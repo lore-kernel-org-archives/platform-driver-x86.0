@@ -2,175 +2,160 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4DFC43214
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 08:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14576C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 08:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04EE960FED
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 08:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCB0C61053
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 08:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243513AbhIAIeV (ORCPT
+        id S231940AbhIAIkH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Sep 2021 04:34:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31796 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S243562AbhIAIeO (ORCPT
+        Wed, 1 Sep 2021 04:40:07 -0400
+Received: from mail-db8eur05on2080.outbound.protection.outlook.com ([40.107.20.80]:45675
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232593AbhIAIkG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Sep 2021 04:34:14 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 18184TuB074153;
-        Wed, 1 Sep 2021 04:32:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=wTyTfHd7TSM/j7teZCQHStIyAgYflYh980W3yUujmzg=;
- b=SVINeSCnKJpQrAlY+H4xBh8erXH2sN7GVXnodgx9IzfdrpxNYhlGq6fghQ4ZTj5LHsRr
- Ik7lAq5lLx/HL5BOtshhXth9mmxANfSm3dEwofBrp6BQngzAIXPwUuwTRtThk7u0j2US
- ba+9lJzgZFKqP83zI1zZfoQ63KDMvsQCVLG7CGlXFZMpeEKUSGKBjOnGOrUBHf6rUX1E
- fdWijevJljsT6qOT4vdnPGFzXqqFkvm9wjcqez7jVG0Cjc6WpsYVmnoTSCJ4x+dxKlJT
- NEQUtFjJj/ytvh4MiggMAhRT5E3yy7nBMgf+qnQ3DZ9Q7ZGocoiI1IaqqBz3Rns6x7zm mg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3at3gdux57-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Sep 2021 04:32:19 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18184U8F074175;
-        Wed, 1 Sep 2021 04:32:18 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3at3gdux4k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Sep 2021 04:32:18 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1818GlCb002939;
-        Wed, 1 Sep 2021 08:32:17 GMT
-Received: from b03cxnp07027.gho.boulder.ibm.com (b03cxnp07027.gho.boulder.ibm.com [9.17.130.14])
-        by ppma04wdc.us.ibm.com with ESMTP id 3aqcsca136-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Sep 2021 08:32:17 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1818WGew21102968
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Sep 2021 08:32:16 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 82B55C6057;
-        Wed,  1 Sep 2021 08:32:16 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 525B0C6061;
-        Wed,  1 Sep 2021 08:32:10 +0000 (GMT)
-Received: from [9.148.12.157] (unknown [9.148.12.157])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed,  1 Sep 2021 08:32:10 +0000 (GMT)
-Subject: Re: [PATCH Part1 v5 38/38] virt: sevguest: Add support to get
- extended report
-To:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        Dov Murik <dovmurik@linux.ibm.com>
-References: <20210820151933.22401-1-brijesh.singh@amd.com>
- <20210820151933.22401-39-brijesh.singh@amd.com>
- <bd5b2d47-2f66-87d9-ce1e-dfe717741d22@linux.ibm.com>
- <e7e35408-9336-2b89-6028-c201b406f5f3@amd.com>
-From:   Dov Murik <dovmurik@linux.ibm.com>
-Message-ID: <a49bafa9-e00c-7dec-ec07-08f4dfd6400f@linux.ibm.com>
-Date:   Wed, 1 Sep 2021 11:32:08 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <e7e35408-9336-2b89-6028-c201b406f5f3@amd.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 1 Sep 2021 04:40:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D4tY8j2kiZB8Lc60aK6ZIHY1b9wtTemwf5MX1H4LYFBQ1VjjKdKqJgZGfOEtcx57QfhYGoyL7GlY5PkleC5KguVk0n/VWiwW7hcAPvDLKpHJtjdShIceEA9IRwqM/I/Y8GOKg7dbswi8os/95O9R/yehRewemWH8kTbUwxeouKR9hXr7TXSX3zKrttpu1U1ecPLXxMuW9+zseMAHwRCEBOOjieoIMTWlfM+ISC42+fYLoMZG78LtxnqK9j2R5u0rixjrCrboc5rFoBRLDHh5qog4WNgEitsyq7VpLSNH9kHpKGZEFYxS4f2/pUUTVydC7cUMBPnZGW+6SLfuYqweag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=4m1rhomZMY/C/DiMrAwXkyibef2OGHkUSolVnlj9FHQ=;
+ b=mEhg4pMa7sJU1erT0K89wOMUz8pynlcLNTdMXnBbaT1SBvfZOTMOdNSGFSyNsQvvRxOw7KlpGS0wiki+dF40oGs5rhDIf01IGuiVIrgBEl83AMUfQJn/kQsWsCnfkyJD0oXMBllBtx6Gw6H1EQwl2g52pkQ4GWM0E8ZAJPvKY2BpbafaFM/3JCR2ouclpX6guZGE4/pmhsKF7GsjAiiouZlvhyGithwIQl6Rz0TnqmxX6wsq51EZIgsw0n0cqejROs/WqdpIPdJ11/1Yp9KhIhOUj82K5B7R2Lzx3A4h14m/RnwVdUJ0izXNgZCC3blduXmTkIwJMcS6v2Tb49zD8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=siemens.onmicrosoft.com; s=selector1-siemens-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4m1rhomZMY/C/DiMrAwXkyibef2OGHkUSolVnlj9FHQ=;
+ b=E05QmVxcUdmeZoD6Vdg5Q5ouA9KVXjQpQwIultN4/z2bMAwggApgLhErzckxf3X1XLrR5cCaiLi1LTGvhQvRVe9SfXSBv792ZZJTYv+VQMRSDxWxRb0NZUVan2n5R97RyyuqN8W6NGbSuXLFjVrYGMzdEg1OYzKrcKNGdPVsLA8=
+Received: from DBAPR10MB4219.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:1b4::17)
+ by DB8PR10MB3529.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:13e::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19; Wed, 1 Sep
+ 2021 08:39:08 +0000
+Received: from DBAPR10MB4219.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::6087:5286:e094:4fe5]) by DBAPR10MB4219.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::6087:5286:e094:4fe5%6]) with mapi id 15.20.4457.024; Wed, 1 Sep 2021
+ 08:39:08 +0000
+From:   "hamza.farooq@siemens.com" <hamza.farooq@siemens.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "henning.schild@siemens.com" <henning.schild@siemens.com>,
+        "jan.kiszka@siemens.com" <jan.kiszka@siemens.com>,
+        "Haeussler, Gerd" <gerd.haeussler.ext@siemens.com>
+Subject: Define LEDs with mixed colors
+Thread-Topic: Define LEDs with mixed colors
+Thread-Index: AdefC/4ZhHUj2Mp2SWmM9Mt1YYYklQ==
+Content-Class: 
+Date:   Wed, 1 Sep 2021 08:39:08 +0000
+Message-ID: <DBAPR10MB42195CA4E52FDD30F0598AE98ACD9@DBAPR10MB4219.EURPRD10.PROD.OUTLOOK.COM>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 5JSPlWLptOL7Dhu_Di7WHkrO4hX69CiQ
-X-Proofpoint-GUID: 7QaYGXi0QrcH-JVSb44dmDj7gh7m4Utd
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-09-01_02:2021-08-31,2021-09-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- mlxscore=0 suspectscore=0 malwarescore=0 lowpriorityscore=0
- impostorscore=0 clxscore=1015 spamscore=0 priorityscore=1501
- mlxlogscore=986 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2107140000 definitions=main-2109010045
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_a59b6cd5-d141-4a33-8bf1-0ca04484304f_Enabled=true;
+ MSIP_Label_a59b6cd5-d141-4a33-8bf1-0ca04484304f_SetDate=2021-09-01T08:39:06Z;
+ MSIP_Label_a59b6cd5-d141-4a33-8bf1-0ca04484304f_Method=Standard;
+ MSIP_Label_a59b6cd5-d141-4a33-8bf1-0ca04484304f_Name=restricted-default;
+ MSIP_Label_a59b6cd5-d141-4a33-8bf1-0ca04484304f_SiteId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;
+ MSIP_Label_a59b6cd5-d141-4a33-8bf1-0ca04484304f_ActionId=4921ba3e-c1c8-415f-b8e2-63b946920111;
+ MSIP_Label_a59b6cd5-d141-4a33-8bf1-0ca04484304f_ContentBits=0
+document_confidentiality: Restricted
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=siemens.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5fc7206b-cafe-4e6f-6c90-08d96d23f6fd
+x-ms-traffictypediagnostic: DB8PR10MB3529:
+x-ld-processed: 38ae3bcd-9579-4fd4-adda-b42e1495d55a,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR10MB352979BA4D40FD4D18C9F1F48ACD9@DB8PR10MB3529.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8G1eWkJF4qPybxRqrsFiynbeVfB/Pd66AwzFblN+w8PTlRoG1JNu2TSRdbx5txrYRX0k4UXuOZEU3WBEUF/0qb8EtUrGV95p7n+XkWYfBlqL/U/NhKm2JIss+TTrS1ij272e0wymImx4yZ+fW6QFif8xfGafosv5mrZZ5Z6H7mHhS+JMK9vfkX48eEaRDXSefvUbstdP2WLOPh3AMb2XptA2RtmOjyOokfId+gxSx0VWWHfKz84BmVV0dB3BP76YleiKbn50Wq9fYNHUv5C/fNvWnpExKKQSGA9+tPZuFLBNLHoYHyBnjeM74EM0PmCBmaleJC8lUl7N+k73RGB1duq+OKWeFYYobu5iIKrDJjrTsONSFmC0vGXhqK4zbJi5y6aI3fsVmBwV0vG3S5XYNKUF4MUGvhmt1uSN7T9yIDygvNHCcJwwfTvCFtgOrkqvWuxMBOlTv3C+j61gPgRj//H7Mas2Rc/fjVgTXuVLPYS1Hx3WuOQy1Ox/yNivO9/xdYwv20YQz6vAIGF4y50Bd4Q3GLTkdV1NzBrqL+DpeujNWj+y+83HX0+2N96X4W8mmS42yk6JafFYtlK/DtprKG1gd3njvkFNrHk60N0k6+B2r00EBdxXgfijdxogTQURnRKqNfq+elXuO9HL18WZ+SCKeABmO01V3xB4o1FVSOsV+d1SHPuOO3hNiU2SpAd21KYRzhhmDRDJJ17C0JIvQQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBAPR10MB4219.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(4326008)(64756008)(71200400001)(76116006)(66946007)(66446008)(7696005)(38070700005)(5660300002)(66556008)(66476007)(9686003)(8936002)(55016002)(52536014)(6916009)(86362001)(33656002)(2906002)(107886003)(8676002)(478600001)(186003)(38100700002)(316002)(83380400001)(4744005)(26005)(122000001)(54906003)(6506007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?g5KxhHm8N1S5cnqyrx4yqzAYXN7dygmH6ZUtTuxTH4EfSe/47vdg1l7JEoJd?=
+ =?us-ascii?Q?AIxLCXFeFj2OB4cBWicChgI9CoLhV1EokQ4+umhpIML/VF1mvBbooczcHvnN?=
+ =?us-ascii?Q?3EiZFpuuRyFBeuL0lGp0JbIVlxSCYdTqvGaUuNEkF4Ki1HOvhKqM6QA3RaOq?=
+ =?us-ascii?Q?1yoIiVmq/JmkTO6kF86abr6ns1OdC3v+F5d0JNJJDmQO1x6zG8ALWLEoFjBL?=
+ =?us-ascii?Q?uNyZtnC094QmMuuXkIz2qtXMQqcukOZ1J6+Hl7z+ryMDQsyXmd3vZKV0aXXI?=
+ =?us-ascii?Q?nb3UgGlm9w7FDjVftqSKLaP3rQGm7iQawNKFTqeUm97MooOL+nH23zIYwnoS?=
+ =?us-ascii?Q?jKYYokW42WO/X8m+qMietULZN43DgO0RMB0BQx8vBSqLhrrXeOi04fRWU+H8?=
+ =?us-ascii?Q?hPMN4d7TI5UchfflO4Kh+J9X61kf4nwBj3XcEHBgH0aMzI8YF5ZlZj5BJEs/?=
+ =?us-ascii?Q?ymbks3XILmVTz8Gbtup7LukaR71Pklo4Uoyfk30GCMYZ5K/9v1BXwunx/puz?=
+ =?us-ascii?Q?ZwLEZMUCUIZjnDP9l7aDnWsSwxAI5mKQGDx6psQcIhpU6O/KKW4BDFwCf81F?=
+ =?us-ascii?Q?P/hwGtsU0/JIQj0CquMbTh2EsFf/w2CgtmRmOYqXiIpbXwV3lxYJtBibwvsM?=
+ =?us-ascii?Q?yU3atg3vpWYFSfJKHXmEgUs5s6iHjltBUE8+MmLSnx499angmSTVsQqz8iNU?=
+ =?us-ascii?Q?n8+SdpC9ZWuf0BvJYo8j7zv7ixaOrfxlywK9uFT+94X0hmeTcROh+QVpbk0R?=
+ =?us-ascii?Q?EP5FOHVWbxHnahiTsj/a54lWDuPmOhdnYYOqb+sz0M75ktl4A1qmwG4WGNTS?=
+ =?us-ascii?Q?qnD9VmeIqVCp3yN/zpiZNzm9xRKfPi+baABxCBQo34WkZ/ICZk6PwbpqVxnd?=
+ =?us-ascii?Q?7qNvannqljXq2Mlqy0+tL6OQC6jcX96ReuEqLf5Fy122Ko0DTO3dBhqmVSs6?=
+ =?us-ascii?Q?U5bPRglxaU3m/pDkwu31C43O55ZWnldZofhk7NT5alqs+LRwfQjPDk4v3W9h?=
+ =?us-ascii?Q?Ysy19rt+uHTRC8Lr5X2OceGmFklxvko9zdCdpZCMsLpgi+acSQInFpyTc5Sc?=
+ =?us-ascii?Q?Qnq6lIPIYxwby3L750yuD5eIJSKmq5hqcqHj/2ilPdTxenVBEs7LLZrONSL9?=
+ =?us-ascii?Q?rNXOlqW/v9BtD4doeLW4646ZOMGjsgfUxv+2TIYqVMq9oyBc26HDdcIVU15B?=
+ =?us-ascii?Q?8K99sRerQT3BO8ET32jZa2TiZePfy4Q68fbaiIFU9bqjBAHTizdhTj99vg+Z?=
+ =?us-ascii?Q?pRqR8LSwgPYQIG9aIzlP+0OMQdImY68EaThRqefSRgo9+lbQ2nziq3cTxGK+?=
+ =?us-ascii?Q?uD9Jn0Rd69ar0vMpN7iHdtYn?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DBAPR10MB4219.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fc7206b-cafe-4e6f-6c90-08d96d23f6fd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2021 08:39:08.3089
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LVfSCxrL+yE/WBXb1NIDp7u+shMPNQ8HaonThNnuf8NPcoCmUEE1c0yKArNkzGcV2/GrOSvEPe4eHQGOQ+zT+xiIyldq7iDWUtkeaRPr1yQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3529
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hello all,
 
+I am toying with the idea of writing a multicolor LED GPIO driver. What wou=
+ld be the right way to define mixed color LEDs (for leds-gpio), in device t=
+ree or ACPI?
+Consider the following:
 
-On 01/09/2021 0:11, Brijesh Singh wrote:
-> 
-> 
-> On 8/31/21 3:22 PM, Dov Murik wrote:
->> Hi Brijesh,
->>
->> On 20/08/2021 18:19, Brijesh Singh wrote:
->>> Version 2 of GHCB specification defines NAE to get the extended guest
->>> request. It is similar to the SNP_GET_REPORT ioctl. The main difference
->>> is related to the additional data that be returned. The additional
->>> data returned is a certificate blob that can be used by the SNP guest
->>> user.
->>
->> It seems like the SNP_GET_EXT_REPORT ioctl does everything that the
->> SNP_GET_REPORT ioctl does, and more.  Why expose SNP_GET_REPORT to
->> userspace at all?
->>
->>
-> 
-> Since both of these options are provided by the GHCB protocol so I
-> exposed it. Its possible that some applications may not care about the
-> extended certificate blob. And in those case, if the hypervisor is
-> programmed with the extended certificate blob and caller does not supply
-> the enough number of pages to copy the blob then command should fail.
-> This will enforce a new requirement on that guest application to
-> allocate an extra memory. e.g:
-> 
-> 1. Hypervisor is programmed with a system wide certificate blob using
-> the SNP_SET_EXT_CONFIG ioctl().
-> 
-> 2. Guest wants to get the report but does not care about the certificate
-> blob.
-> 
-> 3. Guest issues a extended guest report with the npages = 0. The command
-> will fail with invalid length and number of pages will be returned in
-> the response.
-> 
-> 4. Guest will not need to allocate memory to hold the certificate and
-> reissue the command.
-> 
-> The #4 is unnecessary for a guest which does not want to get. In this
-> case, a guest can simply call the attestation report without asking for
-> certificate blob. Please see the GHCB spec for more details.
-> 
+leds {
+	compatible =3D "gpio-leds";
+	led0 {
+		gpios =3D <&mcu_pio 0 GPIO_ACTIVE_LOW>;
+		color =3D <LED_COLOR_ID_RED>;
+	};
 
-OK.  Originally I thought that by passing certs_address=NULL and
-certs_len=0 the user program can say "I don't want this extra data"; but
-now I understand that this will return an error (invalid length) with
-number of pages needed.
+	led1 {
+		gpios =3D <&mcu_pio 1 GPIO_ACTIVE_HIGH>;
+		color =3D <LED_COLOR_ID_GREEN>;
+	};
+	led2 {
+		gpios =3D <&mcu_pio 0 GPIO_ACTIVE_LOW
+			&mcu_pio 1 GPIO_ACTIVE_LOW>;
+		color =3D <LED_COLOR_ID_AMBER>;
+	};
+};
 
--Dov
+This probably won't work as "gpios" seem to be single object in gpio-leds d=
+river code, but what can I do to achieve something similar?
+It is important to define this LED in DT/ACPI in order for the user app to =
+see it in the /sys/class/led folder, without having to write platform-speci=
+fic driver.
+
+Best,
+Hamza
