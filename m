@@ -2,253 +2,220 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11116C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 15:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117A3C4320E
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 15:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED43060F3A
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 15:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70806109E
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 15:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343895AbhIAPyu (ORCPT
+        id S1344138AbhIAP6z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Sep 2021 11:54:50 -0400
-Received: from mail-40136.protonmail.ch ([185.70.40.136]:18977 "EHLO
-        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343916AbhIAPyt (ORCPT
+        Wed, 1 Sep 2021 11:58:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344135AbhIAP6s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Sep 2021 11:54:49 -0400
-Date:   Wed, 01 Sep 2021 15:53:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1630511630;
-        bh=6uwVh0b32UrB8AU699TL5miHtqIG2EArWqGAgES5fzU=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=cAuQ4tDa7HILBtJqHA1uUf7JuJLcGr9/Eaxy1nkEoTSYz6FEIgWFhFvdeXadi2ZZl
-         rlSw6Y2bCw/0pdmV5MDh3i+ixXOK7pDb39s1uBUIRaKSPeZH4EzR+LLeMeS8V/R9L4
-         bScvJ2z8+CJv8roBTD1agb8tMN0k+qtibkoHs0IU=
-To:     Enver Balalic <balalic.enver@gmail.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     mgross@linux.intel.com, jdelvare@suse.com,
-        platform-driver-x86@vger.kernel.org, linux@roeck-us.net,
-        hdegoede@redhat.com
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH v4] platform/x86: hp-wmi: add support for omen laptops
-Message-ID: <VFDoTRfsCLfG-Ur2bAXhPrTkSyFQXRt59bCTRHlNYsi9wvaZdzFcUnREgsP54RXJ4Lif_Md2ITa9OzVH4igOl5aPVUZ9D99HBchK2NqdKgU=@protonmail.com>
-In-Reply-To: <20210827123105.mlrpsfmpbcfunuqc@omen.localdomain>
-References: <20210827123105.mlrpsfmpbcfunuqc@omen.localdomain>
+        Wed, 1 Sep 2021 11:58:48 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9235C061796
+        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Sep 2021 08:57:49 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id fs6so2173984pjb.4
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Sep 2021 08:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bpnJL9b1ZSCBiJrJrREp2DCCrK4MM5yZQJOIfaGjDt4=;
+        b=mev2HZZFuQnmTFXzk3ShrZKtCRgzjVmLpngDEVCAFpqUrAUVn7nFl97A8bDppJNaQ+
+         T/7ErBe4M3n1I75TAOwZn+TV0RKk6kQd8+NZeXJhNejUCOaMQFERui8fDOslv1F4VD/p
+         7PVsCfdEh/lCifRwNAmM+nIfOPwlzZcJQSAzEMg/PKgUjRAExDbFZC+NpiGkIWDFJlRH
+         u1UVOsiseTYq0ROPKnMgYmsKtdOWfYooedg/+a5td5KPEEvGEnacsKeas3Sk2n61Zcs2
+         JTbrEkybiGJJCxxWf69nWjJdbc5gt1eu3MopENOkAAANpH4M7YvQVysT+T6fWxpCbfvS
+         be/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bpnJL9b1ZSCBiJrJrREp2DCCrK4MM5yZQJOIfaGjDt4=;
+        b=UoYHTcUaL0OdtAnHR5OCu5yrvMiZ4cWP3GCrhmQ//5tSRGuBqj9zRniRkZMfVtZVLT
+         mHOUpQtS5W6CxYDp+0ct+0Dp+jgu6/pM75SOHTqEf+b24iIP/aE1hIPEyly1Pr0iG3EN
+         0ewIjmWPZhsYWB+3HNJn86YGjEZgVAUeWpepQBGAjaMFBW4tu+1+wD5SWLyjIY/uJBkt
+         DwrzOdcuoeweDFEMBWwDCl4IqB4V/hEn6I7mUkslKMbsNFEGxPOplb0eFvoAQAfHuqf2
+         wSjXF+HwOThTCYiO5iTD/+V8c4XsEaEsmUIkUNSVkAjQIRbZSMLvDA27PjXw/Z2BqAIb
+         1/fQ==
+X-Gm-Message-State: AOAM533KuPZTsCIU9Dhv/qcmbTt+YPhaRLtS+HNtG+dwSd8tWlgTQjVz
+        dEKgP0/bZl+2ULhFl0mTK+yEPeWC3cNL0Ze/ssY=
+X-Google-Smtp-Source: ABdhPJyeeDQtJhJB/i8tUfCdEBQTDLcqDAxniEpYod3V7YpMmGEwYl9xlKaiRakDrAxo5mmU/6yCrCBzAmUTBGJ4UFk=
+X-Received: by 2002:a17:90b:78f:: with SMTP id l15mr49194pjz.181.1630511869159;
+ Wed, 01 Sep 2021 08:57:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <70b81e33-c769-4cb8-0bae-5ee10a209389@nvidia.com> <20210831224906.1072-1-ddadap@nvidia.com>
+In-Reply-To: <20210831224906.1072-1-ddadap@nvidia.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Sep 2021 18:57:13 +0300
+Message-ID: <CAHp75VcvhPL2dNy4HdoEU5FtuWQkG-t0tH5rAJRKpeG0iB9AUg@mail.gmail.com>
+Subject: Re: [PATCH v4] platform/x86: Add driver for ACPI WMAA EC-based
+ backlight control
+To:     Daniel Dadap <ddadap@nvidia.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        mario.limonciello@outlook.com,
+        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
+        Darren Hart <dvhart@infradead.org>, thomas@t-8ch.de,
+        Aaron Plattner <aplattner@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+On Wed, Sep 1, 2021 at 2:27 AM Daniel Dadap <ddadap@nvidia.com> wrote:
+>
+> A number of upcoming notebook computer designs drive the internal
+> display panel's backlight PWM through the Embedded Controller (EC).
+> This EC-based backlight control can be plumbed through to an ACPI
+> "WMAA" method interface, which in turn can be wrapped by WMI with
+> the GUID handle 603E9613-EF25-4338-A3D0-C46177516DB7.
+>
+> Add a new driver, aliased to the WMAA WMI GUID, to expose a sysfs
+> backlight class driver to control backlight levels on systems with
+> EC-driven backlights.
 
+> Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
 
-> This patch adds support for HP Omen laptops.
-> It adds support for most things that can be controlled via the
-> Windows Omen Command Center application.
->
->  - Fan speed monitoring through hwmon
->  - Platform Profile support (cool, balanced, performance)
->  - Max fan speed function toggle
->
-> Also exposes the existing HDD temperature through hwmon since
-> this driver didn't use hwmon before this patch.
->
-> This patch has been tested on a 2020 HP Omen 15 (AMD) 15-en0023dx.
->
->  - V1
->    Initial Patch
->  - V2
->    Use standard hwmon ABI attributes
->    Add existing non-standard "hddtemp" to hwmon
->  - V3
->    Fix overflow issue in "hp_wmi_get_fan_speed"
->    Map max fan speed value back to hwmon values on read
->    Code style fixes
->    Fix issue with returning values from "hp_wmi_hwmon_read",
->    the value to return should be written to val and not just
->    returned from the function
->  - V4
->    Use DMI Board names to detect if a device should use the omen
->    specific thermal profile method.
->    Select HWMON instead of depending on it.
->    Code style fixes.
->    Replace some error codes with more specific/meaningful ones.
->    Remove the HDD temperature from HWMON since we don't know what
->    unit it's expressed in.
->    Handle error from hp_wmi_hwmon_init
->
-> Signed-off-by: Enver Balalic <balalic.enver@gmail.com>
-> ---
->  drivers/platform/x86/Kconfig  |   1 +
->  drivers/platform/x86/hp-wmi.c | 336 ++++++++++++++++++++++++++++++++--
->  2 files changed, 325 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index d12db6c316ea..2ab0dcf5b598 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -434,6 +434,7 @@ config HP_WMI
->  =09depends on RFKILL || RFKILL =3D n
->  =09select INPUT_SPARSEKMAP
->  =09select ACPI_PLATFORM_PROFILE
-> +=09select HWMON
->  =09help
->  =09 Say Y here if you want to support WMI-based hotkeys on HP laptops an=
-d
->  =09 to read data from WMI such as docking or ambient light sensor state.
-> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.=
-c
-> index 027a1467d009..44030f513453 100644
-> --- a/drivers/platform/x86/hp-wmi.c
-> +++ b/drivers/platform/x86/hp-wmi.c
-> @@ -22,9 +22,11 @@
->  #include <linux/input/sparse-keymap.h>
->  #include <linux/platform_device.h>
->  #include <linux/platform_profile.h>
-> +#include <linux/hwmon.h>
->  #include <linux/acpi.h>
->  #include <linux/rfkill.h>
->  #include <linux/string.h>
-> +#include <linux/dmi.h>
->
->  MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
->  MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
-> @@ -39,6 +41,25 @@ MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TAB=
-LET_MODE reporting (-1=3Daut
->
->  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
->  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
-> +#define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
-> +
-> +/* DMI board names of devices that should use the omen specific path for
-> + * thermal profiles.
-> + * This was obtained by taking a look in the windows omen command center
-> + * app and parsing a json file that they use to figure out what capabili=
-ties
-> + * the device should have.
-> + * A device is considered an omen if the DisplayName in that list contai=
-ns
-> + * "OMEN", and it can use the thermal profile stuff if the "Feature" arr=
-ay
-> + * contains "PerformanceControl".
+Seems like missed Co-developed-by. Or you are the wrong author. Fix accordingly.
+
+> Signed-off-by: Daniel Dadap <ddadap@nvidia.com>
+
+...
+
+> +#include <linux/backlight.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+
+types.h ?
+mod_devicetable.h ?
+
+...
+
+> +enum wmaa_get_or_set {
+> +       WMAA_GET = 0,
+> +       WMAA_SET = 1,
+> +       WMAA_GET_MAX = 2
+
+Is it part of HW protocol? Otherwise drop assignments.
+
+> +};
+
+...
+
 > + */
-> +static const char * const omen_thermal_profile_boards[] =3D {
-> +=09"84DA", "84DB", "84DC", "8574", "8575", "860A", "87B5", "8572", "8573=
-",
-> +=09"8600", "8601", "8602", "8605", "8606", "8607", "8746", "8747", "8749=
-",
-> +=09"874A", "8603", "8604", "8748", "886B", "886C", "878A", "878B", "878C=
-",
-> +=09"88C8", "88CB", "8786", "8787", "8788", "88D1", "88D2", "88F4", "88FD=
-",
-> +=09"88F5", "88F6", "88F7", "88FE", "88FF", "8900", "8901", "8902", "8912=
-",
-> +=09"8917", "8918", "8949", "894A", "89EB"
+> +enum wmaa_source {
+> +       WMAA_SOURCE_GPU = 1,
+> +       WMAA_SOURCE_EC = 2,
+
+> +       WMAA_SOURCE_AUX = 3
+
+Missed comma.
+
 > +};
->
->  enum hp_wmi_radio {
->  =09HPWMI_WIFI=09=3D 0x0,
-> @@ -89,10 +110,18 @@ enum hp_wmi_commandtype {
->  =09HPWMI_THERMAL_PROFILE_QUERY=09=3D 0x4c,
->  };
->
-> +enum hp_wmi_gm_commandtype {
-> +=09HPWMI_FAN_SPEED_GET_QUERY =3D 0x11,
-> +=09HPWMI_SET_PERFORMANCE_MODE =3D 0x1A,
-> +=09HPWMI_FAN_SPEED_MAX_GET_QUERY =3D 0x26,
-> +=09HPWMI_FAN_SPEED_MAX_SET_QUERY =3D 0x27,
+
+...
+
+> +/**
+> + * struct wmaa_args - arguments for the ACPI WMAA method
+
+> + *
+
+Redundant blank line.
+
+> + * @set:     Pass in an &enum wmaa_get_or_set value to select between getting or
+> + *           setting a value.
+> + * @val:     In parameter for value to set when operating in %WMAA_SET mode. Not
+> + *           used in %WMAA_GET or %WMAA_GET_MAX mode.
+> + * @ret:     Out parameter returning retrieved value when operating in %WMAA_GET
+> + *           or %WMAA_GET_MAX mode. Not used in %WMAA_SET mode.
+> + * @ignored: Padding; not used. The ACPI method expects a 24 byte params struct.
+> + *
+> + * This is the parameters structure for the ACPI WMAA method as wrapped by WMI.
+> + * The value passed in to @val or returned by @ret will be a brightness value
+> + * when the WMI method ID is %WMAA_LEVEL, or an &enum wmaa_source value when
+> + * the WMI method ID is %WMAA_SOURCE.
+> + */
+
+...
+
+> +       ret = wmi_call_wmaa(wdev, WMAA_LEVEL, WMAA_GET, &level);
+
+> +
+
+Ditto.
+
+> +       if (ret)
+> +               dev_err(&bd->dev, "ACPI WMAA failed to get backlight level.\n");
+
+...
+> +static const struct backlight_ops wmaa_backlight_ops = {
+> +       .update_status = wmaa_backlight_update_status,
+> +       .get_brightness = wmaa_backlight_get_brightness
+
+Missed comma.
+
 > +};
-> +
->  enum hp_wmi_command {
->  =09HPWMI_READ=09=3D 0x01,
->  =09HPWMI_WRITE=09=3D 0x02,
->  =09HPWMI_ODM=09=3D 0x03,
-> +=09HPWMI_GM=09=3D 0x20008,
->  };
->
->  enum hp_wmi_hardware_mask {
-> @@ -120,6 +149,13 @@ enum hp_wireless2_bits {
->  =09HPWMI_POWER_FW_OR_HW=09=3D HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
->  };
->
-> +
-> +enum hp_thermal_profile_omen {
-> +=09HP_OMEN_THERMAL_PROFILE_DEFAULT     =3D 0x00,
-> +=09HP_OMEN_THERMAL_PROFILE_PERFORMANCE =3D 0x01,
-> +=09HP_OMEN_THERMAL_PROFILE_COOL        =3D 0x02,
-> +};
-> +
->  enum hp_thermal_profile {
->  =09HP_THERMAL_PROFILE_PERFORMANCE=09=3D 0x00,
->  =09HP_THERMAL_PROFILE_DEFAULT=09=09=3D 0x01,
-> @@ -169,6 +205,8 @@ static struct platform_device *hp_wmi_platform_dev;
->  static struct platform_profile_handler platform_profile_handler;
->  static bool platform_profile_support;
->
-> +static bool use_omen_thermal_profile;
 
-I think this variable is not necessary, you set it once,
-and read it once. Maybe you could add a direct function
-call to `detect_is_omen_thermal_profile()` in `thermal_profile_setup()`?
+...
 
+> +       if (source != WMAA_SOURCE_EC) {
+> +               /* This driver is only to be used when brightness control is
+> +                * handled by the EC; otherwise, the GPU driver(s) should handle
+> +                * brightness control. */
 
-> [...]
->  static int hp_wmi_read_int(int query)
->  {
->  =09int val =3D 0, ret;
-> @@ -302,6 +358,75 @@ static int hp_wmi_hw_state(int mask)
->  =09return !!(state & mask);
->  }
->
-> +static int omen_thermal_profile_set(int mode)
-> +{
-> +=09char buffer[2] =3D {0, mode};
-> +=09int ret;
+/*
+ * Wrong multi-line comment
+ * style. Use this example to fix
+ * it properly.
+ */
+
+> +               return -ENODEV;
+> +       }
+
+> +       /* Identify this backlight device as a platform device so that it can
+> +        * be prioritized over any exposed GPU-driven raw device(s). */
+
+Ditto.
+And for any other multi-line comments in this driver.
+
+...
+
+> +       backlight = devm_backlight_device_register(
+> +               &w->dev, "wmaa_backlight",
+> +               &w->dev, w, &wmaa_backlight_ops, &props);
+
+> +       if (IS_ERR(backlight))
+> +               return PTR_ERR(backlight);
 > +
-> +=09if (mode < 0 || mode > 2)
-> +=09=09return -EINVAL;
-> +
-> +=09ret =3D hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
-> +=09=09=09=09   &buffer, sizeof(buffer), sizeof(buffer));
-> +
-> +=09if (ret)
-> +=09=09return ret < 0 ? ret : -EINVAL;
-> +
-> +=09return mode;
-> +}
-> +
-> +static bool detect_is_omen_thermal_profile(void)
-> +{
-> +=09int i;
-> +
-> +=09const char *board_name =3D dmi_get_system_info(DMI_BOARD_NAME);
+> +       return 0;
 
-It seems that this can be NULL. Most users of this function have
-a NULL check after the call, so please add one here as well.
+return PTR_ERR_OR_ZERO(backlight);
 
+...
 
-> +
-> +=09for (i =3D 0; i < ARRAY_SIZE(omen_thermal_profile_boards); i++) {
-> +=09=09if (strcmp(board_name, omen_thermal_profile_boards[i]) =3D=3D 0)
-> +=09=09=09return true;
-> +=09}
+> +MODULE_AUTHOR("Aaron Plattner <aplattner@nvidia.com>");
+> +MODULE_AUTHOR("Daniel Dadap <ddadap@nvidia.com>");
 
-Please see the `match_string()` function.
+So, Co-developed-by seems missing above.
 
+...
 
-> +
-> +=09return false;
-> +}
-> [...]
+> +MODULE_LICENSE("GPL v2");
 
+"GPL" is enough (it's a synonim).
 
-Best regards,
-Barnab=C3=A1s P=C5=91cze
+-- 
+With Best Regards,
+Andy Shevchenko
