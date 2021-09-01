@@ -2,182 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF289C4320E
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 01:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E425C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 02:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8939B61059
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 01:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B1E60F21
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 02:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241575AbhIABSI (ORCPT
+        id S241508AbhIACwt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 31 Aug 2021 21:18:08 -0400
-Received: from mail-bn7nam10on2061.outbound.protection.outlook.com ([40.107.92.61]:22525
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S241207AbhIABSH (ORCPT
+        Tue, 31 Aug 2021 22:52:49 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:40193 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231588AbhIACwt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 31 Aug 2021 21:18:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OqABQwOT56ilksc1BhxYT44RxmWqtvuqg/b31fpOI81o+tRprPNk73L6gBMofiKpUE2bbJ0b+LloFFfIUrnzx586RRjhKEzYQb1gXJhDQxaXgps8OuSss001mYWRkSdErLS0CdlgfXbhNxf6+iPUc5cfOJ/V3Mg/uON6pVc5mPuBkckb68xyjHByElUgJCh6uldkvJLRjCmGf72aF6i+pOBE7VSrs92JmLYj7s4xi5dprgfVMLeMx79x3PqPF9R2BH+i7KdT1TiiNKc0KhPpuYOqpqPwKd2pktC57iCP/3VIiDURUj5rthv9GP/CHFgjQ0bRo/St6i4uc364E08OfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1yelLIWaMCkgIfaz4DqO6DMFkOWziwSNxaALSIEaMLY=;
- b=YntwTCVlDt1LuzKs8w4uRtj0aI6vQbD5Pd29E+e8sYRpU47cReakihlrZaU5WpASyxyq4oPu7BqC22tte74UYFHj4YqghRR0leAHhKoHwiBvR8ajdpdYZAst0krb83NuBzJjvCugMdH/FV4rS7+S3LCgWfrWxzUUintKz/O7S/2enjCX4K6cYrV/eCex/YnthHhVg4SjsZXWtEQv/54j7RlKnUaMI5Iufj7e3lc/u2j/T50eMyiAvVwXFihWBIlemNgpwXTnxnD9VwBP40jL7iTgXCWQjmpqGPMF65YNg5GYDBzAJU+bmkuCcAJ2V2h1zk+7zyJ26rqBdTqc1wMaDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1yelLIWaMCkgIfaz4DqO6DMFkOWziwSNxaALSIEaMLY=;
- b=coTwRjk/raNWdXUrFaIGJHfuj7bxChPWg1ZcsiS5cd6zf+CHHy5l/dPns0EModNyxzTZKOBq+EhY+hr0ESsZfbjKP6WX4nghR7wxBZEAfk+8XVvFp11W6xVyUxks+BjMnHQZbsVSoeLzxT5xgqZILNIPwjm4Tvk94e11tbf/SM4=
-Authentication-Results: alien8.de; dkim=none (message not signed)
- header.d=none;alien8.de; dmarc=none action=none header.from=amd.com;
-Received: from CH2PR12MB4133.namprd12.prod.outlook.com (2603:10b6:610:7a::13)
- by CH2PR12MB3959.namprd12.prod.outlook.com (2603:10b6:610:28::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.17; Wed, 1 Sep
- 2021 01:17:07 +0000
-Received: from CH2PR12MB4133.namprd12.prod.outlook.com
- ([fe80::f5af:373a:5a75:c353]) by CH2PR12MB4133.namprd12.prod.outlook.com
- ([fe80::f5af:373a:5a75:c353%6]) with mapi id 15.20.4457.024; Wed, 1 Sep 2021
- 01:17:07 +0000
-Date:   Tue, 31 Aug 2021 20:16:58 -0500
-From:   Michael Roth <michael.roth@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH Part1 v5 32/38] x86/sev: enable SEV-SNP-validated CPUID
- in #VC handlers
-Message-ID: <20210901011658.s4hgmvbptgseqcm3@amd.com>
-References: <20210820151933.22401-1-brijesh.singh@amd.com>
- <20210820151933.22401-33-brijesh.singh@amd.com>
- <YSkCWVTd0ZEvphlx@zn.tnic>
- <20210827183240.f7zvo3ujkeohmlrt@amd.com>
- <YS5XVBNrASp7Zrig@zn.tnic>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YS5XVBNrASp7Zrig@zn.tnic>
-X-ClientProxiedBy: SN6PR01CA0031.prod.exchangelabs.com (2603:10b6:805:b6::44)
- To CH2PR12MB4133.namprd12.prod.outlook.com (2603:10b6:610:7a::13)
+        Tue, 31 Aug 2021 22:52:49 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 8DEDA5C01A0;
+        Tue, 31 Aug 2021 22:51:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 31 Aug 2021 22:51:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=h6mkqTj0IPa8aXBcl
+        zyhfaTXQ0S5i0ciy6PPsLCCCew=; b=X9K7ltETgS0aclxAnkH5nsNbhPi6Pknqf
+        ZRV0JOMn3uLdvcIMTtRmwz9gt32hxlNrqgdGlJIfMuQWyD+z+gJpfZ4Ns91Q184c
+        dRM8QnJEakRuYunvc6gJoEV55gcooJnuPufJ9CnEVdBPGKDxaZkRBTHtyvC/2ePP
+        wsLxUT/5ZdHcdV7GsDTw5jaFf+JwliDfqunLc0Vnt+Y9wBRT6hNdLLbPIkZfx3Fc
+        RtopxiKTbj4inEH/ooF74r4fqU6Gzvc+dt5xqOjtbJOAH0LSukp4wob+iG1t6XdZ
+        FySfQ9gsU2CQkVnFpUWBybglXoHLntjGwV0EnTf/gR2xQmPjgA20A==
+X-ME-Sender: <xms:x-ouYeQhxdJMBaRdqTVI3JumPHCk_19y2-hdJeaKRObfeHMRN6Wzrg>
+    <xme:x-ouYTxiiBgveBFiUUOcMd0oJeQAU1ZKPYYRdYjCbImbMNfsKZQKvnKANl0f30-pn
+    yKMqDJZKhgdNuWb3XY>
+X-ME-Received: <xmr:x-ouYb0TBIkUXiOV1E9X78W7U5U1eJGOwMaxO1OPs3G5S3pU5WOA7rji8pKB>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddvvddgieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvgeslhhjohhn
+    vghsrdguvghvqeenucggtffrrghtthgvrhhnpeelffelhfeltdfhtdevuefgveeuueekge
+    etiefgiefhgfejvdetvdeuvedthfdvkeenucevlhhushhtvghrufhiiigvpedtnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:x-ouYaChl12wK1ErYFdHeEcn7NJpuFS-7AxuMvkyA_qGX8hF7zl5Cg>
+    <xmx:x-ouYXhViRBTod-qj74f9wbidVRIUY0F7ZbYWBa4C30y6vq9QIY0qg>
+    <xmx:x-ouYWrQych7LvU4aarW6wl5MjYjINnMbVqmkcCEbXMKacRaE9Jx-Q>
+    <xmx:yOouYUsZcBVw4eRI-e5HqRb8mLyguZpuHYx3lRDDtJYRHoCIWFuNrw>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 31 Aug 2021 22:51:48 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     linux-kernel@vger.kernel.org
+Cc:     hdegoede@redhat.com, pobrn@protonmail.com, linux@roeck-us.net,
+        platform-driver-x86@vger.kernel.org,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v8 0/1] asus-wmi: Add support for custom fan curves
+Date:   Wed,  1 Sep 2021 14:51:40 +1200
+Message-Id: <20210901025141.1225029-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (165.204.77.1) by SN6PR01CA0031.prod.exchangelabs.com (2603:10b6:805:b6::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.19 via Frontend Transport; Wed, 1 Sep 2021 01:17:06 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cefba45e-34cf-4c81-0dff-08d96ce636c5
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3959:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR12MB39593FEA145F92F918A9081795CD9@CH2PR12MB3959.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: t7TX3NCRV+ATbmgQaGqaaq9dXFxLUvt9u3o6/PQQ5V/9SErHr+sw9kUmxOgcMErJH/Cbc3++qiRyEfC6sJ6Q02XapSazQp1es8xLZqQ+f188Jm7F8Z7v4IafO29r7437ZmhEwYLpTluuaRcKi/BXZqN3T5uK27YivGnBsafO+aLobvGt19W43d+E8hEGqYw4gGRwAbohLfhoRVjMYavMFVe8nb9c/RQwswqSo4osIG24EwFJIPLo5cSZYMfubn3P8rhD+dGmRe1M2AlHf/e0gIfnTDUPHL+ffqQcqtXbxUhAhrgAmk6F3S+0nWbbv61EPZ5z1+fnC/0KoD8q+0DIQAWgrW9mTW3eT8MEhIdM6mWgcFudGxqnunaf1laAoOvDlqyGmpAZvff/APAGVZTrmhWr5lorPsShrlhQSZYjRS+OmYWi2wUVsrpTAZaGc6KnoHCT418MEfjx+DWz9PtNpM18K/M4rtppG7wlJkyK6pQaPRZE3yTLn6UMaAux5ynbFhEIkllT686PjcXx0OQ9GHjT7/Bz1XqczKWbLeH/vWcNi4Vvd5YBtUt6LLxVYm/fCUUEGpxzYtfsw8I0A8o1HjGDLeSJ306ZCgYZ6GYKClb3VJtBbTfZv1rjE77x/lSUPMoV8KQM6rWxQ+db/GE55hRfFoFAxfQVLQsoBIqHbmwt2NLnXJgQPwi0UhbE8zto1RNxxC/P+TxT0izdRrKQ+52bbBCOXT8jDaaL/pem8RLuvSfMFv5eezNb0s4hk0SNMFQ+xTbsS+raP0sLzMclxw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4133.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(136003)(346002)(366004)(376002)(36756003)(66946007)(66476007)(54906003)(6496006)(44832011)(45080400002)(52116002)(8676002)(1076003)(4326008)(26005)(186003)(83380400001)(6666004)(478600001)(956004)(6486002)(86362001)(2616005)(38350700002)(2906002)(966005)(7416002)(7406005)(5660300002)(8936002)(38100700002)(66556008)(316002)(6916009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9ekcKrei8q6JG5V9Q+w0zYk2jLj9ZHBVYI3E6glVzu5H87g7A6coir5XqqRu?=
- =?us-ascii?Q?1Xodn6T7SoBIfvLEKnyPx7HfA6sOndQl+j4+3uq8HH/cXJn/Ca8GdiHUMTAi?=
- =?us-ascii?Q?HXcviPwBxInoWHNKNU/vqqF2kaE538VBA30rCbyY6vrZFoH9l314nVMIkkf0?=
- =?us-ascii?Q?arfl4e6RCTNdlkeeA09XFZXBwC0pIaa8sMHxNoIloPoj4LSpdYjQ6iYkygQ3?=
- =?us-ascii?Q?1M8OPJ9VxtrlA+F1YVvv84rDZTA70zSZmYftQvcNYJjCkMsg53jw+J7qyMsU?=
- =?us-ascii?Q?uGqpvoYwkPH/KhEaYSRZ0XdUX2tX+XPauSRFOIJxva1DRFz8vg3gXpBBIfEo?=
- =?us-ascii?Q?i5kYetmDE4YyYyLFlUbE7TBBo6zAmsdqSWrqZrdOBTCqVDdfplEdYavDIcYe?=
- =?us-ascii?Q?5ZLSxdPRtPUFotFRYzaFKd3X+X75MXEM4E9dLMS5K7jAwbAf0yZYQ/aW5gSV?=
- =?us-ascii?Q?yvi568rZYz7amZGXfTO6FlNJEDQWeyhVtV2x6acctMWWbtEHBObK4HXPndrr?=
- =?us-ascii?Q?hN96570yeBGkUciytSrVC+S9DCjDU2sZlYNpv+q+tIB7+23helb50NVldcDW?=
- =?us-ascii?Q?6SsxrRf9kyzFc5Vs/HdyDt8ZiqTAk3egOR53uNU6gTlJdB9hSkPx7YrRTPjl?=
- =?us-ascii?Q?qMg71AJFYbl36f+5zuOVLIklDflYwbgBLXrGp8N39kZbw7xc+Q8uj2PHHMC6?=
- =?us-ascii?Q?3HFYtDl+3fPUNPBA+h+FhvjMAyQGV89DFLk1LBboVarMv9uHSQxJ4mgiRkHf?=
- =?us-ascii?Q?Dij0Zex9ZR/2KH+wQK01Zw8cGTBGUpJbI8Q5aHgdRJfU3ZTufJOIqvI6niLM?=
- =?us-ascii?Q?Cl1eUxVAmQtLbX2WKuxKsBEfP+34Jc0G9IZmd4Eh890T0HxWgdSiClafSHLM?=
- =?us-ascii?Q?/GEYjhghRK8erj05gaI/07Pr6nMCk7goD46vCnoOTfdIlhJqABLNP06fJW9u?=
- =?us-ascii?Q?cL0/zUPIqexBNHU/wewelsF9qLTsoIG3p6evwxR1hoMYT3yav4/LEsackP9k?=
- =?us-ascii?Q?iXm9QXL0kVWkB7nWVUW4UA3hVQPjvqYKeKlln9EMPqD7gPMXhyIHuLRCgqck?=
- =?us-ascii?Q?fxPR3qrSNGAeEZHRAQT6JvTdqjVr+LvBdWUmZnklY7Pmfz7/999jMyzJHUUA?=
- =?us-ascii?Q?VyFAbHLmOa7eo5hYmIdDT2vRezsgXy7ZewBy9PNjE9ThePlivrqJVhTXOWlF?=
- =?us-ascii?Q?5jK+A+Shzvcjo8rhd1nh+GKohHAESMsdpbMsVXO1dRAuDxhSMNrk9jMQAMgg?=
- =?us-ascii?Q?azsv+g9yUIsQ7pExkcVeC+tS+jUAwHYLKkeofU8Ad+fZ80unh65S/3S6/uyh?=
- =?us-ascii?Q?V+gXu0+DZZZaXei5mJg5HB8C?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cefba45e-34cf-4c81-0dff-08d96ce636c5
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4133.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2021 01:17:06.9047
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /98pKlYnxJxdyxazVQ0oysgGsstB19EgXyYso3eABL7e8exl/r4LEQHkeD62y3eTBdvLAf7kJujpa+gcZuOtTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3959
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 31, 2021 at 06:22:44PM +0200, Borislav Petkov wrote:
-> On Fri, Aug 27, 2021 at 01:32:40PM -0500, Michael Roth wrote:
-> > If the memory is allocated in boot/compressed/mem_encrypt.S, wouldn't
-> > kernel proper still need to create a static buffer for its copy?
-> 
-> Just like the other variables like sme_me_mask etc that file allocates
-> at the bottom. Or do you have a better idea?
+Add support for custom fan curves found on some ASUS ROG laptops.
 
-What did you think of the suggestion of defining it in sev-shared.c
-as a static buffer/struct as __ro_after_init? It would be nice to
-declare/reserve the memory in one place. Another benefit is it doesn't
-need to be exported, and could just be local with all the other
-snp_cpuid* helpers that access it in sev-shared.c
+- V1
+  + Initial patch work
+- V2
+  + Don't fail and remove wmi driver if error from
+    asus_wmi_evaluate_method_buf() if error is -ENODEV
+- V3
+  + Store the "default" fan curves
+  + Call throttle_thermal_policy_write() if a curve is erased to ensure
+    that the factory default for a profile is applied again
+- V4
+  + Do not apply default curves by default. Testers have found that the
+    default curves don't quite match actual no-curve behaviours
+  + Add method to enable/disable curves for each profile
+- V5
+  + Remove an unrequired function left over from previous iterations
+  + Ensure default curves are applied if user writes " " to a curve path
+  + Rename "active_fan_curve_profiles" to "enabled_fan_curve_profiles" to
+    better reflect the behavious of this setting
+  + Move throttle_thermal_policy_write_*pu_curves() and rename to
+    fan_curve_*pu_write()
+  + Merge fan_curve_check_valid() and fan_curve_write()
+  + Remove some leftover debug statements
+- V6
+  + Refactor data structs to store  array or u8 instead of strings.
+    This affects the entire patch except the enabled_fan_curves block
+  + Use sysfs_match_string in enabled_fan_curve block
+  + Add some extra comments to describe things
+  + Allow some variation in how fan curve input can be formatted
+  + Use SENSOR_DEVICE_ATTR_2_RW() to reduce the amount of lines per
+    fan+profile combo drastically
+- V7
+  + Further refactor to use pwm1_auto_point1_temp + pwm1_auto_point1_pwm
+    format, creating two blocks of attributes for CPU and GPU fans
+  + Remove storing of defualt curves and method to reset them. The
+    factory defaults are still populated in to structs on module load
+    so users have a starting point
+- V8
+  + Make asus_wmi_evaluate_method_buf() safe
+  + Take in to account machines that do not have throttle_thermal_policy
+    but do have a single custom fan curve. Thes machines can't use a 
+    throttle_thermal mode change to reset the fans to factory default if
+    fan curve is disabled so we need to write their stored default back.
+  + Formatting tidy and dev_err() use
+  + Extra comments to make certain things (such as above) more clear
+  + Give generated hwmon a more descriptive `name asus_custom_fan_curve`
 
-> 
-> > Would that be a reasonable approach for v6?
-> 
-> I don't like the ifdeffery one bit, TBH. I guess you should split it
-> and have a boot/compressed page and a kernel proper one and keep 'em
-> separate. That should make everything nice and clean at the cost of 2*4K
-> which is nothing nowadays.
+Luke D. Jones (1):
+  asus-wmi: Add support for custom fan curves
 
-I think I can address the ifdeffery by splitting the boot/proper routines
-into separate self-contained routines (and maybe move them out into
-boot/compressed/sev.c and kernel/sev.c, respectively), then having them
-just initialize the table pointer and create the copy using a common setter
-function, e.g.
+ drivers/platform/x86/asus-wmi.c            | 494 ++++++++++++++++++++-
+ include/linux/platform_data/x86/asus-wmi.h |   2 +
+ 2 files changed, 492 insertions(+), 4 deletions(-)
 
-  snp_cpuid_table_create(cc_blob, fixup_offset)
+-- 
+2.31.1
 
-and for boot/compressed.c fixup_offset would just be passed in as 0.
-
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpeople.kernel.org%2Ftglx%2Fnotes-about-netiquette&amp;data=04%7C01%7CMichael.Roth%40amd.com%7Cb4adf700d33e42ffe4be08d96c9b7fe6%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637660237404006013%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=nVGIpG0WAcqcHZWXK1%2BQoaPBoeCLwtkqgs8Mfgz%2Fr04%3D&amp;reserved=0
