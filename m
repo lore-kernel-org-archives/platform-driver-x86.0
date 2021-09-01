@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1620C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 15:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11116C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 15:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98803610A1
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 15:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED43060F3A
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 15:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343675AbhIAPZl (ORCPT
+        id S1343895AbhIAPyu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Sep 2021 11:25:41 -0400
-Received: from mail-4317.protonmail.ch ([185.70.43.17]:47912 "EHLO
-        mail-4317.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243718AbhIAPZl (ORCPT
+        Wed, 1 Sep 2021 11:54:50 -0400
+Received: from mail-40136.protonmail.ch ([185.70.40.136]:18977 "EHLO
+        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343916AbhIAPyt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Sep 2021 11:25:41 -0400
-X-Greylist: delayed 2694 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Sep 2021 11:25:41 EDT
-Date:   Wed, 01 Sep 2021 15:24:40 +0000
+        Wed, 1 Sep 2021 11:54:49 -0400
+Date:   Wed, 01 Sep 2021 15:53:47 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1630509882;
-        bh=JM4uDiMJsApQbN3SvBBRU1K31XYBclLBZcIW1vSbVtk=;
+        s=protonmail; t=1630511630;
+        bh=6uwVh0b32UrB8AU699TL5miHtqIG2EArWqGAgES5fzU=;
         h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=KkJ6n9nT8J4FgWAH+gPcfiAF1jmryaH0oUkIajigLutkBcsD26LyCNvKqZ6XZEUrF
-         oQjIxB3611QDA7NcjGD1trcub4a/zBsjC2hK0J6NTHIEiaQq/CypT+/fuVMhM1Kwb0
-         MaV6IS6Vcl4/0kifp6S/fH5+l/dY+gL/QJ5Zsp2A=
-To:     Luke Jones <luke@ljones.dev>
+        b=cAuQ4tDa7HILBtJqHA1uUf7JuJLcGr9/Eaxy1nkEoTSYz6FEIgWFhFvdeXadi2ZZl
+         rlSw6Y2bCw/0pdmV5MDh3i+ixXOK7pDb39s1uBUIRaKSPeZH4EzR+LLeMeS8V/R9L4
+         bScvJ2z8+CJv8roBTD1agb8tMN0k+qtibkoHs0IU=
+To:     Enver Balalic <balalic.enver@gmail.com>
 From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-        linux@roeck-us.net, platform-driver-x86@vger.kernel.org
+Cc:     mgross@linux.intel.com, jdelvare@suse.com,
+        platform-driver-x86@vger.kernel.org, linux@roeck-us.net,
+        hdegoede@redhat.com
 Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH v7] asus-wmi: Add support for custom fan curves
-Message-ID: <Z3uTWHyeRPzaHU0iSW56m1ltGsYr5DOfRoJLyGlfnObU0ph-mVf9M6KCbSV66AeY_voEARTrP6bOtqXS1ZubuSj4Cu25VSRu0VMBIf3whow=@protonmail.com>
-In-Reply-To: <BLFOYQ.DC67MOSNFFNW2@ljones.dev>
-References: <20210830113137.1338683-1-luke@ljones.dev> <20210830113137.1338683-2-luke@ljones.dev> <1o94oJFiia_xvrFrSPI_zG1Xfv4FAlJNY96x39rg-zX3-3N5Czw4KmTiJtzCy1So7kYXLu0FTkRkmwUUudeuTyLHSsx5sJGhfsZaYrXKEic=@protonmail.com> <BLFOYQ.DC67MOSNFFNW2@ljones.dev>
+Subject: Re: [PATCH v4] platform/x86: hp-wmi: add support for omen laptops
+Message-ID: <VFDoTRfsCLfG-Ur2bAXhPrTkSyFQXRt59bCTRHlNYsi9wvaZdzFcUnREgsP54RXJ4Lif_Md2ITa9OzVH4igOl5aPVUZ9D99HBchK2NqdKgU=@protonmail.com>
+In-Reply-To: <20210827123105.mlrpsfmpbcfunuqc@omen.localdomain>
+References: <20210827123105.mlrpsfmpbcfunuqc@omen.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -50,197 +50,204 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi
 
 
-> [...]
-> >>  --- a/drivers/platform/x86/asus-wmi.c
-> >>  +++ b/drivers/platform/x86/asus-wmi.c
-> >>  [...]
-> >>  +/*
-> >>  + * Returns as an error if the method output is not a buffer.
-> >> Typically this
-> >
-> > It seems to me it will simply leave the output buffer uninitialized
-> > if something
-> > other than ACPI_TYPE_BUFFER and ACPI_TYPE_INTEGER is encountered and
-> > return 0.
+> This patch adds support for HP Omen laptops.
+> It adds support for most things that can be controlled via the
+> Windows Omen Command Center application.
 >
-> Oops, see below inline reply:
+>  - Fan speed monitoring through hwmon
+>  - Platform Profile support (cool, balanced, performance)
+>  - Max fan speed function toggle
 >
-> >
-> >
-> >>  + * means that the method called is unsupported.
-> >>  + */
-> >>  +static int asus_wmi_evaluate_method_buf(u32 method_id,
-> >>  +=09=09u32 arg0, u32 arg1, u8 *ret_buffer)
-> >>  +{
-> >>  +=09struct bios_args args =3D {
-> >>  +=09=09.arg0 =3D arg0,
-> >>  +=09=09.arg1 =3D arg1,
-> >>  +=09=09.arg2 =3D 0,
-> >>  +=09};
-> >>  +=09struct acpi_buffer input =3D { (acpi_size) sizeof(args), &args };
-> >>  +=09struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> >>  +=09acpi_status status;
-> >>  +=09union acpi_object *obj;
-> >>  +=09u32 int_tmp =3D 0;
-> >>  +
-> >>  +=09status =3D wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 0, method_id,
-> >>  +=09=09=09=09     &input, &output);
-> >>  +
-> >>  +=09if (ACPI_FAILURE(status))
-> >>  +=09=09return -EIO;
-> >>  +
-> >>  +=09obj =3D (union acpi_object *)output.pointer;
-> >>  +
-> >>  +=09if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER) {
-> >>  +=09=09int_tmp =3D (u32) obj->integer.value;
-> >>  +=09=09if (int_tmp =3D=3D ASUS_WMI_UNSUPPORTED_METHOD)
-> >>  +=09=09=09return -ENODEV;
-> >>  +=09=09return int_tmp;
-> >
-> > Is anything known about the possible values? You are later
-> > using it as if it was an errno (e.g. in `custom_fan_check_present()`).
-> >
-> > And `obj` is leaked in both of the previous two returns.
+> Also exposes the existing HDD temperature through hwmon since
+> this driver didn't use hwmon before this patch.
 >
-> The return for the method we're calling in this patch returns 0 if the
-> input arg has no match.
+> This patch has been tested on a 2020 HP Omen 15 (AMD) 15-en0023dx.
 >
-> >
-> >
-> >>  +=09}
-> >>  +
-> >>  +=09if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER)
-> >>  +=09=09memcpy(ret_buffer, obj->buffer.pointer, obj->buffer.length);
-> >
-> > I would suggest you add a "size_t size" argument to this function, and
-> > return -ENOSPC/-ENODATA depending on whether the returned buffer is
-> > too
-> > big/small. Maybe return -ENODATA if `obj` is NULL, too.
+>  - V1
+>    Initial Patch
+>  - V2
+>    Use standard hwmon ABI attributes
+>    Add existing non-standard "hddtemp" to hwmon
+>  - V3
+>    Fix overflow issue in "hp_wmi_get_fan_speed"
+>    Map max fan speed value back to hwmon values on read
+>    Code style fixes
+>    Fix issue with returning values from "hp_wmi_hwmon_read",
+>    the value to return should be written to val and not just
+>    returned from the function
+>  - V4
+>    Use DMI Board names to detect if a device should use the omen
+>    specific thermal profile method.
+>    Select HWMON instead of depending on it.
+>    Code style fixes.
+>    Replace some error codes with more specific/meaningful ones.
+>    Remove the HDD temperature from HWMON since we don't know what
+>    unit it's expressed in.
+>    Handle error from hp_wmi_hwmon_init
 >
-> Got it. So something like this would be suitable?
+> Signed-off-by: Enver Balalic <balalic.enver@gmail.com>
+> ---
+>  drivers/platform/x86/Kconfig  |   1 +
+>  drivers/platform/x86/hp-wmi.c | 336 ++++++++++++++++++++++++++++++++--
+>  2 files changed, 325 insertions(+), 12 deletions(-)
 >
-> =09if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER)
-> =09=09if (obj->buffer.length < size)
-> =09=09=09err =3D -ENOSPC;
-> =09=09if (!obj->buffer.length)
-> =09=09=09err =3D -ENODATA;
-> =09=09if (err) {
-> =09=09=09kfree(obj);
-> =09=09=09return err;
-> =09=09}
-> =09=09memcpy(ret_buffer, obj->buffer.pointer, obj->buffer.length);
-> =09}
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index d12db6c316ea..2ab0dcf5b598 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -434,6 +434,7 @@ config HP_WMI
+>  =09depends on RFKILL || RFKILL =3D n
+>  =09select INPUT_SPARSEKMAP
+>  =09select ACPI_PLATFORM_PROFILE
+> +=09select HWMON
+>  =09help
+>  =09 Say Y here if you want to support WMI-based hotkeys on HP laptops an=
+d
+>  =09 to read data from WMI such as docking or ambient light sensor state.
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.=
+c
+> index 027a1467d009..44030f513453 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -22,9 +22,11 @@
+>  #include <linux/input/sparse-keymap.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/platform_profile.h>
+> +#include <linux/hwmon.h>
+>  #include <linux/acpi.h>
+>  #include <linux/rfkill.h>
+>  #include <linux/string.h>
+> +#include <linux/dmi.h>
 >
-> =09if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER)
-> =09=09int_tmp =3D (u32) obj->integer.value;
+>  MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
+>  MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
+> @@ -39,6 +41,25 @@ MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TAB=
+LET_MODE reporting (-1=3Daut
 >
-> =09kfree(obj);
+>  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
+>  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
+> +#define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
+> +
+> +/* DMI board names of devices that should use the omen specific path for
+> + * thermal profiles.
+> + * This was obtained by taking a look in the windows omen command center
+> + * app and parsing a json file that they use to figure out what capabili=
+ties
+> + * the device should have.
+> + * A device is considered an omen if the DisplayName in that list contai=
+ns
+> + * "OMEN", and it can use the thermal profile stuff if the "Feature" arr=
+ay
+> + * contains "PerformanceControl".
+> + */
+> +static const char * const omen_thermal_profile_boards[] =3D {
+> +=09"84DA", "84DB", "84DC", "8574", "8575", "860A", "87B5", "8572", "8573=
+",
+> +=09"8600", "8601", "8602", "8605", "8606", "8607", "8746", "8747", "8749=
+",
+> +=09"874A", "8603", "8604", "8748", "886B", "886C", "878A", "878B", "878C=
+",
+> +=09"88C8", "88CB", "8786", "8787", "8788", "88D1", "88D2", "88F4", "88FD=
+",
+> +=09"88F5", "88F6", "88F7", "88FE", "88FF", "8900", "8901", "8902", "8912=
+",
+> +=09"8917", "8918", "8949", "894A", "89EB"
+> +};
 >
-> =09if (int_tmp =3D=3D ASUS_WMI_UNSUPPORTED_METHOD)
-> =09=09return -ENODEV;
+>  enum hp_wmi_radio {
+>  =09HPWMI_WIFI=09=3D 0x0,
+> @@ -89,10 +110,18 @@ enum hp_wmi_commandtype {
+>  =09HPWMI_THERMAL_PROFILE_QUERY=09=3D 0x4c,
+>  };
 >
-> =09/* There is at least one method that returns a 0 with no buffer */
-> =09if (obj =3D=3D NULL || int_tmp =3D=3D 0)
-> =09=09return -ENODATA;
+> +enum hp_wmi_gm_commandtype {
+> +=09HPWMI_FAN_SPEED_GET_QUERY =3D 0x11,
+> +=09HPWMI_SET_PERFORMANCE_MODE =3D 0x1A,
+> +=09HPWMI_FAN_SPEED_MAX_GET_QUERY =3D 0x26,
+> +=09HPWMI_FAN_SPEED_MAX_SET_QUERY =3D 0x27,
+> +};
+> +
+>  enum hp_wmi_command {
+>  =09HPWMI_READ=09=3D 0x01,
+>  =09HPWMI_WRITE=09=3D 0x02,
+>  =09HPWMI_ODM=09=3D 0x03,
+> +=09HPWMI_GM=09=3D 0x20008,
+>  };
 >
-> =09return 0;
+>  enum hp_wmi_hardware_mask {
+> @@ -120,6 +149,13 @@ enum hp_wireless2_bits {
+>  =09HPWMI_POWER_FW_OR_HW=09=3D HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
+>  };
 >
+> +
+> +enum hp_thermal_profile_omen {
+> +=09HP_OMEN_THERMAL_PROFILE_DEFAULT     =3D 0x00,
+> +=09HP_OMEN_THERMAL_PROFILE_PERFORMANCE =3D 0x01,
+> +=09HP_OMEN_THERMAL_PROFILE_COOL        =3D 0x02,
+> +};
+> +
+>  enum hp_thermal_profile {
+>  =09HP_THERMAL_PROFILE_PERFORMANCE=09=3D 0x00,
+>  =09HP_THERMAL_PROFILE_DEFAULT=09=09=3D 0x01,
+> @@ -169,6 +205,8 @@ static struct platform_device *hp_wmi_platform_dev;
+>  static struct platform_profile_handler platform_profile_handler;
+>  static bool platform_profile_support;
+>
+> +static bool use_omen_thermal_profile;
 
-I had something like the following in mind:
-
-  int err =3D 0;
-  /* ... */
-  obj =3D output.pointer;
-  if (!obj)
-    return -ENODATA;
-
-  switch (obj->type) {
-  case ACPI_TYPE_BUFFER:
-    if (obj->buffer.length < size)
-      err =3D -ENODATA;
-    else if (obj->buffer.length > size)
-      err =3D -ENOSPC;
-    else
-      memcpy(ret_buffer, obj->buffer.pointer, size);
-    break;
-  case ACPI_TYPE_INTEGER:
-    switch (obj->integer.value) {
-      case ASUS_WMI_UNSUPPORTED_METHOD:
-        err =3D -EOPNOTSUPP;
-=09break;
-      default:
-        err =3D -ENODATA;
-=09break;
-    }
-    break;
-  default:
-    err =3D -ENODATA;
-    break;
-  }
-
-  kfree(obj);
-
-  return err;
-
-
-> >
-> >
-> >>  +
-> >>  +=09kfree(obj);
-> >>  +
-> >>  +=09return 0;
-> >>  +}
-> [...]
-> >>  +/*
-> >>  + * Called only by throttle_thermal_policy_write()
-> >>  + */
-> >
-> > Am I correct in thinking that the firmware does not actually
-> > support specifying fan curves for each mode, only a single one,
-> > and the fan curve switching is done by this driver when
-> > the performance mode is changed?
->
-> I'm not 100% certain on this. The WMI method 0x00110024 takes an arg
-> 0,1,2 which then returns some factory stored fan profiles, these fit
-> the profiles of ASUS_THROTTLE_THERMAL_POLICY_*, but with 1 and 2
-> swapped.
->
-> Looking at the SET part, it seems to write to a different location than
-> where the GET is fetching information.
->
-
-The, unfortunately, that is not as simple as I initially thought...
-
-
-> Because of the fact there are three sets of curves to get, I thought it
-> would be good for users to be able to set per profile. I don't think
-> the set is retained in acpi if the profile is switched.
->
-> Do you think it would be best to not have the ability to store per
-> profile in kernel?
-
-If there was a method to set a fan curve, and one to retrieve it,
-I would suggest just exposing that via the pwmN_auto_pointM_{pwm,temp}
-attributes on a hwmon device, and that the profile-dependent switching
-be implemented somewhere else. As far as I see, there is already
-existing infrastructure for integrating such a feature [0]
-(but please correct me if I'm wrong).
-
-This would simplify the kernel code, add no new ABI, and
-potentially provide greater control over policy for the
-user space.
-
-
-> How would I choose which profile get to populate the
-> initial data with if so?
-
-I assume there isn't a method that can query
-the current fan curve (or it is unknown)?
+I think this variable is not necessary, you set it once,
+and read it once. Maybe you could add a direct function
+call to `detect_is_omen_thermal_profile()` in `thermal_profile_setup()`?
 
 
 > [...]
+>  static int hp_wmi_read_int(int query)
+>  {
+>  =09int val =3D 0, ret;
+> @@ -302,6 +358,75 @@ static int hp_wmi_hw_state(int mask)
+>  =09return !!(state & mask);
+>  }
+>
+> +static int omen_thermal_profile_set(int mode)
+> +{
+> +=09char buffer[2] =3D {0, mode};
+> +=09int ret;
+> +
+> +=09if (mode < 0 || mode > 2)
+> +=09=09return -EINVAL;
+> +
+> +=09ret =3D hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
+> +=09=09=09=09   &buffer, sizeof(buffer), sizeof(buffer));
+> +
+> +=09if (ret)
+> +=09=09return ret < 0 ? ret : -EINVAL;
+> +
+> +=09return mode;
+> +}
+> +
+> +static bool detect_is_omen_thermal_profile(void)
+> +{
+> +=09int i;
+> +
+> +=09const char *board_name =3D dmi_get_system_info(DMI_BOARD_NAME);
 
-[0]: https://gitlab.com/asus-linux/asusctl
+It seems that this can be NULL. Most users of this function have
+a NULL check after the call, so please add one here as well.
+
+
+> +
+> +=09for (i =3D 0; i < ARRAY_SIZE(omen_thermal_profile_boards); i++) {
+> +=09=09if (strcmp(board_name, omen_thermal_profile_boards[i]) =3D=3D 0)
+> +=09=09=09return true;
+> +=09}
+
+Please see the `match_string()` function.
+
+
+> +
+> +=09return false;
+> +}
+> [...]
 
 
 Best regards,
