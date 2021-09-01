@@ -2,340 +2,137 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA14C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 22:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF3FC4320E
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 23:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03C566108E
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 22:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78A0C6108B
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Sep 2021 23:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232816AbhIAWCp (ORCPT
+        id S1345103AbhIAXNj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Sep 2021 18:02:45 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:49221 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232860AbhIAWCp (ORCPT
+        Wed, 1 Sep 2021 19:13:39 -0400
+Received: from mail-bn8nam12on2084.outbound.protection.outlook.com ([40.107.237.84]:50528
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S242620AbhIAXNj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Sep 2021 18:02:45 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id B700D3200124;
-        Wed,  1 Sep 2021 18:01:46 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 01 Sep 2021 18:01:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=eD2Cp1itsRC6wxZANFuIexTHV/hakXfB0J2wP7kN2
-        CA=; b=iE3bNH4VTtaonrnWiYCkd3Q2rfCo7Vhrm9r4U3mbUf+AX4ADuuivIrNf8
-        eNB126mKq6/wXVEDUN6UvqYNUkfKFe35Fc7FkYokkp/HGjMcMqa+2eb2bHQu8gIZ
-        FHhQ9MgDZQIDxU61Aoxkmio6BopT6d9dccLsshOpP9JKLFVLAlBFAVPihh9G91L0
-        uGuc0fUmgJTbVesDui5cmvl5bJuctyryDw53/qWi/oxjANnUBjf9Bh7fYVtieZVm
-        AlWZjuE5AYh1qVJ6wnduE+O3ElNFX/8D7jgJfaOD3z/0POovgVuFXCUgNxgvm95U
-        TWAnrpmb+ROIXbht5b3bD7xF/8Fug==
-X-ME-Sender: <xms:SfgvYdMFC9_0-y_GqEWvzgYIb_xMRR2hKIjB0aVtWBqZ8jRxgiBjKg>
-    <xme:SfgvYf8oZ39cXFds_usPIAw1vu-jtPBvJ-FFaCnst3ZDkYCGyHXExOHDdyMNimtmC
-    olkzCVbPrvWQYYMo_g>
-X-ME-Received: <xmr:SfgvYcTmNdJuCyfw3KcA9F6pwJvwDIoGl2EaXyZ1xXcfJoZ0SET3SWSKHRGtxORbcCNrYA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddvgedgtdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffuvffkjghfofggtgfgsehtqh
-    ertdertdhsnecuhfhrohhmpefnuhhkvgculfhonhgvshcuoehluhhkvgeslhhjohhnvghs
-    rdguvghvqeenucggtffrrghtthgvrhhnpeefleetjeeihffgveeiffelleeuteeiueejff
-    evkeduteegfeelffehleduhfdtffenucffohhmrghinhepghhithhlrggsrdgtohhmnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
-    hljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:SfgvYZvF2uf3GatXtZ3kTBdnwVZsnrmAmapWONDFb8XnadTG9BhwbA>
-    <xmx:SfgvYVcp1xY4G9je8bcoUv0zJI-MnCnXwMBDTwEr0rkuy-ZwuqFqvA>
-    <xmx:SfgvYV1g2xcq6emHhukedlDzFCQXzZozl_d8eeGGr9HPFnD9tHFdFg>
-    <xmx:SvgvYWpqx1Nl1syu5GjjKiV-lchSowMUIo9lFWXx7OqaM3jUWlwI-A>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 1 Sep 2021 18:01:40 -0400 (EDT)
-Date:   Thu, 02 Sep 2021 10:01:24 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v7] asus-wmi: Add support for custom fan curves
-To:     =?iso-8859-2?q?Barnab=E1s_P=F5cze?= <pobrn@protonmail.com>
-Cc:     linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-        linux@roeck-us.net, platform-driver-x86@vger.kernel.org
-Message-Id: <CUZRYQ.HUS5YU6QXUBU@ljones.dev>
-In-Reply-To: <Z3uTWHyeRPzaHU0iSW56m1ltGsYr5DOfRoJLyGlfnObU0ph-mVf9M6KCbSV66AeY_voEARTrP6bOtqXS1ZubuSj4Cu25VSRu0VMBIf3whow=@protonmail.com>
-References: <20210830113137.1338683-1-luke@ljones.dev>
-        <20210830113137.1338683-2-luke@ljones.dev>
-        <1o94oJFiia_xvrFrSPI_zG1Xfv4FAlJNY96x39rg-zX3-3N5Czw4KmTiJtzCy1So7kYXLu0FTkRkmwUUudeuTyLHSsx5sJGhfsZaYrXKEic=@protonmail.com>
-        <BLFOYQ.DC67MOSNFFNW2@ljones.dev>
-        <Z3uTWHyeRPzaHU0iSW56m1ltGsYr5DOfRoJLyGlfnObU0ph-mVf9M6KCbSV66AeY_voEARTrP6bOtqXS1ZubuSj4Cu25VSRu0VMBIf3whow=@protonmail.com>
-X-Mailer: geary/40.0
+        Wed, 1 Sep 2021 19:13:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jJbeOK5y5FG7ed3yoAVji29xs+ebcsfjzN15AS0XTLJMTP3FUKz40TmdXtLN+pT2Eg6+3arJUcO9G92/h3+dpAxBNwybpQC7U0TeQyGSE89qpHak9R04qPiWV5VRWodPPC47aEG4J//JK+lyP+qdDGqzQAe4yx/iSvRJ1MtbwLler3zqaiUmrfr0zntP1PcWrX2kDCVl9g2jHGBTkE1Agnf25FaIWc9fQ4XBRrSlakrjpcEsUFrEBicqltc809CUerj6roxDZ1UoBw/wTSpW2p6f9H14DHTd75SxlhhtanJYhzFxZeYOHfkDxwsE3OsU1665B1VVoBrqXryYa4lmSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xgKqu2l0QL3ZjHvoDy3w28i2haqI6cAPPuUatXqfO4k=;
+ b=l4ZqyVO97d2HVD2uTOVcDmKhVVzih2aua0NfzVbw4NzEFUZRTOhkfBvMVpPM5QZkFOecWgrVGARrnU+5JQNCo+UpeBB4cYTmw9rUnwyECqefm4XYTsor3ay+MHgEyKx4PGQFRkB6qu6+0DUIipUShW81H1368sa2UACoLVyupJ29xIvZZ/pZom7ZEL60hLyn6c1pClYmIZOlskSrjH/jGJL43O599uEN5PFs1yP3WENYpxfhtGVm4RhGweTEGQRvYdeEJHQ3reiSfHxlVe1XgM8gA67L1yO+cfC/IGtBDyR68Q3lwslyx8d8Fa9+6BK8dGLt/OD8LnjFoxvHqidUgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.35) smtp.rcpttodomain=t-8ch.de smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xgKqu2l0QL3ZjHvoDy3w28i2haqI6cAPPuUatXqfO4k=;
+ b=MD5YTQ7wM1ONUoe47S3RoU+fGy4mSMavnRiGUE9h6hoHmLwWoqQGdVJtJAFXcnpzXhKvRxybkeRtqsFq2S4JkIphSv23Sz3y9gfWppOqaNyyuP6v+upGrKJl+N+/W9Tc5NwaW0ypVH69B4sRMdaUXarxBdnAN3zgddineQtcA/TPDyJnplpXciTxf6ZNl11k7VDCS9novYZo3jmrq01nciTI8vSeofhN+v46K/xHbjwT+yQf41T4ESLQTfmQ5GYmLpN2IwVKhegYajL3+z/EN6egR4AOopMzmfaobTg1UIn62OJ3a6lesqPizMUN7xmi81pwpriiXRkE615Qfy0NbQ==
+Received: from CO2PR04CA0182.namprd04.prod.outlook.com (2603:10b6:104:5::12)
+ by MN2PR12MB4109.namprd12.prod.outlook.com (2603:10b6:208:1d9::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.24; Wed, 1 Sep
+ 2021 23:12:40 +0000
+Received: from CO1NAM11FT063.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:104:5:cafe::b4) by CO2PR04CA0182.outlook.office365.com
+ (2603:10b6:104:5::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19 via Frontend
+ Transport; Wed, 1 Sep 2021 23:12:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
+ smtp.mailfrom=nvidia.com; t-8ch.de; dkim=none (message not signed)
+ header.d=none;t-8ch.de; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.35; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.35) by
+ CO1NAM11FT063.mail.protection.outlook.com (10.13.175.37) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4478.19 via Frontend Transport; Wed, 1 Sep 2021 23:12:40 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 1 Sep
+ 2021 23:12:39 +0000
+Received: from ace.plattner.fun (172.20.187.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 1 Sep 2021
+ 23:12:39 +0000
+Subject: Re: [PATCH v4] platform/x86: Add driver for ACPI WMAA EC-based
+ backlight control
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Daniel Dadap <ddadap@nvidia.com>
+CC:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        <mario.limonciello@outlook.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        Darren Hart <dvhart@infradead.org>, <thomas@t-8ch.de>
+References: <70b81e33-c769-4cb8-0bae-5ee10a209389@nvidia.com>
+ <20210831224906.1072-1-ddadap@nvidia.com>
+ <CAHp75VcvhPL2dNy4HdoEU5FtuWQkG-t0tH5rAJRKpeG0iB9AUg@mail.gmail.com>
+X-Nvconfidentiality: public
+From:   Aaron Plattner <aplattner@nvidia.com>
+Message-ID: <c34cbe30-ecc4-aed4-2819-d8fbc7171392@nvidia.com>
+Date:   Wed, 1 Sep 2021 16:12:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHp75VcvhPL2dNy4HdoEU5FtuWQkG-t0tH5rAJRKpeG0iB9AUg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 884f6a9d-05d1-4198-1a15-08d96d9dfec5
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4109:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB410929AC28306A6F5D9FA5C3CDCD9@MN2PR12MB4109.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dQVyNE1K99Z2kT4Kl7DmffTfPlRR9iTb6FfxTWUedTIFj+jHoiArvaquWY+K1njwVAoH5vgNo56ePW+sbocf0GyYI3/TsA4Y70I8AqMckc7ZcxhnOUN1QFsgdZvTnHsrHE1ctorXNh1Ir2/2eQjtzegwC03Xj4y2bRT8hcDdo1xzixVc+Ro7o1sbU66r86ZTZV8OYXQB0HIFW/kEkhRL0RhCxczvt6ANP5OkzmbJKTc1TzP9Wn1z0hZZvXz+IqFqk8LKUh1FrsWyKhk53Q+D65UyKNo1sJLPH00c7k5Kmf4VG9+7howsJy8y76/Toal/MdodldblQM9ezyqRYLMpigzWYvSJIV94kbX6sbCxy4rFhxC1r22XbjCAnwbSur9X70OWzt7tz+qEx5x5/Ip3mob4LF1Cymk29UWxbwwgV+glD9YVylOKud8W0zZGto55TyDyYIvdydNclESKunK1oUkw0wfWIT5FhkHS0166YYSs6iqmq3mbXsBHQtYt1yssPH+glJxVSpG3UkN51MC8bkCbLKnSzm4wkXx8Vg4KrQ5/sIfB7ENI9LPAQ/9CG00d3RMIWKyVvL1ZOz80VQmEEdIFcgw2pPcniRcodXW17ip2ra/3uwZgk9EhAU5PbG335MaMxiiia0asNxlRDdlqwDehqSood6yyejUboeK7ZIukL4qlEyuHQYvCDVHNs3GC3vIM2H1P863P6B4kFnUzTQ==
+X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid04.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(396003)(346002)(39860400002)(376002)(36840700001)(8936002)(2616005)(86362001)(83380400001)(31696002)(336012)(316002)(426003)(36756003)(31686004)(186003)(26005)(6636002)(2906002)(36906005)(8676002)(53546011)(82740400003)(5660300002)(36860700001)(54906003)(4326008)(7636003)(32650700002)(70586007)(70206006)(16526019)(110136005)(356005)(82310400003)(478600001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2021 23:12:40.0049
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 884f6a9d-05d1-4198-1a15-08d96d9dfec5
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT063.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4109
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On 9/1/21 8:57 AM, Andy Shevchenko wrote:
+> On Wed, Sep 1, 2021 at 2:27 AM Daniel Dadap <ddadap@nvidia.com> wrote:
+>> A number of upcoming notebook computer designs drive the internal
+>> display panel's backlight PWM through the Embedded Controller (EC).
+>> This EC-based backlight control can be plumbed through to an ACPI
+>> "WMAA" method interface, which in turn can be wrapped by WMI with
+>> the GUID handle 603E9613-EF25-4338-A3D0-C46177516DB7.
+>>
+>> Add a new driver, aliased to the WMAA WMI GUID, to expose a sysfs
+>> backlight class driver to control backlight levels on systems with
+>> EC-driven backlights.
+>> Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
+> Seems like missed Co-developed-by. Or you are the wrong author. Fix accordingly.
 
+I wrote the initial version of this driver that we used internally for 
+testing, but Daniel almost completely rewrote it for upstreaming. I'd be 
+fine with just dropping me from the patch entirely and listing Daniel as 
+the author since it looks almost nothing like the code I wrote.
 
-On Wed, Sep 1 2021 at 15:24:40 +0000, Barnab=E1s P=F5cze=20
-<pobrn@protonmail.com> wrote:
-> Hi
->=20
->=20
->>  [...]
->>  >>  --- a/drivers/platform/x86/asus-wmi.c
->>  >>  +++ b/drivers/platform/x86/asus-wmi.c
->>  >>  [...]
->>  >>  +/*
->>  >>  + * Returns as an error if the method output is not a buffer.
->>  >> Typically this
->>  >
->>  > It seems to me it will simply leave the output buffer=20
->> uninitialized
->>  > if something
->>  > other than ACPI_TYPE_BUFFER and ACPI_TYPE_INTEGER is encountered=20
->> and
->>  > return 0.
->>=20
->>  Oops, see below inline reply:
->>=20
->>  >
->>  >
->>  >>  + * means that the method called is unsupported.
->>  >>  + */
->>  >>  +static int asus_wmi_evaluate_method_buf(u32 method_id,
->>  >>  +		u32 arg0, u32 arg1, u8 *ret_buffer)
->>  >>  +{
->>  >>  +	struct bios_args args =3D {
->>  >>  +		.arg0 =3D arg0,
->>  >>  +		.arg1 =3D arg1,
->>  >>  +		.arg2 =3D 0,
->>  >>  +	};
->>  >>  +	struct acpi_buffer input =3D { (acpi_size) sizeof(args), &args=20
->> };
->>  >>  +	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
->>  >>  +	acpi_status status;
->>  >>  +	union acpi_object *obj;
->>  >>  +	u32 int_tmp =3D 0;
->>  >>  +
->>  >>  +	status =3D wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 0, method_id,
->>  >>  +				     &input, &output);
->>  >>  +
->>  >>  +	if (ACPI_FAILURE(status))
->>  >>  +		return -EIO;
->>  >>  +
->>  >>  +	obj =3D (union acpi_object *)output.pointer;
->>  >>  +
->>  >>  +	if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER) {
->>  >>  +		int_tmp =3D (u32) obj->integer.value;
->>  >>  +		if (int_tmp =3D=3D ASUS_WMI_UNSUPPORTED_METHOD)
->>  >>  +			return -ENODEV;
->>  >>  +		return int_tmp;
->>  >
->>  > Is anything known about the possible values? You are later
->>  > using it as if it was an errno (e.g. in=20
->> `custom_fan_check_present()`).
->>  >
->>  > And `obj` is leaked in both of the previous two returns.
->>=20
->>  The return for the method we're calling in this patch returns 0 if=20
->> the
->>  input arg has no match.
->>=20
->>  >
->>  >
->>  >>  +	}
->>  >>  +
->>  >>  +	if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER)
->>  >>  +		memcpy(ret_buffer, obj->buffer.pointer, obj->buffer.length);
->>  >
->>  > I would suggest you add a "size_t size" argument to this=20
->> function, and
->>  > return -ENOSPC/-ENODATA depending on whether the returned buffer=20
->> is
->>  > too
->>  > big/small. Maybe return -ENODATA if `obj` is NULL, too.
->>=20
->>  Got it. So something like this would be suitable?
->>=20
->>  	if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER)
->>  		if (obj->buffer.length < size)
->>  			err =3D -ENOSPC;
->>  		if (!obj->buffer.length)
->>  			err =3D -ENODATA;
->>  		if (err) {
->>  			kfree(obj);
->>  			return err;
->>  		}
->>  		memcpy(ret_buffer, obj->buffer.pointer, obj->buffer.length);
->>  	}
->>=20
->>  	if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER)
->>  		int_tmp =3D (u32) obj->integer.value;
->>=20
->>  	kfree(obj);
->>=20
->>  	if (int_tmp =3D=3D ASUS_WMI_UNSUPPORTED_METHOD)
->>  		return -ENODEV;
->>=20
->>  	/* There is at least one method that returns a 0 with no buffer */
->>  	if (obj =3D=3D NULL || int_tmp =3D=3D 0)
->>  		return -ENODATA;
->>=20
->>  	return 0;
->>=20
->=20
-> I had something like the following in mind:
->=20
->   int err =3D 0;
->   /* ... */
->   obj =3D output.pointer;
->   if (!obj)
->     return -ENODATA;
->=20
->   switch (obj->type) {
->   case ACPI_TYPE_BUFFER:
->     if (obj->buffer.length < size)
->       err =3D -ENODATA;
->     else if (obj->buffer.length > size)
->       err =3D -ENOSPC;
->     else
->       memcpy(ret_buffer, obj->buffer.pointer, size);
->     break;
->   case ACPI_TYPE_INTEGER:
->     switch (obj->integer.value) {
->       case ASUS_WMI_UNSUPPORTED_METHOD:
->         err =3D -EOPNOTSUPP;
-> 	break;
->       default:
->         err =3D -ENODATA;
-> 	break;
->     }
->     break;
->   default:
->     err =3D -ENODATA;
->     break;
->   }
->=20
->   kfree(obj);
->=20
->   return err;
->=20
-
-Got it. Sometimes I forget switch/case exists. I'll adjust the v8 patch=20
-I sent out earlier.
-
->=20
->>  >
->>  >
->>  >>  +
->>  >>  +	kfree(obj);
->>  >>  +
->>  >>  +	return 0;
->>  >>  +}
->>  [...]
->>  >>  +/*
->>  >>  + * Called only by throttle_thermal_policy_write()
->>  >>  + */
->>  >
->>  > Am I correct in thinking that the firmware does not actually
->>  > support specifying fan curves for each mode, only a single one,
->>  > and the fan curve switching is done by this driver when
->>  > the performance mode is changed?
->>=20
->>  I'm not 100% certain on this. The WMI method 0x00110024 takes an arg
->>  0,1,2 which then returns some factory stored fan profiles, these fit
->>  the profiles of ASUS_THROTTLE_THERMAL_POLICY_*, but with 1 and 2
->>  swapped.
->>=20
->>  Looking at the SET part, it seems to write to a different location=20
->> than
->>  where the GET is fetching information.
->>=20
->=20
-> The, unfortunately, that is not as simple as I initially thought...
-
-We can add the fact that a variation exists with a more typical setup=20
-also. The G713Q has no throttle_thermal and in the dsdt dump looks like=20
-it possible can read back the curve that is set by the user. This works=20
-in our favour though.
-
->=20
->=20
->>  Because of the fact there are three sets of curves to get, I=20
->> thought it
->>  would be good for users to be able to set per profile. I don't think
->>  the set is retained in acpi if the profile is switched.
->>=20
->>  Do you think it would be best to not have the ability to store per
->>  profile in kernel?
->=20
-> If there was a method to set a fan curve, and one to retrieve it,
-> I would suggest just exposing that via the pwmN_auto_pointM_{pwm,temp}
-> attributes on a hwmon device, and that the profile-dependent switching
-> be implemented somewhere else. As far as I see, there is already
-> existing infrastructure for integrating such a feature [0]
-> (but please correct me if I'm wrong).
-
-There is. I develop asusctl in conjunction with these patches. I'd=20
-certainly like to find the best way to fit all of this together.
-
->=20
-> This would simplify the kernel code, add no new ABI, and
-> potentially provide greater control over policy for the
-> user space.
-
-I agree.
-
->=20
->=20
->>  How would I choose which profile get to populate the
->>  initial data with if so?
->=20
-> I assume there isn't a method that can query
-> the current fan curve (or it is unknown)?
-
-It looks like I need to adjust how pwm[n]_enable works anyway:
-
-`pwm[1-*]_enable`
-Fan speed control method:
-- 0: no fan speed control (i.e. fan at full speed)
-- 1: manual fan speed control enabled (using `pwm[1-*]`)
-- 2+: automatic fan speed control enabled
-
-So maybe on "manual" I can make it so the get method does what is in=20
-fan_curve_check_present() (and change that part also) and fetches the=20
-"defaults" on enable. This might even give us the fan curve that was=20
-set (and looks like it will on the machine that has no thermal throttle=20
-profile, v8 patch) - I'll try this anyway and see what it looks like.=20
-This seems to be the best approach given how the G713Q works anyway.
-
-The issue I have with the above is that it overwrites any curve set.=20
-But given that it'll most likely be managed in userspace that's maybe=20
-*not* an issue. Otherwise would it be sensible to add something like=20
-`pwm1_reset`? I don't see anything like that in the related docs=20
-though. `pwm1_reset` would be to re-read the defaults from the acpi=20
-method.
-
-Central to the above is that we can still read 0, 1, 2 curves from acpi=20
-- I was thinking to use the throttle_thermal mode to choose which one=20
-and that would be the only use of it. And won't store them as=20
-per-profile, which becomes a moot point when userspace is managing it=20
-anyway.
-
-Many thanks,
-Luke.
-
-
->=20
->=20
->>  [...]
->=20
-> [0]: https://gitlab.com/asus-linux/asusctl
->=20
->=20
-> Best regards,
-> Barnab=E1s P=F5cze
-
+-- Aaron
 
