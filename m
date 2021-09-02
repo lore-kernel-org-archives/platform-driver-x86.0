@@ -2,342 +2,203 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE1CC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 19:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C81C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 20:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F23E61102
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 19:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A9D61131
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 20:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234031AbhIBT7S (ORCPT
+        id S232045AbhIBUQS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Sep 2021 15:59:18 -0400
-Received: from mail-dm6nam11on2064.outbound.protection.outlook.com ([40.107.223.64]:29153
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        Thu, 2 Sep 2021 16:16:18 -0400
+Received: from mail-mw2nam08on2087.outbound.protection.outlook.com ([40.107.101.87]:7008
+        "EHLO NAM04-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S244285AbhIBT7O (ORCPT
+        id S1345678AbhIBUQR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Sep 2021 15:59:14 -0400
+        Thu, 2 Sep 2021 16:16:17 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MHqGCxMb49QPJMT3P3fds06ejrxc8JpLXhZETeYocXPr4+LTX65lkZqcAcjAiGd9X3KFPYQ6JpFirWx5gXSYO2EOIBJ3gl8Y6QEuPa/u6O/I0zxyfIQC/WaIt6dl1HVrWOWxszh0BHMs+iNH2oOYmx3jWB4aXqwQAqUyz7OCNSNXRktmE6KyxkT9lIG4OeL8/zeMhDYZeQPZLGa5bCwAx/HDpEcuxxKnqFcY7h31UrIVBbdE5WHXa1WUrgyt6uygGhTHWTPFmDBaEMlQ3+/I+yVnJUx5qwESd7XaQxVIyT4TIPQugtDL0Hz+mUMPMoD06tIHPAdm0V1ps/+3Fe2m1Q==
+ b=mfDA0qsEq1rdlU4b97oEQmAzYzX/S9sFW1thABKwvtsYzaHPUSrKVLUhAhuKPGoDCs1L/7weRv0L3/4sahY7tsonWuM+80tWoUdbTPxkU/DcpWVn3kr/WbBIAMsclSP271ermEbwzE10X243ks8DZ+zzkbkIZE317gVI+cp8HEqor3fi9U9HC8hD3k3mTusBRtweQUWN+EGLyIXKkY/N0yGX1dU5+AyYhgIzvQ8F56YQJEaA12z9A95Z0pqnd1BvvP5/VSrjsUwLERInvyJpvcRlcxLzUXLhj9+ZYq1hpdhBGW6v4ZNUf2pCGwoPr4rmZx/8TDKgMfQduYr8f098dw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=akTcLH0xyVsnbrJwZSmmka2JWwRXl69BnJ7k/ieocBI=;
- b=YlXPfBRhHLwQsCqVM1GezIMKEFFgpxptrR8p6jPPYcSuAPKr/st61FlSfkKmetgUr4IlXzBMIkt5GCSB6rl+diY8pd3Pmq/xzdjMNTmyZzrPvBmS5Y3sbzJLgw4dGQpR+l7cfwYZQMxUahYwB4BThc0RX2G4JDq5E4qaH6pkr0rxml75aOgkZfQNl/upfz9pAJRh/pIUBLCbRrmdhhOmZS9onldY+9MElpzi1VSKDqkftUhMKu3pFvQPaSb224zvCjWrQaSGJ2cJfuvmeEm3WJPbd4JLwPR9IwU2W3G2aXZS0fv6AxdxGT1VLJvm6/H8fmqrg0WEmS9uZ4ReKHObwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=akTcLH0xyVsnbrJwZSmmka2JWwRXl69BnJ7k/ieocBI=;
- b=EUWHoquAdmcFvkmjrgl3TSEkL9iKTDvR731aDYPUnlQkcrE9t74X7S77PEjrn9cOTAewvGP2n6Zmi4ATh8TDiZLA3DHd7hYjyF946D+50MbdFuJQtgnfy4xjuL1raxwr/+dSs6tVEABKk4JCklMyCKb21K/dC/vTI90u9MN59ao=
-Authentication-Results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by SN1PR12MB2511.namprd12.prod.outlook.com (2603:10b6:802:23::12) with
+ bh=F9Z/u2+Fj42Mc6LUumkf1bF/e/5CEixPv9qAOVAZbKY=;
+ b=LY3DQOA16cYAR4xpU26lJ9gJ7cLdPGcJ/spNNR9rEEr03YTtnEFe1TYG6Ym/6lRxR416RGzijQNVif8pe1dUnOtNZCCyryH3YRQGcd279QJ38gL2S/BpXtwGjqxe3BX+Yyr57Whdc5CcAADU7RA4R2Gq8/ULbMKACBGWBijF+1+6Agm8w5YuMOxcpf1WHCNI07aeVMTzji4TiwlEjDy7rUw2OCggNs13eaJyQxyXAkMB39SUZZR0FpGDcEaNY6MPumugwy+rU8MIFrgOoYzo365V3kNo6S5WEWM6dBP8QJCBfuzoEhMcubzFnHcgy592k7IcfONChEOIcbpNh3/8gw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.35) smtp.rcpttodomain=t-8ch.de smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F9Z/u2+Fj42Mc6LUumkf1bF/e/5CEixPv9qAOVAZbKY=;
+ b=QEGPPMr9rWyPbRGmRN8sIm8NWEslcY/r0Q/jfzuS+h/6yqqR/4yrPwljIa9hctYG4W9m4nrGfze1nFR7GKdFhXPbq/jXuEhBM1LR9fx/LQbt++X/NI+0bhKtoM2pAm8/WWNYE2MIxgloG6gFtqBYErHvvx+dthnrPpPT2Zp08hpcPl3GKPAs8CXcArdbyziw0DgORE0uEMuasb//bHsmxodjH4gDMBurb6AmQfn9Ge4EspHdGQEa2zKl5J12u5f4hSYYRJULVRd8LglU0b5z+8gr6UetB+4nX28vetjDxQAoHaBnSAnBhfp2Eua+KEjglvKHuMkerZmIY4Ahx0nrAA==
+Received: from BN9PR03CA0724.namprd03.prod.outlook.com (2603:10b6:408:110::9)
+ by BN7PR12MB2738.namprd12.prod.outlook.com (2603:10b6:408:2d::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19; Thu, 2 Sep
- 2021 19:58:13 +0000
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::78b7:7336:d363:9be3]) by SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::78b7:7336:d363:9be3%6]) with mapi id 15.20.4478.021; Thu, 2 Sep 2021
- 19:58:13 +0000
-Cc:     brijesh.singh@amd.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH Part1 v5 35/38] x86/sev: Register SNP guest request
- platform device
-To:     Borislav Petkov <bp@alien8.de>
-References: <20210820151933.22401-1-brijesh.singh@amd.com>
- <20210820151933.22401-36-brijesh.singh@amd.com> <YTD+go747TIU6k9g@zn.tnic>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <5428d654-a24d-7d8b-489c-b666d72043c1@amd.com>
-Date:   Thu, 2 Sep 2021 14:58:11 -0500
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.24; Thu, 2 Sep
+ 2021 20:15:16 +0000
+Received: from BN8NAM11FT027.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:110:cafe::55) by BN9PR03CA0724.outlook.office365.com
+ (2603:10b6:408:110::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.17 via Frontend
+ Transport; Thu, 2 Sep 2021 20:15:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
+ smtp.mailfrom=nvidia.com; t-8ch.de; dkim=none (message not signed)
+ header.d=none;t-8ch.de; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.35; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.35) by
+ BN8NAM11FT027.mail.protection.outlook.com (10.13.177.96) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4478.19 via Frontend Transport; Thu, 2 Sep 2021 20:15:15 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Sep
+ 2021 20:15:13 +0000
+Received: from [10.20.23.105] (172.20.187.6) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Sep 2021
+ 20:15:12 +0000
+From:   Daniel Dadap <ddadap@nvidia.com>
+Subject: Re: [PATCH v4] platform/x86: Add driver for ACPI WMAA EC-based
+ backlight control
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        <mario.limonciello@outlook.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        Darren Hart <dvhart@infradead.org>, <thomas@t-8ch.de>,
+        Aaron Plattner <aplattner@nvidia.com>
+References: <70b81e33-c769-4cb8-0bae-5ee10a209389@nvidia.com>
+ <20210831224906.1072-1-ddadap@nvidia.com>
+ <CAHp75VcvhPL2dNy4HdoEU5FtuWQkG-t0tH5rAJRKpeG0iB9AUg@mail.gmail.com>
+ <91aa0937-a887-5233-5516-5137d96ae8d7@nvidia.com>
+ <CAHp75Veyft+Ssb3xfasRawksozGHsnXiwoeUzJQ_Jn6u-uZsrQ@mail.gmail.com>
+Message-ID: <f6dc5d3a-f46c-4cbe-4845-5467a7c0c67b@nvidia.com>
+Date:   Thu, 2 Sep 2021 15:15:10 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-In-Reply-To: <YTD+go747TIU6k9g@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA9PR13CA0173.namprd13.prod.outlook.com
- (2603:10b6:806:28::28) To SN6PR12MB2718.namprd12.prod.outlook.com
- (2603:10b6:805:6f::22)
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Received: from [10.236.31.95] (165.204.77.1) by SA9PR13CA0173.namprd13.prod.outlook.com (2603:10b6:806:28::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.4 via Frontend Transport; Thu, 2 Sep 2021 19:58:12 +0000
+In-Reply-To: <CAHp75Veyft+Ssb3xfasRawksozGHsnXiwoeUzJQ_Jn6u-uZsrQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.6]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 76874350-8662-4b76-a8b8-08d96e4bff01
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2511:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB2511F7177E788180A1C0ABC5E5CE9@SN1PR12MB2511.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Office365-Filtering-Correlation-Id: 135e198d-0c4b-4285-669d-08d96e4e60c5
+X-MS-TrafficTypeDiagnostic: BN7PR12MB2738:
+X-Microsoft-Antispam-PRVS: <BN7PR12MB2738C598E1336EFB11C299BEBCCE9@BN7PR12MB2738.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: i4kuJ3YWuVogLQy8ZvqSasI6CbT2JPGV8KKecHBv/5/QxG7oExHKoPHn5x2V6kSGq9Ez9VBR+R+ZaWCFvDkCWQU/YZX3ubwj4xNfiyYetxew3KskcEgQvLdPjQKOODjFUqD4EgrqivYGBcAJViq6Rm3lbTgnQ3kCgyMjSTt/bSMWWoldWSZIcy92k2ZjfxPDj9ryHvA8bsqHkSfnP572Y+ZOlZuq0/6/KZ1LUrSU+UIyojKkWK6fFLJC5ZAeWck4KMFOQSu1JG0UrSv6ZW6z+70tv1qHLJBVF2Namnla2r+F5EECPU232+0YdwKoQmvoEAOHpNRr+0DAwpVsUc1BUy7rFHHDQiGiKulQrz+XrWuVPeDsw/XNkRTlbEVjuJixprm9Y9FVUpsrZPwzPkrzHAx3mgzPqvR71y5zr9Fv8wG2TGRq6IvaER+W6XNL99Jk8BAnSj2fUt6i7z5HPzxa7vjWApcZcxEIDZDQfqwDODOE0jXHJ3BW/9pcMObjm8xC38MrE3xtD6APUc/iRdFKLpJ3M1+jUdCQ3QOA6TvqSce79MA6Xsyx8lxVCuRcJpSFgkK8H2MAFu7ypyMfSH3jkBiSNJoKCbx4bfrjK2kljIZGO659WukvI78Cdj7ieAV2KIsVkeKlUpnRSept9C5OHF36SuQCBB4Wq2nJZkIx63MutBkDBn+U9Z5z2dxcF7Zp3alVckUfPJ1dk04wPIeqTQHCGckOTCBHvE5j28uwSBOfm7MEM9wKDx8L6LgzwOFHgK4fpMPB8otNnVunUpuvVg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(316002)(66946007)(66556008)(66476007)(38350700002)(36756003)(52116002)(6916009)(8676002)(31696002)(16576012)(54906003)(5660300002)(31686004)(38100700002)(8936002)(478600001)(86362001)(2906002)(53546011)(7416002)(7406005)(2616005)(26005)(186003)(6486002)(956004)(44832011)(4326008)(83380400001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZDZDQmszbEVjTjVwN0lrcDhKdWJ6YU1hUnZaLytMck9qenJ1bDEwazlmWXpO?=
- =?utf-8?B?OWNsbVNVblZ5VHJTNDE4SHRaemhzOWFQK1pEcUp2TUNLNHc0dU5XR0YwYjc3?=
- =?utf-8?B?VGx3NGZML0FCMjE2aVg2VUkxS2VRU041WGY4MHQ4U0FJdklXR1VMekZYcGNV?=
- =?utf-8?B?bDJGZG1MaHRtd3dmMy9id2NqbHUxMUhYWFVna0t4WThSanBOV2xQbmxDKzQr?=
- =?utf-8?B?c2VpbGl2ODNRU1NOL2lvVWwzRlhRTzVPZDNnTnRta1V1OTZVcm5FR2w5Wjkv?=
- =?utf-8?B?cGsvZTZxSlZ3QVU3UTkyYTFsMkVxNWMrdjJINzJYZjZwSHJndEVEWHRsQ01V?=
- =?utf-8?B?Zm13VVlYTHVObFBNdmNwWXVmRE1GeWx2K21WMWtXZUNYYTcxWVN6ZGJOZnlq?=
- =?utf-8?B?OEtFR3Nsalk2V3dubmlFVnkyRWR1K3ZTL2VBWTQ3SWFGV1R3QWhNQmlMNXcx?=
- =?utf-8?B?LytwL1FyREFLanltVkd3ZmZWWFZJN2oxN3QrdVNBS3lIUUFpR3UwWGNCaGhM?=
- =?utf-8?B?cGYwb2JNZDhyRGdFKzNaN2xvSjlRVXl6WVRTazJWazBxWkd5ZlBLUkJ5a3F0?=
- =?utf-8?B?d3FLdnFqN2hKK3VpcjFyNUtvUHlnK2pXeUs1UTc4TzcxOUp1bExxQzdMbGVz?=
- =?utf-8?B?YUxTOHFQbG8yZHBJV1MzSjVQRmRYRTE1K0NQeTdlYWloMnlXYTlOR1lTRC9L?=
- =?utf-8?B?dEdNdHQwb2NKalJtWUUzR3pSYnp4MCtVdGJHcTVTTVA2eGlVNWc0OHQ4Y2ZU?=
- =?utf-8?B?UmhaeWJWQkdiNURjekUxWWpxbmltUGVGZmwveGlqVXkyQUh4a1U2N2xZcHFV?=
- =?utf-8?B?bVFJa0pCaWVacjJpUWFSSlZ3ZUFDWHduMjArWWp2UVJpeEYvdnV2Y0ZQWjN6?=
- =?utf-8?B?VFpJMTJNNFVGaytRdVQwSlZISi9TTnQ3ODdSZkRzRnBPWUhNQnFYVkl0S2Y1?=
- =?utf-8?B?alRqS1g4aFEyckgzY2ZvZzVETjY3U3ZmWDk2bjZnNWpzVkJaMCtRdmRQZU44?=
- =?utf-8?B?LytZL1lYcGlMOVMwbUtYSlUzOElPYUNlTkZ5MG9XdGtXSWVZa2xLaGZxRXFv?=
- =?utf-8?B?Qng5L1N3S041cEhDOTlpZy9MV0wyREtaUmIrdWdsa0QrKzk3bmlubTA5dEpj?=
- =?utf-8?B?QWFjYzFRUDRPdmpoZUsyb3NaaWxaZWZPMnp6QmhROUdIWG9XbnV6MlF1STRh?=
- =?utf-8?B?NVUwU2Fpd29sZmVYTkp6OHRoQ0JMcGpSS1h0NUEyTk90cmxlQjlyaEtqV0o1?=
- =?utf-8?B?Tjl5QU5xQnRhVUNpRkFLRktaN0lEc1RwWTFxeVF6ZlpoTVE5OHk5cTRnRS83?=
- =?utf-8?B?MXd0WFc2TTFQb254WFhKak80cUQzdEZMRXpleWpzUCsvLzZob2lhZHBWQ2g3?=
- =?utf-8?B?eVBjYXNIQ1UzaEErUXNMRUxDVjV3dExiVy9pVXMwYmpsT25XZUxmK2VDWmlC?=
- =?utf-8?B?S1Q2VXNCOUE4S3ByUVdoT0V3Q1RYWkRuOGp4OFJnbUtDai9jMWNKQXYwaFRy?=
- =?utf-8?B?a1JXTExsYUJZS3pPS1p4VVU1UXRUZ3IzVVlPSWk1aHlkYWdMVVZ6cFFkSTE0?=
- =?utf-8?B?dWptWHg1MFdaOXhNTzAreURGNW9YajJwS2JSVU9jdUJ0cjRWMGJDdlpidExW?=
- =?utf-8?B?Z3k3RzdNOG4wUmZqU0dRRmpETEQzanh2MUtmYTBQaDF0bmdUbXlDREJodDlZ?=
- =?utf-8?B?Y3lqaUpuWjU0S1B6WnZvZ1k4Z09zcjlsUldNaHR1bTVBUXVpaWhPcGYrb2Zv?=
- =?utf-8?Q?Lad/egsVQOYEGvlYzA9waj98IlfNtRPPq7xnNTA?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76874350-8662-4b76-a8b8-08d96e4bff01
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2021 19:58:13.2275
+X-Microsoft-Antispam-Message-Info: zYGgXvCsOZ9ZajhHsKYGC5eiF18mhw0st15UaPBO1xSIMzaJ7zxsIn2WY3qxgBRdvG8dxj+QIrmRmDpJZOC2fuFxZOrAO4//e7qPaHdlTvU+q7yv4Qp0IFXXOn/C6tTb8nC5KOkdGYA7YAl5nxD9iOG/i+reHEVg0QQ+CFDEHt1Ni8WEs4vklM370vaQu9K02bJzmCuzpMMvjYHhqhAnRMBqomkbZ1e/1IU66QiVdvzfX9lMDMhnNHnGX7RBXZu7cU6vYy+oXP/Hz0E3V3VgvdZTmj0ariMzzIJoIUJsEx4qjYrZswsE4LvkTTNbdg6zxADQFbdVCdAVxIu9yD5RAXMLt4UTwm+t3KPQMJDPzMQjzL6SI7lTpotEhQl96FdxXu2Ob/IkPmrrdC3qsvAb+LF48bdKnmDrnW3AUxLusqEsl/EETW8x624wEOAVp/ogBv++w952/bV5YQgWTNrE712YITi3hZYrmBPjAPxbKSoi4SHFA4hBYIojWTHEYGCkeC7GADXwVu1+g8t7R8bszE9YzJJ4v7VIa/GAzXmZFIKwAkudJh2FGPplE27VBGYSbK3qNFzEjXDcQAIZtv/i2EP7J5YdJtbfUnMj0ieLwKRu4SGXNI9pwh+5Dso0RmC7jr3VhD4y3DkHGD4EOF77rxM6zWBlzVeJt8Bj/0WaE4B+lFSQg5tmh7V/jQSuASAqDKUeYix7d4JkeoFaZYto48bnOvr8mebc6VZDgknVx58=
+X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid02.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(346002)(396003)(376002)(39860400002)(36840700001)(32650700002)(8676002)(26005)(6916009)(53546011)(186003)(16526019)(478600001)(8936002)(107886003)(316002)(5660300002)(54906003)(31686004)(426003)(70586007)(36906005)(356005)(2616005)(16576012)(4326008)(70206006)(36756003)(31696002)(83380400001)(2906002)(7636003)(82740400003)(86362001)(82310400003)(336012)(36860700001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2021 20:15:15.8060
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fe/o2v03R/8HqmeUQC36QTtd4g6URpR3Phojwk8IDP/ycH3tSAkjaQOyEPToMcoTh22GS5c6PJzldL12DyKVLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2511
+X-MS-Exchange-CrossTenant-Network-Message-Id: 135e198d-0c4b-4285-669d-08d96e4e60c5
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT027.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR12MB2738
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-
-
-On 9/2/21 11:40 AM, Borislav Petkov wrote:
-> On Fri, Aug 20, 2021 at 10:19:30AM -0500, Brijesh Singh wrote:
->> Version 2 of GHCB specification provides NAEs that can be used by the SNP
-> 
-> Resolve the "NAE" abbreviation here so that it is clear what this means.
-> 
-Noted.
-
->> guest to communicate with the PSP without risk from a malicious hypervisor
->> who wishes to read, alter, drop or replay the messages sent.
-> 
-> This here says "malicious hypervisor" from which we protect from...
-> 
->> In order to communicate with the PSP, the guest need to locate the secrets
->> page inserted by the hypervisor during the SEV-SNP guest launch. The
-> 
-> ... but this here says the secrets page is inserted by the same
-> hypervisor from which we're actually protecting.
-> 
-
-The content of the secret page is populated by the PSP. Hypervisor 
-cannot alter the contents; all it can do tell the guest where the 
-secrets page is present in the memory. The guest will read the secrets 
-page to get the VM communication key and use that key to encrypt the 
-message send between the PSP and guest.
-
-
-> You wanna rephrase that to explain what exactly happens so that it
-> doesn't sound like we're really trusting the HV with the secrets page.
-> 
-
-Sure, I will expand it a bit more.
-
->> secrets page contains the communication keys used to send and receive the
->> encrypted messages between the guest and the PSP. The secrets page location
->> is passed through the setup_data.
->>
->> Create a platform device that the SNP guest driver can bind to get the
->> platform resources such as encryption key and message id to use to
->> communicate with the PSP. The SNP guest driver can provide userspace
->> interface to get the attestation report, key derivation, extended
->> attestation report etc.
->>
->> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
->> ---
->>   arch/x86/kernel/sev.c     | 68 +++++++++++++++++++++++++++++++++++++++
->>   include/linux/sev-guest.h |  5 +++
->>   2 files changed, 73 insertions(+)
-> 
+On 9/2/21 4:35 AM, Andy Shevchenko wrote:
+> On Thu, Sep 2, 2021 at 5:37 AM Daniel Dadap<ddadap@nvidia.com>  wrote:
+>> On 9/1/21 10:57 AM, Andy Shevchenko wrote:
+>>> On Wed, Sep 1, 2021 at 2:27 AM Daniel Dadap<ddadap@nvidia.com>  wrote:
 > ...
-> 
->> +static u64 find_secrets_paddr(void)
->> +{
->> +	u64 pa_data = boot_params.cc_blob_address;
->> +	struct cc_blob_sev_info info;
->> +	void *map;
->> +
->> +	/*
->> +	 * The CC blob contains the address of the secrets page, check if the
->> +	 * blob is present.
->> +	 */
->> +	if (!pa_data)
->> +		return 0;
->> +
->> +	map = early_memremap(pa_data, sizeof(info));
->> +	memcpy(&info, map, sizeof(info));
->> +	early_memunmap(map, sizeof(info));
->> +
->> +	/* Verify that secrets page address is passed */
-> 
-> That's hardly verifying something - if anything, it should say
-> 
-> 	/* smoke-test the secrets page passed */
-> 
-Noted.
-
->> +	if (info.secrets_phys && info.secrets_len == PAGE_SIZE)
->> +		return info.secrets_phys;
-> 
-> ... which begs the question: how do we verify the HV is not passing some
-> garbage instead of an actual secrets page?
-> 
-
-Unfortunately, the secrets page does not contain a magic header or uuid 
-which a guest can read to verify that the page is actually populated by 
-the PSP. But since the page is encrypted before the launch so this page 
-is always accessed encrypted. If hypervisor is tricking us then all that 
-means is guest OS will get a wrong key and will not be able to 
-communicate with the PSP to get the attestation reports etc.
+>
+>>>> +#include <linux/backlight.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/wmi.h>
+>>> types.h ?
+>>> mod_devicetable.h ?
+>> Evidently, these must already be implicitly picked up by the headers
+>> which I am explicitly including here. I can see the argument for
+>> types.h, since it's always possible that future changes to the kernel
+>> might remove it from the implicit include chain, but I'm not certain why
+>> you're recommending mod_devicetable.h here. If it's because I use the
+>> MODULE_DEVICE_TABLE() macro, that seems to be defined in module.h.
+> No, it's because of the ID table type which leaves there.
+>
+> Basically you have to find a compromise between what to include and
+> what to not. At least those I have mentioned are kinda core stuff that
+> usually should be included explicitly in the modules like this driver.
 
 
-> I guess it is that:
-> 
-> "SNP_LAUNCH_UPDATE can insert two special pages into the guest’s
-> memory: the secrets page and the CPUID page. The secrets page contains
-> encryption keys used by the guest to interact with the firmware. Because
-> the secrets page is encrypted with the guest’s memory encryption
-> key, the hypervisor cannot read the keys. The CPUID page contains
-> hypervisor provided CPUID function values that it passes to the guest.
-> The firmware validates these values to ensure the hypervisor is not
-> providing out-of-range values."
-> 
->  From "4.5 Launching a Guest" in the SNP FW ABI spec.
-> 
-> I think that explanation above is very important wrt to explaining the
-> big picture how this all works with those pages injected into the guest
-> so I guess somewhere around here a comment should say
-> 
-
-I will add more explanation.
-
-> "See section 4.5 Launching a Guest in the SNP FW ABI spec for details
-> about those special pages."
-> 
-> or so.
-> 
->> +
->> +	return 0;
->> +}
->> +
->> +static int __init add_snp_guest_request(void)
-> 
-> If anything, that should be called
-> 
-> init_snp_platform_device()
-> 
-> or so.
-> 
-
-Noted.
-
->> +{
->> +	struct snp_secrets_page_layout *layout;
->> +	struct snp_guest_platform_data data;
->> +
->> +	if (!sev_feature_enabled(SEV_SNP))
->> +		return -ENODEV;
->> +
->> +	snp_secrets_phys = find_secrets_paddr();
->> +	if (!snp_secrets_phys)
->> +		return -ENODEV;
->> +
->> +	layout = snp_map_secrets_page();
->> +	if (!layout)
->> +		return -ENODEV;
->> +
->> +	/*
->> +	 * The secrets page contains three VMPCK that can be used for
-> 
-> What's VMPCK?
-> 
-
-VM platform communication key.
-
->> +	 * communicating with the PSP. We choose the VMPCK0 to encrypt guest
-> 
-> "We" is?
-> 
->> +	 * messages send and receive by the Linux. Provide the key and
-> 
-> "... by the Linux."?! That sentence needs more love.
-> 
-
-I will expand comment a bit more.
-
->> +	 * id through the platform data to the driver.
->> +	 */
->> +	data.vmpck_id = 0;
->> +	memcpy_fromio(data.vmpck, layout->vmpck0, sizeof(data.vmpck));
->> +
->> +	iounmap(layout);
->> +
->> +	platform_device_add_data(&guest_req_device, &data, sizeof(data));
-> 
-> Oh look, that function can return an error.
-> 
-
-Yes, after seeing Dov comment I am adding more checks and return failure.
+Okay, thanks. I suppose I should have <linux/acpi.h> as well: I 
+originally had that on there, then removed it when I realized that it's 
+included implicitly via <linux/wmi.h>, but I do use some ACPI types and 
+macros that are defined in that header.
 
 
->> +
->> +	if (!platform_device_register(&guest_req_device))
->> +		dev_info(&guest_req_device.dev, "secret phys 0x%llx\n", snp_secrets_phys);
-> 
-> Make that message human-readable - not a debug one.
-> 
+> ...
+>
+>>>> +enum wmaa_get_or_set {
+>>>> +       WMAA_GET = 0,
+>>>> +       WMAA_SET = 1,
+>>>> +       WMAA_GET_MAX = 2
+>>> Is it part of HW protocol? Otherwise drop assignments.
+>> Does ACPI count as HW here? I'd certainly prefer to keep the
+>> assignments, since the other side of this interface is not in the Linux
+>> kernel.
+> Yes, that counts as FW and as you noticed out of the Linux kernel realm.
+>
+>>>> +};
+> ...
+>
+>>>> + */
+>>>> +enum wmaa_source {
+>>>> +       WMAA_SOURCE_GPU = 1,
+>>>> +       WMAA_SOURCE_EC = 2,
+>>>> +       WMAA_SOURCE_AUX = 3
+>>> Missed comma.
+>> Oops. I am definitely a fan of using commas here, but I removed the
+>> commas that I had in place for the last elements of these enums, and
+>> members of static initialized structs, because I was trying to more
+>> broadly apply feedback from earlier to drop the terminal comma in the
+>> static initialized device table. I realize now that this feedback was
+>> meant only for the case of the empty struct terminator element in the
+>> device table.
+> Not only, the _MAX in the above enum is correct in leaving commas out.
 
-Sure.
 
-thank
+No, I think it does need a comma, unless I'm misunderstanding why you're 
+saying it doesn't. WMAA_GET_MAX here isn't saying "this is the final 
+element of the enum which is also a count of the 'real' enum values"; 
+it's saying "retrieve the maximum valid brightness level from the 
+firmware". I renamed the enumerant to WMAA_GET_MAX_LEVEL to avoid 
+aliasing with the common "_MAX" convention for the final value defined 
+in an enum.
+
+
+>
+>>>> +};
+> ...
+>
+>>>> +       backlight = devm_backlight_device_register(
+>>>> +               &w->dev, "wmaa_backlight",
+> Strange indentation, btw.
+
+
+Indeed. I'm not totally sure why I did it that way, maybe because the 
+long variable and function name didn't leave much space for arguments to 
+indent normally? I shortened the variable name and reindented it.
+
+
+>
+>>>> +               &w->dev, w, &wmaa_backlight_ops, &props);
