@@ -2,283 +2,186 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD12FC4320E
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 13:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59297C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 15:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5DB06108E
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 13:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3227061074
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 15:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345256AbhIBNPi (ORCPT
+        id S1345698AbhIBP2m (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Sep 2021 09:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345339AbhIBNPU (ORCPT
+        Thu, 2 Sep 2021 11:28:42 -0400
+Received: from mail-dm6nam12on2078.outbound.protection.outlook.com ([40.107.243.78]:52353
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1345689AbhIBP2l (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Sep 2021 09:15:20 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A3F1C06122E
-        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Sep 2021 06:12:58 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id u26-20020a05600c441a00b002f66b2d8603so1408297wmn.4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Sep 2021 06:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=0KMSvpzu+0e4v3QWZES5e7D5+cZcO3zcbXswE89BxKs=;
-        b=XQ8JFzIQuPes+r0ssKZW6ha0cT4kRE7SURbcyl6/GQKFQBx2l2emw92oGyH6yPWVVp
-         EE4AHdBkpQ4RyHVJp4ljJEIM+k9D2qknZ4CO32E+Wz+fTQX4k6YHAj8K5v2ay3ypsQvX
-         WNY5fJZrMdDzYRkpSMLM/FbffMVOcENkTAa9sDxXoPJK+3TLf/bNoc2RESk5ZqxtK2+i
-         5JlgaLFOtA1Rt6yTB1EfOiRNEP0YDosRZthTvfokiSMocypRQpFBIK+A4ETXsZzepQD2
-         YOcNh6dC939ZiucNjmSrv2bPRtW9uaO0UVfzjeia2mftIUM187vOj5B5AzTeB3p3W3JF
-         AE7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=0KMSvpzu+0e4v3QWZES5e7D5+cZcO3zcbXswE89BxKs=;
-        b=Dtz59cZgoT1mAPm39XDAirNjjtLKQFzdYXmOj95O062NreYZf7XSsgD3XRsiNlErQx
-         qQs3ej0Cy8u/PbERSlQ7yGORF4VAJxi0lEpIyMLHy5FqvNDMyZ2XtvsmQni+jxqIWWxR
-         Fefn89wmEEL4JMxXwaC9ScAcrRT0Wi0Qw8QoDrUs2zZMXipaNbiWR/0OsTReGYYyC8yA
-         /RfT8KUXcvJFhACWHyLj5oTlR56p1jgUPwkq/60F9AkklLI2m9pac8963jZRfl/d1NcW
-         sti3XKdhVlTak+io3RTtO46IHs7v3p+pdRJCqM504zU2oo61vRDUTh3MQjQbvnoeL87U
-         sq2g==
-X-Gm-Message-State: AOAM533bcopFMYRjPaCtv3E4ASQ0C8meDWuIHW6ILN7oOiudlDoFm8+j
-        Obpi7DCQyhmG+ujRFPhmiJ0=
-X-Google-Smtp-Source: ABdhPJzDCvUZx0jWCPI+igMgpsitziu+vBxxryYjecUPprNbq5mQil6ePEmlcq82kDidzX9Mn2p1eg==
-X-Received: by 2002:a7b:c014:: with SMTP id c20mr3094941wmb.81.1630588376933;
-        Thu, 02 Sep 2021 06:12:56 -0700 (PDT)
-Received: from omen.localdomain ([77.78.198.93])
-        by smtp.gmail.com with ESMTPSA id e26sm1890608wrc.6.2021.09.02.06.12.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Sep 2021 06:12:56 -0700 (PDT)
-Date:   Thu, 2 Sep 2021 15:12:52 +0200
-From:   Enver Balalic <balalic.enver@gmail.com>
-To:     =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     mgross@linux.intel.com, jdelvare@suse.com,
-        platform-driver-x86@vger.kernel.org, linux@roeck-us.net,
-        hdegoede@redhat.com
-Subject: Re: [PATCH v4] platform/x86: hp-wmi: add support for omen laptops
-Message-ID: <20210902131252.5qzkqispm532fmed@omen.localdomain>
-References: <20210827123105.mlrpsfmpbcfunuqc@omen.localdomain>
- <VFDoTRfsCLfG-Ur2bAXhPrTkSyFQXRt59bCTRHlNYsi9wvaZdzFcUnREgsP54RXJ4Lif_Md2ITa9OzVH4igOl5aPVUZ9D99HBchK2NqdKgU=@protonmail.com>
+        Thu, 2 Sep 2021 11:28:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bYjl0F70/bFR3Zrpy7eyYutN3YbLSgS8qebTyMOVPTNbWHcUomhqxRZaJpLmdWW9pcbE22PAzH5jlGl0lHwFGdBwARw9sVUYiTbo6lG4Uhouq8WbZOgO+Hr7ANPoUPY+H5s+VZuF7HO8JhBjFktJBiuv5ST3Vrcdw051ZYw++qZaaujyXAaKzwjTKwsBt270wDnwuhv6nPjV0xbxkL8BsAWP0A+QEdegK/QYKJ1nVqZJlrOq9RFUGAEuQuYUSZTXqFzdQ2yqNKGW2rJh6itnvUuD/GwYLqhPuY6nq25U7xhDjihzHZ118fbZNuNJw1PbOvPmyOOGmq1O687IUr663w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=MjlRa9KJVbTROiW7pY0odste8AGb+qLpZ2D2029ws30=;
+ b=e7bTAIshV6Qavh7Nalpp8gtmSikLh0+fytrIbwoDlc8xRURAa1HFZsaVIOnwXlslQjT8jQXpK1kjGKAex0PAwe2ROM7HFUCkE7zCJUZ/VyxhAeB1blzueQNY0GrxdVIWcZFsJN0y+vk++T4pn5vA8pJrsZ4bDa+zSw/4r6PRctQVJ3b1oSYgMlXOjWdjFCAy3ZYtMIrtFmo53TjjrqnbiC8py8gvSyvB/xrbdBMz6BG01Wo+xue6ZuXjj1aABJ9fDMFmVsBMnpbO6dJriglBmVt2yXcE1vH/sM9xLPJy2GQe9N1Syqmt6HGCcRoqRHe8p7ZUHYMMbPyv93T79mmliw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MjlRa9KJVbTROiW7pY0odste8AGb+qLpZ2D2029ws30=;
+ b=NvcDZhpgEPONOBos8LB1h+ICkOb+R2j6pWbX5cg5VeT6GI3DsgapXZ5jjwfCiYeawpbfolLjOs/vXUP46zc8p1pbg08X6iNsFuhsimTqqlpuX5XOX4q58E1rhnhASKefVAmMYlasCm51YnHrr50TR7h+j390FGsQk0WcjZbkE7E=
+Authentication-Results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
+ by SA0PR12MB4525.namprd12.prod.outlook.com (2603:10b6:806:92::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19; Thu, 2 Sep
+ 2021 15:27:41 +0000
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::78b7:7336:d363:9be3]) by SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::78b7:7336:d363:9be3%6]) with mapi id 15.20.4478.021; Thu, 2 Sep 2021
+ 15:27:41 +0000
+Cc:     brijesh.singh@amd.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
+        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH Part1 v5 34/38] x86/sev: Add snp_msg_seqno() helper
+To:     Borislav Petkov <bp@alien8.de>
+References: <20210820151933.22401-1-brijesh.singh@amd.com>
+ <20210820151933.22401-35-brijesh.singh@amd.com> <YSkxxkVdupkyxAJi@zn.tnic>
+ <9e0e734d-7d2f-4703-b9ce-8362f0c740f4@amd.com> <YTC1ANx81eQeGN4o@zn.tnic>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+Message-ID: <01b9c0e8-a808-83a7-214f-ea62136ffa0b@amd.com>
+Date:   Thu, 2 Sep 2021 10:27:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+In-Reply-To: <YTC1ANx81eQeGN4o@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0059.namprd11.prod.outlook.com
+ (2603:10b6:806:d0::34) To SN6PR12MB2718.namprd12.prod.outlook.com
+ (2603:10b6:805:6f::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VFDoTRfsCLfG-Ur2bAXhPrTkSyFQXRt59bCTRHlNYsi9wvaZdzFcUnREgsP54RXJ4Lif_Md2ITa9OzVH4igOl5aPVUZ9D99HBchK2NqdKgU=@protonmail.com>
+Received: from [10.236.31.95] (165.204.77.1) by SA0PR11CA0059.namprd11.prod.outlook.com (2603:10b6:806:d0::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19 via Frontend Transport; Thu, 2 Sep 2021 15:27:40 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 77610795-2842-4a2f-43aa-08d96e2633f7
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4525:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4525C522CA751A5EB764ADB2E5CE9@SA0PR12MB4525.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cMNaJ1bFdJtglbTSWYUHz8usGmD4BXLJY+jFZueYcGiZPU4HfPF/DTj7PB39H6Md5T2bqTNJeq8Y+/dNXx15GF11kw37uGEGVxG/QV31G0vyy0KA8jfFA2sxapStMwkXeDzTVLFmVypei4dEeyIqqd4kGNGsOFK5r5GlzrQdo2mNLmTDx6vWVpaqFQTLMp/946tG3vn4BrqK5L/RldZbmx9NjSWp5uzVElrqrFL3ZmICQ2ktD6AFUqagtPqp5BvEliobcdPp65JeSmuDvYQZHQQOw+FvtIgRWP47Dsjdvt1r8DGF5J9ZFwICi28FUCS5JzVSWhnKIypIJCfuoyWEmz+Rc3MoCyJQtw2bEtnx6FVLQ2RZu1Gu8I/JAMr1rNK07ksDJy9wGZb9zwKuXP8PaHzj/yJTZbAaC8gRQBNAW22wOlVia7lf8rqCuv9FBYQxFAu3f8lvgC5xWg9sMXIIQo28Bozwg68cCI1PBjUPPsy+QZoBZsfavKK+e44AgdwbeQWZi3usGG7xXRYnSm/hx5VbWUt6s4jRgvcZWD6o7d1bB+2gL6PpH3GVYmIaCvSe1wWugS9h8zDXBP4yiqbkWYwn2L0S81JETdi0HRWcDn6s0bVE9hNtf4HK9j4ArkzcKUyWszsiz9kV3WaV5nf/fPZj31/ySHsIV3cKDFH7FIm8O9+rd1wsodDaFmLLeZ3H3LABG/dJxIjXIbmdy4C0HPH9X2kj0teC37V/CCpYKzpZ6aI9jZPxIy9xMK8uurwTKCk6qrhxsX/oYkn5yFtUvw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(2616005)(86362001)(7406005)(31686004)(7416002)(956004)(36756003)(52116002)(6486002)(4326008)(5660300002)(66946007)(478600001)(316002)(38100700002)(38350700002)(16576012)(54906003)(2906002)(83380400001)(44832011)(6916009)(66556008)(8936002)(186003)(8676002)(31696002)(26005)(66476007)(53546011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TEZENEdnTkNvaGR2LzlDSTI4dEhuWkRVSmx5bHg1WjZ3N1NyYzlUc3RYcDI4?=
+ =?utf-8?B?MkJEMjJnSHc0QmcyUEhsdzY5WVplVkxmMnJ4TzNzVjFCUGM0NE1pd2Nrb0o3?=
+ =?utf-8?B?cldkV0dOSklreS8vZjI2dXNIeHlISS9KbFgzOUhqVzB2bVh2QUdNTE9yeGZq?=
+ =?utf-8?B?WnZZbUZtUFN0QzRHVGhRS3R1dUpEVmJ2cTQrY1pZdVgrQU5BZjIrYk53UGpJ?=
+ =?utf-8?B?QTBKY2dSQjFPL2RmR3VoYmRORWlQa294dkdKbktlV1ZRK3FOZ1BSNzBOWE50?=
+ =?utf-8?B?cUV5S05CNDhvQ1VidE9RT3lXbTgzVDZWeU1GVkdDektON3VQMXZHTXNUY3ls?=
+ =?utf-8?B?eXd2Z1pSeGdFWHkzeDh0Wi9VZWh2QWdwZm41NTJlTzZxeHRUdjc3SWduaVlJ?=
+ =?utf-8?B?YzQvVFVzY1RFVEttZXlqRmtNUWxVVXRnV3JJV2R3R2xNbW1jc1lIR01rcjhl?=
+ =?utf-8?B?clE5MXo4VEcrcXFTM21GVkx1ZVNsdEIvaC9mT2ZJZlpneDByNWJXS3hLUjJR?=
+ =?utf-8?B?R2xJYmpZa2lBRjJucnd3ckV4Vll4K2hGdXJJZ3dMNEZMMjIrdzcydEtqNzEy?=
+ =?utf-8?B?M3p4ampNM1RjUzI1Wk9FcTViaEZLQlorWWFHZTl3dDVEVGFjYjhMMEpqVzRi?=
+ =?utf-8?B?Q2pJdDRzRk02bzQvK01IcnhlZU5WbEhqUmtOWU5KeUNhU2VSMVo0V0FaczJl?=
+ =?utf-8?B?ekhUM0VyUi9zTzJ6VnZYc05IQks0Y1Blam1aU2RVZVZZcVp5MXhPUS82TFRU?=
+ =?utf-8?B?ZzdpREhVT0JFRS91WjB5S09ORmt1RGZyWnJaOThad3JjSHlZb2x5b092MHlI?=
+ =?utf-8?B?SjEyTWJleGxzYWFQSUljc0kvNWNGQ2U4TzZhcWdIbHpPcDhZWlVZZmttY1VE?=
+ =?utf-8?B?Q3Z6VnRoT2dOZ3hkbkhvWXcrbWhRL290Ym44VkE0ZklQcEh2aUVTcXJrbU00?=
+ =?utf-8?B?NU5iZU9QNUk5NE9TQ0ZoaEZJRnRjeHNUeHM4YTVwNlpGZ1NRUE40QjVqMk1P?=
+ =?utf-8?B?UjZLMXZXWnNLL1luRWRUdTRtakpibGhMWlp4bnZpSDI0Q05DY28zMWh2MndY?=
+ =?utf-8?B?S2xQTVA3OU5SNDFxbkdyZjE0ZHo1UC8wWXhlNEJsWkpieXhEemFScEpOYnZw?=
+ =?utf-8?B?WHhlaGMrY2RjUllrMkUreUdhZjI0TUU2NFBQcHVtVDlqOTc0M3NHZXdYTGpi?=
+ =?utf-8?B?U0g1YjJwaVBmelRrWWNaWWFsb0hqdndoZWNmSUJpdW5NaklqWVZPbmJ1TGdp?=
+ =?utf-8?B?VzREVVRiL1hQZWRwQW85RkI2Y29jYU5FUmQvaVBvZFdOdkJRZHV3V3VpZmtN?=
+ =?utf-8?B?TjFRUTgrSCtvZWdyNnRUSjVRcnREdGlsbGVTaVhkK25RbVM5UzlheHI2c1JJ?=
+ =?utf-8?B?K0pOcUJLZTVFUklwcU9lcnFHcW01emFva2tKMFJOK1Y5aklDUzBlWGNBRGR6?=
+ =?utf-8?B?azNwNWY4LzAyblZhQlRBUjc5NmR0WGF2TE1wQk0zc0dkQ3l3Z3Q3WlJBcExZ?=
+ =?utf-8?B?U004QVhSdGNlUld0Q2VadzhPYXQ1YnE1TndEeWpsWnhhOEo0TkxQY01FQjBN?=
+ =?utf-8?B?RnRpYXV3U2Y5bUVtL1BEcU44aVZQV1lDczBDcTNNRkRkTFZjZU5uQ0VhdSto?=
+ =?utf-8?B?VkNEWlMraW1mQzR0UHlHR09QeSs3ckVOTVRCeWNKSlQ1a1o4R3JDaitCOVhH?=
+ =?utf-8?B?ei8rMEthSGJpT2xIcGE0UTJabWNyU3QzZEgrbkZ3U0Y1WkVJM2pWTE9uSXQy?=
+ =?utf-8?Q?D1VQ9EVfPkOLAWVpfspmjffr2hHJTFGkiOLh2q1?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77610795-2842-4a2f-43aa-08d96e2633f7
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2021 15:27:41.2799
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: i8teaP8OhzOVNdwJ7t3vExFGBwR377BIgzo122K/oL2vyCEfr9S6aHpuEcF4O0jYcQ6E6o0tqhXwGEu7d8/waQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4525
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 01, 2021 at 03:53:47PM +0000, Barnabás Pőcze wrote:
-> Hi
-> 
-> 
-> > This patch adds support for HP Omen laptops.
-> > It adds support for most things that can be controlled via the
-> > Windows Omen Command Center application.
-> >
-> >  - Fan speed monitoring through hwmon
-> >  - Platform Profile support (cool, balanced, performance)
-> >  - Max fan speed function toggle
-> >
-> > Also exposes the existing HDD temperature through hwmon since
-> > this driver didn't use hwmon before this patch.
-> >
-> > This patch has been tested on a 2020 HP Omen 15 (AMD) 15-en0023dx.
-> >
-> >  - V1
-> >    Initial Patch
-> >  - V2
-> >    Use standard hwmon ABI attributes
-> >    Add existing non-standard "hddtemp" to hwmon
-> >  - V3
-> >    Fix overflow issue in "hp_wmi_get_fan_speed"
-> >    Map max fan speed value back to hwmon values on read
-> >    Code style fixes
-> >    Fix issue with returning values from "hp_wmi_hwmon_read",
-> >    the value to return should be written to val and not just
-> >    returned from the function
-> >  - V4
-> >    Use DMI Board names to detect if a device should use the omen
-> >    specific thermal profile method.
-> >    Select HWMON instead of depending on it.
-> >    Code style fixes.
-> >    Replace some error codes with more specific/meaningful ones.
-> >    Remove the HDD temperature from HWMON since we don't know what
-> >    unit it's expressed in.
-> >    Handle error from hp_wmi_hwmon_init
-> >
-> > Signed-off-by: Enver Balalic <balalic.enver@gmail.com>
-> > ---
-> >  drivers/platform/x86/Kconfig  |   1 +
-> >  drivers/platform/x86/hp-wmi.c | 336 ++++++++++++++++++++++++++++++++--
-> >  2 files changed, 325 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > index d12db6c316ea..2ab0dcf5b598 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -434,6 +434,7 @@ config HP_WMI
-> >  	depends on RFKILL || RFKILL = n
-> >  	select INPUT_SPARSEKMAP
-> >  	select ACPI_PLATFORM_PROFILE
-> > +	select HWMON
-> >  	help
-> >  	 Say Y here if you want to support WMI-based hotkeys on HP laptops and
-> >  	 to read data from WMI such as docking or ambient light sensor state.
-> > diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> > index 027a1467d009..44030f513453 100644
-> > --- a/drivers/platform/x86/hp-wmi.c
-> > +++ b/drivers/platform/x86/hp-wmi.c
-> > @@ -22,9 +22,11 @@
-> >  #include <linux/input/sparse-keymap.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/platform_profile.h>
-> > +#include <linux/hwmon.h>
-> >  #include <linux/acpi.h>
-> >  #include <linux/rfkill.h>
-> >  #include <linux/string.h>
-> > +#include <linux/dmi.h>
-> >
-> >  MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
-> >  MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
-> > @@ -39,6 +41,25 @@ MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=aut
-> >
-> >  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
-> >  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
-> > +#define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
-> > +
-> > +/* DMI board names of devices that should use the omen specific path for
-> > + * thermal profiles.
-> > + * This was obtained by taking a look in the windows omen command center
-> > + * app and parsing a json file that they use to figure out what capabilities
-> > + * the device should have.
-> > + * A device is considered an omen if the DisplayName in that list contains
-> > + * "OMEN", and it can use the thermal profile stuff if the "Feature" array
-> > + * contains "PerformanceControl".
-> > + */
-> > +static const char * const omen_thermal_profile_boards[] = {
-> > +	"84DA", "84DB", "84DC", "8574", "8575", "860A", "87B5", "8572", "8573",
-> > +	"8600", "8601", "8602", "8605", "8606", "8607", "8746", "8747", "8749",
-> > +	"874A", "8603", "8604", "8748", "886B", "886C", "878A", "878B", "878C",
-> > +	"88C8", "88CB", "8786", "8787", "8788", "88D1", "88D2", "88F4", "88FD",
-> > +	"88F5", "88F6", "88F7", "88FE", "88FF", "8900", "8901", "8902", "8912",
-> > +	"8917", "8918", "8949", "894A", "89EB"
-> > +};
-> >
-> >  enum hp_wmi_radio {
-> >  	HPWMI_WIFI	= 0x0,
-> > @@ -89,10 +110,18 @@ enum hp_wmi_commandtype {
-> >  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
-> >  };
-> >
-> > +enum hp_wmi_gm_commandtype {
-> > +	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
-> > +	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
-> > +	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
-> > +	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
-> > +};
-> > +
-> >  enum hp_wmi_command {
-> >  	HPWMI_READ	= 0x01,
-> >  	HPWMI_WRITE	= 0x02,
-> >  	HPWMI_ODM	= 0x03,
-> > +	HPWMI_GM	= 0x20008,
-> >  };
-> >
-> >  enum hp_wmi_hardware_mask {
-> > @@ -120,6 +149,13 @@ enum hp_wireless2_bits {
-> >  	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
-> >  };
-> >
-> > +
-> > +enum hp_thermal_profile_omen {
-> > +	HP_OMEN_THERMAL_PROFILE_DEFAULT     = 0x00,
-> > +	HP_OMEN_THERMAL_PROFILE_PERFORMANCE = 0x01,
-> > +	HP_OMEN_THERMAL_PROFILE_COOL        = 0x02,
-> > +};
-> > +
-> >  enum hp_thermal_profile {
-> >  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
-> >  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
-> > @@ -169,6 +205,8 @@ static struct platform_device *hp_wmi_platform_dev;
-> >  static struct platform_profile_handler platform_profile_handler;
-> >  static bool platform_profile_support;
-> >
-> > +static bool use_omen_thermal_profile;
-> 
-> I think this variable is not necessary, you set it once,
-> and read it once. Maybe you could add a direct function
-> call to `detect_is_omen_thermal_profile()` in `thermal_profile_setup()`?
-Got it. At first I had that variable just be `is_omen`, but I noticed in the 
-Windows Command Center code that not all omens support thermal profile
-switching this way so i changed it to be more descriptive. Will change.
-> 
-> 
-> > [...]
-> >  static int hp_wmi_read_int(int query)
-> >  {
-> >  	int val = 0, ret;
-> > @@ -302,6 +358,75 @@ static int hp_wmi_hw_state(int mask)
-> >  	return !!(state & mask);
-> >  }
-> >
-> > +static int omen_thermal_profile_set(int mode)
-> > +{
-> > +	char buffer[2] = {0, mode};
-> > +	int ret;
-> > +
-> > +	if (mode < 0 || mode > 2)
-> > +		return -EINVAL;
-> > +
-> > +	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
-> > +				   &buffer, sizeof(buffer), sizeof(buffer));
-> > +
-> > +	if (ret)
-> > +		return ret < 0 ? ret : -EINVAL;
-> > +
-> > +	return mode;
-> > +}
-> > +
-> > +static bool detect_is_omen_thermal_profile(void)
-> > +{
-> > +	int i;
-> > +
-> > +	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
-> 
-> It seems that this can be NULL. Most users of this function have
-> a NULL check after the call, so please add one here as well.
-Got it.
-> 
-> 
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(omen_thermal_profile_boards); i++) {
-> > +		if (strcmp(board_name, omen_thermal_profile_boards[i]) == 0)
-> > +			return true;
-> > +	}
-> 
-> Please see the `match_string()` function.
-Was looking for something like that. Thanks.
-> 
-> 
-> > +
-> > +	return false;
-> > +}
-> > [...]
-> 
-> 
-> Best regards,
-> Barnabás Pőcze
 
 
-Thanks for the suggestions,
-Enver.
+On 9/2/21 6:26 AM, Borislav Petkov wrote:
+> On Mon, Aug 30, 2021 at 10:07:39AM -0500, Brijesh Singh wrote:
+>> The SNP firmware spec says that counter must begin with the 1.
+> 
+> So put that in the comment and explain what 0 is: magic or invalid or
+> whatnot and why is that so and that it is spec-ed this way, etc.
+> 
+> Just having it there without a reasoning makes one wonder whether that's
+> some arbitrary limitation or so.
+
+Agreed, I will add a comment explaining it.
+
+> 
+>> During the GHCB writing the seqno use to be 32-bit value and hence the GHCB
+>> spec choose the 32-bit value but recently the SNP firmware changed it from
+>> the 32 to 64. So, now we are left with the option of limiting the sequence
+>> number to 32-bit. If we go beyond 32-bit then all we can do is fail the
+>> call. If we pass the value of zero then FW will fail the call.
+> 
+> That sounds weird again. So make it 64-bit like the FW and fix the spec.
+> 
+>> I just choose the smaller name but I have no issues matching with the spec.
+>> Also those keys does not have anything to do with the VMPL level. The
+>> secrets page provides 4 different keys and they are referred as vmpck0..3
+>> and each of them have a sequence numbers associated with it.
+>>
+>> In GHCB v3 we probably need to rework the structure name.
+> 
+> You can point to the spec section so that readers can find the struct
+> layout there.
+> 
+
+I will add comment that this for spec 0.9+.
+
+thanks
