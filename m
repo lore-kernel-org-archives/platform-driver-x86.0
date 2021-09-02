@@ -2,231 +2,555 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC7AC83028
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 16:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31110C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 18:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12BEB610CE
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 16:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146F260EE6
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 18:22:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238956AbhIBQlE (ORCPT
+        id S241834AbhIBSXn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Sep 2021 12:41:04 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57826 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234478AbhIBQlD (ORCPT
+        Thu, 2 Sep 2021 14:23:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241841AbhIBSXh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Sep 2021 12:41:03 -0400
-Received: from zn.tnic (p200300ec2f0ed100559a5c00047fe4a9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d100:559a:5c00:47f:e4a9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5DB381EC051F;
-        Thu,  2 Sep 2021 18:39:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1630600799;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tInBcwV8PPz5HgTlj8s9pKw/c3XcI6QQac6T1fjypAs=;
-        b=DZzM4T7hNki0hfWFToM06T3uIqTpW3S1x3aH9e5p4NtsH7K6Jdwm5Z5VMiIfsO0s2cTTXw
-        U+fCaPc/GyJmhSw7rXntDZUX6+BDp5bUMg+nlj6y21g2g1mWWZT9o8FZHVsus7nbxZUZug
-        8wKREAEDQ63F73TH7zNyF13KdEvoIKk=
-Date:   Thu, 2 Sep 2021 18:40:34 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH Part1 v5 35/38] x86/sev: Register SNP guest request
- platform device
-Message-ID: <YTD+go747TIU6k9g@zn.tnic>
-References: <20210820151933.22401-1-brijesh.singh@amd.com>
- <20210820151933.22401-36-brijesh.singh@amd.com>
+        Thu, 2 Sep 2021 14:23:37 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC14FC061575;
+        Thu,  2 Sep 2021 11:22:38 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id i6so4429946wrv.2;
+        Thu, 02 Sep 2021 11:22:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=cAEmL8mvzZXaDOBLrpu5sdqWABv9/hWlAuIpFLOpbhA=;
+        b=n+LXRtqda6WxqBj6X1PklXEePeI9DLwQXLMoz/BwxORHsd9eeYT+NUG/PrqmWP+XTD
+         DXZI1jFDPEVj7qd7jytUMKnw3gwcG9I2z6XKWhkokpVpkYPnayYBv5xdFHdYy6EFsrd0
+         huKTciFuslEPen4MKU5HdZgbjsBvtTjRw7TK7lLYXN8vGOgN5xWcTFURxzKIzamyDAW9
+         npoCwvGFUEKrTue4iJBKofDdsO7+u1o/NGR0QcuYLvRP0rS/Qa+Y174TaN0yzqloGFNh
+         a/GnFHWMZ4hmL1jjj1z7XyagU6vdpVrAYR1Hl5LWKOrUnAJ23H7FSCFNifCNUW7L0Cf0
+         6SFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=cAEmL8mvzZXaDOBLrpu5sdqWABv9/hWlAuIpFLOpbhA=;
+        b=j5FvoSVe/IFlnm3MJ/a74CPqQjynug7iPIGL61Rmx3sQgTaTSQabr/bDscM1Cx9QzV
+         lFWSF/3a81qiihOw0aJ7ygbTorUvJeri3x2NyxAOzUlWnQyjVh5Pe4wY8wJvlibknoAu
+         jm5T0+v6ha8SlVWHRqZX2rRD4elPnq2fTbaHVws3ueiXGbfrHXojIimfDT3ElSCi0jLk
+         tuSLL0Kf5n13dQj01vntzXLxNa0KGcZ268STKeFfHU0bZN0NfU8nNXTJpwpvPsSlHqcc
+         ziqTP8oz5kRrURVukH09wPQgGCE7GWN8y3lnOr7S8DfEepbOw5Gv2f0QEJ6wDrNFsq0U
+         1i0Q==
+X-Gm-Message-State: AOAM532lqBsSXeVpRcCDihuZvmlJD/tIQFzoezPX0Qg3MSxUTw8PAFf6
+        Do+vx3wNIW8UVRJP6q+/NJFEuKSRm4U+fg==
+X-Google-Smtp-Source: ABdhPJzCMBQVky4Sb2n7psGLQd9iE4pmV/vdPirNQYy4MIn5WvQ3YhYFgbgGRRKZbn97z9e/ZTHoNw==
+X-Received: by 2002:a5d:438a:: with SMTP id i10mr5283165wrq.285.1630606957050;
+        Thu, 02 Sep 2021 11:22:37 -0700 (PDT)
+Received: from omen.localdomain ([188.127.120.115])
+        by smtp.gmail.com with ESMTPSA id n1sm2461216wrp.49.2021.09.02.11.22.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Sep 2021 11:22:36 -0700 (PDT)
+Date:   Thu, 2 Sep 2021 20:22:34 +0200
+From:   Enver Balalic <balalic.enver@gmail.com>
+To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     mgross@linux.intel.com, jdelvare@suse.com, pobrn@protonmail.com,
+        linux@roeck-us.net, hdegoede@redhat.com
+Subject: [PATCH v5] platform/x86: hp-wmi: add support for omen laptops
+Message-ID: <20210902182234.vtwl72n5rjql22qa@omen.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210820151933.22401-36-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Aug 20, 2021 at 10:19:30AM -0500, Brijesh Singh wrote:
-> Version 2 of GHCB specification provides NAEs that can be used by the SNP
+This patch adds support for HP Omen laptops.
+It adds support for most things that can be controlled via the
+Windows Omen Command Center application.
 
-Resolve the "NAE" abbreviation here so that it is clear what this means.
+ - Fan speed monitoring through hwmon
+ - Platform Profile support (cool, balanced, performance)
+ - Max fan speed function toggle
 
-> guest to communicate with the PSP without risk from a malicious hypervisor
-> who wishes to read, alter, drop or replay the messages sent.
+Also exposes the existing HDD temperature through hwmon since
+this driver didn't use hwmon before this patch.
 
-This here says "malicious hypervisor" from which we protect from...
+This patch has been tested on a 2020 HP Omen 15 (AMD) 15-en0023dx.
 
-> In order to communicate with the PSP, the guest need to locate the secrets
-> page inserted by the hypervisor during the SEV-SNP guest launch. The
+ - V1
+   Initial Patch
+ - V2
+   Use standard hwmon ABI attributes
+   Add existing non-standard "hddtemp" to hwmon
+ - V3
+   Fix overflow issue in "hp_wmi_get_fan_speed"
+   Map max fan speed value back to hwmon values on read
+   Code style fixes
+   Fix issue with returning values from "hp_wmi_hwmon_read",
+   the value to return should be written to val and not just
+   returned from the function
+ - V4
+   Use DMI Board names to detect if a device should use the omen
+   specific thermal profile method.
+   Select HWMON instead of depending on it.
+   Code style fixes.
+   Replace some error codes with more specific/meaningful ones.
+   Remove the HDD temperature from HWMON since we don't know what
+   unit it's expressed in.
+   Handle error from hp_wmi_hwmon_init
+ - V5
+   Handle possible NULL from dmi_get_system_info()
+   Use match_string function instead of manually checking
+   Directly use is_omen_thermal_profile() without the static
+   variable.
 
-... but this here says the secrets page is inserted by the same
-hypervisor from which we're actually protecting.
+Signed-off-by: Enver Balalic <balalic.enver@gmail.com>
+---
+ drivers/platform/x86/Kconfig  |   1 +
+ drivers/platform/x86/hp-wmi.c | 330 ++++++++++++++++++++++++++++++++--
+ 2 files changed, 319 insertions(+), 12 deletions(-)
 
-You wanna rephrase that to explain what exactly happens so that it
-doesn't sound like we're really trusting the HV with the secrets page.
-
-> secrets page contains the communication keys used to send and receive the
-> encrypted messages between the guest and the PSP. The secrets page location
-> is passed through the setup_data.
-> 
-> Create a platform device that the SNP guest driver can bind to get the
-> platform resources such as encryption key and message id to use to
-> communicate with the PSP. The SNP guest driver can provide userspace
-> interface to get the attestation report, key derivation, extended
-> attestation report etc.
-> 
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/kernel/sev.c     | 68 +++++++++++++++++++++++++++++++++++++++
->  include/linux/sev-guest.h |  5 +++
->  2 files changed, 73 insertions(+)
-
-...
-
-> +static u64 find_secrets_paddr(void)
-> +{
-> +	u64 pa_data = boot_params.cc_blob_address;
-> +	struct cc_blob_sev_info info;
-> +	void *map;
-> +
-> +	/*
-> +	 * The CC blob contains the address of the secrets page, check if the
-> +	 * blob is present.
-> +	 */
-> +	if (!pa_data)
-> +		return 0;
-> +
-> +	map = early_memremap(pa_data, sizeof(info));
-> +	memcpy(&info, map, sizeof(info));
-> +	early_memunmap(map, sizeof(info));
-> +
-> +	/* Verify that secrets page address is passed */
-
-That's hardly verifying something - if anything, it should say
-
-	/* smoke-test the secrets page passed */
-
-> +	if (info.secrets_phys && info.secrets_len == PAGE_SIZE)
-> +		return info.secrets_phys;
-
-... which begs the question: how do we verify the HV is not passing some
-garbage instead of an actual secrets page?
-
-I guess it is that:
-
-"SNP_LAUNCH_UPDATE can insert two special pages into the guest’s
-memory: the secrets page and the CPUID page. The secrets page contains
-encryption keys used by the guest to interact with the firmware. Because
-the secrets page is encrypted with the guest’s memory encryption
-key, the hypervisor cannot read the keys. The CPUID page contains
-hypervisor provided CPUID function values that it passes to the guest.
-The firmware validates these values to ensure the hypervisor is not
-providing out-of-range values."
-
-From "4.5 Launching a Guest" in the SNP FW ABI spec.
-
-I think that explanation above is very important wrt to explaining the
-big picture how this all works with those pages injected into the guest
-so I guess somewhere around here a comment should say
-
-"See section 4.5 Launching a Guest in the SNP FW ABI spec for details
-about those special pages."
-
-or so.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int __init add_snp_guest_request(void)
-
-If anything, that should be called
-
-init_snp_platform_device()
-
-or so.
-
-> +{
-> +	struct snp_secrets_page_layout *layout;
-> +	struct snp_guest_platform_data data;
-> +
-> +	if (!sev_feature_enabled(SEV_SNP))
-> +		return -ENODEV;
-> +
-> +	snp_secrets_phys = find_secrets_paddr();
-> +	if (!snp_secrets_phys)
-> +		return -ENODEV;
-> +
-> +	layout = snp_map_secrets_page();
-> +	if (!layout)
-> +		return -ENODEV;
-> +
-> +	/*
-> +	 * The secrets page contains three VMPCK that can be used for
-
-What's VMPCK?
-
-> +	 * communicating with the PSP. We choose the VMPCK0 to encrypt guest
-
-"We" is?
-
-> +	 * messages send and receive by the Linux. Provide the key and
-
-"... by the Linux."?! That sentence needs more love.
-
-> +	 * id through the platform data to the driver.
-> +	 */
-> +	data.vmpck_id = 0;
-> +	memcpy_fromio(data.vmpck, layout->vmpck0, sizeof(data.vmpck));
-> +
-> +	iounmap(layout);
-> +
-> +	platform_device_add_data(&guest_req_device, &data, sizeof(data));
-
-Oh look, that function can return an error.
-
-> +
-> +	if (!platform_device_register(&guest_req_device))
-> +		dev_info(&guest_req_device.dev, "secret phys 0x%llx\n", snp_secrets_phys);
-
-Make that message human-readable - not a debug one.
-
-Thx.
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index d12db6c316ea..2ab0dcf5b598 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -434,6 +434,7 @@ config HP_WMI
+ 	depends on RFKILL || RFKILL = n
+ 	select INPUT_SPARSEKMAP
+ 	select ACPI_PLATFORM_PROFILE
++	select HWMON
+ 	help
+ 	 Say Y here if you want to support WMI-based hotkeys on HP laptops and
+ 	 to read data from WMI such as docking or ambient light sensor state.
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 027a1467d009..9c4c9f5095ae 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -22,9 +22,11 @@
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_profile.h>
++#include <linux/hwmon.h>
+ #include <linux/acpi.h>
+ #include <linux/rfkill.h>
+ #include <linux/string.h>
++#include <linux/dmi.h>
+ 
+ MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
+ MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
+@@ -39,6 +41,25 @@ MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=aut
+ 
+ #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
+ #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
++#define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
++
++/* DMI board names of devices that should use the omen specific path for
++ * thermal profiles.
++ * This was obtained by taking a look in the windows omen command center
++ * app and parsing a json file that they use to figure out what capabilities
++ * the device should have.
++ * A device is considered an omen if the DisplayName in that list contains
++ * "OMEN", and it can use the thermal profile stuff if the "Feature" array
++ * contains "PerformanceControl".
++ */
++static const char * const omen_thermal_profile_boards[] = {
++	"84DA", "84DB", "84DC", "8574", "8575", "860A", "87B5", "8572", "8573",
++	"8600", "8601", "8602", "8605", "8606", "8607", "8746", "8747", "8749",
++	"874A", "8603", "8604", "8748", "886B", "886C", "878A", "878B", "878C",
++	"88C8", "88CB", "8786", "8787", "8788", "88D1", "88D2", "88F4", "88FD",
++	"88F5", "88F6", "88F7", "88FE", "88FF", "8900", "8901", "8902", "8912",
++	"8917", "8918", "8949", "894A", "89EB"
++};
+ 
+ enum hp_wmi_radio {
+ 	HPWMI_WIFI	= 0x0,
+@@ -89,10 +110,18 @@ enum hp_wmi_commandtype {
+ 	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
+ };
+ 
++enum hp_wmi_gm_commandtype {
++	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
++	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
++	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
++	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
++};
++
+ enum hp_wmi_command {
+ 	HPWMI_READ	= 0x01,
+ 	HPWMI_WRITE	= 0x02,
+ 	HPWMI_ODM	= 0x03,
++	HPWMI_GM	= 0x20008,
+ };
+ 
+ enum hp_wmi_hardware_mask {
+@@ -120,6 +149,13 @@ enum hp_wireless2_bits {
+ 	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
+ };
+ 
++
++enum hp_thermal_profile_omen {
++	HP_OMEN_THERMAL_PROFILE_DEFAULT     = 0x00,
++	HP_OMEN_THERMAL_PROFILE_PERFORMANCE = 0x01,
++	HP_OMEN_THERMAL_PROFILE_COOL        = 0x02,
++};
++
+ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+ 	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+@@ -279,6 +315,24 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 	return ret;
+ }
+ 
++static int hp_wmi_get_fan_speed(int fan)
++{
++	u8 fsh, fsl;
++	char fan_data[4] = { fan, 0, 0, 0 };
++
++	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
++				       &fan_data, sizeof(fan_data),
++				       sizeof(fan_data));
++
++	if (ret != 0)
++		return -EINVAL;
++
++	fsh = fan_data[2];
++	fsl = fan_data[3];
++
++	return (fsh << 8) | fsl;
++}
++
+ static int hp_wmi_read_int(int query)
+ {
+ 	int val = 0, ret;
+@@ -302,6 +356,73 @@ static int hp_wmi_hw_state(int mask)
+ 	return !!(state & mask);
+ }
+ 
++static int omen_thermal_profile_set(int mode)
++{
++	char buffer[2] = {0, mode};
++	int ret;
++
++	if (mode < 0 || mode > 2)
++		return -EINVAL;
++
++	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
++				   &buffer, sizeof(buffer), sizeof(buffer));
++
++	if (ret)
++		return ret < 0 ? ret : -EINVAL;
++
++	return mode;
++}
++
++static bool is_omen_thermal_profile(void)
++{
++	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
++
++	if (board_name == NULL)
++		return false;
++
++	return match_string(omen_thermal_profile_boards,
++			    ARRAY_SIZE(omen_thermal_profile_boards),
++			    board_name) >= 0;
++}
++
++static int omen_thermal_profile_get(void)
++{
++	u8 data;
++
++	int ret = ec_read(HP_OMEN_EC_THERMAL_PROFILE_OFFSET, &data);
++
++	if (ret)
++		return ret;
++
++	return data;
++}
++
++static int hp_wmi_fan_speed_max_set(int enabled)
++{
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
++				   &enabled, sizeof(enabled), sizeof(enabled));
++
++	if (ret)
++		return ret < 0 ? ret : -EINVAL;
++
++	return enabled;
++}
++
++static int hp_wmi_fan_speed_max_get(void)
++{
++	int val = 0, ret;
++
++	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
++				   &val, sizeof(val), sizeof(val));
++
++	if (ret)
++		return ret < 0 ? ret : -EINVAL;
++
++	return val;
++}
++
+ static int __init hp_wmi_bios_2008_later(void)
+ {
+ 	int state = 0;
+@@ -878,6 +999,58 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 	return err;
+ }
+ 
++static int platform_profile_omen_get(struct platform_profile_handler *pprof,
++				enum platform_profile_option *profile)
++{
++	int tp;
++
++	tp = omen_thermal_profile_get();
++	if (tp < 0)
++		return tp;
++
++	switch (tp) {
++	case HP_OMEN_THERMAL_PROFILE_PERFORMANCE:
++		*profile = PLATFORM_PROFILE_PERFORMANCE;
++		break;
++	case HP_OMEN_THERMAL_PROFILE_DEFAULT:
++		*profile = PLATFORM_PROFILE_BALANCED;
++		break;
++	case HP_OMEN_THERMAL_PROFILE_COOL:
++		*profile = PLATFORM_PROFILE_COOL;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int platform_profile_omen_set(struct platform_profile_handler *pprof,
++				enum platform_profile_option profile)
++{
++	int err, tp;
++
++	switch (profile) {
++	case PLATFORM_PROFILE_PERFORMANCE:
++		tp = HP_OMEN_THERMAL_PROFILE_PERFORMANCE;
++		break;
++	case PLATFORM_PROFILE_BALANCED:
++		tp = HP_OMEN_THERMAL_PROFILE_DEFAULT;
++		break;
++	case PLATFORM_PROFILE_COOL:
++		tp = HP_OMEN_THERMAL_PROFILE_COOL;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	err = omen_thermal_profile_set(tp);
++	if (err < 0)
++		return err;
++
++	return 0;
++}
++
+ static int thermal_profile_get(void)
+ {
+ 	return hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
+@@ -945,20 +1118,39 @@ static int thermal_profile_setup(void)
+ {
+ 	int err, tp;
+ 
+-	tp = thermal_profile_get();
+-	if (tp < 0)
+-		return tp;
++	if (is_omen_thermal_profile()) {
++		tp = omen_thermal_profile_get();
++		if (tp < 0)
++			return tp;
+ 
+-	/*
+-	 * call thermal profile write command to ensure that the firmware correctly
+-	 * sets the OEM variables for the DPTF
+-	 */
+-	err = thermal_profile_set(tp);
+-	if (err)
+-		return err;
++		/*
++		 * call thermal profile write command to ensure that the
++		 * firmware correctly sets the OEM variables
++		 */
++
++		err = omen_thermal_profile_set(tp);
++		if (err < 0)
++			return err;
++
++		platform_profile_handler.profile_get = platform_profile_omen_get;
++		platform_profile_handler.profile_set = platform_profile_omen_set;
++	} else {
++		tp = thermal_profile_get();
++
++		if (tp < 0)
++			return tp;
+ 
+-	platform_profile_handler.profile_get = platform_profile_get,
+-	platform_profile_handler.profile_set = platform_profile_set,
++		/*
++		 * call thermal profile write command to ensure that the
++		 * firmware correctly sets the OEM variables for the DPTF
++		 */
++		err = thermal_profile_set(tp);
++		if (err)
++			return err;
++
++		platform_profile_handler.profile_get = platform_profile_get;
++		platform_profile_handler.profile_set = platform_profile_set;
++	}
+ 
+ 	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
+ 	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
+@@ -973,8 +1165,11 @@ static int thermal_profile_setup(void)
+ 	return 0;
+ }
+ 
++static int hp_wmi_hwmon_init(void);
++
+ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ {
++	int err;
+ 	/* clear detected rfkill devices */
+ 	wifi_rfkill = NULL;
+ 	bluetooth_rfkill = NULL;
+@@ -984,6 +1179,11 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 	if (hp_wmi_rfkill_setup(device))
+ 		hp_wmi_rfkill2_setup(device);
+ 
++	err = hp_wmi_hwmon_init();
++
++	if (err < 0)
++		return err;
++
+ 	thermal_profile_setup();
+ 
+ 	return 0;
+@@ -1068,6 +1268,112 @@ static struct platform_driver hp_wmi_driver = {
+ 	.remove = __exit_p(hp_wmi_bios_remove),
+ };
+ 
++static umode_t hp_wmi_hwmon_is_visible(const void *data,
++					enum hwmon_sensor_types type,
++					u32 attr, int channel)
++{
++	switch (type) {
++	case hwmon_pwm:
++		return 0644;
++	case hwmon_fan:
++		if (hp_wmi_get_fan_speed(channel) >= 0)
++			return 0444;
++		break;
++	default:
++		return 0;
++	}
++
++	return 0;
++}
++
++static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
++			u32 attr, int channel, long *val)
++{
++	int ret;
++
++	switch (type) {
++	case hwmon_fan:
++		ret = hp_wmi_get_fan_speed(channel);
++
++		if (ret < 0)
++			return ret;
++		*val = ret;
++		return 0;
++	case hwmon_pwm:
++		switch (hp_wmi_fan_speed_max_get()) {
++		case 0:
++			/* 0 is automatic fan, which is 2 for hwmon */
++			*val = 2;
++			return 0;
++		case 1:
++			/* 1 is max fan, which is 0
++			 * (no fan speed control) for hwmon
++			 */
++			*val = 0;
++			return 0;
++		default:
++			/* shouldn't happen */
++			return -ENODATA;
++		}
++	default:
++		return -EINVAL;
++	}
++}
++
++static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
++			u32 attr, int channel, long val)
++{
++	switch (type) {
++	case hwmon_pwm:
++		switch (val) {
++		case 0:
++			/* 0 is no fan speed control (max), which is 1 for us */
++			return hp_wmi_fan_speed_max_set(1);
++		case 2:
++			/* 2 is automatic speed control, which is 0 for us */
++			return hp_wmi_fan_speed_max_set(0);
++		default:
++			/* we don't support manual fan speed control */
++			return -EINVAL;
++		}
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static const struct hwmon_channel_info *info[] = {
++	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
++	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE),
++	NULL
++};
++
++static const struct hwmon_ops ops = {
++	.is_visible = hp_wmi_hwmon_is_visible,
++	.read = hp_wmi_hwmon_read,
++	.write = hp_wmi_hwmon_write,
++};
++
++static const struct hwmon_chip_info chip_info = {
++	.ops = &ops,
++	.info = info,
++};
++
++static int hp_wmi_hwmon_init(void)
++{
++	struct device *dev = &hp_wmi_platform_dev->dev;
++	struct device *hwmon;
++
++	hwmon = devm_hwmon_device_register_with_info(dev, "hp", &hp_wmi_driver,
++				&chip_info, NULL);
++
++	if (IS_ERR(hwmon)) {
++		dev_err(dev, "Could not register hp hwmon device\n");
++		return PTR_ERR(hwmon);
++	}
++
++	return 0;
++}
++
+ static int __init hp_wmi_init(void)
+ {
+ 	int event_capable = wmi_has_guid(HPWMI_EVENT_GUID);
 -- 
-Regards/Gruss,
-    Boris.
+2.33.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
