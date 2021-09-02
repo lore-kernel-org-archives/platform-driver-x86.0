@@ -2,355 +2,231 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D656C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 15:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC7AC83028
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 16:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2F5603E9
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 15:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BEB610CE
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 16:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345967AbhIBP41 (ORCPT
+        id S238956AbhIBQlE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Sep 2021 11:56:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41764 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1345969AbhIBP40 (ORCPT
+        Thu, 2 Sep 2021 12:41:04 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57826 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234478AbhIBQlD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Sep 2021 11:56:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630598127;
+        Thu, 2 Sep 2021 12:41:03 -0400
+Received: from zn.tnic (p200300ec2f0ed100559a5c00047fe4a9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d100:559a:5c00:47f:e4a9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5DB381EC051F;
+        Thu,  2 Sep 2021 18:39:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1630600799;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xLvcoxd5ha6N3/QBxzwSOO2ULcQibBEn2kLEl9lpTOY=;
-        b=X686lWMT5u6ZwNdeuCkaH45vIEWK5AdxdMjU0/+BkZEcEMfms+cZV5ZH2uZ2i02lXLL9dU
-        bzEDdRsa0EBnXgZ+/cqc+gmHL6WQu1XZgcQNQjIbptvsr76MbRI7M0+vb791MsNI5o7/J0
-        AxQlQU3zOAbhz2r+bJn2/KCFUeLDzzg=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-110-eyvWCr4qNgyWkdPz9TxkGQ-1; Thu, 02 Sep 2021 11:55:26 -0400
-X-MC-Unique: eyvWCr4qNgyWkdPz9TxkGQ-1
-Received: by mail-ej1-f70.google.com with SMTP id c25-20020a170906529900b005c56c92caa2so1132498ejm.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Sep 2021 08:55:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xLvcoxd5ha6N3/QBxzwSOO2ULcQibBEn2kLEl9lpTOY=;
-        b=bdwF8KxzuVyPFxfgviudj4vW4YZiaX9WQ8j0ORud8QH3GeEEi23z2nH+hCmLBz5gHF
-         Y5b4nP7RaADmz8HdnzpZ6RQR5fS71MLUNJ++e8Lb7U1ky3Cp5TH9HNEuoA7kkSWCxkIR
-         7nTYGRLZa3fI/BFnRJBg45kqiSO0+8DsgxM/Fg9OBI9InH8pJo9O6Rb7iF9GjkBBOSPa
-         UyqV3wtHV1bLNt8DkqEXekC071DU+WgQ0CldSGPnAZ4eHScvJbi0T4urJdkFelp2hYv4
-         4aAWuM4sRPm8r7ZFD0zOZUy4TPc0qAOLEhJhg3l/TcSb+P3Opm7Pu9b39UPBD6vEAeMA
-         9s9Q==
-X-Gm-Message-State: AOAM531Tc+e0eI9BBrzWzp9k3L7pV3cEKVPriQDCM7xuALVtTiirExPP
-        tSs+B7bBJUx+o5+SMQ0RknhCCsZD21IECb6BXSoibetku/9vsczYgOZ2Pwv9joc/RMZyZxuLG4N
-        uhHWf6Mu6CrfbRBTJ6YlXOulN3Z/R5np48Q==
-X-Received: by 2002:aa7:c1ca:: with SMTP id d10mr4172483edp.294.1630598124728;
-        Thu, 02 Sep 2021 08:55:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzNaD4vQ6dvWrwz8alpQZfwAOYU+m/XfhAsQ6tXxZ3FoZMh/XCrIMskxqVfClv8T1jpt1ugZw==
-X-Received: by 2002:aa7:c1ca:: with SMTP id d10mr4172465edp.294.1630598124484;
-        Thu, 02 Sep 2021 08:55:24 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id k15sm1326083ejb.92.2021.09.02.08.55.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Sep 2021 08:55:24 -0700 (PDT)
-Subject: Re: [PATCH v7] asus-wmi: Add support for custom fan curves
-To:     Luke Jones <luke@ljones.dev>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux@roeck-us.net,
-        platform-driver-x86@vger.kernel.org,
-        Bastien Nocera <hadess@hadess.net>
-References: <20210830113137.1338683-1-luke@ljones.dev>
- <20210830113137.1338683-2-luke@ljones.dev>
- <1o94oJFiia_xvrFrSPI_zG1Xfv4FAlJNY96x39rg-zX3-3N5Czw4KmTiJtzCy1So7kYXLu0FTkRkmwUUudeuTyLHSsx5sJGhfsZaYrXKEic=@protonmail.com>
- <BLFOYQ.DC67MOSNFFNW2@ljones.dev>
- <Z3uTWHyeRPzaHU0iSW56m1ltGsYr5DOfRoJLyGlfnObU0ph-mVf9M6KCbSV66AeY_voEARTrP6bOtqXS1ZubuSj4Cu25VSRu0VMBIf3whow=@protonmail.com>
- <CUZRYQ.HUS5YU6QXUBU@ljones.dev>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <742205fb-b712-995a-6e67-15b7f8f0fd2f@redhat.com>
-Date:   Thu, 2 Sep 2021 17:55:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        bh=tInBcwV8PPz5HgTlj8s9pKw/c3XcI6QQac6T1fjypAs=;
+        b=DZzM4T7hNki0hfWFToM06T3uIqTpW3S1x3aH9e5p4NtsH7K6Jdwm5Z5VMiIfsO0s2cTTXw
+        U+fCaPc/GyJmhSw7rXntDZUX6+BDp5bUMg+nlj6y21g2g1mWWZT9o8FZHVsus7nbxZUZug
+        8wKREAEDQ63F73TH7zNyF13KdEvoIKk=
+Date:   Thu, 2 Sep 2021 18:40:34 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
+        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH Part1 v5 35/38] x86/sev: Register SNP guest request
+ platform device
+Message-ID: <YTD+go747TIU6k9g@zn.tnic>
+References: <20210820151933.22401-1-brijesh.singh@amd.com>
+ <20210820151933.22401-36-brijesh.singh@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <CUZRYQ.HUS5YU6QXUBU@ljones.dev>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210820151933.22401-36-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Fri, Aug 20, 2021 at 10:19:30AM -0500, Brijesh Singh wrote:
+> Version 2 of GHCB specification provides NAEs that can be used by the SNP
 
-On 9/2/21 12:01 AM, Luke Jones wrote:
-> 
-> 
-> On Wed, Sep 1 2021 at 15:24:40 +0000, Barnabás Põcze <pobrn@protonmail.com> wrote:
->> Hi
->>
->>
->>>  [...]
->>>  >>  --- a/drivers/platform/x86/asus-wmi.c
->>>  >>  +++ b/drivers/platform/x86/asus-wmi.c
->>>  >>  [...]
->>>  >>  +/*
->>>  >>  + * Returns as an error if the method output is not a buffer.
->>>  >> Typically this
->>>  >
->>>  > It seems to me it will simply leave the output buffer uninitialized
->>>  > if something
->>>  > other than ACPI_TYPE_BUFFER and ACPI_TYPE_INTEGER is encountered and
->>>  > return 0.
->>>
->>>  Oops, see below inline reply:
->>>
->>>  >
->>>  >
->>>  >>  + * means that the method called is unsupported.
->>>  >>  + */
->>>  >>  +static int asus_wmi_evaluate_method_buf(u32 method_id,
->>>  >>  +        u32 arg0, u32 arg1, u8 *ret_buffer)
->>>  >>  +{
->>>  >>  +    struct bios_args args = {
->>>  >>  +        .arg0 = arg0,
->>>  >>  +        .arg1 = arg1,
->>>  >>  +        .arg2 = 0,
->>>  >>  +    };
->>>  >>  +    struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
->>>  >>  +    struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->>>  >>  +    acpi_status status;
->>>  >>  +    union acpi_object *obj;
->>>  >>  +    u32 int_tmp = 0;
->>>  >>  +
->>>  >>  +    status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 0, method_id,
->>>  >>  +                     &input, &output);
->>>  >>  +
->>>  >>  +    if (ACPI_FAILURE(status))
->>>  >>  +        return -EIO;
->>>  >>  +
->>>  >>  +    obj = (union acpi_object *)output.pointer;
->>>  >>  +
->>>  >>  +    if (obj && obj->type == ACPI_TYPE_INTEGER) {
->>>  >>  +        int_tmp = (u32) obj->integer.value;
->>>  >>  +        if (int_tmp == ASUS_WMI_UNSUPPORTED_METHOD)
->>>  >>  +            return -ENODEV;
->>>  >>  +        return int_tmp;
->>>  >
->>>  > Is anything known about the possible values? You are later
->>>  > using it as if it was an errno (e.g. in `custom_fan_check_present()`).
->>>  >
->>>  > And `obj` is leaked in both of the previous two returns.
->>>
->>>  The return for the method we're calling in this patch returns 0 if the
->>>  input arg has no match.
->>>
->>>  >
->>>  >
->>>  >>  +    }
->>>  >>  +
->>>  >>  +    if (obj && obj->type == ACPI_TYPE_BUFFER)
->>>  >>  +        memcpy(ret_buffer, obj->buffer.pointer, obj->buffer.length);
->>>  >
->>>  > I would suggest you add a "size_t size" argument to this function, and
->>>  > return -ENOSPC/-ENODATA depending on whether the returned buffer is
->>>  > too
->>>  > big/small. Maybe return -ENODATA if `obj` is NULL, too.
->>>
->>>  Got it. So something like this would be suitable?
->>>
->>>      if (obj && obj->type == ACPI_TYPE_BUFFER)
->>>          if (obj->buffer.length < size)
->>>              err = -ENOSPC;
->>>          if (!obj->buffer.length)
->>>              err = -ENODATA;
->>>          if (err) {
->>>              kfree(obj);
->>>              return err;
->>>          }
->>>          memcpy(ret_buffer, obj->buffer.pointer, obj->buffer.length);
->>>      }
->>>
->>>      if (obj && obj->type == ACPI_TYPE_INTEGER)
->>>          int_tmp = (u32) obj->integer.value;
->>>
->>>      kfree(obj);
->>>
->>>      if (int_tmp == ASUS_WMI_UNSUPPORTED_METHOD)
->>>          return -ENODEV;
->>>
->>>      /* There is at least one method that returns a 0 with no buffer */
->>>      if (obj == NULL || int_tmp == 0)
->>>          return -ENODATA;
->>>
->>>      return 0;
->>>
->>
->> I had something like the following in mind:
->>
->>   int err = 0;
->>   /* ... */
->>   obj = output.pointer;
->>   if (!obj)
->>     return -ENODATA;
->>
->>   switch (obj->type) {
->>   case ACPI_TYPE_BUFFER:
->>     if (obj->buffer.length < size)
->>       err = -ENODATA;
->>     else if (obj->buffer.length > size)
->>       err = -ENOSPC;
->>     else
->>       memcpy(ret_buffer, obj->buffer.pointer, size);
->>     break;
->>   case ACPI_TYPE_INTEGER:
->>     switch (obj->integer.value) {
->>       case ASUS_WMI_UNSUPPORTED_METHOD:
->>         err = -EOPNOTSUPP;
->>     break;
->>       default:
->>         err = -ENODATA;
->>     break;
->>     }
->>     break;
->>   default:
->>     err = -ENODATA;
->>     break;
->>   }
->>
->>   kfree(obj);
->>
->>   return err;
->>
-> 
-> Got it. Sometimes I forget switch/case exists. I'll adjust the v8 patch I sent out earlier.
-> 
->>
->>>  >
->>>  >
->>>  >>  +
->>>  >>  +    kfree(obj);
->>>  >>  +
->>>  >>  +    return 0;
->>>  >>  +}
->>>  [...]
->>>  >>  +/*
->>>  >>  + * Called only by throttle_thermal_policy_write()
->>>  >>  + */
->>>  >
->>>  > Am I correct in thinking that the firmware does not actually
->>>  > support specifying fan curves for each mode, only a single one,
->>>  > and the fan curve switching is done by this driver when
->>>  > the performance mode is changed?
->>>
->>>  I'm not 100% certain on this. The WMI method 0x00110024 takes an arg
->>>  0,1,2 which then returns some factory stored fan profiles, these fit
->>>  the profiles of ASUS_THROTTLE_THERMAL_POLICY_*, but with 1 and 2
->>>  swapped.
->>>
->>>  Looking at the SET part, it seems to write to a different location than
->>>  where the GET is fetching information.
->>>
->>
->> The, unfortunately, that is not as simple as I initially thought...
-> 
-> We can add the fact that a variation exists with a more typical setup also. The G713Q has no throttle_thermal and in the dsdt dump looks like it possible can read back the curve that is set by the user. This works in our favour though.
-> 
->>
->>
->>>  Because of the fact there are three sets of curves to get, I thought it
->>>  would be good for users to be able to set per profile. I don't think
->>>  the set is retained in acpi if the profile is switched.
->>>
->>>  Do you think it would be best to not have the ability to store per
->>>  profile in kernel?
->>
->> If there was a method to set a fan curve, and one to retrieve it,
->> I would suggest just exposing that via the pwmN_auto_pointM_{pwm,temp}
->> attributes on a hwmon device, and that the profile-dependent switching
->> be implemented somewhere else. As far as I see, there is already
->> existing infrastructure for integrating such a feature [0]
->> (but please correct me if I'm wrong).
-> 
-> There is. I develop asusctl in conjunction with these patches. I'd certainly like to find the best way to fit all of this together.
-> 
->>
->> This would simplify the kernel code, add no new ABI, and
->> potentially provide greater control over policy for the
->> user space.
-> 
-> I agree.
-> 
->>
->>
->>>  How would I choose which profile get to populate the
->>>  initial data with if so?
->>
->> I assume there isn't a method that can query
->> the current fan curve (or it is unknown)?
-> 
-> It looks like I need to adjust how pwm[n]_enable works anyway:
-> 
-> `pwm[1-*]_enable`
-> Fan speed control method:
-> - 0: no fan speed control (i.e. fan at full speed)
-> - 1: manual fan speed control enabled (using `pwm[1-*]`)
-> - 2+: automatic fan speed control enabled
+Resolve the "NAE" abbreviation here so that it is clear what this means.
 
-Notice the 2+ here, AFAIK the API allows defining extra
-settings / custom profiles when the value is higher then 2.
+> guest to communicate with the PSP without risk from a malicious hypervisor
+> who wishes to read, alter, drop or replay the messages sent.
 
-So you could do:
+This here says "malicious hypervisor" from which we protect from...
 
-2: automatic fan speed control with factory default profiles
-   (with all the pwm1_auto_point#... attributes ro perhaps ?)
-3: automatic fan speed control with custom profile
+> In order to communicate with the PSP, the guest need to locate the secrets
+> page inserted by the hypervisor during the SEV-SNP guest launch. The
 
-Note you could swap 2 and 3 here, not sure which order makes
-the most sense.
+... but this here says the secrets page is inserted by the same
+hypervisor from which we're actually protecting.
 
-Guenter, what do you think about the above?
+You wanna rephrase that to explain what exactly happens so that it
+doesn't sound like we're really trusting the HV with the secrets page.
 
-This will also nicely give power-profiles-daemon a nice way
-to check if a custom profile is being used, which Bastien
-requested to have.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
+> secrets page contains the communication keys used to send and receive the
+> encrypted messages between the guest and the PSP. The secrets page location
+> is passed through the setup_data.
 > 
-> So maybe on "manual" I can make it so the get method does what is in fan_curve_check_present() (and change that part also) and fetches the "defaults" on enable. This might even give us the fan curve that was set (and looks like it will on the machine that has no thermal throttle profile, v8 patch) - I'll try this anyway and see what it looks like. This seems to be the best approach given how the G713Q works anyway.
+> Create a platform device that the SNP guest driver can bind to get the
+> platform resources such as encryption key and message id to use to
+> communicate with the PSP. The SNP guest driver can provide userspace
+> interface to get the attestation report, key derivation, extended
+> attestation report etc.
 > 
-> The issue I have with the above is that it overwrites any curve set. But given that it'll most likely be managed in userspace that's maybe *not* an issue. Otherwise would it be sensible to add something like `pwm1_reset`? I don't see anything like that in the related docs though. `pwm1_reset` would be to re-read the defaults from the acpi method.
-> 
-> Central to the above is that we can still read 0, 1, 2 curves from acpi - I was thinking to use the throttle_thermal mode to choose which one and that would be the only use of it. And won't store them as per-profile, which becomes a moot point when userspace is managing it anyway.
-> 
-> Many thanks,
-> Luke.
-> 
-> 
->>
->>
->>>  [...]
->>
->> [0]: https://gitlab.com/asus-linux/asusctl
->>
->>
->> Best regards,
->> Barnabás Põcze
-> 
-> 
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  arch/x86/kernel/sev.c     | 68 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/sev-guest.h |  5 +++
+>  2 files changed, 73 insertions(+)
 
+...
+
+> +static u64 find_secrets_paddr(void)
+> +{
+> +	u64 pa_data = boot_params.cc_blob_address;
+> +	struct cc_blob_sev_info info;
+> +	void *map;
+> +
+> +	/*
+> +	 * The CC blob contains the address of the secrets page, check if the
+> +	 * blob is present.
+> +	 */
+> +	if (!pa_data)
+> +		return 0;
+> +
+> +	map = early_memremap(pa_data, sizeof(info));
+> +	memcpy(&info, map, sizeof(info));
+> +	early_memunmap(map, sizeof(info));
+> +
+> +	/* Verify that secrets page address is passed */
+
+That's hardly verifying something - if anything, it should say
+
+	/* smoke-test the secrets page passed */
+
+> +	if (info.secrets_phys && info.secrets_len == PAGE_SIZE)
+> +		return info.secrets_phys;
+
+... which begs the question: how do we verify the HV is not passing some
+garbage instead of an actual secrets page?
+
+I guess it is that:
+
+"SNP_LAUNCH_UPDATE can insert two special pages into the guestâ€™s
+memory: the secrets page and the CPUID page. The secrets page contains
+encryption keys used by the guest to interact with the firmware. Because
+the secrets page is encrypted with the guestâ€™s memory encryption
+key, the hypervisor cannot read the keys. The CPUID page contains
+hypervisor provided CPUID function values that it passes to the guest.
+The firmware validates these values to ensure the hypervisor is not
+providing out-of-range values."
+
+From "4.5 Launching a Guest" in the SNP FW ABI spec.
+
+I think that explanation above is very important wrt to explaining the
+big picture how this all works with those pages injected into the guest
+so I guess somewhere around here a comment should say
+
+"See section 4.5 Launching a Guest in the SNP FW ABI spec for details
+about those special pages."
+
+or so.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init add_snp_guest_request(void)
+
+If anything, that should be called
+
+init_snp_platform_device()
+
+or so.
+
+> +{
+> +	struct snp_secrets_page_layout *layout;
+> +	struct snp_guest_platform_data data;
+> +
+> +	if (!sev_feature_enabled(SEV_SNP))
+> +		return -ENODEV;
+> +
+> +	snp_secrets_phys = find_secrets_paddr();
+> +	if (!snp_secrets_phys)
+> +		return -ENODEV;
+> +
+> +	layout = snp_map_secrets_page();
+> +	if (!layout)
+> +		return -ENODEV;
+> +
+> +	/*
+> +	 * The secrets page contains three VMPCK that can be used for
+
+What's VMPCK?
+
+> +	 * communicating with the PSP. We choose the VMPCK0 to encrypt guest
+
+"We" is?
+
+> +	 * messages send and receive by the Linux. Provide the key and
+
+"... by the Linux."?! That sentence needs more love.
+
+> +	 * id through the platform data to the driver.
+> +	 */
+> +	data.vmpck_id = 0;
+> +	memcpy_fromio(data.vmpck, layout->vmpck0, sizeof(data.vmpck));
+> +
+> +	iounmap(layout);
+> +
+> +	platform_device_add_data(&guest_req_device, &data, sizeof(data));
+
+Oh look, that function can return an error.
+
+> +
+> +	if (!platform_device_register(&guest_req_device))
+> +		dev_info(&guest_req_device.dev, "secret phys 0x%llx\n", snp_secrets_phys);
+
+Make that message human-readable - not a debug one.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
