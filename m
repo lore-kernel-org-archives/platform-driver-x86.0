@@ -2,122 +2,324 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84B0C00143
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 15:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D656C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 15:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B19610CD
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 15:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2F5603E9
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Sep 2021 15:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345837AbhIBPkA (ORCPT
+        id S1345967AbhIBP41 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Sep 2021 11:40:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42947 "EHLO
+        Thu, 2 Sep 2021 11:56:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41764 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1345877AbhIBPj7 (ORCPT
+        by vger.kernel.org with ESMTP id S1345969AbhIBP40 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Sep 2021 11:39:59 -0400
+        Thu, 2 Sep 2021 11:56:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630597140;
+        s=mimecast20190719; t=1630598127;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uNTOhgRy7o1B8lP12w/RGJ+lb8CdMv3YYkSQuI6PLDE=;
-        b=Oksj3s7gjYSo1JNJoZu7yoC3wGOAUmRRTcCDL+r5tl1bSL8p9bBHir9wbGLq7qtYicqQYi
-        uirG14toooySR3kcIlJUncU0V4gg1jxb93tTCfu64ljhtABBZ1jnRL2C87jqmyL68cwT3h
-        vbr4jGxM5XtQcDNSv0fyrVYZUr2kbxE=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-OgxjGn3UNxyphKlHbW_lRA-1; Thu, 02 Sep 2021 11:38:59 -0400
-X-MC-Unique: OgxjGn3UNxyphKlHbW_lRA-1
-Received: by mail-ej1-f69.google.com with SMTP id ga42-20020a1709070c2a00b005dc8c1cc3a1so1112057ejc.17
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Sep 2021 08:38:59 -0700 (PDT)
+        bh=xLvcoxd5ha6N3/QBxzwSOO2ULcQibBEn2kLEl9lpTOY=;
+        b=X686lWMT5u6ZwNdeuCkaH45vIEWK5AdxdMjU0/+BkZEcEMfms+cZV5ZH2uZ2i02lXLL9dU
+        bzEDdRsa0EBnXgZ+/cqc+gmHL6WQu1XZgcQNQjIbptvsr76MbRI7M0+vb791MsNI5o7/J0
+        AxQlQU3zOAbhz2r+bJn2/KCFUeLDzzg=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-110-eyvWCr4qNgyWkdPz9TxkGQ-1; Thu, 02 Sep 2021 11:55:26 -0400
+X-MC-Unique: eyvWCr4qNgyWkdPz9TxkGQ-1
+Received: by mail-ej1-f70.google.com with SMTP id c25-20020a170906529900b005c56c92caa2so1132498ejm.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Sep 2021 08:55:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=uNTOhgRy7o1B8lP12w/RGJ+lb8CdMv3YYkSQuI6PLDE=;
-        b=pvAi2obJIL2YY6hx637wJtauW1lhkYps9hVjuP4bt3FlzTiQY8tTGVcRkurfsJFEPH
-         tMsd1y+BB7YdgCiTDmxnDT5d7y+1kT7pcYhnFWKFvdPsflq5cj+kgjS5j3/qtvtTa55j
-         o7aPxfQ4H4HNRo6IRU9xpcJww7tQQWwVVqUZ2EcK+rEvHnsYLTVJ1+vg60MT1PViOJOm
-         GZMasYHeMlUaukMY6ql9GxdETBsx22JJC3zoCpsW6cITuot2HRWIJnBRUVHybYoiW5Gj
-         ioU7+DI0S//vIB/ISuS5LbCRCYELvTvCrvFCYvh0kgAlc0ub4jp6OZSbfB9MEc1aXjh3
-         g7PQ==
-X-Gm-Message-State: AOAM531LvoTcKyZHHcYl6WsMacJftcKcT/KpQiXwD4/a/whF0N0QCehc
-        5UGr+P48fyC0MgdQVHbzQan8tZkngvldQ/ciHqnxrlYJ4EdaiVNQRC6owfb3gQqXwSTtprLLe7O
-        oEiZiwNE1URC3DcSkb0rNXRadFL/mBy+wKA==
-X-Received: by 2002:a05:6402:10d9:: with SMTP id p25mr4004638edu.51.1630597138581;
-        Thu, 02 Sep 2021 08:38:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzJql1FaIRBKcJ517uaj5Q2KBSwYefr0TaPUgZmcEMjzrwdxhQ8vEWshPi/MjG3O2B7/LUGNw==
-X-Received: by 2002:a05:6402:10d9:: with SMTP id p25mr4004618edu.51.1630597138335;
-        Thu, 02 Sep 2021 08:38:58 -0700 (PDT)
+        bh=xLvcoxd5ha6N3/QBxzwSOO2ULcQibBEn2kLEl9lpTOY=;
+        b=bdwF8KxzuVyPFxfgviudj4vW4YZiaX9WQ8j0ORud8QH3GeEEi23z2nH+hCmLBz5gHF
+         Y5b4nP7RaADmz8HdnzpZ6RQR5fS71MLUNJ++e8Lb7U1ky3Cp5TH9HNEuoA7kkSWCxkIR
+         7nTYGRLZa3fI/BFnRJBg45kqiSO0+8DsgxM/Fg9OBI9InH8pJo9O6Rb7iF9GjkBBOSPa
+         UyqV3wtHV1bLNt8DkqEXekC071DU+WgQ0CldSGPnAZ4eHScvJbi0T4urJdkFelp2hYv4
+         4aAWuM4sRPm8r7ZFD0zOZUy4TPc0qAOLEhJhg3l/TcSb+P3Opm7Pu9b39UPBD6vEAeMA
+         9s9Q==
+X-Gm-Message-State: AOAM531Tc+e0eI9BBrzWzp9k3L7pV3cEKVPriQDCM7xuALVtTiirExPP
+        tSs+B7bBJUx+o5+SMQ0RknhCCsZD21IECb6BXSoibetku/9vsczYgOZ2Pwv9joc/RMZyZxuLG4N
+        uhHWf6Mu6CrfbRBTJ6YlXOulN3Z/R5np48Q==
+X-Received: by 2002:aa7:c1ca:: with SMTP id d10mr4172483edp.294.1630598124728;
+        Thu, 02 Sep 2021 08:55:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzNaD4vQ6dvWrwz8alpQZfwAOYU+m/XfhAsQ6tXxZ3FoZMh/XCrIMskxqVfClv8T1jpt1ugZw==
+X-Received: by 2002:aa7:c1ca:: with SMTP id d10mr4172465edp.294.1630598124484;
+        Thu, 02 Sep 2021 08:55:24 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id v8sm1394511ejy.79.2021.09.02.08.38.57
+        by smtp.gmail.com with ESMTPSA id k15sm1326083ejb.92.2021.09.02.08.55.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Sep 2021 08:38:57 -0700 (PDT)
-Subject: Re: [PATCH v4] platform/x86: Add driver for ACPI WMAA EC-based
- backlight control
-To:     Daniel Dadap <ddadap@nvidia.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     andy.shevchenko@gmail.com, mario.limonciello@outlook.com,
-        pobrn@protonmail.com, dvhart@infradead.org, thomas@t-8ch.de,
-        Aaron Plattner <aplattner@nvidia.com>
-References: <70b81e33-c769-4cb8-0bae-5ee10a209389@nvidia.com>
- <20210831224906.1072-1-ddadap@nvidia.com>
+        Thu, 02 Sep 2021 08:55:24 -0700 (PDT)
+Subject: Re: [PATCH v7] asus-wmi: Add support for custom fan curves
+To:     Luke Jones <luke@ljones.dev>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux@roeck-us.net,
+        platform-driver-x86@vger.kernel.org,
+        Bastien Nocera <hadess@hadess.net>
+References: <20210830113137.1338683-1-luke@ljones.dev>
+ <20210830113137.1338683-2-luke@ljones.dev>
+ <1o94oJFiia_xvrFrSPI_zG1Xfv4FAlJNY96x39rg-zX3-3N5Czw4KmTiJtzCy1So7kYXLu0FTkRkmwUUudeuTyLHSsx5sJGhfsZaYrXKEic=@protonmail.com>
+ <BLFOYQ.DC67MOSNFFNW2@ljones.dev>
+ <Z3uTWHyeRPzaHU0iSW56m1ltGsYr5DOfRoJLyGlfnObU0ph-mVf9M6KCbSV66AeY_voEARTrP6bOtqXS1ZubuSj4Cu25VSRu0VMBIf3whow=@protonmail.com>
+ <CUZRYQ.HUS5YU6QXUBU@ljones.dev>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c508437a-5140-00f3-6316-a30c1d806e48@redhat.com>
-Date:   Thu, 2 Sep 2021 17:38:57 +0200
+Message-ID: <742205fb-b712-995a-6e67-15b7f8f0fd2f@redhat.com>
+Date:   Thu, 2 Sep 2021 17:55:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210831224906.1072-1-ddadap@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CUZRYQ.HUS5YU6QXUBU@ljones.dev>
+Content-Type: text/plain; charset=iso-8859-2
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Daniel,
+Hi,
 
-On 9/1/21 12:49 AM, Daniel Dadap wrote:
-> A number of upcoming notebook computer designs drive the internal
-> display panel's backlight PWM through the Embedded Controller (EC).
-> This EC-based backlight control can be plumbed through to an ACPI
-> "WMAA" method interface, which in turn can be wrapped by WMI with
-> the GUID handle 603E9613-EF25-4338-A3D0-C46177516DB7.
+On 9/2/21 12:01 AM, Luke Jones wrote:
 > 
-> Add a new driver, aliased to the WMAA WMI GUID, to expose a sysfs
-> backlight class driver to control backlight levels on systems with
-> EC-driven backlights.
 > 
-> Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
-> Signed-off-by: Daniel Dadap <ddadap@nvidia.com>
-> ---
+> On Wed, Sep 1 2021 at 15:24:40 +0000, Barnab·s Pıcze <pobrn@protonmail.com> wrote:
+>> Hi
+>>
+>>
+>>> †[...]
+>>> †>>† --- a/drivers/platform/x86/asus-wmi.c
+>>> †>>† +++ b/drivers/platform/x86/asus-wmi.c
+>>> †>>† [...]
+>>> †>>† +/*
+>>> †>>† + * Returns as an error if the method output is not a buffer.
+>>> †>> Typically this
+>>> †>
+>>> †> It seems to me it will simply leave the output buffer uninitialized
+>>> †> if something
+>>> †> other than ACPI_TYPE_BUFFER and ACPI_TYPE_INTEGER is encountered and
+>>> †> return 0.
+>>>
+>>> †Oops, see below inline reply:
+>>>
+>>> †>
+>>> †>
+>>> †>>† + * means that the method called is unsupported.
+>>> †>>† + */
+>>> †>>† +static int asus_wmi_evaluate_method_buf(u32 method_id,
+>>> †>>† +††††††† u32 arg0, u32 arg1, u8 *ret_buffer)
+>>> †>>† +{
+>>> †>>† +††† struct bios_args args = {
+>>> †>>† +††††††† .arg0 = arg0,
+>>> †>>† +††††††† .arg1 = arg1,
+>>> †>>† +††††††† .arg2 = 0,
+>>> †>>† +††† };
+>>> †>>† +††† struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
+>>> †>>† +††† struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+>>> †>>† +††† acpi_status status;
+>>> †>>† +††† union acpi_object *obj;
+>>> †>>† +††† u32 int_tmp = 0;
+>>> †>>† +
+>>> †>>† +††† status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 0, method_id,
+>>> †>>† +†††††††††††††††††††† &input, &output);
+>>> †>>† +
+>>> †>>† +††† if (ACPI_FAILURE(status))
+>>> †>>† +††††††† return -EIO;
+>>> †>>† +
+>>> †>>† +††† obj = (union acpi_object *)output.pointer;
+>>> †>>† +
+>>> †>>† +††† if (obj && obj->type == ACPI_TYPE_INTEGER) {
+>>> †>>† +††††††† int_tmp = (u32) obj->integer.value;
+>>> †>>† +††††††† if (int_tmp == ASUS_WMI_UNSUPPORTED_METHOD)
+>>> †>>† +††††††††††† return -ENODEV;
+>>> †>>† +††††††† return int_tmp;
+>>> †>
+>>> †> Is anything known about the possible values? You are later
+>>> †> using it as if it was an errno (e.g. in `custom_fan_check_present()`).
+>>> †>
+>>> †> And `obj` is leaked in both of the previous two returns.
+>>>
+>>> †The return for the method we're calling in this patch returns 0 if the
+>>> †input arg has no match.
+>>>
+>>> †>
+>>> †>
+>>> †>>† +††† }
+>>> †>>† +
+>>> †>>† +††† if (obj && obj->type == ACPI_TYPE_BUFFER)
+>>> †>>† +††††††† memcpy(ret_buffer, obj->buffer.pointer, obj->buffer.length);
+>>> †>
+>>> †> I would suggest you add a "size_t size" argument to this function, and
+>>> †> return -ENOSPC/-ENODATA depending on whether the returned buffer is
+>>> †> too
+>>> †> big/small. Maybe return -ENODATA if `obj` is NULL, too.
+>>>
+>>> †Got it. So something like this would be suitable?
+>>>
+>>> †††† if (obj && obj->type == ACPI_TYPE_BUFFER)
+>>> †††††††† if (obj->buffer.length < size)
+>>> †††††††††††† err = -ENOSPC;
+>>> †††††††† if (!obj->buffer.length)
+>>> †††††††††††† err = -ENODATA;
+>>> †††††††† if (err) {
+>>> †††††††††††† kfree(obj);
+>>> †††††††††††† return err;
+>>> †††††††† }
+>>> †††††††† memcpy(ret_buffer, obj->buffer.pointer, obj->buffer.length);
+>>> †††† }
+>>>
+>>> †††† if (obj && obj->type == ACPI_TYPE_INTEGER)
+>>> †††††††† int_tmp = (u32) obj->integer.value;
+>>>
+>>> †††† kfree(obj);
+>>>
+>>> †††† if (int_tmp == ASUS_WMI_UNSUPPORTED_METHOD)
+>>> †††††††† return -ENODEV;
+>>>
+>>> †††† /* There is at least one method that returns a 0 with no buffer */
+>>> †††† if (obj == NULL || int_tmp == 0)
+>>> †††††††† return -ENODATA;
+>>>
+>>> †††† return 0;
+>>>
+>>
+>> I had something like the following in mind:
+>>
+>> † int err = 0;
+>> † /* ... */
+>> † obj = output.pointer;
+>> † if (!obj)
+>> ††† return -ENODATA;
+>>
+>> † switch (obj->type) {
+>> † case ACPI_TYPE_BUFFER:
+>> ††† if (obj->buffer.length < size)
+>> ††††† err = -ENODATA;
+>> ††† else if (obj->buffer.length > size)
+>> ††††† err = -ENOSPC;
+>> ††† else
+>> ††††† memcpy(ret_buffer, obj->buffer.pointer, size);
+>> ††† break;
+>> † case ACPI_TYPE_INTEGER:
+>> ††† switch (obj->integer.value) {
+>> ††††† case ASUS_WMI_UNSUPPORTED_METHOD:
+>> ††††††† err = -EOPNOTSUPP;
+>> ††††break;
+>> ††††† default:
+>> ††††††† err = -ENODATA;
+>> ††††break;
+>> ††† }
+>> ††† break;
+>> † default:
+>> ††† err = -ENODATA;
+>> ††† break;
+>> † }
+>>
+>> † kfree(obj);
+>>
+>> † return err;
+>>
 > 
-> v2: Convert to WMI subsystem driver, suggested by Mario Limonciello
->      <mario.limonciello@outlook.com>; various cleanups suggested by
->      Barnab√°s P≈ëcze <pobrn@protonmail.com>
-> v3: Address assorted style nits raised by Andy Shevchenko
->      <andy.shevchenko@gmail.com> in response to a related patch; remove
->      additional behavior change to WMI subsystem from patch series as
->      recommended by Hans de Goede <hdegoede@redhat.com> 
-> v4: Use MODULE_DEVICE_TABLE() (Thomas Wei√üschuh <thomas@t-8ch.de>)
->     Fix scope of internal driver state; various style fixes (Barnab√°s
->     P≈ëcze, Andy Shevchenko)
->     Use devm_backlight_device_register() (Barnab√°s P≈ëcze)
->     Add kerneldoc comments for enums and structs (Andy Shevchenko)
+> Got it. Sometimes I forget switch/case exists. I'll adjust the v8 patch I sent out earlier.
+> 
+>>
+>>> †>
+>>> †>
+>>> †>>† +
+>>> †>>† +††† kfree(obj);
+>>> †>>† +
+>>> †>>† +††† return 0;
+>>> †>>† +}
+>>> †[...]
+>>> †>>† +/*
+>>> †>>† + * Called only by throttle_thermal_policy_write()
+>>> †>>† + */
+>>> †>
+>>> †> Am I correct in thinking that the firmware does not actually
+>>> †> support specifying fan curves for each mode, only a single one,
+>>> †> and the fan curve switching is done by this driver when
+>>> †> the performance mode is changed?
+>>>
+>>> †I'm not 100% certain on this. The WMI method 0x00110024 takes an arg
+>>> †0,1,2 which then returns some factory stored fan profiles, these fit
+>>> †the profiles of ASUS_THROTTLE_THERMAL_POLICY_*, but with 1 and 2
+>>> †swapped.
+>>>
+>>> †Looking at the SET part, it seems to write to a different location than
+>>> †where the GET is fetching information.
+>>>
+>>
+>> The, unfortunately, that is not as simple as I initially thought...
+> 
+> We can add the fact that a variation exists with a more typical setup also. The G713Q has no throttle_thermal and in the dsdt dump looks like it possible can read back the curve that is set by the user. This works in our favour though.
+> 
+>>
+>>
+>>> †Because of the fact there are three sets of curves to get, I thought it
+>>> †would be good for users to be able to set per profile. I don't think
+>>> †the set is retained in acpi if the profile is switched.
+>>>
+>>> †Do you think it would be best to not have the ability to store per
+>>> †profile in kernel?
+>>
+>> If there was a method to set a fan curve, and one to retrieve it,
+>> I would suggest just exposing that via the pwmN_auto_pointM_{pwm,temp}
+>> attributes on a hwmon device, and that the profile-dependent switching
+>> be implemented somewhere else. As far as I see, there is already
+>> existing infrastructure for integrating such a feature [0]
+>> (but please correct me if I'm wrong).
+> 
+> There is. I develop asusctl in conjunction with these patches. I'd certainly like to find the best way to fit all of this together.
+> 
+>>
+>> This would simplify the kernel code, add no new ABI, and
+>> potentially provide greater control over policy for the
+>> user space.
+> 
+> I agree.
+> 
+>>
+>>
+>>> †How would I choose which profile get to populate the
+>>> †initial data with if so?
+>>
+>> I assume there isn't a method that can query
+>> the current fan curve (or it is unknown)?
+> 
+> It looks like I need to adjust how pwm[n]_enable works anyway:
+> 
+> `pwm[1-*]_enable`
+> Fan speed control method:
+> - 0: no fan speed control (i.e. fan at full speed)
+> - 1: manual fan speed control enabled (using `pwm[1-*]`)
+> - 2+: automatic fan speed control enabled
 
-Thank you for your patch, given Andy's (small) set of remarks
-I believe it would be best to do a v5 addressing those, after that
-I expect this to be ready for merging.
+Notice the 2+ here, AFAIK the API allows defining extra
+settings / custom profiles when the value is higher then 2.
+
+So you could do:
+
+2: automatic fan speed control with factory default profiles
+   (with all the pwm1_auto_point#... attributes ro perhaps ?)
+3: automatic fan speed control with custom profile
+
+Note you could swap 2 and 3 here, not sure which order makes
+the most sense.
+
+Guenter, what do you think about the above?
+
+This will also nicely give power-profiles-daemon a nice way
+to check if a custom profile is being used, which Bastien
+requested to have.
 
 Regards,
 
@@ -126,260 +328,29 @@ Hans
 
 
 
+
+
+
 > 
->  MAINTAINERS                               |   6 +
->  drivers/platform/x86/Kconfig              |  16 ++
->  drivers/platform/x86/Makefile             |   1 +
->  drivers/platform/x86/wmaa-backlight-wmi.c | 185 ++++++++++++++++++++++
->  4 files changed, 208 insertions(+)
->  create mode 100644 drivers/platform/x86/wmaa-backlight-wmi.c
+> So maybe on "manual" I can make it so the get method does what is in fan_curve_check_present() (and change that part also) and fetches the "defaults" on enable. This might even give us the fan curve that was set (and looks like it will on the machine that has no thermal throttle profile, v8 patch) - I'll try this anyway and see what it looks like. This seems to be the best approach given how the G713Q works anyway.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index bbaecde94aa0..fd7362a86c6d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20008,6 +20008,12 @@ L:	linux-wireless@vger.kernel.org
->  S:	Odd fixes
->  F:	drivers/net/wireless/wl3501*
->  
-> +WMAA BACKLIGHT DRIVER
-> +M:	Daniel Dadap <ddadap@nvidia.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/platform/x86/wmaa-backlight-wmi.c
-> +
->  WOLFSON MICROELECTRONICS DRIVERS
->  L:	patches@opensource.cirrus.com
->  S:	Supported
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index d12db6c316ea..0df908ef8d7c 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -113,6 +113,22 @@ config PEAQ_WMI
->  	help
->  	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
->  
-> +config WMAA_BACKLIGHT_WMI
-> +	tristate "ACPI WMAA Backlight Driver"
-> +	depends on ACPI_WMI
-> +	depends on BACKLIGHT_CLASS_DEVICE
-> +	help
-> +	  This driver provides a sysfs backlight interface for notebook
-> +	  systems which expose the WMAA ACPI method and an associated WMI
-> +	  wrapper to drive LCD backlight levels through the system's
-> +	  Embedded Controller (EC).
-> +
-> +	  Say Y or M here if you want to control the backlight on a notebook
-> +	  system with an EC-driven backlight using the ACPI WMAA method.
-> +
-> +	  If you choose to compile this driver as a module the module will be
-> +	  called wmaa-backlight-wmi.
-> +
->  config XIAOMI_WMI
->  	tristate "Xiaomi WMI key driver"
->  	depends on ACPI_WMI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 7ee369aab10d..109c1714237d 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= intel-wmi-sbl-fw-update.o
->  obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
->  obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
->  obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
-> +obj-$(CONFIG_WMAA_BACKLIGHT_WMI)	+= wmaa-backlight-wmi.o
->  obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
->  obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
->  
-> diff --git a/drivers/platform/x86/wmaa-backlight-wmi.c b/drivers/platform/x86/wmaa-backlight-wmi.c
-> new file mode 100644
-> index 000000000000..cb1a973803b1
-> --- /dev/null
-> +++ b/drivers/platform/x86/wmaa-backlight-wmi.c
-> @@ -0,0 +1,185 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
-> + */
-> +
-> +#include <linux/backlight.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +
-> +/**
-> + * enum wmaa_method - WMI method IDs for ACPI WMAA
-> + *
-> + * @WMAA_LEVEL:  Get or set the brightness level,
-> + *               or get the maximum brightness level.
-> + * @WMAA_SOURCE: Get the source for backlight control.
-> + */
-> +enum wmaa_method {
-> +	WMAA_LEVEL = 1,
-> +	WMAA_SOURCE = 2,
-> +};
-> +
-> +/**
-> + * enum wmaa_get_or_set - Operation mode for ACPI WMAA method
-> + *
-> + * @WMAA_GET:     Get the current brightness level or backlight source.
-> + * @WMAA_SET:     Set the brightness level.
-> + * @WMAA_GET_MAX: Get the maximum brightness level. This is only valid when the
-> + *                WMI method is %WMAA_LEVEL.
-> + */
-> +enum wmaa_get_or_set {
-> +	WMAA_GET = 0,
-> +	WMAA_SET = 1,
-> +	WMAA_GET_MAX = 2
-> +};
-> +
-> +/**
-> + * enum wmaa_source - Backlight brightness control source identification
-> + *
-> + * @WMAA_SOURCE_GPU:   Backlight brightness is controlled by the GPU.
-> + * @WMAA_SOURCE_EC:    Backlight brightness is controlled by the system's
-> + *                     Embedded Controller (EC).
-> + * @WMAA_SOURCE_AUX:   Backlight brightness is controlled over the DisplayPort
-> + *                     AUX channel.
-> + */
-> +enum wmaa_source {
-> +	WMAA_SOURCE_GPU = 1,
-> +	WMAA_SOURCE_EC = 2,
-> +	WMAA_SOURCE_AUX = 3
-> +};
-> +
-> +/**
-> + * struct wmaa_args - arguments for the ACPI WMAA method
-> + *
-> + * @set:     Pass in an &enum wmaa_get_or_set value to select between getting or
-> + *           setting a value.
-> + * @val:     In parameter for value to set when operating in %WMAA_SET mode. Not
-> + *           used in %WMAA_GET or %WMAA_GET_MAX mode.
-> + * @ret:     Out parameter returning retrieved value when operating in %WMAA_GET
-> + *           or %WMAA_GET_MAX mode. Not used in %WMAA_SET mode.
-> + * @ignored: Padding; not used. The ACPI method expects a 24 byte params struct.
-> + *
-> + * This is the parameters structure for the ACPI WMAA method as wrapped by WMI.
-> + * The value passed in to @val or returned by @ret will be a brightness value
-> + * when the WMI method ID is %WMAA_LEVEL, or an &enum wmaa_source value when
-> + * the WMI method ID is %WMAA_SOURCE.
-> + */
-> +struct wmaa_args {
-> +	u32 set;
-> +	u32 val;
-> +	u32 ret;
-> +	u32 ignored[3];
-> +};
-> +
-> +static int wmi_call_wmaa(struct wmi_device *w, enum wmaa_method method, enum wmaa_get_or_set set, u32 *val)
-> +{
-> +	struct wmaa_args args = {
-> +		.set = set,
-> +		.val = 0,
-> +		.ret = 0,
-> +	};
-> +	struct acpi_buffer buf = { (acpi_size)sizeof(args), &args };
-> +	acpi_status status;
-> +
-> +	if (set == WMAA_SET)
-> +		args.val = *val;
-> +
-> +	status = wmidev_evaluate_method(w, 0, method, &buf, &buf);
-> +	if (ACPI_FAILURE(status)) {
-> +		dev_err(&w->dev, "ACPI WMAA failed with %s\n",
-> +			acpi_format_exception(status));
-> +		return -EIO;
-> +	}
-> +
-> +	if (set != WMAA_SET)
-> +		*val = args.ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int wmaa_backlight_update_status(struct backlight_device *bd)
-> +{
-> +	struct wmi_device *wdev = bl_get_data(bd);
-> +
-> +	return wmi_call_wmaa(wdev, WMAA_LEVEL, WMAA_SET, &bd->props.brightness);
-> +}
-> +
-> +static int wmaa_backlight_get_brightness(struct backlight_device *bd)
-> +{
-> +	struct wmi_device *wdev = bl_get_data(bd);
-> +	u32 level = 0;
-> +	int ret;
-> +
-> +	ret = wmi_call_wmaa(wdev, WMAA_LEVEL, WMAA_GET, &level);
-> +
-> +	if (ret)
-> +		dev_err(&bd->dev, "ACPI WMAA failed to get backlight level.\n");
-> +
-> +	return level;
-> +}
-> +
-> +static const struct backlight_ops wmaa_backlight_ops = {
-> +	.update_status = wmaa_backlight_update_status,
-> +	.get_brightness = wmaa_backlight_get_brightness
-> +};
-> +
-> +static int wmaa_backlight_wmi_probe(struct wmi_device *w, const void *ctx)
-> +{
-> +	struct backlight_properties props = {};
-> +	struct backlight_device *backlight;
-> +	u32 source;
-> +	int ret;
-> +
-> +	ret = wmi_call_wmaa(w, WMAA_SOURCE, WMAA_GET, &source);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (source != WMAA_SOURCE_EC) {
-> +		/* This driver is only to be used when brightness control is
-> +		 * handled by the EC; otherwise, the GPU driver(s) should handle
-> +		 * brightness control. */
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* Identify this backlight device as a platform device so that it can
-> +	 * be prioritized over any exposed GPU-driven raw device(s). */
-> +	props.type = BACKLIGHT_PLATFORM;
-> +
-> +	ret = wmi_call_wmaa(w, WMAA_LEVEL, WMAA_GET_MAX, &props.max_brightness);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = wmi_call_wmaa(w, WMAA_LEVEL, WMAA_GET, &props.brightness);
-> +	if (ret)
-> +		return ret;
-> +
-> +	backlight = devm_backlight_device_register(
-> +		&w->dev, "wmaa_backlight",
-> +		&w->dev, w, &wmaa_backlight_ops, &props);
-> +	if (IS_ERR(backlight))
-> +		return PTR_ERR(backlight);
-> +
-> +	return 0;
-> +}
-> +
-> +#define WMAA_WMI_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
-> +
-> +static const struct wmi_device_id wmaa_backlight_wmi_id_table[] = {
-> +	{ .guid_string = WMAA_WMI_GUID },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(wmi, wmaa_backlight_wmi_id_table);
-> +
-> +static struct wmi_driver wmaa_backlight_wmi_driver = {
-> +	.driver = {
-> +		.name = "wmaa-backlight"
-> +	},
-> +	.probe = wmaa_backlight_wmi_probe,
-> +	.id_table = wmaa_backlight_wmi_id_table
-> +};
-> +module_wmi_driver(wmaa_backlight_wmi_driver);
-> +
-> +MODULE_AUTHOR("Aaron Plattner <aplattner@nvidia.com>");
-> +MODULE_AUTHOR("Daniel Dadap <ddadap@nvidia.com>");
-> +MODULE_DESCRIPTION("WMAA Backlight WMI driver");
-> +MODULE_LICENSE("GPL v2");
+> The issue I have with the above is that it overwrites any curve set. But given that it'll most likely be managed in userspace that's maybe *not* an issue. Otherwise would it be sensible to add something like `pwm1_reset`? I don't see anything like that in the related docs though. `pwm1_reset` would be to re-read the defaults from the acpi method.
+> 
+> Central to the above is that we can still read 0, 1, 2 curves from acpi - I was thinking to use the throttle_thermal mode to choose which one and that would be the only use of it. And won't store them as per-profile, which becomes a moot point when userspace is managing it anyway.
+> 
+> Many thanks,
+> Luke.
+> 
+> 
+>>
+>>
+>>> †[...]
+>>
+>> [0]: https://gitlab.com/asus-linux/asusctl
+>>
+>>
+>> Best regards,
+>> Barnab·s Pıcze
+> 
 > 
 
