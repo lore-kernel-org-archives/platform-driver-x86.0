@@ -2,104 +2,208 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9375AC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Sep 2021 08:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC72C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Sep 2021 08:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1E9610C8
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Sep 2021 08:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F37610CE
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Sep 2021 08:16:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348176AbhICIQ1 (ORCPT
+        id S1348207AbhICIRs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 3 Sep 2021 04:16:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348170AbhICIQ0 (ORCPT
+        Fri, 3 Sep 2021 04:17:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55608 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1348208AbhICIRr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Sep 2021 04:16:26 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36400C061575
-        for <platform-driver-x86@vger.kernel.org>; Fri,  3 Sep 2021 01:15:27 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id c17so4868874pgc.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Sep 2021 01:15:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=r77UG77TEi9UoiLkAnUunEexq+MEIfmyd1q64/sfa0k=;
-        b=VuoC9TW2zNK6z4QxaxGz2e+OdoBLJ6CB9D7EPcX+DHoiXRmGWWqWxF6RetK4A8M+iG
-         anbYvALslK07q6S788FgPUg/an8yiNrC/lgaj+eSkK19tMSOAG7qr0VaIrVhvGq5r0kK
-         G22ypSvi/aT2E9I8pk0RuVl2cCAJ4AX98G3xiCpSVwmdJShyaV81G8i0NPWX44usn0/T
-         6UuoBGqa6MvVYPt5M5QM/iQHr+oIhDz4fABDPMOdkgzzC6ImXgPjO6HNxm70KBf+pEMd
-         GbL5RtT7Ek4J92We+ubUS8oN53B0/9ZAe/wfkhw/4iW5bQVXTDA2bpu7et1XDJdYrs5g
-         XDtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=r77UG77TEi9UoiLkAnUunEexq+MEIfmyd1q64/sfa0k=;
-        b=ezHY5y4ZrbmVotVd7r5xPxCbROtfOJuVIYPKDmiSpUsEZZl0FQL60IYN2wTBVaczKs
-         40zPUZeZyo20BorZjUXLu5Xhi2iDWOppBwYkFpew6q0Y8RBO7FAoGfY63MUoYnj8hJIZ
-         LLKxEdDG7cjChoWjOm9IVTLJltLnwzlFig9vObjvQVWI8NZDEodNcMc8lDcf8z7wMOx9
-         X4gr8YMaoV3IiE3yi1ossYrypS+lq39EAgHg/N2yoL4kuVHxYCuzKTuO3NnsQP3shJpm
-         6dPmGVAVK9ChWZ3I2Q01DO8xt3+60L7pzVlWlAWVYYDROA/8zhRQKuLVMaTFpKQ7mIJO
-         09Ig==
-X-Gm-Message-State: AOAM530j60oH2BOufMPr4/3AGkBKx7jvJSl6DI9a5XrznP1zPENOuwCj
-        uCbCAjREgchp27BQswb+C0OPgi08VykfjGZS7yzXpM37B8fv8Q==
-X-Google-Smtp-Source: ABdhPJwSfxTpHaBjHraA1CSy4rRfnjrk7zi2A+kXdMCv9T8E6TKx4MLw3HZgKIQ06Q7UQx34sU4M5Qfz4Q2e03v2hYI=
-X-Received: by 2002:aa7:875a:0:b0:3f1:c4c8:5f0d with SMTP id
- g26-20020aa7875a000000b003f1c4c85f0dmr2204306pfo.40.1630656926627; Fri, 03
- Sep 2021 01:15:26 -0700 (PDT)
+        Fri, 3 Sep 2021 04:17:47 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 18388u2k120999;
+        Fri, 3 Sep 2021 04:15:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=LeBFR5NxS59Up7fXyEdw+xXLB76JpsgZixl/tUzPLRA=;
+ b=qegV+v9YgCr0H7ILmPi0n6AmFrk8Qi54Lw0ltVSn0osPDcmxBCYMA8Bpi/cRwiMql+yU
+ w7KVrCynhQIePfvw4tWvFeegpay7VQlQLQ0n7J/d7mTXJo5UJsRHDcNEPMWIuHow6IOt
+ hLq/1mUhRsD7QCWEjFQxlGsk3pTsoV6GR0F/yhgHJZLLN9uUZ400ito0cJ/XJy711O+k
+ p0cLPFRXM0CKhCUumISYMCuAu7nA/u0UzSZ8fYyl2G5IPgEywz608PHXpeFuj84OyO90
+ RFxVykOfSNdjJEFH4WOtRqJLVobNOT5c+qmh5xs9609FH34rVyQ8APghEcycBhTXWzdK Fw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3aufcdgxsg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Sep 2021 04:15:39 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 183891fA121397;
+        Fri, 3 Sep 2021 04:15:38 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3aufcdgxry-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Sep 2021 04:15:38 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18388p1B002414;
+        Fri, 3 Sep 2021 08:15:37 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01wdc.us.ibm.com with ESMTP id 3au6pjgy58-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Sep 2021 08:15:37 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1838FaQ133948086
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Sep 2021 08:15:36 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 462D7C6063;
+        Fri,  3 Sep 2021 08:15:36 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 657F6C6062;
+        Fri,  3 Sep 2021 08:15:28 +0000 (GMT)
+Received: from [9.65.84.185] (unknown [9.65.84.185])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Sep 2021 08:15:28 +0000 (GMT)
+Subject: Re: [PATCH Part1 v5 35/38] x86/sev: Register SNP guest request
+ platform device
+To:     Brijesh Singh <brijesh.singh@amd.com>,
+        Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
+        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+        Dov Murik <dovmurik@linux.ibm.com>
+References: <20210820151933.22401-1-brijesh.singh@amd.com>
+ <20210820151933.22401-36-brijesh.singh@amd.com> <YTD+go747TIU6k9g@zn.tnic>
+ <5428d654-a24d-7d8b-489c-b666d72043c1@amd.com>
+From:   Dov Murik <dovmurik@linux.ibm.com>
+Message-ID: <287db163-aaac-4cc1-522f-380f97197b3d@linux.ibm.com>
+Date:   Fri, 3 Sep 2021 11:15:26 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-References: <f4802d28-3674-bbc3-0377-52d3d03af4fe@redhat.com>
- <20210902214718.13628-1-ddadap@nvidia.com> <e63904b7-105b-4401-bd40-82854b7d42d1@t-8ch.de>
- <43912a84-511d-18d9-7a3f-61716d9889ad@nvidia.com>
-In-Reply-To: <43912a84-511d-18d9-7a3f-61716d9889ad@nvidia.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 3 Sep 2021 11:14:50 +0300
-Message-ID: <CAHp75VetBYgtE3ezS81K104PqkevvxSkO2mCa=GWLgEO2-UJxA@mail.gmail.com>
-Subject: Re: [PATCH v5] platform/x86: Add driver for ACPI WMAA EC-based
- backlight control
-To:     Daniel Dadap <ddadap@nvidia.com>
-Cc:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        mario.limonciello@outlook.com,
-        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Aaron Plattner <aplattner@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <5428d654-a24d-7d8b-489c-b666d72043c1@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: dwanS7qPhIIegVkAiJ4GNPDy_wPCRRKN
+X-Proofpoint-GUID: EFCovUVGi0-Gh9ye25R_ko_qCm0WJHiI
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-09-03_02:2021-09-03,2021-09-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ impostorscore=0 lowpriorityscore=0 adultscore=0 priorityscore=1501
+ mlxscore=0 mlxlogscore=999 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2108310000 definitions=main-2109030048
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Sep 3, 2021 at 3:22 AM Daniel Dadap <ddadap@nvidia.com> wrote:
-> On 9/2/21 6:20 PM, Thomas Wei=C3=9Fschuh wrote:
 
-...
 
-> >> +#define WMAA_WMI_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
-> >> +
-> >> +static const struct wmi_device_id wmaa_backlight_wmi_id_table[] =3D {
-> >> +    { .guid_string =3D WMAA_WMI_GUID },
-> > This could also be inlined as:
-> >       { "603E9613-EF25-4338-A3D0-C46177516DB7" },
-> >
-> > More a stylistic thing though.
->
-> I considered that when switching to MODULE_DEVICE_TABLE, since the value
-> is now only used in one place, but looking at other similar drivers, it
-> does seem that the most common convention is to define the GUID as a
-> macro even if it's only used once. I'll leave this as-is, I think.
+On 02/09/2021 22:58, Brijesh Singh wrote:
+> 
+> 
+> On 9/2/21 11:40 AM, Borislav Petkov wrote:
 
-I'm on Daniel's side here. But the problem I have noticed with the
-proposal is different, i.e. it loses the C99 style of member
-definitions.
+[...]
 
---=20
-With Best Regards,
-Andy Shevchenko
+>>
+>>> +static u64 find_secrets_paddr(void)
+>>> +{
+>>> +    u64 pa_data = boot_params.cc_blob_address;
+>>> +    struct cc_blob_sev_info info;
+>>> +    void *map;
+>>> +
+>>> +    /*
+>>> +     * The CC blob contains the address of the secrets page, check
+>>> if the
+>>> +     * blob is present.
+>>> +     */
+>>> +    if (!pa_data)
+>>> +        return 0;
+>>> +
+>>> +    map = early_memremap(pa_data, sizeof(info));
+>>> +    memcpy(&info, map, sizeof(info));
+>>> +    early_memunmap(map, sizeof(info));
+>>> +
+>>> +    /* Verify that secrets page address is passed */
+>>
+>> That's hardly verifying something - if anything, it should say
+>>
+>>     /* smoke-test the secrets page passed */
+>>
+> Noted.
+> 
+>>> +    if (info.secrets_phys && info.secrets_len == PAGE_SIZE)
+>>> +        return info.secrets_phys;
+>>
+>> ... which begs the question: how do we verify the HV is not passing some
+>> garbage instead of an actual secrets page?
+>>
+> 
+> Unfortunately, the secrets page does not contain a magic header or uuid
+> which a guest can read to verify that the page is actually populated by
+> the PSP. 
+
+In the SNP FW ABI document section 8.14.2.5 there's a Table 61 titled
+Secrets Page Format, which states that the first field in that page is a
+u32 VERSION field which should equal 2h.
+
+While not as strict as GUID header, this can help detect early that the
+content of the SNP secrets page is invalid.
+
+-Dov
+
+> But since the page is encrypted before the launch so this page
+> is always accessed encrypted. If hypervisor is tricking us then all that
+> means is guest OS will get a wrong key and will not be able to
+> communicate with the PSP to get the attestation reports etc.
+> 
+> 
+>> I guess it is that:
+>>
+>> "SNP_LAUNCH_UPDATE can insert two special pages into the guest’s
+>> memory: the secrets page and the CPUID page. The secrets page contains
+>> encryption keys used by the guest to interact with the firmware. Because
+>> the secrets page is encrypted with the guest’s memory encryption
+>> key, the hypervisor cannot read the keys. The CPUID page contains
+>> hypervisor provided CPUID function values that it passes to the guest.
+>> The firmware validates these values to ensure the hypervisor is not
+>> providing out-of-range values."
+>>
+>>  From "4.5 Launching a Guest" in the SNP FW ABI spec.
+>>
+>> I think that explanation above is very important wrt to explaining the
+>> big picture how this all works with those pages injected into the guest
+>> so I guess somewhere around here a comment should say
+>>
+> 
+> I will add more explanation.
+> 
+>> "See section 4.5 Launching a Guest in the SNP FW ABI spec for details
+>> about those special pages."
+>>
+>> or so.
+>>
