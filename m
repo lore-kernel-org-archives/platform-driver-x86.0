@@ -8,35 +8,35 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11224C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ECAC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E887960F3A
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E454A60F38
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237302AbhIDR4X (ORCPT
+        id S237311AbhIDR4Y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Sep 2021 13:56:23 -0400
-Received: from mail-0201.mail-europe.com ([51.77.79.158]:55908 "EHLO
-        mail-0201.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237282AbhIDR4W (ORCPT
+        Sat, 4 Sep 2021 13:56:24 -0400
+Received: from mail-4317.protonmail.ch ([185.70.43.17]:40664 "EHLO
+        mail-4317.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237297AbhIDR4X (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Sep 2021 13:56:22 -0400
-Date:   Sat, 04 Sep 2021 17:55:13 +0000
+        Sat, 4 Sep 2021 13:56:23 -0400
+Date:   Sat, 04 Sep 2021 17:55:16 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1630778117;
-        bh=Uaqd0jXLjtY3STuCp7rKf0fXMDLb+KTv9C74JFI4EmI=;
+        s=protonmail; t=1630778120;
+        bh=LcLUFpeh/z/6S0WSjAWm7gFoW4KL6QLTFYAOkicZa08=;
         h=Date:To:From:Reply-To:Subject:From;
-        b=esS7Kru35VMit9A8IyUymB2q5h16wZ0qrfSTHR6FlaKGhAKLcrTwRn6YOis7w2gA7
-         SaY3puUSwHFVEWvCyExTz52VxJ7n9EXFpwVbdG4nlzoTHMXEYk4t1TcSCM/k9DFsyA
-         WUD+OPMeSzmOucAnqBpeyUHGeSmIHbnfdbbJVSVo=
+        b=Z/SK979sahfZBMFdHYknF8U4nfk6ECBhGp+jaxJhr67MvqlKjJbYH9cjktd/S6BN4
+         weO/frldIryIxTMbfIiQB93CRn672hrcrQEShxZigu0pgLsvecwiPubClQ/kYL0Y3Y
+         0t/8P/uL5S/F/4mOAeDlUUDzrIz2+i0H0aZhmrRQ=
 To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org
 From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
 Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [RFC PATCH v1 06/30] platform/x86: wmi: remove unnecessary variable
-Message-ID: <20210904175450.156801-7-pobrn@protonmail.com>
+Subject: [RFC PATCH v1 07/30] platform/x86: wmi: remove unnecessary argument
+Message-ID: <20210904175450.156801-8-pobrn@protonmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -44,40 +44,65 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The `status` variable was assigned at the end, and then
-immediately returned. Remove it altogether, and return
-the previously assigned value directly.
+The GUID block is available for `wmi_create_device()`
+through `wblock->gblock`. Use that consistently in
+the function instead of using a mix of `gblock` and
+`wblock->gblock`.
 
 Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
 ---
- drivers/platform/x86/wmi.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/platform/x86/wmi.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 36890e301df5..dc31f81d83a7 100644
+index dc31f81d83a7..6252e8d88680 100644
 --- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -254,7 +254,6 @@ acpi_status wmidev_evaluate_method(struct wmi_device *w=
-dev, u8 instance,
- =09struct guid_block *block;
- =09struct wmi_block *wblock;
- =09acpi_handle handle;
--=09acpi_status status;
- =09struct acpi_object_list input;
- =09union acpi_object params[3];
- =09char method[5] =3D "WM";
-@@ -290,9 +289,7 @@ acpi_status wmidev_evaluate_method(struct wmi_device *w=
-dev, u8 instance,
+@@ -1028,7 +1028,6 @@ static const struct device_type wmi_type_data =3D {
+ };
 
- =09strncat(method, block->object_id, 2);
+ static int wmi_create_device(struct device *wmi_bus_dev,
+-=09=09=09     const struct guid_block *gblock,
+ =09=09=09     struct wmi_block *wblock,
+ =09=09=09     struct acpi_device *device)
+ {
+@@ -1036,12 +1035,12 @@ static int wmi_create_device(struct device *wmi_bus=
+_dev,
+ =09char method[5];
+ =09int result;
 
--=09status =3D acpi_evaluate_object(handle, method, &input, out);
--
--=09return status;
-+=09return acpi_evaluate_object(handle, method, &input, out);
- }
- EXPORT_SYMBOL_GPL(wmidev_evaluate_method);
+-=09if (gblock->flags & ACPI_WMI_EVENT) {
++=09if (wblock->gblock.flags & ACPI_WMI_EVENT) {
+ =09=09wblock->dev.dev.type =3D &wmi_type_event;
+ =09=09goto out_init;
+ =09}
 
+-=09if (gblock->flags & ACPI_WMI_METHOD) {
++=09if (wblock->gblock.flags & ACPI_WMI_METHOD) {
+ =09=09wblock->dev.dev.type =3D &wmi_type_method;
+ =09=09mutex_init(&wblock->char_mutex);
+ =09=09goto out_init;
+@@ -1091,7 +1090,7 @@ static int wmi_create_device(struct device *wmi_bus_d=
+ev,
+ =09wblock->dev.dev.bus =3D &wmi_bus_type;
+ =09wblock->dev.dev.parent =3D wmi_bus_dev;
+
+-=09dev_set_name(&wblock->dev.dev, "%pUL", gblock->guid);
++=09dev_set_name(&wblock->dev.dev, "%pUL", wblock->gblock.guid);
+
+ =09device_initialize(&wblock->dev.dev);
+
+@@ -1183,7 +1182,7 @@ static int parse_wdg(struct device *wmi_bus_dev, stru=
+ct acpi_device *device)
+ =09=09wblock->acpi_device =3D device;
+ =09=09wblock->gblock =3D gblock[i];
+
+-=09=09retval =3D wmi_create_device(wmi_bus_dev, &gblock[i], wblock, device=
+);
++=09=09retval =3D wmi_create_device(wmi_bus_dev, wblock, device);
+ =09=09if (retval) {
+ =09=09=09kfree(wblock);
+ =09=09=09continue;
 --
 2.33.0
 
