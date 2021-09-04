@@ -2,168 +2,114 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EBEC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13759C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 20:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0D1B60F56
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40E860F42
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 20:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237247AbhIDR54 (ORCPT
+        id S231753AbhIDUrh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Sep 2021 13:57:56 -0400
-Received: from mail1.protonmail.ch ([185.70.40.18]:17734 "EHLO
-        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237178AbhIDR5z (ORCPT
+        Sat, 4 Sep 2021 16:47:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229888AbhIDUrg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Sep 2021 13:57:55 -0400
-Date:   Sat, 04 Sep 2021 17:56:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1630778212;
-        bh=Lz30czYvQEjqIFQgwmtlqVRJWRZbQdHgeIDs0fZKPXI=;
-        h=Date:To:From:Reply-To:Subject:From;
-        b=izpsE9bT+sqGsngYWq0C4r4BpcjfKusTzxVKaSuVkwBdyNHthrOluOlZaKLzRQTZH
-         8Y95z/zVrw93zzXhiMmO+r9XMeJ2PjSL1HdXd1xBNjBWNGb4vz4RXs0fwlIXrfzGpJ
-         ZIjd+bcu0oKUskPQVYtbGzMDAcpEJHVv+PlcOlqw=
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [RFC PATCH v1 30/30] platform/x86: wmi: more detailed error reporting in find_guid()
-Message-ID: <20210904175450.156801-31-pobrn@protonmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Sat, 4 Sep 2021 16:47:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id B700460F9C
+        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Sep 2021 20:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630788394;
+        bh=UnSrnfyPZ85HRYktqzMIva9MoxEGb23Lkpu/6l3cedc=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=pc/zEbLKiQwyEQlPDsqixPGTS0HrMFaukzgTCDxp+wcB/SBOTrlRIP/iEO+vM3rPb
+         gp06JMFeUPD+h8dUrcsZ1QjeDuWIf1lUE3iKG5cjvD3SBeTAfCQvGnJ4sbjzMXuQ+x
+         lZazmH2LvvhERuEBIXmvotALQj9yYihAcfIee1Vub7ZsAyFiDffznqe44ncgO0a2yN
+         D1YTSI+hY6bWAIFJTROD+KCnct4H3NUb1AkLuv8XhxeVl5pkD+G+6wJ3kAyHzx2Uof
+         U4K3Fz3rInXpcFzt53qWNRZXngfiGz5zqP7xRXwNDPBthCSynZCOf/KBYntp/jFNV+
+         dI29ZJobQ0rEQ==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Sat, 04 Sep 2021 20:46:33 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: PATCH_ALREADY_AVAILABLE
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-X1Xi3mgP57@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Make `find_guid()` return an acpi_status, and make it handle NULL
-pointer GUID strings; and adapt users accordingly.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
----
- drivers/platform/x86/wmi.c | 43 ++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 16 deletions(-)
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index cd274de78ab4..6afe67684eef 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -114,22 +114,27 @@ static struct platform_driver acpi_wmi_driver =3D {
-  * GUID parsing functions
-  */
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #298539|0                           |1
+        is obsolete|                            |
 
--static bool find_guid(const char *guid_string, struct wmi_block **out)
-+static acpi_status find_guid(const char *guid_string, struct wmi_block **o=
-ut)
- {
- =09guid_t guid_input;
- =09struct wmi_block *wblock;
+--- Comment #88 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 298669
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D298669&action=3Dedit
+POC: Add support for access via Asus WMI to nct6775 by board/vendor name de=
+tect
 
-+=09if (!guid_string)
-+=09=09return AE_BAD_PARAMETER;
-+
- =09if (guid_parse(guid_string, &guid_input))
--=09=09return false;
-+=09=09return AE_BAD_PARAMETER;
+Updated version with check vendor name and fix for possible issues with non
+ASUS motherboards, added names of motherboards have mentioned in bug. I will
+also check possible way for use functions pointers instead conditional chec=
+ks
+equal to access_wmi. After that I will try to send patch to review.
 
- =09list_for_each_entry(wblock, &wmi_block_list, list) {
- =09=09if (guid_equal(&wblock->gblock.guid, &guid_input)) {
- =09=09=09if (out)
- =09=09=09=09*out =3D wblock;
--=09=09=09return true;
-+
-+=09=09=09return AE_OK;
- =09=09}
- =09}
--=09return false;
-+
-+=09return AE_NOT_FOUND;
- }
+(In reply to comment #87)
+> I added my board "ROG STRIX B550-F GAMING (WI-FI)" and added patch against
+> 5.14.1-arch1-1 BIOS 2423 08/10/2021.
 
- static const void *find_guid_context(struct wmi_block *wblock,
-@@ -271,9 +276,12 @@ acpi_status wmi_evaluate_method(const char *guid_strin=
-g, u8 instance, u32 method
- =09=09=09=09const struct acpi_buffer *in, struct acpi_buffer *out)
- {
- =09struct wmi_block *wblock;
-+=09acpi_status status;
-+
-+=09status =3D find_guid(guid_string, &wblock);
-+=09if (ACPI_FAILURE(status))
-+=09=09return status;
+Thank you, I have added your board also.
 
--=09if (!find_guid(guid_string, &wblock))
--=09=09return AE_ERROR;
- =09return wmidev_evaluate_method(&wblock->dev, instance, method_id,
- =09=09=09=09      in, out);
- }
-@@ -410,12 +418,11 @@ acpi_status wmi_query_block(const char *guid_string, =
-u8 instance,
- =09=09=09    struct acpi_buffer *out)
- {
- =09struct wmi_block *wblock;
-+=09acpi_status status;
+(In reply to comment #86)
+> Please add my board name "TUF GAMING B550-PLUS".
 
--=09if (!guid_string)
--=09=09return AE_BAD_PARAMETER;
--
--=09if (!find_guid(guid_string, &wblock))
--=09=09return AE_ERROR;
-+=09status =3D find_guid(guid_string, &wblock);
-+=09if (ACPI_FAILURE(status))
-+=09=09return status;
+Thank you, I have added it to list. What the distro do you use?=20
 
- =09return __query_block(wblock, instance, out);
- }
-@@ -450,12 +457,14 @@ acpi_status wmi_set_block(const char *guid_string, u8=
- instance,
- =09struct acpi_object_list input;
- =09union acpi_object params[2];
- =09char method[WMI_ACPI_METHOD_NAME_SIZE];
-+=09acpi_status status;
+For debian it can be:
+* git clone
+git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+* cd linux-stable
+* git check v5.14
+* cp /boot/config-5.10.0-8-amd64 .config
+* make CC=3D"ccache gcc" -j 32
+* make CC=3D"ccache gcc" -j 32 bindeb-pkg
+* sudo dpkg -i ../linux-image-5.14.0+_5.14.0+-1_amd64.deb
 
--=09if (!guid_string || !in)
-+=09if (!in)
- =09=09return AE_BAD_DATA;
+Look to https://wiki.debian.org/BuildADebianKernelPackage
 
--=09if (!find_guid(guid_string, &wblock))
--=09=09return AE_ERROR;
-+=09status =3D find_guid(guid_string, &wblock);
-+=09if (ACPI_FAILURE(status))
-+=09=09return status;
+--=20
+You may reply to this email to add a comment.
 
- =09block =3D &wblock->gblock;
- =09handle =3D wblock->acpi_device->handle;
-@@ -660,7 +669,7 @@ EXPORT_SYMBOL_GPL(wmi_get_event_data);
-  */
- bool wmi_has_guid(const char *guid_string)
- {
--=09return find_guid(guid_string, NULL);
-+=09return ACPI_SUCCESS(find_guid(guid_string, NULL));
- }
- EXPORT_SYMBOL_GPL(wmi_has_guid);
-
-@@ -675,8 +684,10 @@ EXPORT_SYMBOL_GPL(wmi_has_guid);
- char *wmi_get_acpi_device_uid(const char *guid_string)
- {
- =09struct wmi_block *wblock;
-+=09acpi_status status;
-
--=09if (!find_guid(guid_string, &wblock))
-+=09status =3D find_guid(guid_string, &wblock);
-+=09if (ACPI_FAILURE(status))
- =09=09return NULL;
-
- =09return acpi_device_uid(wblock->acpi_device);
---
-2.33.0
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
