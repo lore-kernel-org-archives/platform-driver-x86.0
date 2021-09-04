@@ -8,35 +8,35 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2006C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DAAC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8731560F3A
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1517D60F3A
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237317AbhIDR4h (ORCPT
+        id S237282AbhIDR4i (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Sep 2021 13:56:37 -0400
-Received: from mail-0201.mail-europe.com ([51.77.79.158]:38104 "EHLO
-        mail-0201.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237282AbhIDR4h (ORCPT
+        Sat, 4 Sep 2021 13:56:38 -0400
+Received: from mail1.protonmail.ch ([185.70.40.18]:34873 "EHLO
+        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237315AbhIDR4h (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Sat, 4 Sep 2021 13:56:37 -0400
-Date:   Sat, 04 Sep 2021 17:55:23 +0000
+Date:   Sat, 04 Sep 2021 17:55:29 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1630778133;
-        bh=Ujb753o2jpL8FGy8OVxlFHKih2w3WtkbFVfryXun3z4=;
+        s=protonmail; t=1630778134;
+        bh=V3MUI41oPSiBTR7vqp7YpLb51SSbdHKCP40u45ED/Xg=;
         h=Date:To:From:Reply-To:Subject:From;
-        b=iphX+onY/T1opYf71moq+GyUSdp3WVQPVjffPXyFSutI37I7cMXvtdZHa2CTO7r5c
-         UB9zjaMo/XfyFE1VdHHtvuoAd9OFFfMplqDwzDuUyMXjt5ARzls0oFm1C3vuPcGkGW
-         Xtf0f7C80oUrtm7Dlneg38RkLBQd7hxCpbCRwfYI=
+        b=MUlbNCW23WhzIGU6qJ9Etw70qiYrB9Sw3YxKyFMx0PGwMtUMaTp4uptRZruw7fLYg
+         CX+VvbwsB4iFwXkbDTJN27+kIwTdZdHUXFwiBLpDVcYr+Fz2BCp0KVcyCkHoOkrY/w
+         sbfmvTLhW5YBix+z7VKXfsxB5CplSndZyYlI7mCw=
 To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org
 From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
 Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [RFC PATCH v1 09/30] platform/x86: wmi: remove stray empty line
-Message-ID: <20210904175450.156801-10-pobrn@protonmail.com>
+Subject: [RFC PATCH v1 11/30] platform/x86: wmi: use BIT() macro
+Message-ID: <20210904175450.156801-12-pobrn@protonmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -44,28 +44,41 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Remove an empty line after the last statement
-in `acpi_wmi_notify_handler()` which serves
-no purpose.
+Instead of manually creating the bit masks,
+use the `BIT()` macro to do it.
 
 Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
 ---
- drivers/platform/x86/wmi.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/platform/x86/wmi.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index c3ee64843731..42cc83cf117f 100644
+index 46ebc4e421b4..029278775ebc 100644
 --- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -1321,7 +1321,6 @@ static void acpi_wmi_notify_handler(acpi_handle handl=
-e, u32 event,
- =09=09wblock->acpi_device->pnp.device_class,
- =09=09dev_name(&wblock->dev.dev),
- =09=09event, 0);
--
- }
+@@ -17,6 +17,7 @@
+ #define pr_fmt(fmt)=09KBUILD_MODNAME ": " fmt
 
- static int acpi_wmi_remove(struct platform_device *device)
+ #include <linux/acpi.h>
++#include <linux/bits.h>
+ #include <linux/device.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+@@ -70,10 +71,10 @@ struct wmi_block {
+  * If the GUID data block is marked as expensive, we must enable and
+  * explicitily disable data collection.
+  */
+-#define ACPI_WMI_EXPENSIVE   0x1
+-#define ACPI_WMI_METHOD      0x2=09/* GUID is a method */
+-#define ACPI_WMI_STRING      0x4=09/* GUID takes & returns a string */
+-#define ACPI_WMI_EVENT       0x8=09/* GUID is an event */
++#define ACPI_WMI_EXPENSIVE   BIT(0)
++#define ACPI_WMI_METHOD      BIT(1)=09/* GUID is a method */
++#define ACPI_WMI_STRING      BIT(2)=09/* GUID takes & returns a string */
++#define ACPI_WMI_EVENT       BIT(3)=09/* GUID is an event */
+
+ static bool debug_event;
+ module_param(debug_event, bool, 0444);
 --
 2.33.0
 
