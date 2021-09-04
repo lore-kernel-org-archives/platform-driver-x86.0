@@ -8,35 +8,35 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5336C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB942C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B375C60F56
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5A060F51
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237334AbhIDR5r (ORCPT
+        id S237340AbhIDR5t (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Sep 2021 13:57:47 -0400
-Received: from mail-0301.mail-europe.com ([188.165.51.139]:55162 "EHLO
+        Sat, 4 Sep 2021 13:57:49 -0400
+Received: from mail-0301.mail-europe.com ([188.165.51.139]:59889 "EHLO
         mail-0301.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237178AbhIDR5r (ORCPT
+        with ESMTP id S237178AbhIDR5t (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Sep 2021 13:57:47 -0400
-Date:   Sat, 04 Sep 2021 17:56:35 +0000
+        Sat, 4 Sep 2021 13:57:49 -0400
+Date:   Sat, 04 Sep 2021 17:56:41 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1630778202;
-        bh=1JuGZtWbEyLbOtMIRxVOBDmGks9yhQamvsxhZwQ5oJs=;
+        s=protonmail; t=1630778205;
+        bh=cuST5sTp/SZSZalJB73tl09tIZsJXooY0G+gDmGBhSE=;
         h=Date:To:From:Reply-To:Subject:From;
-        b=oiJT9uGEzaKTssh5Bx1zfw56+3nlvRNB9HZBTjMJranpYEOdi/PDLmzuoWWLtz/jR
-         jZsdj45e2NzbfgWVP7LlpG9oQR4ElH8ww4Ln4Oiad7P7KZbhJB/MffnBW1G8F/Gf11
-         BPc+rVl1aenehPJDRnnCVcKEpzh9XO02aqu4DiDU=
+        b=PcdjEuN1emrHaiNUf/Wu8pNSS0uvDu/Mmjm7RBr2BC7izOtK7Gs/qbd8sTVh9BG9z
+         ydRzs5PwrgjtmUCw9UpPgBiRyUPa+2rsNwyC/q8Lc8wOh32ZIvoaBEtPbX7yNrjqX8
+         dzcJTjTzxhBOm38zheVMY2aBiO2kbof+fOpBnDuA=
 To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org
 From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
 Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [RFC PATCH v1 27/30] platform/x86: wmi: introduce helper to generate method names
-Message-ID: <20210904175450.156801-28-pobrn@protonmail.com>
+Subject: [RFC PATCH v1 29/30] platform/x86: wmi: introduce helper to retrieve event data
+Message-ID: <20210904175450.156801-30-pobrn@protonmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -44,151 +44,99 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Instead of "manually" constructing the ACPI method name and
-hard-coding sizes in WMI functions, introduce a helper method
-which generates the method name for an arbitrary WMI block.
+Previously, `acpi_wmi_notify_handler()` and `wmi_get_event_data()`
+shared more or less the exact same code to query the data for
+a particular event.
 
-Furthermore, save the appropriate buffer size into a macro.
+Introduce a function to get rid of the duplication, and use it
+from `acpi_wmi_notify_handler()` and `wmi_get_event_data()`.
 
 Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
 ---
- drivers/platform/x86/wmi.c | 42 ++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 15 deletions(-)
+ drivers/platform/x86/wmi.c | 42 ++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index ff33ad2053f0..4f484677759b 100644
+index 830f09c2afe9..cd274de78ab4 100644
 --- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -195,6 +195,22 @@ static acpi_status wmi_method_enable(struct wmi_block =
-*wblock, bool enable)
- =09return status;
+@@ -219,6 +219,22 @@ static inline acpi_object_type get_param_acpi_type(con=
+st struct wmi_block *wbloc
+ =09=09return ACPI_TYPE_BUFFER;
  }
 
-+#define WMI_ACPI_METHOD_NAME_SIZE 5
-+
-+static inline void get_acpi_method_name(const struct wmi_block *wblock,
-+=09=09=09=09=09const char method,
-+=09=09=09=09=09char buffer[static WMI_ACPI_METHOD_NAME_SIZE])
++static acpi_status get_event_data(const struct wmi_block *wblock, struct a=
+cpi_buffer *out)
 +{
-+=09static_assert(ARRAY_SIZE(wblock->gblock.object_id) =3D=3D 2);
-+=09static_assert(WMI_ACPI_METHOD_NAME_SIZE >=3D 5);
++=09union acpi_object param =3D {
++=09=09.integer =3D {
++=09=09=09.type =3D ACPI_TYPE_INTEGER,
++=09=09=09.value =3D wblock->gblock.notify_id,
++=09=09}
++=09};
++=09struct acpi_object_list input =3D {
++=09=09.count =3D 1,
++=09=09.pointer =3D &param,
++=09};
 +
-+=09buffer[0] =3D 'W';
-+=09buffer[1] =3D method;
-+=09buffer[2] =3D wblock->gblock.object_id[0];
-+=09buffer[3] =3D wblock->gblock.object_id[1];
-+=09buffer[4] =3D '\0';
++=09return acpi_evaluate_object(wblock->acpi_device->handle, "_WED", &input=
+, out);
 +}
 +
  /*
   * Exported WMI functions
   */
-@@ -257,7 +273,7 @@ acpi_status wmidev_evaluate_method(struct wmi_device *w=
-dev, u8 instance, u32 met
- =09acpi_handle handle;
- =09struct acpi_object_list input;
- =09union acpi_object params[3];
--=09char method[5] =3D "WM";
-+=09char method[WMI_ACPI_METHOD_NAME_SIZE];
-
- =09wblock =3D container_of(wdev, struct wmi_block, dev);
- =09block =3D &wblock->gblock;
-@@ -288,7 +304,7 @@ acpi_status wmidev_evaluate_method(struct wmi_device *w=
-dev, u8 instance, u32 met
- =09=09params[2].buffer.pointer =3D in->pointer;
- =09}
-
--=09strncat(method, block->object_id, 2);
-+=09get_acpi_method_name(wblock, 'M', method);
-
- =09return acpi_evaluate_object(handle, method, &input, out);
- }
-@@ -302,8 +318,8 @@ static acpi_status __query_block(struct wmi_block *wblo=
-ck, u8 instance,
- =09acpi_status status, wc_status =3D AE_ERROR;
- =09struct acpi_object_list input;
- =09union acpi_object wq_params[1];
--=09char method[5];
--=09char wc_method[5] =3D "WC";
-+=09char wc_method[WMI_ACPI_METHOD_NAME_SIZE];
-+=09char method[WMI_ACPI_METHOD_NAME_SIZE];
-
- =09if (!out)
- =09=09return AE_BAD_PARAMETER;
-@@ -331,7 +347,7 @@ static acpi_status __query_block(struct wmi_block *wblo=
-ck, u8 instance,
- =09 * enable collection.
- =09 */
- =09if (block->flags & ACPI_WMI_EXPENSIVE) {
--=09=09strncat(wc_method, block->object_id, 2);
-+=09=09get_acpi_method_name(wblock, 'C', wc_method);
-
- =09=09/*
- =09=09 * Some GUIDs break the specification by declaring themselves
-@@ -341,9 +357,7 @@ static acpi_status __query_block(struct wmi_block *wblo=
-ck, u8 instance,
- =09=09wc_status =3D acpi_execute_simple_method(handle, wc_method, 1);
- =09}
-
--=09strcpy(method, "WQ");
--=09strncat(method, block->object_id, 2);
--
-+=09get_acpi_method_name(wblock, 'Q', method);
- =09status =3D acpi_evaluate_object(handle, method, &input, out);
-
- =09/*
-@@ -415,7 +429,7 @@ acpi_status wmi_set_block(const char *guid_string, u8 i=
-nstance,
- =09acpi_handle handle;
- =09struct acpi_object_list input;
- =09union acpi_object params[2];
--=09char method[5] =3D "WS";
-+=09char method[WMI_ACPI_METHOD_NAME_SIZE];
-
- =09if (!guid_string || !in)
- =09=09return AE_BAD_DATA;
-@@ -446,7 +460,7 @@ acpi_status wmi_set_block(const char *guid_string, u8 i=
-nstance,
- =09params[1].buffer.length =3D in->length;
- =09params[1].buffer.pointer =3D in->pointer;
-
--=09strncat(method, block->object_id, 2);
-+=09get_acpi_method_name(wblock, 'S', method);
-
- =09return acpi_evaluate_object(handle, method, &input, NULL);
- }
-@@ -1040,7 +1054,7 @@ static int wmi_create_device(struct device *wmi_bus_d=
-ev,
- =09=09=09     struct acpi_device *device)
+@@ -623,22 +639,13 @@ EXPORT_SYMBOL_GPL(wmi_remove_notify_handler);
+  */
+ acpi_status wmi_get_event_data(u32 event, struct acpi_buffer *out)
  {
- =09struct acpi_device_info *info;
--=09char method[5];
-+=09char method[WMI_ACPI_METHOD_NAME_SIZE];
- =09int result;
+-=09struct acpi_object_list input;
+-=09union acpi_object params[1];
+ =09struct wmi_block *wblock;
 
- =09if (wblock->gblock.flags & ACPI_WMI_EVENT) {
-@@ -1059,8 +1073,7 @@ static int wmi_create_device(struct device *wmi_bus_d=
-ev,
- =09 * required per the WMI documentation. If it is not present,
- =09 * we ignore this data block.
- =09 */
--=09strcpy(method, "WQ");
--=09strncat(method, wblock->gblock.object_id, 2);
-+=09get_acpi_method_name(wblock, 'Q', method);
- =09result =3D get_subobj_info(device->handle, method, &info);
+-=09input.count =3D 1;
+-=09input.pointer =3D params;
+-=09params[0].type =3D ACPI_TYPE_INTEGER;
+-=09params[0].integer.value =3D event;
+-
+ =09list_for_each_entry(wblock, &wmi_block_list, list) {
+ =09=09struct guid_block *gblock =3D &wblock->gblock;
 
- =09if (result) {
-@@ -1087,8 +1100,7 @@ static int wmi_create_device(struct device *wmi_bus_d=
-ev,
+-=09=09if ((gblock->flags & ACPI_WMI_EVENT) &&
+-=09=09=09(gblock->notify_id =3D=3D event))
+-=09=09=09return acpi_evaluate_object(wblock->acpi_device->handle,
+-=09=09=09=09"_WED", &input, out);
++=09=09if ((gblock->flags & ACPI_WMI_EVENT) && gblock->notify_id =3D=3D eve=
+nt)
++=09=09=09return get_event_data(wblock, out);
+ =09}
 
- =09kfree(info);
+ =09return AE_NOT_FOUND;
+@@ -1303,21 +1310,12 @@ static void acpi_wmi_notify_handler(acpi_handle han=
+dle, u32 event,
+ =09/* If a driver is bound, then notify the driver. */
+ =09if (wblock->dev.dev.driver) {
+ =09=09struct wmi_driver *driver =3D drv_to_wdrv(wblock->dev.dev.driver);
+-=09=09struct acpi_object_list input;
+-=09=09union acpi_object params[1];
+ =09=09struct acpi_buffer evdata =3D { ACPI_ALLOCATE_BUFFER, NULL };
+ =09=09acpi_status status;
 
--=09strcpy(method, "WS");
--=09strncat(method, wblock->gblock.object_id, 2);
-+=09get_acpi_method_name(wblock, 'S', method);
- =09result =3D get_subobj_info(device->handle, method, NULL);
+-=09=09input.count =3D 1;
+-=09=09input.pointer =3D params;
+-=09=09params[0].type =3D ACPI_TYPE_INTEGER;
+-=09=09params[0].integer.value =3D event;
+-
+-=09=09status =3D acpi_evaluate_object(wblock->acpi_device->handle,
+-=09=09=09=09=09      "_WED", &input, &evdata);
++=09=09status =3D get_event_data(wblock, &evdata);
+ =09=09if (ACPI_FAILURE(status)) {
+-=09=09=09dev_warn(&wblock->dev.dev,
+-=09=09=09=09 "failed to get event data\n");
++=09=09=09dev_warn(&wblock->dev.dev, "failed to get event data\n");
+ =09=09=09return;
+ =09=09}
 
- =09if (result =3D=3D 0)
 --
 2.33.0
 
