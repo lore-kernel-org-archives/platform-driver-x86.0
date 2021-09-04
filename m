@@ -8,35 +8,35 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22A6C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A356C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4B7E60F3A
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B7C560F51
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237305AbhIDR51 (ORCPT
+        id S237320AbhIDR5i (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Sep 2021 13:57:27 -0400
-Received: from mail2.protonmail.ch ([185.70.40.22]:61948 "EHLO
-        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237178AbhIDR51 (ORCPT
+        Sat, 4 Sep 2021 13:57:38 -0400
+Received: from mail-4322.protonmail.ch ([185.70.43.22]:36185 "EHLO
+        mail-4322.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237178AbhIDR5i (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Sep 2021 13:57:27 -0400
-Date:   Sat, 04 Sep 2021 17:56:16 +0000
+        Sat, 4 Sep 2021 13:57:38 -0400
+Date:   Sat, 04 Sep 2021 17:56:26 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1630778184;
-        bh=usYv9jVm/hIKSq/VPgEeLOSCsUDFEddgbdKUwOwH+cQ=;
+        s=protonmail; t=1630778195;
+        bh=bYrWE5J1d/UXgeba5aFcYrMsGmVzAnYYqLg6oDZgVic=;
         h=Date:To:From:Reply-To:Subject:From;
-        b=jMlAcEgbLCW6XYmQn5mtoiRz5rXNAOtD26ZPEoaSw8ZzTtz659uUX7Sqn3J8gSCce
-         f4HhjTB9yjc47LkzyQhbORHDI6BtsEeoAizkD5vAbCQeZLmGzeaJl2YJb+c5DqoQTh
-         ScWpLW7bHYFJZRitpWb48S6yzIQa+kPOhLVkK9Wc=
+        b=Z34r2xLvR7ALt1Wpcgrqud3Eglg93Fl6AKWt6ci6Dihzm3tk4pKW468I6t2NYn9hE
+         sjxlDT5+eGdg/vVd6E8nDKfAXtTa6ppKEgHD5QooPVvbjQjwVh8aW9k9rOjJy9oGRU
+         gEAbKKE8pVoWkOJDCpide4XWG3ZTb5sJfz3fNaY8=
 To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org
 From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
 Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [RFC PATCH v1 23/30] platform/x86: wmi: improve debug messages
-Message-ID: <20210904175450.156801-24-pobrn@protonmail.com>
+Subject: [RFC PATCH v1 24/30] platform/x86: wmi: do not fail if disabling fails
+Message-ID: <20210904175450.156801-25-pobrn@protonmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -44,42 +44,40 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Print the event identifier number in addition to
-the already printed information, and use %u for
-printing unsigned values in `wmi_notify_debug()`.
+Previously, `__query_block()` would fail if the
+second WCxx method call failed. However, the
+WQxx method might have succeded, and potentially
+allocated memory for the result. Instead of
+throwing away the result and potentially
+leaking memory, ignore the result of
+the second WCxx call.
 
 Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
 ---
- drivers/platform/x86/wmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/wmi.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index fcc867d79e91..ec5ba2970840 100644
+index ec5ba2970840..5929d9d26801 100644
 --- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -485,10 +485,10 @@ static void wmi_notify_debug(u32 value, void *context=
-)
- =09if (!obj)
- =09=09return;
+@@ -352,7 +352,14 @@ static acpi_status __query_block(struct wmi_block *wbl=
+ock, u8 instance,
+ =09 * the WQxx method failed - we should disable collection anyway.
+ =09 */
+ =09if ((block->flags & ACPI_WMI_EXPENSIVE) && ACPI_SUCCESS(wc_status)) {
+-=09=09status =3D acpi_execute_simple_method(handle, wc_method, 0);
++=09=09/*
++=09=09 * Ignore whether this WCxx call succeeds or not since
++=09=09 * the previously executed WQxx method call might have
++=09=09 * succeeded, and returning the failing status code
++=09=09 * of this call would throw away the result of the WQxx
++=09=09 * call, potentially leaking memory.
++=09=09 */
++=09=09acpi_execute_simple_method(handle, wc_method, 0);
+ =09}
 
--=09pr_info("DEBUG Event ");
-+=09pr_info("DEBUG: event 0x%02X ", value);
- =09switch (obj->type) {
- =09case ACPI_TYPE_BUFFER:
--=09=09pr_cont("BUFFER_TYPE - length %d\n", obj->buffer.length);
-+=09=09pr_cont("BUFFER_TYPE - length %u\n", obj->buffer.length);
- =09=09break;
- =09case ACPI_TYPE_STRING:
- =09=09pr_cont("STRING_TYPE - %s\n", obj->string.pointer);
-@@ -497,7 +497,7 @@ static void wmi_notify_debug(u32 value, void *context)
- =09=09pr_cont("INTEGER_TYPE - %llu\n", obj->integer.value);
- =09=09break;
- =09case ACPI_TYPE_PACKAGE:
--=09=09pr_cont("PACKAGE_TYPE - %d elements\n", obj->package.count);
-+=09=09pr_cont("PACKAGE_TYPE - %u elements\n", obj->package.count);
- =09=09break;
- =09default:
- =09=09pr_cont("object type 0x%X\n", obj->type);
+ =09return status;
 --
 2.33.0
 
