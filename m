@@ -8,35 +8,35 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86FCC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE05EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B51360F51
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D2960F51
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Sep 2021 17:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237329AbhIDR5n (ORCPT
+        id S237330AbhIDR5q (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Sep 2021 13:57:43 -0400
-Received: from mail-0301.mail-europe.com ([188.165.51.139]:53134 "EHLO
-        mail-0301.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237178AbhIDR5n (ORCPT
+        Sat, 4 Sep 2021 13:57:46 -0400
+Received: from mail-4317.protonmail.ch ([185.70.43.17]:41524 "EHLO
+        mail-4317.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237334AbhIDR5q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Sep 2021 13:57:43 -0400
-Date:   Sat, 04 Sep 2021 17:56:29 +0000
+        Sat, 4 Sep 2021 13:57:46 -0400
+Date:   Sat, 04 Sep 2021 17:56:38 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1630778198;
-        bh=RYOXG0qlglXvaCyoOCoFByGdbmkQSzXOGgZbrvxTvsE=;
+        s=protonmail; t=1630778203;
+        bh=+DvUJAYWDwRMILzIJ0/SkLFVT28LPTstM4xb1uh5Xdo=;
         h=Date:To:From:Reply-To:Subject:From;
-        b=M/9nFIyjSsKbrvwHMA93yAVNYteAcdp7rzX3kk0EAUyaitVM7C67oHxqQCG1e6lex
-         ES/Z+rTBRkwYfjue/oqMbnUWssbGAHG+aJg6JCbP+RiBViIzJWkWW5Tl2xIlR2NLQJ
-         0/uySG0/0Wah66heDBkXeVGvweuL3YLpopQWjC0I=
+        b=nvKqcd4nyFQ6cjrb40mz5gZMB0DZXIPfED0yFOnwMGrA4nv3ARWn2jI8hqzkOWo+M
+         JH/8Oq6GO/9jdmJFug3q4LiTeuLV6gm/OoTDV1ZY1grwGIqWcRFpv0wZ/qn4TppZAe
+         uQehcMH9qa7jNJXApeas8UQ05RPF8ervy0+UG2VI=
 To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org
 From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
 Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [RFC PATCH v1 25/30] platform/x86: wmi: simplify error handling logic
-Message-ID: <20210904175450.156801-26-pobrn@protonmail.com>
+Subject: [RFC PATCH v1 28/30] platform/x86: wmi: introduce helper to determine type
+Message-ID: <20210904175450.156801-29-pobrn@protonmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -44,42 +44,67 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The current code carries out the following ACPI status
-mapping:
+Introduce helper function to determine the appropriate
+ACPI type for the input parameter.
 
-  AE_NOT_FOUND -> AE_OK
-  AE_OK        -> AE_OK
-  AE_$X        -> AE_$X
-
-That is, everything is mapped to itself, except AE_NOT_FOUND.
-The current code does not do it in the most straighforward way.
-Simplify the logic.
+This also fixes the following checkpatch warning:
+"braces {} are not necessary for any arm of this statement".
 
 Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
 ---
- drivers/platform/x86/wmi.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/platform/x86/wmi.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 5929d9d26801..ea7154160946 100644
+index 4f484677759b..830f09c2afe9 100644
 --- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -189,11 +189,10 @@ static acpi_status wmi_method_enable(struct wmi_block=
- *wblock, bool enable)
-
- =09snprintf(method, sizeof(method), "WE%02X", block->notify_id);
- =09status =3D acpi_execute_simple_method(handle, method, enable);
--
--=09if (status !=3D AE_OK && status !=3D AE_NOT_FOUND)
--=09=09return status;
--=09else
-+=09if (status =3D=3D AE_NOT_FOUND)
- =09=09return AE_OK;
-+
-+=09return status;
+@@ -211,6 +211,14 @@ static inline void get_acpi_method_name(const struct w=
+mi_block *wblock,
+ =09buffer[4] =3D '\0';
  }
 
++static inline acpi_object_type get_param_acpi_type(const struct wmi_block =
+*wblock)
++{
++=09if (wblock->gblock.flags & ACPI_WMI_STRING)
++=09=09return ACPI_TYPE_STRING;
++=09else
++=09=09return ACPI_TYPE_BUFFER;
++}
++
  /*
+  * Exported WMI functions
+  */
+@@ -295,11 +303,7 @@ acpi_status wmidev_evaluate_method(struct wmi_device *=
+wdev, u8 instance, u32 met
+ =09if (in) {
+ =09=09input.count =3D 3;
+
+-=09=09if (block->flags & ACPI_WMI_STRING) {
+-=09=09=09params[2].type =3D ACPI_TYPE_STRING;
+-=09=09} else {
+-=09=09=09params[2].type =3D ACPI_TYPE_BUFFER;
+-=09=09}
++=09=09params[2].type =3D get_param_acpi_type(wblock);
+ =09=09params[2].buffer.length =3D in->length;
+ =09=09params[2].buffer.pointer =3D in->pointer;
+ =09}
+@@ -451,12 +455,7 @@ acpi_status wmi_set_block(const char *guid_string, u8 =
+instance,
+ =09input.pointer =3D params;
+ =09params[0].type =3D ACPI_TYPE_INTEGER;
+ =09params[0].integer.value =3D instance;
+-
+-=09if (block->flags & ACPI_WMI_STRING) {
+-=09=09params[1].type =3D ACPI_TYPE_STRING;
+-=09} else {
+-=09=09params[1].type =3D ACPI_TYPE_BUFFER;
+-=09}
++=09params[1].type =3D get_param_acpi_type(wblock);
+ =09params[1].buffer.length =3D in->length;
+ =09params[1].buffer.pointer =3D in->pointer;
+
 --
 2.33.0
 
