@@ -2,241 +2,128 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE21C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Sep 2021 12:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C33EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Sep 2021 13:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C104060F3A
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Sep 2021 12:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7748E60F4A
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Sep 2021 13:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237967AbhIEMs2 (ORCPT
+        id S237736AbhIENDS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 5 Sep 2021 08:48:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:56225 "EHLO
+        Sun, 5 Sep 2021 09:03:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49355 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237958AbhIEMs1 (ORCPT
+        by vger.kernel.org with ESMTP id S229566AbhIENDR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 5 Sep 2021 08:48:27 -0400
+        Sun, 5 Sep 2021 09:03:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630846044;
+        s=mimecast20190719; t=1630846934;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Aa3OOJPvKuAfXRfL4dn1rK9HiOHrBtnpDrFWE/WBIno=;
-        b=X3JiBVOfLHYXszoDgrfz4FFiui8gBWepMK8EZR9SqHwT2t/mfg5OkHthWWWpMoUCsoZzWY
-        Gc/08XeGMgqiOWjHF7Ml657YjJId1i8j3mI93KkFNtdSaDpyxvYmWEaYHTRjZ5KkX51dyC
-        b+Q8/MR8gOOuXbs0K8ejD6Kubm3vigQ=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-xEpUfReLMUaWokCEWqHN8A-1; Sun, 05 Sep 2021 08:47:23 -0400
-X-MC-Unique: xEpUfReLMUaWokCEWqHN8A-1
-Received: by mail-ed1-f72.google.com with SMTP id i17-20020aa7c711000000b003c57b06a2caso2144595edq.20
-        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Sep 2021 05:47:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Aa3OOJPvKuAfXRfL4dn1rK9HiOHrBtnpDrFWE/WBIno=;
-        b=o+aCxzTsDE6Rj6fr1FnGQrnuWgongcX7p1wmw47AzIfX72vBwY2qCJPadyG06aeNtC
-         FpQflzc6siGHhazWSz1BiHSyhKhewv8ReJZLsIdGvnBsm3+sbMD9R7HwLzALPOaCVGP8
-         r4merD2jhBtGpyFSpVx2np3gWqJiAqpFaoFJ0MHzDY2qyE0hvg5F4W7p3IZHLC7jQkfb
-         m4aH421T5B8fnRXn6Elv7NHKj+sbEFfVZ3VqyV4XF9jO7SaU5SdHaagw470QdM59NBWr
-         bhhjjOtAkUAi38yAp0NrUeK5T9Bobbl7qlNXZygJOlPkRWWwEkDEXwRCoZ6l1GFPf0ya
-         MsHg==
-X-Gm-Message-State: AOAM530kcj7CuwgL0q7fFQzKY/FgxE/Bf2PN4T9AoQQMbcGSHRMChwTf
-        dqhVfn5M9dxvsdbakp5D5VxdKirbGmrBxznB8Rt7i0eTLEwv522Fsu2FimOBJw1rFlCREsCl5lo
-        IVzfBaRAIDxYlPGuF8YcoYYEIY0ylvwbI+JMmx6tbM9Je6IFsX+a2WZp8+tVhgZ9A9iEZ/QTaog
-        Wid69RWyaWTw==
-X-Received: by 2002:a05:6402:34c2:: with SMTP id w2mr8444038edc.36.1630846041480;
-        Sun, 05 Sep 2021 05:47:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzBpTjZd57JJ9VjmN44qRouQTIfFRUCFRHr8vO0LZj0rfC+GDU0oornMdQTNAvPGKwIdjXq4Q==
-X-Received: by 2002:a05:6402:34c2:: with SMTP id w2mr8444022edc.36.1630846041267;
-        Sun, 05 Sep 2021 05:47:21 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id g9sm2312056ejo.60.2021.09.05.05.47.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Sep 2021 05:47:20 -0700 (PDT)
-Subject: Re: [PATCH regression fix 1/2] Input: silead - Add support for
- EFI-embedded fw using different min/max coordinates
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20210905124547.31567-1-hdegoede@redhat.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Gl4LFTDbxqEE8YQRWnC348Gzo/nBVajKNsFkJf6Bjps=;
+        b=M/EqgSizVmZeAEV02CyJSZgZNkxFprxpMBpJrX4RLNopYBNK2VElRAgpp0Ipln68tiogkZ
+        jw888/Y9OlPLFK3crcYQTZAN+9qOSYqrlF8DLqtmeEsGHANxpXNu63ychQBXLoFPVDJjXg
+        cNi360e5SK8EV2mOvFraHB9yHb6/yFc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-101-Sv1EvtLnN6S6D8YxfOoD4A-1; Sun, 05 Sep 2021 09:02:13 -0400
+X-MC-Unique: Sv1EvtLnN6S6D8YxfOoD4A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 112F95180;
+        Sun,  5 Sep 2021 13:02:12 +0000 (UTC)
+Received: from x1.localdomain (unknown [10.39.192.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 27E4C5D6B1;
+        Sun,  5 Sep 2021 13:02:10 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <627a0fc0-61fb-090a-1adc-07ddcf6e2159@redhat.com>
-Date:   Sun, 5 Sep 2021 14:47:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+To:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86: touchscreen_dmi: Add info for the Chuwi HiBook (CWI514) tablet
+Date:   Sun,  5 Sep 2021 15:02:09 +0200
+Message-Id: <20210905130210.32810-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20210905124547.31567-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Add touchscreen info for the Chuwi HiBook (CWI514) tablet. This includes
+info for getting the firmware directly from the UEFI, so that the user does
+not need to manually install the firmware in /lib/firmware/silead.
 
-These 2 patches obviously are not regression-fixes, I accidentally
-still had a subjectprefix set when sending these, sorry about that.
+This change will make the touchscreen on these devices work OOTB,
+without requiring any manual setup.
 
-Other then that these are ready for merging :)
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 37 ++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-Regards,
-
-Hans
-
-
-On 9/5/21 2:45 PM, Hans de Goede wrote:
-> Unfortunately, at the time of writing this commit message, we have been
-> unable to get permission from Silead, or from device OEMs, to distribute
-> the necessary Silead firmware files in linux-firmware.
-> 
-> On a whole bunch of devices the UEFI BIOS code contains a touchscreen
-> driver, which contains an embedded copy of the firmware. The fw-loader
-> code has a "platform" fallback mechanism, which together with info on the
-> firmware from drivers/platform/x86/touchscreen_dmi.c will use the firmware
-> from the UEFI driver when the firmware is missing from /lib/firmware. This
-> makes the touchscreen work OOTB without users needing to manually download
-> the firmware.
-> 
-> The firmware bundled with the original Windows/Android is usually newer
-> then the firmware in the UEFI driver and it is better calibrated. This
-> better calibration can lead to significant differences in the reported
-> min/max coordinates.
-> 
-> Add support for a new (optional) "silead,efi-fw-min-max" property which
-> provides a set of alternative min/max values to use for the x/y axis when
-> the EFI embedded firmware is used.
-> 
-> The new property is only used on (x86) devices which do not use devicetree,
-> IOW it is not used in actual devicetree files. The devicetree-bindings
-> maintainers have requested properties like these to not be added to the
-> devicetree-bindings, so the new property is deliberately not added to the
-> existing silead devicetree-bindings documentation.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/input/touchscreen/silead.c | 73 ++++++++++++++++++++++++++++--
->  1 file changed, 68 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-> index 1ee760bac0cf..caa25af53e6e 100644
-> --- a/drivers/input/touchscreen/silead.c
-> +++ b/drivers/input/touchscreen/silead.c
-> @@ -75,6 +75,8 @@ struct silead_ts_data {
->  	struct input_mt_pos pos[SILEAD_MAX_FINGERS];
->  	int slots[SILEAD_MAX_FINGERS];
->  	int id[SILEAD_MAX_FINGERS];
-> +	u32 efi_fw_min_max[4];
-> +	bool efi_fw_min_max_set;
->  };
->  
->  struct silead_fw_data {
-> @@ -82,6 +84,35 @@ struct silead_fw_data {
->  	u32 val;
->  };
->  
-> +static void silead_apply_efi_fw_min_max(struct silead_ts_data *data)
-> +{
-> +	struct input_absinfo *absinfo_x = &data->input->absinfo[ABS_MT_POSITION_X];
-> +	struct input_absinfo *absinfo_y = &data->input->absinfo[ABS_MT_POSITION_Y];
-> +
-> +	if (!data->efi_fw_min_max_set)
-> +		return;
-> +
-> +	absinfo_x->minimum = data->efi_fw_min_max[0];
-> +	absinfo_x->maximum = data->efi_fw_min_max[1];
-> +	absinfo_y->minimum = data->efi_fw_min_max[2];
-> +	absinfo_y->maximum = data->efi_fw_min_max[3];
-> +
-> +	if (data->prop.invert_x) {
-> +		absinfo_x->maximum -= absinfo_x->minimum;
-> +		absinfo_x->minimum = 0;
-> +	}
-> +
-> +	if (data->prop.invert_y) {
-> +		absinfo_y->maximum -= absinfo_y->minimum;
-> +		absinfo_y->minimum = 0;
-> +	}
-> +
-> +	if (data->prop.swap_x_y) {
-> +		swap(absinfo_x->minimum, absinfo_y->minimum);
-> +		swap(absinfo_x->maximum, absinfo_y->maximum);
-> +	}
-> +}
-> +
->  static int silead_ts_request_input_dev(struct silead_ts_data *data)
->  {
->  	struct device *dev = &data->client->dev;
-> @@ -97,6 +128,7 @@ static int silead_ts_request_input_dev(struct silead_ts_data *data)
->  	input_set_abs_params(data->input, ABS_MT_POSITION_X, 0, 4095, 0, 0);
->  	input_set_abs_params(data->input, ABS_MT_POSITION_Y, 0, 4095, 0, 0);
->  	touchscreen_parse_properties(data->input, true, &data->prop);
-> +	silead_apply_efi_fw_min_max(data);
->  
->  	input_mt_init_slots(data->input, data->max_fingers,
->  			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED |
-> @@ -282,17 +314,48 @@ static int silead_ts_load_fw(struct i2c_client *client)
->  {
->  	struct device *dev = &client->dev;
->  	struct silead_ts_data *data = i2c_get_clientdata(client);
-> -	unsigned int fw_size, i;
-> -	const struct firmware *fw;
-> +	const struct firmware *fw = NULL;
->  	struct silead_fw_data *fw_data;
-> +	unsigned int fw_size, i;
->  	int error;
->  
->  	dev_dbg(dev, "Firmware file name: %s", data->fw_name);
->  
-> -	error = firmware_request_platform(&fw, data->fw_name, dev);
-> +	/*
-> +	 * Unfortunately, at the time of writing this comment, we have been unable to
-> +	 * get permission from Silead, or from device OEMs, to distribute the necessary
-> +	 * Silead firmware files in linux-firmware.
-> +	 *
-> +	 * On a whole bunch of devices the UEFI BIOS code contains a touchscreen driver,
-> +	 * which contains an embedded copy of the firmware. The fw-loader code has a
-> +	 * "platform" fallback mechanism, which together with info on the firmware
-> +	 * from drivers/platform/x86/touchscreen_dmi.c will use the firmware from the
-> +	 * UEFI driver when the firmware is missing from /lib/firmware. This makes the
-> +	 * touchscreen work OOTB without users needing to manually download the firmware.
-> +	 *
-> +	 * The firmware bundled with the original Windows/Android is usually newer then
-> +	 * the firmware in the UEFI driver and it is better calibrated. This better
-> +	 * calibration can lead to significant differences in the reported min/max
-> +	 * coordinates.
-> +	 *
-> +	 * To deal with this we first try to load the firmware without "platform"
-> +	 * fallback. If that fails we retry with "platform" fallback and if that
-> +	 * succeeds we apply an (optional) set of alternative min/max values from the
-> +	 * "silead,efi-fw-min-max" property.
-> +	 */
-> +	error = firmware_request_nowarn(&fw, data->fw_name, dev);
->  	if (error) {
-> -		dev_err(dev, "Firmware request error %d\n", error);
-> -		return error;
-> +		error = firmware_request_platform(&fw, data->fw_name, dev);
-> +		if (error) {
-> +			dev_err(dev, "Firmware request error %d\n", error);
-> +			return error;
-> +		}
-> +
-> +		error = device_property_read_u32_array(dev, "silead,efi-fw-min-max",
-> +						       data->efi_fw_min_max,
-> +						       ARRAY_SIZE(data->efi_fw_min_max));
-> +		if (!error)
-> +			data->efi_fw_min_max_set = true;
->  	}
->  
->  	fw_size = fw->size / sizeof(*fw_data);
-> 
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 0e1451b1d9c6..1f9cb756b103 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -141,6 +141,33 @@ static const struct ts_dmi_data chuwi_hi10_pro_data = {
+ 	.properties     = chuwi_hi10_pro_props,
+ };
+ 
++static const struct property_entry chuwi_hibook_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 30),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 4),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1892),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1276),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hibook.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
++	{ }
++};
++
++static const struct ts_dmi_data chuwi_hibook_data = {
++	.embedded_fw = {
++		.name	= "silead/gsl1680-chuwi-hibook.fw",
++		.prefix = { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
++		.length	= 40392,
++		.sha256	= { 0xf7, 0xc0, 0xe8, 0x5a, 0x6c, 0xf2, 0xeb, 0x8d,
++			    0x12, 0xc4, 0x45, 0xbf, 0x55, 0x13, 0x4c, 0x1a,
++			    0x13, 0x04, 0x31, 0x08, 0x65, 0x73, 0xf7, 0xa8,
++			    0x1b, 0x7d, 0x59, 0xc9, 0xe6, 0x97, 0xf7, 0x38 },
++	},
++	.acpi_name      = "MSSL0017:00",
++	.properties     = chuwi_hibook_props,
++};
++
+ static const struct property_entry chuwi_vi8_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
+@@ -979,6 +1006,16 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+ 		},
+ 	},
++	{
++		/* Chuwi HiBook (CWI514) */
++		.driver_data = (void *)&chuwi_hibook_data,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
++			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
++			/* Above matches are too generic, add bios-date match */
++			DMI_MATCH(DMI_BIOS_DATE, "05/07/2016"),
++		},
++	},
+ 	{
+ 		/* Chuwi Vi8 (CWI506) */
+ 		.driver_data = (void *)&chuwi_vi8_data,
+-- 
+2.31.1
 
