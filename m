@@ -2,93 +2,203 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888B7C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Sep 2021 11:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2B1C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Sep 2021 12:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B85660F21
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Sep 2021 11:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8F560EBA
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Sep 2021 12:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237775AbhIELYj (ORCPT
+        id S231944AbhIEMqz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 5 Sep 2021 07:24:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229878AbhIELYd (ORCPT
+        Sun, 5 Sep 2021 08:46:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52622 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231628AbhIEMqz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 5 Sep 2021 07:24:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id AFF8661056
-        for <platform-driver-x86@vger.kernel.org>; Sun,  5 Sep 2021 11:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630841010;
-        bh=i+t/efkholfwXSsO89fPAPdmutTIEvXvPr1kbllkmsk=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=qByGjhGhPYNJl3pUbUE1QsLl3gkIIAWnN9z5pAZ/o4JBukzXRlKIsJytq2UP7nnVT
-         28Og4o2QVuYZxHDnV67hQXM3N+1iZA06y3YGnfQvjLaD+Qvvp2rQtck0gz+DSb0n/h
-         a/abm8o+Bb4hFlu/R+pv+H7DksGIwHecejmDjs00onFzmq1ybFKaFjKkZDbvXkFwUh
-         mSjkglEEk8gCAp4RKi3dDBx7Dk+acxBDdVTqA+kZvkVwNHGbdzBnx0c8fnx4OhH/3Y
-         p9rze9ERIBXS5+Jp0b89Yk9aNTQBrrzW3+mXBaMxqBU44tBA5o9+l12p9PvBVif/lC
-         tXvkkx7ECxg0A==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Sun, 05 Sep 2021 11:23:29 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: andy.shevchenko@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: PATCH_ALREADY_AVAILABLE
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-9HPwN4JBcH@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sun, 5 Sep 2021 08:46:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1630845951;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=vOZOx2eTae6h9VDmG3iYid0fwX/chCDozCB4QSRQcBg=;
+        b=DD34EJ7wgYdfOyYTelliGHW+lvViKzZDZOgde4Hhaa0mNBJ9Gu82FKKRCvwsVSa9X7WIcn
+        4s/a6QwIDepq8BsHcK895VvqAWSdH9CDleLpRkIpnIciFDjHbrOIcBPeJFVBjgmYySagYq
+        Af88bdHbY3qpgtq0UuXQslRTmos4Eis=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-491-kCdcYdilOwOlUus_8-BXog-1; Sun, 05 Sep 2021 08:45:50 -0400
+X-MC-Unique: kCdcYdilOwOlUus_8-BXog-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1102E824FA6;
+        Sun,  5 Sep 2021 12:45:49 +0000 (UTC)
+Received: from x1.localdomain (unknown [10.39.192.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 22D9D5C1A3;
+        Sun,  5 Sep 2021 12:45:47 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH regression fix 1/2] Input: silead - Add support for EFI-embedded fw using different min/max coordinates
+Date:   Sun,  5 Sep 2021 14:45:46 +0200
+Message-Id: <20210905124547.31567-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Unfortunately, at the time of writing this commit message, we have been
+unable to get permission from Silead, or from device OEMs, to distribute
+the necessary Silead firmware files in linux-firmware.
 
---- Comment #92 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
-(In reply to Artem S. Tashkinov from comment #91)
-> (In reply to pehlm from comment #90)
-> > Can you please also add my board: "TUF GAMING X570-PLUS".
-> >=20
-> > Thank you for working on the patch!
->=20
-> I'm pretty sure all X570 based ASUS motherboards with this chip have to w=
-ork
-> via WMI and adding them one by one will needlessly inflate the patch.
-> Blacklisting could be used instead (though I'm quite sure there will be no
-> SKUs to blacklist).
+On a whole bunch of devices the UEFI BIOS code contains a touchscreen
+driver, which contains an embedded copy of the firmware. The fw-loader
+code has a "platform" fallback mechanism, which together with info on the
+firmware from drivers/platform/x86/touchscreen_dmi.c will use the firmware
+from the UEFI driver when the firmware is missing from /lib/firmware. This
+makes the touchscreen work OOTB without users needing to manually download
+the firmware.
 
-I even might agree with you, but here is a dilemma: do you want to have the
-patch accepted in mainline (*), or do you want a better code right now?
+The firmware bundled with the original Windows/Android is usually newer
+then the firmware in the UEFI driver and it is better calibrated. This
+better calibration can lead to significant differences in the reported
+min/max coordinates.
 
-*) this is what maintainer wants.
+Add support for a new (optional) "silead,efi-fw-min-max" property which
+provides a set of alternative min/max values to use for the x/y axis when
+the EFI embedded firmware is used.
 
-@Denis Pauk, you may consider to have an array of strings and use
-match_string() call instead of plenty of strcmp():s.
+The new property is only used on (x86) devices which do not use devicetree,
+IOW it is not used in actual devicetree files. The devicetree-bindings
+maintainers have requested properties like these to not be added to the
+devicetree-bindings, so the new property is deliberately not added to the
+existing silead devicetree-bindings documentation.
 
---=20
-You may reply to this email to add a comment.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/input/touchscreen/silead.c | 73 ++++++++++++++++++++++++++++--
+ 1 file changed, 68 insertions(+), 5 deletions(-)
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index 1ee760bac0cf..caa25af53e6e 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -75,6 +75,8 @@ struct silead_ts_data {
+ 	struct input_mt_pos pos[SILEAD_MAX_FINGERS];
+ 	int slots[SILEAD_MAX_FINGERS];
+ 	int id[SILEAD_MAX_FINGERS];
++	u32 efi_fw_min_max[4];
++	bool efi_fw_min_max_set;
+ };
+ 
+ struct silead_fw_data {
+@@ -82,6 +84,35 @@ struct silead_fw_data {
+ 	u32 val;
+ };
+ 
++static void silead_apply_efi_fw_min_max(struct silead_ts_data *data)
++{
++	struct input_absinfo *absinfo_x = &data->input->absinfo[ABS_MT_POSITION_X];
++	struct input_absinfo *absinfo_y = &data->input->absinfo[ABS_MT_POSITION_Y];
++
++	if (!data->efi_fw_min_max_set)
++		return;
++
++	absinfo_x->minimum = data->efi_fw_min_max[0];
++	absinfo_x->maximum = data->efi_fw_min_max[1];
++	absinfo_y->minimum = data->efi_fw_min_max[2];
++	absinfo_y->maximum = data->efi_fw_min_max[3];
++
++	if (data->prop.invert_x) {
++		absinfo_x->maximum -= absinfo_x->minimum;
++		absinfo_x->minimum = 0;
++	}
++
++	if (data->prop.invert_y) {
++		absinfo_y->maximum -= absinfo_y->minimum;
++		absinfo_y->minimum = 0;
++	}
++
++	if (data->prop.swap_x_y) {
++		swap(absinfo_x->minimum, absinfo_y->minimum);
++		swap(absinfo_x->maximum, absinfo_y->maximum);
++	}
++}
++
+ static int silead_ts_request_input_dev(struct silead_ts_data *data)
+ {
+ 	struct device *dev = &data->client->dev;
+@@ -97,6 +128,7 @@ static int silead_ts_request_input_dev(struct silead_ts_data *data)
+ 	input_set_abs_params(data->input, ABS_MT_POSITION_X, 0, 4095, 0, 0);
+ 	input_set_abs_params(data->input, ABS_MT_POSITION_Y, 0, 4095, 0, 0);
+ 	touchscreen_parse_properties(data->input, true, &data->prop);
++	silead_apply_efi_fw_min_max(data);
+ 
+ 	input_mt_init_slots(data->input, data->max_fingers,
+ 			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED |
+@@ -282,17 +314,48 @@ static int silead_ts_load_fw(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
+ 	struct silead_ts_data *data = i2c_get_clientdata(client);
+-	unsigned int fw_size, i;
+-	const struct firmware *fw;
++	const struct firmware *fw = NULL;
+ 	struct silead_fw_data *fw_data;
++	unsigned int fw_size, i;
+ 	int error;
+ 
+ 	dev_dbg(dev, "Firmware file name: %s", data->fw_name);
+ 
+-	error = firmware_request_platform(&fw, data->fw_name, dev);
++	/*
++	 * Unfortunately, at the time of writing this comment, we have been unable to
++	 * get permission from Silead, or from device OEMs, to distribute the necessary
++	 * Silead firmware files in linux-firmware.
++	 *
++	 * On a whole bunch of devices the UEFI BIOS code contains a touchscreen driver,
++	 * which contains an embedded copy of the firmware. The fw-loader code has a
++	 * "platform" fallback mechanism, which together with info on the firmware
++	 * from drivers/platform/x86/touchscreen_dmi.c will use the firmware from the
++	 * UEFI driver when the firmware is missing from /lib/firmware. This makes the
++	 * touchscreen work OOTB without users needing to manually download the firmware.
++	 *
++	 * The firmware bundled with the original Windows/Android is usually newer then
++	 * the firmware in the UEFI driver and it is better calibrated. This better
++	 * calibration can lead to significant differences in the reported min/max
++	 * coordinates.
++	 *
++	 * To deal with this we first try to load the firmware without "platform"
++	 * fallback. If that fails we retry with "platform" fallback and if that
++	 * succeeds we apply an (optional) set of alternative min/max values from the
++	 * "silead,efi-fw-min-max" property.
++	 */
++	error = firmware_request_nowarn(&fw, data->fw_name, dev);
+ 	if (error) {
+-		dev_err(dev, "Firmware request error %d\n", error);
+-		return error;
++		error = firmware_request_platform(&fw, data->fw_name, dev);
++		if (error) {
++			dev_err(dev, "Firmware request error %d\n", error);
++			return error;
++		}
++
++		error = device_property_read_u32_array(dev, "silead,efi-fw-min-max",
++						       data->efi_fw_min_max,
++						       ARRAY_SIZE(data->efi_fw_min_max));
++		if (!error)
++			data->efi_fw_min_max_set = true;
+ 	}
+ 
+ 	fw_size = fw->size / sizeof(*fw_data);
+-- 
+2.31.1
+
