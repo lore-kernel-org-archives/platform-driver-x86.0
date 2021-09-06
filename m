@@ -2,214 +2,323 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F352DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Sep 2021 07:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B2DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Sep 2021 17:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFF0060EE1
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Sep 2021 07:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB1C603E7
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Sep 2021 17:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239974AbhIFHhW (ORCPT
+        id S244009AbhIFRjY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Sep 2021 03:37:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21349 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240197AbhIFHhW (ORCPT
+        Mon, 6 Sep 2021 13:39:24 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37542 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237281AbhIFRjY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Sep 2021 03:37:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630913777;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=L2xDCwjGqujDFwbVMCgJGuluXsFQyyzGlc2vy9kgugU=;
-        b=SofXsTNnVju64lKuznyTDDwePQbptF1nHU0z0ss/fr2q8m2L9f0GZomH/31qIa9D8x900N
-        SqL97D0ei+21PEIn2jFf2Xify+40ftuNtEjGzzwtw4lqX4M8Hz//qmzG3j9kwowxPIyTvo
-        2McQIljNb1p9LU/d2wfo4Hwy74i73Hg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-174-okzN28HzNrq1U5ju8zK8Hw-1; Mon, 06 Sep 2021 03:36:16 -0400
-X-MC-Unique: okzN28HzNrq1U5ju8zK8Hw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 6 Sep 2021 13:39:24 -0400
+Received: from zn.tnic (p200300ec2f0c240054be6003e2b88cf4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:2400:54be:6003:e2b8:8cf4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E956B107ACE3;
-        Mon,  6 Sep 2021 07:36:13 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.194.133])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EF8017A98;
-        Mon,  6 Sep 2021 07:36:09 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rajat Jain <rajatja@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Lyude <lyude@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Pekka Paalanen <pekka.paalanen@collabora.com>,
-        Mario Limonciello <mario.limonciello@outlook.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Sebastien Bacher <seb128@ubuntu.com>,
-        Marco Trevisan <marco.trevisan@canonical.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH 9/9] drm/i915: Add privacy-screen support
-Date:   Mon,  6 Sep 2021 09:35:19 +0200
-Message-Id: <20210906073519.4615-10-hdegoede@redhat.com>
-In-Reply-To: <20210906073519.4615-1-hdegoede@redhat.com>
-References: <20210906073519.4615-1-hdegoede@redhat.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 36C451EC04DF;
+        Mon,  6 Sep 2021 19:38:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1630949897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Ic9idha1eNRSeBbKjXxejnqYa8Nsdxsy/xZxuh1y44E=;
+        b=PPM9iAzRTqGs9JPf6ALMDL2Vgz1dUv1TO1PLsi8TBnLEGNydqiBXeH71rVHga/8DD9iDnS
+        wRmuA8ywktfe9FKU9LtxfmbGBqTZ8c/6KxLqToTiI6fRf3s9ig5kXgJmpDyBMtn0CyzenZ
+        +/XaZvLq7O0pvAJ06c5tURTgK4zgBoE=
+Date:   Mon, 6 Sep 2021 19:38:08 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
+        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH Part1 v5 36/38] virt: Add SEV-SNP guest driver
+Message-ID: <YTZSAB5H9EC2uk8z@zn.tnic>
+References: <20210820151933.22401-1-brijesh.singh@amd.com>
+ <20210820151933.22401-37-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210820151933.22401-37-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support for eDP panels with a built-in privacy screen using the
-new drm_privacy_screen class.
+On Fri, Aug 20, 2021 at 10:19:31AM -0500, Brijesh Singh wrote:
+> +===================================================================
+> +The Definitive SEV Guest API Documentation
+> +===================================================================
+> +
+> +1. General description
+> +======================
+> +
+> +The SEV API is a set of ioctls that are issued to by the guest or
 
-One thing which stands out here is the addition of these 2 lines to
-intel_atomic_commit_tail:
+issued to by?
 
-	for_each_new_connector_in_state(&state->base, connector, ...
-		drm_connector_update_privacy_screen(connector, state);
+Issued by the guest or hypervisor, you mean..
 
-It may seem more logical to instead take care of updating the
-privacy-screen state by marking the crtc as needing a modeset and then
-do this in both the encoder update_pipe (for fast-sets) and enable
-(for full modesets) callbacks. But ATM these callbacks only get passed
-the new connector_state and these callbacks are all called after
-drm_atomic_helper_swap_state() at which point there is no way to get
-the old state from the new state.
+> +hypervisor to get or set certain aspect of the SEV virtual machine.
+> +The ioctls belong to the following classes:
+> +
+> + - Hypervisor ioctls: These query and set global attributes which affect the
+> +   whole SEV firmware.  These ioctl is used by platform provision tools.
 
-Without access to the old state, we do not know if the sw_state of
-the privacy-screen has changes so we would need to call
-drm_privacy_screen_set_sw_state() unconditionally. This is undesirable
-since all current known privacy-screen providers use ACPI calls which
-are somewhat expensive to make.
+"These ioctls are used ... "
 
-Also, as all providers use ACPI calls, rather then poking GPU registers,
-there is no need to order this together with other encoder operations.
-Since no GPU poking is involved having this as a separate step of the
-commit process actually is the logical thing to do.
+> +
+> + - Guest ioctls: These query and set attribute of the SEV virtual machine.
 
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpu/drm/i915/display/intel_display.c |  5 +++++
- drivers/gpu/drm/i915/display/intel_dp.c      | 10 ++++++++++
- drivers/gpu/drm/i915/i915_pci.c              | 12 ++++++++++++
- 3 files changed, 27 insertions(+)
+"... attributes... "
 
-diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-index 5560d2f4c352..7285873d329a 100644
---- a/drivers/gpu/drm/i915/display/intel_display.c
-+++ b/drivers/gpu/drm/i915/display/intel_display.c
-@@ -10140,6 +10140,8 @@ static void intel_atomic_commit_tail(struct intel_atomic_state *state)
- 	struct drm_device *dev = state->base.dev;
- 	struct drm_i915_private *dev_priv = to_i915(dev);
- 	struct intel_crtc_state *new_crtc_state, *old_crtc_state;
-+	struct drm_connector_state *new_connector_state;
-+	struct drm_connector *connector;
- 	struct intel_crtc *crtc;
- 	u64 put_domains[I915_MAX_PIPES] = {};
- 	intel_wakeref_t wakeref = 0;
-@@ -10237,6 +10239,9 @@ static void intel_atomic_commit_tail(struct intel_atomic_state *state)
- 			intel_color_load_luts(new_crtc_state);
- 	}
- 
-+	for_each_new_connector_in_state(&state->base, connector, new_connector_state, i)
-+		drm_connector_update_privacy_screen(connector, &state->base);
-+
- 	/*
- 	 * Now that the vblank has passed, we can go ahead and program the
- 	 * optimal watermarks on platforms that need two-step watermark
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index 7f8e8865048f..3aa2072cccf6 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -37,6 +37,7 @@
- #include <drm/drm_crtc.h>
- #include <drm/drm_dp_helper.h>
- #include <drm/drm_edid.h>
-+#include <drm/drm_privacy_screen_consumer.h>
- #include <drm/drm_probe_helper.h>
- 
- #include "g4x_dp.h"
-@@ -5217,6 +5218,7 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
- 	struct drm_connector *connector = &intel_connector->base;
- 	struct drm_display_mode *fixed_mode = NULL;
- 	struct drm_display_mode *downclock_mode = NULL;
-+	struct drm_privacy_screen *privacy_screen;
- 	bool has_dpcd;
- 	enum pipe pipe = INVALID_PIPE;
- 	struct edid *edid;
-@@ -5308,6 +5310,14 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
- 				fixed_mode->hdisplay, fixed_mode->vdisplay);
- 	}
- 
-+	privacy_screen = drm_privacy_screen_get(dev->dev, NULL);
-+	if (!IS_ERR(privacy_screen)) {
-+		drm_connector_attach_privacy_screen_provider(connector,
-+							     privacy_screen);
-+	} else if (PTR_ERR(privacy_screen) != -ENODEV) {
-+		drm_warn(&dev_priv->drm, "Error getting privacy-screen\n");
-+	}
-+
- 	return true;
- 
- out_vdd_off:
-diff --git a/drivers/gpu/drm/i915/i915_pci.c b/drivers/gpu/drm/i915/i915_pci.c
-index 146f7e39182a..d6913f567a1c 100644
---- a/drivers/gpu/drm/i915/i915_pci.c
-+++ b/drivers/gpu/drm/i915/i915_pci.c
-@@ -25,6 +25,7 @@
- #include <linux/vga_switcheroo.h>
- 
- #include <drm/drm_drv.h>
-+#include <drm/drm_privacy_screen_consumer.h>
- #include <drm/i915_pciids.h>
- 
- #include "i915_drv.h"
-@@ -1167,6 +1168,7 @@ static int i915_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	struct intel_device_info *intel_info =
- 		(struct intel_device_info *) ent->driver_data;
-+	struct drm_privacy_screen *privacy_screen;
- 	int err;
- 
- 	if (intel_info->require_force_probe &&
-@@ -1195,7 +1197,17 @@ static int i915_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (vga_switcheroo_client_probe_defer(pdev))
- 		return -EPROBE_DEFER;
- 
-+	/*
-+	 * We do not handle -EPROBE_DEFER further into the probe process, so
-+	 * check if we have a laptop-panel privacy-screen for which the driver
-+	 * has not loaded yet here.
-+	 */
-+	privacy_screen = drm_privacy_screen_get(&pdev->dev, NULL);
-+	if (IS_ERR(privacy_screen) && PTR_ERR(privacy_screen) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
- 	err = i915_driver_probe(pdev, ent);
-+	drm_privacy_screen_put(privacy_screen);
- 	if (err)
- 		return err;
- 
+> +
+> +2. API description
+> +==================
+> +
+> +This section describes ioctls that can be used to query or set SEV guests.
+> +For each ioctl, the following information is provided along with a
+> +description:
+> +
+> +  Technology:
+> +      which SEV techology provides this ioctl. sev, sev-es, sev-snp or all.
+> +
+> +  Type:
+> +      hypervisor or guest. The ioctl can be used inside the guest or the
+> +      hypervisor.
+> +
+> +  Parameters:
+> +      what parameters are accepted by the ioctl.
+> +
+> +  Returns:
+> +      the return value.  General error numbers (ENOMEM, EINVAL)
+> +      are not detailed, but errors with specific meanings are.
+> +
+> +The guest ioctl should be called to /dev/sev-guest device. The ioctl accepts
+
+s/called to/issued on a file descriptor of the/
+
+> +struct snp_user_guest_request. The input and output structure is specified
+> +through the req_data and resp_data field respectively. If the ioctl fails
+> +to execute due to the firmware error, then fw_err code will be set.
+
+"... due to a ... "
+
+> +
+> +::
+> +        struct snp_user_guest_request {
+
+So you said earlier:
+
+> I followed the naming convension you recommended during the initial SEV driver
+> developement. IIRC, the main reason for us having to add "user" in it because
+> we wanted to distinguious that this structure is not exactly same as the what
+> is defined in the SEV-SNP firmware spec.
+
+but looking at the current variant in the code, the structure in the SNP spec is
+
+Table 91. Layout of the CMDBUF_SNP_GUEST_REQUEST Structure
+
+which corresponds to struct snp_guest_request_data so you can call this one:
+
+	struct snp_guest_request_ioctl
+
+and then it is perfectly clear what is what.
+
+> +                /* Request and response structure address */
+> +                __u64 req_data;
+> +                __u64 resp_data;
+> +
+> +                /* firmware error code on failure (see psp-sev.h) */
+> +                __u64 fw_err;
+> +        };
+> +
+> +2.1 SNP_GET_REPORT
+> +------------------
+> +
+> +:Technology: sev-snp
+> +:Type: guest ioctl
+> +:Parameters (in): struct snp_report_req
+> +:Returns (out): struct snp_report_resp on success, -negative on error
+> +
+> +The SNP_GET_REPORT ioctl can be used to query the attestation report from the
+> +SEV-SNP firmware. The ioctl uses the SNP_GUEST_REQUEST (MSG_REPORT_REQ) command
+> +provided by the SEV-SNP firmware to query the attestation report.
+> +
+> +On success, the snp_report_resp.data will contains the report. The report
+
+"... will contain... "
+
+> +format is described in the SEV-SNP specification. See the SEV-SNP specification
+> +for further details.
+
+"... which can be found at https://developer.amd.com/sev/."
+
+assuming that URL will keep its validity in the foreseeable future.
+
+> +static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long arg)
+> +{
+> +	struct snp_guest_dev *snp_dev = to_snp_dev(file);
+> +	void __user *argp = (void __user *)arg;
+> +	struct snp_user_guest_request input;
+> +	int ret = -ENOTTY;
+> +
+> +	if (copy_from_user(&input, argp, sizeof(input)))
+> +		return -EFAULT;
+> +
+> +	mutex_lock(&snp_cmd_mutex);
+> +
+> +	switch (ioctl) {
+> +	case SNP_GET_REPORT: {
+> +		ret = get_report(snp_dev, &input);
+> +		break;
+> +	}
+
+No need for those {} brackets around the case.
+
+> +	default:
+> +		break;
+> +	}
+> +
+> +	mutex_unlock(&snp_cmd_mutex);
+> +
+> +	if (copy_to_user(argp, &input, sizeof(input)))
+> +		return -EFAULT;
+> +
+> +	return ret;
+> +}
+> +
+> +static void free_shared_pages(void *buf, size_t sz)
+> +{
+> +	unsigned int npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
+> +
+> +	/* If fail to restore the encryption mask then leak it. */
+> +	if (set_memory_encrypted((unsigned long)buf, npages))
+
+Hmm, this sounds like an abnormal condition about which we should at
+least warn...
+
+> +		return;
+> +
+> +	__free_pages(virt_to_page(buf), get_order(sz));
+> +}
+> +
+> +static void *alloc_shared_pages(size_t sz)
+> +{
+> +	unsigned int npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
+> +	struct page *page;
+> +	int ret;
+> +
+> +	page = alloc_pages(GFP_KERNEL_ACCOUNT, get_order(sz));
+> +	if (IS_ERR(page))
+> +		return NULL;
+> +
+> +	ret = set_memory_decrypted((unsigned long)page_address(page), npages);
+> +	if (ret) {
+> +		__free_pages(page, get_order(sz));
+> +		return NULL;
+> +	}
+> +
+> +	return page_address(page);
+> +}
+> +
+> +static const struct file_operations snp_guest_fops = {
+> +	.owner	= THIS_MODULE,
+> +	.unlocked_ioctl = snp_guest_ioctl,
+> +};
+> +
+> +static int __init snp_guest_probe(struct platform_device *pdev)
+> +{
+> +	struct snp_guest_platform_data *data;
+> +	struct device *dev = &pdev->dev;
+> +	struct snp_guest_dev *snp_dev;
+> +	struct miscdevice *misc;
+> +	int ret;
+> +
+> +	if (!dev->platform_data)
+> +		return -ENODEV;
+> +
+> +	data = (struct snp_guest_platform_data *)dev->platform_data;
+> +	vmpck_id = data->vmpck_id;
+> +
+> +	snp_dev = devm_kzalloc(&pdev->dev, sizeof(struct snp_guest_dev), GFP_KERNEL);
+> +	if (!snp_dev)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, snp_dev);
+> +	snp_dev->dev = dev;
+> +
+> +	snp_dev->crypto = init_crypto(snp_dev, data->vmpck, sizeof(data->vmpck));
+> +	if (!snp_dev->crypto)
+> +		return -EIO;
+
+I guess you should put the crypto init...
+
+> +
+> +	/* Allocate the shared page used for the request and response message. */
+> +	snp_dev->request = alloc_shared_pages(sizeof(struct snp_guest_msg));
+> +	if (IS_ERR(snp_dev->request)) {
+> +		ret = PTR_ERR(snp_dev->request);
+> +		goto e_free_crypto;
+> +	}
+> +
+> +	snp_dev->response = alloc_shared_pages(sizeof(struct snp_guest_msg));
+> +	if (IS_ERR(snp_dev->response)) {
+> +		ret = PTR_ERR(snp_dev->response);
+> +		goto e_free_req;
+> +	}
+
+... here, after the page allocation to save yourself all the setup work
+if the shared pages allocation fails.
+
+> +
+> +	misc = &snp_dev->misc;
+> +	misc->minor = MISC_DYNAMIC_MINOR;
+> +	misc->name = DEVICE_NAME;
+> +	misc->fops = &snp_guest_fops;
+> +
+> +	return misc_register(misc);
+> +
+> +e_free_req:
+> +	free_shared_pages(snp_dev->request, sizeof(struct snp_guest_msg));
+> +
+> +e_free_crypto:
+> +	deinit_crypto(snp_dev->crypto);
+> +
+> +	return ret;
+> +}
+
 -- 
-2.31.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
