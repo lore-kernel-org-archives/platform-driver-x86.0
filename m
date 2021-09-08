@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D28C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Sep 2021 22:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 531FEC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Sep 2021 22:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6EED61090
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Sep 2021 22:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4165461090
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Sep 2021 22:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347671AbhIHXAN (ORCPT
+        id S1348092AbhIHXA3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Sep 2021 19:00:13 -0400
-Received: from mail-bn8nam08on2047.outbound.protection.outlook.com ([40.107.100.47]:45793
-        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        Wed, 8 Sep 2021 19:00:29 -0400
+Received: from mail-dm3nam07on2064.outbound.protection.outlook.com ([40.107.95.64]:26401
+        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229997AbhIHXAM (ORCPT
+        id S1347756AbhIHXA2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Sep 2021 19:00:12 -0400
+        Wed, 8 Sep 2021 19:00:28 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YTA56BfNzr+WdTzLWf0R7R5bkD3Z2NieabjINt4YklGwrzQtoa4B479oZdwzgc6eMu3rAnDGD24taLyHxbZUdoWubZs6Scmp85TtvdHZc7jeaMCH+xfCVP+7vzKGD2JdnNAgnAeMZU63nLYAj/RKi+xw768Ip2GJkBfZh7wdfiUwXYHTx3C9GbbbbGQBUAXmhtVWpzuQlXj3V8NYydZYbB/C618dON2moNn+CGy7Wk1saCcZdlU7hNdLkEFpp+VAZDxgm36qeyr88XvH7W6lUi/YdCMZv9r/0HwKaMoqYXkn/a17XFlSJaS7MpeyMJCeckA5hpLuuB2aTP/D+Z6cRg==
+ b=iLgb/s3ZJxgzt0Mx1WgqWEZMusXn4s2LILg2+hvzfglzWfLRsPMOUv8mEHPjNtq5Gmo2vrfDt5WguYD6RigcxpDU9U7QTAdwOPwQESDDAFNu9w6K0l1HjJzuUfVRSnnddqptG2ZAB+saBU6lRLp8bNz0AjEH6hFOmTj8QgyXnAirsj0V5b2gL8lP5vvu475UFq0psjLfiz58a666ZKv1h9/Z0PnPaJjPY5RREz5Z9X2hRyK9lPWo6Z6OCa34mi/1hk9Hj134hJu0Z2qEVFSg1Sn/FapxBLXKM6OcvtEsXkn2FMQBil/vlHvXOvC7sHH3NpvaU9RbtUc/ubZfGmwTHQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=IqGtg1cAr8szUUscL6nSCzLAsTjemz8U/WSliGIExU0=;
- b=eSExbDz1dU5buWdsM4k9sPqrh822VNRsFzTkOhNaBfE4PsjrN+emkA5X7Bu4UTtc+KUTr0VdzfxqgV4VGrBztMpfG4SUeP4lQxGFGEmf7MTqvrIDYiF7IyBEzJxst7BrPfm1eiRbV8ivRtZWNBp3Nr1CxiJEAf/PPN/xhsS0L16lkIasmfy9uwmzEH+/kSMFg6dFLxiWz11ooBi6O9ublqnfghipeW93y7cilzuBP7NBGjaO+0T6mn5DcVC6iuQ6xUsTAyO8NqvuI1psr/wJUCZJ71Wz6WCJ9ZbYOJoctiJZbikd5bL6bUE5RdV1qjhUVStfKQ+oRJSgzJbhdNx9og==
+ bh=PkHOOjZ5XwLPGXYBfaJ6+CT1G6w0aI8Oj/Og6FSB+Tw=;
+ b=QI5bCGtdXaZosz75px9FvAzfPwvQp0VEOlmZEIXn2HInOJgZyDyOmDkPT2ObK8Clgo+KE1Mv1zmtmHEW8Zzl16iOXXLQRlsCPx7mhTtjHCjsiB9sRuZbLteWuqb2tvQlfwHER53BumMkulkjW8HPTRPGWY8r/Ze/up3e9VGTvaZfGEt29KzwoBI5sV7YszqAlDuuwCrKiMJfMApT33BYUfaycpjl6IVcJceq0tALvyC7wJOzKBCD61wbdAj8vKPVsOJz8nR36oYCwO9scRDVnAMnTxyg6+gM1tc7zom4QU96ayAC7r5416EIWtVMuP1Y+0J1OrHmgiYKUn4do5laMw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IqGtg1cAr8szUUscL6nSCzLAsTjemz8U/WSliGIExU0=;
- b=y/rwPex5PwZ7r32Z/uZquca7YNmifGZVQR+X1FqYvKzav8z5krd9TPLyhOq2Vu7BdCDir+LjVqvr54KM7QB2/J6s5fRafBY6tU/BTvJzGvMV7xmznbBIW+plUPIfLmmWmzeDxZLyzJsOMePIPkxP5jz3yXN8x7WfVW3E6xHY93g=
-Received: from DM5PR08CA0026.namprd08.prod.outlook.com (2603:10b6:4:60::15) by
- SA0PR12MB4512.namprd12.prod.outlook.com (2603:10b6:806:71::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4500.14; Wed, 8 Sep 2021 22:59:02 +0000
-Received: from DM6NAM11FT044.eop-nam11.prod.protection.outlook.com
- (2603:10b6:4:60:cafe::20) by DM5PR08CA0026.outlook.office365.com
- (2603:10b6:4:60::15) with Microsoft SMTP Server (version=TLS1_2,
+ bh=PkHOOjZ5XwLPGXYBfaJ6+CT1G6w0aI8Oj/Og6FSB+Tw=;
+ b=RMYHxEZNBkd62HBTvqOgEs71Idh/l8SFGBwpv0vj36zxy5tbE1T9bPpN+irz1P2SkZh9ESnbw2k6rZNiQ+gqkR4WHTqayixpDUbfJoq2lnxKyusFWqv6JUacKceNuzZjQnUVukBLu659qma1cDL7v1jfVMMDmM9Ku76D9FqLs8Q=
+Received: from DM6PR18CA0003.namprd18.prod.outlook.com (2603:10b6:5:15b::16)
+ by MN2PR12MB3453.namprd12.prod.outlook.com (2603:10b6:208:c3::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.22; Wed, 8 Sep
+ 2021 22:59:17 +0000
+Received: from DM6NAM11FT017.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:15b:cafe::d1) by DM6PR18CA0003.outlook.office365.com
+ (2603:10b6:5:15b::16) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.14 via Frontend
- Transport; Wed, 8 Sep 2021 22:59:02 +0000
+ Transport; Wed, 8 Sep 2021 22:59:17 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=pass action=none header.from=amd.com;
@@ -52,13 +53,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT044.mail.protection.outlook.com (10.13.173.185) with Microsoft SMTP
+ DM6NAM11FT017.mail.protection.outlook.com (10.13.172.145) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4500.14 via Frontend Transport; Wed, 8 Sep 2021 22:59:01 +0000
+ 15.20.4500.14 via Frontend Transport; Wed, 8 Sep 2021 22:59:17 +0000
 Received: from tlendack-t1.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Wed, 8 Sep 2021
- 17:58:59 -0500
+ 17:59:15 -0500
 From:   Tom Lendacky <thomas.lendacky@amd.com>
 To:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
         <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
@@ -80,9 +81,9 @@ CC:     Borislav Petkov <bp@alien8.de>,
         "Dave Hansen" <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v3 1/8] x86/ioremap: Selectively build arch override encryption functions
-Date:   Wed, 8 Sep 2021 17:58:32 -0500
-Message-ID: <3c25da5d5516afbdd868df2f6a6f7d7f241f32d4.1631141919.git.thomas.lendacky@amd.com>
+Subject: [PATCH v3 3/8] x86/sev: Add an x86 version of cc_platform_has()
+Date:   Wed, 8 Sep 2021 17:58:34 -0500
+Message-ID: <f9951644147e27772bf4512325e8ba6472e363b7.1631141919.git.thomas.lendacky@amd.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <cover.1631141919.git.thomas.lendacky@amd.com>
 References: <cover.1631141919.git.thomas.lendacky@amd.com>
@@ -94,46 +95,32 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e3722983-dabc-4172-82ef-08d9731c3ff2
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4512:
-X-Microsoft-Antispam-PRVS: <SA0PR12MB4512AA2A47C10C282FE2D6D9ECD49@SA0PR12MB4512.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Office365-Filtering-Correlation-Id: 6ab09aa9-ebcc-4f5d-ccfd-08d9731c4914
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3453:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB345397D64B1CBD2C98E948A2ECD49@MN2PR12MB3453.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BUVdzJB5u2MkMrpUqQhlFq51g9QCsOyMJsm8AcsZFHjDTOD+5gRCwagnQ1mHpcPfTJRc1+4Dq71DTnTFraa7vrnxQ1QwBEC/d5V70m3O3BHyIWgCoOTe58RPUpuXv+iHmKgVC99x9k8SRXnMsUOyXrFL7SwHiJRlvrv0M74S91rlPY2UWmaI4yCeINDkK/jc+K9Q8AEcgHu8XbppQLxw4OqsdOiWz5JlN/Hto8+w788fZm3eCLmoHqqvJ2pmx4wiygTMz5grlmY/AaeC3z7TwU0gDn8aMHJqCKJXvorW1rVDYwcnBu92Ol3fFC/tjcpFy7d40fUZU20dp2fiLRymdpKtQvAilSYk+c82Ml/DqAJBRvkFt8mWUCCtgPX0tqI0gcV6O+JDg5SG6sIalG59NmUe2gOJOnpH9fHs9gOBTPflXbrTnXChtuDYU4mOZP8yybsyMt9IMM0q7i7U/1vLOjP4EsnyzxQ+2zqSxQtXzZuYN8xQgTSjQqo83a0ev5ndq4k0JRgsdFeNN6zm1Ic86v4oJp7n6pGfBOIVh4Ms6e+iUyodeiqS3WOoNk5pu57bxFvxOn97s/kRVRN07BTBt+6dhob0FNN7gkjaJV+ha04NW4qAS7etwLwverSvgnn92J65pek37xYTBNBuQSJ+/ujJueHyKbqhuBT5bEtBTPMF/8z4cggbBml9sS08MQ6fMq4ZHzHVWkFjIfT4Zu76GCZQ4kkT7BfVdVYaVaxvPzN5QpH5/LIVflA92OfV8xuVFs/PByC67R0R/w/GqkgpT3efm+Z4/JM3ynEjWYlQorg=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(396003)(39860400002)(36840700001)(46966006)(8676002)(2906002)(7696005)(110136005)(8936002)(478600001)(6666004)(356005)(70206006)(16526019)(316002)(54906003)(36756003)(4326008)(426003)(7416002)(26005)(47076005)(36860700001)(186003)(336012)(83380400001)(81166007)(82310400003)(70586007)(5660300002)(86362001)(921005)(2616005)(82740400003)(2101003)(83996005)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 7+z77jWY3o8AoUGCL4bculuISBwUOUfXI2hfz/nKwHmZlmaQcZd7S3bOc7Rjg98lxU6+OOp/Xb1+TZ9SgfG/5VyflgddHTNr19FmiqBvB6d/+n0j6V9fAWcwx+t6IF/t7N6gxf0t5bx3qNWwN6DV+vtVA+ulWHEVj+xKkH44sBBtOqYg9jEbVHmvD8ukr3OWuJvljA7Saoe8wHtNpKhIn89j+ho7RSNssQXtcClpLYcouPQO103M0z420yG+NwzKl/BsJJsjuDSvgN/nz4/wvbzSWt0Yz5XK9odChvsQawPjjIegcgTIPgCTQuDsbSJx5Gkrl+XNBA23bPIR+g04K8ZhP2RIlWj5Ba/jVXdfY8u41rD5MQDpXnEL2t5l0d8+N7bwE/K9CsWwq06sMBClSXUzW+REMlEJQ2GOuvJ98AsRBvJvgNOsUoEv5F3YXPgF896i6WVxgfrGi1Bq7OOlz0w8LEqQFsNTEW0yBatJxDFVPAzUGebhcRBIC5T/NvIS4Sk8hbcEtbTOAZbxPXk07mGt+iuu1sCol/qkW9BdiL1Lc4Ihx9ZO1e5dRqyRWuYuX+wNGkiJKeinr95VTnU3+V0twzLVNHR/auI2dL0gHJNFxRMR8ARB3eg5t4a5unUCArEuG2lvxmn4F0KXJOanXFQs0gKY8gccnc1egsK05IGYGzbcGy9UUpEm3wecjNKjipw9Mei5lg1gCcjyQsdMOmVVQMG7HEdQ2ns8VDoMgQCXhB/ZR2gkw86AuNE0nLXBLnGmyH0LzH07MxT0FqDag9XEDFERTMm6C6AoR58xeH4=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(396003)(376002)(346002)(39860400002)(136003)(36840700001)(46966006)(70586007)(70206006)(83380400001)(7416002)(110136005)(36860700001)(86362001)(54906003)(921005)(316002)(336012)(2616005)(5660300002)(426003)(16526019)(186003)(82310400003)(4326008)(7696005)(8676002)(8936002)(6666004)(47076005)(26005)(36756003)(2906002)(356005)(82740400003)(478600001)(81166007)(83996005)(2101003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2021 22:59:01.7802
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2021 22:59:17.1144
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3722983-dabc-4172-82ef-08d9731c3ff2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ab09aa9-ebcc-4f5d-ccfd-08d9731c4914
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT044.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT017.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4512
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3453
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In prep for other uses of the cc_platform_has() function besides AMD's
-memory encryption support, selectively build the AMD memory encryption
-architecture override functions only when CONFIG_AMD_MEM_ENCRYPT=y. These
-functions are:
-- early_memremap_pgprot_adjust()
-- arch_memremap_can_ram_remap()
-
-Additionally, routines that are only invoked by these architecture
-override functions can also be conditionally built. These functions are:
-- memremap_should_map_decrypted()
-- memremap_is_efi_data()
-- memremap_is_setup_data()
-- early_memremap_is_setup_data()
-
-And finally, phys_mem_access_encrypted() is conditionally built as well,
-but requires a static inline version of it when CONFIG_AMD_MEM_ENCRYPT is
-not set.
+Introduce an x86 version of the cc_platform_has() function. This will be
+used to replace vendor specific calls like sme_active(), sev_active(),
+etc.
 
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -141,58 +128,140 @@ Cc: Borislav Petkov <bp@alien8.de>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Co-developed-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Co-developed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/io.h | 8 ++++++++
- arch/x86/mm/ioremap.c     | 2 +-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ arch/x86/Kconfig                   |  1 +
+ arch/x86/include/asm/mem_encrypt.h |  3 +++
+ arch/x86/kernel/Makefile           |  3 +++
+ arch/x86/kernel/cc_platform.c      | 21 +++++++++++++++++++++
+ arch/x86/mm/mem_encrypt.c          | 21 +++++++++++++++++++++
+ 5 files changed, 49 insertions(+)
+ create mode 100644 arch/x86/kernel/cc_platform.c
 
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index 841a5d104afa..5c6a4af0b911 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -391,6 +391,7 @@ extern void arch_io_free_memtype_wc(resource_size_t start, resource_size_t size)
- #define arch_io_reserve_memtype_wc arch_io_reserve_memtype_wc
- #endif
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4e001bbbb425..2b2a9639d8ae 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1513,6 +1513,7 @@ config AMD_MEM_ENCRYPT
+ 	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+ 	select INSTRUCTION_DECODER
+ 	select ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
++	select ARCH_HAS_CC_PLATFORM
+ 	help
+ 	  Say yes to enable support for the encryption of system memory.
+ 	  This requires an AMD processor that supports Secure Memory
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index 9c80c68d75b5..3d8a5e8b2e3f 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -13,6 +13,7 @@
+ #ifndef __ASSEMBLY__
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
- extern bool arch_memremap_can_ram_remap(resource_size_t offset,
- 					unsigned long size,
- 					unsigned long flags);
-@@ -398,6 +399,13 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
+ #include <linux/init.h>
++#include <linux/cc_platform.h>
  
- extern bool phys_mem_access_encrypted(unsigned long phys_addr,
- 				      unsigned long size);
-+#else
-+static inline bool phys_mem_access_encrypted(unsigned long phys_addr,
-+					     unsigned long size)
+ #include <asm/bootparam.h>
+ 
+@@ -53,6 +54,7 @@ void __init sev_es_init_vc_handling(void);
+ bool sme_active(void);
+ bool sev_active(void);
+ bool sev_es_active(void);
++bool amd_cc_platform_has(enum cc_attr attr);
+ 
+ #define __bss_decrypted __section(".bss..decrypted")
+ 
+@@ -78,6 +80,7 @@ static inline void sev_es_init_vc_handling(void) { }
+ static inline bool sme_active(void) { return false; }
+ static inline bool sev_active(void) { return false; }
+ static inline bool sev_es_active(void) { return false; }
++static inline bool amd_cc_platform_has(enum cc_attr attr) { return false; }
+ 
+ static inline int __init
+ early_set_memory_decrypted(unsigned long vaddr, unsigned long size) { return 0; }
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 8f4e8fa6ed75..f91403a78594 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -147,6 +147,9 @@ obj-$(CONFIG_UNWINDER_FRAME_POINTER)	+= unwind_frame.o
+ obj-$(CONFIG_UNWINDER_GUESS)		+= unwind_guess.o
+ 
+ obj-$(CONFIG_AMD_MEM_ENCRYPT)		+= sev.o
++
++obj-$(CONFIG_ARCH_HAS_CC_PLATFORM)	+= cc_platform.o
++
+ ###
+ # 64 bit specific files
+ ifeq ($(CONFIG_X86_64),y)
+diff --git a/arch/x86/kernel/cc_platform.c b/arch/x86/kernel/cc_platform.c
+new file mode 100644
+index 000000000000..3c9bacd3c3f3
+--- /dev/null
++++ b/arch/x86/kernel/cc_platform.c
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Confidential Computing Platform Capability checks
++ *
++ * Copyright (C) 2021 Advanced Micro Devices, Inc.
++ *
++ * Author: Tom Lendacky <thomas.lendacky@amd.com>
++ */
++
++#include <linux/export.h>
++#include <linux/cc_platform.h>
++#include <linux/mem_encrypt.h>
++
++bool cc_platform_has(enum cc_attr attr)
 +{
-+	return true;
++	if (sme_me_mask)
++		return amd_cc_platform_has(attr);
++
++	return false;
 +}
-+#endif
++EXPORT_SYMBOL_GPL(cc_platform_has);
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index ff08dc463634..18fe19916bc3 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -20,6 +20,7 @@
+ #include <linux/bitops.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/virtio_config.h>
++#include <linux/cc_platform.h>
  
- /**
-  * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 60ade7dd71bd..ccff76cedd8f 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -508,6 +508,7 @@ void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
- 	memunmap((void *)((unsigned long)addr & PAGE_MASK));
+ #include <asm/tlbflush.h>
+ #include <asm/fixmap.h>
+@@ -389,6 +390,26 @@ bool noinstr sev_es_active(void)
+ 	return sev_status & MSR_AMD64_SEV_ES_ENABLED;
  }
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
- /*
-  * Examine the physical address to determine if it is an area of memory
-  * that should be mapped decrypted.  If the memory is not part of the
-@@ -746,7 +747,6 @@ bool phys_mem_access_encrypted(unsigned long phys_addr, unsigned long size)
- 	return arch_memremap_can_ram_remap(phys_addr, size, 0);
- }
- 
--#ifdef CONFIG_AMD_MEM_ENCRYPT
- /* Remap memory with encryption */
- void __init *early_memremap_encrypted(resource_size_t phys_addr,
- 				      unsigned long size)
++bool amd_cc_platform_has(enum cc_attr attr)
++{
++	switch (attr) {
++	case CC_ATTR_MEM_ENCRYPT:
++		return sme_me_mask != 0;
++
++	case CC_ATTR_HOST_MEM_ENCRYPT:
++		return sme_active();
++
++	case CC_ATTR_GUEST_MEM_ENCRYPT:
++		return sev_active();
++
++	case CC_ATTR_GUEST_STATE_ENCRYPT:
++		return sev_es_active();
++
++	default:
++		return false;
++	}
++}
++
+ /* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+ bool force_dma_unencrypted(struct device *dev)
+ {
 -- 
 2.33.0
 
