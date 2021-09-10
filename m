@@ -2,114 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6427C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092DFC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 09:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAFEA611B0
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBB3D611AD
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 09:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232487AbhIJAqI (ORCPT
+        id S232157AbhIJJ7W (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Sep 2021 20:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49418 "EHLO mail.kernel.org"
+        Fri, 10 Sep 2021 05:59:22 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48848 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234749AbhIJAYK (ORCPT
+        id S232094AbhIJJ7W (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Sep 2021 20:24:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A237360FC0;
-        Fri, 10 Sep 2021 00:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631233380;
-        bh=4Jo3/NFhFiRF9/BdhNhFOi+rfHK9N1sq5BF7iLwEhO8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=moVCfIML9aEtS+IcCduZ9s22Vmj94taMtZYDga74OI6BUhTirWSXthpVm75h8F0gf
-         8V6ddu6GXbA5t6RiU9yBMpHd5yH4hSyMPo5xcTSLNofzs/rpG+q+Q5K6TEiek8gIQi
-         YiBBNRZtvsbOw3cHGoJ6WXrYJxM3HPXd+e1uEDaVikRrba3eLSLrnvjgXba6nB38ZW
-         PTQxdoP08OUoPdfRgn46N9dsX1wMjEST0CWZRz/qzm5AqGyyb2+A+Hmi780kzK3Xeh
-         jIdBCEdCXNWeGVL4rGW6JvAFkNhOHDCfvX8Yjzfs+V6yeBH8WJ+l9yX+MJF1uwqa0M
-         odQB1yOR5h5RQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Dell.Client.Kernel@dell.com,
-        platform-driver-x86@vger.kernel.org,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 19/25] platform/x86: dell-smbios-wmi: Avoid false-positive memcpy() warning
-Date:   Thu,  9 Sep 2021 20:22:27 -0400
-Message-Id: <20210910002234.176125-19-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210910002234.176125-1-sashal@kernel.org>
-References: <20210910002234.176125-1-sashal@kernel.org>
+        Fri, 10 Sep 2021 05:59:22 -0400
+Received: from zn.tnic (p200300ec2f0f0700510d70add229dcc0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:700:510d:70ad:d229:dcc0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 40EB71EC0287;
+        Fri, 10 Sep 2021 11:58:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1631267886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=eMH0OYhSENU+8l9RdprI+/qV2v32JfEhFp7Y3uknai8=;
+        b=myNaE2VvwfjdGG2lk6PL0KkPRdPkt0ZDCvsWRf5Y2rodWtTjbIA2+CyCD8IHFVywVlEW7g
+        fjllVPDi/4exU0ilN+we/nNkRA3wFUzJzEkDQ+O4nepkUkvjU1HuU82L+YiATyZemqdIca
+        lNsrYvT66piTCJXmwHpWxHz5GyaoHTQ=
+Date:   Fri, 10 Sep 2021 11:57:58 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Chatradhi, Naveen Krishna" <nchatrad@amd.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux@roeck-us.net, yazen.ghannam@amd.com,
+        mingo@redhat.com, nathan.fontenot@amd.com, lewis.carroll@amd.com,
+        Ingo Molnar <mingo@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>
+Subject: Re: [PATCH 1/3] x86/amd_nb: Add support for HSMP mailbox access
+Message-ID: <YTssJkXH/ATm9zaA@zn.tnic>
+References: <20210902174155.7365-1-nchatrad@amd.com>
+ <YTEQzIVfY/A1uy32@zn.tnic>
+ <ad2bbcad-857c-f39d-9bee-49cd8ad582b2@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ad2bbcad-857c-f39d-9bee-49cd8ad582b2@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+On Wed, Sep 08, 2021 at 10:41:20PM +0530, Chatradhi, Naveen Krishna wrote:
+> In all the future server platforms, AMD's direction is the support HSMP
+> interface, which exposes system management knobs.
 
-[ Upstream commit fb49d9946f96081f9a05d8f305b3f40285afe4a9 ]
+I know you all think about the future only but there's the past too and
+there's a bunch of AMD hardware out there which doesn't have that.
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+> > You could make it a separate driver module called amd_hsmp.ko which
+> > loads only on the appropriate hw and uses amd_nb.c for detection only
+> > like the other drivers, for example.
+> 
+> How about, creating a module under drivers/platform/x86/ (lets say
+> amd_hsmp.c) export an API from here and it can be extended to support all
+> the knobs that does not fit in an existing frameworks (such as hwmon, etc)
+> and provide a user space access.
+> 
+> I can see similar references in the drivers/platform/x86/ directory.
 
-Since all the size checking has already happened, use input.pointer
-(void *) so memcpy() doesn't get confused about how much is being
-written.
+That sounds ok to me too. There's also arch/x86/platform/, btw, and I
+still have to find out what the difference is. :-)
 
-Avoids this false-positive warning when run-time memcpy() strict
-bounds checking is enabled:
+Lemme add the platform drivers folks.
 
-memcpy: detected field-spanning write (size 4096) of single field (size 36)
-WARNING: CPU: 0 PID: 357 at drivers/platform/x86/dell/dell-smbios-wmi.c:74 run_smbios_call+0x110/0x1e0 [dell_smbios]
+Thread begins at:
 
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <mgross@linux.intel.com>
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Cc: "Pali Rohár" <pali@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
-Cc: Dell.Client.Kernel@dell.com
-Cc: platform-driver-x86@vger.kernel.org
-Reported-by: Andy Lavr <andy.lavr@gmail.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20210825160749.3891090-1-keescook@chromium.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/dell-smbios-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://lkml.kernel.org/r/20210902174155.7365-1-nchatrad@amd.com
 
-diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
-index ccccce9b67ef..6cbfcc513717 100644
---- a/drivers/platform/x86/dell-smbios-wmi.c
-+++ b/drivers/platform/x86/dell-smbios-wmi.c
-@@ -74,7 +74,7 @@ static int run_smbios_call(struct wmi_device *wdev)
- 				obj->integer.value);
- 		return -EIO;
- 	}
--	memcpy(&priv->buf->std, obj->buffer.pointer, obj->buffer.length);
-+	memcpy(input.pointer, obj->buffer.pointer, obj->buffer.length);
- 	dev_dbg(&wdev->dev, "result: [%08x,%08x,%08x,%08x]\n",
- 		priv->buf->std.output[0], priv->buf->std.output[1],
- 		priv->buf->std.output[2], priv->buf->std.output[3]);
+Thx.
+
 -- 
-2.30.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
