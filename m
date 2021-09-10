@@ -2,217 +2,194 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44740C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Sep 2021 19:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75ED8C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCED6113E
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Sep 2021 19:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61F866115A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244974AbhIIT2F (ORCPT
+        id S232504AbhIJAqB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Sep 2021 15:28:05 -0400
-Received: from mail-bn8nam12on2068.outbound.protection.outlook.com ([40.107.237.68]:8192
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S237494AbhIIT2E (ORCPT
+        Thu, 9 Sep 2021 20:46:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232010AbhIJASh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Sep 2021 15:28:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S6AhbOEKiFQemSTBLYGeycaJPPkRm7t6/jpk00oZ9rqBfXZ9XTrZL4ph1aScAeWOwy4+UMCWrjwjicFzDz0txpbwBq09XQKnFSY2uzFXwmw34SGlwL/To38EqgnCtBK6ReHvvI3UQJKv7jrbYJkVjsi1w2zgThdFcc+HxW/lcmcvMokO+KpbP9KxCae8hFkRJbBjIVYP8lD8l0S/edv4Qm/xaTzORNkm/xl+EEwLPOBgfQ3go8FjhhAvn22zlbPdDGdJO/0O2rceYIMV7MJa2xtN57uoKJuXCkaiI1ggESV3j+XfSjsec4B/qYwdDmo3ZcRKsfM8CJnwS/K71+xTrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=2xPi+62VJK36gSx2wO8HjAynl7TtPz3Hn3y6hunmpO4=;
- b=TK7j+8zXB0dsluD12Q/tyo+bJMD44Ns9K0p4ALaeceEUOf39bEwYZqWdkUmW7bBP9gyKi/AozQbuKUK/cvb90ean1/XjyWWOXIHRSwCSDgKUQoiFYc1YCGbk5r4ibkOALoVQkte/rS0J7IStuOAmqiKQoEwc4nhr/vPUZpi71qwZEUf9Gc9X54xyYtwQgT3uYvNGla80XTV5RUaf7ubz21JjqxTuENPwvz4W2H5PorQKRkU3UAjOi2SvaqigNADtrmJahPmZzQwoeb+XMF99zN1DmBhPouPxLz8WKuX9HYIOH2GrQh8FbKsl3gucrhS8U6X3FDOZR/CIArrCEyAUDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2xPi+62VJK36gSx2wO8HjAynl7TtPz3Hn3y6hunmpO4=;
- b=FtTDhVBVqU6dMXGfe0xfzOiNyY91+SwtxhGNMhcXslUTCF5cA+n1O5fb3my+206nh//Rfjk+o/uf6YeuEXUAzsozSz+p2wIOnpfQCu9nLITPJf2nKkgkNj7U4rZbb5VCtLwVmQD5zBTNyh6p+jR/yVFFK7vC3onqrm3v7E2qQwY=
-Authentication-Results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by SA0PR12MB4431.namprd12.prod.outlook.com (2603:10b6:806:95::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.14; Thu, 9 Sep
- 2021 19:26:52 +0000
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::78b7:7336:d363:9be3]) by SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::78b7:7336:d363:9be3%6]) with mapi id 15.20.4478.027; Thu, 9 Sep 2021
- 19:26:52 +0000
-Cc:     brijesh.singh@amd.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        Marc Orr <marcorr@google.com>,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH Part1 v5 34/38] x86/sev: Add snp_msg_seqno() helper
-To:     Peter Gonda <pgonda@google.com>
-References: <20210820151933.22401-1-brijesh.singh@amd.com>
- <20210820151933.22401-35-brijesh.singh@amd.com>
- <CAMkAt6qQOgZVEMQdMXqvs2s8pELnAFV-Msgc2_MC5WOYf8oAiQ@mail.gmail.com>
- <4742dbfe-4e02-a7e3-6464-905ccc602e6c@amd.com>
- <CAMkAt6pT4vkgLxTN1Lj54ufaStyCHHitNaHAdZvEgDV8Nyrx-Q@mail.gmail.com>
- <f54f3fc3-14c3-5c36-2712-62eb625a958b@amd.com>
- <CAMkAt6oG0L4an-VgsADxz1xs6-wq3x4Qpxk9BdP=F2W3uT8U4g@mail.gmail.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <7ddc78d4-745d-217e-11f1-77643863e6ee@amd.com>
-Date:   Thu, 9 Sep 2021 14:26:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-In-Reply-To: <CAMkAt6oG0L4an-VgsADxz1xs6-wq3x4Qpxk9BdP=F2W3uT8U4g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9P223CA0005.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:806:26::10) To SN6PR12MB2718.namprd12.prod.outlook.com
- (2603:10b6:805:6f::22)
+        Thu, 9 Sep 2021 20:18:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7E31261215;
+        Fri, 10 Sep 2021 00:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631233025;
+        bh=6CfwjVaR4AreFF15nKRjmwLM/H6Zw16p/K0HTzsauCA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VxcK/mDdMMBZUf4xvkLpC96VasaqFLQyCkaGLf7R7YbGZCvfVRBExnFqV5rlp8qXS
+         RyJzDgVBBm8UHmQzb1c5O2J7vwn9HabJLUHncmouYOkSB3yH0EH7oJvQuVUH6QfoQd
+         EP9G+iXb0+I8ZThJgQ6OXyAups1MdB9J5NfDtsA1fYsIYFcX49RuDXkC8QhaC9Aidy
+         lV0MDM/uGZ6uGWKYDmlcRFHAW4zEtZ0HvG0vXKVERD/TyQXTO91smGBzwbiWL6Xt0D
+         YozG+p2Vc7QMZonouDkQGBGXhl+5I6KKSqhQSYUQJNQfu703D6hFzm1FCtY38DR7aO
+         awNLqD6zEtA3A==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        Evgeny Novikov <novikov@ispras.ru>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.14 48/99] platform/x86: intel_pmc_core: Prevent possibile overflow
+Date:   Thu,  9 Sep 2021 20:15:07 -0400
+Message-Id: <20210910001558.173296-48-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210910001558.173296-1-sashal@kernel.org>
+References: <20210910001558.173296-1-sashal@kernel.org>
 MIME-Version: 1.0
-Received: from [10.236.31.95] (165.204.77.1) by SA9P223CA0005.NAMP223.PROD.OUTLOOK.COM (2603:10b6:806:26::10) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.16 via Frontend Transport; Thu, 9 Sep 2021 19:26:50 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e0e94c00-63ae-416f-1e64-08d973c7c6cf
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4431:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB44319320323C4A269EF9B8BAE5D59@SA0PR12MB4431.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OxRA81P/pxotK/9fjx/dzOAuEwL4RuIem0Gy+aJTlhw/5T65mPRQ+lyP5S2eJgi98h6rPvSN1EiQcqogqN57fUD8ePXaXBHSncF7ZegHu5bQMa4yQ74qvBRLin16IzB3/Om02RvNFF3M4UvlXIatFsWl/Rr70CPInvv9MEWCIHX11CN10wNzJtFGgVBVdavOO0zZcMNYZzgMBKTkvKbGMBbjehhi02Iz0zFlMeXKVywGE7LNRkrt0ViLV/KGsdvTFB4R+BwUL0uEdwXJMwvSwNDUMv9sbs0Uo9O+oi/L8+eAk3s+p0amb2QB3Njp/AEF5XK5NOhxgal6Sg5alt9aIlTJYzGOsjEe7FjptchgrGD3wMdkDEE7k9bpNOIAIaJdv3Pwm1ErrUcbe4Yz8OHEvm0QCDAOmyJmizNLixneg0PUYlsEgYGRzR7sh6XFIqPTs2/MhV3QfUtW64KUygJHHXDkWf9/5pykrbC3V+mxEDijygEquz+e+KjK7LX5lRWIy8Zn3XNuxCCsVfGTjcGEAAFEedUg9462B7pT/HQ+fTWODJVIzrMN7T2P3hHnE/MZf9HNkNyWXE31hrIW1t1t/y/6jcEO3pJmlEC5fUzo7ZbXaEAm3tXaeqrC+SwaCMQstd1v6Jwh31qXFMBDtD1uFHHuWORhFBtbpprMYo2fGYFRKAr6j5V8193Q7Jb6DO5qjZOC5HyKmuexxTR/eS1/hinrBx8D3CK6LTv0lHScZSmSSxP0MNkPiEs9Jc9R3nOL5NA9ZHacT+1dHTI5xs6MH4SYF8Q/QTwqs/W5P8oee2yGc0gKds0UUE+WHpUhCxP0YL3hg4jBvJVd9TAG52CpxA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(376002)(396003)(346002)(366004)(4326008)(36756003)(31696002)(16576012)(66476007)(83380400001)(86362001)(66556008)(316002)(8676002)(6486002)(44832011)(66946007)(38350700002)(31686004)(2906002)(54906003)(38100700002)(186003)(8936002)(45080400002)(5660300002)(26005)(6916009)(956004)(2616005)(966005)(7406005)(478600001)(7416002)(52116002)(53546011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Lzc5UGRKbXNkcnZGeFVxNjNjRkxhNXNiMDByU2JxNDhvSGVUKzFNdGNWUTU5?=
- =?utf-8?B?dklBVHZucXlSck90SzQ2NjF5ODUrVmUrMS85TTNhWWovSFYzNmUvbHdnWWdG?=
- =?utf-8?B?OUNINUYxanBPSzZWZ2Z3d3Z1MUw1b0NZN3RWc0U3eTVHL1V1UVdDVUlGeDg5?=
- =?utf-8?B?dEhIKzhoMTZIT2hJWEM5Uit5eU90ckxIakEycTJEQi9nUkR2ckdESDR4KzRi?=
- =?utf-8?B?WFZjYnJVZlVCTnI3NCtZZnR1Tko2VHBzTXFTWHc4cGFUNS84TFFySlJXajVC?=
- =?utf-8?B?VG9ZaG5oZGtVMS9xTG1NWUZLcVdOQ3JkRXFmL3Q4L08xS01xcjdRc0xYazJG?=
- =?utf-8?B?VmphbzBMSTJpOVhNQkN4K0RFWDYvczlpU3Y0L2ZrVkxlaUdXT2hYT3dJSUV5?=
- =?utf-8?B?TnVVUVU5elJXdEhrQlBoMmRqL01vMHB4VUQ0WjhUUU0xbmxjZlFaNG45bU54?=
- =?utf-8?B?WGJWcGU3V0RpZk1IcHJ6Z2hMVFNLV2NSVHJjR1FHaW9JMjlUcE94MFg3S1ZZ?=
- =?utf-8?B?Wk43VUJOa2pSKzNKc3plbGRKNkcxM3RoLzVjTXhpY3lDaThqWTZSY2Y1TlhC?=
- =?utf-8?B?bjdpTzNEdXNIR0k3ekhiWnh5N2NDZlF6WU41TjNBMEcvb2lvOUlMZlF3RlJB?=
- =?utf-8?B?MUJ5RXN0bFRpK0trdEJVVlFtTUd3c0RCVmRCc1F5eDBJODZYSTFoblp1bUs4?=
- =?utf-8?B?a29icnZBMnBhQkF2NlpSbkdwMXJuRnJsYnlIL1NKbWJxaEI1U2h2cGRSQlNs?=
- =?utf-8?B?SERjczI1QUVxd0NIZXN0NkxOVVdYNjEyTThVSk9QcThUWkJLcU01NzdtQk9E?=
- =?utf-8?B?U3I2Y0ZYQjZROWovbS96UGMxNVZqRGZ5V2VTT1c5dlorOWNHM2wzMFdqR21E?=
- =?utf-8?B?bktROUVpZFZqekNiUEZDVjBuMmdWbkRnU25sUXE5KyszVnNkSUN2SlRVbnR3?=
- =?utf-8?B?NmZFNjk2NjMvZmczeTQ0MEFhZnVBY1lpOHg4SHBsRVEyQWVsczlTUUxDUlZB?=
- =?utf-8?B?cHVibnRqRXhJSzUxUTdmZUpSNithYnU3MGZVeFh3N3V4MmhZL2FWbXNwMmtp?=
- =?utf-8?B?VGJLN2lISHZCV0xVNlo1T243ZDRLWTdJcUFpNGZEbm5RR3FZZWU3RWhWTHlM?=
- =?utf-8?B?TC9rY2EzOURzeFVxOS9KRzR2SGR2QkY2RzZHaUFhZzJ0aGJyZUVIdXpkelJB?=
- =?utf-8?B?OEJzd0JSZ0RkTmk5c1Z4ZzZ5dUs1QXNWUUdpbDB5bmphSUx1N2VqUTdXaXht?=
- =?utf-8?B?TDRwOFhFczVHU0ZYc1FtcjlJc0JiM29VM2M4RDFrRmlIQjRCMFM4eWZhNWlH?=
- =?utf-8?B?NHlqZExDbHFTcC9CZUxuaFFTbWJCWUN2RUNBTlRFTWZDWm5PdlorT2dmYmln?=
- =?utf-8?B?dlA0SjQxRmJyMGE0aXNyNW9iNjdsK2ZoVW9WMjRSYWx3QytqbGM3RmY5eXA5?=
- =?utf-8?B?N2JQeEVLT0dNdVNUR2ZJWFVsbzUwMFJlcFdCMVp0M0MyWUlRYXFMcU9wWlZ1?=
- =?utf-8?B?WEczeGJVWmcrK054UmllU2wwamdDL1FWWEJGcGU2a3NxYUlSWSswKzQ2MzB1?=
- =?utf-8?B?YXBPcjlMYThSY05pbFhLSFU5Zmx3RDFka1VUblZ1dUoxNmlyZHBzc1dxVldi?=
- =?utf-8?B?TkowYWVYMnd0N2tHMFpYYXhaU0kxNnJiU0xMaldXWGo3emZwbytKcHR5Qnk1?=
- =?utf-8?B?eDZPZzlEaEN4UmtTaUxGRlVHbDB1SnVzYzNYNTZ0VmJzOERidUV1cXU0QWE1?=
- =?utf-8?Q?O/2sxDGr0JBNio7Bzo9HihYuP/G1khHgaTgj9TM?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0e94c00-63ae-416f-1e64-08d973c7c6cf
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2021 19:26:52.4762
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: meFqzL+zls7RCZAi32i3VJ1wW/jMTkV7iKeOyxaCTt3wbRx+fi+giHRW4bdvDiw09e1fPrR27QTAICj0mnx5aQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4431
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+From: "David E. Box" <david.e.box@linux.intel.com>
 
+[ Upstream commit 45b6f75eab6aabf9d88933830f41f532d39f38d2 ]
 
-On 9/9/21 11:21 AM, Peter Gonda wrote:
-> On Thu, Sep 9, 2021 at 10:17 AM Brijesh Singh <brijesh.singh@amd.com> wrote:
->>
->>
->>
->> On 9/9/21 10:43 AM, Peter Gonda wrote:
->> ...
->>
->>>>
->>>> Does this address your concern?
->>>
->>> So the 'snp_msg_seqno()' call in 'enc_payload' will not increment the
->>> counter, its only incremented on 'snp_gen_msg_seqno()'? If thats
->>> correct, that addresses my first concern.
->>>
->>
->> Yes, that is goal.
->>
->>>>>
->>>>
->>>> So far, the only user for the snp_msg_seqno() is the attestation driver.
->>>> And the driver is designed to serialize the vmgexit request and thus we
->>>> should not run into concurrence issue.
->>>
->>> That seems a little dangerous as any module new code or out-of-tree
->>> module could use this function thus revealing this race condition
->>> right? Could we at least have a comment on these functions
->>> (snp_msg_seqno and snp_gen_msg_seqno) noting this?
->>>
->>
->> Yes, if the driver is not performing the serialization then we will get
->> into race condition.
->>
->> One way to avoid this requirement is to do all the crypto inside the
->> snp_issue_guest_request() and eliminate the need to export the
->> snp_msg_seqno().
->>
->> I will add the comment about it in the function.
-> 
-> Actually I forgot that the sequence number is the only component of
-> the AES-GCM IV. Seen in 'enc_payload'. Given the AES-GCM spec requires
-> uniqueness of the IV. I think we should try a little harder than a
-> comment to guarantee we never expose 2 requests encrypted with the
-> same sequence number / IV. It's more than just a DOS against the
-> guest's PSP request ability but also could be a guest security issue,
-> thoughts?
-> 
+Substate priority levels are encoded in 4 bits in the LPM_PRI register.
+This value was used as an index to an array whose element size was less
+than 16, leading to the possibility of overflow should we read a larger
+than expected priority.  In addition to the overflow, bad values could lead
+to incorrect state reporting.  So rework the priority code to prevent the
+overflow and perform some validation of the register. Use the priority
+register values if they give an ordering of unique numbers between 0 and
+the maximum number of states.  Otherwise, use a default ordering instead.
 
-Ah good point, we should avoid a request with same IV. May be move the 
-sequence number increment and save in sevguest drv. Then driver can do 
-the sequence get, vmgexit and increment with a protected lock.
+Reported-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/20210814014728.520856-1-david.e.box@linux.intel.com
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/intel_pmc_core.c | 65 +++++++++++++++++++++------
+ drivers/platform/x86/intel_pmc_core.h |  2 +
+ 2 files changed, 53 insertions(+), 14 deletions(-)
 
-thanks
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index b0e486a6bdfb..ae410a358ffe 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -1449,9 +1449,42 @@ static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc);
+ 
+-static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
++static bool pmc_core_pri_verify(u32 lpm_pri, u8 *mode_order)
+ {
+-	u8 lpm_priority[LPM_MAX_NUM_MODES];
++	int i, j;
++
++	if (!lpm_pri)
++		return false;
++	/*
++	 * Each byte contains the priority level for 2 modes (7:4 and 3:0).
++	 * In a 32 bit register this allows for describing 8 modes. Store the
++	 * levels and look for values out of range.
++	 */
++	for (i = 0; i < 8; i++) {
++		int level = lpm_pri & GENMASK(3, 0);
++
++		if (level >= LPM_MAX_NUM_MODES)
++			return false;
++
++		mode_order[i] = level;
++		lpm_pri >>= 4;
++	}
++
++	/* Check that we have unique values */
++	for (i = 0; i < LPM_MAX_NUM_MODES - 1; i++)
++		for (j = i + 1; j < LPM_MAX_NUM_MODES; j++)
++			if (mode_order[i] == mode_order[j])
++				return false;
++
++	return true;
++}
++
++static void pmc_core_get_low_power_modes(struct platform_device *pdev)
++{
++	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
++	u8 pri_order[LPM_MAX_NUM_MODES] = LPM_DEFAULT_PRI;
++	u8 mode_order[LPM_MAX_NUM_MODES];
++	u32 lpm_pri;
+ 	u32 lpm_en;
+ 	int mode, i, p;
+ 
+@@ -1462,24 +1495,28 @@ static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
+ 	lpm_en = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_en_offset);
+ 	pmcdev->num_lpm_modes = hweight32(lpm_en);
+ 
+-	/* Each byte contains information for 2 modes (7:4 and 3:0) */
+-	for (mode = 0; mode < LPM_MAX_NUM_MODES; mode += 2) {
+-		u8 priority = pmc_core_reg_read_byte(pmcdev,
+-				pmcdev->map->lpm_priority_offset + (mode / 2));
+-		int pri0 = GENMASK(3, 0) & priority;
+-		int pri1 = (GENMASK(7, 4) & priority) >> 4;
++	/* Read 32 bit LPM_PRI register */
++	lpm_pri = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_priority_offset);
+ 
+-		lpm_priority[pri0] = mode;
+-		lpm_priority[pri1] = mode + 1;
+-	}
+ 
+ 	/*
+-	 * Loop though all modes from lowest to highest priority,
++	 * If lpm_pri value passes verification, then override the default
++	 * modes here. Otherwise stick with the default.
++	 */
++	if (pmc_core_pri_verify(lpm_pri, mode_order))
++		/* Get list of modes in priority order */
++		for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
++			pri_order[mode_order[mode]] = mode;
++	else
++		dev_warn(&pdev->dev, "Assuming a default substate order for this platform\n");
++
++	/*
++	 * Loop through all modes from lowest to highest priority,
+ 	 * and capture all enabled modes in order
+ 	 */
+ 	i = 0;
+ 	for (p = LPM_MAX_NUM_MODES - 1; p >= 0; p--) {
+-		int mode = lpm_priority[p];
++		int mode = pri_order[p];
+ 
+ 		if (!(BIT(mode) & lpm_en))
+ 			continue;
+@@ -1675,7 +1712,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	mutex_init(&pmcdev->lock);
+ 
+ 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
+-	pmc_core_get_low_power_modes(pmcdev);
++	pmc_core_get_low_power_modes(pdev);
+ 	pmc_core_do_dmi_quirks(pmcdev);
+ 
+ 	if (pmcdev->map == &tgl_reg_map)
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index e8dae9c6c45f..b9bf3d3d6f7a 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -188,6 +188,8 @@ enum ppfear_regs {
+ #define ICL_PMC_SLP_S0_RES_COUNTER_STEP		0x64
+ 
+ #define LPM_MAX_NUM_MODES			8
++#define LPM_DEFAULT_PRI				{ 7, 6, 2, 5, 4, 1, 3, 0 }
++
+ #define GET_X2_COUNTER(v)			((v) >> 1)
+ #define LPM_STS_LATCH_MODE			BIT(31)
+ 
+-- 
+2.30.2
 
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fnvlpubs.nist.gov%2Fnistpubs%2FLegacy%2FSP%2Fnistspecialpublication800-38d.pdf&amp;data=04%7C01%7Cbrijesh.singh%40amd.com%7C46a05f4713834307706608d973ade616%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637668013461202204%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=KCsi5rTQX6L%2BqY07VdBtF8IH0TLNyHn6wTyidgWvXf4%3D&amp;reserved=0
-> (Section 8 page 18)
-> 
->>
->> thanks
-> 
