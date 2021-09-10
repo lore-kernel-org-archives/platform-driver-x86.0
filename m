@@ -7,43 +7,46 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE8BC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2AEC4167B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 074E160C40
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EFC661108
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240216AbhIJAqB (ORCPT
+        id S241906AbhIJAqF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Sep 2021 20:46:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44506 "EHLO mail.kernel.org"
+        Thu, 9 Sep 2021 20:46:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231482AbhIJASn (ORCPT
+        id S233634AbhIJAUa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Sep 2021 20:18:43 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F306961211;
-        Fri, 10 Sep 2021 00:17:09 +0000 (UTC)
+        Thu, 9 Sep 2021 20:20:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 08D2D610A3;
+        Fri, 10 Sep 2021 00:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631233030;
-        bh=WU1M5SPF3hcpAADYerqG/9MJyzmuk5wbI5Wn+/E+fT8=;
+        s=k20201202; t=1631233160;
+        bh=6CfwjVaR4AreFF15nKRjmwLM/H6Zw16p/K0HTzsauCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rYgIJD4Le6AVUlkD0di3SMj9ZcxCCyMDhgCtcy2FgvkNoHNeWkprnSmKPGRgdFLP+
-         PI3Zni/fU4dS6cDCoTd49pvDKD2ncrOwLbtbxJTlzfUEmhZUq1qnJtAq0fkyVYsQiI
-         CnVvaBNwBsdJgMGRm028hmzDJvBh7/Mh4Arzj6gJ+PwyD0mvB9DZ3LAwWRW7iECEM5
-         J/9GhyGSsDT8bfqBCKZT5HPvUdOwnsN+mZg3v6tseR9sAkalMsM69F20GBNeH9JDOT
-         1mZ9NVqytZehmebcYYeyofnWzMih90lkuLLed+vEkBgmTHAvqeF1niLNMA+goEJlhj
-         0c0HmhKyMwocw==
+        b=YbZfPkchOC84pDG8SAROA+0VIv8L8fFloWDoN9fqmA2SEWkII1KvX7Vfhf7KKZKxg
+         /5lTh36gIHTCLdUSErSOZ2nEOvtvEIUrEsZNfAwEzsLIrUTvgyw4XVWqrgxotSIWhu
+         erExjI6XdtZfs6z97cWygjBry9pBVhG1ztfz86En79xa9cIy7IjeBHo/J6ZEDFrwSu
+         qNu2PF94x/NBRLdFQowcstvrC+ix5j8UIMzbXQG3WLXLpsqhfYwLIDa2z/8NuxXAlD
+         1MWbrClGFbYMSq0Rr1KMO6BcLMEuH5mj7oNUIGSVCLWr7X8Zk5Kp4CBXX06UIe8s4B
+         182bUlYJRpcyQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Meng Dong <whenov@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        Evgeny Novikov <novikov@ispras.ru>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.14 52/99] platform/x86: ideapad-laptop: Fix Legion 5 Fn lock LED
-Date:   Thu,  9 Sep 2021 20:15:11 -0400
-Message-Id: <20210910001558.173296-52-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 42/88] platform/x86: intel_pmc_core: Prevent possibile overflow
+Date:   Thu,  9 Sep 2021 20:17:34 -0400
+Message-Id: <20210910001820.174272-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210910001558.173296-1-sashal@kernel.org>
-References: <20210910001558.173296-1-sashal@kernel.org>
+In-Reply-To: <20210910001820.174272-1-sashal@kernel.org>
+References: <20210910001820.174272-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -52,57 +55,141 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Meng Dong <whenov@gmail.com>
+From: "David E. Box" <david.e.box@linux.intel.com>
 
-[ Upstream commit 3ae86d2d4704796ee658a34245cb86e68c40c5d7 ]
+[ Upstream commit 45b6f75eab6aabf9d88933830f41f532d39f38d2 ]
 
-This patch fixes the bug 212671.
-Althrough the Fn lock (Fn + Esc) works on Legion 5 (R7000P), its LED
-light does not change with the state. This modification sets the Fn lock
-state to its current value on receiving the wmi event
-8FC0DE0C-B4E4-43FD-B0F3-8871711C1294 to update the LED state.
+Substate priority levels are encoded in 4 bits in the LPM_PRI register.
+This value was used as an index to an array whose element size was less
+than 16, leading to the possibility of overflow should we read a larger
+than expected priority.  In addition to the overflow, bad values could lead
+to incorrect state reporting.  So rework the priority code to prevent the
+overflow and perform some validation of the register. Use the priority
+register values if they give an ordering of unique numbers between 0 and
+the maximum number of states.  Otherwise, use a default ordering instead.
 
-Signed-off-by: Meng Dong <whenov@gmail.com>
-Link: https://lore.kernel.org/r/20210817171203.12855-1-whenov@gmail.com
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reported-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/20210814014728.520856-1-david.e.box@linux.intel.com
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/ideapad-laptop.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/platform/x86/intel_pmc_core.c | 65 +++++++++++++++++++++------
+ drivers/platform/x86/intel_pmc_core.h |  2 +
+ 2 files changed, 53 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 784326bd72f0..e7a1299e3776 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -41,6 +41,7 @@
- static const char *const ideapad_wmi_fnesc_events[] = {
- 	"26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6", /* Yoga 3 */
- 	"56322276-8493-4CE8-A783-98C991274F5E", /* Yoga 700 */
-+	"8FC0DE0C-B4E4-43FD-B0F3-8871711C1294", /* Legion 5 */
- };
- #endif
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index b0e486a6bdfb..ae410a358ffe 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -1449,9 +1449,42 @@ static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc);
  
-@@ -1459,11 +1460,19 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
- static void ideapad_wmi_notify(u32 value, void *context)
+-static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
++static bool pmc_core_pri_verify(u32 lpm_pri, u8 *mode_order)
  {
- 	struct ideapad_private *priv = context;
-+	unsigned long result;
- 
- 	switch (value) {
- 	case 128:
- 		ideapad_input_report(priv, value);
- 		break;
-+	case 208:
-+		if (!eval_hals(priv->adev->handle, &result)) {
-+			bool state = test_bit(HALS_FNLOCK_STATE_BIT, &result);
+-	u8 lpm_priority[LPM_MAX_NUM_MODES];
++	int i, j;
 +
-+			exec_sals(priv->adev->handle, state ? SALS_FNLOCK_ON : SALS_FNLOCK_OFF);
-+		}
-+		break;
- 	default:
- 		dev_info(&priv->platform_device->dev,
- 			 "Unknown WMI event: %u\n", value);
++	if (!lpm_pri)
++		return false;
++	/*
++	 * Each byte contains the priority level for 2 modes (7:4 and 3:0).
++	 * In a 32 bit register this allows for describing 8 modes. Store the
++	 * levels and look for values out of range.
++	 */
++	for (i = 0; i < 8; i++) {
++		int level = lpm_pri & GENMASK(3, 0);
++
++		if (level >= LPM_MAX_NUM_MODES)
++			return false;
++
++		mode_order[i] = level;
++		lpm_pri >>= 4;
++	}
++
++	/* Check that we have unique values */
++	for (i = 0; i < LPM_MAX_NUM_MODES - 1; i++)
++		for (j = i + 1; j < LPM_MAX_NUM_MODES; j++)
++			if (mode_order[i] == mode_order[j])
++				return false;
++
++	return true;
++}
++
++static void pmc_core_get_low_power_modes(struct platform_device *pdev)
++{
++	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
++	u8 pri_order[LPM_MAX_NUM_MODES] = LPM_DEFAULT_PRI;
++	u8 mode_order[LPM_MAX_NUM_MODES];
++	u32 lpm_pri;
+ 	u32 lpm_en;
+ 	int mode, i, p;
+ 
+@@ -1462,24 +1495,28 @@ static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
+ 	lpm_en = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_en_offset);
+ 	pmcdev->num_lpm_modes = hweight32(lpm_en);
+ 
+-	/* Each byte contains information for 2 modes (7:4 and 3:0) */
+-	for (mode = 0; mode < LPM_MAX_NUM_MODES; mode += 2) {
+-		u8 priority = pmc_core_reg_read_byte(pmcdev,
+-				pmcdev->map->lpm_priority_offset + (mode / 2));
+-		int pri0 = GENMASK(3, 0) & priority;
+-		int pri1 = (GENMASK(7, 4) & priority) >> 4;
++	/* Read 32 bit LPM_PRI register */
++	lpm_pri = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_priority_offset);
+ 
+-		lpm_priority[pri0] = mode;
+-		lpm_priority[pri1] = mode + 1;
+-	}
+ 
+ 	/*
+-	 * Loop though all modes from lowest to highest priority,
++	 * If lpm_pri value passes verification, then override the default
++	 * modes here. Otherwise stick with the default.
++	 */
++	if (pmc_core_pri_verify(lpm_pri, mode_order))
++		/* Get list of modes in priority order */
++		for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
++			pri_order[mode_order[mode]] = mode;
++	else
++		dev_warn(&pdev->dev, "Assuming a default substate order for this platform\n");
++
++	/*
++	 * Loop through all modes from lowest to highest priority,
+ 	 * and capture all enabled modes in order
+ 	 */
+ 	i = 0;
+ 	for (p = LPM_MAX_NUM_MODES - 1; p >= 0; p--) {
+-		int mode = lpm_priority[p];
++		int mode = pri_order[p];
+ 
+ 		if (!(BIT(mode) & lpm_en))
+ 			continue;
+@@ -1675,7 +1712,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	mutex_init(&pmcdev->lock);
+ 
+ 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
+-	pmc_core_get_low_power_modes(pmcdev);
++	pmc_core_get_low_power_modes(pdev);
+ 	pmc_core_do_dmi_quirks(pmcdev);
+ 
+ 	if (pmcdev->map == &tgl_reg_map)
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index e8dae9c6c45f..b9bf3d3d6f7a 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -188,6 +188,8 @@ enum ppfear_regs {
+ #define ICL_PMC_SLP_S0_RES_COUNTER_STEP		0x64
+ 
+ #define LPM_MAX_NUM_MODES			8
++#define LPM_DEFAULT_PRI				{ 7, 6, 2, 5, 4, 1, 3, 0 }
++
+ #define GET_X2_COUNTER(v)			((v) >> 1)
+ #define LPM_STS_LATCH_MODE			BIT(31)
+ 
 -- 
 2.30.2
 
