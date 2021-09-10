@@ -7,44 +7,53 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DF9C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E2EC28B21
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0A0761186
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5EF60C40
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232535AbhIJAqF (ORCPT
+        id S240240AbhIJAqG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Sep 2021 20:46:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46706 "EHLO mail.kernel.org"
+        Thu, 9 Sep 2021 20:46:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233685AbhIJAUg (ORCPT
+        id S232124AbhIJAVI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Sep 2021 20:20:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A8F796023D;
-        Fri, 10 Sep 2021 00:19:25 +0000 (UTC)
+        Thu, 9 Sep 2021 20:21:08 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 452B761167;
+        Fri, 10 Sep 2021 00:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631233166;
-        bh=g6oxqBtujSLDxF3lSt9un3bshuYJvb3z1daAs5f6syQ=;
+        s=k20201202; t=1631233198;
+        bh=ac9haFRwlHr4dwDpv/Fc7KPXXzgxLu7bcOOyKuDZCiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AQ2V6lAusiy2glVZtzN9hdma5/ndylk16L6vtejsGCL8MNSv5+nE7zP4Ak3dtG7+q
-         ljLcL7Sbafeig/ffAjWM5RhbPysHvbLLI7wDevhDCq0Y4R2yNj2TcchHiumt936rWz
-         lmInUwf+r0DoOB26m4HmKsk8eBtCoiiwdmEte/O6faCnEHkVclNhefYImd6ydKLFH4
-         rO2JuiHF5cgmP9/Qaip5TpyjsLxDRwobQfD0G9opdPuzRK8NALu+JiX0lVQXwCME3w
-         kZTBBf0L72ozcSago+xd1N2suhT4VDFxxH84PY9J+CH7xxnPhQuFDR6VHKxGDmsr1V
-         dX1IGQhUl6uOw==
+        b=q7q9TuFqvASWO5CtaiECE6+YOU7EkGDw3MxVeQ1J/veUNDNdEt+YYfrcPTcbMQMJo
+         wI+LUooTceteNKiUqx4GHxqQzbidy8crbf+pIdSQhWrpnDnfP4BCLMRhARfDhk9Mw2
+         ayix5qHlMP24xtiXQQY6mhIpJLfD2LGzB9WKpyuf7QZPkeGbuvITzorTMSXtlMJ4li
+         oluap/7xu5ahoOhyMQuFWvgeyBd4tKx4ASRJspkvZ96KQUgPSm20I0NOyE0vYZwNFi
+         BITY0bvvywncxXCSP0r2CC0tET9swQcEVHbIbcrklWDY/ANpaembrNlGeUfmuq6kCv
+         5jNRYvQvuNfsA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Meng Dong <whenov@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.13 46/88] platform/x86: ideapad-laptop: Fix Legion 5 Fn lock LED
-Date:   Thu,  9 Sep 2021 20:17:38 -0400
-Message-Id: <20210910001820.174272-46-sashal@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Dell.Client.Kernel@dell.com,
+        platform-driver-x86@vger.kernel.org,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 69/88] platform/x86: dell-smbios-wmi: Avoid false-positive memcpy() warning
+Date:   Thu,  9 Sep 2021 20:18:01 -0400
+Message-Id: <20210910001820.174272-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210910001820.174272-1-sashal@kernel.org>
 References: <20210910001820.174272-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -52,57 +61,55 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Meng Dong <whenov@gmail.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 3ae86d2d4704796ee658a34245cb86e68c40c5d7 ]
+[ Upstream commit fb49d9946f96081f9a05d8f305b3f40285afe4a9 ]
 
-This patch fixes the bug 212671.
-Althrough the Fn lock (Fn + Esc) works on Legion 5 (R7000P), its LED
-light does not change with the state. This modification sets the Fn lock
-state to its current value on receiving the wmi event
-8FC0DE0C-B4E4-43FD-B0F3-8871711C1294 to update the LED state.
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-Signed-off-by: Meng Dong <whenov@gmail.com>
-Link: https://lore.kernel.org/r/20210817171203.12855-1-whenov@gmail.com
+Since all the size checking has already happened, use input.pointer
+(void *) so memcpy() doesn't get confused about how much is being
+written.
+
+Avoids this false-positive warning when run-time memcpy() strict
+bounds checking is enabled:
+
+memcpy: detected field-spanning write (size 4096) of single field (size 36)
+WARNING: CPU: 0 PID: 357 at drivers/platform/x86/dell/dell-smbios-wmi.c:74 run_smbios_call+0x110/0x1e0 [dell_smbios]
+
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Gross <mgross@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Cc: "Pali Rohár" <pali@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
+Cc: Dell.Client.Kernel@dell.com
+Cc: platform-driver-x86@vger.kernel.org
+Reported-by: Andy Lavr <andy.lavr@gmail.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20210825160749.3891090-1-keescook@chromium.org
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/ideapad-laptop.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/platform/x86/dell/dell-smbios-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 387817290921..15de129e5777 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -41,6 +41,7 @@
- static const char *const ideapad_wmi_fnesc_events[] = {
- 	"26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6", /* Yoga 3 */
- 	"56322276-8493-4CE8-A783-98C991274F5E", /* Yoga 700 */
-+	"8FC0DE0C-B4E4-43FD-B0F3-8871711C1294", /* Legion 5 */
- };
- #endif
- 
-@@ -1447,11 +1448,19 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
- static void ideapad_wmi_notify(u32 value, void *context)
- {
- 	struct ideapad_private *priv = context;
-+	unsigned long result;
- 
- 	switch (value) {
- 	case 128:
- 		ideapad_input_report(priv, value);
- 		break;
-+	case 208:
-+		if (!eval_hals(priv->adev->handle, &result)) {
-+			bool state = test_bit(HALS_FNLOCK_STATE_BIT, &result);
-+
-+			exec_sals(priv->adev->handle, state ? SALS_FNLOCK_ON : SALS_FNLOCK_OFF);
-+		}
-+		break;
- 	default:
- 		dev_info(&priv->platform_device->dev,
- 			 "Unknown WMI event: %u\n", value);
+diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platform/x86/dell/dell-smbios-wmi.c
+index 33f823772733..01ea4bb958af 100644
+--- a/drivers/platform/x86/dell/dell-smbios-wmi.c
++++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
+@@ -71,7 +71,7 @@ static int run_smbios_call(struct wmi_device *wdev)
+ 				obj->integer.value);
+ 		return -EIO;
+ 	}
+-	memcpy(&priv->buf->std, obj->buffer.pointer, obj->buffer.length);
++	memcpy(input.pointer, obj->buffer.pointer, obj->buffer.length);
+ 	dev_dbg(&wdev->dev, "result: [%08x,%08x,%08x,%08x]\n",
+ 		priv->buf->std.output[0], priv->buf->std.output[1],
+ 		priv->buf->std.output[2], priv->buf->std.output[3]);
 -- 
 2.30.2
 
