@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2318EC433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34724C43217
 	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07F2C60C40
+	by mail.kernel.org (Postfix) with ESMTP id 1B233611AD
 	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232465AbhIJAqG (ORCPT
+        id S233769AbhIJAqH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Sep 2021 20:46:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48198 "EHLO mail.kernel.org"
+        Thu, 9 Sep 2021 20:46:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232088AbhIJAWj (ORCPT
+        id S234518AbhIJAXd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Sep 2021 20:22:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 337FB61167;
-        Fri, 10 Sep 2021 00:21:28 +0000 (UTC)
+        Thu, 9 Sep 2021 20:23:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 625A4604DC;
+        Fri, 10 Sep 2021 00:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631233289;
+        s=k20201202; t=1631233343;
         bh=OOlkE/5wn5cX1UCFaQILnONAsv24eb8TbOKobIjrxkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Az1thXH7qdW0YwA3zwdx8BDLaZIFKrSmat7NK01vXtswG6W9FI2/UmHz5CNNy6e4g
-         JZjcVp60x6w+h3lZ9VH7amnjIBfTDBYhRmgQ1Dx23VqyRByqLgbVvwnslBLEQNL66B
-         1VGZWfeayfM/dL62iRilnRZYK7xjFlpukQnWB97+8Khh/wgr4SyUumX0Y6yLPQPWOo
-         mY8fyx+gWPEZO46oGX2Izw79otUTmkhFX7FwnB0QhyvsvKwG3pK+axRIPazC1bxVFA
-         QOE01thDY4Pt7r7Ac1cNn5OnldEmMg2OZ/79lob45Uskzq1fsY+l90uom6uYE9jXyf
-         Xu82GawEBxAqg==
+        b=qQjCprsuPxDCFN0vl2ji1PSmwPWqJB/DXIQTLMD8tE1nTsVZ9YX6wKMUAAMoz62TA
+         ltgPNoDe72oIt2k3nYqPn2T8UwtIxwvlBH2rpfFuI4BeLFelVyQKVSkbRslmbuTH6Y
+         XV8j1dqnfQSWFtM2E4TQDpHSERU1cqJTmf0BBPY2/JvHefbvu0OHM9pkIQFjgQDRzF
+         JmI8sMyTCLvEzgjN7szCDSDDFT3W4BLS3hdIGChtgJIxudRrqExl4JcDRZoiVKnVWs
+         RaVut8J/UE+FcijWnqfAPtllSV+aAJoQ6R/FU6Rd0WIguh4LhOLYexFq2SrDMTYc6J
+         jj+FBKm7cIu1w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -46,12 +46,12 @@ Cc:     Kees Cook <keescook@chromium.org>,
         platform-driver-x86@vger.kernel.org,
         Andy Lavr <andy.lavr@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.10 44/53] platform/x86: dell-smbios-wmi: Avoid false-positive memcpy() warning
-Date:   Thu,  9 Sep 2021 20:20:19 -0400
-Message-Id: <20210910002028.175174-44-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 30/37] platform/x86: dell-smbios-wmi: Avoid false-positive memcpy() warning
+Date:   Thu,  9 Sep 2021 20:21:35 -0400
+Message-Id: <20210910002143.175731-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210910002028.175174-1-sashal@kernel.org>
-References: <20210910002028.175174-1-sashal@kernel.org>
+In-Reply-To: <20210910002143.175731-1-sashal@kernel.org>
+References: <20210910002143.175731-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
