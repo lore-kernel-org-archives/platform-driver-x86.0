@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34724C43217
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6427C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B233611AD
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFEA611B0
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Sep 2021 00:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233769AbhIJAqH (ORCPT
+        id S232487AbhIJAqI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Sep 2021 20:46:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48982 "EHLO mail.kernel.org"
+        Thu, 9 Sep 2021 20:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234518AbhIJAXd (ORCPT
+        id S234749AbhIJAYK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Sep 2021 20:23:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 625A4604DC;
-        Fri, 10 Sep 2021 00:22:22 +0000 (UTC)
+        Thu, 9 Sep 2021 20:24:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A237360FC0;
+        Fri, 10 Sep 2021 00:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631233343;
-        bh=OOlkE/5wn5cX1UCFaQILnONAsv24eb8TbOKobIjrxkc=;
+        s=k20201202; t=1631233380;
+        bh=4Jo3/NFhFiRF9/BdhNhFOi+rfHK9N1sq5BF7iLwEhO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qQjCprsuPxDCFN0vl2ji1PSmwPWqJB/DXIQTLMD8tE1nTsVZ9YX6wKMUAAMoz62TA
-         ltgPNoDe72oIt2k3nYqPn2T8UwtIxwvlBH2rpfFuI4BeLFelVyQKVSkbRslmbuTH6Y
-         XV8j1dqnfQSWFtM2E4TQDpHSERU1cqJTmf0BBPY2/JvHefbvu0OHM9pkIQFjgQDRzF
-         JmI8sMyTCLvEzgjN7szCDSDDFT3W4BLS3hdIGChtgJIxudRrqExl4JcDRZoiVKnVWs
-         RaVut8J/UE+FcijWnqfAPtllSV+aAJoQ6R/FU6Rd0WIguh4LhOLYexFq2SrDMTYc6J
-         jj+FBKm7cIu1w==
+        b=moVCfIML9aEtS+IcCduZ9s22Vmj94taMtZYDga74OI6BUhTirWSXthpVm75h8F0gf
+         8V6ddu6GXbA5t6RiU9yBMpHd5yH4hSyMPo5xcTSLNofzs/rpG+q+Q5K6TEiek8gIQi
+         YiBBNRZtvsbOw3cHGoJ6WXrYJxM3HPXd+e1uEDaVikRrba3eLSLrnvjgXba6nB38ZW
+         PTQxdoP08OUoPdfRgn46N9dsX1wMjEST0CWZRz/qzm5AqGyyb2+A+Hmi780kzK3Xeh
+         jIdBCEdCXNWeGVL4rGW6JvAFkNhOHDCfvX8Yjzfs+V6yeBH8WJ+l9yX+MJF1uwqa0M
+         odQB1yOR5h5RQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -46,12 +46,12 @@ Cc:     Kees Cook <keescook@chromium.org>,
         platform-driver-x86@vger.kernel.org,
         Andy Lavr <andy.lavr@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 30/37] platform/x86: dell-smbios-wmi: Avoid false-positive memcpy() warning
-Date:   Thu,  9 Sep 2021 20:21:35 -0400
-Message-Id: <20210910002143.175731-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 19/25] platform/x86: dell-smbios-wmi: Avoid false-positive memcpy() warning
+Date:   Thu,  9 Sep 2021 20:22:27 -0400
+Message-Id: <20210910002234.176125-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210910002143.175731-1-sashal@kernel.org>
-References: <20210910002143.175731-1-sashal@kernel.org>
+In-Reply-To: <20210910002234.176125-1-sashal@kernel.org>
+References: <20210910002234.176125-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -98,10 +98,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
-index c97bd4a45242..32e8c4715d53 100644
+index ccccce9b67ef..6cbfcc513717 100644
 --- a/drivers/platform/x86/dell-smbios-wmi.c
 +++ b/drivers/platform/x86/dell-smbios-wmi.c
-@@ -71,7 +71,7 @@ static int run_smbios_call(struct wmi_device *wdev)
+@@ -74,7 +74,7 @@ static int run_smbios_call(struct wmi_device *wdev)
  				obj->integer.value);
  		return -EIO;
  	}
