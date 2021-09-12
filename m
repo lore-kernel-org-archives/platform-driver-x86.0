@@ -2,131 +2,147 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445F1C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 11 Sep 2021 10:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ACEC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Sep 2021 01:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21932611CC
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 11 Sep 2021 10:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA636610C9
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Sep 2021 01:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235570AbhIKKLo (ORCPT
+        id S231743AbhILBTG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 11 Sep 2021 06:11:44 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:42550 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235443AbhIKKLl (ORCPT
+        Sat, 11 Sep 2021 21:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229947AbhILBTG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 11 Sep 2021 06:11:41 -0400
-Received: from zn.tnic (p200300ec2f1e14001f3479bbc118498e.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:1400:1f34:79bb:c118:498e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B0AD71EC0136;
-        Sat, 11 Sep 2021 12:10:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1631355022;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=HR27o8pZq+/+uFK0n68ub/mxfkE1ISiJNZUKmCms7j8=;
-        b=I197+52KgpqBBgLvuSMSrQpQNRo13IqV+FgdnGwdscix9JqjZo6kiEOakrW3iQQS6u0uVD
-        WzR3O2CXEOh8ZykdepQmAsy+NBoupC0qZ8IdrqxtxuX9zNND17uAXyBpIh83Qsid6C7Ugn
-        zY+/3Zj7u8+b/OQlEkEddX/RceOjyqA=
-Date:   Sat, 11 Sep 2021 12:10:14 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 3/8] x86/sev: Add an x86 version of cc_platform_has()
-Message-ID: <YTyAhmPf39Vqd7G9@zn.tnic>
-References: <cover.1631141919.git.thomas.lendacky@amd.com>
- <f9951644147e27772bf4512325e8ba6472e363b7.1631141919.git.thomas.lendacky@amd.com>
+        Sat, 11 Sep 2021 21:19:06 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F68C061574;
+        Sat, 11 Sep 2021 18:17:52 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id n7-20020a05600c3b8700b002f8ca941d89so4000041wms.2;
+        Sat, 11 Sep 2021 18:17:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XhbId2wN0jv4HXPk/iZgFZuH5a2t3J4O7Pys7DCf4C0=;
+        b=bv9VsQoaBInkRoLVc9Jv+OkZTNaa2csXmgb6EdtL7zJNh77nZcHaj0DrQtqFSHHS7b
+         YAr20zg+C0REEXrC0iMW3/qG+zEwzz8kdG7QEDKuaHZzsX1KDCU6GKjb0iZwonGaN2/W
+         rnwnwB/Ue9GsPT0J5WAbSerm5I5p4KykiOG7mIjM725E4/kuKPedF8ZjakjMNfEbsaya
+         c4AINrnfOjtfyec0r0E1XFIV7ZNovEJStrTzzIaJ3i62AIb3ljT8dunuOfKaruTP5AJk
+         xtVsYJJWpLfsnAm4GcElUCqICVS4ahypNYqol3kxqPEie31YawrEGWlxyvuPDCn6WnB6
+         LJsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XhbId2wN0jv4HXPk/iZgFZuH5a2t3J4O7Pys7DCf4C0=;
+        b=w+ZEuRTjzSonBBulMsPVHk378fXayuo1aWdEuRZfMg6m7pJmVsOibQ9Vr6MBcSEN92
+         IEvxbZhgdS2lzNezGxUVNzbJSvgyMOZbL9Gx7aUDxN1ycM3QR5kiXr3UM21Vl8UXNk7y
+         rCEx387iBaDG0DhoOtXcyhV5jCEkO/nsvL6n4vJRUPPH8V1rUj3fpEO1b/dzVGIfbPOQ
+         RjCC8RyjXADNYRQjeYfnqbCavuYVT756k7QsFNIzjQU1qeNP55QPsXTT/HrFaJQE1ueh
+         QCWuTRb9XyLFTuWBw7XAT0swGMRJVGlLUsD1Y7CC3fS85El1gewIAsr9rLgA1lJFlQ3c
+         R7KA==
+X-Gm-Message-State: AOAM530unoLw2x6VWET2d3Zgavyr3pkP0Rx17tSV40FAOIJD55YpJIk0
+        DfTf/6UufNyaFQvaN3cerHE8pftrfw==
+X-Google-Smtp-Source: ABdhPJwHXkkTH8DTbGmya/tqP+NzRrLV7oFmY9BNMOXmt/b1312h/+SugW/k3hFS22zusEs1vuEkKQ==
+X-Received: by 2002:a7b:c005:: with SMTP id c5mr4690874wmb.59.1631409471280;
+        Sat, 11 Sep 2021 18:17:51 -0700 (PDT)
+Received: from localhost.localdomain (88-108-171-137.dynamic.dsl.as9105.com. [88.108.171.137])
+        by smtp.gmail.com with ESMTPSA id h15sm2996296wrc.19.2021.09.11.18.17.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Sep 2021 18:17:51 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     jlee@suse.com
+Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH] acer-wmi: use __packed instead of __attribute__((packed))
+Date:   Sun, 12 Sep 2021 02:17:41 +0100
+Message-Id: <20210912011741.30495-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f9951644147e27772bf4512325e8ba6472e363b7.1631141919.git.thomas.lendacky@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 08, 2021 at 05:58:34PM -0500, Tom Lendacky wrote:
-> diff --git a/arch/x86/kernel/cc_platform.c b/arch/x86/kernel/cc_platform.c
-> new file mode 100644
-> index 000000000000..3c9bacd3c3f3
-> --- /dev/null
-> +++ b/arch/x86/kernel/cc_platform.c
-> @@ -0,0 +1,21 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Confidential Computing Platform Capability checks
-> + *
-> + * Copyright (C) 2021 Advanced Micro Devices, Inc.
-> + *
-> + * Author: Tom Lendacky <thomas.lendacky@amd.com>
-> + */
-> +
-> +#include <linux/export.h>
-> +#include <linux/cc_platform.h>
-> +#include <linux/mem_encrypt.h>
-> +
-> +bool cc_platform_has(enum cc_attr attr)
-> +{
-> +	if (sme_me_mask)
+checkpatch.pl tool warns about using __attribute__((packed))
+"WARNING: __packed is preferred over __attribute__((packed))"
+To fix this __attribute__((packed)) is replaced by __packed
 
-Why are you still checking the sme_me_mask here? AFAIR, we said that
-we'll do that only when the KVM folks come with a valid use case...
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+ drivers/platform/x86/acer-wmi.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-> +		return amd_cc_platform_has(attr);
-> +
-> +	return false;
-> +}
-> +EXPORT_SYMBOL_GPL(cc_platform_has);
-> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> index ff08dc463634..18fe19916bc3 100644
-> --- a/arch/x86/mm/mem_encrypt.c
-> +++ b/arch/x86/mm/mem_encrypt.c
-> @@ -20,6 +20,7 @@
->  #include <linux/bitops.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/virtio_config.h>
-> +#include <linux/cc_platform.h>
->  
->  #include <asm/tlbflush.h>
->  #include <asm/fixmap.h>
-> @@ -389,6 +390,26 @@ bool noinstr sev_es_active(void)
->  	return sev_status & MSR_AMD64_SEV_ES_ENABLED;
->  }
->  
-> +bool amd_cc_platform_has(enum cc_attr attr)
-> +{
-> +	switch (attr) {
-> +	case CC_ATTR_MEM_ENCRYPT:
-> +		return sme_me_mask != 0;
-
-No need for the "!= 0"
-
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 694b45ed06a2..9c6943e401a6 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -138,7 +138,7 @@ struct event_return_value {
+ 	u16 reserved1;
+ 	u8 kbd_dock_state;
+ 	u8 reserved2;
+-} __attribute__((packed));
++} __packed;
+ 
+ /*
+  * GUID3 Get Device Status device flags
+@@ -172,33 +172,33 @@ struct func_input_params {
+ 	u8 app_status;          /* Acer Device Status. LM, ePM, RF Button... */
+ 	u8 app_mask;		/* Bit mask to app_status */
+ 	u8 reserved;
+-} __attribute__((packed));
++} __packed;
+ 
+ struct func_return_value {
+ 	u8 error_code;          /* Error Code */
+ 	u8 ec_return_value;     /* EC Return Value */
+ 	u16 reserved;
+-} __attribute__((packed));
++} __packed;
+ 
+ struct wmid3_gds_set_input_param {     /* Set Device Status input parameter */
+ 	u8 function_num;        /* Function Number */
+ 	u8 hotkey_number;       /* Hotkey Number */
+ 	u16 devices;            /* Set Device */
+ 	u8 volume_value;        /* Volume Value */
+-} __attribute__((packed));
++} __packed;
+ 
+ struct wmid3_gds_get_input_param {     /* Get Device Status input parameter */
+ 	u8 function_num;	/* Function Number */
+ 	u8 hotkey_number;	/* Hotkey Number */
+ 	u16 devices;		/* Get Device */
+-} __attribute__((packed));
++} __packed;
+ 
+ struct wmid3_gds_return_value {	/* Get Device Status return value*/
+ 	u8 error_code;		/* Error Code */
+ 	u8 ec_return_value;	/* EC Return Value */
+ 	u16 devices;		/* Current Device Status */
+ 	u32 reserved;
+-} __attribute__((packed));
++} __packed;
+ 
+ struct hotkey_function_type_aa {
+ 	u8 type;
+@@ -210,7 +210,7 @@ struct hotkey_function_type_aa {
+ 	u16 display_func_bitmap;
+ 	u16 others_func_bitmap;
+ 	u8 commun_fn_key_number;
+-} __attribute__((packed));
++} __packed;
+ 
+ /*
+  * Interface capability flags
 -- 
-Regards/Gruss,
-    Boris.
+2.32.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
