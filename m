@@ -2,80 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-24.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B15C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 08:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C092C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 08:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D89A760F4B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 08:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F0B60FBF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 08:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238002AbhIMInu (ORCPT
+        id S238046AbhIMI5a (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Sep 2021 04:43:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44545 "EHLO
+        Mon, 13 Sep 2021 04:57:30 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44375 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237831AbhIMInt (ORCPT
+        by vger.kernel.org with ESMTP id S236048AbhIMI5a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Sep 2021 04:43:49 -0400
+        Mon, 13 Sep 2021 04:57:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631522554;
+        s=mimecast20190719; t=1631523374;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=aO2xQjg0KcRXo5KeF8og49d9mzYqlTv+tnksdu2gqf4=;
-        b=d+EbYI4hzfY3fk3JESY5CUaqxxlqgauhT/TLvU348IpFAbOzCQVDD+arH14qecLSpJPkMY
-        6pKRUyUntS8y2Txo+c411ne0QgCTJPFU6OBziTT1b2/6vC6MwbktamaTcrAO+qJSMkuxFF
-        moFOrRTcfpkUGll8ayMOUOXTW6+Udaw=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-507-gkO_cTZTN8K4Zyen8BTk-A-1; Mon, 13 Sep 2021 04:42:33 -0400
-X-MC-Unique: gkO_cTZTN8K4Zyen8BTk-A-1
-Received: by mail-ej1-f72.google.com with SMTP id jg32-20020a170907972000b005e801aed08aso3346919ejc.4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Sep 2021 01:42:32 -0700 (PDT)
+        bh=42KIdH/HMqdB8rCTN4NfDrRncxxfxLeKhc53DgDEEJQ=;
+        b=FIG88ZcWTkWe/BzK1eJ3BSBDUO/0QPYyIjv+VuDWUjh5dLv4rxLrxlq3T3F5CaKAbsY+PZ
+        5tT2NtV+br09ZEsP5bFO1he+e14coWr8Mwe1yQEOIVVv59JJXtgtgIsoLwMBotiTjsn+9M
+        nS72C2z4kVWwgQAqLQwosIqutDme9oQ=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-574-jnFAmA4bMr2xSqnpSafvUg-1; Mon, 13 Sep 2021 04:56:13 -0400
+X-MC-Unique: jnFAmA4bMr2xSqnpSafvUg-1
+Received: by mail-ej1-f69.google.com with SMTP id cf17-20020a170906b2d100b005d42490f86bso3378760ejb.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Sep 2021 01:56:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=aO2xQjg0KcRXo5KeF8og49d9mzYqlTv+tnksdu2gqf4=;
-        b=Zo08KcrwxGoicxe+iOArzmjl97Fm1nivJ9dP78qeudLjhhDACnNoxUk/uylb3xf4Bo
-         3wYcM52TDkOM3IJ4IBeDt2masDztx6L4WJqCv6e4AIE0ZbkdQ1sBbsmvdkXE+e4fG5Mp
-         H71f5GYquMkgf3XPCZgndg5jBVzxDljHe2yMOyIoPpqKornJ+1c8OGLu+0MANZ4sQVUj
-         IOIyLZsrnMfQFsBFjowJ0MHu6Tq62u8jtvVp1/NZ9ZSB4fOHJtUlvvA8xlTQbTBNKzKR
-         QEKywyVkdfeqmEgA4WRzfQsU2fdXHXDFIV6jxX+BYwTpoc1/2qU2JQ80UILvlcw7IbX/
-         6hNQ==
-X-Gm-Message-State: AOAM532Aed51aDaDOdnjz1zWcyPhS9vpMrSERQKvUEV5agNpBSG2XQRU
-        q+JkK0hc8sdh+8pJrctl7gxrfV9lXnpaIRwjbMm45jJ61tPC6nlH7D2kWHhe7hBOw58PrUXvCKu
-        ITc+yerWwqy/9l57SH+VeABJ3KyYN/PH0VVhu6eHeiVvBLiRmdIoZUDhtxxYWgJUheJRHdwQnWC
-        i9BagVATmIVg==
-X-Received: by 2002:a17:906:7848:: with SMTP id p8mr11531248ejm.212.1631522551637;
-        Mon, 13 Sep 2021 01:42:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx4Q4Jpt5NvnnWk4ZLeLctw6heZ7NrYKI0l2Gh05PVc5u0ykWGiHtRw61TZdrZXhivE4DJEMA==
-X-Received: by 2002:a17:906:7848:: with SMTP id p8mr11531228ejm.212.1631522551322;
-        Mon, 13 Sep 2021 01:42:31 -0700 (PDT)
+        bh=42KIdH/HMqdB8rCTN4NfDrRncxxfxLeKhc53DgDEEJQ=;
+        b=TC6CznpVtgH762lc+M2JlnIz+TKoEfSRgBhFmdIElPWzNzJUGn2K4oVjFN9MFzvFb/
+         PiHBmr2uHaHLC6kyCGpO9AKHAe4+drEv6mdcVTxbCH4ruyRxMTXbIvBveABc1pKsQEw4
+         jW9x018P7KDfGew+LC1z7oKwRAGJnp9fqkIGT+23U+YnILoZ88ZG1QmP1tV8jpEZFESx
+         ZwAvvN56xxYpAQuMsTOYWdnDNcLYxcAnYwGTrQM7Y3k6tBhoOdtXMkle0POYGCh6j5uD
+         TizwoKEpM1zh9xT7JSojSvKdZ7vud0yJALg9N3wAIUwT8la+j+Zv3+U3jkP1ZgLldnC9
+         0Qhg==
+X-Gm-Message-State: AOAM533YmCI84wDQ+dvc7hrNwObSWyB937Gq+XMV6imoHrF+LQqSVYFo
+        xKsUPVV58xIDzpHK05oODGAtkhaNZI4OsKgbIWMwp6ik9b/jRMhtd5ej1o+Kfh+Ji2q6oq0Dr+R
+        jfMUr27W+C42z37naDWPVoCHXFPGMxrIz9g==
+X-Received: by 2002:a17:906:2418:: with SMTP id z24mr5612150eja.105.1631523371996;
+        Mon, 13 Sep 2021 01:56:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz7NAHiRpRgtNTfm8UNo2PswGOyap+CosjNB1WhsJ1N2P6qI2yrrcGkgi9cA9VLKA/2WYI3AA==
+X-Received: by 2002:a17:906:2418:: with SMTP id z24mr5612128eja.105.1631523371629;
+        Mon, 13 Sep 2021 01:56:11 -0700 (PDT)
 Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id c2sm3549827edk.50.2021.09.13.01.42.30
+        by smtp.gmail.com with ESMTPSA id r26sm3124327ejd.85.2021.09.13.01.56.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Sep 2021 01:42:31 -0700 (PDT)
-Subject: Re: [PATCH 1/2] platform/x86: touchscreen_dmi: Add info for the Chuwi
- HiBook (CWI514) tablet
-To:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20210905130210.32810-1-hdegoede@redhat.com>
+        Mon, 13 Sep 2021 01:56:11 -0700 (PDT)
+Subject: Re: [PATCH v5] platform/x86: hp-wmi: add support for omen laptops
+To:     Enver Balalic <balalic.enver@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     mgross@linux.intel.com, jdelvare@suse.com, pobrn@protonmail.com,
+        linux@roeck-us.net
+References: <20210902182234.vtwl72n5rjql22qa@omen.localdomain>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1c759c67-7a29-781e-284d-9093bec2dc72@redhat.com>
-Date:   Mon, 13 Sep 2021 10:42:30 +0200
+Message-ID: <da1f01c0-71d3-4f46-db90-ee7898ca81aa@redhat.com>
+Date:   Mon, 13 Sep 2021 10:56:10 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210905130210.32810-1-hdegoede@redhat.com>
+In-Reply-To: <20210902182234.vtwl72n5rjql22qa@omen.localdomain>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -83,83 +82,510 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All,
+Hi,
 
-On 9/5/21 3:02 PM, Hans de Goede wrote:
-> Add touchscreen info for the Chuwi HiBook (CWI514) tablet. This includes
-> info for getting the firmware directly from the UEFI, so that the user does
-> not need to manually install the firmware in /lib/firmware/silead.
+On 9/2/21 8:22 PM, Enver Balalic wrote:
+> This patch adds support for HP Omen laptops.
+> It adds support for most things that can be controlled via the
+> Windows Omen Command Center application.
 > 
-> This change will make the touchscreen on these devices work OOTB,
-> without requiring any manual setup.
+>  - Fan speed monitoring through hwmon
+>  - Platform Profile support (cool, balanced, performance)
+>  - Max fan speed function toggle
 > 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Also exposes the existing HDD temperature through hwmon since
+> this driver didn't use hwmon before this patch.
+> 
+> This patch has been tested on a 2020 HP Omen 15 (AMD) 15-en0023dx.
+> 
+>  - V1
+>    Initial Patch
+>  - V2
+>    Use standard hwmon ABI attributes
+>    Add existing non-standard "hddtemp" to hwmon
+>  - V3
+>    Fix overflow issue in "hp_wmi_get_fan_speed"
+>    Map max fan speed value back to hwmon values on read
+>    Code style fixes
+>    Fix issue with returning values from "hp_wmi_hwmon_read",
+>    the value to return should be written to val and not just
+>    returned from the function
+>  - V4
+>    Use DMI Board names to detect if a device should use the omen
+>    specific thermal profile method.
+>    Select HWMON instead of depending on it.
+>    Code style fixes.
+>    Replace some error codes with more specific/meaningful ones.
+>    Remove the HDD temperature from HWMON since we don't know what
+>    unit it's expressed in.
+>    Handle error from hp_wmi_hwmon_init
+>  - V5
+>    Handle possible NULL from dmi_get_system_info()
+>    Use match_string function instead of manually checking
+>    Directly use is_omen_thermal_profile() without the static
+>    variable.
+> 
+> Signed-off-by: Enver Balalic <balalic.enver@gmail.com>
 
-I've added both these patches to my review-hans and fixes branches now.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+I've fixed up a couple of trivial white-space issues reported
+by checkpatch --strict while applying this.
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
+
 > ---
->  drivers/platform/x86/touchscreen_dmi.c | 37 ++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
+>  drivers/platform/x86/Kconfig  |   1 +
+>  drivers/platform/x86/hp-wmi.c | 330 ++++++++++++++++++++++++++++++++--
+>  2 files changed, 319 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index 0e1451b1d9c6..1f9cb756b103 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -141,6 +141,33 @@ static const struct ts_dmi_data chuwi_hi10_pro_data = {
->  	.properties     = chuwi_hi10_pro_props,
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index d12db6c316ea..2ab0dcf5b598 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -434,6 +434,7 @@ config HP_WMI
+>  	depends on RFKILL || RFKILL = n
+>  	select INPUT_SPARSEKMAP
+>  	select ACPI_PLATFORM_PROFILE
+> +	select HWMON
+>  	help
+>  	 Say Y here if you want to support WMI-based hotkeys on HP laptops and
+>  	 to read data from WMI such as docking or ambient light sensor state.
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index 027a1467d009..9c4c9f5095ae 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -22,9 +22,11 @@
+>  #include <linux/input/sparse-keymap.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/platform_profile.h>
+> +#include <linux/hwmon.h>
+>  #include <linux/acpi.h>
+>  #include <linux/rfkill.h>
+>  #include <linux/string.h>
+> +#include <linux/dmi.h>
+>  
+>  MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
+>  MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
+> @@ -39,6 +41,25 @@ MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=aut
+>  
+>  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
+>  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
+> +#define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
+> +
+> +/* DMI board names of devices that should use the omen specific path for
+> + * thermal profiles.
+> + * This was obtained by taking a look in the windows omen command center
+> + * app and parsing a json file that they use to figure out what capabilities
+> + * the device should have.
+> + * A device is considered an omen if the DisplayName in that list contains
+> + * "OMEN", and it can use the thermal profile stuff if the "Feature" array
+> + * contains "PerformanceControl".
+> + */
+> +static const char * const omen_thermal_profile_boards[] = {
+> +	"84DA", "84DB", "84DC", "8574", "8575", "860A", "87B5", "8572", "8573",
+> +	"8600", "8601", "8602", "8605", "8606", "8607", "8746", "8747", "8749",
+> +	"874A", "8603", "8604", "8748", "886B", "886C", "878A", "878B", "878C",
+> +	"88C8", "88CB", "8786", "8787", "8788", "88D1", "88D2", "88F4", "88FD",
+> +	"88F5", "88F6", "88F7", "88FE", "88FF", "8900", "8901", "8902", "8912",
+> +	"8917", "8918", "8949", "894A", "89EB"
+> +};
+>  
+>  enum hp_wmi_radio {
+>  	HPWMI_WIFI	= 0x0,
+> @@ -89,10 +110,18 @@ enum hp_wmi_commandtype {
+>  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
 >  };
 >  
-> +static const struct property_entry chuwi_hibook_props[] = {
-> +	PROPERTY_ENTRY_U32("touchscreen-min-x", 30),
-> +	PROPERTY_ENTRY_U32("touchscreen-min-y", 4),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1892),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1276),
-> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-> +	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hibook.fw"),
-> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +	{ }
+> +enum hp_wmi_gm_commandtype {
+> +	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
+> +	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
+> +	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
+> +	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
 > +};
 > +
-> +static const struct ts_dmi_data chuwi_hibook_data = {
-> +	.embedded_fw = {
-> +		.name	= "silead/gsl1680-chuwi-hibook.fw",
-> +		.prefix = { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
-> +		.length	= 40392,
-> +		.sha256	= { 0xf7, 0xc0, 0xe8, 0x5a, 0x6c, 0xf2, 0xeb, 0x8d,
-> +			    0x12, 0xc4, 0x45, 0xbf, 0x55, 0x13, 0x4c, 0x1a,
-> +			    0x13, 0x04, 0x31, 0x08, 0x65, 0x73, 0xf7, 0xa8,
-> +			    0x1b, 0x7d, 0x59, 0xc9, 0xe6, 0x97, 0xf7, 0x38 },
-> +	},
-> +	.acpi_name      = "MSSL0017:00",
-> +	.properties     = chuwi_hibook_props,
+>  enum hp_wmi_command {
+>  	HPWMI_READ	= 0x01,
+>  	HPWMI_WRITE	= 0x02,
+>  	HPWMI_ODM	= 0x03,
+> +	HPWMI_GM	= 0x20008,
+>  };
+>  
+>  enum hp_wmi_hardware_mask {
+> @@ -120,6 +149,13 @@ enum hp_wireless2_bits {
+>  	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
+>  };
+>  
+> +
+> +enum hp_thermal_profile_omen {
+> +	HP_OMEN_THERMAL_PROFILE_DEFAULT     = 0x00,
+> +	HP_OMEN_THERMAL_PROFILE_PERFORMANCE = 0x01,
+> +	HP_OMEN_THERMAL_PROFILE_COOL        = 0x02,
 > +};
 > +
->  static const struct property_entry chuwi_vi8_props[] = {
->  	PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
->  	PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
-> @@ -979,6 +1006,16 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
->  			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
->  		},
->  	},
-> +	{
-> +		/* Chuwi HiBook (CWI514) */
-> +		.driver_data = (void *)&chuwi_hibook_data,
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-> +			/* Above matches are too generic, add bios-date match */
-> +			DMI_MATCH(DMI_BIOS_DATE, "05/07/2016"),
-> +		},
-> +	},
->  	{
->  		/* Chuwi Vi8 (CWI506) */
->  		.driver_data = (void *)&chuwi_vi8_data,
+>  enum hp_thermal_profile {
+>  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+>  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+> @@ -279,6 +315,24 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+>  	return ret;
+>  }
+>  
+> +static int hp_wmi_get_fan_speed(int fan)
+> +{
+> +	u8 fsh, fsl;
+> +	char fan_data[4] = { fan, 0, 0, 0 };
+> +
+> +	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
+> +				       &fan_data, sizeof(fan_data),
+> +				       sizeof(fan_data));
+> +
+> +	if (ret != 0)
+> +		return -EINVAL;
+> +
+> +	fsh = fan_data[2];
+> +	fsl = fan_data[3];
+> +
+> +	return (fsh << 8) | fsl;
+> +}
+> +
+>  static int hp_wmi_read_int(int query)
+>  {
+>  	int val = 0, ret;
+> @@ -302,6 +356,73 @@ static int hp_wmi_hw_state(int mask)
+>  	return !!(state & mask);
+>  }
+>  
+> +static int omen_thermal_profile_set(int mode)
+> +{
+> +	char buffer[2] = {0, mode};
+> +	int ret;
+> +
+> +	if (mode < 0 || mode > 2)
+> +		return -EINVAL;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
+> +				   &buffer, sizeof(buffer), sizeof(buffer));
+> +
+> +	if (ret)
+> +		return ret < 0 ? ret : -EINVAL;
+> +
+> +	return mode;
+> +}
+> +
+> +static bool is_omen_thermal_profile(void)
+> +{
+> +	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
+> +
+> +	if (board_name == NULL)
+> +		return false;
+> +
+> +	return match_string(omen_thermal_profile_boards,
+> +			    ARRAY_SIZE(omen_thermal_profile_boards),
+> +			    board_name) >= 0;
+> +}
+> +
+> +static int omen_thermal_profile_get(void)
+> +{
+> +	u8 data;
+> +
+> +	int ret = ec_read(HP_OMEN_EC_THERMAL_PROFILE_OFFSET, &data);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	return data;
+> +}
+> +
+> +static int hp_wmi_fan_speed_max_set(int enabled)
+> +{
+> +	int ret;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
+> +				   &enabled, sizeof(enabled), sizeof(enabled));
+> +
+> +	if (ret)
+> +		return ret < 0 ? ret : -EINVAL;
+> +
+> +	return enabled;
+> +}
+> +
+> +static int hp_wmi_fan_speed_max_get(void)
+> +{
+> +	int val = 0, ret;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
+> +				   &val, sizeof(val), sizeof(val));
+> +
+> +	if (ret)
+> +		return ret < 0 ? ret : -EINVAL;
+> +
+> +	return val;
+> +}
+> +
+>  static int __init hp_wmi_bios_2008_later(void)
+>  {
+>  	int state = 0;
+> @@ -878,6 +999,58 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+>  	return err;
+>  }
+>  
+> +static int platform_profile_omen_get(struct platform_profile_handler *pprof,
+> +				enum platform_profile_option *profile)
+> +{
+> +	int tp;
+> +
+> +	tp = omen_thermal_profile_get();
+> +	if (tp < 0)
+> +		return tp;
+> +
+> +	switch (tp) {
+> +	case HP_OMEN_THERMAL_PROFILE_PERFORMANCE:
+> +		*profile = PLATFORM_PROFILE_PERFORMANCE;
+> +		break;
+> +	case HP_OMEN_THERMAL_PROFILE_DEFAULT:
+> +		*profile = PLATFORM_PROFILE_BALANCED;
+> +		break;
+> +	case HP_OMEN_THERMAL_PROFILE_COOL:
+> +		*profile = PLATFORM_PROFILE_COOL;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int platform_profile_omen_set(struct platform_profile_handler *pprof,
+> +				enum platform_profile_option profile)
+> +{
+> +	int err, tp;
+> +
+> +	switch (profile) {
+> +	case PLATFORM_PROFILE_PERFORMANCE:
+> +		tp = HP_OMEN_THERMAL_PROFILE_PERFORMANCE;
+> +		break;
+> +	case PLATFORM_PROFILE_BALANCED:
+> +		tp = HP_OMEN_THERMAL_PROFILE_DEFAULT;
+> +		break;
+> +	case PLATFORM_PROFILE_COOL:
+> +		tp = HP_OMEN_THERMAL_PROFILE_COOL;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	err = omen_thermal_profile_set(tp);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+>  static int thermal_profile_get(void)
+>  {
+>  	return hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
+> @@ -945,20 +1118,39 @@ static int thermal_profile_setup(void)
+>  {
+>  	int err, tp;
+>  
+> -	tp = thermal_profile_get();
+> -	if (tp < 0)
+> -		return tp;
+> +	if (is_omen_thermal_profile()) {
+> +		tp = omen_thermal_profile_get();
+> +		if (tp < 0)
+> +			return tp;
+>  
+> -	/*
+> -	 * call thermal profile write command to ensure that the firmware correctly
+> -	 * sets the OEM variables for the DPTF
+> -	 */
+> -	err = thermal_profile_set(tp);
+> -	if (err)
+> -		return err;
+> +		/*
+> +		 * call thermal profile write command to ensure that the
+> +		 * firmware correctly sets the OEM variables
+> +		 */
+> +
+> +		err = omen_thermal_profile_set(tp);
+> +		if (err < 0)
+> +			return err;
+> +
+> +		platform_profile_handler.profile_get = platform_profile_omen_get;
+> +		platform_profile_handler.profile_set = platform_profile_omen_set;
+> +	} else {
+> +		tp = thermal_profile_get();
+> +
+> +		if (tp < 0)
+> +			return tp;
+>  
+> -	platform_profile_handler.profile_get = platform_profile_get,
+> -	platform_profile_handler.profile_set = platform_profile_set,
+> +		/*
+> +		 * call thermal profile write command to ensure that the
+> +		 * firmware correctly sets the OEM variables for the DPTF
+> +		 */
+> +		err = thermal_profile_set(tp);
+> +		if (err)
+> +			return err;
+> +
+> +		platform_profile_handler.profile_get = platform_profile_get;
+> +		platform_profile_handler.profile_set = platform_profile_set;
+> +	}
+>  
+>  	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
+>  	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
+> @@ -973,8 +1165,11 @@ static int thermal_profile_setup(void)
+>  	return 0;
+>  }
+>  
+> +static int hp_wmi_hwmon_init(void);
+> +
+>  static int __init hp_wmi_bios_setup(struct platform_device *device)
+>  {
+> +	int err;
+>  	/* clear detected rfkill devices */
+>  	wifi_rfkill = NULL;
+>  	bluetooth_rfkill = NULL;
+> @@ -984,6 +1179,11 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+>  	if (hp_wmi_rfkill_setup(device))
+>  		hp_wmi_rfkill2_setup(device);
+>  
+> +	err = hp_wmi_hwmon_init();
+> +
+> +	if (err < 0)
+> +		return err;
+> +
+>  	thermal_profile_setup();
+>  
+>  	return 0;
+> @@ -1068,6 +1268,112 @@ static struct platform_driver hp_wmi_driver = {
+>  	.remove = __exit_p(hp_wmi_bios_remove),
+>  };
+>  
+> +static umode_t hp_wmi_hwmon_is_visible(const void *data,
+> +					enum hwmon_sensor_types type,
+> +					u32 attr, int channel)
+> +{
+> +	switch (type) {
+> +	case hwmon_pwm:
+> +		return 0644;
+> +	case hwmon_fan:
+> +		if (hp_wmi_get_fan_speed(channel) >= 0)
+> +			return 0444;
+> +		break;
+> +	default:
+> +		return 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+> +			u32 attr, int channel, long *val)
+> +{
+> +	int ret;
+> +
+> +	switch (type) {
+> +	case hwmon_fan:
+> +		ret = hp_wmi_get_fan_speed(channel);
+> +
+> +		if (ret < 0)
+> +			return ret;
+> +		*val = ret;
+> +		return 0;
+> +	case hwmon_pwm:
+> +		switch (hp_wmi_fan_speed_max_get()) {
+> +		case 0:
+> +			/* 0 is automatic fan, which is 2 for hwmon */
+> +			*val = 2;
+> +			return 0;
+> +		case 1:
+> +			/* 1 is max fan, which is 0
+> +			 * (no fan speed control) for hwmon
+> +			 */
+> +			*val = 0;
+> +			return 0;
+> +		default:
+> +			/* shouldn't happen */
+> +			return -ENODATA;
+> +		}
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+> +			u32 attr, int channel, long val)
+> +{
+> +	switch (type) {
+> +	case hwmon_pwm:
+> +		switch (val) {
+> +		case 0:
+> +			/* 0 is no fan speed control (max), which is 1 for us */
+> +			return hp_wmi_fan_speed_max_set(1);
+> +		case 2:
+> +			/* 2 is automatic speed control, which is 0 for us */
+> +			return hp_wmi_fan_speed_max_set(0);
+> +		default:
+> +			/* we don't support manual fan speed control */
+> +			return -EINVAL;
+> +		}
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+> +static const struct hwmon_channel_info *info[] = {
+> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
+> +	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_ops ops = {
+> +	.is_visible = hp_wmi_hwmon_is_visible,
+> +	.read = hp_wmi_hwmon_read,
+> +	.write = hp_wmi_hwmon_write,
+> +};
+> +
+> +static const struct hwmon_chip_info chip_info = {
+> +	.ops = &ops,
+> +	.info = info,
+> +};
+> +
+> +static int hp_wmi_hwmon_init(void)
+> +{
+> +	struct device *dev = &hp_wmi_platform_dev->dev;
+> +	struct device *hwmon;
+> +
+> +	hwmon = devm_hwmon_device_register_with_info(dev, "hp", &hp_wmi_driver,
+> +				&chip_info, NULL);
+> +
+> +	if (IS_ERR(hwmon)) {
+> +		dev_err(dev, "Could not register hp hwmon device\n");
+> +		return PTR_ERR(hwmon);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int __init hp_wmi_init(void)
+>  {
+>  	int event_capable = wmi_has_guid(HPWMI_EVENT_GUID);
 > 
 
