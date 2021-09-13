@@ -8,74 +8,73 @@ X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818D7C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 09:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47494C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 09:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 665EA60F4C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 09:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23FE460F4B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 09:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238783AbhIMJok (ORCPT
+        id S238873AbhIMJ76 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Sep 2021 05:44:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52400 "EHLO
+        Mon, 13 Sep 2021 05:59:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22407 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231709AbhIMJok (ORCPT
+        by vger.kernel.org with ESMTP id S238850AbhIMJ75 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Sep 2021 05:44:40 -0400
+        Mon, 13 Sep 2021 05:59:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631526204;
+        s=mimecast20190719; t=1631527122;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=V/loW4DClImzCiXBJEZGuPvVho5iKsm3gkkHR+rP5O0=;
-        b=TRNmBPEThOAbCxOPdilzNPVCXbQUwo/0czsuJNNDiix3TL9Sh8NI48+VzpCdtuJxUhk2q9
-        OGYYCwtGve7T8AnO/mQbDtJOklF9jsrQthstNNGyhn3rge6Zy0JOAzc0yN1nFXF9hMrP08
-        8nZykFiOlNIpBRw8vlrKJ0cR0406/jM=
+        bh=DYBriljzN9ev2bq2TI0okdq7L0bZlz46ZlbCpsV98A4=;
+        b=CJ326HJt8UkpXAxtF4szMwTmThkq2tyeO7+CLLQ9sCs6F514Djw6RJcdUtbvqFxrvEMnhK
+        +kfTiFQuTgPr1r+KcWnYaTvTvKk6WOox2izG3Yzzxv+lofco9k6aBKbZ8ui3IXlRJ4cNd3
+        xwoGxA0LaJHtyQuxsbR6YqWy9QDlMuU=
 Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
  [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-196-DSyQNplyNhG2ruT2ZS8IMg-1; Mon, 13 Sep 2021 05:43:23 -0400
-X-MC-Unique: DSyQNplyNhG2ruT2ZS8IMg-1
-Received: by mail-ej1-f71.google.com with SMTP id r21-20020a1709067055b02904be5f536463so3434032ejj.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Sep 2021 02:43:23 -0700 (PDT)
+ us-mta-140-9LiKNkYIPU-UruGot_vVQQ-1; Mon, 13 Sep 2021 05:58:41 -0400
+X-MC-Unique: 9LiKNkYIPU-UruGot_vVQQ-1
+Received: by mail-ej1-f71.google.com with SMTP id cf17-20020a170906b2d100b005d42490f86bso3446973ejb.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Sep 2021 02:58:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=V/loW4DClImzCiXBJEZGuPvVho5iKsm3gkkHR+rP5O0=;
-        b=VJH/7Jl+xzqi0dphjZycw2VWqNrXSyPLSU/oX43zyp2BbpZdvZlZAYB2Dq5sTIT0vT
-         3X2iunhsUSau0ncH1ik8PRFO79uU3t6V6WfsnUs4n3y6UJ0QY/cyOpbE3KvWIaI7yJor
-         P4SoTHmOL3DA0mfXl8I/cDBIxEm6k17zzwsifYqt1CHIpDtMPs6VJumx80qNYe+5C42d
-         LYX6K+Z9nPfrw/o3J4ydhOs2Jrp6KMnWiD73YNHp2TqkcytE5MeYSpKFTbwaeLEoO2pE
-         9xF6cTlETGv9v4Dtsz+38KjE/ieRpemfVgZ6ZlddhGYrtUmduYoqdf+eZB0fpUhef2CK
-         g64A==
-X-Gm-Message-State: AOAM530Gdh1IOstUfieQRduSRybhaJICA9smzm729aUK6HhfSqfwgFae
-        VjetACXnMFRIoq48DbynybFjh9ujaUIHM65FzWGxZIMqKDWdRgDbPRSFf6Bwojcz1gt7QH3bWm9
-        TBgs7AK/bNSBochmmdszVPvHu4PnA5uwgiEKL2JtIfoWir+iNzX4za9MrNdnXWzIW7E+QYf/3DH
-        wkbeq4g1dO4Q==
-X-Received: by 2002:a17:906:39cb:: with SMTP id i11mr10822923eje.168.1631526201983;
-        Mon, 13 Sep 2021 02:43:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx1f4t8zwpdeCjn13pQ8VRKjWpQ33wU9IBfFX+5tYSLeT+qHruzaYZOE2S6t02XwuPNbOfThQ==
-X-Received: by 2002:a17:906:39cb:: with SMTP id i11mr10822898eje.168.1631526201713;
-        Mon, 13 Sep 2021 02:43:21 -0700 (PDT)
+        bh=DYBriljzN9ev2bq2TI0okdq7L0bZlz46ZlbCpsV98A4=;
+        b=R4aHNY/hwKnp7cLjRuNidqteAzn6SBs1oe59eGJQh8H9eoXgDZmOiaFPh+wJnYCRNu
+         SBTN/Aw3s93mOoAjeZ3OreAzbzOkCpPMuLfEpCghn9Pju0SlA52FilEyYOYnMIIm7Gj9
+         +JfxoXEO4M4CvIIXV7bkm8j7MjbYY3bgG6JB5cdFAE08LOt7rgWodwi78NNON5GUUi87
+         SLm8azJOnh9Om2CW+DbD/w4XnaaZhdzWx5nahWB/SQzIqKC0loP4Xxy6/w2h1i8OgxaJ
+         8yv4fdwOI+od0NC1xRw6rP4ihsSvkQ4kNgVMsptY7A5FIAmd39IDIlAW5FlLeM3XL3+m
+         LsjA==
+X-Gm-Message-State: AOAM531ojRG6wWZH466ZCBn9J8L0zDZGsFqfCTEwsuyC9KceoNRKq/Qi
+        kKKl395koRgtHTJLyb7EurMk4PS1MoKkmRAKptrU/3Ql2dSMF/D1eDaz0gCQ2SsjwDvJm37Dtkf
+        HiWgYBjhEET7En1COS+KfOU2LeNa+M0Kx7zr3ED8EZTmbm5pTVS89eFY4Qsxa3bnOjAysqsExLU
+        9lbxrjsa5HGw==
+X-Received: by 2002:a17:906:848f:: with SMTP id m15mr11902872ejx.11.1631527119623;
+        Mon, 13 Sep 2021 02:58:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwiadcmJsSlx/TYlna5KErdVfyuu32KFFyEuEzloVG4iG5a7df4z8wO+jmlxpi/8Z/JZrP4vw==
+X-Received: by 2002:a17:906:848f:: with SMTP id m15mr11902860ejx.11.1631527119440;
+        Mon, 13 Sep 2021 02:58:39 -0700 (PDT)
 Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id cb10sm389670edb.18.2021.09.13.02.43.21
+        by smtp.gmail.com with ESMTPSA id b3sm3186464ejb.7.2021.09.13.02.58.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Sep 2021 02:43:21 -0700 (PDT)
-Subject: Re: [RFC PATCH v1 13/30] platform/x86: wmi: use dynamic debug to
- print data about events
+        Mon, 13 Sep 2021 02:58:39 -0700 (PDT)
+Subject: Re: [RFC PATCH v1 23/30] platform/x86: wmi: improve debug messages
 To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org
-References: <20210904175450.156801-14-pobrn@protonmail.com>
+References: <20210904175450.156801-24-pobrn@protonmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <cca079b3-1a55-845b-3cfc-1b0a1879484e@redhat.com>
-Date:   Mon, 13 Sep 2021 11:43:21 +0200
+Message-ID: <6cb60e35-0b23-5b4d-694f-3e9b7991d562@redhat.com>
+Date:   Mon, 13 Sep 2021 11:58:37 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210904175450.156801-14-pobrn@protonmail.com>
+In-Reply-To: <20210904175450.156801-24-pobrn@protonmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -85,50 +84,58 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/4/21 7:55 PM, Barnabás Pőcze wrote:
-> The dynamic debug framework provides a more flexible
-> way to configure debugging messages emitted by the kernel
-> than module options. Use `dev_dbg()` in `acpi_wmi_notify_handler()`
-> to print the event identifier and device name (which is the GUID).
+On 9/4/21 7:56 PM, Barnabás Pőcze wrote:
+> Print the event identifier number in addition to
+> the already printed information, and use %u for
+> printing unsigned values in `wmi_notify_debug()`.
 > 
 > Signed-off-by: Barnabás Pőcze <pobrn@protonmail.com>
 > ---
->  drivers/platform/x86/wmi.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/platform/x86/wmi.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 90ba75247d7f..8aad8f080c64 100644
+> index fcc867d79e91..ec5ba2970840 100644
 > --- a/drivers/platform/x86/wmi.c
 > +++ b/drivers/platform/x86/wmi.c
-> @@ -1313,8 +1313,7 @@ static void acpi_wmi_notify_handler(acpi_handle handle, u32 event,
->  		wblock->handler(event, wblock->handler_data);
->  	}
+> @@ -485,10 +485,10 @@ static void wmi_notify_debug(u32 value, void *context)
+>  	if (!obj)
+>  		return;
 > 
-> -	if (debug_event)
-> -		pr_info("DEBUG Event GUID: %pUL\n", wblock->gblock.guid);
-> +	dev_dbg(&wblock->dev.dev, "event 0x%02X\n", event);
+> -	pr_info("DEBUG Event ");
+> +	pr_info("DEBUG: event 0x%02X ", value);
+>  	switch (obj->type) {
+>  	case ACPI_TYPE_BUFFER:
+> -		pr_cont("BUFFER_TYPE - length %d\n", obj->buffer.length);
+> +		pr_cont("BUFFER_TYPE - length %u\n", obj->buffer.length);
+>  		break;
+>  	case ACPI_TYPE_STRING:
+>  		pr_cont("STRING_TYPE - %s\n", obj->string.pointer);
+> @@ -497,7 +497,7 @@ static void wmi_notify_debug(u32 value, void *context)
+>  		pr_cont("INTEGER_TYPE - %llu\n", obj->integer.value);
+>  		break;
+>  	case ACPI_TYPE_PACKAGE:
+> -		pr_cont("PACKAGE_TYPE - %d elements\n", obj->package.count);
+> +		pr_cont("PACKAGE_TYPE - %u elements\n", obj->package.count);
+>  		break;
+>  	default:
+>  		pr_cont("object type 0x%X\n", obj->type);
 
-The debug_event value gets set by a module-parameter and several WMI related
-howto-s and forum threads on the web refer to this. At one point in time even:
-https://wiki.ubuntu.com/Hotkeys/Troubleshooting
+Note I've _added_ the following chunk here to compensate for the dropping of the
+patch switching to dev_dbg which also added the printing of the event:
 
-Used to refer to this, but they seem to have dropped this.
+@@ -1316,7 +1316,7 @@ static void acpi_wmi_notify_handler(acpi_handle handle, u32 ev
+        }
 
-Either way this changes makes users have to also deal with dyndbg stuff to
-get the same info which before they could get with just the debug_event module
-param, which makes debugging harder, so I'm going to drop this patch from the
-series.
+        if (debug_event)
+-               pr_info("DEBUG Event GUID: %pUL\n", &wblock->gblock.guid);
++               pr_info("DEBUG: GUID %pUL event 0x%02X\n", &wblock->gblock.guid, eve
+
+        acpi_bus_generate_netlink_event(
+                wblock->acpi_device->pnp.device_class,
+
 
 Regards,
 
 Hans
-
-
-> 
->  	acpi_bus_generate_netlink_event(
->  		wblock->acpi_device->pnp.device_class,
-> --
-> 2.33.0
-> 
-> 
 
