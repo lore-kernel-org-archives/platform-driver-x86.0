@@ -2,87 +2,231 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D888C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 12:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D96C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 12:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8138060F6C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 12:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A5560F6C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 12:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236331AbhIMMlK (ORCPT
+        id S236587AbhIMMlr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Sep 2021 08:41:10 -0400
-Received: from mail-4316.protonmail.ch ([185.70.43.16]:64703 "EHLO
-        mail-4316.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236160AbhIMMlJ (ORCPT
+        Mon, 13 Sep 2021 08:41:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54865 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236160AbhIMMlr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Sep 2021 08:41:09 -0400
-X-Greylist: delayed 9014 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Sep 2021 08:41:09 EDT
-Date:   Mon, 13 Sep 2021 12:39:49 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1631536792;
-        bh=YgDJ919x6p+xEDKzh2hqJMeh22fKtn9ZZCwv+qc/q9E=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=p+EFs132V6qLMWiZVHMRs5vNgLJYloI6X+Jpa3owbIFOeCZT+unJnnUreH2+sSY5G
-         qZcU46TumdYOtFT0KkmO4aqFiVZ1av0MZZGUWpgAAL2Y5aU2VlNyUbWvA9gkiuUzHM
-         h32yXc2vH+0Nat3j6tBnskxV7myffh58l5JYzyoA=
-To:     Hans de Goede <hdegoede@redhat.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH v1] platform/x86: wmi: initialize method name directly
-Message-ID: <hzBz08bOjTWZu618gVKAzEKaxvFF0ng70vA3ddZ9f8sr9_zrK7yZpTgPZ7mzHOVxO6Mj8YCp6E_uMlXIeHRYqE5xrLDKYTcVLG8qwsJZBO0=@protonmail.com>
-In-Reply-To: <f8c3b70a-74ec-15e9-4ee1-dae35e4c803b@redhat.com>
-References: <20210913110805.12387-1-pobrn@protonmail.com> <14e14dd2-a51e-87ae-5776-5f0a585e4936@redhat.com> <iEeEte3wo5BG2NCmh5maeSDY6lUKyxcNdSTRMDXkKsClHCr1LkfBFv0OLwpuIr6EHnl2_6QvRmTy9XTAtgTT5vpLWYe1dy6GisNb7-1UjUw=@protonmail.com> <f8c3b70a-74ec-15e9-4ee1-dae35e4c803b@redhat.com>
+        Mon, 13 Sep 2021 08:41:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631536831;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qlsCP2qhSgSLVFrSvVDvFizs4Sbr7u4Q8tObERzqWpY=;
+        b=G8mTvscBfwx4gybgOJj2HAitCMyTgwzsTmGscptEtNx9eCGGd3V7cJz3MvV6Mp3GRg42m6
+        uVd5W16C0vzs4NHQcsrTzSRzSwcKeSVhpAfkfk7QfV3IGt6OCE2rJjP+uhNhzBma6mfkxe
+        1Q+zY0+Q+djUC1Q87pF6nTqtmoESvK0=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-227-3UcJxaBfPTGeIicgZZ2R9Q-1; Mon, 13 Sep 2021 08:40:30 -0400
+X-MC-Unique: 3UcJxaBfPTGeIicgZZ2R9Q-1
+Received: by mail-ej1-f72.google.com with SMTP id ar17-20020a170907265100b005eff65b9184so1455699ejc.21
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Sep 2021 05:40:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qlsCP2qhSgSLVFrSvVDvFizs4Sbr7u4Q8tObERzqWpY=;
+        b=ZpiYJeQZq6ftlFl3mwB7jEOR4J9oPHtoWe5bgjVtWd3nHdR8wJiIJKGPVLUWShkKns
+         KFS3X5UcEgLUbg9mzAODXZT9/d9250+mHoj/RurEy420lFlIOL7c7qRPqbY+9iC8jp14
+         sJy24p4AJtkFK/8SlP0DQvD18E9y4L34j81eWn0Mzv/nhbOkV+s7Mv6T2IQGOUCYWfYn
+         9GHCJUjjxltTs0bF6tsqx5OxpGl+33VB/H9/2hMQcebuLK4TpEskWF0rcbhIkwl7pskA
+         j3vMrUKNARsoR29Y6jI75Ru8GmYdRss5QbHOqT9ijIPU0S3t/AocBzd+GRTQae0CEKwt
+         6OpA==
+X-Gm-Message-State: AOAM533JBaX5T34+0feEdPn8nTeurZKbGLA4X9Hzf0vWaJAFP3v/B1bQ
+        3+xIUnX8RD7e3t12Dq5ITSXElCxyjLp/YN0rNdyOYy9fNK6u3J5LuijpzkttSLG1sqP6l6/a9Qx
+        tsrkcHDf2iQrZVkpSHfmI2ognQimbYNjSbQ==
+X-Received: by 2002:a17:906:4c89:: with SMTP id q9mr12784105eju.118.1631536829141;
+        Mon, 13 Sep 2021 05:40:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzOgNkAIxBV1tgFRLPkt6mc+RZZ5SibWG4r+lHtG3fyDuFIdvSd6rBNvuruUOJuIRSxj5COBw==
+X-Received: by 2002:a17:906:4c89:: with SMTP id q9mr12784089eju.118.1631536828880;
+        Mon, 13 Sep 2021 05:40:28 -0700 (PDT)
+Received: from x1.localdomain ([81.30.35.201])
+        by smtp.gmail.com with ESMTPSA id y8sm1239281ejm.104.2021.09.13.05.40.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Sep 2021 05:40:28 -0700 (PDT)
+Subject: Re: [PATCH] Process tablet mode events on Dell Inspiron 2n1
+To:     Troy Rollo <linux2021@troy.rollo.name>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210909033502.1994749-1-linux2021@troy.rollo.name>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <776ba42d-1d87-81e9-ed36-3ef860869d93@redhat.com>
+Date:   Mon, 13 Sep 2021 14:40:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
+In-Reply-To: <20210909033502.1994749-1-linux2021@troy.rollo.name>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+Hi,
+
+Overall this patch looks good, I have 2 remarks:
+
+1. Your commit message needs some work, the first line (Subject) should
+briefly describe the change with a subsystem prefix, so something like this:
+
+platform/x86: dell-wmi: Add SW_TABLET_MODE support for Dell Inspiron 2in1
+
+And then an empty line followed by a "body" with a bit more detailed description.
+
+And last but not least you need to add a Signed-off-by line like this:
+
+Singed-off-by: Troy Rollo <linux2021@troy.rollo.name>
+
+Which indicates that you authored the patch and are submitting it under
+the standard kernel license, see:
+https://elinux.org/Developer_Certificate_Of_Origin
+
+2. Also have 1 remark about the code, see below.
 
 
-2021. szeptember 13., h=C3=A9tf=C5=91 14:20 keltez=C3=A9ssel, Hans de Goede=
- =C3=ADrta:
-> Hi,
->
-> On 9/13/21 2:15 PM, Barnab=C3=A1s P=C5=91cze wrote:
-> > Hi
-> >
-> >
-> > 2021. szeptember 13., h=C3=A9tf=C5=91 13:53 keltez=C3=A9ssel, Hans de G=
-oede =C3=ADrta:
-> >> In "platform/x86: wmi: introduce helper to generate method names"
-> >> you added a get_acpi_method_name() helper for generating WMI
-> >> method-names and you are using that everywhere else.
-> >>
-> >> IMHO it would be better to also use that here. Is there any
-> >> specific reason why you are not using this here ?
-> >
-> > Yes, indeed, but `get_acpi_method_name()` uses the `object_id` of the G=
-UID block,
-> > this one uses the `notify_id`. And it seemed problematic to find a simp=
-le
-> > way to reconcile the differences, so I haven't really given it much tho=
-ught.
-> > I'm open to suggestions.
->
-> Ah I see, TBH I liked your original patch just adding sizeof() better
-> then the new one. Or maybe replace the 2 "5"-s used in the snprintf
-> version with WMI_ACPI_METHOD_NAME_SIZE ?
-> [...]
+On 9/9/21 5:35 AM, Troy Rollo wrote:
+> ---
+>  drivers/platform/x86/dell/dell-wmi-base.c | 36 ++++++++++++++++-------
+>  1 file changed, 26 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
+> index 089c125e18f7..474ca05055ab 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-base.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-base.c
+> @@ -309,6 +309,9 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
+>   * Keymap for WMI events of type 0x0011
+>   */
+>  static const struct key_entry dell_wmi_keymap_type_0011[] = {
+> +	/* Reflex keyboard switch on 2n1 devices */
+> +	{ KE_VSW,    0xe070, { .sw  = { SW_TABLET_MODE } } },
+> +
 
-I will not resend it, but please feel free to apply the older patch if thin=
-k it is better.
-Personally, I don't like it, but oh well...
+By adding this here, any device loading the dell-wmi driver will now advertise
+that it supports SW_TABLET_MODE reporting, even when it does not. This will
+cause e.g. GNOME40 to disable accelerometer based rotation since when
+SW_TABLET_MODE=0 is being reported then GNOME40 assumes it is running on a
+2in1 in laptop mode and thus disable auto-rotation (and also the on-screen-kbd).
+
+So advertising a non functional (always reporting 0) SW_TABLET_MODE switch
+is harmful and this change will do this.
+
+Since you already have special handling for the tablet-mode WMI events,
+it would be better to use a separate input-device which just reports
+SW_TABLET_MODE and which gets dynamically created upon receiving the
+first 0x0011 0xe070 event. See the
+drivers/platform/x86/intel/vbtn.c
+drivers/platform/x86/intel/hid.c
+
+Drivers for an example of 2 drivers already doing this.
+
+Regards,
+
+Hans
 
 
-Best regards,
-Barnab=C3=A1s P=C5=91cze
+
+>  	/* Battery unplugged */
+>  	{ KE_IGNORE, 0xfff0, { KEY_RESERVED } },
+>  
+> @@ -344,17 +347,19 @@ static const struct key_entry dell_wmi_keymap_type_0012[] = {
+>  	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
+>  };
+>  
+> -static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
+> +static int dell_wmi_process_key(struct wmi_device *wdev, int type, int code, u16 *buffer, int remaining)
+>  {
+>  	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+>  	const struct key_entry *key;
+> +	int used = 0;
+> +	int value = 1;
+>  
+>  	key = sparse_keymap_entry_from_scancode(priv->input_dev,
+>  						(type << 16) | code);
+>  	if (!key) {
+>  		pr_info("Unknown key with type 0x%04x and code 0x%04x pressed\n",
+>  			type, code);
+> -		return;
+> +		return 0;
+>  	}
+>  
+>  	pr_debug("Key with type 0x%04x and code 0x%04x pressed\n", type, code);
+> @@ -363,16 +368,22 @@ static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
+>  	if ((key->keycode == KEY_BRIGHTNESSUP ||
+>  	     key->keycode == KEY_BRIGHTNESSDOWN) &&
+>  	    acpi_video_handles_brightness_key_presses())
+> -		return;
+> +		return 0;
+>  
+>  	if (type == 0x0000 && code == 0xe025 && !wmi_requires_smbios_request)
+> -		return;
+> +		return 0;
+>  
+> -	if (key->keycode == KEY_KBDILLUMTOGGLE)
+> +	if (key->keycode == KEY_KBDILLUMTOGGLE) {
+>  		dell_laptop_call_notifier(
+>  			DELL_LAPTOP_KBD_BACKLIGHT_BRIGHTNESS_CHANGED, NULL);
+> +	} else if (type == 0x0011 && code == 0xe070 && remaining > 0) {
+> +		value = !buffer[0];
+> +		used = 1;
+> +	}
+> +
+> +	sparse_keymap_report_entry(priv->input_dev, key, value, true);
+>  
+> -	sparse_keymap_report_entry(priv->input_dev, key, 1, true);
+> +	return used;
+>  }
+>  
+>  static void dell_wmi_notify(struct wmi_device *wdev,
+> @@ -430,21 +441,26 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+>  		case 0x0000: /* One key pressed or event occurred */
+>  			if (len > 2)
+>  				dell_wmi_process_key(wdev, buffer_entry[1],
+> -						     buffer_entry[2]);
+> +						     buffer_entry[2],
+> +						     buffer_entry + 3,
+> +						     len - 3);
+>  			/* Extended data is currently ignored */
+>  			break;
+>  		case 0x0010: /* Sequence of keys pressed */
+>  		case 0x0011: /* Sequence of events occurred */
+>  			for (i = 2; i < len; ++i)
+> -				dell_wmi_process_key(wdev, buffer_entry[1],
+> -						     buffer_entry[i]);
+> +				i += dell_wmi_process_key(wdev, buffer_entry[1],
+> +							  buffer_entry[i],
+> +							  buffer_entry + i,
+> +							  len - i - 1);
+>  			break;
+>  		case 0x0012:
+>  			if ((len > 4) && dell_privacy_process_event(buffer_entry[1], buffer_entry[3],
+>  								    buffer_entry[4]))
+>  				/* dell_privacy_process_event has handled the event */;
+>  			else if (len > 2)
+> -				dell_wmi_process_key(wdev, buffer_entry[1], buffer_entry[2]);
+> +				dell_wmi_process_key(wdev, buffer_entry[1], buffer_entry[2],
+> +						     buffer_entry + 3, len - 3);
+>  			break;
+>  		default: /* Unknown event */
+>  			pr_info("Unknown WMI event type 0x%x\n",
+> 
+
