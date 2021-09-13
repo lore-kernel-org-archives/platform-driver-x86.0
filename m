@@ -2,286 +2,175 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-24.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2DFC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 13:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15254C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 13:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFDE561411
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 13:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0074A61A71
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 13:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241782AbhIMNbU (ORCPT
+        id S242506AbhIMNkf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Sep 2021 09:31:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23580 "EHLO
+        Mon, 13 Sep 2021 09:40:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:20951 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241400AbhIMNYJ (ORCPT
+        by vger.kernel.org with ESMTP id S241869AbhIMNiZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Sep 2021 09:24:09 -0400
+        Mon, 13 Sep 2021 09:38:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631539373;
+        s=mimecast20190719; t=1631540228;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=j8W6dBntVL6AusfnmBYHXmMjjTqmgA/g/vBD/v4Pscw=;
-        b=IjH+BtNYjOMiAb5ErEJE6td7Rqr59O36HHCoGc44cIYCUd6hauJm9uK9wiB8bWWnvtBvky
-        mnzdP9R11plhuJ5FMgXxjZjy2PZgT98OKlNnhdqxbG7z2eU6hmr/ghZLex9dcy9CwzImtA
-        h6mnSiCvkPawmo1SvidVd+X7lcyNEhg=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-578-XLhKYWEWMsOzfMnDrhV5iQ-1; Mon, 13 Sep 2021 09:22:52 -0400
-X-MC-Unique: XLhKYWEWMsOzfMnDrhV5iQ-1
-Received: by mail-ed1-f71.google.com with SMTP id m20-20020aa7c2d4000000b003d1add00b8aso1786013edp.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Sep 2021 06:22:52 -0700 (PDT)
+        bh=bjFYHg65tqjKEZiKvQMDCUW4YwiT0ZdGTDTVBXYGaW0=;
+        b=RIqz+o0PFv1O6y979mlOiyKy7t1IwLHlCAK9WtIxxXzzU7B1xnPetU5NbqCsSq1HMy1wIi
+        nTfI+AAFJCodwNHr/pPZvo0ALI9QVOAqWjxf9tE5YthhupetOCxzh0nYb9PN55mQBep+vh
+        6pvDgehuZlnGgw9G9MBkZBEPNaFmRVw=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-19-3e8aDsfLN6q7IabKP1StRQ-1; Mon, 13 Sep 2021 09:37:06 -0400
+X-MC-Unique: 3e8aDsfLN6q7IabKP1StRQ-1
+Received: by mail-ej1-f69.google.com with SMTP id c25-20020a170906341900b005eea9bf6f4aso2204691ejb.12
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Sep 2021 06:37:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=j8W6dBntVL6AusfnmBYHXmMjjTqmgA/g/vBD/v4Pscw=;
-        b=6nSafWRozOlFJmX9TvHRJwfclTg7hBBkcef76sW5rIU2bg3RRqMAtjKW7ndq1gjkzK
-         tbNBOqYoSvdp6ozEfxaAFrDPoIv/ODudmlfb84GoS0dr239Thp4gtfF01gxXYxMwDjew
-         HF61/YHG7gSynZEZfOQIhJUj0i88obkOl7qgfZ+UwaLIaDxPT24d/ghmeqzXGP6f5bke
-         qnbT2vS22aTx6l12YTuNKYNoufrnuA17KTbVKKb+2DIYJySNfnDUemyv8XXYfw3JzOOf
-         b+zFOBNT+fky321UoE15Rlk+RECFdKL7eeQAqSnpcLIOvR/Ai6GwcLGK6vZu2mOJ/qt6
-         tm9w==
-X-Gm-Message-State: AOAM531RtlkZ3Sz0J8ZDTSGOjAis4N7Jlb8RzE8i7Zd04HUfW84znxii
-        AMolSkAzLzTXlefafX1KuwrEXJKPAPmZr8l/Y2kuWeofQ273BR1PziEohMPvs2w0wLlp0V3I/F8
-        oGDbE4ZF+nawZLVkqIXPfEK1ya1bGm5MMWw==
-X-Received: by 2002:aa7:c80d:: with SMTP id a13mr13099413edt.71.1631539371296;
-        Mon, 13 Sep 2021 06:22:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyhLciDvypfxN7D5s0/jX2WJ6IleCql6EIx/3HGSI2S++wGwP/YnUtH59m2ARKHE07k8LGszw==
-X-Received: by 2002:aa7:c80d:: with SMTP id a13mr13099402edt.71.1631539371098;
-        Mon, 13 Sep 2021 06:22:51 -0700 (PDT)
+        bh=bjFYHg65tqjKEZiKvQMDCUW4YwiT0ZdGTDTVBXYGaW0=;
+        b=sfR9FViWndD4OwUH7wYrwLO32tUN6oWQYjH4Z2YmoplUyZQO8KXeV8Y4iSaVvZDuOC
+         u4+HPRbgLTCo3O4bn3UXMylOOOqzpjj4EPOtAA07f2i5TqlDPNjA8RwOcQSBC7pu3KYx
+         LiloisY5Zmm7RFByxA1jg8SHM1ryBKczvWlQ4cGSar3V/1yXqMpNinOLR0VRvvt49BZ7
+         5e7JT9c6PbFcPvUfRFEFFgWbuhhPFg/TN/WdEsgsHGHKI/f9wyBpTaVolqPFbiOVc9Kl
+         3OCAPlDl7EGsbLGT1wSgJrkEv9hOvEAE87E6+vfLN9i4MTg4xa2ySNz8otGpXrwhKOo7
+         EKoA==
+X-Gm-Message-State: AOAM533qPmFeD3v6jCk8lq5+Jv/xQ6etwzXEKMHnR3nYbsPM7jJsoOKC
+        UScS5ZZGUFJCVyykbovplyGsYnMuJcAbMWLTnEDvm3fatS4U3DwGl7gy/8CXfv1bniSMBBJuZRu
+        W6i5EH83QKyx1Ou9ciPFv8aEkfH+3lP0FJw==
+X-Received: by 2002:a17:906:2345:: with SMTP id m5mr806417eja.557.1631540225615;
+        Mon, 13 Sep 2021 06:37:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz69ArpVr5fjX6Qv/alZZF0AteWRQzT/mCPlyPxjrPJNBDptBfIFDgcECjVPZ1ZMhYgePGXoA==
+X-Received: by 2002:a17:906:2345:: with SMTP id m5mr806401eja.557.1631540225390;
+        Mon, 13 Sep 2021 06:37:05 -0700 (PDT)
 Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id t19sm3474426ejb.115.2021.09.13.06.22.50
+        by smtp.gmail.com with ESMTPSA id x13sm3469083ejv.64.2021.09.13.06.37.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Sep 2021 06:22:50 -0700 (PDT)
-Subject: Re: [PATCH] Process tablet mode events on Dell Inspiron 2n1
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-Cc:     Troy Rollo <linux2021@troy.rollo.name>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210909033502.1994749-1-linux2021@troy.rollo.name>
- <776ba42d-1d87-81e9-ed36-3ef860869d93@redhat.com>
- <20210913124448.jnkpbya2eyq2mcqb@pali>
- <063cf992-0f78-1d6e-cb4b-2545b4b740d5@redhat.com>
- <20210913125908.lshshpu5bkdliacg@pali>
+        Mon, 13 Sep 2021 06:37:04 -0700 (PDT)
+Subject: Re: [PATCH] acer-wmi: use __packed instead of __attribute__((packed))
+To:     Jules Irenge <jbi.octave@gmail.com>, jlee@suse.com
+Cc:     mgross@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20210912011741.30495-1-jbi.octave@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <eac854ac-a919-0230-a421-9255ca7f8ff6@redhat.com>
-Date:   Mon, 13 Sep 2021 15:22:50 +0200
+Message-ID: <caff24a5-f6ef-edb6-2b0b-0411fadb2e8f@redhat.com>
+Date:   Mon, 13 Sep 2021 15:37:04 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210913125908.lshshpu5bkdliacg@pali>
+In-Reply-To: <20210912011741.30495-1-jbi.octave@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/13/21 2:59 PM, Pali Rohár wrote:
-> On Monday 13 September 2021 14:48:46 Hans de Goede wrote:
->> Hi,
->>
->> On 9/13/21 2:44 PM, Pali Rohár wrote:
->>> On Monday 13 September 2021 14:40:28 Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> Overall this patch looks good, I have 2 remarks:
->>>>
->>>> 1. Your commit message needs some work, the first line (Subject) should
->>>> briefly describe the change with a subsystem prefix, so something like this:
->>>>
->>>> platform/x86: dell-wmi: Add SW_TABLET_MODE support for Dell Inspiron 2in1
->>>>
->>>> And then an empty line followed by a "body" with a bit more detailed description.
->>>>
->>>> And last but not least you need to add a Signed-off-by line like this:
->>>>
->>>> Singed-off-by: Troy Rollo <linux2021@troy.rollo.name>
->>>>
->>>> Which indicates that you authored the patch and are submitting it under
->>>> the standard kernel license, see:
->>>> https://elinux.org/Developer_Certificate_Of_Origin
->>>>
->>>> 2. Also have 1 remark about the code, see below.
->>>>
->>>>
->>>> On 9/9/21 5:35 AM, Troy Rollo wrote:
->>>>> ---
->>>>>  drivers/platform/x86/dell/dell-wmi-base.c | 36 ++++++++++++++++-------
->>>>>  1 file changed, 26 insertions(+), 10 deletions(-)
->>>>>
->>>>> diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
->>>>> index 089c125e18f7..474ca05055ab 100644
->>>>> --- a/drivers/platform/x86/dell/dell-wmi-base.c
->>>>> +++ b/drivers/platform/x86/dell/dell-wmi-base.c
->>>>> @@ -309,6 +309,9 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
->>>>>   * Keymap for WMI events of type 0x0011
->>>>>   */
->>>>>  static const struct key_entry dell_wmi_keymap_type_0011[] = {
->>>>> +	/* Reflex keyboard switch on 2n1 devices */
->>>>> +	{ KE_VSW,    0xe070, { .sw  = { SW_TABLET_MODE } } },
->>>>> +
->>>>
->>>> By adding this here, any device loading the dell-wmi driver will now advertise
->>>> that it supports SW_TABLET_MODE reporting, even when it does not. This will
->>>> cause e.g. GNOME40 to disable accelerometer based rotation since when
->>>> SW_TABLET_MODE=0 is being reported then GNOME40 assumes it is running on a
->>>> 2in1 in laptop mode and thus disable auto-rotation (and also the on-screen-kbd).
->>>>
->>>> So advertising a non functional (always reporting 0) SW_TABLET_MODE switch
->>>> is harmful and this change will do this.
->>>
->>> Good catch. This code needs some rework as based on above gnome
->>> behavior, this change breaks support for all existing older Dell
->>> laptops.
->>>
->>> It it problem only with SW_TABLET_MODE? Or with any KE_VSW?
->>
->> It is a problem for any KE_SW / KE_VSW since unlike keys/buttons which
->> are always unpressed by default and don't cause userspace to do anything
->> until a press is reported, switches have a meaning in both their
->> 0 and 1 state, so merely reporting the presence of a switch can cause
->> userspace to change behavior.
->>
->> Note I'm not aware of any SW other then SW_TABLET_MODE actually causing
->> issues, but in theory this is an issue with any SW because of the reason
->> which I just gave.
+On 9/12/21 3:17 AM, Jules Irenge wrote:
+> checkpatch.pl tool warns about using __attribute__((packed))
+> "WARNING: __packed is preferred over __attribute__((packed))"
+> To fix this __attribute__((packed)) is replaced by __packed
 > 
-> Well, this argument makes sense for any switch.
-> 
-> But all other defined keys in this driver are "standard" keys which may
-> or may not be present on de-facto standard keyboard: capslock,
-> brightness keys, volume keys, wifi key, eject key, ...
-> Probably generic AT keyboard driver may also report more standard keys
-> than it has.
-> 
-> So I'm not sure if it makes sense to rewrite wmi driver to dynamically
-> allocate presence of also every key based on first press.
-> 
-> If some userspace software depends on capabilities of "standard" keys
-> and reacts differently then I guess it is broken...
-> 
-> But for switches this dynamic behavior as you described is needed.
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 
-Right, I fully agree.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
->>>> Since you already have special handling for the tablet-mode WMI events,
->>>> it would be better to use a separate input-device which just reports
->>>> SW_TABLET_MODE and which gets dynamically created upon receiving the
->>>> first 0x0011 0xe070 event. See the
->>>> drivers/platform/x86/intel/vbtn.c
->>>> drivers/platform/x86/intel/hid.c
->>>>
->>>> Drivers for an example of 2 drivers already doing this.
->>>>
->>>> Regards,
->>>>
->>>> Hans
->>>>
->>>>
->>>>
->>>>>  	/* Battery unplugged */
->>>>>  	{ KE_IGNORE, 0xfff0, { KEY_RESERVED } },
->>>>>  
->>>>> @@ -344,17 +347,19 @@ static const struct key_entry dell_wmi_keymap_type_0012[] = {
->>>>>  	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
->>>>>  };
->>>>>  
->>>>> -static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
->>>>> +static int dell_wmi_process_key(struct wmi_device *wdev, int type, int code, u16 *buffer, int remaining)
->>>>>  {
->>>>>  	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
->>>>>  	const struct key_entry *key;
->>>>> +	int used = 0;
->>>>> +	int value = 1;
->>>>>  
->>>>>  	key = sparse_keymap_entry_from_scancode(priv->input_dev,
->>>>>  						(type << 16) | code);
->>>>>  	if (!key) {
->>>>>  		pr_info("Unknown key with type 0x%04x and code 0x%04x pressed\n",
->>>>>  			type, code);
->>>>> -		return;
->>>>> +		return 0;
->>>>>  	}
->>>>>  
->>>>>  	pr_debug("Key with type 0x%04x and code 0x%04x pressed\n", type, code);
->>>>> @@ -363,16 +368,22 @@ static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
->>>>>  	if ((key->keycode == KEY_BRIGHTNESSUP ||
->>>>>  	     key->keycode == KEY_BRIGHTNESSDOWN) &&
->>>>>  	    acpi_video_handles_brightness_key_presses())
->>>>> -		return;
->>>>> +		return 0;
->>>>>  
->>>>>  	if (type == 0x0000 && code == 0xe025 && !wmi_requires_smbios_request)
->>>>> -		return;
->>>>> +		return 0;
->>>>>  
->>>>> -	if (key->keycode == KEY_KBDILLUMTOGGLE)
->>>>> +	if (key->keycode == KEY_KBDILLUMTOGGLE) {
->>>>>  		dell_laptop_call_notifier(
->>>>>  			DELL_LAPTOP_KBD_BACKLIGHT_BRIGHTNESS_CHANGED, NULL);
->>>>> +	} else if (type == 0x0011 && code == 0xe070 && remaining > 0) {
->>>>> +		value = !buffer[0];
->>>>> +		used = 1;
->>>>> +	}
->>>>> +
->>>>> +	sparse_keymap_report_entry(priv->input_dev, key, value, true);
->>>>>  
->>>>> -	sparse_keymap_report_entry(priv->input_dev, key, 1, true);
->>>>> +	return used;
->>>>>  }
->>>>>  
->>>>>  static void dell_wmi_notify(struct wmi_device *wdev,
->>>>> @@ -430,21 +441,26 @@ static void dell_wmi_notify(struct wmi_device *wdev,
->>>>>  		case 0x0000: /* One key pressed or event occurred */
->>>>>  			if (len > 2)
->>>>>  				dell_wmi_process_key(wdev, buffer_entry[1],
->>>>> -						     buffer_entry[2]);
->>>>> +						     buffer_entry[2],
->>>>> +						     buffer_entry + 3,
->>>>> +						     len - 3);
->>>>>  			/* Extended data is currently ignored */
->>>>>  			break;
->>>>>  		case 0x0010: /* Sequence of keys pressed */
->>>>>  		case 0x0011: /* Sequence of events occurred */
->>>>>  			for (i = 2; i < len; ++i)
->>>>> -				dell_wmi_process_key(wdev, buffer_entry[1],
->>>>> -						     buffer_entry[i]);
->>>>> +				i += dell_wmi_process_key(wdev, buffer_entry[1],
->>>>> +							  buffer_entry[i],
->>>>> +							  buffer_entry + i,
->>>>> +							  len - i - 1);
->>>>>  			break;
->>>>>  		case 0x0012:
->>>>>  			if ((len > 4) && dell_privacy_process_event(buffer_entry[1], buffer_entry[3],
->>>>>  								    buffer_entry[4]))
->>>>>  				/* dell_privacy_process_event has handled the event */;
->>>>>  			else if (len > 2)
->>>>> -				dell_wmi_process_key(wdev, buffer_entry[1], buffer_entry[2]);
->>>>> +				dell_wmi_process_key(wdev, buffer_entry[1], buffer_entry[2],
->>>>> +						     buffer_entry + 3, len - 3);
->>>>>  			break;
->>>>>  		default: /* Unknown event */
->>>>>  			pr_info("Unknown WMI event type 0x%x\n",
->>>>>
->>>>
->>>
->>
+> ---
+>  drivers/platform/x86/acer-wmi.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index 694b45ed06a2..9c6943e401a6 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -138,7 +138,7 @@ struct event_return_value {
+>  	u16 reserved1;
+>  	u8 kbd_dock_state;
+>  	u8 reserved2;
+> -} __attribute__((packed));
+> +} __packed;
+>  
+>  /*
+>   * GUID3 Get Device Status device flags
+> @@ -172,33 +172,33 @@ struct func_input_params {
+>  	u8 app_status;          /* Acer Device Status. LM, ePM, RF Button... */
+>  	u8 app_mask;		/* Bit mask to app_status */
+>  	u8 reserved;
+> -} __attribute__((packed));
+> +} __packed;
+>  
+>  struct func_return_value {
+>  	u8 error_code;          /* Error Code */
+>  	u8 ec_return_value;     /* EC Return Value */
+>  	u16 reserved;
+> -} __attribute__((packed));
+> +} __packed;
+>  
+>  struct wmid3_gds_set_input_param {     /* Set Device Status input parameter */
+>  	u8 function_num;        /* Function Number */
+>  	u8 hotkey_number;       /* Hotkey Number */
+>  	u16 devices;            /* Set Device */
+>  	u8 volume_value;        /* Volume Value */
+> -} __attribute__((packed));
+> +} __packed;
+>  
+>  struct wmid3_gds_get_input_param {     /* Get Device Status input parameter */
+>  	u8 function_num;	/* Function Number */
+>  	u8 hotkey_number;	/* Hotkey Number */
+>  	u16 devices;		/* Get Device */
+> -} __attribute__((packed));
+> +} __packed;
+>  
+>  struct wmid3_gds_return_value {	/* Get Device Status return value*/
+>  	u8 error_code;		/* Error Code */
+>  	u8 ec_return_value;	/* EC Return Value */
+>  	u16 devices;		/* Current Device Status */
+>  	u32 reserved;
+> -} __attribute__((packed));
+> +} __packed;
+>  
+>  struct hotkey_function_type_aa {
+>  	u8 type;
+> @@ -210,7 +210,7 @@ struct hotkey_function_type_aa {
+>  	u16 display_func_bitmap;
+>  	u16 others_func_bitmap;
+>  	u8 commun_fn_key_number;
+> -} __attribute__((packed));
+> +} __packed;
+>  
+>  /*
+>   * Interface capability flags
 > 
 
