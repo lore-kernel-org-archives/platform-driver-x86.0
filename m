@@ -8,131 +8,102 @@ X-Spam-Status: No, score=-24.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C092C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 08:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DF4C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 09:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63F0B60FBF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 08:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFE860FBF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 09:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238046AbhIMI5a (ORCPT
+        id S238217AbhIMJDN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Sep 2021 04:57:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44375 "EHLO
+        Mon, 13 Sep 2021 05:03:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58175 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236048AbhIMI5a (ORCPT
+        by vger.kernel.org with ESMTP id S235890AbhIMJDJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Sep 2021 04:57:30 -0400
+        Mon, 13 Sep 2021 05:03:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631523374;
+        s=mimecast20190719; t=1631523714;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=42KIdH/HMqdB8rCTN4NfDrRncxxfxLeKhc53DgDEEJQ=;
-        b=FIG88ZcWTkWe/BzK1eJ3BSBDUO/0QPYyIjv+VuDWUjh5dLv4rxLrxlq3T3F5CaKAbsY+PZ
-        5tT2NtV+br09ZEsP5bFO1he+e14coWr8Mwe1yQEOIVVv59JJXtgtgIsoLwMBotiTjsn+9M
-        nS72C2z4kVWwgQAqLQwosIqutDme9oQ=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-574-jnFAmA4bMr2xSqnpSafvUg-1; Mon, 13 Sep 2021 04:56:13 -0400
-X-MC-Unique: jnFAmA4bMr2xSqnpSafvUg-1
-Received: by mail-ej1-f69.google.com with SMTP id cf17-20020a170906b2d100b005d42490f86bso3378760ejb.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Sep 2021 01:56:13 -0700 (PDT)
+        bh=ksa/cuR/X7uRKRFtGGQc32Hqelb4zZUhHL1Feuax50k=;
+        b=FcYtcejAJZVYtk+n/l3q5Z8GzEifENfWgpi9Lqyp7+AXvJsWFmEaUPHH/muY/LGNmWK8Dd
+        U90N5gDR4VMzPD9dkRsyiYjXeigw3xk+6YC/+oS9sxia3FtgNuYW56KB2Oa0Sa1MZVgN9n
+        4Re9YEeH3UbIVWQQWLZDutixCv1Tm9M=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-138-3Pgy8-z2NwCXKHTYGfyK-w-1; Mon, 13 Sep 2021 05:01:53 -0400
+X-MC-Unique: 3Pgy8-z2NwCXKHTYGfyK-w-1
+Received: by mail-ed1-f69.google.com with SMTP id y21-20020a056402359500b003cd0257fc7fso4584816edc.10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Sep 2021 02:01:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=42KIdH/HMqdB8rCTN4NfDrRncxxfxLeKhc53DgDEEJQ=;
-        b=TC6CznpVtgH762lc+M2JlnIz+TKoEfSRgBhFmdIElPWzNzJUGn2K4oVjFN9MFzvFb/
-         PiHBmr2uHaHLC6kyCGpO9AKHAe4+drEv6mdcVTxbCH4ruyRxMTXbIvBveABc1pKsQEw4
-         jW9x018P7KDfGew+LC1z7oKwRAGJnp9fqkIGT+23U+YnILoZ88ZG1QmP1tV8jpEZFESx
-         ZwAvvN56xxYpAQuMsTOYWdnDNcLYxcAnYwGTrQM7Y3k6tBhoOdtXMkle0POYGCh6j5uD
-         TizwoKEpM1zh9xT7JSojSvKdZ7vud0yJALg9N3wAIUwT8la+j+Zv3+U3jkP1ZgLldnC9
-         0Qhg==
-X-Gm-Message-State: AOAM533YmCI84wDQ+dvc7hrNwObSWyB937Gq+XMV6imoHrF+LQqSVYFo
-        xKsUPVV58xIDzpHK05oODGAtkhaNZI4OsKgbIWMwp6ik9b/jRMhtd5ej1o+Kfh+Ji2q6oq0Dr+R
-        jfMUr27W+C42z37naDWPVoCHXFPGMxrIz9g==
-X-Received: by 2002:a17:906:2418:: with SMTP id z24mr5612150eja.105.1631523371996;
-        Mon, 13 Sep 2021 01:56:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz7NAHiRpRgtNTfm8UNo2PswGOyap+CosjNB1WhsJ1N2P6qI2yrrcGkgi9cA9VLKA/2WYI3AA==
-X-Received: by 2002:a17:906:2418:: with SMTP id z24mr5612128eja.105.1631523371629;
-        Mon, 13 Sep 2021 01:56:11 -0700 (PDT)
+        bh=ksa/cuR/X7uRKRFtGGQc32Hqelb4zZUhHL1Feuax50k=;
+        b=pvTY4ZyhpqI1E42hhjJC0ZWJSy09rMFmjGI+KY78+mELuELJlg6DWYUAZkUd4/wm3x
+         hBxiGP3hqm07ozWtxenfm2SQRbdrKULnnlBTiw7tqe8MPRdrectNib1L4PqczcwnWBbp
+         05VNVF46TXaxoTVg/MkVB3lb7t/Q0lnXKfO9D6iRSxR0ojD2epMiegQu+c+ovz/LMeFh
+         05Ebmgdkm3wi95LBduWmLS7uYtjyPsNjQrFAx4VsMxHZ2yJXFsTGjWGgOYLWBU/m4nMz
+         k4k26PnnC7L/OZ7RKbQQ+IfqEs0csVKmZvp3gpxwiDHItDuQvkzRBS9hq9smt644V4L7
+         Sjfw==
+X-Gm-Message-State: AOAM533GXTtAPo1qKwrFbYSZYrkZlAkRcnQEkpJjb4m0nrO3vPr1g6lw
+        3A//MTXAbyYPKuY76tRtipZ75ldXHwntCLmbrxUNpDqq3oAQ8XZoi4gUrPs1Zp3yWWaXgfoJIY9
+        8Bw5ZNAA9njtM5Gqm8PhGGjsYgvEbJ7Jnaw==
+X-Received: by 2002:a05:6402:283:: with SMTP id l3mr11882448edv.399.1631523711709;
+        Mon, 13 Sep 2021 02:01:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyz2rEa8hYieDB+qmzqc9LxTaeRYiLDSLDiP3+OIv72/NaKvIGhfice+ThkJDl2xLO7vdzwuA==
+X-Received: by 2002:a05:6402:283:: with SMTP id l3mr11882425edv.399.1631523711411;
+        Mon, 13 Sep 2021 02:01:51 -0700 (PDT)
 Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id r26sm3124327ejd.85.2021.09.13.01.56.11
+        by smtp.gmail.com with ESMTPSA id o3sm3133015eju.123.2021.09.13.02.01.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Sep 2021 01:56:11 -0700 (PDT)
-Subject: Re: [PATCH v5] platform/x86: hp-wmi: add support for omen laptops
-To:     Enver Balalic <balalic.enver@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     mgross@linux.intel.com, jdelvare@suse.com, pobrn@protonmail.com,
-        linux@roeck-us.net
-References: <20210902182234.vtwl72n5rjql22qa@omen.localdomain>
+        Mon, 13 Sep 2021 02:01:51 -0700 (PDT)
+Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI WMAA EC-based
+ backlight control
+To:     Daniel Dadap <ddadap@nvidia.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     mario.limonciello@outlook.com, pobrn@protonmail.com,
+        andy.shevchenko@gmail.com, aplattner@nvidia.com,
+        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>
+References: <e63904b7-105b-4401-bd40-82854b7d42d1@t-8ch.de>
+ <20210903003838.15797-1-ddadap@nvidia.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <da1f01c0-71d3-4f46-db90-ee7898ca81aa@redhat.com>
-Date:   Mon, 13 Sep 2021 10:56:10 +0200
+Message-ID: <11ffe8bc-b4ee-c451-9860-46997de8fe55@redhat.com>
+Date:   Mon, 13 Sep 2021 11:01:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210902182234.vtwl72n5rjql22qa@omen.localdomain>
+In-Reply-To: <20210903003838.15797-1-ddadap@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/2/21 8:22 PM, Enver Balalic wrote:
-> This patch adds support for HP Omen laptops.
-> It adds support for most things that can be controlled via the
-> Windows Omen Command Center application.
+On 9/3/21 2:38 AM, Daniel Dadap wrote:
+> A number of upcoming notebook computer designs drive the internal
+> display panel's backlight PWM through the Embedded Controller (EC).
+> This EC-based backlight control can be plumbed through to an ACPI
+> "WMAA" method interface, which in turn can be wrapped by WMI with
+> the GUID handle 603E9613-EF25-4338-A3D0-C46177516DB7.
 > 
->  - Fan speed monitoring through hwmon
->  - Platform Profile support (cool, balanced, performance)
->  - Max fan speed function toggle
+> Add a new driver, aliased to the WMAA WMI GUID, to expose a sysfs
+> backlight class driver to control backlight levels on systems with
+> EC-driven backlights.
 > 
-> Also exposes the existing HDD temperature through hwmon since
-> this driver didn't use hwmon before this patch.
-> 
-> This patch has been tested on a 2020 HP Omen 15 (AMD) 15-en0023dx.
-> 
->  - V1
->    Initial Patch
->  - V2
->    Use standard hwmon ABI attributes
->    Add existing non-standard "hddtemp" to hwmon
->  - V3
->    Fix overflow issue in "hp_wmi_get_fan_speed"
->    Map max fan speed value back to hwmon values on read
->    Code style fixes
->    Fix issue with returning values from "hp_wmi_hwmon_read",
->    the value to return should be written to val and not just
->    returned from the function
->  - V4
->    Use DMI Board names to detect if a device should use the omen
->    specific thermal profile method.
->    Select HWMON instead of depending on it.
->    Code style fixes.
->    Replace some error codes with more specific/meaningful ones.
->    Remove the HDD temperature from HWMON since we don't know what
->    unit it's expressed in.
->    Handle error from hp_wmi_hwmon_init
->  - V5
->    Handle possible NULL from dmi_get_system_info()
->    Use match_string function instead of manually checking
->    Directly use is_omen_thermal_profile() without the static
->    variable.
-> 
-> Signed-off-by: Enver Balalic <balalic.enver@gmail.com>
+> Signed-off-by: Daniel Dadap <ddadap@nvidia.com>
+> Reviewed-By: Thomas Weißschuh <linux@weissschuh.net>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-I've fixed up a couple of trivial white-space issues reported
-by checkpatch --strict while applying this.
 
 Note it will show up in my review-hans branch once I've pushed my
 local branch there, which might take a while.
@@ -147,445 +118,302 @@ Regards,
 Hans
 
 
-
 > ---
->  drivers/platform/x86/Kconfig  |   1 +
->  drivers/platform/x86/hp-wmi.c | 330 ++++++++++++++++++++++++++++++++--
->  2 files changed, 319 insertions(+), 12 deletions(-)
 > 
+> v2: Convert to WMI subsystem driver, suggested by Mario Limonciello
+>     <mario.limonciello@outlook.com>; various cleanups suggested by
+>     Barnabás Pőcze <pobrn@protonmail.com>
+> v3: Address assorted style nits raised by Andy Shevchenko
+>     <andy.shevchenko@gmail.com> in response to a related patch; remove
+>     additional behavior change to WMI subsystem from patch series as
+>     recommended by Hans de Goede <hdegoede@redhat.com> 
+> v4: Use MODULE_DEVICE_TABLE() (Thomas Weißschuh <thomas@t-8ch.de>)
+>     Fix scope of internal driver state; various style fixes (Barnabás
+>     Pőcze, Andy Shevchenko)
+>     Use devm_backlight_device_register() (Barnabás Pőcze)
+>     Add kerneldoc comments for enums and structs (Andy Shevchenko)
+> v5: Remove Aaron Plattner as author, as suggested by Aaron Plattner
+>     <aplattner@nvidia.com>
+>     Register as BACKLIGHT_FIRMWARE rather than BACKLIGHT_PLATFORM;
+>     Return negative errno if .get_brightness() fails (Thomas Weißschuh)
+>     Assorted style improvements (Andy Shevchenko, Thomas Weißschuh)
+> v6: Make behavior of callers of wmi_call_wmaa() more consistent;
+>     simplify potentially confusing description in Kconfig help text
+>     (Thomas Weißschuh)
+> 
+>  MAINTAINERS                               |   6 +
+>  drivers/platform/x86/Kconfig              |  16 ++
+>  drivers/platform/x86/Makefile             |   1 +
+>  drivers/platform/x86/wmaa-backlight-wmi.c | 205 ++++++++++++++++++++++
+>  4 files changed, 228 insertions(+)
+>  create mode 100644 drivers/platform/x86/wmaa-backlight-wmi.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index bbaecde94aa0..fd7362a86c6d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20008,6 +20008,12 @@ L:	linux-wireless@vger.kernel.org
+>  S:	Odd fixes
+>  F:	drivers/net/wireless/wl3501*
+>  
+> +WMAA BACKLIGHT DRIVER
+> +M:	Daniel Dadap <ddadap@nvidia.com>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/platform/x86/wmaa-backlight-wmi.c
+> +
+>  WOLFSON MICROELECTRONICS DRIVERS
+>  L:	patches@opensource.cirrus.com
+>  S:	Supported
 > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index d12db6c316ea..2ab0dcf5b598 100644
+> index d12db6c316ea..00f021eda25c 100644
 > --- a/drivers/platform/x86/Kconfig
 > +++ b/drivers/platform/x86/Kconfig
-> @@ -434,6 +434,7 @@ config HP_WMI
->  	depends on RFKILL || RFKILL = n
->  	select INPUT_SPARSEKMAP
->  	select ACPI_PLATFORM_PROFILE
-> +	select HWMON
+> @@ -113,6 +113,22 @@ config PEAQ_WMI
 >  	help
->  	 Say Y here if you want to support WMI-based hotkeys on HP laptops and
->  	 to read data from WMI such as docking or ambient light sensor state.
-> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> index 027a1467d009..9c4c9f5095ae 100644
-> --- a/drivers/platform/x86/hp-wmi.c
-> +++ b/drivers/platform/x86/hp-wmi.c
-> @@ -22,9 +22,11 @@
->  #include <linux/input/sparse-keymap.h>
->  #include <linux/platform_device.h>
->  #include <linux/platform_profile.h>
-> +#include <linux/hwmon.h>
->  #include <linux/acpi.h>
->  #include <linux/rfkill.h>
->  #include <linux/string.h>
-> +#include <linux/dmi.h>
+>  	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
 >  
->  MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
->  MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
-> @@ -39,6 +41,25 @@ MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=aut
->  
->  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
->  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
-> +#define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
+> +config WMAA_BACKLIGHT_WMI
+> +	tristate "ACPI WMAA Backlight Driver"
+> +	depends on ACPI_WMI
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	help
+> +	  This driver provides a sysfs backlight interface for notebook
+> +	  systems which expose the WMAA ACPI method and an associated WMI
+> +	  wrapper to drive LCD backlight levels through the Embedded Controller
+> +	  (EC).
 > +
-> +/* DMI board names of devices that should use the omen specific path for
-> + * thermal profiles.
-> + * This was obtained by taking a look in the windows omen command center
-> + * app and parsing a json file that they use to figure out what capabilities
-> + * the device should have.
-> + * A device is considered an omen if the DisplayName in that list contains
-> + * "OMEN", and it can use the thermal profile stuff if the "Feature" array
-> + * contains "PerformanceControl".
+> +	  Say Y or M here if you want to control the backlight on a notebook
+> +	  system with an EC-driven backlight using the ACPI WMAA method.
+> +
+> +	  If you choose to compile this driver as a module the module will be
+> +	  called wmaa-backlight-wmi.
+> +
+>  config XIAOMI_WMI
+>  	tristate "Xiaomi WMI key driver"
+>  	depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 7ee369aab10d..109c1714237d 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= intel-wmi-sbl-fw-update.o
+>  obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
+>  obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
+>  obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
+> +obj-$(CONFIG_WMAA_BACKLIGHT_WMI)	+= wmaa-backlight-wmi.o
+>  obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
+>  obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
+>  
+> diff --git a/drivers/platform/x86/wmaa-backlight-wmi.c b/drivers/platform/x86/wmaa-backlight-wmi.c
+> new file mode 100644
+> index 000000000000..f5c4f8337c2c
+> --- /dev/null
+> +++ b/drivers/platform/x86/wmaa-backlight-wmi.c
+> @@ -0,0 +1,205 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
 > + */
-> +static const char * const omen_thermal_profile_boards[] = {
-> +	"84DA", "84DB", "84DC", "8574", "8575", "860A", "87B5", "8572", "8573",
-> +	"8600", "8601", "8602", "8605", "8606", "8607", "8746", "8747", "8749",
-> +	"874A", "8603", "8604", "8748", "886B", "886C", "878A", "878B", "878C",
-> +	"88C8", "88CB", "8786", "8787", "8788", "88D1", "88D2", "88F4", "88FD",
-> +	"88F5", "88F6", "88F7", "88FE", "88FF", "8900", "8901", "8902", "8912",
-> +	"8917", "8918", "8949", "894A", "89EB"
-> +};
->  
->  enum hp_wmi_radio {
->  	HPWMI_WIFI	= 0x0,
-> @@ -89,10 +110,18 @@ enum hp_wmi_commandtype {
->  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
->  };
->  
-> +enum hp_wmi_gm_commandtype {
-> +	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
-> +	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
-> +	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
-> +	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/backlight.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/types.h>
+> +#include <linux/wmi.h>
+> +
+> +/**
+> + * enum wmaa_method - WMI method IDs for ACPI WMAA
+> + * @WMAA_METHOD_LEVEL:  Get or set the brightness level,
+> + *                      or get the maximum brightness level.
+> + * @WMAA_METHOD_SOURCE: Get the source for backlight control.
+> + */
+> +enum wmaa_method {
+> +	WMAA_METHOD_LEVEL = 1,
+> +	WMAA_METHOD_SOURCE = 2,
+> +	WMAA_METHOD_MAX
 > +};
 > +
->  enum hp_wmi_command {
->  	HPWMI_READ	= 0x01,
->  	HPWMI_WRITE	= 0x02,
->  	HPWMI_ODM	= 0x03,
-> +	HPWMI_GM	= 0x20008,
->  };
->  
->  enum hp_wmi_hardware_mask {
-> @@ -120,6 +149,13 @@ enum hp_wireless2_bits {
->  	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
->  };
->  
-> +
-> +enum hp_thermal_profile_omen {
-> +	HP_OMEN_THERMAL_PROFILE_DEFAULT     = 0x00,
-> +	HP_OMEN_THERMAL_PROFILE_PERFORMANCE = 0x01,
-> +	HP_OMEN_THERMAL_PROFILE_COOL        = 0x02,
+> +/**
+> + * enum wmaa_mode - Operation mode for ACPI WMAA method
+> + * @WMAA_MODE_GET:           Get the current brightness level or source.
+> + * @WMAA_MODE_SET:           Set the brightness level.
+> + * @WMAA_MODE_GET_MAX_LEVEL: Get the maximum brightness level. This is only
+> + *                           valid when the WMI method is %WMAA_METHOD_LEVEL.
+> + */
+> +enum wmaa_mode {
+> +	WMAA_MODE_GET = 0,
+> +	WMAA_MODE_SET = 1,
+> +	WMAA_MODE_GET_MAX_LEVEL = 2,
+> +	WMAA_MODE_MAX
 > +};
 > +
->  enum hp_thermal_profile {
->  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
->  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
-> @@ -279,6 +315,24 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
->  	return ret;
->  }
->  
-> +static int hp_wmi_get_fan_speed(int fan)
+> +/**
+> + * enum wmaa_source - Backlight brightness control source identification
+> + * @WMAA_SOURCE_GPU:   Backlight brightness is controlled by the GPU.
+> + * @WMAA_SOURCE_EC:    Backlight brightness is controlled by the system's
+> + *                     Embedded Controller (EC).
+> + * @WMAA_SOURCE_AUX:   Backlight brightness is controlled over the DisplayPort
+> + *                     AUX channel.
+> + */
+> +enum wmaa_source {
+> +	WMAA_SOURCE_GPU = 1,
+> +	WMAA_SOURCE_EC = 2,
+> +	WMAA_SOURCE_AUX = 3,
+> +	WMAA_SOURCE_MAX
+> +};
+> +
+> +/**
+> + * struct wmaa_args - arguments for the ACPI WMAA method
+> + * @mode:    Pass in an &enum wmaa_mode value to select between getting or
+> + *           setting a value.
+> + * @val:     In parameter for value to set when operating in %WMAA_MODE_SET
+> + *           mode. Not used in %WMAA_MODE_GET or %WMAA_MODE_GET_MAX_LEVEL mode.
+> + * @ret:     Out parameter returning retrieved value when operating in
+> + *           %WMAA_MODE_GET or %WMAA_MODE_GET_MAX_LEVEL mode. Not used in
+> + *           %WMAA_MODE_SET mode.
+> + * @ignored: Padding; not used. The ACPI method expects a 24 byte params struct.
+> + *
+> + * This is the parameters structure for the ACPI WMAA method as wrapped by WMI.
+> + * The value passed in to @val or returned by @ret will be a brightness value
+> + * when the WMI method ID is %WMAA_METHOD_LEVEL, or an &enum wmaa_source value
+> + * when the WMI method ID is %WMAA_METHOD_SOURCE.
+> + */
+> +struct wmaa_args {
+> +	u32 mode;
+> +	u32 val;
+> +	u32 ret;
+> +	u32 ignored[3];
+> +};
+> +
+> +/**
+> + * wmi_call_wmaa() - helper function for calling ACPI WMAA via its WMI wrapper
+> + * @w:    Pointer to the struct wmi_device identified by %WMAA_WMI_GUID
+> + * @id:   The method ID for the ACPI WMAA method (e.g. %WMAA_METHOD_LEVEL or
+> + *        %WMAA_METHOD_SOURCE)
+> + * @mode: The operation to perform on the ACPI WMAA method (e.g. %WMAA_MODE_SET
+> + *        or %WMAA_MODE_GET)
+> + * @val:  Pointer to a value passed in by the caller when @mode is
+> + *        %WMAA_MODE_SET, or a value passed out to the caller when @mode is
+> + *        %WMAA_MODE_GET or %WMAA_MODE_GET_MAX_LEVEL.
+> + *
+> + * Returns 0 on success, or a negative error number on failure.
+> + */
+> +static int wmi_call_wmaa(struct wmi_device *w, enum wmaa_method id, enum wmaa_mode mode, u32 *val)
 > +{
-> +	u8 fsh, fsl;
-> +	char fan_data[4] = { fan, 0, 0, 0 };
+> +	struct wmaa_args args = {
+> +		.mode = mode,
+> +		.val = 0,
+> +		.ret = 0,
+> +	};
+> +	struct acpi_buffer buf = { (acpi_size)sizeof(args), &args };
+> +	acpi_status status;
 > +
-> +	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
-> +				       &fan_data, sizeof(fan_data),
-> +				       sizeof(fan_data));
-> +
-> +	if (ret != 0)
+> +	if (id < WMAA_METHOD_LEVEL || id >= WMAA_METHOD_MAX ||
+> +	    mode < WMAA_MODE_GET || mode >= WMAA_MODE_MAX)
 > +		return -EINVAL;
 > +
-> +	fsh = fan_data[2];
-> +	fsl = fan_data[3];
+> +	if (mode == WMAA_MODE_SET)
+> +		args.val = *val;
 > +
-> +	return (fsh << 8) | fsl;
+> +	status = wmidev_evaluate_method(w, 0, id, &buf, &buf);
+> +	if (ACPI_FAILURE(status)) {
+> +		dev_err(&w->dev, "ACPI WMAA failed: %s\n",
+> +			acpi_format_exception(status));
+> +		return -EIO;
+> +	}
+> +
+> +	if (mode != WMAA_MODE_SET)
+> +		*val = args.ret;
+> +
+> +	return 0;
 > +}
 > +
->  static int hp_wmi_read_int(int query)
->  {
->  	int val = 0, ret;
-> @@ -302,6 +356,73 @@ static int hp_wmi_hw_state(int mask)
->  	return !!(state & mask);
->  }
->  
-> +static int omen_thermal_profile_set(int mode)
+> +static int wmaa_backlight_update_status(struct backlight_device *bd)
 > +{
-> +	char buffer[2] = {0, mode};
+> +	struct wmi_device *wdev = bl_get_data(bd);
+> +
+> +	return wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_SET,
+> +			     &bd->props.brightness);
+> +}
+> +
+> +static int wmaa_backlight_get_brightness(struct backlight_device *bd)
+> +{
+> +	struct wmi_device *wdev = bl_get_data(bd);
+> +	u32 level;
 > +	int ret;
 > +
-> +	if (mode < 0 || mode > 2)
-> +		return -EINVAL;
+> +	ret = wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_GET, &level);
+> +	if (ret < 0)
+> +		return ret;
 > +
-> +	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
-> +				   &buffer, sizeof(buffer), sizeof(buffer));
-> +
-> +	if (ret)
-> +		return ret < 0 ? ret : -EINVAL;
-> +
-> +	return mode;
+> +	return level;
 > +}
 > +
-> +static bool is_omen_thermal_profile(void)
+> +static const struct backlight_ops wmaa_backlight_ops = {
+> +	.update_status = wmaa_backlight_update_status,
+> +	.get_brightness = wmaa_backlight_get_brightness,
+> +};
+> +
+> +static int wmaa_backlight_wmi_probe(struct wmi_device *wdev, const void *ctx)
 > +{
-> +	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
+> +	struct backlight_properties props = {};
+> +	struct backlight_device *bdev;
+> +	u32 source;
+> +	int ret;
 > +
-> +	if (board_name == NULL)
-> +		return false;
-> +
-> +	return match_string(omen_thermal_profile_boards,
-> +			    ARRAY_SIZE(omen_thermal_profile_boards),
-> +			    board_name) >= 0;
-> +}
-> +
-> +static int omen_thermal_profile_get(void)
-> +{
-> +	u8 data;
-> +
-> +	int ret = ec_read(HP_OMEN_EC_THERMAL_PROFILE_OFFSET, &data);
-> +
+> +	ret = wmi_call_wmaa(wdev, WMAA_METHOD_SOURCE, WMAA_MODE_GET, &source);
 > +	if (ret)
 > +		return ret;
 > +
-> +	return data;
-> +}
+> +	/*
+> +	 * This driver is only to be used when brightness control is handled
+> +	 * by the EC; otherwise, the GPU driver(s) should control brightness.
+> +	 */
+> +	if (source != WMAA_SOURCE_EC)
+> +		return -ENODEV;
 > +
-> +static int hp_wmi_fan_speed_max_set(int enabled)
-> +{
-> +	int ret;
+> +	/*
+> +	 * Identify this backlight device as a firmware device so that it can
+> +	 * be prioritized over any exposed GPU-driven raw device(s).
+> +	 */
+> +	props.type = BACKLIGHT_FIRMWARE;
 > +
-> +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
-> +				   &enabled, sizeof(enabled), sizeof(enabled));
-> +
+> +	ret = wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_GET_MAX_LEVEL,
+> +			    &props.max_brightness);
 > +	if (ret)
-> +		return ret < 0 ? ret : -EINVAL;
+> +		return ret;
 > +
-> +	return enabled;
-> +}
-> +
-> +static int hp_wmi_fan_speed_max_get(void)
-> +{
-> +	int val = 0, ret;
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
-> +				   &val, sizeof(val), sizeof(val));
-> +
+> +	ret = wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_GET,
+> +			    &props.brightness);
 > +	if (ret)
-> +		return ret < 0 ? ret : -EINVAL;
+> +		return ret;
 > +
-> +	return val;
+> +	bdev = devm_backlight_device_register(&wdev->dev, "wmaa_backlight",
+> +					      &wdev->dev, wdev,
+> +					      &wmaa_backlight_ops, &props);
+> +	return PTR_ERR_OR_ZERO(bdev);
 > +}
 > +
->  static int __init hp_wmi_bios_2008_later(void)
->  {
->  	int state = 0;
-> @@ -878,6 +999,58 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
->  	return err;
->  }
->  
-> +static int platform_profile_omen_get(struct platform_profile_handler *pprof,
-> +				enum platform_profile_option *profile)
-> +{
-> +	int tp;
+> +#define WMAA_WMI_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
 > +
-> +	tp = omen_thermal_profile_get();
-> +	if (tp < 0)
-> +		return tp;
-> +
-> +	switch (tp) {
-> +	case HP_OMEN_THERMAL_PROFILE_PERFORMANCE:
-> +		*profile = PLATFORM_PROFILE_PERFORMANCE;
-> +		break;
-> +	case HP_OMEN_THERMAL_PROFILE_DEFAULT:
-> +		*profile = PLATFORM_PROFILE_BALANCED;
-> +		break;
-> +	case HP_OMEN_THERMAL_PROFILE_COOL:
-> +		*profile = PLATFORM_PROFILE_COOL;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int platform_profile_omen_set(struct platform_profile_handler *pprof,
-> +				enum platform_profile_option profile)
-> +{
-> +	int err, tp;
-> +
-> +	switch (profile) {
-> +	case PLATFORM_PROFILE_PERFORMANCE:
-> +		tp = HP_OMEN_THERMAL_PROFILE_PERFORMANCE;
-> +		break;
-> +	case PLATFORM_PROFILE_BALANCED:
-> +		tp = HP_OMEN_THERMAL_PROFILE_DEFAULT;
-> +		break;
-> +	case PLATFORM_PROFILE_COOL:
-> +		tp = HP_OMEN_THERMAL_PROFILE_COOL;
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	err = omen_thermal_profile_set(tp);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
->  static int thermal_profile_get(void)
->  {
->  	return hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
-> @@ -945,20 +1118,39 @@ static int thermal_profile_setup(void)
->  {
->  	int err, tp;
->  
-> -	tp = thermal_profile_get();
-> -	if (tp < 0)
-> -		return tp;
-> +	if (is_omen_thermal_profile()) {
-> +		tp = omen_thermal_profile_get();
-> +		if (tp < 0)
-> +			return tp;
->  
-> -	/*
-> -	 * call thermal profile write command to ensure that the firmware correctly
-> -	 * sets the OEM variables for the DPTF
-> -	 */
-> -	err = thermal_profile_set(tp);
-> -	if (err)
-> -		return err;
-> +		/*
-> +		 * call thermal profile write command to ensure that the
-> +		 * firmware correctly sets the OEM variables
-> +		 */
-> +
-> +		err = omen_thermal_profile_set(tp);
-> +		if (err < 0)
-> +			return err;
-> +
-> +		platform_profile_handler.profile_get = platform_profile_omen_get;
-> +		platform_profile_handler.profile_set = platform_profile_omen_set;
-> +	} else {
-> +		tp = thermal_profile_get();
-> +
-> +		if (tp < 0)
-> +			return tp;
->  
-> -	platform_profile_handler.profile_get = platform_profile_get,
-> -	platform_profile_handler.profile_set = platform_profile_set,
-> +		/*
-> +		 * call thermal profile write command to ensure that the
-> +		 * firmware correctly sets the OEM variables for the DPTF
-> +		 */
-> +		err = thermal_profile_set(tp);
-> +		if (err)
-> +			return err;
-> +
-> +		platform_profile_handler.profile_get = platform_profile_get;
-> +		platform_profile_handler.profile_set = platform_profile_set;
-> +	}
->  
->  	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
->  	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
-> @@ -973,8 +1165,11 @@ static int thermal_profile_setup(void)
->  	return 0;
->  }
->  
-> +static int hp_wmi_hwmon_init(void);
-> +
->  static int __init hp_wmi_bios_setup(struct platform_device *device)
->  {
-> +	int err;
->  	/* clear detected rfkill devices */
->  	wifi_rfkill = NULL;
->  	bluetooth_rfkill = NULL;
-> @@ -984,6 +1179,11 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->  	if (hp_wmi_rfkill_setup(device))
->  		hp_wmi_rfkill2_setup(device);
->  
-> +	err = hp_wmi_hwmon_init();
-> +
-> +	if (err < 0)
-> +		return err;
-> +
->  	thermal_profile_setup();
->  
->  	return 0;
-> @@ -1068,6 +1268,112 @@ static struct platform_driver hp_wmi_driver = {
->  	.remove = __exit_p(hp_wmi_bios_remove),
->  };
->  
-> +static umode_t hp_wmi_hwmon_is_visible(const void *data,
-> +					enum hwmon_sensor_types type,
-> +					u32 attr, int channel)
-> +{
-> +	switch (type) {
-> +	case hwmon_pwm:
-> +		return 0644;
-> +	case hwmon_fan:
-> +		if (hp_wmi_get_fan_speed(channel) >= 0)
-> +			return 0444;
-> +		break;
-> +	default:
-> +		return 0;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> +			u32 attr, int channel, long *val)
-> +{
-> +	int ret;
-> +
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		ret = hp_wmi_get_fan_speed(channel);
-> +
-> +		if (ret < 0)
-> +			return ret;
-> +		*val = ret;
-> +		return 0;
-> +	case hwmon_pwm:
-> +		switch (hp_wmi_fan_speed_max_get()) {
-> +		case 0:
-> +			/* 0 is automatic fan, which is 2 for hwmon */
-> +			*val = 2;
-> +			return 0;
-> +		case 1:
-> +			/* 1 is max fan, which is 0
-> +			 * (no fan speed control) for hwmon
-> +			 */
-> +			*val = 0;
-> +			return 0;
-> +		default:
-> +			/* shouldn't happen */
-> +			return -ENODATA;
-> +		}
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
-> +			u32 attr, int channel, long val)
-> +{
-> +	switch (type) {
-> +	case hwmon_pwm:
-> +		switch (val) {
-> +		case 0:
-> +			/* 0 is no fan speed control (max), which is 1 for us */
-> +			return hp_wmi_fan_speed_max_set(1);
-> +		case 2:
-> +			/* 2 is automatic speed control, which is 0 for us */
-> +			return hp_wmi_fan_speed_max_set(0);
-> +		default:
-> +			/* we don't support manual fan speed control */
-> +			return -EINVAL;
-> +		}
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +}
-> +
-> +static const struct hwmon_channel_info *info[] = {
-> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
-> +	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE),
-> +	NULL
+> +static const struct wmi_device_id wmaa_backlight_wmi_id_table[] = {
+> +	{ .guid_string = WMAA_WMI_GUID },
+> +	{ }
 > +};
+> +MODULE_DEVICE_TABLE(wmi, wmaa_backlight_wmi_id_table);
 > +
-> +static const struct hwmon_ops ops = {
-> +	.is_visible = hp_wmi_hwmon_is_visible,
-> +	.read = hp_wmi_hwmon_read,
-> +	.write = hp_wmi_hwmon_write,
+> +static struct wmi_driver wmaa_backlight_wmi_driver = {
+> +	.driver = {
+> +		.name = "wmaa-backlight",
+> +	},
+> +	.probe = wmaa_backlight_wmi_probe,
+> +	.id_table = wmaa_backlight_wmi_id_table,
 > +};
+> +module_wmi_driver(wmaa_backlight_wmi_driver);
 > +
-> +static const struct hwmon_chip_info chip_info = {
-> +	.ops = &ops,
-> +	.info = info,
-> +};
-> +
-> +static int hp_wmi_hwmon_init(void)
-> +{
-> +	struct device *dev = &hp_wmi_platform_dev->dev;
-> +	struct device *hwmon;
-> +
-> +	hwmon = devm_hwmon_device_register_with_info(dev, "hp", &hp_wmi_driver,
-> +				&chip_info, NULL);
-> +
-> +	if (IS_ERR(hwmon)) {
-> +		dev_err(dev, "Could not register hp hwmon device\n");
-> +		return PTR_ERR(hwmon);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int __init hp_wmi_init(void)
->  {
->  	int event_capable = wmi_has_guid(HPWMI_EVENT_GUID);
+> +MODULE_AUTHOR("Daniel Dadap <ddadap@nvidia.com>");
+> +MODULE_DESCRIPTION("WMAA Backlight WMI driver");
+> +MODULE_LICENSE("GPL");
 > 
 
