@@ -2,838 +2,853 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4E3C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Sep 2021 06:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD62AC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 05:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC66661051
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Sep 2021 06:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868E560F6F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Sep 2021 05:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230468AbhILGhb (ORCPT
+        id S229833AbhIMFMG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 12 Sep 2021 02:37:31 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:57415 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230453AbhILGhb (ORCPT
+        Mon, 13 Sep 2021 01:12:06 -0400
+Received: from mga04.intel.com ([192.55.52.120]:4596 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229563AbhIMFMG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 12 Sep 2021 02:37:31 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id C9DAC5C0090;
-        Sun, 12 Sep 2021 02:36:16 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Sun, 12 Sep 2021 02:36:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=My5RjGLlKoj8R+WdXbccuZ/Z811BuRx+NBrovVsPRcs=; b=tiPMfwPJ
-        1Jq2y3On+k2ffQz7UDj64djfXsAQdNauEjHOOKz8Y2gsdQZaRDehRKlsvHNIWxcK
-        8W5w6FOnqcHxgVuNavug5iJ9F2swc6oSfR5+IXPo+hWqxtFIJ7oYJHFpUTo2MKoC
-        USAZJCBDAYqzAu3OH5L847+OjViqghTlZdTPng05dWF6tZOqxLYmWRH40oh7xQ3d
-        /o7ORtig8A5KP8zpJll66C6PTGKsZXgke4wYTRFT0LMlLMq2Q6Kk6FpBaqUscBT1
-        O1lvMIW0KMin34RFVtr2a/vDplTFZWLa++1DDPGI5IKNkfVM3+eTWZok/eVE+z1l
-        SkutM9rD3c3RXg==
-X-ME-Sender: <xms:4J89Yb1dCcTSWeNcnw4X7813iViD4c67GFXKhpDI72J2JqFmBk2nGQ>
-    <xme:4J89YaHTZnrMxYhPmjbH_6I4l4k0rKQy4FKOl4QHAmCrtO9jo5818CPFYl8uLSexA
-    bMVZWZYDhNmJFzF2J8>
-X-ME-Received: <xmr:4J89Yb4Zty3pwYEmBsEH4KVKjgOlbKZ2BbMFy1Whdkp67XHGZOmoKIabloW5>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudeggedguddtgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
-    jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepvdetkedvueehtdfhueduleehje
-    eihfdvtdetleelgefhkefhuefgheegkefftdehnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:4J89YQ0WIryR1bXolXilKZT1aeZoHsxpWL7DpalSVZgrTmiG0aBOFg>
-    <xmx:4J89YeHVkpB8ga7Z11Hv3zzYPfsU_CU5EaeEh31jyJCDR75G0piqTA>
-    <xmx:4J89YR_T_0S0ZusBmvOvVWsN-ZrW0kXulqkiiY10AS3p6fyqG4abSA>
-    <xmx:4J89YaDdPXOcQVyWtSpJ1YjUgwstRsur2znNLtcn5Q-2r5JlFyUxoQ>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 12 Sep 2021 02:36:12 -0400 (EDT)
-From:   "Luke D. Jones" <luke@ljones.dev>
-To:     linux-kernel@vger.kernel.org
-Cc:     hdegoede@redhat.com, pobrn@protonmail.com, linux@roeck-us.net,
-        platform-driver-x86@vger.kernel.org,
-        "Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v13 1/1] asus-wmi: Add support for custom fan curves
-Date:   Sun, 12 Sep 2021 18:35:59 +1200
-Message-Id: <20210912063559.14663-2-luke@ljones.dev>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210912063559.14663-1-luke@ljones.dev>
-References: <20210912063559.14663-1-luke@ljones.dev>
+        Mon, 13 Sep 2021 01:12:06 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10105"; a="219701211"
+X-IronPort-AV: E=Sophos;i="5.85,288,1624345200"; 
+   d="scan'208";a="219701211"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2021 22:10:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,288,1624345200"; 
+   d="scan'208";a="451426382"
+Received: from sumeshkkn (HELO localhost.localdomain) ([10.223.97.2])
+  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2021 22:10:42 -0700
+From:   sumesh.k.naduvalath@intel.com
+To:     hdegoede@redhat.com, mgross@linux.intel.com,
+        srinivas.pandruvada@linux.intel.com
+Cc:     srinivas.pandruvada@intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ganapathi.chinnu@intel.com,
+        nachiketa.kumar@intel.com, sumesh.k.naduvalath@intel.com
+Subject: [PATCH v4 1/1] ishtp: Add support for Intel ishtp eclite driver
+Date:   Mon, 13 Sep 2021 10:40:56 +0530
+Message-Id: <20210913051056.28736-1-sumesh.k.naduvalath@intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support for custom fan curves found on some ASUS ROG laptops.
+From: "K Naduvalath, Sumesh" <sumesh.k.naduvalath@intel.com>
 
-These laptops have the ability to set a custom curve for the CPU
-and GPU fans via two ACPI methods.
+This driver is for accessing the PSE (Programmable Service Engine) - an
+Embedded Controller like IP - using ISHTP (Integratd Sensor Hub Transport
+Protocol) to get battery, thermal and UCSI (USB Type-C Connector System
+Software Interface) related data from the platform.
 
-This patch adds two pwm<N> attributes to the hwmon sysfs,
-pwm1 for CPU fan, pwm2 for GPU fan. Both are under the hwmon of the
-name `asus_custom_fan_curve`. There is no safety check of the set
-fan curves - this must be done in userspace.
-
-The fans have settings [1,2,3] under pwm<N>_enable:
-1. Enable and write settings out
-2. Disable and use factory fan mode
-3. Same as 2, additionally restoring default factory curve.
-
-Use of 2 means that the curve the user has set is still stored and
-won't be erased, but the laptop will be using its default auto-fan
-mode. Re-enabling the manual mode then activates the curves again.
-
-Notes:
-- pwm<N>_enable = 0 is an invalid setting.
-- pwm is actually a percentage and is scaled on writing to device.
-
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
+Signed-off-by: K Naduvalath, Sumesh <sumesh.k.naduvalath@intel.com>
+Reviewed-by: Mark Gross <mgross@linux.intel.com>
 ---
- drivers/platform/x86/asus-wmi.c            | 607 ++++++++++++++++++++-
- include/linux/platform_data/x86/asus-wmi.h |   2 +
- 2 files changed, 601 insertions(+), 8 deletions(-)
+Changes:
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index e14fb5fa7324..097e41a48947 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -106,8 +106,17 @@ module_param(fnlock_default, bool, 0444);
+v4:
+-intel_ishtp_eclite.c ==> intel/ishtp_eclite.c
+-Cosmetic changes to Kconfig text
+
+v3:
+-Moved acpi_dev_put() to the end of ecl_ishtp_cl_remove
+-Registering ishtp event callback moved after acpi_find_eclite_device() call
+-cancel_work_sync for event and reset works moved after ishtp cl deinit
+
+v2:
+-Decoupled ACPI device search with acpi_find_device() and cache adev
+-Opregion context is protected with lock for both cmd and data handlers
+-Opregion length check added in various functions
+-ishtp_get_device and ishtp_put_device are removed
+-acpi_walk_dep_device_list() changed to acpi_dev_clear_dependencies()
+-Kconfig text, cosmetic and minor corrections
+
+v1:
+-Initial Version
+
+ MAINTAINERS                               |   6 +
+ drivers/platform/x86/intel/Kconfig        |  16 +
+ drivers/platform/x86/intel/Makefile       |   1 +
+ drivers/platform/x86/intel/ishtp_eclite.c | 701 ++++++++++++++++++++++
+ 4 files changed, 724 insertions(+)
+ create mode 100644 drivers/platform/x86/intel/ishtp_eclite.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index eeb4c70b3d5b..f99b327e82c7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9479,6 +9479,12 @@ L:	linux-crypto@vger.kernel.org
+ S:	Maintained
+ F:	drivers/crypto/ixp4xx_crypto.c
  
- #define WMI_EVENT_MASK			0xFFFF
- 
-+#define FAN_CURVE_POINTS		8
-+#define FAN_CURVE_BUF_LEN		(FAN_CURVE_POINTS * 2)
-+#define FAN_CURVE_DEV_CPU		0x00
-+#define FAN_CURVE_DEV_GPU		0x01
-+/* Mask to determine if setting temperature or percentage */
-+#define FAN_CURVE_PWM_MASK		0x04
++INTEL ISHTP ECLITE DRIVER
++M:	Sumesh K Naduvalath <sumesh.k.naduvalath@intel.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Supported
++F:	drivers/platform/x86/intel/ishtp_eclite.c
 +
- static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
+ INTEL IXP4XX QMGR, NPE, ETHERNET and HSS SUPPORT
+ M:	Krzysztof Halasa <khalasa@piap.pl>
+ S:	Maintained
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index 0b21468e1bd0..38ce3e344589 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -102,6 +102,22 @@ config INTEL_CHTDC_TI_PWRBTN
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel_chtdc_ti_pwrbtn.
  
-+static int throttle_thermal_policy_write(struct asus_wmi *);
++config INTEL_ISHTP_ECLITE
++	tristate "Intel ISHTP eclite controller Driver"
++	depends on INTEL_ISH_HID
++	depends on ACPI
++	help
++	  This driver is for accessing the PSE (Programmable Service Engine) -
++	  an Embedded Controller like IP - using ISHTP (Integrated Sensor Hub
++	  Transport Protocol) to get battery, thermal and UCSI (USB Type-C
++	  Connector System Software Interface) related data from the platform.
++	  Users who don't want to use discrete Embedded Controller on Intel's
++	  Elkhartlake platform can leverage this integrated solution of
++	  ECLite which is part of PSE subsystem.
 +
- static bool ashs_present(void)
- {
- 	int i = 0;
-@@ -122,7 +131,8 @@ struct bios_args {
- 	u32 arg0;
- 	u32 arg1;
- 	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
--	u32 arg4;
-+	u32 arg3;
-+	u32 arg4; /* Some ROG laptops require a full 5 input args */
- 	u32 arg5;
- } __packed;
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_ishtp_eclite.
++
+ config INTEL_MRFLD_PWRBTN
+ 	tristate "Intel Merrifield Basin Cove power button driver"
+ 	depends on INTEL_SOC_PMIC_MRFLD
+diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+index 8b3a3f7bab49..7c24be2423d8 100644
+--- a/drivers/platform/x86/intel/Makefile
++++ b/drivers/platform/x86/intel/Makefile
+@@ -21,6 +21,7 @@ intel-vbtn-y				:= vbtn.o
+ obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
  
-@@ -173,6 +183,19 @@ enum fan_type {
- 	FAN_TYPE_SPEC83,	/* starting in Spec 8.3, use CPU_FAN_CTRL */
- };
- 
+ # Intel miscellaneous drivers
++obj-$(CONFIG_INTEL_ISHTP_ECLITE)	+= ishtp_eclite.o
+ intel_int0002_vgpio-y			:= int0002_vgpio.o
+ obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+ intel_oaktrail-y			:= oaktrail.o
+diff --git a/drivers/platform/x86/intel/ishtp_eclite.c b/drivers/platform/x86/intel/ishtp_eclite.c
+new file mode 100644
+index 000000000000..12fc98a48657
+--- /dev/null
++++ b/drivers/platform/x86/intel/ishtp_eclite.c
+@@ -0,0 +1,701 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * The related ACPI method for testing availability also returns the factory
-+ * default fan curves. We save them here so that a user can reset custom
-+ * settings if required.
++ * Intel ECLite opregion driver for talking to ECLite firmware running on
++ * Intel Integrated Sensor Hub (ISH) using ISH Transport Protocol (ISHTP)
++ *
++ * Copyright (c) 2021, Intel Corporation.
 + */
-+struct fan_curve_data {
-+	bool enabled;
-+	u8 temps[FAN_CURVE_POINTS];
-+	u8 percents[FAN_CURVE_POINTS];
-+	u8 default_temps[FAN_CURVE_POINTS];
-+	u8 default_percents[FAN_CURVE_POINTS];
++
++#include <linux/acpi.h>
++#include <linux/bitops.h>
++#include <linux/device.h>
++#include <linux/errno.h>
++#include <linux/intel-ish-client-if.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/slab.h>
++#include <linux/suspend.h>
++#include <linux/types.h>
++#include <linux/uuid.h>
++#include <linux/uaccess.h>
++
++#define ECLITE_DATA_OPREGION_ID	0x9E
++#define ECLITE_CMD_OPREGION_ID	0x9F
++
++#define ECL_MSG_DATA	0x1
++#define ECL_MSG_EVENT	0x2
++
++#define ECL_ISH_READ	0x1
++#define ECL_ISH_WRITE	0x2
++#define ECL_ISH_HEADER_VERSION	0
++
++#define ECL_CL_RX_RING_SIZE	16
++#define ECL_CL_TX_RING_SIZE	8
++
++#define ECL_DATA_OPR_BUFLEN	384
++#define ECL_EVENTS_NOTIFY	333
++
++#define cmd_opr_offsetof(element)	offsetof(struct opregion_cmd, element)
++#define cl_data_to_dev(opr_dev)	ishtp_device((opr_dev)->cl_device)
++
++#ifndef BITS_TO_BYTES
++#define BITS_TO_BYTES(x) ((x) / 8)
++#endif
++
++struct opregion_cmd {
++	unsigned int command;
++	unsigned int offset;
++	unsigned int length;
++	unsigned int event_id;
 +};
 +
- struct asus_wmi {
- 	int dsts_id;
- 	int spec;
-@@ -220,6 +243,10 @@ struct asus_wmi {
- 	bool throttle_thermal_policy_available;
- 	u8 throttle_thermal_policy_mode;
- 
-+	bool cpu_fan_curve_available;
-+	bool gpu_fan_curve_available;
-+	struct fan_curve_data custom_fan_curves[2];
++struct opregion_data {
++	char data[ECL_DATA_OPR_BUFLEN];
++};
 +
- 	struct platform_profile_handler platform_profile_handler;
- 	bool platform_profile_support;
- 
-@@ -285,6 +312,103 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
- }
- EXPORT_SYMBOL_GPL(asus_wmi_evaluate_method);
- 
-+static int asus_wmi_evaluate_method5(u32 method_id,
-+		u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 *retval)
++struct opregion_context {
++	struct opregion_cmd cmd_area;
++	struct opregion_data data_area;
++};
++
++struct ecl_message_header {
++	unsigned int version:2;
++	unsigned int data_type:2;
++	unsigned int request_type:2;
++	unsigned int offset:9;
++	unsigned int data_len:9;
++	unsigned int event:8;
++};
++
++struct ecl_message {
++	struct ecl_message_header header;
++	char payload[ECL_DATA_OPR_BUFLEN];
++};
++
++struct ishtp_opregion_dev {
++	struct opregion_context opr_context;
++	struct ishtp_cl *ecl_ishtp_cl;
++	struct ishtp_cl_device *cl_device;
++	struct ishtp_fw_client *fw_client;
++	struct ishtp_cl_rb *rb;
++	struct acpi_device *adev;
++	unsigned int dsm_event_id;
++	unsigned int ish_link_ready;
++	unsigned int ish_read_done;
++	unsigned int acpi_init_done;
++	wait_queue_head_t read_wait;
++	struct work_struct event_work;
++	struct work_struct reset_work;
++	/* lock for opregion context */
++	struct mutex lock;
++
++};
++
++/* eclite ishtp client UUID: 6a19cc4b-d760-4de3-b14d-f25ebd0fbcd9 */
++static const guid_t ecl_ishtp_guid =
++	GUID_INIT(0x6a19cc4b, 0xd760, 0x4de3,
++		  0xb1, 0x4d, 0xf2, 0x5e, 0xbd, 0xf, 0xbc, 0xd9);
++
++/* ACPI DSM UUID: 91d936a7-1f01-49c6-a6b4-72f00ad8d8a5 */
++static const guid_t ecl_acpi_guid =
++	GUID_INIT(0x91d936a7, 0x1f01, 0x49c6, 0xa6,
++		  0xb4, 0x72, 0xf0, 0x0a, 0xd8, 0xd8, 0xa5);
++
++/**
++ * ecl_ish_cl_read() - Read data from eclite FW
++ *
++ * @opr_dev:  pointer to opregion device
++ *
++ * This function issues a read request to eclite FW and waits until it
++ * receives a response. When response is received the read data is copied to
++ * opregion buffer.
++ */
++static int ecl_ish_cl_read(struct ishtp_opregion_dev *opr_dev)
 +{
-+	struct bios_args args = {
-+		.arg0 = arg0,
-+		.arg1 = arg1,
-+		.arg2 = arg2,
-+		.arg3 = arg3,
-+		.arg4 = arg4,
-+	};
-+	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	acpi_status status;
-+	union acpi_object *obj;
-+	u32 tmp = 0;
++	struct ecl_message_header header;
++	int len, rv;
 +
-+	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 0, method_id,
-+				     &input, &output);
-+
-+	if (ACPI_FAILURE(status))
++	if (!opr_dev->ish_link_ready)
 +		return -EIO;
 +
-+	obj = (union acpi_object *)output.pointer;
-+	if (obj && obj->type == ACPI_TYPE_INTEGER)
-+		tmp = (u32) obj->integer.value;
-+
-+	if (retval)
-+		*retval = tmp;
-+
-+	kfree(obj);
-+
-+	if (tmp == ASUS_WMI_UNSUPPORTED_METHOD)
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Returns as an error if the method output is not a buffer. Typically this
-+ * means that the method called is unsupported.
-+ */
-+static int asus_wmi_evaluate_method_buf(u32 method_id,
-+		u32 arg0, u32 arg1, u8 *ret_buffer, size_t size)
-+{
-+	struct bios_args args = {
-+		.arg0 = arg0,
-+		.arg1 = arg1,
-+		.arg2 = 0,
-+	};
-+	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	acpi_status status;
-+	union acpi_object *obj;
-+	int err = 0;
-+
-+	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 0, method_id,
-+				     &input, &output);
-+
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	obj = (union acpi_object *)output.pointer;
-+
-+	switch (obj->type) {
-+	case ACPI_TYPE_BUFFER:
-+		if (obj->buffer.length > size)
-+			err = -ENOSPC;
-+		if (obj->buffer.length == 0)
-+			err = -ENODATA;
-+
-+		memcpy(ret_buffer, obj->buffer.pointer, obj->buffer.length);
-+		break;
-+	case ACPI_TYPE_INTEGER:
-+		err = (u32)obj->integer.value;
-+
-+		if (err == ASUS_WMI_UNSUPPORTED_METHOD)
-+			err = -ENODEV;
-+		/*
-+		 * At least one method returns a 0 with no buffer if no arg
-+		 * is provided, such as ASUS_WMI_DEVID_CPU_FAN_CURVE
-+		 */
-+		if (err == 0)
-+			err = -ENODATA;
-+		break;
-+	default:
-+		err = -ENODATA;
-+		break;
-+	}
-+
-+	kfree(obj);
-+
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
- static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
- {
- 	struct acpi_buffer input;
-@@ -1806,6 +1930,13 @@ static ssize_t pwm1_enable_store(struct device *dev,
- 	}
- 
- 	asus->fan_pwm_mode = state;
-+
-+	/* Must set to disabled if mode is toggled */
-+	if (asus->cpu_fan_curve_available)
-+		asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
-+	if (asus->gpu_fan_curve_available)
-+		asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled = false;
-+
- 	return count;
- }
- 
-@@ -1953,9 +2084,9 @@ static int fan_boost_mode_check_present(struct asus_wmi *asus)
- 
- static int fan_boost_mode_write(struct asus_wmi *asus)
- {
--	int err;
--	u8 value;
- 	u32 retval;
-+	u8 value;
-+	int err;
- 
- 	value = asus->fan_boost_mode;
- 
-@@ -2013,10 +2144,10 @@ static ssize_t fan_boost_mode_store(struct device *dev,
- 				    struct device_attribute *attr,
- 				    const char *buf, size_t count)
- {
--	int result;
--	u8 new_mode;
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	u8 mask = asus->fan_boost_mode_mask;
-+	u8 new_mode;
-+	int result;
- 
- 	result = kstrtou8(buf, 10, &new_mode);
- 	if (result < 0) {
-@@ -2043,6 +2174,454 @@ static ssize_t fan_boost_mode_store(struct device *dev,
- // Fan boost mode: 0 - normal, 1 - overboost, 2 - silent
- static DEVICE_ATTR_RW(fan_boost_mode);
- 
-+/* Custom fan curves per-profile **********************************************/
-+
-+static void fan_curve_copy_from_buf(struct fan_curve_data *data, u8 *buf)
-+{
-+	int i;
-+
-+	for (i = 0; i < FAN_CURVE_POINTS; i++) {
-+		data->temps[i] = buf[i];
-+		data->default_temps[i] = buf[i];
-+	}
-+
-+	for (i = 0; i < FAN_CURVE_POINTS; i++) {
-+		data->percents[i] =
-+			255 * buf[i + FAN_CURVE_POINTS] / 100;
-+		data->default_percents[i] =
-+			255 * buf[i + FAN_CURVE_POINTS] / 100;
-+	}
-+}
-+
-+static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
-+{
-+	struct fan_curve_data *curves;
-+	u8 buf[FAN_CURVE_BUF_LEN];
-+	int fan_idx = 0;
-+	u8 mode = 0;
-+	int err;
-+
-+	if (asus->throttle_thermal_policy_available)
-+		mode = asus->throttle_thermal_policy_mode;
-+	/* DEVID_<C/G>PU_FAN_CURVE is switched for OVERBOOST vs SILENT */
-+	if (mode == 2)
-+		mode = 1;
-+	if (mode == 1)
-+		mode = 2;
-+
-+	if (fan_dev == ASUS_WMI_DEVID_GPU_FAN_CURVE)
-+		fan_idx = FAN_CURVE_DEV_GPU;
-+
-+	curves = &asus->custom_fan_curves[fan_idx];
-+	err = asus_wmi_evaluate_method_buf(asus->dsts_id, fan_dev, mode, buf,
-+					   FAN_CURVE_BUF_LEN);
-+	if (err)
-+		return err;
-+
-+	fan_curve_copy_from_buf(curves, buf);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Check if capability exists, and populate defaults.
-+ */
-+static int fan_curve_check_present(struct asus_wmi *asus, bool *available,
-+				   u32 fan_dev)
-+{
-+	int err;
-+
-+	*available = false;
-+
-+	err = fan_curve_get_factory_default(asus, fan_dev);
-+	if (err) {
-+		if (err == -ENODEV)
-+			return 0;
-+		return err;
-+	}
-+
-+	*available = true;
-+	return 0;
-+}
-+
-+static struct fan_curve_data *fan_curve_data_select(struct asus_wmi *asus,
-+					    struct device_attribute *attr)
-+{
-+	/* Determine which fan the attribute is for */
-+	int nr = to_sensor_dev_attr_2(attr)->nr;
-+	int fan = nr & FAN_CURVE_DEV_GPU;
-+
-+	return &asus->custom_fan_curves[fan];
-+}
-+
-+static ssize_t fan_curve_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	/* Determine if temperature or pwm */
-+	int nr = to_sensor_dev_attr_2(attr)->nr;
-+	struct fan_curve_data *data;
-+	int value, index;
-+
-+	data = fan_curve_data_select(asus, attr);
-+	index = to_sensor_dev_attr_2(attr)->index;
-+
-+	if (nr & FAN_CURVE_PWM_MASK)
-+		value = data->percents[index];
-+	else
-+		value = data->temps[index];
-+
-+	return sysfs_emit(buf, "%d\n", value);
-+}
-+
-+/*
-+ * "fan_dev" is the related WMI method such as ASUS_WMI_DEVID_CPU_FAN_CURVE.
-+ */
-+static int fan_curve_write(struct asus_wmi *asus,
-+			   struct device_attribute *attr, u32 fan_dev)
-+{
-+	struct fan_curve_data *data = fan_curve_data_select(asus, attr);
-+	u32 arg1 = 0, arg2 = 0, arg3 = 0, arg4 = 0;
-+	u8 *percents = data->percents;
-+	u8 *temps = data->temps;
-+	int ret, i, shift = 0;
-+
-+	for (i = 0; i < FAN_CURVE_POINTS / 2; i++) {
-+		arg1 += (temps[i]) << shift;
-+		arg2 += (temps[i + 4]) << shift;
-+		/* Scale to percentage for device */
-+		arg3 += (100 * percents[i] / 255) << shift;
-+		arg4 += (100 * percents[i + 4] / 255) << shift;
-+		shift += 8;
-+	}
-+
-+	return asus_wmi_evaluate_method5(ASUS_WMI_METHODID_DEVS, fan_dev, arg1,
-+					 arg2, arg3, arg4, &ret);
-+}
-+
-+/*
-+ * Called on curve enable/disable. This should be the only way to write out the
-+ * fan curves. This avoids potential lockups on write to ACPI for every change.
-+ */
-+static int fan_curve_write_data(struct asus_wmi *asus,
-+				struct device_attribute *attr)
-+{
-+	int err;
-+
-+	if (asus->cpu_fan_curve_available) {
-+		err = fan_curve_write(asus, attr, ASUS_WMI_DEVID_CPU_FAN_CURVE);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (asus->gpu_fan_curve_available) {
-+		err = fan_curve_write(asus, attr, ASUS_WMI_DEVID_GPU_FAN_CURVE);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static ssize_t fan_curve_store(struct device *dev,
-+			       struct device_attribute *attr, const char *buf,
-+			       size_t count)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	struct fan_curve_data *data;
-+	u8 value;
-+	int err;
-+
-+	int index = to_sensor_dev_attr_2(attr)->index;
-+	int nr = to_sensor_dev_attr_2(attr)->nr;
-+	int pwm = nr & FAN_CURVE_PWM_MASK;
-+
-+	data = fan_curve_data_select(asus, attr);
-+
-+	err = kstrtou8(buf, 10, &value);
-+	if (err < 0)
-+		return err;
-+
-+	if (pwm) {
-+		data->percents[index] = value;
-+	} else {
-+		data->temps[index] = value;
-+	}
-+
-+	/*
-+	 * Mark as disabled so the user has to explicitly enable to apply a
-+	 * changed fan curve. This prevents potential lockups from writing out
-+	 * many changes as one-write-per-change.
-+	 */
-+	data->enabled = false;
-+
-+	return count;
-+}
-+
-+static ssize_t fan_curve_enable_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	struct fan_curve_data *data = fan_curve_data_select(asus, attr);
-+
-+	return sysfs_emit(buf, "%d\n", data->enabled);
-+}
-+
-+static int fan_curve_set_default(struct asus_wmi *asus)
-+{
-+	int err;
-+
-+	err = fan_curve_get_factory_default(
-+		asus, ASUS_WMI_DEVID_CPU_FAN_CURVE);
-+	if (err)
-+		return err;
-+
-+	err = fan_curve_get_factory_default(
-+		asus, ASUS_WMI_DEVID_GPU_FAN_CURVE);
-+	if (err)
-+		return err;
-+	return 0;
-+}
-+
-+static ssize_t fan_curve_enable_store(struct device *dev,
-+				      struct device_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	struct fan_curve_data *data;
-+	int value;
-+	int err;
-+
-+	data = fan_curve_data_select(asus, attr);
-+
-+	err = kstrtoint(buf, 10, &value);
-+	if (err < 0)
-+		return err;
-+
-+	switch (value) {
-+	case 1:
-+		data->enabled = true;
-+		break;
-+	case 2:
-+		data->enabled = false;
-+		break;
-+	/*
-+	 * Auto + reset the fan curve data to defaults. Make it an explicit
-+	 * option so that users don't accidentally overwrite a set fan curve.
-+	 */
-+	case 3:
-+		err = fan_curve_set_default(asus);
-+		if (err)
-+			return err;
-+		data->enabled = false;
-+		break;
-+	default:
++	if ((opr_dev->opr_context.cmd_area.offset +
++	     opr_dev->opr_context.cmd_area.length) > ECL_DATA_OPR_BUFLEN) {
 +		return -EINVAL;
-+	};
-+
-+	/*
-+	 * For machines with throttle this is the only way to reset fans to
-+	 * default mode of operation (does not erase curve data).
-+	 */
-+	if (asus->throttle_thermal_policy_available && !data->enabled) {
-+		err = throttle_thermal_policy_write(asus);
-+		if (err)
-+			return err;
-+	}
-+	/* Similar is true for laptops with this fan */
-+	if (asus->fan_type == FAN_TYPE_SPEC83) {
-+		err = asus_fan_set_auto(asus);
-+		if (err)
-+			return err;
-+	}
-+	/*
-+	 * Machines without either need to write their defaults back always.
-+	 * This is more of a safeguard against ASUS faulty ACPI tables.
-+	 */
-+	if (!asus->throttle_thermal_policy_available
-+	    && asus->fan_type != FAN_TYPE_SPEC83 && !data->enabled) {
-+		err = fan_curve_set_default(asus);
-+		if (err)
-+			return err;
-+		err = fan_curve_write_data(asus, attr);
-+		if (err)
-+			return err;
 +	}
 +
-+	if (data->enabled) {
-+		err = fan_curve_write_data(asus, attr);
-+		if (err)
-+			return err;
++	header.version = ECL_ISH_HEADER_VERSION;
++	header.data_type = ECL_MSG_DATA;
++	header.request_type = ECL_ISH_READ;
++	header.offset = opr_dev->opr_context.cmd_area.offset;
++	header.data_len = opr_dev->opr_context.cmd_area.length;
++	header.event = opr_dev->opr_context.cmd_area.event_id;
++	len = sizeof(header);
++
++	opr_dev->ish_read_done = false;
++	rv = ishtp_cl_send(opr_dev->ecl_ishtp_cl, (uint8_t *)&header, len);
++	if (rv) {
++		dev_err(cl_data_to_dev(opr_dev), "ish-read : send failed\n");
++		return -EIO;
 +	}
 +
-+	return count;
-+}
++	dev_dbg(cl_data_to_dev(opr_dev),
++		"[ish_rd] Req: off : %x, len : %x\n",
++		header.offset,
++		header.data_len);
 +
-+/* CPU */
-+static SENSOR_DEVICE_ATTR_RW(pwm1_enable, fan_curve_enable, FAN_CURVE_DEV_CPU);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 0);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 1);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 2);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point4_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point5_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point6_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point7_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 6);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point8_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 7);
-+
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 0);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 1);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 2);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point4_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point5_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point6_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point7_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 6);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point8_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 7);
-+
-+/* GPU */
-+static SENSOR_DEVICE_ATTR_RW(pwm2_enable, fan_curve_enable, FAN_CURVE_DEV_GPU);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point1_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 0);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point2_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 1);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point3_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 2);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point4_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point5_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point6_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point7_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 6);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point8_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 7);
-+
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point1_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 0);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point2_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 1);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point3_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 2);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point4_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point5_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point6_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point7_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 6);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point8_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 7);
-+
-+static struct attribute *asus_fan_curve_attr[] = {
-+	/* CPU */
-+	&sensor_dev_attr_pwm1_enable.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point1_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point2_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point3_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point4_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point5_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point6_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point7_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point8_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point1_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point2_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point3_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point4_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point5_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point6_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point7_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point8_pwm.dev_attr.attr,
-+	/* GPU */
-+	&sensor_dev_attr_pwm2_enable.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point1_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point2_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point3_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point4_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point5_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point6_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point7_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point8_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point1_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point2_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point3_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point4_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point5_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point6_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point7_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point8_pwm.dev_attr.attr,
-+	NULL
-+};
-+
-+static umode_t asus_fan_curve_is_visible(struct kobject *kobj,
-+					 struct attribute *attr, int idx)
-+{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct asus_wmi *asus = dev_get_drvdata(dev->parent);
-+
-+	if (asus->cpu_fan_curve_available)
-+		return 0644;
-+
-+	if (asus->gpu_fan_curve_available)
-+		return 0644;
++	rv = wait_event_interruptible_timeout(opr_dev->read_wait,
++					      opr_dev->ish_read_done,
++					      2 * HZ);
++	if (!rv) {
++		dev_err(cl_data_to_dev(opr_dev),
++			"[ish_rd] No response from firmware\n");
++		return -EIO;
++	}
 +
 +	return 0;
 +}
 +
-+static const struct attribute_group asus_fan_curve_attr_group = {
-+	.is_visible = asus_fan_curve_is_visible,
-+	.attrs = asus_fan_curve_attr,
-+};
-+__ATTRIBUTE_GROUPS(asus_fan_curve_attr);
-+
-+/*
-+ * Must be initialised after throttle_thermal_policy_check_present() as
-+ * we check the status of throttle_thermal_policy_available during init.
++/**
++ * ecl_ish_cl_write() - This function writes data to eclite FW.
++ *
++ * @opr_dev:  pointer to opregion device
++ *
++ * This function writes data to eclite FW.
 + */
-+static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
++static int ecl_ish_cl_write(struct ishtp_opregion_dev *opr_dev)
 +{
-+	struct device *dev = &asus->platform_device->dev;
-+	struct device *hwmon;
-+	int err;
++	struct ecl_message message;
++	int len;
 +
-+	err = fan_curve_check_present(asus, &asus->cpu_fan_curve_available,
-+				      ASUS_WMI_DEVID_CPU_FAN_CURVE);
-+	if (err)
-+		return err;
++	if (!opr_dev->ish_link_ready)
++		return -EIO;
 +
-+	err = fan_curve_check_present(asus, &asus->gpu_fan_curve_available,
-+				      ASUS_WMI_DEVID_GPU_FAN_CURVE);
-+	if (err)
-+		return err;
-+
-+	hwmon = devm_hwmon_device_register_with_groups(
-+		dev, "asus_custom_fan_curve", asus, asus_fan_curve_attr_groups);
-+
-+	if (IS_ERR(hwmon)) {
-+		dev_err(dev,
-+			"Could not register asus_custom_fan_curve device\n");
-+		return PTR_ERR(hwmon);
++	if ((opr_dev->opr_context.cmd_area.offset +
++	     opr_dev->opr_context.cmd_area.length) > ECL_DATA_OPR_BUFLEN) {
++		return -EINVAL;
 +	}
++
++	message.header.version = ECL_ISH_HEADER_VERSION;
++	message.header.data_type = ECL_MSG_DATA;
++	message.header.request_type = ECL_ISH_WRITE;
++	message.header.offset = opr_dev->opr_context.cmd_area.offset;
++	message.header.data_len = opr_dev->opr_context.cmd_area.length;
++	message.header.event = opr_dev->opr_context.cmd_area.event_id;
++	len = sizeof(struct ecl_message_header) + message.header.data_len;
++
++	memcpy(message.payload,
++	       opr_dev->opr_context.data_area.data + message.header.offset,
++	       message.header.data_len);
++
++	dev_dbg(cl_data_to_dev(opr_dev),
++		"[ish_wr] off : %x, len : %x\n",
++		message.header.offset,
++		message.header.data_len);
++
++	return ishtp_cl_send(opr_dev->ecl_ishtp_cl, (uint8_t *)&message, len);
++}
++
++static acpi_status
++ecl_opregion_cmd_handler(u32 function, acpi_physical_address address,
++			 u32 bits, u64 *value64,
++			 void *handler_context, void *region_context)
++{
++	struct ishtp_opregion_dev *opr_dev;
++	struct opregion_cmd *cmd;
++	acpi_status status = AE_OK;
++
++	if (!region_context || !value64)
++		return AE_BAD_PARAMETER;
++
++	if (function == ACPI_READ)
++		return AE_ERROR;
++
++	opr_dev = (struct ishtp_opregion_dev *)region_context;
++
++	mutex_lock(&opr_dev->lock);
++
++	cmd = &opr_dev->opr_context.cmd_area;
++
++	switch (address) {
++	case cmd_opr_offsetof(command):
++		cmd->command = (u32)*value64;
++
++		if (cmd->command == ECL_ISH_READ)
++			status =  ecl_ish_cl_read(opr_dev);
++		else if (cmd->command == ECL_ISH_WRITE)
++			status = ecl_ish_cl_write(opr_dev);
++		else
++			status = AE_ERROR;
++		break;
++	case cmd_opr_offsetof(offset):
++		cmd->offset = (u32)*value64;
++		break;
++	case cmd_opr_offsetof(length):
++		cmd->length = (u32)*value64;
++		break;
++	case cmd_opr_offsetof(event_id):
++		cmd->event_id = (u32)*value64;
++		break;
++	default:
++		status = AE_ERROR;
++	}
++
++	mutex_unlock(&opr_dev->lock);
++
++	return status;
++}
++
++static acpi_status
++ecl_opregion_data_handler(u32 function, acpi_physical_address address,
++			  u32 bits, u64 *value64,
++			  void *handler_context, void *region_context)
++{
++	struct ishtp_opregion_dev *opr_dev;
++	unsigned int bytes = BITS_TO_BYTES(bits);
++	void *data_addr;
++
++	if (!region_context || !value64)
++		return AE_BAD_PARAMETER;
++
++	if (address + bytes > ECL_DATA_OPR_BUFLEN)
++		return AE_BAD_PARAMETER;
++
++	opr_dev = (struct ishtp_opregion_dev *)region_context;
++
++	mutex_lock(&opr_dev->lock);
++
++	data_addr = &opr_dev->opr_context.data_area.data[address];
++
++	if (function == ACPI_READ) {
++		memcpy(value64, data_addr, bytes);
++	} else if (function == ACPI_WRITE) {
++		memcpy(data_addr, value64, bytes);
++	} else {
++		mutex_unlock(&opr_dev->lock);
++		return AE_BAD_PARAMETER;
++	}
++
++	mutex_unlock(&opr_dev->lock);
++
++	return AE_OK;
++}
++
++static int acpi_find_eclite_device(struct ishtp_opregion_dev *opr_dev)
++{
++	struct acpi_device *adev;
++
++	/* Find ECLite device and save reference */
++	adev = acpi_dev_get_first_match_dev("INTC1035", NULL, -1);
++	if (!adev) {
++		dev_err(cl_data_to_dev(opr_dev), "eclite ACPI device not found\n");
++		return -ENODEV;
++	}
++
++	opr_dev->adev = adev;
 +
 +	return 0;
 +}
 +
- /* Throttle thermal policy ****************************************************/
- 
- static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
-@@ -2053,8 +2632,8 @@ static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
- 	asus->throttle_thermal_policy_available = false;
- 
- 	err = asus_wmi_get_devstate(asus,
--				    ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
--				    &result);
-+		ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-+		&result);
- 	if (err) {
- 		if (err == -ENODEV)
- 			return 0;
-@@ -2092,6 +2671,12 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
- 		return -EIO;
- 	}
- 
-+	/* Must set to disabled if mode is toggled */
-+	if (asus->cpu_fan_curve_available)
-+		asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
-+	if (asus->gpu_fan_curve_available)
-+		asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled = false;
++static int acpi_opregion_init(struct ishtp_opregion_dev *opr_dev)
++{
++	acpi_status status;
 +
- 	return 0;
- }
- 
-@@ -2901,7 +3486,7 @@ static int show_call(struct seq_file *m, void *data)
- 	if (ACPI_FAILURE(status))
- 		return -EIO;
- 
--	obj = (union acpi_object *)output.pointer;
-+	obj = output.pointer;
- 	if (obj && obj->type == ACPI_TYPE_INTEGER)
- 		seq_printf(m, "%#x(%#x, %#x) = %#x\n", asus->debug.method_id,
- 			   asus->debug.dev_id, asus->debug.ctrl_param,
-@@ -3035,6 +3620,10 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (err)
- 		goto fail_hwmon;
- 
-+	err = asus_wmi_custom_fan_curve_init(asus);
-+	if (err)
-+		goto fail_custom_fan_curve;
++	status = acpi_install_address_space_handler(opr_dev->adev->handle,
++						    ECLITE_CMD_OPREGION_ID,
++						    ecl_opregion_cmd_handler,
++						    NULL, opr_dev);
++	if (ACPI_FAILURE(status)) {
++		dev_err(cl_data_to_dev(opr_dev),
++			"cmd space handler install failed\n");
++		return -ENODEV;
++	}
 +
- 	err = asus_wmi_led_init(asus);
- 	if (err)
- 		goto fail_leds;
-@@ -3106,6 +3695,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	asus_wmi_sysfs_exit(asus->platform_device);
- fail_sysfs:
- fail_throttle_thermal_policy:
-+fail_custom_fan_curve:
- fail_platform_profile_setup:
- 	if (asus->platform_profile_support)
- 		platform_profile_remove();
-@@ -3131,6 +3721,7 @@ static int asus_wmi_remove(struct platform_device *device)
- 	asus_wmi_debugfs_exit(asus);
- 	asus_wmi_sysfs_exit(asus->platform_device);
- 	asus_fan_set_auto(asus);
-+	throttle_thermal_policy_set_default(asus);
- 	asus_wmi_battery_exit(asus);
- 
- 	if (asus->platform_profile_support)
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 17dc5cb6f3f2..a571b47ff362 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -77,6 +77,8 @@
- #define ASUS_WMI_DEVID_THERMAL_CTRL	0x00110011
- #define ASUS_WMI_DEVID_FAN_CTRL		0x00110012 /* deprecated */
- #define ASUS_WMI_DEVID_CPU_FAN_CTRL	0x00110013
-+#define ASUS_WMI_DEVID_CPU_FAN_CURVE	0x00110024
-+#define ASUS_WMI_DEVID_GPU_FAN_CURVE	0x00110025
- 
- /* Power */
- #define ASUS_WMI_DEVID_PROCESSOR_STATE	0x00120012
++	status = acpi_install_address_space_handler(opr_dev->adev->handle,
++						    ECLITE_DATA_OPREGION_ID,
++						    ecl_opregion_data_handler,
++						    NULL, opr_dev);
++	if (ACPI_FAILURE(status)) {
++		dev_err(cl_data_to_dev(opr_dev),
++			"data space handler install failed\n");
++
++		acpi_remove_address_space_handler(opr_dev->adev->handle,
++						  ECLITE_CMD_OPREGION_ID,
++						  ecl_opregion_cmd_handler);
++		return -ENODEV;
++	}
++	opr_dev->acpi_init_done = true;
++
++	dev_dbg(cl_data_to_dev(opr_dev), "Opregion handlers are installed\n");
++
++	return 0;
++}
++
++static void acpi_opregion_deinit(struct ishtp_opregion_dev *opr_dev)
++{
++	acpi_remove_address_space_handler(opr_dev->adev->handle,
++					  ECLITE_CMD_OPREGION_ID,
++					  ecl_opregion_cmd_handler);
++
++	acpi_remove_address_space_handler(opr_dev->adev->handle,
++					  ECLITE_DATA_OPREGION_ID,
++					  ecl_opregion_data_handler);
++	opr_dev->acpi_init_done = false;
++}
++
++static void ecl_acpi_invoke_dsm(struct work_struct *work)
++{
++	struct ishtp_opregion_dev *opr_dev;
++	union acpi_object *obj;
++
++	opr_dev = container_of(work, struct ishtp_opregion_dev, event_work);
++	if (!opr_dev->acpi_init_done)
++		return;
++
++	obj = acpi_evaluate_dsm(opr_dev->adev->handle, &ecl_acpi_guid, 0,
++				opr_dev->dsm_event_id, NULL);
++	if (!obj) {
++		dev_warn(cl_data_to_dev(opr_dev), "_DSM fn call failed\n");
++		return;
++	}
++
++	dev_dbg(cl_data_to_dev(opr_dev), "Exec DSM function code: %d success\n",
++		opr_dev->dsm_event_id);
++
++	ACPI_FREE(obj);
++}
++
++static void ecl_ish_process_rx_data(struct ishtp_opregion_dev *opr_dev)
++{
++	struct ecl_message *message =
++		(struct ecl_message *)opr_dev->rb->buffer.data;
++
++	dev_dbg(cl_data_to_dev(opr_dev),
++		"[ish_rd] Resp: off : %x, len : %x\n",
++		message->header.offset,
++		message->header.data_len);
++
++	if ((message->header.offset + message->header.data_len) >
++			ECL_DATA_OPR_BUFLEN) {
++		return;
++	}
++
++	memcpy(opr_dev->opr_context.data_area.data + message->header.offset,
++	       message->payload, message->header.data_len);
++
++	opr_dev->ish_read_done = true;
++	wake_up_interruptible(&opr_dev->read_wait);
++}
++
++static void ecl_ish_process_rx_event(struct ishtp_opregion_dev *opr_dev)
++{
++	struct ecl_message_header *header =
++		(struct ecl_message_header *)opr_dev->rb->buffer.data;
++
++	dev_dbg(cl_data_to_dev(opr_dev),
++		"[ish_ev] Evt received: %8x\n", header->event);
++
++	opr_dev->dsm_event_id = header->event;
++	schedule_work(&opr_dev->event_work);
++}
++
++static int ecl_ish_cl_enable_events(struct ishtp_opregion_dev *opr_dev,
++				    bool config_enable)
++{
++	struct ecl_message message;
++	int len;
++
++	message.header.version = ECL_ISH_HEADER_VERSION;
++	message.header.data_type = ECL_MSG_DATA;
++	message.header.request_type = ECL_ISH_WRITE;
++	message.header.offset = ECL_EVENTS_NOTIFY;
++	message.header.data_len = 1;
++	message.payload[0] = config_enable;
++
++	len = sizeof(struct ecl_message_header) + message.header.data_len;
++
++	return ishtp_cl_send(opr_dev->ecl_ishtp_cl, (uint8_t *)&message, len);
++}
++
++static void ecl_ishtp_cl_event_cb(struct ishtp_cl_device *cl_device)
++{
++	struct ishtp_cl *ecl_ishtp_cl = ishtp_get_drvdata(cl_device);
++	struct ishtp_opregion_dev *opr_dev;
++	struct ecl_message_header *header;
++	struct ishtp_cl_rb *rb;
++
++	opr_dev = ishtp_get_client_data(ecl_ishtp_cl);
++	while ((rb = ishtp_cl_rx_get_rb(opr_dev->ecl_ishtp_cl)) != NULL) {
++		opr_dev->rb = rb;
++		header = (struct ecl_message_header *)rb->buffer.data;
++
++		if (header->data_type == ECL_MSG_DATA)
++			ecl_ish_process_rx_data(opr_dev);
++		else if (header->data_type == ECL_MSG_EVENT)
++			ecl_ish_process_rx_event(opr_dev);
++		else
++			/* Got an event with wrong data_type, ignore it */
++			dev_err(cl_data_to_dev(opr_dev),
++				"[ish_cb] Received wrong data_type\n");
++
++		ishtp_cl_io_rb_recycle(rb);
++	}
++}
++
++static int ecl_ishtp_cl_init(struct ishtp_cl *ecl_ishtp_cl)
++{
++	struct ishtp_opregion_dev *opr_dev =
++		ishtp_get_client_data(ecl_ishtp_cl);
++	struct ishtp_fw_client *fw_client;
++	struct ishtp_device *dev;
++	int rv;
++
++	rv = ishtp_cl_link(ecl_ishtp_cl);
++	if (rv) {
++		dev_err(cl_data_to_dev(opr_dev), "ishtp_cl_link failed\n");
++		return	rv;
++	}
++
++	dev = ishtp_get_ishtp_device(ecl_ishtp_cl);
++
++	/* Connect to FW client */
++	ishtp_set_tx_ring_size(ecl_ishtp_cl, ECL_CL_TX_RING_SIZE);
++	ishtp_set_rx_ring_size(ecl_ishtp_cl, ECL_CL_RX_RING_SIZE);
++
++	fw_client = ishtp_fw_cl_get_client(dev, &ecl_ishtp_guid);
++	if (!fw_client) {
++		dev_err(cl_data_to_dev(opr_dev), "fw client not found\n");
++		return -ENOENT;
++	}
++
++	ishtp_cl_set_fw_client_id(ecl_ishtp_cl,
++				  ishtp_get_fw_client_id(fw_client));
++
++	ishtp_set_connection_state(ecl_ishtp_cl, ISHTP_CL_CONNECTING);
++
++	rv = ishtp_cl_connect(ecl_ishtp_cl);
++	if (rv) {
++		dev_err(cl_data_to_dev(opr_dev), "client connect failed\n");
++
++		ishtp_cl_unlink(ecl_ishtp_cl);
++		return rv;
++	}
++
++	dev_dbg(cl_data_to_dev(opr_dev), "Host connected to fw client\n");
++
++	return 0;
++}
++
++static void ecl_ishtp_cl_deinit(struct ishtp_cl *ecl_ishtp_cl)
++{
++	ishtp_cl_unlink(ecl_ishtp_cl);
++	ishtp_cl_flush_queues(ecl_ishtp_cl);
++	ishtp_cl_free(ecl_ishtp_cl);
++}
++
++static void ecl_ishtp_cl_reset_handler(struct work_struct *work)
++{
++	struct ishtp_opregion_dev *opr_dev;
++	struct ishtp_cl_device *cl_device;
++	struct ishtp_cl *ecl_ishtp_cl;
++	int rv;
++	int retry;
++
++	opr_dev = container_of(work, struct ishtp_opregion_dev, reset_work);
++
++	opr_dev->ish_link_ready = false;
++
++	cl_device = opr_dev->cl_device;
++	ecl_ishtp_cl = opr_dev->ecl_ishtp_cl;
++
++	ecl_ishtp_cl_deinit(ecl_ishtp_cl);
++
++	ecl_ishtp_cl = ishtp_cl_allocate(cl_device);
++	if (!ecl_ishtp_cl)
++		return;
++
++	ishtp_set_drvdata(cl_device, ecl_ishtp_cl);
++	ishtp_set_client_data(ecl_ishtp_cl, opr_dev);
++
++	opr_dev->ecl_ishtp_cl = ecl_ishtp_cl;
++
++	for (retry = 0; retry < 3; ++retry) {
++		rv = ecl_ishtp_cl_init(ecl_ishtp_cl);
++		if (!rv)
++			break;
++	}
++	if (rv) {
++		ishtp_cl_free(ecl_ishtp_cl);
++		opr_dev->ecl_ishtp_cl = NULL;
++		dev_err(cl_data_to_dev(opr_dev),
++			"[ish_rst] Reset failed. Link not ready.\n");
++		return;
++	}
++
++	ishtp_register_event_cb(cl_device, ecl_ishtp_cl_event_cb);
++	dev_info(cl_data_to_dev(opr_dev),
++		 "[ish_rst] Reset Success. Link ready.\n");
++
++	opr_dev->ish_link_ready = true;
++
++	if (opr_dev->acpi_init_done)
++		return;
++
++	rv = acpi_opregion_init(opr_dev);
++	if (rv) {
++		dev_err(cl_data_to_dev(opr_dev),
++			"ACPI opregion init failed\n");
++	}
++}
++
++static int ecl_ishtp_cl_probe(struct ishtp_cl_device *cl_device)
++{
++	struct ishtp_cl *ecl_ishtp_cl;
++	struct ishtp_opregion_dev *opr_dev;
++	int rv;
++
++	opr_dev = devm_kzalloc(ishtp_device(cl_device), sizeof(*opr_dev),
++			       GFP_KERNEL);
++	if (!opr_dev)
++		return -ENOMEM;
++
++	ecl_ishtp_cl = ishtp_cl_allocate(cl_device);
++	if (!ecl_ishtp_cl)
++		return -ENOMEM;
++
++	ishtp_set_drvdata(cl_device, ecl_ishtp_cl);
++	ishtp_set_client_data(ecl_ishtp_cl, opr_dev);
++	opr_dev->ecl_ishtp_cl = ecl_ishtp_cl;
++	opr_dev->cl_device = cl_device;
++
++	init_waitqueue_head(&opr_dev->read_wait);
++	INIT_WORK(&opr_dev->event_work, ecl_acpi_invoke_dsm);
++	INIT_WORK(&opr_dev->reset_work, ecl_ishtp_cl_reset_handler);
++
++	/* Initialize ish client device */
++	rv = ecl_ishtp_cl_init(ecl_ishtp_cl);
++	if (rv) {
++		dev_err(cl_data_to_dev(opr_dev), "Client init failed\n");
++		goto err_exit;
++	}
++
++	dev_dbg(cl_data_to_dev(opr_dev), "eclite-ishtp client initialised\n");
++
++	opr_dev->ish_link_ready = true;
++	mutex_init(&opr_dev->lock);
++
++	rv = acpi_find_eclite_device(opr_dev);
++	if (rv) {
++		dev_err(cl_data_to_dev(opr_dev), "ECLite ACPI ID not found\n");
++		goto err_exit;
++	}
++
++	/* Register a handler for eclite fw events */
++	ishtp_register_event_cb(cl_device, ecl_ishtp_cl_event_cb);
++
++	/* Now init opregion handlers */
++	rv = acpi_opregion_init(opr_dev);
++	if (rv) {
++		dev_err(cl_data_to_dev(opr_dev), "ACPI opregion init failed\n");
++		goto err_exit;
++	}
++
++	/* Reprobe devices depending on ECLite - battery, fan, etc. */
++	acpi_dev_clear_dependencies(opr_dev->adev);
++
++	return 0;
++err_exit:
++	ishtp_set_connection_state(ecl_ishtp_cl, ISHTP_CL_DISCONNECTING);
++	ishtp_cl_disconnect(ecl_ishtp_cl);
++	ecl_ishtp_cl_deinit(ecl_ishtp_cl);
++
++	return rv;
++}
++
++static void ecl_ishtp_cl_remove(struct ishtp_cl_device *cl_device)
++{
++	struct ishtp_cl *ecl_ishtp_cl = ishtp_get_drvdata(cl_device);
++	struct ishtp_opregion_dev *opr_dev =
++		ishtp_get_client_data(ecl_ishtp_cl);
++
++	if (opr_dev->acpi_init_done)
++		acpi_opregion_deinit(opr_dev);
++
++	acpi_dev_put(opr_dev->adev);
++
++	ishtp_set_connection_state(ecl_ishtp_cl, ISHTP_CL_DISCONNECTING);
++	ishtp_cl_disconnect(ecl_ishtp_cl);
++	ecl_ishtp_cl_deinit(ecl_ishtp_cl);
++
++	cancel_work_sync(&opr_dev->reset_work);
++	cancel_work_sync(&opr_dev->event_work);
++}
++
++static int ecl_ishtp_cl_reset(struct ishtp_cl_device *cl_device)
++{
++	struct ishtp_cl *ecl_ishtp_cl = ishtp_get_drvdata(cl_device);
++	struct ishtp_opregion_dev *opr_dev =
++		ishtp_get_client_data(ecl_ishtp_cl);
++
++	schedule_work(&opr_dev->reset_work);
++
++	return 0;
++}
++
++static int ecl_ishtp_cl_suspend(struct device *device)
++{
++	struct ishtp_cl_device *cl_device = ishtp_dev_to_cl_device(device);
++	struct ishtp_cl *ecl_ishtp_cl = ishtp_get_drvdata(cl_device);
++	struct ishtp_opregion_dev *opr_dev =
++		ishtp_get_client_data(ecl_ishtp_cl);
++
++	if (acpi_target_system_state() == ACPI_STATE_S0)
++		return 0;
++
++	acpi_opregion_deinit(opr_dev);
++	ecl_ish_cl_enable_events(opr_dev, false);
++
++	return 0;
++}
++
++static int ecl_ishtp_cl_resume(struct device *device)
++{
++	/* A reset is expected to call after an Sx. At this point
++	 * we are not sure if the link is up or not to restore anything,
++	 * so do nothing in resume path
++	 */
++	return 0;
++}
++
++static const struct dev_pm_ops ecl_ishtp_pm_ops = {
++	.suspend = ecl_ishtp_cl_suspend,
++	.resume = ecl_ishtp_cl_resume,
++};
++
++static struct ishtp_cl_driver ecl_ishtp_cl_driver = {
++	.name = "ishtp-eclite",
++	.guid = &ecl_ishtp_guid,
++	.probe = ecl_ishtp_cl_probe,
++	.remove = ecl_ishtp_cl_remove,
++	.reset = ecl_ishtp_cl_reset,
++	.driver.pm = &ecl_ishtp_pm_ops,
++};
++
++static int __init ecl_ishtp_init(void)
++{
++	return ishtp_cl_driver_register(&ecl_ishtp_cl_driver, THIS_MODULE);
++}
++
++static void __exit ecl_ishtp_exit(void)
++{
++	return ishtp_cl_driver_unregister(&ecl_ishtp_cl_driver);
++}
++
++late_initcall(ecl_ishtp_init);
++module_exit(ecl_ishtp_exit);
++
++MODULE_DESCRIPTION("ISH ISHTP eclite client opregion driver");
++MODULE_AUTHOR("K Naduvalath, Sumesh <sumesh.k.naduvalath@intel.com>");
++
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("ishtp:*");
 -- 
-2.32.0
+2.31.1
 
