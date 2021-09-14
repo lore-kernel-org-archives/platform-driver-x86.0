@@ -2,137 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-4.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27664C43219
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Sep 2021 18:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592CFC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Sep 2021 20:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1277160F44
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Sep 2021 18:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB4B61183
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Sep 2021 20:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231311AbhINS0Y (ORCPT
+        id S233618AbhINUkl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Sep 2021 14:26:24 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58876 "EHLO mail.skyhub.de"
+        Tue, 14 Sep 2021 16:40:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229477AbhINS0W (ORCPT
+        id S233555AbhINUkl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Sep 2021 14:26:22 -0400
-Received: from zn.tnic (p200300ec2f1048008d634cac5b0c7131.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:4800:8d63:4cac:5b0c:7131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 763B31EC04D1;
-        Tue, 14 Sep 2021 20:24:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1631643899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ZiKIvLzxdvLHB/We39H7CYYWYKE3V9X7egkB0ENPsyE=;
-        b=GN7S7yA8avxg1KGLWQ5Wx4mPloiFO1PBUg1PdvgNlg1k2E8fi0qdXRRIE9kwM20ienZRVh
-        o8LBR3WQL8vRxBEN8UtVxzVQ4SPu4d1Dm2tyq3MgOH0kvt8jlqMPz4StWyaaodjjc84DcD
-        Q2fGTwl3VhF1WGvU/wGjdbzSHrnpkrw=
-Date:   Tue, 14 Sep 2021 20:24:52 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 5/8] x86/sme: Replace occurrences of sme_active() with
- cc_platform_has()
-Message-ID: <YUDo9CWyLVa1PeUF@zn.tnic>
-References: <cover.1631141919.git.thomas.lendacky@amd.com>
- <367624d43d35d61d5c97a8b289d9ddae223636e9.1631141919.git.thomas.lendacky@amd.com>
+        Tue, 14 Sep 2021 16:40:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id A6C9B61178
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Sep 2021 20:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631651963;
+        bh=mykGjAi//z5KnSc+HXpViy9g9RFO4YHHwyJLMOToRuE=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=sv+zShbgiGqvvEalxiotntPQb4JUTKq3t+erRqv+cWdtfXzTLWmPIuiVcdjUdrObW
+         awTsNyGbBUFa6oi/D7/P1aI2VlR36WMZsfhVJ1W2N1D1Rbo/U5GdcHiiOxIA7GF3f1
+         aZPXKg2VNX0+RMTCtcgRiWNYP2WSDdnIQVVMiSexNAyeWUTnt9eNf5oIUIq+uvyLNp
+         sij4MBsd4e4nc5+F7UOstgxAE4mTJ88zd/JBevqZzWx3q7k8AF0zMvhhtp2pjGNpDI
+         EwCochT7SxGzzacp+VKf6syK9D0OQg2Cfd2f84H4AetI55Tr5bqH03kOZNd2hQNsoz
+         DudmiNiFY412Q==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Tue, 14 Sep 2021 20:39:22 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: PATCH_ALREADY_AVAILABLE
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-G7tcGANFNQ@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <367624d43d35d61d5c97a8b289d9ddae223636e9.1631141919.git.thomas.lendacky@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 08, 2021 at 05:58:36PM -0500, Tom Lendacky wrote:
-> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> index 18fe19916bc3..4b54a2377821 100644
-> --- a/arch/x86/mm/mem_encrypt.c
-> +++ b/arch/x86/mm/mem_encrypt.c
-> @@ -144,7 +144,7 @@ void __init sme_unmap_bootdata(char *real_mode_data)
->  	struct boot_params *boot_data;
->  	unsigned long cmdline_paddr;
->  
-> -	if (!sme_active())
-> +	if (!cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT))
->  		return;
->  
->  	/* Get the command line address before unmapping the real_mode_data */
-> @@ -164,7 +164,7 @@ void __init sme_map_bootdata(char *real_mode_data)
->  	struct boot_params *boot_data;
->  	unsigned long cmdline_paddr;
->  
-> -	if (!sme_active())
-> +	if (!cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT))
->  		return;
->  
->  	__sme_early_map_unmap_mem(real_mode_data, sizeof(boot_params), true);
-> @@ -377,11 +377,6 @@ bool sev_active(void)
->  {
->  	return sev_status & MSR_AMD64_SEV_ENABLED;
->  }
-> -
-> -bool sme_active(void)
-> -{
-> -	return sme_me_mask && !sev_active();
-> -}
->  EXPORT_SYMBOL_GPL(sev_active);
->  
->  /* Needs to be called from non-instrumentable code */
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-You forgot this hunk:
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 5635ca9a1fbe..a3a2396362a5 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -364,8 +364,9 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size)
- /*
-  * SME and SEV are very similar but they are not the same, so there are
-  * times that the kernel will need to distinguish between SME and SEV. The
-- * sme_active() and sev_active() functions are used for this.  When a
-- * distinction isn't needed, the mem_encrypt_active() function can be used.
-+ * PATTR_HOST_MEM_ENCRYPT and PATTR_GUEST_MEM_ENCRYPT flags to
-+ * amd_prot_guest_has() are used for this. When a distinction isn't needed,
-+ * the mem_encrypt_active() function can be used.
-  *
-  * The trampoline code is a good example for this requirement.  Before
-  * paging is activated, SME will access all memory as decrypted, but SEV
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #298703|0                           |1
+        is obsolete|                            |
 
-because there's still a sme_active() mentioned there:
+--- Comment #110 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 298805
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D298805&action=3Dedit
+POC: Add support for access via Asus WMI to nct6775 with debug
 
-$ git grep sme_active
-arch/x86/mm/mem_encrypt.c:367: * sme_active() and sev_active() functions are used for this.  When a
+Add more debug information about what is wrong with match vendor/board name=
+s.
 
--- 
-Regards/Gruss,
-    Boris.
+(In reply to Jonathan from comment #109)
+> Created attachment 298799 [details]
+> dmesg for boot with Denis's patch applied
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Could you add your board to list and recheck?
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
