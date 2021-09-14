@@ -2,149 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-24.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE58C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Sep 2021 10:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD63C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Sep 2021 11:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7731161108
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Sep 2021 10:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E353861107
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Sep 2021 11:58:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231428AbhINKgF (ORCPT
+        id S232421AbhINL7f (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Sep 2021 06:36:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43838 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231652AbhINKgE (ORCPT
+        Tue, 14 Sep 2021 07:59:35 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57542 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232287AbhINL7d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Sep 2021 06:36:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631615686;
+        Tue, 14 Sep 2021 07:59:33 -0400
+Received: from zn.tnic (p200300ec2f1048001e15ef619509992f.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:4800:1e15:ef61:9509:992f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8B7241EC04EC;
+        Tue, 14 Sep 2021 13:58:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1631620690;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s8aet6o8BGc5Njdk9ZYsP9VXCChwP/HGbbswH50W044=;
-        b=cMvpXngRnLaGu0Qzm8EXq63K5OPVBXnIKyBzAMMwvm2a2uGO2X2Se5366L+NWxV2LMVFgC
-        lLU2rrKRQI7i0kmPanzICD/88lrQNaM1agMSNj/VYFZ0hPiedDaE+ajw8cEIh7cMVmw4Du
-        Z4AVbpcTf3xIBvT04/bHqjJxBmzCSGM=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-557-wMUoKJQZP863yTeDysiJ2A-1; Tue, 14 Sep 2021 06:34:45 -0400
-X-MC-Unique: wMUoKJQZP863yTeDysiJ2A-1
-Received: by mail-ed1-f69.google.com with SMTP id o18-20020a056402439200b003d2b11eb0a9so1849231edc.23
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Sep 2021 03:34:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s8aet6o8BGc5Njdk9ZYsP9VXCChwP/HGbbswH50W044=;
-        b=SopWjT983/kN8xSDHy1tt0gictSkNwlqLkoMQcxAQg5OU70PILdiywcKloVwHgwB+P
-         Is8QumqX99UrSqoZPy9auC6MerJy5nRZxj3iMUq+dwY1n2/rgPvsqkkAUhCUwlhIuBBG
-         tfzKBlRJ7NqiWonYmz0rXO7jYfpF/6xzVtSdTqclqNcnpHPHjqDekRhiGgvDE4k54TWL
-         KQEMI/Zw9Io3ZlTkioTposhLWQNVgOXw1FgxxDEdpj7NdM0xQU52eCG9LrNWMK4ROckO
-         C9+3UgR4tAlCfDTqzW9EN20v9NyccXtgj1i9EpgK3JcwatYqv0g3mN7j9OfcvCxbINv5
-         V/tg==
-X-Gm-Message-State: AOAM532ua2AQfoRv40wL8gApTZ9EZ3ijxlRulWXE2EQ5+3E+wMDaGOWF
-        ENoTG0hE/A+8riQmONm/qdlSf9+wXmRN4P8bN4NglW1IKC21OJByiuiEwNvZfqVjK3OMRjxgUcw
-        IVbIc6c+DM121k7I8bNSJu/kZU2tSZl8irg==
-X-Received: by 2002:a05:6402:b51:: with SMTP id bx17mr4559327edb.193.1631615684297;
-        Tue, 14 Sep 2021 03:34:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwShEPzdj/WbZTH3GBYxpASqFY/Qld8o+Byib4DkvR/k5kKv3Ve7zxfLB3jDEnRXA5ebcG6vw==
-X-Received: by 2002:a05:6402:b51:: with SMTP id bx17mr4559313edb.193.1631615684108;
-        Tue, 14 Sep 2021 03:34:44 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id r2sm5340399edv.78.2021.09.14.03.34.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Sep 2021 03:34:43 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: amd-pmc: Increase the response register
- timeout
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Cc:     stable@kernel.org, Julian Sikorski <belegdol@gmail.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20210914020115.655-1-mario.limonciello@amd.com>
- <666c9ae0-68d5-6008-6fc8-05d097fe3023@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c971b83a-8fdd-6201-89b5-088951b08680@redhat.com>
-Date:   Tue, 14 Sep 2021 12:34:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=b/N09IsvqYn24JfFZ47aDfAefXmwmXR82Pt3awNAfbs=;
+        b=bxwwIzIyK+Rg4oIy01BbpgT86ORE1XKclCEYAaQ9uu2p2YFJBhtO9vvO21Z67RPc0ptMoP
+        47+Ry7kCX0P48iid+/PmdkrtsbH5uZdiuAmR5uxqjBKZy74znSrvhF2nYkipmdb9VWoPx/
+        PSVn04awQpG91qOKWcYNAHUkxFtjb44=
+Date:   Tue, 14 Sep 2021 13:58:04 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Subject: Re: [PATCH v3 4/8] powerpc/pseries/svm: Add a powerpc version of
+ cc_platform_has()
+Message-ID: <YUCOTIPPsJJpLO/d@zn.tnic>
+References: <cover.1631141919.git.thomas.lendacky@amd.com>
+ <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <666c9ae0-68d5-6008-6fc8-05d097fe3023@amd.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 9/14/21 10:38 AM, Shyam Sundar S K wrote:
+On Wed, Sep 08, 2021 at 05:58:35PM -0500, Tom Lendacky wrote:
+> Introduce a powerpc version of the cc_platform_has() function. This will
+> be used to replace the powerpc mem_encrypt_active() implementation, so
+> the implementation will initially only support the CC_ATTR_MEM_ENCRYPT
+> attribute.
 > 
-> 
-> On 9/14/2021 7:31 AM, Mario Limonciello wrote:
->> There have been reports of approximately a 0.9%-1.7% failure rate in SMU
->> communication timeouts with s0i3 entry on some OEM designs.  Currently
->> the design in amd-pmc is to try every 100us for up to 20ms.
->>
->> However the GPU driver which also communicates with the SMU using a
->> mailbox register which the driver polls every 1us for up to 2000ms.
->> In the GPU driver this was increased by commit 055162645a40 ("drm/amd/pm:
->> increase time out value when sending msg to SMU")
->>
->> Increase the maximum timeout used by amd-pmc to 2000ms to match this
->> behavior.  This has been shown to improve the stability for machines
->> that randomly have failures.
->>
->> Cc: stable@kernel.org
->> Reported-by: Julian Sikorski <belegdol@gmail.com>
->> BugLink: https://gitlab.freedesktop.org/drm/amd/-/issues/1629
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>  drivers/platform/x86/amd-pmc.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
->> index 3481479a2942..d6a7c896ac86 100644
->> --- a/drivers/platform/x86/amd-pmc.c
->> +++ b/drivers/platform/x86/amd-pmc.c
->> @@ -71,7 +71,7 @@
->>  #define AMD_CPU_ID_YC			0x14B5
->>  
->>  #define PMC_MSG_DELAY_MIN_US		100
->> -#define RESPONSE_REGISTER_LOOP_MAX	200
->> +#define RESPONSE_REGISTER_LOOP_MAX	20000
->>  
->>  #define SOC_SUBSYSTEM_IP_MAX	12
->>  #define DELAY_MIN_US		2000
->>
-> 
-> Looks good to me.
-> 
-> Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/powerpc/platforms/pseries/Kconfig       |  1 +
+>  arch/powerpc/platforms/pseries/Makefile      |  2 ++
+>  arch/powerpc/platforms/pseries/cc_platform.c | 26 ++++++++++++++++++++
+>  3 files changed, 29 insertions(+)
+>  create mode 100644 arch/powerpc/platforms/pseries/cc_platform.c
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Michael,
 
-I've also added this to the fixes branch so that it will be included
-when I send my next fixes for 5.15 pull-req to Linus.
+can I get an ACK for the ppc bits to carry them through the tip tree
+pls?
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Btw, on a related note, cross-compiling this throws the following error here:
 
-Regards,
+$ make CROSS_COMPILE=/home/share/src/crosstool/gcc-9.4.0-nolibc/powerpc64-linux/bin/powerpc64-linux- V=1 ARCH=powerpc
 
-Hans
+...
 
+/home/share/src/crosstool/gcc-9.4.0-nolibc/powerpc64-linux/bin/powerpc64-linux-gcc -Wp,-MD,arch/powerpc/boot/.crt0.o.d -D__ASSEMBLY__ -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -O2 -msoft-float -mno-altivec -mno-vsx -pipe -fomit-frame-pointer -fno-builtin -fPIC -nostdinc -include ./include/linux/compiler_attributes.h -I./arch/powerpc/include -I./arch/powerpc/include/generated  -I./include -I./arch/powerpc/include/uapi -I./arch/powerpc/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h -m32 -isystem /home/share/src/crosstool/gcc-9.4.0-nolibc/powerpc64-linux/bin/../lib/gcc/powerpc64-linux/9.4.0/include -mbig-endian -nostdinc -c -o arch/powerpc/boot/crt0.o arch/powerpc/boot/crt0.S
+In file included from <command-line>:
+././include/linux/compiler_attributes.h:62:5: warning: "__has_attribute" is not defined, evaluates to 0 [-Wundef]
+   62 | #if __has_attribute(__assume_aligned__)
+      |     ^~~~~~~~~~~~~~~
+././include/linux/compiler_attributes.h:62:20: error: missing binary operator before token "("
+   62 | #if __has_attribute(__assume_aligned__)
+      |                    ^
+././include/linux/compiler_attributes.h:88:5: warning: "__has_attribute" is not defined, evaluates to 0 [-Wundef]
+   88 | #if __has_attribute(__copy__)
+      |     ^~~~~~~~~~~~~~~
+...
+
+Known issue?
+
+This __has_attribute() thing is supposed to be supported
+in gcc since 5.1 and I'm using the crosstool stuff from
+https://www.kernel.org/pub/tools/crosstool/ and gcc-9.4 above is pretty
+new so that should not happen actually.
+
+But it does...
+
+Hmmm.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
