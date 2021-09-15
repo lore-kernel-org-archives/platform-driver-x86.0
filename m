@@ -2,181 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_ABUSE_SURBL,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55960C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Sep 2021 00:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CC2C43219
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Sep 2021 00:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2914061261
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Sep 2021 00:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02616121F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Sep 2021 00:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbhIOAVI (ORCPT
+        id S236159AbhIOAaY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Sep 2021 20:21:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229520AbhIOAVI (ORCPT
+        Tue, 14 Sep 2021 20:30:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229991AbhIOAaX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Sep 2021 20:21:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 44D676121F
-        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Sep 2021 00:19:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631665190;
-        bh=kthOmCghUSsCeLJvKxsuH5mICS4/zZystQWz0F7bcag=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=lfHmGvHRDzCnL6B8zyIMdU3vHENv9knjQ3OdKS6ewROD1DarKhwfScuo//kDfIoP3
-         MW3vdINPA5DNauGN3F3EmGWMHteDjR/MFNlnRLzkpZnEsGDzlPa4lA22ZdgeV9VqOZ
-         snI3F0oB8BvsXQTaiQaZfklCXIdOlZnP1YqrAR8ClDd0XCdHOP3r6Kp+EWKoKhUJU+
-         SxQCzqAdylc7+1GGRUkjqsp7jjNQu4O29iF4pqkBWq3IaT+lfj1Ah1l84HRKp30vCf
-         qb+UaU3v/h7ud1t/Sd+B+OaVOG5vpJ1m6WjFTO6MEk7nz+udWb5hV+8IsmQ3aOMcY7
-         BJkGQzIO11vbQ==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Wed, 15 Sep 2021 00:19:49 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: sefoci9222@rerunway.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: PATCH_ALREADY_AVAILABLE
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-dgDxVqcDF1@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 14 Sep 2021 20:30:23 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53563C061574;
+        Tue, 14 Sep 2021 17:29:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1631665743;
+        bh=HgCpSqOauKiPM+dBPwX1rVKc5DllbEYyPqTeHP+eUfA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=nobrDH5nGZu7v+B+3sYvcmgWwQ6HXMJcFwBQJdDWX9HZxhJmSYRfeLJ5bqM1L8nAT
+         Zv7FEyFybAcOR9q2SSYXqyD/igi9xudle6V5yasFwsCuG7S0oozCaRNikxkvD596/w
+         6l43PVixwL61h3NyNDnNd5sNzqDNGCDn9FEcD1fB6an9gsKEzr5R3Isof7M+Dp+CFm
+         Flkym9C4vSI8DMWcOL/ydbmO/xhA1U449O7gqRfyeoJq9Tl/sPJDKQcCHDPv+s1Rp6
+         4loBfWLosZBa6f9xlvgT7ZD+EwPUzeNUvScHtwtaoHQpWTi57p46qNn2qlhGqy8rED
+         FWCERXkM6X8Sg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4H8LgJ0MSWz9sVq;
+        Wed, 15 Sep 2021 10:28:59 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Subject: Re: [PATCH v3 4/8] powerpc/pseries/svm: Add a powerpc version of
+ cc_platform_has()
+In-Reply-To: <YUCOTIPPsJJpLO/d@zn.tnic>
+References: <cover.1631141919.git.thomas.lendacky@amd.com>
+ <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
+ <YUCOTIPPsJJpLO/d@zn.tnic>
+Date:   Wed, 15 Sep 2021 10:28:59 +1000
+Message-ID: <87lf3yk7g4.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Borislav Petkov <bp@alien8.de> writes:
+> On Wed, Sep 08, 2021 at 05:58:35PM -0500, Tom Lendacky wrote:
+>> Introduce a powerpc version of the cc_platform_has() function. This will
+>> be used to replace the powerpc mem_encrypt_active() implementation, so
+>> the implementation will initially only support the CC_ATTR_MEM_ENCRYPT
+>> attribute.
+>> 
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Paul Mackerras <paulus@samba.org>
+>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>> ---
+>>  arch/powerpc/platforms/pseries/Kconfig       |  1 +
+>>  arch/powerpc/platforms/pseries/Makefile      |  2 ++
+>>  arch/powerpc/platforms/pseries/cc_platform.c | 26 ++++++++++++++++++++
+>>  3 files changed, 29 insertions(+)
+>>  create mode 100644 arch/powerpc/platforms/pseries/cc_platform.c
+>
+> Michael,
+>
+> can I get an ACK for the ppc bits to carry them through the tip tree
+> pls?
 
---- Comment #112 from sefoci9222@rerunway.com ---
+Yeah.
 
-please add:
+I don't love it, a new C file and an out-of-line call to then call back
+to a static inline that for most configuration will return false ... but
+whatever :)
 
-
-cat /sys/class/dmi/id/board_name
-
-ROG STRIX X570-F GAMING
-
-
-can confirm latest debug.diff is working, many thanks:
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
 
-Now follows a summary of the probes I have just done.
-Just press ENTER to continue:=20
+> Btw, on a related note, cross-compiling this throws the following error here:
+>
+> $ make CROSS_COMPILE=/home/share/src/crosstool/gcc-9.4.0-nolibc/powerpc64-linux/bin/powerpc64-linux- V=1 ARCH=powerpc
+>
+> ...
+>
+> /home/share/src/crosstool/gcc-9.4.0-nolibc/powerpc64-linux/bin/powerpc64-linux-gcc -Wp,-MD,arch/powerpc/boot/.crt0.o.d -D__ASSEMBLY__ -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -O2 -msoft-float -mno-altivec -mno-vsx -pipe -fomit-frame-pointer -fno-builtin -fPIC -nostdinc -include ./include/linux/compiler_attributes.h -I./arch/powerpc/include -I./arch/powerpc/include/generated  -I./include -I./arch/powerpc/include/uapi -I./arch/powerpc/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h -m32 -isystem /home/share/src/crosstool/gcc-9.4.0-nolibc/powerpc64-linux/bin/../lib/gcc/powerpc64-linux/9.4.0/include -mbig-endian -nostdinc -c -o arch/powerpc/boot/crt0.o arch/powerpc/boot/crt0.S
+> In file included from <command-line>:
+> ././include/linux/compiler_attributes.h:62:5: warning: "__has_attribute" is not defined, evaluates to 0 [-Wundef]
+>    62 | #if __has_attribute(__assume_aligned__)
+>       |     ^~~~~~~~~~~~~~~
+> ././include/linux/compiler_attributes.h:62:20: error: missing binary operator before token "("
+>    62 | #if __has_attribute(__assume_aligned__)
+>       |                    ^
+> ././include/linux/compiler_attributes.h:88:5: warning: "__has_attribute" is not defined, evaluates to 0 [-Wundef]
+>    88 | #if __has_attribute(__copy__)
+>       |     ^~~~~~~~~~~~~~~
+> ...
+>
+> Known issue?
 
-Driver `nct6775':
-  * ISA bus, address 0x290
-    Chip `Nuvoton NCT6798D Super IO Sensors' (confidence: 9)
+Yeah, fixed in mainline today, thanks for trying to cross compile :)
 
-Driver `k10temp' (autoloaded):
-  * Chip `AMD Family 17h thermal sensors' (confidence: 9)
-
-Do you want to overwrite /etc/sysconfig/lm_sensors? (YES/no):=20
-Unloading i2c-dev... OK
-
--
-
-Sep 15 01:55:35 desk kernel: nct6775: Using Asus WMI to access 0xc1 chip.
-Sep 15 01:55:35 desk kernel: nct6775: Found NCT6798D or compatible chip at
-0x2e:0x290
-
-Sep 15 02:02:41 desk systemd[1]: Starting Hardware Monitoring Sensors...
-Sep 15 02:02:41 desk kernel: nct6775: Using Asus WMI to access 0xc1 chip.
-Sep 15 02:02:41 desk kernel: nct6775: Found NCT6798D or compatible chip at
-0x2e:0x290
-Sep 15 02:02:41 desk systemd[1]: Finished Hardware Monitoring Sensors.
-
--
-
-[root@desk testM]# sensors
-amdgpu-pci-0700
-Adapter: PCI adapter
-vddgfx:      950.00 mV=20
-fan1:         835 RPM  (min =3D    0 RPM, max =3D 3200 RPM)
-edge:         +39.0=C2=B0C  (crit =3D +91.0=C2=B0C, hyst =3D -273.1=C2=B0C)
-power1:       44.15 W  (cap =3D 277.00 W)
-
-nct6798-isa-0290
-Adapter: ISA adapter
-in0:                      888.00 mV (min =3D  +0.00 V, max =3D  +1.74 V)
-in1:                      992.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in2:                        3.38 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in3:                        3.30 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in4:                        1.02 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in5:                      960.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in6:                      256.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in7:                        3.38 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in8:                        3.33 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in9:                      904.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in10:                     480.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in11:                     496.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in12:                       1.03 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in13:                     344.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in14:                     256.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-fan1:                      678 RPM  (min =3D    0 RPM)
-fan2:                      575 RPM  (min =3D    0 RPM)
-fan3:                     1050 RPM  (min =3D    0 RPM)
-fan4:                      738 RPM  (min =3D    0 RPM)
-fan5:                        0 RPM  (min =3D    0 RPM)
-fan6:                        0 RPM  (min =3D    0 RPM)
-SYSTIN:                    +28.0=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
-75.0=C2=B0C)  sensor =3D
-thermistor
-CPUTIN:                    +33.0=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
-75.0=C2=B0C)  sensor =3D
-thermistor
-AUXTIN0:                   +86.0=C2=B0C    sensor =3D thermistor
-AUXTIN1:                   +28.0=C2=B0C    sensor =3D thermistor
-AUXTIN2:                   +26.0=C2=B0C    sensor =3D thermistor
-AUXTIN3:                   +91.0=C2=B0C    sensor =3D thermistor
-PECI Agent 0 Calibration:  +33.5=C2=B0C=20=20
-PCH_CHIP_CPU_MAX_TEMP:      +0.0=C2=B0C=20=20
-PCH_CHIP_TEMP:              +0.0=C2=B0C=20=20
-PCH_CPU_TEMP:               +0.0=C2=B0C=20=20
-intrusion0:               ALARM
-intrusion1:               ALARM
-beep_enable:              disabled
-
-k10temp-pci-00c3
-Adapter: PCI adapter
-Tctl:         +32.6=C2=B0C=20=20
-Tdie:         +32.6=C2=B0C=20=20
-Tccd1:        +39.5=C2=B0C
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+cheers
