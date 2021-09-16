@@ -2,84 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CC0C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 07:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7E7C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 08:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB5360E76
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 07:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0252E6124D
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 08:26:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234828AbhIPHik (ORCPT
+        id S234904AbhIPI1v convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Sep 2021 03:38:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234296AbhIPHij (ORCPT
+        Thu, 16 Sep 2021 04:27:51 -0400
+Received: from mga12.intel.com ([192.55.52.136]:64477 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235009AbhIPI1u (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Sep 2021 03:38:39 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67D8DC061574;
-        Thu, 16 Sep 2021 00:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2++NPtO3N0EKqFjod0lHOXuAnY0BGUp6aM9ZEKLL5JE=; b=fWRQGikoRH60qW6X6cnfcWri00
-        fDV87hJx5JKFIvzB1VghIwXfR96995PVo8kJThgH16NHXA2LcXb/0OUEJDBAk0Bl2qY21EgB/LD6j
-        yuWyo9QXuRb+rz8UdmseafctcU4F9oq4wcHZEeHDZVIzPeJnu/6YD92kHFeC+wADiwV5E0NuXTS9x
-        jELwwp0a1YxSUBTjc7IgjCeSLvhtV8GlZBWss3rZbkljK+45CzD5XrvvLhnYPJ9BPLbg34ibU5Ghh
-        G1NZvE9u3nz/CT9pZxRqgWh1izea0fJlYNRSpJ58AX24QI5uzGRKRidRWQ1bEE28SggGB+0Z9QdPn
-        qQ0W6UAQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mQlvQ-00GQBb-Sl; Thu, 16 Sep 2021 07:35:38 +0000
-Date:   Thu, 16 Sep 2021 08:35:16 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>,
-        kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Thu, 16 Sep 2021 04:27:50 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10108"; a="202013382"
+X-IronPort-AV: E=Sophos;i="5.85,297,1624345200"; 
+   d="scan'208";a="202013382"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2021 01:26:28 -0700
+X-IronPort-AV: E=Sophos;i="5.85,297,1624345200"; 
+   d="scan'208";a="553747262"
+Received: from djustese-mobl.ger.corp.intel.com (HELO localhost) ([10.249.34.120])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2021 01:26:21 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Lyude Paul <lyude@redhat.com>, Hans de Goede <hdegoede@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Rajat Jain <rajatja@google.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Pekka Paalanen <pekka.paalanen@collabora.com>,
+        Mario Limonciello <mario.limonciello@outlook.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Sebastien Bacher <seb128@ubuntu.com>,
+        Marco Trevisan <marco.trevisan@canonical.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
         platform-driver-x86@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>, linux-s390@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>, x86@kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-graphics-maintainer@vmware.com,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 4/8] powerpc/pseries/svm: Add a powerpc version of
- cc_platform_has()
-Message-ID: <YULztMRLJ55YLVU9@infradead.org>
-References: <cover.1631141919.git.thomas.lendacky@amd.com>
- <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
- <YUCOTIPPsJJpLO/d@zn.tnic>
- <87lf3yk7g4.fsf@mpe.ellerman.id.au>
- <YUHGDbtiGrDz5+NS@zn.tnic>
- <f8388f18-5e90-5d0f-d681-0b17f8307dd4@csgroup.eu>
+        Mario Limonciello <Mario.limonciello@dell.com>
+Subject: Re: [PATCH 1/9] drm/connector: Add support for privacy-screen properties (v4)
+In-Reply-To: <9a843feee4c5b422b63f8cc5890bdfa67bbb0f17.camel@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20210906073519.4615-1-hdegoede@redhat.com> <20210906073519.4615-2-hdegoede@redhat.com> <9a843feee4c5b422b63f8cc5890bdfa67bbb0f17.camel@redhat.com>
+Date:   Thu, 16 Sep 2021 11:26:06 +0300
+Message-ID: <87y27xvsdd.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f8388f18-5e90-5d0f-d681-0b17f8307dd4@csgroup.eu>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 15, 2021 at 07:18:34PM +0200, Christophe Leroy wrote:
-> Could you please provide more explicit explanation why inlining such an
-> helper is considered as bad practice and messy ?
+On Wed, 15 Sep 2021, Lyude Paul <lyude@redhat.com> wrote:
+> On Mon, 2021-09-06 at 09:35 +0200, Hans de Goede wrote:
+>>  
+>> +       /**
+>> +        * @privacy_screen_sw_state: See :ref:`Standard Connector
+>> +        * Properties<standard_connector_properties>`
+>> +        */
+>
+> So THAT'S how you reference other sections. I've always wondered!
 
-Because now we get architectures to all subly differ.  Look at the mess
-for ioremap and the ioremap* variant.
+You may find this helpful:
 
-The only good reason to allow for inlines if if they are used in a hot
-path.  Which cc_platform_has is not, especially not on powerpc.
+https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html
+
+BR,
+Jani.
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
