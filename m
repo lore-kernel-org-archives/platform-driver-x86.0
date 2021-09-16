@@ -2,79 +2,48 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CB3C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 09:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B351C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 09:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 250C960EE5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 09:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AB561130
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 09:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235504AbhIPJb1 (ORCPT
+        id S235476AbhIPJln (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Sep 2021 05:31:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42930 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235481AbhIPJb1 (ORCPT
+        Thu, 16 Sep 2021 05:41:43 -0400
+Received: from mga04.intel.com ([192.55.52.120]:63220 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229494AbhIPJlm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Sep 2021 05:31:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631784606;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aoHaC2vU32EKiSePDnHIK0vg2sZi4RSQcdvPjZic5Kg=;
-        b=dWMmcB0KJfcbVLKp46zc/heWRew7C7+6EIVq/hnfGN4gU/kuV0fUp8DYlceQ7amr95G2jG
-        U5K24rFMg/bbw7/r25E4JLFLRWw231iJLyRxa3O70GZRhFBKTvCNTSQlPY0Iy3r6Ltk8IA
-        zEbcBDClNeoyx6Kj4XG/xsMb/IFjkNo=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-119-xYFPKAtSOtuoag62W8rfyQ-1; Thu, 16 Sep 2021 05:30:05 -0400
-X-MC-Unique: xYFPKAtSOtuoag62W8rfyQ-1
-Received: by mail-ed1-f71.google.com with SMTP id z6-20020a50cd06000000b003d2c2e38f1fso4759692edi.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Sep 2021 02:30:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aoHaC2vU32EKiSePDnHIK0vg2sZi4RSQcdvPjZic5Kg=;
-        b=LOovG006OhqnygAZKPN07Wfz1YjKTbo4++fvvNqspEMcJwI6lCbtViP8J1MsUQsI1i
-         fIHnzhBXLCY6sSCBnPTM+Y5bdLAimzOAEOlMkqdpQ+N6jLtaE+pekx+dXswjTZFhvrl9
-         BrL6N7zinBpCUgMG4TqkIZ2puzuB6kC1sVJKqpOOg2pdD+PSUz15l/e2/2Sx2L4defY7
-         mw6Qz5887QW4h8gs+2lgAd5+RoGwWHMRM9eTbedkxOQVD3rTJntaCLcdpFO7K0ZqZFkx
-         dRpCKBR2u7RdOTsgcOW5HHCrfjJ8Db392v9z849fIw+e8HTGGg8/w11a0nbzMgS6WIgN
-         eKyw==
-X-Gm-Message-State: AOAM532OztyVJg8SPNG9HhE+zL2+JE9U64oNz+LwegrgXPPuPKPcu9XT
-        EdxxfwhlR8ugY+7VtDUGWGurUz6eTLp2ex88QFmS+gMQNajrFMCeREzHrpKw+wzX/lPE1nirvnH
-        xg/8KGbdB+GOOXTH8/GYhUOLOy7wcyl9fbMFFnqGM804omnEA4QVqc4f9yQCciHcaF1NRynzvbM
-        zYowOOGvpwBQ==
-X-Received: by 2002:a05:6402:40e:: with SMTP id q14mr5497063edv.11.1631784603632;
-        Thu, 16 Sep 2021 02:30:03 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJypvTXP6sz3HeAjo8791dourC3k5Ua3O2L6yI2Wxc3+R5VGnPICh0Q66RyO9UuWqag7ERu57Q==
-X-Received: by 2002:a05:6402:40e:: with SMTP id q14mr5497020edv.11.1631784603353;
-        Thu, 16 Sep 2021 02:30:03 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id di4sm1173999edb.34.2021.09.16.02.30.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Sep 2021 02:30:03 -0700 (PDT)
-Subject: Re: [PATCH 0/9] drm: Add privacy-screen class and connector
- properties
-To:     Lyude Paul <lyude@redhat.com>,
+        Thu, 16 Sep 2021 05:41:42 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10108"; a="220642825"
+X-IronPort-AV: E=Sophos;i="5.85,298,1624345200"; 
+   d="scan'208";a="220642825"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2021 02:40:22 -0700
+X-IronPort-AV: E=Sophos;i="5.85,298,1624345200"; 
+   d="scan'208";a="545458826"
+Received: from djustese-mobl.ger.corp.intel.com (HELO localhost) ([10.249.34.120])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2021 02:40:14 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
-        Rajat Jain <rajatja@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rajat Jain <rajatja@google.com>, Lyude <lyude@redhat.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Andy Shevchenko <andy@infradead.org>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
         Pekka Paalanen <pekka.paalanen@collabora.com>,
         Mario Limonciello <mario.limonciello@outlook.com>,
         Mark Pearson <markpearson@lenovo.com>,
@@ -84,170 +53,186 @@ Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org,
         platform-driver-x86@vger.kernel.org
-References: <20210906073519.4615-1-hdegoede@redhat.com>
- <ddd8ba1e22adb6fd536c9d72384a30bb9c945997.camel@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <ddd05009-49dd-c61e-f966-e28d42eb7ef8@redhat.com>
-Date:   Thu, 16 Sep 2021 11:30:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+Subject: Re: [PATCH 9/9] drm/i915: Add privacy-screen support
+In-Reply-To: <20210906073519.4615-10-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20210906073519.4615-1-hdegoede@redhat.com> <20210906073519.4615-10-hdegoede@redhat.com>
+Date:   Thu, 16 Sep 2021 12:40:11 +0300
+Message-ID: <87sfy4x3ic.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <ddd8ba1e22adb6fd536c9d72384a30bb9c945997.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
 
-On 9/15/21 11:12 PM, Lyude Paul wrote:
-> OK! Looked over all of these patches. Patches 2 and 4 have some comments that
-> should be addressed, but otherwise this series is:
-> 
-> Reviewed-by: Lyude Paul <lyude@redhat.com>
+Cc: Ville for input here, see question inline.
 
-Thank you!
+On Mon, 06 Sep 2021, Hans de Goede <hdegoede@redhat.com> wrote:
+> Add support for eDP panels with a built-in privacy screen using the
+> new drm_privacy_screen class.
+>
+> One thing which stands out here is the addition of these 2 lines to
+> intel_atomic_commit_tail:
+>
+> 	for_each_new_connector_in_state(&state->base, connector, ...
+> 		drm_connector_update_privacy_screen(connector, state);
+>
+> It may seem more logical to instead take care of updating the
+> privacy-screen state by marking the crtc as needing a modeset and then
+> do this in both the encoder update_pipe (for fast-sets) and enable
+> (for full modesets) callbacks. But ATM these callbacks only get passed
+> the new connector_state and these callbacks are all called after
+> drm_atomic_helper_swap_state() at which point there is no way to get
+> the old state from the new state.
+>
+> Without access to the old state, we do not know if the sw_state of
+> the privacy-screen has changes so we would need to call
+> drm_privacy_screen_set_sw_state() unconditionally. This is undesirable
+> since all current known privacy-screen providers use ACPI calls which
+> are somewhat expensive to make.
+>
+> Also, as all providers use ACPI calls, rather then poking GPU registers,
+> there is no need to order this together with other encoder operations.
+> Since no GPU poking is involved having this as a separate step of the
+> commit process actually is the logical thing to do.
+>
+> Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/gpu/drm/i915/display/intel_display.c |  5 +++++
+>  drivers/gpu/drm/i915/display/intel_dp.c      | 10 ++++++++++
+>  drivers/gpu/drm/i915/i915_pci.c              | 12 ++++++++++++
+>  3 files changed, 27 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+> index 5560d2f4c352..7285873d329a 100644
+> --- a/drivers/gpu/drm/i915/display/intel_display.c
+> +++ b/drivers/gpu/drm/i915/display/intel_display.c
+> @@ -10140,6 +10140,8 @@ static void intel_atomic_commit_tail(struct intel_atomic_state *state)
+>  	struct drm_device *dev = state->base.dev;
+>  	struct drm_i915_private *dev_priv = to_i915(dev);
+>  	struct intel_crtc_state *new_crtc_state, *old_crtc_state;
+> +	struct drm_connector_state *new_connector_state;
+> +	struct drm_connector *connector;
+>  	struct intel_crtc *crtc;
+>  	u64 put_domains[I915_MAX_PIPES] = {};
+>  	intel_wakeref_t wakeref = 0;
+> @@ -10237,6 +10239,9 @@ static void intel_atomic_commit_tail(struct intel_atomic_state *state)
+>  			intel_color_load_luts(new_crtc_state);
+>  	}
+>  
+> +	for_each_new_connector_in_state(&state->base, connector, new_connector_state, i)
+> +		drm_connector_update_privacy_screen(connector, &state->base);
+> +
+>  	/*
+>  	 * Now that the vblank has passed, we can go ahead and program the
+>  	 * optimal watermarks on platforms that need two-step watermark
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+> index 7f8e8865048f..3aa2072cccf6 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
+> @@ -37,6 +37,7 @@
+>  #include <drm/drm_crtc.h>
+>  #include <drm/drm_dp_helper.h>
+>  #include <drm/drm_edid.h>
+> +#include <drm/drm_privacy_screen_consumer.h>
+>  #include <drm/drm_probe_helper.h>
+>  
+>  #include "g4x_dp.h"
+> @@ -5217,6 +5218,7 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
+>  	struct drm_connector *connector = &intel_connector->base;
+>  	struct drm_display_mode *fixed_mode = NULL;
+>  	struct drm_display_mode *downclock_mode = NULL;
+> +	struct drm_privacy_screen *privacy_screen;
+>  	bool has_dpcd;
+>  	enum pipe pipe = INVALID_PIPE;
+>  	struct edid *edid;
+> @@ -5308,6 +5310,14 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
+>  				fixed_mode->hdisplay, fixed_mode->vdisplay);
+>  	}
+>  
+> +	privacy_screen = drm_privacy_screen_get(dev->dev, NULL);
+> +	if (!IS_ERR(privacy_screen)) {
+> +		drm_connector_attach_privacy_screen_provider(connector,
+> +							     privacy_screen);
+> +	} else if (PTR_ERR(privacy_screen) != -ENODEV) {
+> +		drm_warn(&dev_priv->drm, "Error getting privacy-screen\n");
+> +	}
+> +
+>  	return true;
+>  
+>  out_vdd_off:
+> diff --git a/drivers/gpu/drm/i915/i915_pci.c b/drivers/gpu/drm/i915/i915_pci.c
+> index 146f7e39182a..d6913f567a1c 100644
+> --- a/drivers/gpu/drm/i915/i915_pci.c
+> +++ b/drivers/gpu/drm/i915/i915_pci.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/vga_switcheroo.h>
+>  
+>  #include <drm/drm_drv.h>
+> +#include <drm/drm_privacy_screen_consumer.h>
+>  #include <drm/i915_pciids.h>
+>  
+>  #include "i915_drv.h"
+> @@ -1167,6 +1168,7 @@ static int i915_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  {
+>  	struct intel_device_info *intel_info =
+>  		(struct intel_device_info *) ent->driver_data;
+> +	struct drm_privacy_screen *privacy_screen;
+>  	int err;
+>  
+>  	if (intel_info->require_force_probe &&
+> @@ -1195,7 +1197,17 @@ static int i915_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  	if (vga_switcheroo_client_probe_defer(pdev))
+>  		return -EPROBE_DEFER;
+>  
+> +	/*
+> +	 * We do not handle -EPROBE_DEFER further into the probe process, so
+> +	 * check if we have a laptop-panel privacy-screen for which the driver
+> +	 * has not loaded yet here.
+> +	 */
+> +	privacy_screen = drm_privacy_screen_get(&pdev->dev, NULL);
+> +	if (IS_ERR(privacy_screen) && PTR_ERR(privacy_screen) == -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+> +
+>  	err = i915_driver_probe(pdev, ent);
+> +	drm_privacy_screen_put(privacy_screen);
+>  	if (err)
+>  		return err;
 
-> Let me know when/if you need help pushing this upstream
+Ideally, neither i915_pci_probe() nor i915_driver_probe() should assume
+we have display. We might not. We should not wait if we are never going
+to initialize display.
 
-My plan was to just straight forward push the entire series to
-drm-misc-next. The only non drm bits are the drivers/platform/x86/thinkpad_acpi.c
-changes and I'm the drivers/platform/x86 subsys-maintainer and this
-plan has my blessing :)
+Alas, we'll only know after i915_driver_probe() ->
+i915_driver_mmio_probe() -> intel_device_info_runtime_init(), which
+modifies ->pipe_mask, which is the single point of truth. See
+HAS_DISPLAY().
 
-That only leaves the last patch in the series:
-"drm/i915: Add privacy-screen support" 
+We do have tests for failing probe at various points (see the
+i915_inject_probe_failure() calls) to stress the cleanup paths in
+CI. Part of the point was to prepare us for -EPROBE_DEFER returns.
 
-As something which could potentially be troublesome. I can also
-leave that out, while pushing the test to drm-misc-next and then
-push the i915 patch after a drm-misc-next merge into drm-intel-next.
+Looks like the earliest/cleanest point for checking this is in
+intel_modeset_init_noirq(), i.e. first display init call. But I admit it
+gives me an uneasy feeling to return -EPROBE_DEFER at that stage. The
+only -EPROBE_DEFER return we currently have is the vga switcheroo stuff
+you see in the patch context, and most platforms never return that.
 
-Jani, how would you like to handle the single i915 patch in this
-series?
+Ville, I'd like to get your thoughts on that.
 
-Regards,
+Anyway, even if we decide not to, err, defer returning -EPROBE_DEFER, I
+think we should abstract this better. For example, add a
+intel_modeset_probe_defer() function in intel_display.c that checks
+this, and call that as the first thing in i915_driver_probe(). Just to
+keep the display specific code out of the high level functions, even if
+that is functionally the same as what you're doing here.
 
-Hans
+BR,
+Jani.
 
 
 
-
-
-> 
-> On Mon, 2021-09-06 at 09:35 +0200, Hans de Goede wrote:
->> Hi all,
->>
->> Here is the privacy-screen related code which I last posted in April 2021
->> To the best of my knowledge there is consensus about / everyone is in
->> agreement with the new userspace API (2 connector properties) this
->> patch-set add (patch 1 of the series).
->>
->> This is unchanged (except for a rebase on drm-tip), what has changed is
->> that the first userspace consumer of the new properties is now fully ready
->> for merging (it is just waiting for the kernel bits to land first):
->>
->>  -
->> https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/-/merge_requests/49
->>  - https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1952
->>  - https://gitlab.gnome.org/GNOME/gnome-control-center/-/merge_requests/1032
->>
->> Having a userspace-consumer of the API fully ready for merging, clears the
->> last blocker for this series. It has already has been reviewed before
->> by Emil Velikov, but it could really do with another review.
->>
->> The new API works as designed and add the following features to GNOME:
->>
->> 1. Showing an OSD notification when the privacy-screen is toggled on/off
->>    through hotkeys handled by the embedded-controller
->> 2. Allowing control of the privacy-screen from the GNOME control-panel,
->>    including the on/off slider shown there updating to match the hw-setting
->>    when the setting is changed with the control-panel open.
->> 3. Restoring the last user-setting at login
->>
->> This series consists of a number of different parts:
->>
->> 1. A new version of Rajat's privacy-screen connector properties patch,
->> this adds new userspace API in the form of new properties
->>
->> 2. Since on most devices the privacy screen is actually controlled by
->> some vendor specific ACPI/WMI interface which has a driver under
->> drivers/platform/x86, we need some "glue" code to make this functionality
->> available to KMS drivers. Patches 2-4 add a new privacy-screen class for
->> this, which allows non KMS drivers (and possibly KMS drivers too) to
->> register a privacy-screen device and also adds an interface for KMS drivers
->> to get access to the privacy-screen associated with a specific connector.
->> This is modelled similar to how we deal with e.g. PWMs and GPIOs in the
->> kernel, including separate includes for consumers and providers(drivers).
->>
->> 3. Some drm_connector helper functions to keep the actual changes needed
->> for this in individual KMS drivers as small as possible (patch 5).
->>
->> 4. Make the thinkpad_acpi code register a privacy-screen device on
->> ThinkPads with a privacy-screen (patches 6-8)
->>
->> 5. Make the i915 driver export the privacy-screen functionality through
->> the connector properties on the eDP connector.
->>
->> I believe that it would be best to merge the entire series, including
->> the thinkpad_acpi changes through drm-misc in one go. As the pdx86
->> subsys maintainer I hereby give my ack for merging the thinkpad_acpi
->> changes through drm-misc.
->>
->> There is one small caveat with this series, which it is good to be
->> aware of. The i915 driver will now return -EPROBE_DEFER on Thinkpads
->> with an eprivacy screen, until the thinkpad_acpi driver is loaded.
->> This means that initrd generation tools will need to be updated to
->> include thinkpad_acpi when the i915 driver is added to the initrd.
->> Without this the loading of the i915 driver will be delayed to after
->> the switch to real rootfs.
->>
->> Regards,
->>
->> Hans
->>
->>
->> Hans de Goede (8):
->>   drm: Add privacy-screen class (v3)
->>   drm/privacy-screen: Add X86 specific arch init code
->>   drm/privacy-screen: Add notifier support
->>   drm/connector: Add a drm_connector privacy-screen helper functions
->>   platform/x86: thinkpad_acpi: Add hotkey_notify_extended_hotkey()
->>     helper
->>   platform/x86: thinkpad_acpi: Get privacy-screen / lcdshadow ACPI
->>     handles only once
->>   platform/x86: thinkpad_acpi: Register a privacy-screen device
->>   drm/i915: Add privacy-screen support
->>
->> Rajat Jain (1):
->>   drm/connector: Add support for privacy-screen properties (v4)
->>
->>  Documentation/gpu/drm-kms-helpers.rst        |  15 +
->>  Documentation/gpu/drm-kms.rst                |   2 +
->>  MAINTAINERS                                  |   8 +
->>  drivers/gpu/drm/Kconfig                      |   4 +
->>  drivers/gpu/drm/Makefile                     |   1 +
->>  drivers/gpu/drm/drm_atomic_uapi.c            |   4 +
->>  drivers/gpu/drm/drm_connector.c              | 214 +++++++++
->>  drivers/gpu/drm/drm_drv.c                    |   4 +
->>  drivers/gpu/drm/drm_privacy_screen.c         | 468 +++++++++++++++++++
->>  drivers/gpu/drm/drm_privacy_screen_x86.c     |  86 ++++
->>  drivers/gpu/drm/i915/display/intel_display.c |   5 +
->>  drivers/gpu/drm/i915/display/intel_dp.c      |  10 +
->>  drivers/gpu/drm/i915/i915_pci.c              |  12 +
->>  drivers/platform/x86/Kconfig                 |   2 +
->>  drivers/platform/x86/thinkpad_acpi.c         | 131 ++++--
->>  include/drm/drm_connector.h                  |  56 +++
->>  include/drm/drm_privacy_screen_consumer.h    |  65 +++
->>  include/drm/drm_privacy_screen_driver.h      |  84 ++++
->>  include/drm/drm_privacy_screen_machine.h     |  46 ++
->>  19 files changed, 1175 insertions(+), 42 deletions(-)
->>  create mode 100644 drivers/gpu/drm/drm_privacy_screen.c
->>  create mode 100644 drivers/gpu/drm/drm_privacy_screen_x86.c
->>  create mode 100644 include/drm/drm_privacy_screen_consumer.h
->>  create mode 100644 include/drm/drm_privacy_screen_driver.h
->>  create mode 100644 include/drm/drm_privacy_screen_machine.h
->>
-> 
-
+-- 
+Jani Nikula, Intel Open Source Graphics Center
