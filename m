@@ -2,187 +2,252 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BFEC43217
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 11:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C569FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 12:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E13160F48
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 11:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD2160F46
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 12:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238342AbhIPLxC (ORCPT
+        id S239971AbhIPMmC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Sep 2021 07:53:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238274AbhIPLxB (ORCPT
+        Thu, 16 Sep 2021 08:42:02 -0400
+Received: from mail-dm6nam10on2071.outbound.protection.outlook.com ([40.107.93.71]:6560
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S239891AbhIPMlq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Sep 2021 07:53:01 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB01BC061574;
-        Thu, 16 Sep 2021 04:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1631793098;
-        bh=hO8MM7rkDgtjlX2BKCZzkCfApidbr4y2lSSjjuo6Spc=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=T879eZw4oyZmXCoQBzMn6TSL7TK2u4yA9WcOVdZAZ0H1ES0BfZh+c8qlaAlgIPIpC
-         EZnQfXlJ4z5xni7cnClkogAdyVLHlN0VyzknQ+r9zr6EpGugkqsddQqZZrBGZDfrR0
-         9M+jMUqC/HazPpVpqowHJ+tlxvnuziqzSjk0KDQRmXiXxxaF7vMYJKwoebP5X7vITE
-         bMJsOzJQ7uNDCIvfTBD7ylQk7c+vA2OSB/um9B8TH/DnrN+ZCARHPzrHaVfJh6WWqX
-         eRpDp98PeMg6OvGq/UiCuletGr7nCgKoxmLkqF4TIS7Ah9AEH2oeKN2Got5wDxjEQU
-         5Tn4zy5KEZ4Kw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4H9FmR1HjKz9sXS;
-        Thu, 16 Sep 2021 21:51:33 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christoph Hellwig <hch@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>,
-        kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>, linux-s390@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>, x86@kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-graphics-maintainer@vmware.com,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 4/8] powerpc/pseries/svm: Add a powerpc version of
- cc_platform_has()
-In-Reply-To: <YULztMRLJ55YLVU9@infradead.org>
-References: <cover.1631141919.git.thomas.lendacky@amd.com>
- <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
- <YUCOTIPPsJJpLO/d@zn.tnic> <87lf3yk7g4.fsf@mpe.ellerman.id.au>
- <YUHGDbtiGrDz5+NS@zn.tnic>
- <f8388f18-5e90-5d0f-d681-0b17f8307dd4@csgroup.eu>
- <YULztMRLJ55YLVU9@infradead.org>
-Date:   Thu, 16 Sep 2021 21:51:30 +1000
-Message-ID: <87czp8kabh.fsf@mpe.ellerman.id.au>
+        Thu, 16 Sep 2021 08:41:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XKqRbzKn31T29rn5es7XkIpWbVoKvVopbZy3CJ4H799tOTMxHiLN0SwzTsh2RTo4rhpdjr2wpqr3CwFuhtFgXICHGwCKGQSGTX1AZz5jKtFXV7stdb/UMFeKqQuIyzytfencm/iDU/ENffAWix1ueT9g1rar9uvkPyWZ0xszI7kfyu2rdF1NBbRVx2K/TsiWGyE/9+nFyWfzcNrbUhG2nHXe+f6qdWtJDQqynGgM3I9OkIRRKEfggI2aeYTlN4O0zX6yFY7q/TC2zdE1RVNAG4zp0gM0yBSSAhggDgtdMQLRitYS4K5AozqxwUzu5nJFWRmTtul0UU5y8cWELreXqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=94EJLJBwBHep0r0sfnpPqUMizNc6oS1Bcm/foOul2Tc=;
+ b=FzfSyDen5jiYxOlpiGV7ZKkLNDbmxk/xubpkWffxDa9ZyzUGgojlNEVZr9PqbECWOtYsjn6hkusHU/E4LghNaKsZLEcrJiRIFYUQYnQDttPOTSs0PrcyBBVG2pEBaaoA0OuRIU2IbkCM/hbeeEXY8wjvNNGyrP9aCHm+3aNAwbQXa8haZjLxQXKf1Qot4hZroMrdTPwCd0Hy/cYP22xaurJOch1LqyB/bN8xfbIycRC7yhLJzSy6h5FxTa0o+EGB9pDv0GhXuaBEDYx8KqDwjtz1BW93r5xvc1LOzccTQQ3ZfMAIhJ0f9/yPRshSKgW37sW/KM2dJhO9WsFmJ4PWrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=94EJLJBwBHep0r0sfnpPqUMizNc6oS1Bcm/foOul2Tc=;
+ b=qdLDN0Tp5M6nUvxXxOBRN9aKLnSakuOIC7FmY7y/frwayR8Q3oC2qaTr202b5lg96XRX2XoyxVZgdSWEkW5CbgSPGUb0FajKBNfPVxX2essKAkHSps/mOQ+c1X3wJtvlI4P4M2SZ2ks8TBfEOi3cuvqLGy34054fmwa/AES0TcQ=
+Received: from BN9PR03CA0440.namprd03.prod.outlook.com (2603:10b6:408:113::25)
+ by BN6PR12MB1843.namprd12.prod.outlook.com (2603:10b6:404:101::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.16; Thu, 16 Sep
+ 2021 12:40:22 +0000
+Received: from BN8NAM11FT003.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:113:cafe::21) by BN9PR03CA0440.outlook.office365.com
+ (2603:10b6:408:113::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.14 via Frontend
+ Transport; Thu, 16 Sep 2021 12:40:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT003.mail.protection.outlook.com (10.13.177.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4523.14 via Frontend Transport; Thu, 16 Sep 2021 12:40:22 +0000
+Received: from Mayan-RMB.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Thu, 16 Sep
+ 2021 07:40:19 -0500
+From:   Sanket Goswami <Sanket.Goswami@amd.com>
+To:     <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>,
+        <mgross@linux.intel.com>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Sanket Goswami <Sanket.Goswami@amd.com>
+Subject: [PATCH v2] platform/x86: amd-pmc: Export Idlemask values based on the APU
+Date:   Thu, 16 Sep 2021 18:10:02 +0530
+Message-ID: <20210916124002.2529-1-Sanket.Goswami@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a41c587f-81b4-47e5-6f2d-08d9790f265d
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1843:
+X-Microsoft-Antispam-PRVS: <BN6PR12MB18433C7ABF67A079C949B25E9CDC9@BN6PR12MB1843.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:619;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ju3czA0sghC7wgpwxY8zHqp9kA3VL3ZbGMVvMWCdj7e+iXt0PBazoQz/kmziaImzvxbgwDJZZDyU4j//XMGndJGlfzAxxaU6ALbPrtQNYKjmEgz10w49z7JJLogn3vSG4PuugYudTCxi08/I+p/Wf88hrw7l+h8e99UGnPmdb6MAvXpBWDjLFtnZAhPEwuOcyk7ttTAPtONMq4HSg3N+1qbIcWKGfpmZUWxkPRtX5xp5/IlPTrse/hdBPn75j08rPZ51V/O/Y9xQvmsZTzTQgAH5Il30prxabT1wWuiOUo0ujIAEswbf8n1CACm79WpG7NOmorjQbyC5DzHOxMJZ5ulJfDDPoGOFRAnHlfsHlap3cdSoXzfEr6my+T8LcHjz+rTz8xxxJ2AFsLPZBES1HWHpLV1vHp/7nxgJI2klZaKQue5JACkvoGLXEpRCOkyx2uP07OYr5lPi8TsK7aS2ht4+VBxb5eA7NLze7ognqdWK/55XI+xm7BM46zJec3gek51T6laEHItLqwVVUvZZCWPvWqlm8eX3pPehZsb/yYGKK9bN5vneeqyhL8Eyda9GzmLG9ONW/oVZTEnyE02OixB9n+rsMrW1F8n92lFYH+vLd4sjto++zT9ImOa4sAy0I+J4bpJytEmBCiiZsn/3MVjDM1MWDGcwLV41jkISpEY57PvnSCn6EuQZQWc8RQYgJP3cc5hTqZEaBxUUDWl9Cdy5VVXQPJ+oACnfhTaRfBk=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(136003)(39860400002)(346002)(396003)(376002)(46966006)(36840700001)(316002)(83380400001)(7696005)(82310400003)(2906002)(110136005)(54906003)(4326008)(70206006)(70586007)(336012)(356005)(26005)(186003)(5660300002)(81166007)(82740400003)(16526019)(6666004)(86362001)(1076003)(2616005)(8936002)(36860700001)(36756003)(47076005)(8676002)(426003)(478600001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2021 12:40:22.4343
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a41c587f-81b4-47e5-6f2d-08d9790f265d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT003.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1843
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Christoph Hellwig <hch@infradead.org> writes:
-> On Wed, Sep 15, 2021 at 07:18:34PM +0200, Christophe Leroy wrote:
->> Could you please provide more explicit explanation why inlining such an
->> helper is considered as bad practice and messy ?
->
-> Because now we get architectures to all subly differ.  Look at the mess
-> for ioremap and the ioremap* variant.
->
-> The only good reason to allow for inlines if if they are used in a hot
-> path.  Which cc_platform_has is not, especially not on powerpc.
+IdleMask is the metric used by the PM firmware to know the status of each
+of the Hardware IP blocks monitored by the PM firmware.
 
-Yes I agree, it's not a hot path so it doesn't really matter, which is
-why I Acked it.
+Knowing this value is key to get the information of s2idle suspend/resume
+status. This value is mapped to PMC scratch registers, retrieve them
+accordingly based on the CPU family and the underlying firmware support.
 
-I think it is possible to do both, share the declaration across arches
-but also give arches flexibility to use an inline if they prefer, see
-patch below.
+Co-developed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+---
+Changes in v2:
+- Add separate routine amd_pmc_idlemask_read to get the value.
+- Address review comments from Mario.
 
-I'm not suggesting we actually do that for this series now, but I think
-it would solve the problem if we ever needed to in future.
+ drivers/platform/x86/amd-pmc.c | 76 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-cheers
-
-
-diff --git a/arch/powerpc/platforms/pseries/cc_platform.c b/arch/powerpc/include/asm/cc_platform.h
-similarity index 74%
-rename from arch/powerpc/platforms/pseries/cc_platform.c
-rename to arch/powerpc/include/asm/cc_platform.h
-index e8021af83a19..6285c3c385a6 100644
---- a/arch/powerpc/platforms/pseries/cc_platform.c
-+++ b/arch/powerpc/include/asm/cc_platform.h
-@@ -7,13 +7,10 @@
-  * Author: Tom Lendacky <thomas.lendacky@amd.com>
-  */
+diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+index 3481479a2942..0c970f613e09 100644
+--- a/drivers/platform/x86/amd-pmc.c
++++ b/drivers/platform/x86/amd-pmc.c
+@@ -29,6 +29,10 @@
+ #define AMD_PMC_REGISTER_RESPONSE	0x980
+ #define AMD_PMC_REGISTER_ARGUMENT	0x9BC
  
--#include <linux/export.h>
- #include <linux/cc_platform.h>
--
--#include <asm/machdep.h>
- #include <asm/svm.h>
- 
--bool cc_platform_has(enum cc_attr attr)
-+static inline bool arch_cc_platform_has(enum cc_attr attr)
- {
- 	switch (attr) {
- 	case CC_ATTR_MEM_ENCRYPT:
-@@ -23,4 +20,3 @@ bool cc_platform_has(enum cc_attr attr)
- 		return false;
- 	}
++/* PMC Scratch Registers */
++#define AMD_PMC_SCRATCH_REG_CZN		0x94
++#define AMD_PMC_SCRATCH_REG_YC		0xD14
++
+ /* Base address of SMU for mapping physical address to virtual address */
+ #define AMD_PMC_SMU_INDEX_ADDRESS	0xB8
+ #define AMD_PMC_SMU_INDEX_DATA		0xBC
+@@ -110,6 +114,10 @@ struct amd_pmc_dev {
+ 	u32 base_addr;
+ 	u32 cpu_id;
+ 	u32 active_ips;
++/* SMU version information */
++	u16 major;
++	u16 minor;
++	u16 rev;
+ 	struct device *dev;
+ 	struct mutex lock; /* generic mutex lock */
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
+@@ -201,6 +209,66 @@ static int s0ix_stats_show(struct seq_file *s, void *unused)
  }
--EXPORT_SYMBOL_GPL(cc_platform_has);
-diff --git a/arch/x86/include/asm/cc_platform.h b/arch/x86/include/asm/cc_platform.h
-new file mode 100644
-index 000000000000..0a4220697043
---- /dev/null
-+++ b/arch/x86/include/asm/cc_platform.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_CC_PLATFORM_H_
-+#define _ASM_X86_CC_PLATFORM_H_
-+
-+bool arch_cc_platform_has(enum cc_attr attr);
-+
-+#endif // _ASM_X86_CC_PLATFORM_H_
-diff --git a/arch/x86/kernel/cc_platform.c b/arch/x86/kernel/cc_platform.c
-index 3c9bacd3c3f3..77e8c3465979 100644
---- a/arch/x86/kernel/cc_platform.c
-+++ b/arch/x86/kernel/cc_platform.c
-@@ -11,11 +11,11 @@
- #include <linux/cc_platform.h>
- #include <linux/mem_encrypt.h>
+ DEFINE_SHOW_ATTRIBUTE(s0ix_stats);
  
--bool cc_platform_has(enum cc_attr attr)
-+bool arch_cc_platform_has(enum cc_attr attr)
- {
- 	if (sme_me_mask)
- 		return amd_cc_platform_has(attr);
- 
- 	return false;
- }
--EXPORT_SYMBOL_GPL(cc_platform_has);
-+EXPORT_SYMBOL_GPL(arch_cc_platform_has);
-diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
-index 253f3ea66cd8..f3306647c5d9 100644
---- a/include/linux/cc_platform.h
-+++ b/include/linux/cc_platform.h
-@@ -65,6 +65,8 @@ enum cc_attr {
- 
- #ifdef CONFIG_ARCH_HAS_CC_PLATFORM
- 
-+#include <asm/cc_platform.h>
-+
- /**
-  * cc_platform_has() - Checks if the specified cc_attr attribute is active
-  * @attr: Confidential computing attribute to check
-@@ -77,7 +79,10 @@ enum cc_attr {
-  * * TRUE  - Specified Confidential Computing attribute is active
-  * * FALSE - Specified Confidential Computing attribute is not active
-  */
--bool cc_platform_has(enum cc_attr attr);
-+static inline bool cc_platform_has(enum cc_attr attr)
++static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
 +{
-+	return arch_cc_platform_has(attr);
++	int rc;
++	u32 val;
++
++	rc = amd_pmc_send_cmd(dev, 0, &val, SMU_MSG_GETSMUVERSION, 1);
++	if (rc)
++		return rc;
++
++	dev->major = (val >> 16) & GENMASK(15, 0);
++	dev->minor = (val >> 8) & GENMASK(7, 0);
++	dev->rev = (val >> 0) & GENMASK(7, 0);
++
++	dev_dbg(dev->dev, "SMU version is %u.%u.%u\n", dev->major, dev->minor, dev->rev);
++
++	return 0;
 +}
++
++static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
++				 struct seq_file *s)
++{
++	u32 val;
++
++	switch (pdev->cpu_id) {
++	case AMD_CPU_ID_CZN:
++		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_CZN);
++		break;
++	case AMD_CPU_ID_YC:
++		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_YC);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	if (dev)
++		dev_dbg(pdev->dev, "SMU idlemask s0i3: 0x%x\n", val);
++
++	if (s)
++		seq_printf(s, "SMU idlemask : 0x%x\n", val);
++
++	return 0;
++}
++
++static int amd_pmc_idlemask_show(struct seq_file *s, void *unused)
++{
++	struct amd_pmc_dev *dev = s->private;
++	int rc;
++
++	if (dev->major > 56 || (dev->major >= 55 && dev->minor >= 37)) {
++		rc = amd_pmc_idlemask_read(dev, NULL, s);
++		if (rc)
++			return rc;
++	} else {
++		seq_puts(s, "Unsupported SMU version for Idlemask\n");
++	}
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(amd_pmc_idlemask);
++
+ static void amd_pmc_dbgfs_unregister(struct amd_pmc_dev *dev)
+ {
+ 	debugfs_remove_recursive(dev->dbgfs_dir);
+@@ -213,6 +281,8 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
+ 			    &smu_fw_info_fops);
+ 	debugfs_create_file("s0ix_stats", 0644, dev->dbgfs_dir, dev,
+ 			    &s0ix_stats_fops);
++	debugfs_create_file("amd_pmc_idlemask", 0644, dev->dbgfs_dir, dev,
++			    &amd_pmc_idlemask_fops);
+ }
+ #else
+ static inline void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
+@@ -349,6 +419,8 @@ static int __maybe_unused amd_pmc_suspend(struct device *dev)
+ 	amd_pmc_send_cmd(pdev, 0, NULL, SMU_MSG_LOG_RESET, 0);
+ 	amd_pmc_send_cmd(pdev, 0, NULL, SMU_MSG_LOG_START, 0);
  
- #else	/* !CONFIG_ARCH_HAS_CC_PLATFORM */
++	/* Dump the IdleMask before we send hint to SMU */
++	amd_pmc_idlemask_read(pdev, dev, NULL);
+ 	msg = amd_pmc_get_os_hint(pdev);
+ 	rc = amd_pmc_send_cmd(pdev, 1, NULL, msg, 0);
+ 	if (rc)
+@@ -371,6 +443,9 @@ static int __maybe_unused amd_pmc_resume(struct device *dev)
+ 	if (rc)
+ 		dev_err(pdev->dev, "resume failed\n");
  
-
++	/* Dump the IdleMask to see the blockers */
++	amd_pmc_idlemask_read(pdev, dev, NULL);
++
+ 	return 0;
+ }
+ 
+@@ -457,6 +532,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
+ 	if (err)
+ 		dev_err(dev->dev, "SMU debugging info not supported on this platform\n");
+ 
++	amd_pmc_get_smu_version(dev);
+ 	platform_set_drvdata(pdev, dev);
+ 	amd_pmc_dbgfs_register(dev);
+ 	return 0;
+-- 
+2.25.1
 
