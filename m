@@ -2,254 +2,103 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F08DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 14:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56825C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 15:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 717F761130
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 14:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B2961216
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 15:02:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235997AbhIPOFa (ORCPT
+        id S239074AbhIPPES (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Sep 2021 10:05:30 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40474 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238147AbhIPOF3 (ORCPT
+        Thu, 16 Sep 2021 11:04:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238971AbhIPPEO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Sep 2021 10:05:29 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10109"; a="209797810"
-X-IronPort-AV: E=Sophos;i="5.85,298,1624345200"; 
-   d="scan'208";a="209797810"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2021 07:04:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,298,1624345200"; 
-   d="scan'208";a="545717360"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.171])
-  by FMSMGA003.fm.intel.com with SMTP; 16 Sep 2021 07:04:01 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Thu, 16 Sep 2021 17:04:01 +0300
-Date:   Thu, 16 Sep 2021 17:04:01 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Thu, 16 Sep 2021 11:04:14 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AE0C061574;
+        Thu, 16 Sep 2021 08:02:52 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f11c600e73b4cdd38695acb.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:c600:e73b:4cdd:3869:5acb])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 56F431EC0136;
+        Thu, 16 Sep 2021 17:02:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1631804566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Ry9NO0W0dY1PlRpeMUb1ltduv1HjeDhspaE6VFY8fE0=;
+        b=dzihOSpZSIsZh7rL/9DrKrEUKj+fwC3WBoadhJkTSM7ks3hY+DLbUVbUxsNt3sZ013SNbv
+        1uoFXr/UPHLRN/IWfbqSc9ua9o0PdzpF9X5dQXtDeWZUajOJiu0Yx7FrtLENXoeeq5i90A
+        kjm7WIQn/Y72ZtAGCfVPiXsaokbbn6M=
+Date:   Thu, 16 Sep 2021 17:02:40 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Thomas Zimmermann <tzimmermann@suse.de>,
-        Rajat Jain <rajatja@google.com>, Lyude <lyude@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Pekka Paalanen <pekka.paalanen@collabora.com>,
-        Mario Limonciello <mario.limonciello@outlook.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Sebastien Bacher <seb128@ubuntu.com>,
-        Marco Trevisan <marco.trevisan@canonical.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 9/9] drm/i915: Add privacy-screen support
-Message-ID: <YUNO0VrffuPZa02O@intel.com>
-References: <20210906073519.4615-1-hdegoede@redhat.com>
- <20210906073519.4615-10-hdegoede@redhat.com>
- <87sfy4x3ic.fsf@intel.com>
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 0/8] Implement generic cc_platform_has() helper
+ function
+Message-ID: <YUNckGH0+KXdEmqu@zn.tnic>
+References: <cover.1631141919.git.thomas.lendacky@amd.com>
+ <YUIjS6lKEY5AadZx@zn.tnic>
+ <d48e6a17-d2b4-67da-56d1-fc9a61dfe2b8@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87sfy4x3ic.fsf@intel.com>
-X-Patchwork-Hint: comment
+In-Reply-To: <d48e6a17-d2b4-67da-56d1-fc9a61dfe2b8@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 12:40:11PM +0300, Jani Nikula wrote:
-> 
-> Cc: Ville for input here, see question inline.
-> 
-> On Mon, 06 Sep 2021, Hans de Goede <hdegoede@redhat.com> wrote:
-> > Add support for eDP panels with a built-in privacy screen using the
-> > new drm_privacy_screen class.
-> >
-> > One thing which stands out here is the addition of these 2 lines to
-> > intel_atomic_commit_tail:
-> >
-> > 	for_each_new_connector_in_state(&state->base, connector, ...
-> > 		drm_connector_update_privacy_screen(connector, state);
-> >
-> > It may seem more logical to instead take care of updating the
-> > privacy-screen state by marking the crtc as needing a modeset and then
-> > do this in both the encoder update_pipe (for fast-sets) and enable
-> > (for full modesets) callbacks. But ATM these callbacks only get passed
-> > the new connector_state and these callbacks are all called after
-> > drm_atomic_helper_swap_state() at which point there is no way to get
-> > the old state from the new state.
-> >
-> > Without access to the old state, we do not know if the sw_state of
-> > the privacy-screen has changes so we would need to call
-> > drm_privacy_screen_set_sw_state() unconditionally. This is undesirable
-> > since all current known privacy-screen providers use ACPI calls which
-> > are somewhat expensive to make.
-> >
-> > Also, as all providers use ACPI calls, rather then poking GPU registers,
-> > there is no need to order this together with other encoder operations.
-> > Since no GPU poking is involved having this as a separate step of the
-> > commit process actually is the logical thing to do.
-> >
-> > Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > ---
-> >  drivers/gpu/drm/i915/display/intel_display.c |  5 +++++
-> >  drivers/gpu/drm/i915/display/intel_dp.c      | 10 ++++++++++
-> >  drivers/gpu/drm/i915/i915_pci.c              | 12 ++++++++++++
-> >  3 files changed, 27 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-> > index 5560d2f4c352..7285873d329a 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_display.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_display.c
-> > @@ -10140,6 +10140,8 @@ static void intel_atomic_commit_tail(struct intel_atomic_state *state)
-> >  	struct drm_device *dev = state->base.dev;
-> >  	struct drm_i915_private *dev_priv = to_i915(dev);
-> >  	struct intel_crtc_state *new_crtc_state, *old_crtc_state;
-> > +	struct drm_connector_state *new_connector_state;
-> > +	struct drm_connector *connector;
-> >  	struct intel_crtc *crtc;
-> >  	u64 put_domains[I915_MAX_PIPES] = {};
-> >  	intel_wakeref_t wakeref = 0;
-> > @@ -10237,6 +10239,9 @@ static void intel_atomic_commit_tail(struct intel_atomic_state *state)
-> >  			intel_color_load_luts(new_crtc_state);
-> >  	}
-> >  
-> > +	for_each_new_connector_in_state(&state->base, connector, new_connector_state, i)
-> > +		drm_connector_update_privacy_screen(connector, &state->base);
-> > +
-> >  	/*
-> >  	 * Now that the vblank has passed, we can go ahead and program the
-> >  	 * optimal watermarks on platforms that need two-step watermark
-> > diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> > index 7f8e8865048f..3aa2072cccf6 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> > @@ -37,6 +37,7 @@
-> >  #include <drm/drm_crtc.h>
-> >  #include <drm/drm_dp_helper.h>
-> >  #include <drm/drm_edid.h>
-> > +#include <drm/drm_privacy_screen_consumer.h>
-> >  #include <drm/drm_probe_helper.h>
-> >  
-> >  #include "g4x_dp.h"
-> > @@ -5217,6 +5218,7 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
-> >  	struct drm_connector *connector = &intel_connector->base;
-> >  	struct drm_display_mode *fixed_mode = NULL;
-> >  	struct drm_display_mode *downclock_mode = NULL;
-> > +	struct drm_privacy_screen *privacy_screen;
-> >  	bool has_dpcd;
-> >  	enum pipe pipe = INVALID_PIPE;
-> >  	struct edid *edid;
-> > @@ -5308,6 +5310,14 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
-> >  				fixed_mode->hdisplay, fixed_mode->vdisplay);
-> >  	}
-> >  
-> > +	privacy_screen = drm_privacy_screen_get(dev->dev, NULL);
-> > +	if (!IS_ERR(privacy_screen)) {
-> > +		drm_connector_attach_privacy_screen_provider(connector,
-> > +							     privacy_screen);
-> > +	} else if (PTR_ERR(privacy_screen) != -ENODEV) {
-> > +		drm_warn(&dev_priv->drm, "Error getting privacy-screen\n");
-> > +	}
-> > +
-> >  	return true;
-> >  
-> >  out_vdd_off:
-> > diff --git a/drivers/gpu/drm/i915/i915_pci.c b/drivers/gpu/drm/i915/i915_pci.c
-> > index 146f7e39182a..d6913f567a1c 100644
-> > --- a/drivers/gpu/drm/i915/i915_pci.c
-> > +++ b/drivers/gpu/drm/i915/i915_pci.c
-> > @@ -25,6 +25,7 @@
-> >  #include <linux/vga_switcheroo.h>
-> >  
-> >  #include <drm/drm_drv.h>
-> > +#include <drm/drm_privacy_screen_consumer.h>
-> >  #include <drm/i915_pciids.h>
-> >  
-> >  #include "i915_drv.h"
-> > @@ -1167,6 +1168,7 @@ static int i915_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-> >  {
-> >  	struct intel_device_info *intel_info =
-> >  		(struct intel_device_info *) ent->driver_data;
-> > +	struct drm_privacy_screen *privacy_screen;
-> >  	int err;
-> >  
-> >  	if (intel_info->require_force_probe &&
-> > @@ -1195,7 +1197,17 @@ static int i915_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-> >  	if (vga_switcheroo_client_probe_defer(pdev))
-> >  		return -EPROBE_DEFER;
-> >  
-> > +	/*
-> > +	 * We do not handle -EPROBE_DEFER further into the probe process, so
-> > +	 * check if we have a laptop-panel privacy-screen for which the driver
-> > +	 * has not loaded yet here.
-> > +	 */
-> > +	privacy_screen = drm_privacy_screen_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(privacy_screen) && PTR_ERR(privacy_screen) == -EPROBE_DEFER)
-> > +		return -EPROBE_DEFER;
-> > +
-> >  	err = i915_driver_probe(pdev, ent);
-> > +	drm_privacy_screen_put(privacy_screen);
-> >  	if (err)
-> >  		return err;
-> 
-> Ideally, neither i915_pci_probe() nor i915_driver_probe() should assume
-> we have display. We might not. We should not wait if we are never going
-> to initialize display.
-> 
-> Alas, we'll only know after i915_driver_probe() ->
-> i915_driver_mmio_probe() -> intel_device_info_runtime_init(), which
-> modifies ->pipe_mask, which is the single point of truth. See
-> HAS_DISPLAY().
-> 
-> We do have tests for failing probe at various points (see the
-> i915_inject_probe_failure() calls) to stress the cleanup paths in
-> CI. Part of the point was to prepare us for -EPROBE_DEFER returns.
-> 
-> Looks like the earliest/cleanest point for checking this is in
-> intel_modeset_init_noirq(), i.e. first display init call. But I admit it
-> gives me an uneasy feeling to return -EPROBE_DEFER at that stage. The
-> only -EPROBE_DEFER return we currently have is the vga switcheroo stuff
-> you see in the patch context, and most platforms never return that.
-> 
-> Ville, I'd like to get your thoughts on that.
+On Wed, Sep 15, 2021 at 10:26:06AM -0700, Kuppuswamy, Sathyanarayanan wrote:
+> I have a Intel variant patch (please check following patch). But it includes
+> TDX changes as well. Shall I move TDX changes to different patch and just
+> create a separate patch for adding intel_cc_platform_has()?
 
-I'm just scaread about everything to do with deferred probing.
+Yes, please, so that I can expedite that stuff separately and so that it
+can go in early in order for future work to be based ontop.
 
-For example, I don't even know what would happen if you have some kind
-of mismatch betwen i915 and thinkpad_acpi y/m/n? Or you have one but not
-the other in the initrd? Is the machine at least guaranteed to boot
-properly and light up the display at some point?
-
-But yeah, failing the probe at some stage when we've already clobbered
-a bunch of things sounds like an "interesting" idea. I don't think we've
-given the error paths any real though beyond the "ci+error injection
-seems to not explode too badly" approach.
-
-> Anyway, even if we decide not to, err, defer returning -EPROBE_DEFER, I
-> think we should abstract this better. For example, add a
-> intel_modeset_probe_defer() function in intel_display.c that checks
-> this, and call that as the first thing in i915_driver_probe(). Just to
-> keep the display specific code out of the high level functions, even if
-> that is functionally the same as what you're doing here.
-
-Yeah, I guess something like that could be the safest option
-for the moment.
+Thx.
 
 -- 
-Ville Syrjälä
-Intel
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
