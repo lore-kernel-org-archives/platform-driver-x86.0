@@ -2,166 +2,307 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BAFC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 19:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E83DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Sep 2021 14:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 602D461164
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Sep 2021 19:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B6E60EB2
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Sep 2021 14:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232512AbhIPTmZ (ORCPT
+        id S229680AbhIQOY2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Sep 2021 15:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230452AbhIPTmY (ORCPT
+        Fri, 17 Sep 2021 10:24:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60365 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232161AbhIQOY2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Sep 2021 15:42:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 93D3761164;
-        Thu, 16 Sep 2021 19:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631821263;
-        bh=soyfUqVQbP0TrX3MUGTCtp9M3EsGu8pssJ5XKcFWprU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=o8SNT7ENEBzSRvnpewmA/7iWvL7Q61LSeFRnC1pugyW7mzrVUOhghrYs8oNIZT0Qx
-         p5A1O3kkdDMILw8O/WnmxW1oZp/gbDrPdW8EDJh4cJL12MPdy2ToeHzZCpyfk2+qb4
-         eI0OkIjdk2oFUWVh1alOgqEr4UrS/UsG9JBbn3CrFA4qV9W+D5unbt+Yolxs2scAhQ
-         fBEfj3xUNXMiTabH8tLPkUQiPqWng8n2SYAnDmdIG7LGCul63BADhBSM74M46mBVdQ
-         VEPmAPpF0I+z7imdkfNmbyZMU7XD0VS2X4URA5Km6FqpqsB7gJUkugByScQxic1wvO
-         rv/jVZyice3zQ==
-Received: by mail-pf1-f180.google.com with SMTP id y4so5391367pfe.5;
-        Thu, 16 Sep 2021 12:41:03 -0700 (PDT)
-X-Gm-Message-State: AOAM533xiXUUGEUXNdPnEntZGyoORPmyKYZWARXw+NUfMa36ePmwEQU9
-        5dvfNLFTdJBVbEfQmUILd9wXqTu4yunPLlXJMEw=
-X-Google-Smtp-Source: ABdhPJxSK0Md4SdwZxQEm62tQpRGeq+lHK11/cMSAJz7jYpspL00UImVffNfMonjsjbKr0XkSgC4uIilxre0QhXL/ao=
-X-Received: by 2002:a63:841:: with SMTP id 62mr6376041pgi.354.1631821263269;
- Thu, 16 Sep 2021 12:41:03 -0700 (PDT)
+        Fri, 17 Sep 2021 10:24:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631888585;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bI64QYSDpBVT8/gWBdIZI4WSCd5oXszuQKLlkpnO6v8=;
+        b=E8Eyd7rRAf/2poMbRTwoGkepx/ymXRZsCpBEprCA5aliz3GgtKvQbETmSxEZ74tNOOe7ST
+        X2KfAcnbgjbd177in5kBwoFAeQaEQWAJonBmsMGRKD33xUA8n6wzwoOmqUw+fhWJGy4x4b
+        0LJTBDX7piVyPhr4ewfzRbvjOMbIAqE=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-kRdfubiXP0aCRe0HI3sIjQ-1; Fri, 17 Sep 2021 10:23:04 -0400
+X-MC-Unique: kRdfubiXP0aCRe0HI3sIjQ-1
+Received: by mail-ed1-f71.google.com with SMTP id b7-20020a50e787000000b003d59cb1a923so8311833edn.5
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Sep 2021 07:23:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bI64QYSDpBVT8/gWBdIZI4WSCd5oXszuQKLlkpnO6v8=;
+        b=4+jm/mXmgn5hw7JRc9Yd84bXiYa89ojqBVtY0FZiIFOfbJDvgG5AsEpRI1i9KKYg0Y
+         FVB3YSD9T+Nrr6xwr5m+5gKFOZ5qRMQR0Yk2FwAStyngpFeDTMkE3cvk7n6FU7VvpP9n
+         WaSuTLGGbpNLlUnfi0+cauy4m2asAgJN3H6VsabJ85kZheZuPMGQjv7Uhz+BeTmGtqlB
+         xjoyeoQwZSswtLWnZPVWdtqI1P2MtiZ40xeLJchsFwL6OLaoxfiSigPjbIVVK1g4lhs/
+         8Z8uVZULqhcsBAdhPF0iqSNGi0+rZ6vt4g/5UHWLtQLbuoAmvU2GMeIqDwajaFrZzDyC
+         qliA==
+X-Gm-Message-State: AOAM530DoFHGUTS/dbJVohjRLd7IosUmioPl/eYkJ2Acg8R5DsR86m95
+        1wOqeNApwSkF9wsUzg+utovKRls7GiLoIrt0GYdDPiNpBamNL6XL+CXUPTYy4z3RqV6pIvErHtd
+        UzRonhcJoG/l8UfxxO5wyowClf7p4/D0ysTAsg8p7TQ+nMnE3SB0PsCdY4A+g+IBUXAZB0HnKxK
+        wXLuZdBOC6Bw==
+X-Received: by 2002:a17:906:8608:: with SMTP id o8mr12471301ejx.470.1631888582857;
+        Fri, 17 Sep 2021 07:23:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxa/bm+soBA+sjiwpF+D00HqanQhTjL1ArpHFHLO+4TMD6y1gEHc02a6kFuN2UlNR5oN0yAwQ==
+X-Received: by 2002:a17:906:8608:: with SMTP id o8mr12471247ejx.470.1631888582468;
+        Fri, 17 Sep 2021 07:23:02 -0700 (PDT)
+Received: from x1.localdomain ([2a0e:5700:4:11:334c:7e36:8d57:40cb])
+        by smtp.gmail.com with ESMTPSA id k12sm2700618edo.9.2021.09.17.07.23.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Sep 2021 07:23:02 -0700 (PDT)
+Subject: Re: [PATCH 9/9] drm/i915: Add privacy-screen support
+To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Rajat Jain <rajatja@google.com>, Lyude <lyude@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Pekka Paalanen <pekka.paalanen@collabora.com>,
+        Mario Limonciello <mario.limonciello@outlook.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Sebastien Bacher <seb128@ubuntu.com>,
+        Marco Trevisan <marco.trevisan@canonical.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org
+References: <20210906073519.4615-1-hdegoede@redhat.com>
+ <20210906073519.4615-10-hdegoede@redhat.com> <87sfy4x3ic.fsf@intel.com>
+ <YUNO0VrffuPZa02O@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <cc9a8dd1-3cbb-06b8-6a4f-8eb3ea277c4c@redhat.com>
+Date:   Fri, 17 Sep 2021 16:23:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <20200827185829.30096-1-krzk@kernel.org> <20201002162353.GA5870@kozik-lap>
-In-Reply-To: <20201002162353.GA5870@kozik-lap>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 16 Sep 2021 21:40:51 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdOvmuGJCF9Edw8zFfOY7r+QFc23OAgjoXtHxN65Ovh7A@mail.gmail.com>
-Message-ID: <CAJKOXPdOvmuGJCF9Edw8zFfOY7r+QFc23OAgjoXtHxN65Ovh7A@mail.gmail.com>
-Subject: Re: [PATCH v3 01/27] Input: Simplify with dev_err_probe()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <YUNO0VrffuPZa02O@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 2 Oct 2020 at 18:23, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Thu, Aug 27, 2020 at 08:58:02PM +0200, Krzysztof Kozlowski wrote:
-> > Hi,
-> >
-> > Changes since v2:
-> > 1. Add review tags,
-> > 2. Fixes after review (see individual patches).
-> > 3. Two new patches - 26 and 27.
-> >
-> >
->
-> Hi Dmitry,
->
-> Any comments here? Some of these nicely simplify the code or remove some
-> lines.
+Hi,
 
-Hi Dmitry,
+On 9/16/21 4:04 PM, Ville Syrjälä wrote:
+> On Thu, Sep 16, 2021 at 12:40:11PM +0300, Jani Nikula wrote:
+>>
+>> Cc: Ville for input here, see question inline.
+>>
+>> On Mon, 06 Sep 2021, Hans de Goede <hdegoede@redhat.com> wrote:
+>>> Add support for eDP panels with a built-in privacy screen using the
+>>> new drm_privacy_screen class.
+>>>
+>>> One thing which stands out here is the addition of these 2 lines to
+>>> intel_atomic_commit_tail:
+>>>
+>>> 	for_each_new_connector_in_state(&state->base, connector, ...
+>>> 		drm_connector_update_privacy_screen(connector, state);
+>>>
+>>> It may seem more logical to instead take care of updating the
+>>> privacy-screen state by marking the crtc as needing a modeset and then
+>>> do this in both the encoder update_pipe (for fast-sets) and enable
+>>> (for full modesets) callbacks. But ATM these callbacks only get passed
+>>> the new connector_state and these callbacks are all called after
+>>> drm_atomic_helper_swap_state() at which point there is no way to get
+>>> the old state from the new state.
+>>>
+>>> Without access to the old state, we do not know if the sw_state of
+>>> the privacy-screen has changes so we would need to call
+>>> drm_privacy_screen_set_sw_state() unconditionally. This is undesirable
+>>> since all current known privacy-screen providers use ACPI calls which
+>>> are somewhat expensive to make.
+>>>
+>>> Also, as all providers use ACPI calls, rather then poking GPU registers,
+>>> there is no need to order this together with other encoder operations.
+>>> Since no GPU poking is involved having this as a separate step of the
+>>> commit process actually is the logical thing to do.
+>>>
+>>> Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>> ---
+>>>  drivers/gpu/drm/i915/display/intel_display.c |  5 +++++
+>>>  drivers/gpu/drm/i915/display/intel_dp.c      | 10 ++++++++++
+>>>  drivers/gpu/drm/i915/i915_pci.c              | 12 ++++++++++++
+>>>  3 files changed, 27 insertions(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+>>> index 5560d2f4c352..7285873d329a 100644
+>>> --- a/drivers/gpu/drm/i915/display/intel_display.c
+>>> +++ b/drivers/gpu/drm/i915/display/intel_display.c
+>>> @@ -10140,6 +10140,8 @@ static void intel_atomic_commit_tail(struct intel_atomic_state *state)
+>>>  	struct drm_device *dev = state->base.dev;
+>>>  	struct drm_i915_private *dev_priv = to_i915(dev);
+>>>  	struct intel_crtc_state *new_crtc_state, *old_crtc_state;
+>>> +	struct drm_connector_state *new_connector_state;
+>>> +	struct drm_connector *connector;
+>>>  	struct intel_crtc *crtc;
+>>>  	u64 put_domains[I915_MAX_PIPES] = {};
+>>>  	intel_wakeref_t wakeref = 0;
+>>> @@ -10237,6 +10239,9 @@ static void intel_atomic_commit_tail(struct intel_atomic_state *state)
+>>>  			intel_color_load_luts(new_crtc_state);
+>>>  	}
+>>>  
+>>> +	for_each_new_connector_in_state(&state->base, connector, new_connector_state, i)
+>>> +		drm_connector_update_privacy_screen(connector, &state->base);
+>>> +
+>>>  	/*
+>>>  	 * Now that the vblank has passed, we can go ahead and program the
+>>>  	 * optimal watermarks on platforms that need two-step watermark
+>>> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+>>> index 7f8e8865048f..3aa2072cccf6 100644
+>>> --- a/drivers/gpu/drm/i915/display/intel_dp.c
+>>> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
+>>> @@ -37,6 +37,7 @@
+>>>  #include <drm/drm_crtc.h>
+>>>  #include <drm/drm_dp_helper.h>
+>>>  #include <drm/drm_edid.h>
+>>> +#include <drm/drm_privacy_screen_consumer.h>
+>>>  #include <drm/drm_probe_helper.h>
+>>>  
+>>>  #include "g4x_dp.h"
+>>> @@ -5217,6 +5218,7 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
+>>>  	struct drm_connector *connector = &intel_connector->base;
+>>>  	struct drm_display_mode *fixed_mode = NULL;
+>>>  	struct drm_display_mode *downclock_mode = NULL;
+>>> +	struct drm_privacy_screen *privacy_screen;
+>>>  	bool has_dpcd;
+>>>  	enum pipe pipe = INVALID_PIPE;
+>>>  	struct edid *edid;
+>>> @@ -5308,6 +5310,14 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
+>>>  				fixed_mode->hdisplay, fixed_mode->vdisplay);
+>>>  	}
+>>>  
+>>> +	privacy_screen = drm_privacy_screen_get(dev->dev, NULL);
+>>> +	if (!IS_ERR(privacy_screen)) {
+>>> +		drm_connector_attach_privacy_screen_provider(connector,
+>>> +							     privacy_screen);
+>>> +	} else if (PTR_ERR(privacy_screen) != -ENODEV) {
+>>> +		drm_warn(&dev_priv->drm, "Error getting privacy-screen\n");
+>>> +	}
+>>> +
+>>>  	return true;
+>>>  
+>>>  out_vdd_off:
+>>> diff --git a/drivers/gpu/drm/i915/i915_pci.c b/drivers/gpu/drm/i915/i915_pci.c
+>>> index 146f7e39182a..d6913f567a1c 100644
+>>> --- a/drivers/gpu/drm/i915/i915_pci.c
+>>> +++ b/drivers/gpu/drm/i915/i915_pci.c
+>>> @@ -25,6 +25,7 @@
+>>>  #include <linux/vga_switcheroo.h>
+>>>  
+>>>  #include <drm/drm_drv.h>
+>>> +#include <drm/drm_privacy_screen_consumer.h>
+>>>  #include <drm/i915_pciids.h>
+>>>  
+>>>  #include "i915_drv.h"
+>>> @@ -1167,6 +1168,7 @@ static int i915_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>>>  {
+>>>  	struct intel_device_info *intel_info =
+>>>  		(struct intel_device_info *) ent->driver_data;
+>>> +	struct drm_privacy_screen *privacy_screen;
+>>>  	int err;
+>>>  
+>>>  	if (intel_info->require_force_probe &&
+>>> @@ -1195,7 +1197,17 @@ static int i915_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>>>  	if (vga_switcheroo_client_probe_defer(pdev))
+>>>  		return -EPROBE_DEFER;
+>>>  
+>>> +	/*
+>>> +	 * We do not handle -EPROBE_DEFER further into the probe process, so
+>>> +	 * check if we have a laptop-panel privacy-screen for which the driver
+>>> +	 * has not loaded yet here.
+>>> +	 */
+>>> +	privacy_screen = drm_privacy_screen_get(&pdev->dev, NULL);
+>>> +	if (IS_ERR(privacy_screen) && PTR_ERR(privacy_screen) == -EPROBE_DEFER)
+>>> +		return -EPROBE_DEFER;
+>>> +
+>>>  	err = i915_driver_probe(pdev, ent);
+>>> +	drm_privacy_screen_put(privacy_screen);
+>>>  	if (err)
+>>>  		return err;
+>>
+>> Ideally, neither i915_pci_probe() nor i915_driver_probe() should assume
+>> we have display. We might not. We should not wait if we are never going
+>> to initialize display.
+>>
+>> Alas, we'll only know after i915_driver_probe() ->
+>> i915_driver_mmio_probe() -> intel_device_info_runtime_init(), which
+>> modifies ->pipe_mask, which is the single point of truth. See
+>> HAS_DISPLAY().
+>>
+>> We do have tests for failing probe at various points (see the
+>> i915_inject_probe_failure() calls) to stress the cleanup paths in
+>> CI. Part of the point was to prepare us for -EPROBE_DEFER returns.
+>>
+>> Looks like the earliest/cleanest point for checking this is in
+>> intel_modeset_init_noirq(), i.e. first display init call. But I admit it
+>> gives me an uneasy feeling to return -EPROBE_DEFER at that stage. The
+>> only -EPROBE_DEFER return we currently have is the vga switcheroo stuff
+>> you see in the patch context, and most platforms never return that.
+>>
+>> Ville, I'd like to get your thoughts on that.
+> 
+> I'm just scaread about everything to do with deferred probing.
+> 
+> For example, I don't even know what would happen if you have some kind
+> of mismatch betwen i915 and thinkpad_acpi y/m/n? Or you have one but not
+> the other in the initrd? Is the machine at least guaranteed to boot
+> properly and light up the display at some point?
 
-You never shared your thoughts about this simplification. Some of
-these could be redundant with Rob's work:
-https://lore.kernel.org/lkml/CAL_Jsq+ajm5aiAJfQdS2+2DO1ynBDHWha_7TsA4u-2qwd87y6g@mail.gmail.com/
-but I am not sure if it was merged.
+If i915 us builtin and thinkpad_acpi is m and the machine is a ThinkPad
+with a privacy-screen then the  i915 driver's probe won't get past
+the added check until the thinkpad_acpi driver has loaded.
 
-On the other hand there are here also few other changes like:
->   gpio: Add devm_fwnode_gpiod_get_optional() helpers
->   Input: gpio_keys - Simplify with dev_err_probe()
-which does:
-8 insertions(+), 17 deletions(-)
+Same for i915 being in the initrd and thinkpad_acpi not, then
+the i915 driver's probe won't get past
+the added check until we've pivoted to the real root and the
+thinkpad_acpi module is loaded from the real-root.
 
-and these:
->   Input: bu21013_ts - Use local 'client->dev' variable in probe()
->   Input: bu21029_ts - Use local 'client->dev' variable in probe()
-
-Any comments?
-
-Best regards,
-Krzysztof
+Note that the boot will otherwise continue normally and we will
+still have console output (and even e.g. a plymouth splash after
+a timeout) on the efifb.
 
 
+> 
+> But yeah, failing the probe at some stage when we've already clobbered
+> a bunch of things sounds like an "interesting" idea. I don't think we've
+> given the error paths any real though beyond the "ci+error injection
+> seems to not explode too badly" approach.
+> 
+>> Anyway, even if we decide not to, err, defer returning -EPROBE_DEFER, I
+>> think we should abstract this better. For example, add a
+>> intel_modeset_probe_defer() function in intel_display.c that checks
+>> this, and call that as the first thing in i915_driver_probe(). Just to
+>> keep the display specific code out of the high level functions, even if
+>> that is functionally the same as what you're doing here.
+> 
+> Yeah, I guess something like that could be the safest option
+> for the moment.
 
-> > Krzysztof Kozlowski (27):
-> >   Input: gpio_keys_polled - Simplify with dev_err_probe()
-> >   Input: gpio-vibra - Simplify with dev_err_probe()
-> >   Input: pwm-beeper - Simplify with dev_err_probe()
-> >   Input: pwm-vibra - Simplify with dev_err_probe()
-> >   Input: rotary_encoder - Simplify with dev_err_probe()
-> >   Input: elan_i2c - Simplify with dev_err_probe()
-> >   Input: bu21013_ts - Simplify with dev_err_probe()
-> >   Input: bu21029_ts - Simplify with dev_err_probe()
-> >   Input: chipone_icn8318 - Simplify with dev_err_probe()
-> >   Input: cy8ctma140 - Simplify with dev_err_probe()
-> >   Input: edf-ft5x06 - Simplify with dev_err_probe()
-> >   Input: ektf2127 - Simplify with dev_err_probe()
-> >   Input: elants_i2c - Simplify with dev_err_probe()
-> >   Input: goodix - Simplify with dev_err_probe()
-> >   Input: melfas_mip4 - Simplify with dev_err_probe()
-> >   Input: pixcir_i2c_ts - Simplify with dev_err_probe()
-> >   Input: raydium_i2c_ts - Simplify with dev_err_probe()
-> >   Input: resistive-adc-touch - Simplify with dev_err_probe()
-> >   Input: silead - Simplify with dev_err_probe()
-> >   Input: sis_i2c - Simplify with dev_err_probe()
-> >   Input: surface3_spi - Simplify with dev_err_probe()
-> >   Input: sx8643 - Simplify with dev_err_probe()
-> >   Input: bcm-keypad - Simplify with dev_err_probe()
-> >   gpio: Add devm_fwnode_gpiod_get_optional() helpers
-> >   Input: gpio_keys - Simplify with dev_err_probe()
-> >   Input: bu21013_ts - Use local 'client->dev' variable in probe()
-> >   Input: bu21029_ts - Use local 'client->dev' variable in probe()
-> >
-> >  drivers/gpio/gpiolib-devres.c                 | 71 ++++++++++++++++++
-> >  drivers/input/keyboard/bcm-keypad.c           | 14 ++--
-> >  drivers/input/keyboard/gpio_keys.c            | 25 +++----
-> >  drivers/input/keyboard/gpio_keys_polled.c     |  8 +--
-> >  drivers/input/misc/gpio-vibra.c               | 20 ++----
-> >  drivers/input/misc/pwm-beeper.c               | 19 ++---
-> >  drivers/input/misc/pwm-vibra.c                | 20 ++----
-> >  drivers/input/misc/rotary_encoder.c           |  8 +--
-> >  drivers/input/mouse/elan_i2c_core.c           |  9 +--
-> >  drivers/input/touchscreen/bu21013_ts.c        | 72 ++++++++-----------
-> >  drivers/input/touchscreen/bu21029_ts.c        | 53 ++++++--------
-> >  drivers/input/touchscreen/chipone_icn8318.c   |  8 +--
-> >  drivers/input/touchscreen/cy8ctma140.c        |  8 +--
-> >  drivers/input/touchscreen/edt-ft5x06.c        | 10 +--
-> >  drivers/input/touchscreen/ektf2127.c          |  8 +--
-> >  drivers/input/touchscreen/elants_i2c.c        | 22 ++----
-> >  drivers/input/touchscreen/goodix.c            | 40 +++--------
-> >  drivers/input/touchscreen/melfas_mip4.c       |  9 +--
-> >  drivers/input/touchscreen/pixcir_i2c_ts.c     | 38 ++++------
-> >  drivers/input/touchscreen/raydium_i2c_ts.c    | 30 +++-----
-> >  .../input/touchscreen/resistive-adc-touch.c   |  8 +--
-> >  drivers/input/touchscreen/silead.c            |  8 +--
-> >  drivers/input/touchscreen/sis_i2c.c           | 20 ++----
-> >  drivers/input/touchscreen/surface3_spi.c      | 13 +---
-> >  drivers/input/touchscreen/sx8654.c            | 10 +--
-> >  include/linux/gpio/consumer.h                 | 30 ++++++++
-> >  26 files changed, 253 insertions(+), 328 deletions(-)
-> >
-> > --
-> > 2.17.1
-> >
+Ack I will go with that then.
+
+Regards,
+
+Hans
+
