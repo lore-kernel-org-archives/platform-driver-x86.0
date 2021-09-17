@@ -2,198 +2,128 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ACCC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Sep 2021 17:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B04C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Sep 2021 18:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3734C60F70
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Sep 2021 17:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21F760E52
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Sep 2021 18:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233719AbhIQRF4 (ORCPT
+        id S236100AbhIQSjD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Sep 2021 13:05:56 -0400
-Received: from mga05.intel.com ([192.55.52.43]:60971 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231138AbhIQRF4 (ORCPT
+        Fri, 17 Sep 2021 14:39:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22198 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233335AbhIQSjA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Sep 2021 13:05:56 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10110"; a="308382489"
-X-IronPort-AV: E=Sophos;i="5.85,301,1624345200"; 
-   d="scan'208";a="308382489"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2021 10:04:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,301,1624345200"; 
-   d="scan'208";a="517194610"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.171])
-  by orsmga001.jf.intel.com with SMTP; 17 Sep 2021 10:04:27 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Fri, 17 Sep 2021 20:04:26 +0300
-Date:   Fri, 17 Sep 2021 20:04:26 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rajat Jain <rajatja@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Lyude <lyude@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Pekka Paalanen <pekka.paalanen@collabora.com>,
-        Mario Limonciello <mario.limonciello@outlook.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Sebastien Bacher <seb128@ubuntu.com>,
-        Marco Trevisan <marco.trevisan@canonical.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 9/9] drm/i915: Add privacy-screen support
-Message-ID: <YUTKmkCZ4RE095Ys@intel.com>
-References: <20210906073519.4615-1-hdegoede@redhat.com>
- <20210906073519.4615-10-hdegoede@redhat.com>
- <YUNKh9xcIGoi1eol@intel.com>
- <1239f5f3-fd02-4eed-f464-e92c0afbb620@redhat.com>
- <YUTBb05YNayO3yOg@intel.com>
- <686d5177-3bf9-ddb0-5e55-a2e9969f36f7@redhat.com>
+        Fri, 17 Sep 2021 14:39:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631903856;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2uGSUJ4OwEDinUYdbE9Xm9EZmCzZGXaFlbE5avYj6BU=;
+        b=HAXr+reeIrWgIG2HORKAqF7eUQS9F9b1bB0EnPhQbL4uWhTptIE3EGWdgdfTKsMG+oae10
+        esIooirIeNfSbQs5WZuBESY18vqhSGvRDCcwLeM0mPnvpMPpoBqInLipsZQBqit6mMBpio
+        o8M+Mg8qRonjKNIWSV7+eoRMJuiYo58=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-439-vhI14HkZMJaZOr1aRxnCpw-1; Fri, 17 Sep 2021 14:37:34 -0400
+X-MC-Unique: vhI14HkZMJaZOr1aRxnCpw-1
+Received: by mail-ed1-f72.google.com with SMTP id q17-20020a50c351000000b003d81427d25cso3436983edb.15
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Sep 2021 11:37:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2uGSUJ4OwEDinUYdbE9Xm9EZmCzZGXaFlbE5avYj6BU=;
+        b=xfjKenS8pu6YL2Ny9ewFZcWW7m4NKV6i1W1IdC0NtiiYBRIWeT147bAv0GQiejhPGf
+         LxgRayDO0bKyMN4RSwZ/kbNxRBoCctetOLsyct/hdzN0BJeltYkk21yyNoDgKYaV4GX+
+         atMv8ByYViWwYW9PkGVeCkveS3KLBuYRq3U2vvZ9PT4O1xtMqhaMS0mCdQSRg/4q322x
+         KEXYSu0TYwZqBTHHJs+UscfF1Xc0Sd9fpQ/eQH06V9HPDaRZEoCPcwtZaTFXoDaiZuYz
+         BP84Hz0KTlLFgc2+eNY2SqfMRd0mwKk+xB1+KjtKDEjg/k/3lec4cPhAmaZKdlsOMOoG
+         TR2Q==
+X-Gm-Message-State: AOAM532/2/4Cz+wAGMyBN9UJcig7AC89lsZm1K0WwzVlUc8CeAsxkf/e
+        eJY6NA+orXnVAvtW0CG9SjH5AfqcWsbvhy3isZKx8bjJiJ+ECAtY1KdF4cf4WhPBtlWd3Toxo4u
+        Q8WL/b1U5KS7ugciFDydbCbo2KtKCpZU0fg==
+X-Received: by 2002:a50:e1c4:: with SMTP id m4mr6128300edl.307.1631903853526;
+        Fri, 17 Sep 2021 11:37:33 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwNbhN9Xkm6HUn/UupN6L6rbjYldGZ9ByZPcxb82N8bRPpnSTbC7H/rf8BnRjTmNHq7BNslfg==
+X-Received: by 2002:a50:e1c4:: with SMTP id m4mr6128287edl.307.1631903853384;
+        Fri, 17 Sep 2021 11:37:33 -0700 (PDT)
+Received: from x1.localdomain ([2a0e:5700:4:11:334c:7e36:8d57:40cb])
+        by smtp.gmail.com with ESMTPSA id e22sm3175909edu.35.2021.09.17.11.37.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Sep 2021 11:37:33 -0700 (PDT)
+Subject: Re: [PATCH] Input: silead - Make use of the helper function
+ dev_err_probe()
+To:     Cai Huoqing <caihuoqing@baidu.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20210916153426.15158-1-caihuoqing@baidu.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <83e5b7db-4707-0ab3-c02e-e467c3190358@redhat.com>
+Date:   Fri, 17 Sep 2021 20:37:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <686d5177-3bf9-ddb0-5e55-a2e9969f36f7@redhat.com>
-X-Patchwork-Hint: comment
+In-Reply-To: <20210916153426.15158-1-caihuoqing@baidu.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Sep 17, 2021 at 06:42:04PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 9/17/21 6:25 PM, Ville Syrjälä wrote:
-> > On Fri, Sep 17, 2021 at 04:37:14PM +0200, Hans de Goede wrote:
-> >> Hi,
-> >>
-> >> On 9/16/21 3:45 PM, Ville Syrjälä wrote:
-> >>> On Mon, Sep 06, 2021 at 09:35:19AM +0200, Hans de Goede wrote:
-> >>>> Add support for eDP panels with a built-in privacy screen using the
-> >>>> new drm_privacy_screen class.
-> >>>>
-> >>>> One thing which stands out here is the addition of these 2 lines to
-> >>>> intel_atomic_commit_tail:
-> >>>>
-> >>>> 	for_each_new_connector_in_state(&state->base, connector, ...
-> >>>> 		drm_connector_update_privacy_screen(connector, state);
-> >>>>
-> >>>> It may seem more logical to instead take care of updating the
-> >>>> privacy-screen state by marking the crtc as needing a modeset and then
-> >>>> do this in both the encoder update_pipe (for fast-sets) and enable
-> >>>> (for full modesets) callbacks. But ATM these callbacks only get passed
-> >>>> the new connector_state and these callbacks are all called after
-> >>>> drm_atomic_helper_swap_state() at which point there is no way to get
-> >>>> the old state from the new state.
-> >>>
-> >>> Pretty sure the full atomic state is plumbed all the way
-> >>> down these days.
-> >>
-> >> Including the old state? AFAICT the old-state is being thrown away
-> >> from drm_atomic_helper_swap_state(),
-> > 
-> > No. That's just when those annoying foo_state->state pointers get
-> > clobbered. We've been moving away from using those and just
-> > plumbing the entire atomic state everywhere.
-> > 
-> > Nothing actually gets freed until the whole drm_atomic_state gets
-> > nuked after the commit is done.
-> > 
-> >> so if we do this in a different
-> >> place then we don't have access to the old-state.
-> >>
-> >>
-> >>>
-> >>>>
-> >>>> Without access to the old state, we do not know if the sw_state of
-> >>>> the privacy-screen has changes so we would need to call
-> >>>> drm_privacy_screen_set_sw_state() unconditionally. This is undesirable
-> >>>> since all current known privacy-screen providers use ACPI calls which
-> >>>> are somewhat expensive to make.
-> >>>
-> >>> I doubt anyone is going to care about a bit of overhead for a modeset.
-> >>
-> >> But this is not a modeset, this is more like changing the backlight brightness,
-> >> atm the code does not set the needs_modeset when only the privacy-screen
-> >> sw-state has changed.
-> >>
-> >> Also in my experience the firmware (AML) code which we end up calling
-> >> for this is not the highest quality code, often it has interesting
-> >> issues / unhandled corner cases. So in my experience with ACPI we
-> >> really should try to avoid these calls unless we absolutely must make them,
-> >> but I guess not making unnecessary calls is something which could be handled
-> >> inside the actual privacy-screen driver instead.
-> >>
-> >>> The usual rule is that a modeset doesn't skip anything. That way we
-> >>> can be 100% sure we remeber to update everythinbg. For fastsets I guess
-> >>> one could argue skipping it if not needed, but not sure even that is
-> >>> warranted.
-> >>
-> >> Right, but again this is not a full modeset.
-> > 
-> > In general fastset is is just an optimized modeset. Userspace asked
-> > for a modeset, but we noticed it doesn't need it. I don't think
-> > there is a particular expectation that it's super fast.
-> > 
-> > But if this is really annoyingly slow in some actual usecase
-> 
-> Yeah these acpi-calls might take like a 100 ms easily, so
-> we really want to avoid it if it is not necessary.
-> 
-> > then
-> > one way to avoid that need to compare against the old state is just
-> > introduce another foo_changed flag.
-> 
-> Ok, so I have the feeling that you have an idea of how you think this
-> should be done / how this code should look instead of what I have
-> currently.
-> 
-> Can you perhaps provide a rough sketch / description of how you
-> think this should be done (instead of the current implementation) ?
-> 
-> Should I do the update from the the encoder update_pipe (for fast-sets)
-> and enable (for full modesets) callbacks instead as I mention in
-> the commit message ?
-> 
-> And since I still only want to do the call if there is an actual
-> change, where could I best do the old / new sw_state change cmp to
-> set the new foo_changed flag?
->
+Hi,
 
-I guess it could be just something like this:
+On 9/16/21 5:34 PM, Cai Huoqing wrote:
+> When possible use dev_err_probe help to properly deal with the
+> PROBE_DEFER error, the benefit is that DEFER issue will be logged
+> in the devices_deferred debugfs file.
+> Using dev_err_probe() can reduce code size, and the error value
+> gets printed.
+> 
+> Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
 
-intel_digital_connector_duplicate_state()
-{
-	foo_changed = false;
-}
+Thanks, patch looks good to me:
 
-intel_digital_connector_atomic_check()
-{
-	if (old_foo != new_foo) {
-		mode_changed = true;
-		foo_changed = true;
-	}
-}
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-update_pipe()
-{
-	if (foo_changed)
-		update_foo();
-}
+Regards,
 
--- 
-Ville Syrjälä
-Intel
+Hans
+
+> ---
+>  drivers/input/touchscreen/silead.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+> index 1ee760bac0cf..adfac271f0b5 100644
+> --- a/drivers/input/touchscreen/silead.c
+> +++ b/drivers/input/touchscreen/silead.c
+> @@ -548,11 +548,9 @@ static int silead_ts_probe(struct i2c_client *client,
+>  
+>  	/* Power GPIO pin */
+>  	data->gpio_power = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
+> -	if (IS_ERR(data->gpio_power)) {
+> -		if (PTR_ERR(data->gpio_power) != -EPROBE_DEFER)
+> -			dev_err(dev, "Shutdown GPIO request failed\n");
+> -		return PTR_ERR(data->gpio_power);
+> -	}
+> +	if (IS_ERR(data->gpio_power))
+> +		return dev_err_probe(dev, PTR_ERR(data->gpio_power),
+> +				     "Shutdown GPIO request failed\n");
+>  
+>  	error = silead_ts_setup(client);
+>  	if (error)
+> 
+
