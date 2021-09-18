@@ -2,86 +2,228 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E07BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Sep 2021 04:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0860AC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Sep 2021 07:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A1061212
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Sep 2021 04:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13A660F93
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Sep 2021 07:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234547AbhIREt4 (ORCPT
+        id S234105AbhIRHg0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 18 Sep 2021 00:49:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229963AbhIREt4 (ORCPT
+        Sat, 18 Sep 2021 03:36:26 -0400
+Received: from ds9.troy.rollo.name ([208.77.100.199]:57858 "EHLO
+        ds9.troy.rollo.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231351AbhIRHg0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 18 Sep 2021 00:49:56 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD9AC061574;
-        Fri, 17 Sep 2021 21:48:33 -0700 (PDT)
+        Sat, 18 Sep 2021 03:36:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=ZSyq6dnNtLRF9BLAbdspJ2ImLg9O5ADHvg8kEWnVbi8=; b=qkw+szn3Bvs0HqwRZu0JeKrT6c
-        lulMJVjfKr/voIixGdJkZfXxDNhG68FC+r+MpwWK4OjMt6eUr4fSPRKs7wtxYFKS5T0N+nCtJ+X0Y
-        ABtUhN2fvpC+CozsUvg/ZwI2kiZVhlf5OscIHMWrEFM5cIrJTHC2oy26S4E9eLAIsK0O4F24xeHKE
-        cZErJKDqJR51wNuLWRP47/I1uX1DeKFn+VniY2yND4xcWe+XgvrzU4JUDJWFdYdS13dCf9Pp+/EeU
-        c6DaG8EsWIprKLS6GMDADHqr17YYhi7CxAp3Ws5Hmfx26PI7e9DUGvts6/znl9s52qDZvKOpBnw7g
-        ruMpqsvg==;
-Received: from [2601:1c0:6280:3f0::aa0b] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mRSH8-00FOCC-JI; Sat, 18 Sep 2021 04:48:30 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Perry Yuan <Perry.Yuan@dell.com>, Dell.Client.Kernel@dell.com,
-        platform-driver-x86@vger.kernel.org,
+        d=troy.rollo.name; s=20151118; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=5YF8qUyL/Z0S+zvPuJUJ/IZTj4Gp5JFGgIljFMXbdq4=; b=ihqdRYFhx/H6pHc2v2LAIk0MHL
+        lV/99+/t3QCurmZXRufGXzk9be695yr0Cx/Ipy+xOx0ZfXYKgcx4nM0SIrbZBwPrewQacJXaIy2GG
+        gA+N9Rdz94/eDIUZ73mlicHBWhyInGocBgNJ55WYJBOiIoRPOWqsOrCpmgdBg6StPtg4=;
+Received: from enterprise.troy.rollo.name ([202.153.212.77] helo=enterprise)
+        by ds9.troy.rollo.name with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <troy@troy.rollo.name>)
+        id 1mRUqa-00052i-5J; Sat, 18 Sep 2021 17:33:16 +1000
+Received: from troy by enterprise with local (Exim 4.94.2)
+        (envelope-from <troy@enterprise.troy.rollo.name>)
+        id 1mRUr3-00CRx7-Jp; Sat, 18 Sep 2021 17:33:46 +1000
+From:   Troy Rollo <linux2021@troy.rollo.name>
+To:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>
-Subject: [PATCH] platform/x86: dell: fix DELL_WMI_PRIVACY dependencies & build error
-Date:   Fri, 17 Sep 2021 21:48:29 -0700
-Message-Id: <20210918044829.19222-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.31.1
+Cc:     Troy Rollo <linux2021@troy.rollo.name>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: dell-wmi: Recognise or support new switches
+Date:   Sat, 18 Sep 2021 17:31:30 +1000
+Message-Id: <20210918073131.2966942-1-linux2021@troy.rollo.name>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-When DELL_WMI=y, DELL_WMI_PRIVACY=y, and LEDS_TRIGGER_AUDIO=m, there
-is a linker error since the LEDS trigger code is built as a loadable
-module. This happens because DELL_WMI_PRIVACY is a bool that depends
-on a tristate (LEDS_TRIGGER_AUDIO=m), which can be dangerous.
+Adds support for:
 
-ld: drivers/platform/x86/dell/dell-wmi-privacy.o: in function `dell_privacy_wmi_probe':
-dell-wmi-privacy.c:(.text+0x3df): undefined reference to `ledtrig_audio_get'
+- Dell Inspiron 2in1 tablet mode switch notifications. These are
+  delivered by a type 0x0011 message with code 0xe070, followed by a
+  flag (1 for laptop mode, 0 for tablet mode).
 
-Fixes: 8af9fa37b8a3 ("platform/x86: dell-privacy: Add support for Dell hardware privacy")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Perry Yuan <Perry.Yuan@dell.com>
-Cc: Dell.Client.Kernel@dell.com
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <mgross@linux.intel.com>
+- Recognising (but not otherwise processing) the Dell Ultra Performance
+  mode request switch. This is delivered by a type 0x0012 message with
+  code 0x000d, followed by a parameter that is either 1 or 2. It is
+  not clear what (if anything) should be done with this notification, so
+  it is ignored.
+
+Signed-off-by: Troy Rollo <linux2021@troy.rollo.name>
 ---
- drivers/platform/x86/dell/Kconfig |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/platform/x86/dell/dell-wmi-base.c | 76 ++++++++++++++++++++---
+ 1 file changed, 66 insertions(+), 10 deletions(-)
 
---- linux-next-20210917.orig/drivers/platform/x86/dell/Kconfig
-+++ linux-next-20210917/drivers/platform/x86/dell/Kconfig
-@@ -166,8 +166,7 @@ config DELL_WMI
+diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
+index 089c125e18f7..e07d3ba85a3f 100644
+--- a/drivers/platform/x86/dell/dell-wmi-base.c
++++ b/drivers/platform/x86/dell/dell-wmi-base.c
+@@ -40,6 +40,7 @@ static bool wmi_requires_smbios_request;
  
- config DELL_WMI_PRIVACY
- 	bool "Dell WMI Hardware Privacy Support"
--	depends on DELL_WMI
--	depends on LEDS_TRIGGER_AUDIO
-+	depends on LEDS_TRIGGER_AUDIO = y || DELL_WMI = LEDS_TRIGGER_AUDIO
- 	help
- 	  This option adds integration with the "Dell Hardware Privacy"
- 	  feature of Dell laptops to the dell-wmi driver.
+ struct dell_wmi_priv {
+ 	struct input_dev *input_dev;
++	struct input_dev *tabletswitch_dev;
+ 	u32 interface_version;
+ };
+ 
+@@ -309,6 +310,9 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
+  * Keymap for WMI events of type 0x0011
+  */
+ static const struct key_entry dell_wmi_keymap_type_0011[] = {
++	/* Reflex keyboard switch on 2n1 devices */
++	{ KE_IGNORE, 0xe070, { KEY_RESERVED } },
++
+ 	/* Battery unplugged */
+ 	{ KE_IGNORE, 0xfff0, { KEY_RESERVED } },
+ 
+@@ -340,21 +344,55 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
+  * They are events with extended data
+  */
+ static const struct key_entry dell_wmi_keymap_type_0012[] = {
++	/* Ultra-performance mode switch request */
++	{ KE_IGNORE, 0x000d, { KEY_RESERVED } },
++
+ 	/* Fn-lock button pressed */
+ 	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
+ };
+ 
+-static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
++static void dell_wmi_switch_event(struct input_dev **subdev,
++				  const char *devname,
++				  int switchid,
++				  int value)
++{
++	if (!*subdev) {
++		struct input_dev *dev = input_allocate_device();
++
++		if (!dev) {
++			pr_warn("could not allocate device for %s\n", devname);
++			return;
++		}
++		__set_bit(EV_SW, (dev)->evbit);
++		__set_bit(switchid, (dev)->swbit);
++
++		(dev)->name = devname;
++		(dev)->id.bustype = BUS_HOST;
++		if (input_register_device(dev)) {
++			input_free_device(dev);
++			pr_warn("could not register device for %s\n", devname);
++			return;
++		}
++		*subdev = dev;
++	}
++
++	input_report_switch(*subdev, switchid, value);
++	input_sync(*subdev);
++}
++
++static int dell_wmi_process_key(struct wmi_device *wdev, int type, int code, u16 *buffer, int remaining)
+ {
+ 	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+ 	const struct key_entry *key;
++	int used = 0;
++	int value = 1;
+ 
+ 	key = sparse_keymap_entry_from_scancode(priv->input_dev,
+ 						(type << 16) | code);
+ 	if (!key) {
+ 		pr_info("Unknown key with type 0x%04x and code 0x%04x pressed\n",
+ 			type, code);
+-		return;
++		return 0;
+ 	}
+ 
+ 	pr_debug("Key with type 0x%04x and code 0x%04x pressed\n", type, code);
+@@ -363,16 +401,27 @@ static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
+ 	if ((key->keycode == KEY_BRIGHTNESSUP ||
+ 	     key->keycode == KEY_BRIGHTNESSDOWN) &&
+ 	    acpi_video_handles_brightness_key_presses())
+-		return;
++		return 0;
+ 
+ 	if (type == 0x0000 && code == 0xe025 && !wmi_requires_smbios_request)
+-		return;
++		return 0;
+ 
+-	if (key->keycode == KEY_KBDILLUMTOGGLE)
++	if (key->keycode == KEY_KBDILLUMTOGGLE) {
+ 		dell_laptop_call_notifier(
+ 			DELL_LAPTOP_KBD_BACKLIGHT_BRIGHTNESS_CHANGED, NULL);
++	} else if (type == 0x0011 && code == 0xe070 && remaining > 0) {
++		dell_wmi_switch_event(&priv->tabletswitch_dev,
++				      "Dell tablet mode switch",
++				      SW_TABLET_MODE, !buffer[0]);
++		return 1;
++	} else if (type == 0x0012 && code == 0x000d && remaining > 0) {
++		value = (buffer[2] == 2);
++		used = 1;
++	}
+ 
+-	sparse_keymap_report_entry(priv->input_dev, key, 1, true);
++	sparse_keymap_report_entry(priv->input_dev, key, value, true);
++
++	return used;
+ }
+ 
+ static void dell_wmi_notify(struct wmi_device *wdev,
+@@ -430,21 +479,26 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+ 		case 0x0000: /* One key pressed or event occurred */
+ 			if (len > 2)
+ 				dell_wmi_process_key(wdev, buffer_entry[1],
+-						     buffer_entry[2]);
++						     buffer_entry[2],
++						     buffer_entry + 3,
++						     len - 3);
+ 			/* Extended data is currently ignored */
+ 			break;
+ 		case 0x0010: /* Sequence of keys pressed */
+ 		case 0x0011: /* Sequence of events occurred */
+ 			for (i = 2; i < len; ++i)
+-				dell_wmi_process_key(wdev, buffer_entry[1],
+-						     buffer_entry[i]);
++				i += dell_wmi_process_key(wdev, buffer_entry[1],
++							  buffer_entry[i],
++							  buffer_entry + i,
++							  len - i - 1);
+ 			break;
+ 		case 0x0012:
+ 			if ((len > 4) && dell_privacy_process_event(buffer_entry[1], buffer_entry[3],
+ 								    buffer_entry[4]))
+ 				/* dell_privacy_process_event has handled the event */;
+ 			else if (len > 2)
+-				dell_wmi_process_key(wdev, buffer_entry[1], buffer_entry[2]);
++				dell_wmi_process_key(wdev, buffer_entry[1], buffer_entry[2],
++						     buffer_entry + 3, len - 3);
+ 			break;
+ 		default: /* Unknown event */
+ 			pr_info("Unknown WMI event type 0x%x\n",
+@@ -661,6 +715,8 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
+ 	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+ 
+ 	input_unregister_device(priv->input_dev);
++	if (priv->tabletswitch_dev)
++		input_unregister_device(priv->tabletswitch_dev);
+ }
+ 
+ /*
+-- 
+2.30.2
+
