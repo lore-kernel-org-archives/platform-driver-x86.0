@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27872C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Sep 2021 22:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02536C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Sep 2021 22:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA4076126A
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Sep 2021 22:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4C561028
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Sep 2021 22:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232269AbhISWFl (ORCPT
+        id S233087AbhISWyC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 19 Sep 2021 18:05:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53866 "EHLO mail.kernel.org"
+        Sun, 19 Sep 2021 18:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229689AbhISWFl (ORCPT
+        id S230007AbhISWyB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 19 Sep 2021 18:05:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id CBE8A60F5B
-        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Sep 2021 22:04:15 +0000 (UTC)
+        Sun, 19 Sep 2021 18:54:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 268266115C
+        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Sep 2021 22:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632089055;
-        bh=HzFHM1VDSg4JWTuJ8n5+LVdmbbgi0qzoY7OFEEx23XY=;
+        s=k20201202; t=1632091956;
+        bh=EFaiCiBnpK0tTYKdYv/YJsSuv5Bfp2t0vA//73ZjGGs=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=r27JNx5UZdlkBxb4mnXsw+hIh3+BkcEV47eebFFiw2Vsl3aC2EwmOMUpume91QkzX
-         +E+p/+uQuh8KUY6OvicJp+wB5RR8DPO4cNREE7fn5qhVtXe3snayU/38+LHSo8wtCT
-         3+S7Ekr2t0rX4PxC2wPr+/uYd5rTkVhTNj9YRz+yfN/j0yBltYsyC4P0LM5VqnXee6
-         0xeRw8+5beQRPDqWubeSeWRASDBCoNRXFKMLaWB+Yrv5VmYRidof465TjN6t2V6b6w
-         MYQ9yKNh1XsG+fKdd0g38ma7azElBpxd/gDFhLJ776lKET9sEVHG2qY2CS0m5cTDPg
-         OD+MPHHfAwR2Q==
+        b=GJK2ZUM7IDh+NO+uP++QLLAl513lkma/XVJ0/WOMinzyqE7CeSUD8N9Ei4RZYp9xv
+         /4D0Xk12kXenjoXPh4gK8nu6PtFckHUg/H7coTfFq2SPFBN7jwqXA/+XkPtPvRKM8j
+         Zolg1f8/qh66mnIdUURFesYFRZ6xP6k14g4dNdiShblWXjyOAxEWmBcRuSS1dT2vE4
+         nZQYgahfvqutbljBtNpUj8tto1xte8KgDqIneoumxQdpgTfIG++zMOvHEBJz6GE7S7
+         tnOZqoETLc5KaFmk1d+P+o1MSwYjrnHigdBzdskonUKV+nmujCvqbIEZqCveLM5ZNh
+         hRfDChwezgOYg==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date:   Sun, 19 Sep 2021 22:04:14 +0000
+Date:   Sun, 19 Sep 2021 22:52:35 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -45,14 +45,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Who: mirh@protonmail.ch
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-RsVqGCannn@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-204807-215701-QnclxpjvVf@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,47 +66,40 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #123 from Denis Pauk (pauk.denis@gmail.com) ---
-(In reply to Kamil Pietrzak from comment #122)
-> I confrm patch works on my "TUF GAMING Z490-PLUS (WI-FI)".
->=20
-> [1295150.017048] nct6775: Found NCT6798D or compatible chip at 0x0:0x290
-....
->=20
-> I also noticed that some voltage values reported by nct6775 differs from =
-the
-> ones reported by Asus software on Windows.
->=20
-> I changed voltage scaling factors to those listed below and now voltages =
-are
-> reported like on Asus software on Windows.
->=20
-> /*
->  * Some of the voltage inputs have internal scaling, the tables below
->  * contain 8 (the ADC LSB in mV) * scaling factor * 100
->  */
-> static const u16 scale_in[15] =3D {
->       888, 4000, 1600, 1600, 9600, 800, 800, 1600, 1600, 1600, 1600, 1600,
-> 800,
->       800, 800
-> };
+mirh (mirh@protonmail.ch) changed:
 
-It looks like need to update code with custom scale values in relation to b=
-oard
-name. And it can be in future patches.=20
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |chunkeey@googlemail.com,
+                   |                            |mirh@protonmail.ch
 
-Also need to look what functionality is nondestructive and can be merged in:
-* https://gitlab.com/CalcProgrammer1/OpenRGB/-/blob/master/OpenRGB.patch
-*
-https://github.com/zeule/asus-wmi-ec-sensors/blob/master/asus-wmi-ec-sensor=
-s.c
-* https://github.com/electrified/asus-wmi-sensors/
-and cover maximum boards.
+--- Comment #124 from mirh (mirh@protonmail.ch) ---
+(In reply to Eugene Shalygin from comment #111)
+> Most of these boards, as you probably know already, seem to not provide
+> readings for all the available sensors via the Nuvoton chip. For example,=
+=20
+> [...] we found that the Nuvoton 6798D chip provides sensors readings for
+> configured in the BIOS QFan sources in its registers [2]. Maybe those are
+> worth displaying with the nct6775 driver? They can include sensors that
+> are otherwise are available from the embedded controller only.
 
-OpenRGB looks as good candidate for merge, as I see it uses i2c bus instead
-asuswmi, and we already have ground for custom logic, it should be possible=
- if
-we have list of boards where such access is implemented by ASUS?.
+I can't really vouch for high end desktop motherboards, but at least as far=
+ as
+laptops are concerned this has been the case since forever about everywhere
+(ranging from "somewhat nitpicky" lacks to "kinda important" ones)
+https://github.com/daringer/asus-fan/issues/13
+https://github.com/daringer/asus-fan/issues/44#issuecomment-487380638
+
+I don't know how dangerous accessing EC could be (be it directly, or through
+possible ACPI methods.. in some cases datasheets may even be available), but
+something else that isn't just vanilla WMI is needed.=20
+
+https://sourceforge.net/p/acpi4asus/mailman/message/7375427/
+Btw following the breadcrumb trail of the asus linux drivers history.. it s=
+eems
+like different/older machines may have used 'ECRW' in its place (or if not =
+any
+I found that to still be present on my 2016 X756UX).
 
 --=20
 You may reply to this email to add a comment.
