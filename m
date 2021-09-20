@@ -2,145 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886ECC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 18:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE37C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 18:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750E660F6B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 18:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF9161183
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 18:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384126AbhITSqi (ORCPT
+        id S1387231AbhITS4l (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Sep 2021 14:46:38 -0400
-Received: from mail-4322.protonmail.ch ([185.70.43.22]:27045 "EHLO
-        mail-4322.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1383455AbhITSof (ORCPT
+        Mon, 20 Sep 2021 14:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1385804AbhITSw2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Sep 2021 14:44:35 -0400
-Date:   Mon, 20 Sep 2021 18:43:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1632163386;
-        bh=/dCPObPUPU/gLuQE7BcDq2GKMnutPsgeme1TLL+i1X8=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=LXJlDbv/5HUdDFxFWVaJ5m4aeqMgCjK/JDv5MifAyIggBs09G1vantspUmWIZ7gAs
-         H3vG8NnKotCXCGQhd7o4I0pg1yyS0NBlnKQxNbXCkPql09l/rRGrThwTljm5ekslF5
-         YU2ZwkVoWQYGpf1igJ47A1Tw6ZNoijuUbqDrxE6s=
-To:     =?utf-8?Q?Jos=C3=A9_Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     hdegoede@redhat.com, alex.hung@canonical.com,
-        mgross@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tobias Gurtzick <magic@wizardtales.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH] platform/x86/intel: hid: Add DMI switches allow list
-Message-ID: <NgI8poho2fFBrbj2ivUSWphaZbwgMIxHVovWWqI2UWdJA8FNhlDtkFk-Y7cp4mYxiiOtkFQHoCQj-kkGh71lQfsvzJ1sg0IgixkJqdEdcnM=@protonmail.com>
-In-Reply-To: <20210920160312.9787-1-jose.exposito89@gmail.com>
-References: <20210920160312.9787-1-jose.exposito89@gmail.com>
+        Mon, 20 Sep 2021 14:52:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5DA6A615E5;
+        Mon, 20 Sep 2021 17:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632159904;
+        bh=eizUbIsjMYN+/U7qxJUDeZOmJ6obtyGbGnTfTb7yHFk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=akNnW5dU4Cx5qLoSXfsKOMMVVZHBfSw64ojyQUwciY/dbVxov5yQqNih9bqJdF4sa
+         LU9LFjLIT4Q1oI+XF35+yLZ6UmeLvIzrNj4LCoWOrP6/EOgIV6QTx5JYWNDoDuEjYP
+         P5SO7qDo/YRjufnMVhVtVYEUgSdSTIHCJYFkczGFb9EWUiTgAxlSllv50sLaS6HbXw
+         Lf6MX2irdcNOS6dpDMa5uzOoBZVApoH5wvi68MRjYgnfbw1J2LKF/QG8yPm7ebFvWt
+         XlY0ir1kbMIhX5qvxdMOPvg6jsZkfKYK+d7gMwixJ/l4PwQpGkCizDzOsZmVmJM9Pi
+         vVbkpcIfjuhsg==
+Date:   Mon, 20 Sep 2021 10:45:03 -0700
+From:   Mark Gross <markgross@kernel.org>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Matan Ziv-Av <matan@svgalib.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: lg-laptop: Fix possible NULL pointer
+ derefence
+Message-ID: <YUjInxyfnuo1tZvh@envy17>
+References: <20210920095556.1175269-1-arnd@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210920095556.1175269-1-arnd@kernel.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
-
-
-2021. szeptember 20., h=C3=A9tf=C5=91 18:03 keltez=C3=A9ssel, Jos=C3=A9 Exp=
-=C3=B3sito =C3=ADrta:
-> Some devices, even non convertible ones, can send incorrect
-> SW_TABLET_MODE reports.
->
-> Add an allow list and accept such reports only from devices in it.
->
-> Bug reported for Dell XPS 17 9710 on:
-> https://gitlab.freedesktop.org/libinput/libinput/-/issues/662
->
-> Reported-by: Tobias Gurtzick <magic@wizardtales.com>
-> Suggested-by: Hans de Goede <hdegoede@redhat.com>
-> Tested-by: Tobias Gurtzick <magic@wizardtales.com>
-> Signed-off-by: Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com>
+On Mon, Sep 20, 2021 at 11:55:50AM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> When CONFIG_DMI is disabled, dmi_get_system_info() returns a NULL
+> pointer, which is now caught by a warning:
+> 
+> In function 'strlen',
+>     inlined from 'acpi_add.part.0' at drivers/platform/x86/lg-laptop.c:658:6:
+> include/linux/fortify-string.h:25:33: error: argument 1 null where non-null expected [-Werror=nonnull]
+>    25 | #define __underlying_strlen     __builtin_strlen
+>       |                                 ^
+> include/linux/fortify-string.h:60:24: note: in expansion of macro '__underlying_strlen'
+>    60 |                 return __underlying_strlen(p);
+>       |                        ^~~~~~~~~~~~~~~~~~~
+> drivers/platform/x86/lg-laptop.c: In function 'acpi_add.part.0':
+> include/linux/fortify-string.h:25:33: note: in a call to built-in function '__builtin_strlen'
+>    25 | #define __underlying_strlen     __builtin_strlen
+>       |                                 ^
+> include/linux/fortify-string.h:60:24: note: in expansion of macro '__underlying_strlen'
+>    60 |                 return __underlying_strlen(p);
+>       |                        ^~~~~~~~~~~~~~~~~~~
+> 
+> The code in there does not appear essential, so an explicit
+> NULL check should be sufficient. The string is also printed
+> to the console, but printk() is able to handle NULL pointer
+> arguments gracefully.
+> 
+> Fixes: 8983bfd58d61 ("platform/x86: lg-laptop: Support for battery charge limit on newer models")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/platform/x86/intel/hid.c | 33 +++++++++++++++++++++++++++-----
->  1 file changed, 28 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/inte=
-l/hid.c
-> index a33a5826e81a..24d26336e39a 100644
-> --- a/drivers/platform/x86/intel/hid.c
-> +++ b/drivers/platform/x86/intel/hid.c
-> @@ -118,6 +118,24 @@ static const struct dmi_system_id dmi_vgbs_allow_lis=
-t[] =3D {
->  =09{ }
->  };
->
-> +/*
-> + * Some devices, even non convertible ones, can send incorrect SW_TABLET=
-_MODE
-> + * reports. Accept such reports only from devices in this list.
-> + */
-> +static const struct dmi_system_id dmi_switches_auto_add_allow_list[] =3D=
- {
-> +=09{
-> +=09=09.matches =3D {
-> +=09=09=09DMI_EXACT_MATCH(DMI_CHASSIS_TYPE, "31" /* Convertible */),
-> +=09=09},
-> +=09},
-> +=09{
-> +=09=09.matches =3D {
-> +=09=09=09DMI_EXACT_MATCH(DMI_CHASSIS_TYPE, "32" /* Detachable */),
-> +=09=09},
-> +=09},
-> +=09{} /* Array terminator */
-> +};
-> +
->  struct intel_hid_priv {
->  =09struct input_dev *input_dev;
->  =09struct input_dev *array;
-> @@ -455,11 +473,16 @@ static void notify_handler(acpi_handle handle, u32 =
-event, void *context)
->  =09 *
->  =09 * See dual_accel_detect.h for more info on the dual_accel check.
->  =09 */
-> -=09if (!priv->switches && !priv->dual_accel && (event =3D=3D 0xcc || eve=
-nt =3D=3D 0xcd)) {
-> -=09=09dev_info(&device->dev, "switch event received, enable switches sup=
-ports\n");
-> -=09=09err =3D intel_hid_switches_setup(device);
-> -=09=09if (err)
-> -=09=09=09pr_err("Failed to setup Intel HID switches\n");
-> +=09if (event =3D=3D 0xcc || event =3D=3D 0xcd) {
-> +=09=09if (!dmi_check_system(dmi_switches_auto_add_allow_list))
-> +=09=09=09return;
+>  drivers/platform/x86/lg-laptop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+> index 3e520d5bca07..88b551caeaaf 100644
+> --- a/drivers/platform/x86/lg-laptop.c
+> +++ b/drivers/platform/x86/lg-laptop.c
+> @@ -655,7 +655,7 @@ static int acpi_add(struct acpi_device *device)
+>  		goto out_platform_registered;
+>  	}
+>  	product = dmi_get_system_info(DMI_PRODUCT_NAME);
+> -	if (strlen(product) > 4)
+> +	if (product && strlen(product) > 4)
+seems appropriate.
 
-I think you should not check it every time. Maybe add a `bool` member
-to `struct intel_hid_priv`. Or maybe better: rename `dual_accel` to somethi=
-ng like
-`autodetect_switch` and initialize it with `!dual_accel_detect() && dmi_che=
-ck_system(...)`.
-
-
-> +
-> +=09=09if (!priv->switches && !priv->dual_accel) {
-> +=09=09=09dev_info(&device->dev, "switch event received, enable switches =
-supports\n");
-> +=09=09=09err =3D intel_hid_switches_setup(device);
-> +=09=09=09if (err)
-> +=09=09=09=09pr_err("Failed to setup Intel HID switches\n");
-> +=09=09}
->  =09}
->
->  =09if (priv->wakeup_mode) {
-> --
-> 2.25.1
->
->
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
+--mark
+>  		switch (product[4]) {
+>  		case '5':
+>  		case '6':
+> -- 
+> 2.29.2
+> 
