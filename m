@@ -2,107 +2,140 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE37C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C05C433FE
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 18:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF9161183
+	by mail.kernel.org (Postfix) with ESMTP id A030760F93
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 18:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1387231AbhITS4l (ORCPT
+        id S1387246AbhITS4s (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Sep 2021 14:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
+        Mon, 20 Sep 2021 14:56:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1385804AbhITSw2 (ORCPT
+        id S1385810AbhITSw2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Mon, 20 Sep 2021 14:52:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5DA6A615E5;
-        Mon, 20 Sep 2021 17:45:04 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2927561107;
+        Mon, 20 Sep 2021 17:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632159904;
-        bh=eizUbIsjMYN+/U7qxJUDeZOmJ6obtyGbGnTfTb7yHFk=;
+        s=k20201202; t=1632160529;
+        bh=hzulpvtgTfOxx4bSICmkUAfYsLkJUj04SA7nuzM4Dbs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=akNnW5dU4Cx5qLoSXfsKOMMVVZHBfSw64ojyQUwciY/dbVxov5yQqNih9bqJdF4sa
-         LU9LFjLIT4Q1oI+XF35+yLZ6UmeLvIzrNj4LCoWOrP6/EOgIV6QTx5JYWNDoDuEjYP
-         P5SO7qDo/YRjufnMVhVtVYEUgSdSTIHCJYFkczGFb9EWUiTgAxlSllv50sLaS6HbXw
-         Lf6MX2irdcNOS6dpDMa5uzOoBZVApoH5wvi68MRjYgnfbw1J2LKF/QG8yPm7ebFvWt
-         XlY0ir1kbMIhX5qvxdMOPvg6jsZkfKYK+d7gMwixJ/l4PwQpGkCizDzOsZmVmJM9Pi
-         vVbkpcIfjuhsg==
-Date:   Mon, 20 Sep 2021 10:45:03 -0700
-From:   Mark Gross <markgross@kernel.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Matan Ziv-Av <matan@svgalib.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: lg-laptop: Fix possible NULL pointer
- derefence
-Message-ID: <YUjInxyfnuo1tZvh@envy17>
-References: <20210920095556.1175269-1-arnd@kernel.org>
+        b=YV1Ip6XGUd+DR79KmSPGOxjDSqWfIcn5ifcZyqkx8FRm5OQvd5rnYwh5F2i8g4vbT
+         AG5SJN4gbQC5+i9lUv8LKHCEG3o/xhrC3oRp6GVj6x7+8Nu8j6isUME9EhKOHoGrUL
+         N7FwNBAEtnzildcvao3Ej7Ga73CeyFKSrdM8MSRfcYYZ7vJsC+D5IlN1x7YTPO2e93
+         69yqYuZvGSXfG5jpJO+OAitrMRX5d3okL1dslKmZ4c9/ww/o7yTnAD6++xqqsVD75+
+         ITPmskeQd3zRCOUGxVN3u+ifdRCMdk9WtJr7GHVp+9IwgIi125/M+pBpdnXof1e6tc
+         HukV/6/k7yyRw==
+Received: by pali.im (Postfix)
+        id B81DC855; Mon, 20 Sep 2021 19:55:26 +0200 (CEST)
+Date:   Mon, 20 Sep 2021 19:55:26 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Daniel Dadap <ddadap@nvidia.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, mario.limonciello@outlook.com,
+        pobrn@protonmail.com, andy.shevchenko@gmail.com,
+        aplattner@nvidia.com,
+        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI WMAA EC-based
+ backlight control
+Message-ID: <20210920175526.5itrqbif65iievxb@pali>
+References: <e63904b7-105b-4401-bd40-82854b7d42d1@t-8ch.de>
+ <20210903003838.15797-1-ddadap@nvidia.com>
+ <11ffe8bc-b4ee-c451-9860-46997de8fe55@redhat.com>
+ <20210920132911.cus27elz36dme63g@pali>
+ <8b07125d-83b9-9de4-fd52-1cb01466364a@redhat.com>
+ <20210920135106.y6mi57bcmurczmka@pali>
+ <1aa8fdc7-9e7a-5e86-0045-f07ad5bf118e@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210920095556.1175269-1-arnd@kernel.org>
+In-Reply-To: <1aa8fdc7-9e7a-5e86-0045-f07ad5bf118e@nvidia.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Sep 20, 2021 at 11:55:50AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Monday 20 September 2021 12:34:09 Daniel Dadap wrote:
+> My apologies. I wasn't aware that WMAA was an autogenerated method name; I
+> thought it was the name of the ACPI method and that the 603E9613... WMI GUID
+> happened to wrap it. Given your explanation, I agree that the current name
+> is inappropriate.
 > 
-> When CONFIG_DMI is disabled, dmi_get_system_info() returns a NULL
-> pointer, which is now caught by a warning:
 > 
-> In function 'strlen',
->     inlined from 'acpi_add.part.0' at drivers/platform/x86/lg-laptop.c:658:6:
-> include/linux/fortify-string.h:25:33: error: argument 1 null where non-null expected [-Werror=nonnull]
->    25 | #define __underlying_strlen     __builtin_strlen
->       |                                 ^
-> include/linux/fortify-string.h:60:24: note: in expansion of macro '__underlying_strlen'
->    60 |                 return __underlying_strlen(p);
->       |                        ^~~~~~~~~~~~~~~~~~~
-> drivers/platform/x86/lg-laptop.c: In function 'acpi_add.part.0':
-> include/linux/fortify-string.h:25:33: note: in a call to built-in function '__builtin_strlen'
->    25 | #define __underlying_strlen     __builtin_strlen
->       |                                 ^
-> include/linux/fortify-string.h:60:24: note: in expansion of macro '__underlying_strlen'
->    60 |                 return __underlying_strlen(p);
->       |                        ^~~~~~~~~~~~~~~~~~~
+> > > So what would be a better name wmi-nvidia-backlight.ko I guess ?
+> > > (and update the rest to match ?)
+> > It looks like that no vendor driver starts with "wmi-" prefix. "-wmi"
+> > string is used as a suffix. So for consistency it would be better to
+> > choose "nvidia-backlight-wmi.ko".
+> > 
+> > But it would be a nice to know if this wmi "API" is nvidia specific or
+> > not. Because it is possible that there is vendor C who this "API"
+> > invented, is licensing it and nvidia was just first who started using
+> > this "API" + send patch to kernel. Embedded Controller, including its
+> > programming is done by laptop vendor, it is fully in laptop vendor
+> > control and I do not think that nvidia sells laptops. So there is a high
+> > chance that we will see laptops without any nvidia component (with e.g.
+> > amd or intel graphics card) and with this "API" :)
 > 
-> The code in there does not appear essential, so an explicit
-> NULL check should be sufficient. The string is also printed
-> to the console, but printk() is able to handle NULL pointer
-> arguments gracefully.
 > 
-> Fixes: 8983bfd58d61 ("platform/x86: lg-laptop: Support for battery charge limit on newer models")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/platform/x86/lg-laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-> index 3e520d5bca07..88b551caeaaf 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -655,7 +655,7 @@ static int acpi_add(struct acpi_device *device)
->  		goto out_platform_registered;
->  	}
->  	product = dmi_get_system_info(DMI_PRODUCT_NAME);
-> -	if (strlen(product) > 4)
-> +	if (product && strlen(product) > 4)
-seems appropriate.
+> I will have to check about the origin of the "API" to be certain. My
+> understanding is that this WMI backlight control scheme is part of NVIDIA
+> design recommendations to notebook OEMs, with multiple OEMs potentially
+> implementing it (I'm aware of at least two off the top of my head which
+> already have systems in the wild). Specifically, this is meant to address an
+> issue in hybrid systems with switchable graphics, by placing control of the
+> backlight level with the EC rather than having to coordinate it between the
+> different GPUs which might happen to be connected to the panel at any given
+> time. It seems appropriate to me to include "nvidia" in the driver name for
+> now; it could be renamed if it turns out non-NVIDIA designs use it as well.
+> I don't have any specific information on whether or not that would be the
+> case.
 
---mark
->  		switch (product[4]) {
->  		case '5':
->  		case '6':
-> -- 
-> 2.29.2
+Ok! So lets stick with nvidia name for now.
+
+> > Some information may be available in bmf / acpidump code. Also there can
+> > be information if this GUID is just for backlight or if it can provide
+> > also some other functionality.
+> > 
+> > So for now lets stick with nvidia and I guess later driver can be
+> > renamed (if we find out that this "API" is used also on non-nvidia based
+> > laptops).
 > 
+> 
+> Okay, I'll send a follow-up patch to do the renaming once I get a little
+> more clarification from someone who knows more about where the interface
+> came from.
+> 
+> 
+> > 
+> > > > Anyway, could you provide BMF code for this wmi acpi functionality? In
+> > > > BMF could be encoded more informations, including real, meaning human
+> > > > readable name of this function. Not only internal (autogenerated) AA
+> > > > identifier. BMF can be extracted from dumps created by 'acpidump' tool
+> > > > or with new kernels directly from files 'find /sys/ -name bmof'.
+> 
+> 
+> I've attached the output of your bmf2mof tool. Seems it's named
+> "WmiBrightnessNotify", which isn't especially helpful.
+
+I see... no (interesting) additional details.
+
+Just one check, has bmf2mof showed some warning on stderr? I see
+"instance" in class definition and bmf2mof does not support decompiling
+MOF instances yet, it shows warning.
+
+> [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("WMI Function"), guid("{603e9613-ef25-4338-a3d0-c46177516db7}")]
+> class WmiBrightnessNotify {
+>   [key, read] String InstanceName;
+>   [read] Boolean Active;
+> 
+>   [WmiMethodId(1), Implemented, read, write, Description("Get/Set EC brightness level status")] void NotifyBrightnessLevel([in] uint32 inArg, [in] uint32 Level, [out] uint32 Result);
+>   [WmiMethodId(2), Implemented, read, write, Description("Get/Set Display Brightness Source")] void NotifyBrightnessSource([in] uint32 inArg0, [in] uint32 inArg1, [out] uint32 Result);
+> };
+
