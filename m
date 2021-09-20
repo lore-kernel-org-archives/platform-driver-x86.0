@@ -2,99 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5785BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 09:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539F9C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 12:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 375B460F9B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 09:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF5361177
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 12:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233845AbhITJ52 (ORCPT
+        id S235233AbhITMik (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Sep 2021 05:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40382 "EHLO mail.kernel.org"
+        Mon, 20 Sep 2021 08:38:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233136AbhITJ52 (ORCPT
+        id S231849AbhITMij (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Sep 2021 05:57:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5E51160240;
-        Mon, 20 Sep 2021 09:56:00 +0000 (UTC)
+        Mon, 20 Sep 2021 08:38:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 4DFA560F9D
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Sep 2021 12:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632131761;
-        bh=UMgc0ypSsQxjI//9tTpmdJQMwxV+y+7dPPyn1NAloNQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jK5eEfPFq9arxUMS+0gscszPEiPaDBA6twyL8kDnYc5Nxd57Mt0FdjhPXcZbE7Rwj
-         Cg4ZTFD6fTKdyraik9XBQzb/cSIn8bWpGELrN1QzR2bmN0cRK1Ru5Z7+9RQutAC40q
-         zJwdMfk9t9ziQp00qFb8Ym+2Uu5lfu4XtY7zc1mZpnW+/9CjYhYJ4cdJx9LH/j4N3x
-         Bgl8mHtcy04LpRWoYTfrecgm75nasY2Tb+VlMsgl1B4K26BHkMfDDicVkz+chA1Mk8
-         XyY4upQjn1arnPDtuUDlEaTyHez8J1gWMxqM1DXjYUypSY+e1uYaf9hxlXWHYuknRe
-         j4H8N/Ka4oEHg==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Matan Ziv-Av <matan@svgalib.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: lg-laptop: Fix possible NULL pointer derefence
-Date:   Mon, 20 Sep 2021 11:55:50 +0200
-Message-Id: <20210920095556.1175269-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.29.2
+        s=k20201202; t=1632141433;
+        bh=wAOjvX2BdkVVJ9W1W4uK4vEKkOrgrO1J4t3fcSaTb8U=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=s/SBe8zDHJ75hLmsvIkDKBNFiRIv2J2QYDw13FVPnR0tUqObUVP1tc/kbvQahWXr+
+         OjsvZY3BvWNiBLMqUyj9aIvhCg1rmKwE8hWR74UncVutI9M+H5YVe7ZgdaqNVXVz5u
+         Ci9pH/h9eyfsLee56ZTcaYhuTEWa2X5v97tYnGP4jfZ99fY3Lq1jqZAl+W9CyCUpqi
+         nrJ2C3xDnX8IIx8V5zvJ0pLSm6FCHA+ctwBLXFQpIFwVX5VhkQiy+OeSGAGvMZmbEv
+         CpG5D77nHl/4kklUYa/gg2RsvjW1bfun7CoUgs0AixW4NtoU4e5BokQZvCzBj9ZCHU
+         nc26TgZ+MvOuw==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Mon, 20 Sep 2021 12:37:12 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-2YwyOdSBQE@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-When CONFIG_DMI is disabled, dmi_get_system_info() returns a NULL
-pointer, which is now caught by a warning:
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-In function 'strlen',
-    inlined from 'acpi_add.part.0' at drivers/platform/x86/lg-laptop.c:658:6:
-include/linux/fortify-string.h:25:33: error: argument 1 null where non-null expected [-Werror=nonnull]
-   25 | #define __underlying_strlen     __builtin_strlen
-      |                                 ^
-include/linux/fortify-string.h:60:24: note: in expansion of macro '__underlying_strlen'
-   60 |                 return __underlying_strlen(p);
-      |                        ^~~~~~~~~~~~~~~~~~~
-drivers/platform/x86/lg-laptop.c: In function 'acpi_add.part.0':
-include/linux/fortify-string.h:25:33: note: in a call to built-in function '__builtin_strlen'
-   25 | #define __underlying_strlen     __builtin_strlen
-      |                                 ^
-include/linux/fortify-string.h:60:24: note: in expansion of macro '__underlying_strlen'
-   60 |                 return __underlying_strlen(p);
-      |                        ^~~~~~~~~~~~~~~~~~~
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #298805|0                           |1
+        is obsolete|                            |
 
-The code in there does not appear essential, so an explicit
-NULL check should be sufficient. The string is also printed
-to the console, but printk() is able to handle NULL pointer
-arguments gracefully.
+--- Comment #125 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 298887
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D298887&action=3Dedit
+Add support for access via Asus WMI to nct6775 (2021.09.20)
 
-Fixes: 8983bfd58d61 ("platform/x86: lg-laptop: Support for battery charge limit on newer models")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Updated patch with support:
 ---
- drivers/platform/x86/lg-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
++       "PRIME B360-PLUS",
++       "PRIME B460-PLUS",
++       "ROG CROSSHAIR VIII DARK HERO",
++       "ROG CROSSHAIR VIII FORMULA",
++       "ROG CROSSHAIR VIII HERO",
++       "ROG CROSSHAIR VIII IMPACT",
++       "ROG STRIX B550-E GAMING",
++       "ROG STRIX B550-F GAMING",
++       "ROG STRIX B550-F GAMING (WI-FI)",
++       "ROG STRIX X570-F GAMING",
++       "ROG STRIX Z390-E GAMING",
++       "ROG STRIX Z490-I GAMING",
++       "TUF GAMING B550M-PLUS",
++       "TUF GAMING B550M-PLUS (WI-FI)",
++       "TUF GAMING B550-PLUS",
++       "TUF GAMING X570-PLUS",
++       "TUF GAMING X570-PLUS (WI-FI)",
++       "TUF GAMING X570-PRO (WI-FI)",
++       "TUF GAMING Z490-PLUS (WI-FI)",
+---
 
-diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-index 3e520d5bca07..88b551caeaaf 100644
---- a/drivers/platform/x86/lg-laptop.c
-+++ b/drivers/platform/x86/lg-laptop.c
-@@ -655,7 +655,7 @@ static int acpi_add(struct acpi_device *device)
- 		goto out_platform_registered;
- 	}
- 	product = dmi_get_system_info(DMI_PRODUCT_NAME);
--	if (strlen(product) > 4)
-+	if (product && strlen(product) > 4)
- 		switch (product[4]) {
- 		case '5':
- 		case '6':
--- 
-2.29.2
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
