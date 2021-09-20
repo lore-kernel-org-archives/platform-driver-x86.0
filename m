@@ -2,473 +2,146 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-24.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F04C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 13:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EB3C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 16:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A3460F26
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 13:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8DF46115C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Sep 2021 16:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232897AbhITNwg (ORCPT
+        id S238940AbhITQFK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Sep 2021 09:52:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230103AbhITNwg (ORCPT
+        Mon, 20 Sep 2021 12:05:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229881AbhITQFK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Sep 2021 09:52:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 297FD60F23;
-        Mon, 20 Sep 2021 13:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632145869;
-        bh=0anQprl5MbjBakFb/rs0QTXOhZZaRi7vHVTQIhECQMY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YSpNzR3WaQq2sZ62h1sUXmUmMquh0tv9uqGv5FdfSAGeFj3zwHcQQcZG7IZ0TApTm
-         GjVy2mWXx01y1xN5Kfy6DggNGTtS2yFEckDphz0feKKeLfZYenYqrAVVeb5loRw0RT
-         8mrkqqyjABlR+CN4i/WoDhiTs3Iv4D0AA/ZcryE0FJEETnIAHBvUuHZy84tEwPfA1Q
-         CCtTSe4rI2UwJjEy0I4XczS20RHDKmk9aHyiZLSBZTBRjtT5DV0se+QL+0AwYAbIKe
-         fQM0i83322hm1ZcrZETPT7S8tsVcM2H15Nidwmo9AMfxILsZWjnFM+B8uLw38XHTlF
-         FzOyHheVg6McA==
-Received: by pali.im (Postfix)
-        id EDD0E855; Mon, 20 Sep 2021 15:51:06 +0200 (CEST)
-Date:   Mon, 20 Sep 2021 15:51:06 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Daniel Dadap <ddadap@nvidia.com>,
-        platform-driver-x86@vger.kernel.org, mario.limonciello@outlook.com,
-        pobrn@protonmail.com, andy.shevchenko@gmail.com,
-        aplattner@nvidia.com,
-        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI WMAA EC-based
- backlight control
-Message-ID: <20210920135106.y6mi57bcmurczmka@pali>
-References: <e63904b7-105b-4401-bd40-82854b7d42d1@t-8ch.de>
- <20210903003838.15797-1-ddadap@nvidia.com>
- <11ffe8bc-b4ee-c451-9860-46997de8fe55@redhat.com>
- <20210920132911.cus27elz36dme63g@pali>
- <8b07125d-83b9-9de4-fd52-1cb01466364a@redhat.com>
+        Mon, 20 Sep 2021 12:05:10 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9371C061574;
+        Mon, 20 Sep 2021 09:03:42 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id d21so31113260wra.12;
+        Mon, 20 Sep 2021 09:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gcR8T78D6KzdaCdUdXtUTv6ShblvMHi/s5bj6aQtCUA=;
+        b=hXlvTF57VTAzUeU3SmrlIOFc08fH8PnH1CZtEmos1h/ms+tTe8LSb15CH1OwAv2l0j
+         fMvMZFZkJEZO683Ybx/3MnxNlp2wpLkXRG64/B64Tt+i4ENnCIEHDc44o2BzpCuUZ9Pz
+         HyP8ds0EELkUBO51Hd48Dk4V+6r+clmJJmZ2/l0J/+xV+ccIl2E/ft9j/W7kOQVvxxDQ
+         9Y7kcrfc3p7Sf8dMLKmT6PYrvtMKllkg+elSH+0Kcq+Sh4iFe64ZwFww/d/Cfpr9ZjJh
+         v/5jHBlP383T2CxK0a/QLdbpM3DqfuALbE1e0XXyKaGImASPlTMJEw/LsJbFgRO6ND2I
+         sBdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gcR8T78D6KzdaCdUdXtUTv6ShblvMHi/s5bj6aQtCUA=;
+        b=qI5Me0JXLL5/o+hQu+pQVM4ZST9Y6oSEwBRgGaVPr+Tl59vLUf7pMcQKVq6/2crekS
+         UPRzPkqsfaR4PjfMgeqTsm+D7uXnViEEdgqL+Z0dVU06LmNrWFxjvoQyT66QOATyoOpJ
+         z8vAT16bHDNWy35tlGrJaFZ4ZWPHX6OYlQ6gsRQnOlAMKFl4k7qmevHZIkItljFMaGxL
+         k7K+Ysxn/8D3IOKKYPDjVveoSL4u4mRCBQZipsASU8hxr71UbDQpVzFb8J2u0KzjFA6q
+         GaQRGB3BFcgFz7kktEjaH4+J7QlP3o4W3ZrbAWA7JWMyY7Zrcm+Q0ObM5uDjXm849Ws/
+         WWsA==
+X-Gm-Message-State: AOAM532NyZX3fS1984lCUXG/qvWCa/nmOJjzFQcTNKZChSw2n+MKeFpK
+        8BsCaqCdjqvFSGmBDpuRf6Y=
+X-Google-Smtp-Source: ABdhPJyLFCFhzUxxzuQH2Exq2CM/Wn7dn5n8fkWcWSVKmKJre8nPazDsDpiedPKmZPcho6hEd77cRA==
+X-Received: by 2002:a05:600c:4788:: with SMTP id k8mr9540521wmo.131.1632153821428;
+        Mon, 20 Sep 2021 09:03:41 -0700 (PDT)
+Received: from localhost.localdomain ([94.73.35.139])
+        by smtp.gmail.com with ESMTPSA id c17sm20015422wrn.54.2021.09.20.09.03.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Sep 2021 09:03:40 -0700 (PDT)
+From:   =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+To:     hdegoede@redhat.com
+Cc:     alex.hung@canonical.com, mgross@linux.intel.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>,
+        Tobias Gurtzick <magic@wizardtales.com>
+Subject: [PATCH] platform/x86/intel: hid: Add DMI switches allow list
+Date:   Mon, 20 Sep 2021 18:03:12 +0200
+Message-Id: <20210920160312.9787-1-jose.exposito89@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8b07125d-83b9-9de4-fd52-1cb01466364a@redhat.com>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Monday 20 September 2021 15:33:20 Hans de Goede wrote:
-> Hi Pali,
-> 
-> On 9/20/21 3:29 PM, Pali Rohár wrote:
-> > On Monday 13 September 2021 11:01:50 Hans de Goede wrote:
-> >> Hi,
-> >>
-> >> On 9/3/21 2:38 AM, Daniel Dadap wrote:
-> >>> A number of upcoming notebook computer designs drive the internal
-> >>> display panel's backlight PWM through the Embedded Controller (EC).
-> >>> This EC-based backlight control can be plumbed through to an ACPI
-> >>> "WMAA" method interface, which in turn can be wrapped by WMI with
-> >>> the GUID handle 603E9613-EF25-4338-A3D0-C46177516DB7.
-> >>>
-> >>> Add a new driver, aliased to the WMAA WMI GUID, to expose a sysfs
-> >>> backlight class driver to control backlight levels on systems with
-> >>> EC-driven backlights.
-> >>>
-> >>> Signed-off-by: Daniel Dadap <ddadap@nvidia.com>
-> >>> Reviewed-By: Thomas Weißschuh <linux@weissschuh.net>
-> >>
-> >> Thank you for your patch, I've applied this patch to my review-hans 
-> >> branch:
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-> >>
-> >> Note it will show up in my review-hans branch once I've pushed my
-> >> local branch there, which might take a while.
-> >>
-> >> Once I've run some tests on this branch the patches there will be
-> >> added to the platform-drivers-x86/for-next branch and eventually
-> >> will be included in the pdx86 pull-request to Linus for the next
-> >> merge-window.
-> > 
-> > Hello Hans!
-> > 
-> > I would suggest to rename this driver and config option to not include
-> > -AA in its name. WMAA is just internal name of ACPI method, composed
-> > from two parts: "WM" and "AA". Second part "AA" is read from the _WDG
-> > where is the translation table from WMI GUID (in this case 603E9613...)
-> > to ACPI method name. "AA" is just autogenerated identifier by wmi
-> > compiler and because names are ASCII strings, I guess "AA" could mean
-> > the first (autogenerated) method. In the whole driver code you are not
-> > using AA function name, but directly WMI GUID, which also means that
-> > driver is prepared if vendor "recompiles" wmi code in acpi (and compiler
-> > generates another identifier, not AA). Also another argument is that
-> > there can be lot of other laptops which have WMAA ACPI method but they
-> > can have different API or do something totally different. So name WMAA
-> > is in this wmi context very misleading. Rather it should be named by
-> > vendor.
-> 
-> Right, that is a very valid point. I should have spotted this myself.
-> 
-> So what would be a better name wmi-nvidia-backlight.ko I guess ?
-> (and update the rest to match ?)
+Some devices, even non convertible ones, can send incorrect
+SW_TABLET_MODE reports.
 
-It looks like that no vendor driver starts with "wmi-" prefix. "-wmi"
-string is used as a suffix. So for consistency it would be better to
-choose "nvidia-backlight-wmi.ko".
+Add an allow list and accept such reports only from devices in it.
 
-But it would be a nice to know if this wmi "API" is nvidia specific or
-not. Because it is possible that there is vendor C who this "API"
-invented, is licensing it and nvidia was just first who started using
-this "API" + send patch to kernel. Embedded Controller, including its
-programming is done by laptop vendor, it is fully in laptop vendor
-control and I do not think that nvidia sells laptops. So there is a high
-chance that we will see laptops without any nvidia component (with e.g.
-amd or intel graphics card) and with this "API" :)
+Bug reported for Dell XPS 17 9710 on:
+https://gitlab.freedesktop.org/libinput/libinput/-/issues/662
 
-Some information may be available in bmf / acpidump code. Also there can
-be information if this GUID is just for backlight or if it can provide
-also some other functionality.
+Reported-by: Tobias Gurtzick <magic@wizardtales.com>
+Suggested-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Tobias Gurtzick <magic@wizardtales.com>
+Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+---
+ drivers/platform/x86/intel/hid.c | 33 +++++++++++++++++++++++++++-----
+ 1 file changed, 28 insertions(+), 5 deletions(-)
 
-So for now lets stick with nvidia and I guess later driver can be
-renamed (if we find out that this "API" is used also on non-nvidia based
-laptops).
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index a33a5826e81a..24d26336e39a 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -118,6 +118,24 @@ static const struct dmi_system_id dmi_vgbs_allow_list[] = {
+ 	{ }
+ };
+ 
++/*
++ * Some devices, even non convertible ones, can send incorrect SW_TABLET_MODE
++ * reports. Accept such reports only from devices in this list.
++ */
++static const struct dmi_system_id dmi_switches_auto_add_allow_list[] = {
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_CHASSIS_TYPE, "31" /* Convertible */),
++		},
++	},
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_CHASSIS_TYPE, "32" /* Detachable */),
++		},
++	},
++	{} /* Array terminator */
++};
++
+ struct intel_hid_priv {
+ 	struct input_dev *input_dev;
+ 	struct input_dev *array;
+@@ -455,11 +473,16 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	 *
+ 	 * See dual_accel_detect.h for more info on the dual_accel check.
+ 	 */
+-	if (!priv->switches && !priv->dual_accel && (event == 0xcc || event == 0xcd)) {
+-		dev_info(&device->dev, "switch event received, enable switches supports\n");
+-		err = intel_hid_switches_setup(device);
+-		if (err)
+-			pr_err("Failed to setup Intel HID switches\n");
++	if (event == 0xcc || event == 0xcd) {
++		if (!dmi_check_system(dmi_switches_auto_add_allow_list))
++			return;
++
++		if (!priv->switches && !priv->dual_accel) {
++			dev_info(&device->dev, "switch event received, enable switches supports\n");
++			err = intel_hid_switches_setup(device);
++			if (err)
++				pr_err("Failed to setup Intel HID switches\n");
++		}
+ 	}
+ 
+ 	if (priv->wakeup_mode) {
+-- 
+2.25.1
 
-> > Anyway, could you provide BMF code for this wmi acpi functionality? In
-> > BMF could be encoded more informations, including real, meaning human
-> > readable name of this function. Not only internal (autogenerated) AA
-> > identifier. BMF can be extracted from dumps created by 'acpidump' tool
-> > or with new kernels directly from files 'find /sys/ -name bmof'.
-> 
-> I will leave answering this part up to Daniel Dadap, since I don't
-> have access to any of this.
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> > For example Windows drivers use directly those real function names and
-> > let Windows NT kernel to translate real function names. So if for this
-> > functionality there is Windows driver, its .ini (or other text files)
-> > could also provide more information.
-> > 
-> > In past I have written bmf2mof decompiler which decompiles binary BMF
-> > code back to MOF source code: https://github.com/pali/bmfdec
-> > 
-> > So if you extract BMF code from that machine, then this bmf2mof tool can
-> > help with developing or identifying parts of wmi, and showing real
-> > function names. Sometimes there are also comments/descriptions in binary
-> > BMF code (but due to its format, not readable by 'strings', and
-> > decompilation is needed) which can provide even more information about
-> > usage.
-> > 
-> >> Regards,
-> >>
-> >> Hans
-> >>
-> >>
-> >>> ---
-> >>>
-> >>> v2: Convert to WMI subsystem driver, suggested by Mario Limonciello
-> >>>     <mario.limonciello@outlook.com>; various cleanups suggested by
-> >>>     Barnabás Pőcze <pobrn@protonmail.com>
-> >>> v3: Address assorted style nits raised by Andy Shevchenko
-> >>>     <andy.shevchenko@gmail.com> in response to a related patch; remove
-> >>>     additional behavior change to WMI subsystem from patch series as
-> >>>     recommended by Hans de Goede <hdegoede@redhat.com> 
-> >>> v4: Use MODULE_DEVICE_TABLE() (Thomas Weißschuh <thomas@t-8ch.de>)
-> >>>     Fix scope of internal driver state; various style fixes (Barnabás
-> >>>     Pőcze, Andy Shevchenko)
-> >>>     Use devm_backlight_device_register() (Barnabás Pőcze)
-> >>>     Add kerneldoc comments for enums and structs (Andy Shevchenko)
-> >>> v5: Remove Aaron Plattner as author, as suggested by Aaron Plattner
-> >>>     <aplattner@nvidia.com>
-> >>>     Register as BACKLIGHT_FIRMWARE rather than BACKLIGHT_PLATFORM;
-> >>>     Return negative errno if .get_brightness() fails (Thomas Weißschuh)
-> >>>     Assorted style improvements (Andy Shevchenko, Thomas Weißschuh)
-> >>> v6: Make behavior of callers of wmi_call_wmaa() more consistent;
-> >>>     simplify potentially confusing description in Kconfig help text
-> >>>     (Thomas Weißschuh)
-> >>>
-> >>>  MAINTAINERS                               |   6 +
-> >>>  drivers/platform/x86/Kconfig              |  16 ++
-> >>>  drivers/platform/x86/Makefile             |   1 +
-> >>>  drivers/platform/x86/wmaa-backlight-wmi.c | 205 ++++++++++++++++++++++
-> >>>  4 files changed, 228 insertions(+)
-> >>>  create mode 100644 drivers/platform/x86/wmaa-backlight-wmi.c
-> >>>
-> >>> diff --git a/MAINTAINERS b/MAINTAINERS
-> >>> index bbaecde94aa0..fd7362a86c6d 100644
-> >>> --- a/MAINTAINERS
-> >>> +++ b/MAINTAINERS
-> >>> @@ -20008,6 +20008,12 @@ L:	linux-wireless@vger.kernel.org
-> >>>  S:	Odd fixes
-> >>>  F:	drivers/net/wireless/wl3501*
-> >>>  
-> >>> +WMAA BACKLIGHT DRIVER
-> >>> +M:	Daniel Dadap <ddadap@nvidia.com>
-> >>> +L:	platform-driver-x86@vger.kernel.org
-> >>> +S:	Supported
-> >>> +F:	drivers/platform/x86/wmaa-backlight-wmi.c
-> >>> +
-> >>>  WOLFSON MICROELECTRONICS DRIVERS
-> >>>  L:	patches@opensource.cirrus.com
-> >>>  S:	Supported
-> >>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> >>> index d12db6c316ea..00f021eda25c 100644
-> >>> --- a/drivers/platform/x86/Kconfig
-> >>> +++ b/drivers/platform/x86/Kconfig
-> >>> @@ -113,6 +113,22 @@ config PEAQ_WMI
-> >>>  	help
-> >>>  	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
-> >>>  
-> >>> +config WMAA_BACKLIGHT_WMI
-> >>> +	tristate "ACPI WMAA Backlight Driver"
-> >>> +	depends on ACPI_WMI
-> >>> +	depends on BACKLIGHT_CLASS_DEVICE
-> >>> +	help
-> >>> +	  This driver provides a sysfs backlight interface for notebook
-> >>> +	  systems which expose the WMAA ACPI method and an associated WMI
-> >>> +	  wrapper to drive LCD backlight levels through the Embedded Controller
-> >>> +	  (EC).
-> >>> +
-> >>> +	  Say Y or M here if you want to control the backlight on a notebook
-> >>> +	  system with an EC-driven backlight using the ACPI WMAA method.
-> >>> +
-> >>> +	  If you choose to compile this driver as a module the module will be
-> >>> +	  called wmaa-backlight-wmi.
-> >>> +
-> >>>  config XIAOMI_WMI
-> >>>  	tristate "Xiaomi WMI key driver"
-> >>>  	depends on ACPI_WMI
-> >>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> >>> index 7ee369aab10d..109c1714237d 100644
-> >>> --- a/drivers/platform/x86/Makefile
-> >>> +++ b/drivers/platform/x86/Makefile
-> >>> @@ -14,6 +14,7 @@ obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= intel-wmi-sbl-fw-update.o
-> >>>  obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
-> >>>  obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
-> >>>  obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
-> >>> +obj-$(CONFIG_WMAA_BACKLIGHT_WMI)	+= wmaa-backlight-wmi.o
-> >>>  obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
-> >>>  obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
-> >>>  
-> >>> diff --git a/drivers/platform/x86/wmaa-backlight-wmi.c b/drivers/platform/x86/wmaa-backlight-wmi.c
-> >>> new file mode 100644
-> >>> index 000000000000..f5c4f8337c2c
-> >>> --- /dev/null
-> >>> +++ b/drivers/platform/x86/wmaa-backlight-wmi.c
-> >>> @@ -0,0 +1,205 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0-only
-> >>> +/*
-> >>> + * Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
-> >>> + */
-> >>> +
-> >>> +#include <linux/acpi.h>
-> >>> +#include <linux/backlight.h>
-> >>> +#include <linux/mod_devicetable.h>
-> >>> +#include <linux/module.h>
-> >>> +#include <linux/types.h>
-> >>> +#include <linux/wmi.h>
-> >>> +
-> >>> +/**
-> >>> + * enum wmaa_method - WMI method IDs for ACPI WMAA
-> >>> + * @WMAA_METHOD_LEVEL:  Get or set the brightness level,
-> >>> + *                      or get the maximum brightness level.
-> >>> + * @WMAA_METHOD_SOURCE: Get the source for backlight control.
-> >>> + */
-> >>> +enum wmaa_method {
-> >>> +	WMAA_METHOD_LEVEL = 1,
-> >>> +	WMAA_METHOD_SOURCE = 2,
-> >>> +	WMAA_METHOD_MAX
-> >>> +};
-> >>> +
-> >>> +/**
-> >>> + * enum wmaa_mode - Operation mode for ACPI WMAA method
-> >>> + * @WMAA_MODE_GET:           Get the current brightness level or source.
-> >>> + * @WMAA_MODE_SET:           Set the brightness level.
-> >>> + * @WMAA_MODE_GET_MAX_LEVEL: Get the maximum brightness level. This is only
-> >>> + *                           valid when the WMI method is %WMAA_METHOD_LEVEL.
-> >>> + */
-> >>> +enum wmaa_mode {
-> >>> +	WMAA_MODE_GET = 0,
-> >>> +	WMAA_MODE_SET = 1,
-> >>> +	WMAA_MODE_GET_MAX_LEVEL = 2,
-> >>> +	WMAA_MODE_MAX
-> >>> +};
-> >>> +
-> >>> +/**
-> >>> + * enum wmaa_source - Backlight brightness control source identification
-> >>> + * @WMAA_SOURCE_GPU:   Backlight brightness is controlled by the GPU.
-> >>> + * @WMAA_SOURCE_EC:    Backlight brightness is controlled by the system's
-> >>> + *                     Embedded Controller (EC).
-> >>> + * @WMAA_SOURCE_AUX:   Backlight brightness is controlled over the DisplayPort
-> >>> + *                     AUX channel.
-> >>> + */
-> >>> +enum wmaa_source {
-> >>> +	WMAA_SOURCE_GPU = 1,
-> >>> +	WMAA_SOURCE_EC = 2,
-> >>> +	WMAA_SOURCE_AUX = 3,
-> >>> +	WMAA_SOURCE_MAX
-> >>> +};
-> >>> +
-> >>> +/**
-> >>> + * struct wmaa_args - arguments for the ACPI WMAA method
-> >>> + * @mode:    Pass in an &enum wmaa_mode value to select between getting or
-> >>> + *           setting a value.
-> >>> + * @val:     In parameter for value to set when operating in %WMAA_MODE_SET
-> >>> + *           mode. Not used in %WMAA_MODE_GET or %WMAA_MODE_GET_MAX_LEVEL mode.
-> >>> + * @ret:     Out parameter returning retrieved value when operating in
-> >>> + *           %WMAA_MODE_GET or %WMAA_MODE_GET_MAX_LEVEL mode. Not used in
-> >>> + *           %WMAA_MODE_SET mode.
-> >>> + * @ignored: Padding; not used. The ACPI method expects a 24 byte params struct.
-> >>> + *
-> >>> + * This is the parameters structure for the ACPI WMAA method as wrapped by WMI.
-> >>> + * The value passed in to @val or returned by @ret will be a brightness value
-> >>> + * when the WMI method ID is %WMAA_METHOD_LEVEL, or an &enum wmaa_source value
-> >>> + * when the WMI method ID is %WMAA_METHOD_SOURCE.
-> >>> + */
-> >>> +struct wmaa_args {
-> >>> +	u32 mode;
-> >>> +	u32 val;
-> >>> +	u32 ret;
-> >>> +	u32 ignored[3];
-> >>> +};
-> >>> +
-> >>> +/**
-> >>> + * wmi_call_wmaa() - helper function for calling ACPI WMAA via its WMI wrapper
-> >>> + * @w:    Pointer to the struct wmi_device identified by %WMAA_WMI_GUID
-> >>> + * @id:   The method ID for the ACPI WMAA method (e.g. %WMAA_METHOD_LEVEL or
-> >>> + *        %WMAA_METHOD_SOURCE)
-> >>> + * @mode: The operation to perform on the ACPI WMAA method (e.g. %WMAA_MODE_SET
-> >>> + *        or %WMAA_MODE_GET)
-> >>> + * @val:  Pointer to a value passed in by the caller when @mode is
-> >>> + *        %WMAA_MODE_SET, or a value passed out to the caller when @mode is
-> >>> + *        %WMAA_MODE_GET or %WMAA_MODE_GET_MAX_LEVEL.
-> >>> + *
-> >>> + * Returns 0 on success, or a negative error number on failure.
-> >>> + */
-> >>> +static int wmi_call_wmaa(struct wmi_device *w, enum wmaa_method id, enum wmaa_mode mode, u32 *val)
-> >>> +{
-> >>> +	struct wmaa_args args = {
-> >>> +		.mode = mode,
-> >>> +		.val = 0,
-> >>> +		.ret = 0,
-> >>> +	};
-> >>> +	struct acpi_buffer buf = { (acpi_size)sizeof(args), &args };
-> >>> +	acpi_status status;
-> >>> +
-> >>> +	if (id < WMAA_METHOD_LEVEL || id >= WMAA_METHOD_MAX ||
-> >>> +	    mode < WMAA_MODE_GET || mode >= WMAA_MODE_MAX)
-> >>> +		return -EINVAL;
-> >>> +
-> >>> +	if (mode == WMAA_MODE_SET)
-> >>> +		args.val = *val;
-> >>> +
-> >>> +	status = wmidev_evaluate_method(w, 0, id, &buf, &buf);
-> >>> +	if (ACPI_FAILURE(status)) {
-> >>> +		dev_err(&w->dev, "ACPI WMAA failed: %s\n",
-> >>> +			acpi_format_exception(status));
-> >>> +		return -EIO;
-> >>> +	}
-> >>> +
-> >>> +	if (mode != WMAA_MODE_SET)
-> >>> +		*val = args.ret;
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +
-> >>> +static int wmaa_backlight_update_status(struct backlight_device *bd)
-> >>> +{
-> >>> +	struct wmi_device *wdev = bl_get_data(bd);
-> >>> +
-> >>> +	return wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_SET,
-> >>> +			     &bd->props.brightness);
-> >>> +}
-> >>> +
-> >>> +static int wmaa_backlight_get_brightness(struct backlight_device *bd)
-> >>> +{
-> >>> +	struct wmi_device *wdev = bl_get_data(bd);
-> >>> +	u32 level;
-> >>> +	int ret;
-> >>> +
-> >>> +	ret = wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_GET, &level);
-> >>> +	if (ret < 0)
-> >>> +		return ret;
-> >>> +
-> >>> +	return level;
-> >>> +}
-> >>> +
-> >>> +static const struct backlight_ops wmaa_backlight_ops = {
-> >>> +	.update_status = wmaa_backlight_update_status,
-> >>> +	.get_brightness = wmaa_backlight_get_brightness,
-> >>> +};
-> >>> +
-> >>> +static int wmaa_backlight_wmi_probe(struct wmi_device *wdev, const void *ctx)
-> >>> +{
-> >>> +	struct backlight_properties props = {};
-> >>> +	struct backlight_device *bdev;
-> >>> +	u32 source;
-> >>> +	int ret;
-> >>> +
-> >>> +	ret = wmi_call_wmaa(wdev, WMAA_METHOD_SOURCE, WMAA_MODE_GET, &source);
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >>> +	/*
-> >>> +	 * This driver is only to be used when brightness control is handled
-> >>> +	 * by the EC; otherwise, the GPU driver(s) should control brightness.
-> >>> +	 */
-> >>> +	if (source != WMAA_SOURCE_EC)
-> >>> +		return -ENODEV;
-> >>> +
-> >>> +	/*
-> >>> +	 * Identify this backlight device as a firmware device so that it can
-> >>> +	 * be prioritized over any exposed GPU-driven raw device(s).
-> >>> +	 */
-> >>> +	props.type = BACKLIGHT_FIRMWARE;
-> >>> +
-> >>> +	ret = wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_GET_MAX_LEVEL,
-> >>> +			    &props.max_brightness);
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >>> +	ret = wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_GET,
-> >>> +			    &props.brightness);
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >>> +	bdev = devm_backlight_device_register(&wdev->dev, "wmaa_backlight",
-> >>> +					      &wdev->dev, wdev,
-> >>> +					      &wmaa_backlight_ops, &props);
-> >>> +	return PTR_ERR_OR_ZERO(bdev);
-> >>> +}
-> >>> +
-> >>> +#define WMAA_WMI_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
-> >>> +
-> >>> +static const struct wmi_device_id wmaa_backlight_wmi_id_table[] = {
-> >>> +	{ .guid_string = WMAA_WMI_GUID },
-> >>> +	{ }
-> >>> +};
-> >>> +MODULE_DEVICE_TABLE(wmi, wmaa_backlight_wmi_id_table);
-> >>> +
-> >>> +static struct wmi_driver wmaa_backlight_wmi_driver = {
-> >>> +	.driver = {
-> >>> +		.name = "wmaa-backlight",
-> >>> +	},
-> >>> +	.probe = wmaa_backlight_wmi_probe,
-> >>> +	.id_table = wmaa_backlight_wmi_id_table,
-> >>> +};
-> >>> +module_wmi_driver(wmaa_backlight_wmi_driver);
-> >>> +
-> >>> +MODULE_AUTHOR("Daniel Dadap <ddadap@nvidia.com>");
-> >>> +MODULE_DESCRIPTION("WMAA Backlight WMI driver");
-> >>> +MODULE_LICENSE("GPL");
-> >>>
-> >>
-> > 
-> 
