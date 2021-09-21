@@ -2,84 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-23.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A68C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 12:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F221DC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 12:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99BAA60FE8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 12:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80C260FE8
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 12:52:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232702AbhIUMx2 (ORCPT
+        id S232850AbhIUMyC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Sep 2021 08:53:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:59054 "EHLO
+        Tue, 21 Sep 2021 08:54:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:55884 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230519AbhIUMxZ (ORCPT
+        by vger.kernel.org with ESMTP id S232739AbhIUMyB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Sep 2021 08:53:25 -0400
+        Tue, 21 Sep 2021 08:54:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632228717;
+        s=mimecast20190719; t=1632228753;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TqxAQwuwKeUNvwuaTqo1+dLfw9h1X6NxpXvwJl/CpGM=;
-        b=K9pT03i5PRU9Gcr3ivzXCPuUGt+K7EtfhxY1iy68pSZQQbQTNTLGxQu+Ly4aLotVbLkupD
-        UXtMQ8HAfps0hg0s7x8UF6TFeseg7GiBYxA1yZZLDg/6aYc+9qstflC5V9GoynRxhMtDJn
-        8yHAL/sTlyHQTmHPkplGAF3Jv3HU5QU=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-380-osMPAF1-P-uFny7WUjk6ig-1; Tue, 21 Sep 2021 08:51:56 -0400
-X-MC-Unique: osMPAF1-P-uFny7WUjk6ig-1
-Received: by mail-ed1-f70.google.com with SMTP id e7-20020aa7d7c7000000b003d3e6df477cso18878681eds.20
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Sep 2021 05:51:55 -0700 (PDT)
+        bh=QT7c1hyCu5qlCGLm4lU550mRBx+ss6BkQeQEtVJJ7O4=;
+        b=e22Xj0SWjaNjGut4TgjNWyr4hxUGT5SqNnxdsPsewXjXVV9+Oa+ptU1esXi6ciUk/bliN9
+        1AJOtjvzHb97ifeYxxKTd/o3juYdhJOIvrth91oy6RjHJlz9qZWTNpWzofffcJQnHbxYil
+        cHj/rJh2AbnO8+erPUjTCKTlyaFaDMA=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-442-By0DP5PoMZ6XnI0qjuDKhQ-1; Tue, 21 Sep 2021 08:52:31 -0400
+X-MC-Unique: By0DP5PoMZ6XnI0qjuDKhQ-1
+Received: by mail-ed1-f69.google.com with SMTP id c7-20020a05640227c700b003d27f41f1d4so18895411ede.16
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Sep 2021 05:52:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=TqxAQwuwKeUNvwuaTqo1+dLfw9h1X6NxpXvwJl/CpGM=;
-        b=rF74VndMALVs0lss2NZAKWhp6m1y0bAl1lRH8m0zLIVtfWhQDqIyzkr7huxAUITh46
-         rA8r5gbOZWvvJuzw6hlbgaRtt29Lr/ENq6lIsvpJ3VYmaTxwdqbk6TL5od2TPfgTpeVL
-         HAHcc+peKztWo/4fB3zYr6/d8HOSO4+t4s0ggAUiIM9PI+QAoKIYnSLFCXT3UHpmS8nB
-         Y4MOnPQugDYe7ksAs24scy38/gpiRUh/Bfk9QvLKTA5rzHKuD4yGGIur+pZFju6kazU6
-         Je67RUDfvyMhfbdw5jr9nNZvNXB2R9LrbRYX9AmWPy1IHaokEI9xOlPZasEzTtr9kh9R
-         igMA==
-X-Gm-Message-State: AOAM53115xfdnG6N1kEqQ+qBByDAsaij9YRv/6/tToKV3Zj+uVMkoywc
-        7aXmWAmy2vpzP1qARup/dsmh8Pf2EFuFDuPWcWN8NSlnbIHbIjfgayZqCftxMedrUQ8jPN0LhoJ
-        hFO/6XVpnriJVyGkWlrIqLgA0iQ9GObDr0C2KlhzoqUOA8ziady6XtdbevJw8bYkp3quYHOWeJA
-        jk8HyyPa9+3A==
-X-Received: by 2002:a17:906:c52:: with SMTP id t18mr34493882ejf.148.1632228714557;
-        Tue, 21 Sep 2021 05:51:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxhuiUQhb0tewsqj63rPQftRwt57rxaB6FUVbu3JbDMhgH6wEublWh/IKVcBTwPNrwaAf/NaA==
-X-Received: by 2002:a17:906:c52:: with SMTP id t18mr34493856ejf.148.1632228714315;
-        Tue, 21 Sep 2021 05:51:54 -0700 (PDT)
+        bh=QT7c1hyCu5qlCGLm4lU550mRBx+ss6BkQeQEtVJJ7O4=;
+        b=rOnzZ3+6DA+8z2zE6q3uV1LSZ5Fbad7arTfsL6NAAP+SWCg6CKMvc1JkEqAny9Eccd
+         nVbVSE9ZSwQOUG2Ir5smbpLoBQx0W0AFv653FMuyg6QW9NcBAu1Wd3QFidPia/kcnAqh
+         y7zMxjUb+4uayT4UYKIDeDsMAL0241s+HZWNFtzHsIKdPRFu8h3550ePMpcGYOcXxSmP
+         4n672Xeby89jzGqmREFmiYVql94lEJObXKw0wDoQKkZHIF9Dg7gk/YBjOEtfHnQRPaoZ
+         cxN2IoigZZtbLOD60Zgk9J5+k4jpfRHNAYLCQtqqVFPqhkIwe2+6iq6kmaJgMz1ID2Ed
+         1bCA==
+X-Gm-Message-State: AOAM533YQo1DfTRY7bSZ4xqJYpWzQ/WiQDPkW+RqzJ8OKXReiC+kpihD
+        Cde1ucLygj79fx213x2LcpIskDR/LIsNv8oZhOfJD75I+Em19yiJ2u47mVkU9zXYW/1IamczIoG
+        NPTnvfNjnH30DwRVm3BOLuorZvsOYzCyYBQ==
+X-Received: by 2002:aa7:d850:: with SMTP id f16mr35080566eds.176.1632228750483;
+        Tue, 21 Sep 2021 05:52:30 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwpsuNi5Q+WZay0piknbslOd2NnlEfRhQpdmEoN5ZN/nyc2tFUMYba8wi0JfcdtHWs0a/242w==
+X-Received: by 2002:aa7:d850:: with SMTP id f16mr35080550eds.176.1632228750354;
+        Tue, 21 Sep 2021 05:52:30 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id d9sm8435983ede.31.2021.09.21.05.51.53
+        by smtp.gmail.com with ESMTPSA id f2sm7323114eje.109.2021.09.21.05.52.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Sep 2021 05:51:54 -0700 (PDT)
-Subject: Re: [PATCH 2/2] acpi: pnp: remove duplicated BRI0A49 and BDP3336
- entries
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Matan Ziv-Av <matan@svgalib.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <20210916170054.136790-1-krzysztof.kozlowski@canonical.com>
- <20210916170054.136790-2-krzysztof.kozlowski@canonical.com>
+        Tue, 21 Sep 2021 05:52:30 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: dell: fix DELL_WMI_PRIVACY dependencies &
+ build error
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Perry Yuan <Perry.Yuan@dell.com>, Dell.Client.Kernel@dell.com,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <mgross@linux.intel.com>
+References: <20210918044829.19222-1-rdunlap@infradead.org>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f78523c5-df88-a768-3b9a-d542bbd73a1c@redhat.com>
-Date:   Tue, 21 Sep 2021 14:51:53 +0200
+Message-ID: <3cd39888-d0ec-f3b2-b696-8d1cf86a7684@redhat.com>
+Date:   Tue, 21 Sep 2021 14:52:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210916170054.136790-2-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20210918044829.19222-1-rdunlap@infradead.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -89,38 +85,55 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/16/21 7:00 PM, Krzysztof Kozlowski wrote:
-> BRI0A49 and BDP3336 are already on the list.
+On 9/18/21 6:48 AM, Randy Dunlap wrote:
+> When DELL_WMI=y, DELL_WMI_PRIVACY=y, and LEDS_TRIGGER_AUDIO=m, there
+> is a linker error since the LEDS trigger code is built as a loadable
+> module. This happens because DELL_WMI_PRIVACY is a bool that depends
+> on a tristate (LEDS_TRIGGER_AUDIO=m), which can be dangerous.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> ld: drivers/platform/x86/dell/dell-wmi-privacy.o: in function `dell_privacy_wmi_probe':
+> dell-wmi-privacy.c:(.text+0x3df): undefined reference to `ledtrig_audio_get'
+> 
+> Fixes: 8af9fa37b8a3 ("platform/x86: dell-privacy: Add support for Dell hardware privacy")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Perry Yuan <Perry.Yuan@dell.com>
+> Cc: Dell.Client.Kernel@dell.com
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Mark Gross <mgross@linux.intel.com>
 
-Thanks, patch looks good to me:
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-Rafael, I've picked up 1/2 since that applies to a drivers/platform/x86
-driver. I'll leave picking this one up to you.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
+
 > ---
->  drivers/acpi/acpi_pnp.c | 2 --
->  1 file changed, 2 deletions(-)
+>  drivers/platform/x86/dell/Kconfig |    3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/acpi/acpi_pnp.c b/drivers/acpi/acpi_pnp.c
-> index 8f2dc176bb41..ffdcfcd4a10d 100644
-> --- a/drivers/acpi/acpi_pnp.c
-> +++ b/drivers/acpi/acpi_pnp.c
-> @@ -156,8 +156,6 @@ static const struct acpi_device_id acpi_pnp_device_ids[] = {
->  	{"BRI0A49"},		/* Boca Complete Ofc Communicator 14.4 Data-FAX */
->  	{"BRI1400"},		/* Boca Research 33,600 ACF Modem */
->  	{"BRI3400"},		/* Boca 33.6 Kbps Internal FD34FSVD */
-> -	{"BRI0A49"},		/* Boca 33.6 Kbps Internal FD34FSVD */
-> -	{"BDP3336"},		/* Best Data Products Inc. Smart One 336F PnP Modem */
->  	{"CPI4050"},		/* Computer Peripherals Inc. EuroViVa CommCenter-33.6 SP PnP */
->  	{"CTL3001"},		/* Creative Labs Phone Blaster 28.8 DSVD PnP Voice */
->  	{"CTL3011"},		/* Creative Labs Modem Blaster 28.8 DSVD PnP Voice */
+> --- linux-next-20210917.orig/drivers/platform/x86/dell/Kconfig
+> +++ linux-next-20210917/drivers/platform/x86/dell/Kconfig
+> @@ -166,8 +166,7 @@ config DELL_WMI
+>  
+>  config DELL_WMI_PRIVACY
+>  	bool "Dell WMI Hardware Privacy Support"
+> -	depends on DELL_WMI
+> -	depends on LEDS_TRIGGER_AUDIO
+> +	depends on LEDS_TRIGGER_AUDIO = y || DELL_WMI = LEDS_TRIGGER_AUDIO
+>  	help
+>  	  This option adds integration with the "Dell Hardware Privacy"
+>  	  feature of Dell laptops to the dell-wmi driver.
 > 
 
