@@ -2,127 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-23.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DCCC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 12:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669CAC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 12:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C32B960F56
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 12:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42FF561186
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 12:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232571AbhIUMCK (ORCPT
+        id S232806AbhIUMwZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Sep 2021 08:02:10 -0400
-Received: from mail-bn7nam10on2080.outbound.protection.outlook.com ([40.107.92.80]:9312
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232605AbhIUMCJ (ORCPT
+        Tue, 21 Sep 2021 08:52:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60765 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230052AbhIUMwZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Sep 2021 08:02:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZYayl8bQlYhYPkp8nw/Ilk6yfd8M9hqSbdi0P59oFxwJk5Fi2ZxETKvxIquuQrC8jnVf0pf87DufxpiOPSjr+v07tHaquUjj+b6DgNGNnP6PF0DEsaorY5PtF6T0ykvKejF0c9X3GLp8yOhUFCmHYYHN3XJLvOYf8klr4xf4GRnHiVhdQBGuLhcxuNZf4cnX3OkR9MxITd9svIr8GaGmsbx78RJnnlTCwlnuhV5wBrvNP+13qWCVuw8fW6QsIWfuNi1cBplAm1pHDLyLthz+kURyCAyAGkeR0BQKQHXPbzfgvcqdlm31H0toL3iyfBGZyOobYSugVs/KNxFYXPTUQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=1EuNq3J8lrxWVK3sIOVV1dsr621AFiRt1dGmExkl4KY=;
- b=jdrWLcpZeWNeSHYPMHoss42ytjYtp9JXQ2ywgfFOJC1c/Kxc8ubAXb2zInLzwrWB7vPONckdB4SVAyoIOf0kuVvwCE7P5bsaV5N+tqOQ9INW9JqTU4jS9iU4zukNX/eRpQivaTUK0E4mkHUyewlsypDXbXfR2V7DGVphkUN3KLF8/j3P6NZfBdeciKUYaxyOfboir+T6ohitrS+y0AOrTT079fxALgUUoqyPdRzBkEgh08AOzLsuuuFslOP/FeHIzlMkbFl2cztMxNk/GiPIkbRmW+gn1BWIzmb6AVzTm1am3szTVvV6L0XzDxYZDXIRUkCSU/1oLaTYFgtH3ccEZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1EuNq3J8lrxWVK3sIOVV1dsr621AFiRt1dGmExkl4KY=;
- b=hxb1nsGgb8JnQn/ops2t6u3GcRRClij/BzzmO9P6eL5iVg1hYgN8iTvx9kpk2FsXXF2lkNbU82pDTMoqpbRt8Kgi88HwJ7nwpzYac0GFTlL+ar2Yy3SKQ/CEJSFdwSgOiubCf+QyModvink4gjlSQGoJEx1VpjOL+Iik/WqNk0M=
-Received: from DM6PR18CA0002.namprd18.prod.outlook.com (2603:10b6:5:15b::15)
- by DM4PR12MB5102.namprd12.prod.outlook.com (2603:10b6:5:391::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.14; Tue, 21 Sep
- 2021 12:00:39 +0000
-Received: from DM6NAM11FT050.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:15b:cafe::cb) by DM6PR18CA0002.outlook.office365.com
- (2603:10b6:5:15b::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.13 via Frontend
- Transport; Tue, 21 Sep 2021 12:00:39 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT050.mail.protection.outlook.com (10.13.173.111) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4523.14 via Frontend Transport; Tue, 21 Sep 2021 12:00:39 +0000
-Received: from amd-Mandolin-PCO.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Tue, 21 Sep
- 2021 07:00:36 -0500
-From:   Sanket Goswami <Sanket.Goswami@amd.com>
-To:     <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>,
-        <mgross@linux.intel.com>
-CC:     <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Sanket Goswami <Sanket.Goswami@amd.com>
-Subject: [PATCH] platform/x86: amd-pmc: Add a message to print resume time info
-Date:   Tue, 21 Sep 2021 17:30:20 +0530
-Message-ID: <20210921120020.19454-1-Sanket.Goswami@amd.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 21 Sep 2021 08:52:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632228656;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gkOBjqAV0ouhbcNISGSBmXY/07/63Cpl8i+uD2W0SL4=;
+        b=KprcYIydZSbd3V3cV5bL7Qd9r16LDXYUxUwrM0JWhNcFdpT7IuPl83EVo61i9/ABjhEdS7
+        6SNrsrGCp7DQedBykrEmNZJkm4CZefGIbr2hYd8I9zSUoGEdZzin7VkpUHmCaMDlm016Tm
+        N+Uqh2rBMWAWg9nI1m4h/Pl7Ge4m98A=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-68-LiQ4Q41ZNLei6xmvG-L71Q-1; Tue, 21 Sep 2021 08:50:55 -0400
+X-MC-Unique: LiQ4Q41ZNLei6xmvG-L71Q-1
+Received: by mail-ed1-f69.google.com with SMTP id b7-20020a50e787000000b003d59cb1a923so18019243edn.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Sep 2021 05:50:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gkOBjqAV0ouhbcNISGSBmXY/07/63Cpl8i+uD2W0SL4=;
+        b=QMbha1gvI3NPTRFzru9TEblNjcy45sYMbiIs1UPMeS5WgUXz0MYMorVPgxO2A/sm6f
+         eMwzTHwlyPf/zpTJqEmC6/1OK/pLYoOjtsw1rHUERieFYUR2aRpmrsoxqRiIssIl+JRW
+         Vgm2m136QaU9nGQIsaDxLXoq7ePvfdVqbk8VFe8xY+XAj8TxgWbQwVMK+TR8F04SbwWj
+         twyen+gyUCxIn/6ajYg/XhF3/gQwPQOBNV66J9jHzxqCVpOvl/kpDyvBDWZZCUtNGRwk
+         djTmY+e35qMnzLc4qdB7n1Ci+s16AIBz8BeIxYcruN2PKpujMdACtd7fSKM7jvaTcDMm
+         XtMw==
+X-Gm-Message-State: AOAM530PcTETDyBPOfgVnP5eLAutAwt42UV/DXs6adyPv+k/HEcxVaJ9
+        972L1Ng8pKkMOLzqhRJNtOFReg/4WUZb3JYfgMdJLNwbwrkqN2WZIyg1P3fUWHvaX0Eqe6zFO7U
+        fp+qQnz6d2uOqYtM0uEBEExHVm/oRdTNvoWzmsf0hUMxL5aprDTzEVE9bk57nuIJVLDs4BVjUD/
+        Y4limAqbwmzw==
+X-Received: by 2002:a17:906:5045:: with SMTP id e5mr35814764ejk.239.1632228653588;
+        Tue, 21 Sep 2021 05:50:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxRrwf090vg7jBTUydLH0bX50Of6iJwYw5EC5TT6k8b62dvJQIpkfN/g1eWxoMOaoQvl3CGcg==
+X-Received: by 2002:a17:906:5045:: with SMTP id e5mr35814737ejk.239.1632228653388;
+        Tue, 21 Sep 2021 05:50:53 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id b38sm8423919edf.46.2021.09.21.05.50.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Sep 2021 05:50:53 -0700 (PDT)
+Subject: Re: [PATCH 1/2] platform: lg-laptop: drop unneeded MODULE_ALIAS
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Matan Ziv-Av <matan@svgalib.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <20210916170054.136790-1-krzysztof.kozlowski@canonical.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <852fde2e-c2c3-0ad5-6156-05ab1b6ef74c@redhat.com>
+Date:   Tue, 21 Sep 2021 14:50:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4c54225f-7453-4a57-89fc-08d97cf76dec
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5102:
-X-Microsoft-Antispam-PRVS: <DM4PR12MB5102D36FB5CA683AEC0853FA9CA19@DM4PR12MB5102.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:22;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sJlZ1FaHb+pz89lwL+iWJIh2ILSoD9Wk0tL1fUv2/AjdxuhGzuJZGwTHQiLBSvU1IiGZYE9RCwKt9MCA7qqDJhgN4lQnx19rC1NhL1HeACxiMCAYRhHjvi74ILxKKn0EXLQSF2+yvEQGu6vKSNU434YuAcs49Jq/816ktlzaUzehGlqVmE77URRF2+cEJ4jRfS7Ptxb82TroYU3voLWE0MYbo9vNZffwzP+nqg8q2483ILK1evxyzfRjYkqe8R8KLqy11WxqU5M3LqesWZE/RvA4J7CJYeOXrgnfbJ/ph9eqNBhNNN885BVz96LcCM2W8klJP5Kk18Bp/vAWmXVTSl47hlNfm8zwTSIJtuNQ9SQsZdXDxvdkReM57gniw7QZEPiAGKYq0Z03sflTd+ihv2+aaQZyEeqFBfDdBT3RWH8EfM3aNa6CaCKoKqzx29mYkQ1iXvp2dxfCvL57conr+bqSivW27DKZw2pzbPLWEa2Iwva7mt6xLcOnnoC3SRdKs2bEE9UxrvBhqlfmyA8SxzLwOBVKsEpZ1IzzlPZ+GxMaqmVfkSUFYiiZr0F0TCa7xrG66XcSAL4rNXPXcx434yyewuwSrm7fmFEtww4trVHaMN1XO7e07Cf8JDQyU4TY4WrfcszwtHyca18y8PNERjz9ZoVTJzKY3YZ3XZk7nu1pUEhj4juT20IByds7nSQUQFL3WgjgfNsE03GHhEAdmHeVC/8lwwsqBfl7BbSVSkw=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(2616005)(83380400001)(7696005)(36756003)(316002)(81166007)(15650500001)(356005)(186003)(4326008)(5660300002)(426003)(2906002)(6666004)(8676002)(4744005)(508600001)(26005)(70586007)(8936002)(70206006)(82310400003)(36860700001)(1076003)(110136005)(54906003)(86362001)(336012)(47076005)(16526019)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2021 12:00:39.1840
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c54225f-7453-4a57-89fc-08d97cf76dec
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT050.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5102
+In-Reply-To: <20210916170054.136790-1-krzysztof.kozlowski@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a message to print the resume time information obtained from the
-smu_metrics structure.
+Hi,
 
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
----
- drivers/platform/x86/amd-pmc.c | 2 ++
- 1 file changed, 2 insertions(+)
+On 9/16/21 7:00 PM, Krzysztof Kozlowski wrote:
+> The MODULE_DEVICE_TABLE already creates proper alias for ACPI driver.
+> Having another MODULE_ALIAS causes the alias to be duplicated.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 
-diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-index bc7c4498067b..27c04ff57ffb 100644
---- a/drivers/platform/x86/amd-pmc.c
-+++ b/drivers/platform/x86/amd-pmc.c
-@@ -174,6 +174,8 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
- 		   "Unknown/Fail");
- 	seq_printf(s, "Time (in us) to S0i3: %lld\n", table.timeentering_s0i3_lastcapture);
- 	seq_printf(s, "Time (in us) in S0i3: %lld\n", table.timein_s0i3_lastcapture);
-+	seq_printf(s, "Time (in us) to resume from S0i3: %lld\n",
-+		   table.timeto_resume_to_os_lastcapture);
- 
- 	seq_puts(s, "\n=== Active time (in us) ===\n");
- 	for (idx = 0 ; idx < SOC_SUBSYSTEM_IP_MAX ; idx++) {
--- 
-2.25.1
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+> ---
+>  drivers/platform/x86/lg-laptop.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+> index 3e520d5bca07..4f3ece819f4c 100644
+> --- a/drivers/platform/x86/lg-laptop.c
+> +++ b/drivers/platform/x86/lg-laptop.c
+> @@ -60,7 +60,6 @@ MODULE_ALIAS("wmi:" WMI_EVENT_GUID2);
+>  MODULE_ALIAS("wmi:" WMI_EVENT_GUID3);
+>  MODULE_ALIAS("wmi:" WMI_METHOD_WMAB);
+>  MODULE_ALIAS("wmi:" WMI_METHOD_WMBB);
+> -MODULE_ALIAS("acpi*:LGEX0815:*");
+>  
+>  static struct platform_device *pf_device;
+>  static struct input_dev *wmi_input_dev;
+> 
 
