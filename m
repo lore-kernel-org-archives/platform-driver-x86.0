@@ -2,183 +2,230 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4087C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 14:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0629C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 15:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACFC6610A0
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 14:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6C6E60F41
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 15:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233756AbhIUPAE (ORCPT
+        id S233756AbhIUPRL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Sep 2021 11:00:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48872 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233647AbhIUPAD (ORCPT
+        Tue, 21 Sep 2021 11:17:11 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:56643 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233974AbhIUPRJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Sep 2021 11:00:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632236314;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gpypRbetDoW4vlrOOyiS3JIREgB/4Ibwu6EOgqNDQfU=;
-        b=Af0Vzxw4o3b9FVEvB51w7JdPRNnjfRMi6OZONzY43O1u9k/9HyHpzbwZrilOUzqRVg71pP
-        NwWGLRLHi78CpZMkzdymNuD1aAR9vtgMDaYqseQ/wfj8ufmY8HGmESWxBXrBcgOg07ymh2
-        92+N0+KjUuCt3ShkGT2XF1q4I6aVSiU=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-75-E85CvGrXMASzgZWrCbVCYg-1; Tue, 21 Sep 2021 10:58:33 -0400
-X-MC-Unique: E85CvGrXMASzgZWrCbVCYg-1
-Received: by mail-ed1-f70.google.com with SMTP id m30-20020a50999e000000b003cdd7680c8cso19274538edb.11
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Sep 2021 07:58:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gpypRbetDoW4vlrOOyiS3JIREgB/4Ibwu6EOgqNDQfU=;
-        b=GtZlr6HOsfn9wCtJo2fk03boS6kd1X9MpIFbS90EvjvZMlQruSW0zzhXiR157emepN
-         Xc6AQ2icp3tuI1CaZcQX2BDSb/MLKHcCTG7naxlrpckSEbourdsX2ViX1XesnPU7/KY4
-         EwpAAUSLvyVFsCWNgDR37sRL9IKN0MlJqz4Qn63yohbQMqgk6+fpmCubZhk5P0qsVP4e
-         b3Wfs9kBerlk3cy5C3L3nEEW1ChsqS/AA9kq4QQwelcjepwLhOcsHCGIwwBU3851wMZO
-         IX6Y4aAkprryBsYktGzI7r90qcEwuSnr3PpASvy6UX5DsNocRXdFruPkUiOPRELv1zBd
-         GwSA==
-X-Gm-Message-State: AOAM533VysbHOkEL4FPQ8RS/1Y99naSFvC6NbBNIs4emqAW4BklVxV3s
-        xNKQGyYmxZLhSVOjrgA6KU7P01Ff/rJadJviw12WYAP+h2+G00OsP8OzwMG+vLeqG2bLZy8rOB6
-        6+i2ltEwv9GoRI3b3+6v9gFvLhNj/7zV1pA==
-X-Received: by 2002:a17:906:1c99:: with SMTP id g25mr34667640ejh.521.1632236312435;
-        Tue, 21 Sep 2021 07:58:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzKgHYXQ0BPzeCWyg3QC6cJ+ov6yXGO6lhEj+cWv2lLWj4V81UUlpqu9xkp2NcdO2411nF6yQ==
-X-Received: by 2002:a17:906:1c99:: with SMTP id g25mr34667609ejh.521.1632236312194;
-        Tue, 21 Sep 2021 07:58:32 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id n25sm8537415eda.95.2021.09.21.07.58.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Sep 2021 07:58:31 -0700 (PDT)
-Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI WMAA EC-based
- backlight control
-To:     Daniel Dadap <ddadap@nvidia.com>
-Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "mario.limonciello@outlook.com" <mario.limonciello@outlook.com>,
-        "pobrn@protonmail.com" <pobrn@protonmail.com>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        Aaron Plattner <aplattner@nvidia.com>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>
-References: <e63904b7-105b-4401-bd40-82854b7d42d1@t-8ch.de>
- <20210903003838.15797-1-ddadap@nvidia.com>
- <11ffe8bc-b4ee-c451-9860-46997de8fe55@redhat.com>
- <20210920132911.cus27elz36dme63g@pali>
- <8b07125d-83b9-9de4-fd52-1cb01466364a@redhat.com>
- <20210920135106.y6mi57bcmurczmka@pali>
- <57a958e2-93d7-3eea-ec7b-9496acd6aae5@redhat.com>
- <A116D719-A0BD-4FA5-A758-E48D6428A8A6@nvidia.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9cbb4e7a-4af9-32f8-0293-6c2ef7d44ceb@redhat.com>
-Date:   Tue, 21 Sep 2021 16:58:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Tue, 21 Sep 2021 11:17:09 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.west.internal (Postfix) with ESMTP id 488EC2B01343;
+        Tue, 21 Sep 2021 11:15:39 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 21 Sep 2021 11:15:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=6b4bk+5E8OPLQowTL7kis4IonQ7
+        Cljxm8kY9KOSGcPs=; b=rZpPfzSs7Jb93FbC2bda9KAVNQiNL2itKHeoUk8QtO4
+        nBfNouIRbOzCMVOAwkrqCbiRklbBDXzt8fYbjKQZJfyE9hSK51MlaU1k5BJaJXPA
+        QZZR/dVzp3MOBxZ5qYKUSOI69UU3h29jXS3yjzXBmZGSJZTjHYBU5b2i3OSy+klS
+        chgd3LZghrfSzga9MfaLMGDUX0ZaSh19tyL2gJvrARA07G7SChyQc49zg4XwITuP
+        CXaUtQYayrE5+G2ytoWthiJ1n0BgJPvgnC9/YeRKN/xvI9qn0y6/INe28jrtq/pJ
+        mvmkt8Gdmazj4rO4+C1yfGutYlOPFXdIofAaxB1aqHg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=6b4bk+
+        5E8OPLQowTL7kis4IonQ7Cljxm8kY9KOSGcPs=; b=eD37gPlHJgVovesHO5uuoI
+        N+uyLl/5gkfFL+fAr9k/5/pPL22rUsUuC42Rc+oLsbhLUzjJg7b8/rz4mhocY0t0
+        DHJzv3Eqvjgy/z1l3bI9huge0JjW1aKY3Q+41QinCs2WZ69gNO4YEglkqfNIiEWp
+        5GJOOSDEINUb1ZcqDgJg1AvyPfO0+rSai5FH7gW8XXTH4SR7h5HV5QH8mRUxwpVu
+        7ZSiviVPb27RxoUI42QbIDk9qeEaa9cA05RSIw/QTzPd5Hv9aF3n7uRYCaZCZMWM
+        wN4iwnuC2/CBh0dzpReBoPgbiFFTIm5SOpwzl5kzOhWMN/bNAK1E9pWcAcCUmjAg
+        ==
+X-ME-Sender: <xms:GfdJYWj23d-WWr7-03IMMcrguH72liZ2gH2LFAiJ6cEd87yRrELBpg>
+    <xme:GfdJYXB2uVxuBAPPAF0VODCp299Dt3gVF4xRMuc6AYApy3wuaqY4NVj4yOjbP9F04
+    0b8B5YsTVdZTg>
+X-ME-Received: <xmr:GfdJYeFlAGI7Ex5XjdIALQ1e2C9lS0fcXrBfam4RgwGvGhF7spZ1I-4NelFazSDbcZrjhJqw34qpkeU-ouLVk8gIXlfCl8br>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudeigedgkeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeeuleeltd
+    ehkeeltefhleduuddvhfffuedvffduveegheekgeeiffevheegfeetgfenucffohhmrghi
+    nhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:GfdJYfTyAmQvuuIDWQI2AWOEymz5RJ-Jd7ikExPO1vXs4R5rTaEXWA>
+    <xmx:GfdJYTxuvAi44xJQBv5O75YkTfZayUXMB33vqLerFN0RGRzz4_ZAug>
+    <xmx:GfdJYd5zeyuqfYBFrouN67lG3N9yIfDV-Qm9nn0dPBcKRErBvu2fOQ>
+    <xmx:GvdJYUqgEQUA-OnCpFXRTg9Ob23CIAB-EkAa70v175uT6bPdPRJYGDQOaCs>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 21 Sep 2021 11:15:37 -0400 (EDT)
+Date:   Tue, 21 Sep 2021 17:15:35 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>, Len Baker <len.baker@gmx.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Mark Gross <mgross@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Prefer struct_size over
+ open coded arithmetic
+Message-ID: <YUn3F9HtgrpN9sSM@kroah.com>
+References: <20210918150500.21530-1-len.baker@gmx.com>
+ <202109192246.B438B42EF@keescook>
+ <ba427967-cb1b-58a8-ec93-bd5ae89f58f8@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <A116D719-A0BD-4FA5-A758-E48D6428A8A6@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba427967-cb1b-58a8-ec93-bd5ae89f58f8@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 9/21/21 4:29 PM, Daniel Dadap wrote:
+On Tue, Sep 21, 2021 at 03:46:23PM +0200, Hans de Goede wrote:
+> Hi,
 > 
->> On Sep 21, 2021, at 08:53, Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> ﻿Hi,
->>
->>> On 9/20/21 3:51 PM, Pali Rohár wrote:
->>>> On Monday 20 September 2021 15:33:20 Hans de Goede wrote:
->>>> Hi Pali,
->>>>
->>>> On 9/20/21 3:29 PM, Pali Rohár wrote:
->>>>> On Monday 13 September 2021 11:01:50 Hans de Goede wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On 9/3/21 2:38 AM, Daniel Dadap wrote:
->>>>>>> A number of upcoming notebook computer designs drive the internal
->>>>>>> display panel's backlight PWM through the Embedded Controller (EC).
->>>>>>> This EC-based backlight control can be plumbed through to an ACPI
->>>>>>> "WMAA" method interface, which in turn can be wrapped by WMI with
->>>>>>> the GUID handle 603E9613-EF25-4338-A3D0-C46177516DB7.
->>>>>>>
->>>>>>> Add a new driver, aliased to the WMAA WMI GUID, to expose a sysfs
->>>>>>> backlight class driver to control backlight levels on systems with
->>>>>>> EC-driven backlights.
->>>>>>>
->>>>>>> Signed-off-by: Daniel Dadap <ddadap@nvidia.com>
->>>>>>> Reviewed-By: Thomas Weißschuh <linux@weissschuh.net>
->>>>>>
->>>>>> Thank you for your patch, I've applied this patch to my review-hans 
->>>>>> branch:
->>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->>>>>>
->>>>>> Note it will show up in my review-hans branch once I've pushed my
->>>>>> local branch there, which might take a while.
->>>>>>
->>>>>> Once I've run some tests on this branch the patches there will be
->>>>>> added to the platform-drivers-x86/for-next branch and eventually
->>>>>> will be included in the pdx86 pull-request to Linus for the next
->>>>>> merge-window.
->>>>>
->>>>> Hello Hans!
->>>>>
->>>>> I would suggest to rename this driver and config option to not include
->>>>> -AA in its name. WMAA is just internal name of ACPI method, composed
->>>>> from two parts: "WM" and "AA". Second part "AA" is read from the _WDG
->>>>> where is the translation table from WMI GUID (in this case 603E9613...)
->>>>> to ACPI method name. "AA" is just autogenerated identifier by wmi
->>>>> compiler and because names are ASCII strings, I guess "AA" could mean
->>>>> the first (autogenerated) method. In the whole driver code you are not
->>>>> using AA function name, but directly WMI GUID, which also means that
->>>>> driver is prepared if vendor "recompiles" wmi code in acpi (and compiler
->>>>> generates another identifier, not AA). Also another argument is that
->>>>> there can be lot of other laptops which have WMAA ACPI method but they
->>>>> can have different API or do something totally different. So name WMAA
->>>>> is in this wmi context very misleading. Rather it should be named by
->>>>> vendor.
->>>>
->>>> Right, that is a very valid point. I should have spotted this myself.
->>>>
->>>> So what would be a better name wmi-nvidia-backlight.ko I guess ?
->>>> (and update the rest to match ?)
->>>
->>> It looks like that no vendor driver starts with "wmi-" prefix. "-wmi"
->>> string is used as a suffix. So for consistency it would be better to
->>> choose "nvidia-backlight-wmi.ko".
->>
->> Right, I should have checked first.
->>
->> So I just checked and the standard pattern used is:
->> vendor_wmi_feature
->>
->> So lets go with nvidia_wmi_backlight.ko
->>
->> Daniel, can you prepare a patch on top of your merged patch to do
->> the rename of the Kconfig entry and the module-name please?
->>
+> On 9/20/21 7:58 AM, Kees Cook wrote:
+> > On Sat, Sep 18, 2021 at 05:05:00PM +0200, Len Baker wrote:
+> >> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> >> and Conventions" documentation [1], size calculations (especially
+> >> multiplication) should not be performed in memory allocator (or similar)
+> >> function arguments due to the risk of them overflowing. This could lead
+> >> to values wrapping around and a smaller allocation being made than the
+> >> caller was expecting. Using those allocations could lead to linear
+> >> overflows of heap memory and other misbehaviors.
+> >>
+> >> So, switch to flexible array member in the struct attribute_set_obj and
+> >> refactor the code accordingly to use the struct_size() helper instead of
+> >> the argument "size + count * size" in the kzalloc() function.
+> >>
+> >> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> >>
+> >> Signed-off-by: Len Baker <len.baker@gmx.com>
+> >> ---
+> >>  drivers/platform/x86/thinkpad_acpi.c | 8 +++-----
+> >>  1 file changed, 3 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> >> index 50ff04c84650..ed0b01ead796 100644
+> >> --- a/drivers/platform/x86/thinkpad_acpi.c
+> >> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> >> @@ -1008,7 +1008,7 @@ struct attribute_set {
+> >>
+> >>  struct attribute_set_obj {
+> >>  	struct attribute_set s;
+> >> -	struct attribute *a;
+> >> +	struct attribute *a[];
+> >>  } __attribute__((packed));
+> > 
+> > Whoa. I have so many questions... :)
+> > 
+> >>
+> >>  static struct attribute_set *create_attr_set(unsigned int max_members,
+> >> @@ -1020,13 +1020,11 @@ static struct attribute_set *create_attr_set(unsigned int max_members,
+> >>  		return NULL;
+> >>
+> >>  	/* Allocates space for implicit NULL at the end too */
+> >> -	sobj = kzalloc(sizeof(struct attribute_set_obj) +
+> >> -		    max_members * sizeof(struct attribute *),
+> >> -		    GFP_KERNEL);
+> >> +	sobj = kzalloc(struct_size(sobj, a, max_members + 1), GFP_KERNEL);
+> > 
+> > Whoa, this needs a lot more detail in the changelog if this is actually
+> > correct. The original code doesn't seem to match the comment? (Where is
+> > the +1?) So is this also a bug-fix?
 > 
-> Yes, I already had a patch prepared to rename things to nvidia-backlight-wmi; I am waiting to hear back from some folks if there’s a more specific name that might be appropriate (e.g. a name of a particular feature tied to this) or if it should be more generic (e.g., if there is a strong possibility this design may be used in systems with no NVIDIA GPU); while I’m waiting for those answers, I’ll switch to nvidia-wmi-backlight as the assumed option, if there isn’t something more appropriate.
+> Kees, at first I thought you were spot-on with this comment, but the
+> truth is more subtle. struct attribute_set_obj was:
+> 
+> struct attribute_set_obj {
+>         struct attribute_set s;
+>         struct attribute *a;
+> } __attribute__((packed));
+> 
+> Another way of looking at this, which makes things more clear is as:
+> 
+> struct attribute_set_obj {
+>         struct attribute_set s;
+>         struct attribute *a[1];
+> } __attribute__((packed));
+> 
+> So the sizeof(struct attribute_set_obj) in the original kzalloc call
+> included room for 1 "extra" pointer which is reserved for the terminating
+> NULL pointer.
+> 
+> Changing the struct to:
+> 
+> struct attribute_set_obj {
+>         struct attribute_set s;
+>         struct attribute *a[];
+> } __attribute__((packed));
+> 
+> Is equivalent to changing it to:
+> 
+> struct attribute_set_obj {
+>         struct attribute_set s;
+>         struct attribute *a[0];
+> } __attribute__((packed));
+> 
+> So the change in the struct declaration reduces the sizeof(struct attribute_set_obj)
+> by the size of 1 pointer, making the +1 necessary.
+> 
+> So AFAICT there is actually no functional change here.
+> 
+> Still I will hold off merging this until we agree on this :)
 
-Ok, sounds good, thank you.
+First off, why is a single driver doing so many odd things with
+attribute groups?  Why not just use them the way that the rest of the
+kernel does?  Why does this driver need this special handling and no one
+else does?
 
-Regards,
+I think the default way of handling if an attribute is enabled or not,
+should suffice here, and make things much simpler overall as all of this
+crazy attribute handling can just be removed.
 
-Hans
+Bonus would also be that I think it would fix the race conditions that
+happen when trying to create attributes after the device is bound to the
+driver that I think the existing driver has today.
 
+> > (I see the caller uses +2? Why? It seems to be using each of hotkey_attributes,
+> > plus 1 more attr, plus a final NULL?)
+> 
+> The +2 is actually for 2 extra attributes (making the total number
+> of extra attributes +3 because the sizeof(struct attribute_set_obj)
+> already includes 1 extra). 
+> 
+> FWIW these 2 extra attributes are for devices with a
+> a physical rfkill on/off switch and for the device being
+> a convertible capable of reporting laptop- vs tablet-mode.
+
+Again, using the default way to show (or not show) attributes should
+solve this issue.  Why not just use that instead?
+
+> >>  	if (!sobj)
+> >>  		return NULL;
+> >>  	sobj->s.max_members = max_members;
+> >> -	sobj->s.group.attrs = &sobj->a;
+> >> +	sobj->s.group.attrs = sobj->a;
+> >>  	sobj->s.group.name = name;
+> > 
+> > The caller also never sets a name?
+> 
+> attribute_group.name may be NULL, I don't know
+> of (m)any drivers which actual set this to non NULL.
+
+It is used by some, that is how you can put all of the attributes in a
+subdirectory automatically.  No idea if that's needed here...
+
+All attributes for this driver are documented in Documentation/ABI/,
+right? :)
+
+thanks,
+
+greg k-h
