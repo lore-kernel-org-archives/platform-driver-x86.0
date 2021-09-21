@@ -2,87 +2,169 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-23.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CECC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 14:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F10C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 14:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1347761159
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 14:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 340B560FE8
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Sep 2021 14:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233320AbhIUODk (ORCPT
+        id S233564AbhIUOMd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Sep 2021 10:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232981AbhIUODk (ORCPT
+        Tue, 21 Sep 2021 10:12:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30386 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233453AbhIUOM2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Sep 2021 10:03:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EDCF060F9D;
-        Tue, 21 Sep 2021 14:02:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632232932;
-        bh=yiUJdUUcg7i1WGoEgF4g/CfaPAGHN8AXmNkjoYeBXMs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fQmeR2El0/xHd7DVfOesgHVsM9SEuplX2QDvdv/OROFL+CTcfi3wp6h+1pC3+Kb68
-         S09wJjANGs4eIJ9sqC4nwX6TA2CsZP8fy49+j2TVY/v9xT+Y8Fa0PoSXXFIEkSkycM
-         +c3sK3OLfsbmO1EUb6I/6pCLKlVoqCAlag6sS8gs0nP0myuHYPli3UcOFxYbKzPSDK
-         0ggTm4YRWzkohJqyyjUxBvBWrYhxBDizq0o0HLSLh5Ab+396bqblTdrs1T9eIYn8F9
-         HxFML0Jg0jaJm5LpemPHTJjnL6yzqMgWE1/NJxMfXxp6D4PLc/wQyT7AkKnu0PJpxD
-         pWvWK/BqYQC7g==
-Received: by pali.im (Postfix)
-        id C3B647DD; Tue, 21 Sep 2021 16:02:09 +0200 (CEST)
-Date:   Tue, 21 Sep 2021 16:02:09 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Daniel Dadap <ddadap@nvidia.com>,
-        platform-driver-x86@vger.kernel.org, mario.limonciello@outlook.com,
-        pobrn@protonmail.com, andy.shevchenko@gmail.com,
-        aplattner@nvidia.com,
-        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI WMAA EC-based
- backlight control
-Message-ID: <20210921140209.qtepebqoieitrold@pali>
-References: <e63904b7-105b-4401-bd40-82854b7d42d1@t-8ch.de>
- <20210903003838.15797-1-ddadap@nvidia.com>
- <11ffe8bc-b4ee-c451-9860-46997de8fe55@redhat.com>
- <20210920132911.cus27elz36dme63g@pali>
- <8b07125d-83b9-9de4-fd52-1cb01466364a@redhat.com>
- <20210920135106.y6mi57bcmurczmka@pali>
- <57a958e2-93d7-3eea-ec7b-9496acd6aae5@redhat.com>
+        Tue, 21 Sep 2021 10:12:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632233459;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cE900L65kVIfjK8VvpSvwnI3zOb0vmCndw5L/cT4PJY=;
+        b=BNBn9joqL0GmbZE+lerdT4LOMyN6eYqTj2+P0GOK8ugxFxWopfQB8RAYN1QwhXXtTtObSa
+        aXy7wTygppVMxFzwR6csoQQpkJDpIWzCaFloN15SNERIoKATIJF05MRV1UqiNQF0hdOyct
+        loUqvcAJ36Y7x5tUSSQ4hqvxhG64aNc=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-596-eqr6_NSdPIOiZ2hNa8H7xA-1; Tue, 21 Sep 2021 10:10:58 -0400
+X-MC-Unique: eqr6_NSdPIOiZ2hNa8H7xA-1
+Received: by mail-ed1-f71.google.com with SMTP id h24-20020a50cdd8000000b003d8005fe2f8so15067599edj.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Sep 2021 07:10:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=cE900L65kVIfjK8VvpSvwnI3zOb0vmCndw5L/cT4PJY=;
+        b=448OiR/kBC1Tvx7pL6fMGXaUrh7gNP1MdUQr+0kZ0fbn5BSUuVrfdRIj+1l63Y1krV
+         WYtRUGBb3FVqNpTHIipHzWZo5tdA6JkCU8upASCb26DJIp3uMvI3W7ez1XkIXzZEeubc
+         mPLYZiLympSdaGEAFzDq7dDocR2lyw4hTjexr/mzjLbFOg5jFhJ2bPav1CoiM/HEmOVU
+         9V9hrvq881OWdH56vcaHYq1hCHuHkZh3yh0lfC7NTKfbgmM8VXMxFiDFYe30qT+gaCtT
+         pVtJs9TD633dMCWdRogixG6AbHYnTDTdGkLQ2ZeUvkwKJOOYuBNbOCiGxqZQ5V6qgqdo
+         +Hxw==
+X-Gm-Message-State: AOAM5327ngi8ln7efHcM9pcrfbcrjcTu8p7+HpUDgqRfpmssrH8iymzi
+        pLA29jQZBiuXwzgKX6/31Oijt1ndsg9lOMGZ+2IVu65M6DrbuFi3dgOVbnVwnxYU1cla4jRGLou
+        E16OZRny9Cz/434HsSezxTfhNVLeEy70LJNHNb2ozGLHafBslHiNgcwJqAc9UKfMbQ6JIn9YD2D
+        k63pfdpifrSQ==
+X-Received: by 2002:a17:906:6dc1:: with SMTP id j1mr35454458ejt.324.1632233456619;
+        Tue, 21 Sep 2021 07:10:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyAoM5e3buXw+N0LcG9p+wHQBfnYocJMtDe5bhVO8jD0Iq9JvegX69/gL9z94fLU813+DHQ5g==
+X-Received: by 2002:a17:906:6dc1:: with SMTP id j1mr35454437ejt.324.1632233456410;
+        Tue, 21 Sep 2021 07:10:56 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id be9sm8031877edb.13.2021.09.21.07.10.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Sep 2021 07:10:56 -0700 (PDT)
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] platform-drivers-x86 for 5.15-2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Message-ID: <d7f081b7-275a-4f1c-ed27-9016ed5b2b46@redhat.com>
+Date:   Tue, 21 Sep 2021 16:10:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <57a958e2-93d7-3eea-ec7b-9496acd6aae5@redhat.com>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tuesday 21 September 2021 15:53:29 Hans de Goede wrote:
-> Hi,
-> 
-> On 9/20/21 3:51 PM, Pali Rohár wrote:
-> > It looks like that no vendor driver starts with "wmi-" prefix. "-wmi"
-> > string is used as a suffix. So for consistency it would be better to
-> > choose "nvidia-backlight-wmi.ko".
-> 
-> Right, I should have checked first.
-> 
-> So I just checked and the standard pattern used is:
-> vendor_wmi_feature
-> 
-> So lets go with nvidia_wmi_backlight.ko
+Hi Linus,
 
-Just source code filenames use hyphen (-) not underscore (_).
+Here is the first round of bug-fixes for platform-drivers-x86
+for 5.15, highlights:
+ -  amd-pmc fix for some suspend/resume issues
+ -  intel-hid fix to avoid false-positive SW_TABLET_MODE=1 reporting
+ -  some build error/warning fixes
+ -  various DMI quirk additions
 
-> Daniel, can you prepare a patch on top of your merged patch to do
-> the rename of the Kconfig entry and the module-name please?
-> 
-> Regards,
-> 
-> Hans
-> 
+Regards,
+
+Hans
+
+
+The following changes since commit 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f:
+
+  Linux 5.15-rc1 (2021-09-12 16:28:37 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.15-2
+
+for you to fetch changes up to 6f6aab1caf6c7fef46852aaab03f4e8250779e52:
+
+  platform/x86: gigabyte-wmi: add support for B550I Aorus Pro AX (2021-09-21 15:49:23 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.15-2
+
+Highlights:
+ -  amd-pmc fix for some suspend/resume issues
+ -  intel-hid fix to avoid false-positive SW_TABLET_MODE=1 reporting
+ -  some build error/warning fixes
+ -  various DMI quirk additions
+
+The following is an automated git shortlog grouped by driver:
+
+amd-pmc:
+ -  Increase the response register timeout
+
+dell:
+ -  fix DELL_WMI_PRIVACY dependencies & build error
+
+gigabyte-wmi:
+ -  add support for B550I Aorus Pro AX
+
+lg-laptop:
+ -  Correctly handle dmi_get_system_info() returning NULL
+
+platform/x86/intel:
+ -  hid: Add DMI switches allow list
+ -  punit_ipc: Drop wrong use of ACPI_PTR()
+
+touchscreen_dmi:
+ -  Update info for the Chuwi Hi10 Plus (CWI527) tablet
+ -  Add info for the Chuwi HiBook (CWI514) tablet
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      platform/x86/intel: punit_ipc: Drop wrong use of ACPI_PTR()
+
+Hans de Goede (2):
+      platform/x86: touchscreen_dmi: Add info for the Chuwi HiBook (CWI514) tablet
+      platform/x86: touchscreen_dmi: Update info for the Chuwi Hi10 Plus (CWI527) tablet
+
+José Expósito (1):
+      platform/x86/intel: hid: Add DMI switches allow list
+
+Mario Limonciello (1):
+      platform/x86: amd-pmc: Increase the response register timeout
+
+Matan Ziv-Av (1):
+      lg-laptop: Correctly handle dmi_get_system_info() returning NULL
+
+Randy Dunlap (1):
+      platform/x86: dell: fix DELL_WMI_PRIVACY dependencies & build error
+
+Tobias Jakobi (1):
+      platform/x86: gigabyte-wmi: add support for B550I Aorus Pro AX
+
+ drivers/platform/x86/amd-pmc.c         |  2 +-
+ drivers/platform/x86/dell/Kconfig      |  3 +-
+ drivers/platform/x86/gigabyte-wmi.c    |  1 +
+ drivers/platform/x86/intel/hid.c       | 27 +++++++++++++----
+ drivers/platform/x86/intel/punit_ipc.c |  3 +-
+ drivers/platform/x86/lg-laptop.c       |  2 +-
+ drivers/platform/x86/touchscreen_dmi.c | 54 +++++++++++++++++++++++++++++++---
+ 7 files changed, 77 insertions(+), 15 deletions(-)
+
