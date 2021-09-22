@@ -2,124 +2,78 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1242FC4321E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 21:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECF3C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 21:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E78FE61181
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 21:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852DF61168
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 21:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237868AbhIVVHa (ORCPT
+        id S237991AbhIVVbk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Sep 2021 17:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237829AbhIVVH3 (ORCPT
+        Wed, 22 Sep 2021 17:31:40 -0400
+Received: from mga12.intel.com ([192.55.52.136]:45002 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237770AbhIVVbi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Sep 2021 17:07:29 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33638C061760
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Sep 2021 14:05:59 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id g41so17216790lfv.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Sep 2021 14:05:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/PcqjgcRCkyIpO5H00bhPWTTbPCMNXWR4nKgirdi3Io=;
-        b=xEkq7SUZRewChVZqWhm4cS96l8pPzSSEz+ScgQL56dgjn10FcSw+jLPv0OY9bYezIP
-         CYphaUGJXn/snvtDU3KSfg579Nb5Qlk3NtUo6CuASAlclCh3ui7cA33wRO6foyyQk9sK
-         Mw3x0Ft59CKVBwMroO3W4lugA/tv5mEWbElbrHB+wIwMc5ZNjOZSS8KT6h+Zon+cf4qv
-         JmEltnmffmbEBqUsebTV11v0B5U1mVwBUj3sW1gLZspQ54hm7TrP9j1QPJEblcLAhwI2
-         nEggNK9m8gYxewjcBCYSYCHLIhl9iSTZmO6vl1lqR1Tl54TSO4jEGxDT96zBALyLtnLS
-         Hi0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/PcqjgcRCkyIpO5H00bhPWTTbPCMNXWR4nKgirdi3Io=;
-        b=VefjWsxajU6NJtkZn/XN/dfKjsoo/19RBdP/2vHS5ekDVmDsz5/0M0OGaEvyvLsBmj
-         IzV6wwQUsAf+iREMf1Ke7Puq2qgR+313Kd2OOII5zpNZOxhregGYEAM49gNWBYHxqaX4
-         mIA+LNvNhqWfxDrU5NlllCtOo28n93DR+5FVaIoMWtb5/9BSJ+Xmlk5ixwej0Sir7rnS
-         8CZOw1qV6XYIeJO3WHAUG7jZgILUBmIMKqaeW4ZLgFOfOpxfB9BSJXWKTvf9WVtGrHIl
-         UjyXCdvp51r29E5HQ1NO92XbsPjc0vqgN0Ig2RFyK8TPxZXjybrR7nwhWwk6cQBFgrhD
-         XdRw==
-X-Gm-Message-State: AOAM5312ZeNvg+j5z0M3NGhRrOgHm/0iALGpRhabGvSyaXtBYeExfxqu
-        tVMGtHLPHOodekQlRdCi9SahKw==
-X-Google-Smtp-Source: ABdhPJxFaBhI/uy8npc3Dtax2q52q/CAXrrCmDjvazERLjrealUJSj+rQLNB+0RcTEMnHlaiKFjmmA==
-X-Received: by 2002:a05:6512:5c2:: with SMTP id o2mr917110lfo.207.1632344757440;
-        Wed, 22 Sep 2021 14:05:57 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id bi33sm370467ljb.89.2021.09.22.14.05.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Sep 2021 14:05:56 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 60F2A10304D; Thu, 23 Sep 2021 00:05:58 +0300 (+03)
-Date:   Thu, 23 Sep 2021 00:05:58 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 5/8] x86/sme: Replace occurrences of sme_active() with
- cc_platform_has()
-Message-ID: <20210922210558.itofvu3725dap5xx@box.shutemov.name>
-References: <77df37e1-0496-aed5-fd1d-302180f1edeb@amd.com>
- <YUoao0LlqQ6+uBrq@zn.tnic>
- <20210921212059.wwlytlmxoft4cdth@box.shutemov.name>
- <YUpONYwM4dQXAOJr@zn.tnic>
- <20210921213401.i2pzaotgjvn4efgg@box.shutemov.name>
- <00f52bf8-cbc6-3721-f40e-2f51744751b0@amd.com>
- <20210921215830.vqxd75r4eyau6cxy@box.shutemov.name>
- <01891f59-7ec3-cf62-a8fc-79f79ca76587@amd.com>
- <20210922143015.vvxvh6ec73lffvkf@box.shutemov.name>
- <YUuJZ2qOgbdpfk6N@zn.tnic>
+        Wed, 22 Sep 2021 17:31:38 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10115"; a="203202706"
+X-IronPort-AV: E=Sophos;i="5.85,315,1624345200"; 
+   d="scan'208";a="203202706"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2021 14:30:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,315,1624345200"; 
+   d="scan'208";a="557639903"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Sep 2021 14:30:07 -0700
+Received: from debox1-server.jf.intel.com (debox1-server.jf.intel.com [10.54.39.121])
+        by linux.intel.com (Postfix) with ESMTP id A4C94580ABF;
+        Wed, 22 Sep 2021 14:30:07 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, bhelgaas@google.com,
+        andy.shevchenko@gmail.com
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        mgross@linux.intel.com, srinivas.pandruvada@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v3 0/5] Add general DVSEC/VSEC support
+Date:   Wed, 22 Sep 2021 14:30:02 -0700
+Message-Id: <20210922213007.2738388-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YUuJZ2qOgbdpfk6N@zn.tnic>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 09:52:07PM +0200, Borislav Petkov wrote:
-> On Wed, Sep 22, 2021 at 05:30:15PM +0300, Kirill A. Shutemov wrote:
-> > Not fine, but waiting to blowup with random build environment change.
-> 
-> Why is it not fine?
-> 
-> Are you suspecting that the compiler might generate something else and
-> not a rip-relative access?
+This patch enables general support for Intel defined PCIe VSEC and DVSEC
+capabilities in the Intel Platform Monitoring Technology (PMT) driver.
+Though the driver was written exclusively for PMT capabilities, newer DVSEC
+and VSEC IDs for other capabilities can exist on the same device requiring
+that the driver handle them.
 
-Yes. We had it before for __supported_pte_mask and other users of
-fixup_pointer().
+V3 is mostly a resend of V2. It drops a platform/x86 patch that was picked
+up separately by Hans in the last cycle. It also adds a new patch to
+support an upcoming capability.
 
-See for instance 4a09f0210c8b ("x86/boot/64/clang: Use fixup_pointer() to
-access '__supported_pte_mask'")
+David E. Box (5):
+  PCI: Add #defines for accessing PCIE DVSEC fields
+  MFD: intel_pmt: Support non-PMT capabilities
+  MFD: intel_pmt: Add support for PCIe VSEC structures
+  MFD: intel_pmt: Add DG2 support
+  MFD: intel_extended_cap: Add support for Intel SDSi
 
-Unless we find other way to guarantee RIP-relative access, we must use
-fixup_pointer() to access any global variables.
+ drivers/mfd/intel_pmt.c                    | 258 +++++++++++++++------
+ drivers/platform/x86/intel/pmt/class.c     |   2 +
+ drivers/platform/x86/intel/pmt/crashlog.c  |   2 +-
+ drivers/platform/x86/intel/pmt/telemetry.c |   2 +-
+ include/uapi/linux/pci_regs.h              |   4 +
+ 5 files changed, 191 insertions(+), 77 deletions(-)
 
 -- 
- Kirill A. Shutemov
+2.25.1
+
