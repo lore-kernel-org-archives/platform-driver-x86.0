@@ -2,147 +2,67 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B5AC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 14:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996FEC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 16:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2AC611C9
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 14:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB3960F3A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 16:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236237AbhIVOdi (ORCPT
+        id S236568AbhIVQdH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Sep 2021 10:33:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235600AbhIVOdh (ORCPT
+        Wed, 22 Sep 2021 12:33:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236628AbhIVQdG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Sep 2021 10:33:37 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B68BEC061574
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Sep 2021 07:32:07 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id i4so12808069lfv.4
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Sep 2021 07:32:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ayCGrHt4GWDBHksaWpDlFPsTDgmCQyv1ZQQyBUlWV+I=;
-        b=vKVQE5RUe8kMs0wun4XuDGO3eTujOGs2RwESdLhyIqK2JwxlqZrlSJy3MrsXJkRafX
-         gBAYy/nccugQKoUll1gn8VoFbzjQhjrLzptB1R76SapyouDJT5ZGJIWbG+FX4hwJyS6V
-         RHRd5aepSbIC42CmHtd5u+dR4xuEL++muo/z0NTk8BMGL92wAA2PmP9KOi2aYe71/Bfr
-         QklC4Nhk0K/0QbQiJZijepS1OZ+jtAxihfchh+jQ4jf5+4U17tQ1xXPBbmD5a5nhc0Gd
-         SVGSB9p7xAW0QvKqL518rFLXTD4w7KZA2wBif/Kp2RKz31Lh+5HyNQaqaSmkfOyisrNC
-         k+Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ayCGrHt4GWDBHksaWpDlFPsTDgmCQyv1ZQQyBUlWV+I=;
-        b=ToprmeuVJOVC6WTXYRm/Ypdzqf3dzYaUM1qioSaiqyHNYpiRlSz0XJKRtt6n0zcKLt
-         ehwZno4v5Ba9WW0xOBC+apGsdFOU4z1dyHKBd1qs6DkdRf1UUJRI8irswvpf/ww9oPlV
-         9uzyCuygUNpgfrgQVIBsSvfrUWuNIm71oW6s1SNpIgGTdU2ry9Gz6CrtrAjhlX/JGq8S
-         vJ46QEDzxoLPAMn5iB74m8cwxhBcTrIdZkLNs1jz3f7QdZB9UrfLr4cyV5+OpIzLWDG0
-         B9ukYc6XxzCJdiW7MUyq4/f6LrtC5B93JyK0j8iZOPVbZ8QGLLDYfaTtyilNZSp2TR/s
-         gl3w==
-X-Gm-Message-State: AOAM533Cq2HdExtIWRGakHr6xY7yx9xbTvGksOTGmnHTSTW0mW4IfkGh
-        o9m5x1qKw4zWzvpUyY1Y7zngyg==
-X-Google-Smtp-Source: ABdhPJz3SPlP/oK9QpFHL+xKtQ0nQUgNyOd556PIkN1KxMSQUqIwOiDbPwtupEbWOJByEgde/ChetQ==
-X-Received: by 2002:a05:651c:512:: with SMTP id o18mr35155713ljp.199.1632321016184;
-        Wed, 22 Sep 2021 07:30:16 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id y9sm205960lfl.240.2021.09.22.07.30.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Sep 2021 07:30:15 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id E147C10304D; Wed, 22 Sep 2021 17:30:15 +0300 (+03)
-Date:   Wed, 22 Sep 2021 17:30:15 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Borislav Petkov <bp@alien8.de>, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 5/8] x86/sme: Replace occurrences of sme_active() with
- cc_platform_has()
-Message-ID: <20210922143015.vvxvh6ec73lffvkf@box.shutemov.name>
-References: <367624d43d35d61d5c97a8b289d9ddae223636e9.1631141919.git.thomas.lendacky@amd.com>
- <20210920192341.maue7db4lcbdn46x@box.shutemov.name>
- <77df37e1-0496-aed5-fd1d-302180f1edeb@amd.com>
- <YUoao0LlqQ6+uBrq@zn.tnic>
- <20210921212059.wwlytlmxoft4cdth@box.shutemov.name>
- <YUpONYwM4dQXAOJr@zn.tnic>
- <20210921213401.i2pzaotgjvn4efgg@box.shutemov.name>
- <00f52bf8-cbc6-3721-f40e-2f51744751b0@amd.com>
- <20210921215830.vqxd75r4eyau6cxy@box.shutemov.name>
- <01891f59-7ec3-cf62-a8fc-79f79ca76587@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01891f59-7ec3-cf62-a8fc-79f79ca76587@amd.com>
+        Wed, 22 Sep 2021 12:33:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 0E63A611B0;
+        Wed, 22 Sep 2021 16:31:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632328296;
+        bh=Aa5tfeKSQT7wdEHxHLHokNl8n6PqodEsiECSutpnnco=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=nDEeRLZsBvvAvRbpKWBuE1XFVkBmHpurSRNIgez30nV2sk2jyJr9tbrrJIn3icu0v
+         z0fCdQDxnMsYoQIRJnDRXdouHdCUWv7iuQFQAWk6o/BvS7AAdbP+EMmg6nMdgID8b6
+         wB3RVdhjJhVRJ+NRBW23ZmhQ6ZuurRxR4tc6fVI9K/b7u2C1AAYSiplNJ6i2NcT3wG
+         7kHx95aZ3KyT0wJGxxy/tbMKDVNwBq3sECsfJdkLuCi5922514J9MV1GwvzG1jDtag
+         Mxaqe8eLFNFX/rWiv/382zKJGYBviIN6IV2s/c39L1IdoVqmTrpapalsF+PfY+A8pa
+         SB0qW8/LilZ9Q==
+Subject: Re: [GIT PULL] platform-drivers-x86 for 5.15-2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <d7f081b7-275a-4f1c-ed27-9016ed5b2b46@redhat.com>
+References: <d7f081b7-275a-4f1c-ed27-9016ed5b2b46@redhat.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <d7f081b7-275a-4f1c-ed27-9016ed5b2b46@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.15-2
+X-PR-Tracked-Commit-Id: 6f6aab1caf6c7fef46852aaab03f4e8250779e52
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: bee42512c4a0e6253d6b196445f9091438b264b5
+Message-Id: <163232829602.9122.11986880933771269081.pr-tracker-bot@kernel.org>
+Date:   Wed, 22 Sep 2021 16:31:36 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 08:40:43AM -0500, Tom Lendacky wrote:
-> On 9/21/21 4:58 PM, Kirill A. Shutemov wrote:
-> > On Tue, Sep 21, 2021 at 04:43:59PM -0500, Tom Lendacky wrote:
-> > > On 9/21/21 4:34 PM, Kirill A. Shutemov wrote:
-> > > > On Tue, Sep 21, 2021 at 11:27:17PM +0200, Borislav Petkov wrote:
-> > > > > On Wed, Sep 22, 2021 at 12:20:59AM +0300, Kirill A. Shutemov wrote:
-> > > > > > I still believe calling cc_platform_has() from __startup_64() is totally
-> > > > > > broken as it lacks proper wrapping while accessing global variables.
-> > > > > 
-> > > > > Well, one of the issues on the AMD side was using boot_cpu_data too
-> > > > > early and the Intel side uses it too. Can you replace those checks with
-> > > > > is_tdx_guest() or whatever was the helper's name which would check
-> > > > > whether the the kernel is running as a TDX guest, and see if that helps?
-> > > > 
-> > > > There's no need in Intel check this early. Only AMD need it. Maybe just
-> > > > opencode them?
-> > > 
-> > > Any way you can put a gzipped/bzipped copy of your vmlinux file somewhere I
-> > > can grab it from and take a look at it?
-> > 
-> > You can find broken vmlinux and bzImage here:
-> > 
-> > https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdrive.google.com%2Fdrive%2Ffolders%2F1n74vUQHOGebnF70Im32qLFY8iS3wvjIs%3Fusp%3Dsharing&amp;data=04%7C01%7Cthomas.lendacky%40amd.com%7C1c7adf380cbe4c1a6bb708d97d4af6ff%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637678583935705530%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=gA30x%2Bfu97tUx0p2UqI8HgjiL8bxDbK1GqgJBbUrUE4%3D&amp;reserved=0
-> > 
-> > Let me know when I can remove it.
-> 
-> Looking at everything, it is all RIP relative addressing, so those
-> accesses should be fine.
+The pull request you sent on Tue, 21 Sep 2021 16:10:55 +0200:
 
-Not fine, but waiting to blowup with random build environment change.
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.15-2
 
-> Your image has the intel_cc_platform_has()
-> function, does it work if you remove that call? Because I think it may be
-> the early call into that function which looks like it has instrumentation
-> that uses %gs in __sanitizer_cov_trace_pc and %gs is not setup properly
-> yet. And since boot_cpu_data.x86_vendor will likely be zero this early it
-> will match X86_VENDOR_INTEL and call into that function.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/bee42512c4a0e6253d6b196445f9091438b264b5
 
-Right removing call to intel_cc_platform_has() or moving it to
-cc_platform.c fixes the issue.
+Thank you!
 
 -- 
- Kirill A. Shutemov
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
