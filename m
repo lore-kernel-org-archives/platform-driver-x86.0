@@ -2,67 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 996FEC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 16:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEBFC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 19:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB3960F3A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 16:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54CB6105A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Sep 2021 19:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236568AbhIVQdH (ORCPT
+        id S237223AbhIVTxv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Sep 2021 12:33:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236628AbhIVQdG (ORCPT
+        Wed, 22 Sep 2021 15:53:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230384AbhIVTxu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Sep 2021 12:33:06 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 0E63A611B0;
-        Wed, 22 Sep 2021 16:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632328296;
-        bh=Aa5tfeKSQT7wdEHxHLHokNl8n6PqodEsiECSutpnnco=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=nDEeRLZsBvvAvRbpKWBuE1XFVkBmHpurSRNIgez30nV2sk2jyJr9tbrrJIn3icu0v
-         z0fCdQDxnMsYoQIRJnDRXdouHdCUWv7iuQFQAWk6o/BvS7AAdbP+EMmg6nMdgID8b6
-         wB3RVdhjJhVRJ+NRBW23ZmhQ6ZuurRxR4tc6fVI9K/b7u2C1AAYSiplNJ6i2NcT3wG
-         7kHx95aZ3KyT0wJGxxy/tbMKDVNwBq3sECsfJdkLuCi5922514J9MV1GwvzG1jDtag
-         Mxaqe8eLFNFX/rWiv/382zKJGYBviIN6IV2s/c39L1IdoVqmTrpapalsF+PfY+A8pa
-         SB0qW8/LilZ9Q==
-Subject: Re: [GIT PULL] platform-drivers-x86 for 5.15-2
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <d7f081b7-275a-4f1c-ed27-9016ed5b2b46@redhat.com>
-References: <d7f081b7-275a-4f1c-ed27-9016ed5b2b46@redhat.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <d7f081b7-275a-4f1c-ed27-9016ed5b2b46@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.15-2
-X-PR-Tracked-Commit-Id: 6f6aab1caf6c7fef46852aaab03f4e8250779e52
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: bee42512c4a0e6253d6b196445f9091438b264b5
-Message-Id: <163232829602.9122.11986880933771269081.pr-tracker-bot@kernel.org>
-Date:   Wed, 22 Sep 2021 16:31:36 +0000
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
+        Wed, 22 Sep 2021 15:53:50 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA40CC061574;
+        Wed, 22 Sep 2021 12:52:19 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0efa00329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:fa00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A15F91EC051F;
+        Wed, 22 Sep 2021 21:52:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1632340332;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=fzo+PEl8pAwSY958R9AIE6gnLhJ3Zcu0FqnZgS+Q1TY=;
+        b=TrWHyvCovp1xYBCa06xEBb39RTKWLWn8eifuyhcdUuW5I5UUvkqPldeIi88B6DgpVlgBYI
+        ASWuqiS9Bh001r8tMMkQ2eLdFI7a2WxUys56vjsCLc9p/oWDFK43yZPwrWhsKpt67ttN8/
+        oJCfsdDzqB/NRk5+DSVx+/KMmYpDSb0=
+Date:   Wed, 22 Sep 2021 21:52:07 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 5/8] x86/sme: Replace occurrences of sme_active() with
+ cc_platform_has()
+Message-ID: <YUuJZ2qOgbdpfk6N@zn.tnic>
+References: <20210920192341.maue7db4lcbdn46x@box.shutemov.name>
+ <77df37e1-0496-aed5-fd1d-302180f1edeb@amd.com>
+ <YUoao0LlqQ6+uBrq@zn.tnic>
+ <20210921212059.wwlytlmxoft4cdth@box.shutemov.name>
+ <YUpONYwM4dQXAOJr@zn.tnic>
+ <20210921213401.i2pzaotgjvn4efgg@box.shutemov.name>
+ <00f52bf8-cbc6-3721-f40e-2f51744751b0@amd.com>
+ <20210921215830.vqxd75r4eyau6cxy@box.shutemov.name>
+ <01891f59-7ec3-cf62-a8fc-79f79ca76587@amd.com>
+ <20210922143015.vvxvh6ec73lffvkf@box.shutemov.name>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210922143015.vvxvh6ec73lffvkf@box.shutemov.name>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Tue, 21 Sep 2021 16:10:55 +0200:
+On Wed, Sep 22, 2021 at 05:30:15PM +0300, Kirill A. Shutemov wrote:
+> Not fine, but waiting to blowup with random build environment change.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.15-2
+Why is it not fine?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bee42512c4a0e6253d6b196445f9091438b264b5
-
-Thank you!
+Are you suspecting that the compiler might generate something else and
+not a rip-relative access?
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
