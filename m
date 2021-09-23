@@ -2,128 +2,189 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3547C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Sep 2021 09:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A038C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Sep 2021 09:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA4E6124C
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Sep 2021 09:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D48961152
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Sep 2021 09:06:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240101AbhIWJGZ (ORCPT
+        id S240057AbhIWJIP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Sep 2021 05:06:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25287 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240033AbhIWJGZ (ORCPT
+        Thu, 23 Sep 2021 05:08:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240019AbhIWJIO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Sep 2021 05:06:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632387894;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=POvmQFHwQedCHQCS5FtuCZbcIW6Qr+1gI9/W1ZBdgLg=;
-        b=fBVdsWsON2J9RWOXd3+OIFz6AjJi3x81DQCNSogbNATeD8Mtya20j9/8w6W/hn9q1nG5a3
-        leZqsX6VJtRctfnFkw52SpBgdYVPZVVhf/ABReSx1KdmekWBEqIcdTSw1u07qR/EuulAcM
-        UqoMQAVfqZFZxwvG2DKFHSmzKoJhrfA=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-515-CkC1mCfjN5SIjiJzw_d9eQ-1; Thu, 23 Sep 2021 05:04:52 -0400
-X-MC-Unique: CkC1mCfjN5SIjiJzw_d9eQ-1
-Received: by mail-ed1-f72.google.com with SMTP id r23-20020a50d697000000b003d824845066so6134851edi.8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Sep 2021 02:04:52 -0700 (PDT)
+        Thu, 23 Sep 2021 05:08:14 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE6BC061756;
+        Thu, 23 Sep 2021 02:06:43 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id i23so15195518wrb.2;
+        Thu, 23 Sep 2021 02:06:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W7zJC5aAqnyO98X4K6bFPJj+u1b4jQVw+cClFYWpioo=;
+        b=a9ZHfDLE1htrbTBFgFlzlURyjWeEzYOimdnm96oO8kOOASLQMgVEH+PbCXkqRa1QKa
+         Xo/mhNjZmJCv6//Yr2udOy4RrQmjbr0q5kcBySyqhwmHCWonJlcwwCqZKCCK+CFSp29v
+         ov3qEYsSyjLYIfHE0nIh1soE1ayctAmh2Z0tHgRqzd5fxf0vpFtOJCe5uRJ4S8ZRlmLm
+         9QbevfW59NDuCI6XfgPIVS/INi9r/M8UFKHlmojz0vYMwRbxZSJh273lYgBTHKizbJeR
+         GE12Hlf0gNNtYLVcD1oFQILaXal7Fz8C9G40Mw0uZ+4A53tnYmRo7jEJdFsIVIoDVL6m
+         Gz7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=POvmQFHwQedCHQCS5FtuCZbcIW6Qr+1gI9/W1ZBdgLg=;
-        b=L4TSLIczIjnftxqgBFNPA8muYBxwFbe+6xatbClYf5DAxwJ3kwcIvIpcmmrMXauNWn
-         XRnCeFu9QZ+OyIkgkMCB8ZZRXhawMOtz1qvJ8nNWx9HJS+yXj99AsKZdsbyCIHGqVt8h
-         DyoST390K1eiFP7ez5vYNsJzt78K/B92z7luBWWtHnvHFVFSlF+GCWlRdNG72hc5MKVb
-         1OBUTOaUZaroa3YXJnlzHvQz7bV4HLJMmItWYesQ5UZlDmqnRRYZ8UebLYnAaeyv/8j1
-         CblPWNS0bzLwhTKun+mFQrysgfBUiJO914DiF31NzoeO+Y3RXu+B/6ifTvlfINEKC3ci
-         aROQ==
-X-Gm-Message-State: AOAM533loQkR1uLcMvDMQuqpnbw76UCdK2bJv7gaWFU2dDmM5+NHoOhj
-        qWmmZr3wrVVUXunlyTnrKnDuc0MYBKTGOLiI+ePrUXCvyNJ8Drzo4P+YNNXdEqplpWC+MCVcieg
-        jFr2PRorWopsrPaHLJOmV9oWteGyw3SP7Qg==
-X-Received: by 2002:a17:906:6a21:: with SMTP id qw33mr3949029ejc.326.1632387891521;
-        Thu, 23 Sep 2021 02:04:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxCoJwt7GfyvkgYCYqH43iz6MTmxVRiJkKQBqavUbmbjQFAeRzeRIe5taLYX66NvKp/emPI+A==
-X-Received: by 2002:a17:906:6a21:: with SMTP id qw33mr3949010ejc.326.1632387891320;
-        Thu, 23 Sep 2021 02:04:51 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id t19sm2601334ejb.115.2021.09.23.02.04.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Sep 2021 02:04:50 -0700 (PDT)
-Subject: Re: [PATCH v3 0/5] Add general DVSEC/VSEC support
-To:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
-        bhelgaas@google.com, andy.shevchenko@gmail.com
-Cc:     mgross@linux.intel.com, srinivas.pandruvada@intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20210922213007.2738388-1-david.e.box@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <da8d9c79-d041-b7fa-6ee3-3abfcfcb0ef6@redhat.com>
-Date:   Thu, 23 Sep 2021 11:04:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W7zJC5aAqnyO98X4K6bFPJj+u1b4jQVw+cClFYWpioo=;
+        b=pZMaBQAOt0HaU1m7Z32byYeOwEYOLxwbvsHC8tefWntwMNXj7bZlt7OSS7jsZflV+V
+         ry9nmDfpXROnk2txte+rqEgxFloQhiBqCqr560NgA4tZg6ll0sw/sm4jk6/N9xq2KZrf
+         oLr11DG2GzW4rc3P5pvvj9bJ5PYZ72zgLFUMJLoSgL6nbNr+ntrG5scbnW9WDD4y/MML
+         dEpSJkbnVmPPwGRgtG0dyFEYf0IVky0mHk0uCRO2QLgOIo5SLP91DB2HgjIEllGpczxx
+         xD6pAg6pB4tY0PuMF/F80OXQwuVFfCzdQgXdwCxPUm3N012qw/cIJeseTOMI3pMYQtWQ
+         eF9A==
+X-Gm-Message-State: AOAM531+CVlVlJtCTfQdbM4rQVGX0E4NsM9nTVL5/k2XvJ21Rv+eHyRC
+        NkOzZwcCOgwaH5wrrh+nO9f+ClBhkP3e55FHX9I=
+X-Google-Smtp-Source: ABdhPJwmaE0WOKFEdoPl71aerkf8BW4hR1ah2KQpCRQqOoPXwAejh3hHj5VunpFrv94eYrn+kbYy/RR8fKnhNZPGDTc=
+X-Received: by 2002:a5d:58ec:: with SMTP id f12mr3760465wrd.24.1632388001736;
+ Thu, 23 Sep 2021 02:06:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210922213007.2738388-1-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAGhUXvBw4rzCQrqttyyS=Psxmhppk79c6fDoxPbV91jE7fO_9A@mail.gmail.com>
+ <CAGhUXvDNj2v3O==+wWWKPYVzej8Vq+WNiBtPwmYxSQ2dTuLb9Q@mail.gmail.com>
+ <CAGhUXvC8eHfxEKzkGN06VvRU6Z0ko7MJ9hF6uXNq+PxRZSbEmQ@mail.gmail.com> <70cbe360-6385-2536-32bd-ae803517d2b2@redhat.com>
+In-Reply-To: <70cbe360-6385-2536-32bd-ae803517d2b2@redhat.com>
+From:   Andrea Ippolito <andrea.ippo@gmail.com>
+Date:   Thu, 23 Sep 2021 11:06:05 +0200
+Message-ID: <CAGhUXvDWgsZ4+e-PL7EYkf48urJxfCS+eUKfgnqJOSBHM_oqCA@mail.gmail.com>
+Subject: Re: Touchpad stickiness on Dell Inspiron/XPS
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     dmitry.torokhov@gmail.com, Alex Hung <alex.hung@canonical.com>,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Thanks a lot Hans for your quick reply :)
 
-On 9/22/21 11:30 PM, David E. Box wrote:
-> This patch enables general support for Intel defined PCIe VSEC and DVSEC
-> capabilities in the Intel Platform Monitoring Technology (PMT) driver.
-> Though the driver was written exclusively for PMT capabilities, newer DVSEC
-> and VSEC IDs for other capabilities can exist on the same device requiring
-> that the driver handle them.
-> 
-> V3 is mostly a resend of V2. It drops a platform/x86 patch that was picked
-> up separately by Hans in the last cycle. It also adds a new patch to
-> support an upcoming capability.
-> 
-> David E. Box (5):
->   PCI: Add #defines for accessing PCIE DVSEC fields
->   MFD: intel_pmt: Support non-PMT capabilities
->   MFD: intel_pmt: Add support for PCIe VSEC structures
->   MFD: intel_pmt: Add DG2 support
->   MFD: intel_extended_cap: Add support for Intel SDSi
+I will indeed proceed to filing a bug as you suggested and hope for the best.
 
-Since this mostly touches drivers/mfd/intel_pmt.c, I assume this is
-going to get merged through the MFD trees.
+Have a nice day!
 
-For the few small drivers/platform/x86 changes:
+Andrea IPPOLITO
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-
-
-> 
->  drivers/mfd/intel_pmt.c                    | 258 +++++++++++++++------
->  drivers/platform/x86/intel/pmt/class.c     |   2 +
->  drivers/platform/x86/intel/pmt/crashlog.c  |   2 +-
->  drivers/platform/x86/intel/pmt/telemetry.c |   2 +-
->  include/uapi/linux/pci_regs.h              |   4 +
->  5 files changed, 191 insertions(+), 77 deletions(-)
-> 
-
+Il giorno gio 23 set 2021 alle ore 11:00 Hans de Goede
+<hdegoede@redhat.com> ha scritto:
+>
+> Hi Andrea,
+>
+> On 9/23/21 10:47 AM, Andrea Ippolito wrote:
+> > Hello,
+> >
+> > has anyone had a chance to have a look at this report, and can help
+> > making some progress on the investigation?
+> >
+> > Please let me know if there are more suitable channels for this, since
+> > most of the things I see in these mailing lists are patches and code
+> > reviews, not really reports and discussions around ongoing issues.
+>
+> Right, bugs are usually discussed in bugzila, you could consider
+> filing a bug here:
+>
+> https://bugzilla.kernel.org/enter_bug.cgi?product=Drivers
+>
+> But I must be honest here, I don't see much progress being made
+> on this until someone with a significant amount of kernel / hw-enablement
+> experience gets it hands on one of these models. Either because some
+> company wants to run Linux on an affected model and ends up paying
+> someone to look at this, or because someone with the necessary
+> skills happens to buy one and then gets annoyed enough by this to sink
+> enough time into the issue to figure things out.
+>
+> This hw is still relatively new, so with some luck someone accidentally
+> fixes this while fixing another issue, which happens to have the
+> same root cause.
+>
+> Short of one of these 2 happening I don't see this getting resolved
+> anytime soon. By all means, do file a bug for this, I just want to
+> set expectations about the (un)likelyness of this getting fixed
+> (or the bug getting much attention in general) beforehand.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> >
+> > Thanks a lot in advance.
+> >
+> > Regards,
+> > Andrea IPPOLITO
+> >
+> > Il giorno ven 27 ago 2021 alle ore 08:57 Andrea Ippolito
+> > <andrea.ippo@gmail.com> ha scritto:
+> >>
+> >> (resending as plain text)
+> >>
+> >> Hello everyone,
+> >>
+> >> I hope I find you well.
+> >>
+> >> I am writing this to report a touchpad issue faced by me and several
+> >> other DELL users across several different distros (HW defect has been
+> >> ruled out by people unable to reproduce on Windows).
+> >>
+> >> First thing that came to mind was to report this to the libinput
+> >> project, which I did here:
+> >>
+> >> https://gitlab.freedesktop.org/libinput/libinput/-/issues/618
+> >>
+> >> A similar report by another user followed shortly after:
+> >>
+> >> https://gitlab.freedesktop.org/libinput/libinput/-/issues/636 (will be
+> >> closed as dupe eventually, so please keep #618 as reference)
+> >>
+> >> Issue has been also reported by yet another user on reddit:
+> >>
+> >> https://www.reddit.com/r/linuxhardware/comments/ofbzg3/dell_xps_15_9510_experience/h5ddy07/
+> >> and https://www.reddit.com/r/linuxhardware/comments/ofbzg3/dell_xps_15_9510_experience/h5zjwc8/?utm_source=reddit&utm_medium=web2x&context=3
+> >>
+> >> And finally, I have reported it on the DELL user forums (no help
+> >> whatsoever from DELL):
+> >>
+> >> https://www.dell.com/community/Inspiron/Tiger-Lake-DELL-Inspiron-Touchpad-Cursor-temporarily-drops/m-p/8021753#M126292
+> >>
+> >> The investigation on the libinput side appears to be complete, as
+> >> maintainers didn't spot anything weird there (also, the issue is also
+> >> reproducible with the synaptics lib, suggesting that this might be
+> >> lower level).
+> >>
+> >> Robert Martin suggested to raise this to you now, as per comment:
+> >>
+> >> https://gitlab.freedesktop.org/libinput/libinput/-/issues/618#note_1042277
+> >>
+> >> I'm kind of new to Linux mailing lists and bug reporting, so please
+> >> forgive me if I'm violating some rules or etiquette, I'd be glad to
+> >> rectify if that's the case.
+> >>
+> >> I also don't know what is the best way to keep the conversation going,
+> >> e.g. if there's an issue tracker or instead mailing lists are the
+> >> preferred choice.
+> >>
+> >> You should find some interesting data in the above mentioned reports
+> >> already, if not, please don't hesitate to let me know or chime in on
+> >> libinput issue #618 directly.
+> >>
+> >> Thanks a lot in advance.
+> >>
+> >> Kind regards,
+> >> Andrea IPPOLITO
+> >
+>
