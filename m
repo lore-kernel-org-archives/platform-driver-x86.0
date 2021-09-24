@@ -2,99 +2,70 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F8DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Sep 2021 16:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD84C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Sep 2021 21:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC8026124B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Sep 2021 16:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DED0610FD
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Sep 2021 21:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347332AbhIXQPP (ORCPT
+        id S1347552AbhIXVdg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 24 Sep 2021 12:15:15 -0400
-Received: from mail-ot1-f42.google.com ([209.85.210.42]:34635 "EHLO
-        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347280AbhIXQPO (ORCPT
+        Fri, 24 Sep 2021 17:33:36 -0400
+Received: from mga06.intel.com ([134.134.136.31]:37403 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1347527AbhIXVdg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 24 Sep 2021 12:15:14 -0400
-Received: by mail-ot1-f42.google.com with SMTP id g62-20020a9d2dc4000000b0054752cfbc59so8112528otb.1;
-        Fri, 24 Sep 2021 09:13:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZC1EsaX6wL9yAIaslJ+DDFzcPPT/Y6p1NPh5ojVAeNQ=;
-        b=jbiAyrW2gdcd6B7LThjfje/H/jPuaLEcVBln34uxnnBI8Cbn+v7cZTnTQhjmh86ifT
-         iYHZcHCw1N/jtAegV2liq7Ot/Gzo5vaHPf3kyxQmHxLkXs7qRh3LSCtT62/hZY/xXwgT
-         cCIkURK4SLpCJFUgDi8wkXZRD2G1YRM9xaysKxfsYXQPfWScsUTt8dFDhy+cxtEH2FOD
-         TN50ruyBtVuyUwhBqfOLGEevvyT525usSP7VnVSheh9WoGlc4z/eGvtuUu+9xd4xuuDj
-         rHtEpasVwn7odWX5M8NxmnRKTo/DIuLfBTLd33Fvf5jLY5j4Op0w6t4wMdPYh5vwh1+u
-         T0kA==
-X-Gm-Message-State: AOAM532V/qBwij4/+2y3fo4La3voL2coloall/SEy5RFltzcUF070SJ+
-        +HCzosaEUiCUcc+LxOKdh44pVoPpVuvFKqEo4Fs=
-X-Google-Smtp-Source: ABdhPJyDmk32YSUnR4jaxOpngtEpUVlNAQbbQN6VQfqSURZRXjSvfaW8NMxlUVFCefrC+4cm6RdlM+vRJJSgqXQipr0=
-X-Received: by 2002:a05:6830:2784:: with SMTP id x4mr4892011otu.86.1632500021144;
- Fri, 24 Sep 2021 09:13:41 -0700 (PDT)
+        Fri, 24 Sep 2021 17:33:36 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10117"; a="285183558"
+X-IronPort-AV: E=Sophos;i="5.85,321,1624345200"; 
+   d="scan'208";a="285183558"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2021 14:32:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,321,1624345200"; 
+   d="scan'208";a="704324501"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Sep 2021 14:32:00 -0700
+Received: from debox1-server.jf.intel.com (debox1-server.jf.intel.com [10.54.39.121])
+        by linux.intel.com (Postfix) with ESMTP id AFA1258096C;
+        Fri, 24 Sep 2021 14:31:57 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     hdegoede@redhat.com, mgross@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, gregkh@linuxfoundation.org,
+        srinivas.pandruvada@intel.com
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/2] Documentation: Update ioctl-number.rst for Intel Software Defined Silicon interface
+Date:   Fri, 24 Sep 2021 14:31:56 -0700
+Message-Id: <20210924213157.3584061-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210916170054.136790-1-krzysztof.kozlowski@canonical.com>
- <20210916170054.136790-2-krzysztof.kozlowski@canonical.com>
- <f78523c5-df88-a768-3b9a-d542bbd73a1c@redhat.com> <CAJZ5v0gBZUrvX+w2oz-tmvDrHz_tFvzyzVGe4iz2wc3-V_9qPg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gBZUrvX+w2oz-tmvDrHz_tFvzyzVGe4iz2wc3-V_9qPg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 24 Sep 2021 18:13:30 +0200
-Message-ID: <CAJZ5v0j03SLpmJhX1jBHcsrVyt+kecmfE8n8-1quCVZBN+4RvQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] acpi: pnp: remove duplicated BRI0A49 and BDP3336 entries
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Matan Ziv-Av <matan@svgalib.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Sep 21, 2021 at 3:08 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Sep 21, 2021 at 2:52 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> > Hi,
-> >
-> > On 9/16/21 7:00 PM, Krzysztof Kozlowski wrote:
-> > > BRI0A49 and BDP3336 are already on the list.
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> >
-> > Thanks, patch looks good to me:
-> >
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> >
-> > Rafael, I've picked up 1/2 since that applies to a drivers/platform/x86
-> > driver. I'll leave picking this one up to you.
->
-> I'll pick it up, thanks!
+Reserve ioctl number and range for the Intel Software Defined Silicon
+driver.
 
-Applied as 5.16 material now, thanks!
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ Documentation/userspace-api/ioctl/ioctl-number.rst | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > > ---
-> > >  drivers/acpi/acpi_pnp.c | 2 --
-> > >  1 file changed, 2 deletions(-)
-> > >
-> > > diff --git a/drivers/acpi/acpi_pnp.c b/drivers/acpi/acpi_pnp.c
-> > > index 8f2dc176bb41..ffdcfcd4a10d 100644
-> > > --- a/drivers/acpi/acpi_pnp.c
-> > > +++ b/drivers/acpi/acpi_pnp.c
-> > > @@ -156,8 +156,6 @@ static const struct acpi_device_id acpi_pnp_device_ids[] = {
-> > >       {"BRI0A49"},            /* Boca Complete Ofc Communicator 14.4 Data-FAX */
-> > >       {"BRI1400"},            /* Boca Research 33,600 ACF Modem */
-> > >       {"BRI3400"},            /* Boca 33.6 Kbps Internal FD34FSVD */
-> > > -     {"BRI0A49"},            /* Boca 33.6 Kbps Internal FD34FSVD */
-> > > -     {"BDP3336"},            /* Best Data Products Inc. Smart One 336F PnP Modem */
-> > >       {"CPI4050"},            /* Computer Peripherals Inc. EuroViVa CommCenter-33.6 SP PnP */
-> > >       {"CTL3001"},            /* Creative Labs Phone Blaster 28.8 DSVD PnP Voice */
-> > >       {"CTL3011"},            /* Creative Labs Modem Blaster 28.8 DSVD PnP Voice */
-> > >
-> >
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index 2e8134059c87..2a6e92639cdb 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -363,6 +363,7 @@ Code  Seq#    Include File                                           Comments
+ 0xDB  00-0F  drivers/char/mwave/mwavepub.h
+ 0xDD  00-3F                                                          ZFCP device driver see drivers/s390/scsi/
+                                                                      <mailto:aherrman@de.ibm.com>
++0xDF  all    linux/isdsi_if.h
+ 0xE5  00-3F  linux/fuse.h
+ 0xEC  00-01  drivers/platform/chrome/cros_ec_dev.h                   ChromeOS EC driver
+ 0xF3  00-3F  drivers/usb/misc/sisusbvga/sisusb.h                     sisfb (in development)
+-- 
+2.25.1
+
