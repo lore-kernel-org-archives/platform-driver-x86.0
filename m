@@ -2,87 +2,135 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02750C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Sep 2021 21:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E904BC43219
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Sep 2021 09:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D427F61214
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Sep 2021 21:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D473C6056B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Sep 2021 09:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230149AbhIWVwY (ORCPT
+        id S245290AbhIXJnF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Sep 2021 17:52:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230272AbhIWVwX (ORCPT
+        Fri, 24 Sep 2021 05:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245221AbhIXJnF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Sep 2021 17:52:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6E97661152;
-        Thu, 23 Sep 2021 21:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632433851;
-        bh=G33CELDjpkIi7/i+uSBAnuvjXvPt234/sYyyXuqZrI4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FkZoG+0vEIqOypwkpQR8BTY8ITWbpIDNzfdC9qV1Pr48wxfdh+QKa1AwxlMeVhzDY
-         syAvS70GO0Pewf6cCUDNZFtBSf0H5UVv0/p0MJRapqMNhVU6Epzd3PaTgNNYbedU4d
-         xFdWheJpNjs8xsJIeZ59I5K4h/5J4uI2BXhV7rLA/qFb+us7nE0IHjGXXeolcfaLly
-         vI+tPFsYps4kb1WRuYYI0/5O5rd5A4Akp4ycO1HcZNRCZZEKAVswqYxQ3/FDeJ2GgF
-         MGxVLv17ZhHdrhpoUku43f8Y4qFvnODKOlYRHXUvW9T7IhwEyzVpFDRMX1OcjmpLrp
-         F6HzVHtZUb1jA==
-Date:   Thu, 23 Sep 2021 14:50:47 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Sanket Goswami <Sanket.Goswami@amd.com>
-Cc:     Shyam-sundar.S-k@amd.com, hdegoede@redhat.com,
-        mgross@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: amd-pmc: Export Idlemask values based
- on the APU
-Message-ID: <YUz2t+bdes2I+gMK@archlinux-ax161>
-References: <20210916124002.2529-1-Sanket.Goswami@amd.com>
+        Fri, 24 Sep 2021 05:43:05 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25523C061757
+        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Sep 2021 02:41:32 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id z24so38551274lfu.13
+        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Sep 2021 02:41:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20210112.gappssmtp.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7QWYmDDdQ14wxTTMWtNorG+4hnmrm04qfz4ZOujDnZs=;
+        b=a94RXEUJuMmQvxSDKok9kJbMV98Mo28f1Csi4Z4iwvW7+MkRyX5SrQhnYAAaonglNs
+         TqzSbC141ptsWvvzM0S2r5099PgvSLUTd+llMs5cQH1O/KYv2VKwA3rHbEQ17XEUoJiN
+         b88sf+8/Kq6CN5gKqNMDbt0WofHePWjCWhJfrHH/URopiQYKQJViZtb5wMUubTQfdu6m
+         e490qkHKD0Pb0R4D5rMx+0JuhhDDbQUkFWETXBCjCVPYNSZnkKFRM+sk+iiLVm+sara7
+         E1aPac0dVliF4TZMk0iL6yousngzwZf3UFxxtnempLUEnPswt9hwLB+6ECQ/gPgJLFvg
+         u+ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7QWYmDDdQ14wxTTMWtNorG+4hnmrm04qfz4ZOujDnZs=;
+        b=j5zyk54KZ3C8eSOfZHX6bNprqarY9Mh83t6Mgmd4SnHLeCrBx4Q4w6L1mTbVO3V1Tn
+         aBNhTvq8ijYXauqupcB7J7BsS/lzT+a1VoYZ/ZpEjxN8mjD8t+qN0nm+T53zTTlFFRFA
+         RM56vlwnVTG8Y3Xrjh9q5yZBNDM5pH7/JH8h6U0EkVNCsnYf/mgA+mZI3nsfSXosI0FG
+         vvnzD1Lpwl3uvo9ECitDq0H07f4jPks6vKMNJIaV9kYamCzniGFVuLCWccc2jCGazz7+
+         B1BlDJHaqIHgzx+ngYWnwtXxbYJtzLLjdg8QSANn1nHqfEXgzfE8UkxYf0RrlrXPropj
+         5srQ==
+X-Gm-Message-State: AOAM532plI3Q+iMOuS7U/cwDoYlJ9/dv2elfR0m7e5CoBqBCqwtVK5t1
+        /lXJ1FBFeBwi5vFH/9J4CmB+hw==
+X-Google-Smtp-Source: ABdhPJz+tcQG7FGy3FlEBQPrN+mpMikLwlc4Lo7J+ey+pIvMNuRrMxCLd7yfmXFIncsb4Qxt6AJb6g==
+X-Received: by 2002:a2e:804c:: with SMTP id p12mr10420673ljg.344.1632476490492;
+        Fri, 24 Sep 2021 02:41:30 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id k21sm952544lji.81.2021.09.24.02.41.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Sep 2021 02:41:29 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 84289103068; Fri, 24 Sep 2021 12:41:32 +0300 (+03)
+Date:   Fri, 24 Sep 2021 12:41:32 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 5/8] x86/sme: Replace occurrences of sme_active() with
+ cc_platform_has()
+Message-ID: <20210924094132.gxyqp4z3qdk5w4j6@box.shutemov.name>
+References: <20210921212059.wwlytlmxoft4cdth@box.shutemov.name>
+ <YUpONYwM4dQXAOJr@zn.tnic>
+ <20210921213401.i2pzaotgjvn4efgg@box.shutemov.name>
+ <00f52bf8-cbc6-3721-f40e-2f51744751b0@amd.com>
+ <20210921215830.vqxd75r4eyau6cxy@box.shutemov.name>
+ <01891f59-7ec3-cf62-a8fc-79f79ca76587@amd.com>
+ <20210922143015.vvxvh6ec73lffvkf@box.shutemov.name>
+ <YUuJZ2qOgbdpfk6N@zn.tnic>
+ <20210922210558.itofvu3725dap5xx@box.shutemov.name>
+ <YUzFj+yH79XRc3F3@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210916124002.2529-1-Sanket.Goswami@amd.com>
+In-Reply-To: <YUzFj+yH79XRc3F3@zn.tnic>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 06:10:02PM +0530, Sanket Goswami wrote:
-> IdleMask is the metric used by the PM firmware to know the status of each
-> of the Hardware IP blocks monitored by the PM firmware.
+On Thu, Sep 23, 2021 at 08:21:03PM +0200, Borislav Petkov wrote:
+> On Thu, Sep 23, 2021 at 12:05:58AM +0300, Kirill A. Shutemov wrote:
+> > Unless we find other way to guarantee RIP-relative access, we must use
+> > fixup_pointer() to access any global variables.
 > 
-> Knowing this value is key to get the information of s2idle suspend/resume
-> status. This value is mapped to PMC scratch registers, retrieve them
-> accordingly based on the CPU family and the underlying firmware support.
+> Yah, I've asked compiler folks about any guarantees we have wrt
+> rip-relative addresses but it doesn't look good. Worst case, we'd have
+> to do the fixup_pointer() thing.
 > 
-> Co-developed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> In the meantime, Tom and I did some more poking at this and here's a
+> diff ontop.
+> 
+> The direction being that we'll stick both the AMD and Intel
+> *cc_platform_has() call into cc_platform.c for which instrumentation
+> will be disabled so no issues with that.
+> 
+> And that will keep all that querying all together in a single file.
 
-This patch as commit f6045de1f532 ("platform/x86: amd-pmc: Export
-Idlemask values based on the APU") in -next causes the following errors
-when CONFIG_DEBUG_FS is disabled:
+And still do cc_platform_has() calls in __startup_64() codepath?
 
-drivers/platform/x86/amd-pmc.c:424:2: error: implicit declaration of function 'amd_pmc_idlemask_read' [-Werror,-Wimplicit-function-declaration]
-        amd_pmc_idlemask_read(pdev, dev, NULL);
-        ^
-drivers/platform/x86/amd-pmc.c:424:2: note: did you mean 'amd_pmc_reg_read'?
-drivers/platform/x86/amd-pmc.c:131:19: note: 'amd_pmc_reg_read' declared here
-static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
-                  ^
-drivers/platform/x86/amd-pmc.c:448:2: error: implicit declaration of function 'amd_pmc_idlemask_read' [-Werror,-Wimplicit-function-declaration]
-        amd_pmc_idlemask_read(pdev, dev, NULL);
-        ^
-drivers/platform/x86/amd-pmc.c:536:2: error: implicit declaration of function 'amd_pmc_get_smu_version' [-Werror,-Wimplicit-function-declaration]
-        amd_pmc_get_smu_version(dev);
-        ^
-3 errors generated.
+It's broken.
 
-Should these functions be stubbed or should there be a different fix?
+Intel detection in cc_platform_has() relies on boot_cpu_data.x86_vendor
+which is not initialized until early_cpu_init() in setup_arch(). Given
+that X86_VENDOR_INTEL is 0 it leads to false-positive.
 
-Cheers,
-Nathan
+I think opencode these two calls is the way forward. Maybe also move the
+check from sme_encrypt_kernel() to __startup_64().
+
+-- 
+ Kirill A. Shutemov
