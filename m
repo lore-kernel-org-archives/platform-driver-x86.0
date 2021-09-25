@@ -2,148 +2,171 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4BFC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Sep 2021 11:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8562C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Sep 2021 13:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38AF56105A
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Sep 2021 11:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1D56135A
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Sep 2021 13:33:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236171AbhIYLJA (ORCPT
+        id S245152AbhIYNfN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 25 Sep 2021 07:09:00 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:52337 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231706AbhIYLJA (ORCPT
+        Sat, 25 Sep 2021 09:35:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S245112AbhIYNfM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 25 Sep 2021 07:09:00 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.west.internal (Postfix) with ESMTP id 504E02B0063E;
-        Sat, 25 Sep 2021 07:07:24 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Sat, 25 Sep 2021 07:07:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=3uQrqEVhHhLU6E1nXr0ckYIdMZ1
-        n/+TcG7HITTU3dkI=; b=Bipe1O7BRRE0DizAoy8TNijIWvKh+TrmfSzetj4DQIQ
-        mf1bKGj6w9dgr0khmgQZTh9ss6UWfIjGsndlAoiWWtgqZAKjthEC5MmqpgZQMp10
-        J59QXnjtfWwyeJ1gUSa8Osty9TWTSMx3MB/9UMJII61IM5OGXHezutgntp0LB/sS
-        8BRiO4AwtynTCZbZcGnnF3LE7UubBZv4b/rieMJJN3wT7ASUJQ0fvwulrvReEekw
-        JVxcFsRrU7uMk0ADJYciik5KrCX8JNclvUfZcDETmiLCF2XAgzyQS/atBQYG4j4B
-        mBGa4McLyh34IAbn3M+nNEnP+ysS3jKpKCpWG7Uilag==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=3uQrqE
-        VhHhLU6E1nXr0ckYIdMZ1n/+TcG7HITTU3dkI=; b=h759m/5BigSJkwYVjTOB04
-        rQAMAZjgCrSV3fvVMYcl7k99lyjGMacz9/NO9gI8du2XeXr0QJLwV32/HMsxsIj0
-        zoZggdCj2WkpIPqlJumyihH/sT4hO9O7ZWEfzKfFblq2V/pLY6vP0TuTi2vDGpeA
-        Z6Ab6n/dMUBirjiyQVWXt7eKmapK97on3511kBLHHkposEfKifzFJf2qum/LcYXW
-        QbbSmrAvPPpWhiZMzp6iwPootN9noh1wGQ8jz/vtEX4Z8dQcpdShNgFBe4rHT76s
-        SLsjfgd0+azuTHXbUm6fMNO6p2/lBElosiFZE1mhr0vw4zRSc0GYPGOOaDSmAaYw
-        ==
-X-ME-Sender: <xms:6wJPYTJ-1Vq28NSW3ObfYiNYzstYOY9JSebhJOAVCoxbKRDCcaDSwA>
-    <xme:6wJPYXLDVXar2mKdtwAXbQD34cmhl5uZXRAPnjI1Gc5tGBId6ggVtzo3ULYYFrmBb
-    v_YHXrXayapaA>
-X-ME-Received: <xmr:6wJPYbv7lHB4X6EyiekiXdM6XvCBdSCUY_yoD7UCOVhHNyMufB_C2dLSjAI5eMQzxlUOBiZxdnAoeG3YhWX1G2l5nvf69TZR>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudejfedgfeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevffffte
-    fhleeuhfefieffhfeifefhhefftefhffduvdfhfffgleetgfdvleehtdenucffohhmrghi
-    nhepkhgvrhhnvghlrdhorhhgpdhkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:6wJPYcac4EhmEtUn4XmJA2fWY6HGV09Pr_Cj6jSen5LV0yzoKSQnbA>
-    <xmx:6wJPYaZoSEvcqefDMEf-nbE5FFwnMksG6G305hi_yiZa2rBxv4ttCA>
-    <xmx:6wJPYQBPyAmjWjOvYy9Q-tOfnaFr8FqaCycu1RaIFtxT4PI7CK9M3w>
-    <xmx:6wJPYXR8gYW4CmYRCDRPA297DWaRwBYpfuEfdWqBW03hajW92EzXcp0vGSI>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 25 Sep 2021 07:07:22 -0400 (EDT)
-Date:   Sat, 25 Sep 2021 13:07:20 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Len Baker <len.baker@gmx.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Mark Gross <mgross@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Prefer struct_size over
- open coded arithmetic
-Message-ID: <YU8C6B5zw5t4vsh7@kroah.com>
-References: <20210918150500.21530-1-len.baker@gmx.com>
- <202109192246.B438B42EF@keescook>
- <ba427967-cb1b-58a8-ec93-bd5ae89f58f8@redhat.com>
- <YUn3F9HtgrpN9sSM@kroah.com>
- <20210925081856.GD1660@titan>
+        Sat, 25 Sep 2021 09:35:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 4DAE06128B
+        for <platform-driver-x86@vger.kernel.org>; Sat, 25 Sep 2021 13:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632576818;
+        bh=QXRdIs64xXjnZ/4S5zFSQA49YKWSVRSNoc0BrPRrYKE=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=Af79PVwe0s7vTrJpHiVFv7U1zR5DiqIsp2C4QceM9wRuSViKbnrudXPDkyhqDXbzh
+         dLoEawbnCin8EW/jE0842nj4cjQ0L4PAJTt3B3r2zPyhxTGSjQcP6/WFXW8Pw6grMU
+         UJK9JZsThBApquxwsCVpI0KdMaGp7pkdxuEvNAVd4dL8y8CTAn2o9Yu9BjtIv4F/75
+         J9Mu9bikK2c8wPQEvsEb7kV8QF7+uBt8FMXkH5iVF4GIqyoaycQH6k8XN2Gmfv81wi
+         owhsRBQk4EjhwbBK02nL9PERyrgqhmY+2XRvFv2TVYrsYSGyRUy9GdPsZqu0ErIXEk
+         lzJvSjoaCEdHQ==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Sat, 25 Sep 2021 13:33:37 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-I38ChR8wsB@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210925081856.GD1660@titan>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Sep 25, 2021 at 12:40:44PM +0200, Len Baker wrote:
-> Hi,
-> 
-> On Tue, Sep 21, 2021 at 05:15:35PM +0200, Greg KH wrote:
-> >
-> > First off, why is a single driver doing so many odd things with
-> > attribute groups?  Why not just use them the way that the rest of the
-> > kernel does?  Why does this driver need this special handling and no one
-> > else does?
-> 
-> Is [1] the correct way to deal with devices attributes? I think so.
-> 
-> [1] https://www.kernel.org/doc/html/latest/driver-api/driver-model/driver.html#attributes
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-No, do not use driver_create_file(), see:
-	http://kroah.com/log/blog/2013/06/26/how-to-create-a-sysfs-file-correctly/
-as a more up to date thing.
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-Someone should fix that in-kernel documentation one day :)
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #298905|0                           |1
+        is obsolete|                            |
 
-> > I think the default way of handling if an attribute is enabled or not,
-> > should suffice here, and make things much simpler overall as all of this
-> > crazy attribute handling can just be removed.
-> 
-> Sorry but what is the default way? Would it be correct to check if the
-> file exists?
+--- Comment #128 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 298971
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D298971&action=3Dedit
+Add support for access via Asus WMI (2021.09.25)
 
-Use the is_visable() callback for the attribute group to enable/disable
-the creation of the sysfs file.
+Support by nct6775:ASUSWMI:
+---
++       "PRIME B360-PLUS",
++       "PRIME B460-PLUS",
++       "PRIME X570-PRO",
++       "ROG CROSSHAIR VIII DARK HERO",
++       "ROG CROSSHAIR VIII FORMULA",
++       "ROG CROSSHAIR VIII HERO",
++       "ROG CROSSHAIR VIII IMPACT",
++       "ROG STRIX B550-E GAMING",
++       "ROG STRIX B550-F GAMING",
++       "ROG STRIX B550-F GAMING (WI-FI)",
++       "ROG STRIX B550-I GAMING",
++       "ROG STRIX X570-F GAMING",
++       "ROG STRIX Z390-E GAMING",
++       "ROG STRIX Z490-I GAMING",
++       "TUF GAMING B550M-PLUS",
++       "TUF GAMING B550M-PLUS (WI-FI)",
++       "TUF GAMING B550-PLUS",
++       "TUF GAMING B550-PRO",
++       "TUF GAMING X570-PLUS",
++       "TUF GAMING X570-PLUS (WI-FI)",
++       "TUF GAMING X570-PRO (WI-FI)",
++       "TUF GAMING Z490-PLUS (WI-FI)",
+---
 
-> > Bonus would also be that I think it would fix the race conditions that
-> > happen when trying to create attributes after the device is bound to the
-> > driver that I think the existing driver has today.
-> >
-> > > > (I see the caller uses +2? Why? It seems to be using each of hotkey_attributes,
-> > > > plus 1 more attr, plus a final NULL?)
-> > >
-> > > The +2 is actually for 2 extra attributes (making the total number
-> > > of extra attributes +3 because the sizeof(struct attribute_set_obj)
-> > > already includes 1 extra).
-> > >
-> > > FWIW these 2 extra attributes are for devices with a
-> > > a physical rfkill on/off switch and for the device being
-> > > a convertible capable of reporting laptop- vs tablet-mode.
-> >
-> > Again, using the default way to show (or not show) attributes should
-> > solve this issue.  Why not just use that instead?
-> 
-> What is the default way? Would it be correct to use device_create_file()
-> and device_remove_file()?
+Support nct6775:i2c (OpenRGB code):
+--
++       "PRIME B450M-GAMING",
++       "PRIME X370-PRO",
++       "PRIME X399-A",
++       "PRIME X470-PRO",
++       "PRIME Z270-A",
++       "PRIME Z370-A",
++       "ROG CROSSHAIR VI HERO",
++       "ROG STRIX B350-F GAMING",
++       "ROG STRIX B450-F GAMING",
++       "ROG STRIX X399-E GAMING",
++       "ROG STRIX Z270-E",
++       "ROG STRIX Z370-E",
++       "ROG STRIX Z490-E GAMING",
++       "TUF B450 PLUS GAMING",
+--
 
-Put all the attributes into an attribute group and attach it to the
-driver.  The driver core will create/remove the files when needed.  The
-link above should help explain that a bit better, and I can point you at
-examples if needed.
+Support ASUS WSI asus_wmi_sensors:native
+(https://github.com/electrified/asus-wmi-sensors):
+---
++       "ROG CROSSHAIR VII HERO (WI-FI)",
++       "ROG CROSSHAIR VII HERO",
++       "ROG CROSSHAIR VI HERO (WI-FI AC)",
++       "CROSSHAIR VI HERO",
++       "ROG CROSSHAIR VI EXTREME",
++       "ROG ZENITH EXTREME",
++       "ROG ZENITH EXTREME ALPHA",
++       "PRIME X399-A",
++       "PRIME X470-PRO",
++       "ROG STRIX X399-E GAMING",
++       "ROG STRIX B450-E GAMING",
++       "ROG STRIX B450-F GAMING",
++       "ROG STRIX B450-I GAMING",
++       "ROG STRIX X470-I GAMING",
++       "ROG STRIX X470-F GAMING",
+----
 
-Does that help?
+Support ASUS WSI asus_wmi_sensors:ec
+(https://github.com/zeule/asus-wmi-ec-sensors/blob/master):
+---
++       [BOARD_R_C8H] =3D "ROG CROSSHAIR VIII HERO",
++       [BOARD_R_C8DH] =3D "ROG CROSSHAIR VIII DARK HERO",
++       [BOARD_R_C8F] =3D "ROG CROSSHAIR VIII FORMULA",
++       [BOARD_RS_X570_E_G] =3D "ROG STRIX X570-E GAMING",
++       [BOARD_RS_B550_E_G] =3D "ROG STRIX B550-E GAMING",
+---
 
-thanks,
+(In reply to Kamil Pietrzak from comment #122)
+> static const u16 scale_in[15] =3D {
+>       888, 4000, 1600, 1600, 9600, 800, 800, 1600, 1600, 1600, 1600, 1600,
+> 800,
+>       800, 800
+> };
 
-greg k-h
+@Kamil Pietrzak Could you please check that scale applied to your board
+correctly?
+
+(In reply to Eugene Shalygin from comment #111)
+> Thus I created a little HWMON driver [1] to read them using WMI method
+> 'BREC'.
+
+@Eugene Shalygin Could you please check that combined version is still work=
+ed?
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
