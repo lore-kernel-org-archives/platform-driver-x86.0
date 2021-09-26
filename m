@@ -2,105 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA88C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Sep 2021 04:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD6FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Sep 2021 04:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D076112E
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Sep 2021 04:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A960361157
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Sep 2021 04:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230453AbhIZElE convert rfc822-to-8bit (ORCPT
+        id S231126AbhIZE4A (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 26 Sep 2021 00:41:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230378AbhIZElD (ORCPT
+        Sun, 26 Sep 2021 00:56:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229737AbhIZEz4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 26 Sep 2021 00:41:03 -0400
-Received: from xilka.com (bbb.xilka.com [IPv6:2001:470:1f11:5a5:16da:e9ff:fe11:e54b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5CD6C061570;
-        Sat, 25 Sep 2021 21:39:27 -0700 (PDT)
-Received: from comer.internal ([IPv6:2001:470:1f11:5a5:9a1c:501a:37c:97b7])
-        (authenticated bits=0)
-        by xilka.com (8.16.1/8.16.1) with ESMTPSA id 18Q4d6lf1125606
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 25 Sep 2021 22:39:06 -0600
-From:   Kelly Anderson <kelly@xilka.com>
-To:     ike.pan@canonical.com, hdegoede@redhat.com, pobrn@protonmail.com,
-        mgross@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        markpearson@lenovo.com, kelly@xilka.com
-Subject: [PATCH v2] add platform support for Ideapad 5 Pro 16ACH6-82L5
-Date:   Sat, 25 Sep 2021 22:39:00 -0600
-Message-ID: <11840239.O9o76ZdvQC@comer.internal>
-Organization: Xilka
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+        Sun, 26 Sep 2021 00:55:56 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 650DF6117A
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Sep 2021 04:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632632059;
+        bh=pjt9zM9ORTuOElKvrmpMjIR8GSKGQxNNUNdYR3TDsf0=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=edi4GLHp4iJmQiePQ8J05PKds+7+RBuHHywTzwVLZkLhWjLNxjrehe9P/rF7Z4+ph
+         Y4ZCo7InLYENZvN4wkpRGwb22o7s7X6v/hx679a9DwM/CryQsZYD1BJgSFhM5loFvM
+         AUD5+Lym/Cthe2n8B/8lC0MtHCT+NMMUNup4ISBkWsPKIwej7xnrUYQDHvj7a51vge
+         LwHnp3BfMqDYMDZnXyK7OBlZSib0hrh3vkb1sepYH1xHJZOOil9SGtmgbDgV9vYkdT
+         uF6VbPbOPGPjQKVkHXHL47GGlpyPqixkrSuP/8hVA3DbKy5rzKhrrGJ68dmxkyQh5m
+         3NYCevX7mWv2A==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Sun, 26 Sep 2021 04:54:18 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: andy.shevchenko@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-7f6v4TFtH1@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-V2 - Addressed issues brought up by Barnabás Pőcze.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Adding support specifically for Ideapad 5 Pro 16ACH6-82L5 by adding a
-whitelist function that can validate notebooks for which dytc_version
-is less than 5, and seem to work fine at dytc_version 4. This code has
-been tested to work properly on the specified system.
+--- Comment #132 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
+(In reply to Denis Pauk from comment #131)
+> (In reply to Eugene Shalygin from comment #129)
+> > Thank you for your efforts to mainline these drivers! I have a couple of
+> > changes and questions to the EC part. Is a review going on somewhere wh=
+ere
+> I
+> > can participate? Otherwise here are the main points:
+> >=20
+> I have not sent it to review yet. I prefer to have checked at least one
+> motherboard from each group before send for review. Especially i2c adapte=
+r.=20
 
-Signed-off-by: Kelly Anderson <kelly@xilka.com>
+Don't forget to split per logical change (to me sounds like new code contai=
+ns 3
+to 5 logical pieces, hence the number of patches).
 
- drivers/platform/x86/ideapad-laptop.c | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+> (In reply to Kamil Pietrzak from comment #130)
+> > Motherboard "TUF GAMING Z490-PLUS (WI-FI)" is using Nuvoton NCT6798D Su=
+per
+> > I/O, so probably all motherboards that use same Nuvoton chip may benefit
+> > from those new voltage scaling factors.=20=20
+>=20
+> What do you think about use kernel mode parameter for use custom value un=
+til
+> we will have some approve that other motherboards with NCT6798D has same
+> scale factors?
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index e7a1299e3776..fc54f6ab614f 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -868,6 +868,18 @@ static void dytc_profile_refresh(struct ideapad_private *priv)
- 	}
- }
- 
-+static const struct dmi_system_id ideapad_dytc_v4_whitelist_table[] = {
-+	{
-+		/* Ideapad 5 Pro 16ACH6 */
-+		.ident = "LENOVO 82L5",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "82L5")
-+		}
-+	},
-+	{}
-+};
-+
- static int ideapad_dytc_profile_init(struct ideapad_private *priv)
- {
- 	int err, dytc_version;
-@@ -882,12 +894,20 @@ static int ideapad_dytc_profile_init(struct ideapad_private *priv)
- 		return err;
- 
- 	/* Check DYTC is enabled and supports mode setting */
--	if (!test_bit(DYTC_QUERY_ENABLE_BIT, &output))
-+	if (!test_bit(DYTC_QUERY_ENABLE_BIT, &output)) {
-+		dev_info(&priv->platform_device->dev, "DYTC_QUERY_ENABLE_BIT returned false\n");
- 		return -ENODEV;
-+	}
- 
- 	dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
--	if (dytc_version < 5)
--		return -ENODEV;
-+
-+	if (dytc_version < 5) {
-+		if ( dytc_version < 4 || ! dmi_check_system(ideapad_dytc_v4_whitelist_table) ) {
-+			dev_info(&priv->platform_device->dev,
-+				"DYTC_VERSION is less than 4 or is not whitelisted: %d\n", dytc_version);
-+			return -ENODEV;
-+		}
-+	}
- 
- 	priv->dytc = kzalloc(sizeof(*priv->dytc), GFP_KERNEL);
- 	if (!priv->dytc)
--- 
-2.33.0
+Once added, parameter may not be removed (because we don't break user space=
+).
+So, this parameter is not so critical and I am definitely against adding it.
 
+The compromise would be to name after the tested board (with probably comme=
+nt
+in the commit message and/or the code that this is possible to have the same
+for all NCT6789D chips) and when confirmed, rename as Kamil proposed.
 
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
