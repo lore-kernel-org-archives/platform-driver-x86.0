@@ -2,50 +2,47 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155A2C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 17:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF9FC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 18:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9C1960EE2
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 17:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E0460F9B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 18:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235746AbhI0Ryw (ORCPT
+        id S236309AbhI0SmR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Sep 2021 13:54:52 -0400
-Received: from mga07.intel.com ([134.134.136.100]:49997 "EHLO mga07.intel.com"
+        Mon, 27 Sep 2021 14:42:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:45371 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235703AbhI0Ryr (ORCPT
+        id S236238AbhI0SmQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Sep 2021 13:54:47 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10120"; a="288190732"
+        Mon, 27 Sep 2021 14:42:16 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10120"; a="204029831"
 X-IronPort-AV: E=Sophos;i="5.85,327,1624345200"; 
-   d="scan'208";a="288190732"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2021 10:53:09 -0700
+   d="scan'208";a="204029831"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2021 11:40:37 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,327,1624345200"; 
-   d="scan'208";a="456328547"
+   d="scan'208";a="586882043"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 27 Sep 2021 10:53:09 -0700
+  by orsmga004.jf.intel.com with ESMTP; 27 Sep 2021 11:40:37 -0700
 Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
-        by linux.intel.com (Postfix) with ESMTP id 66BCA5802BD;
-        Mon, 27 Sep 2021 10:53:09 -0700 (PDT)
-Message-ID: <10bee4a609c48b8e10458c25755f17222c43c33c.camel@linux.intel.com>
-Subject: Re: [PATCH 2/2] platform/x86: Add Intel Software Defined Silicon
- driver
+        by linux.intel.com (Postfix) with ESMTP id 9239A580677;
+        Mon, 27 Sep 2021 11:40:37 -0700 (PDT)
+Message-ID: <d540894d3d8c05722bd924c21bd9dd9c2b9def53.camel@linux.intel.com>
+Subject: Re: [PATCH v3 2/5] MFD: intel_pmt: Support non-PMT capabilities
 From:   "David E. Box" <david.e.box@linux.intel.com>
 Reply-To: david.e.box@linux.intel.com
 To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Date:   Mon, 27 Sep 2021 10:53:09 -0700
-In-Reply-To: <YVFCetbrNV+WkJ5Q@kroah.com>
-References: <20210924213157.3584061-1-david.e.box@linux.intel.com>
-         <20210924213157.3584061-2-david.e.box@linux.intel.com>
-         <YU7BPIH123HUZKhw@kroah.com>
-         <3392aea6b112926b063bbe46b1decaad4c9f9e6e.camel@linux.intel.com>
-         <YVFCetbrNV+WkJ5Q@kroah.com>
+Cc:     lee.jones@linaro.org, bhelgaas@google.com,
+        andy.shevchenko@gmail.com, mgross@linux.intel.com,
+        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Date:   Mon, 27 Sep 2021 11:40:37 -0700
+In-Reply-To: <YVIBI6TQrD/rehli@kroah.com>
+References: <20210922213007.2738388-1-david.e.box@linux.intel.com>
+         <20210922213007.2738388-3-david.e.box@linux.intel.com>
+         <YVIBI6TQrD/rehli@kroah.com>
 Organization: David E. Box
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
@@ -55,38 +52,48 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2021-09-27 at 06:03 +0200, Greg KH wrote:
-> On Sun, Sep 26, 2021 at 06:15:16PM -0700, David E. Box wrote:
-> > > > +static int sdsi_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +       struct sdsi_priv *priv = platform_get_drvdata(pdev);
-> > > > +
-> > > > +       priv->dev_present = false;
-> > > > +       sysfs_remove_bin_file(&priv->pdev->dev.kobj, &priv->registers_bin_attr);
-> > > > +       misc_deregister(&priv->miscdev);
-> > > > +       kref_put(&priv->kref, sdsi_priv_release);
-> > > 
-> > > Why do you need a kref for a structure that already can be controlled by
-> > > a different lifetime rule?
-> > 
-> > Which rule am I missing? This kref allows the structure to remain in case the device is removed
-> > while the file is open.
+On Mon, 2021-09-27 at 19:36 +0200, Greg KH wrote:
+> On Wed, Sep 22, 2021 at 02:30:04PM -0700, David E. Box wrote:
+> > Intel Platform Monitoring Technology (PMT) support is indicated by presence
+> > of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
+> > structures may also be used by Intel to indicate support for other
+> > capabilities unrelated to PMT.  OOBMSM is a device that can have both PMT
+> > and non-PMT capabilities. In order to support these capabilities it is
+> > necessary to modify the intel_pmt driver to handle the creation of platform
+> > devices more generically.
 > 
-> This device is on a hardware bus that allows removal?
+> I said this on your other driver submission, but why are you turning a
+> PCIe device into a set of platform devices and craming it into the MFD
+> subsystem?
+> 
+> PCIe devices are NOT platform devices.
 
-Well the device can be unbound. A test case covers this.
+But they *are* used to create platform devices when the PCIe device is multi-functional, which is
+what intel_pmt is.
 
 > 
-> Anyway, you now are dealing with lifetime rules of 3 structures all at
-> once, and the interactions between them is not very obvious.  It would
-> probably be simpler just to stick with 2, right?  You really only care
-> about the misc structure here.
+> Why not use the auxiliary bus for this thing if you have individual
+> drivers that need to "bind" to the different attributes that this single
+> PCIe device is exporting.
 
-In the case that the device is unbound, both the pdev and miscdev go away. Something has to outlive
-them in order to handle any open files still trying to use the ioctl.
+It wasn't clear in the beginning how this would evolve. MFD made sense for the PMT (platform
+monitoring technology) driver. PMT has 3 related but individually enumerable devices on the same IP,
+like lpss. But the same IP is now being used for other features too like SDSi. We could work on
+converting this to the auxiliary bus and then covert the cell drivers.
 
-David
+> 
+> Or why not just fix the hardware to report individual PCIe devices, like
+> a sane system would do?
 
+We have some systems with 1000+ PCIe devices. Each PCIe device adds cost to HW. So increasingly
+VSEC/DVSEC is used to expose features which are handled by the same micro-controller in the HW.
+
+>   Has this shipped in any devices yet?  If not,
+> can that be fixed first?  It's just a firmware change, right?
+
+PMT has been shipped for over a year. It's not just a firmware change.
+
+David 
 > 
 > thanks,
 > 
