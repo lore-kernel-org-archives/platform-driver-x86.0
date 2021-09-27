@@ -2,161 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5302C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 01:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E604C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 04:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB4060F41
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 01:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FA96113A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 04:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232278AbhI0BQ4 (ORCPT
+        id S229659AbhI0EEs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 26 Sep 2021 21:16:56 -0400
-Received: from mga07.intel.com ([134.134.136.100]:58567 "EHLO mga07.intel.com"
+        Mon, 27 Sep 2021 00:04:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230174AbhI0BQx (ORCPT
+        id S229445AbhI0EEs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 26 Sep 2021 21:16:53 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10119"; a="288047046"
-X-IronPort-AV: E=Sophos;i="5.85,325,1624345200"; 
-   d="scan'208";a="288047046"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2021 18:15:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,325,1624345200"; 
-   d="scan'208";a="519881777"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 26 Sep 2021 18:15:16 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
-        by linux.intel.com (Postfix) with ESMTP id 5179258073D;
-        Sun, 26 Sep 2021 18:15:16 -0700 (PDT)
-Message-ID: <3392aea6b112926b063bbe46b1decaad4c9f9e6e.camel@linux.intel.com>
-Subject: Re: [PATCH 2/2] platform/x86: Add Intel Software Defined Silicon
- driver
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Greg KH <gregkh@linuxfoundation.org>, lee.jones@linaro.org
-Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
+        Mon, 27 Sep 2021 00:04:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0CA9960F58;
+        Mon, 27 Sep 2021 04:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1632715390;
+        bh=mRuC96Zj8HKwRVxgwL86lhq6ERtGrM3ClP5WU5GbLw4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N8sUpJWZoUGNwzTmbSXlpykWbXcz28yLbc061+LpUXZ8SmS888gckdIXkOGJW5d1+
+         fDwNx0QG93WitEX+iR8dSVlv8Zl+wxVxzMQ9jFxpf4kw27AcWUjr2s62slwo2RdqOB
+         GDFn/5rIsywz92My5EYlLENdVbKG6Qd1xV7gj2tc=
+Date:   Mon, 27 Sep 2021 06:03:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
         andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Date:   Sun, 26 Sep 2021 18:15:16 -0700
-In-Reply-To: <YU7BPIH123HUZKhw@kroah.com>
+Subject: Re: [PATCH 2/2] platform/x86: Add Intel Software Defined Silicon
+ driver
+Message-ID: <YVFCetbrNV+WkJ5Q@kroah.com>
 References: <20210924213157.3584061-1-david.e.box@linux.intel.com>
-         <20210924213157.3584061-2-david.e.box@linux.intel.com>
-         <YU7BPIH123HUZKhw@kroah.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+ <20210924213157.3584061-2-david.e.box@linux.intel.com>
+ <YU7BPIH123HUZKhw@kroah.com>
+ <3392aea6b112926b063bbe46b1decaad4c9f9e6e.camel@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <3392aea6b112926b063bbe46b1decaad4c9f9e6e.camel@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 2021-09-25 at 08:27 +0200, Greg KH wrote:
-> On Fri, Sep 24, 2021 at 02:31:57PM -0700, David E. Box wrote:
+On Sun, Sep 26, 2021 at 06:15:16PM -0700, David E. Box wrote:
+> > > +static int sdsi_remove(struct platform_device *pdev)
+> > > +{
+> > > +�������struct sdsi_priv *priv = platform_get_drvdata(pdev);
+> > > +
+> > > +�������priv->dev_present = false;
+> > > +�������sysfs_remove_bin_file(&priv->pdev->dev.kobj, &priv->registers_bin_attr);
+> > > +�������misc_deregister(&priv->miscdev);
+> > > +�������kref_put(&priv->kref, sdsi_priv_release);
+> > 
+> > Why do you need a kref for a structure that already can be controlled by
+> > a different lifetime rule?
 > 
-> Quick review:
-> 
-> > +static int sdsi_probe(struct platform_device *pdev)
-> > +{
-> > +       void __iomem *disc_addr;
-> > +       struct sdsi_priv *priv;
-> > +       int ret;
-> > +
-> > +       disc_addr = devm_platform_ioremap_resource(pdev, 0);
-> > +       if (IS_ERR(disc_addr))
-> > +               return PTR_ERR(disc_addr);
-> > +
-> > +       priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> > +       if (!priv)
-> > +               return -ENOMEM;
-> > +
-> > +       kref_init(&priv->kref);
-> > +
-> > +       platform_set_drvdata(pdev, priv);
-> > +       priv->pdev = pdev;
-> > +       mutex_init(&priv->mb_lock);
-> > +       mutex_init(&priv->akc_lock);
-> > +
-> > +       memcpy_fromio(&priv->disc_table, disc_addr, DISC_TABLE_SIZE);
-> > +
-> > +       ret = sdsi_map_sdsi_registers(pdev);
-> > +       if (ret)
-> > +               goto put_kref;
-> > +
-> > +       ret = sdsi_create_misc_device(pdev);
-> > +       if (ret)
-> > +               goto put_kref;
-> > +
-> > +       ret = sdsi_add_bin_attrs(pdev);
-> 
-> You just raced with userspace and lost.  Please attach your attributes
-> to the misc device before registering it.
-> 
-> Also, you need a Documentation/ABI/ entry for your new sysfs file(s).
+> Which rule am I missing? This kref allows the structure to remain in case the device is removed
+> while the file is open.
 
-Ack
+This device is on a hardware bus that allows removal?
 
-> 
-> > +       if (ret)
-> > +               goto deregister_misc;
-> > +
-> > +       priv->dev_present = true;
-> > +
-> > +       return 0;
-> > +
-> > +deregister_misc:
-> > +       misc_deregister(&priv->miscdev);
-> > +put_kref:
-> > +       kref_put(&priv->kref, sdsi_priv_release);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +static int sdsi_remove(struct platform_device *pdev)
-> > +{
-> > +       struct sdsi_priv *priv = platform_get_drvdata(pdev);
-> > +
-> > +       priv->dev_present = false;
-> > +       sysfs_remove_bin_file(&priv->pdev->dev.kobj, &priv->registers_bin_attr);
-> > +       misc_deregister(&priv->miscdev);
-> > +       kref_put(&priv->kref, sdsi_priv_release);
-> 
-> Why do you need a kref for a structure that already can be controlled by
-> a different lifetime rule?
+Anyway, you now are dealing with lifetime rules of 3 structures all at
+once, and the interactions between them is not very obvious.  It would
+probably be simpler just to stick with 2, right?  You really only care
+about the misc structure here.
 
-Which rule am I missing? This kref allows the structure to remain in case the device is removed
-while the file is open.
+thanks,
 
-> 
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static struct platform_driver sdsi_driver = {
-> > +       .driver = {
-> > +               .name           = SDSI_DEV_NAME,
-> > +               .dev_groups     = sdsi_groups,
-> > +       },
-> > +       .probe  = sdsi_probe,
-> > +       .remove = sdsi_remove,
-> > +};
-> > +module_platform_driver(sdsi_driver);
-> 
-> What causes the platform to know to register, and enable, this platform
-> driver?  Shouldn't there be some hardware involved that is discoverable
-> to enable it to load dynamically?
-
-Ah. The patch that adds the SDSi platform device string was added to a series for the intel_pmt MFD
-driver and it's still waiting review. I see that complicates things. I can combine the two series
-together.
-
-David
-
-> 
-> thanks,
-> 
-> greg k-h
-
-
+greg k-h
