@@ -2,110 +2,161 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91C8C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Sep 2021 11:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5302C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 01:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1BC610A2
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Sep 2021 11:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB4060F41
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 01:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231277AbhIZLvq (ORCPT
+        id S232278AbhI0BQ4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 26 Sep 2021 07:51:46 -0400
-Received: from mout.gmx.net ([212.227.15.18]:45869 "EHLO mout.gmx.net"
+        Sun, 26 Sep 2021 21:16:56 -0400
+Received: from mga07.intel.com ([134.134.136.100]:58567 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231206AbhIZLvp (ORCPT
+        id S230174AbhI0BQx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 26 Sep 2021 07:51:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-        s=badeba3b8450; t=1632656985;
-        bh=0rIwgn2+oCBKdiYEGxebf4tyq7xKWUvrjdTls2w8bTQ=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=lTrRQS9XaD6F1ONfw8099VGdThd5PAgQwBday0keXJxgtR0a6GC329uCQAWKjHzUy
-         N1xTUyKJqvj3erwLL3Ml6csLeaL9znZUcFzyMsfXirCqEZKkclP9mBUAo1WY6x9/xM
-         ghvLD1yminXNnsbNkp33uiA2vDBBB9sSGmHSEfhA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MnakR-1nE0EO1gbF-00jaCp; Sun, 26
- Sep 2021 13:49:45 +0200
-Date:   Sun, 26 Sep 2021 13:49:34 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Len Baker <len.baker@gmx.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Switch to common use of
- attributes
-Message-ID: <20210926114934.GA7286@titan>
-References: <20210926111908.6950-1-len.baker@gmx.com>
- <YVBaQAFVX1CeQUPE@kroah.com>
+        Sun, 26 Sep 2021 21:16:53 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10119"; a="288047046"
+X-IronPort-AV: E=Sophos;i="5.85,325,1624345200"; 
+   d="scan'208";a="288047046"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2021 18:15:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,325,1624345200"; 
+   d="scan'208";a="519881777"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 26 Sep 2021 18:15:16 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
+        by linux.intel.com (Postfix) with ESMTP id 5179258073D;
+        Sun, 26 Sep 2021 18:15:16 -0700 (PDT)
+Message-ID: <3392aea6b112926b063bbe46b1decaad4c9f9e6e.camel@linux.intel.com>
+Subject: Re: [PATCH 2/2] platform/x86: Add Intel Software Defined Silicon
+ driver
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Greg KH <gregkh@linuxfoundation.org>, lee.jones@linaro.org
+Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Date:   Sun, 26 Sep 2021 18:15:16 -0700
+In-Reply-To: <YU7BPIH123HUZKhw@kroah.com>
+References: <20210924213157.3584061-1-david.e.box@linux.intel.com>
+         <20210924213157.3584061-2-david.e.box@linux.intel.com>
+         <YU7BPIH123HUZKhw@kroah.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YVBaQAFVX1CeQUPE@kroah.com>
-X-Provags-ID: V03:K1:HkWiYA0Jt5HBdYP/LidFZOnItr02xlDFohMZktYouwwlV4AxKeo
- EApb4Ji3/iX5l/aJIojCmNDEjuqi2GOvjW5v2qLFlvH+4TUEtMkZvvULXTCxJ1a8pMUdJip
- YsBrzKTBateYYU07GQPsBSiF8o8KSShzd7fDUw7WKBGGgod8wHB+fY/2Y3Aa6OZ9c5xdapx
- 8nGRB1GDgHzeOmpkGeqQg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aUuzZ2iWYWg=:NsMNqTlri2SdA3cPh4zGLb
- yLHgGUr39uAWpMqs2PYOXmr0M1EEH7VzAcV2EG74g/4BSD51m4p1ziooEVIAiCl/s/q+rGkIK
- c2+3Qqsf1yPSGn2bF9kPOOitg2sZLQb/Yz2UpQfosTTccCyCR7CFHzTOOh6cLiFswTSvWOeFl
- 3D1tc/9kQ2urkZFTjQmK6dzGzEcUrZ/UVWx98z0/6BIrJ4TlNWGhsAUMPj6VapZvWEkjbw3+P
- 0Rg0p2L+/JKjuW1U7vQ2EO2jq/5UBrpkKnKqLZaFQ4tsKadupAxvNklBMDNcZG31ea0Lwu5cY
- no5wqqmx3gLj3wLK84Rv9LI96pLm8zatn6sAy6wMog26YfGU8qxgpvOfD4Om0M172ZERWNd1W
- 2A6tGl72a7G5CjVMQwSaPP/QlhOUOPMxJolXQkZh71dkEVSSfo0hOQRQSlJGs/wAjXFjLU01i
- 4B6lb2jjmP7P8vNWbtCwuLQnnoc/JlQdnaZpC1VNuicr4J1hHCy19TmADmXb1LE1B4/8PBAZC
- 7tc2KrV9ebz/SqOY0CpO6saA2ykCYgGDxyovTot2CTPVan9JwF3zcCbWz3FIKqvHGuLhnPBKm
- I1j8m3ueKKmUGIwyLNAtnOSsf2AACO0hdNNoT6bmkmGOqo3aqzJNXuHWTNwMFwr3E1ECMivxe
- DkOTebD027Ezc6YCO5yCdniaPoqfpQHy33lCNMg8P1mFLuCdtm9g32n/X67aALjvUOr7fGktV
- f16xN6+Q69vvh3mm1QyxyQvLHnYBPlIc5SnvkcU6uLqYuF6zlL6lGSbDaIyBh1vV8AcpWZJXK
- x6EzZCybXkyzSUg0d+xCITUz5P6bSSFn/35QKTbqCexJvKuFFXYBOOdu9FFUlKeG9j59+fm9c
- /U2DgnjhBNtmBybRoThS/m+B7sqL2RPV8SdddrEGMj0AwpUxwR0XDibjqXFkcWm+AqkQfd/W6
- lNAUue60wcU9ckN1vxemRhgeoHI63WeMp9FuG2xhwMB1mPG55FaV9FkmDFFuE7MMb7SjaMa/a
- I/dP/zVNpDiIzGxjdhXJvRDgWG45CMzF6r7iRbhRkfUlc+5Z3rJvVI+uVCfxvz0ZejEeTWX4z
- lQxR4d4+pxSIZ8=
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Greg,
+On Sat, 2021-09-25 at 08:27 +0200, Greg KH wrote:
+> On Fri, Sep 24, 2021 at 02:31:57PM -0700, David E. Box wrote:
+> 
+> Quick review:
+> 
+> > +static int sdsi_probe(struct platform_device *pdev)
+> > +{
+> > +       void __iomem *disc_addr;
+> > +       struct sdsi_priv *priv;
+> > +       int ret;
+> > +
+> > +       disc_addr = devm_platform_ioremap_resource(pdev, 0);
+> > +       if (IS_ERR(disc_addr))
+> > +               return PTR_ERR(disc_addr);
+> > +
+> > +       priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> > +       if (!priv)
+> > +               return -ENOMEM;
+> > +
+> > +       kref_init(&priv->kref);
+> > +
+> > +       platform_set_drvdata(pdev, priv);
+> > +       priv->pdev = pdev;
+> > +       mutex_init(&priv->mb_lock);
+> > +       mutex_init(&priv->akc_lock);
+> > +
+> > +       memcpy_fromio(&priv->disc_table, disc_addr, DISC_TABLE_SIZE);
+> > +
+> > +       ret = sdsi_map_sdsi_registers(pdev);
+> > +       if (ret)
+> > +               goto put_kref;
+> > +
+> > +       ret = sdsi_create_misc_device(pdev);
+> > +       if (ret)
+> > +               goto put_kref;
+> > +
+> > +       ret = sdsi_add_bin_attrs(pdev);
+> 
+> You just raced with userspace and lost.  Please attach your attributes
+> to the misc device before registering it.
+> 
+> Also, you need a Documentation/ABI/ entry for your new sysfs file(s).
 
-On Sun, Sep 26, 2021 at 01:32:16PM +0200, Greg Kroah-Hartman wrote:
-> On Sun, Sep 26, 2021 at 01:19:08PM +0200, Len Baker wrote:
->
-> > @@ -3161,9 +3106,7 @@ static void hotkey_exit(void)
-> >  	hotkey_poll_stop_sync();
-> >  	mutex_unlock(&hotkey_mutex);
-> >  #endif
-> > -
-> > -	if (hotkey_dev_attributes)
-> > -		delete_attr_set(hotkey_dev_attributes, &tpacpi_pdev->dev.kobj);
-> > +	sysfs_remove_group(&tpacpi_pdev->dev.kobj, &hotkey_attr_group);
->
-> Why do you have to manually add/remove these groups still?
->
-> A huge hint that something is going wrong is when you have to call a
-> sysfs_*() call from within a driver.  There should be proper driver_*()
-> calls for you instead to get the job done.
->
-> As this is a platform device, why not set the dev_groups variable in the
-> platform_driver field so that these attribute groups get added and
-> removed automatically?
->
-> An example commit to look at that shows how this was converted for one
-> driver is 5bd08a4ae3d0 ("platform: x86: hp-wmi: convert platform driver
-> to use dev_groups").  See if that helps here as well.
+Ack
 
-Ok, I will look at this and I will try to improve the patch. Anyway thanks
-for the guidance and advices.
+> 
+> > +       if (ret)
+> > +               goto deregister_misc;
+> > +
+> > +       priv->dev_present = true;
+> > +
+> > +       return 0;
+> > +
+> > +deregister_misc:
+> > +       misc_deregister(&priv->miscdev);
+> > +put_kref:
+> > +       kref_put(&priv->kref, sdsi_priv_release);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +static int sdsi_remove(struct platform_device *pdev)
+> > +{
+> > +       struct sdsi_priv *priv = platform_get_drvdata(pdev);
+> > +
+> > +       priv->dev_present = false;
+> > +       sysfs_remove_bin_file(&priv->pdev->dev.kobj, &priv->registers_bin_attr);
+> > +       misc_deregister(&priv->miscdev);
+> > +       kref_put(&priv->kref, sdsi_priv_release);
+> 
+> Why do you need a kref for a structure that already can be controlled by
+> a different lifetime rule?
 
-Again, thanks for your time.
+Which rule am I missing? This kref allows the structure to remain in case the device is removed
+while the file is open.
 
-Regards,
-Len
+> 
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static struct platform_driver sdsi_driver = {
+> > +       .driver = {
+> > +               .name           = SDSI_DEV_NAME,
+> > +               .dev_groups     = sdsi_groups,
+> > +       },
+> > +       .probe  = sdsi_probe,
+> > +       .remove = sdsi_remove,
+> > +};
+> > +module_platform_driver(sdsi_driver);
+> 
+> What causes the platform to know to register, and enable, this platform
+> driver?  Shouldn't there be some hardware involved that is discoverable
+> to enable it to load dynamically?
+
+Ah. The patch that adds the SDSi platform device string was added to a series for the intel_pmt MFD
+driver and it's still waiting review. I see that complicates things. I can combine the two series
+together.
+
+David
+
+> 
+> thanks,
+> 
+> greg k-h
+
+
