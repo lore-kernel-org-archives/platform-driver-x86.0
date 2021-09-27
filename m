@@ -2,85 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330C5C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 17:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D034C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 17:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF36611F0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 17:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F72604D1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 17:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236467AbhI0Rfr (ORCPT
+        id S238102AbhI0Rge (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Sep 2021 13:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47536 "EHLO mail.kernel.org"
+        Mon, 27 Sep 2021 13:36:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:46134 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238253AbhI0RcH (ORCPT
+        id S239261AbhI0RfL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Sep 2021 13:32:07 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 62C7A60E08;
-        Mon, 27 Sep 2021 17:30:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632763821;
-        bh=+XPiy1lkMe54dEZDykhM7x1ydKFAwCm7W2f6EXWbvzM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=koTlTr/gYSHZQEDGbsyDcJTBZZ2o58S4Cjd/MOT12MOq3U8YzEF35X48CiYRHm4xt
-         smk/UmPVERvwxrIuvBEXfaqKciIC3C8gAb4yYR04Dui2p3/5G4Ivp9iXXMyqe6SwSt
-         Eh4LgZmnUiOLk0V2POGyJ9dFBMUOmV/497ald04OVdq5nylDt8+eRQq6gPZtxur4eZ
-         2Xr5Dww/0qBqqEdH/8meVLYd2zjrBA9+UoY1A6UnN5ue2Yj2InS4lwPdYI/AtPvIMj
-         5zMEpU0AU2pp9TZKW67YNL0l/AoOOciJThq7sDOiMhq0uOrrtZU6c3a9aJhRe9CbfK
-         UJnZGxNAzt/6w==
-Date:   Mon, 27 Sep 2021 12:30:20 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, bhelgaas@google.com,
-        andy.shevchenko@gmail.com, mgross@linux.intel.com,
-        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] PCI: Add #defines for accessing PCIE DVSEC fields
-Message-ID: <20210927173020.GA659547@bhelgaas>
+        Mon, 27 Sep 2021 13:35:11 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10120"; a="288185019"
+X-IronPort-AV: E=Sophos;i="5.85,327,1624345200"; 
+   d="scan'208";a="288185019"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2021 10:27:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,327,1624345200"; 
+   d="scan'208";a="615905152"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 27 Sep 2021 10:27:28 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
+        by linux.intel.com (Postfix) with ESMTP id 939735802BD;
+        Mon, 27 Sep 2021 10:27:28 -0700 (PDT)
+Message-ID: <7295cafaf6da34e31390fe621198205d18eac525.camel@linux.intel.com>
+Subject: Re: [PATCH 2/2] platform/x86: Add Intel Software Defined Silicon
+ driver
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Date:   Mon, 27 Sep 2021 10:27:28 -0700
+In-Reply-To: <YVFC0U+wOqbTgDhy@kroah.com>
+References: <20210924213157.3584061-1-david.e.box@linux.intel.com>
+         <20210924213157.3584061-2-david.e.box@linux.intel.com>
+         <YU7BPIH123HUZKhw@kroah.com>
+         <3392aea6b112926b063bbe46b1decaad4c9f9e6e.camel@linux.intel.com>
+         <YVFC0U+wOqbTgDhy@kroah.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210922213007.2738388-2-david.e.box@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If you repost this for any reason, update the subject to:
+On Mon, 2021-09-27 at 06:04 +0200, Greg KH wrote:
+> On Sun, Sep 26, 2021 at 06:15:16PM -0700, David E. Box wrote:
+> > > > +static struct platform_driver sdsi_driver = {
+> > > > +       .driver = {
+> > > > +               .name           = SDSI_DEV_NAME,
+> > > > +               .dev_groups     = sdsi_groups,
+> > > > +       },
+> > > > +       .probe  = sdsi_probe,
+> > > > +       .remove = sdsi_remove,
+> > > > +};
+> > > > +module_platform_driver(sdsi_driver);
+> > > 
+> > > What causes the platform to know to register, and enable, this platform
+> > > driver?  Shouldn't there be some hardware involved that is discoverable
+> > > to enable it to load dynamically?
+> > 
+> > Ah. The patch that adds the SDSi platform device string was added to a series for the intel_pmt
+> > MFD
+> > driver and it's still waiting review. I see that complicates things. I can combine the two series
+> > together.
+> 
+> Do you have a pointer to the lore.kernel.org location of that series?
 
-s/PCIE/PCIe/
+https://lore.kernel.org/all/20210922213007.2738388-1-david.e.box@linux.intel.com/
 
-So it matches the commit log and other usage in drivers/pci/
+> 
+> Your code right here will bind to any system that it is loaded on, a
+> very dangerous thing...
 
-On Wed, Sep 22, 2021 at 02:30:03PM -0700, David E. Box wrote:
-> Add #defines for accessing Vendor ID, Revision, Length, and ID offsets
-> in the Designated Vendor Specific Extended Capability (DVSEC). Defined
-> in PCIe r5.0, sec 7.9.6.
+It won't. It uses module alias to load against the SDSi specific MFD cell.
+
 > 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
+> thanks,
 > 
-> v3:	No change
-> 
->  include/uapi/linux/pci_regs.h | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index e709ae8235e7..57ee51f19283 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1080,7 +1080,11 @@
->  
->  /* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
->  #define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-Specific Header1 */
-> +#define  PCI_DVSEC_HEADER1_VID(x)	((x) & 0xffff)
-> +#define  PCI_DVSEC_HEADER1_REV(x)	(((x) >> 16) & 0xf)
-> +#define  PCI_DVSEC_HEADER1_LEN(x)	(((x) >> 20) & 0xfff)
->  #define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-Specific Header2 */
-> +#define  PCI_DVSEC_HEADER2_ID(x)		((x) & 0xffff)
->  
->  /* Data Link Feature */
->  #define PCI_DLF_CAP		0x04	/* Capabilities Register */
-> -- 
-> 2.25.1
-> 
+> greg k-h
+
+
