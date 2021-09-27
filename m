@@ -2,95 +2,85 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553D4C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 17:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330C5C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 17:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C61360F46
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 17:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF36611F0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 17:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236640AbhI0RZU (ORCPT
+        id S236467AbhI0Rfr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Sep 2021 13:25:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35212 "EHLO mail.kernel.org"
+        Mon, 27 Sep 2021 13:35:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236954AbhI0RWT (ORCPT
+        id S238253AbhI0RcH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Sep 2021 13:22:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 39FDD61251;
-        Mon, 27 Sep 2021 17:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1632762849;
-        bh=EArap/CnkO1XqV9Y0mNUt3kBMxU0ppYGNUg2VYqODys=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EzbYoAc7ckyBQlYXvySEeoNJShic1L7PBAUWF6dyH8Amu/5o+CvrLxr9QkbAz6E6W
-         SLyLVCI7tMjRLJ50mdNT9hGJmKY0CsOXgF65nwRMFecqHK1si0Vaz2oBjcyCzk9SPi
-         0znsakIgIcFP41IOQNPizD0Lr1sm5/bhBBjL+0/Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Perry Yuan <Perry.Yuan@dell.com>, Dell.Client.Kernel@dell.com,
-        platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.14 074/162] platform/x86: dell: fix DELL_WMI_PRIVACY dependencies & build error
-Date:   Mon, 27 Sep 2021 19:02:00 +0200
-Message-Id: <20210927170236.021145945@linuxfoundation.org>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20210927170233.453060397@linuxfoundation.org>
-References: <20210927170233.453060397@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 27 Sep 2021 13:32:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 62C7A60E08;
+        Mon, 27 Sep 2021 17:30:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632763821;
+        bh=+XPiy1lkMe54dEZDykhM7x1ydKFAwCm7W2f6EXWbvzM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=koTlTr/gYSHZQEDGbsyDcJTBZZ2o58S4Cjd/MOT12MOq3U8YzEF35X48CiYRHm4xt
+         smk/UmPVERvwxrIuvBEXfaqKciIC3C8gAb4yYR04Dui2p3/5G4Ivp9iXXMyqe6SwSt
+         Eh4LgZmnUiOLk0V2POGyJ9dFBMUOmV/497ald04OVdq5nylDt8+eRQq6gPZtxur4eZ
+         2Xr5Dww/0qBqqEdH/8meVLYd2zjrBA9+UoY1A6UnN5ue2Yj2InS4lwPdYI/AtPvIMj
+         5zMEpU0AU2pp9TZKW67YNL0l/AoOOciJThq7sDOiMhq0uOrrtZU6c3a9aJhRe9CbfK
+         UJnZGxNAzt/6w==
+Date:   Mon, 27 Sep 2021 12:30:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     lee.jones@linaro.org, bhelgaas@google.com,
+        andy.shevchenko@gmail.com, mgross@linux.intel.com,
+        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] PCI: Add #defines for accessing PCIE DVSEC fields
+Message-ID: <20210927173020.GA659547@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210922213007.2738388-2-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+If you repost this for any reason, update the subject to:
 
-[ Upstream commit 5b72dafaca73b33416c82457ae615e6f2022e901 ]
+s/PCIE/PCIe/
 
-When DELL_WMI=y, DELL_WMI_PRIVACY=y, and LEDS_TRIGGER_AUDIO=m, there
-is a linker error since the LEDS trigger code is built as a loadable
-module. This happens because DELL_WMI_PRIVACY is a bool that depends
-on a tristate (LEDS_TRIGGER_AUDIO=m), which can be dangerous.
+So it matches the commit log and other usage in drivers/pci/
 
-ld: drivers/platform/x86/dell/dell-wmi-privacy.o: in function `dell_privacy_wmi_probe':
-dell-wmi-privacy.c:(.text+0x3df): undefined reference to `ledtrig_audio_get'
-
-Fixes: 8af9fa37b8a3 ("platform/x86: dell-privacy: Add support for Dell hardware privacy")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Perry Yuan <Perry.Yuan@dell.com>
-Cc: Dell.Client.Kernel@dell.com
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <mgross@linux.intel.com>
-Link: https://lore.kernel.org/r/20210918044829.19222-1-rdunlap@infradead.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/dell/Kconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-index 9e7314d90bea..1e3da9700005 100644
---- a/drivers/platform/x86/dell/Kconfig
-+++ b/drivers/platform/x86/dell/Kconfig
-@@ -166,8 +166,7 @@ config DELL_WMI
- 
- config DELL_WMI_PRIVACY
- 	bool "Dell WMI Hardware Privacy Support"
--	depends on DELL_WMI
--	depends on LEDS_TRIGGER_AUDIO
-+	depends on LEDS_TRIGGER_AUDIO = y || DELL_WMI = LEDS_TRIGGER_AUDIO
- 	help
- 	  This option adds integration with the "Dell Hardware Privacy"
- 	  feature of Dell laptops to the dell-wmi driver.
--- 
-2.33.0
-
-
-
+On Wed, Sep 22, 2021 at 02:30:03PM -0700, David E. Box wrote:
+> Add #defines for accessing Vendor ID, Revision, Length, and ID offsets
+> in the Designated Vendor Specific Extended Capability (DVSEC). Defined
+> in PCIe r5.0, sec 7.9.6.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+> 
+> v3:	No change
+> 
+>  include/uapi/linux/pci_regs.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index e709ae8235e7..57ee51f19283 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1080,7 +1080,11 @@
+>  
+>  /* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+>  #define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-Specific Header1 */
+> +#define  PCI_DVSEC_HEADER1_VID(x)	((x) & 0xffff)
+> +#define  PCI_DVSEC_HEADER1_REV(x)	(((x) >> 16) & 0xf)
+> +#define  PCI_DVSEC_HEADER1_LEN(x)	(((x) >> 20) & 0xfff)
+>  #define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-Specific Header2 */
+> +#define  PCI_DVSEC_HEADER2_ID(x)		((x) & 0xffff)
+>  
+>  /* Data Link Feature */
+>  #define PCI_DLF_CAP		0x04	/* Capabilities Register */
+> -- 
+> 2.25.1
+> 
