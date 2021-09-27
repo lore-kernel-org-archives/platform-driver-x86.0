@@ -2,76 +2,87 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20093C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 04:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1399C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 11:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E89656113A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 04:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81999610FC
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 11:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231243AbhI0EGO (ORCPT
+        id S233985AbhI0LMl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Sep 2021 00:06:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49614 "EHLO mail.kernel.org"
+        Mon, 27 Sep 2021 07:12:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229445AbhI0EGO (ORCPT
+        id S233968AbhI0LMk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Sep 2021 00:06:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 30B26610A2;
-        Mon, 27 Sep 2021 04:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1632715476;
-        bh=l8rONjICwE2lHMGY6qOv7rr80KcJ8HFyxEn+LuNw9d8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V7dd2NARTlgDGjZ3TONLGqhIXpIhI2ej0jM4+LCs/CqluMwgyLRPfO8iPu2CriXt9
-         +SAD2jDm3AKA5Hs7IDvBWIaaVqrAfQsP+ebPSBEVPYf3SzLpyISLRbffCpILTMOtgX
-         KBJoHevslCJxXRiDgznbWXHpwl4/pCTWn/jIalKU=
-Date:   Mon, 27 Sep 2021 06:04:33 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 2/2] platform/x86: Add Intel Software Defined Silicon
- driver
-Message-ID: <YVFC0U+wOqbTgDhy@kroah.com>
-References: <20210924213157.3584061-1-david.e.box@linux.intel.com>
- <20210924213157.3584061-2-david.e.box@linux.intel.com>
- <YU7BPIH123HUZKhw@kroah.com>
- <3392aea6b112926b063bbe46b1decaad4c9f9e6e.camel@linux.intel.com>
+        Mon, 27 Sep 2021 07:12:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C4CD610FC;
+        Mon, 27 Sep 2021 11:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632741062;
+        bh=GDm/y+SZJct8F+bbfQLLdd3wmy7Mr0IXRMgYbbWldCg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mefTENAzdipTgV/vUeadWr8Adn3GeVp3fa9NLIyB9n44b5WLXVLmpoHU2B/8wufjc
+         6v2WLZOZxG6fElr69SBInt5Y9JoboJZqspuk4Ttdj/+GGdAqn5BWTmKMJhXr9z0owM
+         J5SVY/H4PTIPv3OVI9H+xRzAqdPMfSQh6VkQhysnfoYzvs4FMmG/r9oKGARdqfzcf6
+         NPtE22lQ830NkpEbrLWv5drbfEHx2cYaxPOJmXK7HoghAL2R8L0YOBfZILWMlIG8Ua
+         83vOgB9OfxLBFTb3KNbPlQ6A3oF/oRiYaI4agCdiLBx3seJPCi4h2m1ULz3FKBY9iu
+         gg3vITPh3C4zQ==
+Received: by mail.kernel.org with local (Exim 4.94.2)
+        (envelope-from <mchehab@kernel.org>)
+        id 1mUoXE-0005yX-IH; Mon, 27 Sep 2021 13:11:00 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Jonathan Corbet" <corbet@lwn.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David E Box <david.e.box@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        Tamar Mashiah <tamar.mashiah@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH 7/7] ABI: sysfs-platform-intel-pmc: add blank lines to make it valid for ReST
+Date:   Mon, 27 Sep 2021 13:10:56 +0200
+Message-Id: <3673e1a255ad4100c933af215b60d68ba126f820.1632740376.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <cover.1632740376.git.mchehab+huawei@kernel.org>
+References: <cover.1632740376.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3392aea6b112926b063bbe46b1decaad4c9f9e6e.camel@linux.intel.com>
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Sep 26, 2021 at 06:15:16PM -0700, David E. Box wrote:
-> > > +static struct platform_driver sdsi_driver = {
-> > > +       .driver = {
-> > > +               .name           = SDSI_DEV_NAME,
-> > > +               .dev_groups     = sdsi_groups,
-> > > +       },
-> > > +       .probe  = sdsi_probe,
-> > > +       .remove = sdsi_remove,
-> > > +};
-> > > +module_platform_driver(sdsi_driver);
-> > 
-> > What causes the platform to know to register, and enable, this platform
-> > driver?  Shouldn't there be some hardware involved that is discoverable
-> > to enable it to load dynamically?
-> 
-> Ah. The patch that adds the SDSi platform device string was added to a series for the intel_pmt MFD
-> driver and it's still waiting review. I see that complicates things. I can combine the two series
-> together.
+The ReST format requires blank lines before/after identation changes,
+for it to properly detect lists.
 
-Do you have a pointer to the lore.kernel.org location of that series?
+Fixes: ee7abc105e2b ("platform/x86: intel_pmc_core: export platform global reset bits via etr3 sysfs file")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
 
-Your code right here will bind to any system that it is loaded on, a
-very dangerous thing...
+See [PATCH 0/7] at: https://lore.kernel.org/all/cover.1632740376.git.mchehab+huawei@kernel.org/T/#t
 
-thanks,
+ Documentation/ABI/testing/sysfs-platform-intel-pmc | 2 ++
+ 1 file changed, 2 insertions(+)
 
-greg k-h
+diff --git a/Documentation/ABI/testing/sysfs-platform-intel-pmc b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+index ef199af75ab0..f31d59b21f9b 100644
+--- a/Documentation/ABI/testing/sysfs-platform-intel-pmc
++++ b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+@@ -11,8 +11,10 @@ Description:
+ 		to take effect.
+ 
+ 		Display global reset setting bits for PMC.
++
+ 			* bit 31 - global reset is locked
+ 			* bit 20 - global reset is set
++
+ 		Writing bit 20 value to the etr3 will induce
+ 		a platform "global reset" upon consequent platform reset,
+ 		in case the register is not locked.
+-- 
+2.31.1
+
