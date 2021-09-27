@@ -2,95 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F5BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 20:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8683FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 21:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D814661058
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 20:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BAB60EE7
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Sep 2021 21:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236811AbhI0Uze (ORCPT
+        id S236212AbhI0VIL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Sep 2021 16:55:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236732AbhI0Uze (ORCPT
+        Mon, 27 Sep 2021 17:08:11 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:47999 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230046AbhI0VIK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Sep 2021 16:55:34 -0400
-Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB28DC061575;
-        Mon, 27 Sep 2021 13:53:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=g4A0NSRi31vvXLwvt3b9nsg1g99lBx3cBcUDT11Y28E=; b=RgFoc+Tl+COUxGSeqeOvUMJV7U
-        WFb9SKMJnSmbUgxcmFfPGJcxMGZyGjVUMBenkG6XyARHyQiuTJsIzibPSHNHxoprvJHpbJRQOWw1I
-        8Sn5cpd9QnXRZACE5Cz1t6v6pLtMWZheZlwbZV4xWUeFkvCThXax3UE5I5iwjc1RR9/h/gyxVvfFd
-        ZyzmtMPHpyp7cIv/c5qZ/Z9b1BbACClO95AYaSvZCZLZ6hF8P/P5/Bdk687rjImYavkp6z8bLE9+/
-        AU4Cd3SGmaFcn5CQm38+KkZDXpoCy5HtrSWvUKeaYquOAhSCoAw7AtShx4nR56clRsbmuHZuWFxLK
-        YECOuhfQ==;
-Received: from [2601:1c0:6280:3f0::aa0b] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUxdL-004HJM-7W; Mon, 27 Sep 2021 20:53:55 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Perry Yuan <Perry.Yuan@dell.com>, Dell.Client.Kernel@dell.com,
-        platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Subject: [PATCH] platform: dell: all DELL_WMI driver options depend on DELL_WMI
-Date:   Mon, 27 Sep 2021 13:53:54 -0700
-Message-Id: <20210927205354.19342-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.31.1
+        Mon, 27 Sep 2021 17:08:10 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id DF04532009C3;
+        Mon, 27 Sep 2021 17:06:31 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Mon, 27 Sep 2021 17:06:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:message-id:mime-version:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=tKb8wP
+        5SYxRx6sWdP/TyrzWBGjuUAj/IoToXxUXQE/4=; b=YdCRcyXzuUpI9zAiA1uqNN
+        TqbiJZRAl7FHKKWOrrrUhB0F1UdVJd/ychOHOCrIfbtwUQXpPY+z7KfDc+IBM7uU
+        2OVMss33iYwXipXYIvoxZkn9B4fSNfO1bfnzUUrzyPZhdF9AvMuVI9s33cxFQCwH
+        D4tgJyIhPufD/ERFZwkXCxeSL/PZRUsyN6HTi2Gl9vtIOprlKsN7uOScE/p3goVL
+        Phh9lHO5aUw0JatuWYm96IfXa+CWtrHHY9EZ1rh3w/RfLl7wK6zseSElP6nczHr6
+        FxUi1WvYLRRzer/1Ep+tc3Z3f1IOWtIU08G7jJzswfrVQGoP12vK9nYCEs66ssrw
+        ==
+X-ME-Sender: <xms:VzJSYSsZrdnYzCv9NPZhprKIKzCewD_JRRt5Ve3XRyt925zzEhC2IA>
+    <xme:VzJSYXd16vhwrZlxmPU0_J91vokGr1D7C-TdgwayJmvzzRit8J6sayP-9bhAEVopH
+    -uFLEiu00uwg_Bvjg>
+X-ME-Received: <xmr:VzJSYdxFcRThsQIEYq5hO5TuuH456lrMJc9y2s9n_8oxKK0AaARHcgbjmeUVV8J0jFoqb3ok6SeJ6howXsFndhdse21Y8xY2UMZcgv8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudejkedgudehgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffogggtgfesthekre
+    dtredtjeenucfhrhhomhepvfhimhcuvehrrgiffhhorhguuceothgtrhgrfihfohhruges
+    shihshhtvghmjeeirdgtohhmqeenucggtffrrghtthgvrhhnpedvieeuueejledtffeiie
+    eviedvuddufeethfdtgfekleeltdfghfegteeugeeuhfenucffohhmrghinhepghhithhh
+    uhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepthgtrhgrfihfohhrugesshihshhtvghmjeeirdgtohhm
+X-ME-Proxy: <xmx:VzJSYdPSsezjlhsn1ERVSm3RVoVE_9qhr0LKJmgzG_N9fE5DRuDn8w>
+    <xmx:VzJSYS8a6Bt-58ae-T2xziA5F5WMK8mxYXCsAA3lSVGaUKdbvBs2rA>
+    <xmx:VzJSYVX8k88rvDNiKfzAS8kdm6T7Nsp2G6UGPxnMmr5bK6ML-sW8WA>
+    <xmx:VzJSYXHCFuJSo8qzCYtU-Fea0U6vLH0TME42QoWOpkCxPgMz77Y8bQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 27 Sep 2021 17:06:31 -0400 (EDT)
+From:   Tim Crawford <tcrawford@system76.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     productdev@system76.com
+Subject: [PATCH 0/3] platform/x86: system76_acpi: Sync DKMS module changes
+Date:   Mon, 27 Sep 2021 15:06:26 -0600
+Message-Id: <20210927210629.37966-1-tcrawford@system76.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-A randconfig or a user can set/enable DELL_WMI_PRIVACY even when
-DELL_WMI is not enabled. This leads to a build error in
-dell-laptop.o:
+Sync the in-tree system76_acpi module with changes made to the DKMS
+module [1]. This introduces/exposes new functionality implemented in the
+open source BIOS and EC firmware for System76 laptops.
 
-ld: drivers/platform/x86/dell/dell-laptop.o: in function `dell_init':
-dell-laptop.c:(.init.text+0x719): undefined reference to `dell_privacy_has_mic_mute'
+[1]: https://github.com/pop-os/system76-acpi-dkms
 
-Fix this by enclosing the DELL_WMI driver options inside a
-if DELL_WMI / endif bracket.
+Jeremy Soller (2):
+  platform/x86: system76_acpi: Report temperature and fan speed
+  platform/x86: system76_acpi: Replace Fn+F2 function for OLED models
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Perry Yuan <Perry.Yuan@dell.com>
-Cc: Dell.Client.Kernel@dell.com
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <mgross@linux.intel.com>
----
-Found in linux-next, applies to mainline.
+Tim Crawford (1):
+  platform/x86: system76_acpi: Add battery charging thresholds
 
-The last time that I sent a patch to Perry Yuan (about 2 weeks ago),
-it bounced...
+ drivers/platform/x86/system76_acpi.c | 356 ++++++++++++++++++++++++++-
+ 1 file changed, 355 insertions(+), 1 deletion(-)
 
- drivers/platform/x86/dell/Kconfig |    4 ++++
- 1 file changed, 4 insertions(+)
+-- 
+2.31.1
 
---- linux-next-20210927.orig/drivers/platform/x86/dell/Kconfig
-+++ linux-next-20210927/drivers/platform/x86/dell/Kconfig
-@@ -164,6 +164,8 @@ config DELL_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called dell-wmi.
- 
-+if DELL_WMI
-+
- config DELL_WMI_PRIVACY
- 	bool "Dell WMI Hardware Privacy Support"
- 	depends on LEDS_TRIGGER_AUDIO = y || DELL_WMI = LEDS_TRIGGER_AUDIO
-@@ -198,6 +200,8 @@ config DELL_WMI_LED
- 	  This adds support for the Latitude 2100 and similar
- 	  notebooks that have an external LED.
- 
-+endif # DELL_WMI
-+
- config DELL_WMI_SYSMAN
- 	tristate "Dell WMI-based Systems management driver"
- 	default m
