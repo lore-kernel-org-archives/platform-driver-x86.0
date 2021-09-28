@@ -2,31 +2,31 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DB5C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 10:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5830C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 10:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2069961139
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 10:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2396101E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 10:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240169AbhI1K4R (ORCPT
+        id S240295AbhI1K44 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Sep 2021 06:56:17 -0400
-Received: from mga01.intel.com ([192.55.52.88]:49172 "EHLO mga01.intel.com"
+        Tue, 28 Sep 2021 06:56:56 -0400
+Received: from mga09.intel.com ([134.134.136.24]:1511 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240268AbhI1K4Q (ORCPT
+        id S240283AbhI1K4z (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Sep 2021 06:56:16 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10120"; a="247178588"
+        Tue, 28 Sep 2021 06:56:55 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10120"; a="224707453"
 X-IronPort-AV: E=Sophos;i="5.85,329,1624345200"; 
-   d="scan'208";a="247178588"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2021 03:54:36 -0700
+   d="scan'208";a="224707453"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2021 03:55:15 -0700
 X-IronPort-AV: E=Sophos;i="5.85,329,1624345200"; 
-   d="scan'208";a="437162852"
+   d="scan'208";a="562185231"
 Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2021 03:54:33 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 28 Sep 2021 13:54:31 +0300
-Date:   Tue, 28 Sep 2021 13:54:31 +0300
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2021 03:55:12 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 28 Sep 2021 13:55:09 +0300
+Date:   Tue, 28 Sep 2021 13:55:09 +0300
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Prashant Malani <pmalani@chromium.org>
 Cc:     linux-kernel@vger.kernel.org, bleung@chromium.org,
@@ -35,28 +35,27 @@ Cc:     linux-kernel@vger.kernel.org, bleung@chromium.org,
         Mark Gross <mgross@linux.intel.com>,
         "open list:X86 PLATFORM DRIVERS" 
         <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH 1/3] platform/x86: intel_scu_ipc: Fix busy loop expiry
- time
-Message-ID: <YVL0Z6Y+91XGFkDO@lahna>
+Subject: Re: [PATCH 2/3] platform/x86: intel_scu_ipc: Increase virtual
+ timeout to 10s
+Message-ID: <YVL0jSa1TTgDA4q+@lahna>
 References: <20210928101932.2543937-1-pmalani@chromium.org>
- <20210928101932.2543937-2-pmalani@chromium.org>
+ <20210928101932.2543937-3-pmalani@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210928101932.2543937-2-pmalani@chromium.org>
+In-Reply-To: <20210928101932.2543937-3-pmalani@chromium.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Sep 28, 2021 at 03:19:30AM -0700, Prashant Malani wrote:
-> The macro IPC_TIMEOUT is already in jiffies (it is also used like that
-> elsewhere in the file when calling wait_for_completion_timeout()). Don’t
-> convert it using helper functions for the purposes of calculating the
-> busy loop expiry time.
+On Tue, Sep 28, 2021 at 03:19:32AM -0700, Prashant Malani wrote:
+> Commit a7d53dbbc70a ("platform/x86: intel_scu_ipc: Increase virtual
+> timeout from 3 to 5 seconds") states that the recommended timeout range
+> is 5-10 seconds. Adjust the timeout value to the higher of those i.e 10
+> seconds, to account for situations where the 5 seconds is insufficient
+> for disconnect command success.
 > 
-> Fixes: e7b7ab3847c9 (“platform/x86: intel_scu_ipc: Sleeping is fine when polling”)
 > Signed-off-by: Prashant Malani <pmalani@chromium.org>
 > Cc: Benson Leung <bleung@chromium.org>
 
