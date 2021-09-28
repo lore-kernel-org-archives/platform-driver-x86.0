@@ -2,124 +2,116 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A89C43219
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 05:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E60EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 07:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFD8561159
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 05:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D4161159
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 07:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239443AbhI1F7f (ORCPT
+        id S239519AbhI1H42 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Sep 2021 01:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239203AbhI1F6l (ORCPT
+        Tue, 28 Sep 2021 03:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239357AbhI1H42 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Sep 2021 01:58:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id ECBF16128E;
-        Tue, 28 Sep 2021 05:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632808606;
-        bh=IEaQOTNlA53Qt75QXvCLuqc1WsdcEa6N94zuXbDr9Po=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tS0+m+pkWFwkNykbmovX8eC+e85UCoL2LSE8ohMUY71QRNo9L6TEHxV0byUN+yQ01
-         meGi4TDWGLXTgvpG65pGOMBQYxlAwF/0K63HWGj/VI2At45TNUUP+VG5GUZLr41QFo
-         IQHox7x204HNVc1O6pp7SVv9u3k1xrvASiIaMjL47ynWBX6emDUmt14nBQ0jqw//jE
-         rCncfK+cFI+Ma+ylTlsvSMzIVh9jSDG2e6ljcFSxxqmll9/+gM6iE9HM1ZmrCpJoJm
-         IpOWapuM/UUUbVNumBRUj/ZznNJGSasTA8ZjLaQzCaQJfDc9/YCF8ETMV9NAx+m+7V
-         vqnl2q7uPAwfw==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, mgross@linux.intel.com,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 02/23] platform/x86: touchscreen_dmi: Add info for the Chuwi HiBook (CWI514) tablet
-Date:   Tue, 28 Sep 2021 01:56:23 -0400
-Message-Id: <20210928055645.172544-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20210928055645.172544-1-sashal@kernel.org>
-References: <20210928055645.172544-1-sashal@kernel.org>
+        Tue, 28 Sep 2021 03:56:28 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31AE2C061740
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Sep 2021 00:54:49 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id s21so16343867wra.7
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Sep 2021 00:54:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=f4VN/SnhPqfb/dEeJYDkJM2WbH0AefwIT+QKzstH0Q8=;
+        b=qzlQe3PVamgrfOedx3vzFKyEVE37BD2Pmu1oTNeTtix60+ticgm1/crdjKGDbW+DrW
+         zUkHOtCy2iZ8E4Ux+zxwrtaNtBAYwPPeLR4xBanAU2dXq6neD9wH9wSuMUcP21JGSnPb
+         awbXYpU3q2BOyxQ5RxVWOQH0JW60yOAGQ6LXrnjwZhsIcJpHk96T4rTJEN+pd2iwTXrw
+         hecRYw1fC48BRlLCCqIg8YfdFgoMItU7LjO5r/N+xMRDoFVoeG7tsTpCwdJNPfVGvcWE
+         2dHwEL7q1uqwtOPdaw7//A9tAwqjE1i22TtFj8KDlwJh8Hoi7E5ByE6a4pl8q6HX4hyV
+         clwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=f4VN/SnhPqfb/dEeJYDkJM2WbH0AefwIT+QKzstH0Q8=;
+        b=SScRMM76Gt0osvaZO+mY1EDHJPdyoKmxsFY6ojPk72qvYshD25wqq75MHw/S5i/A0E
+         q/kE6EYuoPWgvInPti9X4hJKYW99jN4kQ8FIp0NCGQS5GcbJS6+c0cG+dNDsmL5WTizU
+         qV0geKRGosbyQgfx61LlaMwlmt0ofLUxJFJ0s0NRw6dSxyUqdu4EookzNc4thBKaDvVU
+         r9I4eU5ZrbdwMu501TflHerl+lJ89YjfMKho2ManwIJFJ6e4lLuAgWsTfSHU95CEoHoN
+         mGufTG0qNSYwW8QCjFG7j6pULdxfqY0zy0TjwVa0XlRioqaaKVyqu9Tkgen54Drlc01S
+         MS3g==
+X-Gm-Message-State: AOAM533RlNXhlK1Ezr7UNehk3NmDUCiHnHFlwiPJ+Thk5ztnmnVMPkR7
+        SFWexMtkfDBK8KMJ0pL4Noty4Q==
+X-Google-Smtp-Source: ABdhPJxo4xGSPJSRJOoFV6bJHHHqYhKffK7s6nvA0mYcfzzl/U5f1AFb8FTvNNUh0LiuR2Jp2Hy4uA==
+X-Received: by 2002:adf:d22e:: with SMTP id k14mr4994311wrh.258.1632815687682;
+        Tue, 28 Sep 2021 00:54:47 -0700 (PDT)
+Received: from google.com ([95.148.6.233])
+        by smtp.gmail.com with ESMTPSA id p10sm1375564wmq.40.2021.09.28.00.54.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Sep 2021 00:54:47 -0700 (PDT)
+Date:   Tue, 28 Sep 2021 08:54:45 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, bhelgaas@google.com,
+        andy.shevchenko@gmail.com, mgross@linux.intel.com,
+        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] MFD: intel_pmt: Support non-PMT capabilities
+Message-ID: <YVLKRSQx01vB4N77@google.com>
+References: <20210922213007.2738388-1-david.e.box@linux.intel.com>
+ <20210922213007.2738388-3-david.e.box@linux.intel.com>
+ <YVIBI6TQrD/rehli@kroah.com>
+ <d540894d3d8c05722bd924c21bd9dd9c2b9def53.camel@linux.intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d540894d3d8c05722bd924c21bd9dd9c2b9def53.camel@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+On Mon, 27 Sep 2021, David E. Box wrote:
 
-[ Upstream commit 3bf1669b0e033c885ebcb1ddc2334088dd125f2d ]
+> On Mon, 2021-09-27 at 19:36 +0200, Greg KH wrote:
+> > On Wed, Sep 22, 2021 at 02:30:04PM -0700, David E. Box wrote:
+> > > Intel Platform Monitoring Technology (PMT) support is indicated by presence
+> > > of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
+> > > structures may also be used by Intel to indicate support for other
+> > > capabilities unrelated to PMT.  OOBMSM is a device that can have both PMT
+> > > and non-PMT capabilities. In order to support these capabilities it is
+> > > necessary to modify the intel_pmt driver to handle the creation of platform
+> > > devices more generically.
+> > 
+> > I said this on your other driver submission, but why are you turning a
+> > PCIe device into a set of platform devices and craming it into the MFD
+> > subsystem?
+> > 
+> > PCIe devices are NOT platform devices.
+> 
+> But they *are* used to create platform devices when the PCIe device is multi-functional, which is
+> what intel_pmt is.
+> 
+> > 
+> > Why not use the auxiliary bus for this thing if you have individual
+> > drivers that need to "bind" to the different attributes that this single
+> > PCIe device is exporting.
+> 
+> It wasn't clear in the beginning how this would evolve. MFD made sense for the PMT (platform
+> monitoring technology) driver. PMT has 3 related but individually enumerable devices on the same IP,
+> like lpss. But the same IP is now being used for other features too like SDSi. We could work on
+> converting this to the auxiliary bus and then covert the cell drivers.
 
-Add touchscreen info for the Chuwi HiBook (CWI514) tablet. This includes
-info for getting the firmware directly from the UEFI, so that the user does
-not need to manually install the firmware in /lib/firmware/silead.
+I see this as subsequent work.  It should not affect this submission.
 
-This change will make the touchscreen on these devices work OOTB,
-without requiring any manual setup.
+FWIW, I still plan to review this set for inclusion into MFD.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20210905130210.32810-1-hdegoede@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/touchscreen_dmi.c | 37 ++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 99260915122c..4f5d53b585db 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -141,6 +141,33 @@ static const struct ts_dmi_data chuwi_hi10_pro_data = {
- 	.properties     = chuwi_hi10_pro_props,
- };
- 
-+static const struct property_entry chuwi_hibook_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 30),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 4),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1892),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1276),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hibook.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data chuwi_hibook_data = {
-+	.embedded_fw = {
-+		.name	= "silead/gsl1680-chuwi-hibook.fw",
-+		.prefix = { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
-+		.length	= 40392,
-+		.sha256	= { 0xf7, 0xc0, 0xe8, 0x5a, 0x6c, 0xf2, 0xeb, 0x8d,
-+			    0x12, 0xc4, 0x45, 0xbf, 0x55, 0x13, 0x4c, 0x1a,
-+			    0x13, 0x04, 0x31, 0x08, 0x65, 0x73, 0xf7, 0xa8,
-+			    0x1b, 0x7d, 0x59, 0xc9, 0xe6, 0x97, 0xf7, 0x38 },
-+	},
-+	.acpi_name      = "MSSL0017:00",
-+	.properties     = chuwi_hibook_props,
-+};
-+
- static const struct property_entry chuwi_vi8_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
- 	PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
-@@ -936,6 +963,16 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
- 		},
- 	},
-+	{
-+		/* Chuwi HiBook (CWI514) */
-+		.driver_data = (void *)&chuwi_hibook_data,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-+			/* Above matches are too generic, add bios-date match */
-+			DMI_MATCH(DMI_BIOS_DATE, "05/07/2016"),
-+		},
-+	},
- 	{
- 		/* Chuwi Vi8 (CWI506) */
- 		.driver_data = (void *)&chuwi_vi8_data,
 -- 
-2.33.0
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
