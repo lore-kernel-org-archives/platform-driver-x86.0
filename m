@@ -2,208 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC639C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 17:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D889C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 19:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0E2360E90
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 17:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018D161374
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 19:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242213AbhI1RjQ (ORCPT
+        id S242381AbhI1TMB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Sep 2021 13:39:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59587 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241527AbhI1RjQ (ORCPT
+        Tue, 28 Sep 2021 15:12:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242312AbhI1TMA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Sep 2021 13:39:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632850656;
+        Tue, 28 Sep 2021 15:12:00 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C0B7C061745;
+        Tue, 28 Sep 2021 12:10:20 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f13b20078349fd04295260b.dip0.t-ipconnect.de [IPv6:2003:ec:2f13:b200:7834:9fd0:4295:260b])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1CB931EC06D9;
+        Tue, 28 Sep 2021 21:10:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1632856219;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Dge3VVGgzmJFOKMEGjGlEoUpp6t8t6xym7qtRDntnkM=;
-        b=KtjSjZeKaqx4Ci6t0RBO5jqhkiLwRdlxWmkTx/kmz/UrBrYxR0nb6Xbknz3FN2+u0EPaEi
-        8Pm0NGtAsr4YzvdSXttAzZM/KGNw+DrRp8RRNT4rdWok3goMZN9QabUIGIcrjpKnCJ1hSf
-        F/lVzYtcEe9VwR2TFYOve8nY/YSJEBw=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-559-6iTX361aPjqJpeQo92mVGw-1; Tue, 28 Sep 2021 13:37:34 -0400
-X-MC-Unique: 6iTX361aPjqJpeQo92mVGw-1
-Received: by mail-ed1-f72.google.com with SMTP id o23-20020a509b17000000b003da756cac0eso7702185edi.22
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Sep 2021 10:37:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Dge3VVGgzmJFOKMEGjGlEoUpp6t8t6xym7qtRDntnkM=;
-        b=A5pyeWq5CxgIU7i11MDdAN+iQQREsJaFtU/xaydtG4yOAlQuAEra6I+7Rif8PTWny3
-         6OLmmuubN9VIg2PXC4K57klOKog3Za7OSfEKBasjBiK8W4T5vKLMVKKrqqj4C+Z+m9zF
-         xgKFN1ByfGnd8DbCHRQJr45aF6pT0nii9eCAmDpmFlNB0SYXTJsqRXjBxm4N1oS8Jn8f
-         lj0Uya7FsuJXJcnGFZMsON+WtlnpQ0ctU8KrG3TBGfgwaHr42J61waG2iPBIFdZKaZ5X
-         aDlZUloCij8xdlXdjRiczMdrVGEMfBguc7rv6HB89Ld5APpUsrlyraFXgER+h7XMt0l8
-         kdxg==
-X-Gm-Message-State: AOAM533xczmLcv5ZlXzUtMtdB0L+Tgz/fFFCCrSKg3Y1aeHG9WgGWrwg
-        dQkTxqmgIdaPbCBeN4AUmLh9/bgK64uUCkOSi1C2wyuopnhLWqai4lvMhb/C7KdfHrS5+OcUp7u
-        ff7KjD+zVcVVxw0G8busRi5Syz2UOH52B5A==
-X-Received: by 2002:a50:eac4:: with SMTP id u4mr8852468edp.259.1632850653643;
-        Tue, 28 Sep 2021 10:37:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJybEQpF8E6cr85iiKnEUDARYctZPPgmTbaT8p8ixzPpQAIyjAm+0Gu0biSEaZvQip5/a6JcOg==
-X-Received: by 2002:a50:eac4:: with SMTP id u4mr8852425edp.259.1632850653270;
-        Tue, 28 Sep 2021 10:37:33 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id lb12sm10993043ejc.28.2021.09.28.10.37.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Sep 2021 10:37:32 -0700 (PDT)
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Switch to common use of
- attributes
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Len Baker <len.baker@gmx.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Mark Gross <mgross@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210926111908.6950-1-len.baker@gmx.com>
- <YVBaQAFVX1CeQUPE@kroah.com>
- <50135c0e-e291-509f-2286-a1e443fdf4f3@redhat.com>
- <YVM9BhHcMRVnEder@kroah.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <de92227c-5f39-ecdc-af6d-87970eba07b9@redhat.com>
-Date:   Tue, 28 Sep 2021 19:37:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        bh=ezqIhy/GzEctU/BzXXa8nRx9BM/oenaY5A3bWVYyogc=;
+        b=L15WdFBZiGsmF9pfPIN2c5ZAgIU4PtH28ptrgSgBhWpm+4j822yrxCFG5g1HkliRhUi5uF
+        CRYVq82aPiFD57CtKa57/vA4L1iRWeGtkZ/r3TuxAhU5th8F6Q2wEbSDYpjVyB2e++vhJZ
+        NSdeH98yXiBNfY80fDZLfpkLkYe+4+I=
+From:   Borislav Petkov <bp@alien8.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Young <dyoung@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Will Deacon <will@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org
+Subject: [PATCH 1/8] x86/ioremap: Selectively build arch override encryption functions
+Date:   Tue, 28 Sep 2021 21:10:02 +0200
+Message-Id: <20210928191009.32551-2-bp@alien8.de>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20210928191009.32551-1-bp@alien8.de>
+References: <20210928191009.32551-1-bp@alien8.de>
 MIME-Version: 1.0
-In-Reply-To: <YVM9BhHcMRVnEder@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-On 9/28/21 6:04 PM, Greg Kroah-Hartman wrote:
-> On Tue, Sep 28, 2021 at 04:55:25PM +0200, Hans de Goede wrote:
->> Hi All,
->>
->> On 9/26/21 1:32 PM, Greg Kroah-Hartman wrote:
->>> On Sun, Sep 26, 2021 at 01:19:08PM +0200, Len Baker wrote:
->>>> As noted in the "Deprecated Interfaces, Language Features, Attributes,
->>>> and Conventions" documentation [1], size calculations (especially
->>>> multiplication) should not be performed in memory allocator (or similar)
->>>> function arguments due to the risk of them overflowing. This could lead
->>>> to values wrapping around and a smaller allocation being made than the
->>>> caller was expecting. Using those allocations could lead to linear
->>>> overflows of heap memory and other misbehaviors.
->>>>
->>>> So, to avoid open-coded arithmetic in the kzalloc() call inside the
->>>> create_attr_set() function the code must be refactored. Using the
->>>> struct_size() helper is the fast solution but it is better to switch
->>>> this code to common use of attributes.
->>>>
->>>> Then, remove all the custom code to manage hotkey attributes and use the
->>>> attribute_group structure instead, refactoring the code accordingly.
->>>> Also, to manage the optional hotkey attributes (hotkey_tablet_mode and
->>>> hotkey_radio_sw) use the is_visible callback from the same structure.
->>>>
->>>> Moreover, now the hotkey_init_tablet_mode() function never returns a
->>>> negative number. So, the check after the call can be safely removed.
->>>>
->>>> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
->>>>
->>>> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Signed-off-by: Len Baker <len.baker@gmx.com>
->>>> ---
->>>> Hi,
->>>>
->>>> Following the suggestions made by Greg I have switch the code to common
->>>> use of attributes. However this code is untested. If someone could test
->>>> it would be great.
->>>
->>> Much better, thanks.
->>
->> This indeed is much better and a great cleanup, thanks.
->>
->>>
->>> But, I have a few questions here:
->>>
->>>> @@ -3161,9 +3106,7 @@ static void hotkey_exit(void)
->>>>  	hotkey_poll_stop_sync();
->>>>  	mutex_unlock(&hotkey_mutex);
->>>>  #endif
->>>> -
->>>> -	if (hotkey_dev_attributes)
->>>> -		delete_attr_set(hotkey_dev_attributes, &tpacpi_pdev->dev.kobj);
->>>> +	sysfs_remove_group(&tpacpi_pdev->dev.kobj, &hotkey_attr_group);
->>>
->>> Why do you have to manually add/remove these groups still?
->>>
->>> A huge hint that something is going wrong is when you have to call a
->>> sysfs_*() call from within a driver.  There should be proper driver_*()
->>> calls for you instead to get the job done.
->>>
->>> As this is a platform device, why not set the dev_groups variable in the
->>> platform_driver field so that these attribute groups get added and
->>> removed automatically?
->>
->> The thinkpad_acpi code talks to the ACPI object representing the
->> ThinkPad embedded-controller and that has a lot of different sub-functionalities
->> which may or may not be present depending on the model laptop as well
->> as on the hw-configuration of the model.
->>
->> The code is organized around all the different sub-functions with there
->> being a separate init + exit function for each sub-function, including
->> with first detecting in the init function if the functionality is present
->> (e.g. don't register SW_TABLETMODE_SW evdev reporting when the device
->> is not convertible / don register a WWAN rfkill if there is no WWAN modem).
->>
->> Many (but not all) of the sub-functions come with a few sysfs-attributes
->> under /sys/bus/platform/devices/thinkpad_acpi/ many of the separate
->> function_init functions therefor call sysfs_create_group() for their own
->> set of sysfs-attributes, if the function is present on the machine.
->>
->>> An example commit to look at that shows how this was converted for one
->>> driver is 5bd08a4ae3d0 ("platform: x86: hp-wmi: convert platform driver
->>> to use dev_groups").  See if that helps here as well.
->>
->> Right, that results in a very nice cleanup. But there all the attributes
->> were always registered before the patch so throwing them together in a
->> ATTRIBUTE_GROUPS(hp_wmi) makes a ton of sense.
->>
->> Here however we have all the separate function_init() blocks each
->> conditionally adding their own attributes if the function is present,
->> so that is different.
->>
->> Currently there already are 8 separate sysfs_create_group() calls in
->> the thinkpad_acpi code, so even if we want to refactor this (I'm not
->> sure that we do) then doing so would fall outside of the scope of this
->> patch.
->>
->> Greg, since this resolves / defers your remark and since this otherwise
->> is a nice cleanup I'm going to merge this version of this patch now.
-> 
-> Ok, but having this all in one big list of attributes does work.  You
-> can have multiple attribute groups listed together (that's why it's a
-> list of attribute groups, not just one attribute group that the driver
-> core is expecting.)
-> 
-> You just put the logic of "is this group needed or not?" in the
-> is_visible() callback for that group.  You then don't need the
-> function_init() blocks to do anything with sysfs except maybe set a
-> device variable of "I have type foo" for the is_visible() callback to
-> check.
-> 
-> Yes, it's not obvious, but should clean up a lot of code in the end.
+In preparation for other uses of the cc_platform_has() function
+besides AMD's memory encryption support, selectively build the
+AMD memory encryption architecture override functions only when
+CONFIG_AMD_MEM_ENCRYPT=y. These functions are:
 
-That is an interesting suggestion, if someone feels up to giving this
-a try I wonder what the end-result will look like.
+- early_memremap_pgprot_adjust()
+- arch_memremap_can_ram_remap()
 
-Regards,
+Additionally, routines that are only invoked by these architecture
+override functions can also be conditionally built. These functions are:
 
-Hans
+- memremap_should_map_decrypted()
+- memremap_is_efi_data()
+- memremap_is_setup_data()
+- early_memremap_is_setup_data()
+
+And finally, phys_mem_access_encrypted() is conditionally built as well,
+but requires a static inline version of it when CONFIG_AMD_MEM_ENCRYPT is
+not set.
+
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/include/asm/io.h | 8 ++++++++
+ arch/x86/mm/ioremap.c     | 2 +-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index 841a5d104afa..5c6a4af0b911 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -391,6 +391,7 @@ extern void arch_io_free_memtype_wc(resource_size_t start, resource_size_t size)
+ #define arch_io_reserve_memtype_wc arch_io_reserve_memtype_wc
+ #endif
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
+ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
+ 					unsigned long size,
+ 					unsigned long flags);
+@@ -398,6 +399,13 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
+ 
+ extern bool phys_mem_access_encrypted(unsigned long phys_addr,
+ 				      unsigned long size);
++#else
++static inline bool phys_mem_access_encrypted(unsigned long phys_addr,
++					     unsigned long size)
++{
++	return true;
++}
++#endif
+ 
+ /**
+  * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 60ade7dd71bd..ccff76cedd8f 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -508,6 +508,7 @@ void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
+ 	memunmap((void *)((unsigned long)addr & PAGE_MASK));
+ }
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
+ /*
+  * Examine the physical address to determine if it is an area of memory
+  * that should be mapped decrypted.  If the memory is not part of the
+@@ -746,7 +747,6 @@ bool phys_mem_access_encrypted(unsigned long phys_addr, unsigned long size)
+ 	return arch_memremap_can_ram_remap(phys_addr, size, 0);
+ }
+ 
+-#ifdef CONFIG_AMD_MEM_ENCRYPT
+ /* Remap memory with encryption */
+ void __init *early_memremap_encrypted(resource_size_t phys_addr,
+ 				      unsigned long size)
+-- 
+2.29.2
 
