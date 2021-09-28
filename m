@@ -2,203 +2,157 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03829C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 12:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C021FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 12:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D17EB611CA
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 12:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93773611CA
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 12:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240466AbhI1MDH (ORCPT
+        id S240453AbhI1MFi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Sep 2021 08:03:07 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:43977 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240471AbhI1MDG (ORCPT
+        Tue, 28 Sep 2021 08:05:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34449 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240410AbhI1MFh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Sep 2021 08:03:06 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.nyi.internal (Postfix) with ESMTP id 12C015C0126;
-        Tue, 28 Sep 2021 08:01:27 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Tue, 28 Sep 2021 08:01:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=soRmW/
-        drOJCliOyx+fO7VLL9WVqPUcGMti9RXPA3YNM=; b=ONj0nquSnawX+aur9pDytZ
-        U6rEpS6Jpv122xPSdn/RchuppNWDSBJrs1lf7kiJiRPvoTF7T5cmH6g1wABikdnN
-        o+79KnRIFDQhXOeRZTmARpX6q2CI82qgqU2TQLthyIQv2QURET1iqAe00Ze+Iw7L
-        jyLgiZ0C+klUpXTBpVC820k0rM89a8bPLM7xoPnZnZUdvmcnG50HyAZSLIsOZzjv
-        wRzX1cAbpi6QpNp8G80fl3QDoGGf24g4grHSngm0tYe4I9R4mh8P7IvksJ84t24N
-        yT0Y/TfiaJj7G0j654C6IDhrt3r2GtSTOnKlMfU8PuBaPay5uroC2D+CIl10pFOg
-        ==
-X-ME-Sender: <xms:FgRTYTtC-87ePW6VEvBsCqeHA40CISmBPXSV_o9n3rxca8OctBpUwA>
-    <xme:FgRTYUdR1l63ikDbJ_ZhGt26L2LWdrgbbzIa_ElNqSkf9HgRMF3UP-PFuvug4VSml
-    w7dNFYc8zzPtK1ggEk>
-X-ME-Received: <xmr:FgRTYWy9GmXTQ8AP2EvVoQ4Il7LWfqjOut5Wl_Y5WaMFmUlpCfPcqW-fo_yGHUxaQSroNQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudektddggeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvkfgjfhfogggtsehttdertdertddvnecuhfhrohhmpefnuhhkvgcu
-    lfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpe
-    ettdefvdeufffgjeeliedufeeiteefkeduteehvdfhieeigfffvdeuueejjeeuteenucff
-    ohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:FgRTYSMbBZ8fnglUlWyCMOG9-ijQbTENRhbcpDUSaVmBnq07DO_XPg>
-    <xmx:FgRTYT_EFeY16Arhe9d8QzxiAWXAkPx0Fq2mrYNwKOOEjGJhhV2cbw>
-    <xmx:FgRTYSXFj5IjUIqSy9FQ1cIlYoc1FGob4fl6uInfcWa5-sMNUgIPhw>
-    <xmx:FwRTYWbK-46ikjGyVqHfQR7GhIdvhQ2_7K8SO5L555gSvPK6N1spKA>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 28 Sep 2021 08:01:22 -0400 (EDT)
-Date:   Wed, 29 Sep 2021 01:01:09 +1300
-From:   Luke Jones <luke@ljones.dev>
+        Tue, 28 Sep 2021 08:05:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632830638;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TrMZ42g/G3Kkz26yMPZtqroMl+g6CgMq/DrfJClCp8w=;
+        b=CZPPvrcWqIeY0TsqrlmLDu9P+cdxgkafmPzAIYuEIuQSiHbdVIEftQxQKeNZL4Oml3rjwu
+        mljdTiC7+oIfWfDLg6VEHfnKPSdo1fO5yyUOsv8HBOC7BEBCP6pKYBjK5ShhLLAxtbxQnW
+        tYv39cNNz0EUxaGD0iREvYi9GNfY4F8=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-345--MWeZpUlNV6ZUedL6i7kmw-1; Tue, 28 Sep 2021 08:03:56 -0400
+X-MC-Unique: -MWeZpUlNV6ZUedL6i7kmw-1
+Received: by mail-ed1-f69.google.com with SMTP id z62-20020a509e44000000b003da839b9821so3187479ede.15
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Sep 2021 05:03:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TrMZ42g/G3Kkz26yMPZtqroMl+g6CgMq/DrfJClCp8w=;
+        b=hpY0z3a4eq2qV3JRYLylyMbo1iOv39gNh3667/J29nAqNj+JUAIBJMdBGrb9U8oaK4
+         in4WxgOwlm++IeCwngYEMsxJebhBL6nCPd4PIQKDNX7R2C+P+FJ8blXBnfLPN/e+kIUv
+         OIuQhNheOpyP+wlA4xrYry50P5eXdLoGvavskqdOfnAdQBjNY5Z9kaortroBOYa3vtjw
+         XoaidH7m2I+MUDUK75VgxJtbhwpWmsDHRIT1s9Z1ApIxxxkKa0AqnCzfYFGGOQ7ISx6k
+         tMi5XR9rQG+ww5RO/8hTR7Cq9ZqFR+9APf1xXG0OH0RDb3LuYLqeDEnC1cBVDoCrta5q
+         FMRQ==
+X-Gm-Message-State: AOAM531vM8BBiQbTTzGCpmGevk4agTTWPe7DbMAwDHoULULsATWucxY7
+        mP2oC0CzCkHNQTyxqrtMX8jW6l4BMBLm3UvNbQMlDlctyb5cindAq/oWw9Rx/31jUYuSjPjAesl
+        CN+7psAnYaSuClR/lvbes1nyB/Rb+sEXivMGw5HO7ZxeUvSf0Tcxh1qPnloHC/fnuNXVRFy6bmc
+        U0H6njoXiBqg==
+X-Received: by 2002:a17:907:e91:: with SMTP id ho17mr2782028ejc.287.1632830635294;
+        Tue, 28 Sep 2021 05:03:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyE1hWUA634mQtZ+6fBawrpxRt9f5U+RYXzP767pfFl9nRwH1KVSbGCqC4TA3dHZBG9VmuQ2A==
+X-Received: by 2002:a17:907:e91:: with SMTP id ho17mr2781996ejc.287.1632830635003;
+        Tue, 28 Sep 2021 05:03:55 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id s11sm12867225edy.64.2021.09.28.05.03.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Sep 2021 05:03:54 -0700 (PDT)
 Subject: Re: [PATCH v11] asus-wmi: Add support for custom fan curves
-To:     Hans de Goede <hdegoede@redhat.com>
+To:     Luke Jones <luke@ljones.dev>
 Cc:     Bastien Nocera <hadess@hadess.net>, linux-kernel@vger.kernel.org,
         pobrn@protonmail.com, linux@roeck-us.net,
         platform-driver-x86@vger.kernel.org
-Message-Id: <X1850R.K87ZAZR7ALEU2@ljones.dev>
-In-Reply-To: <b3eee6a7-5c8b-e0f9-d7cc-291fbdebd3b1@redhat.com>
 References: <20210907232232.5205-1-luke@ljones.dev>
-        <20210907232232.5205-2-luke@ljones.dev>
-        <1d9d4de26d0c862acf3e579f14de9596027f3c3b.camel@hadess.net>
-        <ef22aa1f-288a-4e5a-0210-d62c7fc89307@redhat.com>
-        <TT750R.ES1JPTD16XUL@ljones.dev>
-        <b3eee6a7-5c8b-e0f9-d7cc-291fbdebd3b1@redhat.com>
-X-Mailer: geary/40.0
+ <20210907232232.5205-2-luke@ljones.dev>
+ <1d9d4de26d0c862acf3e579f14de9596027f3c3b.camel@hadess.net>
+ <99750R.GZYR2PKX93HX@ljones.dev>
+ <10be9244-0d89-ef79-08d0-fe7024609ee2@redhat.com>
+ <NY750R.JRUHTBKNLH1F1@ljones.dev>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <461e3768-7c6d-7351-3482-2545ad0af754@redhat.com>
+Date:   Tue, 28 Sep 2021 14:03:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+In-Reply-To: <NY750R.JRUHTBKNLH1F1@ljones.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
+On 9/28/21 1:59 PM, Luke Jones wrote:
+> 
+> 
+> On Tue, Sep 28 2021 at 13:56:05 +0200, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Hi,
+>>
+>> On 9/28/21 1:43 PM, Luke Jones wrote:
+>>>  Sure, the path is similar to /sys/devices/platform/asus-nb-wmi/hwmon/hwmon4/pwm1_enable where hwmon4 will likely be different depending on init, and pwm2_enable is the second fan if it exists. The values are 1,2,3 - where 1 = fan curve enabled/manual, 2 = auto. 3 here is custom extra that writes default curve back then defaults to 2.
+>>>
+>>>  As I understand it, this should be adhering to the accepted kernel standard, so if you use this for ASUS laptops, then it should carry over to other brands that implement it also.
+>>
+>> Ah, so this is a bit different then how I thought this would work
+>> (this is probably better though).
+>>
+>> <snip>
+>>
+>>>>>   The fans have settings [1,2,3] under pwm<N>_enable:
+>>>>>   1. Enable and write settings out
+>>>>>   2. Disable and use factory fan mode
+>>>>>   3. Same as 2, additionally restoring default factory curve.
+>>
+>> Quoting Documentation/hwmon/sysfs-interface.rst
+>>
+>> `pwm[1-*]_enable`
+>>                 Fan speed control method:
+>>
+>>                 - 0: no fan speed control (i.e. fan at full speed)
+>>                 - 1: manual fan speed control enabled (using `pwm[1-*]`)
+>>                 - 2+: automatic fan speed control enabled
+>>
+>> 1 normally means the fans runs at a fixed speed, but you are using it
+>> for the custom/manual profile, which is still a temp<->pwm table,
+>> right?
+>>
+>> I guess this make sense since full manual control is not supported
+>> and this keeps "2" aka auto as being the normal factory auto
+>> setting which is good.
+>>
+>> Bastien is this interface usable for p-p-d ?
+>>
+>> I guess that it is a bit annoying that you need to figure out
+>> the # in the hwmon# part of the path, but there will be only
+>> one hwmon child.
+>>
+>> You could also go through /sys/class/hwmon but then you really
+>> have no idea which one to use. Ideally we would have some way
+>> to indicate that there is a hmwon class-dev associated with
+>> /sys/firmware/acpi/platform_profile but as we mentioned before
+>> we should defer coming up with a generic solution for this
+>> until we have more then 1 user, so that we hopefully get the
+>> generic solution right in one go.
+> 
+> If it's at all helpful, I named the interface as "asus_custom_fan_curve". I use this to verify I have the correct hwmon for asusctl. Open to suggestions on that.
 
-On Tue, Sep 28 2021 at 13:59:31 +0200, Hans de Goede 
-<hdegoede@redhat.com> wrote:
-> Hi,
-> 
-> On 9/28/21 1:56 PM, Luke Jones wrote:
->>  Hmm,
->>  A change via /sys/firmware/acpi/platform_profile does disable the 
->> fan-curve until a user re-enables it.
-> 
-> Ah ok, so did get that part right :)
-> 
-> So basically any write to /sys/firmware/acpi/platform_profile
-> will reset the pwm1_enable to "2" if it was not "2" already.
-> 
->>  It doesn't wipe the actual curve setting though, I thought that 
->> would be bad UX,
-> 
-> Ok that is fine.
-> 
->>  but yes the curve is definitely disabled on profile change and will 
->> remain disabled until turned on again. At which point another 
->> profile change will disable it again.
->> 
->>  And as stated in previous reply use of 
->> /sys/devices/platform/asus-nb-wmi/hwmon/hwmon<N>/pwm<N>_enable to 
->> check the status is stabilised (1 = manual fan).
->> 
->>  Looking at it with fresh eyes I just spotted some things I can 
->> clean up further. Very sorry, there'll be a v15 :(
-> 
-> No worries, maybe wait a bit with posting v15 till Bastien has a 
-> chance
-> to way in on this discussion though.
+Ah yes, that means the interface could be looked up through /sys/class/hwmon
+too, that is probably the safest route to go then, as the
+/sys/devices/platform/asus-nb-wmi/ path might change if we e.g. ever
+convert the asus-wmi code to use the new wmi bus interface.
 
-No problem at all. Very little will change except for code clean up :)
+Now that you have confirmed that any writes to
+/sys/firmware/acpi/platform_profile override any custom profiles
+I wonder if p-p-d needs to take this into account at all though.
 
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
->>  On Tue, Sep 28 2021 at 13:44:32 +0200, Hans de Goede 
->> <hdegoede@redhat.com> wrote:
->>>  Hi,
->>> 
->>>  On 9/28/21 1:36 PM, Bastien Nocera wrote:
->>>>   On Wed, 2021-09-08 at 11:22 +1200, Luke D. Jones wrote:
->>>>>   Add support for custom fan curves found on some ASUS ROG 
->>>>> laptops.
->>>>> 
->>>>>   These laptops have the ability to set a custom curve for the CPU
->>>>>   and GPU fans via two ACPI methods.
->>>>> 
->>>>>   This patch adds two pwm<N> attributes to the hwmon sysfs,
->>>>>   pwm1 for CPU fan, pwm2 for GPU fan. Both are under the hwmon of 
->>>>> the
->>>>>   name `asus_custom_fan_curve`. There is no safety check of the 
->>>>> set
->>>>>   fan curves - this must be done in userspace.
->>>>> 
->>>>>   The fans have settings [1,2,3] under pwm<N>_enable:
->>>>>   1. Enable and write settings out
->>>>>   2. Disable and use factory fan mode
->>>>>   3. Same as 2, additionally restoring default factory curve.
->>>>> 
->>>>>   Use of 2 means that the curve the user has set is still stored 
->>>>> and
->>>>>   won't be erased, but the laptop will be using its default 
->>>>> auto-fan
->>>>>   mode. Re-enabling the manual mode then activates the curves 
->>>>> again.
->>>>> 
->>>>>   Notes:
->>>>>   - pwm<N>_enable = 0 is an invalid setting.
->>>>>   - pwm is actually a percentage and is scaled on writing to 
->>>>> device.
->>>> 
->>>>   I was trying to update:
->>>> 
->>>>  
->>>> https://gitlab.freedesktop.org/hadess/power-profiles-daemon/-/merge_requests/80
->>>>   but I don't understand what files I need to check for what 
->>>> values to
->>>>   detect whether custom fan curves were used.
->>>> 
->>>>   Can you help me out here?
->>> 
->>>  How to deal with this is actually one of my remaining questions 
->>> too.
->>> 
->>>  I've not looked at the new code closely yet, but if I understand
->>>  things correctly, the now code basically only allows to set 1
->>>  custom profile and setting that profile overrides the last
->>>  profile set through /sys/firmware/acpi/platform_profile.
->>> 
->>>  And any write to /sys/firmware/acpi/platform_profile will
->>>  overwrite / replace the last custom set profile (if any) with
->>>  the one matching the requested platform-profile.
->>> 
->>>  So basically users of custom fan profiles are expected to
->>>  disable power-profiles-daemon or at least to refrain from
->>>  making any platform_profile changes.
->>> 
->>>  And if power-profile-daemon is actually active and
->>>  makes a change then any custom settings will be thrown away,
->>>  IOW p-p-d will always win. So I believe that it no longer needs
->>>  to check for custom profiles, since any time it requests a
->>>  standard profile that will overwrite any custom profile
->>>  which may be present.
->>> 
->>>  Luke, do I have that right ?
->>> 
->>>>   Also, was this patch accepted in the pdx86 tree?
->>> 
->>>  No, I still need to find/make some time to review it and
->>>  I still have the same question as you :)
->>> 
->>>  Regards,
->>> 
->>>  Hans
->>> 
->> 
->> 
-> 
+The easiest way to deal with this in p-p-d, is just to not deal
+with it at all...    If that turns out to be a bad idea, we
+can always reconsider and add some special handling to p-p-d for
+this later.
 
+Regards,
+
+Hans
 
