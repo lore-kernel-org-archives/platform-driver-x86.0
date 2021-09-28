@@ -2,77 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD61C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 14:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E258C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 14:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E03F56120D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 14:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2766C611CE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 14:55:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241021AbhI1ObM (ORCPT
+        id S241339AbhI1O5J (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Sep 2021 10:31:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49217 "EHLO
+        Tue, 28 Sep 2021 10:57:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51811 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241016AbhI1ObL (ORCPT
+        by vger.kernel.org with ESMTP id S241279AbhI1O5J (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Sep 2021 10:31:11 -0400
+        Tue, 28 Sep 2021 10:57:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632839371;
+        s=mimecast20190719; t=1632840929;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fygzUBJRpxy1aYLfquLuU9tF3tU8t7U5iuELbZp5uiE=;
-        b=ZSPXB4juXnOUkRZqW20DCPoY17tkWiSZ8rsSIP2Mc5s7VjklF25sVCcwCdcI8ANLeDDLKy
-        kXrCC6EQy8yXzpfEH11B/rprB0/bwhDfSJzEO7w9YINB+JC49MRqDwqvlDr7rXIrR8XHAu
-        fGhS6bW8UvXUDPCbmi7YkGR4OSeMhf0=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-589-EaH-sxAqOhStV0u_BCMPdA-1; Tue, 28 Sep 2021 10:29:29 -0400
-X-MC-Unique: EaH-sxAqOhStV0u_BCMPdA-1
-Received: by mail-ed1-f71.google.com with SMTP id r11-20020aa7cfcb000000b003d4fbd652b9so21977121edy.14
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Sep 2021 07:29:29 -0700 (PDT)
+        bh=h1tsDh6YLJRJVvMNgciG5IrKowgU5pvDWEHe56at1gM=;
+        b=iy7jaQzZWGmZ/l2AZwjBUZ8/QLZVa8oJ1qT4Jmq66ohA4/DeLQJUCDgCmQccm3Ql3fTAeS
+        qW3sSgj9UYRrixEWb7nleQnRMtX0+JIhw4ii1WFa5Q8Th1Z27EyCwDpyrtFOPi6HT7+dm3
+        t3qvVcsetz0E8C0yCLBHB47dehqx0js=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-154-Dv-EFcOXPiCOnUKqr69MuQ-1; Tue, 28 Sep 2021 10:55:28 -0400
+X-MC-Unique: Dv-EFcOXPiCOnUKqr69MuQ-1
+Received: by mail-ed1-f72.google.com with SMTP id n5-20020a05640206c500b003cf53f7cef2so22110810edy.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Sep 2021 07:55:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=fygzUBJRpxy1aYLfquLuU9tF3tU8t7U5iuELbZp5uiE=;
-        b=vHMkKAP4aWJbASlXxWTgzuIYeeCTKXET5hE0/aj60z7JyGK7aQ46vuFfMLXkSIeWFA
-         FtLTFuReHRTpNjfRoWzLVvsx62NCOuuuPPQEXooILCMt5Qwx6+Gy0x6IixNzxoJ1z2K8
-         F8jqQzYbxXO883b+X3J3BCwH2OOeJQQ7y3vsq6RUbogxAEwLHCgEeazkS4x2c06/uphU
-         oA647K97J5h1DJhWwPU3wx/CTXVoEwuLNh84HflQXHblnOHjLh1pxvf+y7dR5f+wqkTb
-         CXXuMR5vkfO7B0a/4KBO+8U52Ei4btLr7eDCFk6gO6yYoIv+Dvvx5j79fRL8WmCHslOZ
-         XMXA==
-X-Gm-Message-State: AOAM533r1cgYXz8vhGsDrGUgReddsRom8k7dKl2elZNLrGZ7HrTJRe9o
-        wbbiXG91O/IxYtMr/tCngxwKlTI4f72sw9heI+ZSze+lVPwT+WuXFzCHsxaeJa4H7FIwqkcswYW
-        lrVNGSax8MkXnzgaUUdwvHUVIXRwprk/tvw==
-X-Received: by 2002:a17:906:4f82:: with SMTP id o2mr7231071eju.10.1632839368521;
-        Tue, 28 Sep 2021 07:29:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyNQB7zIOipG/VMitvIElwoor3HHMzfFQidD16cQnq0D0eWeyLjOCvDOiM+9XClGImGGW7E8Q==
-X-Received: by 2002:a17:906:4f82:: with SMTP id o2mr7231051eju.10.1632839368308;
-        Tue, 28 Sep 2021 07:29:28 -0700 (PDT)
+        bh=h1tsDh6YLJRJVvMNgciG5IrKowgU5pvDWEHe56at1gM=;
+        b=uUqDh8tXOWBbcsG0oN28fmUSiAtEXsvmLY9/X9g5j2pwjZFFQrPOEA8kEW9+CqCeA1
+         n1pZQFmw7X1BM5m7/aSpH3N2aWZNvlRL/vD/bX16HVL7vk9No0Va6RiUzRIHuTuurEsJ
+         pqxEMY9Edrsl3/hDgIAQApGfmIcHZrsejIGwNpy1Tu2i77r0hj6Ox9ldargtGlTmwCfE
+         4H8nZh/MqanFb7PMLoF/TeHKKJTE58eozMEsxH1y8iKMChqFFVfOOKDzALjKdqkqbhvE
+         RwhmJsXFDz8PNg9kBujVt22ubx+5ApuSdwNR4fB74uaHtauEAJ8HMu7zgf1MMUQUTl1Q
+         qjBw==
+X-Gm-Message-State: AOAM533wQOtaQmm3IRiX3FC/oSyHj+h8FFVK0ruMJvuDpNofonEZC9wV
+        4IJUWBOTFPQp713QRCHCCUvigTDfvtZk6sFhNSYnXOje6TPi/4rofZY/H5aBhEmHB1kj2EKbJNl
+        ue/yS2e78NA0g2SWVNQq1ytPKdRNH4QED5w==
+X-Received: by 2002:a17:906:7f01:: with SMTP id d1mr7233538ejr.318.1632840926572;
+        Tue, 28 Sep 2021 07:55:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzS5yBFuwSLcJg5mxtyACkXxKi0wMBSw+WcYEEdtvHABfNgyidxO8bV0CX3nV8KT0UKTzPI0Q==
+X-Received: by 2002:a17:906:7f01:: with SMTP id d1mr7233511ejr.318.1632840926322;
+        Tue, 28 Sep 2021 07:55:26 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id bw25sm10847599ejb.20.2021.09.28.07.29.27
+        by smtp.gmail.com with ESMTPSA id d16sm10517546ejk.39.2021.09.28.07.55.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Sep 2021 07:29:27 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: amd-pmc: Fix compilation when
- CONFIG_DEBUGFS is disabled
+        Tue, 28 Sep 2021 07:55:25 -0700 (PDT)
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Switch to common use of
+ attributes
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Baker <len.baker@gmx.com>
+Cc:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Mark Gross <mgross@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210926111908.6950-1-len.baker@gmx.com>
+ <YVBaQAFVX1CeQUPE@kroah.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Sanket Goswami <Sanket.Goswami@amd.com>,
-        Nathan Chancellor <nathan@kernel.org>
-References: <20210928142122.58417-1-hdegoede@redhat.com>
- <fb2e58d0-e241-41f6-b6a5-539a521ddff2@redhat.com>
-Message-ID: <fad187cb-e5d6-66fe-0b83-4712e01f750f@redhat.com>
-Date:   Tue, 28 Sep 2021 16:29:27 +0200
+Message-ID: <50135c0e-e291-509f-2286-a1e443fdf4f3@redhat.com>
+Date:   Tue, 28 Sep 2021 16:55:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <fb2e58d0-e241-41f6-b6a5-539a521ddff2@redhat.com>
+In-Reply-To: <YVBaQAFVX1CeQUPE@kroah.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -80,150 +83,105 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi All,
 
-On 9/28/21 4:23 PM, Hans de Goede wrote:
-> Hi,
-> 
-> On 9/28/21 4:21 PM, Hans de Goede wrote:
->> The amd_pmc_get_smu_version() and amd_pmc_idlemask_read() functions are
->> used in the probe / suspend/resume code, so they are also used when
->> CONFIG_DEBUGFS is disabled, move them outside of the #ifdef CONFIG_DEBUGFS
->> block.
+On 9/26/21 1:32 PM, Greg Kroah-Hartman wrote:
+> On Sun, Sep 26, 2021 at 01:19:08PM +0200, Len Baker wrote:
+>> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+>> and Conventions" documentation [1], size calculations (especially
+>> multiplication) should not be performed in memory allocator (or similar)
+>> function arguments due to the risk of them overflowing. This could lead
+>> to values wrapping around and a smaller allocation being made than the
+>> caller was expecting. Using those allocations could lead to linear
+>> overflows of heap memory and other misbehaviors.
 >>
->> Note this purely moves the code to above the #ifdef CONFIG_DEBUGFS,
->> the code is completely unchanged.
+>> So, to avoid open-coded arithmetic in the kzalloc() call inside the
+>> create_attr_set() function the code must be refactored. Using the
+>> struct_size() helper is the fast solution but it is better to switch
+>> this code to common use of attributes.
 >>
->> Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> Cc: Sanket Goswami <Sanket.Goswami@amd.com>
->> Reported-by: Nathan Chancellor <nathan@kernel.org>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> Then, remove all the custom code to manage hotkey attributes and use the
+>> attribute_group structure instead, refactoring the code accordingly.
+>> Also, to manage the optional hotkey attributes (hotkey_tablet_mode and
+>> hotkey_radio_sw) use the is_visible callback from the same structure.
+>>
+>> Moreover, now the hotkey_init_tablet_mode() function never returns a
+>> negative number. So, the check after the call can be safely removed.
+>>
+>> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+>>
+>> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Len Baker <len.baker@gmx.com>
+>> ---
+>> Hi,
+>>
+>> Following the suggestions made by Greg I have switch the code to common
+>> use of attributes. However this code is untested. If someone could test
+>> it would be great.
 > 
-> I've forgotten to add a:
-> 
-> Fixes: f6045de1f532 ("platform/x86: amd-pmc: Export Idlemask values based on the APU")
-> 
-> I've done so now and added this to my pdx86/review-hans branch.
-> 
-> I will also add this to pdx86/fixes and include it in my
-> next 5.15 fixes pull-req to Linus.
+> Much better, thanks.
 
-Scratch the part of also adding this also to pdx86/fixes, the
-troublesome commit is only present in -next.
+This indeed is much better and a great cleanup, thanks.
+
+> 
+> But, I have a few questions here:
+> 
+>> @@ -3161,9 +3106,7 @@ static void hotkey_exit(void)
+>>  	hotkey_poll_stop_sync();
+>>  	mutex_unlock(&hotkey_mutex);
+>>  #endif
+>> -
+>> -	if (hotkey_dev_attributes)
+>> -		delete_attr_set(hotkey_dev_attributes, &tpacpi_pdev->dev.kobj);
+>> +	sysfs_remove_group(&tpacpi_pdev->dev.kobj, &hotkey_attr_group);
+> 
+> Why do you have to manually add/remove these groups still?
+> 
+> A huge hint that something is going wrong is when you have to call a
+> sysfs_*() call from within a driver.  There should be proper driver_*()
+> calls for you instead to get the job done.
+> 
+> As this is a platform device, why not set the dev_groups variable in the
+> platform_driver field so that these attribute groups get added and
+> removed automatically?
+
+The thinkpad_acpi code talks to the ACPI object representing the
+ThinkPad embedded-controller and that has a lot of different sub-functionalities
+which may or may not be present depending on the model laptop as well
+as on the hw-configuration of the model.
+
+The code is organized around all the different sub-functions with there
+being a separate init + exit function for each sub-function, including
+with first detecting in the init function if the functionality is present
+(e.g. don't register SW_TABLETMODE_SW evdev reporting when the device
+is not convertible / don register a WWAN rfkill if there is no WWAN modem).
+
+Many (but not all) of the sub-functions come with a few sysfs-attributes
+under /sys/bus/platform/devices/thinkpad_acpi/ many of the separate
+function_init functions therefor call sysfs_create_group() for their own
+set of sysfs-attributes, if the function is present on the machine.
+
+> An example commit to look at that shows how this was converted for one
+> driver is 5bd08a4ae3d0 ("platform: x86: hp-wmi: convert platform driver
+> to use dev_groups").  See if that helps here as well.
+
+Right, that results in a very nice cleanup. But there all the attributes
+were always registered before the patch so throwing them together in a
+ATTRIBUTE_GROUPS(hp_wmi) makes a ton of sense.
+
+Here however we have all the separate function_init() blocks each
+conditionally adding their own attributes if the function is present,
+so that is different.
+
+Currently there already are 8 separate sysfs_create_group() calls in
+the thinkpad_acpi code, so even if we want to refactor this (I'm not
+sure that we do) then doing so would fall outside of the scope of this
+patch.
+
+Greg, since this resolves / defers your remark and since this otherwise
+is a nice cleanup I'm going to merge this version of this patch now.
 
 Regards,
 
 Hans
-
-
-
->> ---
->>  drivers/platform/x86/amd-pmc.c | 86 +++++++++++++++++-----------------
->>  1 file changed, 43 insertions(+), 43 deletions(-)
->>
->> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
->> index 1303366c31af..f185c43bbaa4 100644
->> --- a/drivers/platform/x86/amd-pmc.c
->> +++ b/drivers/platform/x86/amd-pmc.c
->> @@ -155,6 +155,49 @@ struct smu_metrics {
->>  	u64 timecondition_notmet_totaltime[SOC_SUBSYSTEM_IP_MAX];
->>  } __packed;
->>  
->> +static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
->> +{
->> +	int rc;
->> +	u32 val;
->> +
->> +	rc = amd_pmc_send_cmd(dev, 0, &val, SMU_MSG_GETSMUVERSION, 1);
->> +	if (rc)
->> +		return rc;
->> +
->> +	dev->major = (val >> 16) & GENMASK(15, 0);
->> +	dev->minor = (val >> 8) & GENMASK(7, 0);
->> +	dev->rev = (val >> 0) & GENMASK(7, 0);
->> +
->> +	dev_dbg(dev->dev, "SMU version is %u.%u.%u\n", dev->major, dev->minor, dev->rev);
->> +
->> +	return 0;
->> +}
->> +
->> +static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
->> +				 struct seq_file *s)
->> +{
->> +	u32 val;
->> +
->> +	switch (pdev->cpu_id) {
->> +	case AMD_CPU_ID_CZN:
->> +		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_CZN);
->> +		break;
->> +	case AMD_CPU_ID_YC:
->> +		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_YC);
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (dev)
->> +		dev_dbg(pdev->dev, "SMU idlemask s0i3: 0x%x\n", val);
->> +
->> +	if (s)
->> +		seq_printf(s, "SMU idlemask : 0x%x\n", val);
->> +
->> +	return 0;
->> +}
->> +
->>  #ifdef CONFIG_DEBUG_FS
->>  static int smu_fw_info_show(struct seq_file *s, void *unused)
->>  {
->> @@ -210,49 +253,6 @@ static int s0ix_stats_show(struct seq_file *s, void *unused)
->>  }
->>  DEFINE_SHOW_ATTRIBUTE(s0ix_stats);
->>  
->> -static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
->> -{
->> -	int rc;
->> -	u32 val;
->> -
->> -	rc = amd_pmc_send_cmd(dev, 0, &val, SMU_MSG_GETSMUVERSION, 1);
->> -	if (rc)
->> -		return rc;
->> -
->> -	dev->major = (val >> 16) & GENMASK(15, 0);
->> -	dev->minor = (val >> 8) & GENMASK(7, 0);
->> -	dev->rev = (val >> 0) & GENMASK(7, 0);
->> -
->> -	dev_dbg(dev->dev, "SMU version is %u.%u.%u\n", dev->major, dev->minor, dev->rev);
->> -
->> -	return 0;
->> -}
->> -
->> -static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
->> -				 struct seq_file *s)
->> -{
->> -	u32 val;
->> -
->> -	switch (pdev->cpu_id) {
->> -	case AMD_CPU_ID_CZN:
->> -		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_CZN);
->> -		break;
->> -	case AMD_CPU_ID_YC:
->> -		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_YC);
->> -		break;
->> -	default:
->> -		return -EINVAL;
->> -	}
->> -
->> -	if (dev)
->> -		dev_dbg(pdev->dev, "SMU idlemask s0i3: 0x%x\n", val);
->> -
->> -	if (s)
->> -		seq_printf(s, "SMU idlemask : 0x%x\n", val);
->> -
->> -	return 0;
->> -}
->> -
->>  static int amd_pmc_idlemask_show(struct seq_file *s, void *unused)
->>  {
->>  	struct amd_pmc_dev *dev = s->private;
->>
 
