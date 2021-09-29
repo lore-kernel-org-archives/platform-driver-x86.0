@@ -2,309 +2,161 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD46C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 22:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F016C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Sep 2021 05:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26FCE613A5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Sep 2021 22:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A24D611C7
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Sep 2021 05:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243115AbhI1WRW (ORCPT
+        id S244285AbhI2FtE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Sep 2021 18:17:22 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:58883 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S243132AbhI1WRQ (ORCPT
+        Wed, 29 Sep 2021 01:49:04 -0400
+Received: from mout.gmx.net ([212.227.15.15]:39113 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243585AbhI2FtE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Sep 2021 18:17:16 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 833113201E78;
-        Tue, 28 Sep 2021 18:15:32 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 28 Sep 2021 18:15:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=dX5R+t1s2y/VmAcZ1GbiFyiNaJ5HdQKqC8aE59zCg
-        Po=; b=HskB6o187s5XtKkIb1xR6VOzTURQykphMy2q9q+wRNWHA28sTn/MSSr9R
-        s+5dy9OklVXEzLOLITVyvEm8B8st2avqCefSNC4UZBG6QJOOo9EymnSR3CfF1G8L
-        oD6UpdeoP1570PnWp6JlCnTFaDjsW9iY2zIh8CptgL0u8k5+pLdnGQ22WivWCHzO
-        wQgT6JXGCZ4LQE6rXpQpdt58JIZkzlR0hZvX5gjpfQwBbCi6lRT19SB9yiEtVI+9
-        +hXPz7FoFy9PuXviA3hPzLKsS6I+op2xquyOA3cFx8y8lq8I9R/JqrIvJJ2zArb0
-        S3ux2pBpo/hRq51yh0+KxFFeRTjdA==
-X-ME-Sender: <xms:BJRTYeslfeyrMzrDatLeUBXgbT2LNiS9j3c1894fnXsbwxQhEUfM5A>
-    <xme:BJRTYTdj9CeAVW5wKbjoRvDtZNg_0ei5Lb6klraZcE99UpjLxUiBJ-xF6UWIxeHwT
-    whrolNc5Sx0c3h8mw>
-X-ME-Received: <xmr:BJRTYZwARrT1m2xhNxjP_SNfS1IhIAuOBPjpGFCvX9iiiNz9bHIQYXMntEpDEB5tfgI_6aUFfL_gAXJqi1AKJUi4gpk9IPx6UvyG4uQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekuddgtdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfgggtgfesthekredtredtjeenucfhrhhomhepvfhimhcu
-    vehrrgiffhhorhguuceothgtrhgrfihfohhrugesshihshhtvghmjeeirdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpeehleduhffhueegtdevhfeltdekffejheduudeugedthfffgeej
-    tefffeefveehgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehttghrrgiffhhorhgusehshihsthgvmhejiedrtghomh
-X-ME-Proxy: <xmx:BJRTYZPWDcN0se99gNlSGDwgHQHMXw0QZjBWchKBNqtiRe5ll_OMmA>
-    <xmx:BJRTYe8ydAFD7vNz360DJ04iK8FPZim_4_ailFJC--bOi0BeGzun4A>
-    <xmx:BJRTYRUGd7u9peJDJO8-zjAwbZNF_0WdZgsRiGjXtkVzBTeg5sQQnQ>
-    <xmx:BJRTYUkBpChrwBkp5qr6vEaLkVGyTpRcrPijtgMREuzkSwMGSeMHIA>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 28 Sep 2021 18:15:31 -0400 (EDT)
-From:   Tim Crawford <tcrawford@system76.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     productdev@system76.com, Jeremy Soller <jeremy@system76.com>
-Subject: [PATCH v2 1/3] platform/x86: system76_acpi: Report temperature and fan speed
-Date:   Tue, 28 Sep 2021 16:15:27 -0600
-Message-Id: <20210928221529.70176-2-tcrawford@system76.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210928221529.70176-1-tcrawford@system76.com>
-References: <20210927210629.37966-1-tcrawford@system76.com>
- <20210928221529.70176-1-tcrawford@system76.com>
+        Wed, 29 Sep 2021 01:49:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1632894430;
+        bh=ajONYP06m0vWqfCRNgyIDZRp1gSqX9yT+XQhCzz/Q64=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=TrFRpdpYMerU1fFhZ2Z5dKuXWOdBLMAdF+Rzts97OGLxENw2EGFZMd703BHz++0+9
+         VTHg6kq1nf+1Q0e2KQJcPVVlpdB3r+RNqjkTh2c91GUpvL3jAF/4SLHHsNLcqi6shZ
+         DlQKHok2+8t7EQNuDzch643l3DRg57FsL6t+Z4GI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.135.7.100] ([87.123.183.88]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MsYqv-1moDVF1Yol-00tyso; Wed, 29
+ Sep 2021 07:47:10 +0200
+Subject: Re: [PATCH 1/3] thinkpad_acpi: add support for force_discharge
+To:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?Q?Nicol=c3=b2_Piazzalunga?= <nicolopiazzalunga@gmail.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        platform-driver-x86@vger.kernel.org,
+        Nitin Joshi1 <njoshi1@lenovo.com>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     jwrdegoede@fedoraproject.org, smclt30p@gmail.com
+References: <c2504700-06e9-e7d8-80f7-de90b0b6dfb5@gmail.com>
+ <06f65bb5-eca4-c1ba-a8c2-b44f8a94c699@redhat.com>
+ <2ea2d9b7-4a15-6aea-1aff-4e1cb80a026f@lenovo.com>
+ <ac508b49-7958-3afa-25cf-416d701034e3@gmail.com>
+ <ba6698de-1700-fce9-6bca-12ee577ac09b@redhat.com>
+From:   Thomas Koch <linrunner@gmx.net>
+Message-ID: <943fa4fb-273a-0a36-4919-26c05ae4a534@gmx.net>
+Date:   Wed, 29 Sep 2021 07:47:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ba6698de-1700-fce9-6bca-12ee577ac09b@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:2J2zXW8a0V5nFqsFObuO7cK7xSoXP2ojq9Jmz/BmunYUjrph5Mp
+ XNbCO0gG1VeKBcd5wjra1xfzdQVwA0mpnQLdZqeE/zrArngrLoWdl/LNCuol4bf1aa7ISmQ
+ IbLaOf7SjQHGJY8EzJHKsnTw3+E2OmwnrtuPN93QPylG+UtjFDficn3gJ3UM8JjAEN/4HS8
+ PBY01akJznU5xDLlJb9EA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/ZscDuHHkoI=:PsVDHBAWmSWuCFdCKIePsx
+ hVqaK0JbjSdT3so+kxX4cQvNahtYlBHJ71NUod9Lv7vMPx+L8waBdbHJGH9ooQK57xJmSsgUG
+ jjUuc9qGUG4kF8lXMX5pM8Eks6/eZKas6fQUxlGOVaqXWUFYMfJ2LLLeXvCe4kxHidkCQi+mg
+ wpM17obotcwBCfKEClk27TGqok741/66ch921hKXaCfBvSw8CcXDdeQPMG++bByz00KlxUAnF
+ V86MArmCp2+G3huzcBC5BQSkxZwC6f/CGCWhlxzRHM4LLMcYkFqJgKnHcsWwmt7cQ/BPrL+0S
+ t6FmZf0NwGv+hCzdtpmoXiF2rJe8e0xBBn7rzlkEH+jBaydjUSr73eHEv/6W35o2eQHOZoUdq
+ pZO5tZFF2gShj2Cg7KH+nTmpBHJTpb8JWYCrne+cr/9kYqKMtZCxKZ4n2zzXq9E12oT88XqHb
+ vkG5j0oQdLr4kbFe7kqvonQ3xp47RAp9EAzbkNHYNTHgitPbhYNELsUeW7ORIzNk2cQY2TUnk
+ l5uVHXG9hnOQF0J8+QCB3oPZQpslYadwj2YFQO6UedKVjP2uau/AdMlJrbrzIjYIlEDYjVQhp
+ mvKbzG7YJMc4FVttirotFXRe8xZaXhYJCY7hvOj+BTQJBfrSgtim5/Z+Gw1ElFM+pnT3t7P/9
+ ypVZoPAo1u0OKHlfWbd7xddLv49uSPpt/S6lLMZ2IDdujPuggo2XSPaxcMA3kdxEPZ4uil/UT
+ JBKnoZzE0oT4jQRWxxm/7QbZJOVH/hmaPOIOs7JqG7Wkf9wwgB1+KwdaHw7tWclSWRvcasqDz
+ 1EUPcxUTYDcBO6ub0xesuyizzF3Arj/SY5aD/rU2LxTzi8DGQDLbnc6839j6hzJOaQarwM2yE
+ d3OEAbM+PK++Oy4xz4TExRZNZ0swReskQaYslTEhlfsvbn3l9Z+lvWliBvAWOT7o/FPo0jE78
+ lumxxQ00pTeaWJ68no/Thqz4zpyyjCTNhnB83tVE1Yxn/2yvNNY9sC+Ebh1GyI5dP123PjLkd
+ BLAdkbVUd02GAXkVSzFoIT0m2AoPAG63uqKZ62+6tzuAy3kjukfj3NPWYhN4VhOWiILGdE9x7
+ o3VCtqk4BmtgAk=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Jeremy Soller <jeremy@system76.com>
+Hi Hans,
 
-Add a hwmon interface to report CPU/GPU temperature and fan speed.
-sensors now reports an ACPI interface with the entries:
+On 27.09.21 17:12, Hans de Goede wrote:
+> Hi Nicol=C3=B2,
+>
+> On 9/27/21 5:00 PM, Nicol=C3=B2 Piazzalunga wrote:
+>> Hi,
+>>
+>> On 9/27/21 3:59 PM, Mark Pearson wrote:
+>>> Do let me know if there are some important use cases for these so I ca=
+n go back to the FW team and discuss supporting them properly.
+>>
+>> The important use cases are force discharge and inhibit charge.
+>> These at present are dealt with using tpacpi-bat, which relies on (out =
+of tree) acpi_call.
+>> See also your previous reply.
+>
+> I can see how those can be useful in certain circumstances.
+>
+> I can also understand how Lenovo does not want these to be
+> available by default everywhere.
+>
+> I think a good compromise would be to add a bool module option
+> which defaults to false to enable these.
 
-system76_acpi-acpi-0
-Adapter: ACPI interface
-CPU fan:        0 RPM
-GPU fan:        0 RPM
-CPU temp:     +47.0°C
-GPU temp:      +0.0°C
+ From the user perspective, I don't agree that this is a good
+compromise. Users simply want to recalibrate their battery. Having to
+set the module option beforehand is an unnecessary hurdle imho.
 
-Signed-off-by: Jeremy Soller <jeremy@system76.com>
-Signed-off-by: Tim Crawford <tcrawford@system76.com>
----
- drivers/platform/x86/system76_acpi.c | 172 ++++++++++++++++++++++++++-
- 1 file changed, 171 insertions(+), 1 deletion(-)
+Of course a module option again leads to support overhead in "user
+space". Then tlp-stat -b would have to inform the user that
+force_discharge is unfortunately not available, but he should try to set
+the module option. What would that be good for?
 
-diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
-index c14fd22ba196..11f0e42386ba 100644
---- a/drivers/platform/x86/system76_acpi.c
-+++ b/drivers/platform/x86/system76_acpi.c
-@@ -10,6 +10,8 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/leds.h>
-@@ -24,6 +26,9 @@ struct system76_data {
- 	enum led_brightness kb_brightness;
- 	enum led_brightness kb_toggle_brightness;
- 	int kb_color;
-+	struct device *therm;
-+	union acpi_object *nfan;
-+	union acpi_object *ntmp;
- };
- 
- static const struct acpi_device_id device_ids[] = {
-@@ -68,6 +73,55 @@ static int system76_get(struct system76_data *data, char *method)
- 		return -1;
- }
- 
-+// Get a System76 ACPI device value by name with index
-+static int system76_get_index(struct system76_data *data, char *method, int index)
-+{
-+	union acpi_object obj;
-+	struct acpi_object_list obj_list;
-+	acpi_handle handle;
-+	acpi_status status;
-+	unsigned long long ret = 0;
-+
-+	obj.type = ACPI_TYPE_INTEGER;
-+	obj.integer.value = index;
-+	obj_list.count = 1;
-+	obj_list.pointer = &obj;
-+
-+	handle = acpi_device_handle(data->acpi_dev);
-+	status = acpi_evaluate_integer(handle, method, &obj_list, &ret);
-+	if (ACPI_SUCCESS(status))
-+		return (int)ret;
-+	return -1;
-+}
-+
-+// Get a System76 ACPI device object by name
-+static int system76_get_object(struct system76_data *data, char *method, union acpi_object **obj)
-+{
-+	acpi_handle handle;
-+	acpi_status status;
-+	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER, NULL };
-+
-+	handle = acpi_device_handle(data->acpi_dev);
-+	status = acpi_evaluate_object(handle, method, NULL, &buf);
-+	if (ACPI_SUCCESS(status)) {
-+		*obj = (union acpi_object *)buf.pointer;
-+		return 0;
-+	}
-+
-+	return -1;
-+}
-+
-+// Get a name from a System76 ACPI device object
-+static char *system76_name(union acpi_object *obj, int index)
-+{
-+	if (obj && obj->type == ACPI_TYPE_PACKAGE && index <= obj->package.count) {
-+		if (obj->package.elements[index].type == ACPI_TYPE_STRING)
-+			return obj->package.elements[index].string.pointer;
-+	}
-+
-+	return NULL;
-+}
-+
- // Set a System76 ACPI device value by name
- static int system76_set(struct system76_data *data, char *method, int value)
- {
-@@ -270,6 +324,112 @@ static void kb_led_hotkey_color(struct system76_data *data)
- 	kb_led_notify(data);
- }
- 
-+static umode_t thermal_is_visible(const void *drvdata, enum hwmon_sensor_types type,
-+				  u32 attr, int channel)
-+{
-+	const struct system76_data *data = drvdata;
-+
-+	if (type == hwmon_fan || type == hwmon_pwm) {
-+		if (system76_name(data->nfan, channel))
-+			return 0444;
-+	} else if (type == hwmon_temp) {
-+		if (system76_name(data->ntmp, channel))
-+			return 0444;
-+	}
-+
-+	return 0;
-+}
-+
-+static int thermal_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
-+			int channel, long *val)
-+{
-+	struct system76_data *data = dev_get_drvdata(dev);
-+	int raw;
-+
-+	if (type == hwmon_fan && attr == hwmon_fan_input) {
-+		raw = system76_get_index(data, "GFAN", channel);
-+		if (raw >= 0) {
-+			*val = (long)((raw >> 8) & 0xFFFF);
-+			return 0;
-+		}
-+	} else if (type == hwmon_pwm && attr == hwmon_pwm_input) {
-+		raw = system76_get_index(data, "GFAN", channel);
-+		if (raw >= 0) {
-+			*val = (long)(raw & 0xFF);
-+			return 0;
-+		}
-+	} else if (type == hwmon_temp && attr == hwmon_temp_input) {
-+		raw = system76_get_index(data, "GTMP", channel);
-+		if (raw >= 0) {
-+			*val = (long)(raw * 1000);
-+			return 0;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int thermal_read_string(struct device *dev, enum hwmon_sensor_types type, u32 attr,
-+			       int channel, const char **str)
-+{
-+	struct system76_data *data = dev_get_drvdata(dev);
-+
-+	if (type == hwmon_fan && attr == hwmon_fan_label) {
-+		*str = system76_name(data->nfan, channel);
-+		if (*str)
-+			return 0;
-+	} else if (type == hwmon_temp && attr == hwmon_temp_label) {
-+		*str = system76_name(data->ntmp, channel);
-+		if (*str)
-+			return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct hwmon_ops thermal_ops = {
-+	.is_visible = thermal_is_visible,
-+	.read = thermal_read,
-+	.read_string = thermal_read_string,
-+};
-+
-+// Allocate up to 8 fans and temperatures
-+static const struct hwmon_channel_info *thermal_channel_info[] = {
-+	HWMON_CHANNEL_INFO(fan,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL),
-+	HWMON_CHANNEL_INFO(pwm,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT),
-+	HWMON_CHANNEL_INFO(temp,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info thermal_chip_info = {
-+	.ops = &thermal_ops,
-+	.info = thermal_channel_info,
-+};
-+
- // Handle ACPI notification
- static void system76_notify(struct acpi_device *acpi_dev, u32 event)
- {
-@@ -346,6 +506,14 @@ static int system76_add(struct acpi_device *acpi_dev)
- 			return err;
- 	}
- 
-+	system76_get_object(data, "NFAN", &data->nfan);
-+	system76_get_object(data, "NTMP", &data->ntmp);
-+
-+	data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
-+		"system76_acpi", data, &thermal_chip_info, NULL);
-+	if (IS_ERR(data->therm))
-+		return PTR_ERR(data->therm);
-+
- 	return 0;
- }
- 
-@@ -359,9 +527,11 @@ static int system76_remove(struct acpi_device *acpi_dev)
- 		device_remove_file(data->kb_led.dev, &kb_led_color_dev_attr);
- 
- 	devm_led_classdev_unregister(&acpi_dev->dev, &data->ap_led);
--
- 	devm_led_classdev_unregister(&acpi_dev->dev, &data->kb_led);
- 
-+	kfree(data->nfan);
-+	kfree(data->ntmp);
-+
- 	system76_get(data, "FINI");
- 
- 	return 0;
--- 
-2.31.1
+While I respect Mark's official opinion, I would like to counter with my
+experience from 10 years of TLP development and support:
 
+The calls for force_discharge work unmodified since the 2012 ThinkPads
+(T420/X220) on all models that also support charge thresholds.
+
+They also work reliably, otherwise the issue tracker at tpacpi-bat and
+TLP would be full of user issues.
+
+inhibit_charge is probably used rather rarely, at least no TLP user has
+asked for it.
+
+@Mark: what is Lenovo's position on the calls for charge thresholds
+already included in thinkpad_acpi? Are they also internal?
+
+>
+> Assuming Mark is ok with that, this is still blocked on agreeing
+> on standard power_supply class property names for these 2 features.
+>
+> Can you perhaps write a (RFC) patch adding proposed standardized
+> attributes for this to:
+>
+> Documentation/ABI/testing/sysfs-class-power
+>
+> As well as to the enum power_supply_property {}
+> enum in: include/linux/power_supply.h
+>
+> And to the power_supply_attrs[] array in
+> drivers/power/supply/power_supply_sysfs.c
+>
+> ?
+>
+> And then send that the Sebastian Reichel with the linux-pm
+> and platform-driver-x86 lists in the Cc?
+>
+> Regards,
+>
+> Hans
+>
+
+=2D-
+
+Freundliche Gr=C3=BC=C3=9Fe / Kind regards,
+
+Thomas Koch
+
+
+
+Mail : linrunner@gmx.net
+
+Web  : https://linrunner.de/tlp
