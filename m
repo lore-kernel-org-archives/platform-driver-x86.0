@@ -2,83 +2,109 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F90C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Sep 2021 16:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18465C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Sep 2021 08:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87C896128C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Sep 2021 16:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF11161164
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Sep 2021 08:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344357AbhI2QYG (ORCPT
+        id S1348338AbhI3Ii7 convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Sep 2021 12:24:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245575AbhI2QYG (ORCPT
+        Thu, 30 Sep 2021 04:38:59 -0400
+Received: from mga18.intel.com ([134.134.136.126]:41463 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1348048AbhI3Ii7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Sep 2021 12:24:06 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB76C06161C;
-        Wed, 29 Sep 2021 09:22:25 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id i25so13112720lfg.6;
-        Wed, 29 Sep 2021 09:22:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CcWRHT628g8uLLrXHcaoMAVejqE4eYmkHN2oa1pbhm8=;
-        b=OtcTySMa5bM6txuOtQ6WAclsYjcJ5p3+2QB9ao3AQEkUrT1SekyoveZvxQdcrKWz05
-         1wU0uLX+fBUDneV4YZGPp+783zPJSsxb81m8dLY9Pd5Eske33EK6UxZOQ9M2IudDwuqk
-         HhED0FTxqkK1qSbVuue9dEwzMo7lKYj93NVLP2qf3alSUKGVkEiywhtWsv5Rk3Oyie6n
-         tQSTF7DW/VfihFvd1nljtfXLwOgm1f6tSqxbkpZrGo8nMNCkbsZuYfdDZOGHTfL0k3Bu
-         dbgho6tGJjwUwyjHiLU/p3RrS1p8cFJS2T/4mu7hWUaaS/u/gw0InSC8RuXjClxYWyDD
-         xfUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CcWRHT628g8uLLrXHcaoMAVejqE4eYmkHN2oa1pbhm8=;
-        b=e/eJ30u32gN7r9C1PpnJcpHOh9nKV2QUhCsbdSwl2hq2B5Sz+n4q1sw4XHxXKsnw1m
-         MnCBI3q+iNZFb0k8NqqqOMPrY/cnNVJFLGoqo7E2uHhHwaq1GB5KKt19HsHy69Cmp7lA
-         Rz/zfgzAFFYU40qcQu6W7/VcHKqURGtWg154bAtSnY/koml5Y0dUJq2YHqpTJqKFEsER
-         vs/7d8kUVn9z2sPgOxsPF1tK1Pl9Cmm4OokHEpTI0L13D75NaLkHhEDRuwHHE1nQYMqs
-         cYDCdJ4O24CPRrfjtdv5y2xXXbDjs/a7p9XhzvNmiBIpvLCi+T6KcbOIcFykm0OIo6XR
-         rCdw==
-X-Gm-Message-State: AOAM533fOhTh0qYOrQc35Ta+fjivy4xNV1EnJ/BPl9KahYauF7mlwNOQ
-        38CDwf8/mx0IXgdBMu7bhE+uj/MuVGw=
-X-Google-Smtp-Source: ABdhPJwT9hESx5WAv7KuHP3/jNKV9R4zJ7va3JfHYmxp1yM5pwdEgVGj8jpRsvLeJr5APP0T4jQHkA==
-X-Received: by 2002:a2e:6f1d:: with SMTP id k29mr777666ljc.209.1632932542411;
-        Wed, 29 Sep 2021 09:22:22 -0700 (PDT)
-Received: from [130.238.84.122] (emp-84-122.eduroam.uu.se. [130.238.84.122])
-        by smtp.gmail.com with ESMTPSA id l13sm36937lfk.211.2021.09.29.09.22.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Sep 2021 09:22:21 -0700 (PDT)
-Subject: Re: [RFC] add standardized attributes for force_discharge and
- inhibit_charge
-From:   =?UTF-8?Q?Nicol=c3=b2_Piazzalunga?= <nicolopiazzalunga@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-pm@vger.kernel.org,
+        Thu, 30 Sep 2021 04:38:59 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10122"; a="212215353"
+X-IronPort-AV: E=Sophos;i="5.85,335,1624345200"; 
+   d="scan'208";a="212215353"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 01:37:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,335,1624345200"; 
+   d="scan'208";a="487241757"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga008.jf.intel.com with ESMTP; 30 Sep 2021 01:37:15 -0700
+Received: from lcsmsx602.ger.corp.intel.com (10.109.210.11) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Thu, 30 Sep 2021 01:37:14 -0700
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ LCSMSX602.ger.corp.intel.com (10.109.210.11) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Thu, 30 Sep 2021 11:37:12 +0300
+Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
+ HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.2242.012;
+ Thu, 30 Sep 2021 11:37:12 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        "Mashiah, Tamar" <tamar.mashiah@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Thomas Koch <linrunner@gmx.net>,
-        "smclt30p@gmail.com" <smclt30p@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>
-References: <21569a89-8303-8573-05fb-c2fec29983d1@gmail.com>
-Message-ID: <57e605d8-e59e-1c58-78ee-7248e97b9e90@gmail.com>
-Date:   Wed, 29 Sep 2021 18:22:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <21569a89-8303-8573-05fb-c2fec29983d1@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        <platform-driver-x86@vger.kernel.org>
+Subject: RE: [PATCH 7/7] ABI: sysfs-platform-intel-pmc: add blank lines to
+ make it valid for ReST
+Thread-Topic: [PATCH 7/7] ABI: sysfs-platform-intel-pmc: add blank lines to
+ make it valid for ReST
+Thread-Index: AQHXs5BhWDSB44ICBEuOmGxnwUE14Ku8RYTw
+Date:   Thu, 30 Sep 2021 08:37:12 +0000
+Message-ID: <b21707f01a3646bf929db9c9df3653d7@intel.com>
+References: <cover.1632740376.git.mchehab+huawei@kernel.org>
+ <3673e1a255ad4100c933af215b60d68ba126f820.1632740376.git.mchehab+huawei@kernel.org>
+In-Reply-To: <3673e1a255ad4100c933af215b60d68ba126f820.1632740376.git.mchehab+huawei@kernel.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [163.33.253.164]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+> 
+> The ReST format requires blank lines before/after identation changes, for it
+> to properly detect lists.
+> 
+> Fixes: ee7abc105e2b ("platform/x86: intel_pmc_core: export platform global
+> reset bits via etr3 sysfs file")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Ack.
+> ---
+> 
+> See [PATCH 0/7] at:
+> https://lore.kernel.org/all/cover.1632740376.git.mchehab+huawei@kernel.o
+> rg/T/#t
+> 
+>  Documentation/ABI/testing/sysfs-platform-intel-pmc | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> index ef199af75ab0..f31d59b21f9b 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> +++ b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> @@ -11,8 +11,10 @@ Description:
+>  		to take effect.
+> 
+>  		Display global reset setting bits for PMC.
+> +
+>  			* bit 31 - global reset is locked
+>  			* bit 20 - global reset is set
+> +
+>  		Writing bit 20 value to the etr3 will induce
+>  		a platform "global reset" upon consequent platform reset,
+>  		in case the register is not locked.
+> --
+> 2.31.1
 
-you are right, I swapped 1 and 0 there of course, my mistake.
-
-Nicolò
