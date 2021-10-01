@@ -2,109 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18465C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Sep 2021 08:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F91C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 01:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF11161164
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Sep 2021 08:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C832619E2
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 01:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348338AbhI3Ii7 convert rfc822-to-8bit (ORCPT
+        id S1351321AbhJABaC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 30 Sep 2021 04:38:59 -0400
-Received: from mga18.intel.com ([134.134.136.126]:41463 "EHLO mga18.intel.com"
+        Thu, 30 Sep 2021 21:30:02 -0400
+Received: from mga03.intel.com ([134.134.136.65]:32272 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1348048AbhI3Ii7 (ORCPT
+        id S1351264AbhJABaA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Sep 2021 04:38:59 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10122"; a="212215353"
-X-IronPort-AV: E=Sophos;i="5.85,335,1624345200"; 
-   d="scan'208";a="212215353"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 01:37:15 -0700
+        Thu, 30 Sep 2021 21:30:00 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="225407529"
+X-IronPort-AV: E=Sophos;i="5.85,337,1624345200"; 
+   d="scan'208";a="225407529"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 18:28:17 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,335,1624345200"; 
-   d="scan'208";a="487241757"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga008.jf.intel.com with ESMTP; 30 Sep 2021 01:37:15 -0700
-Received: from lcsmsx602.ger.corp.intel.com (10.109.210.11) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12; Thu, 30 Sep 2021 01:37:14 -0700
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- LCSMSX602.ger.corp.intel.com (10.109.210.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12; Thu, 30 Sep 2021 11:37:12 +0300
-Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
- HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.2242.012;
- Thu, 30 Sep 2021 11:37:12 +0300
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Jonathan Corbet <corbet@lwn.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        "Mashiah, Tamar" <tamar.mashiah@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Subject: RE: [PATCH 7/7] ABI: sysfs-platform-intel-pmc: add blank lines to
- make it valid for ReST
-Thread-Topic: [PATCH 7/7] ABI: sysfs-platform-intel-pmc: add blank lines to
- make it valid for ReST
-Thread-Index: AQHXs5BhWDSB44ICBEuOmGxnwUE14Ku8RYTw
-Date:   Thu, 30 Sep 2021 08:37:12 +0000
-Message-ID: <b21707f01a3646bf929db9c9df3653d7@intel.com>
-References: <cover.1632740376.git.mchehab+huawei@kernel.org>
- <3673e1a255ad4100c933af215b60d68ba126f820.1632740376.git.mchehab+huawei@kernel.org>
-In-Reply-To: <3673e1a255ad4100c933af215b60d68ba126f820.1632740376.git.mchehab+huawei@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [163.33.253.164]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+X-IronPort-AV: E=Sophos;i="5.85,337,1624345200"; 
+   d="scan'208";a="457651685"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 30 Sep 2021 18:28:16 -0700
+Received: from debox1-server.jf.intel.com (debox1-server.jf.intel.com [10.54.39.121])
+        by linux.intel.com (Postfix) with ESMTP id D7AEA580A31;
+        Thu, 30 Sep 2021 18:28:16 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
+        bhelgaas@google.com, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH 4/5] Documentation: Update ioctl-number.rst for Intel Software Defined Silicon interface
+Date:   Thu, 30 Sep 2021 18:28:14 -0700
+Message-Id: <20211001012815.1999501-5-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211001012815.1999501-1-david.e.box@linux.intel.com>
+References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-> 
-> The ReST format requires blank lines before/after identation changes, for it
-> to properly detect lists.
-> 
-> Fixes: ee7abc105e2b ("platform/x86: intel_pmc_core: export platform global
-> reset bits via etr3 sysfs file")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Ack.
-> ---
-> 
-> See [PATCH 0/7] at:
-> https://lore.kernel.org/all/cover.1632740376.git.mchehab+huawei@kernel.o
-> rg/T/#t
-> 
->  Documentation/ABI/testing/sysfs-platform-intel-pmc | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-intel-pmc
-> b/Documentation/ABI/testing/sysfs-platform-intel-pmc
-> index ef199af75ab0..f31d59b21f9b 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-intel-pmc
-> +++ b/Documentation/ABI/testing/sysfs-platform-intel-pmc
-> @@ -11,8 +11,10 @@ Description:
->  		to take effect.
-> 
->  		Display global reset setting bits for PMC.
-> +
->  			* bit 31 - global reset is locked
->  			* bit 20 - global reset is set
-> +
->  		Writing bit 20 value to the etr3 will induce
->  		a platform "global reset" upon consequent platform reset,
->  		in case the register is not locked.
-> --
-> 2.31.1
+Reserve ioctl number and range for the Intel Software Defined Silicon
+driver.
+
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+
+V1:	No change from previous submission
+
+ Documentation/userspace-api/ioctl/ioctl-number.rst | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index 2e8134059c87..2a6e92639cdb 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -363,6 +363,7 @@ Code  Seq#    Include File                                           Comments
+ 0xDB  00-0F  drivers/char/mwave/mwavepub.h
+ 0xDD  00-3F                                                          ZFCP device driver see drivers/s390/scsi/
+                                                                      <mailto:aherrman@de.ibm.com>
++0xDF  all    linux/isdsi_if.h
+ 0xE5  00-3F  linux/fuse.h
+ 0xEC  00-01  drivers/platform/chrome/cros_ec_dev.h                   ChromeOS EC driver
+ 0xF3  00-3F  drivers/usb/misc/sisusbvga/sisusb.h                     sisfb (in development)
+-- 
+2.25.1
 
