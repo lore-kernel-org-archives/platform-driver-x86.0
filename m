@@ -2,128 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC02C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 16:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CAEC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 20:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 459B961A40
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 16:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E9461ADF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 20:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231946AbhJAQKE (ORCPT
+        id S1355491AbhJAUpQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 1 Oct 2021 12:10:04 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:50429 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231675AbhJAQKE (ORCPT
+        Fri, 1 Oct 2021 16:45:16 -0400
+Received: from mga12.intel.com ([192.55.52.136]:8613 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1355475AbhJAUpN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 1 Oct 2021 12:10:04 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id E3D6432023A3;
-        Fri,  1 Oct 2021 12:08:19 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 01 Oct 2021 12:08:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=b69Pkba++yGYo7ZiQMmCRh47E3KbZp/+PNG1bWff/Cc=; b=YLElXbsw
-        JYnIfevr3M4Or16b6IdijmCCy0MYSreksGPok0pkQsjI/8M1i73vsQIEZJid2q3g
-        CdKQwa+Rd9NDhy4j+1ylg/k3dxYKlaULwx5vNSs/sm57uI0DRv8gLL7hXLVP4WuZ
-        YCq7n2JVbvS9e+RttZ+Yet9x2BjwXHtFKAoybUgQuNQ/HDh+abiVuXjfAoTCG0jx
-        B6CCYRj5hGD5L8HXwbI82Xiz78C37vJQglDmGTvkx0pwpBqZ4oDvmxSYVagkC92D
-        2lXHlu+GXkj89Gq09dc48aRqGZvDwmg+NXv+p9putQ04fkjB0r+T3oFFYreRFT6T
-        h644rpjdGbPAaA==
-X-ME-Sender: <xms:czJXYe6WcHcmwC0PpeKwUu3n3jqmINltTCoCIvwldXg7dvlJWHMVnA>
-    <xme:czJXYX4z6NFfMjgwucY9L9JD8g_xobauT2bfPu6iqbcucghu4gSTJIsxk7Ol73bet
-    9ZvyTv3FRAK-XAStA>
-X-ME-Received: <xmr:czJXYdd4qbHFPd16TCsPTPUzd-EEmVJV5wfBlSuDCrQH2JHiFZ6bBjuUaaW2O3EUihhDZuf_dC7-DuPHQznXIYfUzFGG2G4OUi1Xwq8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekiedgledvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomhepvfhimhcuvehrrgiffhhorhguuceothgtrhgrfihfohhruges
-    shihshhtvghmjeeirdgtohhmqeenucggtffrrghtthgvrhhnpeeifeelvdfgueeiteefhe
-    eghfeiudelleffgeetkeejudeugfekueehkefhhefftdenucevlhhushhtvghrufhiiigv
-    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehttghrrgiffhhorhgusehshihsthgvmh
-    ejiedrtghomh
-X-ME-Proxy: <xmx:czJXYbIJ0QSkqi_ug03SnqKpC1Gmy-Jfo7rlkf2bOQ6rj2tEnsWYNA>
-    <xmx:czJXYSLREmSsh43bq6NAc7vVzUXavY_TQc7tJxeYif3e_EBHoOw4tg>
-    <xmx:czJXYcwzJkw1a3RepBnrSNKsQP4WdPGMOS7z5t_vJZ0NoFJuw0zs2A>
-    <xmx:czJXYcw5RlGE8wrqm7yLQxl4rkqIHjIBZc-irNI38uRuCJGeGA56yw>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 1 Oct 2021 12:08:19 -0400 (EDT)
-From:   Tim Crawford <tcrawford@system76.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     productdev@system76.com
-Subject: [PATCH 4/4] platform/x86: system76_acpi: Use DEV_ATTR macro for kb_led_color
-Date:   Fri,  1 Oct 2021 10:08:12 -0600
-Message-Id: <20211001160812.22535-5-tcrawford@system76.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211001160812.22535-1-tcrawford@system76.com>
-References: <20211001160812.22535-1-tcrawford@system76.com>
+        Fri, 1 Oct 2021 16:45:13 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10124"; a="205059066"
+X-IronPort-AV: E=Sophos;i="5.85,340,1624345200"; 
+   d="scan'208";a="205059066"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2021 13:43:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,340,1624345200"; 
+   d="scan'208";a="619392045"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Oct 2021 13:43:24 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
+        by linux.intel.com (Postfix) with ESMTP id 846A6580689;
+        Fri,  1 Oct 2021 13:43:24 -0700 (PDT)
+Message-ID: <f559b543ce28a3333e6690ba217758a08ffadf15.camel@linux.intel.com>
+Subject: Re: [PATCH 5/5] platform/x86: Add Intel Software Defined Silicon
+ driver
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
+        bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Date:   Fri, 01 Oct 2021 13:43:24 -0700
+In-Reply-To: <YVbwgkncsQtWuh/k@kroah.com>
+References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
+         <20211001012815.1999501-6-david.e.box@linux.intel.com>
+         <YVa46eU1VX7CM+Xd@kroah.com>
+         <45b6454a3421ac064dff3ba159e02985d3e55440.camel@linux.intel.com>
+         <YVbwgkncsQtWuh/k@kroah.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Update kb_led_color to use the attr macro instead of manually making the
-struct. While touching it, also change its show method to use
-sysfs_emit() instead of sprintf().
+On Fri, 2021-10-01 at 13:26 +0200, Greg KH wrote:
+> On Fri, Oct 01, 2021 at 04:13:58AM -0700, David E. Box wrote:
+> > On Fri, 2021-10-01 at 09:29 +0200, Greg KH wrote:
+> > > On Thu, Sep 30, 2021 at 06:28:15PM -0700, David E. Box wrote:
+> > > > +static long sdsi_device_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+> > > > +{
+> > > > +       struct miscdevice *miscdev = file->private_data;
+> > > > +       struct sdsi_priv *priv = to_sdsi_priv(miscdev);
+> > > > +       void __user *argp = (void __user *)arg;
+> > > > +       long ret = -EINVAL;
+> > > > +
+> > > > +       if (!priv->dev_present)
+> > > > +               return -ENODEV;
+> > > > +
+> > > > +       if (!priv->sdsi_enabled)
+> > > > +               return -EPERM;
+> > > > +
+> > > > +       if (cmd == SDSI_IF_READ_STATE)
+> > > > +               return sdsi_if_read_state_cert(priv, argp);
+> > > > +
+> > > > +       mutex_lock(&priv->akc_lock);
+> > > > +       switch (cmd) {
+> > > > +       case SDSI_IF_PROVISION_AKC:
+> > > > +               /*
+> > > > +                * While writing an authentication certificate disallow other openers
+> > > > +                * from using AKC or CAP.
+> > > > +                */
+> > > > +               if (!priv->akc_owner)
+> > > > +                       priv->akc_owner = file;
+> > > > +
+> > > > +               if (priv->akc_owner != file) {
+> > > 
+> > > Please explain how this test would ever trigger and how you tested it?
+> > > 
+> > > What exactly are you trying to protect from here?  If userspace has your
+> > > file descriptor, it can do whatever it wants, don't try to be smarter
+> > > than it as you will never win.
+> > > 
+> > > And why are you using ioctls at all here?  As you are just
+> > > reading/writing to the hardware directly, why not just use a binary
+> > > sysfs file to be that pipe?  What requires an ioctl at all?
+> > 
+> > So an original internal version of this did use binary attributes. But there was concern during
+> > review that a flow, particularly when doing the two write operations, could not be handled
+> > atomically while exposed as separate files. Above is the attempt to handle the situation in the
+> > ioctl. That is, whichever opener performs AKC write first would lock out all other openers from
+> > performing any write until that file is closed. This is to avoid interfering with that process,
+> > should the opener also decide to perform a CAP operation.
+> 
+> Unfortunately, your code here does not prevent that at all, so your
+> moving off of a binary sysfs attribute changed nothing.
+> 
+> You can "prevent" this from happening just as easily through a sysfs
+> attribute as you can a character device node.
+> 
+> > There may be future commands requiring RW ioctls as well.
+> 
+> How am I or anyone else supposed to know that?  We write code and review
+> it for _today_, not what might be sometime in the future someday.  As
+> that will be dealt with when it actually happens.
 
-Signed-off-by: Tim Crawford <tcrawford@system76.com>
----
- drivers/platform/x86/system76_acpi.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+Sure. Thanks for the insightful review. I'll take your comments back and submit with the reviewed-by
+tag. Will probably switch back to sysfs.
 
-diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
-index 5c525c242211..dd00eb2663d6 100644
---- a/drivers/platform/x86/system76_acpi.c
-+++ b/drivers/platform/x86/system76_acpi.c
-@@ -354,7 +354,7 @@ static ssize_t kb_led_color_show(
- 
- 	led = (struct led_classdev *)dev->driver_data;
- 	data = container_of(led, struct system76_data, kb_led);
--	return sprintf(buf, "%06X\n", data->kb_color);
-+	return sysfs_emit(buf, "%06X\n", data->kb_color);
- }
- 
- // Set the keyboard LED color
-@@ -382,14 +382,7 @@ static ssize_t kb_led_color_store(
- 	return size;
- }
- 
--static const struct device_attribute kb_led_color_dev_attr = {
--	.attr = {
--		.name = "color",
--		.mode = 0644,
--	},
--	.show = kb_led_color_show,
--	.store = kb_led_color_store,
--};
-+static DEVICE_ATTR_RW(kb_led_color);
- 
- // Notify that the keyboard LED was changed by hardware
- static void kb_led_notify(struct system76_data *data)
-@@ -669,10 +662,7 @@ static int system76_add(struct acpi_device *acpi_dev)
- 		return err;
- 
- 	if (data->kb_color >= 0) {
--		err = device_create_file(
--			data->kb_led.dev,
--			&kb_led_color_dev_attr
--		);
-+		err = device_create_file(data->kb_led.dev, &dev_attr_kb_led_color);
- 		if (err)
- 			return err;
- 	}
-@@ -716,7 +706,7 @@ static int system76_remove(struct acpi_device *acpi_dev)
- 	system76_battery_exit();
- 
- 	if (data->kb_color >= 0)
--		device_remove_file(data->kb_led.dev, &kb_led_color_dev_attr);
-+		device_remove_file(data->kb_led.dev, &dev_attr_kb_led_color);
- 
- 	devm_led_classdev_unregister(&acpi_dev->dev, &data->ap_led);
- 	devm_led_classdev_unregister(&acpi_dev->dev, &data->kb_led);
--- 
-2.31.1
+David
+
+> 
+> greg k-h
+
 
