@@ -2,112 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3F2C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 11:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E3EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 16:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D74761A8D
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 11:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A8861452
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 16:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353878AbhJALba (ORCPT
+        id S231767AbhJAQJ7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 1 Oct 2021 07:31:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1353865AbhJALba (ORCPT
+        Fri, 1 Oct 2021 12:09:59 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:46983 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231675AbhJAQJ7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 1 Oct 2021 07:31:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 20BE360EBD;
-        Fri,  1 Oct 2021 11:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1633087785;
-        bh=AOesFciQFfqDQGdIEvwsqkxbyxwJeoyuNHwKVFmlXTw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CEFUt//w51BGtH8mXtgvC3OzuQ1ev0Lx2QYUAumKwZPK8Gc8Bj44+kbreBUoKmM96
-         6GAXqe/0X9FQx+gZwzCSCAW4839Om4mmzyHBzGPmjEgkysUb/cT4Gv9ikI+/l4AlRA
-         HIaztO5U58IOPrUn5s8DY4qnvwZ6bTdCLhc9orOw=
-Date:   Fri, 1 Oct 2021 13:29:42 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
-        bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
-        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 5/5] platform/x86: Add Intel Software Defined Silicon
- driver
-Message-ID: <YVbxJjjn4I97nnmv@kroah.com>
-References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
- <20211001012815.1999501-6-david.e.box@linux.intel.com>
- <YVa1aiTqS6Ik5cO1@kroah.com>
- <d988a4b8698b20a151680cc98a6b7434efbaea55.camel@linux.intel.com>
+        Fri, 1 Oct 2021 12:09:59 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 2FB8F3202363;
+        Fri,  1 Oct 2021 12:08:14 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Fri, 01 Oct 2021 12:08:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:message-id:mime-version:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=NmlT8C
+        55bBdyHU6Kx0FCIPHyAL1kulaGfxQ/tz8o00c=; b=fh09c2gU/YiGJVR/Kd/VBs
+        WHCghNjz5DHHlmc2T/XwDquWw0Xflhfyi/WskWQm23Biz5xSlCrsnOD6opMYU+iU
+        YF1qVBKsSkcWRTDjywzr+kf5wDbe9jTNI45mCFxRSzpoqv74OrfqDg7ZeCBy5o1q
+        pZDvtcGaHwzWLhbrJP+JBQfWoplPo+uX9b5T8NttQsQywH+MJwLZHWmgkAMZpo4s
+        KNwqI0jySKTRzDdiaJdG0LKFmIypLoOvoiWBscQ+EiF4mGQyl+h11t7ARhJyLpz3
+        iEcl4jckh+/13ppc8m+cBdf1fzpnjDwHHenGW3HIUygJ92U7SamVwR/cjC2V/bsQ
+        ==
+X-ME-Sender: <xms:bTJXYV7f_vMuOnnZaaNnyfPuomT5FvUJob0T3G-Ny9iWYZvYfJ2z_w>
+    <xme:bTJXYS6r0ZZRdcBJDCw7HeCswnMMIH0o8YFkanctxi1zpkHVIAhb0Uy9ptKFZ9b-F
+    u1AS9hQlsQ9xKe0yw>
+X-ME-Received: <xmr:bTJXYceO2UATMReDhftRFb34Ct7Lrgpe5kkd4worT23R00DFLXSVOxzD52hZTDZk2wE_TA54kzsNw5w8uKzc4hG-bc_lbyDmYpN8rfY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekiedgleefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofggtgfgsehtkeertd
+    ertdejnecuhfhrohhmpefvihhmucevrhgrfihfohhrugcuoehttghrrgiffhhorhgusehs
+    hihsthgvmhejiedrtghomheqnecuggftrfgrthhtvghrnhepvdeiueeujeeltdffieeive
+    eivdduudeftefhtdfgkeelledtgffhgeetueeguefhnecuffhomhgrihhnpehgihhthhhu
+    sgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehttghrrgiffhhorhgusehshihsthgvmhejiedrtghomh
+X-ME-Proxy: <xmx:bTJXYeIAQIlP6TbC5ydOwReo0Tp_JuNGFFi19b4gCShtO1XfZTNqDQ>
+    <xmx:bTJXYZIwp_nud7b4bjzYKHuvPjB7aeLa0dGqMf4_vSU8S4QFUfQZ0g>
+    <xmx:bTJXYXx2UWUWkVizENNJG2O4bFl3OYM-srEfE_j1B837ahjSstGr9A>
+    <xmx:bTJXYbwdyd-_6szwjhxnuxPdkCbOBK5yaNR1aKzOpO6tfc6K2JbKbQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 1 Oct 2021 12:08:13 -0400 (EDT)
+From:   Tim Crawford <tcrawford@system76.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     productdev@system76.com
+Subject: [PATCH v3 0/4] platform/x86: system76_acpi: Sync DKMS module changes
+Date:   Fri,  1 Oct 2021 10:08:08 -0600
+Message-Id: <20211001160812.22535-1-tcrawford@system76.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d988a4b8698b20a151680cc98a6b7434efbaea55.camel@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Oct 01, 2021 at 03:38:23AM -0700, David E. Box wrote:
-> On Fri, 2021-10-01 at 09:14 +0200, Greg KH wrote:
-> > On Thu, Sep 30, 2021 at 06:28:15PM -0700, David E. Box wrote:
-> > > +static int sdsi_device_open(struct inode *inode, struct file *file)
-> > > +{
-> > > +       struct miscdevice *miscdev = file->private_data;
-> > > +
-> > > +       get_device(miscdev->this_device);
-> > 
-> > Why do you think this is needed?  Shouldn't the misc core handle all of
-> > this for you already?
-> > 
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > > +static int sdsi_device_release(struct inode *inode, struct file *file)
-> > > +{
-> > > +
-> > > +       struct miscdevice *miscdev = file->private_data;
-> > > +       struct sdsi_priv *priv = to_sdsi_priv(miscdev);
-> > > +
-> > > +       if (priv->akc_owner == file)
-> > > +               priv->akc_owner = NULL;
-> > 
-> > Why is this needed?
-> > 
-> > > +
-> > > +       put_device(miscdev->this_device);
-> > 
-> > I see this matches the open call, but if you do not have this in the
-> > open call, is it needed here as well?
-> > 
-> > > +       ret = devm_add_action_or_reset(priv->miscdev.this_device, sdsi_miscdev_remove, priv);
-> > > +       if (ret)
-> > > +               goto deregister_misc;
-> > 
-> > I think this is all you need to clean up your device memory, not the
-> > get/put device in open/release, right?
-> 
-> It does clean up the memory, but it does so immediately after the device has been unregistered, even
-> if a file is open. The get/put ensures that if files are open, the memory isn't cleaned up until the
-> files are closed.
-> 
-> I can show that this happens without the get/put,
-> 
-> 	open()
-> 	unbind device -> devm action called -> kfree(priv)
-> 	ioctl() -> priv accessed
-> 
-> but it doesn't blow up. I guess because the former location of priv is accessible by container_of on
-> the miscdev. But that memory was freed right?
+Sync the in-tree system76_acpi module with changes made to the DKMS
+module [1]. This introduces/exposes new functionality implemented in the
+open source BIOS and EC firmware for System76 laptops.
 
-You are dealing with two different structures with two different
-lifecycles and reference counts.  Yes, you can kind of try to tie them
-together here, but really, that way lies madness.  Why not just drop the
-misc device entirely and only use the struct device that the kernel
-created for you?  That would make everything much simpler.
+v3:
+- Made use of DEV_ATTR macro for kb_led_color
+- Used sysfs_emit() instead of sprintf() for kb_led_color
+v2:
+- Used input_set_capability() instead of setting bits directly in patch 2/3
+- Used sysfs_emit() instead of sprintf() in patch 3/3
+- Made use of device_{add,remove}_groups() in patch 3/3
 
-thanks,
+[1]: https://github.com/pop-os/system76-acpi-dkms
 
-greg k-h
+Jeremy Soller (2):
+  platform/x86: system76_acpi: Report temperature and fan speed
+  platform/x86: system76_acpi: Replace Fn+F2 function for OLED models
+
+Tim Crawford (2):
+  platform/x86: system76_acpi: Add battery charging thresholds
+  platform/x86: system76_acpi: Use DEV_ATTR macro for kb_led_color
+
+ drivers/platform/x86/system76_acpi.c | 382 +++++++++++++++++++++++++--
+ 1 file changed, 367 insertions(+), 15 deletions(-)
+
+-- 
+2.31.1
+
