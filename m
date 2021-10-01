@@ -2,127 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CAEC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 20:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686E7C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 21:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9E9461ADF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 20:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D81B61A08
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Oct 2021 21:48:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355491AbhJAUpQ (ORCPT
+        id S1354739AbhJAVt4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 1 Oct 2021 16:45:16 -0400
-Received: from mga12.intel.com ([192.55.52.136]:8613 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1355475AbhJAUpN (ORCPT
+        Fri, 1 Oct 2021 17:49:56 -0400
+Received: from mail-0301.mail-europe.com ([188.165.51.139]:47356 "EHLO
+        mail-0301.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232171AbhJAVtz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 1 Oct 2021 16:45:13 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10124"; a="205059066"
-X-IronPort-AV: E=Sophos;i="5.85,340,1624345200"; 
-   d="scan'208";a="205059066"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2021 13:43:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,340,1624345200"; 
-   d="scan'208";a="619392045"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 01 Oct 2021 13:43:24 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
-        by linux.intel.com (Postfix) with ESMTP id 846A6580689;
-        Fri,  1 Oct 2021 13:43:24 -0700 (PDT)
-Message-ID: <f559b543ce28a3333e6690ba217758a08ffadf15.camel@linux.intel.com>
-Subject: Re: [PATCH 5/5] platform/x86: Add Intel Software Defined Silicon
- driver
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
-        bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
-        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Date:   Fri, 01 Oct 2021 13:43:24 -0700
-In-Reply-To: <YVbwgkncsQtWuh/k@kroah.com>
-References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
-         <20211001012815.1999501-6-david.e.box@linux.intel.com>
-         <YVa46eU1VX7CM+Xd@kroah.com>
-         <45b6454a3421ac064dff3ba159e02985d3e55440.camel@linux.intel.com>
-         <YVbwgkncsQtWuh/k@kroah.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        Fri, 1 Oct 2021 17:49:55 -0400
+Date:   Fri, 01 Oct 2021 21:48:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1633124888;
+        bh=qA7bBeWMO0h2thjuzvWEc37L47eUBUZJjg0juLIHSzw=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=gdU4913Ckevdb/5QLJn5bCR8y5hiEnWbQKHRniu/R9r/g/05TDRnMmAdClfKwAkZ5
+         jg1eXeMOQJyZVlTU71eDdRTR8DZ8ziBaD7h7IfEvTuft2v64pca8V0AEhd4LL6Ozr1
+         ARdMtiU8iUnVATp+pDK1ZVgNplLXW8pzvv4QuHmU=
+To:     Tim Crawford <tcrawford@system76.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, productdev@system76.com
+Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: Re: [PATCH 4/4] platform/x86: system76_acpi: Use DEV_ATTR macro for kb_led_color
+Message-ID: <uQcwLg-hios4UuqJwLCjTmjF93N2Dq16wuhUglnkBzzC3_8J-H_5sEtcObhUVankeJN5FZGqB4UOFUIWKvn3p-RkvxKTAC716S5blzdMd6E=@protonmail.com>
+In-Reply-To: <20211001160812.22535-5-tcrawford@system76.com>
+References: <20211001160812.22535-1-tcrawford@system76.com> <20211001160812.22535-5-tcrawford@system76.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 2021-10-01 at 13:26 +0200, Greg KH wrote:
-> On Fri, Oct 01, 2021 at 04:13:58AM -0700, David E. Box wrote:
-> > On Fri, 2021-10-01 at 09:29 +0200, Greg KH wrote:
-> > > On Thu, Sep 30, 2021 at 06:28:15PM -0700, David E. Box wrote:
-> > > > +static long sdsi_device_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> > > > +{
-> > > > +       struct miscdevice *miscdev = file->private_data;
-> > > > +       struct sdsi_priv *priv = to_sdsi_priv(miscdev);
-> > > > +       void __user *argp = (void __user *)arg;
-> > > > +       long ret = -EINVAL;
-> > > > +
-> > > > +       if (!priv->dev_present)
-> > > > +               return -ENODEV;
-> > > > +
-> > > > +       if (!priv->sdsi_enabled)
-> > > > +               return -EPERM;
-> > > > +
-> > > > +       if (cmd == SDSI_IF_READ_STATE)
-> > > > +               return sdsi_if_read_state_cert(priv, argp);
-> > > > +
-> > > > +       mutex_lock(&priv->akc_lock);
-> > > > +       switch (cmd) {
-> > > > +       case SDSI_IF_PROVISION_AKC:
-> > > > +               /*
-> > > > +                * While writing an authentication certificate disallow other openers
-> > > > +                * from using AKC or CAP.
-> > > > +                */
-> > > > +               if (!priv->akc_owner)
-> > > > +                       priv->akc_owner = file;
-> > > > +
-> > > > +               if (priv->akc_owner != file) {
-> > > 
-> > > Please explain how this test would ever trigger and how you tested it?
-> > > 
-> > > What exactly are you trying to protect from here?  If userspace has your
-> > > file descriptor, it can do whatever it wants, don't try to be smarter
-> > > than it as you will never win.
-> > > 
-> > > And why are you using ioctls at all here?  As you are just
-> > > reading/writing to the hardware directly, why not just use a binary
-> > > sysfs file to be that pipe?  What requires an ioctl at all?
-> > 
-> > So an original internal version of this did use binary attributes. But there was concern during
-> > review that a flow, particularly when doing the two write operations, could not be handled
-> > atomically while exposed as separate files. Above is the attempt to handle the situation in the
-> > ioctl. That is, whichever opener performs AKC write first would lock out all other openers from
-> > performing any write until that file is closed. This is to avoid interfering with that process,
-> > should the opener also decide to perform a CAP operation.
-> 
-> Unfortunately, your code here does not prevent that at all, so your
-> moving off of a binary sysfs attribute changed nothing.
-> 
-> You can "prevent" this from happening just as easily through a sysfs
-> attribute as you can a character device node.
-> 
-> > There may be future commands requiring RW ioctls as well.
-> 
-> How am I or anyone else supposed to know that?  We write code and review
-> it for _today_, not what might be sometime in the future someday.  As
-> that will be dealt with when it actually happens.
-
-Sure. Thanks for the insightful review. I'll take your comments back and submit with the reviewed-by
-tag. Will probably switch back to sysfs.
-
-David
-
-> 
-> greg k-h
+Hi
 
 
+2021. okt=C3=B3ber 1., p=C3=A9ntek 18:08 keltez=C3=A9ssel, Tim Crawford =
+=C3=ADrta:
+
+> Update kb_led_color to use the attr macro instead of manually making the
+> struct. While touching it, also change its show method to use
+> sysfs_emit() instead of sprintf().
+>
+
+If you're already touching this part of the code, you should probably creat=
+e
+an attribute group and set the `groups` field of the led_classdev struct
+instead of manually adding the attribute.
+
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
+
+
+> Signed-off-by: Tim Crawford <tcrawford@system76.com>
+> ---
+>  drivers/platform/x86/system76_acpi.c | 18 ++++--------------
+>  1 file changed, 4 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/=
+system76_acpi.c
+> index 5c525c242211..dd00eb2663d6 100644
+> --- a/drivers/platform/x86/system76_acpi.c
+> +++ b/drivers/platform/x86/system76_acpi.c
+> @@ -354,7 +354,7 @@ static ssize_t kb_led_color_show(
+>
+>  =09led =3D (struct led_classdev *)dev->driver_data;
+>  =09data =3D container_of(led, struct system76_data, kb_led);
+> -=09return sprintf(buf, "%06X\n", data->kb_color);
+> +=09return sysfs_emit(buf, "%06X\n", data->kb_color);
+>  }
+>
+>  // Set the keyboard LED color
+> @@ -382,14 +382,7 @@ static ssize_t kb_led_color_store(
+>  =09return size;
+>  }
+>
+> -static const struct device_attribute kb_led_color_dev_attr =3D {
+> -=09.attr =3D {
+> -=09=09.name =3D "color",
+> -=09=09.mode =3D 0644,
+> -=09},
+> -=09.show =3D kb_led_color_show,
+> -=09.store =3D kb_led_color_store,
+> -};
+> +static DEVICE_ATTR_RW(kb_led_color);
+>
+>  // Notify that the keyboard LED was changed by hardware
+>  static void kb_led_notify(struct system76_data *data)
+> @@ -669,10 +662,7 @@ static int system76_add(struct acpi_device *acpi_dev=
+)
+>  =09=09return err;
+>
+>  =09if (data->kb_color >=3D 0) {
+> -=09=09err =3D device_create_file(
+> -=09=09=09data->kb_led.dev,
+> -=09=09=09&kb_led_color_dev_attr
+> -=09=09);
+> +=09=09err =3D device_create_file(data->kb_led.dev, &dev_attr_kb_led_colo=
+r);
+>  =09=09if (err)
+>  =09=09=09return err;
+>  =09}
+> @@ -716,7 +706,7 @@ static int system76_remove(struct acpi_device *acpi_d=
+ev)
+>  =09system76_battery_exit();
+>
+>  =09if (data->kb_color >=3D 0)
+> -=09=09device_remove_file(data->kb_led.dev, &kb_led_color_dev_attr);
+> +=09=09device_remove_file(data->kb_led.dev, &dev_attr_kb_led_color);
+>
+>  =09devm_led_classdev_unregister(&acpi_dev->dev, &data->ap_led);
+>  =09devm_led_classdev_unregister(&acpi_dev->dev, &data->kb_led);
+> --
+> 2.31.1
