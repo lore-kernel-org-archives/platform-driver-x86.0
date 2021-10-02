@@ -2,112 +2,166 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE83C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 04:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055CBC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 06:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9243361A0A
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 04:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D566861AAD
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 06:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230248AbhJBEU6 (ORCPT
+        id S232369AbhJBGX4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 2 Oct 2021 00:20:58 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:54897 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229520AbhJBEU5 (ORCPT
+        Sat, 2 Oct 2021 02:23:56 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:47867 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232082AbhJBGX4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Oct 2021 00:20:57 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E3135580F81;
-        Sat,  2 Oct 2021 00:19:11 -0400 (EDT)
+        Sat, 2 Oct 2021 02:23:56 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 76F163200974;
+        Sat,  2 Oct 2021 02:22:10 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sat, 02 Oct 2021 00:19:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nakato.io; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=XliFWXIjL29k8
-        nU0RjgNu6OyBCt8KghjoRwqfcsYNzM=; b=buUJjmOBa1OZVow7BwEnPKxU3u6Q0
-        yBlx2aCL5/sVxqhErLM0ij/EVVpdLjelPFepZ2gGwzB6Pl3qf13NPUJbLYZ3RfrD
-        mohG+uPJn9G28qUSOzi7j8mS3Mmw+na5OGr/0sbkIai/FyfthfOm1tBPvS9AG5vd
-        SX5xONoTogOjBhtc3/dM4tA8zUIqnSLFP/LRRSn0O3voF3W+izeF/wMJ7LhqCtl8
-        yVHmLK5oBZ2y6NQBTt3Gj6RSre3V23sVx8Zdrg6IlVLzmYerpFu3G0FksUbSFYZO
-        EjmYtVLzr9addiqvP8+4gdfS9ab3rLhPCX5B3r9H/OwBF4mJtdV13ZsjA==
+  by compute1.internal (MEProxy); Sat, 02 Oct 2021 02:22:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=XliFWXIjL29k8nU0RjgNu6OyBCt8KghjoRwqfcsYNzM=; b=uLzp6brD
-        aQLKvEXiN90RDd8kVc49eJH4E3iAMnQrOpDnHFsKqp60kUoy0aAKr/dLJN27reMO
-        E6jUrYrWcHbNxJRooXsLbesW8LoVxM5L12GwmgDskghGGl6bzonU751aD0pQIpU5
-        ncIDfv5NW5ZS1wYvCvAlsbFZQ87S/q2QcAvu0Vgm9UkgYAmTPsIG4hLsOd+c4ZRR
-        84ii7wAPkYibaKQExqtfBMxMYSrcdRGS0bwVQiMIJ6nXX2HenHmCtrnd+3xNTICf
-        MfxLszSs8MkibthVCq+rM1SgVLI6dpFUGEbSjISjKGwzNlDmAOVy1SEXpdpV4g3f
-        dhHrXM6XLcwgxA==
-X-ME-Sender: <xms:v91XYReG1wThITEGaLlSKFAqqZHMovsgROQv5tJXJJmwDO9Ww9eJ9Q>
-    <xme:v91XYfPdZomyB28SvBAf3csgt3HZfcKpcYUkt97Hz76wyAv5ia7Xy2b7BOfDlRKk-
-    1hNlh71OVmDbehUVQ>
-X-ME-Received: <xmr:v91XYagqmTmNIkZO0ImJnGigOytzaHavw7gKOrWKUntkTwz4_uoOWb--wNgsu1TEyeDBygYdYZUodwgDwTnfspGiHCAPMc3F4ZpKGahC>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekjedgkedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomhepufgrtghhihcumfhinhhguceonhgrkhgrthhosehnrghkrght
-    ohdrihhoqeenucggtffrrghtthgvrhhnpedufeethfetgeektdeuvdetiefhteffuddule
-    dukeektdfhtdefudeiheejgffhhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpehnrghkrghtohesnhgrkhgrthhordhioh
-X-ME-Proxy: <xmx:v91XYa-FTWor_WV_eNSCu1-cFJTkUv7L1sBb57M2TH_51boDkKezIg>
-    <xmx:v91XYdvptCRGMHLxRtipD0R-g4Tvmr-XZ5oZRajlFPDkgZpM6wQB5A>
-    <xmx:v91XYZHw7CvI0erGmsJJp8XVelL58gFPrkTR2tyEZKPLowsnEGeWTg>
-    <xmx:v91XYTJwG-lXLRh6gjjQiMU_fex-92g6h-fpOgW_QzoWnJyxINZG4w>
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=cKmwPnxNcR2hQBOn+
+        umhfyImSJ8x6Tid8jvRTvRXQck=; b=XzT0Lfgfbf4tpfEeg+Fhgz3L3qGX7yyX3
+        rrGs1gpYGN1OlwjXp+VM81ylgkHaI+EgmY9pWL7qyUEaGxg6tANJDiW+h1X+bywx
+        mVR99lcxs7hE1Am3VjiRSjnI0/vYjBY45IzonHsf2dSK4e8xpeXIA/Yq5f2NIlfZ
+        sOH1AxzIRqE0RxbF3m7T8bvDGrXMLajLwvlWor8GgdApkzMu46K1pIVEmg8+K8FB
+        k7DwiIvZrnVQl2cZd49dQ18vLLQTkUwgvS40WCg+K8UaXAipJbC81v7tBIQcbKAO
+        iIP9WjRd6oziH1VAjAR8eJu3/uDVEZfIbOnIOAxrveIHh8qey1N1g==
+X-ME-Sender: <xms:kfpXYVsfsuUxMInvQvEbkIKyibQ0hWBrMS3P0VlRU3chl1TiSflCDA>
+    <xme:kfpXYec33e7WmiVTTKyBOXJiB_Xnf7cM9k9924CWXPhXyAgYM-x_7aWadV-3ZqXbg
+    UBEJ-aEg22YJyIA6BM>
+X-ME-Received: <xmr:kfpXYYyvvkZKaN1__2UQAwScMS2phvCpwCLUi72y-_Jb8wxPxw6eFn6OuZoP>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekjedguddthecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnheplefflefhledthfdtveeugfevueeuke
+    egteeigfeihffgjedvtedvueevtdfhvdeknecuvehluhhsthgvrhfuihiivgeptdenucfr
+    rghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:kfpXYcPy2_Jjr7ugJIKkNkUzALbURPDp8HY3f--8IwdH7O8S9Sjt8A>
+    <xmx:kfpXYV9TySV5rJPdss-cijtcTto5CImdWHgglBanzWR7mswu7-UfgA>
+    <xmx:kfpXYcV1GrbThzhGCy2px4lAMMCz4071dGwEtyNR9MU7UznlrCotBA>
+    <xmx:kvpXYRbJw1c12PnMHszgY6S7G6F_W8_quY5xRMMzzSY_HAHDr1idwg>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 2 Oct 2021 00:19:07 -0400 (EDT)
-From:   Sachi King <nakato@nakato.io>
-To:     Shyam-sundar.S-k@amd.com, hdegoede@redhat.com,
-        mgross@linux.intel.com, mario.limonciello@amd.com,
-        rafael@kernel.org, lenb@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Sachi King <nakato@nakato.io>,
-        stable@vger.kernel.org
-Subject: [PATCH 2/2] ACPI: PM: Include alternate AMDI0005 id in special behaviour
-Date:   Sat,  2 Oct 2021 14:18:40 +1000
-Message-Id: <20211002041840.2058647-2-nakato@nakato.io>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211002041840.2058647-1-nakato@nakato.io>
-References: <20211002041840.2058647-1-nakato@nakato.io>
+ 2 Oct 2021 02:22:05 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     linux-kernel@vger.kernel.org
+Cc:     hdegoede@redhat.com, pobrn@protonmail.com, linux@roeck-us.net,
+        platform-driver-x86@vger.kernel.org, hadess@hadess.net,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v15 0/1] asus-wmi: Add support for custom fan curves
+Date:   Sat,  2 Oct 2021 19:21:56 +1300
+Message-Id: <20211002062157.33318-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The Surface Laptop 4 AMD has used the AMD0005 to identify this
-controller instead of using the appropriate ACPI ID AMDI0005.  The
-AMD0005 needs the same special casing as AMDI0005.
+Add support for custom fan curves found on some ASUS ROG laptops.
 
-Cc: <stable@vger.kernel.org> # 5.14+
-Signed-off-by: Sachi King <nakato@nakato.io>
----
- drivers/acpi/x86/s2idle.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This has been fairly widely tested by the asus-rog community now and
+should be in a good state for merging now.
 
-diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
-index bd92b549fd5a..1c48358b43ba 100644
---- a/drivers/acpi/x86/s2idle.c
-+++ b/drivers/acpi/x86/s2idle.c
-@@ -371,7 +371,7 @@ static int lps0_device_attach(struct acpi_device *adev,
- 		return 0;
- 
- 	if (acpi_s2idle_vendor_amd()) {
--		/* AMD0004, AMDI0005:
-+		/* AMD0004, AMD0005, AMDI0005:
- 		 * - Should use rev_id 0x0
- 		 * - function mask > 0x3: Should use AMD method, but has off by one bug
- 		 * - function mask = 0x3: Should use Microsoft method
-@@ -390,6 +390,7 @@ static int lps0_device_attach(struct acpi_device *adev,
- 					ACPI_LPS0_DSM_UUID_MICROSOFT, 0,
- 					&lps0_dsm_guid_microsoft);
- 		if (lps0_dsm_func_mask > 0x3 && (!strcmp(hid, "AMD0004") ||
-+						 !strcmp(hid, "AMD0005") ||
- 						 !strcmp(hid, "AMDI0005"))) {
- 			lps0_dsm_func_mask = (lps0_dsm_func_mask << 1) | 0x1;
- 			acpi_handle_debug(adev->handle, "_DSM UUID %s: Adjusted function mask: 0x%x\n",
+- V1
+  + Initial patch work
+- V2
+  + Don't fail and remove wmi driver if error from
+    asus_wmi_evaluate_method_buf() if error is -ENODEV
+- V3
+  + Store the "default" fan curves
+  + Call throttle_thermal_policy_write() if a curve is erased to ensure
+    that the factory default for a profile is applied again
+- V4
+  + Do not apply default curves by default. Testers have found that the
+    default curves don't quite match actual no-curve behaviours
+  + Add method to enable/disable curves for each profile
+- V5
+  + Remove an unrequired function left over from previous iterations
+  + Ensure default curves are applied if user writes " " to a curve path
+  + Rename "active_fan_curve_profiles" to "enabled_fan_curve_profiles" to
+    better reflect the behavious of this setting
+  + Move throttle_thermal_policy_write_*pu_curves() and rename to
+    fan_curve_*pu_write()
+  + Merge fan_curve_check_valid() and fan_curve_write()
+  + Remove some leftover debug statements
+- V6
+  + Refactor data structs to store  array or u8 instead of strings.
+    This affects the entire patch except the enabled_fan_curves block
+  + Use sysfs_match_string in enabled_fan_curve block
+  + Add some extra comments to describe things
+  + Allow some variation in how fan curve input can be formatted
+  + Use SENSOR_DEVICE_ATTR_2_RW() to reduce the amount of lines per
+    fan+profile combo drastically
+- V7
+  + Further refactor to use pwm1_auto_point1_temp + pwm1_auto_point1_pwm
+    format, creating two blocks of attributes for CPU and GPU fans
+  + Remove storing of defualt curves and method to reset them. The
+    factory defaults are still populated in to structs on module load
+    so users have a starting point
+- V8
+  + Make asus_wmi_evaluate_method_buf() safe
+  + Take in to account machines that do not have throttle_thermal_policy
+    but do have a single custom fan curve. These machines can't use a
+    throttle_thermal mode change to reset the fans to factory default if
+    fan curve is disabled so we need to write their stored default back.
+    In some cases this is also needed due to mistakes in ASUS ACPI tables.
+  + Formatting tidy and dev_err() use
+  + Extra comments to make certain things (such as above) more clear
+  + Give generated hwmon a more descriptive `name asus_custom_fan_curve`
+- V9
+  + Cleanup and remove per-profile setting
+  + Call `asus_fan_set_auto()` if method supported to ensure fan state is
+    reset on these models
+  + Add extra case (3) to related `pwm<N>_enable`s for fan curves to reset
+    the used curve to factory default
+  + Related to the above is that if throttle_thermal_policy is supported
+    then the fetched factory default curve is correct for the current
+    throttle_thermal_policy_mode
+  + Ensure that if throttle_thermal_policy_mode is changed then fan_curve
+    is set to disabled.
+  + Ensure the same for pwm1_enable_store()
+- V10
+  - Better handling of conditions in asus_wmi_evaluate_method_buf()
+  - Correct a mistaken conversion to percentage for temperature
+  - Remove unused function
+  - Formating corrections
+  - Update or remove various comments
+  - Update commit message to better reflect purpose of patch
+- V11
+  - Remove fan_curve_verify() as this prevented easily adjusting a fan curve
+    and there is no good way to give user feedback on fan-curve validity
+    unless checked in userspace
+- V12
+  - Remove unused old_value as caught by CI
+    + Reported-by: kernel test robot <lkp@intel.com>
+  - Rebase on upstream master 78e709522d2c012cb0daad2e668506637bffb7c2
+- V13
+  - Fix the errors related to old_value where I didn't remove the old code
+    + Reported-by: kernel test robot <lkp@intel.com>
+- V14
+  - Fix incorrect logic in fan_curve_get_factory_default()
+  - Ensure fan_curve_enable_show() displays correct status for state
+- V15
+  - Remove unused "default" fan curve store as these are read from the hardware
+    when required
+  - Use correct `to_sensor_dev_attr` for pwm<N>_enable instead of
+    to_sensor_dev_attr_2
+  - Don't call fan_curve_attr_2_select 3 times in fan_curve_show()
+  - General code quality cleanup
+
+Luke D. Jones (1):
+  asus-wmi: Add support for custom fan curves
+
+ drivers/platform/x86/asus-wmi.c            | 614 ++++++++++++++++++++-
+ include/linux/platform_data/x86/asus-wmi.h |   2 +
+ 2 files changed, 608 insertions(+), 8 deletions(-)
+
 -- 
-2.33.0
+2.32.0
 
