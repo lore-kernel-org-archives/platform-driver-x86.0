@@ -2,834 +2,170 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2922CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 06:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEE4C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 09:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECBE61AAA
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 06:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDBB61353
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 09:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232433AbhJBGYC (ORCPT
+        id S232736AbhJBJep (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 2 Oct 2021 02:24:02 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:55427 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232082AbhJBGYB (ORCPT
+        Sat, 2 Oct 2021 05:34:45 -0400
+Received: from mail-bn8nam11on2071.outbound.protection.outlook.com ([40.107.236.71]:32736
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232691AbhJBJeo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Oct 2021 02:24:01 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id D00783200A16;
-        Sat,  2 Oct 2021 02:22:15 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sat, 02 Oct 2021 02:22:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=H83khfcyCDt9eIokiXmqzOpq6KfJvTPBHkMoUCKix14=; b=Cw2mXY6f
-        6+reMZCRyEJCCEB6ytVBXlj0VqLbOxwbz+3qaTQRXxH5F3BhC65d/Z04mF12bsKq
-        7J8zR3UtymOazI3MYeGVVzgFOhkMdLKlYnlrt4CHMXKhpdh06sQ92se3MlPFxEFA
-        BqbQmR6nhNaW/nbFBHAqfsnKfXc9Wd+BPHDvndUgbWlTqT0W8Z0tUetuKIDPlZix
-        VUM20W97EV0WcfjKsVGi6KpTO0sqOEbuo5Kn3XkmvwyPCFTYyaJqS72sbvrDjM7i
-        EmqM79DFavtgLvSq229kwwuGYGnS7dJIEqvGwI0PUOZhE5objcXT/m4RlppUvEPo
-        GBm3aFzH1RXA3g==
-X-ME-Sender: <xms:l_pXYeIvIGRC_IccyNokS7vSIx_u1IKprExsHMGyJlB-4IPn1svUnQ>
-    <xme:l_pXYWKLB_XHbFgb1jOFPWZ3Atz0EMfeAvdezgc1siG--MR7TmSXvZhFzCe_Rwa3C
-    6nRp5tKetXTqB1OY-A>
-X-ME-Received: <xmr:l_pXYeu8KI36WfN7n2qNLLaoGb91TmuGNAZFqwwUImF-OGtju8sWxNXWicyJ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekjedguddthecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
-    jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepvdetkedvueehtdfhueduleehje
-    eihfdvtdetleelgefhkefhuefgheegkefftdehnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:l_pXYTb-musyHGjl9-MqQ6j_6ALR3qkqQOHNcyHZAVxuLf1n55EAeA>
-    <xmx:l_pXYVaFbvvj0bz1hoyJqhNnnKpK2sJNZqKvwiSDHobL6UW4y86iuA>
-    <xmx:l_pXYfClCFoWwCYRK3GEaoR00yY-Yw2LNDZOkaKc0WREj9MVa6UiNQ>
-    <xmx:l_pXYUWItbHSLYc4cjbX4MTkIAZDusfFO-ABCrXkZ0TJPR9ikrJXjQ>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 2 Oct 2021 02:22:11 -0400 (EDT)
-From:   "Luke D. Jones" <luke@ljones.dev>
-To:     linux-kernel@vger.kernel.org
-Cc:     hdegoede@redhat.com, pobrn@protonmail.com, linux@roeck-us.net,
-        platform-driver-x86@vger.kernel.org, hadess@hadess.net,
-        "Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v15] asus-wmi: Add support for custom fan curves
-Date:   Sat,  2 Oct 2021 19:21:57 +1300
-Message-Id: <20211002062157.33318-2-luke@ljones.dev>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211002062157.33318-1-luke@ljones.dev>
-References: <20211002062157.33318-1-luke@ljones.dev>
+        Sat, 2 Oct 2021 05:34:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wgj1bsqhUifDDbWv8aJh3EQAFopnQBniT2Ak+yxbCA51Z5HsLHjc6Hf5mIVESX2a0R4y/BdbK97l6XCv0mwxgK1KzRSC0CbgGwNERINoSBpL6qarxYB0OZoMUvc7LUBlZnq3YK7DmbCuJQWuptQfr6Kg82bQ//xRT2E31O9Wquq9W4DfVlSjhFP5OCa9CnYoYx04wyPQwrB6jLM6v2BB9MrB5D3dxWBlolasArIzgb3QLn5bX8rorBuj6jjn+O1fv76aRmWukp7vNE/xAnb0aI8+85Dth92T1KK+pqs+JIeR7veF6pelRyaRBO3S8GJXw7tu3EdH7n9NheranFvUgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/0OctpFdKMNEdrVk/om5rtl+tQ97zq+lE/s/VoaG+r8=;
+ b=nZN9ZJTwYKLhtqZ92+xYC7Tpo+X3bUgeoFoIzSIOuuifcowDF6wv5hxy/yiUThTFXCKm1zp/fI9XQaac5Cx72Uwtjyl50itq6qxsTTjhxoHM7sQvP1YbyxRI7eBDqrklQmUVl7ehdxZRh6a+uShdk6MwAsA2PXSLgMPdAwKSLlsQP4vs3or4eYTLCwnG0dRwEZ6KdIyq3DocDyZJaMpyuQNPH+YiUifWXPNDoGI0wWiATpJIuBvpKPDN3kTY5lynN/bSBv0YxsVWT4oG1mYmCvp/wKxA/dlXlW/Pql4XqAMI45SyiriWL57RAXLNbnbJwVAHjOh1cBdSOUR/BY+3Xg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/0OctpFdKMNEdrVk/om5rtl+tQ97zq+lE/s/VoaG+r8=;
+ b=ZncEEv9eksSF4spTjkeekBjwQugmg6RRxwmV0UdlK70A2BcSUtO6wswh1jUgiuqb643MoWhad6meQzPxm8EvBCFJDVpE95zP47C0dCiWq2CkW30nOonWKBRom1yaB5UuonXBamp8bcHrGbeKtpz4ec4rIehfSCyHjGU71lmsOT5H5nzjy7IZpaUr4grEgPb9cDEGKLA0iY/PofwO57MojMkKS9HF7knW1BpQHJxbPOXLyeI0epT9EnnNAqmBsBJ3eTY68SUP3qU6wKf//Bq32I8KVOqJSYEQj2P3+u44NuekR1Vwy+rI4swo7cTvDM7vFUoliUxJcJn90a0kycTHAA==
+Received: from MW4PR04CA0205.namprd04.prod.outlook.com (2603:10b6:303:86::30)
+ by CY4PR12MB1909.namprd12.prod.outlook.com (2603:10b6:903:124::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.19; Sat, 2 Oct
+ 2021 09:32:57 +0000
+Received: from CO1NAM11FT020.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:86:cafe::ff) by MW4PR04CA0205.outlook.office365.com
+ (2603:10b6:303:86::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.15 via Frontend
+ Transport; Sat, 2 Oct 2021 09:32:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ CO1NAM11FT020.mail.protection.outlook.com (10.13.174.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4566.14 via Frontend Transport; Sat, 2 Oct 2021 09:32:57 +0000
+Received: from dev-r-vrt-156.mtr.labs.mlnx (172.20.187.6) by
+ HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.18; Sat, 2 Oct 2021 09:32:55 +0000
+From:   Vadim Pasternak <vadimp@nvidia.com>
+To:     <hdegoede@redhat.com>
+CC:     <platform-driver-x86@vger.kernel.org>, <michaelsh@nvidia.com>,
+        "Vadim Pasternak" <vadimp@nvidia.com>
+Subject: [PATCH platform-next 00/10] platform: mellanox: Introduce initial chassis management support for modular Ethernet system
+Date:   Sat, 2 Oct 2021 12:32:29 +0300
+Message-ID: <20211002093238.3771419-1-vadimp@nvidia.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="y"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [172.20.187.6]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 781997f8-a4c0-42db-a0cb-08d985879e4c
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1909:
+X-Microsoft-Antispam-PRVS: <CY4PR12MB1909FE999426417954742DDBAFAC9@CY4PR12MB1909.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /PPuGURkw1wIgYU2FAklW0LqDFXSnWdQsUqiHLQMr4rI3mf4odqfZcg0QdHngnHM1hVt187lEJGuIxmdss7x31+eWaW3WhtLA8eitMAqPbkpMisyEnufIuT6km/JRoWlNESv2AYdEj1UJ+1h7/CQxx+rp6mqvuR7DrICLp1tAdF2EkAy6hgaZM2pu8y7l0d/BLvYI0Aobjl9M2QSR5uJhJS0BJ7jG20FxPMr0nDYLImM8jNkQbVatSbci6mYXKJVzs4HnexkzRPbyzXZR/HrqiF0r5/pjWBfUSq8uGe0nXJnxx2sDal0oSewIi847HALMzLeDqB5AYtGC12vTRjnU2CG+B4hbYxK0qxW2o2o/uuh5Sva3jUcDk5VuBmeL6GZ/dVg4pO+zP8F6YyQaZvvqdTNNG5hUrfAtnfGj38FGPRknPjHnOnHUvkL9UQAlqVdnx4MOAoU8ouE4zHpkG3L5D6ppVhpiAAY7n7engZAeYZBfFHm/3koB3zni5lM9+kAClwn81M0fofn+RcTbsz8XPxhkOrcmcn12lEA5gOT0y0VaCTXGAbZUzOvdqAGzh3fulFYbGlm26OHtOxt428jzm0qvQLYHvcy9Zx5QOSa48IKjQqhumRSqHuH1vWENBhmMKgOfGBJIeKTDs2YqWNNGngSKB9b+UaqylL+zscQoLH9ZG+MlXjmfBF1beQCqERkuOrllxoC1EckQ2WpamqDfA==
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(5660300002)(336012)(4326008)(54906003)(36860700001)(36756003)(316002)(1076003)(86362001)(2616005)(7636003)(356005)(2906002)(186003)(16526019)(508600001)(26005)(426003)(6916009)(82310400003)(47076005)(70586007)(70206006)(6666004)(83380400001)(8936002)(8676002)(107886003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2021 09:32:57.1404
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 781997f8-a4c0-42db-a0cb-08d985879e4c
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT020.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1909
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support for custom fan curves found on some ASUS ROG laptops.
+Add initial chassis management support for Nvidia modular Ethernet
+switch systems MSN4800, providing a high performance switching solution
+for Enterprise Data Centers (EDC) for building Ethernet based clusters,
+High-Performance Computing (HPC) and embedded environments.
 
-These laptops have the ability to set a custom curve for the CPU
-and GPU fans via two ACPI methods.
+This system could be equipped with the different types of replaceable
+line cards and management board. The first system flavor will support
+the line card type MSN4800-C16 equipped with Lattice CPLD devices aimed
+for system and ASIC control, one Nvidia FPGA for gearboxes (PHYs)
+management, and four Nvidia gearboxes for the port control and with
+16x100GbE QSFP28 ports and with various devices for electrical control.
 
-This patch adds two pwm<N> attributes to the hwmon sysfs,
-pwm1 for CPU fan, pwm2 for GPU fan. Both are under the hwmon of the
-name `asus_custom_fan_curve`. There is no safety check of the set
-fan curves - this must be done in userspace.
+The system is equipped with eight slots for line cards, four slots for
+power supplies and six slots for fans. It could be configured as fully
+populated or with even only one line card. The line cards are
+hot-pluggable.
+In the future when more line card flavors are to be available (for
+example line cards with 8x200Gb Eth port, with 4x400 Eth ports, or with
+some kind of smart cards for offloading purpose), any type of line card
+could be inserted at any slot.
 
-The fans have settings [1,2,3] under pwm<N>_enable:
-1. Enable and write settings out
-2. Disable and use factory fan mode
-3. Same as 2, additionally restoring default factory curve.
+The system is based on Nvidia Spectrum-3 ASIC. The switch height is 4U
+and it fits standard rack size.
 
-Use of 2 means that the curve the user has set is still stored and
-won't be erased, but the laptop will be using its default auto-fan
-mode. Re-enabling the manual mode then activates the curves again.
+The next coming card generations are supposed to support:
+- Line cards with 8x200Gbe QSFP28 Ethernet ports.
+- Line cards with 4x400Gbe QSFP-DD Ethernet ports.
+- Smart cards equipped with Nvidia ARM CPU for offloading and for fast
+  access to the storage (EBoF).
+- Fabric cards for inter-connection.
 
-Notes:
-- pwm<N>_enable = 0 is an invalid setting.
-- pwm is actually a percentage and is scaled on writing to device.
+Patch set contains:
+Patch #1 – adds new types for modular system support.
+Patch #2 - adds support for the modular system equipped with replicable
+	   line cards.
+Patches #3-#4 - extend logic for hotplug devices operations for the
+		modular system support.
+Patch #5 - extends number of hwmon attributes for mlxreg-io driver,
+	   since modular system introduces more attributes.
+Patch #6 - adds field for security access validation.
+Patch #7 - introduces initial support for Mellanox line card devices.
+Patches #8-#9 – add documentation.
+Patch #10 - extend support for cooling devices.
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-wmi.c            | 608 ++++++++++++++++++++-
- include/linux/platform_data/x86/asus-wmi.h |   2 +
- 2 files changed, 602 insertions(+), 8 deletions(-)
+Vadim Pasternak (10):
+  platform_data/mlxreg: Add new type to support modular systems
+  platform/x86: mlx-platform: Add initial support for new modular system
+  platform/mellanox: mlxreg-hotplug: Extend logic for hotplug devices
+    operations
+  platform/x86: mlx-platform: Configure notifier callbacks for modular
+    system
+  platform/mellanox: mlxreg-io: Extend number of hwmon attributes
+  platform_data/mlxreg: Add new field for secured access
+  platform/mellanox: mlxreg-lc: Add initial support for Nvidia line card
+    devices
+  Documentation/ABI: Add new attributes for mlxreg-io sysfs interfaces
+  Documentation/ABI: Add new line card attributes for mlxreg-io sysfs
+    interfaces
+  platform/x86: mlx-platform: Add support for multiply cooling devices
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index e14fb5fa7324..8b0ed1969d86 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -106,8 +106,17 @@ module_param(fnlock_default, bool, 0444);
- 
- #define WMI_EVENT_MASK			0xFFFF
- 
-+#define FAN_CURVE_POINTS		8
-+#define FAN_CURVE_BUF_LEN		(FAN_CURVE_POINTS * 2)
-+#define FAN_CURVE_DEV_CPU		0x00
-+#define FAN_CURVE_DEV_GPU		0x01
-+/* Mask to determine if setting temperature or percentage */
-+#define FAN_CURVE_PWM_MASK		0x04
-+
- static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
- 
-+static int throttle_thermal_policy_write(struct asus_wmi *);
-+
- static bool ashs_present(void)
- {
- 	int i = 0;
-@@ -122,7 +131,8 @@ struct bios_args {
- 	u32 arg0;
- 	u32 arg1;
- 	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
--	u32 arg4;
-+	u32 arg3;
-+	u32 arg4; /* Some ROG laptops require a full 5 input args */
- 	u32 arg5;
- } __packed;
- 
-@@ -173,6 +183,12 @@ enum fan_type {
- 	FAN_TYPE_SPEC83,	/* starting in Spec 8.3, use CPU_FAN_CTRL */
- };
- 
-+struct fan_curve_data {
-+	bool enabled;
-+	u8 temps[FAN_CURVE_POINTS];
-+	u8 percents[FAN_CURVE_POINTS];
-+};
-+
- struct asus_wmi {
- 	int dsts_id;
- 	int spec;
-@@ -220,6 +236,10 @@ struct asus_wmi {
- 	bool throttle_thermal_policy_available;
- 	u8 throttle_thermal_policy_mode;
- 
-+	bool cpu_fan_curve_available;
-+	bool gpu_fan_curve_available;
-+	struct fan_curve_data custom_fan_curves[2];
-+
- 	struct platform_profile_handler platform_profile_handler;
- 	bool platform_profile_support;
- 
-@@ -285,6 +305,103 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
- }
- EXPORT_SYMBOL_GPL(asus_wmi_evaluate_method);
- 
-+static int asus_wmi_evaluate_method5(u32 method_id,
-+		u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 *retval)
-+{
-+	struct bios_args args = {
-+		.arg0 = arg0,
-+		.arg1 = arg1,
-+		.arg2 = arg2,
-+		.arg3 = arg3,
-+		.arg4 = arg4,
-+	};
-+	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	acpi_status status;
-+	union acpi_object *obj;
-+	u32 tmp = 0;
-+
-+	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 0, method_id,
-+				     &input, &output);
-+
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	obj = (union acpi_object *)output.pointer;
-+	if (obj && obj->type == ACPI_TYPE_INTEGER)
-+		tmp = (u32) obj->integer.value;
-+
-+	if (retval)
-+		*retval = tmp;
-+
-+	kfree(obj);
-+
-+	if (tmp == ASUS_WMI_UNSUPPORTED_METHOD)
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Returns as an error if the method output is not a buffer. Typically this
-+ * means that the method called is unsupported.
-+ */
-+static int asus_wmi_evaluate_method_buf(u32 method_id,
-+		u32 arg0, u32 arg1, u8 *ret_buffer, size_t size)
-+{
-+	struct bios_args args = {
-+		.arg0 = arg0,
-+		.arg1 = arg1,
-+		.arg2 = 0,
-+	};
-+	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	acpi_status status;
-+	union acpi_object *obj;
-+	int err = 0;
-+
-+	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 0, method_id,
-+				     &input, &output);
-+
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	obj = (union acpi_object *)output.pointer;
-+
-+	switch (obj->type) {
-+	case ACPI_TYPE_BUFFER:
-+		if (obj->buffer.length > size)
-+			err = -ENOSPC;
-+		if (obj->buffer.length == 0)
-+			err = -ENODATA;
-+
-+		memcpy(ret_buffer, obj->buffer.pointer, obj->buffer.length);
-+		break;
-+	case ACPI_TYPE_INTEGER:
-+		err = (u32)obj->integer.value;
-+
-+		if (err == ASUS_WMI_UNSUPPORTED_METHOD)
-+			err = -ENODEV;
-+		/*
-+		 * At least one method returns a 0 with no buffer if no arg
-+		 * is provided, such as ASUS_WMI_DEVID_CPU_FAN_CURVE
-+		 */
-+		if (err == 0)
-+			err = -ENODATA;
-+		break;
-+	default:
-+		err = -ENODATA;
-+		break;
-+	}
-+
-+	kfree(obj);
-+
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
- static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
- {
- 	struct acpi_buffer input;
-@@ -1806,6 +1923,13 @@ static ssize_t pwm1_enable_store(struct device *dev,
- 	}
- 
- 	asus->fan_pwm_mode = state;
-+
-+	/* Must set to disabled if mode is toggled */
-+	if (asus->cpu_fan_curve_available)
-+		asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
-+	if (asus->gpu_fan_curve_available)
-+		asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled = false;
-+
- 	return count;
- }
- 
-@@ -1953,9 +2077,9 @@ static int fan_boost_mode_check_present(struct asus_wmi *asus)
- 
- static int fan_boost_mode_write(struct asus_wmi *asus)
- {
--	int err;
--	u8 value;
- 	u32 retval;
-+	u8 value;
-+	int err;
- 
- 	value = asus->fan_boost_mode;
- 
-@@ -2013,10 +2137,10 @@ static ssize_t fan_boost_mode_store(struct device *dev,
- 				    struct device_attribute *attr,
- 				    const char *buf, size_t count)
- {
--	int result;
--	u8 new_mode;
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	u8 mask = asus->fan_boost_mode_mask;
-+	u8 new_mode;
-+	int result;
- 
- 	result = kstrtou8(buf, 10, &new_mode);
- 	if (result < 0) {
-@@ -2043,6 +2167,462 @@ static ssize_t fan_boost_mode_store(struct device *dev,
- // Fan boost mode: 0 - normal, 1 - overboost, 2 - silent
- static DEVICE_ATTR_RW(fan_boost_mode);
- 
-+/* Custom fan curves *********************************************************/
-+
-+static void fan_curve_copy_from_buf(struct fan_curve_data *data, u8 *buf)
-+{
-+	int i;
-+
-+	for (i = 0; i < FAN_CURVE_POINTS; i++) {
-+		data->temps[i] = buf[i];
-+	}
-+
-+	for (i = 0; i < FAN_CURVE_POINTS; i++) {
-+		data->percents[i] =
-+			255 * buf[i + FAN_CURVE_POINTS] / 100;
-+	}
-+}
-+
-+static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
-+{
-+	struct fan_curve_data *curves;
-+	u8 buf[FAN_CURVE_BUF_LEN];
-+	int fan_idx = 0;
-+	u8 mode = 0;
-+	int err;
-+
-+	if (asus->throttle_thermal_policy_available)
-+		mode = asus->throttle_thermal_policy_mode;
-+	/* DEVID_<C/G>PU_FAN_CURVE is switched for OVERBOOST vs SILENT */
-+	if (mode == 2)
-+		mode = 1;
-+	else if (mode == 1)
-+		mode = 2;
-+
-+	if (fan_dev == ASUS_WMI_DEVID_GPU_FAN_CURVE)
-+		fan_idx = FAN_CURVE_DEV_GPU;
-+
-+	curves = &asus->custom_fan_curves[fan_idx];
-+	err = asus_wmi_evaluate_method_buf(asus->dsts_id, fan_dev, mode, buf,
-+					   FAN_CURVE_BUF_LEN);
-+	if (err)
-+		return err;
-+
-+	fan_curve_copy_from_buf(curves, buf);
-+
-+	return 0;
-+}
-+
-+/* Check if capability exists, and populate defaults */
-+static int fan_curve_check_present(struct asus_wmi *asus, bool *available,
-+				   u32 fan_dev)
-+{
-+	int err;
-+
-+	*available = false;
-+
-+	err = fan_curve_get_factory_default(asus, fan_dev);
-+	if (err) {
-+		if (err == -ENODEV)
-+			return 0;
-+		return err;
-+	}
-+
-+	*available = true;
-+	return 0;
-+}
-+
-+/* Determine which fan the attribute is for if SENSOR_ATTR */
-+static struct fan_curve_data *fan_curve_attr_select(struct asus_wmi *asus,
-+					      struct device_attribute *attr)
-+{
-+	int index = to_sensor_dev_attr(attr)->index;
-+
-+	return &asus->custom_fan_curves[index & FAN_CURVE_DEV_GPU];
-+}
-+
-+/* Determine which fan the attribute is for if SENSOR_ATTR_2 */
-+static struct fan_curve_data *fan_curve_attr_2_select(struct asus_wmi *asus,
-+					    struct device_attribute *attr)
-+{
-+	int nr = to_sensor_dev_attr_2(attr)->nr;
-+
-+	return &asus->custom_fan_curves[nr & FAN_CURVE_DEV_GPU];
-+}
-+
-+static ssize_t fan_curve_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct sensor_device_attribute_2 *dev_attr = to_sensor_dev_attr_2(attr);
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	struct fan_curve_data *data;
-+	int value, index, nr;
-+
-+	data = fan_curve_attr_2_select(asus, attr);
-+	index = dev_attr->index;
-+	nr = dev_attr->nr;
-+
-+	if (nr & FAN_CURVE_PWM_MASK)
-+		value = data->percents[index];
-+	else
-+		value = data->temps[index];
-+
-+	return sysfs_emit(buf, "%d\n", value);
-+}
-+
-+/*
-+ * "fan_dev" is the related WMI method such as ASUS_WMI_DEVID_CPU_FAN_CURVE.
-+ */
-+static int fan_curve_write(struct asus_wmi *asus,
-+			   struct device_attribute *attr, u32 fan_dev)
-+{
-+	struct fan_curve_data *data = fan_curve_attr_2_select(asus, attr);
-+	u32 arg1 = 0, arg2 = 0, arg3 = 0, arg4 = 0;
-+	u8 *percents = data->percents;
-+	u8 *temps = data->temps;
-+	int ret, i, shift = 0;
-+
-+	for (i = 0; i < FAN_CURVE_POINTS / 2; i++) {
-+		arg1 += (temps[i]) << shift;
-+		arg2 += (temps[i + 4]) << shift;
-+		/* Scale to percentage for device */
-+		arg3 += (100 * percents[i] / 255) << shift;
-+		arg4 += (100 * percents[i + 4] / 255) << shift;
-+		shift += 8;
-+	}
-+
-+	return asus_wmi_evaluate_method5(ASUS_WMI_METHODID_DEVS, fan_dev, arg1,
-+					 arg2, arg3, arg4, &ret);
-+}
-+
-+/*
-+ * Called on curve enable/disable. This should be the only way to write out the
-+ * fan curves. This avoids potential lockups on write to ACPI for every change.
-+ */
-+static int fan_curve_write_data(struct asus_wmi *asus,
-+				struct device_attribute *attr)
-+{
-+	int err;
-+
-+	if (asus->cpu_fan_curve_available) {
-+		err = fan_curve_write(asus, attr, ASUS_WMI_DEVID_CPU_FAN_CURVE);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (asus->gpu_fan_curve_available) {
-+		err = fan_curve_write(asus, attr, ASUS_WMI_DEVID_GPU_FAN_CURVE);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static ssize_t fan_curve_store(struct device *dev,
-+			       struct device_attribute *attr, const char *buf,
-+			       size_t count)
-+{
-+	struct sensor_device_attribute_2 *dev_attr = to_sensor_dev_attr_2(attr);
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	struct fan_curve_data *data;
-+	u8 value;
-+	int err;
-+
-+	int pwm = dev_attr->nr & FAN_CURVE_PWM_MASK;
-+	int index = dev_attr->index;
-+
-+	data = fan_curve_attr_2_select(asus, attr);
-+
-+	err = kstrtou8(buf, 10, &value);
-+	if (err < 0)
-+		return err;
-+
-+	if (pwm) {
-+		data->percents[index] = value;
-+	} else {
-+		data->temps[index] = value;
-+	}
-+
-+	/*
-+	 * Mark as disabled so the user has to explicitly enable to apply a
-+	 * changed fan curve. This prevents potential lockups from writing out
-+	 * many changes as one-write-per-change.
-+	 */
-+	data->enabled = false;
-+
-+	return count;
-+}
-+
-+static ssize_t fan_curve_enable_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	struct fan_curve_data *data;
-+	int out = 2;
-+
-+	data = fan_curve_attr_select(asus, attr);
-+
-+	if (data->enabled)
-+		out = 1;
-+
-+	return sysfs_emit(buf, "%d\n", out);
-+}
-+
-+static int fan_curve_set_default(struct asus_wmi *asus)
-+{
-+	int err;
-+
-+	err = fan_curve_get_factory_default(
-+		asus, ASUS_WMI_DEVID_CPU_FAN_CURVE);
-+	if (err)
-+		return err;
-+
-+	err = fan_curve_get_factory_default(
-+		asus, ASUS_WMI_DEVID_GPU_FAN_CURVE);
-+	if (err)
-+		return err;
-+	return 0;
-+}
-+
-+static ssize_t fan_curve_enable_store(struct device *dev,
-+				      struct device_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	struct fan_curve_data *data;
-+	int value, err;
-+
-+	data = fan_curve_attr_select(asus, attr);
-+
-+	err = kstrtoint(buf, 10, &value);
-+	if (err < 0)
-+		return err;
-+
-+	switch (value) {
-+	case 1:
-+		data->enabled = true;
-+		break;
-+	case 2:
-+		data->enabled = false;
-+		break;
-+	/*
-+	 * Auto + reset the fan curve data to defaults. Make it an explicit
-+	 * option so that users don't accidentally overwrite a set fan curve.
-+	 */
-+	case 3:
-+		err = fan_curve_set_default(asus);
-+		if (err)
-+			return err;
-+		data->enabled = false;
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
-+	/*
-+	 * For machines with throttle this is the only way to reset fans to
-+	 * default mode of operation (does not erase curve data).
-+	 */
-+	if (asus->throttle_thermal_policy_available && !data->enabled) {
-+		err = throttle_thermal_policy_write(asus);
-+		if (err)
-+			return err;
-+	}
-+	/* Similar is true for laptops with this fan */
-+	if (asus->fan_type == FAN_TYPE_SPEC83) {
-+		err = asus_fan_set_auto(asus);
-+		if (err)
-+			return err;
-+	}
-+	/*
-+	 * Machines without either need to write their defaults back always.
-+	 * This is more of a safeguard against ASUS faulty ACPI tables.
-+	 */
-+	if (!asus->throttle_thermal_policy_available
-+	    && asus->fan_type != FAN_TYPE_SPEC83 && !data->enabled) {
-+		err = fan_curve_set_default(asus);
-+		if (err)
-+			return err;
-+		err = fan_curve_write_data(asus, attr);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (data->enabled) {
-+		err = fan_curve_write_data(asus, attr);
-+		if (err)
-+			return err;
-+	}
-+
-+	return count;
-+}
-+
-+/* CPU */
-+static SENSOR_DEVICE_ATTR_RW(pwm1_enable, fan_curve_enable, FAN_CURVE_DEV_CPU);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 0);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 1);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 2);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point4_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point5_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point6_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point7_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 6);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point8_temp, fan_curve,
-+			       FAN_CURVE_DEV_CPU, 7);
-+
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 0);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 1);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 2);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point4_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point5_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point6_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point7_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 6);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point8_pwm, fan_curve,
-+			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 7);
-+
-+/* GPU */
-+static SENSOR_DEVICE_ATTR_RW(pwm2_enable, fan_curve_enable, FAN_CURVE_DEV_GPU);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point1_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 0);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point2_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 1);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point3_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 2);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point4_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point5_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point6_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point7_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 6);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point8_temp, fan_curve,
-+			       FAN_CURVE_DEV_GPU, 7);
-+
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point1_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 0);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point2_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 1);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point3_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 2);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point4_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point5_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point6_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point7_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 6);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point8_pwm, fan_curve,
-+			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 7);
-+
-+static struct attribute *asus_fan_curve_attr[] = {
-+	/* CPU */
-+	&sensor_dev_attr_pwm1_enable.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point1_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point2_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point3_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point4_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point5_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point6_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point7_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point8_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point1_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point2_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point3_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point4_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point5_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point6_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point7_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point8_pwm.dev_attr.attr,
-+	/* GPU */
-+	&sensor_dev_attr_pwm2_enable.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point1_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point2_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point3_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point4_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point5_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point6_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point7_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point8_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point1_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point2_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point3_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point4_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point5_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point6_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point7_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point8_pwm.dev_attr.attr,
-+	NULL
-+};
-+
-+static umode_t asus_fan_curve_is_visible(struct kobject *kobj,
-+					 struct attribute *attr, int idx)
-+{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct asus_wmi *asus = dev_get_drvdata(dev->parent);
-+
-+	if (asus->cpu_fan_curve_available)
-+		return 0644;
-+
-+	if (asus->gpu_fan_curve_available)
-+		return 0644;
-+
-+	return 0;
-+}
-+
-+static const struct attribute_group asus_fan_curve_attr_group = {
-+	.is_visible = asus_fan_curve_is_visible,
-+	.attrs = asus_fan_curve_attr,
-+};
-+__ATTRIBUTE_GROUPS(asus_fan_curve_attr);
-+
-+/*
-+ * Must be initialised after throttle_thermal_policy_check_present() as
-+ * we check the status of throttle_thermal_policy_available during init.
-+ */
-+static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
-+{
-+	struct device *dev = &asus->platform_device->dev;
-+	struct device *hwmon;
-+	int err;
-+
-+	err = fan_curve_check_present(asus, &asus->cpu_fan_curve_available,
-+				      ASUS_WMI_DEVID_CPU_FAN_CURVE);
-+	if (err)
-+		return err;
-+
-+	err = fan_curve_check_present(asus, &asus->gpu_fan_curve_available,
-+				      ASUS_WMI_DEVID_GPU_FAN_CURVE);
-+	if (err)
-+		return err;
-+
-+	hwmon = devm_hwmon_device_register_with_groups(
-+		dev, "asus_custom_fan_curve", asus, asus_fan_curve_attr_groups);
-+
-+	if (IS_ERR(hwmon)) {
-+		dev_err(dev,
-+			"Could not register asus_custom_fan_curve device\n");
-+		return PTR_ERR(hwmon);
-+	}
-+
-+	return 0;
-+}
-+
- /* Throttle thermal policy ****************************************************/
- 
- static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
-@@ -2053,8 +2633,8 @@ static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
- 	asus->throttle_thermal_policy_available = false;
- 
- 	err = asus_wmi_get_devstate(asus,
--				    ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
--				    &result);
-+		ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-+		&result);
- 	if (err) {
- 		if (err == -ENODEV)
- 			return 0;
-@@ -2092,6 +2672,12 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
- 		return -EIO;
- 	}
- 
-+	/* Must set to disabled if mode is toggled */
-+	if (asus->cpu_fan_curve_available)
-+		asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
-+	if (asus->gpu_fan_curve_available)
-+		asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled = false;
-+
- 	return 0;
- }
- 
-@@ -2901,7 +3487,7 @@ static int show_call(struct seq_file *m, void *data)
- 	if (ACPI_FAILURE(status))
- 		return -EIO;
- 
--	obj = (union acpi_object *)output.pointer;
-+	obj = output.pointer;
- 	if (obj && obj->type == ACPI_TYPE_INTEGER)
- 		seq_printf(m, "%#x(%#x, %#x) = %#x\n", asus->debug.method_id,
- 			   asus->debug.dev_id, asus->debug.ctrl_param,
-@@ -3035,6 +3621,10 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (err)
- 		goto fail_hwmon;
- 
-+	err = asus_wmi_custom_fan_curve_init(asus);
-+	if (err)
-+		goto fail_custom_fan_curve;
-+
- 	err = asus_wmi_led_init(asus);
- 	if (err)
- 		goto fail_leds;
-@@ -3106,6 +3696,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	asus_wmi_sysfs_exit(asus->platform_device);
- fail_sysfs:
- fail_throttle_thermal_policy:
-+fail_custom_fan_curve:
- fail_platform_profile_setup:
- 	if (asus->platform_profile_support)
- 		platform_profile_remove();
-@@ -3131,6 +3722,7 @@ static int asus_wmi_remove(struct platform_device *device)
- 	asus_wmi_debugfs_exit(asus);
- 	asus_wmi_sysfs_exit(asus->platform_device);
- 	asus_fan_set_auto(asus);
-+	throttle_thermal_policy_set_default(asus);
- 	asus_wmi_battery_exit(asus);
- 
- 	if (asus->platform_profile_support)
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 17dc5cb6f3f2..a571b47ff362 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -77,6 +77,8 @@
- #define ASUS_WMI_DEVID_THERMAL_CTRL	0x00110011
- #define ASUS_WMI_DEVID_FAN_CTRL		0x00110012 /* deprecated */
- #define ASUS_WMI_DEVID_CPU_FAN_CTRL	0x00110013
-+#define ASUS_WMI_DEVID_CPU_FAN_CURVE	0x00110024
-+#define ASUS_WMI_DEVID_GPU_FAN_CURVE	0x00110025
- 
- /* Power */
- #define ASUS_WMI_DEVID_PROCESSOR_STATE	0x00120012
+ .../ABI/stable/sysfs-driver-mlxreg-io         |  241 ++
+ drivers/platform/mellanox/Kconfig             |   12 +
+ drivers/platform/mellanox/Makefile            |    1 +
+ drivers/platform/mellanox/mlxreg-hotplug.c    |  123 +-
+ drivers/platform/mellanox/mlxreg-io.c         |    2 +-
+ drivers/platform/mellanox/mlxreg-lc.c         |  906 +++++++
+ drivers/platform/x86/mlx-platform.c           | 2279 +++++++++++++++--
+ include/linux/platform_data/mlxreg.h          |   82 +
+ 8 files changed, 3351 insertions(+), 295 deletions(-)
+ create mode 100644 drivers/platform/mellanox/mlxreg-lc.c
+
 -- 
-2.32.0
+2.20.1
 
