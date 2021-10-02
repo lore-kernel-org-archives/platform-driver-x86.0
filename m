@@ -2,42 +2,42 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD111C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 16:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BEFC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 16:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F903611C1
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 16:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA68561B00
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 16:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233653AbhJBQit (ORCPT
+        id S233654AbhJBQi5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 2 Oct 2021 12:38:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:23465 "EHLO
+        Sat, 2 Oct 2021 12:38:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22623 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233444AbhJBQit (ORCPT
+        by vger.kernel.org with ESMTP id S233444AbhJBQi5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Oct 2021 12:38:49 -0400
+        Sat, 2 Oct 2021 12:38:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633192623;
+        s=mimecast20190719; t=1633192631;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5eviQYiH+wuDn8MmmBiFy5LN8Xmc95cv/5zFPmx8IsU=;
-        b=NCtVcRFIe8B4qc7L+FxlbywKL1Supm4iEMyOkfk9NTYmuFY3EuO5fqElHUP4ZQ3pZeBNBy
-        mS9PAFV7Lsod4tyNORJu5GT1NHNiBTOl06LJVsnKAEyHgJ1+9JfSsUez6ZPZPgcOCCMzN7
-        ARilwM+Wby6wqsM0kqS6ntVKTgQ1nj0=
+        bh=M2+KDtrw05uj5F7fj7m/1ZjrRG+E6j0FTDlsU7SYouA=;
+        b=YXtKWlD12vf4QqWpe3Z17PjVTzgAOr/PzOSxB9ZtmA5S6VDoUdX0DTiGEzqJYlujv1Bgqq
+        ilO8MIV05gNYsuO9cQXdfuLhDN1EyalBPhk8nTCVCeowlOx//QexINoopYUkiGQZKk6B79
+        rW/KThrj6zP9J/gg/Rv6Ga73tlkH18A=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-vF23RfCLPsWjP8TlotmgPA-1; Sat, 02 Oct 2021 12:37:02 -0400
-X-MC-Unique: vF23RfCLPsWjP8TlotmgPA-1
+ us-mta-345-bE3NcMSWPV6PXJ5FJHmu0w-1; Sat, 02 Oct 2021 12:37:10 -0400
+X-MC-Unique: bE3NcMSWPV6PXJ5FJHmu0w-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75103362F8;
-        Sat,  2 Oct 2021 16:36:59 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 837D01006AA2;
+        Sat,  2 Oct 2021 16:37:07 +0000 (UTC)
 Received: from x1.localdomain (unknown [10.39.192.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D1681025EA0;
-        Sat,  2 Oct 2021 16:36:54 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B5550100763D;
+        Sat,  2 Oct 2021 16:37:03 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
@@ -62,9 +62,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH 08/10] platform/x86: thinkpad_acpi: Register a privacy-screen device
-Date:   Sat,  2 Oct 2021 18:36:16 +0200
-Message-Id: <20211002163618.99175-9-hdegoede@redhat.com>
+Subject: [PATCH 10/10] drm/i915: Add privacy-screen support (v2)
+Date:   Sat,  2 Oct 2021 18:36:18 +0200
+Message-Id: <20211002163618.99175-11-hdegoede@redhat.com>
 In-Reply-To: <20211002163618.99175-1-hdegoede@redhat.com>
 References: <20211002163618.99175-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -74,243 +74,133 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Register a privacy-screen device on laptops with a privacy-screen,
-this exports the PrivacyGuard features to user-space using a
-standardized vendor-agnostic sysfs interface. Note the sysfs interface
-is read-only.
-
-Registering a privacy-screen device with the new privacy-screen class
-code will also allow the GPU driver to get a handle to it and export
-the privacy-screen setting as a property on the DRM connector object
-for the LCD panel. This DRM connector property is a new standardized
-interface which all user-space code should use to query and control
-the privacy-screen.
-
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v3:
-- On receiving a TP_HKEY_EV_PRIVACYGUARD_TOGGLE event only call
-  drm_privacy_screen_call_notifier_chain() if the privacy-screen state
-  has actually changed
+Add support for eDP panels with a built-in privacy screen using the
+new drm_privacy_screen class.
 
 Changes in v2:
-- Make the new lcdshadow_set_sw_state, lcdshadow_get_hw_state and
-  lcdshadow_ops symbols static
-- Update state and call drm_privacy_screen_call_notifier_chain()
-  when the state is changed by pressing the Fn + D hotkey combo
----
- drivers/platform/x86/Kconfig         |  2 +
- drivers/platform/x86/thinkpad_acpi.c | 97 +++++++++++++++++++++-------
- 2 files changed, 74 insertions(+), 25 deletions(-)
+- Call drm_connector_update_privacy_screen() from
+  intel_enable_ddi_dp() / intel_ddi_update_pipe_dp() instead of adding a
+  for_each_new_connector_in_state() loop to intel_atomic_commit_tail()
+- Move the probe-deferral check to the intel_modeset_probe_defer() helper
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index e21ea3d23e6f..20208207e366 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -501,7 +501,9 @@ config THINKPAD_ACPI
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
- 	depends on BACKLIGHT_CLASS_DEVICE
- 	depends on I2C
-+	depends on DRM
- 	select ACPI_PLATFORM_PROFILE
-+	select DRM_PRIVACY_SCREEN
- 	select HWMON
- 	select NVRAM
- 	select NEW_LEDS
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index b8f2556c4797..291cd18c9c8f 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -73,6 +73,7 @@
- #include <linux/uaccess.h>
- #include <acpi/battery.h>
- #include <acpi/video.h>
-+#include <drm/drm_privacy_screen_driver.h>
- #include "dual_accel_detect.h"
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/gpu/drm/i915/display/intel_atomic.c  |  1 +
+ drivers/gpu/drm/i915/display/intel_ddi.c     |  3 +++
+ drivers/gpu/drm/i915/display/intel_display.c | 10 ++++++++++
+ drivers/gpu/drm/i915/display/intel_dp.c      | 10 ++++++++++
+ 4 files changed, 24 insertions(+)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/i915/display/intel_atomic.c
+index b4e7ac51aa31..a62550711e98 100644
+--- a/drivers/gpu/drm/i915/display/intel_atomic.c
++++ b/drivers/gpu/drm/i915/display/intel_atomic.c
+@@ -139,6 +139,7 @@ int intel_digital_connector_atomic_check(struct drm_connector *conn,
+ 	    new_conn_state->base.picture_aspect_ratio != old_conn_state->base.picture_aspect_ratio ||
+ 	    new_conn_state->base.content_type != old_conn_state->base.content_type ||
+ 	    new_conn_state->base.scaling_mode != old_conn_state->base.scaling_mode ||
++	    new_conn_state->base.privacy_screen_sw_state != old_conn_state->base.privacy_screen_sw_state ||
+ 	    !drm_connector_atomic_hdr_metadata_equal(old_state, new_state))
+ 		crtc_state->mode_changed = true;
  
- /* ThinkPad CMOS commands */
-@@ -157,6 +158,7 @@ enum tpacpi_hkey_event_t {
- 	TP_HKEY_EV_VOL_UP		= 0x1015, /* Volume up or unmute */
- 	TP_HKEY_EV_VOL_DOWN		= 0x1016, /* Volume down or unmute */
- 	TP_HKEY_EV_VOL_MUTE		= 0x1017, /* Mixer output mute */
-+	TP_HKEY_EV_PRIVACYGUARD_TOGGLE	= 0x130f, /* Toggle priv.guard on/off */
- 
- 	/* Reasons for waking up from S3/S4 */
- 	TP_HKEY_EV_WKUP_S3_UNDOCK	= 0x2304, /* undock requested, S3 */
-@@ -3889,6 +3891,12 @@ static bool hotkey_notify_extended_hotkey(const u32 hkey)
- {
- 	unsigned int scancode;
- 
-+	switch (hkey) {
-+	case TP_HKEY_EV_PRIVACYGUARD_TOGGLE:
-+		tpacpi_driver_event(hkey);
-+		return true;
-+	}
-+
- 	/* Extended keycodes start at 0x300 and our offset into the map
- 	 * TP_ACPI_HOTKEYSCAN_EXTENDED_START. The calculated scancode
- 	 * will be positive, but might not be in the correct range.
-@@ -9819,30 +9827,40 @@ static struct ibm_struct battery_driver_data = {
-  * LCD Shadow subdriver, for the Lenovo PrivacyGuard feature
+diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
+index 51cd0420e00e..e4496c830a35 100644
+--- a/drivers/gpu/drm/i915/display/intel_ddi.c
++++ b/drivers/gpu/drm/i915/display/intel_ddi.c
+@@ -25,6 +25,7 @@
+  *
   */
  
-+static struct drm_privacy_screen *lcdshadow_dev;
- static acpi_handle lcdshadow_get_handle;
- static acpi_handle lcdshadow_set_handle;
--static int lcdshadow_state;
++#include <drm/drm_privacy_screen_consumer.h>
+ #include <drm/drm_scdc_helper.h>
  
--static int lcdshadow_on_off(bool state)
-+static int lcdshadow_set_sw_state(struct drm_privacy_screen *priv,
-+				  enum drm_privacy_screen_status state)
- {
- 	int output;
+ #include "i915_drv.h"
+@@ -3022,6 +3023,7 @@ static void intel_enable_ddi_dp(struct intel_atomic_state *state,
+ 	if (port == PORT_A && DISPLAY_VER(dev_priv) < 9)
+ 		intel_dp_stop_link_train(intel_dp, crtc_state);
  
-+	if (WARN_ON(!mutex_is_locked(&priv->lock)))
-+		return -EIO;
-+
- 	if (!acpi_evalf(lcdshadow_set_handle, &output, NULL, "dd", (int)state))
- 		return -EIO;
++	drm_connector_update_privacy_screen(conn_state);
+ 	intel_edp_backlight_on(crtc_state, conn_state);
  
--	lcdshadow_state = state;
-+	priv->hw_state = priv->sw_state = state;
- 	return 0;
+ 	if (!dig_port->lspcon.active || dig_port->dp.has_hdmi_sink)
+@@ -3247,6 +3249,7 @@ static void intel_ddi_update_pipe_dp(struct intel_atomic_state *state,
+ 	intel_drrs_update(intel_dp, crtc_state);
+ 
+ 	intel_backlight_update(state, encoder, crtc_state, conn_state);
++	drm_connector_update_privacy_screen(conn_state);
  }
  
--static int lcdshadow_set(bool on)
-+static void lcdshadow_get_hw_state(struct drm_privacy_screen *priv)
+ void intel_ddi_update_pipe(struct intel_atomic_state *state,
+diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+index e67f3207ba54..9a5dbe51458d 100644
+--- a/drivers/gpu/drm/i915/display/intel_display.c
++++ b/drivers/gpu/drm/i915/display/intel_display.c
+@@ -42,6 +42,7 @@
+ #include <drm/drm_edid.h>
+ #include <drm/drm_fourcc.h>
+ #include <drm/drm_plane_helper.h>
++#include <drm/drm_privacy_screen_consumer.h>
+ #include <drm/drm_probe_helper.h>
+ #include <drm/drm_rect.h>
+ #include <drm/drm_drv.h>
+@@ -12693,6 +12694,8 @@ void intel_modeset_driver_remove_nogem(struct drm_i915_private *i915)
+ 
+ bool intel_modeset_probe_defer(struct pci_dev *pdev)
  {
--	if (lcdshadow_state < 0)
--		return lcdshadow_state;
--	if (lcdshadow_state == on)
--		return 0;
--	return lcdshadow_on_off(on);
-+	int output;
++	struct drm_privacy_screen *privacy_screen;
 +
-+	if (!acpi_evalf(lcdshadow_get_handle, &output, NULL, "dd", 0))
-+		return;
+ 	/*
+ 	 * apple-gmux is needed on dual GPU MacBook Pro
+ 	 * to probe the panel if we're the inactive GPU.
+@@ -12700,6 +12703,13 @@ bool intel_modeset_probe_defer(struct pci_dev *pdev)
+ 	if (vga_switcheroo_client_probe_defer(pdev))
+ 		return true;
+ 
++	/* If the LCD panel has a privacy-screen, wait for it */
++	privacy_screen = drm_privacy_screen_get(&pdev->dev, NULL);
++	if (IS_ERR(privacy_screen) && PTR_ERR(privacy_screen) == -EPROBE_DEFER)
++		return true;
 +
-+	priv->hw_state = priv->sw_state = output & 0x1;
++	drm_privacy_screen_put(privacy_screen);
++
+ 	return false;
  }
  
-+static const struct drm_privacy_screen_ops lcdshadow_ops = {
-+	.set_sw_state = lcdshadow_set_sw_state,
-+	.get_hw_state = lcdshadow_get_hw_state,
-+};
-+
- static int tpacpi_lcdshadow_init(struct ibm_init_struct *iibm)
- {
- 	acpi_status status1, status2;
-@@ -9850,36 +9868,44 @@ static int tpacpi_lcdshadow_init(struct ibm_init_struct *iibm)
+diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+index 74a657ae131a..91207310dc0d 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -37,6 +37,7 @@
+ #include <drm/drm_crtc.h>
+ #include <drm/drm_dp_helper.h>
+ #include <drm/drm_edid.h>
++#include <drm/drm_privacy_screen_consumer.h>
+ #include <drm/drm_probe_helper.h>
  
- 	status1 = acpi_get_handle(hkey_handle, "GSSS", &lcdshadow_get_handle);
- 	status2 = acpi_get_handle(hkey_handle, "SSSS", &lcdshadow_set_handle);
--	if (ACPI_FAILURE(status1) || ACPI_FAILURE(status2)) {
--		lcdshadow_state = -ENODEV;
-+	if (ACPI_FAILURE(status1) || ACPI_FAILURE(status2))
- 		return 0;
--	}
- 
--	if (!acpi_evalf(lcdshadow_get_handle, &output, NULL, "dd", 0)) {
--		lcdshadow_state = -EIO;
-+	if (!acpi_evalf(lcdshadow_get_handle, &output, NULL, "dd", 0))
- 		return -EIO;
--	}
--	if (!(output & 0x10000)) {
--		lcdshadow_state = -ENODEV;
-+
-+	if (!(output & 0x10000))
- 		return 0;
--	}
--	lcdshadow_state = output & 0x1;
-+
-+	lcdshadow_dev = drm_privacy_screen_register(&tpacpi_pdev->dev,
-+						    &lcdshadow_ops);
-+	if (IS_ERR(lcdshadow_dev))
-+		return PTR_ERR(lcdshadow_dev);
- 
- 	return 0;
- }
- 
-+static void lcdshadow_exit(void)
-+{
-+	drm_privacy_screen_unregister(lcdshadow_dev);
-+}
-+
- static void lcdshadow_resume(void)
- {
--	if (lcdshadow_state >= 0)
--		lcdshadow_on_off(lcdshadow_state);
-+	if (!lcdshadow_dev)
-+		return;
-+
-+	mutex_lock(&lcdshadow_dev->lock);
-+	lcdshadow_set_sw_state(lcdshadow_dev, lcdshadow_dev->sw_state);
-+	mutex_unlock(&lcdshadow_dev->lock);
- }
- 
- static int lcdshadow_read(struct seq_file *m)
- {
--	if (lcdshadow_state < 0) {
-+	if (!lcdshadow_dev) {
- 		seq_puts(m, "status:\t\tnot supported\n");
- 	} else {
--		seq_printf(m, "status:\t\t%d\n", lcdshadow_state);
-+		seq_printf(m, "status:\t\t%d\n", lcdshadow_dev->hw_state);
- 		seq_puts(m, "commands:\t0, 1\n");
+ #include "g4x_dp.h"
+@@ -4808,6 +4809,7 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
+ 	struct drm_connector *connector = &intel_connector->base;
+ 	struct drm_display_mode *fixed_mode = NULL;
+ 	struct drm_display_mode *downclock_mode = NULL;
++	struct drm_privacy_screen *privacy_screen;
+ 	bool has_dpcd;
+ 	enum pipe pipe = INVALID_PIPE;
+ 	struct edid *edid;
+@@ -4902,6 +4904,14 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
+ 				fixed_mode->hdisplay, fixed_mode->vdisplay);
  	}
  
-@@ -9891,7 +9917,7 @@ static int lcdshadow_write(char *buf)
- 	char *cmd;
- 	int res, state = -EINVAL;
- 
--	if (lcdshadow_state < 0)
-+	if (!lcdshadow_dev)
- 		return -ENODEV;
- 
- 	while ((cmd = strsep(&buf, ","))) {
-@@ -9903,11 +9929,18 @@ static int lcdshadow_write(char *buf)
- 	if (state >= 2 || state < 0)
- 		return -EINVAL;
- 
--	return lcdshadow_set(state);
-+	mutex_lock(&lcdshadow_dev->lock);
-+	res = lcdshadow_set_sw_state(lcdshadow_dev, state);
-+	mutex_unlock(&lcdshadow_dev->lock);
-+
-+	drm_privacy_screen_call_notifier_chain(lcdshadow_dev);
-+
-+	return res;
- }
- 
- static struct ibm_struct lcdshadow_driver_data = {
- 	.name = "lcdshadow",
-+	.exit = lcdshadow_exit,
- 	.resume = lcdshadow_resume,
- 	.read = lcdshadow_read,
- 	.write = lcdshadow_write,
-@@ -10717,6 +10750,20 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
- 		if (!atomic_add_unless(&dytc_ignore_event, -1, 0))
- 			dytc_profile_refresh();
- 	}
-+
-+	if (lcdshadow_dev && hkey_event == TP_HKEY_EV_PRIVACYGUARD_TOGGLE) {
-+		enum drm_privacy_screen_status old_hw_state;
-+		bool changed;
-+
-+		mutex_lock(&lcdshadow_dev->lock);
-+		old_hw_state = lcdshadow_dev->hw_state;
-+		lcdshadow_get_hw_state(lcdshadow_dev);
-+		changed = lcdshadow_dev->hw_state != old_hw_state;
-+		mutex_unlock(&lcdshadow_dev->lock);
-+
-+		if (changed)
-+			drm_privacy_screen_call_notifier_chain(lcdshadow_dev);
++	privacy_screen = drm_privacy_screen_get(dev->dev, NULL);
++	if (!IS_ERR(privacy_screen)) {
++		drm_connector_attach_privacy_screen_provider(connector,
++							     privacy_screen);
++	} else if (PTR_ERR(privacy_screen) != -ENODEV) {
++		drm_warn(&dev_priv->drm, "Error getting privacy-screen\n");
 +	}
- }
++
+ 	return true;
  
- static void hotkey_driver_event(const unsigned int scancode)
+ out_vdd_off:
 -- 
 2.31.1
 
