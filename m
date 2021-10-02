@@ -2,42 +2,42 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BEFC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 16:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E62C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 16:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA68561B00
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 16:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466DE61AA9
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Oct 2021 16:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233654AbhJBQi5 (ORCPT
+        id S233444AbhJBQjE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 2 Oct 2021 12:38:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22623 "EHLO
+        Sat, 2 Oct 2021 12:39:04 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:53316 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233444AbhJBQi5 (ORCPT
+        by vger.kernel.org with ESMTP id S233656AbhJBQjE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Oct 2021 12:38:57 -0400
+        Sat, 2 Oct 2021 12:39:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633192631;
+        s=mimecast20190719; t=1633192637;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=M2+KDtrw05uj5F7fj7m/1ZjrRG+E6j0FTDlsU7SYouA=;
-        b=YXtKWlD12vf4QqWpe3Z17PjVTzgAOr/PzOSxB9ZtmA5S6VDoUdX0DTiGEzqJYlujv1Bgqq
-        ilO8MIV05gNYsuO9cQXdfuLhDN1EyalBPhk8nTCVCeowlOx//QexINoopYUkiGQZKk6B79
-        rW/KThrj6zP9J/gg/Rv6Ga73tlkH18A=
+        bh=3s1ISiYxVXCZxxNxsv/9LY9q5pxSjXSHsFXMtIWzB6Q=;
+        b=JrgOpcMuVXYJmfsbv/QlWsezA75g0PPkHs+lcitcHAhi4xjctnGY0xfllTJP//s+wvM+mq
+        ukiMtnDyUW4keGQB7AJL/R1Mm6Y8VTUpFL9XrfX/uPwjSGkX/aOc9jwbuoRq5JaJbdcXy+
+        o51UE2TmURC2kQRogrpIL37Q6ZDZTdA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-345-bE3NcMSWPV6PXJ5FJHmu0w-1; Sat, 02 Oct 2021 12:37:10 -0400
-X-MC-Unique: bE3NcMSWPV6PXJ5FJHmu0w-1
+ us-mta-74-IWUhw18YNb6X9JBgP2cJKw-1; Sat, 02 Oct 2021 12:37:06 -0400
+X-MC-Unique: IWUhw18YNb6X9JBgP2cJKw-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 837D01006AA2;
-        Sat,  2 Oct 2021 16:37:07 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.192.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B5550100763D;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70389814313;
         Sat,  2 Oct 2021 16:37:03 +0000 (UTC)
+Received: from x1.localdomain (unknown [10.39.192.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B8DCF100763D;
+        Sat,  2 Oct 2021 16:36:59 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
@@ -62,9 +62,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH 10/10] drm/i915: Add privacy-screen support (v2)
-Date:   Sat,  2 Oct 2021 18:36:18 +0200
-Message-Id: <20211002163618.99175-11-hdegoede@redhat.com>
+Subject: [PATCH 09/10] drm/i915: Add intel_modeset_probe_defer() helper
+Date:   Sat,  2 Oct 2021 18:36:17 +0200
+Message-Id: <20211002163618.99175-10-hdegoede@redhat.com>
 In-Reply-To: <20211002163618.99175-1-hdegoede@redhat.com>
 References: <20211002163618.99175-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -74,133 +74,90 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support for eDP panels with a built-in privacy screen using the
-new drm_privacy_screen class.
+The upcoming privacy-screen support adds another check for
+deferring probe till some other drivers have bound first.
 
-Changes in v2:
-- Call drm_connector_update_privacy_screen() from
-  intel_enable_ddi_dp() / intel_ddi_update_pipe_dp() instead of adding a
-  for_each_new_connector_in_state() loop to intel_atomic_commit_tail()
-- Move the probe-deferral check to the intel_modeset_probe_defer() helper
+Factor out the current vga_switcheroo_client_probe_defer() check
+into an intel_modeset_probe_defer() helper, so that further
+probe-deferral checks can be added there.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/gpu/drm/i915/display/intel_atomic.c  |  1 +
- drivers/gpu/drm/i915/display/intel_ddi.c     |  3 +++
- drivers/gpu/drm/i915/display/intel_display.c | 10 ++++++++++
- drivers/gpu/drm/i915/display/intel_dp.c      | 10 ++++++++++
- 4 files changed, 24 insertions(+)
+ drivers/gpu/drm/i915/display/intel_display.c | 13 +++++++++++++
+ drivers/gpu/drm/i915/display/intel_display.h |  1 +
+ drivers/gpu/drm/i915/i915_pci.c              |  9 ++-------
+ 3 files changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/i915/display/intel_atomic.c
-index b4e7ac51aa31..a62550711e98 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic.c
-@@ -139,6 +139,7 @@ int intel_digital_connector_atomic_check(struct drm_connector *conn,
- 	    new_conn_state->base.picture_aspect_ratio != old_conn_state->base.picture_aspect_ratio ||
- 	    new_conn_state->base.content_type != old_conn_state->base.content_type ||
- 	    new_conn_state->base.scaling_mode != old_conn_state->base.scaling_mode ||
-+	    new_conn_state->base.privacy_screen_sw_state != old_conn_state->base.privacy_screen_sw_state ||
- 	    !drm_connector_atomic_hdr_metadata_equal(old_state, new_state))
- 		crtc_state->mode_changed = true;
+diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+index 60b2bc3ad011..e67f3207ba54 100644
+--- a/drivers/gpu/drm/i915/display/intel_display.c
++++ b/drivers/gpu/drm/i915/display/intel_display.c
+@@ -32,6 +32,7 @@
+ #include <linux/module.h>
+ #include <linux/dma-resv.h>
+ #include <linux/slab.h>
++#include <linux/vga_switcheroo.h>
  
-diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
-index 51cd0420e00e..e4496c830a35 100644
---- a/drivers/gpu/drm/i915/display/intel_ddi.c
-+++ b/drivers/gpu/drm/i915/display/intel_ddi.c
-@@ -25,6 +25,7 @@
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
+@@ -12690,6 +12691,18 @@ void intel_modeset_driver_remove_nogem(struct drm_i915_private *i915)
+ 	intel_bios_driver_remove(i915);
+ }
+ 
++bool intel_modeset_probe_defer(struct pci_dev *pdev)
++{
++	/*
++	 * apple-gmux is needed on dual GPU MacBook Pro
++	 * to probe the panel if we're the inactive GPU.
++	 */
++	if (vga_switcheroo_client_probe_defer(pdev))
++		return true;
++
++	return false;
++}
++
+ void intel_display_driver_register(struct drm_i915_private *i915)
+ {
+ 	if (!HAS_DISPLAY(i915))
+diff --git a/drivers/gpu/drm/i915/display/intel_display.h b/drivers/gpu/drm/i915/display/intel_display.h
+index 3028072c2cf3..d3d34acb6c08 100644
+--- a/drivers/gpu/drm/i915/display/intel_display.h
++++ b/drivers/gpu/drm/i915/display/intel_display.h
+@@ -633,6 +633,7 @@ void intel_display_driver_register(struct drm_i915_private *i915);
+ void intel_display_driver_unregister(struct drm_i915_private *i915);
+ 
+ /* modesetting */
++bool intel_modeset_probe_defer(struct pci_dev *pdev);
+ void intel_modeset_init_hw(struct drm_i915_private *i915);
+ int intel_modeset_init_noirq(struct drm_i915_private *i915);
+ int intel_modeset_init_nogem(struct drm_i915_private *i915);
+diff --git a/drivers/gpu/drm/i915/i915_pci.c b/drivers/gpu/drm/i915/i915_pci.c
+index d4a6a9dcf182..cf4ad648b742 100644
+--- a/drivers/gpu/drm/i915/i915_pci.c
++++ b/drivers/gpu/drm/i915/i915_pci.c
+@@ -22,8 +22,6 @@
   *
   */
  
-+#include <drm/drm_privacy_screen_consumer.h>
- #include <drm/drm_scdc_helper.h>
- 
- #include "i915_drv.h"
-@@ -3022,6 +3023,7 @@ static void intel_enable_ddi_dp(struct intel_atomic_state *state,
- 	if (port == PORT_A && DISPLAY_VER(dev_priv) < 9)
- 		intel_dp_stop_link_train(intel_dp, crtc_state);
- 
-+	drm_connector_update_privacy_screen(conn_state);
- 	intel_edp_backlight_on(crtc_state, conn_state);
- 
- 	if (!dig_port->lspcon.active || dig_port->dp.has_hdmi_sink)
-@@ -3247,6 +3249,7 @@ static void intel_ddi_update_pipe_dp(struct intel_atomic_state *state,
- 	intel_drrs_update(intel_dp, crtc_state);
- 
- 	intel_backlight_update(state, encoder, crtc_state, conn_state);
-+	drm_connector_update_privacy_screen(conn_state);
- }
- 
- void intel_ddi_update_pipe(struct intel_atomic_state *state,
-diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-index e67f3207ba54..9a5dbe51458d 100644
---- a/drivers/gpu/drm/i915/display/intel_display.c
-+++ b/drivers/gpu/drm/i915/display/intel_display.c
-@@ -42,6 +42,7 @@
- #include <drm/drm_edid.h>
- #include <drm/drm_fourcc.h>
- #include <drm/drm_plane_helper.h>
-+#include <drm/drm_privacy_screen_consumer.h>
- #include <drm/drm_probe_helper.h>
- #include <drm/drm_rect.h>
+-#include <linux/vga_switcheroo.h>
+-
  #include <drm/drm_drv.h>
-@@ -12693,6 +12694,8 @@ void intel_modeset_driver_remove_nogem(struct drm_i915_private *i915)
+ #include <drm/i915_pciids.h>
  
- bool intel_modeset_probe_defer(struct pci_dev *pdev)
- {
-+	struct drm_privacy_screen *privacy_screen;
-+
- 	/*
- 	 * apple-gmux is needed on dual GPU MacBook Pro
- 	 * to probe the panel if we're the inactive GPU.
-@@ -12700,6 +12703,13 @@ bool intel_modeset_probe_defer(struct pci_dev *pdev)
- 	if (vga_switcheroo_client_probe_defer(pdev))
- 		return true;
+@@ -1187,11 +1185,8 @@ static int i915_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (PCI_FUNC(pdev->devfn))
+ 		return -ENODEV;
  
-+	/* If the LCD panel has a privacy-screen, wait for it */
-+	privacy_screen = drm_privacy_screen_get(&pdev->dev, NULL);
-+	if (IS_ERR(privacy_screen) && PTR_ERR(privacy_screen) == -EPROBE_DEFER)
-+		return true;
-+
-+	drm_privacy_screen_put(privacy_screen);
-+
- 	return false;
- }
+-	/*
+-	 * apple-gmux is needed on dual GPU MacBook Pro
+-	 * to probe the panel if we're the inactive GPU.
+-	 */
+-	if (vga_switcheroo_client_probe_defer(pdev))
++	/* Detect if we need to wait for other drivers early on */
++	if (intel_modeset_probe_defer(pdev))
+ 		return -EPROBE_DEFER;
  
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index 74a657ae131a..91207310dc0d 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -37,6 +37,7 @@
- #include <drm/drm_crtc.h>
- #include <drm/drm_dp_helper.h>
- #include <drm/drm_edid.h>
-+#include <drm/drm_privacy_screen_consumer.h>
- #include <drm/drm_probe_helper.h>
- 
- #include "g4x_dp.h"
-@@ -4808,6 +4809,7 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
- 	struct drm_connector *connector = &intel_connector->base;
- 	struct drm_display_mode *fixed_mode = NULL;
- 	struct drm_display_mode *downclock_mode = NULL;
-+	struct drm_privacy_screen *privacy_screen;
- 	bool has_dpcd;
- 	enum pipe pipe = INVALID_PIPE;
- 	struct edid *edid;
-@@ -4902,6 +4904,14 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
- 				fixed_mode->hdisplay, fixed_mode->vdisplay);
- 	}
- 
-+	privacy_screen = drm_privacy_screen_get(dev->dev, NULL);
-+	if (!IS_ERR(privacy_screen)) {
-+		drm_connector_attach_privacy_screen_provider(connector,
-+							     privacy_screen);
-+	} else if (PTR_ERR(privacy_screen) != -ENODEV) {
-+		drm_warn(&dev_priv->drm, "Error getting privacy-screen\n");
-+	}
-+
- 	return true;
- 
- out_vdd_off:
+ 	err = i915_driver_probe(pdev, ent);
 -- 
 2.31.1
 
