@@ -2,162 +2,98 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024C2C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Oct 2021 16:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41FEC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Oct 2021 16:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC48B6124D
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Oct 2021 16:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 871CA61357
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Oct 2021 16:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236408AbhJDQXy (ORCPT
+        id S237889AbhJDRBW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Oct 2021 12:23:54 -0400
-Received: from mga11.intel.com ([192.55.52.93]:48674 "EHLO mga11.intel.com"
+        Mon, 4 Oct 2021 13:01:22 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52662 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236902AbhJDQXu (ORCPT
+        id S235754AbhJDRBT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Oct 2021 12:23:50 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10127"; a="222932433"
-X-IronPort-AV: E=Sophos;i="5.85,346,1624345200"; 
-   d="scan'208";a="222932433"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2021 08:34:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,346,1624345200"; 
-   d="scan'208";a="483164961"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.171])
-  by fmsmga007.fm.intel.com with SMTP; 04 Oct 2021 08:34:17 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Mon, 04 Oct 2021 18:34:16 +0300
-Date:   Mon, 4 Oct 2021 18:34:16 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rajat Jain <rajatja@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Lyude <lyude@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Pekka Paalanen <pekka.paalanen@collabora.com>,
-        Mario Limonciello <mario.limonciello@outlook.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Sebastien Bacher <seb128@ubuntu.com>,
-        Marco Trevisan <marco.trevisan@canonical.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 09/10] drm/i915: Add intel_modeset_probe_defer() helper
-Message-ID: <YVse+Kr2J4VO+2uu@intel.com>
-References: <20211002163618.99175-1-hdegoede@redhat.com>
- <20211002163618.99175-10-hdegoede@redhat.com>
+        Mon, 4 Oct 2021 13:01:19 -0400
+Received: from zn.tnic (p200300ec2f0fe400ce4149225ac01b7e.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:e400:ce41:4922:5ac0:1b7e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6B34A1EC03FE;
+        Mon,  4 Oct 2021 18:59:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1633366769;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=mzoIXD8vqb3ZXpDUu8n6sOgVFOmimNsgP0yg1PVSUjE=;
+        b=BrcRMXQgn7F/9dK/nlGjIrS9TVfoabXUOocuA87+KE3Gk9ANWdfvmAUob2BOpyR/aAqx9E
+        wkIec3izSs5L8GTk63mHL6gXedPtGFtSoExxps+xF/4U4j9cTwY1ZbQzID7HyJIs93Pp35
+        EP9TqWedSIKEpatBNn19Bbz+YWGH5o0=
+Date:   Mon, 4 Oct 2021 18:59:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Subject: Re: [Bug 214453] New: skl_int3472_unregister_clock: kernel NULL
+ pointer dereference (HP Elite x2 1013 G3)
+Message-ID: <YVsy5Gv3z6JAWnxj@zn.tnic>
+References: <bug-214453-6385@https.bugzilla.kernel.org/>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211002163618.99175-10-hdegoede@redhat.com>
-X-Patchwork-Hint: comment
+In-Reply-To: <bug-214453-6385@https.bugzilla.kernel.org/>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Oct 02, 2021 at 06:36:17PM +0200, Hans de Goede wrote:
-> The upcoming privacy-screen support adds another check for
-> deferring probe till some other drivers have bound first.
-> 
-> Factor out the current vga_switcheroo_client_probe_defer() check
-> into an intel_modeset_probe_defer() helper, so that further
-> probe-deferral checks can be added there.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/gpu/drm/i915/display/intel_display.c | 13 +++++++++++++
->  drivers/gpu/drm/i915/display/intel_display.h |  1 +
->  drivers/gpu/drm/i915/i915_pci.c              |  9 ++-------
->  3 files changed, 16 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-> index 60b2bc3ad011..e67f3207ba54 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display.c
-> +++ b/drivers/gpu/drm/i915/display/intel_display.c
-> @@ -32,6 +32,7 @@
->  #include <linux/module.h>
->  #include <linux/dma-resv.h>
->  #include <linux/slab.h>
-> +#include <linux/vga_switcheroo.h>
->  
->  #include <drm/drm_atomic.h>
->  #include <drm/drm_atomic_helper.h>
-> @@ -12690,6 +12691,18 @@ void intel_modeset_driver_remove_nogem(struct drm_i915_private *i915)
->  	intel_bios_driver_remove(i915);
->  }
->  
-> +bool intel_modeset_probe_defer(struct pci_dev *pdev)
-> +{
-> +	/*
-> +	 * apple-gmux is needed on dual GPU MacBook Pro
-> +	 * to probe the panel if we're the inactive GPU.
-> +	 */
-> +	if (vga_switcheroo_client_probe_defer(pdev))
-> +		return true;
-> +
-> +	return false;
-> +}
+Adding more people to Cc.
 
-Seems fine. Presumably Jani isn't too grumpy about it :P
-
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-
-> +
->  void intel_display_driver_register(struct drm_i915_private *i915)
->  {
->  	if (!HAS_DISPLAY(i915))
-> diff --git a/drivers/gpu/drm/i915/display/intel_display.h b/drivers/gpu/drm/i915/display/intel_display.h
-> index 3028072c2cf3..d3d34acb6c08 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display.h
-> +++ b/drivers/gpu/drm/i915/display/intel_display.h
-> @@ -633,6 +633,7 @@ void intel_display_driver_register(struct drm_i915_private *i915);
->  void intel_display_driver_unregister(struct drm_i915_private *i915);
->  
->  /* modesetting */
-> +bool intel_modeset_probe_defer(struct pci_dev *pdev);
->  void intel_modeset_init_hw(struct drm_i915_private *i915);
->  int intel_modeset_init_noirq(struct drm_i915_private *i915);
->  int intel_modeset_init_nogem(struct drm_i915_private *i915);
-> diff --git a/drivers/gpu/drm/i915/i915_pci.c b/drivers/gpu/drm/i915/i915_pci.c
-> index d4a6a9dcf182..cf4ad648b742 100644
-> --- a/drivers/gpu/drm/i915/i915_pci.c
-> +++ b/drivers/gpu/drm/i915/i915_pci.c
-> @@ -22,8 +22,6 @@
->   *
->   */
->  
-> -#include <linux/vga_switcheroo.h>
-> -
->  #include <drm/drm_drv.h>
->  #include <drm/i915_pciids.h>
->  
-> @@ -1187,11 +1185,8 @@ static int i915_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  	if (PCI_FUNC(pdev->devfn))
->  		return -ENODEV;
->  
-> -	/*
-> -	 * apple-gmux is needed on dual GPU MacBook Pro
-> -	 * to probe the panel if we're the inactive GPU.
-> -	 */
-> -	if (vga_switcheroo_client_probe_defer(pdev))
-> +	/* Detect if we need to wait for other drivers early on */
-> +	if (intel_modeset_probe_defer(pdev))
->  		return -EPROBE_DEFER;
->  
->  	err = i915_driver_probe(pdev, ent);
+On Fri, Sep 17, 2021 at 12:18:27PM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=214453
+> 
+>             Bug ID: 214453
+>            Summary: skl_int3472_unregister_clock: kernel NULL pointer
+>                     dereference (HP Elite x2 1013 G3)
+>            Product: Platform Specific/Hardware
+>            Version: 2.5
+>     Kernel Version: 5.14.5
+>           Hardware: Intel
+>                 OS: Linux
+>               Tree: Mainline
+>             Status: NEW
+>           Severity: low
+>           Priority: P1
+>          Component: x86-64
+>           Assignee: platform_x86_64@kernel-bugs.osdl.org
+>           Reporter: kernel-NTEO@vplace.de
+>         Regression: No
+> 
+> Created attachment 298863
+>   --> https://bugzilla.kernel.org/attachment.cgi?id=298863&action=edit
+> dmesg oops log
+> 
+> On a HP Elite x2 1013 G3 a kernel oops is caused by int3472:
+> 
+> [    8.820565] int3472-discrete INT3472:02: No sensor module config
+> [    8.820569] int3472-discrete INT3472:02: error -EINVAL: Failed to map
+> regulator to sensor
+> [    8.820574] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> [...]
+> [    8.820654] Call Trace:
+> [    8.820657]  clkdev_drop+0x1d/0x60
+> [    8.820665]  skl_int3472_unregister_clock+0x15/0x30 [intel_skl_int3472
+> a61329898df9463f8661b1eee1ed1e20b1626f62]
+> 
 > -- 
-> 2.31.1
+> You may reply to this email to add a comment.
+> 
+> You are receiving this mail because:
+> You are watching the assignee of the bug.
 
 -- 
-Ville Syrjälä
-Intel
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
