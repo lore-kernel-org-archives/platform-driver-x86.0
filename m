@@ -2,293 +2,238 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E880DC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 15:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EBCC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 16:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF41461042
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 15:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CD061373
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 16:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234416AbhJEP7A (ORCPT
+        id S231993AbhJEQZr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Oct 2021 11:59:00 -0400
-Received: from mail-dm6nam10on2064.outbound.protection.outlook.com ([40.107.93.64]:44704
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231513AbhJEP7A (ORCPT
+        Tue, 5 Oct 2021 12:25:47 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54590 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231196AbhJEQZq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Oct 2021 11:59:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P7ZZbVLiviJ08f5JGPyl5tanCfL8oqzarFcp4pD7ooneQBJaROsYbYxUqRiNoCoAgvqGeKxiLLawJ+FNelxvpZJOTobJnPeOaBQBqd/BHetDoM+batAUvYYcZfcL8l1i8xC+lWck4rIWLaYG2bVY1ZeXXMr/+4/MpsbMGu3LPYCqytaaRujdk70cEDlE3lyfH7o7HJDSHcuDjcGcAEjD7e9DHu2qBtkhAxVd8xl6JP9xGZdga/qpN1+bmljbV010j/53/bw2zeaCt7MgpY122NxQU7Tptaeus2eKBy4E54gcUwMy4U8OZHFIBXMwQy15MNEGtIUO8CntsrzdQEmjGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=30iHlsis5640VTLyW81v5zEeWdZjkJAFYDg6a135Sw4=;
- b=GlVZPajRfBaiZcGe0Bpo4TOi/5IY+o4d+H54W6zrx1p7jqxuqgUKu8/jwgCxHEaQ5QMXs1lcl04XXqmDerrQs5t/kjo6FC5jSjPs7Ceqpz5O1jkta94UgZFz05KR2W+fy7iR05sdGoOrokPhGF3T06NgnUrvRZAO0e2hKB2N6YApHsnH6teSPDYG5TkTIuAcCIPVDbAKQY9sp1bRuVDTgI5EStyDKJjbwpqs2C+MvxsLmdWt9YvrOQ5r/Vs+1XcRkgbQRlSy5GSkWy2BVqvdDw08U12v5EkKGiHCggiHUhHUdHptzaspZ5he0HKdRvwecVRtuas8A8FK27b/JF4tSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=30iHlsis5640VTLyW81v5zEeWdZjkJAFYDg6a135Sw4=;
- b=J05SW+ePAgaW+bVVKEjaq3dH4Ngw9izIX0w/cUPMVOKlwzitXlDyO/xlYR8HC4QwTvImiJggtF1qLWYUQvX0xrYmDZiQXsffCrmXIxvGPxweTpi8ESnyT9wXo4x3f8kXcBWA36NjoYjiZ+LPxFpdSBPeCiQkp2NVoxVFmQV0nHE=
-Received: from BN9PR03CA0860.namprd03.prod.outlook.com (2603:10b6:408:13d::25)
- by BY5PR12MB4920.namprd12.prod.outlook.com (2603:10b6:a03:1d3::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.22; Tue, 5 Oct
- 2021 15:57:07 +0000
-Received: from BN8NAM11FT042.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:13d:cafe::75) by BN9PR03CA0860.outlook.office365.com
- (2603:10b6:408:13d::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.22 via Frontend
- Transport; Tue, 5 Oct 2021 15:57:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT042.mail.protection.outlook.com (10.13.177.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4566.14 via Frontend Transport; Tue, 5 Oct 2021 15:57:06 +0000
-Received: from amd-Mandolin-PCO.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Tue, 5 Oct 2021
- 10:57:04 -0500
-From:   Sanket Goswami <Sanket.Goswami@amd.com>
-To:     <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>,
-        <mgross@linux.intel.com>
-CC:     <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Sanket Goswami <Sanket.Goswami@amd.com>
-Subject: [PATCH] platform/x86: amd-pmc: Add support for AMD Smart Trace Buffer
-Date:   Tue, 5 Oct 2021 21:26:41 +0530
-Message-ID: <20211005155641.2308-1-Sanket.Goswami@amd.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 5 Oct 2021 12:25:46 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 16F191F425D6
+Received: by earth.universe (Postfix, from userid 1000)
+        id 93B9D3C0CA7; Tue,  5 Oct 2021 18:23:52 +0200 (CEST)
+Date:   Tue, 5 Oct 2021 18:23:52 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     =?utf-8?Q?Nicol=C3=B2?= Piazzalunga <nicolopiazzalunga@gmail.com>,
+        linux-pm@vger.kernel.org,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Thomas Koch <linrunner@gmx.net>,
+        "smclt30p@gmail.com" <smclt30p@gmail.com>
+Subject: Re: [RFC] add standardized attributes for force_discharge and
+ inhibit_charge
+Message-ID: <20211005162352.emaoveimhkp5uzfw@earth.universe>
+References: <21569a89-8303-8573-05fb-c2fec29983d1@gmail.com>
+ <77e39b3e-fa51-54fe-1898-4f43895ac2c6@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 18f89310-90f9-4cfb-5fd2-08d98818c830
-X-MS-TrafficTypeDiagnostic: BY5PR12MB4920:
-X-Microsoft-Antispam-PRVS: <BY5PR12MB49209783BC3965A6305C434F9CAF9@BY5PR12MB4920.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pn8W9lW9MzlK2xu3PW6x/OxOxXGH16IkjNtW3Wx65129bFvfmUgwYEbQoGOWI+toSajezaM2imV2Y3eo0V7aNiqvlxImch4XcGDuQJcsPSx34nuHMWZAAgo4/5qEkqAlPYo/JZvtrXdMaDYoSNQGwQXOsVsi98JCRJDxII4fdn1MZ9FRnEepwrNgmYbrXrRQY+80ClRReEHSD4UotuAHNxPk1JlBkmtmM7JBFIPVRQ5JhHNtpSDBWfgfbrMnR7+cijId9Y0oPg78o32+jxO72ppqn25IMJNzouhBuMNARNKFia0mSZzFLQv6r1I/iBEkP9Jl+UgxRnT4VqouiYYlGW4/zbB/956PtNN6MfgqZi6d8RYpC53pB4FIt9P5ZqHZ/KUsqnqxztWuyXo9fRr0Z4mXUX777Y2bJq5CkPSx1THdp0QNfRULSOMzPacglDxjKIjCIA6lySCNDCc6w3uDzpbZsztQz1XuymzaDul0IYdwfJcDjjJiFvoOFrnytkqZXP/V0TIKKKLnAfPnF210Sa/xm8m4TaiLunTKv1uqDAC0jIYzPEI7nJKQRZ1TgO5zanE2Kr4756gKfME2aJkF7etH3sP0//dXoJfDlOBH+KUnKG/otrnKvj3XrOtBWlI5N0GFWFilndSTEGEPciwiSQ1sWsAHsjQ8AWDqFvmg23jZLyc4x6AIau93S7b4HwHv7U2p1PoehbdlWJLiW0scW/xUgIDbAlccAkVayjKgwhs=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(47076005)(8936002)(5660300002)(54906003)(316002)(508600001)(110136005)(7696005)(1076003)(336012)(70586007)(81166007)(4326008)(356005)(83380400001)(36756003)(26005)(8676002)(70206006)(186003)(2616005)(6666004)(82310400003)(36860700001)(426003)(16526019)(86362001)(2906002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2021 15:57:06.8412
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18f89310-90f9-4cfb-5fd2-08d98818c830
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT042.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4920
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ypvk6t7gfdphpnja"
+Content-Disposition: inline
+In-Reply-To: <77e39b3e-fa51-54fe-1898-4f43895ac2c6@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-STB (Smart Trace Buffer), is a debug trace buffer which is used to help
-isolate failures by analyzing the last feature that a system was running
-before hitting a failure. This nonintrusive way is always running in the
-background and trace is stored into the SoC.
 
-This patch provides mechanism to access the STB buffer using the read and
-write routines.
+--ypvk6t7gfdphpnja
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Co-developed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
----
- drivers/platform/x86/amd-pmc.c | 110 +++++++++++++++++++++++++++++++++
- 1 file changed, 110 insertions(+)
+Hi,
 
-diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-index 7b44833290df..c853b22cad6a 100644
---- a/drivers/platform/x86/amd-pmc.c
-+++ b/drivers/platform/x86/amd-pmc.c
-@@ -33,6 +33,12 @@
- #define AMD_PMC_SCRATCH_REG_CZN		0x94
- #define AMD_PMC_SCRATCH_REG_YC		0xD14
- 
-+/* STB Registers */
-+#define AMD_PMC_STB_INDEX_ADDRESS	0xF8
-+#define AMD_PMC_STB_INDEX_DATA		0xFC
-+#define AMD_PMC_STB_PMI_0		0x03E30600
-+#define AMD_PMC_STB_PREDEF		0xC6000001
-+
- /* Base address of SMU for mapping physical address to virtual address */
- #define AMD_PMC_SMU_INDEX_ADDRESS	0xB8
- #define AMD_PMC_SMU_INDEX_DATA		0xBC
-@@ -80,6 +86,7 @@
- #define SOC_SUBSYSTEM_IP_MAX	12
- #define DELAY_MIN_US		2000
- #define DELAY_MAX_US		3000
-+#define FIFO_SIZE		4096
- enum amd_pmc_def {
- 	MSG_TEST = 0x01,
- 	MSG_OS_HINT_PCO,
-@@ -119,13 +126,21 @@ struct amd_pmc_dev {
- 	u16 minor;
- 	u16 rev;
- 	struct device *dev;
-+	struct pci_dev *rdev;
- 	struct mutex lock; /* generic mutex lock */
- #if IS_ENABLED(CONFIG_DEBUG_FS)
- 	struct dentry *dbgfs_dir;
- #endif /* CONFIG_DEBUG_FS */
- };
- 
-+static u32 stb_data[FIFO_SIZE];
-+static bool enable_stb;
-+module_param(enable_stb, bool, 0644);
-+MODULE_PARM_DESC(enable_stb, "Enable the STB debug mechanism");
-+
- static struct amd_pmc_dev pmc;
-+static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
-+static int amd_pmc_read_stb(struct amd_pmc_dev *dev);
- static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set, u32 *data, u8 msg, bool ret);
- 
- static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
-@@ -254,6 +269,20 @@ static int amd_pmc_idlemask_show(struct seq_file *s, void *unused)
- }
- DEFINE_SHOW_ATTRIBUTE(amd_pmc_idlemask);
- 
-+static int stb_read_show(struct seq_file *seq, void *unused)
-+{
-+	struct amd_pmc_dev *pdev = seq->private;
-+	int i;
-+
-+	amd_pmc_read_stb(pdev);
-+
-+	for (i = 0; i < FIFO_SIZE; i += 4)
-+		seq_hex_dump(seq, "", DUMP_PREFIX_NONE, 16, 1, &stb_data[i], 16, true);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(stb_read);
-+
- static void amd_pmc_dbgfs_unregister(struct amd_pmc_dev *dev)
- {
- 	debugfs_remove_recursive(dev->dbgfs_dir);
-@@ -268,6 +297,10 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
- 			    &s0ix_stats_fops);
- 	debugfs_create_file("amd_pmc_idlemask", 0644, dev->dbgfs_dir, dev,
- 			    &amd_pmc_idlemask_fops);
-+	/* Enable STB only when the module_param is set */
-+	if (enable_stb)
-+		debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
-+				    &stb_read_fops);
- }
- #else
- static inline void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
-@@ -429,6 +462,9 @@ static int __maybe_unused amd_pmc_suspend(struct device *dev)
- 	if (rc)
- 		dev_err(pdev->dev, "suspend failed\n");
- 
-+	if (enable_stb)
-+		amd_pmc_write_stb(pdev, AMD_PMC_STB_PREDEF);
-+
- 	return rc;
- }
- 
-@@ -449,6 +485,10 @@ static int __maybe_unused amd_pmc_resume(struct device *dev)
- 	/* Dump the IdleMask to see the blockers */
- 	amd_pmc_idlemask_read(pdev, dev, NULL);
- 
-+	/* Write data incremented by 1 to distinguish in stb_read */
-+	if (enable_stb)
-+		amd_pmc_write_stb(pdev, AMD_PMC_STB_PREDEF + 1);
-+
- 	return 0;
- }
- 
-@@ -465,6 +505,76 @@ static const struct pci_device_id pmc_pci_ids[] = {
- 	{ }
- };
- 
-+static int amd_pmc_get_root_port(struct amd_pmc_dev *dev)
-+{
-+	dev->rdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0, 0));
-+	if (!dev->rdev || !pci_match_id(pmc_pci_ids, dev->rdev)) {
-+		pci_dev_put(dev->rdev);
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
-+{
-+	int rc;
-+
-+	rc = amd_pmc_get_root_port(dev);
-+	if (rc)
-+		return rc;
-+
-+	rc = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_ADDRESS, AMD_PMC_STB_PMI_0);
-+	if (rc) {
-+		dev_err(dev->dev, "failed to write addr in stb: 0x%X\n",
-+			AMD_PMC_STB_INDEX_ADDRESS);
-+		pci_dev_put(dev->rdev);
-+		return pcibios_err_to_errno(rc);
-+	}
-+
-+	rc = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_DATA, data);
-+	if (rc) {
-+		dev_err(dev->dev, "failed to write data in stb: 0x%X\n",
-+			AMD_PMC_STB_INDEX_DATA);
-+		pci_dev_put(dev->rdev);
-+		return pcibios_err_to_errno(rc);
-+	}
-+
-+	return 0;
-+}
-+
-+static int amd_pmc_read_stb(struct amd_pmc_dev *dev)
-+{
-+	u32 cnt = 0, value;
-+	int i, err;
-+
-+	err = amd_pmc_get_root_port(dev);
-+	if (err)
-+		return err;
-+
-+	err = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_ADDRESS, AMD_PMC_STB_PMI_0);
-+	if (err) {
-+		dev_err(dev->dev, "error writing addr to stb: 0x%X\n",
-+			AMD_PMC_STB_INDEX_ADDRESS);
-+		pci_dev_put(dev->rdev);
-+		return pcibios_err_to_errno(err);
-+	}
-+
-+	for (i = 0; i < FIFO_SIZE; i++) {
-+		err = pci_read_config_dword(dev->rdev, AMD_PMC_STB_INDEX_DATA, &value);
-+		if (err) {
-+			dev_err(dev->dev, "error reading data from stb: 0x%X\n",
-+				AMD_PMC_STB_INDEX_DATA);
-+			pci_dev_put(dev->rdev);
-+			return pcibios_err_to_errno(err);
-+		}
-+
-+		stb_data[cnt++] = value;
-+	}
-+
-+	return 0;
-+}
-+
- static int amd_pmc_probe(struct platform_device *pdev)
- {
- 	struct amd_pmc_dev *dev = &pmc;
--- 
-2.25.1
+On Wed, Sep 29, 2021 at 11:38:12AM +0200, Hans de Goede wrote:
+> On 9/28/21 10:11 PM, Nicol=F2 Piazzalunga wrote:
+> > this is a proposal to introduce separate and standardized attributes
+> > for force_discharge and inhibit_charge of a battery.
+> > These are simpler than using status from a user-space perspective,
+> > as discussed on the platform-driver-x86 mail list.
+>=20
+> To clarify things a bit here, the reasons for not using status for
+> this are:
+>=20
+> 1. This would require adding new status-es which so far have never
+> been seen by userspace, which will likely cause confusion of e.g.
+> upower. IOW I believe that adding new status-es for this would
+> be a userspace ABI break.
 
+Some embedded devices have status writable and use existing status
+and reset when adapter is replugged. That's why there are no extra
+status already.
+
+> 2. The devices where we currently want to use this functionality
+> use the ACPI battery interface, which is standardized between
+> vendors and dealt with by drivers/apci/battery.c  but this kinda
+> extra functionality is vendor specific. The drivers/apci/battery.c
+> has code allowing vendor drivers to "hook" ACPI batteries and get
+> add/remove calls for them. Then in these calls currently the
+> vendor drivers do:
+>=20
+> 	device_add_groups(&battery->dev, my_prop_group))
+>=20
+> Which allows them to register extra sysfs_attributes for
+> for example charge_control_start_threshold and
+> charge_control_end_threshold.
+>=20
+> This works well, but having vendor drivers somehow intercept /
+> muck with the status handling in drivers/apci/battery.c is a
+> non trival problem. Where as with new separate attributes
+> this is already a solved problem.
+
+The second argument is a very weak one. We do not accept bad
+userspace API to avoid restructuring a driver. FWIW adding
+attributes that way is already racy and a bug:
+
+http://kroah.com/log/blog/2013/06/26/how-to-create-a-sysfs-file-correctly/
+
+The power-supply subsystem offers registering custom sysfs
+files since a few kernel releases by setting up the following:
+
+/* Run-time specific power supply configuration */
+struct power_supply_config {
+    ...
+   	/* Device specific sysfs attributes */
+	const struct attribute_group **attr_grp;
+    ...
+}
+
+All drivers in drivers/power/supply/ have been converted and
+the ACPI is one of the last drivers not using this.
+
+> > ---
+> >  Documentation/ABI/testing/sysfs-class-power | 27 +++++++++++++++++++++
+> >  drivers/power/supply/power_supply_sysfs.c   |  2 ++
+> >  include/linux/power_supply.h                |  2 ++
+> >  3 files changed, 31 insertions(+)
+> >=20
+> > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentatio=
+n/ABI/testing/sysfs-class-power
+> > index ca830c6cd809..2c5f48f49273 100644
+> > --- a/Documentation/ABI/testing/sysfs-class-power
+> > +++ b/Documentation/ABI/testing/sysfs-class-power
+> > @@ -455,6 +455,33 @@ Description:
+> >  			      "Unknown", "Charging", "Discharging",
+> >  			      "Not charging", "Full"
+> > =20
+> > +What:		/sys/class/power_supply/<supply_name>/force_discharge
+> > +Date:		September 2021
+> > +Contact:	linux-pm@vger.kernel.org
+> > +Description:
+> > +		Represents the forced discharging status of the battery.
+> > +
+> > +		Access: Read, Write
+> > +
+> > +		Valid values:
+> > +			=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +			0: Force discharge while AC is attached
+> > +			1: Terminate forced discharging
+> > +
+>=20
+> I think you have 0 and 1 swapped here? I would expect 1 to be enable forc=
+ed
+> discharging and 0 be normal operation, iow only discharge when not on AC.
+
+Considering some Thinkpads have two batteries the naming and
+description of this is quite bad. Only the valid values part
+suggests that this is just about AC.
+
+> > +What:		/sys/class/power_supply/<supply_name>/inhibit_charge
+> > +Date:		September 2021
+> > +Contact:	linux-pm@vger.kernel.org
+> > +Description:
+> > +		Represents the presence of a manual override over the threshold
+> > +		attributes of the battery, thus inhibiting battery charge.
+
+The first part is specific to thinkpad implementation.
+
+> > +
+> > +		Access: Read, Write
+> > +
+> > +		Valid values:
+> > +			=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+> > +			1: Stop charging
+> > +			0: Terminate the override
+> > +
+
+I wonder if its better to put both into the same file, considering
+that the only logical options are
+
+ * 0 =3D no override (=3D charge when possible)
+ * 1 =3D force idle
+ * 2 =3D force discharge
+
+I.e. forced discharge implies battery not being charged.
+
+-- Sebastian
+
+> >  What:		/sys/class/power_supply/<supply_name>/technology
+> >  Date:		May 2007
+> >  Contact:	linux-pm@vger.kernel.org
+> > diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/=
+supply/power_supply_sysfs.c
+> > index c3d7cbcd4fad..6e7303935810 100644
+> > --- a/drivers/power/supply/power_supply_sysfs.c
+> > +++ b/drivers/power/supply/power_supply_sysfs.c
+> > @@ -136,6 +136,8 @@ static const char * const POWER_SUPPLY_SCOPE_TEXT[]=
+ =3D {
+> >  static struct power_supply_attr power_supply_attrs[] =3D {
+> >  	/* Properties of type `int' */
+> >  	POWER_SUPPLY_ENUM_ATTR(STATUS),
+> > +	POWER_SUPPLY_ENUM_ATTR(FORCE_DISCHARGE),
+> > +	POWER_SUPPLY_ENUM_ATTR(INHIBIT_CHARGE),
+> >  	POWER_SUPPLY_ENUM_ATTR(CHARGE_TYPE),
+> >  	POWER_SUPPLY_ENUM_ATTR(HEALTH),
+> >  	POWER_SUPPLY_ATTR(PRESENT),
+> > diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> > index 9ca1f120a211..4340fe65df4d 100644
+> > --- a/include/linux/power_supply.h
+> > +++ b/include/linux/power_supply.h
+> > @@ -96,6 +96,8 @@ enum {
+> >  enum power_supply_property {
+> >  	/* Properties of type `int' */
+> >  	POWER_SUPPLY_PROP_STATUS =3D 0,
+> > +	POWER_SUPPLY_PROP_FORCE_DISCHARGE,
+> > +	POWER_SUPPLY_PROP_INHIBIT_CHARGE,
+> >  	POWER_SUPPLY_PROP_CHARGE_TYPE,
+> >  	POWER_SUPPLY_PROP_HEALTH,
+> >  	POWER_SUPPLY_PROP_PRESENT,
+> >=20
+>=20
+> Regards,
+>=20
+> Hans
+>=20
+
+--ypvk6t7gfdphpnja
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmFcfBQACgkQ2O7X88g7
++pr3/g//cdiacSUI6ucSueiJ6nMero8VDp7aT/T/v7Ooot5a9bv03Aemi+iihmRy
+e8V8QC1xUYxte8NylUENs8J09WXd+ipqMO9rngjp3w6AWCQvbjVDxI0G1J0T3sR+
+u5pZqEuiKuJZYlcYBs0YGu+O6XOd9qtcc/8GbIzd8WXfnQhovYiDsvaiaFS1mtgB
+zgYeV3PmC8bXLYGtmzMtqtaaiDt4VPQnlC3A7Fjx4e+7rePQ0No2XRQOiDddcj27
+GIAKQPxQeY7/HlJu/qL3fZ8e3fg2hpLputPn2BAF4j34OHUOBdLkarZCu9aIa6jr
+RTQm9LMfZ8TkYBCwfF40I2iDJuL2pmFF94xEqPWHuiwx2bcqxh33gSHROYSMkV36
+Pf6NIcdK8WZqx3xhyX5CazRg1wx2msfCLg43YvABKG4d8KMnPylP4S8BcYVdq8zq
+6LZ87vYumQcwk86wIdSk6uYcR+/HisDt9obrNeweJrUepmQV+XMd2tuPPHEF8G9S
+H7IUdHUTZJGbfenCTJ3U1DpPeM4YJYU2Im6oQ1NVdB3ed5ZseRcUCDsBQk0koe/A
+3KuC4fYaTJB5uEmGtW+e+hQeNchfBVhBqmvm7AYtDbhlHn+Saem6uWDtMlNbyp2M
+sVqrcJuCBvQ8qOvf08rDJoBL5KQXMaRKY9XYLNui9V1DBOoXd94=
+=rRJG
+-----END PGP SIGNATURE-----
+
+--ypvk6t7gfdphpnja--
