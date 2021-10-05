@@ -2,161 +2,194 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A219C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 19:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7252BC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 20:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130C8613B5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 19:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5864861502
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 20:23:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235884AbhJEUA7 (ORCPT
+        id S236141AbhJEUZ0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Oct 2021 16:00:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235224AbhJEUA6 (ORCPT
+        Tue, 5 Oct 2021 16:25:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47964 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235157AbhJEUZ0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Oct 2021 16:00:58 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76774C061749;
-        Tue,  5 Oct 2021 12:59:07 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0d20002fd498dc90ccb948.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:2000:2fd4:98dc:90cc:b948])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 06F001EC01CE;
-        Tue,  5 Oct 2021 21:59:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1633463946;
+        Tue, 5 Oct 2021 16:25:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633465414;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Qmxm7CefUtXt2Yw0nJkZhWFc7mEAr8RAL5qiQWAIgjQ=;
-        b=aSGhz2XdrluOcHf5GknU/TWBcN0flEOQjeJ+D5kPaeDbADVwbC6pk4PyY+J0GZzENG3k0s
-        VUsIEAaUAt5w+BYv27Ok+k01yDeAPUyxodBV6W2V2iCq0uh6vvHPe0onGuKhk3NqihuJ+k
-        mijk1z8p0enA8ynnnDH9I2eoKZMMZSw=
-Date:   Tue, 5 Oct 2021 21:59:06 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Lubomir Rintel <lkundrak@v3.sk>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 9/9] x86: ia32.h: adjust comment for endif of
- CONFIG_IA32_EMULATION
-Message-ID: <YVyuihupLwW3o0XR@zn.tnic>
-References: <20210803113531.30720-1-lukas.bulwahn@gmail.com>
- <20210803113531.30720-10-lukas.bulwahn@gmail.com>
+         content-transfer-encoding:content-transfer-encoding;
+        bh=NRgmhXdpaqY+FVC7J2s26OG7wCUvyBg6kbOeQ49YTr0=;
+        b=OiZosax7hs1XhcDykcfCHW3V59Dm+fWWL9Wkv+nJPu/GHYcIUSepgd5h6nDv2+BwEungvR
+        sY+jss1ewgSrD38UsJzequqf1/LkyOEIMYdSctbIhDV5XpITIJSzVGN4RUpA/UyhhUjx5x
+        5StXXrMJV1BLoNs82j6YqhYqEFyCL3o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-86-JBvlBNKhNMOm8ttvLe_cwg-1; Tue, 05 Oct 2021 16:23:33 -0400
+X-MC-Unique: JBvlBNKhNMOm8ttvLe_cwg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F323362FA;
+        Tue,  5 Oct 2021 20:23:30 +0000 (UTC)
+Received: from x1.localdomain (unknown [10.39.192.128])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DA78860C13;
+        Tue,  5 Oct 2021 20:23:23 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Rajat Jain <rajatja@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Lyude <lyude@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Pekka Paalanen <pekka.paalanen@collabora.com>,
+        Mario Limonciello <mario.limonciello@outlook.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Sebastien Bacher <seb128@ubuntu.com>,
+        Marco Trevisan <marco.trevisan@canonical.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 00/10] drm: Add privacy-screen class and connector properties
+Date:   Tue,  5 Oct 2021 22:23:12 +0200
+Message-Id: <20211005202322.700909-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210803113531.30720-10-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 03, 2021 at 01:35:31PM +0200, Lukas Bulwahn wrote:
-> The content of the ia32 header is guarded by
-> "ifdef CONFIG_IA32_EMULATION". The comment on the corresponding endif
-> refers slightly mismatching to CONFIG_IA32_SUPPORT instead.
-> 
-> Hence, ./scripts/checkkconfigsymbols.py warns:
-> 
-> IA32_SUPPORT
-> Referencing files: arch/x86/include/asm/ia32.h
-> 
-> Adjust the comment on endif to the actual ifdef condition.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
->  arch/x86/include/asm/ia32.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi all,
 
-Merged the last 4 into a single patch because they're trivial:
+Here is a new version of my privacy-screen series, addressing the
+review-remark from Ville on patch 10/10 from the version posted on
+October 2nd. This new version contains the following changes:
 
----
-From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date: Tue, 5 Oct 2021 21:48:30 +0200
-Subject: [PATCH] x86: Fix misspelled Kconfig symbols
+- drm/i915: Add privacy-screen support (v3)
+ - Move drm_privacy_screen_get() call to intel_ddi_init_dp_connector()
 
-Fix misspelled Kconfig symbols as detected by
-scripts/checkkconfigsymbols.py.
+Ville, can you (re)review "[PATCH 10/10] drm/i915: Add privacy-screen
+support (v3)" please ?
 
- [ bp: Combine into a single patch. ]
+For anyone just tuning in, here is some more info from the previous
+cover-letters:
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20210803113531.30720-7-lukas.bulwahn@gmail.com
----
- arch/x86/include/asm/ia32.h      | 2 +-
- arch/x86/include/asm/irq_stack.h | 2 +-
- arch/x86/include/asm/page_32.h   | 2 +-
- arch/x86/include/asm/uaccess.h   | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+The first userspace consumer of the new properties is now fully ready
+for merging (it is just waiting for the kernel bits to land first):
 
-diff --git a/arch/x86/include/asm/ia32.h b/arch/x86/include/asm/ia32.h
-index 2c5f7861d373..fada857f0a1e 100644
---- a/arch/x86/include/asm/ia32.h
-+++ b/arch/x86/include/asm/ia32.h
-@@ -68,6 +68,6 @@ extern void ia32_pick_mmap_layout(struct mm_struct *mm);
- 
- #endif
- 
--#endif /* !CONFIG_IA32_SUPPORT */
-+#endif /* CONFIG_IA32_EMULATION */
- 
- #endif /* _ASM_X86_IA32_H */
-diff --git a/arch/x86/include/asm/irq_stack.h b/arch/x86/include/asm/irq_stack.h
-index 562854c60808..8912492a78f1 100644
---- a/arch/x86/include/asm/irq_stack.h
-+++ b/arch/x86/include/asm/irq_stack.h
-@@ -58,7 +58,7 @@
-  *     the output constraints to make the compiler aware that R11 cannot be
-  *     reused after the asm() statement.
-  *
-- *     For builds with CONFIG_UNWIND_FRAME_POINTER ASM_CALL_CONSTRAINT is
-+ *     For builds with CONFIG_UNWINDER_FRAME_POINTER, ASM_CALL_CONSTRAINT is
-  *     required as well as this prevents certain creative GCC variants from
-  *     misplacing the ASM code.
-  *
-diff --git a/arch/x86/include/asm/page_32.h b/arch/x86/include/asm/page_32.h
-index 94dbd51df58f..b13f8488ac85 100644
---- a/arch/x86/include/asm/page_32.h
-+++ b/arch/x86/include/asm/page_32.h
-@@ -43,7 +43,7 @@ static inline void copy_page(void *to, void *from)
- {
- 	memcpy(to, from, PAGE_SIZE);
- }
--#endif	/* CONFIG_X86_3DNOW */
-+#endif	/* CONFIG_X86_USE_3DNOW */
- #endif	/* !__ASSEMBLY__ */
- 
- #endif /* _ASM_X86_PAGE_32_H */
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index c9fa7be3df82..e7fc2c515e08 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -411,7 +411,7 @@ do {									\
- 		     : [umem] "m" (__m(addr)),				\
- 		       [efault] "i" (-EFAULT), "0" (err))
- 
--#endif // CONFIG_CC_ASM_GOTO_OUTPUT
-+#endif // CONFIG_CC_HAS_ASM_GOTO_OUTPUT
- 
- /* FIXME: this hack is definitely wrong -AK */
- struct __large_struct { unsigned long buf[100]; };
+ - https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/-/merge_requests/49
+ - https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1952
+ - https://gitlab.gnome.org/GNOME/gnome-control-center/-/merge_requests/1032
+
+The new API works as designed and add the following features to GNOME:
+
+1. Showing an OSD notification when the privacy-screen is toggled on/off
+   through hotkeys handled by the embedded-controller
+2. Allowing control of the privacy-screen from the GNOME control-panel,
+   including the on/off slider shown there updating to match the hw-setting
+   when the setting is changed with the control-panel open.
+3. Restoring the last user-setting at login
+
+This series consists of a number of different parts:
+
+1. A new version of Rajat's privacy-screen connector properties patch,
+this adds new userspace API in the form of new properties
+
+2. Since on most devices the privacy screen is actually controlled by
+some vendor specific ACPI/WMI interface which has a driver under
+drivers/platform/x86, we need some "glue" code to make this functionality
+available to KMS drivers. Patches 2-4 add a new privacy-screen class for
+this, which allows non KMS drivers (and possibly KMS drivers too) to
+register a privacy-screen device and also adds an interface for KMS drivers
+to get access to the privacy-screen associated with a specific connector.
+This is modelled similar to how we deal with e.g. PWMs and GPIOs in the
+kernel, including separate includes for consumers and providers(drivers).
+
+3. Some drm_connector helper functions to keep the actual changes needed
+for this in individual KMS drivers as small as possible (patch 5).
+
+4. Make the thinkpad_acpi code register a privacy-screen device on
+ThinkPads with a privacy-screen (patches 6-8)
+
+5. Make the i915 driver export the privacy-screen functionality through
+the connector properties on the eDP connector.
+
+I believe that it would be best to merge the entire series, including
+the thinkpad_acpi changes through drm-misc in one go. As the pdx86
+subsys maintainer I hereby give my ack for merging the thinkpad_acpi
+changes through drm-misc.
+
+There is one small caveat with this series, which it is good to be
+aware of. The i915 driver will now return -EPROBE_DEFER on Thinkpads
+with an eprivacy screen, until the thinkpad_acpi driver is loaded.
+This means that initrd generation tools will need to be updated to
+include thinkpad_acpi when the i915 driver is added to the initrd.
+Without this the loading of the i915 driver will be delayed to after
+the switch to real rootfs.
+
+Regards,
+
+Hans
+
+
+Hans de Goede (9):
+  drm: Add privacy-screen class (v4)
+  drm/privacy-screen: Add X86 specific arch init code
+  drm/privacy-screen: Add notifier support (v2)
+  drm/connector: Add a drm_connector privacy-screen helper functions
+    (v2)
+  platform/x86: thinkpad_acpi: Add hotkey_notify_extended_hotkey()
+    helper
+  platform/x86: thinkpad_acpi: Get privacy-screen / lcdshadow ACPI
+    handles only once
+  platform/x86: thinkpad_acpi: Register a privacy-screen device
+  drm/i915: Add intel_modeset_probe_defer() helper
+  drm/i915: Add privacy-screen support (v3)
+
+Rajat Jain (1):
+  drm/connector: Add support for privacy-screen properties (v4)
+
+ Documentation/gpu/drm-kms-helpers.rst        |  15 +
+ Documentation/gpu/drm-kms.rst                |   2 +
+ MAINTAINERS                                  |   8 +
+ drivers/gpu/drm/Kconfig                      |   4 +
+ drivers/gpu/drm/Makefile                     |   1 +
+ drivers/gpu/drm/drm_atomic_uapi.c            |   4 +
+ drivers/gpu/drm/drm_connector.c              | 203 ++++++++
+ drivers/gpu/drm/drm_drv.c                    |   4 +
+ drivers/gpu/drm/drm_privacy_screen.c         | 467 +++++++++++++++++++
+ drivers/gpu/drm/drm_privacy_screen_x86.c     |  86 ++++
+ drivers/gpu/drm/i915/display/intel_atomic.c  |   1 +
+ drivers/gpu/drm/i915/display/intel_ddi.c     |  15 +
+ drivers/gpu/drm/i915/display/intel_display.c |  23 +
+ drivers/gpu/drm/i915/display/intel_display.h |   1 +
+ drivers/gpu/drm/i915/i915_pci.c              |   9 +-
+ drivers/platform/x86/Kconfig                 |   2 +
+ drivers/platform/x86/thinkpad_acpi.c         | 137 ++++--
+ include/drm/drm_connector.h                  |  55 +++
+ include/drm/drm_privacy_screen_consumer.h    |  65 +++
+ include/drm/drm_privacy_screen_driver.h      |  84 ++++
+ include/drm/drm_privacy_screen_machine.h     |  46 ++
+ 21 files changed, 1183 insertions(+), 49 deletions(-)
+ create mode 100644 drivers/gpu/drm/drm_privacy_screen.c
+ create mode 100644 drivers/gpu/drm/drm_privacy_screen_x86.c
+ create mode 100644 include/drm/drm_privacy_screen_consumer.h
+ create mode 100644 include/drm/drm_privacy_screen_driver.h
+ create mode 100644 include/drm/drm_privacy_screen_machine.h
+
 -- 
-2.29.2
+2.31.1
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
