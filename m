@@ -2,42 +2,42 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D48C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 20:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC92C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 20:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB9A261502
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 20:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F7261502
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 20:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232250AbhJEU0O (ORCPT
+        id S230019AbhJEU0e (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Oct 2021 16:26:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54665 "EHLO
+        Tue, 5 Oct 2021 16:26:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30179 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230019AbhJEU0N (ORCPT
+        by vger.kernel.org with ESMTP id S229805AbhJEU0d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Oct 2021 16:26:13 -0400
+        Tue, 5 Oct 2021 16:26:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633465462;
+        s=mimecast20190719; t=1633465482;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=b4ertXwdplp0ii/4EZ2opkSV9zpjx4R8JUIaQH5bRRw=;
-        b=Ko+w6dMW96DjSqBAGX6kEetILGf9U7mohocFqa3axt7b8JqIsDYwLUBY3vPiGNGDbXYVqT
-        v+eRRDeJmGAzBwQwZCAwcOu8ccn9GktZURZK2O8SjbjtJq2Y9OQ9Hz5cc0uIMHppEgQac0
-        aPwzeLxOKBTD9tMgci1Cq3XFjRp01FU=
+        bh=x54z3MQgiCfOrz9jnqnzG0UQQYo8bsysv9CWq6awoRA=;
+        b=ICxE7Y2mg2I1nJnc6CKxpyDEMAxxIwqaIKzmNw1ruoNHeXOSj2IcMRRdIpt1McQFxS9f+t
+        jfqKwciLVW1afWyzTo/+W+JCrdenRvt8np9PoSAQpsfDfybvvMzTCxWMWVpwdI9DEKRI7h
+        pEWM6zgm22a02cq3OdoxnMA82N6cNgY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-199--Tq57FVPOmq8--rQp3DVfg-1; Tue, 05 Oct 2021 16:24:17 -0400
-X-MC-Unique: -Tq57FVPOmq8--rQp3DVfg-1
+ us-mta-132-3QWOmbJ7OfuVnw_M7UMjrQ-1; Tue, 05 Oct 2021 16:24:36 -0400
+X-MC-Unique: 3QWOmbJ7OfuVnw_M7UMjrQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B021814313;
-        Tue,  5 Oct 2021 20:24:14 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF2351926DA0;
+        Tue,  5 Oct 2021 20:24:33 +0000 (UTC)
 Received: from x1.localdomain (unknown [10.39.192.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 242F160C05;
-        Tue,  5 Oct 2021 20:24:00 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E08AA60C05;
+        Tue,  5 Oct 2021 20:24:14 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
@@ -62,9 +62,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH 06/10] platform/x86: thinkpad_acpi: Add hotkey_notify_extended_hotkey() helper
-Date:   Tue,  5 Oct 2021 22:23:18 +0200
-Message-Id: <20211005202322.700909-7-hdegoede@redhat.com>
+Subject: [PATCH 07/10] platform/x86: thinkpad_acpi: Get privacy-screen / lcdshadow ACPI handles only once
+Date:   Tue,  5 Oct 2021 22:23:19 +0200
+Message-Id: <20211005202322.700909-8-hdegoede@redhat.com>
 In-Reply-To: <20211005202322.700909-1-hdegoede@redhat.com>
 References: <20211005202322.700909-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -74,68 +74,64 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Factor the extended hotkey handling out of hotkey_notify_hotkey() and
-into a new hotkey_notify_extended_hotkey() helper.
-
-This is a preparation patch for adding support the privacy-screen hotkey
-toggle (which needs some special handling, it should NOT send an evdev
-key-event to userspace...).
+Get the privacy-screen / lcdshadow ACPI handles once and cache them,
+instead of retrieving them every time we need them.
 
 Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
 Reviewed-by: Lyude Paul <lyude@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 30 ++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 50ff04c84650..83c88a8ebaf2 100644
+index 83c88a8ebaf2..b8f2556c4797 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3885,6 +3885,24 @@ static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
- 	}
- }
+@@ -9819,19 +9819,15 @@ static struct ibm_struct battery_driver_data = {
+  * LCD Shadow subdriver, for the Lenovo PrivacyGuard feature
+  */
  
-+static bool hotkey_notify_extended_hotkey(const u32 hkey)
-+{
-+	unsigned int scancode;
-+
-+	/* Extended keycodes start at 0x300 and our offset into the map
-+	 * TP_ACPI_HOTKEYSCAN_EXTENDED_START. The calculated scancode
-+	 * will be positive, but might not be in the correct range.
-+	 */
-+	scancode = (hkey & 0xfff) - (0x300 - TP_ACPI_HOTKEYSCAN_EXTENDED_START);
-+	if (scancode >= TP_ACPI_HOTKEYSCAN_EXTENDED_START &&
-+	    scancode < TPACPI_HOTKEY_MAP_LEN) {
-+		tpacpi_input_send_key(scancode);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- static bool hotkey_notify_hotkey(const u32 hkey,
- 				 bool *send_acpi_ev,
- 				 bool *ignore_acpi_ev)
-@@ -3919,17 +3937,7 @@ static bool hotkey_notify_hotkey(const u32 hkey,
- 		return adaptive_keyboard_hotkey_notify_hotkey(scancode);
++static acpi_handle lcdshadow_get_handle;
++static acpi_handle lcdshadow_set_handle;
+ static int lcdshadow_state;
  
- 	case 3:
--		/* Extended keycodes start at 0x300 and our offset into the map
--		 * TP_ACPI_HOTKEYSCAN_EXTENDED_START. The calculated scancode
--		 * will be positive, but might not be in the correct range.
--		 */
--		scancode -= (0x300 - TP_ACPI_HOTKEYSCAN_EXTENDED_START);
--		if (scancode >= TP_ACPI_HOTKEYSCAN_EXTENDED_START &&
--		    scancode < TPACPI_HOTKEY_MAP_LEN) {
--			tpacpi_input_send_key(scancode);
--			return true;
--		}
--		break;
-+		return hotkey_notify_extended_hotkey(hkey);
+ static int lcdshadow_on_off(bool state)
+ {
+-	acpi_handle set_shadow_handle;
+ 	int output;
+ 
+-	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "SSSS", &set_shadow_handle))) {
+-		pr_warn("Thinkpad ACPI has no %s interface.\n", "SSSS");
+-		return -EIO;
+-	}
+-
+-	if (!acpi_evalf(set_shadow_handle, &output, NULL, "dd", (int)state))
++	if (!acpi_evalf(lcdshadow_set_handle, &output, NULL, "dd", (int)state))
+ 		return -EIO;
+ 
+ 	lcdshadow_state = state;
+@@ -9849,15 +9845,17 @@ static int lcdshadow_set(bool on)
+ 
+ static int tpacpi_lcdshadow_init(struct ibm_init_struct *iibm)
+ {
+-	acpi_handle get_shadow_handle;
++	acpi_status status1, status2;
+ 	int output;
+ 
+-	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "GSSS", &get_shadow_handle))) {
++	status1 = acpi_get_handle(hkey_handle, "GSSS", &lcdshadow_get_handle);
++	status2 = acpi_get_handle(hkey_handle, "SSSS", &lcdshadow_set_handle);
++	if (ACPI_FAILURE(status1) || ACPI_FAILURE(status2)) {
+ 		lcdshadow_state = -ENODEV;
+ 		return 0;
  	}
  
- 	return false;
+-	if (!acpi_evalf(get_shadow_handle, &output, NULL, "dd", 0)) {
++	if (!acpi_evalf(lcdshadow_get_handle, &output, NULL, "dd", 0)) {
+ 		lcdshadow_state = -EIO;
+ 		return -EIO;
+ 	}
 -- 
 2.31.1
 
