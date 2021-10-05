@@ -2,235 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42791C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Oct 2021 18:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759A1C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 04:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2289361452
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Oct 2021 18:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD3860F9D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 04:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236024AbhJDSuW (ORCPT
+        id S231559AbhJEEw0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Oct 2021 14:50:22 -0400
-Received: from mga06.intel.com ([134.134.136.31]:42924 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235628AbhJDSuW (ORCPT
+        Tue, 5 Oct 2021 00:52:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230403AbhJEEwZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Oct 2021 14:50:22 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10127"; a="286436707"
-X-IronPort-AV: E=Sophos;i="5.85,346,1624345200"; 
-   d="scan'208";a="286436707"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2021 11:48:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,346,1624345200"; 
-   d="scan'208";a="457763836"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.171])
-  by orsmga002.jf.intel.com with SMTP; 04 Oct 2021 11:48:26 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Mon, 04 Oct 2021 21:48:25 +0300
-Date:   Mon, 4 Oct 2021 21:48:25 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rajat Jain <rajatja@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Lyude <lyude@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Pekka Paalanen <pekka.paalanen@collabora.com>,
-        Mario Limonciello <mario.limonciello@outlook.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Sebastien Bacher <seb128@ubuntu.com>,
-        Marco Trevisan <marco.trevisan@canonical.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 10/10] drm/i915: Add privacy-screen support (v2)
-Message-ID: <YVtMeYqDAuGLRCTi@intel.com>
-References: <20211002163618.99175-1-hdegoede@redhat.com>
- <20211002163618.99175-11-hdegoede@redhat.com>
- <YVsfwmQjYOnIrxzl@intel.com>
- <ac1b7f4a-42f6-5f07-9733-e8945fb65179@redhat.com>
+        Tue, 5 Oct 2021 00:52:25 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFEE3C061745;
+        Mon,  4 Oct 2021 21:50:35 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id k23so2249300pji.0;
+        Mon, 04 Oct 2021 21:50:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ykx0E0HoH3gswN00KBdlmyPkgBtTSiv8X3i/sICQMYU=;
+        b=WmuQnKkjijrqbv3StPV2yJhsrhB7Rvv5yv/oNegG2zbI9MpArDC6VJTMLqChpgtU3F
+         snPnOhKtvvcgIOwemaRFiVPSId9IQROA+B5KB7wtS/Kgwu32WMIFcELzsm+QwqtOtrSN
+         6NcxyqzCng5XBCiciMIimuUqBRrNN4Rq2RwkKdN/WmojlRctstWrH0q/hblJqyH7xdZT
+         mD8qs4GtPXK+eEF3n3JCvHM/G/5VlftJNkf4g+wYWWRM6NO0EDeQOIudp04IiPwDVo1c
+         vSOHw23lq7JYGdA+kmH3X1yN3m7M95IMNDHzl0et2qb+Gr+Nm6YTn9xHthN2VFgChR9F
+         02pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ykx0E0HoH3gswN00KBdlmyPkgBtTSiv8X3i/sICQMYU=;
+        b=HMCS13nAxkfiN4F0sUo22Wg4r6bjg1OtKs/EVyu8/IC9T06a85ucxRK+1v4609bhlG
+         DG3BCn2Lzp5Q/Z/IzmvWfYp1nhCxKXPB+pQn5iI2AXmH2/g9dEKc2nYxJ5OaYsWyVrek
+         k8CqdseWWaT0crfGW/dvMwYl1GrNoM57GcpVFujdPfQvNZSxCRq4PLt/EZWDB/dss16k
+         e6jlaKqurhKLGboX5DAN4b5MCAilGWPO75Y1NwZjRnRSzBeiE2AZnG5NUWwyHxDWTTjv
+         Rpq8QG+pb/gF8PFmVfouWeFwpUAG2+/Rqdey7GsydlLy5sRGZ4SDq/MjPBMbUCR1+dTW
+         4Phw==
+X-Gm-Message-State: AOAM532vOBK/aqW4WrZOTeOlAy/6uyvHjh/O6kHernQm+o1bUhH5nEQC
+        PcPszniz1exS6kvfu5MACmaJnerQZNGhGw==
+X-Google-Smtp-Source: ABdhPJxVMbu6CZZnqH4S7a6FUaErlJ6fIwdM+UzNqTo6+TlZEwgNLF0BdrKjiEM97J5z++Q6b5Qlvg==
+X-Received: by 2002:a17:90b:1105:: with SMTP id gi5mr1347588pjb.100.1633409435006;
+        Mon, 04 Oct 2021 21:50:35 -0700 (PDT)
+Received: from unconquered.home.aehallh.com (24-113-252-168.wavecable.com. [24.113.252.168])
+        by smtp.gmail.com with ESMTPSA id i8sm15901446pfo.117.2021.10.04.21.50.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Oct 2021 21:50:34 -0700 (PDT)
+From:   "Zephaniah E. Loss-Cutler-Hull" <zephaniah@gmail.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "Zephaniah E. Loss-Cutler-Hull" <zephaniah@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] platform/x86: gigabyte-wmi: add support for B550 AORUS ELITE AX V2
+Date:   Mon,  4 Oct 2021 21:48:55 -0700
+Message-Id: <20211005044855.1429724-1-zephaniah@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ac1b7f4a-42f6-5f07-9733-e8945fb65179@redhat.com>
-X-Patchwork-Hint: comment
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 04, 2021 at 06:02:21PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 10/4/21 5:37 PM, Ville Syrjälä wrote:
-> > On Sat, Oct 02, 2021 at 06:36:18PM +0200, Hans de Goede wrote:
-> >> Add support for eDP panels with a built-in privacy screen using the
-> >> new drm_privacy_screen class.
-> >>
-> >> Changes in v2:
-> >> - Call drm_connector_update_privacy_screen() from
-> >>   intel_enable_ddi_dp() / intel_ddi_update_pipe_dp() instead of adding a
-> >>   for_each_new_connector_in_state() loop to intel_atomic_commit_tail()
-> >> - Move the probe-deferral check to the intel_modeset_probe_defer() helper
-> >>
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >> ---
-> >>  drivers/gpu/drm/i915/display/intel_atomic.c  |  1 +
-> >>  drivers/gpu/drm/i915/display/intel_ddi.c     |  3 +++
-> >>  drivers/gpu/drm/i915/display/intel_display.c | 10 ++++++++++
-> >>  drivers/gpu/drm/i915/display/intel_dp.c      | 10 ++++++++++
-> >>  4 files changed, 24 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/i915/display/intel_atomic.c
-> >> index b4e7ac51aa31..a62550711e98 100644
-> >> --- a/drivers/gpu/drm/i915/display/intel_atomic.c
-> >> +++ b/drivers/gpu/drm/i915/display/intel_atomic.c
-> >> @@ -139,6 +139,7 @@ int intel_digital_connector_atomic_check(struct drm_connector *conn,
-> >>  	    new_conn_state->base.picture_aspect_ratio != old_conn_state->base.picture_aspect_ratio ||
-> >>  	    new_conn_state->base.content_type != old_conn_state->base.content_type ||
-> >>  	    new_conn_state->base.scaling_mode != old_conn_state->base.scaling_mode ||
-> >> +	    new_conn_state->base.privacy_screen_sw_state != old_conn_state->base.privacy_screen_sw_state ||
-> >>  	    !drm_connector_atomic_hdr_metadata_equal(old_state, new_state))
-> >>  		crtc_state->mode_changed = true;
-> >>  
-> >> diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
-> >> index 51cd0420e00e..e4496c830a35 100644
-> >> --- a/drivers/gpu/drm/i915/display/intel_ddi.c
-> >> +++ b/drivers/gpu/drm/i915/display/intel_ddi.c
-> >> @@ -25,6 +25,7 @@
-> >>   *
-> >>   */
-> >>  
-> >> +#include <drm/drm_privacy_screen_consumer.h>
-> >>  #include <drm/drm_scdc_helper.h>
-> >>  
-> >>  #include "i915_drv.h"
-> >> @@ -3022,6 +3023,7 @@ static void intel_enable_ddi_dp(struct intel_atomic_state *state,
-> >>  	if (port == PORT_A && DISPLAY_VER(dev_priv) < 9)
-> >>  		intel_dp_stop_link_train(intel_dp, crtc_state);
-> >>  
-> >> +	drm_connector_update_privacy_screen(conn_state);
-> >>  	intel_edp_backlight_on(crtc_state, conn_state);
-> >>  
-> >>  	if (!dig_port->lspcon.active || dig_port->dp.has_hdmi_sink)
-> >> @@ -3247,6 +3249,7 @@ static void intel_ddi_update_pipe_dp(struct intel_atomic_state *state,
-> >>  	intel_drrs_update(intel_dp, crtc_state);
-> >>  
-> >>  	intel_backlight_update(state, encoder, crtc_state, conn_state);
-> >> +	drm_connector_update_privacy_screen(conn_state);
-> >>  }
-> >>  
-> >>  void intel_ddi_update_pipe(struct intel_atomic_state *state,
-> >> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-> >> index e67f3207ba54..9a5dbe51458d 100644
-> >> --- a/drivers/gpu/drm/i915/display/intel_display.c
-> >> +++ b/drivers/gpu/drm/i915/display/intel_display.c
-> >> @@ -42,6 +42,7 @@
-> >>  #include <drm/drm_edid.h>
-> >>  #include <drm/drm_fourcc.h>
-> >>  #include <drm/drm_plane_helper.h>
-> >> +#include <drm/drm_privacy_screen_consumer.h>
-> >>  #include <drm/drm_probe_helper.h>
-> >>  #include <drm/drm_rect.h>
-> >>  #include <drm/drm_drv.h>
-> >> @@ -12693,6 +12694,8 @@ void intel_modeset_driver_remove_nogem(struct drm_i915_private *i915)
-> >>  
-> >>  bool intel_modeset_probe_defer(struct pci_dev *pdev)
-> >>  {
-> >> +	struct drm_privacy_screen *privacy_screen;
-> >> +
-> >>  	/*
-> >>  	 * apple-gmux is needed on dual GPU MacBook Pro
-> >>  	 * to probe the panel if we're the inactive GPU.
-> >> @@ -12700,6 +12703,13 @@ bool intel_modeset_probe_defer(struct pci_dev *pdev)
-> >>  	if (vga_switcheroo_client_probe_defer(pdev))
-> >>  		return true;
-> >>  
-> >> +	/* If the LCD panel has a privacy-screen, wait for it */
-> >> +	privacy_screen = drm_privacy_screen_get(&pdev->dev, NULL);
-> >> +	if (IS_ERR(privacy_screen) && PTR_ERR(privacy_screen) == -EPROBE_DEFER)
-> >> +		return true;
-> >> +
-> >> +	drm_privacy_screen_put(privacy_screen);
-> >> +
-> >>  	return false;
-> >>  }
-> >>  
-> >> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> >> index 74a657ae131a..91207310dc0d 100644
-> >> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> >> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> >> @@ -37,6 +37,7 @@
-> >>  #include <drm/drm_crtc.h>
-> >>  #include <drm/drm_dp_helper.h>
-> >>  #include <drm/drm_edid.h>
-> >> +#include <drm/drm_privacy_screen_consumer.h>
-> >>  #include <drm/drm_probe_helper.h>
-> >>  
-> >>  #include "g4x_dp.h"
-> >> @@ -4808,6 +4809,7 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
-> >>  	struct drm_connector *connector = &intel_connector->base;
-> >>  	struct drm_display_mode *fixed_mode = NULL;
-> >>  	struct drm_display_mode *downclock_mode = NULL;
-> >> +	struct drm_privacy_screen *privacy_screen;
-> >>  	bool has_dpcd;
-> >>  	enum pipe pipe = INVALID_PIPE;
-> >>  	struct edid *edid;
-> >> @@ -4902,6 +4904,14 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
-> >>  				fixed_mode->hdisplay, fixed_mode->vdisplay);
-> >>  	}
-> >>  
-> >> +	privacy_screen = drm_privacy_screen_get(dev->dev, NULL);
-> >> +	if (!IS_ERR(privacy_screen)) {
-> >> +		drm_connector_attach_privacy_screen_provider(connector,
-> >> +							     privacy_screen);
-> >> +	} else if (PTR_ERR(privacy_screen) != -ENODEV) {
-> >> +		drm_warn(&dev_priv->drm, "Error getting privacy-screen\n");
-> >> +	}
-> > 
-> > I'm thinking this should go into intel_ddi_init_dp_connector()
-> > on account of only the ddi codepaths having the
-> > drm_connector_update_privacy_screen() calls.
-> 
-> This should only be done in case of intel_dp_is_edp(intel_dp) returning
-> true. We don't have a mapping which connector has the privacy screen
-> (hence the NULL argument as second parameter to drm_privacy_screen_get()),
-> so if there are multiple DP connectors we want this to only happen on
-> the eDP one.
-> 
-> Yes this assumes that devices with a builtin privacy-screen have only
-> one eDP connector. For now this holds true, if this becomes not true in
-> the future then that is something to figure out at that point in time
-> (with a lot of luck the privacy-screen will be controlled through DP
-> by then and not through some random ACPI interface).
-> 
-> So I traced the call-graph and I see that we can also end up in
-> intel_edp_init_connector() from g4x_dp_init(), which I assume is
-> your main reason for requesting this change. But unless someone
-> retro-fits an electronic privacy-screen to the old hw supported
-> by g4x_dp_init() then drm_privacy_screen_get() will always
-> return -ENODEV, so in that case this is a no-op.
-> 
-> > Otherwise seems ok.
-> 
-> Thanks, note if you still want me to move this please let me know,
-> this does mean adding a intel_dp_is_edp() check to intel_ddi.c
-> which so far is free of these kinda checks.
+This works just fine on my system.
 
-Yeah I think less confusing there with a check. And I'd probably
-check the connector type rather than the encoder type. Otherwise
-I suspect a year from now I'll end up wondering what happened to
-the rest of the related code when I see the thing in the common 
-init function.
+Signed-off-by: Zephaniah E. Loss-Cutler-Hull <zephaniah@gmail.com>
+Cc: <stable@vger.kernel.org>
+---
+ drivers/platform/x86/gigabyte-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+index d53634c8a6e0..658bab4b7964 100644
+--- a/drivers/platform/x86/gigabyte-wmi.c
++++ b/drivers/platform/x86/gigabyte-wmi.c
+@@ -141,6 +141,7 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
+ 
+ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
++	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE AX V2"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE V2"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 GAMING X V2"),
 -- 
-Ville Syrjälä
-Intel
+2.33.0
+
