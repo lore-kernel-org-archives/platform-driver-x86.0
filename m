@@ -2,89 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01428C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 22:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE08C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 22:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1D4E61880
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 22:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CE36610FC
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Oct 2021 22:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236738AbhJEWEh (ORCPT
+        id S236768AbhJEWIZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Oct 2021 18:04:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229974AbhJEWEg (ORCPT
+        Tue, 5 Oct 2021 18:08:25 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60088 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236793AbhJEWIZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Oct 2021 18:04:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 8E56A615E1
-        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Oct 2021 22:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633471365;
-        bh=jwjM/4+DVzcqeoCBFyR1Im7Tx7f8ShF3cVuzSLWnGAo=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=TlQvq6eBP5CtQ5GB1sh2PKuSVU+U+sU4M3Q4HMX7WYQGS3iQO9VcJ+MXg8NaDtHpL
-         1F5LdPM4sYVbFBcMqfrXSuOyykkA6D65P3UXN6TXADiYvbZQvlCaBwRz0avQIAakUb
-         aXUsFhgu+b5+Fad16e/BADdLKHFDVZqR4sUDQY9iWaJsAxzCVgLoESpX48sjMtTKC4
-         0ifJctyMiFXZYuvNdYkRPke57Uf4ZUE72VHtctuxor9zHtn6pdvjA+5gfx/N3frUdo
-         DkDhR/hLv/Ae/sxLbPq7/xCaOk3NGPkLFqgnooofWM4IIFYyd+cYtbjuJDPtSqZlR5
-         oGz78Mu19o+xg==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Tue, 05 Oct 2021 22:02:44 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: kpietrzak@disroot.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-ssPToQcuuC@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 5 Oct 2021 18:08:25 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 3C3371F42D7B
+Received: by earth.universe (Postfix, from userid 1000)
+        id 95A1A3C0CA8; Wed,  6 Oct 2021 00:06:30 +0200 (CEST)
+Date:   Wed, 6 Oct 2021 00:06:30 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     =?utf-8?Q?Nicol=C3=B2?= Piazzalunga <nicolopiazzalunga@gmail.com>,
+        linux-pm@vger.kernel.org,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Thomas Koch <linrunner@gmx.net>,
+        "smclt30p@gmail.com" <smclt30p@gmail.com>
+Subject: Re: [RFC] add standardized attributes for force_discharge and
+ inhibit_charge
+Message-ID: <20211005220630.zurfqyva44idnplu@earth.universe>
+References: <21569a89-8303-8573-05fb-c2fec29983d1@gmail.com>
+ <77e39b3e-fa51-54fe-1898-4f43895ac2c6@redhat.com>
+ <20211005162352.emaoveimhkp5uzfw@earth.universe>
+ <06fa7a23-4dec-cba9-4e00-c00cf0bf9337@redhat.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cvbhbwzdfpbbgvp3"
+Content-Disposition: inline
+In-Reply-To: <06fa7a23-4dec-cba9-4e00-c00cf0bf9337@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #137 from Kamil Pietrzak (kpietrzak@disroot.org) ---
-(In reply to Denis Pauk from comment #133)
-> I afraid next patch will be without scaling :-(
-> https://lkml.org/lkml/2021/10/5/707
+--cvbhbwzdfpbbgvp3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I am not kernel developer but I also think per motherboard voltage scalling=
- is
-bad idea in terms of maintenance. For the same reason hardcoding any of boa=
-rd
-models in module code is rather bad idea and personally I would prefer to u=
-se
-for example use_wmi=3Dy module parameter or similar when resource conflict =
-occurs
-on module loading.
+Hi,
 
-With regard to current voltage scaling factors for nct6798d chip, they are =
-most
-likely not correct and probably will require future changes. For example I
-can't see +12V and +5V is sensors output when using current voltage scalling
-factors.
+On Tue, Oct 05, 2021 at 08:01:12PM +0200, Hans de Goede wrote:
+> Right, force-discharge automatically implies charging is
+> being inhibited, so putting this in one file makes sense.
+>=20
+> Any suggestion for the name of the file?
 
---=20
-You may reply to this email to add a comment.
+Maybe like this?
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+---------------------------------------------------------------------
+What: /sys/class/power_supply/<supply_name>/charge_behaviour
+Date: October 2021
+Contact: linux-pm@vger.kernel.org
+Description:
+ Configure battery behaviour when a charger is being connected.
+
+ Access: Read, Write
+
+ Valid values:
+
+ 0: auto / no override
+    When charger is connected battery should be charged
+ 1: force idle
+    When charger is connected the battery should neither be charged
+    nor discharged.
+ 2: force discharge
+    When charger is connected the battery should be discharged
+    anyways.
+---------------------------------------------------------------------
+
+-- Sebastian
+
+--cvbhbwzdfpbbgvp3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmFczGMACgkQ2O7X88g7
++poKjA//bbFnQErO9t1t4eu5bRpb53y9zW02ZnoekvAIwqpZBA7JzIWdIpmG99NC
+YGq4BmTUZQR/rKV1Xq8pK8ecfmxPACXfz07ewGgom0s9fQSKL7h8kJhMn5l7S8tU
+YQgRJd+J87VW5cgUwGzSg8mxpwr3BNvq+un27/ukmqyRrlqNswn0xwpQ+vz91wu2
+6VcOsbqtrdlh1qarJgf9n3bJw2oeTSE9wKxGl4Q1h5W8fiwJLiSAk3X70bEtYiCy
+PHux1QhIbxC+21DHkk6wsZyeVy5vtXYnXRwWWoL/E3eiNOHaG3SmrLHavhN1fEx5
+okpV19oC2zej6mTlDV0D4p4fI/wQXnmC5pGVzWsm7Pz0s+qJHmpheOVP2YyQB94p
+Yv/llnlM+PfCTzuIK6sjZNnieY8QzG2BWuDh75gbGAVD2QeG53bHp8NvLDS9sBPc
+LZwZnjMN824AKHiKtE7PDLKSKQ2dHcFXTIPSuxsYz/D1RLZBYCpx+XhlncwFnlD1
+do0pAgVkBExeMPTZot4o5DFOr7uQgtI4/WQSsSpso0fDstlYzw0+gIvruoTyNVbp
+fR7aEbep6ixTWrngsnaON5vvDhd1zsY9erzI4jPGIto8Ma5r1yNN6x62CjSYwJS+
+8ypxcSNhUKLPirskN1AORKT+Chem7wSD85lfT/1GVrkoaVYVsZA=
+=KjJe
+-----END PGP SIGNATURE-----
+
+--cvbhbwzdfpbbgvp3--
