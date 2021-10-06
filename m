@@ -2,156 +2,176 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B48BBC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 20:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E76C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 21:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF6361177
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 20:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83266121F
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 21:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233346AbhJFVAU (ORCPT
+        id S239729AbhJFVlQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Oct 2021 17:00:20 -0400
-Received: from mga14.intel.com ([192.55.52.115]:54692 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229657AbhJFVAU (ORCPT
+        Wed, 6 Oct 2021 17:41:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239651AbhJFVlI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Oct 2021 17:00:20 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226412795"
-X-IronPort-AV: E=Sophos;i="5.85,352,1624345200"; 
-   d="scan'208";a="226412795"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2021 13:58:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,352,1624345200"; 
-   d="scan'208";a="713074765"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Oct 2021 13:58:22 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
-        by linux.intel.com (Postfix) with ESMTP id B6EEC5807FC;
-        Wed,  6 Oct 2021 13:58:22 -0700 (PDT)
-Message-ID: <668f263e1d2606ad7485c40ce41933300ec4b8a3.camel@linux.intel.com>
-Subject: Re: [PATCH 2/5] platform/x86/intel: Move intel_pmt from MFD to
- Auxiliary Bus
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
-        bhelgaas@google.com, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Wed, 06 Oct 2021 13:58:22 -0700
-In-Reply-To: <YV1lTMwBSVlvadiG@unreal>
-References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
-         <20211001012815.1999501-3-david.e.box@linux.intel.com>
-         <YV1lTMwBSVlvadiG@unreal>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        Wed, 6 Oct 2021 17:41:08 -0400
+Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C7AC061746;
+        Wed,  6 Oct 2021 14:39:14 -0700 (PDT)
+Date:   Wed, 6 Oct 2021 23:39:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
+        s=mail; t=1633556353;
+        bh=1qAb2Niz1SCraMQINx1guoV8FQWObaMymyIyOyPR1eY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=inboIkRUaOVXJhvc9FWK7pMn3+/w+gvGbih7Qjvgz796xNrW3FjMIUtRp1riNvTB6
+         wxYjpM6/eWo4/HN57O7za1NlXFRHWlzNCJmWDpVZ+PxSlr9HeW9qyFWgsbr3QBxUtz
+         S3OPTAdFQqOYstvCrDV8oA62kOqo3o3EAY2bHEGM=
+From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@weissschuh.net>
+To:     Thomas Koch <linrunner@gmx.net>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        =?utf-8?Q?Nicol=C3=B2?= Piazzalunga <nicolopiazzalunga@gmail.com>,
+        linux-pm@vger.kernel.org,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "smclt30p@gmail.com" <smclt30p@gmail.com>
+Subject: Re: [RFC] add standardized attributes for force_discharge and
+ inhibit_charge
+Message-ID: <cdc45a93-dd17-4ff1-8ce7-9002ae6ae23b@t-8ch.de>
+References: <77e39b3e-fa51-54fe-1898-4f43895ac2c6@redhat.com>
+ <20211005162352.emaoveimhkp5uzfw@earth.universe>
+ <06fa7a23-4dec-cba9-4e00-c00cf0bf9337@redhat.com>
+ <20211005220630.zurfqyva44idnplu@earth.universe>
+ <8cbf7671-d9ee-6bfc-d8fd-d360ccb2c595@redhat.com>
+ <f2e99c38-2e2f-4777-8318-fb4dae6e8bf1@t-8ch.de>
+ <04693bb2-9fd1-59fa-4c21-99848e8aa4c4@redhat.com>
+ <20211006162834.ujxfcn7jjrdl4kjx@earth.universe>
+ <9ec694b7-48a9-5d86-0970-daefdf204712@redhat.com>
+ <10fe30d4-f076-0612-002b-8bdf4e0a1fd5@gmx.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <10fe30d4-f076-0612-002b-8bdf4e0a1fd5@gmx.net>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 2021-10-06 at 11:58 +0300, Leon Romanovsky wrote:
-> On Thu, Sep 30, 2021 at 06:28:12PM -0700, David E. Box wrote:
-> > Intel Platform Monitoring Technology (PMT) support is indicated by presence
-> > of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
-> > structures may also be used by Intel to indicate support for other
-> > capabilities unrelated to PMT.  The Out Of Band Management Services Module
-> > (OOBMSM) is an example of a device that can have both PMT and non-PMT
-> > capabilities. In order to support these capabilities it is necessary to
-> > modify the intel_pmt driver to handle the creation of platform devices more
-> > generically. To that end the following changes are made.
+On 2021-10-06T21:24+0200, Thomas Koch wrote:
+> Date: Wed, 6 Oct 2021 21:24:14 +0200
+> From: Thomas Koch <linrunner@gmx.net>
+> To: Hans de Goede <hdegoede@redhat.com>, Sebastian Reichel
+>  <sebastian.reichel@collabora.com>
+> Cc: Thomas Weißschuh <thomas@weissschuh.net>, Nicolò Piazzalunga
+>  <nicolopiazzalunga@gmail.com>, linux-pm@vger.kernel.org,
+>  "platform-driver-x86@vger.kernel.org"
+>  <platform-driver-x86@vger.kernel.org>, "smclt30p@gmail.com"
+>  <smclt30p@gmail.com>
+> Subject: Re: [RFC] add standardized attributes for force_discharge and
+>  inhibit_charge
+> User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+>  Thunderbird/78.13.0
+> 
+> Hi,
+> 
+> On 06.10.21 19:47, Hans de Goede wrote:
+> > Hi,
 > > 
-> > Convert the driver and child drivers from MFD to the Auxiliary Bus. This
-> > architecture is more suitable anyway since the driver partitions a
-> > multifunctional PCIe device. This also moves the driver out of the MFD
-> > subsystem and into platform/x86/intel.
+> > On 10/6/21 6:28 PM, Sebastian Reichel wrote:
+> > > Hi,
+> > > 
+> > > On Wed, Oct 06, 2021 at 05:27:22PM +0200, Hans de Goede wrote:
+> > > > On 10/6/21 4:49 PM, Thomas Weißschuh wrote:
+> > > > > On 2021-10-06T10:10+0200, Hans de Goede wrote:
+> > > > > > On 10/6/21 12:06 AM, Sebastian Reichel wrote:
+> > > > > > > On Tue, Oct 05, 2021 at 08:01:12PM +0200, Hans de Goede wrote:
+> > > > > > > > Right, force-discharge automatically implies charging is
+> > > > > > > > being inhibited, so putting this in one file makes sense.
+> > > > > > > > 
+> > > > > > > > Any suggestion for the name of the file?
+> > > > > > > 
+> > > > > > > Maybe like this?
+> > > > > > > 
+> > > > > > > ---------------------------------------------------------------------
+> > > > > > > What: /sys/class/power_supply/<supply_name>/charge_behaviour
+> > > > > > > Date: October 2021
+> > > > > > > Contact: linux-pm@vger.kernel.org
+> > > > > > > Description:
+> > > > > > >   Configure battery behaviour when a charger is being connected.
+> > > > > > > 
+> > > > > > >   Access: Read, Write
+> > > > > > > 
+> > > > > > >   Valid values:
+> > > > > > > 
+> > > > > > >   0: auto / no override
+> > > > > > >      When charger is connected battery should be charged
+> > > > > > >   1: force idle
+> > > > > > >      When charger is connected the battery should neither be charged
+> > > > > > >      nor discharged.
+> > > > > > >   2: force discharge
+> > > > > > >      When charger is connected the battery should be discharged
+> > > > > > >      anyways.
+> > > > > > > ---------------------------------------------------------------------
+> > > > > > 
+> > > > > > That looks good to me. Although I just realized that some hw may
+> > > > > > only support 1. or 2. maybe explicitly document this and that
+> > > > > > EOPNOTSUPP will be reported when the value is not supported
+> > > > > > (vs EINVAL for plain invalid values) ?
+> > > > > 
+> > > > > Would that not force a userspace applications to offer all possibilities to
+> > > > > the user only to tell them that it's not supported?
+> > > > > If the driver knows what is supported and what not it should make this
+> > > > > discoverable without actually performing the operation.
+> > > > > 
+> > > > > Maybe something along the lines of /sys/power/mem_sleep.
+> > > > 
+> > > > Good point, but something like /sys/power/mem_sleep works
+> > > > very differently then how all the other power_supply properties work.
+> > > 
+> > > Actually we already use this format in power-supply for USB
+> > > types, implemented in power_supply_show_usb_type().
+> > > 
+> > > > In general if something is supported or not on a psy class
+> > > > device is communicated by the presence / absence of attributes.
+> > > > 
+> > > > So I think we should move back to having 2 separate attributes
+> > > > for this after all; and group the 2 together in the doc and
+> > > > document that enabling (setting to 1) one of force_charge /
+> > > > inhibit_charge automatically clears the setting of the other.
+> > > > 
+> > > > Then the availability of the features can simply be probed
+> > > > by checking for the presence of the property files.
+> > > 
+> > > If it's two files, then somebody needs to come up with proper
+> > > names. Things like 'force_discharge' look sensible in this context,
+> > > but on a system with two batteries (like some Thinkpads have) it
+> > > is easy to confuse with "I want to discharge this battery before
+> > > the other one (while no AC is connected)". > Ah I did not realize there was already some (read-only) precedence
+> > for this in the psy subsystem.
 > > 
-> > Before, devices were named by their capability (e.g. pmt_telemetry).
-> > Instead, generically name them by their capability ID (e.g.
-> > intel_extended_cap.2). This allows the IDs to be created automatically,
-> > minimizing the code needed to support future capabilities. However, to
-> > ensure that unsupported devices aren't created, use an allow list to
-> > specify supported capabilities. Along these lines, rename the driver from
-> > intel_pmt to intel_extended_caps to better reflect the purpose.
+> > Since there is precedence for this using
+> > /sys/class/power_supply/<supply_name>/charge_behaviour
 > > 
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
+> > with an example contents of say:
 > > 
-> > V1:     New patch. However incorporates some elements of [1] which was
-> >         dropped. Namely enumerating features generically and creating an
-> >         allow list. Also cleans up probe by moving some code to functions
-> >         and using a bool instead of an int to track whether a device was
-> >         added.
+> > [auto] inhibit-charge force-discharge
 > > 
-> > [1] https://lore.kernel.org/all/20210922213007.2738388-3-david.e.box@linux.intel.com/
+> > Works for me and having 1 file instead of 2 is better then
+> > because this clearly encapsulates that inhibit-charge and
+> > force-discharge are mutually exclusive.
+> In fact they do not reset each other on ThinkPads. It's possible to
 > 
-> <...>
-> 
-> > +static int extended_caps_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> > +{
-> > +       struct extended_caps_platform_info *info;
-> > +       bool have_devices = false;
-> > +       unsigned long quirks = 0;
-> > +       int ret;
-> > +
-> > +       ret = pcim_enable_device(pdev);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       info = (struct extended_caps_platform_info *)id->driver_data;
-> 
-> pci_get_drvdata() in all places and no need to cast void *.
+> 1. set force_discharge=1 -- discharging commences
+> 2. set inhibit_charge=1 -- discharging continues, force_discharge remains 1
+> 3. set force_discharge=0 -- battery does not charge, inhibit_charge
+> remains 1
 
-This is coming from the id not the pdev. The data here is type kernel_ulong_t.
+But in the end there are only three states the user cares about, or?
+(inhibit, force_discharge and normal)
 
-> 
-> > +       if (info)
-> > +               quirks = info->quirks;
-> > +
-> > +       have_devices |= extended_caps_walk_dvsec(pdev, quirks);
-> > +
-> > +       if (info && (info->quirks & EXT_CAPS_QUIRK_NO_DVSEC))
-> > +               have_devices |= extended_caps_walk_header(pdev, quirks, info->capabilities);
-> > +
-> > +       if (!have_devices)
-> > +               return -ENODEV;
-> > +
-> > +       return 0;
-> > +}
-> 
-> <...>
-> 
-> > -static struct platform_driver pmt_telem_driver = {
-> > -       .driver = {
-> > -               .name   = TELEM_DEV_NAME,
-> > -       },
-> > -       .remove = pmt_telem_remove,
-> > -       .probe  = pmt_telem_probe,
-> > +static const struct auxiliary_device_id pmt_telem_aux_id_table[] = {
-> > +       { .name = "intel_extended_caps.2", },
-> 
-> Why "2" in the name?
+So when selecting inhibit or force_discharge the driver itself can reset the
+other option so the users do not have to care about the internal state of the
+EC.
 
-This is being changed to a string for the next version after similar comment. Thanks.
-
-David
-
-> 
-> Thanks
-> 
-> > +       {},
-> > +};
-> > +MODULE_DEVICE_TABLE(auxiliary, pmt_telem_aux_id_table);
-> > +
-> > +static struct auxiliary_driver pmt_telem_aux_driver = {
-> > +       .id_table       = pmt_telem_aux_id_table,
-> > +       .remove         = pmt_telem_remove,
-> > +       .probe          = pmt_telem_probe,
-> >  };
-> >  
-
-
+Thomas
