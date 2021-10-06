@@ -2,128 +2,140 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0FAC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 08:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AC6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 08:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CAB361166
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 08:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C80610A5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 08:59:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237686AbhJFIMf (ORCPT
+        id S237594AbhJFJAu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Oct 2021 04:12:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:22016 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237690AbhJFIMc (ORCPT
+        Wed, 6 Oct 2021 05:00:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237653AbhJFJAt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Oct 2021 04:12:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633507840;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mthn/G3Sv0qrkenGI3DlH3Nwq62NK6rrpSNp7AZdduo=;
-        b=JMmiQgUzIoFtwgI9365e8bNEZZYo6RYYY9/q0DGV+/O9P72nYNfmTcyC3G33r76vMv6d5n
-        /vaa47+bSz8CRodPZoEE0C8Pfmu8B2Wa/UFKfinD0f2LAb8xLKEumuapwe9z269+JOCHpq
-        4UTjYmFGqqRiJQ4Bsf4rSitvhccXcd8=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-57-eP5kWL30MOaCHpp0IVJybg-1; Wed, 06 Oct 2021 04:10:39 -0400
-X-MC-Unique: eP5kWL30MOaCHpp0IVJybg-1
-Received: by mail-ed1-f69.google.com with SMTP id 1-20020a508741000000b003da559ba1eeso1862519edv.13
-        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Oct 2021 01:10:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mthn/G3Sv0qrkenGI3DlH3Nwq62NK6rrpSNp7AZdduo=;
-        b=bT+SdDr5wiZYfD98Q2ZOB0vUHaMTKJ7vGtMeB9CtZaGlHWGPfMz6sFPxkq4sE+eAHa
-         wuTVE2PAN/XN7kJQBm+goDWl3S4vzyOHaoBtRZEAXUMXNU3jB+FA1d301y9nyg/Kgr16
-         vWdZl1N5QhZQTWDYpVRB4QZ8MU0NcJ3AA6zh4H6jCjNRYQejmeFJq2mUnSLF7TTy12oX
-         R+q0XeME+bHuW7vcjAEcwI4A3zoj8FqISPm0T9k5flACYIb3e7Y0BsnjJXwKztHUhqxH
-         453fiJenboGZLSIqZdS9tLJd6SCpGBlIImyE/T/VFyLweWn0+Mo7L63fhUY4mLF3gdj3
-         /Uxw==
-X-Gm-Message-State: AOAM53054Icc9NHyf1EgmSohwgJGG4tQQ4U0O7n6T+q0M0OmIZ6pHGq3
-        Vowx0YVyrz3vRhOYlBMo1K9spBZrrhGMM+bXsO5h2SrH9SBsC348NgwLw0th8Amqr2XLhftjcac
-        iaBth84VX4egb2lb5zt+m4EItmq1WYsWb+A==
-X-Received: by 2002:a05:6402:3494:: with SMTP id v20mr2354654edc.326.1633507838161;
-        Wed, 06 Oct 2021 01:10:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyDjl/WmeV0e8V9tIQbI8WCJ3iANjgxPy2EnDRPu692c71YSacs3IID5mHQ1Yf+2aEG0qGWgg==
-X-Received: by 2002:a05:6402:3494:: with SMTP id v20mr2354639edc.326.1633507838017;
-        Wed, 06 Oct 2021 01:10:38 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id o7sm2358498edr.83.2021.10.06.01.10.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Oct 2021 01:10:36 -0700 (PDT)
-Subject: Re: [RFC] add standardized attributes for force_discharge and
- inhibit_charge
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     =?UTF-8?Q?Nicol=c3=b2_Piazzalunga?= <nicolopiazzalunga@gmail.com>,
-        linux-pm@vger.kernel.org,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Thomas Koch <linrunner@gmx.net>,
-        "smclt30p@gmail.com" <smclt30p@gmail.com>
-References: <21569a89-8303-8573-05fb-c2fec29983d1@gmail.com>
- <77e39b3e-fa51-54fe-1898-4f43895ac2c6@redhat.com>
- <20211005162352.emaoveimhkp5uzfw@earth.universe>
- <06fa7a23-4dec-cba9-4e00-c00cf0bf9337@redhat.com>
- <20211005220630.zurfqyva44idnplu@earth.universe>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <8cbf7671-d9ee-6bfc-d8fd-d360ccb2c595@redhat.com>
-Date:   Wed, 6 Oct 2021 10:10:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Wed, 6 Oct 2021 05:00:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2882761154;
+        Wed,  6 Oct 2021 08:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633510737;
+        bh=++lqEzQxtoW7xfOop+3aaHSFfCOnbuI0IZsaxmI1SwU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U44MV0I+Y7MJ6VUgb5Zmwxs0dfF1p2KQU2+dd0zK8in5c21w8sAH6CYVHJwBOQOk7
+         39H45Z4x4k3pZXCNWfODnm981s+m9HOW6SEDaoDmIcY7xpTx4fiQG0p9nDenpY+iju
+         fVnxn0DPgcGoXk5LI8V9r5/SRkWIMwX2c0JN3UIxJhd2IVHPc5fb0HSIMFmu76qM0A
+         PSb/xnshsD3UX4CyqpPxGU16aruhSp9jJKdlOmKEm1Oeq47Bj/Idb+lg2GgGUJj+y6
+         IvIk/o+WKLjeohjaADhQBSr1mktt4YyFribvW1F+KEtBTdeitHEo/gGqv2LPT0VN1V
+         iCNt2bDWNSiuA==
+Date:   Wed, 6 Oct 2021 11:58:52 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
+        bhelgaas@google.com, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/5] platform/x86/intel: Move intel_pmt from MFD to
+ Auxiliary Bus
+Message-ID: <YV1lTMwBSVlvadiG@unreal>
+References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
+ <20211001012815.1999501-3-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20211005220630.zurfqyva44idnplu@earth.universe>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211001012815.1999501-3-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Thu, Sep 30, 2021 at 06:28:12PM -0700, David E. Box wrote:
+> Intel Platform Monitoring Technology (PMT) support is indicated by presence
+> of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
+> structures may also be used by Intel to indicate support for other
+> capabilities unrelated to PMT.  The Out Of Band Management Services Module
+> (OOBMSM) is an example of a device that can have both PMT and non-PMT
+> capabilities. In order to support these capabilities it is necessary to
+> modify the intel_pmt driver to handle the creation of platform devices more
+> generically. To that end the following changes are made.
+> 
+> Convert the driver and child drivers from MFD to the Auxiliary Bus. This
+> architecture is more suitable anyway since the driver partitions a
+> multifunctional PCIe device. This also moves the driver out of the MFD
+> subsystem and into platform/x86/intel.
+> 
+> Before, devices were named by their capability (e.g. pmt_telemetry).
+> Instead, generically name them by their capability ID (e.g.
+> intel_extended_cap.2). This allows the IDs to be created automatically,
+> minimizing the code needed to support future capabilities. However, to
+> ensure that unsupported devices aren't created, use an allow list to
+> specify supported capabilities. Along these lines, rename the driver from
+> intel_pmt to intel_extended_caps to better reflect the purpose.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> 
+> V1:	New patch. However incorporates some elements of [1] which was
+> 	dropped. Namely enumerating features generically and creating an
+> 	allow list. Also cleans up probe by moving some code to functions
+> 	and using a bool instead of an int to track whether a device was
+> 	added.
+> 
+> [1] https://lore.kernel.org/all/20210922213007.2738388-3-david.e.box@linux.intel.com/
 
-On 10/6/21 12:06 AM, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Tue, Oct 05, 2021 at 08:01:12PM +0200, Hans de Goede wrote:
->> Right, force-discharge automatically implies charging is
->> being inhibited, so putting this in one file makes sense.
->>
->> Any suggestion for the name of the file?
-> 
-> Maybe like this?
-> 
-> ---------------------------------------------------------------------
-> What: /sys/class/power_supply/<supply_name>/charge_behaviour
-> Date: October 2021
-> Contact: linux-pm@vger.kernel.org
-> Description:
->  Configure battery behaviour when a charger is being connected.
-> 
->  Access: Read, Write
-> 
->  Valid values:
-> 
->  0: auto / no override
->     When charger is connected battery should be charged
->  1: force idle
->     When charger is connected the battery should neither be charged
->     nor discharged.
->  2: force discharge
->     When charger is connected the battery should be discharged
->     anyways.
-> ---------------------------------------------------------------------
+<...>
 
-That looks good to me. Although I just realized that some hw may
-only support 1. or 2. maybe explicitly document this and that
-EOPNOTSUPP will be reported when the value is not supported
-(vs EINVAL for plain invalid values) ?
+> +static int extended_caps_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> +{
+> +	struct extended_caps_platform_info *info;
+> +	bool have_devices = false;
+> +	unsigned long quirks = 0;
+> +	int ret;
+> +
+> +	ret = pcim_enable_device(pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	info = (struct extended_caps_platform_info *)id->driver_data;
 
-Regards,
+pci_get_drvdata() in all places and no need to cast void *.
 
-Hans
+> +	if (info)
+> +		quirks = info->quirks;
+> +
+> +	have_devices |= extended_caps_walk_dvsec(pdev, quirks);
+> +
+> +	if (info && (info->quirks & EXT_CAPS_QUIRK_NO_DVSEC))
+> +		have_devices |= extended_caps_walk_header(pdev, quirks, info->capabilities);
+> +
+> +	if (!have_devices)
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
 
+<...>
+
+> -static struct platform_driver pmt_telem_driver = {
+> -	.driver = {
+> -		.name   = TELEM_DEV_NAME,
+> -	},
+> -	.remove = pmt_telem_remove,
+> -	.probe  = pmt_telem_probe,
+> +static const struct auxiliary_device_id pmt_telem_aux_id_table[] = {
+> +	{ .name = "intel_extended_caps.2", },
+
+Why "2" in the name?
+
+Thanks
+
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(auxiliary, pmt_telem_aux_id_table);
+> +
+> +static struct auxiliary_driver pmt_telem_aux_driver = {
+> +	.id_table	= pmt_telem_aux_id_table,
+> +	.remove		= pmt_telem_remove,
+> +	.probe		= pmt_telem_probe,
+>  };
+>  
