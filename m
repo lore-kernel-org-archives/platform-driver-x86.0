@@ -2,74 +2,156 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6436C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 20:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48BBC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 20:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B914261163
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 20:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF6361177
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 20:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239454AbhJFU7i (ORCPT
+        id S233346AbhJFVAU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Oct 2021 16:59:38 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:36681 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229657AbhJFU7i (ORCPT
+        Wed, 6 Oct 2021 17:00:20 -0400
+Received: from mga14.intel.com ([192.55.52.115]:54692 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229657AbhJFVAU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Oct 2021 16:59:38 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 4686E32010F5;
-        Wed,  6 Oct 2021 16:57:45 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 06 Oct 2021 16:57:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=lltFajXQMAQ1lhK6SCeUtDZD7/JoaS0ecSW+yiC5D9o=; b=SiedS8m7
-        qbTzy9rBZfxocFXU/rDRi9fbIQz3TNmOLxcanBlRr4or4g9tvB+4wbyjhJRAHSZS
-        I8Uee/TXYA1u5dzIqPyGdxmK6XVCFw+87QdeyP2NCnDcZU65FnGGuqU6IAXEQ/cE
-        hI31Yz9CgBMM76pTAFlIhYxIbG4t0wzddajIgomDSTz0VTgFXaoVUQOvz8fZe2Qf
-        +xmLt6oXiBfiSshQsbtl7N6CCxf9W4alodc/kx/C1r+jKZAfNyGFgEOFFnCGblA7
-        U/pbJH4IKew7JquAe2S9d4wqSMFQvKA0rq6wxr0hUz2kvgZL5//IVeNDVCeF/zSc
-        cWHhJm1yY6K+Kg==
-X-ME-Sender: <xms:yA1eYcpkgJKTPxQKwp1CpyXBsniiy8VsRF7NGYA1AwayiGU0wEQX3A>
-    <xme:yA1eYSqCZhlt4aSgIOoLDvVkVzVxdQ-ayj7x-ZsoyqwSIQum3d4u0lfl3APhEEZVB
-    R83TCU5oG_wNi33Gw>
-X-ME-Received: <xmr:yA1eYROAr0s3pbJ_ikE--KmsBuHQRvHGRcPuVjp6YUz76m3tKx62EPIqEb1pe7X1NRdgcjG2J7srlgV6qzz-Ffs3fvHCDO1w99q1AHI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudeliedgudehudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpefvihhmucevrhgrfihfohhrugcuoehttghrrgiffhhorhgu
-    sehshihsthgvmhejiedrtghomheqnecuggftrfgrthhtvghrnhepieefledvgfeuieetfe
-    ehgefhieduleelffegteekjeduuefgkeeuheekhfehffdtnecuvehluhhsthgvrhfuihii
-    vgeptdenucfrrghrrghmpehmrghilhhfrhhomhepthgtrhgrfihfohhrugesshihshhtvg
-    hmjeeirdgtohhm
-X-ME-Proxy: <xmx:yA1eYT4GMrcL3hkphGoOVlVSjfnrmvX5sHgkpvvdnIsOrhWS-hEvsw>
-    <xmx:yA1eYb4gVLOmTAnjfcC-QoJNZqfmTG4rNqSK-4-HRw1SKjYzj119jg>
-    <xmx:yA1eYThBS2Rd6M6QM0C4R4Vkkv8l_Fq--9YDAn8VsIC_H5zIuBiraA>
-    <xmx:yA1eYYhsNzpA1Xt5jW8Yyf-8yMU0MsE72O2er7sCi-Q_T69q40CBQg>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 6 Oct 2021 16:57:44 -0400 (EDT)
-From:   Tim Crawford <tcrawford@system76.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     productdev@system76.com
-Subject: Re: [PATCH v4 0/4] platform/x86: system76_acpi: Sync DKMS module changes
-Date:   Wed,  6 Oct 2021 14:57:43 -0600
-Message-ID: <20211006202202.7479-1-tcrawford@system76.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211006202202.7479-1-tcrawford@system76.com>
-References: <20211006202202.7479-1-tcrawford@system76.com>
+        Wed, 6 Oct 2021 17:00:20 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226412795"
+X-IronPort-AV: E=Sophos;i="5.85,352,1624345200"; 
+   d="scan'208";a="226412795"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2021 13:58:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,352,1624345200"; 
+   d="scan'208";a="713074765"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Oct 2021 13:58:22 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
+        by linux.intel.com (Postfix) with ESMTP id B6EEC5807FC;
+        Wed,  6 Oct 2021 13:58:22 -0700 (PDT)
+Message-ID: <668f263e1d2606ad7485c40ce41933300ec4b8a3.camel@linux.intel.com>
+Subject: Re: [PATCH 2/5] platform/x86/intel: Move intel_pmt from MFD to
+ Auxiliary Bus
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
+        bhelgaas@google.com, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Date:   Wed, 06 Oct 2021 13:58:22 -0700
+In-Reply-To: <YV1lTMwBSVlvadiG@unreal>
+References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
+         <20211001012815.1999501-3-david.e.box@linux.intel.com>
+         <YV1lTMwBSVlvadiG@unreal>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
-Message-ID: <20211006205743.eD0uXBJCf2Cy_MOCvkpC9wgBBQRHkuX0SiSOBWmRTn8@z>
 
-> v4:
-> - Reverted DEV_ATTR macro change to keep custom `name`
-> - Added attribute groups for kb_led_color
-> - Set kd_led.groups instead of manually creating/removing the sysfs file
+On Wed, 2021-10-06 at 11:58 +0300, Leon Romanovsky wrote:
+> On Thu, Sep 30, 2021 at 06:28:12PM -0700, David E. Box wrote:
+> > Intel Platform Monitoring Technology (PMT) support is indicated by presence
+> > of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
+> > structures may also be used by Intel to indicate support for other
+> > capabilities unrelated to PMT.  The Out Of Band Management Services Module
+> > (OOBMSM) is an example of a device that can have both PMT and non-PMT
+> > capabilities. In order to support these capabilities it is necessary to
+> > modify the intel_pmt driver to handle the creation of platform devices more
+> > generically. To that end the following changes are made.
+> > 
+> > Convert the driver and child drivers from MFD to the Auxiliary Bus. This
+> > architecture is more suitable anyway since the driver partitions a
+> > multifunctional PCIe device. This also moves the driver out of the MFD
+> > subsystem and into platform/x86/intel.
+> > 
+> > Before, devices were named by their capability (e.g. pmt_telemetry).
+> > Instead, generically name them by their capability ID (e.g.
+> > intel_extended_cap.2). This allows the IDs to be created automatically,
+> > minimizing the code needed to support future capabilities. However, to
+> > ensure that unsupported devices aren't created, use an allow list to
+> > specify supported capabilities. Along these lines, rename the driver from
+> > intel_pmt to intel_extended_caps to better reflect the purpose.
+> > 
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+> > 
+> > V1:     New patch. However incorporates some elements of [1] which was
+> >         dropped. Namely enumerating features generically and creating an
+> >         allow list. Also cleans up probe by moving some code to functions
+> >         and using a bool instead of an int to track whether a device was
+> >         added.
+> > 
+> > [1] https://lore.kernel.org/all/20210922213007.2738388-3-david.e.box@linux.intel.com/
+> 
+> <...>
+> 
+> > +static int extended_caps_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > +{
+> > +       struct extended_caps_platform_info *info;
+> > +       bool have_devices = false;
+> > +       unsigned long quirks = 0;
+> > +       int ret;
+> > +
+> > +       ret = pcim_enable_device(pdev);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       info = (struct extended_caps_platform_info *)id->driver_data;
+> 
+> pci_get_drvdata() in all places and no need to cast void *.
 
-Forgot to note that I changed the hwmon if blocks to switch cases to
-more closely match what other hwmon drivers do.
+This is coming from the id not the pdev. The data here is type kernel_ulong_t.
+
+> 
+> > +       if (info)
+> > +               quirks = info->quirks;
+> > +
+> > +       have_devices |= extended_caps_walk_dvsec(pdev, quirks);
+> > +
+> > +       if (info && (info->quirks & EXT_CAPS_QUIRK_NO_DVSEC))
+> > +               have_devices |= extended_caps_walk_header(pdev, quirks, info->capabilities);
+> > +
+> > +       if (!have_devices)
+> > +               return -ENODEV;
+> > +
+> > +       return 0;
+> > +}
+> 
+> <...>
+> 
+> > -static struct platform_driver pmt_telem_driver = {
+> > -       .driver = {
+> > -               .name   = TELEM_DEV_NAME,
+> > -       },
+> > -       .remove = pmt_telem_remove,
+> > -       .probe  = pmt_telem_probe,
+> > +static const struct auxiliary_device_id pmt_telem_aux_id_table[] = {
+> > +       { .name = "intel_extended_caps.2", },
+> 
+> Why "2" in the name?
+
+This is being changed to a string for the next version after similar comment. Thanks.
+
+David
+
+> 
+> Thanks
+> 
+> > +       {},
+> > +};
+> > +MODULE_DEVICE_TABLE(auxiliary, pmt_telem_aux_id_table);
+> > +
+> > +static struct auxiliary_driver pmt_telem_aux_driver = {
+> > +       .id_table       = pmt_telem_aux_id_table,
+> > +       .remove         = pmt_telem_remove,
+> > +       .probe          = pmt_telem_probe,
+> >  };
+> >  
+
+
