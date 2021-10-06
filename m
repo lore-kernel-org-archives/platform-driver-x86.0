@@ -2,140 +2,116 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AC6C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 08:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08626C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 11:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68C80610A5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 08:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D767C611B0
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Oct 2021 11:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237594AbhJFJAu (ORCPT
+        id S237931AbhJFLKA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Oct 2021 05:00:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45944 "EHLO mail.kernel.org"
+        Wed, 6 Oct 2021 07:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237653AbhJFJAt (ORCPT
+        id S237836AbhJFLKA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Oct 2021 05:00:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2882761154;
-        Wed,  6 Oct 2021 08:58:56 +0000 (UTC)
+        Wed, 6 Oct 2021 07:10:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 25145611C6
+        for <platform-driver-x86@vger.kernel.org>; Wed,  6 Oct 2021 11:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633510737;
-        bh=++lqEzQxtoW7xfOop+3aaHSFfCOnbuI0IZsaxmI1SwU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U44MV0I+Y7MJ6VUgb5Zmwxs0dfF1p2KQU2+dd0zK8in5c21w8sAH6CYVHJwBOQOk7
-         39H45Z4x4k3pZXCNWfODnm981s+m9HOW6SEDaoDmIcY7xpTx4fiQG0p9nDenpY+iju
-         fVnxn0DPgcGoXk5LI8V9r5/SRkWIMwX2c0JN3UIxJhd2IVHPc5fb0HSIMFmu76qM0A
-         PSb/xnshsD3UX4CyqpPxGU16aruhSp9jJKdlOmKEm1Oeq47Bj/Idb+lg2GgGUJj+y6
-         IvIk/o+WKLjeohjaADhQBSr1mktt4YyFribvW1F+KEtBTdeitHEo/gGqv2LPT0VN1V
-         iCNt2bDWNSiuA==
-Date:   Wed, 6 Oct 2021 11:58:52 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
-        bhelgaas@google.com, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/5] platform/x86/intel: Move intel_pmt from MFD to
- Auxiliary Bus
-Message-ID: <YV1lTMwBSVlvadiG@unreal>
-References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
- <20211001012815.1999501-3-david.e.box@linux.intel.com>
+        s=k20201202; t=1633518488;
+        bh=VAZwOJAKeklnxL7BH8CqaIZuW4fNG9pIW+tXb5tVKXE=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=K+WuN6ZbWFWcvznAt77Zjtqo5v8rKZapeBkU57PlfD8asEQEZu5kY8uqC5noQbYVS
+         Ox0UtxDEMlcPRPFKXcIhl/B3abJEfvGHVS55WBPPguzUJGSLTW4afk5SRECy2qrXM3
+         l1EaILJVZmyZ9kNLtFJKvbq0crBlFJFRYgsfWUH7meFhjLWdo+nzI4DrINOKSjjxhY
+         k9MgUYWVyNCC0VZuF7fDz3+ED8K0YF2x8vZ82nkbtKm02RDmcq11iDUEItYgSgXW1m
+         nsb64HnNXUHM7mlDFejtQYM7ymgzZQVMFiNIWGnmx1ZtZ7qFHGl5bscYOLl3LDcFD0
+         K+2nxAmBbTWRw==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Wed, 06 Oct 2021 11:08:07 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: kpietrzak@disroot.org
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-ww2Sy35HpD@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211001012815.1999501-3-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 06:28:12PM -0700, David E. Box wrote:
-> Intel Platform Monitoring Technology (PMT) support is indicated by presence
-> of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
-> structures may also be used by Intel to indicate support for other
-> capabilities unrelated to PMT.  The Out Of Band Management Services Module
-> (OOBMSM) is an example of a device that can have both PMT and non-PMT
-> capabilities. In order to support these capabilities it is necessary to
-> modify the intel_pmt driver to handle the creation of platform devices more
-> generically. To that end the following changes are made.
-> 
-> Convert the driver and child drivers from MFD to the Auxiliary Bus. This
-> architecture is more suitable anyway since the driver partitions a
-> multifunctional PCIe device. This also moves the driver out of the MFD
-> subsystem and into platform/x86/intel.
-> 
-> Before, devices were named by their capability (e.g. pmt_telemetry).
-> Instead, generically name them by their capability ID (e.g.
-> intel_extended_cap.2). This allows the IDs to be created automatically,
-> minimizing the code needed to support future capabilities. However, to
-> ensure that unsupported devices aren't created, use an allow list to
-> specify supported capabilities. Along these lines, rename the driver from
-> intel_pmt to intel_extended_caps to better reflect the purpose.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
-> 
-> V1:	New patch. However incorporates some elements of [1] which was
-> 	dropped. Namely enumerating features generically and creating an
-> 	allow list. Also cleans up probe by moving some code to functions
-> 	and using a bool instead of an int to track whether a device was
-> 	added.
-> 
-> [1] https://lore.kernel.org/all/20210922213007.2738388-3-david.e.box@linux.intel.com/
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-<...>
+--- Comment #138 from Kamil Pietrzak (kpietrzak@disroot.org) ---
+(In reply to Kamil Pietrzak from comment #137)
+> With regard to current voltage scaling factors for nct6798d chip, they are
+> most likely not correct and probably will require future changes. For
+> example I can't see +12V and +5V is sensors output when using current
+> voltage scalling factors.
 
-> +static int extended_caps_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +	struct extended_caps_platform_info *info;
-> +	bool have_devices = false;
-> +	unsigned long quirks = 0;
-> +	int ret;
-> +
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	info = (struct extended_caps_platform_info *)id->driver_data;
+Partially responding to my own comment here.
 
-pci_get_drvdata() in all places and no need to cast void *.
+Due to the lack of publicly available documentation for NCT6798D chip I che=
+cked
+docs for similar chips (NCT6791D, NCT6791D).
 
-> +	if (info)
-> +		quirks = info->quirks;
-> +
-> +	have_devices |= extended_caps_walk_dvsec(pdev, quirks);
-> +
-> +	if (info && (info->quirks & EXT_CAPS_QUIRK_NO_DVSEC))
-> +		have_devices |= extended_caps_walk_header(pdev, quirks, info->capabilities);
-> +
-> +	if (!have_devices)
-> +		return -ENODEV;
-> +
-> +	return 0;
-> +}
+Looks like voltages like +12V and +5V can be connected to any one of general
+purpose voltage inputs on the SuperIO chip. So on one motherboard +12V can =
+be
+connected to pin VIN0, but on another one with same SuperIO chip it can
+possibly be connected to other general purpose voltage pin like VIN1, VIN2,
+VIN3 etc. In that case it will not be possible to properly scale these volt=
+ages
+without hardcoding motherboard models in module code, so scaling should take
+place in userspace apps like lm_sensors. The only voltages that can be safe=
+ly
+scaled in module code are Vcore, AVSB, 3VCC, 3VSB, VBAT. Pins to which they=
+ are
+connected should not change between different motherboards. So it looks like
+current voltage scaling factors are as accurate as it can be without hardco=
+ding
+motherboards models.
 
-<...>
+However, I am still curious about Vcore voltage readings on my TUF Z490 boa=
+rd
+in BIOS and Asus software. According to docs Vcore should be calculated with
+formula=20
 
-> -static struct platform_driver pmt_telem_driver = {
-> -	.driver = {
-> -		.name   = TELEM_DEV_NAME,
-> -	},
-> -	.remove = pmt_telem_remove,
-> -	.probe  = pmt_telem_probe,
-> +static const struct auxiliary_device_id pmt_telem_aux_id_table[] = {
-> +	{ .name = "intel_extended_caps.2", },
+Detected Voltage =3D Reading * 0.008 V
 
-Why "2" in the name?
+but Asus in BIOS and in their software on Windows calculate it probably with
+some additional scaling factor, most likely something like
 
-Thanks
+Detected Voltage =3D Reading * 0.008 V * 1.11
 
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(auxiliary, pmt_telem_aux_id_table);
-> +
-> +static struct auxiliary_driver pmt_telem_aux_driver = {
-> +	.id_table	= pmt_telem_aux_id_table,
-> +	.remove		= pmt_telem_remove,
-> +	.probe		= pmt_telem_probe,
->  };
->  
+The only reason that comes to my mind for calculating Vcore in that way is =
+that
+they (Asus) wanted BIOS/software Vcore readings to be more accurate in rela=
+tion
+to voltage readings using for example multimeter near the CPU socket.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
