@@ -2,207 +2,153 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9163C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Oct 2021 11:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0302CC43217
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Oct 2021 20:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B097610EA
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Oct 2021 11:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE8A610CC
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Oct 2021 20:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240867AbhJGL37 (ORCPT
+        id S241989AbhJGUCW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 7 Oct 2021 07:29:59 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33632 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230087AbhJGL36 (ORCPT
+        Thu, 7 Oct 2021 16:02:22 -0400
+Received: from mail-bn7nam10on2042.outbound.protection.outlook.com ([40.107.92.42]:38913
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S241572AbhJGUCV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Oct 2021 07:29:58 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 701B21F44EBA
-Received: by earth.universe (Postfix, from userid 1000)
-        id E3DD03C0CA8; Thu,  7 Oct 2021 13:28:01 +0200 (CEST)
-Date:   Thu, 7 Oct 2021 13:28:01 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Thomas Koch <linrunner@gmx.net>
-Cc:     Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@weissschuh.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?utf-8?Q?Nicol=C3=B2?= Piazzalunga <nicolopiazzalunga@gmail.com>,
-        linux-pm@vger.kernel.org,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "smclt30p@gmail.com" <smclt30p@gmail.com>
-Subject: Re: [RFC] add standardized attributes for force_discharge and
- inhibit_charge
-Message-ID: <20211007112801.jqc4xyht5rn5wt4j@earth.universe>
-References: <06fa7a23-4dec-cba9-4e00-c00cf0bf9337@redhat.com>
- <20211005220630.zurfqyva44idnplu@earth.universe>
- <8cbf7671-d9ee-6bfc-d8fd-d360ccb2c595@redhat.com>
- <f2e99c38-2e2f-4777-8318-fb4dae6e8bf1@t-8ch.de>
- <04693bb2-9fd1-59fa-4c21-99848e8aa4c4@redhat.com>
- <20211006162834.ujxfcn7jjrdl4kjx@earth.universe>
- <9ec694b7-48a9-5d86-0970-daefdf204712@redhat.com>
- <10fe30d4-f076-0612-002b-8bdf4e0a1fd5@gmx.net>
- <cdc45a93-dd17-4ff1-8ce7-9002ae6ae23b@t-8ch.de>
- <48c9dd0e-ffe7-6ee5-c201-517392269da5@gmx.net>
+        Thu, 7 Oct 2021 16:02:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=awvP99yDyAsok4VLaalbiyqS3Td6VvtakhVMzeCs+aY0u01cchHpbulIgbCM0SXx12ERqcaDicQ4m48PrUvH/Pndf0NTKv5kEznaSJrMNoqUFJ0HX3cJ60+95yEUb+SDece8j+qqFoaZfC0XwbDEbEuMfsmW43D4UfHhCTQc93YufqacKS+Si2BTQxtOl0KfGK93uK6mCPtJa7EP83t9eHp+faAIKRVAcGrxU+mWw5A7SGWLrZcu8YuT/3OagTxhhGQqjvGSw7i1ehbE+AXGQuI0cMiuiLAV3LZb3Eyfem7TRLAAX65qAt8mu6SMh2KEQYHOC1zUll/wid5STr1iGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=w0R+daDZhzW5md683dZ6ph/xkCumF3ZRJkN8Ie+GQgM=;
+ b=YA1U2ozTnfo889c8BQfbO74opql4KY0Gh/AS+YTtJgeqFT7wiaPvft3G8Ec9cJF4HABZcYRvdcd0gw1EX7WzD/1ba6/Q26rhDDgyV9IazKYRN8dWzjeaVcziGqLLlh7mztuANu5pcapKGw4C317sgWWbjUl3izkaKp6i4sW9OMjsPnadTMxJgX7CRZK5VXgspN22XekBMZMH7cJmjChuohRT0IMDxethYE7paKvYn8hoB78veyQec84CKzUXPpg6VjhQf5engnW0Sc5GXyeqo/qVDvHMmRRonwwPEyanTXGE3+gmG7mya9sjO6SUlbPdnjs//47eYrNX3p2f4yC8Gg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w0R+daDZhzW5md683dZ6ph/xkCumF3ZRJkN8Ie+GQgM=;
+ b=V9lHfn4qW5u4h6MJ+YcFmqKn1BqOLUbgk6bp9Oi4eFyESQL3Lxi0pjKFlxW8MtshBVfnNcePW+XSAaFve2lCzwIBS8+6L5swNROLRk5j60JFvKCYj2kLzYleGYsd9Yq9tsJSn1PCFp2aO5JAJoV2CKQfhX1yt+w/Hbc4ac0xql8=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from SA0PR12MB4510.namprd12.prod.outlook.com (2603:10b6:806:94::8)
+ by SN6PR12MB4670.namprd12.prod.outlook.com (2603:10b6:805:11::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.18; Thu, 7 Oct
+ 2021 20:00:24 +0000
+Received: from SA0PR12MB4510.namprd12.prod.outlook.com
+ ([fe80::f909:b733:33ff:e3b1]) by SA0PR12MB4510.namprd12.prod.outlook.com
+ ([fe80::f909:b733:33ff:e3b1%5]) with mapi id 15.20.4587.020; Thu, 7 Oct 2021
+ 20:00:24 +0000
+Subject: Re: [PATCH 1/2] platform/x86: amd-pmc: Add alternative acpi id for
+ PMC controller
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Sachi King <nakato@nakato.io>, hdegoede@redhat.com,
+        mgross@linux.intel.com, rafael@kernel.org, lenb@kernel.org,
+        Sanket.Goswami@amd.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, stable@vger.kernel.org
+References: <20211002041840.2058647-1-nakato@nakato.io>
+ <3ecd9046-ad0c-9c9a-9b09-bbab2f94b9f2@amd.com>
+From:   "Limonciello, Mario" <mario.limonciello@amd.com>
+Message-ID: <909f28e9-245a-df90-52f1-98b0f63a2b3a@amd.com>
+Date:   Thu, 7 Oct 2021 15:00:23 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+In-Reply-To: <3ecd9046-ad0c-9c9a-9b09-bbab2f94b9f2@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN2PR01CA0053.prod.exchangelabs.com (2603:10b6:800::21) To
+ SA0PR12MB4510.namprd12.prod.outlook.com (2603:10b6:806:94::8)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="t5y7eyfgbxqcs5dr"
-Content-Disposition: inline
-In-Reply-To: <48c9dd0e-ffe7-6ee5-c201-517392269da5@gmx.net>
+Received: from [10.254.54.68] (165.204.77.11) by SN2PR01CA0053.prod.exchangelabs.com (2603:10b6:800::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.19 via Frontend Transport; Thu, 7 Oct 2021 20:00:24 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: dde907fa-d25d-4bc5-2495-08d989cd19f0
+X-MS-TrafficTypeDiagnostic: SN6PR12MB4670:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB4670E98EAB8C6A01F46D5967E2B19@SN6PR12MB4670.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: i7c+neIWsFDnKGZpFa8rBjDevL08u2BGRTArCRzyKWK2pYD5dT9Dnua8ANaPC3nMRUl1gTrScPSkbJK1REkG7emXWaSA9hI2qXBTkhtb5UpOBLdSpLGqtdUt/56PvS/5RWhjyAfO5Y6RuOPxUMJlahp09dxXJCIvZzS0lIunif1WjlwY+rH1dl++KTlyayFiqBzHVUHbTYmnv9wc5zjuz0oRwzCU3IWA9zraxn1AkKpz4qSqlMnzX5RgjV+JETkr7oIMukT6MOHS/kFu42KutmZfRrhf/58ZWkZbzv/+I/oIsnlhfOKtAG/SSFwSWlGRq85V2OfFPfkapIrNpF9xtmYM3aNmJ2O+oQ335fVzXWp6EKGci2EnOg9wKbNgyZvar/p2hxfJnK88VBVjl65X9i+/lk9u1eJ4hzyEMzSGobEs8cuMe/tBzDaRaqUTv/yxcseXLloPeqycpCBXd0SkxXKgqqMBC9w3jbVY8C6GXukTs1PHtECSeff+BfF8tqei/7yYhlysqAm2gQZ9fOaZhhnXuYyXz0lR1zx0OYn4STw8cGc694g883UuipVgqxIz1VTW/+DpDGWOhyH6HZqIYXVXY8JLvDN9alsXDglX5t4SJ6b4+bQggoaBCc7G8I/QJk1SG0SfpdJUhG6VibpSfAa123ITPEW1PeEKotmKINepnqZPFt1I5jDKw6QferhaG8xPuB6RLa122y8OaL8g1g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4510.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(508600001)(31686004)(2616005)(53546011)(6486002)(8936002)(38100700002)(83380400001)(956004)(5660300002)(66946007)(110136005)(36756003)(2906002)(66556008)(26005)(316002)(86362001)(66476007)(6636002)(16576012)(8676002)(4326008)(31696002)(186003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bHBVZFNHaURyY0dTMUxtVzdST01Kdi9Ra1RvY3VYb0J0WTF6emhOMjBtcjdN?=
+ =?utf-8?B?QlNIYnJndTRZb0lUenNuc3NJYm9xaDRlMFhDcGxFRlBEbVNMbEREaXhrZnYr?=
+ =?utf-8?B?d0d6Z3NDMW4ySjdxWHhXMGV4SHhWaDJnYk9zSTlyQ2xjM2RDNW5RM1RNLzJZ?=
+ =?utf-8?B?K0JTSmdBNklHb3FWUSswWEdtTXlUeEp5emg4eHVhL3F4WjJpOVEzNXVnUkdU?=
+ =?utf-8?B?SmxPZXpIOXZ2U21hUDdueXhhWlNsNWhQYTUwVGwxT0xCYWkwS0M4dndqUlkv?=
+ =?utf-8?B?OW9RbklGZk9pMXMxeGVjQW5qUEJwcm5WQmcwVWlnV2k3eTNMendmOHhqMVZp?=
+ =?utf-8?B?NUdWR0g3T0RNdmFoQk8zZy9DL2kxUi9ncWxCcG44WUNQcW5lU3RTdlNWcFZ3?=
+ =?utf-8?B?ZXYvVlQ4bE90UWNJT0lqMjZtWGsyR1dLUHJEQU5uUzZac1MxbHBVd0s5VWtV?=
+ =?utf-8?B?eWRucUpyaUM2Wnk5VXh2QXVCNjBIWGdmdGRKaFdmNmtweUlOc2ltNE9SUUU5?=
+ =?utf-8?B?SXAwTjVOVnR0UC9QQ1VUMXNwVTRsM3Z3WXhKdDRyTjNPempxYVVOaG5DWGJw?=
+ =?utf-8?B?U2JJWmlraFlqN2lLQ3ZCRFMxVHp0bkx6dkFpTm15TVNrVTRwWm9SdWUrb3lC?=
+ =?utf-8?B?cVlpQmFRQXNxVkVlYlg4RjY5bFAzVEdRMGN0K0lSUDI2V05TSE1tUk1SNDRS?=
+ =?utf-8?B?U1BFVGE2VmI2R2NlMjlHSGJUOTFrQ3N4SzAyQUZiaXg3dG01YWlSN2lsZVJw?=
+ =?utf-8?B?ZGJPU2MxTmxEZTV5R29pR0xvL1pLQU55MWVKUGIzdjQ1SWhyRGZUSUNCRGh5?=
+ =?utf-8?B?b0h5cDFtMVVzTlY3UUd0aTEyZXlXMVVxdHhsTW1zalAwQVViaGxQcFVPRGNK?=
+ =?utf-8?B?L1FmYi9FZ3k4WWdpVmMyS0xySHFwVGhrak54S0ZkUnpnbXNEdC85T1M1WGJ1?=
+ =?utf-8?B?aEtreTRpcHRYTW4wMVpOWVhTa3R2Y2U5cUUycTFjZmNVYitydlNXOGorbjRS?=
+ =?utf-8?B?a1VXSXcyMlNJbFNKT3ppQTZVR2MzdWVXQ3hEYmREdVJEV1EzenFqazlBRlZP?=
+ =?utf-8?B?TmNuVE8xTHJkVHo3NGpSMWMrYldGZ0RuMVoydStYRXdFZlpIUG8rYXBJaC91?=
+ =?utf-8?B?RjlQVUljTXQybFBIN1hxcW5SN29yK2dRZk1Ta3ltMTFNRDFuL3FSSGRZa2JC?=
+ =?utf-8?B?UkZacENVNGNSeEVNUkJ0Ni9EdVZGK0duV2l6WmQ0bkxVa0M2czZsKzdRbzMr?=
+ =?utf-8?B?T3hIQm5KL1g3WUUzOTNweFR1cDZRalBkRkd5dHh2Y2pBUEllY2szV1NQTE84?=
+ =?utf-8?B?YXBrL0V3dUYzelNxSjRkUTJLOWFScW9MaXNPZTdkWUpGVS9pSEJKblBXVWFl?=
+ =?utf-8?B?d01lQjNuLzZDdHFvWFExbFBHVysrbndNQUNRV1RZbkxIVXdXMWpkY24zNkxn?=
+ =?utf-8?B?RzlOQkp4QlhvcmNNdmFTNUcxTFRqMkk5L01lZTU5c1FER3lhK05hdlZ6M3RR?=
+ =?utf-8?B?R0MrUXdPb1FZRHM4VjhuQWtCWDE5V1poaU84WTRZM0UvVTB1U2lNc3dWRFhm?=
+ =?utf-8?B?Y1AyZWNwdGxESjJWemZrVW9kVlZuS0pEcFUxLzZxTHZ0Q3FYVkpTb2JFSTVs?=
+ =?utf-8?B?MHhiMmlOWkQ5c2dEaXQ2L2k2RGpmY0lHbDJ1UkMzYnNYRWhDNVZjSnViRjdH?=
+ =?utf-8?B?TlNxY3VoWFhGMTlDWG1RVkViekRUU3dFeFI1ZkgrRm5zUFpLL3FZTVZFMmdj?=
+ =?utf-8?Q?nChszAaWdqqtrNqcbybGzGCn3tKf19QjLI64qvm?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dde907fa-d25d-4bc5-2495-08d989cd19f0
+X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4510.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2021 20:00:24.7230
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 45Ie1cTe6Al+v3SMksMy20uGhmADYQHcVfN/bTsl8Cw8QIFr8exS+fQhEfWVWQ7BwbHC3lIn2vv3BunI2QEEuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB4670
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
++Sanket Goswami
 
---t5y7eyfgbxqcs5dr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/5/2021 00:16, Shyam Sundar S K wrote:
+> 
+> 
+> On 10/2/2021 9:48 AM, Sachi King wrote:
+>> The Surface Laptop 4 AMD has used the AMD0005 to identify this
+>> controller instead of using the appropriate ACPI ID AMDI0005.  Include
+>> AMD0005 in the acpi id list.
+> 
+> Can you provide an ACPI dump and output of 'cat /sys/power/mem_sleep'
+> 
+> Thanks,
+> Shyam
+> 
 
-Hi,
+I had a look through the acpidump listed there and it seems like the PEP
+device is filled with a lot of NO-OP type of code.  This means the LPS0 
+patch really isn't "needed", but still may be a good idea to include for 
+completeness in case there ends up being a design based upon this that 
+does need it.
 
-On Thu, Oct 07, 2021 at 07:56:13AM +0200, Thomas Koch wrote:
-> > > > > On Wed, Oct 06, 2021 at 05:27:22PM +0200, Hans de Goede wrote:
-> > > > > > On 10/6/21 4:49 PM, Thomas Wei=DFschuh wrote:
-> > > > > > > On 2021-10-06T10:10+0200, Hans de Goede wrote:
-> > > > > > > > On 10/6/21 12:06 AM, Sebastian Reichel wrote:Ack
-> > > > > > > > > On Tue, Oct 05, 2021 at 08:01:12PM +0200, Hans de Goede w=
-rote:
-> > > > > > > > > > Right, force-discharge automatically implies charging is
-> > > > > > > > > > being inhibited, so putting this in one file makes sens=
-e.
-> > > > > > > > > >=20
-> > > > > > > > > > Any suggestion for the name of the file?
-> > > > > > > > >=20
-> > > > > > > > > Maybe like this?
-> > > > > > > > >=20
-> > > > > > > > > ---------------------------------------------------------=
-------------
-> > > > > > > > > What: /sys/class/power_supply/<supply_name>/charge_behavi=
-our
-> > > > > > > > > Date: October 2021
-> > > > > > > > > Contact: linux-pm@vger.kernel.org
-> > > > > > > > > Description:
-> > > > > > > > >    Configure battery behaviour when a charger is being co=
-nnected.
-> > > > > > > > >=20
-> > > > > > > > >    Access: Read, Write
-> > > > > > > > >=20
-> > > > > > > > >    Valid values:
-> > > > > > > > >=20
-> > > > > > > > >    0: auto / no override
-> > > > > > > > >       When charger is connected battery should be charged
-> > > > > > > > >    1: force idle
-> > > > > > > > >       When charger is connected the battery should neithe=
-r be charged
-> > > > > > > > >       nor discharged.
-> > > > > > > > >    2: force discharge
-> > > > > > > > >       When charger is connected the battery should be dis=
-charged
-> > > > > > > > >       anyways.
-> > > > > > > > > ---------------------------------------------------------=
-------------
-> > > > > > > >=20
-> > > > > > > > That looks good to me. Although I just realized that some h=
-w may
-> > > > > > > > only support 1. or 2. maybe explicitly document this and th=
-at
-> > > > > > > > EOPNOTSUPP will be reported when the value is not supported
-> > > > > > > > (vs EINVAL for plain invalid values) ?
-> > > > > > >=20
-> > > > > > > Would that not force a userspace applications to offer all po=
-ssibilities to
-> > > > > > > the user only to tell them that it's not supported?
-> > > > > > > If the driver knows what is supported and what not it should =
-make this
-> > > > > > > discoverable without actually performing the operation.
-> > > > > > >=20
-> > > > > > > Maybe something along the lines of /sys/power/mem_sleep.
-> > > > > >=20
-> > > > > > Good point, but something like /sys/power/mem_sleep works
-> > > > > > very differently then how all the other power_supply properties=
- work.
-> > > > >=20
-> > > > > Actually we already use this format in power-supply for USB
-> > > > > types, implemented in power_supply_show_usb_type().
-> > > > >=20
-> > > > > > In general if something is supported or not on a psy class
-> > > > > > device is communicated by the presence / absence of attributes.
-> > > > > >=20
-> > > > > > So I think we should move back to having 2 separate attributes
-> > > > > > for this after all; and group the 2 together in the doc and
-> > > > > > document that enabling (setting to 1) one of force_charge /
-> > > > > > inhibit_charge automatically clears the setting of the other.
-> > > > > >=20
-> > > > > > Then the availability of the features can simply be probed
-> > > > > > by checking for the presence of the property files.
-> > > > >=20
-> > > > > If it's two files, then somebody needs to come up with proper
-> > > > > names. Things like 'force_discharge' look sensible in this contex=
-t,
-> > > > > but on a system with two batteries (like some Thinkpads have) it
-> > > > > is easy to confuse with "I want to discharge this battery before
-> > > > > the other one (while no AC is connected)". > Ah I did not realize=
- there was already some (read-only) precedence
-> > > > for this in the psy subsystem.
-> > > >=20
-> > > > Since there is precedence for this using
-> > > > /sys/class/power_supply/<supply_name>/charge_behaviour
-> > > >=20
-> > > > with an example contents of say:
-> > > >=20
-> > > > [auto] inhibit-charge force-discharge
-> > > >=20
-> > > > Works for me and having 1 file instead of 2 is better then
-> > > > because this clearly encapsulates that inhibit-charge and
-> > > > force-discharge are mutually exclusive.
-> > > In fact they do not reset each other on ThinkPads. It's possible to
-> > >=20
-> > > 1. set force_discharge=3D1 -- discharging commences
-> > > 2. set inhibit_charge=3D1 -- discharging continues, force_discharge r=
-emains 1
-> > > 3. set force_discharge=3D0 -- battery does not charge, inhibit_charge
-> > > remains 1
-> >=20
-> > But in the end there are only three states the user cares about, or?
-> > (inhibit, force_discharge and normal)
-> >=20
-> > So when selecting inhibit or force_discharge the driver itself can rese=
-t the
-> > other option so the users do not have to care about the internal state =
-of the
-> > EC.
-> Correct. It works with the three states Sebastian suggested because
-> force_discharge overrules inhibit_charge.
->=20
-> Whereby for user-friendliness I would prefer Hans' strings
->=20
-> >>> [auto] inhibit-charge force-discharge
->=20
-> to Sebastian's numbered states.
+As for this one (the amd-pmc patch) how are things working with it? 
+Have you checked power consumption and verified that the amd_pmc debugfs 
+statistics are increasing?  Is the system able to resume from s2idle?
 
-LGTM.
-
--- Sebastian
-
---t5y7eyfgbxqcs5dr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmFe2bsACgkQ2O7X88g7
-+poEYg//Tn1LYFLfhnpqSfcx4VaYYX284i3QPw460nGqriANNa0gEwsBFzoIHVib
-7UTtVF2F+V8SsFmoJ1oC4X8s3kImlGisUvltf0IBFQyAPsDtomhpvM2P5CJXkICN
-b//TUlrDcM3SrTFwPvAZBdd1eW7ivE/mdsEsSrZPLVqmPL5pVgCGkyo2wGgAy1G1
-/7zyPX5DZICIy0NbXRn7NKXe035tWifwpFx2sJf4q8aAdq8EEaQqAxCR6YRpurBH
-H1/tXUD6s3Jzov+JzwikotQv+h2VXcs2ef6Z3ikgTsWdkr7H+8fC2wd1fmLPheuU
-8wJ+QqLtVji4eL7PfK3oyXNi9fg1ssQh4uSVffpKWMD8yvnFYk1B8J/DhqMu8MXW
-6i5fx8RlevAYX/ohbwjjAVlLig1QvESOavuyv6DOwZ+BOodVpI5sFvW8bz7h/YLj
-rpX/nq/VStAxoTSDxjiIT8ki2br/soxG5WJeYD575qkpKugIem9waMo4I/BwtOJK
-9675MjO9TPBe30M7DRK7y/9wgjrJSqjSneH/ikij1ydH5XAo8qTVsoUpwjujFCG0
-n1G95iRzIKdjXjgM7hvkZXPbe0KBct+0/MgQdHpA0Qv8ome198mqojsljTgvPRFL
-zVhQoDw5LAuHvDLlpePN8pga1RK53AgZdooqQeGbLLeEjG5+/MU=
-=Yh3j
------END PGP SIGNATURE-----
-
---t5y7eyfgbxqcs5dr--
+Does pinctrl-amd load on this system?  It seems to me that the power 
+button GPIO doesn't get used like normally on "regular" UEFI based AMD 
+systems.  I do see MSHW0040 so this is probably supported by 
+surfacepro3-button and that will probably service all the important events.
