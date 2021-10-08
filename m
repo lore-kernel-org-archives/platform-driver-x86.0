@@ -2,325 +2,200 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9580C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Oct 2021 16:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3216C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Oct 2021 18:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A14D261019
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Oct 2021 16:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E87C60F9D
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Oct 2021 18:05:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230345AbhJHQ2N (ORCPT
+        id S231330AbhJHSHN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 8 Oct 2021 12:28:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:29605 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239912AbhJHQ1r (ORCPT
+        Fri, 8 Oct 2021 14:07:13 -0400
+Received: from mail-bn8nam12on2069.outbound.protection.outlook.com ([40.107.237.69]:29056
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231217AbhJHSHN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Oct 2021 12:27:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633710350;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4hME9X/3eMZhCAQ7BpDzT3/VoKBAlb5y0lcKAKkPuW4=;
-        b=LalGaIcKAo2MF6XoSuFVmWjtL0LHwbrRh5IxH8F73i+f/CGpiS0+bRKmhPgbFCtnF6+cjx
-        yv8dooN/j98og5lIuDWlh/vuv+MKxBqTTCiCgI/5RJ6i7ACnhO56IlIZz91W92OZBtdUM/
-        iYrdU93jRk2qW6MjvkdDQPnHUtxb+T4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-4KxdZOwDNI6LUn3Y-_nntQ-1; Fri, 08 Oct 2021 12:25:43 -0400
-X-MC-Unique: 4KxdZOwDNI6LUn3Y-_nntQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7FE5710D01E4;
-        Fri,  8 Oct 2021 16:22:55 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.192.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 66CFE60C0F;
-        Fri,  8 Oct 2021 16:22:50 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH 05/12] regulator: Introduce tps68470-regulator driver
-Date:   Fri,  8 Oct 2021 18:21:14 +0200
-Message-Id: <20211008162121.6628-6-hdegoede@redhat.com>
-In-Reply-To: <20211008162121.6628-1-hdegoede@redhat.com>
-References: <20211008162121.6628-1-hdegoede@redhat.com>
+        Fri, 8 Oct 2021 14:07:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZwLsx5dXbaAbpgBA/wf9fRgoifz2buezuue6EZBgvdvZIawdNet1S7YtZOga/UKp0fyflcBUizVN2QyP53rON2mog5zXU23lI3mjIrR4rej6Vl65dheUisRsrLCRUR8XOdkNpNe9UYYzWar99Q2+E9fNrcA3j6vdtPce1PWBfe892t2+sqjUk4S3i5FILnN/3CG9A6at87dk0uNhnvF5OomL+Qyp5HbYDfdnMjtF+X0WVV7LA+PIdJD0gvCSHM/p867C2SF3TWll9l78hq66qIyo4RzYD9sEsai86DCBUngXHLUEOUN5palcCvQKAb/f2gDpA4gd1uuNn3rgcPNojA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3wUqQzuX+kBbOqDPaSYFLxyarHWjRNqYkkO1kYubPAI=;
+ b=M2nrvtrfZc34wZjxSTRUfwpGr6NwOmluLLMePCA6KIZ7wYIh/Ijwhl1mAHr8OWYmqSZ558HZG2HUSKs52vEXA5HVv8KuDZJnNoXX9zLvChvullT1gG1jfLbb95/42ETw+8fAJgNxI3Ab4mIFuNUBxRb80D7hlaXDMd3W3bzcAirk3DZFkKNsItY6QxXF5r3qTgNZreEOOe8IVMeBTh9n/rOoHy8T1kGSgl80az7Jkn1SccGk9E3MlIhIJpk7JWh4e3yGyAC4yL20UMGonntksywoRpHTGdCFezUPfFKrICPGrGi4k0yfyNE/nD4LkEIuXb9nPL4KNn1ycfwX8dvv0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3wUqQzuX+kBbOqDPaSYFLxyarHWjRNqYkkO1kYubPAI=;
+ b=ghLCfwB8Z0zOT6OkMJbozaavnUIBxSLVKYwlENThb3ltxqEgh+gtnF877T72dEoACzySutJT6ho77WsWDj3cqvBV/mxZbgzMyxncpu5Ywo/IfM8OJekBGH1Vc/WKu3TuMyyBurHQDrBcSxxWLnsD+EDaDzuz+wGpjZkGMMvWgBY=
+Received: from MW4PR03CA0083.namprd03.prod.outlook.com (2603:10b6:303:b6::28)
+ by MN2PR12MB4125.namprd12.prod.outlook.com (2603:10b6:208:1d9::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.22; Fri, 8 Oct
+ 2021 18:05:14 +0000
+Received: from CO1NAM11FT004.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:b6:cafe::40) by MW4PR03CA0083.outlook.office365.com
+ (2603:10b6:303:b6::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.18 via Frontend
+ Transport; Fri, 8 Oct 2021 18:05:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT004.mail.protection.outlook.com (10.13.175.89) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4587.18 via Frontend Transport; Fri, 8 Oct 2021 18:05:13 +0000
+Received: from sbrijesh-desktop.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Fri, 8 Oct 2021
+ 13:05:11 -0500
+From:   Brijesh Singh <brijesh.singh@amd.com>
+To:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>, <linux-efi@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "Vitaly Kuznetsov" <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        <tony.luck@intel.com>, <marcorr@google.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: [PATCH v6 01/42] x86/mm: Extend cc_attr to include AMD SEV-SNP
+Date:   Fri, 8 Oct 2021 13:04:12 -0500
+Message-ID: <20211008180453.462291-2-brijesh.singh@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211008180453.462291-1-brijesh.singh@amd.com>
+References: <20211008180453.462291-1-brijesh.singh@amd.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f69b822e-3c8f-48ca-ff9f-08d98a862d39
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4125:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB412586F293BB7B7E3A57066FE5B29@MN2PR12MB4125.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: c0oerZWFtPiW01FNpoJi4zEbzoOdZmDuYowSEE1OkvYzgJMCB8qSJpmCgIgNVi6V6j2cpNCdqdkylHL+X941u4RndZxrfaYDHXLcz1YCilvY3ccy9BEydtWCiZ8l0dvqz2VXD7j4Fm1xVHWJTdsTzhIQdixg5z0MPmtT44kVD++i+CIp2gTteyDkbP1CUkwX+IIE1xYscgmsA2M8yo9VD3VwlBAQQv392yIcvRKuV0sNtNveieBoMLdOysOCTbldS9OrRcnWp90e4U8UAKzudKtRP4QxRvUrAhBA8vfXxa0XfIksRR2dQHn0mCX4OSEN9pfL0p+X7o/9Qk33vZqyUXuKaOwWtrosu1Kk3B7eYhg1BFtQ/5H+fc8sMhl1Hpught/fC416D82okPR7nfLaArwjWWywB84nphiaPJdbYOxJ0mJSHBFXgayjPXn57dDoLLn/pDjN2aCEuSx8r524ctuHNYZqIO5yYoSMp02nkn0oCZg6PMTyG+MfZLIfInxazMVS0wqD2qehhZN1C1Lu0rGgAjwlkYo+Q2Xo956wXhMMmN68RijVCQaqgGa5eimTEdX7Ww0G2lN1ZL3vV4FPxmQFBkvJt7S9NjO04GLTVVHJWchL9ZTgIfE3lG7JMK+0OIDfD1oc/8QxwM9RoIunwN5UhjT/jB2Y0xaO2Cv0T2ggW78GKpIciGcA14YSCSnULEjLAdaYeU9pWqhM1Bj2xhGnPFyDH24T4GZGfghp2Hn0qvcUbh1cCB9LWowNHQgd
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(36756003)(86362001)(47076005)(36860700001)(336012)(82310400003)(54906003)(7696005)(44832011)(2616005)(1076003)(356005)(426003)(81166007)(316002)(4326008)(110136005)(2906002)(5660300002)(26005)(7406005)(186003)(16526019)(8676002)(508600001)(70206006)(70586007)(8936002)(7416002)(2101003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2021 18:05:13.7243
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f69b822e-3c8f-48ca-ff9f-08d98a862d39
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT004.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4125
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The TPS68470 PMIC provides Clocks, GPIOs and Regulators. At present in
-the kernel the Regulators and Clocks are controlled by an OpRegion
-driver designed to work with power control methods defined in ACPI, but
-some platforms lack those methods, meaning drivers need to be able to
-consume the resources of these chips through the usual frameworks.
+The CC_ATTR_SEV_SNP can be used by the guest to query whether the SNP -
+Secure Nested Paging feature is active.
 
-This commit adds a driver for the regulators provided by the tps68470,
-and is designed to bind to the platform_device registered by the
-intel_skl_int3472 module.
-
-This is based on this out of tree driver written by Intel:
-https://github.com/intel/linux-intel-lts/blob/4.14/base/drivers/regulator/tps68470-regulator.c
-with various cleanups added.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 ---
- drivers/regulator/Kconfig              |   9 ++
- drivers/regulator/Makefile             |   1 +
- drivers/regulator/tps68470-regulator.c | 194 +++++++++++++++++++++++++
- 3 files changed, 204 insertions(+)
- create mode 100644 drivers/regulator/tps68470-regulator.c
+ arch/x86/include/asm/msr-index.h | 2 ++
+ arch/x86/kernel/cc_platform.c    | 2 ++
+ arch/x86/mm/mem_encrypt.c        | 4 ++++
+ include/linux/cc_platform.h      | 8 ++++++++
+ 4 files changed, 16 insertions(+)
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 4fd13b06231f..d107af5bff6c 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -1339,6 +1339,15 @@ config REGULATOR_TPS65912
- 	help
- 	    This driver supports TPS65912 voltage regulator chip.
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index a7c413432b33..37589da0282e 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -481,8 +481,10 @@
+ #define MSR_AMD64_SEV			0xc0010131
+ #define MSR_AMD64_SEV_ENABLED_BIT	0
+ #define MSR_AMD64_SEV_ES_ENABLED_BIT	1
++#define MSR_AMD64_SEV_SNP_ENABLED_BIT	2
+ #define MSR_AMD64_SEV_ENABLED		BIT_ULL(MSR_AMD64_SEV_ENABLED_BIT)
+ #define MSR_AMD64_SEV_ES_ENABLED	BIT_ULL(MSR_AMD64_SEV_ES_ENABLED_BIT)
++#define MSR_AMD64_SEV_SNP_ENABLED	BIT_ULL(MSR_AMD64_SEV_SNP_ENABLED_BIT)
  
-+config REGULATOR_TPS68470
-+	tristate "TI TPS68370 PMIC Regulators Driver"
-+	depends on INTEL_SKL_INT3472
-+	help
-+	  This driver adds support for the TPS68470 PMIC to register
-+	  regulators against the usual framework.
+ #define MSR_AMD64_VIRT_SPEC_CTRL	0xc001011f
+ 
+diff --git a/arch/x86/kernel/cc_platform.c b/arch/x86/kernel/cc_platform.c
+index 03bb2f343ddb..e05310f5ec2f 100644
+--- a/arch/x86/kernel/cc_platform.c
++++ b/arch/x86/kernel/cc_platform.c
+@@ -50,6 +50,8 @@ static bool amd_cc_platform_has(enum cc_attr attr)
+ 	case CC_ATTR_GUEST_STATE_ENCRYPT:
+ 		return sev_status & MSR_AMD64_SEV_ES_ENABLED;
+ 
++	case CC_ATTR_SEV_SNP:
++		return sev_status & MSR_AMD64_SEV_SNP_ENABLED;
+ 	default:
+ 		return false;
+ 	}
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index 23d54b810f08..534c2c82fbec 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -433,6 +433,10 @@ static void print_mem_encrypt_feature_info(void)
+ 	if (cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+ 		pr_cont(" SEV-ES");
+ 
++	/* Secure Nested Paging */
++	if (cc_platform_has(CC_ATTR_SEV_SNP))
++		pr_cont(" SEV-SNP");
 +
-+	  The module will be called "tps68470-regulator"
+ 	pr_cont("\n");
+ }
+ 
+diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
+index a075b70b9a70..ef5e2209c9b8 100644
+--- a/include/linux/cc_platform.h
++++ b/include/linux/cc_platform.h
+@@ -61,6 +61,14 @@ enum cc_attr {
+ 	 * Examples include SEV-ES.
+ 	 */
+ 	CC_ATTR_GUEST_STATE_ENCRYPT,
 +
- config REGULATOR_TPS80031
- 	tristate "TI TPS80031/TPS80032 power regulator driver"
- 	depends on MFD_TPS80031
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 9e382b50a5ef..03c318110986 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -158,6 +158,7 @@ obj-$(CONFIG_REGULATOR_TPS6524X) += tps6524x-regulator.o
- obj-$(CONFIG_REGULATOR_TPS6586X) += tps6586x-regulator.o
- obj-$(CONFIG_REGULATOR_TPS65910) += tps65910-regulator.o
- obj-$(CONFIG_REGULATOR_TPS65912) += tps65912-regulator.o
-+obj-$(CONFIG_REGULATOR_TPS68470) += tps68470-regulator.o
- obj-$(CONFIG_REGULATOR_TPS80031) += tps80031-regulator.o
- obj-$(CONFIG_REGULATOR_TPS65132) += tps65132-regulator.o
- obj-$(CONFIG_REGULATOR_TWL4030) += twl-regulator.o twl6030-regulator.o
-diff --git a/drivers/regulator/tps68470-regulator.c b/drivers/regulator/tps68470-regulator.c
-new file mode 100644
-index 000000000000..82c4b1211c6f
---- /dev/null
-+++ b/drivers/regulator/tps68470-regulator.c
-@@ -0,0 +1,194 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Regulator driver for TPS68470 PMIC
-+ *
-+ * Copyright (C) 2018 Intel Corporation
-+ *
-+ * Authors:
-+ *	Zaikuo Wang <zaikuo.wang@intel.com>
-+ *	Tianshu Qiu <tian.shu.qiu@intel.com>
-+ *	Jian Xu Zheng <jian.xu.zheng@intel.com>
-+ *	Yuning Pu <yuning.pu@intel.com>
-+ *	Rajmohan Mani <rajmohan.mani@intel.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/tps68470.h>
-+#include <linux/module.h>
-+#include <linux/platform_data/tps68470.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+
-+#define TPS68470_REGULATOR(_name, _id, _ops, _n, _vr,			\
-+			   _vm, _er, _em, _t, _lr, _nlr)		\
-+	[TPS68470_ ## _name] = {					\
-+		.name			= # _name,			\
-+		.id			= _id,				\
-+		.ops			= &_ops,			\
-+		.n_voltages		= _n,				\
-+		.type			= REGULATOR_VOLTAGE,		\
-+		.owner			= THIS_MODULE,			\
-+		.vsel_reg		= _vr,				\
-+		.vsel_mask		= _vm,				\
-+		.enable_reg		= _er,				\
-+		.enable_mask		= _em,				\
-+		.volt_table		= _t,				\
-+		.linear_ranges		= _lr,				\
-+		.n_linear_ranges	= _nlr,				\
-+	}
-+
-+static const struct linear_range tps68470_ldo_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(875000, 0, 125, 17800),
-+};
-+
-+static const struct linear_range tps68470_core_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(900000, 0, 42, 25000),
-+};
-+
-+/* Operations permitted on DCDCx, LDO2, LDO3 and LDO4 */
-+static struct regulator_ops tps68470_regulator_ops = {
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.list_voltage		= regulator_list_voltage_linear_range,
-+	.map_voltage		= regulator_map_voltage_linear_range,
-+};
-+
-+static const struct regulator_desc regulators[] = {
-+	TPS68470_REGULATOR(CORE, TPS68470_CORE,
-+			   tps68470_regulator_ops, 43, TPS68470_REG_VDVAL,
-+			   TPS68470_VDVAL_DVOLT_MASK, TPS68470_REG_VDCTL,
-+			   TPS68470_VDCTL_EN_MASK,
-+			   NULL, tps68470_core_ranges,
-+			   ARRAY_SIZE(tps68470_core_ranges)),
-+	TPS68470_REGULATOR(ANA, TPS68470_ANA,
-+			   tps68470_regulator_ops, 126, TPS68470_REG_VAVAL,
-+			   TPS68470_VAVAL_AVOLT_MASK, TPS68470_REG_VACTL,
-+			   TPS68470_VACTL_EN_MASK,
-+			   NULL, tps68470_ldo_ranges,
-+			   ARRAY_SIZE(tps68470_ldo_ranges)),
-+	TPS68470_REGULATOR(VCM, TPS68470_VCM,
-+			   tps68470_regulator_ops, 126, TPS68470_REG_VCMVAL,
-+			   TPS68470_VCMVAL_VCVOLT_MASK, TPS68470_REG_VCMCTL,
-+			   TPS68470_VCMCTL_EN_MASK,
-+			   NULL, tps68470_ldo_ranges,
-+			   ARRAY_SIZE(tps68470_ldo_ranges)),
-+	TPS68470_REGULATOR(VIO, TPS68470_VIO,
-+			   tps68470_regulator_ops, 126, TPS68470_REG_VIOVAL,
-+			   TPS68470_VIOVAL_IOVOLT_MASK, TPS68470_REG_S_I2C_CTL,
-+			   TPS68470_S_I2C_CTL_EN_MASK,
-+			   NULL, tps68470_ldo_ranges,
-+			   ARRAY_SIZE(tps68470_ldo_ranges)),
-+
-+/*
-+ * (1) This register must have same setting as VIOVAL if S_IO LDO is used to
-+ *     power daisy chained IOs in the receive side.
-+ * (2) If there is no I2C daisy chain it can be set freely.
-+ *
-+ */
-+	TPS68470_REGULATOR(VSIO, TPS68470_VSIO,
-+			   tps68470_regulator_ops, 126, TPS68470_REG_VSIOVAL,
-+			   TPS68470_VSIOVAL_IOVOLT_MASK, TPS68470_REG_S_I2C_CTL,
-+			   TPS68470_S_I2C_CTL_EN_MASK,
-+			   NULL, tps68470_ldo_ranges,
-+			   ARRAY_SIZE(tps68470_ldo_ranges)),
-+	TPS68470_REGULATOR(AUX1, TPS68470_AUX1,
-+			   tps68470_regulator_ops, 126, TPS68470_REG_VAUX1VAL,
-+			   TPS68470_VAUX1VAL_AUX1VOLT_MASK,
-+			   TPS68470_REG_VAUX1CTL,
-+			   TPS68470_VAUX1CTL_EN_MASK,
-+			   NULL, tps68470_ldo_ranges,
-+			   ARRAY_SIZE(tps68470_ldo_ranges)),
-+	TPS68470_REGULATOR(AUX2, TPS68470_AUX2,
-+			   tps68470_regulator_ops, 126, TPS68470_REG_VAUX2VAL,
-+			   TPS68470_VAUX2VAL_AUX2VOLT_MASK,
-+			   TPS68470_REG_VAUX2CTL,
-+			   TPS68470_VAUX2CTL_EN_MASK,
-+			   NULL, tps68470_ldo_ranges,
-+			   ARRAY_SIZE(tps68470_ldo_ranges)),
-+};
-+
-+#define TPS68470_REG_INIT_DATA(_name, _min_uV, _max_uV)			\
-+	[TPS68470_ ## _name] = {					\
-+		.constraints = {					\
-+			.name = # _name,				\
-+			.valid_ops_mask = REGULATOR_CHANGE_VOLTAGE |	\
-+					  REGULATOR_CHANGE_STATUS,	\
-+			.min_uV = _min_uV,				\
-+			.max_uV = _max_uV,				\
-+		},							\
-+	}
-+
-+struct regulator_init_data tps68470_init[] = {
-+	TPS68470_REG_INIT_DATA(CORE, 900000, 1950000),
-+	TPS68470_REG_INIT_DATA(ANA, 875000, 3100000),
-+	TPS68470_REG_INIT_DATA(VCM, 875000, 3100000),
-+	TPS68470_REG_INIT_DATA(VIO, 875000, 3100000),
-+	TPS68470_REG_INIT_DATA(VSIO, 875000, 3100000),
-+	TPS68470_REG_INIT_DATA(AUX1, 875000, 3100000),
-+	TPS68470_REG_INIT_DATA(AUX2, 875000, 3100000),
-+};
-+
-+static int tps68470_regulator_probe(struct platform_device *pdev)
-+{
-+	struct tps68470_regulator_platform_data *pdata = pdev->dev.platform_data;
-+	struct regulator_config config = { };
-+	struct regmap *tps68470_regmap;
-+	struct regulator_dev *rdev;
-+	int i;
-+
-+	tps68470_regmap = dev_get_drvdata(pdev->dev.parent);
-+
-+	for (i = 0; i < TPS68470_NUM_REGULATORS; i++) {
-+		config.dev = pdev->dev.parent;
-+		config.regmap = tps68470_regmap;
-+		if (pdata && pdata->reg_init_data[i])
-+			config.init_data = pdata->reg_init_data[i];
-+		else
-+			config.init_data = &tps68470_init[i];
-+
-+		rdev = devm_regulator_register(&pdev->dev, &regulators[i], &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(&pdev->dev, "failed to register %s regulator\n",
-+				regulators[i].name);
-+			return PTR_ERR(rdev);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver tps68470_regulator_driver = {
-+	.driver = {
-+		.name = "tps68470-regulator",
-+	},
-+	.probe = tps68470_regulator_probe,
-+};
-+
-+/*
-+ * The ACPI tps68470 probe-ordering depends on the clk/gpio/regulator drivers
-+ * being registered before the MFD cells are created (the MFD driver calls
-+ * acpi_dev_clear_dependencies() after the cell creation).
-+ * subsys_initcall() ensures this when the drivers are builtin.
-+ */
-+static int __init tps68470_regulator_init(void)
-+{
-+	return platform_driver_register(&tps68470_regulator_driver);
-+}
-+subsys_initcall(tps68470_regulator_init);
-+
-+static void __exit tps68470_regulator_exit(void)
-+{
-+	platform_driver_unregister(&tps68470_regulator_driver);
-+}
-+module_exit(tps68470_regulator_exit);
-+
-+MODULE_ALIAS("platform:tps68470-regulator");
-+MODULE_DESCRIPTION("TPS68470 voltage regulator driver");
-+MODULE_LICENSE("GPL v2");
++	/**
++	 * @CC_ATTR_SEV_SNP: Guest SNP is active.
++	 *
++	 * The platform/OS is running as a guest/virtual machine and actively
++	 * using AMD SEV-SNP features.
++	 */
++	CC_ATTR_SEV_SNP = 0x100,
+ };
+ 
+ #ifdef CONFIG_ARCH_HAS_CC_PLATFORM
 -- 
-2.31.1
+2.25.1
 
