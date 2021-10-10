@@ -2,42 +2,42 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3EEC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Oct 2021 18:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E85C43219
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Oct 2021 18:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A39260F4B
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Oct 2021 18:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7816E6056B
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Oct 2021 18:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232758AbhJJS7V (ORCPT
+        id S232878AbhJJS7h (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 10 Oct 2021 14:59:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40629 "EHLO
+        Sun, 10 Oct 2021 14:59:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:27207 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232586AbhJJS7V (ORCPT
+        by vger.kernel.org with ESMTP id S232955AbhJJS7g (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 10 Oct 2021 14:59:21 -0400
+        Sun, 10 Oct 2021 14:59:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633892241;
+        s=mimecast20190719; t=1633892257;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=czteCw2ghEFliHSDBqseids4h78i74TqEgqWN/xBSB8=;
-        b=fod/6fSkbwd5ZMCi6eDNXDJsa0R/PCby/PeZNar7d+2ExwBUDkg9qjJA6HAgzDSssYndVf
-        oRZvoIO2+Ec07xLkdMRiUv+JuvouHBs55dcW+wEKRq1WIy57UCgQFF8PlLEODyPVCQQRF9
-        vwcTfNwTuhAh96u4tem5BCEMQIwWul0=
+        bh=rC4qYhpsM2/cVQc8g3dIQfmz5YhNwfFf2sVOIrKUjUc=;
+        b=cICeOqXnK/nEmUsmpMVbu/EscnAJIC7Qvrn1x7OfowZhjiQr2kKKhNdRXb+Xye08QGpGAI
+        YFjx5KnqXvFz3m9wlJO4S7MJQ/wgWaoQInQgbcXcCKYECUvsJtRKK/KFSwhsRQNGWNM23s
+        64YlLPphAJE8WfcVYaUyfEtBgwHAqoA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-Cvo1vZAEMWmG63NjRXNEMw-1; Sun, 10 Oct 2021 14:57:20 -0400
-X-MC-Unique: Cvo1vZAEMWmG63NjRXNEMw-1
+ us-mta-315-gs5HWwsIMAyzi7rNNaiaBw-1; Sun, 10 Oct 2021 14:57:31 -0400
+X-MC-Unique: gs5HWwsIMAyzi7rNNaiaBw-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5D081006AA2;
-        Sun, 10 Oct 2021 18:57:17 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74B94362FD;
+        Sun, 10 Oct 2021 18:57:29 +0000 (UTC)
 Received: from x1.localdomain (unknown [10.39.192.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C3E705F4EB;
-        Sun, 10 Oct 2021 18:57:13 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B6F0B5F4E1;
+        Sun, 10 Oct 2021 18:57:25 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Mark Gross <markgross@kernel.org>,
@@ -57,9 +57,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: [PATCH v3 01/11] ACPI: delay enumeration of devices with a _DEP pointing to an INT3472 device
-Date:   Sun, 10 Oct 2021 20:56:57 +0200
-Message-Id: <20211010185707.195883-2-hdegoede@redhat.com>
+Subject: [PATCH v3 04/11] regulator: Introduce tps68470-regulator driver
+Date:   Sun, 10 Oct 2021 20:57:00 +0200
+Message-Id: <20211010185707.195883-5-hdegoede@redhat.com>
 In-Reply-To: <20211010185707.195883-1-hdegoede@redhat.com>
 References: <20211010185707.195883-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -69,179 +69,263 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The clk and regulator frameworks expect clk/regulator consumer-devices
-to have info about the consumed clks/regulators described in the device's
-fw_node.
+The TPS68470 PMIC provides Clocks, GPIOs and Regulators. At present in
+the kernel the Regulators and Clocks are controlled by an OpRegion
+driver designed to work with power control methods defined in ACPI, but
+some platforms lack those methods, meaning drivers need to be able to
+consume the resources of these chips through the usual frameworks.
 
-To work around cases where this info is not present in the firmware tables,
-which is often the case on x86/ACPI devices, both frameworks allow the
-provider-driver to attach info about consumers to the clks/regulators
-when registering these.
+This commit adds a driver for the regulators provided by the tps68470,
+and is designed to bind to the platform_device registered by the
+intel_skl_int3472 module.
 
-This causes problems with the probe ordering wrt drivers for consumers
-of these clks/regulators. Since the lookups are only registered when the
-provider-driver binds, trying to get these clks/regulators before then
-results in a -ENOENT error for clks and a dummy regulator for regulators.
-
-One case where we hit this issue is camera sensors such as e.g. the OV8865
-sensor found on the Microsoft Surface Go. The sensor uses clks, regulators
-and GPIOs provided by a TPS68470 PMIC which is described in an INT3472
-ACPI device. There is special platform code handling this and setting
-platform_data with the necessary consumer info on the MFD cells
-instantiated for the PMIC under: drivers/platform/x86/intel/int3472.
-
-For this to work properly the ov8865 driver must not bind to the I2C-client
-for the OV8865 sensor until after the TPS68470 PMIC gpio, regulator and
-clk MFD cells have all been fully setup.
-
-The OV8865 on the Microsoft Surface Go is just one example, all X86
-devices using the Intel IPU3 camera block found on recent Intel SoCs
-have similar issues where there is an INT3472 HID ACPI-device, which
-describes the clks and regulators, and the driver for this INT3472 device
-must be fully initialized before the sensor driver (any sensor driver)
-binds for things to work properly.
-
-On these devices the ACPI nodes describing the sensors all have a _DEP
-dependency on the matching INT3472 ACPI device (there is one per sensor).
-
-This allows solving the probe-ordering problem by delaying the enumeration
-(instantiation of the I2C-client in the ov8865 example) of ACPI-devices
-which have a _DEP dependency on an INT3472 device.
-
-The new acpi_dev_ready_for_enumeration() helper used for this is also
-exported because for devices, which have the enumeration_by_parent flag
-set, the parent-driver will do its own scan of child ACPI devices and
-it will try to enumerate those during its probe(). Code doing this such
-as e.g. the i2c-core-acpi.c code must call this new helper to ensure
-that it too delays the enumeration until all the _DEP dependencies are
-met on devices which have the new honor_deps flag set.
+This is based on this out of tree driver written by Intel:
+https://github.com/intel/linux-intel-lts/blob/4.14/base/drivers/regulator/tps68470-regulator.c
+with various cleanups added.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/acpi/scan.c     | 36 ++++++++++++++++++++++++++++++++++--
- include/acpi/acpi_bus.h |  5 ++++-
- 2 files changed, 38 insertions(+), 3 deletions(-)
+Changes in v2:
+- Update the comment on why a subsys_initcall is used to register the drv
+- Make struct regulator_ops const
+---
+ drivers/regulator/Kconfig              |   9 ++
+ drivers/regulator/Makefile             |   1 +
+ drivers/regulator/tps68470-regulator.c | 193 +++++++++++++++++++++++++
+ 3 files changed, 203 insertions(+)
+ create mode 100644 drivers/regulator/tps68470-regulator.c
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 5b54c80b9d32..efee6ee91c8f 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -796,6 +796,12 @@ static const char * const acpi_ignore_dep_ids[] = {
- 	NULL
- };
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 4fd13b06231f..d107af5bff6c 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -1339,6 +1339,15 @@ config REGULATOR_TPS65912
+ 	help
+ 	    This driver supports TPS65912 voltage regulator chip.
  
-+/* List of HIDs for which we honor deps of matching ACPI devs, when checking _DEP lists. */
-+static const char * const acpi_honor_dep_ids[] = {
-+	"INT3472", /* Camera sensor PMIC / clk and regulator info */
-+	NULL
++config REGULATOR_TPS68470
++	tristate "TI TPS68370 PMIC Regulators Driver"
++	depends on INTEL_SKL_INT3472
++	help
++	  This driver adds support for the TPS68470 PMIC to register
++	  regulators against the usual framework.
++
++	  The module will be called "tps68470-regulator"
++
+ config REGULATOR_TPS80031
+ 	tristate "TI TPS80031/TPS80032 power regulator driver"
+ 	depends on MFD_TPS80031
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 9e382b50a5ef..03c318110986 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -158,6 +158,7 @@ obj-$(CONFIG_REGULATOR_TPS6524X) += tps6524x-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS6586X) += tps6586x-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS65910) += tps65910-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS65912) += tps65912-regulator.o
++obj-$(CONFIG_REGULATOR_TPS68470) += tps68470-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS80031) += tps80031-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS65132) += tps65132-regulator.o
+ obj-$(CONFIG_REGULATOR_TWL4030) += twl-regulator.o twl6030-regulator.o
+diff --git a/drivers/regulator/tps68470-regulator.c b/drivers/regulator/tps68470-regulator.c
+new file mode 100644
+index 000000000000..3129fa13a122
+--- /dev/null
++++ b/drivers/regulator/tps68470-regulator.c
+@@ -0,0 +1,193 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Regulator driver for TPS68470 PMIC
++ *
++ * Copyright (C) 2018 Intel Corporation
++ *
++ * Authors:
++ *	Zaikuo Wang <zaikuo.wang@intel.com>
++ *	Tianshu Qiu <tian.shu.qiu@intel.com>
++ *	Jian Xu Zheng <jian.xu.zheng@intel.com>
++ *	Yuning Pu <yuning.pu@intel.com>
++ *	Rajmohan Mani <rajmohan.mani@intel.com>
++ */
++
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/mfd/tps68470.h>
++#include <linux/module.h>
++#include <linux/platform_data/tps68470.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++
++#define TPS68470_REGULATOR(_name, _id, _ops, _n, _vr,			\
++			   _vm, _er, _em, _t, _lr, _nlr)		\
++	[TPS68470_ ## _name] = {					\
++		.name			= # _name,			\
++		.id			= _id,				\
++		.ops			= &_ops,			\
++		.n_voltages		= _n,				\
++		.type			= REGULATOR_VOLTAGE,		\
++		.owner			= THIS_MODULE,			\
++		.vsel_reg		= _vr,				\
++		.vsel_mask		= _vm,				\
++		.enable_reg		= _er,				\
++		.enable_mask		= _em,				\
++		.volt_table		= _t,				\
++		.linear_ranges		= _lr,				\
++		.n_linear_ranges	= _nlr,				\
++	}
++
++static const struct linear_range tps68470_ldo_ranges[] = {
++	REGULATOR_LINEAR_RANGE(875000, 0, 125, 17800),
 +};
 +
- static struct acpi_device *acpi_bus_get_parent(acpi_handle handle)
- {
- 	struct acpi_device *device = NULL;
-@@ -1757,8 +1763,12 @@ static void acpi_scan_dep_init(struct acpi_device *adev)
- 	struct acpi_dep_data *dep;
- 
- 	list_for_each_entry(dep, &acpi_dep_list, node) {
--		if (dep->consumer == adev->handle)
-+		if (dep->consumer == adev->handle) {
-+			if (dep->honor_dep)
-+				adev->flags.honor_deps = 1;
++static const struct linear_range tps68470_core_ranges[] = {
++	REGULATOR_LINEAR_RANGE(900000, 0, 42, 25000),
++};
 +
- 			adev->dep_unmet++;
-+		}
- 	}
- }
- 
-@@ -1962,7 +1972,7 @@ static u32 acpi_scan_check_dep(acpi_handle handle, bool check_dep)
- 	for (count = 0, i = 0; i < dep_devices.count; i++) {
- 		struct acpi_device_info *info;
- 		struct acpi_dep_data *dep;
--		bool skip;
-+		bool skip, honor_dep;
- 
- 		status = acpi_get_object_info(dep_devices.handles[i], &info);
- 		if (ACPI_FAILURE(status)) {
-@@ -1971,6 +1981,7 @@ static u32 acpi_scan_check_dep(acpi_handle handle, bool check_dep)
- 		}
- 
- 		skip = acpi_info_matches_ids(info, acpi_ignore_dep_ids);
-+		honor_dep = acpi_info_matches_ids(info, acpi_honor_dep_ids);
- 		kfree(info);
- 
- 		if (skip)
-@@ -1984,6 +1995,7 @@ static u32 acpi_scan_check_dep(acpi_handle handle, bool check_dep)
- 
- 		dep->supplier = dep_devices.handles[i];
- 		dep->consumer = handle;
-+		dep->honor_dep = honor_dep;
- 
- 		mutex_lock(&acpi_dep_list_lock);
- 		list_add_tail(&dep->node , &acpi_dep_list);
-@@ -2071,6 +2083,9 @@ static acpi_status acpi_bus_check_add_2(acpi_handle handle, u32 lvl_not_used,
- 
- static void acpi_default_enumeration(struct acpi_device *device)
- {
-+	if (!acpi_dev_ready_for_enumeration(device))
-+		return;
++/* Operations permitted on DCDCx, LDO2, LDO3 and LDO4 */
++static const struct regulator_ops tps68470_regulator_ops = {
++	.is_enabled		= regulator_is_enabled_regmap,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
++	.list_voltage		= regulator_list_voltage_linear_range,
++	.map_voltage		= regulator_map_voltage_linear_range,
++};
 +
- 	/*
- 	 * Do not enumerate devices with enumeration_by_parent flag set as
- 	 * they will be enumerated by their respective parents.
-@@ -2313,6 +2328,23 @@ void acpi_dev_clear_dependencies(struct acpi_device *supplier)
- }
- EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
- 
-+/**
-+ * acpi_dev_ready_for_enumeration - Check if the ACPI device is ready for enumeration
-+ * @device: Pointer to the &struct acpi_device to check
++static const struct regulator_desc regulators[] = {
++	TPS68470_REGULATOR(CORE, TPS68470_CORE,
++			   tps68470_regulator_ops, 43, TPS68470_REG_VDVAL,
++			   TPS68470_VDVAL_DVOLT_MASK, TPS68470_REG_VDCTL,
++			   TPS68470_VDCTL_EN_MASK,
++			   NULL, tps68470_core_ranges,
++			   ARRAY_SIZE(tps68470_core_ranges)),
++	TPS68470_REGULATOR(ANA, TPS68470_ANA,
++			   tps68470_regulator_ops, 126, TPS68470_REG_VAVAL,
++			   TPS68470_VAVAL_AVOLT_MASK, TPS68470_REG_VACTL,
++			   TPS68470_VACTL_EN_MASK,
++			   NULL, tps68470_ldo_ranges,
++			   ARRAY_SIZE(tps68470_ldo_ranges)),
++	TPS68470_REGULATOR(VCM, TPS68470_VCM,
++			   tps68470_regulator_ops, 126, TPS68470_REG_VCMVAL,
++			   TPS68470_VCMVAL_VCVOLT_MASK, TPS68470_REG_VCMCTL,
++			   TPS68470_VCMCTL_EN_MASK,
++			   NULL, tps68470_ldo_ranges,
++			   ARRAY_SIZE(tps68470_ldo_ranges)),
++	TPS68470_REGULATOR(VIO, TPS68470_VIO,
++			   tps68470_regulator_ops, 126, TPS68470_REG_VIOVAL,
++			   TPS68470_VIOVAL_IOVOLT_MASK, TPS68470_REG_S_I2C_CTL,
++			   TPS68470_S_I2C_CTL_EN_MASK,
++			   NULL, tps68470_ldo_ranges,
++			   ARRAY_SIZE(tps68470_ldo_ranges)),
++
++/*
++ * (1) This register must have same setting as VIOVAL if S_IO LDO is used to
++ *     power daisy chained IOs in the receive side.
++ * (2) If there is no I2C daisy chain it can be set freely.
 + *
-+ * Check if the device is present and has no unmet dependencies.
-+ *
-+ * Return true if the device is ready for enumeratino. Otherwise, return false.
 + */
-+bool acpi_dev_ready_for_enumeration(const struct acpi_device *device)
++	TPS68470_REGULATOR(VSIO, TPS68470_VSIO,
++			   tps68470_regulator_ops, 126, TPS68470_REG_VSIOVAL,
++			   TPS68470_VSIOVAL_IOVOLT_MASK, TPS68470_REG_S_I2C_CTL,
++			   TPS68470_S_I2C_CTL_EN_MASK,
++			   NULL, tps68470_ldo_ranges,
++			   ARRAY_SIZE(tps68470_ldo_ranges)),
++	TPS68470_REGULATOR(AUX1, TPS68470_AUX1,
++			   tps68470_regulator_ops, 126, TPS68470_REG_VAUX1VAL,
++			   TPS68470_VAUX1VAL_AUX1VOLT_MASK,
++			   TPS68470_REG_VAUX1CTL,
++			   TPS68470_VAUX1CTL_EN_MASK,
++			   NULL, tps68470_ldo_ranges,
++			   ARRAY_SIZE(tps68470_ldo_ranges)),
++	TPS68470_REGULATOR(AUX2, TPS68470_AUX2,
++			   tps68470_regulator_ops, 126, TPS68470_REG_VAUX2VAL,
++			   TPS68470_VAUX2VAL_AUX2VOLT_MASK,
++			   TPS68470_REG_VAUX2CTL,
++			   TPS68470_VAUX2CTL_EN_MASK,
++			   NULL, tps68470_ldo_ranges,
++			   ARRAY_SIZE(tps68470_ldo_ranges)),
++};
++
++#define TPS68470_REG_INIT_DATA(_name, _min_uV, _max_uV)			\
++	[TPS68470_ ## _name] = {					\
++		.constraints = {					\
++			.name = # _name,				\
++			.valid_ops_mask = REGULATOR_CHANGE_VOLTAGE |	\
++					  REGULATOR_CHANGE_STATUS,	\
++			.min_uV = _min_uV,				\
++			.max_uV = _max_uV,				\
++		},							\
++	}
++
++struct regulator_init_data tps68470_init[] = {
++	TPS68470_REG_INIT_DATA(CORE, 900000, 1950000),
++	TPS68470_REG_INIT_DATA(ANA, 875000, 3100000),
++	TPS68470_REG_INIT_DATA(VCM, 875000, 3100000),
++	TPS68470_REG_INIT_DATA(VIO, 875000, 3100000),
++	TPS68470_REG_INIT_DATA(VSIO, 875000, 3100000),
++	TPS68470_REG_INIT_DATA(AUX1, 875000, 3100000),
++	TPS68470_REG_INIT_DATA(AUX2, 875000, 3100000),
++};
++
++static int tps68470_regulator_probe(struct platform_device *pdev)
 +{
-+	if (device->flags.honor_deps && device->dep_unmet)
-+		return false;
++	struct tps68470_regulator_platform_data *pdata = pdev->dev.platform_data;
++	struct regulator_config config = { };
++	struct regmap *tps68470_regmap;
++	struct regulator_dev *rdev;
++	int i;
 +
-+	return acpi_device_is_present(device);
++	tps68470_regmap = dev_get_drvdata(pdev->dev.parent);
++
++	for (i = 0; i < TPS68470_NUM_REGULATORS; i++) {
++		config.dev = pdev->dev.parent;
++		config.regmap = tps68470_regmap;
++		if (pdata && pdata->reg_init_data[i])
++			config.init_data = pdata->reg_init_data[i];
++		else
++			config.init_data = &tps68470_init[i];
++
++		rdev = devm_regulator_register(&pdev->dev, &regulators[i], &config);
++		if (IS_ERR(rdev)) {
++			dev_err(&pdev->dev, "failed to register %s regulator\n",
++				regulators[i].name);
++			return PTR_ERR(rdev);
++		}
++	}
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(acpi_dev_ready_for_enumeration);
 +
- /**
-  * acpi_dev_get_first_consumer_dev - Return ACPI device dependent on @supplier
-  * @supplier: Pointer to the dependee device
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index 13d93371790e..2da53b7b4965 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -202,7 +202,8 @@ struct acpi_device_flags {
- 	u32 coherent_dma:1;
- 	u32 cca_seen:1;
- 	u32 enumeration_by_parent:1;
--	u32 reserved:19;
-+	u32 honor_deps:1;
-+	u32 reserved:18;
- };
- 
- /* File System */
-@@ -284,6 +285,7 @@ struct acpi_dep_data {
- 	struct list_head node;
- 	acpi_handle supplier;
- 	acpi_handle consumer;
-+	bool honor_dep;
- };
- 
- /* Performance Management */
-@@ -693,6 +695,7 @@ static inline bool acpi_device_can_poweroff(struct acpi_device *adev)
- bool acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, const char *uid2);
- 
- void acpi_dev_clear_dependencies(struct acpi_device *supplier);
-+bool acpi_dev_ready_for_enumeration(const struct acpi_device *device);
- struct acpi_device *acpi_dev_get_first_consumer_dev(struct acpi_device *supplier);
- struct acpi_device *
- acpi_dev_get_next_match_dev(struct acpi_device *adev, const char *hid, const char *uid, s64 hrv);
++static struct platform_driver tps68470_regulator_driver = {
++	.driver = {
++		.name = "tps68470-regulator",
++	},
++	.probe = tps68470_regulator_probe,
++};
++
++/*
++ * The ACPI tps68470 probe-ordering depends on the clk/gpio/regulator drivers
++ * registering before the drivers for the camera-sensors which use them bind.
++ * subsys_initcall() ensures this when the drivers are builtin.
++ */
++static int __init tps68470_regulator_init(void)
++{
++	return platform_driver_register(&tps68470_regulator_driver);
++}
++subsys_initcall(tps68470_regulator_init);
++
++static void __exit tps68470_regulator_exit(void)
++{
++	platform_driver_unregister(&tps68470_regulator_driver);
++}
++module_exit(tps68470_regulator_exit);
++
++MODULE_ALIAS("platform:tps68470-regulator");
++MODULE_DESCRIPTION("TPS68470 voltage regulator driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.31.1
 
