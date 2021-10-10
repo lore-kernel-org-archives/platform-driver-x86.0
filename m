@@ -2,251 +2,189 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A90DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Oct 2021 15:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D230C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Oct 2021 17:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04EED60ED4
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Oct 2021 15:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4303660F6E
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Oct 2021 17:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232747AbhJJPMu (ORCPT
+        id S232181AbhJJRyL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 10 Oct 2021 11:12:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:38044 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231842AbhJJPMt (ORCPT
+        Sun, 10 Oct 2021 13:54:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19354 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231396AbhJJRyK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 10 Oct 2021 11:12:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633878651;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ymYBEBSUvf6CaVJZTg55f7eZ0XT38KYWfIPvyX/VujI=;
-        b=D/ogrlM/OxA6lV3KzvWHGmNlKTkEyB5yjC9uj/NtJbYc3ATIByvivJ5wg2bQ8Fu3z+V+mJ
-        +KwUz2NaMkntB/DcwHtPWvipV3L6truq1f0qqfAbQ8QI54z5UMDMl97dy9BxvpTBBnCg2V
-        lghuKB5YzZIRtk4jsdeD+EtCjmGYqG0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-FccpZUiYPY-BkKgQBrU8iw-1; Sun, 10 Oct 2021 11:10:49 -0400
-X-MC-Unique: FccpZUiYPY-BkKgQBrU8iw-1
-Received: by mail-ed1-f69.google.com with SMTP id u24-20020aa7db98000000b003db57b1688aso8143232edt.6
-        for <platform-driver-x86@vger.kernel.org>; Sun, 10 Oct 2021 08:10:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ymYBEBSUvf6CaVJZTg55f7eZ0XT38KYWfIPvyX/VujI=;
-        b=nNjJMAINO76bhawJI7foBNYT71mnD5WsR6xdb5DB3W0OxjgjoTN2JcD94oHBcHI0F2
-         tTGqXKtNpy1uiRX6MK3RwueXIbJNcvXfOEeVHMZtbSsISy3il9gkDwlhC2AIk++UuUnx
-         W7U20j6eLogeoexr+XPJhVvtsoqyW1B4gLD3hRVissbN/NaHkIpsFTj8VQNaWlNblMEN
-         OwOhDoTE2EqUmjIRTK2LaH8qhZVw5cHnVf7kA3Mr/9czsd3xJEC/oEMhIWdLE/RJM7+Q
-         TsRDg5vldyOPZx9vBGvzwQ0DSr8NDn7zZL3b6f41gUNJFLb2GP9V3Ef8PjJBY9AA4itg
-         mMjA==
-X-Gm-Message-State: AOAM530K5fFZ36n8v7VS5VcmLtIZ7Tp1zdW9mbdZQkaT/6qx6gn+NMMn
-        5hcKT+XbIMeWQqbzzdmLS+bzmmI/aPjGodSSo6ZswWACuV41ag0vhSAXCtvCBv8OBPUkD6RuV7g
-        TTbiZ/T+xhKutzh+a9GQs7ltQeZkz3lkODg==
-X-Received: by 2002:a05:6402:268c:: with SMTP id w12mr32262457edd.376.1633878648664;
-        Sun, 10 Oct 2021 08:10:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwLPx4rw5dSOqmTSWeFvO+pX78uTWdkgxG68sKgpA1md+rOQ4QAYdlxxEJVEnKXjnU/oTQ3mQ==
-X-Received: by 2002:a05:6402:268c:: with SMTP id w12mr32262422edd.376.1633878648447;
-        Sun, 10 Oct 2021 08:10:48 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id h11sm2171214eji.96.2021.10.10.08.10.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Oct 2021 08:10:48 -0700 (PDT)
-Subject: Re: [PATCH v2 02/13] ACPI: honor dependencies for devices with a _DEP
- pointing to an INT3472 device
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org
-References: <20211009160548.306550-1-hdegoede@redhat.com>
- <20211009160548.306550-3-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <d90f8514-a779-06ad-5e8d-5c42a5771b15@redhat.com>
-Date:   Sun, 10 Oct 2021 17:10:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Sun, 10 Oct 2021 13:54:10 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19AGfxpt018676;
+        Sun, 10 Oct 2021 13:51:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=8fajRAyLezHmCj5tnyq6jjoYckaHOnt9JulikSV16CQ=;
+ b=p4+ivKM1gAEjETiBx+Ee0HBzE8i3PqQg2hBYA97Vxj+ZAW9H7UQu5fs184XNnaPUZzlX
+ J8BNWXxknJB0kmcB9gP5+kAqccFZcDMgLyaMW/Gv3Nc+tpBcNSxoQkYUQjKOd9A+AMNu
+ XlF2Fok+DLqer9S64tnQKRVnetmxvE98H1HWpMFAGnuv/n/c+I9f+le2gaerQmXxAZ0O
+ acP9+8MTwYDZA7XYfUn1vKwOKFAuE1AxzRaLEmbw26toZuVN3MCZ/VrPOwxHYy1dQk7Z
+ qDIlto7o91RwLpI3X1Dupoe5pVnQAlXh+4nLD/UjBxIPEPn6/DfSYlYH/KvzL4YcqC+d Tw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bm3wvrqay-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 10 Oct 2021 13:51:30 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19AHpTbY009651;
+        Sun, 10 Oct 2021 13:51:30 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bm3wvrqaq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 10 Oct 2021 13:51:29 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19AHmBCX013224;
+        Sun, 10 Oct 2021 17:51:28 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma04dal.us.ibm.com with ESMTP id 3bkeq5ca5d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 10 Oct 2021 17:51:28 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19AHpQ2V36241806
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 10 Oct 2021 17:51:26 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A5DFB136051;
+        Sun, 10 Oct 2021 17:51:26 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CEE1B13604F;
+        Sun, 10 Oct 2021 17:51:18 +0000 (GMT)
+Received: from [9.65.95.104] (unknown [9.65.95.104])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Sun, 10 Oct 2021 17:51:18 +0000 (GMT)
+Subject: Re: [PATCH v6 40/42] virt: Add SEV-SNP guest driver
+To:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        Dov Murik <dovmurik@linux.ibm.com>
+References: <20211008180453.462291-1-brijesh.singh@amd.com>
+ <20211008180453.462291-41-brijesh.singh@amd.com>
+From:   Dov Murik <dovmurik@linux.ibm.com>
+Message-ID: <b79cfdfa-6482-70ab-3520-f76387fe4c27@linux.ibm.com>
+Date:   Sun, 10 Oct 2021 20:51:17 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20211009160548.306550-3-hdegoede@redhat.com>
+In-Reply-To: <20211008180453.462291-41-brijesh.singh@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: YBeyMoQMMm3SJoHLC39vmKofxUAJszj-
+X-Proofpoint-GUID: g_DMRlUvvUHE91j4L2Jc4IcxKCn7QVsi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-10-10_05,2021-10-07_02,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ malwarescore=0 impostorscore=0 mlxlogscore=999 lowpriorityscore=0
+ adultscore=0 spamscore=0 bulkscore=0 mlxscore=0 priorityscore=1501
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109230001 definitions=main-2110100120
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Brijesh,
 
-On 10/9/21 6:05 PM, Hans de Goede wrote:
-> The clk and regulator frameworks expect clk/regulator consumer-devices
-> to have info about the consumed clks/regulators described in the device's
-> fw_node.
+On 08/10/2021 21:04, Brijesh Singh wrote:
+> SEV-SNP specification provides the guest a mechanisum to communicate with
+> the PSP without risk from a malicious hypervisor who wishes to read, alter,
+> drop or replay the messages sent. The driver uses snp_issue_guest_request()
+> to issue GHCB SNP_GUEST_REQUEST or SNP_EXT_GUEST_REQUEST NAE events to
+> submit the request to PSP.
 > 
-> To work around cases where this info is not present in the firmware tables,
-> which is often the case on x86/ACPI devices, both frameworks allow the
-> provider-driver to attach info about consumers to the clks/regulators
-> when registering these.
+> The PSP requires that all communication should be encrypted using key
+> specified through the platform_data.
 > 
-> This causes problems with the probe ordering wrt drivers for consumers
-> of these clks/regulators. Since the lookups are only registered when the
-> provider-driver binds, trying to get these clks/regulators before then
-> results in a -ENOENT error for clks and a dummy regulator for regulators.
+> The userspace can use SNP_GET_REPORT ioctl() to query the guest
+> attestation report.
 > 
-> One case where we hit this issue is camera sensors such as e.g. the OV8865
-> sensor found on the Microsoft Surface Go. The sensor uses clks, regulators
-> and GPIOs provided by a TPS68470 PMIC which is described in an INT3472
-> ACPI device. There is special platform code handling this and setting
-> platform_data with the necessary consumer info on the MFD cells
-> instantiated for the PMIC under: drivers/platform/x86/intel/int3472.
+> See SEV-SNP spec section Guest Messages for more details.
 > 
-> For this to work properly the ov8865 driver must not bind to the i2c-client
-> for the OV8865 sensor until after the TPS68470 PMIC gpio, regulator and
-> clk MFD cells have all been fully setup.
-> 
-> The OV8865 on the Microsoft Surface Go is just one example, all X86
-> devices using the Intel IPU3 camera block found on recent Intel SoCs
-> have similar issues where there is an INT3472 HID ACPI-device which
-> describes the clks and regulators and the driver for this INT3472 device
-> must be fully initialized before the sensor driver (any sensor driver)
-> binds for things to work properly.
-> 
-> On these devices the ACPI nodes describing the sensors all have a _DEP
-> dependency on the matching INT3472 ACPI device (there is one per sensor).
-> 
-> This allows solving the probe-ordering problem by making ACPI-devices
-> honor the _DEP dependencies (like we already do for batteries) when they
-> have a dependency on an INT3472 device.
-> 
-> Note the matching is done on there being a _DEP on an INT3472 device,
-> rather then matching on the HID of the sensor device itself to avoid
-> having to maintain an ever growing list of HIDs of sensors which need
-> the honor_dep behavior.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-
-In the end I was not entirely happy with the approach in patch 1 + 2
-(this patch) myself, reporting 0 for the status of some devices until
-the _DEP-s are met has some troublesome implications for code which
-behavior depends on acpi_dev_is_present() calls (or equivalent code).
-
-Which led to the: "[PATCH v2 13/13] media: ipu3-cio2: Add module
-soft-deps for the INT3472 drivers" adding unnecessary soft
-module-dependencies to the ipu3-cio2 code to make sure that the
-status was not reported as 0 because of unmet deps when that code
-runs.
-
-Besides these soft-deps being non-sense / undesirable. This also
-is a bit racy since the status only gets updated to reflect the
-unmet_deps==0 once the acpi_scan_clear_dep() workqueue work
-has run and there is no guarantee the work has fully run
-once the modprobe-s of the INT3472 are done (it should run
-soon afterwards, but there is a race there).
-
-So I'm working on a rewrite of patch 1 + 2 now which replaces
-the approach where we "lie" about the status with deferring the
-enumeration step (1) until all the _DEP-s are met (for select
-devices).
-
-Expect a v3 with this new approach soon...
-
-Regards,
-
-Hans
-
-
-
-1) The step where a platform_device or e.g. i2c-client is
-instantiated as physical_device_node for the ACPI-device
-
-
-
-
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 > ---
->  drivers/acpi/scan.c     | 16 ++++++++++++++--
->  include/acpi/acpi_bus.h |  1 +
->  2 files changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 4e0a946b35ed..976724540197 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -796,6 +796,12 @@ static const char * const acpi_ignore_dep_ids[] = {
->  	NULL
->  };
->  
-> +/* List of HIDs for which we honor deps of matching ACPI devs, when checking _DEP lists. */
-> +static const char * const acpi_honor_dep_ids[] = {
-> +	"INT3472", /* Camera sensor PMIC / clk and regulator info */
-> +	NULL
-> +};
-> +
->  static struct acpi_device *acpi_bus_get_parent(acpi_handle handle)
->  {
->  	struct acpi_device *device = NULL;
-> @@ -1761,8 +1767,12 @@ static void acpi_scan_dep_init(struct acpi_device *adev)
->  		adev->honor_deps = true;
->  
->  	list_for_each_entry(dep, &acpi_dep_list, node) {
-> -		if (dep->consumer == adev->handle)
-> +		if (dep->consumer == adev->handle) {
-> +			if (dep->honor_dep)
-> +				adev->honor_deps = true;
-> +
->  			adev->dep_unmet++;
-> +		}
->  	}
->  }
->  
-> @@ -1966,7 +1976,7 @@ static u32 acpi_scan_check_dep(acpi_handle handle, bool check_dep)
->  	for (count = 0, i = 0; i < dep_devices.count; i++) {
->  		struct acpi_device_info *info;
->  		struct acpi_dep_data *dep;
-> -		bool skip;
-> +		bool skip, honor_dep;
->  
->  		status = acpi_get_object_info(dep_devices.handles[i], &info);
->  		if (ACPI_FAILURE(status)) {
-> @@ -1975,6 +1985,7 @@ static u32 acpi_scan_check_dep(acpi_handle handle, bool check_dep)
->  		}
->  
->  		skip = acpi_info_matches_ids(info, acpi_ignore_dep_ids);
-> +		honor_dep = acpi_info_matches_ids(info, acpi_honor_dep_ids);
->  		kfree(info);
->  
->  		if (skip)
-> @@ -1988,6 +1999,7 @@ static u32 acpi_scan_check_dep(acpi_handle handle, bool check_dep)
->  
->  		dep->supplier = dep_devices.handles[i];
->  		dep->consumer = handle;
-> +		dep->honor_dep = honor_dep;
->  
->  		mutex_lock(&acpi_dep_list_lock);
->  		list_add_tail(&dep->node , &acpi_dep_list);
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index 0ba344a5f4f8..b6fb050e77bb 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -284,6 +284,7 @@ struct acpi_dep_data {
->  	struct list_head node;
->  	acpi_handle supplier;
->  	acpi_handle consumer;
-> +	bool honor_dep;
->  };
->  
->  /* Performance Management */
+>  Documentation/virt/coco/sevguest.rst  |  77 ++++
+>  drivers/virt/Kconfig                  |   3 +
+>  drivers/virt/Makefile                 |   1 +
+>  drivers/virt/coco/sevguest/Kconfig    |   9 +
+>  drivers/virt/coco/sevguest/Makefile   |   2 +
+>  drivers/virt/coco/sevguest/sevguest.c | 561 ++++++++++++++++++++++++++
+>  drivers/virt/coco/sevguest/sevguest.h |  98 +++++
+>  include/uapi/linux/sev-guest.h        |  44 ++
+>  8 files changed, 795 insertions(+)
+>  create mode 100644 Documentation/virt/coco/sevguest.rst
+>  create mode 100644 drivers/virt/coco/sevguest/Kconfig
+>  create mode 100644 drivers/virt/coco/sevguest/Makefile
+>  create mode 100644 drivers/virt/coco/sevguest/sevguest.c
+>  create mode 100644 drivers/virt/coco/sevguest/sevguest.h
+>  create mode 100644 include/uapi/linux/sev-guest.h
 > 
 
+[...]
+
+
+> +
+> +static u8 *get_vmpck(int id, struct snp_secrets_page_layout *layout, u32 **seqno)
+> +{
+> +	u8 *key = NULL;
+> +
+> +	switch (id) {
+> +	case 0:
+> +		*seqno = &layout->os_area.msg_seqno_0;
+> +		key = layout->vmpck0;
+> +		break;
+> +	case 1:
+> +		*seqno = &layout->os_area.msg_seqno_1;
+> +		key = layout->vmpck1;
+> +		break;
+> +	case 2:
+> +		*seqno = &layout->os_area.msg_seqno_2;
+> +		key = layout->vmpck2;
+> +		break;
+> +	case 3:
+> +		*seqno = &layout->os_area.msg_seqno_3;
+> +		key = layout->vmpck3;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return NULL;
+
+This should be 'return key', right?
+
+-Dov
+
+> +}
+> +
