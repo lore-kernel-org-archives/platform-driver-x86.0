@@ -2,114 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85328C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Oct 2021 16:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640F3C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Oct 2021 07:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABC76056B
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Oct 2021 16:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F44C61078
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Oct 2021 07:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230136AbhJIQJM (ORCPT
+        id S230267AbhJJHB7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 9 Oct 2021 12:09:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54620 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231801AbhJIQIs (ORCPT
+        Sun, 10 Oct 2021 03:01:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229697AbhJJHB7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 9 Oct 2021 12:08:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633795610;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kyRSTZhAr4vtiVySKg6oKQ+eD8aKotXSs6/ZudHdQ1c=;
-        b=gSD3udL9mvlsSGFBpBOO5hqLPVUdJk3AbDcT4BlPOyAVMjOE+UbUX1awEoX2Il2wGKREN4
-        Qrd1Lb/nQqGGAEpCpOpYJidsH0heDTmPd9FCVIKyv9YmJiyWG+ZvqbaChHPjW2wzuD5T/R
-        pwY9X+GGCrZCYr0o+7lC2BcI2jIhbFs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-221-xPlLhf1rMK2nUINEyyfQaQ-1; Sat, 09 Oct 2021 12:06:47 -0400
-X-MC-Unique: xPlLhf1rMK2nUINEyyfQaQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0BB01808310;
-        Sat,  9 Oct 2021 16:06:44 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.192.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B645B5C1B4;
-        Sat,  9 Oct 2021 16:06:41 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH v2 13/13] media: ipu3-cio2: Add module soft-deps for the INT3472 drivers
-Date:   Sat,  9 Oct 2021 18:05:48 +0200
-Message-Id: <20211009160548.306550-14-hdegoede@redhat.com>
-In-Reply-To: <20211009160548.306550-1-hdegoede@redhat.com>
-References: <20211009160548.306550-1-hdegoede@redhat.com>
+        Sun, 10 Oct 2021 03:01:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 486AA60F9D;
+        Sun, 10 Oct 2021 07:00:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633849201;
+        bh=IwnNOrz5seXBx4GJflM5rnye6dM754sH681Dnay32OI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HSTWNjjGve+8OiRUv8wlP7d/V1F2p1jHm3jtCvaqzsLW2dgEwlFo3eErjMjkK1vKi
+         x1OMsgif4Z/xUMI+m735yxoVcx2YPaLD1qBERjts1/wlZ1YODTANAIxp/l9sGmYGeL
+         42SoFDn6IOC8dTa+T4E5W1/zDA6XNrYA9QkU0Q9pkua/3V5/2hda2NIo3Zgm5Co2C5
+         eNDboSrNzmQ1DZrNmZV0li+r/CUN2KfRCZWXD0Otx7aZnieELEzReLHGA18YZ7KkMT
+         JA6l4WEx9nLMpiXx3wSCpTyt8fdvFb6lslRG7mz0M1fprL5RKg/6bThXnZagD9QP6R
+         R8Gy06k2MC1RA==
+Date:   Sun, 10 Oct 2021 09:59:56 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
+        bhelgaas@google.com, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/5] platform/x86/intel: Move intel_pmt from MFD to
+ Auxiliary Bus
+Message-ID: <YWKPbEu0k5RiwWYi@unreal>
+References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
+ <20211001012815.1999501-3-david.e.box@linux.intel.com>
+ <YV1lTMwBSVlvadiG@unreal>
+ <668f263e1d2606ad7485c40ce41933300ec4b8a3.camel@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <668f263e1d2606ad7485c40ce41933300ec4b8a3.camel@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The clk and regulator frameworks expect clk/regulator consumer-devices
-to have info about the consumed clks/regulators described in the device's
-fw_node.
+On Wed, Oct 06, 2021 at 01:58:22PM -0700, David E. Box wrote:
+> On Wed, 2021-10-06 at 11:58 +0300, Leon Romanovsky wrote:
+> > On Thu, Sep 30, 2021 at 06:28:12PM -0700, David E. Box wrote:
+> > > Intel Platform Monitoring Technology (PMT) support is indicated by presence
+> > > of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
+> > > structures may also be used by Intel to indicate support for other
+> > > capabilities unrelated to PMT.  The Out Of Band Management Services Module
+> > > (OOBMSM) is an example of a device that can have both PMT and non-PMT
+> > > capabilities. In order to support these capabilities it is necessary to
+> > > modify the intel_pmt driver to handle the creation of platform devices more
+> > > generically. To that end the following changes are made.
+> > > 
+> > > Convert the driver and child drivers from MFD to the Auxiliary Bus. This
+> > > architecture is more suitable anyway since the driver partitions a
+> > > multifunctional PCIe device. This also moves the driver out of the MFD
+> > > subsystem and into platform/x86/intel.
+> > > 
+> > > Before, devices were named by their capability (e.g. pmt_telemetry).
+> > > Instead, generically name them by their capability ID (e.g.
+> > > intel_extended_cap.2). This allows the IDs to be created automatically,
+> > > minimizing the code needed to support future capabilities. However, to
+> > > ensure that unsupported devices aren't created, use an allow list to
+> > > specify supported capabilities. Along these lines, rename the driver from
+> > > intel_pmt to intel_extended_caps to better reflect the purpose.
+> > > 
+> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > ---
+> > > 
+> > > V1:     New patch. However incorporates some elements of [1] which was
+> > >         dropped. Namely enumerating features generically and creating an
+> > >         allow list. Also cleans up probe by moving some code to functions
+> > >         and using a bool instead of an int to track whether a device was
+> > >         added.
+> > > 
+> > > [1] https://lore.kernel.org/all/20210922213007.2738388-3-david.e.box@linux.intel.com/
+> > 
+> > <...>
+> > 
+> > > +static int extended_caps_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > > +{
+> > > +       struct extended_caps_platform_info *info;
+> > > +       bool have_devices = false;
+> > > +       unsigned long quirks = 0;
+> > > +       int ret;
+> > > +
+> > > +       ret = pcim_enable_device(pdev);
+> > > +       if (ret)
+> > > +               return ret;
+> > > +
+> > > +       info = (struct extended_caps_platform_info *)id->driver_data;
+> > 
+> > pci_get_drvdata() in all places and no need to cast void *.
+> 
+> This is coming from the id not the pdev. The data here is type kernel_ulong_t.
 
-To work around this info missing from the ACPI tables on devices where
-the int3472 driver is used, the int3472 MFD-cell drivers attach info about
-consumers to the clks/regulators when registering these.
+Ohh, this is very unusual.
 
-This causes problems with the probe ordering wrt drivers for consumers
-of these clks/regulators. Since the lookups are only registered when the
-provider-driver binds, trying to get these clks/regulators before then
-results in a -ENOENT error for clks and a dummy regulator for regulators.
-
-All the sensor ACPI fw-nodes have a _DEP dependency on the INT3472 ACPI
-fw-node, so to work around these probe ordering issues the ACPI core
-reports status.present and status.enabled as false for any ACPI devices
-which have a dependency on an INT3472 ACPI device until all _DEP-s are met.
-
-Our sensor-detect code in cio2-bridge.c depends on the status.present /
-status.enabled fields. So the INT3472 driver (which fullfills the _DEP-s)
-must be loaded before us to ensure the sensor-detect code works.
-Add module soft-deps on the INT3472 drivers to ensure that they are loaded
-first.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/media/pci/intel/ipu3/ipu3-cio2-main.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/media/pci/intel/ipu3/ipu3-cio2-main.c b/drivers/media/pci/intel/ipu3/ipu3-cio2-main.c
-index 7bb86e246ebe..4db6b637f555 100644
---- a/drivers/media/pci/intel/ipu3/ipu3-cio2-main.c
-+++ b/drivers/media/pci/intel/ipu3/ipu3-cio2-main.c
-@@ -2063,3 +2063,9 @@ MODULE_AUTHOR("Yuning Pu <yuning.pu@intel.com>");
- MODULE_AUTHOR("Yong Zhi <yong.zhi@intel.com>");
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("IPU3 CIO2 driver");
-+/*
-+ * The sensor detection in cio2-bridge.c relies on adev->status.present/enabled
-+ * which will only be true for sensors if their _DEP dependencies are met, which
-+ * requires the INT3472 drivers to have loaded.
-+ */
-+MODULE_SOFTDEP("pre: intel_skl_int3472_discrete intel_skl_int3472_tps68470");
--- 
-2.31.1
-
+Thanks
