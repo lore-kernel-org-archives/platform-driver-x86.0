@@ -2,101 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A671EC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 08:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E137AC43219
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 09:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D894603E7
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 08:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79B460EDF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 09:31:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235286AbhJKIuf (ORCPT
+        id S235506AbhJKJdI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Oct 2021 04:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235276AbhJKIue (ORCPT
+        Mon, 11 Oct 2021 05:33:08 -0400
+Received: from mga01.intel.com ([192.55.52.88]:48063 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235452AbhJKJdI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Oct 2021 04:50:34 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9294C061570;
-        Mon, 11 Oct 2021 01:48:34 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f08bb008041f0293f2a9501.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:bb00:8041:f029:3f2a:9501])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8ED011EC01CE;
-        Mon, 11 Oct 2021 10:48:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1633942112;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=WX7Mv16IItiWUhDYtgsQ58XhYcnYoY2/nQSVZ23QgEg=;
-        b=Ue70iMsndjsy737r0a//5qQ1NU65dolZ0oHJYGSTMEMzKT3itfDJfBtMRSqYuWrKViHFS3
-        2eZO2GQS2SA1qZ6pyQ0CvE9ttnnQNX3/j6ygLUtSzi8mRTaSJD9CRoohuRLpaGHYGxN4Xf
-        nQqfHtGyOog15JWmfroRpy+iRXtWPqk=
-Date:   Mon, 11 Oct 2021 10:48:28 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v6 03/42] x86/sev: Get rid of excessive use of defines
-Message-ID: <YWP6XDbbqyWalbSa@zn.tnic>
-References: <20211008180453.462291-1-brijesh.singh@amd.com>
- <20211008180453.462291-4-brijesh.singh@amd.com>
+        Mon, 11 Oct 2021 05:33:08 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10133"; a="250221457"
+X-IronPort-AV: E=Sophos;i="5.85,364,1624345200"; 
+   d="scan'208";a="250221457"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2021 02:30:50 -0700
+X-IronPort-AV: E=Sophos;i="5.85,364,1624345200"; 
+   d="scan'208";a="479785314"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2021 02:30:44 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 11 Oct 2021 12:30:41 +0300
+Date:   Mon, 11 Oct 2021 12:30:41 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH v3 01/11] ACPI: delay enumeration of devices with a _DEP
+ pointing to an INT3472 device
+Message-ID: <YWQEQVzF2nMjE10y@lahna>
+References: <20211010185707.195883-1-hdegoede@redhat.com>
+ <20211010185707.195883-2-hdegoede@redhat.com>
+ <YWPXixp/J6KIzWp6@lahna>
+ <0c08069e-7758-fc09-c200-d867d097b499@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211008180453.462291-4-brijesh.singh@amd.com>
+In-Reply-To: <0c08069e-7758-fc09-c200-d867d097b499@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 01:04:14PM -0500, Brijesh Singh wrote:
-> From: Borislav Petkov <bp@suse.de>
+On Mon, Oct 11, 2021 at 09:11:05AM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> Remove all the defines of masks and bit positions for the GHCB MSR
-> protocol and use comments instead which correspond directly to the spec
-> so that following those can be a lot easier and straightforward with the
-> spec opened in parallel to the code.
+> On 10/11/21 8:19 AM, Mika Westerberg wrote:
+> > Hi,
+> > 
+> > On Sun, Oct 10, 2021 at 08:56:57PM +0200, Hans de Goede wrote:
+> >> +/* List of HIDs for which we honor deps of matching ACPI devs, when checking _DEP lists. */
+> >> +static const char * const acpi_honor_dep_ids[] = {
+> >> +	"INT3472", /* Camera sensor PMIC / clk and regulator info */
+> > 
+> > Is there some reason why we can't do this for all devices with _DEP?
+> > That way we don't need to maintain lists like this.
 > 
-> Aligh vertically while at it.
+> Up until now the ACPI core deliberate mostly ignores _DEP-s because the
+> _DEP method may point to pretty much any random ACPI object and Linux does
+> not necessarily have a driver for all ACPI objects the driver points too,
+> which would lead to the devices never getting instantiated.
 > 
-> No functional changes.
+> In hindsight this might not have been the best solution (1), but if we
+> now start honoring _DEP-s for all devices all of a sudden then this
+> will almost certainly lead to a whole bunch of regressions.
 > 
-> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Note that in this case the HID which triggers this is for the device
+> being depended upon and for all camera sensors used with the IPU3 and
+> IPU4 Intel camera blocks this is the INT3472 device. By triggering on
+> this HID (rather then on the sensor HIDs) I expect that we will not
+> need to update this list all that often.
 
-When you handle someone else's patch, you need to add your SOB
-underneath to state that fact. I'll add it now but don't forget rule as
-it is important to be able to show how a patch found its way upstream.
+I see and agree. Thanks for the explanation!
 
-Like you've done for the next patch. :)
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+No objections from my side then :)
