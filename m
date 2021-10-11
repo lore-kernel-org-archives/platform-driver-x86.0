@@ -2,78 +2,73 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC891C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 13:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E82C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 14:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0CBE60F6E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 13:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FB361056
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 14:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237252AbhJKNvT (ORCPT
+        id S242324AbhJKOKT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Oct 2021 09:51:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52857 "EHLO
+        Mon, 11 Oct 2021 10:10:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:31173 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237305AbhJKNuf (ORCPT
+        by vger.kernel.org with ESMTP id S237686AbhJKOIL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Oct 2021 09:50:35 -0400
+        Mon, 11 Oct 2021 10:08:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633960114;
+        s=mimecast20190719; t=1633961170;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uXHfjscGcvZFNxsglQ5OlKnQlpRW8PJ8T4iIDGaTsAE=;
-        b=ehDgqzECHC9nv9syvPQjhGS9aq3GXbq4Dz7Ac0M1JOYAN4wXnHuosUeSTKjWXDdsTdrpYa
-        JeHRqveFkGeN+nuu3NKQHLA2+rHs2fmS9DGbtDsyT4z7WueFZiT/zz80ktx0/uZxUeo3ig
-        mF04vM1K0hqsDPGuyinq5DLptpPViuA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386--6EE34AvNJCxwYpGoKG9jA-1; Mon, 11 Oct 2021 09:48:31 -0400
-X-MC-Unique: -6EE34AvNJCxwYpGoKG9jA-1
-Received: by mail-ed1-f71.google.com with SMTP id u24-20020aa7db98000000b003db57b1688aso10566445edt.6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Oct 2021 06:48:31 -0700 (PDT)
+        bh=ussR32xFKF2ITlAEAPR/6vAziEgzw+wzIh8gegh7UIU=;
+        b=J5zvwwA7ljEdLeyfEACWeipfo9AfaT5fUNKZnDYXLc180j0MfFwos2crtSZUU7YXrGv3hC
+        BqlN4z2WKVjjmXrJCTVc6Yw8/bICdKnqn3u/jhAI1lEXCKkUQGUXVfAlpU4kdKgeO3+WOi
+        yV6Slv2EEVGK0sp1DpcjZpYi5FW1kT8=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-542-yOds9ao3Msq5Adm2IIP1jg-1; Mon, 11 Oct 2021 10:06:09 -0400
+X-MC-Unique: yOds9ao3Msq5Adm2IIP1jg-1
+Received: by mail-ed1-f72.google.com with SMTP id i7-20020a50d747000000b003db0225d219so16068431edj.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Oct 2021 07:06:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=uXHfjscGcvZFNxsglQ5OlKnQlpRW8PJ8T4iIDGaTsAE=;
-        b=ZQCjV77kvunXPAN9XCIcu0vdqcr+kxj0739pcgUtm8NPhjsfdm9uZaSvDyUWraZ4Ka
-         nwc53VXu3YKP72zQnOKCMCe49VD/x8knPl+IOyJz69NqlQV8/8qGroBV1wbE86u5Tmdk
-         SkryfgDliZ2MidQlCJQr07KRDHUT1GvvNE40hc29y4WsiELYJrO6Y9ehX22/hBud+bd4
-         xCGyU96UCFU86Hs0xq5I/rSyC/SEcNbD2LOAiZTowH/V465jAri3D8KukOvbKSIDCc+h
-         Q7hiwYZ8oFuiy0GutND0l8LCXL6qqr08mshP2woUcX9bTWfwMsHFob1JGRAQlQzdY8if
-         LCOQ==
-X-Gm-Message-State: AOAM533PWlPfnLE90dSegyFAlJPFORBusBYm9KSoKfhxwEwe0vpTk5/4
-        RknYpG4d4HR8QQxK7awmdUCfl9he1xglf04No0v2BW1acp04zr8Vy3TMZ282gk7NFWauBL1ckXh
-        SiK27cZO3gUGulqY61J65hIc0TvjSXWrjgA==
-X-Received: by 2002:a17:906:7848:: with SMTP id p8mr25849744ejm.212.1633960109483;
-        Mon, 11 Oct 2021 06:48:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxDMIfO5Q2xjFaF7/r+z4xwwVPMAYIs+QMYrxeijfg/2kao39jda1nsyIawptV7zv6WXizG/Q==
-X-Received: by 2002:a17:906:7848:: with SMTP id p8mr25849707ejm.212.1633960109175;
-        Mon, 11 Oct 2021 06:48:29 -0700 (PDT)
+        bh=ussR32xFKF2ITlAEAPR/6vAziEgzw+wzIh8gegh7UIU=;
+        b=rq3ucg6bJ4EiAKx2qE4O+icasrMdr1zSOPYbbiaYnHx8d/wgJwrJgRmt/9nVBYXORS
+         w8ayqoaDD3Z4lV25QxhUAlHggaIDwZtepsuLDZEHbVznafsV9cYVwkZ2wMp/L6VIdFZv
+         BMHRCbgqFkmcSgZOpnoMiijTwvTqiy0VMyH9f0ffa6JeKVQhkjyycFcBAo9mAXrIo2QJ
+         qpt3zWMwrociPN6F5G3iE6OjWhv/nv5I16/1Vb+ZX+OtP0H/i6pozYoE4fkBWsPQy5tP
+         M5E0ozHPo4pwydC8Av3b33O52cY//5kbQ3SUOjxPTFwyCBfRT1UfjIGQDNDqHrTjIPM3
+         m1mA==
+X-Gm-Message-State: AOAM533dxsv8xgiJqCJL7S7jJzL3t5284CFx9U1sjpfjKqyB5G0P7uIu
+        drVBmfqsr+0RnyYkPs+Buvs9eiP/1V0aWpB3EY8KsFxU954CMhHqqp3IMlyFQzWk7lD7MQvqSFz
+        kLra33PWorvp8zJH7PGyR754AaMiPFkVp2w==
+X-Received: by 2002:a17:906:7810:: with SMTP id u16mr25044488ejm.516.1633961168153;
+        Mon, 11 Oct 2021 07:06:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyNTqHf2qe1Ej7MK+KyTbhae7cu45v+Gs+KYWTyABa+jFKGSDe5qnwRm+ilHWu2oXO+ScL+kg==
+X-Received: by 2002:a17:906:7810:: with SMTP id u16mr25044470ejm.516.1633961168012;
+        Mon, 11 Oct 2021 07:06:08 -0700 (PDT)
 Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id o3sm3541144eju.123.2021.10.11.06.48.28
+        by smtp.gmail.com with ESMTPSA id j3sm3546884ejy.65.2021.10.11.07.06.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Oct 2021 06:48:28 -0700 (PDT)
-Subject: Re: [PATCH 1/2] platform/x86: amd-pmc: Add alternative acpi id for
- PMC controller
-To:     Sachi King <nakato@nakato.io>, mgross@linux.intel.com,
-        rafael@kernel.org, lenb@kernel.org, Sanket.Goswami@amd.com,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, stable@vger.kernel.org
-References: <20211002041840.2058647-1-nakato@nakato.io>
- <42e9a7d0-536f-bd15-0c4a-071d09195bc2@amd.com>
- <fa761e91-0aa7-d18d-a1ad-17325f419c4c@amd.com> <5824654.09FbfXajTC@youmu>
+        Mon, 11 Oct 2021 07:06:07 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: gigabyte-wmi: add support for B550 AORUS
+ ELITE AX V2
+To:     "Zephaniah E. Loss-Cutler-Hull" <zephaniah@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20211005044855.1429724-1-zephaniah@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <bb392381-541b-e6db-1b4b-2915118d5314@redhat.com>
-Date:   Mon, 11 Oct 2021 15:48:28 +0200
+Message-ID: <d9c3df7a-03e9-2cd6-6c62-dca1e8e13b6f@redhat.com>
+Date:   Mon, 11 Oct 2021 16:06:07 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <5824654.09FbfXajTC@youmu>
+In-Reply-To: <20211005044855.1429724-1-zephaniah@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -83,243 +78,45 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 10/9/21 4:05 AM, Sachi King wrote:
-> On Saturday, 9 October 2021 06:01:53 AEDT Limonciello, Mario wrote:
->> On 10/8/2021 10:57, Limonciello, Mario wrote:
->>> On 10/8/2021 07:19, Sachi King wrote:
->>>> On Friday, 8 October 2021 21:27:15 AEDT Shyam Sundar S K wrote:
->>>>>
->>>>> On 10/8/2021 1:30 AM, Limonciello, Mario wrote:
->>>>>>
->>>>>> On 10/5/2021 00:16, Shyam Sundar S K wrote:
->>>>>>>
->>>>>>> On 10/2/2021 9:48 AM, Sachi King wrote:
->>>>>>>> The Surface Laptop 4 AMD has used the AMD0005 to identify this
->>>>>>>> controller instead of using the appropriate ACPI ID AMDI0005.  
->>>>>>>> Include
->>>>>>>> AMD0005 in the acpi id list.
->>>>>>>
->>>>>>> Can you provide an ACPI dump and output of 'cat /sys/power/mem_sleep'
->>>>>>
->>>>>> I had a look through the acpidump listed there and it seems like the 
->>>>>> PEP
->>>>>> device is filled with a lot of NO-OP type of code.  This means the LPS0
->>>>>> patch really isn't "needed", but still may be a good idea to include 
->>>>>> for
->>>>>> completeness in case there ends up being a design based upon this that
->>>>>> does need it.
->>>>>>
->>>>>> As for this one (the amd-pmc patch) how are things working with it? 
->>>>>> Have
->>>>>> you checked power consumption
->>>>
->>>> Using my rather limited plug-in power meter I measure 1w with this patch,
->>>> and I've never seen the meter go below this reading, so this may be over
->>>> reporting.  Without this patch however the device bounces around 
->>>> 2.2-2.5w.
->>>> The device consumes 6w with the display off.
->>>>
->>>> I have not left the device for long periods of time to see what the 
->>>> battery
->>>> consumption is over a period of time, however this patch is being carried
->>>> in linux-surface in advance and one users suspend power consumption is
->>>> looking good.  They have reported 2 hours of suspend without a noticable
->>>> power drop from the battery indicator.
->>>>
->>>>
->>>
->>> Thanks, in that case this is certainly part of what you'll need and it 
->>> sounds like you're on the right train as it pertains to the wakeup sources.
->>>
->>> For both patches in this series:
->>>
->>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->>>
->>>>
->>>>>> and verified that the amd_pmc debugfs
->>>>>> statistics are increasing?
->>>>
->>>> s0ix_stats included following smu_fw_info below.
->>>>
->>>>>> Is the system able to resume from s2idle?
->>>>
->>>> It does, however additional patches are required to do so without an 
->>>> external
->>>> device such as a keyboard.  The power button, lid, and power plug trigger
->>>> events via pinctrl-amd.  Keyboard and trackpad go via the Surface EC and
->>>> require the surface_* drivers, which do not have wakeup support.
->>>>
->>>> 1. The AMDI0031 pinctrl-amd device is setup on Interrupt 7, however 
->>>> the APIC
->>>> table does not define an interrupt source override.  Right now I'm not 
->>>> sure
->>>> how approach producing a quirk for this.  linux-surface is carrying 
->>>> the hack
->>>> described in
->>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2F87lf8ddjqx.ffs%40nanos.tec.linutronix.de%2F&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7Cb95422d699a2496a56f608d98a55e888%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637692923846585025%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=5dWwpgh%2FRIA%2F57UpY5h0l9Snzem%2BNpirgE6ujEHO7aY%3D&amp;reserved=0 
->>>>
->>>> Also available here:
->>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Flinux-surface%2Fkernel%2Fcommit%2F25baf27d6d76f068ab8e7cb7a5be33218ac9bd6b&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7Cb95422d699a2496a56f608d98a55e888%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637692923846585025%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=HPZfqPoVUJT8w%2FRD7UaVjegT0iRLDlRkXfOwMx5HS8Q%3D&amp;reserved=0 
->>>>
->>>>
->>>> 2. pinctrl: amd: Handle wake-up interrupt
->>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Ftorvalds%2Fc%2Facd47b9f28e5&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7Cb95422d699a2496a56f608d98a55e888%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637692923846585025%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=gUtHcFKolVIZeHtIIJuT3BkruQbjq8NAOU5504%2F02Mg%3D&amp;reserved=0 
->>>>
->>>> Without this patch the device would suspend, but any interrupt via
->>>> pinctrl-amd would result in a failed resume, which is every wakeup
->>>> souce I know of on this device.
->>>
->>> Yes that was the same experience a number of us had on other AMD based 
->>> platforms as well which led to this patch being submitted.
->>>
->>>>
->>>> 3. pinctrl: amd: disable and mask interrupts on probe
->>>> Once I worked out that I needed the patch in 2 above the device gets a 
->>>> lot
->>>> of spurious wakeups, largely because Surface devices have a second 
->>>> embedded
->>>> controller that wants to wake the device on all sorts of events.  We 
->>>> don't
->>>> have support for that, and there were a number of interrupts not 
->>>> configured
->>>> by linux that were set enabled, unmasked, and wake in s0i3 on boot.
->>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flinux-gpio%2F20211001161714.2053597-1-nakato%40nakato.io%2FT%2F%23t&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7Cb95422d699a2496a56f608d98a55e888%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637692923846585025%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=mwJgcXBY9zdlTG671KssViHdSwHfq6DCJ2fpeLbRbR4%3D&amp;reserved=0 
->>>>
->>>
->>> We'll have to take a look at this to make sure it's not causing a 
->>> regression for the other platforms the original patch helped.  If it 
->>> does, then we'll need some sort of other messaging to accomplish this 
->>> for the surface devices.
->>>
->>>>
->>>> These three are enough to be able to wake the device via a lid event, 
->>>> or by
->>>> changing the state of the power cable.
->>>>
->>>> 4. The power button requires another pair of patches.  These are only 
->>>> in the
->>>> linux-surface kernel as qzed would like to run them there for a couple of
->>>> releases before we propose them upstream.  These patches change the 
->>>> method
->>>> used to determine if we should load surfacepro3-button or 
->>>> soc-button-array.
->>>> The AMD variant Surface Laptops were loading surfacepro3-button instead
->>>> soc-button-array.  They can be seen:
->>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Flinux-surface%2Fkernel%2Fcommit%2F1927c0b30e5cd95a566a23b6926472bc2be54f42&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7Cb95422d699a2496a56f608d98a55e888%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637692923846585025%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=PGWON0kCpByJtsO1rS9wrYr7oH86V%2F8M%2FYLmUoFjBhM%3D&amp;reserved=0 
->>>>
->>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Flinux-surface%2Fkernel%2Fcommit%2Fac1a977392880456f61e830a95e368cad7a0fa3f&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7Cb95422d699a2496a56f608d98a55e888%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637692923846585025%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=B%2BBW3M4L5TLCq3Fc6oB0KHaC9A%2FQp3uwkB2Jby%2FdDo8%3D&amp;reserved=0 
->>>>
->>>>
->>>>
->>>>> Echo-ing to what Mario said, I am also equally interested in knowing the
->>>>> the surface devices are able to reach S2Idle.
->>>>>
->>>>> Spefically can you check if your tree has this commit?
->>>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fpdx86%2Fplatform-drivers-x86.git%2Fcommit%2F%3Fh%3Dfor-next%26id%3D9cfe02023cf67a36c2dfb05d1ea3eb79811a8720&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7Cb95422d699a2496a56f608d98a55e888%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637692923846585025%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=XdRCk8klBuDRCk7UWL%2Ft5wiupVVgdCWBqFmaYgGK%2BFU%3D&amp;reserved=0 
->>>>>
->>>>
->>>> My tree currently does not have that one.  I've applied it.
->>>
->>> You should look through all the other amd-pmc patches that have happened 
->>> as well in linux-next, it's very likely some others will make sense too 
->>> for you to be using and testing with.
->>>
->>>>
->>>>> this would tell the last s0i3 status, whether it was successful or not.
->>>>>
->>>>> cat /sys/kernel/debug/amd_pmc/smu_fw_info
->>>>
->>>>
->>>> === SMU Statistics ===
->>>> Table Version: 3
->>>> Hint Count: 1
->>>> Last S0i3 Status: Success
->>>> Time (in us) to S0i3: 102543
->>>> Time (in us) in S0i3: 10790466
->>>>
->>>> === Active time (in us) ===
->>>> DISPLAY  : 0
->>>> CPU      : 39737
->>>> GFX      : 0
->>>> VDD      : 39732
->>>> ACP      : 0
->>>> VCN      : 0
->>>> DF       : 18854
->>>> USB0     : 3790
->>>> USB1     : 2647
->>>>
->>>>>> /sys/kernel/debug/amd_pmc/s0ix_stats
->>>>
->>>> After two seperate suspends:
->>>>
->>>> === S0ix statistics ===
->>>> S0ix Entry Time: 19022953504
->>>> S0ix Exit Time: 19485830941
->>>> Residency Time: 9643279
->>>>
->>>> === S0ix statistics ===
->>>> S0ix Entry Time: 21091709805
->>>> S0ix Exit Time: 21586928064
->>>> Residency Time: 10317047
->>>>
->>>>
->>>
->>> Yeah these look good, thanks.
->>>
->>>>>> Does pinctrl-amd load on this system? It seems to me that the power
->>>>>> button GPIO doesn't get used like normally on "regular" UEFI based AMD
->>>>>> systems.  I do see MSHW0040 so this is probably supported by
->>>>>> surfacepro3-button and that will probably service all the important 
->>>>>> events.
->>>>
->>>> We require the first patch listed above to get pinctrl-amd to load on 
->>>> this
->>>> system, and the two patches mentioned in 4 so we correctly choose
->>>> soc-button-array which is used by all recent Surface devices.
->>>>
->>>>
->>>>
->>>>
->>>
->>
->> Sachi,
->>
->> I was talking to some internal folks about this patch.  We had one more 
->> thought - can you please put into a Github gist (or somewhere 
->> semi-permanent) the output of:
->>
->> # cat /sys/kernel/debug/dri/0/amdgpu_firmware_info
->>
->> That way we know more about the FW versions on your system in case of 
->> any future regressions stemming from this.
->>
->> Hans,
->>
->> If you can pick up the tag:
->>
->> Link: 
->> https://github.com/linux-surface/acpidumps/tree/master/surface_laptop_4_amd
->>
->> as well as that value for "Link: <url>" pointing to amdgpu_firmware_info 
->> in the commit message.  Or if you want Sachi to re-spin to do 
->> themselves, then Sachi feel free to add my Reviewed-by tag in your v2.
+On 10/5/21 6:48 AM, Zephaniah E. Loss-Cutler-Hull wrote:
+> This works just fine on my system.
 > 
-> Hans,
-> 
-> The  requested amdgpu_firmware_info
-> Link:
-> https://gist.github.com/nakato/2a1a7df1a45fe680d7a08c583e1bf863
-> 
-> If you want me to re-spin with with the these two links and Mario's 
-> Reviewed-by tag, let me know.
+> Signed-off-by: Zephaniah E. Loss-Cutler-Hull <zephaniah@gmail.com>
+> Cc: <stable@vger.kernel.org>
 
-There is no need to resend this, I've just merged it with the following tags added:
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Link: https://github.com/linux-surface/acpidumps/tree/master/surface_laptop_4_amd
-Link: https://gist.github.com/nakato/2a1a7df1a45fe680d7a08c583e1bf863
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+I will also include this in my upcoming pdx86-fixes pull-req for 5.15 .
 
 Regards,
 
 Hans
+
+> ---
+>  drivers/platform/x86/gigabyte-wmi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+> index d53634c8a6e0..658bab4b7964 100644
+> --- a/drivers/platform/x86/gigabyte-wmi.c
+> +++ b/drivers/platform/x86/gigabyte-wmi.c
+> @@ -141,6 +141,7 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
+>  
+>  static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
+>  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
+> +	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE AX V2"),
+>  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
+>  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE V2"),
+>  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 GAMING X V2"),
+> 
 
