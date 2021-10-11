@@ -2,86 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB381C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 11:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCFCC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 12:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E34E60F21
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 11:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D0D604DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 12:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234667AbhJKLpr (ORCPT
+        id S236748AbhJKMym (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Oct 2021 07:45:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21357 "EHLO
+        Mon, 11 Oct 2021 08:54:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38039 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234399AbhJKLpp (ORCPT
+        by vger.kernel.org with ESMTP id S235129AbhJKMyl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Oct 2021 07:45:45 -0400
+        Mon, 11 Oct 2021 08:54:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633952624;
+        s=mimecast20190719; t=1633956761;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sLERr4wwqXS0zpFcNWBnvOvmmDhWW73fjpWHdhZQYhI=;
-        b=Nl7C079gA4K0aKVX3UIKYhoMQ/fshtvJBW1YH6viejuSFVir9Q031jWLSlQvaGHczaTFF9
-        0qUqKNYupT5U3vuyMUBSI3yU2O1+7vEoY/X++zU4Oq1VHXvo9yLbCBKt+yuSyMwzBdJPBR
-        +iIG6WjfiwPJTIVaHJa3q/orfwVDY/0=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-10-dWJJPLPVM12i2Ep2jc1rhA-1; Mon, 11 Oct 2021 07:43:43 -0400
-X-MC-Unique: dWJJPLPVM12i2Ep2jc1rhA-1
-Received: by mail-ed1-f71.google.com with SMTP id p20-20020a50cd94000000b003db23619472so15655340edi.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Oct 2021 04:43:42 -0700 (PDT)
+        bh=R/O41kNxsiEROmyRK7T1peFirCbbua8dp9Na0HOmfkg=;
+        b=ZwxH0YQTDw360MoxSEq6EevQdt5b0+0bOJnNrmJ1owlAu/z9EH0g0PFQHTAsUIR3l6kYpy
+        JJr2IMvlStnnq/rQSX6kzb1TP/8TGnU5ES5ixtfzCcvQ5OPT2ozVE9jx4fG6WGXEWen127
+        XUQvzJmjS6qqKbPHDYsSyiisS66KP9o=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-273-jzmsvoLlMiCleXCLA9tymQ-1; Mon, 11 Oct 2021 08:52:40 -0400
+X-MC-Unique: jzmsvoLlMiCleXCLA9tymQ-1
+Received: by mail-ed1-f69.google.com with SMTP id z23-20020aa7cf97000000b003db7be405e1so4897838edx.13
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Oct 2021 05:52:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=sLERr4wwqXS0zpFcNWBnvOvmmDhWW73fjpWHdhZQYhI=;
-        b=CjwBRkFdPlww3yDODtLuJ7PjbKGCDZwPPLFZq+a8qc0kv3ZyzSH/hML/ib0lcmRHca
-         krv4cyR353X16B5PWshitDsoFaJxizJA+mf315+P13byC/0l2FcfZyRI3yzV7VuXc91n
-         G0xEo2n38rJplp7ADnwMyQe4mZDexQiQTI2M3+LqVuzQs2oQBRHUqX7sOWSBiwrnb29X
-         0JmfJ0OruuY9jUfIWEthERsvYeiLJendpAtwZJfDasMYMzgQEdWR88n1i+XAz/kuxSSP
-         tswMCnZUvTg8qSlM6vxC/jI50RsWKpR18k/36gM6DNhNRJv5xGV89OWLtkIp99VfAtYv
-         0MdQ==
-X-Gm-Message-State: AOAM530o7J6S8SHBb5HJGLgPpZMqqMkMt6PE0ttx7k/rncCgwzBRZPCw
-        TjosvrmHmen/CwKE0RRFyvmQ5SEyhoCwKhQOYkxYlTgIDgSUAAfbzLtLMj97wUE9wBMjBH6i5Ej
-        alI1c/OXuDbE3u5ltvUTwq9M6fdh4k/9yOQ==
-X-Received: by 2002:a50:e142:: with SMTP id i2mr39787469edl.107.1633952621876;
-        Mon, 11 Oct 2021 04:43:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzoBMlYivGscv/CpFZXt+Isxb/TUwR/lh7DEa3/tPor+O3a4b49kIUWc1t55oZdKq8JCUSS4w==
-X-Received: by 2002:a50:e142:: with SMTP id i2mr39787430edl.107.1633952621702;
-        Mon, 11 Oct 2021 04:43:41 -0700 (PDT)
+        bh=R/O41kNxsiEROmyRK7T1peFirCbbua8dp9Na0HOmfkg=;
+        b=JPVLCpWiL7s9dSax99jjdvwKje7uz0T2cE00s/1Z/0VlYk908+rU3CMaJ/C9wgnjsL
+         kXrZAcPOm/g4K3JAkxABw7Zn1Y9F3cYrJKmJN27+8Fxtzm/oJ+tMmsndWVOj/yRj9GPN
+         YEaUyi6MeQSyJE5sfdsK9B8y6Fhd2+lqC9zRGtFtRpcavOChe2Kok94UH5YF+IXBV0Az
+         i/9TMY4km/BTJlqHJJgWidBvgIY0z0Jg/dYnng1PuMKCl4Anrgc+fREXdY4LrkOk/4gm
+         bi85spvBw8NFphABG6PG53UDRecRqI9R9EpWlFisubWJgySOuwkci4Z6GXrbD0lmzwyv
+         9Aig==
+X-Gm-Message-State: AOAM533I7mdFHPViKuJX+Bh4ej3P3fyDDcAUAOzMzlYYzkcGjtF5oyRE
+        e3/CwEBwTn6RUeZxRDGc72Nmd0gAYDpiV7hDRBwQJV1ERQqTc69Bqny8Tlr8xQP+hqMEaIXx+sm
+        bi2TjYLv3+ZDHtW9kZOI+1Q9TtHfAX+3Kt4lQVi8Ph+i5eTpIaBd6+2Cz2OWiwV/POPxJ4Ki3Kz
+        BruaxrgpJupA==
+X-Received: by 2002:a17:906:b796:: with SMTP id dt22mr18038395ejb.456.1633956757834;
+        Mon, 11 Oct 2021 05:52:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxi7o92tq3gvqBc2CVw+igZfADk/zfjRvTv8729ds/ygTzFp3Qlc3LXYc3L1Pnrvj/Zr7JHAQ==
+X-Received: by 2002:a17:906:b796:: with SMTP id dt22mr18038364ejb.456.1633956757634;
+        Mon, 11 Oct 2021 05:52:37 -0700 (PDT)
 Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id g9sm3400631ejo.60.2021.10.11.04.43.41
+        by smtp.gmail.com with ESMTPSA id lb12sm3570830ejc.28.2021.10.11.05.52.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Oct 2021 04:43:41 -0700 (PDT)
-Subject: Re: [PATCH 05/12] regulator: Introduce tps68470-regulator driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org
-References: <20211008162121.6628-1-hdegoede@redhat.com>
- <20211008162121.6628-6-hdegoede@redhat.com> <YWQU/SYTT5Vk24XH@sirena.org.uk>
+        Mon, 11 Oct 2021 05:52:37 -0700 (PDT)
+Subject: Re: [PATCH 7/7] ABI: sysfs-platform-intel-pmc: add blank lines to
+ make it valid for ReST
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David E Box <david.e.box@intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        Tamar Mashiah <tamar.mashiah@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <cover.1632740376.git.mchehab+huawei@kernel.org>
+ <3673e1a255ad4100c933af215b60d68ba126f820.1632740376.git.mchehab+huawei@kernel.org>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f6f2d7e8-fdb8-ed64-0cdd-65aded9fc42c@redhat.com>
-Date:   Mon, 11 Oct 2021 13:43:40 +0200
+Message-ID: <e5ce90b3-898e-34ca-0a4e-19c7ea214f4d@redhat.com>
+Date:   Mon, 11 Oct 2021 14:52:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <YWQU/SYTT5Vk24XH@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <3673e1a255ad4100c933af215b60d68ba126f820.1632740376.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -90,84 +87,51 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 10/11/21 12:42 PM, Mark Brown wrote:
-> On Fri, Oct 08, 2021 at 06:21:14PM +0200, Hans de Goede wrote:
+On 9/27/21 1:10 PM, Mauro Carvalho Chehab wrote:
+> The ReST format requires blank lines before/after identation changes,
+> for it to properly detect lists.
 > 
->> +++ b/drivers/regulator/tps68470-regulator.c
->> @@ -0,0 +1,194 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Regulator driver for TPS68470 PMIC
->> + *
-> 
-> Please make the entire comment a C++ one so things look more
-> intentional.
+> Fixes: ee7abc105e2b ("platform/x86: intel_pmc_core: export platform global reset bits via etr3 sysfs file")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Ok, will do so for the next version.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
->> +
->> +/*
->> + * The ACPI tps68470 probe-ordering depends on the clk/gpio/regulator drivers
->> + * being registered before the MFD cells are created (the MFD driver calls
->> + * acpi_dev_clear_dependencies() after the cell creation).
->> + * subsys_initcall() ensures this when the drivers are builtin.
->> + */
->> +static int __init tps68470_regulator_init(void)
->> +{
->> +	return platform_driver_register(&tps68470_regulator_driver);
->> +}
->> +subsys_initcall(tps68470_regulator_init);
-> 
-> If this is actually required then the driver is broken for modular use
-> which frankly is just generally broken.  I don't understand why this
-> driver would require this when other drivers don't, or what the actual
-> requirement is here - what does the call do and why is the ordering
-> important?
-
-For the camera-sensor which is a consumer of this devices to be able
-to get the regulators (and not end up with a dummy regulator) the
-consumer info added through the constraints passed as platform data
-must be available to the regulator framework before the sensor-driver's
-probe() method tries to get the regulators.
-
-The ACPI fwnode describing the sensor has an ACPI _DEP dependency on
-the ACPI fwnode describing the PMIC. To ensure that the PMIC driver
-binds first patches 1 + 2 of this series make the ACPI code use this
-dependency to not instantiate the i2c-client for the sensor until
-the PMIC driver has bound.
-
-The PMIC driver is a MFD driver creating GPIO, clk and regulator
-MFD cells. So in order for the ACPI code delaying the instantiation
-to help, the regulator constraints / consumer info must be registered
-when the MFD driver is done binding. This means that the regulator
-driver for the regulator MFD cells must be registered before the
-platform_dev-s for the cell is instantiated, so that the driver
-binds immediately (during instantiation) and thus the regulator
-consumer info is available before the PMIC-MFD-driver's probe()
-method is done.
-
-The use of a subsys_initcall() here ensures that when builtin
-the regulator driver is registered before the PMIC-MFD-driver
-is registered (the PMIC driver uses a normal device_initcall).
-
-To make this work when everything is build as a module patch 12/12
-adds the following to the PMIC-MFD-driver:
-
-MODULE_SOFTDEP("pre: clk-tps68470 tps68470-regulator");
-
-This will make modprobe load the clk and regulator drivers
-before it loads the main/MFD tps68470 driver.
-
-I've tested this with everything built as module (the typical
-setup for standard x86 setups) and without the MODULE_SOFTDEP
-the sensor driver ends up with a dummy regulator (illustrating
-the problem) and with the SOFTDEP in place everything works
-as it should.
-
-I hope this helps explain things.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
+
+
+> ---
+> 
+> See [PATCH 0/7] at: https://lore.kernel.org/all/cover.1632740376.git.mchehab+huawei@kernel.org/T/#t
+> 
+>  Documentation/ABI/testing/sysfs-platform-intel-pmc | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-platform-intel-pmc b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> index ef199af75ab0..f31d59b21f9b 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> +++ b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> @@ -11,8 +11,10 @@ Description:
+>  		to take effect.
+>  
+>  		Display global reset setting bits for PMC.
+> +
+>  			* bit 31 - global reset is locked
+>  			* bit 20 - global reset is set
+> +
+>  		Writing bit 20 value to the etr3 will induce
+>  		a platform "global reset" upon consequent platform reset,
+>  		in case the register is not locked.
+> 
 
