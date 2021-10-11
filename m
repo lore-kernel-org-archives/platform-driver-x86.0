@@ -2,75 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBE0C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 13:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F384C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 13:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9538E60F4B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 13:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A92860C49
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 13:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236303AbhJKNsh (ORCPT
+        id S236325AbhJKNtm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Oct 2021 09:48:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:60570 "EHLO
+        Mon, 11 Oct 2021 09:49:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51525 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233144AbhJKNsh (ORCPT
+        by vger.kernel.org with ESMTP id S236249AbhJKNtf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Oct 2021 09:48:37 -0400
+        Mon, 11 Oct 2021 09:49:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633959997;
+        s=mimecast20190719; t=1633960055;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=u6DOb9W+mr1GjdJH/2XbWUql9BRZsSj2QfBWX7iXaJU=;
-        b=S7twIDh8n4hdFfYSWxaxlAbZhpYmv6QpWFUDmYaxxzAJ9+7cUo/tx6m7DHO55+a+bUvMmc
-        wQFc/6LP0/D7s4qKRUAHaWDOAnBA/jOvwDKjGKFQ4DVJmyfT6Br0anz9/hWn4KNBB7sMOy
-        I5wOhNxMQxNL8PU0iI0u9SO/095DWMo=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-41-y1ga-RDEPF6DcUFxOGlE-A-1; Mon, 11 Oct 2021 09:46:35 -0400
-X-MC-Unique: y1ga-RDEPF6DcUFxOGlE-A-1
-Received: by mail-ed1-f69.google.com with SMTP id u24-20020aa7db98000000b003db57b1688aso10561286edt.6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Oct 2021 06:46:35 -0700 (PDT)
+        bh=dYFSzJa4/X5MdTw0ej6ByG8jedB2v1DK+40e1tfjLpY=;
+        b=OYregtajtk/2AQ+dy8jOzq5mE5Kfil87sd7MH3WmXi8SfKrGE6qQi1UehgpHaJyYtDwJMD
+        1LH2Y0MRNq+fWmoVW3RUOPnyymi0OhUaXIV+z9CHLFosBHCuP6/VhRyQAoN8fL/1DRlGXj
+        fif/xoyKuYzC2yjWmpvVadxIRAhmBi8=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-271-k4vRBcSpO1-JNc4WUEPQ0w-1; Mon, 11 Oct 2021 09:47:34 -0400
+X-MC-Unique: k4vRBcSpO1-JNc4WUEPQ0w-1
+Received: by mail-ed1-f70.google.com with SMTP id l10-20020a056402230a00b003db6977b694so7608183eda.23
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Oct 2021 06:47:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=u6DOb9W+mr1GjdJH/2XbWUql9BRZsSj2QfBWX7iXaJU=;
-        b=ye9hZJY+fLzvxZocCaaLkyZhy4VQQ9tBj/DgtpguMSds5bmuQOzkl9X+h4RNUE5fXu
-         8hUv6ISj8u5WGqsxknsi3UpyCCA6FacgI4FRYIrHHwp8jJzjb3oJG3idQLrBF118ARdF
-         IQx2ROeDZyNV/enBXZqmKjXkv/pJMCyFazjdW94t3DHOdWm6hqHix7JnPY7+QUZULgvx
-         QTmtnyM2APAm//uI7TglSxs96xvcEQ1n5el8i+jlLxa9G8O4Sdzs4wDEHuviOVvTOjuE
-         7s4k5khxv2JxR6Hq6hLC0bXfMHYeJheKWheD/BDljw1lgTXF5aquc2RGiYefy4dJlHdr
-         cJYQ==
-X-Gm-Message-State: AOAM532kGBcDBCmGsGa1teMdOfAiRNZNrJlP/bqUIZt9NPKEBL6u+/5h
-        3ud+7S4dQS9O/+N4+S1rGikDiNeJXXjFAdsU81vU66mNqdRzBJeKQq5D4vOVHu6s12U8wPCaVlz
-        fKUkqwe+PaIsXIWUj8octRLiLcBuGctz9bA==
-X-Received: by 2002:aa7:db8a:: with SMTP id u10mr43526203edt.189.1633959993700;
-        Mon, 11 Oct 2021 06:46:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyRwi9U7s2IhR5kI8VuvUR4QQwNMVV7wDkQjkuDwgGNm8rg71fZHIgmHCovzrOcnv2oFED7dw==
-X-Received: by 2002:aa7:db8a:: with SMTP id u10mr43526174edt.189.1633959993550;
-        Mon, 11 Oct 2021 06:46:33 -0700 (PDT)
+        bh=dYFSzJa4/X5MdTw0ej6ByG8jedB2v1DK+40e1tfjLpY=;
+        b=Vfyeiv3iKrhBAMTUobcJ0uIMDWwAGQDO/vONUI1OMrMoPoF2fIN9T5HlN7EI1Ok531
+         kIEr1hiwZdcsQcNwJz6cK3s8JjgMGpyBhNydw56Hr3tqcOgGLzXO7grPbtiVVsJQrql4
+         JUX1KswXF2kaHNGMFFb6myNpzA2bOH1YxlZmof4Awc8yeb+MVh7RH1lvvaDNjhmcAQO3
+         1rZFNdDH9e4S+NYkBKfo520TOOqIVNgyvawWFv/Lza2zxc+JXJVg0TCWp0Mv8u2lJAZs
+         MsEagY05qO1UWZ87+tfMBNCA3BeLwZr+9qrC2cvUaGSiLRtkoJC7YIgwCF5GGieE622W
+         yK8g==
+X-Gm-Message-State: AOAM5302a2OPfo2qwp/19JRBPH54dt5cJcQ1fJR1tm7BqIJ+kJV4G9Sj
+        IbtWS5DhWg0uktMBOjK3LD2PsXrySVhIV2HccA2PHij07mOxkwA5WNmFPQVuPxRIcVX4Td34dg0
+        vqk63JDQq/IT6y9Ubfkkk1WtP7/AnmWeFPA==
+X-Received: by 2002:a50:d944:: with SMTP id u4mr41485544edj.327.1633960052857;
+        Mon, 11 Oct 2021 06:47:32 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzl98X8t7epnvmXxk3hpem5zaOR2SPG1wUIZIsGJp9yhGYwckwlRuh6DVHhzZQQoUI0O3pLzw==
+X-Received: by 2002:a50:d944:: with SMTP id u4mr41485521edj.327.1633960052710;
+        Mon, 11 Oct 2021 06:47:32 -0700 (PDT)
 Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id f12sm757429edx.90.2021.10.11.06.46.32
+        by smtp.gmail.com with ESMTPSA id m15sm4253564edv.45.2021.10.11.06.47.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Oct 2021 06:46:33 -0700 (PDT)
-Subject: Re: [PATCH 1/2] platform/x86: amd-pmc: Add alternative acpi id for
- PMC controller
+        Mon, 11 Oct 2021 06:47:32 -0700 (PDT)
+Subject: Re: [PATCH 2/2] ACPI: PM: Include alternate AMDI0005 id in special
+ behaviour
 To:     Sachi King <nakato@nakato.io>, Shyam-sundar.S-k@amd.com,
         mgross@linux.intel.com, mario.limonciello@amd.com,
         rafael@kernel.org, lenb@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-acpi@vger.kernel.org, stable@vger.kernel.org
 References: <20211002041840.2058647-1-nakato@nakato.io>
+ <20211002041840.2058647-2-nakato@nakato.io>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <038d2490-0cfd-e68c-2129-b386e1c9d071@redhat.com>
-Date:   Mon, 11 Oct 2021 15:46:32 +0200
+Message-ID: <912fedbb-5399-bb4e-555f-9ad48a284a31@redhat.com>
+Date:   Mon, 11 Oct 2021 15:47:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20211002041840.2058647-1-nakato@nakato.io>
+In-Reply-To: <20211002041840.2058647-2-nakato@nakato.io>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,42 +83,49 @@ Hi,
 
 On 10/2/21 6:18 AM, Sachi King wrote:
 > The Surface Laptop 4 AMD has used the AMD0005 to identify this
-> controller instead of using the appropriate ACPI ID AMDI0005.  Include
-> AMD0005 in the acpi id list.
+> controller instead of using the appropriate ACPI ID AMDI0005.  The
+> AMD0005 needs the same special casing as AMDI0005.
 > 
 > Cc: <stable@vger.kernel.org> # 5.14+
 > Signed-off-by: Sachi King <nakato@nakato.io>
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Rafael, I assume that you will pick up this one?  Please add the
+following tags from other parts of the thread:
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-I will also include this in my upcoming pdx86-fixes pull-req for 5.15 .
+Link: https://github.com/linux-surface/acpidumps/tree/master/surface_laptop_4_amd
+Link: https://gist.github.com/nakato/2a1a7df1a45fe680d7a08c583e1bf863
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
 Regards,
 
 Hans
 
+
+
 > ---
->  drivers/platform/x86/amd-pmc.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/acpi/x86/s2idle.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-> index d6a7c896ac86..fc95620101e8 100644
-> --- a/drivers/platform/x86/amd-pmc.c
-> +++ b/drivers/platform/x86/amd-pmc.c
-> @@ -476,6 +476,7 @@ static const struct acpi_device_id amd_pmc_acpi_ids[] = {
->  	{"AMDI0006", 0},
->  	{"AMDI0007", 0},
->  	{"AMD0004", 0},
-> +	{"AMD0005", 0},
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(acpi, amd_pmc_acpi_ids);
+> diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
+> index bd92b549fd5a..1c48358b43ba 100644
+> --- a/drivers/acpi/x86/s2idle.c
+> +++ b/drivers/acpi/x86/s2idle.c
+> @@ -371,7 +371,7 @@ static int lps0_device_attach(struct acpi_device *adev,
+>  		return 0;
+>  
+>  	if (acpi_s2idle_vendor_amd()) {
+> -		/* AMD0004, AMDI0005:
+> +		/* AMD0004, AMD0005, AMDI0005:
+>  		 * - Should use rev_id 0x0
+>  		 * - function mask > 0x3: Should use AMD method, but has off by one bug
+>  		 * - function mask = 0x3: Should use Microsoft method
+> @@ -390,6 +390,7 @@ static int lps0_device_attach(struct acpi_device *adev,
+>  					ACPI_LPS0_DSM_UUID_MICROSOFT, 0,
+>  					&lps0_dsm_guid_microsoft);
+>  		if (lps0_dsm_func_mask > 0x3 && (!strcmp(hid, "AMD0004") ||
+> +						 !strcmp(hid, "AMD0005") ||
+>  						 !strcmp(hid, "AMDI0005"))) {
+>  			lps0_dsm_func_mask = (lps0_dsm_func_mask << 1) | 0x1;
+>  			acpi_handle_debug(adev->handle, "_DSM UUID %s: Adjusted function mask: 0x%x\n",
 > 
 
