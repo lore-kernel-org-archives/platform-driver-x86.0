@@ -2,73 +2,74 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D585C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 12:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F39C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 13:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 808BC60EE2
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 12:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6DE60EE9
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 13:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235158AbhJKM6O (ORCPT
+        id S235288AbhJKNCr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Oct 2021 08:58:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42507 "EHLO
+        Mon, 11 Oct 2021 09:02:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:55512 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235129AbhJKM6O (ORCPT
+        by vger.kernel.org with ESMTP id S235237AbhJKNCr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Oct 2021 08:58:14 -0400
+        Mon, 11 Oct 2021 09:02:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633956974;
+        s=mimecast20190719; t=1633957246;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=viKmwUa7rcBGqBnlBwF5+/qMbjMaoc07fuxoSskXJVc=;
-        b=RL+PRi7PDYeRaYcwX2MQ0N7YuSXb/s/Gcf4uE6vaF3X6Hr2kPd1pFuYnJLCYvziVkVWzqQ
-        klxDeGE5zuJpJhhgUeGtW27lU9kSsbuZftDb4DFgzlin7qDHdFouRCWDzIijutRb39IRvg
-        15j1q5koExX4O7gTzaKbzQTgs0NWa2s=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-rtibRr9YNsmqePPuYy-8cA-1; Mon, 11 Oct 2021 08:56:13 -0400
-X-MC-Unique: rtibRr9YNsmqePPuYy-8cA-1
-Received: by mail-ed1-f72.google.com with SMTP id cy14-20020a0564021c8e00b003db8c9a6e30so3404991edb.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Oct 2021 05:56:12 -0700 (PDT)
+        bh=XSC0ZBPf17Eg5bHu8i8hVZaP3wPPFlvgK36qZ2UguL8=;
+        b=gBkf+TJwnv2ggILDblnbdvbfqZDsgIjtqFIdf18aOX3xcn1vFzxoOpAGRKm1B3NH4+xDz5
+        jRzzllfxr9NlCJV+6rN1SnFOt0FiIM97vmCyOcH2wG+q9FxeZNNBKA4HBpYJaTs2xzYDsN
+        eCnqFKBrXJPLd0V+Gqa5WmDvsAwWsfU=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-452-ho0N4AU3N1OrH8nGLBwFyA-1; Mon, 11 Oct 2021 09:00:45 -0400
+X-MC-Unique: ho0N4AU3N1OrH8nGLBwFyA-1
+Received: by mail-ed1-f70.google.com with SMTP id v9-20020a50d849000000b003db459aa3f5so13214280edj.15
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Oct 2021 06:00:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=viKmwUa7rcBGqBnlBwF5+/qMbjMaoc07fuxoSskXJVc=;
-        b=2wdbPfXuNyWNAU/x5QI3JUmzVpZJ/xpnOo0zPfK00RmKKN3tmbNAORT782dUk7Gvq6
-         7ydQBGQqmmFr8F+/iOx1lHc3FX3Ngvy/rU5Lv7dRb8wVOJtyGKuv0H7exgvSVdK5twH4
-         OFxklpiELt+5VlV/iMmHI4I+MmTUNnW5Ikxvo6VV17LtzHq63zGakuXlgt62v59IpGKM
-         SegUmicleoCI8qG4PvuW0lMw2Lw+74AFIbM9Qh6Fb61ciz4KdTNL4jbEE9RtzKfKq9oc
-         mjPhqU0WCheUBv27htwgfVVVQj2C/EKkfwja7EzqDi92J18mUnBUkcJXh2BUKQ2b6G0w
-         Rniw==
-X-Gm-Message-State: AOAM532gK0550lIXLXKpVk4pcn3xg+akYuEgfc2RAZGc7VeCJE3Q6uLk
-        HArx5eD3VZEhJ8ugvs7ZzvZZxP537HG/26DmaMT/aL4gka8kuKjjHQtq6LYkTfQE0uy7yKTLOEz
-        irDa9DW6NajidUNy7QSvuZMFLqG6L2I7pE4/FjMlR/q1As/NcAvHDa0muQsGpZJu662ug7LJuJ7
-        VYZwFBDPjaHA==
-X-Received: by 2002:a17:906:c055:: with SMTP id bm21mr25308814ejb.350.1633956971677;
-        Mon, 11 Oct 2021 05:56:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwjEcLUgmrduvGevQNHpAgrOflqn8dBNzlAjhFS8hxjKfn8R6fh6cQNu0kL0J+iiuVOK7wNMA==
-X-Received: by 2002:a17:906:c055:: with SMTP id bm21mr25308788ejb.350.1633956971414;
-        Mon, 11 Oct 2021 05:56:11 -0700 (PDT)
+        bh=XSC0ZBPf17Eg5bHu8i8hVZaP3wPPFlvgK36qZ2UguL8=;
+        b=lwpq7QXeQJhF1iy6aUBescSCatcen07NF/GongqwW1Rxwt+gN0vwZ0bJHmG24RjkIs
+         6muZjFP6cjxi3Y1+LtEpbV6T3HSZuBI96sgCvjFNsIyLSAlO03nyNFb/o8rV84LisvDu
+         ksDs6hjRsfWuVDynFDke9GJJ03vCQh0TaiLm7a+UwP5mfjZEMbwMxciJcVldRXclWNl9
+         zLEbDlwW7fGJAlgo3tpnmDW55kjnx4R9BrAVQdDcC6w/v9Pt4f4W/ReYLbyvuGKy4HSY
+         RBtYeDLvDMVQbSasEQnAF0KABhTmvou2UaUvoTkh9mnrTC8AiRHpHE1FztaLE5nJ9XTP
+         Er6A==
+X-Gm-Message-State: AOAM5318Ow7Bx+H8plZgTxdSGO9B4vEVDMREhzo8i4wgmMvg4sKXZmzv
+        oyYKJlnJpbV5Mb8V9BsV+6FCLvgge15Q6WxSXnwHiXz1lZMJ6WUnJUVhZ8GAa8NapvaILuLHDGb
+        oE1fiXRTAKJ3+ntso1xeweLMclDAlFe/GdQ==
+X-Received: by 2002:a17:906:f92:: with SMTP id q18mr24577085ejj.353.1633957243924;
+        Mon, 11 Oct 2021 06:00:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwhcACLTLArPtFFLJzqu+s+sThhi6TQx2mZpoRarSgcw4ki+3MMqFDEBRfF39qyrV0MiThWLA==
+X-Received: by 2002:a17:906:f92:: with SMTP id q18mr24577044ejj.353.1633957243578;
+        Mon, 11 Oct 2021 06:00:43 -0700 (PDT)
 Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id h10sm4182132edf.85.2021.10.11.05.56.10
+        by smtp.gmail.com with ESMTPSA id m15sm1053551edd.5.2021.10.11.06.00.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Oct 2021 05:56:11 -0700 (PDT)
-Subject: Re: [PATCH platform 0/2] platform/mellanox: Fixes for register space
- access
-To:     Vadim Pasternak <vadimp@nvidia.com>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20210927142214.2613929-1-vadimp@nvidia.com>
+        Mon, 11 Oct 2021 06:00:43 -0700 (PDT)
+Subject: Re: [PATCH 1/2] platform/x86: Remove "WMAA" from identifier names in
+ wmaa-backlight-wmi.c
+To:     Daniel Dadap <ddadap@nvidia.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     pali@kernel.org
+References: <9cbb4e7a-4af9-32f8-0293-6c2ef7d44ceb@redhat.com>
+ <20210927202359.13684-1-ddadap@nvidia.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <88795fc8-7f7e-2f4d-fbae-86c7645b5c9f@redhat.com>
-Date:   Mon, 11 Oct 2021 14:56:10 +0200
+Message-ID: <a1d8d36b-b25a-197f-3917-fff1ad8855ee@redhat.com>
+Date:   Mon, 11 Oct 2021 15:00:42 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210927142214.2613929-1-vadimp@nvidia.com>
+In-Reply-To: <20210927202359.13684-1-ddadap@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -78,10 +79,25 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/27/21 4:22 PM, Vadim Pasternak wrote:
-> Patch set contains:
-> Patch #1 - Fix argument for kstrtou32() conversion.
-> Patch #2 - Fix rea access for complex attribute.
+On 9/27/21 10:23 PM, Daniel Dadap wrote:
+> The "wmaa" in the name of the wmaa-backlight-wmi driver was named after
+> the ACPI method handle for EC-based backlight control on the systems
+> this driver was tested on during development. However, this "WMAA"
+> handle is generated by the WMI compilation process, and isn't actually
+> a part of the backlight control mechanism which this driver supports.
+> Since the "WMAA" handle isn't actually a part of the firmware backlight
+> interface, the various identifiers in this driver using "WMAA" or
+> "wmaa" aren't actually appropriate.
+> 
+> As a common denominator across the systems supported by this driver is
+> that they are hybrid graphics systems with NVIDIA GPUs, using "nvidia"
+> in the driver name seems more appropriate than "wmaa". Update the
+> driver to remove "wmaa" and "WMAA" in identifier names where they
+> appear. The kerneldoc comments for the enum wmi_brightness_method
+> values are replaced with the verbatim text from the decompiled BMF code
+> for this WMI class.
+> 
+> Signed-off-by: Daniel Dadap <ddadap@nvidia.com>
 
 Thank you for your patch-series, I've applied the series to my
 review-hans branch:
@@ -89,9 +105,6 @@ https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/l
 
 Note it will show up in my review-hans branch once I've pushed my
 local branch there, which might take a while.
-
-Since these are both clear bug fixes I will also include these
-in my upcoming pdx86-fixes pull-req for 5.15 .
 
 Once I've run some tests on this branch the patches there will be
 added to the platform-drivers-x86/for-next branch and eventually
@@ -101,4 +114,301 @@ merge-window.
 Regards,
 
 Hans
+
+
+> ---
+>  drivers/platform/x86/wmaa-backlight-wmi.c | 174 +++++++++++-----------
+>  1 file changed, 91 insertions(+), 83 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/wmaa-backlight-wmi.c b/drivers/platform/x86/wmaa-backlight-wmi.c
+> index f5c4f8337c2c..61e37194df70 100644
+> --- a/drivers/platform/x86/wmaa-backlight-wmi.c
+> +++ b/drivers/platform/x86/wmaa-backlight-wmi.c
+> @@ -11,63 +11,64 @@
+>  #include <linux/wmi.h>
+>  
+>  /**
+> - * enum wmaa_method - WMI method IDs for ACPI WMAA
+> - * @WMAA_METHOD_LEVEL:  Get or set the brightness level,
+> - *                      or get the maximum brightness level.
+> - * @WMAA_METHOD_SOURCE: Get the source for backlight control.
+> + * enum wmi_brightness_method - WMI method IDs
+> + * @WMI_BRIGHTNESS_METHOD_LEVEL:  Get/Set EC brightness level status
+> + * @WMI_BRIGHTNESS_METHOD_SOURCE: Get/Set EC Brightness Source
+>   */
+> -enum wmaa_method {
+> -	WMAA_METHOD_LEVEL = 1,
+> -	WMAA_METHOD_SOURCE = 2,
+> -	WMAA_METHOD_MAX
+> +enum wmi_brightness_method {
+> +	WMI_BRIGHTNESS_METHOD_LEVEL = 1,
+> +	WMI_BRIGHTNESS_METHOD_SOURCE = 2,
+> +	WMI_BRIGHTNESS_METHOD_MAX
+>  };
+>  
+>  /**
+> - * enum wmaa_mode - Operation mode for ACPI WMAA method
+> - * @WMAA_MODE_GET:           Get the current brightness level or source.
+> - * @WMAA_MODE_SET:           Set the brightness level.
+> - * @WMAA_MODE_GET_MAX_LEVEL: Get the maximum brightness level. This is only
+> - *                           valid when the WMI method is %WMAA_METHOD_LEVEL.
+> + * enum wmi_brightness_mode - Operation mode for WMI-wrapped method
+> + * @WMI_BRIGHTNESS_MODE_GET:            Get the current brightness level/source.
+> + * @WMI_BRIGHTNESS_MODE_SET:            Set the brightness level.
+> + * @WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL:  Get the maximum brightness level. This
+> + *                                      is only valid when the WMI method is
+> + *                                      %WMI_BRIGHTNESS_METHOD_LEVEL.
+>   */
+> -enum wmaa_mode {
+> -	WMAA_MODE_GET = 0,
+> -	WMAA_MODE_SET = 1,
+> -	WMAA_MODE_GET_MAX_LEVEL = 2,
+> -	WMAA_MODE_MAX
+> +enum wmi_brightness_mode {
+> +	WMI_BRIGHTNESS_MODE_GET = 0,
+> +	WMI_BRIGHTNESS_MODE_SET = 1,
+> +	WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL = 2,
+> +	WMI_BRIGHTNESS_MODE_MAX
+>  };
+>  
+>  /**
+> - * enum wmaa_source - Backlight brightness control source identification
+> - * @WMAA_SOURCE_GPU:   Backlight brightness is controlled by the GPU.
+> - * @WMAA_SOURCE_EC:    Backlight brightness is controlled by the system's
+> - *                     Embedded Controller (EC).
+> - * @WMAA_SOURCE_AUX:   Backlight brightness is controlled over the DisplayPort
+> - *                     AUX channel.
+> + * enum wmi_brightness_source - Backlight brightness control source selection
+> + * @WMI_BRIGHTNESS_SOURCE_GPU: Backlight brightness is controlled by the GPU.
+> + * @WMI_BRIGHTNESS_SOURCE_EC:  Backlight brightness is controlled by the
+> + *                             system's Embedded Controller (EC).
+> + * @WMI_BRIGHTNESS_SOURCE_AUX: Backlight brightness is controlled over the
+> + *                             DisplayPort AUX channel.
+>   */
+> -enum wmaa_source {
+> -	WMAA_SOURCE_GPU = 1,
+> -	WMAA_SOURCE_EC = 2,
+> -	WMAA_SOURCE_AUX = 3,
+> -	WMAA_SOURCE_MAX
+> +enum wmi_brightness_source {
+> +	WMI_BRIGHTNESS_SOURCE_GPU = 1,
+> +	WMI_BRIGHTNESS_SOURCE_EC = 2,
+> +	WMI_BRIGHTNESS_SOURCE_AUX = 3,
+> +	WMI_BRIGHTNESS_SOURCE_MAX
+>  };
+>  
+>  /**
+> - * struct wmaa_args - arguments for the ACPI WMAA method
+> - * @mode:    Pass in an &enum wmaa_mode value to select between getting or
+> - *           setting a value.
+> - * @val:     In parameter for value to set when operating in %WMAA_MODE_SET
+> - *           mode. Not used in %WMAA_MODE_GET or %WMAA_MODE_GET_MAX_LEVEL mode.
+> + * struct wmi_brightness_args - arguments for the WMI-wrapped ACPI method
+> + * @mode:    Pass in an &enum wmi_brightness_mode value to select between
+> + *           getting or setting a value.
+> + * @val:     In parameter for value to set when using %WMI_BRIGHTNESS_MODE_SET
+> + *           mode. Not used in conjunction with %WMI_BRIGHTNESS_MODE_GET or
+> + *           %WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL mode.
+>   * @ret:     Out parameter returning retrieved value when operating in
+> - *           %WMAA_MODE_GET or %WMAA_MODE_GET_MAX_LEVEL mode. Not used in
+> - *           %WMAA_MODE_SET mode.
+> + *           %WMI_BRIGHTNESS_MODE_GET or %WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL
+> + *           mode. Not used in %WMI_BRIGHTNESS_MODE_SET mode.
+>   * @ignored: Padding; not used. The ACPI method expects a 24 byte params struct.
+>   *
+> - * This is the parameters structure for the ACPI WMAA method as wrapped by WMI.
+> - * The value passed in to @val or returned by @ret will be a brightness value
+> - * when the WMI method ID is %WMAA_METHOD_LEVEL, or an &enum wmaa_source value
+> - * when the WMI method ID is %WMAA_METHOD_SOURCE.
+> + * This is the parameters structure for the WmiBrightnessNotify ACPI method as
+> + * wrapped by WMI. The value passed in to @val or returned by @ret will be a
+> + * brightness value when the WMI method ID is %WMI_BRIGHTNESS_METHOD_LEVEL, or
+> + * an &enum wmi_brightness_source value with %WMI_BRIGHTNESS_METHOD_SOURCE.
+>   */
+> -struct wmaa_args {
+> +struct wmi_brightness_args {
+>  	u32 mode;
+>  	u32 val;
+>  	u32 ret;
+> @@ -75,21 +76,21 @@ struct wmaa_args {
+>  };
+>  
+>  /**
+> - * wmi_call_wmaa() - helper function for calling ACPI WMAA via its WMI wrapper
+> - * @w:    Pointer to the struct wmi_device identified by %WMAA_WMI_GUID
+> - * @id:   The method ID for the ACPI WMAA method (e.g. %WMAA_METHOD_LEVEL or
+> - *        %WMAA_METHOD_SOURCE)
+> - * @mode: The operation to perform on the ACPI WMAA method (e.g. %WMAA_MODE_SET
+> - *        or %WMAA_MODE_GET)
+> + * wmi_brightness_notify() - helper function for calling WMI-wrapped ACPI method
+> + * @w:    Pointer to the struct wmi_device identified by %WMI_BRIGHTNESS_GUID
+> + * @id:   The WMI method ID to call (e.g. %WMI_BRIGHTNESS_METHOD_LEVEL or
+> + *        %WMI_BRIGHTNESS_METHOD_SOURCE)
+> + * @mode: The operation to perform on the method (e.g. %WMI_BRIGHTNESS_MODE_SET
+> + *        or %WMI_BRIGHTNESS_MODE_GET)
+>   * @val:  Pointer to a value passed in by the caller when @mode is
+> - *        %WMAA_MODE_SET, or a value passed out to the caller when @mode is
+> - *        %WMAA_MODE_GET or %WMAA_MODE_GET_MAX_LEVEL.
+> + *        %WMI_BRIGHTNESS_MODE_SET, or a value passed out to caller when @mode
+> + *        is %WMI_BRIGHTNESS_MODE_GET or %WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL.
+>   *
+>   * Returns 0 on success, or a negative error number on failure.
+>   */
+> -static int wmi_call_wmaa(struct wmi_device *w, enum wmaa_method id, enum wmaa_mode mode, u32 *val)
+> +static int wmi_brightness_notify(struct wmi_device *w, enum wmi_brightness_method id, enum wmi_brightness_mode mode, u32 *val)
+>  {
+> -	struct wmaa_args args = {
+> +	struct wmi_brightness_args args = {
+>  		.mode = mode,
+>  		.val = 0,
+>  		.ret = 0,
+> @@ -97,60 +98,64 @@ static int wmi_call_wmaa(struct wmi_device *w, enum wmaa_method id, enum wmaa_mo
+>  	struct acpi_buffer buf = { (acpi_size)sizeof(args), &args };
+>  	acpi_status status;
+>  
+> -	if (id < WMAA_METHOD_LEVEL || id >= WMAA_METHOD_MAX ||
+> -	    mode < WMAA_MODE_GET || mode >= WMAA_MODE_MAX)
+> +	if (id < WMI_BRIGHTNESS_METHOD_LEVEL ||
+> +	    id >= WMI_BRIGHTNESS_METHOD_MAX ||
+> +	    mode < WMI_BRIGHTNESS_MODE_GET || mode >= WMI_BRIGHTNESS_MODE_MAX)
+>  		return -EINVAL;
+>  
+> -	if (mode == WMAA_MODE_SET)
+> +	if (mode == WMI_BRIGHTNESS_MODE_SET)
+>  		args.val = *val;
+>  
+>  	status = wmidev_evaluate_method(w, 0, id, &buf, &buf);
+>  	if (ACPI_FAILURE(status)) {
+> -		dev_err(&w->dev, "ACPI WMAA failed: %s\n",
+> +		dev_err(&w->dev, "EC backlight control failed: %s\n",
+>  			acpi_format_exception(status));
+>  		return -EIO;
+>  	}
+>  
+> -	if (mode != WMAA_MODE_SET)
+> +	if (mode != WMI_BRIGHTNESS_MODE_SET)
+>  		*val = args.ret;
+>  
+>  	return 0;
+>  }
+>  
+> -static int wmaa_backlight_update_status(struct backlight_device *bd)
+> +static int nvidia_wmi_ec_backlight_update_status(struct backlight_device *bd)
+>  {
+>  	struct wmi_device *wdev = bl_get_data(bd);
+>  
+> -	return wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_SET,
+> -			     &bd->props.brightness);
+> +	return wmi_brightness_notify(wdev, WMI_BRIGHTNESS_METHOD_LEVEL,
+> +	                             WMI_BRIGHTNESS_MODE_SET,
+> +			             &bd->props.brightness);
+>  }
+>  
+> -static int wmaa_backlight_get_brightness(struct backlight_device *bd)
+> +static int nvidia_wmi_ec_backlight_get_brightness(struct backlight_device *bd)
+>  {
+>  	struct wmi_device *wdev = bl_get_data(bd);
+>  	u32 level;
+>  	int ret;
+>  
+> -	ret = wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_GET, &level);
+> +	ret = wmi_brightness_notify(wdev, WMI_BRIGHTNESS_METHOD_LEVEL,
+> +	                            WMI_BRIGHTNESS_MODE_GET, &level);
+>  	if (ret < 0)
+>  		return ret;
+>  
+>  	return level;
+>  }
+>  
+> -static const struct backlight_ops wmaa_backlight_ops = {
+> -	.update_status = wmaa_backlight_update_status,
+> -	.get_brightness = wmaa_backlight_get_brightness,
+> +static const struct backlight_ops nvidia_wmi_ec_backlight_ops = {
+> +	.update_status = nvidia_wmi_ec_backlight_update_status,
+> +	.get_brightness = nvidia_wmi_ec_backlight_get_brightness,
+>  };
+>  
+> -static int wmaa_backlight_wmi_probe(struct wmi_device *wdev, const void *ctx)
+> +static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ctx)
+>  {
+>  	struct backlight_properties props = {};
+>  	struct backlight_device *bdev;
+>  	u32 source;
+>  	int ret;
+>  
+> -	ret = wmi_call_wmaa(wdev, WMAA_METHOD_SOURCE, WMAA_MODE_GET, &source);
+> +	ret = wmi_brightness_notify(wdev, WMI_BRIGHTNESS_METHOD_SOURCE,
+> +	                           WMI_BRIGHTNESS_MODE_GET, &source);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -158,7 +163,7 @@ static int wmaa_backlight_wmi_probe(struct wmi_device *wdev, const void *ctx)
+>  	 * This driver is only to be used when brightness control is handled
+>  	 * by the EC; otherwise, the GPU driver(s) should control brightness.
+>  	 */
+> -	if (source != WMAA_SOURCE_EC)
+> +	if (source != WMI_BRIGHTNESS_SOURCE_EC)
+>  		return -ENODEV;
+>  
+>  	/*
+> @@ -167,39 +172,42 @@ static int wmaa_backlight_wmi_probe(struct wmi_device *wdev, const void *ctx)
+>  	 */
+>  	props.type = BACKLIGHT_FIRMWARE;
+>  
+> -	ret = wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_GET_MAX_LEVEL,
+> -			    &props.max_brightness);
+> +	ret = wmi_brightness_notify(wdev, WMI_BRIGHTNESS_METHOD_LEVEL,
+> +	                           WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL,
+> +	                           &props.max_brightness);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = wmi_call_wmaa(wdev, WMAA_METHOD_LEVEL, WMAA_MODE_GET,
+> -			    &props.brightness);
+> +	ret = wmi_brightness_notify(wdev, WMI_BRIGHTNESS_METHOD_LEVEL,
+> +	                           WMI_BRIGHTNESS_MODE_GET, &props.brightness);
+>  	if (ret)
+>  		return ret;
+>  
+> -	bdev = devm_backlight_device_register(&wdev->dev, "wmaa_backlight",
+> +	bdev = devm_backlight_device_register(&wdev->dev,
+> +	                                      "nvidia_wmi_ec_backlight",
+>  					      &wdev->dev, wdev,
+> -					      &wmaa_backlight_ops, &props);
+> +					      &nvidia_wmi_ec_backlight_ops,
+> +					      &props);
+>  	return PTR_ERR_OR_ZERO(bdev);
+>  }
+>  
+> -#define WMAA_WMI_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
+> +#define WMI_BRIGHTNESS_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
+>  
+> -static const struct wmi_device_id wmaa_backlight_wmi_id_table[] = {
+> -	{ .guid_string = WMAA_WMI_GUID },
+> +static const struct wmi_device_id nvidia_wmi_ec_backlight_id_table[] = {
+> +	{ .guid_string = WMI_BRIGHTNESS_GUID },
+>  	{ }
+>  };
+> -MODULE_DEVICE_TABLE(wmi, wmaa_backlight_wmi_id_table);
+> +MODULE_DEVICE_TABLE(wmi, nvidia_wmi_ec_backlight_id_table);
+>  
+> -static struct wmi_driver wmaa_backlight_wmi_driver = {
+> +static struct wmi_driver nvidia_wmi_ec_backlight_driver = {
+>  	.driver = {
+> -		.name = "wmaa-backlight",
+> +		.name = "nvidia-wmi-ec-backlight",
+>  	},
+> -	.probe = wmaa_backlight_wmi_probe,
+> -	.id_table = wmaa_backlight_wmi_id_table,
+> +	.probe = nvidia_wmi_ec_backlight_probe,
+> +	.id_table = nvidia_wmi_ec_backlight_id_table,
+>  };
+> -module_wmi_driver(wmaa_backlight_wmi_driver);
+> +module_wmi_driver(nvidia_wmi_ec_backlight_driver);
+>  
+>  MODULE_AUTHOR("Daniel Dadap <ddadap@nvidia.com>");
+> -MODULE_DESCRIPTION("WMAA Backlight WMI driver");
+> +MODULE_DESCRIPTION("NVIDIA WMI EC Backlight driver");
+>  MODULE_LICENSE("GPL");
+> 
 
