@@ -2,73 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAFCC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 14:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD64C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 14:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE3061078
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 14:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC50603E9
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Oct 2021 14:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241304AbhJKOL2 (ORCPT
+        id S244047AbhJKOl6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Oct 2021 10:11:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28859 "EHLO
+        Mon, 11 Oct 2021 10:41:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35538 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242688AbhJKOJB (ORCPT
+        by vger.kernel.org with ESMTP id S244103AbhJKOk3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Oct 2021 10:09:01 -0400
+        Mon, 11 Oct 2021 10:40:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633961221;
+        s=mimecast20190719; t=1633963109;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UH7PKwF4Z5JS0smpZmGqRuXV5jdZzltefNhTAchIIIo=;
-        b=NSOYfYcpkfLUjSwJHtHzNRh282H6j8rjkBRN/A7pYkQaGS+fLQ3uHPHg+72+giLwNKpGbx
-        izmjbPyvvyC/6I/K+11TiaB7aVifhdF/2jbejMYQdb/YwSA+YFAXzkS2p4qHis3o26i7Ru
-        InKUUgra607aIv/jHjrJnxibUdbyyeg=
+        bh=SSbv7CI+yiEmIR+Zycm2xpN91XWvUy9ziU1fWRPReRo=;
+        b=RqSmQ8adj465Twk9K/IJo60HG0QUbTiEqU3WuBbotDNBW4/PExa98+BfwIN4YqQs7ylGnY
+        p1gYi+mP3jP3fhoph0CwspmwsIY5IW6WlvuPNgtPmv1trHaYrFxjHEbqoY5AjKNUHW0QvC
+        u3L5GRzLhDknzshvnlMF9ZF0qKXk4kM=
 Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
  [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-591-FAYC42iNM0us_vnqyBIHqQ-1; Mon, 11 Oct 2021 10:07:00 -0400
-X-MC-Unique: FAYC42iNM0us_vnqyBIHqQ-1
-Received: by mail-ed1-f70.google.com with SMTP id h19-20020aa7de13000000b003db6ad5245bso7396595edv.9
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Oct 2021 07:06:59 -0700 (PDT)
+ us-mta-218-Y2Rt2L0gMuuA-eqFxjfD4A-1; Mon, 11 Oct 2021 10:38:28 -0400
+X-MC-Unique: Y2Rt2L0gMuuA-eqFxjfD4A-1
+Received: by mail-ed1-f70.google.com with SMTP id p20-20020a50cd94000000b003db23619472so16108218edi.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Oct 2021 07:38:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=UH7PKwF4Z5JS0smpZmGqRuXV5jdZzltefNhTAchIIIo=;
-        b=s/wss+1x3/O5DIlLIizE6MJaOqo7d9UfPv+7yySp+rn9zFAALoHaKfkUOpoYM+BKMK
-         Jj3oiyMro8xrtJ+gsxqC0VU9W4kCxdT++caEXZzJpvRJ6UxdbLGQnmSO11kmSnw0WsA3
-         qp1QA28pF6QiTy/5ZPKY2iiLOi/jPSyV54Ri0BNQaPICAiGJbpfwZUG4ZyNplw/G8mBx
-         hLroEcFxaGAY0f9jFGEC+Fh3m22CK+Fwd1ZGB2SABgUdE5IavjTPTmOX7nOVFEnUkpM4
-         3xZkqV0Z3ESoMUStQ/iEYyykF96VADBRewVSXWLe83MsI4KPZZClK1OBPQs2F7KG/jdV
-         TpTw==
-X-Gm-Message-State: AOAM533gqaUL55VGdUtszPGNFeWC9hCuT0qS9qbCxl8/MhA9FHpt+KN5
-        cXvXgUUzI2iHgmLd2isTXG93RAMW59JpXpJ4/jiXd6kTIWLVmaHrq8gmsyPYeMZXTStlUgwKwaM
-        d1mu0FO4nJbczt5hgNfbwvo7mRJnqL78cwQ==
-X-Received: by 2002:a05:6402:2022:: with SMTP id ay2mr18975703edb.344.1633961218925;
-        Mon, 11 Oct 2021 07:06:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwEvIziUS282WT1398kwg/E8pezemjIKBXGX71W/i2GvjRMIhVNPiJun9qRkyi7Q8lJRJK9aA==
-X-Received: by 2002:a05:6402:2022:: with SMTP id ay2mr18975674edb.344.1633961218743;
-        Mon, 11 Oct 2021 07:06:58 -0700 (PDT)
+        bh=SSbv7CI+yiEmIR+Zycm2xpN91XWvUy9ziU1fWRPReRo=;
+        b=IHLq3ZafdYSeIudN3rLOWkHf80i4cSuhXJhiiObDvCFPFOnooWyjICQQJ1/duQOTRK
+         tE9/sFHGegoLLhGY8IU89eGZ1bry/HIHQZaabFfjdpX0rLAIX+WHsAcDteD2Uj0Dzw//
+         +42HH9UqIrvPkFjGMR6r9vyfh6ewRdKF6qJ+ZB9rEpXlwfydji3v1lexN2QllCbKfkTn
+         Kk/1uONxmPTJWYfRT0LqOWcyAljtOwUMem/AS8vjxTrsc8pRPnWp40KQsD8G0GOJcMcR
+         kdqcxsDHr6Zk4WUl2XC3NNrO/sLPAz0z9b8UWqRK9DI9aVASPz797CR2HP8R6qFaIP+X
+         GPWA==
+X-Gm-Message-State: AOAM531whxmhE2VptwlHZOSsQiY3BNJy6bxp34Vv8xsPNSVa1Dsn2iCL
+        8PNHOHY/GhN+ikfVYvHHweQSciGGqOpiSJu26m1CQZoZb7GEDARqAHSi6RSIn+w9xJQI1CFFAKa
+        Su2Xv9JIZlN6FmIlvZJ42BnxkipX5IY2P8g==
+X-Received: by 2002:a05:6402:5252:: with SMTP id t18mr40952828edd.129.1633963106744;
+        Mon, 11 Oct 2021 07:38:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwSPsu9+sfwHhFOYDhNuadPnTRtTtEF7cY+60PAW2yfwWyKwhF3Qrk0NKIpdFC73RQk736CLw==
+X-Received: by 2002:a05:6402:5252:: with SMTP id t18mr40952807edd.129.1633963106542;
+        Mon, 11 Oct 2021 07:38:26 -0700 (PDT)
 Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id r22sm3555173ejd.109.2021.10.11.07.06.58
+        by smtp.gmail.com with ESMTPSA id ay7sm3329055ejb.116.2021.10.11.07.38.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Oct 2021 07:06:58 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: intel_skl_int3472: Correct null check
-To:     Daniel Scally <djrscally@gmail.com>,
+        Mon, 11 Oct 2021 07:38:26 -0700 (PDT)
+Subject: Re: [PATCH V2] platform/x86: Non Sequential Device mode handling
+To:     Shravan S <s.shravan@intel.com>, mgross@linux.intel.com,
         platform-driver-x86@vger.kernel.org
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20211008224608.415949-1-djrscally@gmail.com>
+Cc:     sudhakar.an@intel.com
+References: <20211006073525.1332925-1-s.shravan@intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <e78eec7e-301e-8686-7768-7e62c713afdd@redhat.com>
-Date:   Mon, 11 Oct 2021 16:06:57 +0200
+Message-ID: <8199c57f-fd4b-10fa-f3f2-1da44ab250e1@redhat.com>
+Date:   Mon, 11 Oct 2021 16:38:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20211008224608.415949-1-djrscally@gmail.com>
+In-Reply-To: <20211006073525.1332925-1-s.shravan@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -78,17 +77,29 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 10/9/21 12:46 AM, Daniel Scally wrote:
-> The int3472-discrete driver can enter an error path after initialising
-> int3472->clock.ena_gpio, but before it has registered the clock. This will
-> cause a NULL pointer dereference, because clkdev_drop() is not null aware.
-> Instead of guarding the call to skl_int3472_unregister_clock() by checking
-> for .ena_gpio, check specifically for the presence of the clk_lookup, which
-> will guarantee clkdev_create() has already been called.
+On 10/6/21 9:35 AM, Shravan S wrote:
+> SAR information from BIOS may come in non sequential pattern
 > 
-> Bug: https://bugzilla.kernel.org/show_bug.cgi?id=214453
-> Fixes: 7540599a5ef1 ("platform/x86: intel_skl_int3472: Provide skl_int3472_unregister_clock()")
-> Signed-off-by: Daniel Scally <djrscally@gmail.com>
+> To overcome the issue, a check is made to extract the right SAR
+> information using the device mode which is currently being used.
+> 
+> Remove .owner field if calls are used which set it automatically 
+> Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
+> 
+> Signed-off-by: Shravan S <s.shravan@intel.com>
+> ---
+> V2 :
+> * Remove .owner field as it is set automatically by scripts
+> * Check Device modes as packages may not come sequentially from BIOS
+
+Next time please split a patch like this into 3 patches:
+
+1. s/Shravan S/Shravan Sudhakar/
+2. Remove .owner field
+3. Fix Non Sequential Device mode handling
+
+I've merged this as now, so that the fix can be included in
+my next pdx86 fixes pull-req for 5.15 :
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -102,29 +113,77 @@ added to the platform-drivers-x86/for-next branch and eventually
 will be included in the pdx86 pull-request to Linus for the next
 merge-window.
 
-I will also include this in my upcoming pdx86-fixes pull-req for 5.15 .
-
 Regards,
 
 Hans
 
 
-> ---
->  drivers/platform/x86/intel/int3472/intel_skl_int3472_discrete.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+
 > 
-> diff --git a/drivers/platform/x86/intel/int3472/intel_skl_int3472_discrete.c b/drivers/platform/x86/intel/int3472/intel_skl_int3472_discrete.c
-> index 9fe0a2527e1c..e59d79c7e82f 100644
-> --- a/drivers/platform/x86/intel/int3472/intel_skl_int3472_discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/intel_skl_int3472_discrete.c
-> @@ -401,7 +401,7 @@ int skl_int3472_discrete_remove(struct platform_device *pdev)
+> ---
+>  MAINTAINERS                                   |  2 +-
+>  .../platform/x86/intel/int1092/intel_sar.c    | 23 ++++++++++++-------
+>  2 files changed, 16 insertions(+), 9 deletions(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index eeb4c70b3d5b..6cfad2bf9d81 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9302,7 +9302,7 @@ S:	Maintained
+>  F:	drivers/platform/x86/intel/atomisp2/led.c
 >  
->  	gpiod_remove_lookup_table(&int3472->gpios);
+>  INTEL BIOS SAR INT1092 DRIVER
+> -M:	Shravan S <s.shravan@intel.com>
+> +M:	Shravan Sudhakar <s.shravan@intel.com>
+>  M:	Intel Corporation <linuxwwan@intel.com>
+>  L:	platform-driver-x86@vger.kernel.org
+>  S:	Maintained
+> diff --git a/drivers/platform/x86/intel/int1092/intel_sar.c b/drivers/platform/x86/intel/int1092/intel_sar.c
+> index 379560fe5df9..e03943e6380a 100644
+> --- a/drivers/platform/x86/intel/int1092/intel_sar.c
+> +++ b/drivers/platform/x86/intel/int1092/intel_sar.c
+> @@ -42,12 +42,20 @@ static void update_sar_data(struct wwan_sar_context *context)
 >  
-> -	if (int3472->clock.ena_gpio)
-> +	if (int3472->clock.cl)
->  		skl_int3472_unregister_clock(int3472);
+>  	if (config->device_mode_info &&
+>  	    context->sar_data.device_mode < config->total_dev_mode) {
+> -		struct wwan_device_mode_info *dev_mode =
+> -			&config->device_mode_info[context->sar_data.device_mode];
+> -
+> -		context->sar_data.antennatable_index = dev_mode->antennatable_index;
+> -		context->sar_data.bandtable_index = dev_mode->bandtable_index;
+> -		context->sar_data.sartable_index = dev_mode->sartable_index;
+> +		int itr = 0;
+> +
+> +		for (itr = 0; itr < config->total_dev_mode; itr++) {
+> +			if (context->sar_data.device_mode ==
+> +				config->device_mode_info[itr].device_mode) {
+> +				struct wwan_device_mode_info *dev_mode =
+> +				&config->device_mode_info[itr];
+> +
+> +				context->sar_data.antennatable_index = dev_mode->antennatable_index;
+> +				context->sar_data.bandtable_index = dev_mode->bandtable_index;
+> +				context->sar_data.sartable_index = dev_mode->sartable_index;
+> +				break;
+> +			}
+> +		}
+>  	}
+>  }
 >  
->  	gpiod_put(int3472->clock.ena_gpio);
+> @@ -305,7 +313,6 @@ static struct platform_driver sar_driver = {
+>  	.remove = sar_remove,
+>  	.driver = {
+>  		.name = DRVNAME,
+> -		.owner = THIS_MODULE,
+>  		.acpi_match_table = ACPI_PTR(sar_device_ids)
+>  	}
+>  };
+> @@ -313,4 +320,4 @@ module_platform_driver(sar_driver);
+>  
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_DESCRIPTION("Platform device driver for INTEL MODEM BIOS SAR");
+> -MODULE_AUTHOR("Shravan S <s.shravan@intel.com>");
+> +MODULE_AUTHOR("Shravan Sudhakar <s.shravan@intel.com>");
+> 
+> base-commit: 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f
 > 
 
