@@ -2,63 +2,117 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B372C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 18:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E15C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 19:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C38560F38
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 18:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32EB610CE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 19:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235137AbhJLSrs (ORCPT
+        id S232865AbhJLTN3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 12 Oct 2021 14:47:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234164AbhJLSrr (ORCPT
+        Tue, 12 Oct 2021 15:13:29 -0400
+Received: from mail-ot1-f47.google.com ([209.85.210.47]:39539 "EHLO
+        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231886AbhJLTN2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 12 Oct 2021 14:47:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id D48C360EE5;
-        Tue, 12 Oct 2021 18:45:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634064345;
-        bh=orsRu50ErWxWNwiueOzLYLnYY/S8RlhRFc5OzwRgRyc=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=HwHqVps/vnX507S7KI23ZGrjcm1pAPb2vylRgw/7u/2bkJXwuNd+PJhsI3zvRKTi5
-         bJPk4h93ub1i+GiyXIE6wSX1xoQPGUSJPszY2mQnr4rW66A1UovVlDCB82e3WXiZ0c
-         43r+jmj2s78QvgD4LdLMKYfqc31gZHjUyeRrIXC2PDqcvrlhv/EuNX63CPRVDhFpQQ
-         0zsIdKl6ZO9DUgfHAzC0H5ZffQT1EpFM98G6DrK4WKz+S9hIy5hbij5u/wVGrbmIu7
-         GGGEiA4P3XbfoR0O5PPHeEFVTqeyu/7hTr5DApb5ZqGwWZ4CV7fjCf+L2YU/XFkvxa
-         mf1ay81ngsQTQ==
-Subject: Re: [GIT PULL] platform-drivers-x86 for 5.15-3
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <30dcf211-9359-dd17-dcee-cb688a7bfc71@redhat.com>
-References: <30dcf211-9359-dd17-dcee-cb688a7bfc71@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <30dcf211-9359-dd17-dcee-cb688a7bfc71@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.15-3
-X-PR-Tracked-Commit-Id: 7df227847ab562c42d318bceccebb0c911c87b04
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ed47291911d375f7d0bf63b9afb7516988305d94
-Message-Id: <163406434573.24253.5411539614749816356.pr-tracker-bot@kernel.org>
-Date:   Tue, 12 Oct 2021 18:45:45 +0000
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Tue, 12 Oct 2021 15:13:28 -0400
+Received: by mail-ot1-f47.google.com with SMTP id k2-20020a056830168200b0054e523d242aso618389otr.6;
+        Tue, 12 Oct 2021 12:11:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UsdaTdlqInk/Db+RELmJSVFeuk7KGQ8SYughWLnehY8=;
+        b=zeF1M07uZ8koHB8p8h4k4Af9rpsS7JfPitcYjb4dJizDs9kwcfTb6SIg1cjkj8xeoo
+         Cm/UONhKNolje1c0RBuxt6ATGTqlN6fGSyX6pMURacipxG5coD/I2i2j48Drho/ITQ/M
+         geJrpgW8zQLyjF6f8le34r0FJ85p6ffUtJ6OgMw0J0tYwD3FmStWzPV2kU5gcMX2ed2Z
+         uJ8Wg7Mv2MbUmtgrVZ6EZGcNgPV+qFQAMgRN/4Vt6EB7CrXdCSetvpZdPUVyz/q5sV3k
+         pJtta2ZEF8Kxb/x6J/MfsnF3CU3Ui6H+rfD9JyPWAYJ8Z16tOqhO22fbsVaWa0bH1JGZ
+         EOog==
+X-Gm-Message-State: AOAM530fRqCRX744roWP+N2vwVYC5wujpE0+4HpyyHDN/vebkZUAX+ed
+        0+8fs1PkZwOVGes5jnN1QLKpsj5PBtHbtINluxw=
+X-Google-Smtp-Source: ABdhPJytCGKquuZUCLHcTR60tHiVx+DiBYKNCYYXZyFiFB2yU1k6CxzHrr7FAo+69ScbY5+qP7A2HHxC8Gc+p27Jylg=
+X-Received: by 2002:a05:6830:1af0:: with SMTP id c16mr14677399otd.16.1634065886475;
+ Tue, 12 Oct 2021 12:11:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <4369779.LvFx2qVVIh@kreacher> <3089655.5fSG56mABF@kreacher> <e15036b7-b41f-a5cf-b8a6-b1b9023197cd@gmail.com>
+In-Reply-To: <e15036b7-b41f-a5cf-b8a6-b1b9023197cd@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 12 Oct 2021 21:11:15 +0200
+Message-ID: <CAJZ5v0hmvRDZjs6y4q8CuMdP6iu5cOcQ3KLJQm4kD5aNvt4pHw@mail.gmail.com>
+Subject: Re: [PATCH v1 5/7] surface: surface3_power: Use ACPI_COMPANION() directly
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Tue, 12 Oct 2021 17:17:38 +0200:
+On Tue, Oct 12, 2021 at 8:21 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+>
+> On 10/12/21 19:46, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael@kernel.org>
+> >
+> > The ACPI_HANDLE() macro is a wrapper arond the ACPI_COMPANION()
+> > macro and the ACPI handle produced by the former comes from the
+> > ACPI device object produced by the latter, so it is way more
+> > straightforward to evaluate the latter directly instead of passing
+> > the handle produced by the former to acpi_bus_get_device().
+> >
+> > Modify mshw0011_notify() accordingly (no intentional functional
+> > impact).
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael@kernel.org>
+>
+> Looks mostly good to me, small comment/question inline.
+>
+> > ---
+> >   drivers/platform/surface/surface3_power.c |    9 ++++-----
+> >   1 file changed, 4 insertions(+), 5 deletions(-)
+> >
+> > Index: linux-pm/drivers/platform/surface/surface3_power.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/platform/surface/surface3_power.c
+> > +++ linux-pm/drivers/platform/surface/surface3_power.c
+> > @@ -160,15 +160,14 @@ mshw0011_notify(struct mshw0011_data *cd
+> >   {
+> >       union acpi_object *obj;
+> >       struct acpi_device *adev;
+> > -     acpi_handle handle;
+> >       unsigned int i;
+> >
+> > -     handle = ACPI_HANDLE(&cdata->adp1->dev);
+> > -     if (!handle || acpi_bus_get_device(handle, &adev))
+> > +     adev = ACPI_COMPANION(&cdata->adp1->dev);
+> > +     if (!adev)
+> >               return -ENODEV;
+>
+> Do we need to get the ACPI device (adev) here? To me it looks like only
+> its handle is actually used so why not keep ACPI_HANDLE() and remove the
+> acpi_bus_get_device() call instead?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.15-3
+It actually doesn't really matter, but you're right,
+acpi_bus_get_device() is simply redundant here, so ACPI_HANDLE() is
+sufficient.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ed47291911d375f7d0bf63b9afb7516988305d94
+I'll send a v2 of this one.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> >
+> > -     obj = acpi_evaluate_dsm_typed(handle, &mshw0011_guid, arg1, arg2, NULL,
+> > -                                   ACPI_TYPE_BUFFER);
+> > +     obj = acpi_evaluate_dsm_typed(adev->handle, &mshw0011_guid, arg1, arg2,
+> > +                                   NULL, ACPI_TYPE_BUFFER);
+> >       if (!obj) {
+> >               dev_err(&cdata->adp1->dev, "device _DSM execution failed\n");
+> >               return -ENODEV;
+> >
+> >
+> >
+>
+> Regards,
+> Max
