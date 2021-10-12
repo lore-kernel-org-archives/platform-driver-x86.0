@@ -2,100 +2,132 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451B2C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 17:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444C3C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 18:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8E561108
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 17:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BE7B61050
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 18:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233194AbhJLRxZ (ORCPT
+        id S232844AbhJLSPM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 12 Oct 2021 13:53:25 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:42148 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232404AbhJLRxS (ORCPT
+        Tue, 12 Oct 2021 14:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232698AbhJLSPL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 12 Oct 2021 13:53:18 -0400
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 3.0.0)
- id 1dd9a816cb4bdd57; Tue, 12 Oct 2021 19:51:15 +0200
-Received: from kreacher.localnet (unknown [213.134.187.88])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id ABF2D66A81B;
-        Tue, 12 Oct 2021 19:51:14 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
+        Tue, 12 Oct 2021 14:15:11 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16C78C061570;
+        Tue, 12 Oct 2021 11:13:09 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id a25so2772772edx.8;
+        Tue, 12 Oct 2021 11:13:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Gbt771FcUpKhRbY7l1qKOaogjRjP2WQTDl1Nm1Sbb5s=;
+        b=nR9m8poegxkbYqSEvu0sGbUleY5y9j4ueU4x0z4zFGBeys0kxAWQ0tARkgRqTqu58Q
+         zfZ9wYkH2kqgTE+0+q6LurNMt2LcMdgnTtt1xDdn9xrPz3s/LY7bz2oD+jWv0XByqj3w
+         jkeyX34/ZnkEtgdP0lvrulDXik6yBqQvRGnfestR3ZuFGUfIuMcMF5qHAjKSTddVcuuO
+         E+C+wmcO3Bd6uqHKYG6MlV21XkeHJmEKiQpJWlg1AdwuLlWxVDboZeXHaxGqoc2dVLIQ
+         SBt06KJjQQG0fEOztcMnlu0HESWOwZsnmPf45daNJV9su55j0pRqyEHuxZp/UowstN+Q
+         SoSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Gbt771FcUpKhRbY7l1qKOaogjRjP2WQTDl1Nm1Sbb5s=;
+        b=RKcw2DsJOTOyUVYjw9osUhC4K9pLzlb6ftXZ0brVTYqrnDI/wnr80Qs/MVZ3zljtPD
+         H+Fl47wwK7lxenIpPB5z29ttAGohxUotZ59O6VyE1Hfuiw+UTy0brWgsIQkS2GC2eUCE
+         UMuA/+B0OwZIBoeHODvSWy6eYJHyvWBQD9qDi5tMYuSsFaZFNxRzD59OUxlq5CPOjyTM
+         iHzh3OMNuP8lIJv1+H4zm8/F52QtayhrQEGz2GQfnBnUBhqkkw+h2SaXbTMonDR1G0qR
+         J6U4Te6KqoZsWnM7+tXAM+cr/3krnTEbSrx2Is5gacT0qPcpRN4lBGHuzhZaiKAIPczy
+         5UbQ==
+X-Gm-Message-State: AOAM5302E/4ltMXDs5TS+/t7EBZy7mKm/wsmGHJo2ZuV9Tzqpwo6WtZq
+        dbR1E/PbAIlLzQUQDQfdxMw=
+X-Google-Smtp-Source: ABdhPJwbZy3JHKQpZ5UY5oPwLwwgrSNtl5KLlgVD6eaf1lk6xQeON7r1+S/KRDcGC/hdkS8l1to66g==
+X-Received: by 2002:a50:da48:: with SMTP id a8mr1752981edk.146.1634062384153;
+        Tue, 12 Oct 2021 11:13:04 -0700 (PDT)
+Received: from [10.20.0.4] ([194.126.177.11])
+        by smtp.gmail.com with ESMTPSA id nd36sm5422846ejc.17.2021.10.12.11.13.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Oct 2021 11:13:03 -0700 (PDT)
+Message-ID: <f8ab041f-fe54-baf3-a378-f6807a7d3e01@gmail.com>
+Date:   Tue, 12 Oct 2021 20:13:02 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v1 4/7] surface: surface3-wmi: Use ACPI_COMPANION()
+ directly
+Content-Language: en-US
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v1 4/7] surface: surface3-wmi: Use ACPI_COMPANION() directly
-Date:   Tue, 12 Oct 2021 19:44:42 +0200
-Message-ID: <3414042.iIbC2pHGDl@kreacher>
-In-Reply-To: <4369779.LvFx2qVVIh@kreacher>
-References: <4369779.LvFx2qVVIh@kreacher>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 213.134.187.88
-X-CLIENT-HOSTNAME: 213.134.187.88
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddrvddtkedguddugecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdejlefghfeiudektdelkeekvddugfeghffggeejgfeukeejleevgffgvdeluddtnecukfhppedvudefrddufeegrddukeejrdekkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudefrddufeegrddukeejrdekkedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmhhgrhhoshhssehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhuiihmrgigihhmihhlihgrnhes
- ghhmrghilhdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
+References: <4369779.LvFx2qVVIh@kreacher> <3414042.iIbC2pHGDl@kreacher>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <3414042.iIbC2pHGDl@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael@kernel.org>
+On 10/12/21 19:44, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael@kernel.org>
+> 
+> The ACPI_HANDLE() macro is a wrapper arond the ACPI_COMPANION()
+> macro and the ACPI handle produced by the former comes from the
+> ACPI device object produced by the latter, so it is way more
+> straightforward to evaluate the latter directly instead of passing
+> the handle produced by the former to acpi_bus_get_device().
+> 
+> Modify s3_wmi_check_platform_device() accordingly (no intentional
+> functional impact).
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael@kernel.org>
 
-The ACPI_HANDLE() macro is a wrapper arond the ACPI_COMPANION()
-macro and the ACPI handle produced by the former comes from the
-ACPI device object produced by the latter, so it is way more
-straightforward to evaluate the latter directly instead of passing
-the handle produced by the former to acpi_bus_get_device().
+Looks good to me.
 
-Modify s3_wmi_check_platform_device() accordingly (no intentional
-functional impact).
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-Signed-off-by: Rafael J. Wysocki <rafael@kernel.org>
----
- drivers/platform/surface/surface3-wmi.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-Index: linux-pm/drivers/platform/surface/surface3-wmi.c
-===================================================================
---- linux-pm.orig/drivers/platform/surface/surface3-wmi.c
-+++ linux-pm/drivers/platform/surface/surface3-wmi.c
-@@ -139,13 +139,12 @@ static acpi_status s3_wmi_attach_spi_dev
- 
- static int s3_wmi_check_platform_device(struct device *dev, void *data)
- {
--	struct acpi_device *adev, *ts_adev = NULL;
--	acpi_handle handle;
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
-+	struct acpi_device *ts_adev = NULL;
- 	acpi_status status;
- 
- 	/* ignore non ACPI devices */
--	handle = ACPI_HANDLE(dev);
--	if (!handle || acpi_bus_get_device(handle, &adev))
-+	if (!adev)
- 		return 0;
- 
- 	/* check for LID ACPI switch */
-@@ -159,7 +158,7 @@ static int s3_wmi_check_platform_device(
- 	    strlen(SPI_CTL_OBJ_NAME)))
- 		return 0;
- 
--	status = acpi_walk_namespace(ACPI_TYPE_DEVICE, handle, 1,
-+	status = acpi_walk_namespace(ACPI_TYPE_DEVICE, adev->handle, 1,
- 				     s3_wmi_attach_spi_device, NULL,
- 				     &ts_adev, NULL);
- 	if (ACPI_FAILURE(status))
-
-
-
+> ---
+>   drivers/platform/surface/surface3-wmi.c |    9 ++++-----
+>   1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> Index: linux-pm/drivers/platform/surface/surface3-wmi.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/surface/surface3-wmi.c
+> +++ linux-pm/drivers/platform/surface/surface3-wmi.c
+> @@ -139,13 +139,12 @@ static acpi_status s3_wmi_attach_spi_dev
+>   
+>   static int s3_wmi_check_platform_device(struct device *dev, void *data)
+>   {
+> -	struct acpi_device *adev, *ts_adev = NULL;
+> -	acpi_handle handle;
+> +	struct acpi_device *adev = ACPI_COMPANION(dev);
+> +	struct acpi_device *ts_adev = NULL;
+>   	acpi_status status;
+>   
+>   	/* ignore non ACPI devices */
+> -	handle = ACPI_HANDLE(dev);
+> -	if (!handle || acpi_bus_get_device(handle, &adev))
+> +	if (!adev)
+>   		return 0;
+>   
+>   	/* check for LID ACPI switch */
+> @@ -159,7 +158,7 @@ static int s3_wmi_check_platform_device(
+>   	    strlen(SPI_CTL_OBJ_NAME)))
+>   		return 0;
+>   
+> -	status = acpi_walk_namespace(ACPI_TYPE_DEVICE, handle, 1,
+> +	status = acpi_walk_namespace(ACPI_TYPE_DEVICE, adev->handle, 1,
+>   				     s3_wmi_attach_spi_device, NULL,
+>   				     &ts_adev, NULL);
+>   	if (ACPI_FAILURE(status))
+> 
+> 
+> 
