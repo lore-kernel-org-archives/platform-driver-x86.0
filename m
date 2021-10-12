@@ -2,161 +2,140 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F525C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 15:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC16C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 15:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B67C600CC
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 15:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2436109E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Oct 2021 15:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbhJLPTq (ORCPT
+        id S237567AbhJLPmX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 12 Oct 2021 11:19:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54066 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237167AbhJLPTp (ORCPT
+        Tue, 12 Oct 2021 11:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47664 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237591AbhJLPmQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 12 Oct 2021 11:19:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634051863;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=10aXNDKfZw3j/Q6GRxYEoqvrWGBnZSBNXLMAxqiv6VA=;
-        b=h6DeM/V5lwCH4wXPhkWXVBfClslCrPTVHkWP+h0vDYXvBtS6LjdAkEjxdUgvrVsITuG2hU
-        FvMcw6pcvMB9vEVD5UvpjVchJrXPaGiZj44BD6D/aQLiTSXt7VrWbjThSQIVd/h9gLNAhi
-        qILkqhtbEyrUKZHZTuKNr7NBmeA5hR8=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-336-xmGdLXnoPVyNh8xoq3z4AA-1; Tue, 12 Oct 2021 11:17:42 -0400
-X-MC-Unique: xmGdLXnoPVyNh8xoq3z4AA-1
-Received: by mail-ed1-f72.google.com with SMTP id g28-20020a50d0dc000000b003dae69dfe3aso227346edf.7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Oct 2021 08:17:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=10aXNDKfZw3j/Q6GRxYEoqvrWGBnZSBNXLMAxqiv6VA=;
-        b=AzNmbLXU65ms/THs+fE5gvorKRLrg83Y4arU7lAtZ9ABLKkFst6I8jIWvc9+paiZF5
-         dUjnmLoNHcNtyeTIgX+2VJOpLnwuXtn2bOsBgyXvCPfG2WAlcVGpeXMAuqYL7Fc7tpEt
-         puXuPaBRelVf97l0HDZslVXfquPC7GzmH4tvjyw4FQiRgbFR0ScdDlzAvraReE6LyLpo
-         pcERmojro/FpPc/HLt6XCzeTxK9CHax+D38WkIipKnwYWIKXoFwrc+qcdOSGDwQYeiev
-         /ArFbHGsrClalrYexIDXa0q/X0Xjj18AjRJFl96atjCMkYELStFG+jrzi3fKdk5tKd/T
-         +PPg==
-X-Gm-Message-State: AOAM533dPOdnDSGJ0o5gqtqndKWSWq70LwWL8EdxWUVu4WLs+tuOMnUQ
-        j73A/q0UvB97Ggt63PhMuozYXWSfcKxuIRngYpwpsPYhyebwb5Hvm9sR9TYUY6pgQ8jzIT+v6gv
-        GthbqRZIeycgJv0UpnEn2EE+xLUNtC6iF0beakyBXOLpVdwbAsvxSPA9RGRbNAGtkpYD+SHSTAZ
-        cznh8l0UdqRw==
-X-Received: by 2002:a17:906:5801:: with SMTP id m1mr33766627ejq.296.1634051859672;
-        Tue, 12 Oct 2021 08:17:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy6afB2X2z24HUckFfKv3ojzCDeN/NsXdu29QaJ5kJP/96m8xo6jXCL/fQrPEHtm+4j7U6XmQ==
-X-Received: by 2002:a17:906:5801:: with SMTP id m1mr33766596ejq.296.1634051859328;
-        Tue, 12 Oct 2021 08:17:39 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id rv25sm5128158ejb.21.2021.10.12.08.17.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Oct 2021 08:17:38 -0700 (PDT)
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 5.15-3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Message-ID: <30dcf211-9359-dd17-dcee-cb688a7bfc71@redhat.com>
-Date:   Tue, 12 Oct 2021 17:17:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Tue, 12 Oct 2021 11:42:16 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFE4C061764
+        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Oct 2021 08:40:14 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1maJsk-0000In-VL; Tue, 12 Oct 2021 17:39:59 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1maJsk-0004lT-Am; Tue, 12 Oct 2021 17:39:58 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1maJsd-0004Yd-5J; Tue, 12 Oct 2021 17:39:51 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     Mark Brown <broonie@kernel.org>, kernel@pengutronix.de,
+        linux-spi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 12/20] misc: lis3lv02d: Make lis3lv02d_remove_fs() return void
+Date:   Tue, 12 Oct 2021 17:39:37 +0200
+Message-Id: <20211012153945.2651412-13-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20211012153945.2651412-1-u.kleine-koenig@pengutronix.de>
+References: <20211012153945.2651412-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+X-Patch-Hashes: v=1; h=sha256; i=WWMONXS4nQyU8LWJfp5LQwiwkNadPD19C12YOs6BjVY=; m=EvLChWJEMdkgjbEsXVN6Tz2xXArpU22O6tu5BfLNtt4=; p=byHwshnJ1HXVTYPhlZe1MP3r9RDx0xvXW0YzUKY8y4U=; g=fb6c05d76d7186cee9555ca62f10f13d9cb21e0b
+X-Patch-Sig: m=pgp; i=u.kleine-koenig@pengutronix.de; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFlrB0ACgkQwfwUeK3K7AntmwgAizc 4ZLndCQSQvNPnnd6VQaNAowrpYfjodoF6V9t42rOpFjQzX5hHXo9dbydNWaqFqlhstEyKY0l01G6h K5CNfCO5OMobY0irptnCsmttTjvylRCxebMLjGqDYm+jlA48WYiWhoCdIkTL4wpHj0hAenynVuAUa FcQvPSEiC1y14RMpgP7zycmcCBa8al4NO2zRsCjnIMjRfPvGHEaFFkNwSpHCioDbZsAw5s/Q+hnC+ q+LTJTHEQc9bNHi2MOQByDI1v3HGkLhTGt/uLjPfms7Qj5EKibZ0+uy7YvVxzXaUkg+gBnCAAmDTO +q4cVFlG+wOSBnV4RDJlX15UkQ3hMuw==
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
+Up to now lis3lv02d_remove_fs() returns zero unconditionally. Make it return
+void instead which makes it easier to see in the callers that there is
+no error to handle.
 
-Here is a set of bug-fixes and new hardware-ids for platform-drivers-x86 for 5.15.
+Also the return value of i2c and spi remove callbacks is ignored anyway.
 
-Regards,
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/misc/lis3lv02d/lis3lv02d.c     | 3 +--
+ drivers/misc/lis3lv02d/lis3lv02d.h     | 2 +-
+ drivers/misc/lis3lv02d/lis3lv02d_spi.c | 4 +++-
+ drivers/platform/x86/hp_accel.c        | 3 ++-
+ 4 files changed, 7 insertions(+), 5 deletions(-)
 
-Hans
-
-
-The following changes since commit 6f6aab1caf6c7fef46852aaab03f4e8250779e52:
-
-  platform/x86: gigabyte-wmi: add support for B550I Aorus Pro AX (2021-09-21 15:49:23 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.15-3
-
-for you to fetch changes up to 7df227847ab562c42d318bceccebb0c911c87b04:
-
-  platform/x86: int1092: Fix non sequential device mode handling (2021-10-11 16:39:25 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v5.15-3
-
-Second (small) set of pdx86 fixes for 5.15.
-
-The following is an automated git shortlog grouped by driver:
-
-amd-pmc:
- -  Add alternative acpi id for PMC controller
-
-dell:
- -  Make DELL_WMI_PRIVACY depend on DELL_WMI
-
-gigabyte-wmi:
- -  add support for B550 AORUS ELITE AX V2
-
-int1092:
- -  Fix non sequential device mode handling
-
-intel_scu_ipc:
- -  Update timeout value in comment
- -  Increase virtual timeout to 10s
- -  Fix busy loop expiry time
-
-intel_skl_int3472:
- -  Correct null check
-
-platform/mellanox:
- -  mlxreg-io: Fix read access of n-bytes size attributes
- -  mlxreg-io: Fix argument base in kstrtou32() call
-
-----------------------------------------------------------------
-Daniel Scally (1):
-      platform/x86: intel_skl_int3472: Correct null check
-
-Hans de Goede (1):
-      platform/x86: dell: Make DELL_WMI_PRIVACY depend on DELL_WMI
-
-Prashant Malani (3):
-      platform/x86: intel_scu_ipc: Fix busy loop expiry time
-      platform/x86: intel_scu_ipc: Increase virtual timeout to 10s
-      platform/x86: intel_scu_ipc: Update timeout value in comment
-
-Sachi King (1):
-      platform/x86: amd-pmc: Add alternative acpi id for PMC controller
-
-Shravan S (1):
-      platform/x86: int1092: Fix non sequential device mode handling
-
-Vadim Pasternak (2):
-      platform/mellanox: mlxreg-io: Fix argument base in kstrtou32() call
-      platform/mellanox: mlxreg-io: Fix read access of n-bytes size attributes
-
-Zephaniah E. Loss-Cutler-Hull (1):
-      platform/x86: gigabyte-wmi: add support for B550 AORUS ELITE AX V2
-
- MAINTAINERS                                        |  2 +-
- drivers/platform/mellanox/mlxreg-io.c              |  4 ++--
- drivers/platform/x86/amd-pmc.c                     |  1 +
- drivers/platform/x86/dell/Kconfig                  |  1 +
- drivers/platform/x86/gigabyte-wmi.c                |  1 +
- drivers/platform/x86/intel/int1092/intel_sar.c     | 23 ++++++++++++++--------
- .../x86/intel/int3472/intel_skl_int3472_discrete.c |  2 +-
- drivers/platform/x86/intel_scu_ipc.c               |  6 +++---
- 8 files changed, 25 insertions(+), 15 deletions(-)
+diff --git a/drivers/misc/lis3lv02d/lis3lv02d.c b/drivers/misc/lis3lv02d/lis3lv02d.c
+index 70c5bb1e6f49..3a7808b796b1 100644
+--- a/drivers/misc/lis3lv02d/lis3lv02d.c
++++ b/drivers/misc/lis3lv02d/lis3lv02d.c
+@@ -878,7 +878,7 @@ static int lis3lv02d_add_fs(struct lis3lv02d *lis3)
+ 	return sysfs_create_group(&lis3->pdev->dev.kobj, &lis3lv02d_attribute_group);
+ }
+ 
+-int lis3lv02d_remove_fs(struct lis3lv02d *lis3)
++void lis3lv02d_remove_fs(struct lis3lv02d *lis3)
+ {
+ 	sysfs_remove_group(&lis3->pdev->dev.kobj, &lis3lv02d_attribute_group);
+ 	platform_device_unregister(lis3->pdev);
+@@ -894,7 +894,6 @@ int lis3lv02d_remove_fs(struct lis3lv02d *lis3)
+ 		pm_runtime_set_suspended(lis3->pm_dev);
+ 	}
+ 	kfree(lis3->reg_cache);
+-	return 0;
+ }
+ EXPORT_SYMBOL_GPL(lis3lv02d_remove_fs);
+ 
+diff --git a/drivers/misc/lis3lv02d/lis3lv02d.h b/drivers/misc/lis3lv02d/lis3lv02d.h
+index c394c0b08519..195bd2fd2eb5 100644
+--- a/drivers/misc/lis3lv02d/lis3lv02d.h
++++ b/drivers/misc/lis3lv02d/lis3lv02d.h
+@@ -312,7 +312,7 @@ int lis3lv02d_joystick_enable(struct lis3lv02d *lis3);
+ void lis3lv02d_joystick_disable(struct lis3lv02d *lis3);
+ void lis3lv02d_poweroff(struct lis3lv02d *lis3);
+ int lis3lv02d_poweron(struct lis3lv02d *lis3);
+-int lis3lv02d_remove_fs(struct lis3lv02d *lis3);
++void lis3lv02d_remove_fs(struct lis3lv02d *lis3);
+ int lis3lv02d_init_dt(struct lis3lv02d *lis3);
+ 
+ extern struct lis3lv02d lis3_dev;
+diff --git a/drivers/misc/lis3lv02d/lis3lv02d_spi.c b/drivers/misc/lis3lv02d/lis3lv02d_spi.c
+index f664ed123730..9e40dfb60742 100644
+--- a/drivers/misc/lis3lv02d/lis3lv02d_spi.c
++++ b/drivers/misc/lis3lv02d/lis3lv02d_spi.c
+@@ -102,7 +102,9 @@ static int lis302dl_spi_remove(struct spi_device *spi)
+ 	lis3lv02d_joystick_disable(lis3);
+ 	lis3lv02d_poweroff(lis3);
+ 
+-	return lis3lv02d_remove_fs(&lis3_dev);
++	lis3lv02d_remove_fs(&lis3_dev);
++
++	return 0;
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
+index cc53f725c041..b183967ecfb7 100644
+--- a/drivers/platform/x86/hp_accel.c
++++ b/drivers/platform/x86/hp_accel.c
+@@ -349,7 +349,8 @@ static int lis3lv02d_remove(struct platform_device *device)
+ 	led_classdev_unregister(&hpled_led.led_classdev);
+ 	flush_work(&hpled_led.work);
+ 
+-	return lis3lv02d_remove_fs(&lis3_dev);
++	lis3lv02d_remove_fs(&lis3_dev);
++	return 0;
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+-- 
+2.30.2
 
