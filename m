@@ -2,98 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CBAC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Oct 2021 14:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D7AC43219
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Oct 2021 14:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 915FE61181
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Oct 2021 14:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C760D6117A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Oct 2021 14:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230190AbhJNO1h (ORCPT
+        id S231396AbhJNOjM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Oct 2021 10:27:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
+        Thu, 14 Oct 2021 10:39:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230030AbhJNO1g (ORCPT
+        with ESMTP id S231361AbhJNOjL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Oct 2021 10:27:36 -0400
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E42C061570;
-        Thu, 14 Oct 2021 07:25:31 -0700 (PDT)
-Received: by mail-ot1-x330.google.com with SMTP id v2-20020a05683018c200b0054e3acddd91so8438239ote.8;
-        Thu, 14 Oct 2021 07:25:31 -0700 (PDT)
+        Thu, 14 Oct 2021 10:39:11 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2CDDC061570;
+        Thu, 14 Oct 2021 07:37:06 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id k3so3762628ilu.2;
+        Thu, 14 Oct 2021 07:37:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DgggYFRN9gnata5M3CUjSHFufPP55fUbunNLNw/C/eY=;
-        b=b7seyn2A9tEw8HJUvgJVcUP4WwRhr5TXX60R//wRT36q7M8FOcm0TZEJjIcOwmo0P8
-         FXwA4AQC7xTw7emN/c9ES3qiGI8aqqrLQZeQCxX/nDkwvHPFjRG02ZJvhiNUygbCdF0S
-         uLomW0egGJN4ZjC/iak/ae0kDUIYskWcATOWV48xSWijQ+/MJq+Bd96vGjY3y92XGqyd
-         bkVr7CJo070kAgbxs4tQEcaKLoqQmpWUg5OK39EfUR32phhRD7eF0sBJyP55uiwg9ZMG
-         6RVt0gyctabfZvr+zpN1iBm412AEMBxtQGf/uprAcR5CBGosajV6DYvmrgr2neHm2aTT
-         oMVg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6TILiM3jzDjbrj3vsrVLxeVOCIYLc6j8cTUj5GZITRA=;
+        b=HILhJGvMsvMb+FcdhJNze2EnyOJDnn1FjmHxk7rIOuj/QEE6gSglc8WiYjvFk2yCFk
+         sjj7/dzn3DwgLgE1zDI8oJHUu090U40zwpD59iLQCv+1Gv/qYgOwQqG5O1WN+6Rc2+bo
+         tmyNvDVx1V9Cu1gpM5svD7GQAt2JIdTLRxrxetJMZ48qjBpBvb2XGC+yPMpUKcn8OfUY
+         8pgVHkMrYS3yUUxQ7fJODgpVYmaXZaQ9MclO3zsiZ8eJubKs8f3TiaWaZjQMZ9aMm2Sn
+         trSmH5h1PJTCl0aQyt/Ld9G/DmABRx5/dAnwPZhgmNiGLUBIcPPXojj5SlyNvHasX09m
+         agZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DgggYFRN9gnata5M3CUjSHFufPP55fUbunNLNw/C/eY=;
-        b=Hy7oDMxcxVT77D8vwHfJXU66POZgRqMTs79OJyZx9u77A58eM/XIF8L/n68T8nGQk6
-         bhs0w1H5Hb5M7sHQ4/HT3JpqfwSVQOdSlK+5F99hdcz5xxYzlaZ9uK/CLfs1Ch2IUrMH
-         TYneL+qyUWUxST6mOhtyzERgNriJWehwH0IhET02Pun3UJoOGPg3zrB/B9gfk+HqKEfq
-         qGGKyj8L4ZXv512cPetxcIOSzMHPpKnzcvm8MziKtBkjbkd+8pMsebeq0KBGVF7rYhlK
-         JRBUEKG8AorTwb6CToToa1H8yT8SvRnRN2Mt2stF2LPOLc7NQ5G78h/3y2YFqyuIDnGj
-         uvcA==
-X-Gm-Message-State: AOAM5338yFb7e0mR2H4MnkzqDnqtW1q53DNOd62Ku6Gvl55B82wHhBBn
-        J3KpBUKHMmoHaccWRylX1Pzw51suaXk=
-X-Google-Smtp-Source: ABdhPJyhNVhhmxeGNDO19iv3OtTgAOWDcQTjpC0JLm0n0PMtbLPeGqjMIBFvWE10qt2AFsbovzDonQ==
-X-Received: by 2002:a9d:4b95:: with SMTP id k21mr2708925otf.345.1634221530195;
-        Thu, 14 Oct 2021 07:25:30 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l10sm563680otj.9.2021.10.14.07.25.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Oct 2021 07:25:29 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [PATCH v6 1/2] hwmon: (asus_wmi_ec_sensors) Support B550 Asus
- WMI.
-To:     Eugene Shalygin <eugene.shalygin@gmail.com>,
-        Denis Pauk <pauk.denis@gmail.com>
-Cc:     andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org,
-        Tor Vic <torvic9@mailbox.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6TILiM3jzDjbrj3vsrVLxeVOCIYLc6j8cTUj5GZITRA=;
+        b=sqBtrRgXucfUD2bXZbWR5HCuMfSyaiBMZcI9kC0Q1SIFTMIFGWeWVFcstEcshqTKX5
+         KMNsQPcM8psyvjlMODyMnKuOMszf3QTw8MQ/8TpwjdXpKABOHvpFvzWWi/BXZ78bzBjI
+         ZYfesQpVBcAqp+0rHPaFbuupisv4bknc9s7ufCgIHsTQMqNVo/t5FNpzyozsKeXHHNjY
+         xSRkpoGBwYNuF4zgejUuK4LuG/5eGRqhomej4weI64hOdpiaNyNifB8Nyn0hZ+8i1Pxg
+         cVmmly9ffwSof0mAMlsbUwDEakRqkWOX31WwvDCycQy3zvsFLzH+GOZTWbjCXbCbq8yM
+         ZRgg==
+X-Gm-Message-State: AOAM533VBBY8NiNpq5yMVTCbzVZvlNqTb6HUC9FT43Gtm0GVHNMeSNSU
+        +qRrTXfIB0WJGbo2/DpntE1zvk3RqCe4pyNOEN4=
+X-Google-Smtp-Source: ABdhPJxLl41BUqpTzCO9cy/h/ZOB/3FmCOXeWonczhPTVAprvE1eXl9iX1rEHaFIeVfvNbYdm+7ZymlRc/xgq5EMXSI=
+X-Received: by 2002:a05:6e02:8a7:: with SMTP id a7mr2838801ilt.246.1634222226261;
+ Thu, 14 Oct 2021 07:37:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211014072537.190816-1-pauk.denis@gmail.com> <20211014072537.190816-2-pauk.denis@gmail.com>
+ <CAB95QAQQC6KJcbd-WhexBm=jusyoFkkB_a69RizMHpjSEbrqgA@mail.gmail.com> <e1a141d4-20e7-62c4-fae3-11166b8d0a66@roeck-us.net>
+In-Reply-To: <e1a141d4-20e7-62c4-fae3-11166b8d0a66@roeck-us.net>
+From:   Eugene Shalygin <eugene.shalygin@gmail.com>
+Date:   Thu, 14 Oct 2021 16:36:54 +0200
+Message-ID: <CAB95QAT44kyBR19cu6sP0kFJwFtVnmULqMzTQPArL94x2oxGkQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] hwmon: (asus_wmi_ec_sensors) Support B550 Asus WMI.
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Denis Pauk <pauk.denis@gmail.com>, andy.shevchenko@gmail.com,
+        platform-driver-x86@vger.kernel.org, Tor Vic <torvic9@mailbox.org>,
         kernel test robot <lkp@intel.com>,
         Jean Delvare <jdelvare@suse.com>,
         Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20211014072537.190816-1-pauk.denis@gmail.com>
- <20211014072537.190816-2-pauk.denis@gmail.com>
- <CAB95QAQQC6KJcbd-WhexBm=jusyoFkkB_a69RizMHpjSEbrqgA@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <e1a141d4-20e7-62c4-fae3-11166b8d0a66@roeck-us.net>
-Date:   Thu, 14 Oct 2021 07:25:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <CAB95QAQQC6KJcbd-WhexBm=jusyoFkkB_a69RizMHpjSEbrqgA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 10/14/21 5:08 AM, Eugene Shalygin wrote:
->> +struct asus_wmi_ec_sensor_address {
->> +       u8 index;
->> +       u8 bank;
->> +       u8 size;
->> +};
-> The fourth field which you removed was supposed to hold the data
-> encoding type, and together those four were packing nicely in u32...
-> 
+> The compiler aligns the data nicely anyway (it will just leave
+> a 1-byte hole where needed), so the packing is really irrelevant.
+> Apart of that, does the above suggest that some information/
+> code is now missing from the driver ?
 
-The compiler aligns the data nicely anyway (it will just leave
-a 1-byte hole where needed), so the packing is really irrelevant.
-Apart of that, does the above suggest that some information/
-code is now missing from the driver ?
+It is perhaps an unnecessary removal which will need to be undone
+anyway when I (or others) add the south bridge voltage sensor.
+Everything is OK with that change now, but since the size of the
+address struct or union is 32 bits anyway, I would not remove that
+field.
 
-Guenter
+Eugene
