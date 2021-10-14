@@ -2,194 +2,177 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BC3C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Oct 2021 21:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B68C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Oct 2021 07:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0993610CE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Oct 2021 21:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 302FA60FDA
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Oct 2021 07:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229754AbhJMWBs (ORCPT
+        id S229994AbhJNH2H (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Oct 2021 18:01:48 -0400
-Received: from mga01.intel.com ([192.55.52.88]:43810 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229631AbhJMWBs (ORCPT
+        Thu, 14 Oct 2021 03:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229910AbhJNH2H (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Oct 2021 18:01:48 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10136"; a="250976026"
-X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
-   d="scan'208";a="250976026"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 14:59:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
-   d="scan'208";a="571020214"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.171])
-  by fmsmga002.fm.intel.com with SMTP; 13 Oct 2021 14:59:38 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Thu, 14 Oct 2021 00:59:37 +0300
-Date:   Thu, 14 Oct 2021 00:59:37 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rajat Jain <rajatja@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Lyude <lyude@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Pekka Paalanen <pekka.paalanen@collabora.com>,
-        Mario Limonciello <mario.limonciello@outlook.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Sebastien Bacher <seb128@ubuntu.com>,
-        Marco Trevisan <marco.trevisan@canonical.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 10/10] drm/i915: Add privacy-screen support (v3)
-Message-ID: <YWdWyTVXMA3907no@intel.com>
-References: <20211005202322.700909-1-hdegoede@redhat.com>
- <20211005202322.700909-11-hdegoede@redhat.com>
+        Thu, 14 Oct 2021 03:28:07 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DF5AC061570;
+        Thu, 14 Oct 2021 00:26:02 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id ec8so20387315edb.6;
+        Thu, 14 Oct 2021 00:26:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d3qTxnMX3ADqt/J9bOBlE4FoV+RoUTqNQMD+qoLqjyo=;
+        b=BLMVpNxorGP0FGagmx/rK5Ow23sQILrvrXHCD0mw2DWgAHMYKxS++1kFLmO4FHL7SA
+         lr4O9DF+BvS/XSoabciFi1rySNzngSLXW/uHe+x/ny3HB4ZPIX81xh8KmTNxToNoa3ZG
+         AbMIV2nEikKnns7U+7moxc/3wr3FNWC1lftMVvwaAr7+9uKQrY6JzgCttjT0nx1cUAGF
+         VSiTjwvYkSg3vWYu4usPaC1Hb0snLXxqz+76pp9+UKN4HAb5GW2q7xuOGhrIkw793Kcr
+         cj7xTlgL9thw+mJcYP0aL3HE2XFiIQ5jLEbXk2YPKiUdmEksHWBlPaZoUJBfvEtss4pR
+         IDNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d3qTxnMX3ADqt/J9bOBlE4FoV+RoUTqNQMD+qoLqjyo=;
+        b=SH5GA9wrMYtEHqWXfgt0uHF25Yyc7eAedIBP6v0LW4hvY1+e+oaehAn3KIafudhDIg
+         j641ZiJ+HG9WlVuc6w80KveJxLyKLZAAkwTuLHyDEtdmVNy/qje0KlA6euvBSA0TmoZw
+         kv8poaMuDBVDu1DwmZmHuJOJpxksdeuoZEueLncbvfasbL+2oXoSCEaNqITd6ch/2MXy
+         A0LWC/8xlAMBnZjYMAlFFKayKI/eaoMujE8XOUn00aaJMRoFMeOKeAIG8uFppqVKL3pA
+         SJZ47K/nWu/4/CNsXegccdIG1aSzMjhua8UPpSAXji5Tpmnx+2CGVFDtJg1gmUjFNwka
+         2i3g==
+X-Gm-Message-State: AOAM532DDPjk/AnmDn4lNgFGSP/DXKcwj93FnqXqwTdMcmhxYqEKez/8
+        jfyUbnpRxEU3Cwz3xEuwWjgp1vCu1VJ/Ag==
+X-Google-Smtp-Source: ABdhPJx50iRsp+hDLVdZa45timmdh/WpbCLcdVFgYcYLEt0NAzPmh1mYCw4bu98bc7q/Xg+jUre4wA==
+X-Received: by 2002:a17:906:a4e:: with SMTP id x14mr1735381ejf.1.1634196360837;
+        Thu, 14 Oct 2021 00:26:00 -0700 (PDT)
+Received: from localhost.localdomain ([94.179.52.32])
+        by smtp.gmail.com with ESMTPSA id z4sm1238253ejw.46.2021.10.14.00.25.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Oct 2021 00:26:00 -0700 (PDT)
+From:   Denis Pauk <pauk.denis@gmail.com>
+Cc:     eugene.shalygin@gmail.com, andy.shevchenko@gmail.com,
+        pauk.denis@gmail.com, platform-driver-x86@vger.kernel.org,
+        Ed Brindley <kernel@maidavale.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/2] Update ASUS WMI supported boards
+Date:   Thu, 14 Oct 2021 10:25:33 +0300
+Message-Id: <20211014072537.190816-1-pauk.denis@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211005202322.700909-11-hdegoede@redhat.com>
-X-Patchwork-Hint: comment
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Oct 05, 2021 at 10:23:22PM +0200, Hans de Goede wrote:
-> Add support for eDP panels with a built-in privacy screen using the
-> new drm_privacy_screen class.
-> 
-> Changes in v3:
-> - Move drm_privacy_screen_get() call to intel_ddi_init_dp_connector()
-> 
-> Changes in v2:
-> - Call drm_connector_update_privacy_screen() from
->   intel_enable_ddi_dp() / intel_ddi_update_pipe_dp() instead of adding a
->   for_each_new_connector_in_state() loop to intel_atomic_commit_tail()
-> - Move the probe-deferral check to the intel_modeset_probe_defer() helper
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/gpu/drm/i915/display/intel_atomic.c  |  1 +
->  drivers/gpu/drm/i915/display/intel_ddi.c     | 16 ++++++++++++++++
->  drivers/gpu/drm/i915/display/intel_display.c | 10 ++++++++++
->  3 files changed, 27 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/i915/display/intel_atomic.c
-> index b4e7ac51aa31..a62550711e98 100644
-> --- a/drivers/gpu/drm/i915/display/intel_atomic.c
-> +++ b/drivers/gpu/drm/i915/display/intel_atomic.c
-> @@ -139,6 +139,7 @@ int intel_digital_connector_atomic_check(struct drm_connector *conn,
->  	    new_conn_state->base.picture_aspect_ratio != old_conn_state->base.picture_aspect_ratio ||
->  	    new_conn_state->base.content_type != old_conn_state->base.content_type ||
->  	    new_conn_state->base.scaling_mode != old_conn_state->base.scaling_mode ||
-> +	    new_conn_state->base.privacy_screen_sw_state != old_conn_state->base.privacy_screen_sw_state ||
->  	    !drm_connector_atomic_hdr_metadata_equal(old_state, new_state))
->  		crtc_state->mode_changed = true;
->  
-> diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
-> index 0d4cf7fa8720..272714e07cc6 100644
-> --- a/drivers/gpu/drm/i915/display/intel_ddi.c
-> +++ b/drivers/gpu/drm/i915/display/intel_ddi.c
-> @@ -25,6 +25,7 @@
->   *
->   */
->  
-> +#include <drm/drm_privacy_screen_consumer.h>
->  #include <drm/drm_scdc_helper.h>
->  
->  #include "i915_drv.h"
-> @@ -2946,6 +2947,7 @@ static void intel_enable_ddi_dp(struct intel_atomic_state *state,
->  	if (port == PORT_A && DISPLAY_VER(dev_priv) < 9)
->  		intel_dp_stop_link_train(intel_dp, crtc_state);
->  
-> +	drm_connector_update_privacy_screen(conn_state);
->  	intel_edp_backlight_on(crtc_state, conn_state);
->  
->  	if (!dig_port->lspcon.active || dig_port->dp.has_hdmi_sink)
-> @@ -3161,6 +3163,7 @@ static void intel_ddi_update_pipe_dp(struct intel_atomic_state *state,
->  	intel_drrs_update(intel_dp, crtc_state);
->  
->  	intel_backlight_update(state, encoder, crtc_state, conn_state);
-> +	drm_connector_update_privacy_screen(conn_state);
->  }
->  
->  void intel_ddi_update_pipe(struct intel_atomic_state *state,
-> @@ -3979,6 +3982,19 @@ intel_ddi_init_dp_connector(struct intel_digital_port *dig_port)
->  		return NULL;
->  	}
->  
-> +	if (dig_port->base.type == INTEL_OUTPUT_EDP) {
+Add support by WMI interface privided by Asus for B550/X570 boards: 
+* PRIME X570-PRO,
+* ROG CROSSHAIR VIII HERO
+* ROG CROSSHAIR VIII DARK HERO
+* ROG CROSSHAIR VIII FORMULA
+* ROG STRIX X570-E GAMING
+* ROG STRIX B550-E GAMING
 
-Connector type check would be a bit more consistent with what this is
-about I think. But there's is 1:1 correspondence with the encoder type
-for eDP so not a particularly important point.
+Add support by WMI interface privided by Asus for X370/X470/
+B450/X399 boards:
+* ROG CROSSHAIR VI HERO,
+* PRIME X399-A,
+* PRIME X470-PRO,
+* ROG CROSSHAIR VI EXTREME,
+* ROG CROSSHAIR VI HERO (WI-FI AC),
+* ROG CROSSHAIR VII HERO,
+* ROG CROSSHAIR VII HERO (WI-FI),
+* ROG STRIX B450-E GAMING,
+* ROG STRIX B450-F GAMING,
+* ROG STRIX B450-I GAMING,
+* ROG STRIX X399-E GAMING,
+* ROG STRIX X470-F GAMING,
+* ROG STRIX X470-I GAMING,
+* ROG ZENITH EXTREME,
+* ROG ZENITH EXTREME ALPHA.
 
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+>There is at least one more sensor hiding in the EC address space: the
+> south bridge voltage. And it seems its value is not an integer, so the
+> conversion to mV will not be a simple get_unaligned_xx() call when we
+> locate and add it.
+@Eugene Shalygin: I have updated patch with usage separate function for 
+convert binary data to sensors value as you proposed for sensors with 
+sophisticated logic. Also I have moved quiery creation logic to sensors 
+setup function.
 
-> +		struct drm_device *dev = dig_port->base.base.dev;
-> +		struct drm_privacy_screen *privacy_screen;
-> +
-> +		privacy_screen = drm_privacy_screen_get(dev->dev, NULL);
-> +		if (!IS_ERR(privacy_screen)) {
-> +			drm_connector_attach_privacy_screen_provider(&connector->base,
-> +								     privacy_screen);
-> +		} else if (PTR_ERR(privacy_screen) != -ENODEV) {
-> +			drm_warn(dev, "Error getting privacy-screen\n");
-> +		}
-> +	}
-> +
->  	return connector;
->  }
->  
-> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-> index 86dbe366a907..84715a779d9d 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display.c
-> +++ b/drivers/gpu/drm/i915/display/intel_display.c
-> @@ -42,6 +42,7 @@
->  #include <drm/drm_edid.h>
->  #include <drm/drm_fourcc.h>
->  #include <drm/drm_plane_helper.h>
-> +#include <drm/drm_privacy_screen_consumer.h>
->  #include <drm/drm_probe_helper.h>
->  #include <drm/drm_rect.h>
->  
-> @@ -12769,6 +12770,8 @@ void intel_modeset_driver_remove_nogem(struct drm_i915_private *i915)
->  
->  bool intel_modeset_probe_defer(struct pci_dev *pdev)
->  {
-> +	struct drm_privacy_screen *privacy_screen;
-> +
->  	/*
->  	 * apple-gmux is needed on dual GPU MacBook Pro
->  	 * to probe the panel if we're the inactive GPU.
-> @@ -12776,6 +12779,13 @@ bool intel_modeset_probe_defer(struct pci_dev *pdev)
->  	if (vga_switcheroo_client_probe_defer(pdev))
->  		return true;
->  
-> +	/* If the LCD panel has a privacy-screen, wait for it */
-> +	privacy_screen = drm_privacy_screen_get(&pdev->dev, NULL);
-> +	if (IS_ERR(privacy_screen) && PTR_ERR(privacy_screen) == -EPROBE_DEFER)
-> +		return true;
-> +
-> +	drm_privacy_screen_put(privacy_screen);
-> +
->  	return false;
->  }
->  
-> -- 
-> 2.31.1
+@Guenter Roeck: I have added both sensors to index.rst, fixed usage of 
+acpi_os_free in asus_wmi_ec_block_read and fixed 'instrnal' typo in both 
+files.
 
+Could you please review?
+
+Signed-off-by: Denis Pauk <pauk.denis@gmail.com>
+Signed-off-by: Ed Brindley <kernel@maidavale.org>
+Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
+
+---
+Changes in v6:
+- asus_wmi_ec_sensors: Generate query for all sensors on sensors setup
+- asus_wmi_ec_sensors: Move binary to sensor value logic to separate 
+  get_sensor_value (by Eugene Shalygin)
+- asus_wmi_ec_sensors: Use acpi_os_free without NULL pointer check.
+- Add asus_wmi_sensor to documentation index.
+- Add asus_wmi_ec_sensor to documentation index.
+
+Changes in v5:
+- Fixes build issue reported by kernel test robot with disabled ACPI_WMI.
+- asus_wmi_sensors: Remove sensor->name check as always evaluated to true.
+
+Changes in v4:
+ - Implement wmi driver instead platform driver.
+ - Update documentation with known issues.
+
+Changes in v3:
+ - Use MODULE_DEVICE_TABLE for match devices.
+ - asus_wmi_ec_sensors: Use get_unaligned_be32 instead incorrectly used 
+   get_unaligned_le32.
+ - Add documentaion for drivers.
+
+Changes in v2:
+ - asus_wmi_ec_sensors: Rename asus_wmi_sensors to asus_wmi_ec_sensors for 
+   B550/X570 boards.
+ - asus_wmi_ec_sensors: Use utf8s_to_utf16s/utf16s_to_utf8s instead handmade 
+   fuctions.
+ - asus_wmi_ec_sensors: Use post increment.
+ - asus_wmi_ec_sensors: Use get_unaligned* for convert values.
+ - asus_wmi_ec_sensors: Use PTR_ERR_OR_ZERO.
+ - asus_wmi_ec_sensors: Specify per-board sensors in a declarative way 
+   (by Eugene Shalygin).
+ - asus_wmi_sensors: Add support for X370/X470/B450/X399 boards.
+
+---
+
+Denis Pauk (2):
+  hwmon: (asus_wmi_ec_sensors) Support B550 Asus WMI.
+  hwmon: (asus_wmi_sensors) Support X370 Asus WMI.
+
+ Documentation/hwmon/asus_wmi_ec_sensors.rst |  35 ++
+ Documentation/hwmon/asus_wmi_sensors.rst    |  74 +++
+ Documentation/hwmon/index.rst               |   2 +
+ MAINTAINERS                                 |   8 +
+ drivers/hwmon/Kconfig                       |  22 +
+ drivers/hwmon/Makefile                      |   2 +
+ drivers/hwmon/asus_wmi_ec_sensors.c         | 637 ++++++++++++++++++++
+ drivers/hwmon/asus_wmi_sensors.c            | 621 +++++++++++++++++++
+ 8 files changed, 1401 insertions(+)
+ create mode 100644 Documentation/hwmon/asus_wmi_ec_sensors.rst
+ create mode 100644 Documentation/hwmon/asus_wmi_sensors.rst
+ create mode 100644 drivers/hwmon/asus_wmi_ec_sensors.c
+ create mode 100644 drivers/hwmon/asus_wmi_sensors.c
+
+
+base-commit: be68c4dcc659172af86e875c25d26c6a114b1afc
 -- 
-Ville Syrjälä
-Intel
+2.33.0
+
