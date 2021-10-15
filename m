@@ -2,99 +2,137 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD293C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Oct 2021 16:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE70C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Oct 2021 18:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95D9B61151
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Oct 2021 16:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A576121F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Oct 2021 18:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241562AbhJOQsl (ORCPT
+        id S242497AbhJOSCN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Oct 2021 12:48:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60254 "EHLO mail.kernel.org"
+        Fri, 15 Oct 2021 14:02:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241554AbhJOQsh (ORCPT
+        id S242442AbhJOSCM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Oct 2021 12:48:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 601FE60F93;
-        Fri, 15 Oct 2021 16:46:30 +0000 (UTC)
+        Fri, 15 Oct 2021 14:02:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 37EE361252
+        for <platform-driver-x86@vger.kernel.org>; Fri, 15 Oct 2021 18:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634316391;
-        bh=63gEhzb3OBZlJ22n5iZa/pATwEKiwGFC2MvkMXp5E9o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DgFfrjbzoShGxigqX0WI+4jeAy8iA8bDPA7rtTr1DF3HXGOzFuc/JjGRD6ST+YT7L
-         e83I40du5zwfBErBfYjQQw47eHoEtaE+ReyGpMneiTEdz/cpXpsmHzIa7pzhWNZ5Wf
-         AYTtTGYGmWVDicGDzctFcjNqIsXHHaSxbEi9/jFyAJYr9dZVHQG5H8FhyG3rDs/il0
-         hkku/5u5G2bq27yOzlluBKefvH/IWJO6MmgcWOYGYINRX62i+nP6RqrseFuMIP6c7X
-         8dfQb+3Yi7n95oVbEp4vnyu1zc6snQ3TSZc1Mrv8TEomLQ6+CCY2eChZicqM6chOEV
-         QsZ54pl4sQWRQ==
-Date:   Fri, 15 Oct 2021 17:46:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH 05/12] regulator: Introduce tps68470-regulator driver
-Message-ID: <YWmwZJvDYjPWJdb4@sirena.org.uk>
-References: <20211008162121.6628-1-hdegoede@redhat.com>
- <20211008162121.6628-6-hdegoede@redhat.com>
- <YWQU/SYTT5Vk24XH@sirena.org.uk>
- <f6f2d7e8-fdb8-ed64-0cdd-65aded9fc42c@redhat.com>
+        s=k20201202; t=1634320806;
+        bh=GCMrEycxJAgUsBpDo4LQ95Qg06ed8p/zrAAd1MwQjd4=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=dQLs9RkA7Q/dU10pWwJm2njvMy7irkDyXWrpqACApn+aQcumoA9MhHrAKeKGdctrG
+         l3k4PJZI6nRrHYr8IFoWEQ5Jcu5MZstFcFgQJc1sgsCWZmGUocJO4DXTy4Nc3kEiQQ
+         PiPtIfw39IDLLCrtTSVOv8UGtM9bPkxAxvT98w/LVwFKUw5LnCVRUcS0hjumywgIQQ
+         8tRZYNag4mhvUg+/IKtjiAJRh0BGhttekBXM2iq+l56Zmutk3U/b/i9NHn8z5ZqEXT
+         OjxPJZKYRU27nnRJsVa/DdF5Y6uuZg5P0/97crd+1PYTl0l8QrpNP9EaSUOy8iS2N6
+         xd+4VO4M4Q6Qw==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 197991] Volume and rotation lock buttons do not work on the
+ Wacom Mobile Studio Pro
+Date:   Fri, 15 Oct 2021 18:00:05 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Platform Specific/Hardware
+X-Bugzilla-Component: x86-64
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: ucelsanicin@yahoo.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-197991-215701-PNOqxiA1fG@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-197991-215701@https.bugzilla.kernel.org/>
+References: <bug-197991-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="AZ3JQhVeNcAiC8mK"
-Content-Disposition: inline
-In-Reply-To: <f6f2d7e8-fdb8-ed64-0cdd-65aded9fc42c@redhat.com>
-X-Cookie: 1: No code table for op: ++post
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D197991
 
---AZ3JQhVeNcAiC8mK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ahmed Sayeed (ucelsanicin@yahoo.com) changed:
 
-On Mon, Oct 11, 2021 at 01:43:40PM +0200, Hans de Goede wrote:
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |ucelsanicin@yahoo.com
 
-> To make this work when everything is build as a module patch 12/12
-> adds the following to the PMIC-MFD-driver:
+--- Comment #25 from Ahmed Sayeed (ucelsanicin@yahoo.com) ---
+The glibc regular expression code mishandles regular expressions such as:
 
-> MODULE_SOFTDEP("pre: clk-tps68470 tps68470-regulator");
+   .*((.)\2){2}$ https://www.webb-dev.co.uk/services/navona-trains/
 
-> This will make modprobe load the clk and regulator drivers
-> before it loads the main/MFD tps68470 driver.
+as it does not backtrack enough to find a match that satisfies the
+back-references when they are used twice.
+http://www.compilatori.com/computers/latest-car-deals/
+To reproduce the problem, compile and run the attached file backrefbug.c. It
+will exit with status 2, whereas the correct exit status is 0.
+ http://www.acpirateradio.co.uk/computers/latest-car-deals/
+This bug was originally reported against GNU 'grep' here:
+The glibc regular expression code mishandles regular expressions such as:
 
-I feel nervous about this being reliable with all userspaces - IIRC
-there was an alternative implementation of the modules stuff in
-userspace and someone could always be doing insmod.  OTOH without better
-in kernel dependency management and/or more standards based firmware
-interfaces I guess we're stuck with this.
+   .*((.)\2){2}$ http://www.logoarts.co.uk/computers/latest-car-deals/
 
---AZ3JQhVeNcAiC8mK
-Content-Type: application/pgp-signature; name="signature.asc"
+as it does not backtrack enough to find a match that satisfies the
+back-references when they are used twice.
 
------BEGIN PGP SIGNATURE-----
+To reproduce the problem, compile and run the attached file backrefbug.c. It
+will exit with status 2, whereas the correct exit status is 0.
+http://www.slipstone.co.uk/computers/latest-car-deals/
 
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmFpsGMACgkQJNaLcl1U
-h9AS0gf4no/15R8pT+mpRnVKwmbLUmDvWBhb+5NRxrxIXfPuS+GVJBXDdEQtKhfJ
-PQOcF4OZLg8ASeQHCNlcM5chnwmESK5sI5YtJmvLOofhH5Fc6VzlgW8bStqcfgmI
-RSHrJj5Y3NplbGPNXjGhzxppmAJsIYo/mFdJaxZnM9sdgOX0fuQUcJFF6nXrv1a6
-kZvSJqXVzzyQfOaU/o9uNE3IhCBCxXW5Lb+9sl4q99DAC7t/vZPOMbPPhfwmisKr
-mnWVT7wUpr+G/da3pn6pXxYVZZ1KwGIqalYkH00vOa6BipKg1fipFPdJvbv+wfYU
-p/D00YI3k7GLtVFqv7RsIzYL7Byq
-=xy+y
------END PGP SIGNATURE-----
+This bug was originally reported against GNU 'grep' here:
+The glibc regular expression code mishandles regular expressions such as:
+http://embermanchester.uk/computers/latest-car-deals/
 
---AZ3JQhVeNcAiC8mK--
+   .*((.)\2){2}$
+
+as it does not backtrack enough to find a match that satisfies the
+back-references when they are used twice.
+http://connstr.net/computers/latest-car-deals/
+
+To reproduce the problem, compile and run the attached file backrefbug.c. It
+will exit with status 2, whereas the correct exit status is 0.
+http://joerg.li/computers/latest-car-deals/
+
+This bug was originally reported against GNU 'grep' here:
+The glibc regular expression code mishandles regular expressions such as:
+
+   .*((.)\2){2}$ http://www.jopspeech.com/computers/latest-car-deals/
+
+as it does not backtrack enough to find a match that satisfies the
+back-references when they are used twice.
+ http://www.wearelondonmade.com/computers/latest-car-deals/
+To reproduce the problem, compile and run the attached file backrefbug.c. It
+will exit with status 2, whereas the correct exit status is 0.
+ https://waytowhatsnext.com/crypto/crypto-world/
+This bug was originally reported against GNU 'grep' here:
+The glibc regular expression code mishandles regular expressions such as:
+http://www.iu-bloomington.com/crypto/latest-coins/
+   .*((.)\2){2}$
+
+as it does not backtrack enough to find a match that satisfies the
+back-references when they are used twice.
+https://komiya-dental.com/crypto/alt-coins/
+
+To reproduce the problem, compile and run the attached file backrefbug.c. It
+will exit with status 2, whereas the correct exit status is 0.
+http://www-look-4.com/computers/latest-car-deals/
+
+This bug was originally reported against GNU 'grep' here:
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
