@@ -2,211 +2,441 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28029C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Oct 2021 06:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0BAC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Oct 2021 08:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0701461181
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Oct 2021 06:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F446120A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Oct 2021 08:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235742AbhJOGw7 (ORCPT
+        id S237073AbhJOIZF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Oct 2021 02:52:59 -0400
-Received: from mail-eopbgr1310112.outbound.protection.outlook.com ([40.107.131.112]:13952
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230032AbhJOGw5 (ORCPT
+        Fri, 15 Oct 2021 04:25:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237001AbhJOIYx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Oct 2021 02:52:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jjkJAhIxF4QSeH2UnJe0gLXwW9z0n6vAig0VSX+LrY7R0o8alwGjgIUzBFhexhwztfO8G1B1fJ2PgaehvPAkTrP6a5feByb/cZi+cVKYXNjzc1AaID1HFQrkQGyBv4GuPkhL0r7d0om/etycAPeTaeiJxI8AOGpJTjiftahxK7bdO3jHD1roI7ZtGFjVQHXyXkAdJ9LbzuF4JrVfcMINxmV7AemXPbKb2QJGqeM31sE8xhNqQ/YPwT8tE8HPGXLcLb5gr1stjwFZVtcekUXDc8o9eeBCpoAo+hA3ksTGsdFlSSBreMrJZoPbnVFVIGpR1rMI/c9ekGh4YCCFQsd3UQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eoZXRMgjK2qes3v+KfnstBwfAnZ9rlUPO8w8h/YPdUs=;
- b=OLrOBeL1uDw7Zx8lrvrZu2amaTeDbLyrJQQS8GzCzf5SE6u08sSerV6OdR3pR1wlDbIHLdHBt4T1Xi27NztM2EkbengKBtgdxq9HFkiEdVjARb2gB048H1sJb+OxaIj1p3bCLg6I+LDwIiMuuq8tK/ikG9GreeW2YChpOzzvFsT9zdsO9lTPCFuNd1kgZXD+bssx7PXp4xgSWZHwz31T2MTaw+OQZjHAaYdCMkiHaKrdzTbGLxaMFx1eaB8uo0smgdeRlmjS11ynq6NrzlTYBFjUIVC3mF70+877JsUNoBcaDRSBIWgh4LUNWRSu7T5tvDP/B+t4h8GT0C7c5TZKfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo0.onmicrosoft.com;
- s=selector2-vivo0-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eoZXRMgjK2qes3v+KfnstBwfAnZ9rlUPO8w8h/YPdUs=;
- b=CfGoQt3NzYiK54R5CuTYsPZN3fSwFLBhCCSb+0xgEy32pCfRzU+hiBzxIz8CNXBII+N4haFCp8/iX+Qg38DgnEWJrv0yFULTJCp2N+B5j8r9eevo0JaEYjCFjLQmVyKsLttweqAFEx6F0I91hzT/3sezNg+FvKuqsZyTfk6/IxY=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=vivo.com;
-Received: from SL2PR06MB3082.apcprd06.prod.outlook.com (2603:1096:100:37::17)
- by SL2PR06MB3003.apcprd06.prod.outlook.com (2603:1096:100:33::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.18; Fri, 15 Oct
- 2021 06:50:49 +0000
-Received: from SL2PR06MB3082.apcprd06.prod.outlook.com
- ([fe80::4c9b:b71f:fb67:6414]) by SL2PR06MB3082.apcprd06.prod.outlook.com
- ([fe80::4c9b:b71f:fb67:6414%6]) with mapi id 15.20.4608.017; Fri, 15 Oct 2021
- 06:50:49 +0000
-From:   Qing Wang <wangqing@vivo.com>
-To:     Kenneth Chan <kenneth.t.chan@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Qing Wang <wangqing@vivo.com>
-Subject: [PATCH] x86: replace snprintf in show functions with sysfs_emit
-Date:   Thu, 14 Oct 2021 23:50:40 -0700
-Message-Id: <1634280641-4862-1-git-send-email-wangqing@vivo.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR02CA0172.apcprd02.prod.outlook.com
- (2603:1096:201:1f::32) To SL2PR06MB3082.apcprd06.prod.outlook.com
- (2603:1096:100:37::17)
+        Fri, 15 Oct 2021 04:24:53 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63DF5C0613E3;
+        Fri, 15 Oct 2021 01:22:27 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id z20so35116148edc.13;
+        Fri, 15 Oct 2021 01:22:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VrNt/o1nSa4MO5VitUgo1gh5ZbHCnm6V9nLtUmAkb7I=;
+        b=i4gbiwmRnCV0DehbtrRYKr9MsrTjzWHvG9/DAZOuZjfO3gwr0gBifehKCNJd8KjZfc
+         /0zGdGLVVne8PE/UcyabuP9GWakU9gPziEmLk6NcisHh6REihNFnLqqiAynryLaFwz/n
+         hhpFfQRNhNuPZAB21MY39jBh+CATMo7Qvim6Jc44IGcvESbpDlh7cVB4LddoB85Pmz6z
+         1qqSREoh6Ag4/mJNIdpqT9hUEe972Or8nt5d9JsdedFuY8Mcc95QXmVEyVatNkRiQmMC
+         NVezkgx1Kpf1t9t5IQkkJB70TwKS4FXNjMDS/g6PhVfPpIAfux7AaRsDnLCc+Al3tc+7
+         13bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VrNt/o1nSa4MO5VitUgo1gh5ZbHCnm6V9nLtUmAkb7I=;
+        b=URLCHig4Hs37oq/zRtrIfM88Zw6DLMoBPuE0mnHiBYkl7zfVZhVDs/dXLnZwawTY55
+         Ir0via1rUwKFjq6ob4Fg0j3LIks0oNwdHYC3t1FhRbkZV4HsJ/s9UIgVgAAL6Y6uiLa/
+         9/aO0/j1IrDirEBEiwGeG5BODtiIZf5HPRJ/zDhty/qjjZNFsqz4HWE74cywFcludjRv
+         RlqjNbEQFo1sStJlaiATREPyaLilpXFgOdW4QbOz40Vziqwzid+IGq4KutCQxqHmKkrU
+         w/99ebIAt1vFCJZxklUqnZ9SxTbgFoSD6DosVlyrfmjkgdw959I3P2gYWZnuFzWP25NX
+         Pvrg==
+X-Gm-Message-State: AOAM531zoJWi2nEXK0sHB0nqmjJryGtWUM5AlxwEmQ5AwU7CiVulsgsQ
+        SK2f/MdDyBqwlq3cUWWd9zfMQ8tZVImTumqkv/g=
+X-Google-Smtp-Source: ABdhPJwv/ExlTDSry1jLJBW9JfIk31scH5Z7zEfPwN/7wDwFoY9c1bFn4NLJEn9bhxHfMjB+s/13Hoi/JD1IdPRkgAU=
+X-Received: by 2002:a17:906:a158:: with SMTP id bu24mr4830546ejb.356.1634286145843;
+ Fri, 15 Oct 2021 01:22:25 -0700 (PDT)
 MIME-Version: 1.0
-Received: from ubuntu.localdomain (103.220.76.181) by HK2PR02CA0172.apcprd02.prod.outlook.com (2603:1096:201:1f::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.4608.16 via Frontend Transport; Fri, 15 Oct 2021 06:50:48 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a3cd34ba-f81d-492b-530a-08d98fa81f61
-X-MS-TrafficTypeDiagnostic: SL2PR06MB3003:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SL2PR06MB3003EEC0176135638048990CBDB99@SL2PR06MB3003.apcprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1227;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uUzeD4lMsqsSZmrPCxFQv0UDaW7W5DQhN3VyF71n/EyF04RL+0Nc01cIDMKE392EpXFDFgWDYBHXDiMJ+T7U2nMqbG8KBetoiBkZGmZnZu4LqTLVO4W6LKRLP9mswoHYjEgl5UC9h/ZBBpylOSR7TJlmInJP0AHpU7gGaqt/azVV8qNby5FotORr9pEwXCx3eERJVGIxRpFWo4qw92MGV7Pul0qT+DWTS0UQqK0LkeVvTFNWgId132KqVJUidWkRFxQ1ebVL0NsQQVrfIK9HT3K7yWGizJXklkd68QYaEctPaQLNHCEPmwBccYtN7TuEhiNhVYGeyHdpdlGYRhBA1edj2MxoVecYqg7hRTzAh+r6QW5NgE3Td3gBinjE8GA+/EzvdegEfotzZQN0N20pwiRDm2I6qQsTQ2R2HQaeGgCDzEatf5i/zd3dWZcavEZtvRw0qzOwVK6W8WRCeVjw1TX3XXh7Bkaqm14RZCbN59PQbk7Gb74xYCMAmzBxuUXdheepmVv3tL0BRfDgM8XaC/5xxldqaYiqld/m3tU1RLcznyZ+ZtYxG5q+zTJzlw++Wo0dEJW6Yt5u/pMzzYSFXk0BiArEn0FPLgeVBKqU2xV2wFi8lJjYlzZXdr/O8zi9mEeo6lD+gadG7yScK8ng3JZrQzNzdxbajMBkBxlq/H2UvtXlswL/pDfcshQrrHS/AE1HMdQqctDhb/GyRnsxcw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SL2PR06MB3082.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66556008)(5660300002)(8936002)(66476007)(83380400001)(316002)(2906002)(4326008)(36756003)(110136005)(6666004)(66946007)(86362001)(186003)(956004)(2616005)(107886003)(26005)(6512007)(8676002)(508600001)(52116002)(38350700002)(6506007)(6486002)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?G27mQ7JcKGdZOpxKBnz7Kq+t/qow5yOecNUqT8kHySzpD0/x1JOGQqfxLA47?=
- =?us-ascii?Q?1es+ZZIECCGR/iWOsO/HtyV4xsr4kzTtaIwDmj1Doh38+D2GSCW+vnNWXjoJ?=
- =?us-ascii?Q?Dwm/krX6bYVkjLtNoBOCy+6Wgm9pQL+5oq7NFZAq/od7GH6qePoiJBg8CQz+?=
- =?us-ascii?Q?ymZ0kjqjFAv3g99DvbwRKeLQfliRKnlI5uxCfsPwrk9VyDw26YLpioxpon/G?=
- =?us-ascii?Q?zYSRBBkftUxJWjworNbGecyljkjjDQZPMKf7p2EV1x8onV8NdODLAROe0TI5?=
- =?us-ascii?Q?g0rzGjjwy28GGjTLQMYwVhzNZjOVl6nq4n63yHZFz+a/Hqj4UV1TDXFNUcwP?=
- =?us-ascii?Q?ZvtaXp1TJTbkFID2lzP4aSU1OffiqlryoX3LN96kHUcL4apmbM0k1iFKEBOS?=
- =?us-ascii?Q?GtfpPN0THk8IPSrM4384MRZceo0YRWzzRuHfTyIgnvAI3cj12uPKe/vqVASg?=
- =?us-ascii?Q?MhxpMCNY1qGqKHECKg+GU2jB2meKUK676S1haOe1Upnzr2XVnq8UTQYPv4lp?=
- =?us-ascii?Q?tzHI7oxe8jn+XJ0vPWYFrY9X2qsqRHHLGwBPSAE+J1kQ1Gz7xncUZr2XRjdt?=
- =?us-ascii?Q?mxs4ZE0Krnkxt0CYuwMaFTOjZRwoI99YsmptfcTtNdN4/lJqVTZkKe05c1yA?=
- =?us-ascii?Q?/AuBcngnitW6aNmJ/Rohyht01MltzBA/uuSmwxKbL+uU+ikwq8LM+9ZHpfg9?=
- =?us-ascii?Q?4BdbB0VyPQ6R0Mjad9qXcePCmKfWje1gAOIeClK4j+pQBloEjwNQHcCQp/kO?=
- =?us-ascii?Q?dOloCO4dyZBXwrcgb8ve2EUpaOL+YtDK07ah3twTeG2pj+TnXrvV87R3xRTi?=
- =?us-ascii?Q?PDF4gtiY6QKfFUVlkiPl9iiegBNyfR6pWOLAB95A3FspN6CKmA7DIDrCP4hy?=
- =?us-ascii?Q?6oAlLOHHKKw4lQ9MO8JD2WEB2p2YB4vrS4bRjznvFzOv2jqAk2QxH7QZXIu9?=
- =?us-ascii?Q?IG8aWa0hapizzvFpHs6gKAgZEh3XFS4QdRyp3qV5bNcXhKiuTn94KSrjwcwl?=
- =?us-ascii?Q?osVizR+deSyLMPzSS7/xIKhwAYa2RiOCBSQkSRJxRNMhVK1BLhGVCAvw7Lqd?=
- =?us-ascii?Q?3uTEKKRA4NNus4imzMH0YF9FbjczSb4AV9PM+4B107eC3mT7PkRAZgArKtDb?=
- =?us-ascii?Q?fjMeDXsr8QLoUS5uAhnCxaBzs8z/Lou+/Nb5U6ht2gARyQlCGkRmVEy9j0p2?=
- =?us-ascii?Q?911E2NNL/OzGBb+NkIAiyKE5xjMH8W5bwiwdvRWSLZw0P1JWL2UwS/MrvGw2?=
- =?us-ascii?Q?GXuHOl0x2Sq0lp83lM89cvQSU0FHotOU55DQdYWsTiDAyzsPpZY+mOpW8hwM?=
- =?us-ascii?Q?5KDFDKsI0ZuIQXmbR3y3sGa3?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3cd34ba-f81d-492b-530a-08d98fa81f61
-X-MS-Exchange-CrossTenant-AuthSource: SL2PR06MB3082.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2021 06:50:49.4964
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZUdbJAJz77fwzM1Fk6a3gOWk1Ntjb30BIXhjBo597IZkQwnQ8JXGwnQeWnPQ/TS2U3Wy1VBfVuD8+1m7xepXnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SL2PR06MB3003
+References: <20211015055808.327453-1-pauk.denis@gmail.com> <20211015055808.327453-2-pauk.denis@gmail.com>
+In-Reply-To: <20211015055808.327453-2-pauk.denis@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 15 Oct 2021 11:21:49 +0300
+Message-ID: <CAHp75VfUYgYT_RSNXCc+_3rkBbywL8ZDcAFPwr=WbPzcD8MF0w@mail.gmail.com>
+Subject: Re: [PATCH v7 1/2] hwmon: (asus_wmi_ec_sensors) Support B550 Asus WMI.
+To:     Denis Pauk <pauk.denis@gmail.com>
+Cc:     Eugene Shalygin <eugene.shalygin@gmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        thomas@weissschuh.net, Tor Vic <torvic9@mailbox.org>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        kernel test robot <lkp@intel.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-show() must not use snprintf() when formatting the value to be
-returned to user space.
+On Fri, Oct 15, 2021 at 8:58 AM Denis Pauk <pauk.denis@gmail.com> wrote:
+>
+> Linux HWMON sensors driver for ASUS motherboards to read
+> sensors from the embedded controller.
+>
+> Many ASUS motherboards do not publish all the available
+> sensors via the Super I/O chip but the missing ones are
+> available through the embedded controller (EC) registers.
+>
+> This driver implements reading those sensor data via the
+> WMI method BREC, which is known to be present in all ASUS
+> motherboards based on the AMD 500 series chipsets (and
+> probably is available in other models too). The driver
+> needs to know exact register addresses for the sensors and
+> thus support for each motherboard has to be added explicitly.
+>
+> The EC registers do not provide critical values for the
+> sensors and as such they are not published to the HWMON.
+>
+> Supported motherboards:
+> * PRIME X570-PRO
+> * Pro WS X570-ACE
+> * ROG CROSSHAIR VIII HERO
+> * ROG CROSSHAIR VIII DARK HERO
+> * ROG CROSSHAIR VIII FORMULA
+> * ROG STRIX X570-E GAMING
+> * ROG STRIX B550-E GAMING
 
-Fix the coccicheck warnings:
-WARNING: use scnprintf or sprintf.
+...
 
-Use sysfs_emit instead of scnprintf or sprintf makes more sense.
+> Reported-by: kernel test robot <lkp@intel.com>
 
-Signed-off-by: Qing Wang <wangqing@vivo.com>
----
- drivers/platform/x86/panasonic-laptop.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+New code can't be reported as regression. Or what did you mean by that?
 
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index d4f4444..37850d0 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -470,7 +470,7 @@ static ssize_t numbatt_show(struct device *dev, struct device_attribute *attr,
- 	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
--	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sinf[SINF_NUM_BATTERIES]);
-+	return sysfs_emit(buf, "%u\n", pcc->sinf[SINF_NUM_BATTERIES]);
- }
- 
- static ssize_t lcdtype_show(struct device *dev, struct device_attribute *attr,
-@@ -482,7 +482,7 @@ static ssize_t lcdtype_show(struct device *dev, struct device_attribute *attr,
- 	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
--	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sinf[SINF_LCD_TYPE]);
-+	return sysfs_emit(buf, "%u\n", pcc->sinf[SINF_LCD_TYPE]);
- }
- 
- static ssize_t mute_show(struct device *dev, struct device_attribute *attr,
-@@ -494,7 +494,7 @@ static ssize_t mute_show(struct device *dev, struct device_attribute *attr,
- 	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
--	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sinf[SINF_MUTE]);
-+	return sysfs_emit(buf, "%u\n", pcc->sinf[SINF_MUTE]);
- }
- 
- static ssize_t mute_store(struct device *dev, struct device_attribute *attr,
-@@ -524,7 +524,7 @@ static ssize_t sticky_key_show(struct device *dev, struct device_attribute *attr
- 	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
--	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sticky_key);
-+	return sysfs_emit(buf, "%u\n", pcc->sticky_key);
- }
- 
- static ssize_t sticky_key_store(struct device *dev, struct device_attribute *attr,
-@@ -566,7 +566,7 @@ static ssize_t eco_mode_show(struct device *dev, struct device_attribute *attr,
- 		result = -EIO;
- 		break;
- 	}
--	return snprintf(buf, PAGE_SIZE, "%u\n", result);
-+	return sysfs_emit(buf, "%u\n", result);
- }
- 
- static ssize_t eco_mode_store(struct device *dev, struct device_attribute *attr,
-@@ -625,7 +625,7 @@ static ssize_t ac_brightness_show(struct device *dev, struct device_attribute *a
- 	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
--	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sinf[SINF_AC_CUR_BRIGHT]);
-+	return sysfs_emit(buf, "%u\n", pcc->sinf[SINF_AC_CUR_BRIGHT]);
- }
- 
- static ssize_t ac_brightness_store(struct device *dev, struct device_attribute *attr,
-@@ -655,7 +655,7 @@ static ssize_t dc_brightness_show(struct device *dev, struct device_attribute *a
- 	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
--	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sinf[SINF_DC_CUR_BRIGHT]);
-+	return sysfs_emit(buf, "%u\n", pcc->sinf[SINF_DC_CUR_BRIGHT]);
- }
- 
- static ssize_t dc_brightness_store(struct device *dev, struct device_attribute *attr,
-@@ -685,7 +685,7 @@ static ssize_t current_brightness_show(struct device *dev, struct device_attribu
- 	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
--	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sinf[SINF_CUR_BRIGHT]);
-+	return sysfs_emit(buf, "%u\n", pcc->sinf[SINF_CUR_BRIGHT]);
- }
- 
- static ssize_t current_brightness_store(struct device *dev, struct device_attribute *attr,
-@@ -710,7 +710,7 @@ static ssize_t current_brightness_store(struct device *dev, struct device_attrib
- static ssize_t cdpower_show(struct device *dev, struct device_attribute *attr,
- 			    char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%d\n", get_optd_power_state());
-+	return sysfs_emit(buf, "%d\n", get_optd_power_state());
- }
- 
- static ssize_t cdpower_store(struct device *dev, struct device_attribute *attr,
+...
+
+> +Kernel driver asus-wmi-ec-sensors
+> +=================================
+> +
+> +Supported boards:
+> + * PRIME X570-PRO,
+> + * Pro WS X570-ACE,
+> + * ROG CROSSHAIR VIII DARK HERO,
+> + * ROG CROSSHAIR VIII FORMULA,
+> + * ROG CROSSHAIR VIII HERO,
+> + * ROG STRIX B550-E GAMING,
+> + * ROG STRIX X570-E GAMING.
+> +
+
+> +Authors:
+> +        Eugene Shalygin <eugene.shalygin@gmail.com>
+
+reST has a special keyword for that.
+
+...
+
+> +/*
+> + * HWMON driver for ASUS B550/X570 motherboards that publish sensor
+> + * values via the embedded controller registers.
+> + *
+> + * Copyright (C) 2021 Eugene Shalygin <eugene.shalygin@gmail.com>
+> + * Copyright (C) 2018-2019 Ed Brindley <kernel@maidavale.org>
+> + *
+> + * EC provides:
+> + * Chipset temperature,
+> + * CPU temperature,
+> + * Motherboard temperature,
+> + * T_Sensor temperature,
+> + * VRM  temperature,
+> + * Water In temperature,
+> + * Water Out temperature,
+> + * CPU Optional Fan RPM,
+> + * Chipset Fan RPM,
+> + * Water Flow Fan RPM,
+> + * CPU current.
+
+> + *
+
+Redundant line.
+
+> + */
+
+> +#include <asm/unaligned.h>
+
+The common rule is to go from generic to particular, hence
+linux/*
+followed by
+asm/*
+followed by local subsystem / local headers like
+linux/hwmon*
+
+with a blank line between each group.
+
+> +#include <linux/acpi.h>
+> +#include <linux/dmi.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
+> +#include <linux/init.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/nls.h>
+> +#include <linux/units.h>
+> +#include <linux/wmi.h>
+
+...
+
+> +/* BLOCK_READ_EC */
+
+Not sure what this means, but...
+
+> +#define        ASUSWMI_METHODID_BREC   0x42524543
+
+...above has definitely an ASCII combination in hex format, care to
+decode it in the comment?
+
+...
+
+> +/* from the ASUS DSDT source */
+
+Keep the same style for all comments, i.e. here "From ..."
+
+...
+
+> +#define        MAKE_SENSOR_ADDRESS(size_i, bank_i, index_i) \
+> +       { .size = size_i,\
+> +          .bank = bank_i,\
+> +          .index = index_i}
+
+You should choose one style for all macros. Here is one, there is
+another... I would recommend to use one of
+
+#define ... { \
+... \
+}
+
+or
+
+#define ... \
+{ \
+... \
+}
+
+In the second case the indentation of the {} is defined by the
+semantics of the macro: in case of function-like macro it starts from
+the first column, in case of data structure filler usually with one
+TAB.
+
+...
+
+> +/*
+> + * All the known sensors for ASUS EC controllers
+> + */
+
+One line and "All known sensors..."
+
+...
+
+> +struct asus_wmi_ec_info {
+> +       struct ec_sensor sensors[SENSOR_MAX];
+
+> +       char read_arg[((ASUSWMI_BREC_REGISTERS_MAX * 4) + 1) * 2];
+
+Too many parentheses.
+
+> +       u8 read_buffer[ASUSWMI_BREC_REGISTERS_MAX];
+> +       unsigned int nr_sensors;
+> +       unsigned int nr_registers;
+> +       unsigned long last_updated;
+> +};
+
+...
+
+> +       for (i = 0; i < SENSOR_MAX && bsi[i] != SENSOR_MAX; i++) {
+> +               s[i].info_index = bsi[i];
+
+> +               s[i].cached_value = 0;
+
+Isn't it filled by kzalloc() or alike?
+
+> +               ec->nr_sensors++;
+> +               ec->nr_registers += known_ec_sensors[bsi[i]].addr.size;
+> +       }
+
+...
+
+> +/*
+> + * The next four functions converts to/from BRxx string argument format
+> + * The format of the string is as follows:
+> + * The string consists of two-byte UTF-16 characters
+> + * The value of the very first byte int the string is equal to the total length
+> + * of the next string in bytes, thus excluding the first two-byte character
+> + * The rest of the string encodes pairs of (bank, index) pairs, where both
+> + * values are byte-long (0x00 to 0xFF)
+> + * Numbers are encoded as UTF-16 hex values
+
+The comment above misses a lot of punctuation. Also it would be nice
+to indent the list of items if any and so on.
+
+> + */
+> +static void asus_wmi_ec_decode_reply_buffer(const u8 *inp, u8 *out, u32 length)
+> +{
+> +       char buffer[ASUSWMI_MAX_BUF_LEN * 2];
+> +       const char *pos = buffer;
+> +       const u8 *data = inp + 2;
+> +       unsigned int i;
+> +       u32 len;
+
+> +       len = min3((u32)ASUSWMI_MAX_BUF_LEN, (length - 2) / 4, (u32)inp[0] / 4);
+
+Instead I would prefer to have to min_t() calls without adding castings.
+Also might be useful to have a short comment explaining this choice.
+
+> +       utf16s_to_utf8s((wchar_t *)data, len * 2,  UTF16_LITTLE_ENDIAN, buffer, len * 2);
+
+> +       for (i = 0; i < len; i++, pos += 2)
+> +               out[i] = (hex_to_bin(pos[0]) << 4) + hex_to_bin(pos[1]);
+
+NIH hex2bin().
+
+> +}
+
+...
+
+> +       for (i = 0; i < len; i++) {
+> +               byte = registers[i] >> 8;
+> +               *pos = hex_asc_hi(byte);
+> +               pos++;
+> +               *pos = hex_asc_lo(byte);
+> +               pos++;
+> +               byte = registers[i];
+> +               *pos = hex_asc_hi(byte);
+> +               pos++;
+> +               *pos = hex_asc_lo(byte);
+> +               pos++;
+> +       }
+
+NIH bin2hex()
+
+...
+
+> +               for (j = 0; j < si->addr.size;
+> +                    j++, register_idx++) {
+
+One line.
+
+> +                       registers[register_idx] = (si->addr.bank << 8) + si->addr.index + j;
+> +               }
+
+...
+
+> +       /* the first byte of the BRxx() argument string has to be the string size */
+
+Comment style.
+
+...
+
+> +       input.length = (acpi_size)query[0] + 2;
+
+Why is casting needed?
+
+...
+
+> +       status = wmi_evaluate_method(ASUSWMI_MONITORING_GUID, 0, method_id, &input,
+> +                                    &output);
+
+Logically better to keep &input and &output on the same line, i.e.
+second one here.
+
+> +       obj = output.pointer;
+> +       if (!obj || obj->type != ACPI_TYPE_BUFFER) {
+
+> +               acpi_os_free(obj);
+
+What's the point of calling acpi_os_free(obj) when you already know it's NULL?
+
+On top of that is the acpi_os_free() high-level enough API for this?
+
+> +               return -EIO;
+> +       }
+> +       asus_wmi_ec_decode_reply_buffer(obj->buffer.pointer, out, obj->buffer.length);
+
+> +       acpi_os_free(obj);
+
+Ditto.
+
+...
+
+> +       switch (data_type) {
+> +       case hwmon_curr:
+> +       case hwmon_temp:
+> +       case hwmon_in:
+
+> +               return value * KILO;
+
+Thanks for using KILO, but do you think it's the correct one and not MILLI?
+MILLI means that we got value in <units> and we would like to convert
+it to <milliunits>.
+KILO would mean the opposite, like we got in <milliunits> and we would
+like to have <units>.
+
+> +       default:
+> +               return value;
+> +       }
+
+...
+
+> +/*
+> + * Now follow the functions that implement the hwmon interface
+> + */
+
+One line.
+
+...
+
+> +       int index;
+> +       const struct asus_wmi_sensors *sensor_data = drvdata;
+
+Here and elsewhere, perhaps reversed xmas tree order?
+
+...
+
+> +       int nr_count[hwmon_max] = { 0 }, nr_types = 0;
+
+{} will work as well.
+
+...
+
+> +       /*
+> +        * if we can get values for all the registers in a single query,
+> +        * the query will not change from call to call
+
+"If..."
+And period at the end since it's a multi-line comment.
+
+> +        */
+
+...
+
+> +       sensor_data = devm_kzalloc(dev, sizeof(struct asus_wmi_sensors),
+> +                                  GFP_KERNEL);
+
+One line?
+
+...
+
+> +       /* ec init */
+
+Usefulness of this comment?
+
+> +       return asus_wmi_ec_configure_sensor_setup(dev,
+> +                                                 sensor_data, bsi);
+
+One line?
+
+...
+
+> +       .driver = {
+
+> +               .name = KBUILD_MODNAME,
+
+It's kinda semi-ABI, please be not dependent on compile-time variables.
+
+> +       },
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
