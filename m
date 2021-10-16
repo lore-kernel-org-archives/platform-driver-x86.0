@@ -2,35 +2,62 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B5BC43217
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Oct 2021 22:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6465CC18E0C
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Oct 2021 10:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC058611EE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Oct 2021 22:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A6060FDA
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Oct 2021 10:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243345AbhJOWbS (ORCPT
+        id S244047AbhJPKUd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Oct 2021 18:31:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235751AbhJOWbS (ORCPT
+        Sat, 16 Oct 2021 06:20:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22082 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S244094AbhJPKUa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Oct 2021 18:31:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B73FE6115C;
-        Fri, 15 Oct 2021 22:29:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634336951;
-        bh=TQtRtLYNlFE/GQNWGHE6FL49bQNWg/4TcBK38kMyEcE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OdvqBCvilrxB5rg9TaeamtdhCRox0HpwskMXhsphnvc8PFUZGtmpsu1AMs2gF0wGA
-         9YbLmc+sy5PqGzjPYGxE5N8j3btU3CYGreT7U6rr0J8kGJsi0k7C4g7XDY79WIj8SC
-         X4V3+fTgQxB9FRxot1OBSbzaVd1IiLGDS13cJj0LkVWA1nzN2HqHnsfI9/uQJBGDlg
-         IGPDilW56TCaxYQa/EkCkyG7N5A+jk31n9n5ovfpDLKLInpH7NgYcgvyXQI9C3p/fg
-         9LZj9zgxlhoEvuSNjtRnEfXsvvXsgGg1TCleGikg4tBdzfiMNovhH4+q1XNOdgPnkL
-         e0plAGH1ltXhA==
-Date:   Fri, 15 Oct 2021 23:29:08 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
+        Sat, 16 Oct 2021 06:20:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634379502;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lRKifhuZPEWMV9NZ2wr+qPq6taJBi8mO/4F/nJu9ENk=;
+        b=Kkh/ARh4ZzzY0jfO/HfqlKEgh64pzOBYEwTQodBwTBrukREV9FZ1r51i+1OHjUtJzVEjHv
+        eY7vdtDG00BmvAFqkyjZDzU88lcJavL0VRLpkTp7ZAaQFxt8KXa0zTS1TR+va8qPZ7G1tp
+        NEEnvxWH3DONV69cC8mszAwxsX0fgd4=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-5YS5cM_6O1CdQMnzsQL9_A-1; Sat, 16 Oct 2021 06:18:20 -0400
+X-MC-Unique: 5YS5cM_6O1CdQMnzsQL9_A-1
+Received: by mail-ed1-f69.google.com with SMTP id d3-20020a056402516300b003db863a248eso10316901ede.16
+        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Oct 2021 03:18:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lRKifhuZPEWMV9NZ2wr+qPq6taJBi8mO/4F/nJu9ENk=;
+        b=S7P+bjXznKvPt+Bj6GqRWETyhyzk9xdbsseXjFe3BNFVbMzvuzFVcVCay2KAToWmXQ
+         VsvF4kTRohI4FhscTOZd+vpoAlaaFSP7RR9/X8Hv5ZCKlew9KeIA/hzsp98WH6/kwVMR
+         suSDVeN1F9x8wIo6Z0wAAavDnVlfVF0jIEgqcNP/JaqLH/CfbHojAAMy/BknOelxg0oJ
+         ft6l/npXUDz5by8CajVaMixll69Z83OxpIiy9VyvRlQel21sF/njzUThLXKSRCnmwj6N
+         LWndSo6yee0pYiQzpMrvedB9WW4aAQIOMNYOfHeJWZ+RCVojbxJ8O7nCTKcUxg0Y2uOp
+         dfgw==
+X-Gm-Message-State: AOAM533KkD+cqdY9U1YiJ6yOJtUkya5RpyAWYPO7Trl0/G356mlvgyQ+
+        hkiUvAGaZynMwIMTFuZqAJNxAFzKejD+kHMkz9iNBwRjNOUOalEwqHiSl3Xk+icBwAX612e1lIS
+        uBNtvodDGcqa/6ij5tM2TdrEcRFPKrCmeTQ==
+X-Received: by 2002:a05:6402:1c85:: with SMTP id cy5mr26031884edb.281.1634379499473;
+        Sat, 16 Oct 2021 03:18:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwuJiWcON3M4nXKn747LTbTpMeMQmvBtJaORLUCaPCevFz0HcJ8P2t0t0MZp62LMyoxb4bUTQ==
+X-Received: by 2002:a05:6402:1c85:: with SMTP id cy5mr26031859edb.281.1634379499200;
+        Sat, 16 Oct 2021 03:18:19 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id m18sm3371750ejn.62.2021.10.16.03.18.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 16 Oct 2021 03:18:18 -0700 (PDT)
+Subject: Re: [PATCH 05/12] regulator: Introduce tps68470-regulator driver
+To:     Mark Brown <broonie@kernel.org>
 Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@infradead.org>,
@@ -45,8 +72,6 @@ Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: Re: [PATCH 05/12] regulator: Introduce tps68470-regulator driver
-Message-ID: <YWoAtCdikYfMpUnD@sirena.org.uk>
 References: <YWQU/SYTT5Vk24XH@sirena.org.uk>
  <f6f2d7e8-fdb8-ed64-0cdd-65aded9fc42c@redhat.com>
  <YWmwZJvDYjPWJdb4@sirena.org.uk>
@@ -57,147 +82,112 @@ References: <YWQU/SYTT5Vk24XH@sirena.org.uk>
  <c595b143-d7ed-e76b-7734-e03d14e0f76e@redhat.com>
  <YWndpGgBtLEAEaNj@sirena.org.uk>
  <1805d16e-87ab-c291-6a73-adabf41344ca@redhat.com>
+ <YWoAtCdikYfMpUnD@sirena.org.uk>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <26a1b636-1b82-2ca6-4f78-b1d22fa556d6@redhat.com>
+Date:   Sat, 16 Oct 2021 12:18:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="F/jmgXxh9qwDNeFa"
-Content-Disposition: inline
-In-Reply-To: <1805d16e-87ab-c291-6a73-adabf41344ca@redhat.com>
-X-Cookie: 1: No code table for op: ++post
+In-Reply-To: <YWoAtCdikYfMpUnD@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi Mark,
 
---F/jmgXxh9qwDNeFa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 10/16/21 12:29 AM, Mark Brown wrote:
+> On Fri, Oct 15, 2021 at 10:14:30PM +0200, Hans de Goede wrote:
+>> On 10/15/21 9:59 PM, Mark Brown wrote:
 
-On Fri, Oct 15, 2021 at 10:14:30PM +0200, Hans de Goede wrote:
-> On 10/15/21 9:59 PM, Mark Brown wrote:
+<snip>
 
-> > No, it's not.  What normally happens is that whatever registers the
-> > device will when registering the device supply platform data that the
-> > device later picks up from the struct device during probe.  What you're
-> > saying is that the idea here is that driver unconditionally declares
-> > platform data and then other code scribbles over that before the driver
-> > instantiates.  This is cleaner in that it keeps the platform
+>> During that discussion you said that instead we should sinmply
+>> directly pass the regulator_init_data, rather then first
+>> encoding this in device-properties in a swnode and then
+>> decoding those again in the regulator core.
+> 
+>> And passing the regulator_init_data is exactly what we are doing
+>> now; and now again this is not what we should be doing ?
+> 
+> No, it is not what the driver doing now.  The driver will *optionally*
+> check for platform data, but if none is provided or if it doesn't
+> configure some of the regulators then the driver will provide some hard
+> coded regulator_init_data as a default.  These might be OK on the system
+> you're looking at but will also be used on any other system that happens
+> to instantiate the driver without platform data where there's no
+> guarantee that the information provided will be safe.  These defaults
+> that are being provided may use the same structure that gets used for
+> platform data but they aren't really platform data.
+> 
+> Yes, someone could use this on a system that does things in the standard
+> fashion where the platform data is getting passed in but if it's ever
+> run on any other system then it's going to assume this default platform
+> data with these constraints that have been embedded directly into the
+> driver without anything to ensure that they make sense on that system.
+> 
+> Indeed, now I go back and dig out the rest of the series it seems that
+> there's some drivers/platforms/x86 code added later which does in fact
+> do the right thing for some but not all of the regulators, it supplies
+> some platform data which overrides some but not all of this default
+> regulator_init_data using platform_data having identified the system
+> using DMI information (with configurations quite different to and much
+> more restricted than the defaults provided, exactly why defaults are an
+> issue).  I'm now even more confused about what the information that's
+> there is doing in the driver.  Either it's all unneeded even for your
+> system and should just be deleted, or if any of it is needed then it
+> should be moved to being initialised in the same place everything else
+> is so that it's only used on your system and not on any other system
+> that happens to end up running the driver.
+> 
+> In any case given that your platform does actually have code for
+> identifying it and supplying appropriate platform data the driver itself
+> can be fixed by just deleting the else case of
+> 
+> 	if (pdata && pdata->reg_init_data[i])
+> 		config.init_data = pdata->reg_init_data[i];
+> 	else
+> 		config.init_data = &tps68470_init[i];
+> 
+> and the data structure/macro it uses.  If no configuration is provided
+> by the platform then none should be provided to the core, this in turn
+> means that the regulator framework won't reconfigure the hardware if it
+> doesn't know it's safe to do so.
 
-Actually, correction - there's no export of tps68470_init[] so I guess
-that's just the data that gets used :/
+Ah, ok. The default regulator_init_data in the tps68470_init[]
+array was already there in the out of tree version of this driver
+Daniel and I started with:
 
-> > configuration together and safer since the device can't exist before
-> > it's configuration is provided.
+https://github.com/intel/linux-intel-lts/blob/4.14/base/drivers/regulator/tps68470-regulator.c
 
-> Right, this is the standard device-tree model. Unfortunately the
-> information about which supplies are needed and the constraints
-> for those supplies is missing from the ACPI description for the
-> devices which we are dealing with here.
+Now that you have pointed this out I would be more then happy to
+delete it and I agree that providing this bogus data is not a
+good idea.
 
-That's not just the standard device tree model, that's how systems with
-board files work too.
+<snip>
 
-> During that discussion you said that instead we should sinmply
-> directly pass the regulator_init_data, rather then first
-> encoding this in device-properties in a swnode and then
-> decoding those again in the regulator core.
+> The important thing is to get rid of the hard coded defaults for the
+> regulator_init_data in the driver itself, if there is regulator_init_data
+> in the driver itself then it should be guarded with a DMI or similar
+> quirk.  Like I say above I think now I've gone back and dug through the
+> rest of the series once the default init_data is gone it's probably OK.
 
-> And passing the regulator_init_data is exactly what we are doing
-> now; and now again this is not what we should be doing ?
+Ok, for the next version of this patch-set I will:
 
-No, it is not what the driver doing now.  The driver will *optionally*
-check for platform data, but if none is provided or if it doesn't
-configure some of the regulators then the driver will provide some hard
-coded regulator_init_data as a default.  These might be OK on the system
-you're looking at but will also be used on any other system that happens
-to instantiate the driver without platform data where there's no
-guarantee that the information provided will be safe.  These defaults
-that are being provided may use the same structure that gets used for
-platform data but they aren't really platform data.
+1. Remove the default init_data
+2. Change the toplevel comment to be all C++ style matching the SPDX line
+3. Add a || COMPILE_TEST to the Kconfig so that this can be compile-tested
+   without selecting the INTEL_SKL_INT3472 option
 
-Yes, someone could use this on a system that does things in the standard
-fashion where the platform data is getting passed in but if it's ever
-run on any other system then it's going to assume this default platform
-data with these constraints that have been embedded directly into the
-driver without anything to ensure that they make sense on that system.
+Thank you for taking the time to dive a bit deeper into the patch-set
+and make it clear that your objection is the presence of the default
+regulator_init_data; and sorry for loosing my cool a bit in my previous
+email.
 
-Indeed, now I go back and dig out the rest of the series it seems that
-there's some drivers/platforms/x86 code added later which does in fact
-do the right thing for some but not all of the regulators, it supplies
-some platform data which overrides some but not all of this default
-regulator_init_data using platform_data having identified the system
-using DMI information (with configurations quite different to and much
-more restricted than the defaults provided, exactly why defaults are an
-issue).  I'm now even more confused about what the information that's
-there is doing in the driver.  Either it's all unneeded even for your
-system and should just be deleted, or if any of it is needed then it
-should be moved to being initialised in the same place everything else
-is so that it's only used on your system and not on any other system
-that happens to end up running the driver.
+Regards,
 
-In any case given that your platform does actually have code for
-identifying it and supplying appropriate platform data the driver itself
-can be fixed by just deleting the else case of
+Hans
 
-	if (pdata && pdata->reg_init_data[i])
-		config.init_data = pdata->reg_init_data[i];
-	else
-		config.init_data = &tps68470_init[i];
-
-and the data structure/macro it uses.  If no configuration is provided
-by the platform then none should be provided to the core, this in turn
-means that the regulator framework won't reconfigure the hardware if it
-doesn't know it's safe to do so.
-
-> Also note that the current solution is exactly what I suggested
-> we should do during the discussion with Daniel and I even provided
-> example code and you said absolutely nothing about this!
-
-I had been under the impression that the platform data would look like
-normal platform data and come along with the device registration,
-providing default regulator_init_data hadn't really occurred to me.
-
-> And please keep in mind that we *cannot* change the ACPI firmware interfaces
-> and that whether we like it or not things simply work different in the ACPI
-> world.
-
-> Frankly I'm quit unhappy, angry even about how you are blocking progress
-> here. You don't like APCI we get it, can we get over that now please?
-
-ACPI is fine, we have a bunch of perfectly good ways to handle things
-that need quirking on it safely - both platform_data and DMI quirks can
-and do work well here.  The issue is that we should be using those
-things rather than inventing new things unless those new things solve a
-problem.
-
-> So far all you seem to be doing is shooting down solutions, then first
-> being quiet about suggested alternative solutions and then once the
-> alternative solutions are implemented shoot them down again...
-
-> And all that without adding anything constructive. All you have
-> told us is how things should not be done (according to you).
-
-> So fine everything we come up is wrong, please tell us how we should
-> solve this instead then!
-
-The important thing is to get rid of the hard coded defaults for the
-regulator_init_data in the driver itself, if there is regulator_init_data
-in the driver itself then it should be guarded with a DMI or similar
-quirk.  Like I say above I think now I've gone back and dug through the
-rest of the series once the default init_data is gone it's probably OK.
-
---F/jmgXxh9qwDNeFa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmFqALMACgkQJNaLcl1U
-h9B5aQgAhQ7bqrNnhCcHborjeRwONxMdsrv6cyyt5sQlX5QAkjsYkIsE6OJfdwPM
-vHFJhWNXVJxfixf0+HRxF0ROwDSxjE+YOhuAnfxi61RWXx1aLkovdK9kBjVcRP3Y
-+WAgoVItgQ5PZkaL5x8+EvGDlAAmqjauL2EstgBYLoIA4jO9DW0jUoBEISyTlngS
-GXw+3CGX0mKpIADv8UCCjVKFZ4gXerXRroZD6tMqS1rV/YkpaLreZtHZz1iTMSOX
-lkllAPXbaqmKK2XIGd3N6kniK1JgG2uBoXGf4ErkWGl5swcNjIV8QaOVrCfyyg0r
-w23iI+GBFoQd2NNhwK+8601UryTwZQ==
-=ujeE
------END PGP SIGNATURE-----
-
---F/jmgXxh9qwDNeFa--
