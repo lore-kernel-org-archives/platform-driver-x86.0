@@ -2,141 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6184BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 14:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CEEC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 14:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4980860FED
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 14:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E626103D
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 14:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232079AbhJROfx (ORCPT
+        id S232303AbhJRPBc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Oct 2021 10:35:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58231 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231495AbhJROfx (ORCPT
+        Mon, 18 Oct 2021 11:01:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232402AbhJRPBc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Oct 2021 10:35:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634567621;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PHKzH/wajaDyRcGRKJtdJRiyxCohYfbn/RZQ0IVry88=;
-        b=HgwesVgWWbnkfrQeQ4pE+//sweBZ83azsU4p7gEs1Asssy9vFH6Eu0wu9NTu4R4Ke0KUzS
-        YE7WPDm8orhVUK9/EPjXRKg5GRvoWlM3KwL9A4LR6C/bMPP03AEabdBsv4zHpWHTneSjPl
-        8oqQkjNzMLVw2CTV3HdU9zQf/yvcboo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-506-nhARz-PKMzSzGCKpsEchYw-1; Mon, 18 Oct 2021 10:33:38 -0400
-X-MC-Unique: nhARz-PKMzSzGCKpsEchYw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F33FB10168D0;
-        Mon, 18 Oct 2021 14:33:36 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.192.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 76EE4100E809;
-        Mon, 18 Oct 2021 14:33:34 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mon, 18 Oct 2021 11:01:32 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8210CC06161C;
+        Mon, 18 Oct 2021 07:59:20 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id ec8so262603edb.6;
+        Mon, 18 Oct 2021 07:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WehYX/BfdiEXKhaGvq/GoMSkv9C2ieI8FUBxkA42jGQ=;
+        b=NAE1RUywfmSkyXk6xtlYeiVgQ3YmaOBs0NIxWLDU3LRdD+1AxGfVlacU9nwVREfJe5
+         nOItl2mjVJPwbBoK4En52WbyBFQZLFiswQ8xr9n/T7U5644bUi74aB0C1Yp9+Nn7EEv+
+         Q/IRUQqWZOXXr1KfU9y4ow5HG5UQCzRBJn/1MDOzQjCcvPCsR/fYklXb+WmfgKC7ZNYv
+         mB8zH2HbaU+ajMx+YNFNe6OHKby8ES7fGwDbtiJH64595uT+gCNzltI8Sm6jT1RgmKQg
+         yNIeKPt3ZOCAbgNrtK3HjuphOroi0U0opViW2k7iHmu3VJmPbbnEyldwELIHZkUCtVVf
+         RVvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WehYX/BfdiEXKhaGvq/GoMSkv9C2ieI8FUBxkA42jGQ=;
+        b=eLCRmXijdUAJpBYwYm/H7WhR5oBBRZBAs0s2HBuQUBN9Tif75A+2Q0r4Nnygmrt2gq
+         z2oQz/WQS1ckvgge6xj0aNS0sHojRlPgnSqB9CioEr+zETKAj9nQ7TelBIfh2F1LaoKO
+         8hLZMnHDEYlt8l6tOrZKXPZpOanNAdqdi0jdNsosgDDHB4Gfik3SEgHHAee3HVutWc2s
+         OUhQMvu8vVMM4pp2DX5IIrNkpCd54KmgP1TyHMgaBi/nNj6H/p/68RgytfwWy3KKp1di
+         cBwYc56SJYhbS9M9VCvF6QrD4Il9cc7ncegUij0HHrmoZcPA1MigXbfVwOzR/Yhicgzd
+         6zQw==
+X-Gm-Message-State: AOAM533hUmnIzh9kXfdarrNRz4R9usrEGJfOd6p8j35AJxvb61HAv8C3
+        t2GpGGGJIja1+yt+hmDoE129QzSM80HBavc8hZs=
+X-Google-Smtp-Source: ABdhPJw7yRU3C27ninbZ6RYvsA4b+bUz9SKwE96wmHwYQ0r+IM9z4rvD5eWXVEmmLh9ZmczfrPAjwmY8KqtNY5q05uY=
+X-Received: by 2002:a17:906:2887:: with SMTP id o7mr29518989ejd.425.1634569151170;
+ Mon, 18 Oct 2021 07:59:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211018143324.296961-1-hdegoede@redhat.com>
+In-Reply-To: <20211018143324.296961-1-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 18 Oct 2021 17:58:19 +0300
+Message-ID: <CAHp75VePYGsioootWjSEC=VXu8tz3+tv510Otju-O=ugCX+h=Q@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ASoC/pdx86/input: Introduce and use soc_intel_is_*() helpers
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@infradead.org>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH 3/3] Input: axp20x-pek - Use new soc_intel_is_cht() helper
-Date:   Mon, 18 Oct 2021 16:33:24 +0200
-Message-Id: <20211018143324.296961-4-hdegoede@redhat.com>
-In-Reply-To: <20211018143324.296961-1-hdegoede@redhat.com>
-References: <20211018143324.296961-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Mark Brown <broonie@kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use the new soc_intel_is_cht() helper to find out if we are running
-on a CHT device rather then checking the ACPI _HRV field.
+On Mon, Oct 18, 2021 at 5:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi All,
+>
+> We have been open-coding x86_match_cpu() checks for enabling some
+> SoC specific behavior in various places.
+>
+> The sound/soc/intel drivers used to also open-code this but this was
+> cleaned up a while ago introducing a number of soc_intel_is_*() helpers.
+>
+> This series moves the definition of these helpers to a more public place
+> and uses it in a couple of more places outside the sound tree.
+>
+> Mark, I know we are a bit late in the cycle, but if you can pick up
+> patch 1/3 (assuming on one objects) for 5.16, then the rest can be
 
-This is more reliable (some CHT devices have been found where the _HRV
-for the PMIC is 2 rather then 3) and leads to a nice cleanup.
+I suppose s/on one/no-one/ :-)
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/input/misc/axp20x-pek.c | 26 +++++---------------------
- 1 file changed, 5 insertions(+), 21 deletions(-)
+> applied after 5.16-rc1 is out.
 
-diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
-index 9c6386b2af33..e09b1fae42e1 100644
---- a/drivers/input/misc/axp20x-pek.c
-+++ b/drivers/input/misc/axp20x-pek.c
-@@ -22,6 +22,7 @@
- #include <linux/kernel.h>
- #include <linux/mfd/axp20x.h>
- #include <linux/module.h>
-+#include <linux/platform_data/x86/soc.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-@@ -255,41 +256,24 @@ static int axp20x_pek_probe_input_device(struct axp20x_pek *axp20x_pek,
- 	return 0;
- }
- 
--#ifdef CONFIG_ACPI
--static bool axp20x_pek_should_register_input(struct axp20x_pek *axp20x_pek,
--					     struct platform_device *pdev)
-+static bool axp20x_pek_should_register_input(struct axp20x_pek *axp20x_pek)
- {
--	unsigned long long hrv = 0;
--	acpi_status status;
--
- 	if (IS_ENABLED(CONFIG_INPUT_SOC_BUTTON_ARRAY) &&
- 	    axp20x_pek->axp20x->variant == AXP288_ID) {
--		status = acpi_evaluate_integer(ACPI_HANDLE(pdev->dev.parent),
--					       "_HRV", NULL, &hrv);
--		if (ACPI_FAILURE(status))
--			dev_err(&pdev->dev, "Failed to get PMIC hardware revision\n");
--
- 		/*
- 		 * On Cherry Trail platforms (hrv == 3), do not register the
- 		 * input device if there is an "INTCFD9" or "ACPI0011" gpio
- 		 * button ACPI device, as that handles the power button too,
- 		 * and otherwise we end up reporting all presses twice.
- 		 */
--		if (hrv == 3 && (acpi_dev_present("INTCFD9", NULL, -1) ||
-+		if (soc_intel_is_cht() &&
-+				(acpi_dev_present("INTCFD9", NULL, -1) ||
- 				 acpi_dev_present("ACPI0011", NULL, -1)))
- 			return false;
--
- 	}
- 
- 	return true;
- }
--#else
--static bool axp20x_pek_should_register_input(struct axp20x_pek *axp20x_pek,
--					     struct platform_device *pdev)
--{
--	return true;
--}
--#endif
- 
- static int axp20x_pek_probe(struct platform_device *pdev)
- {
-@@ -321,7 +305,7 @@ static int axp20x_pek_probe(struct platform_device *pdev)
- 	axp20x_pek->irq_dbf = regmap_irq_get_virq(
- 			axp20x_pek->axp20x->regmap_irqc, axp20x_pek->irq_dbf);
- 
--	if (axp20x_pek_should_register_input(axp20x_pek, pdev)) {
-+	if (axp20x_pek_should_register_input(axp20x_pek)) {
- 		error = axp20x_pek_probe_input_device(axp20x_pek, pdev);
- 		if (error)
- 			return error;
+What I like about this series is dropping ugly ifdeffery here and
+there and consolidating it in one place.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+P.S. Btw, since you are the maintainer of PDx86 it means either you or
+Mark (whoever gives an Ack to the other one) can take at least two
+patches that makes visible that the change is not just for a single
+user.
+
+> Hans de Goede (3):
+>   ASoC: Intel: Move soc_intel_is_foo() helpers to a generic header
+>   platform/x86: intel_int0002_vgpio: Use the new soc_intel_is_byt/cht
+>     helpers
+>   Input: axp20x-pek - Use new soc_intel_is_cht() helper
+>
+>  drivers/input/misc/axp20x-pek.c            | 26 ++-------
+>  drivers/platform/x86/intel/int0002_vgpio.c | 14 +----
+>  include/linux/platform_data/x86/soc.h      | 65 ++++++++++++++++++++++
+>  sound/soc/intel/common/soc-intel-quirks.h  | 51 +----------------
+>  4 files changed, 75 insertions(+), 81 deletions(-)
+>  create mode 100644 include/linux/platform_data/x86/soc.h
+>
+> --
+> 2.31.1
+>
+
+
 -- 
-2.31.1
-
+With Best Regards,
+Andy Shevchenko
