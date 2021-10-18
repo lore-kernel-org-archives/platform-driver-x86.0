@@ -2,61 +2,34 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58877C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 15:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4617AC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 15:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45FD6610A3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 15:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D8361212
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 15:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233532AbhJRPLr (ORCPT
+        id S231946AbhJRPhd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Oct 2021 11:11:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233561AbhJRPL1 (ORCPT
+        Mon, 18 Oct 2021 11:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231893AbhJRPhc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Oct 2021 11:11:27 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1735EC061774;
-        Mon, 18 Oct 2021 08:09:13 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id y12so482746eda.4;
-        Mon, 18 Oct 2021 08:09:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O49qZck/FUON9mmr+JH//18PwFgO+f1wHgk975bD51c=;
-        b=VmZbBY16aWPLzlt6Br9nXEfTLA7TReLEAISZZuILZVAjpfHxwA/wqbG7YMS0PnU+P+
-         R5yokL+gULNQTy1ZC/NaJWcEbcZrib+mz19FBO/7ZrnFazWHdRb0Fl93pEcdcIMEH+XN
-         KaQUtFNbmTNXt04IJ1uZD9lXXjG6S+CMve4AQD9MQojhSXFIlG8nTH5Krp65MV4rltCb
-         Gl+Ns3D26UMUhNxZxvC+8bLLV/wQyc3G8X/Vc8s1W3f/+/FRKRw10h04sKEsw2S/gM7k
-         e0U0wPM8vc6xic4OgZGzM5bkAVe3aOHA5iVcE0DyEliGNofe8pyQs5TjI5nSUxLZX21S
-         1ETQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O49qZck/FUON9mmr+JH//18PwFgO+f1wHgk975bD51c=;
-        b=YIbswQ7Ni60K68RDdq/jmHfPD99yEeHsf7jit6UBznn6bswOwSZicA/OtBEwZZ8TTk
-         4REUboj5f36CNdcNt7oCfDNGXv3Ec+XuvmWAxwyseW3rJ7dWDjyAI0wC+4PuAhe6Lkni
-         hlr15cATvp5wxfnpd8BRN/53kuh0lrSTwyKOAGgEwxhefEx4PFj/p2hI1JjZOfakALNH
-         9UtOMnUS0372IPEkDpYSfZFLOJTPeq7HvCZWk2wqnUjl2o50Z1QcJ/xp7IbCkOKk5Chd
-         ibNw8i1dleyc7NxZinIvTyHxe5CB2ZO7KkWp9Mmkwk12yPJVqstx/ruyx0sd41r7gCzx
-         WvHQ==
-X-Gm-Message-State: AOAM530SXqR4UVNsKbtbn9q1mQipiANAY7cNBraEatk536Q3Ad45oy5Y
-        rmuIMnuPG0cPpqUvYtJTcI15irpQkSCb/qIpFdk=
-X-Google-Smtp-Source: ABdhPJxdvKVHSKlpnzcnrhNs4EhvuOzaUStv0eobr4UnlD9/9u/rzOFLMjwPMeYViTbx0hvfpF8GSWLwTEVwjS/2gic=
-X-Received: by 2002:a50:e00b:: with SMTP id e11mr45546820edl.359.1634569749974;
- Mon, 18 Oct 2021 08:09:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211018143324.296961-1-hdegoede@redhat.com> <20211018143324.296961-3-hdegoede@redhat.com>
- <CAHp75VeG=RLXY16pMzNQbB9GR7GUsRTZu9Rx9yB0u3hzmhGELA@mail.gmail.com>
-In-Reply-To: <CAHp75VeG=RLXY16pMzNQbB9GR7GUsRTZu9Rx9yB0u3hzmhGELA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 Oct 2021 18:08:18 +0300
-Message-ID: <CAHp75VdLLapyoXOJSuS7kFZdu4U6r7tmi3g6wAOrFG0ez+Ajew@mail.gmail.com>
-Subject: Re: [PATCH 2/3] platform/x86: intel_int0002_vgpio: Use the new
- soc_intel_is_byt/cht helpers
+        Mon, 18 Oct 2021 11:37:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 51C95610C7;
+        Mon, 18 Oct 2021 15:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634571320;
+        bh=JibSQjxE3eYl/3LJTIS9KI3uMWewWr7xZzBC0dfWGTU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aTiMfr82haKToQNJsWafwbAPkKDz4OMKjDlHN4AzHZWc5OGHEx82vqxPis3A44u47
+         h1o4bOWucgwPQn6QmLRZbtQKZuEfMAcpjDqJKKyrUsBYSoxIg0EIYaAX5EaSSDIUiA
+         uN6kHbOPl5GghmzEGqONfQrl6TqOiZfNmzByK3qCWtqrTV7tpWc+KadjH2v+zKBOYk
+         ZGD1CkuzrJFqwJczsZDjgw66Js23G5MkBCE67oKtBiuVePB6F3mhBgGolnGblLo7uc
+         xF+lD1MKKB52R66Qg+yvvfIK5YzQJpLYX3V7YP7y0kVZ8OSLexRWMSqaeDdExrKdob
+         oiJjtsXY177ww==
+Date:   Mon, 18 Oct 2021 16:35:17 +0100
+From:   Mark Brown <broonie@kernel.org>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Gross <markgross@kernel.org>,
@@ -64,30 +37,49 @@ Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/3] ASoC: Intel: Move soc_intel_is_foo() helpers to a
+ generic header
+Message-ID: <YW2UNRAWUphJqhyW@sirena.org.uk>
+References: <20211018143324.296961-1-hdegoede@redhat.com>
+ <20211018143324.296961-2-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pdySZJpBnvtzNFGZ"
+Content-Disposition: inline
+In-Reply-To: <20211018143324.296961-2-hdegoede@redhat.com>
+X-Cookie: I program, therefore I am.
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 6:03 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, Oct 18, 2021 at 5:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-...
+--pdySZJpBnvtzNFGZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > +       if (!soc_intel_is_byt() && !soc_intel_is_cht())
->
->   if (!(soc_intel_is_byt() || soc_intel_is_cht()))
->
-> ?
+On Mon, Oct 18, 2021 at 04:33:22PM +0200, Hans de Goede wrote:
+> The soc_intel_is_foo() helpers from
+> sound/soc/intel/common/soc-intel-quirks.h are useful outside of the
+> sound subsystem too.
 
-Self-nak on this. && is slightly better in case we got the first
-argument false. Proposed variant will always evaluate both.
+Acked-by: Mark Brown <broonie@kernel.org>
 
--- 
-With Best Regards,
-Andy Shevchenko
+--pdySZJpBnvtzNFGZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmFtlDUACgkQJNaLcl1U
+h9AmLAf/akoQqvZR7V/vLj9gdKLLnHFVYPkDDXQ/rV347EYuW1MwbPWahTmi5Ptx
+BK063G0PZVbcYuqyrJWFbGMZRnbqLOPITzjq7z0qsMvNfSpS6emjT+jlTA7gGxGa
+22tp9TkO2QxeQ1ZK6qXF6ppQHI7VunrVNkDHdGjFGpNtNrHJ/BrTfsEswMXvPaYd
+nIWF0qzlS6v2Vy9CV1xuZXtdIUuME3UIPHBaEyr5K+Rszj2S0A6pGVM/mVLA4CUe
+BQ5GFTEMgjMJgz4zNvtv3+QGn3C+QgeP3fzROg3Gnv9xFGpk6ia1yvuvcKAslAgL
+ABlCBNnMRMeYtS3E5k56LuwghbwTFA==
+=jPfX
+-----END PGP SIGNATURE-----
+
+--pdySZJpBnvtzNFGZ--
