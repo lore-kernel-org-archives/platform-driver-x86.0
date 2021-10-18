@@ -2,192 +2,333 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6465CC18E0C
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Oct 2021 10:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985A5C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 09:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45A6060FDA
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Oct 2021 10:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB3E60FC3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 09:18:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244047AbhJPKUd (ORCPT
+        id S231339AbhJRJUM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 16 Oct 2021 06:20:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22082 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244094AbhJPKUa (ORCPT
+        Mon, 18 Oct 2021 05:20:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231375AbhJRJUI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 16 Oct 2021 06:20:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634379502;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lRKifhuZPEWMV9NZ2wr+qPq6taJBi8mO/4F/nJu9ENk=;
-        b=Kkh/ARh4ZzzY0jfO/HfqlKEgh64pzOBYEwTQodBwTBrukREV9FZ1r51i+1OHjUtJzVEjHv
-        eY7vdtDG00BmvAFqkyjZDzU88lcJavL0VRLpkTp7ZAaQFxt8KXa0zTS1TR+va8qPZ7G1tp
-        NEEnvxWH3DONV69cC8mszAwxsX0fgd4=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-284-5YS5cM_6O1CdQMnzsQL9_A-1; Sat, 16 Oct 2021 06:18:20 -0400
-X-MC-Unique: 5YS5cM_6O1CdQMnzsQL9_A-1
-Received: by mail-ed1-f69.google.com with SMTP id d3-20020a056402516300b003db863a248eso10316901ede.16
-        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Oct 2021 03:18:20 -0700 (PDT)
+        Mon, 18 Oct 2021 05:20:08 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67066C06161C;
+        Mon, 18 Oct 2021 02:17:57 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id ls18-20020a17090b351200b001a00250584aso14020288pjb.4;
+        Mon, 18 Oct 2021 02:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dEPTi1IjpGGaCxlyJFB6iV1bIw/FMmc/gW7AFZwRvk8=;
+        b=VL3fki0KsshkeYZcxHAfMGRr4wUvB80IPXjXA24efe8jrQmG6sM91MmMumonZhw2ZX
+         D/Niqk0ZJt9hL4/R2DMEa431x0b5CIRqSNEE8vNnq6WrsHc7UUhY657ufX2nKU9vdOav
+         ex9Jz5NaMkuZElJIISPqrMczQfz0oe4jBzuDkCC2ejOR7Uyb225+KouEhD34gObp0dHO
+         iQWi20nv4sDoDIvdj2hjRK2sZY0OB8oh/5D5l3AcWvdhYah2pSHpHenTBAL/RoiPjGg8
+         WanJKHcw0ESBNjti764263+WsOo1IiTaJFaBYPdP3l5FsIgdJp6EI5J3TOEzZ2JcEmxu
+         PrHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=lRKifhuZPEWMV9NZ2wr+qPq6taJBi8mO/4F/nJu9ENk=;
-        b=S7P+bjXznKvPt+Bj6GqRWETyhyzk9xdbsseXjFe3BNFVbMzvuzFVcVCay2KAToWmXQ
-         VsvF4kTRohI4FhscTOZd+vpoAlaaFSP7RR9/X8Hv5ZCKlew9KeIA/hzsp98WH6/kwVMR
-         suSDVeN1F9x8wIo6Z0wAAavDnVlfVF0jIEgqcNP/JaqLH/CfbHojAAMy/BknOelxg0oJ
-         ft6l/npXUDz5by8CajVaMixll69Z83OxpIiy9VyvRlQel21sF/njzUThLXKSRCnmwj6N
-         LWndSo6yee0pYiQzpMrvedB9WW4aAQIOMNYOfHeJWZ+RCVojbxJ8O7nCTKcUxg0Y2uOp
-         dfgw==
-X-Gm-Message-State: AOAM533KkD+cqdY9U1YiJ6yOJtUkya5RpyAWYPO7Trl0/G356mlvgyQ+
-        hkiUvAGaZynMwIMTFuZqAJNxAFzKejD+kHMkz9iNBwRjNOUOalEwqHiSl3Xk+icBwAX612e1lIS
-        uBNtvodDGcqa/6ij5tM2TdrEcRFPKrCmeTQ==
-X-Received: by 2002:a05:6402:1c85:: with SMTP id cy5mr26031884edb.281.1634379499473;
-        Sat, 16 Oct 2021 03:18:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwuJiWcON3M4nXKn747LTbTpMeMQmvBtJaORLUCaPCevFz0HcJ8P2t0t0MZp62LMyoxb4bUTQ==
-X-Received: by 2002:a05:6402:1c85:: with SMTP id cy5mr26031859edb.281.1634379499200;
-        Sat, 16 Oct 2021 03:18:19 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id m18sm3371750ejn.62.2021.10.16.03.18.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Oct 2021 03:18:18 -0700 (PDT)
-Subject: Re: [PATCH 05/12] regulator: Introduce tps68470-regulator driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org
-References: <YWQU/SYTT5Vk24XH@sirena.org.uk>
- <f6f2d7e8-fdb8-ed64-0cdd-65aded9fc42c@redhat.com>
- <YWmwZJvDYjPWJdb4@sirena.org.uk>
- <d0d1dc05-4cc6-2f47-88a9-700cfc356d86@redhat.com>
- <YWnPaI/ZECdfYre9@sirena.org.uk>
- <843f939a-7e43-bc12-e9fc-582e01129b63@redhat.com>
- <YWnZIZTPiuAIazV+@sirena.org.uk>
- <c595b143-d7ed-e76b-7734-e03d14e0f76e@redhat.com>
- <YWndpGgBtLEAEaNj@sirena.org.uk>
- <1805d16e-87ab-c291-6a73-adabf41344ca@redhat.com>
- <YWoAtCdikYfMpUnD@sirena.org.uk>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <26a1b636-1b82-2ca6-4f78-b1d22fa556d6@redhat.com>
-Date:   Sat, 16 Oct 2021 12:18:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        bh=dEPTi1IjpGGaCxlyJFB6iV1bIw/FMmc/gW7AFZwRvk8=;
+        b=BFKWkL0peKsWpsBC789pUKXvBSoe6YP0h5Xpj86aXcrnJlodM/isQS1aM+7tpwJgkx
+         wTnXll+iiy74+3OAJClmdK6vxfcdH5jlststMUzYwCuvMxm00I2wQR7s9RiRtB6MBUin
+         bxcAXMmryYJOtiP0S4TooyPG+MafdilYuQlPYVj1zG+TAK2lQBoWxa9zdPWQhOzGm5hy
+         XUiO9BvLW8bc9D+Owj+qzFf5IF1TD6jCQV2WeX8I7/SAz+SyzJ9cHChAIwMM474nTL50
+         otejDMx6UCkJL1hUgCj+cEoO9izuu/86gC/oSgCMmKi+t63kUK68MnojXrg89uH69r6c
+         hMzw==
+X-Gm-Message-State: AOAM533G9vR87ZH5y5PGpNg28OIUmpviKKGe0qf9irZnaBg/cIgpb9Zj
+        tITomEZ3FEhw7UynaiGde2A=
+X-Google-Smtp-Source: ABdhPJyTUAJsqyaPHHMhqyyIADxc6L72xpFBQjE+mWWyed6Kq2PGMb4OzU2DNRle4903v0NEAX6s2w==
+X-Received: by 2002:a17:90b:4b46:: with SMTP id mi6mr31566870pjb.161.1634548676947;
+        Mon, 18 Oct 2021 02:17:56 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id u16sm12317290pfn.187.2021.10.18.02.17.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Oct 2021 02:17:56 -0700 (PDT)
+From:   Ye Guojin <cgel.zte@gmail.com>
+X-Google-Original-From: Ye Guojin <ye.guojin@zte.com.cn>
+To:     hmh@hmh.eng.br
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zealci@zte.com.cn, Ye Guojin <ye.guojin@zte.com.cn>
+Subject: [PATCH] platform/x86: thinkpad_acpi: fix coccinelle warnings
+Date:   Mon, 18 Oct 2021 09:17:50 +0000
+Message-Id: <20211018091750.858826-1-ye.guojin@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <YWoAtCdikYfMpUnD@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+coccicheck complains about the use of snprintf() in sysfs show
+functions:
 
-On 10/16/21 12:29 AM, Mark Brown wrote:
-> On Fri, Oct 15, 2021 at 10:14:30PM +0200, Hans de Goede wrote:
->> On 10/15/21 9:59 PM, Mark Brown wrote:
+WARNING  use scnprintf or sprintf
 
-<snip>
+Use sysfs_emit instead of scnprintf or sprintf makes more sense.
 
->> During that discussion you said that instead we should sinmply
->> directly pass the regulator_init_data, rather then first
->> encoding this in device-properties in a swnode and then
->> decoding those again in the regulator core.
-> 
->> And passing the regulator_init_data is exactly what we are doing
->> now; and now again this is not what we should be doing ?
-> 
-> No, it is not what the driver doing now.  The driver will *optionally*
-> check for platform data, but if none is provided or if it doesn't
-> configure some of the regulators then the driver will provide some hard
-> coded regulator_init_data as a default.  These might be OK on the system
-> you're looking at but will also be used on any other system that happens
-> to instantiate the driver without platform data where there's no
-> guarantee that the information provided will be safe.  These defaults
-> that are being provided may use the same structure that gets used for
-> platform data but they aren't really platform data.
-> 
-> Yes, someone could use this on a system that does things in the standard
-> fashion where the platform data is getting passed in but if it's ever
-> run on any other system then it's going to assume this default platform
-> data with these constraints that have been embedded directly into the
-> driver without anything to ensure that they make sense on that system.
-> 
-> Indeed, now I go back and dig out the rest of the series it seems that
-> there's some drivers/platforms/x86 code added later which does in fact
-> do the right thing for some but not all of the regulators, it supplies
-> some platform data which overrides some but not all of this default
-> regulator_init_data using platform_data having identified the system
-> using DMI information (with configurations quite different to and much
-> more restricted than the defaults provided, exactly why defaults are an
-> issue).  I'm now even more confused about what the information that's
-> there is doing in the driver.  Either it's all unneeded even for your
-> system and should just be deleted, or if any of it is needed then it
-> should be moved to being initialised in the same place everything else
-> is so that it's only used on your system and not on any other system
-> that happens to end up running the driver.
-> 
-> In any case given that your platform does actually have code for
-> identifying it and supplying appropriate platform data the driver itself
-> can be fixed by just deleting the else case of
-> 
-> 	if (pdata && pdata->reg_init_data[i])
-> 		config.init_data = pdata->reg_init_data[i];
-> 	else
-> 		config.init_data = &tps68470_init[i];
-> 
-> and the data structure/macro it uses.  If no configuration is provided
-> by the platform then none should be provided to the core, this in turn
-> means that the regulator framework won't reconfigure the hardware if it
-> doesn't know it's safe to do so.
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Ye Guojin <ye.guojin@zte.com.cn>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 54 ++++++++++++++--------------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
-Ah, ok. The default regulator_init_data in the tps68470_init[]
-array was already there in the out of tree version of this driver
-Daniel and I started with:
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 882e994658f1..338a848d6dd0 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -1277,7 +1277,7 @@ static ssize_t tpacpi_rfk_sysfs_enable_show(const enum tpacpi_rfk_id id,
+ 			return status;
+ 	}
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n",
++	return sysfs_emit(buf, "%d\n",
+ 			(status == TPACPI_RFK_RADIO_ON) ? 1 : 0);
+ }
+ 
+@@ -1370,14 +1370,14 @@ static int tpacpi_rfk_procfs_write(const enum tpacpi_rfk_id id, char *buf)
+ /* interface_version --------------------------------------------------- */
+ static ssize_t interface_version_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n", TPACPI_SYSFS_VERSION);
++	return sysfs_emit(buf, "0x%08x\n", TPACPI_SYSFS_VERSION);
+ }
+ static DRIVER_ATTR_RO(interface_version);
+ 
+ /* debug_level --------------------------------------------------------- */
+ static ssize_t debug_level_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%04x\n", dbg_level);
++	return sysfs_emit(buf, "0x%04x\n", dbg_level);
+ }
+ 
+ static ssize_t debug_level_store(struct device_driver *drv, const char *buf,
+@@ -1397,7 +1397,7 @@ static DRIVER_ATTR_RW(debug_level);
+ /* version ------------------------------------------------------------- */
+ static ssize_t version_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%s v%s\n",
++	return sysfs_emit(buf, "%s v%s\n",
+ 			TPACPI_DESC, TPACPI_VERSION);
+ }
+ static DRIVER_ATTR_RO(version);
+@@ -1409,7 +1409,7 @@ static DRIVER_ATTR_RO(version);
+ /* wlsw_emulstate ------------------------------------------------------ */
+ static ssize_t wlsw_emulstate_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_wlsw_emulstate);
++	return sysfs_emit(buf, "%d\n", !!tpacpi_wlsw_emulstate);
+ }
+ 
+ static ssize_t wlsw_emulstate_store(struct device_driver *drv, const char *buf,
+@@ -1432,7 +1432,7 @@ static DRIVER_ATTR_RW(wlsw_emulstate);
+ /* bluetooth_emulstate ------------------------------------------------- */
+ static ssize_t bluetooth_emulstate_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_bluetooth_emulstate);
++	return sysfs_emit(buf, "%d\n", !!tpacpi_bluetooth_emulstate);
+ }
+ 
+ static ssize_t bluetooth_emulstate_store(struct device_driver *drv,
+@@ -1452,7 +1452,7 @@ static DRIVER_ATTR_RW(bluetooth_emulstate);
+ /* wwan_emulstate ------------------------------------------------- */
+ static ssize_t wwan_emulstate_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_wwan_emulstate);
++	return sysfs_emit(buf, "%d\n", !!tpacpi_wwan_emulstate);
+ }
+ 
+ static ssize_t wwan_emulstate_store(struct device_driver *drv, const char *buf,
+@@ -1472,7 +1472,7 @@ static DRIVER_ATTR_RW(wwan_emulstate);
+ /* uwb_emulstate ------------------------------------------------- */
+ static ssize_t uwb_emulstate_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_uwb_emulstate);
++	return sysfs_emit(buf, "%d\n", !!tpacpi_uwb_emulstate);
+ }
+ 
+ static ssize_t uwb_emulstate_store(struct device_driver *drv, const char *buf,
+@@ -2680,7 +2680,7 @@ static ssize_t hotkey_enable_show(struct device *dev,
+ 	if (res)
+ 		return res;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", status);
++	return sysfs_emit(buf, "%d\n", status);
+ }
+ 
+ static ssize_t hotkey_enable_store(struct device *dev,
+@@ -2708,7 +2708,7 @@ static ssize_t hotkey_mask_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n", hotkey_user_mask);
++	return sysfs_emit(buf, "0x%08x\n", hotkey_user_mask);
+ }
+ 
+ static ssize_t hotkey_mask_store(struct device *dev,
+@@ -2756,7 +2756,7 @@ static ssize_t hotkey_bios_mask_show(struct device *dev,
+ {
+ 	printk_deprecated_attribute("hotkey_bios_mask",
+ 			"This attribute is useless.");
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n", hotkey_orig_mask);
++	return sysfs_emit(buf, "0x%08x\n", hotkey_orig_mask);
+ }
+ 
+ static DEVICE_ATTR_RO(hotkey_bios_mask);
+@@ -2766,7 +2766,7 @@ static ssize_t hotkey_all_mask_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n",
++	return sysfs_emit(buf, "0x%08x\n",
+ 				hotkey_all_mask | hotkey_source_mask);
+ }
+ 
+@@ -2777,7 +2777,7 @@ static ssize_t hotkey_adaptive_all_mask_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n",
++	return sysfs_emit(buf, "0x%08x\n",
+ 			hotkey_adaptive_all_mask | hotkey_source_mask);
+ }
+ 
+@@ -2788,7 +2788,7 @@ static ssize_t hotkey_recommended_mask_show(struct device *dev,
+ 					    struct device_attribute *attr,
+ 					    char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n",
++	return sysfs_emit(buf, "0x%08x\n",
+ 			(hotkey_all_mask | hotkey_source_mask)
+ 			& ~hotkey_reserved_mask);
+ }
+@@ -2802,7 +2802,7 @@ static ssize_t hotkey_source_mask_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n", hotkey_source_mask);
++	return sysfs_emit(buf, "0x%08x\n", hotkey_source_mask);
+ }
+ 
+ static ssize_t hotkey_source_mask_store(struct device *dev,
+@@ -2853,7 +2853,7 @@ static ssize_t hotkey_poll_freq_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", hotkey_poll_freq);
++	return sysfs_emit(buf, "%d\n", hotkey_poll_freq);
+ }
+ 
+ static ssize_t hotkey_poll_freq_store(struct device *dev,
+@@ -2895,7 +2895,7 @@ static ssize_t hotkey_radio_sw_show(struct device *dev,
+ 	/* Opportunistic update */
+ 	tpacpi_rfk_update_hwblock_state((res == TPACPI_RFK_RADIO_OFF));
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n",
++	return sysfs_emit(buf, "%d\n",
+ 			(res == TPACPI_RFK_RADIO_OFF) ? 0 : 1);
+ }
+ 
+@@ -2918,7 +2918,7 @@ static ssize_t hotkey_tablet_mode_show(struct device *dev,
+ 	if (res < 0)
+ 		return res;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", !!s);
++	return sysfs_emit(buf, "%d\n", !!s);
+ }
+ 
+ static DEVICE_ATTR_RO(hotkey_tablet_mode);
+@@ -2935,7 +2935,7 @@ static ssize_t hotkey_wakeup_reason_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", hotkey_wakeup_reason);
++	return sysfs_emit(buf, "%d\n", hotkey_wakeup_reason);
+ }
+ 
+ static DEVICE_ATTR(wakeup_reason, S_IRUGO, hotkey_wakeup_reason_show, NULL);
+@@ -2951,7 +2951,7 @@ static ssize_t hotkey_wakeup_hotunplug_complete_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", hotkey_autosleep_ack);
++	return sysfs_emit(buf, "%d\n", hotkey_autosleep_ack);
+ }
+ 
+ static DEVICE_ATTR(wakeup_hotunplug_complete, S_IRUGO,
+@@ -2986,7 +2986,7 @@ static ssize_t adaptive_kbd_mode_show(struct device *dev,
+ 	if (current_mode < 0)
+ 		return current_mode;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", current_mode);
++	return sysfs_emit(buf, "%d\n", current_mode);
+ }
+ 
+ static ssize_t adaptive_kbd_mode_store(struct device *dev,
+@@ -6350,7 +6350,7 @@ static ssize_t thermal_temp_input_show(struct device *dev,
+ 	if (value == TPACPI_THERMAL_SENSOR_NA)
+ 		return -ENXIO;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", value);
++	return sysfs_emit(buf, "%d\n", value);
+ }
+ 
+ #define THERMAL_SENSOR_ATTR_TEMP(_idxA, _idxB) \
+@@ -8583,7 +8583,7 @@ static ssize_t fan_pwm1_enable_show(struct device *dev,
+ 	} else
+ 		mode = 1;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", mode);
++	return sysfs_emit(buf, "%d\n", mode);
+ }
+ 
+ static ssize_t fan_pwm1_enable_store(struct device *dev,
+@@ -8649,7 +8649,7 @@ static ssize_t fan_pwm1_show(struct device *dev,
+ 	if (status > 7)
+ 		status = 7;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", (status * 255) / 7);
++	return sysfs_emit(buf, "%u\n", (status * 255) / 7);
+ }
+ 
+ static ssize_t fan_pwm1_store(struct device *dev,
+@@ -8702,7 +8702,7 @@ static ssize_t fan_fan1_input_show(struct device *dev,
+ 	if (res < 0)
+ 		return res;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", speed);
++	return sysfs_emit(buf, "%u\n", speed);
+ }
+ 
+ static DEVICE_ATTR(fan1_input, S_IRUGO, fan_fan1_input_show, NULL);
+@@ -8719,7 +8719,7 @@ static ssize_t fan_fan2_input_show(struct device *dev,
+ 	if (res < 0)
+ 		return res;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", speed);
++	return sysfs_emit(buf, "%u\n", speed);
+ }
+ 
+ static DEVICE_ATTR(fan2_input, S_IRUGO, fan_fan2_input_show, NULL);
+@@ -8727,7 +8727,7 @@ static DEVICE_ATTR(fan2_input, S_IRUGO, fan_fan2_input_show, NULL);
+ /* sysfs fan fan_watchdog (hwmon driver) ------------------------------- */
+ static ssize_t fan_watchdog_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%u\n", fan_watchdog_maxinterval);
++	return sysfs_emit(buf, "%u\n", fan_watchdog_maxinterval);
+ }
+ 
+ static ssize_t fan_watchdog_store(struct device_driver *drv, const char *buf,
+-- 
+2.25.1
 
-https://github.com/intel/linux-intel-lts/blob/4.14/base/drivers/regulator/tps68470-regulator.c
-
-Now that you have pointed this out I would be more then happy to
-delete it and I agree that providing this bogus data is not a
-good idea.
-
-<snip>
-
-> The important thing is to get rid of the hard coded defaults for the
-> regulator_init_data in the driver itself, if there is regulator_init_data
-> in the driver itself then it should be guarded with a DMI or similar
-> quirk.  Like I say above I think now I've gone back and dug through the
-> rest of the series once the default init_data is gone it's probably OK.
-
-Ok, for the next version of this patch-set I will:
-
-1. Remove the default init_data
-2. Change the toplevel comment to be all C++ style matching the SPDX line
-3. Add a || COMPILE_TEST to the Kconfig so that this can be compile-tested
-   without selecting the INTEL_SKL_INT3472 option
-
-Thank you for taking the time to dive a bit deeper into the patch-set
-and make it clear that your objection is the presence of the default
-regulator_init_data; and sorry for loosing my cool a bit in my previous
-email.
-
-Regards,
-
-Hans
 
