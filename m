@@ -2,141 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74ADC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 14:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7691CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 14:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C659160FC3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 14:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C71B60FC3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 14:33:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232395AbhJRObz (ORCPT
+        id S231883AbhJROfr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Oct 2021 10:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232260AbhJRObj (ORCPT
+        Mon, 18 Oct 2021 10:35:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:50442 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231495AbhJROfp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Oct 2021 10:31:39 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CFADC06176D;
-        Mon, 18 Oct 2021 07:29:09 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f085700a5f06031787ecc0a.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:5700:a5f0:6031:787e:cc0a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D2FC91EC04C2;
-        Mon, 18 Oct 2021 16:29:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1634567347;
+        Mon, 18 Oct 2021 10:35:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634567613;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=c9xEu9dyx4wrnGD++qak7Rf0JfD9ujFQ9E5yOZB19Q0=;
-        b=aKWwYTlr9cCQu7ia5dZP/kuxrxzN93CyPBgOxttie/QBj3Td/GyHk64AiEAbXaIbAsIGqx
-        BgGTrkPaemD3IjwBuWI2GydbibFzG2kuXi6yqjHnJLtsSpqF8n17AX6r45/y+wPNjuoNcV
-        Bkj7MRJet38z0l3P6cMLUbOfmJ1xF50=
-Date:   Mon, 18 Oct 2021 16:29:07 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v6 08/42] x86/sev-es: initialize sev_status/features
- within #VC handler
-Message-ID: <YW2EsxcqBucuyoal@zn.tnic>
-References: <20211008180453.462291-1-brijesh.singh@amd.com>
- <20211008180453.462291-9-brijesh.singh@amd.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zX7HGUsCfiKjj+VA4N3UsOYAYrUUNC8LJO4AASrIqXk=;
+        b=eSDtOXqOVmKC3HPA9uUPO2FmOPGY37+z1/BevuJ3dqO1cnAQ4FwmnGMqZOidG6kvA0p/tI
+        /g3rIOI9ulW0OE+UjQsOn1G+uxdf0aU8ODF8XbxDTeIHpzQutlw8FUR2hfR78x3e518nbi
+        9PclgIDPEYqGrvSoU3zNYyNHK35XdiU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-534-iRruZ8zyOyCALMFvMuOiqg-1; Mon, 18 Oct 2021 10:33:30 -0400
+X-MC-Unique: iRruZ8zyOyCALMFvMuOiqg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF0A4101B4A0;
+        Mon, 18 Oct 2021 14:33:28 +0000 (UTC)
+Received: from x1.localdomain (unknown [10.39.192.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D7A6C100E809;
+        Mon, 18 Oct 2021 14:33:25 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: [PATCH 0/3] ASoC/pdx86/input: Introduce and use soc_intel_is_*() helpers
+Date:   Mon, 18 Oct 2021 16:33:21 +0200
+Message-Id: <20211018143324.296961-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211008180453.462291-9-brijesh.singh@amd.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 01:04:19PM -0500, Brijesh Singh wrote:
-> From: Michael Roth <michael.roth@amd.com>
-> 
-> Generally access to MSR_AMD64_SEV is only safe if the 0x8000001F CPUID
-> leaf indicates SEV support. With SEV-SNP, CPUID responses from the
-> hypervisor are not considered trustworthy, particularly for 0x8000001F.
-> SEV-SNP provides a firmware-validated CPUID table to use as an
-> alternative, but prior to checking MSR_AMD64_SEV there are no
-> guarantees that this is even an SEV-SNP guest.
-> 
-> Rather than relying on these CPUID values early on, allow SEV-ES and
-> SEV-SNP guests to instead use a cpuid instruction to trigger a #VC and
-> have it cache MSR_AMD64_SEV in sev_status, since it is known to be safe
-> to access MSR_AMD64_SEV if a #VC has triggered.
-> 
-> Signed-off-by: Michael Roth <michael.roth@amd.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/kernel/sev-shared.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
-> index 8ee27d07c1cd..2796c524d174 100644
-> --- a/arch/x86/kernel/sev-shared.c
-> +++ b/arch/x86/kernel/sev-shared.c
-> @@ -191,6 +191,20 @@ void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
->  	if (exit_code != SVM_EXIT_CPUID)
->  		goto fail;
->  
-> +	/*
-> +	 * A #VC implies that either SEV-ES or SEV-SNP are enabled, so the SEV
-> +	 * MSR is also available. Go ahead and initialize sev_status here to
-> +	 * allow SEV features to be checked without relying solely on the SEV
-> +	 * cpuid bit to indicate whether it is safe to do so.
-> +	 */
-> +	if (!sev_status) {
-> +		unsigned long lo, hi;
-> +
-> +		asm volatile("rdmsr" : "=a" (lo), "=d" (hi)
-> +				     : "c" (MSR_AMD64_SEV));
-> +		sev_status = (hi << 32) | lo;
-> +	}
-> +
->  	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EAX));
->  	VMGEXIT();
->  	val = sev_es_rd_ghcb_msr();
-> -- 
+Hi All,
 
-Ok, you guys are killing me. ;-\
+We have been open-coding x86_match_cpu() checks for enabling some
+SoC specific behavior in various places.
 
-How is bolting some pretty much unrelated code into the early #VC
-handler not a hack? Do you not see it?
+The sound/soc/intel drivers used to also open-code this but this was
+cleaned up a while ago introducing a number of soc_intel_is_*() helpers.
 
-So sme_enable() is reading MSR_AMD64_SEV and setting up everything
-there, including sev_status. If a SNP guest does not trust CPUID, why
-can't you attempt to read that MSR there, even if CPUID has lied to the
-guest?
+This series moves the definition of these helpers to a more public place
+and uses it in a couple of more places outside the sound tree.
 
-And not just slap it somewhere just because it works?
+Mark, I know we are a bit late in the cycle, but if you can pick up
+patch 1/3 (assuming on one objects) for 5.16, then the rest can be
+applied after 5.16-rc1 is out.
+
+Regards,
+
+Hans
+
+
+Hans de Goede (3):
+  ASoC: Intel: Move soc_intel_is_foo() helpers to a generic header
+  platform/x86: intel_int0002_vgpio: Use the new soc_intel_is_byt/cht
+    helpers
+  Input: axp20x-pek - Use new soc_intel_is_cht() helper
+
+ drivers/input/misc/axp20x-pek.c            | 26 ++-------
+ drivers/platform/x86/intel/int0002_vgpio.c | 14 +----
+ include/linux/platform_data/x86/soc.h      | 65 ++++++++++++++++++++++
+ sound/soc/intel/common/soc-intel-quirks.h  | 51 +----------------
+ 4 files changed, 75 insertions(+), 81 deletions(-)
+ create mode 100644 include/linux/platform_data/x86/soc.h
 
 -- 
-Regards/Gruss,
-    Boris.
+2.31.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
