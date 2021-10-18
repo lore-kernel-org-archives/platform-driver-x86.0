@@ -2,93 +2,103 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9407C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 20:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221B6C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 21:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC7DC60F93
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 20:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0140A6115A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 21:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230298AbhJRUQa (ORCPT
+        id S231883AbhJRVQN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Oct 2021 16:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229941AbhJRUQa (ORCPT
+        Mon, 18 Oct 2021 17:16:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22215 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231858AbhJRVQM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Oct 2021 16:16:30 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37E10C06161C
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Oct 2021 13:14:18 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id y15so2274328lfk.7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Oct 2021 13:14:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tt24hSGflNdpheMRwlJmY7tz8SqrWMFdjzVrWWc99WA=;
-        b=ThzaXo9WMP/Hx60CctXyI47vb2LH1UDfrYY8Ar9oaSYyIGAmOezaOvDQ/jGlcx8JQ4
-         0brV7of05Lpixk+xH/TLFCWzQwK7jriqQMDLPnN5ss46nsAcOoEsTOur5rdnomWefoPe
-         az7yIStcQN012YMWrb/4FUJ49saLFmUDhyvpWcWH6Rx/LzGqfPuBlth8b7OvQYhS+Ysm
-         Bz9I+BJUt6goyo6D8gV6hg0vC06pn2nCP16akhI5YQ8Sa9RbvGYGi3pKJdr025cIHpbc
-         pNxNRW+eTROo3kwt8ERY1h33eLQTL70ZZI+mcC4i+IT3rm63x9tVUisYuK7cgoANHt6k
-         CvKA==
+        Mon, 18 Oct 2021 17:16:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634591640;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6eBzORXCbFEMu4YDfNXk+RL3umCNwL4ub/VK7Fp9vPc=;
+        b=adCr46OK22ElragsxH+KTi/DkE4g3fe14JFKeOZN3BiFYmKkVKsKDpFXeU4hbtJnyyIV/x
+        lp6N/AXmNHgpn2AJVBtrWN4IXnoJMv/rMfYKO1+vxwbz4a+vMQdsOrkaQnQzXv/dJ0nimq
+        usdeq6FuesiXqgPSHH9Ge+pF8/Y6kAI=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-485-_q2IylDIOPmW5_9Hwn5F3g-1; Mon, 18 Oct 2021 17:13:59 -0400
+X-MC-Unique: _q2IylDIOPmW5_9Hwn5F3g-1
+Received: by mail-ed1-f69.google.com with SMTP id d11-20020a50cd4b000000b003da63711a8aso15504730edj.20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Oct 2021 14:13:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tt24hSGflNdpheMRwlJmY7tz8SqrWMFdjzVrWWc99WA=;
-        b=a44ED8mOjKeKYcQ3ButA+P83oG8+Htd7B12HlhR0iTwgjSjHdH6B9FNeJaz0CQwarE
-         Oq/DOfYrWcsWLp6+/jBqUGTwLrRBTPxva2xOJuLrcwmKZWuw2uMRaVvfm/E//puVBNNC
-         BQzzvfL28gXSOociqHY/EsvGFJmmCMyUZsvvlqA6xwRVuWHxP+GkBOHqXAmVn4jbbDzg
-         7oeauI6s9quBap/3oB+dQupzxpvIsR7UpGLm5X3PbLAzQh0dpZ0P3za1s0qn6NqyCqwT
-         oikgmQ8rHW7ZrcDjWgHt4hg9z5H7UrPyLEbW/uNhLEuw/yhAIuRggqHTdZbTe3noiuzo
-         nTtg==
-X-Gm-Message-State: AOAM531WEvbRxcygRtfx0I34YXmJFzvPWQrca+lh1t9IQBajErgulaY9
-        xcUOjrDukBwDhF0ljGAsj/L9Um2+bbtJk/XAVo1K04aQh3eI4Q==
-X-Google-Smtp-Source: ABdhPJzslvUpnH9sQ/IhkDtp4mGVU7/17DQKkqHCoDvDX9vcL6++QrFeuzEfX+XJ9kFW9AXMdoVU1XuaqjmEeVcZDrk=
-X-Received: by 2002:a05:6512:3ba3:: with SMTP id g35mr1762408lfv.651.1634588056448;
- Mon, 18 Oct 2021 13:14:16 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=6eBzORXCbFEMu4YDfNXk+RL3umCNwL4ub/VK7Fp9vPc=;
+        b=g6bLlMMnMpokNPVjikayctX1yXohKmC4BJ5+PaGI3aX9qlmpQ4xmiBFX6AYLWEw+tn
+         Boowjz00Xs9qCtciSsTMuY7qN1tUzBhETXPvJX3T9QGL2EWKmfXo0X3gTLahtdX7dgTa
+         HoAxrYVCW2vQ6/ah+2abB3rCdqgNY5t7Sxv6USpQLzk/DZHFhgMwpLzRbbuqQe4XTSuX
+         Y+lDJIVgnxB3X2m9GPY1IfDJj6sBHPwn6LCEV0Y43GxK4IEYCRqwBYIjl2/sipzk4I2+
+         pmYinGvu1sGKPmf+FLcdW9KWU7soFuO3sYn9w/utSNd/asi4c1qv18V9vkRtwztIpWdf
+         9epQ==
+X-Gm-Message-State: AOAM531Dn1he3CIU6tMdG18OkwB8MJjfZt54Sq0gwlkh67JI0xjh6bJ6
+        9tkHL0LTGlwQtc3HV7v1oxZmjIR0VW/r3do0z5KlgLrvBJXqpz/xVJJX59tMC5ohcihoG8Mm8iw
+        fOdXtk0ghpiEj+10k9E87X7mr+ystPhrfQw==
+X-Received: by 2002:a17:906:4895:: with SMTP id v21mr33861135ejq.299.1634591638507;
+        Mon, 18 Oct 2021 14:13:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxR/1A9wzRRVEB3L+RBQpU75fFxxxvftqHqqkyF3AqtMVIPa7tvvcHIcNFBuxFp+GpIaMN07g==
+X-Received: by 2002:a17:906:4895:: with SMTP id v21mr33861086ejq.299.1634591638159;
+        Mon, 18 Oct 2021 14:13:58 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id z13sm6933808ejl.106.2021.10.18.14.13.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Oct 2021 14:13:57 -0700 (PDT)
+Message-ID: <c34cc4b8-31c8-9425-214f-2a0f39f048d9@redhat.com>
+Date:   Mon, 18 Oct 2021 23:13:57 +0200
 MIME-Version: 1.0
-References: <20211018182537.2316800-1-nathan@kernel.org> <CAKwvOdn4_DrgaZoAo-v7CbYurNUpfAK5tnzT023=WCDzkmYQVg@mail.gmail.com>
- <CAHk-=wi7hUsTTcmPfZCkUEw51Y3ayq3JJxzFsNgodsxxDyk9Ww@mail.gmail.com>
-In-Reply-To: <CAHk-=wi7hUsTTcmPfZCkUEw51Y3ayq3JJxzFsNgodsxxDyk9Ww@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 18 Oct 2021 13:14:05 -0700
-Message-ID: <CAKwvOd=wGjd_L1703Y9Kngcr9-_wTvcRLToiydXYkR=S_9xWDw@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix bitwise vs. logical warning
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Hans de Goede <hdegoede@redhat.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.0
+Subject: Re: [PATCH 1/3] ASoC: Intel: Move soc_intel_is_foo() helpers to a
+ generic header
+Content-Language: en-US
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Gross <markgross@kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev, Tor Vic <torvic9@mailbox.org>
-Content-Type: text/plain; charset="UTF-8"
+        Andy Shevchenko <andy@infradead.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20211018143324.296961-1-hdegoede@redhat.com>
+ <20211018143324.296961-2-hdegoede@redhat.com>
+ <YW2UNRAWUphJqhyW@sirena.org.uk>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <YW2UNRAWUphJqhyW@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 12:41 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Mon, Oct 18, 2021 at 8:34 AM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > LGTM, thanks for the patch! I guess this would be the first
-> > "interesting" case this warning has found in kernel sources?
->
-> The patch looks obviously correct (tm), but I'm not convinced that the
-> warning is actually all that interesting.
->
-> The thing is, using bitwise operators for booleans is _exactly_ the
-> same as using logical ones as long as there are no side effects.
+Hi Mark,
 
-Right, the patch that added the warning explicitly checks for side effects.
-https://reviews.llvm.org/D108003
-https://lore.kernel.org/lkml/20211018193101.2340261-1-nathan@kernel.org/
-is another example that I would point to in favor of the error.
--- 
-Thanks,
-~Nick Desaulniers
+On 10/18/21 17:35, Mark Brown wrote:
+> On Mon, Oct 18, 2021 at 04:33:22PM +0200, Hans de Goede wrote:
+>> The soc_intel_is_foo() helpers from
+>> sound/soc/intel/common/soc-intel-quirks.h are useful outside of the
+>> sound subsystem too.
+> 
+> Acked-by: Mark Brown <broonie@kernel.org>
+
+Does this mean that you are ok with me merging patch 1 + 2 through
+the drivers/platform/x86 tree ?
+
+Regards,
+
+Hans
+
