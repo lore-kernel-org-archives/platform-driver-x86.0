@@ -2,275 +2,1010 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC300C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 09:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C568C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 09:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8775D60E76
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 09:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 120DF6138F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 09:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234764AbhJSJGT (ORCPT
+        id S235059AbhJSJns (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Oct 2021 05:06:19 -0400
-Received: from mail-bn8nam08on2076.outbound.protection.outlook.com ([40.107.100.76]:28736
-        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234700AbhJSJGS (ORCPT
+        Tue, 19 Oct 2021 05:43:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:53603 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234953AbhJSJns (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Oct 2021 05:06:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YNNGAJJTJcfrXIxuhiZhEqKn2i5GYRwPaXEDMdi8Hm2HYmKIv+Tlec4utjHCEejbIIswz7wGqU99eEO7M65n+Ztde+Q0PrZmkoiWPAuBCWpdXxt/w6OQpB63Br1JBqw08Samji/sdhj1AzvLM4Nq+/mTYhYmj8d4zFDmkqMgwBn/0nCHR75Vy80i1I2mbjUfznzalRUEDS9vTgyt8pvVFgfGhKX3hf62OxxDOpoCoq7jZ/lgVN9UYzOE+2Dr1NbiyRDt+tfaQTdLIh2m68fKPGbh7PLWbnrjroIaFVJg7cqtbcPRwJOsOX7L0dgl0HwV7KlofCTjpiR0JPzZ6kHIBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QATW1MezdpPwuamIZi7mfeUtIUHieQeZzq9ZC8kuBXc=;
- b=n/LKuv4AKJI4ZLzYwOeOZaWriDNDwdFWg22asGPONNlCDN0nOK3KA7UGsOr/hXVGe//X4N5YJ634KELfJLXnFgY2n4ecXRQYD3oFr7QG/AxyXPXXP2UNc82HEudozZFPzIIZUWJbnM2tjWKhCSSvDABu97nyyi3XhUwV7MLC4MB8QQEIsL8CWwTC4iG/iaML8B6nEKfvTkYtcEmfukE4hQDEaEGW63Y66wP6Wrg3BnYH9T9LyTTu/Tv7RVgHsP9Zq9gaUNYyKWG3GJYFZfv5TRmJ3fcWjyQYx8v6AtQVn3jk2R6ZM9+LdVS5Hsm27hyDG2a32XlijpuWcMe8qr8ylw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QATW1MezdpPwuamIZi7mfeUtIUHieQeZzq9ZC8kuBXc=;
- b=DDdsYKr/dQp50+M/uJG3A0Zh5NaQ0Fk5QTM1+lWWk4IG8+FZzbGxFBHK7Poo4QRFnM4uoIO1OM5aOeHnkx1Vg5Y7SqgsTnrun3zUk7EO2ftjpT8KRsJTMOYxdmogPW6Xb6G2gOrqj4v+xwQ4gKuxaAQJfMoWTR0qHDJApspImDrftmGfQ2XGvk61IR7dW3Lv04+SZxxXez1VftzU4l3/FzL3KnPumfbQ35aextg0p6+MjiA1eGjmguOrW+ghytAafSuuoNUMuNC5yE9hoe0ndcK8cYCf+KYkXMbfnXDC4CDJ+ctwepbkyrcUGxUCQ3hANnjQOjBDIzvtC2sM4Ng5CA==
-Received: from BN9PR12MB5381.namprd12.prod.outlook.com (2603:10b6:408:102::24)
- by BN9PR12MB5308.namprd12.prod.outlook.com (2603:10b6:408:105::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.17; Tue, 19 Oct
- 2021 09:04:03 +0000
-Received: from BN9PR12MB5381.namprd12.prod.outlook.com
- ([fe80::f846:3ab1:9cc3:ee1]) by BN9PR12MB5381.namprd12.prod.outlook.com
- ([fe80::f846:3ab1:9cc3:ee1%6]) with mapi id 15.20.4608.018; Tue, 19 Oct 2021
- 09:04:03 +0000
-From:   Vadim Pasternak <vadimp@nvidia.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Michael Shych <michaelsh@nvidia.com>
-Subject: RE: [PATCH platform-next 09/10] Documentation/ABI: Add new line card
- attributes for mlxreg-io sysfs interfaces
-Thread-Topic: [PATCH platform-next 09/10] Documentation/ABI: Add new line card
- attributes for mlxreg-io sysfs interfaces
-Thread-Index: AQHXt3CTdDDcC/4ZvkKszeSbW9LC1avaH7sAgAABvgA=
-Date:   Tue, 19 Oct 2021 09:04:03 +0000
-Message-ID: <BN9PR12MB53813DC207D19E3398DB3083AFBD9@BN9PR12MB5381.namprd12.prod.outlook.com>
-References: <20211002093238.3771419-1-vadimp@nvidia.com>
- <20211002093238.3771419-10-vadimp@nvidia.com>
- <bb2330cf-07db-e9df-67bd-de8e62650a0e@redhat.com>
-In-Reply-To: <bb2330cf-07db-e9df-67bd-de8e62650a0e@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d34a44c4-fa56-401c-47ca-08d992df6606
-x-ms-traffictypediagnostic: BN9PR12MB5308:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN9PR12MB5308B1C41D2F2F2CD2B4142AAFBD9@BN9PR12MB5308.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VVtx2ag9M9xLZPx8eMmd4cWGQNcVbSeotYdSgaTtvKP36DMkQWaMQfwWSxmLrmp5/vKxTorS8afWYET0LwIuYYTBvb8D/7Ovqn1MnH5KvNEmmYg5KZM70rY49DmCx6/XitTK2W3OaIA13WwDl5lFqDmD4DfvXcs6QhzDdb9mHC3OhWRrkt7sTWe4mndQl6Ih4euhYkBM95kOtjBuvqgvyVxbhRnBoMrX9icuQLEm0VW0GnOJvcl9IGuTH4OygP/nJ+XPWMakkt00H1lWPZYu3f5fRfWcJTgbMklloHs3zo7QOrkfSnpoYbQc79oU9E3W54JWmGJ3cGF8nYPaKmCMQT7dZduxiaQ5lBE7uL34MR7lVDsT0Depn8yUVmYkRyMQ5FeOAlS9+gIoM1z5VEIfBrGW9otC8ICOu2dZn9vCHc2aQhOz+4qaJrqXwf1E1qOJTGm3+m4uaQR+EFy9iawAjyjcpnn5CsGYwU0j5M8VGd7oOd/a+spKOZY2wfhM4/nRFvsD7cYnRDnqraV1E05zxaYAnkm6Uugm2371sj8GtWp2P+ZZOEjszs4M9faLGjCpR5hg6kYoCZwplrDJM8MTHTLTl7N9CvPhwwbIbODBu+fr+PZJ9kHASaNPpuVJGQnGeAyzqWQaHYjKiStc0mppFCDRs2Jn35/9vpUKOohGijIj7ykHkw3EIihfLgSb4WSdS6D7VfSZzGbKXXYmiZHPFg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5381.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(76116006)(64756008)(66446008)(54906003)(66476007)(86362001)(122000001)(55016002)(7696005)(66946007)(66556008)(26005)(38070700005)(9686003)(53546011)(6506007)(8936002)(186003)(83380400001)(52536014)(8676002)(2906002)(33656002)(4326008)(508600001)(316002)(6916009)(107886003)(71200400001)(38100700002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Uyt3VGtwdWU5bzEveFAzRGMrbThSNEgzZUhjaEMwNXgrbDM3MnU3emo4cU04?=
- =?utf-8?B?cjNTVHhhb083ZXhKM3pXUXhDSjdtNWhmdVQyQzFvM2FRc1VqbE0vME8wZE9V?=
- =?utf-8?B?ZGhKakxJWTUxK05MWUxLWUQ2UjM2ZlRYMWt2ZVZLSEhER2pnc3lSZXloYmRX?=
- =?utf-8?B?ZUtkSXdZWHMrZGJMVEdlRGtTZ256aWtKY1o2d0FZRnhZRVJQNjJPMXpRNkZB?=
- =?utf-8?B?RUhBQzdOKzZFcUp2eVRsbFBVS2lUNGZpcHJ0OUU0R3ZjVE1iUERLL2lydCt1?=
- =?utf-8?B?aUZZVFM0MEt6WElBdmdTeHg0RXFuU01ydHI3d05SQ0h2RFlacklwTzRyOGdY?=
- =?utf-8?B?YURCMXB0N2t1SjRDNVZFaFNhQ05STlNienJNSmpWbTFRVU5DUzhIZHVPNlpM?=
- =?utf-8?B?TnFNTXZLNm1abTJ0S3BsTG50Vk96L3Rac045d0tMdHltbld3OFlxWitqSTl0?=
- =?utf-8?B?MTh1Vk02dDdLenVualhWejN2a3g4a2MxV2ZLT2Iwb05SWTNHd1h6aWl1ejdW?=
- =?utf-8?B?OG82SGJyVTg5SzQrUUhEU0hJTk1wTTYwRGFpNVF1NzNDWGVpYWFOZ2RKKzBz?=
- =?utf-8?B?UnNidXJyR1pTZTJSWGs2dnJra3cwb2pNeVAxNHI0dUpEdXpEaGxSRzBydlpG?=
- =?utf-8?B?OWNYenF3bUxzUktvK05jUXg5NGZwaTFndGhXckQ2S0diK0E0eGg1cGpRRFcy?=
- =?utf-8?B?ZE1MTy92M2hzeXdoUFJZNUFib3RvaGJwUGc2UkhSQ0VWOURNQ3NUTm1GWStG?=
- =?utf-8?B?KzJwTEdOQ0g3YThrL3VvSFF4c3FsL2JCWmhMQ3Zxbyt2QS9WaDdhWnBzbERr?=
- =?utf-8?B?cThlcGxYYXhqSm84SEljVGkrd1EyUVBYaXNDNkVRdzdwTG1UUnpobzFNeDZh?=
- =?utf-8?B?L0lnc2QvZGozM2ppbGt4aytpTHhoMDhZc2ptK3NEd254MTRUVDVoU0MrZDJj?=
- =?utf-8?B?K2NNYjFuL1pGZy9JcXlxMExvNGYrVEQyTGhPUlAya0lZdmt6OGxnKzJyMTdk?=
- =?utf-8?B?NHM4UEUrZ0lRbmZzMG5MckY2QUYwN3NnTUl3Z2ZhdStpNStFNFNmTENiT2Uw?=
- =?utf-8?B?bmlhK0xpbmpETjVYQjVrc2VEY0NsWHEwQ3NMN3g2ODZyMnY4czhjMEVMMUU0?=
- =?utf-8?B?Skp3SjhkYkZocjNOWTRIdHl1a2l5aldQNTNHZWFDNVlHOTBpL3pPYjVsSmNv?=
- =?utf-8?B?V1FteFBhWVA2djB3Mmt4UnYyM3ZHNks3cVlKenJBK3pIS2RiakxyUzRqUy81?=
- =?utf-8?B?TnN0UU5TY240ZGtrWnhUTWZ5QzUwcDdoRnAxTWhuczQ3ZzNSWWRlbUlVTUVn?=
- =?utf-8?B?WEhlVUtzTzVLZVo0YUtHQjhoTU9CR0NXMld1aWxSMmY1L21aMzhLaTVrQ0k4?=
- =?utf-8?B?S2xPUjNnVTFRbW85Sjdqc254UEl1OUEySjk5TDR4OEp6WC85VTJZT01SdVVJ?=
- =?utf-8?B?WXNjUXcrNzNnK00rTGRBRkJIRE5iRnFldDY0QWlRcGF0dEhHd1NLYVozRWw1?=
- =?utf-8?B?ZnJrN3ZOWXNhUTJ5UHFzaTdqcE50cldjdGxYMWlNMnJtRFdUd1JTdjVZS1hZ?=
- =?utf-8?B?cXliSEx1K0NaNWpEbCtTNWI5QWs4a3hiVkJVTWdhY3ViMTI4T05WK09YalRL?=
- =?utf-8?B?VDBhWk9hNVhBTy9NTmRzRmdYM3QweFFRQS9Vc01oa1JGa3BLLzE0UmxKK2FP?=
- =?utf-8?B?Sjdjd2JFaHRVL0I4aFNwUk93R2NZOVZhdnpYY0o1Y05oN3pneUNValU5YlVP?=
- =?utf-8?Q?8cEWYLgYqmrO2Xi2cF1cGm/mNox0iZIeXUVGfkG?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 19 Oct 2021 05:43:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634636495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QecxdLTWPEyiceKCSJDV+pAbr0vqICEs6iWHJyVMLgQ=;
+        b=JsB/yfqHPDAKuZh4OHRWXfD9xm/8uK/SMYrSo3t/pg3bE8k3v0VwkXMnSbOZ7DTdfsIXBA
+        voecCfKSS1OfZiuz6nDTsOlHuLYUaT9qu3rpoUswP1fsdbj/gpsgbVpapla0K653K7ystx
+        S4kDK0OI9khPW8V/ldHvsnwgl6VEnqo=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-47-aD8YAGHWP4eIwya8AQ3iCA-1; Tue, 19 Oct 2021 05:41:33 -0400
+X-MC-Unique: aD8YAGHWP4eIwya8AQ3iCA-1
+Received: by mail-ed1-f69.google.com with SMTP id u17-20020a50d511000000b003daa3828c13so17038011edi.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Oct 2021 02:41:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=QecxdLTWPEyiceKCSJDV+pAbr0vqICEs6iWHJyVMLgQ=;
+        b=oupBF/bOSOehudrIraEn6zi68Oyuys8wWJp1+ZtyAHtjMIGbHuERuV2UVpWmC/qWiX
+         r+JX6rJDNOY2i15CTFR9gENk5pUHle7XN/LaVt3JdF8gFgGQ4J+OMMzpg3Kd9DLJGIQ1
+         +cIyrU3FdRcXqX4Vo5zJFLaOQW8zESd7nHAlRaeAUr2LBXdKjsqEk120fK0zFK9WRxuq
+         Q/FXIsKP53c6Kd8qIHE8wYYL5csAV7VaNw2FBLRJNdm8x/28labfVAPxNBKymltH6MCd
+         Rpdpphz+FNZ9rf+gal61FEIod75FdarsNimHSRD4Cgts6C6avmUJwbx2qiBWCcw7V+N9
+         eGpA==
+X-Gm-Message-State: AOAM533AJlHq31F6LrFoJcr9ytXmyt7VD/8mhv9tsnARPl8OlPAUASwL
+        vzPboBC9mVFk4nwJVMjruZstZqQbS9zqb1FRqjhwBf2VIHfoFxZ0uGGSme1bN1akhZcIcfO6iRA
+        hfOoOMdA+ex0x7gOeoJLbdRqiT3l0AbxDWQ==
+X-Received: by 2002:a05:6402:b15:: with SMTP id bm21mr52231782edb.380.1634636492014;
+        Tue, 19 Oct 2021 02:41:32 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxjhspGNPctl83/78PwUmiyxdDVcRg7Rnhc33W1FMZDTcIY7LNhXoCp6P6v7RiIxsTUuH4dAw==
+X-Received: by 2002:a05:6402:b15:: with SMTP id bm21mr52231737edb.380.1634636491577;
+        Tue, 19 Oct 2021 02:41:31 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id di4sm11104015edb.34.2021.10.19.02.41.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Oct 2021 02:41:31 -0700 (PDT)
+Message-ID: <cad3c7dc-cfba-6032-4951-7c2061797b7b@redhat.com>
+Date:   Tue, 19 Oct 2021 11:41:30 +0200
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5381.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d34a44c4-fa56-401c-47ca-08d992df6606
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Oct 2021 09:04:03.5162
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ULTf29EHJJ7NfkNY+SUGhm8YIzCkUq5uaiJzXVfE4FXqYrSL2ct3FrIYqODR5tQvNjHXngGYE/Ty5RB6Yjnx0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5308
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.0
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Convert platform driver to
+ use dev_groups
+Content-Language: en-US
+To:     Len Baker <len.baker@gmx.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Mark Gross <markgross@kernel.org>
+Cc:     ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20211003091949.7339-1-len.baker@gmx.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211003091949.7339-1-len.baker@gmx.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGFucyBkZSBHb2VkZSA8
-aGRlZ29lZGVAcmVkaGF0LmNvbT4NCj4gU2VudDogVHVlc2RheSwgT2N0b2JlciAxOSwgMjAyMSAx
-MTo1NyBBTQ0KPiBUbzogVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbnZpZGlhLmNvbT4NCj4gQ2M6
-IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBNaWNoYWVsIFNoeWNoDQo+IDxt
-aWNoYWVsc2hAbnZpZGlhLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCBwbGF0Zm9ybS1uZXh0
-IDA5LzEwXSBEb2N1bWVudGF0aW9uL0FCSTogQWRkIG5ldyBsaW5lDQo+IGNhcmQgYXR0cmlidXRl
-cyBmb3IgbWx4cmVnLWlvIHN5c2ZzIGludGVyZmFjZXMNCj4gDQo+IEhpLA0KPiANCj4gT24gMTAv
-Mi8yMSAxMTozMiwgVmFkaW0gUGFzdGVybmFrIHdyb3RlOg0KPiA+IEFkZCBkb2N1bWVudGF0aW9u
-IGZvciB0aGUgbmV3IGF0dHJpYnV0ZXMgZm9yIGxpbmUgY2FyZHM6DQo+ID4gLSBDUExEcyB2ZXJz
-aW9uaW5nLg0KPiA+IC0gV3JpdGUgcHJvdGVjdGlvbiBjb250cm9sIGZvciAnbnZyYW0nIGRldmlj
-ZXMuDQo+ID4gLSBMaW5lIGNhcmQgcmVzZXQgcmVhc29ucy4NCj4gPiAtIEVuYWJsaW5nIGJ1cm5p
-bmcgb2YgRlBHQSBhbmQgQ1BMRHMuDQo+ID4gLSBFbmFibGluZyBidXJuaW5nIG9mIEZQR0EgYW5k
-IGdlYXJib3ggU1BJIGZsYXNoZXMsDQo+ID4gLSBFbmFibGluZyBwb3dlciBvZiB3aG9sZSBsaW5l
-IGNhcmQuDQo+ID4gLSBFbmFibGluZyBwb3dlciBvZiBRU0ZQIHBvcnRzIGVxdWlwcGVkIG9uIGxp
-bmUgY2FyZC4NCj4gPiAtIFRoZSBtYXhpbXVtIHBvd2VyZWQgcmVxdWlyZWQgZm9yIGxpbmUgY2Fy
-ZCBmZWVkaW5nLg0KPiA+IC0gTGluZSBjYXJkIGNvbmZpZ3VyYXRpb24gSWQuDQo+ID4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBWYWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBudmlkaWEuY29tPg0KPiA+IFJl
-dmlld2VkLWJ5OiBNaWNoYWVsIFNoeWNoIDxtaWNoYWVsc2hAbnZpZGlhLmNvbT4NCj4gDQo+IEFw
-cGx5aW5nIHRoaXMgZ2F2ZSB0aGUgZm9sbG93aW5nIHdhcm5pbmdzOg0KPiANCj4gQXBwbHlpbmc6
-IERvY3VtZW50YXRpb24vQUJJOiBBZGQgbmV3IGxpbmUgY2FyZCBhdHRyaWJ1dGVzIGZvciBtbHhy
-ZWctaW8NCj4gc3lzZnMgaW50ZXJmYWNlcw0KPiAvaG9tZS9oYW5zL3Byb2plY3RzL2xpbnV4Ly5n
-aXQvd29ya3RyZWVzL3BsYXRmb3JtLWRyaXZlcnMteDg2L3JlYmFzZS0NCj4gYXBwbHkvcGF0Y2g6
-NDQ6IHNwYWNlIGJlZm9yZSB0YWIgaW4gaW5kZW50Lg0KPiAgCQlJZiB0aGUgc3lzdGVtIGlzIGlu
-IGxvY2tlZC1kb3duIG1vZGUgd3JpdGluZyB0aGlzIGZpbGUgd2lsbCBub3QNCj4gL2hvbWUvaGFu
-cy9wcm9qZWN0cy9saW51eC8uZ2l0L3dvcmt0cmVlcy9wbGF0Zm9ybS1kcml2ZXJzLXg4Ni9yZWJh
-c2UtDQo+IGFwcGx5L3BhdGNoOjc2OiBzcGFjZSBiZWZvcmUgdGFiIGluIGluZGVudC4NCj4gIAkJ
-SWYgdGhlIHN5c3RlbSBpcyBpbiBsb2NrZWQtZG93biBtb2RlIHdyaXRpbmcgdGhlc2UgZmlsZXMg
-d2lsbA0KPiAvaG9tZS9oYW5zL3Byb2plY3RzL2xpbnV4Ly5naXQvd29ya3RyZWVzL3BsYXRmb3Jt
-LWRyaXZlcnMteDg2L3JlYmFzZS0NCj4gYXBwbHkvcGF0Y2g6MTAwOiBzcGFjZSBiZWZvcmUgdGFi
-IGluIGluZGVudC4NCj4gIAkJSWYgdGhlIHN5c3RlbSBpcyBpbiBsb2NrZWQtZG93biBtb2RlIHdy
-aXRpbmcgdGhlc2UgZmlsZXMgd2lsbA0KPiB3YXJuaW5nOiAzIGxpbmVzIGFkZCB3aGl0ZXNwYWNl
-IGVycm9ycy4NCj4gDQo+IEkndmUgZml4ZWQgdGhpcyB1cCBsb2NhbGx5Lg0KDQpUaGFuayB5b3Ug
-dmVyeSBtdWNoIGZvciBmaXhpbmcgaXQuDQoNCj4gDQo+IEZZSSB0aGUgMyAiSWYgdGhlIHN5c3Rl
-bSBpcyBpbiBsb2NrZWQtZG93biBtb2RlIHdyaXRpbmcgdGhpcyBmaWxlIHdpbGwgbm90Ig0KPiBs
-aW5lcyBzdGFydGVkIHdpdGggPHRhYj48c3BhY2U+PHRhYj4gd2hpY2ggSSd2ZSByZXBsYWNlZCB3
-aXRoIDx0YWI+PHRhYj4uDQo+IA0KPiBSZWdhcmRzLA0KPiANCj4gSGFucw0KPiANCj4gDQo+ID4g
-LS0tDQo+ID4gIC4uLi9BQkkvc3RhYmxlL3N5c2ZzLWRyaXZlci1tbHhyZWctaW8gICAgICAgICB8
-IDEwMyArKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEwMyBpbnNlcnRp
-b25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9BQkkvc3RhYmxlL3N5
-c2ZzLWRyaXZlci1tbHhyZWctaW8NCj4gYi9Eb2N1bWVudGF0aW9uL0FCSS9zdGFibGUvc3lzZnMt
-ZHJpdmVyLW1seHJlZy1pbw0KPiA+IGluZGV4IDZlZjY5NzljOTQ0OC4uYjI1ZTk2M2VjMGZhIDEw
-MDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vQUJJL3N0YWJsZS9zeXNmcy1kcml2ZXItbWx4
-cmVnLWlvDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9BQkkvc3RhYmxlL3N5c2ZzLWRyaXZlci1t
-bHhyZWctaW8NCj4gPiBAQCAtMzYxLDMgKzM2MSwxMDYgQEAgRGVzY3JpcHRpb246CVRoaXMgZmls
-ZSBhbGxvd3MgdG8gdW5sb2NrIEFTSUMNCj4gYWZ0ZXIgdGhlcm1hbCBzaHV0ZG93biBldmVudC4N
-Cj4gPiAgCQlEZWZhdWx0IGlzIDEuDQo+ID4NCj4gPiAgCQlUaGUgZmlsZSBpcyByZWFkL3dyaXRl
-Lg0KPiA+ICsNCj4gPiArV2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0L2kyY19t
-bHhjcGxkLiovaTJjLQ0KPiAqL2kyYy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9od21vbi9o
-d21vbiovY3BsZDFfcG4NCj4gPiArV2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0
-L2kyY19tbHhjcGxkLiovaTJjLQ0KPiAqL2kyYy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9o
-d21vbi9od21vbiovY3BsZDFfdmVyc2lvbg0KPiA+ICtXaGF0OgkJL3N5cy9kZXZpY2VzL3BsYXRm
-b3JtL21seHBsYXQvaTJjX21seGNwbGQuKi9pMmMtDQo+ICovaTJjLSovaTJjLSovKi0wMDMyL21s
-eHJlZy1pby4qL2h3bW9uL2h3bW9uKi9jcGxkMV92ZXJzaW9uX21pbg0KPiA+ICtEYXRlOgkJT2N0
-b2JlciAyMDIxDQo+ID4gK0tlcm5lbFZlcnNpb246CTUuMTYNCj4gPiArQ29udGFjdDoJVmFkaW0g
-UGFzdGVybmFrIDx2YWRpbXBAbnZpZGlhLmNvbT4NCj4gPiArRGVzY3JpcHRpb246CVRoZXNlIGZp
-bGVzIHNob3cgd2l0aCB3aGljaCBDUExEIG1ham9yIGFuZCBtaW5vciB2ZXJzaW9ucw0KPiA+ICsJ
-CWFuZCBwYXJ0IG51bWJlciBoYXMgYmVlbiBidXJuZWQgQ1BMRCBkZXZpY2Ugb24gbGluZSBjYXJk
-Lg0KPiA+ICsNCj4gPiArCQlUaGUgZmlsZXMgYXJlIHJlYWQgb25seS4NCj4gPiArDQo+ID4gK1do
-YXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0NCj4g
-Ki9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL2ZwZ2ExX3BuDQo+
-ID4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2ky
-Yy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL2ZwZ2Ex
-X3ZlcnNpb24NCj4gPiArV2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0L2kyY19t
-bHhjcGxkLiovaTJjLQ0KPiAqL2kyYy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9od21vbi9o
-d21vbiovZnBnYTFfdmVyc2lvbl9taW4NCj4gPiArRGF0ZToJCU9jdG9iZXIgMjAyMQ0KPiA+ICtL
-ZXJuZWxWZXJzaW9uOgk1LjE2DQo+ID4gK0NvbnRhY3Q6CVZhZGltIFBhc3Rlcm5hayA8dmFkaW1w
-QG52aWRpYS5jb20+DQo+ID4gK0Rlc2NyaXB0aW9uOglUaGVzZSBmaWxlcyBzaG93IHdpdGggd2hp
-Y2ggRlBHQSBtYWpvciBhbmQgbWlub3IgdmVyc2lvbnMNCj4gPiArCQlhbmQgcGFydCBudW1iZXIg
-aGFzIGJlZW4gYnVybmVkIEZQR0EgZGV2aWNlIG9uIGxpbmUgY2FyZC4NCj4gPiArDQo+ID4gKwkJ
-VGhlIGZpbGVzIGFyZSByZWFkIG9ubHkuDQo+ID4gKw0KPiA+ICtXaGF0OgkJL3N5cy9kZXZpY2Vz
-L3BsYXRmb3JtL21seHBsYXQvaTJjX21seGNwbGQuKi9pMmMtDQo+ICovaTJjLSovaTJjLSovKi0w
-MDMyL21seHJlZy1pby4qL2h3bW9uL2h3bW9uKi92cGRfd3ANCj4gPiArRGF0ZToJCU9jdG9iZXIg
-MjAyMQ0KPiA+ICtLZXJuZWxWZXJzaW9uOgk1LjE2DQo+ID4gK0NvbnRhY3Q6CVZhZGltIFBhc3Rl
-cm5hayA8dmFkaW1wQG52aWRpYS5jb20+DQo+ID4gK0Rlc2NyaXB0aW9uOglUaGlzIGZpbGUgYWxs
-b3cgdG8gb3ZlcndyaXRlIGxpbmUgY2FyZCBWUEQgaGFyZHdhcmUgd3JpdGUNCj4gPiArCQlwcm90
-ZWN0aW9uIG1vZGUuIFdoZW4gYXR0cmlidXRlIGlzIHNldCAxIC0gd3JpdGUgcHJvdGVjdGlvbiBp
-cw0KPiA+ICsJCWRpc2FibGVkLCB3aGVuIDAgLSBlbmFibGVkLg0KPiA+ICsJCURlZmF1bHQgaXMg
-MC4NCj4gPiArIAkJSWYgdGhlIHN5c3RlbSBpcyBpbiBsb2NrZWQtZG93biBtb2RlIHdyaXRpbmcg
-dGhpcyBmaWxlIHdpbGwgbm90DQo+ID4gKwkJYmUgYWxsb3dlZC4NCj4gPiArCQlUaGUgcHVycG9z
-ZSBpZiB0aGlzIGZpbGUgaXMgdG8gYWxsb3cgbGluZSBjYXJkIFZQRCBidXJuaW5nDQo+ID4gKwkJ
-ZHVyaW5nIHByb2R1Y3Rpb24gZmxvdy4NCj4gPiArDQo+ID4gKwkJVGhlIGZpbGUgaXMgcmVhZC93
-cml0ZS4NCj4gPiArDQo+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9p
-MmNfbWx4Y3BsZC4qL2kyYy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdt
-b24vaHdtb24qL3Jlc2V0X2F1eF9wd3Jfb3JfcmVmDQo+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMv
-cGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAw
-MzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL3Jlc2V0X2RjX2RjX3B3cl9mYWlsDQo+ID4gK1do
-YXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0NCj4g
-Ki9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL3Jlc2V0X2ZwZ2Ff
-bm90X2RvbmUNCj4gPiArV2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0L2kyY19t
-bHhjcGxkLiovaTJjLQ0KPiAqL2kyYy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9od21vbi9o
-d21vbiovcmVzZXRfZnJvbV9jaGFzc2lzDQo+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZv
-cm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4
-cmVnLWlvLiovaHdtb24vaHdtb24qL3Jlc2V0X2xpbmVfY2FyZA0KPiA+ICtXaGF0OgkJL3N5cy9k
-ZXZpY2VzL3BsYXRmb3JtL21seHBsYXQvaTJjX21seGNwbGQuKi9pMmMtDQo+ICovaTJjLSovaTJj
-LSovKi0wMDMyL21seHJlZy0NCj4gaW8uKi9od21vbi9od21vbiovcmVzZXRfcHdyX29mZl9mcm9t
-X2NoYXNzaXMNCj4gPiArRGF0ZToJCU9jdG9iZXIgMjAyMQ0KPiA+ICtLZXJuZWxWZXJzaW9uOgk1
-LjE2DQo+ID4gK0NvbnRhY3Q6CVZhZGltIFBhc3Rlcm5hayA8dmFkaW1wQG52aWRpYS5jb20+DQo+
-ID4gK0Rlc2NyaXB0aW9uOglUaGVzZSBmaWxlcyBzaG93IHRoZSBsaW5lIHJlc2V0IGNhdXNlLCBh
-cyBmb2xsb3dpbmc6IHBvd2VyDQo+ID4gKwkJYXV4aWxpYXJ5IG91dGFnZSBvciBwb3dlciByZWZy
-ZXNoLCBEQy10by1EQyBwb3dlciBmYWlsdXJlLA0KPiBGUEdBIHJlc2V0DQo+ID4gKwkJZmFpbGVk
-LCBsaW5lIGNhcmQgcmVzZXQgZmFpbGVkLCBwb3dlciBvZmYgZnJvbSBjaGFzc2lzLg0KPiA+ICsJ
-CVZhbHVlIDEgaW4gZmlsZSBtZWFucyB0aGlzIGlzIHJlc2V0IGNhdXNlLCAwIC0gb3RoZXJ3aXNl
-LiBPbmx5DQo+IG9uZSBvZg0KPiA+ICsJCXRoZSBhYm92ZSBjYXVzZXMgY291bGQgYmUgMSBhdCB0
-aGUgc2FtZSB0aW1lLCByZXByZXNlbnRpbmcNCj4gb25seSBsYXN0DQo+ID4gKwkJcmVzZXQgY2F1
-c2UuDQo+ID4gKw0KPiA+ICsJCVRoZSBmaWxlcyBhcmUgcmVhZCBvbmx5Lg0KPiA+ICsNCj4gPiAr
-V2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0L2kyY19tbHhjcGxkLiovaTJjLQ0K
-PiAqL2kyYy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9od21vbi9od21vbiovY3BsZF91cGdy
-YWRlX2VuDQo+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4
-Y3BsZC4qL2kyYy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdt
-b24qL2ZwZ2FfdXBncmFkZV9lbg0KPiA+ICtEYXRlOgkJT2N0b2JlciAyMDIxDQo+ID4gK0tlcm5l
-bFZlcnNpb246CTUuMTYNCj4gPiArQ29udGFjdDoJVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbnZp
-ZGlhLmNvbT4NCj4gPiArRGVzY3JpcHRpb246CVRoZXNlIGZpbGVzIGFsbG93IENQTEQgYW5kIEZQ
-R0EgYnVybmluZy4gVmFsdWUgMSBpbiBmaWxlDQo+IG1lYW5zIGJ1cm5pbmcNCj4gPiArCQlpcyBl
-bmFibGVkLCAwIC0gb3RoZXJ3aXNlLg0KPiA+ICsgCQlJZiB0aGUgc3lzdGVtIGlzIGluIGxvY2tl
-ZC1kb3duIG1vZGUgd3JpdGluZyB0aGVzZSBmaWxlcyB3aWxsDQo+ID4gKwkJbm90IGJlIGFsbG93
-ZWQuDQo+ID4gKwkJVGhlIHB1cnBvc2Ugb2YgdGhlc2UgZmlsZXMgdG8gYWxsb3cgbGluZSBjYXJk
-IENQTEQgYW5kIEZQR0ENCj4gPiArCQl1cGdyYWRlIHRocm91Z2ggdGhlIEpUQUcgZGFpc3ktY2hh
-aW4uDQo+ID4gKw0KPiA+ICsJCVRoZSBmaWxlcyBhcmUgcmVhZC93cml0ZS4NCj4gPiArDQo+ID4g
-K1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0N
-Cj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL3FzZnBfcHdy
-X2VuDQo+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3Bs
-ZC4qL2kyYy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24q
-L3B3cl9lbg0KPiA+ICtEYXRlOgkJT2N0b2JlciAyMDIxDQo+ID4gK0tlcm5lbFZlcnNpb246CTUu
-MTYNCj4gPiArQ29udGFjdDoJVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbnZpZGlhLmNvbT4NCj4g
-PiArRGVzY3JpcHRpb246CVRoZXNlIGZpbGVzIGFsbG93IHRvIHBvd2VyIG9uL29mZiBhbGwgUVNG
-UCBwb3J0cyBhbmQgd2hvbGUNCj4gbGluZSBjYXJkLg0KPiA+ICsJCVRoZSBhdHRyaWJ1dGVzIGFy
-ZSBzZXQgMSBmb3IgcG93ZXIgb24sIDAgLSBmb3IgcG93ZXIgb2ZmLg0KPiA+ICsNCj4gPiArCQlU
-aGUgZmlsZXMgYXJlIHJlYWQvd3JpdGUuDQo+ID4gKw0KPiA+ICtXaGF0OgkJL3N5cy9kZXZpY2Vz
-L3BsYXRmb3JtL21seHBsYXQvaTJjX21seGNwbGQuKi9pMmMtDQo+ICovaTJjLSovaTJjLSovKi0w
-MDMyL21seHJlZy1pby4qL2h3bW9uL2h3bW9uKi9hZ2Jfc3BpX2J1cm5fZW4NCj4gPiArV2hhdDoJ
-CS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0L2kyY19tbHhjcGxkLiovaTJjLQ0KPiAqL2ky
-Yy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9od21vbi9od21vbiovZnBnYV9zcGlfYnVybl9l
-bg0KPiA+ICtEYXRlOgkJT2N0b2JlciAyMDIxDQo+ID4gK0tlcm5lbFZlcnNpb246CTUuMTYNCj4g
-PiArQ29udGFjdDoJVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbnZpZGlhLmNvbT4NCj4gPiArRGVz
-Y3JpcHRpb246CVRoZXNlIGZpbGVzIGFsbG93IGdlYXJib3hlcyBhbmQgRlBHQSBTUEkgZmxhc2gg
-YnVybmluZy4NCj4gPiArCQlUaGUgYXR0cmlidXRlcyBhcmUgc2V0IDEgdG8gZW5hYmxlIGJ1cm5p
-bmcsIDAgLSB0byBkaXNhYmxlLg0KPiA+ICsgCQlJZiB0aGUgc3lzdGVtIGlzIGluIGxvY2tlZC1k
-b3duIG1vZGUgd3JpdGluZyB0aGVzZSBmaWxlcyB3aWxsDQo+ID4gKwkJbm90IGJlIGFsbG93ZWQu
-DQo+ID4gKwkJVGhlIHB1cnBvc2Ugb2YgdGhlc2UgZmlsZXMgdG8gYWxsb3cgbGluZSBjYXJkIEdl
-YXJib3hlcyBhbmQNCj4gRlBHQQ0KPiA+ICsJCWJ1cm5pbmcgZHVyaW5nIHByb2R1Y3Rpb24gZmxv
-dy4NCj4gPiArDQo+ID4gKwkJVGhlIGZpbGUgaXMgcmVhZC93cml0ZS4NCj4gPiArDQo+ID4gK1do
-YXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0NCj4g
-Ki9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL21heF9wb3dlcg0K
-PiA+ICtXaGF0OgkJL3N5cy9kZXZpY2VzL3BsYXRmb3JtL21seHBsYXQvaTJjX21seGNwbGQuKi9p
-MmMtDQo+ICovaTJjLSovaTJjLSovKi0wMDMyL21seHJlZy1pby4qL2h3bW9uL2h3bW9uKi9jb25m
-aWcNCj4gPiArRGF0ZToJCU9jdG9iZXIgMjAyMQ0KPiA+ICtLZXJuZWxWZXJzaW9uOgk1LjE2DQo+
-ID4gK0NvbnRhY3Q6CVZhZGltIFBhc3Rlcm5hayA8dmFkaW1wQG52aWRpYS5jb20+DQo+ID4gK0Rl
-c2NyaXB0aW9uOglUaGVzZSBmaWxlcyBwcm92aWRlIHRoZSBtYXhpbXVtIHBvd2VyZWQgcmVxdWly
-ZWQgZm9yIGxpbmUNCj4gY2FyZA0KPiA+ICsJCWZlZWRpbmcgYW5kIGxpbmUgY2FyZCBjb25maWd1
-cmF0aW9uIElkLg0KPiA+ICsNCj4gPiArCQlUaGUgZmlsZXMgYXJlIHJlYWQgb25seS4NCj4gPg0K
-DQo=
+Hi Len,
+
+On 10/3/21 11:19, Len Baker wrote:
+> Platform drivers have the option of having the platform core create and
+> remove any needed sysfs attribute files. So take advantage of that and
+> refactor the attributes management to avoid to register them "by hand".
+> 
+> Also, due to some attributes are optionals, refactor the code and move
+> the logic inside the "is_visible" callbacks of the attribute_group
+> structures.
+> 
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Len Baker <len.baker@gmx.com>
+
+Thank you for the patch, this indeed results in a nice improvement.
+
+Unfortunately I cannot take this as is (because it will trigger
+a BUG_ON). See my inline remarks, if you can do a v2 with those
+fixed that would be great.
+
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 536 ++++++++++++---------------
+>  1 file changed, 236 insertions(+), 300 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 07b9710d500e..270eb4f373c9 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -332,9 +332,7 @@ static struct {
+>  	u32 battery_force_primary:1;
+>  	u32 input_device_registered:1;
+>  	u32 platform_drv_registered:1;
+> -	u32 platform_drv_attrs_registered:1;
+>  	u32 sensors_pdrv_registered:1;
+> -	u32 sensors_pdrv_attrs_registered:1;
+>  	u32 sensors_pdev_attrs_registered:1;
+>  	u32 hotkey_poll_active:1;
+>  	u32 has_adaptive_kbd:1;
+> @@ -983,20 +981,6 @@ static void tpacpi_shutdown_handler(struct platform_device *pdev)
+>  	}
+>  }
+> 
+> -static struct platform_driver tpacpi_pdriver = {
+> -	.driver = {
+> -		.name = TPACPI_DRVR_NAME,
+> -		.pm = &tpacpi_pm,
+> -	},
+> -	.shutdown = tpacpi_shutdown_handler,
+> -};
+> -
+> -static struct platform_driver tpacpi_hwmon_pdriver = {
+> -	.driver = {
+> -		.name = TPACPI_HWMON_DRVR_NAME,
+> -	},
+> -};
+> -
+>  /*************************************************************************
+>   * sysfs support helpers
+>   */
+> @@ -1488,53 +1472,6 @@ static ssize_t uwb_emulstate_store(struct device_driver *drv, const char *buf,
+>  static DRIVER_ATTR_RW(uwb_emulstate);
+>  #endif
+> 
+> -/* --------------------------------------------------------------------- */
+> -
+> -static struct driver_attribute *tpacpi_driver_attributes[] = {
+> -	&driver_attr_debug_level, &driver_attr_version,
+> -	&driver_attr_interface_version,
+> -};
+> -
+> -static int __init tpacpi_create_driver_attributes(struct device_driver *drv)
+> -{
+> -	int i, res;
+> -
+> -	i = 0;
+> -	res = 0;
+> -	while (!res && i < ARRAY_SIZE(tpacpi_driver_attributes)) {
+> -		res = driver_create_file(drv, tpacpi_driver_attributes[i]);
+> -		i++;
+> -	}
+> -
+> -#ifdef CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
+> -	if (!res && dbg_wlswemul)
+> -		res = driver_create_file(drv, &driver_attr_wlsw_emulstate);
+> -	if (!res && dbg_bluetoothemul)
+> -		res = driver_create_file(drv, &driver_attr_bluetooth_emulstate);
+> -	if (!res && dbg_wwanemul)
+> -		res = driver_create_file(drv, &driver_attr_wwan_emulstate);
+> -	if (!res && dbg_uwbemul)
+> -		res = driver_create_file(drv, &driver_attr_uwb_emulstate);
+> -#endif
+> -
+> -	return res;
+> -}
+> -
+> -static void tpacpi_remove_driver_attributes(struct device_driver *drv)
+> -{
+> -	int i;
+> -
+> -	for (i = 0; i < ARRAY_SIZE(tpacpi_driver_attributes); i++)
+> -		driver_remove_file(drv, tpacpi_driver_attributes[i]);
+> -
+> -#ifdef THINKPAD_ACPI_DEBUGFACILITIES
+> -	driver_remove_file(drv, &driver_attr_wlsw_emulstate);
+> -	driver_remove_file(drv, &driver_attr_bluetooth_emulstate);
+> -	driver_remove_file(drv, &driver_attr_wwan_emulstate);
+> -	driver_remove_file(drv, &driver_attr_uwb_emulstate);
+> -#endif
+> -}
+> -
+>  /*************************************************************************
+>   * Firmware Data
+>   */
+> @@ -3008,7 +2945,14 @@ static struct attribute *adaptive_kbd_attributes[] = {
+>  	NULL
+>  };
+> 
+> +static umode_t hadaptive_kbd_attr_is_visible(struct kobject *kobj,
+> +					     struct attribute *attr, int n)
+> +{
+> +	return tp_features.has_adaptive_kbd ? attr->mode : 0;
+> +}
+> +
+>  static const struct attribute_group adaptive_kbd_attr_group = {
+> +	.is_visible = hadaptive_kbd_attr_is_visible,
+>  	.attrs = adaptive_kbd_attributes,
+>  };
+> 
+> @@ -3106,8 +3050,6 @@ static void hotkey_exit(void)
+>  	hotkey_poll_stop_sync();
+>  	mutex_unlock(&hotkey_mutex);
+>  #endif
+> -	sysfs_remove_group(&tpacpi_pdev->dev.kobj, &hotkey_attr_group);
+> -
+>  	dbg_printk(TPACPI_DBG_EXIT | TPACPI_DBG_HKEY,
+>  		   "restoring original HKEY status and mask\n");
+>  	/* yes, there is a bitwise or below, we want the
+> @@ -3502,14 +3444,8 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+>  			 */
+>  			if (acpi_evalf(hkey_handle, &hotkey_adaptive_all_mask,
+>  				       "MHKA", "dd", 2)) {
+> -				if (hotkey_adaptive_all_mask != 0) {
+> +				if (hotkey_adaptive_all_mask != 0)
+>  					tp_features.has_adaptive_kbd = true;
+> -					res = sysfs_create_group(
+> -						&tpacpi_pdev->dev.kobj,
+> -						&adaptive_kbd_attr_group);
+> -					if (res)
+> -						goto err_exit;
+> -				}
+>  			} else {
+>  				tp_features.has_adaptive_kbd = false;
+>  				hotkey_adaptive_all_mask = 0x0U;
+> @@ -3563,9 +3499,6 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+>  	}
+> 
+>  	tabletsw_state = hotkey_init_tablet_mode();
+> -	res = sysfs_create_group(&tpacpi_pdev->dev.kobj, &hotkey_attr_group);
+> -	if (res)
+> -		goto err_exit;
+> 
+>  	/* Set up key map */
+>  	keymap_id = tpacpi_check_quirks(tpacpi_keymap_qtable,
+> @@ -3662,9 +3595,6 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+>  	return 0;
+> 
+>  err_exit:
+> -	sysfs_remove_group(&tpacpi_pdev->dev.kobj, &hotkey_attr_group);
+> -	sysfs_remove_group(&tpacpi_pdev->dev.kobj, &adaptive_kbd_attr_group);
+> -
+>  	return (res < 0) ? res : 1;
+>  }
+> 
+> @@ -4396,7 +4326,14 @@ static struct attribute *bluetooth_attributes[] = {
+>  	NULL
+>  };
+> 
+> +static umode_t bluetooth_attr_is_visible(struct kobject *kobj,
+> +					 struct attribute *attr, int n)
+> +{
+> +	return tp_features.bluetooth ? attr->mode : 0;
+> +}
+> +
+>  static const struct attribute_group bluetooth_attr_group = {
+> +	.is_visible = bluetooth_attr_is_visible,
+>  	.attrs = bluetooth_attributes,
+>  };
+> 
+> @@ -4418,11 +4355,7 @@ static void bluetooth_shutdown(void)
+> 
+>  static void bluetooth_exit(void)
+>  {
+> -	sysfs_remove_group(&tpacpi_pdev->dev.kobj,
+> -			&bluetooth_attr_group);
+> -
+>  	tpacpi_destroy_rfkill(TPACPI_RFK_BLUETOOTH_SW_ID);
+> -
+>  	bluetooth_shutdown();
+>  }
+> 
+> @@ -4536,17 +4469,7 @@ static int __init bluetooth_init(struct ibm_init_struct *iibm)
+>  				RFKILL_TYPE_BLUETOOTH,
+>  				TPACPI_RFK_BLUETOOTH_SW_NAME,
+>  				true);
+> -	if (res)
+> -		return res;
+> -
+> -	res = sysfs_create_group(&tpacpi_pdev->dev.kobj,
+> -				&bluetooth_attr_group);
+> -	if (res) {
+> -		tpacpi_destroy_rfkill(TPACPI_RFK_BLUETOOTH_SW_ID);
+> -		return res;
+> -	}
+> -
+> -	return 0;
+> +	return res;
+>  }
+> 
+>  /* procfs -------------------------------------------------------------- */
+> @@ -4653,7 +4576,14 @@ static struct attribute *wan_attributes[] = {
+>  	NULL
+>  };
+> 
+> +static umode_t wan_attr_is_visible(struct kobject *kobj, struct attribute *attr,
+> +				   int n)
+> +{
+> +	return tp_features.wan ? attr->mode : 0;
+> +}
+> +
+>  static const struct attribute_group wan_attr_group = {
+> +	.is_visible = wan_attr_is_visible,
+>  	.attrs = wan_attributes,
+>  };
+> 
+> @@ -4675,11 +4605,7 @@ static void wan_shutdown(void)
+> 
+>  static void wan_exit(void)
+>  {
+> -	sysfs_remove_group(&tpacpi_pdev->dev.kobj,
+> -		&wan_attr_group);
+> -
+>  	tpacpi_destroy_rfkill(TPACPI_RFK_WWAN_SW_ID);
+> -
+>  	wan_shutdown();
+>  }
+> 
+> @@ -4723,18 +4649,7 @@ static int __init wan_init(struct ibm_init_struct *iibm)
+>  				RFKILL_TYPE_WWAN,
+>  				TPACPI_RFK_WWAN_SW_NAME,
+>  				true);
+> -	if (res)
+> -		return res;
+> -
+> -	res = sysfs_create_group(&tpacpi_pdev->dev.kobj,
+> -				&wan_attr_group);
+> -
+> -	if (res) {
+> -		tpacpi_destroy_rfkill(TPACPI_RFK_WWAN_SW_ID);
+> -		return res;
+> -	}
+> -
+> -	return 0;
+> +	return res;
+>  }
+> 
+>  /* procfs -------------------------------------------------------------- */
+> @@ -5635,30 +5550,35 @@ static ssize_t cmos_command_store(struct device *dev,
+> 
+>  static DEVICE_ATTR_WO(cmos_command);
+> 
+> +static struct attribute *cmos_attributes[] = {
+> +	&dev_attr_cmos_command.attr,
+> +	NULL
+> +};
+> +
+> +static umode_t cmos_attr_is_visible(struct kobject *kobj,
+> +				    struct attribute *attr, int n)
+> +{
+> +	return cmos_handle ? attr->mode : 0;
+> +}
+> +
+> +static const struct attribute_group cmos_attr_group = {
+> +	.is_visible = cmos_attr_is_visible,
+> +	.attrs = cmos_attributes,
+> +};
+> +
+>  /* --------------------------------------------------------------------- */
+> 
+>  static int __init cmos_init(struct ibm_init_struct *iibm)
+>  {
+> -	int res;
+> -
+>  	vdbg_printk(TPACPI_DBG_INIT,
+> -		"initializing cmos commands subdriver\n");
+> +		    "initializing cmos commands subdriver\n");
+> 
+>  	TPACPI_ACPIHANDLE_INIT(cmos);
+> 
+>  	vdbg_printk(TPACPI_DBG_INIT, "cmos commands are %s\n",
+> -		str_supported(cmos_handle != NULL));
+> -
+> -	res = device_create_file(&tpacpi_pdev->dev, &dev_attr_cmos_command);
+> -	if (res)
+> -		return res;
+> +		    str_supported(cmos_handle != NULL));
+> 
+> -	return (cmos_handle) ? 0 : 1;
+> -}
+> -
+> -static void cmos_exit(void)
+> -{
+> -	device_remove_file(&tpacpi_pdev->dev, &dev_attr_cmos_command);
+> +	return cmos_handle ? 0 : 1;
+>  }
+> 
+>  static int cmos_read(struct seq_file *m)
+> @@ -5699,7 +5619,6 @@ static struct ibm_struct cmos_driver_data = {
+>  	.name = "cmos",
+>  	.read = cmos_read,
+>  	.write = cmos_write,
+> -	.exit = cmos_exit,
+>  };
+> 
+>  /*************************************************************************
+> @@ -6210,7 +6129,6 @@ struct ibm_thermal_sensors_struct {
+>  };
+> 
+>  static enum thermal_access_mode thermal_read_mode;
+> -static const struct attribute_group *thermal_attr_group;
+>  static bool thermal_use_labels;
+> 
+>  /* idx is zero-based */
+> @@ -6383,12 +6301,26 @@ static struct attribute *thermal_temp_input_attr[] = {
+>  	NULL
+>  };
+> 
+> -static const struct attribute_group thermal_temp_input16_group = {
+> -	.attrs = thermal_temp_input_attr
+> -};
+> +static umode_t thermal_attr_is_visible(struct kobject *kobj,
+> +				       struct attribute *attr, int n)
+> +{
+> +	if (thermal_read_mode == TPACPI_THERMAL_NONE)
+> +		return 0;
+> +
+> +	if (attr == THERMAL_ATTRS(8) || attr == THERMAL_ATTRS(9) ||
+> +	    attr == THERMAL_ATTRS(10) || attr == THERMAL_ATTRS(11) ||
+> +	    attr == THERMAL_ATTRS(12) || attr == THERMAL_ATTRS(13) ||
+> +	    attr == THERMAL_ATTRS(14) || attr == THERMAL_ATTRS(15)) {
+> +		if (thermal_read_mode != TPACPI_THERMAL_TPEC_16)
+> +			return 0;
+> +	}
+> 
+> -static const struct attribute_group thermal_temp_input8_group = {
+> -	.attrs = &thermal_temp_input_attr[8]
+> +	return attr->mode;
+> +}
+> +
+> +static const struct attribute_group thermal_attr_group = {
+> +	.is_visible = thermal_attr_is_visible,
+> +	.attrs = thermal_temp_input_attr,
+>  };
+> 
+>  #undef THERMAL_SENSOR_ATTR_TEMP
+> @@ -6412,7 +6344,14 @@ static struct attribute *temp_label_attributes[] = {
+>  	NULL
+>  };
+> 
+> +static umode_t temp_label_attr_is_visible(struct kobject *kobj,
+> +					  struct attribute *attr, int n)
+> +{
+> +	return thermal_use_labels ? attr->mode : 0;
+> +}
+> +
+>  static const struct attribute_group temp_label_attr_group = {
+> +	.is_visible = temp_label_attr_is_visible,
+>  	.attrs = temp_label_attributes,
+>  };
+> 
+> @@ -6423,7 +6362,6 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
+>  	u8 t, ta1, ta2, ver = 0;
+>  	int i;
+>  	int acpi_tmp7;
+> -	int res;
+> 
+>  	vdbg_printk(TPACPI_DBG_INIT, "initializing thermal subdriver\n");
+> 
+> @@ -6498,42 +6436,7 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
+>  		str_supported(thermal_read_mode != TPACPI_THERMAL_NONE),
+>  		thermal_read_mode);
+> 
+> -	switch (thermal_read_mode) {
+> -	case TPACPI_THERMAL_TPEC_16:
+> -		thermal_attr_group = &thermal_temp_input16_group;
+> -		break;
+> -	case TPACPI_THERMAL_TPEC_8:
+> -	case TPACPI_THERMAL_ACPI_TMP07:
+> -	case TPACPI_THERMAL_ACPI_UPDT:
+> -		thermal_attr_group = &thermal_temp_input8_group;
+> -		break;
+> -	case TPACPI_THERMAL_NONE:
+> -	default:
+> -		return 1;
+> -	}
+> -
+> -	res = sysfs_create_group(&tpacpi_hwmon->kobj, thermal_attr_group);
+> -	if (res)
+> -		return res;
+> -
+> -	if (thermal_use_labels) {
+> -		res = sysfs_create_group(&tpacpi_hwmon->kobj, &temp_label_attr_group);
+> -		if (res) {
+> -			sysfs_remove_group(&tpacpi_hwmon->kobj, thermal_attr_group);
+> -			return res;
+> -		}
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static void thermal_exit(void)
+> -{
+> -	if (thermal_attr_group)
+> -		sysfs_remove_group(&tpacpi_hwmon->kobj, thermal_attr_group);
+> -
+> -	if (thermal_use_labels)
+> -		sysfs_remove_group(&tpacpi_hwmon->kobj, &temp_label_attr_group);
+> +	return thermal_read_mode == TPACPI_THERMAL_NONE ? 1 : 0;
+>  }
+> 
+>  static int thermal_read(struct seq_file *m)
+> @@ -6560,7 +6463,6 @@ static int thermal_read(struct seq_file *m)
+>  static struct ibm_struct thermal_driver_data = {
+>  	.name = "thermal",
+>  	.read = thermal_read,
+> -	.exit = thermal_exit,
+>  };
+> 
+>  /*************************************************************************
+> @@ -8735,14 +8637,34 @@ static ssize_t fan_watchdog_store(struct device_driver *drv, const char *buf,
+>  static DRIVER_ATTR_RW(fan_watchdog);
+> 
+>  /* --------------------------------------------------------------------- */
+> +
+>  static struct attribute *fan_attributes[] = {
+> -	&dev_attr_pwm1_enable.attr, &dev_attr_pwm1.attr,
+> +	&dev_attr_pwm1_enable.attr,
+> +	&dev_attr_pwm1.attr,
+>  	&dev_attr_fan1_input.attr,
+> -	NULL, /* for fan2_input */
+> +	&dev_attr_fan2_input.attr,
+> +	&driver_attr_fan_watchdog.attr,
+>  	NULL
+>  };
+> 
+> +static umode_t fan_attr_is_visible(struct kobject *kobj, struct attribute *attr,
+> +				   int n)
+> +{
+> +	if (fan_status_access_mode != TPACPI_FAN_NONE ||
+> +	    fan_control_access_mode != TPACPI_FAN_WR_NONE) {
+> +		if (attr == &dev_attr_fan2_input.attr) {
+> +			if (!tp_features.second_fan)
+> +				return 0;
+> +		}
+> +
+> +		return attr->mode;
+> +	}
+
+
+Can you refactor this one to not have nested if-s and put the
+"return attr->mode;" at the end like the other is_visible
+functions please ?
+
+
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct attribute_group fan_attr_group = {
+> +	.is_visible = fan_attr_is_visible,
+>  	.attrs = fan_attributes,
+>  };
+> 
+> @@ -8772,7 +8694,6 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+> 
+>  static int __init fan_init(struct ibm_init_struct *iibm)
+>  {
+> -	int rc;
+>  	unsigned long quirks;
+> 
+>  	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_FAN,
+> @@ -8869,27 +8790,10 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+>  		fan_get_status_safe(NULL);
+> 
+>  	if (fan_status_access_mode != TPACPI_FAN_NONE ||
+> -	    fan_control_access_mode != TPACPI_FAN_WR_NONE) {
+> -		if (tp_features.second_fan) {
+> -			/* attach second fan tachometer */
+> -			fan_attributes[ARRAY_SIZE(fan_attributes)-2] =
+> -					&dev_attr_fan2_input.attr;
+> -		}
+> -		rc = sysfs_create_group(&tpacpi_hwmon->kobj,
+> -					 &fan_attr_group);
+> -		if (rc < 0)
+> -			return rc;
+> -
+> -		rc = driver_create_file(&tpacpi_hwmon_pdriver.driver,
+> -					&driver_attr_fan_watchdog);
+> -		if (rc < 0) {
+> -			sysfs_remove_group(&tpacpi_hwmon->kobj,
+> -					&fan_attr_group);
+> -			return rc;
+> -		}
+> +	    fan_control_access_mode != TPACPI_FAN_WR_NONE)
+>  		return 0;
+> -	} else
+> -		return 1;
+> +
+> +	return 1;
+>  }
+> 
+>  static void fan_exit(void)
+> @@ -8897,11 +8801,6 @@ static void fan_exit(void)
+>  	vdbg_printk(TPACPI_DBG_EXIT | TPACPI_DBG_FAN,
+>  		    "cancelling any pending fan watchdog tasks\n");
+> 
+> -	/* FIXME: can we really do this unconditionally? */
+> -	sysfs_remove_group(&tpacpi_hwmon->kobj, &fan_attr_group);
+> -	driver_remove_file(&tpacpi_hwmon_pdriver.driver,
+> -			   &driver_attr_fan_watchdog);
+> -
+>  	cancel_delayed_work(&fan_watchdog_task);
+>  	flush_workqueue(tpacpi_wq);
+>  }
+> @@ -9963,6 +9862,35 @@ static ssize_t palmsensor_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(palmsensor);
+> 
+> +static struct attribute *proxsensor_attributes[] = {
+> +	&dev_attr_dytc_lapmode.attr,
+> +	&dev_attr_palmsensor.attr,
+> +	NULL
+> +};
+> +
+> +static umode_t proxsensor_attr_is_visible(struct kobject *kobj,
+> +					  struct attribute *attr, int n)
+> +{
+> +	if (attr == &dev_attr_dytc_lapmode.attr) {
+> +		/*
+> +		 * Platforms before DYTC version 5 claim to have a lap sensor,
+> +		 * but it doesn't work, so we ignore them.
+> +		 */
+> +		if (!has_lapsensor ||  dytc_version < 5)
+> +			return 0;
+> +	} else if (attr == &dev_attr_palmsensor.attr) {
+> +		if (!has_palmsensor)
+> +			return 0;
+> +	}
+> +
+> +	return attr->mode;
+> +}
+> +
+> +static const struct attribute_group proxsensor_attr_group = {
+> +	.is_visible = proxsensor_attr_is_visible,
+> +	.attrs = proxsensor_attributes,
+> +};
+> +
+>  static int tpacpi_proxsensor_init(struct ibm_init_struct *iibm)
+>  {
+>  	int palm_err, lap_err, err;
+> @@ -9981,43 +9909,16 @@ static int tpacpi_proxsensor_init(struct ibm_init_struct *iibm)
+>  	if (lap_err && (lap_err != -ENODEV))
+>  		return lap_err;
+> 
+> -	if (has_palmsensor) {
+> -		err = sysfs_create_file(&tpacpi_pdev->dev.kobj, &dev_attr_palmsensor.attr);
+> -		if (err)
+> -			return err;
+> -	}
+> -
+>  	/* Check if we know the DYTC version, if we don't then get it */
+>  	if (!dytc_version) {
+>  		err = dytc_get_version();
+>  		if (err)
+>  			return err;
+>  	}
+> -	/*
+> -	 * Platforms before DYTC version 5 claim to have a lap sensor, but it doesn't work, so we
+> -	 * ignore them
+> -	 */
+> -	if (has_lapsensor && (dytc_version >= 5)) {
+> -		err = sysfs_create_file(&tpacpi_pdev->dev.kobj, &dev_attr_dytc_lapmode.attr);
+> -		if (err)
+> -			return err;
+> -	}
+> -	return 0;
+> -}
+> 
+> -static void proxsensor_exit(void)
+> -{
+> -	if (has_lapsensor)
+> -		sysfs_remove_file(&tpacpi_pdev->dev.kobj, &dev_attr_dytc_lapmode.attr);
+> -	if (has_palmsensor)
+> -		sysfs_remove_file(&tpacpi_pdev->dev.kobj, &dev_attr_palmsensor.attr);
+> +	return 0;
+>  }
+> 
+> -static struct ibm_struct proxsensor_driver_data = {
+> -	.name = "proximity-sensor",
+> -	.exit = proxsensor_exit,
+> -};
+> -
+
+So when I came here during the review I decided a v2 was necessary.
+
+The way the sub-drivers inside thinkpad_acpi work is they must have a
+struct ibm_struct associated with them, even if it is just for the name
+field.
+
+This is enforced rather harshly (something to fix in another patch)
+by this bit of code:
+
+```
+static int __init ibm_init(struct ibm_init_struct *iibm)
+{
+        int ret;
+        struct ibm_struct *ibm = iibm->data;
+        struct proc_dir_entry *entry;
+
+        BUG_ON(ibm == NULL);
+```
+
+The name is used in various places and the struct is also used to
+store various house-keeping flags.
+
+So for v2 please keep the proxsensor_driver_data struct here, as well
+as for dprc_driver_data.
+
+
+>  /*************************************************************************
+>   * DYTC Platform Profile interface
+>   */
+> @@ -10432,37 +10333,18 @@ static struct attribute *kbdlang_attributes[] = {
+>  	NULL
+>  };
+> 
+> -static const struct attribute_group kbdlang_attr_group = {
+> -	.attrs = kbdlang_attributes,
+> -};
+> -
+> -static int tpacpi_kbdlang_init(struct ibm_init_struct *iibm)
+> +static umode_t kbdlang_attr_is_visible(struct kobject *kobj,
+> +				       struct attribute *attr, int n)
+>  {
+>  	int err, output;
+> 
+>  	err = get_keyboard_lang(&output);
+> -	/*
+> -	 * If support isn't available (ENODEV) then don't return an error
+> -	 * just don't create the sysfs group.
+> -	 */
+> -	if (err == -ENODEV)
+> -		return 0;
+> -
+> -	if (err)
+> -		return err;
+> -
+> -	/* Platform supports this feature - create the sysfs file */
+> -	return sysfs_create_group(&tpacpi_pdev->dev.kobj, &kbdlang_attr_group);
+> +	return err ? 0 : attr->mode;
+>  }
+
+get_keyboard_lang() consists of 2 not cheap ACPI calls, one of
+which involves talking to the embedded-controller over some slow bus.
+
+Please keep kbdlang_init() and make it set a flag to use inside
+kbdlang_attr_is_visible().
+
+
+> 
+> -static void kbdlang_exit(void)
+> -{
+> -	sysfs_remove_group(&tpacpi_pdev->dev.kobj, &kbdlang_attr_group);
+> -}
+> -
+> -static struct ibm_struct kbdlang_driver_data = {
+> -	.name = "kbdlang",
+> -	.exit = kbdlang_exit,
+> +static const struct attribute_group kbdlang_attr_group = {
+> +	.is_visible = kbdlang_attr_is_visible,
+> +	.attrs = kbdlang_attributes,
+>  };
+> 
+>  /*************************************************************************
+> @@ -10533,41 +10415,127 @@ static ssize_t wwan_antenna_type_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(wwan_antenna_type);
+> 
+> +static struct attribute *dprc_attributes[] = {
+> +	&dev_attr_wwan_antenna_type.attr,
+> +	NULL
+> +};
+> +
+> +static umode_t dprc_attr_is_visible(struct kobject *kobj,
+> +				    struct attribute *attr, int n)
+> +{
+> +	return has_antennatype ? attr->mode : 0;
+> +}
+> +
+> +static const struct attribute_group dprc_attr_group = {
+> +	.is_visible = dprc_attr_is_visible,
+> +	.attrs = dprc_attributes,
+> +};
+> +
+>  static int tpacpi_dprc_init(struct ibm_init_struct *iibm)
+>  {
+> -	int wwanantenna_err, err;
+> +	int err = get_wwan_antenna(&wwan_antennatype);
+> 
+> -	wwanantenna_err = get_wwan_antenna(&wwan_antennatype);
+>  	/*
+>  	 * If support isn't available (ENODEV) then quit, but don't
+>  	 * return an error.
+>  	 */
+> -	if (wwanantenna_err == -ENODEV)
+> +	if (err == -ENODEV)
+>  		return 0;
+> 
+> -	/* if there was an error return it */
+> -	if (wwanantenna_err && (wwanantenna_err != -ENODEV))
+> -		return wwanantenna_err;
+> -	else if (!wwanantenna_err)
+> -		has_antennatype = true;
+> +	/* If there was an error return it */
+> +	if (err)
+> +		return err;
+> 
+> -	if (has_antennatype) {
+> -		err = sysfs_create_file(&tpacpi_pdev->dev.kobj, &dev_attr_wwan_antenna_type.attr);
+> -		if (err)
+> -			return err;
+> -	}
+> +	has_antennatype = true;
+>  	return 0;
+>  }
+> 
+> -static void dprc_exit(void)
+> +/* --------------------------------------------------------------------- */
+> +
+> +static struct attribute *tpacpi_attributes[] = {
+> +	&driver_attr_debug_level.attr,
+> +	&driver_attr_version.attr,
+> +	&driver_attr_interface_version.attr,
+> +#ifdef CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
+> +	&driver_attr_wlsw_emulstate.attr,
+> +	&driver_attr_bluetooth_emulstate.attr,
+> +	&driver_attr_wwan_emulstate.attr,
+> +	&driver_attr_uwb_emulstate.attr,
+> +#endif
+> +	NULL
+> +};
+> +
+> +#ifdef CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
+> +static umode_t tpacpi_attr_is_visible(struct kobject *kobj,
+> +				      struct attribute *attr, int n)
+>  {
+> -	if (has_antennatype)
+> -		sysfs_remove_file(&tpacpi_pdev->dev.kobj, &dev_attr_wwan_antenna_type.attr);
+> +	if (attr == &driver_attr_wlsw_emulstate.attr) {
+> +		if (!dbg_wlswemul)
+> +			return 0;
+> +	} else if (attr == &driver_attr_bluetooth_emulstate.attr) {
+> +		if (!dbg_bluetoothemul)
+> +			return 0;
+> +	} else if (attr == &driver_attr_wwan_emulstate.attr) {
+> +		if (!dbg_wwanemul)
+> +			return 0;
+> +	} else if (attr == &driver_attr_uwb_emulstate.attr) {
+> +		if (!dbg_uwbemul)
+> +			return 0;
+> +	}
+> +
+> +	return attr->mode;
+>  }
+> +#endif
+> 
+> -static struct ibm_struct dprc_driver_data = {
+> -	.name = "dprc",
+> -	.exit = dprc_exit,
+
+As mentioned above this struct needs to be kept around,
+with just the name set.
+
+> +static const struct attribute_group tpacpi_attr_group = {
+> +#ifdef CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
+> +	.is_visible = tpacpi_attr_is_visible,
+> +#endif
+> +	.attrs = tpacpi_attributes,
+> +};
+> +
+> +static const struct attribute_group *tpacpi_groups[] = {
+> +	&adaptive_kbd_attr_group,
+> +	&hotkey_attr_group,
+> +	&bluetooth_attr_group,
+> +	&wan_attr_group,
+> +	&proxsensor_attr_group,
+> +	&kbdlang_attr_group,
+> +	&dprc_attr_group,
+> +	&tpacpi_attr_group,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group *tpacpi_hwmon_groups[] = {
+> +	&thermal_attr_group,
+> +	&temp_label_attr_group,
+> +	&fan_attr_group,
+> +	&tpacpi_attr_group,
+> +	NULL,
+> +};
+> +
+> +/****************************************************************************
+> + ****************************************************************************
+> + *
+> + * Platform drivers
+> + *
+> + ****************************************************************************
+> + ****************************************************************************/
+> +
+> +static struct platform_driver tpacpi_pdriver = {
+> +	.driver = {
+> +		.name = TPACPI_DRVR_NAME,
+> +		.pm = &tpacpi_pm,
+> +		.dev_groups = tpacpi_groups,
+> +	},
+> +	.shutdown = tpacpi_shutdown_handler,
+> +};
+> +
+> +static struct platform_driver tpacpi_hwmon_pdriver = {
+> +	.driver = {
+> +		.name = TPACPI_HWMON_DRVR_NAME,
+> +		.dev_groups = tpacpi_hwmon_groups,
+> +	},
+>  };
+> 
+>  /****************************************************************************
+> @@ -11064,19 +11032,13 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+>  	},
+>  	{
+>  		.init = tpacpi_proxsensor_init,
+> -		.data = &proxsensor_driver_data,
+>  	},
+>  	{
+>  		.init = tpacpi_dytc_profile_init,
+>  		.data = &dytc_profile_driver_data,
+>  	},
+> -	{
+> -		.init = tpacpi_kbdlang_init,
+> -		.data = &kbdlang_driver_data,
+> -	},
+>  	{
+>  		.init = tpacpi_dprc_init,
+> -		.data = &dprc_driver_data,
+>  	},
+>  };
+> 
+> @@ -11090,8 +11052,6 @@ static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
+> 
+>  	for (i = 0; i < ARRAY_SIZE(ibms_init); i++) {
+>  		ibm = ibms_init[i].data;
+> -		WARN_ON(ibm == NULL);
+> -
+>  		if (!ibm || !ibm->name)
+>  			continue;
+> 
+> @@ -11221,26 +11181,16 @@ static void thinkpad_acpi_module_exit(void)
+> 
+>  	if (tpacpi_hwmon)
+>  		hwmon_device_unregister(tpacpi_hwmon);
+> -
+>  	if (tpacpi_sensors_pdev)
+>  		platform_device_unregister(tpacpi_sensors_pdev);
+>  	if (tpacpi_pdev)
+>  		platform_device_unregister(tpacpi_pdev);
+> -
+> -	if (tp_features.sensors_pdrv_attrs_registered)
+> -		tpacpi_remove_driver_attributes(&tpacpi_hwmon_pdriver.driver);
+> -	if (tp_features.platform_drv_attrs_registered)
+> -		tpacpi_remove_driver_attributes(&tpacpi_pdriver.driver);
+> -
+>  	if (tp_features.sensors_pdrv_registered)
+>  		platform_driver_unregister(&tpacpi_hwmon_pdriver);
+> -
+>  	if (tp_features.platform_drv_registered)
+>  		platform_driver_unregister(&tpacpi_pdriver);
+> -
+>  	if (proc_dir)
+>  		remove_proc_entry(TPACPI_PROC_DIR, acpi_root_dir);
+> -
+>  	if (tpacpi_wq)
+>  		destroy_workqueue(tpacpi_wq);
+> 
+> @@ -11308,20 +11258,6 @@ static int __init thinkpad_acpi_module_init(void)
+>  	}
+>  	tp_features.sensors_pdrv_registered = 1;
+> 
+> -	ret = tpacpi_create_driver_attributes(&tpacpi_pdriver.driver);
+> -	if (!ret) {
+> -		tp_features.platform_drv_attrs_registered = 1;
+> -		ret = tpacpi_create_driver_attributes(
+> -					&tpacpi_hwmon_pdriver.driver);
+> -	}
+> -	if (ret) {
+> -		pr_err("unable to create sysfs driver attributes\n");
+> -		thinkpad_acpi_module_exit();
+> -		return ret;
+> -	}
+> -	tp_features.sensors_pdrv_attrs_registered = 1;
+> -
+> -
+>  	/* Device initialization */
+>  	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, -1,
+>  							NULL, 0);
+> --
+> 2.25.1
+> 
+
+Regards,
+
+Hans
+
