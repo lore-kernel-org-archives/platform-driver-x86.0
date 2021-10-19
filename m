@@ -2,92 +2,134 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9E2C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 01:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C7AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 03:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE17861354
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 01:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E0F60F9E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 03:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229588AbhJSB54 (ORCPT
+        id S229742AbhJSDkm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Oct 2021 21:57:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34752 "EHLO
+        Mon, 18 Oct 2021 23:40:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbhJSB54 (ORCPT
+        with ESMTP id S232473AbhJSDkl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Oct 2021 21:57:56 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 734D5C06161C;
-        Mon, 18 Oct 2021 18:55:44 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id ls18-20020a17090b351200b001a00250584aso797902pjb.4;
-        Mon, 18 Oct 2021 18:55:44 -0700 (PDT)
+        Mon, 18 Oct 2021 23:40:41 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD14FC06161C
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Oct 2021 20:38:28 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id n7so3519361ljp.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Oct 2021 20:38:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iVUwTST59wL6CTCRNw7c8eNLL6H7oNA2+TgO4Oeu8Y4=;
-        b=W/pHLIdze3XNKJnt2F32rIzoajoraz7WOisrfpL79CoLKpEItyajbals9z4qH0/hSQ
-         MsMbtVPgHEyXF9d7a3xx9ECfUPdJy2y579OmnaB/tB6WBX95IiVCR6MxX9PSuBAbn7MO
-         zQwq05oS1sNCrzecgb6ysYxc7pc6bK+svtWUvUhrpbhDZ122h2OXN8AKTGwoZgbMyZIL
-         hXgo8COOAhx79wDodOe6szSc8QUFQXW8scUbjGoyrW00w73tAi5VfY3dILcOfKlh6I4u
-         jWAGRpBMBv06AErvnMP6nGKhZm3GxVX1GvKqmzwPJ75AlkysLku9NnFOTcylYAAb+T+e
-         v9TQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8/Vo8naa2pVOSCfV4UFA2BJ46wmQrSEVSsBZouXgR8Q=;
+        b=TBqUPv05LF6J1Ap/h7Pz9XJiHiK0IslnX+9wn7xlIvHPKYKx/hZE2OdYd8/tUHUJiY
+         5A0XsyYfcM8kS3aHiGgfpEG+nkoekDVqu2WkEHgchyxUgt84AkSR1/G59wXD3IbW6RJ1
+         4qij4MWM98pZd9rp8BkYS9iuIRoGDWcJuG/YE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iVUwTST59wL6CTCRNw7c8eNLL6H7oNA2+TgO4Oeu8Y4=;
-        b=Vic9jXmOJy0nx5laFh2i9g7n3UlFi9D8GgVcciWQBn5NO+e9GrrfVA5WJZh6qaz5+5
-         sHjiaKZmKm5qAk/zE/Gx38actAc7NQ8cukD1i6uHAjr9pv6jMIGCnO9zLgsGgD/iu5tx
-         8TYeooVPwu83uUQqFf0CXpWNkUbwIf/hx11NHB8kKLskV+EBe2OeEqUfnRduFKWiYowe
-         xGoXR8PbFpZ3jJd497ICTRthN4LhUxRSi4EY6mw0ijEB236vQ/AjW6Uvt4MJvTXfCZCE
-         4BuH7yGi/jGyc/0HTsuFPXUWa2IVFDHeziF1YnWWqaYbE+Dw82XXrEVtaEKce801tPRD
-         3l+A==
-X-Gm-Message-State: AOAM5301AZw7FThN7hmNgJ4IjiMGDG5901bOv3lLsWp1/vYIvmqt8Ok5
-        r67IpLyw8kcNlpG89t9LrvY=
-X-Google-Smtp-Source: ABdhPJxOmf2YCoKcCsPO1gg9ffjbe92LAOAJFoagIEVGnqtsbTEoNeSqP8nBMw+HX1IC3RE1OOfYEg==
-X-Received: by 2002:a17:90a:3ec2:: with SMTP id k60mr3075137pjc.176.1634608543794;
-        Mon, 18 Oct 2021 18:55:43 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:54f8:9d9:1fa7:9eae])
-        by smtp.gmail.com with ESMTPSA id oo9sm680504pjb.53.2021.10.18.18.55.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Oct 2021 18:55:42 -0700 (PDT)
-Date:   Mon, 18 Oct 2021 18:55:40 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 3/3] Input: axp20x-pek - Use new soc_intel_is_cht() helper
-Message-ID: <YW4lnI2fAWBlIQhw@google.com>
-References: <20211018143324.296961-1-hdegoede@redhat.com>
- <20211018143324.296961-4-hdegoede@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8/Vo8naa2pVOSCfV4UFA2BJ46wmQrSEVSsBZouXgR8Q=;
+        b=osop6BXGWYTv+mC+Zyfh03f/cSIpZarG9b6bho+r3ic4S+FOXhE0twWdQctQNGYO8A
+         8SlqhZb7BbcGXvqn0BzSqw6uq9E3qIbH17PuVnFGJyhKXdUG+SdixZcLaZo5IaDV257L
+         PcnlUyn2v0/S3GR2Zc2z7sth26yvtcBYzyUJRIPyQgzSKg8qkFyaVWlomzKwHuhungoY
+         97azjV/XiWYM1hv/k1dkmN3G4xalG/7N1nbB4BQxBdhnCw/le6jR7PuP/YdTL4Ae6/FR
+         3+T0Ar4686BBSorE0RmPUW8FLemHaPvM2kmEhghN49sc3DybTDvO66tAbdekUzQNny+d
+         L60g==
+X-Gm-Message-State: AOAM530wxcRyzPYDO8RTY23SHdhsUahEAsxH03VUC8hbyCRKX7SnEC7m
+        0Y1znEhXEmxZeG4TMc5j98t1YV/LUUXof1DY
+X-Google-Smtp-Source: ABdhPJynF7qWlr6kIgA/pZTzhvgMHdWkaiOnSci91ompf727CS4M0Dqoesm2T88ORJwop02d2wbJoA==
+X-Received: by 2002:a05:651c:12c6:: with SMTP id 6mr4047602lje.256.1634614706909;
+        Mon, 18 Oct 2021 20:38:26 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id s11sm1548661lfd.95.2021.10.18.20.38.25
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Oct 2021 20:38:25 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id z11so4342332lfj.4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Oct 2021 20:38:25 -0700 (PDT)
+X-Received: by 2002:a05:6512:12d4:: with SMTP id p20mr3786322lfg.280.1634614705218;
+ Mon, 18 Oct 2021 20:38:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211018143324.296961-4-hdegoede@redhat.com>
+References: <20211018182537.2316800-1-nathan@kernel.org> <CAKwvOdn4_DrgaZoAo-v7CbYurNUpfAK5tnzT023=WCDzkmYQVg@mail.gmail.com>
+ <CAHk-=wi7hUsTTcmPfZCkUEw51Y3ayq3JJxzFsNgodsxxDyk9Ww@mail.gmail.com> <CAKwvOd=wGjd_L1703Y9Kngcr9-_wTvcRLToiydXYkR=S_9xWDw@mail.gmail.com>
+In-Reply-To: <CAKwvOd=wGjd_L1703Y9Kngcr9-_wTvcRLToiydXYkR=S_9xWDw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 18 Oct 2021 17:38:09 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wjwOnrHXDSqnmhiKujk=5XieJFvfnQwc2WKOKFwzcqvaA@mail.gmail.com>
+Message-ID: <CAHk-=wjwOnrHXDSqnmhiKujk=5XieJFvfnQwc2WKOKFwzcqvaA@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix bitwise vs. logical warning
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        llvm@lists.linux.dev, Tor Vic <torvic9@mailbox.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 04:33:24PM +0200, Hans de Goede wrote:
-> Use the new soc_intel_is_cht() helper to find out if we are running
-> on a CHT device rather then checking the ACPI _HRV field.
-> 
-> This is more reliable (some CHT devices have been found where the _HRV
-> for the PMIC is 2 rather then 3) and leads to a nice cleanup.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Mon, Oct 18, 2021 at 10:14 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> Right, the patch that added the warning explicitly checks for side effects.
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Well, it's a bit questionable. The "side effects" are things like any
+pointer dereference, because it could fault, but if you know that
+isn't an issue, then clang basically ends up complaining about code
+that is perfectly fine. Maybe it was written that way on purpose, like
+the kvm code.
 
-Please feel free to merge with the rest of the patches.
+Now, it's probably not worth keeping that "bitops of booleans" logic -
+if it is a noticeable optimization, it's generally something that the
+compiler should do for us, but basically clang is warning about
+perfectly valid code.
 
-Thanks.
+And what I find absolutely disgusting is the suggested "fix" that
+clang gives you.
 
--- 
-Dmitry
+If the warning said "maybe you meant to use a logical or (||)", then
+that would be one thing. But what clang suggests as the "fix" for the
+warning is just bad coding practice.
+
+If a warning fix involves making the code uglier, then the warning fix is wrong.
+
+This is not the first time we've had compilers suggesting garbage. Gcc
+used to suggest (perhaps still does) the "extra parenthesis" for
+"assignment used as a truth value" situation. Which is - once again -
+disgusting garbage.
+
+Writing code like
+
+        if (a = b) ..
+
+is bad and error prone. But the suggestion to "fix" the warning with
+
+        if ((a = b)) ..
+
+is just completely unacceptably stupid, and is just BAD CODE.
+
+The proper fix might be to write it like
+
+        if ((a = b) != 0) ...
+
+which at least makes the truth value part explicit - in ways that a
+silly double parenthesis does not. Or, better yet, write it as
+
+        a = b;
+        if (a) ..
+
+instead, which is legible and fine.
+
+The clang suggestion to add a cast to 'int' to avoid the warning is
+the same kind of "write bad code" suggestion. Just don't do it.
+
+             Linus
