@@ -2,86 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A653BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 22:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9E2C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 01:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 768B5610FB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Oct 2021 22:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE17861354
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 01:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbhJRWZj (ORCPT
+        id S229588AbhJSB54 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Oct 2021 18:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229524AbhJRWZj (ORCPT
+        Mon, 18 Oct 2021 21:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229529AbhJSB54 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Oct 2021 18:25:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E2D1160F57;
-        Mon, 18 Oct 2021 22:23:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634595807;
-        bh=+5+FcQUycSBCcdTJVdkEdUZqNj9ZSNQUuVmNGAUQGGM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VptKryPmU7qyjXCSs/4te/qeSuRiLufwujOpcXXT9iKyHTiHOaY7T5W5peaQkmZ0o
-         QXZgz4EjlGBILkPvBvzu3O4q8WjrrXU8L7IX4wo4J9NlGC0Z8xyC1rk6EU3MpAk5Bh
-         LOb9yivCPAqZ1+JPxs4vcyGf6GdsnU7dRlkANNqwtcc8A3fYeepFEnSW355DishdY9
-         BENqomU8aGfGfK8y8DHDVhY4WNmGejS6GiYOXIzeHpAdsh3rYy8ZvzuAHNnDVL1m9H
-         YK3aQCF3Z2XLr1as4NZENuQFyXEJ2xlgGbHpUc6qcnSEqUck+RgFzoy4wDUfyOEu+U
-         O9z+FE9j2/ekw==
-Date:   Mon, 18 Oct 2021 23:23:24 +0100
-From:   Mark Brown <broonie@kernel.org>
+        Mon, 18 Oct 2021 21:57:56 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 734D5C06161C;
+        Mon, 18 Oct 2021 18:55:44 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id ls18-20020a17090b351200b001a00250584aso797902pjb.4;
+        Mon, 18 Oct 2021 18:55:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iVUwTST59wL6CTCRNw7c8eNLL6H7oNA2+TgO4Oeu8Y4=;
+        b=W/pHLIdze3XNKJnt2F32rIzoajoraz7WOisrfpL79CoLKpEItyajbals9z4qH0/hSQ
+         MsMbtVPgHEyXF9d7a3xx9ECfUPdJy2y579OmnaB/tB6WBX95IiVCR6MxX9PSuBAbn7MO
+         zQwq05oS1sNCrzecgb6ysYxc7pc6bK+svtWUvUhrpbhDZ122h2OXN8AKTGwoZgbMyZIL
+         hXgo8COOAhx79wDodOe6szSc8QUFQXW8scUbjGoyrW00w73tAi5VfY3dILcOfKlh6I4u
+         jWAGRpBMBv06AErvnMP6nGKhZm3GxVX1GvKqmzwPJ75AlkysLku9NnFOTcylYAAb+T+e
+         v9TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iVUwTST59wL6CTCRNw7c8eNLL6H7oNA2+TgO4Oeu8Y4=;
+        b=Vic9jXmOJy0nx5laFh2i9g7n3UlFi9D8GgVcciWQBn5NO+e9GrrfVA5WJZh6qaz5+5
+         sHjiaKZmKm5qAk/zE/Gx38actAc7NQ8cukD1i6uHAjr9pv6jMIGCnO9zLgsGgD/iu5tx
+         8TYeooVPwu83uUQqFf0CXpWNkUbwIf/hx11NHB8kKLskV+EBe2OeEqUfnRduFKWiYowe
+         xGoXR8PbFpZ3jJd497ICTRthN4LhUxRSi4EY6mw0ijEB236vQ/AjW6Uvt4MJvTXfCZCE
+         4BuH7yGi/jGyc/0HTsuFPXUWa2IVFDHeziF1YnWWqaYbE+Dw82XXrEVtaEKce801tPRD
+         3l+A==
+X-Gm-Message-State: AOAM5301AZw7FThN7hmNgJ4IjiMGDG5901bOv3lLsWp1/vYIvmqt8Ok5
+        r67IpLyw8kcNlpG89t9LrvY=
+X-Google-Smtp-Source: ABdhPJxOmf2YCoKcCsPO1gg9ffjbe92LAOAJFoagIEVGnqtsbTEoNeSqP8nBMw+HX1IC3RE1OOfYEg==
+X-Received: by 2002:a17:90a:3ec2:: with SMTP id k60mr3075137pjc.176.1634608543794;
+        Mon, 18 Oct 2021 18:55:43 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:54f8:9d9:1fa7:9eae])
+        by smtp.gmail.com with ESMTPSA id oo9sm680504pjb.53.2021.10.18.18.55.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Oct 2021 18:55:42 -0700 (PDT)
+Date:   Mon, 18 Oct 2021 18:55:40 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
+Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@infradead.org>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/3] ASoC: Intel: Move soc_intel_is_foo() helpers to a
- generic header
-Message-ID: <YW3z3Ehz9ZD06G12@sirena.org.uk>
+        Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 3/3] Input: axp20x-pek - Use new soc_intel_is_cht() helper
+Message-ID: <YW4lnI2fAWBlIQhw@google.com>
 References: <20211018143324.296961-1-hdegoede@redhat.com>
- <20211018143324.296961-2-hdegoede@redhat.com>
- <YW2UNRAWUphJqhyW@sirena.org.uk>
- <c34cc4b8-31c8-9425-214f-2a0f39f048d9@redhat.com>
+ <20211018143324.296961-4-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SQ3NCdbEKKY1NF3R"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c34cc4b8-31c8-9425-214f-2a0f39f048d9@redhat.com>
-X-Cookie: I program, therefore I am.
+In-Reply-To: <20211018143324.296961-4-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Mon, Oct 18, 2021 at 04:33:24PM +0200, Hans de Goede wrote:
+> Use the new soc_intel_is_cht() helper to find out if we are running
+> on a CHT device rather then checking the ACPI _HRV field.
+> 
+> This is more reliable (some CHT devices have been found where the _HRV
+> for the PMIC is 2 rather then 3) and leads to a nice cleanup.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
---SQ3NCdbEKKY1NF3R
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-On Mon, Oct 18, 2021 at 11:13:57PM +0200, Hans de Goede wrote:
+Please feel free to merge with the rest of the patches.
 
-> Does this mean that you are ok with me merging patch 1 + 2 through
-> the drivers/platform/x86 tree ?
+Thanks.
 
-Yes.
-
---SQ3NCdbEKKY1NF3R
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmFt89sACgkQJNaLcl1U
-h9D77Af/XtiF5NvyxP333blY0iXME4zq1rD4DkpJluCocSzJLyILvVLQFTzOWftv
-HyBDIvEKIBSZDll0aHHLjbeQkXHhq0GhQvSPZh0m2I5/CjFJbzBte/qh3Z1fYLth
-nCKDxDDlILMjwCXpkr98CCzPPDu/iS6EdNX4tt4uS+IaVWaG7AD+PrarHI5FHe4t
-DAQwiw6r32IIfws1C/TAiagkX6eZJc8d6OChzk23Yk5BMM5cR8i/ffUl4pVyCp9z
-Ux4tGrnffE2DLf8RH/4i1734CqWI2syNdMLJEdcTNrDV6fysd64dgK0weWpzCIxo
-02JYtfFDS9mSOnCR+6ud5RUETb07fg==
-=TnDh
------END PGP SIGNATURE-----
-
---SQ3NCdbEKKY1NF3R--
+-- 
+Dmitry
