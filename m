@@ -2,232 +2,275 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40963C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 08:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC300C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 09:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBE96103D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 08:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8775D60E76
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 09:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234814AbhJSJAA (ORCPT
+        id S234764AbhJSJGT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Oct 2021 05:00:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:20756 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229930AbhJSI77 (ORCPT
+        Tue, 19 Oct 2021 05:06:19 -0400
+Received: from mail-bn8nam08on2076.outbound.protection.outlook.com ([40.107.100.76]:28736
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S234700AbhJSJGS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Oct 2021 04:59:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634633866;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HwxXgeM2NASyS4XYB6ZEI/fVlAuU1XAQdiPjyGiePyE=;
-        b=HsS32GO6UD0RbuRfZEhFs7GdeeLRTL65BRJM3R62JfFHG/JyWI6yGdDE+WWcyJmB5+VkiR
-        sSj9MgLDJH0XCg0GoMxaz4iYu55KmHd+OoLY7oEt95aX3AOj3KAt0nHcj3gzFVLIY4GCQh
-        IRwnKGOm1J/Gqs9obP/DuT0Xb5GOyDs=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-571-UFO8qa23PEm-ud_LpPS28w-1; Tue, 19 Oct 2021 04:57:15 -0400
-X-MC-Unique: UFO8qa23PEm-ud_LpPS28w-1
-Received: by mail-ed1-f69.google.com with SMTP id g28-20020a50d0dc000000b003dae69dfe3aso16934597edf.7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Oct 2021 01:57:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=HwxXgeM2NASyS4XYB6ZEI/fVlAuU1XAQdiPjyGiePyE=;
-        b=d/kB2TQ+cjlac29BTAuboFqfDEEUzCNRyMJxpXHBNH9BQjlU2/IfrqCeXh4x+K8tCS
-         Z5rm3njDaYihA18/PEhqaUtEDODrZ2uUHb/FRzcljyPFE3x19VhGsEzkgBWHCcBF+do7
-         lopyLjLFWOf9VnYVMI6keSUJMj7PAqfOhJzJ4hQmn0WKwK0NmeO7bnhZNoJQ8uOrsroc
-         +bl3nqjxx8vs/tTVuyzF6i73B44Ot76UG2IMMRoLi+GxDL7kU7QbSJrO2N2oX7D5O4H8
-         CyQijKzlV2Qebzcc78q+ftqF0N5UbxMwQiXcYxT2f931buuvRgOiZuEfMFqiok4DCaTg
-         b3uQ==
-X-Gm-Message-State: AOAM533WCbbFNed4Ozzhs9uv5cwrRVpbYF+lhY4qEjDFm6XycU2R7DlE
-        XLz8IFrH9lp9daOwGDEqv7Q61rSjdn717e7/oqOEvjO3FQkY9huMPbiZfb54nWbgDs6ndwdnFQk
-        18qktIjPHCASYFuE3BiXfm4Tki8OFIm0Tnw==
-X-Received: by 2002:a05:6402:34f:: with SMTP id r15mr52486973edw.111.1634633834087;
-        Tue, 19 Oct 2021 01:57:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyJUfQGO+e495adUgOZt66X+NO4k1mXrBnvdAtGG+TdvAWf4lToDoAv857MWNXt/v7RLb1XlQ==
-X-Received: by 2002:a05:6402:34f:: with SMTP id r15mr52486943edw.111.1634633833825;
-        Tue, 19 Oct 2021 01:57:13 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id u23sm10914236edr.97.2021.10.19.01.57.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Oct 2021 01:57:13 -0700 (PDT)
-Message-ID: <bb2330cf-07db-e9df-67bd-de8e62650a0e@redhat.com>
-Date:   Tue, 19 Oct 2021 10:57:12 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Subject: Re: [PATCH platform-next 09/10] Documentation/ABI: Add new line card
+        Tue, 19 Oct 2021 05:06:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YNNGAJJTJcfrXIxuhiZhEqKn2i5GYRwPaXEDMdi8Hm2HYmKIv+Tlec4utjHCEejbIIswz7wGqU99eEO7M65n+Ztde+Q0PrZmkoiWPAuBCWpdXxt/w6OQpB63Br1JBqw08Samji/sdhj1AzvLM4Nq+/mTYhYmj8d4zFDmkqMgwBn/0nCHR75Vy80i1I2mbjUfznzalRUEDS9vTgyt8pvVFgfGhKX3hf62OxxDOpoCoq7jZ/lgVN9UYzOE+2Dr1NbiyRDt+tfaQTdLIh2m68fKPGbh7PLWbnrjroIaFVJg7cqtbcPRwJOsOX7L0dgl0HwV7KlofCTjpiR0JPzZ6kHIBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QATW1MezdpPwuamIZi7mfeUtIUHieQeZzq9ZC8kuBXc=;
+ b=n/LKuv4AKJI4ZLzYwOeOZaWriDNDwdFWg22asGPONNlCDN0nOK3KA7UGsOr/hXVGe//X4N5YJ634KELfJLXnFgY2n4ecXRQYD3oFr7QG/AxyXPXXP2UNc82HEudozZFPzIIZUWJbnM2tjWKhCSSvDABu97nyyi3XhUwV7MLC4MB8QQEIsL8CWwTC4iG/iaML8B6nEKfvTkYtcEmfukE4hQDEaEGW63Y66wP6Wrg3BnYH9T9LyTTu/Tv7RVgHsP9Zq9gaUNYyKWG3GJYFZfv5TRmJ3fcWjyQYx8v6AtQVn3jk2R6ZM9+LdVS5Hsm27hyDG2a32XlijpuWcMe8qr8ylw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QATW1MezdpPwuamIZi7mfeUtIUHieQeZzq9ZC8kuBXc=;
+ b=DDdsYKr/dQp50+M/uJG3A0Zh5NaQ0Fk5QTM1+lWWk4IG8+FZzbGxFBHK7Poo4QRFnM4uoIO1OM5aOeHnkx1Vg5Y7SqgsTnrun3zUk7EO2ftjpT8KRsJTMOYxdmogPW6Xb6G2gOrqj4v+xwQ4gKuxaAQJfMoWTR0qHDJApspImDrftmGfQ2XGvk61IR7dW3Lv04+SZxxXez1VftzU4l3/FzL3KnPumfbQ35aextg0p6+MjiA1eGjmguOrW+ghytAafSuuoNUMuNC5yE9hoe0ndcK8cYCf+KYkXMbfnXDC4CDJ+ctwepbkyrcUGxUCQ3hANnjQOjBDIzvtC2sM4Ng5CA==
+Received: from BN9PR12MB5381.namprd12.prod.outlook.com (2603:10b6:408:102::24)
+ by BN9PR12MB5308.namprd12.prod.outlook.com (2603:10b6:408:105::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.17; Tue, 19 Oct
+ 2021 09:04:03 +0000
+Received: from BN9PR12MB5381.namprd12.prod.outlook.com
+ ([fe80::f846:3ab1:9cc3:ee1]) by BN9PR12MB5381.namprd12.prod.outlook.com
+ ([fe80::f846:3ab1:9cc3:ee1%6]) with mapi id 15.20.4608.018; Tue, 19 Oct 2021
+ 09:04:03 +0000
+From:   Vadim Pasternak <vadimp@nvidia.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+CC:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Michael Shych <michaelsh@nvidia.com>
+Subject: RE: [PATCH platform-next 09/10] Documentation/ABI: Add new line card
  attributes for mlxreg-io sysfs interfaces
-Content-Language: en-US
-To:     Vadim Pasternak <vadimp@nvidia.com>
-Cc:     platform-driver-x86@vger.kernel.org, michaelsh@nvidia.com
+Thread-Topic: [PATCH platform-next 09/10] Documentation/ABI: Add new line card
+ attributes for mlxreg-io sysfs interfaces
+Thread-Index: AQHXt3CTdDDcC/4ZvkKszeSbW9LC1avaH7sAgAABvgA=
+Date:   Tue, 19 Oct 2021 09:04:03 +0000
+Message-ID: <BN9PR12MB53813DC207D19E3398DB3083AFBD9@BN9PR12MB5381.namprd12.prod.outlook.com>
 References: <20211002093238.3771419-1-vadimp@nvidia.com>
  <20211002093238.3771419-10-vadimp@nvidia.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211002093238.3771419-10-vadimp@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <bb2330cf-07db-e9df-67bd-de8e62650a0e@redhat.com>
+In-Reply-To: <bb2330cf-07db-e9df-67bd-de8e62650a0e@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d34a44c4-fa56-401c-47ca-08d992df6606
+x-ms-traffictypediagnostic: BN9PR12MB5308:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN9PR12MB5308B1C41D2F2F2CD2B4142AAFBD9@BN9PR12MB5308.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VVtx2ag9M9xLZPx8eMmd4cWGQNcVbSeotYdSgaTtvKP36DMkQWaMQfwWSxmLrmp5/vKxTorS8afWYET0LwIuYYTBvb8D/7Ovqn1MnH5KvNEmmYg5KZM70rY49DmCx6/XitTK2W3OaIA13WwDl5lFqDmD4DfvXcs6QhzDdb9mHC3OhWRrkt7sTWe4mndQl6Ih4euhYkBM95kOtjBuvqgvyVxbhRnBoMrX9icuQLEm0VW0GnOJvcl9IGuTH4OygP/nJ+XPWMakkt00H1lWPZYu3f5fRfWcJTgbMklloHs3zo7QOrkfSnpoYbQc79oU9E3W54JWmGJ3cGF8nYPaKmCMQT7dZduxiaQ5lBE7uL34MR7lVDsT0Depn8yUVmYkRyMQ5FeOAlS9+gIoM1z5VEIfBrGW9otC8ICOu2dZn9vCHc2aQhOz+4qaJrqXwf1E1qOJTGm3+m4uaQR+EFy9iawAjyjcpnn5CsGYwU0j5M8VGd7oOd/a+spKOZY2wfhM4/nRFvsD7cYnRDnqraV1E05zxaYAnkm6Uugm2371sj8GtWp2P+ZZOEjszs4M9faLGjCpR5hg6kYoCZwplrDJM8MTHTLTl7N9CvPhwwbIbODBu+fr+PZJ9kHASaNPpuVJGQnGeAyzqWQaHYjKiStc0mppFCDRs2Jn35/9vpUKOohGijIj7ykHkw3EIihfLgSb4WSdS6D7VfSZzGbKXXYmiZHPFg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5381.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(76116006)(64756008)(66446008)(54906003)(66476007)(86362001)(122000001)(55016002)(7696005)(66946007)(66556008)(26005)(38070700005)(9686003)(53546011)(6506007)(8936002)(186003)(83380400001)(52536014)(8676002)(2906002)(33656002)(4326008)(508600001)(316002)(6916009)(107886003)(71200400001)(38100700002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Uyt3VGtwdWU5bzEveFAzRGMrbThSNEgzZUhjaEMwNXgrbDM3MnU3emo4cU04?=
+ =?utf-8?B?cjNTVHhhb083ZXhKM3pXUXhDSjdtNWhmdVQyQzFvM2FRc1VqbE0vME8wZE9V?=
+ =?utf-8?B?ZGhKakxJWTUxK05MWUxLWUQ2UjM2ZlRYMWt2ZVZLSEhER2pnc3lSZXloYmRX?=
+ =?utf-8?B?ZUtkSXdZWHMrZGJMVEdlRGtTZ256aWtKY1o2d0FZRnhZRVJQNjJPMXpRNkZB?=
+ =?utf-8?B?RUhBQzdOKzZFcUp2eVRsbFBVS2lUNGZpcHJ0OUU0R3ZjVE1iUERLL2lydCt1?=
+ =?utf-8?B?aUZZVFM0MEt6WElBdmdTeHg0RXFuU01ydHI3d05SQ0h2RFlacklwTzRyOGdY?=
+ =?utf-8?B?YURCMXB0N2t1SjRDNVZFaFNhQ05STlNienJNSmpWbTFRVU5DUzhIZHVPNlpM?=
+ =?utf-8?B?TnFNTXZLNm1abTJ0S3BsTG50Vk96L3Rac045d0tMdHltbld3OFlxWitqSTl0?=
+ =?utf-8?B?MTh1Vk02dDdLenVualhWejN2a3g4a2MxV2ZLT2Iwb05SWTNHd1h6aWl1ejdW?=
+ =?utf-8?B?OG82SGJyVTg5SzQrUUhEU0hJTk1wTTYwRGFpNVF1NzNDWGVpYWFOZ2RKKzBz?=
+ =?utf-8?B?UnNidXJyR1pTZTJSWGs2dnJra3cwb2pNeVAxNHI0dUpEdXpEaGxSRzBydlpG?=
+ =?utf-8?B?OWNYenF3bUxzUktvK05jUXg5NGZwaTFndGhXckQ2S0diK0E0eGg1cGpRRFcy?=
+ =?utf-8?B?ZE1MTy92M2hzeXdoUFJZNUFib3RvaGJwUGc2UkhSQ0VWOURNQ3NUTm1GWStG?=
+ =?utf-8?B?KzJwTEdOQ0g3YThrL3VvSFF4c3FsL2JCWmhMQ3Zxbyt2QS9WaDdhWnBzbERr?=
+ =?utf-8?B?cThlcGxYYXhqSm84SEljVGkrd1EyUVBYaXNDNkVRdzdwTG1UUnpobzFNeDZh?=
+ =?utf-8?B?L0lnc2QvZGozM2ppbGt4aytpTHhoMDhZc2ptK3NEd254MTRUVDVoU0MrZDJj?=
+ =?utf-8?B?K2NNYjFuL1pGZy9JcXlxMExvNGYrVEQyTGhPUlAya0lZdmt6OGxnKzJyMTdk?=
+ =?utf-8?B?NHM4UEUrZ0lRbmZzMG5MckY2QUYwN3NnTUl3Z2ZhdStpNStFNFNmTENiT2Uw?=
+ =?utf-8?B?bmlhK0xpbmpETjVYQjVrc2VEY0NsWHEwQ3NMN3g2ODZyMnY4czhjMEVMMUU0?=
+ =?utf-8?B?Skp3SjhkYkZocjNOWTRIdHl1a2l5aldQNTNHZWFDNVlHOTBpL3pPYjVsSmNv?=
+ =?utf-8?B?V1FteFBhWVA2djB3Mmt4UnYyM3ZHNks3cVlKenJBK3pIS2RiakxyUzRqUy81?=
+ =?utf-8?B?TnN0UU5TY240ZGtrWnhUTWZ5QzUwcDdoRnAxTWhuczQ3ZzNSWWRlbUlVTUVn?=
+ =?utf-8?B?WEhlVUtzTzVLZVo0YUtHQjhoTU9CR0NXMld1aWxSMmY1L21aMzhLaTVrQ0k4?=
+ =?utf-8?B?S2xPUjNnVTFRbW85Sjdqc254UEl1OUEySjk5TDR4OEp6WC85VTJZT01SdVVJ?=
+ =?utf-8?B?WXNjUXcrNzNnK00rTGRBRkJIRE5iRnFldDY0QWlRcGF0dEhHd1NLYVozRWw1?=
+ =?utf-8?B?ZnJrN3ZOWXNhUTJ5UHFzaTdqcE50cldjdGxYMWlNMnJtRFdUd1JTdjVZS1hZ?=
+ =?utf-8?B?cXliSEx1K0NaNWpEbCtTNWI5QWs4a3hiVkJVTWdhY3ViMTI4T05WK09YalRL?=
+ =?utf-8?B?VDBhWk9hNVhBTy9NTmRzRmdYM3QweFFRQS9Vc01oa1JGa3BLLzE0UmxKK2FP?=
+ =?utf-8?B?Sjdjd2JFaHRVL0I4aFNwUk93R2NZOVZhdnpYY0o1Y05oN3pneUNValU5YlVP?=
+ =?utf-8?Q?8cEWYLgYqmrO2Xi2cF1cGm/mNox0iZIeXUVGfkG?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5381.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d34a44c4-fa56-401c-47ca-08d992df6606
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Oct 2021 09:04:03.5162
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ULTf29EHJJ7NfkNY+SUGhm8YIzCkUq5uaiJzXVfE4FXqYrSL2ct3FrIYqODR5tQvNjHXngGYE/Ty5RB6Yjnx0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5308
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 10/2/21 11:32, Vadim Pasternak wrote:
-> Add documentation for the new attributes for line cards:
-> - CPLDs versioning.
-> - Write protection control for 'nvram' devices.
-> - Line card reset reasons.
-> - Enabling burning of FPGA and CPLDs.
-> - Enabling burning of FPGA and gearbox SPI flashes,
-> - Enabling power of whole line card.
-> - Enabling power of QSFP ports equipped on line card.
-> - The maximum powered required for line card feeding.
-> - Line card configuration Id.
-> 
-> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
-> Reviewed-by: Michael Shych <michaelsh@nvidia.com>
-
-Applying this gave the following warnings:
-
-Applying: Documentation/ABI: Add new line card attributes for mlxreg-io sysfs interfaces
-/home/hans/projects/linux/.git/worktrees/platform-drivers-x86/rebase-apply/patch:44: space before tab in indent.
- 		If the system is in locked-down mode writing this file will not
-/home/hans/projects/linux/.git/worktrees/platform-drivers-x86/rebase-apply/patch:76: space before tab in indent.
- 		If the system is in locked-down mode writing these files will
-/home/hans/projects/linux/.git/worktrees/platform-drivers-x86/rebase-apply/patch:100: space before tab in indent.
- 		If the system is in locked-down mode writing these files will
-warning: 3 lines add whitespace errors.
-
-I've fixed this up locally.
-
-FYI the 3 "If the system is in locked-down mode writing this file will not"
-lines started with <tab><space><tab> which I've replaced with <tab><tab>.
-
-Regards,
-
-Hans
-
-
-> ---
->  .../ABI/stable/sysfs-driver-mlxreg-io         | 103 ++++++++++++++++++
->  1 file changed, 103 insertions(+)
-> 
-> diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> index 6ef6979c9448..b25e963ec0fa 100644
-> --- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> +++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> @@ -361,3 +361,106 @@ Description:	This file allows to unlock ASIC after thermal shutdown event.
->  		Default is 1.
->  
->  		The file is read/write.
-> +
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/cpld1_pn
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/cpld1_version
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/cpld1_version_min
-> +Date:		October 2021
-> +KernelVersion:	5.16
-> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
-> +Description:	These files show with which CPLD major and minor versions
-> +		and part number has been burned CPLD device on line card.
-> +
-> +		The files are read only.
-> +
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/fpga1_pn
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/fpga1_version
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/fpga1_version_min
-> +Date:		October 2021
-> +KernelVersion:	5.16
-> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
-> +Description:	These files show with which FPGA major and minor versions
-> +		and part number has been burned FPGA device on line card.
-> +
-> +		The files are read only.
-> +
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/vpd_wp
-> +Date:		October 2021
-> +KernelVersion:	5.16
-> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
-> +Description:	This file allow to overwrite line card VPD hardware write
-> +		protection mode. When attribute is set 1 - write protection is
-> +		disabled, when 0 - enabled.
-> +		Default is 0.
-> + 		If the system is in locked-down mode writing this file will not
-> +		be allowed.
-> +		The purpose if this file is to allow line card VPD burning
-> +		during production flow.
-> +
-> +		The file is read/write.
-> +
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_aux_pwr_or_ref
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_dc_dc_pwr_fail
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_fpga_not_done
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_from_chassis
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_line_card
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_pwr_off_from_chassis
-> +Date:		October 2021
-> +KernelVersion:	5.16
-> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
-> +Description:	These files show the line reset cause, as following: power
-> +		auxiliary outage or power refresh, DC-to-DC power failure, FPGA reset
-> +		failed, line card reset failed, power off from chassis.
-> +		Value 1 in file means this is reset cause, 0 - otherwise. Only one of
-> +		the above causes could be 1 at the same time, representing only last
-> +		reset cause.
-> +
-> +		The files are read only.
-> +
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/cpld_upgrade_en
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/fpga_upgrade_en
-> +Date:		October 2021
-> +KernelVersion:	5.16
-> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
-> +Description:	These files allow CPLD and FPGA burning. Value 1 in file means burning
-> +		is enabled, 0 - otherwise.
-> + 		If the system is in locked-down mode writing these files will
-> +		not be allowed.
-> +		The purpose of these files to allow line card CPLD and FPGA
-> +		upgrade through the JTAG daisy-chain.
-> +
-> +		The files are read/write.
-> +
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/qsfp_pwr_en
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/pwr_en
-> +Date:		October 2021
-> +KernelVersion:	5.16
-> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
-> +Description:	These files allow to power on/off all QSFP ports and whole line card.
-> +		The attributes are set 1 for power on, 0 - for power off.
-> +
-> +		The files are read/write.
-> +
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/agb_spi_burn_en
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/fpga_spi_burn_en
-> +Date:		October 2021
-> +KernelVersion:	5.16
-> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
-> +Description:	These files allow gearboxes and FPGA SPI flash burning.
-> +		The attributes are set 1 to enable burning, 0 - to disable.
-> + 		If the system is in locked-down mode writing these files will
-> +		not be allowed.
-> +		The purpose of these files to allow line card Gearboxes and FPGA
-> +		burning during production flow.
-> +
-> +		The file is read/write.
-> +
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/max_power
-> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/config
-> +Date:		October 2021
-> +KernelVersion:	5.16
-> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
-> +Description:	These files provide the maximum powered required for line card
-> +		feeding and line card configuration Id.
-> +
-> +		The files are read only.
-> 
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGFucyBkZSBHb2VkZSA8
+aGRlZ29lZGVAcmVkaGF0LmNvbT4NCj4gU2VudDogVHVlc2RheSwgT2N0b2JlciAxOSwgMjAyMSAx
+MTo1NyBBTQ0KPiBUbzogVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbnZpZGlhLmNvbT4NCj4gQ2M6
+IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBNaWNoYWVsIFNoeWNoDQo+IDxt
+aWNoYWVsc2hAbnZpZGlhLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCBwbGF0Zm9ybS1uZXh0
+IDA5LzEwXSBEb2N1bWVudGF0aW9uL0FCSTogQWRkIG5ldyBsaW5lDQo+IGNhcmQgYXR0cmlidXRl
+cyBmb3IgbWx4cmVnLWlvIHN5c2ZzIGludGVyZmFjZXMNCj4gDQo+IEhpLA0KPiANCj4gT24gMTAv
+Mi8yMSAxMTozMiwgVmFkaW0gUGFzdGVybmFrIHdyb3RlOg0KPiA+IEFkZCBkb2N1bWVudGF0aW9u
+IGZvciB0aGUgbmV3IGF0dHJpYnV0ZXMgZm9yIGxpbmUgY2FyZHM6DQo+ID4gLSBDUExEcyB2ZXJz
+aW9uaW5nLg0KPiA+IC0gV3JpdGUgcHJvdGVjdGlvbiBjb250cm9sIGZvciAnbnZyYW0nIGRldmlj
+ZXMuDQo+ID4gLSBMaW5lIGNhcmQgcmVzZXQgcmVhc29ucy4NCj4gPiAtIEVuYWJsaW5nIGJ1cm5p
+bmcgb2YgRlBHQSBhbmQgQ1BMRHMuDQo+ID4gLSBFbmFibGluZyBidXJuaW5nIG9mIEZQR0EgYW5k
+IGdlYXJib3ggU1BJIGZsYXNoZXMsDQo+ID4gLSBFbmFibGluZyBwb3dlciBvZiB3aG9sZSBsaW5l
+IGNhcmQuDQo+ID4gLSBFbmFibGluZyBwb3dlciBvZiBRU0ZQIHBvcnRzIGVxdWlwcGVkIG9uIGxp
+bmUgY2FyZC4NCj4gPiAtIFRoZSBtYXhpbXVtIHBvd2VyZWQgcmVxdWlyZWQgZm9yIGxpbmUgY2Fy
+ZCBmZWVkaW5nLg0KPiA+IC0gTGluZSBjYXJkIGNvbmZpZ3VyYXRpb24gSWQuDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBWYWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBudmlkaWEuY29tPg0KPiA+IFJl
+dmlld2VkLWJ5OiBNaWNoYWVsIFNoeWNoIDxtaWNoYWVsc2hAbnZpZGlhLmNvbT4NCj4gDQo+IEFw
+cGx5aW5nIHRoaXMgZ2F2ZSB0aGUgZm9sbG93aW5nIHdhcm5pbmdzOg0KPiANCj4gQXBwbHlpbmc6
+IERvY3VtZW50YXRpb24vQUJJOiBBZGQgbmV3IGxpbmUgY2FyZCBhdHRyaWJ1dGVzIGZvciBtbHhy
+ZWctaW8NCj4gc3lzZnMgaW50ZXJmYWNlcw0KPiAvaG9tZS9oYW5zL3Byb2plY3RzL2xpbnV4Ly5n
+aXQvd29ya3RyZWVzL3BsYXRmb3JtLWRyaXZlcnMteDg2L3JlYmFzZS0NCj4gYXBwbHkvcGF0Y2g6
+NDQ6IHNwYWNlIGJlZm9yZSB0YWIgaW4gaW5kZW50Lg0KPiAgCQlJZiB0aGUgc3lzdGVtIGlzIGlu
+IGxvY2tlZC1kb3duIG1vZGUgd3JpdGluZyB0aGlzIGZpbGUgd2lsbCBub3QNCj4gL2hvbWUvaGFu
+cy9wcm9qZWN0cy9saW51eC8uZ2l0L3dvcmt0cmVlcy9wbGF0Zm9ybS1kcml2ZXJzLXg4Ni9yZWJh
+c2UtDQo+IGFwcGx5L3BhdGNoOjc2OiBzcGFjZSBiZWZvcmUgdGFiIGluIGluZGVudC4NCj4gIAkJ
+SWYgdGhlIHN5c3RlbSBpcyBpbiBsb2NrZWQtZG93biBtb2RlIHdyaXRpbmcgdGhlc2UgZmlsZXMg
+d2lsbA0KPiAvaG9tZS9oYW5zL3Byb2plY3RzL2xpbnV4Ly5naXQvd29ya3RyZWVzL3BsYXRmb3Jt
+LWRyaXZlcnMteDg2L3JlYmFzZS0NCj4gYXBwbHkvcGF0Y2g6MTAwOiBzcGFjZSBiZWZvcmUgdGFi
+IGluIGluZGVudC4NCj4gIAkJSWYgdGhlIHN5c3RlbSBpcyBpbiBsb2NrZWQtZG93biBtb2RlIHdy
+aXRpbmcgdGhlc2UgZmlsZXMgd2lsbA0KPiB3YXJuaW5nOiAzIGxpbmVzIGFkZCB3aGl0ZXNwYWNl
+IGVycm9ycy4NCj4gDQo+IEkndmUgZml4ZWQgdGhpcyB1cCBsb2NhbGx5Lg0KDQpUaGFuayB5b3Ug
+dmVyeSBtdWNoIGZvciBmaXhpbmcgaXQuDQoNCj4gDQo+IEZZSSB0aGUgMyAiSWYgdGhlIHN5c3Rl
+bSBpcyBpbiBsb2NrZWQtZG93biBtb2RlIHdyaXRpbmcgdGhpcyBmaWxlIHdpbGwgbm90Ig0KPiBs
+aW5lcyBzdGFydGVkIHdpdGggPHRhYj48c3BhY2U+PHRhYj4gd2hpY2ggSSd2ZSByZXBsYWNlZCB3
+aXRoIDx0YWI+PHRhYj4uDQo+IA0KPiBSZWdhcmRzLA0KPiANCj4gSGFucw0KPiANCj4gDQo+ID4g
+LS0tDQo+ID4gIC4uLi9BQkkvc3RhYmxlL3N5c2ZzLWRyaXZlci1tbHhyZWctaW8gICAgICAgICB8
+IDEwMyArKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEwMyBpbnNlcnRp
+b25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9BQkkvc3RhYmxlL3N5
+c2ZzLWRyaXZlci1tbHhyZWctaW8NCj4gYi9Eb2N1bWVudGF0aW9uL0FCSS9zdGFibGUvc3lzZnMt
+ZHJpdmVyLW1seHJlZy1pbw0KPiA+IGluZGV4IDZlZjY5NzljOTQ0OC4uYjI1ZTk2M2VjMGZhIDEw
+MDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vQUJJL3N0YWJsZS9zeXNmcy1kcml2ZXItbWx4
+cmVnLWlvDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9BQkkvc3RhYmxlL3N5c2ZzLWRyaXZlci1t
+bHhyZWctaW8NCj4gPiBAQCAtMzYxLDMgKzM2MSwxMDYgQEAgRGVzY3JpcHRpb246CVRoaXMgZmls
+ZSBhbGxvd3MgdG8gdW5sb2NrIEFTSUMNCj4gYWZ0ZXIgdGhlcm1hbCBzaHV0ZG93biBldmVudC4N
+Cj4gPiAgCQlEZWZhdWx0IGlzIDEuDQo+ID4NCj4gPiAgCQlUaGUgZmlsZSBpcyByZWFkL3dyaXRl
+Lg0KPiA+ICsNCj4gPiArV2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0L2kyY19t
+bHhjcGxkLiovaTJjLQ0KPiAqL2kyYy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9od21vbi9o
+d21vbiovY3BsZDFfcG4NCj4gPiArV2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0
+L2kyY19tbHhjcGxkLiovaTJjLQ0KPiAqL2kyYy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9o
+d21vbi9od21vbiovY3BsZDFfdmVyc2lvbg0KPiA+ICtXaGF0OgkJL3N5cy9kZXZpY2VzL3BsYXRm
+b3JtL21seHBsYXQvaTJjX21seGNwbGQuKi9pMmMtDQo+ICovaTJjLSovaTJjLSovKi0wMDMyL21s
+eHJlZy1pby4qL2h3bW9uL2h3bW9uKi9jcGxkMV92ZXJzaW9uX21pbg0KPiA+ICtEYXRlOgkJT2N0
+b2JlciAyMDIxDQo+ID4gK0tlcm5lbFZlcnNpb246CTUuMTYNCj4gPiArQ29udGFjdDoJVmFkaW0g
+UGFzdGVybmFrIDx2YWRpbXBAbnZpZGlhLmNvbT4NCj4gPiArRGVzY3JpcHRpb246CVRoZXNlIGZp
+bGVzIHNob3cgd2l0aCB3aGljaCBDUExEIG1ham9yIGFuZCBtaW5vciB2ZXJzaW9ucw0KPiA+ICsJ
+CWFuZCBwYXJ0IG51bWJlciBoYXMgYmVlbiBidXJuZWQgQ1BMRCBkZXZpY2Ugb24gbGluZSBjYXJk
+Lg0KPiA+ICsNCj4gPiArCQlUaGUgZmlsZXMgYXJlIHJlYWQgb25seS4NCj4gPiArDQo+ID4gK1do
+YXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0NCj4g
+Ki9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL2ZwZ2ExX3BuDQo+
+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2ky
+Yy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL2ZwZ2Ex
+X3ZlcnNpb24NCj4gPiArV2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0L2kyY19t
+bHhjcGxkLiovaTJjLQ0KPiAqL2kyYy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9od21vbi9o
+d21vbiovZnBnYTFfdmVyc2lvbl9taW4NCj4gPiArRGF0ZToJCU9jdG9iZXIgMjAyMQ0KPiA+ICtL
+ZXJuZWxWZXJzaW9uOgk1LjE2DQo+ID4gK0NvbnRhY3Q6CVZhZGltIFBhc3Rlcm5hayA8dmFkaW1w
+QG52aWRpYS5jb20+DQo+ID4gK0Rlc2NyaXB0aW9uOglUaGVzZSBmaWxlcyBzaG93IHdpdGggd2hp
+Y2ggRlBHQSBtYWpvciBhbmQgbWlub3IgdmVyc2lvbnMNCj4gPiArCQlhbmQgcGFydCBudW1iZXIg
+aGFzIGJlZW4gYnVybmVkIEZQR0EgZGV2aWNlIG9uIGxpbmUgY2FyZC4NCj4gPiArDQo+ID4gKwkJ
+VGhlIGZpbGVzIGFyZSByZWFkIG9ubHkuDQo+ID4gKw0KPiA+ICtXaGF0OgkJL3N5cy9kZXZpY2Vz
+L3BsYXRmb3JtL21seHBsYXQvaTJjX21seGNwbGQuKi9pMmMtDQo+ICovaTJjLSovaTJjLSovKi0w
+MDMyL21seHJlZy1pby4qL2h3bW9uL2h3bW9uKi92cGRfd3ANCj4gPiArRGF0ZToJCU9jdG9iZXIg
+MjAyMQ0KPiA+ICtLZXJuZWxWZXJzaW9uOgk1LjE2DQo+ID4gK0NvbnRhY3Q6CVZhZGltIFBhc3Rl
+cm5hayA8dmFkaW1wQG52aWRpYS5jb20+DQo+ID4gK0Rlc2NyaXB0aW9uOglUaGlzIGZpbGUgYWxs
+b3cgdG8gb3ZlcndyaXRlIGxpbmUgY2FyZCBWUEQgaGFyZHdhcmUgd3JpdGUNCj4gPiArCQlwcm90
+ZWN0aW9uIG1vZGUuIFdoZW4gYXR0cmlidXRlIGlzIHNldCAxIC0gd3JpdGUgcHJvdGVjdGlvbiBp
+cw0KPiA+ICsJCWRpc2FibGVkLCB3aGVuIDAgLSBlbmFibGVkLg0KPiA+ICsJCURlZmF1bHQgaXMg
+MC4NCj4gPiArIAkJSWYgdGhlIHN5c3RlbSBpcyBpbiBsb2NrZWQtZG93biBtb2RlIHdyaXRpbmcg
+dGhpcyBmaWxlIHdpbGwgbm90DQo+ID4gKwkJYmUgYWxsb3dlZC4NCj4gPiArCQlUaGUgcHVycG9z
+ZSBpZiB0aGlzIGZpbGUgaXMgdG8gYWxsb3cgbGluZSBjYXJkIFZQRCBidXJuaW5nDQo+ID4gKwkJ
+ZHVyaW5nIHByb2R1Y3Rpb24gZmxvdy4NCj4gPiArDQo+ID4gKwkJVGhlIGZpbGUgaXMgcmVhZC93
+cml0ZS4NCj4gPiArDQo+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9p
+MmNfbWx4Y3BsZC4qL2kyYy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdt
+b24vaHdtb24qL3Jlc2V0X2F1eF9wd3Jfb3JfcmVmDQo+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMv
+cGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAw
+MzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL3Jlc2V0X2RjX2RjX3B3cl9mYWlsDQo+ID4gK1do
+YXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0NCj4g
+Ki9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL3Jlc2V0X2ZwZ2Ff
+bm90X2RvbmUNCj4gPiArV2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0L2kyY19t
+bHhjcGxkLiovaTJjLQ0KPiAqL2kyYy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9od21vbi9o
+d21vbiovcmVzZXRfZnJvbV9jaGFzc2lzDQo+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZv
+cm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4
+cmVnLWlvLiovaHdtb24vaHdtb24qL3Jlc2V0X2xpbmVfY2FyZA0KPiA+ICtXaGF0OgkJL3N5cy9k
+ZXZpY2VzL3BsYXRmb3JtL21seHBsYXQvaTJjX21seGNwbGQuKi9pMmMtDQo+ICovaTJjLSovaTJj
+LSovKi0wMDMyL21seHJlZy0NCj4gaW8uKi9od21vbi9od21vbiovcmVzZXRfcHdyX29mZl9mcm9t
+X2NoYXNzaXMNCj4gPiArRGF0ZToJCU9jdG9iZXIgMjAyMQ0KPiA+ICtLZXJuZWxWZXJzaW9uOgk1
+LjE2DQo+ID4gK0NvbnRhY3Q6CVZhZGltIFBhc3Rlcm5hayA8dmFkaW1wQG52aWRpYS5jb20+DQo+
+ID4gK0Rlc2NyaXB0aW9uOglUaGVzZSBmaWxlcyBzaG93IHRoZSBsaW5lIHJlc2V0IGNhdXNlLCBh
+cyBmb2xsb3dpbmc6IHBvd2VyDQo+ID4gKwkJYXV4aWxpYXJ5IG91dGFnZSBvciBwb3dlciByZWZy
+ZXNoLCBEQy10by1EQyBwb3dlciBmYWlsdXJlLA0KPiBGUEdBIHJlc2V0DQo+ID4gKwkJZmFpbGVk
+LCBsaW5lIGNhcmQgcmVzZXQgZmFpbGVkLCBwb3dlciBvZmYgZnJvbSBjaGFzc2lzLg0KPiA+ICsJ
+CVZhbHVlIDEgaW4gZmlsZSBtZWFucyB0aGlzIGlzIHJlc2V0IGNhdXNlLCAwIC0gb3RoZXJ3aXNl
+LiBPbmx5DQo+IG9uZSBvZg0KPiA+ICsJCXRoZSBhYm92ZSBjYXVzZXMgY291bGQgYmUgMSBhdCB0
+aGUgc2FtZSB0aW1lLCByZXByZXNlbnRpbmcNCj4gb25seSBsYXN0DQo+ID4gKwkJcmVzZXQgY2F1
+c2UuDQo+ID4gKw0KPiA+ICsJCVRoZSBmaWxlcyBhcmUgcmVhZCBvbmx5Lg0KPiA+ICsNCj4gPiAr
+V2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0L2kyY19tbHhjcGxkLiovaTJjLQ0K
+PiAqL2kyYy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9od21vbi9od21vbiovY3BsZF91cGdy
+YWRlX2VuDQo+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4
+Y3BsZC4qL2kyYy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdt
+b24qL2ZwZ2FfdXBncmFkZV9lbg0KPiA+ICtEYXRlOgkJT2N0b2JlciAyMDIxDQo+ID4gK0tlcm5l
+bFZlcnNpb246CTUuMTYNCj4gPiArQ29udGFjdDoJVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbnZp
+ZGlhLmNvbT4NCj4gPiArRGVzY3JpcHRpb246CVRoZXNlIGZpbGVzIGFsbG93IENQTEQgYW5kIEZQ
+R0EgYnVybmluZy4gVmFsdWUgMSBpbiBmaWxlDQo+IG1lYW5zIGJ1cm5pbmcNCj4gPiArCQlpcyBl
+bmFibGVkLCAwIC0gb3RoZXJ3aXNlLg0KPiA+ICsgCQlJZiB0aGUgc3lzdGVtIGlzIGluIGxvY2tl
+ZC1kb3duIG1vZGUgd3JpdGluZyB0aGVzZSBmaWxlcyB3aWxsDQo+ID4gKwkJbm90IGJlIGFsbG93
+ZWQuDQo+ID4gKwkJVGhlIHB1cnBvc2Ugb2YgdGhlc2UgZmlsZXMgdG8gYWxsb3cgbGluZSBjYXJk
+IENQTEQgYW5kIEZQR0ENCj4gPiArCQl1cGdyYWRlIHRocm91Z2ggdGhlIEpUQUcgZGFpc3ktY2hh
+aW4uDQo+ID4gKw0KPiA+ICsJCVRoZSBmaWxlcyBhcmUgcmVhZC93cml0ZS4NCj4gPiArDQo+ID4g
+K1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0N
+Cj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL3FzZnBfcHdy
+X2VuDQo+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3Bs
+ZC4qL2kyYy0NCj4gKi9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24q
+L3B3cl9lbg0KPiA+ICtEYXRlOgkJT2N0b2JlciAyMDIxDQo+ID4gK0tlcm5lbFZlcnNpb246CTUu
+MTYNCj4gPiArQ29udGFjdDoJVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbnZpZGlhLmNvbT4NCj4g
+PiArRGVzY3JpcHRpb246CVRoZXNlIGZpbGVzIGFsbG93IHRvIHBvd2VyIG9uL29mZiBhbGwgUVNG
+UCBwb3J0cyBhbmQgd2hvbGUNCj4gbGluZSBjYXJkLg0KPiA+ICsJCVRoZSBhdHRyaWJ1dGVzIGFy
+ZSBzZXQgMSBmb3IgcG93ZXIgb24sIDAgLSBmb3IgcG93ZXIgb2ZmLg0KPiA+ICsNCj4gPiArCQlU
+aGUgZmlsZXMgYXJlIHJlYWQvd3JpdGUuDQo+ID4gKw0KPiA+ICtXaGF0OgkJL3N5cy9kZXZpY2Vz
+L3BsYXRmb3JtL21seHBsYXQvaTJjX21seGNwbGQuKi9pMmMtDQo+ICovaTJjLSovaTJjLSovKi0w
+MDMyL21seHJlZy1pby4qL2h3bW9uL2h3bW9uKi9hZ2Jfc3BpX2J1cm5fZW4NCj4gPiArV2hhdDoJ
+CS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9tbHhwbGF0L2kyY19tbHhjcGxkLiovaTJjLQ0KPiAqL2ky
+Yy0qL2kyYy0qLyotMDAzMi9tbHhyZWctaW8uKi9od21vbi9od21vbiovZnBnYV9zcGlfYnVybl9l
+bg0KPiA+ICtEYXRlOgkJT2N0b2JlciAyMDIxDQo+ID4gK0tlcm5lbFZlcnNpb246CTUuMTYNCj4g
+PiArQ29udGFjdDoJVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbnZpZGlhLmNvbT4NCj4gPiArRGVz
+Y3JpcHRpb246CVRoZXNlIGZpbGVzIGFsbG93IGdlYXJib3hlcyBhbmQgRlBHQSBTUEkgZmxhc2gg
+YnVybmluZy4NCj4gPiArCQlUaGUgYXR0cmlidXRlcyBhcmUgc2V0IDEgdG8gZW5hYmxlIGJ1cm5p
+bmcsIDAgLSB0byBkaXNhYmxlLg0KPiA+ICsgCQlJZiB0aGUgc3lzdGVtIGlzIGluIGxvY2tlZC1k
+b3duIG1vZGUgd3JpdGluZyB0aGVzZSBmaWxlcyB3aWxsDQo+ID4gKwkJbm90IGJlIGFsbG93ZWQu
+DQo+ID4gKwkJVGhlIHB1cnBvc2Ugb2YgdGhlc2UgZmlsZXMgdG8gYWxsb3cgbGluZSBjYXJkIEdl
+YXJib3hlcyBhbmQNCj4gRlBHQQ0KPiA+ICsJCWJ1cm5pbmcgZHVyaW5nIHByb2R1Y3Rpb24gZmxv
+dy4NCj4gPiArDQo+ID4gKwkJVGhlIGZpbGUgaXMgcmVhZC93cml0ZS4NCj4gPiArDQo+ID4gK1do
+YXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vbWx4cGxhdC9pMmNfbWx4Y3BsZC4qL2kyYy0NCj4g
+Ki9pMmMtKi9pMmMtKi8qLTAwMzIvbWx4cmVnLWlvLiovaHdtb24vaHdtb24qL21heF9wb3dlcg0K
+PiA+ICtXaGF0OgkJL3N5cy9kZXZpY2VzL3BsYXRmb3JtL21seHBsYXQvaTJjX21seGNwbGQuKi9p
+MmMtDQo+ICovaTJjLSovaTJjLSovKi0wMDMyL21seHJlZy1pby4qL2h3bW9uL2h3bW9uKi9jb25m
+aWcNCj4gPiArRGF0ZToJCU9jdG9iZXIgMjAyMQ0KPiA+ICtLZXJuZWxWZXJzaW9uOgk1LjE2DQo+
+ID4gK0NvbnRhY3Q6CVZhZGltIFBhc3Rlcm5hayA8dmFkaW1wQG52aWRpYS5jb20+DQo+ID4gK0Rl
+c2NyaXB0aW9uOglUaGVzZSBmaWxlcyBwcm92aWRlIHRoZSBtYXhpbXVtIHBvd2VyZWQgcmVxdWly
+ZWQgZm9yIGxpbmUNCj4gY2FyZA0KPiA+ICsJCWZlZWRpbmcgYW5kIGxpbmUgY2FyZCBjb25maWd1
+cmF0aW9uIElkLg0KPiA+ICsNCj4gPiArCQlUaGUgZmlsZXMgYXJlIHJlYWQgb25seS4NCj4gPg0K
+DQo=
