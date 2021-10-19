@@ -2,136 +2,118 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3263DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 15:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B14C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 18:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11753610A3
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 15:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79FBE604AC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Oct 2021 18:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232993AbhJSPku (ORCPT
+        id S233413AbhJSSIz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Oct 2021 11:40:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23018 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232804AbhJSPkt (ORCPT
+        Tue, 19 Oct 2021 14:08:55 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:45693 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230158AbhJSSIz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Oct 2021 11:40:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634657916;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lBWny9l8w5QQ5c/h7R1rNUnAj1o8FomFEG/lW37JHhQ=;
-        b=TvhEUa7FKVCvHey6VHmqNNFFSp7ZwccDrloFjA8/Wias9G+EIMxyilUeHM/smRNYBe63Q6
-        EegCj6FlTitsaVj4yTJV7E+AhxHDNXDgAlooVuzEVIqc/CLW1gDIbdc9IvMZnp4HWlsD/K
-        2T0aJot3wtJBMftC9uyTwQtCYIhj61s=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-MASPk9xCMKmDa0SJypk9zg-1; Tue, 19 Oct 2021 11:38:34 -0400
-X-MC-Unique: MASPk9xCMKmDa0SJypk9zg-1
-Received: by mail-ed1-f69.google.com with SMTP id d3-20020a056402516300b003db863a248eso17955535ede.16
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Oct 2021 08:38:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=lBWny9l8w5QQ5c/h7R1rNUnAj1o8FomFEG/lW37JHhQ=;
-        b=JPE+48DFI4hNnKHML2bqa8IdL+KsE9lYVMY9DAa9w4sktA5+CTowWCOBLW4O4UDdxb
-         sYK416G0ldgVVeVDenV/ePpi5CmNmmoZ4KsOb9sF86EdfAnzJsgYavYD2WIyjAniCSRN
-         d0NLnQaxLIMdA4I+2gCHGtmpiGyhqfPfHBUkv9yM+bnyd1TwBG3z9QaGzSlMz4aYb6HB
-         2KjFqRg6uWKXLRZCR1a46Bffcm/XtSYGnPhT4IiPhRun3FMQRFgnOQ6IEwuC/Ll3Au7K
-         lxVrVIq41vEk4xk0wKN3aFps94+fLq9KCvYCcuHa1KLYaQAL8T1FlcJSPaHUZG3aUgFT
-         6EWA==
-X-Gm-Message-State: AOAM533xzuqiDoH6LnmEpzuR0An+Nr0sHyq8Qa7ONteOODKe0iRRiDIs
-        sLIDMDB3jcU/gXERgVCY+qDjEeItJEkp+tVEY3jbOBNKcTX396F0i1HFtjq3fxS4qEkXhBxKNNH
-        l/0UtkoWEqXcycAGDeW5s0mZj1OKlSZ1yew==
-X-Received: by 2002:a05:6402:4243:: with SMTP id g3mr55292096edb.381.1634657913658;
-        Tue, 19 Oct 2021 08:38:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwG/fAtFGLBchgq7PN24BSIFjwXRBZ3wtMsrjk1m8hP9cKbjUIFYOi0igzOYOGWTbohrYqsZw==
-X-Received: by 2002:a05:6402:4243:: with SMTP id g3mr55292072edb.381.1634657913512;
-        Tue, 19 Oct 2021 08:38:33 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id r3sm11033928edo.59.2021.10.19.08.38.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Oct 2021 08:38:33 -0700 (PDT)
-Message-ID: <7b1224bf-005b-03a4-5bf1-3b8ec3de6b4c@redhat.com>
-Date:   Tue, 19 Oct 2021 17:38:32 +0200
+        Tue, 19 Oct 2021 14:08:55 -0400
+Received: (Authenticated sender: peter@korsgaard.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id C9A5D1C0002;
+        Tue, 19 Oct 2021 18:06:39 +0000 (UTC)
+Received: from peko by dell.be.48ers.dk with local (Exim 4.92)
+        (envelope-from <peter@korsgaard.com>)
+        id 1mctVX-0005yF-6z; Tue, 19 Oct 2021 20:06:39 +0200
+X-From-Line: nobody Tue Oct 19 17:14:02 2021
+From:   Peter Korsgaard <peter@korsgaard.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Santosh Kumar Yadav <santoshkumar.yadav@barco.com>,
+        santoshyadav30@gmail.com, Mark Gross <mgross@linux.intel.com>,
+        Peter Korsgaard <peter.korsgaard@barco.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: Support for EC-connected GPIOs for identify LED/button on Barco P50 board
+References: <20211013140356.6235-1-santoshkumar.yadav@barco.com>
+        <6183f051-969e-19e9-dd53-0d56a2fdf218@redhat.com>
+Date:   Tue, 19 Oct 2021 17:14:02 +0200
+In-Reply-To: <6183f051-969e-19e9-dd53-0d56a2fdf218@redhat.com> (Hans de
+        Goede's message of "Tue, 19 Oct 2021 16:50:22 +0200")
+Message-ID: <87a6j5cait.fsf@dell.be.48ers.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Subject: Re: [PATCH 0/3] ASoC/pdx86/input: Introduce and use soc_intel_is_*()
- helpers
-Content-Language: en-US
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        alsa-devel@alsa-project.org
-References: <20211018143324.296961-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211018143324.296961-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi all,
+>>>>> "Hans" == Hans de Goede <hdegoede@redhat.com> writes:
 
-On 10/18/21 16:33, Hans de Goede wrote:
-> Hi All,
-> 
-> We have been open-coding x86_match_cpu() checks for enabling some
-> SoC specific behavior in various places.
-> 
-> The sound/soc/intel drivers used to also open-code this but this was
-> cleaned up a while ago introducing a number of soc_intel_is_*() helpers.
-> 
-> This series moves the definition of these helpers to a more public place
-> and uses it in a couple of more places outside the sound tree.
-> 
-> Mark, I know we are a bit late in the cycle, but if you can pick up
-> patch 1/3 (assuming on one objects) for 5.16, then the rest can be
-> applied after 5.16-rc1 is out.
-> 
-> Regards,
-> 
-> Hans
+ > Hi,
+ > On 10/13/21 16:03, Santosh Kumar Yadav wrote:
+ >> Add a driver providing access to the GPIOs for the identify button and led
+ >> present on Barco P50 board, based on the pcengines-apuv2.c driver.
+ >> 
+ >> There is unfortunately no suitable ACPI entry for the EC communication
+ >> interface, so instead bind to boards with "P50" as their DMI product family
+ >> and hard code the I/O port number (0x299).
+ >> 
+ >> The driver also hooks up the leds-gpio and gpio-keys-polled drivers to the
+ >> GPIOs, so they are finally exposed as:
+ >> 
+ >> LED:
+ >> /sys/class/leds/identify
+ >> 
+ >> Button: (/proc/bus/input/devices)
+ >> I: Bus=0019 Vendor=0001 Product=0001 Version=0100
+ >> N: Name="identify"
+ >> P: Phys=gpio-keys-polled/input0
+ >> S: Sysfs=/devices/platform/barco-p50-gpio/gpio-keys-polled/input/input10
+ >> U: Uniq=
+ >> H: Handlers=event10
+ >> B: PROP=0
+ >> B: EV=3
+ >> B: KEY=1000000 0 0 0 0 0 0
+ >> 
+ >> Signed-off-by: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>
+ >> Signed-off-by: Peter Korsgaard <peter@korsgaard.com>
 
-Thank you all for the review and acks. I've pushed the entire series to:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-now, with Andy's Reviewed-by and the acks added and Andy's
-nitpicks addressed.
+ > Thanks, overall this looks pretty good. I've a couple of comments inline,
+ > please send a v2 addresing this.
 
-Once the buildbot has had a chance to play with this I'll push this
-out to platform-drivers-x86/for-next.
+..
 
-Regards,
+ >> +/* Board setup */
+ >> +static const struct dmi_system_id dmi_ids[] __initconst = {
+ >> +       {
+ >> +               .matches = {
+ >> +                       DMI_EXACT_MATCH(DMI_PRODUCT_FAMILY, "P50")
+ >> +               },
+ >> +       },
 
-Hans
+ > But I'm a bit worried about the DMI match, it seems a bit too generic.
+
+ > E.g. Lenovo also has a P50 laptop series.
+
+ > For v2 please make the DMI match also on e.g. sys_vendor.
+
+Agreed, will add a match on vendor = Barco.
 
 
+ > You should put a:
+
+ > MODULE_DEVICE_TABLE(dmi, dmi_ids);
+
+ > here, this will add a dmi based modalias to the module, so that it will
+ > be automatically loaded at boot on systems which match the dmi_ids table.
+
+Ok.
 
 
-> 
-> 
-> Hans de Goede (3):
->   ASoC: Intel: Move soc_intel_is_foo() helpers to a generic header
->   platform/x86: intel_int0002_vgpio: Use the new soc_intel_is_byt/cht
->     helpers
->   Input: axp20x-pek - Use new soc_intel_is_cht() helper
-> 
->  drivers/input/misc/axp20x-pek.c            | 26 ++-------
->  drivers/platform/x86/intel/int0002_vgpio.c | 14 +----
->  include/linux/platform_data/x86/soc.h      | 65 ++++++++++++++++++++++
->  sound/soc/intel/common/soc-intel-quirks.h  | 51 +----------------
->  4 files changed, 75 insertions(+), 81 deletions(-)
->  create mode 100644 include/linux/platform_data/x86/soc.h
-> 
+ >> +MODULE_SOFTDEP("pre: platform:leds-gpio platform:gpio-keys-polled");
 
+ > Is this softdep really necessary ? I would expect things to work fine too if
+ > the leds-gpio and gpio-keys-polled drivers are loaded automatically after
+ > the platform_devices for them have been created .
+
+True. This was copied over from pcengines-apuv2.c, but we'll drop it for
+v2.
+
+-- 
+Bye, Peter Korsgaard
