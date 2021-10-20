@@ -2,143 +2,132 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1CCC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Oct 2021 16:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72B7C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Oct 2021 18:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 585B76138F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Oct 2021 16:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8EB61260
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Oct 2021 18:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229998AbhJTQcZ (ORCPT
+        id S231130AbhJTSDZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 20 Oct 2021 12:32:25 -0400
-Received: from mail-bn8nam11on2085.outbound.protection.outlook.com ([40.107.236.85]:51041
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229817AbhJTQcY (ORCPT
+        Wed, 20 Oct 2021 14:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230245AbhJTSDY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 20 Oct 2021 12:32:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PAm9EAWxifii0F3QBg/SQ9nWS2bllfzjE/ycuWCAaqTyXQFJO9JJqhkZiH9Ic3tlSHXKbXCks/xLYC6eSPRiB66cmcQA+/276HpGmEonVxAXpMxZzOCL5wlKcoWXpGcnyEvi1iK2H0034YGVNAiKD0J7a0pCSlgsfhTCVrsof5G+5NpLDUdKdUvLXvsUBuQurO3Sl+Pju/wJWnKqGMThJXEPBoqR2SeMvPhLgvMKODIJ2cWsPubSwuQpcE0FgANsD/LBsWtau64XdELxu/NkeHyPARS/xTlMGpeD4X7LDRbG7EiscbDAJNh6ttkGfQbFK+hUl0TcCeCJkqMF4Ln8Cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tUxBWgP45RU91FOsBPrmF4Fxrqx2k2/PmtJFD06iKsA=;
- b=JDUaaUdzLQSYWUgNvYqBFDaXXydiCL4JkhUZMUFALxEC+Fmp4VmkY2XpU9Nl0RTX86aVuLQUoENoNDCl+ouyschKRMz3tzZOCDLSW2Elora53m3yIVh8MKGTfhmlj4CEHb4KXvDmHnQETfX4o3hHg2DW9RpPBkMOVEGhf0AitZYGqzobXZvcMHDZ4IaybeUT9zz/eJsNkIe81BFtTGgGdst2JKSKKu5VEv1UcTcpY8TBhbD3gzrlXwYCWg/CENGPwBJnV87elh842fGGZx5Iv0CpSZQ4U8pwpv6uqFMGjmMxVePXWfLLYbuD7pwBsTK894A+I6yHX9E4yoQ0g4GR7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tUxBWgP45RU91FOsBPrmF4Fxrqx2k2/PmtJFD06iKsA=;
- b=V76GfHuNZxyZgKdidjmpqXYA73Qwsqy+6tDT6KZYAvak4VJygAICUAWIvI9jms1qEvGmwds/8jI9oVMpnvzMjyRNpvPKjYStZ0EYOyh8c1clf6D3h/8oK+gAu6vNc/bUH+xWgvjFKnj0Lo8sOoXAAYO9NKmtaVVwbeE4VE5oSgg=
-Received: from MWHPR15CA0041.namprd15.prod.outlook.com (2603:10b6:300:ad::27)
- by BN9PR12MB5051.namprd12.prod.outlook.com (2603:10b6:408:134::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.17; Wed, 20 Oct
- 2021 16:30:02 +0000
-Received: from CO1NAM11FT013.eop-nam11.prod.protection.outlook.com
- (2603:10b6:300:ad:cafe::7e) by MWHPR15CA0041.outlook.office365.com
- (2603:10b6:300:ad::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.15 via Frontend
- Transport; Wed, 20 Oct 2021 16:30:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT013.mail.protection.outlook.com (10.13.174.227) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4628.16 via Frontend Transport; Wed, 20 Oct 2021 16:30:02 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Wed, 20 Oct
- 2021 11:30:00 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>
-CC:     Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH 1/2] platform/x86: amd-pmc: adjust arguments for `amd_pmc_send_cmd`
-Date:   Wed, 20 Oct 2021 11:29:45 -0500
-Message-ID: <20211020162946.10537-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 20 Oct 2021 14:03:24 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB20C06161C;
+        Wed, 20 Oct 2021 11:01:10 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0db300f8abf0ed14d647a3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:b300:f8ab:f0ed:14d6:47a3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A2FA61EC036B;
+        Wed, 20 Oct 2021 20:01:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1634752868;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/4U7+bVpmBPJ7gV+r1bdTzVoBWatHcmArzH+WpFLVX0=;
+        b=LQb5wxNMBVSSlO4PGPVoSe/7fkJf0JVygFKVgj3YJxWvdH223GLeJBRVogaHJsXpgELkDZ
+        aR2X2C7ns1benSbZXA3zSmx/zXmFDxNO1jhKOrJ2xoKPbM5W4/RCaen8vWDcaktwbP3Uoo
+        bofa4W9GEGyxWkwSaRWxf1JrdO63uX8=
+Date:   Wed, 20 Oct 2021 20:01:07 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Roth <michael.roth@amd.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v6 08/42] x86/sev-es: initialize sev_status/features
+ within #VC handler
+Message-ID: <YXBZYws8NnxiQJD7@zn.tnic>
+References: <20211008180453.462291-1-brijesh.singh@amd.com>
+ <20211008180453.462291-9-brijesh.singh@amd.com>
+ <YW2EsxcqBucuyoal@zn.tnic>
+ <20211018184003.3ob2uxcpd2rpee3s@amd.com>
+ <YW3IdfMs61191qnU@zn.tnic>
+ <20211020161023.hzbj53ehmzjrt4xd@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: da11e1f7-99c9-4f5f-8dff-08d993e6dde9
-X-MS-TrafficTypeDiagnostic: BN9PR12MB5051:
-X-Microsoft-Antispam-PRVS: <BN9PR12MB5051D56378FD85A7C7470436E2BE9@BN9PR12MB5051.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WQsbmWQgl8fbMyluwpQZPORGagSFVa2nipvkjnqLkOPU96mNUFaOyOlxcAv5+NN85xmE2ZMZrjoQueKVTdU5iFTEnz4xAkbfnNvhJLLMz9AoTgYBX4A5bQBDJWoFWCxOPfg1K4RzdxOLYw0qrOqQu36OglJD60MwlDxVhGaXY7dFezPQfV61S2seat7yyi+eNZf1x4Ojv38LeSdLo826KFOTlbPXfHxfF5iiMc22j1Ms1HkJM1aHJIjP8lPmX8FhNGKda9HxHeAQT1episeq4hLWx/pJUC4oWjwdTDhrwamLjbldY3i4UaImkTd2bnE0d8jENsZL748cuJGQ4qKEYiPsdC3pIYlohoAkHu6HYp68DbUOe7Htzx8mllqpXQoPkhToYOmv2bUd8vaME3IqdyGv4yjMvwFbKQw2AhJKqCRD1qZBvBtef1X0u7DXLX4Ooe5kA6PkiWGdtmUyU4P+EGsFTVrQsSubCPvcR6Kml2VCUtcKbQISsT1oePFyLrEpH4EtY2eBX9uUw5PhUUHzJSmgLmDwy7sT+Wxzhfy69pnLyKEF+xKQHqs6tsn/dN4i+x3Ozc/P24U6hUb+4sgAalrd8gX554Bu+jgDB/i4EVqyRICqZ/LsqYY2rQxD4USyK8vSmEGKGFaBbQ7hJdOz9H6HYdtOxZhku0KTSIFycrM/gXub1KJV3khCrXmXG7bxTlGHvsKW4yVuCT3LRyE/COILTY/e29AzBXf7CnEO6r8ItDzAMGvPP2WF1ZKudaL+F/mZ83cQgYutYuqxDvfeHg==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(316002)(86362001)(186003)(7696005)(4326008)(2616005)(508600001)(6666004)(36756003)(16526019)(44832011)(2906002)(110136005)(83380400001)(8936002)(47076005)(70586007)(5660300002)(336012)(1076003)(8676002)(26005)(81166007)(426003)(70206006)(82310400003)(36860700001)(356005)(81973001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2021 16:30:02.2928
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: da11e1f7-99c9-4f5f-8dff-08d993e6dde9
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT013.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5051
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211020161023.hzbj53ehmzjrt4xd@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently the "argument" for the "message" is listed as a boolean
-value.  This works well for the commands used currently, but an
-additional upcoming command will pass more data in the message.
+On Wed, Oct 20, 2021 at 11:10:23AM -0500, Michael Roth wrote:
+> [Sorry for the wall of text, just trying to work through everything.]
 
-Expand it to be a full 32 bit value.
+And I'm going to respond in a couple of mails just for my own sanity.
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/amd-pmc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> I'm not sure if this is pertaining to using the CPUID table prior to
+> sme_enable(), or just the #VC-based SEV MSR read. The following comments
+> assume the former. If that assumption is wrong you can basically ignore
+> the rest of this email :)
 
-diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-index b7b6ad4629a7..99ac50616bc3 100644
---- a/drivers/platform/x86/amd-pmc.c
-+++ b/drivers/platform/x86/amd-pmc.c
-@@ -126,7 +126,7 @@ struct amd_pmc_dev {
- };
- 
- static struct amd_pmc_dev pmc;
--static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set, u32 *data, u8 msg, bool ret);
-+static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
- 
- static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
- {
-@@ -337,7 +337,7 @@ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
- 	dev_dbg(dev->dev, "AMD_PMC_REGISTER_MESSAGE:%x\n", value);
- }
- 
--static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set, u32 *data, u8 msg, bool ret)
-+static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret)
- {
- 	int rc;
- 	u32 val;
-@@ -356,7 +356,7 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set, u32 *data, u8 msg
- 	amd_pmc_reg_write(dev, AMD_PMC_REGISTER_RESPONSE, 0);
- 
- 	/* Write argument into response register */
--	amd_pmc_reg_write(dev, AMD_PMC_REGISTER_ARGUMENT, set);
-+	amd_pmc_reg_write(dev, AMD_PMC_REGISTER_ARGUMENT, arg);
- 
- 	/* Write message ID to message ID register */
- 	amd_pmc_reg_write(dev, AMD_PMC_REGISTER_MESSAGE, msg);
+This is pertaining to me wanting to show you that the design of this SNP
+support needs to be sane and maintainable and every function needs to
+make sense not only now but in the future.
+
+In this particular example, we should set sev_status *once*, *before*
+anything accesses it so that it is prepared when something needs it. Not
+do a #VC and go, "oh, btw, is sev_status set? No? Ok, lemme set it."
+which basically means our design is seriously lacking.
+
+And I had suggested a similar thing for TDX and tglx was 100% right in
+shooting it down because we do properly designed things - not, get stuff
+in so that vendor is happy and then, once the vendor programmers have
+disappeared to do their next enablement task, the maintainers get to mop
+up and maintain it forever.
+
+Because this mopping up doesn't scale - trust me.
+
+> [The #VC-based SEV MSR read is not necessary for anything in sme_enable(),
+> it's simply a way to determine whether the guest is an SNP guest, without
+> any reliance on CPUID, which seemed useful in the context of doing some
+> additional sanity checks against the SNP CPUID table and determining that
+> it's appropriate to use it early on (rather than just trust that this is an
+> SNP guest by virtue of the CC blob being present, and then failing later
+> once sme_enable() checks for the SNP feature bits through the normal
+> mechanism, as was done in v5).]
+
+So you need to make up your mind here design-wise, what you wanna do.
+
+The proper thing to do would be, to detect *everything*, detect whether
+this is an SNP guest, yadda yadda, everything your code is going to need
+later on, and then be done with it.
+
+Then you continue with the boot and now your other code queries
+everything that has been detected up til now and uses it.
+
+End of mail 1.
+
 -- 
-2.25.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
