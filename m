@@ -2,634 +2,315 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C25C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Oct 2021 14:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 191CDC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Oct 2021 16:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B251E61373
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Oct 2021 14:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 017C661391
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Oct 2021 16:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229842AbhJTOmM (ORCPT
+        id S231228AbhJTQNE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 20 Oct 2021 10:42:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44650 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229639AbhJTOmL (ORCPT
+        Wed, 20 Oct 2021 12:13:04 -0400
+Received: from mail-bn7nam10on2078.outbound.protection.outlook.com ([40.107.92.78]:10848
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231207AbhJTQND (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 20 Oct 2021 10:42:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634740797;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jEmoj0pmD3P9WCH1oAICo4Le6YRTfWi88s40buVzYhY=;
-        b=chupBgtnTfC6pVHjEt7yIQudwnOP/dn042f2Wd/Ka9hahZsLWqSFGjgFfPj/B8c3/6KnN6
-        Mf7NBxVr4Z64YuNSXVSpW6FSadllK71V7nn9SM/qEqIRC1On0iTSIzdbn8YC2kJ9W21UkK
-        Ff3QZie6Vva2nxgp6+rRZl+XhR86u5k=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-396-vmf2zQlAN6S289erUEDhdA-1; Wed, 20 Oct 2021 10:39:55 -0400
-X-MC-Unique: vmf2zQlAN6S289erUEDhdA-1
-Received: by mail-ed1-f71.google.com with SMTP id x5-20020a50f185000000b003db0f796903so21205463edl.18
-        for <platform-driver-x86@vger.kernel.org>; Wed, 20 Oct 2021 07:39:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=jEmoj0pmD3P9WCH1oAICo4Le6YRTfWi88s40buVzYhY=;
-        b=zOvEdCC8TDGpmJXDMuQjuajXiJpVdZBQqOox4K80xomciqipaxikqrePJTVmkxtM0M
-         lwyKdbccoU+rVHBq8trn/TflYFhqibrs9YqSSPJIj3LKcFDRGdYKvSZp1mlSyi8zsMnz
-         K9d3ZPRRwSML+SUySJS+hOsQ8b/SFYYHY3CtwRJJfLqps+wcPsj8WbaY1bzbVFQOu0IT
-         dICeolIEVCBrekccCJxQdwLUKYsWpHdxLKcXuyM1HXpHZtNzT0z/dvf6RJI/r1gMDWpL
-         jGCp1e7mwf0tem+vFlnyrWzDdKOmjUj3qAxAne3ns1BbU3s+9XkMvLY8DS6l8Oi5jMfU
-         bKbg==
-X-Gm-Message-State: AOAM533h9oSZAZQ4/YyLHhnMovaXf36+XlwKyvxfRktEiJ4Dy5mo5hlE
-        L0STwuejXVPHsvr5E6LTOb6n82VPXGyR9GD2GoXTt5mDZsEsRo5FTldwJkfI7EwC8dyskcysC4B
-        3StfmrV+Q+HMFnarbCxa8fBYUHO/9A8h/Ug==
-X-Received: by 2002:a05:6402:5186:: with SMTP id q6mr483761edd.340.1634740794205;
-        Wed, 20 Oct 2021 07:39:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxsnrPSOF+zSAUHZCYz8Q8/l+jGY6MhJ3ypGlW07f0s8ZmW54CV9ceoBG9Yv7ceEHmIoORRpg==
-X-Received: by 2002:a05:6402:5186:: with SMTP id q6mr483715edd.340.1634740793906;
-        Wed, 20 Oct 2021 07:39:53 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id hp3sm755271ejc.61.2021.10.20.07.39.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Oct 2021 07:39:53 -0700 (PDT)
-Message-ID: <150f27d2-32b9-403b-01ff-8ab7d971d1d1@redhat.com>
-Date:   Wed, 20 Oct 2021 16:39:52 +0200
+        Wed, 20 Oct 2021 12:13:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i5jvOHoL7mJf7u2b89Uzp3z6nH+h8hh9QFnGCCMJTQCBaYxoDdaMyaugr6akiyDuHplF1d1tHG+Mwr/wa3xuLm8nosSH/UDny/ULvatps/A6M5bbf6GfGoc68kNtBdL24pNvG0TWmsZPvbRThdwhAz1NvQ6wz8FVvyOaY8HJ6+ewiAIeeXCebFubGsdcL3QSy3QiLJ4a6wY74yLRV4yXFn8fRnD8F5Hss0rGgAcQ5dJzfJSthTlrNQYQfQzwB4/NFgaG2Ux5PJGAr1GtwTmt/qd+x9JJznkblV3pzPLvkUsED8mYgkWlZeOY2KQTE9uDte7zxCXOuglnGyuGaih9nA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3W/1I90HN2LHumujvyPlr/T27cwj+Jws/FEERs852nU=;
+ b=SpgbZEltKTO6hCQj2EviVoLQDg+3MY1XPqWRMWx6K+Qs5ryUu2y1Jay/v5XUuy+0PpsoPdNTo69SEEVm7VB+JNNYSnUhJpHjQgCPHhNqGFannUnnX3V4IidMfruHJmNSGuyxhsPjLCOjOoPaqKy0hI8VSCYodaKSeJO2oMSg4Qzv+2qRxIWfzvbK6uu/yvSUPM2z0msYpkA4MqFJF6t4zb19L2wUQP+k3vl0xWVvFplg7CNlWTv73RRmI01dS3/CValGYKpUhXPYt0hyAaps0p3Wv5iKxJQbFvUMATWe26OH99bX2nOMwTpvd/KN39s1u9HZlu8VmsiJuY6mHNxaFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3W/1I90HN2LHumujvyPlr/T27cwj+Jws/FEERs852nU=;
+ b=iw7+lTrYM51yHuZB7X9E1PWgtLDCznOVKnexQEOVJlscsECET3bBtIwvrqr+G2hXQ7WZ1Hi97EJa0V/6ONJ62GIdqajZgJPOYJ/ZGOHcDV0aZv7JFfjOux61IXtc52LK9CoCJtpGYtexngpbpOYE76gKxHL0KLQlWRQ+GBPoCms=
+Received: from BN6PR11CA0063.namprd11.prod.outlook.com (2603:10b6:404:f7::25)
+ by DM6PR12MB3258.namprd12.prod.outlook.com (2603:10b6:5:187::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.16; Wed, 20 Oct
+ 2021 16:10:44 +0000
+Received: from BN8NAM11FT067.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:f7:cafe::da) by BN6PR11CA0063.outlook.office365.com
+ (2603:10b6:404:f7::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.16 via Frontend
+ Transport; Wed, 20 Oct 2021 16:10:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; alien8.de; dkim=none (message not signed)
+ header.d=none;alien8.de; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT067.mail.protection.outlook.com (10.13.177.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4628.16 via Frontend Transport; Wed, 20 Oct 2021 16:10:42 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Wed, 20 Oct
+ 2021 11:10:42 -0500
+Date:   Wed, 20 Oct 2021 11:10:23 -0500
+From:   Michael Roth <michael.roth@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     Brijesh Singh <brijesh.singh@amd.com>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+        <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "Vitaly Kuznetsov" <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        <tony.luck@intel.com>, <marcorr@google.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v6 08/42] x86/sev-es: initialize sev_status/features
+ within #VC handler
+Message-ID: <20211020161023.hzbj53ehmzjrt4xd@amd.com>
+References: <20211008180453.462291-1-brijesh.singh@amd.com>
+ <20211008180453.462291-9-brijesh.singh@amd.com>
+ <YW2EsxcqBucuyoal@zn.tnic>
+ <20211018184003.3ob2uxcpd2rpee3s@amd.com>
+ <YW3IdfMs61191qnU@zn.tnic>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Subject: Re: [PATCH v2] platform/x86: Support for EC-connected GPIOs for
- identify LED/button on Barco P50 board
-Content-Language: en-US
-To:     Peter Korsgaard <peter@korsgaard.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     mgross@linux.intel.com,
-        Santosh Kumar Yadav <santoshkumar.yadav@barco.com>
-References: <20211013140356.6235-1-santoshkumar.yadav@barco.com>
- <20211020123634.2638-1-peter@korsgaard.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211020123634.2638-1-peter@korsgaard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <YW3IdfMs61191qnU@zn.tnic>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5b4ffa7b-8e18-48a9-6267-08d993e42ad2
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3258:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3258289A948234D14A78DD7095BE9@DM6PR12MB3258.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oQ3aPkCKN4bj58oFtJ7tYArUIE1CstuuF9Iuj142LeInSWGxR0AW32b7JHGOf0IvdwEd55rr2MMMIXqG1hMHj0y8GBdB/Fand5mtnGBOn9KJ3GuBZ8g/wJs1ZFDtNZEtBuytiOO9pxoKMCKGRRaR0GRgBYTQbV5VK4cwJ7hDcgNBEPQmOymdk3HKPUF0MAuOOJGfJy25HwxmTdRhCmwqJllp98i4ATSc86C7oCQjP4t08idg4R3DQD/MC/VqIn0JHFmVGwnrAy0lgGQvxtMcFBr5d+jHbEHQYk9KQMySrPYHab9km5x8wQo9uyFpwuJT14N/taE8k3BGvafkIvKIrw2TNetIcyXcHf5vQH1kolnbF2JhgxiVzha1zk1AtaLPk3gQLZqv27o84ZBZtAx0MVVy0rt9qO2rE6woyTc9tXawALIpRV4voFwy0fNJZV2t6RCFl0Yax1JytY8YTp1ZjRxmvstCuHTegjVYNQuBQL0M3aH7UcZ3glWV6lpOmXUr2KfN4lwVRZ//y2Rg+qpcm3JVe+uy1cFZus1eSaCGTu5SJCKIw631t9Sb1lg4x0bgynWcfDgWPVnmkwjfjxSewgLHM2dBReQf6z78/x2g1TTQdhOMn7UWAvJ5mfX675pvDRgkVpsh0enDeK3tXsQ8OrUxr8IAiSNhv6ouMlNzAiIGMMj4CY9dXVQ0v1OvcNyuzFr3xG3Wn/2CxBA8NMAKHPEgsmbT//ffFcphKGs+/sX785CznmnIzm9X2W+M1/CQSSR3HVsFPO44pCePuZN4H5a/hfd5fsXLXB0RAF6+KGacZuqc4lgI55iCB11Hfa+F
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(54906003)(70586007)(70206006)(336012)(44832011)(2906002)(81166007)(1076003)(83380400001)(316002)(356005)(7406005)(8676002)(2616005)(4326008)(7416002)(426003)(86362001)(47076005)(508600001)(36756003)(186003)(966005)(6666004)(16526019)(5660300002)(8936002)(6916009)(36860700001)(26005)(45080400002)(82310400003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2021 16:10:42.9453
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b4ffa7b-8e18-48a9-6267-08d993e42ad2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT067.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3258
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 10/20/21 14:36, Peter Korsgaard wrote:
-> From: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>
-> 
-> Add a driver providing access to the GPIOs for the identify button and led
-> present on Barco P50 board, based on the pcengines-apuv2.c driver.
-> 
-> There is unfortunately no suitable ACPI entry for the EC communication
-> interface, so instead bind to boards with "P50" as their DMI product family
-> and hard code the I/O port number (0x299).
-> 
-> The driver also hooks up the leds-gpio and gpio-keys-polled drivers to the
-> GPIOs, so they are finally exposed as:
-> 
-> LED:
-> /sys/class/leds/identify
-> 
-> Button: (/proc/bus/input/devices)
-> I: Bus=0019 Vendor=0001 Product=0001 Version=0100
-> N: Name="identify"
-> P: Phys=gpio-keys-polled/input0
-> S: Sysfs=/devices/platform/barco-p50-gpio/gpio-keys-polled/input/input10
-> U: Uniq=
-> H: Handlers=event10
-> B: PROP=0
-> B: EV=3
-> B: KEY=1000000 0 0 0 0 0 0
-> 
-> Signed-off-by: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>
-> Signed-off-by: Peter Korsgaard <peter@korsgaard.com>
-> ---
-> v2: Match on DMI vendor as well, add module table, drop softdeps
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-> 
->  MAINTAINERS                           |   6 +
->  drivers/platform/x86/Kconfig          |  10 +
->  drivers/platform/x86/Makefile         |   3 +
->  drivers/platform/x86/barco-p50-gpio.c | 436 ++++++++++++++++++++++++++
->  4 files changed, 455 insertions(+)
->  create mode 100644 drivers/platform/x86/barco-p50-gpio.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8d118d7957d2..60980f7cc29a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3220,6 +3220,12 @@ F:	drivers/video/backlight/
->  F:	include/linux/backlight.h
->  F:	include/linux/pwm_backlight.h
->  
-> +BARCO P50 GPIO DRIVER
-> +M:	Santosh Kumar Yadav <santoshkumar.yadav@barco.com>
-> +M:	Peter Korsgaard <peter.korsgaard@barco.com>
-> +S:	Maintained
-> +F:	drivers/platform/x86/barco-p50-gpio.c
-> +
->  BATMAN ADVANCED
->  M:	Marek Lindner <mareklindner@neomailbox.ch>
->  M:	Simon Wunderlich <sw@simonwunderlich.de>
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index e21ea3d23e6f..42b4895e4acc 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -713,6 +713,16 @@ config PCENGINES_APU2
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pcengines-apuv2.
->  
-> +config BARCO_P50_GPIO
-> +	tristate "Barco P50 GPIO driver for identify LED/button"
-> +	depends on GPIOLIB
-> +	help
-> +	  This driver provides access to the GPIOs for the identify button
-> +	  and led present on Barco P50 board.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called barco-p50-gpio.
-> +
->  config SAMSUNG_LAPTOP
->  	tristate "Samsung Laptop driver"
->  	depends on RFKILL || RFKILL = n
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 69690e26bb6d..931dc55f6f3e 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -80,6 +80,9 @@ obj-$(CONFIG_XO1_RFKILL)	+= xo1-rfkill.o
->  # PC Engines
->  obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
->  
-> +# Barco
-> +obj-$(CONFIG_BARCO_P50_GPIO)	+= barco-p50-gpio.o
-> +
->  # Samsung
->  obj-$(CONFIG_SAMSUNG_LAPTOP)	+= samsung-laptop.o
->  obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
-> diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
-> new file mode 100644
-> index 000000000000..ca0b2564c407
-> --- /dev/null
-> +++ b/drivers/platform/x86/barco-p50-gpio.c
-> @@ -0,0 +1,436 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +
-> +/*
-> + * Support for EC-connected GPIOs for identify
-> + * LED/button on Barco P50 board
-> + *
-> + * Copyright (C) 2021 Barco NV
-> + * Author: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>
-> + */
-> +
-> +#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/io.h>
-> +#include <linux/delay.h>
-> +#include <linux/dmi.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/gpio_keys.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/gpio/machine.h>
-> +#include <linux/input.h>
-> +
-> +
-> +#define DRIVER_NAME		"barco-p50-gpio"
-> +
-> +/* GPIO lines */
-> +#define P50_GPIO_LINE_LED	0
-> +#define P50_GPIO_LINE_BTN	1
-> +
-> +/* GPIO IO Ports */
-> +#define P50_GPIO_IO_PORT_BASE	0x299
-> +
-> +#define P50_PORT_DATA		0x00
-> +#define P50_PORT_CMD		0x01
-> +
-> +#define P50_STATUS_OBF		0x01 /* EC output buffer full */
-> +#define P50_STATUS_IBF		0x02 /* EC input buffer full */
-> +
-> +#define P50_CMD_READ		0xa0
-> +#define P50_CMD_WRITE		0x50
-> +
-> +/* EC mailbox registers */
-> +#define P50_MBOX_REG_CMD	0x00
-> +#define P50_MBOX_REG_STATUS	0x01
-> +#define P50_MBOX_REG_PARAM	0x02
-> +#define P50_MBOX_REG_DATA	0x03
-> +
-> +#define P50_MBOX_CMD_READ_GPIO	0x11
-> +#define P50_MBOX_CMD_WRITE_GPIO	0x12
-> +#define P50_MBOX_CMD_CLEAR	0xff
-> +
-> +#define P50_MBOX_STATUS_SUCCESS	0x01
-> +
-> +#define P50_MBOX_PARAM_LED	0x12
-> +#define P50_MBOX_PARAM_BTN	0x13
-> +
-> +
-> +struct p50_gpio {
-> +	struct gpio_chip gc;
-> +	struct mutex lock;
-> +	unsigned long base;
-> +	struct platform_device *leds_pdev;
-> +	struct platform_device *keys_pdev;
-> +};
-> +
-> +static struct platform_device *gpio_pdev;
-> +
-> +static int gpio_params[] = {
-> +	[P50_GPIO_LINE_LED] = P50_MBOX_PARAM_LED,
-> +	[P50_GPIO_LINE_BTN] = P50_MBOX_PARAM_BTN,
-> +};
-> +
-> +static const char * const gpio_names[] = {
-> +	[P50_GPIO_LINE_LED] = "identify-led",
-> +	[P50_GPIO_LINE_BTN] = "identify-button",
-> +};
-> +
-> +
-> +static struct gpiod_lookup_table p50_gpio_led_table = {
-> +	.dev_id = "leds-gpio",
-> +	.table = {
-> +		GPIO_LOOKUP_IDX(DRIVER_NAME, P50_GPIO_LINE_LED, NULL, 0, GPIO_ACTIVE_HIGH),
-> +		{}
-> +	}
-> +};
-> +
-> +/* GPIO LEDs */
-> +static struct gpio_led leds[] = {
-> +	{ .name = "identify" }
-> +};
-> +
-> +static struct gpio_led_platform_data leds_pdata = {
-> +	.num_leds = ARRAY_SIZE(leds),
-> +	.leds = leds,
-> +};
-> +
-> +/* GPIO keyboard */
-> +static struct gpio_keys_button buttons[] = {
-> +	{
-> +		.code = KEY_RESTART,
-> +		.gpio = P50_GPIO_LINE_BTN,
-> +		.active_low = 1,
-> +		.type = EV_KEY,
-> +		.value = 1,
-> +	},
-> +};
-> +
-> +static struct gpio_keys_platform_data keys_pdata = {
-> +	.buttons = buttons,
-> +	.nbuttons = ARRAY_SIZE(buttons),
-> +	.poll_interval = 100,
-> +	.rep = 0,
-> +	.name = "identify",
-> +};
-> +
-> +
-> +/* low level access routines */
-> +
-> +static int p50_wait_ec(struct p50_gpio *p50, int mask, int expected)
-> +{
-> +	int i, val;
-> +
-> +	for (i = 0; i < 100; i++) {
-> +		val = inb(p50->base + P50_PORT_CMD) & mask;
-> +		if (val == expected)
-> +			return 0;
-> +		usleep_range(500, 2000);
-> +	}
-> +
-> +	dev_err(p50->gc.parent, "Timed out waiting for EC (0x%x)\n", val);
-> +	return -ETIMEDOUT;
-> +}
-> +
-> +
-> +static int p50_read_mbox_reg(struct p50_gpio *p50, int reg)
-> +{
-> +	int ret;
-> +
-> +	ret = p50_wait_ec(p50, P50_STATUS_IBF, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* clear output buffer flag, prevent unfinished commands */
-> +	inb(p50->base + P50_PORT_DATA);
-> +
-> +	/* cmd/address */
-> +	outb(P50_CMD_READ | reg, p50->base + P50_PORT_CMD);
-> +
-> +	ret = p50_wait_ec(p50, P50_STATUS_OBF, P50_STATUS_OBF);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return inb(p50->base + P50_PORT_DATA);
-> +}
-> +
-> +static int p50_write_mbox_reg(struct p50_gpio *p50, int reg, int val)
-> +{
-> +	int ret;
-> +
-> +	ret = p50_wait_ec(p50, P50_STATUS_IBF, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* cmd/address */
-> +	outb(P50_CMD_WRITE | reg, p50->base + P50_PORT_CMD);
-> +
-> +	ret = p50_wait_ec(p50, P50_STATUS_IBF, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* data */
-> +	outb(val, p50->base + P50_PORT_DATA);
-> +
-> +	return 0;
-> +}
-> +
-> +
-> +/* mbox routines */
-> +
-> +static int p50_wait_mbox_idle(struct p50_gpio *p50)
-> +{
-> +	int i, val;
-> +
-> +	for (i = 0; i < 1000; i++) {
-> +		val = p50_read_mbox_reg(p50, P50_MBOX_REG_CMD);
-> +		/* cmd is 0 when idle */
-> +		if (val <= 0)
-> +			return val;
-> +
-> +		usleep_range(500, 2000);
-> +	}
-> +
-> +	dev_err(p50->gc.parent,	"Timed out waiting for EC mbox idle (CMD: 0x%x)\n", val);
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
-> +static int p50_send_mbox_cmd(struct p50_gpio *p50, int cmd, int param, int data)
-> +{
-> +	int ret;
-> +
-> +	ret = p50_wait_mbox_idle(p50);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = p50_write_mbox_reg(p50, P50_MBOX_REG_DATA, data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = p50_write_mbox_reg(p50, P50_MBOX_REG_PARAM, param);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = p50_write_mbox_reg(p50, P50_MBOX_REG_CMD, cmd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = p50_wait_mbox_idle(p50);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = p50_read_mbox_reg(p50, P50_MBOX_REG_STATUS);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (ret == P50_MBOX_STATUS_SUCCESS)
-> +		return 0;
-> +
-> +	dev_err(p50->gc.parent,	"Mbox command failed (CMD=0x%x STAT=0x%x PARAM=0x%x DATA=0x%x)\n",
-> +		cmd, ret, param, data);
-> +
-> +	return -EIO;
-> +}
-> +
-> +
-> +/* gpio routines */
-> +
-> +static int p50_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	switch (offset) {
-> +	case P50_GPIO_LINE_BTN:
-> +		return GPIO_LINE_DIRECTION_IN;
-> +
-> +	case P50_GPIO_LINE_LED:
-> +		return GPIO_LINE_DIRECTION_OUT;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int p50_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	struct p50_gpio *p50 = gpiochip_get_data(gc);
-> +	int ret;
-> +
-> +	mutex_lock(&p50->lock);
-> +
-> +	ret = p50_send_mbox_cmd(p50, P50_MBOX_CMD_READ_GPIO, gpio_params[offset], 0);
-> +	if (ret == 0)
-> +		ret = p50_read_mbox_reg(p50, P50_MBOX_REG_DATA);
-> +
-> +	mutex_unlock(&p50->lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static void p50_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-> +{
-> +	struct p50_gpio *p50 = gpiochip_get_data(gc);
-> +
-> +	mutex_lock(&p50->lock);
-> +
-> +	p50_send_mbox_cmd(p50, P50_MBOX_CMD_WRITE_GPIO, gpio_params[offset], value);
-> +
-> +	mutex_unlock(&p50->lock);
-> +}
-> +
-> +static int p50_gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct p50_gpio *p50;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
-> +	if (!res) {
-> +		dev_err(&pdev->dev, "Cannot get I/O ports\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (!devm_request_region(&pdev->dev, res->start, resource_size(res), pdev->name)) {
-> +		dev_err(&pdev->dev, "Unable to reserve I/O region\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	p50 = devm_kzalloc(&pdev->dev, sizeof(*p50), GFP_KERNEL);
-> +	if (!p50)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, p50);
-> +	mutex_init(&p50->lock);
-> +	p50->base = res->start;
-> +	p50->gc.owner = THIS_MODULE;
-> +	p50->gc.parent = &pdev->dev;
-> +	p50->gc.label = dev_name(&pdev->dev);
-> +	p50->gc.ngpio = ARRAY_SIZE(gpio_names);
-> +	p50->gc.names = gpio_names;
-> +	p50->gc.can_sleep = true;
-> +	p50->gc.base = -1;
-> +	p50->gc.get_direction = p50_gpio_get_direction;
-> +	p50->gc.get = p50_gpio_get;
-> +	p50->gc.set = p50_gpio_set;
-> +
-> +
-> +	/* reset mbox */
-> +	ret = p50_wait_mbox_idle(p50);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = p50_write_mbox_reg(p50, P50_MBOX_REG_CMD, P50_MBOX_CMD_CLEAR);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = p50_wait_mbox_idle(p50);
-> +	if (ret)
-> +		return ret;
-> +
-> +
-> +	ret = devm_gpiochip_add_data(&pdev->dev, &p50->gc, p50);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Could not register gpiochip: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	gpiod_add_lookup_table(&p50_gpio_led_table);
-> +
-> +	p50->leds_pdev = platform_device_register_data(&pdev->dev,
-> +		"leds-gpio", PLATFORM_DEVID_NONE, &leds_pdata, sizeof(leds_pdata));
-> +
-> +	if (IS_ERR(p50->leds_pdev)) {
-> +		ret = PTR_ERR(p50->leds_pdev);
-> +		dev_err(&pdev->dev, "Could not register leds-gpio: %d\n", ret);
-> +		goto err_leds;
-> +	}
-> +
-> +	/* gpio-keys-polled uses old-style gpio interface, pass the right identifier */
-> +	buttons[0].gpio += p50->gc.base;
-> +
-> +	p50->keys_pdev =
-> +		platform_device_register_data(&pdev->dev, "gpio-keys-polled",
-> +					      PLATFORM_DEVID_NONE,
-> +					      &keys_pdata, sizeof(keys_pdata));
-> +
-> +	if (IS_ERR(p50->keys_pdev)) {
-> +		ret = PTR_ERR(p50->keys_pdev);
-> +		dev_err(&pdev->dev, "Could not register gpio-keys-polled: %d\n", ret);
-> +		goto err_keys;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_keys:
-> +	platform_device_unregister(p50->leds_pdev);
-> +err_leds:
-> +	gpiod_remove_lookup_table(&p50_gpio_led_table);
-> +
-> +	return ret;
-> +}
-> +
-> +static int p50_gpio_remove(struct platform_device *pdev)
-> +{
-> +	struct p50_gpio *p50 = platform_get_drvdata(pdev);
-> +
-> +	platform_device_unregister(p50->keys_pdev);
-> +	platform_device_unregister(p50->leds_pdev);
-> +
-> +	gpiod_remove_lookup_table(&p50_gpio_led_table);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver p50_gpio_driver = {
-> +	.driver = {
-> +		.name = DRIVER_NAME,
-> +	},
-> +	.probe = p50_gpio_probe,
-> +	.remove = p50_gpio_remove,
-> +};
-> +
-> +/* Board setup */
-> +static const struct dmi_system_id dmi_ids[] __initconst = {
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Barco"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_FAMILY, "P50")
-> +		},
-> +	},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(dmi, dmi_ids);
-> +
-> +static int __init p50_module_init(void)
-> +{
-> +	struct resource res = DEFINE_RES_IO(P50_GPIO_IO_PORT_BASE, P50_PORT_CMD + 1);
-> +
-> +	if (!dmi_first_match(dmi_ids))
-> +		return -ENODEV;
-> +
-> +	platform_driver_register(&p50_gpio_driver);
-> +
-> +	gpio_pdev = platform_device_register_simple(DRIVER_NAME, PLATFORM_DEVID_NONE, &res, 1);
-> +	if (IS_ERR(gpio_pdev)) {
-> +		pr_err("failed registering %s: %ld\n", DRIVER_NAME, PTR_ERR(gpio_pdev));
-> +		platform_driver_unregister(&p50_gpio_driver);
-> +		return PTR_ERR(gpio_pdev);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit p50_module_exit(void)
-> +{
-> +	platform_device_unregister(gpio_pdev);
-> +	platform_driver_unregister(&p50_gpio_driver);
-> +}
-> +
-> +module_init(p50_module_init);
-> +module_exit(p50_module_exit);
-> +
-> +MODULE_AUTHOR("Santosh Kumar Yadav, Barco NV <santoshkumar.yadav@barco.com>");
-> +MODULE_DESCRIPTION("Barco P50 identify GPIOs driver");
-> +MODULE_LICENSE("GPL");
+On Mon, Oct 18, 2021 at 09:18:13PM +0200, Borislav Petkov wrote:
+> On Mon, Oct 18, 2021 at 01:40:03PM -0500, Michael Roth wrote:
+> > If CPUID has lied, that would result in a #GP, rather than a controlled
+> > termination in the various checkers/callers. The latter is easier to
+> > debug.
+> > 
+> > Additionally, #VC is arguably a better indicator of SEV MSR availability
+> > for SEV-ES/SEV-SNP guests, since it is only generated by ES/SNP hardware
+> > and doesn't rely directly on hypervisor/EFI-provided CPUID values. It
+> > doesn't work for SEV guests, but I don't think it's a bad idea to allow
+> > SEV-ES/SEV-SNP guests to initialize sev_status in #VC handler to make
+> > use of the added assurance.
 > 
 
+[Sorry for the wall of text, just trying to work through everything.]
+
+> Ok, let's take a step back and analyze what we're trying to solve first.
+> So I'm looking at sme_enable():
+
+I'm not sure if this is pertaining to using the CPUID table prior to
+sme_enable(), or just the #VC-based SEV MSR read. The following comments
+assume the former. If that assumption is wrong you can basically ignore
+the rest of this email :)
+
+[The #VC-based SEV MSR read is not necessary for anything in sme_enable(),
+it's simply a way to determine whether the guest is an SNP guest, without
+any reliance on CPUID, which seemed useful in the context of doing some
+additional sanity checks against the SNP CPUID table and determining that
+it's appropriate to use it early on (rather than just trust that this is an
+SNP guest by virtue of the CC blob being present, and then failing later
+once sme_enable() checks for the SNP feature bits through the normal
+mechanism, as was done in v5).]
+
+> 
+> 1. Code checks SME/SEV support leaf. HV lies and says there's none. So
+> guest doesn't boot encrypted. Oh well, not a big deal, the cloud vendor
+> won't be able to give confidentiality to its users => users go away or
+> do unencrypted like now.
+> 
+> Problem is solved by political and economical pressure.
+> 
+> 2. Check SEV and SME bit. HV lies here. Oh well, same as the above.
+
+I'd be worried about the possibility that, through some additional exploits
+or failures in the attestation flow, a guest owner was tricked into booting
+unencrypted on a compromised host and exposing their secrets. Their
+attestation process might even do some additional CPUID sanity checks, which
+would at the point be via the SNP CPUID table and look legitimate, unaware
+that the kernel didn't actually use the SNP CPUID table until after
+0x8000001F was parsed (if we were to only initialize it after/as-part-of
+sme_enable()).
+
+Fortunately in this scenario I think the guest kernel actually would fail to
+boot due to the SNP hardware unconditionally treating code/page tables as
+encrypted pages. I tested some of these scenarios just to check, but not
+all, and I still don't feel confident enough about it to say that there's
+not some way to exploit this by someone who is more clever/persistant than
+me.
+
+> 
+> 3. HV lies about 1. and 2. but says that SME/SEV is supported.
+> 
+> Guest attempts to read the MSR Guest explodes due to the #GP. The same
+> political/economical pressure thing happens.
+
+That's seems likely, but maybe some future hardware bug, or some other
+exploit, makes it possible to intercept that MSR read? I don't know, but
+if that particular branch of execution can be made less likely by utilizing
+SNP CPUID validation I think it makes sense to make use of it.
+
+> 
+> If the MSR is really there, we've landed at the place where we read the
+> SEV MSR. Moment of truth - SEV/SNP guests have a communication protocol
+> which is independent from the HV and all good.
+
+At which point we then switch to using the CPUID table? But at that
+point all the previous CPUID checks, both SEV-related/non-SEV-related,
+are now possibly not consistent with what's in the CPUID table. Do we
+then revalidate? Even a non-malicious hypervisor might provide
+inconsistent values between the two sources due to bugs, or SNP
+validation suppressing certain feature bits that hypervisor otherwise
+exposes, etc. Now all the code after sme_enable() can potentially take
+unexpected execution paths, where post-sme_enable() code makes
+assumptions about pre-sme_enable() checks that may no longer hold true.
+
+Also, it would be useful from an attestation perspective that the CPUID
+bits visible to userspace correspond to what the kernel used during boot,
+which wouldn't necessarily be the case if hypervisor-provided values were
+used during early boot and potentially put the kernel into some unexpected
+state that could persist beyond the point of attestation.
+
+Code-wise, thanks in large part to your suggestions, it really isn't all
+that much more complicated to hook in the CPUID table lookup in the #VC
+handlers (which are already needed anyway for SEV-ES) early on so all
+these checks are against the same trusted (or more-trusted at least)
+CPUID source.
+
+> 
+> Now, which case am I missing here which justifies the need to do those
+> acrobatics of causing #VCs just to detect the SEV MSR?
+
+There are a few more places where cpuid is utilized prior to
+sme_enable():
+
+# In boot/compressed
+paging_prepare():
+  ecx = cpuid(7, 0) # SNP-verified against host values
+  # check ecx for LA57
+
+# In boot/compressed and kernel proper
+verify_cpu():
+  eax, ebx, ecx, edx = cpuid(0, 0) # SNP-verified against host values
+  # check eax for range > 0
+  # check ebx, ecx, edx for "AuthenticAMD" or "GenuineIntel"
+
+if_amd:
+  edx = cpuid(1, 0) # SNP-verified against host values
+  # check edx feature bits against REQUIRED_MASK0 (PAE|FPU|PSE|etc.)
+
+  eax = cpuid(0x80000001, 0) # SNP-verified against host values
+  # check eax against REQUIRED_MASK1 (LM|3DNOW)
+
+  edx = cpuid(1, 0) # SNP-verified against host values
+  # check eax against SSE_MASK
+  # if not set, try to force it on via MSR_K7_HWCR if this is an AMD CPU
+  # if forcing fails, report no_longmode available
+
+if_intel:
+  # completely different stuff
+
+It's possible that various lies about the values checked for in
+REQUIRED_MASK0/REQUIRED_MASK1, LA57 enablement, etc., can be audited in
+similar fashion as you've done above to find nothing concerning, but
+what about 5 years from now? And these are all checks/configuration that
+can put the kernel in unexpected states that persist beyond the point of
+attestation, where we really need to care about the possible effects. If
+SNP CPUID validation isn't utilized until after-the-fact, we'd end up
+not utilizing it for some of the more 'interesting' CPUID bits.
+
+It's also worth noting that TDX guards against most of this through
+CPUID virtualization, where hardware/microcode provides similar
+validation for these sorts of CPUID bits in early boot. It's only because
+the SEV-SNP CPUID 'virtualization' lives in the guest code that we have to
+deal with the additional complexity of initializing the CPUID table early
+on. But if both platforms are capable of providing similar assurances then
+it seems worthwhile to pursue that.
+
+> acrobatics of causing #VCs just to detect the SEV MSR?
+
+The CPUID calls in snp_cpuid_init() weren't added specifically to induce
+the #VC-based SEV MSR read, they were added only because I thought the
+gist of your earlier suggestions were to do more validation against the
+CPUID table advertised by EFI rather than the v5 approach of deferring
+them till later after sev_status gets set by sme_enable(), and then
+failing later if turned out that SNP CPUID feature bit wasn't set by
+sme_enable(). I thought this was motivated by a desire to be more
+paranoid about what EFI provides, so once I had the cpuid checks added
+in snp_cpuid_init() it seemed like a logical step to further
+sanity-check the SNP CPUID bit using a mechanism that was completely
+independent of the CPUID table.
+
+I'm not dead set on that at all however, it was only added based on me
+[mis-]interpreting your comments as a desire to be less trusting of EFI
+as to whether this is an SNP guest or not. But I also don't think it's
+a good idea to not utilize the CPUID table until after sme_enable(),
+based on the above reasons.
+
+What if we simply add a check in sme_enable() that terminates the guest
+if the cc_blob/cpuid table is provided, but the CPUID/MSR checks in
+sme_enable() determine that this isn't an SNP guest? That would be similar
+to the v5 approach, but in a less roundabout way, and then the cpuid/MSR
+checks could be dropped from snp_cpuid_init().
+
+If we did decide that it is useful to use #VC-based initialization of
+sev_status there, it would all be self-contained there (but again, that's
+a separate thing that I don't have a strong opinion on).
+
+Thanks,
+
+Mike
+
+> 
+> Thx.
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpeople.kernel.org%2Ftglx%2Fnotes-about-netiquette&amp;data=04%7C01%7Cmichael.roth%40amd.com%7Cddb8c27d71794244176308d9926c094d%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637701815061371715%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=LUArcQqb%2F0WFlworDbZOClXhgYqEGje364fpBycixUg%3D&amp;reserved=0
