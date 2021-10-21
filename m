@@ -2,32 +2,32 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58123C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 00:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BDCC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 00:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAB861057
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 00:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B45961057
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 00:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232743AbhJUA2D (ORCPT
+        id S232897AbhJUA2d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 20 Oct 2021 20:28:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46214 "EHLO mail.kernel.org"
+        Wed, 20 Oct 2021 20:28:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232032AbhJUA0d (ORCPT
+        id S231675AbhJUA07 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 20 Oct 2021 20:26:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8129361381;
-        Thu, 21 Oct 2021 00:24:17 +0000 (UTC)
+        Wed, 20 Oct 2021 20:26:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BBC1761374;
+        Thu, 21 Oct 2021 00:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634775858;
-        bh=fyj9I3XPf2AF6zgHV9ufCSsOVwVPKoCgptUH2+OCzYQ=;
+        s=k20201202; t=1634775881;
+        bh=vckJ+27QpxEAGzTzJ96GNZUN5D4JFQ/i+rJ7uthyoX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dhqef0/Qamf6y3GXi5Rg6SvXnT+mtrsFDmkw72tNAizl8s55J98CHheUrMxfzEoAE
-         +RoUg3PjbfoHOl7DNV1toXA0UWvwMZ+Ik/M/gZxoVjJt0eu0d9ttcR0XdxMtN+yRqB
-         szxxl/T6CBy1ayCPtwUPakzXsOm3qZMdjkuHdpjud9SjH51n9GwnEjUJa092r/vvs7
-         SorwSiXB0LeaFo7BN4N0TVD3uO8T3p/ry2uEP+3sohSz73OzpZXMlKhI0gddnk+l1U
-         oAAEGsqAAzdX+1TuqHGXye43z7vrVyeXe64aNFyRDbzoA4T1wR+My8WL2mmRFF//SP
-         RpMg57NxozZWQ==
+        b=PA1ZOHm+uJMTWeblaxDbbkld0epgPEr2wj/6xZS+0LDwr4IVMpH70tUle7Kq8M3dR
+         NBiEZUbMVTxUaNaShX7B6wh/3SlIcniCnUVYuUjS6FHzLCIzAcQeLzYejy1n81LAN5
+         bDfvVMRywRtJwysj+KmW46ZvYcVQooFkWLnBssYd8Tpgs4ygV9UyhJk8vFVYsQkz8P
+         fAHNmTh3ZAxw28aPAua4PZIw0VnObB/oEfZnmE5zMsiuNFqXqs1ek2bXw7+R7AYJ9V
+         4O0YMiEURdJXEOD83/7soa5Yx20vookyLQyTnoRKVS8U5lBEtx59MZozKdy8gQjHQw
+         L4kvV6RDIYb6w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Prashant Malani <pmalani@chromium.org>,
@@ -36,12 +36,12 @@ Cc:     Prashant Malani <pmalani@chromium.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, mgross@linux.intel.com,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 5/7] platform/x86: intel_scu_ipc: Update timeout value in comment
-Date:   Wed, 20 Oct 2021 20:24:01 -0400
-Message-Id: <20211021002404.1129946-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 5/7] platform/x86: intel_scu_ipc: Update timeout value in comment
+Date:   Wed, 20 Oct 2021 20:24:24 -0400
+Message-Id: <20211021002427.1130044-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211021002404.1129946-1-sashal@kernel.org>
-References: <20211021002404.1129946-1-sashal@kernel.org>
+In-Reply-To: <20211021002427.1130044-1-sashal@kernel.org>
+References: <20211021002427.1130044-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -73,10 +73,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index e81daff65f62..238ee4275f5c 100644
+index f94b730540e2..04cabcbd8aaa 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -187,7 +187,7 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
+@@ -188,7 +188,7 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
  	return 0;
  }
  
