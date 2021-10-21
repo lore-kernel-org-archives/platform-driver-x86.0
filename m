@@ -2,151 +2,143 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B385EC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 17:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F63C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 18:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99D5F6135A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 17:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B956136F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 18:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232536AbhJURuN (ORCPT
+        id S231326AbhJUSQP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Oct 2021 13:50:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:40761 "EHLO
+        Thu, 21 Oct 2021 14:16:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60987 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232206AbhJURuM (ORCPT
+        by vger.kernel.org with ESMTP id S229914AbhJUSQO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Oct 2021 13:50:12 -0400
+        Thu, 21 Oct 2021 14:16:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634838476;
+        s=mimecast20190719; t=1634840038;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sdVy6FwDaq466AExZNtZZOl0E2m/+xf4V5tJYwOKByc=;
-        b=eugDPjAcOFmIxVsh4ad+0OdKhkR40/LvJTeI92IFk1pXjalZ2RP0xkxKAvn397qtP222t2
-        Qz76xSDgujap/RGCf22oabsaRZ8CONB3e2Tbw77TLgTeDR1C5+PoPNp7uUsAzzeLxO3VvH
-        FmU4u0Ghc36bQRFYU4zTe7ieDmPQNI8=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39-77q3u3kAMC2HlJgBZay6Fw-1; Thu, 21 Oct 2021 13:47:54 -0400
-X-MC-Unique: 77q3u3kAMC2HlJgBZay6Fw-1
-Received: by mail-wr1-f69.google.com with SMTP id x1-20020adfffc1000000b001679fc9c018so128902wrs.18
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Oct 2021 10:47:54 -0700 (PDT)
+        bh=WOu0qllB+fT0oBa4IrNEKrfZQ1X1Q8v2WF3KPhNThx8=;
+        b=BtcbY77mS+cv9RtwGVix/h2TGAM1X4fb1Bpxs6HVIXKrmtZOCafUAV4+cSN9sCcY5G8aEH
+        VAVqEWte5dlp76SURRV1eb/ZbF8u17dyNQ8Ctph/xlT3lKvx62agZSKK96YFZSjfaphswR
+        WisQnmiI5+hzs6X6c1N/0Tosnug8qeg=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-380-0OTq0ZUZPF6Lre-MIBpMbg-1; Thu, 21 Oct 2021 14:13:57 -0400
+X-MC-Unique: 0OTq0ZUZPF6Lre-MIBpMbg-1
+Received: by mail-ed1-f71.google.com with SMTP id r25-20020a05640216d900b003dca3501ab4so1185720edx.15
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Oct 2021 11:13:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sdVy6FwDaq466AExZNtZZOl0E2m/+xf4V5tJYwOKByc=;
-        b=Yutrj9NPPvdqOcuK1NaG1V57Tk9Nn/0odD60GfKR0p1fvo/t5HtfhXXBQtUg3zhsDe
-         CMzzzEABxF1Ysv5YYE1YtwjVlDoiRrYU8+gwaXRvpIKYKWoFFUSrwchqXbhO7H6f0M7h
-         +mh5yDkYZOg+4CzaLlzY46obgXz4tLRspZEQVf9umJBOtmmhJqARS4NWPvJvaYgc1KLx
-         ieItH6q8vbNSsozyP4FZ1yWTyu7c0ghVgkOfQJfwk/3A/K6Xo6Rczx9TBJUoXCqJNpN7
-         ts+QJ/W1xcyoh8NrsQXc80cBy6fn5qmlAnKx4124i10dj6YPkfWiwsKqrtFtvAIFVOeG
-         9idw==
-X-Gm-Message-State: AOAM533u7EkXfDt6zd2TIkCexm3z9BqHInQJilW2c+MnFJJCT5bfExp/
-        eKDcL2zCKzCBl9TDbIHt6oCFLFqf6eEgLqxOzKl4fDR5nYZeOd8drvMKkOqjFZ3gZ1Zb6ElWzmT
-        2UHX5viCPMeiuI8By4yTBrFRTSsykeVT0ww==
-X-Received: by 2002:a7b:cbd1:: with SMTP id n17mr23050398wmi.113.1634838473754;
-        Thu, 21 Oct 2021 10:47:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyrJOA3K2+jcEdUJkI5yUOvDRbh0LHvWJK/dSXnO5HgNUEG6KoK85UuOyllpMd1Zyh5XoN7lA==
-X-Received: by 2002:a7b:cbd1:: with SMTP id n17mr23050368wmi.113.1634838473557;
-        Thu, 21 Oct 2021 10:47:53 -0700 (PDT)
-Received: from work-vm (cpc109025-salf6-2-0-cust480.10-2.cable.virginm.net. [82.30.61.225])
-        by smtp.gmail.com with ESMTPSA id l40sm6144308wms.31.2021.10.21.10.47.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 10:47:52 -0700 (PDT)
-Date:   Thu, 21 Oct 2021 18:47:50 +0100
-From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Michael Roth <michael.roth@amd.com>,
-        Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v6 08/42] x86/sev-es: initialize sev_status/features
- within #VC handler
-Message-ID: <YXGnxs0hV3IKGDwP@work-vm>
-References: <20211008180453.462291-9-brijesh.singh@amd.com>
- <YW2EsxcqBucuyoal@zn.tnic>
- <20211018184003.3ob2uxcpd2rpee3s@amd.com>
- <YW3IdfMs61191qnU@zn.tnic>
- <20211020161023.hzbj53ehmzjrt4xd@amd.com>
- <YXF9sCbPDsLwlm42@zn.tnic>
- <YXGNmeR/C33HvaBi@work-vm>
- <YXGbcqN2IRh9YJk9@zn.tnic>
- <YXGflXdrAXH5fE5H@work-vm>
- <YXGlPf5OTPzp09qr@zn.tnic>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=WOu0qllB+fT0oBa4IrNEKrfZQ1X1Q8v2WF3KPhNThx8=;
+        b=iJkInTTyd/5bolVa9ENc036BWfn8WPm0pB9TKbpBPmHjTg8rJYagqUQtrimQUpSLnh
+         seMJj8jt2QW1UNpICsBTQ2KeMHvriUEu3DTM7lUT1xgnjW+h66Q+ELliUiHRmfCYTHgD
+         6QGDG2PP5sBa+sq2gdpO2N4oINTHN9/aLRHjq1sSaXdhv4dAFmZc+Q1E4PGOL34tPnQ3
+         v/jv5SGtBQI2pxCLmwV/c3K0+UUM4G2KkJBtI0BZIVV1RIKvqSYcsdSPXjxnyndKcaKL
+         +CFZounvpljcgFJRFwTjRBYypc4QswvjpkD696/XDGMIcOn+7ftgtCiCDM5pSQiqpQNM
+         lOAg==
+X-Gm-Message-State: AOAM531Cy2B2c8g9nvyAl0ttDF1g+vhrFv47JRHJr8oLMr0Q4IPkVMyr
+        iLtPkRetaRtOgbONjIxU+oe0VU7/iSHZunO08gRE2iXNEpn2xcR0l05yaOaSaGYCzo9pPD7t53W
+        4OPpsLHwmrUGhLnpTE1FiL9NiEWrYctPCUw==
+X-Received: by 2002:a17:906:e2d3:: with SMTP id gr19mr9176817ejb.483.1634840035266;
+        Thu, 21 Oct 2021 11:13:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy45L3FkNaUfcjbI4+CI+1aSK08Ti3Ou0ZGap5HLaQS24yMl1BxHP9AY009LUx76tzsP9B80g==
+X-Received: by 2002:a17:906:e2d3:: with SMTP id gr19mr9176798ejb.483.1634840035033;
+        Thu, 21 Oct 2021 11:13:55 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id jg13sm1068297ejc.26.2021.10.21.11.13.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Oct 2021 11:13:54 -0700 (PDT)
+Message-ID: <6ce5e23d-1832-44c3-4330-7a05dbcd28b1@redhat.com>
+Date:   Thu, 21 Oct 2021 20:13:53 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YXGlPf5OTPzp09qr@zn.tnic>
-User-Agent: Mutt/2.0.7 (2021-05-04)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH 1/2] platform/x86: amd-pmc: adjust arguments for
+ `amd_pmc_send_cmd`
+Content-Language: en-US
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>
+References: <20211020162946.10537-1-mario.limonciello@amd.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211020162946.10537-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-* Borislav Petkov (bp@alien8.de) wrote:
-> On Thu, Oct 21, 2021 at 06:12:53PM +0100, Dr. David Alan Gilbert wrote:
-> > OK, so that bit is 8...21 Eax ext2eax bit 6 page 1-109
-> > 
-> > then 2.1.5.3 CPUID policy enforcement shows 8...21 EAX as
-> > 'bitmask'
-> > 'bits set in the GuestVal must also be set in HostVal.
-> > This is often applied to feature fields where each bit indicates
-> > support for a feature'
-> > 
-> > So that's right isn't it?
-> 
-> Yap, AFAIRC, it would fail the check if:
-> 
-> (GuestVal & HostVal) != GuestVal
-> 
-> and GuestVal is "the CPUID result value created by the hypervisor that
-> it wants to give to the guest". Let's say it clears bit 6 there.
-                                               ^^^^^^^
+Hi,
 
-> Then HostVal comes in which is "the actual CPUID result value specified
-> in this PPR" and there the guest catches the HV lying its *ss off.
+On 10/20/21 18:29, Mario Limonciello wrote:
+> Currently the "argument" for the "message" is listed as a boolean
+> value.  This works well for the commands used currently, but an
+> additional upcoming command will pass more data in the message.
 > 
-> :-)
-
-Hang on, I think it's perfectly fine for it to clear that bit - it just
-gets caught if it *sets* it (i.e. claims to be a chip unaffected by the
-bug).
-
-i.e. if guestval=0 then (GustVal & whatever) == GuestVal
-  fine
-
-?
-
-Dave
-
+> Expand it to be a full 32 bit value.
 > 
-> -- 
-> Regards/Gruss,
->     Boris.
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+> ---
+>  drivers/platform/x86/amd-pmc.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> https://people.kernel.org/tglx/notes-about-netiquette
+> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+> index b7b6ad4629a7..99ac50616bc3 100644
+> --- a/drivers/platform/x86/amd-pmc.c
+> +++ b/drivers/platform/x86/amd-pmc.c
+> @@ -126,7 +126,7 @@ struct amd_pmc_dev {
+>  };
+>  
+>  static struct amd_pmc_dev pmc;
+> -static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set, u32 *data, u8 msg, bool ret);
+> +static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
+>  
+>  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
+>  {
+> @@ -337,7 +337,7 @@ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
+>  	dev_dbg(dev->dev, "AMD_PMC_REGISTER_MESSAGE:%x\n", value);
+>  }
+>  
+> -static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set, u32 *data, u8 msg, bool ret)
+> +static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret)
+>  {
+>  	int rc;
+>  	u32 val;
+> @@ -356,7 +356,7 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set, u32 *data, u8 msg
+>  	amd_pmc_reg_write(dev, AMD_PMC_REGISTER_RESPONSE, 0);
+>  
+>  	/* Write argument into response register */
+> -	amd_pmc_reg_write(dev, AMD_PMC_REGISTER_ARGUMENT, set);
+> +	amd_pmc_reg_write(dev, AMD_PMC_REGISTER_ARGUMENT, arg);
+>  
+>  	/* Write message ID to message ID register */
+>  	amd_pmc_reg_write(dev, AMD_PMC_REGISTER_MESSAGE, msg);
 > 
--- 
-Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
 
