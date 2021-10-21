@@ -2,74 +2,74 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF27C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 18:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADE6C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 18:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2289F61AAD
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 18:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1155F60D07
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 18:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231509AbhJUSUy (ORCPT
+        id S231635AbhJUSfq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Oct 2021 14:20:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21790 "EHLO
+        Thu, 21 Oct 2021 14:35:46 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41390 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230184AbhJUSUx (ORCPT
+        by vger.kernel.org with ESMTP id S231502AbhJUSfq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Oct 2021 14:20:53 -0400
+        Thu, 21 Oct 2021 14:35:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634840317;
+        s=mimecast20190719; t=1634841209;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4RpUn6cYgu8cISKY/uglyQh/unX6c+SSLOJqKnpLMP4=;
-        b=XWKQ0FVwHyNYjUXuvMO2oyP/xmL5R+6ykW+UsPfi2xF4ibT/n8RqP5UdVuKYQ/844dvBZR
-        MrnpDkjMKGvmqiUsUb58I7usTK/SNB56rXgj9vSGaUFKU5H2kdxxCLsjYGwiymKwtdr/nb
-        XqlrCKBHkO4rstrb8p7KKG4p++mCQq4=
+        bh=fJv7bUttzHzeUKPod/KfL06tCpY98UdeXt9wFfAbFRI=;
+        b=AiIJgey66ZKFTeC7rA+VnkYkEEYYKecIpPKS5L2h5JHyvkC2wxtmh46j9nGyDkWjDX7v58
+        TRqbtU7N2Klcchz6CjamZz9sp8q8RUWhPK9hzFvepLO8gJOIS6oNF5X83JKl1iGYgcLfJn
+        t1O1ELd4eIlxQLOvcXriHLe9H1ZAuc0=
 Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
  [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-441-DvsFtyqBMPWu-vbpmqK3CQ-1; Thu, 21 Oct 2021 14:18:36 -0400
-X-MC-Unique: DvsFtyqBMPWu-vbpmqK3CQ-1
-Received: by mail-ed1-f70.google.com with SMTP id g28-20020a50d0dc000000b003dae69dfe3aso1232833edf.7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Oct 2021 11:18:35 -0700 (PDT)
+ us-mta-441-JGMy13JJNqO-0jwHxdeCTA-1; Thu, 21 Oct 2021 14:33:28 -0400
+X-MC-Unique: JGMy13JJNqO-0jwHxdeCTA-1
+Received: by mail-ed1-f70.google.com with SMTP id u10-20020a50d94a000000b003dc51565894so1215561edj.21
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Oct 2021 11:33:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=4RpUn6cYgu8cISKY/uglyQh/unX6c+SSLOJqKnpLMP4=;
-        b=SjkdX47JLRmJnPdtJpSkUEalY42WRtV39RBoK/WdCRcRLrbeNODGhbT4pMf0WRr+90
-         9V7DpPDBdTZs97YkSDOxuBWCkkLGNxwjxAzAq6yM8EudUmVxD8cZgZQPhQC5U1Lonono
-         qMNOs9BkPHW6FGFkvkkkk8RFtxgXfvm1VWOoqu6BUgrgXkptx2tlI+sPGkpig4jF5Tiw
-         iaPju5/o/Px/O/MZxVc+Ig521rxD/m4xTIx9TCOpb678Ns2J0o5K/RzhXd9yNrJ8gK0U
-         8DHqRtqBl8EmJy2lg5mUGu4VkULqaDNeK4YVMBfB99GWPjbENfZDlprCiJy4BQu/LDKp
-         3+UQ==
-X-Gm-Message-State: AOAM530ig9Qyu1aYeaW1ErSGdHZSLdnBAU9BcAHLTnooqhVDxaH98P+5
-        irzl/0d3uScTnSWC7l1aVuO/5xmPtBR8/1R77ct0hxpQb0PYZJpQGMbEY9R0S6NvufxZiLMHTpo
-        pdiKK2pNdGwBRWB3cOr5Xc7w1/hrDcoQFog==
-X-Received: by 2002:a17:906:6a2a:: with SMTP id qw42mr9041048ejc.313.1634840314878;
-        Thu, 21 Oct 2021 11:18:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxq3JaVpgudA3LEa/AETJnANbrKR4WRMFwyz5bCVzBY6kDX3Ttts2W1A1g/UriPqlAIU1iSGg==
-X-Received: by 2002:a17:906:6a2a:: with SMTP id qw42mr9041033ejc.313.1634840314732;
-        Thu, 21 Oct 2021 11:18:34 -0700 (PDT)
+        bh=fJv7bUttzHzeUKPod/KfL06tCpY98UdeXt9wFfAbFRI=;
+        b=F4hagSlr9gFmDMoQs/lcRovMv/FM+g4AytkK49lwpvrIjPSD0C/pJ6xCtD82x+NUgE
+         m8ttcuL7TczJB12g5xZ/j5LhNRpzs47aGj4E2lpXwam70S5/+Kv9NHsBaXm+wBwgF3mt
+         etSNJiBJj5mnMM4AWXlSq6hacuQdBx8jkOwPM/JriGV2Hl1a6Lj+RuAGMo7I770xjzH0
+         m2jpsr7311RNlNl7nfZNvp6KVe86R0oaAcRUtXZZjHqBesNVOIzfceGk3dAWa+FxCnDK
+         9PyyhW3Oh3VKqqY968UBasq4QaIpjXdt5VAu0sSUvCsZ5bZaOjQQuYOl8bQBj4AH1lNS
+         FzZQ==
+X-Gm-Message-State: AOAM533Gb+88KbclgN3wm0kMrNUQkSAUJtyUVQT48T9NQCkAg+EpmxeF
+        Smkt/NJsWp8dsRqUAE19WLfuB44hGi4S7F2TyeQIv/762jFVzGeqCKAv91vPU6gSs7hjpeEfiTf
+        O4/1h0pCxoO50I9p6TlxGw/JrG9iEJi4r7Q==
+X-Received: by 2002:a50:9b06:: with SMTP id o6mr10029318edi.284.1634841207331;
+        Thu, 21 Oct 2021 11:33:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwpP27IAl5diPSXUSRyhAfup3C5V1r5HFXZJeAuZaSNfUHqMNSsodhp5yV84qCICK121UKCwQ==
+X-Received: by 2002:a50:9b06:: with SMTP id o6mr10029296edi.284.1634841207182;
+        Thu, 21 Oct 2021 11:33:27 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id n24sm3307748edb.28.2021.10.21.11.18.33
+        by smtp.gmail.com with ESMTPSA id n6sm3137103eds.10.2021.10.21.11.33.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Oct 2021 11:18:34 -0700 (PDT)
-Message-ID: <f903b9d5-0477-1618-6596-b6039b56a5af@redhat.com>
-Date:   Thu, 21 Oct 2021 20:18:33 +0200
+        Thu, 21 Oct 2021 11:33:26 -0700 (PDT)
+Message-ID: <db6b4b82-01e6-d211-e8e9-5e3db6943bd7@redhat.com>
+Date:   Thu, 21 Oct 2021 20:33:26 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH v2 1/2] platform/x86: amd-pmc: Store the pci_dev instance
- inside struct amd_pmc_dev
+Subject: Re: [PATCH] platform/surface: gpe: Add support for Surface Laptop
+ Studio
 Content-Language: en-US
-To:     Sanket Goswami <Sanket.Goswami@amd.com>, Shyam-sundar.S-k@amd.com,
-        mgross@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20211021092938.196933-1-Sanket.Goswami@amd.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20211021111053.564133-1-luzmaximilian@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211021092938.196933-1-Sanket.Goswami@amd.com>
+In-Reply-To: <20211021111053.564133-1-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -78,89 +78,62 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 10/21/21 11:29, Sanket Goswami wrote:
-> Store the root port information in amd_pmc_probe() so that the
-> information can be used across multiple routines.
+On 10/21/21 13:10, Maximilian Luz wrote:
+> The new Surface Laptop Studio uses GPEs for lid events as well. Add an
+> entry for that so that the lid can be used to wake the device.
 > 
-> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> ---
-> Changes in v2:
-> - Store the rdev info in amd_pmc_probe() as suggested by Hans.
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-Thank you, but there are still some issues, see below.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
->  drivers/platform/x86/amd-pmc.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-> index 55f14bdfdbfd..502f37eaba1f 100644
-> --- a/drivers/platform/x86/amd-pmc.c
-> +++ b/drivers/platform/x86/amd-pmc.c
-> @@ -119,6 +119,7 @@ struct amd_pmc_dev {
->  	u16 minor;
->  	u16 rev;
->  	struct device *dev;
-> +	struct pci_dev *rdev;
->  	struct mutex lock; /* generic mutex lock */
->  #if IS_ENABLED(CONFIG_DEBUG_FS)
->  	struct dentry *dbgfs_dir;
-> @@ -482,6 +483,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> +	dev->rdev = rdev;
->  	dev->cpu_id = rdev->device;
->  	err = pci_write_config_dword(rdev, AMD_PMC_SMU_INDEX_ADDRESS, AMD_PMC_BASE_ADDR_LO);
->  	if (err) {
-> @@ -512,7 +514,6 @@ static int amd_pmc_probe(struct platform_device *pdev)
->  	}
->  
->  	base_addr_hi = val & AMD_PMC_BASE_ADDR_LO_MASK;
-> -	pci_dev_put(dev->rdev);
-
-The current code here actually reads:
-
-	pci_dev_put(rdev);
-
-Note (rdev) not (dev->rdev). I don't know what you based this on, this is weird.
-
-Also there are a bunch of error-exits from amd_pmc_probe() which not all
-need a "pci_dev_put(rdev)" added to them before there "return ERROR;"
-statement.
-
-It would be best to add:
-
-err_pci_dev_put:
-	pci_dev_put(rdev);
-	return err;
-
-Add the end off the function (after the return 0;) and replace all
-"return FOO" error-exits with:
-
-		err = <FOO>;
-		goto err_pci_dev_put;
-	}
-
-
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
-
-
-
->  	base_addr = ((u64)base_addr_hi << 32 | base_addr_lo);
+> ---
+>  drivers/platform/surface/surface_gpe.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/platform/surface/surface_gpe.c b/drivers/platform/surface/surface_gpe.c
+> index 86f6991b1215..c1775db29efb 100644
+> --- a/drivers/platform/surface/surface_gpe.c
+> +++ b/drivers/platform/surface/surface_gpe.c
+> @@ -26,6 +26,11 @@ static const struct property_entry lid_device_props_l17[] = {
+>  	{},
+>  };
 >  
->  	dev->regbase = devm_ioremap(dev->dev, base_addr + AMD_PMC_BASE_ADDR_OFFSET,
-> @@ -546,6 +547,7 @@ static int amd_pmc_remove(struct platform_device *pdev)
->  	struct amd_pmc_dev *dev = platform_get_drvdata(pdev);
+> +static const struct property_entry lid_device_props_l4B[] = {
+> +	PROPERTY_ENTRY_U32("gpe", 0x4B),
+> +	{},
+> +};
+> +
+>  static const struct property_entry lid_device_props_l4D[] = {
+>  	PROPERTY_ENTRY_U32("gpe", 0x4D),
+>  	{},
+> @@ -158,6 +163,14 @@ static const struct dmi_system_id dmi_lid_device_table[] = {
+>  		},
+>  		.driver_data = (void *)lid_device_props_l4D,
+>  	},
+> +	{
+> +		.ident = "Surface Laptop Studio",
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Laptop Studio"),
+> +		},
+> +		.driver_data = (void *)lid_device_props_l4B,
+> +	},
+>  	{ }
+>  };
 >  
->  	amd_pmc_dbgfs_unregister(dev);
-> +	pci_dev_put(dev->rdev);
->  	mutex_destroy(&dev->lock);
->  	return 0;
->  }
 > 
 
