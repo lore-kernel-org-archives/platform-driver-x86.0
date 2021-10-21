@@ -2,158 +2,145 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B902C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 17:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19324C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 17:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 698F160FD8
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 17:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED42F614C8
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Oct 2021 17:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231891AbhJURPQ (ORCPT
+        id S230437AbhJUR2E (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Oct 2021 13:15:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:20710 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230243AbhJURPQ (ORCPT
+        Thu, 21 Oct 2021 13:28:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230453AbhJUR2D (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Oct 2021 13:15:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634836379;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XK8lsFGIy7ux6qnbNN7kYySECN4eAp1hXXWqZfwXvfI=;
-        b=XOZwm+cAhEm6MExP9mohWBEYmnN/6OBUcEo2xe3y3AQiHma8gxnw0taNxDZZAyI/aw61/A
-        VXaM61iTm4IuIBemzd0CxeC4KSzXmERfkbpft5dsfpewapJQP44vywuUax6BPtJn9pw6B1
-        2ud0MmiPfBS5bYfsej5n8sRJklAxJts=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-497-9GqN1f3ZN1ib6tpnk1O1MA-1; Thu, 21 Oct 2021 13:12:58 -0400
-X-MC-Unique: 9GqN1f3ZN1ib6tpnk1O1MA-1
-Received: by mail-wm1-f70.google.com with SMTP id n189-20020a1c27c6000000b00322f2e380f2so129108wmn.6
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Oct 2021 10:12:58 -0700 (PDT)
+        Thu, 21 Oct 2021 13:28:03 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F19C0613B9
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Oct 2021 10:25:47 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id g10so3778389edj.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Oct 2021 10:25:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=w05r+bU0/r3pBtg2tVZUWeliTpqb3/TxA0p+/lW0rlA=;
+        b=YCI/8PAGvvUjuQqixeks7N9aDHNLPdDOgX3isGNR0PgiMm6KgMmeijsc6L7C79f0a6
+         FbDGErpeZs3nFHLuyf/ZJYNM2ZR59KM+iyfYqWLfBbUnLGZDgRtVHw6yHuQtFk0+HhPM
+         G9hxMh5ctJ1csRi+7MxHgTUa2+F+My/BqsbuXA1GwsU9kL0J+muA6yk6jEtB/SLt/WKE
+         R4vLYbROYYRUlnEsobZys4TrsYBIi93uHPHEnl8UosnNKb7RGNZDyLJjbRatH6SIifP5
+         NSjockoq4iPl9VGlMgYMAg0mMfxwuAmFOanihy2cWE+sqAeMm7ivB/EfG9djcUmDI1dC
+         cQDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XK8lsFGIy7ux6qnbNN7kYySECN4eAp1hXXWqZfwXvfI=;
-        b=XSvTkrsFqpebcs/scgRxFmXZVVyX9AIQ9yojL5Cr/C7DLOGM1fYRfanzC/9t5zf2+a
-         4A9e6Bx8uhtcwn85ZZiFLIc1JrPZk1Hm6A+YMNqqwAAmqgqruuxjafS7SWVPDUC5ZgHE
-         ox2E9J5YKJzgfWaSdplhfbXZUnoNbF5MiFiIVCRkoiAMCxE/MxRmqPZzPKy1MEmWMjI0
-         KF3rtymtBSUwXWtghm+OKo0O15prHHtpBiAOXH6yPcy7ptPjphCmwQn6HgoHYJJ3BPLo
-         luwU5huaUhPF+Lc1R30BhRQXXzyNaN25wDoCz6G3qC8sPE+VbVbzpDmugtPPAdYY0Fbx
-         sWxw==
-X-Gm-Message-State: AOAM530bakFVT48rTrLUNSMWkOQ/yAYlUkEIHS2J2gcA+14asCypfB5b
-        MiEJUOGLwTMgAtX7WhdxbTK3nV0mijaHU5QLrSe8Fjg8ao4b5CB+AH72XXkntdWy+xFDiy2WwbP
-        g5ZmnJvxVIOcePUE19rb+GEhiBclzvPI4/A==
-X-Received: by 2002:adf:d84d:: with SMTP id k13mr9086379wrl.276.1634836377357;
-        Thu, 21 Oct 2021 10:12:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyIz2xc4dlFybQ+Itlm8MuVX7/TKhmdXDokBG8vkqS60XCLS5Pa1uXT6kLyhVWWxhAy7jGivg==
-X-Received: by 2002:adf:d84d:: with SMTP id k13mr9086349wrl.276.1634836377142;
-        Thu, 21 Oct 2021 10:12:57 -0700 (PDT)
-Received: from work-vm (cpc109025-salf6-2-0-cust480.10-2.cable.virginm.net. [82.30.61.225])
-        by smtp.gmail.com with ESMTPSA id d1sm5657617wrr.72.2021.10.21.10.12.55
+         :mime-version:content-disposition:in-reply-to;
+        bh=w05r+bU0/r3pBtg2tVZUWeliTpqb3/TxA0p+/lW0rlA=;
+        b=uaXoSjHkvp0VFiY7kaV/nPT0TGAk4xVlbMfGtmvHPXbLIM5eKb3oxpJsH5R3h7vi+6
+         UKFDGziVEoQv6QxQ36AFyNygOPs3XjSImrlL+qqyICWghMSMT/ueS6vGoq/9/KdCh70S
+         ru5WioDI7BnpLw8oobLjx5JcNTo0LHW6dN5naa/u0zgNtvvAXx6pvpdRfTC4HkpObEDd
+         tSVmwUGMDMgpb7jK7YEI0LIPo1UfaU4MiBxYCfnMJVc/vjdsXDUvq8eNT1M8LTbSwW3J
+         Fv9YZapAh/vKCsWIIhTHEcek25MzMalEzmmjjz4TKxQ/vut/Bb9DZp3qHXtLjVjnXZRd
+         g7Cg==
+X-Gm-Message-State: AOAM532qYYI/G/tjN/Hsay0TwswVHJJyCs3sM4KzlD27y12icXUwBxJd
+        fmRyEudMVnOgQdgGPHuWq1E=
+X-Google-Smtp-Source: ABdhPJynvMZHKLWiB2yJYg4i2pSoweew7kcu0aqBgaLpyVfZeQm/Nfa6lUE9bE6ZiB5P42K0h4dYFg==
+X-Received: by 2002:a05:6402:1296:: with SMTP id w22mr9424897edv.390.1634837144301;
+        Thu, 21 Oct 2021 10:25:44 -0700 (PDT)
+Received: from mikalai-laptop ([37.214.53.62])
+        by smtp.gmail.com with ESMTPSA id q11sm3195645edv.80.2021.10.21.10.25.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 10:12:56 -0700 (PDT)
-Date:   Thu, 21 Oct 2021 18:12:53 +0100
-From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Michael Roth <michael.roth@amd.com>,
-        Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v6 08/42] x86/sev-es: initialize sev_status/features
- within #VC handler
-Message-ID: <YXGflXdrAXH5fE5H@work-vm>
-References: <20211008180453.462291-1-brijesh.singh@amd.com>
- <20211008180453.462291-9-brijesh.singh@amd.com>
- <YW2EsxcqBucuyoal@zn.tnic>
- <20211018184003.3ob2uxcpd2rpee3s@amd.com>
- <YW3IdfMs61191qnU@zn.tnic>
- <20211020161023.hzbj53ehmzjrt4xd@amd.com>
- <YXF9sCbPDsLwlm42@zn.tnic>
- <YXGNmeR/C33HvaBi@work-vm>
- <YXGbcqN2IRh9YJk9@zn.tnic>
+        Thu, 21 Oct 2021 10:25:43 -0700 (PDT)
+Date:   Thu, 21 Oct 2021 20:25:41 +0300
+From:   Mikalai Ramanovich <nikolay.romanovich.00@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Mikalai Ramanovich <nikolay.romanovich.00@gmail.com>
+Subject: Re: [PATCH] platform/x86: wmi: change notification handler type
+Message-ID: <YXGild+Pr90PMBe2@mikalai-laptop>
+References: <20211015191322.73388-1-nikolay.romanovich.00@gmail.com>
+ <2deb56e0-24a6-6615-d95e-e0efb7f86db2@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YXGbcqN2IRh9YJk9@zn.tnic>
-User-Agent: Mutt/2.0.7 (2021-05-04)
+In-Reply-To: <2deb56e0-24a6-6615-d95e-e0efb7f86db2@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-* Borislav Petkov (bp@alien8.de) wrote:
-> On Thu, Oct 21, 2021 at 04:56:09PM +0100, Dr. David Alan Gilbert wrote:
-> > I can imagine a malicious hypervisor trying to return different cpuid
-> > answers to different threads or even the same thread at different times.
+Hi, 
+thank you for your reply.
+
+On Tue, Oct 19, 2021 at 05:11:51PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> Haha, I guess that will fail not because of SEV* but because of the
-> kernel not really being able to handle heterogeneous CPUIDs.
-
-My worry is if it fails cleanly or fails in a way an evil hypervisor can
-exploit.
-
-> > Well, the spec (AMD 56860 SEV spec) says:
+> On 10/15/21 21:13, Mikalai Ramanovich wrote:
+> > Since AML code on some Xiaomi laptops notifies the WMI hotkey with
+> > 0x20 event, we need ACPI_ALL_NOTIFY here to be able to handle it.
 > > 
-> >   'If firmware encounters a CPUID function that is in the standard or extended ranges, then the
-> > firmware performs a check to ensure that the provided output would not lead to an insecure guest
-> > state'
-> > 
-> > so I take that 'firmware' to be the PSP; that wording doesn't say that
-> > it checks that the CPUID is identical, just that it 'would not lead to
-> > an insecure guest' - so a hypervisor could hide any 'no longer affected
-> > by' flag for all the CPUs in it's migration pool and the firmware
-> > shouldn't complain; so it should be OK to pessimise.
+> > Signed-off-by: Mikalai Ramanovich <nikolay.romanovich.00@gmail.com>
 > 
-> AFAIU this, I think this would depend on "[t]he policy used by the
-> firmware to assess CPUID function output can be found in [PPR]."
+> Hmm, this is a rather unusual change and I'm worried that it may have
+> some bad side-effects.
+
+I think it can't lead to bad side effects: this driver ignores events 
+which are not described in the _WDG section (doesn't have GUID assiciated).
+
+But if it's described it should be handled by this driver even if it
+is less than 0x80. But this driver handles only 0x80-0xFF events.
+
+> Can you provide the model-number and an acpidump for the laptop where
+> you need this ? And maybe also point out which bit (which lines after
+> disassembling) of the DSDT needs this ?
+
+It's Xiaomi Mi Notebook Pro 14 2021. (TIMI A34 by DMI).
+
+Here is a dump of interesting files: 
+https://gist.github.com/MikalaiR/eee783cc0b1efdbe2aab158653e84935
+(sorry for the link, i don't know it's good to attach files here or not).
+
+The most interesting part is ssdt8.dsl file which contains only one
+WMI device. Method \_SB.PC00.LPCB.EC0.XWEV (in ssdt10.dsl, line 2495) 
+generates events for this device.
+
+And this is a part of decompiled BMOF from this device:
+
+[WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), 
+ Description("Root/WMI/HID_EVENT20"), 
+ guid("{46c93e13-ee9b-4262-8488-563bca757fef}")]
+class HID_EVENT20 : WmiEvent {
+  [key, read] string InstanceName;
+  [read] boolean Active;
+  [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
+};
+
+ACPI event 0x20 associated with GUID 46c93e13-ee9b-4262-8488-563bca757fef.
+
+> ATM I'm thinking that it might be best to do something like this:
 > 
-> So if the HV sets the "no longer affected by" flag but the firmware
-> deems this set flag as insecure, I'm assuming the firmare will clear
-> it when it returns the CPUID leafs. I guess I need to go find that
-> policy...
-
-<digs - ppr_B1_pub_1 55898 rev 0.50 >
-
-OK, so that bit is 8...21 Eax ext2eax bit 6 page 1-109
-
-then 2.1.5.3 CPUID policy enforcement shows 8...21 EAX as
-'bitmask'
-'bits set in the GuestVal must also be set in HostVal.
-This is often applied to feature fields where each bit indicates
-support for a feature'
-
-So that's right isn't it?
-
-Dave
-
-> -- 
-> Regards/Gruss,
->     Boris.
+> static u32 acpi_wmi_get_handler_type(void)
+> {
+> 	if (dmi_name_in_vendors("XIAOMI"))
+> 		return ACPI_ALL_NOTIFY;
+> 	else
+> 		return ACPI_DEVICE_NOTIFY;
+> }
 > 
-> https://people.kernel.org/tglx/notes-about-netiquette
+> 	status = acpi_install_notify_handler(acpi_device->handle,
+> 					     acpi_wmi_get_handler_type(),
+> 					     acpi_wmi_notify_handler,
+> 					     NULL);
 > 
--- 
-Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
+> (and the same for the remove)
+> 
+> So that we limit this behavior to the Xiaomi case.
 
+In general i don't think it's a good idea, but if it's the only 
+acceptable solution, why not.
+
+
+Regards, 
+
+Mikalai
