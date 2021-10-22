@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0A1C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 09:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2A3C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 09:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 937EC61163
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 09:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832F460C51
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 09:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232559AbhJVJSQ (ORCPT
+        id S232161AbhJVJUO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Oct 2021 05:18:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26160 "EHLO
+        Fri, 22 Oct 2021 05:20:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35562 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232575AbhJVJSP (ORCPT
+        by vger.kernel.org with ESMTP id S232213AbhJVJUK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Oct 2021 05:18:15 -0400
+        Fri, 22 Oct 2021 05:20:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634894158;
+        s=mimecast20190719; t=1634894273;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UQGDJah/KreCof6wR/rgfBuc6vkWJYHgPEBv9eX/JPc=;
-        b=d1kwAftVlLQUzoNasjzT4JCiDV7LTR2SpM2RPIxBpSu+jMXYEjVUR6n1kkRwL3qiDOYFMW
-        RC0iRW5vyfDYcjlIkr0y3lfwF242ulfpo5ASvqDatwhOIyFtFUO41loeAVTooYAU/InMNW
-        bGi47YA8iS+i27R3UhJAYwzS/CANcwo=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-p6l9VtpnObuuAoHdA9pZQQ-1; Fri, 22 Oct 2021 05:15:56 -0400
-X-MC-Unique: p6l9VtpnObuuAoHdA9pZQQ-1
-Received: by mail-ed1-f72.google.com with SMTP id h19-20020aa7de13000000b003db6ad5245bso3104370edv.9
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Oct 2021 02:15:56 -0700 (PDT)
+        bh=lboD0bBPHVoGPW1F/xWMh4ehE1WNGBRLzYFSTLsKba8=;
+        b=Ew/bhXqBxOCS8+NOODiVEb3TA6izVD1exSK8TNSnMTyPrF9JMpar2qt3khglmaKUIHi7PU
+        69SsUsAs7/aFdvMQDHAvEV3x0K3R6r0BvrOH32sFeUsntyLKyZsemk/KXTjMtrNUxZOdH6
+        3ynfZ6MCdVRWZ3B7LYrKGe2lvzEctAk=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-526-a0kSN_hqNmKdP6KSB9KOeA-1; Fri, 22 Oct 2021 05:17:52 -0400
+X-MC-Unique: a0kSN_hqNmKdP6KSB9KOeA-1
+Received: by mail-ed1-f70.google.com with SMTP id u23-20020a50a417000000b003db23c7e5e2so3098896edb.8
+        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Oct 2021 02:17:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=UQGDJah/KreCof6wR/rgfBuc6vkWJYHgPEBv9eX/JPc=;
-        b=tAhrSOrcaonrowfIbMoFrETT2OB7Wt0zqRraoPRXAl77lJWc51lzW2KV2seD/GnBeG
-         WozvaJ7990ySF40Pwn/lFabh0RoW44/mXEdBE+3MkCZB09Fh5apE81UtinIj8z5SLWPi
-         J7HRPBof8NJeYhfrk6Vf3tWJ6lBlLX61F6TmaE3Wx0N0dYP4V8gYzKrA4hPra8eAoSeH
-         sIzoUVUt9EkQZs6NFAbFpr/lK8ZBslhiZuFDea9cAvgpPHobAq9FsxIVDFvKU2mazW84
-         hAkGvh4J0byoxL6RKR1QFfDiSatwDskI/lccgia9zsxHe9nQedUZhQNjn1PYon8IApsh
-         hfSA==
-X-Gm-Message-State: AOAM533kSxBkzrrWp07BURNla55t1Z3H+IaciLaxSwQvtjxEu4nmNHBf
-        oWxCrH9XwyLfqEtaVJNa7f04f4ZPbjiaWxngR+RZu2WZN//rHvAahjnmN/no194S3+aNzsViLYY
-        ve1j8UySUoI5yQm4Lt1D1fD0ZtTEpLBktNQ==
-X-Received: by 2002:a17:906:3842:: with SMTP id w2mr14414243ejc.28.1634894154920;
-        Fri, 22 Oct 2021 02:15:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxfQltY1u0ItXDgZL8i6ARy0Vt6IVTLGAMHyDBta8ooLrUu+EKZ/xwgXevj9QBKoe2HYJE57A==
-X-Received: by 2002:a17:906:3842:: with SMTP id w2mr14414225ejc.28.1634894154746;
-        Fri, 22 Oct 2021 02:15:54 -0700 (PDT)
+        bh=lboD0bBPHVoGPW1F/xWMh4ehE1WNGBRLzYFSTLsKba8=;
+        b=6vAXF3NflVj2VDrSrFFVHZ03eHu1mjA2KsHmBzm+4D7WM7Hb5YH9Tnp1duEg6ilbCP
+         U6INb5/AXzTBxMuTTesp3BW81wszItt5+DVKz9xzTA+5h+k0fZkc8cJXisKQJ7CttPbB
+         qCC+BSqOk+aY1++22+tBhKoKHQ9a9J3OQZ6j7t+n/y6OpnDU4aASbzmViiIanMIp6civ
+         pTuTBhl72A20rdc3dBQP0esCAy20F0RZmOsfuXFtz4VCJeQBNn0X5dHpoZBeuXr5GrHe
+         ZME6/ObanoCJKt131no7NQRfOSJRDQxGXL/VJ2/3l7erxl/ERzSRGNqKnwtuYVvYEkFO
+         QXNQ==
+X-Gm-Message-State: AOAM533grE42yxpuTiKMFzaZjXMdii0PDuSFTn7u0d8Jgfz9jw7fMqeQ
+        6sJ86G79aks09sPq4wvDkMX5+AEqU47KPDC65mbIFyeY4CLt5vwRlhYD2sRCV/V9lBidLiwku4a
+        /+qQuz7lPUEcFi1onx0QcGplo9xmWzFjj6w==
+X-Received: by 2002:a17:906:fad8:: with SMTP id lu24mr14694552ejb.133.1634894270657;
+        Fri, 22 Oct 2021 02:17:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxfOkanZknF9lMVId7X2JviIg1DkDlFJb8unkBqxzks7Pg5r6SxaKqrzTXFMtjtw7fmCCDnwg==
+X-Received: by 2002:a17:906:fad8:: with SMTP id lu24mr14694528ejb.133.1634894270395;
+        Fri, 22 Oct 2021 02:17:50 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id mp5sm1775558ejc.68.2021.10.22.02.14.20
+        by smtp.gmail.com with ESMTPSA id 91sm4048713ede.56.2021.10.22.02.16.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Oct 2021 02:14:57 -0700 (PDT)
-Message-ID: <39927c6d-8c55-5667-4aa0-31d746df90cc@redhat.com>
-Date:   Fri, 22 Oct 2021 11:14:20 +0200
+        Fri, 22 Oct 2021 02:16:19 -0700 (PDT)
+Message-ID: <22e08521-fb11-4ab5-85e7-4227dd5d743a@redhat.com>
+Date:   Fri, 22 Oct 2021 11:16:10 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH] platform/x86: lg-laptop: replace snprintf in show
+Subject: Re: [PATCH] platform/x86: sony-laptop: replace snprintf in show
  functions with sysfs_emit
 Content-Language: en-US
-To:     cgel.zte@gmail.com, matan@svgalib.org
+To:     cgel.zte@gmail.com, malattia@linux.it
 Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, Ye Guojin <ye.guojin@zte.com.cn>,
         Zeal Robot <zealci@zte.com.cn>
-References: <20211022090722.1065457-1-ye.guojin@zte.com.cn>
+References: <20211022090851.1065538-1-ye.guojin@zte.com.cn>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211022090722.1065457-1-ye.guojin@zte.com.cn>
+In-Reply-To: <20211022090851.1065538-1-ye.guojin@zte.com.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,7 +79,7 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 10/22/21 11:07, cgel.zte@gmail.com wrote:
+On 10/22/21 11:08, cgel.zte@gmail.com wrote:
 > From: Ye Guojin <ye.guojin@zte.com.cn>
 > 
 > coccicheck complains about the use of snprintf() in sysfs show
@@ -109,57 +109,192 @@ Hans
 
 
 > ---
->  drivers/platform/x86/lg-laptop.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>  drivers/platform/x86/sony-laptop.c | 46 ++++++++++++------------------
+>  1 file changed, 18 insertions(+), 28 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-> index 7e9351c36389..ae9293024c77 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -330,7 +330,7 @@ static ssize_t fan_mode_show(struct device *dev,
->  	status = r->integer.value & 0x01;
->  	kfree(r);
+> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+> index 704813374922..d8d0c0bed5e9 100644
+> --- a/drivers/platform/x86/sony-laptop.c
+> +++ b/drivers/platform/x86/sony-laptop.c
+> @@ -964,7 +964,7 @@ static ssize_t sony_nc_sysfs_show(struct device *dev, struct device_attribute *a
+>  	if (item->validate)
+>  		value = item->validate(SNC_VALIDATE_OUT, value);
+>  
+> -	return snprintf(buffer, PAGE_SIZE, "%d\n", value);
+> +	return sysfs_emit(buffer, "%d\n", value);
+>  }
+>  
+>  static ssize_t sony_nc_sysfs_store(struct device *dev,
+> @@ -1811,9 +1811,7 @@ static ssize_t sony_nc_kbd_backlight_mode_store(struct device *dev,
+>  static ssize_t sony_nc_kbd_backlight_mode_show(struct device *dev,
+>  		struct device_attribute *attr, char *buffer)
+>  {
+> -	ssize_t count = 0;
+> -	count = snprintf(buffer, PAGE_SIZE, "%d\n", kbdbl_ctl->mode);
+> -	return count;
+> +	return sysfs_emit(buffer, "%d\n", kbdbl_ctl->mode);
+>  }
+>  
+>  static int __sony_nc_kbd_backlight_timeout_set(u8 value)
+> @@ -1855,9 +1853,7 @@ static ssize_t sony_nc_kbd_backlight_timeout_store(struct device *dev,
+>  static ssize_t sony_nc_kbd_backlight_timeout_show(struct device *dev,
+>  		struct device_attribute *attr, char *buffer)
+>  {
+> -	ssize_t count = 0;
+> -	count = snprintf(buffer, PAGE_SIZE, "%d\n", kbdbl_ctl->timeout);
+> -	return count;
+> +	return sysfs_emit(buffer, "%d\n", kbdbl_ctl->timeout);
+>  }
+>  
+>  static int sony_nc_kbd_backlight_setup(struct platform_device *pd,
+> @@ -2051,21 +2047,18 @@ static ssize_t sony_nc_battery_care_limit_show(struct device *dev,
+>  		break;
+>  	}
 >  
 > -	return snprintf(buffer, PAGE_SIZE, "%d\n", status);
 > +	return sysfs_emit(buffer, "%d\n", status);
 >  }
 >  
->  static ssize_t usb_charge_store(struct device *dev,
-> @@ -372,7 +372,7 @@ static ssize_t usb_charge_show(struct device *dev,
+>  static ssize_t sony_nc_battery_care_health_show(struct device *dev,
+>  		struct device_attribute *attr, char *buffer)
+>  {
+> -	ssize_t count = 0;
+>  	unsigned int health;
 >  
->  	kfree(r);
+>  	if (sony_call_snc_handle(bcare_ctl->handle, 0x0200, &health))
+>  		return -EIO;
 >  
-> -	return snprintf(buffer, PAGE_SIZE, "%d\n", status);
-> +	return sysfs_emit(buffer, "%d\n", status);
+> -	count = snprintf(buffer, PAGE_SIZE, "%d\n", health & 0xff);
+> -
+> -	return count;
+> +	return sysfs_emit(buffer, "%d\n", health & 0xff);
 >  }
 >  
->  static ssize_t reader_mode_store(struct device *dev,
-> @@ -414,7 +414,7 @@ static ssize_t reader_mode_show(struct device *dev,
+>  static int sony_nc_battery_care_setup(struct platform_device *pd,
+> @@ -2215,15 +2208,12 @@ static ssize_t sony_nc_thermal_mode_store(struct device *dev,
+>  static ssize_t sony_nc_thermal_mode_show(struct device *dev,
+>  		struct device_attribute *attr, char *buffer)
+>  {
+> -	ssize_t count = 0;
+>  	int mode = sony_nc_thermal_mode_get();
 >  
->  	kfree(r);
+>  	if (mode < 0)
+>  		return mode;
 >  
-> -	return snprintf(buffer, PAGE_SIZE, "%d\n", status);
-> +	return sysfs_emit(buffer, "%d\n", status);
+> -	count = snprintf(buffer, PAGE_SIZE, "%s\n", snc_thermal_profiles[mode]);
+> -
+> -	return count;
+> +	return sysfs_emit(buffer, "%s\n", snc_thermal_profiles[mode]);
 >  }
 >  
->  static ssize_t fn_lock_store(struct device *dev,
-> @@ -455,7 +455,7 @@ static ssize_t fn_lock_show(struct device *dev,
->  	status = !!r->buffer.pointer[0];
->  	kfree(r);
+>  static int sony_nc_thermal_setup(struct platform_device *pd)
+> @@ -2361,7 +2351,7 @@ static ssize_t sony_nc_lid_resume_show(struct device *dev,
 >  
-> -	return snprintf(buffer, PAGE_SIZE, "%d\n", status);
-> +	return sysfs_emit(buffer, "%d\n", status);
+>  	while (pos < LID_RESUME_MAX) {
+>  		if (&lid_ctl->attrs[pos].attr == &attr->attr)
+> -			return snprintf(buffer, PAGE_SIZE, "%d\n",
+> +			return sysfs_emit(buffer, "%d\n",
+>  					(lid_ctl->status >> pos) & 0x01);
+>  		pos++;
+>  	}
+> @@ -2493,7 +2483,7 @@ static ssize_t sony_nc_gfx_switch_status_show(struct device *dev,
+>  	if (pos < 0)
+>  		return pos;
+>  
+> -	return snprintf(buffer, PAGE_SIZE, "%s\n",
+> +	return sysfs_emit(buffer, "%s\n",
+>  					pos == SPEED ? "speed" :
+>  					pos == STAMINA ? "stamina" :
+>  					pos == AUTO ? "auto" : "unknown");
+> @@ -2568,7 +2558,7 @@ static ssize_t sony_nc_highspeed_charging_show(struct device *dev,
+>  	if (sony_call_snc_handle(0x0131, 0x0100, &result))
+>  		return -EIO;
+>  
+> -	return snprintf(buffer, PAGE_SIZE, "%d\n", result & 0x01);
+> +	return sysfs_emit(buffer, "%d\n", result & 0x01);
 >  }
 >  
->  static ssize_t battery_care_limit_store(struct device *dev,
-> @@ -520,7 +520,7 @@ static ssize_t battery_care_limit_show(struct device *dev,
->  	if (status != 80 && status != 100)
->  		status = 0;
+>  static int sony_nc_highspeed_charging_setup(struct platform_device *pd)
+> @@ -2642,7 +2632,7 @@ static ssize_t sony_nc_lowbatt_show(struct device *dev,
+>  	if (sony_call_snc_handle(0x0121, 0x0200, &result))
+>  		return -EIO;
 >  
-> -	return snprintf(buffer, PAGE_SIZE, "%d\n", status);
-> +	return sysfs_emit(buffer, "%d\n", status);
+> -	return snprintf(buffer, PAGE_SIZE, "%d\n", result & 1);
+> +	return sysfs_emit(buffer, "%d\n", result & 1);
 >  }
 >  
->  static DEVICE_ATTR_RW(fan_mode);
+>  static int sony_nc_lowbatt_setup(struct platform_device *pd)
+> @@ -2708,7 +2698,7 @@ static ssize_t sony_nc_hsfan_show(struct device *dev,
+>  	if (sony_call_snc_handle(0x0149, 0x0100, &result))
+>  		return -EIO;
+>  
+> -	return snprintf(buffer, PAGE_SIZE, "%d\n", result & 0x01);
+> +	return sysfs_emit(buffer, "%d\n", result & 0x01);
+>  }
+>  
+>  static ssize_t sony_nc_fanspeed_show(struct device *dev,
+> @@ -2719,7 +2709,7 @@ static ssize_t sony_nc_fanspeed_show(struct device *dev,
+>  	if (sony_call_snc_handle(0x0149, 0x0300, &result))
+>  		return -EIO;
+>  
+> -	return snprintf(buffer, PAGE_SIZE, "%d\n", result & 0xff);
+> +	return sysfs_emit(buffer, "%d\n", result & 0xff);
+>  }
+>  
+>  static int sony_nc_fanspeed_setup(struct platform_device *pd)
+> @@ -2815,7 +2805,7 @@ static ssize_t sony_nc_usb_charge_show(struct device *dev,
+>  	if (sony_call_snc_handle(0x0155, 0x0000, &result))
+>  		return -EIO;
+>  
+> -	return snprintf(buffer, PAGE_SIZE, "%d\n", result & 0x01);
+> +	return sysfs_emit(buffer, "%d\n", result & 0x01);
+>  }
+>  
+>  static int sony_nc_usb_charge_setup(struct platform_device *pd)
+> @@ -2870,7 +2860,7 @@ static ssize_t sony_nc_panelid_show(struct device *dev,
+>  	if (sony_call_snc_handle(0x011D, 0x0000, &result))
+>  		return -EIO;
+>  
+> -	return snprintf(buffer, PAGE_SIZE, "%d\n", result);
+> +	return sysfs_emit(buffer, "%d\n", result);
+>  }
+>  
+>  static int sony_nc_panelid_setup(struct platform_device *pd)
+> @@ -2998,7 +2988,7 @@ static ssize_t sony_nc_touchpad_show(struct device *dev,
+>  	if (sony_call_snc_handle(tp_ctl->handle, 0x000, &result))
+>  		return -EINVAL;
+>  
+> -	return snprintf(buffer, PAGE_SIZE, "%d\n", !(result & 0x01));
+> +	return sysfs_emit(buffer, "%d\n", !(result & 0x01));
+>  }
+>  
+>  static int sony_nc_touchpad_setup(struct platform_device *pd,
+> @@ -3915,7 +3905,7 @@ static ssize_t sony_pic_wwanpower_show(struct device *dev,
+>  {
+>  	ssize_t count;
+>  	mutex_lock(&spic_dev.lock);
+> -	count = snprintf(buffer, PAGE_SIZE, "%d\n", spic_dev.wwan_power);
+> +	count = sysfs_emit(buffer, "%d\n", spic_dev.wwan_power);
+>  	mutex_unlock(&spic_dev.lock);
+>  	return count;
+>  }
+> @@ -3954,7 +3944,7 @@ static ssize_t sony_pic_bluetoothpower_show(struct device *dev,
+>  {
+>  	ssize_t count = 0;
+>  	mutex_lock(&spic_dev.lock);
+> -	count = snprintf(buffer, PAGE_SIZE, "%d\n", spic_dev.bluetooth_power);
+> +	count = sysfs_emit(buffer, "%d\n", spic_dev.bluetooth_power);
+>  	mutex_unlock(&spic_dev.lock);
+>  	return count;
+>  }
+> @@ -3996,7 +3986,7 @@ static ssize_t sony_pic_fanspeed_show(struct device *dev,
+>  	if (sony_pic_get_fanspeed(&value))
+>  		return -EIO;
+>  
+> -	return snprintf(buffer, PAGE_SIZE, "%d\n", value);
+> +	return sysfs_emit(buffer, "%d\n", value);
+>  }
+>  
+>  #define SPIC_ATTR(_name, _mode)					\
 > 
 
