@@ -2,124 +2,136 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18498C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 09:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F855C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 09:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEFE361205
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 09:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12FFD6120E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 09:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232430AbhJVJG7 (ORCPT
+        id S232343AbhJVJJw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Oct 2021 05:06:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33812 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232460AbhJVJG4 (ORCPT
+        Fri, 22 Oct 2021 05:09:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232406AbhJVJJv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Oct 2021 05:06:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634893479;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NJGZhkxj38uYQtmuRmaa5a4QRl7cPEpIp72Xf6GYbis=;
-        b=U4dljFatiuYE+Gq4gTIssDqjCv4s6oDNGRws346vTaWllFc04zJrZ9P3QQ8wOqg2aXRQzs
-        0kIsKg7/B7nPGYAcc4WZTRzr7xpjZAuShmZh6FZjZY1DOo3UV5t2ujyB66FMAOznqaDpcu
-        XD5+NCLfXtmOLq1CDnqvesqoh3WHN8I=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-383-ORFMG3J6Ofa_luKxiKnTTw-1; Fri, 22 Oct 2021 05:04:34 -0400
-X-MC-Unique: ORFMG3J6Ofa_luKxiKnTTw-1
-Received: by mail-ed1-f70.google.com with SMTP id y3-20020a056402358300b003dd1cb80d4bso2090419edc.18
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Oct 2021 02:04:34 -0700 (PDT)
+        Fri, 22 Oct 2021 05:09:51 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5670EC061764;
+        Fri, 22 Oct 2021 02:07:34 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id f21so2277550plb.3;
+        Fri, 22 Oct 2021 02:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LT6CARq18UAj8Ce53+t2XCRMifCgnD74jt9UaSc6Trg=;
+        b=T875tlr7jMHbbft8AA8YRCf+O4ydPZscuaWc8kGDIWGWYGsxvjLLCseF6AtWEtb2CC
+         S9wBQaHFrpLVncmmN0isi0Ssfi7ADKQ8DK9+jO0Mkr39yHPC6RRLLAlCKf8ks9fwY2bR
+         hXS9vVYvb63Kvs2/fxHr8mS/Q3tg8ByQRSDp6ZgyNF52bry63rwndTeAISxQEQ6a9/eK
+         sC8nnlI7yIEbW/B4HAvqskI09odzpZpxQbda7XLtF7gqXP9cg4b7pehMQSgtuGxDpQSF
+         x0RN5Yd/Z/+cvKVhn9mab9Q8nIudih0wRMOGAKpm8WgDcHfXpz5OTQvMufhUDgTh4VYJ
+         PjMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=NJGZhkxj38uYQtmuRmaa5a4QRl7cPEpIp72Xf6GYbis=;
-        b=OSA3bQXkrtRN8fzf6BqDNudMdgz1Np8M8+h0X8irEI1JhUCWPHp1eTSOulCW1x4DnT
-         JQmXzwLihSHtHz0/2SooU4vye11io4vkc9f42QON3BJw5uYgVMSUjIeuX1hKNbNsyrIJ
-         sh/5UvRxF+H0n4FxWKorfK7cX37ovNRC0d2TRffNFj2azKoqAAih4I5iuh0vLcix4qlX
-         S64qX1qD2KqRnlCjhlgR7Qy2c6LYpOR0ZM64o9APxb2aAcOvvuxvr7G/mUC0lYQSwXmn
-         mrKS57d0UBDg6RGKoSUST2vvEbXl/TL9a/Etkmsvc6dgPO4xL5kqyYxeMQLNt6Po3EBO
-         18pg==
-X-Gm-Message-State: AOAM531vJ52FUIHrqWr3C7rbbN/FTgS1iZCoSHTZn4Y5J2mZiwMp4+5T
-        32akiRr43kMDj3XFukIVlZpnNIzoHO3zgcQksYX7kyQVQ6/cx+PYRA1PE42opOnieTlbABaW22m
-        v9tTjMoWHfia75i1gbpLFZBwNmSpjVsAdhA==
-X-Received: by 2002:a17:907:6d9f:: with SMTP id sb31mr13655300ejc.109.1634893473601;
-        Fri, 22 Oct 2021 02:04:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxgaLxV/q19thSWzWkPVL40Td4avhVP3W53ZxVNiGvYCe3dCcT5gMVAl5iE2ggZ3DTJDYw6TQ==
-X-Received: by 2002:a17:907:6d9f:: with SMTP id sb31mr13655281ejc.109.1634893473415;
-        Fri, 22 Oct 2021 02:04:33 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id j1sm4078740edk.53.2021.10.22.02.04.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Oct 2021 02:04:32 -0700 (PDT)
-Message-ID: <fd11b3fb-1f14-cd9e-c6f7-cbea0aa6548b@redhat.com>
-Date:   Fri, 22 Oct 2021 11:04:31 +0200
+        bh=LT6CARq18UAj8Ce53+t2XCRMifCgnD74jt9UaSc6Trg=;
+        b=bU4KNxnNisvxLD259jieAVMRsXbWh4xXq/Hwxa/kQBljGDfcK0SDpgwWd4nOK1TReJ
+         4JSwIr4w16Nt8/Efw6q5Lp37x9KtfJG65MZaVeiqCjMmi4KuuyCaiPCf3MCV7USBN0EZ
+         twc/1yTS9jcISfD+vaNfLuRRUpvi3K0Rkfo1QWQcgmaeejF89xgQo52WzwK0v5hVe1Hv
+         819ZJsuiboCK1RFyMWmB/pdrUK5JhBr4Wllnp0GaWBZLD00H0hQC5g6AGUa5XvuBBm39
+         VsijPhcK6AjVjReYD6wU7/hbRkHeWLGECVb5U+n8vqO56Rc5CSivUSzfhGr48cMZgcmg
+         5IWQ==
+X-Gm-Message-State: AOAM532McZPgre7Fh4f8jTTAfK7fDCC1FbVnleCGVJhxE+ImVMLeKdYy
+        bjfOwdyAb9YH/EpJBrgBcnE=
+X-Google-Smtp-Source: ABdhPJzXMP7FE8cfFbUeeUS8t8atc4u4DHmG/6vtBRTevO9DstC9K+RlJ70CpHnXH3nDst78vZBSWQ==
+X-Received: by 2002:a17:90b:380d:: with SMTP id mq13mr12926153pjb.131.1634893653951;
+        Fri, 22 Oct 2021 02:07:33 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id t14sm7477547pga.62.2021.10.22.02.07.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Oct 2021 02:07:33 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: ye.guojin@zte.com.cn
+To:     matan@svgalib.org
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ye Guojin <ye.guojin@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH] platform/x86: lg-laptop: replace snprintf in show functions with sysfs_emit
+Date:   Fri, 22 Oct 2021 09:07:22 +0000
+Message-Id: <20211022090722.1065457-1-ye.guojin@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH v3 05/11] clk: Introduce clk-tps68470 driver
-Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J.Wysocki" <rjw@rjwysocki.net>,
-        Wolfram Sang <wsa@the-dreams.de>, Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-References: <20211010185707.195883-1-hdegoede@redhat.com>
- <20211010185707.195883-6-hdegoede@redhat.com>
- <163415237957.936110.1269283416777498553@swboyd.mtv.corp.google.com>
- <4e5884d5-bcde-dac9-34fb-e29ed32f73c9@redhat.com>
- <CAHp75Ve_xqgnaCqc3oyDMWDE9kVm8HNOEcdMuDkOD9epwgfWnA@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75Ve_xqgnaCqc3oyDMWDE9kVm8HNOEcdMuDkOD9epwgfWnA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+From: Ye Guojin <ye.guojin@zte.com.cn>
 
-On 10/22/21 10:46, Andy Shevchenko wrote:
-> On Thu, Oct 21, 2021 at 8:31 PM Hans de Goede <hdegoede@redhat.com> wrote:
->> On 10/13/21 21:12, Stephen Boyd wrote:
-> 
-> ...
-> 
->>>> +       regmap_write(clkdata->regmap, TPS68470_REG_CLKCFG1,
-> 
->>>> +                          (TPS68470_PLL_OUTPUT_ENABLE <<
->>>> +                          TPS68470_OUTPUT_A_SHIFT) |
-> 
-> One line, please?
-> 
->>>> +                          (TPS68470_PLL_OUTPUT_ENABLE <<
->>>> +                          TPS68470_OUTPUT_B_SHIFT));
-> 
-> Ditto.
+coccicheck complains about the use of snprintf() in sysfs show
+functions:
+WARNING  use scnprintf or sprintf
 
-Ack, both fixed for v4.
+Use sysfs_emit instead of scnprintf or sprintf makes more sense.
 
-Regards,
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Ye Guojin <ye.guojin@zte.com.cn>
+---
+ drivers/platform/x86/lg-laptop.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Hans
+diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+index 7e9351c36389..ae9293024c77 100644
+--- a/drivers/platform/x86/lg-laptop.c
++++ b/drivers/platform/x86/lg-laptop.c
+@@ -330,7 +330,7 @@ static ssize_t fan_mode_show(struct device *dev,
+ 	status = r->integer.value & 0x01;
+ 	kfree(r);
+ 
+-	return snprintf(buffer, PAGE_SIZE, "%d\n", status);
++	return sysfs_emit(buffer, "%d\n", status);
+ }
+ 
+ static ssize_t usb_charge_store(struct device *dev,
+@@ -372,7 +372,7 @@ static ssize_t usb_charge_show(struct device *dev,
+ 
+ 	kfree(r);
+ 
+-	return snprintf(buffer, PAGE_SIZE, "%d\n", status);
++	return sysfs_emit(buffer, "%d\n", status);
+ }
+ 
+ static ssize_t reader_mode_store(struct device *dev,
+@@ -414,7 +414,7 @@ static ssize_t reader_mode_show(struct device *dev,
+ 
+ 	kfree(r);
+ 
+-	return snprintf(buffer, PAGE_SIZE, "%d\n", status);
++	return sysfs_emit(buffer, "%d\n", status);
+ }
+ 
+ static ssize_t fn_lock_store(struct device *dev,
+@@ -455,7 +455,7 @@ static ssize_t fn_lock_show(struct device *dev,
+ 	status = !!r->buffer.pointer[0];
+ 	kfree(r);
+ 
+-	return snprintf(buffer, PAGE_SIZE, "%d\n", status);
++	return sysfs_emit(buffer, "%d\n", status);
+ }
+ 
+ static ssize_t battery_care_limit_store(struct device *dev,
+@@ -520,7 +520,7 @@ static ssize_t battery_care_limit_show(struct device *dev,
+ 	if (status != 80 && status != 100)
+ 		status = 0;
+ 
+-	return snprintf(buffer, PAGE_SIZE, "%d\n", status);
++	return sysfs_emit(buffer, "%d\n", status);
+ }
+ 
+ static DEVICE_ATTR_RW(fan_mode);
+-- 
+2.25.1
 
