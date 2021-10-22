@@ -2,204 +2,165 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB574C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 16:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8284C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 17:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A555F6115B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 16:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFBD361181
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Oct 2021 17:02:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233356AbhJVQur (ORCPT
+        id S233677AbhJVREw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Oct 2021 12:50:47 -0400
-Received: from mga18.intel.com ([134.134.136.126]:48049 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232190AbhJVQur (ORCPT
+        Fri, 22 Oct 2021 13:04:52 -0400
+Received: from mail-bn8nam08on2078.outbound.protection.outlook.com ([40.107.100.78]:64355
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233617AbhJVREv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Oct 2021 12:50:47 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10145"; a="216255620"
-X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="216255620"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 09:48:11 -0700
-X-IronPort-AV: E=Sophos;i="5.87,173,1631602800"; 
-   d="scan'208";a="553389108"
-Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2021 09:48:10 -0700
-Received: from mtg-dev.jf.intel.com (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id 184946362;
-        Fri, 22 Oct 2021 09:48:09 -0700 (PDT)
-Received: by mtg-dev.jf.intel.com (Postfix, from userid 1000)
-        id 81C9336247C; Fri, 22 Oct 2021 09:50:35 -0700 (PDT)
-Date:   Fri, 22 Oct 2021 09:50:35 -0700
-From:   mark gross <mgross@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc:     mgross@linux.intel.com, Sanket Goswami <Sanket.Goswami@amd.com>,
-        hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] platform/x86: amd-pmc: Add support for AMD Smart
- Trace Buffer
-Message-ID: <20211022165035.GE94023@linux.intel.com>
-Reply-To: mgross@linux.intel.com
-References: <20211021093106.196989-1-Sanket.Goswami@amd.com>
- <20211021235753.GF63795@linux.intel.com>
- <b2d7cb80-a8dc-3951-252f-63ff413ed5b0@amd.com>
+        Fri, 22 Oct 2021 13:04:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lQLt6ZV8u6oh2uvHdcyMien5Z5mBjlZ2GVKtJfes8ja5/BcrKC7r99nxta8Bboc+WvO8HBdVfuZZcp/ZMSAxyJudkekKv2jdFAbP6/VIihZCCCJNTFWppm54Uf4+5NGbmsbz6H5GiBVn7a4LFWzWha9IhHtE/mpF6pBQCiG+FEWaHOAXq5BOIEexxsvDeYpzkqgKHxZsCgET2RcrGgQMbLaJCJkWIafyhHx/FdCoo6tLJlZakke8oY9dnCFcDyLl6VRFSHWqXX3c1Qq+et54JV3M8rgi9IdEmgTec1/R0yqzcDZgLO1DwWCfGQa6C72H0pieYsKTxtGMzHv8FoKQsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=U4WDGXrqj2qGbXh9cXJ09sPgaoeiQTVGZbGOAr6U8/M=;
+ b=eXDPYG7vxztCuEzC+87Lys0z6lkhTQTSWKvpDoQ0MPQK6NWQPfqmQSkYD7AOZvMkjXi/zGkBbnHjWxhSK6IieNfW+cOveW+d1oqxihbYM+Ph1LsIDNm60mXlDo8Aql+sYprkkVmYUEuHwB5YqgdjJgOBWlahdIk6m6EHgGd64mFLRSMdHVkX9nbaubt49Ri+ciu8NvfK4gNy0fztbwEhI5H2alefJAsaGRTagEpQidGjM5j27JxIDxpfJUX6Wflz2O3awU6EhhVIA+tcj+NT4GWA+N9LZ/HiXrERhsvnF8rwEnOy3kVBKPQJ7SrGtg5Xy2w96vImPxNN5Ic4O7oACw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U4WDGXrqj2qGbXh9cXJ09sPgaoeiQTVGZbGOAr6U8/M=;
+ b=ZTwymFBMATdszDpkDISgkBW1FckAVxXF/V8jPMjZNrM74m3nk1AxME7q4BYIctLcaYB9Mtil/JSA5Ci6I5ed3dZFz1uq+hgN1ElDnoaK8OdtiJmydsfSEdTrfNo6ASThoJn1fmAYaofAuYOllxb/sfLtoXWUjuvmt/ap7P5R5sk=
+Received: from MW2PR16CA0008.namprd16.prod.outlook.com (2603:10b6:907::21) by
+ DM5PR12MB1898.namprd12.prod.outlook.com (2603:10b6:3:10d::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4628.16; Fri, 22 Oct 2021 17:02:29 +0000
+Received: from CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:907:0:cafe::65) by MW2PR16CA0008.outlook.office365.com
+ (2603:10b6:907::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.16 via Frontend
+ Transport; Fri, 22 Oct 2021 17:02:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT040.mail.protection.outlook.com (10.13.174.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4628.16 via Frontend Transport; Fri, 22 Oct 2021 17:02:29 +0000
+Received: from tlendack-t1.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Fri, 22 Oct
+ 2021 12:02:27 -0500
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+To:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        <stable@vger.kernel.org>
+Subject: [PATCH v2] x86/sme: Explicitly map new EFI memmap table as encrypted
+Date:   Fri, 22 Oct 2021 12:02:15 -0500
+Message-ID: <8afff0c64feb6b96db36112cb865243f4ae280ca.1634922135.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b2d7cb80-a8dc-3951-252f-63ff413ed5b0@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 958d5e6d-b045-457b-3e43-08d9957dbb48
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1898:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB18985DAAD5F0DF91D39A8DD3EC809@DM5PR12MB1898.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2150;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mPAp1QUhGWZqIfjkiqhnFV+lE769tckX1lm1I61sJJo55rPCmfAsvLI+6lgknQiZyoLhtf6jh4TBAvNsSiQoJ6RE7lvIT6FGF2d2ubEG1EZkWJFQFMaNFCKbO2pl1ajqNVe9wpmSL2It0TP5MSA5QGohd5syym8/mVKtYoQN037kdGrzw76DwRVYBKeTw+bfrOhaXqeKUyRy6fiP92/oxgqLbqxfzfHNkqXggCVpSM1B+cZUgam31DkDhhARB4u3xJwVA2ua4B9WfGwT0BgE/dNXtNBNOtS+uUgnivse4D6n1/H6FyVVf2w3jl9eE16nNDguBwJkQzyAex2XBub3DPA6QWppwsz6J98LnDx8j6brB0hQmwiMal8WboMtDmnILO14kcS9+RU6POk7e8hFTOjjJZUsNZKjkkuknHsi/QovWhlMzx+zNjsnzzAGkSsWeAynI6NfME07gwYKzVLdiebG3td6XHJB42KcC4A7Z4lfeBSW/q1Z+NjTQAOYgrjk/3exqEAySEmaXRkEB+JoFhvVRWFyokL06B+xQf/haiWv57XmdIwgAbtxdYLMLgPIitAahcouV9+FfAf3tCUvhO7890FQJT+G4zL+v2Y3S71pHNvoaAzQqz7h9D81CidW5aUoiZMaaV8skLD2IhZBKpgEovwlLjcPSWxUHwmXCLP+ufG8riGIFQtklF4tXDcPU8Gri7lbi0uo9ncnu3g5ej91bwtyXepaMT/bpcdq8BQ=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(16526019)(5660300002)(4326008)(7696005)(70586007)(356005)(26005)(186003)(8936002)(110136005)(8676002)(336012)(36860700001)(2616005)(54906003)(2906002)(508600001)(70206006)(81166007)(82310400003)(83380400001)(316002)(47076005)(7416002)(6666004)(36756003)(86362001)(426003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2021 17:02:29.3321
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 958d5e6d-b045-457b-3e43-08d9957dbb48
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1898
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Oct 22, 2021 at 12:12:57PM +0530, Shyam Sundar S K wrote:
-> Hi Mark,
-> 
-> On 10/22/2021 5:27 AM, mark gross wrote:
-> > On Thu, Oct 21, 2021 at 03:01:06PM +0530, Sanket Goswami wrote:
-> >> STB (Smart Trace Buffer), is a debug trace buffer which is used to help
-> >> isolate failures by analyzing the last feature that a system was running
-> >> before hitting a failure. This nonintrusive way is always running in the
-> >> background and trace is stored into the SoC.
-> >>
-> >> This patch provides mechanism to access the STB buffer using the read
-> >> and write routines.
-> > I don't see the write routine exported.
-> 
-> There is a function which does this job amd_pmc_write_stb()
-> 
-> OR
-> 
-> You mean to say EXPORT_SYMBOL() ?
-Yup.  this looks like fancy memory to logging debug traces that will survive a
-warmboot.  So why is the scope of writing such traces limited to just this
-file?  Kindof looks like a useful debug hack done to solving a suspend/resume
-crash.  Yet, you are tring to upstream it.  Shouldn't this be more generalized
-if its going to be upstreamed?
+Reserving memory using efi_mem_reserve() calls into the x86
+efi_arch_mem_reserve() function. This function will insert a new EFI
+memory descriptor into the EFI memory map representing the area of
+memory to be reserved and marking it as EFI runtime memory.
 
---mark
+As part of adding this new entry, a new EFI memory map is allocated and
+mapped. The mapping is where a problem can occur. This new EFI memory map
+is mapped using early_memremap(). If the allocated memory comes from an
+area that is marked as EFI_BOOT_SERVICES_DATA memory in the current EFI
+memory map, then it will be mapped unencrypted (see memremap_is_efi_data()
+and the call to efi_mem_type()).
 
-> 
-> > 
-> >>
-> >> Co-developed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> >> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> >> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> >> ---
-> >> Changes in v2:
-> >> - Create amd_pmc_stb_debugfs_fops structure to get STB data.
-> >> - Address review comments from Hans.
-> >>
-> >>  drivers/platform/x86/amd-pmc.c | 120 +++++++++++++++++++++++++++++++++
-> >>  1 file changed, 120 insertions(+)
-> >>
-> >> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-> >> index 502f37eaba1f..df53c5996e2c 100644
-> >> --- a/drivers/platform/x86/amd-pmc.c
-> >> +++ b/drivers/platform/x86/amd-pmc.c
-> >> @@ -33,6 +33,12 @@
-> >>  #define AMD_PMC_SCRATCH_REG_CZN		0x94
-> >>  #define AMD_PMC_SCRATCH_REG_YC		0xD14
-> >>  
-> >> +/* STB Registers */
-> >> +#define AMD_PMC_STB_INDEX_ADDRESS	0xF8
-> >> +#define AMD_PMC_STB_INDEX_DATA		0xFC
-> >> +#define AMD_PMC_STB_PMI_0		0x03E30600
-> >> +#define AMD_PMC_STB_PREDEF		0xC6000001
-> >> +
-> >>  /* Base address of SMU for mapping physical address to virtual address */
-> >>  #define AMD_PMC_SMU_INDEX_ADDRESS	0xB8
-> >>  #define AMD_PMC_SMU_INDEX_DATA		0xBC
-> >> @@ -80,6 +86,7 @@
-> >>  #define SOC_SUBSYSTEM_IP_MAX	12
-> >>  #define DELAY_MIN_US		2000
-> >>  #define DELAY_MAX_US		3000
-> >> +#define FIFO_SIZE		4096
-> >>  enum amd_pmc_def {
-> >>  	MSG_TEST = 0x01,
-> >>  	MSG_OS_HINT_PCO,
-> >> @@ -126,8 +133,14 @@ struct amd_pmc_dev {
-> >>  #endif /* CONFIG_DEBUG_FS */
-> >>  };
-> >>  
-> >> +static bool enable_stb;
-> >> +module_param(enable_stb, bool, 0644);
-> >> +MODULE_PARM_DESC(enable_stb, "Enable the STB debug mechanism");
-> >> +
-> >>  static struct amd_pmc_dev pmc;
-> >>  static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set, u32 *data, u8 msg, bool ret);
-> >> +static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
-> > shouldn't this be exported as a kernel API to log stuff?  seems like a waist to
-> > only log the pmc suspend resume status.
-> 
-> Agree. But currently there are no drivers *yet* who are consumers of STB
-> in the context of APU. PMC is the only driver which is currently taking
-> advantage of the STB mechanism which is quite useful in debugging the
-> s2idle failures.
-> 
-> As per STB Spec, not all drivers are allowed to write to the STB buffer.
-> 
-> > 
-> >> +static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
-> >>  
-> >>  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
-> >>  {
-> >> @@ -156,6 +169,51 @@ struct smu_metrics {
-> >>  	u64 timecondition_notmet_totaltime[SOC_SUBSYSTEM_IP_MAX];
-> >>  } __packed;
-> >>  
-> >> +static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
-> >> +{
-> >> +	struct amd_pmc_dev *dev = filp->f_inode->i_private;
-> >> +	u32 *buf;
-> >> +	int rc;
-> >> +
-> >> +	buf = devm_kmalloc(dev->dev, FIFO_SIZE * 4, GFP_KERNEL);
-> > would it be more readable to use sizeof(u32)?
-> > 
-> >> +	if (!buf)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	rc = amd_pmc_read_stb(dev, buf);
-> >> +	if (rc)
-> >> +		goto out;
-> >> +
-> >> +	filp->private_data = buf;
-> >> +
-> >> +out:
-> >> +	return rc;
-> >> +}
-> >> +
-> >> +static ssize_t amd_pmc_stb_debugfs_read(struct file *filp, char __user *buf, size_t size,
-> >> +					loff_t *pos)
-> >> +{
-> >> +	if (!filp->private_data)
-> >> +		return -EINVAL;
-> >> +
-> >> +	return simple_read_from_buffer(buf, size, pos, filp->private_data,
-> >> +				       FIFO_SIZE * 4);
-> > would it be more readable to use sizeof(u32)?
-> >> +}
-> >> +
-> >> +static int amd_pmc_stb_debugfs_release(struct inode *inode, struct file *filp)
-> >> +{
-> >> +	kfree(filp->private_data);
-> >> +	filp->private_data = NULL;
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +const struct file_operations amd_pmc_stb_debugfs_fops = {
-> >> +	.owner = THIS_MODULE,
-> >> +	.open = amd_pmc_stb_debugfs_open,
-> >> +	.read = amd_pmc_stb_debugfs_read,
-> >> +	.release = amd_pmc_stb_debugfs_release,
-> > are you missing a write fop?  you commit comment talked about a write routine.
-> 
-> As per the STB spec no userspace should write to STB buffer. Hence we
-> took a call not to include ".write" fop. But yes, userland can read the
-> buffer any given time.
-> 
-> Rest of the comments will be addressed in the next revision.
-> 
-> Thanks,
-> Shyam
+However, during replacement of the old EFI memory map with the new EFI
+memory map, efi_mem_type() is disabled, resulting in the new EFI memory
+map always being mapped encrypted in efi.memmap. This will cause a kernel
+crash later in the boot.
+
+Since it is known that the new EFI memory map will always be mapped
+encrypted when efi_memmap_install() is called, explicitly map the new EFI
+memory map as encrypted (using early_memremap_prot()) when inserting the
+new memory map entry.
+
+Cc: <stable@vger.kernel.org> # 4.14.x
+Fixes: 8f716c9b5feb ("x86/mm: Add support to access boot related data in the clear")
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+
+---
+Changes for v2:
+- Update/expand commit message to (hopefully) make it easier to read and
+  understand
+- Add a comment around the use of the early_memremap_prot() call
+---
+ arch/x86/platform/efi/quirks.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index b15ebfe40a73..14f8f20d727a 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -277,7 +277,19 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+ 		return;
+ 	}
+ 
+-	new = early_memremap(data.phys_map, data.size);
++	/*
++	 * When SME is active, early_memremap() can map the memory unencrypted
++	 * if the allocation came from EFI_BOOT_SERVICES_DATA (see
++	 * memremap_is_efi_data() and the call to efi_mem_type()). However,
++	 * when efi_memmap_install() is called to replace the memory map,
++	 * efi_mem_type() is "disabled" and so the memory will always be mapped
++	 * encrypted. To avoid this possible mismatch between the mappings,
++	 * always map the newly allocated memmap memory as encrypted.
++	 *
++	 * When SME is not active, this behaves just like early_memremap().
++	 */
++	new = early_memremap_prot(data.phys_map, data.size,
++				  pgprot_val(pgprot_encrypted(FIXMAP_PAGE_NORMAL)));
+ 	if (!new) {
+ 		pr_err("Failed to map new boot services memmap\n");
+ 		return;
+-- 
+2.33.1
+
