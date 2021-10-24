@@ -2,75 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC85FC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 24 Oct 2021 08:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5C8C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 24 Oct 2021 08:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9604860D07
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 24 Oct 2021 08:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0529660ED4
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 24 Oct 2021 08:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231154AbhJXIVg (ORCPT
+        id S231172AbhJXIWH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 24 Oct 2021 04:21:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54014 "EHLO
+        Sun, 24 Oct 2021 04:22:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24953 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229527AbhJXIVf (ORCPT
+        by vger.kernel.org with ESMTP id S231285AbhJXIWF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 24 Oct 2021 04:21:35 -0400
+        Sun, 24 Oct 2021 04:22:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635063554;
+        s=mimecast20190719; t=1635063585;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TThxIOYGR5ELqT9OPOHrsFzCq6olSpunpDYH9OWv8t0=;
-        b=Pwy21EJdQiaEIg2FEUtWLPd+1llwDJF4ZnZBwyTH+jIL2hisUT+H4fy42bunx8HbE4lDsp
-        2yU3rhKLz6x3fDtFIeAnvbjnA+u0E7mtsm4LVQv679pLlwhq0nP32fbKUv/WTkwamNouBp
-        b8fmc8kUK/PQphQNCeGDh43ZAvAPboo=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-387-tBRWRvs2NIepCNxJw8stfg-1; Sun, 24 Oct 2021 04:19:13 -0400
-X-MC-Unique: tBRWRvs2NIepCNxJw8stfg-1
-Received: by mail-ed1-f69.google.com with SMTP id c25-20020a056402143900b003dc19782ea8so7301046edx.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 24 Oct 2021 01:19:13 -0700 (PDT)
+        bh=iEA+bOsDY0+9yg7R/acNp9qvWIVajgO8oDCJI28qcNg=;
+        b=NGCnPXWK5bNYKFUbrsqXfjlaRwfUnmxZMaWUCqcJUkKYPKPSORKMITtoPg+VfAvjaqkU1y
+        2DHAPcaFcLDVLYyA0cGo8AnjdtHnkl6Guc4N8R5uuL1TobMYPsJKkwVZgQOeVYD9zolBo1
+        ZiZqbizLmyQ3m4/BI7wpAjnn5AhTgPI=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-549-05i07ZqHNyeymPMuPVNcYQ-1; Sun, 24 Oct 2021 04:19:42 -0400
+X-MC-Unique: 05i07ZqHNyeymPMuPVNcYQ-1
+Received: by mail-ed1-f71.google.com with SMTP id d11-20020a50cd4b000000b003da63711a8aso3762064edj.20
+        for <platform-driver-x86@vger.kernel.org>; Sun, 24 Oct 2021 01:19:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=TThxIOYGR5ELqT9OPOHrsFzCq6olSpunpDYH9OWv8t0=;
-        b=XGB7CiVPflbmQujAJBks8f0f4KEkR6AAbOMAbT7NsK9YMtJ3PJhDSyzUfOCBbYYifM
-         2qL7l2t08nGrRwguEorGpGlXokbjjPPhRVsncAQVfpeczFetOspeinB5PCh52SgiAtsh
-         X6HbBapjoHWCTVSQvoh2WnQd9Z0iQVbJV6DbRAASCHKq7eRN6ZUw6Rm3NPxab9+FVgpx
-         SZNdv60Fz24PEgRsJcqBFUcOeQV9FM7V4wmgSxVQwJ8jg1xHStBw9f4DxKY47s3d6lCa
-         fUSVpw7Jyc6kmCZjXt/JSmDztATRKrkERgZ8zvgGH5vaJ9ZNeTGCqJ8JPnHgb1m6A85H
-         IBUA==
-X-Gm-Message-State: AOAM5307W4xfYuQBv5N5zCAt7BG2e3f+0nBKGqX+gEYd0p6r8YCCNNYP
-        NQ+LOI7swR7tZU8HcM8m65cjWWEVsJ5xE4oFM4Pp1h/ABurzYGMy1wb7wlQfq7FYn8FlhsAc1Vu
-        pw0tQXZuo9bCPt2V6/95rvd4HC5aMZb+GEg==
-X-Received: by 2002:a05:6402:438f:: with SMTP id o15mr16064426edc.53.1635063552088;
-        Sun, 24 Oct 2021 01:19:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxE4FdpmmIwy5N/BH1LEF0MdMC7FKfrS8K9F2vsRDmcQRfqTjgdojQKj/h3QOGnW/S4k7O4Tw==
-X-Received: by 2002:a05:6402:438f:: with SMTP id o15mr16064393edc.53.1635063551779;
-        Sun, 24 Oct 2021 01:19:11 -0700 (PDT)
+        bh=iEA+bOsDY0+9yg7R/acNp9qvWIVajgO8oDCJI28qcNg=;
+        b=ZXVYJBfwVxCLY5WA1JyDTf/BckaHH7We26sQQmJN2pR+H5sgh7w5W+6e2M1PEemepZ
+         Q78rmPTTP4xmTFAbDJk2NNx8t1JeiBj7ycnI5rpA4mMv418zORUGL99Qrttw5ctnhak5
+         bXknsrotvJ4Mz9v9sYeF8ornnvrzjlxUa1afqIwRkCnYiQIyDeHhGmPbaGHz7wP3Ld5K
+         Rr4/zXF/z5ApMi+yg8+JnzVfGeOsyaMxS3Jx4g+nIdmb4OAuee6u8nkRkcXR5kpnVLBn
+         mU1YACfgj03MTbGZypdQ9B3b32c8V4DLI8IWDVQii8Jms7O2KEAGG/qQ9YfRh8RRCv2K
+         MR/A==
+X-Gm-Message-State: AOAM532PlbXrp87fqyHI8yWqbftyYDHoKFsWIEf8ppvkipCx+0IvX4Wk
+        dU1jNRBw8nqgxV0eX1bTse1SZg+YrrDjlGrV42r6n6zwEVMsCLpFqx5XijBNZCq6CmjoHXpBsDX
+        dkT+L/6oZkwwb2LwC5EQun/bkJ+J29KeTEg==
+X-Received: by 2002:aa7:c952:: with SMTP id h18mr16344377edt.18.1635063581667;
+        Sun, 24 Oct 2021 01:19:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz5rtFBpYqxF0K9CIYe+eHutxNObi8ukisQuZC6nx0OFjTu3p+Z581qSKvqb5oWD+F57MrVvA==
+X-Received: by 2002:aa7:c952:: with SMTP id h18mr16344365edt.18.1635063581499;
+        Sun, 24 Oct 2021 01:19:41 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id p26sm6888056edu.57.2021.10.24.01.19.11
+        by smtp.gmail.com with ESMTPSA id y22sm7607114edc.76.2021.10.24.01.19.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 Oct 2021 01:19:11 -0700 (PDT)
-Message-ID: <a72e4eda-c893-9de8-f0d4-59c15baf7e5e@redhat.com>
-Date:   Sun, 24 Oct 2021 10:19:10 +0200
+        Sun, 24 Oct 2021 01:19:41 -0700 (PDT)
+Message-ID: <f52acae3-42b8-72e5-84dd-68eb41ff0efa@redhat.com>
+Date:   Sun, 24 Oct 2021 10:19:40 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH] platform/x86: barco-p50-gpio: use KEY_VENDOR for button
- insted of KEY_RESTART
+Subject: Re: [PATCH] platform/x86: system76_acpi: fix Kconfig dependencies
 Content-Language: en-US
-To:     Peter Korsgaard <peter@korsgaard.com>,
-        platform-driver-x86@vger.kernel.org, santoshkumar.yadav@barco.com
-Cc:     Peter Korsgaard <peter.korsgaard@barco.com>
-References: <150f27d2-32b9-403b-01ff-8ab7d971d1d1@redhat.com>
- <20211022124612.19780-1-peter@korsgaard.com>
+To:     Arnd Bergmann <arnd@kernel.org>, Mark Gross <markgross@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Tim Crawford <tcrawford@system76.com>,
+        Jeremy Soller <jeremy@system76.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org
+References: <20211022154901.904984-1-arnd@kernel.org>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211022124612.19780-1-peter@korsgaard.com>
+In-Reply-To: <20211022154901.904984-1-arnd@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,14 +88,33 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 10/22/21 14:46, Peter Korsgaard wrote:
-> From: Peter Korsgaard <peter.korsgaard@barco.com>
+On 10/22/21 17:48, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> It turns out that systemd-logind by default listens for KEY_RESTART input
-> events and reboots the machine, which isn't great - So use KEY_VENDOR for
-> the vendor specific identify button instead to not conflict.
+> When CONFIG_INPUT is disabled, this driver now fails to link:
 > 
-> Signed-off-by: Peter Korsgaard <peter.korsgaard@barco.com>
+> ld.lld: error: undefined symbol: devm_input_allocate_device
+>>>> referenced by system76_acpi.c
+>>>>               platform/x86/system76_acpi.o:(system76_add) in archive drivers/built-in.a
+> 
+> ld.lld: error: undefined symbol: input_set_capability
+>>>> referenced by system76_acpi.c
+>>>>               platform/x86/system76_acpi.o:(system76_add) in archive drivers/built-in.a
+> 
+> ld.lld: error: undefined symbol: devm_hwmon_device_register_with_info
+>>>> referenced by system76_acpi.c
+>>>>               platform/x86/system76_acpi.o:(system76_add) in archive drivers/built-in.a
+> 
+> ld.lld: error: undefined symbol: battery_hook_unregister
+>>>> referenced by system76_acpi.c
+>>>>               platform/x86/system76_acpi.o:(system76_remove) in archive drivers/built-in.a
+> 
+> Add Kconfig dependencies for each of these three.
+> 
+> Fixes: 0de30fc684b3 ("platform/x86: system76_acpi: Replace Fn+F2 function for OLED models")
+> Fixes: 95563d45b5da ("platform/x86: system76_acpi: Report temperature and fan speed")
+> Fixes: 76f7eba3e0a2 ("platform/x86: system76_acpi: Add battery charging thresholds")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -106,21 +134,22 @@ Hans
 
 
 > ---
->  drivers/platform/x86/barco-p50-gpio.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/Kconfig | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
-> index ca0b2564c407..f5c72e33f9ae 100644
-> --- a/drivers/platform/x86/barco-p50-gpio.c
-> +++ b/drivers/platform/x86/barco-p50-gpio.c
-> @@ -101,7 +101,7 @@ static struct gpio_led_platform_data leds_pdata = {
->  /* GPIO keyboard */
->  static struct gpio_keys_button buttons[] = {
->  	{
-> -		.code = KEY_RESTART,
-> +		.code = KEY_VENDOR,
->  		.gpio = P50_GPIO_LINE_BTN,
->  		.active_low = 1,
->  		.type = EV_KEY,
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 56bcf80da60a..c422ee785c56 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -923,6 +923,9 @@ config SONYPI_COMPAT
+>  config SYSTEM76_ACPI
+>  	tristate "System76 ACPI Driver"
+>  	depends on ACPI
+> +	depends on ACPI_BATTERY
+> +	depends on HWMON
+> +	depends on INPUT
+>  	select NEW_LEDS
+>  	select LEDS_CLASS
+>  	select LEDS_TRIGGERS
 > 
 
