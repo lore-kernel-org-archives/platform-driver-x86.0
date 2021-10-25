@@ -2,153 +2,165 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D57C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 09:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81ADFC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 513A960EFF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 09:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E03E61039
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:04:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232990AbhJYJp1 (ORCPT
+        id S232695AbhJYLGg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Oct 2021 05:45:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:38160 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232947AbhJYJo6 (ORCPT
+        Mon, 25 Oct 2021 07:06:36 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:40432 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232394AbhJYLGf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Oct 2021 05:44:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635154954;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SKwKQKkno83iWdPQp68+jL3tuL2dNVk2AHtccPfXn80=;
-        b=U7IvCLnR4Hlky8FSv3f08I9JrWdAYGaL6r1yirKKZA17K9oDjEnVXex0FnzyXl7PYx/6Iw
-        BCpk5VLw/C+ZRRa+s7gxHV1wgxNjWbzWe8pEG+VDTyPymXN6D+M9kfrHS2vYgsbZKvHGtf
-        TlSA/nO0q0UnO2AyPEPFkMzBWotJvn8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-27-mMaRfN7JOiOBDnDm30BBxg-1; Mon, 25 Oct 2021 05:42:31 -0400
-X-MC-Unique: mMaRfN7JOiOBDnDm30BBxg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 25 Oct 2021 07:06:35 -0400
+Received: from zn.tnic (p200300ec2f0f4e0014f3333d144d8f4c.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:4e00:14f3:333d:144d:8f4c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E3968066F5;
-        Mon, 25 Oct 2021 09:42:28 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.195.129])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 91B5760BF4;
-        Mon, 25 Oct 2021 09:42:23 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH v4 11/11] platform/x86: int3472: Deal with probe ordering issues
-Date:   Mon, 25 Oct 2021 11:41:19 +0200
-Message-Id: <20211025094119.82967-12-hdegoede@redhat.com>
-In-Reply-To: <20211025094119.82967-1-hdegoede@redhat.com>
-References: <20211025094119.82967-1-hdegoede@redhat.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 16F671EC01A2;
+        Mon, 25 Oct 2021 13:04:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1635159852;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=7cmuTPU0DzQTCxQyPVEejLbQuN+VwiqGyI2YEU3p7AA=;
+        b=bsEi5PDRu9B//F2k3sBqf+iWQBeBiCnanLpmDuwuXJqZLC7yaGVSsuu9lgqvYe+bEmhhKl
+        23nleFXGRaeNDIG9j9g2r+JuV0yV/Ja9wO/CkPt1uczRzIiQf8sqHepd0ZEDL0DmsdIgj2
+        4Vzt5se9siIhk1/riS5dAv7DWDHpqdg=
+Date:   Mon, 25 Oct 2021 13:04:10 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Roth <michael.roth@amd.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v6 08/42] x86/sev-es: initialize sev_status/features
+ within #VC handler
+Message-ID: <YXaPKsicNYFZe84I@zn.tnic>
+References: <20211008180453.462291-1-brijesh.singh@amd.com>
+ <20211008180453.462291-9-brijesh.singh@amd.com>
+ <YW2EsxcqBucuyoal@zn.tnic>
+ <20211018184003.3ob2uxcpd2rpee3s@amd.com>
+ <YW3IdfMs61191qnU@zn.tnic>
+ <20211020161023.hzbj53ehmzjrt4xd@amd.com>
+ <YXF+WjMHW/dd0Wb6@zn.tnic>
+ <20211021204149.pof2exhwkzy2zqrg@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211021204149.pof2exhwkzy2zqrg@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The clk and regulator frameworks expect clk/regulator consumer-devices
-to have info about the consumed clks/regulators described in the device's
-fw_node.
+On Thu, Oct 21, 2021 at 03:41:49PM -0500, Michael Roth wrote:
+> On Thu, Oct 21, 2021 at 04:51:06PM +0200, Borislav Petkov wrote:
+> > On Wed, Oct 20, 2021 at 11:10:23AM -0500, Michael Roth wrote:
+> > > The CPUID calls in snp_cpuid_init() weren't added specifically to induce
+> > > the #VC-based SEV MSR read, they were added only because I thought the
+> > > gist of your earlier suggestions were to do more validation against the
+> > > CPUID table advertised by EFI
+> > 
+> > Well, if EFI is providing us with the CPUID table, who verified it? The
+> > attestation process? Is it signed with the AMD platform key?
+> 
+> For CPUID table pages, the only thing that's assured/attested to by firmware
+> is that:
+> 
+>  1) it is present at the expected guest physical address (that address
+>     is generally baked into the EFI firmware, which *is* attested to)
+>  2) its contents have been validated by the PSP against the current host
+>     CPUID capabilities as defined by the AMD PPR (Publication #55898),
+>     Section 2.1.5.3, "CPUID Policy Enforcement"
+>  3) it is encrypted with the guest key
+>  4) it is in a validated state at launch
+> 
+> The actual contents of the CPUID table are *not* attested to,
 
-To work around this info missing from the ACPI tables on devices where
-the int3472 driver is used, the int3472 MFD-cell drivers attach info about
-consumers to the clks/regulators when registering these.
+Why?
 
-This causes problems with the probe ordering wrt drivers for consumers
-of these clks/regulators. Since the lookups are only registered when the
-provider-driver binds, trying to get these clks/regulators before then
-results in a -ENOENT error for clks and a dummy regulator for regulators.
+> so in theory it can still be manipulated by a malicious hypervisor as
+> part of the initial SNP_LAUNCH_UPDATE firmware commands that provides
+> the initial plain-text encoding of the CPUID table that is provided
+> to the PSP via SNP_LAUNCH_UPDATE. It's also not signed in any way
+> (apparently there were some security reasons for that decision, though
+> I don't know the full details).
 
-All the sensor ACPI fw-nodes have a _DEP dependency on the INT3472 ACPI
-fw-node, so to work around these probe ordering issues the ACPI core /
-i2c-code does not instantiate the I2C-clients for any ACPI devices
-which have a _DEP dependency on an INT3472 ACPI device until all
-_DEP-s are met.
+So this sounds like an unnecessary complication. I'm sure there are
+reasons to do it this way but my simple thinking would simply want the
+CPUID page to be read-only and signed so that the guest can trust it
+unconditionally.
 
-This relies on acpi_dev_clear_dependencies() getting called by the driver
-for the _DEP-s when they are ready, add a acpi_dev_clear_dependencies()
-call to the discrete.c probe code.
+> [A guest owner can still validate their CPUID values against known good
+> ones as part of their attestation flow, but that is not part of the
+> attestation report as reported by SNP firmware. (So long as there is some
+> care taken to ensure the source of the CPUID values visible to
+> userspace/guest attestion process are the same as what was used by the boot
+> stack: i.e. EFI/bootloader/kernel all use the CPUID page at that same
+> initial address, or in cases where a copy is used, that copy is placed in
+> encrypted/private/validated guest memory so it can't be tampered with during
+> boot.]
 
-In the tps68470 case calling acpi_dev_clear_dependencies() is already done
-by the acpi_gpiochip_add() call done by the driver for the GPIO MFD cell
-(The GPIO cell is deliberately the last cell created to make sure the
-clk + regulator cells are already instantiated when this happens).
+This sounds like the good practices advice to guest owners would be,
+"Hey, I just booted your SNP guest but for full trust, you should go and
+verify the CPUID page's contents."
 
-However for proper probe ordering, the clk/regulator cells must not just
-be instantiated the must be fully ready (the clks + regulators must be
-registered with their subsystems).
+"And if I were you, I wouldn't want to run any verification of CPUID
+pages' contents on the same guest because it itself hasn't been verified
+yet."
 
-Add MODULE_SOFTDEP dependencies for the clk and regulator drivers for
-the instantiated MFD-cells so that these are loaded before us and so
-that they bind immediately when the platform-devs are instantiated.
+It all sounds weird.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Only call acpi_dev_clear_dependencies() in the discrete.c case, for the
-  tps68470 case this is already done by the acpi_gpiochip_add() for the
-  GPIO MFD cell.
----
- drivers/platform/x86/intel/int3472/discrete.c | 1 +
- drivers/platform/x86/intel/int3472/tps68470.c | 6 ++++++
- 2 files changed, 7 insertions(+)
+> So, while it's more difficult to do, and the scope of influence is reduced,
+> there are still some games that can be played to mess with boot via
+> manipulation of the initial CPUID table values, so long as they are within
+> the constraints set by the CPUID enforcement policy defined in the PPR.
+> 
+> Unfortunately, the presence of the SEV/SEV-ES/SEV-SNP bits in 0x8000001F,
+> EAX, are not enforced by PSP. The only thing enforced there is that the
+> hypervisor cannot advertise bits that aren't supported by hardware. So
+> no matter how much the boot stack is trusted, the CPUID table does not
+> inherit that trust, and even values that we *know* should be true should be
+> verified rather than assumed.
+> 
+> But I think there are a couple approaches for verifying this is an SNP
+> guest that are robust against this sort of scenario. You've touched on
+> some of them in your other replies, so I'll respond there.
 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index ff2bdbb8722c..5b514fa01a97 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -380,6 +380,7 @@ static int skl_int3472_discrete_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	acpi_dev_clear_dependencies(adev);
- 	return 0;
- }
- 
-diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
-index 5b881d6f5943..fcd872804101 100644
---- a/drivers/platform/x86/intel/int3472/tps68470.c
-+++ b/drivers/platform/x86/intel/int3472/tps68470.c
-@@ -174,6 +174,11 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
- 		return device_type;
- 	}
- 
-+	/*
-+	 * No acpi_dev_clear_dependencies() here, since the acpi_gpiochip_add()
-+	 * for the GPIO cell already does this.
-+	 */
-+
- 	return ret;
- }
- 
-@@ -207,3 +212,4 @@ module_i2c_driver(int3472_tps68470);
- MODULE_DESCRIPTION("Intel SkyLake INT3472 ACPI TPS68470 Device Driver");
- MODULE_AUTHOR("Daniel Scally <djrscally@gmail.com>");
- MODULE_LICENSE("GPL v2");
-+MODULE_SOFTDEP("pre: clk-tps68470 tps68470-regulator");
+Yah, I guess the kernel can do good enough verification and then the
+full thing needs to be done by the guest owner and in *some* userspace
+- not necessarily on the currently booted, unverified guest - but
+somewhere, where you have maximal flexibility.
+
+IMHO.
+
 -- 
-2.31.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
