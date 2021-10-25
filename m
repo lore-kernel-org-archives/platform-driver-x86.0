@@ -2,59 +2,60 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D880C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5189C43219
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4688260F9D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E4660230
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233073AbhJYL1Y (ORCPT
+        id S231786AbhJYLew (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Oct 2021 07:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53788 "EHLO
+        Mon, 25 Oct 2021 07:34:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231586AbhJYL1X (ORCPT
+        with ESMTP id S229900AbhJYLeu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Oct 2021 07:27:23 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E93BC061745;
-        Mon, 25 Oct 2021 04:25:01 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id r4so16765179edi.5;
-        Mon, 25 Oct 2021 04:25:00 -0700 (PDT)
+        Mon, 25 Oct 2021 07:34:50 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 371B4C061745;
+        Mon, 25 Oct 2021 04:32:28 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id a26so17307067edy.11;
+        Mon, 25 Oct 2021 04:32:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HMjzXf7F4jpbrQlFDm/ITcd5oZmF0Z2TEeku8oHs3kU=;
-        b=bsotcAEmprCE7ce2WplDUGURzqrGrekAxYm00UTRZNzXyKHE6B08b4aa4Bzcbcdw5M
-         l8QlCXUhQLF5UeYA56cWKwQf8BH2NKKVWHzsryq9TEpS5f3ozdFrUjInicNJFiO/VSqI
-         x0v/OiHFMmkFC93i4jvSpyuTSu0jI6REkoXUfGOF8S79MmVhCOlcTMP1vMX1yPag3MyI
-         ASFC2jJUJtdaHrpXDkY82IzzwcRavnKpqZ9XJZYPfxDcGLa4mLNv72lculoB0VNPdoh9
-         Re1fPrGVmvyj8ot/LtyjbCDmT36ty1nMg0hnbS2+6+LPfdtpVXoGbXNtI1oJnFeJex6T
-         0pEw==
+        bh=G2NPmlcMPM8u/iY4todsLOCGGObz0mNOdwPosQ4z7jU=;
+        b=iBXBEyTvee6oM98JuqDH5T5z+TI3MTmuIHrsMr0w3ksV1pIAj6WbaHDx1T7wz+I4tw
+         2xCsxFxgxLaHVrTNOlV0YDkxwTXVzIZ+LP94Gxhfe9fOViwdJf2OJ3w+fJsjQkkar0Fa
+         g1FP3e/le9ZANjG6VbXkhB4wlk8vCZLrijf027ZnS+NAgUuZyG90RhWCSh490gSfULrg
+         KLCY95RmW4RyhJKQttgg0BhurANO7w5zRir1GlebR1YQ6FVdqkvFTjoxiQXYU6VwTTqA
+         87B85toll8bZQ6bp8E5lPoDLFgeWj8YEaMazpcVy/EKkkmtMs9+Adubh+9laD5ea1zaF
+         I6LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HMjzXf7F4jpbrQlFDm/ITcd5oZmF0Z2TEeku8oHs3kU=;
-        b=GLXgtdcHIDHCKILppQPhwVStr3RyRu92yaQWdGiPFOE4A7r78u648qO82smBVHNUvW
-         HgztTIavWw/JBxEnpVsYKyNSiKPACG3kMYYyEJclyZ+mRhGu6dQoxDOAMwoh9xn91jCU
-         AHWB4YWU2Ii94k/RcNQo9glwcOaekUAze4Wc9XcDQFl5Ng4VRQWPHL9DBR/lwGSu7QbM
-         6Hg9fgawPdOxpOsTp/GB87m3PUVFhuUg+ei1AxZsX5FWCJ5f1CzBnQpzTgqguFXIPhyn
-         AQmqxBBTi69m9mn1kQCVErjhTSwN2vI54Tcj6nseheEkSN85sW3WIHrfLaNg2FS4DH17
-         rPLg==
-X-Gm-Message-State: AOAM533ResgDVu2ew2SYw3BPvM/E83YwerYqJ2wRlrwsgSFb4j2c6pUX
-        aYXAzePfa1qg8YKDksZ+hznxX2CxgOs3GL1vgXo=
-X-Google-Smtp-Source: ABdhPJxNro7nJb+4nNcU2bcNEILfMTDeLp7HJvi6zJ4Qvf79TF+E57V2hcT8u1m/awhFSY5Xohc1i+UovGXa4cjHoyk=
-X-Received: by 2002:a17:906:d553:: with SMTP id cr19mr14246616ejc.128.1635161099617;
- Mon, 25 Oct 2021 04:24:59 -0700 (PDT)
+        bh=G2NPmlcMPM8u/iY4todsLOCGGObz0mNOdwPosQ4z7jU=;
+        b=OzSF6v41+wCM+FUCn0UWY65DPPE+GhxYN9ctxY0/mhsYCz+7IunC3HY7Hhk/gZ/JS0
+         1S4ZiaVjTaCLmMPmZY5f536F/8iUpOY46lUdBoUOWaFvEl6M1SDyGvOxpdbrLG6c3Dz1
+         faS0GaQUQQ0DeOiuC+GOJ66KK2qkTNLyYWu9M6nrGpH4BYNsZ4Rdo7VqT04z77vHfV89
+         pcHnoRInQKdQI8lKcn+WD66qoM2xAwGcVugGm2BNxSHj8bPeVqdVJwULxLXnv5ZJtPVc
+         GK+hsQ1PzGzaoosrO8fyL5RBRfph+3iGldhOnJ+LtEUgHr7mPhOsERWk2mjLKw3rZm2h
+         msKQ==
+X-Gm-Message-State: AOAM530h/cPKEudoOo+STcPTyAwjWctNIXcKzJiGTgiTeZvgWoo2X5iq
+        zJiJlHzv9SfeAdbn2+yTXkwjb2UOvn3Pb3Sp4Qg=
+X-Google-Smtp-Source: ABdhPJwRTtO/pCXD97oUX/9rG5nYJlwxtG0fIcAVwqui8j4uQB48QLOBmVa/Ihxvr6hmy0V6m6XOuSP7TWuXDVe2Gjs=
+X-Received: by 2002:a17:907:7601:: with SMTP id jx1mr22028819ejc.69.1635161546705;
+ Mon, 25 Oct 2021 04:32:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211025094119.82967-1-hdegoede@redhat.com> <20211025094119.82967-6-hdegoede@redhat.com>
-In-Reply-To: <20211025094119.82967-6-hdegoede@redhat.com>
+References: <20211025094119.82967-1-hdegoede@redhat.com> <20211025094119.82967-9-hdegoede@redhat.com>
+In-Reply-To: <20211025094119.82967-9-hdegoede@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 25 Oct 2021 14:24:05 +0300
-Message-ID: <CAHp75VdfwA_3QK2Fo1S34rRZWHCMNzzHug4AKsRfOrKu4CU_YA@mail.gmail.com>
-Subject: Re: [PATCH v4 05/11] clk: Introduce clk-tps68470 driver
+Date:   Mon, 25 Oct 2021 14:31:32 +0300
+Message-ID: <CAHp75VeLAW6ZBQYidnD7PDYfAH3A2bq+oMJTru-9OW_t-XS26g@mail.gmail.com>
+Subject: Re: [PATCH v4 08/11] platform/x86: int3472: Add get_sensor_adev_and_name()
+ helper
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Mark Gross <markgross@kernel.org>,
@@ -83,97 +84,63 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Mon, Oct 25, 2021 at 12:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> The TPS68470 PMIC provides Clocks, GPIOs and Regulators. At present in
-> the kernel the Regulators and Clocks are controlled by an OpRegion
-> driver designed to work with power control methods defined in ACPI, but
-> some platforms lack those methods, meaning drivers need to be able to
-> consume the resources of these chips through the usual frameworks.
+> The discrete.c code is not the only code which needs to lookup the
+> acpi_device and device-name for the sensor for which the INT3472
+> ACPI-device is a GPIO/clk/regulator provider.
 >
-> This commit adds a driver for the clocks provided by the tps68470,
-> and is designed to bind to the platform_device registered by the
-> intel_skl_int3472 module.
+> The tps68470.c code also needs this functionality, so factor this
+> out into a new get_sensor_adev_and_name() helper.
 
 ...
 
-> +/*
-> + *  The PLL is used to multiply the crystal oscillator
-> + *  frequency range of 3 MHz to 27 MHz by a programmable
-> + *  factor of F = (M/N)*(1/P) such that the output
-> + *  available at the HCLK_A or HCLK_B pins are in the range
-> + *  of 4 MHz to 64 MHz in increments of 0.1 MHz
-
-Missed (grammatical) period.
-
-> + *
-> + * hclk_# = osc_in * (((plldiv*2)+320) / (xtaldiv+30)) * (1 / 2^postdiv)
-> + *
-> + * PLL_REF_CLK should be as close as possible to 100kHz
-> + * PLL_REF_CLK = input clk / XTALDIV[7:0] + 30)
-> + *
-> + * PLL_VCO_CLK = (PLL_REF_CLK * (plldiv*2 + 320))
-> + *
-> + * BOOST should be as close as possible to 2Mhz
-> + * BOOST = PLL_VCO_CLK / (BOOSTDIV[4:0] + 16) *
-> + *
-> + * BUCK should be as close as possible to 5.2Mhz
-> + * BUCK = PLL_VCO_CLK / (BUCKDIV[3:0] + 5)
-> + *
-> + * osc_in   xtaldiv  plldiv   postdiv   hclk_#
-> + * 20Mhz    170      32       1         19.2Mhz
-> + * 20Mhz    170      40       1         20Mhz
-> + * 20Mhz    170      80       1         24Mhz
-
-> + *
-
-Redundant empty line.
-
-> + */
-
-...
-
-> +       /* disable clock first */
-
-Disable
-first...
-
-> +       /* and then tri-state the clock outputs */
-
-...and
-
-...
-
-> +       for (i = 0; i < ARRAY_SIZE(clk_freqs); i++) {
-> +               diff = clk_freqs[i].freq - rate;
-> +               if (diff == 0)
-> +                       return i;
-
-> +               diff = abs(diff);
-
-This needs a comment why higher (lower) frequency is okay.
-
-> +               if (diff < best_diff) {
-> +                       best_diff = diff;
-> +                       best_idx = i;
-> +               }
+> +int skl_int3472_get_sensor_adev_and_name(struct device *dev,
+> +                                        struct acpi_device **sensor_adev_ret,
+> +                                        const char **name_ret)
+> +{
+> +       struct acpi_device *adev = ACPI_COMPANION(dev);
+> +       struct acpi_device *sensor;
+> +       int ret = 0;
+> +
+> +       sensor = acpi_dev_get_first_consumer_dev(adev);
+> +       if (!sensor) {
+> +               dev_err(dev, "INT3472 seems to have no dependents.\n");
+> +               return -ENODEV;
 > +       }
-
-...
-
-> +       if (pdata) {
-> +               ret = devm_clk_hw_register_clkdev(&pdev->dev,
-> +                                                 &tps68470_clkdata->clkout_hw,
-> +                                                 pdata->consumer_con_id,
-> +                                                 pdata->consumer_dev_name);
-
-if (ret)
-  return ret;
-
-> +       }
+> +
+> +       *name_ret = devm_kasprintf(dev, GFP_KERNEL, I2C_DEV_NAME_FORMAT,
+> +                                  acpi_dev_name(sensor));
+> +       if (!*name_ret)
+> +               ret = -ENOMEM;
+> +
+> +       if (ret == 0 && sensor_adev_ret)
+> +               *sensor_adev_ret = sensor;
+> +       else
+> +               acpi_dev_put(sensor);
 > +
 > +       return ret;
 
-return 0;
+The error path is twisted a bit including far staying ret=0 assignment.
 
---
+Can it be
+
+       int ret;
+       ...
+       *name_ret = devm_kasprintf(dev, GFP_KERNEL, I2C_DEV_NAME_FORMAT,
+                                  acpi_dev_name(sensor));
+       if (!*name_ret) {
+               acpi_dev_put(sensor);
+               return -ENOMEM;
+       }
+
+       if (sensor_adev_ret)
+               *sensor_adev_ret = sensor;
+
+       return 0;
+
+?
+
+> +}
+
+-- 
 With Best Regards,
 Andy Shevchenko
