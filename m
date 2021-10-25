@@ -2,127 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DF1C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1EFC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 14:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADB1261002
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96CA60F9D
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 14:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233121AbhJYLoC (ORCPT
+        id S233580AbhJYOem (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Oct 2021 07:44:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57544 "EHLO
+        Mon, 25 Oct 2021 10:34:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232207AbhJYLn5 (ORCPT
+        with ESMTP id S233588AbhJYOel (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Oct 2021 07:43:57 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B5DFC061745;
-        Mon, 25 Oct 2021 04:41:35 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id g8so10320150edb.2;
-        Mon, 25 Oct 2021 04:41:35 -0700 (PDT)
+        Mon, 25 Oct 2021 10:34:41 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A38CC061746;
+        Mon, 25 Oct 2021 07:32:19 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id u69so15810407oie.3;
+        Mon, 25 Oct 2021 07:32:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Af+qmYvV3PY7oY9iMHf1WDLN+yTC/dfVl6LmNB2Ru+M=;
-        b=iLTzGHKq62wcRXJw/NQeb8QVl0SSGxd0VOXTRXyEMYtWDF16J/H4D9o1cX+9caqz8h
-         pXrPyzBaUiZ0wa/rRI5QqSYx28CxRd1p5Ys03yoYaNBgm3qYTV80XOmaEFCOc8WN3eI+
-         /Zwrh18K9RiH6f4EmIOxd9zjwFUeuIeq/GdpkLulr84hMeotFMMfUuWWmc1F0lnxsvey
-         1wozSc9mRa+aSgqBIsqi3KeUU16h2VN8zp5sptzJqmma4Ljkt5BOEK3yDYNWT89byf7X
-         cX9CfI4culRu/NEpETmT2OCUXcdXtWlLT82RGyimdnOIp4g0iEyt3U8uwefzVYNDGf9/
-         VyeQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=pmebVXES+76mcKv5JBTJdxBg8OzPf8jfiUIeu+qp7AQ=;
+        b=KN/5JlHLu6ClZJBbYzBYLzN30uU6RqIWbSRiOnnjfQJEij9D/LgVKKDeLScGYA6FHi
+         T1VaKw9qj0ZxqR2cQBrCFbmnyu7zyGbS1D0zjFhwk4NWj1DjgWJd9z5pmvSqAH0ydM8y
+         ggrWMs7iqeT/kte2jNs+E1tbTViujJse+QFdVca0TgZenyS/7L3mfkscl/k4itN3g+0c
+         h/hH0n/ESvSFqoAHNStD1nmsaX+Bsj2xWRTJTQpTvWqv2eDpzsJJTebMsNw5EEY15yP6
+         OIZrwep7oGrBIao0uCKUWRifuLbGd9SkBp9+IIXfV8oukZFHz4oYtcGZTxwXPi/6D2DT
+         kmkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Af+qmYvV3PY7oY9iMHf1WDLN+yTC/dfVl6LmNB2Ru+M=;
-        b=UUfPSHY/5GTlh7vNnngmfbwcsOt1bbIg3kAuA7pAdr+5yiWD+5apss0uaJI76lIM0B
-         PZNlk+dFc68optixYEHjIqKAyILm+RYyPEpMXWQ1Tb13icpyy9tzLG042Y/VZ/JtZLBj
-         AZzJhiDwiefr//OvgpmAuy96rWNR++eWXf6MBy2DbhgqhgN3M8z84jozTE3JHJwIKaXi
-         f6ONyxx/qZpx8+Uwm0kOIn9Go5HjvbCVJjFg0HJW93gFp6sWMbRjCW4fYssGvWltrRmy
-         8UdxH94gs4NyNN4pffRPyXicaJwVUI7+ocgYLLVt14J9AeCQKDVP+8RLV4bG+8DcQafQ
-         aadw==
-X-Gm-Message-State: AOAM532wd7W+KrnWTlLjEnCsLZLCJmsW7oqOtBK8pUNvMRulJG3xTnhE
-        yHSacVq8seR56o2Xe1L4jRZLNbzZQxllRv5/bb0=
-X-Google-Smtp-Source: ABdhPJzjBN4K07mgHexd4fWyTF3MfP5LCSNqxjtFEIj1rgPmmarKsiTdhxurgICUQfmRRjgJ3XTV28Ui7aDLiZxfOA8=
-X-Received: by 2002:a17:906:d553:: with SMTP id cr19mr14340955ejc.128.1635162093757;
- Mon, 25 Oct 2021 04:41:33 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=pmebVXES+76mcKv5JBTJdxBg8OzPf8jfiUIeu+qp7AQ=;
+        b=WyZdaKgawuiuPGLtwKMXcksHi4LuyE6QPAW3u914GJKnyqtiLqjxIY0GbgmcHO+zLG
+         D08RFttIm9JuiJucSTyMJ/AM+SuGARTZLxcFKIm7wX9iguJ7Cxe7NqcrSNN4giAlIF0m
+         RIxYMgpOQ/RpKJbqAd7rP36NNNM3pHtq5QELpWX66ErJ+E91eLdm0ajLr4mAw5pAwkBs
+         NZKLKiGP4G58JT5YC+awc7ijkzqQJ2HhFAVmcQgV4T+gwCGQi2AZkdKvQ5QXZGb3Mn/e
+         6L03V2VtvsLqe90O8yC/tsKQrCB1z5quqvQ0g8ikO70/HMogrQnQI/NQbo/g/gYNcCNN
+         jiIA==
+X-Gm-Message-State: AOAM530HeHlHVA0nP1BEV0ZMJkJdP3XehNUkv1xVV85ADxBrQ4ZDuaMC
+        /I83SMG3/ljELrHQt7I05m0=
+X-Google-Smtp-Source: ABdhPJyfvhXAD5bAJ8pfK0Z27LAI0zpl8BNKmE4gMYAcmsvoKqH+NrVYIWrZSFD549xjoHGic166/A==
+X-Received: by 2002:aca:4b84:: with SMTP id y126mr22465314oia.127.1635172338576;
+        Mon, 25 Oct 2021 07:32:18 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v13sm3560494oto.65.2021.10.25.07.32.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Oct 2021 07:32:18 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Mon, 25 Oct 2021 07:32:16 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Denis Pauk <pauk.denis@gmail.com>
+Cc:     eugene.shalygin@gmail.com, andy.shevchenko@gmail.com,
+        platform-driver-x86@vger.kernel.org, thomas@weissschuh.net,
+        Joel =?utf-8?Q?Wir=C4=81mu?= Pauling <jwp@redhat.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 3/3] hwmon: (nct6775) Add ProArt X570-CREATOR WIFI
+ support.
+Message-ID: <20211025143216.GA3203621@roeck-us.net>
+References: <20211022200032.23267-1-pauk.denis@gmail.com>
+ <20211022200032.23267-4-pauk.denis@gmail.com>
 MIME-Version: 1.0
-References: <20211025094119.82967-1-hdegoede@redhat.com> <20211025094119.82967-12-hdegoede@redhat.com>
-In-Reply-To: <20211025094119.82967-12-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 25 Oct 2021 14:40:39 +0300
-Message-ID: <CAHp75VdJav6L03oVNd0DNA8jUXHPaqNzHU+q=+2-eEbh087bOQ@mail.gmail.com>
-Subject: Re: [PATCH v4 11/11] platform/x86: int3472: Deal with probe ordering issues
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211022200032.23267-4-pauk.denis@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 25, 2021 at 12:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> The clk and regulator frameworks expect clk/regulator consumer-devices
-> to have info about the consumed clks/regulators described in the device's
-> fw_node.
->
-> To work around this info missing from the ACPI tables on devices where
-> the int3472 driver is used, the int3472 MFD-cell drivers attach info about
-> consumers to the clks/regulators when registering these.
->
-> This causes problems with the probe ordering wrt drivers for consumers
-> of these clks/regulators. Since the lookups are only registered when the
-> provider-driver binds, trying to get these clks/regulators before then
-> results in a -ENOENT error for clks and a dummy regulator for regulators.
->
-> All the sensor ACPI fw-nodes have a _DEP dependency on the INT3472 ACPI
-> fw-node, so to work around these probe ordering issues the ACPI core /
-> i2c-code does not instantiate the I2C-clients for any ACPI devices
-> which have a _DEP dependency on an INT3472 ACPI device until all
-> _DEP-s are met.
->
-> This relies on acpi_dev_clear_dependencies() getting called by the driver
-> for the _DEP-s when they are ready, add a acpi_dev_clear_dependencies()
-> call to the discrete.c probe code.
->
-> In the tps68470 case calling acpi_dev_clear_dependencies() is already done
-> by the acpi_gpiochip_add() call done by the driver for the GPIO MFD cell
-> (The GPIO cell is deliberately the last cell created to make sure the
-> clk + regulator cells are already instantiated when this happens).
->
-> However for proper probe ordering, the clk/regulator cells must not just
-> be instantiated the must be fully ready (the clks + regulators must be
-> registered with their subsystems).
->
-> Add MODULE_SOFTDEP dependencies for the clk and regulator drivers for
-> the instantiated MFD-cells so that these are loaded before us and so
-> that they bind immediately when the platform-devs are instantiated.
+On Fri, Oct 22, 2021 at 11:00:31PM +0300, Denis Pauk wrote:
+> Tested on:
+> ```
+> BIOS Information
+>     Vendor: American Megatrends Inc.
+>     Version: 0402
+>     Release Date: 08/04/2021
+> ```
+> 
 
-Just a side note: MODULE_SOFTDEP() won't work in some (special?) cases
-when module tools are limited in functionality (e.g. busybox
-implementation as of today).
+This is not an appropriate patch description. Also. it should be an independent
+patch and not be tied to the other patches of the series.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Guenter
+
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204807
+> Signed-off-by: Denis Pauk <pauk.denis@gmail.com>
+> Tested-by: Joel Wirāmu Pauling <jwp@redhat.com>
+> 
+> ---
+> Changes in v8:
+> - Add ProArt X570 support.
+> ---
+>  drivers/hwmon/nct6775.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
+> index f345e1902ad9..93dca471972e 100644
+> --- a/drivers/hwmon/nct6775.c
+> +++ b/drivers/hwmon/nct6775.c
+> @@ -4986,6 +4986,7 @@ static int __init nct6775_find(int sioaddr, struct nct6775_sio_data *sio_data)
+>  static struct platform_device *pdev[2];
+>  
+>  static const char * const asus_wmi_boards[] = {
+> +	"ProArt X570-CREATOR WIFI",
+>  	"Pro WS X570-ACE",
+>  	"PRIME B360-PLUS",
+>  	"PRIME B460-PLUS",
+> -- 
+> 2.33.0
+> 
