@@ -2,165 +2,145 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81ADFC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E96B6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E03E61039
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A0F60238
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Oct 2021 11:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232695AbhJYLGg (ORCPT
+        id S232996AbhJYLOn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Oct 2021 07:06:36 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:40432 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232394AbhJYLGf (ORCPT
+        Mon, 25 Oct 2021 07:14:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230232AbhJYLOm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Oct 2021 07:06:35 -0400
-Received: from zn.tnic (p200300ec2f0f4e0014f3333d144d8f4c.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:4e00:14f3:333d:144d:8f4c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 16F671EC01A2;
-        Mon, 25 Oct 2021 13:04:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1635159852;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=7cmuTPU0DzQTCxQyPVEejLbQuN+VwiqGyI2YEU3p7AA=;
-        b=bsEi5PDRu9B//F2k3sBqf+iWQBeBiCnanLpmDuwuXJqZLC7yaGVSsuu9lgqvYe+bEmhhKl
-        23nleFXGRaeNDIG9j9g2r+JuV0yV/Ja9wO/CkPt1uczRzIiQf8sqHepd0ZEDL0DmsdIgj2
-        4Vzt5se9siIhk1/riS5dAv7DWDHpqdg=
-Date:   Mon, 25 Oct 2021 13:04:10 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Michael Roth <michael.roth@amd.com>
-Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v6 08/42] x86/sev-es: initialize sev_status/features
- within #VC handler
-Message-ID: <YXaPKsicNYFZe84I@zn.tnic>
-References: <20211008180453.462291-1-brijesh.singh@amd.com>
- <20211008180453.462291-9-brijesh.singh@amd.com>
- <YW2EsxcqBucuyoal@zn.tnic>
- <20211018184003.3ob2uxcpd2rpee3s@amd.com>
- <YW3IdfMs61191qnU@zn.tnic>
- <20211020161023.hzbj53ehmzjrt4xd@amd.com>
- <YXF+WjMHW/dd0Wb6@zn.tnic>
- <20211021204149.pof2exhwkzy2zqrg@amd.com>
+        Mon, 25 Oct 2021 07:14:42 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15CF4C061745;
+        Mon, 25 Oct 2021 04:12:20 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id l13so20991631edi.8;
+        Mon, 25 Oct 2021 04:12:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DE414Csss+ESJUsxIVSV3LbjKKBbROgWqQe4HOBfb1o=;
+        b=ZyabSViE6U7Oogdi/LL9eL0DoZU1mlE5KHkHL4kMn5iqw3evyYKxGSA/W6q38331bM
+         BwzH90IAxQMTWxLdXZBFrIRih2fY27usQYqwoOop1toa+3X5qgVXvc1SSSkIaifjMG/0
+         Nn8EUcL1MOUPCUYeDWwvaJGdDkKdIcBzOFHDrsGFP3UAEYKqqwC8UKGzt1d+d+AKgN9Z
+         wQdFk8V/VcpXrC3ZY98ZamMK/2y/sU589/tsO1FFMEwmDqZ4W+Mc5UKF79NVgKWRrklC
+         2W8tcKHBVZsh2pv3l2f4fM+1M5sUdZLbU57j6ep4wR4Azrw+8nf2Fz26huOrOA/Hpd9W
+         MrRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DE414Csss+ESJUsxIVSV3LbjKKBbROgWqQe4HOBfb1o=;
+        b=TNSjPm7ipHVX8sD52eHcIyniuUWiAO9y3LfdaFSHP5xDYXF0ES/68BjuMWaF0Jdj6u
+         e2aCkRdRFxqOogJ228nA/ELufSXSHnNJUPl42jUMZK7xiuC7GrjI817R548sAIaLpWi9
+         sEyvZrRSqtvNSi/52wntKyThAWLfbdxL3k6qzw7jVx9//YOli1PoTcczo0tF2KBFaZdi
+         RckDP5le2i9YIHoID4aR6aUl/zYxTNrRgwh8cqGst+gZ9HX4MQJH9A/xq0zxtEwQr73k
+         DTtTPAREiIwfHUhY5emszO+WknbhxtAnms4Eyy7OWP6qabbH/re+rZAcRCXD6hb6vn48
+         Rw5g==
+X-Gm-Message-State: AOAM531wyNtFJQoV3TuE2TKpxyeJeHA0b+2C5NJGLFvjzHzCp/WxmQJj
+        t7YFQe5MLydqwOzSd9O7p0D6uVn/4LtCI//rc6o=
+X-Google-Smtp-Source: ABdhPJxsHqCxc9rcuWSI/uo1379vMzZ34fwIDA/WvIMYTprTuHb5Azjp9WOPaOClk9+sjtE6UnOhGd4VS5+dBo7YQhQ=
+X-Received: by 2002:a17:906:d553:: with SMTP id cr19mr14174870ejc.128.1635160338586;
+ Mon, 25 Oct 2021 04:12:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211021204149.pof2exhwkzy2zqrg@amd.com>
+References: <20211025094119.82967-1-hdegoede@redhat.com> <20211025094119.82967-5-hdegoede@redhat.com>
+In-Reply-To: <20211025094119.82967-5-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 25 Oct 2021 14:11:24 +0300
+Message-ID: <CAHp75Ve4nu1WDURaSvUto6+aLoEDM2OfTCVi2Th6x-oagO6a-Q@mail.gmail.com>
+Subject: Re: [PATCH v4 04/11] regulator: Introduce tps68470-regulator driver
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 03:41:49PM -0500, Michael Roth wrote:
-> On Thu, Oct 21, 2021 at 04:51:06PM +0200, Borislav Petkov wrote:
-> > On Wed, Oct 20, 2021 at 11:10:23AM -0500, Michael Roth wrote:
-> > > The CPUID calls in snp_cpuid_init() weren't added specifically to induce
-> > > the #VC-based SEV MSR read, they were added only because I thought the
-> > > gist of your earlier suggestions were to do more validation against the
-> > > CPUID table advertised by EFI
-> > 
-> > Well, if EFI is providing us with the CPUID table, who verified it? The
-> > attestation process? Is it signed with the AMD platform key?
-> 
-> For CPUID table pages, the only thing that's assured/attested to by firmware
-> is that:
-> 
->  1) it is present at the expected guest physical address (that address
->     is generally baked into the EFI firmware, which *is* attested to)
->  2) its contents have been validated by the PSP against the current host
->     CPUID capabilities as defined by the AMD PPR (Publication #55898),
->     Section 2.1.5.3, "CPUID Policy Enforcement"
->  3) it is encrypted with the guest key
->  4) it is in a validated state at launch
-> 
-> The actual contents of the CPUID table are *not* attested to,
+On Mon, Oct 25, 2021 at 12:41 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> The TPS68470 PMIC provides Clocks, GPIOs and Regulators. At present in
+> the kernel the Regulators and Clocks are controlled by an OpRegion
+> driver designed to work with power control methods defined in ACPI, but
+> some platforms lack those methods, meaning drivers need to be able to
+> consume the resources of these chips through the usual frameworks.
+>
+> This commit adds a driver for the regulators provided by the tps68470,
+> and is designed to bind to the platform_device registered by the
+> intel_skl_int3472 module.
+>
+> This is based on this out of tree driver written by Intel:
+> https://github.com/intel/linux-intel-lts/blob/4.14/base/drivers/regulator/tps68470-regulator.c
+> with various cleanups added.
 
-Why?
+> +struct tps68470_regulator_data {
+> +       struct clk *clk;
+> +};
 
-> so in theory it can still be manipulated by a malicious hypervisor as
-> part of the initial SNP_LAUNCH_UPDATE firmware commands that provides
-> the initial plain-text encoding of the CPUID table that is provided
-> to the PSP via SNP_LAUNCH_UPDATE. It's also not signed in any way
-> (apparently there were some security reasons for that decision, though
-> I don't know the full details).
+...
 
-So this sounds like an unnecessary complication. I'm sure there are
-reasons to do it this way but my simple thinking would simply want the
-CPUID page to be read-only and signed so that the guest can trust it
-unconditionally.
+> +/*
+> + * (1) This register must have same setting as VIOVAL if S_IO LDO is used to
+> + *     power daisy chained IOs in the receive side.
+> + * (2) If there is no I2C daisy chain it can be set freely.
 
-> [A guest owner can still validate their CPUID values against known good
-> ones as part of their attestation flow, but that is not part of the
-> attestation report as reported by SNP firmware. (So long as there is some
-> care taken to ensure the source of the CPUID values visible to
-> userspace/guest attestion process are the same as what was used by the boot
-> stack: i.e. EFI/bootloader/kernel all use the CPUID page at that same
-> initial address, or in cases where a copy is used, that copy is placed in
-> encrypted/private/validated guest memory so it can't be tampered with during
-> boot.]
+> + *
 
-This sounds like the good practices advice to guest owners would be,
-"Hey, I just booted your SNP guest but for full trust, you should go and
-verify the CPUID page's contents."
+Redundant empty line.
 
-"And if I were you, I wouldn't want to run any verification of CPUID
-pages' contents on the same guest because it itself hasn't been verified
-yet."
+> + */
 
-It all sounds weird.
+...
 
-> So, while it's more difficult to do, and the scope of influence is reduced,
-> there are still some games that can be played to mess with boot via
-> manipulation of the initial CPUID table values, so long as they are within
-> the constraints set by the CPUID enforcement policy defined in the PPR.
-> 
-> Unfortunately, the presence of the SEV/SEV-ES/SEV-SNP bits in 0x8000001F,
-> EAX, are not enforced by PSP. The only thing enforced there is that the
-> hypervisor cannot advertise bits that aren't supported by hardware. So
-> no matter how much the boot stack is trusted, the CPUID table does not
-> inherit that trust, and even values that we *know* should be true should be
-> verified rather than assumed.
-> 
-> But I think there are a couple approaches for verifying this is an SNP
-> guest that are robust against this sort of scenario. You've touched on
-> some of them in your other replies, so I'll respond there.
+> +       struct tps68470_regulator_platform_data *pdata = pdev->dev.platform_data;
 
-Yah, I guess the kernel can do good enough verification and then the
-full thing needs to be done by the guest owner and in *some* userspace
-- not necessarily on the currently booted, unverified guest - but
-somewhere, where you have maximal flexibility.
+dev_get_platdata() ?
 
-IMHO.
+...
+
+> +       data->clk = devm_clk_get(&pdev->dev, "tps68470-clk");
+> +       if (IS_ERR(data->clk)) {
+> +               dev_err(&pdev->dev, "Error getting tps68470-clk\n");
+> +               return PTR_ERR(data->clk);
+> +       }
+
+return dev_err_probe(...);
+
+...
+
+> +               rdev = devm_regulator_register(&pdev->dev, &regulators[i], &config);
+> +               if (IS_ERR(rdev)) {
+> +                       dev_err(&pdev->dev, "failed to register %s regulator\n",
+> +                               regulators[i].name);
+> +                       return PTR_ERR(rdev);
+> +               }
+
+Ditto.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+With Best Regards,
+Andy Shevchenko
