@@ -2,146 +2,285 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BE8C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Oct 2021 09:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EADBC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Oct 2021 11:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED9260F46
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Oct 2021 09:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC05D60232
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Oct 2021 11:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233588AbhJZKBT (ORCPT
+        id S232658AbhJZLYR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Oct 2021 06:01:19 -0400
-Received: from mail-dm6nam11on2055.outbound.protection.outlook.com ([40.107.223.55]:51457
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231495AbhJZKBM (ORCPT
+        Tue, 26 Oct 2021 07:24:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230160AbhJZLYR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Oct 2021 06:01:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VzmMdi1Ibd4V8TRNue9Uo2E9URuumeuCKhmoM5WgQczmYfst4DcEDmndCBEiywIJnyQnWCZ/koD3Ekr9+bEjkS6123zlWZXadHt2gG2DdM337OZdFfqOeHQtFGfaOFEXbbzJhOmr2MhlPsBN8377k0yohD+fHxmTU+Y912ywMwWqEq9UGSvJ+JDv60wo6eWbK1D+QxDVOQbZ+epl54CJr1sNWnA6RQJQhteMJDuLIIMbplTGLOn7BMKPZ4Au/g6fzn2gDskJArkAbC6v+FdrouVaEXPBNTINDl+3tPZf8SXtt9w9GRWUMr0lU1xV6HXmcNFzaAZN+5nlNdrumx68fw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kl4MbdJEAeSUyPCCBSR8ie1zofJqCFmJyUtv9Oo4arE=;
- b=Opzs4c71Niz1abzqDmsl38cW9LcRp4B37kn0bNPiswcQzDgsUYZ+i2Rg43H2wh6d/P9idG7AkNJen+yromarJgbyraVIoX17jzZ/aTNbk3n8XSknuKGh8BsQqATMtBIpPXzEljUZVbQrAmlfASl7LxU5yI1i2avF/38URLaEuAN+pH90lDIb1i8S3M7hmcrkZnaf1cvoVc6VOWAg8VKSoCmB0rA1S7rtiPX718iIgqkHggHeuDoxiijBzX+aYrE4gJNfCL1ZjEOXgkTowKFmclnInCqMYYg8bXK/UTzKnUgg9TjU3fO+Wo7p9Yk1Z8OMl7sGj8EZVcVWX/VG6rD3CQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kl4MbdJEAeSUyPCCBSR8ie1zofJqCFmJyUtv9Oo4arE=;
- b=FRFXBbechT5DDGNWPB/UiGZ6q8RjULU4Tn3XPYTBNgb7bD3896kMmFAwSIr6vIdOo70cgHl6Kf2UYbKgwcyeW5ugSt8RlN6Fxn6bxeiUZ+L0jl8RXjLR3xknModi0tshAChHVI4seZBR0lcjMKy0G3lTTDRxD4v7JgDuo97zysY=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.18; Tue, 26 Oct
- 2021 09:58:47 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::e8e1:a20d:de7c:8b53]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::e8e1:a20d:de7c:8b53%3]) with mapi id 15.20.4628.020; Tue, 26 Oct 2021
- 09:58:47 +0000
-Subject: Re: [PATCH v3 0/3] Updates to amd-pmc driver
-To:     Sanket Goswami <Sanket.Goswami@amd.com>, hdegoede@redhat.com,
-        mgross@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20211022172845.2608-1-Sanket.Goswami@amd.com>
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Message-ID: <2497770e-a7b2-349c-477b-4d9de9fb5bca@amd.com>
-Date:   Tue, 26 Oct 2021 15:28:38 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-In-Reply-To: <20211022172845.2608-1-Sanket.Goswami@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR0101CA0054.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:20::16) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+        Tue, 26 Oct 2021 07:24:17 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8A90C061745
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Oct 2021 04:21:53 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id y12so13174305eda.4
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Oct 2021 04:21:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZU/+lWJRR81Cmoazf7Nu391mwgEGZcNE5uqQhSAjNyQ=;
+        b=kvd5MKqbQi17eJJrA2D4lqakf+/zMybbVBcWURWmNzuxa4GJl9XofLPGYOIETK8QJm
+         aJMYUs93n1vTn1T4MYjoRehly25uXo36C1oYsrozkIOPzJQHBoZXUySZZ3nI2Xd9/0Eu
+         gjsbOKuNMK/5nBQ6Ym1FCaH7pMcbZrPGmmZksLIPR/5gwji9jUOsfb3HUF655oG+iUFc
+         pl8MaQn0CxP3KnNKXMbAFJ3uFjHrsXi4oeTsd6yiIVeRfO2RQvWJsYZQFgqeQv+FZ/Ga
+         5kRhsK9Wh+FQdQETp87jp/+cx63ixSNeyHYSwmXqr3Xd5OfE9vKnonxpLZ7V18R677am
+         chSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZU/+lWJRR81Cmoazf7Nu391mwgEGZcNE5uqQhSAjNyQ=;
+        b=IF+yAs0N0L7FHW2qBKoXTJwMCQCyNZx04bAe9jDjMmO9Q5Sb/k2ObzL9WxfN02z3cB
+         bJwRCifkVlQX7B6AER3JOg1PbketDedBw2MbCTp27gLglW0hn/Ps5VEJ1DMMxZWdh+Cx
+         Wtw6msWS4CtY89pKD/FbEFEv+6UUKe0CI6nQRQGrinQAnH7Pqdacd+ohTB5sINCPj4z0
+         UXylIGIaEpRaMxtyJUwYlrpnLADDFyoeLD3iVFuyPBDEZ+qHDHJ62zKtsXaFeXXycuKE
+         ma6Ore4ZpP/Qzqh6KbqVY3OiTS8DEmcH7W/Xd1mbzIEANAzxp+1kWgag8DM0Xmv8kbBO
+         5vbg==
+X-Gm-Message-State: AOAM530hqDUNMrP1z0eCEdCWhThrmeAde3Hb3K9XtefkE18ISb10Rrbp
+        34rBlx9zMjQWrHKfgkfntHorm9fT7E/DYLtZ5Ui0yCs2LwA=
+X-Google-Smtp-Source: ABdhPJx1rEqDyj+37YAGww72UHKpOYhuRIs2Zy78GrMPbTC7JKLcdLSRI3ryanliNh3LwnoTza1+r/RjRRD35sRsRKg=
+X-Received: by 2002:aa7:d54e:: with SMTP id u14mr34479530edr.2.1635247312292;
+ Tue, 26 Oct 2021 04:21:52 -0700 (PDT)
 MIME-Version: 1.0
-Received: from [10.136.40.143] (165.204.157.251) by MA1PR0101CA0054.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:20::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.13 via Frontend Transport; Tue, 26 Oct 2021 09:58:44 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0f50a5a5-33a0-4ad4-5aec-08d9986733a1
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:
-X-Microsoft-Antispam-PRVS: <BL1PR12MB5176139DF2A18451DC745F169A849@BL1PR12MB5176.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lYboJx8Xggao68xLLoGpg07gGKsOZYDgGXkIEDOysiWJI52lTbydImlr5AL5bR4wxgu+/69zYWcitk92kaZHFgru3n/y7LZQ7HS81EICBWJQ883cPy8xr+gP27l+1Za7+2Noqn0ctD13/5wGioUceOWFovT0iNAerCFlEfzbB35E1bK01R1sary+hR60fUkugwz4gizU/Nu05p6f2u8Yy8zqWnFDOANbC7BhyWiCuXHX8SMG7JxxIcXqmsZF0TqF70eiwaMLDK7nogLC1FMvLGjgaqPewAguzDVX96eSCi46SMG4JRrivkj2yiqtzG0z2u0UIGFIbpvBe3yMCPfEp5jn7c+n8eTcDR7WNOSsENf+mhyjZfFny4Veevts0gYyg4ZVxOY2tBbUIvIB4m8u7Czf9oKNvlTT6PDFRa4luQWcyznrpIn1PPHkzTsroRntE6VUoFOLu6/WCpGUKjXO+roY/rGJ3eQkog9jNadLref7++QZYSNu6OWUvKYtMwqDeaD/SVTmxGX4IYfCs21pxopxWmYwOvE2bIT0+ra+yNLm1K48f+7z/Y3B74kddvkbPjPh5ivbxNew0vXHdZ3ip5X6vHeiG61lwCnObHbZqNTnGRZZ+9oH78XdZq7XipCQz+0YiQoURuJM+li1aKH/PYJfsPaM0t//XICkyQKSGVz/bVxIpD7HbelojYF3NKLrn8df61SeXsXBdbfTN0jDZcwq4O/j5q+l2R5cRBEQ0r0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(83380400001)(26005)(6666004)(8936002)(31696002)(4326008)(508600001)(66556008)(4744005)(66946007)(38100700002)(66476007)(53546011)(2906002)(6486002)(31686004)(956004)(186003)(5660300002)(8676002)(36756003)(16576012)(86362001)(316002)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T2c4WENJMU5ZN0VPRzk4dlpnTlk4UHkwKytMUDZVQndvVTVPZ1lLMUFFcnp1?=
- =?utf-8?B?Z29HZHBnSlJsbnVxNWRMYjdtZnE2dEhqWCttdnphdTlXM2s1MkFJS3lJN0Ro?=
- =?utf-8?B?dVRrbW9kTGw2bGJmWjd2WEVQS3pnYnZibFJXWlJKOWpRTGJPREJlbFpkcjht?=
- =?utf-8?B?MGdlZGw5SlZoNVpYc3QyRUxxeDA0SFdvTk9kUUZqUDhVTUFRYm5tZm93ZCti?=
- =?utf-8?B?Vjh2ZFpKSSt6cVVycTlwTFRnR1JaazFreVI5ZWlsR2tGTjhraGdmSnBCYkFo?=
- =?utf-8?B?UEFGenU3Wkk1UFArOUNQZWJaeFhueEI5QmxrQnB3N1A0RnJ6NjVVajk0dkJK?=
- =?utf-8?B?dzB5SlV5clJXVmdTNkNhekdRMXFXOUZuTjcvUmlSS3ZkVWpnMXRKR2ZnV3VF?=
- =?utf-8?B?S3lEWnYraCtnVjQwM05HNEd4VEt6YjBJLzN0cy94dUNOVHJubm8xY2xYU0k0?=
- =?utf-8?B?R1lpSnVFeW9iR1VaeEFtVHpzT2lHZzBGb3dYcXFIMGRhTUExSjJLSFZWMkVV?=
- =?utf-8?B?KzlWMk1NZ09HSVdHZ3ZqcWtFeEJ1ZVBxSGZjUFVONnV1WVptTE93MU9DaEJ5?=
- =?utf-8?B?Qjgrb3lVVFZIMWxWTklxdDhUUzN0WjJ3b0RWZkFrQytUdkRSLzhPZWNveFE4?=
- =?utf-8?B?ZmpIWWdwU3R2enpPUnFHbnJYblg5K0RJdVBNZTlZZVpTclhtcnhsYUtHRTNz?=
- =?utf-8?B?YzlpK2ZQd1R6TW0xUFRsOVN3dnM4YVdvdG9UUHR6cXFXTWk2RnViYldsUmFP?=
- =?utf-8?B?WmtxdTFOV0R4cm1OaU1ZY3NiRmlOUnp5K2ovamN6elE3ZE0rZDBNQ0pZNnJw?=
- =?utf-8?B?VFgvNFdiVDB1SlB3SjVYMEdpaGxkbmFhRkVVdTFMVmdLY0tVMlhHOEFNMFE4?=
- =?utf-8?B?Uno1WkJ6NitoeTB2WlBxaGNsS3V5MlZ6SFdxdUM0b0NVd2pNcXZPZmZOS1lX?=
- =?utf-8?B?OFllVjQyTnpJYlJOSFJrMGpKb0tVZDFCbTYrN2Q1NC9ZcVN6RVNvcUR3bG94?=
- =?utf-8?B?RlJCTUttRFREQ3FRMVBVTEJjc25aeGVkNmJ4OUw4R29VV1NlNGNMSXpSckJH?=
- =?utf-8?B?S2ZNRDhadW1JblBBcTVVeGVzV0kvZUtXdmplODBxQ1dIQUpEU1huVFFqYUY4?=
- =?utf-8?B?Y3VLQmpkWFpEWkxtKzJ5ZlBOSGl1MHZEdytzdjhrUDg3ZWtHWU5rSkxnU0cv?=
- =?utf-8?B?UjhPTUpBcGtVL1A3eVJlQmxPNUVHRmJ6eEptZzdrU01HS2ZxaXYvZHdCRTJl?=
- =?utf-8?B?OWRDMmxad3ZodHRuUlZiRmh6UUhEWXhwRVgvN1l2QStPMmZCUVRVZkN1cGxJ?=
- =?utf-8?B?RTlENG9sckJXeEVGNkF4UXh1OTVOakNoRlJBUTlXbG5TaStUeXZ1SUZiWFhC?=
- =?utf-8?B?ZWtRSnVCSDRweTg3cXAxVXpaR0QzYzJRcm90OVI1UCtQVTFwdTlUYkdMZkJl?=
- =?utf-8?B?MzBmODY5ZjlTRlowV3lZMDZ0Z0c3NjkyR3JScVFGQ3RYM0ZsNjhQbTBOZkRm?=
- =?utf-8?B?QURib0k0eklnSjZ5dmFlaC9RS3VVZ2crMmNSY1I0eTRlNW0wejV6dGVGUndC?=
- =?utf-8?B?RHRzaVhtTzZlVXhWaWtGS3M0OGQza3JJVHloMTI5RnJjSTNDdWtueXJwcXdF?=
- =?utf-8?B?dmNxUmdwb0E2R0hvNVFUckEvcGpEbU9xMlU0MkhjWVhPQVBnUlJNbks0Zzdo?=
- =?utf-8?B?bGh1b2FmZkRQZWxlQ2JRUVhsdlRMenhDNWdZSnJkVm1veXFIeE5GRE45KzFY?=
- =?utf-8?B?RXo4WUNJeGttYVVjZHZiSkVzUmtaam5KbFBNR2o2UllOWWtYb0IzZzhaL1RU?=
- =?utf-8?B?NGJnb2lHcHUvRlkrUXk2NjU4ZXYwSjUyZzZKUXdRbHdRajlFNllVZmNLT1lW?=
- =?utf-8?B?OFdTUURJV0hwQnZ3aHhNaVNOR0ZqL25PTFZBQkx3bTFyZHlzWjZsOW4rNWhx?=
- =?utf-8?B?djVWaERjUURPODFwVkhoNngvQVdWcDhiSEtBLy9TZER5Skd4MWN3MGsxMEVs?=
- =?utf-8?B?aEVJa25UZFJoamtKb21rZlVYWU1ETWxzWU9yOXl5aTFWODNOaDlhejB2SFVr?=
- =?utf-8?B?QitMQ1FaY3grQVNZSW16SXlhOWViVHJLcGt0TmUrbUtTWWFuS0wwSDduUWl5?=
- =?utf-8?B?Tmt4eFBkend5Tllzbjd4SFJSbGsrbFkyQzl5YnY1TGFSQW0ydHpGR1VBdEl3?=
- =?utf-8?Q?sjTDz/TFBeYFJwnrkQP7a2c=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f50a5a5-33a0-4ad4-5aec-08d9986733a1
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2021 09:58:46.9631
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dhCrCYrWcEwqmWjgeAFRz+UZZyD2Cw0Hy0yXtVECb0XXOwimVOx0SmkBBtxqTB8AARLXtBtCU0ANyu4cQ4Ratw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5176
+References: <20211022172845.2608-1-Sanket.Goswami@amd.com> <20211022172845.2608-4-Sanket.Goswami@amd.com>
+In-Reply-To: <20211022172845.2608-4-Sanket.Goswami@amd.com>
+From:   Scott Bruce <smbruce@gmail.com>
+Date:   Tue, 26 Oct 2021 04:21:40 -0700
+Message-ID: <CAPOoXdE0vA7ygcU2UMvd1Sb9PBMhBkJ4Dv8Y8bP9jN7i+bdrRA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] platform/x86: amd-pmc: Add support for AMD Smart
+ Trace Buffer
+To:     Sanket Goswami <Sanket.Goswami@amd.com>
+Cc:     Shyam-sundar.S-k@amd.com, hdegoede@redhat.com,
+        mgross@linux.intel.com, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+v3 of this patch hard crashes on my Cezanne laptop on the second
+suspend attempt. The problem appears to be with the 3rd patch in the
+series, the first two don't cause any problems.
 
+This tree suspends fine using the original v1 and the first two
+patches from the new series:
+https://gitlab.com/smbruce/linux-stable-s0ix/-/commits/v5.14.14-s0ix-testing4
+This crashes: https://gitlab.com/smbruce/linux-stable-s0ix/-/commits/v5.14.14-s0ix-testing3-DONTUSE
 
-On 10/22/2021 10:58 PM, Sanket Goswami wrote:
-> This patch series includes:
-> - Improvements to error-exits in driver probe
-> - Store root port information
-> - Introduce support for AMD Smart Trace Buffer
-> 
-> Sanket Goswami (3):
->   platform/x86: amd-pmc: Store the pci_dev instance inside struct
->     amd_pmc_dev
->   platform/x86: amd-pmc: Simplify error handling path
->   platform/x86: amd-pmc: Add support for AMD Smart Trace Buffer
-> 
->  drivers/platform/x86/amd-pmc.c | 146 ++++++++++++++++++++++++++++++---
->  1 file changed, 133 insertions(+), 13 deletions(-)
-> 
+crash journal: https://gitlab.com/-/snippets/2194519
 
-Series look good to me.
-
-Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+On Fri, Oct 22, 2021 at 10:31 AM Sanket Goswami <Sanket.Goswami@amd.com> wrote:
+>
+> STB (Smart Trace Buffer), is a debug trace buffer which is used to help
+> isolate failures by analyzing the last feature that a system was running
+> before hitting a failure. This nonintrusive way is always running in the
+> background and trace is stored into the SoC.
+>
+> This patch provides mechanism to access the STB buffer using the read
+> and write routines.
+>
+> Co-developed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> ---
+> Changes in v3:
+> - Address review comments from Mark Gross.
+>
+> Changes in v2:
+> - Create amd_pmc_stb_debugfs_fops structure to get STB data.
+> - Address review comments from Hans.
+>
+>  drivers/platform/x86/amd-pmc.c | 120 +++++++++++++++++++++++++++++++++
+>  1 file changed, 120 insertions(+)
+>
+> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+> index 50cb65e38d11..665d57ff222d 100644
+> --- a/drivers/platform/x86/amd-pmc.c
+> +++ b/drivers/platform/x86/amd-pmc.c
+> @@ -35,6 +35,12 @@
+>  #define AMD_PMC_SCRATCH_REG_CZN                0x94
+>  #define AMD_PMC_SCRATCH_REG_YC         0xD14
+>
+> +/* STB Registers */
+> +#define AMD_PMC_STB_INDEX_ADDRESS      0xF8
+> +#define AMD_PMC_STB_INDEX_DATA         0xFC
+> +#define AMD_PMC_STB_PMI_0              0x03E30600
+> +#define AMD_PMC_STB_PREDEF             0xC6000001
+> +
+>  /* Base address of SMU for mapping physical address to virtual address */
+>  #define AMD_PMC_SMU_INDEX_ADDRESS      0xB8
+>  #define AMD_PMC_SMU_INDEX_DATA         0xBC
+> @@ -82,6 +88,7 @@
+>  #define SOC_SUBSYSTEM_IP_MAX   12
+>  #define DELAY_MIN_US           2000
+>  #define DELAY_MAX_US           3000
+> +#define FIFO_SIZE              4096
+>  enum amd_pmc_def {
+>         MSG_TEST = 0x01,
+>         MSG_OS_HINT_PCO,
+> @@ -128,8 +135,14 @@ struct amd_pmc_dev {
+>  #endif /* CONFIG_DEBUG_FS */
+>  };
+>
+> +static bool enable_stb;
+> +module_param(enable_stb, bool, 0644);
+> +MODULE_PARM_DESC(enable_stb, "Enable the STB debug mechanism");
+> +
+>  static struct amd_pmc_dev pmc;
+>  static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
+> +static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
+> +static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
+>
+>  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
+>  {
+> @@ -176,6 +189,51 @@ static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
+>         return 0;
+>  }
+>
+> +static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
+> +{
+> +       struct amd_pmc_dev *dev = filp->f_inode->i_private;
+> +       u32 *buf;
+> +       int rc;
+> +
+> +       buf = devm_kmalloc(dev->dev, FIFO_SIZE * sizeof(u32), GFP_KERNEL);
+> +       if (!buf)
+> +               return -ENOMEM;
+> +
+> +       rc = amd_pmc_read_stb(dev, buf);
+> +       if (rc)
+> +               goto out;
+> +
+> +       filp->private_data = buf;
+> +
+> +out:
+> +       return rc;
+> +}
+> +
+> +static ssize_t amd_pmc_stb_debugfs_read(struct file *filp, char __user *buf, size_t size,
+> +                                       loff_t *pos)
+> +{
+> +       if (!filp->private_data)
+> +               return -EINVAL;
+> +
+> +       return simple_read_from_buffer(buf, size, pos, filp->private_data,
+> +                                      FIFO_SIZE * sizeof(u32));
+> +}
+> +
+> +static int amd_pmc_stb_debugfs_release(struct inode *inode, struct file *filp)
+> +{
+> +       kfree(filp->private_data);
+> +       filp->private_data = NULL;
+> +
+> +       return 0;
+> +}
+> +
+> +const struct file_operations amd_pmc_stb_debugfs_fops = {
+> +       .owner = THIS_MODULE,
+> +       .open = amd_pmc_stb_debugfs_open,
+> +       .read = amd_pmc_stb_debugfs_read,
+> +       .release = amd_pmc_stb_debugfs_release,
+> +};
+> +
+>  static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
+>                                  struct seq_file *s)
+>  {
+> @@ -289,6 +347,10 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
+>                             &s0ix_stats_fops);
+>         debugfs_create_file("amd_pmc_idlemask", 0644, dev->dbgfs_dir, dev,
+>                             &amd_pmc_idlemask_fops);
+> +       /* Enable STB only when the module_param is set */
+> +       if (enable_stb)
+> +               debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
+> +                                   &amd_pmc_stb_debugfs_fops);
+>  }
+>  #else
+>  static inline void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
+> @@ -488,6 +550,9 @@ static int __maybe_unused amd_pmc_suspend(struct device *dev)
+>         if (rc)
+>                 dev_err(pdev->dev, "suspend failed\n");
+>
+> +       if (enable_stb)
+> +               amd_pmc_write_stb(pdev, AMD_PMC_STB_PREDEF);
+> +
+>         return rc;
+>  }
+>
+> @@ -508,6 +573,10 @@ static int __maybe_unused amd_pmc_resume(struct device *dev)
+>         /* Dump the IdleMask to see the blockers */
+>         amd_pmc_idlemask_read(pdev, dev, NULL);
+>
+> +       /* Write data incremented by 1 to distinguish in stb_read */
+> +       if (enable_stb)
+> +               amd_pmc_write_stb(pdev, AMD_PMC_STB_PREDEF + 1);
+> +
+>         return 0;
+>  }
+>
+> @@ -524,6 +593,57 @@ static const struct pci_device_id pmc_pci_ids[] = {
+>         { }
+>  };
+>
+> +static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
+> +{
+> +       int rc;
+> +
+> +       rc = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_ADDRESS, AMD_PMC_STB_PMI_0);
+> +       if (rc) {
+> +               dev_err(dev->dev, "failed to write addr in stb: 0x%X\n",
+> +                       AMD_PMC_STB_INDEX_ADDRESS);
+> +               pci_dev_put(dev->rdev);
+> +               return pcibios_err_to_errno(rc);
+> +       }
+> +
+> +       rc = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_DATA, data);
+> +       if (rc) {
+> +               dev_err(dev->dev, "failed to write data in stb: 0x%X\n",
+> +                       AMD_PMC_STB_INDEX_DATA);
+> +               pci_dev_put(dev->rdev);
+> +               return pcibios_err_to_errno(rc);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
+> +{
+> +       int i, err;
+> +       u32 value;
+> +
+> +       err = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_ADDRESS, AMD_PMC_STB_PMI_0);
+> +       if (err) {
+> +               dev_err(dev->dev, "error writing addr to stb: 0x%X\n",
+> +                       AMD_PMC_STB_INDEX_ADDRESS);
+> +               pci_dev_put(dev->rdev);
+> +               return pcibios_err_to_errno(err);
+> +       }
+> +
+> +       for (i = 0; i < FIFO_SIZE; i++) {
+> +               err = pci_read_config_dword(dev->rdev, AMD_PMC_STB_INDEX_DATA, &value);
+> +               if (err) {
+> +                       dev_err(dev->dev, "error reading data from stb: 0x%X\n",
+> +                               AMD_PMC_STB_INDEX_DATA);
+> +                       pci_dev_put(dev->rdev);
+> +                       return pcibios_err_to_errno(err);
+> +               }
+> +
+> +               *buf++ = value;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int amd_pmc_probe(struct platform_device *pdev)
+>  {
+>         struct amd_pmc_dev *dev = &pmc;
+> --
+> 2.25.1
+>
