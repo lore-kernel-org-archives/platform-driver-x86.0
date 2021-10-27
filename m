@@ -2,85 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055EEC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 09:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A221C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 11:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A5760FC0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 09:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20FDC61052
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 11:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232435AbhJ0JDf (ORCPT
+        id S241617AbhJ0LTj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Oct 2021 05:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232047AbhJ0JDf (ORCPT
+        Wed, 27 Oct 2021 07:19:39 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48362 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237402AbhJ0LTi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Oct 2021 05:03:35 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F72C061570;
-        Wed, 27 Oct 2021 02:01:10 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id s1so7759836edd.3;
-        Wed, 27 Oct 2021 02:01:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FwSpFY7U7Gd4ELBz8g66vgAETa0RnYhonzcZ9AVHumA=;
-        b=fUy6bdf0Ab6eD2kRHUso7K4espthSWVlKrzsDF+v9UlWSJCkC1QCFitLCKHpqfU/rb
-         AJwnKdSsDzjDNmfnTzbYX1zKJ1z+uIt8CsbfcHWv2zelGb5iJKJMt/E4WCBD8MPBkgBB
-         nYWshVa8A2Oo+ExhtL4v0frXvHEgWfIo4GpLiu7jxvEckPrPQieivcaczp+y4ydc+h8I
-         BB7wmIwOyuJW9ZCp1ss2p2NHuK7epZ7JHsbEMzJXmxlhEMjtZrVYpl18F9pwBCIwY0oK
-         NdCDjdFTRR+DoqwI3xGfJKLtA9/nVmAoaKONnSed6PvnzpYTqwe4bNzIZWcJZPh2eGGH
-         Z4Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FwSpFY7U7Gd4ELBz8g66vgAETa0RnYhonzcZ9AVHumA=;
-        b=YkrABuw4Z0Ng2yVV1zW4nOWbaeodAEPon3SGfUj0MQRISPkFlo4znp+y4dJWKMQO1k
-         wRDrN18WFcU/wklnFNF0E1FdNModVUhA5hK1tcdq0cQCArRqZEpTKzfKFrZvI4v4AX5S
-         haJrfFqVbOtPaTkQlm7fCjCs13gQ6eA5c1kfPUkmIsnV+GUFfT2KCU6kcyXSBwSgwMYq
-         FjxOlXRtkr0xBt6Dd8vRddx+L6uOhLPCg6O5BeavQ5DIIO/kSpO+L18KZl8KyBoGjnnK
-         ZDbMFYNRJk4VcFFQc7+2Ki2wyPedwMpPVKg8NbEuvuAAGxhBN6FX0gKVEh5UefUV/6et
-         rBug==
-X-Gm-Message-State: AOAM533vMeEqe6u7fKVxG+MypoaOWA0fLLDRJKI0yb3Uhwl0dcCrnySe
-        HrqLDn8jsAJbSlcHn3pKWi0zNCPCJfi8dvDuA4c=
-X-Google-Smtp-Source: ABdhPJwiRlxKN8rVFf+TqHcvaGebMUj7HhFjqA8GrP7Zb1pDbtyaDlm7JREauXbJYDdJAwvNEIBZ86iIUp/JyM9RQFU=
-X-Received: by 2002:a05:6402:10da:: with SMTP id p26mr43735894edu.283.1635325268073;
- Wed, 27 Oct 2021 02:01:08 -0700 (PDT)
+        Wed, 27 Oct 2021 07:19:38 -0400
+Received: from zn.tnic (p200300ec2f1615002935f4cf24b5c3ba.dip0.t-ipconnect.de [IPv6:2003:ec:2f16:1500:2935:f4cf:24b5:c3ba])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C06CA1EC0622;
+        Wed, 27 Oct 2021 13:17:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1635333431;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=stNjoo2XJVbCmOdEgRU5yFEgbX9ASxd3JdeLr48Zahs=;
+        b=ebK1cCm9TusIIJya8AsuEOa2C3nQXceCim+lTIqBQiXlDB1x/eNW5KTm2nrR7tb97mQhQS
+        vnvCswmbz10LpK/Kw8nzXp85LtQ568h2zkaEyr3nXmArdt3dd3cOUNBshF/UW+o8mvILwa
+        acBETot9fx4OESPek0YesL84jKRUcrY=
+Date:   Wed, 27 Oct 2021 13:17:11 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Roth <michael.roth@amd.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v6 08/42] x86/sev-es: initialize sev_status/features
+ within #VC handler
+Message-ID: <YXk1N6ApJA8PgkwM@zn.tnic>
+References: <20211008180453.462291-1-brijesh.singh@amd.com>
+ <20211008180453.462291-9-brijesh.singh@amd.com>
+ <YW2EsxcqBucuyoal@zn.tnic>
+ <20211018184003.3ob2uxcpd2rpee3s@amd.com>
+ <YW3IdfMs61191qnU@zn.tnic>
+ <20211020161023.hzbj53ehmzjrt4xd@amd.com>
+ <YXF+WjMHW/dd0Wb6@zn.tnic>
+ <20211021204149.pof2exhwkzy2zqrg@amd.com>
+ <YXaPKsicNYFZe84I@zn.tnic>
+ <20211025163518.rztqnngwggnbfxvs@amd.com>
 MIME-Version: 1.0
-References: <20211022200032.23267-1-pauk.denis@gmail.com> <20211022200032.23267-2-pauk.denis@gmail.com>
- <YXcDcXrUo4a/KAsT@smile.fi.intel.com> <YXcHYvleoOr6sqMK@smile.fi.intel.com>
- <YXcKLvRu3gRm3zUF@smile.fi.intel.com> <20211026225805.1504a9f9@penguin.lxd>
-In-Reply-To: <20211026225805.1504a9f9@penguin.lxd>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 27 Oct 2021 12:00:32 +0300
-Message-ID: <CAHp75VekkKU7ain3f0+fWym6G54+jFYuAau7Bj+E0CrQjv-VBg@mail.gmail.com>
-Subject: Re: [PATCH v8 1/3] hwmon: (asus_wmi_ec_sensors) Support B550 Asus WMI.
-To:     Denis Pauk <pauk.denis@gmail.com>
-Cc:     Eugene Shalygin <eugene.shalygin@gmail.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        thomas@weissschuh.net, Tor Vic <torvic9@mailbox.org>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211025163518.rztqnngwggnbfxvs@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Oct 26, 2021 at 10:58 PM Denis Pauk <pauk.denis@gmail.com> wrote:
+On Mon, Oct 25, 2021 at 11:35:18AM -0500, Michael Roth wrote:
+> As counter-intuitive as it sounds, it actually doesn't buy us if the CPUID
+> table is part of the PSP attestation report, since:
 
-> Thank you, currently code has returned N/A by some reason. I will search
-> place of regression.
+Thanks for taking the time to explain in detail - I think I know now
+what's going on, and David explained some additional stuff to me
+yesterday.
 
-The code I issued is a complete draft and basically it's just an idea
-on how to improve in the form of a patch.
-I'm pretty sure there may be some bugs lurking.
+So, to cut to the chase:
+
+ - yeah, ok, I guess guest owner attestation is what should happen.
+
+ - as to the boot detection, I think you should do in sme_enable(), in
+pseudo:
+
+	bool snp_guest_detected;
+
+        if (CPUID page address) {
+                read SEV_STATUS;
+
+                snp_guest_detected = SEV_STATUS & MSR_AMD64_SEV_SNP_ENABLED;
+        }
+
+        /* old SME/SEV detection path */
+        read 0x8000_001F_EAX and look at bits SME and SEV, yadda yadda.
+
+        if (snp_guest_detected && (!SME || !SEV))
+                /*
+		 * HV is lying to me, do something there, dunno what. I guess we can
+		 * continue booting unencrypted so that the guest owner knows that
+		 * detection has failed and maybe the HV didn't want us to force SNP.
+		 * This way, attestation will fail and the user will know why.
+		 * Or something like that.
+		 */
+
+
+        /* normal feature detection continues. */
+
+How does that sound?
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
