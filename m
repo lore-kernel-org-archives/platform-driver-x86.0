@@ -2,121 +2,117 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4EDC43217
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 18:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF7EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 19:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F74D60F38
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 18:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A473360FC0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 19:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240530AbhJ0S4j (ORCPT
+        id S240458AbhJ0T6f (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Oct 2021 14:56:39 -0400
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:43536 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230437AbhJ0S4g (ORCPT
+        Wed, 27 Oct 2021 15:58:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240344AbhJ0T6f (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Oct 2021 14:56:36 -0400
-Received: by mail-ot1-f51.google.com with SMTP id y15-20020a9d460f000000b0055337e17a55so4952365ote.10;
-        Wed, 27 Oct 2021 11:54:10 -0700 (PDT)
+        Wed, 27 Oct 2021 15:58:35 -0400
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DDADC061570
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Oct 2021 12:56:09 -0700 (PDT)
+Received: by mail-qv1-xf2c.google.com with SMTP id t1so2593937qvb.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Oct 2021 12:56:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RxkC08Ya/onM0Zfgr9OBmgvN+l1f5cx6s4UfOynb4lM=;
+        b=gL2MvQADekNF0oWYA/nHaYiSskDTD4/GFGqSLL+sU/zw0tjVfoVOdGitXjG9lVSV4R
+         4IQy3vz9mRPmZe4oajS8NQMMV3p8mrv7Ng5+bckrLwDH0Sk8FHJx2ZSp+lQ4sc+eqcHV
+         QOHQixCcD3mPv45+19nqwd7NNzppdNBGkHw+COxCnP5EO66fNW5gbZm4mQ7TyF895d2T
+         WqndopvTOkygXXo+fVYKvNrUO/dHw/4yszp/2XxaALGoFHWoo/AhcsedGmj8wmnPR+8o
+         trWznpYreSwGQMq7eHzibHYkHD70NWDctVFMOaH4J34kaQv0NpslI6edpK+D/SELnuNr
+         7aLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0BMTeXCdhZ7VaC/eWMcigTkrnP2pN01kWWzYJFIQyu0=;
-        b=HO7aDRTVppu2yosyAPICQSxU5lZ2c/IAU7mENzj2Yo+g35S4jyN81S/nOvQFt8IeMa
-         iSxbgkOPknv3UJfXJ6ZB+rNIIieF0nX7pT8u9A8ugyviKYXfqJ9GynfPJGnXg0lY3wQz
-         k+P/M9SLXiqEYYLMKu7PHGki/0gOxznCv6Yag5tQvV6ldvgXyYq6qPGbc5y7bzhD/xNh
-         tdNfTP9V/rlGW4/88xZTr+UVPxpAxxJtswzyAWYyna3mLcyjIWZtMVpTYFYbMfJVcQDG
-         08mRvET7OYyxzDFsLcVnMNoYavmi2C4ydmBkWJk+4qYzGPdt776gKCgEEypNcqjYjSKt
-         mK/A==
-X-Gm-Message-State: AOAM5325/P09KwSftqsB9AjpEOKVfdPFpMMIgKDiIDS9b1odyIR+0dJL
-        T/wbSmw5pyTjdh15j7B3wrShb8sE7KZPGVLcXKc=
-X-Google-Smtp-Source: ABdhPJw0AMpRmI1zFTOHuehxHHn8AZdWi9FzbUBykmyZ1w/j7Rjw32Mx1RuAL2p+wihj2Y1Je++etttIOPSnN3B9SVM=
-X-Received: by 2002:a05:6830:1af0:: with SMTP id c16mr25788038otd.16.1635360850599;
- Wed, 27 Oct 2021 11:54:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RxkC08Ya/onM0Zfgr9OBmgvN+l1f5cx6s4UfOynb4lM=;
+        b=wARhzyl2VfaAags1Q6mqs01tvHd9BbQHW3N/mfPSo9nlDnGGR+x4WDWeZhClc+uZ0+
+         lgTd2WpByCnZrxWmsD3Vtf+hNeA7osKt44VGCQxE4soooBbUzUzNXWAld6fZWdu0VNsS
+         gGHIytabVaJLpP+uLjQObr+u2TwRMHPh73OvU5jl3+2lTONO5+bZC/X+dknLcfXRIaYA
+         Q2n4licUnDeslj35nItm0KelCPch8/PsVffZ5ovNYgYY+yUOM4TpT1QI/q648RGMw5i4
+         nR4WadH2JZ/EiWo3uEQMpeBa6ibShrQ1DapP3wPzgj38GnzZFp8MMgTQKDJcZLJO9Kk7
+         dcMg==
+X-Gm-Message-State: AOAM531fHCvDmdMyD5/19EzQaBumVBELFU4bYZ+2ZRHlfkg3h9Tsihb+
+        ES14x1HMsRSwDS+MUTEbUD6F0A==
+X-Google-Smtp-Source: ABdhPJxehUt/tNtBSMoMFfzAS98h4RXEoiQRAuOspNlEsHA1/ZCVCGvCHKvMvsSLfk46ontQtgtW1Q==
+X-Received: by 2002:a05:6214:e84:: with SMTP id hf4mr31700576qvb.38.1635364567977;
+        Wed, 27 Oct 2021 12:56:07 -0700 (PDT)
+Received: from localhost (7-153-16-190.fibertel.com.ar. [190.16.153.7])
+        by smtp.gmail.com with ESMTPSA id c13sm594483qtc.42.2021.10.27.12.56.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Oct 2021 12:56:07 -0700 (PDT)
+From:   Martin Fernandez <martin.fernandez@eclypsium.com>
+To:     linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, ardb@kernel.org, dvhart@infradead.org,
+        andy@infradead.org, gregkh@linuxfoundation.org, rafael@kernel.org,
+        martin.fernandez@eclypsium.com, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com
+Subject: [PATCH v2 0/5] [RFC] x86: Export information about hardware memory encryption to sysfs
+Date:   Wed, 27 Oct 2021 16:55:06 -0300
+Message-Id: <20211027195511.207552-1-martin.fernandez@eclypsium.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20211025094119.82967-1-hdegoede@redhat.com> <20211025094119.82967-3-hdegoede@redhat.com>
-In-Reply-To: <20211025094119.82967-3-hdegoede@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 27 Oct 2021 20:53:59 +0200
-Message-ID: <CAJZ5v0h2gaVxOKL0xnDpJiO2G3zvacTVbQajYaDBcXuxaoEjrg@mail.gmail.com>
-Subject: Re: [PATCH v4 02/11] i2c: acpi: Use acpi_dev_ready_for_enumeration() helper
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Wolfram Sang <wsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 25, 2021 at 11:42 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> The clk and regulator frameworks expect clk/regulator consumer-devices
-> to have info about the consumed clks/regulators described in the device's
-> fw_node.
->
-> To work around cases where this info is not present in the firmware tables,
-> which is often the case on x86/ACPI devices, both frameworks allow the
-> provider-driver to attach info about consumers to the clks/regulators
-> when registering these.
->
-> This causes problems with the probe ordering wrt drivers for consumers
-> of these clks/regulators. Since the lookups are only registered when the
-> provider-driver binds, trying to get these clks/regulators before then
-> results in a -ENOENT error for clks and a dummy regulator for regulators.
->
-> To ensure the correct probe-ordering the ACPI core has code to defer the
-> enumeration of consumers affected by this until the providers are ready.
->
-> Call the new acpi_dev_ready_for_enumeration() helper to avoid
-> enumerating / instantiating i2c-clients too early.
->
-> Acked-by: Wolfram Sang <wsa@kernel.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Show for each NUMA node the value of EFI_MEMORY_CPU_CRYPTO in its
+memory.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This is a serie of patches for exporting the needed information to
+userspace to determine if a machine is using Intel's TME or MKTME.
 
-> ---
->  drivers/i2c/i2c-core-acpi.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> index 546cc935e035..71eee5bc17ab 100644
-> --- a/drivers/i2c/i2c-core-acpi.c
-> +++ b/drivers/i2c/i2c-core-acpi.c
-> @@ -144,9 +144,12 @@ static int i2c_acpi_do_lookup(struct acpi_device *adev,
->         struct list_head resource_list;
->         int ret;
->
-> -       if (acpi_bus_get_status(adev) || !adev->status.present)
-> +       if (acpi_bus_get_status(adev))
->                 return -EINVAL;
->
-> +       if (!acpi_dev_ready_for_enumeration(adev))
-> +               return -ENODEV;
-> +
->         if (acpi_match_device_ids(adev, i2c_acpi_ignored_device_ids) == 0)
->                 return -ENODEV;
->
-> --
-> 2.31.1
->
+In a next patch I'm going to export if TME/MKTME is activated by the
+BIOS to sysfs, since right now for the user, this information is only
+available in the kernel logs, and it's not appropriate for fwupd to
+scan the boot logs just to parse an integer. I'm looking for
+suggestions for where to store this value.
+
+Changelog v2:
+
+The value shown in each node now only corresponds to memory in that
+node in particular
+
+Martin Fernandez (5):
+  Extend memblock to support memory encryption
+  Extend pg_data_t to hold information about memory encryption
+  Extend e820_table to hold information about memory encryption
+  Mark e820_entries as crypto capable from EFI memmap
+  Show in sysfs if a memory node is able to do memory encryption
+
+ Documentation/ABI/testing/sysfs-devices-node |  12 +++
+ arch/x86/include/asm/e820/api.h              |   2 +
+ arch/x86/include/asm/e820/types.h            |   1 +
+ arch/x86/include/asm/numa.h                  |   7 ++
+ arch/x86/kernel/e820.c                       |  32 +++++-
+ arch/x86/mm/numa.c                           |   5 +
+ arch/x86/mm/numa_emulation.c                 |   2 +-
+ arch/x86/platform/efi/efi.c                  | 108 +++++++++++++++++++
+ drivers/base/node.c                          |  72 ++++++++++++-
+ include/linux/memblock.h                     |   6 ++
+ include/linux/mmzone.h                       |   2 +
+ include/linux/node.h                         |   1 +
+ mm/memblock.c                                |  74 +++++++++++++
+ mm/page_alloc.c                              |   1 +
+ 14 files changed, 321 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-node
+
+
+base-commit: 3906fe9bb7f1a2c8667ae54e967dc8690824f4ea
+--
+2.30.2
+
