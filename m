@@ -2,78 +2,73 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31669C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 14:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D45FC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 14:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13C0560F9B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 14:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E0C7603E5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 14:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242427AbhJ0OLV (ORCPT
+        id S238581AbhJ0OcD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Oct 2021 10:11:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35573 "EHLO
+        Wed, 27 Oct 2021 10:32:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:39413 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237672AbhJ0OLV (ORCPT
+        by vger.kernel.org with ESMTP id S238237AbhJ0OcD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Oct 2021 10:11:21 -0400
+        Wed, 27 Oct 2021 10:32:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635343735;
+        s=mimecast20190719; t=1635344977;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wgdeyFxPGuqP7X+NdKI/OrLvd/C9GODgzNmDVSEMqQ0=;
-        b=ddMso1YfRgns/yFsL/t0JgYog9fRtfgJ+lVYU5qnZArMlUbkJO6S69MVnrjQqqc80YJxXi
-        Vcm9R7T5p5RVhti51ks8QTMPlbxb1M7WJDWMvlAAmtq0qOHvi8CXGjpD/YAPjaHHWRbM+2
-        txWWL5jE2FCdOw8HOp83Q1r7tF1VYr0=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-VJ-VBIRKMOe-xdsbUxDZMg-1; Wed, 27 Oct 2021 10:08:54 -0400
-X-MC-Unique: VJ-VBIRKMOe-xdsbUxDZMg-1
-Received: by mail-ed1-f72.google.com with SMTP id o22-20020a056402439600b003dd4f228451so2390227edc.16
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Oct 2021 07:08:53 -0700 (PDT)
+        bh=1TutWtNWFAZGxh9/9EQ+Z/ODI7l3NFQCcnYgc7PSp4E=;
+        b=dSXzkBwc4JCPHIKxGO2AWOAXTIgWp+tA1uQk3Hut+43h099YzWGw4yXqFrXxHYWKbW/1+m
+        XfsJ3bQtOU9MHzj9FdNjspyYkRJooAE0Yc6JPTXUVZ0pVrFJOnG+41w/rUqU+jENGsCKc0
+        6rplvvZG/CbeBubCH/iIVFvqr+nbOeU=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-117-U6NQ6SQXPWuNqrNhBcYUgA-1; Wed, 27 Oct 2021 10:29:35 -0400
+X-MC-Unique: U6NQ6SQXPWuNqrNhBcYUgA-1
+Received: by mail-ed1-f70.google.com with SMTP id h16-20020a05640250d000b003dd8167857aso2542406edb.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Oct 2021 07:29:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=wgdeyFxPGuqP7X+NdKI/OrLvd/C9GODgzNmDVSEMqQ0=;
-        b=ONwsAxpkNVyFA2VFENyjWR+MCA/Bpc/xY1Q/qARfyOSAIcQqFuoTEjQIzwupwHvxC5
-         K1hPFFQRqkedfi9L5QBw2wxmp8Kr/7jQg6JvK8Z2hH7EnYqx/5SmEix6oKwAS996/gDT
-         3oIvpfAwYoxNBabGwVAvOA/E2Pvzh2Dxg89PV8HEq8QZpXMedDr7AKA2N/8Kuff9J9u9
-         PxwnraQYWvtl/bOZHLshKhlSAQKnhQW7VSRnRHT5NVMV2wA33ftg06s/Mtp7t4EhFQRU
-         01FSLOk1RKpwPemj8s66a33CrKcYg6z8xQb2m9yhCa8MpYpNK0jQeLwnMaW0gsOKLWmc
-         Mr7Q==
-X-Gm-Message-State: AOAM530txJXYq/tJ7gM3NPMHjIoQG4Lphc9uYxmVlxH2MqYVXRIqf3/z
-        AIcsxMcrmsz1MYZ/Fu1PjP59ofxVfHHpA8PvHHloWcXCOfkpunGLItGjXma5ORoIPqI+WmNr4FI
-        oerhSKorbQ5dwE2TJWn29lwyUFQl4hEmPAQ==
-X-Received: by 2002:aa7:de83:: with SMTP id j3mr45938570edv.312.1635343732838;
-        Wed, 27 Oct 2021 07:08:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz+UUV3Yl/79WVSquPk3+QAo+NRVNHuOpU1mwgdsycapt1Wdqf2kPi7xam7IHCPbkuKpJIyEQ==
-X-Received: by 2002:aa7:de83:: with SMTP id j3mr45938552edv.312.1635343732644;
-        Wed, 27 Oct 2021 07:08:52 -0700 (PDT)
+        bh=1TutWtNWFAZGxh9/9EQ+Z/ODI7l3NFQCcnYgc7PSp4E=;
+        b=fKPdgcgqKDB3DHt6HVwmCKLwsUTt7Y3F5yF5RD+FPDznhQpm7C/0CT689vTWBNPH3z
+         Rk3/R7eC+7EqzzjEidXftTqgNlF2sE8UUtXU6/gQ/PemBJhSogHs+OJ14YJF5UMgyEwO
+         lCxQ3v+nxLxUPKMf/HSL1q5exrzyV7HneH0ShnqzjVGs9SctY5a3mF+20xGFtgAY3F5U
+         pTkD/7g5WS9hkEZUapnplgJpW9eLuIO24t3/EtjKLJV7KfvMS9qdgGAL6RhVwJvjSTCQ
+         J0T5CB2+s/0Ewq7adKqKfWb2SQJJu7/n1NtMl0TxiTRSltH0+ylT6G7ZQOw78sEHAE5W
+         Si+w==
+X-Gm-Message-State: AOAM533ZESosbLlDx31foVOoqGAUg/bZnLYgxH/G6owpbuvjH5iEsfvh
+        CWusH3C4NHhJVRMUNJbxC+qCac6uXDu7sWidYiA3c46vNaqopTh69R58lobSuDMOv1vQeF16Irn
+        vLrUdU3ZfB6rKSvY28h3QtIppLMhbJGrBkA==
+X-Received: by 2002:a17:907:16a3:: with SMTP id hc35mr15780614ejc.497.1635344974639;
+        Wed, 27 Oct 2021 07:29:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwyF+zvDYmKs7dRApmzRmSo5JIGwpdZy6SCv5mw8ACfSG9IGP+JhJa36nnKPpjxVf+ijuvusQ==
+X-Received: by 2002:a17:907:16a3:: with SMTP id hc35mr15780594ejc.497.1635344974437;
+        Wed, 27 Oct 2021 07:29:34 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id c5sm69098eds.81.2021.10.27.07.08.52
+        by smtp.gmail.com with ESMTPSA id h7sm113309edt.37.2021.10.27.07.29.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Oct 2021 07:08:52 -0700 (PDT)
-Message-ID: <e00e3f20-96d9-ee5f-505e-46bcfe0daee5@redhat.com>
-Date:   Wed, 27 Oct 2021 16:08:51 +0200
+        Wed, 27 Oct 2021 07:29:34 -0700 (PDT)
+Message-ID: <9386f248-41fa-8a3c-a480-c0aa8734712d@redhat.com>
+Date:   Wed, 27 Oct 2021 16:29:33 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH v4 2/3] platform/x86: asus-wmi: rename platform_profile_*
- function symbols
+Subject: Re: [PATCH platform-next 0/3] platform/x86: mlx-platform: Extend to
+ support new systems and additional user interfaces
 Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>, markpearson@lenovo.com,
-        linux-acpi@vger.kernel.org
-References: <20211026190835.10697-1-mario.limonciello@amd.com>
- <20211026190835.10697-3-mario.limonciello@amd.com>
+To:     Vadim Pasternak <vadimp@nvidia.com>
+Cc:     platform-driver-x86@vger.kernel.org, oleksandrs@nvidia.com
+References: <20211023094022.4193813-1-vadimp@nvidia.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211026190835.10697-3-mario.limonciello@amd.com>
+In-Reply-To: <20211023094022.4193813-1-vadimp@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -82,14 +77,21 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 10/26/21 21:08, Mario Limonciello wrote:
-> An upcoming change to platform profiles will export `platform_profile_get`
-> as a symbol that can be used by other drivers. Avoid the collision.
+On 10/23/21 11:40, Vadim Pasternak wrote:
+> Add support for new systems:
+> - InfiniBand system type MQM97xx.
+> - Ethernet water cooling system type SGN2410.
 > 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Extend the existing system class "VMOD0010" with additional BIOS related
+> attributes.
+> 
+> Patch set contains:
+> Patch #1 - adds support for MQM97xx system.
+> Patch #2 - adds support for BIOS related attributes.
+> Patch #3 - adds support for SGN2410 system.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
 Note it will show up in my review-hans branch once I've pushed my
@@ -104,46 +106,17 @@ Regards,
 
 Hans
 
-> ---
->  drivers/platform/x86/asus-wmi.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+
+
 > 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index e14fb5fa7324..8f067ac4e952 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -2169,8 +2169,8 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
->  static DEVICE_ATTR_RW(throttle_thermal_policy);
->  
->  /* Platform profile ***********************************************************/
-> -static int platform_profile_get(struct platform_profile_handler *pprof,
-> -				enum platform_profile_option *profile)
-> +static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
-> +					enum platform_profile_option *profile)
->  {
->  	struct asus_wmi *asus;
->  	int tp;
-> @@ -2196,8 +2196,8 @@ static int platform_profile_get(struct platform_profile_handler *pprof,
->  	return 0;
->  }
->  
-> -static int platform_profile_set(struct platform_profile_handler *pprof,
-> -				enum platform_profile_option profile)
-> +static int asus_wmi_platform_profile_set(struct platform_profile_handler *pprof,
-> +					enum platform_profile_option profile)
->  {
->  	struct asus_wmi *asus;
->  	int tp;
-> @@ -2236,8 +2236,8 @@ static int platform_profile_setup(struct asus_wmi *asus)
->  
->  	dev_info(dev, "Using throttle_thermal_policy for platform_profile support\n");
->  
-> -	asus->platform_profile_handler.profile_get = platform_profile_get;
-> -	asus->platform_profile_handler.profile_set = platform_profile_set;
-> +	asus->platform_profile_handler.profile_get = asus_wmi_platform_profile_get;
-> +	asus->platform_profile_handler.profile_set = asus_wmi_platform_profile_set;
->  
->  	set_bit(PLATFORM_PROFILE_QUIET, asus->platform_profile_handler.choices);
->  	set_bit(PLATFORM_PROFILE_BALANCED,
+> Vadim Pasternak (3):
+>   platform/x86: mlx-platform: Extend FAN and LED configuration to
+>     support new MQM97xx systems
+>   platform/x86: mlx-platform: Add BIOS attributes for CoffeeLake COMEx
+>     based systems
+>   platform/x86: mlx-platform: Add support for new system SGN2410
+> 
+>  drivers/platform/x86/mlx-platform.c | 193 +++++++++++++++++++++++++++-
+>  1 file changed, 192 insertions(+), 1 deletion(-)
 > 
 
