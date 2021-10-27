@@ -2,74 +2,85 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B6AC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 08:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055EEC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 09:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F43160F9D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 08:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A5760FC0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 09:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236779AbhJ0IWY (ORCPT
+        id S232435AbhJ0JDf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Oct 2021 04:22:24 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:44115 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236592AbhJ0IWY (ORCPT
+        Wed, 27 Oct 2021 05:03:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232047AbhJ0JDf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Oct 2021 04:22:24 -0400
-Received: (Authenticated sender: peter@korsgaard.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 5EA5020009;
-        Wed, 27 Oct 2021 08:19:54 +0000 (UTC)
-Received: from peko by dell.be.48ers.dk with local (Exim 4.92)
-        (envelope-from <peter@korsgaard.com>)
-        id 1mfeA6-0006U4-4d; Wed, 27 Oct 2021 10:19:54 +0200
-From:   Peter Korsgaard <peter@korsgaard.com>
-To:     cgel.zte@gmail.com
-Cc:     santoshkumar.yadav@barco.com, peter.korsgaard@barco.com,
-        hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ran jianping <ran.jianping@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: Re: [PATCH] platform/x86: remove duplicate include in barco-p50-gpio.c
-References: <20211027081516.1865-1-ran.jianping@zte.com.cn>
-Date:   Wed, 27 Oct 2021 10:19:54 +0200
-In-Reply-To: <20211027081516.1865-1-ran.jianping@zte.com.cn> (cgel zte's
-        message of "Wed, 27 Oct 2021 08:15:16 +0000")
-Message-ID: <87v91iriad.fsf@dell.be.48ers.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 27 Oct 2021 05:03:35 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F72C061570;
+        Wed, 27 Oct 2021 02:01:10 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id s1so7759836edd.3;
+        Wed, 27 Oct 2021 02:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FwSpFY7U7Gd4ELBz8g66vgAETa0RnYhonzcZ9AVHumA=;
+        b=fUy6bdf0Ab6eD2kRHUso7K4espthSWVlKrzsDF+v9UlWSJCkC1QCFitLCKHpqfU/rb
+         AJwnKdSsDzjDNmfnTzbYX1zKJ1z+uIt8CsbfcHWv2zelGb5iJKJMt/E4WCBD8MPBkgBB
+         nYWshVa8A2Oo+ExhtL4v0frXvHEgWfIo4GpLiu7jxvEckPrPQieivcaczp+y4ydc+h8I
+         BB7wmIwOyuJW9ZCp1ss2p2NHuK7epZ7JHsbEMzJXmxlhEMjtZrVYpl18F9pwBCIwY0oK
+         NdCDjdFTRR+DoqwI3xGfJKLtA9/nVmAoaKONnSed6PvnzpYTqwe4bNzIZWcJZPh2eGGH
+         Z4Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FwSpFY7U7Gd4ELBz8g66vgAETa0RnYhonzcZ9AVHumA=;
+        b=YkrABuw4Z0Ng2yVV1zW4nOWbaeodAEPon3SGfUj0MQRISPkFlo4znp+y4dJWKMQO1k
+         wRDrN18WFcU/wklnFNF0E1FdNModVUhA5hK1tcdq0cQCArRqZEpTKzfKFrZvI4v4AX5S
+         haJrfFqVbOtPaTkQlm7fCjCs13gQ6eA5c1kfPUkmIsnV+GUFfT2KCU6kcyXSBwSgwMYq
+         FjxOlXRtkr0xBt6Dd8vRddx+L6uOhLPCg6O5BeavQ5DIIO/kSpO+L18KZl8KyBoGjnnK
+         ZDbMFYNRJk4VcFFQc7+2Ki2wyPedwMpPVKg8NbEuvuAAGxhBN6FX0gKVEh5UefUV/6et
+         rBug==
+X-Gm-Message-State: AOAM533vMeEqe6u7fKVxG+MypoaOWA0fLLDRJKI0yb3Uhwl0dcCrnySe
+        HrqLDn8jsAJbSlcHn3pKWi0zNCPCJfi8dvDuA4c=
+X-Google-Smtp-Source: ABdhPJwiRlxKN8rVFf+TqHcvaGebMUj7HhFjqA8GrP7Zb1pDbtyaDlm7JREauXbJYDdJAwvNEIBZ86iIUp/JyM9RQFU=
+X-Received: by 2002:a05:6402:10da:: with SMTP id p26mr43735894edu.283.1635325268073;
+ Wed, 27 Oct 2021 02:01:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20211022200032.23267-1-pauk.denis@gmail.com> <20211022200032.23267-2-pauk.denis@gmail.com>
+ <YXcDcXrUo4a/KAsT@smile.fi.intel.com> <YXcHYvleoOr6sqMK@smile.fi.intel.com>
+ <YXcKLvRu3gRm3zUF@smile.fi.intel.com> <20211026225805.1504a9f9@penguin.lxd>
+In-Reply-To: <20211026225805.1504a9f9@penguin.lxd>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 27 Oct 2021 12:00:32 +0300
+Message-ID: <CAHp75VekkKU7ain3f0+fWym6G54+jFYuAau7Bj+E0CrQjv-VBg@mail.gmail.com>
+Subject: Re: [PATCH v8 1/3] hwmon: (asus_wmi_ec_sensors) Support B550 Asus WMI.
+To:     Denis Pauk <pauk.denis@gmail.com>
+Cc:     Eugene Shalygin <eugene.shalygin@gmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        thomas@weissschuh.net, Tor Vic <torvic9@mailbox.org>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
->>>>> "cgel" == cgel zte <cgel.zte@gmail.com> writes:
+On Tue, Oct 26, 2021 at 10:58 PM Denis Pauk <pauk.denis@gmail.com> wrote:
 
- > From: ran jianping <ran.jianping@zte.com.cn>
- > 'linux/io.h' included in 'drivers/platform/x86/barco-p50-gpio.c'
- >  is duplicated.It is also included on the 17 line.
+> Thank you, currently code has returned N/A by some reason. I will search
+> place of regression.
 
- > Reported-by: Zeal Robot <zealci@zte.com.cn>
- > Signed-off-by: ran jianping <ran.jianping@zte.com.cn>
- > ---
- >  drivers/platform/x86/barco-p50-gpio.c | 1 -
- >  1 file changed, 1 deletion(-)
-
- > diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
- > index f5c72e33f9ae..bb8ed8e95225 100644
- > --- a/drivers/platform/x86/barco-p50-gpio.c
- > +++ b/drivers/platform/x86/barco-p50-gpio.c
- > @@ -14,7 +14,6 @@
- >  #include <linux/delay.h>
- >  #include <linux/dmi.h>
- >  #include <linux/err.h>
- > -#include <linux/io.h>
-
-It probably makes more sense to drop the include from line 17 to keep
-alphabetical ordering, but otherwise it looks good to.
-
-With that fixed:
-
-Acked-by: Peter Korsgaard <peter@korsgaard.com>
+The code I issued is a complete draft and basically it's just an idea
+on how to improve in the form of a patch.
+I'm pretty sure there may be some bugs lurking.
 
 -- 
-Bye, Peter Korsgaard
+With Best Regards,
+Andy Shevchenko
