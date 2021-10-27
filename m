@@ -2,97 +2,74 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E179FC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 08:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B6AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 08:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C273360F9D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 08:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F43160F9D
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 08:20:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238711AbhJ0IRt (ORCPT
+        id S236779AbhJ0IWY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Oct 2021 04:17:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231715AbhJ0IRt (ORCPT
+        Wed, 27 Oct 2021 04:22:24 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:44115 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236592AbhJ0IWY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Oct 2021 04:17:49 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05BEAC061570;
-        Wed, 27 Oct 2021 01:15:24 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id t184so2054871pfd.0;
-        Wed, 27 Oct 2021 01:15:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FkeGV2X5Ht4WOcxwzPnDHzustbz4fUY6SlFH5mmZHhA=;
-        b=YgZkNKac6ZilncgALhUCR3GWw5DlAyr1rgpcGY/OZ/j6V2TlgJ+eu0mkSaAQp0n86m
-         T305RAeK1fb5JVUI07auNsfLZdKdFOZMBC/6kjHsAU/WuBnpoTmN0b1roF4YG5yq2Zi6
-         aKJw9u/ozRIxWqCPlWN4MOH2puSrvkNZe024iEq1O/0/u/AlR5XR2pJxps1YrD7BOJ9U
-         PoboJjAselSPyLy3AUO6hNdsIB0z6AaxY+jk8MXJOVR68gqnavYkCDYpde6JShMjzRx6
-         QOdQQv8dpGAOpARFxbjtSxgcku57dTerqlc0/8QYCHs/yGDREhAlbLh4GwmgSQHYJHwZ
-         8xpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FkeGV2X5Ht4WOcxwzPnDHzustbz4fUY6SlFH5mmZHhA=;
-        b=X5Ha/se+vog67USiK/TS1rOn+8REk2TL2SCeZmfz+15oIDg5vSmwKy5dsXSoZt7pij
-         SsXz7+6IElA/OzZpzxEVuLE9u2bXNOpCL+Qetl5CKZUWYz25OZMsUO50wRAMbB1NIZDP
-         e2f20uD4FYoRSlXm8Ya264L7tCLkbyw//RO0fowrH78ZWRMRveCKt+P2hyTdmEoTKOy5
-         /+LMB2o3O2PViJ5QR9XQLnfmxJ3yRyQXMOKRkYBeiI6Rd6iZiko2puBiVKQNJX7IeWT/
-         zgWl8trhzj0jtEsJsnOF75dQb1eDVkVQUzw3t3I1ZNj0JCQPdPtNlx67daE5LJZeZANy
-         5ogw==
-X-Gm-Message-State: AOAM530eFJ51wKEI6V13Ot3Ti5E2qeOeD3U916zBzkwJQ53BcOHZOojw
-        EtiIJwCu8ew9sHQyyiH4ad3weYXdrWE=
-X-Google-Smtp-Source: ABdhPJxEGe6edu9vJN3Nt4OkuncWrQlJBs0g/XkpZ3pk2RyKGskWlM4F95JezYN/NDE8RBQXQK0k9g==
-X-Received: by 2002:a05:6a00:a1d:b0:44d:aa2d:9665 with SMTP id p29-20020a056a000a1d00b0044daa2d9665mr30903369pfh.24.1635322523557;
-        Wed, 27 Oct 2021 01:15:23 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id h4sm3274622pjm.14.2021.10.27.01.15.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Oct 2021 01:15:23 -0700 (PDT)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: ran.jianping@zte.com.cn
-To:     santoshkumar.yadav@barco.com
-Cc:     peter.korsgaard@barco.com, hdegoede@redhat.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        Wed, 27 Oct 2021 04:22:24 -0400
+Received: (Authenticated sender: peter@korsgaard.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 5EA5020009;
+        Wed, 27 Oct 2021 08:19:54 +0000 (UTC)
+Received: from peko by dell.be.48ers.dk with local (Exim 4.92)
+        (envelope-from <peter@korsgaard.com>)
+        id 1mfeA6-0006U4-4d; Wed, 27 Oct 2021 10:19:54 +0200
+From:   Peter Korsgaard <peter@korsgaard.com>
+To:     cgel.zte@gmail.com
+Cc:     santoshkumar.yadav@barco.com, peter.korsgaard@barco.com,
+        hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         ran jianping <ran.jianping@zte.com.cn>,
         Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH] platform/x86: remove duplicate include in barco-p50-gpio.c
-Date:   Wed, 27 Oct 2021 08:15:16 +0000
-Message-Id: <20211027081516.1865-1-ran.jianping@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH] platform/x86: remove duplicate include in barco-p50-gpio.c
+References: <20211027081516.1865-1-ran.jianping@zte.com.cn>
+Date:   Wed, 27 Oct 2021 10:19:54 +0200
+In-Reply-To: <20211027081516.1865-1-ran.jianping@zte.com.cn> (cgel zte's
+        message of "Wed, 27 Oct 2021 08:15:16 +0000")
+Message-ID: <87v91iriad.fsf@dell.be.48ers.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: ran jianping <ran.jianping@zte.com.cn>
+>>>>> "cgel" == cgel zte <cgel.zte@gmail.com> writes:
 
-'linux/io.h' included in 'drivers/platform/x86/barco-p50-gpio.c'
- is duplicated.It is also included on the 17 line.
+ > From: ran jianping <ran.jianping@zte.com.cn>
+ > 'linux/io.h' included in 'drivers/platform/x86/barco-p50-gpio.c'
+ >  is duplicated.It is also included on the 17 line.
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: ran jianping <ran.jianping@zte.com.cn>
----
- drivers/platform/x86/barco-p50-gpio.c | 1 -
- 1 file changed, 1 deletion(-)
+ > Reported-by: Zeal Robot <zealci@zte.com.cn>
+ > Signed-off-by: ran jianping <ran.jianping@zte.com.cn>
+ > ---
+ >  drivers/platform/x86/barco-p50-gpio.c | 1 -
+ >  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
-index f5c72e33f9ae..bb8ed8e95225 100644
---- a/drivers/platform/x86/barco-p50-gpio.c
-+++ b/drivers/platform/x86/barco-p50-gpio.c
-@@ -14,7 +14,6 @@
- #include <linux/delay.h>
- #include <linux/dmi.h>
- #include <linux/err.h>
--#include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/leds.h>
- #include <linux/module.h>
+ > diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
+ > index f5c72e33f9ae..bb8ed8e95225 100644
+ > --- a/drivers/platform/x86/barco-p50-gpio.c
+ > +++ b/drivers/platform/x86/barco-p50-gpio.c
+ > @@ -14,7 +14,6 @@
+ >  #include <linux/delay.h>
+ >  #include <linux/dmi.h>
+ >  #include <linux/err.h>
+ > -#include <linux/io.h>
+
+It probably makes more sense to drop the include from line 17 to keep
+alphabetical ordering, but otherwise it looks good to.
+
+With that fixed:
+
+Acked-by: Peter Korsgaard <peter@korsgaard.com>
+
 -- 
-2.25.1
-
+Bye, Peter Korsgaard
