@@ -2,147 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4454C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 09:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F84EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 09:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC44C610E7
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 09:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08175610D2
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 09:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230078AbhJ1Jhb (ORCPT
+        id S230226AbhJ1JvA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Oct 2021 05:37:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:25148 "EHLO
+        Thu, 28 Oct 2021 05:51:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45807 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230088AbhJ1Jhb (ORCPT
+        by vger.kernel.org with ESMTP id S230210AbhJ1Ju4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Oct 2021 05:37:31 -0400
+        Thu, 28 Oct 2021 05:50:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635413704;
+        s=mimecast20190719; t=1635414509;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IGr0evJpq0ehfSf5Z/rdSKDkY1U6PFL75WswHuxKJMY=;
-        b=WCiG/5Oq2bZ6FtcRgAQ4fw/09K7p4JeSL4QvWTk/LRsb4TYHw9bkmBVNSC7xwv5ViOSqNw
-        m8mv7glpXKPeqJKDJ+qT9Kf3oohZWk/aPFObZSFC72DrlnsjG9YkHTTOaCDTCSorW2rGrQ
-        wgp3TBzW4VzbKxqwMuNQtIHrlEGULgw=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-RHp5YhtaNfyS6B4w6mCRsg-1; Thu, 28 Oct 2021 05:35:02 -0400
-X-MC-Unique: RHp5YhtaNfyS6B4w6mCRsg-1
-Received: by mail-ed1-f72.google.com with SMTP id c25-20020a056402143900b003dc19782ea8so5071767edx.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Oct 2021 02:35:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=IGr0evJpq0ehfSf5Z/rdSKDkY1U6PFL75WswHuxKJMY=;
-        b=Q8aaMMM0S4imR6+LcMda3arBZBEO/yjbyrjmZbqy9l0HpwWZ6z2ksaqjUGyFW4cxG4
-         /2nvlWhzhgBI0pQb96nIrqsuVgJJ0U/VlsmnAHUjQ8zVznApZiMfRX7m/QhlcYYwYL+o
-         m92WvfX952CZPO/82ZJa3kFx43eJ3mgNgVlAIDjZUc86Z+1+FMqUh1xgGRMJHlZZS12O
-         NOMZdoHnykYPVggY7nbh1dC1MN3JVccG9Xl5A7igPkKre8oBpdVCrkvn4NPK9U6bQaTm
-         tuTcp50xAodDodWKUtUtIV93u2fI7/WY6iDXmQaC3qjuTm1ikUuMARQYkShs4lem7ENV
-         NH0w==
-X-Gm-Message-State: AOAM5326g2inZF3v6MClcrxOMPWlC1s3KqCI6cXZiTjJQ3oXs4oFpcm/
-        vcfjAgbqXEdvb5ngc8IG13mMCTMgJ2V7rfAI9blnF/HenN5Pr4QpNBpkAuZ5KVhdThA5J37y9Sm
-        mojPE+YobY3OCseI0rfvMSpUy2CPj2w8CrA==
-X-Received: by 2002:a17:906:4fc8:: with SMTP id i8mr3868523ejw.342.1635413701692;
-        Thu, 28 Oct 2021 02:35:01 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwoOKZ3qNBcwlMLgnZG7JpL8bh/RkFvn0OZnTYlgEXKNmaw3Bv3HQvhehzCBwh8H8U1o3dx5w==
-X-Received: by 2002:a17:906:4fc8:: with SMTP id i8mr3868506ejw.342.1635413701541;
-        Thu, 28 Oct 2021 02:35:01 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id bn20sm1095335ejb.5.2021.10.28.02.35.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Oct 2021 02:35:01 -0700 (PDT)
-Message-ID: <15aeb61a-8dae-deb4-8e7a-f31ce5531cf6@redhat.com>
-Date:   Thu, 28 Oct 2021 11:35:00 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH] platform/surface: aggregator_registry: Add initial
- support for Surface Pro 8
-Content-Language: en-US
-To:     Maximilian Luz <luzmaximilian@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     Mark Gross <markgross@kernel.org>, linux-kernel@vger.kernel.org
-References: <20211028012845.1887219-1-luzmaximilian@gmail.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=nWiBYxcFaFXuaFEyBPCEAL5D0LET0SxpB1dWr9y5pGA=;
+        b=bUJUcLqaFoECFE2aDpONN48WBWKJWAlUQueBWUM7nAKBhKTVH3/dKku9v5iLpJ4QqEAlaR
+        I1sIet1Z0ehe5eHZovej3QED9tEvkg59wM5gHIwAyPxvl9VtiZaROeM3PKkoa5iXLxOJyZ
+        5m70C8Ru/f0Hwy8YW+fa7K3wkI84n2M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-413-A6FRSY7QPxqVkJONySV7Xg-1; Thu, 28 Oct 2021 05:48:27 -0400
+X-MC-Unique: A6FRSY7QPxqVkJONySV7Xg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1E4180A5C1;
+        Thu, 28 Oct 2021 09:48:26 +0000 (UTC)
+Received: from x1.localdomain (unknown [10.39.192.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F48E70F5C;
+        Thu, 28 Oct 2021 09:48:25 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211028012845.1887219-1-luzmaximilian@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
+        Mark Stamp <stamp497@googlemail.com>
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the Viglen Connect 10 tablet
+Date:   Thu, 28 Oct 2021 11:48:24 +0200
+Message-Id: <20211028094824.84292-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+From: Mark Stamp <stamp497@googlemail.com>
 
-On 10/28/21 03:28, Maximilian Luz wrote:
-> Add preliminary support for the Surface Pro 8 to the Surface Aggregator
-> registry. This includes battery/charger status and platform profile
-> support.
-> 
-> In contrast to earlier Surface Pro generations, the keyboard cover is
-> now also connected via the Surface Aggregator Module (whereas it was
-> previously connected via USB or HID-over-I2C). To properly support the
-> HID devices of that cover, however, more changes regarding hot-removal
-> of Surface Aggregator client devices as well as a new device hub driver
-> are required. We will address those things in a follow-up series, so do
-> not add any HID device IDs just yet.
-> 
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+Add touchscreen info for the Viglen Connect 10 tablet.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Signed-off-by: Mark Stamp <stamp497@googlemail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-> ---
->  .../platform/surface/surface_aggregator_registry.c   | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-> index 2e0d3a808d47..ce2bd88feeaa 100644
-> --- a/drivers/platform/surface/surface_aggregator_registry.c
-> +++ b/drivers/platform/surface/surface_aggregator_registry.c
-> @@ -228,6 +228,15 @@ static const struct software_node *ssam_node_group_sp7[] = {
->  	NULL,
->  };
->  
-> +static const struct software_node *ssam_node_group_sp8[] = {
-> +	&ssam_node_root,
-> +	&ssam_node_bat_ac,
-> +	&ssam_node_bat_main,
-> +	&ssam_node_tmp_pprof,
-> +	/* TODO: Add support for keyboard cover. */
-> +	NULL,
-> +};
-> +
->  
->  /* -- Device registry helper functions. ------------------------------------- */
->  
-> @@ -520,6 +529,9 @@ static const struct acpi_device_id ssam_platform_hub_match[] = {
->  	/* Surface Pro 7+ */
->  	{ "MSHW0119", (unsigned long)ssam_node_group_sp7 },
->  
-> +	/* Surface Pro 8 */
-> +	{ "MSHW0263", (unsigned long)ssam_node_group_sp8 },
-> +
->  	/* Surface Book 2 */
->  	{ "MSHW0107", (unsigned long)ssam_node_group_gen5 },
->  
-> 
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 033f797861d8..fa8812039b82 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -938,6 +938,23 @@ static const struct ts_dmi_data trekstor_surftab_wintron70_data = {
+ 	.properties	= trekstor_surftab_wintron70_props,
+ };
+ 
++static const struct property_entry viglen_connect_10_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1890),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1280),
++	PROPERTY_ENTRY_U32("touchscreen-fuzz-x", 6),
++	PROPERTY_ENTRY_U32("touchscreen-fuzz-y", 6),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-viglen-connect-10.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
++	{ }
++};
++
++static const struct ts_dmi_data viglen_connect_10_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= viglen_connect_10_props,
++};
++
+ static const struct property_entry vinga_twizzle_j116_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1920),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1280),
+@@ -1521,6 +1538,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "YOURBOOK C11B"),
+ 		},
+ 	},
++	{
++		/* Viglen Connect 10 */
++		.driver_data = (void *)&viglen_connect_10_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Viglen Ltd."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Connect 10'' Tablet PC"),
++		},
++	},
+ 	{
+ 		/* Vinga Twizzle J116 */
+ 		.driver_data = (void *)&vinga_twizzle_j116_data,
+-- 
+2.31.1
 
