@@ -2,93 +2,86 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F80FC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 16:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3818C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 16:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38AA0610D2
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 16:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A62610E8
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 16:35:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230217AbhJ1Q0V (ORCPT
+        id S229806AbhJ1Qhf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Oct 2021 12:26:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229764AbhJ1Q0U (ORCPT
+        Thu, 28 Oct 2021 12:37:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229565AbhJ1Qhf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Oct 2021 12:26:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EA77860FC4;
-        Thu, 28 Oct 2021 16:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635438232;
-        bh=EmYTJJ13B1E0RoYAnyAeh+HhBWdvFaVem0sUg5GqFGM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G6LtmcdXJ459KQFzVoJF0jBK73tHKjzTD8vNHgrMNQ0QSuWwkTEAGpUATccGgdpHN
-         ZVLfpef9jVL54epUkK4pbPR+qt6hwwXnjInXMaAlirwq61ucyVRKU0xi0SKu6lyFJw
-         ikAUdEvBYyNdsHeN9fpAOdWZun2R2Y44cD2fiEB3OKX3zt3ngyztRzbabOe2mP1oDH
-         Q7xrDOWz2AYO+r76ARD1eZBHMuHBrbktzlj3bT/s0wVW+l/O73FnxPS+8tXZmn8uii
-         dlln8VX05VaKkKqh7J2rRhafTuDVT/iG5lQTTLnGWshTacoyjL/6J3dGqgd2TtrvmC
-         qnfn2zsxYimdA==
-Date:   Thu, 28 Oct 2021 17:23:45 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v4 04/11] regulator: Introduce tps68470-regulator driver
-Message-ID: <YXrOkeudAzQZezKM@sirena.org.uk>
-References: <20211025094119.82967-1-hdegoede@redhat.com>
- <20211025094119.82967-5-hdegoede@redhat.com>
+        Thu, 28 Oct 2021 12:37:35 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7EAC061570;
+        Thu, 28 Oct 2021 09:35:08 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f13a70087f257aa50e887e8.dip0.t-ipconnect.de [IPv6:2003:ec:2f13:a700:87f2:57aa:50e8:87e8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C672A1EC066C;
+        Thu, 28 Oct 2021 18:35:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1635438906;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=zh+2GNP02n/dF4/zNJ+FeGBfsbHiW2pUtoXXFtUgYqw=;
+        b=Y7QXElCSiP3f5F2MygLvhg8uyJ3u/zL9/HdJ57Hu7Cm/OUTZNVgtdKS6tZWtNyEzE6WBPp
+        QEiPgtn2mz1lnoDatHWqfAqLIT+lGq+I4TSTb3FG/WpgkAAA19rA3T7nCRZW/r2osYmO9a
+        Wkee9fZnCgo4LXMmNwz0HHmvfYAmu/0=
+Date:   Thu, 28 Oct 2021 18:35:03 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Richard Hughes <hughsient@gmail.com>
+Cc:     Martin Fernandez <martin.fernandez@eclypsium.com>,
+        Dave Hansen <dave.hansen@intel.com>, linux-efi@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, ardb@kernel.org,
+        dvhart@infradead.org, andy@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org,
+        Daniel Gutson <daniel.gutson@eclypsium.com>
+Subject: Re: [PATCH v2 0/5] [RFC] x86: Export information about hardware
+ memory encryption to sysfs
+Message-ID: <YXrRN+pDr4Uv5p0t@zn.tnic>
+References: <20211027195511.207552-1-martin.fernandez@eclypsium.com>
+ <8a8e0743-e54d-ec96-da4e-1d101b550274@intel.com>
+ <CAKgze5Z3fT9F0S-mogfP6is9sL3=0imtCbfy6ZYrd3zgaBUqRg@mail.gmail.com>
+ <YXq50yzJQqrJk13v@zn.tnic>
+ <CAD2FfiFS++2-Sn5nCft8Eb-R41MM6abCjXyDn8bOVY-_miCpRA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HICPYDh+BDn1Q9So"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211025094119.82967-5-hdegoede@redhat.com>
-X-Cookie: try again
+In-Reply-To: <CAD2FfiFS++2-Sn5nCft8Eb-R41MM6abCjXyDn8bOVY-_miCpRA@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Thu, Oct 28, 2021 at 05:03:20PM +0100, Richard Hughes wrote:
+> We've got Red Hat customers right now that are completely confused if
+> they have hardware capable of encrypted memory. We want to make it
+> part of a specification that can be passed to the people actually
+> purchasing the hardware.
 
---HICPYDh+BDn1Q9So
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sorry, you need to expand on that: part of what specification? How is
+this going to be run? How is the customer supposed to figure that out
+when she has the hardware?
 
-On Mon, Oct 25, 2021 at 11:41:12AM +0200, Hans de Goede wrote:
-> The TPS68470 PMIC provides Clocks, GPIOs and Regulators. At present in
-> the kernel the Regulators and Clocks are controlled by an OpRegion
-> driver designed to work with power control methods defined in ACPI, but
-> some platforms lack those methods, meaning drivers need to be able to
-> consume the resources of these chips through the usual frameworks.
+Why cannot this be a userspace program, script, tool, whatever?
 
-This looks good to me, if you fix the issues Andy raised I think it's
-good to go.
+My questions are still unanswered.
 
---HICPYDh+BDn1Q9So
-Content-Type: application/pgp-signature; name="signature.asc"
+Thx.
 
------BEGIN PGP SIGNATURE-----
+-- 
+Regards/Gruss,
+    Boris.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmF6zpAACgkQJNaLcl1U
-h9CVSAf/QLg3eJMYmRs2uUC6+US55NacBhv8/h4hQIYq+5JYfFBGFezL99DqwPEq
-j8N+Z6p+wdcgaxqBB79CGBBt4mEC7gvnnk0HluM/mKS9jNfu7WFhE2NgUHmPgVHW
-OfyXfL3Voi9GOGquXkNquLKiTSmSf+Osxrx3w9FPMyIHZpbABtXxoYNolUUZKIqM
-Qw4HIuk79CHl6Obh1fIYS9waZJF35bSwTIJO1aT+GaJjvicFDlcI5DbvVmRpaKgM
-O92Z5nzihMQGx6YYh6WJEydowJQCo4l0arsbxa38AGuXS/FzaXkAwqnw163njuYg
-GweYZ9VJx2P7RnluQUI1ED9BwPUDcQ==
-=p/X5
------END PGP SIGNATURE-----
-
---HICPYDh+BDn1Q9So--
+https://people.kernel.org/tglx/notes-about-netiquette
