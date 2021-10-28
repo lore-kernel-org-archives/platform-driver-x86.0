@@ -2,103 +2,133 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1290EC43219
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 21:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39C0C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 21:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9FD6604DA
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 21:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81BC610FC
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 21:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231357AbhJ1VUc (ORCPT
+        id S231235AbhJ1V7Q (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Oct 2021 17:20:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231324AbhJ1VUb (ORCPT
+        Thu, 28 Oct 2021 17:59:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230476AbhJ1V7P (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Oct 2021 17:20:31 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91841C061570;
-        Thu, 28 Oct 2021 14:18:03 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id i5so5345792pla.5;
-        Thu, 28 Oct 2021 14:18:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ognCBoDmFtJ0jDf9zfDBkQa2RYeMmm2YH6+AY/lKCjM=;
-        b=lOCqcChIKAD8dJfBjdbwL8TXk5QjcZcv9l3rc0j5+eya4fdOCh4wIkKuJV9HS31xGF
-         rrCjQnVUpqpqYv6Vtx8LBVhv9AoBXs9Pd9DRLHWbqKs08y7jgQvI3u2wA3xTLNwM70SS
-         jAakJYIRxEaSSAid8d7bOebSAGQgxYbpLjZ4VJ22eKKebLe5RJUwjMadHkCl9pYZ82ko
-         9eEA/U7VHmTp2caVUysV98zxsjJj1QLW/526wruP8a1kLXjm77HYX+wDzwKuYeItK20S
-         H7xJJUvN//0mvaDI9jB+94MeuFqT5qFdv7Fkc9lCV9rOjQcFu1xL6wLAshp9LEt2CD6b
-         Qg5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ognCBoDmFtJ0jDf9zfDBkQa2RYeMmm2YH6+AY/lKCjM=;
-        b=AV8AyXpCLhxv5OGvs0vWQZw++BS6dtYe9eV0Elz2xr8CIrDZ/sEi3qjZGPmdYqV6bV
-         /CUj2br1RpGO6FfAfOGGq5cxEUWmuUMG91qF5gzcxLZH//pkno1Z0zWrofph7H3Mj8zk
-         WhFoYV8w+2UqXDR8qvQ7opv2fvwxziS1Y/x1L4nZtydm1MKKpCnXyEWy7stjHeb94gIs
-         Fgt0y6d/fV/iCKmutgpcRHp218lzwF/P4DTy5FSrmX+au4BMdst23Xtioj4wWsBVXMZ4
-         PUr9vIQBRe0a4b5yhZNS0xnaGR0GGJGxoL0VWYZjMo2Rr7Z/rS7fuHx0EqIPribLX8gb
-         v87A==
-X-Gm-Message-State: AOAM532cuwo0P7itHEzTiR8xdBAcG2pClKpxzoFJHjR7/68LlrBGsFO7
-        a4bZ2kKJvzasEaQZdDrYbLE=
-X-Google-Smtp-Source: ABdhPJzrTgJfhrpqGWj1qM5QwUFP0K5QAEpTzWvTeWlrqi8R3sgEBjKhWA41WO/fRhzNB3xO7wtvoQ==
-X-Received: by 2002:a17:902:904b:b0:13f:b0c9:3c5d with SMTP id w11-20020a170902904b00b0013fb0c93c5dmr6293241plz.26.1635455883112;
-        Thu, 28 Oct 2021 14:18:03 -0700 (PDT)
-Received: from jaschultz-Thelio-Major.corp.microsoft.com ([2001:4898:80e8:0:1173:767a:1b1e:f6a4])
-        by smtp.gmail.com with ESMTPSA id t14sm3506610pga.62.2021.10.28.14.18.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Oct 2021 14:18:02 -0700 (PDT)
-From:   Jarrett Schultz <jaschultzms@gmail.com>
-X-Google-Original-From: Jarrett Schultz <jaschultzMS@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Thu, 28 Oct 2021 17:59:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1A67560EFF;
+        Thu, 28 Oct 2021 21:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635458208;
+        bh=p1CgpYh4aVtdnX6MdBbbbhbddudo+aw//ZNbp0j3+c8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d4rAxZjeh2FEiYPF4uFQFptIetsY/Q0YZUVzaBQT5mcTcBmZwrniixzFBiFTiTFPA
+         31//Yjvov6QH95zQDzVMYjZWcbG4/wi2OI5+VQUG34WQH0mJbra7YSS/iiIECESneE
+         IlCXBMfXhrth6eqkObgjSYsMp8TqQNlDqvY/qBzMZBp3MiO226/XBLTkDlP0x9s+lW
+         iU/j0SV17Oh6cdRNPZlVbFOtgeeeCyEpiDyjBzB0ilvgnDUzZ1VFBYOdAsKn0C014T
+         OaWTszoJN1jhSY7G57HfA/uODPR1uC/5YSSxPWt0uX8p96tO+Smr2z7Kd4YCakZY+5
+         oPNob95+R/FNg==
+Received: by mail-ed1-f46.google.com with SMTP id 5so29855710edw.7;
+        Thu, 28 Oct 2021 14:56:48 -0700 (PDT)
+X-Gm-Message-State: AOAM532eoqhvHHoHQTMZR7O7bRY0j6Dp+/Q2WkszdC0x4iC1mgMFMzUz
+        uMMBpWo5Xez1W9WmnUrYZCoiFgZPy9550LWJpA==
+X-Google-Smtp-Source: ABdhPJyBZTHa1ojrhvI9yd99LoSOz9t2pRPDfh45BIbRWanmI5KCU7TATgBknuLMfpapt+/+JRbD8NqF5DmgcvkeHrk=
+X-Received: by 2002:a17:906:6a0a:: with SMTP id qw10mr8354497ejc.466.1635458206566;
+ Thu, 28 Oct 2021 14:56:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211028211753.573480-1-jaschultzMS@gmail.com> <20211028211753.573480-2-jaschultzMS@gmail.com>
+In-Reply-To: <20211028211753.573480-2-jaschultzMS@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 28 Oct 2021 16:56:35 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLxg3-Th85cYNJqCgQFYB0awgXV-=OkASk_aDY-H4Mk5g@mail.gmail.com>
+Message-ID: <CAL_JsqLxg3-Th85cYNJqCgQFYB0awgXV-=OkASk_aDY-H4Mk5g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: platform: microsoft: Document surface xbl
+To:     Jarrett Schultz <jaschultzms@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Jarrett Schultz <jaschultzMS@gmail.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
         Jarrett Schultz <jaschultz@microsoft.com>
-Subject: [PATCH 3/3] arm64: dts: qcom: surface-duo: Add surface xbl
-Date:   Thu, 28 Oct 2021 14:17:53 -0700
-Message-Id: <20211028211753.573480-4-jaschultzMS@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211028211753.573480-1-jaschultzMS@gmail.com>
-References: <20211028211753.573480-1-jaschultzMS@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Introduce device tree source for the surface xbl driver.
+On Thu, Oct 28, 2021 at 4:18 PM Jarrett Schultz <jaschultzms@gmail.com> wrote:
+>
+> Introduce yaml for surface xbl driver.
 
-Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
----
- arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+What's surface? What's xbl? Bindings are for h/w devices, not drivers.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dts b/arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dts
-index 736da9af44e0..9fd9f733a791 100644
---- a/arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dts
-@@ -57,6 +57,12 @@ vol_up {
- 			linux,code = <KEY_VOLUMEUP>;
- 		};
- 	};
-+
-+	xbl@146bfa94 {
-+		compatible = "microsoft,sm8150-surface-duo-xbl";
-+		reg = <0x00 0x146bfa94 0x00 0x100>;
-+		status = "okay";
-+	};
- };
- 
- &apps_rsc {
--- 
-2.25.1
+Please send DT patches to the DT list. IOW, run get_maintainers.pl.
 
+>
+> Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
+> ---
+>  .../platform/microsoft/surface-xbl.yaml       | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+> new file mode 100644
+> index 000000000000..3d2771322e72
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+> @@ -0,0 +1,37 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Dual license please. Run checkpatch.pl as that will tell you this.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/platform/microsoft/surface-xbl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Surface Extensible Bootloader for Microsoft Surface Duo
+> +
+> +maintainers:
+> +  - Jarrett Schultz <jaschultzMS@gmail.com>
+> +
+> +description: |
+> +  Exposes device information to user space.
+
+What does that mean?
+
+> +
+> +allOf:
+> +  - $ref: /schemas/platform/microsoft/surface-xbl.c#
+
+You have a C file with json-schema?
+
+> +
+> +properties:
+> +  compatible:
+> +    const: microsoft,sm8150-surface-duo-xbl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +unevaluatedProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +examples:
+> +  - |
+> +    xbl@146bfa94 {
+> +      compatible = "microsoft,sm8150-surface-duo-xbl";
+> +      reg = <0x00 0x146bfa94 0x00 0x100>;
+
+That's an odd address. Is this part of some other block?
+
+> +    };
+> --
+> 2.25.1
+>
