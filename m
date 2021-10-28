@@ -2,170 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EEBC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 21:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65435C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 00:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8385C610FF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Oct 2021 21:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A31160F9B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 00:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240913AbhJ0VSq (ORCPT
+        id S229484AbhJ1AZc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Oct 2021 17:18:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53162 "EHLO
+        Wed, 27 Oct 2021 20:25:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244258AbhJ0VSG (ORCPT
+        with ESMTP id S229437AbhJ1AZc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Oct 2021 17:18:06 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41409C061767
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Oct 2021 14:15:40 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id f3so793487lfu.12
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Oct 2021 14:15:40 -0700 (PDT)
+        Wed, 27 Oct 2021 20:25:32 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5784C061570;
+        Wed, 27 Oct 2021 17:23:05 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id s1so17458964edd.3;
+        Wed, 27 Oct 2021 17:23:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZUzj8OdRUyoCesvY9oYCJsi3ZMdPAltpXbUySPTyBuc=;
-        b=ZIKZfwDyLiBXM4FTpiIdXUlr5R+dGI4KZkzsZUVmNpqPvYo82Eg9+mHUocDVdvsZRp
-         bHC9ooluOVD3eOGj7LPilAH9no8kzTwRRuYP+1gemifBf9EmDbJHIc5OrlyAX3AErpYL
-         rCUkbQ4oC/0/RC8tdZ8NSo7568axnml9rN/sSJ5mA2MGDa5CgiyJRlLuhtN1U3Q4WSCG
-         AnMNeoEa0RpKePUuZlZiGhzIsuYPu5BLCjJhMGzARP7vYLxtIXT7UyovYQkTwrt82WqU
-         9RBNxTpyNJrocw3u98bizPwdzQxbEvMV670aQO7grbt5qAOhoDZmzAPqEDsUVxS/KD76
-         ZNrg==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DjjqSH69oC8cg0hQ1i4eeW5boZhzpHPAKqQHgkqSM40=;
+        b=BZaF8jnvOph44VTBcgU0GwKZUEKTErcivkRShSXAiBrZlDT/MjytdQZcWPCUxon0hh
+         GTNPs6Sq9zzOJNQ6GsBz+ko7mWjUoJw0UdQktNKdO3MHMhjboKv/71OFsybq+PfXPhj6
+         7X2abD+LBpbtJ88xN+ATWOKJT2GMKWaL4+P2ZjOGRS4gcadYcDj4mfBNOhNIM43SUlPr
+         qCONOGgKL2paDWTn4ht8mXFRs2nuUIMKgxB2Ru1YKSCe3ze01NyDLWJQb3r169Q2smQb
+         mSmg/CuknCY5hL2Y+lMvFkFix86fYxcSZWAdr/DCdepdwd2qM4XWO0NQvPDkwcokWBYR
+         nxnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZUzj8OdRUyoCesvY9oYCJsi3ZMdPAltpXbUySPTyBuc=;
-        b=e2c3mQiFVFnp0N93CeaJANPNYQ/U8R7BtXMCOB58LkinGTt/93UgdxhTMSvjDK7wEZ
-         jb73kWmsyCYMwvoHnseDlYnP1LsC7APULlXg6GhpbjxvjyWJgSTqS05Vktvc1I/tuZ56
-         YEpB2PVfEbcflAzX2tqcTgMjIeAFscyqRWpm+SBARgUSSIxE6+kxlRo8dtTeGtSGLHWc
-         JHhyFZf8dadU4zNR7bQjpoXm8Vhedh5OE2rGifjRQFf6qQOfpedv2p+68rkJwxhIyzPI
-         RdOYnrz67vohYPj36S+QgC0M4TvjYu3eGQb6aqwftQCoQK3VK5YfVyychfFEzm1NumKx
-         6BLw==
-X-Gm-Message-State: AOAM5323bHSbkNEU+J0pscxQoBphWZiFUYI2810xMVEdb8JUSz8RRmou
-        Ledrr7BUsbO7pNOwCq0ZUROb8OvMSeyE5/exj5H+oA==
-X-Google-Smtp-Source: ABdhPJybiFy4oIGNhhlBmd8VY61nM798zr2vK1FyUgViR6EzKUCgaGgxcLv7n9sV9CUY4RPDWZNVBYEO2FFLs9wKsoY=
-X-Received: by 2002:a05:6512:39d1:: with SMTP id k17mr95057lfu.79.1635369338308;
- Wed, 27 Oct 2021 14:15:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DjjqSH69oC8cg0hQ1i4eeW5boZhzpHPAKqQHgkqSM40=;
+        b=OM8YIdL+vd/Q9ejddWPpO+O/pYDrfVxo47S+hKQOt7SdlgYCy6YZzy6cGnoaB8iB6+
+         Yzhz2jSZ5JYQhQwVOwdZUaZUw5R4ECOaqB3PAV73k+JW6YKAWlYvn/0FVia1dGr6/kgv
+         j0dcvzRET3dvYzb84eaY+b5oKGiJTlo+wsAWCq6UGHBmBOU2A1A2awtGI1C+qdqXhANz
+         wTWHPZ3cB/fj7ZIx9DenneCuO4Pas16rKOO25RNMPA84Dex9T8sjI+ZmNDUdcS9LT3X0
+         flbn4W/ZdQugSNeEd4zobG3c7zELHeg2vp5XNPml6e2c9QfRkHm3bHtFY2MP2mE0HIFs
+         7TIg==
+X-Gm-Message-State: AOAM5339A8PtXSX+upWzf0JVt+u0roMwy1hf53YXw2IKuEDP+Gh9NBgv
+        SxBZpxOBzn2yQuAOXu5KHgbPIURsHQo=
+X-Google-Smtp-Source: ABdhPJz22H0uIcxVEu9LGZPrXfdO+bXbzZGKkJgv51RhQvK0CcQLQJd3wv52GYXfF2S6psAZxMO3LA==
+X-Received: by 2002:a05:6402:5189:: with SMTP id q9mr1511621edd.94.1635380584048;
+        Wed, 27 Oct 2021 17:23:04 -0700 (PDT)
+Received: from xws.localdomain ([37.120.217.83])
+        by smtp.gmail.com with ESMTPSA id i22sm753801edu.93.2021.10.27.17.23.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Oct 2021 17:23:03 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] platform/surface: aggregator: Clean up client device removal
+Date:   Thu, 28 Oct 2021 02:22:40 +0200
+Message-Id: <20211028002243.1586083-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-References: <20211008180453.462291-1-brijesh.singh@amd.com>
- <20211008180453.462291-41-brijesh.singh@amd.com> <CAMkAt6rPVsJpvdzwG3Keu3gv=n0hmYdDpYJMVoDP7XgwzvH7vQ@mail.gmail.com>
- <bf55b53c-cc3d-f2c3-cf21-df6fb4882e13@amd.com> <CAMkAt6pCSNZiB7zVXp=70fF-qORZT0D5KCSY=GrJU0iiLZN_Mw@mail.gmail.com>
- <943a1b7d-d867-5daa-e2e7-f0d91de37103@amd.com> <CAMkAt6qPHtOy8ONBtjn4V28P5F5qqQtnP2sD5YrBjbe_Uwkdcg@mail.gmail.com>
- <ecfe3b3a-0a7d-86e7-08fb-f693bfa9255b@amd.com>
-In-Reply-To: <ecfe3b3a-0a7d-86e7-08fb-f693bfa9255b@amd.com>
-From:   Peter Gonda <pgonda@google.com>
-Date:   Wed, 27 Oct 2021 15:15:26 -0600
-Message-ID: <CAMkAt6pgXJ5vop5j7BNF_FQ6ZbWKWCCfUmic2yx3kk0Z1AvJwA@mail.gmail.com>
-Subject: Re: [PATCH v6 40/42] virt: Add SEV-SNP guest driver
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-coco@lists.linux.dev,
-        linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, Marc Orr <marcorr@google.com>,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Oct 27, 2021 at 3:13 PM Brijesh Singh <brijesh.singh@amd.com> wrote:
->
->
->
-> On 10/27/21 4:05 PM, Peter Gonda wrote:
-> ....
->
-> >>>>>
-> >>>>> Thanks for updating this sequence number logic. But I still have some
-> >>>>> concerns. In verify_and_dec_payload() we check the encryption header
-> >>>>> but all these fields are accessible to the hypervisor, meaning it can
-> >>>>> change the header and cause this sequence number to not get
-> >>>>> incremented. We then will reuse the sequence number for the next
-> >>>>> command, which isn't great for AES GCM. It seems very hard to tell if
-> >>>>> the FW actually got our request and created a response there by
-> >>>>> incrementing the sequence number by 2, or if the hypervisor is acting
-> >>>>> in bad faith. It seems like to be safe we need to completely stop
-> >>>>> using this vmpck if we cannot confirm the PSP has gotten our request
-> >>>>> and created a response. Thoughts?
-> >>>>>
-> >>>>
-> >>>> Very good point, I think we can detect this condition by rearranging the
-> >>>> checks. The verify_and_dec_payload() is called only after the command is
-> >>>> succesful and does the following checks
-> >>>>
-> >>>> 1) Verifies the header
-> >>>> 2) Decrypts the payload
-> >>>> 3) Later we increment the sequence
-> >>>>
-> >>>> If we arrange to the below order then we can avoid this condition.
-> >>>> 1) Decrypt the payload
-> >>>> 2) Increment the sequence number
-> >>>> 3) Verify the header
-> >>>>
-> >>>> The descryption will succeed only if PSP constructed the payload.
-> >>>>
-> >>>> Does this make sense ?
-> >>>
-> >>> Either ordering seems fine to me. I don't think it changes much though
-> >>> since the header (bytes 30-50 according to the spec) are included in
-> >>> the authenticated data of the encryption. So any hypervisor modictions
-> >>> will lead to a decryption failure right?
-> >>>
-> >>> Either case if we do fail the decryption, what are your thoughts on
-> >>> not allowing further use of that VMPCK?
-> >>>
-> >>
-> >> We have limited number of VMPCK (total 3). I am not sure switching to
-> >> different will change much. HV can quickly exaust it. Once we have SVSM
-> >> in-place then its possible that SVSM may use of the VMPCK. If the
-> >> decryption failed, then maybe its safe to erase the key from the secrets
-> >> page (in other words guest OS cannot use that key for any further
-> >> communication). A guest can reload the driver will different VMPCK id
-> >> and try again.
-> >
-> > SNP cannot really cover DOS at all since the VMM could just never
-> > schedule the VM. In this case we know that the hypervisor is trying to
-> > mess with the guest, so my preference would be to stop sending guest
-> > messages to prevent that duplicated IV usage. If one caller gets an
-> > EBADMSG it knows its in this case but the rest of userspace has no
-> > idea. Maybe log an error?
-> >
-> >>
->
-> Yap, we cannot protect against the DOS. This is why I was saying that we
-> zero the key from secrets page so that guest cannot use that key for any
-> future communication (whether its from rest of userspace or kexec
-> kernel). I can update the driver to log the message and ensure that
-> future messages will *not* use that key. The VMPCK ID is a module
-> params, so a guest can reload the driver to use different VMPCK.
+Remove some duplicate code for Surface Aggregator client device removal and
+rename a function for consistency.
 
-Duh! Sorry I thought you said we needed a VMPL0 SVSM to do that. That
-sounds great.
+Maximilian Luz (3):
+  platform/surface: aggregator: Make client device removal more generic
+  platform/surface: aggregator_registry: Use generic client removal
+    function
+  platform/surface: aggregator_registry: Rename device registration
+    function
 
->
->
-> >> thanks
+ drivers/platform/surface/aggregator/bus.c     | 24 +++++---------
+ drivers/platform/surface/aggregator/bus.h     |  3 --
+ drivers/platform/surface/aggregator/core.c    |  3 +-
+ .../surface/surface_aggregator_registry.c     | 32 ++++++-------------
+ include/linux/surface_aggregator/device.h     |  9 ++++++
+ 5 files changed, 28 insertions(+), 43 deletions(-)
+
+-- 
+2.33.1
+
