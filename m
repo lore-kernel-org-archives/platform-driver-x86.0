@@ -2,133 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39C0C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 21:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B85C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 22:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C81BC610FC
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 21:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806CF60E8F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Oct 2021 22:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231235AbhJ1V7Q (ORCPT
+        id S231352AbhJ1Wq3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Oct 2021 17:59:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230476AbhJ1V7P (ORCPT
+        Thu, 28 Oct 2021 18:46:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231258AbhJ1Wq2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Oct 2021 17:59:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1A67560EFF;
-        Thu, 28 Oct 2021 21:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635458208;
-        bh=p1CgpYh4aVtdnX6MdBbbbhbddudo+aw//ZNbp0j3+c8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=d4rAxZjeh2FEiYPF4uFQFptIetsY/Q0YZUVzaBQT5mcTcBmZwrniixzFBiFTiTFPA
-         31//Yjvov6QH95zQDzVMYjZWcbG4/wi2OI5+VQUG34WQH0mJbra7YSS/iiIECESneE
-         IlCXBMfXhrth6eqkObgjSYsMp8TqQNlDqvY/qBzMZBp3MiO226/XBLTkDlP0x9s+lW
-         iU/j0SV17Oh6cdRNPZlVbFOtgeeeCyEpiDyjBzB0ilvgnDUzZ1VFBYOdAsKn0C014T
-         OaWTszoJN1jhSY7G57HfA/uODPR1uC/5YSSxPWt0uX8p96tO+Smr2z7Kd4YCakZY+5
-         oPNob95+R/FNg==
-Received: by mail-ed1-f46.google.com with SMTP id 5so29855710edw.7;
-        Thu, 28 Oct 2021 14:56:48 -0700 (PDT)
-X-Gm-Message-State: AOAM532eoqhvHHoHQTMZR7O7bRY0j6Dp+/Q2WkszdC0x4iC1mgMFMzUz
-        uMMBpWo5Xez1W9WmnUrYZCoiFgZPy9550LWJpA==
-X-Google-Smtp-Source: ABdhPJyBZTHa1ojrhvI9yd99LoSOz9t2pRPDfh45BIbRWanmI5KCU7TATgBknuLMfpapt+/+JRbD8NqF5DmgcvkeHrk=
-X-Received: by 2002:a17:906:6a0a:: with SMTP id qw10mr8354497ejc.466.1635458206566;
- Thu, 28 Oct 2021 14:56:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211028211753.573480-1-jaschultzMS@gmail.com> <20211028211753.573480-2-jaschultzMS@gmail.com>
-In-Reply-To: <20211028211753.573480-2-jaschultzMS@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 28 Oct 2021 16:56:35 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLxg3-Th85cYNJqCgQFYB0awgXV-=OkASk_aDY-H4Mk5g@mail.gmail.com>
-Message-ID: <CAL_JsqLxg3-Th85cYNJqCgQFYB0awgXV-=OkASk_aDY-H4Mk5g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: platform: microsoft: Document surface xbl
-To:     Jarrett Schultz <jaschultzms@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
+        Thu, 28 Oct 2021 18:46:28 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693C1C061570;
+        Thu, 28 Oct 2021 15:44:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=1aP1RuxewBS7vDJk8te7l3M2iURYtqKADbLflxFn3qY=; b=R4WDzWL0Kr3H1+AoXPvIDhxxj4
+        Gfge9IWEXlstzPMRlLUsHxFNIBN0l6uL3b4/EUHct3vqeaLtkBAFmhg9TARbJkLWtaudQtrPDt6L4
+        iAQXWQ1dGnQmweRnsPEtHqPasrJY6ndE166qpA5dA5fe65o+JXzRyckVAxNzbS/C9hmnGrVfoNRUb
+        ZTrNaoSX6ZAvJRJeKzuMH+DpC5EbI8/z8AFDyt0F+HnMiqdnkqd8RyxWkos7OAMWdOQuHH4fnqsLK
+        eXemr4LlpzHWv3wRb4BGFuYhHG+4+vheDEMWwTwbkjo4hC1Xk1K8kE/k3Laj7u8XGFyspFYkaUjji
+        4gqRgnYA==;
+Received: from [2601:1c0:6280:3f0::aa0b]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mgE7q-009GEi-W5; Thu, 28 Oct 2021 22:43:59 +0000
+Subject: Re: [PATCH 2/3] platform: surface: Add surface xbl
+To:     Jarrett Schultz <jaschultzms@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
         Jarrett Schultz <jaschultz@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20211028211753.573480-1-jaschultzMS@gmail.com>
+ <20211028211753.573480-3-jaschultzMS@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <788208ca-abc4-70d3-7367-9489b0faead4@infradead.org>
+Date:   Thu, 28 Oct 2021 15:43:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+MIME-Version: 1.0
+In-Reply-To: <20211028211753.573480-3-jaschultzMS@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Oct 28, 2021 at 4:18 PM Jarrett Schultz <jaschultzms@gmail.com> wrote:
->
-> Introduce yaml for surface xbl driver.
-
-What's surface? What's xbl? Bindings are for h/w devices, not drivers.
-
-Please send DT patches to the DT list. IOW, run get_maintainers.pl.
-
->
-> Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
-> ---
->  .../platform/microsoft/surface-xbl.yaml       | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
->
-> diff --git a/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> new file mode 100644
-> index 000000000000..3d2771322e72
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> @@ -0,0 +1,37 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license please. Run checkpatch.pl as that will tell you this.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/platform/microsoft/surface-xbl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+On 10/28/21 2:17 PM, Jarrett Schultz wrote:
+> diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
+> index 3105f651614f..ca0546397414 100644
+> --- a/drivers/platform/surface/Kconfig
+> +++ b/drivers/platform/surface/Kconfig
+> @@ -180,6 +180,16 @@ config SURFACE_PRO3_BUTTON
+>   	help
+>   	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3/4 tablet.
+>   
+> +config SURFACE_XBL
+> +	tristate "Surface XBL Driver"
+> +	depends on ARM64 || COMPILE_TEST
+> +	help
+> +	  If you say 'Y' to this option, support will be included for the
+> +	  Surface XBL Driver.
 > +
-> +title: Surface Extensible Bootloader for Microsoft Surface Duo
-> +
-> +maintainers:
-> +  - Jarrett Schultz <jaschultzMS@gmail.com>
-> +
-> +description: |
-> +  Exposes device information to user space.
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called surface-xbl.
 
-What does that mean?
+Hi,
 
-> +
-> +allOf:
-> +  - $ref: /schemas/platform/microsoft/surface-xbl.c#
+Can you tell the user/reader what XBL means, please?
 
-You have a C file with json-schema?
+Don't assume that they will look at some documentation.
 
-> +
-> +properties:
-> +  compatible:
-> +    const: microsoft,sm8150-surface-duo-xbl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    xbl@146bfa94 {
-> +      compatible = "microsoft,sm8150-surface-duo-xbl";
-> +      reg = <0x00 0x146bfa94 0x00 0x100>;
-
-That's an odd address. Is this part of some other block?
-
-> +    };
-> --
-> 2.25.1
->
+thanks.
+-- 
+~Randy
