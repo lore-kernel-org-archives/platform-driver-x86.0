@@ -2,109 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC943C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 15:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BF7C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 17:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7EBF61184
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 15:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0303E60F9C
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 17:09:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229652AbhJ2Pj3 (ORCPT
+        id S229900AbhJ2RLa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 29 Oct 2021 11:39:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbhJ2Pj3 (ORCPT
+        Fri, 29 Oct 2021 13:11:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:60890 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229826AbhJ2RL3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 29 Oct 2021 11:39:29 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76AE4C061570;
-        Fri, 29 Oct 2021 08:37:00 -0700 (PDT)
-Received: by todd.t-8ch.de (Postfix, from userid 0)
-        id 4A1953EDA3; Fri, 29 Oct 2021 15:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
-        s=mail; t=1635521818;
-        bh=eeH9nLeGJVIiF8XXSqN2lYYeJNQSBTUuABif4FxVAEw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bVcAWHahqE7PpbIVNmRFft8d5EJXuGUAHSC++3JNYzo5kFrgvJMGdbLQvgNGAWjnd
-         5spI19iR+LsvzAiRGLgnUkjtiTXa1OmdbUE7XZwlM/OlPhIchsMLAl6Y3QITVwb6R8
-         WPZ0zfXt7jZKoBLKrm5G5jh6qmyq0W/a5QxNP6eI=
-From:   =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
-        s=mail; t=1635521527;
-        bh=eeH9nLeGJVIiF8XXSqN2lYYeJNQSBTUuABif4FxVAEw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fJacEtNtC0dpLHm84xfVbT8P8ZMXoVKwpdHojOaIydnFxKVy64TjeNKKx7T+GU/3L
-         bsF8tfWxVhY5rJKcZGCu6gHJysxVV8vBRiTCDsn/5RgEd+nnYZe41Z8yfrJDb+u2YT
-         5xIoJVOCmkU+dd3RRF7yaL6oaUK0fZbBdj9nhwH4=
-To:     linux-input@vger.kernel.org
-Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Sumesh K Naduvalath <sumesh.k.naduvalath@intel.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH 6/6] platform/x86: isthp_eclite: only load for matching devices
-Date:   Fri, 29 Oct 2021 17:29:01 +0200
-Message-ID: <20211029152901.297939-7-linux@weissschuh.net>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211029152901.297939-6-linux@weissschuh.net>
-References: <20211029152901.297939-1-linux@weissschuh.net>
- <20211029152901.297939-2-linux@weissschuh.net>
- <20211029152901.297939-3-linux@weissschuh.net>
- <20211029152901.297939-4-linux@weissschuh.net>
- <20211029152901.297939-5-linux@weissschuh.net>
- <20211029152901.297939-6-linux@weissschuh.net>
+        Fri, 29 Oct 2021 13:11:29 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10152"; a="210760063"
+X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
+   d="scan'208";a="210760063"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 10:08:55 -0700
+X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
+   d="scan'208";a="665898260"
+Received: from jongchoi-mobl.amr.corp.intel.com (HELO [10.212.201.61]) ([10.212.201.61])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 10:08:54 -0700
+Subject: Re: [PATCH v2 0/5] [RFC] x86: Export information about hardware
+ memory encryption to sysfs
+To:     Martin Fernandez <martin.fernandez@eclypsium.com>,
+        Borislav Petkov <bp@alien8.de>
+Cc:     Richard Hughes <hughsient@gmail.com>, linux-efi@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, ardb@kernel.org,
+        dvhart@infradead.org, andy@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org,
+        Daniel Gutson <daniel.gutson@eclypsium.com>
+References: <20211027195511.207552-1-martin.fernandez@eclypsium.com>
+ <8a8e0743-e54d-ec96-da4e-1d101b550274@intel.com>
+ <CAKgze5Z3fT9F0S-mogfP6is9sL3=0imtCbfy6ZYrd3zgaBUqRg@mail.gmail.com>
+ <YXq50yzJQqrJk13v@zn.tnic>
+ <CAD2FfiFS++2-Sn5nCft8Eb-R41MM6abCjXyDn8bOVY-_miCpRA@mail.gmail.com>
+ <YXrRN+pDr4Uv5p0t@zn.tnic>
+ <CAKgze5av=duAc+inw6XnroT1WxHoP6pA2=Bb2tjK45yO6aDfOg@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <b2de42c1-e973-0f4a-635f-8e8bbaebbfa5@intel.com>
+Date:   Fri, 29 Oct 2021 10:08:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CAKgze5av=duAc+inw6XnroT1WxHoP6pA2=Bb2tjK45yO6aDfOg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
-Message-ID: <20211029152901.jihLyEibldzKES61mSVYTzX0wGeARkZmIPgIzqjubrU@z>
 
-Previously it was loaded for all ISHTP devices.
+On 10/28/21 10:39 AM, Martin Fernandez wrote:
+> On 10/28/21, Borislav Petkov <bp@alien8.de> wrote:
+>> Why cannot this be a userspace program, script, tool, whatever?
+> Because it's not convenient to parse dmesg. And about /proc/cpuinfo,
+> it tells you about TME, as a feature of the cpu but it doesn't tell
+> you if it is activated, and even if it is activated you will need to
+> be sure that you are storing your data in a region flagged with this
+> new attribute.
+> 
+> Here we discussed about it some time ago:
+> http://lkml.iu.edu/hypermail/linux/kernel/2006.2/06753.html . That
+> comment is what triggered this patch.
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Martin,
 
----
+I don't think this interface makes any sense at all for something off of
+which to base firmware updates.  It's just too noisy.
 
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Sumesh K Naduvalath <sumesh.k.naduvalath@intel.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <markgross@kernel.org>
-Cc: linux-input@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org
----
- drivers/platform/x86/intel/ishtp_eclite.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+That said, I *do* think we are going to need something similar to what
+you propose here because folks are going to want to target memory
+allocations to NUMA nodes that have encryption capabilities.
 
-diff --git a/drivers/platform/x86/intel/ishtp_eclite.c b/drivers/platform/x86/intel/ishtp_eclite.c
-index 12fc98a48657..b9fb8f28fd63 100644
---- a/drivers/platform/x86/intel/ishtp_eclite.c
-+++ b/drivers/platform/x86/intel/ishtp_eclite.c
-@@ -681,6 +681,12 @@ static struct ishtp_cl_driver ecl_ishtp_cl_driver = {
- 	.driver.pm = &ecl_ishtp_pm_ops,
- };
- 
-+static const struct ishtp_device_id ecl_ishtp_id_table[] = {
-+	{ ecl_ishtp_guid },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(ishtp, ecl_ishtp_id_table);
-+
- static int __init ecl_ishtp_init(void)
- {
- 	return ishtp_cl_driver_register(&ecl_ishtp_cl_driver, THIS_MODULE);
-@@ -698,4 +704,3 @@ MODULE_DESCRIPTION("ISH ISHTP eclite client opregion driver");
- MODULE_AUTHOR("K Naduvalath, Sumesh <sumesh.k.naduvalath@intel.com>");
- 
- MODULE_LICENSE("GPL v2");
--MODULE_ALIAS("ishtp:*");
--- 
-2.33.1
-
+But, I don't think what you've proposed here fits very well there.  The
+->cpu_local thing looks totally broken.  It's entirely unclear what
+users are supposed to do when the crypto_capable file is not present.
