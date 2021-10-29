@@ -2,130 +2,114 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BF7C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 17:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D927C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 17:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0303E60F9C
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 17:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE7960FF2
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 17:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbhJ2RLa (ORCPT
+        id S230156AbhJ2R00 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 29 Oct 2021 13:11:30 -0400
-Received: from mga12.intel.com ([192.55.52.136]:60890 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229826AbhJ2RL3 (ORCPT
+        Fri, 29 Oct 2021 13:26:26 -0400
+Received: from mail-bn8nam12on2076.outbound.protection.outlook.com ([40.107.237.76]:33440
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229826AbhJ2R0Z (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 29 Oct 2021 13:11:29 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10152"; a="210760063"
-X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="210760063"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 10:08:55 -0700
-X-IronPort-AV: E=Sophos;i="5.87,193,1631602800"; 
-   d="scan'208";a="665898260"
-Received: from jongchoi-mobl.amr.corp.intel.com (HELO [10.212.201.61]) ([10.212.201.61])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2021 10:08:54 -0700
-Subject: Re: [PATCH v2 0/5] [RFC] x86: Export information about hardware
- memory encryption to sysfs
-To:     Martin Fernandez <martin.fernandez@eclypsium.com>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     Richard Hughes <hughsient@gmail.com>, linux-efi@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, ardb@kernel.org,
-        dvhart@infradead.org, andy@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org,
-        Daniel Gutson <daniel.gutson@eclypsium.com>
-References: <20211027195511.207552-1-martin.fernandez@eclypsium.com>
- <8a8e0743-e54d-ec96-da4e-1d101b550274@intel.com>
- <CAKgze5Z3fT9F0S-mogfP6is9sL3=0imtCbfy6ZYrd3zgaBUqRg@mail.gmail.com>
- <YXq50yzJQqrJk13v@zn.tnic>
- <CAD2FfiFS++2-Sn5nCft8Eb-R41MM6abCjXyDn8bOVY-_miCpRA@mail.gmail.com>
- <YXrRN+pDr4Uv5p0t@zn.tnic>
- <CAKgze5av=duAc+inw6XnroT1WxHoP6pA2=Bb2tjK45yO6aDfOg@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <b2de42c1-e973-0f4a-635f-8e8bbaebbfa5@intel.com>
-Date:   Fri, 29 Oct 2021 10:08:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 29 Oct 2021 13:26:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G4iltQ1GyGsD0qzeViRHrCYsFfjobZFVMgLUJiibzrLw+Yl52tmT+DHMllf7fGQAChaoFKgv40gydebF3CeVml3ozv0gsb3dEWargE0/RIn135BPAreCtzAlzqzvkghjR5CpfXcdlDOiE63H2f8YaJvsrYzgmfrWuLNEDiEKcrX550HF8X31klj2As1mmqU9EPZdWxiDaHKPOsgsO8lXdel8xEgDdGHqqwwB0xn3aMcJm6k8sJ5W3auBkf3P9GN5biimWCha1PYYpXoT/IZsgWjrG1kSgTKRaeRqwxCde6AMKmQZPP6X4be2v6iad02kr/Ad1a4x/gZT71PO3KGRaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+8XX8SC3Z1VqJGsNnOulPZAmWDbfHnZQbZQ64MS7Uzs=;
+ b=NT4xO5k6r1buSW3iqCrTaqUwYu/J4D1AQAYPQVXgSKk9ke8pxyqrJpTxl9PZC+htb8K1ESkL67lJweCm1kMF84A+qt9A/ilRCOKNoNrfzBIs3K+DPe8VDtWv2Q/Ky0fifTMU6U6DIC0TmkFxFI5tDAppK+9ukjHEDgX2Jn/kZmMjMGCmJv2HNyhtjO66aCMPW4JGwL/HJ9nRlwRenyXVJcOXM2KY2csrO6KxjS6N9c7b21SRPGTQL+/19RDGtxmWXJYJqTjBwUtAe73U7K9sMvfTvEdbGHwLJI6JMLb4VF1gVLTqpR3lyriSreDuZsyI1Zi+3L63QHL9u1JZ5cyyTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+8XX8SC3Z1VqJGsNnOulPZAmWDbfHnZQbZQ64MS7Uzs=;
+ b=PdXxUCwEAgO5Yzf7ffPgi/5uxnv444GRZtSCdjXDfJe2Ql208xdHPtbnSJzvVpkU3xq7qlLCQyGKv7YssnQzdCGHP7xyGtOZ12gHh9WVBDt/bEpEscmQkLl6CBKpi5GiWG73CSnGhSrpqh7Y4Zzb9H5qhRsNt7DMs085+61DGIs=
+Received: from CO2PR05CA0004.namprd05.prod.outlook.com (2603:10b6:102:2::14)
+ by CH2PR12MB3830.namprd12.prod.outlook.com (2603:10b6:610:2f::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.15; Fri, 29 Oct
+ 2021 17:23:55 +0000
+Received: from CO1NAM11FT053.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:102:2:cafe::33) by CO2PR05CA0004.outlook.office365.com
+ (2603:10b6:102:2::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.4 via Frontend
+ Transport; Fri, 29 Oct 2021 17:23:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT053.mail.protection.outlook.com (10.13.175.63) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4649.14 via Frontend Transport; Fri, 29 Oct 2021 17:23:54 +0000
+Received: from Celadon-CZN.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Fri, 29 Oct
+ 2021 12:23:49 -0500
+From:   Sanket Goswami <Sanket.Goswami@amd.com>
+To:     <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>,
+        <mgross@linux.intel.com>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        Sanket Goswami <Sanket.Goswami@amd.com>
+Subject: [PATCH v5 0/3] Updates to amd-pmc driver
+Date:   Fri, 29 Oct 2021 22:53:01 +0530
+Message-ID: <20211029172304.2998-1-Sanket.Goswami@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAKgze5av=duAc+inw6XnroT1WxHoP6pA2=Bb2tjK45yO6aDfOg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c5b884f5-7800-4495-10d5-08d99b00e28a
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3830:
+X-Microsoft-Antispam-PRVS: <CH2PR12MB3830724EEE69FAF80CF288069C879@CH2PR12MB3830.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pULfTwF+Kn5IrOe1Lc8EMUREtOZB7r5S8rqZxXUqrhj7whgXTxQtD9K1/n99UDWjOW6k3B5JXg5LawNe2LmessDGGfU/ptkZ4i/mQ6xt6Om7JeplCWtfPROzIOjUDk1WFpYOAI1wfkhV4QWJC9c7cET/q+yfj6eUD4wcO/DCIfCjSDBMs0KEEYQPH9GREtaooWjUeuDWQZpC2EAb2CWGBRkegx7tZdyAdfox/PSOA6m5V4xnsl7mr7xEkU+8DXR1VUiv/J/Qhgyxyn080vB6DKC/ZCAbYHwtP/Rru4c1+Hb/Tl9MtMf59Mpsp09sKTzMy2WLnnoSumOsk6z0KQ8tQMD9irFLYMgn1BL5UIa3dR5Jfnq7N8hbrTAqv80IWuhQbpeSCvbOXd013WA8oJcDPjiaETndcRaxUlMv5I2T2RsWyFcD5XiFyi+wbyH1UHeYQIvqQVz/8edcJLfUiYUjTAdYmFiKn/vMdv9/yhyoSW2JC+sCtO9T1S1giyyif+8pgedtHD2w/+IR/JE3VP2u9ixDE8OuRlLqJHyP6jTC+ffM3YnhYvoJ9tQP6itNfhLvO6Ir4dWq4EWyiKqdF6qyVZxTqCwv4IrDeYZ7JfdzHxfh6J23B8CFe93oxD05KQAVxkdFX77W42DWaSp3iie4KmMfL2h0CzPwVDR58yH9M3QYw0FYQWyMQ+9orZ8cIi3u8SR/NPpAq0IaH+U/dD3pxMZ1nCx51rc9OEBhFVn8rlc=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(1076003)(356005)(81166007)(2906002)(70586007)(83380400001)(8676002)(6666004)(5660300002)(4326008)(4744005)(426003)(86362001)(82310400003)(36756003)(316002)(2616005)(8936002)(47076005)(54906003)(186003)(70206006)(36860700001)(7696005)(26005)(508600001)(16526019)(336012)(110136005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2021 17:23:54.9941
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5b884f5-7800-4495-10d5-08d99b00e28a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT053.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3830
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 10/28/21 10:39 AM, Martin Fernandez wrote:
-> On 10/28/21, Borislav Petkov <bp@alien8.de> wrote:
->> Why cannot this be a userspace program, script, tool, whatever?
-> Because it's not convenient to parse dmesg. And about /proc/cpuinfo,
-> it tells you about TME, as a feature of the cpu but it doesn't tell
-> you if it is activated, and even if it is activated you will need to
-> be sure that you are storing your data in a region flagged with this
-> new attribute.
-> 
-> Here we discussed about it some time ago:
-> http://lkml.iu.edu/hypermail/linux/kernel/2006.2/06753.html . That
-> comment is what triggered this patch.
+This patch series includes:
+- Improvements to error-exits in driver probe
+- Store root port information
+- Introduce support for AMD Smart Trace Buffer
 
-Martin,
+Sanket Goswami (3):
+  platform/x86: amd-pmc: Simplify error handling path
+  platform/x86: amd-pmc: Store the pci_dev instance inside struct
+    amd_pmc_dev
+  platform/x86: amd-pmc: Add support for AMD Smart Trace Buffer
 
-I don't think this interface makes any sense at all for something off of
-which to base firmware updates.  It's just too noisy.
+ drivers/platform/x86/amd-pmc.c | 153 ++++++++++++++++++++++++++++++---
+ 1 file changed, 143 insertions(+), 10 deletions(-)
 
-That said, I *do* think we are going to need something similar to what
-you propose here because folks are going to want to target memory
-allocations to NUMA nodes that have encryption capabilities.
+-- 
+2.25.1
 
-But, I don't think what you've proposed here fits very well there.  The
-->cpu_local thing looks totally broken.  It's entirely unclear what
-users are supposed to do when the crypto_capable file is not present.
