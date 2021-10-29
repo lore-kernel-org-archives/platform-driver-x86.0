@@ -2,129 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9368C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 13:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE9DC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 13:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B79E3611C1
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 13:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609A761175
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Oct 2021 13:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231403AbhJ2NQr (ORCPT
+        id S231530AbhJ2NRM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 29 Oct 2021 09:16:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230213AbhJ2NQq (ORCPT
+        Fri, 29 Oct 2021 09:17:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230213AbhJ2NRL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 29 Oct 2021 09:16:46 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CEDA661167;
-        Fri, 29 Oct 2021 13:14:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635513258;
-        bh=P1ON3/62L0Dv3I0JOEX4dWv6/iBLDiTdyLMkn72flOE=;
-        h=References:From:To:Cc:Subject:Date:In-reply-to:From;
-        b=Z4fNmufrUQYNBmCrjdme6gGW2Xge2pyny+vN2reRjsWoNza44nM3RQ6+hS/PX5DEY
-         scP+rqH8lgWcJyUrZJSEFsuqjQmnCjiFRwG9nIDIxsp75FSd8w2TWJs3yHMAK3lZ0K
-         eYJQB2rmKAtw8vH2GoaczSKOEaeNDnF8NP8gw5zvMTFMW2RhIM8U2jQ/wOeOuvElAO
-         RcDxnAccPUuIqvwcdCAoMac2dv1WPLvei+QVgl07Wmewf0P2RfsGUPxLYkhf9AXZkH
-         NBk7h0YEkNbxUlSG0HDoom8igk35aQR00aOFAr819AIbeCKjrJEcW5ZyJuiLdMN9UC
-         qfz0e7QKgy/lQ==
-References: <20211028211753.573480-1-jaschultzMS@gmail.com>
- <20211028211753.573480-3-jaschultzMS@gmail.com>
- <CAHp75Vfq7ZkXytuAFhGOMGuH7_AsXcYf9O=p30e4OUx+a4jMgw@mail.gmail.com>
- <87fsskqvvc.fsf@kernel.org>
- <CAHp75VdHpHMp7X=8WcVbSUaT3pfxo-ZOTQ0BwdQqD09bJ2ddKg@mail.gmail.com>
- <877ddwqaas.fsf@kernel.org>
- <CAHp75VcwbVh7K=UMgiJ1QpaeB_f_==K4Ewzjt5OwYcOAXqiyUw@mail.gmail.com>
-User-agent: mu4e 1.6.6; emacs 28.0.60
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jarrett Schultz <jaschultzms@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jarrett Schultz <jaschultz@microsoft.com>
-Subject: Re: [PATCH 2/3] platform: surface: Add surface xbl
-Date:   Fri, 29 Oct 2021 16:12:08 +0300
-In-reply-to: <CAHp75VcwbVh7K=UMgiJ1QpaeB_f_==K4Ewzjt5OwYcOAXqiyUw@mail.gmail.com>
-Message-ID: <875ytgt1lm.fsf@kernel.org>
+        Fri, 29 Oct 2021 09:17:11 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCA8EC061570;
+        Fri, 29 Oct 2021 06:14:42 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id l2so16844098lji.6;
+        Fri, 29 Oct 2021 06:14:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=osDamQOuONsYrpKcvETFaiMS87IGXmH0jox9ViqQ238=;
+        b=hRxPn9kf5utbmv79GgZM21YGEg+2weS4UCfoFwFvDJ4HvUnJjrdLlBT7rLK+BVB9iX
+         D6lI/76Z2dmHfsJboeTibySTEC3rxrgxwUDCQeydihBDtbQXj1vR5mT2aslyM34lZQw4
+         6Dtivo6dQtpZXcMfESU7f/+nWoLsBCIObAi410ITGxuCGowr0JFCpgMn3ypRfGZyfADt
+         aNbsOTw8znTeUSnfDRwYiOZNTYNp042xfcF/9yvQblKxMZJw4T7WOopI8W2nEXDTkbRf
+         h6etLt771nqgrhb1WKVnZM/aX0wTPZXQoGNTYvIqAFsWNOeCVzITJYQIbl7m8gfv54mY
+         /XjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=osDamQOuONsYrpKcvETFaiMS87IGXmH0jox9ViqQ238=;
+        b=pq1JkEEEuNlkKRY8xAu58fJOmdLb49O0imESOU6SppeByxIz/gXHnEKYiB1NaCoTij
+         n5e1TtHqFdvvfqw2yf0vGWydt6nkvrYSPO7kutiFoI1RwaS3Fg8aXmqX4/Ngt6SJgplf
+         jYgKePNrU7mt69ob4W6EaPDfiNF8uiZW7UtvChhwhDNVAR6V6P3F8NYdhLwQ21KVwKbs
+         5Yutdc7QWpEeYWOUdH3xy6uqwm88q/lB4C5mMyh6lVeB6DoAS48ilmBICCR4OwMnFJGR
+         qIJngalGQ//6IqK2JC6l6ocrjwtm9euVPSKK7CItbQlIY2LT3K46jJ++jqnUbL/cR9NH
+         TJ1A==
+X-Gm-Message-State: AOAM533LybN3wypnUwaC2e4TNZ8hQXNGzp8PUvLxYef2PRR8/MzSZV/I
+        ZHi2brsd+Fbu+GJsFMJeQFysErmB04v2dkeIV8Su1WB8AkA=
+X-Google-Smtp-Source: ABdhPJyFnCZne9XeVCKdL8ft8JTJVYclV9S/a3sZtLvY3wZiLOU7vpAe9KMcmjVFsT0nFq6qx3RGBvI2LrBMnPlMSQs=
+X-Received: by 2002:a2e:901:: with SMTP id 1mr11738396ljj.333.1635513281231;
+ Fri, 29 Oct 2021 06:14:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20211027195511.207552-1-martin.fernandez@eclypsium.com>
+ <8a8e0743-e54d-ec96-da4e-1d101b550274@intel.com> <CAKgze5Z3fT9F0S-mogfP6is9sL3=0imtCbfy6ZYrd3zgaBUqRg@mail.gmail.com>
+ <YXq50yzJQqrJk13v@zn.tnic> <CAD2FfiFS++2-Sn5nCft8Eb-R41MM6abCjXyDn8bOVY-_miCpRA@mail.gmail.com>
+ <YXrRN+pDr4Uv5p0t@zn.tnic>
+In-Reply-To: <YXrRN+pDr4Uv5p0t@zn.tnic>
+From:   Richard Hughes <hughsient@gmail.com>
+Date:   Fri, 29 Oct 2021 14:14:29 +0100
+Message-ID: <CAD2FfiEurBe34_dx-ChY7BPtaiZpFW7SFBBa4hKU2w-3QLr+DQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] [RFC] x86: Export information about hardware
+ memory encryption to sysfs
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Martin Fernandez <martin.fernandez@eclypsium.com>,
+        Dave Hansen <dave.hansen@intel.com>, linux-efi@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, ardb@kernel.org,
+        dvhart@infradead.org, andy@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org,
+        Daniel Gutson <daniel.gutson@eclypsium.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Thu, 28 Oct 2021 at 17:35, Borislav Petkov <bp@alien8.de> wrote:
+> Sorry, you need to expand on that: part of what specification?
 
-Hi,
+My apologies, I should have linked to the specification. It's called
+Host Security ID: https://fwupd.github.io/libfwupdplugin/hsi.html
 
-Andy Shevchenko <andy.shevchenko@gmail.com> writes:
->> >> > Capital L will be better to read and understand the
->> >> > abbreviation. Actually usually we do something like this:
->> >> >
->> >> > Extensible Boot Loader (EBL)
->> >>
->> >> nah, this is silly Andy. It's just capitalized as eXtensible Boot
->> >> Loader, very much akin to eXtensible Host Controller Interface.
->> >
->> > My point here is to have a full name followed by the abbreviation. and
->> > n(O)t in (F)ancy st(Y)le.
->>
->> too bad my patch removing acronyms from the kernel got rejects :-p
->>
->> Seriously, this is pretty pointless. You're vouching for something that
->> will just cause confusion. Every piece of internal documentation refers
->> to xbl and you want this to be renamed to ebl because it looks nicer for
->> you. Thanks, but no thanks.
->
-> Maybe I was too unclear. I'm not pushing for EBL, I'm pushing for the form os
->
-> "Foo bAr BullSh*t (FABS)" vs. "(F)oo b(a)r (B)ull(s)h*t".
->
-> If you have x there to be capitalized, do it like "eXtensible Boot
-> Loader (XBL)". Is it too hard?
+> How is this going to be run?
 
-Take a breather Andy, you need it. Winter sure is coming
+HSI tests are run at every boot and logged. HSI is part of Insights
+(for servers) and is even now part of several large companies'
+purchasing policies.
 
->> >> >  +static const struct attribute_group inputs_attr_group = {
->> >> >  +       .attrs = inputs_attrs,
->> >> >  +};
->> >> >  +
->> >> >  +static u8 surface_xbl_readb(void __iomem *base, u32 offset)
->> >> >  +{
->> >> >  +       return readb(base + offset);
->> >> >  +}
->> >> >  +
->> >> >  +static u16 surface_xbl_readw(void __iomem *base, u32 offset)
->> >> >  +{
->> >> >  +       return readw(base + offset);
->> >> >  +}
->> >> >
->> >> > Either use corresponding io accessors in-line, or make first parameter
->> >> > to be sirface_xbl pointer. Otherwise these helpers useless.
->> >>
->> >> I agree with passing surface_xbl point as first parameter, but calling
->> >> the accessors pointless is a bit much. At a minimum, they make it easier
->> >> to ftrace the entire driver by simply ftracing surface_xbl_*
->> >
->> > My point is that the above seems half-baked. It's pointless to have a
->> > func(a,b) { return readl(a + b); }. It doesn't add value.
->>
->> sure it does. echo surface_xbl_* > ftrace_filter_function (or whatever
->> the filename was) it reason enough IMHO. Not to mention that these
->> little accessors will likely be optimized by the compiler.
->
-> readl() will appear in the traces, no? But yeah I also was thinking
-> about the weakness in your argument that the compiler can silently
-> inline them anyway.
+> Why cannot this be a userspace program, script, tool, whatever?
 
-In non-debug builds, when tracers are enabled a thunk will be added for
-runtime patching ;-) (IIRC)
+We actually tried this, using the journal API:
+https://github.com/fwupd/fwupd/pull/2129
 
--- 
-balbi
+It was a hack, and took a really long time to complete on slow
+embedded hardware.
+
+Richard
