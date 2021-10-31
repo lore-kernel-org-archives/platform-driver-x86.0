@@ -2,140 +2,186 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF501C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 30 Oct 2021 22:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483CFC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 09:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEF1160F55
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 30 Oct 2021 22:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21EE961058
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 09:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231766AbhJ3WRI (ORCPT
+        id S229887AbhJaJDQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 30 Oct 2021 18:17:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230323AbhJ3WRH (ORCPT
+        Sun, 31 Oct 2021 05:03:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44875 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229525AbhJaJDQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 30 Oct 2021 18:17:07 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 088D4C061570;
-        Sat, 30 Oct 2021 15:14:37 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id ee16so37889152edb.10;
-        Sat, 30 Oct 2021 15:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rZW96vbK8Teu6OjvSzaXi6oYccLSbo4NeNB+PnxDYjs=;
-        b=DHOAo1ppJJP8d81/gQ3MXN4x6pffoigju7/27smlLAyMH7XC+hnC6Es2UGVZFkyKp0
-         BWh1ANbfYlGei6kjYwjBWNqA6IXv4+hWNVInl3YtUerR95UgdEl7Lcgb11XwQsfSqixr
-         wR9AcZF2uBqAFvTtAJ6u6R/kxebeS49Ln32Usig5kPmyNyW0fyS2n7s48I2y/rK+2Sjb
-         vnyLBPJW1u7nVgsNw1gCAxcPNefDhZbh5yB/ZkC0wMf1ERDaMkg05ZaVtRsJRY4nxfpz
-         JxQ1vQknx4gnmQePosJtL1cWaCRqk8s3ZQHaIzj6+UO7A9dHBmk0lPDN1TJBdEVPudbS
-         gIsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rZW96vbK8Teu6OjvSzaXi6oYccLSbo4NeNB+PnxDYjs=;
-        b=bzFBU+Qhj0Z5eNibEh6LHprMWXMFOSwITzd0ZHZXTWf4ZWx0k3QpymP119bl99M61v
-         TawgNd9LSo6yeuTDRm9KmqSBGEmluPJL0w0AzQVeS36C85eqyuL1iiLJyB882WFFwDIo
-         zRk0GPTSHXyC9tu9VDoebVIPgglOWpdlEpzGpt6r2AHv9J4dziWPUPTEt4gFL/5zTGA+
-         gX7NSLDlRd97YQIh1fyGY2V+tp/OknGGr9sUkRyI+6Tr6y4Dyh2mNAqD6IOs5VFGgytb
-         s3hd2mUeIRAt2hJOlohD/hVKTQKqr9WdtqZZipwJFLeJp+CMOFmE/kynL/e72tDgTz+Z
-         vMaw==
-X-Gm-Message-State: AOAM531rS/Rn/CcOFgXQaegqL5OdjGzyJV04HhyUwEuGz62zLLRjoncH
-        rhMvtvmTQ4R/xUnaJCuQlmmheWoSQngPwHa4xFQ=
-X-Google-Smtp-Source: ABdhPJx3A7gXmeumq/rnSnxMOHcO0tGHTrpMnAPU7K+xilax92WAeU73erjyBal2eFFy7rg4hXkZP3JHvPJLjNss3Og=
-X-Received: by 2002:a17:907:1c9e:: with SMTP id nb30mr24504525ejc.141.1635632075516;
- Sat, 30 Oct 2021 15:14:35 -0700 (PDT)
+        Sun, 31 Oct 2021 05:03:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635670844;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Z4ASAiv+SIq5uZw+Lsxb9ayRoGky8y61FOJKaWDBieY=;
+        b=f5e5B6ehhs9OoMBJFSCMmIX+FLZnihaXkEIijYB/1US9d8UJLfmIVS/Zpwez3UnBUf9uir
+        ZfKJgPGTMvQ2HgxMwvtOxUqVwJhIv9C9k/FUNvsopAvNzFdTkgKvEpBMWMKsMx+e3zRCOU
+        eBS8Q8TXVtVk1PRozx5x6mWshRqpTl8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-Ww7yk3eJPhiT7_5EVR0Djw-1; Sun, 31 Oct 2021 05:00:41 -0400
+X-MC-Unique: Ww7yk3eJPhiT7_5EVR0Djw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C3101006AA4;
+        Sun, 31 Oct 2021 09:00:39 +0000 (UTC)
+Received: from x1.localdomain (unknown [10.39.192.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 27B0E60BF4;
+        Sun, 31 Oct 2021 09:00:28 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH] ACPI / PMIC: Fix intel_pmic_regs_handler() read accesses
+Date:   Sun, 31 Oct 2021 10:00:28 +0100
+Message-Id: <20211031090028.6445-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <20211030182813.116672-1-hdegoede@redhat.com> <20211030182813.116672-11-hdegoede@redhat.com>
-In-Reply-To: <20211030182813.116672-11-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 31 Oct 2021 01:13:59 +0300
-Message-ID: <CAHp75Vc=dZ1FPeDgaY8S+dSu8i=QUgbLN2NVOcsMz6h0uytNeg@mail.gmail.com>
-Subject: Re: [PATCH 10/13] power: supply: bq25890: Add support for registering
- the Vbus boost converter as a regulator
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Oct 30, 2021 at 9:28 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> The bq25890_charger code supports enabling/disabling the boost converter
-> based on usb-phy notifications. But the usb-phy framework is not used on
-> all boards/platforms. At support for registering the Vbus boost converter
-> as a standard regulator when there is no usb-phy on the board.
->
-> Also add support for providing regulator_init_data through platform_data
-> for use on boards where device-tree is not used and the platform code must
-> thus provide the regulator_init_data.
+The handling of PMIC register reads through writing 0 to address 4
+of the opregion is wrong. Instead of returning the read value
+through the value64, which is a no-op for function == ACPI_WRITE calls,
+store the value and then on a subsequent function == ACPI_READ with
+address == 3 (the address for the value field of the OpRegion)
+return the stored value.
 
-...
+This has been tested on a Xiaomi Mi Pad 2 and makes the ACPI battery dev
+there mostly functional (unfortunately there are still other issues).
 
-> @@ -1018,6 +1059,21 @@ static int bq25890_probe(struct i2c_client *client,
->                 INIT_WORK(&bq->usb_work, bq25890_usb_work);
->                 bq->usb_nb.notifier_call = bq25890_usb_notifier;
->                 usb_register_notifier(bq->usb_phy, &bq->usb_nb);
-> +#ifdef CONFIG_REGULATOR
-> +       } else {
-> +               struct bq25890_platform_data *pdata = dev_get_platdata(dev);
-> +               struct regulator_config cfg = { };
-> +               struct regulator_dev *reg;
-> +
-> +               cfg.dev = dev;
-> +               cfg.driver_data = bq;
-> +               if (pdata)
-> +                       cfg.init_data = pdata->regulator_init_data;
-> +
-> +               reg = devm_regulator_register(dev, &bq25890_vbus_desc, &cfg);
-> +               if (IS_ERR(reg))
-> +                       return dev_err_probe(dev, PTR_ERR(reg), "registering regulator");
-> +#endif
->         }
+Here are the SET() / GET() functions of the PMIC ACPI device,
+which use this opregion, which clearly show the new behavior to
+be correct:
 
+OperationRegion (REGS, 0x8F, Zero, 0x50)
+Field (REGS, ByteAcc, NoLock, Preserve)
+{
+    CLNT,   8,
+    SA,     8,
+    OFF,    8,
+    VAL,    8,
+    RWM,    8
 }
-#ifdef
-else {
-  ...
+
+Method (GET, 3, Serialized)
+{
+    If ((AVBE == One))
+    {
+        CLNT = Arg0
+        SA = Arg1
+        OFF = Arg2
+        RWM = Zero
+        If ((AVBG == One))
+        {
+            GPRW = Zero
+        }
+    }
+
+    Return (VAL) /* \_SB_.PCI0.I2C7.PMI5.VAL_ */
 }
-#endif
 
-is a bit better to maintain (less error prone in case of new code).
+Method (SET, 4, Serialized)
+{
+    If ((AVBE == One))
+    {
+        CLNT = Arg0
+        SA = Arg1
+        OFF = Arg2
+        VAL = Arg3
+        RWM = One
+        If ((AVBG == One))
+        {
+            GPRW = One
+        }
+    }
+}
 
-...
+Fixes: 0afa877a5650 ("ACPI / PMIC: intel: add REGS operation region support")
+Cc: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/pmic/intel_pmic.c | 51 +++++++++++++++++++---------------
+ 1 file changed, 28 insertions(+), 23 deletions(-)
 
-> +#ifndef _BQ25890_CHARGER_H_
-> +#define _BQ25890_CHARGER_H_
-
-> +#include <linux/regulator/machine.h>
-
-struct regulator_init_data;
-
-should be sufficient, no header is needed.
-
-> +struct bq25890_platform_data {
-> +       const struct regulator_init_data *regulator_init_data;
-> +};
-> +
-> +#endif
-
+diff --git a/drivers/acpi/pmic/intel_pmic.c b/drivers/acpi/pmic/intel_pmic.c
+index a371f273f99d..9cde299eba88 100644
+--- a/drivers/acpi/pmic/intel_pmic.c
++++ b/drivers/acpi/pmic/intel_pmic.c
+@@ -211,31 +211,36 @@ static acpi_status intel_pmic_regs_handler(u32 function,
+ 		void *handler_context, void *region_context)
+ {
+ 	struct intel_pmic_opregion *opregion = region_context;
+-	int result = 0;
++	int result = -EINVAL;
++
++	if (function == ACPI_WRITE) {
++		switch (address) {
++		case 0:
++			return AE_OK;
++		case 1:
++			opregion->ctx.addr |= (*value64 & 0xff) << 8;
++			return AE_OK;
++		case 2:
++			opregion->ctx.addr |= *value64 & 0xff;
++			return AE_OK;
++		case 3:
++			opregion->ctx.val = *value64 & 0xff;
++			return AE_OK;
++		case 4:
++			if (*value64) {
++				result = regmap_write(opregion->regmap, opregion->ctx.addr,
++						      opregion->ctx.val);
++			} else {
++				result = regmap_read(opregion->regmap, opregion->ctx.addr,
++						     &opregion->ctx.val);
++			}
++			opregion->ctx.addr = 0;
++		}
++	}
+ 
+-	switch (address) {
+-	case 0:
+-		return AE_OK;
+-	case 1:
+-		opregion->ctx.addr |= (*value64 & 0xff) << 8;
+-		return AE_OK;
+-	case 2:
+-		opregion->ctx.addr |= *value64 & 0xff;
++	if (function == ACPI_READ && address == 3) {
++		*value64 = opregion->ctx.val;
+ 		return AE_OK;
+-	case 3:
+-		opregion->ctx.val = *value64 & 0xff;
+-		return AE_OK;
+-	case 4:
+-		if (*value64) {
+-			result = regmap_write(opregion->regmap, opregion->ctx.addr,
+-					      opregion->ctx.val);
+-		} else {
+-			result = regmap_read(opregion->regmap, opregion->ctx.addr,
+-					     &opregion->ctx.val);
+-			if (result == 0)
+-				*value64 = opregion->ctx.val;
+-		}
+-		memset(&opregion->ctx, 0x00, sizeof(opregion->ctx));
+ 	}
+ 
+ 	if (result < 0) {
 -- 
-With Best Regards,
-Andy Shevchenko
+2.31.1
+
