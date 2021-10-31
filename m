@@ -2,93 +2,203 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D6EC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 20:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA12AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 21:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4F960FD9
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 20:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFBBE60FC4
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 21:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230049AbhJaUFH (ORCPT
+        id S230081AbhJaVgC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 31 Oct 2021 16:05:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38032 "EHLO
+        Sun, 31 Oct 2021 17:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbhJaUFG (ORCPT
+        with ESMTP id S229982AbhJaVgB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 31 Oct 2021 16:05:06 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D67C061570;
-        Sun, 31 Oct 2021 13:02:34 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id w1so3679568edd.10;
-        Sun, 31 Oct 2021 13:02:34 -0700 (PDT)
+        Sun, 31 Oct 2021 17:36:01 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87405C061714;
+        Sun, 31 Oct 2021 14:33:29 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id s13so18310880wrb.3;
+        Sun, 31 Oct 2021 14:33:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zfUaTO+JtpEhn8e4kj/WNJyyw6O24RYn0R5mAg+QdhM=;
-        b=j6yxrxbDE14KoLZW7mKUm9ai+b0gD2eNXHdKpe13a9Q1L9XfF1lf/SNxtTIiQ1mpeH
-         zzfPPYgAqNvB7eY54qFYk4ym006xjZlWOlfjDI1W1IThs35MT7BNn2oMvkUlJ73iBc8m
-         Iz6MHWPjpEozS6gyb6UfTrWAo3CyDVHWC2OLpKTDFruOaZpGMg+QyJq+WzgKOs3+MAti
-         ziZgcnJg+caLAPjNLmrfwwSTkkw1N7+eXuweRy9CVXh9XyMaT52UGPueaOCV9LMV6SP5
-         eNQZ1pH8od0FleHRKIlU+vxIiVVf89P46D1R5BRD4UPgjhEVSByFN8S3XVPwWqeojpps
-         /5KA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XjWB/oIIVDw6rf0oBoNalWFM14/FZCTWVcKgDXNXbNg=;
+        b=lZO/1m/5fR6QzApKkpy+bR70wQ4I25QuMV+MyVzF8njwojfyR9wfvWgzF4uudxwaf/
+         LA1vBksCk7h3MZSRHV+A+QZ/hGmVl/p8Ipfk09vaux4fwGEHpsJQQUt4ZOlVVjqsADn/
+         RIHke0yBwrIlQCwX+HasBRSZ6AUZmrYK3gYWa/2fpFFygU+a3BBsowBBxSZ2SmhDPumP
+         3QLTTuIJpnrUbDldqHEjMmxQNIAjuOlpZifh0D6J6lGplqEjm4b2wd3IaAiDrR42qhEl
+         4pynBqN2mcL+CvDvaaNBXCvplARsnZ7RLBBfz/Q3z3s8AjtgtJEpDmx4qacw+/lUfSmd
+         xTxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zfUaTO+JtpEhn8e4kj/WNJyyw6O24RYn0R5mAg+QdhM=;
-        b=lwznTYzpPypjSOwe0qbl6MRuZVO9V9JwEqauwfC1pJ1kcPNVvf12UFuMqTBCZBFwLt
-         HH1vmtK0nMYv2XtNyTXL1YajxvPuNoXUDAA3nrYbsOgqP0i2ZoukfD6EhHcBz7AtrYGT
-         0eY2bwxwgZ7pYLwiHUfyr7jKhhEs074uT9T6691oMT4cKdV2Sy/gaWbz5HpZGZU4z/PM
-         +6JSTPgczWYh0GdtPfEkC8ClyZrXy2NNtSl5mBqEy/924PkM5x9oqH/+08rYD8hWLCuk
-         80Y4IFCKDQ/Pmb8w01V9BULNRcY3onsu3yByzu+mV8CNaOXhQPn5u0X7v9MMf2YYBupq
-         Hqfw==
-X-Gm-Message-State: AOAM530ayWPM9j/WLg5zonxob3fPAN0sIMJYpLQ+LKKEk3M6AzCu1aL1
-        VHvee0ytLqq50EKtCIVU1ts9eTkKMQgDeI2dIF8=
-X-Google-Smtp-Source: ABdhPJwQcLdE22O0BD2/YnkE/eji2qmfxqA//Hdb2+Oq/NgFgzZ7imVt7Rxdj9HTRsd98Aq8oJdclTKupG7J+V1oe/M=
-X-Received: by 2002:a05:6402:10da:: with SMTP id p26mr34696434edu.283.1635710552671;
- Sun, 31 Oct 2021 13:02:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XjWB/oIIVDw6rf0oBoNalWFM14/FZCTWVcKgDXNXbNg=;
+        b=02KLmPE9msmiYTEOgvnEJixOU4ok3PRuxaCiZV3JAtSdRjZbIKaQr5qhZnbUEGKyAu
+         VBkkQVQJRyEFsYNoSh8VTJuBx15vlIVCc+1T3u+wahI9SwuU8xnp1hgszwVQyyA8PqxA
+         IsWBiXcJ6rnFTRUfBtkADKhd/MW5qF6rbYsZiytMG3uKiwxfktKz6tEKecufH1sdjYGs
+         6qY7a/bz7jCeegomppmtwaEHbEdPhj7mERgwQoLcDtxDeQAjKKxJD7uCl/Vema9aKV2t
+         Whdm4HVpqEKPMNUIf/TbqzHP9f1YrcVAmWpfIedK24K7h6hBmfzrpRzZwjmYkUiwSVKR
+         bzhg==
+X-Gm-Message-State: AOAM533a1BANwYWbeJpFVQJ0mQaosu12qCF3Po3vyOQ0vfHWbTYlouBX
+        AbSOv19MiNPadadBKZ1aKD8=
+X-Google-Smtp-Source: ABdhPJw/LkqJ0iLXrjETfFeMCKvEQPxEJ4kV/FinXXoIv2xbYRXgvZWVNUyAKQdDrqd0MoC1GKjLqg==
+X-Received: by 2002:adf:e54a:: with SMTP id z10mr22430791wrm.328.1635716007156;
+        Sun, 31 Oct 2021 14:33:27 -0700 (PDT)
+Received: from localhost.localdomain ([94.179.15.8])
+        by smtp.gmail.com with ESMTPSA id n7sm10526158wro.68.2021.10.31.14.33.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 Oct 2021 14:33:26 -0700 (PDT)
+From:   Denis Pauk <pauk.denis@gmail.com>
+Cc:     eugene.shalygin@gmail.com, andy.shevchenko@gmail.com,
+        pauk.denis@gmail.com, platform-driver-x86@vger.kernel.org,
+        thomas@weissschuh.net, kernel@maidavale.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v10 0/2] Update ASUS WMI supported boards
+Date:   Sun, 31 Oct 2021 23:32:54 +0200
+Message-Id: <20211031213257.123049-1-pauk.denis@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-References: <20211031162428.22368-1-hdegoede@redhat.com> <20211031162428.22368-4-hdegoede@redhat.com>
- <CAHp75Vf-EOfF_XfqfWFQZNLp3B03o79xHf4bUrf9x9D9pTrvgw@mail.gmail.com>
-In-Reply-To: <CAHp75Vf-EOfF_XfqfWFQZNLp3B03o79xHf4bUrf9x9D9pTrvgw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 31 Oct 2021 22:01:56 +0200
-Message-ID: <CAHp75Ve-WAQM0aLbhRzyT5KQ-tej17=nczNSY9hG5zXztmRVWQ@mail.gmail.com>
-Subject: Re: [RFC 3/5] gpiolib: acpi: Add a new "ignore" module option
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Ard Biesheuvel <ardb@kernel.org>, Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Oct 31, 2021 at 9:59 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sun, Oct 31, 2021 at 6:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
+Add support by WMI interface provided by Asus for B550/X570 boards: 
+* PRIME X570-PRO,
+* ROG CROSSHAIR VIII HERO
+* ROG CROSSHAIR VIII DARK HERO
+* ROG CROSSHAIR VIII FORMULA
+* ROG STRIX X570-E GAMING
+* ROG STRIX B550-I GAMING
+* ROG STRIX B550-E GAMING
 
-> I'm wondering if the idea behind this is something relative to
-> https://elixir.bootlin.com/linux/latest/source/drivers/acpi/sysfs.c
+Add support by WMI interface provided by Asus for X370/X470/
+B450/X399 boards:
+* ROG CROSSHAIR VI HERO,
+* PRIME X399-A,
+* PRIME X470-PRO,
+* ROG CROSSHAIR VI EXTREME,
+* ROG CROSSHAIR VI HERO (WI-FI AC),
+* ROG CROSSHAIR VII HERO,
+* ROG CROSSHAIR VII HERO (WI-FI),
+* ROG STRIX B450-E GAMING,
+* ROG STRIX B450-F GAMING,
+* ROG STRIX B450-I GAMING,
+* ROG STRIX X399-E GAMING,
+* ROG STRIX X470-F GAMING,
+* ROG STRIX X470-I GAMING,
+* ROG ZENITH EXTREME,
+* ROG ZENITH EXTREME ALPHA.
 
-Missed line:
-https://elixir.bootlin.com/linux/latest/source/drivers/acpi/sysfs.c#L792
+@Guenter Roeck: I have changed type of all sensor values to long.
 
+@Ed Brindley: Could you please check changes in asus_wmi_sensors?
+
+Could you please review?
+
+Signed-off-by: Denis Pauk <pauk.denis@gmail.com>
+Signed-off-by: Ed Brindley <kernel@maidavale.org>
+Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+---
+Changes in v10:
+- Use long for sensor values.
+- Remove unrequired linux/hwmon-sysfs.h
+- Add "ROG STRIX B550-I GAMING" board support in asus_wmi_ec_sensors.
+- Change code style in error status return.
+- Remove unuses wmi.buffer and fix type of source in asus_wmi_sensors.
+
+Changes in v9:
+- Fix memory leaks in asus_wmi_ec_block_read()
+- Fix buffer and parameter lengths in decode and encode algorithms
+- Simplify encoding in read query
+- Reshuffle structures to make pointer arithmetics simpler or
+  no-op in some cases
+- Shuffle parameters in some functions to make it more logical
+- Use temporary variable for EC info data structure
+- Many indentation fixes to improve readability (breaks 80 characters rule)
+- Fix memory leaks in asus_wmi_sensors:asus_wmi_*().
+
+Changes in v8:
+- Add seprate patch for ProArt X570-CREATOR WIFI support.
+- Fix codestyle in defines and comments.
+- Fix buffer length calculation.
+- Use hex2bin/bin2hex for convert values in buffers.
+- Remove unrequired acpi_os_free usage.
+- Call mutex_lock inside of functions.
+
+Changes in v7:
+- Use  for directly get sensors list by board.
+- Add depends on ACPI_WMI to Kconfig.
+- Add response buffer size check in asus_wmi_ec_decode_reply_buffer.
+- Clean up defines names.
+
+Changes in v6:
+- asus_wmi_ec_sensors: Generate query for all sensors on sensors setup
+- asus_wmi_ec_sensors: Move binary to sensor value logic to separate 
+  get_sensor_value (by Eugene Shalygin)
+- asus_wmi_ec_sensors: Use acpi_os_free without NULL pointer check.
+- Add asus_wmi_sensor to documentation index.
+- Add asus_wmi_ec_sensor to documentation index.
+
+Changes in v5:
+- Fixes build issue reported by kernel test robot with disabled ACPI_WMI.
+- asus_wmi_sensors: Remove sensor->name check as always evaluated to true.
+
+Changes in v4:
+ - Implement wmi driver instead platform driver.
+ - Update documentation with known issues.
+
+Changes in v3:
+ - Use MODULE_DEVICE_TABLE for match devices.
+ - asus_wmi_ec_sensors: Use get_unaligned_be32 instead incorrectly used 
+   get_unaligned_le32.
+ - Add documentaion for drivers.
+
+Changes in v2:
+ - asus_wmi_ec_sensors: Rename asus_wmi_sensors to asus_wmi_ec_sensors for 
+   B550/X570 boards.
+ - asus_wmi_ec_sensors: Use utf8s_to_utf16s/utf16s_to_utf8s instead handmade 
+   fuctions.
+ - asus_wmi_ec_sensors: Use post increment.
+ - asus_wmi_ec_sensors: Use get_unaligned* for convert values.
+ - asus_wmi_ec_sensors: Use PTR_ERR_OR_ZERO.
+ - asus_wmi_ec_sensors: Specify per-board sensors in a declarative way 
+   (by Eugene Shalygin).
+ - asus_wmi_sensors: Add support for X370/X470/B450/X399 boards.
+
+---
+
+Denis Pauk (2):
+  hwmon: (asus_wmi_ec_sensors) Support B550 Asus WMI.
+  hwmon: (asus_wmi_sensors) Support X370 Asus WMI.
+
+ Documentation/hwmon/asus_wmi_ec_sensors.rst |  38 ++
+ Documentation/hwmon/asus_wmi_sensors.rst    |  76 +++
+ Documentation/hwmon/index.rst               |   2 +
+ MAINTAINERS                                 |   8 +
+ drivers/hwmon/Kconfig                       |  24 +
+ drivers/hwmon/Makefile                      |   2 +
+ drivers/hwmon/asus_wmi_ec_sensors.c         | 621 ++++++++++++++++++
+ drivers/hwmon/asus_wmi_sensors.c            | 664 ++++++++++++++++++++
+ 8 files changed, 1435 insertions(+)
+ create mode 100644 Documentation/hwmon/asus_wmi_ec_sensors.rst
+ create mode 100644 Documentation/hwmon/asus_wmi_sensors.rst
+ create mode 100644 drivers/hwmon/asus_wmi_ec_sensors.c
+ create mode 100644 drivers/hwmon/asus_wmi_sensors.c
+
+
+base-commit: 10f0d2ab9aa672707559d46601fd35544759ff70
 -- 
-With Best Regards,
-Andy Shevchenko
+2.33.0
+
