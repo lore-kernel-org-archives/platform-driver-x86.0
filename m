@@ -2,130 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BD0C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 17:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73324C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 19:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C61760720
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 17:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589C461051
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 19:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229898AbhJaSB2 (ORCPT
+        id S230152AbhJaTah (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 31 Oct 2021 14:01:28 -0400
-Received: from sauhun.de ([88.99.104.3]:34022 "EHLO pokefinder.org"
+        Sun, 31 Oct 2021 15:30:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229838AbhJaSB1 (ORCPT
+        id S230010AbhJaTah (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 31 Oct 2021 14:01:27 -0400
-Received: from localhost (p5de04e1e.dip0.t-ipconnect.de [93.224.78.30])
-        by pokefinder.org (Postfix) with ESMTPSA id B2A1D2C0093;
-        Sun, 31 Oct 2021 18:58:40 +0100 (CET)
-Date:   Sun, 31 Oct 2021 18:58:37 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-efi@vger.kernel.org
-Subject: Re: [PATCH 11/13] i2c: cht-wc: Add support for devices using a
- bq25890 charger
-Message-ID: <YX7ZTXbD0F+n3M36@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-efi@vger.kernel.org
-References: <20211030182813.116672-1-hdegoede@redhat.com>
- <20211030182813.116672-12-hdegoede@redhat.com>
+        Sun, 31 Oct 2021 15:30:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 32D0260F0F
+        for <platform-driver-x86@vger.kernel.org>; Sun, 31 Oct 2021 19:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635708485;
+        bh=HW/imU8UWINDwaGunEkixoImSd5npinle7R4V1Ri1qI=;
+        h=From:To:Subject:Date:From;
+        b=g1zq5cDjOzg7MDAnM5g6srRMM+NeZCt0k8WhE9NgtRcxmhTd+R/ZPpqVSn7yewXjF
+         X8qIJIpAwoyOR1scbdv6Z/inp1dH+Qyodiq9exDUavfWETBAO8VxuI3w7CmgeP9XYx
+         1ZbMQ6YP4sYCQz25dpPG8uGS67DpggGvHfCaeWEMXI5aQzp9U2AlYcbZdqpurEbmi7
+         /6VNJZn7RxqFb3BRB0n6UAIPzxA2KAvH2c8AJP6CaMZXmofh0tcyh7zDWTE+H+ZinW
+         7RdtPeCQiqVYREmqFLG+H7nvfR5fj/ZBYIk84nPf91wmXBatt9a138SFZa1JK7IaLK
+         j4+iV8sXW5UeA==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 214899] New: ideapad-laptop: platform backlight device not
+ working
+Date:   Sun, 31 Oct 2021 19:28:04 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: johannes.penssel@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression attachments.created
+Message-ID: <bug-214899-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HlSTOP0HHK83WUVH"
-Content-Disposition: inline
-In-Reply-To: <20211030182813.116672-12-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
 
---HlSTOP0HHK83WUVH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+            Bug ID: 214899
+           Summary: ideapad-laptop: platform backlight device not working
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 5.10.27-5.14.15
+          Hardware: All
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: johannes.penssel@gmail.com
+        Regression: No
 
-On Sat, Oct 30, 2021 at 08:28:11PM +0200, Hans de Goede wrote:
-> The i2c-controller on the Cherry Trail - Whiskey Cove PMIC is special
-> in that it is always connected to the I2C charger IC of the board on
-> which the PMIC is used; and the charger IC is not described in ACPI,
-> so the i2c-cht-wc code needs to instantiate an i2c-client for it itself.
->=20
-> So far there has been a rudimentary check to make sure the ACPI tables
-> are at least somewhat as expected by checking for the presence of an
-> INT33FE device and sofar the code has assumed that if this INT33FE
-> device is present that the used charger then is a bq24290i.
->=20
-> But some boards with an INT33FE device in their ACPI tables use a
-> different charger IC and some boards don't have an INT33FE device at all.
->=20
-> Since the information about the used charger + fuel-gauge + other chips is
-> necessary in other places too, the kernel now adds a "intel,cht-wc-setup"
-> string property to the Whiskey Cove PMIC i2c-client based on DMI matching,
-> which reliably describes the board's setup of the PMIC.
->=20
-> Switch to using the "intel,cht-wc-setup" property and add support for
-> instantiating an i2c-client for either a bq24292i or a bq25890 charger.
->=20
-> This has been tested on a GPD pocket (which uses the old bq24292i setup)
-> and on a Xiaomi Mi Pad 2 with a bq25890 charger.
->=20
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Created attachment 299379
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D299379&action=3Dedit
+DSDT.dsl
 
-In general, fine with me from the I2C side:
+Hardware: Lenovo IdeaPad 5 15ITL05, latest BIOS version
+Issue: Platform backlight device provided by ideapad-laptop has no effect on
+actual brightness.
+Pressing brightness keys on my keyboard causes changes in
+/sys/class/backlight/ideapad/actual_brightness, but no uevent is generated =
+(as
+outlined in drivers/video/backlight.c source code comments), and
+/sys/class/backlight/ideapad/brightness is unaffected.=20
+When manipulating /sys/class/backlight/ideapad/brightness directly, uevents=
+ are
+being generated, but no change in real screen brightness occurs.=20
+The only way that screen brightness can actually be changed is by using i91=
+5's
+intel_backlight sysfs interface, which does not respond to brightness keybo=
+ard
+keys.
 
-Acked-by: Wolfram Sang <wsa@kernel.org>
+attached is my decompiled DSDT and dmesg.
 
+ls -la /sys/class/backlight/ideapad/
+total 0
+drwxr-xr-x 3 root root     0 Oct 31 19:40 .
+drwxr-xr-x 3 root root     0 Oct 31 19:40 ..
+-r--r--r-- 1 root root  4096 Oct 31 19:40 actual_brightness
+-rw-r--r-- 1 root root  4096 Oct 31 19:40 bl_power
+-rw-rw-r-- 1 root video 4096 Oct 31 19:43 brightness
+lrwxrwxrwx 1 root root     0 Oct 31 19:40 device -> ../../../VPC2004:00
+-r--r--r-- 1 root root  4096 Oct 31 19:40 max_brightness
+drwxr-xr-x 2 root root     0 Oct 31 19:40 power
+-r--r--r-- 1 root root  4096 Oct 31 19:40 scale
+lrwxrwxrwx 1 root root     0 Oct 31 19:40 subsystem ->
+../../../../../../../class/backlight
+-r--r--r-- 1 root root  4096 Oct 31 19:40 type
+-rw-r--r-- 1 root root  4096 Oct 31 19:40 uevent
 
-> +	else if (!strcmp(str, "bq24292i,max17047,fusb302,pi3usb30532"))
-> +		board_info =3D &bq24190_board_info;
-> +	else if (!strcmp(str, "bq25890,bq27520"))
-> +		board_info =3D &bq25890_board_info;
+--=20
+You may reply to this email to add a comment.
 
-Very minor nit: I prefer 'strcmp() =3D=3D 0' because the above could be read
-as 'if not strcmp()' which is sadly misleading. But I am not strict with
-it.
-
-
---HlSTOP0HHK83WUVH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmF+2UgACgkQFA3kzBSg
-KbYmyg//ZFQBxYsRGPbdXLc7APBbxDE5qYmiiYJcZJnDc5S6/lKyh4ZoaOOeTGPv
-LNw6jEPZQmjtHbZD72e4PfDY4FHmHCcj/6jZjmj3ftWzqS3wzQdzqXjC4qvkEHsd
-ZHTa0BbSdb7sXWMo32Uf2ouTAeuMluVsbkEcwrFDvSKC39o/G1FsyTw4CHKphkOw
-EmtFTRPnNhpvUKEA3PBVLojCtAIeg8d1j8t1KR7+1A/V7m82WNTRWh4MKZgCqTd9
-0AqGamhOvc9DLok/cnzFxUICbaTpohBY5jDgP3WXlZBUGgpwOAVtvl4d7hMFhPhm
-D9BJtASdC8H98ARoM8ELyrDjeVvZzxPxipyg+3oX77XAUePQUGV41ml2NKvQ5dCm
-/iQWM/8Whrp+0lOMixkgZM3OtCjCWrH/p52WxAMk6Hyx4JqHTeTB7TNJjJTb8C25
-2eYFXuC5P9gfW+FeMwt1LJ5QypNcG75JkYCO1AhoHz2eXdirSM5B2FFxUVZ4mMs9
-rawpBnTG8EYUlP7HK6cNrkfCZC9azuYJ/ODNlYL/AE7Fb0TrPjYnXSMgYvD06pkC
-Mh7NUZiz5KbXdRpgTm+IWDpevccXjslMtCmEatbmnr2tBObepvjy2qWIeZKY0jma
-0RQbCFmpAWVziKgzozj1KJ78Psuv9vTdl0MpvTPN0uSWdc1SKjM=
-=f7kV
------END PGP SIGNATURE-----
-
---HlSTOP0HHK83WUVH--
+You are receiving this mail because:
+You are watching the assignee of the bug.=
