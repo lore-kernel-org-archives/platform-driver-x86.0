@@ -2,123 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73324C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 19:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05ECCC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 19:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 589C461051
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 19:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EED60FC4
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 31 Oct 2021 19:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230152AbhJaTah (ORCPT
+        id S230152AbhJaTh5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 31 Oct 2021 15:30:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230010AbhJaTah (ORCPT
+        Sun, 31 Oct 2021 15:37:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230041AbhJaTh4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 31 Oct 2021 15:30:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 32D0260F0F
-        for <platform-driver-x86@vger.kernel.org>; Sun, 31 Oct 2021 19:28:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635708485;
-        bh=HW/imU8UWINDwaGunEkixoImSd5npinle7R4V1Ri1qI=;
-        h=From:To:Subject:Date:From;
-        b=g1zq5cDjOzg7MDAnM5g6srRMM+NeZCt0k8WhE9NgtRcxmhTd+R/ZPpqVSn7yewXjF
-         X8qIJIpAwoyOR1scbdv6Z/inp1dH+Qyodiq9exDUavfWETBAO8VxuI3w7CmgeP9XYx
-         1ZbMQ6YP4sYCQz25dpPG8uGS67DpggGvHfCaeWEMXI5aQzp9U2AlYcbZdqpurEbmi7
-         /6VNJZn7RxqFb3BRB0n6UAIPzxA2KAvH2c8AJP6CaMZXmofh0tcyh7zDWTE+H+ZinW
-         7RdtPeCQiqVYREmqFLG+H7nvfR5fj/ZBYIk84nPf91wmXBatt9a138SFZa1JK7IaLK
-         j4+iV8sXW5UeA==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] New: ideapad-laptop: platform backlight device not
- working
-Date:   Sun, 31 Oct 2021 19:28:04 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: johannes.penssel@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
- priority component assigned_to reporter cf_regression attachments.created
-Message-ID: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sun, 31 Oct 2021 15:37:56 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35EA2C061570;
+        Sun, 31 Oct 2021 12:35:24 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id k24so6639391ljg.3;
+        Sun, 31 Oct 2021 12:35:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WuTpWz9YI/ddpcB1dJElXKYAQNO1y0xx5YwMMXQ8zB4=;
+        b=Pu6LsxvwoeW4IWmkXZPI3htQ5RU307fzeXXBdkA/st4FtIFYUT322rSO6BIqPi2iSa
+         ApGYvvS6vIZ1SdY8bwKll9+uLJsGZZ8QbvzErT0GN63Eosqt17iIPlawPqXDNpC9pmt0
+         ASmNTaw2Cou50xti08CbbbRVgRpCSTap37FxMicOd4p7Rlo8AWAElg246Q8etF03YbhB
+         0wTRsZIKQTy4BWr714hKowfEgJTvWMy7k5FrfoNuQxgr4Q2GErEALYIWaIdHFgydKe9X
+         Gsg+bXXKUmerUOB+B3UTxEHkmUIHeGHDBIFdWN+NWS3148L80dZ2HDpz6+25b5vGY+Rl
+         lxKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WuTpWz9YI/ddpcB1dJElXKYAQNO1y0xx5YwMMXQ8zB4=;
+        b=ML1ft2XcbI5Txl8Op0FGGKq3WqhCQNeZqyU6hAEj3/PAabG+mC0BlQmKGMZkCS+xq0
+         D7zV9KelZgr3RybL0JC5BN2BRJ+WMDE8udvfNaZtZfbvgLt4dJBvq//kFksG7aNfoiSg
+         L9p0e4iQ5ZpP/CDYm4FDOYKI9GaisE80zuwkt4qNMfbdSpfGV44DcRv1Qh4FtyDsNK9n
+         nt1APKz7r7x4dUt1nWApeXxMhIXrBf9k4MkXz8R5nSgXA4WAUT+pRpStCv/zeJpTMaMA
+         vF2UVLt/vxPxW5NbFEe8dJ1/zoCGS2m2v/9nzdl59TK/8o4RhW2LbTwTIZ510npIzQs7
+         /ZqQ==
+X-Gm-Message-State: AOAM531OT5kWFVRV2J1xZLJguLmV1Eq7X8swQjuCd9XU0JXb6yWpOYC1
+        bj4jaN9UgHLWHPlULKR7MUohWo9weGWEyYRu7tw=
+X-Google-Smtp-Source: ABdhPJyluf0XmpuQjyVpq9BPD0ZAx1H0Fr8Zn2ulDmXx2dA2cQ87nlK8Ig4JQ9NIu5hA4WMLNK/2exTHl25orvTBqL8=
+X-Received: by 2002:a05:651c:b07:: with SMTP id b7mr26823391ljr.166.1635708922330;
+ Sun, 31 Oct 2021 12:35:22 -0700 (PDT)
 MIME-Version: 1.0
+References: <20211031152522.3911-1-hdegoede@redhat.com>
+In-Reply-To: <20211031152522.3911-1-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 31 Oct 2021 21:34:46 +0200
+Message-ID: <CAHp75Vc6GO4e0_Qp6HfFtd_kbSakaMXsQN4oEPArdmMrxTFb7A@mail.gmail.com>
+Subject: Re: [PATCH v2] power: supply: bq27xxx: Fix kernel crash on IRQ
+ handler register error
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
+On Sun, Oct 31, 2021 at 5:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> When registering the IRQ handler fails, do not just return the error code,
+> this will free the devm_kzalloc()-ed data struct while leaving the queued
+> work queued and the registered power_supply registered with both of them
+> now pointing to free-ed memory, resulting in various kernel crashes
+> soon afterwards.
+>
+> Instead properly tear-down things on IRQ handler register errors.
 
-            Bug ID: 214899
-           Summary: ideapad-laptop: platform backlight device not working
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 5.10.27-5.14.15
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: johannes.penssel@gmail.com
-        Regression: No
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Created attachment 299379
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D299379&action=3Dedit
-DSDT.dsl
+> Fixes: 703df6c09795 ("power: bq27xxx_battery: Reorganize I2C into a module")
+> Cc: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> - Fix devm_kzalloc()-ed type in the commit message
+> ---
+>  drivers/power/supply/bq27xxx_battery_i2c.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/supply/bq27xxx_battery_i2c.c
+> index 46f078350fd3..cf38cbfe13e9 100644
+> --- a/drivers/power/supply/bq27xxx_battery_i2c.c
+> +++ b/drivers/power/supply/bq27xxx_battery_i2c.c
+> @@ -187,7 +187,8 @@ static int bq27xxx_battery_i2c_probe(struct i2c_client *client,
+>                         dev_err(&client->dev,
+>                                 "Unable to register IRQ %d error %d\n",
+>                                 client->irq, ret);
+> -                       return ret;
+> +                       bq27xxx_battery_teardown(di);
+> +                       goto err_failed;
+>                 }
+>         }
+>
+> --
+> 2.31.1
+>
 
-Hardware: Lenovo IdeaPad 5 15ITL05, latest BIOS version
-Issue: Platform backlight device provided by ideapad-laptop has no effect on
-actual brightness.
-Pressing brightness keys on my keyboard causes changes in
-/sys/class/backlight/ideapad/actual_brightness, but no uevent is generated =
-(as
-outlined in drivers/video/backlight.c source code comments), and
-/sys/class/backlight/ideapad/brightness is unaffected.=20
-When manipulating /sys/class/backlight/ideapad/brightness directly, uevents=
- are
-being generated, but no change in real screen brightness occurs.=20
-The only way that screen brightness can actually be changed is by using i91=
-5's
-intel_backlight sysfs interface, which does not respond to brightness keybo=
-ard
-keys.
 
-attached is my decompiled DSDT and dmesg.
-
-ls -la /sys/class/backlight/ideapad/
-total 0
-drwxr-xr-x 3 root root     0 Oct 31 19:40 .
-drwxr-xr-x 3 root root     0 Oct 31 19:40 ..
--r--r--r-- 1 root root  4096 Oct 31 19:40 actual_brightness
--rw-r--r-- 1 root root  4096 Oct 31 19:40 bl_power
--rw-rw-r-- 1 root video 4096 Oct 31 19:43 brightness
-lrwxrwxrwx 1 root root     0 Oct 31 19:40 device -> ../../../VPC2004:00
--r--r--r-- 1 root root  4096 Oct 31 19:40 max_brightness
-drwxr-xr-x 2 root root     0 Oct 31 19:40 power
--r--r--r-- 1 root root  4096 Oct 31 19:40 scale
-lrwxrwxrwx 1 root root     0 Oct 31 19:40 subsystem ->
-../../../../../../../class/backlight
--r--r--r-- 1 root root  4096 Oct 31 19:40 type
--rw-r--r-- 1 root root  4096 Oct 31 19:40 uevent
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
+With Best Regards,
+Andy Shevchenko
