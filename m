@@ -2,125 +2,147 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03286C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 09:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03D0C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 09:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE43F6056B
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 09:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2D060E54
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 09:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234405AbhKAJzo (ORCPT
+        id S232929AbhKAKAH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 1 Nov 2021 05:55:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:42736 "EHLO
+        Mon, 1 Nov 2021 06:00:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:46612 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235039AbhKAJxl (ORCPT
+        by vger.kernel.org with ESMTP id S232587AbhKAJ7R (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 Nov 2021 05:53:41 -0400
+        Mon, 1 Nov 2021 05:59:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635760267;
+        s=mimecast20190719; t=1635760604;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RVmTahPp05ug2rZV/FDS9rid3xaGB6x17QO5vyS0nII=;
-        b=EgUm7Ad4hKBF1eMvGcFR1fUgPrMpsMovQlaVlMVPs31dsOVbOe1iC5binw/mZKjgzEMczI
-        LCebxS+M3fzzrjMS1XQWGQkCKa41A6/sWCFq+5o0YiRg8OQGhv9+WdyXA+RYKk5E5hot7E
-        FfsNHZXq6LqJE5NVRFSJwJQkqng17h0=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-125-2nmaCvBcN3u8pqd0WvfZBQ-1; Mon, 01 Nov 2021 05:51:06 -0400
-X-MC-Unique: 2nmaCvBcN3u8pqd0WvfZBQ-1
-Received: by mail-ed1-f70.google.com with SMTP id d11-20020a50cd4b000000b003da63711a8aso14976457edj.20
-        for <platform-driver-x86@vger.kernel.org>; Mon, 01 Nov 2021 02:51:06 -0700 (PDT)
+        bh=vnNLP3pxCj5kK+Y7vBpKll8NWXd7vahWcRAymdcHOXU=;
+        b=XMxIYR6Ct4LAlKOU6HWX70OX7h6tOys4BaqEVdiM8JApgs6qvrpxFTi5SpPIs/QnEH0rUz
+        sE3m/CRr0ZLWd9I/6XCuX5xNomIW7nwM+Vns8qyQO7ozIOWYuq9dV2ln9HR1ghEgpWBf7B
+        oSTqMFEdOqA/UDYzpNI3tz32XOO79zo=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-iK7ix7XqPIK59QLpWifwQg-1; Mon, 01 Nov 2021 05:56:43 -0400
+X-MC-Unique: iK7ix7XqPIK59QLpWifwQg-1
+Received: by mail-ed1-f69.google.com with SMTP id w11-20020a05640234cb00b003e0cd525777so10360420edc.12
+        for <platform-driver-x86@vger.kernel.org>; Mon, 01 Nov 2021 02:56:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=RVmTahPp05ug2rZV/FDS9rid3xaGB6x17QO5vyS0nII=;
-        b=67jMwTJL++URxon0q5/FQzM2FfbbpKAglASR40JwfPh2Ha+Js6DpfPTzWXes/9rOEo
-         rrwrUgo7RXxRvPwcloPgLJjGMk5egSWz5/DtNxrYiHl/q7RDSMm2uj+OY9GhWRRHFVlL
-         E07weUL06Xde7evkWtvujIGq3LByBYc1qI/VJkCWrCSQx776P23aDA81jZsQyXICmr/K
-         jvuV8sk4ScVS/34eXjSmq2hY0QtdheZB+0NQSd0oZuE4n63FU8c7LuTNzq9u3HbkVN/i
-         oX1Ac3GoymadFOShDyDfrgVN7AGKTOwNey0kVrvrsrb3M0zd+i+VoleWgE5H6oJLdqRT
-         bOqw==
-X-Gm-Message-State: AOAM5307mBSqpwp04FSpkqX/JehedrCb4X/WoXoMHPlVl2o0phccutDb
-        90dVM0KsmeVBnLLVyGq53etAUuBXiA3oHjtgSaTQqaitCNiLLySseIX4qMUu5NePLUqeSzcCVnA
-        j6aAVlzC8L86hiF/dCAqrbpMxyi6yqexgKw==
-X-Received: by 2002:a17:906:a896:: with SMTP id ha22mr13873569ejb.439.1635760265538;
-        Mon, 01 Nov 2021 02:51:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJztTnQHGkL0HOnaZ10lApuJ48JJ1vkr9CkU3eOMwbbUYq0fnGxqJGNwsqXZVbtGVoMfQR/wxw==
-X-Received: by 2002:a17:906:a896:: with SMTP id ha22mr13873542ejb.439.1635760265330;
-        Mon, 01 Nov 2021 02:51:05 -0700 (PDT)
+        bh=vnNLP3pxCj5kK+Y7vBpKll8NWXd7vahWcRAymdcHOXU=;
+        b=qY1iTV560vrUpI6yzqEEoeJ0gn7YrKgBFkhBlyo7ySfugcRMSkccqIx8ZP6fpTV3PT
+         csS7Ddf+0X0Wnu3zMLCAV3U1OyBJFoBnAnNtuYY1twC67HW/4FFBmOw1205RxZl0yt5A
+         iLbYHAyxwrxVGmRJy3PII9WZDXobvctgeN+1sM02XIZMUDDQXtiIboLWFB007Ik5xMrj
+         5N22kbLDsoSPqQwpXoGeiLz/Xfu/BIyGWW9bNaeMFiL+CSt4TK0ze0pIPHblnoZ2trAR
+         JkVS2cIYdEJkKjtWulNoPsDe2oE7vf7Kx79jxXUA8Y8TyhcY6xFnO1kGJ8SXvgU9PPAv
+         hQKg==
+X-Gm-Message-State: AOAM532Gy6s2LfxI4jGcyGaPYxNDjpaKOFWcEu9DgSzILTwJ++rflRFC
+        diU/vBhnOtNrgiDdQUzH7UrBoEo2nFG/TTuy+h/CdOLFzKIA2DJDwS1NPafX1P2l0Va/MBa5dL+
+        MNZhUUk+0CAR8FmvLDdOClLN2gReDEDn0YQ==
+X-Received: by 2002:a17:907:72c3:: with SMTP id du3mr34940721ejc.536.1635760601919;
+        Mon, 01 Nov 2021 02:56:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxDvKiU7RqegUNMLj+l6RYZc7y2j4L+5bcqrSsjwNjl0uODitZefSFLpVVKu1zw5CeLeXrwIA==
+X-Received: by 2002:a17:907:72c3:: with SMTP id du3mr34940693ejc.536.1635760601753;
+        Mon, 01 Nov 2021 02:56:41 -0700 (PDT)
 Received: from [10.40.1.223] ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id h7sm8500814edt.37.2021.11.01.02.51.04
+        by smtp.gmail.com with ESMTPSA id bm1sm6701834ejb.38.2021.11.01.02.56.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Nov 2021 02:51:04 -0700 (PDT)
-Message-ID: <26f900e5-39f5-62c6-6acf-1e058a21cd3c@redhat.com>
-Date:   Mon, 1 Nov 2021 10:51:04 +0100
+        Mon, 01 Nov 2021 02:56:40 -0700 (PDT)
+Message-ID: <883db585-c9bb-5255-4ddd-f093616af1a1@redhat.com>
+Date:   Mon, 1 Nov 2021 10:56:40 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH v2] platform/x86: system76_acpi: Fix input device error
- handling
+Subject: Re: [PATCH 0/6] MODULE_DEVICE_TABLE() support for the ISHTP bus
 Content-Language: en-US
-To:     Tim Crawford <tcrawford@system76.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     productdev@system76.com
-References: <20211030154213.2515-1-tcrawford@system76.com>
+To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
+        linux-input@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        platform-driver-x86@vger.kernel.org, linux-kbuild@vger.kernel.org
+References: <20211029152901.297939-1-linux@weissschuh.net>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211030154213.2515-1-tcrawford@system76.com>
+In-Reply-To: <20211029152901.297939-1-linux@weissschuh.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 10/30/21 17:42, Tim Crawford wrote:
-> Users on darp6 that do not have Open EC firmware have reported crashes
-> on boot. Correct the error handling for the input device to fix it.
+On 10/29/21 17:28, Thomas Weißschuh wrote:
+> Currently as soon as any ISHTP device appears all available ISHTP device
+> drivers are loaded automatically.
+> This series extends the MODULE_DEVICE_TABLE() functionality to properly handle
+> the ishtp bus and switches the drivers over to use it.
 > 
-> Managed devices do not need to be explicitly unregistered or freed, as
-> this is handled by devres. Drop the call to input_free_device.
+> Patch 1 adds the infrastructure to handle ishtp devices via MODULE_DEVICE_TABLE()
+> Patch 2 replaces some inlined constants with ones now defined by mod_devicetable.h
+> Patches 3-6 migrate all ishtp drivers to MODULE_DEVICE_TABLE()
 > 
-> Fixes: 0de30fc684b ("platform/x86: system76_acpi: Replace Fn+F2 function for OLED models")
-> 
-> Signed-off-by: Tim Crawford <tcrawford@system76.com>
+> Note: This patchset is based on the pdx86/for-next tree because that contains
+> one of the drivers that is not yet in the other trees.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Since most of the changes here are under drivers/hid and since the latter
+patches depend on 1/6, I believe it would be best to merge the entire series
+through the HID tree, here is my ack for this:
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
 
 
-> ---
->  drivers/platform/x86/system76_acpi.c | 1 -
->  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
-> index b3c8178420b1..8b292ee95a14 100644
-> --- a/drivers/platform/x86/system76_acpi.c
-> +++ b/drivers/platform/x86/system76_acpi.c
-> @@ -739,7 +739,6 @@ static int system76_add(struct acpi_device *acpi_dev)
->  error:
->  	kfree(data->ntmp);
->  	kfree(data->nfan);
-> -	input_free_device(data->input);
->  	return err;
->  }
->  
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: Mark Gross <markgross@kernel.org>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+> Cc: Jiri Kosina <jikos@kernel.org>
+> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Cc: Benson Leung <bleung@chromium.org>
+> 
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: linux-kbuild@vger.kernel.org
+> 
+> Thomas Weißschuh (6):
+>   HID: intel-ish-hid: add support for MODULE_DEVICE_TABLE()
+>   HID: intel-ish-hid: use constants for modaliases
+>   HID: intel-ish-hid: fw-loader: only load for matching devices
+>   HID: intel-ish-hid: hid-client: only load for matching devices
+>   platform/chrome: chros_ec_ishtp: only load for matching devices
+>   platform/x86: isthp_eclite: only load for matching devices
+> 
+>  drivers/hid/intel-ish-hid/ishtp-fw-loader.c  |  7 +++++-
+>  drivers/hid/intel-ish-hid/ishtp-hid-client.c |  7 +++++-
+>  drivers/hid/intel-ish-hid/ishtp/bus.c        |  4 ++--
+>  drivers/platform/chrome/cros_ec_ishtp.c      |  7 +++++-
+>  drivers/platform/x86/intel/ishtp_eclite.c    |  7 +++++-
+>  include/linux/mod_devicetable.h              | 13 +++++++++++
+>  scripts/mod/devicetable-offsets.c            |  3 +++
+>  scripts/mod/file2alias.c                     | 24 ++++++++++++++++++++
+>  8 files changed, 66 insertions(+), 6 deletions(-)
+> 
+> 
+> base-commit: 85303db36b6e170917a7bc6aae4898c31a5272a0
 > 
 
