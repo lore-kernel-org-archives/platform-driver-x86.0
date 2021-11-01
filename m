@@ -2,135 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F5DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 19:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38534C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 20:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E91760187
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 19:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B7D61058
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 20:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231197AbhKATii (ORCPT
+        id S231147AbhKAUNa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 1 Nov 2021 15:38:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231186AbhKATib (ORCPT
+        Mon, 1 Nov 2021 16:13:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49294 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230505AbhKAUN0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 Nov 2021 15:38:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id E2F6460187
-        for <platform-driver-x86@vger.kernel.org>; Mon,  1 Nov 2021 19:35:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635795356;
-        bh=pGmMH7XDoCPaOLkJdqIqiz33b95UH3OaIJxOXm39sFo=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=fpNqy3a63xAPbHFUQOhKoRcdK3wxmGELBJUel54ktyU2uFkvgM/lVZ4nqv/ww/0H8
-         gd5cKOd1q3JZOgHNMiLjZqZp8fAXMSIKT3fPfYQlkgkqY3tW4dpdP41+xD06nfrITA
-         cyFM9NCqLaeFP+ZzH2E0b9PPVTmHGWZ4vfSH7+B0MjFhtvi8zYVb3JxlhaMv61F3X6
-         UlAVl+2kFkW9M92G757Qrbu5sWZkCfgeiZKVTXBGVTgXaZFGhhquVtmddgk77+0xdy
-         k3gdfN953nn6WtfX47armhvLk15VRAio5aB6DNE3/JHgR2wVpxJDncyU3ocGnxk93R
-         +WNSxFozoGN8w==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] ideapad-laptop: platform backlight device not working
-Date:   Mon, 01 Nov 2021 19:35:56 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-214899-215701-iafppdV7Kj@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
-References: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 1 Nov 2021 16:13:26 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E700C061714
+        for <platform-driver-x86@vger.kernel.org>; Mon,  1 Nov 2021 13:10:52 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id 131so35937387ybc.7
+        for <platform-driver-x86@vger.kernel.org>; Mon, 01 Nov 2021 13:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=ZUgxn0lmh9dNAC/c7eLSOzWzcjlgZ0KBJZDm+rIaPh4=;
+        b=YmJGbHyYO8FjlHaWXdqQX2ep6ZWcZgf80vvHkiIaNcD22F5NdLLVVDCNr1fvMk2xub
+         LhleTXjFhoen4O5pB9quoVWb+3A/RrmauG0733odq0WJxJxUx651forzxOnYt9WfOBY5
+         Prn8FSgNUaW06qQWbL5P3YsGm+sMoq0JKuHt6nwiNyI09b/YXdmT4nMQrJjJhFREsO5Z
+         lNRWifj4T/RmiFBiQOdc3oTZhwulo838MtWCikPFfA4HraMLGEzqVqixJN6kmja9W5M7
+         1dKSMPjR2V1atiumdOzqsz51Ygj/M0QFrdCUfQX8xfdSPS94pAdYlJlrrxDV/t1aFlrL
+         LutQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=ZUgxn0lmh9dNAC/c7eLSOzWzcjlgZ0KBJZDm+rIaPh4=;
+        b=DL/NtmmBvkAuz+am8mtIgBJS6ydn3Qz9FtMjMsIaDy3Y33BxUJhky3Z+Vbj69pCNUG
+         6WUPOikif3+mJIzIwo43/V7mtmiO/vWE6amoXqv7T7Ou7syYeuEO8K2q1peOMMfXjT0U
+         SFYrJfM7pZnHIax7gyap3Ky5FT7D45mJbbVziExYgJVgoFvfnjbP4bonnPSr1xSMfyj4
+         K7U3hZ8HSG27KUYuns/CVd/DDPEMJ2ZbzsScgbzGITT8uBBGiKBnfBKc0zfFqxpQ53x0
+         inPrMl1n/jw1SfLU8vru8uhYjfYQf49a6xaSLOv02vw44WcShz/+HrxuvcimJ8drMfxn
+         S59A==
+X-Gm-Message-State: AOAM532/jCkTTdV3MXnKvHOydv10EJm4ytLPXabOTcbZC/1TFNzWWaun
+        jPPIeHSDnOnYku6ru52tF3BYG78n+hi2Ntr34HUFeA==
+X-Google-Smtp-Source: ABdhPJxmRcGVfjTG7RNJkd3yvtG0SUwIlVzcS87rMZlBppb9lOFjIYHC9m9jEXeCc6OPjQoMsiCvGeAPeCuJrpPHoDQ=
+X-Received: by 2002:a25:2d1:: with SMTP id 200mr17630104ybc.528.1635797451467;
+ Mon, 01 Nov 2021 13:10:51 -0700 (PDT)
 MIME-Version: 1.0
+Received: by 2002:a81:1f09:0:0:0:0:0 with HTTP; Mon, 1 Nov 2021 13:10:50 -0700 (PDT)
+In-Reply-To: <b2de42c1-e973-0f4a-635f-8e8bbaebbfa5@intel.com>
+References: <20211027195511.207552-1-martin.fernandez@eclypsium.com>
+ <8a8e0743-e54d-ec96-da4e-1d101b550274@intel.com> <CAKgze5Z3fT9F0S-mogfP6is9sL3=0imtCbfy6ZYrd3zgaBUqRg@mail.gmail.com>
+ <YXq50yzJQqrJk13v@zn.tnic> <CAD2FfiFS++2-Sn5nCft8Eb-R41MM6abCjXyDn8bOVY-_miCpRA@mail.gmail.com>
+ <YXrRN+pDr4Uv5p0t@zn.tnic> <CAKgze5av=duAc+inw6XnroT1WxHoP6pA2=Bb2tjK45yO6aDfOg@mail.gmail.com>
+ <b2de42c1-e973-0f4a-635f-8e8bbaebbfa5@intel.com>
+From:   Martin Fernandez <martin.fernandez@eclypsium.com>
+Date:   Mon, 1 Nov 2021 17:10:50 -0300
+Message-ID: <CAKgze5bRTeqZ0zmbykk24TAPzj6mQ3=xMQXn5k37rNm4bFVKMw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] [RFC] x86: Export information about hardware
+ memory encryption to sysfs
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Richard Hughes <hughsient@gmail.com>,
+        linux-efi@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, ardb@kernel.org,
+        dvhart@infradead.org, andy@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org,
+        Daniel Gutson <daniel.gutson@eclypsium.com>,
+        alison.schofield@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
+On 10/29/21, Dave Hansen <dave.hansen@intel.com> wrote:
+> I don't think this interface makes any sense at all for something off of
+> which to base firmware updates.  It's just too noisy.
+>
+> That said, I *do* think we are going to need something similar to what
+> you propose here because folks are going to want to target memory
+> allocations to NUMA nodes that have encryption capabilities.
 
-Hans de Goede (jwrdegoede@fedoraproject.org) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |jwrdegoede@fedoraproject.or
-                   |                            |g
-
---- Comment #2 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-What is your kernel commandline?  According to your attached dmesg it is em=
-pty,
-but that seems unlikely... ?
-
-The ideapad-laptop code has this:
-
-        if (acpi_video_get_backlight_type() =3D=3D acpi_backlight_vendor) {
-                err =3D ideapad_backlight_init(priv);
-                if (err && err !=3D -ENODEV)
-                        goto backlight_failed;
-        }
-
-And acpi_video_get_backlight_type() is:
-
-enum acpi_backlight_type acpi_video_get_backlight_type(void)
-{
-...
-        if (acpi_backlight_cmdline !=3D acpi_backlight_undef)
-                return acpi_backlight_cmdline;
-
-        if (acpi_backlight_dmi !=3D acpi_backlight_undef)
-                return acpi_backlight_dmi;
-
-        if (!(video_caps & ACPI_VIDEO_BACKLIGHT))
-                return acpi_backlight_vendor;
-
-        if (acpi_osi_is_win8() && backlight_device_get_by_type(BACKLIGHT_RA=
-W))
-                return acpi_backlight_native;
-
-        return acpi_backlight_video;
-}
-
-So the only way that the ideapad backlight can get registered is if:
-
-1. You have acpi_backlight=3Dvendor on your kernel cmdline
-2. There is a DMI quirk setting for your model in the kernel which there is
-not.
-3. Your ACPI tables do not implement the ACPI_VIDEO_BACKLIGHT interface, but
-your dmesg says:
-
-[    2.237329] ACPI: video: Video Device [GFX0] (multi-head: yes  rom: no=20
-post: no)
-
-So this is unlikely, it is still possible though that your DSDT implements =
-the
-ACPI video interface but not the backlight part (that would be a first). I
-cannot tell since the ACPI video interface is not in the DSDT, it is likely
-defined in one of the SSDT tables. Please attach a full acpidump.
-
-Can you try specifying: "acpi_backlight=3Dvideo" on the kernel commandline =
-and
-then do:
-
-ls /sys/class/backlight
-
-And copy and paste the output here. This cmdline option not only helps me d=
-ebug
-this, but it should also workaround your backlight issue :)
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+And how do think we should approach this? Putting apart the TME part,
+ie, this patch as it is (but showing the file for every node), what do
+think it's the next step?
