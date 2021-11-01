@@ -2,119 +2,108 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D975C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 12:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A83C43217
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 14:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E385610A8
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 12:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4106108F
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Nov 2021 14:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232425AbhKAMVV (ORCPT
+        id S231906AbhKAO23 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 1 Nov 2021 08:21:21 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55540 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232036AbhKAMVT (ORCPT
+        Mon, 1 Nov 2021 10:28:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229826AbhKAO21 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 Nov 2021 08:21:19 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id BCB8F1C0B76; Mon,  1 Nov 2021 13:18:44 +0100 (CET)
-Date:   Mon, 1 Nov 2021 13:18:40 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "hamza.farooq@siemens.com" <hamza.farooq@siemens.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "henning.schild@siemens.com" <henning.schild@siemens.com>,
-        "jan.kiszka@siemens.com" <jan.kiszka@siemens.com>,
-        "Haeussler, Gerd" <gerd.haeussler.ext@siemens.com>
-Subject: Re: Define LEDs with mixed colors
-Message-ID: <20211101121840.GB2571@duo.ucw.cz>
-References: <DBAPR10MB42195CA4E52FDD30F0598AE98ACD9@DBAPR10MB4219.EURPRD10.PROD.OUTLOOK.COM>
- <20210901110929.GA18522@duo.ucw.cz>
- <DBAPR10MB42198EA968C14B13B510834D8ACD9@DBAPR10MB4219.EURPRD10.PROD.OUTLOOK.COM>
+        Mon, 1 Nov 2021 10:28:27 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB3EC061714;
+        Mon,  1 Nov 2021 07:25:53 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id f4so6731768edx.12;
+        Mon, 01 Nov 2021 07:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U8dGpHr2LbqeeAeL0rdMryoAEIzzb9ek644l/wYoSc0=;
+        b=qfPfuUyKZZiLcmVeHl4aZMPpfyaRykfYCtocxIUEaKcP1sB2WeHuRpeSenxfRhzVaJ
+         1VToEAmhDVB5dUVFxg4K9ZVhi1cSVQbk/SummxncNmrLuKtvht+NCy73ZODXPf0WpRUC
+         OlsvB2pbLI0s5s2DL5dB9MUj3UxOO05PLIzMGuKr92Wtv+CDEKAvF+UdX2zJ9N+auyUx
+         cdTKbekFXwzb9hHd0RJpv2JbV+fMSvTLlYDQf658hcmLLUWifohDy7PLV1yu3nYzAwVi
+         jS7+wCXEVlP2VUrf350Mk2gwzhAZiT7P9w41C2y47tSEs/7Vbz1lSjdIV3eCwjr4RBQX
+         2APw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U8dGpHr2LbqeeAeL0rdMryoAEIzzb9ek644l/wYoSc0=;
+        b=yD4D/vX1Wlx/bwizGp1iTt7Tq74zg4QMBnlg90G+nxYIRiw7CbgWAfTq5FdylhpNoX
+         JHuKLUahKvKV5yERDLpcqYdqjQx6EXbqfv8ruQHsBkf9jI1Z9p0cDLHF+7fbSLeuNxD9
+         qMyvqRJxAOmWCzV7rWovsVkEQPb0Fiwe0EjhN4ZbX8u56ASSUGIjjCFcFIlFYxzH66d2
+         x9DED/LZb+N1zjEShIDu9BA6DE71zjjpl4H11b4xPrwhozaRLVhrA9pTgXnMWCpM8bja
+         +DmH8gtgcMmxgrSW6FyQ4zjVXTTo9seywwVIOFPFnb77e2Fs8meCdjUk2DOMCw+6VPFv
+         eRqw==
+X-Gm-Message-State: AOAM530tLeVXc0Cwp/DLy96fJ+dqAwzoKKMd8fVr+KzY5lPO5ciE+LfR
+        oTVMueDUwRJK4BWUPSJBxPlDcuxqEP2GXRWeOMIbtrfXLCk=
+X-Google-Smtp-Source: ABdhPJzWM6VCDa5ZmF2ZKjZ1DdhV+AAGA9EqR2F/VhuTDDoFuYjeq48tl6QyW1NBKDlXUB980wqbufQ1zQVeZg6M+74=
+X-Received: by 2002:aa7:c44b:: with SMTP id n11mr20384013edr.238.1635776752332;
+ Mon, 01 Nov 2021 07:25:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
-Content-Disposition: inline
-In-Reply-To: <DBAPR10MB42198EA968C14B13B510834D8ACD9@DBAPR10MB4219.EURPRD10.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20211025094119.82967-1-hdegoede@redhat.com> <20211025094119.82967-11-hdegoede@redhat.com>
+ <CAHp75VdC8i1YWZh_KXNqz_hHgHFoXQ57cce4-x3e6Ha0ZVPQag@mail.gmail.com> <08a94895-ad57-c8f2-fcb5-ff1c1637dc0d@redhat.com>
+In-Reply-To: <08a94895-ad57-c8f2-fcb5-ff1c1637dc0d@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 1 Nov 2021 16:25:02 +0200
+Message-ID: <CAHp75VfYMEZKtR5HZTazSSZ1qgz5iV7Nk9JFHgFmtUuWGqQabg@mail.gmail.com>
+Subject: Re: [PATCH v4 10/11] platform/x86: int3472: Pass tps68470_regulator_platform_data
+ to the tps68470-regulator MFD-cell
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Mon, Nov 1, 2021 at 1:32 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 10/25/21 13:38, Andy Shevchenko wrote:
+> > On Mon, Oct 25, 2021 at 12:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
---gatW/ieO32f1wygP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-Hi!
-
-> > > I am toying with the idea of writing a multicolor LED GPIO driver. Wh=
-at
-> > would be the right way to define mixed color LEDs (for leds-gpio), in d=
-evice
-> > tree or ACPI?
-> > > Consider the following:
-> > >
-> > > leds {
-> > > 	compatible =3D "gpio-leds";
-> > > 	led0 {
-> > > 		gpios =3D <&mcu_pio 0 GPIO_ACTIVE_LOW>;
-> > > 		color =3D <LED_COLOR_ID_RED>;
-> > > 	};
-> > >
-> > > 	led1 {
-> > > 		gpios =3D <&mcu_pio 1 GPIO_ACTIVE_HIGH>;
-> > > 		color =3D <LED_COLOR_ID_GREEN>;
-> > > 	};
-> > > 	led2 {
-> > > 		gpios =3D <&mcu_pio 0 GPIO_ACTIVE_LOW
-> > > 			&mcu_pio 1 GPIO_ACTIVE_LOW>;
-> > > 		color =3D <LED_COLOR_ID_AMBER>;
-> > > 	};
-> > > };
-> > >
-> > > This probably won't work as "gpios" seem to be single object in gpio-=
-leds
-> > driver code, but what can I do to achieve something similar?
-> > > It is important to define this LED in DT/ACPI in order for the user a=
-pp to see
-> > it in the /sys/class/led folder, without having to write platform-speci=
-fic
-> > driver.
-> > >
-> >=20
-> > So you have one package with red and green LED, each connected to one
-> > GPIO?
-> Right. It is possible to create orange color, and I want to use DT/ACPI t=
-o present this info to the userland.
->=20
-> >=20
-> > Can you take a look at Documentation/leds/leds-class-multicolor.rst?
-> Couldn't find a hint there therefore this email thread. I might eventuall=
-y write a multicolor led-gpio driver so want to know how to handle mixed LE=
-D.
+> >> +       board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
+> >
+> >> +       if (board_data)
+> >
+> > IIRC it's a dup. Below already incorporates this.
+> >
+> >> +               gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_table);
 >
+> Not sure what you mean here? This line *dereferences* board_data, so even if
+> gpiod_remove_lookup_table() already contains a NULL check for the table pointer,
+> we still need the board_data check to avoid dereferencing it to get
+> the tps68470_gpio_lookup_table member.
 
-There's no similar driver in the tree, and we don't have estabilished
-API. You are mostly on your own.
+Oh, I see now. Nothing needs to be changed here.
 
-Best regards,
-								Pavel
-
---=20
-http://www.livejournal.com/~pavelmachek
-
---gatW/ieO32f1wygP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYX/bIAAKCRAw5/Bqldv6
-8gCYAKCik3wlhPUjpN2F5+JM+sE50MdvDQCfY8J4qNKz1Fe7aNa+pxyM+0OVVOo=
-=ki/h
------END PGP SIGNATURE-----
-
---gatW/ieO32f1wygP--
+-- 
+With Best Regards,
+Andy Shevchenko
