@@ -2,153 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8F7C4167E
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 09:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC628C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 11:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 765D960C4B
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 09:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3FAE60295
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 11:51:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230353AbhKBJxe (ORCPT
+        id S230511AbhKBLxk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Nov 2021 05:53:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28071 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231926AbhKBJwj (ORCPT
+        Tue, 2 Nov 2021 07:53:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229720AbhKBLxj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Nov 2021 05:52:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635846604;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GHf1L78zlZbVcgZS57yJJ9tbV6/S/WZ37eDXpQxC7vo=;
-        b=iHOG+lRxOsE+ouLi2P/Kgn6oJQaBX3uSPhBsWTgZJrO0J49qTr2SXcjRTEWQUz7JdWtN7k
-        +Ew/zu57fj54IYmHs/lLqTCUTkkcLQkUb+cwE/5kGBixJLyzQ8O8Qa1Qkq29YrdyZzTvmA
-        g8Og8iyeLx2UZkgA3XYmsBn9Apwq+Rw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-315-ZYvtjyyONiGASnkvrZ7oyw-1; Tue, 02 Nov 2021 05:50:01 -0400
-X-MC-Unique: ZYvtjyyONiGASnkvrZ7oyw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D42FD1927800;
-        Tue,  2 Nov 2021 09:49:58 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.195.91])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D2E65D9DC;
-        Tue,  2 Nov 2021 09:49:54 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Tue, 2 Nov 2021 07:53:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E8BAA60F5A;
+        Tue,  2 Nov 2021 11:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635853864;
+        bh=dqJN2Gi6q7TPSF77o6RQLRWPsFd/JVJbppmgYInfGv8=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=nrrauIoQWCLjHnJV4rwpOzX2ac87/ZtDlNMSEV6MKg9vOdLreBYmoyc400xNpNfZH
+         Rmlrf0jQyLtJf0bllBRc/QbwTFmsYDUHzvbpHyzge1yqnJMbkl7+ClMHQZuVD+nrwi
+         9mcmwp/ccnxVm2h8ufjseCAb1CvvSdTKYrpuR8a+7KF6FrGojKjOzCWy3m7biDn1y4
+         YccZjkRj4nGzGozfqBeNmQDckxGzLZHpgY0eSaR+ZDPfGckr38ti02CHrkaQCKmXMO
+         DcQt0m2nCwh0DzPoqkG2UFMsDNtBh9tysmL8ZF6pM9wfvFFWjqZ3UvDT/rjnChGuAZ
+         32I5UGdrp6ahg==
+Date:   Tue, 2 Nov 2021 12:50:59 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+cc:     =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH v5 11/11] platform/x86: int3472: Deal with probe ordering issues
-Date:   Tue,  2 Nov 2021 10:49:07 +0100
-Message-Id: <20211102094907.31271-12-hdegoede@redhat.com>
-In-Reply-To: <20211102094907.31271-1-hdegoede@redhat.com>
-References: <20211102094907.31271-1-hdegoede@redhat.com>
+        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        platform-driver-x86@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 0/6] MODULE_DEVICE_TABLE() support for the ISHTP bus
+In-Reply-To: <85cb78cd-92d9-69ed-9360-f5d6f8f904af@redhat.com>
+Message-ID: <nycvar.YFH.7.76.2111021249520.12554@cbobk.fhfr.pm>
+References: <20211029152901.297939-1-linux@weissschuh.net> <883db585-c9bb-5255-4ddd-f093616af1a1@redhat.com> <1bb82b37-06e4-4937-ba0d-57fd301eaf2e@t-8ch.de> <85cb78cd-92d9-69ed-9360-f5d6f8f904af@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The clk and regulator frameworks expect clk/regulator consumer-devices
-to have info about the consumed clks/regulators described in the device's
-fw_node.
+On Mon, 1 Nov 2021, Hans de Goede wrote:
 
-To work around this info missing from the ACPI tables on devices where
-the int3472 driver is used, the int3472 MFD-cell drivers attach info about
-consumers to the clks/regulators when registering these.
+> >> Since most of the changes here are under drivers/hid and since the latter
+> >> patches depend on 1/6, I believe it would be best to merge the entire series
+> >> through the HID tree, here is my ack for this:
+> >>
+> >> Acked-by: Hans de Goede <hdegoede@redhat.com>
+> > 
+> > Please note that patch 6 modifies a driver that is not yet available in the HID
+> > and 5.15 trees but only in pdx86/for-next.
+> 
+> Right, but given where we are in the cycle this is going to be something to
+> merge post 5.16-rc1 anyways which resolves the dependency issue.
+> 
+> I guess it might be good to send this our in a later pull-req as a fix series
+> for a later 5.16-rc# though, to avoid the eclite and chrome-ec drivers from
+> autoloading on all systems with an ISH, even though they usually will not be
+> used there.
 
-This causes problems with the probe ordering wrt drivers for consumers
-of these clks/regulators. Since the lookups are only registered when the
-provider-driver binds, trying to get these clks/regulators before then
-results in a -ENOENT error for clks and a dummy regulator for regulators.
+I'll be happy to take this as 5.16 fixups after the merge window is over 
+(I am not adding anything new to the branches now, before Linus merges HID 
+tree), but I'd still like to see Ack from Srinivas.
 
-All the sensor ACPI fw-nodes have a _DEP dependency on the INT3472 ACPI
-fw-node, so to work around these probe ordering issues the ACPI core /
-i2c-code does not instantiate the I2C-clients for any ACPI devices
-which have a _DEP dependency on an INT3472 ACPI device until all
-_DEP-s are met.
+Thanks,
 
-This relies on acpi_dev_clear_dependencies() getting called by the driver
-for the _DEP-s when they are ready, add a acpi_dev_clear_dependencies()
-call to the discrete.c probe code.
-
-In the tps68470 case calling acpi_dev_clear_dependencies() is already done
-by the acpi_gpiochip_add() call done by the driver for the GPIO MFD cell
-(The GPIO cell is deliberately the last cell created to make sure the
-clk + regulator cells are already instantiated when this happens).
-
-However for proper probe ordering, the clk/regulator cells must not just
-be instantiated the must be fully ready (the clks + regulators must be
-registered with their subsystems).
-
-Add MODULE_SOFTDEP dependencies for the clk and regulator drivers for
-the instantiated MFD-cells so that these are loaded before us and so
-that they bind immediately when the platform-devs are instantiated.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Only call acpi_dev_clear_dependencies() in the discrete.c case, for the
-  tps68470 case this is already done by the acpi_gpiochip_add() for the
-  GPIO MFD cell.
----
- drivers/platform/x86/intel/int3472/discrete.c | 1 +
- drivers/platform/x86/intel/int3472/tps68470.c | 6 ++++++
- 2 files changed, 7 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index ff2bdbb8722c..5b514fa01a97 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -380,6 +380,7 @@ static int skl_int3472_discrete_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	acpi_dev_clear_dependencies(adev);
- 	return 0;
- }
- 
-diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
-index 49eea7bb98c1..5232dbcd8212 100644
---- a/drivers/platform/x86/intel/int3472/tps68470.c
-+++ b/drivers/platform/x86/intel/int3472/tps68470.c
-@@ -177,6 +177,11 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
- 		return device_type;
- 	}
- 
-+	/*
-+	 * No acpi_dev_clear_dependencies() here, since the acpi_gpiochip_add()
-+	 * for the GPIO cell already does this.
-+	 */
-+
- 	return ret;
- }
- 
-@@ -210,3 +215,4 @@ module_i2c_driver(int3472_tps68470);
- MODULE_DESCRIPTION("Intel SkyLake INT3472 ACPI TPS68470 Device Driver");
- MODULE_AUTHOR("Daniel Scally <djrscally@gmail.com>");
- MODULE_LICENSE("GPL v2");
-+MODULE_SOFTDEP("pre: clk-tps68470 tps68470-regulator");
 -- 
-2.31.1
+Jiri Kosina
+SUSE Labs
 
