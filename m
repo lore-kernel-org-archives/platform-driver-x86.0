@@ -2,104 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8CAC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 18:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B455CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 22:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72E036103C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 18:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970B260FC4
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 22:06:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230425AbhKBSrB (ORCPT
+        id S231166AbhKBWJW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Nov 2021 14:47:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231164AbhKBSrB (ORCPT
+        Tue, 2 Nov 2021 18:09:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229672AbhKBWJV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Nov 2021 14:47:01 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2186EC061714;
-        Tue,  2 Nov 2021 11:44:26 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f1dc300e1073f755e7fce47.dip0.t-ipconnect.de [IPv6:2003:ec:2f1d:c300:e107:3f75:5e7f:ce47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4195F1EC0295;
-        Tue,  2 Nov 2021 19:44:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1635878664;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=AxuOw0DQ4Frl9MECG8Kper8H3T3XmCRerq6iet0JTvg=;
-        b=fnDosBtZdhTQHutSgr1/+RABVQIrAbm94J935ajx4Z9Kisycu7UocDnt8PckwIj3n3lTJx
-        BI19SipB4tqJQJUImPbytZWTapJ9GIoEiP27NptNIzkc92S11oTGUZeyuZe08xinQ4Gf7N
-        AyTH+RF5Fl4D+tugIqEWI0IxA6rfSSU=
-Date:   Tue, 2 Nov 2021 19:44:18 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v6 14/42] x86/sev: Register GHCB memory when SEV-SNP is
- active
-Message-ID: <YYGGv6EtWrw7cnLA@zn.tnic>
-References: <20211008180453.462291-1-brijesh.singh@amd.com>
- <20211008180453.462291-15-brijesh.singh@amd.com>
- <YYFs+5UUMfyDgh/a@zn.tnic>
- <aea0e0c8-7f03-b9db-3084-f487a233c50b@amd.com>
+        Tue, 2 Nov 2021 18:09:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 6F79D61050
+        for <platform-driver-x86@vger.kernel.org>; Tue,  2 Nov 2021 22:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635890806;
+        bh=FWYNuidMMTkk4l+tatoZheTVnMHz3EbyrRcVTrUJM7Q=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=Dg6IVmGpMrUeBkJOhq23vDYcBhYVbFpRroiYLXX2BXDI5SKmEST2C3r7kkdeE8vFz
+         /bRZSP4jhkPwVrZur7WWONoIb9KtxGlwS1XAbHpJkVAKWRSw126GGZWHJqd3FpycEA
+         DCWe/fn/O4aYs8Hm9ui/ckJmhZlAQP66s3yw4R3iHm+BRFo7pjJbaSaaTFMcHCyiDO
+         XgXr7wL6yJrET9Hl/9gA2zObAy6GSfhZEmx3y6UfZMZO2FngCPu+KRWYfGL1tZppPN
+         qoxv2U8YTjT/Q3md4gjYayeqHX/LC4hpV3VYkqsYonSMO+c0t9BafDq5j4Ki8kKGiz
+         ab1TI4R4/FGWg==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 214899] ideapad-laptop: platform backlight device not working
+Date:   Tue, 02 Nov 2021 22:06:46 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: johannes.penssel@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-214899-215701-AzCysdaNd2@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
+References: <bug-214899-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aea0e0c8-7f03-b9db-3084-f487a233c50b@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 02, 2021 at 01:24:01PM -0500, Brijesh Singh wrote:
-> To answer your question, GHCB is registered at the time of first #VC
-> handling by the second exception handler.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
 
-And this is what I don't like - register at use. Instead of init
-everything *before* use.
+--- Comment #15 from Johannes P (johannes.penssel@gmail.com) ---
+Unfortunately, your latest patch did not yield any results either. :(
 
-> Mike can correct me, the CPUID page check is going to happen on first
-> #VC handling inside the early exception handler (i.e case 1).
+In the meantime, I have discovered another peculiarity: the ACPI/WMI events
+generated by this "open app" key are identical to the ones created by press=
+ing
+Fn + ESC. (i.e. toggling Fn lock) In fact, the WMI 0xd0 event is already
+handled by ideapad driver in the ideapad_wmi_notify function. The only appa=
+rent
+difference between pressing "open app" and pressing Fn + ESC is that the la=
+tter
+also toggles the LED on the ESC key. This might be a firmware issue however=
+, as
+this key does nothing in Windows either.
 
-What is the "CPUID page check"?
+Thanks a lot for your support!
 
-And no, you don't want to do any detection when an exception happens -
-you want to detect *everything* *first* and then do exceptions.
+--=20
+You may reply to this email to add a comment.
 
-> See if my above explanation make sense. Based on it, I don't think it
-> makes sense to register the GHCB during the CPUID page detection. The
-> CPUID page detection will occur in early VC handling.
-
-See above. If this needs more discussion, we can talk on IRC.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+You are receiving this mail because:
+You are watching the assignee of the bug.=
