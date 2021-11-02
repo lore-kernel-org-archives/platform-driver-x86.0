@@ -2,122 +2,97 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97597C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 15:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17908C43217
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 16:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5506112F
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 15:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C346112D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 16:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234655AbhKBPzz (ORCPT
+        id S235030AbhKBQjC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Nov 2021 11:55:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33066 "EHLO
+        Tue, 2 Nov 2021 12:39:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234642AbhKBPzy (ORCPT
+        with ESMTP id S235056AbhKBQir (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Nov 2021 11:55:54 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 531FDC061714;
-        Tue,  2 Nov 2021 08:53:19 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id g14so15346532edz.2;
-        Tue, 02 Nov 2021 08:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uh3V+KhWN7/HDkvhbVf6laOL4Ct4HKkj535+ZUd6sTc=;
-        b=mljJuPk2s95J1Zu/X2yPZDdeX9Tf7AHTEqZnBDycdLY58ImXaeR/qCwS/yHo/ygp0E
-         RJym9wVijZxG5saxzNG0JyJ8gLTZ+dTaAz7P00YLje3/Bs/H1KQprhFV6hGbWx7oL2dF
-         BAD/6VP1Gvg2rZNZqWifEKMjNYV5/GmhwwUK8pKpMX/8GSMjhTIqexDbTk4ZsSxk7SCN
-         XyTXy4gm/8KLLwipx5eOiFBhN1eDI5/KyGFLQAOHh5abx1wrsRuuh3qxqR0eldbXT9Gk
-         L2oTZNC4gw/F+adHjZPGZqN1TgQTWAbRqOebK++aRc9XMQUAztT3+iPOC+qz641ayfM4
-         rOWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uh3V+KhWN7/HDkvhbVf6laOL4Ct4HKkj535+ZUd6sTc=;
-        b=OK2eOGhS17AWr5hEBZTm8mBJzKAhkYqhc7c3F/6z6caO6Ymo9TqVBp1UShfRZfKEJj
-         qYJG5yCG2eIjKVjp8Day9sU7mZg90VYwXmVhlXO2OqNX1WTPwJB3/EWMbYzSppb8+bwV
-         dSIPvXOpr94pTRDqxZ921YyAGytEs6xXFcblVWZzh9Ho4vrnOrcky7007+Uo5VFrZEUC
-         BXD5t5J9GqJ67BfMxpHyyvM7EAYgEF+3f/lVjyiTBnsXGHHfkVtttUamQzeDMohDWXs8
-         JK5tu1EAe7ZmQkMjg87hLkHm/mmGEpnjVmyBvvEvtvDtbxvK2yrW+bZqk77tZVDLtn6v
-         cmOA==
-X-Gm-Message-State: AOAM531NZZzvNOsKl0AADAEmRjmODye7JpOYi4kBTNSAUFYCsE3Ub2iH
-        Ftlpc0Ns2SesAPN6zmf5bTkNYVXDiLUtYlfEIMc=
-X-Google-Smtp-Source: ABdhPJyTjVXWUex3kx74jUkyZZy1Lgyk60TiagscYsQU7F+1Bp3htGq7r9PeARDpBYraFJPo86RpwCEz5AO3nHAjN0c=
-X-Received: by 2002:a17:906:9f21:: with SMTP id fy33mr46127665ejc.567.1635868395452;
- Tue, 02 Nov 2021 08:53:15 -0700 (PDT)
+        Tue, 2 Nov 2021 12:38:47 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E668C0432EE;
+        Tue,  2 Nov 2021 09:33:55 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0f6200599060f0a067c463.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:6200:5990:60f0:a067:c463])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D3CBB1EC054E;
+        Tue,  2 Nov 2021 17:33:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1635870833;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=LgqrmB8sgbt0GGy55Ij0lvUle6j2/wn+2sw2xrp27AY=;
+        b=j3LUENcqI26r8HYNZ8BSLpWqVpyY8aYCrXHrPKvlogaZlwvSZm2zRXcKwf082+ljUp5vPc
+        Ii8rUxK3c19CcxhFAROclfd+fe0dxmegzWMDzMMuXAbAXoE4wFPchiOd9EwxwJ3FJiy0Nu
+        2gFxYxzea53lDkOWUG92mFHUqAT+Glg=
+Date:   Tue, 2 Nov 2021 17:33:52 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v6 13/42] x86/compressed: Register GHCB memory when
+ SEV-SNP is active
+Message-ID: <YYFocEczs9F+evkx@zn.tnic>
+References: <20211008180453.462291-1-brijesh.singh@amd.com>
+ <20211008180453.462291-14-brijesh.singh@amd.com>
 MIME-Version: 1.0
-References: <20211102094907.31271-1-hdegoede@redhat.com> <20211102094907.31271-11-hdegoede@redhat.com>
- <CAHp75Vd-xY43H8jPOUqJp55Rq3Wuhsdzctfhqq300S0vAKTzpw@mail.gmail.com> <1f4377bb-2902-05e9-95c7-ad924477b543@redhat.com>
-In-Reply-To: <1f4377bb-2902-05e9-95c7-ad924477b543@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 2 Nov 2021 17:52:26 +0200
-Message-ID: <CAHp75VfJZYiVvE0uQ6ahOJo9wxh0EwjgkeN81vas89pNMDv3GQ@mail.gmail.com>
-Subject: Re: [PATCH v5 10/11] platform/x86: int3472: Pass tps68470_regulator_platform_data
- to the tps68470-regulator MFD-cell
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211008180453.462291-14-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 2, 2021 at 4:59 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 11/2/21 15:34, Andy Shevchenko wrote:
-> > On Tue, Nov 2, 2021 at 11:50 AM Hans de Goede <hdegoede@redhat.com> wrote:
+On Fri, Oct 08, 2021 at 01:04:24PM -0500, Brijesh Singh wrote:
+> The SEV-SNP guest is required to perform GHCB GPA registration. This is
 
-...
+Let's write that out and make this more readable for outsiders too:
 
-> >> +               board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
-> >> +               if (!board_data) {
-> >> +                       dev_err(&client->dev, "No board-data found for this laptop/tablet model\n");
-> >> +                       return -ENODEV;
-> >
-> > It's fine to use dev_err_probe() for known error codes.
-> >
-> >> +               }
-> >
-> > ...
-> >
-> >> +               cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
-> >
-> > Do we need casting?
->
-> Yes, the cast casts away a "const", the const is correct
-> since the data only ever gets read by the regulator driver,
-> but platform_data pointers are normally not const, so it
-> is either the cast, or loose the const on the definition
-> of the struct to which board_data->tps68470_regulator_pdata
-> points...
->
-> So not good choice here really, only chosing between bad
-> options and I picked the lets do the cast "least worse"
-> option (at least to me). I'm open to changing this.
+"... is required by the GHCB spec to register the GHCB's Guest Physical
+Address (GPA)."
 
-Hmm... Okay, I was under the impression that MFD is using const for
-that field...
+> because the hypervisor may prefer that a guest use a consistent and/or
+> specific GPA for the GHCB associated with a vCPU. For more information,
+> see the GHCB specification.
+
+Giving a section in that spec would be helpful.
+
+Thx.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
