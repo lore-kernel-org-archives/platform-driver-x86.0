@@ -2,99 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BE5C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 13:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AC5C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 13:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7E160F36
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 13:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222D5610E5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 13:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230336AbhKBNTy (ORCPT
+        id S230504AbhKBN0b (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Nov 2021 09:19:54 -0400
-Received: from mga06.intel.com ([134.134.136.31]:60430 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229530AbhKBNTy (ORCPT
+        Tue, 2 Nov 2021 09:26:31 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60606 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229924AbhKBN0a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Nov 2021 09:19:54 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10155"; a="292090908"
-X-IronPort-AV: E=Sophos;i="5.87,203,1631602800"; 
-   d="scan'208";a="292090908"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2021 06:17:19 -0700
-X-IronPort-AV: E=Sophos;i="5.87,203,1631602800"; 
-   d="scan'208";a="489107359"
-Received: from kumarsh2-mobl.gar.corp.intel.com ([10.215.113.239])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2021 06:17:14 -0700
-Message-ID: <0d0f1d106cfbd98e352a0f08904d04d08a6fec04.camel@linux.intel.com>
-Subject: Re: [PATCH 0/6] MODULE_DEVICE_TABLE() support for the ISHTP bus
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Jiri Kosina <jikos@kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Cc:     Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>,
-        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        platform-driver-x86@vger.kernel.org, linux-kbuild@vger.kernel.org
-Date:   Tue, 02 Nov 2021 06:17:10 -0700
-In-Reply-To: <nycvar.YFH.7.76.2111021249520.12554@cbobk.fhfr.pm>
-References: <20211029152901.297939-1-linux@weissschuh.net>
-         <883db585-c9bb-5255-4ddd-f093616af1a1@redhat.com>
-         <1bb82b37-06e4-4937-ba0d-57fd301eaf2e@t-8ch.de>
-         <85cb78cd-92d9-69ed-9360-f5d6f8f904af@redhat.com>
-         <nycvar.YFH.7.76.2111021249520.12554@cbobk.fhfr.pm>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.0-1 
+        Tue, 2 Nov 2021 09:26:30 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id ABD4F1F44A21
+Received: by earth.universe (Postfix, from userid 1000)
+        id 1C9313C0F95; Tue,  2 Nov 2021 14:23:52 +0100 (CET)
+Date:   Tue, 2 Nov 2021 14:23:52 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Subject: Re: [PATCH v2] power: supply: bq27xxx: Fix kernel crash on IRQ
+ handler register error
+Message-ID: <20211102132352.yqazgy2njnbthujb@earth.universe>
+References: <20211031152522.3911-1-hdegoede@redhat.com>
+ <CAHp75Vc6GO4e0_Qp6HfFtd_kbSakaMXsQN4oEPArdmMrxTFb7A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="exju7zrkmgu2clvz"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vc6GO4e0_Qp6HfFtd_kbSakaMXsQN4oEPArdmMrxTFb7A@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 2021-11-02 at 12:50 +0100, Jiri Kosina wrote:
-> On Mon, 1 Nov 2021, Hans de Goede wrote:
-> 
-> > > > Since most of the changes here are under drivers/hid and since
-> > > > the latter
-> > > > patches depend on 1/6, I believe it would be best to merge the
-> > > > entire series
-> > > > through the HID tree, here is my ack for this:
-> > > > 
-> > > > Acked-by: Hans de Goede <hdegoede@redhat.com>
 
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+--exju7zrkmgu2clvz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > > 
-> > > Please note that patch 6 modifies a driver that is not yet
-> > > available in the HID
-> > > and 5.15 trees but only in pdx86/for-next.
-> > 
-> > Right, but given where we are in the cycle this is going to be
-> > something to
-> > merge post 5.16-rc1 anyways which resolves the dependency issue.
-> > 
-> > I guess it might be good to send this our in a later pull-req as a
-> > fix series
-> > for a later 5.16-rc# though, to avoid the eclite and chrome-ec
-> > drivers from
-> > autoloading on all systems with an ISH, even though they usually
-> > will not be
-> > used there.
-> 
-> I'll be happy to take this as 5.16 fixups after the merge window is
-> over 
-> (I am not adding anything new to the branches now, before Linus
-> merges HID 
-> tree), but I'd still like to see Ack from Srinivas.
-Done.
+Hi,
 
-Thanks,
-Srinivas
+On Sun, Oct 31, 2021 at 09:34:46PM +0200, Andy Shevchenko wrote:
+> On Sun, Oct 31, 2021 at 5:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >
+> > When registering the IRQ handler fails, do not just return the error co=
+de,
+> > this will free the devm_kzalloc()-ed data struct while leaving the queu=
+ed
+> > work queued and the registered power_supply registered with both of them
+> > now pointing to free-ed memory, resulting in various kernel crashes
+> > soon afterwards.
+> >
+> > Instead properly tear-down things on IRQ handler register errors.
+>=20
+> FWIW,
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> 
-> Thanks,
-> 
+Thanks, queued.
 
+-- Sebastian
 
+> > Fixes: 703df6c09795 ("power: bq27xxx_battery: Reorganize I2C into a mod=
+ule")
+> > Cc: Andrew F. Davis <afd@ti.com>
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > ---
+> > Changes in v2:
+> > - Fix devm_kzalloc()-ed type in the commit message
+> > ---
+> >  drivers/power/supply/bq27xxx_battery_i2c.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power=
+/supply/bq27xxx_battery_i2c.c
+> > index 46f078350fd3..cf38cbfe13e9 100644
+> > --- a/drivers/power/supply/bq27xxx_battery_i2c.c
+> > +++ b/drivers/power/supply/bq27xxx_battery_i2c.c
+> > @@ -187,7 +187,8 @@ static int bq27xxx_battery_i2c_probe(struct i2c_cli=
+ent *client,
+> >                         dev_err(&client->dev,
+> >                                 "Unable to register IRQ %d error %d\n",
+> >                                 client->irq, ret);
+> > -                       return ret;
+> > +                       bq27xxx_battery_teardown(di);
+> > +                       goto err_failed;
+> >                 }
+> >         }
+> >
+> > --
+> > 2.31.1
+> >
+>=20
+>=20
+> --=20
+> With Best Regards,
+> Andy Shevchenko
+
+--exju7zrkmgu2clvz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmGBO+EACgkQ2O7X88g7
++ppmxhAAil5Wgix3gYlBueXhIOuA/ZHpHFxnUZZQHnDlN6n+z3AZMj8quc0MrguB
+kPyqTDIUl1mGIZCTWW3QrqJdMrP4+7NV432F15QKH5G1zMizcvE+K3IXoPvsWMq8
+tyo4ADWcDDNEFE9F8zc2TrE7AextggLMu/fXVwTuBIYVOl9g1QzJKx+p4dghqBGR
+McUpF5isE9APxjHIE36GvgS9nBeyrsylEZ3vS5Qo+Qz0LaMTYvEBzDrLnXD+3p/S
+YGejrstEX1uEt+ulPIDRUU8C+BYlRyVke1EIX//l+OOHbJJE9oPb64KoTIlZIiDf
+cCMqxWF+gKX0XOpVPRME7LuEdbUGDoVGKqaK1qo3vB2AI6g28M+aVFeSx4ot87FZ
+ONjK7TXVl3KCmPcBe1alRlIxNnb2Aj5fXipIoaU6kM9VEEBMjtZFSzKoxi6vCV0E
+e7VTHzOIQsVBu7IIeXoN3OmnZE0O4rYtUtfXLJHxDaS7LvfEyBZk4fRhsMCWSA6C
+MKTSDx6J/f3wWGRNi+z2vFOrAcyLHiAMh6MHVemSTyWZKghhC9DOBuCJo0Bp/Vlb
+3iplXb3YPbqQW9HgQzRyZpEpL4JdjxSdOdAW3j8mjpQYAUFoKTNy/Toq2/SecKhu
+tjeQksvHh24hpfWwTZ8n5lVyBoUEALaNGHTTtkN+vmtWPL05aSA=
+=/dC6
+-----END PGP SIGNATURE-----
+
+--exju7zrkmgu2clvz--
