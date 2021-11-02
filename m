@@ -2,86 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B35C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 14:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23936C43217
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 14:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 147D8610EA
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 14:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0655E61100
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 14:35:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229981AbhKBOcx (ORCPT
+        id S231283AbhKBOh6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Nov 2021 10:32:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229557AbhKBOcw (ORCPT
+        Tue, 2 Nov 2021 10:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229530AbhKBOhz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Nov 2021 10:32:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 1495D603E7
-        for <platform-driver-x86@vger.kernel.org>; Tue,  2 Nov 2021 14:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635863418;
-        bh=QriS2hnceiyfuDixNl9T4WS2r/S6TsUK04JMgPE4Xhk=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Yf7fpgOKKDkGcW8QCXIdFLkauosTzvmamivmwxe43Mjm2FZrNoc4PINP/HtBHXdxP
-         jr83nGYuwRHEjCzBezDVHzDlTLZvIuB0RXvMiuXgUSQnaNH0Ea+/r4M6R4orZ8Yygg
-         Z1OyGoE08K0d/6EidFn4I/mb5/gXzF8gox6McuZSYFjtADg5jsZDj89FEZMrAR/QjB
-         pTddTXthxJrl6iTu3M761fJbsgzODHWGrtiwXBZmsFwP9eDzz3XVsRR7y/luzJMa++
-         bSONjdyUc0iYEQGd5tvdM3N807kcNKvvxqgx7NuvRNDCMb9dHyzsBlC2FrMEgDu6Q0
-         bfGIvxugy5sVw==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] ideapad-laptop: platform backlight device not working
-Date:   Tue, 02 Nov 2021 14:30:17 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-214899-215701-ILDhoe81HZ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
-References: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 2 Nov 2021 10:37:55 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83560C0613F5;
+        Tue,  2 Nov 2021 07:35:20 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id w15so76792713edc.9;
+        Tue, 02 Nov 2021 07:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=65sYvvqiPacKnyXGm00uOfZmsdN1H152QZb/K+6oTrA=;
+        b=JxLBTKIVNZHK0eYuQS+2xQbio8EFWVSsF86el4ZeRBHIxp4C+xMek7kd13w+RHprtp
+         BUr6gFI4Vd7RVLKLTkAdpctZSALuqID7yhubn31jBEo/wGXnTxwHFvGgb5i4tXyM44Ee
+         eMuMErWiXd+lLV4bh96VAYwFml+Qjt1p1vDuv5nvc4C96SKi161F3rM8FIZVUGE//s0i
+         BLwF+OO8ZOIzlyS7sPYrylrrQKNDcbv8boMgC6JrTdWxM8/0I6RP3FvRt/eSc2c6djHg
+         ZW1mqeU1TH+QAxauUw/3Jv37PxViBGQ8hzcIpuWT7DOpoVx8iwLliYA8im2G00scJf3i
+         dBKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=65sYvvqiPacKnyXGm00uOfZmsdN1H152QZb/K+6oTrA=;
+        b=w9WksMXQ69VBCIl/ePBEdHusuh0tpUoLSsMRPQVUZgzkThSOtvCIhdilpIPQKg+YZs
+         GuWeFZF3F012u0eAwer5ydliXuZ7UoRjQ5J3KCencmJvnk5zQ/3Vr0fRN2YxoFulg/WL
+         /MBFwkBWmjwy3OO/kGI2EqDDba3rUTHCjnZDxFwPb6etYilFOme0FFLquBch3DDjDUBS
+         YtYhkdJ2a3R0zppzu28NVAQz0sje5sjpW1/upl+lJqw9sTFk1D+SOB33A2RXBikoHyC3
+         C/roUKgdFEdvBpy2aE2N5QNUhmxDPPWCtMglaasXzTFF5RABOXq3Bwo5ieC85PvPPhQP
+         SHvg==
+X-Gm-Message-State: AOAM530mHExfyJrE6KZuf6NPWOGOTK7Jt7jPq+IWUR3Bh4xFal/6ceEo
+        nzunRVd6gIfc88uzY9DrzndOu6onUaLF4Gu3Kgk=
+X-Google-Smtp-Source: ABdhPJxbNeuBL+SSNH+3/S3iAwFmMxZhFeZFkV/g7SdZI4XCi+BAFf24eDiSTLXHPzQiLIjNziN/KABxFr0PzlrMtTE=
+X-Received: by 2002:a05:6402:207c:: with SMTP id bd28mr41368359edb.240.1635863711126;
+ Tue, 02 Nov 2021 07:35:11 -0700 (PDT)
 MIME-Version: 1.0
+References: <20211102094907.31271-1-hdegoede@redhat.com> <20211102094907.31271-11-hdegoede@redhat.com>
+In-Reply-To: <20211102094907.31271-11-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 2 Nov 2021 16:34:21 +0200
+Message-ID: <CAHp75Vd-xY43H8jPOUqJp55Rq3Wuhsdzctfhqq300S0vAKTzpw@mail.gmail.com>
+Subject: Re: [PATCH v5 10/11] platform/x86: int3472: Pass tps68470_regulator_platform_data
+ to the tps68470-regulator MFD-cell
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
+On Tue, Nov 2, 2021 at 11:50 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Pass tps68470_regulator_platform_data to the tps68470-regulator
+> MFD-cell, specifying the voltages of the various regulators and
+> tying the regulators to the sensor supplies so that sensors which use
+> the TPS68470 can find their regulators.
+>
+> Since the voltages and supply connections are board-specific, this
+> introduces a DMI matches int3472_tps68470_board_data struct which
+> contains the necessary per-board info.
+>
+> This per-board info also includes GPIO lookup information for the
+> sensor IO lines which may be connected to the tps68470 GPIOs.
 
---- Comment #13 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-> Still nothing but grave silence from the brightness keys though.
+...
 
-Ok, I suspect that we need to enable reporting of events from them by some =
-ACPI
-video call; and that we will then get events for them on the "Video Bus" in=
-put
-device.
+> +               board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
+> +               if (!board_data) {
+> +                       dev_err(&client->dev, "No board-data found for this laptop/tablet model\n");
+> +                       return -ENODEV;
 
-I need to do a deep dive into your acpidump to see if I can find anything
-there. Mondays are my "look into odd bugs which need more then a quick 5 mi=
-nute
-bugzilla reply" day, so I hope to make some time to look into this next Mon=
-day.
+It's fine to use dev_err_probe() for known error codes.
 
-In the mean time I have one last 5 minutes idea :)  Let me attach another p=
-atch
-with some video-bus debugging added.
+> +               }
 
---=20
-You may reply to this email to add a comment.
+...
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+> +               cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
+
+Do we need casting?
+
+...
+
+> +#include <linux/dmi.h>
+> +#include <linux/gpio/machine.h>
+> +#include <linux/platform_data/tps68470.h>
+> +#include <linux/regulator/machine.h>
+
+string.h  for strcmp() ?
+kernel.h for ARRAY_SIZE() ?
+
+-- 
+With Best Regards,
+Andy Shevchenko
