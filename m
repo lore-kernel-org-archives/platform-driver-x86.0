@@ -2,84 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDD3C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 22:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDDEC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 22:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 948B060F70
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 22:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AFC60240
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 22:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230175AbhKBWR6 (ORCPT
+        id S230293AbhKBWmp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Nov 2021 18:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229900AbhKBWR4 (ORCPT
+        Tue, 2 Nov 2021 18:42:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:55251 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230046AbhKBWmp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Nov 2021 18:17:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 3C8A160F70
-        for <platform-driver-x86@vger.kernel.org>; Tue,  2 Nov 2021 22:15:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635891321;
-        bh=9eJnllGAEXVyCVV6lz3iHh/JOGo/yCrJNmMqB1jDEv0=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=up6mhZpy+/J0dICObPGSvUKtAXvdp9lizbCKIWB09ch0pEHsk2KuKumX7XI8ys79y
-         lTFkXcYof4Qzqqsk8d0F9ZYOHk16/JAcr/kNvfGTMdaCoQDdndEkjs9iFWKSceKwzA
-         bI/V35r8Y/+HoCILAax6ecztQbvYLwiJHvS4BpOwLwNmSLNLklk9xvKUu+AYGtGuR1
-         eRPVoy9o+SlfWAJez7mNdZnMyt1Za6EcnttF68KcL+J6jHDDFDQCGsoAQXfqYbawi+
-         4h1p2Nb06N79JBdVu+GTga/aiBM6iZkSqt3zmwgXs0K7zp8qIDXeWA3P7bm/4q0aqP
-         KEzSc4ucMm3jw==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] ideapad-laptop: platform backlight device not working
-Date:   Tue, 02 Nov 2021 22:15:20 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: johannes.penssel@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-214899-215701-FxsPs5NFa3@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
-References: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 2 Nov 2021 18:42:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635892809;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=370zfpGuUR/QYlFDjZLZ/oiv1jiwAesX/9g3hqhjOWQ=;
+        b=bp3AY5+ni7F6SwN8dMK1A8N+n+Jbt/UbvZm8AglVrMJbQ3wgfVqpyBkohsONXtARNgBn1E
+        s9XWbl4NZkXaE/sMDCdumghiNTzCVroSqIL51NAd9Uw+SgY0wQDkiD24gz0XEAiXhHNg/g
+        fe2xEAQZNi1myGd/esiNCPZoLsSZeV8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-414-ljJlO3FTMM6OqP6-4iJRIQ-1; Tue, 02 Nov 2021 18:40:05 -0400
+X-MC-Unique: ljJlO3FTMM6OqP6-4iJRIQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C035BBEE3;
+        Tue,  2 Nov 2021 22:40:03 +0000 (UTC)
+Received: from x1.localdomain (unknown [10.39.192.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B04960C05;
+        Tue,  2 Nov 2021 22:40:00 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, Yauhen Kharuzhy <jekhor@gmail.com>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [RFC v2 0/2] ACPI/power-suppy add fuel-gauge support on cht-wc PMIC without USB-PD support devs
+Date:   Tue,  2 Nov 2021 23:39:57 +0100
+Message-Id: <20211102223959.3873-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
+Hi All,
 
---- Comment #16 from Johannes P (johannes.penssel@gmail.com) ---
-(In reply to Andy Shevchenko from comment #12)
-> (In reply to Johannes P from comment #11)
-> > Still nothing but grave silence from the brightness keys though.
->=20
-> Which might be a sign that the key presses are handled by some
-> microcontroller (EC?) with a custom firmware and being delivered to the OS
-> in different way. It's also possible that the WMI can be used but these
-> events have to be enabled somehow (obviously with ACPI methods or so).
+Here is a new RFC to add battery monitoring support on the Xiaomi Mi Pad 2
+this implements option 2 of the different options which I gave in v1:
+https://lore.kernel.org/platform-driver-x86/20211031162428.22368-1-hdegoede@redhat.com/
 
-This is something that came to my mind as well. The keyboard backlight on t=
-his
-machine works in a similar way: It seems to be entirely handled by the EC,
-because it is in no way exposed to the OS, but can be toggled at any time, =
-even
-during boot/shutdown/restart.
+To solve the challenges of getting this to work on this device, as
+you can see compared to option 1, the first patch has gone from
+adding 3 separate quirks to adding only one; and the 2 gpiolib-acpi
+and 2 bq27xxx_battery driver patches are now no longer necessary.
 
---=20
-You may reply to this email to add a comment.
+These are now all 4 replaced by a new special xiaomi-mipad2 module
+under drivers/platform/x86 which uses a DMI modalias to autoload
+and thus will only be auto-loaded on the actual Mi Pad 2.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+I like this option much better then the previous option, but this
+still a RFC for now, since I would like to also see what is necessary
+to get everything PMIC / micro-USB connector related to work on the
+Yoga Book YB1-X91L which is on its way to me.
+
+Regards,
+
+Hans
+
+
+p.s.
+
+While working on this I realized that there also is a 4th option,
+which is basically option 1 from the v1 RFC minus the 2 gpiolib-acpi
+patches.
+
+With the 2nd option (as implemented by this RFC) we leave the
+_AEI handler in place and run the fuel-gauge without interrupt,
+we can do the same when marking the fuel-gauge as always present
+by treating IRQs on ACPI devices the same way as in the
+max17042_battery code, which has already solved the IRQ problem
+without disabling the _AEI handler:
+
+		/*
+		 * On ACPI systems the IRQ may be handled by ACPI-event code,
+		 * so we need to share (if the ACPI code is willing to share).
+		 */
+		if (acpi_id)
+			flags |= IRQF_SHARED | IRQF_PROBE_SHARED;
+
+This is a pretty decent option too, it requires:
+
+1. 2 more always_present quirks in the ACPI scan code which is part of
+the main kernel image.
+
+2. Patches to the bq27xxx_battery code to support ACPI enumeration.
+
+
+
+
+Hans de Goede (2):
+  ACPI / x86: Add PWM2 on the Xiaomi Mi Pad 2 to the always_present list
+  platform/x86: xiaomi-mipad2: New driver for Xiaomi Mi Pad 2 tablets
+
+ drivers/acpi/x86/utils.c             |   5 ++
+ drivers/platform/x86/Kconfig         |  13 +++
+ drivers/platform/x86/Makefile        |   1 +
+ drivers/platform/x86/xiaomi-mipad2.c | 126 +++++++++++++++++++++++++++
+ 4 files changed, 145 insertions(+)
+ create mode 100644 drivers/platform/x86/xiaomi-mipad2.c
+
+-- 
+2.31.1
+
