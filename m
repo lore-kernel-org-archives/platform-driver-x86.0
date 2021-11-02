@@ -2,100 +2,135 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7C7C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 16:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA6DC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 17:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51ECE60EE3
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 16:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED6061053
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 17:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234980AbhKBQ5N (ORCPT
+        id S230392AbhKBSBA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Nov 2021 12:57:13 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52284 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234954AbhKBQ5F (ORCPT
+        Tue, 2 Nov 2021 14:01:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:24419 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234527AbhKBSA7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Nov 2021 12:57:05 -0400
-Received: from zn.tnic (p200300ec2f0f6200599060f0a067c463.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:6200:5990:60f0:a067:c463])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 46E391EC0532;
-        Tue,  2 Nov 2021 17:54:29 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1635872069;
+        Tue, 2 Nov 2021 14:00:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635875904;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=XRnIinnL4tOnsAL/GsMC8vW8ZfXO/hpxLuI1GtroUw0=;
-        b=MkIi5voWdAAqnJnlNQK6bNu9R7cztziHTaU/XPDf0ZKy0BqKKb1BQ3RuzDIFFXHy9EJP83
-        lb8sQGtpdAFvET5XpRXx283CSabxdd1se7RVnQ+RMaimeIJVnDCNa3vkNqD8JkEkKV3iVn
-        j67HJZb2nQ1KtMFypPkKcJjVwQmjdIA=
-Date:   Tue, 2 Nov 2021 17:54:29 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v6 15/42] x86/sev: Remove do_early_exception() forward
- declarations
-Message-ID: <YYFtRfdSEtjRI15D@zn.tnic>
-References: <20211008180453.462291-1-brijesh.singh@amd.com>
- <20211008180453.462291-16-brijesh.singh@amd.com>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7YWae8/c2+VpFHCahTyZSU56P7dkdlZsynEUAcRXcs8=;
+        b=ZVbjTcup6pAj8VBBfFl0FjtHiVn+I/t/c/yHtig1wMhUPjoFOcN9WEJ1e+n5Gz6P5Zn+VS
+        Fo9zkVdhigZEf+gggkLQFqK/UlmKiR1hs1tu6UoDen7a8CqHP/REZ8J6Dkoyc6hnob9vw9
+        mhXC14y0mgLT+B54w88jEewCjM/kIdQ=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-500-U96v-LsRNP2xCEgQ1rX_HA-1; Tue, 02 Nov 2021 13:58:23 -0400
+X-MC-Unique: U96v-LsRNP2xCEgQ1rX_HA-1
+Received: by mail-ed1-f71.google.com with SMTP id y12-20020a056402270c00b003e28de6e995so114165edd.11
+        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Nov 2021 10:58:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=7YWae8/c2+VpFHCahTyZSU56P7dkdlZsynEUAcRXcs8=;
+        b=tdcd5hdVHfemorNxtJpLSCNTWHMxz7+z7pBM7lHgmBd7Oq1GIESkN98Z+tQfAM6wky
+         klH6aQkkMMBGth5o3q/8TmCz+s3NpbkZXofsdVgSU5iyj3zTuwRWBOF2/YE4T9IGrfV+
+         HsyJKOlVSF/UXZ8+yQGJo6OnQpLpXXTO+oGNzcA72zUyCyCWnQP9vF3SEaofSAwHEgKD
+         hKjoODG1Ug2DyuljK5/YWYEfwtnOyuiDMF1yOVX3RaG1qQccCZGnmztF7YaYLLd9Rttb
+         9YnGNE/9WK6VpKERdDdZfb0iarBEqTR7CmtB/p5NcNLngJXYE7sfFsyzTuUg1nw1BTGC
+         OOWw==
+X-Gm-Message-State: AOAM530vB75o6uSyTwZKZkW6ynaU5NJtc6sdcdfZcwZaY+D0ZfHOKa74
+        akoVY995Kc1IlMKGMTlICpOEvWerjldvcmdfDzKmJk/XfhXQOn/YZ1PYI4C4UPANT74Wz5HbKxI
+        IqxFiddgExop1idv40C4XcbxlgT3g6BYdNw==
+X-Received: by 2002:a05:6402:1c95:: with SMTP id cy21mr30982356edb.320.1635875901804;
+        Tue, 02 Nov 2021 10:58:21 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx4LRnCc2ywjCJCkzUey0AE4rRRgjUs3hTJutR2Ki1XGzhFVxd5OwCRFJa/mVZ/uC9LuY+1xw==
+X-Received: by 2002:a05:6402:1c95:: with SMTP id cy21mr30982339edb.320.1635875901562;
+        Tue, 02 Nov 2021 10:58:21 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id f7sm11107373edl.33.2021.11.02.10.58.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Nov 2021 10:58:21 -0700 (PDT)
+Message-ID: <b5548052-11c8-d34e-9851-ad64d9032267@redhat.com>
+Date:   Tue, 2 Nov 2021 18:58:20 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211008180453.462291-16-brijesh.singh@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v2] power: supply: bq27xxx: Fix kernel crash on IRQ
+ handler register error
+Content-Language: en-US
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+References: <20211031152522.3911-1-hdegoede@redhat.com>
+ <CAHp75Vc6GO4e0_Qp6HfFtd_kbSakaMXsQN4oEPArdmMrxTFb7A@mail.gmail.com>
+ <20211102132352.yqazgy2njnbthujb@earth.universe>
+ <e74947c4-74c8-a17e-f4cb-752a79851954@redhat.com>
+ <20211102164117.pnbpvephlh4wgrwb@earth.universe>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211102164117.pnbpvephlh4wgrwb@earth.universe>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 01:04:26PM -0500, Brijesh Singh wrote:
-> From: Borislav Petkov <bp@suse.de>
+Hi,
+
+On 11/2/21 17:41, Sebastian Reichel wrote:
+> Hi Hans,
 > 
-> There's a perfectly fine prototype in the asm/setup.h header. Use it.
+> On Tue, Nov 02, 2021 at 03:12:51PM +0100, Hans de Goede wrote:
+>> Hi Sebastian,
+>>
+>> On 11/2/21 14:23, Sebastian Reichel wrote:
+>>> Hi,
+>>>
+>>> On Sun, Oct 31, 2021 at 09:34:46PM +0200, Andy Shevchenko wrote:
+>>>> On Sun, Oct 31, 2021 at 5:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>>
+>>>>> When registering the IRQ handler fails, do not just return the error code,
+>>>>> this will free the devm_kzalloc()-ed data struct while leaving the queued
+>>>>> work queued and the registered power_supply registered with both of them
+>>>>> now pointing to free-ed memory, resulting in various kernel crashes
+>>>>> soon afterwards.
+>>>>>
+>>>>> Instead properly tear-down things on IRQ handler register errors.
+>>>>
+>>>> FWIW,
+>>>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>>>
+>>> Thanks, queued.
+>>
+>> Thank you, note these 2 patches (for the bq25980 driver) are also
+>> pure bug-fixes, I posted them as part of a larger series, but
+>> in hindsight I should have probably posted them separately:
+>>
+>> https://lore.kernel.org/platform-driver-x86/20211030182813.116672-4-hdegoede@redhat.com/
+>> https://lore.kernel.org/platform-driver-x86/20211030182813.116672-5-hdegoede@redhat.com/
+>>
+>> It would be good if you can pick these 2 up too
+>> (I'll respin the rest of the series to address various
+>> review comments without them then).
+>> Let me know if you want me to resend these 2 as a stand alone
+>> series.
 > 
-> No functional changes.
-> 
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/kernel/sev.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
+> Thanks for the pointer, I queued both of them. I had to slightly
+> rebase, since your base did not include 172d0ccea55c. I have not
+> yet reviewed the remaining patchset, but considering there are more
+> patches to bq25890 a rebase would be ncie.
 
-Right, for the next and all future submissions, it is a lot easier if
-you put all fixes and cleanups and code reorganizations at the beginning
-of the patchset. Because then they can simply get applied earlier -
-they're useful cleanups and fixes, after all - and this way you'll
-unload some of the patches quicker and have to deal with a smaller set.
+Ack, I'll rebase for the next version of that series.
 
-Thx.
+Regards,
 
--- 
-Regards/Gruss,
-    Boris.
+Hans
 
-https://people.kernel.org/tglx/notes-about-netiquette
