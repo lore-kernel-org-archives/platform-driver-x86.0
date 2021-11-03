@@ -2,352 +2,209 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59ACC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Nov 2021 18:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321DAC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Nov 2021 20:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85CBA6109F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Nov 2021 18:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134DC6052B
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Nov 2021 20:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231288AbhKCSmB (ORCPT
+        id S230172AbhKCUNJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 Nov 2021 14:42:01 -0400
-Received: from mail-dm6nam10on2046.outbound.protection.outlook.com ([40.107.93.46]:35321
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        Wed, 3 Nov 2021 16:13:09 -0400
+Received: from mail-bn7nam10on2045.outbound.protection.outlook.com ([40.107.92.45]:60801
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229703AbhKCSmA (ORCPT
+        id S230243AbhKCUNI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 Nov 2021 14:42:00 -0400
+        Wed, 3 Nov 2021 16:13:08 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MUuBwNDjmN/leba55c/MF36VXZcCtwKOtJyslxCmXVqzLmq3K+pSGlyFEaGhrfZTDima89sfidHwT/f+AUX6Tjy3yxyZUVpuowrkk3ObgVHXSCpNg+wvIO0PUmvkVn7p5wUSNV+7xkaU+nJzLsTOUoXmHandk1BaAroOHAHHY3nLRUN75hyoLGAs5ugTDupJwlLhhNMZQ9jdiFOsnvPKrey0L6pMk04Agz+gFfWTAnl4dzfoP4F+B1ltM8AaGrSdASc8zwo5YmD573XE53y6zOxEb84fNWTzHtz4AeF5OGNPE7TpYGvuPm7hCWKUfhw7pnOs5MbII4ZaG7hpLd3fuA==
+ b=H40RcYskgytP5pVtGWpIvYUBanGgd5raCIqP8cqj3eQ3sGRmKfwrlEiq3/sAfuLGAIoNHVuc30x4M94AZwy7sqQ++RLz7xeRzHaZ/c8SLw8lOZPnrg1j3bMmMrfbuuspEhaR3LwiZ/tOm/57I2a1wpR4+DaZjw1IjuEqrqOang5WQ79s518zZB348LMnJl+XE4Nu1a+iQS+DS8LvTf8dRnqE6rVVIAuvJYj0Z0hJOfFnx8IcTgEL3dJEAhxb1VW92tIoFD7dvGtxokeTR3FwHVmCNpagzRFGa8HIO366zXspZSzlR1vnN2lmefDMYgh37mYAbrvuOtlc1nQ9zCLHlQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+tI5m+EsxjKKIscrHwrX+tfhOlQltJfC8PkNqupHJjw=;
- b=Mzu0r0ex5UDGxl1Z0mEJ6B41ryhuEedMVWxfUatXuzwfva4KQyx/eFVEonY1iwITTSpmy1u6TdLhsBxPiEYpRpdj6EVbwIh83xtqrZbUMQ/B8+oxEd4C4EKfGsEmK3puQ5L4iRh5gb0tFtDcX9gzorwxBzzLWLT98w1FY955KPC/Lazm+40GWK6GJkeb5COG63LLoIShQbREMct+Jz4tJRgm5C/mpsZBnxI3ouUa6KBWQd9OX+KAMYTaOdHp/bQ9n9esDSkCt5QqrAeWlYN2Eb9epl1OVreKurllCXFd7/w2SLp33hh/MzGyJKVvJSXSXbreHmXwJ31GyTxQACQa5Q==
+ bh=l+BvHctcBTQijhyl1a0w3G80LQPsbIRXCR24jNQBgv8=;
+ b=Rn7BNSEc8VLkq67+43ffeCgqbrxmqDPs4sqig2mPpWa4DyD4M3X9vQlpBx1RUMnXzbhzmQQWuB3j8EzaGonRcyrElytKDinOq/oru9VSoh783YaZItZzsc3ZanzbVQIWIaKlAfzliBEDqH2NSl91UdbSR2KcUEPkvhw2vnSPy7f7gjC49pIlAhEcACRxcTeusvX3ZPrCBXNqGDpDIwcRxhUsy3zecJv+BJX3N8qHkafVp/anI8Sj49sWn/huF4p8H0buxXBR3rzpX6RolhZsm6/wOdIzY98KyDUMA7pleKP3UgGG0tQC7guKp6Hd7Y7Lyr9lF98Wjg31KhHwsywI9w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+tI5m+EsxjKKIscrHwrX+tfhOlQltJfC8PkNqupHJjw=;
- b=dOhKr4e+/ol2t4r7PUCdc6P16CQjomm5rgH5s8mEMf6g1yBTFeWSbw0cZ8T4hQH+gDzz0FW1zJblz7/TdHdeDYBMICX1vZQ21luh2Ztrt+tvdZhZuchdtH5T307VKm7bk+5vkWgkrnYl7Cy/5t/FV3cq7A5TrXXtB9MFfhGjYaE=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from SA0PR12MB4510.namprd12.prod.outlook.com (2603:10b6:806:94::8)
- by SN6PR12MB2637.namprd12.prod.outlook.com (2603:10b6:805:6b::23) with
+ bh=l+BvHctcBTQijhyl1a0w3G80LQPsbIRXCR24jNQBgv8=;
+ b=fqLvbxd67PjvZ39+UB0IM6cgKCpy3q55oeJ11Ky+optOLSUrYQnXiepOKhM/YiEzETJZJqt27h8uSrsMQ0uNyDtq2+U/GkArV60KY8JpW99mDEiuPFRN2rs7pX8uUOIU6sGA85EQ3nnLvFFOhAdZ3XHIiHFedZUD6eV7MFCKRpM=
+Authentication-Results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
+ by SN6PR12MB2685.namprd12.prod.outlook.com (2603:10b6:805:67::33) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.15; Wed, 3 Nov
- 2021 18:39:21 +0000
-Received: from SA0PR12MB4510.namprd12.prod.outlook.com
- ([fe80::7cbc:2454:74b9:f4ea]) by SA0PR12MB4510.namprd12.prod.outlook.com
- ([fe80::7cbc:2454:74b9:f4ea%6]) with mapi id 15.20.4649.020; Wed, 3 Nov 2021
- 18:39:21 +0000
-Message-ID: <54185145-cbec-319f-d450-a41b7f81d700@amd.com>
-Date:   Wed, 3 Nov 2021 13:39:19 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [PATCH v5 3/3] platform/x86: amd-pmc: Add support for AMD Smart
- Trace Buffer
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.18; Wed, 3 Nov
+ 2021 20:10:28 +0000
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::e4da:b3ea:a3ec:761c]) by SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::e4da:b3ea:a3ec:761c%7]) with mapi id 15.20.4649.020; Wed, 3 Nov 2021
+ 20:10:28 +0000
+Cc:     brijesh.singh@amd.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v6 14/42] x86/sev: Register GHCB memory when SEV-SNP is
+ active
+To:     Borislav Petkov <bp@alien8.de>
+References: <20211008180453.462291-1-brijesh.singh@amd.com>
+ <20211008180453.462291-15-brijesh.singh@amd.com> <YYFs+5UUMfyDgh/a@zn.tnic>
+ <aea0e0c8-7f03-b9db-3084-f487a233c50b@amd.com> <YYGGv6EtWrw7cnLA@zn.tnic>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+Message-ID: <a975dfbf-f9bb-982e-9814-7259bc075b71@amd.com>
+Date:   Wed, 3 Nov 2021 15:10:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+In-Reply-To: <YYGGv6EtWrw7cnLA@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-To:     Sanket Goswami <Sanket.Goswami@amd.com>, Shyam-sundar.S-k@amd.com,
-        hdegoede@redhat.com, mgross@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20211029172304.2998-1-Sanket.Goswami@amd.com>
- <20211029172304.2998-4-Sanket.Goswami@amd.com>
-From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <20211029172304.2998-4-Sanket.Goswami@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9PR03CA0792.namprd03.prod.outlook.com
- (2603:10b6:408:13f::17) To SA0PR12MB4510.namprd12.prod.outlook.com
- (2603:10b6:806:94::8)
+X-ClientProxiedBy: CH2PR05CA0008.namprd05.prod.outlook.com (2603:10b6:610::21)
+ To SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
 MIME-Version: 1.0
-Received: from [10.254.34.155] (165.204.84.11) by BN9PR03CA0792.namprd03.prod.outlook.com (2603:10b6:408:13f::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.15 via Frontend Transport; Wed, 3 Nov 2021 18:39:20 +0000
+Received: from [10.236.30.107] (165.204.77.1) by CH2PR05CA0008.namprd05.prod.outlook.com (2603:10b6:610::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.4 via Frontend Transport; Wed, 3 Nov 2021 20:10:18 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: dedf9dc8-6440-48d7-787b-08d99ef9406f
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2637:
-X-Microsoft-Antispam-PRVS: <SN6PR12MB26378D1AAA29EAC1106E1F2AE28C9@SN6PR12MB2637.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Office365-Filtering-Correlation-Id: 89cd9a35-f380-48dd-256c-08d99f05fa79
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2685:
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2685B7F60868615528426850E58C9@SN6PR12MB2685.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yxQerjJP+zttF0xjVIUf8guuQeB/HRNNnFHHaOXqAK+zctba6HBvMLC/cV6g80Yh4Ruj/UB5EGadvcl02Pt83t5QhnLAWowGwMfDkyVqtovyTPyr+YvZgs26WRAjxnfJn4xf5nsEP8RyXT3/ji9kn0jbD7Hf4cHu+jhSHXkGaPafAxf5UgA5ZzsfK/YmRB3NuVJEAaK5xQyT5bU0r/dKW/PUwA+NuqJEUmXx/5F7zGEimMrwOrQLiQWVCzpKT/seOQojn5vLNRDW/dNEa4tQarJdt8dJELP/qU6pRBalqbKXkSoTzbo3jO2H4+FF8853k59t48hEX5zQyB2a9riDdfGIjjqv/Me9SRiS4IfWN9/V00EpAh9YMgt33wG5rMkCc3ngJjrAItbqwivnyPzKp0InqYrXF+Nec/HiytgAqgkqjA8OuL4HdCZICA16QsM4M2Su9kqNnqe8ojeSaKSqX6avkHmimUknwKPb+ZLZFQwRnKDQ+jQrpJh8CyKB4SdBz86c7+NTFXp7Qq4e2hI0Asj81V6QDadeEQWv85PwVfMEnE78cfuchuFVjqeR+OGE2sKTKxd7OxQUUaaHW549hFlgkz2LiPE5VNTHoSk5vI2125qvXaVAdBdwTpDI71SFVWkwmWKKlvYSPdl33KH23BYkel3WblmrcWuDufDcdugdI7Tv04Hd+BjVPsgv+g83Dt4YlPSKKMibpq2vjzYFL5wmZuzHxyVVWNtSeTH0+/8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4510.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(956004)(31696002)(2616005)(26005)(36756003)(66946007)(186003)(53546011)(2906002)(4326008)(66476007)(5660300002)(66556008)(8676002)(38100700002)(31686004)(508600001)(8936002)(6486002)(316002)(86362001)(83380400001)(16576012)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: ZgDpo6tJmOY8HYxCJgGx0A4MCwj7c2qo9hx4D1vPq7rXD2rbpK6aNzUb/4IsS+8XhMnwgIjjLMYUn68Zlj5lg5q5BoLhgVbM1ppbSqlje54Cyj2NxNONUGQi3HP2AckGqMAq2tHbPZ0XNxyGm3cDLfqiHmDjlaD4s4mHf9z1uo0U1TAEHTknU0TOI9C2AKyIVlthGrzGrTit3mJmkAWQtvqralXXMYEIzrLO+AD318Ne+M6/p96VBMXs6gS602+Q+Z1h8p5nfdqbUizaQQf560dU7duX9ZH/nUqY0VYQ9+6e5AGv+73Ze5m3rj71kUHLLyvy5q3KczU/IseWSE8o7fYdRfl2uQ0DAyEX1o4cHHjYxbhiLEM8dA4SGafZmFqsk2awyLne0cvGVlhgo1niur5sT6YJnEli0GaRJDTONxPTgoJu83zuTSeIzO8Sly5rVqfws6mVqrdC3xOjNkjVf6HdQAhVkxs4RPD8JdLwtodlMUVgq1bRvWvg80OO5iOm+kgSM9z96Bd2WNsz5F82NwuGc3v7iY6P5w13kBTGtblwrkMszySqxbyEACIxUkhHGKY3Pl21xNVe/TFuEMjjqN/+LKP6YJKKLsdJJxFo2P2SNcdl069mMwKgOvmW81JXHH9VDUU6EfVwjfQATCF9mwgHmLAsUWflyy+RKHs3oO9GpNHgjU7peR048fyIHRqfq0nbla+wru3CIt9ysx8uWttEAA+NEu+wcHR73R+9V0GR+4YdgGyaVRCbmbIMvDTi
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(36756003)(6916009)(2906002)(31686004)(2616005)(44832011)(66476007)(66556008)(956004)(66946007)(186003)(16576012)(316002)(8676002)(31696002)(86362001)(7406005)(6486002)(7416002)(26005)(4326008)(508600001)(53546011)(8936002)(83380400001)(54906003)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WWtLNDFkY09NcG1mUDJKOUF0QzlqS0lsSitrRWxKb1dzK25RaXFKS3VOQnNH?=
- =?utf-8?B?dVQwc0NCV0dSZS9zYk1LT0hOT2JKNy9GNndsL0ROcS83K0JHK2VBaCt3YS9F?=
- =?utf-8?B?UXcvemhnS3RYc2wrWlpQWjJoOG5uNjhVT1NSbHpaaUYrdHQxY05qUTZrY01m?=
- =?utf-8?B?QmpqNkw2a1BEUURaN0RKV2paS2FIajAzN1NjRkIwczl1c05ObmlKbHZza2FJ?=
- =?utf-8?B?RjN0eTY5cy9CQ2NTWVBxTHVuVTlGM2hpZEhKME5LNlNJVmRlL05BaGduUmo4?=
- =?utf-8?B?V0NyT3pJOXU4ZTBtN0lQWURCeUtQQkwxeTlOUjlaSUVwM1BNTEFJU0hTUUt6?=
- =?utf-8?B?SEl5QTdGYXhqa282WnZkcVB4aStJRHdYVm1pb2pQSkc1TUpRU25saDU5K3ZI?=
- =?utf-8?B?UlNMcXozeUNxNDN3cThCY3YxMWZ4Ui85T2V6YVpKUU5JeG1teTF6dTFxNUtQ?=
- =?utf-8?B?dk1UYWRTMDF0K1h2dWJ4Z2s3akFBTFVCYlZpWUtYT3FRVlZJWERTQnRLbnpR?=
- =?utf-8?B?ZS8vMHFRSzZYMkI0Zkx1ZGRQVnlSMmJGb1JUQmN5RlhvYnlHNm02TFkxcndp?=
- =?utf-8?B?RUJmNkdJMXQ4N1pPZlNkeTNPcjZqNTA1YW9ZaEwrcG9TQldhRm1LdDRHNVpn?=
- =?utf-8?B?Y0tySHI3ZmpJTHRZNlJDNFBwZW1Bc3VxeUVoWnQzWGYyMFd6M2p6a2czRlZL?=
- =?utf-8?B?SGNDRGtDM1gvRlMzVFNqL09VK2svM1k0Zk14UkZLc3FoNDcxZGJJYzI1UDJl?=
- =?utf-8?B?OWJ4UHBFakRPSVRVTWoydHYzY2ZSM1hHOHJFQ0hGM2J1Nk1ESk9hRlhwMGts?=
- =?utf-8?B?OXFSL3FyM25DazZzRXpnQjNOSWd4d3hjYmlDMmdTTDhhZ1BRMlFvQlFTelRO?=
- =?utf-8?B?SU55ZzFDT2xVblkyaUxhcXN1S3puOVNvYWVVcWZCZ0RvZEV4NlhWRVdEaU5q?=
- =?utf-8?B?Z0tBRkR2bTM1RzZLZ2FJcGZFaThTNTNPNmFBTEljYWJ1U0RXTnhpbzRoa05I?=
- =?utf-8?B?YXk4OW8vSEdxZ2RBbUUwTGxlaHU3aXpOR1ZtanhOKzFSczV1OFlyTklGa1dB?=
- =?utf-8?B?V0xhdnRnSEN2UXgxcW1weFBKWGhFblFYWWFqMkJjOXlIN1ArQXk1VUtCKy8z?=
- =?utf-8?B?Y1cxOTd1WTFtK3Q0LzhNdDAwcjloQmp5MHBuNWhsRkxtanFQYVhEUDMvNkdt?=
- =?utf-8?B?cERTd29QUmtRY3lPempXVyt4enduR3hxUE9Wb3BxcktVaFZwNVV4MVV0MzZl?=
- =?utf-8?B?UW9uQUlJSmF1UTVRcVppVnlYZ2pnejRzQVE5bWl2SmpIYjRCUmRzaDBmQWky?=
- =?utf-8?B?S29Fd01OT1I5czU1T09FdkNWc0x2NGdVVjAyL0VVT2hhSXhkNVdPM05GSDR1?=
- =?utf-8?B?WUc3NWp5OVlQTi9VT3ppN3FxOUg0aHYxZkEvVEZtblZiZG10OGo5OHB6TTZW?=
- =?utf-8?B?UnFOWWJQdkdJbW5HUjQwQm1IUlNrR1Zqb1p3TFB0L0lCS1ZqbEoxc1Y5M2R0?=
- =?utf-8?B?VUtTTE0xalZXcEYydUV6VHFtQWJwVzBqQUlLN2s0bk9uQlp5aVZPOXhaTTNy?=
- =?utf-8?B?MlJiSnVZUGh6SFNoR1UwdWMzVTgxWWp3dWxuV2tldTlHcnFVc3J3R3U5MW5j?=
- =?utf-8?B?OE9mQWJ4TzlVcHFHWkZibFVOSjVSblNNaTVPUXNZUGJ1ZWpzbkNBc1Y2YWFa?=
- =?utf-8?B?OHFId25vaFBMcUw3U213SzVzaCtyb3ZsbVlPTG5rOUgwNWpLbGFoSWtKTkFQ?=
- =?utf-8?B?aHFOZlJJTU1nNW1sN2NZbEtZa0FWQ2tLc1VwRWpaL29JMXl4QkhicEVaN0VV?=
- =?utf-8?B?UVdnQzFML3VrZ0VzZ2xZQ0ozU29BTWxGdEZqODZSWHd4YWp3d3EwK0R0NVFt?=
- =?utf-8?B?cjlleTZBVHFVZ0RkNXVEYnc3d2RodVptMUZpTUZ2RFdBWWxnZCtzNkkwQkhL?=
- =?utf-8?B?ak4rNnI3UVZUSTZiRmxsdmxrTFhmRVVGY0dUbHpXcWFVVDFqa2FjL0U5UDIw?=
- =?utf-8?B?M3BOM2RZOUZUVDN1VVhLNVNDTzdLWVNUbUkyaDVrR0ZtMWNPZ0JMc0VNMVhl?=
- =?utf-8?B?aTYzL3UvVUZ3WXVuTnQ0VVdiTmVTWHhZMnVuMmRwNjdCcHV1a05URE1Bbm8z?=
- =?utf-8?B?bGU1dUUyYTZjbG1LQlFsSXJqYU5jb0ptb3N2NkZEbkYxeG5LOXdTdWhDMEs0?=
- =?utf-8?Q?Scr1d6EPGnzYUKXEIzSqEkM=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TUNzVVBXRWNwUlk3bVJQSUxFWGRqU3ZKZGpMbDZBeFdoYlhtZ21Ub09lbVdL?=
+ =?utf-8?B?UE9NTjN2ZCthK1JhWVh1clgxZjllaGdpNUM1aWhxTFdiditvcXFOUTNtc3RU?=
+ =?utf-8?B?SzBDYWlKaHJaVnd5ZWVjQ3pSclRFQ3EyOHFjZjJpMXF4VzQyTXZRMlIveTgv?=
+ =?utf-8?B?RlBEZXVxNGZldGxPc1R3b1hVd0d2WEhwbktLanBZQU9kODZKbW4zMTBYSm9X?=
+ =?utf-8?B?WXM0SmZ5ZUg4WmhPb0ZlRnJYQlIwMks1WmV0amJZdCtCaEhjcHVJKytFNDBC?=
+ =?utf-8?B?Z2tNd3Vza2lOLzVRa3FQQTJJT0VYMlQ0ZndtZTVKdGwrMVYyNnE5a092MXhT?=
+ =?utf-8?B?NWpGTVk3Y21VTnRlWE44SWFYcjIxN0UzaFNCZmw4RmJ6WERaY3lOR1MzQU9C?=
+ =?utf-8?B?d0d3cjBySzkvWXVaVC8wckwyL2lWWXc4bnFka2J1VTAwckVUYVdWNnNWTjhV?=
+ =?utf-8?B?SXpXZ05tYThHMHNIOVRUd01HTnN1TFlzVEgrZkhEWW1pdWhVV1U3OTIxY1Iy?=
+ =?utf-8?B?SlluYzI2OGxVV0JzSVlQZTBvNXlnOEc2cWlqeEZZWTdPSnRrRC9hbWRXVzVK?=
+ =?utf-8?B?TlNiTVN4akloM29zSHJQR1pRTlNIcFl1TjB3NjF3bThabWZrcUtBd0xGb3Zs?=
+ =?utf-8?B?dlMrMzllVW43Sm95YTdGTlY2aTNyNHkxZmZPSCtwNkNicFRnWWdZUlloQzZa?=
+ =?utf-8?B?ZXJwRXpaVjZIMElEeWkrV1Y1LzRaOXFuNUQ1TFZyeTc5ZmhXMUlkR25lUXJl?=
+ =?utf-8?B?L3VncXpScnpoSnhxMUdZYjJuMm8ybi9rWUIxWHF3SVRLK2RtUVJaZ1Q2N3d6?=
+ =?utf-8?B?MkU1UTdveGJLOGhEV0ExQ3ZpVXYrdzU1bHdZYkpKMGE5TWQwWGRsbGMwRWgx?=
+ =?utf-8?B?VHUrTndGTXJCaHJVMzdyVjFJd3BQMStEQVRpQmM4MmFQa2ZoWVZxMkZjYXRt?=
+ =?utf-8?B?Y2lFcFc3REJRbDN3OXJzWlp2Q2dZYVYzVkJXL2JmWW5rVmo3QmRQSnVjR3pL?=
+ =?utf-8?B?c2NHVEZHaXhQWEMwS2lFbkN6dnl4MmJMdUhocVdIcFZ2Qk5PZlNoSWRzbkdt?=
+ =?utf-8?B?cjloQTc5ZTlZMUdRdkRSTWJHY1RvVmRVeWdnRFRQWWhjbldteFJFVmJpOVNz?=
+ =?utf-8?B?UFBTWDFScCtaY3ExYXZkZzhxK2s4Z1NGS2NuSnluN0w3akFyVmZzWElzcWFz?=
+ =?utf-8?B?MGFMTUxweVBTVyttZ1hMeVYrYWY3ZENtRk9FVHgzRysyK1VQUFN6MExCTFNp?=
+ =?utf-8?B?STQzMHNEVHFRM2Mvd0RLUUhjdThwUTgrS2NCMVpZa2I2WFhRSWdlV0tvWUlX?=
+ =?utf-8?B?M1pHMENja3RFcnR1WU90VlRIeXhNWTRTSURhSTlWeGdQUGtVU0VHZzZDM3Jn?=
+ =?utf-8?B?Tnh1QVBtczhEWUw3bDlHd2hXMGtyMmpwS3dhbmw3Z3Fxb2ltbFE0ZHB2V2dy?=
+ =?utf-8?B?OU5WVno0dDFKeFd2aGY4bTBXQ1ZVTEpRSTZKcE5vVGtHcDVGdmRoQm90TGtQ?=
+ =?utf-8?B?U1ZRWUIwdDQ0MHZ0d1RFN2FpUGQ4TVVDU3Q1L3ppcTBNWUl2N05HZGlKNVlS?=
+ =?utf-8?B?NDNCUFBsZDRkemEyK2VPQXlISXhwSmlweFIwYXNHY3BWRlJ4SFFDTDNkTnVt?=
+ =?utf-8?B?N1hDKzZYWFRIM2lFVVpRWWx3b3BDcHBjeVQ5YXRDTEt3WVdlVUNleE1vWFZB?=
+ =?utf-8?B?TWxzd2RyQWdNU2tiSGFaMjY4SWw3SmhkUTFUWW9QN3QrMEdxU2xFL3ptNW1V?=
+ =?utf-8?B?S202NDJBY2x6RFdEZk03VW5HT1ZzMHJYc0d2RU9iMklrTm40K3FVQ1BlQmhv?=
+ =?utf-8?B?WWJpU3dEOVpteWVMWE9XR1AyRHF6YU5OVEoyOXVQc1Y4aXRUQ1BveUdicXYv?=
+ =?utf-8?B?OERLUGVVT1RoRFZPdUtVTHVaSUFuYUdiUzNmeVd3aGU2WVpoUXlzalphVThJ?=
+ =?utf-8?B?cjZEVFpjT1dHNVhldlhwWmJNaHU4OTBlQ2tyZE1pY2JRY2ZlbyszeEdiWmJ5?=
+ =?utf-8?B?ZWJpMThLZjlhdlZ2ZFBscnVBL2lkWVRUZ1dyRi9rZDhhR2dYVlQ0d3Jkdzlz?=
+ =?utf-8?B?TkFrZG9oUU5TNURRUWV2alREelF1aG8wVXpWeWVOQ2hSVDFLV2F0UHV5SlI1?=
+ =?utf-8?B?emM2cHhDSnFKT1dqSWVKVGpRazVDUDRDUkdSZnNOUUlxa3FTb0tib2EzSGVY?=
+ =?utf-8?Q?hZjIPKzgoLZI1nCENJmq2YE=3D?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dedf9dc8-6440-48d7-787b-08d99ef9406f
-X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4510.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89cd9a35-f380-48dd-256c-08d99f05fa79
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2021 18:39:21.7994
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2021 20:10:27.9919
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3p/5pnEUS4h5pBLOVoPXwQbAyKCRSRX/gUV3KDaiA+3bxcgacZNuO/2dvpyOGDTNhWuufT6vrsHkeXSaliB9pQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2637
+X-MS-Exchange-CrossTenant-UserPrincipalName: cmR3dwi9FODNeiIfw7AAcJKTnq3E/CwuTW/cbJIpmZz+F78s1IcNi3Vehh+Cr6nVcIQ+r0s7fuPKiaSA8dzAbA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2685
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 10/29/2021 12:23, Sanket Goswami wrote:
-> STB (Smart Trace Buffer), is a debug trace buffer which is used to help
-> isolate failures by analyzing the last feature that a system was running
-> before hitting a failure. This nonintrusive way is always running in the
-> background and trace is stored into the SoC.
-> 
-> This patch provides mechanism to access the STB buffer using the read
-> and write routines.
-> 
-> Co-developed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Tested-by: Scott Bruce <smbruce@gmail.com>
-> ---
-> Changes in v5:
-> - Use kfree() only once in .open as suggested by Hans.
-> 
-> Changes in v4:
-> - Use kzalloc() for memory allocation.
-> 
-> Changes in v3:
-> - Use sizeof(u32) with multiplier as suggested by Mark Gross.
-> 
-> Changes in v2:
-> - Create amd_pmc_stb_debugfs_fops structure to get STB data.
-> - Address review comments from Hans.
-> 
->   drivers/platform/x86/amd-pmc.c | 127 +++++++++++++++++++++++++++++++++
->   1 file changed, 127 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-> index ea099f7759f2..a39354ea96c4 100644
-> --- a/drivers/platform/x86/amd-pmc.c
-> +++ b/drivers/platform/x86/amd-pmc.c
-> @@ -35,6 +35,12 @@
->   #define AMD_PMC_SCRATCH_REG_CZN		0x94
->   #define AMD_PMC_SCRATCH_REG_YC		0xD14
->   
-> +/* STB Registers */
-> +#define AMD_PMC_STB_INDEX_ADDRESS	0xF8
-> +#define AMD_PMC_STB_INDEX_DATA		0xFC
-> +#define AMD_PMC_STB_PMI_0		0x03E30600
-> +#define AMD_PMC_STB_PREDEF		0xC6000001
-> +
->   /* Base address of SMU for mapping physical address to virtual address */
->   #define AMD_PMC_SMU_INDEX_ADDRESS	0xB8
->   #define AMD_PMC_SMU_INDEX_DATA		0xBC
-> @@ -82,6 +88,7 @@
->   #define SOC_SUBSYSTEM_IP_MAX	12
->   #define DELAY_MIN_US		2000
->   #define DELAY_MAX_US		3000
-> +#define FIFO_SIZE		4096
->   enum amd_pmc_def {
->   	MSG_TEST = 0x01,
->   	MSG_OS_HINT_PCO,
-> @@ -128,8 +135,14 @@ struct amd_pmc_dev {
->   #endif /* CONFIG_DEBUG_FS */
->   };
->   
-> +static bool enable_stb;
-> +module_param(enable_stb, bool, 0644);
-> +MODULE_PARM_DESC(enable_stb, "Enable the STB debug mechanism");
-> +
->   static struct amd_pmc_dev pmc;
->   static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
-> +static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
-> +static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
->   
->   static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
->   {
-> @@ -176,6 +189,50 @@ static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
->   	return 0;
->   }
->   
-> +static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
-> +{
-> +	struct amd_pmc_dev *dev = filp->f_inode->i_private;
-> +	u32 size = FIFO_SIZE * sizeof(u32);
-> +	u32 *buf;
-> +	int rc;
-> +
-> +	buf = kzalloc(size, GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	rc = amd_pmc_read_stb(dev, buf);
-> +	if (rc) {
-> +		kfree(buf);
-> +		return rc;
-> +	}
-> +
-> +	filp->private_data = buf;
-> +	return rc;
-> +}
-> +
-> +static ssize_t amd_pmc_stb_debugfs_read(struct file *filp, char __user *buf, size_t size,
-> +					loff_t *pos)
-> +{
-> +	if (!filp->private_data)
-> +		return -EINVAL;
-> +
-> +	return simple_read_from_buffer(buf, size, pos, filp->private_data,
-> +				       FIFO_SIZE * sizeof(u32));
-> +}
-> +
-> +static int amd_pmc_stb_debugfs_release(struct inode *inode, struct file *filp)
-> +{
-> +	kfree(filp->private_data);
-> +	return 0;
-> +}
-> +
-> +const struct file_operations amd_pmc_stb_debugfs_fops = {
-> +	.owner = THIS_MODULE,
-> +	.open = amd_pmc_stb_debugfs_open,
-> +	.read = amd_pmc_stb_debugfs_read,
-> +	.release = amd_pmc_stb_debugfs_release,
-> +};
-> +
->   static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
->   				 struct seq_file *s)
->   {
-> @@ -289,6 +346,10 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
->   			    &s0ix_stats_fops);
->   	debugfs_create_file("amd_pmc_idlemask", 0644, dev->dbgfs_dir, dev,
->   			    &amd_pmc_idlemask_fops);
-> +	/* Enable STB only when the module_param is set */
-> +	if (enable_stb)
-> +		debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
-> +				    &amd_pmc_stb_debugfs_fops);
+Hi Boris,
 
-Have you considered using debugfs_create_blob instead?  Wouldn't this 
-make it match the data type more closely?
 
->   }
->   #else
->   static inline void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
-> @@ -485,6 +546,9 @@ static int __maybe_unused amd_pmc_suspend(struct device *dev)
->   	if (rc)
->   		dev_err(pdev->dev, "suspend failed\n");
->   
-> +	if (enable_stb)
-> +		amd_pmc_write_stb(pdev, AMD_PMC_STB_PREDEF);
-> +
->   	return rc;
->   }
->   
-> @@ -505,6 +569,10 @@ static int __maybe_unused amd_pmc_resume(struct device *dev)
->   	/* Dump the IdleMask to see the blockers */
->   	amd_pmc_idlemask_read(pdev, dev, NULL);
->   
-> +	/* Write data incremented by 1 to distinguish in stb_read */
-> +	if (enable_stb)
-> +		amd_pmc_write_stb(pdev, AMD_PMC_STB_PREDEF + 1);
-> +
->   	return 0;
->   }
->   
-> @@ -521,6 +589,65 @@ static const struct pci_device_id pmc_pci_ids[] = {
->   	{ }
->   };
->   
-> +static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
-> +{
-> +	int err;
-> +
-> +	err = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_ADDRESS, AMD_PMC_STB_PMI_0);
-> +	if (err) {
-> +		dev_err(dev->dev, "failed to write addr in stb: 0x%X\n",
-> +			AMD_PMC_STB_INDEX_ADDRESS);
-> +		err = pcibios_err_to_errno(err);
-> +		goto err_pci_dev_put;
-> +	}
-> +
-> +	err = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_DATA, data);
-> +	if (err) {
-> +		dev_err(dev->dev, "failed to write data in stb: 0x%X\n",
-> +			AMD_PMC_STB_INDEX_DATA);
-> +		err = pcibios_err_to_errno(err);
-> +		goto err_pci_dev_put;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_pci_dev_put:
-> +	pci_dev_put(dev->rdev);
-> +	return err;
-> +}
-> +
-> +static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
-> +{
-> +	int i, err;
-> +	u32 value;
-> +
-> +	err = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_ADDRESS, AMD_PMC_STB_PMI_0);
-> +	if (err) {
-> +		dev_err(dev->dev, "error writing addr to stb: 0x%X\n",
-> +			AMD_PMC_STB_INDEX_ADDRESS);
-> +		err = pcibios_err_to_errno(err);
-> +		goto err_pci_dev_put;
-> +	}
-> +
-> +	for (i = 0; i < FIFO_SIZE; i++) {
-> +		err = pci_read_config_dword(dev->rdev, AMD_PMC_STB_INDEX_DATA, &value);
-> +		if (err) {
-> +			dev_err(dev->dev, "error reading data from stb: 0x%X\n",
-> +				AMD_PMC_STB_INDEX_DATA);
-> +			err = pcibios_err_to_errno(err);
-> +			goto err_pci_dev_put;
-> +		}
-> +
-> +		*buf++ = value;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_pci_dev_put:
-> +	pci_dev_put(dev->rdev);
-> +	return err;
-> +}
-> +
->   static int amd_pmc_probe(struct platform_device *pdev)
->   {
->   	struct amd_pmc_dev *dev = &pmc;
+On 11/2/21 1:44 PM, Borislav Petkov wrote:
+> On Tue, Nov 02, 2021 at 01:24:01PM -0500, Brijesh Singh wrote:
+>> To answer your question, GHCB is registered at the time of first #VC
+>> handling by the second exception handler.
 > 
+> And this is what I don't like - register at use. Instead of init
+> everything *before* use.
+> 
+>> Mike can correct me, the CPUID page check is going to happen on first
+>> #VC handling inside the early exception handler (i.e case 1).
+> 
+> What is the "CPUID page check"?
+> 
+> And no, you don't want to do any detection when an exception happens -
+> you want to detect *everything* *first* and then do exceptions.
+> 
+>> See if my above explanation make sense. Based on it, I don't think it
+>> makes sense to register the GHCB during the CPUID page detection. The
+>> CPUID page detection will occur in early VC handling.
+> 
+> See above. If this needs more discussion, we can talk on IRC.
+> 
+
+Looking at the secondary CPU bring up path it seems that we will not be 
+getting #VC until the early_setup_idt() is called. I am thinking to add 
+function to register the GHCB from the early_setup_idt()
+
+early_setup_idt()
+{
+   ...
+   if (IS_ENABLED(CONFIG_MEM_ENCRYPT))
+     sev_snp_register_ghcb()
+   ...
+}
+
+The above will cover the APs and for BSP case I can call the same 
+function just after the final IDT is loaded
+
+cpu_init_exception_handling()
+{
+    ...
+    ...
+    /* Finally load the IDT */
+    load_current_idt();
+
+    if (IS_ENABLED(CONFIG_MEM_ENCRYPT))
+      sev_snp_register_ghcb()
+
+}
+
+Please let me know if something like above is acceptable.
+
+thanks
 
