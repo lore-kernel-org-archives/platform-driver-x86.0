@@ -2,255 +2,116 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FD7C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 22:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A47BC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Nov 2021 09:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5AB610C8
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Nov 2021 22:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F7C61101
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Nov 2021 09:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbhKBWm7 (ORCPT
+        id S231755AbhKCJVr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Nov 2021 18:42:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:50456 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231254AbhKBWm7 (ORCPT
+        Wed, 3 Nov 2021 05:21:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231240AbhKCJVq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Nov 2021 18:42:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635892822;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LtkGYeDupOVlp4mYmQYWHhyomssu+8nyW0y2n+jxxU8=;
-        b=GnMARjyrToiyTr5mxBHvoDgJJ7bcQn2wecKgveho/o8eujrD//JGC554E1LbElh4aD2bRl
-        Q72a2umPZ7pA5uGB0rxawj8vPqfwnpncdPrOIoWVTrjmWzhBBn2rBr8buVi1IBUKZtg1IX
-        qRhDzfnW5HJ+1smbSe5Td7HMj1lL++Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-oF-Srp45NZ-2dzHu3Q8K0w-1; Tue, 02 Nov 2021 18:40:18 -0400
-X-MC-Unique: oF-Srp45NZ-2dzHu3Q8K0w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED05E80A5C0;
-        Tue,  2 Nov 2021 22:40:16 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.192.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 71FCB60C05;
-        Tue,  2 Nov 2021 22:40:08 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Wed, 3 Nov 2021 05:21:46 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53341C061714;
+        Wed,  3 Nov 2021 02:19:10 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id f4so6649706edx.12;
+        Wed, 03 Nov 2021 02:19:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=izh+Izi2ViuBwJmcCrMjhlzLlTjUKnonv7xgDnMZKrU=;
+        b=TOKXBUUZnEhSiVUGswo5BWK4XFiOQ2DZnwlqKSdHEn10SsJWliHEGHgqw+9ylVayJt
+         0caUEzS8EWy0LF4JQtctFoGh5RdeYpx+7IQqErlBGO2l7DdUhV+P5GmH6qngfsNRwk4f
+         QV74rbGLnWWigx5dWqctsPl7vZQYQh7urXzFT6EacH63MKT9vaY4a/w2PLDAzcm0U2vA
+         TptxGVG18x246E1nDbf0/8ht0qt1SvLPGAxFt9sq0M0hCr3nd+4aJD3Rdg5tTtsLPevu
+         VDwcDwrgtcsU+RfaLUpEvakbwjWWpLxfMOx2Rq5RgaBlhxgHRBmIfFoUOkuGrOBpAkVY
+         7NmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=izh+Izi2ViuBwJmcCrMjhlzLlTjUKnonv7xgDnMZKrU=;
+        b=YMJbFUm8sXX4rnxoYg+y12JIQl+qddkVpoh94+gldV8orlFE7FwTsikCd5qON+lOms
+         zblxs4Na9aWy15OGal/CJ2jKY+5Vnxrk8lncqSqXNb2ottXc+77W8CrcW9zAMe870j57
+         2IRebJnDQJqe/QEKH/SQuQV7Of8O+3spCnKyID80wVBS+rm79Z1W1vesM0GZubDsCdvp
+         zicCakhz49JPfACYjDAjcePWzjw2B9G/YlZVu8YzbTUTRi2XceZzcifk+SeU00oEYcEZ
+         6c2d/TJWmLDHf5RBfITXxOfwPamIJMH6mr1EpYDm6b+jZWCWGLeCilQT9qfb1oHcFXKL
+         RG7g==
+X-Gm-Message-State: AOAM533XOkQrjUvWOoGAfAbzzma3cymfS6fOyaP6IKKS9xm49pPIE+68
+        1+LESdhPzh03MDSZEe3ub4i85QEAzTZOS9Fi+0s=
+X-Google-Smtp-Source: ABdhPJylFvUk+eMM/aD3uh9TFRjKL0A0DPL5/C9zxrRXh8EDSBK11TVImY7EP6IdHGBEUgJ/89og7ZwlPvXA2Da80+M=
+X-Received: by 2002:a05:6402:207c:: with SMTP id bd28mr48553253edb.240.1635931148908;
+ Wed, 03 Nov 2021 02:19:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211102223959.3873-1-hdegoede@redhat.com>
+In-Reply-To: <20211102223959.3873-1-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 3 Nov 2021 11:18:31 +0200
+Message-ID: <CAHp75VdoYO7DCWGHadgto3Aay836z1A7g4LHT7RNLF4kgAa_Pg@mail.gmail.com>
+Subject: Re: [RFC v2 0/2] ACPI/power-suppy add fuel-gauge support on cht-wc
+ PMIC without USB-PD support devs
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@infradead.org>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, Yauhen Kharuzhy <jekhor@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Yauhen Kharuzhy <jekhor@gmail.com>,
         Tsuchiya Yuto <kitakar@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [RFC v2 2/2] platform/x86: xiaomi-mipad2: New driver for Xiaomi Mi Pad 2 tablets
-Date:   Tue,  2 Nov 2021 23:39:59 +0100
-Message-Id: <20211102223959.3873-3-hdegoede@redhat.com>
-In-Reply-To: <20211102223959.3873-1-hdegoede@redhat.com>
-References: <20211102223959.3873-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The ACPI tables on the Xiaomi Mi Pad 2 hide a number of devices from Linux,
-such as the fuel-gauge IC used for battery monitoring.
+On Wed, Nov 3, 2021 at 12:40 AM Hans de Goede <hdegoede@redhat.com> wrote:
 
-This adds a xiaomi-mipad2 "board-file" which manually instantiates
-device-objects for the missing devices.
+...
 
-When build as a module this will only ever get auto-loaded on Xiaomi
-Mi Pad 2 tablets, allowing us to support these tablets in generic X86
-kernels at the cost of just a small amount of diskspace for the module.
+> While working on this I realized that there also is a 4th option,
+> which is basically option 1 from the v1 RFC minus the 2 gpiolib-acpi
+> patches.
+>
+> With the 2nd option (as implemented by this RFC) we leave the
+> _AEI handler in place and run the fuel-gauge without interrupt,
+> we can do the same when marking the fuel-gauge as always present
+> by treating IRQs on ACPI devices the same way as in the
+> max17042_battery code, which has already solved the IRQ problem
+> without disabling the _AEI handler:
+>
+>                 /*
+>                  * On ACPI systems the IRQ may be handled by ACPI-event code,
+>                  * so we need to share (if the ACPI code is willing to share).
+>                  */
 
-As discussed previously this is the least ugly option to get these
-devices to fully work and to do so without adding any extra code to
-the main kernel image (vmlinuz) when built as a module.
+>                 if (acpi_id)
 
-Link: https://lore.kernel.org/platform-driver-x86/20211031162428.22368-1-hdegoede@redhat.com/
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/Kconfig         |  13 +++
- drivers/platform/x86/Makefile        |   1 +
- drivers/platform/x86/xiaomi-mipad2.c | 126 +++++++++++++++++++++++++++
- 3 files changed, 140 insertions(+)
- create mode 100644 drivers/platform/x86/xiaomi-mipad2.c
+(Side remark: wouldn't it be better to have has_acpi_companion() and
+use device_get_match_data()?)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 9cb8d33cc6e1..df8101fdfc6a 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -958,6 +958,19 @@ config TOPSTAR_LAPTOP
- 
- 	  If you have a Topstar laptop, say Y or M here.
- 
-+config XIAOMI_MIPAD2
-+	tristate "Xiaomi Mi Pad 2 support"
-+	depends on I2C && ACPI
-+	help
-+	  The ACPI tables on the Xiaomi Mi Pad 2 hide a number of devices
-+	  from Linux, such as the fuel-gauge IC used for battery monitoring.
-+
-+	  Say Y or M here to enable building a xiaomi-mipad2 board-file which
-+	  manually instantiates device-objects for the missing devices.
-+
-+	  If you have a Xiaomi Mi Pad 2 say Y or M here, for a generic X86
-+	  distro config say M here.
-+
- config I2C_MULTI_INSTANTIATE
- 	tristate "I2C multi instantiate pseudo device driver"
- 	depends on I2C && ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 3f610332b556..631f1b948cd0 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -105,6 +105,7 @@ obj-$(CONFIG_PANASONIC_LAPTOP)	+= panasonic-laptop.o
- obj-$(CONFIG_SONY_LAPTOP)	+= sony-laptop.o
- obj-$(CONFIG_SYSTEM76_ACPI)	+= system76_acpi.o
- obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
-+obj-$(CONFIG_XIAOMI_MIPAD2)	+= xiaomi-mipad2.o
- 
- # Platform drivers
- obj-$(CONFIG_DMI_DEVICE_PROPERTIES)	+= dmi_device_properties.o
-diff --git a/drivers/platform/x86/xiaomi-mipad2.c b/drivers/platform/x86/xiaomi-mipad2.c
-new file mode 100644
-index 000000000000..bf333aaa0edf
---- /dev/null
-+++ b/drivers/platform/x86/xiaomi-mipad2.c
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * On the Xiaomi Mi Pad 2 X86 tablet a bunch of devices are hidden when
-+ * the EFI if the tablet does thinks the OS it is booting is Windows
-+ * (OSID in the DSDT is set to 1); and the EFI code thinks this as soon
-+ * as the EFI bootloader is not Xiaomi's own signed Android loader :|
-+ *
-+ * This "board-file" takes care of instantiating the hidden devices manually.
-+ *
-+ * Copyright (C) 2021 Hans de Goede <hdegoede@redhat.com>
-+ */
-+
-+#define pr_fmt(fmt) "xiaomi-mipad2: " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/dmi.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+
-+/********** BQ27520 fuel-gauge info **********/
-+#define BQ27520_ADAPTER "\\_SB_.PCI0.I2C1"
-+
-+static const char * const bq27520_suppliers[] = { "bq25890-charger" };
-+
-+static const struct property_entry bq27520_props[] = {
-+	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq27520_suppliers),
-+	{ }
-+};
-+
-+static const struct software_node bq27520_node = {
-+	.properties = bq27520_props,
-+};
-+
-+static const struct i2c_board_info bq27520_board_info = {
-+	.type = "bq27520",
-+	.addr = 0x55,
-+	.dev_name = "bq27520",
-+	.swnode = &bq27520_node,
-+};
-+
-+static struct i2c_client *bq27520_client;
-+
-+/********** KTD2026 RGB notification LED controller **********/
-+#define KTD2026_ADAPTER "\\_SB_.PCI0.I2C3"
-+
-+static const struct i2c_board_info ktd2026_board_info = {
-+	.type = "ktd2026",
-+	.addr = 0x30,
-+	.dev_name = "ktd2026",
-+};
-+
-+static struct i2c_client *ktd2026_client;
-+
-+/********** DMI-match, probe(), etc. **********/
-+static const struct dmi_system_id xiaomi_mipad2_ids[] __initconst = {
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Xiaomi Inc"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Mipad2"),
-+		},
-+	},
-+	{} /* Terminating entry */
-+};
-+MODULE_DEVICE_TABLE(dmi, xiaomi_mipad2_ids);
-+
-+static __init struct i2c_client *xiaomi_instantiate_i2c_client(
-+				char *adapter_path,
-+				const struct i2c_board_info *board_info)
-+{
-+	struct i2c_client *client;
-+	struct i2c_adapter *adap;
-+	acpi_handle handle;
-+	acpi_status status;
-+
-+	status = acpi_get_handle(NULL, adapter_path, &handle);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("Error could not get %s handle\n", adapter_path);
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	adap = i2c_acpi_find_adapter_by_handle(handle);
-+	if (!adap) {
-+		pr_err("Error could not get %s adapter\n", adapter_path);
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	client = i2c_new_client_device(adap, board_info);
-+
-+	put_device(&adap->dev);
-+
-+	return client;
-+}
-+
-+static __init int xiaomi_mipad2_init(void)
-+{
-+	if (!dmi_first_match(xiaomi_mipad2_ids))
-+		return -ENODEV;
-+
-+	bq27520_client = xiaomi_instantiate_i2c_client(BQ27520_ADAPTER,
-+						       &bq27520_board_info);
-+	if (IS_ERR(bq27520_client))
-+		return PTR_ERR(bq27520_client);
-+
-+	ktd2026_client = xiaomi_instantiate_i2c_client(KTD2026_ADAPTER,
-+						       &ktd2026_board_info);
-+	if (IS_ERR(ktd2026_client)) {
-+		i2c_unregister_device(bq27520_client);
-+		return PTR_ERR(ktd2026_client);
-+	}
-+
-+	return 0;
-+}
-+
-+static __exit void xiaomi_mipad2_cleanup(void)
-+{
-+	i2c_unregister_device(ktd2026_client);
-+	i2c_unregister_device(bq27520_client);
-+}
-+
-+module_init(xiaomi_mipad2_init);
-+module_exit(xiaomi_mipad2_cleanup);
-+
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com");
-+MODULE_DESCRIPTION("Xiaomi Mi Pad 2 board-file");
-+MODULE_LICENSE("GPL");
+>                         flags |= IRQF_SHARED | IRQF_PROBE_SHARED;
+>
+> This is a pretty decent option too, it requires:
+>
+> 1. 2 more always_present quirks in the ACPI scan code which is part of
+> the main kernel image.
+>
+> 2. Patches to the bq27xxx_battery code to support ACPI enumeration.
+
+If it works, why not try it?
+
+I like the common base for the FG drivers that can be used as a pattern then.
+
+
 -- 
-2.31.1
-
+With Best Regards,
+Andy Shevchenko
