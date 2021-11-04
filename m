@@ -2,88 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB05C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Nov 2021 16:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A219C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Nov 2021 21:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 001C361212
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Nov 2021 16:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF0261252
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Nov 2021 21:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231566AbhKDQF7 (ORCPT
+        id S232062AbhKDVZd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 Nov 2021 12:05:59 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33520 "EHLO mail.skyhub.de"
+        Thu, 4 Nov 2021 17:25:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229770AbhKDQF6 (ORCPT
+        id S232051AbhKDVZc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 Nov 2021 12:05:58 -0400
-Received: from [127.0.0.1] (dynamic-046-114-037-055.46.114.pool.telefonica.de [46.114.37.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E61611EC03AD;
-        Thu,  4 Nov 2021 17:03:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1636041799;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a4evrOHd0IfTyrs3k9/fwX+W/P75BgRT5NqUyOT/QhA=;
-        b=MfYrIi/NzQzu7+bUg8+JE8a/TjdlOnIxd1Ge1UeACXOJRNorLjOjCGPP2/IX3XfM4XWYch
-        J+HgUXwKITXMoxJV2gESgaK97zM9aRSiRhSnUzToelJvc4z36gX3fHpH5mvFXVlQXFcdzp
-        cs5LiiOtD9sx6+Z9xuk74MSKNsFALDI=
-Date:   Thu, 04 Nov 2021 16:03:15 +0000
-From:   Boris Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-CC:     brijesh.singh@amd.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-efi@vger.kernel.org, kvm@vger.kernel.org,
-        linux-coco@lists.linux.dev, Andy Lutomirski <luto@kernel.org>,
-        Sergio Lopez <slp@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        Joerg Roedel <jroedel@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Ingo Molnar <mingo@redhat.com>, tony.luck@intel.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jim Mattson <jmattson@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Peter Gonda <pgonda@google.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, marcorr@google.com,
-        Andi Kleen <ak@linux.intel.com>,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_14/42=5D_x86/sev=3A_Regist?= =?US-ASCII?Q?er_GHCB_memory_when_SEV-SNP_is_active?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <47815dd4-f9ac-b141-2852-8f48c8299a5e@amd.com>
-References: <20211008180453.462291-1-brijesh.singh@amd.com> <20211008180453.462291-15-brijesh.singh@amd.com> <YYFs+5UUMfyDgh/a@zn.tnic> <aea0e0c8-7f03-b9db-3084-f487a233c50b@amd.com> <YYGGv6EtWrw7cnLA@zn.tnic> <a975dfbf-f9bb-982e-9814-7259bc075b71@amd.com> <YYPnGeW+8tlNgW34@zn.tnic> <47815dd4-f9ac-b141-2852-8f48c8299a5e@amd.com>
-Message-ID: <C01A4C34-D84A-4489-A2D0-91003B9B564C@alien8.de>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+        Thu, 4 Nov 2021 17:25:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 4E10E60F39
+        for <platform-driver-x86@vger.kernel.org>; Thu,  4 Nov 2021 21:22:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636060974;
+        bh=ahKZDfWg6flTbNREawztuwfLfaAOAjDX2O1QA69a3Nc=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=lylRBGdCTCdMTUnWM1JVtYKkYO2NpWmEphwA9NLUEpVr1LEWY8EbR6tc+SQI56wV1
+         kqcrAWa3WnNv0iDDG2WAhCjbQW3IShgNT2VAkdGF7e5A5XwjzVRMy2vDX3DMnA/Mz3
+         3qPiCf2U7Whiitqg4sb2PqMTPegrmXTC0jwiMVLgbDS8klpOsY1N2SwO+LIm9ajNJF
+         58Tv+r+UKRls/01dVm7SeYg9jA0HlU7tnySQ2qAlX/9yCZ8aziqEtN0gPOOu5kjwKI
+         Ojx8ZCm40y7bTw9NZ1PXXAkjp29YowjZhTOqP2yHeeGQ0Ubm13J4CUnjx/yf5KFzGC
+         QepkBkc2nNvHg==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 214899] ideapad-laptop: platform backlight device not working
+Date:   Thu, 04 Nov 2021 21:22:53 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: johannes.penssel@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-214899-215701-F0c9Sa3Qtr@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
+References: <bug-214899-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On November 4, 2021 3:26:56 PM UTC, Brijesh Singh <brijesh=2Esingh@amd=2Eco=
-m> wrote:
->Of course, the current patch does not suffer with it=2E Let me know your=
-=20
->preference=2E
+https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
 
-Whatever keeps the code simpler=2E
+--- Comment #17 from Johannes P (johannes.penssel@gmail.com) ---
+Looks like the mic mute key and the brightness keys do not behave identical=
+ly
+with the ideapad-laptop module unloaded after all.
 
-Thx=2E
+While playing around with ACPI EC debugging today, I was able to produce ou=
+tput
+for everything (including the otherwise "invisible" KB backlight toggle) ex=
+cept
+the brightness keys. This included the mic mute key and other keys reliant =
+on
+ideapad-laptop. Without the module, pressing these keys still triggered EC
+debug output.
+
+Just as a correction to my above claims.
 
 --=20
-Sent from a small device: formatting sux and brevity is inevitable=2E 
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
