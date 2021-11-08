@@ -2,199 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5217C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 18:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53984C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 19:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5B3F61989
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 18:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8DB617E4
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 19:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236019AbhKHSuC (ORCPT
+        id S236768AbhKHTcg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Nov 2021 13:50:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236039AbhKHSt6 (ORCPT
+        Mon, 8 Nov 2021 14:32:36 -0500
+Received: from todd.t-8ch.de ([159.69.126.157]:34617 "EHLO todd.t-8ch.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230136AbhKHTcf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Nov 2021 13:49:58 -0500
-Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A4DC061714
-        for <platform-driver-x86@vger.kernel.org>; Mon,  8 Nov 2021 10:47:13 -0800 (PST)
-Received: by mail-oi1-x22b.google.com with SMTP id u74so7949894oie.8
-        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Nov 2021 10:47:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0vw8s287M6V5tUEsTJntxMeh19bFdVrXBNKNoghHXao=;
-        b=ywlYUfVasoalbTydcYohciaaAH8wfFvqWJ/gT+CCOCjU1tjYJY9d259VD/iG+WAxeX
-         UzBNkbA2iiR9m8NWFAMtNtDcOwUzOKyw02Nz+HbwkU4xOvYN6WYbrTknog4XZgC1gU6N
-         D6giWibXnftdvgv4qAuJRkcE14pOBcSCHyPlF9zx11QEMMaUohAOmZ6J/S0kBh+MWJxj
-         SgEuTOs8PuLKfdynmN/2WLZPXkgMwXWOJW39pQfCeub5zfek+jztC7kuTbhXq5pKXzOn
-         RFKgyqpnfnhXXmFJyWqAY2X+OMc/Pw/8yYj2Bz5hM+lwfTxbGv9N+/i3ZdYk51soUuGr
-         fWXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0vw8s287M6V5tUEsTJntxMeh19bFdVrXBNKNoghHXao=;
-        b=VUAm0sRsP6/7Kwqafs3ukYfKny8WWWvKO2WZMk46pmcTs4ubI7WTbo1EjhUR8b8LOi
-         Jo6PCdr184moyYKX3hzscgQOnik3YywBuGekJUZmC4b84w+T4G2zVSadsVUcP2ND0NFH
-         2HuiUCfScqZ2/OQJlufsaIEMDSrWqiX4IT6Nzay9QvxZgF+xBWvolQMZfZvKGUToFR8Q
-         t/cM3KoAew/rQVxJ7oYsv6MjAKtZSRM8yRWZS1tW266/NyuTTAIHTh/tD6k7JY7+uGM1
-         aECGrHhJI1mDqtzsY+wlCzxwo6kA3n+fhd6PiA1chWz3lfivJLPC1WIrmW36D2Sv+L0J
-         UZRg==
-X-Gm-Message-State: AOAM532iIKvclYX/tKaSZ4RgJmbC6EZeXm5Vn6e39AWK1yQ3Ev4m5/O4
-        qHjZ8NWKdmxswX6jHZ/9ZbAkEQ==
-X-Google-Smtp-Source: ABdhPJwztpHYHCOdNId1sZbWWKDiOQRdMs7lgaadW6QKrlShBESNVaqndOmityyif7Tg18o9uOBktQ==
-X-Received: by 2002:a54:4401:: with SMTP id k1mr349239oiw.143.1636397232392;
-        Mon, 08 Nov 2021 10:47:12 -0800 (PST)
-Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id w29sm5245219ooe.25.2021.11.08.10.47.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Nov 2021 10:47:11 -0800 (PST)
-Date:   Mon, 8 Nov 2021 10:48:47 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jarrett Schultz <jaschultzms@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Jarrett Schultz <jaschultz@microsoft.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: platform: microsoft: Document
- surface xbl
-Message-ID: <YYlxD7TuNzFlWokq@ripper>
-References: <20211108164449.3036210-1-jaschultz@microsoft.com>
- <20211108164449.3036210-2-jaschultz@microsoft.com>
+        Mon, 8 Nov 2021 14:32:35 -0500
+From:   =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
+        s=mail; t=1636399787;
+        bh=lCoxgCkW+ya6kBvkFnYw9vuv4lbSkSjmPSR9jBoDfQI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nN+ZeA1gAJzoEnRYXi/+Z8oLrL4em2OLEZ+jEL6wptusYpidOwyLH1XHJQu5bd9HR
+         22YE2eOhgerXevLMp3In7Q/ZuAFYTEWipWSPpHZHfyUB0wdm8q6NcY2Cpj0Urzr0Z4
+         d7EKmyiWOr9Dorh3tOGTz+WybkU20UwLSUF3/Weo=
+To:     linux-pm@vger.kernel.org
+Cc:     nicolopiazzalunga@gmail.com, linrunner@gmx.net,
+        platform-driver-x86@vger.kernel.org, smclt30p@gmail.com,
+        sre@kernel.org,
+        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Subject: [RFC v2] standardized attributes for powersupply charge behaviour
+Date:   Mon,  8 Nov 2021 20:28:52 +0100
+Message-Id: <20211108192852.357473-1-linux@weissschuh.net>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211108164449.3036210-2-jaschultz@microsoft.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon 08 Nov 08:44 PST 2021, Jarrett Schultz wrote:
+This a revised version of
+"[RFC] add standardized attributes for force_discharge and inhibit_charge" [0],
+incorporating discussion results.
 
-> Introduce yaml for surface xbl driver.
-> 
-> Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
-> 
-> ---
-> 
-> Changes in v2:
->  - Removed json-schema dependence
->  - Elaborated on description of driver
->  - Updated example
-> 
-> ---
-> 
->  .../platform/microsoft/surface-xbl.yaml       | 57 +++++++++++++++++++
->  MAINTAINERS                                   |  7 +++
->  2 files changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> new file mode 100644
-> index 000000000000..09f806f373bd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/platform/microsoft/surface-xbl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Surface Extensible Bootloader for Microsoft Surface Duo
-> +
-> +maintainers:
-> +  - Jarrett Schultz <jaschultzMS@gmail.com>
-> +
-> +description: |
-> +  Exposes the following device information to user space via sysfs -
+The biggest change is the switch from two boolean attributes to a single
+enum attribute.
 
-The devicetree should describe the hardware, or in this case the imem
-region. User space, sysfs etc are concepts of one possible consumer of
-this information and should not be part of the binding.
+[0] https://lore.kernel.org/platform-driver-x86/21569a89-8303-8573-05fb-c2fec29983d1@gmail.com/
+---
+ Documentation/ABI/testing/sysfs-class-power | 14 ++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c   |  1 +
+ include/linux/power_supply.h                |  7 +++++++
+ 3 files changed, 22 insertions(+)
 
-It might make sense to update this description to still document what's
-to be found in the memory region though.
+diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+index ca830c6cd809..2f58cfc91420 100644
+--- a/Documentation/ABI/testing/sysfs-class-power
++++ b/Documentation/ABI/testing/sysfs-class-power
+@@ -455,6 +455,20 @@ Description:
+ 			      "Unknown", "Charging", "Discharging",
+ 			      "Not charging", "Full"
+ 
++What:		/sys/class/power_supply/<supply_name>/charge_behaviour
++Date:		November 2021
++Contact:	linux-pm@vger.kernel.org
++Description:
++		Represents the charging behaviour.
++
++		Access: Read, Write
++
++		Valid values:
++			================ ====================================
++			auto:            Charge normally, respect thresholds
++			inhibit-charge:  Do not charge while AC is attached
++			force-discharge: Force discharge while AC is attached
++
+ What:		/sys/class/power_supply/<supply_name>/technology
+ Date:		May 2007
+ Contact:	linux-pm@vger.kernel.org
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index c3d7cbcd4fad..26c60587dca1 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -172,6 +172,7 @@ static struct power_supply_attr power_supply_attrs[] = {
+ 	POWER_SUPPLY_ATTR(CHARGE_CONTROL_LIMIT_MAX),
+ 	POWER_SUPPLY_ATTR(CHARGE_CONTROL_START_THRESHOLD),
+ 	POWER_SUPPLY_ATTR(CHARGE_CONTROL_END_THRESHOLD),
++	POWER_SUPPLY_ENUM_ATTR(CHARGE_BEHAVIOUR),
+ 	POWER_SUPPLY_ATTR(INPUT_CURRENT_LIMIT),
+ 	POWER_SUPPLY_ATTR(INPUT_VOLTAGE_LIMIT),
+ 	POWER_SUPPLY_ATTR(INPUT_POWER_LIMIT),
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index 9ca1f120a211..70c333e86293 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -132,6 +132,7 @@ enum power_supply_property {
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD, /* in percents! */
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD, /* in percents! */
++	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
+ 	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
+ 	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
+ 	POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
+@@ -202,6 +203,12 @@ enum power_supply_usb_type {
+ 	POWER_SUPPLY_USB_TYPE_APPLE_BRICK_ID,	/* Apple Charging Method */
+ };
+ 
++enum power_supply_charge_behaviour {
++	POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO = 0,
++	POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE,
++	POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE,
++};
++
+ enum power_supply_notifier_events {
+ 	PSY_EVENT_PROP_CHANGED,
+ };
 
-> +    * board_id
-> +    * battery_present
-> +    * hw_init_retries
-> +    * is_customer_mode
-> +    * is_act_mode
-> +    * pmic_reset_reason
-> +    * touch_fw_version
-> +    * ocp_error_location
-> +  See sysfs documentation for more information.
-> +
-> +properties:
-> +  compatible:
-> +    const: microsoft,sm8150-surface-duo-xbl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
+base-commit: 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f
+-- 
+2.33.1
 
-I believe interrupts is a leftover...
-
-> +
-> +examples:
-> +  - |
-> +    xbl@146bfa94 {
-> +      compatible = "microsoft,sm8150-surface-duo-xbl";
-> +      reg = <0x00 0x146bfa94 0x00 0x100>;
-
-The example is compiled with #address-cells == #size-cells = <1>, so
-you should omit the extra 0 in both address and size, in both examples.
-
-Regards,
-Bjorn
-
-> +    };
-> +  - |
-> +    imem@146bf000 {
-> +      compatible = "simple-mfd";
-> +      reg = <0x0 0x146bf000 0x0 0x1000>;
-> +      ranges = <0x0 0x0 0x146bf000 0x1000>;
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +
-> +      xbl@a94 {
-> +        compatible = "microsoft,sm8150-surface-duo-xbl";
-> +        reg = <0xa94 0x100>;
-> +      };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index eeb4c70b3d5b..8643546f8fab 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12423,6 +12423,13 @@ F:	Documentation/driver-api/surface_aggregator/clients/dtx.rst
->  F:	drivers/platform/surface/surface_dtx.c
->  F:	include/uapi/linux/surface_aggregator/dtx.h
->  
-> +MICROSOFT SURFACE DUO XBL DRIVER
-> +M:	Jarrett Schultz <jaschultz@microsoft.com>
-> +L:	linux-arm-msm@vger.kernel.org
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Supported
-> +F:	Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> +
->  MICROSOFT SURFACE GPE LID SUPPORT DRIVER
->  M:	Maximilian Luz <luzmaximilian@gmail.com>
->  L:	platform-driver-x86@vger.kernel.org
-> -- 
-> 2.25.1
-> 
