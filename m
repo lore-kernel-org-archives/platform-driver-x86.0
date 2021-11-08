@@ -2,74 +2,73 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEE9C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  7 Nov 2021 19:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C9AC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 02:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F62D61058
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  7 Nov 2021 19:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B226134F
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 02:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234381AbhKGT74 (ORCPT
+        id S236259AbhKHCTK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 7 Nov 2021 14:59:56 -0500
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:64766 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234197AbhKGT7z (ORCPT
+        Sun, 7 Nov 2021 21:19:10 -0500
+Received: from mail-m973.mail.163.com ([123.126.97.3]:46016 "EHLO
+        mail-m973.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232513AbhKHCTK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 7 Nov 2021 14:59:55 -0500
-Received: from pop-os.home ([86.243.171.122])
-        by smtp.orange.fr with ESMTPA
-        id joHtmnpvfIEdljoHtmSmvS; Sun, 07 Nov 2021 20:57:11 +0100
-X-ME-Helo: pop-os.home
-X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
-X-ME-Date: Sun, 07 Nov 2021 20:57:11 +0100
-X-ME-IP: 86.243.171.122
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     eric.piel@tremplin-utc.net, hdegoede@redhat.com,
-        markgross@kernel.org, dmitry.torokhov@gmail.com,
-        giedriuswork@gmail.com, dvhart@linux.intel.com,
-        akpm@linux-foundation.org, pavel@suse.cz
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] platform/x86: hp_accel: Fix an error handling path in 'lis3lv02d_probe()'
-Date:   Sun,  7 Nov 2021 20:57:07 +0100
-Message-Id: <5a4f218f8f16d2e3a7906b7ca3654ffa946895f8.1636314074.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.30.2
+        Sun, 7 Nov 2021 21:19:10 -0500
+X-Greylist: delayed 909 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Nov 2021 21:19:09 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=7z1K0
+        sPc2NW3ADD5fllk4cazdNDAgk9u0Mox0gqXvXI=; b=B3N6oWhMAJSqc6BtcJ5sQ
+        zp1W7m8OWMSl8dc3ik7cdzc6IhvO0IWhqvCpnzV05tQSVlTq9+cq7ucHc0wbQiIb
+        9hD+PBdhFC59V3c/d/UuKV/JoJrys03KfyzX+5HfIJ5nzZKO9aqqV4HdSNWLjyvG
+        N/GIif1A9MUXYECdN0DQOY=
+Received: from fedora.lenovo.com (unknown [103.30.235.251])
+        by smtp3 (Coremail) with SMTP id G9xpCgD3jVazhIhhPgoJPw--.10083S2;
+        Mon, 08 Nov 2021 10:00:21 +0800 (CST)
+From:   Jimmy Wang <jimmy221b@163.com>
+To:     -Linux-PC-SW@lenovo.com
+Cc:     jimmy221b@163.com, Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: thinkpad_acpi: Add support for dual fan control
+Date:   Mon,  8 Nov 2021 10:00:16 +0800
+Message-Id: <20211108020016.4508-1-jimmy221b@163.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: G9xpCgD3jVazhIhhPgoJPw--.10083S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKFykZF15KFyUXw4UCrW8tFb_yoWDAFc_C3
+        Z8WFs2yF95K3909r1UKrnavry2qr9rXw1kGw47Xa43Gr95XF4xZw1jkFyfJFy3ZFnI9a4D
+        Zr15XF1jkry5tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRRksqtUUUUU==
+X-Originating-IP: [103.30.235.251]
+X-CM-SenderInfo: 5mlpz5assruqqrwthudrp/xtbBZBNFAlQHPCVR8gAAsZ
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If 'led_classdev_register()' fails, some additional resources should be
-released.
+   This adds dual fan control for P1 / X1 Extreme Gen4
 
-Add the missing 'i8042_remove_filter()' and 'lis3lv02d_remove_fs()' calls
-that are already in the remove function but are missing here.
-
-Fixes: a4c724d0723b ("platform: hp_accel: add a i8042 filter to remove HPQ6000 data from kb bus stream")
-Fixes: 9e0c79782143 ("lis3lv02d: merge with leds hp disk")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Jimmy Wang <jimmy221b@163.com>
 ---
- drivers/platform/x86/hp_accel.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/thinkpad_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
-index b183967ecfb7..435a91fe2568 100644
---- a/drivers/platform/x86/hp_accel.c
-+++ b/drivers/platform/x86/hp_accel.c
-@@ -331,9 +331,11 @@ static int lis3lv02d_probe(struct platform_device *device)
- 	INIT_WORK(&hpled_led.work, delayed_set_status_worker);
- 	ret = led_classdev_register(NULL, &hpled_led.led_classdev);
- 	if (ret) {
-+		i8042_remove_filter(hp_accel_i8042_filter);
- 		lis3lv02d_joystick_disable(&lis3_dev);
- 		lis3lv02d_poweroff(&lis3_dev);
- 		flush_work(&hpled_led.work);
-+		lis3lv02d_remove_fs(&lis3_dev);
- 		return ret;
- 	}
- 
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 9c632df734bb..eb201d001075 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -8766,6 +8766,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_Q_LNV3('N', '2', 'E', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (1st gen) */
+ 	TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (2nd gen) */
+ 	TPACPI_Q_LNV3('N', '2', 'V', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (3nd gen) */
++	TPACPI_Q_LNV3('N', '4', '0', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (4nd gen) */
+ 	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v (1st gen) */
+ 	TPACPI_Q_LNV3('N', '3', '2', TPACPI_FAN_2CTL),	/* X1 Carbon (9th gen) */
+ };
 -- 
-2.30.2
+2.31.1
 
