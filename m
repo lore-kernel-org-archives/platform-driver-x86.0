@@ -2,50 +2,50 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C9AC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 02:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A403C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 02:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9B226134F
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 02:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7BAE60F36
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 02:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236259AbhKHCTK (ORCPT
+        id S237094AbhKHC6t (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 7 Nov 2021 21:19:10 -0500
-Received: from mail-m973.mail.163.com ([123.126.97.3]:46016 "EHLO
-        mail-m973.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232513AbhKHCTK (ORCPT
+        Sun, 7 Nov 2021 21:58:49 -0500
+Received: from mail-m974.mail.163.com ([123.126.97.4]:35416 "EHLO
+        mail-m974.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237048AbhKHC6t (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 7 Nov 2021 21:19:10 -0500
-X-Greylist: delayed 909 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Nov 2021 21:19:09 EST
+        Sun, 7 Nov 2021 21:58:49 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
         s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=7z1K0
-        sPc2NW3ADD5fllk4cazdNDAgk9u0Mox0gqXvXI=; b=B3N6oWhMAJSqc6BtcJ5sQ
-        zp1W7m8OWMSl8dc3ik7cdzc6IhvO0IWhqvCpnzV05tQSVlTq9+cq7ucHc0wbQiIb
-        9hD+PBdhFC59V3c/d/UuKV/JoJrys03KfyzX+5HfIJ5nzZKO9aqqV4HdSNWLjyvG
-        N/GIif1A9MUXYECdN0DQOY=
+        sPc2NW3ADD5fllk4cazdNDAgk9u0Mox0gqXvXI=; b=Q+QEte4u5XDDYizVSD6bV
+        S4QBX++lLn4z60ZnO5c1m87utwytLcUA7ddmHbG5mbWcKl5eg3byK7NYPi+89Cpm
+        +pyRXbL4KeNRFVPzCJFK0SDLd29htfXVVSyvYgEDBKlpcSpvCdSORA390S4jNCRS
+        Yiacw+fICD4paKQMDJxzMo=
 Received: from fedora.lenovo.com (unknown [103.30.235.251])
-        by smtp3 (Coremail) with SMTP id G9xpCgD3jVazhIhhPgoJPw--.10083S2;
-        Mon, 08 Nov 2021 10:00:21 +0800 (CST)
+        by smtp4 (Coremail) with SMTP id HNxpCgCXHYKokYhhEgT8Kg--.2010S2;
+        Mon, 08 Nov 2021 10:55:41 +0800 (CST)
 From:   Jimmy Wang <jimmy221b@163.com>
-To:     -Linux-PC-SW@lenovo.com
-Cc:     jimmy221b@163.com, Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+To:     markpearson@lenovo.com
+Cc:     wangjm19@lenovo.com, Jimmy Wang <jimmy221b@163.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: [PATCH] platform/x86: thinkpad_acpi: Add support for dual fan control
-Date:   Mon,  8 Nov 2021 10:00:16 +0800
-Message-Id: <20211108020016.4508-1-jimmy221b@163.com>
+Date:   Mon,  8 Nov 2021 10:55:34 +0800
+Message-Id: <20211108025534.7801-1-jimmy221b@163.com>
 X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: G9xpCgD3jVazhIhhPgoJPw--.10083S2
+X-CM-TRANSID: HNxpCgCXHYKokYhhEgT8Kg--.2010S2
 X-Coremail-Antispam: 1Uf129KBjvdXoWrKFykZF15KFyUXw4UCrW8tFb_yoWDAFc_C3
         Z8WFs2yF95K3909r1UKrnavry2qr9rXw1kGw47Xa43Gr95XF4xZw1jkFyfJFy3ZFnI9a4D
-        Zr15XF1jkry5tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRRksqtUUUUU==
+        Zr15XF1jkry5tjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUE4i5UUUUU==
 X-Originating-IP: [103.30.235.251]
-X-CM-SenderInfo: 5mlpz5assruqqrwthudrp/xtbBZBNFAlQHPCVR8gAAsZ
+X-CM-SenderInfo: 5mlpz5assruqqrwthudrp/1tbiNhlFAlWBotLKQQACsF
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
