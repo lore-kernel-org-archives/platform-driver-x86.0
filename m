@@ -2,218 +2,133 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11739C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 17:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E67C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 18:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB0B619BB
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 17:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF8561503
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Nov 2021 18:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233440AbhKHSBY (ORCPT
+        id S234570AbhKHSG5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Nov 2021 13:01:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232511AbhKHSBY (ORCPT
+        Mon, 8 Nov 2021 13:06:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47187 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234536AbhKHSG5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Nov 2021 13:01:24 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4756BC061570;
-        Mon,  8 Nov 2021 09:58:39 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id w29so16807824wra.12;
-        Mon, 08 Nov 2021 09:58:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=6csVjf1SebHxBNHa9KF6H/+atJmt35VuzjaR8qLgGP8=;
-        b=FXa1OZoE7+PQ+/KKJso5mi+CVg7wHFHXtWv5DwvRWIlPvAd5XMA0diQPUhZK/KyKZy
-         gvnCxsMeh6+x/cBWDQe0gazmy6mWHb68RVtgc+Kd2Xw9Dr52ELijQkt3J28MnqOkPpFm
-         jaehpZ/73MNmyRbl1ZUjgId6FAuRZgOXEQSUFYVQTH17wKsZ2R5FQF2aGry3Xo5iLW4P
-         7tImCRFCJalQtzVO8eFmmXtZUhRtLqaMTu4NXufmNhzGdyhYLhLx+i2/qmD69pvBJKxf
-         6uHC/Zu6WqwwGpu4iVfRvb7oK6ip2oEUvFWhcWimXH2VLfz8UYwPrKx6CZZzcJMsa0ZF
-         eLkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=6csVjf1SebHxBNHa9KF6H/+atJmt35VuzjaR8qLgGP8=;
-        b=4skoMAZapSiLnACd9Io/gBz0JfbuyF32T8IAGRn4WcsJ+rm+Omev4Bu0UKgZPhDOjm
-         sPAN8dt+O9rexqwUBClparGU06cWUndFZcAfKbcnMDk6yMf1UY6KwKsmfTBTa+Hgq1Hp
-         K8n+pP9UwER7EqIL1MfxsJHbPvGbupOW10jcUUtDK+CqBylGWihrVSmv8Fqd4df8knZw
-         3U14Bf7MfKWNBUcdXViSxomcfyNtkfPJr5RcBwX37raFq2fy0530tuqaNhQddiP5TjdK
-         gwwqjtFYLfpUpkAu4mt+hDUz01uefCaQchil52kG8lMTPjP/YAMimWNU5qZW6g5y/lpv
-         +8CQ==
-X-Gm-Message-State: AOAM533Gur+flY672IrrU0qjtD0nKfCYTy1I32wPlflikml0G/HZ+O0i
-        Gv/UtKV7gTG6YvmLHyZT2K8=
-X-Google-Smtp-Source: ABdhPJzg/BiqmatmU9UAYZjQmkk4ZJ/XDIbVMk0k4mUO3zSXnYi1V+NEGrcI/if23eBhPDyR/dlIug==
-X-Received: by 2002:a5d:6488:: with SMTP id o8mr1169169wri.348.1636394317848;
-        Mon, 08 Nov 2021 09:58:37 -0800 (PST)
-Received: from [10.19.0.16] ([91.207.172.187])
-        by smtp.gmail.com with ESMTPSA id d7sm17316955wrw.87.2021.11.08.09.58.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Nov 2021 09:58:36 -0800 (PST)
-Message-ID: <6e6e478b-eb12-5d7b-e944-4e6c02e46d4c@gmail.com>
-Date:   Mon, 8 Nov 2021 18:58:34 +0100
+        Mon, 8 Nov 2021 13:06:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1636394652;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=im9lhTupFPwsIHFjLfrf1/cWof8gxzjA2GesYxJq3+Y=;
+        b=ZxpTq81JXdCR3H4nt42x15rQlZNlPV29Qdcfnm5K4NIQMHTyJZ2DNj1MuyJULzTsspSZQS
+        7jzjqjB8Wpwl0U38OrMWz/9HHjLct9plIfNEIMQ5Zplz1eJlxeoZa4ml1n0vlo3goMD8TG
+        6fy4/A7PP8tcKd4nqa0lq3goa2k2qno=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-174-oiG5onmRPcKpQIUZRhHuhA-1; Mon, 08 Nov 2021 13:04:11 -0500
+X-MC-Unique: oiG5onmRPcKpQIUZRhHuhA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 27BB719253C6;
+        Mon,  8 Nov 2021 18:04:10 +0000 (UTC)
+Received: from [172.30.41.16] (ovpn-115-6.phx2.redhat.com [10.3.115.6])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C1ED560C17;
+        Mon,  8 Nov 2021 18:03:57 +0000 (UTC)
+Subject: [PATCH] platform/x86: think-lmi: Abort probe on analyze failure
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     markpearson@lenovo.com, hdegoede@redhat.com, markgross@kernel.org
+Cc:     alex.williamson@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 08 Nov 2021 11:03:57 -0700
+Message-ID: <163639463588.1330483.15850167112490200219.stgit@omen>
+User-Agent: StGit/1.0-8-g6af9-dirty
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v2 2/5] platform: surface: Propagate ACPI Dependency
-Content-Language: en-US
-To:     Jarrett Schultz <jaschultzms@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Jarrett Schultz <jaschultz@microsoft.com>
-References: <20211108164449.3036210-1-jaschultz@microsoft.com>
- <20211108164449.3036210-3-jaschultz@microsoft.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20211108164449.3036210-3-jaschultz@microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 11/8/21 17:44, Jarrett Schultz wrote:> From: Jarrett Schultz <jaschultzMS@gmail.com>
-> 
-> Since the Surface XBL Driver does not depend on ACPI, the
-> platform/surface directory as a whole no longer depends on ACPI. With
-> respect to this, the ACPI dependency is moved into each config that
-> depends on ACPI individually.
-> 
-> Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
+A Lenovo ThinkStation S20 (4157CTO BIOS 60KT41AUS) fails to boot on
+recent kernels including the think-lmi driver, due to the fact that
+errors returned by the tlmi_analyze() function are ignored by
+tlmi_probe(), where  tlmi_sysfs_init() is called unconditionally.
+This results in making use of an array of already freed, non-null
+pointers and other uninitialized globals, causing all sorts of nasty
+kobject and memory faults.
 
-Some remarks inline:
+Make use of the analyze function return value, free a couple leaked
+allocations, and remove the settings_count field, which is incremented
+but never consumed.
 
-> ---
-> 
-> Changes in v2:
->   - Created to propagate ACPI dependency
-> 
-> ---
-> 
->   drivers/platform/surface/Kconfig | 12 +++++++++++-
+Fixes: a40cd7ef22fb ("platform/x86: think-lmi: Add WMI interface support on Lenovo platforms")
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
+ drivers/platform/x86/think-lmi.c |   13 ++++++++++---
+ drivers/platform/x86/think-lmi.h |    1 -
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-You also need to account for included Kconfigs, specifically:
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 9472aae72df2..c4d9c45350f7 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -888,8 +888,10 @@ static int tlmi_analyze(void)
+ 			break;
+ 		if (!item)
+ 			break;
+-		if (!*item)
++		if (!*item) {
++			kfree(item);
+ 			continue;
++		}
+ 
+ 		/* It is not allowed to have '/' for file name. Convert it into '\'. */
+ 		strreplace(item, '/', '\\');
+@@ -902,6 +904,7 @@ static int tlmi_analyze(void)
+ 		setting = kzalloc(sizeof(*setting), GFP_KERNEL);
+ 		if (!setting) {
+ 			ret = -ENOMEM;
++			kfree(item);
+ 			goto fail_clear_attr;
+ 		}
+ 		setting->index = i;
+@@ -916,7 +919,6 @@ static int tlmi_analyze(void)
+ 		}
+ 		kobject_init(&setting->kobj, &tlmi_attr_setting_ktype);
+ 		tlmi_priv.setting[i] = setting;
+-		tlmi_priv.settings_count++;
+ 		kfree(item);
+ 	}
+ 
+@@ -983,7 +985,12 @@ static void tlmi_remove(struct wmi_device *wdev)
+ 
+ static int tlmi_probe(struct wmi_device *wdev, const void *context)
+ {
+-	tlmi_analyze();
++	int ret;
++
++	ret = tlmi_analyze();
++	if (ret)
++		return ret;
++
+ 	return tlmi_sysfs_init();
+ }
+ 
+diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
+index f8e26823075f..2ce5086a5af2 100644
+--- a/drivers/platform/x86/think-lmi.h
++++ b/drivers/platform/x86/think-lmi.h
+@@ -55,7 +55,6 @@ struct tlmi_attr_setting {
+ struct think_lmi {
+ 	struct wmi_device *wmi_device;
+ 
+-	int settings_count;
+ 	bool can_set_bios_settings;
+ 	bool can_get_bios_selections;
+ 	bool can_set_bios_password;
 
-     drivers/platform/surface/aggregator/Kconfig.
 
->   1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
-> index 3105f651614f..0d3970e1d144 100644
-> --- a/drivers/platform/surface/Kconfig
-> +++ b/drivers/platform/surface/Kconfig
-> @@ -5,7 +5,6 @@
->   
->   menuconfig SURFACE_PLATFORMS
->   	bool "Microsoft Surface Platform-Specific Device Drivers"
-> -	depends on ACPI
->   	default y
->   	help
->   	  Say Y here to get to see options for platform-specific device drivers
-> @@ -18,6 +17,7 @@ if SURFACE_PLATFORMS
->   
->   config SURFACE3_WMI
->   	tristate "Surface 3 WMI Driver"
-> +	depends on ACPI
-
-This is redundant, you can drop that. ACPI_WMI already depends on ACPI.
-
->   	depends on ACPI_WMI
->   	depends on DMI
->   	depends on INPUT
-> @@ -30,12 +30,14 @@ config SURFACE3_WMI
->   
->   config SURFACE_3_BUTTON
->   	tristate "Power/home/volume buttons driver for Microsoft Surface 3 tablet"
-> +	depends on ACPI
->   	depends on KEYBOARD_GPIO && I2C
->   	help
->   	  This driver handles the power/home/volume buttons on the Microsoft Surface 3 tablet.
->   
->   config SURFACE_3_POWER_OPREGION
->   	tristate "Surface 3 battery platform operation region support"
-> +	depends on ACPI
->   	depends on I2C
->   	help
->   	  This driver provides support for ACPI operation
-> @@ -43,6 +45,7 @@ config SURFACE_3_POWER_OPREGION
->   
->   config SURFACE_ACPI_NOTIFY
->   	tristate "Surface ACPI Notify Driver"
-> +	depends on ACPI
-
-As mentioned above, you're missing aggregator/Kconfig. All you need to
-do is add "depends on ACPI" to SURFACE_AGGREGATOR in that file. Then you
-can drop the "depends on ACPI" for anything that depends on that.
-
-Same holds for the couple of options depending on SURFACE_AGGREGATOR
-below.
-
->   	depends on SURFACE_AGGREGATOR
->   	help
->   	  Surface ACPI Notify (SAN) driver for Microsoft Surface devices.
-> @@ -62,6 +65,7 @@ config SURFACE_ACPI_NOTIFY
->   
->   config SURFACE_AGGREGATOR_CDEV
->   	tristate "Surface System Aggregator Module User-Space Interface"
-> +	depends on ACPI
->   	depends on SURFACE_AGGREGATOR
->   	help
->   	  Provides a misc-device interface to the Surface System Aggregator
-> @@ -79,6 +83,7 @@ config SURFACE_AGGREGATOR_CDEV
->   
->   config SURFACE_AGGREGATOR_REGISTRY
->   	tristate "Surface System Aggregator Module Device Registry"
-> +	depends on ACPI
->   	depends on SURFACE_AGGREGATOR
->   	depends on SURFACE_AGGREGATOR_BUS
->   	help
-> @@ -106,6 +111,7 @@ config SURFACE_AGGREGATOR_REGISTRY
->   
->   config SURFACE_DTX
->   	tristate "Surface DTX (Detachment System) Driver"
-> +	depends on ACPI
->   	depends on SURFACE_AGGREGATOR
->   	depends on INPUT
->   	help
-> @@ -126,6 +132,7 @@ config SURFACE_DTX
->   
->   config SURFACE_GPE
->   	tristate "Surface GPE/Lid Support Driver"
-> +	depends on ACPI
->   	depends on DMI
->   	help
->   	  This driver marks the GPEs related to the ACPI lid device found on
-> @@ -135,6 +142,7 @@ config SURFACE_GPE
->   
->   config SURFACE_HOTPLUG
->   	tristate "Surface Hot-Plug Driver"
-> +	depends on ACPI
->   	depends on GPIOLIB
->   	help
->   	  Driver for out-of-band hot-plug event signaling on Microsoft Surface
-> @@ -154,6 +162,7 @@ config SURFACE_HOTPLUG
->   
->   config SURFACE_PLATFORM_PROFILE
->   	tristate "Surface Platform Profile Driver"
-> +	depends on ACPI
->   	depends on SURFACE_AGGREGATOR_REGISTRY
->   	select ACPI_PLATFORM_PROFILE
->   	help
-> @@ -176,6 +185,7 @@ config SURFACE_PLATFORM_PROFILE
->   
->   config SURFACE_PRO3_BUTTON
->   	tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3/4 tablet"
-> +	depends on ACPI
->   	depends on INPUT
->   	help
->   	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3/4 tablet.
-> 
