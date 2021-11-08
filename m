@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5197EC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 01:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B94DC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 01:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4D561A80
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 01:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B6F6128B
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 01:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238160AbhKIBMx (ORCPT
+        id S242694AbhKIBRy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Nov 2021 20:12:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38626 "EHLO mail.kernel.org"
+        Mon, 8 Nov 2021 20:17:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242262AbhKIBKu (ORCPT
+        id S242082AbhKIBMx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Nov 2021 20:10:50 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0CAB061A7D;
-        Tue,  9 Nov 2021 01:04:37 +0000 (UTC)
+        Mon, 8 Nov 2021 20:12:53 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0328F61A8E;
+        Tue,  9 Nov 2021 01:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636419878;
-        bh=r7MT3L16rNgKpJAaZ5pMOOWvRgHtnQLKMjcpb0r11PU=;
+        s=k20201202; t=1636419921;
+        bh=RdyAUPeWHwqSaZcCBqjgldY7s4d+hnJI9k5HpUxAa28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fVmr1E3/yuEIncEu4DNgHiDlVd3eDZbUNGxuVMQcSHXFhsQpqvV0V98WQrOAeA3Hc
-         biICL4V4SSBwKTgT2Jyz6iaEcsJNRtIxtGHMR6YNoWK2VdXRGU9l/fOaCQ9u/aFRzn
-         jOpbQmzuUHjo41ZaU4OsdVmHLXKW+3WUIU7IAlsZqfa0chhtDg6XTSYkhvziWoUK3L
-         mkAUAhncUN0S4xvp5mlZZjA98rQ7aUVXjeKEWVpV0EUOAq4wTK7S4gtZR8IVHVQJWV
-         +H2phveP+RmPWcQeH0t7GR/df/p8JSbtwL0ZLGBJa4LqkTh/flohi1b8jUEkboNC1R
-         e+2p5+CJDQMtw==
+        b=d+PqNWvJBnV0se24GhMNzVrCLdBorwiCBzgwywLXPKs1FOSRRIuHsucuz9dQL3KEL
+         YsYpMKHPR/GrmHTF421/v9G1EM8PcA8LG+vzyNoP+AbPNf8R2anrYZYV4FJ+Dqrf/r
+         QysDytnLWc8eMjLSsx5rpmR6gpXHWBifEO+I+ISSNrxk29rG+KVF91dCWPdwh3onKD
+         ESVZdKJqEaIvO93GfQgaMS2UDDeVdyznPZIWJYG/VMBon/7khlNV4LD12zqHDKd1mI
+         b3tFQihMCEYkbSN6pnJ8B0M4DFN2uH4p7xoR0UIA6mZAw9taQ7ZqhFwDJOHJCaahnP
+         b7LI9k1RnlzsQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 08/74] platform/x86: wmi: do not fail if disabling fails
-Date:   Mon,  8 Nov 2021 12:48:35 -0500
-Message-Id: <20211108174942.1189927-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 04/47] platform/x86: wmi: do not fail if disabling fails
+Date:   Mon,  8 Nov 2021 12:49:48 -0500
+Message-Id: <20211108175031.1190422-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211108174942.1189927-1-sashal@kernel.org>
-References: <20211108174942.1189927-1-sashal@kernel.org>
+In-Reply-To: <20211108175031.1190422-1-sashal@kernel.org>
+References: <20211108175031.1190422-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -71,10 +71,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 59e9aa0f96436..cb029126a68c6 100644
+index 35cdc3998eb59..387358af685c5 100644
 --- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -353,7 +353,14 @@ static acpi_status __query_block(struct wmi_block *wblock, u8 instance,
+@@ -350,7 +350,14 @@ static acpi_status __query_block(struct wmi_block *wblock, u8 instance,
  	 * the WQxx method failed - we should disable collection anyway.
  	 */
  	if ((block->flags & ACPI_WMI_EXPENSIVE) && ACPI_SUCCESS(wc_status)) {
