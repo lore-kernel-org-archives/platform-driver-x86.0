@@ -2,192 +2,145 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B387DC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 06:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2F3C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 08:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9100A611AF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 06:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2937B611F0
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 08:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239192AbhKIGTa (ORCPT
+        id S243954AbhKIIOZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Nov 2021 01:19:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230011AbhKIGT3 (ORCPT
+        Tue, 9 Nov 2021 03:14:25 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:52815 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235389AbhKIIOZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Nov 2021 01:19:29 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 27747611BF;
-        Tue,  9 Nov 2021 06:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1636438604;
-        bh=Pj0w/765nIeUinsdw2x8elro8Twg48Pg8i+XxslDxxs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bPXNt/UaJM8HsokBr6UYcVV3VdTwHbWw43zmUsMUEk0LkPtFVhluqS9SQEfUS2MjE
-         AuftfEYa7KgmveH4dEUY+q956qpISuVkwdsBavto6NkGrEV3K2VEpbxiiiSULhOdBo
-         T6Hq33mkcBl0UtQZAi4UCA1VDcpRqFILaCyjdHs0=
-Date:   Tue, 9 Nov 2021 07:16:30 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        philipp.deppenwiese@immu.ne, mauro.lima@eclypsium.com,
-        hughsient@gmail.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via
- sysfs
-Message-ID: <YYoSPjF3M05dR0PX@kroah.com>
-References: <20211109000130.42361-1-hans-gert.dahmen@immu.ne>
+        Tue, 9 Nov 2021 03:14:25 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id A071A5C01FE;
+        Tue,  9 Nov 2021 03:11:39 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 09 Nov 2021 03:11:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nakato.io; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=ehBF5Wy69Bh/k
+        ZkJ7uMIKe19bB8uwhbi/yToEkQuFGM=; b=EpINqzgd9hrt+Ss+BZ5cHFTjQISNo
+        djS56qf80j18n50zDKGEVSQ8B4RctOiAGMB/bjmxTvafxxZoQkI9BDGE0zrToHZ4
+        4zftXLfhrvE8njxmJL7oi1oE5uEzdeEEfF+TsJbF+w/kgwwKKerw/caJjwk0YHwK
+        vrPkfcvfelAPcEIiEg1W/DpCgL7NMKf1JU8H0EE7/2xpolcwedP0/yT5DozV9ovM
+        vzH9dgiXtFq8kDGzA9qveM8pZjr2M3OtNK5XnIaI0b3XfALLAp/i3reS2bMkqNag
+        KYvA62hvI1yTJWRlZ/mrTgrNwX4kO5aUaPvsnw1MYQQ/EgfQtCJieTsQg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; bh=ehBF5Wy69Bh/kZkJ7uMIKe19bB8uwhbi/yToEkQuFGM=; b=HLCkzNR6
+        06opqwLsHnbYCSod2Ccg2uuXBi5glOZAgC9l1MDChXvEcYe/Z1RCn5fd8VVbXbsv
+        Sh8pLqUbF4nmhJK0xmxk+fTV37QOERaiTPkhYT64/NQS3QNwLnznbOPrh+seQCoC
+        2cwxPE9CF19dMqA7YIgKE6qb/grJKnBssWUv0YAVc4sLlG4QIU4lWSWJie5DiXGg
+        PH6+UhwxVvDJHh/NX+gp16bfBsQYUHBuje+9RfiedyEViZU/f7As+0Uf8jjp2J+U
+        lYw/vgPRctv7jTwKs9n3jpTDNaTsndvlu1km+laC/xCVjNDgzyxiIayUyQwQ7ilw
+        KAT/QxwTloLS0A==
+X-ME-Sender: <xms:Oy2KYQajpDA4RrFFbydCIJkmK89If72ibbxWHAtiHnjjMmcH2pMk8A>
+    <xme:Oy2KYbbpDmbxmmEsbYmMvT_dd94DB8tKfAFFsVG8GFLfcZPWr4DxC0hZKM2CcDygo
+    ym4kd_8NfkOnDYuig>
+X-ME-Received: <xmr:Oy2KYa9eexmfsWokvzioJDQyPR2ceeAch_zRQCdaj-pZk3nIaNaFt-cqUNBWVzh5OvGJud8YBoqhAnBdcFpCOv5MPx4Czt_Wr8eucLyi>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddrudefgdduudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurggthhhi
+    ucfmihhnghcuoehnrghkrghtohesnhgrkhgrthhordhioheqnecuggftrfgrthhtvghrnh
+    epudeftefhteegkedtuedvteeihfetffduudeludekkedthfdtfeduieehjefghffhnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgrkhgrth
+    hosehnrghkrghtohdrihho
+X-ME-Proxy: <xmx:Oy2KYar2zwDlBgih5gK-FqOTpD4UxvkY5bCOUe5HkjZEzo54LpOruQ>
+    <xmx:Oy2KYbqGJD3SpfRUwBhvNZD3vaCmVRvC9WKcEt29b-Z1pDjpohHuVQ>
+    <xmx:Oy2KYYQV99nP_4Wq7O2Z-0W_vfvz3cji7kj7Fd4dmE-SeJKLa5ZYmw>
+    <xmx:Oy2KYXJNfiBDfFCr3crxv6ssDUB-XhYDwyn4eq1fe66dJZ16p6EMFQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 9 Nov 2021 03:11:35 -0500 (EST)
+From:   Sachi King <nakato@nakato.io>
+To:     Chen Yu <yu.c.chen@intel.com>, Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Sachi King <nakato@nakato.io>, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] platform/surface: surfacepro3_button: don't load on amd variant
+Date:   Tue,  9 Nov 2021 19:11:25 +1100
+Message-Id: <20211109081125.41410-2-nakato@nakato.io>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20211109081125.41410-1-nakato@nakato.io>
+References: <20211109081125.41410-1-nakato@nakato.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211109000130.42361-1-hans-gert.dahmen@immu.ne>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 09, 2021 at 01:01:30AM +0100, Hans-Gert Dahmen wrote:
-> Make the 16MiB long memory-mapped BIOS region of the platform SPI flash
-> on X86_64 system available via /sys/kernel/firmware/flash_mmap/bios_region
-> for pen-testing, security analysis and malware detection on kernels
-> which restrict module loading and/or access to /dev/mem.
+The AMD variant of the Surface Laptop report 0 for their OEM platform
+revision.  The Surface devices that require the surfacepro3_button
+driver do not have the _DSM that gets the OEM platform revision.  If the
+method does not exist, load surfacepro3_button.
 
-That feels like a big security hole we would be opening up for no good
-reason.
+Fixes: 64dd243d7356 ("platform/x86: surfacepro3_button: Fix device check")
+Co-developed-by: Maximilian Luz <luzmaximilian@gmail.com>
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+Signed-off-by: Sachi King <nakato@nakato.io>
+---
+ drivers/platform/surface/surfacepro3_button.c | 30 ++++---------------
+ 1 file changed, 6 insertions(+), 24 deletions(-)
 
-> It will be used by the open source Converged Security Suite.
-> https://github.com/9elements/converged-security-suite
+diff --git a/drivers/platform/surface/surfacepro3_button.c b/drivers/platform/surface/surfacepro3_button.c
+index 242fb690dcaf..30eea54dbb47 100644
+--- a/drivers/platform/surface/surfacepro3_button.c
++++ b/drivers/platform/surface/surfacepro3_button.c
+@@ -149,7 +149,8 @@ static int surface_button_resume(struct device *dev)
+ /*
+  * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
+  * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
+- * device by checking for the _DSM method and OEM Platform Revision.
++ * device by checking for the _DSM method and OEM Platform Revision DSM
++ * function.
+  *
+  * Returns true if the driver should bind to this device, i.e. the device is
+  * either MSWH0028 (Pro 3) or MSHW0040 on a Pro 4 or Book 1.
+@@ -157,30 +158,11 @@ static int surface_button_resume(struct device *dev)
+ static bool surface_button_check_MSHW0040(struct acpi_device *dev)
+ {
+ 	acpi_handle handle = dev->handle;
+-	union acpi_object *result;
+-	u64 oem_platform_rev = 0;	// valid revisions are nonzero
+-
+-	// get OEM platform revision
+-	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
+-					 MSHW0040_DSM_REVISION,
+-					 MSHW0040_DSM_GET_OMPR,
+-					 NULL, ACPI_TYPE_INTEGER);
+-
+-	/*
+-	 * If evaluating the _DSM fails, the method is not present. This means
+-	 * that we have either MSHW0028 or MSHW0040 on Pro 4 or Book 1, so we
+-	 * should use this driver. We use revision 0 indicating it is
+-	 * unavailable.
+-	 */
+-
+-	if (result) {
+-		oem_platform_rev = result->integer.value;
+-		ACPI_FREE(result);
+-	}
+-
+-	dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
+ 
+-	return oem_platform_rev == 0;
++	// make sure that OEM platform revision DSM call does not exist
++	return !acpi_check_dsm(handle, &MSHW0040_DSM_UUID,
++			       MSHW0040_DSM_REVISION,
++			       BIT(MSHW0040_DSM_GET_OMPR));
+ }
+ 
+ 
+-- 
+2.33.0
 
-What is the reason for this, and what use is this new interface?
-
-> 
-> Signed-off-by: Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
-> ---
->  drivers/firmware/Kconfig             |  9 +++
->  drivers/firmware/Makefile            |  1 +
->  drivers/firmware/x86_64_flash_mmap.c | 86 ++++++++++++++++++++++++++++
-
-You forgot to document the new sysfs files in Documentation/ABI/ :(
-
-
->  3 files changed, 96 insertions(+)
->  create mode 100644 drivers/firmware/x86_64_flash_mmap.c
-> 
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index 75cb91055c17..27c2d0b074e0 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -293,6 +293,15 @@ config TURRIS_MOX_RWTM
->  	  other manufacturing data and also utilize the Entropy Bit Generator
->  	  for hardware random number generation.
->  
-> +config X86_64_FLASH_MMAP
-> +	tristate "Export platform flash memory-mapped BIOS region"
-> +	depends on X86_64
-> +	help
-> +	  Export the memory-mapped BIOS region of the platform SPI flash as
-> +	  a read-only sysfs binary attribute on X86_64 systems. The first 16MiB
-> +	  will be accessible via /sys/devices/platform/flash_mmap/bios_region
-> +	  for security and malware analysis for example.
-> +
->  source "drivers/firmware/arm_ffa/Kconfig"
->  source "drivers/firmware/broadcom/Kconfig"
->  source "drivers/firmware/cirrus/Kconfig"
-> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-> index 4e58cb474a68..60dc4ea08705 100644
-> --- a/drivers/firmware/Makefile
-> +++ b/drivers/firmware/Makefile
-> @@ -24,6 +24,7 @@ obj-$(CONFIG_SYSFB_SIMPLEFB)	+= sysfb_simplefb.o
->  obj-$(CONFIG_TI_SCI_PROTOCOL)	+= ti_sci.o
->  obj-$(CONFIG_TRUSTED_FOUNDATIONS) += trusted_foundations.o
->  obj-$(CONFIG_TURRIS_MOX_RWTM)	+= turris-mox-rwtm.o
-> +obj-$(CONFIG_X86_64_FLASH_MMAP)	+= x86_64_flash_mmap.o
->  
->  obj-y				+= arm_ffa/
->  obj-y				+= arm_scmi/
-> diff --git a/drivers/firmware/x86_64_flash_mmap.c b/drivers/firmware/x86_64_flash_mmap.c
-> new file mode 100644
-> index 000000000000..23d8655d17bb
-> --- /dev/null
-> +++ b/drivers/firmware/x86_64_flash_mmap.c
-> @@ -0,0 +1,86 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Export the memory-mapped BIOS region of the platform SPI flash as
-> + * a read-only sysfs binary attribute on X86_64 systems.
-> + *
-> + * Copyright © 2021 immune GmbH
-> + */
-> +
-> +#include <linux/version.h>
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/io.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define FLASH_REGION_START 0xFF000000ULL
-> +#define FLASH_REGION_SIZE 0x1000000ULL
-> +#define FLASH_REGION_MASK (FLASH_REGION_SIZE - 1)
-> +
-> +struct platform_device *pdev;
-> +
-> +static ssize_t bios_region_read(struct file *file, struct kobject *kobj,
-> +				struct bin_attribute *bin_attr, char *buffer,
-> +				loff_t offset, size_t count)
-> +{
-> +	resource_size_t pa;
-> +	size_t copysize, remapsize;
-> +	void __iomem *va;
-> +
-> +	offset = offset & FLASH_REGION_MASK;
-> +	pa = (FLASH_REGION_START + offset) & PAGE_MASK;
-> +
-> +	if ((offset + count) > FLASH_REGION_SIZE)
-> +		copysize = FLASH_REGION_SIZE - offset;
-> +	else
-> +		copysize = min(count, PAGE_SIZE);
-> +
-> +	if (((offset & ~PAGE_MASK) + copysize) > PAGE_SIZE)
-> +		remapsize = 2 * PAGE_SIZE;
-> +	else
-> +		remapsize = PAGE_SIZE;
-> +
-> +	va = ioremap(pa, remapsize);
-> +	memcpy_fromio(buffer, va, copysize);
-> +	iounmap(va);
-> +
-> +	return copysize;
-> +}
-> +
-> +static BIN_ATTR_RO(bios_region, FLASH_REGION_SIZE);
-> +
-> +static struct bin_attribute *flash_mmap_attrs[] = { &bin_attr_bios_region,
-> +						    NULL };
-> +
-> +static const struct attribute_group flash_mmap_group = {
-> +	.bin_attrs = flash_mmap_attrs,
-> +};
-> +
-> +static int __init flash_mmap_init(void)
-> +{
-> +	int ret;
-> +
-> +	pdev = platform_device_register_simple("flash_mmap", -1, NULL, 0);
-> +	if (IS_ERR(pdev))
-> +		return PTR_ERR(pdev);
-> +
-> +	ret = sysfs_create_group(&pdev->dev.kobj, &flash_mmap_group);
-
-You just raced with userspace and lost :(
-
-Please set the attribute to the platform driver before you create the
-device.
-
-Also, you just bound this driver to ANY platform that it was loaded on,
-with no actual detection of the hardware present, which feels like it
-could cause big problems on all platforms.  Please, if you really want
-to do this, restrict it to hardware that actually has the hardware you
-are wanting to access, not all machines in the world.
-
-thanks,
-
-greg k-h
