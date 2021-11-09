@@ -2,97 +2,142 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387C1C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 12:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD0CC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 12:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FADB610F8
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 12:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D6A60EE9
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 12:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242458AbhKIMdY (ORCPT
+        id S235943AbhKIMfl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Nov 2021 07:33:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58298 "EHLO
+        Tue, 9 Nov 2021 07:35:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231250AbhKIMdX (ORCPT
+        with ESMTP id S236039AbhKIMfl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Nov 2021 07:33:23 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0518C061764;
-        Tue,  9 Nov 2021 04:30:37 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id f8so76136636edy.4;
-        Tue, 09 Nov 2021 04:30:37 -0800 (PST)
+        Tue, 9 Nov 2021 07:35:41 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133A4C061764
+        for <platform-driver-x86@vger.kernel.org>; Tue,  9 Nov 2021 04:32:55 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id b12so32720746wrh.4
+        for <platform-driver-x86@vger.kernel.org>; Tue, 09 Nov 2021 04:32:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=immu-ne.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Izwf0rNKbmjX//l6OqTNxretUo1ZACTCQZpG5D1V0qY=;
-        b=Z/PuwOPXJ3QyXPwgTI9wO+h6I0yH2IfB0vfbX7zfIkNnrTuYgjwNTg8gUcIk9r3Lsh
-         nq7PTATk9O6PgJ+Ps9johoCLk8wGfs7N7urFewvSeQoV3S6g6hoyGPSPFSlhGO8nswXp
-         Wopwg9j50Op5IceG+odtGlfYttvwgb1Sp+2Opeio08MxPEP3azmUObThzL2+t8tsavPL
-         CfuvmInv622AoGVMwFbIWEPuNLZ+PyHulPDOIBAA2n6T9PplQExr3+UgfsETC8q8QL0S
-         aShTqkuyTtNI9AikZdMlx2sZ93ysgYLssinbMA+BR8WiPO7Gjfofs/3ddjA5wtnWVCNt
-         RZ8w==
+        bh=6vZ6aUIeCJbBlIO0Lv+WQYFDNRnVtb+GSHZa0RcE2rc=;
+        b=zjefnNTa5dG2lLyDyFwcYr3GkGFdRiMW0BfUjt11dHS7twn/Wx415BTEVSo+UwPmc3
+         RN0qNqol2NwaZG3z4qUFCf1L+MjGfPc8B1g6HqAgGHReiyj4nQRf4VEk71Zh7keJgcML
+         4JitDL82G2/YrG2OQThFdBv9TDmcUQL6KHLjy4E7fNVv9WPjDRDmc6fVQ0O18jau0P8d
+         zGB+NKmzP65RSpSB6dKXEHYDzNm02RKiLbMGIoaOZw9z7lkhR5+v4FhcMFbB20iMBayp
+         o5cdVdLyh28b7gsRtDoHuVB0JzR2jSOeY946ws55eUYej9prMz3GG0QpEeC8obCx5Dkk
+         aF2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Izwf0rNKbmjX//l6OqTNxretUo1ZACTCQZpG5D1V0qY=;
-        b=yXZzWshZouakFaAt0ML41JbzHDadg5i1PJmJicuwvE6XRymDw7f/6UEpDzTUsFUuJV
-         Qa84WOKfY32yAAdxMsDHb7dbrG7hYVsMqgPHs09dvUfCPHlWJRg2kxTHqLWftqhXzX9I
-         231t6RHs3rdvb8OL1hLi/1utPxpGNB4NJE3gu/o6su75/mcoLzb0vko5k9p1+mjnogEv
-         Or8vCAbFpZKr/vd2RgYXsHxmUD6LgqYcbDhGEu/v4u4HO1euoZyGXjCjVEOaKvi6FYPr
-         VVEG0Uq9Phf41rmLjnIwakSJ2aeknfBRF/JhUYDpBMV1ktksNKsZpZ1iy1+8K/CPhqiJ
-         3xkA==
-X-Gm-Message-State: AOAM532bWQetsLIv+POWSkF9DnNbsK0pNbtyAAacJZyjNWRTGcAws2UF
-        BZYnSvDVqyNV9GYq2KBA4UNnRsGjo3+OWGgqaC8=
-X-Google-Smtp-Source: ABdhPJxDCOOSrJrsdArOYFSqCctbOnu9Joe6Dm69fx4ZRvWaZkOHluNqKBfMst7bcVTnfdqsUbuH2jYNQs+b4XxgduE=
-X-Received: by 2002:a17:906:489b:: with SMTP id v27mr8851114ejq.567.1636461036427;
- Tue, 09 Nov 2021 04:30:36 -0800 (PST)
+        bh=6vZ6aUIeCJbBlIO0Lv+WQYFDNRnVtb+GSHZa0RcE2rc=;
+        b=sFPDN+m+IdjCNQripv5+Md09YKeqtHKqr86gV7iNaGL77vX9KQ/2uukOwP2TppyzF1
+         AYx0kj20Alm8Cr9yFJMLKgVY61qDsS6jfQSeIzOiClTL7kFNSg5m3CAI6rv7iskNXcEG
+         PNUHlgSBjMZVwkKceVVy18CXfG9r2TC20D9KVjIwVmH//+XIGXtLzNpKZixbML/nNi2a
+         PeqEAcjkceUBQfTduqO59Pod4ECu8I2RtPgXNpuUdZllCGso93MadrmNUEgWAfoLm9Wb
+         uYxxJCqY1m5aNN9BOr//WqD361i99obSHtBTGJdxGai/3cNz2ZCdSWXGXg1UtCsDaf2X
+         uaKw==
+X-Gm-Message-State: AOAM5321ALoUUh1yji40s7BZZinSxO4+4hslpOr5EMAi05DHFxlgmxDq
+        y5crwvZJ9yFpy6Z4j93E1TbHxyQHOwUMo/mtkdc5aQ==
+X-Google-Smtp-Source: ABdhPJxBVGq3/twpZtrzbiJORWrfHffp4rl1UwLaiG27C8lDBzeYC7fhbtt4/m1JVkrSQn260BYhdO/Q3ZlAgtSOg5Q=
+X-Received: by 2002:a5d:6c6b:: with SMTP id r11mr8800449wrz.231.1636461173687;
+ Tue, 09 Nov 2021 04:32:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20211025094119.82967-1-hdegoede@redhat.com> <20211025094119.82967-5-hdegoede@redhat.com>
- <YYpmMNefsGUhqJ9W@paasikivi.fi.intel.com>
-In-Reply-To: <YYpmMNefsGUhqJ9W@paasikivi.fi.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 9 Nov 2021 14:29:51 +0200
-Message-ID: <CAHp75VeGR8_53ZEXAtQ9oQXGfLoVfS6a+RNWWgA6Hi6oq7_02g@mail.gmail.com>
-Subject: Re: [PATCH v4 04/11] regulator: Introduce tps68470-regulator driver
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Kate Hsuan <hpa@redhat.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
+References: <20211109000130.42361-1-hans-gert.dahmen@immu.ne>
+ <YYoSPjF3M05dR0PX@kroah.com> <42cea157-55a2-bd12-335b-6348f0ff6525@immu.ne> <YYpNOMtp7Kwf0fho@kroah.com>
+In-Reply-To: <YYpNOMtp7Kwf0fho@kroah.com>
+From:   Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
+Date:   Tue, 9 Nov 2021 13:32:48 +0100
+Message-ID: <CAHifhD4f676jiQ52siiKQTjUFXFm6Sto8pQjF07w5y+gqrUvFQ@mail.gmail.com>
+Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via sysfs
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Philipp Deppenwiese <philipp.deppenwiese@immu.ne>,
+        Mauro Lima <mauro.lima@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>,
+        platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 9, 2021 at 2:14 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
-> On Mon, Oct 25, 2021 at 11:41:12AM +0200, Hans de Goede wrote:
-
-> > Changes in v4:
-> > - Make the top comment block use c++ style comments
+On Tue, 9 Nov 2021, 11:28 Greg KH, <gregkh@linuxfoundation.org> wrote:
 >
-> Why?
+> On Tue, Nov 09, 2021 at 09:52:53AM +0100, Hans-Gert Dahmen wrote:
+> > On 09.11.21 07:16, Greg KH wrote:
+> > > On Tue, Nov 09, 2021 at 01:01:30AM +0100, Hans-Gert Dahmen wrote:
+> > > > Make the 16MiB long memory-mapped BIOS region of the platform SPI flash
+> > > > on X86_64 system available via /sys/kernel/firmware/flash_mmap/bios_region
+> > > > for pen-testing, security analysis and malware detection on kernels
+> > > > which restrict module loading and/or access to /dev/mem.
+> > >
+> > > That feels like a big security hole we would be opening up for no good
+> > > reason.
+> > >
+> > > > It will be used by the open source Converged Security Suite.
+> > > > https://github.com/9elements/converged-security-suite
+> > >
+> > > What is the reason for this, and what use is this new interface?
+> > Because it is very hard to access the SPI flash to read the BIOS contents
+> > for (security) analysis and this works without the more complex and
+> > unfinished SPI drivers and it does so on a system where we may not access
+> > the full /dev/mem.
+>
+> Why not fix the spi drivers to do this properly?  What is preventing you
+> from doing that instead of adding a new user/kernel api that you will
+> have to support for the next 20+ years?
+>
 
-Subsystem maintainer requirement.
+Because this interface we want to use is inherently tied to the
+workings of x86_64 CPUs. It is very stable and easy to use. The SPI
+drivers in contrast have a history of being complex, buggy and in
+general not reliable. This module will require very little maintenance
+and will probably work in the future without needing modification for
+newer platforms. It generally is meant as a fallback to the real SPI
+flash drivers so that userspace programs are able to provide essential
+functionality.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > > > +static int __init flash_mmap_init(void)
+> > > > +{
+> > > > + int ret;
+> > > > +
+> > > > + pdev = platform_device_register_simple("flash_mmap", -1, NULL, 0);
+> > > > + if (IS_ERR(pdev))
+> > > > +         return PTR_ERR(pdev);
+> > > > +
+> > > > + ret = sysfs_create_group(&pdev->dev.kobj, &flash_mmap_group);
+> > >
+> > > You just raced with userspace and lost  >
+> > > Please set the attribute to the platform driver before you create the
+> > > device.
+> > >
+> >
+> > Sorry, but I went through tons of code and could not find a single instance
+> > where I can use a default group for creation without using a probe function
+> > that does the magic for me. Please help me find the correct way of doing
+> > this without manually creating and adding kobjects.
+>
+> The problem here is that you are abusing the platform driver code and
+> making a "fake" device that is not attached to anything real, and
+> without a driver.  That should not be done, as you do not know what
+> hardware this driver is going to be run on.
+>
+> Bind to the real hardware resource please.
+
+In a previous mail in June you suggested this is some sort of platform
+device, that is why I rewrote it as such. The hardware resource here
+is the south bridge for x86_64 CPUs and the module dependencies will
+compile it only for these platforms. The situation is like, if you
+have that CPU, you have the hardware, so it is implicitly bound or it
+just will not execute on a machine code level. I feel like your
+requirement is somewhat impossible to satisfy and I really don't know
+what to do. Please, can anyone help me by pointing out a proper
+example elsewhere in the kernel?
+
+Hans-Gert
