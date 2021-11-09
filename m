@@ -2,117 +2,192 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D904C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 04:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B387DC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 06:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86A3061130
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 04:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9100A611AF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 06:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242673AbhKIEJl (ORCPT
+        id S239192AbhKIGTa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Nov 2021 23:09:41 -0500
-Received: from mail-oi1-f174.google.com ([209.85.167.174]:38756 "EHLO
-        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242516AbhKIEJZ (ORCPT
+        Tue, 9 Nov 2021 01:19:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230011AbhKIGT3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Nov 2021 23:09:25 -0500
-Received: by mail-oi1-f174.google.com with SMTP id r26so10167398oiw.5;
-        Mon, 08 Nov 2021 20:06:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=yWjEoiTmBnd7kKiE2670l9/aYrullxFB3tI7lE4jPLI=;
-        b=I1bEwN3gGz2Nr22VqfPt53yRF6LmRPUiil7GPWzNr0kb5mvcMpf2Jirz2g2YFx4Lq+
-         0MasgCvbpwffiXkoqh68iWOs4hX52BjJpa3/ZJoGHty7OAmlTa4JaieUEsB/S2/MzQA0
-         saUdHqg1tpVivny0AAVnK9TH3eT0m5uHhMUNxcJo3tc3W65euBqM5iqhnAwNJsJn+/JE
-         R/3+5W0xD9/ci4f2dckNlerbxB+Mi6WQXecN6K7tqbkNMi5SFHSpCi0j70/M4CCUn89t
-         DXXkTla5yr7oAbjjS12WJGR71G26kxyNALmWFuAY6NgL/UT3g+JAouzNDGgAf0gI0mgz
-         a9GQ==
-X-Gm-Message-State: AOAM533w8NZnOty+4aYHFNtQQSgaqACe2x9vOA+92urwTr2clwh+E8Yr
-        G++58d9m1PS82+927eEJgRH6CxuBpQ==
-X-Google-Smtp-Source: ABdhPJzE9iIxM9m48OrJ/Egben0+1clK6xGops/L6ZzAdXtZMvt+oX5UJ1xi7S0LdLsDtDAr4S/IYg==
-X-Received: by 2002:a05:6808:2017:: with SMTP id q23mr3108540oiw.122.1636430799739;
-        Mon, 08 Nov 2021 20:06:39 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id k24sm6117571oou.18.2021.11.08.20.06.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Nov 2021 20:06:39 -0800 (PST)
-Received: (nullmailer pid 743047 invoked by uid 1000);
-        Tue, 09 Nov 2021 04:06:29 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Jarrett Schultz <jaschultzms@gmail.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-kernel@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Jarrett Schultz <jaschultz@microsoft.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jarrett Schultz <jaschultzMS@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-In-Reply-To: <20211108164449.3036210-2-jaschultz@microsoft.com>
-References: <20211108164449.3036210-1-jaschultz@microsoft.com> <20211108164449.3036210-2-jaschultz@microsoft.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: platform: microsoft: Document surface xbl
-Date:   Mon, 08 Nov 2021 22:06:29 -0600
-Message-Id: <1636430789.960811.743046.nullmailer@robh.at.kernel.org>
+        Tue, 9 Nov 2021 01:19:29 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 27747611BF;
+        Tue,  9 Nov 2021 06:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1636438604;
+        bh=Pj0w/765nIeUinsdw2x8elro8Twg48Pg8i+XxslDxxs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bPXNt/UaJM8HsokBr6UYcVV3VdTwHbWw43zmUsMUEk0LkPtFVhluqS9SQEfUS2MjE
+         AuftfEYa7KgmveH4dEUY+q956qpISuVkwdsBavto6NkGrEV3K2VEpbxiiiSULhOdBo
+         T6Hq33mkcBl0UtQZAi4UCA1VDcpRqFILaCyjdHs0=
+Date:   Tue, 9 Nov 2021 07:16:30 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        philipp.deppenwiese@immu.ne, mauro.lima@eclypsium.com,
+        hughsient@gmail.com, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via
+ sysfs
+Message-ID: <YYoSPjF3M05dR0PX@kroah.com>
+References: <20211109000130.42361-1-hans-gert.dahmen@immu.ne>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211109000130.42361-1-hans-gert.dahmen@immu.ne>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 08 Nov 2021 08:44:45 -0800, Jarrett Schultz wrote:
-> Introduce yaml for surface xbl driver.
+On Tue, Nov 09, 2021 at 01:01:30AM +0100, Hans-Gert Dahmen wrote:
+> Make the 16MiB long memory-mapped BIOS region of the platform SPI flash
+> on X86_64 system available via /sys/kernel/firmware/flash_mmap/bios_region
+> for pen-testing, security analysis and malware detection on kernels
+> which restrict module loading and/or access to /dev/mem.
+
+That feels like a big security hole we would be opening up for no good
+reason.
+
+> It will be used by the open source Converged Security Suite.
+> https://github.com/9elements/converged-security-suite
+
+What is the reason for this, and what use is this new interface?
+
 > 
-> Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
-> 
+> Signed-off-by: Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
 > ---
+>  drivers/firmware/Kconfig             |  9 +++
+>  drivers/firmware/Makefile            |  1 +
+>  drivers/firmware/x86_64_flash_mmap.c | 86 ++++++++++++++++++++++++++++
+
+You forgot to document the new sysfs files in Documentation/ABI/ :(
+
+
+>  3 files changed, 96 insertions(+)
+>  create mode 100644 drivers/firmware/x86_64_flash_mmap.c
 > 
-> Changes in v2:
->  - Removed json-schema dependence
->  - Elaborated on description of driver
->  - Updated example
-> 
-> ---
-> 
->  .../platform/microsoft/surface-xbl.yaml       | 57 +++++++++++++++++++
->  MAINTAINERS                                   |  7 +++
->  2 files changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> 
+> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+> index 75cb91055c17..27c2d0b074e0 100644
+> --- a/drivers/firmware/Kconfig
+> +++ b/drivers/firmware/Kconfig
+> @@ -293,6 +293,15 @@ config TURRIS_MOX_RWTM
+>  	  other manufacturing data and also utilize the Entropy Bit Generator
+>  	  for hardware random number generation.
+>  
+> +config X86_64_FLASH_MMAP
+> +	tristate "Export platform flash memory-mapped BIOS region"
+> +	depends on X86_64
+> +	help
+> +	  Export the memory-mapped BIOS region of the platform SPI flash as
+> +	  a read-only sysfs binary attribute on X86_64 systems. The first 16MiB
+> +	  will be accessible via /sys/devices/platform/flash_mmap/bios_region
+> +	  for security and malware analysis for example.
+> +
+>  source "drivers/firmware/arm_ffa/Kconfig"
+>  source "drivers/firmware/broadcom/Kconfig"
+>  source "drivers/firmware/cirrus/Kconfig"
+> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+> index 4e58cb474a68..60dc4ea08705 100644
+> --- a/drivers/firmware/Makefile
+> +++ b/drivers/firmware/Makefile
+> @@ -24,6 +24,7 @@ obj-$(CONFIG_SYSFB_SIMPLEFB)	+= sysfb_simplefb.o
+>  obj-$(CONFIG_TI_SCI_PROTOCOL)	+= ti_sci.o
+>  obj-$(CONFIG_TRUSTED_FOUNDATIONS) += trusted_foundations.o
+>  obj-$(CONFIG_TURRIS_MOX_RWTM)	+= turris-mox-rwtm.o
+> +obj-$(CONFIG_X86_64_FLASH_MMAP)	+= x86_64_flash_mmap.o
+>  
+>  obj-y				+= arm_ffa/
+>  obj-y				+= arm_scmi/
+> diff --git a/drivers/firmware/x86_64_flash_mmap.c b/drivers/firmware/x86_64_flash_mmap.c
+> new file mode 100644
+> index 000000000000..23d8655d17bb
+> --- /dev/null
+> +++ b/drivers/firmware/x86_64_flash_mmap.c
+> @@ -0,0 +1,86 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Export the memory-mapped BIOS region of the platform SPI flash as
+> + * a read-only sysfs binary attribute on X86_64 systems.
+> + *
+> + * Copyright © 2021 immune GmbH
+> + */
+> +
+> +#include <linux/version.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define FLASH_REGION_START 0xFF000000ULL
+> +#define FLASH_REGION_SIZE 0x1000000ULL
+> +#define FLASH_REGION_MASK (FLASH_REGION_SIZE - 1)
+> +
+> +struct platform_device *pdev;
+> +
+> +static ssize_t bios_region_read(struct file *file, struct kobject *kobj,
+> +				struct bin_attribute *bin_attr, char *buffer,
+> +				loff_t offset, size_t count)
+> +{
+> +	resource_size_t pa;
+> +	size_t copysize, remapsize;
+> +	void __iomem *va;
+> +
+> +	offset = offset & FLASH_REGION_MASK;
+> +	pa = (FLASH_REGION_START + offset) & PAGE_MASK;
+> +
+> +	if ((offset + count) > FLASH_REGION_SIZE)
+> +		copysize = FLASH_REGION_SIZE - offset;
+> +	else
+> +		copysize = min(count, PAGE_SIZE);
+> +
+> +	if (((offset & ~PAGE_MASK) + copysize) > PAGE_SIZE)
+> +		remapsize = 2 * PAGE_SIZE;
+> +	else
+> +		remapsize = PAGE_SIZE;
+> +
+> +	va = ioremap(pa, remapsize);
+> +	memcpy_fromio(buffer, va, copysize);
+> +	iounmap(va);
+> +
+> +	return copysize;
+> +}
+> +
+> +static BIN_ATTR_RO(bios_region, FLASH_REGION_SIZE);
+> +
+> +static struct bin_attribute *flash_mmap_attrs[] = { &bin_attr_bios_region,
+> +						    NULL };
+> +
+> +static const struct attribute_group flash_mmap_group = {
+> +	.bin_attrs = flash_mmap_attrs,
+> +};
+> +
+> +static int __init flash_mmap_init(void)
+> +{
+> +	int ret;
+> +
+> +	pdev = platform_device_register_simple("flash_mmap", -1, NULL, 0);
+> +	if (IS_ERR(pdev))
+> +		return PTR_ERR(pdev);
+> +
+> +	ret = sysfs_create_group(&pdev->dev.kobj, &flash_mmap_group);
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+You just raced with userspace and lost :(
 
-yamllint warnings/errors:
+Please set the attribute to the platform driver before you create the
+device.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml: 'additionalProperties' is a required property
-	hint: A schema without a "$ref" to another schema must define all properties and use "additionalProperties"
-	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml: ignoring, error in schema: 
-warning: no schema found in file: ./Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-Documentation/devicetree/bindings/platform/microsoft/surface-xbl.example.dts:44.11-48: Warning (ranges_format): /example-1/imem@146bf000:ranges: "ranges" property has invalid length (16 bytes) (parent #address-cells == 1, child #address-cells == 1, #size-cells == 1)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.example.dt.yaml: example-0: xbl@146bfa94:reg:0: [0, 342620820, 0, 256] is too long
-	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
-Documentation/devicetree/bindings/platform/microsoft/surface-xbl.example.dt.yaml:0:0: /example-0/xbl@146bfa94: failed to match any schema with compatible: ['microsoft,sm8150-surface-duo-xbl']
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.example.dt.yaml: example-1: imem@146bf000:reg:0: [0, 342618112, 0, 4096] is too long
-	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
-Documentation/devicetree/bindings/platform/microsoft/surface-xbl.example.dt.yaml:0:0: /example-1/imem@146bf000/xbl@a94: failed to match any schema with compatible: ['microsoft,sm8150-surface-duo-xbl']
+Also, you just bound this driver to ANY platform that it was loaded on,
+with no actual detection of the hardware present, which feels like it
+could cause big problems on all platforms.  Please, if you really want
+to do this, restrict it to hardware that actually has the hardware you
+are wanting to access, not all machines in the world.
 
-doc reference errors (make refcheckdocs):
+thanks,
 
-See https://patchwork.ozlabs.org/patch/1552442
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+greg k-h
