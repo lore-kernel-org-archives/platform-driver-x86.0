@@ -2,236 +2,206 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FEBC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 13:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE52C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 14:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D65961205
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 13:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F70C611BF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 14:10:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236069AbhKIN6x (ORCPT
+        id S234233AbhKIOMs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Nov 2021 08:58:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49486 "EHLO
+        Tue, 9 Nov 2021 09:12:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231137AbhKIN6w (ORCPT
+        with ESMTP id S231839AbhKIOMr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Nov 2021 08:58:52 -0500
-Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E59C061764
-        for <platform-driver-x86@vger.kernel.org>; Tue,  9 Nov 2021 05:56:06 -0800 (PST)
-Received: by mail-vk1-xa36.google.com with SMTP id f7so770671vkf.10
-        for <platform-driver-x86@vger.kernel.org>; Tue, 09 Nov 2021 05:56:06 -0800 (PST)
+        Tue, 9 Nov 2021 09:12:47 -0500
+Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E29C061764
+        for <platform-driver-x86@vger.kernel.org>; Tue,  9 Nov 2021 06:10:01 -0800 (PST)
+Received: by mail-vk1-xa35.google.com with SMTP id 84so8219846vkc.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 09 Nov 2021 06:10:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=eclypsium.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=N2NSdGItuH/fcx4ggcFuCYc3KaY8OKz0UKwkgWXZOwg=;
-        b=CVLY+KS35il+CjF+6bh+XNIL4HsoiDrsb5cYUFBDNbGgN3srhceuD11mFJ0GOVw7WK
-         xczIUU+nX/sm9RR8HM2Pwa8d0dY8J6rOCI/Fqp4LKM/8y3VIyGJIVAXiFu0qVxlvyDJq
-         XulF4w1UmoUBB+U1Tiz4e/NJPsWbke42UNV1y3LO9fae3gW8MM7jOj26YgiIZuykxY6s
-         pCCDr+ItawGyUUBSZSvU3jYI0GQswI59BFvi4n3teHDrJpOAvcxtgpgzr5N6ZK7dHUVB
-         bmJevEiZrqC2UxGkzBnwdetr+JNRGNvGCW8ztV8p5jLfeEd0rk62bDsEUI0I+iIAF8dn
-         /vuA==
+         :cc;
+        bh=/J4gthd3qA7NoGBc7YDjUAL5EF4s746/NmksKEqqClY=;
+        b=E+Y3y8rDnFkA6I6Aq+x2QVjkohJVEoe+lUX53ZwKnjmYLDyLyb2413yUTxBao5qxlY
+         DdzUx3EdJzIaOJxyeYEykGzV44BHzI9pTMWuHqKggENG5uVtKYBXYyc//Voc0mVOVoKt
+         6WTymGVW2t7g5k+mpgCWeBH0g0JvY5rioa56h/BY/kNFk7P1OIxWp7vtcCeL85MfxbFG
+         zUviE5k0/J9V1PDIgoodIpVdsuexCsZSI/2moTLYsyqUxOmyfey+NnWLxhHWsn+bUSU3
+         CxG5+3WCGYJFrKcc2MfXK23uIaRhbCTqCPpHvN2yx/Vtt6mGNAzTvIyMvbN9krZ/CuQ8
+         y+4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=N2NSdGItuH/fcx4ggcFuCYc3KaY8OKz0UKwkgWXZOwg=;
-        b=LYObsMS5F6YkRbnyBWgqG6OvYcn9/RmtHHsdmTaHz9Dq/KguWHjFWT+jnSs2uzKtSp
-         ByIaJ6od36diCi42TtHoeXTvcKnDabt78fDc+Al5SeDGtyJGP2glFGqBOtU/SLeNPDWp
-         P7HA+tPMTxxcuwmCvFQJlRlimajrmYEGwSjXt5tRhh7KGI/O9bqAKrzOn+qQWS7dFMdT
-         09S2eUoUrjWVz+l810E5bSZbdqIDRKb0KeDFNQ7NCc6B+OtHsgalrhmUah3nZucLeXPD
-         BHw+nIpBUu4Zfm/5HZ4TXzTgOEXDkidhGxTWgILddF0SsidEZjqjpophmlsEzoXa1ZmW
-         HBcQ==
-X-Gm-Message-State: AOAM532WNVKlcIj8Pu2M2SALPN2xEPJOhEjv76IilCVjzJIsxQnv4v6B
-        uUageTtGGSDEhfMLI85C/d0Jqi71NvTCKQCCEgVlJg==
-X-Google-Smtp-Source: ABdhPJxZtw35lHOr93Yk27TdEM8xHLSbd7kXw2FSOfNX0T613BLywsPz6ZcyhR6l5svUdWt8qrwV9HBRcxilPtdejJk=
-X-Received: by 2002:a05:6122:54b:: with SMTP id y11mr11339421vko.16.1636466165951;
- Tue, 09 Nov 2021 05:56:05 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=/J4gthd3qA7NoGBc7YDjUAL5EF4s746/NmksKEqqClY=;
+        b=bDnkrdWwPgath+i1s7UvZKU1qQhamm/YnOSSt6ZOJVlHCC5SZbKNXNFu7WL0dhRlzu
+         vTSeCMahUHfncUj22Y0fJHlOYBu0WiUA8L5Cui1C0AnS8LNJJ23h+yPGPeTbQIFrfhvU
+         1ip+CObQDAZxirwnYuOLd09Kig9C7vh5kgyB+0VxM2qbpIVXMXIzdF+CRUZPPl6+ZnuA
+         CCohUhQSCLOsR+qmjWSBfoIJ5S5iYtiWHKyq4oq/3vdrEX8MLoTx7OmtBjBh5nDdjBk+
+         ZrfhAseEcG762PQFk4n1wiBaIjk5/wTJIZYeyO6jsqWwdO5hGSdRvK1sEDMycXF6wNB+
+         XAsg==
+X-Gm-Message-State: AOAM530KNul41uE379UW0jVNjA0zmKyiuvfHxytMO/zV149/ba23LNMI
+        M1oCr8zJleskb3uhvADNxqnHGBQwu+VmzvPi3vsEFQ==
+X-Google-Smtp-Source: ABdhPJyqcLbh34J3Whum4K1oX0clsySWSkOOsImf+tTGRSpAGHCGg6D/eL8wKTY+OirhAkMiMfaoJt+86aZIimYdGbc=
+X-Received: by 2002:a05:6122:1803:: with SMTP id ay3mr11940761vkb.24.1636467000684;
+ Tue, 09 Nov 2021 06:10:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20211109000130.42361-1-hans-gert.dahmen@immu.ne> <YYoSPjF3M05dR0PX@kroah.com>
-In-Reply-To: <YYoSPjF3M05dR0PX@kroah.com>
+References: <20211109000130.42361-1-hans-gert.dahmen@immu.ne>
+ <YYoSPjF3M05dR0PX@kroah.com> <42cea157-55a2-bd12-335b-6348f0ff6525@immu.ne>
+ <YYpNOMtp7Kwf0fho@kroah.com> <CAHifhD4f676jiQ52siiKQTjUFXFm6Sto8pQjF07w5y+gqrUvFQ@mail.gmail.com>
+ <YYpsq/umygfTb8mM@kroah.com>
+In-Reply-To: <YYpsq/umygfTb8mM@kroah.com>
 From:   Mauro Lima <mauro.lima@eclypsium.com>
-Date:   Tue, 9 Nov 2021 10:55:54 -0300
-Message-ID: <CAArk9MN99YjKV2AKCYsUqh7LNVCb2ddvcSnRgGGsXePkM6Q86Q@mail.gmail.com>
+Date:   Tue, 9 Nov 2021 11:09:49 -0300
+Message-ID: <CAArk9MNtj9Q3kREOM_fhgUWSMhP15dGd3Mzg30pgG+RkKL-DQg@mail.gmail.com>
 Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via sysfs
 To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>,
         akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        philipp.deppenwiese@immu.ne, Richard Hughes <hughsient@gmail.com>,
+        Philipp Deppenwiese <philipp.deppenwiese@immu.ne>,
+        Richard Hughes <hughsient@gmail.com>,
         platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi all,
+On Tue, Nov 9, 2021 at 9:42 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Nov 09, 2021 at 01:32:48PM +0100, Hans-Gert Dahmen wrote:
+> > On Tue, 9 Nov 2021, 11:28 Greg KH, <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Nov 09, 2021 at 09:52:53AM +0100, Hans-Gert Dahmen wrote:
+> > > > On 09.11.21 07:16, Greg KH wrote:
+> > > > > On Tue, Nov 09, 2021 at 01:01:30AM +0100, Hans-Gert Dahmen wrote:
+> > > > > > Make the 16MiB long memory-mapped BIOS region of the platform SPI flash
+> > > > > > on X86_64 system available via /sys/kernel/firmware/flash_mmap/bios_region
+> > > > > > for pen-testing, security analysis and malware detection on kernels
+> > > > > > which restrict module loading and/or access to /dev/mem.
+> > > > >
+> > > > > That feels like a big security hole we would be opening up for no good
+> > > > > reason.
+> > > > >
+> > > > > > It will be used by the open source Converged Security Suite.
+> > > > > > https://github.com/9elements/converged-security-suite
+> > > > >
+> > > > > What is the reason for this, and what use is this new interface?
+> > > > Because it is very hard to access the SPI flash to read the BIOS contents
+> > > > for (security) analysis and this works without the more complex and
+> > > > unfinished SPI drivers and it does so on a system where we may not access
+> > > > the full /dev/mem.
+> > >
+> > > Why not fix the spi drivers to do this properly?  What is preventing you
+> > > from doing that instead of adding a new user/kernel api that you will
+> > > have to support for the next 20+ years?
+> > >
+> >
+> > Because this interface we want to use is inherently tied to the
+> > workings of x86_64 CPUs. It is very stable and easy to use. The SPI
+> > drivers in contrast have a history of being complex, buggy and in
+> > general not reliable.
+>
+> Do you have a pointer to these complex and buggy drivers anywhere?
 
-On Tue, Nov 9, 2021 at 3:16 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+Right now the intel spi driver has a _(DANGEROUS)_ tag [1], this is
+preventing the kernel engineers from compiling the driver into
+different distros.
+A couple of months ago I tried to modify the driver and make it RO [2]
+ but the drivers author told me that they don't want to remove the
+tag, even if the driver is compiled without any write/erase
+functionality as I proposed.
+The driver is fixed as the author claims but, as I said, they want to
+preserve the tag.
+This patch is close to what we need if we can't use the intel spi mechanism.
+
 >
-> On Tue, Nov 09, 2021 at 01:01:30AM +0100, Hans-Gert Dahmen wrote:
-> > Make the 16MiB long memory-mapped BIOS region of the platform SPI flash
-> > on X86_64 system available via /sys/kernel/firmware/flash_mmap/bios_reg=
-ion
-> > for pen-testing, security analysis and malware detection on kernels
-> > which restrict module loading and/or access to /dev/mem.
+> > This module will require very little maintenance
+> > and will probably work in the future without needing modification for
+> > newer platforms. It generally is meant as a fallback to the real SPI
+> > flash drivers so that userspace programs are able to provide essential
+> > functionality.
 >
-> That feels like a big security hole we would be opening up for no good
-> reason.
-Please, can you explain why this could be a security hole?
-IMO if the host is compromised the attacker already has information
-about the BIOS version, and after a quick lookup they know the BIOS
-vulnerabilities or the lack of them.
+> If it is a "fallback", how is it going to interact on a system where the
+> SPI driver is loaded?
 >
-> > It will be used by the open source Converged Security Suite.
-> > https://github.com/9elements/converged-security-suite
->
-> What is the reason for this, and what use is this new interface?
-In Eclypsium we are also interested in being able to dump the actual
-binary from hosts and compare them to see if they are corrupted
-somehow.
->
+> > > > > > +static int __init flash_mmap_init(void)
+> > > > > > +{
+> > > > > > + int ret;
+> > > > > > +
+> > > > > > + pdev = platform_device_register_simple("flash_mmap", -1, NULL, 0);
+> > > > > > + if (IS_ERR(pdev))
+> > > > > > +         return PTR_ERR(pdev);
+> > > > > > +
+> > > > > > + ret = sysfs_create_group(&pdev->dev.kobj, &flash_mmap_group);
+> > > > >
+> > > > > You just raced with userspace and lost  >
+> > > > > Please set the attribute to the platform driver before you create the
+> > > > > device.
+> > > > >
+> > > >
+> > > > Sorry, but I went through tons of code and could not find a single instance
+> > > > where I can use a default group for creation without using a probe function
+> > > > that does the magic for me. Please help me find the correct way of doing
+> > > > this without manually creating and adding kobjects.
+> > >
+> > > The problem here is that you are abusing the platform driver code and
+> > > making a "fake" device that is not attached to anything real, and
+> > > without a driver.  That should not be done, as you do not know what
+> > > hardware this driver is going to be run on.
+> > >
+> > > Bind to the real hardware resource please.
 > >
-> > Signed-off-by: Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
-> > ---
-> >  drivers/firmware/Kconfig             |  9 +++
-> >  drivers/firmware/Makefile            |  1 +
-> >  drivers/firmware/x86_64_flash_mmap.c | 86 ++++++++++++++++++++++++++++
+> > In a previous mail in June you suggested this is some sort of platform
+> > device, that is why I rewrote it as such.
 >
-> You forgot to document the new sysfs files in Documentation/ABI/ :(
+> That's fine, but bind to the real platform device that describes this
+> hardware!  You are not doing anything like this at all here, you are
+> just creating a random device in the sysfs tree and instantly allowing
+> userspace access to raw memory.  You are not actually controlling the
+> platform device at all.
 >
+> > The hardware resource here
+> > is the south bridge for x86_64 CPUs and the module dependencies will
+> > compile it only for these platforms.
 >
-> >  3 files changed, 96 insertions(+)
-> >  create mode 100644 drivers/firmware/x86_64_flash_mmap.c
-> >
-> > diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> > index 75cb91055c17..27c2d0b074e0 100644
-> > --- a/drivers/firmware/Kconfig
-> > +++ b/drivers/firmware/Kconfig
-> > @@ -293,6 +293,15 @@ config TURRIS_MOX_RWTM
-> >         other manufacturing data and also utilize the Entropy Bit Gener=
-ator
-> >         for hardware random number generation.
-> >
-> > +config X86_64_FLASH_MMAP
-> > +     tristate "Export platform flash memory-mapped BIOS region"
-> > +     depends on X86_64
-> > +     help
-> > +       Export the memory-mapped BIOS region of the platform SPI flash =
-as
-> > +       a read-only sysfs binary attribute on X86_64 systems. The first=
- 16MiB
-> > +       will be accessible via /sys/devices/platform/flash_mmap/bios_re=
-gion
-> > +       for security and malware analysis for example.
-> > +
-> >  source "drivers/firmware/arm_ffa/Kconfig"
-> >  source "drivers/firmware/broadcom/Kconfig"
-> >  source "drivers/firmware/cirrus/Kconfig"
-> > diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-> > index 4e58cb474a68..60dc4ea08705 100644
-> > --- a/drivers/firmware/Makefile
-> > +++ b/drivers/firmware/Makefile
-> > @@ -24,6 +24,7 @@ obj-$(CONFIG_SYSFB_SIMPLEFB)        +=3D sysfb_simple=
-fb.o
-> >  obj-$(CONFIG_TI_SCI_PROTOCOL)        +=3D ti_sci.o
-> >  obj-$(CONFIG_TRUSTED_FOUNDATIONS) +=3D trusted_foundations.o
-> >  obj-$(CONFIG_TURRIS_MOX_RWTM)        +=3D turris-mox-rwtm.o
-> > +obj-$(CONFIG_X86_64_FLASH_MMAP)      +=3D x86_64_flash_mmap.o
-> >
-> >  obj-y                                +=3D arm_ffa/
-> >  obj-y                                +=3D arm_scmi/
-> > diff --git a/drivers/firmware/x86_64_flash_mmap.c b/drivers/firmware/x8=
-6_64_flash_mmap.c
-> > new file mode 100644
-> > index 000000000000..23d8655d17bb
-> > --- /dev/null
-> > +++ b/drivers/firmware/x86_64_flash_mmap.c
-> > @@ -0,0 +1,86 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Export the memory-mapped BIOS region of the platform SPI flash as
-> > + * a read-only sysfs binary attribute on X86_64 systems.
-> > + *
-> > + * Copyright =C2=A9 2021 immune GmbH
-> > + */
-> > +
-> > +#include <linux/version.h>
-> > +#include <linux/init.h>
-> > +#include <linux/module.h>
-> > +#include <linux/io.h>
-> > +#include <linux/sysfs.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#define FLASH_REGION_START 0xFF000000ULL
-> > +#define FLASH_REGION_SIZE 0x1000000ULL
-> > +#define FLASH_REGION_MASK (FLASH_REGION_SIZE - 1)
-> > +
-> > +struct platform_device *pdev;
-> > +
-> > +static ssize_t bios_region_read(struct file *file, struct kobject *kob=
-j,
-> > +                             struct bin_attribute *bin_attr, char *buf=
-fer,
-> > +                             loff_t offset, size_t count)
-> > +{
-> > +     resource_size_t pa;
-> > +     size_t copysize, remapsize;
-> > +     void __iomem *va;
-> > +
-> > +     offset =3D offset & FLASH_REGION_MASK;
-> > +     pa =3D (FLASH_REGION_START + offset) & PAGE_MASK;
-> > +
-> > +     if ((offset + count) > FLASH_REGION_SIZE)
-> > +             copysize =3D FLASH_REGION_SIZE - offset;
-> > +     else
-> > +             copysize =3D min(count, PAGE_SIZE);
-> > +
-> > +     if (((offset & ~PAGE_MASK) + copysize) > PAGE_SIZE)
-> > +             remapsize =3D 2 * PAGE_SIZE;
-> > +     else
-> > +             remapsize =3D PAGE_SIZE;
-> > +
-> > +     va =3D ioremap(pa, remapsize);
-> > +     memcpy_fromio(buffer, va, copysize);
-> > +     iounmap(va);
-> > +
-> > +     return copysize;
-> > +}
-> > +
-> > +static BIN_ATTR_RO(bios_region, FLASH_REGION_SIZE);
-> > +
-> > +static struct bin_attribute *flash_mmap_attrs[] =3D { &bin_attr_bios_r=
-egion,
-> > +                                                 NULL };
-> > +
-> > +static const struct attribute_group flash_mmap_group =3D {
-> > +     .bin_attrs =3D flash_mmap_attrs,
-> > +};
-> > +
-> > +static int __init flash_mmap_init(void)
-> > +{
-> > +     int ret;
-> > +
-> > +     pdev =3D platform_device_register_simple("flash_mmap", -1, NULL, =
-0);
-> > +     if (IS_ERR(pdev))
-> > +             return PTR_ERR(pdev);
-> > +
-> > +     ret =3D sysfs_create_group(&pdev->dev.kobj, &flash_mmap_group);
+> What "module dependencies"?  You do realize that distro kernels enable
+> all modules to be built. We have an "autoload only the modules that this
+> hardware needs" infrastructure that you need to tie into here, you are
+> totally ignoring it (despite it being present for almost 20 years
+> now...)
 >
-> You just raced with userspace and lost :(
+> > The situation is like, if you
+> > have that CPU, you have the hardware, so it is implicitly bound or it
+> > just will not execute on a machine code level.
 >
-> Please set the attribute to the platform driver before you create the
-> device.
+> What do you mean "implicitly bound"?  How does this tie into the driver
+> model such that it will only be autoloaded, and have the driver bind to
+> the hardware, that it knows it can control?
 >
-> Also, you just bound this driver to ANY platform that it was loaded on,
-> with no actual detection of the hardware present, which feels like it
-> could cause big problems on all platforms.  Please, if you really want
-> to do this, restrict it to hardware that actually has the hardware you
-> are wanting to access, not all machines in the world.
+> That is what needs to be fixed here, you are just claiming that it can
+> talk to the hardware without having any check at all for this.
+>
+> > I feel like your
+> > requirement is somewhat impossible to satisfy and I really don't know
+> > what to do. Please, can anyone help me by pointing out a proper
+> > example elsewhere in the kernel?
+>
+> What resource in the system describes the hardware you wish to bind to?
+> Write a driver for _that_ resource, and have it be properly autoloaded
+> when that resource is present in the system.
+>
+> You have hundreds of examples running on your system today, but as I do
+> not know where this hardware is described specifically, it's hard to be
+> able to point you to an example that works like that.
+>
+> So again, what hardware signature describes the resource you wish to
+> bind to?
 >
 > thanks,
 >
 > greg k-h
+
+Thanks, Mauro.
