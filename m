@@ -2,145 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2F3C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 08:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EDBC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 08:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2937B611F0
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 08:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B215611C4
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Nov 2021 08:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243954AbhKIIOZ (ORCPT
+        id S244584AbhKIIzn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Nov 2021 03:14:25 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:52815 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235389AbhKIIOZ (ORCPT
+        Tue, 9 Nov 2021 03:55:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244583AbhKIIzm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Nov 2021 03:14:25 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id A071A5C01FE;
-        Tue,  9 Nov 2021 03:11:39 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 09 Nov 2021 03:11:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nakato.io; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=ehBF5Wy69Bh/k
-        ZkJ7uMIKe19bB8uwhbi/yToEkQuFGM=; b=EpINqzgd9hrt+Ss+BZ5cHFTjQISNo
-        djS56qf80j18n50zDKGEVSQ8B4RctOiAGMB/bjmxTvafxxZoQkI9BDGE0zrToHZ4
-        4zftXLfhrvE8njxmJL7oi1oE5uEzdeEEfF+TsJbF+w/kgwwKKerw/caJjwk0YHwK
-        vrPkfcvfelAPcEIiEg1W/DpCgL7NMKf1JU8H0EE7/2xpolcwedP0/yT5DozV9ovM
-        vzH9dgiXtFq8kDGzA9qveM8pZjr2M3OtNK5XnIaI0b3XfALLAp/i3reS2bMkqNag
-        KYvA62hvI1yTJWRlZ/mrTgrNwX4kO5aUaPvsnw1MYQQ/EgfQtCJieTsQg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=ehBF5Wy69Bh/kZkJ7uMIKe19bB8uwhbi/yToEkQuFGM=; b=HLCkzNR6
-        06opqwLsHnbYCSod2Ccg2uuXBi5glOZAgC9l1MDChXvEcYe/Z1RCn5fd8VVbXbsv
-        Sh8pLqUbF4nmhJK0xmxk+fTV37QOERaiTPkhYT64/NQS3QNwLnznbOPrh+seQCoC
-        2cwxPE9CF19dMqA7YIgKE6qb/grJKnBssWUv0YAVc4sLlG4QIU4lWSWJie5DiXGg
-        PH6+UhwxVvDJHh/NX+gp16bfBsQYUHBuje+9RfiedyEViZU/f7As+0Uf8jjp2J+U
-        lYw/vgPRctv7jTwKs9n3jpTDNaTsndvlu1km+laC/xCVjNDgzyxiIayUyQwQ7ilw
-        KAT/QxwTloLS0A==
-X-ME-Sender: <xms:Oy2KYQajpDA4RrFFbydCIJkmK89If72ibbxWHAtiHnjjMmcH2pMk8A>
-    <xme:Oy2KYbbpDmbxmmEsbYmMvT_dd94DB8tKfAFFsVG8GFLfcZPWr4DxC0hZKM2CcDygo
-    ym4kd_8NfkOnDYuig>
-X-ME-Received: <xmr:Oy2KYa9eexmfsWokvzioJDQyPR2ceeAch_zRQCdaj-pZk3nIaNaFt-cqUNBWVzh5OvGJud8YBoqhAnBdcFpCOv5MPx4Czt_Wr8eucLyi>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddrudefgdduudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurggthhhi
-    ucfmihhnghcuoehnrghkrghtohesnhgrkhgrthhordhioheqnecuggftrfgrthhtvghrnh
-    epudeftefhteegkedtuedvteeihfetffduudeludekkedthfdtfeduieehjefghffhnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgrkhgrth
-    hosehnrghkrghtohdrihho
-X-ME-Proxy: <xmx:Oy2KYar2zwDlBgih5gK-FqOTpD4UxvkY5bCOUe5HkjZEzo54LpOruQ>
-    <xmx:Oy2KYbqGJD3SpfRUwBhvNZD3vaCmVRvC9WKcEt29b-Z1pDjpohHuVQ>
-    <xmx:Oy2KYYQV99nP_4Wq7O2Z-0W_vfvz3cji7kj7Fd4dmE-SeJKLa5ZYmw>
-    <xmx:Oy2KYXJNfiBDfFCr3crxv6ssDUB-XhYDwyn4eq1fe66dJZ16p6EMFQ>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 9 Nov 2021 03:11:35 -0500 (EST)
-From:   Sachi King <nakato@nakato.io>
-To:     Chen Yu <yu.c.chen@intel.com>, Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Sachi King <nakato@nakato.io>, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] platform/surface: surfacepro3_button: don't load on amd variant
-Date:   Tue,  9 Nov 2021 19:11:25 +1100
-Message-Id: <20211109081125.41410-2-nakato@nakato.io>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211109081125.41410-1-nakato@nakato.io>
-References: <20211109081125.41410-1-nakato@nakato.io>
+        Tue, 9 Nov 2021 03:55:42 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00678C061766
+        for <platform-driver-x86@vger.kernel.org>; Tue,  9 Nov 2021 00:52:56 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id i5so31690818wrb.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 09 Nov 2021 00:52:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=immu-ne.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=aDt5AcmP+hGUAd+OlV839slvDoKlq8aR1W8+sUGr0nI=;
+        b=FBlHTOEGhDtif7tYHfM+LX5hnH04gjJmUB/RpC3lMi745hSNHerVlwb9OPI3SxfnuQ
+         dz3kgkgBQmsoYqbJDKX/ksYHE60q1fmfpqtkgqiMrXWT3Mo1HX2eVLE3jT3rvo5yVqu+
+         u5kBpKS69OHDFdT2hSSBy8kTKe4u9L5Ym9hT8+6GmYHjisKPxeCsbRFS/6ilik2YZpsr
+         np4ADMLRtjsBPL5v9fdZyfFlfjdj7rM5tBgVfhshlC9TvT/kx9aFsi1H62eRkBZlyzet
+         EEQt07cKiZkKTNNJ5vGo0ET6QTyNLQ3164cp/MtPfMOUZ19obo65XP+YnJGudGarCl79
+         UOfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=aDt5AcmP+hGUAd+OlV839slvDoKlq8aR1W8+sUGr0nI=;
+        b=LmFMM6Osla3s8xV4oAAflnlVcu1tHyiv7xBQO47r76+YLiW5opxZxLU4ClNWGr7Sbt
+         ldJLGqrDZlPJbNgYzs7nIP8ZAKSxnwdrh5dRLCO5enp6RTZtUk43nfolXXx5sBhUGJAA
+         PcgG1mJHQ0Z+/uBwnL67GyioLRu+OI38SDY5W8y1TgHaz/78Am/IVtmMNnooRUgE84X/
+         h75ZPDVgz08ZWjSM1j+MoZ+gd+H4UaHvFYAHZPZRYYYoe6dsUSEfzwpUXiygUo2EoDjZ
+         pKt2e7TodFwkPKRaQ6IWEaCd1JhnkebAAc3GVJPXXVD5ShekbOEfOHmcnzzlOiLazCwc
+         Qvpw==
+X-Gm-Message-State: AOAM533oMCCmFuhd/ZSgUM7VMpa+lpBFMb46A4Yzl921XuBZn/c5DKkF
+        eZbTcC0TtlGfBxmos5RTgc0Gmg==
+X-Google-Smtp-Source: ABdhPJwiP+2iglFJrDNBGPH2koLqltR+Fjd1VahideDdfFo0Qehoa4YUZJSJfBOU2mfnSc5u5VXspg==
+X-Received: by 2002:a5d:4b45:: with SMTP id w5mr7131726wrs.272.1636447975481;
+        Tue, 09 Nov 2021 00:52:55 -0800 (PST)
+Received: from [192.168.1.158] ([45.138.42.234])
+        by smtp.gmail.com with ESMTPSA id o8sm19374704wrm.67.2021.11.09.00.52.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Nov 2021 00:52:55 -0800 (PST)
+Message-ID: <42cea157-55a2-bd12-335b-6348f0ff6525@immu.ne>
+Date:   Tue, 9 Nov 2021 09:52:53 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via
+ sysfs
+Content-Language: en-US
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        philipp.deppenwiese@immu.ne, mauro.lima@eclypsium.com,
+        hughsient@gmail.com, platform-driver-x86@vger.kernel.org
+References: <20211109000130.42361-1-hans-gert.dahmen@immu.ne>
+ <YYoSPjF3M05dR0PX@kroah.com>
+From:   Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
+In-Reply-To: <YYoSPjF3M05dR0PX@kroah.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The AMD variant of the Surface Laptop report 0 for their OEM platform
-revision.  The Surface devices that require the surfacepro3_button
-driver do not have the _DSM that gets the OEM platform revision.  If the
-method does not exist, load surfacepro3_button.
+On 09.11.21 07:16, Greg KH wrote:
+> On Tue, Nov 09, 2021 at 01:01:30AM +0100, Hans-Gert Dahmen wrote:
+>> Make the 16MiB long memory-mapped BIOS region of the platform SPI flash
+>> on X86_64 system available via /sys/kernel/firmware/flash_mmap/bios_region
+>> for pen-testing, security analysis and malware detection on kernels
+>> which restrict module loading and/or access to /dev/mem.
+> 
+> That feels like a big security hole we would be opening up for no good
+> reason.
+> 
+>> It will be used by the open source Converged Security Suite.
+>> https://github.com/9elements/converged-security-suite
+> 
+> What is the reason for this, and what use is this new interface?
+Because it is very hard to access the SPI flash to read the BIOS 
+contents for (security) analysis and this works without the more complex 
+and unfinished SPI drivers and it does so on a system where we may not 
+access the full /dev/mem.
 
-Fixes: 64dd243d7356 ("platform/x86: surfacepro3_button: Fix device check")
-Co-developed-by: Maximilian Luz <luzmaximilian@gmail.com>
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-Signed-off-by: Sachi King <nakato@nakato.io>
----
- drivers/platform/surface/surfacepro3_button.c | 30 ++++---------------
- 1 file changed, 6 insertions(+), 24 deletions(-)
+>> +static int __init flash_mmap_init(void)
+>> +{
+>> +	int ret;
+>> +
+>> +	pdev = platform_device_register_simple("flash_mmap", -1, NULL, 0);
+>> +	if (IS_ERR(pdev))
+>> +		return PTR_ERR(pdev);
+>> +
+>> +	ret = sysfs_create_group(&pdev->dev.kobj, &flash_mmap_group);
+> 
+> You just raced with userspace and lost  >
+ > Please set the attribute to the platform driver before you create the
+ > device.
+ >
 
-diff --git a/drivers/platform/surface/surfacepro3_button.c b/drivers/platform/surface/surfacepro3_button.c
-index 242fb690dcaf..30eea54dbb47 100644
---- a/drivers/platform/surface/surfacepro3_button.c
-+++ b/drivers/platform/surface/surfacepro3_button.c
-@@ -149,7 +149,8 @@ static int surface_button_resume(struct device *dev)
- /*
-  * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
-  * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
-- * device by checking for the _DSM method and OEM Platform Revision.
-+ * device by checking for the _DSM method and OEM Platform Revision DSM
-+ * function.
-  *
-  * Returns true if the driver should bind to this device, i.e. the device is
-  * either MSWH0028 (Pro 3) or MSHW0040 on a Pro 4 or Book 1.
-@@ -157,30 +158,11 @@ static int surface_button_resume(struct device *dev)
- static bool surface_button_check_MSHW0040(struct acpi_device *dev)
- {
- 	acpi_handle handle = dev->handle;
--	union acpi_object *result;
--	u64 oem_platform_rev = 0;	// valid revisions are nonzero
--
--	// get OEM platform revision
--	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
--					 MSHW0040_DSM_REVISION,
--					 MSHW0040_DSM_GET_OMPR,
--					 NULL, ACPI_TYPE_INTEGER);
--
--	/*
--	 * If evaluating the _DSM fails, the method is not present. This means
--	 * that we have either MSHW0028 or MSHW0040 on Pro 4 or Book 1, so we
--	 * should use this driver. We use revision 0 indicating it is
--	 * unavailable.
--	 */
--
--	if (result) {
--		oem_platform_rev = result->integer.value;
--		ACPI_FREE(result);
--	}
--
--	dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
- 
--	return oem_platform_rev == 0;
-+	// make sure that OEM platform revision DSM call does not exist
-+	return !acpi_check_dsm(handle, &MSHW0040_DSM_UUID,
-+			       MSHW0040_DSM_REVISION,
-+			       BIT(MSHW0040_DSM_GET_OMPR));
- }
- 
- 
--- 
-2.33.0
+Sorry, but I went through tons of code and could not find a single 
+instance where I can use a default group for creation without using a 
+probe function that does the magic for me. Please help me find the 
+correct way of doing this without manually creating and adding kobjects.
 
+> Also, you just bound this driver to ANY platform that it was loaded on,
+> with no actual detection of the hardware present, which feels like it
+> could cause big problems on all platforms.  Please, if you really want
+> to do this, restrict it to hardware that actually has the hardware you
+> are wanting to access, not all machines in the world.
+
+I ave already proven that it works on all x64 Intel platforms here [1]. 
+It nearly impossible to prove for AMD b/c of the lack of documentation, 
+but we tested it on several old Bulldozer system and so far the memory 
+was always mapped. I feel that adding more hardware detection just adds 
+complexity. Anyway, what do you suggest? Use CPUID to check if the 
+vendor is AMD or Intel?
+
+Hans-Gert Dahmen
