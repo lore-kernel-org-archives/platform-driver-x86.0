@@ -2,99 +2,117 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB47C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 22:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119F1C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 22:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8C2061186
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 22:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C6161264
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 22:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234082AbhKJWek (ORCPT
+        id S233708AbhKJWjg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 10 Nov 2021 17:34:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32786 "EHLO mail.kernel.org"
+        Wed, 10 Nov 2021 17:39:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234180AbhKJWeh (ORCPT
+        id S233569AbhKJWjf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 10 Nov 2021 17:34:37 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C61636117A;
-        Wed, 10 Nov 2021 22:31:48 +0000 (UTC)
+        Wed, 10 Nov 2021 17:39:35 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 92E356187A
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Nov 2021 22:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636583508;
-        bh=UwCljJlJEQxD0zk3IYhR6savwKvL1dc1xs7HcybGM4M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dR5lb2Qd90aQipnOKCJQi/LqDKVsbIHSttHXJ2NbPj4tk8FQsUcJfkqg8EMe9yPJi
-         8P0bDZWUpJvXBw3eDEh6DkTKSoHTqC15Of3jQlVgBnA+/59IIfEcrfniicRkoj8d33
-         pikFEZUqXgCeM/CRXkE2u5OxLEg6fldKx5QSlNut/tx4S9WsUYDH4E8+M9C/RN7PsU
-         5/lKWjxcWpVgIhVmMhYa0cWkkzu1rMFWEl/Gk1ZOtSFdaZeLjvwWroT8FSiE2HeRgD
-         biA0W6mI1MrfFpeIWiX4fYlhbMh8AWiUbLHI3vyLZrAjNyore1CYPArJa/HAVqeQ4P
-         kQQVcg2KvT9XQ==
-Date:   Wed, 10 Nov 2021 14:31:47 -0800
-From:   Mark Gross <markgross@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Mark Gross <markgross@kernel.org>,
-        Michael Shych <michaelsh@nvidia.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/mellanox: mlxreg-lc: fix error code in
- mlxreg_lc_create_static_devices()
-Message-ID: <20211110223147.GA16388@T470>
-References: <20211110074346.GB5176@kili>
+        s=k20201202; t=1636583807;
+        bh=DL1tnD2umRPKBlXChavgqPduEL7QVi5z5viCUhPK2b4=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=uyeu85ij81bT7ia9tsAFDMPE9udRhHBT6Sk6vq5FJnXUBHXiw1eZNoaZ4R/xmvVH1
+         I/2Ww/LuCnIKQ40bPpAWKVNr0sfU2QEN1Qm6pW588R8TSPlzI9oACuSf5JuLWsfbO7
+         mJFdovXzbvzArjZHxNjhPzwwJ3XUR+fD48WBXlzivJi6ikh/crJmG9OTCnUkShSM5U
+         IrHZhhsvFmTm6CExesVxWsNj3Hi+4YK2svr24MQsIcRATh5W5urXtkmr7yuTz6rHZg
+         TqZGXpoZzm0QYKN7bzGMBHBp3Y8iqfXUB6Wnde2sm7vTLccfHS6B6cALnoF8qjl3mp
+         ZcKpfdpOsSu6Q==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Wed, 10 Nov 2021 22:36:44 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-mFRp0uV6sq@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211110074346.GB5176@kili>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 10, 2021 at 10:43:46AM +0300, Dan Carpenter wrote:
-> This code should be using PTR_ERR() instead of IS_ERR().  And because
-> it's using the wrong "dev->client" pointer, the IS_ERR() check will be
-> false, meaning the function returns success.
-> 
-> Fixes: 62f9529b8d5c ("platform/mellanox: mlxreg-lc: Add initial support for Nvidia line card devices")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/platform/mellanox/mlxreg-lc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
-> index 0b7f58feb701..c897a2f15840 100644
-> --- a/drivers/platform/mellanox/mlxreg-lc.c
-> +++ b/drivers/platform/mellanox/mlxreg-lc.c
-> @@ -413,7 +413,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
->  				int size)
->  {
->  	struct mlxreg_hotplug_device *dev = devs;
-> -	int i;
-> +	int i, ret;
->  
->  	/* Create static I2C device feeding by auxiliary or main power. */
->  	for (i = 0; i < size; i++, dev++) {
-> @@ -423,6 +423,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
->  				dev->brdinfo->type, dev->nr, dev->brdinfo->addr);
->  
->  			dev->adapter = NULL;
-> +			ret = PTR_ERR(dev->client);
-ret is only set on this error path.
-can we get to the return without setting ret?
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---mark
+Denis Pauk (pauk.denis@gmail.com) changed:
 
->  			goto fail_create_static_devices;
->  		}
->  	}
-> @@ -435,7 +436,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
->  		i2c_unregister_device(dev->client);
->  		dev->client = NULL;
->  	}
-> -	return IS_ERR(dev->client);
-> +	return ret;
->  }
->  
->  static void
-> -- 
-> 2.20.1
-> 
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #299483|0                           |1
+        is obsolete|                            |
+
+--- Comment #163 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 299517
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D299517&action=3Dedit
+Rebased patch with all asus_* drivers and i2c 11.11.2021
+
+Patch rebased over
+https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git/ta=
+g/?h=3Dhwmon-for-v5.16
+tag.=20
+
+Could someone also check i2c adapter? It should work for all boards with di=
+rect
+access to NCT67xx or with known acpi mutex name and available for:
+    "PRIME B450M-GAMING",
+    "PRIME X370-PRO",
+    "PRIME X399-A",
+    "PRIME X470-PRO",
+    "PRIME Z270-A",
+    "PRIME Z370-A",
+    "ROG CROSSHAIR VI HERO",
+    "ROG STRIX B350-F GAMING",
+    "ROG STRIX B450-F GAMING",
+    "ROG STRIX X399-E GAMING",
+    "ROG STRIX Z270-E",
+    "ROG STRIX Z370-E",
+    "ROG STRIX Z490-E GAMING",
+    "TUF B450 PLUS GAMING",
+
+As:
+---
+cat /sys/bus/i2c/devices/i2c-8/name=20
+SMBus NCT67xx adapter at 0295
+---
+
+i2c bus can be checked by:
+---
+modprobe i2c-dev
+i2cdetect 8
+---
+
+I2c adapter code is based on patch from OpenRGB repository.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
