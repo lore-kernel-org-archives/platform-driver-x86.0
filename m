@@ -2,190 +2,194 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6900FC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 10:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4D1C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 13:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4713C61038
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 10:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9C061107
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 13:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231136AbhKJKaI (ORCPT
+        id S231958AbhKJNQE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 10 Nov 2021 05:30:08 -0500
-Received: from mail-bn8nam12on2067.outbound.protection.outlook.com ([40.107.237.67]:63848
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229831AbhKJKaH (ORCPT
+        Wed, 10 Nov 2021 08:16:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231868AbhKJNQE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 10 Nov 2021 05:30:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i8ovYyPmxKZcS7M3OwsSVTH8+lt5mBjsQzJWaVPPS63OP/BCUjUDz2SQz0UWr9DOlWH9r8+A3RCDKYmm85o+oeXuLyI8k6jujU2LUWMoMT+GFLqT3XSnHD/Xkw6apEOFz8ahTguX7LnGlnwXqgYomtE0RjErwQG74uwnkgHr2qbBm1h59Nmh5HpkQtw1Bt5cbwOP8fHrsxomzQYWt6i++gmYYBaSk2TJck2Jf5Xu7nmZK5Z8/PAJWKvS6LXKwH6rcbe/SoyhMENXWgpM9QFRI6cCXLugLVcNEaJLJkGUAoqy9A+4ZjaO2mguJlnGMdzOwj8/o0eQbgCVWS8nnvGeZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5Se7Fcf9kycjGAha0cvwyPuC/A5oxyuxOoRNT+EV/cY=;
- b=Bf/9DsJ1voDmWcaifGBRc7sOjlUXfD80qpjQuNdEe7wa+QvbH8SP2Imz63/upHAOsFCCYqgZYSfm1cvll69IYE+N7CfijabqX5PMM2AAN+HWjMW5CruMgngXpYBfaBy4ktGj7Bo+Fp08p3pZebYwmfB5rchC4R/D8al6+7O1kZohlhnU1MSrh4p4LPuHuQCNnI5blc8in8CWq75DT8IWr9jua7sYsTU/KpVZ/clZhqg2GyDx3+2HAsDl+KuyscpPPRvVkecVA0+xVDEm+NimMW7jIh5uI4nFz4KDyI0E/SdF2HxEzqVeEtiqW4RWHpght8x/6yAn/L+dHZ104+4bCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5Se7Fcf9kycjGAha0cvwyPuC/A5oxyuxOoRNT+EV/cY=;
- b=api5PZqGrARNUrpDnpWVDC3OOlRroNxvW7LkEuBK65SyXBwTR3tqXk5/gsTTWd+Aqgh+n7Ht31z0eBBE0QZGMy4tmCehXv0CnBX8k+6l0NDCvdBbzUIL1qUDjiWvwgdXy8Bf6RD5iiSppxAkQ9t2/TFHvFYLHR8djwxSI8AqaWuVYNxIzpKEhlV9+Eg1sZ8Q51Tf8xpkR+5xyVFALnYeWJwXKZqJOOvSO+gp+MG3KzPP2MoVKhJsGuNdekL4nGds/AVYUMij9ev6nBuDlVqeWdYO8S+CgeVISQTK8+KNtN1idYfqi9lNimQ25oEzZkEGhUKNaNP/nLUyD4cllwYgZw==
-Received: from BN9PR12MB5381.namprd12.prod.outlook.com (2603:10b6:408:102::24)
- by BN9PR12MB5130.namprd12.prod.outlook.com (2603:10b6:408:137::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.10; Wed, 10 Nov
- 2021 10:27:18 +0000
-Received: from BN9PR12MB5381.namprd12.prod.outlook.com
- ([fe80::f846:3ab1:9cc3:ee1]) by BN9PR12MB5381.namprd12.prod.outlook.com
- ([fe80::f846:3ab1:9cc3:ee1%7]) with mapi id 15.20.4690.015; Wed, 10 Nov 2021
- 10:27:18 +0000
-From:   Vadim Pasternak <vadimp@nvidia.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans de Goede <hdegoede@redhat.com>
-CC:     Mark Gross <markgross@kernel.org>,
-        Michael Shych <michaelsh@nvidia.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: RE: [PATCH] platform/mellanox: mlxreg-lc: fix error code in
- mlxreg_lc_create_static_devices()
-Thread-Topic: [PATCH] platform/mellanox: mlxreg-lc: fix error code in
- mlxreg_lc_create_static_devices()
-Thread-Index: AQHX1gbAkay6IdGhH0ON/eZP4PZjX6v8juLw
-Date:   Wed, 10 Nov 2021 10:27:18 +0000
-Message-ID: <BN9PR12MB538173B0C85C0080732A0721AF939@BN9PR12MB5381.namprd12.prod.outlook.com>
-References: <20211110074346.GB5176@kili>
-In-Reply-To: <20211110074346.GB5176@kili>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b45bb06d-bdc5-427b-fd05-08d9a434ac43
-x-ms-traffictypediagnostic: BN9PR12MB5130:
-x-microsoft-antispam-prvs: <BN9PR12MB513084214253E19F9BF70081AF939@BN9PR12MB5130.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1060;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KFOvSMf8Gco0izNeCJYlOW1zmM2aplVNofKdrxJXB67B9zulh9gGgDY45wzKJSeDP53uhEmN7amEK6DsDzeD2/LrEKKr+Y/NB4DQBWfYXTd9au1G6pOQ2pss259dFV9ZOix0N6LSS9qjicSOUChuDyCrVle7Ek45tkhAvi3+jRC+vIklbUoYEBKsmAwSsLdrXmi3j2yOSIL+K3++NCKxWHoU/RzoOe7BrynSOYtGuXznjC3N1Eb0RCACBVeY2QUJV+YnKbl2PbIv69HW4eqivfPkRPpasf5CiBvRHHQbVj9c6g04fkIjvORzeQoZgss8EYfuS+uxJW2+ZAscGqfbn/bBOoZuV2lEKdVwcdmywSPTV8B6+BsgzK6hosD680wpJLBTvUjQGe/Ao9+1CnTb7C8nHubb6fyNjyQ3nw5g7MByyx+k689OagT8Dzk3tyw9EnY25mIchfpnZfa6Kfl9HuIoPb/FwUlfLRd7AMK6imshuiU5n1avWqLKbu04bpG35CnvAYCmqCRi2IMWme+FO8d3YhHok+QUH0XTxze/eZYBJ6H94mPStZ7UeAQjWRxPUYS87cMVqz4oM+vqKWNldlEs3c0LThwzRYBjMkCv7jeVsL4cwv/Ige+bE5BICGC66JuSizHuA9CXKL3rCFDRCX09jcLiZOMuQs5PVIcFCUmfoSvHntDxAuvp4Ese4XO6jLlzLbjvx/LjuWQr0jYKfA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5381.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(9686003)(8676002)(26005)(7696005)(38070700005)(316002)(5660300002)(66946007)(186003)(66476007)(508600001)(76116006)(66556008)(64756008)(54906003)(33656002)(38100700002)(83380400001)(122000001)(86362001)(53546011)(55016002)(4326008)(6506007)(8936002)(66446008)(110136005)(71200400001)(2906002)(52536014);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?BZUJI/I/F8En8W/6a6IPA5rQKusJtBpgQ6kl4IOSvM5kMWlOr54qHgEXl4WA?=
- =?us-ascii?Q?bBtXQ0Xhfp1c2dUX9kH5LvfIvXpXcZD0QNwd45tStvmYvnXdxuVP1TFujKMW?=
- =?us-ascii?Q?QXIkMjZgLp8L7I8RYh8GCxiNBlfQ93sQdWMukW+56U30OnJh1Msd3GoIKSIN?=
- =?us-ascii?Q?g1vl0j27t7ffxO0SSatQYzYdjd/YAXXmdNE9dzPXazXEDIH3DdCDKZ64QvRB?=
- =?us-ascii?Q?qRjhYWmcnNOEfImr5dqb6BOlv2nExN1Dp4J/QjNvR07Lyvz/IZKYGaKafPik?=
- =?us-ascii?Q?jX2juxnuVlWYVE1mvvr5yGAf9ApNJIbB+1oDANgvdECgWP5zUkGaoCBtvwup?=
- =?us-ascii?Q?nhSazfEGnKa3aQ5aieWFLa8Fqa1CQp4N0TPtjV5Q+G7GJusu2+g178tOflSA?=
- =?us-ascii?Q?ZPjS+SNDl2gs7s5D5vI04MOW9AowgOJw5HMOmNi6bWBfwzSse4p3DfStCjkD?=
- =?us-ascii?Q?gYpFadZORHTCUhBBfCF0bwBU4sQKZiD3Ru4Lw4HIjUgotP0h8Kn1vl4nZMGJ?=
- =?us-ascii?Q?Zoi61lYWwUZggYrgUyiDYDKBO4LCZk6eQ2UC2DH1g2S4GZ++B/QrLqVxL5YP?=
- =?us-ascii?Q?DKBQ/4mQq2KnlnTKAVy0MZgqBrge3lqCKDeX0hPAlXz3KT005WlLDJ6VW0cX?=
- =?us-ascii?Q?LBdGQxIR70KOTm6q2vGTNscddPa+sghM0qcW5ACVFJUGiA3CXpcYQagEJnpc?=
- =?us-ascii?Q?M5kspp4jYZwfsorbLjC3ZdhJFNwNbJMmMOr1+6qf9GfMgujvPq1jTS0A57De?=
- =?us-ascii?Q?lyTWpNtAQuvGWZ2LizO+XAY2y32kzq39V8i9NnXhiY03hgPAyyjtcC1w4S24?=
- =?us-ascii?Q?c49z1qgDjkUVtbO0oJKAdk+ReyWi5d+uHvhV8feEFp25drIM6mOjJZaeYc1v?=
- =?us-ascii?Q?kmgjsUIfgzGzM3Z+zJp5GFpXsJ+ap5KQNnq2sA9Y2YJtfZbkLVpwgSGG9GMl?=
- =?us-ascii?Q?gtObcTmHqq/3xqSYMORQsapdaL9iwvCc/DHrtcgDM27zKHQAaDlIzlMcPTxR?=
- =?us-ascii?Q?1Eyc4cpEbBeWyQhY1oxVUzBpLylLVmWZ/AAhtpaqsiDEj8ZAhMMhJJM8K2gV?=
- =?us-ascii?Q?NdSU5H9DxdzoS8OiUIqkqr/trVDacHkO6n0PVNlF9I8hz5m4ME4t/JKRZAYO?=
- =?us-ascii?Q?7mszf9Vwufdis1RbPANjklthqFrhBNzSFPid/UYTo2oIlAgBbC8VOa6Tohsp?=
- =?us-ascii?Q?BsDTfZt3hsrEAhwCEyLznpnGCodV5OL3tzKaGbwx2ay8ebs4twfltDeRH1zn?=
- =?us-ascii?Q?swmbUH/PdLikI9bBCO3+IJ1Trvtnn4bshH9nn5pTEETlHHCmoFsh9EBVGnqo?=
- =?us-ascii?Q?NMrMyjBvLX63kDwUl2WEfGGorLW0ZfKP6uYToh6G80txyDBPVPOxSAmQorL4?=
- =?us-ascii?Q?ctRYDI1XiF91jC5v0d3tCzvnoVOciZh3gCeeSgy1DvZw8Hc+ZjCQkc/1ahfQ?=
- =?us-ascii?Q?umBfcjbFhltZjxaBti0nmq6JFzTqeaA4+G3wKFT8hmYssmsI62FCUwyo7onW?=
- =?us-ascii?Q?4+ev4qpjP6s1ADF/y0ecuZTVB5U5xWxqNaw1EXux2Jwmgk/RMyxrHiP5aq/j?=
- =?us-ascii?Q?DZ6H7aI4MQxqy4Mmr1/Wtj+CHL9YaKP9nyyYqodJik2qT76gzHOAccydfEVF?=
- =?us-ascii?Q?jTEdh/MUmkbxKuz/mXi/b4g=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 10 Nov 2021 08:16:04 -0500
+Received: from mail-ua1-x92c.google.com (mail-ua1-x92c.google.com [IPv6:2607:f8b0:4864:20::92c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE727C061764
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Nov 2021 05:13:16 -0800 (PST)
+Received: by mail-ua1-x92c.google.com with SMTP id v3so4539843uam.10
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Nov 2021 05:13:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Rvvr2RtA4N64UFGQXK0jopqcOfmPc4aLE1qDp/yCm4Q=;
+        b=RzyFtbmtLFy/pM9mFZc38CpU11SdAryotxtOK/AWdRBqNoNgID8lPX+XDy/riYG+6H
+         7QQqz5Ub14mcgi8x3GumK5Ujau+Y9vJaYsKE5yoHDlHXQBIZzntPL+Pdxeel8s7Z0mgp
+         FMRuHfFB7oxmlyI33E9nIx9Nhl1zhzn8uBg9+58fyl41NF2xHyTMEPEmO4y2Tdx5nqhy
+         KDRMr6/RzxpZRRceCtLg75avMkk/rywvtE8ZdwAPeZzcZr6s4dBnfdd7kKLlXitupBDO
+         UfSw/PyodEFP6SV+8+3O5wdOQXcrBSSN0Jm32/Lfix8Kp71fw7lE/dfYFrqcPo/uMI2R
+         84YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Rvvr2RtA4N64UFGQXK0jopqcOfmPc4aLE1qDp/yCm4Q=;
+        b=ENvv7e3L+OO71+tXOZzJgYSCl7OnA7r/G7GVRS/vpNS+3IXlix3/6+g/19Vorv2cVb
+         XtaR/iPSwtWOHTe710YGIS/xE/mlwunTxvS86RlGl6Y1zUKjUVDTDv1Bef+UHM7oEyA7
+         9teqMYWoJ8g1fZ3hpcrLaiXGSWb5xjDZIkpm4NVKjKBy9YW7Yex7ypF0QqDB4o1il98a
+         GACXwPB95ktJs4jCM4Qj+SPpf27J7PxXeavQ0V7Ie1HBJv9bOKcc4cr2pIzqYsICqfj8
+         IYCg7FO0nxjLwgjL3kWFf3xvR1KsbIX46iUsan1Lw34GhenlxZBQzD7ON38zczktGP5d
+         0VXg==
+X-Gm-Message-State: AOAM530G9nzJX7q7Ytpz/3Nq8M7QymAOX63cwq2XG7Kw5vfo3+X4vr+B
+        4ssBstdM5NzkpYuIHwhn8JYzoFV/YnHuDp4arIAxKAJxsyqtKw==
+X-Google-Smtp-Source: ABdhPJwH8wajx7BTO0aUFOl6fZQyQHZ6WnBQygNHEtDOZGsedxX+DRVxW7t7+Vhm7IcTswn+n2TA2WDNGb5a2uMHp60=
+X-Received: by 2002:a67:f805:: with SMTP id l5mr44536272vso.17.1636549995973;
+ Wed, 10 Nov 2021 05:13:15 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5381.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b45bb06d-bdc5-427b-fd05-08d9a434ac43
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Nov 2021 10:27:18.4001
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PZ3eWyHMt7eGhNCP36uQ+n1I5D/7Gy+p7Hrz8vO6bZ+F/t8mxBNUjmKIZd813Tyf2w4DnVvdFmmDKuT0yTKsCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5130
+References: <20211109000130.42361-1-hans-gert.dahmen@immu.ne>
+ <YYoSPjF3M05dR0PX@kroah.com> <42cea157-55a2-bd12-335b-6348f0ff6525@immu.ne>
+ <YYpNOMtp7Kwf0fho@kroah.com> <CAHifhD4f676jiQ52siiKQTjUFXFm6Sto8pQjF07w5y+gqrUvFQ@mail.gmail.com>
+ <YYpsq/umygfTb8mM@kroah.com> <CAHifhD6K5hbpHS-X+2L=pfUe+7OpyTbB7uyh8WGbdaeBMwoYPg@mail.gmail.com>
+ <CAHp75VfbYsyC=7Ncnex1f_jiwrZhExDF7iy4oSGZgS1cHmsN0Q@mail.gmail.com>
+ <CAHifhD5V9vwJenRLcPRH5ZMeLa_JnjZKfdcFZw1CjceBtC6=Ew@mail.gmail.com>
+ <CAHp75VeyQEaABFOnEUh2pdFx9ROJvRcud-BuEbKWmaEWpL9_Uw@mail.gmail.com>
+ <CAHifhD7Qf7+dc7K-MjNguqmiCWUxOJZmQoCTRUZOR-RWMm_JPw@mail.gmail.com>
+ <CAHp75Ve9BMNy3gP=-Dajm+Lgu+E4FCqc4phLgV1_cr2qUnTX_w@mail.gmail.com> <CAHifhD4n7O5eWFPOjRAmHYL52tW0K=uXXzVj7L5+enTFwFXW2A@mail.gmail.com>
+In-Reply-To: <CAHifhD4n7O5eWFPOjRAmHYL52tW0K=uXXzVj7L5+enTFwFXW2A@mail.gmail.com>
+From:   Mauro Lima <mauro.lima@eclypsium.com>
+Date:   Wed, 10 Nov 2021 10:13:04 -0300
+Message-ID: <CAArk9MP5cKJ+VhAZUseW4LnQNRvux=MZe2eSy3rQkbHKnUsGig@mail.gmail.com>
+Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via sysfs
+To:     Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Philipp Deppenwiese <philipp.deppenwiese@immu.ne>,
+        Richard Hughes <hughsient@gmail.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, Nov 10, 2021 at 7:00 AM Hans-Gert Dahmen
+<hans-gert.dahmen@immu.ne> wrote:
+>
+> Am Mi., 10. Nov. 2021 um 10:25 Uhr schrieb Andy Shevchenko
+> <andy.shevchenko@gmail.com>:
+> >
+> > On Wed, Nov 10, 2021 at 11:17 AM Hans-Gert Dahmen
+> > <hans-gert.dahmen@immu.ne> wrote:
+> > > Am Mi., 10. Nov. 2021 um 10:05 Uhr schrieb Andy Shevchenko
+> > > <andy.shevchenko@gmail.com>:
+> > > > On Wed, Nov 10, 2021 at 10:37 AM Hans-Gert Dahmen
+> > > > <hans-gert.dahmen@immu.ne> wrote:
+> > > > > Am Mi., 10. Nov. 2021 um 07:35 Uhr schrieb Andy Shevchenko
+> > > > > <andy.shevchenko@gmail.com>:
+> > > > > > On Tuesday, November 9, 2021, Hans-Gert Dahmen <hans-gert.dahme=
+n@immu.ne> wrote:
+> > > > > >> Am Di., 9. Nov. 2021 um 13:42 Uhr schrieb Greg KH <gregkh@linu=
+xfoundation.org>:
+> > > >
+> > > > > >> > Do you have a pointer to these complex and buggy drivers any=
+where?
+> > > > > >>
+> > > > > >> I am talking about the linux-mtd intel-spi driver for example,=
+ but I
+> > > > > >> feel that this gets the discussion in the wrong direction.
+> > > > > >
+> > > > > > This is the driver that covers all BIOSes on modern x86\64. Wha=
+t=E2=80=99s wrong with it? Why do you need this?!
+> > > > > >
+> > > > > > If it=E2=80=99s buggy, where is the bug reports from you or som=
+ebody else?
+> > > > >
+> > > > > Please see Mauro's mail in this thread from yesterday below:
+> > > >
+> > > > I didn't get this. What's wrong with the response from the author o=
+f
+> > > > intel-spi (since we are speaking about it, let me add him to the
+> > > > thread)?
+> > > > What you are trying to do is to sneak around with ugly hack behind =
+the
+> > > > proper subsystem's back.
+> > > >
+> > > > NAK as I already said.
+> > >
+> > > There is nothing wrong with the response. Also we are not trying to
+> > > sneak anything into the kernel. This just is no mtd or spi driver, it
+> > > is not even a driver. What this does is it opens back up a portion of
+> > > memory that can not be read anymore through /dev/mem on locked down
+> > > systems with SecureBoot enabled. This portion of memory is actively
+> > > being used by userspace programs. We, 9elements, Eclypsium, fwudp and
+> > > immune are among those who rely upon this to improve the security of
+> > > x86_64 linux devices.
+> >
+> > I appreciate this.
+> >
+> > x86_64 starting from long time ago has more or less standard hardware
+> > interface for BIOS chip, i.e. SPI NOR. PCH usually has a separate host
+> > controller and we have the driver in the kernel for that (coverage of
+> > the systems may not be 100%, but close enough). Now you are trying to
+> > repeat something that is _already_ provided by the kernel. Correct?
+>
+> Yes and no. We are not repeating the functionality of the SPI driver
+> because we don't read nor write the flash specifically. What we do, is
+> we make the boot vector readable by userspace when it is not
+> accessible by /dev/mem. It happens to be a portion of the SPI flash
+> but that doesn't have to be the case because the required view upon io
+> memory here is CPU-centric and the rest of the system could be built
+> in a way that backs that memory window differently. However, this is
+> more or less hypothetical if you ignore some probably never-used bits
+> that can be set in PCH registers. As I said, effectively we are trying
+> to partially revert the lockdown on /dev/mem to be able to do a
+> harmless read on an important memory range. From that point of view we
+> are trying to keep functionality intact. The interface being used here
+> has not changed a bit since 15 years and it probably will stay that
+> way. In contrast to the intel-spi driver this will likely cover more
+> future and past systems in different use-cases with fewer lines of
+> code and next to no maintenance.
+>
+> >
+> > > Now what happens is that more distros start to
+> > > lock down their kernels and require signed modules. With the mtd
+> > > driver not working on those machine to read the bios binary, you are
+> > > effectively forcing users into less secure system configurations (i.e=
+.
+> > > opening up the whole /dev/mem and/or disabling SecureBoot) just to be
+> > > able to run fwupd or other tools to assess firmware information. The
+> > > issue of being able to assess and compare the bios binary to the one
+> > > publicly available from the vendors is increasingly getting important
+> > > in the wake of recent CVEs about supply-chain attacks where UEFI
+> > > malware was pre-installed. So we are not even doing anything new here=
+,
+> > > you are just making life harder for everybody.
+> >
+> > Why me? As far as I got it from above the bottleneck is the distros
+> > which do not enable the driver. So why not go and work with them?
+> >
+>
+> Oh come on,  the distros have no choice here. Either not provide a
+> more secure locked down system or allow a dangerous driver where
+> patches to make it less dangerous are not welcome. And even if the
+> latter could be solved, the history clearly is that it is in no way
+> not even remotely as reliable as the memory region my patch is
+> relaying to userspace.
 
+As Hans already said, it is a no go to put drivers tagged as
+_(DANGEROUS)_ within the kernel distro. In this thread [1] from the
+latest changes to the intel-spi driver I asked if there is any reason
+to keep the dangerous tag or if there is any work we can do to achieve
+this. As long as this tag is in the driver, we can't use the driver.
 
-> -----Original Message-----
-> From: Dan Carpenter <dan.carpenter@oracle.com>
-> Sent: Wednesday, November 10, 2021 9:44 AM
-> To: Hans de Goede <hdegoede@redhat.com>; Vadim Pasternak
-> <vadimp@nvidia.com>
-> Cc: Mark Gross <markgross@kernel.org>; Michael Shych
-> <michaelsh@nvidia.com>; platform-driver-x86@vger.kernel.org; linux-
-> kernel@vger.kernel.org; kernel-janitors@vger.kernel.org
-> Subject: [PATCH] platform/mellanox: mlxreg-lc: fix error code in
-> mlxreg_lc_create_static_devices()
->=20
-> This code should be using PTR_ERR() instead of IS_ERR().  And because it'=
-s
-> using the wrong "dev->client" pointer, the IS_ERR() check will be false,
-> meaning the function returns success.
->=20
-> Fixes: 62f9529b8d5c ("platform/mellanox: mlxreg-lc: Add initial support f=
-or
-> Nvidia line card devices")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+[1] https://lore.kernel.org/all/CAArk9MPWh4f1E=3DecKBHy8PFzvU_y_ROgDyUU_O3Z=
+Q0FuMhkj5Q@mail.gmail.com/
 
-Acked-by: Vadim Pasternak <vadimp@nvidia.com>
-
-> ---
->  drivers/platform/mellanox/mlxreg-lc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/platform/mellanox/mlxreg-lc.c
-> b/drivers/platform/mellanox/mlxreg-lc.c
-> index 0b7f58feb701..c897a2f15840 100644
-> --- a/drivers/platform/mellanox/mlxreg-lc.c
-> +++ b/drivers/platform/mellanox/mlxreg-lc.c
-> @@ -413,7 +413,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc
-> *mlxreg_lc, struct mlxreg_hotpl
->  				int size)
->  {
->  	struct mlxreg_hotplug_device *dev =3D devs;
-> -	int i;
-> +	int i, ret;
->=20
->  	/* Create static I2C device feeding by auxiliary or main power. */
->  	for (i =3D 0; i < size; i++, dev++) {
-> @@ -423,6 +423,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc
-> *mlxreg_lc, struct mlxreg_hotpl
->  				dev->brdinfo->type, dev->nr, dev->brdinfo-
-> >addr);
->=20
->  			dev->adapter =3D NULL;
-> +			ret =3D PTR_ERR(dev->client);
->  			goto fail_create_static_devices;
->  		}
->  	}
-> @@ -435,7 +436,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc
-> *mlxreg_lc, struct mlxreg_hotpl
->  		i2c_unregister_device(dev->client);
->  		dev->client =3D NULL;
->  	}
-> -	return IS_ERR(dev->client);
-> +	return ret;
->  }
->=20
->  static void
-> --
-> 2.20.1
-
+> Hans-Gert
