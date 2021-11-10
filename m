@@ -2,108 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492D8C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 22:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB47C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 22:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A42961186
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 22:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C2061186
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Nov 2021 22:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233558AbhKJWao (ORCPT
+        id S234082AbhKJWek (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 10 Nov 2021 17:30:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233519AbhKJWao (ORCPT
+        Wed, 10 Nov 2021 17:34:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234180AbhKJWeh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 10 Nov 2021 17:30:44 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E49C1C061766;
-        Wed, 10 Nov 2021 14:27:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=ajE2E1oSo9dMdca3nNcODp4DAhXTWNhCgu0RAXyw3Ts=; b=zZ9gUMnX+5lgCf/ZDSs2giGD2x
-        pYvIHVANyt+wE9U86AVXKNBSFYn2SLmKPKhTE6Ek4pOcdOtRG2KLOFqI1LF0XYp/+yNnj6do2TwyP
-        qb82kSIOdOwCqoLvUuJIndcEJo+8rihYLaaIad1cR4sk2T3Db5bh73eRBNwPHBYnu0xMVy3BSg9TD
-        qQIOVkzo6aXJM8ba1+5AleepYAoLPnRskqqJEsuhcwxoJHFQlJ8iqSpHX0E3JRwkYml/JtYEyy+Lb
-        4/claBL7QjKZDCOnJfYjui1utRDVX7teIlBW3dp2cW1jmIBg0rmp2Jq8PsFPp3WoqbmXYvn2A16F1
-        Tfxz46FQ==;
-Received: from [2601:1c0:6280:3f0::aa0b]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mkw3z-006Xsi-SV; Wed, 10 Nov 2021 22:27:27 +0000
-Subject: Re: [PATCH v7 43/45] virt: Add SEV-SNP guest driver
-To:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-References: <20211110220731.2396491-1-brijesh.singh@amd.com>
- <20211110220731.2396491-44-brijesh.singh@amd.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e8baf85f-8f17-d43e-4656-ed9003affaa8@infradead.org>
-Date:   Wed, 10 Nov 2021 14:27:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Wed, 10 Nov 2021 17:34:37 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C61636117A;
+        Wed, 10 Nov 2021 22:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636583508;
+        bh=UwCljJlJEQxD0zk3IYhR6savwKvL1dc1xs7HcybGM4M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dR5lb2Qd90aQipnOKCJQi/LqDKVsbIHSttHXJ2NbPj4tk8FQsUcJfkqg8EMe9yPJi
+         8P0bDZWUpJvXBw3eDEh6DkTKSoHTqC15Of3jQlVgBnA+/59IIfEcrfniicRkoj8d33
+         pikFEZUqXgCeM/CRXkE2u5OxLEg6fldKx5QSlNut/tx4S9WsUYDH4E8+M9C/RN7PsU
+         5/lKWjxcWpVgIhVmMhYa0cWkkzu1rMFWEl/Gk1ZOtSFdaZeLjvwWroT8FSiE2HeRgD
+         biA0W6mI1MrfFpeIWiX4fYlhbMh8AWiUbLHI3vyLZrAjNyore1CYPArJa/HAVqeQ4P
+         kQQVcg2KvT9XQ==
+Date:   Wed, 10 Nov 2021 14:31:47 -0800
+From:   Mark Gross <markgross@kernel.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Mark Gross <markgross@kernel.org>,
+        Michael Shych <michaelsh@nvidia.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] platform/mellanox: mlxreg-lc: fix error code in
+ mlxreg_lc_create_static_devices()
+Message-ID: <20211110223147.GA16388@T470>
+References: <20211110074346.GB5176@kili>
 MIME-Version: 1.0
-In-Reply-To: <20211110220731.2396491-44-brijesh.singh@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211110074346.GB5176@kili>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Wed, Nov 10, 2021 at 10:43:46AM +0300, Dan Carpenter wrote:
+> This code should be using PTR_ERR() instead of IS_ERR().  And because
+> it's using the wrong "dev->client" pointer, the IS_ERR() check will be
+> false, meaning the function returns success.
+> 
+> Fixes: 62f9529b8d5c ("platform/mellanox: mlxreg-lc: Add initial support for Nvidia line card devices")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  drivers/platform/mellanox/mlxreg-lc.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
+> index 0b7f58feb701..c897a2f15840 100644
+> --- a/drivers/platform/mellanox/mlxreg-lc.c
+> +++ b/drivers/platform/mellanox/mlxreg-lc.c
+> @@ -413,7 +413,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
+>  				int size)
+>  {
+>  	struct mlxreg_hotplug_device *dev = devs;
+> -	int i;
+> +	int i, ret;
+>  
+>  	/* Create static I2C device feeding by auxiliary or main power. */
+>  	for (i = 0; i < size; i++, dev++) {
+> @@ -423,6 +423,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
+>  				dev->brdinfo->type, dev->nr, dev->brdinfo->addr);
+>  
+>  			dev->adapter = NULL;
+> +			ret = PTR_ERR(dev->client);
+ret is only set on this error path.
+can we get to the return without setting ret?
 
-On 11/10/21 2:07 PM, Brijesh Singh wrote:
-> diff --git a/drivers/virt/coco/sevguest/Kconfig b/drivers/virt/coco/sevguest/Kconfig
-> new file mode 100644
-> index 000000000000..96190919cca8
-> --- /dev/null
-> +++ b/drivers/virt/coco/sevguest/Kconfig
-> @@ -0,0 +1,9 @@
-> +config SEV_GUEST
-> +	tristate "AMD SEV Guest driver"
-> +	default y
+--mark
 
-For this to remain as "default y", you need to justify it.
-E.g., if a board cannot boot with an interrupt controller,
-the driver for the interrupt controller can be "default y".
-
-So why is this default y?
-No other drivers in drivers/virt/ are default y.
-
-> +	depends on AMD_MEM_ENCRYPT && CRYPTO_AEAD2
-> +	help
-> +	  The driver can be used by the SEV-SNP guest to communicate with the PSP to
-> +	  request the attestation report and more.
-> +
-> +	  If you choose 'M' here, this module will be called sevguest.
-
-thanks.
--- 
-~Randy
+>  			goto fail_create_static_devices;
+>  		}
+>  	}
+> @@ -435,7 +436,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
+>  		i2c_unregister_device(dev->client);
+>  		dev->client = NULL;
+>  	}
+> -	return IS_ERR(dev->client);
+> +	return ret;
+>  }
+>  
+>  static void
+> -- 
+> 2.20.1
+> 
