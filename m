@@ -2,52 +2,52 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F68CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABB8C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0D860EE4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8866124D
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:07:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234031AbhKKQIK (ORCPT
+        id S233902AbhKKQKs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 11:08:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50418 "EHLO
+        Thu, 11 Nov 2021 11:10:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233128AbhKKQIK (ORCPT
+        with ESMTP id S233890AbhKKQKr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 11:08:10 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60E3C061767
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 08:05:20 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id i8-20020a7bc948000000b0030db7b70b6bso7646159wml.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 08:05:20 -0800 (PST)
+        Thu, 11 Nov 2021 11:10:47 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39AE3C061767
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 08:07:58 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id n29so10606038wra.11
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 08:07:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=immu-ne.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pm7n/4dnc2MbJNtR6nV+0gvIHCB7NPnJxlVJbDiXAyM=;
-        b=dzfWJrH3allKPA4G1tMFLRZrIapX53LToHlnTRpc75HNMJRLOFpey6A+359sRZM5xY
-         BlTFXrd4Lk0Z560BEvmOyGwKzr7PcpEsdF2DqVKSIO7bbzdy/VqnBjQUvYqpcN7xO2f8
-         Cfq5pdADlGMoE4vKdAes2immvLK2mrPiQINrUS9WI9Q+leKKCPGmP3nlREU2zVunfDx6
-         7f9aP+syfqRWP0AEk0666QSVEMXlRiGSXGFSDBSNVmW63FxQ9sLZVA+n235ZhwheG9n2
-         w7Oze809rEstfz2wxYUbOfjV1EDeDlrtYrXO2ooAyWhzFII8NyzUKE3uPEeXHzhGg/mF
-         VX4Q==
+        bh=jIkJoHo49nDB7d1kNVJcqRJr0HpVKkGDJ4epEGRcchQ=;
+        b=67Lrk1tLsWVtEjr2Q11WYluG4LUvxRHHehh9KUiY8bUlDNUBcWcwf2lZwc03cX1FSR
+         tOotfcpHZXrs5mzlhsQcOq47Y3ovQ+KY2PbkSCF3vdYp8lODvVcqRlh/i6VLK8edRpxF
+         YUF6lTd7ef8RNBWZ9ziZJSj/N7g1gyNt/qkvlTDOBvdQaWjaah0QHi1Bir+eQd5qr+am
+         Y4i0B/kCIk/+3YpAk1MUVyyn+UjKSfICaZ4ErIQQLKZ1pKwRg974FHFf/HECgFgPo4WZ
+         QabHYObOjWF+bsMZPQCcDkg2aQ3ClKoEE2OiiXWEqkf8TeZ8YnxuZB6i0AJmnFXnFkWw
+         CvKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pm7n/4dnc2MbJNtR6nV+0gvIHCB7NPnJxlVJbDiXAyM=;
-        b=Wqw8byIUJOINOrCWsxbP2jA0hV880RYlDKwxaol9rcYrDSmWJD/rpM60PdCP3kjIBm
-         CPoJKM5JupIBq7DyGPBqxV4TA6LrSBF0GDPSrXF8dt1Cdj6jUm3e7/5Ha8jEK7j/Dzhg
-         Wtl3dnNwhpjnLrecXYBR8glBWB5p0x/UIwSb67xZAO/9STWdrBdJMayrFyB3DTEJthxL
-         rap7GZQ9s6daXCP/QLkpbFahFv451Q2Vl46JKjJ0Em6om+oiGMPp7TrDkb9rMbfGk/Dh
-         alfgNxV67AGRlxS6ad3Lpn/nmBiUxUBs3DcUt46hI3uFQ1UheFhxAIwyBHqnw8qzSc/U
-         Br0Q==
-X-Gm-Message-State: AOAM533iEcluq/dGCHptOjToKBgtSiaBIiGiW0EfYSVbKRU2V+21Vdz+
-        cSKnOumJtbW08AVzKKGYeJ7v1AA8i963R3zfn0ouOQ==
-X-Google-Smtp-Source: ABdhPJzsWEhNQD7R1s97GYV0Jz4SS2WLD6yVai7hOc1rY5Y3oMLG3v+0YbevaDrB4LpizTUcTEcfjNIbWoQw2LQLIYY=
-X-Received: by 2002:a1c:790d:: with SMTP id l13mr27229558wme.101.1636646719280;
- Thu, 11 Nov 2021 08:05:19 -0800 (PST)
+        bh=jIkJoHo49nDB7d1kNVJcqRJr0HpVKkGDJ4epEGRcchQ=;
+        b=B2hXuG9J1B2sQpcZMtkChe/KOK19U+O0C9RR+7gFPstElvR1XKh/iGLi7/MTbW2FEh
+         ba+k9TmzIZmZT5kVY0kC+KB/hUBRTeWxbvtSP+24aGEAqRVAy8A16xk+lCW0PYJrcw4x
+         kcFWpCqNBlbkmJJegP0Qx8YR3yRvZQLPlih7yXObFKfXhnv7pEAV5c9YqYKoJZO/K+IL
+         RlQ6vPymVcwwaVLFKDRHBhAWmYxeUlJCbUYuaKfUv+3SrAMqRpk8rbU2f123hdc47Q5b
+         ZGI3u6E37d1wOmdKURJWtNqa+7cHtBJPyiFgUQupWWd9+IdU92B2IgYKjEdyPc82TQVf
+         zb/Q==
+X-Gm-Message-State: AOAM5310DsiQjSGDRwAq0jeygCTfT7Ps2q63eY28z133wIPfx2sG2ynj
+        xlCg7Dr42aQxLoHfVr6OiEiZEmiasdKYreg/pp9BNQ==
+X-Google-Smtp-Source: ABdhPJxeFAt+bFa2IjwBgy1mqrAdkL2HaPzN4eJux2ID2pL419IbRKkQt1WDH2/QiIQ4vPTgMacFZUA1k9E8mH25q/I=
+X-Received: by 2002:a5d:464c:: with SMTP id j12mr10055416wrs.150.1636646876725;
+ Thu, 11 Nov 2021 08:07:56 -0800 (PST)
 MIME-Version: 1.0
 References: <CAHifhD5V9vwJenRLcPRH5ZMeLa_JnjZKfdcFZw1CjceBtC6=Ew@mail.gmail.com>
  <CAHp75VeyQEaABFOnEUh2pdFx9ROJvRcud-BuEbKWmaEWpL9_Uw@mail.gmail.com>
@@ -62,17 +62,15 @@ References: <CAHifhD5V9vwJenRLcPRH5ZMeLa_JnjZKfdcFZw1CjceBtC6=Ew@mail.gmail.com>
  <CAHp75Vcp=hC1oL5FBQDDFe8EBxWB9Po4FKNS9ZGtD3q-yQPtAw@mail.gmail.com>
  <CAHifhD6p9qSm5dv1spz+oPRhRkBZeQspHNEphE49fODacm-S6g@mail.gmail.com>
  <CAHp75Vfk5WHWiQxwmqEzVEymgpvjxKWEZbaQ9+=Et7N63Ps=Ng@mail.gmail.com>
- <CAHifhD5bGZOcZFNsHYFeecikHGUts73U4k6=aUVNTKEeETW5rQ@mail.gmail.com>
- <CAHp75VeSnXfjeNeBLtrR78AmB-18kTeXpknn7-jcPLEeWCrzXQ@mail.gmail.com>
- <CAMj1kXHoRa+9gS7OEZZH2SSZQ8Tf4BUMdh-p=+OvWEb1a6ffFA@mail.gmail.com> <CAHp75VckB0RA6zoLRQ2UOcQRgMEf6sNxDGfpsNVr+92eArhD=Q@mail.gmail.com>
-In-Reply-To: <CAHp75VckB0RA6zoLRQ2UOcQRgMEf6sNxDGfpsNVr+92eArhD=Q@mail.gmail.com>
+ <CAHifhD5bGZOcZFNsHYFeecikHGUts73U4k6=aUVNTKEeETW5rQ@mail.gmail.com> <CAHp75VeSnXfjeNeBLtrR78AmB-18kTeXpknn7-jcPLEeWCrzXQ@mail.gmail.com>
+In-Reply-To: <CAHp75VeSnXfjeNeBLtrR78AmB-18kTeXpknn7-jcPLEeWCrzXQ@mail.gmail.com>
 From:   Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
-Date:   Thu, 11 Nov 2021 17:05:07 +0100
-Message-ID: <CAHifhD6ekUjsHaR9j9XrsSMwEjJtEE3Dtz=xW8E7ctVwUVPedQ@mail.gmail.com>
+Date:   Thu, 11 Nov 2021 17:07:44 +0100
+Message-ID: <CAHifhD4KbLQTA1=vVCeftKybSjU1tHGk7OZn4PN55eXUu-yKog@mail.gmail.com>
 Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via sysfs
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Richard Hughes <hughsient@gmail.com>,
+Cc:     Richard Hughes <hughsient@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Mauro Lima <mauro.lima@eclypsium.com>,
         Greg KH <gregkh@linuxfoundation.org>,
@@ -86,114 +84,88 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Do., 11. Nov. 2021 um 16:50 Uhr schrieb Andy Shevchenko
-
+Am Do., 11. Nov. 2021 um 16:31 Uhr schrieb Andy Shevchenko
 <andy.shevchenko@gmail.com>:
 >
-> On Thu, Nov 11, 2021 at 5:43 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > On Thu, 11 Nov 2021 at 16:31, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > On Thu, Nov 11, 2021 at 4:33 PM Hans-Gert Dahmen
+> On Thu, Nov 11, 2021 at 4:33 PM Hans-Gert Dahmen
+> <hans-gert.dahmen@immu.ne> wrote:
+> > Am Do., 11. Nov. 2021 um 14:55 Uhr schrieb Andy Shevchenko
+> > <andy.shevchenko@gmail.com>:
+> > > On Thu, Nov 11, 2021 at 2:56 PM Hans-Gert Dahmen
 > > > <hans-gert.dahmen@immu.ne> wrote:
-> > > > Am Do., 11. Nov. 2021 um 14:55 Uhr schrieb Andy Shevchenko
+> > > > Am Do., 11. Nov. 2021 um 13:46 Uhr schrieb Andy Shevchenko
 > > > > <andy.shevchenko@gmail.com>:
-> > > > > On Thu, Nov 11, 2021 at 2:56 PM Hans-Gert Dahmen
-> > > > > <hans-gert.dahmen@immu.ne> wrote:
-> > > > > > Am Do., 11. Nov. 2021 um 13:46 Uhr schrieb Andy Shevchenko
-> > > > > > <andy.shevchenko@gmail.com>:
-> > > > > > > On Thu, Nov 11, 2021 at 1:46 PM Richard Hughes <hughsient@gmail.com> wrote:
-> > > > > > > > On Thu, 11 Nov 2021 at 10:33, Mika Westerberg
-> > > > > > > > <mika.westerberg@linux.intel.com> wrote:
-> > > > > > >
-> > > > > > > > it's always going to work on x64 -- if the system firmware isn't available at that offset then the platform just isn't going to boot.
-> > > > > > >
-> > > > > > > Well, it's _usual_ case, but in general the assumption is simply
-> > > > > > > incorrect. Btw, have you checked it on Coreboot enabled platforms?
-> > > > > > > What about bare metal configurations where the bootloader provides
-> > > > > > > services to the OS?
-> > > > > >
-> > > > > > No it is always the case. I suggest you go read your own Intel specs
-> > > > > > and datasheets
+> > > > > On Thu, Nov 11, 2021 at 1:46 PM Richard Hughes <hughsient@gmail.com> wrote:
+> > > > > > On Thu, 11 Nov 2021 at 10:33, Mika Westerberg
+> > > > > > <mika.westerberg@linux.intel.com> wrote:
 > > > > >
-> > > > > Point me out, please, chapters in SDM (I never really read it in full,
-> > > > > it's kinda 10x Bible size). What x86 expects is 16 bytes at the end of
-> > > > > 1Mb physical address space that the CPU runs at first.
+> > > > > > it's always going to work on x64 -- if the system firmware isn't available at that offset then the platform just isn't going to boot.
+> > > > >
+> > > > > Well, it's _usual_ case, but in general the assumption is simply
+> > > > > incorrect. Btw, have you checked it on Coreboot enabled platforms?
+> > > > > What about bare metal configurations where the bootloader provides
+> > > > > services to the OS?
 > > > >
-> > > > So you do not know what you are talking about, am I correct?
+> > > > No it is always the case. I suggest you go read your own Intel specs
+> > > > and datasheets
 > > >
-> > > Let me comment on this provocative question later, after some other
-> > > comments first.
-> > >
-> > > > Starting
-> > > > from 386 the first instruction is executed at 0xFFFFFFF0h. What you
-> > > > are referring to is the 8086 reset vector and that was like 40 years
-> > > > ago.
-> > >
-> > > True. The idea is the same, It has a reset vector standard for x86
-> > > (which doesn't explicitly tell what is there). So, nothing new or
-> > > different here.
-> > >
-> > > > Please refer to SDM volume 3A, chapter 9, section 9.1.4 "First
-> > > > Instruction Executed", paragraph two. Just watch out for the hex
-> > > > number train starting with FFFFF... then you will find it. This is
-> > > > what requires the memory range to be mapped. Modern Intel CPUs require
-> > > > larger portions, because of the ACM loading and XuCode and whatnot.
-> > >
-> > > Thanks. Have you read 9.7 and 9.8, btw?
-> > > Where does it tell anything about memory to be mapped to a certain
-> > > address, except the last up to 16 bytes?
-> > >
-> > > > Please refer to the email [1] from me linked below where I reference
-> > > > all PCH datasheets of the x64 era to prove that 16MB are mapped
-> > > > hard-wired. Note that the range cannot be turned off and will read
-> > > > back 0xFF's if the PCH registers are configured to not be backed by
-> > > > the actual SPI flash contents.
-> > >
-> > > And as I said it does not cover _all_ x86 designs (usual != all) .
-> > > Have you heard about Intel MID line of SoCs? Do you know that they
-> > > have no SPI NOR and the firmware is located on eMMC? Do you know that
-> > > they can run Linux?
-> > >
-> > > So, maybe it's you who do not know what you are talking about, am I correct?
-> > >
-> > > > [1] https://lkml.org/lkml/2021/6/24/379
+> > > Point me out, please, chapters in SDM (I never really read it in full,
+> > > it's kinda 10x Bible size). What x86 expects is 16 bytes at the end of
+> > > 1Mb physical address space that the CPU runs at first.
 > >
-> > Thanks for looping me in (I think ...)
+> > So you do not know what you are talking about, am I correct?
 >
-> Thank you for chiming in!
+> Let me comment on this provocative question later, after some other
+> comments first.
 >
-> > The thing I don't like about exposing the entire SPI NOR region to
-> > user space is that we can never take it back, given the 'never break
-> > user space' rule. So once we ship this, the cat is out of the bag, and
-> > somebody (which != the contributors of this code) will have to
-> > maintain this forever.
-> >
-> > Also, you quoted several different use cases, all of which are
-> > currently served by exposing a chunk of PA space, and letting the user
-> > do the interpretation. This is not how it usually works: we tend to
-> > prefer targeted and maintainable interfaces. That woudl mean that,
-> > e.g., fwupd can invoke some kind of syscall to get at the version
-> > numbers it is after, and the logic that finds those numbers is in the
-> > kernel and not in user space.
+> > Starting
+> > from 386 the first instruction is executed at 0xFFFFFFF0h. What you
+> > are referring to is the 8086 reset vector and that was like 40 years
+> > ago.
 >
-> I was thinking about SHA256 hashes or so (as they tell about
-> binaries). In any case the interface for this seems to be in the
-> kernel.
+> True. The idea is the same, It has a reset vector standard for x86
+> (which doesn't explicitly tell what is there). So, nothing new or
+> different here.
 >
-> It is also possible to do the other way around, i.e. piping binary to
-> the kernel and wait for the answer if it is the same or not or...
+> > Please refer to SDM volume 3A, chapter 9, section 9.1.4 "First
+> > Instruction Executed", paragraph two. Just watch out for the hex
+> > number train starting with FFFFF... then you will find it. This is
+> > what requires the memory range to be mapped. Modern Intel CPUs require
+> > larger portions, because of the ACM loading and XuCode and whatnot.
 >
-> > For the pen testing use case, things are likely a bit different, so I
-> > realize this is not universally applicable, but just exposing the PA
-> > space directly is not the solution IMO.
+> Thanks. Have you read 9.7 and 9.8, btw?
+> Where does it tell anything about memory to be mapped to a certain
+> address, except the last up to 16 bytes?
 >
 
-All of this doesn't really sound like it is more maintainable. It
-requires the base use case, being able to read the BIOS/UEFI binary
-plus more code and a more complicated interface. So if you do this,
-there's more cats out of the bag.
-Also please be aware that not everything is UEFI and you would
-probably need to support things like CoreBoot as well.
+It doesn't, except that the FIT, ACM, BootGuard, XuCode stuff rely on
+their binaries to be there, this just sets the upper address limit of
+the window.
 
+> > Please refer to the email [1] from me linked below where I reference
+> > all PCH datasheets of the x64 era to prove that 16MB are mapped
+> > hard-wired. Note that the range cannot be turned off and will read
+> > back 0xFF's if the PCH registers are configured to not be backed by
+> > the actual SPI flash contents.
+>
+> And as I said it does not cover _all_ x86 designs (usual != all) .
+> Have you heard about Intel MID line of SoCs? Do you know that they
+
+No and a quick search didn't turn up anything. Can you point me to
+resources about those SoCs? Also my module is targeting x86_64, that
+is only a subset of x86 designs.
+
+> have no SPI NOR and the firmware is located on eMMC? Do you know that
+> they can run Linux?
+
+It doesn't matter where the firmware is coming from, as long as it is
+_mapped_. And something has to be mapped there, even if it is just a
+loader that gets eMMC going.
+
+>
+> So, maybe it's you who do not know what you are talking about, am I correct?
+>
+> > [1] https://lkml.org/lkml/2021/6/24/379
 >
 > --
 > With Best Regards,
