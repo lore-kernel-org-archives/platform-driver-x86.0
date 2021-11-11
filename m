@@ -2,33 +2,68 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC96C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 13:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA791C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 13:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D90761107
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 13:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E3061211
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 13:22:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232883AbhKKNDy (ORCPT
+        id S232033AbhKKNZ2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 08:03:54 -0500
-Received: from mga11.intel.com ([192.55.52.93]:53930 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232513AbhKKNDy (ORCPT
+        Thu, 11 Nov 2021 08:25:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231380AbhKKNZ2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 08:03:54 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10164"; a="230367278"
-X-IronPort-AV: E=Sophos;i="5.87,226,1631602800"; 
-   d="scan'208";a="230367278"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 05:01:04 -0800
-X-IronPort-AV: E=Sophos;i="5.87,226,1631602800"; 
-   d="scan'208";a="452690470"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 05:00:59 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 11 Nov 2021 15:00:56 +0200
-Date:   Thu, 11 Nov 2021 15:00:56 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Richard Hughes <hughsient@gmail.com>
+        Thu, 11 Nov 2021 08:25:28 -0500
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECA9C061766;
+        Thu, 11 Nov 2021 05:22:39 -0800 (PST)
+Received: by mail-lj1-x22f.google.com with SMTP id u25so9215843ljo.12;
+        Thu, 11 Nov 2021 05:22:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XXEbn8H7pxAKlYWqlmB2yKeJ4B1lwBLiYpPWtH/0aJI=;
+        b=EdEsfI1iXJWPqQ1Z53pJXoWngi2Kag6xy1HTYr77msFRYWrWkXwm33wI92W5mJqk/K
+         3d/amHMdnF0cKoGD6UJEnNXi1q20O56PFyiP1sa6tKCMHmtQnuSYRQEVjHbiSIYD6qpI
+         Umtwx9A436RENm+mIMnXCS7EN2egubDTGWOT+aNrcdgDqKyUeZ49VJ13LHC27Gaj2WGF
+         WLzRgM0cLQI3GU2uWmVohpeKeq9/3Od74HOxdtJjU4xwrNNQE+H0yf7yMaoQwO50TwXh
+         VJ73e4uvZ5ynCVfEFa9eo7W8NNnuPX//iFx+yn3CXpen52lksw874x8ptDtuk0agO75n
+         AF0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XXEbn8H7pxAKlYWqlmB2yKeJ4B1lwBLiYpPWtH/0aJI=;
+        b=J5kJ/T9gplJtcrS5VycD8P7CuVd2Skg9BGfRhIQRMuaxtmY9q3b0F167HSlkyW3xVi
+         S+nIoXNJDpJS6rmXzwjJ35PZfwuBwgBcRAvKgCg2W/cmIxgd+JgR29Croca+ramqKTKO
+         wyuzf3e6GntMcwH7PRgptp5Y62JohMIs2IDVZsNY6p/M38JC8DFdTmdLprH949c1SB8R
+         nzN59z98J0zs1zRzKhLHYOUnZuP+LZFLLW69NoJDuEc7H1ixTLat+gO3RhRF/YVEUynf
+         YOL5XId1W8FEl3R2JUB4oQPttOhxcq1kbV9CwObIwYZ6VMRy/JkveVU9Yq5Dd9U3XWWL
+         mg9A==
+X-Gm-Message-State: AOAM530RrHLXPTWfimqy63hJ2vlAh52lvZ7UNUvsAS2VXIkVW8UtP4X+
+        PwVZ+VILD63JbmzgHu6eaWqB68ZyphM4lG6oCDA=
+X-Google-Smtp-Source: ABdhPJyIt/3NhcQZH+TXhAsoszHNHs0Iyoyr/rzDe7ITzB6qVWV2BcovQ4R/k4tRIufDmBto0yLr30bt5xEoaLl4+XI=
+X-Received: by 2002:a2e:a607:: with SMTP id v7mr6882559ljp.35.1636636957329;
+ Thu, 11 Nov 2021 05:22:37 -0800 (PST)
+MIME-Version: 1.0
+References: <CAHifhD7Qf7+dc7K-MjNguqmiCWUxOJZmQoCTRUZOR-RWMm_JPw@mail.gmail.com>
+ <CAHp75Ve9BMNy3gP=-Dajm+Lgu+E4FCqc4phLgV1_cr2qUnTX_w@mail.gmail.com>
+ <CAHifhD4n7O5eWFPOjRAmHYL52tW0K=uXXzVj7L5+enTFwFXW2A@mail.gmail.com>
+ <CAArk9MP5cKJ+VhAZUseW4LnQNRvux=MZe2eSy3rQkbHKnUsGig@mail.gmail.com>
+ <CAHp75VdRwvU5WjFP5E4gg8U+_e34A0Lwze+nz_wVHoB49jLeLg@mail.gmail.com>
+ <CAArk9MNGSxR+92n-D2pe_+r+Z0Q9FoTMPqk11sAKA=4Vckj0HQ@mail.gmail.com>
+ <YYy7QZGKeEEfI1mH@lahna> <CAHifhD5bXu2nP533RXyWDnyNt=k2rRZq5Z6A6CCik_2e6XNgGA@mail.gmail.com>
+ <YYzxWPIWFAV04LRU@lahna> <CAD2FfiGnmFSTPvkJaXj+cf4yDvci-j+2QkpMqNY821fUT5C=CA@mail.gmail.com>
+ <YY0UCHtf8SAvGHTY@lahna>
+In-Reply-To: <YY0UCHtf8SAvGHTY@lahna>
+From:   Richard Hughes <hughsient@gmail.com>
+Date:   Thu, 11 Nov 2021 13:22:25 +0000
+Message-ID: <CAD2FfiF=7H7RuAdrSrrr57JF6YG=pb5jw2QMgBDQsAEwgasYLw@mail.gmail.com>
+Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via sysfs
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>,
         Mauro Lima <mauro.lima@eclypsium.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
@@ -38,90 +73,50 @@ Cc:     Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>,
         Philipp Deppenwiese <philipp.deppenwiese@immu.ne>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via
- sysfs
-Message-ID: <YY0UCHtf8SAvGHTY@lahna>
-References: <CAHifhD7Qf7+dc7K-MjNguqmiCWUxOJZmQoCTRUZOR-RWMm_JPw@mail.gmail.com>
- <CAHp75Ve9BMNy3gP=-Dajm+Lgu+E4FCqc4phLgV1_cr2qUnTX_w@mail.gmail.com>
- <CAHifhD4n7O5eWFPOjRAmHYL52tW0K=uXXzVj7L5+enTFwFXW2A@mail.gmail.com>
- <CAArk9MP5cKJ+VhAZUseW4LnQNRvux=MZe2eSy3rQkbHKnUsGig@mail.gmail.com>
- <CAHp75VdRwvU5WjFP5E4gg8U+_e34A0Lwze+nz_wVHoB49jLeLg@mail.gmail.com>
- <CAArk9MNGSxR+92n-D2pe_+r+Z0Q9FoTMPqk11sAKA=4Vckj0HQ@mail.gmail.com>
- <YYy7QZGKeEEfI1mH@lahna>
- <CAHifhD5bXu2nP533RXyWDnyNt=k2rRZq5Z6A6CCik_2e6XNgGA@mail.gmail.com>
- <YYzxWPIWFAV04LRU@lahna>
- <CAD2FfiGnmFSTPvkJaXj+cf4yDvci-j+2QkpMqNY821fUT5C=CA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD2FfiGnmFSTPvkJaXj+cf4yDvci-j+2QkpMqNY821fUT5C=CA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Nov 11, 2021 at 11:46:39AM +0000, Richard Hughes wrote:
-> On Thu, 11 Nov 2021 at 10:33, Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > OK, I see from your patch that it uses the direct mapped read-only
-> > region to read this data.
-> 
-> Sorry for the delay in replying here. What I like about Hans-Gert's
-> patch is that it's always going to work on x64 -- if the system
-> firmware isn't available at that offset then the platform just isn't
-> going to boot. It's super simple, and means we can read out the hugely
-> complex UEFI blob without asking the user to turn off kernel lockdown
-> and secure boot so we can run the security verification tools. At the
-> moment we're in this strange situation where we ask the user to
-> cripple their platform security to run the platform security tools.
+On Thu, 11 Nov 2021 at 13:01, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> I'm not sure I understand why the platform security needs to be turned off?
 
-I'm not sure I understand why the platform security needs to be turned
-off? Sorry if that was already mentioned somewhere in the thread, I did
-not read all of them throughly.
+Sorry to be unclear, I meant we had to turn off Secure Boot (and thus
+also kernel lockdown) so that we could use /dev/mem to verify that
+OEMs have set up the IFD, BLE, BIOSWP etc correctly. You'd be
+surprised just how many vendors don't read the specifications
+correctly and get this wrong. We also need port IO to use the
+intel-spi driver so we can parse the BIOS contents from userspace,
+which you can't obviously do when SB is turned off. The eSPI
+controller is hidden on some hardware now, and we need to play games
+to make it visible again.
 
-> > Do we know what information exactly fwupd needs? I mean exposing all of
-> > this might not be good idea from security perspective (but I'm not an
-> > expert).
-> 
-> Ideally, fwupd needs the entire IFD partition which contains all the
-> EFI File Volumes. We already parse these when the user is booting
-> without secure boot using the Intel SPI controller and doing *evil*
-> hacks to make the PCI device visible. The reason we want to parse the
-> BIOS can be explained pretty easily; at startup we look at the TPM
-> PCRs and we know very quickly and easily if the system firmware event
-> has changed. If the checksum changed, then the firmware was modified
-> in some way. However, saying to the user that "checksum changed" isn't
-> useful at all. What we want to do is say something like "an EFI binary
-> called RootKitz.efi was added" or "the AmiTcgPlatformPeiAfterMem.efi
-> binary changed" and actually report what was done. At the moment we
-> can do this, but not if /dev/mem cannot be used.
+> I think exposing /dev/mem opens another can of worms that we want to
+> avoid.
 
-I think exposing /dev/mem opens another can of worms that we want to
-avoid.
+Ohh it's not all of /dev/mem, it's just the 16MB BIOS region that has
+to be mapped at that address for the hardware to boot.
 
-Is there anything preventing to add a sane interface from say the
-intel-spi driver (can be something else too) that exposes the minimal
-set you need? That can be in the mainline kernel and is secure (and
-safe) enough that distros (and users) can enable it?
+> Don't we already expose some of the EFI stuff under /sys/firmware?
 
-Don't we already expose some of the EFI stuff under /sys/firmware?
+Yes, some information, but not the file volumes themselves. I don't
+think the kernel wants to be in the game of supporting every nested
+container and compression format that EFI supports. It's also the
+wrong layer to expose platform attributes like BLE, but that's an
+orthogonal thing to the patch Hans-Gert is proposing.
 
-> > However, we can perhaps expose some of it through intel-spi,
-> > and make that work so that distros can enable it safely.
-> 
-> I think, if we're being honest, that Intel has no plans to make
-> intel-spi available as a RO interface of any sort. There's some sort
-> of hardware errata or misdesign that nobody can mention that makes the
-> RO access unsafe. I think it's probably more than missing arbitration.
+> I just don't want to
+> spend yet another Christmas holiday trying to fix angry peoples laptops :(
 
-No that's not the reason. The real reason I'm concerned (as the author
-and maintainer of that thing) is that last time the driver was
-accidentally enabled in Ubuntu (around 2019) there was a driver bug
-(which was fixed already but it was not yet in the Ubuntu kernel) that
-turned some Lenovo based systems' BIOSes to read-only. It has nothing to
-do with my employer or hardware errata/misdesign. I just don't want to
-spend yet another Christmas holiday trying to fix angry peoples laptops :(
+Completely understood, I don't think any of us want that.
 
-Having said that the hardware sequencer used in the recent CPUs should
-be much safer in that sense. It should not allow things like this to
-happen (the affected systems used software based sequencer).
+> Having said that the hardware sequencer used in the recent CPUs should
+> be much safer in that sense.
+
+FWIW, I'd be fine if we had RO access for HWSEQ flash access only. If
+I understood correctly that's what Mauro proposed (with a patch) and
+instead was told that it was being rewritten as a mtd driver
+completion time unknown.
+
+Richard.
