@@ -2,221 +2,190 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80976C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 19:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C9EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 19:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61E7E61252
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 19:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7A361381
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 19:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231919AbhKKTRj (ORCPT
+        id S231648AbhKKTax (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 14:17:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229785AbhKKTRi (ORCPT
+        Thu, 11 Nov 2021 14:30:53 -0500
+Received: from mail-co1nam11on2074.outbound.protection.outlook.com ([40.107.220.74]:17408
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229710AbhKKTaw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 14:17:38 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 97C6761269;
-        Thu, 11 Nov 2021 19:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636658088;
-        bh=fLq87UbMLm9X6eW2rQdFoIKXAz4h2P6ghyXFhpUb+Zo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uiN1T+nKgpu3G3V1bNu0KoXFt/c3ZKOARv5VYcGWq0XbMcjAute2Soc2EDBXOyjRH
-         JSyBMEfHZf6KUuVrQQ9PFaKt8oobQ5ZHqFJ3vsVFp2yocqjsdI8uRWqGcNIU/M1eOj
-         2SIO/PjpWdQPhwO3WI2kae6NjNIERNW6RE2lzi6JHSOD9DW6Q2pOt9QRHAFGhImkj5
-         XP8KrX5hLY1q88DhQ8xCEmtw3wc/x4jhvwqjkYzXmLC2FXU+3W6JUtOLKnUhmMxnyk
-         4cbS+HMWQCykqK3xxMy1IcqOYkAgU5UivjKvhqkP3kzSgKktNkI5ckyaTn682p4vT+
-         dFi2Xni+OSZ8w==
-Received: by mail-oi1-f171.google.com with SMTP id o83so13340260oif.4;
-        Thu, 11 Nov 2021 11:14:48 -0800 (PST)
-X-Gm-Message-State: AOAM532Yc5h1bYVAi3nO1kkaWpEpz5Bb4cUJ4cNsQscnCugwt5zOsvYg
-        DCJDlthmkvr+clN/3OSGV5EtbMVGMSg0h82FtdE=
-X-Google-Smtp-Source: ABdhPJz2WvXAOmi6gF0GFDDVpw6ZT9hWI+Bx859nG1W+CZYMdLudyfxgodmghTkUA1HMwr1ctAsZNLMLQFv8Mp4U/UU=
-X-Received: by 2002:a05:6808:1919:: with SMTP id bf25mr8121280oib.33.1636658087851;
- Thu, 11 Nov 2021 11:14:47 -0800 (PST)
+        Thu, 11 Nov 2021 14:30:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ha140z4dhZjbRprZykwkjTvk8uKduYqmX40AvVwLOUydljQ1TwiayXnIyBxsppbZqshyQVyVOOcTKjihP6JcyDv/eb1FXcWhWsQFAXKLxz/2+bZI11jl/8hAKBx/KFQCta2m2jJkB90tytM63J4cag/7p2uDYXWH2zoKiPFShEVj2JOoEDI73AbncYYtOePrXsngg/P9SGMMuhz/9h2eprjPWkP9a83ceYhMmLDaK03OlBos2P1CDLRbngOIPihi+R5MTIWCio4EFcc6XodEMuZCcVp1sMQawo15F40DYmlQ2yRxprT27xwOq0wFv0Ssyr7eFP3boHAxznlXrrjB3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MwdJ6cuBX6in83SlpHeLAc8qPzHGh4aLmmfGmUEbMhQ=;
+ b=CQaSwL3BOvdTo8t080twUxv4B6CQmYGui/6Qq1LsBjBLahOiW2JsFLK8+N+eYp2Q1aCw2sXQ6Bh96h8EqD81wptHYcumZrA8j/Zas/kyZ7dgrAD+EfFP4mTQLKVfVk61uXh7YafehHC9NyES5VnEutG83FqMUzHehQCdiWut3QIIuNMPCM6xOJzddwP0TBG63pJ3xHBzvqv+NtV/olcgsww9c3utXKCS9vWSlXHlIJ5qlT3/IHfW8VKZggmoT4qRVEEZZufwi69c77Wrdi8hsD+5FfZxJmV+ht4LA5lY/CcF3QwrECk9jzpU17nU7FW3gEgWWeeAhc3+OJ8jbVUvpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MwdJ6cuBX6in83SlpHeLAc8qPzHGh4aLmmfGmUEbMhQ=;
+ b=DJXVwuP964vJrsabv5UoooNOSfVEd6M1ds/HjJ7aj6HRd9Zj9Da3oNvtpGRvSsDTjmByVGJpms0/WpFTOzcbOzkEPG8ELfqOHit1slyaouugR6U7DgwgviZg2yCaBG4EVgTg1iQ0OiPP7qeKh8Be89PTtonn/NULJlLspsHoXSE=
+Authentication-Results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
+ by SN6PR12MB2685.namprd12.prod.outlook.com (2603:10b6:805:67::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.13; Thu, 11 Nov
+ 2021 19:27:58 +0000
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::e4da:b3ea:a3ec:761c]) by SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::e4da:b3ea:a3ec:761c%7]) with mapi id 15.20.4669.020; Thu, 11 Nov 2021
+ 19:27:58 +0000
+Cc:     brijesh.singh@amd.com, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v7 43/45] virt: Add SEV-SNP guest driver
+To:     Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org
+References: <20211110220731.2396491-1-brijesh.singh@amd.com>
+ <20211110220731.2396491-44-brijesh.singh@amd.com>
+ <e8baf85f-8f17-d43e-4656-ed9003affaa8@infradead.org>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+Message-ID: <38e5047c-43a9-400b-c507-337011e0e605@amd.com>
+Date:   Thu, 11 Nov 2021 13:27:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+In-Reply-To: <e8baf85f-8f17-d43e-4656-ed9003affaa8@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MN2PR01CA0023.prod.exchangelabs.com (2603:10b6:208:10c::36)
+ To SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
 MIME-Version: 1.0
-References: <CAHifhD5V9vwJenRLcPRH5ZMeLa_JnjZKfdcFZw1CjceBtC6=Ew@mail.gmail.com>
- <CAHp75VeyQEaABFOnEUh2pdFx9ROJvRcud-BuEbKWmaEWpL9_Uw@mail.gmail.com>
- <CAHifhD7Qf7+dc7K-MjNguqmiCWUxOJZmQoCTRUZOR-RWMm_JPw@mail.gmail.com>
- <CAHp75Ve9BMNy3gP=-Dajm+Lgu+E4FCqc4phLgV1_cr2qUnTX_w@mail.gmail.com>
- <CAHifhD4n7O5eWFPOjRAmHYL52tW0K=uXXzVj7L5+enTFwFXW2A@mail.gmail.com>
- <CAArk9MP5cKJ+VhAZUseW4LnQNRvux=MZe2eSy3rQkbHKnUsGig@mail.gmail.com>
- <CAHp75VdRwvU5WjFP5E4gg8U+_e34A0Lwze+nz_wVHoB49jLeLg@mail.gmail.com>
- <CAArk9MNGSxR+92n-D2pe_+r+Z0Q9FoTMPqk11sAKA=4Vckj0HQ@mail.gmail.com>
- <YYy7QZGKeEEfI1mH@lahna> <CAHifhD5bXu2nP533RXyWDnyNt=k2rRZq5Z6A6CCik_2e6XNgGA@mail.gmail.com>
- <YYzxWPIWFAV04LRU@lahna> <CAD2FfiGnmFSTPvkJaXj+cf4yDvci-j+2QkpMqNY821fUT5C=CA@mail.gmail.com>
- <CAHp75Vcp=hC1oL5FBQDDFe8EBxWB9Po4FKNS9ZGtD3q-yQPtAw@mail.gmail.com>
- <CAHifhD6p9qSm5dv1spz+oPRhRkBZeQspHNEphE49fODacm-S6g@mail.gmail.com>
- <CAHp75Vfk5WHWiQxwmqEzVEymgpvjxKWEZbaQ9+=Et7N63Ps=Ng@mail.gmail.com>
- <CAHifhD5bGZOcZFNsHYFeecikHGUts73U4k6=aUVNTKEeETW5rQ@mail.gmail.com>
- <CAHp75VeSnXfjeNeBLtrR78AmB-18kTeXpknn7-jcPLEeWCrzXQ@mail.gmail.com>
- <CAHifhD4KbLQTA1=vVCeftKybSjU1tHGk7OZn4PN55eXUu-yKog@mail.gmail.com>
- <CAHp75Vfc85XnVmnJ0ytm_XCGSoqFfiMQ3jxXCudsyo5XW6brTQ@mail.gmail.com>
- <CAHifhD42G+7BQHBwS=ZFzcv9On0TFNFLV+HARjWENUAmX-8WaQ@mail.gmail.com>
- <CAHp75Vcn6023eNCmRupRDLVHQrmGgAJ56TPEjHpDoQrwNgC8Hg@mail.gmail.com> <CAHifhD7bc46ro39JVg3P_M2TRW9BJmcxMCSnMVNOc0DoNN8fHg@mail.gmail.com>
-In-Reply-To: <CAHifhD7bc46ro39JVg3P_M2TRW9BJmcxMCSnMVNOc0DoNN8fHg@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 11 Nov 2021 20:14:36 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFeHhA2CgBgiO5d39+0C42rsd1C=kZVS32z0j4WEx-vZQ@mail.gmail.com>
-Message-ID: <CAMj1kXFeHhA2CgBgiO5d39+0C42rsd1C=kZVS32z0j4WEx-vZQ@mail.gmail.com>
-Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via sysfs
-To:     Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Richard Hughes <hughsient@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mauro Lima <mauro.lima@eclypsium.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philipp Deppenwiese <philipp.deppenwiese@immu.ne>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from [10.236.30.107] (165.204.77.1) by MN2PR01CA0023.prod.exchangelabs.com (2603:10b6:208:10c::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.15 via Frontend Transport; Thu, 11 Nov 2021 19:27:55 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0687d810-3925-499f-2caf-08d9a5495e64
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2685:
+X-Microsoft-Antispam-PRVS: <SN6PR12MB26850CA605BA836054479F4EE5949@SN6PR12MB2685.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TwXCuk3RiJnxhmmdsDv3dZQFHQS/nAxCnqAVwjP+4BtxvwyhN8YvYd5ak5tVlUTt6PbSBiPR65dPNGPROuLQHFP6TRlcFYw+RTGNJLzO6ite/IGbn4aJR6tXPkvh7R/fKCEOamNUFnPCwK8z+llRf73zeiuDh6xWQT1n/Q+/sZoWYz1KUmMtIM9OT+QuDIetQogZwH7opOsKVv1qNQK7jdv7Sg+iq+sT5E1kDo8/18BYN+anjYMyUJ84OM5rfkf5RtpDY4mN4pRocrkkIww3etVXEulsVPaCbj4y+MKR/1OK4o5wdWp980pyLwh7bIBooZrfQq+QbD4Ep+yzA5VIXsB8HGpEUCy4mY3rSVDgg0u2cCg28NPX/i+dk5DrrVjW2JxgYXF5wTZxdV6uQOOpymUmwL7blfXyAz0Xyj+VTrbb7yXTssSux8yEPDojdkCgKKyGKhmiYfgBliiR0jLf+YpqACziDfVKKcSZNJScGoccJeYbBJ8U7HbTeF3kIQad56woTZPFssB5G2M0Hg7dhz36UcFgmp7oZLfRX1EB714mohEcI4KuuvVWnpI/Kd8+I2/3AsiFCkTL4EmC9h7PufDtp/ifhJOQYOiDkP+HWkTRbi/FcvHY6gczVCJWkU4WXfd3he7e4VIHxbYSmOEATn5D+PT1alRezpcHuLh6ZGwRpZQW/9zvWTy8nxy20CLVvjUgme9FSSk52+hEduhHfg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(4326008)(26005)(66946007)(16576012)(53546011)(5660300002)(54906003)(2616005)(2906002)(6486002)(31696002)(38100700002)(316002)(83380400001)(44832011)(31686004)(508600001)(956004)(36756003)(7416002)(8936002)(66476007)(66556008)(7406005)(8676002)(186003)(86362001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Z0h4LzNvY3cxRVN0cVh0bzVXNXhIMVY3dkVDbWFQbUxkcEhqckJtY3NDYmpq?=
+ =?utf-8?B?ZW92ZTlLU3pxUTNTR2h2dnVNc3dMQytLQ3JKRW5pMXpmKzlNb1hVSk5mWmgw?=
+ =?utf-8?B?RzJEQVlpeDdndVpGYnUydXNWQ2lXYlpaeDhnSXI3REdueUZKdmUxRkdTbVMx?=
+ =?utf-8?B?TnN4Zi9QZmNGcmFuMWJCSFk0d0NRd2FORWxNSkliWDBreEVGS3ZPbkNDalcx?=
+ =?utf-8?B?UDNVQmtpdDcrSjAwdXZXenBlbzk3M25IYWExbFlYbzR3bzBrRTluMEFmS2hK?=
+ =?utf-8?B?MVFyTmVDTGJZaWF6aENkeGoxb2dzc2x2QUJqdldYU2hlc3ZGV04rUFZGRXhM?=
+ =?utf-8?B?RDBRR1pyU0x6VTg5RkVrT25TZWszaitoT1pGeFdUcXEyU2RrcXRIMzU2OU5N?=
+ =?utf-8?B?aS9PU3ZuRmNoRWt0S2VLSDVBQStBNkU2SG1INUl2RXpVdXlHblhVVW1hUnc3?=
+ =?utf-8?B?Z1dSL1NZRXRRTTk4ck5VdnVyMCtTTDFKVjdRY0l1R290U2FaaGFoN0NBMlJC?=
+ =?utf-8?B?VjUrVGZzbUViamJWMHVaWjF5WmdBam1XM1NyWmhxV2VIa2d5S3pob251Mkxm?=
+ =?utf-8?B?VkxXV3JYbUY0ZkFKdmk4eXBWeTNwUW5DRC9CR1V6YWNnMXJmeXl1Q09HZWEw?=
+ =?utf-8?B?QUFBUDN0bnR3eEg2RGNuUnJLb1hKanQ5MkliNnM4ZG01SDVjclNZZnpYVHh2?=
+ =?utf-8?B?eW5MQnMwcFIwcnBQT1Uvb1hhL3Q1NTdFQk5rU1RQQzhHaTJyMzM4WDZYbEtE?=
+ =?utf-8?B?VVFZMUxydnZxTERrNnJMaEphWW9HOGFIMnZ3bUJVV3hUK3JXa0duam44MTNB?=
+ =?utf-8?B?eU1WS3JSbExIUHZrRnBsTEgrVW9zZm00S3ZoTlJ3Q0M0MlZnUVR4aU1KZ3lO?=
+ =?utf-8?B?SEUvb0lFVHdaTkVoNWt5SGgrNHQ4V3oxbkdCT0pOcjFxbVNQUlUwcTNXbHo0?=
+ =?utf-8?B?WHJaeEZNbG95Yml4aFl1RUMwdThwYXJlYnQ5dTBPUFc2MC9Qd0picUhoTVV6?=
+ =?utf-8?B?QWQ4QTdMWWZYdTVLZmtNOFhwSUpuMzJTOWl4WDlWaGl3SGRqanEwaUMrcVdp?=
+ =?utf-8?B?STUzTmlpR3EyNmlRNGxjd1BIMkVlY3F4bFEvOXkrTWF4VzJEYUlENEF4OXZD?=
+ =?utf-8?B?RnhLZnJuN05IQURtQTVIMU9nWm42WFNtajZteFg2V1l5Zit2T0tVVElFY1Vu?=
+ =?utf-8?B?N2RwL053bER2TmpmM2ZWdDRBdVYwbXVNdlZUd2lMZjlhdS9CbTJPVkJ0c21i?=
+ =?utf-8?B?WjFIYXVnbXlTQW4vY0NLcUxkVEQzRklIOFp0OUpzNmZUenB5V2k5cks0bzJu?=
+ =?utf-8?B?NUdwRkNQQWpYYk1keFByalpiVkhkdi9MbkUxTW9JWExKb1dYMndla0MwSzlh?=
+ =?utf-8?B?S0lITmVWazJnemNFc0w0VFNDYmtWSGhDUk9QYjErcklWYWVSTmdMMVprVXM4?=
+ =?utf-8?B?cFdJRU1TSWJuc3dFSzJiZVFvNG11QitNRmtWbDJNVjdlSnN0cC9aV3orZUtX?=
+ =?utf-8?B?SVlHNGFNSHlLYkc4NEgxdkRraDNMQ3ZFSy9lcTZaRzJmTElsOEJmVnRnUmRG?=
+ =?utf-8?B?bC8vZVovQm5jTlgvSnZidkZLdW11bWYyMzdPYU93a2c5czdBT3dqZGFPR2la?=
+ =?utf-8?B?MmNySndwWVZ6Q2tEUTNRaE5Za2VGZFNZbE81MWI3RS9qRXZUem5CUldWUGRp?=
+ =?utf-8?B?RWVoeDBqR2k3ODVlcWhHa1hBZ3I0WldYRStWb3RMTWlzZjRrcXZGNHE2OEpF?=
+ =?utf-8?B?SU0wa2U5SFZaZWF1a201RUowVGQ4blhwTnhONm14cUF6T0Nnc1MreVhNVmdP?=
+ =?utf-8?B?TjRtZE9QMkdGT2xmcWZKdGlQL0NINktkTllmSG9Yc1MwaEI0bEVaVTZsVWxj?=
+ =?utf-8?B?bUM2Wkl1bTlVRkdhNUNQNnk5TmZPNGNMNmoyVk8yUDM2TVlEK3BnKzNmWnV3?=
+ =?utf-8?B?ZUhZb2hJNHk4RlZLc1N5YnZLMjNRM0FsazY5bjhHTDdUS3ZCNU9vamlaNkk4?=
+ =?utf-8?B?YWVOc2xZUHMyZld1blVRRzdXTlRFZmlJTlU0aXdvdkVVTjkvMlRuMHFSN24y?=
+ =?utf-8?B?S3dwRHZNektNNFVSVHUrVEhmYnJiWHByWjZKR3ZKaWxjL00yaEFwR0xNSlcr?=
+ =?utf-8?B?VEw1cjgyODJlQnVaZFlic2tPOTBKc1BPRDhEQ0xRVENpZVpjN21oZWVYSFdX?=
+ =?utf-8?Q?15Tv+Nn8qqagG8Vr4QdT1Gw=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0687d810-3925-499f-2caf-08d9a5495e64
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2021 19:27:58.5624
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JnxssjhrK+smCbUElDoomUJsJG4WWMpGt1+zIQ6VW8o/Jxg6EOs4VaSP2j+XrZqGgL9z3X0tV61pj6m5HkBDpQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2685
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 11 Nov 2021 at 19:15, Hans-Gert Dahmen <hans-gert.dahmen@immu.ne> wrote:
->
-> Am Do., 11. Nov. 2021 um 18:49 Uhr schrieb Andy Shevchenko
-> <andy.shevchenko@gmail.com>:
-> >
-> > On Thu, Nov 11, 2021 at 6:55 PM Hans-Gert Dahmen
-> > <hans-gert.dahmen@immu.ne> wrote:
-> > > Am Do., 11. Nov. 2021 um 17:45 Uhr schrieb Andy Shevchenko
-> > > <andy.shevchenko@gmail.com>:
-> > > > On Thu, Nov 11, 2021 at 6:07 PM Hans-Gert Dahmen
-> > > > <hans-gert.dahmen@immu.ne> wrote:
-> > > > > Am Do., 11. Nov. 2021 um 16:31 Uhr schrieb Andy Shevchenko
-> > > > > <andy.shevchenko@gmail.com>:
-> > > > > > On Thu, Nov 11, 2021 at 4:33 PM Hans-Gert Dahmen
-> > > > > > <hans-gert.dahmen@immu.ne> wrote:
-> > > > > > > Am Do., 11. Nov. 2021 um 14:55 Uhr schrieb Andy Shevchenko
-> > > > > > > <andy.shevchenko@gmail.com>:
-> > > > > > > > On Thu, Nov 11, 2021 at 2:56 PM Hans-Gert Dahmen
-> > > > > > > > <hans-gert.dahmen@immu.ne> wrote:
-> > > > > > > > > Am Do., 11. Nov. 2021 um 13:46 Uhr schrieb Andy Shevchenko
-> > > > > > > > > <andy.shevchenko@gmail.com>:
-> > > > > > > > > > On Thu, Nov 11, 2021 at 1:46 PM Richard Hughes <hughsient@gmail.com> wrote:
-> > > > > > > > > > > On Thu, 11 Nov 2021 at 10:33, Mika Westerberg
-> > > > > > > > > > > <mika.westerberg@linux.intel.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > > it's always going to work on x64 -- if the system firmware isn't available at that offset then the platform just isn't going to boot.
-> >
-> > (1)
-> >
-> > > > > > > > > > Well, it's _usual_ case, but in general the assumption is simply
-> > > > > > > > > > incorrect. Btw, have you checked it on Coreboot enabled platforms?
-> > > > > > > > > > What about bare metal configurations where the bootloader provides
-> > > > > > > > > > services to the OS?
-> > > > > > > > >
-> > > > > > > > > No it is always the case. I suggest you go read your own Intel specs
-> > > > > > > > > and datasheets
-> >
-> > (2)
-> >
-> > > > > > > > Point me out, please, chapters in SDM (I never really read it in full,
-> > > > > > > > it's kinda 10x Bible size). What x86 expects is 16 bytes at the end of
-> > > > > > > > 1Mb physical address space that the CPU runs at first.
-> > > > > > >
-> > > > > > > So you do not know what you are talking about, am I correct?
-> > > > > >
-> > > > > > Let me comment on this provocative question later, after some other
-> > > > > > comments first.
-> > > > > >
-> > > > > > > Starting
-> > > > > > > from 386 the first instruction is executed at 0xFFFFFFF0h. What you
-> > > > > > > are referring to is the 8086 reset vector and that was like 40 years
-> > > > > > > ago.
-> > > > > >
-> > > > > > True. The idea is the same, It has a reset vector standard for x86
-> > > > > > (which doesn't explicitly tell what is there). So, nothing new or
-> > > > > > different here.
-> > > > > >
-> > > > > > > Please refer to SDM volume 3A, chapter 9, section 9.1.4 "First
-> > > > > > > Instruction Executed", paragraph two. Just watch out for the hex
-> > > > > > > number train starting with FFFFF... then you will find it. This is
-> > > > > > > what requires the memory range to be mapped. Modern Intel CPUs require
-> > > > > > > larger portions, because of the ACM loading and XuCode and whatnot.
-> > > > > >
-> > > > > > Thanks. Have you read 9.7 and 9.8, btw?
-> > > > > > Where does it tell anything about memory to be mapped to a certain
-> > > > > > address, except the last up to 16 bytes?
-> > > > >
-> > > > > It doesn't, except that the FIT, ACM, BootGuard, XuCode stuff rely on
-> > > > > their binaries to be there, this just sets the upper address limit of
-> > > > > the window.
-> > > >
-> > > > Why is it needed? I mean the listed blobs are not mandatory to get
-> > > > system boot. Is this correct?
-> > >
-> > > That doesn't matter for this case.
-> >
-> > Then why did you mention them?
-> >
-> > > > > > > Please refer to the email [1] from me linked below where I reference
-> > > > > > > all PCH datasheets of the x64 era to prove that 16MB are mapped
-> > > > > > > hard-wired. Note that the range cannot be turned off and will read
-> > > > > > > back 0xFF's if the PCH registers are configured to not be backed by
-> > > > > > > the actual SPI flash contents.
-> > > > > >
-> > > > > > And as I said it does not cover _all_ x86 designs (usual != all) .
-> > > > > > Have you heard about Intel MID line of SoCs? Do you know that they
-> > > > >
-> > > > > No and a quick search didn't turn up anything. Can you point me to
-> > > > > resources about those SoCs? Also my module is targeting x86_64, that
-> > > > > is only a subset of x86 designs.
-> > > >
-> > > > They are x86_32 and x86_64, so in the category you listed.
-> > > >
-> > > > Unfortunately there is indeed not much publicly available information,
-> > > > but I can tell you that from a design perspective you may consider
-> > > > them PCH-less.
-> > >
-> > > Okay fine. Now you come around the corner with undocumented Intel
-> > > devices and make your first semi-valid point.
-> >
-> > Huh?!
-> > You simply have the wrong assumption (see (1) and (2) above) and
-> > _this_ is my point. And it seems you still can't admit that. Be brave!
-> >
->
-> I thought my last email was admitting that, but, if you insist, I
-> hereby explicitly admit, that, now, after some 40 emails, you have
-> brought forward a valid point that proves my assumption wrong. If this
-> is what makes you happy, then I can also certify my defeat on paper
-> and send it to you so you can hang it as a trophy on your wall. The
-> notion of being brave or not has no value for me here, I am purely
-> interested in the technical details. I never said that my solution was
-> brilliant, and, all I wanted, was, as you already know: to retain
-> functionality used by userspace tools on locked-down systems. Please,
-> next time, be of good character and don't play games like this. Just
-> directly bring forward the evidence to challenge an assumption.
->
-> > > Why did it take you so
-> > > long?
-> >
-> > Same question to you.
-> >
-> > >  Why did you seemingly just try to derail the discussion before?
-> >
-> > See just above. I don't like when people are blind with their
-> > brilliant solutions.
->
-> Again, now, if you have the feeling that someone is blind, please
-> don't fool them around just to make them painfully aware of their
-> blind spot. IMO the more human solution is not to react with anger,
-> like you did, but with constructivism.
->
+Hi Randy,
 
-Can we cut the drama please?
+On 11/10/21 4:27 PM, Randy Dunlap wrote:
+> Hi,
+> 
+> On 11/10/21 2:07 PM, Brijesh Singh wrote:
+>> diff --git a/drivers/virt/coco/sevguest/Kconfig 
+>> b/drivers/virt/coco/sevguest/Kconfig
+>> new file mode 100644
+>> index 000000000000..96190919cca8
+>> --- /dev/null
+>> +++ b/drivers/virt/coco/sevguest/Kconfig
+>> @@ -0,0 +1,9 @@
+>> +config SEV_GUEST
+>> +    tristate "AMD SEV Guest driver"
+>> +    default y
+> 
+> For this to remain as "default y", you need to justify it.
+> E.g., if a board cannot boot with an interrupt controller,
+> the driver for the interrupt controller can be "default y".
+> 
+> So why is this default y?
+> No other drivers in drivers/virt/ are default y.
+> 
 
-Greg has already pointed out that you cannot blindly expose this
-without tying it to a property exposed by the hardware. Andy has
-pointed out that your assumption that any x86_64 based platform
-exposes this region does not hold.
+I choose the default "y" for two reasons:
 
-So maybe it is time for some 'constructivism' on your part, and simply
-go and implement what the reviewers suggested, rather than keep this
-pointless discussion going?
+1.  The driver is built if the user enables the AMD memory encryption 
+support. If the user has selected the AMD memory encryption support, 
+they will be querying an attestation report to verify that the guest is 
+running on AMD memory encryption enabled hardware.
+
+2. Typically, an attestation report is retrieved from an initial ramdisk 
+(before mounting the disk). IIUC, the standard initramfs build tools may 
+not include the driver by default and requires the user to go through hoops.
+
+However, I have no strong reason to keep it to "y" if other prefers "m".
+
+thanks
