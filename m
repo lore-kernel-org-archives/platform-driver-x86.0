@@ -2,171 +2,89 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABB8C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478EFC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8866124D
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B35361390
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233902AbhKKQKs (ORCPT
+        id S233128AbhKKQ14 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 11:10:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233890AbhKKQKr (ORCPT
+        Thu, 11 Nov 2021 11:27:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232033AbhKKQ14 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 11:10:47 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39AE3C061767
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 08:07:58 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id n29so10606038wra.11
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 08:07:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=immu-ne.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jIkJoHo49nDB7d1kNVJcqRJr0HpVKkGDJ4epEGRcchQ=;
-        b=67Lrk1tLsWVtEjr2Q11WYluG4LUvxRHHehh9KUiY8bUlDNUBcWcwf2lZwc03cX1FSR
-         tOotfcpHZXrs5mzlhsQcOq47Y3ovQ+KY2PbkSCF3vdYp8lODvVcqRlh/i6VLK8edRpxF
-         YUF6lTd7ef8RNBWZ9ziZJSj/N7g1gyNt/qkvlTDOBvdQaWjaah0QHi1Bir+eQd5qr+am
-         Y4i0B/kCIk/+3YpAk1MUVyyn+UjKSfICaZ4ErIQQLKZ1pKwRg974FHFf/HECgFgPo4WZ
-         QabHYObOjWF+bsMZPQCcDkg2aQ3ClKoEE2OiiXWEqkf8TeZ8YnxuZB6i0AJmnFXnFkWw
-         CvKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jIkJoHo49nDB7d1kNVJcqRJr0HpVKkGDJ4epEGRcchQ=;
-        b=B2hXuG9J1B2sQpcZMtkChe/KOK19U+O0C9RR+7gFPstElvR1XKh/iGLi7/MTbW2FEh
-         ba+k9TmzIZmZT5kVY0kC+KB/hUBRTeWxbvtSP+24aGEAqRVAy8A16xk+lCW0PYJrcw4x
-         kcFWpCqNBlbkmJJegP0Qx8YR3yRvZQLPlih7yXObFKfXhnv7pEAV5c9YqYKoJZO/K+IL
-         RlQ6vPymVcwwaVLFKDRHBhAWmYxeUlJCbUYuaKfUv+3SrAMqRpk8rbU2f123hdc47Q5b
-         ZGI3u6E37d1wOmdKURJWtNqa+7cHtBJPyiFgUQupWWd9+IdU92B2IgYKjEdyPc82TQVf
-         zb/Q==
-X-Gm-Message-State: AOAM5310DsiQjSGDRwAq0jeygCTfT7Ps2q63eY28z133wIPfx2sG2ynj
-        xlCg7Dr42aQxLoHfVr6OiEiZEmiasdKYreg/pp9BNQ==
-X-Google-Smtp-Source: ABdhPJxeFAt+bFa2IjwBgy1mqrAdkL2HaPzN4eJux2ID2pL419IbRKkQt1WDH2/QiIQ4vPTgMacFZUA1k9E8mH25q/I=
-X-Received: by 2002:a5d:464c:: with SMTP id j12mr10055416wrs.150.1636646876725;
- Thu, 11 Nov 2021 08:07:56 -0800 (PST)
+        Thu, 11 Nov 2021 11:27:56 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A3C246124C;
+        Thu, 11 Nov 2021 16:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636647906;
+        bh=dw0x+LBQ552ApvZujaQIillgV6iC1yb5QQ5PK/digpQ=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=AQu3TUpVccJo4t7u3W3hOW69QX8iDiJz8OrLBhAO1QJQhPdKguQishmbKqVi6KrON
+         y4Y1KdAToySCDwJx9OJe8PlwiVd8iH+62xubOBPXSX4/je/rqHZlzpwqUDKGGJOlBe
+         JHrylfyQcRyOxdnTwLdaz4cDrFyiXV5nKWjAf4NHj3/Zdrk464+HTyk5p+abcqtEpH
+         0QAFVoqJ6ikODrnzHA9r0CSTLyuEMKHkXiLqX9H8Dt0CAzgbM9DN6/KfakeV/fxgb1
+         co0YrhJzDbDXLs/8QRANEXorz+wzMF9NoJJZ4drQ4H+AWxwdjD6deloua9TyTpidos
+         Z9Jv8NfiG3S6g==
+Date:   Thu, 11 Nov 2021 17:25:01 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Arnd Bergmann <arnd@kernel.org>
+cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        Sumesh K Naduvalath <sumesh.k.naduvalath@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] HID: intel-ish-hid: fix module device-id handling
+In-Reply-To: <20211111085842.2846422-1-arnd@kernel.org>
+Message-ID: <nycvar.YFH.7.76.2111111723190.12554@cbobk.fhfr.pm>
+References: <20211111085842.2846422-1-arnd@kernel.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <CAHifhD5V9vwJenRLcPRH5ZMeLa_JnjZKfdcFZw1CjceBtC6=Ew@mail.gmail.com>
- <CAHp75VeyQEaABFOnEUh2pdFx9ROJvRcud-BuEbKWmaEWpL9_Uw@mail.gmail.com>
- <CAHifhD7Qf7+dc7K-MjNguqmiCWUxOJZmQoCTRUZOR-RWMm_JPw@mail.gmail.com>
- <CAHp75Ve9BMNy3gP=-Dajm+Lgu+E4FCqc4phLgV1_cr2qUnTX_w@mail.gmail.com>
- <CAHifhD4n7O5eWFPOjRAmHYL52tW0K=uXXzVj7L5+enTFwFXW2A@mail.gmail.com>
- <CAArk9MP5cKJ+VhAZUseW4LnQNRvux=MZe2eSy3rQkbHKnUsGig@mail.gmail.com>
- <CAHp75VdRwvU5WjFP5E4gg8U+_e34A0Lwze+nz_wVHoB49jLeLg@mail.gmail.com>
- <CAArk9MNGSxR+92n-D2pe_+r+Z0Q9FoTMPqk11sAKA=4Vckj0HQ@mail.gmail.com>
- <YYy7QZGKeEEfI1mH@lahna> <CAHifhD5bXu2nP533RXyWDnyNt=k2rRZq5Z6A6CCik_2e6XNgGA@mail.gmail.com>
- <YYzxWPIWFAV04LRU@lahna> <CAD2FfiGnmFSTPvkJaXj+cf4yDvci-j+2QkpMqNY821fUT5C=CA@mail.gmail.com>
- <CAHp75Vcp=hC1oL5FBQDDFe8EBxWB9Po4FKNS9ZGtD3q-yQPtAw@mail.gmail.com>
- <CAHifhD6p9qSm5dv1spz+oPRhRkBZeQspHNEphE49fODacm-S6g@mail.gmail.com>
- <CAHp75Vfk5WHWiQxwmqEzVEymgpvjxKWEZbaQ9+=Et7N63Ps=Ng@mail.gmail.com>
- <CAHifhD5bGZOcZFNsHYFeecikHGUts73U4k6=aUVNTKEeETW5rQ@mail.gmail.com> <CAHp75VeSnXfjeNeBLtrR78AmB-18kTeXpknn7-jcPLEeWCrzXQ@mail.gmail.com>
-In-Reply-To: <CAHp75VeSnXfjeNeBLtrR78AmB-18kTeXpknn7-jcPLEeWCrzXQ@mail.gmail.com>
-From:   Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
-Date:   Thu, 11 Nov 2021 17:07:44 +0100
-Message-ID: <CAHifhD4KbLQTA1=vVCeftKybSjU1tHGk7OZn4PN55eXUu-yKog@mail.gmail.com>
-Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via sysfs
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Richard Hughes <hughsient@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mauro Lima <mauro.lima@eclypsium.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philipp Deppenwiese <philipp.deppenwiese@immu.ne>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Do., 11. Nov. 2021 um 16:31 Uhr schrieb Andy Shevchenko
-<andy.shevchenko@gmail.com>:
->
-> On Thu, Nov 11, 2021 at 4:33 PM Hans-Gert Dahmen
-> <hans-gert.dahmen@immu.ne> wrote:
-> > Am Do., 11. Nov. 2021 um 14:55 Uhr schrieb Andy Shevchenko
-> > <andy.shevchenko@gmail.com>:
-> > > On Thu, Nov 11, 2021 at 2:56 PM Hans-Gert Dahmen
-> > > <hans-gert.dahmen@immu.ne> wrote:
-> > > > Am Do., 11. Nov. 2021 um 13:46 Uhr schrieb Andy Shevchenko
-> > > > <andy.shevchenko@gmail.com>:
-> > > > > On Thu, Nov 11, 2021 at 1:46 PM Richard Hughes <hughsient@gmail.com> wrote:
-> > > > > > On Thu, 11 Nov 2021 at 10:33, Mika Westerberg
-> > > > > > <mika.westerberg@linux.intel.com> wrote:
-> > > > >
-> > > > > > it's always going to work on x64 -- if the system firmware isn't available at that offset then the platform just isn't going to boot.
-> > > > >
-> > > > > Well, it's _usual_ case, but in general the assumption is simply
-> > > > > incorrect. Btw, have you checked it on Coreboot enabled platforms?
-> > > > > What about bare metal configurations where the bootloader provides
-> > > > > services to the OS?
-> > > >
-> > > > No it is always the case. I suggest you go read your own Intel specs
-> > > > and datasheets
-> > >
-> > > Point me out, please, chapters in SDM (I never really read it in full,
-> > > it's kinda 10x Bible size). What x86 expects is 16 bytes at the end of
-> > > 1Mb physical address space that the CPU runs at first.
-> >
-> > So you do not know what you are talking about, am I correct?
->
-> Let me comment on this provocative question later, after some other
-> comments first.
->
-> > Starting
-> > from 386 the first instruction is executed at 0xFFFFFFF0h. What you
-> > are referring to is the 8086 reset vector and that was like 40 years
-> > ago.
->
-> True. The idea is the same, It has a reset vector standard for x86
-> (which doesn't explicitly tell what is there). So, nothing new or
-> different here.
->
-> > Please refer to SDM volume 3A, chapter 9, section 9.1.4 "First
-> > Instruction Executed", paragraph two. Just watch out for the hex
-> > number train starting with FFFFF... then you will find it. This is
-> > what requires the memory range to be mapped. Modern Intel CPUs require
-> > larger portions, because of the ACM loading and XuCode and whatnot.
->
-> Thanks. Have you read 9.7 and 9.8, btw?
-> Where does it tell anything about memory to be mapped to a certain
-> address, except the last up to 16 bytes?
->
+On Thu, 11 Nov 2021, Arnd Bergmann wrote:
 
-It doesn't, except that the FIT, ACM, BootGuard, XuCode stuff rely on
-their binaries to be there, this just sets the upper address limit of
-the window.
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> A late addititon to the intel-ish-hid framework caused a build failure
+> with clang, and introduced an ABI to the module loader that stops working
+> if any driver ever needs to bind to more than one UUID:
+> 
+> drivers/hid/intel-ish-hid/ishtp-fw-loader.c:1067:4: error: initializer element is not a compile-time constant
+> 
+> Change the ishtp_device_id to have correct documentation and a driver_data
+> field like all the other ones, and change the drivers to use the ID table
+> as the primary identification in a way that works with all compilers
+> and avoids duplciating the identifiers.
+> 
+> Fixes: f155dfeaa4ee ("platform/x86: isthp_eclite: only load for matching devices")
+> Fixes: facfe0a4fdce ("platform/chrome: chros_ec_ishtp: only load for matching devices")
+> Fixes: 0d0cccc0fd83 ("HID: intel-ish-hid: hid-client: only load for matching devices")
+> Fixes: 44e2a58cb880 ("HID: intel-ish-hid: fw-loader: only load for matching devices")
+> Fixes: cb1a2c6847f7 ("HID: intel-ish-hid: use constants for modaliases")
+> Fixes: fa443bc3c1e4 ("HID: intel-ish-hid: add support for MODULE_DEVICE_TABLE()")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-> > Please refer to the email [1] from me linked below where I reference
-> > all PCH datasheets of the x64 era to prove that 16MB are mapped
-> > hard-wired. Note that the range cannot be turned off and will read
-> > back 0xFF's if the PCH registers are configured to not be backed by
-> > the actual SPI flash contents.
->
-> And as I said it does not cover _all_ x86 designs (usual != all) .
-> Have you heard about Intel MID line of SoCs? Do you know that they
+I have fixed the ecl_ishtp_cl_driver.id initialization and applied. Thanks 
+a lot for spotting and fixing this, Arnd.
 
-No and a quick search didn't turn up anything. Can you point me to
-resources about those SoCs? Also my module is targeting x86_64, that
-is only a subset of x86 designs.
+-- 
+Jiri Kosina
+SUSE Labs
 
-> have no SPI NOR and the firmware is located on eMMC? Do you know that
-> they can run Linux?
-
-It doesn't matter where the firmware is coming from, as long as it is
-_mapped_. And something has to be mapped there, even if it is just a
-loader that gets eMMC going.
-
->
-> So, maybe it's you who do not know what you are talking about, am I correct?
->
-> > [1] https://lkml.org/lkml/2021/6/24/379
->
-> --
-> With Best Regards,
-> Andy Shevchenko
