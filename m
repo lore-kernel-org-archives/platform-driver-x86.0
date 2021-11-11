@@ -2,75 +2,77 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56650C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 09:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC232C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 09:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1FB610FC
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 09:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC516117A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 09:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230256AbhKKJsh (ORCPT
+        id S232671AbhKKJuO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 04:48:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:25955 "EHLO
+        Thu, 11 Nov 2021 04:50:14 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:47136 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229649AbhKKJsg (ORCPT
+        by vger.kernel.org with ESMTP id S232549AbhKKJuN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 04:48:36 -0500
+        Thu, 11 Nov 2021 04:50:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636623947;
+        s=mimecast20190719; t=1636624044;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NHZpzPiJjVdQJR747hgvu7Kbq8RX36AdGZlglYBTJok=;
-        b=VT5s6B3CNvvgcdFoZonuDo2X3gday5nRy/5iABfEKGKqiFnuSNVZ3cViUu+HollqmElkAT
-        CK/lmCFasUTTs1paX2IQywoZxEjDPPDOy755oTC2vRkIe/zeBTO+5uAIplp9CXfbkc6jzG
-        pqZnlDwgQ+PWIYqX7b83fORDq5r+EU0=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-FEIABrf8PFKDiAkDd3ZiNw-1; Thu, 11 Nov 2021 04:45:44 -0500
-X-MC-Unique: FEIABrf8PFKDiAkDd3ZiNw-1
-Received: by mail-ed1-f71.google.com with SMTP id y12-20020a056402270c00b003e28de6e995so4926189edd.11
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 01:45:44 -0800 (PST)
+        bh=LZMGVBi1WJ/do0+s09ZqM+DEvJGBRijkiBcXTXBsjMY=;
+        b=iAjo0XyQuUHNJ9HnyP70vJCc5tri8FhPLf15xk5wLQG/lciWi38gm7My+aYK7/IR9ox+sm
+        1A+Bh892Kxob3KYwysZ79m96XCUKWSwd+VNevEKKp0A5HMjsgVpjU4ffnc9wiSq+8bM8nk
+        gklGxDluwScyNPYhTxHEp1PTV9Lubn0=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-pVt1HG2QMHeJDmxH87G68w-1; Thu, 11 Nov 2021 04:47:23 -0500
+X-MC-Unique: pVt1HG2QMHeJDmxH87G68w-1
+Received: by mail-ed1-f70.google.com with SMTP id g3-20020a056402424300b003e2981e1edbso4994221edb.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 01:47:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=NHZpzPiJjVdQJR747hgvu7Kbq8RX36AdGZlglYBTJok=;
-        b=4azdAZ7q5Xvp7B5/PRkFqIpVflHBmdE4Zch6ctehhMPAWMmClKwPfKcplwtZoIoqIC
-         uhzhlq4Sek/gAJ9aSaIRR6k0WWuPKlsYzjLT6VqjVj0Qla8Xey3zHlQso6lmJjBJ0e2n
-         phu6d4SBaAgUiDMwt9jlW596dE2GErXJ6Yw9EOlbpPkAHX8M7IBIrk6ylVJI2Gk749n3
-         A2uEzQ8+uqLGENEDuxQ9EAEEtoV9w/WpL7PKjTODOnmyeJE4EPKwA8mDZaQ09424ktTJ
-         GtPzd+ygnj7eosCeI2I0Yg2tDBjb8+4LgLmP8HgPEpPWW5sOaW0PcaLYoRj6uQrrjTfX
-         UGmg==
-X-Gm-Message-State: AOAM531H84+w8tB9WkwmlMTsWq3M0F/95rQm0mSU3begLOakup39u4Cc
-        IeBluOPgfV3evW1fNbF6vygRbRxLeSyDoavmfDYnKUEA3LPn3PVBwkq11o98jyHhS+ijkzAo/AW
-        egsNxVcZ78OmH4H610SsICvKoyjDMuwxqDA==
-X-Received: by 2002:a17:907:216e:: with SMTP id rl14mr7758006ejb.368.1636623943063;
-        Thu, 11 Nov 2021 01:45:43 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz+VyX7ZbK3W3c9WLo5vQL9u3j9cA6xOlIQkmsHYVnZ8N2eTGqGysfnVpZRSlV5X1PUiyWblA==
-X-Received: by 2002:a17:907:216e:: with SMTP id rl14mr7757948ejb.368.1636623942584;
-        Thu, 11 Nov 2021 01:45:42 -0800 (PST)
+        bh=LZMGVBi1WJ/do0+s09ZqM+DEvJGBRijkiBcXTXBsjMY=;
+        b=s93GTnVl6xvYx83rDpbak5mGWopmCAnqujn8WC88wzX8b+kpOrQrQYsh3c3cJ6lW9i
+         pv8QmEgn4I0eiuAve44l9EwhwY5BAr1T8ca9dyun5yeGOfjsASI4zWHYtzWVlkQizMaN
+         jOxtAOFihnhVkkt4ZCHCQNoCt3xkpZsUgStZmQF6GX+avTOVCA+8Q/i7/jcCdO4FG1kE
+         uZjsDDXyvQoVh2QI6gYBSAoHWsLqIntWNfdkl9YKTmWskxJ0KxpDnJuYRGiIz7zb7aC/
+         QwH16WKpCCQWyZ4+kP3+cXuvHq4dzuku+b7VZCO8Q7joqZPuyho2LZUJ+60uxK3So/dO
+         revw==
+X-Gm-Message-State: AOAM530SXfelGWKzHCiDUMVaxn2F+z4VRXihqvbcjQCAqgdkMIePfArb
+        Ycr3GGf+rtcCSwxpg7otjhf2k4HKtI91ky/+E95JnR9jlLL401t+S0siATMPuCdQ4mECuS6wt72
+        /IVHdaOlXEUN70XaQTaXrc4fwp/sGw0hpTg==
+X-Received: by 2002:a17:907:628b:: with SMTP id nd11mr2634073ejc.114.1636624042163;
+        Thu, 11 Nov 2021 01:47:22 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxwgJGs5QCPoY9JhAxHn4JnudzBNsH69YXFp0vFFrO9V81K73N3VoMBrKW+QGGXDhNN+aeH6A==
+X-Received: by 2002:a17:907:628b:: with SMTP id nd11mr2634046ejc.114.1636624042014;
+        Thu, 11 Nov 2021 01:47:22 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id qk7sm1058625ejc.23.2021.11.11.01.45.42
+        by smtp.gmail.com with ESMTPSA id gt18sm1018254ejc.88.2021.11.11.01.47.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Nov 2021 01:45:42 -0800 (PST)
-Message-ID: <b33c60d4-1da3-9e71-66d6-3e4e5c43b6b8@redhat.com>
-Date:   Thu, 11 Nov 2021 10:45:41 +0100
+        Thu, 11 Nov 2021 01:47:21 -0800 (PST)
+Message-ID: <12650b8d-6f4b-bbf1-f570-d9476e3850bf@redhat.com>
+Date:   Thu, 11 Nov 2021 10:47:21 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: fix documentation for
- adaptive keyboard
+Subject: Re: [PATCH] platform/mellanox: mlxreg-lc: fix error code in
+ mlxreg_lc_create_static_devices()
 Content-Language: en-US
-To:     Vincent Bernat <vincent@bernat.ch>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-References: <20211109195209.176905-1-vincent@bernat.ch>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Vadim Pasternak <vadimp@nvidia.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Michael Shych <michaelsh@nvidia.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20211110074346.GB5176@kili>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211109195209.176905-1-vincent@bernat.ch>
+In-Reply-To: <20211110074346.GB5176@kili>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,16 +81,19 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/9/21 20:52, Vincent Bernat wrote:
-> The different values were offset by 1. 0 is for "home mode", 1 for
-> "web-browser mode", etc. Moreover, the URL to the laptop's user guide
-> did not work anymore.
+On 11/10/21 08:43, Dan Carpenter wrote:
+> This code should be using PTR_ERR() instead of IS_ERR().  And because
+> it's using the wrong "dev->client" pointer, the IS_ERR() check will be
+> false, meaning the function returns success.
 > 
-> Signed-off-by: Vincent Bernat <vincent@bernat.ch>
+> Fixes: 62f9529b8d5c ("platform/mellanox: mlxreg-lc: Add initial support for Nvidia line card devices")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Thank you for this fix.
+Thanks, patch looks good to me:
 
-I will add this fix to my tree once 5.16-rc is out and
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+I will add this fix to my tree once 5.16-rc1 is out and
 I will include this fix in my first pdx86 fixes pull-req
 for 5.16.
 
@@ -97,34 +102,38 @@ Regards,
 Hans
 
 > ---
->  Documentation/admin-guide/laptops/thinkpad-acpi.rst | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  drivers/platform/mellanox/mlxreg-lc.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> index 6721a80a2d4f..475eb0e81e4a 100644
-> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> @@ -1520,15 +1520,15 @@ This sysfs attribute controls the keyboard "face" that will be shown on the
->  Lenovo X1 Carbon 2nd gen (2014)'s adaptive keyboard. The value can be read
->  and set.
+> diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
+> index 0b7f58feb701..c897a2f15840 100644
+> --- a/drivers/platform/mellanox/mlxreg-lc.c
+> +++ b/drivers/platform/mellanox/mlxreg-lc.c
+> @@ -413,7 +413,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
+>  				int size)
+>  {
+>  	struct mlxreg_hotplug_device *dev = devs;
+> -	int i;
+> +	int i, ret;
 >  
-> -- 1 = Home mode
-> -- 2 = Web-browser mode
-> -- 3 = Web-conference mode
-> -- 4 = Function mode
-> -- 5 = Layflat mode
-> +- 0 = Home mode
-> +- 1 = Web-browser mode
-> +- 2 = Web-conference mode
-> +- 3 = Function mode
-> +- 4 = Layflat mode
+>  	/* Create static I2C device feeding by auxiliary or main power. */
+>  	for (i = 0; i < size; i++, dev++) {
+> @@ -423,6 +423,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
+>  				dev->brdinfo->type, dev->nr, dev->brdinfo->addr);
 >  
->  For more details about which buttons will appear depending on the mode, please
->  review the laptop's user guide:
-> -http://www.lenovo.com/shop/americas/content/user_guides/x1carbon_2_ug_en.pdf
-> +https://download.lenovo.com/ibmdl/pub/pc/pccbbs/mobiles_pdf/x1carbon_2_ug_en.pdf
+>  			dev->adapter = NULL;
+> +			ret = PTR_ERR(dev->client);
+>  			goto fail_create_static_devices;
+>  		}
+>  	}
+> @@ -435,7 +436,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
+>  		i2c_unregister_device(dev->client);
+>  		dev->client = NULL;
+>  	}
+> -	return IS_ERR(dev->client);
+> +	return ret;
+>  }
 >  
->  Battery charge control
->  ----------------------
+>  static void
 > 
 
