@@ -2,77 +2,77 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC232C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 09:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B111AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 09:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC516117A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 09:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944DD61152
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 09:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232671AbhKKJuO (ORCPT
+        id S232719AbhKKJw4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 04:50:14 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:47136 "EHLO
+        Thu, 11 Nov 2021 04:52:56 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58660 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232549AbhKKJuN (ORCPT
+        by vger.kernel.org with ESMTP id S229668AbhKKJw4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 04:50:13 -0500
+        Thu, 11 Nov 2021 04:52:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636624044;
+        s=mimecast20190719; t=1636624207;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LZMGVBi1WJ/do0+s09ZqM+DEvJGBRijkiBcXTXBsjMY=;
-        b=iAjo0XyQuUHNJ9HnyP70vJCc5tri8FhPLf15xk5wLQG/lciWi38gm7My+aYK7/IR9ox+sm
-        1A+Bh892Kxob3KYwysZ79m96XCUKWSwd+VNevEKKp0A5HMjsgVpjU4ffnc9wiSq+8bM8nk
-        gklGxDluwScyNPYhTxHEp1PTV9Lubn0=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-pVt1HG2QMHeJDmxH87G68w-1; Thu, 11 Nov 2021 04:47:23 -0500
-X-MC-Unique: pVt1HG2QMHeJDmxH87G68w-1
-Received: by mail-ed1-f70.google.com with SMTP id g3-20020a056402424300b003e2981e1edbso4994221edb.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 01:47:23 -0800 (PST)
+        bh=JafLzISzwmOzPN4jHok3ZWFkvUmYVSwTaJ2FlEhdEi4=;
+        b=QbWg1OzrgDRamDTh2vPijm76Myrs1GB/Jpj44ft2UYYW4NIbVnFOnnHha16GnVnAZwycVz
+        VFgj+9101C9mB5dUNWWZkuw4D1fH3KwNV531pMX3i7GyhO+kszymBHHLJ8hp7iztv9f6TS
+        zqk1d+khUPZISld3uLoYaL3V5B0LqC0=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-480-sbN7LJ1hMRCQyej2aTWynQ-1; Thu, 11 Nov 2021 04:50:05 -0500
+X-MC-Unique: sbN7LJ1hMRCQyej2aTWynQ-1
+Received: by mail-ed1-f69.google.com with SMTP id z1-20020a05640235c100b003e28c89743bso4896348edc.22
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 01:50:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=LZMGVBi1WJ/do0+s09ZqM+DEvJGBRijkiBcXTXBsjMY=;
-        b=s93GTnVl6xvYx83rDpbak5mGWopmCAnqujn8WC88wzX8b+kpOrQrQYsh3c3cJ6lW9i
-         pv8QmEgn4I0eiuAve44l9EwhwY5BAr1T8ca9dyun5yeGOfjsASI4zWHYtzWVlkQizMaN
-         jOxtAOFihnhVkkt4ZCHCQNoCt3xkpZsUgStZmQF6GX+avTOVCA+8Q/i7/jcCdO4FG1kE
-         uZjsDDXyvQoVh2QI6gYBSAoHWsLqIntWNfdkl9YKTmWskxJ0KxpDnJuYRGiIz7zb7aC/
-         QwH16WKpCCQWyZ4+kP3+cXuvHq4dzuku+b7VZCO8Q7joqZPuyho2LZUJ+60uxK3So/dO
-         revw==
-X-Gm-Message-State: AOAM530SXfelGWKzHCiDUMVaxn2F+z4VRXihqvbcjQCAqgdkMIePfArb
-        Ycr3GGf+rtcCSwxpg7otjhf2k4HKtI91ky/+E95JnR9jlLL401t+S0siATMPuCdQ4mECuS6wt72
-        /IVHdaOlXEUN70XaQTaXrc4fwp/sGw0hpTg==
-X-Received: by 2002:a17:907:628b:: with SMTP id nd11mr2634073ejc.114.1636624042163;
-        Thu, 11 Nov 2021 01:47:22 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxwgJGs5QCPoY9JhAxHn4JnudzBNsH69YXFp0vFFrO9V81K73N3VoMBrKW+QGGXDhNN+aeH6A==
-X-Received: by 2002:a17:907:628b:: with SMTP id nd11mr2634046ejc.114.1636624042014;
-        Thu, 11 Nov 2021 01:47:22 -0800 (PST)
+        bh=JafLzISzwmOzPN4jHok3ZWFkvUmYVSwTaJ2FlEhdEi4=;
+        b=5AxVoS7OZSBR+zR/ldbprRCJvTeEX2t6+W+QU/u+NicMQLltofzubNAqgdiPpWE2Qp
+         Q8W5fUh+dW+jFvDxmnJpddWT3Zh3odhaOFeMJgtXqFXhqLDMJDhH4eKqYRfS3nSxu0Pt
+         h7QwybGZjNgrE3/fed8omSM3iZeZtEFypK641SljfYzSDMRhUUU1Nam2f+t19XMkg7a2
+         HOGgGpAkjp3CLzH7gaiGLRkL9Yz87tXM1pgkvD2s9SMSxhbdPCtm52O5rpoIUUyTpEEV
+         ZihUgvvMIGoVIfyW5swQf4BFCjXKrbH1WriFDsbJi6kHK5vgdRH8uONpyuWWrOKOf/uy
+         IR9A==
+X-Gm-Message-State: AOAM531srtoQrMy0/WV2cxO1e3MxhvjaLGYzjXCNaYtCizU1/wIHfS8s
+        TlSr5F2MoiA31liFwD+MiVjyBrxt3SisbuBBGrHbrv/9WZb/7pH+YHcqy+91vAnZDBwzBwtl5t8
+        FM73mOVwXVRhd8qx+3LR66QBKKc7k1crR8Q==
+X-Received: by 2002:a05:6402:510b:: with SMTP id m11mr8276772edd.215.1636624204510;
+        Thu, 11 Nov 2021 01:50:04 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwQXQipOHgu56fK0wp8NB2xtImtn2zLX3VXCyWkmAAt4eX3rhUs8DnfV/kJZx6jHnPTnieDzg==
+X-Received: by 2002:a05:6402:510b:: with SMTP id m11mr8276733edd.215.1636624204285;
+        Thu, 11 Nov 2021 01:50:04 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id gt18sm1018254ejc.88.2021.11.11.01.47.21
+        by smtp.gmail.com with ESMTPSA id ee7sm1252316edb.1.2021.11.11.01.50.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Nov 2021 01:47:21 -0800 (PST)
-Message-ID: <12650b8d-6f4b-bbf1-f570-d9476e3850bf@redhat.com>
-Date:   Thu, 11 Nov 2021 10:47:21 +0100
+        Thu, 11 Nov 2021 01:50:04 -0800 (PST)
+Message-ID: <c6130e0a-8c26-f6c8-acf1-351b41e8a2bc@redhat.com>
+Date:   Thu, 11 Nov 2021 10:50:03 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH] platform/mellanox: mlxreg-lc: fix error code in
- mlxreg_lc_create_static_devices()
+Subject: Re: [PATCH] platform/x86: hp_accel: Fix an error handling path in
+ 'lis3lv02d_probe()'
 Content-Language: en-US
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Vadim Pasternak <vadimp@nvidia.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Michael Shych <michaelsh@nvidia.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        eric.piel@tremplin-utc.net, markgross@kernel.org,
+        dmitry.torokhov@gmail.com, giedriuswork@gmail.com,
+        dvhart@linux.intel.com, akpm@linux-foundation.org, pavel@suse.cz
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org
-References: <20211110074346.GB5176@kili>
+References: <5a4f218f8f16d2e3a7906b7ca3654ffa946895f8.1636314074.git.christophe.jaillet@wanadoo.fr>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211110074346.GB5176@kili>
+In-Reply-To: <5a4f218f8f16d2e3a7906b7ca3654ffa946895f8.1636314074.git.christophe.jaillet@wanadoo.fr>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,13 +81,16 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/10/21 08:43, Dan Carpenter wrote:
-> This code should be using PTR_ERR() instead of IS_ERR().  And because
-> it's using the wrong "dev->client" pointer, the IS_ERR() check will be
-> false, meaning the function returns success.
+On 11/7/21 20:57, Christophe JAILLET wrote:
+> If 'led_classdev_register()' fails, some additional resources should be
+> released.
 > 
-> Fixes: 62f9529b8d5c ("platform/mellanox: mlxreg-lc: Add initial support for Nvidia line card devices")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Add the missing 'i8042_remove_filter()' and 'lis3lv02d_remove_fs()' calls
+> that are already in the remove function but are missing here.
+> 
+> Fixes: a4c724d0723b ("platform: hp_accel: add a i8042 filter to remove HPQ6000 data from kb bus stream")
+> Fixes: 9e0c79782143 ("lis3lv02d: merge with leds hp disk")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
 Thanks, patch looks good to me:
 
@@ -102,38 +105,24 @@ Regards,
 Hans
 
 > ---
->  drivers/platform/mellanox/mlxreg-lc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/hp_accel.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
-> index 0b7f58feb701..c897a2f15840 100644
-> --- a/drivers/platform/mellanox/mlxreg-lc.c
-> +++ b/drivers/platform/mellanox/mlxreg-lc.c
-> @@ -413,7 +413,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
->  				int size)
->  {
->  	struct mlxreg_hotplug_device *dev = devs;
-> -	int i;
-> +	int i, ret;
->  
->  	/* Create static I2C device feeding by auxiliary or main power. */
->  	for (i = 0; i < size; i++, dev++) {
-> @@ -423,6 +423,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
->  				dev->brdinfo->type, dev->nr, dev->brdinfo->addr);
->  
->  			dev->adapter = NULL;
-> +			ret = PTR_ERR(dev->client);
->  			goto fail_create_static_devices;
->  		}
+> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
+> index b183967ecfb7..435a91fe2568 100644
+> --- a/drivers/platform/x86/hp_accel.c
+> +++ b/drivers/platform/x86/hp_accel.c
+> @@ -331,9 +331,11 @@ static int lis3lv02d_probe(struct platform_device *device)
+>  	INIT_WORK(&hpled_led.work, delayed_set_status_worker);
+>  	ret = led_classdev_register(NULL, &hpled_led.led_classdev);
+>  	if (ret) {
+> +		i8042_remove_filter(hp_accel_i8042_filter);
+>  		lis3lv02d_joystick_disable(&lis3_dev);
+>  		lis3lv02d_poweroff(&lis3_dev);
+>  		flush_work(&hpled_led.work);
+> +		lis3lv02d_remove_fs(&lis3_dev);
+>  		return ret;
 >  	}
-> @@ -435,7 +436,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
->  		i2c_unregister_device(dev->client);
->  		dev->client = NULL;
->  	}
-> -	return IS_ERR(dev->client);
-> +	return ret;
->  }
 >  
->  static void
 > 
 
