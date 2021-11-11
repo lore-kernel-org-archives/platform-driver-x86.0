@@ -2,199 +2,350 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EE5C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 07:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF546C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 08:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7CE6124D
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 07:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82636162E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 08:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229668AbhKKHnI (ORCPT
+        id S231928AbhKKJBl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 02:43:08 -0500
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:25646 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229564AbhKKHnI (ORCPT
+        Thu, 11 Nov 2021 04:01:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229543AbhKKJBk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 02:43:08 -0500
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AB5O5Yi010764;
-        Thu, 11 Nov 2021 07:40:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2021-07-09;
- bh=Mw0gu86+f3QknTxIo+j/9CoawGJukcxjdbeDryJ2im4=;
- b=uyDO392XhUZbXhUdC6/9+l21D7xejLz4wB3KY9f8fdKd97c6jcSpGKox8UhOJXurz/Si
- T2DMv+3HEfP6qxNDmhhGDRPmPGHHIFp96zbyOk0/F9jjUtf4SGa1ZAK9MW0KHwmQ7krg
- /5r2DT53/nMIvNjgBOR+wpIL6Vr0DLdeXL8y9rXUVRynAX69nWzW4pnCiVZjMzNcKFJy
- eCoPdzPDlVIEJ4iWl5sR0YnNAWjcFQBuF6s3bgvXf87kjV9+coG5gt8dKFzXoh2yvXA8
- 8Rbm/t1427LaGLqBZn3OCSdqDO4Dajv7ihIG7ojJgCDfAimXCVnMowGfezxSfnDDVjvF GA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3c7yq7j3sn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Nov 2021 07:40:12 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1AB7UMm7015347;
-        Thu, 11 Nov 2021 07:40:11 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2173.outbound.protection.outlook.com [104.47.56.173])
-        by aserp3020.oracle.com with ESMTP id 3c5hh6fgyq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Nov 2021 07:40:11 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kzy9UpqPXp13MBLgKrGD/KW7ugIR+2unGhVLbKo90jEixb+u1FY0tuULSGOwE8pDONyDYGfJauB7Ke3Y3cGlBczSsQdTjeigPvc+98UQ+y8g96C9kYLF4+TB374lpeUL3n2CzWNsTzRaPoTA7JY+tgD/e95jv8nUfsAtNBDPJyRUCIVkgyPiC9rJseJof3wMDMtSwA2fu1WD2sfgcFtwXG9tVkNbsP03nrtbD5olWxtngGaxHUKQUs7gJLlB66tqJAhazCeb2liuHOgLUjJOzMBst2VlgNc+GUL1x+tkxaTDkbdscSbzfLp691BD/TzY43y1u1rlgQXaZ2zXCkExmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Mw0gu86+f3QknTxIo+j/9CoawGJukcxjdbeDryJ2im4=;
- b=K1wusxYAfc/FcFcRCQGlrWLRWrZYpEfkwYS8Bns4sSqdqaEDlsyYbVL1Q6usCMRfU8Vc8QBbvjA69/PkXymD945a/iDCCeeaHlIvdwTASbOyHP715QYhSZyZUKsqN1mCmEtuHp4r1pHDCE7k4M4kVw8q/7dJxkfSKtO72g9eSRjKFoHMZl8L+xNOR3B0Ug9+pdiqzkDySVZZkMteznpV6bZhFjBOswWnNwchmM+C8eDNdHkOYwXT6qYZQ2purjf6co2zudU1t1ykZIHBCsh7G2eb5PbNLaO7xx1BiAurchvFMfZ5cWJ6MpYk0+MWJbe1fvW9U7M1zB3oU0U2FJlzEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mw0gu86+f3QknTxIo+j/9CoawGJukcxjdbeDryJ2im4=;
- b=ufujGrFlRxyH4I6eTl/bN55KPMOP2T82vWDYHFn+R2jlaCk8r8SE775MR+wxmWJmunmvn8JHwhg9VuO529cTBf4NU0LvZ/dGaRE+rZVnLPJoskYHNXt4+tsCZvIgUHj0AMGQbV3x0ebS4E/Njjz2DPw9rM0O7y6mjB5D8GwRU3g=
-Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
- (2603:10b6:301:2d::28) by CO1PR10MB4610.namprd10.prod.outlook.com
- (2603:10b6:303:93::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.16; Thu, 11 Nov
- 2021 07:40:09 +0000
-Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
- ([fe80::d409:11b5:5eb2:6be9]) by MWHPR1001MB2365.namprd10.prod.outlook.com
- ([fe80::d409:11b5:5eb2:6be9%5]) with mapi id 15.20.4690.016; Thu, 11 Nov 2021
- 07:40:09 +0000
-Date:   Thu, 11 Nov 2021 10:39:50 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mark Gross <markgross@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Michael Shych <michaelsh@nvidia.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/mellanox: mlxreg-lc: fix error code in
- mlxreg_lc_create_static_devices()
-Message-ID: <20211111073949.GO2026@kadam>
-References: <20211110074346.GB5176@kili>
- <20211110223147.GA16388@T470>
- <20211111073341.GN2001@kadam>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211111073341.GN2001@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: JNAP275CA0005.ZAFP275.PROD.OUTLOOK.COM (2603:1086:0:4c::10)
- To MWHPR1001MB2365.namprd10.prod.outlook.com (2603:10b6:301:2d::28)
+        Thu, 11 Nov 2021 04:01:40 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 92ED961208;
+        Thu, 11 Nov 2021 08:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636621131;
+        bh=R/hxMyBxw54SZkxop6XaqXPv6qgS05My5zvnCK2eyHE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kZpEJfqsZvnUfiY2s+Z1GCDnTon+gl5i948cGEmu1Lb6Emsb8Ts4PKMYVHsQHWyxr
+         A7Xzzmtt3sXEu71KKWv5+AuqH26rMRy6YjsENilwmHY2znmI+carKd2w0eTOouTLqF
+         fVc6L72wJWeaoRn73pjmYBUjeZVhs4JhQgLvEes+FePqJ8KJGk/QCAohf+wM6d8Hdp
+         3drIuINXTO6dJzbEWjaYx+MVTb0Ut7h3ArbsEB9lipgDFcvMY/Ngxw73FNb4ETNl/I
+         dPSvoDkdWVA+cOqCG6rPoes4CndV4wSukj0uT5jYwzGVweC5G55otkpWetPysHFqUh
+         VkduHmeDKKvzw==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        Sumesh K Naduvalath <sumesh.k.naduvalath@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, llvm@lists.linux.dev
+Subject: [PATCH] HID: intel-ish-hid: fix module device-id handling
+Date:   Thu, 11 Nov 2021 09:56:33 +0100
+Message-Id: <20211111085842.2846422-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Received: from kadam (102.222.70.114) by JNAP275CA0005.ZAFP275.PROD.OUTLOOK.COM (2603:1086:0:4c::10) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.11 via Frontend Transport; Thu, 11 Nov 2021 07:40:03 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b84fe80a-ca32-4d86-3b81-08d9a4e67c7b
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4610:
-X-Microsoft-Antispam-PRVS: <CO1PR10MB4610349E32C64C1C446D8C5D8E949@CO1PR10MB4610.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Wv2KznVsj44R+0B59Ez9ADL+wv3tXasbZb3GZnAVyifBtwZQbpZZYW33R3ft8tPnXjISI3CgYHeUo4KHJVqV8KsXLoXZrH9LeugWww12p7kQP8WSc6kMa0IB20Q1GhClif1PuGmBGg2CqEWW7x7to9J4HCugRgpMA6RwzU8XRRy3pKeDBNYa1dbJWZhppBXH+Vpx81Ql56Z6pgXUjvk8+0niybrzWKYbqVqgVUsslK8Rh7ocO0l14JXfpCQ86vvCaCyCyGxOzfGJcXvTErmONl2PszBX9z4bj61lFxn+gU6r/pb7jfh1IMveLeXe59HdCXOXdFBiEDbiVRVAjveENz7+BY4NnsrGXrQNB82CDetCmm+N9PR9bpdXKM2W+okSD/yfFYQkhSAukSAhGC4IfcnI8zGYLVHdXAovy4V39TcnWd+7oF/dQQ1iFVZQymnpaQdIg+bsSY/VdfMknT/nxasrvRE5niY4lfRmVAgQbIEVltDwY0cla1aoYXN+GRJFnKKNtSpfBttvKK9v9nXDq6f9sVS2Xgt81xPV0dj5lTNuvDqcLw/4uS4d+GSQDVqcQmlxdc4UEbXj2BP84bL8lah7rxVnSJSlH8qeW0WbAlITZuT8LdhkXq0xZNVs9SNgCzvfwO2oGD0VoGd5a6ESWPo4zAanmUFFXbtNSpwptnFkX9ln29NUsKnH5mIbuNPeBf5ir4mdYSqK4zSH5L9kvQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2365.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(33656002)(44832011)(33716001)(2906002)(5660300002)(316002)(6916009)(54906003)(9576002)(38350700002)(38100700002)(86362001)(6666004)(186003)(9686003)(83380400001)(4326008)(66476007)(8676002)(6496006)(66556008)(52116002)(1076003)(55016002)(66946007)(8936002)(508600001)(956004)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3sOGNKYCfyvYwSpHLz+t5j6HXoAkxcECeqH11y8sGG/kRUTpwCZ7KwKakhBN?=
- =?us-ascii?Q?1zqJQRra7db/X2Bf8UkygZEuhO99PlZnqI8JtD7jP3S29Ep6oKplT4VlvtLD?=
- =?us-ascii?Q?bh518sHTh0qgsgn7HuP3DbsDruhoXo+btoWO8kaeTxgL3BXk4FSTDIDcYXKf?=
- =?us-ascii?Q?JU21sLku+1VZHmzNHTNJj61VljKFOuay3O3pzOtxSYrC+n/2Hs6uPejQlYEr?=
- =?us-ascii?Q?NyN7OMDystrl3B2Vphf0xUNrI/rQJkzppLfmVon5apEFtPncb1Zn4j8OB6ns?=
- =?us-ascii?Q?1w6torLHS7FP+bDFJyzdeeJRX49/zXgmS7IsTodymrbdNUPN6H2uKRVQRX75?=
- =?us-ascii?Q?rNEx9B925C2n1aRzEzFCdqCWvEns9EEbbtHuf+94qK0giyLmDewu3PNf2Mqw?=
- =?us-ascii?Q?36ajDf1zZn0V8PvzUBTWWRgSCDrjSO48+mUk1/xAmTzFnw+6ispFmJpkoPj1?=
- =?us-ascii?Q?5ztPXSjBSNnQUpt+P0LgDn4Fl6DpFHn+0l2gYNwpIt8c9/g9m3O3qcWutZH4?=
- =?us-ascii?Q?l3fSPQJ3YfOnzqgLxwBQXooh6dXRoN/m9stkepzN2pKYytVLq3H8GFbvNJ8N?=
- =?us-ascii?Q?IzYy5LjSQR48dabL2wtmxUfZWOS3SY7z+Bac01L3vPSMjWpcms9d6cMM6Xhz?=
- =?us-ascii?Q?bhe/x3R72zIx1nLIjZVRFufNTc37U7rA1fxqtDsXq40z5Ie/q90Y7RsPxDj2?=
- =?us-ascii?Q?itYtIL3Vxa+OlzAB4Nd/KYkiWZrOhgKRtN6nbM7oWKwaa1J1Wo9m//KNc2vc?=
- =?us-ascii?Q?XdEBzVsYIVI/th53mMhkOIjJuA7mKxuhEiyZv6MqNniTvJjzgwj52pnpfvUU?=
- =?us-ascii?Q?RqIz2ieZkprxvwF18saXmDFHSsc+6kNytOO0mcsDDU3eV1VaKpTAOYk98H2z?=
- =?us-ascii?Q?xgk6ugCaMrAm/rDUHLQXVkZLMUDC6tyGPFpqoeQODntiz2AWxPfdrHRJGeH3?=
- =?us-ascii?Q?17cDWjG5303F1mFZX9Bn0FTZQIhxZnFVV2r0/jw1Zp3mUkECDLM2ADLYF4Ew?=
- =?us-ascii?Q?iq4Qg038PXKIBZlyx83ABfiPbJ7ZoQpaFF7Q5ZMhPI5uJhtmbxvr/H/DgAS1?=
- =?us-ascii?Q?Jhp6siqn63jSQ+1hn5pqGvJa6qzcZ3c0HOunRYIjyG4RMCkFovqktDb1leJ7?=
- =?us-ascii?Q?L0KIeYVv9ZefT1OjPk+x1r9r0RIZ0pQF4rxCelfzbW2OoTTGHAdcW5NTbIuZ?=
- =?us-ascii?Q?9558NyFZhDGu/cw1nWGWG6B7gOcgfAN/tJRW8DLUJNJ8SGQN2E5qwJKbvfsM?=
- =?us-ascii?Q?SConjTGqcrgjRFUBZyQvMZSnu01jtTBWE36YMHU5ufnC5Ss3qbKPbvnWt041?=
- =?us-ascii?Q?PjbrzOE9lRgH6w9hA9zbvZlpNWf0SVuOJIYLspJYJl+fAaWUKtgSZ+Lzwizt?=
- =?us-ascii?Q?16knWMb+WA9K4bQhM6/qzAt7u+5uMcjI+N+aRxlifvTSx0F4yFfgzvIn8Son?=
- =?us-ascii?Q?VsYkx8sQA+M5IJp4rHWLNA2h535sRwfCyOsmZcyUcsuO8erbx3NOC5EIl5Gx?=
- =?us-ascii?Q?mae2oBr3N5C0bCfSTcAZSQcshgvK5WnObvFhrvVPmMedTCJC3VTSTokkGPep?=
- =?us-ascii?Q?UYeyTKZ5YrwihLF8gAR6+Tf2Q7BWw9FYc/VwRqVKQW5QtHAi5HL8gXfQGEHQ?=
- =?us-ascii?Q?1/rjLqIUeuw3sGeJdacdyPl4MXjdIwlGZ6A/Hh9UUe9JMJBD+mjTCvZsuh5+?=
- =?us-ascii?Q?uzdCwzwcdsR1/YI+Udm5dic6Iu4=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b84fe80a-ca32-4d86-3b81-08d9a4e67c7b
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2365.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2021 07:40:09.0628
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IulZMYOh5Xp607Tutw2pKfQaOsTRGUqdmaFTmlnqL2QSBRbECbVFLOejR4c7kxUUVgFZHnxiFpBY0R3p6VWCQjRo6R9SP1Vpqoj0ttFt3WU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4610
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10164 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
- malwarescore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
- definitions=main-2111110044
-X-Proofpoint-GUID: WfiayfbySW9SXGDLpuenMm1vzqk6d2mj
-X-Proofpoint-ORIG-GUID: WfiayfbySW9SXGDLpuenMm1vzqk6d2mj
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Nov 11, 2021 at 10:33:41AM +0300, Dan Carpenter wrote:
-> On Wed, Nov 10, 2021 at 02:31:47PM -0800, Mark Gross wrote:
-> > On Wed, Nov 10, 2021 at 10:43:46AM +0300, Dan Carpenter wrote:
-> > > This code should be using PTR_ERR() instead of IS_ERR().  And because
-> > > it's using the wrong "dev->client" pointer, the IS_ERR() check will be
-> > > false, meaning the function returns success.
-> > > 
-> > > Fixes: 62f9529b8d5c ("platform/mellanox: mlxreg-lc: Add initial support for Nvidia line card devices")
-> > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > > ---
-> > >  drivers/platform/mellanox/mlxreg-lc.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
-> > > index 0b7f58feb701..c897a2f15840 100644
-> > > --- a/drivers/platform/mellanox/mlxreg-lc.c
-> > > +++ b/drivers/platform/mellanox/mlxreg-lc.c
-> > > @@ -413,7 +413,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
-> > >  				int size)
-> > >  {
-> > >  	struct mlxreg_hotplug_device *dev = devs;
-> > > -	int i;
-> > > +	int i, ret;
-> > >  
-> > >  	/* Create static I2C device feeding by auxiliary or main power. */
-> > >  	for (i = 0; i < size; i++, dev++) {
-> > > @@ -423,6 +423,7 @@ mlxreg_lc_create_static_devices(struct mlxreg_lc *mlxreg_lc, struct mlxreg_hotpl
-> > >  				dev->brdinfo->type, dev->nr, dev->brdinfo->addr);
-> > >  
-> > >  			dev->adapter = NULL;
-> > > +			ret = PTR_ERR(dev->client);
-> > ret is only set on this error path.
-> > can we get to the return without setting ret?
-> > 
-> 
-> No.
-> 
-> :P
-> 
-> There two ways to read that question is if the patch introduces an
-> uninitialized variable bug and I would be super embarrassed if I did
-> something like that with all the QC scripts that I have to prevent it.
-> The other way to read that question is if it's possible to not introduce
-> the "ret" variable but instead figure it out at the end.  But the error
-> code needs to be preserved at this point because we change change the
-> "dev" pointer and set "dev->adapter" to NULL.
-                         ^^^^^^^^^^^^
-I meant "dev->client" not "dev->adapter".
+From: Arnd Bergmann <arnd@arndb.de>
 
-regards,
-dan carpenter
+A late addititon to the intel-ish-hid framework caused a build failure
+with clang, and introduced an ABI to the module loader that stops working
+if any driver ever needs to bind to more than one UUID:
+
+drivers/hid/intel-ish-hid/ishtp-fw-loader.c:1067:4: error: initializer element is not a compile-time constant
+
+Change the ishtp_device_id to have correct documentation and a driver_data
+field like all the other ones, and change the drivers to use the ID table
+as the primary identification in a way that works with all compilers
+and avoids duplciating the identifiers.
+
+Fixes: f155dfeaa4ee ("platform/x86: isthp_eclite: only load for matching devices")
+Fixes: facfe0a4fdce ("platform/chrome: chros_ec_ishtp: only load for matching devices")
+Fixes: 0d0cccc0fd83 ("HID: intel-ish-hid: hid-client: only load for matching devices")
+Fixes: 44e2a58cb880 ("HID: intel-ish-hid: fw-loader: only load for matching devices")
+Fixes: cb1a2c6847f7 ("HID: intel-ish-hid: use constants for modaliases")
+Fixes: fa443bc3c1e4 ("HID: intel-ish-hid: add support for MODULE_DEVICE_TABLE()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+I did not see this reported on the list so far, but it has probably
+shown up in other build bots as well.
+
+There are lots of ways to fix the warning, I picked this way to address
+the more urgent problem of fixing the mod_devicetable.h format before
+it is too late for that.
+---
+ drivers/hid/intel-ish-hid/ishtp-fw-loader.c  | 19 ++++++++-----------
+ drivers/hid/intel-ish-hid/ishtp-hid-client.c | 19 ++++++++-----------
+ drivers/hid/intel-ish-hid/ishtp/bus.c        |  2 +-
+ drivers/platform/chrome/cros_ec_ishtp.c      | 19 ++++++++-----------
+ drivers/platform/x86/intel/ishtp_eclite.c    | 19 ++++++++-----------
+ include/linux/intel-ish-client-if.h          |  4 ++--
+ include/linux/mod_devicetable.h              |  5 +++--
+ 7 files changed, 38 insertions(+), 49 deletions(-)
+
+diff --git a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+index 945a9d0b68cd..0e1183e96147 100644
+--- a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
++++ b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+@@ -76,9 +76,12 @@ enum ish_loader_commands {
+ #define LOADER_XFER_MODE_ISHTP			BIT(1)
+ 
+ /* ISH Transport Loader client unique GUID */
+-static const guid_t loader_ishtp_guid =
+-	GUID_INIT(0xc804d06a, 0x55bd, 0x4ea7,
+-		  0xad, 0xed, 0x1e, 0x31, 0x22, 0x8c, 0x76, 0xdc);
++static const struct ishtp_device_id loader_ishtp_id_table[] = {
++	{ .guid = GUID_INIT(0xc804d06a, 0x55bd, 0x4ea7,
++		  0xad, 0xed, 0x1e, 0x31, 0x22, 0x8c, 0x76, 0xdc) },
++	{ }
++};
++MODULE_DEVICE_TABLE(ishtp, loader_ishtp_id_table);
+ 
+ #define FILENAME_SIZE				256
+ 
+@@ -880,7 +883,7 @@ static int loader_init(struct ishtp_cl *loader_ishtp_cl, int reset)
+ 
+ 	fw_client =
+ 		ishtp_fw_cl_get_client(ishtp_get_ishtp_device(loader_ishtp_cl),
+-				       &loader_ishtp_guid);
++				       &loader_ishtp_id_table[0].guid);
+ 	if (!fw_client) {
+ 		dev_err(cl_data_to_dev(client_data),
+ 			"ISH client uuid not found\n");
+@@ -1057,18 +1060,12 @@ static int loader_ishtp_cl_reset(struct ishtp_cl_device *cl_device)
+ 
+ static struct ishtp_cl_driver	loader_ishtp_cl_driver = {
+ 	.name = "ish-loader",
+-	.guid = &loader_ishtp_guid,
++	.id = loader_ishtp_id_table,
+ 	.probe = loader_ishtp_cl_probe,
+ 	.remove = loader_ishtp_cl_remove,
+ 	.reset = loader_ishtp_cl_reset,
+ };
+ 
+-static const struct ishtp_device_id loader_ishtp_id_table[] = {
+-	{ loader_ishtp_guid },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(ishtp, loader_ishtp_id_table);
+-
+ static int __init ish_loader_init(void)
+ {
+ 	return ishtp_cl_driver_register(&loader_ishtp_cl_driver, THIS_MODULE);
+diff --git a/drivers/hid/intel-ish-hid/ishtp-hid-client.c b/drivers/hid/intel-ish-hid/ishtp-hid-client.c
+index fb47d38d1e87..4338c9b68a43 100644
+--- a/drivers/hid/intel-ish-hid/ishtp-hid-client.c
++++ b/drivers/hid/intel-ish-hid/ishtp-hid-client.c
+@@ -12,9 +12,12 @@
+ #include "ishtp-hid.h"
+ 
+ /* ISH Transport protocol (ISHTP in short) GUID */
+-static const guid_t hid_ishtp_guid =
+-	GUID_INIT(0x33AECD58, 0xB679, 0x4E54,
+-		  0x9B, 0xD9, 0xA0, 0x4D, 0x34, 0xF0, 0xC2, 0x26);
++static const struct ishtp_device_id hid_ishtp_id_table[] = {
++	{ .guid = GUID_INIT(0x33AECD58, 0xB679, 0x4E54,
++		  0x9B, 0xD9, 0xA0, 0x4D, 0x34, 0xF0, 0xC2, 0x26), },
++	{ }
++};
++MODULE_DEVICE_TABLE(ishtp, hid_ishtp_id_table);
+ 
+ /* Rx ring buffer pool size */
+ #define HID_CL_RX_RING_SIZE	32
+@@ -662,7 +665,7 @@ static int hid_ishtp_cl_init(struct ishtp_cl *hid_ishtp_cl, int reset)
+ 	ishtp_set_tx_ring_size(hid_ishtp_cl, HID_CL_TX_RING_SIZE);
+ 	ishtp_set_rx_ring_size(hid_ishtp_cl, HID_CL_RX_RING_SIZE);
+ 
+-	fw_client = ishtp_fw_cl_get_client(dev, &hid_ishtp_guid);
++	fw_client = ishtp_fw_cl_get_client(dev, &hid_ishtp_id_table[0].guid);
+ 	if (!fw_client) {
+ 		dev_err(cl_data_to_dev(client_data),
+ 			"ish client uuid not found\n");
+@@ -945,19 +948,13 @@ static const struct dev_pm_ops hid_ishtp_pm_ops = {
+ 
+ static struct ishtp_cl_driver	hid_ishtp_cl_driver = {
+ 	.name = "ish-hid",
+-	.guid = &hid_ishtp_guid,
++	.id = hid_ishtp_id_table,
+ 	.probe = hid_ishtp_cl_probe,
+ 	.remove = hid_ishtp_cl_remove,
+ 	.reset = hid_ishtp_cl_reset,
+ 	.driver.pm = &hid_ishtp_pm_ops,
+ };
+ 
+-static const struct ishtp_device_id hid_ishtp_id_table[] = {
+-	{ hid_ishtp_guid },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(ishtp, hid_ishtp_id_table);
+-
+ static int __init ish_hid_init(void)
+ {
+ 	int	rv;
+diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
+index e159cd1c5f37..f68aba8794fe 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/bus.c
++++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
+@@ -241,7 +241,7 @@ static int ishtp_cl_bus_match(struct device *dev, struct device_driver *drv)
+ 	struct ishtp_cl_device *device = to_ishtp_cl_device(dev);
+ 	struct ishtp_cl_driver *driver = to_ishtp_cl_driver(drv);
+ 
+-	return guid_equal(driver->guid,
++	return guid_equal(&driver->id[0].guid,
+ 			  &device->fw_client->props.protocol_name);
+ }
+ 
+diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
+index 8c17358e84c1..4020b8354bae 100644
+--- a/drivers/platform/chrome/cros_ec_ishtp.c
++++ b/drivers/platform/chrome/cros_ec_ishtp.c
+@@ -41,9 +41,12 @@ enum cros_ec_ish_channel {
+ #define ISHTP_SEND_TIMEOUT			(3 * HZ)
+ 
+ /* ISH Transport CrOS EC ISH client unique GUID */
+-static const guid_t cros_ish_guid =
+-	GUID_INIT(0x7b7154d0, 0x56f4, 0x4bdc,
+-		  0xb0, 0xd8, 0x9e, 0x7c, 0xda,	0xe0, 0xd6, 0xa0);
++static const struct ishtp_device_id cros_ec_ishtp_id_table[] = {
++	{ .guid = GUID_INIT(0x7b7154d0, 0x56f4, 0x4bdc,
++		  0xb0, 0xd8, 0x9e, 0x7c, 0xda,	0xe0, 0xd6, 0xa0), },
++	{ }
++};
++MODULE_DEVICE_TABLE(ishtp, cros_ec_ishtp_id_table);
+ 
+ struct header {
+ 	u8 channel;
+@@ -389,7 +392,7 @@ static int cros_ish_init(struct ishtp_cl *cros_ish_cl)
+ 	ishtp_set_tx_ring_size(cros_ish_cl, CROS_ISH_CL_TX_RING_SIZE);
+ 	ishtp_set_rx_ring_size(cros_ish_cl, CROS_ISH_CL_RX_RING_SIZE);
+ 
+-	fw_client = ishtp_fw_cl_get_client(dev, &cros_ish_guid);
++	fw_client = ishtp_fw_cl_get_client(dev, &cros_ec_ishtp_id_table[0].guid);
+ 	if (!fw_client) {
+ 		dev_err(cl_data_to_dev(client_data),
+ 			"ish client uuid not found\n");
+@@ -765,7 +768,7 @@ static SIMPLE_DEV_PM_OPS(cros_ec_ishtp_pm_ops, cros_ec_ishtp_suspend,
+ 
+ static struct ishtp_cl_driver	cros_ec_ishtp_driver = {
+ 	.name = "cros_ec_ishtp",
+-	.guid = &cros_ish_guid,
++	.id = cros_ec_ishtp_id_table,
+ 	.probe = cros_ec_ishtp_probe,
+ 	.remove = cros_ec_ishtp_remove,
+ 	.reset = cros_ec_ishtp_reset,
+@@ -774,12 +777,6 @@ static struct ishtp_cl_driver	cros_ec_ishtp_driver = {
+ 	},
+ };
+ 
+-static const struct ishtp_device_id cros_ec_ishtp_id_table[] = {
+-	{ cros_ish_guid },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(ishtp, cros_ec_ishtp_id_table);
+-
+ static int __init cros_ec_ishtp_mod_init(void)
+ {
+ 	return ishtp_cl_driver_register(&cros_ec_ishtp_driver, THIS_MODULE);
+diff --git a/drivers/platform/x86/intel/ishtp_eclite.c b/drivers/platform/x86/intel/ishtp_eclite.c
+index b9fb8f28fd63..b2da3a4b3e1b 100644
+--- a/drivers/platform/x86/intel/ishtp_eclite.c
++++ b/drivers/platform/x86/intel/ishtp_eclite.c
+@@ -93,9 +93,12 @@ struct ishtp_opregion_dev {
+ };
+ 
+ /* eclite ishtp client UUID: 6a19cc4b-d760-4de3-b14d-f25ebd0fbcd9 */
+-static const guid_t ecl_ishtp_guid =
+-	GUID_INIT(0x6a19cc4b, 0xd760, 0x4de3,
+-		  0xb1, 0x4d, 0xf2, 0x5e, 0xbd, 0xf, 0xbc, 0xd9);
++static const struct ishtp_device_id ecl_ishtp_id_table[] = {
++	{ .guid = GUID_INIT(0x6a19cc4b, 0xd760, 0x4de3,
++		  0xb1, 0x4d, 0xf2, 0x5e, 0xbd, 0xf, 0xbc, 0xd9), },
++	{ }
++};
++MODULE_DEVICE_TABLE(ishtp, ecl_ishtp_id_table);
+ 
+ /* ACPI DSM UUID: 91d936a7-1f01-49c6-a6b4-72f00ad8d8a5 */
+ static const guid_t ecl_acpi_guid =
+@@ -462,7 +465,7 @@ static int ecl_ishtp_cl_init(struct ishtp_cl *ecl_ishtp_cl)
+ 	ishtp_set_tx_ring_size(ecl_ishtp_cl, ECL_CL_TX_RING_SIZE);
+ 	ishtp_set_rx_ring_size(ecl_ishtp_cl, ECL_CL_RX_RING_SIZE);
+ 
+-	fw_client = ishtp_fw_cl_get_client(dev, &ecl_ishtp_guid);
++	fw_client = ishtp_fw_cl_get_client(dev, &ecl_ishtp_id_table[0].guid);
+ 	if (!fw_client) {
+ 		dev_err(cl_data_to_dev(opr_dev), "fw client not found\n");
+ 		return -ENOENT;
+@@ -674,19 +677,13 @@ static const struct dev_pm_ops ecl_ishtp_pm_ops = {
+ 
+ static struct ishtp_cl_driver ecl_ishtp_cl_driver = {
+ 	.name = "ishtp-eclite",
+-	.guid = &ecl_ishtp_guid,
++	.id = &ecl_ishtp_id_table,
+ 	.probe = ecl_ishtp_cl_probe,
+ 	.remove = ecl_ishtp_cl_remove,
+ 	.reset = ecl_ishtp_cl_reset,
+ 	.driver.pm = &ecl_ishtp_pm_ops,
+ };
+ 
+-static const struct ishtp_device_id ecl_ishtp_id_table[] = {
+-	{ ecl_ishtp_guid },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(ishtp, ecl_ishtp_id_table);
+-
+ static int __init ecl_ishtp_init(void)
+ {
+ 	return ishtp_cl_driver_register(&ecl_ishtp_cl_driver, THIS_MODULE);
+diff --git a/include/linux/intel-ish-client-if.h b/include/linux/intel-ish-client-if.h
+index aee8ff4739b1..f45f13304add 100644
+--- a/include/linux/intel-ish-client-if.h
++++ b/include/linux/intel-ish-client-if.h
+@@ -9,7 +9,7 @@
+ #define _INTEL_ISH_CLIENT_IF_H_
+ 
+ #include <linux/device.h>
+-#include <linux/uuid.h>
++#include <linux/mod_devicetable.h>
+ 
+ struct ishtp_cl_device;
+ struct ishtp_device;
+@@ -40,7 +40,7 @@ enum cl_state {
+ struct ishtp_cl_driver {
+ 	struct device_driver driver;
+ 	const char *name;
+-	const guid_t *guid;
++	const struct ishtp_device_id *id;
+ 	int (*probe)(struct ishtp_cl_device *dev);
+ 	void (*remove)(struct ishtp_cl_device *dev);
+ 	int (*reset)(struct ishtp_cl_device *dev);
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index befbf53c4b7c..bcfd5357c9a5 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -901,11 +901,12 @@ struct dfl_device_id {
+ 
+ /**
+  * struct ishtp_device_id - ISHTP device identifier
+- * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+- * @context: pointer to driver specific data
++ * @guid: 16-byte binary guid representation
++ * @driver_data: pointer to driver specific data
+  */
+ struct ishtp_device_id {
+ 	guid_t guid;
++	kernel_ulong_t driver_data;
+ };
+ 
+ #endif /* LINUX_MOD_DEVICETABLE_H */
+-- 
+2.29.2
+
