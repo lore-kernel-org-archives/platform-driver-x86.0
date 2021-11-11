@@ -2,203 +2,86 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D86DDC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44308C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B58326187A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4CA61354
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 16:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234261AbhKKQsC (ORCPT
+        id S233994AbhKKQ5b (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 11:48:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234222AbhKKQsB (ORCPT
+        Thu, 11 Nov 2021 11:57:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229539AbhKKQ5a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 11:48:01 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA3F2C0613F5;
-        Thu, 11 Nov 2021 08:45:11 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id g14so26603846edz.2;
-        Thu, 11 Nov 2021 08:45:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u7NxryXErjXtkrtdjeJl2OkLP7Fwd8D1Ac4yme0xpGQ=;
-        b=TXzXvJntdUq1otyeLiWQQz1xbD3C6bknEk53APVTv1dGvccxr3/O8hJRWEmM8q22mA
-         ugPSVetDIQ9Ci+i5pfRRMlCp+1bwBGRGdWfZLvzUZ5ZQAjY7hOOogjpI5etzsA+hN8ZM
-         Nz1uaucW3DBCe3k4sCGaBQx9Y3e94iZ212dCtTIRue6LedtSyVPY3HBiuW20OWQe4qsq
-         uXCNvDsSZQhf1iM7pvhLjyUFu/aJx5VggCeexUSmrMmHZ7fMnzbmUiwHZZhPXAKRQT/1
-         97Lk+/443fUpLanduElQPFS+Ka4n7772e/vFExdm1zeYIVgpM1P8+3pQ5D5xmlBGvB46
-         zqww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u7NxryXErjXtkrtdjeJl2OkLP7Fwd8D1Ac4yme0xpGQ=;
-        b=uJ3ilwp1bigx/hwGz7+9h/RxlzdpGxJBc4Vo+P3O0Vd7KSTrJJronw3jf1+0XfxTP4
-         GlHXJp6KM5VLhBYGEH6VBs0D7svHJt9Ql5aHUUkm9DsbFrSbNdrPiBetZIiHPIQSdH9g
-         GPKi20m6gwtk8z9y7Nf+OpBD5n3fgQStmwlJobmx9+m/Emjyj2U9PrzerEQPdEHSURJW
-         a0Ib4BhzNXWBNu8958tOYE8czAqZv6s39SEPoFmaFwDhr9/suVssjHLPiD0MrANOkpom
-         lIfNXdnqnnxR8ChNg2snTUj90wU3cM8A+O3q5RzqJtRsDlbfGkq0dqbdvzmT91mICzC9
-         6UDw==
-X-Gm-Message-State: AOAM530a3bEcINvQxicgWyYK/Uap5rLSRuOjyxUpW/aZuZJGxkHauFFi
-        wFGVgqtyIUqLUQnodLXUGT0RS8p3oW5UOMALoig=
-X-Google-Smtp-Source: ABdhPJwy83UujwqCbhFtQEDkTPXfMQEi2mcXedjgv4a3KHMqQWTQdxZxGfPia4GU9ivaP3diFl56L5qWBluJyimK2nw=
-X-Received: by 2002:a17:906:2887:: with SMTP id o7mr10760234ejd.425.1636649110429;
- Thu, 11 Nov 2021 08:45:10 -0800 (PST)
-MIME-Version: 1.0
-References: <CAHifhD5V9vwJenRLcPRH5ZMeLa_JnjZKfdcFZw1CjceBtC6=Ew@mail.gmail.com>
- <CAHp75VeyQEaABFOnEUh2pdFx9ROJvRcud-BuEbKWmaEWpL9_Uw@mail.gmail.com>
- <CAHifhD7Qf7+dc7K-MjNguqmiCWUxOJZmQoCTRUZOR-RWMm_JPw@mail.gmail.com>
- <CAHp75Ve9BMNy3gP=-Dajm+Lgu+E4FCqc4phLgV1_cr2qUnTX_w@mail.gmail.com>
- <CAHifhD4n7O5eWFPOjRAmHYL52tW0K=uXXzVj7L5+enTFwFXW2A@mail.gmail.com>
- <CAArk9MP5cKJ+VhAZUseW4LnQNRvux=MZe2eSy3rQkbHKnUsGig@mail.gmail.com>
- <CAHp75VdRwvU5WjFP5E4gg8U+_e34A0Lwze+nz_wVHoB49jLeLg@mail.gmail.com>
- <CAArk9MNGSxR+92n-D2pe_+r+Z0Q9FoTMPqk11sAKA=4Vckj0HQ@mail.gmail.com>
- <YYy7QZGKeEEfI1mH@lahna> <CAHifhD5bXu2nP533RXyWDnyNt=k2rRZq5Z6A6CCik_2e6XNgGA@mail.gmail.com>
- <YYzxWPIWFAV04LRU@lahna> <CAD2FfiGnmFSTPvkJaXj+cf4yDvci-j+2QkpMqNY821fUT5C=CA@mail.gmail.com>
- <CAHp75Vcp=hC1oL5FBQDDFe8EBxWB9Po4FKNS9ZGtD3q-yQPtAw@mail.gmail.com>
- <CAHifhD6p9qSm5dv1spz+oPRhRkBZeQspHNEphE49fODacm-S6g@mail.gmail.com>
- <CAHp75Vfk5WHWiQxwmqEzVEymgpvjxKWEZbaQ9+=Et7N63Ps=Ng@mail.gmail.com>
- <CAHifhD5bGZOcZFNsHYFeecikHGUts73U4k6=aUVNTKEeETW5rQ@mail.gmail.com>
- <CAHp75VeSnXfjeNeBLtrR78AmB-18kTeXpknn7-jcPLEeWCrzXQ@mail.gmail.com> <CAHifhD4KbLQTA1=vVCeftKybSjU1tHGk7OZn4PN55eXUu-yKog@mail.gmail.com>
-In-Reply-To: <CAHifhD4KbLQTA1=vVCeftKybSjU1tHGk7OZn4PN55eXUu-yKog@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 11 Nov 2021 18:44:25 +0200
-Message-ID: <CAHp75Vfc85XnVmnJ0ytm_XCGSoqFfiMQ3jxXCudsyo5XW6brTQ@mail.gmail.com>
-Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via sysfs
-To:     Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
-Cc:     Richard Hughes <hughsient@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mauro Lima <mauro.lima@eclypsium.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philipp Deppenwiese <philipp.deppenwiese@immu.ne>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
+        Thu, 11 Nov 2021 11:57:30 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 83CC9619F8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 16:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636649681;
+        bh=5zL43joCDPkuBordy+mSwxEUeQh0X5+SrdrEB7i07js=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=JarYh8l1/PX9NK66+s60XZ5vW2KK/dnmR55ysSya7pprh8nuKw7EoAVX+hC2b8gVF
+         mtvm22nId3P7tCHFiUha19we8WWgFDX4ScOJkluB2i5SIJVX6g/nNQ5eAqYAax72WO
+         wFWItOTOizxBnPAraMGs10IhkwftVUbsc+Yh/66+Lv4d/kO1vqgkHaMCe+1Wp9tDPY
+         +DQrxW/QcQeF9tHCePBi93GsMcoYoGU+FrRHPZkFA0agOt3NAaAC+OmMYyCIDv21Zm
+         i5pzV7d9omIiuQvh2qvkOVy+heeXVHsblyrG4SdDDq+uJb+0T6sv6dfsDLWyTM83WE
+         dfQ9+eCZhFnzg==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 11 Nov 2021 16:54:39 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: eugene.shalygin@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-xeFbqHSb50@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Nov 11, 2021 at 6:07 PM Hans-Gert Dahmen
-<hans-gert.dahmen@immu.ne> wrote:
-> Am Do., 11. Nov. 2021 um 16:31 Uhr schrieb Andy Shevchenko
-> <andy.shevchenko@gmail.com>:
-> > On Thu, Nov 11, 2021 at 4:33 PM Hans-Gert Dahmen
-> > <hans-gert.dahmen@immu.ne> wrote:
-> > > Am Do., 11. Nov. 2021 um 14:55 Uhr schrieb Andy Shevchenko
-> > > <andy.shevchenko@gmail.com>:
-> > > > On Thu, Nov 11, 2021 at 2:56 PM Hans-Gert Dahmen
-> > > > <hans-gert.dahmen@immu.ne> wrote:
-> > > > > Am Do., 11. Nov. 2021 um 13:46 Uhr schrieb Andy Shevchenko
-> > > > > <andy.shevchenko@gmail.com>:
-> > > > > > On Thu, Nov 11, 2021 at 1:46 PM Richard Hughes <hughsient@gmail.com> wrote:
-> > > > > > > On Thu, 11 Nov 2021 at 10:33, Mika Westerberg
-> > > > > > > <mika.westerberg@linux.intel.com> wrote:
-> > > > > >
-> > > > > > > it's always going to work on x64 -- if the system firmware isn't available at that offset then the platform just isn't going to boot.
-> > > > > >
-> > > > > > Well, it's _usual_ case, but in general the assumption is simply
-> > > > > > incorrect. Btw, have you checked it on Coreboot enabled platforms?
-> > > > > > What about bare metal configurations where the bootloader provides
-> > > > > > services to the OS?
-> > > > >
-> > > > > No it is always the case. I suggest you go read your own Intel specs
-> > > > > and datasheets
-> > > >
-> > > > Point me out, please, chapters in SDM (I never really read it in full,
-> > > > it's kinda 10x Bible size). What x86 expects is 16 bytes at the end of
-> > > > 1Mb physical address space that the CPU runs at first.
-> > >
-> > > So you do not know what you are talking about, am I correct?
-> >
-> > Let me comment on this provocative question later, after some other
-> > comments first.
-> >
-> > > Starting
-> > > from 386 the first instruction is executed at 0xFFFFFFF0h. What you
-> > > are referring to is the 8086 reset vector and that was like 40 years
-> > > ago.
-> >
-> > True. The idea is the same, It has a reset vector standard for x86
-> > (which doesn't explicitly tell what is there). So, nothing new or
-> > different here.
-> >
-> > > Please refer to SDM volume 3A, chapter 9, section 9.1.4 "First
-> > > Instruction Executed", paragraph two. Just watch out for the hex
-> > > number train starting with FFFFF... then you will find it. This is
-> > > what requires the memory range to be mapped. Modern Intel CPUs require
-> > > larger portions, because of the ACM loading and XuCode and whatnot.
-> >
-> > Thanks. Have you read 9.7 and 9.8, btw?
-> > Where does it tell anything about memory to be mapped to a certain
-> > address, except the last up to 16 bytes?
-> >
->
-> It doesn't, except that the FIT, ACM, BootGuard, XuCode stuff rely on
-> their binaries to be there, this just sets the upper address limit of
-> the window.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Why is it needed? I mean the listed blobs are not mandatory to get
-system boot. Is this correct?
+--- Comment #168 from Eugene Shalygin (eugene.shalygin@gmail.com) ---
+(In reply to Denis Pauk from comment #165)
 
-> > > Please refer to the email [1] from me linked below where I reference
-> > > all PCH datasheets of the x64 era to prove that 16MB are mapped
-> > > hard-wired. Note that the range cannot be turned off and will read
-> > > back 0xFF's if the PCH registers are configured to not be backed by
-> > > the actual SPI flash contents.
-> >
-> > And as I said it does not cover _all_ x86 designs (usual != all) .
-> > Have you heard about Intel MID line of SoCs? Do you know that they
->
-> No and a quick search didn't turn up anything. Can you point me to
-> resources about those SoCs? Also my module is targeting x86_64, that
-> is only a subset of x86 designs.
+> Maybe we can have asus_wmi_info_table from patch in #163 as shared file w=
+ith
+> description of preferred method for access, acpi mutext name, devices on =
+i2c
+> bus, ec register address to sensor type. What do you think?
 
-They are x86_32 and x86_64, so in the category you listed.
+My idea was that the mutex for the state lock can be either the regular mut=
+ex
+or the ACPI mutex, there is no need to lock both of them simultaneously. So
+that the module can return a structure with the mutex (ACPI one if known for
+the given hardware or the regular one) and functions to lock and unlock it.=
+ I
+just thought that would make logic in the actual sensor modules (nct or ec)
+simpler.
 
-Unfortunately there is indeed not much publicly available information,
-but I can tell you that from a design perspective you may consider
-them PCH-less.
+--=20
+You may reply to this email to add a comment.
 
-> > have no SPI NOR and the firmware is located on eMMC? Do you know that
-> > they can run Linux?
->
-> It doesn't matter where the firmware is coming from, as long as it is
-> _mapped_.
-
-It's not. That address space is full of devices, the same memory can't
-be used for ROM and devices at the same time (I won't go to the weird
-concept of different read and write paths, and it's not applicable
-here anyway).
-
-> And something has to be mapped there, even if it is just a
-> loader that gets eMMC going.
-
-(Semi-)wrong. Yes, _something_ is there (with the holes), but it's
-_not_ a firmware memory.
-
-You may google for iomem output on that kind of device.
-
-For your convenience (an excerpt):
-
-  fee00000-fee00fff : Local APIC
-   fee00000-fee00fff : Reserved
- ff000000-ffffffff : Reserved
-   ff008000-ff008fff : 0000:00:0c.0
-     ff008000-ff008fff : 0000:00:0c.0
-   ff009000-ff009fff : 0000:00:13.0
-     ff009000-ff009fff : intel_scu_ipc
-
-> > So, maybe it's you who do not know what you are talking about, am I correct?
-> >
-> > > [1] https://lkml.org/lkml/2021/6/24/379
-
--- 
-With Best Regards,
-Andy Shevchenko
+You are receiving this mail because:
+You are watching the assignee of the bug.=
