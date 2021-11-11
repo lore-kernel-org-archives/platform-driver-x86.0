@@ -2,98 +2,120 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73702C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 21:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51169C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 22:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 529B861241
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 21:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318FC61264
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 22:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233544AbhKKVKr (ORCPT
+        id S230308AbhKKXBS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 16:10:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34010 "EHLO
+        Thu, 11 Nov 2021 18:01:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbhKKVKq (ORCPT
+        with ESMTP id S229835AbhKKXBS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 16:10:46 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8D57C061766;
-        Thu, 11 Nov 2021 13:07:56 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id w1so29256652edd.10;
-        Thu, 11 Nov 2021 13:07:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I5/QR0fHODlqbwJV7S2kEOX48nVs3lR4nWWESAR7ot8=;
-        b=BACge4gwR4FjHMj+kG2cyK0l1bIwq1pBIuO96TbeV0v1aroqwuM4o8ulh/WsGrsR9o
-         UgZqI4bw+rknTxhgU/qX2z/JOGeg4A1iiMba6GsseSlwJvtlpvhoLyN21YICqxgWCPXf
-         5XuhgLK4aoCATpY2+Ne0fF6GzzjqgWA32BOug7lVzXwfip15ux3RNfmZ7QIuHsjZTOV0
-         YoEDndBMs+3wahSmHpkgq/CL6JW+PCXjEV4aw4JLwpYCRb6THQ/im6J6FLWkaICZEsIY
-         q85F9Ek5Yqbwf7fB3mXyhNlhpnMk7EkLwPv8igUyMU4UW53uEmBjQc/0JxdzpPRBLAk9
-         /ZWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I5/QR0fHODlqbwJV7S2kEOX48nVs3lR4nWWESAR7ot8=;
-        b=qmSE6QNp6NMTiTotUZsqfxpeo/VRh/DScDmx+N3TYUBOzR8eMQWkNsUaEoZec3C0TT
-         e3iYUc/wPjU++pQIRhZfSFXVoYPSNuDv5q0+8DmcIGa1Nx43BG35DqXAfpjZpC4wpplC
-         rfQLfDzDwA4Na0umT2ikEgXM2dExAwv3/cCqnfKq0DIg6TsagaIWsJuvDVm/P34gbuvM
-         +iGpoZzXIqhzOn1ggRPs6lz/MTSIyvGOPGBRLCfd7L8SI/SFNWEG5k9zcYfe+OIDJjKj
-         uS0T5jKhU7MTW20vXp8+0ByClwKQXeJWtNlB9jlZc3cN9+/WfwrZzRz5hIbn+fjI3MB+
-         sy/A==
-X-Gm-Message-State: AOAM530wAYJTI4t6oIKzMzWeTyzIzsVBBhRZ1mJS5yKpJxuH36U5gfWz
-        ACgbC69OtbkIoVeSxqxIaIhxCEbLVsOi2pQIIb06aX32
-X-Google-Smtp-Source: ABdhPJxPQARMqHT35vc/9vUQ5/d7UgTjh+rmJjlEvmyzrZ7HxbykWPKqasxIZoRH7FEFTeB8YkjRVEspwZCrz1hcG6o=
-X-Received: by 2002:a05:6402:51cc:: with SMTP id r12mr14383794edd.64.1636664875541;
- Thu, 11 Nov 2021 13:07:55 -0800 (PST)
+        Thu, 11 Nov 2021 18:01:18 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABFA6C061766;
+        Thu, 11 Nov 2021 14:58:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=4VEbIBkqcGJ3l7Zgq/uZwytuUTxQjnyHYFTzYLajeFM=; b=TRKP74wrJUWYaJp4HuEvwVy7CF
+        YTjoRR5QTzBEeBxq3PCrmmtk8OoH2yjaSangsFbsIzdeSF3SLaE56izUwg7fntdvR2wOK/SS+BBoW
+        mlw1ocs5fd6xel1vUL09N1TKuP894s35YGVDEpjPgpVFbveFsZ22oH/jfhCfNxY8cANsFbTSLGVAx
+        K2DBb0Cg0FcItQGhKOg0hYwZVpeswRgpzsjAb1ohwaQTwk1JI+3g3tjD+fcTGOK18WGrRiP2XgaLJ
+        80qxVMKle/wX4S20DP1RY6pgKSTZD0GwVGh8FXexqBMDy9+bYRS3kt0g4B2yElOISKUDDoO4fTzVX
+        z6FuMwhQ==;
+Received: from [2601:1c0:6280:3f0::aa0b]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mlJ17-008w1k-MP; Thu, 11 Nov 2021 22:58:01 +0000
+Subject: Re: [PATCH v7 43/45] virt: Add SEV-SNP guest driver
+To:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+References: <20211110220731.2396491-1-brijesh.singh@amd.com>
+ <20211110220731.2396491-44-brijesh.singh@amd.com>
+ <e8baf85f-8f17-d43e-4656-ed9003affaa8@infradead.org>
+ <38e5047c-43a9-400b-c507-337011e0e605@amd.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e6b412e4-f38e-d212-f52a-e7bdc9a26eff@infradead.org>
+Date:   Thu, 11 Nov 2021 14:57:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-References: <CAHifhD5V9vwJenRLcPRH5ZMeLa_JnjZKfdcFZw1CjceBtC6=Ew@mail.gmail.com>
- <CAHp75VeyQEaABFOnEUh2pdFx9ROJvRcud-BuEbKWmaEWpL9_Uw@mail.gmail.com>
- <CAHifhD7Qf7+dc7K-MjNguqmiCWUxOJZmQoCTRUZOR-RWMm_JPw@mail.gmail.com>
- <CAHp75Ve9BMNy3gP=-Dajm+Lgu+E4FCqc4phLgV1_cr2qUnTX_w@mail.gmail.com>
- <CAHifhD4n7O5eWFPOjRAmHYL52tW0K=uXXzVj7L5+enTFwFXW2A@mail.gmail.com>
- <CAArk9MP5cKJ+VhAZUseW4LnQNRvux=MZe2eSy3rQkbHKnUsGig@mail.gmail.com>
- <CAHp75VdRwvU5WjFP5E4gg8U+_e34A0Lwze+nz_wVHoB49jLeLg@mail.gmail.com>
- <CAArk9MNGSxR+92n-D2pe_+r+Z0Q9FoTMPqk11sAKA=4Vckj0HQ@mail.gmail.com>
- <YYy7QZGKeEEfI1mH@lahna> <CAHifhD5bXu2nP533RXyWDnyNt=k2rRZq5Z6A6CCik_2e6XNgGA@mail.gmail.com>
- <YYzxWPIWFAV04LRU@lahna> <CAD2FfiGnmFSTPvkJaXj+cf4yDvci-j+2QkpMqNY821fUT5C=CA@mail.gmail.com>
- <CAHp75Vcp=hC1oL5FBQDDFe8EBxWB9Po4FKNS9ZGtD3q-yQPtAw@mail.gmail.com>
- <CAHifhD6p9qSm5dv1spz+oPRhRkBZeQspHNEphE49fODacm-S6g@mail.gmail.com>
- <CAHp75Vfk5WHWiQxwmqEzVEymgpvjxKWEZbaQ9+=Et7N63Ps=Ng@mail.gmail.com>
- <CAHifhD5bGZOcZFNsHYFeecikHGUts73U4k6=aUVNTKEeETW5rQ@mail.gmail.com>
- <CAHp75VeSnXfjeNeBLtrR78AmB-18kTeXpknn7-jcPLEeWCrzXQ@mail.gmail.com>
- <CAMj1kXHoRa+9gS7OEZZH2SSZQ8Tf4BUMdh-p=+OvWEb1a6ffFA@mail.gmail.com> <CAHp75VckB0RA6zoLRQ2UOcQRgMEf6sNxDGfpsNVr+92eArhD=Q@mail.gmail.com>
-In-Reply-To: <CAHp75VckB0RA6zoLRQ2UOcQRgMEf6sNxDGfpsNVr+92eArhD=Q@mail.gmail.com>
-From:   Richard Hughes <hughsient@gmail.com>
-Date:   Thu, 11 Nov 2021 21:07:42 +0000
-Message-ID: <CAD2FfiH9OcKyUo6xjTfSENrEKF=4kZiGU4rT0FriK6KgKYSzyw@mail.gmail.com>
-Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via sysfs
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mauro Lima <mauro.lima@eclypsium.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philipp Deppenwiese <philipp.deppenwiese@immu.ne>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <38e5047c-43a9-400b-c507-337011e0e605@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 11 Nov 2021 at 15:50, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> I was thinking about SHA256 hashes or so (as they tell about
-> binaries). In any case the interface for this seems to be in the
-> kernel.
+On 11/11/21 11:27 AM, Brijesh Singh wrote:
+> Hi Randy,
+> 
+> On 11/10/21 4:27 PM, Randy Dunlap wrote:
+>> Hi,
+>>
+>> On 11/10/21 2:07 PM, Brijesh Singh wrote:
+>>> diff --git a/drivers/virt/coco/sevguest/Kconfig b/drivers/virt/coco/sevguest/Kconfig
+>>> new file mode 100644
+>>> index 000000000000..96190919cca8
+>>> --- /dev/null
+>>> +++ b/drivers/virt/coco/sevguest/Kconfig
+>>> @@ -0,0 +1,9 @@
+>>> +config SEV_GUEST
+>>> +    tristate "AMD SEV Guest driver"
+>>> +    default y
+>>
+>> For this to remain as "default y", you need to justify it.
+>> E.g., if a board cannot boot with an interrupt controller,
+>> the driver for the interrupt controller can be "default y".
+>>
+>> So why is this default y?
+>> No other drivers in drivers/virt/ are default y.
+>>
+> 
+> I choose the default "y" for two reasons:
+> 
+> 1.  The driver is built if the user enables the AMD memory encryption support. If the user has selected the AMD memory encryption support, they will be querying an attestation report to verify that the guest is running on AMD memory encryption enabled hardware.
 
-I'm quite sure you don't want to put those EFI format decoders in the
-kernel; there is all kinds of weird compression schemes, volumes are
-recursive, and vendors like to hide weird things in the undocumented
-(or reserved) areas.
+OK, I see. I'm OK with this.
 
-Richard.
+> 2. Typically, an attestation report is retrieved from an initial ramdisk (before mounting the disk). IIUC, the standard initramfs build tools may not include the driver by default and requires the user to go through hoops.
+> 
+> However, I have no strong reason to keep it to "y" if other prefers "m".
+
+"m" is no better than "y" in this case.
+
+thanks.
+-- 
+~Randy
