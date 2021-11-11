@@ -2,70 +2,74 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB66C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 13:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48504C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 13:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3AD61354
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 13:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C01C61152
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 13:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233449AbhKKNjS (ORCPT
+        id S232823AbhKKN55 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 08:39:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43858 "EHLO
+        Thu, 11 Nov 2021 08:57:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233443AbhKKNjR (ORCPT
+        with ESMTP id S232033AbhKKN54 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 08:39:17 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E6B0C0613F5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 05:36:28 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id n29so9829024wra.11
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 05:36:28 -0800 (PST)
+        Thu, 11 Nov 2021 08:57:56 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B877BC061766;
+        Thu, 11 Nov 2021 05:55:07 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id g14so24558992edz.2;
+        Thu, 11 Nov 2021 05:55:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=immu-ne.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WzCDiDkndP/GKiTl3ZEmRMT9MYSu0rjfM7w2AMw4pPA=;
-        b=P0fRuCQN6EBfBT6XLSo/7G56qjZcEUiY+4Lk3atEr+xmA6BuvRCkYBMKhC86SqliT4
-         ZSLCiKGHues/znyvjK6WkE34qSyPM3kzq5/KdYfTJAikIB2zVAT/1CfBpCgDVpKvhOLe
-         Rhw+3oxiiZF9SMV1M/cP4LrcXrh1n+fEdXgrchlDQRJDKG5jYu/vJtTbMizEx0qjkU6d
-         M63VoERgIBkFuQuZr6fBKBx4mxkjyrchhZjmmS/uBfk/Ofgo/b29/Ff9A+OUBVwJOMwR
-         baBiTV39qhAk4j5O1NmgEh7DFzrmqH55voiURasb7sDFJ65rEmHLbpAfUNQQw9llYdNN
-         Yv3Q==
+        bh=tkAHHRELUR3r+2lukxo30sI9DzwFgcJtRiHk6YyjBfE=;
+        b=nLlKfMMvzCLKY9hkrrxdIg+ATY/2fzIXErWKdMKOmbvypXaeA4UeZNQ19OCo2Zwwr1
+         zd8/YcAfB2ZIAPPykQd6Nv21RYMfVgglKgiPsd1GbafCoesPtfF8Wjwtfp+3Ma+9FT80
+         H+62xiUTd3T4Me6xC0QoMA8LR4t6rL8F5l425JvnhOlKpK68C8gupyHyTmdc5JRQ5vgX
+         ism8uomf8kvHjZlbTB1VYYlPsQszDiMT3gnsVOmOGVT7gUIeo19kUExaTrG5rej26j3v
+         4NtbxF3lBZy4/0TqBQ2Ct3155lSDhFhy+sExk6JYUevqGSP0kq9DwOzubBybKvKZO/0S
+         Brfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WzCDiDkndP/GKiTl3ZEmRMT9MYSu0rjfM7w2AMw4pPA=;
-        b=ef4hYomugYmncZPi+LG1jXCpEjKWqiNSlEL1Ip6nE6yMiuvKLYCATFyQT6vbLhjAGe
-         BnBov0TKjhKtuttArvdplpocyYCfFf+BUklMjPkN7DjkCTsBr00GhJVXvZAgPPsjgk/x
-         ADpMiK64ML48tGhS0wkfD8/zjobxjrqD66EnNdXdsjiHNspr7C5BpoE21JGOsIFjqy9/
-         j/oNUMdRl+03VYXQBkctksMWytlmBtiHQXNIrjN2Q5C8E8aaFh5aEBLE/kHs+xnjl2LV
-         owOOTt7HgCU0fy4ewVMGUqMUPf/34lRr2S3X8gqHw6fbMZLtJX63B1sUNHDAVI4UDI/9
-         d0Sw==
-X-Gm-Message-State: AOAM530b9w+SAnvlnGttV8CI9Q2vqMqfWWawFyajzLYJW4mNtUeJvlE3
-        qHHLM20mw2SOatlxzwbJEZLMza9mG6lvUzGJJNJz1w==
-X-Google-Smtp-Source: ABdhPJze/m1HpnZv8jnQMYbSum+bxfNuwGgAN1K3EwV0ar4PyxpBqdDavff3srOKuX2Tsb4C9WLF8IdQd3JC+AmMK1s=
-X-Received: by 2002:adf:eece:: with SMTP id a14mr8906694wrp.333.1636637787099;
- Thu, 11 Nov 2021 05:36:27 -0800 (PST)
+        bh=tkAHHRELUR3r+2lukxo30sI9DzwFgcJtRiHk6YyjBfE=;
+        b=gFWw6qDqiypgGQnIzbf4WjTiPcMZ6n/layeD9rCzgguxjS7b4QxPVg6N5tyKLGVlJQ
+         RnrhMb327wh+eOQririOsyLkYZTON0+KAy/Zp+TS+In/3g5vGo3+rdMq3Cl59PyhuKFW
+         FdCHIlu1mrQix7IzOKO5cLJnn3Uprl7Q3soNICsQW2oyRmUoAmQBWIMR8rqjdZA0X42C
+         9rxkY89nOJbQWF/+qSchv7rvtUrJmmSoS+9hwBiL2tPix+kcW/yRSYxh+iT7nblb2tpc
+         WDT7zoJz51rvaSoLBuuGGTi3iSBX56QXxo6uUKZRJ/fEVIH8qHvPeY+Ig4tVjADcxejJ
+         AY6g==
+X-Gm-Message-State: AOAM532ald+/6YTHSUW412+3HBnrVEIvo3Txs+WWS7mBmCccMdgVIdbP
+        FUFTLEzkNGv/kmdBERhiHburPqiAQCWSCh8emcE=
+X-Google-Smtp-Source: ABdhPJzIGR0yr2K/uYmW72GvEIHnQ6+Ni56Znw65lXQD9xptQmRMY6gNhUaJPd9WkD0ddddvNs+w9QPIr9ySKoRFgyk=
+X-Received: by 2002:a05:6402:c89:: with SMTP id cm9mr1443651edb.283.1636638906260;
+ Thu, 11 Nov 2021 05:55:06 -0800 (PST)
 MIME-Version: 1.0
-References: <CAHifhD4n7O5eWFPOjRAmHYL52tW0K=uXXzVj7L5+enTFwFXW2A@mail.gmail.com>
+References: <CAHifhD5V9vwJenRLcPRH5ZMeLa_JnjZKfdcFZw1CjceBtC6=Ew@mail.gmail.com>
+ <CAHp75VeyQEaABFOnEUh2pdFx9ROJvRcud-BuEbKWmaEWpL9_Uw@mail.gmail.com>
+ <CAHifhD7Qf7+dc7K-MjNguqmiCWUxOJZmQoCTRUZOR-RWMm_JPw@mail.gmail.com>
+ <CAHp75Ve9BMNy3gP=-Dajm+Lgu+E4FCqc4phLgV1_cr2qUnTX_w@mail.gmail.com>
+ <CAHifhD4n7O5eWFPOjRAmHYL52tW0K=uXXzVj7L5+enTFwFXW2A@mail.gmail.com>
  <CAArk9MP5cKJ+VhAZUseW4LnQNRvux=MZe2eSy3rQkbHKnUsGig@mail.gmail.com>
  <CAHp75VdRwvU5WjFP5E4gg8U+_e34A0Lwze+nz_wVHoB49jLeLg@mail.gmail.com>
  <CAArk9MNGSxR+92n-D2pe_+r+Z0Q9FoTMPqk11sAKA=4Vckj0HQ@mail.gmail.com>
  <YYy7QZGKeEEfI1mH@lahna> <CAHifhD5bXu2nP533RXyWDnyNt=k2rRZq5Z6A6CCik_2e6XNgGA@mail.gmail.com>
  <YYzxWPIWFAV04LRU@lahna> <CAD2FfiGnmFSTPvkJaXj+cf4yDvci-j+2QkpMqNY821fUT5C=CA@mail.gmail.com>
- <YY0UCHtf8SAvGHTY@lahna> <CAD2FfiF=7H7RuAdrSrrr57JF6YG=pb5jw2QMgBDQsAEwgasYLw@mail.gmail.com>
- <YY0b01g+z3lkO4w2@lahna>
-In-Reply-To: <YY0b01g+z3lkO4w2@lahna>
-From:   Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
-Date:   Thu, 11 Nov 2021 14:36:15 +0100
-Message-ID: <CAHifhD51y5jX6bGJdFr7s46oJPwHNNOjq9haNOZ8U4ryOkyMbw@mail.gmail.com>
+ <CAHp75Vcp=hC1oL5FBQDDFe8EBxWB9Po4FKNS9ZGtD3q-yQPtAw@mail.gmail.com> <CAHifhD6p9qSm5dv1spz+oPRhRkBZeQspHNEphE49fODacm-S6g@mail.gmail.com>
+In-Reply-To: <CAHifhD6p9qSm5dv1spz+oPRhRkBZeQspHNEphE49fODacm-S6g@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 11 Nov 2021 15:54:22 +0200
+Message-ID: <CAHp75Vfk5WHWiQxwmqEzVEymgpvjxKWEZbaQ9+=Et7N63Ps=Ng@mail.gmail.com>
 Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via sysfs
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
 Cc:     Richard Hughes <hughsient@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Mauro Lima <mauro.lima@eclypsium.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Greg KH <gregkh@linuxfoundation.org>,
         "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -77,70 +81,37 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Do., 11. Nov. 2021 um 14:34 Uhr schrieb Mika Westerberg
-<mika.westerberg@linux.intel.com>:
+On Thu, Nov 11, 2021 at 2:56 PM Hans-Gert Dahmen
+<hans-gert.dahmen@immu.ne> wrote:
 >
-> On Thu, Nov 11, 2021 at 01:22:25PM +0000, Richard Hughes wrote:
-> > On Thu, 11 Nov 2021 at 13:01, Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > > I'm not sure I understand why the platform security needs to be turned off?
+> Am Do., 11. Nov. 2021 um 13:46 Uhr schrieb Andy Shevchenko
+> <andy.shevchenko@gmail.com>:
 > >
-> > Sorry to be unclear, I meant we had to turn off Secure Boot (and thus
-> > also kernel lockdown) so that we could use /dev/mem to verify that
-> > OEMs have set up the IFD, BLE, BIOSWP etc correctly. You'd be
-> > surprised just how many vendors don't read the specifications
-> > correctly and get this wrong. We also need port IO to use the
-> > intel-spi driver so we can parse the BIOS contents from userspace,
-> > which you can't obviously do when SB is turned off. The eSPI
-> > controller is hidden on some hardware now, and we need to play games
-> > to make it visible again.
->
-> Okay, thanks for explaining.
->
-> > > I think exposing /dev/mem opens another can of worms that we want to
-> > > avoid.
+> > On Thu, Nov 11, 2021 at 1:46 PM Richard Hughes <hughsient@gmail.com> wrote:
+> > > On Thu, 11 Nov 2021 at 10:33, Mika Westerberg
+> > > <mika.westerberg@linux.intel.com> wrote:
 > >
-> > Ohh it's not all of /dev/mem, it's just the 16MB BIOS region that has
-> > to be mapped at that address for the hardware to boot.
->
-> I see.
->
-> > > Don't we already expose some of the EFI stuff under /sys/firmware?
+> > > it's always going to work on x64 -- if the system firmware isn't available at that offset then the platform just isn't going to boot.
 > >
-> > Yes, some information, but not the file volumes themselves. I don't
-> > think the kernel wants to be in the game of supporting every nested
-> > container and compression format that EFI supports. It's also the
-> > wrong layer to expose platform attributes like BLE, but that's an
-> > orthogonal thing to the patch Hans-Gert is proposing.
-> >
-> > > I just don't want to
-> > > spend yet another Christmas holiday trying to fix angry peoples laptops :(
-> >
-> > Completely understood, I don't think any of us want that.
-> >
-> > > Having said that the hardware sequencer used in the recent CPUs should
-> > > be much safer in that sense.
-> >
-> > FWIW, I'd be fine if we had RO access for HWSEQ flash access only. If
-> > I understood correctly that's what Mauro proposed (with a patch) and
-> > instead was told that it was being rewritten as a mtd driver
-> > completion time unknown.
+> > Well, it's _usual_ case, but in general the assumption is simply
+> > incorrect. Btw, have you checked it on Coreboot enabled platforms?
+> > What about bare metal configurations where the bootloader provides
+> > services to the OS?
 >
-> I think Mauro proposed something different, basically exposing RO parts
-> of the driver only.
->
-> The intel-spi driver is being moved from MTD to SPI because the MTD
-> SPI-NOR maintainers (not me) said that it needs to be done before we can
-> add any new feature to the driver. That includes also Mauro's patch.
->
-> I have v4 of the conversion patch series done already but since it is a
-> middle of the merge window I'm holding it until v5.16-rc1 is released
-> (next sunday). I can CC you too and I suppose Hans and Mauro (who else,
+> No it is always the case. I suggest you go read your own Intel specs
+> and datasheets
 
-I'd be delighted.
+Point me out, please, chapters in SDM (I never really read it in full,
+it's kinda 10x Bible size). What x86 expects is 16 bytes at the end of
+1Mb physical address space that the CPU runs at first.
 
-> let me know). Once the MTD maintainers are happy we can progress adding
-> features what fwupd needs there too (and the features we, Intel, want to
-> add there).
+> before spreading further FUD. I have experienced u-root
+> and coreboot developers sitting right next to me in my office and they
+> were among the ones suggesting my patch. This is just laughable,
+> please stop it Andy.
 
-Hans-Gert
+Yeah, zillion people can't ever make a mistake... I see.
+
+-- 
+With Best Regards,
+Andy Shevchenko
