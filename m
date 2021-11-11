@@ -2,171 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0633C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 09:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6815BC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 10:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC60761267
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 09:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE8B61261
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 10:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231928AbhKKJ4O (ORCPT
+        id S230358AbhKKKfw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 04:56:14 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:56189 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230021AbhKKJ4M (ORCPT
+        Thu, 11 Nov 2021 05:35:52 -0500
+Received: from mga07.intel.com ([134.134.136.100]:54889 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229668AbhKKKfv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 04:56:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636624403;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+qvQtHczzG1MfYZk8oGNUIA3UOWGJnPKv08a/xUeA9I=;
-        b=O5bmT9wTJnSeBtgoJ0FDJGMeBALVY8Q5EU2h13/4YYfrwyEwxBeVZCfI9mxJeRMoSOIMQy
-        ZnlAAJRzIDPEb3UgjH3bY76dEpdPTRhCZfRN/44yq2E+8SOEn+glFgXO5/TmyhrLiZXOEO
-        ufIkR26y1Xlp4jjwHsy71sXD1S7wp8w=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-541-RfubstmION2RkdJqsyQUAA-1; Thu, 11 Nov 2021 04:53:21 -0500
-X-MC-Unique: RfubstmION2RkdJqsyQUAA-1
-Received: by mail-ed1-f71.google.com with SMTP id t20-20020a056402525400b003e2ad6b5ee7so4961917edd.8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Nov 2021 01:53:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=+qvQtHczzG1MfYZk8oGNUIA3UOWGJnPKv08a/xUeA9I=;
-        b=b0xiAmsZQ+WB+ioifmuoa/x51hUwyw5RXy7pAz1lS5xQIHNxDTlUfLc05EjjHxZcwR
-         jIyGCwcMJ5clavQ/ybu1uyYWvokqct6eYq3oVg3sthTDBqDlFScpi7MHlXMPwlKa8Dwx
-         TrPeyvv1pGHYZotkA7NDRnJN/hr4x9sCcHk3UN/5a+77H7WcH3rJtdY7gH02e/NYIqvT
-         P3Di/YKYj/HppgGAouUym9Il+ozAteC8X6rij613YFfo42vGAsdYzuoiqv+IklR4k+jE
-         z6kVD2yKthCM1ahVwbPELZfOD7TV4X/MOEArDe3S4LuY+OP8rmUbs1gBG7KWxH9spWAy
-         vNYQ==
-X-Gm-Message-State: AOAM530kBbxCaKuTlZJjJQX0bQvk/my+Ay+RoxmP3CoEktduUKgCHv+D
-        xMmZvn+lfOrb0Jq//YVHKZdDFppp2bbiirZ1Ox5SKXbgP2ZnzkP0UiiBTtOWTipv47y66cRMHh2
-        kBSQQSJFoESXKMso/o8QkqS/RJr/EAy8BTg==
-X-Received: by 2002:a05:6402:190d:: with SMTP id e13mr8092827edz.339.1636624400203;
-        Thu, 11 Nov 2021 01:53:20 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzp74fhV+A0BlicDRmgQzd2ZzPgKl37hWijytHEwGPVHnxogi3w6VW/NOe4TlP9qnF8BXHLNQ==
-X-Received: by 2002:a05:6402:190d:: with SMTP id e13mr8092803edz.339.1636624400033;
-        Thu, 11 Nov 2021 01:53:20 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id z7sm1258687edj.51.2021.11.11.01.53.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Nov 2021 01:53:19 -0800 (PST)
-Message-ID: <27e86396-63cd-be69-e344-bc3229b91a9b@redhat.com>
-Date:   Thu, 11 Nov 2021 10:53:19 +0100
+        Thu, 11 Nov 2021 05:35:51 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10164"; a="296327252"
+X-IronPort-AV: E=Sophos;i="5.87,225,1631602800"; 
+   d="scan'208";a="296327252"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 02:33:02 -0800
+X-IronPort-AV: E=Sophos;i="5.87,225,1631602800"; 
+   d="scan'208";a="492493741"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 02:32:59 -0800
+Received: by lahna (sSMTP sendmail emulation); Thu, 11 Nov 2021 12:32:56 +0200
+Date:   Thu, 11 Nov 2021 12:32:56 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
+Cc:     Mauro Lima <mauro.lima@eclypsium.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Philipp Deppenwiese <philipp.deppenwiese@immu.ne>,
+        Richard Hughes <hughsient@gmail.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via
+ sysfs
+Message-ID: <YYzxWPIWFAV04LRU@lahna>
+References: <CAHifhD5V9vwJenRLcPRH5ZMeLa_JnjZKfdcFZw1CjceBtC6=Ew@mail.gmail.com>
+ <CAHp75VeyQEaABFOnEUh2pdFx9ROJvRcud-BuEbKWmaEWpL9_Uw@mail.gmail.com>
+ <CAHifhD7Qf7+dc7K-MjNguqmiCWUxOJZmQoCTRUZOR-RWMm_JPw@mail.gmail.com>
+ <CAHp75Ve9BMNy3gP=-Dajm+Lgu+E4FCqc4phLgV1_cr2qUnTX_w@mail.gmail.com>
+ <CAHifhD4n7O5eWFPOjRAmHYL52tW0K=uXXzVj7L5+enTFwFXW2A@mail.gmail.com>
+ <CAArk9MP5cKJ+VhAZUseW4LnQNRvux=MZe2eSy3rQkbHKnUsGig@mail.gmail.com>
+ <CAHp75VdRwvU5WjFP5E4gg8U+_e34A0Lwze+nz_wVHoB49jLeLg@mail.gmail.com>
+ <CAArk9MNGSxR+92n-D2pe_+r+Z0Q9FoTMPqk11sAKA=4Vckj0HQ@mail.gmail.com>
+ <YYy7QZGKeEEfI1mH@lahna>
+ <CAHifhD5bXu2nP533RXyWDnyNt=k2rRZq5Z6A6CCik_2e6XNgGA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [RFC v2] standardized attributes for powersupply charge behaviour
-Content-Language: en-US
-To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        linux-pm@vger.kernel.org
-Cc:     nicolopiazzalunga@gmail.com, linrunner@gmx.net,
-        platform-driver-x86@vger.kernel.org, smclt30p@gmail.com,
-        sre@kernel.org
-References: <20211108192852.357473-1-linux@weissschuh.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211108192852.357473-1-linux@weissschuh.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHifhD5bXu2nP533RXyWDnyNt=k2rRZq5Z6A6CCik_2e6XNgGA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/8/21 20:28, Thomas Weißschuh wrote:
-> This a revised version of
-> "[RFC] add standardized attributes for force_discharge and inhibit_charge" [0],
-> incorporating discussion results.
+On Thu, Nov 11, 2021 at 09:59:32AM +0100, Hans-Gert Dahmen wrote:
+> > I think we discussed this previously already but in any case, instead of
+> > removing the tag from the "main" driver, we can make certain "safe"
+> > parts of the driver available without that tag. That would allow you to
+> > read the things the controller exposes and allow distros safely include
+> > the driver too. By "safe" parts, I mean the information available
+> > through the SPI flash controller without actually sending commands to
+> > the flash chip. I think this is the information everybody (on this
+> > thread at least) is interested in. Unless I'm mistaken - I did not check
 > 
-> The biggest change is the switch from two boolean attributes to a single
-> enum attribute.
-> 
-> [0] https://lore.kernel.org/platform-driver-x86/21569a89-8303-8573-05fb-c2fec29983d1@gmail.com/
+> Yes you are mistaken. My patch is about safely reading the BIOS/UEFI
+> binary on every past and future x86_64 system. There are tools out
+> there that use the interface my patch uses and they can not work any
+> longer when /dev/mem is locked down with SecureBoot enabled. The
+> tools, like fwupd, should work out-of-the-box on the typical
+> distribution. During this discussion we were told that my patch is not
+> welcome and that we have to work with you to achieve the same. So I'm
+> curious to hear how that can be done.
 
-Thanks, patch looks good to me:
+OK, I see from your patch that it uses the direct mapped read-only
+region to read this data.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-> ---
->  Documentation/ABI/testing/sysfs-class-power | 14 ++++++++++++++
->  drivers/power/supply/power_supply_sysfs.c   |  1 +
->  include/linux/power_supply.h                |  7 +++++++
->  3 files changed, 22 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> index ca830c6cd809..2f58cfc91420 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -455,6 +455,20 @@ Description:
->  			      "Unknown", "Charging", "Discharging",
->  			      "Not charging", "Full"
->  
-> +What:		/sys/class/power_supply/<supply_name>/charge_behaviour
-> +Date:		November 2021
-> +Contact:	linux-pm@vger.kernel.org
-> +Description:
-> +		Represents the charging behaviour.
-> +
-> +		Access: Read, Write
-> +
-> +		Valid values:
-> +			================ ====================================
-> +			auto:            Charge normally, respect thresholds
-> +			inhibit-charge:  Do not charge while AC is attached
-> +			force-discharge: Force discharge while AC is attached
-> +
->  What:		/sys/class/power_supply/<supply_name>/technology
->  Date:		May 2007
->  Contact:	linux-pm@vger.kernel.org
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-> index c3d7cbcd4fad..26c60587dca1 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -172,6 +172,7 @@ static struct power_supply_attr power_supply_attrs[] = {
->  	POWER_SUPPLY_ATTR(CHARGE_CONTROL_LIMIT_MAX),
->  	POWER_SUPPLY_ATTR(CHARGE_CONTROL_START_THRESHOLD),
->  	POWER_SUPPLY_ATTR(CHARGE_CONTROL_END_THRESHOLD),
-> +	POWER_SUPPLY_ENUM_ATTR(CHARGE_BEHAVIOUR),
->  	POWER_SUPPLY_ATTR(INPUT_CURRENT_LIMIT),
->  	POWER_SUPPLY_ATTR(INPUT_VOLTAGE_LIMIT),
->  	POWER_SUPPLY_ATTR(INPUT_POWER_LIMIT),
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 9ca1f120a211..70c333e86293 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -132,6 +132,7 @@ enum power_supply_property {
->  	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
->  	POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD, /* in percents! */
->  	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD, /* in percents! */
-> +	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
->  	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
->  	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
->  	POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
-> @@ -202,6 +203,12 @@ enum power_supply_usb_type {
->  	POWER_SUPPLY_USB_TYPE_APPLE_BRICK_ID,	/* Apple Charging Method */
->  };
->  
-> +enum power_supply_charge_behaviour {
-> +	POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO = 0,
-> +	POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE,
-> +	POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE,
-> +};
-> +
->  enum power_supply_notifier_events {
->  	PSY_EVENT_PROP_CHANGED,
->  };
-> 
-> base-commit: 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f
-> 
-
+Do we know what information exactly fwupd needs? I mean exposing all of
+this might not be good idea from security perspective (but I'm not an
+expert). However, we can perhaps expose some of it through intel-spi,
+and make that work so that distros can enable it safely. My concern of
+removing the DANGEROUS tag is that we end up bricking yet another Lenovo
+laptop by accident. Avoiding that would give me more peace of mind :)
