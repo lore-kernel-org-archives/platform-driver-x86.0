@@ -2,37 +2,37 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63205C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Nov 2021 06:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAF3C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Nov 2021 06:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E84D60F14
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Nov 2021 06:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6764060EB4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Nov 2021 06:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230510AbhKLGzH (ORCPT
+        id S230464AbhKLHCo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 12 Nov 2021 01:55:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35964 "EHLO mail.kernel.org"
+        Fri, 12 Nov 2021 02:02:44 -0500
+Received: from mga09.intel.com ([134.134.136.24]:5889 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230259AbhKLGzH (ORCPT
+        id S230259AbhKLHCo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 12 Nov 2021 01:55:07 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 27FD860D07;
-        Fri, 12 Nov 2021 06:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1636699937;
-        bh=3z9fwfrXafXz1v0JMezNYLQv1XDhle64SZ4vD13dYAY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JtKSl+3dronxPT4t8UvjFUIjd+z6wD7/TiD3dhCrh/Kn6pQ5Wiqv86T7G7LIWmd8K
-         GjkCW9Vxz3BDJZGztbw5tFQvmarIQQ4nvja65jtVrNUb8zLPciZejSx7VOrqLiVosD
-         4BuNspZdh8YeXpX7dwv32wa+XHJWeq93c7p7L+v4=
-Date:   Fri, 12 Nov 2021 07:52:13 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Richard Hughes <hughsient@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mauro Lima <mauro.lima@eclypsium.com>,
+        Fri, 12 Nov 2021 02:02:44 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="232929784"
+X-IronPort-AV: E=Sophos;i="5.87,228,1631602800"; 
+   d="scan'208";a="232929784"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 22:59:54 -0800
+X-IronPort-AV: E=Sophos;i="5.87,228,1631602800"; 
+   d="scan'208";a="534692367"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2021 22:59:50 -0800
+Received: by lahna (sSMTP sendmail emulation); Fri, 12 Nov 2021 08:59:47 +0200
+Date:   Fri, 12 Nov 2021 08:59:47 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Hans-Gert Dahmen <hans-gert.dahmen@immu.ne>
+Cc:     Mauro Lima <mauro.lima@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
         "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Philipp Deppenwiese <philipp.deppenwiese@immu.ne>,
@@ -40,44 +40,49 @@ Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         <platform-driver-x86@vger.kernel.org>
 Subject: Re: [PATCH] firmware: export x86_64 platform flash bios region via
  sysfs
-Message-ID: <YY4PHacrS4czhEx3@kroah.com>
-References: <YYzxWPIWFAV04LRU@lahna>
+Message-ID: <YY4Q46XogSDHgcsY@lahna>
+References: <YYy7QZGKeEEfI1mH@lahna>
+ <CAHifhD5bXu2nP533RXyWDnyNt=k2rRZq5Z6A6CCik_2e6XNgGA@mail.gmail.com>
+ <YYzxWPIWFAV04LRU@lahna>
  <CAD2FfiGnmFSTPvkJaXj+cf4yDvci-j+2QkpMqNY821fUT5C=CA@mail.gmail.com>
- <CAHp75Vcp=hC1oL5FBQDDFe8EBxWB9Po4FKNS9ZGtD3q-yQPtAw@mail.gmail.com>
- <CAHifhD6p9qSm5dv1spz+oPRhRkBZeQspHNEphE49fODacm-S6g@mail.gmail.com>
- <CAHp75Vfk5WHWiQxwmqEzVEymgpvjxKWEZbaQ9+=Et7N63Ps=Ng@mail.gmail.com>
- <CAHifhD5bGZOcZFNsHYFeecikHGUts73U4k6=aUVNTKEeETW5rQ@mail.gmail.com>
- <CAHp75VeSnXfjeNeBLtrR78AmB-18kTeXpknn7-jcPLEeWCrzXQ@mail.gmail.com>
- <CAMj1kXHoRa+9gS7OEZZH2SSZQ8Tf4BUMdh-p=+OvWEb1a6ffFA@mail.gmail.com>
- <CAHp75VckB0RA6zoLRQ2UOcQRgMEf6sNxDGfpsNVr+92eArhD=Q@mail.gmail.com>
- <CAD2FfiH9OcKyUo6xjTfSENrEKF=4kZiGU4rT0FriK6KgKYSzyw@mail.gmail.com>
+ <YY0UCHtf8SAvGHTY@lahna>
+ <CAD2FfiF=7H7RuAdrSrrr57JF6YG=pb5jw2QMgBDQsAEwgasYLw@mail.gmail.com>
+ <YY0b01g+z3lkO4w2@lahna>
+ <CAArk9MOxZaK2WqsuPR4GbgdxSnUBqgO1KZ8OT=+siksYq+2PxQ@mail.gmail.com>
+ <YY0xZjjGjNq+kUXi@lahna>
+ <CAHifhD6+BB+4LHq1CE3ZBVhnG-V0U=3H51mjfh44dx11kMCUfg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD2FfiH9OcKyUo6xjTfSENrEKF=4kZiGU4rT0FriK6KgKYSzyw@mail.gmail.com>
+In-Reply-To: <CAHifhD6+BB+4LHq1CE3ZBVhnG-V0U=3H51mjfh44dx11kMCUfg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Nov 11, 2021 at 09:07:42PM +0000, Richard Hughes wrote:
-> On Thu, 11 Nov 2021 at 15:50, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > I was thinking about SHA256 hashes or so (as they tell about
-> > binaries). In any case the interface for this seems to be in the
-> > kernel.
+Hi,
+
+On Thu, Nov 11, 2021 at 04:16:14PM +0100, Hans-Gert Dahmen wrote:
+> > In case someone is unfamiliar with this, the Intel SPI hardware
+> > exposes two interfaces through the same controller. One that is called
+> > software sequencer and there is a register of "allowed" opcodes that
+> > software can use as it wishes. This register can be locked down but is
+> > not always. The second interface is the hardware sequencer that only
+> > exposes higher level commands like read, write and so on and internally
+> > then executes whatever opcode the controller got from the chip
+> > "supported opcodes table" (SFDP).  The recent Intel hardware, all
+> > big-cores, only provide hardware sequencer and the software one is not
+> > even available.
 > 
-> I'm quite sure you don't want to put those EFI format decoders in the
-> kernel; there is all kinds of weird compression schemes, volumes are
-> recursive, and vendors like to hide weird things in the undocumented
-> (or reserved) areas.
+> I am familiar with this and I do totally agree. I believe HW
+> sequencing is available since sandy-bridge from 2011, so it will
+> suffice for modern platforms. Honestly me and my developer friends
+> never understood why this driver needs to still focus on SW sequencing
+> altogether, it seems like a (possibly buggy) relic that just slows
+> down the vital parts.
 
-Why don't we just export these areas to userspace and let the decoding
-of them happen there?  That's a real "thing" that the kernel can easily
-detect is present and know to export properly as they are defined by the
-UEFI specification, right?
-
-Yes, that will not help for the non-UEFI x86 systems, but it's a
-start...
-
-thanks,
-
-greg k-h
+Just to clarify the software sequencer was used in "recent" Atoms
+(Baytrail, Braswell and I think its successor too). After Broxton I
+think it all is now hardware sequencer only. AFAIK those are still used
+in embedded world so we should keep the support in the driver but that
+support can be put under the "DANGEROUS" KConfig option.
