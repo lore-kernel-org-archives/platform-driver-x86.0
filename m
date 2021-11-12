@@ -2,120 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51169C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 22:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A8BC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Nov 2021 00:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 318FC61264
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Nov 2021 22:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B24B60F58
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Nov 2021 00:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230308AbhKKXBS (ORCPT
+        id S234507AbhKLAfP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Nov 2021 18:01:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229835AbhKKXBS (ORCPT
+        Thu, 11 Nov 2021 19:35:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233817AbhKLAfO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Nov 2021 18:01:18 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABFA6C061766;
-        Thu, 11 Nov 2021 14:58:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=4VEbIBkqcGJ3l7Zgq/uZwytuUTxQjnyHYFTzYLajeFM=; b=TRKP74wrJUWYaJp4HuEvwVy7CF
-        YTjoRR5QTzBEeBxq3PCrmmtk8OoH2yjaSangsFbsIzdeSF3SLaE56izUwg7fntdvR2wOK/SS+BBoW
-        mlw1ocs5fd6xel1vUL09N1TKuP894s35YGVDEpjPgpVFbveFsZ22oH/jfhCfNxY8cANsFbTSLGVAx
-        K2DBb0Cg0FcItQGhKOg0hYwZVpeswRgpzsjAb1ohwaQTwk1JI+3g3tjD+fcTGOK18WGrRiP2XgaLJ
-        80qxVMKle/wX4S20DP1RY6pgKSTZD0GwVGh8FXexqBMDy9+bYRS3kt0g4B2yElOISKUDDoO4fTzVX
-        z6FuMwhQ==;
-Received: from [2601:1c0:6280:3f0::aa0b]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mlJ17-008w1k-MP; Thu, 11 Nov 2021 22:58:01 +0000
-Subject: Re: [PATCH v7 43/45] virt: Add SEV-SNP guest driver
-To:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-References: <20211110220731.2396491-1-brijesh.singh@amd.com>
- <20211110220731.2396491-44-brijesh.singh@amd.com>
- <e8baf85f-8f17-d43e-4656-ed9003affaa8@infradead.org>
- <38e5047c-43a9-400b-c507-337011e0e605@amd.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e6b412e4-f38e-d212-f52a-e7bdc9a26eff@infradead.org>
-Date:   Thu, 11 Nov 2021 14:57:59 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Thu, 11 Nov 2021 19:35:14 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id BEE94619E8
+        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Nov 2021 00:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636677140;
+        bh=faV4KO7bbOIiy9DCKwCHcEQjFCphTCy8fhSOsLIg7BM=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=JhoHNZpvgKDgDiCIbSNrxfznr8QUu33IBnQKB3A+KjEhopk0U5QMu8HPjqEgxgneN
+         RysJ9vRKm6EMNABd5LYlrLS6vC54T4C7gtgDegk3VSFDP/A4iGxM2/t7LZrUfBaGhA
+         zl5bq3hXuevKrVjK4ApR61oU/4LQ97gAxespNEaoHXMKScvz9gcegiWibi/CjJBx0t
+         01lfmtZja/m9LkFMlusa5VuWylh5Q7qh42lcLG3NZDtopB0fnQvBcyqtSgIbRpBsSM
+         Tbt4XLpoYs87Clm5UKWoSGyB/Ju8ZpBEjpoOgXP92WTARsXtWHyaxhk2AaLzxuURt/
+         bIr3ylhbJR5ow==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Fri, 12 Nov 2021 00:32:18 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: eugene.shalygin@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-MMPxFUcrxB@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-In-Reply-To: <38e5047c-43a9-400b-c507-337011e0e605@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 11/11/21 11:27 AM, Brijesh Singh wrote:
-> Hi Randy,
-> 
-> On 11/10/21 4:27 PM, Randy Dunlap wrote:
->> Hi,
->>
->> On 11/10/21 2:07 PM, Brijesh Singh wrote:
->>> diff --git a/drivers/virt/coco/sevguest/Kconfig b/drivers/virt/coco/sevguest/Kconfig
->>> new file mode 100644
->>> index 000000000000..96190919cca8
->>> --- /dev/null
->>> +++ b/drivers/virt/coco/sevguest/Kconfig
->>> @@ -0,0 +1,9 @@
->>> +config SEV_GUEST
->>> +    tristate "AMD SEV Guest driver"
->>> +    default y
->>
->> For this to remain as "default y", you need to justify it.
->> E.g., if a board cannot boot with an interrupt controller,
->> the driver for the interrupt controller can be "default y".
->>
->> So why is this default y?
->> No other drivers in drivers/virt/ are default y.
->>
-> 
-> I choose the default "y" for two reasons:
-> 
-> 1.  The driver is built if the user enables the AMD memory encryption support. If the user has selected the AMD memory encryption support, they will be querying an attestation report to verify that the guest is running on AMD memory encryption enabled hardware.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-OK, I see. I'm OK with this.
+--- Comment #170 from Eugene Shalygin (eugene.shalygin@gmail.com) ---
+(In reply to Denis Pauk from comment #169)
 
-> 2. Typically, an attestation report is retrieved from an initial ramdisk (before mounting the disk). IIUC, the standard initramfs build tools may not include the driver by default and requires the user to go through hoops.
-> 
-> However, I have no strong reason to keep it to "y" if other prefers "m".
+> Could you look to nct6775_data:{un}lock? Do you mean something like it?
 
-"m" is no better than "y" in this case.
+Yes, something like that. I think if we hide that under a formal interface =
+and
+put in a module, it can be used in both hwmon drivers. And yes, I believe we
+should query EC directly, because the WMI functions are simply wrappers that
+end up at the same calls to ec_read(). Since we going to lock the ACPI mutex
+ourselves, there is no reason to use WMI functions to access EC registers.
 
-thanks.
--- 
-~Randy
+Here is what I thought of:
+
+union access_lock_data {
+         struct mutex lock;
+         struct {
+                acpi_handle aml_mutex[MAX_ACPI_MUTEX_COUNT]; // maybe there=
+ is
+a firmware where there is no single mutex to guard both chips?
+                int acpi_mutex_count;
+         } acpi_lock;
+};
+
+struct access_lock_funcs {
+        int (*lock)(access_lock_funcs* funcs);
+        int (*unlock)(access_lock_funcs* funcs);
+};
+
+struct access_lock_state {
+        union access_lock_data data;
+        struct access_lock_funcs funcs;
+};
+
+int get_access_lock(int flags, struct access_lock_funcs* res); // flags to =
+tell
+what needs to be guarded (HWMON chip, EC, or both)
+void free_access_lock(struct access_lock_funcs* funcs);
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
