@@ -2,72 +2,70 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A13BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Nov 2021 03:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6816C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Nov 2021 05:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA0FA61105
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Nov 2021 03:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A400060F5B
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Nov 2021 05:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233557AbhKMDcR (ORCPT
+        id S231250AbhKMFvq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 12 Nov 2021 22:32:17 -0500
-Received: from smtpbg604.qq.com ([59.36.128.82]:56677 "EHLO smtpbg604.qq.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232113AbhKMDcR (ORCPT
+        Sat, 13 Nov 2021 00:51:46 -0500
+Received: from smtpbg126.qq.com ([106.55.201.22]:18050 "EHLO smtpbg587.qq.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229487AbhKMFvp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 12 Nov 2021 22:32:17 -0500
-X-QQ-mid: bizesmtp42t1636774110tco0shkf
+        Sat, 13 Nov 2021 00:51:45 -0500
+X-QQ-mid: bizesmtp51t1636782518t4rlqw4m
 Received: from localhost.localdomain (unknown [125.69.41.88])
         by esmtp6.qq.com (ESMTP) with 
-        id ; Sat, 13 Nov 2021 11:28:28 +0800 (CST)
-X-QQ-SSF: 01000000000000C0F000B00A0000000
-X-QQ-FEAT: 5YkfsBQ8D09UoePCN3Atr56y9jtXDPlgLiS+yJNjn2fIH+5IAQGCshWXG0+X4
-        CYTeTrKTcD4RCEOeyCru52XrnBRShZ+suTsmcfFzi6ZnZAQwMHYxnY+kuly2X62jpRUj32e
-        LguzkqWXRLok4PAVLQEAH3VlTNrDVzk8lApce9EhvE55flsxPi8hxaCd1k/MLRU81tvtrL2
-        mhuZ0AJRhvws3Llx57ZGG1JzDYYz3EZ/o/+Gi8gR5uta7ygdXQNDehZQBpvHc0xn2njGRKS
-        j78shJ3cXgvedAhUzuGuJLaESFVVm2kAwUVajOOBnYS3A7hHtsubfBWh/lKEGH7p35fUunI
-        eBQxqVAre3P+KoX2WqWTUPrvbM77A==
+        id ; Sat, 13 Nov 2021 13:48:37 +0800 (CST)
+X-QQ-SSF: 01000000000000C0F000C00A0000000
+X-QQ-FEAT: W6nSwEQQYT/zLvTaMck+UA5HuWSWNNTR2iRVR/PtD0oRdGmXXAaG2q1qySIui
+        ZWFWtsaUl+n1dd7/vZXqUQuB+yOuoJvmMqfd475Y2jJNp2w0xFwPPlmyQsGKCMGm1zuh6/d
+        6DiSAMRKDGeU+x5SZlt8Fj1k8pHxWZqWF6Tne/9Pmf1F+H6Ipsmok8R199U0dgNOQKkVUsG
+        ayKSC4sbkzqo9fBfmEnDSpeUItI9pLYTlN/1OmM1TWOEp5oY73NrpDFJr8zNvi2BeDLRdNU
+        5d5uZUFPWJuVm3LxOq7R6JXzLElOjYsDxQovrQwqNnQRQ5eai3hVPwBlfosnQCY+DoBOrS6
+        /GcK614YFmgg5y4vBIAc3H/RM1vOw==
 X-QQ-GoodBg: 0
 From:   Jason Wang <wangborong@cdjrlc.com>
-To:     tglx@linutronix.de
-Cc:     ardb@kernel.org, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, dvhart@infradead.org,
-        andy@infradead.org, hpa@zytor.com, linux-efi@vger.kernel.org,
+To:     hdegoede@redhat.com
+Cc:     corentin.chary@gmail.com, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jason Wang <wangborong@cdjrlc.com>
-Subject: [PATCH] x86/efi: Remove a repeated word in a comment
-Date:   Sat, 13 Nov 2021 11:28:26 +0800
-Message-Id: <20211113032826.57606-1-wangborong@cdjrlc.com>
+Subject: [PATCH] platform/x86: samsung-laptop: Fix typo in a comment
+Date:   Sat, 13 Nov 2021 13:48:27 +0800
+Message-Id: <20211113054827.199517-1-wangborong@cdjrlc.com>
 X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:cdjrlc.com:qybgspam:qybgspam4
+Feedback-ID: bizesmtp:cdjrlc.com:qybgspam:qybgspam2
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The repeated word `there' in a comment is redundant, thus
-one of them was removed from the comment.
+The double `it' is repeated in a comment, therefore one of them
+is removed.
 
 Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
 ---
- arch/x86/platform/efi/efi.c | 2 +-
+ drivers/platform/x86/samsung-laptop.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 147c30a81f15..2a970fb27744 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -189,7 +189,7 @@ static void __init do_add_efi_memmap(void)
- }
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index 7ee010aa740a..c1d9ed9b7b67 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -152,7 +152,7 @@ struct sabi_config {
  
- /*
-- * Given add_efi_memmap defaults to 0 and there there is no alternative
-+ * Given add_efi_memmap defaults to 0 and there is no alternative
-  * e820 mechanism for soft-reserved memory, import the full EFI memory
-  * map if soft reservations are present and enabled. Otherwise, the
-  * mechanism to disable the kernel's consideration of EFI_MEMORY_SP is
+ static const struct sabi_config sabi_configs[] = {
+ 	{
+-		/* I don't know if it is really 2, but it it is
++		/* I don't know if it is really 2, but it is
+ 		 * less than 3 anyway */
+ 		.sabi_version = 2,
+ 
 -- 
 2.33.0
 
