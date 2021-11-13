@@ -2,40 +2,41 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F37DC4321E
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Nov 2021 08:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8658BC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Nov 2021 10:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0624B6120D
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Nov 2021 08:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA7261156
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Nov 2021 10:42:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235734AbhKMIJN (ORCPT
+        id S235815AbhKMKpa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 13 Nov 2021 03:09:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230095AbhKMIJN (ORCPT
+        Sat, 13 Nov 2021 05:45:30 -0500
+Received: from todd.t-8ch.de ([159.69.126.157]:48557 "EHLO todd.t-8ch.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231735AbhKMKp3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 13 Nov 2021 03:09:13 -0500
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D81CC061766;
-        Sat, 13 Nov 2021 00:06:18 -0800 (PST)
+        Sat, 13 Nov 2021 05:45:29 -0500
 From:   =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
-        s=mail; t=1636790777;
-        bh=CVgak5rLZGWpqYIgRSwjJO+cIS2KYNwHgY4TaH4p39Q=;
+        s=mail; t=1636800156;
+        bh=ESS4PJFNqBSyT0t32NT6SXPSUNZ2SzCvuI/arOjvzXc=;
         h=From:To:Cc:Subject:Date:From;
-        b=Fh+sgQ6toASetZCAKUFNyOjead23zs7No2BcDxv1AhTeTUDxYQgvxj5KTUusF1nKg
-         ufPOakrgpox1T5Dt4x+nM7SwyCkwqPy6VhGWRTWfy9moAXlUDHR25gWhO5XB2GP+8w
-         CNO7rNYFz8mpDgD5UyJrCY4qB3cG+qw8gCz1JzUQ=
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com
+        b=I1vjxJi74M8nmx4Wjef1FJc7YpPhIWg9fUU8jsEXX8eNThPpQGcTIradsuTAlSo43
+         XFCqVji9xUHQ8HR2QTGRv3LwYRDc+Rk7ErtnVZO9IJY2kwtkrL/g9efY7xi0l+Fu2v
+         5qvX1Hf6zPSKdSbQSyipu82DsrU9hf6HMb3Cy7FU=
+To:     linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: dell-wmi-descriptor: disable by default
-Date:   Sat, 13 Nov 2021 09:05:51 +0100
-Message-Id: <20211113080551.61860-1-linux@weissschuh.net>
+        linux-kernel@vger.kernel.org, linrunner@gmx.net, bberg@redhat.com,
+        hadess@hadess.net, markpearson@lenovo.com,
+        nicolopiazzalunga@gmail.com, njoshi1@lenovo.com, smclt30p@gmail.com
+Subject: [PATCH 0/4] power: supply: add charge_behaviour property (force-discharge, inhibit-charge)
+Date:   Sat, 13 Nov 2021 11:42:21 +0100
+Message-Id: <20211113104225.141333-1-linux@weissschuh.net>
 X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -44,32 +45,56 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-dell-wmi-descriptor only provides symbols to other drivers.
-These drivers already select dell-wmi-descriptor when needed.
+Hi,
 
-This fixes an issue where dell-wmi-descriptor is compiled as a module
-with localyesconfig on a non-Dell machine.
+this series adds support for the charge_behaviour property to the power
+subsystem and thinkpad_acpi driver.
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- drivers/platform/x86/dell/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As thinkpad_acpi has to use the 'struct power_supply' created by the generic
+ACPI driver it has to rely on custom sysfs attributes instead of proper
+power_supply properties to implement this property.
 
-diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-index 821aba31821c..dbc71a936339 100644
---- a/drivers/platform/x86/dell/Kconfig
-+++ b/drivers/platform/x86/dell/Kconfig
-@@ -187,7 +187,7 @@ config DELL_WMI_AIO
- 
- config DELL_WMI_DESCRIPTOR
- 	tristate
--	default m
-+	default n
- 	depends on ACPI_WMI
- 
- config DELL_WMI_LED
+Patch 1: Adds the power_supply documentation and basic public API
+Patch 2: Adds helpers to power_supply core to help drivers implement the
+  charge_behaviour attribute
+Patch 3: Adds support for force-discharge to thinkpad_acpi.
+Patch 4: Adds support for inhibit-discharge to thinkpad_acpi.
 
-base-commit: 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f
+Patch 3 and 4 are largely taken from other patches and adapted to the new API.
+(Links are in the patch trailer)
+
+Ognjen Galic, Nicolo' Piazzalunga, Thomas Koch:
+
+Your S-o-b is on the original inhibit_charge and force_discharge patches.
+I would like to add you as Co-developed-by but to do that it will also require
+your S-o-b. Could you give your sign-offs for the new patches, so you can be
+properly attributed?
+
+Sebastian Reichel:
+
+Currently the series does not actually support the property as a proper
+powersupply property handled fully by power_supply_sysfs.c because there would
+be no user for this property.
+
+Previous discussions about the API:
+
+https://lore.kernel.org/platform-driver-x86/20211108192852.357473-1-linux@weissschuh.net/
+https://lore.kernel.org/platform-driver-x86/21569a89-8303-8573-05fb-c2fec29983d1@gmail.com/
+
+Thomas Weißschuh (4):
+  power: supply: add charge_behaviour attributes
+  power: supply: add helpers for charge_behaviour sysfs
+  platform/x86: thinkpad_acpi: support force-discharge
+  platform/x86: thinkpad_acpi: support inhibit-charge
+
+ Documentation/ABI/testing/sysfs-class-power |  14 ++
+ drivers/platform/x86/thinkpad_acpi.c        | 154 +++++++++++++++++++-
+ drivers/power/supply/power_supply_sysfs.c   |  51 +++++++
+ include/linux/power_supply.h                |  16 ++
+ 4 files changed, 231 insertions(+), 4 deletions(-)
+
+
+base-commit: 66f4beaa6c1d28161f534471484b2daa2de1dce0
 -- 
 2.33.1
 
