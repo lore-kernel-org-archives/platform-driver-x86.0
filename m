@@ -2,125 +2,162 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543CAC43219
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 15:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CDAC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 15:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 380ED630EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 15:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276D061BFB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 15:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238079AbhKPPWs (ORCPT
+        id S238247AbhKPPbD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Nov 2021 10:22:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51492 "EHLO
+        Tue, 16 Nov 2021 10:31:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237827AbhKPPWr (ORCPT
+        with ESMTP id S238210AbhKPPbB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Nov 2021 10:22:47 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B442C061570;
-        Tue, 16 Nov 2021 07:19:50 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id w1so89618060edd.10;
-        Tue, 16 Nov 2021 07:19:49 -0800 (PST)
+        Tue, 16 Nov 2021 10:31:01 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 538E0C061746;
+        Tue, 16 Nov 2021 07:28:04 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id m20so43751933edc.5;
+        Tue, 16 Nov 2021 07:28:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JmBWvXQj8znoaNlP/XJEaiijvOo6PBGp1wWsFw5sd+Y=;
-        b=dHKt+qxBxbb/Rv6TLuF27ll6/vi/79PRdmfilrqAAdoy78Zib/N8o3KpEJvaZLBza1
-         8Cpdi36wDvKg9pqXXhjVliG4WJfPYlEkTw7qx8Tqv/KYAZay8Thq5fj+XPcVC2zNTY3O
-         LsAs1JuSfg5m8eNCCVi78V0i4Y4+O1D7AE2511ss6/JwumN4jOPAG7nNT/EQOH4TgCyQ
-         xLW7K1XNkDmNAtwRuIGRn/0G9uTYVB8m6aGRcQbyX5pqMAfAFnbMzNKqO9ovd8Ks64aU
-         JLC9LugV7CO8n/7+gnbPknr9e4qhN1F7pAeBElMxhGy1hdtRdSB9S0N295uvkBesTq0O
-         BP5g==
+        bh=dIxAulZGhe8FSNRDbe6lspOQRntq7iKkrQ7YJUamTrE=;
+        b=H2dRB1tmub7FmqAf+2gPesNCCZvWpw4VPXLBEH3IyZufX087WhaOzcQvx9RRB5dhz8
+         jm6a7eG+nG58ciNzZzcPOfWA0ldnPB0I9tKH+QyF53WjqVdp3xX/anon2r3lFAH1aCat
+         Mt+VG1xt5lk/tKcbkTPTkXay5sSImHyFtoPEnvpKNIoAonqxJ8v7uYvZpYISw9RQzkwx
+         OjUHaA9/mMBNijIO+xXfMRx87bn/fq7zrY6bk8E1aNNbIK1xhR58qGmu0+8KioqVCvw2
+         gach2cQ3C1ns2QY93ng+KlhaApfHQ+Elj2e3sf93Ri5Gri9DhpWlXzFfLa8mnEghEni/
+         aEtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JmBWvXQj8znoaNlP/XJEaiijvOo6PBGp1wWsFw5sd+Y=;
-        b=uFHXRgOq2NCRGW9PQ53EMFq0m5fPtape47SPPn+HkSSQusViBTwIxVNQ6UTZgE55u1
-         TI3hvV1nprf9xTPFPRscDEmXEDJsYLXLvVFAfVqdiJan2H/ZRb7pUd5E6AYyhpwR5KD4
-         wr2huv+a7eGKmPIj+fzKjdo/DCSMu/E+BMXZBlLrR0StyN/0l8ds+XWvIl7PubVvFmGC
-         6nAGtaqhVoMPgbqT7ZnLww6BxstKK6nS48tYEHCGgE0BB3fdhfcohVIAAV8tANHBMQSp
-         mgAC6akBgcOgGH23uFu/XoCsohCKukxrHwzWXgazlR9MqmTR2dOcQLRaYjeCgq3cvIKD
-         D5aw==
-X-Gm-Message-State: AOAM533xnscUr8lD27ULjTb04vUbtd+3wj6KM91casoa1oE4q6xLDL+u
-        FApCkNwdqLktORNOMKQzr5i4QVm5s0ykpIABjfmzx0ojJT4=
-X-Google-Smtp-Source: ABdhPJxyPvxtL5u41BdFRCmpus5JQskyeQT/k/mvLjEvqbLp9EodkDIsgxUvTRaAyeaG4TXjaUVO/qDhhLGfrls95CU=
-X-Received: by 2002:a17:907:9196:: with SMTP id bp22mr10768857ejb.69.1637075988577;
- Tue, 16 Nov 2021 07:19:48 -0800 (PST)
+        bh=dIxAulZGhe8FSNRDbe6lspOQRntq7iKkrQ7YJUamTrE=;
+        b=mrEzoK7yKUcba+sdbGKuYM8qLvhD0veQ1FOWNdfZeL3Cs1wWc2lAC+4047aXGzZ9R9
+         r4LP7HqJHZCSmgCh+F6hUebBaSC31kJezuDoFFN78b9l2O7UMZEnGJyEVCywpe/zg9rR
+         xABTK0ewx8/kapUCOos3GdZ9d8cWseNLY/c9sRXfjsxX9PPG0dU8hjloS6//jbqP/5id
+         EBrfnI2SHGRFwa2rnhqP0XwoMCmS90VpuSLtUytMBDW3MQoc3NmS0wEbGVz+V0JwlUp3
+         32wSq+EuzO7PL6FG1yLMyzYzdxXZMFFp/xRq1rbxrjUjuS4BpXJRsisxyxVvkyzT47ZT
+         RbsQ==
+X-Gm-Message-State: AOAM531i5W35lY8sSQWwzrQTPOr9qmp+O+uIGp8AKTEX7DoJrsdHxIbM
+        0rlogYrREghKjwV4uYoF7RJZ16Ox27zno4AOyWrbvPq+8kICOg==
+X-Google-Smtp-Source: ABdhPJxlCHMzmmqISOAsV2eJDLJviURmzDXeBzNZwNN8hZzEgPRRxrFwjjzdnsheotK2EQMxfb+RQN7ch3mo1H3A5O4=
+X-Received: by 2002:a17:907:60d0:: with SMTP id hv16mr10742076ejc.425.1637076482742;
+ Tue, 16 Nov 2021 07:28:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20211114170335.66994-1-hdegoede@redhat.com> <20211114170335.66994-20-hdegoede@redhat.com>
-In-Reply-To: <20211114170335.66994-20-hdegoede@redhat.com>
+References: <20211115210842.11972-1-pauk.denis@gmail.com> <CAHp75VcPHi1XyZr=CFbUhiUXK0q-10iBx5U3d==aG8pMG27k1Q@mail.gmail.com>
+ <c016d0ca-b8b1-fb06-50f3-06a7b1c4aaea@roeck-us.net> <YZOKLDg582dQPzVN@smile.fi.intel.com>
+ <d2943033-e701-f719-5da6-c00dc431dff9@roeck-us.net>
+In-Reply-To: <d2943033-e701-f719-5da6-c00dc431dff9@roeck-us.net>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 16 Nov 2021 17:19:07 +0200
-Message-ID: <CAHp75Vd2ytGkaSDZXuKNLihsK5JYrFv5ezkTAd73o2xFjoNDHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 19/20] extcon: intel-cht-wc: Add support for
- registering a power_supply class-device
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Ard Biesheuvel <ardb@kernel.org>, Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
+Date:   Tue, 16 Nov 2021 17:27:21 +0200
+Message-ID: <CAHp75Vdh+Fv_mV6VunzzndzXBONjbxMYKrii6We9Y+jD+NsYDQ@mail.gmail.com>
+Subject: Re: [PATCH v11 0/2] Update ASUS WMI supported boards
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Denis Pauk <pauk.denis@gmail.com>,
+        Eugene Shalygin <eugene.shalygin@gmail.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
+        thomas@weissschuh.net, Ed Brindley <kernel@maidavale.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Nov 14, 2021 at 7:05 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Tue, Nov 16, 2021 at 4:32 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> On 11/16/21 2:38 AM, Andy Shevchenko wrote:
+> > On Mon, Nov 15, 2021 at 03:15:39PM -0800, Guenter Roeck wrote:
+> >> On 11/15/21 2:01 PM, Andy Shevchenko wrote:
+> >>> On Mon, Nov 15, 2021 at 11:09 PM Denis Pauk <pauk.denis@gmail.com> wrote:
+> >>>>
+> >>>> Add support by WMI interface provided by Asus for B550/X570 boards:
+> >>>> * PRIME X570-PRO,
+> >>>> * ROG CROSSHAIR VIII HERO
+> >>>> * ROG CROSSHAIR VIII DARK HERO
+> >>>> * ROG CROSSHAIR VIII FORMULA
+> >>>> * ROG STRIX X570-E GAMING
+> >>>> * ROG STRIX B550-I GAMING
+> >>>> * ROG STRIX B550-E GAMING
+> >>>>
+> >>>> Add support by WMI interface provided by Asus for X370/X470/
+> >>>> B450/X399 boards:
+> >>>> * ROG CROSSHAIR VI HERO,
+> >>>> * PRIME X399-A,
+> >>>> * PRIME X470-PRO,
+> >>>> * ROG CROSSHAIR VI EXTREME,
+> >>>> * ROG CROSSHAIR VI HERO (WI-FI AC),
+> >>>> * ROG CROSSHAIR VII HERO,
+> >>>> * ROG CROSSHAIR VII HERO (WI-FI),
+> >>>> * ROG STRIX Z390-F GAMING
+> >>>> * ROG STRIX B450-E GAMING,
+> >>>> * ROG STRIX B450-F GAMING,
+> >>>> * ROG STRIX B450-I GAMING,
+> >>>> * ROG STRIX X399-E GAMING,
+> >>>> * ROG STRIX X470-F GAMING,
+> >>>> * ROG STRIX X470-I GAMING,
+> >>>> * ROG ZENITH EXTREME,
+> >>>> * ROG ZENITH EXTREME ALPHA.
+> >>>>
+> >>>> I have added "ROG STRIX Z390-F GAMING" to list of supported boards in
+> >>>> asus_wmi_sensors.
+> >>>
+> >>> Guenter, what is your plan about this patch series? It seems it
+> >>> missed, by unknown (?) reason, the v5.16-rc1 (I remember seeing it in
+> >>> some of your tree branches at some point).
+> >>>
+> >>
+> >> I don't see it in my record. Earlier I was simply waiting for some
+> >> Reviewed-by: tags, which I have never seen.
+> >
+> > Ah, understood. Thank you for clarifications.
+> >
+> >> Looking into the commit log,
+> >> I do see:
+> >>
+> >> Signed-off-by: Denis Pauk <pauk.denis@gmail.com>
+> >> Co-developed-by: Eugene Shalygin <eugene.shalygin@gmail.com>
+> >> Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
+> >> Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >>
+> >> Did you and Eugene indeed sign this off, ie did you write it, and
+> >> Eugene and Denis signed it off ? If so, the tags are in the wrong order.
+> >
+> > I'm not sure I follow. I have helped Denis with the code and according to
+> > Submitting Patches documentation the order should be chronological with the
+> > main author to be first in the list. Here the committer (submitter) is the
+> > same as the original author IIUC. (I can't speak for Eugene, though)
+> >
 >
-> The bq25890 used on the Yogabook YB1-X90 / -X91 models relies on
-> the extcon-driver's BC-1.2 charger detection, and the bq25890 driver
-> expect this info to be  available through a parent power_supply
-> class-device which models the detected charger (idem to how the Type-C
-> TCPM code registers a power_supply classdev for the connected charger).
->
-> Add support for registering the power_supply class-device expected
-> by this setup.
+> I got the patch from Denis. At the very least, Denis' signature should be
+> last. It is first.
 
-...
+"...the ordering of Signed-off-by: tags should reflect the
+chronological history of the patch insofar as possible, regardless of
+whether the author is attributed via From: or Co-developed-by:.
+Notably, the last Signed-off-by: must always be that of the developer
+submitting the patch."
 
-> +       struct cht_wc_extcon_data *ext = power_supply_get_drvdata(psy);
+Okay, "must" obviously takes precedence over the "as possible".
 
-> +       int ret = 0;
-
-Not needed.
-
-> +       switch (psp) {
-> +       case POWER_SUPPLY_PROP_USB_TYPE:
-> +               val->intval = ext->usb_type;
-> +               break;
-> +       case POWER_SUPPLY_PROP_ONLINE:
-> +               val->intval = ext->usb_type ? 1 : 0;
-> +               break;
-> +       default:
-
-> +               ret = -EINVAL;
-> +               break;
-
-return -EINVAL;
-
-> +       }
-> +
-> +       return ret;
-
-return 0;
-
-> +}
-
-P.S. And here you have a "break", which is nice!
+> >> On the other side, if the code is ultimately from Denis, with your input,
+> >> the tags should be either Acked-by: or Reviewed-by: for both Eugene
+> >> and yourself.
+> >
+> > I'm fine with either Co-developed-by+SoB or Reviewed-by.
+> >
+> >> Note that v11 of this patch series is missing from
+> >> https://patchwork.kernel.org/project/linux-hwmon/list/
+> >> for some reason.
+> >
+> > Hmm... Denis, please check locally how you prepare your patches.
 
 -- 
 With Best Regards,
