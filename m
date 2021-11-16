@@ -2,198 +2,187 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C1BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 16:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C11CC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 16:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70B8D61B72
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 16:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6F361A52
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 16:57:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230166AbhKPQUt (ORCPT
+        id S235757AbhKPRAN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Nov 2021 11:20:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbhKPQUt (ORCPT
+        Tue, 16 Nov 2021 12:00:13 -0500
+Received: from mout.gmx.net ([212.227.15.19]:37155 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230103AbhKPRAN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Nov 2021 11:20:49 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 673BFC061570;
-        Tue, 16 Nov 2021 08:17:52 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id nh10-20020a17090b364a00b001a69adad5ebso3344530pjb.2;
-        Tue, 16 Nov 2021 08:17:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vq/qbvOpDtTALSBunfD04P/4oL3hiPG2sNC8bjd3Ux4=;
-        b=SzMp1vt1/zF/Wtcu//QtgNqpU4/hK1h68Ta+1QiDyWXcFsM+lQtkw9sgXZYpFzPckG
-         6vZAc5mHQcdVEOrX7gaHZzDx9zBiXiYBSpTbt3A6CJlFeykM1KjJK8Q190885BSsxEo9
-         csamlVUy2D/M+wrzSYdobRSllSc8Kdmc/Edn8FlTniP4lzIbhx/nyzyrgpHVrw/fkUll
-         nFhY9cDa/y0dRCUeec3gg8TOIw76nWYaigeJxBDIDlpwLh5pFtj900RWOnKYCQtJTxed
-         ZTZBPhZXntJofRIe9c0INrNhnTgfpSf3Kyh4nBheBgOXGMRq/so+KfOLiTOna9HxoF/B
-         2QWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vq/qbvOpDtTALSBunfD04P/4oL3hiPG2sNC8bjd3Ux4=;
-        b=k7c23/AasxiEYHt3BoFjTblchBS7m+wwogwk80M2/+nlCGHzmeY2oRyN59rY5Xg6SC
-         tvxat+il7hLtAX29tj0NUvmVoT3TDKiSIN97ZyFbofzu2RiYF94ECyBsFWjlV1ObA3ir
-         RfyTByqC11woJMnYpIyh0SbP7qnU54VZONPZNvUPva34KCnKmFq7xDWThfUeGZOerslj
-         Gmvdhfi1fZRgZOYLWL8YmV+s+X5xWb6qWB0rytYojzyuSyBrV6xqhtfMSfE+7aFhGDh4
-         0hwHfenIb3VIZdAPFAA4Auv7eov0PNBvnaqkqIlXYDHydf+9UFeCn8wYvGkxdnQJBnlq
-         0Bwg==
-X-Gm-Message-State: AOAM532EqbLePryVTbPAp3Dy3ATPhHTbMuZqm/BXOeHyA7HhVkAWwVF1
-        eAazrY2tgjF1an6sicZHFKU=
-X-Google-Smtp-Source: ABdhPJz+RdOSwNv/6V9OhMwYSNtttObBBUfvB116zNGPeddkvzk/2yjVqKqPJthxwHUeqLWSrKfeJQ==
-X-Received: by 2002:a17:903:32c2:b0:141:eed4:ec1c with SMTP id i2-20020a17090332c200b00141eed4ec1cmr46731524plr.33.1637079471903;
-        Tue, 16 Nov 2021 08:17:51 -0800 (PST)
-Received: from jaschultz-Thelio-Major ([2001:4898:80e8:35:c6dc:98dc:8835:3138])
-        by smtp.gmail.com with ESMTPSA id z12sm755744pfg.186.2021.11.16.08.17.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Nov 2021 08:17:51 -0800 (PST)
-From:   Jarrett Schultz <jaschultzms@gmail.com>
-X-Google-Original-From: Jarrett Schultz <jaschultzMS@gmail.com>
-Date:   Tue, 16 Nov 2021 08:17:49 -0800
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Tue, 16 Nov 2021 12:00:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1637081805;
+        bh=M+95GG9pOYr+sggZ23h8a1YVbdAtpertOAKkIz3RoPU=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=BPK1gM/+x29dXwIb4VTJ0wuqARu0SlJvHSd1htQ9OyB8V2hvsp+3LnI8zIebc6DWZ
+         Q59+RrPKfrKrCK4ajxRyWN1ZTdeW1hRHOQLUZeXMbEmvBgLlyEEhH+XRXoq8Ct9S+J
+         1+yscgOvUiZtkCkWgsDHgXNetdwEzqYU46+pF/Qg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.135.7.100] ([87.123.191.145]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N95iH-1mZslu1CeV-0163ef; Tue, 16
+ Nov 2021 17:56:45 +0100
+Subject: Re: [PATCH 0/4] power: supply: add charge_behaviour property
+ (force-discharge, inhibit-charge)
+To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
+        linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Jarrett Schultz <jaschultz@microsoft.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: platform: microsoft: Document
- surface xbl
-Message-ID: <20211116161749.GA430792@jaschultz-Thelio-Major>
-References: <20211108164449.3036210-1-jaschultz@microsoft.com>
- <20211108164449.3036210-2-jaschultz@microsoft.com>
- <YY58nB3XjEbTFBzT@robh.at.kernel.org>
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc:     linux-kernel@vger.kernel.org, bberg@redhat.com, hadess@hadess.net,
+        markpearson@lenovo.com, nicolopiazzalunga@gmail.com,
+        njoshi1@lenovo.com, smclt30p@gmail.com
+References: <20211113104225.141333-1-linux@weissschuh.net>
+From:   Thomas Koch <linrunner@gmx.net>
+Message-ID: <9cebba85-f399-a7aa-91f7-237852338dc5@gmx.net>
+Date:   Tue, 16 Nov 2021 17:56:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YY58nB3XjEbTFBzT@robh.at.kernel.org>
+In-Reply-To: <20211113104225.141333-1-linux@weissschuh.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:x0ju+oRwoPkuyA8uflSr94bEewFh4Xtgfzb+77evOag2GA29Kam
+ kQYZF+ptmlGuEkmDsU5plA8urpKQH+2YvpfkSQaaCfNCJ0+lfwzJ1slypCodsFEbwtORK2v
+ EUFBmsq6OfNVpRp0YudFpTMdE7Rt1/1jUqEzouFZrokKFr2UPDWN6AzTLVVTdICVcIcZRme
+ ts3BcJnQiauwNaXlmROsw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:btgV3Qyhq+4=:5T9pn9zDZK6OHVY98O34Xi
+ c5VEwyrxQvqhdymO51ZIqR9XwTjWBS09/8q35zoQQY/sYPiFRYXM8DHHocsoiGOGyQU+y2Wqj
+ 2k6mygFxFydYyJOK2GbNg3uL1CqW06FrurmISMcM2is+Qbyes4cMcPgXVoIidZ2ktf+LKlOm2
+ sqd722LcJFOAxueHVtsBzKqggbEYg6bVKdn79Jh0rx01qAi8v01aQ+Ln1+D4JQacyUEcb3gaM
+ ax50mwB7AkuITzhi4kso0ywthcpsFNvbZCTq1FOelGqV4KikNYRMfRws5r0nJsFj5fhuqamo3
+ LdfnhnzK9IJEgdcDtApzT+JDHB5n3VO0W0qqYNRf8Ym6KsdqEBNF7fJEPpFbJTo2dIV9DwCyc
+ dts/BXzWyKspbN6v6vuPYOkdi69LVwVfvrlZqj2ZMZ9vQmn8qdP7HEPFItwEut9pZ6C/f90rm
+ gDu6xOyBuAyYmibZ6f5qz+0LqU0LsA1yRRdZ8E0TiGP8CUBNQZECwViC5uUGE5Q09wx9WRJse
+ m9mqeobCW8rVuW9IH34zlJN9vkLd9DcWEks2QSGAwrjABhBiS3TMUmtCjf6rHhJ6hzjGJZU+a
+ V0pAULg6/UvBSQRaD0SQXUQiJ7oI0wRdD/WdrOrEE6OnmQuxBip0Zxpb3bOC3ibdmETJueInS
+ Di50UmFXDbR/mzTiufH9wt+a4DYFBLTuJnMbpRgCabAR1E+6FcycmtzSUZGl688obbiLShzGk
+ Iy8R93Y519AQBU4L1AQHVFPCjz8yq1Agb84IhYzmjKljXCqIAjXIMXIhj6/+zay7ug6Fe8BzW
+ nHBOSotN4UNj/HvLwMHoPBQEysIVZgKb/MF5mnaIB+Ui1WImbgiFj/FMQO2QFJNRQRkAhauk9
+ xHWwvAV9LDnOXWZKa6R+0TqrOaoNI7kOF9kU+mQjwt6JiiONADi/UninmskYlIMm6b3eyOD5/
+ 4LlJemCvu3USdi7HffKiqe1o5QHwqlNpf3MSLoFPd5zqnPH7OIdWnRWlFqMb0/FJ4IISIWfnY
+ rrP1URkUBe+Ty+kcw6jJeq0ZiXh3SMppDQzf8hBdSkJaHM/POjKOBlsKZEGvrJ4cNziqXTa2e
+ wVKlmYh112NEz4=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Nov 12, 2021 at 08:39:24AM -0600, Rob Herring wrote:
-> On Mon, Nov 08, 2021 at 08:44:45AM -0800, Jarrett Schultz wrote:
-> > Introduce yaml for surface xbl driver.
-> > 
-> > Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
-> 
-> Author and Sob emails need to match.
-> 
-> > 
-> > ---
-> > 
-> > Changes in v2:
-> >  - Removed json-schema dependence
-> >  - Elaborated on description of driver
-> >  - Updated example
-> > 
-> > ---
-> > 
-> >  .../platform/microsoft/surface-xbl.yaml       | 57 +++++++++++++++++++
-> >  MAINTAINERS                                   |  7 +++
-> >  2 files changed, 64 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> > new file mode 100644
-> > index 000000000000..09f806f373bd
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> > @@ -0,0 +1,57 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/platform/microsoft/surface-xbl.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Surface Extensible Bootloader for Microsoft Surface Duo
-> > +
-> > +maintainers:
-> > +  - Jarrett Schultz <jaschultzMS@gmail.com>
-> > +
-> > +description: |
-> > +  Exposes the following device information to user space via sysfs -
-> 
-> What's sysfs? :) Linux details don't go in bindings.
-> 
-> > +    * board_id
-> > +    * battery_present
-> > +    * hw_init_retries
-> > +    * is_customer_mode
-> > +    * is_act_mode
-> > +    * pmic_reset_reason
-> > +    * touch_fw_version
-> > +    * ocp_error_location
-> > +  See sysfs documentation for more information.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: microsoft,sm8150-surface-duo-xbl
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +
-> > +examples:
-> > +  - |
-> > +    xbl@146bfa94 {
-> > +      compatible = "microsoft,sm8150-surface-duo-xbl";
-> > +      reg = <0x00 0x146bfa94 0x00 0x100>;
-> > +    };
-> > +  - |
-> > +    imem@146bf000 {
-> > +      compatible = "simple-mfd";
-> 
-> 'simple-mfd' needs a specific compatible for the block.
-> 
+Hi Thomas,
 
-Is there any need to describe the inner "xbl@a94" binding? If so, could
-you point me in the right direction?
+thank you very much for working on this. It is high time that we leave
+external kernel modules for ThinkPads behind us.
 
-> > +      reg = <0x0 0x146bf000 0x0 0x1000>;
-> > +      ranges = <0x0 0x0 0x146bf000 0x1000>;
-> > +
-> > +      #address-cells = <1>;
-> > +      #size-cells = <1>;
-> > +
-> > +      xbl@a94 {
-> > +        compatible = "microsoft,sm8150-surface-duo-xbl";
-> > +        reg = <0xa94 0x100>;
-> > +      };
-> > +    };
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index eeb4c70b3d5b..8643546f8fab 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12423,6 +12423,13 @@ F:	Documentation/driver-api/surface_aggregator/clients/dtx.rst
-> >  F:	drivers/platform/surface/surface_dtx.c
-> >  F:	include/uapi/linux/surface_aggregator/dtx.h
-> >  
-> > +MICROSOFT SURFACE DUO XBL DRIVER
-> > +M:	Jarrett Schultz <jaschultz@microsoft.com>
-> > +L:	linux-arm-msm@vger.kernel.org
-> > +L:	platform-driver-x86@vger.kernel.org
-> > +S:	Supported
-> > +F:	Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> > +
-> >  MICROSOFT SURFACE GPE LID SUPPORT DRIVER
-> >  M:	Maximilian Luz <luzmaximilian@gmail.com>
-> >  L:	platform-driver-x86@vger.kernel.org
-> > -- 
-> > 2.25.1
-> > 
-> > 
+On 13.11.21 11:42, Thomas Wei=C3=9Fschuh wrote:
+> Hi,
+>
+> this series adds support for the charge_behaviour property to the power
+> subsystem and thinkpad_acpi driver.
+>
+> As thinkpad_acpi has to use the 'struct power_supply' created by the gen=
+eric
+> ACPI driver it has to rely on custom sysfs attributes instead of proper
+> power_supply properties to implement this property.
+>
+> Patch 1: Adds the power_supply documentation and basic public API
+> Patch 2: Adds helpers to power_supply core to help drivers implement the
+>    charge_behaviour attribute
+> Patch 3: Adds support for force-discharge to thinkpad_acpi.
+> Patch 4: Adds support for inhibit-discharge to thinkpad_acpi.
+>
+> Patch 3 and 4 are largely taken from other patches and adapted to the ne=
+w API.
+> (Links are in the patch trailer)
+>
+> Ognjen Galic, Nicolo' Piazzalunga, Thomas Koch:
+>
+> Your S-o-b is on the original inhibit_charge and force_discharge patches=
+.
+> I would like to add you as Co-developed-by but to do that it will also r=
+equire
+> your S-o-b. Could you give your sign-offs for the new patches, so you ca=
+n be
+> properly attributed?
+S-o-b/Co-developed-by/Tested-by is fine with me.
+
+I tested your patches.
+
+Hardware:
+
+- ThinkPad X220, BAT0
+- ThinkPad T450s, BAT0+BAT1
+- ThinkPad X1C6, BAT0
+
+Test Results:
+
+1. force-discharge
+
+Everythings works as expected
+- Writing including disengaging w/ "auto" : OK
+- Reading: OK
+
+- Battery discharging: OK
+- Disengaging with "auto": OK
+
+2. inhibit-charge
+
+Works as expected:
+- Writing: OK
+
+- Disengaging with "auto": OK
+
+
+Discrepancies:
+- Battery charge inhibited: BAT0 OK, BAT1 no effect e.g. continues chargin=
+g
+- Reading: always returns "auto"
+
+Note: the reading discrepancy may be related to Hans' remarks [1].
+
+[1]
+https://lore.kernel.org/all/09a66da1-1a8b-a668-3179-81670303ea37@redhat.co=
+m/
+
+>
+> Sebastian Reichel:
+>
+> Currently the series does not actually support the property as a proper
+> powersupply property handled fully by power_supply_sysfs.c because there=
+ would
+> be no user for this property.
+>
+> Previous discussions about the API:
+>
+> https://lore.kernel.org/platform-driver-x86/20211108192852.357473-1-linu=
+x@weissschuh.net/
+> https://lore.kernel.org/platform-driver-x86/21569a89-8303-8573-05fb-c2fe=
+c29983d1@gmail.com/
+>
+> Thomas Wei=C3=9Fschuh (4):
+>    power: supply: add charge_behaviour attributes
+>    power: supply: add helpers for charge_behaviour sysfs
+>    platform/x86: thinkpad_acpi: support force-discharge
+>    platform/x86: thinkpad_acpi: support inhibit-charge
+>
+>   Documentation/ABI/testing/sysfs-class-power |  14 ++
+>   drivers/platform/x86/thinkpad_acpi.c        | 154 +++++++++++++++++++-
+>   drivers/power/supply/power_supply_sysfs.c   |  51 +++++++
+>   include/linux/power_supply.h                |  16 ++
+>   4 files changed, 231 insertions(+), 4 deletions(-)
+>
+>
+> base-commit: 66f4beaa6c1d28161f534471484b2daa2de1dce0
+>
+=2D-
+Freundliche Gr=C3=BC=C3=9Fe / Kind regards,
+Thomas Koch
+
+Mail : linrunner@gmx.net
+Web  : https://linrunner.de/tlp
