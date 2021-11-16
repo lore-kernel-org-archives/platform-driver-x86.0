@@ -2,81 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD92C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 12:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7D0C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 13:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A630D61B50
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 12:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7831461C4F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 13:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233068AbhKPMVM (ORCPT
+        id S236607AbhKPNOS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Nov 2021 07:21:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232525AbhKPMVL (ORCPT
+        Tue, 16 Nov 2021 08:14:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:38889 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236600AbhKPNOQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Nov 2021 07:21:11 -0500
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F410C061746;
-        Tue, 16 Nov 2021 04:18:13 -0800 (PST)
-Date:   Tue, 16 Nov 2021 13:18:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
-        s=mail; t=1637065091;
-        bh=cCgpA89cKBgN/pAn0p9KVi8LU03GGQSfKl3QzsHCXw8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IqOFjlcX/Pgfrfec+ZiVtqFM7Oxra6IElEHtEWj3fzCyBvGm3Dd+stv9soWOciLXR
-         v+7DgjstXGAf1c2O5745wioBd8HLs+TtQi/5wDSC7o/Cb91DibrSQpwL7n1QbzCvzQ
-         OnLTVMWbU7jFPE5B0+hrXVBrDydlPxo5gxgJbTHA=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        linux-kernel@vger.kernel.org, linrunner@gmx.net, bberg@redhat.com,
-        hadess@hadess.net, markpearson@lenovo.com,
-        nicolopiazzalunga@gmail.com, njoshi1@lenovo.com, smclt30p@gmail.com
-Subject: Re: [PATCH 4/4] platform/x86: thinkpad_acpi: support inhibit-charge
-Message-ID: <754b4466-4636-4a51-980a-5e5c21953f44@t-8ch.de>
-References: <20211113104225.141333-1-linux@weissschuh.net>
- <20211113104225.141333-5-linux@weissschuh.net>
- <09a66da1-1a8b-a668-3179-81670303ea37@redhat.com>
+        Tue, 16 Nov 2021 08:14:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1637068279;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=G+eFuVhDZ+VMRsPPrXKpG+BgL73UT9dRvCnGODv/ZC0=;
+        b=HuNxgUILQrn/UuuhERhquF5k6s8tWs7pmkzR4ElLpbAGaj7J4rSiW2J3crPCcWHXDxb4kN
+        ylE2OnyJ46Jv++5yA6gyLb1c8M//xQwTrXmlTND75pHEzH7pG7kivlRf3b6rlbcPTvu089
+        Osh/vvt75/DRkIzJ/Yo/xlh/W3XsdiM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-385-msIPPAEFNGiKqYENOBTpcw-1; Tue, 16 Nov 2021 08:11:16 -0500
+X-MC-Unique: msIPPAEFNGiKqYENOBTpcw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C7F61966320;
+        Tue, 16 Nov 2021 13:11:15 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.192.241])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 29FC460C13;
+        Tue, 16 Nov 2021 13:11:12 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Christian Brauner <christian@brauner.io>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] proc: Make the proc_create[_data]() stubs static inlines
+Date:   Tue, 16 Nov 2021 14:11:12 +0100
+Message-Id: <20211116131112.508304-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <09a66da1-1a8b-a668-3179-81670303ea37@redhat.com>
-Jabber-ID: thomas@t-8ch.de
-X-Accept: text/plain, text/html;q=0.2, text/*;q=0.1
-X-Accept-Language: en-us, en;q=0.8, de-de;q=0.7, de;q=0.6
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Change the proc_create[_data]() stubs which are used when CONFIG_PROC_FS
+is not set from #defines to a static inline stubs.
 
-On 2021-11-16 11:58+0100, Hans de Goede wrote:
-> Thank you for working on this!
+Thix should fix clang -Werror builds failing due to errors like this:
 
-Thanks for the review!
+drivers/platform/x86/thinkpad_acpi.c:918:30: error: unused variable
+ 'dispatch_proc_ops' [-Werror,-Wunused-const-variable]
 
-> On 11/13/21 11:42, Thomas Weißschuh wrote:
-> > @@ -9673,6 +9711,11 @@ static ssize_t charge_behaviour_show(struct device *dev,
-> >  			return -ENODEV;
-> >  		if (ret)
-> >  			active = POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE;
-> > +	} else if (available & BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE)) {
-> 
-> The use of else-if here seems wrong, this suggests that batterys can never
-> support both force-discharge and inhibit-charge behavior, which they can, so this
-> means that active can now never get set to BEHAVIOUR_INHIBIT_CHARGE on
-> batteries which support both.
-> 
-> So AFAICT the else part of the else if should be dropped here, making this
-> a new stand alone if block.
+Fixing this in include/linux/proc_fs.h should ensure that the same issue
+is also fixed in any other drivers hitting the same -Werror issue.
 
-Indeed, I'll fix this logic for v2.
+Cc: platform-driver-x86@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Note the commit message says "should fix" because I could not actually
+be bothered to verify this. The whole notion of combining:
+1. clang
+2. -Werror
+3. -Wunused-const-variable
+Is frankly a bit crazy, causing way too much noise and has already
+cost me too much time IMHO.
+---
+ include/linux/proc_fs.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Thanks,
-Thomas
+diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+index 069c7fd95396..3d19453fb6b3 100644
+--- a/include/linux/proc_fs.h
++++ b/include/linux/proc_fs.h
+@@ -178,8 +178,14 @@ static inline struct proc_dir_entry *proc_mkdir_mode(const char *name,
+ #define proc_create_seq(name, mode, parent, ops) ({NULL;})
+ #define proc_create_single(name, mode, parent, show) ({NULL;})
+ #define proc_create_single_data(name, mode, parent, show, data) ({NULL;})
+-#define proc_create(name, mode, parent, proc_ops) ({NULL;})
+-#define proc_create_data(name, mode, parent, proc_ops, data) ({NULL;})
++
++static inline struct proc_dir_entry *proc_create(
++	const char *, umode_t, struct proc_dir_entry *, const struct proc_ops *)
++{ return NULL; }
++
++static inline struct proc_dir_entry *proc_create_data(
++	const char *, umode_t, struct proc_dir_entry *, const struct proc_ops *, void *)
++{ return NULL; }
+ 
+ static inline void proc_set_size(struct proc_dir_entry *de, loff_t size) {}
+ static inline void proc_set_user(struct proc_dir_entry *de, kuid_t uid, kgid_t gid) {}
+-- 
+2.31.1
+
