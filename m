@@ -2,135 +2,238 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CB6C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 10:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9863EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 10:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6CA560EE9
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 10:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74AE86321A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 10:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234066AbhKPKlo (ORCPT
+        id S234432AbhKPLBT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Nov 2021 05:41:44 -0500
-Received: from mga01.intel.com ([192.55.52.88]:12433 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234039AbhKPKlo (ORCPT
+        Tue, 16 Nov 2021 06:01:19 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:38241 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232203AbhKPLBS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Nov 2021 05:41:44 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10169"; a="257422426"
-X-IronPort-AV: E=Sophos;i="5.87,238,1631602800"; 
-   d="scan'208";a="257422426"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2021 02:38:47 -0800
-X-IronPort-AV: E=Sophos;i="5.87,238,1631602800"; 
-   d="scan'208";a="592571817"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2021 02:38:44 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1mmvrI-007O8b-IQ;
-        Tue, 16 Nov 2021 12:38:36 +0200
-Date:   Tue, 16 Nov 2021 12:38:36 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Denis Pauk <pauk.denis@gmail.com>,
-        Eugene Shalygin <eugene.shalygin@gmail.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        thomas@weissschuh.net, Ed Brindley <kernel@maidavale.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 0/2] Update ASUS WMI supported boards
-Message-ID: <YZOKLDg582dQPzVN@smile.fi.intel.com>
-References: <20211115210842.11972-1-pauk.denis@gmail.com>
- <CAHp75VcPHi1XyZr=CFbUhiUXK0q-10iBx5U3d==aG8pMG27k1Q@mail.gmail.com>
- <c016d0ca-b8b1-fb06-50f3-06a7b1c4aaea@roeck-us.net>
+        Tue, 16 Nov 2021 06:01:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1637060301;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kY0B8yGVYk8MaOQx8xvl+ZB1I0VF4H2dddqWO+tZ2pc=;
+        b=XdXnV8zWUe2u7QFcfv4ESqCbDuppkxfU1epWwpC2PSo47wtiUx/DtVWrl7z9op9YTmMGYk
+        1LAwpXz85tUV/axlSH2d1HnJk7u1V/6Pg0tRz0LRqEiRwwbdouCIUOcPDIuZ6pAsHTIagW
+        RndFcqnmnhsvSzOsebiw/7pNCQcHXkQ=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-298-S2zjuvr7PKS_wt1rBgULRw-1; Tue, 16 Nov 2021 05:58:19 -0500
+X-MC-Unique: S2zjuvr7PKS_wt1rBgULRw-1
+Received: by mail-ed1-f72.google.com with SMTP id l15-20020a056402124f00b003e57269ab87so10195280edw.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Nov 2021 02:58:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=kY0B8yGVYk8MaOQx8xvl+ZB1I0VF4H2dddqWO+tZ2pc=;
+        b=UybJ72IngsRjPRgJuFUERGvx4GDRZwXp0oht4cTACOER804ZiYNwR+9C4io/i9Xap0
+         zQ4PBoYCeDj6O2r709LJLnOiXmYJOpUe9T+MXFV9AZZqlCVHhaqeZ+NODxF0vNviDmI/
+         jLC1Msb7LNXWh6jdT/lRY7L1k1mhuM6uz3a/ZZGDbX0Fs39Xc6U5azx+c/WucRNHDDVV
+         3EPuuPdDpAeVrZTtOJZescNJRvRCS6ZaTD79X1tekz813lMTG9voGiDtBW84DTWqSMal
+         KF7k0xsiuZ4VyyULYl6f0bWHfM3m9JCClmnmCRzilRHku8VSTqChZjfXKAeq6pX19xXm
+         Hv0g==
+X-Gm-Message-State: AOAM530gcfdbd+3fNOABOXE4kqXx2m9g95GHhMfRZtHh0MttbzGww58B
+        Weg5s8rxulsumVf+VzI8HR8zlJg86dXAqZo414BdoHP6u9+ZlCPKCKn9YUOL0ESXLqQw7EkDrWd
+        0EUON8EB3s8SGPa81ySqKqAHtFYDppBfEoQ==
+X-Received: by 2002:a17:907:2d0e:: with SMTP id gs14mr8757033ejc.249.1637060298616;
+        Tue, 16 Nov 2021 02:58:18 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxIEbJVQs6Ie/485xAX3626rJajgjdDhHYqVaN7DlmCbvpayCdiFexQj8i/fiIF/lTRfUn0LQ==
+X-Received: by 2002:a17:907:2d0e:: with SMTP id gs14mr8756992ejc.249.1637060298317;
+        Tue, 16 Nov 2021 02:58:18 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id bo20sm9304943edb.31.2021.11.16.02.58.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Nov 2021 02:58:18 -0800 (PST)
+Message-ID: <09a66da1-1a8b-a668-3179-81670303ea37@redhat.com>
+Date:   Tue, 16 Nov 2021 11:58:16 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c016d0ca-b8b1-fb06-50f3-06a7b1c4aaea@roeck-us.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH 4/4] platform/x86: thinkpad_acpi: support inhibit-charge
+Content-Language: en-US
+To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
+        linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc:     linux-kernel@vger.kernel.org, linrunner@gmx.net, bberg@redhat.com,
+        hadess@hadess.net, markpearson@lenovo.com,
+        nicolopiazzalunga@gmail.com, njoshi1@lenovo.com, smclt30p@gmail.com
+References: <20211113104225.141333-1-linux@weissschuh.net>
+ <20211113104225.141333-5-linux@weissschuh.net>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211113104225.141333-5-linux@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 03:15:39PM -0800, Guenter Roeck wrote:
-> On 11/15/21 2:01 PM, Andy Shevchenko wrote:
-> > On Mon, Nov 15, 2021 at 11:09 PM Denis Pauk <pauk.denis@gmail.com> wrote:
-> > > 
-> > > Add support by WMI interface provided by Asus for B550/X570 boards:
-> > > * PRIME X570-PRO,
-> > > * ROG CROSSHAIR VIII HERO
-> > > * ROG CROSSHAIR VIII DARK HERO
-> > > * ROG CROSSHAIR VIII FORMULA
-> > > * ROG STRIX X570-E GAMING
-> > > * ROG STRIX B550-I GAMING
-> > > * ROG STRIX B550-E GAMING
-> > > 
-> > > Add support by WMI interface provided by Asus for X370/X470/
-> > > B450/X399 boards:
-> > > * ROG CROSSHAIR VI HERO,
-> > > * PRIME X399-A,
-> > > * PRIME X470-PRO,
-> > > * ROG CROSSHAIR VI EXTREME,
-> > > * ROG CROSSHAIR VI HERO (WI-FI AC),
-> > > * ROG CROSSHAIR VII HERO,
-> > > * ROG CROSSHAIR VII HERO (WI-FI),
-> > > * ROG STRIX Z390-F GAMING
-> > > * ROG STRIX B450-E GAMING,
-> > > * ROG STRIX B450-F GAMING,
-> > > * ROG STRIX B450-I GAMING,
-> > > * ROG STRIX X399-E GAMING,
-> > > * ROG STRIX X470-F GAMING,
-> > > * ROG STRIX X470-I GAMING,
-> > > * ROG ZENITH EXTREME,
-> > > * ROG ZENITH EXTREME ALPHA.
-> > > 
-> > > I have added "ROG STRIX Z390-F GAMING" to list of supported boards in
-> > > asus_wmi_sensors.
-> > 
-> > Guenter, what is your plan about this patch series? It seems it
-> > missed, by unknown (?) reason, the v5.16-rc1 (I remember seeing it in
-> > some of your tree branches at some point).
-> > 
+Hi Thomas,
+
+Thank you for working on this!
+
+On 11/13/21 11:42, Thomas Weißschuh wrote:
+> This adds support for the inhibit-charge charge_behaviour through the
+> embedded controller of ThinkPads.
 > 
-> I don't see it in my record. Earlier I was simply waiting for some
-> Reviewed-by: tags, which I have never seen.
-
-Ah, understood. Thank you for clarifications.
-
-> Looking into the commit log,
-> I do see:
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 > 
-> Signed-off-by: Denis Pauk <pauk.denis@gmail.com>
-> Co-developed-by: Eugene Shalygin <eugene.shalygin@gmail.com>
-> Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
-> Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
 > 
-> Did you and Eugene indeed sign this off, ie did you write it, and
-> Eugene and Denis signed it off ? If so, the tags are in the wrong order.
+> This patch is based on https://lore.kernel.org/platform-driver-x86/d2808930-5840-6ffb-3a59-d235cdb1fe16@gmail.com/
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 55 +++++++++++++++++++++++++++-
+>  1 file changed, 53 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index e8c98e9aff71..7cd6475240b2 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -9321,6 +9321,8 @@ static struct ibm_struct mute_led_driver_data = {
+>  #define SET_STOP	"BCSS"
+>  #define GET_DISCHARGE	"BDSG"
+>  #define SET_DISCHARGE	"BDSS"
+> +#define GET_INHIBIT	"PSSG"
+> +#define SET_INHIBIT	"BICS"
+>  
+>  enum {
+>  	BAT_ANY = 0,
+> @@ -9338,6 +9340,7 @@ enum {
+>  	THRESHOLD_START,
+>  	THRESHOLD_STOP,
+>  	FORCE_DISCHARGE,
+> +	INHIBIT_CHARGE,
+>  };
+>  
+>  struct tpacpi_battery_data {
+> @@ -9409,6 +9412,13 @@ static int tpacpi_battery_get(int what, int battery, int *ret)
+>  		/* The force discharge status is in bit 0 */
+>  		*ret = *ret & 0x01;
+>  		return 0;
+> +	case INHIBIT_CHARGE:
+> +		/* This is actually reading peak shift state, like tpacpi-bat does */
+> +		if ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_INHIBIT, ret, battery))
+> +			return -ENODEV;
+> +		/* The inhibit charge status is in bit 0 */
+> +		*ret = *ret & 0x01;
+> +		return 0;
+>  	default:
+>  		pr_crit("wrong parameter: %d", what);
+>  		return -EINVAL;
+> @@ -9447,6 +9457,22 @@ static int tpacpi_battery_set(int what, int battery, int value)
+>  			return -ENODEV;
+>  		}
+>  		return 0;
+> +	case INHIBIT_CHARGE:
+> +		/* When setting inhibit charge, we set a default value of
+> +		 * always breaking on AC detach and the effective time is set to
+> +		 * be permanent.
+> +		 * The battery ID is in bits 4-5, 2 bits,
+> +		 * the effective time is in bits 8-23, 2 bytes.
+> +		 * A time of FFFF indicates forever.
+> +		 */
+> +		param = value;
+> +		param |= battery << 4;
+> +		param |= 0xFFFF << 8;
+> +		if (ACPI_FAILURE(tpacpi_battery_acpi_eval(SET_INHIBIT, &ret, param))) {
+> +			pr_err("failed to set inhibit charge on %d", battery);
+> +			return -ENODEV;
+> +		}
+> +		return 0;
+>  	default:
+>  		pr_crit("wrong parameter: %d", what);
+>  		return -EINVAL;
+> @@ -9467,6 +9493,8 @@ static int tpacpi_battery_probe(int battery)
+>  	 * 4) Check for support
+>  	 * 5) Get the current force discharge status
+>  	 * 6) Check for support
+> +	 * 7) Get the current inhibit charge status
+> +	 * 8) Check for support
+>  	 */
+>  	if (acpi_has_method(hkey_handle, GET_START)) {
+>  		if ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_START, &ret, battery)) {
+> @@ -9513,6 +9541,16 @@ static int tpacpi_battery_probe(int battery)
+>  			battery_info.batteries[battery].charge_behaviours |=
+>  				BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE);
+>  	}
+> +	if (acpi_has_method(hkey_handle, GET_INHIBIT)) {
+> +		if (ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_INHIBIT, &ret, battery))) {
+> +			pr_err("Error probing battery inhibit charge; %d\n", battery);
+> +			return -ENODEV;
+> +		}
+> +		/* Support is marked in bit 5 */
+> +		if (ret & BIT(5))
+> +			battery_info.batteries[battery].charge_behaviours |=
+> +				BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE);
+> +	}
+>  
+>  	battery_info.batteries[battery].charge_behaviours |=
+>  		BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO);
+> @@ -9673,6 +9711,11 @@ static ssize_t charge_behaviour_show(struct device *dev,
+>  			return -ENODEV;
+>  		if (ret)
+>  			active = POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE;
+> +	} else if (available & BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE)) {
 
-I'm not sure I follow. I have helped Denis with the code and according to
-Submitting Patches documentation the order should be chronological with the
-main author to be first in the list. Here the committer (submitter) is the
-same as the original author IIUC. (I can't speak for Eugene, though)
+The use of else-if here seems wrong, this suggests that batterys can never
+support both force-discharge and inhibit-charge behavior, which they can, so this
+means that active can now never get set to BEHAVIOUR_INHIBIT_CHARGE on
+batteries which support both.
 
-> On the other side, if the code is ultimately from Denis, with your input,
-> the tags should be either Acked-by: or Reviewed-by: for both Eugene
-> and yourself.
+So AFAICT the else part of the else if should be dropped here, making this
+a new stand alone if block.
 
-I'm fine with either Co-developed-by+SoB or Reviewed-by.
+For the other parts of the set lets wait and see what Sebastian has to say.
 
-> Note that v11 of this patch series is missing from
-> https://patchwork.kernel.org/project/linux-hwmon/list/
-> for some reason.
+Regards,
 
-Hmm... Denis, please check locally how you prepare your patches.
+Hans
 
 
--- 
-With Best Regards,
-Andy Shevchenko
 
+> +		if (tpacpi_battery_get(INHIBIT_CHARGE, battery, &ret))
+> +			return -ENODEV;
+> +		if (ret)
+> +			active = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
+>  	}
+>  
+>  	return power_supply_charge_behaviour_show(dev, available, active, buf);
+> @@ -9710,12 +9753,20 @@ static ssize_t charge_behaviour_store(struct device *dev,
+>  	switch (selected) {
+>  	case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
+>  		ret = tpacpi_battery_set(FORCE_DISCHARGE, battery, 0);
+> -		if (ret < 0)
+> +		ret = tpacpi_battery_set(INHIBIT_CHARGE, battery, 0) || ret;
+> +		if (ret)
+>  			return ret;
+>  		break;
+>  	case POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE:
+>  		ret = tpacpi_battery_set(FORCE_DISCHARGE, battery, 1);
+> -		if (ret < 0)
+> +		ret = tpacpi_battery_set(INHIBIT_CHARGE, battery, 0) || ret;
+> +		if (ret)
+> +			return ret;
+> +		break;
+> +	case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
+> +		ret = tpacpi_battery_set(FORCE_DISCHARGE, battery, 0);
+> +		ret = tpacpi_battery_set(INHIBIT_CHARGE, battery, 1) || ret;
+> +		if (ret)
+>  			return ret;
+>  		break;
+>  	default:
+> 
 
