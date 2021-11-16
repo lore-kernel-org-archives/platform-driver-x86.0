@@ -2,100 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B53C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 06:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92415C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 07:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D06161B44
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 06:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7739B6323A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 07:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbhKPG7b (ORCPT
+        id S231327AbhKPHnl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Nov 2021 01:59:31 -0500
-Received: from m13114.mail.163.com ([220.181.13.114]:31925 "EHLO
-        m13114.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbhKPG7a (ORCPT
+        Tue, 16 Nov 2021 02:43:41 -0500
+Received: from mail-sn1anam02on2055.outbound.protection.outlook.com ([40.107.96.55]:64711
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231274AbhKPHnh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Nov 2021 01:59:30 -0500
-X-Greylist: delayed 907 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Nov 2021 01:59:28 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=dm99I
-        mjsnU0DiVA05qj0id/TZYTy9xCy5wMYaAe/P+0=; b=nwrCJZetRkpiCich85XjB
-        /uHcbB67mXdr2Az/Q8mYrTolLwo4qL6PXUtW3ub9vre38/T/rCppgXWGD0oenDRP
-        mJ3aUQ3FiBMRwvOTg2a29Rf+qyg8YKL/PZ829V1x2491M1NUoqlm4Zd6Ywc1Laxc
-        h+NMz+VP1AvjTjzHN8E1+A=
-Received: from slark_xiao$163.com ( [112.97.50.141] ) by
- ajax-webmail-wmsvr114 (Coremail) ; Tue, 16 Nov 2021 14:40:30 +0800 (CST)
-X-Originating-IP: [112.97.50.141]
-Date:   Tue, 16 Nov 2021 14:40:30 +0800 (CST)
-From:   "Slark Xiao" <slark_xiao@163.com>
-To:     "Hans de Goede" <hdegoede@redhat.com>
-Cc:     hmh@hmh.eng.br, mgross@linux.intel.com, markpearson@lenovo.com,
-        njoshi1@lenovo.com, ibm-acpi-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re:Re:Re: [PATCH v3] Fix WWAN device disabled issue after S3 deep
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20210622(1d4788a8)
- Copyright (c) 2002-2021 www.mailtech.cn 163com
-In-Reply-To: <7821731c.1990.17d02723fb6.Coremail.slark_xiao@163.com>
-References: <20211108060648.8212-1-slark_xiao@163.com>
- <b3523a57-a21e-80ca-561d-23f6ee89913d@redhat.com>
- <7821731c.1990.17d02723fb6.Coremail.slark_xiao@163.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+        Tue, 16 Nov 2021 02:43:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F05MydmgBBfHXGEu1hhRxq1zuTdWmNd2QMDuX+jgjXfv2MVsHXBBZS7RARVDVli7CIBc64WZxqDcHrF1TWIGlCqHHlXsUCCTUCHeycc0thb4Pn5U7/6wG1k1iG7py0+s7KKaRh0ZH6Co/VURJEJ7dZc6MNFS7ejPGS22ZvGWZhZsQ26FX+bWt7GamTwpcVsNxt3pGZRFCP9gtLDhw60nQ+zU5+LGzzIVO7QR8auVD7TQNeOK2dtmdZNQcqU1bqGNOmuAWiYazdLvI1K5r7edz3TX3OquOgja3Ez0SGO+vqaHMaqPEYJykXYje3tiL+IaAR2nvCF95P1Mv8iwgmaYog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=urBnSfbdc16D5XU/KXyLWd4QNLvRHymYSWEL81CCNus=;
+ b=DSWhMjcv8a1X4uh6bpD7NfaENU/jq4JsZA6QWPHpkVjZD5rNYE4gKZso94N8S5uCh6sE88xnzZv+9SZf4hE8CxhppQoX34cIk9gVbAuJZVT5djRqAvdsyfVFh0srIG2OOx5bZkDbZ2gJ/MoHpMmYnPfkAMff17pLY5oJpiJe2YZfFJdJZRw+jpJUYS+abYNQ6Kd1ixTMdRD6LK3zjE3mpIB9DVzkBDzgwmaK65wencPpGSNfw+1Zs2xXXbSI/FfdFtn0RQ7T9h3gF7dWe9vKP/pWsmVYNCY6ZAI9WhZEPyw6c7FUeXK2Ah/VmGNTkmVDM8gQs22glsT5HRRovHd4Cg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=urBnSfbdc16D5XU/KXyLWd4QNLvRHymYSWEL81CCNus=;
+ b=vHapWYP4VWVZzDxRpgGd+Qhf7OiHCNQhT68MxA7V4g/+YOsxSjUfm2/AYxUHGH/xbK0cs9S5M5XljyZ5MG3fDUbY5uPnKkpctwry38vP9DAmH4mSVllWkSkU7FuFpz5IX7+pE/pzW8qcKoMov+vsLw7QygVWCDKsUCUr/GlEsl8=
+Received: from DM6PR11CA0046.namprd11.prod.outlook.com (2603:10b6:5:14c::23)
+ by BN8PR12MB3507.namprd12.prod.outlook.com (2603:10b6:408:6e::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.16; Tue, 16 Nov
+ 2021 07:40:37 +0000
+Received: from DM6NAM11FT052.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:14c:cafe::cd) by DM6PR11CA0046.outlook.office365.com
+ (2603:10b6:5:14c::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.25 via Frontend
+ Transport; Tue, 16 Nov 2021 07:40:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT052.mail.protection.outlook.com (10.13.172.111) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4690.15 via Frontend Transport; Tue, 16 Nov 2021 07:40:36 +0000
+Received: from Mayan-RMB.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Tue, 16 Nov
+ 2021 01:40:34 -0600
+From:   Sanket Goswami <Sanket.Goswami@amd.com>
+To:     <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>,
+        <markgross@kernel.org>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        Sanket Goswami <Sanket.Goswami@amd.com>
+Subject: [PATCH 0/2] Updates to amd-pmc driver
+Date:   Tue, 16 Nov 2021 13:09:58 +0530
+Message-ID: <20211116074000.28626-1-Sanket.Goswami@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Message-ID: <350a209b.242b.17d2779c109.Coremail.slark_xiao@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: csGowACHn+teUpNhQqvdAA--.22805W
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/xtbBAxhIZGB0HqHiHQACsh
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3e1688b6-c46d-4778-fde8-08d9a8d4616f
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3507:
+X-Microsoft-Antispam-PRVS: <BN8PR12MB3507B4A2AB178B02747B41569C999@BN8PR12MB3507.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 14p54vqmzu/rruRsUQDXRAhvZBlzbyjFJ8+5o0Vj5Ba/VSSFRlMchcTMBWXDw5ROvnFVe2B3FzmyXk9RgJ6aNMTfl/hdoU8S1BKVciHAtLawxd9G3Rzm6f2DaTHVr2BjJ+ndLCWSMcgeIWkDKHwsHdoYCKFjMBIp3qOlxHnIwR86AXJ3Yu0BOnCJcUhIMGAmeB9Cb+OQiiEedXQrN2tmg3VieZQvt6Sz4gPZH6bTPNZjK5gHq8raItAjH0q2UqmB44qmczdsxr1Z24FQzP0jlJwaGMQ5GlnLw/NkUOHMakxfYaNHCGMbHztDRRSa8OBZ6Jbaan+toal8i2KDy1QvH/9bH0iXmCXnxfmeBya4OPF7y0KYui3d2HXeJaHJ7FM8QCVn3XEMbBrJaMBDmKgWb03sVFmGXOfaw8FysGNsqH7Huaw0Yinc2mRSjFMlUvZmK7FH5z6GYBi+NxHhgap+qOFVA1EwvIUxLl4cGZDcaExK3+RosHpqdJtpdi6MpXcTLUxIdaA7xikvLl3PeYDFQV3Y2MICaXb7Tss6iGxpRjZa1CqiS7HVl7EBJ4VLoFAYYtncCbhhdw5SVqs4b4PqM+iCXvlwd04BXO9J9CmMfS1DZtQaKXA7PuVDgp15QA8x9lnvt9IsirKXD/FGBN0pfxqocVn4H7o5tnX/jWzKREvAE8K1Kr1BAwuwgngDwUTA4VH4gBuv+F3H48hWjyJECGEiMIgLhAYrDTL8hbBRIVc=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(82310400003)(6666004)(5660300002)(15650500001)(426003)(2906002)(36860700001)(316002)(70586007)(70206006)(36756003)(54906003)(7696005)(4326008)(110136005)(47076005)(86362001)(81166007)(1076003)(356005)(83380400001)(4744005)(508600001)(2616005)(26005)(8936002)(336012)(8676002)(186003)(16526019)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2021 07:40:36.8949
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e1688b6-c46d-4778-fde8-08d9a8d4616f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT052.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3507
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-CgoKQXQgMjAyMS0xMS0wOSAxMDowNjoyMSwgIlNsYXJrIFhpYW8iIDxzbGFya194aWFvQDE2My5j
-b20+IHdyb3RlOgo+Cj4KPkF0IDIwMjEtMTEtMDggMjI6MzI6NTYsICJIYW5zIGRlIEdvZWRlIiA8
-aGRlZ29lZGVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4+SGksCj4+Cj4+T24gMTEvOC8yMSAwNzowNiwg
-U2xhcmsgWGlhbyB3cm90ZToKPj4+IFdoZW4gV1dBTiBkZXZpY2Ugd2FrZSBmcm9tIFMzIGRlZXAs
-IHVuZGVyIHRoaW5rcGFkIHBsYXRmb3JtLAo+Pj4gV1dBTiB3b3VsZCBiZSBkaXNhYmxlZC4gVGhp
-cyBkaXNhYmxlIHN0YXR1cyBjb3VsZCBiZSBjaGVja2VkCj4+PiBieSBjb21tYW5kICdubWNsaSBy
-IHd3YW4nIG9yICdyZmtpbGwgbGlzdCcuCj4+PiAKPj4+IElzc3VlIGFuYWx5c2lzIGFzIGJlbG93
-Ogo+Pj4gICBXaGVuIGhvc3QgcmVzdW1lIGZyb20gUzMgZGVlcCwgdGhpbmtwYWRfYWNwaSBkcml2
-ZXIgd291bGQKPj4+IGNhbGwgaG90a2V5X3Jlc3VtZSgpIGZ1bmN0aW9uLiBGaW5uYWx5LCBpdCB3
-aWxsIHVzZQo+Pj4gd2FuX2dldF9zdGF0dXMgdG8gY2hlY2sgdGhlIGN1cnJlbnQgc3RhdHVzIG9m
-IFdXQU4gZGV2aWNlLgo+Pj4gRHVyaW5nIHRoaXMgcmVzdW1lIHByb2dyZXNzLCB3YW5fZ2V0X3N0
-YXR1cyB3b3VsZCBhbHdheXMKPj4+IHJldHVybiBvZmYgZXZlbiBXV0FOIGJvb3QgdXAgY29tcGxl
-dGVseS4KPj4+ICAgSW4gcGF0Y2ggVjIsIEhhbnMgc2FpZCAnc3dfc3RhdGUgc2hvdWxkIGJlIHVu
-Y2hhbmdlZAo+Pj4gYWZ0ZXIgYSBzdXNwZW5kL3Jlc3VtZS4gSXQncyBiZXR0ZXIgdG8gZHJvcCB0
-aGUKPj4+IHRwYWNwaV9yZmtfdXBkYXRlX3N3c3RhdGUgY2FsbCBhbGwgdG9nZXRoZXIgZnJvbSB0
-aGUKPj4+IHJlc3VtZSBwYXRoJy4KPj4+ICAgQW5kIGl0J3MgY29uZmltZWQgYnkgTGVub3ZvIHRo
-YXQgR1dBTiBpcyBubyBsb25nZXIKPj4+ICBhdmFpbGFibGUgZnJvbSBXSEwgZ2VuZXJhdGlvbiBi
-ZWNhdXNlIHRoZSBkZXNpZ24gZG9lcyBub3QKPj4+ICBtYXRjaCB3aXRoIGN1cnJlbnQgcGluIGNv
-bnRyb2wuCj4+PiAKPj4+IFNpZ25lZC1vZmYtYnk6IFNsYXJrIFhpYW8gPHNsYXJrX3hpYW9AMTYz
-LmNvbT4KPj4KPj5UaGFua3MsIHBhdGNoIGxvb2tzIGdvb2QgdG8gbWU6Cj4+Cj4+UmV2aWV3ZWQt
-Ynk6IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5jb20+Cj4+Cj4+SSB3aWxsIG1lcmdl
-IHRoaXMgb25jZSA1LjE2LXJjMSBpcyBvdXQuCj4+Cj4+UmVnYXJkcywKPj4KSGkgSGFucywKICA1
-LjE2LXJjMSBpcyBhbHJlYWR5IG91dC4gQ291bGQgeW91IGhlbHAgbWVyZ2UgdGhpcyBwYXRjaCBp
-bnRvIGJhc2VsaW5lIG5vdz8KClRoYW5rcyEKU2xhcmsgWGlhbwo+Pgo+Pj4gLS0tCj4+PiAgZHJp
-dmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jIHwgMTIgLS0tLS0tLS0tLS0tCj4+PiAg
-MSBmaWxlIGNoYW5nZWQsIDEyIGRlbGV0aW9ucygtKQo+Pj4gCj4+PiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYv
-dGhpbmtwYWRfYWNwaS5jCj4+PiBpbmRleCA1MGZmMDRjODQ2NTAuLmYxY2JkMjcyODJlMSAxMDA2
-NDQKPj4+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYwo+Pj4gKysr
-IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jCj4+PiBAQCAtMTE3OCwxNSAr
-MTE3OCw2IEBAIHN0YXRpYyBpbnQgdHBhY3BpX3Jma191cGRhdGVfc3dzdGF0ZShjb25zdCBzdHJ1
-Y3QgdHBhY3BpX3JmayAqdHBfcmZrKQo+Pj4gIAlyZXR1cm4gc3RhdHVzOwo+Pj4gIH0KPj4+ICAK
-Pj4+IC0vKiBRdWVyeSBGVyBhbmQgdXBkYXRlIHJma2lsbCBzdyBzdGF0ZSBmb3IgYWxsIHJma2ls
-bCBzd2l0Y2hlcyAqLwo+Pj4gLXN0YXRpYyB2b2lkIHRwYWNwaV9yZmtfdXBkYXRlX3N3c3RhdGVf
-YWxsKHZvaWQpCj4+PiAtewo+Pj4gLQl1bnNpZ25lZCBpbnQgaTsKPj4+IC0KPj4+IC0JZm9yIChp
-ID0gMDsgaSA8IFRQQUNQSV9SRktfU1dfTUFYOyBpKyspCj4+PiAtCQl0cGFjcGlfcmZrX3VwZGF0
-ZV9zd3N0YXRlKHRwYWNwaV9yZmtpbGxfc3dpdGNoZXNbaV0pOwo+Pj4gLX0KPj4+IC0KPj4+ICAv
-Kgo+Pj4gICAqIFN5bmMgdGhlIEhXLWJsb2NraW5nIHN0YXRlIG9mIGFsbCByZmtpbGwgc3dpdGNo
-ZXMsCj4+PiAgICogZG8gbm90aWNlIGl0IGNhdXNlcyB0aGUgcmZraWxsIGNvcmUgdG8gc2NoZWR1
-bGUgdWV2ZW50cwo+Pj4gQEAgLTMxMjksOSArMzEyMCw2IEBAIHN0YXRpYyB2b2lkIHRwYWNwaV9z
-ZW5kX3JhZGlvc3dfdXBkYXRlKHZvaWQpCj4+PiAgCWlmICh3bHN3ID09IFRQQUNQSV9SRktfUkFE
-SU9fT0ZGKQo+Pj4gIAkJdHBhY3BpX3Jma191cGRhdGVfaHdibG9ja19zdGF0ZSh0cnVlKTsKPj4+
-ICAKPj4+IC0JLyogU3luYyBzdyBibG9ja2luZyBzdGF0ZSAqLwo+Pj4gLQl0cGFjcGlfcmZrX3Vw
-ZGF0ZV9zd3N0YXRlX2FsbCgpOwo+Pj4gLQo+Pj4gIAkvKiBTeW5jIGh3IGJsb2NraW5nIHN0YXRl
-IGxhc3QgaWYgaXQgaXMgaHctdW5ibG9ja2VkICovCj4+PiAgCWlmICh3bHN3ID09IFRQQUNQSV9S
-RktfUkFESU9fT04pCj4+PiAgCQl0cGFjcGlfcmZrX3VwZGF0ZV9od2Jsb2NrX3N0YXRlKGZhbHNl
-KTsKPj4+IAo=
+This patch series includes:
+- Introduce msg_port argument to amd_pmc_send_cmd() function signature
+- Add support for Spill to DRAM on Smart Trace Buffer feature
+
+Sanket Goswami (2):
+  platform/x86: amd-pmc: Introduce message port argument in SMU routine
+  platform/x86: amd-pmc: Add support for AMD Spill to DRAM STB feature
+
+ drivers/platform/x86/amd-pmc.c | 159 +++++++++++++++++++++++++++------
+ 1 file changed, 131 insertions(+), 28 deletions(-)
+
+-- 
+2.25.1
+
