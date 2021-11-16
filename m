@@ -2,142 +2,100 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEC6C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 01:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B53C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 06:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFD661A4E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 01:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D06161B44
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 06:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349106AbhKPBzO (ORCPT
+        id S229686AbhKPG7b (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 Nov 2021 20:55:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382428AbhKPBvH (ORCPT
+        Tue, 16 Nov 2021 01:59:31 -0500
+Received: from m13114.mail.163.com ([220.181.13.114]:31925 "EHLO
+        m13114.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229593AbhKPG7a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 Nov 2021 20:51:07 -0500
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B05FEC0613B9;
-        Mon, 15 Nov 2021 15:15:43 -0800 (PST)
-Received: by mail-ot1-x32f.google.com with SMTP id g91-20020a9d12e4000000b0055ae68cfc3dso30149588otg.9;
-        Mon, 15 Nov 2021 15:15:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6eHHZwd5AiaKYcBpg9jtnJaGHGAUHaKvzfg2DTMYK08=;
-        b=ObI8n4joXZ8q/dG3SAJwScNI3LORzJPiEx136iyckAl8ktFuJbwAJ60c0UCR6kMGA/
-         Vsm6kYOclh5ErheFtU5rKHJotgXci7bE6Z8C+Nnesd18UaDjB7W4mAJpc6bERI7oszLt
-         1nI9Kjfs0xG7JFC0LVbJGNjizVp0RJFZwwa0NXVQ4DhwuGChovLPM3zPOT6qmTUsFP3+
-         xs8XSwS3IehSoAKKfMUJllsMaYDfEIeicZj5DQR5FJty0kuETD3TPfeEyXFhnoGZL8o5
-         hw5uY3UszYWW+l98DaXWXl0PPqbJhNNKvC0iQgjlraZlmZIXnk8KvsX54Hs/ZYiVJ/jx
-         Ic0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:to:cc:references:from:subject:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6eHHZwd5AiaKYcBpg9jtnJaGHGAUHaKvzfg2DTMYK08=;
-        b=awl/9QNiV4eXd8xgTdMoUw/wVkmn2z0qXUd5MIPJAYpRQZo2dyP9nR3mhfRKVOZ2RO
-         zRqqHJTFDkXtdDAgjSyKsolH/yACLCEdrR2fXPTEq3Tyy3aEmeUTlQH10h6z2wub4JIQ
-         RZxaSTGXKHNBZLXR5WQHT5Wh9wPKCtOGkPpvn+oJciBjitjG7beDG5XDixUlC0Uv2gwP
-         66/CN0+uhEjOttpUm/dfg5b4rpzz16b6T8dB5keL8G4k+cg0BQoI1CAGpbrBvpU91deQ
-         omaRlEWh0wn6JxHpi4YNd+J/376zhgr4Dpu5bWCRuYUFVDnv+m1BMXbPgGAdt3/7dKq6
-         OQog==
-X-Gm-Message-State: AOAM533eROK+NKtdcO6sOzHJCoMMKC8KDJpW5FnNvNeza/uxgKfDgPUD
-        g1TBffcKtBOOCBDXfH2Dc84P8k9K+7U=
-X-Google-Smtp-Source: ABdhPJxe6XtS+XxMMBLMZBa9E2wbBtEc8VOSvXHY7qaw1sN58S2DpPDpblFuYZ54DQvOnqqcchLN6Q==
-X-Received: by 2002:a05:6830:449e:: with SMTP id r30mr2325653otv.120.1637018142809;
-        Mon, 15 Nov 2021 15:15:42 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s6sm1037028ois.3.2021.11.15.15.15.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Nov 2021 15:15:42 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Denis Pauk <pauk.denis@gmail.com>
-Cc:     Eugene Shalygin <eugene.shalygin@gmail.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        thomas@weissschuh.net, Ed Brindley <kernel@maidavale.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20211115210842.11972-1-pauk.denis@gmail.com>
- <CAHp75VcPHi1XyZr=CFbUhiUXK0q-10iBx5U3d==aG8pMG27k1Q@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v11 0/2] Update ASUS WMI supported boards
-Message-ID: <c016d0ca-b8b1-fb06-50f3-06a7b1c4aaea@roeck-us.net>
-Date:   Mon, 15 Nov 2021 15:15:39 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Tue, 16 Nov 2021 01:59:30 -0500
+X-Greylist: delayed 907 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Nov 2021 01:59:28 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=dm99I
+        mjsnU0DiVA05qj0id/TZYTy9xCy5wMYaAe/P+0=; b=nwrCJZetRkpiCich85XjB
+        /uHcbB67mXdr2Az/Q8mYrTolLwo4qL6PXUtW3ub9vre38/T/rCppgXWGD0oenDRP
+        mJ3aUQ3FiBMRwvOTg2a29Rf+qyg8YKL/PZ829V1x2491M1NUoqlm4Zd6Ywc1Laxc
+        h+NMz+VP1AvjTjzHN8E1+A=
+Received: from slark_xiao$163.com ( [112.97.50.141] ) by
+ ajax-webmail-wmsvr114 (Coremail) ; Tue, 16 Nov 2021 14:40:30 +0800 (CST)
+X-Originating-IP: [112.97.50.141]
+Date:   Tue, 16 Nov 2021 14:40:30 +0800 (CST)
+From:   "Slark Xiao" <slark_xiao@163.com>
+To:     "Hans de Goede" <hdegoede@redhat.com>
+Cc:     hmh@hmh.eng.br, mgross@linux.intel.com, markpearson@lenovo.com,
+        njoshi1@lenovo.com, ibm-acpi-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re:Re:Re: [PATCH v3] Fix WWAN device disabled issue after S3 deep
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20210622(1d4788a8)
+ Copyright (c) 2002-2021 www.mailtech.cn 163com
+In-Reply-To: <7821731c.1990.17d02723fb6.Coremail.slark_xiao@163.com>
+References: <20211108060648.8212-1-slark_xiao@163.com>
+ <b3523a57-a21e-80ca-561d-23f6ee89913d@redhat.com>
+ <7821731c.1990.17d02723fb6.Coremail.slark_xiao@163.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcPHi1XyZr=CFbUhiUXK0q-10iBx5U3d==aG8pMG27k1Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Message-ID: <350a209b.242b.17d2779c109.Coremail.slark_xiao@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: csGowACHn+teUpNhQqvdAA--.22805W
+X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/xtbBAxhIZGB0HqHiHQACsh
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 11/15/21 2:01 PM, Andy Shevchenko wrote:
-> On Mon, Nov 15, 2021 at 11:09 PM Denis Pauk <pauk.denis@gmail.com> wrote:
->>
->> Add support by WMI interface provided by Asus for B550/X570 boards:
->> * PRIME X570-PRO,
->> * ROG CROSSHAIR VIII HERO
->> * ROG CROSSHAIR VIII DARK HERO
->> * ROG CROSSHAIR VIII FORMULA
->> * ROG STRIX X570-E GAMING
->> * ROG STRIX B550-I GAMING
->> * ROG STRIX B550-E GAMING
->>
->> Add support by WMI interface provided by Asus for X370/X470/
->> B450/X399 boards:
->> * ROG CROSSHAIR VI HERO,
->> * PRIME X399-A,
->> * PRIME X470-PRO,
->> * ROG CROSSHAIR VI EXTREME,
->> * ROG CROSSHAIR VI HERO (WI-FI AC),
->> * ROG CROSSHAIR VII HERO,
->> * ROG CROSSHAIR VII HERO (WI-FI),
->> * ROG STRIX Z390-F GAMING
->> * ROG STRIX B450-E GAMING,
->> * ROG STRIX B450-F GAMING,
->> * ROG STRIX B450-I GAMING,
->> * ROG STRIX X399-E GAMING,
->> * ROG STRIX X470-F GAMING,
->> * ROG STRIX X470-I GAMING,
->> * ROG ZENITH EXTREME,
->> * ROG ZENITH EXTREME ALPHA.
->>
->> I have added "ROG STRIX Z390-F GAMING" to list of supported boards in
->> asus_wmi_sensors.
-> 
-> Guenter, what is your plan about this patch series? It seems it
-> missed, by unknown (?) reason, the v5.16-rc1 (I remember seeing it in
-> some of your tree branches at some point).
-> 
-
-I don't see it in my record. Earlier I was simply waiting for some
-Reviewed-by: tags, which I have never seen. Looking into the commit log,
-I do see:
-
-Signed-off-by: Denis Pauk <pauk.denis@gmail.com>
-Co-developed-by: Eugene Shalygin <eugene.shalygin@gmail.com>
-Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
-Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Did you and Eugene indeed sign this off, ie did you write it, and
-Eugene and Denis signed it off ? If so, the tags are in the wrong order.
-On the other side, if the code is ultimately from Denis, with your input,
-the tags should be either Acked-by: or Reviewed-by: for both Eugene
-and yourself.
-
-Note that v11 of this patch series is missing from
-https://patchwork.kernel.org/project/linux-hwmon/list/
-for some reason.
-
-Guenter
+CgoKQXQgMjAyMS0xMS0wOSAxMDowNjoyMSwgIlNsYXJrIFhpYW8iIDxzbGFya194aWFvQDE2My5j
+b20+IHdyb3RlOgo+Cj4KPkF0IDIwMjEtMTEtMDggMjI6MzI6NTYsICJIYW5zIGRlIEdvZWRlIiA8
+aGRlZ29lZGVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4+SGksCj4+Cj4+T24gMTEvOC8yMSAwNzowNiwg
+U2xhcmsgWGlhbyB3cm90ZToKPj4+IFdoZW4gV1dBTiBkZXZpY2Ugd2FrZSBmcm9tIFMzIGRlZXAs
+IHVuZGVyIHRoaW5rcGFkIHBsYXRmb3JtLAo+Pj4gV1dBTiB3b3VsZCBiZSBkaXNhYmxlZC4gVGhp
+cyBkaXNhYmxlIHN0YXR1cyBjb3VsZCBiZSBjaGVja2VkCj4+PiBieSBjb21tYW5kICdubWNsaSBy
+IHd3YW4nIG9yICdyZmtpbGwgbGlzdCcuCj4+PiAKPj4+IElzc3VlIGFuYWx5c2lzIGFzIGJlbG93
+Ogo+Pj4gICBXaGVuIGhvc3QgcmVzdW1lIGZyb20gUzMgZGVlcCwgdGhpbmtwYWRfYWNwaSBkcml2
+ZXIgd291bGQKPj4+IGNhbGwgaG90a2V5X3Jlc3VtZSgpIGZ1bmN0aW9uLiBGaW5uYWx5LCBpdCB3
+aWxsIHVzZQo+Pj4gd2FuX2dldF9zdGF0dXMgdG8gY2hlY2sgdGhlIGN1cnJlbnQgc3RhdHVzIG9m
+IFdXQU4gZGV2aWNlLgo+Pj4gRHVyaW5nIHRoaXMgcmVzdW1lIHByb2dyZXNzLCB3YW5fZ2V0X3N0
+YXR1cyB3b3VsZCBhbHdheXMKPj4+IHJldHVybiBvZmYgZXZlbiBXV0FOIGJvb3QgdXAgY29tcGxl
+dGVseS4KPj4+ICAgSW4gcGF0Y2ggVjIsIEhhbnMgc2FpZCAnc3dfc3RhdGUgc2hvdWxkIGJlIHVu
+Y2hhbmdlZAo+Pj4gYWZ0ZXIgYSBzdXNwZW5kL3Jlc3VtZS4gSXQncyBiZXR0ZXIgdG8gZHJvcCB0
+aGUKPj4+IHRwYWNwaV9yZmtfdXBkYXRlX3N3c3RhdGUgY2FsbCBhbGwgdG9nZXRoZXIgZnJvbSB0
+aGUKPj4+IHJlc3VtZSBwYXRoJy4KPj4+ICAgQW5kIGl0J3MgY29uZmltZWQgYnkgTGVub3ZvIHRo
+YXQgR1dBTiBpcyBubyBsb25nZXIKPj4+ICBhdmFpbGFibGUgZnJvbSBXSEwgZ2VuZXJhdGlvbiBi
+ZWNhdXNlIHRoZSBkZXNpZ24gZG9lcyBub3QKPj4+ICBtYXRjaCB3aXRoIGN1cnJlbnQgcGluIGNv
+bnRyb2wuCj4+PiAKPj4+IFNpZ25lZC1vZmYtYnk6IFNsYXJrIFhpYW8gPHNsYXJrX3hpYW9AMTYz
+LmNvbT4KPj4KPj5UaGFua3MsIHBhdGNoIGxvb2tzIGdvb2QgdG8gbWU6Cj4+Cj4+UmV2aWV3ZWQt
+Ynk6IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5jb20+Cj4+Cj4+SSB3aWxsIG1lcmdl
+IHRoaXMgb25jZSA1LjE2LXJjMSBpcyBvdXQuCj4+Cj4+UmVnYXJkcywKPj4KSGkgSGFucywKICA1
+LjE2LXJjMSBpcyBhbHJlYWR5IG91dC4gQ291bGQgeW91IGhlbHAgbWVyZ2UgdGhpcyBwYXRjaCBp
+bnRvIGJhc2VsaW5lIG5vdz8KClRoYW5rcyEKU2xhcmsgWGlhbwo+Pgo+Pj4gLS0tCj4+PiAgZHJp
+dmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jIHwgMTIgLS0tLS0tLS0tLS0tCj4+PiAg
+MSBmaWxlIGNoYW5nZWQsIDEyIGRlbGV0aW9ucygtKQo+Pj4gCj4+PiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYv
+dGhpbmtwYWRfYWNwaS5jCj4+PiBpbmRleCA1MGZmMDRjODQ2NTAuLmYxY2JkMjcyODJlMSAxMDA2
+NDQKPj4+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYwo+Pj4gKysr
+IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jCj4+PiBAQCAtMTE3OCwxNSAr
+MTE3OCw2IEBAIHN0YXRpYyBpbnQgdHBhY3BpX3Jma191cGRhdGVfc3dzdGF0ZShjb25zdCBzdHJ1
+Y3QgdHBhY3BpX3JmayAqdHBfcmZrKQo+Pj4gIAlyZXR1cm4gc3RhdHVzOwo+Pj4gIH0KPj4+ICAK
+Pj4+IC0vKiBRdWVyeSBGVyBhbmQgdXBkYXRlIHJma2lsbCBzdyBzdGF0ZSBmb3IgYWxsIHJma2ls
+bCBzd2l0Y2hlcyAqLwo+Pj4gLXN0YXRpYyB2b2lkIHRwYWNwaV9yZmtfdXBkYXRlX3N3c3RhdGVf
+YWxsKHZvaWQpCj4+PiAtewo+Pj4gLQl1bnNpZ25lZCBpbnQgaTsKPj4+IC0KPj4+IC0JZm9yIChp
+ID0gMDsgaSA8IFRQQUNQSV9SRktfU1dfTUFYOyBpKyspCj4+PiAtCQl0cGFjcGlfcmZrX3VwZGF0
+ZV9zd3N0YXRlKHRwYWNwaV9yZmtpbGxfc3dpdGNoZXNbaV0pOwo+Pj4gLX0KPj4+IC0KPj4+ICAv
+Kgo+Pj4gICAqIFN5bmMgdGhlIEhXLWJsb2NraW5nIHN0YXRlIG9mIGFsbCByZmtpbGwgc3dpdGNo
+ZXMsCj4+PiAgICogZG8gbm90aWNlIGl0IGNhdXNlcyB0aGUgcmZraWxsIGNvcmUgdG8gc2NoZWR1
+bGUgdWV2ZW50cwo+Pj4gQEAgLTMxMjksOSArMzEyMCw2IEBAIHN0YXRpYyB2b2lkIHRwYWNwaV9z
+ZW5kX3JhZGlvc3dfdXBkYXRlKHZvaWQpCj4+PiAgCWlmICh3bHN3ID09IFRQQUNQSV9SRktfUkFE
+SU9fT0ZGKQo+Pj4gIAkJdHBhY3BpX3Jma191cGRhdGVfaHdibG9ja19zdGF0ZSh0cnVlKTsKPj4+
+ICAKPj4+IC0JLyogU3luYyBzdyBibG9ja2luZyBzdGF0ZSAqLwo+Pj4gLQl0cGFjcGlfcmZrX3Vw
+ZGF0ZV9zd3N0YXRlX2FsbCgpOwo+Pj4gLQo+Pj4gIAkvKiBTeW5jIGh3IGJsb2NraW5nIHN0YXRl
+IGxhc3QgaWYgaXQgaXMgaHctdW5ibG9ja2VkICovCj4+PiAgCWlmICh3bHN3ID09IFRQQUNQSV9S
+RktfUkFESU9fT04pCj4+PiAgCQl0cGFjcGlfcmZrX3VwZGF0ZV9od2Jsb2NrX3N0YXRlKGZhbHNl
+KTsKPj4+IAo=
