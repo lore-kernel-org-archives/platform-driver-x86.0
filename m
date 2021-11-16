@@ -2,162 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CDAC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 15:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D947BC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 15:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 276D061BFB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 15:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4331630EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 15:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238247AbhKPPbD (ORCPT
+        id S238268AbhKPPcg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Nov 2021 10:31:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53436 "EHLO
+        Tue, 16 Nov 2021 10:32:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238210AbhKPPbB (ORCPT
+        with ESMTP id S238210AbhKPPcd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Nov 2021 10:31:01 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 538E0C061746;
-        Tue, 16 Nov 2021 07:28:04 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id m20so43751933edc.5;
-        Tue, 16 Nov 2021 07:28:04 -0800 (PST)
+        Tue, 16 Nov 2021 10:32:33 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C5CDC061570;
+        Tue, 16 Nov 2021 07:29:36 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id b15so89270412edd.7;
+        Tue, 16 Nov 2021 07:29:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dIxAulZGhe8FSNRDbe6lspOQRntq7iKkrQ7YJUamTrE=;
-        b=H2dRB1tmub7FmqAf+2gPesNCCZvWpw4VPXLBEH3IyZufX087WhaOzcQvx9RRB5dhz8
-         jm6a7eG+nG58ciNzZzcPOfWA0ldnPB0I9tKH+QyF53WjqVdp3xX/anon2r3lFAH1aCat
-         Mt+VG1xt5lk/tKcbkTPTkXay5sSImHyFtoPEnvpKNIoAonqxJ8v7uYvZpYISw9RQzkwx
-         OjUHaA9/mMBNijIO+xXfMRx87bn/fq7zrY6bk8E1aNNbIK1xhR58qGmu0+8KioqVCvw2
-         gach2cQ3C1ns2QY93ng+KlhaApfHQ+Elj2e3sf93Ri5Gri9DhpWlXzFfLa8mnEghEni/
-         aEtw==
+        bh=XP/WD34N2xW31YEPPdTkLsFiPxD+BXuI6TQenMThUU0=;
+        b=k+xen1al/ElL2mRGcFuvoH64vuRVEdtffXC7y7Xuty7GIb6UdowAG3+pBld0/ZUVrg
+         xv+R/lqbr5t9zDJuZEhcgIPps2pV52Ec8vl12s5AH063hwaaR/oGUI6pMSBKBT0hw5av
+         2t33juLbhmwOQdL4hSgch6yzxdBHVgcPRwpIVWocpQNlRxbIHPWu7wYAib71oYqgUpzO
+         YLbLUX4PAlH9Ui5cvgLaTUAOpNL6y7sDdmshBalzpOT0H8T17KpK9mI5iZGOMXVZMvXi
+         TweMrQ6GCkN1N4DZg6gm+6kIDZLVKtYzm/gOtsDzEhM8pFCsJPIhkgR/2knvx8e+AjL9
+         /92g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dIxAulZGhe8FSNRDbe6lspOQRntq7iKkrQ7YJUamTrE=;
-        b=mrEzoK7yKUcba+sdbGKuYM8qLvhD0veQ1FOWNdfZeL3Cs1wWc2lAC+4047aXGzZ9R9
-         r4LP7HqJHZCSmgCh+F6hUebBaSC31kJezuDoFFN78b9l2O7UMZEnGJyEVCywpe/zg9rR
-         xABTK0ewx8/kapUCOos3GdZ9d8cWseNLY/c9sRXfjsxX9PPG0dU8hjloS6//jbqP/5id
-         EBrfnI2SHGRFwa2rnhqP0XwoMCmS90VpuSLtUytMBDW3MQoc3NmS0wEbGVz+V0JwlUp3
-         32wSq+EuzO7PL6FG1yLMyzYzdxXZMFFp/xRq1rbxrjUjuS4BpXJRsisxyxVvkyzT47ZT
-         RbsQ==
-X-Gm-Message-State: AOAM531i5W35lY8sSQWwzrQTPOr9qmp+O+uIGp8AKTEX7DoJrsdHxIbM
-        0rlogYrREghKjwV4uYoF7RJZ16Ox27zno4AOyWrbvPq+8kICOg==
-X-Google-Smtp-Source: ABdhPJxlCHMzmmqISOAsV2eJDLJviURmzDXeBzNZwNN8hZzEgPRRxrFwjjzdnsheotK2EQMxfb+RQN7ch3mo1H3A5O4=
-X-Received: by 2002:a17:907:60d0:: with SMTP id hv16mr10742076ejc.425.1637076482742;
- Tue, 16 Nov 2021 07:28:02 -0800 (PST)
+        bh=XP/WD34N2xW31YEPPdTkLsFiPxD+BXuI6TQenMThUU0=;
+        b=lcixeUHsNjiLD/U6NOQfFHHUNWmCOpnaksumVP2f6YM7VyTNqe5+JPfAbluIjJ18or
+         X5BfJgA6Y8IDj4SwhHZC5PIRey0NL0Dx/7ciwPJK6kLQecxrnq84DTNDzzRSHI9d9XNX
+         erPxVwfgyhF0aqZ1JAwv57kUH5eDpXI0t7x0BPAMr6oCXTmDnocO6njMeA/JPGSXdrFo
+         4kGrjw8a5lyi8Ocrkg9onB+vAynipzCstcq5z745p9MQyyekkIZS04kQp8AbFlFbMmK3
+         LVv9o5vpyNZiYsPegbYVCL+XiyMgTp5GX5c+HpjqPNF2oucXlpaF+kilVDx+slv4ScFm
+         H8mA==
+X-Gm-Message-State: AOAM533MuvxTf4NpHr7b/491911YGGlRatISQfyXanJfbgVOScavipIU
+        +13aAmqcEdaWbKR6gbzkGN8vHbaj667V4fo8oDY=
+X-Google-Smtp-Source: ABdhPJy24zGx0EGIId68pmO/RIPAS3eflKt4vSUATfPZpGYsYh0Rdqaj9fJhQCII6f7euP5QBoXcnk7JIozbX08ZjiM=
+X-Received: by 2002:a50:fd16:: with SMTP id i22mr11299530eds.224.1637076575153;
+ Tue, 16 Nov 2021 07:29:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20211115210842.11972-1-pauk.denis@gmail.com> <CAHp75VcPHi1XyZr=CFbUhiUXK0q-10iBx5U3d==aG8pMG27k1Q@mail.gmail.com>
- <c016d0ca-b8b1-fb06-50f3-06a7b1c4aaea@roeck-us.net> <YZOKLDg582dQPzVN@smile.fi.intel.com>
- <d2943033-e701-f719-5da6-c00dc431dff9@roeck-us.net>
-In-Reply-To: <d2943033-e701-f719-5da6-c00dc431dff9@roeck-us.net>
+References: <20211116131247.508424-1-hdegoede@redhat.com>
+In-Reply-To: <20211116131247.508424-1-hdegoede@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 16 Nov 2021 17:27:21 +0200
-Message-ID: <CAHp75Vdh+Fv_mV6VunzzndzXBONjbxMYKrii6We9Y+jD+NsYDQ@mail.gmail.com>
-Subject: Re: [PATCH v11 0/2] Update ASUS WMI supported boards
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Denis Pauk <pauk.denis@gmail.com>,
-        Eugene Shalygin <eugene.shalygin@gmail.com>,
+Date:   Tue, 16 Nov 2021 17:28:54 +0200
+Message-ID: <CAHp75Vfb6Apx4wwcK6m3wKuj5O0xq7g2tGhiOJTuZZA4hfmT1A@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Make the pci_dev_present() stub a static inline
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        thomas@weissschuh.net, Ed Brindley <kernel@maidavale.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 16, 2021 at 4:32 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> On 11/16/21 2:38 AM, Andy Shevchenko wrote:
-> > On Mon, Nov 15, 2021 at 03:15:39PM -0800, Guenter Roeck wrote:
-> >> On 11/15/21 2:01 PM, Andy Shevchenko wrote:
-> >>> On Mon, Nov 15, 2021 at 11:09 PM Denis Pauk <pauk.denis@gmail.com> wrote:
-> >>>>
-> >>>> Add support by WMI interface provided by Asus for B550/X570 boards:
-> >>>> * PRIME X570-PRO,
-> >>>> * ROG CROSSHAIR VIII HERO
-> >>>> * ROG CROSSHAIR VIII DARK HERO
-> >>>> * ROG CROSSHAIR VIII FORMULA
-> >>>> * ROG STRIX X570-E GAMING
-> >>>> * ROG STRIX B550-I GAMING
-> >>>> * ROG STRIX B550-E GAMING
-> >>>>
-> >>>> Add support by WMI interface provided by Asus for X370/X470/
-> >>>> B450/X399 boards:
-> >>>> * ROG CROSSHAIR VI HERO,
-> >>>> * PRIME X399-A,
-> >>>> * PRIME X470-PRO,
-> >>>> * ROG CROSSHAIR VI EXTREME,
-> >>>> * ROG CROSSHAIR VI HERO (WI-FI AC),
-> >>>> * ROG CROSSHAIR VII HERO,
-> >>>> * ROG CROSSHAIR VII HERO (WI-FI),
-> >>>> * ROG STRIX Z390-F GAMING
-> >>>> * ROG STRIX B450-E GAMING,
-> >>>> * ROG STRIX B450-F GAMING,
-> >>>> * ROG STRIX B450-I GAMING,
-> >>>> * ROG STRIX X399-E GAMING,
-> >>>> * ROG STRIX X470-F GAMING,
-> >>>> * ROG STRIX X470-I GAMING,
-> >>>> * ROG ZENITH EXTREME,
-> >>>> * ROG ZENITH EXTREME ALPHA.
-> >>>>
-> >>>> I have added "ROG STRIX Z390-F GAMING" to list of supported boards in
-> >>>> asus_wmi_sensors.
-> >>>
-> >>> Guenter, what is your plan about this patch series? It seems it
-> >>> missed, by unknown (?) reason, the v5.16-rc1 (I remember seeing it in
-> >>> some of your tree branches at some point).
-> >>>
-> >>
-> >> I don't see it in my record. Earlier I was simply waiting for some
-> >> Reviewed-by: tags, which I have never seen.
-> >
-> > Ah, understood. Thank you for clarifications.
-> >
-> >> Looking into the commit log,
-> >> I do see:
-> >>
-> >> Signed-off-by: Denis Pauk <pauk.denis@gmail.com>
-> >> Co-developed-by: Eugene Shalygin <eugene.shalygin@gmail.com>
-> >> Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
-> >> Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >>
-> >> Did you and Eugene indeed sign this off, ie did you write it, and
-> >> Eugene and Denis signed it off ? If so, the tags are in the wrong order.
-> >
-> > I'm not sure I follow. I have helped Denis with the code and according to
-> > Submitting Patches documentation the order should be chronological with the
-> > main author to be first in the list. Here the committer (submitter) is the
-> > same as the original author IIUC. (I can't speak for Eugene, though)
-> >
+On Tue, Nov 16, 2021 at 3:14 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> I got the patch from Denis. At the very least, Denis' signature should be
-> last. It is first.
+> Change the pci_dev_present() stub which is used when CONFIG_PCI is not set
+> from a #define to a static inline stub.
+>
+> Thix should fix clang -Werror builds failing due to errors like this:
+>
+> drivers/platform/x86/thinkpad_acpi.c:4475:35:
+>  error: unused variable 'fwbug_cards_ids' [-Werror,-Wunused-const-variable]
+>
+> Where fwbug_cards_ids is an array if pci_device_id-s passed to
+> pci_dev_present() during a quirk check.
+>
+> Fixing this in include/linux/pci.h should ensure that the same issue is
+> also fixed in any other drivers hitting the same -Werror issue.
 
-"...the ordering of Signed-off-by: tags should reflect the
-chronological history of the patch insofar as possible, regardless of
-whether the author is attributed via From: or Co-developed-by:.
-Notably, the last Signed-off-by: must always be that of the developer
-submitting the patch."
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Okay, "must" obviously takes precedence over the "as possible".
+> Cc: platform-driver-x86@vger.kernel.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Note the commit message says "should fix" because I could not actually
+> be bothered to verify this. The whole notion of combining:
+> 1. clang
+> 2. -Werror
+> 3. -Wunused-const-variable
+> Is frankly a bit crazy, causing way too much noise and has already
+> cost me too much time IMHO.
+> ---
+>  include/linux/pci.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 18a75c8e615c..7d825637d7ca 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1775,7 +1775,10 @@ static inline struct pci_dev *pci_get_class(unsigned int class,
+>                                             struct pci_dev *from)
+>  { return NULL; }
+>
+> -#define pci_dev_present(ids)   (0)
+> +
+> +static inline int pci_dev_present(const struct pci_device_id *ids)
+> +{ return 0; }
+> +
+>  #define no_pci_devices()       (1)
+>  #define pci_dev_put(dev)       do { } while (0)
+>
+> --
+> 2.31.1
+>
 
-> >> On the other side, if the code is ultimately from Denis, with your input,
-> >> the tags should be either Acked-by: or Reviewed-by: for both Eugene
-> >> and yourself.
-> >
-> > I'm fine with either Co-developed-by+SoB or Reviewed-by.
-> >
-> >> Note that v11 of this patch series is missing from
-> >> https://patchwork.kernel.org/project/linux-hwmon/list/
-> >> for some reason.
-> >
-> > Hmm... Denis, please check locally how you prepare your patches.
 
 -- 
 With Best Regards,
