@@ -2,214 +2,552 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B63C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 21:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8686DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 22:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B967261BF8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 21:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642EB63227
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 22:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231980AbhKPVLm (ORCPT
+        id S231684AbhKPWIB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Nov 2021 16:11:42 -0500
-Received: from mail1.bemta33.messagelabs.com ([67.219.247.1]:48543 "EHLO
-        mail1.bemta33.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232004AbhKPVLh (ORCPT
+        Tue, 16 Nov 2021 17:08:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230484AbhKPWIB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Nov 2021 16:11:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
-        s=Selector; t=1637096919; i=@lenovo.com;
-        bh=per36Q1I8S/ol+nQz8YLlcFB7DVzMVG2Va0vRCcT3Lc=;
-        h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-         In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        b=BoEM0LFG3bSwQ3Tzu/RbfhBAYAKHFKEG+/pVoZK67R7Bqfv1kPvUXTQBPVSXzExQH
-         RrJwimb9HkzX0pIhA0aNF7KjQmW9iPUcvhjNncon1IR+4y0xrtPjRVjqRyXZfrFaNV
-         1/KPzevXra0pQT5mHkQKtKOhXVQykOkmnHdJFBG/8HN1QR4iuNkJstidEXvr1VtsUE
-         UUOwMz68w0cJSVNyHfzJEjZEGZgVjI5D+D2Fq60hw7Pxt6J1dJkhbyLc/ad3+PUuSu
-         uVo+80ICJmmEVbr++HeW0grn2ozz0NGTeMCfPGYtL6K+ah6IAS4Au+A503g3NqYPux
-         NO6aKC8ksPeUg==
-Received: from [100.114.65.29] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-a.us-east-2.aws.ess.symcld.net id 7D/0B-13372-6DD14916; Tue, 16 Nov 2021 21:08:38 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOJsWRWlGSWpSXmKPExsWSoS+Vr3tNdkq
-  iwfo9ShZvjk9nsvjcMZnFYvWeF8wOzB7zTgZ6vN93lc3j8ya5AOYo1sy8pPyKBNaMbyu3MhZs
-  FKj4dfsqYwPjRd4uRi4ORoGlzBJPHsxhgnAWsUp8X/adBcLpZJKYPO8eO4gjJDCbSeL4rQ/ME
-  M5+Jomz63rBeiQEjjNKdB9axwSR6WSU+PHqFAuEM4lJYvn641A9Txgl1i3thZr2gFFi+7J7bF
-  2MnBy8ArYSJ+8fYgKxWQRUJTZ/gokLSpyc+QRoFAeHqEC4RMOdYpCwsECAxOYZb8BKmAXEJW4
-  9mQ/WKiKgLjG1owcq7iwxqWUCG8Su3YwSm+/0MIMk2AS0JbZs+cUGMpNTwE6i9ac/RL2mROv2
-  3+wQtrzE9rdzwMqFBJQlfvWfZwYplwCKN8zkBAlLCCRI9Px7xAZhS0pcu3mBHcKWlTh6dg4Lh
-  O0r0b91PSuErSWx9fw0Jgg7R2Lu4fvMELaaxMdz01knMOrNQvLwLCSfzUJy3Swk1y1gZFnFaJ
-  1UlJmeUZKbmJmja2hgoGtoaKJrZqFrZGiql1ilm6hXWqybmlhcomukl1herJdaXKxXXJmbnJO
-  il5dasokRmI5Silyu72D8/eWH3iFGSQ4mJVFesYeTE4X4kvJTKjMSizPii0pzUosPMcpwcChJ
-  8C7gmpIoJFiUmp5akZaZA0yNMGkJDh4lEV4GKaA0b3FBYm5xZjpE6hSjJceEl3MXMXN09SwEk
-  pOO7N7OLMSSl5+XKiXOe1EGqEEApCGjNA9uHCx9X2KUlRLmZWRgYBDiKUgtys0sQZV/xSjOwa
-  gkzLsMZApPZl4J3NZXQAcxAR0ke3kyyEEliQgpqQamE7EsPqx7N2a0yP+b1s92/6jKQ4nvd9b
-  Kti3xtqteyyb58dsV7gkL72r89pg66cSkjOmCa9qZvfZ0aPksWrL0MG/BZ2FfzU/H1/bc/Kdx
-  TdJoZ1CSv4tiZYKRoeeboKflvQY3VTh3hC34W5DSHzKn9ZNb+sldtz48Trj+2+9KrYdSR3hdB
-  4+O7K3is5fm/Z522ER/i4128ZO3iw7fWhi0wlqr7clhhX082/n6Pv/oqnG8mLea+cOyf0dvBQ
-  Q1z3jJK2/McDw6TiSnj0svQnwz42b1jUr+Ek4VMds+M2nkMj64vaouvNrxvaFj5aU/PJ93bPp
-  w+VPHlb+Wk0Vf8/t++PFd7c/BxH9a96xbsu4JKLEUZyQaajEXFScCACUWYRJaBAAA
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-10.tower-635.messagelabs.com!1637096916!40753!1
-X-Originating-IP: [104.47.26.111]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.81.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 9191 invoked from network); 16 Nov 2021 21:08:38 -0000
-Received: from mail-sgaapc01lp2111.outbound.protection.outlook.com (HELO APC01-SG2-obe.outbound.protection.outlook.com) (104.47.26.111)
-  by server-10.tower-635.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 16 Nov 2021 21:08:38 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RPYiEYpGHgJIzz9jTM2/FTvHpo4N56QYrOa4cuZ4lPXujrX0Xo+RTcTo3MAhoMiFHySf4rpeEY6hcuVOLEZflq2uAHzFQaWHFYahYnXNHOXakZYYzC0USsKp8/xO7jtsl5xoyUlrMFERzOEOeXnjIz2pETFFPx20F3uZRmVOumsF9OHRG/tp+Zzo/JSVdu+VjSVyh1v0OfINr7dd55XggaZrRoDTnpXO6ouNmN7fliEXw5TfCJW7HGznI1LnN1JT2wqpd1ut24rHk8XWyE5yujFa+ajkHszep8GNVIZlQjNct7Jm7PTIq4wxmMsVt3F3cz0ox+0vfVj76yLAGdSfrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=per36Q1I8S/ol+nQz8YLlcFB7DVzMVG2Va0vRCcT3Lc=;
- b=BMzkaSct6zwG8sXcK9gTCN4BHKiIsmMH8p+SCPd+8l6NkwlqKm2ik5ITPLuxRzsD1kDo1qc1O9elqbyud1eB8VLd4iQxa4hPIZZp+l9OE9kCHb8WSkFh5FfFmgChUsGhi6maGm+aYbSuKxO2p4hf8J0Op6xRvr7LW9nIrWTXc6SJbEsnOgZMtMIxYFSqEToMXH4lx8Ko/ttgbtIQaz8VuYoEl0R98a33/2LLu2TlX+0PvYqyYtpJ5U9FG6zI40MIJ9QSunlLFhksNyLixE/JgLq8F024pRFlpBKE37L7i8vHvMQzuG7uA17m5/PWTGFA88Fk1Bx1yaG2PSAK5PfaDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 104.232.225.7) smtp.rcpttodomain=redhat.com smtp.mailfrom=lenovo.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=lenovo.com;
- dkim=none (message not signed); arc=none
-Received: from SG2PR06CA0127.apcprd06.prod.outlook.com (2603:1096:1:1d::29) by
- KL1PR03MB5570.apcprd03.prod.outlook.com (2603:1096:820:51::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4713.14; Tue, 16 Nov 2021 21:08:35 +0000
-Received: from SG2APC01FT047.eop-APC01.prod.protection.outlook.com
- (2603:1096:1:1d:cafe::de) by SG2PR06CA0127.outlook.office365.com
- (2603:1096:1:1d::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.15 via Frontend
- Transport; Tue, 16 Nov 2021 21:08:35 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 104.232.225.7) smtp.mailfrom=lenovo.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=lenovo.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- lenovo.com discourages use of 104.232.225.7 as permitted sender)
-Received: from mail.lenovo.com (104.232.225.7) by
- SG2APC01FT047.mail.protection.outlook.com (10.152.251.172) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4690.19 via Frontend Transport; Tue, 16 Nov 2021 21:08:35 +0000
-Received: from reswpmail01.lenovo.com (10.62.32.20) by mail.lenovo.com
- (10.62.123.117) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.20; Tue, 16 Nov
- 2021 16:08:32 -0500
-Received: from [10.38.49.20] (10.38.49.20) by reswpmail01.lenovo.com
- (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.20; Tue, 16 Nov
- 2021 16:08:31 -0500
-Message-ID: <79b2dc73-1605-4440-5840-3a6bd071d01c@lenovo.com>
-Date:   Tue, 16 Nov 2021 16:08:30 -0500
+        Tue, 16 Nov 2021 17:08:01 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A203C061570;
+        Tue, 16 Nov 2021 14:05:04 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id n15-20020a17090a160f00b001a75089daa3so3464821pja.1;
+        Tue, 16 Nov 2021 14:05:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nTpcWMwSXaygMQ4EjDDaHCb2+I8WxS2EofMS4e7/Klg=;
+        b=iQwQH9g+mKXSnbKE/QoRHxK3ey5fyXIJRNaJdLamal3tjcdMwf1ihuWRUrSclR14/R
+         4nnDGuJrEeFn3unibj+NJKIReT3PT0Erg4Fa6KLioyF1AolVcrSeTkI4I8fmV7zTBnYv
+         usuLUumcsguqxVu1H9z3g3NY9U1QcDQhFcbycH0bOTN1sOl1fMAOlqO5g7XQjpIANbEw
+         tXbz6WqcUl1MJQYhIngC68Kzex9xmqHIImHXmgL3JNVf/nB1Bb2XrvKYB/4efDJ5m2iZ
+         D5nVw1QAboUhMuA58AXpTQ9pfGy5HRPRQn/efE0lxnm55OdTzbZWWrO60og0TuUbvGX3
+         8OiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nTpcWMwSXaygMQ4EjDDaHCb2+I8WxS2EofMS4e7/Klg=;
+        b=wWjX6Z+CiwbxVavx9rmAj+yaG/5krdgwgQ5sgIUHMVewKzH7ItRQZFTp6uz2+9ZQhv
+         +G5xb0GPA5UpPcNgamJOJ2CLh2cWtHBKMckmeFMJjANrvBeKSpwbp4Lu2TMkYHYKn6W+
+         ngu0S/afwKjcLwwTliYJ2eEJruAD5rx9p1yvxDUMbFl+kXwxQIF5wu0yiucDq5p2Vj91
+         MY/I7hFy1vZLKB7FJcc8Rwa+RKw40CBfbiz46CkATfnfIOzT6mXW/QadyjZb3GwVfVtH
+         wc0gi0jdN5lqE5+Ko1Qweq0KtaoeDxQtUbIabZrCYodB7O9yO1d/ko851aUtcJvURXcN
+         fqGg==
+X-Gm-Message-State: AOAM532HtR9Ss/cGEPNkRuxHFvbGdXTvEu6TBovzcIgSns2rSn/QKNxr
+        sV3Phw4B/hmPrtxQbyfExPPibeDZ2I8=
+X-Google-Smtp-Source: ABdhPJzZNrEvCTk1m2Iv+PDMsqzmWJPjC2wNyzp7FC9JSavXtgXmJ9ouvv4K3sOIlGzD0m8PWbk/tA==
+X-Received: by 2002:a17:90b:33d0:: with SMTP id lk16mr2973814pjb.66.1637100303508;
+        Tue, 16 Nov 2021 14:05:03 -0800 (PST)
+Received: from jaschultz-Thelio-Major ([2001:4898:80e8:b:9571:5a5d:56f2:a842])
+        by smtp.gmail.com with ESMTPSA id h194sm19139728pfe.156.2021.11.16.14.05.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Nov 2021 14:05:02 -0800 (PST)
+From:   Jarrett Schultz <jaschultzms@gmail.com>
+X-Google-Original-From: Jarrett Schultz <jaschultzMS@gmail.com>
+Date:   Tue, 16 Nov 2021 14:05:01 -0800
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Jarrett Schultz <jaschultz@microsoft.com>
+Subject: Re: [PATCH v2 3/5] platform: surface: Add surface xbl
+Message-ID: <20211116220501.GA432529@jaschultz-Thelio-Major>
+References: <20211108164449.3036210-1-jaschultz@microsoft.com>
+ <20211108164449.3036210-4-jaschultz@microsoft.com>
+ <YYlu+HqTJ/ZY1C2+@ripper>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [External] Re: [PATCH 2/2] platform/x86: think-lmi: Opcode
- support
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     <mgross@linux.intel.com>, <platform-driver-x86@vger.kernel.org>
-References: <markpearson@lenovo.com>
- <20211108232533.211693-1-markpearson@lenovo.com>
- <20211108232533.211693-2-markpearson@lenovo.com>
- <0ab21b8d-0b15-e963-fb36-d3026765f757@redhat.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-In-Reply-To: <0ab21b8d-0b15-e963-fb36-d3026765f757@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.38.49.20]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b7bbb437-bc55-4f58-cfb0-08d9a94540ee
-X-MS-TrafficTypeDiagnostic: KL1PR03MB5570:
-X-Microsoft-Antispam-PRVS: <KL1PR03MB5570B73DE2B2BDA8C20F7291C5999@KL1PR03MB5570.apcprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HHpPHM94umEdq46twTPYRFHDxjvs5NqImh/9Y8d3wvKP7XvrYsjY3dY2avO40ZoIqeGnJwXjGkgqsyVSpWK7gANVyGmv8V9rH9JmXEdwGpbwCtdkAlkXiHyofgLnuoWYuZJhc6b4GI3AjQlNaZSwUOZYfH8R2+5oUEaZVMJAwsB0jBCZcEfEjqG0vXFi5bXYrzPyI/CMpXcCKAQPSOp8Drn3WOCEQfzK+dzOKOhLQuDRGxQEpxO99pfk2s8lwIZwiVXbePnVSi4UhViSjYGMnbPh61/8ET7YK0NeYA2LhIBw42t0wjHJeVnaPUiB2LMyYMi8jve50I1HRZXj2Ow+OJ2r55iFToFIBWSteSAx6yvbBD0h2JC05Ztc9t29YqknDxPGDki7k7GhnRsObu6B6QeoaDqWxYGWpeXIFE2mEfMAoviSUPLb2ze/zNf1VWQHa1+Vf7dIhJy/tmPPN4/a+sqXWnuYF7V4SOXfN13U7tqaRQ67xrPTNdrxF1EupyQLTSfUBd+i7lgY+LPyQxeGELjbBkaijw947MS5eOLU4+jVugrDXbVlTL+/3p+q2Ntmcc2+Wog65/4+Hb8VHStxSveEA2N8/il4439+tx1NnfSC53j7b4vshAwS4+vLaAarIOLVmfJAJigyuk3iTziQ2vXvr5vR16ZQuMhQawKO+Xqzjq3CG5esa2JCaO27jXh7ZW2Z+Lhrj7R3huZxlWSw+DdxvP1u0l/2lOkY8NmkbOl4U+m/uMPgDZnUBud35NDDByEJmhqR7yhFGdZJLrd+Fv6Afz1ZhLEw7wM8GmE6yvQ=
-X-Forefront-Antispam-Report: CIP:104.232.225.7;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.lenovo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(36860700001)(2616005)(31686004)(186003)(8676002)(70586007)(6916009)(316002)(508600001)(426003)(336012)(16526019)(70206006)(36756003)(31696002)(356005)(82960400001)(82310400003)(4001150100001)(2906002)(81166007)(16576012)(53546011)(83380400001)(54906003)(26005)(47076005)(8936002)(5660300002)(4326008)(36906005)(86362001)(3940600001)(43740500002)(36900700001);DIR:OUT;SFP:1102;
-X-OriginatorOrg: lenovo.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2021 21:08:35.1705
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7bbb437-bc55-4f58-cfb0-08d9a94540ee
-X-MS-Exchange-CrossTenant-Id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5c7d0b28-bdf8-410c-aa93-4df372b16203;Ip=[104.232.225.7];Helo=[mail.lenovo.com]
-X-MS-Exchange-CrossTenant-AuthSource: SG2APC01FT047.eop-APC01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB5570
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YYlu+HqTJ/ZY1C2+@ripper>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-
-Hi Hans
-
-On 2021-11-16 09:07, Hans de Goede wrote:
-> Hi Mark,
+On Mon, Nov 08, 2021 at 10:39:52AM -0800, Bjorn Andersson wrote:
+> On Mon 08 Nov 08:44 PST 2021, Jarrett Schultz wrote:
 > 
-> On 11/9/21 00:25, Mark Pearson wrote:
->> Implement Opcode support.
->> This is available on ThinkCenter and ThinkStations platforms and
->> gives improved password setting capabilities
->>
->> Add options to configure System, HDD & NVMe passwords.
->> HDD & NVMe passwords need a user level (user/master) along with
->> drive index.
->>
->> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+> > Introduce support for the Extensible Boot Loader driver found on the
+> > Surface Duo. Makes device information available to users via sysfs.
+> > 
+> > Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
+> > 
+> > ---
+> > 
+> > Changes in v2:
+> >  - Added types.h inclusion and removed unused inclusions
+> >  - Minor updates to code and acronym style
+> >  - Remove __packed attribute on driver struct
+> >  - Use .dev_groups for sysfs
+> >  - Added more in-depth description of driver in Kconfig
+> >  - Changed target KernelVersion in sysfs documentation
+> > 
+> > ---
+> > 
+> >  .../ABI/testing/sysfs-platform-surface-xbl    |  78 +++++++
+> >  MAINTAINERS                                   |   2 +
+> >  drivers/platform/surface/Kconfig              |  12 +
+> >  drivers/platform/surface/Makefile             |   1 +
+> >  drivers/platform/surface/surface-xbl.c        | 215 ++++++++++++++++++
+> >  5 files changed, 308 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-platform-surface-xbl
+> >  create mode 100644 drivers/platform/surface/surface-xbl.c
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-platform-surface-xbl b/Documentation/ABI/testing/sysfs-platform-surface-xbl
+> > new file mode 100644
+> > index 000000000000..2ae047b884d3
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-platform-surface-xbl
+> > @@ -0,0 +1,78 @@
+> > +What:		/sys/devices/platform/146bfa94.xbl/battery_present
+> > +Date:		October 2021
+> > +KernelVersion:	5.16
+> > +Contact:	jaschultz@microsoft.com
+> > +Description:
+> > +		Read only. It returns whether the battery is present. Valid
+> > +		values are:
+> > +			0 - battery absent
+> > +			1 - battery present
 > 
-> The change you are making to tlmi_probe() is already in my
-> review-hans branch and the line numbers also do not seem to
-> match in various places, please rebase this for v2.
-
-Yeah - I had this written before that patch came through and wasn't sure
-what to do. I'll rebase
-> 
-> I also have some remarks inline.
-> 
->> ---
->>  drivers/platform/x86/think-lmi.c | 303 +++++++++++++++++++++++++++----
->>  drivers/platform/x86/think-lmi.h |  28 ++-
->>  2 files changed, 296 insertions(+), 35 deletions(-)
->>
->> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
->> index 3671b5d20613..04810c5ced93 100644
->> --- a/drivers/platform/x86/think-lmi.c
->> +++ b/drivers/platform/x86/think-lmi.c
->> @@ -116,8 +116,23 @@
->>   */
->>  #define LENOVO_GET_BIOS_SELECTIONS_GUID	"7364651A-132F-4FE7-ADAA-40C6C7EE2E3B"
->>  
-<snip>
->> +
->> +static struct kobj_attribute auth_level = __ATTR_RW(level);
->> +
->>  static struct attribute *auth_attrs[] = {
->>  	&auth_is_pass_set.attr,
->>  	&auth_min_pass_length.attr,
->> @@ -473,6 +606,8 @@ static struct attribute *auth_attrs[] = {
->>  	&auth_mechanism.attr,
->>  	&auth_encoding.attr,
->>  	&auth_kbdlang.attr,
->> +	&auth_index.attr,
->> +	&auth_level.attr,
-> 
-> This will add the index and level attr to all auth dirs,
-> but they should only be added to the NVMe and HDD dirs,
-> right ?
-> 
-> Please add an is_visible callback (see recent thinkpad_acpi changes)
-> and hide these for the other auth dirs.
-
-Good idea - I hadn't thought of that. Will do
-
+> Would this information not be available from some battery driver, under
+> /sys/class/power_supply?
 > 
 
-<snip>
+See below under touch_fw_version.
 
+> > +
+> > +What:		/sys/devices/platform/146bfa94.xbl/board_id
+> > +Date:		October 2021
+> > +KernelVersion:	5.16
+> > +Contact:	jaschultz@microsoft.com
+> > +Description:
+> > +		Read only. It returns the board id.
 > 
-> Except for the one remark and the need to renase this 
-> looks good overall, thank you.
+> Is this a Microsoft-specific board id, or does it relate to the Qualcomm
+> socinfo property with the same name?
 > 
-Excellent - thanks!
 
-Mark
+Microsoft-specific board id. I will include this in the new description.
+
+> > +
+> > +What:		/sys/devices/platform/146bfa94.xbl/hw_init_retries
+> > +Date:		October 2021
+> > +KernelVersion:	5.16
+> > +Contact:	jaschultz@microsoft.com
+> > +Description:
+> > +		Read only. It returns retries attempted to initialize the
+> > +		discrete hardware circuit.
+> 
+> Which description hardware circuit?
+> 
+
+This is a Microsoft specific value for the battery charging subsystem. I
+will include this in the new description.
+
+> > +
+> > +What:		/sys/devices/platform/146bfa94.xbl/is_act_mode
+> > +Date:		October 2021
+> > +KernelVersion:	5.16
+> > +Contact:	jaschultz@microsoft.com
+> > +Description:
+> > +		Read only. It returns whether ACT mode is enabled. Valid values
+> > +		are:
+> > +			0 - ACT disabled
+> > +			1 - ACT enabled
+> > +
+> > +		ACT mode is used to run checks and put the device to shipmode
+> > +		at factory.
+> > +
+> > +What:		/sys/devices/platform/146bfa94.xbl/is_customer_mode
+> > +Date:		October 2021
+> > +KernelVersion:	5.16
+> > +Contact:	jaschultz@microsoft.com
+> > +Description:
+> > +		Read only. It returns whether the device is in manufacturing
+> > +		mode. Valid values are:
+> > +			0 - Not in manufacturing mode
+> > +			1 - In manufacturing mode
+> > +
+> > +What:		/sys/devices/platform/146bfa94.xbl/ocp_error_location
+> > +Date:		October 2021
+> > +KernelVersion:	5.16
+> > +Contact:	jaschultz@microsoft.com
+> > +Description:
+> > +		Read only. It returns 0 or which power rail has the OCP error.
+> 
+> Sounds like the reason is singular, so why is this a bitmask?
+> 
+
+There are multiple power rails so if there is an error, the value will
+be the power rail which had the error.
+
+> > +		Valid values are:
+> > +			Bit(s)		Meaning
+> > +			15		More than one OCP error occurred
+> > +			14-12		PMIC
+> > +			11-7		SMPS
+> > +			6-2		LDO
+> > +			1-0		BOB
+> > +
+> > +What:		/sys/devices/platform/146bfa94.xbl/pmic_reset_reason
+> > +Date:		October 2021
+> > +KernelVersion:	5.16
+> > +Contact:	jaschultz@microsoft.com
+> > +Description:
+> > +		Read only. It returns the reason for the reset. Valid values
+> > +		are:
+> 
+> Is this different from the PMIC reset reason that we read from the PMIC?
+> Could we make sure to expose this generically for all Qualcomm PMICs?
+> 
+
+This is the same as the one read from PMIC. This information should be
+exposed generically for all Qualcomm PMICs. Here is some information
+from my colleague about the value:
+
+ - It is provided by QC (ResetRuntimeDxe driver in QComPkg)
+ - Protocol GUID: gEfiResetReasonProtocolGuid
+ - API: ReadPmicRegisterForResetReason
+    * Local Protocol: gQcomPmicPwrOnProtocolGuid
+    * Get Value: PmicPwrOnProtocol->GetSpareReg (PRIMARY_PMIC, EFI_PM_PON_SOFT_SPARE, &Value);
+
+> > +			0 - no reason lol
+> > +			9 - Battery driver triggered
+> > +
+> > +What:		/sys/devices/platform/146bfa94.xbl/touch_fw_version
+> > +Date:		October 2021
+> > +KernelVersion:	5.16
+> > +Contact:	jaschultz@microsoft.com
+> > +Description:
+> > +		Read only. It returns the version of the firmware.
+> 
+> Why isn't this exposed by the touchscreen driver instead?
+> 
+> 
+> Generally I wonder how you're consuming this information in userspace.
+> Is it only for debugging purposes, i.e. would debugfs be a better place?
+>
+
+The information exposed through this driver is used in manufacturing
+mode when producing the device.
+
+Please let me know if you need additional information. All your other
+other comments will be addressed in the next version, thank you for
+your continued feedback.
+
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 8643546f8fab..d08b68d626f6 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -12428,7 +12428,9 @@ M:	Jarrett Schultz <jaschultz@microsoft.com>
+> >  L:	linux-arm-msm@vger.kernel.org
+> >  L:	platform-driver-x86@vger.kernel.org
+> >  S:	Supported
+> > +F:	Documentation/ABI/testing/sysfs-platform-surface-xbl
+> >  F:	Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+> > +F:	drivers/platform/surface/surface-xbl.c
+> >  
+> >  MICROSOFT SURFACE GPE LID SUPPORT DRIVER
+> >  M:	Maximilian Luz <luzmaximilian@gmail.com>
+> > diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
+> > index 0d3970e1d144..3a1ced269d96 100644
+> > --- a/drivers/platform/surface/Kconfig
+> > +++ b/drivers/platform/surface/Kconfig
+> > @@ -190,6 +190,18 @@ config SURFACE_PRO3_BUTTON
+> >  	help
+> >  	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3/4 tablet.
+> >  
+> > +config SURFACE_XBL
+> > +        tristate "Surface XBL Driver"
+> > +        depends on ARM64 || COMPILE_TEST
+> > +        depends on OF
+> > +        help
+> > +          If you say 'Y' to this option, support will be included for the
+> > +          Surface Extensible Boot Loader (XBL) Driver. This driver exposes
+> > +          information about the device through sysfs.
+> > +
+> > +          This driver can also be built as a module.  If so, the module
+> > +          will be called surface-xbl.
+> > +
+> >  source "drivers/platform/surface/aggregator/Kconfig"
+> >  
+> >  endif # SURFACE_PLATFORMS
+> > diff --git a/drivers/platform/surface/Makefile b/drivers/platform/surface/Makefile
+> > index 32889482de55..0946266a8a73 100644
+> > --- a/drivers/platform/surface/Makefile
+> > +++ b/drivers/platform/surface/Makefile
+> > @@ -16,3 +16,4 @@ obj-$(CONFIG_SURFACE_GPE)		+= surface_gpe.o
+> >  obj-$(CONFIG_SURFACE_HOTPLUG)		+= surface_hotplug.o
+> >  obj-$(CONFIG_SURFACE_PLATFORM_PROFILE)	+= surface_platform_profile.o
+> >  obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
+> > +obj-$(CONFIG_SURFACE_XBL)               += surface-xbl.o
+> 
+> All other files in this directory are named with an underscore, would be
+> nice to carry on with such convention.
+> 
+> > diff --git a/drivers/platform/surface/surface-xbl.c b/drivers/platform/surface/surface-xbl.c
+> > new file mode 100644
+> > index 000000000000..9ecec4e55a4d
+> > --- /dev/null
+> > +++ b/drivers/platform/surface/surface-xbl.c
+> > @@ -0,0 +1,215 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Surface eXtensible Boot Loader (XBL)
+> > + *
+> > + * Copyright (C) 2021 Microsoft Corporation
+> > + * Author: Jarrett Schultz <jaschultz@microsoft.com>
+> > + */
+> > +
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/types.h>
+> > +
+> > +#define SURFACE_XBL_MAX_VERSION_LEN	16
+> > +#define SURFACE_XBL_BOARD_ID		0
+> > +#define SURFACE_XBL_BATTERY_PRESENT	1
+> > +#define SURFACE_XBL_HW_INIT_RETRIES	2
+> > +#define SURFACE_XBL_IS_CUSTOMER_MODE	3
+> > +#define SURFACE_XBL_IS_ACT_MODE		4
+> > +#define SURFACE_XBL_PMIC_RESET_REASON	5
+> > +#define SURFACE_XBL_TOUCH_FW_VERSION	6
+> > +#define SURFACE_XBL_OCP_ERROR_LOCATION		\
+> > +		(SURFACE_XBL_TOUCH_FW_VERSION +	\
+> > +		SURFACE_XBL_MAX_VERSION_LEN)
+> > +
+> > +struct surface_xbl {
+> > +	struct device	*dev;
+> > +	void __iomem	*regs;
+> > +
+> > +	u8		board_id;
+> > +	u8		battery_present;
+> > +	u8		hw_init_retries;
+> > +	u8		is_customer_mode;
+> > +	u8		is_act_mode;
+> > +	u8		pmic_reset_reason;
+> > +	char		touch_fw_version[SURFACE_XBL_MAX_VERSION_LEN];
+> > +	u16		ocp_error_location;
+> > +};
+> > +
+> > +static ssize_t
+> > +board_id_show(struct device *dev, struct device_attribute *attr, char *buf)
+> 
+> I think it would be nice to avoid some duplication by putting all these
+> integer ones in a single show(), see e.g. soc_info_show()
+> 
+> > +{
+> > +	struct surface_xbl	*sxbl = dev_get_drvdata(dev);
+> > +
+> > +	return sysfs_emit(buf, "%d\n", sxbl->board_id);
+> > +}
+> > +static DEVICE_ATTR_RO(board_id);
+> > +
+> > +static ssize_t
+> > +battery_present_show(struct device *dev, struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct surface_xbl	*sxbl = dev_get_drvdata(dev);
+> > +
+> > +	return sysfs_emit(buf, "%d\n", sxbl->battery_present);
+> > +}
+> > +static DEVICE_ATTR_RO(battery_present);
+> > +
+> > +static ssize_t
+> > +hw_init_retries_show(struct device *dev, struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct surface_xbl	*sxbl = dev_get_drvdata(dev);
+> > +
+> > +	return sysfs_emit(buf, "%d\n", sxbl->hw_init_retries);
+> > +}
+> > +static DEVICE_ATTR_RO(hw_init_retries);
+> > +
+> > +static ssize_t
+> > +is_customer_mode_show(struct device *dev, struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct surface_xbl	*sxbl = dev_get_drvdata(dev);
+> > +
+> > +	return sysfs_emit(buf, "%d\n", sxbl->is_customer_mode);
+> > +}
+> > +static DEVICE_ATTR_RO(is_customer_mode);
+> > +
+> > +static ssize_t
+> > +is_act_mode_show(struct device *dev, struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct surface_xbl	*sxbl = dev_get_drvdata(dev);
+> > +
+> > +	return sysfs_emit(buf, "%d\n", sxbl->is_act_mode);
+> > +}
+> > +static DEVICE_ATTR_RO(is_act_mode);
+> > +
+> > +static ssize_t
+> > +pmic_reset_reason_show(struct device *dev, struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct surface_xbl	*sxbl = dev_get_drvdata(dev);
+> > +
+> > +	return sysfs_emit(buf, "%d\n", sxbl->pmic_reset_reason);
+> > +}
+> > +static DEVICE_ATTR_RO(pmic_reset_reason);
+> > +
+> > +static ssize_t
+> > +touch_fw_version_show(struct device *dev, struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct surface_xbl	*sxbl = dev_get_drvdata(dev);
+> > +
+> > +	return sysfs_emit(buf, "0x%s\n", sxbl->touch_fw_version);
+> > +}
+> > +static DEVICE_ATTR_RO(touch_fw_version);
+> > +
+> > +static ssize_t
+> > +ocp_error_location_show(struct device *dev, struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct surface_xbl	*sxbl = dev_get_drvdata(dev);
+> > +
+> > +	return sysfs_emit(buf, "%d\n", sxbl->ocp_error_location);
+> > +}
+> > +static DEVICE_ATTR_RO(ocp_error_location);
+> > +
+> > +static struct attribute *xbl_attrs[] = {
+> > +	&dev_attr_board_id.attr,
+> > +	&dev_attr_battery_present.attr,
+> > +	&dev_attr_hw_init_retries.attr,
+> > +	&dev_attr_is_customer_mode.attr,
+> > +	&dev_attr_is_act_mode.attr,
+> > +	&dev_attr_pmic_reset_reason.attr,
+> > +	&dev_attr_touch_fw_version.attr,
+> > +	&dev_attr_ocp_error_location.attr,
+> > +	NULL
+> > +};
+> > +
+> > +static const struct attribute_group xbl_attr_group = {
+> > +	.attrs = xbl_attrs,
+> > +};
+> > +
+> > +const struct attribute_group *xbl_sysfs_groups[] = {
+> > +	&xbl_attr_group,
+> > +	NULL
+> > +};
+> > +
+> > +static u8 surface_xbl_readb(void __iomem *base, u32 offset)
+> > +{
+> > +	return readb(base + offset);
+> 
+> Instead of having these helpers I think you should just call readb(base
+> + offset) directly below.
+> 
+> The shorter function name (readb vs surface_xbl_readb) means that you
+> don't even need to line wrap those lines.
+> 
+> > +}
+> > +
+> > +static u16 surface_xbl_readw(void __iomem *base, u32 offset)
+> > +{
+> > +	return readw(base + offset);
+> > +}
+> > +
+> > +static int surface_xbl_probe(struct platform_device *pdev)
+> > +{
+> > +	struct surface_xbl	*sxbl;
+> > +	struct device		*dev;
+> > +	void __iomem		*regs;
+> > +	int			index;
+> > +
+> > +	dev = &pdev->dev;
+> > +	sxbl = devm_kzalloc(dev, sizeof(*sxbl), GFP_KERNEL);
+> 
+> This is the only use of &pdev->dev, so put that here and drop "dev" from
+> sxbl (and the stack).
+> 
+> > +	if (!sxbl)
+> > +		return -ENOMEM;
+> > +
+> > +	sxbl->dev = dev;
+> > +
+> > +	regs = devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(regs))
+> > +		return PTR_ERR(regs);
+> > +
+> > +	sxbl->regs = regs;
+> 
+> Seems only reason you stash "regs" in sxbl is so that you can pass
+> sxbl->regs in below function calls. I.e. it's a local variable and you
+> can omit it from struct surface_xbl...
+> 
+> > +
+> > +	platform_set_drvdata(pdev, sxbl);
+> > +
+> > +	sxbl->board_id = surface_xbl_readb(sxbl->regs,
+> > +					   SURFACE_XBL_BOARD_ID);
+> > +	sxbl->battery_present = surface_xbl_readb(sxbl->regs,
+> > +						  SURFACE_XBL_BATTERY_PRESENT);
+> > +	sxbl->hw_init_retries = surface_xbl_readb(sxbl->regs,
+> > +						  SURFACE_XBL_HW_INIT_RETRIES);
+> > +	sxbl->is_customer_mode = surface_xbl_readb(sxbl->regs,
+> > +						   SURFACE_XBL_IS_CUSTOMER_MODE);
+> > +	sxbl->is_act_mode = surface_xbl_readb(sxbl->regs,
+> > +					      SURFACE_XBL_IS_ACT_MODE);
+> > +	sxbl->pmic_reset_reason = surface_xbl_readb(sxbl->regs,
+> > +						    SURFACE_XBL_PMIC_RESET_REASON);
+> > +
+> > +	for (index = 0; index < SURFACE_XBL_MAX_VERSION_LEN; index++)
+> 
+> "i" is a good succinct variable name for an index.
+> 
+> > +		sxbl->touch_fw_version[index] = surface_xbl_readb(sxbl->regs,
+> > +							SURFACE_XBL_TOUCH_FW_VERSION + index);
+> > +
+> > +	sxbl->ocp_error_location = surface_xbl_readw(sxbl->regs,
+> > +						     SURFACE_XBL_OCP_ERROR_LOCATION);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int surface_xbl_remove(struct platform_device *pdev)
+> 
+> Your remove function is empty, simply omit it...
+> 
+> Regards,
+> Bjorn
+> 
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id surface_xbl_of_match[] = {
+> > +	{
+> > +		.compatible = "microsoft,sm8150-surface-duo-xbl"
+> > +	},
+> > +	{  }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, surface_xbl_of_match);
+> > +
+> > +static struct platform_driver surface_xbl_driver = {
+> > +	.driver	= {
+> > +		.name		= "surface-xbl",
+> > +		.of_match_table = surface_xbl_of_match,
+> > +		.dev_groups	= xbl_sysfs_groups
+> > +	},
+> > +	.probe		= surface_xbl_probe,
+> > +	.remove		= surface_xbl_remove
+> > +};
+> > +module_platform_driver(surface_xbl_driver);
+> > +
+> > +MODULE_AUTHOR("Jarrett Schultz <jaschultz@microsoft.com>");
+> > +MODULE_DESCRIPTION("Surface Extensible Bootloader");
+> > +MODULE_LICENSE("GPL");
+> > -- 
+> > 2.25.1
+> > 
