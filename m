@@ -2,173 +2,135 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CB5C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 10:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CB6C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 10:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8607561AD2
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 10:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CA560EE9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Nov 2021 10:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233745AbhKPKFo (ORCPT
+        id S234066AbhKPKlo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Nov 2021 05:05:44 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29865 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233752AbhKPKFf (ORCPT
+        Tue, 16 Nov 2021 05:41:44 -0500
+Received: from mga01.intel.com ([192.55.52.88]:12433 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234039AbhKPKlo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Nov 2021 05:05:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637056958;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aiZm/l8h1t+i6C/1lnIe2TWJtuPljKczLdv4k7NCKi8=;
-        b=MEi/ClAf/dI8nTeq24sHS3CEPw5A7OeBq0U/gwzl1eIP/BN0HeC1C5t3uXA5KX5sxuLsGX
-        0KfWbwiwxlo/q5JFp+MzFWjGWYogHrOgkGgsy3h/omPtBc6elSDRqmhcdUk3EgENrnQRi2
-        MSZmIR22TqDZEoyqY7DW4+lZb6Yo9mg=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-16-wxuAgD67MKiIyWAMUld6ug-1; Tue, 16 Nov 2021 05:02:32 -0500
-X-MC-Unique: wxuAgD67MKiIyWAMUld6ug-1
-Received: by mail-ed1-f70.google.com with SMTP id v10-20020aa7d9ca000000b003e7bed57968so5466066eds.23
-        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Nov 2021 02:02:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=aiZm/l8h1t+i6C/1lnIe2TWJtuPljKczLdv4k7NCKi8=;
-        b=e/CztvdLUmkClohILKznt9ZhrOYmn4yCo6M4bHfx/fycWBu0EtHZLpo8cw+AwHyaZA
-         wYzZNUiD7q0r3+R2axSJlj82f5NOb07R+XHQzQfb2Zu5QrPc7cp3AOHX0uY8fJ+Lbeci
-         4VhczD4ffEyzydwl9Ko4eBBkH/VvH3RBO3c0BUAceTLKLmNBfmadLQpvPseVe9b3PieH
-         C+QFhl0fEQYlWwo9nATSUVxZUmwTfdrGYpL+OmzPvJo0+qzONyb/KYjLVY57BStFhPmn
-         vvWOiAvtkDo7HVxic9lRIP7z3Rm8OVKlwEYfo4lNXWsziy9JreiharMNxjeAYJ4qSKxx
-         1l8Q==
-X-Gm-Message-State: AOAM530Q5H7zQw9vGnLAiO/Apz24EeEGF7/jLHoHWTwSA/8+v/DXOpNx
-        m/ELTfUnffxtugBvfYRMBsPVNnlJxzyhC+nDg713Mxaz5HXDf7I7rFTOJrQ2GmNUjNLZoXZKiub
-        qsI7fK2gxHMg4Raoj5bE8/ySPAXzBzBLWTw==
-X-Received: by 2002:a17:907:97d4:: with SMTP id js20mr8391805ejc.416.1637056951165;
-        Tue, 16 Nov 2021 02:02:31 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJykAzOBUSb2LJ/7bdebJJCjkz2v8g3ph4oaTOtIeGHv5vCbF1lDBEi5ZOVkbHgvK5dyfr40JQ==
-X-Received: by 2002:a17:907:97d4:: with SMTP id js20mr8391771ejc.416.1637056951022;
-        Tue, 16 Nov 2021 02:02:31 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id g21sm7954974ejt.87.2021.11.16.02.02.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Nov 2021 02:02:29 -0800 (PST)
-Message-ID: <cdcea26c-b780-92fc-0e42-be52d9a5a5c5@redhat.com>
-Date:   Tue, 16 Nov 2021 11:02:29 +0100
+        Tue, 16 Nov 2021 05:41:44 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10169"; a="257422426"
+X-IronPort-AV: E=Sophos;i="5.87,238,1631602800"; 
+   d="scan'208";a="257422426"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2021 02:38:47 -0800
+X-IronPort-AV: E=Sophos;i="5.87,238,1631602800"; 
+   d="scan'208";a="592571817"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2021 02:38:44 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1mmvrI-007O8b-IQ;
+        Tue, 16 Nov 2021 12:38:36 +0200
+Date:   Tue, 16 Nov 2021 12:38:36 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Denis Pauk <pauk.denis@gmail.com>,
+        Eugene Shalygin <eugene.shalygin@gmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        thomas@weissschuh.net, Ed Brindley <kernel@maidavale.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v11 0/2] Update ASUS WMI supported boards
+Message-ID: <YZOKLDg582dQPzVN@smile.fi.intel.com>
+References: <20211115210842.11972-1-pauk.denis@gmail.com>
+ <CAHp75VcPHi1XyZr=CFbUhiUXK0q-10iBx5U3d==aG8pMG27k1Q@mail.gmail.com>
+ <c016d0ca-b8b1-fb06-50f3-06a7b1c4aaea@roeck-us.net>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH v3] Fix WWAN device disabled issue after S3 deep
-Content-Language: en-US
-To:     Slark Xiao <slark_xiao@163.com>
-Cc:     hmh@hmh.eng.br, mgross@linux.intel.com, markpearson@lenovo.com,
-        njoshi1@lenovo.com, ibm-acpi-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20211108060648.8212-1-slark_xiao@163.com>
- <b3523a57-a21e-80ca-561d-23f6ee89913d@redhat.com>
- <7821731c.1990.17d02723fb6.Coremail.slark_xiao@163.com>
- <350a209b.242b.17d2779c109.Coremail.slark_xiao@163.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <350a209b.242b.17d2779c109.Coremail.slark_xiao@163.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c016d0ca-b8b1-fb06-50f3-06a7b1c4aaea@roeck-us.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 11/16/21 07:40, Slark Xiao wrote:
+On Mon, Nov 15, 2021 at 03:15:39PM -0800, Guenter Roeck wrote:
+> On 11/15/21 2:01 PM, Andy Shevchenko wrote:
+> > On Mon, Nov 15, 2021 at 11:09 PM Denis Pauk <pauk.denis@gmail.com> wrote:
+> > > 
+> > > Add support by WMI interface provided by Asus for B550/X570 boards:
+> > > * PRIME X570-PRO,
+> > > * ROG CROSSHAIR VIII HERO
+> > > * ROG CROSSHAIR VIII DARK HERO
+> > > * ROG CROSSHAIR VIII FORMULA
+> > > * ROG STRIX X570-E GAMING
+> > > * ROG STRIX B550-I GAMING
+> > > * ROG STRIX B550-E GAMING
+> > > 
+> > > Add support by WMI interface provided by Asus for X370/X470/
+> > > B450/X399 boards:
+> > > * ROG CROSSHAIR VI HERO,
+> > > * PRIME X399-A,
+> > > * PRIME X470-PRO,
+> > > * ROG CROSSHAIR VI EXTREME,
+> > > * ROG CROSSHAIR VI HERO (WI-FI AC),
+> > > * ROG CROSSHAIR VII HERO,
+> > > * ROG CROSSHAIR VII HERO (WI-FI),
+> > > * ROG STRIX Z390-F GAMING
+> > > * ROG STRIX B450-E GAMING,
+> > > * ROG STRIX B450-F GAMING,
+> > > * ROG STRIX B450-I GAMING,
+> > > * ROG STRIX X399-E GAMING,
+> > > * ROG STRIX X470-F GAMING,
+> > > * ROG STRIX X470-I GAMING,
+> > > * ROG ZENITH EXTREME,
+> > > * ROG ZENITH EXTREME ALPHA.
+> > > 
+> > > I have added "ROG STRIX Z390-F GAMING" to list of supported boards in
+> > > asus_wmi_sensors.
+> > 
+> > Guenter, what is your plan about this patch series? It seems it
+> > missed, by unknown (?) reason, the v5.16-rc1 (I remember seeing it in
+> > some of your tree branches at some point).
+> > 
 > 
+> I don't see it in my record. Earlier I was simply waiting for some
+> Reviewed-by: tags, which I have never seen.
+
+Ah, understood. Thank you for clarifications.
+
+> Looking into the commit log,
+> I do see:
 > 
+> Signed-off-by: Denis Pauk <pauk.denis@gmail.com>
+> Co-developed-by: Eugene Shalygin <eugene.shalygin@gmail.com>
+> Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
+> Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> At 2021-11-09 10:06:21, "Slark Xiao" <slark_xiao@163.com> wrote:
->>
->>
->> At 2021-11-08 22:32:56, "Hans de Goede" <hdegoede@redhat.com> wrote:
->>> Hi,
->>>
->>> On 11/8/21 07:06, Slark Xiao wrote:
->>>> When WWAN device wake from S3 deep, under thinkpad platform,
->>>> WWAN would be disabled. This disable status could be checked
->>>> by command 'nmcli r wwan' or 'rfkill list'.
->>>>
->>>> Issue analysis as below:
->>>>   When host resume from S3 deep, thinkpad_acpi driver would
->>>> call hotkey_resume() function. Finnaly, it will use
->>>> wan_get_status to check the current status of WWAN device.
->>>> During this resume progress, wan_get_status would always
->>>> return off even WWAN boot up completely.
->>>>   In patch V2, Hans said 'sw_state should be unchanged
->>>> after a suspend/resume. It's better to drop the
->>>> tpacpi_rfk_update_swstate call all together from the
->>>> resume path'.
->>>>   And it's confimed by Lenovo that GWAN is no longer
->>>>  available from WHL generation because the design does not
->>>>  match with current pin control.
->>>>
->>>> Signed-off-by: Slark Xiao <slark_xiao@163.com>
->>>
->>> Thanks, patch looks good to me:
->>>
->>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>>
->>> I will merge this once 5.16-rc1 is out.
->>>
->>> Regards,
->>>
-> Hi Hans,
->   5.16-rc1 is already out. Could you help merge this patch into baseline now?
+> Did you and Eugene indeed sign this off, ie did you write it, and
+> Eugene and Denis signed it off ? If so, the tags are in the wrong order.
 
-5.16-rc1 has only been out for 1 day, some patience please!
+I'm not sure I follow. I have helped Denis with the code and according to
+Submitting Patches documentation the order should be chronological with the
+main author to be first in the list. Here the committer (submitter) is the
+same as the original author IIUC. (I can't speak for Eugene, though)
 
-But yes I plan to send a fixes pull-req to Linus later today
-including this fix.
+> On the other side, if the code is ultimately from Denis, with your input,
+> the tags should be either Acked-by: or Reviewed-by: for both Eugene
+> and yourself.
 
-Regards,
+I'm fine with either Co-developed-by+SoB or Reviewed-by.
 
-Hans
+> Note that v11 of this patch series is missing from
+> https://patchwork.kernel.org/project/linux-hwmon/list/
+> for some reason.
+
+Hmm... Denis, please check locally how you prepare your patches.
 
 
+-- 
+With Best Regards,
+Andy Shevchenko
 
-
->>>> ---
->>>>  drivers/platform/x86/thinkpad_acpi.c | 12 ------------
->>>>  1 file changed, 12 deletions(-)
->>>>
->>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->>>> index 50ff04c84650..f1cbd27282e1 100644
->>>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>>> @@ -1178,15 +1178,6 @@ static int tpacpi_rfk_update_swstate(const struct tpacpi_rfk *tp_rfk)
->>>>  	return status;
->>>>  }
->>>>  
->>>> -/* Query FW and update rfkill sw state for all rfkill switches */
->>>> -static void tpacpi_rfk_update_swstate_all(void)
->>>> -{
->>>> -	unsigned int i;
->>>> -
->>>> -	for (i = 0; i < TPACPI_RFK_SW_MAX; i++)
->>>> -		tpacpi_rfk_update_swstate(tpacpi_rfkill_switches[i]);
->>>> -}
->>>> -
->>>>  /*
->>>>   * Sync the HW-blocking state of all rfkill switches,
->>>>   * do notice it causes the rfkill core to schedule uevents
->>>> @@ -3129,9 +3120,6 @@ static void tpacpi_send_radiosw_update(void)
->>>>  	if (wlsw == TPACPI_RFK_RADIO_OFF)
->>>>  		tpacpi_rfk_update_hwblock_state(true);
->>>>  
->>>> -	/* Sync sw blocking state */
->>>> -	tpacpi_rfk_update_swstate_all();
->>>> -
->>>>  	/* Sync hw blocking state last if it is hw-unblocked */
->>>>  	if (wlsw == TPACPI_RFK_RADIO_ON)
->>>>  		tpacpi_rfk_update_hwblock_state(false);
->>>>
 
