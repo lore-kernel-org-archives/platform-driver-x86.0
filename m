@@ -2,216 +2,260 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC3AC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Nov 2021 15:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3E0C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Nov 2021 16:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 065BE61B39
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Nov 2021 15:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E1D61A8A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Nov 2021 16:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231920AbhKRPtW (ORCPT
+        id S233662AbhKRQqY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 18 Nov 2021 10:49:22 -0500
-Received: from mail1.bemta33.messagelabs.com ([67.219.247.2]:34301 "EHLO
-        mail1.bemta33.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232651AbhKRPtV (ORCPT
+        Thu, 18 Nov 2021 11:46:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233651AbhKRQqU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 18 Nov 2021 10:49:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
-        s=Selector; t=1637250381; i=@lenovo.com;
-        bh=8m+42UV1o3fYIrWev91YNBsTDLOyPR4A4h7wOE0IWvg=;
-        h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-         In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        b=AY2B/scUm3SigeUHkdebD53gr3tOp1Fl5+EsUv5sA4R8y5kSgxg+FR6GsPwZSwwDb
-         57t+pJOhix/9HAXodHwACdtlOhvILNJSMZl16Qj0yrF45ibEcgVJJ5Ssm7FBlZJtz8
-         Sg/OmifYW9o2nfsagNOwwtOq2yCV4msCDxdyt9GV83Xbc2wuE9wqPqca6EWTXCT/XA
-         ggOha6yiabMykAQIO8wlP3j2t5xfZhifV2rdgpMwftrRBSAuuyKBVq91hobfK3yjMD
-         IlrWWfV5Bt3z4Rfzi0P+e88cEwDQRNVBHML8pLx0nEJC5ODra+ZT7dW1B8UmpZaQEv
-         eSc6vVWCPKS8A==
-Received: from [100.114.65.136] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-a.us-east-2.aws.ess.symcld.net id F1/70-05583-C4576916; Thu, 18 Nov 2021 15:46:20 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAJsWRWlGSWpSXmKPExsWSoV9jretTOi3
-  R4MMUeYtJM/4zW7w5Pp3J4sDUacwWq/e8YHZg8di8Qstj06pONo/3+66yeXzeJBfAEsWamZeU
-  X5HAmnH6Em/Bf8GKH+fOszQwPuPrYuTkYBRYyixxZa9iFyMXkL2IVWLahp/MEE4nk8Si7plsI
-  I6QwBwmiW9/rrFCOAeZJB7tucYC4kgIPGCUOPDkFgtEppNRYvfWH1A9E5gkrh6aAtXzhFFiQ+
-  tRFjjn1/ujQBkODl4BW4kXK8NATBYBVYmVjfUgZ/EKCEqcnPmEBcQWFQiXOLvqNjOILSyQJbF
-  7/hM2EJtZQFzi1pP5TCC2iEChxOG7q1gh4poSz9o6GEFsIYEMiSNTZ4HF2QS0JbZs+cUGsopT
-  wEqib4cOTHnr9t/sELa8xPa3c5ghWpUlfvWfB7MlBBQldrS9YYewEyR6/j1ig7AlJa7dvAAVl
-  5U4enYOC4TtKzGzbyUTyCoJAS2JZc+SIcI5EnPnLmGCsNUklv6+xzSBUW8WkodnIXlsFpLrZi
-  G5bgEjyypGq6SizPSMktzEzBxdQwMDXUNDE10zM11jM73EKt1EvdJi3dTE4hJdI73E8mK91OJ
-  iveLK3OScFL281JJNjMDElFLkpLKD8ceXH3qHGCU5mJREedf8n5ooxJeUn1KZkVicEV9UmpNa
-  fIhRhoNDSYLX13FaopBgUWp6akVaZg4wScKkJTh4lER4zzkBpXmLCxJzizPTIVKnGHU5Jrycu
-  4hZiCUvPy9VSpx3NkiRAEhRRmke3AhYwr7EKCslzMvIwMAgxFOQWpSbWYIq/4pRnINRSZj3K8
-  gUnsy8ErhNr4COYAI6QvbyZJAjShIRUlINTG6LfKZtduaem66TyWXBwnDPYaphv+zT84XqJ/Y
-  s/75bf4fGj+dHZqWYbkv59u3pprTblYfma6VM5fbT5C429Q4+kXVmnaJviEGDWrDe+gfr7XVk
-  KsM0fr20jj4caiaqL/lG5dkDvqB6jgX170Wim9b23n9tYyikyOD6YF1i8Ysje1wvTbJPOvSop
-  2JqmFmO425v+118ljtWKJyfOzvQO3ypbXzXyolM7FsOtqrEpr8QsfwVL2T9INVBd1rfTJmied
-  o7BNWUz1QE+Xa4bes6tt1G4WHBsmLN1z1f1undCqteqGzq9/qI9gWDCXpG52svq3RbLsw7ta7
-  oZGb7VdX0/cozX3V+tK9J2Fi5ZlmIEktxRqKhFnNRcSIAmkXRkFMEAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-8.tower-635.messagelabs.com!1637250378!215825!1
-X-Originating-IP: [104.47.124.59]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.81.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 7042 invoked from network); 18 Nov 2021 15:46:20 -0000
-Received: from mail-hk2apc01lp2059.outbound.protection.outlook.com (HELO APC01-HK2-obe.outbound.protection.outlook.com) (104.47.124.59)
-  by server-8.tower-635.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 18 Nov 2021 15:46:20 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hyzRsbMGsToSKVOqTkjJvaOghCnlyw3iwf+/Nb/QIOS8/Jo8wgDdpA0PJ0hajEXYKMjdNEXvZMz0SUQHfIpFsYFBuGpRSRTJ7pqci6atESNx0DeZ9wpF5ws69Zg0LVB5xRWIrauUuk9Dlba5TwTsJ7Y+/wTLK4I2kyEGCYCXOZD4QlsFgP2sDywtCj5r1KbW1oHt3AU7s5EPA87JWdERlF6hR2XNEB2ybJA8psZ1nF8kk7JsvCIbD8bPvM6PqZXrplDKN/CXPj19j4gRUhX0qvpAyx04IC+riE8Jr+fTPn5iGVOKmx+rlLYYrAXdT2K9bgMRxLSoChIDbQ63p+Vlsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8m+42UV1o3fYIrWev91YNBsTDLOyPR4A4h7wOE0IWvg=;
- b=dO05b0huXRIWrQJKJE7E2HhSToFBF/yXePHfsCx0K3zxKsXnnw0fy40FA6M1NJEKhEuBLwXQn8s/MpDvlSE1OIazHXqaHJsQI6zqhxFfPwhpZyEt84djwNqTv2+NS994HSkQKMuVg4KQBWVuDSSHp6mhYAszm5iAbqa/K4JH992vTqJXm8krOJnuZWk644r+YuRgL/vpASUEnEneliV05JKJ7KF4yffchNhFM87wJIQan3zqWOOyWrbvCKGWTrPYsEmXW2UdhDZ5EMrwEhwIvM98s/zA/7RqLC4RuH/3Dd0SF3tw7gOGEwqFuPWxSeDyQBMlWsS32AaH75obob3YHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 104.232.225.6) smtp.rcpttodomain=redhat.com smtp.mailfrom=lenovo.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=lenovo.com;
- dkim=none (message not signed); arc=none
-Received: from SL2P216CA0102.KORP216.PROD.OUTLOOK.COM (2603:1096:101:3::17) by
- TYZPR03MB5294.apcprd03.prod.outlook.com (2603:1096:400:3f::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4649.12; Thu, 18 Nov 2021 15:46:17 +0000
-Received: from PSAAPC01FT037.eop-APC01.prod.protection.outlook.com
- (2603:1096:101:3:cafe::4f) by SL2P216CA0102.outlook.office365.com
- (2603:1096:101:3::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.27 via Frontend
- Transport; Thu, 18 Nov 2021 15:46:17 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 104.232.225.6) smtp.mailfrom=lenovo.com; redhat.com; dkim=none (message not
- signed) header.d=none;redhat.com; dmarc=fail action=none
- header.from=lenovo.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- lenovo.com discourages use of 104.232.225.6 as permitted sender)
-Received: from mail.lenovo.com (104.232.225.6) by
- PSAAPC01FT037.mail.protection.outlook.com (10.13.38.216) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4713.19 via Frontend Transport; Thu, 18 Nov 2021 15:46:16 +0000
-Received: from reswpmail01.lenovo.com (10.62.32.20) by mail.lenovo.com
- (10.62.123.116) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.20; Thu, 18 Nov
- 2021 10:46:15 -0500
-Received: from [10.38.106.125] (10.38.106.125) by reswpmail01.lenovo.com
- (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.20; Thu, 18 Nov
- 2021 10:46:14 -0500
-Message-ID: <edcabc67-c1b4-6931-5e40-f64660a5280a@lenovo.com>
-Date:   Thu, 18 Nov 2021 10:46:13 -0500
+        Thu, 18 Nov 2021 11:46:20 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D034DC06173E
+        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Nov 2021 08:43:19 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id k37so29134349lfv.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Nov 2021 08:43:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A7D/BeXVr7wzzWFs8SKVTpLA5OK3s6ikrHABb23KOco=;
+        b=CqP/wh5rSorV/TnAQxzdgsZz00pJ5cWLtZd6e3yhJ0X2NfcSIeOGNa4K1m8IOgAuZ/
+         IhTPa0XJNMCiP+pgVih/Bi3fq+TwkhnPnoUretxdR/GVsXAbwudVYOECqRPhHYqKXLFQ
+         IWNRqYT+ZOi+IcKyGcxDtm9HuylzUxlZ8WwILX5upefDxs8JGP6Q2BmfWBsc3yHywHAX
+         9tg08Uy5hehL2b/S0KNhF2j1aITHPZTiUW1kXHrP4cuqQJJCU2ydhZs6+YN1zZ0LvLXR
+         xNfmFuA0sXeU3wxMPjanG//zwdlWx6bTfDU1DGAk3gOII5FKYLJHJgajYOYiOX31wQsP
+         LAww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A7D/BeXVr7wzzWFs8SKVTpLA5OK3s6ikrHABb23KOco=;
+        b=QFKYBM/LXT6YJKuQEV9fQ8K+hq7gwtxmLX252sn4tSY6qeVGSPS/4VnvtBTP9Rks0J
+         WuCbwDAIOg+4AxHy4oRGCio7H8vj1a+Ae5vt5xQmDBzjwkHvSmnR0QnaBwXEJFRLHA22
+         UcmiL1ckJdVU4XB8U2t09r2UDCUa1a6I39ipGmmEDvcHZ3i95kopMSBxL0tqy81i0fSr
+         kKwukV6qsFy9jcRZY13WACZ0qIXHM1XVOaEgABHxVtF9/bCbK8ArgntLfjodnXNX3SPe
+         H8bHiPnOSpaG5KM9EUexERCpK1WRTY33Slwda42V3WsOgjPwlKxud2M4jmUspWQZNPD9
+         SNQA==
+X-Gm-Message-State: AOAM530NIMcIcr2jONdRKVNrO9Nd/wevRxHFDhCbaEolGqXVYXUMUmTr
+        KZqxBGp+8oOGkATuhrNiUMe6AcxAEd4qFXv3056XtA==
+X-Google-Smtp-Source: ABdhPJxW6myjWm6lja6OnE0jaItEXzM/1vqY0/QtkI9jvuFbZMxUM+NzZUA0oYBmrWBnvhOYOZf0hJ2GBlFtQttYCpA=
+X-Received: by 2002:a05:6512:2804:: with SMTP id cf4mr1847789lfb.644.1637253797827;
+ Thu, 18 Nov 2021 08:43:17 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [External] [PATCH 2/2] platform/x86: think-lmi: Simplify
- tlmi_analyze() error handling a bit
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>
-CC:     <platform-driver-x86@vger.kernel.org>
-References: <20211118114150.271274-1-hdegoede@redhat.com>
- <20211118114150.271274-2-hdegoede@redhat.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-In-Reply-To: <20211118114150.271274-2-hdegoede@redhat.com>
+References: <20211110220731.2396491-1-brijesh.singh@amd.com> <20211110220731.2396491-45-brijesh.singh@amd.com>
+In-Reply-To: <20211110220731.2396491-45-brijesh.singh@amd.com>
+From:   Peter Gonda <pgonda@google.com>
+Date:   Thu, 18 Nov 2021 09:43:06 -0700
+Message-ID: <CAMkAt6qGASUFv7_bEDd3zrwt2J8kRxKdNuZCGCnsNvnGr4Uv3g@mail.gmail.com>
+Subject: Re: [PATCH v7 44/45] virt: sevguest: Add support to derive key
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <Thomas.Lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.38.106.125]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6e28c081-6429-46e0-013a-08d9aaaa8f12
-X-MS-TrafficTypeDiagnostic: TYZPR03MB5294:
-X-Microsoft-Antispam-PRVS: <TYZPR03MB5294B8ABA657FBADBA035EECC59B9@TYZPR03MB5294.apcprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: R81ZXdLTtt4iJUYqyKIPl8vx9HQJ0DC/OE92oHHELNukuK1Af+zBrNgB2p/gDuQt/0XgqMhNESZIIfA4wnDKnWyeqF+QXGDDjV+FGCoU1Fsg7czzVm9lEEJsNc2Jq8oDTK/cjXpwPShVtLu2R8rvPV+sPwFmTAywdE8HQTdaY3FEmXOny4zsoBbaM/4zE/K4Da0OWj6CRl+WBAk12pfuTrhkM/HNlOly7VAVsB438fzgAloAc5ze1SmgMMxnbEyy6dRkPMjLvfga2OkNs5btxotBhRhxHgr4yCtCT0NXHvScM9btKFqryViCV9upYU+JJnNU7KtIAlupuH7XHqrk/MLrX4TUjKiR/y5eDmmSEmJftGGek6plyMTpz4SlqMbZpnWzEC4sg1P+Bl1b5it8o36WlWWuBy98dxdTeQgo2lG6QsyT67pg/bWL26dJd2ME/nYxzv+AinOp6WFG8C24W/V8kr9P8rzdQ0/tmjwkMNRg4k+H533NAFWbyB26pTwXgJCMP4Sq5wr7yND8QOdCoHsCCMRCpzQsYoXHeeRaeYFYFvI+QoRzhkvoRa4jvarMmk5L7ii9Ap6lFVMgSajt8GkR49Fg0cuPfdSURj15P83nUCxg7g4Mvegplmz0AIpFXf9ePMTqAc28WnnCJJyvHxsTSRT01EQB4DwwjtKLdELaPe2TkDwo47QxjeHPtB3t6VHGke4GIYPMoiDF89Qeq17yIVzUT5OW9kuV2VpW+8pvodQqbkpM9gb5rxzjO+R+S+PtjjIaEjDOe1I2W72SFeqYcKZ85IafKzUsLFWgNaC+iJ7ijlpuMxKRjaeeb+NErjzXD04EjkRZtyGu0TH+wv117mIbSsqnn4CTIB/KS2o=
-X-Forefront-Antispam-Report: CIP:104.232.225.6;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.lenovo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(508600001)(110136005)(8936002)(356005)(31696002)(8676002)(4326008)(36906005)(81166007)(53546011)(316002)(82310400003)(36756003)(83380400001)(16576012)(26005)(47076005)(70586007)(16526019)(36860700001)(31686004)(336012)(82960400001)(86362001)(186003)(5660300002)(4001150100001)(2616005)(2906002)(426003)(70206006)(3940600001)(43740500002)(36900700001);DIR:OUT;SFP:1102;
-X-OriginatorOrg: lenovo.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2021 15:46:16.6762
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e28c081-6429-46e0-013a-08d9aaaa8f12
-X-MS-Exchange-CrossTenant-Id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5c7d0b28-bdf8-410c-aa93-4df372b16203;Ip=[104.232.225.6];Helo=[mail.lenovo.com]
-X-MS-Exchange-CrossTenant-AuthSource: PSAAPC01FT037.eop-APC01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB5294
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks Hans,
-
-On 2021-11-18 06:41, Hans de Goede wrote:
-> Creating the tlmi_pwd_setting structs can only fail with -ENOMEM, set
-> ret to this once and simplify the error handling a bit.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Wed, Nov 10, 2021 at 3:09 PM Brijesh Singh <brijesh.singh@amd.com> wrote:
+>
+> The SNP_GET_DERIVED_KEY ioctl interface can be used by the SNP guest to
+> ask the firmware to provide a key derived from a root key. The derived
+> key may be used by the guest for any purposes it choose, such as a
+> sealing key or communicating with the external entities.
+>
+> See SEV-SNP firmware spec for more information.
+>
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 > ---
->  drivers/platform/x86/think-lmi.c | 26 +++++++++++---------------
->  1 file changed, 11 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 6eba69334fa6..27ab8e4e5b83 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -1141,42 +1141,38 @@ static int tlmi_analyze(void)
->  	if (ret)
->  		goto fail_clear_attr;
->  
-> +	/* All failures below boil down to kmalloc failures */
-> +	ret = -ENOMEM;
+>  Documentation/virt/coco/sevguest.rst  | 19 ++++++++++-
+>  drivers/virt/coco/sevguest/sevguest.c | 49 +++++++++++++++++++++++++++
+>  include/uapi/linux/sev-guest.h        | 24 +++++++++++++
+>  3 files changed, 91 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/virt/coco/sevguest.rst b/Documentation/virt/coco/sevguest.rst
+> index 002c90946b8a..0bd9a65e0370 100644
+> --- a/Documentation/virt/coco/sevguest.rst
+> +++ b/Documentation/virt/coco/sevguest.rst
+> @@ -64,10 +64,27 @@ The SNP_GET_REPORT ioctl can be used to query the attestation report from the
+>  SEV-SNP firmware. The ioctl uses the SNP_GUEST_REQUEST (MSG_REPORT_REQ) command
+>  provided by the SEV-SNP firmware to query the attestation report.
+>
+> -On success, the snp_report_resp.data will contains the report. The report
+> +On success, the snp_report_resp.data will contain the report. The report
+>  will contain the format described in the SEV-SNP specification. See the SEV-SNP
+>  specification for further details.
+>
+> +2.2 SNP_GET_DERIVED_KEY
+> +-----------------------
+> +:Technology: sev-snp
+> +:Type: guest ioctl
+> +:Parameters (in): struct snp_derived_key_req
+> +:Returns (out): struct snp_derived_key_req on success, -negative on error
 > +
->  	tlmi_priv.pwd_admin = tlmi_create_auth("pap", "bios-admin");
-> -	if (!tlmi_priv.pwd_admin) {
-> -		ret = -ENOMEM;
-> +	if (!tlmi_priv.pwd_admin)
->  		goto fail_clear_attr;
-> -	}
-> +
->  	if (tlmi_priv.pwdcfg.core.password_state & TLMI_PAP_PWD)
->  		tlmi_priv.pwd_admin->valid = true;
->  
->  	tlmi_priv.pwd_power = tlmi_create_auth("pop", "power-on");
-> -	if (!tlmi_priv.pwd_power) {
-> -		ret = -ENOMEM;
-> +	if (!tlmi_priv.pwd_power)
->  		goto fail_clear_attr;
-> -	}
-> +
->  	if (tlmi_priv.pwdcfg.core.password_state & TLMI_POP_PWD)
->  		tlmi_priv.pwd_power->valid = true;
->  
->  	if (tlmi_priv.opcode_support) {
->  		tlmi_priv.pwd_system = tlmi_create_auth("sys", "system");
-> -		if (!tlmi_priv.pwd_system) {
-> -			ret = -ENOMEM;
-> +		if (!tlmi_priv.pwd_system)
->  			goto fail_clear_attr;
-> -		}
-> +
->  		if (tlmi_priv.pwdcfg.core.password_state & TLMI_SYS_PWD)
->  			tlmi_priv.pwd_system->valid = true;
->  
->  		tlmi_priv.pwd_hdd = tlmi_create_auth("hdd", "hdd");
-> -		if (!tlmi_priv.pwd_hdd) {
-> -			ret = -ENOMEM;
-> +		if (!tlmi_priv.pwd_hdd)
->  			goto fail_clear_attr;
-> -		}
->  
->  		tlmi_priv.pwd_nvme = tlmi_create_auth("nvm", "nvme");
-> -		if (!tlmi_priv.pwd_nvme) {
-> -			ret = -ENOMEM;
-> +		if (!tlmi_priv.pwd_nvme)
->  			goto fail_clear_attr;
-> -		}
->  
->  		if (tlmi_priv.pwdcfg.core.password_state & TLMI_HDD_PWD) {
->  			/* Check if PWD is configured and set index to first drive found */
-> 
-Looks good, and works well. Verified with modifying NVMe and Admin
-password on M90n
+> +The SNP_GET_DERIVED_KEY ioctl can be used to get a key derive from a root key.
 
-Tested-by: Mark Pearson <markpearson@lenovo.com>
+derived
+
+> +The derived key can be used by the guest for any purpose, such as sealing keys
+> +or communicating with external entities.
+> +
+> +The ioctl uses the SNP_GUEST_REQUEST (MSG_KEY_REQ) command provided by the
+> +SEV-SNP firmware to derive the key. See SEV-SNP specification for further details
+> +on the various fields passed in the key derivation request.
+> +
+> +On success, the snp_derived_key_resp.data will contains the derived key value. See
+".data will contain the..." or ".data contains the derived key..."
+
+
+> +the SEV-SNP specification for further details.
+>
+>  Reference
+>  ---------
+> diff --git a/drivers/virt/coco/sevguest/sevguest.c b/drivers/virt/coco/sevguest/sevguest.c
+> index 982714c1b4ca..bece6856573e 100644
+> --- a/drivers/virt/coco/sevguest/sevguest.c
+> +++ b/drivers/virt/coco/sevguest/sevguest.c
+> @@ -392,6 +392,52 @@ static int get_report(struct snp_guest_dev *snp_dev, struct snp_guest_request_io
+>         return rc;
+>  }
+>
+> +static int get_derived_key(struct snp_guest_dev *snp_dev, struct snp_guest_request_ioctl *arg)
+> +{
+> +       struct snp_guest_crypto *crypto = snp_dev->crypto;
+> +       struct snp_derived_key_resp resp = {0};
+> +       struct snp_derived_key_req req;
+> +       int rc, resp_len;
+> +       u8 buf[89];
+
+Could we document this magic number?
+
+> +
+> +       if (!arg->req_data || !arg->resp_data)
+> +               return -EINVAL;
+> +
+> +       /* Copy the request payload from userspace */
+> +       if (copy_from_user(&req, (void __user *)arg->req_data, sizeof(req)))
+> +               return -EFAULT;
+> +
+> +       /* Message version must be non-zero */
+> +       if (!req.msg_version)
+> +               return -EINVAL;
+> +
+> +       /*
+> +        * The intermediate response buffer is used while decrypting the
+> +        * response payload. Make sure that it has enough space to cover the
+> +        * authtag.
+> +        */
+> +       resp_len = sizeof(resp.data) + crypto->a_len;
+> +       if (sizeof(buf) < resp_len)
+> +               return -ENOMEM;
+> +
+> +       /* Issue the command to get the attestation report */
+> +       rc = handle_guest_request(snp_dev, SVM_VMGEXIT_GUEST_REQUEST, req.msg_version,
+> +                                 SNP_MSG_KEY_REQ, &req.data, sizeof(req.data), buf, resp_len,
+> +                                 &arg->fw_err);
+> +       if (rc)
+> +               goto e_free;
+
+Should we check the first 32 bits of |data| here since that is a
+status field? If we see 16h here we could return -EINVAL, or better to
+let userspace deal with that error handling?
+
+> +
+> +       /* Copy the response payload to userspace */
+> +       memcpy(resp.data, buf, sizeof(resp.data));
+> +       if (copy_to_user((void __user *)arg->resp_data, &resp, sizeof(resp)))
+> +               rc = -EFAULT;
+> +
+> +e_free:
+> +       memzero_explicit(buf, sizeof(buf));
+> +       memzero_explicit(&resp, sizeof(resp));
+> +       return rc;
+> +}
+> +
+>  static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long arg)
+>  {
+>         struct snp_guest_dev *snp_dev = to_snp_dev(file);
+> @@ -417,6 +463,9 @@ static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long
+>         case SNP_GET_REPORT:
+>                 ret = get_report(snp_dev, &input);
+>                 break;
+> +       case SNP_GET_DERIVED_KEY:
+> +               ret = get_derived_key(snp_dev, &input);
+> +               break;
+>         default:
+>                 break;
+>         }
+> diff --git a/include/uapi/linux/sev-guest.h b/include/uapi/linux/sev-guest.h
+> index eda7edcffda8..f6d9c136ff4d 100644
+> --- a/include/uapi/linux/sev-guest.h
+> +++ b/include/uapi/linux/sev-guest.h
+> @@ -36,9 +36,33 @@ struct snp_guest_request_ioctl {
+>         __u64 fw_err;
+>  };
+>
+> +struct __snp_derived_key_req {
+> +       __u32 root_key_select;
+> +       __u32 rsvd;
+> +       __u64 guest_field_select;
+> +       __u32 vmpl;
+> +       __u32 guest_svn;
+> +       __u64 tcb_version;
+> +};
+> +
+> +struct snp_derived_key_req {
+> +       /* message version number (must be non-zero) */
+> +       __u8 msg_version;
+> +
+> +       struct __snp_derived_key_req data;
+> +};
+> +
+> +struct snp_derived_key_resp {
+> +       /* response data, see SEV-SNP spec for the format */
+> +       __u8 data[64];
+> +};
+> +
+>  #define SNP_GUEST_REQ_IOC_TYPE 'S'
+>
+>  /* Get SNP attestation report */
+>  #define SNP_GET_REPORT _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x0, struct snp_guest_request_ioctl)
+>
+> +/* Get a derived key from the root */
+> +#define SNP_GET_DERIVED_KEY _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x1, struct snp_guest_request_ioctl)
+> +
+>  #endif /* __UAPI_LINUX_SEV_GUEST_H_ */
+> --
+> 2.25.1
+>
