@@ -2,121 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE737C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Nov 2021 11:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8D6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Nov 2021 13:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A23961AA3
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Nov 2021 11:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E1361AF0
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Nov 2021 13:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234854AbhKSLjQ (ORCPT
+        id S235533AbhKSNlX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 19 Nov 2021 06:39:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234151AbhKSLjQ (ORCPT
+        Fri, 19 Nov 2021 08:41:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235488AbhKSNlX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Nov 2021 06:39:16 -0500
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A3A9C061574;
-        Fri, 19 Nov 2021 03:36:14 -0800 (PST)
-Received: by mail-oi1-x233.google.com with SMTP id q25so21479232oiw.0;
-        Fri, 19 Nov 2021 03:36:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=K+HQ+r21ViS1zY/XFw0FQwQ4LY4L5mHZUk1SHH1fhM4=;
-        b=Cmd4vp3AW6JwSbZeWsnovSgI6by7+h5WUnQxr0lX6KC5HfvKCJMy0/JqJGfKrEh3pe
-         8YDLeyqIaxnUg6RqyqjnBAmiboE8Ny7rBm7VgmFZ44N3eUk3pQKJwtFqV4xSIiayv+he
-         oy4YNlaQktN6gMWzZtldPTF2gTbxihs1lR3QLl2+zUUkcfthMLD3nbiF+qQRwTGSvD7I
-         r/9aot3UxWwpqB1BHHsxsmlpFvDgwfcnmK5nBww+lQKwv+gYoObheOXa1fsTgieCWEJZ
-         upLP1PqkWcFpJU0h19nQnL3ieg1fFKyDOfHagap0sYsfJU61HI9m8I0J0wjLlgLJxATr
-         Omwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K+HQ+r21ViS1zY/XFw0FQwQ4LY4L5mHZUk1SHH1fhM4=;
-        b=Y01LdbntErVSnBigVbg0s+GmaB7bL++V6tqL/vbS8Tzd9onTdATUPEJqLn7mUMMGVz
-         pgK6UiQdI4s2Db82XMTXTZ1d9w62CVgHmzZZXEM6OzbmyJ3MySLR90uMI/vIdKlECyn1
-         +0y2GK8U2dTHMan/IjcEfKs9KAUeU+FD6KeD5ZlQqaiblU8lzEmwgdlokLL/h90F/f8Q
-         LhkryBYBVKtGvCfNyy1l3zVIPF17qWrpDwfY+HOo1TezafVaVuiK62X8cVR5/ephEBYC
-         1wPHZJ7juXJKdZ4b1WklvVspqcw9ubGDaAmAi7iKjGNeR1+T3FJV+boLeB0K1oliYt2a
-         reIw==
-X-Gm-Message-State: AOAM531TFl54fXYTzzM/e9NYk73wG0wH2ldRbiVkqxM3uYoSRMZjJ7f9
-        ekU+qaiNTvwiwKjIVJbvb/mnAwjh97g=
-X-Google-Smtp-Source: ABdhPJw+qGmW9tHCSLtWT35tqWAeN1SpSRNcGUhcL81PWpTcBO1BUPc8XRgQBJED48X+HVElDSDpkg==
-X-Received: by 2002:a05:6808:7db:: with SMTP id f27mr4345868oij.83.1637321773628;
-        Fri, 19 Nov 2021 03:36:13 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f12sm493987ote.75.2021.11.19.03.36.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Nov 2021 03:36:13 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [PATCH v12 0/2] Update ASUS WMI supported boards
-To:     Denis Pauk <pauk.denis@gmail.com>
-Cc:     eugene.shalygin@gmail.com, andy.shevchenko@gmail.com,
-        platform-driver-x86@vger.kernel.org, thomas@weissschuh.net,
-        kernel@maidavale.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20211116205744.381790-1-pauk.denis@gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <f0bf01fa-ccd8-3a6a-8fd2-4c785fa212ef@roeck-us.net>
-Date:   Fri, 19 Nov 2021 03:36:10 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Fri, 19 Nov 2021 08:41:23 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id AAC2461A89
+        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Nov 2021 13:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637329101;
+        bh=anmJcwvgDJTNtzyygHXnitRG9TWNR38wAfYgv+xKnl4=;
+        h=From:To:Subject:Date:From;
+        b=jjfqa/DrMvr1Nz7/RYJ+Pn6u6kdbKaj7GjhtDGz1ZA+sMhl5j+oMVqK8BT5dUOUSK
+         Lu6lmwpWTQGGJe9tpitxNdL48eyQ84jos6F2Rkm5VdL3dcLfuPu6UKnIMmI2IAWrSB
+         snIyW3a5wF6XXFKKp62SFFWEjjl7Ex4h0H+YDcy8CvtHBiwEHUljodAkitbROWJ7zQ
+         PrwuANu8PFYkJsXlWWvEAUazRy5zRuh/iVnqEFUfXvHAN6zOgzssyLyrfPjgbgUY7o
+         rmUpY1Nfq0FXZY0+T2oulbkJhiLrIMOM3Iq7ZT6NeAZrrDo9ximeQ6m1vW+zFUit3+
+         fsOltIppsKCXA==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 215075] New: BUG: scheduling while atomic:
+ cpuhp/1/21/0x00000002 when going out of sleep S3 state
+Date:   Fri, 19 Nov 2021 13:38:21 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: samy@lahfa.xyz
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression attachments.created
+Message-ID: <bug-215075-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-In-Reply-To: <20211116205744.381790-1-pauk.denis@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 11/16/21 12:57 PM, Denis Pauk wrote:
-> Add support by WMI interface provided by Asus for B550/X570 boards:
-> * PRIME X570-PRO,
-> * ROG CROSSHAIR VIII HERO
-> * ROG CROSSHAIR VIII DARK HERO
-> * ROG CROSSHAIR VIII FORMULA
-> * ROG STRIX X570-E GAMING
-> * ROG STRIX B550-I GAMING
-> * ROG STRIX B550-E GAMING
-> 
-> Add support by WMI interface provided by Asus for X370/X470/
-> B450/X399 boards:
-> * ROG CROSSHAIR VI HERO,
-> * PRIME X399-A,
-> * PRIME X470-PRO,
-> * ROG CROSSHAIR VI EXTREME,
-> * ROG CROSSHAIR VI HERO (WI-FI AC),
-> * ROG CROSSHAIR VII HERO,
-> * ROG CROSSHAIR VII HERO (WI-FI),
-> * ROG STRIX B450-E GAMING,
-> * ROG STRIX B450-F GAMING,
-> * ROG STRIX B450-I GAMING,
-> * ROG STRIX X399-E GAMING,
-> * ROG STRIX X470-F GAMING,
-> * ROG STRIX X470-I GAMING,
-> * ROG ZENITH EXTREME,
-> * ROG ZENITH EXTREME ALPHA.
-> 
-> I have removed "ROG STRIX Z390-F GAMING" from list of supported boards in
-> asus_wmi_sensors that I have added by mistake. I had misunderstood a
-> comment in the [1] issue.
-> 
-> I have added separate records for each of modules in MAINTAINERS file.
-> Before it was one shared recors for both of modules.
-> 
-> Could you please review?
-> 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215075
 
-Series applied to hwmon-next.
+            Bug ID: 215075
+           Summary: BUG: scheduling while atomic: cpuhp/1/21/0x00000002
+                    when going out of sleep S3 state
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 5.15.2-arch1-1
+          Hardware: x86-64
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: samy@lahfa.xyz
+        Regression: No
 
-Thanks,
-Guenter
+Created attachment 299641
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D299641&action=3Dedit
+Dmesg log of the bug when going out of sleep S3 state
+
+This bug has begun to happen recently, I do not remember however what was t=
+he
+exact kernel that introduced this bug.
+
+My computer is a Thinkpad T495 with a Ryzen Pro 7 3700U with a integrated
+graphics card a Vega RX 10.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
