@@ -2,63 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03232C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Nov 2021 22:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE737C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Nov 2021 11:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3A2B61A70
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Nov 2021 22:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A23961AA3
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Nov 2021 11:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232778AbhKRW7V (ORCPT
+        id S234854AbhKSLjQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 18 Nov 2021 17:59:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232760AbhKRW7T (ORCPT
+        Fri, 19 Nov 2021 06:39:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234151AbhKSLjQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 18 Nov 2021 17:59:19 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 4031D61526;
-        Thu, 18 Nov 2021 22:56:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637276178;
-        bh=i2HUUY1fwI5VVSu8KruFj5Pz6smY2kjOlpolDga4t0Y=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=CseAM44kaZh3Jt/31YUxOwZjr42g4ogRPOUqFMoRK2gNRfQxABKEzuIaQHFOmiZqq
-         TeKLyVRgEqPgOgD7rMqftiFjdtyZkpaavOJPED1r6YY+SicJR38UtUvebrV3paLAg7
-         EbYKTZaGsY6tylm6ySDXCJuZPdMa8JRZLtPXEv/q5WABxide9V7+G5vNWXKjLcvPt/
-         9Fo4nJ6aEqObSPuApPa55WsrGu5LcwyFpHw92VH/uAcuqZMAvyReZFoxOBcIKKYbXP
-         f/hC9+D/3rmlfkDtoimu+ndpep+r4CCzcJdhvTKgIgrEUeN8WS67xUT2yP7gUFpnv8
-         lqdsrJczdgnGg==
-Subject: Re: [GIT PULL] platform-drivers-x86 for 5.16-2
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <f5ff716f-ba1d-31b1-bad3-e1aadea02931@redhat.com>
-References: <f5ff716f-ba1d-31b1-bad3-e1aadea02931@redhat.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <f5ff716f-ba1d-31b1-bad3-e1aadea02931@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.16-2
-X-PR-Tracked-Commit-Id: d477a907cba317cfa58a8c89c09454d3fced1964
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d1c2b55d84a609c9ede39138d055adcd26fc165f
-Message-Id: <163727617823.9679.11004501176491381787.pr-tracker-bot@kernel.org>
-Date:   Thu, 18 Nov 2021 22:56:18 +0000
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
+        Fri, 19 Nov 2021 06:39:16 -0500
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A3A9C061574;
+        Fri, 19 Nov 2021 03:36:14 -0800 (PST)
+Received: by mail-oi1-x233.google.com with SMTP id q25so21479232oiw.0;
+        Fri, 19 Nov 2021 03:36:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K+HQ+r21ViS1zY/XFw0FQwQ4LY4L5mHZUk1SHH1fhM4=;
+        b=Cmd4vp3AW6JwSbZeWsnovSgI6by7+h5WUnQxr0lX6KC5HfvKCJMy0/JqJGfKrEh3pe
+         8YDLeyqIaxnUg6RqyqjnBAmiboE8Ny7rBm7VgmFZ44N3eUk3pQKJwtFqV4xSIiayv+he
+         oy4YNlaQktN6gMWzZtldPTF2gTbxihs1lR3QLl2+zUUkcfthMLD3nbiF+qQRwTGSvD7I
+         r/9aot3UxWwpqB1BHHsxsmlpFvDgwfcnmK5nBww+lQKwv+gYoObheOXa1fsTgieCWEJZ
+         upLP1PqkWcFpJU0h19nQnL3ieg1fFKyDOfHagap0sYsfJU61HI9m8I0J0wjLlgLJxATr
+         Omwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K+HQ+r21ViS1zY/XFw0FQwQ4LY4L5mHZUk1SHH1fhM4=;
+        b=Y01LdbntErVSnBigVbg0s+GmaB7bL++V6tqL/vbS8Tzd9onTdATUPEJqLn7mUMMGVz
+         pgK6UiQdI4s2Db82XMTXTZ1d9w62CVgHmzZZXEM6OzbmyJ3MySLR90uMI/vIdKlECyn1
+         +0y2GK8U2dTHMan/IjcEfKs9KAUeU+FD6KeD5ZlQqaiblU8lzEmwgdlokLL/h90F/f8Q
+         LhkryBYBVKtGvCfNyy1l3zVIPF17qWrpDwfY+HOo1TezafVaVuiK62X8cVR5/ephEBYC
+         1wPHZJ7juXJKdZ4b1WklvVspqcw9ubGDaAmAi7iKjGNeR1+T3FJV+boLeB0K1oliYt2a
+         reIw==
+X-Gm-Message-State: AOAM531TFl54fXYTzzM/e9NYk73wG0wH2ldRbiVkqxM3uYoSRMZjJ7f9
+        ekU+qaiNTvwiwKjIVJbvb/mnAwjh97g=
+X-Google-Smtp-Source: ABdhPJw+qGmW9tHCSLtWT35tqWAeN1SpSRNcGUhcL81PWpTcBO1BUPc8XRgQBJED48X+HVElDSDpkg==
+X-Received: by 2002:a05:6808:7db:: with SMTP id f27mr4345868oij.83.1637321773628;
+        Fri, 19 Nov 2021 03:36:13 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f12sm493987ote.75.2021.11.19.03.36.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Nov 2021 03:36:13 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCH v12 0/2] Update ASUS WMI supported boards
+To:     Denis Pauk <pauk.denis@gmail.com>
+Cc:     eugene.shalygin@gmail.com, andy.shevchenko@gmail.com,
+        platform-driver-x86@vger.kernel.org, thomas@weissschuh.net,
+        kernel@maidavale.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20211116205744.381790-1-pauk.denis@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <f0bf01fa-ccd8-3a6a-8fd2-4c785fa212ef@roeck-us.net>
+Date:   Fri, 19 Nov 2021 03:36:10 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+MIME-Version: 1.0
+In-Reply-To: <20211116205744.381790-1-pauk.denis@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Thu, 18 Nov 2021 10:49:58 +0100:
+On 11/16/21 12:57 PM, Denis Pauk wrote:
+> Add support by WMI interface provided by Asus for B550/X570 boards:
+> * PRIME X570-PRO,
+> * ROG CROSSHAIR VIII HERO
+> * ROG CROSSHAIR VIII DARK HERO
+> * ROG CROSSHAIR VIII FORMULA
+> * ROG STRIX X570-E GAMING
+> * ROG STRIX B550-I GAMING
+> * ROG STRIX B550-E GAMING
+> 
+> Add support by WMI interface provided by Asus for X370/X470/
+> B450/X399 boards:
+> * ROG CROSSHAIR VI HERO,
+> * PRIME X399-A,
+> * PRIME X470-PRO,
+> * ROG CROSSHAIR VI EXTREME,
+> * ROG CROSSHAIR VI HERO (WI-FI AC),
+> * ROG CROSSHAIR VII HERO,
+> * ROG CROSSHAIR VII HERO (WI-FI),
+> * ROG STRIX B450-E GAMING,
+> * ROG STRIX B450-F GAMING,
+> * ROG STRIX B450-I GAMING,
+> * ROG STRIX X399-E GAMING,
+> * ROG STRIX X470-F GAMING,
+> * ROG STRIX X470-I GAMING,
+> * ROG ZENITH EXTREME,
+> * ROG ZENITH EXTREME ALPHA.
+> 
+> I have removed "ROG STRIX Z390-F GAMING" from list of supported boards in
+> asus_wmi_sensors that I have added by mistake. I had misunderstood a
+> comment in the [1] issue.
+> 
+> I have added separate records for each of modules in MAINTAINERS file.
+> Before it was one shared recors for both of modules.
+> 
+> Could you please review?
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.16-2
+Series applied to hwmon-next.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d1c2b55d84a609c9ede39138d055adcd26fc165f
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks,
+Guenter
