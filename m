@@ -2,126 +2,87 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131A8C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Nov 2021 17:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266D5C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Nov 2021 19:11:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236996AbhKURVb (ORCPT
+        id S238433AbhKUTOl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 21 Nov 2021 12:21:31 -0500
-Received: from mga09.intel.com ([134.134.136.24]:28944 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230330AbhKURVb (ORCPT
+        Sun, 21 Nov 2021 14:14:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26977 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236275AbhKUTOl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 21 Nov 2021 12:21:31 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10175"; a="234504093"
-X-IronPort-AV: E=Sophos;i="5.87,252,1631602800"; 
-   d="scan'208";a="234504093"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2021 09:18:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,252,1631602800"; 
-   d="scan'208";a="595517457"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Nov 2021 09:18:25 -0800
-Received: from mradosav-MOBL1.amr.corp.intel.com (unknown [10.252.142.12])
-        by linux.intel.com (Postfix) with ESMTP id 3D3AC5807C5;
-        Sun, 21 Nov 2021 09:18:25 -0800 (PST)
-Message-ID: <4d8ba355de09a4a806b6075305ca8d7156dc70ef.camel@linux.intel.com>
-Subject: Re: [PATCH 4/4] platform/x86: Add Intel Software Defined Silicon
- driver
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Sun, 21 Nov 2021 09:18:25 -0800
-In-Reply-To: <YZo8HUxx8LNgOMeK@kroah.com>
-References: <20211120231705.189969-1-david.e.box@linux.intel.com>
-         <20211120231705.189969-5-david.e.box@linux.intel.com>
-         <YZo8HUxx8LNgOMeK@kroah.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        Sun, 21 Nov 2021 14:14:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1637521895;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6XIXbl+8EJQw9dZh+l4BilTITBLoNSkBH5I99dzusOY=;
+        b=FYvgVq2IiKofG+HXqpn+rpva20aX5Y+qMMki4CtlOJlCQ5D+p1fV2r/lwH5DQvFgEYRsFP
+        sNICS7iOxBjaP0iTRL/0znwDLqB0dl1mNBvtfTsnCttbKE5ZviIntPa4NgxlDi6Ta0X3/e
+        MdHVf7iO3gXaAX/nXuEeuXcmFmKo6R8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-204-BYAa2SIONz6m4M5AkLnPQA-1; Sun, 21 Nov 2021 14:11:32 -0500
+X-MC-Unique: BYAa2SIONz6m4M5AkLnPQA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EB49102C886;
+        Sun, 21 Nov 2021 19:11:31 +0000 (UTC)
+Received: from x1.localdomain (unknown [10.39.192.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E83F85DF21;
+        Sun, 21 Nov 2021 19:11:29 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mark Pearson <markpearson@lenovo.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 0/7] thinkpad_acpi: 1 bugfix + a bunch of cleanups
+Date:   Sun, 21 Nov 2021 20:11:22 +0100
+Message-Id: <20211121191129.256713-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Greg,
+Hi All,
 
-On Sun, 2021-11-21 at 13:31 +0100, Greg KH wrote:
-> On Sat, Nov 20, 2021 at 03:17:05PM -0800, David E. Box wrote:
-> > +static ssize_t registers_read(struct file *filp, struct kobject *kobj,
-> > +			      struct bin_attribute *attr, char *buf, loff_t off,
-> > +			      size_t count)
-> > +{
-> > +	struct device *dev = kobj_to_dev(kobj);
-> > +	struct sdsi_priv *priv = dev_get_drvdata(dev);
-> > +	void __iomem *addr = priv->regs_addr;
-> > +
-> > +	memcpy_fromio(buf, addr + off, count);
-> 
-> Oh nice, this will be fun if I provide "interesting" values for off to
-> the function right?
-> 
-> Remember:
-> 	All input is evil.
+Here is a patch-series for the thinkpad_acpi driver starting with one
+important bugfix which fixes a bug introduced by commit 79f960e29cfc
+("platform/x86: thinkpad_acpi: Convert platform driver to use dev_groups")
+in platform-drivers-x86/for-next which is causing the driver to not load
+at all on many devices.
 
-I was relying on sysfs_kf_bin_read() which checks off (pos) before calling us.
+Followed by a bunch of cleanup patches.
 
-        if (size) {
-                if (pos >= size)
-                        return 0;
-                if (pos + count > size)
-                        count = size - pos;
-        }
+Please test and review.
 
-> 
-> > +
-> > +	return count;
-> > +}
-> > +static BIN_ATTR(registers, 0400, registers_read, NULL, SDSI_SIZE_REGS);
-> > +
-> > +static struct bin_attribute *sdsi_bin_attrs[] = {
-> > +	&bin_attr_registers,
-> > +	&bin_attr_state_certificate,
-> > +	&bin_attr_provision_akc,
-> > +	&bin_attr_provision_cap,
-> > +	NULL
-> > +};
-> > +
-> > +static ssize_t guid_show(struct device *dev, struct device_attribute *attr,
-> > char *buf)
-> > +{
-> > +	struct sdsi_priv *priv = dev_get_drvdata(dev);
-> > +
-> > +	return sprintf(buf, "0x%x\n", priv->guid);
-> 
-> sysfs_emit() please.
-> 
-> These sysfs attributes are crazy.  Who has audited them to be correct
-> and work properly? It feels like there are just buffer overflows
-> waiting to be exploited in them due to the reading/writing of raw memory
-> buffers all over the place.
+Regards,
 
-Agree with the concern. I can submit the tests that were used. Is selftests the
-best place?
+Hans
 
-> 
-> Where is the userspace tool that uses these files?
 
-The tool will be published in the same github repo as the spec once the driver
-is ready.
+Hans de Goede (7):
+  platform/x86: thinkpad_acpi: Accept ibm_init_struct.init() returning
+    -ENODEV
+  platform/x86: thinkpad_acpi: Make *_init() functions return -ENODEV
+    instead of 1
+  platform/x86: thinkpad_acpi: Simplify dytc_version handling
+  platform/x86: thinkpad_acpi: Cleanup dytc_profile_available
+  platform/x86: thinkpad_acpi: Properly indent code in
+    tpacpi_dytc_profile_init()
+  platform/x86: thinkpad_acpi: Remove "goto err_exit" from hotkey_init()
+  platform/x86: thinkpad_acpi: Fix thermal_temp_input_attr sorting
 
-Thanks.
+ drivers/platform/x86/thinkpad_acpi.c | 221 ++++++++++-----------------
+ 1 file changed, 78 insertions(+), 143 deletions(-)
 
-David
-
-> 
-> thanks,
-> 
-> greg k-h
+-- 
+2.31.1
 
