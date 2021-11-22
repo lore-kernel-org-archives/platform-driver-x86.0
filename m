@@ -2,82 +2,87 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2753DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Nov 2021 14:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC44C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Nov 2021 18:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239622AbhKVOyq (ORCPT
+        id S239261AbhKVSbN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 22 Nov 2021 09:54:46 -0500
-Received: from mga02.intel.com ([134.134.136.20]:50520 "EHLO mga02.intel.com"
+        Mon, 22 Nov 2021 13:31:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239546AbhKVOyp (ORCPT
+        id S229853AbhKVSbM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Nov 2021 09:54:45 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10175"; a="222018899"
-X-IronPort-AV: E=Sophos;i="5.87,255,1631602800"; 
-   d="scan'208";a="222018899"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 06:51:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,255,1631602800"; 
-   d="scan'208";a="649471384"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Nov 2021 06:51:38 -0800
-Received: from malshaye-mobl.amr.corp.intel.com (malshaye-mobl.amr.corp.intel.com [10.212.153.61])
-        by linux.intel.com (Postfix) with ESMTP id EB53E5807C8;
-        Mon, 22 Nov 2021 06:51:37 -0800 (PST)
-Message-ID: <7ba2c0c40b3abeecdef0eacb46d957aaa2fd24bf.camel@linux.intel.com>
-Subject: Re: [PATCH 4/4] platform/x86: Add Intel Software Defined Silicon
- driver
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
+        Mon, 22 Nov 2021 13:31:12 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BAC8160F6F;
+        Mon, 22 Nov 2021 18:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637605686;
+        bh=konvSo77Cx8ln8EJy9hBJpfgeh2p+6Im9gPnwaVvtcE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KAoHQNfLF2Vjg4BscPPxWDJ0g3M4DFTf8kY7Ac+dD9nfCBSd+Ya+iAcqVAHZRZHWe
+         6/oOOfNQkyJFtScp+pZe+cVhbdU6TfHDwPzm623zb3cE0HwZDe+9mepaj0yHgqJkts
+         BUxazuHp2yEK+m3UCIbZleOqik4WeTp1nCJtoi1ufE0C4+OUN8PmVBpkjEmMwBUbzz
+         nj3Em69KVmtH+6Hn5Iuo1RT4o7rRzXnVNR/301UWRd/e0uef56vADR+I3+ZnuPeI5b
+         OorpzgMfyavFPbk2F6x/EouklIfzULQF3hJuRJTwzranrrBCCKTWNs0mYKtxbAk7k8
+         ufbAPbXbTOZ4Q==
+Date:   Mon, 22 Nov 2021 12:28:04 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
+Cc:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
+        hdegoede@redhat.com, bhelgaas@google.com,
         andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
         mgross@linux.intel.com, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Mon, 22 Nov 2021 06:51:37 -0800
-In-Reply-To: <YZs28g87GE3XgAKk@kroah.com>
-References: <20211120231705.189969-1-david.e.box@linux.intel.com>
-         <20211120231705.189969-5-david.e.box@linux.intel.com>
-         <YZo8HUxx8LNgOMeK@kroah.com>
-         <4d8ba355de09a4a806b6075305ca8d7156dc70ef.camel@linux.intel.com>
-         <YZs28g87GE3XgAKk@kroah.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+Subject: Re: [PATCH 1/4] PCI: Add #defines for accessing PCIe DVSEC fields
+Message-ID: <20211122182804.GA2157671@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YZo6aczgqoobIcDC@kroah.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2021-11-22 at 07:21 +0100, Greg KH wrote:
-> On Sun, Nov 21, 2021 at 09:18:25AM -0800, David E. Box wrote:
-> > > These sysfs attributes are crazy.  Who has audited them to be correct
-> > > and work properly? It feels like there are just buffer overflows
-> > > waiting to be exploited in them due to the reading/writing of raw memory
-> > > buffers all over the place.
+On Sun, Nov 21, 2021 at 01:24:09PM +0100, Greg KH wrote:
+> On Sat, Nov 20, 2021 at 03:17:02PM -0800, David E. Box wrote:
+> > Add #defines for accessing Vendor ID, Revision, Length, and ID offsets
+> > in the Designated Vendor Specific Extended Capability (DVSEC). Defined
+> > in PCIe r5.0, sec 7.9.6.
 > > 
-> > Agree with the concern. I can submit the tests that were used. Is selftests
-> > the
-> > best place?
-> 
-> Yes.
-> 
-> > > Where is the userspace tool that uses these files?
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  include/uapi/linux/pci_regs.h | 4 ++++
+> >  1 file changed, 4 insertions(+)
 > > 
-> > The tool will be published in the same github repo as the spec once the
-> > driver
-> > is ready.
+> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> > index ff6ccbc6efe9..318f3f1f9e92 100644
+> > --- a/include/uapi/linux/pci_regs.h
+> > +++ b/include/uapi/linux/pci_regs.h
+> > @@ -1086,7 +1086,11 @@
+> >  
+> >  /* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+> >  #define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-Specific Header1 */
+> > +#define  PCI_DVSEC_HEADER1_VID(x)	((x) & 0xffff)
+> > +#define  PCI_DVSEC_HEADER1_REV(x)	(((x) >> 16) & 0xf)
+> > +#define  PCI_DVSEC_HEADER1_LEN(x)	(((x) >> 20) & 0xfff)
+> >  #define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-Specific Header2 */
+> > +#define  PCI_DVSEC_HEADER2_ID(x)		((x) & 0xffff)
 > 
-> Isn't the driver "ready" if you are asking for it to be accepted
-> here?  Why isn't it published already so we can see if it actually is
-> tested?
+> Why does userspace need to have these defines?  What userspace tool is
+> going to use these?
 
-It will be required for the tests anyway, so I'll submit it with them.
+This is pretty typical of other content in pci_regs.h.  There's lots
+of existing content that may not be directly useful to userspace, but
+it's there because it's convenient to have definitions prescribed by
+the spec all together in one place.
 
-Thanks.
+They probably shouldn't go in drivers/pci/pci.h because by definition
+this vendor-specific stuff will be used by vendor-specific drivers but
+not by the PCI core.
 
-David
+I guess these *could* go in include/linux/pci.h, but that wouldn't be
+my first choice because there's nothing similar there.
 
+Bjorn
