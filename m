@@ -2,57 +2,57 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB7CC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Nov 2021 10:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C1FC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Nov 2021 15:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232412AbhKWK0d (ORCPT
+        id S232596AbhKWPxv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 23 Nov 2021 05:26:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33670 "EHLO
+        Tue, 23 Nov 2021 10:53:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbhKWK0c (ORCPT
+        with ESMTP id S232147AbhKWPxv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 Nov 2021 05:26:32 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6B58C061574;
-        Tue, 23 Nov 2021 02:23:24 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id y12so89903162eda.12;
-        Tue, 23 Nov 2021 02:23:24 -0800 (PST)
+        Tue, 23 Nov 2021 10:53:51 -0500
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BDAC061574;
+        Tue, 23 Nov 2021 07:50:43 -0800 (PST)
+Received: by mail-ot1-x334.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso34428004otj.1;
+        Tue, 23 Nov 2021 07:50:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BLa9DhjAB06zjOMfSgJjIOKy1OBWmGUyMeBeCrxhDPM=;
-        b=Yjc2DZtoWkfYgFYqWkVHfSCSLMHFkcfkm7+pw8sL6XLkHwLuwvO8ggrni6VWY0ZRxD
-         WCWtESQLIpI0YeHSQgB62gWiNSjIggf/NCE47SX0nrpyN1eRCMmdedRqu3ksj6sGV54A
-         N84Qcm+vkmmJtyfpNQv13U9QdHT5HYpuAjR9/6Ou9R1zER9lh/yQ55un9Ea2izoRk9mr
-         E30YQaUGwdC4QSdhZNIgz3ot3jcFwtYgv15WPrhOvTmAFX4nnSJ2QIbw+N2CbGekkcXN
-         MBQtNkPcCMi09ZBiCwwEV0qCi+PC8/IRi4g8GbOgf7hJijHg01L1f6AFZ9jdeM93S+UI
-         mfew==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4hIzh/yH7twyHCgqG/Qpcvvbzjw8p7UTAPXaSEcQbuY=;
+        b=BYsFLg4ZuSznGm+fVSngbOtutw4wt2pIMFeNqOcJnDQQ+kyk+htspNcsyLAMymOS/T
+         tScYg7OyC7qgBPEJ32zIKNNkvsVg8/hDdL3i7om6o5W8+SqG8eyHZAKPHhlBs/Ff0vec
+         mPUOmT8M+x2YQGSgK5vPj+qwyKLkHMMpJjxny9pds3HVk48YmNGMVGiq1GLidz6MSZUa
+         Bu0iGwS9H5FMnNa2PAxunIfdFb0SadkuxMxyvusOCcw3hNe10wbFe6FKHfbdaxN1s7k6
+         HNHbHJ8vMJBB1iqaZ82173FJhiGj20HDCn2z35gFV3fxG3g2PIpObi0dgdrfdIjDgKdD
+         kD9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BLa9DhjAB06zjOMfSgJjIOKy1OBWmGUyMeBeCrxhDPM=;
-        b=Tk8gJH87Yl31MSn3lrMuBJ55zlAyMuNsXzUeg/fp02cGrA/xh0cwhpYnFEUL3PfJQ9
-         ZQ5JO9mnzf24oD+8i3Sd5SuA8lXtsNyFMKOfi0M1gkQtlkROrmUbl3XkRcU1nWBvJur/
-         Oe5CckAnBqpt3accEl26DIgNKnE6eh/fJU6UdPlefQ/J8Gpk49l4QvmcYgzrIg2U58Mk
-         orF/BaNOeP3JVQrX87k0JWZg7Y4VrNhZOcucwKo9NHY13dSRoWVlSp20Gww68bGPAqcB
-         QiSj25I3ZJUsef/+yCPffXztLo6SAGCR6QiXSCAg2KDyfCVv3YBapTounD8pysP4zEmW
-         A3Og==
-X-Gm-Message-State: AOAM532PRorjCLDnr+3YvdIkmifYRe2R+zRdUkxdSq0tDetR54SjqwxI
-        8/dsjJPLyosp/4elmwC36+GYkAkQFYvnfOrdBDg=
-X-Google-Smtp-Source: ABdhPJxNzJxqvc8wlpj9WXfx7m31SDwbXPR2ckwtQG9sccF7mwI3Y+q6UybbKU4+If9J90VeQTLvwZXeRSqiKpIxUMM=
-X-Received: by 2002:a17:906:489b:: with SMTP id v27mr5964462ejq.567.1637663003409;
- Tue, 23 Nov 2021 02:23:23 -0800 (PST)
-MIME-Version: 1.0
-References: <20211116205744.381790-1-pauk.denis@gmail.com> <f0bf01fa-ccd8-3a6a-8fd2-4c785fa212ef@roeck-us.net>
-In-Reply-To: <f0bf01fa-ccd8-3a6a-8fd2-4c785fa212ef@roeck-us.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 23 Nov 2021 12:22:46 +0200
-Message-ID: <CAHp75Vfbh+O39C_k9zQqSqsoSro7_gv6QmsxgmdO=woA32Q0HQ@mail.gmail.com>
-Subject: Re: [PATCH v12 0/2] Update ASUS WMI supported boards
-To:     Guenter Roeck <linux@roeck-us.net>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=4hIzh/yH7twyHCgqG/Qpcvvbzjw8p7UTAPXaSEcQbuY=;
+        b=OS38JH/7yLQ49zltYJMV/b5zfrmY868Y7SAcC4R1HPV6kGZMqRs/+maxV9wCHLmC0D
+         GQegdkWgFO61m0/WXKTHC1ErZLIVarJOy/6V8OCnIV4454K7yZCnfMQT3aPV8kdDw9X+
+         jVHjyAYSQM11HOKL6Lhnj1XSCYpdUIEP/gh4ttVu1fB+o2GNZNWdElrufB9g5A1TDqnG
+         H8LaVINdiEA2lE8BS1U/nmzTrjsYEoDdfohv5kYtsOOzSR0XqzSywcmI0crCiyppwofe
+         CazHvrA1xqh9gSIcF5jD5tZE7EBMC8pAcfdmbKyCKvZuAuIBlz6Ean6CHLGL3yXWsyVK
+         kcxw==
+X-Gm-Message-State: AOAM532VTjcSF/JRq1cu9k0DwOupd9Q8XR0/g4okWvhomiteMSgbPkRl
+        NHoo/sKFhOZy0DeqP4XjFAk=
+X-Google-Smtp-Source: ABdhPJxKZp/qWH8tknhZHGj0FM76Yb4ZXcCbSD8Bm3uQZFpzGA2/8oUDhNGLOaJueTuscmZ2u35Qtg==
+X-Received: by 2002:a05:6830:264d:: with SMTP id f13mr5415353otu.43.1637682642641;
+        Tue, 23 Nov 2021 07:50:42 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w17sm550237oth.17.2021.11.23.07.50.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Nov 2021 07:50:42 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Tue, 23 Nov 2021 07:50:40 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Denis Pauk <pauk.denis@gmail.com>,
         Eugene Shalygin <eugene.shalygin@gmail.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
@@ -62,59 +62,28 @@ Cc:     Denis Pauk <pauk.denis@gmail.com>,
         Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
         Linux Documentation List <linux-doc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v12 0/2] Update ASUS WMI supported boards
+Message-ID: <20211123155040.GA2184678@roeck-us.net>
+References: <20211116205744.381790-1-pauk.denis@gmail.com>
+ <f0bf01fa-ccd8-3a6a-8fd2-4c785fa212ef@roeck-us.net>
+ <CAHp75Vfbh+O39C_k9zQqSqsoSro7_gv6QmsxgmdO=woA32Q0HQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vfbh+O39C_k9zQqSqsoSro7_gv6QmsxgmdO=woA32Q0HQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 1:36 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 11/16/21 12:57 PM, Denis Pauk wrote:
-> > Add support by WMI interface provided by Asus for B550/X570 boards:
-> > * PRIME X570-PRO,
-> > * ROG CROSSHAIR VIII HERO
-> > * ROG CROSSHAIR VIII DARK HERO
-> > * ROG CROSSHAIR VIII FORMULA
-> > * ROG STRIX X570-E GAMING
-> > * ROG STRIX B550-I GAMING
-> > * ROG STRIX B550-E GAMING
+On Tue, Nov 23, 2021 at 12:22:46PM +0200, Andy Shevchenko wrote:
 > >
-> > Add support by WMI interface provided by Asus for X370/X470/
-> > B450/X399 boards:
-> > * ROG CROSSHAIR VI HERO,
-> > * PRIME X399-A,
-> > * PRIME X470-PRO,
-> > * ROG CROSSHAIR VI EXTREME,
-> > * ROG CROSSHAIR VI HERO (WI-FI AC),
-> > * ROG CROSSHAIR VII HERO,
-> > * ROG CROSSHAIR VII HERO (WI-FI),
-> > * ROG STRIX B450-E GAMING,
-> > * ROG STRIX B450-F GAMING,
-> > * ROG STRIX B450-I GAMING,
-> > * ROG STRIX X399-E GAMING,
-> > * ROG STRIX X470-F GAMING,
-> > * ROG STRIX X470-I GAMING,
-> > * ROG ZENITH EXTREME,
-> > * ROG ZENITH EXTREME ALPHA.
-> >
-> > I have removed "ROG STRIX Z390-F GAMING" from list of supported boards in
-> > asus_wmi_sensors that I have added by mistake. I had misunderstood a
-> > comment in the [1] issue.
-> >
-> > I have added separate records for each of modules in MAINTAINERS file.
-> > Before it was one shared recors for both of modules.
-> >
-> > Could you please review?
-> >
->
-> Series applied to hwmon-next.
+> > Series applied to hwmon-next.
+> 
+> What is the repository it has been applied to? I don't see it in
+> neither Linux Next nor [1]. It might be that I am missing the
+> workflow.
+> 
 
-What is the repository it has been applied to? I don't see it in
-neither Linux Next nor [1]. It might be that I am missing the
-workflow.
+I had not pushed the branch out. Done now.
 
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git/log/?h=hwmon-next
-
--- 
-With Best Regards,
-Andy Shevchenko
+Guenter
