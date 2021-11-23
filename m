@@ -2,117 +2,118 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D6CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Nov 2021 23:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A67C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Nov 2021 23:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231555AbhKWXFI (ORCPT
+        id S229959AbhKWXaZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 23 Nov 2021 18:05:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40726 "EHLO
+        Tue, 23 Nov 2021 18:30:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229642AbhKWXFI (ORCPT
+        with ESMTP id S240237AbhKWXaU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 Nov 2021 18:05:08 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110EAC061574;
-        Tue, 23 Nov 2021 15:01:59 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id g14so1615458edb.8;
-        Tue, 23 Nov 2021 15:01:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ht9E1p/DyzTpsAqMy6QR1zhTTEv9RdTNX9jIQ90EKf0=;
-        b=qGLwsyoG1Pcf+l323FrU7zfkNsFBiEzV5p5s/wM7Hesk9nWnHJt0R1pIC6iiRlBomj
-         NIf011wRJHUCAZWgYCsyh8UriNs3HfQjBFpDSXeoC/Cg21V2Yz5UOsuUK47O207wyekj
-         +Qejdg9mnrlOc55iDAViSd0Iu/yIUcWRdvDbNskawt0WKFT0NcaMRLUHgG7TR6h2kpUw
-         tOvVadWKaMapJYV7LYcfVTXwrorDKh/VKELoFAFbzKlNi1D8W90hZEziIj5B94Rga1f+
-         iX4JVBap0gLwiltixQTrP9/YoYobHKAzMIaHZadLqsIabt6riHb9XERx98H/MucVrXHh
-         PUHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ht9E1p/DyzTpsAqMy6QR1zhTTEv9RdTNX9jIQ90EKf0=;
-        b=sEwCMuoBAKwemv4VGmf0ap8++9i0Cdnk/0IPMqhzLNd0ZM77C3i6UWLZomf82jdmms
-         VbTnrlafhjjR7338FsGOoygyQBbsE1s/7A2QbwD1Cj6OmjcIIj0fyH7i5XifcjVWhyEL
-         9RIlSMrftGgddT5sE9aUVY31Ecd0W1iWSfikQRJI2zn3MoudZm6j//XifRX3X+PVbT+1
-         QPBRU/25yE0eQyARcyPGFR4XQEYhbBVPSBuv5XoOw2uhQLakQchIfANIWA9jyUnooUOq
-         3IldL7wq/VjNbHmSHNdlPZv/G5ev0Bj2/d4RuDR/9ZmLlIKHdxRz2Tymw5I33wxtJaBC
-         vSqg==
-X-Gm-Message-State: AOAM53032+ZmkPo380Fxs7djAaXROpKSxtt3VhGBFTHB0vj+ccepa454
-        vK2gkXYocNylyujNMiN5kGxxVZatqEeciurF/gQ=
-X-Google-Smtp-Source: ABdhPJyGkjWgdJNmrGbvK5UhP73uvpIxjmfUItuL6e+QCzmzGC5HR6vmcZUBZndWYGeq7YneJzPMHREKrcnGnGuWkB8=
-X-Received: by 2002:a17:906:6a0a:: with SMTP id qw10mr13399358ejc.141.1637708517524;
- Tue, 23 Nov 2021 15:01:57 -0800 (PST)
+        Tue, 23 Nov 2021 18:30:20 -0500
+Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A60E6C061574;
+        Tue, 23 Nov 2021 15:27:11 -0800 (PST)
+From:   =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
+        s=mail; t=1637710028;
+        bh=SZYLz9pODZYhp1MPf438WzgYeqxIh6cyZNNo+eLNyiI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hWN8rkyGx/czcemUfLKEY/DftrxEJYrMHZqBUsVqt91Ak4lgZ6b33Dg99Va0FwvId
+         5anYDVmzroeWtQeN8C2gkXn3faA6P8N7JWnykqxOc5n33wifVz0d+ujVTiv9LEV2XP
+         PUZWr7qcm8ZAOk59SUxd0d+d7rrjQLfMYU4WSovM=
+To:     linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        linux-kernel@vger.kernel.org, linrunner@gmx.net, bberg@redhat.com,
+        hadess@hadess.net, markpearson@lenovo.com,
+        nicolopiazzalunga@gmail.com, njoshi1@lenovo.com, smclt30p@gmail.com
+Subject: [PATCH v2 1/4] power: supply: add charge_behaviour attributes
+Date:   Wed, 24 Nov 2021 00:27:01 +0100
+Message-Id: <20211123232704.25394-2-linux@weissschuh.net>
+X-Mailer: git-send-email 2.34.0
+In-Reply-To: <20211123232704.25394-1-linux@weissschuh.net>
+References: <20211123232704.25394-1-linux@weissschuh.net>
 MIME-Version: 1.0
-References: <20211123163149.1530535-1-tanureal@opensource.cirrus.com>
- <20211123163149.1530535-12-tanureal@opensource.cirrus.com>
- <87af37a2-dc02-2ae0-a621-b82c8601c16c@redhat.com> <756f813c-cc3e-7ddf-e5db-cf6c874f907e@opensource.cirrus.com>
- <1605be8d-0913-4b52-32e2-8076fff01d30@redhat.com>
-In-Reply-To: <1605be8d-0913-4b52-32e2-8076fff01d30@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 24 Nov 2021 01:01:21 +0200
-Message-ID: <CAHp75VcanaEU89LXCs_CaBC5WvhotyuTeeS2FSxqhZntbz5FFg@mail.gmail.com>
-Subject: Re: [PATCH 11/11] ACPI / scan: Create platform device for CLSA0100
- ACPI nodes
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Lucas tanure <tanureal@opensource.cirrus.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Kailang Yang <kailang@realtek.com>,
-        Shuming Fan <shumingf@realtek.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        David Rhodes <david.rhodes@cirrus.com>,
-        Vitaly Rodionov <vitalyr@opensource.cirrus.com>,
-        Jeremy Szu <jeremy.szu@canonical.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Werner Sembach <wse@tuxedocomputers.com>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Cameron Berkenpas <cam@neo-zeon.de>,
-        Sami Loone <sami@loone.fi>, Elia Devito <eliadevito@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Jack Yu <jack.yu@realtek.com>, Arnd Bergmann <arnd@arndb.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1637710019; l=2492; s=20211113; h=from:subject; bh=SZYLz9pODZYhp1MPf438WzgYeqxIh6cyZNNo+eLNyiI=; b=wEL2amfTqT1FYd22a4d7WEiSv3LHb/lYYaZ7ZkQQhWQcBIuUWr92Dru0OR29hjho/e3lJMWFXUQR p6TSb02cDo2UtQok+PIrNP2zesS2ITVHAJU1u3lqwBsslWPDjf8O
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519; pk=9LP6KM4vD/8CwHW7nouRBhWLyQLcK1MkP6aTZbzUlj4=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 23, 2021 at 8:36 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 11/23/21 18:11, Lucas tanure wrote:
-> > On 11/23/21 17:05, Hans de Goede wrote:
-> >> On 11/23/21 17:31, Lucas Tanure wrote:
-> >>> The ACPI device with CLSA0100 is a sound card with multiple
-> >>> instances of CS35L41.
-> >>>
-> >>> We add an ID to the I2C multi instantiate list to enumerate
-> >>> all I2C slaves correctly.
+This a revised version of
+"[RFC] add standardized attributes for force_discharge and inhibit_charge" [0],
+incorporating discussion results.
 
-...
+The biggest change is the switch from two boolean attributes to a single
+enum attribute.
 
-> >>> @@ -1708,6 +1708,7 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
-> >>>           {"BSG2150", },
-> >>>           {"INT33FE", },
-> >>>           {"INT3515", },
+[0] https://lore.kernel.org/platform-driver-x86/21569a89-8303-8573-05fb-c2fec29983d1@gmail.com/
 
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ Documentation/ABI/testing/sysfs-class-power | 14 ++++++++++++++
+ include/linux/power_supply.h                |  7 +++++++
+ 2 files changed, 21 insertions(+)
 
-> >>> +        {"CLSA0100", },
-
-Can we keep it sorted, please?
-Ditto for the other driver.
-
-> >>>           {}
-
+diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+index f7904efc4cfa..cece094764f8 100644
+--- a/Documentation/ABI/testing/sysfs-class-power
++++ b/Documentation/ABI/testing/sysfs-class-power
+@@ -455,6 +455,20 @@ Description:
+ 			      "Unknown", "Charging", "Discharging",
+ 			      "Not charging", "Full"
+ 
++What:		/sys/class/power_supply/<supply_name>/charge_behaviour
++Date:		November 2021
++Contact:	linux-pm@vger.kernel.org
++Description:
++		Represents the charging behaviour.
++
++		Access: Read, Write
++
++		Valid values:
++			================ ====================================
++			auto:            Charge normally, respect thresholds
++			inhibit-charge:  Do not charge while AC is attached
++			force-discharge: Force discharge while AC is attached
++
+ What:		/sys/class/power_supply/<supply_name>/technology
+ Date:		May 2007
+ Contact:	linux-pm@vger.kernel.org
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index 9ca1f120a211..70c333e86293 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -132,6 +132,7 @@ enum power_supply_property {
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD, /* in percents! */
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD, /* in percents! */
++	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
+ 	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
+ 	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
+ 	POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
+@@ -202,6 +203,12 @@ enum power_supply_usb_type {
+ 	POWER_SUPPLY_USB_TYPE_APPLE_BRICK_ID,	/* Apple Charging Method */
+ };
+ 
++enum power_supply_charge_behaviour {
++	POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO = 0,
++	POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE,
++	POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE,
++};
++
+ enum power_supply_notifier_events {
+ 	PSY_EVENT_PROP_CHANGED,
+ };
 -- 
-With Best Regards,
-Andy Shevchenko
+2.34.0
+
