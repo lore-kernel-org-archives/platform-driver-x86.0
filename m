@@ -2,107 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA28C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Nov 2021 14:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AB5C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Nov 2021 15:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354590AbhKXOKX (ORCPT
+        id S1347013AbhKXP5G (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Nov 2021 09:10:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55244 "EHLO mail.kernel.org"
+        Wed, 24 Nov 2021 10:57:06 -0500
+Received: from todd.t-8ch.de ([159.69.126.157]:38319 "EHLO todd.t-8ch.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1354592AbhKXOI1 (ORCPT
+        id S237606AbhKXP5F (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Nov 2021 09:08:27 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E2880611BF;
-        Wed, 24 Nov 2021 13:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637760715;
-        bh=QFU9huopJ1xeYjSSB6nMmQbA/vbauGkKaHZqMRU4bS8=;
+        Wed, 24 Nov 2021 10:57:05 -0500
+Date:   Wed, 24 Nov 2021 16:53:51 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=t-8ch.de; s=mail;
+        t=1637769232; bh=7nNK0HfvYKWkyadfEm8cdojoRbJZhadbEjbd85EFuew=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LIJ/fP9hdSBqgYZhCG+OgB2C952jBEWuMu1dHcaN4OZEqbJqcqf4apX8F4LAU68UA
-         jquyUrJ27zsTNsAQioCetNH3bWP/6qMB4Xllw6GExBZYJoihHO/+CPF4ADTqdFjXRv
-         aXLRW7dXExZ06tGush5Jh41lWAD4Te04qgOF5ejWCVttgN9MK0a1zSO/XORibilYoj
-         +zWvrn5b/uutGFA28JnoBTpeUu4UFbTJ6j/2EF6lH1BJk8LXAyF6uLMsC5x4aXQihk
-         BaF457+Fp4nw8qTa76MziQVv3DrFuq5dqCqk801oC1rTX/li2hN+yYMB5NMBBQnVKE
-         qmHCcr0xaJVfQ==
-Date:   Wed, 24 Nov 2021 13:31:46 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Lucas Tanure <tanureal@opensource.cirrus.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kailang Yang <kailang@realtek.com>,
-        Shuming Fan <shumingf@realtek.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        David Rhodes <david.rhodes@cirrus.com>,
-        Vitaly Rodionov <vitalyr@opensource.cirrus.com>,
-        Jeremy Szu <jeremy.szu@canonical.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Werner Sembach <wse@tuxedocomputers.com>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Cameron Berkenpas <cam@neo-zeon.de>,
-        Sami Loone <sami@loone.fi>, Elia Devito <eliadevito@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Jack Yu <jack.yu@realtek.com>, Arnd Bergmann <arnd@arndb.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        alsa-devel@alsa-project.org, linux-acpi@vger.kernel.org,
-        patches@opensource.cirrus.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/11] ASoC: cs35l41: Create function for init array of
- Supplies
-Message-ID: <YZ4+wu5aaku4u6qA@sirena.org.uk>
-References: <20211123163149.1530535-1-tanureal@opensource.cirrus.com>
- <20211123163149.1530535-5-tanureal@opensource.cirrus.com>
- <YZ0r2s1z15yXLVhb@sirena.org.uk>
+        b=CABk3CZOF/zAGiKhwJ3tPnBOPhJ3F23Gx5YzFn/Nt/eoXMucn6AdrWvNpEjVq3H+n
+         TKmz2CYToPvX3x3aGbIBNT7QdciDPQ/jiZYvfHJUKE+M8a1PeI7XAR+HvgFru2JvYx
+         j+Q+wcniP0t2gHZdzXcAyu1fncwce49p8fQUcNpo=
+From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mark Pearson <markpearson@lenovo.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 2/2] platform/x86: thinkpad_acpi: Add lid-logo-led to the
+ list of safe LEDs
+Message-ID: <ca16bf3e-2efe-49a6-94a2-4aeb66f398dc@t-8ch.de>
+References: <20211123210524.266705-1-hdegoede@redhat.com>
+ <20211123210524.266705-2-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Lkt1foV1iL9BAfKp"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YZ0r2s1z15yXLVhb@sirena.org.uk>
-X-Cookie: (null cookie
+In-Reply-To: <20211123210524.266705-2-hdegoede@redhat.com>
+Jabber-ID: thomas@t-8ch.de
+X-Accept: text/plain, text/html;q=0.2, text/*;q=0.1
+X-Accept-Language: en-us, en;q=0.8, de-de;q=0.7, de;q=0.6
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
---Lkt1foV1iL9BAfKp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2021-11-23 22:05+0100, Hans de Goede wrote:
+> There have been various bugs / forum threads about allowing control of
+> the LED in the ThinkPad logo on the lid of various models.
+> 
+> This seems to be something which users want to control and there really
+> is no reason to require setting CONFIG_THINKPAD_ACPI_UNSAFE_LEDS for this.
+> 
+> The lid-logo-led is LED number 10, so change the name of the 10th led
+> from unknown_led2 to lid_logo_led and add it to the TPACPI_SAFE_LEDS mask.
+> 
+> Link: https://www.reddit.com/r/thinkpad/comments/7n8eyu/thinkpad_led_control_under_gnulinux/
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1943318
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 49fdf16b2db9..28f0299ecab0 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -5661,11 +5661,11 @@ static const char * const tpacpi_led_names[TPACPI_LED_NUMLEDS] = {
+>  	"tpacpi::standby",
+>  	"tpacpi::dock_status1",
+>  	"tpacpi::dock_status2",
+> -	"tpacpi::unknown_led2",
+> +	"tpacpi::lid_logo_led",
 
-On Tue, Nov 23, 2021 at 05:58:59PM +0000, Mark Brown wrote:
-> On Tue, Nov 23, 2021 at 04:31:42PM +0000, Lucas Tanure wrote:
+The suffix "_led" looks a bit redundant. Also non of the other LEDs have it.
 
-> > +	ret = regulator_bulk_enable(CS35L41_NUM_SUPPLIES, supplies);
-> > +	if (ret != 0) {
-> > +		dev_err(dev, "Failed to enable core supplies: %d\n", ret);
-> > +		return ret;
-> > +	}
+Also currently the reported brightness is 0 before writing to it, although the
+LED is powered on by default, not sure how this could be fixed though.
 
-> Where's the matching disable, I didn't see anything in the HDA code?  It
-> is there in cs35l41_remove() in the CODEC driver but there's nothing
-> sharing that bit of code here that I noticed.
+>  	"tpacpi::unknown_led3",
+>  	"tpacpi::thinkvantage",
+>  };
+> -#define TPACPI_SAFE_LEDS	0x1081U
+> +#define TPACPI_SAFE_LEDS	0x1481U
+>  
+>  static inline bool tpacpi_is_led_restricted(const unsigned int led)
+>  {
 
-Relatedly, given that the HDA stuff will most likely only be used on
-ACPI systems are you sure it needs to handle regulators at all?
-
---Lkt1foV1iL9BAfKp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmGePsEACgkQJNaLcl1U
-h9AqFAf+LegJkpoeZg0eJ9EnAmsGSQK73vyaOr+rEHjY4AAFPg11h5r7lfZGByW6
-VAGiGnwJFEIG5OMtGM327Q4xnT7E3PdKxx+p6isIHRvKQy1S/Sgr4zap8WiDnna5
-K8i/jr4dpYmItrfOuWKxoTTlv5W7uGpY+4VPi40oP9Z5LJlxWtwTpWptw/mJPw0t
-UTSn59eX+7dc9B+PJOg68yekHDmVlpNdzVpgGTtoSVGELQ7XoZlPQap0Szj1RsQF
-5U2ztjSjNvsyb8LdyMpw1uy7XVuIniKJtYtC+BgV8of5kxbdqcTTizANTV9VuBAW
-Znu1rJBHlrfNR+kaGEAnMEohvVUpyg==
-=tasH
------END PGP SIGNATURE-----
-
---Lkt1foV1iL9BAfKp--
+Thomas
