@@ -2,98 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7266C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Nov 2021 16:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CE9C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Nov 2021 17:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230403AbhKXQdu (ORCPT
+        id S229661AbhKXRjr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Nov 2021 11:33:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348911AbhKXQdt (ORCPT
+        Wed, 24 Nov 2021 12:39:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229538AbhKXRjq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Nov 2021 11:33:49 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EF5CC061574
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Nov 2021 08:30:39 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id x6so12997649edr.5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Nov 2021 08:30:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XKNBajIsglAzZe0y/vL//Ni5Us7zXEMN6Pat+pnlU1g=;
-        b=oQ4GFnFYFGWjc10X84dgjEwdcPPmEadSws3mdS6kPHHKfYV+F0vZJAmDcKO9w9cy8w
-         CX0SNGskoPWc1qmZAVx+rDbyK7Ekd6bBBRJw18mPxZJM7gfduinik4AREWUS1/zENS39
-         eN/DBntv+9HtSAHx/9lp+G+xrs2T8R6ZlTb2tUxG047cs2huBs66X79ciS7IiN0Gr8j+
-         7QqUh3ENkALW1jufwfhKp+Osi0F2uwwH3ms3Pk/cUOeWfyK5U3xJoDX8K6Ovm+8vLJhW
-         n2RbXSeiU4YKFR0JXwPKNPjicOZQAhw6ChMvBPVgDXVGJDaFLakJxSboTbdu1iAGUWub
-         E/bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XKNBajIsglAzZe0y/vL//Ni5Us7zXEMN6Pat+pnlU1g=;
-        b=D8iG57C893tiJfLYsuG7XoA89fXvzWjGC2Vu1NfSK/CJzOsl/pLaMYrJHfF1M8ENnb
-         0JHL0xFYACm7jzBiWQ6bewJ6HuUNaB90EG7HeK2/Nw5SKNYsVnhdTpUwJDW9ocUa2M8e
-         x1cjDXxxOjKAXU4bmqfWYZaNEO0FzY/CiN5Y6JGSJ7rBtoSsikBYYBvMP6n41tEucqgF
-         gLkl50Z4z94EcTGoHSrIq4U0shQtJg/UJRZc0FBtIYBgUPkbeS7S5l9MTUh/NW6pYxxs
-         L/5ATD/a60Sj13KMbJROtAGzRiwwcWF9X7h4r1Vrsy2Fzo46vpoRUnraPQ9GexB66J6O
-         fnxA==
-X-Gm-Message-State: AOAM533uWVGaEObsdeUh5dpzGq8KFjo5wP5uOOglAcCnEY6fKZIlQ1jb
-        k/LBlnQwiaN1Kwlex+9ExmWd5kCp2OeEEKwCLG4=
-X-Google-Smtp-Source: ABdhPJz7xb1BfgtROA0don+gqkNgZgdwyPZLJ83mtFR3FLOz/MbdkHDTye+/3WssarPWcxbFBm/mhN2GfmEFO3MIPgE=
-X-Received: by 2002:a50:fd16:: with SMTP id i22mr26763316eds.224.1637771438102;
- Wed, 24 Nov 2021 08:30:38 -0800 (PST)
+        Wed, 24 Nov 2021 12:39:46 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D46D760FE3;
+        Wed, 24 Nov 2021 17:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637775396;
+        bh=HmpZ/PgUokyQPcT3gkW2G68BXXRTTkFFIjflrvUeDeg=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=dZ2UsOvQoRZrv0cH6UL+Xr4aUgGtGWoib5B1mgMftX6fEQTp29HHNQZwr7AzrHWkM
+         qxiobFcepuKJIdMWgAjbXBwS11s3tbpXjJRqzqUgHfJNt1zNTtKmhk9K+qg6jOq40v
+         2vQvSKw3M8jb39mnaN3paQo8SXtyg7k6SW6xXOKn+cb3o09bJ1fqroDIBEeP5F0nhK
+         IW+8XLI1fYeEBcwuoCPYSMr30CeHUDLpTENtPq4VF/5CHBMAqL6N2hzyAxM4cH7JHc
+         R9yG9Eg1241pw4sOK9YGRVoFKxiDcXFSx1hqPsnLs0usjbj5m/GeYZbD049HxsZTuR
+         FiQ0J7cvlgeSQ==
+From:   Mark Brown <broonie@kernel.org>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Kailang Yang <kailang@realtek.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Shuming Fan <shumingf@realtek.com>,
+        David Rhodes <david.rhodes@cirrus.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Lucas Tanure <tanureal@opensource.cirrus.com>,
+        Vitaly Rodionov <vitalyr@opensource.cirrus.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        Cameron Berkenpas <cam@neo-zeon.de>,
+        platform-driver-x86@vger.kernel.org,
+        Jeremy Szu <jeremy.szu@canonical.com>,
+        alsa-devel@alsa-project.org, Hui Wang <hui.wang@canonical.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sami Loone <sami@loone.fi>,
+        Werner Sembach <wse@tuxedocomputers.com>,
+        Elia Devito <eliadevito@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Jack Yu <jack.yu@realtek.com>, patches@opensource.cirrus.com
+In-Reply-To: <20211123163149.1530535-1-tanureal@opensource.cirrus.com>
+References: <20211123163149.1530535-1-tanureal@opensource.cirrus.com>
+Subject: Re: (subset) [PATCH v3 00/11] Add support for Legion 7 16ACHg6 laptop
+Message-Id: <163777539060.2712035.8727444012645430033.b4-ty@kernel.org>
+Date:   Wed, 24 Nov 2021 17:36:30 +0000
 MIME-Version: 1.0
-References: <c752b3b2-9718-bd9a-732d-e165aa8a1fca@svgalib.org>
-In-Reply-To: <c752b3b2-9718-bd9a-732d-e165aa8a1fca@svgalib.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 24 Nov 2021 18:30:01 +0200
-Message-ID: <CAHp75VdxCaRJ9Dg-ruHOfiX3Y8yzzKX_fC7txPPn9JypXt9Mow@mail.gmail.com>
-Subject: Re: [PATCH] lg-laptop: Recognize more models
-To:     Matan Ziv-Av <matan@svgalib.org>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 24, 2021 at 1:27 AM Matan Ziv-Av <matan@svgalib.org> wrote:
+On Tue, 23 Nov 2021 16:31:38 +0000, Lucas Tanure wrote:
+> Add support for laptops that have CS35L41 connected to an
+> HDA codec by I2S and direct I2C/SPI connection to the CPU
+> 
+> Hardware:
+>  - The 16ACHg6 laptop has two CS35L41 amplifiers, connected
+> to Realtek ALC287 by an I2S bus and by and direct I2C to the CPU.
+>  - The ALC287 codec is connected to the CPU by an HDA bus.
+>  - The CS35L41 has a DSP which will require firmware to be loaded.
+> 
+> [...]
 
-> LG uses 5 instead of 0 in the third digit (second digit after 2019)
-> of the year string to indicate newer models in the same year. Handle
-> this case as well.
+Applied to
 
->         if (product && strlen(product) > 4)
->                 switch (product[4]) {
->                 case '5':
-> +                       if (strlen(product) > 5)
-> +                               switch (product[5]) {
-> +                               case 'N':
-> +                                       year = 2021;
-> +                                       break;
-> +                               case '0':
-> +                                       year = 2016;
-> +                                       break;
-> +                               default:
-> +                                       year = 2022;
-> +                               }
-> +                       break;
->                 case '6':
->                         year = 2016;
->                         break;
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-linus
 
-Actually you may replace all those `if (strlen(product) > $X) {}` and
-accompanied indentation level by adding corresponding
-  case '\0':
-    break;
-into the switches, but this is out of scope here as it should be a
-separate change, if any.
+Thanks!
 
+[01/11] ASoC: cs35l41: Set the max SPI speed for the whole device
+        commit: 872fc0b6bde8b2dd6891c740cd792d214255dca3
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
--- 
-With Best Regards,
-Andy Shevchenko
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
