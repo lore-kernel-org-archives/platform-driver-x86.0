@@ -2,53 +2,53 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFD4C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Nov 2021 20:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B40C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Nov 2021 20:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236535AbhKXUig (ORCPT
+        id S236647AbhKXUit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Nov 2021 15:38:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48030 "EHLO
+        Wed, 24 Nov 2021 15:38:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234742AbhKXUif (ORCPT
+        with ESMTP id S234742AbhKXUit (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Nov 2021 15:38:35 -0500
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4414C061574
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Nov 2021 12:35:25 -0800 (PST)
-Received: by mail-ua1-x934.google.com with SMTP id n6so7802267uak.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Nov 2021 12:35:25 -0800 (PST)
+        Wed, 24 Nov 2021 15:38:49 -0500
+Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BEB6C061574
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Nov 2021 12:35:39 -0800 (PST)
+Received: by mail-ua1-x933.google.com with SMTP id j14so7690095uan.10
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Nov 2021 12:35:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=eclypsium.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WWVyA9rAT+6UqFks6dTFD+XM7gB7oWrs5iYRikzxmOM=;
-        b=WbV062ADcaZlzsRT9vd/XbsLpKxMq4laIhRub0+tanSWZYatiUAH62How4J6UgXjFg
-         rPtzDYLvTqq9GK/SduFeKNyWsuzktleUUfnRTJjODk1n+yvHggF7Qj4leP5WZdUUeaom
-         9+jA155t5D0njV65l023h2ejKQv9MMI/S811FJfMvdw9yp4pMFSIynSNxXLGI8byI1i3
-         q7ANTDB+xo6j48lg3HW+/jcaIMntmdob9wRbyudnmEuukieMDHGUN6M773xj4RnpapEw
-         7QydoqlalZXaszL67EqBE7Aklucyr89rxb1ppnhx9no+8u+FShiGO6C6fiIGfK+v6XtG
-         laRw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=A1xzUXa5x5Bog8pkez/HAfQHT5aX9xfLkxwoJiQMbWc=;
+        b=R/VkjXX7MeaPnAJhsMccTmDjScX+FGCDi/gWTGbEyxNzjTrosEp2TMkxq4Q8QqnWX3
+         EiR05kKzaCua2T5uLpS4x+98C9oM8i3LlhzcnBDeRGC24fGAoyeFvA1KVSV9AgEjeOVJ
+         vH7np4lUkKx+qQHlPlhpJygvWwD869+WYK43+cFJ/C7Kd8v7ndmK5JMhk/uy9VzFsPCQ
+         wXZsTrxo7Zt8TLdrpr5Nd9gnOKty6EwrQFR9x1l78oU9y4enfAPISe4cwYbaeioZHn+f
+         mM5vGVQEMpumW+1F5JNtvk+ktfsQXcogAWs82IlNpm/nQEFmqB/in2eVlF72g+x7Orjp
+         vNdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WWVyA9rAT+6UqFks6dTFD+XM7gB7oWrs5iYRikzxmOM=;
-        b=7Jl8JK5D/H6KGr7CWUEHwcwTdGBzt1oDY78xYOYhSuGYxhEWKvqTmOr3XJVEU4WuQ5
-         Z1kcqyQwhgyd4hjW1e3CG2VNrNpTElLDcA7CZzWiB7H7tvQU0xrCV6e/ypwbB0HXNbY0
-         KXyC6hcpAYL0q+HODNWcP6UtLddrH5ElMEa2UCkmckXh4b32hs+YeTY39L4bFVoEqv1S
-         6RzRIMWUeR4nvVdSQhqXPxSGTcS85KdokMohzy4iPCGlMG7nvdzH9+OhdvyxJDG9UOSL
-         UOTfZaNvCI4Bbtgk7ehjUeXc78KoB6gY20ZtY2D+bDvpj3vDQldPu3zTvQCfbzqX8mr8
-         gRVw==
-X-Gm-Message-State: AOAM533rCYzeFt8yheNIi1jfaszn2CUGCpanunuTg2xB3YRSKZAWLmU/
-        1i69Igy3dIl5vDAmSV79t9gAdg==
-X-Google-Smtp-Source: ABdhPJwzWzaQ9o75w/vYtE+DN8W9P9ajLA82XkQlYDx1uUehhPbBdyYs/x96QMBMEwaH/tHbyOvQ1g==
-X-Received: by 2002:a05:6102:497:: with SMTP id n23mr27360382vsa.36.1637786125024;
-        Wed, 24 Nov 2021 12:35:25 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=A1xzUXa5x5Bog8pkez/HAfQHT5aX9xfLkxwoJiQMbWc=;
+        b=pPcKongDseQW4a6w9XzP2iW5KI7I5LvNLODF8euT2JL3bdZP79hKnigOkW2q8vxfsP
+         Ctqv7Zp8rq5+SfZdj2vQchwoZjfqhkRGOzFlMC5fU6qjwZF/S65MqW4n6YUn9UTL0J3a
+         wCUv8aXsodsbz1jnOJtz2C5dMXr+9GPh2rCbQe23XsEpQ2G/yBwR2XfxiWg3Z/xihcxx
+         wWuFmkRYowshODkLZMhnIesoA6GnLIF4d3DKkoHuxYpRNGXfj+KwWrbyjv3WV6v3XdQe
+         VGRpWbinPaGzjh+cH8LsfEYGC85fY8DBNdRLim4UwRqWAWcELBfi4KkkqHy/GMFZ0O40
+         uwhQ==
+X-Gm-Message-State: AOAM5308IMzfAcqEujV5s0+sQ/ePIOrE+DNRSTB6fEg0APWbtMVk5Zpq
+        U4FU0MZ5eodfePqxI1/wHBnstA==
+X-Google-Smtp-Source: ABdhPJxrY7iEnE3QEj+1+FKnOjeDBmxUb2vIP8O2gzcsmt6jFXU8jIdP3ReeX+H4CHRVT1yoUpuYTQ==
+X-Received: by 2002:a67:bc16:: with SMTP id t22mr27805377vsn.10.1637786138632;
+        Wed, 24 Nov 2021 12:35:38 -0800 (PST)
 Received: from localhost (7-153-16-190.fibertel.com.ar. [190.16.153.7])
-        by smtp.gmail.com with ESMTPSA id y22sm501975vkn.42.2021.11.24.12.35.19
+        by smtp.gmail.com with ESMTPSA id t11sm479278vkt.34.2021.11.24.12.35.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Nov 2021 12:35:24 -0800 (PST)
+        Wed, 24 Nov 2021 12:35:38 -0800 (PST)
 From:   Martin Fernandez <martin.fernandez@eclypsium.com>
 To:     linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         linux-mm@kvack.org
@@ -59,66 +59,128 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         daniel.gutson@eclypsium.com, hughsient@gmail.com,
         alison.schofield@intel.com,
         Martin Fernandez <martin.fernandez@eclypsium.com>
-Subject: [PATCH v2 0/5] x86: Show in sysfs if a memory node is able to do encryption
-Date:   Wed, 24 Nov 2021 17:34:54 -0300
-Message-Id: <20211124203459.4578-1-martin.fernandez@eclypsium.com>
+Subject: [PATCH v2 1/5] mm/memblock: Tag memblocks with crypto capabilities
+Date:   Wed, 24 Nov 2021 17:34:55 -0300
+Message-Id: <20211124203459.4578-2-martin.fernandez@eclypsium.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20211124203459.4578-1-martin.fernandez@eclypsium.com>
+References: <20211124203459.4578-1-martin.fernandez@eclypsium.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Show for each node if every memory descriptor in that node has the
-EFI_MEMORY_CPU_CRYPTO attribute.
+Add the capability to mark regions of the memory memory_type able of
+hardware memory encryption.
 
-fwupd project plans to use it as part of a check to see if the users
-have properly configured memory hardware encryption capabilities. It's
-planned to make it part of a specification that can be passed to
-people purchasing hardware. It's called Host Security ID:
-https://fwupd.github.io/libfwupdplugin/hsi.html
+Also add the capability to query if all regions of a memory node are
+able to do hardware memory encryption to call it when initializing the
+nodes.
 
-This also can be useful in the future if NUMA decides to prioritize
-nodes that are able to do encryption.
+Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
+---
+ include/linux/memblock.h |  5 ++++
+ mm/memblock.c            | 49 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 54 insertions(+)
 
-Changes since v1:
-
-Modify __e820__range_update to update the crypto capabilities of a
-range; now this function will change the crypto capability of a range
-if it's called with the same old_type and new_type. Rework
-efi_mark_e820_regions_as_crypto_capable based on this.
-
-Update do_add_efi_memmap to mark the regions as it creates them.
-
-Change the type of crypto_capable in e820_entry from bool to u8.
-
-Fix e820__update_table changes.
-
-Remove memblock_add_crypto_capable. Now you have to add the region and
-mark it then.
-
-Better place for crypto_capable in pglist_data.
-
-Martin Fernandez (5):
-  mm/memblock: Tag memblocks with crypto capabilities
-  mm/mmzone: Tag pg_data_t with crypto capabilities
-  x86/e820: Tag e820_entry with crypto capabilities
-  x86/efi: Tag e820_entries as crypto capable from EFI memmap
-  drivers/node: Show in sysfs node's crypto capabilities
-
- Documentation/ABI/testing/sysfs-devices-node | 10 ++++
- arch/x86/include/asm/e820/api.h              |  1 +
- arch/x86/include/asm/e820/types.h            |  1 +
- arch/x86/kernel/e820.c                       | 58 ++++++++++++++++----
- arch/x86/platform/efi/efi.c                  | 25 +++++++++
- drivers/base/node.c                          | 10 ++++
- include/linux/memblock.h                     |  5 ++
- include/linux/mmzone.h                       |  3 +
- mm/memblock.c                                | 49 +++++++++++++++++
- mm/page_alloc.c                              |  1 +
- 10 files changed, 152 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-node
-
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 34de69b3b8ba..a54665863f80 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -31,6 +31,7 @@ extern unsigned long long max_possible_pfn;
+  * @MEMBLOCK_HOTPLUG: hotpluggable region
+  * @MEMBLOCK_MIRROR: mirrored region
+  * @MEMBLOCK_NOMAP: don't add to kernel direct mapping and treat as
++ * @MEMBLOCK_CRYPTO_CAPABLE: capable of hardware encryption
+  * reserved in the memory map; refer to memblock_mark_nomap() description
+  * for further details
+  */
+@@ -39,6 +40,7 @@ enum memblock_flags {
+ 	MEMBLOCK_HOTPLUG	= 0x1,	/* hotpluggable region */
+ 	MEMBLOCK_MIRROR		= 0x2,	/* mirrored region */
+ 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
++	MEMBLOCK_CRYPTO_CAPABLE = 0x8,  /* capable of hardware encryption */
+ };
+ 
+ /**
+@@ -111,6 +113,9 @@ int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
+ void memblock_trim_memory(phys_addr_t align);
+ bool memblock_overlaps_region(struct memblock_type *type,
+ 			      phys_addr_t base, phys_addr_t size);
++bool memblock_node_is_crypto_capable(int nid);
++int memblock_mark_crypto_capable(phys_addr_t base, phys_addr_t size);
++int memblock_clear_crypto_capable(phys_addr_t base, phys_addr_t size);
+ int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
+ int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
+ int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 5096500b2647..cd5553c3df5a 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -191,6 +191,27 @@ bool __init_memblock memblock_overlaps_region(struct memblock_type *type,
+ 	return i < type->cnt;
+ }
+ 
++/**
++ * memblock_node_is_crypto_capable - get if whole node is capable
++ * of encryption
++ * @nid: number of node
++ *
++ * Iterate over all memory memblock_type and find if all regions under
++ * node @nid are capable of hardware encryption.
++ */
++bool __init_memblock memblock_node_is_crypto_capable(int nid)
++{
++	struct memblock_region *region;
++
++	for_each_mem_region(region) {
++		if ((memblock_get_region_node(region) == nid) &&
++		    !(region->flags & MEMBLOCK_CRYPTO_CAPABLE))
++			return false;
++	}
++
++	return true;
++}
++
+ /**
+  * __memblock_find_range_bottom_up - find free area utility in bottom-up
+  * @start: start of candidate range
+@@ -884,6 +905,34 @@ static int __init_memblock memblock_setclr_flag(phys_addr_t base,
+ 	return 0;
+ }
+ 
++/**
++ * memblock_mark_crypto_capable - Mark memory regions capable of hardware
++ * encryption with flag MEMBLOCK_CRYPTO_CAPABLE.
++ * @base: the base phys addr of the region
++ * @size: the size of the region
++ *
++ * Return: 0 on success, -errno on failure.
++ */
++int __init_memblock memblock_mark_crypto_capable(phys_addr_t base,
++						 phys_addr_t size)
++{
++	return memblock_setclr_flag(base, size, 1, MEMBLOCK_CRYPTO_CAPABLE);
++}
++
++/**
++ * memblock_clear_crypto_capable - Clear flag MEMBLOCK_CRYPTO for a
++ * specified region.
++ * @base: the base phys addr of the region
++ * @size: the size of the region
++ *
++ * Return: 0 on success, -errno on failure.
++ */
++int __init_memblock memblock_clear_crypto_capable(phys_addr_t base,
++						  phys_addr_t size)
++{
++	return memblock_setclr_flag(base, size, 0, MEMBLOCK_CRYPTO_CAPABLE);
++}
++
+ /**
+  * memblock_mark_hotplug - Mark hotpluggable memory with flag MEMBLOCK_HOTPLUG.
+  * @base: the base phys addr of the region
 -- 
 2.30.2
 
