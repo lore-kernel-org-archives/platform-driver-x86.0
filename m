@@ -2,175 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C5AC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Nov 2021 19:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFD4C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Nov 2021 20:35:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351317AbhKXTlU (ORCPT
+        id S236535AbhKXUig (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Nov 2021 14:41:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:31162 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241791AbhKXTlP (ORCPT
+        Wed, 24 Nov 2021 15:38:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234742AbhKXUif (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Nov 2021 14:41:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637782685;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EBMyA879RvsAF1C+luC7hFdhhdb0lbrjQTlN8WSCnFk=;
-        b=aDSlGlFPT4lJEBrNoSyB9rM6J1sZzciDm/7IgEzKz8EzfguerSg/le/qHHkh+kLtEYVdmO
-        gh+N/UqrkUtmU3tu3uiXl0EY8zE3A4hCVtUlSH2+mZ8eLqua29Pd/d+HmTQjWoCbj+NcXF
-        pwHQxtQHqZ3mZycEKf8gNhi+v+PWhko=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-448-29D2Hkz0OZWvUK_3yLghxQ-1; Wed, 24 Nov 2021 14:38:04 -0500
-X-MC-Unique: 29D2Hkz0OZWvUK_3yLghxQ-1
-Received: by mail-ed1-f70.google.com with SMTP id q17-20020aa7da91000000b003e7c0641b9cso3315397eds.12
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Nov 2021 11:38:04 -0800 (PST)
+        Wed, 24 Nov 2021 15:38:35 -0500
+Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4414C061574
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Nov 2021 12:35:25 -0800 (PST)
+Received: by mail-ua1-x934.google.com with SMTP id n6so7802267uak.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Nov 2021 12:35:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WWVyA9rAT+6UqFks6dTFD+XM7gB7oWrs5iYRikzxmOM=;
+        b=WbV062ADcaZlzsRT9vd/XbsLpKxMq4laIhRub0+tanSWZYatiUAH62How4J6UgXjFg
+         rPtzDYLvTqq9GK/SduFeKNyWsuzktleUUfnRTJjODk1n+yvHggF7Qj4leP5WZdUUeaom
+         9+jA155t5D0njV65l023h2ejKQv9MMI/S811FJfMvdw9yp4pMFSIynSNxXLGI8byI1i3
+         q7ANTDB+xo6j48lg3HW+/jcaIMntmdob9wRbyudnmEuukieMDHGUN6M773xj4RnpapEw
+         7QydoqlalZXaszL67EqBE7Aklucyr89rxb1ppnhx9no+8u+FShiGO6C6fiIGfK+v6XtG
+         laRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=EBMyA879RvsAF1C+luC7hFdhhdb0lbrjQTlN8WSCnFk=;
-        b=CNTBwcALa9eVXOxuKnIbDPjZFgfQlm5heq/jKl4yHDomRptOZvRACqbhbp9YGA4K8o
-         eG3ZCYTg4M6d8ODCvvCgZE6+egX+ip3tJvwnHFPeoYUaGOq4rUqVAZW9Jcu1WE1ohZSj
-         u8IFrvNlxCgw1ta5q9VpehHOtBS8gvn80l6DSgWY9FaRcJc0PDrSpav49tiFRsuOSs+J
-         Cdf1O/a+a/v+07xhSZFsVXI89fYfJOId0/xgFwguQEPq+2eoXBFe2OAQcT3kqvN9J7Ru
-         0BvLk7vjPEQYLGA5jNsf4lTihiHPXftI8GzkrGZrAcG5m9ktkjY1wC2XB7xPihiSe77P
-         Y6nQ==
-X-Gm-Message-State: AOAM532PZqPdFmfjcSjp23kixLvrNdCCmgqgGzAcOjnFhW7q2eKy9/V3
-        HOzZF8WQ8lu/h5CwmkFZaBAZ9oWVWzsscUH+92XENGw+azo7DQ7l4OPs+Av5xtgNu1SkKed9D6g
-        FxB1OGjdLRmnqV7/9o1ENDL+YTxVLT8itFQ==
-X-Received: by 2002:a50:da0a:: with SMTP id z10mr29245619edj.298.1637782683048;
-        Wed, 24 Nov 2021 11:38:03 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzBFXtQywPJcpeP7Cae5o3iW6b2JD8nhe10LTlQSbjqidiFyuRVkCZhul9s25yC5JO8dnD7Eg==
-X-Received: by 2002:a50:da0a:: with SMTP id z10mr29245588edj.298.1637782682857;
-        Wed, 24 Nov 2021 11:38:02 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id d18sm557752edj.23.2021.11.24.11.38.02
+        bh=WWVyA9rAT+6UqFks6dTFD+XM7gB7oWrs5iYRikzxmOM=;
+        b=7Jl8JK5D/H6KGr7CWUEHwcwTdGBzt1oDY78xYOYhSuGYxhEWKvqTmOr3XJVEU4WuQ5
+         Z1kcqyQwhgyd4hjW1e3CG2VNrNpTElLDcA7CZzWiB7H7tvQU0xrCV6e/ypwbB0HXNbY0
+         KXyC6hcpAYL0q+HODNWcP6UtLddrH5ElMEa2UCkmckXh4b32hs+YeTY39L4bFVoEqv1S
+         6RzRIMWUeR4nvVdSQhqXPxSGTcS85KdokMohzy4iPCGlMG7nvdzH9+OhdvyxJDG9UOSL
+         UOTfZaNvCI4Bbtgk7ehjUeXc78KoB6gY20ZtY2D+bDvpj3vDQldPu3zTvQCfbzqX8mr8
+         gRVw==
+X-Gm-Message-State: AOAM533rCYzeFt8yheNIi1jfaszn2CUGCpanunuTg2xB3YRSKZAWLmU/
+        1i69Igy3dIl5vDAmSV79t9gAdg==
+X-Google-Smtp-Source: ABdhPJwzWzaQ9o75w/vYtE+DN8W9P9ajLA82XkQlYDx1uUehhPbBdyYs/x96QMBMEwaH/tHbyOvQ1g==
+X-Received: by 2002:a05:6102:497:: with SMTP id n23mr27360382vsa.36.1637786125024;
+        Wed, 24 Nov 2021 12:35:25 -0800 (PST)
+Received: from localhost (7-153-16-190.fibertel.com.ar. [190.16.153.7])
+        by smtp.gmail.com with ESMTPSA id y22sm501975vkn.42.2021.11.24.12.35.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Nov 2021 11:38:02 -0800 (PST)
-Message-ID: <add58c0b-de08-7bd9-9b9e-4b4289d8abc4@redhat.com>
-Date:   Wed, 24 Nov 2021 20:38:01 +0100
+        Wed, 24 Nov 2021 12:35:24 -0800 (PST)
+From:   Martin Fernandez <martin.fernandez@eclypsium.com>
+To:     linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, ardb@kernel.org, dvhart@infradead.org,
+        andy@infradead.org, gregkh@linuxfoundation.org, rafael@kernel.org,
+        daniel.gutson@eclypsium.com, hughsient@gmail.com,
+        alison.schofield@intel.com,
+        Martin Fernandez <martin.fernandez@eclypsium.com>
+Subject: [PATCH v2 0/5] x86: Show in sysfs if a memory node is able to do encryption
+Date:   Wed, 24 Nov 2021 17:34:54 -0300
+Message-Id: <20211124203459.4578-1-martin.fernandez@eclypsium.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [External] Re: [PATCH 2/2] platform/x86: thinkpad_acpi: Add
- lid-logo-led to the list of safe LEDs
-Content-Language: en-US
-To:     Mark Pearson <markpearson@lenovo.com>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@t-8ch.de>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20211123210524.266705-1-hdegoede@redhat.com>
- <20211123210524.266705-2-hdegoede@redhat.com>
- <ca16bf3e-2efe-49a6-94a2-4aeb66f398dc@t-8ch.de>
- <eeaa722c-b1e5-477f-d683-f4e55e50f8b5@redhat.com>
- <2cdab9d3-a433-5449-6602-069b7549603d@lenovo.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <2cdab9d3-a433-5449-6602-069b7549603d@lenovo.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Show for each node if every memory descriptor in that node has the
+EFI_MEMORY_CPU_CRYPTO attribute.
 
-On 11/24/21 20:13, Mark Pearson wrote:
-> 
-> 
-> On 2021-11-24 11:28, Hans de Goede wrote:
->> Hi,
->>
->> On 11/24/21 16:53, Thomas Weißschuh wrote:
->>> Hi,
->>>
->>> On 2021-11-23 22:05+0100, Hans de Goede wrote:
->>>> There have been various bugs / forum threads about allowing control of
->>>> the LED in the ThinkPad logo on the lid of various models.
->>>>
->>>> This seems to be something which users want to control and there really
->>>> is no reason to require setting CONFIG_THINKPAD_ACPI_UNSAFE_LEDS for this.
->>>>
->>>> The lid-logo-led is LED number 10, so change the name of the 10th led
->>>> from unknown_led2 to lid_logo_led and add it to the TPACPI_SAFE_LEDS mask.
->>>>
->>>> Link: https://www.reddit.com/r/thinkpad/comments/7n8eyu/thinkpad_led_control_under_gnulinux/>>>> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1943318>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>> ---
->>>>  drivers/platform/x86/thinkpad_acpi.c | 4 ++--
->>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->>>> index 49fdf16b2db9..28f0299ecab0 100644
->>>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>>> @@ -5661,11 +5661,11 @@ static const char * const tpacpi_led_names[TPACPI_LED_NUMLEDS] = {
->>>>  	"tpacpi::standby",
->>>>  	"tpacpi::dock_status1",
->>>>  	"tpacpi::dock_status2",
->>>> -	"tpacpi::unknown_led2",
->>>> +	"tpacpi::lid_logo_led",
->>>
->>> The suffix "_led" looks a bit redundant. Also non of the other LEDs have it.
->>
->> Hmm, good point, but without the _led to me it sounds as if it controls
->> some backlight for the entire logo, where it really is just the dot of the i.
->>
->> So I'm not sure what to do here :)
->>
->>> Also currently the reported brightness is 0 before writing to it, although the
->>> LED is powered on by default, not sure how this could be fixed though.
->>
->> Right, this is a known short-coming of the tpacpi LED interface, LEDs can be
->> set but you cannot get the current status.
->>
->> And once set, the LED is now fully under usercontrol, until the next reboot
->> (or maybe even power-cycle).
->>
-> Apart from being vaguely fascinated that people want to play with the
-> LED (I assume because it's annoying and a small waste of power?)
+fwupd project plans to use it as part of a check to see if the users
+have properly configured memory hardware encryption capabilities. It's
+planned to make it part of a specification that can be passed to
+people purchasing hardware. It's called Host Security ID:
+https://fwupd.github.io/libfwupdplugin/hsi.html
 
-Some people just find the LED annoying so they just want to turn it off
-I believe. Others want to repurpose it for their own purposes.
+This also can be useful in the future if NUMA decides to prioritize
+nodes that are able to do encryption.
 
-> is this
-> something that I should put in a request for an API to get the LED status?
+Changes since v1:
 
-I don't believe not being able to read the status is really a big deal,
-with that said it would be nice to have, but definitely a low priority item.
+Modify __e820__range_update to update the crypto capabilities of a
+range; now this function will change the crypto capability of a range
+if it's called with the same old_type and new_type. Rework
+efi_mark_e820_regions_as_crypto_capable based on this.
 
-> I would like to get the FW teams point of view here too. We use the LED
-> to show if the system is suspended or not so I'm somewhat curious as to
-> what happens if a user overrides the setting.
+Update do_add_efi_memmap to mark the regions as it creates them.
 
-AFAIK once the user has overridden the value it stays at the user selected
-value until a reboot or power-cycle.
+Change the type of crypto_capable in e820_entry from bool to u8.
 
-Note that most thinkpads also make the power-button-led "glow" when
-suspended, and we already allow overriding this.
+Fix e820__update_table changes.
 
-The reason why thinkpad_acpi has the notion of safe LEDs is to disallow
-overriding some LEDs in older docks which indicate when it is safe to
-unplug the laptop.
+Remove memblock_add_crypto_capable. Now you have to add the region and
+mark it then.
 
-In that case overriding the LEDs could be quite bad but here we just loose
-"I'm suspended" notification which may be annoying if the user is waiting
-for the LED to start glowing after closing the lid (and before say bagging
-the laptop). But presumably a user deliberately overriding the LED knows
-it is not going to glow now.
+Better place for crypto_capable in pglist_data.
 
-> I doubt it's a big deal
-> but I'd like to double check if there are any gotcha's.
+Martin Fernandez (5):
+  mm/memblock: Tag memblocks with crypto capabilities
+  mm/mmzone: Tag pg_data_t with crypto capabilities
+  x86/e820: Tag e820_entry with crypto capabilities
+  x86/efi: Tag e820_entries as crypto capable from EFI memmap
+  drivers/node: Show in sysfs node's crypto capabilities
 
-Sounds good, thanks.
+ Documentation/ABI/testing/sysfs-devices-node | 10 ++++
+ arch/x86/include/asm/e820/api.h              |  1 +
+ arch/x86/include/asm/e820/types.h            |  1 +
+ arch/x86/kernel/e820.c                       | 58 ++++++++++++++++----
+ arch/x86/platform/efi/efi.c                  | 25 +++++++++
+ drivers/base/node.c                          | 10 ++++
+ include/linux/memblock.h                     |  5 ++
+ include/linux/mmzone.h                       |  3 +
+ mm/memblock.c                                | 49 +++++++++++++++++
+ mm/page_alloc.c                              |  1 +
+ 10 files changed, 152 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-node
 
-Regards,
-
-Hans
+-- 
+2.30.2
 
