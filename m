@@ -2,85 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40107C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Nov 2021 15:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230BFC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Nov 2021 15:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349654AbhKYPlV (ORCPT
+        id S1356147AbhKYPli (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Nov 2021 10:41:21 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:47296 "EHLO
+        Thu, 25 Nov 2021 10:41:38 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51271 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1355787AbhKYPjV (ORCPT
+        by vger.kernel.org with ESMTP id S234528AbhKYPjh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Nov 2021 10:39:21 -0500
+        Thu, 25 Nov 2021 10:39:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637854570;
+        s=mimecast20190719; t=1637854585;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eX6dSHlu3Ns8F5BZbs69kb/zi1atkpX8NZ3CQ8zoWh4=;
-        b=VHzPw/cDCymXOWWcvEWQUCuJmnaTTzZTU6JMPbRXj9Vd2pwJFocA2zZWwUvjPswap5ncfO
-        GIGrz1VUnn+ARudMEZSy0EoDIJrT8pkigYr4qDPWSQYblVZVQMLUAAIEaRvn/2dP47+dq/
-        EIzSqjYJH9GKNLZOxxuFo6SUFJi4W9c=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=TtCB2GSB6fvEpPp2XAo0ayiv6a2jnAbDE1AtR+ngZyI=;
+        b=ieve6waiVMB4a9haRfIvl0QdiaGT9JaSbIxPiPkTnVB1RxL5S/M7E+Ai9yCH/NnIA/3OCR
+        oSk6eOb1nUKPHEWz/c/jgwjb99iB3N2/yDuwmix0R9dE2z3y1pd0apiZXs0X9CkIpH/a//
+        hVWSHnDn+VeWSyb7KWJC+8n/HYGu8fg=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-17-1AIBT5SfNmaJbZq1hvkpzg-1; Thu, 25 Nov 2021 10:36:08 -0500
-X-MC-Unique: 1AIBT5SfNmaJbZq1hvkpzg-1
-Received: by mail-ed1-f71.google.com with SMTP id w18-20020a056402071200b003e61cbafdb4so5785668edx.4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Nov 2021 07:36:08 -0800 (PST)
+ us-mta-354-uDflDIifMPKW0BLra4Sfig-1; Thu, 25 Nov 2021 10:36:24 -0500
+X-MC-Unique: uDflDIifMPKW0BLra4Sfig-1
+Received: by mail-ed1-f69.google.com with SMTP id eg20-20020a056402289400b003eb56fcf6easo5725090edb.20
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Nov 2021 07:36:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=eX6dSHlu3Ns8F5BZbs69kb/zi1atkpX8NZ3CQ8zoWh4=;
-        b=4yRa+AsJl3vi8eAU+vzJRBD8m+0ukyV4Aw+TjDRjz+iajilv7EMbQnTAFwbdZrt5uc
-         8IlBhomOrZS49dRBjfOFUoFc2MT40xxTVcDz7Zq6/hZjuP+J7YCdN2TM+D8JhCqyfxob
-         ffABLhRm7u4TPOHK/4ZYU40qnLGCOPm8J3WOLQHSpIMLlBf+SRdpL+s4XKkglL7bxX2G
-         Vtyh/d/KQ71XelZVLLoeuvFmUnvrvoDOIfFogRYgprNj3xQmxEXOhUcQ6lIsx3s/ql4R
-         JltS4rYTXW0Ebt0WBubEbP1YUxNU39ztglzPJPyNS99LKlna6xmIEY8ekVjcH49ia5YV
-         5pjg==
-X-Gm-Message-State: AOAM533NMqvGRGDgmYrBp0fR27fF4EvI2qnfUbWFU/B9nFr/+elGsDNh
-        L2ZjjhQbRcYvHxBEO3N55RvOJXV8FVvydaZ6hmuEuBnz7vQWCVT+x6lm8gElOsmM9a5J8KDiXYV
-        KVZuGz/9iKMSGP56UJJVFaJ+ByGcwXbUiNQ==
-X-Received: by 2002:a05:6402:50cf:: with SMTP id h15mr39308770edb.90.1637854567542;
-        Thu, 25 Nov 2021 07:36:07 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxIcaSNOlMTT2I/ucmwCR5UkZ3asJaJo5x1mzxdh8r8ZE5v5cBBKVNJUksjqk0dqJgW3j+S9g==
-X-Received: by 2002:a05:6402:50cf:: with SMTP id h15mr39308741edb.90.1637854567402;
-        Thu, 25 Nov 2021 07:36:07 -0800 (PST)
+        bh=TtCB2GSB6fvEpPp2XAo0ayiv6a2jnAbDE1AtR+ngZyI=;
+        b=pdzTSs7jXlKzu4cDQw4Hnnrrhf6EnCaQ98romhJbC0LZEsp2BeqdXmaLlpGw7SLJ+Z
+         YObvHvmXS0Nth0nBt4wAn5SDe4t4TMxYcvAJdUa/MoTe4es2sPVLR57NckbR07L1KP2Q
+         PHVElTeZLaaarXqZhP8TOyatA4gyMd1qnkK5nEh0fNO3Wv9HL1xSvq1FHv7/Nbm9COnl
+         cCXIEzDdbHj8/xj2IMi1hpsAqhrXXi3YjpJ0f9HThw4Dwppuhst22bX7Yr/Gy48Dawf/
+         mBTY2kHa4FRq+te957tieMZvct0RKhDQiqqg2HYIBVb1mBBWxZn9mbEX3xjhKLr6OBFh
+         H8Cw==
+X-Gm-Message-State: AOAM5324DSF4/znbKm+DMn1Ekw3W8WhJH8ayWDZe4TgkOGZdwbS3W5g2
+        8T2fJYK+FrcTX9P8rTRTt3qjQw18Rho7Z3yeDhQUbuLORpYTbZWB/DCx2I7a4xnV4R3sD6JU+Ov
+        UhzElodaJDpVGTrGXGJ4rr5lgGqlIEPjsuA==
+X-Received: by 2002:a05:6402:35ce:: with SMTP id z14mr38624736edc.197.1637854583144;
+        Thu, 25 Nov 2021 07:36:23 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzKaZQH3mEp86gkciV/Iy6yzpSITcVdSu1JUeMEhFg0Z14ZZRrgDYeN5NoiMXAjoAfElWHibg==
+X-Received: by 2002:a05:6402:35ce:: with SMTP id z14mr38624693edc.197.1637854582886;
+        Thu, 25 Nov 2021 07:36:22 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id mc3sm1714623ejb.24.2021.11.25.07.36.06
+        by smtp.gmail.com with ESMTPSA id hb36sm1672248ejc.73.2021.11.25.07.36.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Nov 2021 07:36:07 -0800 (PST)
-Message-ID: <dd605051-c32d-ef18-5af1-fd1012597e7b@redhat.com>
-Date:   Thu, 25 Nov 2021 16:36:05 +0100
+        Thu, 25 Nov 2021 07:36:22 -0800 (PST)
+Message-ID: <673d9b69-9193-9ac6-3253-8c760edd7417@redhat.com>
+Date:   Thu, 25 Nov 2021 16:36:20 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH -next] asus-wmi: remove unneeded semicolon
+Subject: Re: [PATCH] lg-laptop: Recognize more models
 Content-Language: en-US
-To:     Yang Li <yang.lee@linux.alibaba.com>, corentin.chary@gmail.com
-Cc:     markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1637719332-45224-1-git-send-email-yang.lee@linux.alibaba.com>
+To:     Matan Ziv-Av <matan@svgalib.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+References: <c752b3b2-9718-bd9a-732d-e165aa8a1fca@svgalib.org>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <1637719332-45224-1-git-send-email-yang.lee@linux.alibaba.com>
+In-Reply-To: <c752b3b2-9718-bd9a-732d-e165aa8a1fca@svgalib.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/24/21 03:02, Yang Li wrote:
-> Eliminate the following coccicheck warning:
-> ./drivers/platform/x86/asus-wmi.c:2386:2-3: Unneeded semicolon
+On 11/23/21 21:14, Matan Ziv-Av wrote:
 > 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+> LG uses 5 instead of 0 in the third digit (second digit after 2019) of the year string to indicate newer models in the same year. Handle this case as well.
+> 
+> Signed-off-by: Matan Ziv-Av <matan@svgalib.org>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -98,22 +96,35 @@ Regards,
 
 Hans
 
+
 > ---
->  drivers/platform/x86/asus-wmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/lg-laptop.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index ab0c087..6fa4b0b 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -2383,7 +2383,7 @@ static ssize_t fan_curve_enable_store(struct device *dev,
->  		break;
->  	default:
->  		return -EINVAL;
-> -	};
-> +	}
->  
->  	if (data->enabled) {
->  		err = fan_curve_write(asus, data);
+> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+> index ae9293024c77..a91847a551a7 100644
+> --- a/drivers/platform/x86/lg-laptop.c
+> +++ b/drivers/platform/x86/lg-laptop.c
+> @@ -657,6 +657,18 @@ static int acpi_add(struct acpi_device *device)
+>      if (product && strlen(product) > 4)
+>          switch (product[4]) {
+>          case '5':
+> +            if (strlen(product) > 5)
+> +                switch (product[5]) {
+> +                case 'N':
+> +                    year = 2021;
+> +                    break;
+> +                case '0':
+> +                    year = 2016;
+> +                    break;
+> +                default:
+> +                    year = 2022;
+> +                }
+> +            break;
+>          case '6':
+>              year = 2016;
+>              break;
+> 
+> 
 > 
 
