@@ -2,83 +2,189 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECBFC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Nov 2021 14:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959DEC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Nov 2021 15:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233606AbhKYOH4 (ORCPT
+        id S231285AbhKYPGz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Nov 2021 09:07:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240255AbhKYOF4 (ORCPT
+        Thu, 25 Nov 2021 10:06:55 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:38683 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233954AbhKYPEy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Nov 2021 09:05:56 -0500
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FB02C061763;
-        Thu, 25 Nov 2021 06:01:06 -0800 (PST)
-Received: by mail-il1-x12c.google.com with SMTP id w4so5900932ilv.12;
-        Thu, 25 Nov 2021 06:01:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QCr8cEbiqbrqQ9HAwPRp4+Y1KfhodpUIEhtcV1dJm3c=;
-        b=DU0bINKQ4aXtmPNed7uqfcdTgB1HSygpeozOmEvD1UD75jstk6+9NSf3jfuCNVzrs4
-         TnUYCVjkfWFQw1ms7Pot/dkSFtUhB1A69hbbUVIvaXNmnwV0VJzFW2kMB9UgzueHGGqI
-         8gb8F/PBBIm4hj/obL2BID055DZ1ZQal8oY3ZwF4zdKK0Md0BX/13KdT3bmHixuCraTc
-         3yNYv1Ps5VsRWvk0OZJ3e4ITmN6wlBZgNgPE+L0/2GcDVBZectS6JuCBay4VDqOtvoZ/
-         BTR9g98PvtQ1rfvMNsAk3wJEh3D+thGNrnoh5nzMmLog2Jqxq7RfTW3uS46uidL7KuA1
-         89rA==
+        Thu, 25 Nov 2021 10:04:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1637852502;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pzY+nlb0WLLo3q9EhtWI9RItnRnZnbWS8p2iLJT22S4=;
+        b=gQoTfj6BeePVoRDBskdRK6Sq0IKkO6158TFwpFSvcBHuO5Gd6Io0J2o9ToZL/QrhkxvdDZ
+        CcoQUJsJYZftxAjo/Tl+Ug2A4b2mrFFhXYVp5oYCkFpckvHx3Kxw0FcvT/A3sQXTiKup4H
+        F0EnWinonLGwGZOAAS8L1zDcpD23a2w=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-177-oEOgaYWqNXW855x8Wqvm9g-1; Thu, 25 Nov 2021 10:01:41 -0500
+X-MC-Unique: oEOgaYWqNXW855x8Wqvm9g-1
+Received: by mail-ed1-f71.google.com with SMTP id m12-20020a056402430c00b003e9f10bbb7dso5693807edc.18
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Nov 2021 07:01:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QCr8cEbiqbrqQ9HAwPRp4+Y1KfhodpUIEhtcV1dJm3c=;
-        b=VssYcoU5cGJyPsCOAelObvILNLeaz2U4/2n3o83uVlfF1Qt95q3/ugerfD8l4ySr8P
-         XfYfFR4lQKtOHyMqNtGr8eqcE/bK/Y+lT8PcLrYiOsA5JewIseJRgqklLU2NQzddG8zF
-         shpBndAu520xWiCaIOxcU7wLpsgyVC6F13uYX72sP4Qa5EIMWdfJvi9mUiN8MbJG/GYf
-         LzXaqmokB8y18yXuI3wYcGwvgi1Plja5YxjZkX2H9hIMRaS9ZlEg3PUsQoBGYNilvB3a
-         8LtJtyxVoQ7uS1ZEY0W8abqM+HD3KAaVE2V9idCDwj7rm1nDljPgMJQPNGDG25MRvylB
-         6Djw==
-X-Gm-Message-State: AOAM532rUEZ1WF7Zv5lDt1SH8VTHCERlj56r5Pe2P6+92+YbkZZKGjjk
-        G8WNrMY+K9P+BBNOfg6/cty28P2Ar4RWTSSAnocELppe3Dk=
-X-Google-Smtp-Source: ABdhPJy5D7qohbbXZo9zAz2iFy4+Ql+8vdUIov/AEYqhTptx7l9qZbL6FiItEjZnjHY14+YoTV10asFl5/aEo1GpQc0=
-X-Received: by 2002:a05:6e02:1445:: with SMTP id p5mr960063ilo.164.1637848865782;
- Thu, 25 Nov 2021 06:01:05 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=pzY+nlb0WLLo3q9EhtWI9RItnRnZnbWS8p2iLJT22S4=;
+        b=fw6SMx5ulANu0nhmj02DDe6ljG0EHUi4m7ITW00G1QpHuESzIHADuLd+VLy5Ie78/V
+         dNduOGmpOHddMbc/rSClt8op5CCNc4824VGmqB+T2nRpQAF8509uxFCQ1K1+mjeBHfbc
+         TpDbtVUVJNN7UUlMpbiMnc194eHDT9A6HhxBznlj2ura1HcGYJwu87kNCfoOiG1rJ6F4
+         G4Mdy6yKJi+eqbZoVkPXUBjL1a81hMqXtgcQvgyjd+o1WN6eKAOneT5a/wm0n40i2pZT
+         z/MJiX3PpiwAMbu1Dtp5TAyzgkUeJE6y/eVut7VSX2zOV75YW69KAh/z74tRne+MtAw7
+         ldHQ==
+X-Gm-Message-State: AOAM5310bhDx5OIKrC+vvFDGhogDJHG7aavAfhwx/Emx+wWYHrUEHg6W
+        p+SaSqep1l/apWUsgswPxvkbA1BMRIihF1fHELfgS6MdUJUaLmWAT3sKGF9GtA5Zd8VlimJzRUH
+        xaFfZ1jPv0QA2/RhE3Jrblqsyj1z+sTM19g==
+X-Received: by 2002:a05:6402:5c9:: with SMTP id n9mr40305216edx.306.1637852500396;
+        Thu, 25 Nov 2021 07:01:40 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzMuiDvP4QYeeLwDI2JCOjzlhRkJeTB36IJtfD88XbWM3LPA2G1s9P+fBWdUkpvYv4+DeiFNA==
+X-Received: by 2002:a05:6402:5c9:: with SMTP id n9mr40305178edx.306.1637852500217;
+        Thu, 25 Nov 2021 07:01:40 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id gt18sm1725641ejc.46.2021.11.25.07.01.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Nov 2021 07:01:39 -0800 (PST)
+Message-ID: <09cdb0bd-56f6-d0fe-c35a-ed86c5919b4d@redhat.com>
+Date:   Thu, 25 Nov 2021 16:01:38 +0100
 MIME-Version: 1.0
-References: <20211122212850.321542-1-pauk.denis@gmail.com> <20211122212850.321542-3-pauk.denis@gmail.com>
- <CAHp75Vfg7LKX-21+b6f5c34G4Y=ZUqrWRbfDt_quCiJe+By-Ww@mail.gmail.com>
- <CAB95QASDiwM+-AwPgGfc7dP=Ctm0s2WP4xrapJzNHJ22B9foAw@mail.gmail.com> <CAHp75VeO2mz7wJpuKdrErnYcw-dUOBs9W4FzA6MkgCQLr0eQUg@mail.gmail.com>
-In-Reply-To: <CAHp75VeO2mz7wJpuKdrErnYcw-dUOBs9W4FzA6MkgCQLr0eQUg@mail.gmail.com>
-From:   Eugene Shalygin <eugene.shalygin@gmail.com>
-Date:   Thu, 25 Nov 2021 15:00:54 +0100
-Message-ID: <CAB95QAT_b8Wef+4wN-H8dKZXxgnznqOk5J0fMuL2XJLhob7d9Q@mail.gmail.com>
-Subject: Re: [PATCH 2/3] hwmon: (nct6775) Implement custom lock by ACPI mutex.
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Denis Pauk <pauk.denis@gmail.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        thomas@weissschuh.net, Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re:
+Content-Language: en-US
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J.Wysocki" <rjw@rjwysocki.net>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
+        linux-clk@vger.kernel.org
+References: <20211102094907.31271-1-hdegoede@redhat.com>
+ <20211102094907.31271-6-hdegoede@redhat.com>
+ <163588780885.2993099.2088131017920983969@swboyd.mtv.corp.google.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <163588780885.2993099.2088131017920983969@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-> Please, do not top post in the mailing lists!
+Hi,
 
-Well, it was almost a new topic...
+On 11/2/21 22:16, Stephen Boyd wrote:
+> Quoting Hans de Goede (2021-11-02 02:49:01)
+>> diff --git a/drivers/clk/clk-tps68470.c b/drivers/clk/clk-tps68470.c
+>> new file mode 100644
+>> index 000000000000..2ad0ac2f4096
+>> --- /dev/null
+>> +++ b/drivers/clk/clk-tps68470.c
+>> @@ -0,0 +1,257 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Clock driver for TPS68470 PMIC
+>> + *
+>> + * Copyright (c) 2021 Red Hat Inc.
+>> + * Copyright (C) 2018 Intel Corporation
+>> + *
+>> + * Authors:
+>> + *     Hans de Goede <hdegoede@redhat.com>
+>> + *     Zaikuo Wang <zaikuo.wang@intel.com>
+>> + *     Tianshu Qiu <tian.shu.qiu@intel.com>
+>> + *     Jian Xu Zheng <jian.xu.zheng@intel.com>
+>> + *     Yuning Pu <yuning.pu@intel.com>
+>> + *     Antti Laakso <antti.laakso@intel.com>
+>> + */
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/clkdev.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/mfd/tps68470.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/platform_data/tps68470.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#define TPS68470_CLK_NAME "tps68470-clk"
+>> +
+>> +#define to_tps68470_clkdata(clkd) \
+>> +       container_of(clkd, struct tps68470_clkdata, clkout_hw)
+>> +
+> [...]
+>> +
+>> +static int tps68470_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+>> +                                unsigned long parent_rate)
+>> +{
+>> +       struct tps68470_clkdata *clkdata = to_tps68470_clkdata(hw);
+>> +       unsigned int idx = tps68470_clk_cfg_lookup(rate);
+>> +
+>> +       if (rate != clk_freqs[idx].freq)
+>> +               return -EINVAL;
+>> +
+>> +       clkdata->clk_cfg_idx = idx;
+> 
+> It deserves a comment that set_rate can only be called when the clk is
+> gated. We have CLK_SET_RATE_GATE flag as well that should be set if the
+> clk can't support changing rate while enabled. With that flag set, this
+> function should be able to actually change hardware with the assumption
+> that the framework won't call down into this clk_op when the clk is
+> enabled.
 
-> I'm not sure I have got the above correctly, do you mean that the just
-> submitted asus_wmi_sensors HWMON driver will be replaced by your
-> changes? If so, you guys, need a lot to improve communication between
-> each other before submitting anything upstream.
+Ok for v6 I've added the CLK_SET_RATE_GATE flag + a comment why
+it used and moved the divider programming to tps68470_clk_set_rate()m
+while keeping the PLL_EN + output-enable writes in tps68470_clk_prepare()
 
-Yes, you get it right. Sorry for that, it was a long story and I
-worked on the subject
-only occasionally, so that when Denis took the code and submitted it
-to the mainline
-I was not sure which approach is better, and so I did not stop him.
 
-Best regards,
-Eugene
+> 
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct clk_ops tps68470_clk_ops = {
+>> +       .is_prepared = tps68470_clk_is_prepared,
+>> +       .prepare = tps68470_clk_prepare,
+>> +       .unprepare = tps68470_clk_unprepare,
+>> +       .recalc_rate = tps68470_clk_recalc_rate,
+>> +       .round_rate = tps68470_clk_round_rate,
+>> +       .set_rate = tps68470_clk_set_rate,
+>> +};
+>> +
+>> +static const struct clk_init_data tps68470_clk_initdata = {
+> 
+> Is there a reason to make this a static global? It's probably better to
+> throw it on the stack so that a structure isn't sitting around after
+> driver probe being unused.
+
+Fixed for v6.
+
+Thanks & Regards,
+
+Hans
+
+
+> 
+>> +       .name = TPS68470_CLK_NAME,
+>> +       .ops = &tps68470_clk_ops,
+>> +};
+> 
+
