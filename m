@@ -2,256 +2,336 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD28C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Nov 2021 16:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5422DC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Nov 2021 17:12:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356600AbhKYRAy (ORCPT
+        id S237194AbhKYRPz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Nov 2021 12:00:54 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:33550 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1356643AbhKYQ6x (ORCPT
+        Thu, 25 Nov 2021 12:15:55 -0500
+Received: from gecko.sbs.de ([194.138.37.40]:44293 "EHLO gecko.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237265AbhKYRNz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Nov 2021 11:58:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637859341;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CnaCRXQQDkNaLaN82LcLlN5i1GlnXuJtYhrqJc4aPrU=;
-        b=SiFk40v0O0DE+TjpQx6/jrAsDyw0jgmp5czj2IuuLQfVV3L7ZfQyBJWn1dDtMTWSVM4TG1
-        X4FVL11DxSr3hP1GZETFbYuGyUBGCPoN16P4S4PLP6EdJ30U9wd4HqJ2vqCULNsvQ+gnjR
-        q8mPZIeayO5VsBeFxkUZqLfya62XmwU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-98-heASMzY_PHmzitdPyzmRMw-1; Thu, 25 Nov 2021 11:55:36 -0500
-X-MC-Unique: heASMzY_PHmzitdPyzmRMw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 311E1801B00;
-        Thu, 25 Nov 2021 16:55:34 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.195.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 62E7D67842;
-        Thu, 25 Nov 2021 16:55:30 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH v6 15/15] media: ipu3-cio2: Add support for instantiating i2c-clients for VCMs
-Date:   Thu, 25 Nov 2021 17:54:12 +0100
-Message-Id: <20211125165412.535063-16-hdegoede@redhat.com>
-In-Reply-To: <20211125165412.535063-1-hdegoede@redhat.com>
-References: <20211125165412.535063-1-hdegoede@redhat.com>
+        Thu, 25 Nov 2021 12:13:55 -0500
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 1APHAFnL029882
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Nov 2021 18:10:15 +0100
+Received: from md1za8fc.ad001.siemens.net ([139.25.69.80])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 1APHAEFv000820;
+        Thu, 25 Nov 2021 18:10:14 +0100
+Date:   Thu, 25 Nov 2021 18:10:13 +0100
+From:   Henning Schild <henning.schild@siemens.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>
+Cc:     Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        "Gerd Haeussler" <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Enrico Weigelt <lkml@metux.net>
+Subject: Re: [PATCH v3 3/4] watchdog: simatic-ipc-wdt: add new driver for
+ Siemens Industrial PCs
+Message-ID: <20211125181013.534dc679@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20210329174928.18816-4-henning.schild@siemens.com>
+References: <20210329174928.18816-1-henning.schild@siemens.com>
+        <20210329174928.18816-4-henning.schild@siemens.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Some sensors come with a variable-focus lens where the lens focus is
-controller by a VCM (Voice Coil Motor). If there is a VCM for the
-lens-focus, and if so which one, is described on the vcm_type field
-of the ACPI SSDB table.
+Am Mon, 29 Mar 2021 19:49:27 +0200
+schrieb Henning Schild <henning.schild@siemens.com>:
 
-These VCMs are a second I2C device listed as an extra I2cSerialBusV2
-resource in the same ACPI device as the sensor. The i2c-core-acpi.c
-code only instantiates an i2c-client for the first I2cSerialBusV2
-resource.
+> This driver adds initial support for several devices from Siemens. It
+> is based on a platform driver introduced in an earlier commit.
+> 
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  drivers/watchdog/Kconfig           |  11 ++
+>  drivers/watchdog/Makefile          |   1 +
+>  drivers/watchdog/simatic-ipc-wdt.c | 215
+> +++++++++++++++++++++++++++++ 3 files changed, 227 insertions(+)
+>  create mode 100644 drivers/watchdog/simatic-ipc-wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 1fe0042a48d2..948497eb4bef 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -1575,6 +1575,17 @@ config NIC7018_WDT
+>  	  To compile this driver as a module, choose M here: the
+> module will be called nic7018_wdt.
+>  
+> +config SIEMENS_SIMATIC_IPC_WDT
+> +	tristate "Siemens Simatic IPC Watchdog"
+> +	depends on SIEMENS_SIMATIC_IPC
+> +	select WATCHDOG_CORE
+> +	help
+> +	  This driver adds support for several watchdogs found in
+> Industrial
+> +	  PCs from Siemens.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> module will be
+> +	  called simatic-ipc-wdt.
+> +
+>  # M68K Architecture
+>  
+>  config M54xx_WATCHDOG
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index f3a6540e725e..7f5c73ec058c 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -142,6 +142,7 @@ obj-$(CONFIG_NI903X_WDT) += ni903x_wdt.o
+>  obj-$(CONFIG_NIC7018_WDT) += nic7018_wdt.o
+>  obj-$(CONFIG_MLX_WDT) += mlx_wdt.o
+>  obj-$(CONFIG_KEEMBAY_WATCHDOG) += keembay_wdt.o
+> +obj-$(CONFIG_SIEMENS_SIMATIC_IPC_WDT) += simatic-ipc-wdt.o
+>  
+>  # M68K Architecture
+>  obj-$(CONFIG_M54xx_WATCHDOG) += m54xx_wdt.o
+> diff --git a/drivers/watchdog/simatic-ipc-wdt.c
+> b/drivers/watchdog/simatic-ipc-wdt.c new file mode 100644
+> index 000000000000..e901718d05b9
+> --- /dev/null
+> +++ b/drivers/watchdog/simatic-ipc-wdt.c
+> @@ -0,0 +1,215 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Siemens SIMATIC IPC driver for Watchdogs
+> + *
+> + * Copyright (c) Siemens AG, 2020-2021
+> + *
+> + * Authors:
+> + *  Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/ioport.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_data/x86/simatic-ipc-base.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/sizes.h>
+> +#include <linux/util_macros.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define WD_ENABLE_IOADR			0x62
+> +#define WD_TRIGGER_IOADR		0x66
+> +#define GPIO_COMMUNITY0_PORT_ID		0xaf
+> +#define PAD_CFG_DW0_GPP_A_23		0x4b8
+> +#define SAFE_EN_N_427E			0x01
+> +#define SAFE_EN_N_227E			0x04
+> +#define WD_ENABLED			0x01
+> +#define WD_TRIGGERED			0x80
+> +#define WD_MACROMODE			0x02
+> +
+> +#define TIMEOUT_MIN	2
+> +#define TIMEOUT_DEF	64
+> +#define TIMEOUT_MAX	64
+> +
+> +#define GP_STATUS_REG_227E	0x404D	/* IO PORT for
+> SAFE_EN_N on 227E */ +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0000);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started
+> (default="
+> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +static struct resource gp_status_reg_227e_res =
+> +	DEFINE_RES_IO_NAMED(GP_STATUS_REG_227E, SZ_1,
+> KBUILD_MODNAME); +
+> +static struct resource io_resource =
+> +	DEFINE_RES_IO_NAMED(WD_ENABLE_IOADR, SZ_1,
+> +			    KBUILD_MODNAME " WD_ENABLE_IOADR");
+> +
+> +/* the actual start will be discovered with pci, 0 is a placeholder
+> */ +static struct resource mem_resource =
+> +	DEFINE_RES_MEM_NAMED(0, SZ_4, "WD_RESET_BASE_ADR");
+> +
+> +static u32 wd_timeout_table[] = {2, 4, 6, 8, 16, 32, 48, 64 };
+> +static void __iomem *wd_reset_base_addr;
+> +
+> +static int wd_start(struct watchdog_device *wdd)
+> +{
+> +	outb(inb(WD_ENABLE_IOADR) | WD_ENABLED, WD_ENABLE_IOADR);
+> +	return 0;
+> +}
+> +
+> +static int wd_stop(struct watchdog_device *wdd)
+> +{
+> +	outb(inb(WD_ENABLE_IOADR) & ~WD_ENABLED, WD_ENABLE_IOADR);
+> +	return 0;
+> +}
+> +
+> +static int wd_ping(struct watchdog_device *wdd)
+> +{
+> +	inb(WD_TRIGGER_IOADR);
+> +	return 0;
+> +}
+> +
+> +static int wd_set_timeout(struct watchdog_device *wdd, unsigned int
+> t) +{
+> +	int timeout_idx = find_closest(t, wd_timeout_table,
+> +				       ARRAY_SIZE(wd_timeout_table));
+> +
+> +	outb((inb(WD_ENABLE_IOADR) & 0xc7) | timeout_idx << 3,
+> WD_ENABLE_IOADR);
+> +	wdd->timeout = wd_timeout_table[timeout_idx];
+> +	return 0;
+> +}
+> +
+> +static const struct watchdog_info wdt_ident = {
+> +	.options	= WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING |
+> +			  WDIOF_SETTIMEOUT,
+> +	.identity	= KBUILD_MODNAME,
+> +};
+> +
+> +static const struct watchdog_ops wdt_ops = {
+> +	.owner		= THIS_MODULE,
+> +	.start		= wd_start,
+> +	.stop		= wd_stop,
+> +	.ping		= wd_ping,
+> +	.set_timeout	= wd_set_timeout,
+> +};
+> +
+> +static void wd_secondary_enable(u32 wdtmode)
+> +{
+> +	u16 resetbit;
+> +
+> +	/* set safe_en_n so we are not just WDIOF_ALARMONLY */
+> +	if (wdtmode == SIMATIC_IPC_DEVICE_227E) {
+> +		/* enable SAFE_EN_N on GP_STATUS_REG_227E */
+> +		resetbit = inw(GP_STATUS_REG_227E);
+> +		outw(resetbit & ~SAFE_EN_N_227E, GP_STATUS_REG_227E);
 
-Add support for instantiating an i2c-client for the VCM with
-the type of the i2c-client set based on the SSDB vcm_type field.
+Should be inb/outb we just have an SZ_1 region.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/media/pci/intel/ipu3/cio2-bridge.c | 55 ++++++++++++++++++++++
- drivers/media/pci/intel/ipu3/cio2-bridge.h | 16 ++++++-
- 2 files changed, 69 insertions(+), 2 deletions(-)
+Henning
 
-diff --git a/drivers/media/pci/intel/ipu3/cio2-bridge.c b/drivers/media/pci/intel/ipu3/cio2-bridge.c
-index 460ef7f78234..9b02f5599082 100644
---- a/drivers/media/pci/intel/ipu3/cio2-bridge.c
-+++ b/drivers/media/pci/intel/ipu3/cio2-bridge.c
-@@ -3,6 +3,7 @@
- 
- #include <linux/acpi.h>
- #include <linux/device.h>
-+#include <linux/i2c.h>
- #include <linux/pci.h>
- #include <linux/property.h>
- #include <media/v4l2-fwnode.h>
-@@ -38,6 +39,18 @@ static const struct cio2_property_names prop_names = {
- 	.link_frequencies = "link-frequencies",
- };
- 
-+static const char * const cio2_vcm_types[] = {
-+	"ad5823",
-+	"dw9714",
-+	"ad5816",
-+	"dw9719",
-+	"dw9718",
-+	"dw9806b",
-+	"wv517s",
-+	"lc898122xa",
-+	"lc898212axb",
-+};
-+
- static int cio2_bridge_read_acpi_buffer(struct acpi_device *adev, char *id,
- 					void *data, u32 size)
- {
-@@ -134,6 +147,12 @@ static void cio2_bridge_create_fwnode_properties(
- 	sensor->dev_properties[2] = PROPERTY_ENTRY_U32(
- 					sensor->prop_names.orientation,
- 					orientation);
-+	if (sensor->ssdb.vcmtype) {
-+		sensor->vcm_ref[0] =
-+			SOFTWARE_NODE_REFERENCE(&sensor->swnodes[SWNODE_VCM]);
-+		sensor->dev_properties[3] =
-+			PROPERTY_ENTRY_REF_ARRAY("lens-focus", sensor->vcm_ref);
-+	}
- 
- 	sensor->ep_properties[0] = PROPERTY_ENTRY_U32(
- 					sensor->prop_names.bus_type,
-@@ -195,6 +214,33 @@ static void cio2_bridge_create_connection_swnodes(struct cio2_bridge *bridge,
- 						sensor->node_names.endpoint,
- 						&nodes[SWNODE_CIO2_PORT],
- 						sensor->cio2_properties);
-+	if (sensor->ssdb.vcmtype)
-+		nodes[SWNODE_VCM] =
-+			NODE_VCM(cio2_vcm_types[sensor->ssdb.vcmtype - 1]);
-+}
-+
-+static void cio2_bridge_instantiate_vcm_i2c_client(struct cio2_sensor *sensor)
-+{
-+	struct i2c_board_info board_info = { };
-+	char name[16];
-+
-+	if (!sensor->ssdb.vcmtype)
-+		return;
-+
-+	snprintf(name, sizeof(name), "%s-VCM", acpi_dev_name(sensor->adev));
-+	board_info.dev_name = name;
-+	strscpy(board_info.type, cio2_vcm_types[sensor->ssdb.vcmtype - 1],
-+		ARRAY_SIZE(board_info.type));
-+	board_info.swnode = &sensor->swnodes[SWNODE_VCM];
-+
-+	sensor->vcm_i2c_client =
-+		i2c_acpi_new_device_by_fwnode(acpi_fwnode_handle(sensor->adev),
-+					      1, &board_info);
-+	if (IS_ERR(sensor->vcm_i2c_client)) {
-+		dev_warn(&sensor->adev->dev, "Error instantiation VCM i2c-client: %ld\n",
-+			 PTR_ERR(sensor->vcm_i2c_client));
-+		sensor->vcm_i2c_client = NULL;
-+	}
- }
- 
- static void cio2_bridge_unregister_sensors(struct cio2_bridge *bridge)
-@@ -207,6 +253,7 @@ static void cio2_bridge_unregister_sensors(struct cio2_bridge *bridge)
- 		software_node_unregister_nodes(sensor->swnodes);
- 		ACPI_FREE(sensor->pld);
- 		acpi_dev_put(sensor->adev);
-+		i2c_unregister_device(sensor->vcm_i2c_client);
- 	}
- }
- 
-@@ -239,6 +286,12 @@ static int cio2_bridge_connect_sensor(const struct cio2_sensor_config *cfg,
- 		if (ret)
- 			goto err_put_adev;
- 
-+		if (sensor->ssdb.vcmtype > ARRAY_SIZE(cio2_vcm_types)) {
-+			dev_warn(&adev->dev, "Unknown VCM type %d\n",
-+				 sensor->ssdb.vcmtype);
-+			sensor->ssdb.vcmtype = 0;
-+		}
-+
- 		status = acpi_get_physical_device_location(adev->handle, &sensor->pld);
- 		if (ACPI_FAILURE(status)) {
- 			ret = -ENODEV;
-@@ -269,6 +322,8 @@ static int cio2_bridge_connect_sensor(const struct cio2_sensor_config *cfg,
- 		sensor->adev = acpi_dev_get(adev);
- 		adev->fwnode.secondary = fwnode;
- 
-+		cio2_bridge_instantiate_vcm_i2c_client(sensor);
-+
- 		dev_info(&cio2->dev, "Found supported sensor %s\n",
- 			 acpi_dev_name(adev));
- 
-diff --git a/drivers/media/pci/intel/ipu3/cio2-bridge.h b/drivers/media/pci/intel/ipu3/cio2-bridge.h
-index 202c7d494f7a..4418cbd08208 100644
---- a/drivers/media/pci/intel/ipu3/cio2-bridge.h
-+++ b/drivers/media/pci/intel/ipu3/cio2-bridge.h
-@@ -8,6 +8,8 @@
- 
- #include "ipu3-cio2.h"
- 
-+struct i2c_client;
-+
- #define CIO2_HID				"INT343E"
- #define CIO2_MAX_LANES				4
- #define MAX_NUM_LINK_FREQS			3
-@@ -42,12 +44,19 @@
- 		.properties = _PROPS,		\
- 	}
- 
-+#define NODE_VCM(_TYPE)				\
-+	(const struct software_node) {		\
-+		.name = _TYPE,			\
-+	}
-+
- enum cio2_sensor_swnodes {
- 	SWNODE_SENSOR_HID,
- 	SWNODE_SENSOR_PORT,
- 	SWNODE_SENSOR_ENDPOINT,
- 	SWNODE_CIO2_PORT,
- 	SWNODE_CIO2_ENDPOINT,
-+	/* Must be last because it is optional / maybe empty */
-+	SWNODE_VCM,
- 	SWNODE_COUNT
- };
- 
-@@ -106,8 +115,10 @@ struct cio2_sensor_config {
- struct cio2_sensor {
- 	char name[ACPI_ID_LEN];
- 	struct acpi_device *adev;
-+	struct i2c_client *vcm_i2c_client;
- 
--	struct software_node swnodes[6];
-+	/* SWNODE_COUNT + 1 for terminating empty node */
-+	struct software_node swnodes[SWNODE_COUNT + 1];
- 	struct cio2_node_names node_names;
- 
- 	struct cio2_sensor_ssdb ssdb;
-@@ -115,10 +126,11 @@ struct cio2_sensor {
- 
- 	struct cio2_property_names prop_names;
- 	struct property_entry ep_properties[5];
--	struct property_entry dev_properties[4];
-+	struct property_entry dev_properties[5];
- 	struct property_entry cio2_properties[3];
- 	struct software_node_ref_args local_ref[1];
- 	struct software_node_ref_args remote_ref[1];
-+	struct software_node_ref_args vcm_ref[1];
- };
- 
- struct cio2_bridge {
--- 
-2.33.1
+> +	} else {
+> +		/* enable SAFE_EN_N on PCH D1600 */
+> +		resetbit = ioread16(wd_reset_base_addr);
+> +		iowrite16(resetbit & ~SAFE_EN_N_427E,
+> wd_reset_base_addr);
+> +	}
+> +}
+> +
+> +static int wd_setup(u32 wdtmode)
+> +{
+> +	unsigned int bootstatus = 0;
+> +	int timeout_idx;
+> +
+> +	timeout_idx = find_closest(TIMEOUT_DEF, wd_timeout_table,
+> +				   ARRAY_SIZE(wd_timeout_table));
+> +
+> +	if (inb(WD_ENABLE_IOADR) & WD_TRIGGERED)
+> +		bootstatus |= WDIOF_CARDRESET;
+> +
+> +	/* reset alarm bit, set macro mode, and set timeout */
+> +	outb(WD_TRIGGERED | WD_MACROMODE | timeout_idx << 3,
+> WD_ENABLE_IOADR); +
+> +	wd_secondary_enable(wdtmode);
+> +
+> +	return bootstatus;
+> +}
+> +
+> +static struct watchdog_device wdd_data = {
+> +	.info = &wdt_ident,
+> +	.ops = &wdt_ops,
+> +	.min_timeout = TIMEOUT_MIN,
+> +	.max_timeout = TIMEOUT_MAX
+> +};
+> +
+> +static int simatic_ipc_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct simatic_ipc_platform *plat = pdev->dev.platform_data;
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +
+> +	switch (plat->devmode) {
+> +	case SIMATIC_IPC_DEVICE_227E:
+> +		if (!devm_request_region(dev,
+> gp_status_reg_227e_res.start,
+> +
+> resource_size(&gp_status_reg_227e_res),
+> +					 KBUILD_MODNAME)) {
+> +			dev_err(dev,
+> +				"Unable to register IO resource at
+> %pR\n",
+> +				&gp_status_reg_227e_res);
+> +			return -EBUSY;
+> +		}
+> +		fallthrough;
+> +	case SIMATIC_IPC_DEVICE_427E:
+> +		wdd_data.parent = dev;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!devm_request_region(dev, io_resource.start,
+> +				 resource_size(&io_resource),
+> +				 io_resource.name)) {
+> +		dev_err(dev,
+> +			"Unable to register IO resource at %#x\n",
+> +			WD_ENABLE_IOADR);
+> +		return -EBUSY;
+> +	}
+> +
+> +	if (plat->devmode == SIMATIC_IPC_DEVICE_427E) {
+> +		res = &mem_resource;
+> +
+> +		/* get GPIO base from PCI */
+> +		res->start =
+> simatic_ipc_get_membase0(PCI_DEVFN(0x1f, 1));
+> +		if (res->start == 0)
+> +			return -ENODEV;
+> +
+> +		/* do the final address calculation */
+> +		res->start = res->start + (GPIO_COMMUNITY0_PORT_ID
+> << 16) +
+> +			     PAD_CFG_DW0_GPP_A_23;
+> +		res->end += res->start;
+> +
+> +		wd_reset_base_addr = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(wd_reset_base_addr))
+> +			return PTR_ERR(wd_reset_base_addr);
+> +	}
+> +
+> +	wdd_data.bootstatus = wd_setup(plat->devmode);
+> +	if (wdd_data.bootstatus)
+> +		dev_warn(dev, "last reboot caused by watchdog
+> reset\n"); +
+> +	watchdog_set_nowayout(&wdd_data, nowayout);
+> +	watchdog_stop_on_reboot(&wdd_data);
+> +	return devm_watchdog_register_device(dev, &wdd_data);
+> +}
+> +
+> +static struct platform_driver simatic_ipc_wdt_driver = {
+> +	.probe = simatic_ipc_wdt_probe,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +	},
+> +};
+> +
+> +module_platform_driver(simatic_ipc_wdt_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:" KBUILD_MODNAME);
+> +MODULE_AUTHOR("Gerd Haeussler <gerd.haeussler.ext@siemens.com>");
 
