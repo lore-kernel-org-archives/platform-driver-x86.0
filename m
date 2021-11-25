@@ -2,336 +2,204 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC392C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Nov 2021 17:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3643FC4321E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Nov 2021 17:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344998AbhKYReW (ORCPT
+        id S237475AbhKYRgl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Nov 2021 12:34:22 -0500
-Received: from thoth.sbs.de ([192.35.17.2]:48726 "EHLO thoth.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1349373AbhKYRcW (ORCPT
+        Thu, 25 Nov 2021 12:36:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348947AbhKYRej (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Nov 2021 12:32:22 -0500
-X-Greylist: delayed 1181 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Nov 2021 12:32:20 EST
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id 1APH8s2V030334
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Nov 2021 18:08:54 +0100
-Received: from md1za8fc.ad001.siemens.net ([139.25.69.80])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 1APH8r6V023783;
-        Thu, 25 Nov 2021 18:08:53 +0100
-Date:   Thu, 25 Nov 2021 18:08:52 +0100
-From:   Henning Schild <henning.schild@siemens.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>
-Cc:     Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        "Gerd Haeussler" <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Enrico Weigelt <lkml@metux.net>
-Subject: Re: [PATCH v3 3/4] watchdog: simatic-ipc-wdt: add new driver for
- Siemens Industrial PCs
-Message-ID: <20211125180852.190e4eec@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20210329174928.18816-4-henning.schild@siemens.com>
-References: <20210329174928.18816-1-henning.schild@siemens.com>
-        <20210329174928.18816-4-henning.schild@siemens.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Thu, 25 Nov 2021 12:34:39 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD389C0619DB;
+        Thu, 25 Nov 2021 09:22:54 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id w1so28515292edc.6;
+        Thu, 25 Nov 2021 09:22:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CeTt+lZ3NtZ7WbMSRJw3X+ea0cwH/6HmZ09E6WWPuRc=;
+        b=cMWL0pgR5NOYORdbNpHMMbTNtSL2eR/M5o1k01s9tvdrr2xZYy0AYbY5dZ53ofu2KF
+         UXtiuVYVtzNxAKn/7+uEIteZUqzIC7DHqumsEglGjQV8Xf+VuiHIh0huGItNsTpGrpeA
+         gzK/rUmvoH+amV8ept364s5LHai1NF2mwyd4uwBVpekJOUmo6BjlDREZFl4wyL8PU4QP
+         NuJPPD8nXtM8Z33WEO2xqhohX3gXjEr/G+98PHeslUTwLoxX3cbI5HwQB2TuuwQU4nnk
+         zqGWOuJ6AEqNoO9oJTtvKNQ3uPlHCnN7tWXJ4I24J/I7aLFi8HfkpsaMH9Tw/ysKZfQa
+         Q0Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CeTt+lZ3NtZ7WbMSRJw3X+ea0cwH/6HmZ09E6WWPuRc=;
+        b=ns2uUP4GlURqMwcMK/7GoxjGLP6uJl4lKPnpEmJSndwP58TaH6gsiZefcM3lYHI9ad
+         6VXRzOb2laIdXUB9h1PwBN6mESeb6WOo33rNLAi8EtYlzcKBtgDqivqDuBVBXpwo9iYi
+         KaNE7vAHe/bfbhrXZWio7RthZDYM4pffYKZYe5d6jrilCbdlyBZc79YptjzB62ndOQ+z
+         okw4vYMOpYR1REOXYp/FWZvnmgQ/PgXdcS1i27WCVZG5gXjz8WsY3wouUkaOojTEDqiI
+         8ariky4eEaPQYI8gsV8GCYRBSO5Sx41zQahMpERKj6VvOi2Sett+UITadr0VyGxyMxC0
+         d6Uw==
+X-Gm-Message-State: AOAM532fanpRPj7ZPkT7h5Y2UhV6vBfvmSZc2uV3yZRt8D7Jpf8echRO
+        q5LNRbiQb7JXVKInCf0cUm8fmzqsLuIMSg2I4rw=
+X-Google-Smtp-Source: ABdhPJw+gnMB2U6mq9HU0eAzyUrTKWNPtnYpCXiAHUb55ZRPMW14tsVKlJZfoCEHCSjHliSNcdJZYhnEF4fpn1yI0ss=
+X-Received: by 2002:a05:6402:4394:: with SMTP id o20mr40808523edc.342.1637860973272;
+ Thu, 25 Nov 2021 09:22:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20211125165412.535063-1-hdegoede@redhat.com> <20211125165412.535063-4-hdegoede@redhat.com>
+In-Reply-To: <20211125165412.535063-4-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 25 Nov 2021 19:22:17 +0200
+Message-ID: <CAHp75VdBf-xNfx5a70LWnP7-qJpjB9gWSVQExqCz3emrgrT7Zw@mail.gmail.com>
+Subject: Re: [PATCH v6 03/15] i2c: acpi: Add i2c_acpi_new_device_by_fwnode() function
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Mon, 29 Mar 2021 19:49:27 +0200
-schrieb Henning Schild <henning.schild@siemens.com>:
+On Thu, Nov 25, 2021 at 6:54 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Change i2c_acpi_new_device() into i2c_acpi_new_device_by_fwnode() and
+> add a static inline wrapper providing the old i2c_acpi_new_device()
+> behavior.
+>
+> This is necessary because in some cases we may only have access
+> to the fwnode / acpi_device and not to the matching physical-node
+> struct device *.
 
-> This driver adds initial support for several devices from Siemens. It
-> is based on a platform driver introduced in an earlier commit.
-> 
-> Signed-off-by: Henning Schild <henning.schild@siemens.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+One nit-pick below.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Thanks!
+
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/watchdog/Kconfig           |  11 ++
->  drivers/watchdog/Makefile          |   1 +
->  drivers/watchdog/simatic-ipc-wdt.c | 215
-> +++++++++++++++++++++++++++++ 3 files changed, 227 insertions(+)
->  create mode 100644 drivers/watchdog/simatic-ipc-wdt.c
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 1fe0042a48d2..948497eb4bef 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -1575,6 +1575,17 @@ config NIC7018_WDT
->  	  To compile this driver as a module, choose M here: the
-> module will be called nic7018_wdt.
->  
-> +config SIEMENS_SIMATIC_IPC_WDT
-> +	tristate "Siemens Simatic IPC Watchdog"
-> +	depends on SIEMENS_SIMATIC_IPC
-> +	select WATCHDOG_CORE
-> +	help
-> +	  This driver adds support for several watchdogs found in
-> Industrial
-> +	  PCs from Siemens.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> module will be
-> +	  called simatic-ipc-wdt.
-> +
->  # M68K Architecture
->  
->  config M54xx_WATCHDOG
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index f3a6540e725e..7f5c73ec058c 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -142,6 +142,7 @@ obj-$(CONFIG_NI903X_WDT) += ni903x_wdt.o
->  obj-$(CONFIG_NIC7018_WDT) += nic7018_wdt.o
->  obj-$(CONFIG_MLX_WDT) += mlx_wdt.o
->  obj-$(CONFIG_KEEMBAY_WATCHDOG) += keembay_wdt.o
-> +obj-$(CONFIG_SIEMENS_SIMATIC_IPC_WDT) += simatic-ipc-wdt.o
->  
->  # M68K Architecture
->  obj-$(CONFIG_M54xx_WATCHDOG) += m54xx_wdt.o
-> diff --git a/drivers/watchdog/simatic-ipc-wdt.c
-> b/drivers/watchdog/simatic-ipc-wdt.c new file mode 100644
-> index 000000000000..e901718d05b9
-> --- /dev/null
-> +++ b/drivers/watchdog/simatic-ipc-wdt.c
-> @@ -0,0 +1,215 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Siemens SIMATIC IPC driver for Watchdogs
-> + *
-> + * Copyright (c) Siemens AG, 2020-2021
-> + *
-> + * Authors:
-> + *  Gerd Haeussler <gerd.haeussler.ext@siemens.com>
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/errno.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_data/x86/simatic-ipc-base.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/sizes.h>
-> +#include <linux/util_macros.h>
-> +#include <linux/watchdog.h>
-> +
-> +#define WD_ENABLE_IOADR			0x62
-> +#define WD_TRIGGER_IOADR		0x66
-> +#define GPIO_COMMUNITY0_PORT_ID		0xaf
-> +#define PAD_CFG_DW0_GPP_A_23		0x4b8
-> +#define SAFE_EN_N_427E			0x01
-> +#define SAFE_EN_N_227E			0x04
-> +#define WD_ENABLED			0x01
-> +#define WD_TRIGGERED			0x80
-> +#define WD_MACROMODE			0x02
-> +
-> +#define TIMEOUT_MIN	2
-> +#define TIMEOUT_DEF	64
-> +#define TIMEOUT_MAX	64
-> +
-> +#define GP_STATUS_REG_227E	0x404D	/* IO PORT for
-> SAFE_EN_N on 227E */ +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, 0000);
-> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started
-> (default="
-> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +static struct resource gp_status_reg_227e_res =
-> +	DEFINE_RES_IO_NAMED(GP_STATUS_REG_227E, SZ_1,
-> KBUILD_MODNAME); +
-> +static struct resource io_resource =
-> +	DEFINE_RES_IO_NAMED(WD_ENABLE_IOADR, SZ_1,
-> +			    KBUILD_MODNAME " WD_ENABLE_IOADR");
+> Changes in v6:
+> - New patch in v6 of this patch series
+> ---
+>  drivers/i2c/i2c-core-acpi.c | 18 ++++++++++++------
+>  include/linux/i2c.h         | 17 +++++++++++++----
+>  2 files changed, 25 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+> index 04338cbd08a9..1db3cc5fc47f 100644
+> --- a/drivers/i2c/i2c-core-acpi.c
+> +++ b/drivers/i2c/i2c-core-acpi.c
+> @@ -476,8 +476,9 @@ struct notifier_block i2c_acpi_notifier = {
+>  };
+>
+>  /**
+> - * i2c_acpi_new_device - Create i2c-client for the Nth I2cSerialBus resource
+> - * @dev:     Device owning the ACPI resources to get the client from
 
-WD_TRIGGER_IOADR, SZ_1 missing here and in request_region part
+> + * i2c_acpi_new_device_by_fwnode - Create i2c-client for the Nth I2cSerialBus
+> + * resource
 
-Henning
+Can be on one line.
 
-> +/* the actual start will be discovered with pci, 0 is a placeholder
-> */ +static struct resource mem_resource =
-> +	DEFINE_RES_MEM_NAMED(0, SZ_4, "WD_RESET_BASE_ADR");
+> + * @fwnode:  fwnode with the ACPI resources to get the client from
+>   * @index:   Index of ACPI resource to get
+>   * @info:    describes the I2C device; note this is modified (addr gets set)
+>   * Context: can sleep
+> @@ -493,15 +494,20 @@ struct notifier_block i2c_acpi_notifier = {
+>   * Returns a pointer to the new i2c-client, or error pointer in case of failure.
+>   * Specifically, -EPROBE_DEFER is returned if the adapter is not found.
+>   */
+> -struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
+> -                                      struct i2c_board_info *info)
+> +struct i2c_client *i2c_acpi_new_device_by_fwnode(struct fwnode_handle *fwnode,
+> +                                                int index,
+> +                                                struct i2c_board_info *info)
+>  {
+> -       struct acpi_device *adev = ACPI_COMPANION(dev);
+>         struct i2c_acpi_lookup lookup;
+>         struct i2c_adapter *adapter;
+> +       struct acpi_device *adev;
+>         LIST_HEAD(resource_list);
+>         int ret;
+>
+> +       adev = to_acpi_device_node(fwnode);
+> +       if (!adev)
+> +               return ERR_PTR(-ENODEV);
 > +
-> +static u32 wd_timeout_table[] = {2, 4, 6, 8, 16, 32, 48, 64 };
-> +static void __iomem *wd_reset_base_addr;
-> +
-> +static int wd_start(struct watchdog_device *wdd)
+>         memset(&lookup, 0, sizeof(lookup));
+>         lookup.info = info;
+>         lookup.device_handle = acpi_device_handle(adev);
+> @@ -523,7 +529,7 @@ struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
+>
+>         return i2c_new_client_device(adapter, info);
+>  }
+> -EXPORT_SYMBOL_GPL(i2c_acpi_new_device);
+> +EXPORT_SYMBOL_GPL(i2c_acpi_new_device_by_fwnode);
+>
+>  bool i2c_acpi_waive_d0_probe(struct device *dev)
+>  {
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index 16119ac1aa97..7d4f52ceb7b5 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -1025,8 +1025,9 @@ bool i2c_acpi_get_i2c_resource(struct acpi_resource *ares,
+>                                struct acpi_resource_i2c_serialbus **i2c);
+>  int i2c_acpi_client_count(struct acpi_device *adev);
+>  u32 i2c_acpi_find_bus_speed(struct device *dev);
+> -struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
+> -                                      struct i2c_board_info *info);
+> +struct i2c_client *i2c_acpi_new_device_by_fwnode(struct fwnode_handle *fwnode,
+> +                                                int index,
+> +                                                struct i2c_board_info *info);
+>  struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle);
+>  bool i2c_acpi_waive_d0_probe(struct device *dev);
+>  #else
+> @@ -1043,8 +1044,9 @@ static inline u32 i2c_acpi_find_bus_speed(struct device *dev)
+>  {
+>         return 0;
+>  }
+> -static inline struct i2c_client *i2c_acpi_new_device(struct device *dev,
+> -                                       int index, struct i2c_board_info *info)
+> +static inline struct i2c_client *i2c_acpi_new_device_by_fwnode(
+> +                                       struct fwnode_handle *fwnode, int index,
+> +                                       struct i2c_board_info *info)
+>  {
+>         return ERR_PTR(-ENODEV);
+>  }
+> @@ -1058,4 +1060,11 @@ static inline bool i2c_acpi_waive_d0_probe(struct device *dev)
+>  }
+>  #endif /* CONFIG_ACPI */
+>
+> +static inline struct i2c_client *i2c_acpi_new_device(struct device *dev,
+> +                                                    int index,
+> +                                                    struct i2c_board_info *info)
 > +{
-> +	outb(inb(WD_ENABLE_IOADR) | WD_ENABLED, WD_ENABLE_IOADR);
-> +	return 0;
+> +       return i2c_acpi_new_device_by_fwnode(dev_fwnode(dev), index, info);
 > +}
 > +
-> +static int wd_stop(struct watchdog_device *wdd)
-> +{
-> +	outb(inb(WD_ENABLE_IOADR) & ~WD_ENABLED, WD_ENABLE_IOADR);
-> +	return 0;
-> +}
-> +
-> +static int wd_ping(struct watchdog_device *wdd)
-> +{
-> +	inb(WD_TRIGGER_IOADR);
-> +	return 0;
-> +}
-> +
-> +static int wd_set_timeout(struct watchdog_device *wdd, unsigned int
-> t) +{
-> +	int timeout_idx = find_closest(t, wd_timeout_table,
-> +				       ARRAY_SIZE(wd_timeout_table));
-> +
-> +	outb((inb(WD_ENABLE_IOADR) & 0xc7) | timeout_idx << 3,
-> WD_ENABLE_IOADR);
-> +	wdd->timeout = wd_timeout_table[timeout_idx];
-> +	return 0;
-> +}
-> +
-> +static const struct watchdog_info wdt_ident = {
-> +	.options	= WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING |
-> +			  WDIOF_SETTIMEOUT,
-> +	.identity	= KBUILD_MODNAME,
-> +};
-> +
-> +static const struct watchdog_ops wdt_ops = {
-> +	.owner		= THIS_MODULE,
-> +	.start		= wd_start,
-> +	.stop		= wd_stop,
-> +	.ping		= wd_ping,
-> +	.set_timeout	= wd_set_timeout,
-> +};
-> +
-> +static void wd_secondary_enable(u32 wdtmode)
-> +{
-> +	u16 resetbit;
-> +
-> +	/* set safe_en_n so we are not just WDIOF_ALARMONLY */
-> +	if (wdtmode == SIMATIC_IPC_DEVICE_227E) {
-> +		/* enable SAFE_EN_N on GP_STATUS_REG_227E */
-> +		resetbit = inw(GP_STATUS_REG_227E);
-> +		outw(resetbit & ~SAFE_EN_N_227E, GP_STATUS_REG_227E);
-> +	} else {
-> +		/* enable SAFE_EN_N on PCH D1600 */
-> +		resetbit = ioread16(wd_reset_base_addr);
-> +		iowrite16(resetbit & ~SAFE_EN_N_427E,
-> wd_reset_base_addr);
-> +	}
-> +}
-> +
-> +static int wd_setup(u32 wdtmode)
-> +{
-> +	unsigned int bootstatus = 0;
-> +	int timeout_idx;
-> +
-> +	timeout_idx = find_closest(TIMEOUT_DEF, wd_timeout_table,
-> +				   ARRAY_SIZE(wd_timeout_table));
-> +
-> +	if (inb(WD_ENABLE_IOADR) & WD_TRIGGERED)
-> +		bootstatus |= WDIOF_CARDRESET;
-> +
-> +	/* reset alarm bit, set macro mode, and set timeout */
-> +	outb(WD_TRIGGERED | WD_MACROMODE | timeout_idx << 3,
-> WD_ENABLE_IOADR); +
-> +	wd_secondary_enable(wdtmode);
-> +
-> +	return bootstatus;
-> +}
-> +
-> +static struct watchdog_device wdd_data = {
-> +	.info = &wdt_ident,
-> +	.ops = &wdt_ops,
-> +	.min_timeout = TIMEOUT_MIN,
-> +	.max_timeout = TIMEOUT_MAX
-> +};
-> +
-> +static int simatic_ipc_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct simatic_ipc_platform *plat = pdev->dev.platform_data;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +
-> +	switch (plat->devmode) {
-> +	case SIMATIC_IPC_DEVICE_227E:
-> +		if (!devm_request_region(dev,
-> gp_status_reg_227e_res.start,
-> +
-> resource_size(&gp_status_reg_227e_res),
-> +					 KBUILD_MODNAME)) {
-> +			dev_err(dev,
-> +				"Unable to register IO resource at
-> %pR\n",
-> +				&gp_status_reg_227e_res);
-> +			return -EBUSY;
-> +		}
-> +		fallthrough;
-> +	case SIMATIC_IPC_DEVICE_427E:
-> +		wdd_data.parent = dev;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!devm_request_region(dev, io_resource.start,
-> +				 resource_size(&io_resource),
-> +				 io_resource.name)) {
-> +		dev_err(dev,
-> +			"Unable to register IO resource at %#x\n",
-> +			WD_ENABLE_IOADR);
-> +		return -EBUSY;
-> +	}
-> +
-> +	if (plat->devmode == SIMATIC_IPC_DEVICE_427E) {
-> +		res = &mem_resource;
-> +
-> +		/* get GPIO base from PCI */
-> +		res->start =
-> simatic_ipc_get_membase0(PCI_DEVFN(0x1f, 1));
-> +		if (res->start == 0)
-> +			return -ENODEV;
-> +
-> +		/* do the final address calculation */
-> +		res->start = res->start + (GPIO_COMMUNITY0_PORT_ID
-> << 16) +
-> +			     PAD_CFG_DW0_GPP_A_23;
-> +		res->end += res->start;
-> +
-> +		wd_reset_base_addr = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(wd_reset_base_addr))
-> +			return PTR_ERR(wd_reset_base_addr);
-> +	}
-> +
-> +	wdd_data.bootstatus = wd_setup(plat->devmode);
-> +	if (wdd_data.bootstatus)
-> +		dev_warn(dev, "last reboot caused by watchdog
-> reset\n"); +
-> +	watchdog_set_nowayout(&wdd_data, nowayout);
-> +	watchdog_stop_on_reboot(&wdd_data);
-> +	return devm_watchdog_register_device(dev, &wdd_data);
-> +}
-> +
-> +static struct platform_driver simatic_ipc_wdt_driver = {
-> +	.probe = simatic_ipc_wdt_probe,
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
-> +	},
-> +};
-> +
-> +module_platform_driver(simatic_ipc_wdt_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:" KBUILD_MODNAME);
-> +MODULE_AUTHOR("Gerd Haeussler <gerd.haeussler.ext@siemens.com>");
+>  #endif /* _LINUX_I2C_H */
+> --
+> 2.33.1
+>
 
+
+-- 
+With Best Regards,
+Andy Shevchenko
