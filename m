@@ -2,193 +2,428 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D7EC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Nov 2021 12:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8531C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Nov 2021 12:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239504AbhKZMb3 (ORCPT
+        id S1377543AbhKZMow (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 26 Nov 2021 07:31:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233765AbhKZM33 (ORCPT
+        Fri, 26 Nov 2021 07:44:52 -0500
+Received: from thoth.sbs.de ([192.35.17.2]:49800 "EHLO thoth.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1377237AbhKZMmv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 Nov 2021 07:29:29 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C220C08C5DA;
-        Fri, 26 Nov 2021 03:56:14 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id j3so18148910wrp.1;
-        Fri, 26 Nov 2021 03:56:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=FjiDebeN0lftz9SIBVsy6WJxvM/l3Hn6Nmxtkdqni4Q=;
-        b=qV59eAZvwVT28HDrcNzurtuW8qs60Idx7SSZRN9FdnyyNugUBTneHz/X8BbSom+Z1M
-         FFMacGSf/yxmIocne/ESqk797izSzsl0zwq2x5T1LtE4DJnz1Reh0lJKpbLTeXWO0rj5
-         9HBk0KmDA3+OnrTaG4/bfBNt/rfhnivxrjflJzSuvH/OKfqln4diqOEZl7uE1VcIhE+m
-         GWaKb+CQxgLCkHCCEQpQdNoIDijAt2a0E8uM+fhYQLDvRfNEoXUGjXZzkTgcIw7T2Tp0
-         FII8k3XvwMmffzfIZPlTJh4/eMfb+xXov9RUY7mNhj9BRbQjckh7AWLjwqPXf5M0w0I4
-         tGow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=FjiDebeN0lftz9SIBVsy6WJxvM/l3Hn6Nmxtkdqni4Q=;
-        b=lCByU3f0B5ufhtD32kXeMylQfmSZAQBw4xJa3fXvULVCnZ38S1NlihoSyBE4I9dwoN
-         T+vxvLAWuIWYa1P7EhcHgx1TNGVwNQWp7MKqhSeC7Y184OhfO63+QahBcdn2Y4BMMeI7
-         sKKpY/yWYFH8epG76qysRIQWkMz390pw3+Ymjj6n5rLsqxcNrlBqw2sIzAQ7tb8+147R
-         5dfMsRNHLmcLFQuCE6bDU5UxE3adBQ1y+f65GVcMp/4LP8Gcc0qPkx+lg8Hrwl8VRtBy
-         +9TmbQeYzQ161jKIvmYO8Rtn358NoMio8GzAJpe607jHGJGumJGUNjsPO5/hmRbYoPXh
-         ZsvQ==
-X-Gm-Message-State: AOAM533bS5l1zGecK2RUs4F08r0p9ozTotsuUbSEhwUVfO/EFtoMd7Eo
-        U2iXwGE9I86dMNg7tASp5qI=
-X-Google-Smtp-Source: ABdhPJzfUgA3+l4rR+XNu5HeQbUXPQ1u3phKl+rWgA+uxctzFaji7KrNTSrX0cUbU77wZeGV2rlWOA==
-X-Received: by 2002:adf:c10e:: with SMTP id r14mr13062187wre.558.1637927772579;
-        Fri, 26 Nov 2021 03:56:12 -0800 (PST)
-Received: from [192.168.0.14] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net. [86.13.91.161])
-        by smtp.gmail.com with ESMTPSA id p13sm10797690wmi.0.2021.11.26.03.56.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Nov 2021 03:56:12 -0800 (PST)
-Subject: Re: [PATCH v6 07/15] platform/x86: int3472: Enable I2c daisy chain
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20211125165412.535063-1-hdegoede@redhat.com>
- <20211125165412.535063-8-hdegoede@redhat.com>
- <YaAel9HuAvemRg2s@pendragon.ideasonboard.com>
- <03306e12-40ec-39ab-3b40-42b0395e1b65@redhat.com>
- <4ab5efa7-65b0-009c-293a-d7a49776e78d@gmail.com>
- <2fd5400e-e587-54d2-1071-ad8df49a8a68@redhat.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <ef123ea0-f51f-50e1-dbc2-c442a97722e4@gmail.com>
-Date:   Fri, 26 Nov 2021 11:56:11 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Fri, 26 Nov 2021 07:42:51 -0500
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id 1AQCdC6N001686
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Nov 2021 13:39:12 +0100
+Received: from md1za8fc.ad001.siemens.net ([139.22.47.90])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 1AQCdAdV022198;
+        Fri, 26 Nov 2021 13:39:10 +0100
+Date:   Fri, 26 Nov 2021 13:39:09 +0100
+From:   Henning Schild <henning.schild@siemens.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>
+Cc:     Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        "Gerd Haeussler" <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Enrico Weigelt <lkml@metux.net>
+Subject: Re: [PATCH v3 1/4] platform/x86: simatic-ipc: add main driver for
+ Siemens devices
+Message-ID: <20211126133909.33fb1937@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20210329174928.18816-2-henning.schild@siemens.com>
+References: <20210329174928.18816-1-henning.schild@siemens.com>
+        <20210329174928.18816-2-henning.schild@siemens.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <2fd5400e-e587-54d2-1071-ad8df49a8a68@redhat.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Am Mon, 29 Mar 2021 19:49:25 +0200
+schrieb Henning Schild <henning.schild@siemens.com>:
 
-On 26/11/2021 11:45, Hans de Goede wrote:
-> Hi,
->
-> On 11/26/21 12:39, Daniel Scally wrote:
->> Hello
->>
->> On 26/11/2021 11:30, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 11/26/21 00:39, Laurent Pinchart wrote:
->>>> Hi Hans,
->>>>
->>>> Thank you for the patch.
->>>>
->>>> On Thu, Nov 25, 2021 at 05:54:04PM +0100, Hans de Goede wrote:
->>>>> From: Daniel Scally <djrscally@gmail.com>
->>>>>
->>>>> The TPS68470 PMIC has an I2C passthrough mode through which I2C traffic
->>>>> can be forwarded to a device connected to the PMIC as though it were
->>>>> connected directly to the system bus. Enable this mode when the chip
->>>>> is initialised.
->>>> Is there any drawback doing this unconditionally, if nothing is
->>>> connected to the bus on the other side (including no pull-ups) ?
->>> I actually never took a really close look at this patch, I just
->>> sorta inherited it from Daniel.
->>>
->>> Now that I have taken a close look, I see that it is setting the
->>> exact same bits as which get set when enabling the VSIO regulator.
->>>
->>> The idea here is that the I2C-passthrough only gets enabled when
->>> the VSIO regulator is turned on, because some sensors end up
->>> shorting the I2C pins to ground when the sensor is not powered.
->>>
->>> Since we set these bits when powering up the VSIO regulator
->>> and since we do that before trying to talk to the sensor
->>> I don't think that we need this (hack) anymore.
->>>
->>> I will give things a try without this change and if things
->>> still work I will drop this patch from the set.
->>>
->>> Daniel, what do you think?
->>
->> Humm, we're only using the VSIO regulator with the VCM though right?
-> Nope, there is a mapping from VSIO to dovdd for the ov8865 in the
-> board_data; and I'm pretty sure I copied that from your earlier
-> attempts at getting regulator lookups registered :)
+> This mainly implements detection of these devices and will allow
+> secondary drivers to work on such machines.
+> 
+> The identification is DMI-based with a vendor specific way to tell
+> them apart in a reliable way.
+> 
+> Drivers for LEDs and Watchdogs will follow to make use of that
+> platform detection.
+> 
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> ---
+>  drivers/platform/x86/Kconfig                  |  12 ++
+>  drivers/platform/x86/Makefile                 |   3 +
+>  drivers/platform/x86/simatic-ipc.c            | 169
+> ++++++++++++++++++ .../platform_data/x86/simatic-ipc-base.h      |
+> 29 +++ include/linux/platform_data/x86/simatic-ipc.h |  72 ++++++++
+>  5 files changed, 285 insertions(+)
+>  create mode 100644 drivers/platform/x86/simatic-ipc.c
+>  create mode 100644 include/linux/platform_data/x86/simatic-ipc-base.h
+>  create mode 100644 include/linux/platform_data/x86/simatic-ipc.h
+> 
+> diff --git a/drivers/platform/x86/Kconfig
+> b/drivers/platform/x86/Kconfig index 461ec61530eb..1eaa03d0d183 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1289,6 +1289,18 @@ config INTEL_TELEMETRY
+>  	  directly via debugfs files. Various tools may use
+>  	  this interface for SoC state monitoring.
+>  
+> +config SIEMENS_SIMATIC_IPC
+> +	tristate "Siemens Simatic IPC Class driver"
+> +	depends on PCI
+> +	help
+> +	  This Simatic IPC class driver is the central of several
+> drivers. It
+> +	  is mainly used for system identification, after which
+> drivers in other
+> +	  classes will take care of driving specifics of those
+> machines.
+> +	  i.e. LEDs and watchdog.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> module
+> +	  will be called simatic-ipc.
+> +
+>  endif # X86_PLATFORM_DEVICES
+>  
+>  config PMC_ATOM
+> diff --git a/drivers/platform/x86/Makefile
+> b/drivers/platform/x86/Makefile index 60d554073749..26cdebf2e701
+> 100644 --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -138,3 +138,6 @@ obj-$(CONFIG_INTEL_TELEMETRY)		+=
+> intel_telemetry_core.o \ intel_telemetry_pltdrv.o \
+>  					   intel_telemetry_debugfs.o
+>  obj-$(CONFIG_PMC_ATOM)			+= pmc_atom.o
+> +
+> +# Siemens Simatic Industrial PCs
+> +obj-$(CONFIG_SIEMENS_SIMATIC_IPC)	+= simatic-ipc.o
+> diff --git a/drivers/platform/x86/simatic-ipc.c
+> b/drivers/platform/x86/simatic-ipc.c new file mode 100644
+> index 000000000000..52e8596bc63d
+> --- /dev/null
+> +++ b/drivers/platform/x86/simatic-ipc.c
+> @@ -0,0 +1,169 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Siemens SIMATIC IPC platform driver
+> + *
+> + * Copyright (c) Siemens AG, 2018-2021
+> + *
+> + * Authors:
+> + *  Henning Schild <henning.schild@siemens.com>
+> + *  Jan Kiszka <jan.kiszka@siemens.com>
+> + *  Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/dmi.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_data/x86/simatic-ipc.h>
+> +#include <linux/platform_device.h>
+> +
+> +static struct platform_device *ipc_led_platform_device;
+> +static struct platform_device *ipc_wdt_platform_device;
+> +
+> +static const struct dmi_system_id simatic_ipc_whitelist[] = {
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+> +static struct simatic_ipc_platform platform_data;
+> +
+> +static struct {
+> +	u32 station_id;
+> +	u8 led_mode;
+> +	u8 wdt_mode;
+> +} device_modes[] = {
+> +	{SIMATIC_IPC_IPC127E, SIMATIC_IPC_DEVICE_127E,
+> SIMATIC_IPC_DEVICE_NONE},
+> +	{SIMATIC_IPC_IPC227D, SIMATIC_IPC_DEVICE_227D,
+> SIMATIC_IPC_DEVICE_NONE},
+> +	{SIMATIC_IPC_IPC227E, SIMATIC_IPC_DEVICE_427E,
+> SIMATIC_IPC_DEVICE_227E},
+> +	{SIMATIC_IPC_IPC277E, SIMATIC_IPC_DEVICE_NONE,
+> SIMATIC_IPC_DEVICE_227E},
+> +	{SIMATIC_IPC_IPC427D, SIMATIC_IPC_DEVICE_427E,
+> SIMATIC_IPC_DEVICE_NONE},
+> +	{SIMATIC_IPC_IPC427E, SIMATIC_IPC_DEVICE_427E,
+> SIMATIC_IPC_DEVICE_427E},
+> +	{SIMATIC_IPC_IPC477E, SIMATIC_IPC_DEVICE_NONE,
+> SIMATIC_IPC_DEVICE_427E}, +};
+> +
+> +static int register_platform_devices(u32 station_id)
+> +{
+> +	u8 ledmode = SIMATIC_IPC_DEVICE_NONE;
+> +	u8 wdtmode = SIMATIC_IPC_DEVICE_NONE;
+> +	int i;
+> +
+> +	platform_data.devmode = SIMATIC_IPC_DEVICE_NONE;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(device_modes); i++) {
+> +		if (device_modes[i].station_id == station_id) {
+> +			ledmode = device_modes[i].led_mode;
+> +			wdtmode = device_modes[i].wdt_mode;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (ledmode != SIMATIC_IPC_DEVICE_NONE) {
+> +		platform_data.devmode = ledmode;
+> +		ipc_led_platform_device =
+> +			platform_device_register_data(NULL,
+> +				KBUILD_MODNAME "_leds",
+> PLATFORM_DEVID_NONE,
+> +				&platform_data,
+> +				sizeof(struct simatic_ipc_platform));
+> +		if (IS_ERR(ipc_led_platform_device))
+> +			return PTR_ERR(ipc_led_platform_device);
+> +
+> +		pr_debug("device=%s created\n",
+> +			 ipc_led_platform_device->name);
+> +	}
+> +
+> +	if (wdtmode != SIMATIC_IPC_DEVICE_NONE) {
+> +		platform_data.devmode = wdtmode;
+> +		ipc_wdt_platform_device =
+> +			platform_device_register_data(NULL,
+> +				KBUILD_MODNAME "_wdt",
+> PLATFORM_DEVID_NONE,
+> +				&platform_data,
+> +				sizeof(struct simatic_ipc_platform));
+> +		if (IS_ERR(ipc_wdt_platform_device))
+> +			return PTR_ERR(ipc_wdt_platform_device);
+> +
+> +		pr_debug("device=%s created\n",
+> +			 ipc_wdt_platform_device->name);
+> +	}
+> +
+> +	if (ledmode == SIMATIC_IPC_DEVICE_NONE &&
+> +	    wdtmode == SIMATIC_IPC_DEVICE_NONE) {
+> +		pr_warn("unsupported IPC detected, station
+> id=%08x\n",
+> +			station_id);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +
 
-Oh yeah derp; I was looking at the supply names rather than the
-regulator names, my bad!
-> And even if the VSIO regulator was only used by the VCM, then it would
-> get turned off after probing the VCM, clearing the 2 bits which this
-> commit sets. Which would break things if we did not re-enable it when
-> the ov8865 needs it.
->
->> Which might not be on when the ov8865 tries to probe. I haven't tried
->> without this patch to be honest; I set it because that was what Windows
->> does when powering on the PMIC.
-> See above, I'm pretty sure we can do without this patch which means
-> that the INT3472 code will no longer be poking at the PMIC directly
-> itself, which is good :)
+extra newline, should be removed
 
+> +/* FIXME: this should eventually be done with generic P2SB discovery
+> code */ +/*
+> + * Get membase address from PCI, used in leds and wdt modul. Here we
+> read
 
-Yeah, in that case I think you're right and this can be dropped.
+/modul/module/
 
-> Anyways I'll give this a try sometime next week and then drop the
-> patch.
+was pointed out already but forgotten about
 
+Henning
 
-Sounds good
+> + * the bar0. The final address calculation is done in the
+> appropriate modules
+> + */
+> +u32 simatic_ipc_get_membase0(unsigned int p2sb)
+> +{
+> +	struct pci_bus *bus;
+> +	u32 bar0 = 0;
+> +	/*
+> +	 * The GPIO memory is in bar0 of the hidden P2SB device.
+> +	 * Unhide the device to have a quick look at it, before we
+> hide it
+> +	 * again.
+> +	 * Also grab the pci rescan lock so that device does not get
+> discovered
+> +	 * and remapped while it is visible.
+> +	 * This code is inspired by drivers/mfd/lpc_ich.c
+> +	 */
+> +	bus = pci_find_bus(0, 0);
+> +	pci_lock_rescan_remove();
+> +	pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x0);
+> +	pci_bus_read_config_dword(bus, p2sb, PCI_BASE_ADDRESS_0,
+> &bar0); +
+> +	bar0 &= ~0xf;
+> +	pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x1);
+> +	pci_unlock_rescan_remove();
+> +
+> +	return bar0;
+> +}
+> +EXPORT_SYMBOL(simatic_ipc_get_membase0);
+> +
+> +static int __init simatic_ipc_init_module(void)
+> +{
+> +	const struct dmi_system_id *match;
+> +	u32 station_id;
+> +	int err;
+> +
+> +	match = dmi_first_match(simatic_ipc_whitelist);
+> +	if (!match)
+> +		return 0;
+> +
+> +	err = dmi_walk(simatic_ipc_find_dmi_entry_helper,
+> &station_id); +
+> +	if (err || station_id == SIMATIC_IPC_INVALID_STATION_ID) {
+> +		pr_warn("DMI entry %d not found\n",
+> SIMATIC_IPC_DMI_ENTRY_OEM);
+> +		return 0;
+> +	}
+> +
+> +	return register_platform_devices(station_id);
+> +}
+> +
+> +static void __exit simatic_ipc_exit_module(void)
+> +{
+> +	platform_device_unregister(ipc_led_platform_device);
+> +	ipc_led_platform_device = NULL;
+> +
+> +	platform_device_unregister(ipc_wdt_platform_device);
+> +	ipc_wdt_platform_device = NULL;
+> +}
+> +
+> +module_init(simatic_ipc_init_module);
+> +module_exit(simatic_ipc_exit_module);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Gerd Haeussler <gerd.haeussler.ext@siemens.com>");
+> +MODULE_ALIAS("dmi:*:svnSIEMENSAG:*");
+> diff --git a/include/linux/platform_data/x86/simatic-ipc-base.h
+> b/include/linux/platform_data/x86/simatic-ipc-base.h new file mode
+> 100644 index 000000000000..62d2bc774067
+> --- /dev/null
+> +++ b/include/linux/platform_data/x86/simatic-ipc-base.h
+> @@ -0,0 +1,29 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Siemens SIMATIC IPC drivers
+> + *
+> + * Copyright (c) Siemens AG, 2018-2021
+> + *
+> + * Authors:
+> + *  Henning Schild <henning.schild@siemens.com>
+> + *  Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+> + */
+> +
+> +#ifndef __PLATFORM_DATA_X86_SIMATIC_IPC_BASE_H
+> +#define __PLATFORM_DATA_X86_SIMATIC_IPC_BASE_H
+> +
+> +#include <linux/types.h>
+> +
+> +#define SIMATIC_IPC_DEVICE_NONE 0
+> +#define SIMATIC_IPC_DEVICE_227D 1
+> +#define SIMATIC_IPC_DEVICE_427E 2
+> +#define SIMATIC_IPC_DEVICE_127E 3
+> +#define SIMATIC_IPC_DEVICE_227E 4
+> +
+> +struct simatic_ipc_platform {
+> +	u8	devmode;
+> +};
+> +
+> +u32 simatic_ipc_get_membase0(unsigned int p2sb);
+> +
+> +#endif /* __PLATFORM_DATA_X86_SIMATIC_IPC_BASE_H */
+> diff --git a/include/linux/platform_data/x86/simatic-ipc.h
+> b/include/linux/platform_data/x86/simatic-ipc.h new file mode 100644
+> index 000000000000..f3b76b39776b
+> --- /dev/null
+> +++ b/include/linux/platform_data/x86/simatic-ipc.h
+> @@ -0,0 +1,72 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Siemens SIMATIC IPC drivers
+> + *
+> + * Copyright (c) Siemens AG, 2018-2021
+> + *
+> + * Authors:
+> + *  Henning Schild <henning.schild@siemens.com>
+> + *  Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+> + */
+> +
+> +#ifndef __PLATFORM_DATA_X86_SIMATIC_IPC_H
+> +#define __PLATFORM_DATA_X86_SIMATIC_IPC_H
+> +
+> +#include <linux/dmi.h>
+> +#include <linux/platform_data/x86/simatic-ipc-base.h>
+> +
+> +#define SIMATIC_IPC_DMI_ENTRY_OEM	129
+> +/* binary type */
+> +#define SIMATIC_IPC_DMI_TYPE		0xff
+> +#define SIMATIC_IPC_DMI_GROUP		0x05
+> +#define SIMATIC_IPC_DMI_ENTRY		0x02
+> +#define SIMATIC_IPC_DMI_TID		0x02
+> +
+> +enum simatic_ipc_station_ids {
+> +	SIMATIC_IPC_INVALID_STATION_ID = 0,
+> +	SIMATIC_IPC_IPC227D = 0x00000501,
+> +	SIMATIC_IPC_IPC427D = 0x00000701,
+> +	SIMATIC_IPC_IPC227E = 0x00000901,
+> +	SIMATIC_IPC_IPC277E = 0x00000902,
+> +	SIMATIC_IPC_IPC427E = 0x00000A01,
+> +	SIMATIC_IPC_IPC477E = 0x00000A02,
+> +	SIMATIC_IPC_IPC127E = 0x00000D01,
+> +};
+> +
+> +static inline u32 simatic_ipc_get_station_id(u8 *data, int max_len)
+> +{
+> +	struct {
+> +		u8	type;		/* type (0xff =
+> binary) */
+> +		u8	len;		/* len of data entry */
+> +		u8	group;
+> +		u8	entry;
+> +		u8	tid;
+> +		__le32	station_id;	/* station id (LE)
+> */
+> +	} __packed * data_entry = (void *)data + sizeof(struct
+> dmi_header); +
+> +	while ((u8 *)data_entry < data + max_len) {
+> +		if (data_entry->type == SIMATIC_IPC_DMI_TYPE &&
+> +		    data_entry->len == sizeof(*data_entry) &&
+> +		    data_entry->group == SIMATIC_IPC_DMI_GROUP &&
+> +		    data_entry->entry == SIMATIC_IPC_DMI_ENTRY &&
+> +		    data_entry->tid == SIMATIC_IPC_DMI_TID) {
+> +			return le32_to_cpu(data_entry->station_id);
+> +		}
+> +		data_entry = (void *)((u8 *)(data_entry) +
+> data_entry->len);
+> +	}
+> +
+> +	return SIMATIC_IPC_INVALID_STATION_ID;
+> +}
+> +
+> +static inline void
+> +simatic_ipc_find_dmi_entry_helper(const struct dmi_header *dh, void
+> *_data) +{
+> +	u32 *id = _data;
+> +
+> +	if (dh->type != SIMATIC_IPC_DMI_ENTRY_OEM)
+> +		return;
+> +
+> +	*id = simatic_ipc_get_station_id((u8 *)dh, dh->length);
+> +}
+> +
+> +#endif /* __PLATFORM_DATA_X86_SIMATIC_IPC_H */
 
->
-> Regards,
->
-> Hans
->
->
->
->
->>>>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>>>> Signed-off-by: Daniel Scally <djrscally@gmail.com>
->>>>> ---
->>>>>  .../x86/intel/int3472/intel_skl_int3472_tps68470.c         | 7 +++++++
->>>>>  1 file changed, 7 insertions(+)
->>>>>
->>>>> diff --git a/drivers/platform/x86/intel/int3472/intel_skl_int3472_tps68470.c b/drivers/platform/x86/intel/int3472/intel_skl_int3472_tps68470.c
->>>>> index c05b4cf502fe..42e688f4cad4 100644
->>>>> --- a/drivers/platform/x86/intel/int3472/intel_skl_int3472_tps68470.c
->>>>> +++ b/drivers/platform/x86/intel/int3472/intel_skl_int3472_tps68470.c
->>>>> @@ -45,6 +45,13 @@ static int tps68470_chip_init(struct device *dev, struct regmap *regmap)
->>>>>  		return ret;
->>>>>  	}
->>>>>  
->>>>> +	/* Enable I2C daisy chain */
->>>>> +	ret = regmap_write(regmap, TPS68470_REG_S_I2C_CTL, 0x03);
->>>>> +	if (ret) {
->>>>> +		dev_err(dev, "Failed to enable i2c daisy chain\n");
->>>>> +		return ret;
->>>>> +	}
->>>>> +
->>>>>  	dev_info(dev, "TPS68470 REVID: 0x%02x\n", version);
->>>>>  
->>>>>  	return 0;
