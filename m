@@ -2,111 +2,71 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8ABC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Nov 2021 02:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0976C43217
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Nov 2021 07:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357759AbhKZCuh (ORCPT
+        id S1353143AbhKZHXy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Nov 2021 21:50:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51528 "EHLO mail.kernel.org"
+        Fri, 26 Nov 2021 02:23:54 -0500
+Received: from mga07.intel.com ([134.134.136.100]:24250 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1358401AbhKZCrQ (ORCPT
+        id S232938AbhKZHVy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Nov 2021 21:47:16 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 48B7761378;
-        Fri, 26 Nov 2021 02:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637894225;
-        bh=xOCNst8FZ1YVyJaxr86KZ7YUm2spGOy3739QOFDp/90=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aqObIyUUtRkolWFi+lJH2NFFyPKo+LBHhJgdLZCNM7z/A4c9tjph3he3+6CfhJGJC
-         8VbC7EGgXTbG3UsDfaYydGNR0oYSbEtsc/PgvPG39Qd9sySBUBtqN9cCBlpdxBSq2u
-         LjZjofTe+umF3p16QQLWa/MBAev3JpbF5ShnXy8x+59Z/PehqcTwPgjqRvYvrqF60K
-         MFrCb48wYqD9xHTrDybrjCn5YoN9Rc4goROAiYBTnrsKfEyt1aToz+zN1GrN+EGXG4
-         bKs01VZShJPzwBGvCaYctwdUfvRBC/MF1uyE4L1DkPqzFRU2vODxlLSFOFRAzZxYD8
-         nxRZqKnhR2h7Q==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Slark Xiao <slark_xiao@163.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, hmh@hmh.eng.br,
-        markgross@kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 2/6] platform/x86: thinkpad_acpi: Fix WWAN device disabled issue after S3 deep
-Date:   Thu, 25 Nov 2021 21:36:57 -0500
-Message-Id: <20211126023701.443472-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211126023701.443472-1-sashal@kernel.org>
-References: <20211126023701.443472-1-sashal@kernel.org>
+        Fri, 26 Nov 2021 02:21:54 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10179"; a="299027074"
+X-IronPort-AV: E=Sophos;i="5.87,265,1631602800"; 
+   d="scan'208";a="299027074"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2021 23:18:41 -0800
+X-IronPort-AV: E=Sophos;i="5.87,265,1631602800"; 
+   d="scan'208";a="554826905"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2021 23:18:35 -0800
+Received: by lahna (sSMTP sendmail emulation); Fri, 26 Nov 2021 09:18:32 +0200
+Date:   Fri, 26 Nov 2021 09:18:32 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
+        linux-clk@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6 03/15] i2c: acpi: Add i2c_acpi_new_device_by_fwnode()
+ function
+Message-ID: <YaCKSPbEWTRlnFr2@lahna>
+References: <20211125165412.535063-1-hdegoede@redhat.com>
+ <20211125165412.535063-4-hdegoede@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211125165412.535063-4-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Slark Xiao <slark_xiao@163.com>
+On Thu, Nov 25, 2021 at 05:54:00PM +0100, Hans de Goede wrote:
+> Change i2c_acpi_new_device() into i2c_acpi_new_device_by_fwnode() and
+> add a static inline wrapper providing the old i2c_acpi_new_device()
+> behavior.
+> 
+> This is necessary because in some cases we may only have access
+> to the fwnode / acpi_device and not to the matching physical-node
+> struct device *.
+> 
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 39f53292181081d35174a581a98441de5da22bc9 ]
-
-When WWAN device wake from S3 deep, under thinkpad platform,
-WWAN would be disabled. This disable status could be checked
-by command 'nmcli r wwan' or 'rfkill list'.
-
-Issue analysis as below:
-  When host resume from S3 deep, thinkpad_acpi driver would
-call hotkey_resume() function. Finnaly, it will use
-wan_get_status to check the current status of WWAN device.
-During this resume progress, wan_get_status would always
-return off even WWAN boot up completely.
-  In patch V2, Hans said 'sw_state should be unchanged
-after a suspend/resume. It's better to drop the
-tpacpi_rfk_update_swstate call all together from the
-resume path'.
-  And it's confimed by Lenovo that GWAN is no longer
- available from WHL generation because the design does not
- match with current pin control.
-
-Signed-off-by: Slark Xiao <slark_xiao@163.com>
-Link: https://lore.kernel.org/r/20211108060648.8212-1-slark_xiao@163.com
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/thinkpad_acpi.c | 12 ------------
- 1 file changed, 12 deletions(-)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 20c588af33d88..60e211853a688 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -1168,15 +1168,6 @@ static int tpacpi_rfk_update_swstate(const struct tpacpi_rfk *tp_rfk)
- 	return status;
- }
- 
--/* Query FW and update rfkill sw state for all rfkill switches */
--static void tpacpi_rfk_update_swstate_all(void)
--{
--	unsigned int i;
--
--	for (i = 0; i < TPACPI_RFK_SW_MAX; i++)
--		tpacpi_rfk_update_swstate(tpacpi_rfkill_switches[i]);
--}
--
- /*
-  * Sync the HW-blocking state of all rfkill switches,
-  * do notice it causes the rfkill core to schedule uevents
-@@ -3015,9 +3006,6 @@ static void tpacpi_send_radiosw_update(void)
- 	if (wlsw == TPACPI_RFK_RADIO_OFF)
- 		tpacpi_rfk_update_hwblock_state(true);
- 
--	/* Sync sw blocking state */
--	tpacpi_rfk_update_swstate_all();
--
- 	/* Sync hw blocking state last if it is hw-unblocked */
- 	if (wlsw == TPACPI_RFK_RADIO_ON)
- 		tpacpi_rfk_update_hwblock_state(false);
--- 
-2.33.0
-
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
