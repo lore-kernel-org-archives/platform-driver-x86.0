@@ -2,100 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC68C43217
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Nov 2021 23:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684EDC4321E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Nov 2021 02:35:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351551AbhKYXom (ORCPT
+        id S1343732AbhKZCiR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Nov 2021 18:44:42 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37388 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232344AbhKYXml (ORCPT
+        Thu, 25 Nov 2021 21:38:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1357814AbhKZCgK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Nov 2021 18:42:41 -0500
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 59FF7FD7;
-        Fri, 26 Nov 2021 00:39:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1637883566;
-        bh=e/88nyQPFqvYKj8EETiiJv+//BkB8gj96nheD+iYq7A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lkb9OAOJJnIWFaIvu4Ar1l+5rc1in50j6aLb5V/UbDmKuO7xxy0noL4+60JzJCGjN
-         By4Wiy9K3MwjUv5EdEzD9rM1xDOJn6GW/Q3gayy9DeI0L5vt045EsTpNFil/w3D51l
-         rri7NyOjYiYIT97v4wsrCISxSfR5mGWAR0If8N4c=
-Date:   Fri, 26 Nov 2021 01:39:03 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6 07/15] platform/x86: int3472: Enable I2c daisy chain
-Message-ID: <YaAel9HuAvemRg2s@pendragon.ideasonboard.com>
-References: <20211125165412.535063-1-hdegoede@redhat.com>
- <20211125165412.535063-8-hdegoede@redhat.com>
+        Thu, 25 Nov 2021 21:36:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0854261184;
+        Fri, 26 Nov 2021 02:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637893953;
+        bh=n3597jHgL7vSM4mrRLxmd/92eVmOD7NHilGmdvqz/JA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EoEVJQ7FjkEmtastP93PyKL748tIIP2VkawzST5fCayZdWbxvIhM8F6L04H+9K+to
+         aVxBKPd7epO8liC5230BECV3iqBO6g+pNDKd5SN4VMdYimm+IwiKMnBCHHePrOH3yH
+         1bRztgbOPYzORO87xOVRWJuB3w4IaH1zU+FU9YH48nsRH8Wji7rSHJpD2/EX9N7dp1
+         cq8O+eV+Y5yGBsDYL+FnmXwfTklJgMh62yGtwNbv6b3jHnltkrmYoYW4fL3ca3Ce6L
+         e438JWTy47J5NRwutz+eZA7M3/mQ7sa4uRhU5PEd4M8rDLBO39VtEVvbS5D8jrVf5Z
+         LDRmktCLmlqrQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Slark Xiao <slark_xiao@163.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, hmh@hmh.eng.br,
+        markgross@kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 17/39] platform/x86: thinkpad_acpi: Fix WWAN device disabled issue after S3 deep
+Date:   Thu, 25 Nov 2021 21:31:34 -0500
+Message-Id: <20211126023156.441292-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20211126023156.441292-1-sashal@kernel.org>
+References: <20211126023156.441292-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211125165412.535063-8-hdegoede@redhat.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+From: Slark Xiao <slark_xiao@163.com>
 
-Thank you for the patch.
+[ Upstream commit 39f53292181081d35174a581a98441de5da22bc9 ]
 
-On Thu, Nov 25, 2021 at 05:54:04PM +0100, Hans de Goede wrote:
-> From: Daniel Scally <djrscally@gmail.com>
-> 
-> The TPS68470 PMIC has an I2C passthrough mode through which I2C traffic
-> can be forwarded to a device connected to the PMIC as though it were
-> connected directly to the system bus. Enable this mode when the chip
-> is initialised.
+When WWAN device wake from S3 deep, under thinkpad platform,
+WWAN would be disabled. This disable status could be checked
+by command 'nmcli r wwan' or 'rfkill list'.
 
-Is there any drawback doing this unconditionally, if nothing is
-connected to the bus on the other side (including no pull-ups) ?
+Issue analysis as below:
+  When host resume from S3 deep, thinkpad_acpi driver would
+call hotkey_resume() function. Finnaly, it will use
+wan_get_status to check the current status of WWAN device.
+During this resume progress, wan_get_status would always
+return off even WWAN boot up completely.
+  In patch V2, Hans said 'sw_state should be unchanged
+after a suspend/resume. It's better to drop the
+tpacpi_rfk_update_swstate call all together from the
+resume path'.
+  And it's confimed by Lenovo that GWAN is no longer
+ available from WHL generation because the design does not
+ match with current pin control.
 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Daniel Scally <djrscally@gmail.com>
-> ---
->  .../x86/intel/int3472/intel_skl_int3472_tps68470.c         | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/intel_skl_int3472_tps68470.c b/drivers/platform/x86/intel/int3472/intel_skl_int3472_tps68470.c
-> index c05b4cf502fe..42e688f4cad4 100644
-> --- a/drivers/platform/x86/intel/int3472/intel_skl_int3472_tps68470.c
-> +++ b/drivers/platform/x86/intel/int3472/intel_skl_int3472_tps68470.c
-> @@ -45,6 +45,13 @@ static int tps68470_chip_init(struct device *dev, struct regmap *regmap)
->  		return ret;
->  	}
->  
-> +	/* Enable I2C daisy chain */
-> +	ret = regmap_write(regmap, TPS68470_REG_S_I2C_CTL, 0x03);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable i2c daisy chain\n");
-> +		return ret;
-> +	}
-> +
->  	dev_info(dev, "TPS68470 REVID: 0x%02x\n", version);
->  
->  	return 0;
+Signed-off-by: Slark Xiao <slark_xiao@163.com>
+Link: https://lore.kernel.org/r/20211108060648.8212-1-slark_xiao@163.com
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 6aa31816159cf..3dc055ce6e61b 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -1178,15 +1178,6 @@ static int tpacpi_rfk_update_swstate(const struct tpacpi_rfk *tp_rfk)
+ 	return status;
+ }
+ 
+-/* Query FW and update rfkill sw state for all rfkill switches */
+-static void tpacpi_rfk_update_swstate_all(void)
+-{
+-	unsigned int i;
+-
+-	for (i = 0; i < TPACPI_RFK_SW_MAX; i++)
+-		tpacpi_rfk_update_swstate(tpacpi_rfkill_switches[i]);
+-}
+-
+ /*
+  * Sync the HW-blocking state of all rfkill switches,
+  * do notice it causes the rfkill core to schedule uevents
+@@ -3129,9 +3120,6 @@ static void tpacpi_send_radiosw_update(void)
+ 	if (wlsw == TPACPI_RFK_RADIO_OFF)
+ 		tpacpi_rfk_update_hwblock_state(true);
+ 
+-	/* Sync sw blocking state */
+-	tpacpi_rfk_update_swstate_all();
+-
+ 	/* Sync hw blocking state last if it is hw-unblocked */
+ 	if (wlsw == TPACPI_RFK_RADIO_ON)
+ 		tpacpi_rfk_update_hwblock_state(false);
 -- 
-Regards,
+2.33.0
 
-Laurent Pinchart
