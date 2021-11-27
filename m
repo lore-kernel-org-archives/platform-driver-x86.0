@@ -2,99 +2,112 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D547C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 Nov 2021 17:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879BCC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 Nov 2021 22:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231559AbhK0RIj (ORCPT
+        id S1344969AbhK0Wy2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 27 Nov 2021 12:08:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234945AbhK0RGj (ORCPT
+        Sat, 27 Nov 2021 17:54:28 -0500
+Received: from sauhun.de ([88.99.104.3]:52196 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231691AbhK0Ww1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 Nov 2021 12:06:39 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F81C061574;
-        Sat, 27 Nov 2021 09:03:23 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id i5so26004703wrb.2;
-        Sat, 27 Nov 2021 09:03:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lS1zair4sK18hzWn/R6s0K/jIJB9uRS8Tf1yrPl4qUE=;
-        b=i6PYEDTEWBxh2uWbOmobmyDf4PFNUCGPjrhW4IBtFqgUj/wjnC942onOaGlorcKY3Q
-         FF2QQnidWU7dTumffSTNPt7Cu3p0SpLPkTQgCic6IKpxWCti61SG1eJ4jOUrUGrXzhmt
-         Pa424m0ujbzK7XmeCkkGp3PUoGsofw9xNatIUWVILZ/5XhlWJmNfZwaLBMgf6A6K30bo
-         c7BhLrEFZKKRvW56w9sgGpmkx3Cipa8EQ/yJaXVmX7OFOr7gSJILZb2H1DSgirxwri/P
-         fEUIGVLWQVHCuJD6lMu+Bh/IdWlifYk90Y8YFO5bHSEXpGTem0G6nGDiLNvai5ka6E6P
-         5XiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lS1zair4sK18hzWn/R6s0K/jIJB9uRS8Tf1yrPl4qUE=;
-        b=B/pGMk3YOeV5NrFP1hiv9DdbGQ15NyWsuQe4rCn+75avA/Dk/f2Lzw6BEbRbpNbIeS
-         Ihxpu5XyNmF3qjwiEp1H0yhwoYZqHgbmOxlSdfZVSBMKqzTeXMVUMznL1wsVGIX9Hl+X
-         77Atx/i9NMP29PweRY9TFeX14PlrrZM6CR27Sb+r3xSjqeWtZTh5Vx0Lr9HPR8tC9ZVF
-         bHqDShH/QFtfd+WpXOCw1spyUrPtfMm2BI1SdpPOa3Qoz2mEdwYcpJplmzaJH5pfSs89
-         +0jUPZoejpSlqIObUVSLXuJFYrjJEf0L23PJc7JCRT4Y/O4RripCkN9sF3qQjheRTXlg
-         fyiA==
-X-Gm-Message-State: AOAM532iYutm5/cU255UhwRX0R4YwkAZTAv1nSscSUOLQqBGqagZw459
-        Y7qiP6fGueXhRg==
-X-Google-Smtp-Source: ABdhPJy+pishnTF0Jp3O1BLFoly/fFQfUlwkVKDWYJt8ktJqLJeucMMflxmOFNywu5S0QOwkVJHhZA==
-X-Received: by 2002:adf:fe81:: with SMTP id l1mr22456857wrr.522.1638032602333;
-        Sat, 27 Nov 2021 09:03:22 -0800 (PST)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id k187sm15177446wme.0.2021.11.27.09.03.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Nov 2021 09:03:22 -0800 (PST)
-From:   Colin Ian King <colin.i.king@googlemail.com>
-X-Google-Original-From: Colin Ian King <colin.i.king@gmail.com>
-To:     Steve Wahl <steve.wahl@hpe.com>, Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
+        Sat, 27 Nov 2021 17:52:27 -0500
+Received: from localhost (p54b33988.dip0.t-ipconnect.de [84.179.57.136])
+        by pokefinder.org (Postfix) with ESMTPSA id 186602C009F;
+        Sat, 27 Nov 2021 23:49:10 +0100 (CET)
+Date:   Sat, 27 Nov 2021 23:49:04 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/platform/uv: make const pointer dots a static const array
-Date:   Sat, 27 Nov 2021 17:03:20 +0000
-Message-Id: <20211127170320.77963-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.33.1
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
+        linux-clk@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6 03/15] i2c: acpi: Add i2c_acpi_new_device_by_fwnode()
+ function
+Message-ID: <YaK14JHgF5KS1Yzg@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
+        linux-clk@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20211125165412.535063-1-hdegoede@redhat.com>
+ <20211125165412.535063-4-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="B+c7GcSbsVwZbrXV"
+Content-Disposition: inline
+In-Reply-To: <20211125165412.535063-4-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Don't populate the const array dots on the stack but make it static
-const and make the pointer an array to remove a dereference. Shrinks
-object code a few bytes too.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- arch/x86/platform/uv/uv_nmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--B+c7GcSbsVwZbrXV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
-index 1e9ff28bc2e0..2c69a0c30632 100644
---- a/arch/x86/platform/uv/uv_nmi.c
-+++ b/arch/x86/platform/uv/uv_nmi.c
-@@ -725,7 +725,7 @@ static void uv_nmi_dump_cpu_ip(int cpu, struct pt_regs *regs)
-  */
- static void uv_nmi_dump_state_cpu(int cpu, struct pt_regs *regs)
- {
--	const char *dots = " ................................. ";
-+	static const char dots[] = " ................................. ";
- 
- 	if (cpu == 0)
- 		uv_nmi_dump_cpu_ip_hdr();
--- 
-2.33.1
+On Thu, Nov 25, 2021 at 05:54:00PM +0100, Hans de Goede wrote:
+> Change i2c_acpi_new_device() into i2c_acpi_new_device_by_fwnode() and
+> add a static inline wrapper providing the old i2c_acpi_new_device()
+> behavior.
+>=20
+> This is necessary because in some cases we may only have access
+> to the fwnode / acpi_device and not to the matching physical-node
+> struct device *.
+>=20
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
+Acked-by: Wolfram Sang <wsa@kernel.org>
+
+
+--B+c7GcSbsVwZbrXV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmGitdsACgkQFA3kzBSg
+Kba4UA//dAQJdZByu+PraO/AJeiXb5P0B1XSecqdaGFPXLJAPqBEz9WQYMShmcd5
+X7jXbMjN6Bms26Qp8SVs4RDhXwl9BGrzZ8M3Ui1LLHbMYR5CEf+VH774fEPQIu73
+yyzCY9amwbe53ZaYgCOA1Y7vVf7dJF4pYfZOwDGPIu/QPRsHbsh6z6Ax6rX40AtP
+q7vm6/RMusfbFbtYEUUoxgmESapheayMxO50PS2q8jKVTXovP+4PVqXAYMU2HXFA
+pdykZTpG/GOuw1hrCciWWpJlabmIaIDnVYJZ/nUBvPkw/MQ2rDk3qJNwl7G7ndkh
+hTwdpPNVslh7DqXjBs3bGFrfFwk6QxLUOIfbJ0/vbw7z5aNs0v1vFhtFtcgX47ix
+FxGzyLVjojMiD9/GA4zSDnYy/9t1s5W3IWjrz8pTf5hunFz0nJlA1Mjes8FQUXHQ
+yhytbzG7ZagSgDkys/Vo0K8GUptohlVh+eabGCSQ4y0bw4bWRhXT8M2W8Ecjssxp
+CpDP1y+Q1zM46X0c9ZZcmpp9NPcirg9S8qZkAiDfG/i4nsQihmko9SrhjlLnR8i/
+i+WfFKuti/Nw+dp/YmpRjunOWNU5duvWXHXW6XO8KBY7ynPgxnA3dp32k1LfcS4p
+Zm67/bmDd9fZC/V0RsB2QPDz2KstjoH/OIAaVJic4QZdeRe0rLg=
+=1EJS
+-----END PGP SIGNATURE-----
+
+--B+c7GcSbsVwZbrXV--
