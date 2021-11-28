@@ -2,118 +2,114 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B92C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 28 Nov 2021 18:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FC6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 28 Nov 2021 18:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359749AbhK1SZK (ORCPT
+        id S1346768AbhK1Sva (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 28 Nov 2021 13:25:10 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:22177 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1359204AbhK1SXE (ORCPT
+        Sun, 28 Nov 2021 13:51:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234164AbhK1St1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 28 Nov 2021 13:23:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638123588;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UJ60w9l5x9z7ezkDeL8gMwQfAMNkzdnrdHE2RsyKQDs=;
-        b=GJBPYo+JjYlOHoRIVQ/abxpO99OyjlSfrqEgFw75oeqiHi79ZUxFFqOpedolJRF9+zGvAe
-        IesQnh98Bf9gTWkTVl1mSppj90LdrGzGV9MvW8tGrYYqJfDWWSc62eE8KCd+1svyrAbdhc
-        CtXsOVYuA7gDomsqPuEYQxRxRPEyh68=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-511-SEcGvk1KM3OTTQ47wym0lw-1; Sun, 28 Nov 2021 13:19:44 -0500
-X-MC-Unique: SEcGvk1KM3OTTQ47wym0lw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A05E1006AA0;
-        Sun, 28 Nov 2021 18:19:42 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.192.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F55710016F4;
-        Sun, 28 Nov 2021 18:19:38 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, Yauhen Kharuzhy <jekhor@gmail.com>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
-Subject: [PATCH v3 20/20] extcon: intel-cht-wc: Report RID_A for ACA adapters
-Date:   Sun, 28 Nov 2021 19:18:09 +0100
-Message-Id: <20211128181809.326736-21-hdegoede@redhat.com>
-In-Reply-To: <20211128181809.326736-1-hdegoede@redhat.com>
-References: <20211128181809.326736-1-hdegoede@redhat.com>
+        Sun, 28 Nov 2021 13:49:27 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA19C061746;
+        Sun, 28 Nov 2021 10:46:10 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id e3so62458997edu.4;
+        Sun, 28 Nov 2021 10:46:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1aHLX1viH/WS2n9CHSEXBPwORlSxbTiU2QKC9Iz83+A=;
+        b=ldo+RRt2xa0TkaYt9nsluh77KQr0+Jagv+Lle+tA/35vASAhKmcRbcmdMg8WYhPtJk
+         qaRjTYNVT8VdzpQdTBBTMeVLvcLuAk6l62+/CelJfAadDE3OYQAViCbJ6WIPX9RIjL5H
+         ZDOJQPtrmhGCsz6rQCnTXOnn8rBxgQfB+nETnBXmgxUfO0QC+JAH7AvYAjnwDnBOw1VB
+         +muceCz+yVLXWU5qSuuoiTbr49ZHrkX5Mf+NxgQV8o71pfvKzHdhR6OHR3pE+FEY+O9c
+         dPr0AYKCK8jSX/7zK+7vXsu50FNg5gqkll8Tq4sLhbvNM2EPsKK3NtvTk/6tvmrq6hRG
+         Y48g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1aHLX1viH/WS2n9CHSEXBPwORlSxbTiU2QKC9Iz83+A=;
+        b=P17OXokvLUlTHw8tmBPKVZWWmy+7yvfE5dcVbtuz/REsBBNYhx+0zeErldaPKVJd4p
+         lDRZye7oz/c+88HKT60u5OclGfwf9jc5o+JCdrwSh7pnZeMMBTbwjVOA+fblOPLLUBBf
+         dg2woFesBbN9xPZRy/+f+R2w/QKtwm9i3CecF6DoX/kfYt9NTa9VfP2qjEypMxr+Hl4q
+         eYbhaNcMccIF8fi5lHYfuTwxRoYHwsePTHAymY7nK8Km8IbyUPsihgBKrPtuUcdayjWG
+         2efSwnav8DzSzcSm7aF6xg88QyMaFQoCetk79lrvyLPb4ikCq5r8Js8YTdN3vlrMqLrB
+         M11w==
+X-Gm-Message-State: AOAM532Va6Kuf28wpecP9w7Sg3TK+zjtRUgz3YuAhLYypW6QNtJWuJsB
+        peTMCjIVQzjbXYDD3d/u8bI=
+X-Google-Smtp-Source: ABdhPJzTyp53JAn92mdY4kUb6yEuYbaKSh7TQrat2sTl5Z4dctCJGJBn7D5jEC4vynTHOF7Cm1tSYQ==
+X-Received: by 2002:a05:6402:1a4f:: with SMTP id bf15mr67289121edb.260.1638125169115;
+        Sun, 28 Nov 2021 10:46:09 -0800 (PST)
+Received: from localhost.localdomain ([94.179.32.10])
+        by smtp.gmail.com with ESMTPSA id g1sm6072900eje.105.2021.11.28.10.46.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Nov 2021 10:46:08 -0800 (PST)
+From:   Denis Pauk <pauk.denis@gmail.com>
+Cc:     eugene.shalygin@gmail.com, andy.shevchenko@gmail.com,
+        pauk.denis@gmail.com, platform-driver-x86@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] hwmon: (nct6775) Support lock by ACPI mutex
+Date:   Sun, 28 Nov 2021 20:45:45 +0200
+Message-Id: <20211128184549.9161-1-pauk.denis@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Make cht_wc_extcon_get_id() report RID_A for ACA adapters, instead of
-reporting ID_FLOAT.
+Lock by a ACPI mutex that is required for support ASUS MAXIMUS VII HERO 
+motherboard. In other case, all methods are returned zero instead of real 
+values. Code uses acpi mutex before any IO operations in case when such 
+acpi mutex is known.
 
-According to the spec. we should read the USB-ID pin ADC value
-to determine the resistance of the used pull-down resister and
-then return RID_A / RID_B / RID_C based on this. But all "Accessory
-Charger Adapter"s (ACAs) which users can actually buy always use
-a combination of a charging port with one or more USB-A ports, so
-they should always use a resistor indicating RID_A. But the spec
-is hard to read / badly-worded so some of them actually indicate
-they are a RID_B ACA even though they clearly are a RID_A ACA.
+Patch series adds additional check for chip ID, and if method returned 
+zero, all calls by acpi_wmi are disabled. 
 
-To workaround this simply always return INTEL_USB_RID_A, which
-matches all the ACAs which users can actually buy.
+@Andy Shevchenko: 
+>> Do you need string_helpers.h after this change?
+It was not required in the original patch, as it was included as part of 
+some other header and I have left includes without changes.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+I have a little bit changed conditionals in "add MAXIMUS VII HERO", code 
+can change access variable several times: 
+* By the default, access is set to direct, 
+* after code has checked that wmi methods can return something useful,
+* and as the last step code has checked that mutext is existed and set 
+  access back to direct.
+
+But as for me, it should be less confusing.
+
+What do you think?
+
 ---
- drivers/extcon/extcon-intel-cht-wc.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
-index 144cb5d8cd47..2a8d41cbf41c 100644
---- a/drivers/extcon/extcon-intel-cht-wc.c
-+++ b/drivers/extcon/extcon-intel-cht-wc.c
-@@ -121,13 +121,21 @@ static int cht_wc_extcon_get_id(struct cht_wc_extcon_data *ext, int pwrsrc_sts)
- 		return INTEL_USB_ID_GND;
- 	case CHT_WC_PWRSRC_RID_FLOAT:
- 		return INTEL_USB_ID_FLOAT;
-+	/*
-+	 * According to the spec. we should read the USB-ID pin ADC value here
-+	 * to determine the resistance of the used pull-down resister and then
-+	 * return RID_A / RID_B / RID_C based on this. But all "Accessory
-+	 * Charger Adapter"s (ACAs) which users can actually buy always use
-+	 * a combination of a charging port with one or more USB-A ports, so
-+	 * they should always use a resistor indicating RID_A. But the spec
-+	 * is hard to read / badly-worded so some of them actually indicate
-+	 * they are a RID_B ACA evnen though they clearly are a RID_A ACA.
-+	 * To workaround this simply always return INTEL_USB_RID_A, which
-+	 * matches all the ACAs which users can actually buy.
-+	 */
- 	case CHT_WC_PWRSRC_RID_ACA:
-+		return INTEL_USB_RID_A;
- 	default:
--		/*
--		 * Once we have IIO support for the GPADC we should read
--		 * the USBID GPADC channel here and determine ACA role
--		 * based on that.
--		 */
- 		return INTEL_USB_ID_FLOAT;
- 	}
- }
+Changes in v2:
+- Fix commit message.
+- Remove default acpi_board_ANY and use NULL instead.
+- Use chip ID everywhere.
+- Use an anonymous union for mutexes.
+- Use temporary status varibale in acpi calls.
+---
+
+Denis Pauk (3):
+  hwmon: (nct6775) Use lock function pointers in nct6775_data
+  hwmon: (nct6775) Implement custom lock by ACPI mutex
+  hwmon: (nct6775) add MAXIMUS VII HERO
+
+ drivers/hwmon/nct6775.c | 364 +++++++++++++++++++++++++++++-----------
+ 1 file changed, 263 insertions(+), 101 deletions(-)
+
+
+base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
 -- 
-2.33.1
+2.33.0
 
