@@ -2,325 +2,228 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8272C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Nov 2021 11:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1755C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Nov 2021 11:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239026AbhK3L2B (ORCPT
+        id S240759AbhK3L3Y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 30 Nov 2021 06:28:01 -0500
-Received: from mail-mw2nam10on2061.outbound.protection.outlook.com ([40.107.94.61]:26784
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        Tue, 30 Nov 2021 06:29:24 -0500
+Received: from mail-mw2nam12on2066.outbound.protection.outlook.com ([40.107.244.66]:9678
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S238891AbhK3L2A (ORCPT
+        id S236162AbhK3L3X (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 30 Nov 2021 06:28:00 -0500
+        Tue, 30 Nov 2021 06:29:23 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hS6uGlxcu3yCQFpKgxB480wsfOO5+ZsX5Aawe6RKazPgPYAC1A6hgScBFF/dsnhOipMXAraxRcOsYfWiWCbmfwgJGTGn2iT/z3AEnmoRt1LIExr4eMhVMssZs47W1M8S2TSrvrKpQIpGciJ6kL1fAcCWBZe3OCakHpOqt1CRiIhu/SFK5ZZp3xvI95mNr1jXqT/EVWeF9VEO7WFfx3fsUwi3BC3MEC13t7ZW0zpxvmPTpUN8ZyVzL+E0JDVwvFPa+a//8i4Z+0JfS0UA/1I7YSi5i705E5eLfN4zK2Luyxycs1z4zP3Ks48GpKRhX3s6jG/7VdRz6O9+cPJkJzDSWA==
+ b=dBsBsQ1o88NMI7DXCWcvDd+Z2If/nlG+6Xc+QBOAAf8LHEGnJch41EKeE3qS37NE3wCGL+chBdvIK6ax3+x/yAbcRkkt8p2WG2iJIoXkJG9IjLsZccuST/sxOOw7BjhAjPCgGtHol13mgbR+Sdn+IQMCSpgOTanIMQRmJLkf+YWMt8UJUOIb+3GcAyQiknVztjF93uk8OCSmAF85YdoLEi0mkcplF2Lmh9bPdJ747BwtwDEMrcp55QcUs16bPDw6UqPy2bR0Oy3jJJDpKPmQ42CeGZNv8YzExsrfusaIiuRCZaSmFTUjzkOvki+ztdZJbJsimbmibTbxNDAufv5eug==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kh2UaavZF0cm5aa63WhVj3uCLRoFizB3D3rnjnjoYP0=;
- b=Lg5Mcr5ZV+cbwP45XTAnLiXaTBVUr0MfKQqvy7XVAywSHIvPeo65e8dUBqZOqa7on1ZEaPownNWyaNz4PxNvw+8ibXKcdOWnGilBac/K9VqdgEuciDUXfHQBcgYbHm0KnQrSpLrttPp5i/DV0EAy7PzEhAGHgQBVow0DPwbHpbdLGfylRms3U1D1rvXEBFBRKh8piSPoSGn/TzH8oiDmMmVBQwgkua0MkmfZO7v6+jqZEx76VIIaaf/Pe0v6BYSw1L0gWrG/MaW0+u/bjVFMzNeCHSQYytF2rXOCMOW3YLVLZE09rnyu4iXs9s824Yn0v8iueADNnaJbDryztE0Ehg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
+ bh=Cm0iV+5947/Pwkj31yfv4ki+VWUK5lkA2N9FiKfdFMc=;
+ b=oAyX8kd6hOJpH0iizXPgQhCHG0UK+32N3NNtVhH7JY1+JNc6MIyg41DnpGlUzAvBA7sHVItGgBYf8tX6uyIneTIbCeJBJJMFsyEauHThjsh/N7inuVolPQojOAnmwYO/W/eBwYV5+gObr7sUBGG7Ov1nrWpIuH8NjRhlRXA2e+G1eDnn5hSQ9d7txABqUwdWhhTQq+BmqjIBY1F9e0nWWEvljOkj1nJJYOQbJ3iLoxtK8E5JLLRlm/qVspe1NFSuPi9C0iw5PX6sSxLOwANnogcWfYq4nuHG3pqWP+ML0x0mJJ1ShAnPnsUsuOL6C2+ninoVPWtDPNHXJp6hN/ne7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kh2UaavZF0cm5aa63WhVj3uCLRoFizB3D3rnjnjoYP0=;
- b=qjxPKmcnrV9udmwUaWb6xL64zicccmcNOO8N0DUf51hk4Ymask9ot7Bg6MvUij2pSCjHmN66LsK9saAZWWtb1F6qzqtT42Ve4Ok7LNBdxL1aoDJ9YsuTVUUpwRM4i+X7kir+DYc1vD5k3ACHqp2OV1nxs51aWgy/h7uSLv0JBxY=
-Received: from BN9PR03CA0430.namprd03.prod.outlook.com (2603:10b6:408:113::15)
- by DM6PR12MB3580.namprd12.prod.outlook.com (2603:10b6:5:11e::16) with
+ bh=Cm0iV+5947/Pwkj31yfv4ki+VWUK5lkA2N9FiKfdFMc=;
+ b=TJwKWko+01MNlXTBCmst5KC7SfR/Fi+Di5b6jBnUSHWdL3Ne2JDrupSBijKeVXB0Hu0bTOom9gFxW8/2G/uV3lsA1EspfHc9XGRCELgCZGc9Xw3ojP5+h9b9mnLP5MIBB37Q8kcQvQpIPedExvbJgCL7icdebpciu2AbES8ymiE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3508.namprd12.prod.outlook.com (2603:10b6:408:6b::19)
+ by BN8PR12MB3508.namprd12.prod.outlook.com (2603:10b6:408:6b::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Tue, 30 Nov
- 2021 11:24:39 +0000
-Received: from BN8NAM11FT006.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:113:cafe::65) by BN9PR03CA0430.outlook.office365.com
- (2603:10b6:408:113::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.24 via Frontend
- Transport; Tue, 30 Nov 2021 11:24:39 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT006.mail.protection.outlook.com (10.13.177.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4734.22 via Frontend Transport; Tue, 30 Nov 2021 11:24:39 +0000
-Received: from Celadon-CZN.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Tue, 30 Nov
- 2021 05:24:37 -0600
-From:   Sanket Goswami <Sanket.Goswami@amd.com>
-To:     <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>,
-        <markgross@kernel.org>
-CC:     <platform-driver-x86@vger.kernel.org>,
-        Sanket Goswami <Sanket.Goswami@amd.com>
-Subject: [PATCH v6 2/2] platform/x86: amd-pmc: Add support for AMD Smart Trace Buffer
-Date:   Tue, 30 Nov 2021 16:53:18 +0530
-Message-ID: <20211130112318.92850-3-Sanket.Goswami@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211130112318.92850-1-Sanket.Goswami@amd.com>
-References: <20211130112318.92850-1-Sanket.Goswami@amd.com>
+ 2021 11:26:02 +0000
+Received: from BN8PR12MB3508.namprd12.prod.outlook.com
+ ([fe80::a907:e716:6d47:d3c8]) by BN8PR12MB3508.namprd12.prod.outlook.com
+ ([fe80::a907:e716:6d47:d3c8%6]) with mapi id 15.20.4734.024; Tue, 30 Nov 2021
+ 11:26:02 +0000
+Message-ID: <5768f078-733d-9960-583f-d5fd50edb051@amd.com>
+Date:   Tue, 30 Nov 2021 16:55:48 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH v5 2/3] platform/x86: amd-pmc: Store the pci_dev instance
+ inside struct amd_pmc_dev
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+References: <20211029172304.2998-1-Sanket.Goswami@amd.com>
+ <20211029172304.2998-3-Sanket.Goswami@amd.com>
+ <94fff162-0c75-496e-37bd-fd7dab980153@redhat.com>
+From:   "Goswami, Sanket" <Sanket.Goswami@amd.com>
+In-Reply-To: <94fff162-0c75-496e-37bd-fd7dab980153@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BM1PR0101CA0068.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:19::30) To BN8PR12MB3508.namprd12.prod.outlook.com
+ (2603:10b6:408:6b::19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
+Received: from [10.136.45.90] (165.204.157.251) by BM1PR0101CA0068.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:19::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.11 via Frontend Transport; Tue, 30 Nov 2021 11:25:58 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2df8a961-31fa-40c9-f3ac-08d9b3f3ff8b
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3580:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3580F38807595BE67138FB1F9C679@DM6PR12MB3580.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Office365-Filtering-Correlation-Id: 44deb258-dd0c-4a49-3507-08d9b3f4304a
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3508:
+X-Microsoft-Antispam-PRVS: <BN8PR12MB3508A9F43F94EB791109119D9C679@BN8PR12MB3508.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vgFLTWX4jjQvv7H/oko5CmBTxDm4WzFvpRdOXnTz2YvzthrEkekm+CA2jOW5ZhSDrKoBd4NNl5KYRyYXyX/ZQuJykDLCaW2OIFkUujsWQOzulAZ32TPB1zE3l++qR3UQHsqRX6MW8FyxTa3unv753F8J0Dn8/Kn8mwsEEm4ihiStoCpQBJTEOXQmTDw2sgvHe3n1oCAvxzL+eiiBL6IKXkCnAn3WewAxiextNZ9N7zyJ+bNcMVkQV4yfDunzSj8G6pTGiQse4K9XGq/J/Qrq8sA9vQGiOz4N/zfac4pnEMwoJY+EYJWlFcRncGbBot17lJO4u2EfQPVbJQ8ovXwS/BFDv8JdRe2HM4vd+IRKWHVNSYl+r+uPALGiiURFD71vba6tLtdMpxaVnoBDDwdV/PsZAUjGlYh9drSPB26TLYF/YCejqFtEyNi47k8jOFyYpivv7mODW6SXQAHzCsiIB2eAmNBV9jIPL+rvp8+8A/qit584B1lHIMuIL/5fwfLwaMeVMge06jW+/CYl3P0m+VBhFPPs1u3iOnmzExC74msXwtxK7ag15gFdPNSu8LWTvo5ZyRJEbe/QgSgioRGy1oxE7yYgS3WXNfAs4/Fj3BcMc9+pEP5S3WvAK33QBMwZo/onpr5WBoOnt6Vb/+CYqqpGSm4jT5qMcEuvwRZfLX2LDMfXRV4jJkJLt7CpHPk8HYIvVomErq/84BCKSIGdd/lkhdTo12vffKJ/S7VIK5nBaxSEQWQNa8Skple4djbEWFqB3iTEu3i+GPFXDPx4RIrOhdIQCE24YnkjswYoOrE=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(40470700001)(16526019)(186003)(2616005)(5660300002)(336012)(36756003)(2906002)(86362001)(356005)(40460700001)(47076005)(426003)(83380400001)(8676002)(81166007)(70586007)(7696005)(508600001)(36860700001)(1076003)(6666004)(26005)(70206006)(54906003)(8936002)(316002)(110136005)(4326008)(82310400004)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: rwNoJsAkMUIBrWVpOliW8SlIvC82vcW35QtuNVmsydRW5+NaLtP2Jv5+zKE29suDoB+d/pHiGHB8QHij6CP3jVFwCVYGGWCM6ZlVEp766yP/AoPZjkE6zaaWn9lLsXOnnCeoCuIx6o8jfAVpCp6D8eOOeVuGuy7A0gW+tzCX4JSZ12hk0so0RxsRVCcpMeFfk7cA884ddbJ3ZTZYobufPu7ShaRq0yJ8p9+iiZrkmyg1F311KTv0R9qcgBwk8PY6GvSViNmrrut9vASJ4y8215DAn87+/3KbkglEE+rEpGzyo2Pp+p1aAJ7omX49r0ykt7YAXha3YQ3t/tvSK5YLdCB9yYQ7DlGj8Sw2b6jk4hyEJxVT6c1ZrGQJMPwZHwAPciWDKArquPMfOLTIBKJBg1e4AsHNFAF391QsWMhbPft/CYUc5a3x7yJYatCbmLnhR2nQem0G4Q50cXuRf7Tsfd3RZHwIYGpRPYd/wr58ZemxmPhL5egoell/m+UxeI+DrDpYEfUWTA5sXQwP3h3q+DylpyLY3SlSRkjgmS3AlIytq8cgljNu8TFZYZ3vr4IXiUwnqu8ZZ7Yijm7QfL8rlFbTBFzbL//VPTTts8/cXtUZSIPRGwxt5j8AtHCx0XpoIVU1uYVWCI9bTSgbxMBeAqlqZORZFAurbffFmX7SW9si3FyDG2IQ3P/kUj1h2OkUwg57VMCYBcOlXxvzUpG5WVnKXOx2EvLWTiwp1V2+r/77m3YQRl9sW99kuo4uAy3P
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3508.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8676002)(956004)(4326008)(8936002)(53546011)(6486002)(316002)(6636002)(508600001)(16576012)(2906002)(83380400001)(86362001)(26005)(2616005)(5660300002)(31696002)(66556008)(6666004)(66476007)(186003)(38100700002)(36756003)(66946007)(31686004)(110136005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZUlmTUlXUmRSQkJMLzFzak00T2VlL2Z1ays5Qnd5RUg4ZWpYQWk1c3RHcTk4?=
+ =?utf-8?B?TThUYVR2VzJScDVWQWZNdGp3YTU1ZTNFUVoxV2FuVWZLeVVxSTBkUjM5Y1VX?=
+ =?utf-8?B?ZzZoTGhwcStrekJiUU5yUHZ6MlFXYUtJcXliWFpzOStYMGlBYSt2S2d1WmZ2?=
+ =?utf-8?B?Z2Z6Ky9ZSEFQQjJTbGlrRzZYR0tXZGt3a3ZBM0dwSlFjb0ZwZTh4dXAyZDFJ?=
+ =?utf-8?B?UzBwTEk4N1dSWDUwcktwRjdUK2R0YzVJcmxvZ2FxL3VRM1NrYXNxdGQzQVZz?=
+ =?utf-8?B?Y3dBVCtpWVdNSWswL1pWZlpMQkVLend5OGloV1B1OWdnMWpaSDJ4S1Q3MzY1?=
+ =?utf-8?B?Z2x2N3ZTeGs4UGxvZU1wR0JLT0p5M2xkdXd1NVJ5TEUybnlrWDh5UnFZWVlj?=
+ =?utf-8?B?RW9RdXhTNnZUcjBudzcxVDVvM1hMZnBWODUxWDE4U2NTaDltYmtTT1dlbkVW?=
+ =?utf-8?B?WGZtQTd3d3pNWU1BNzVBbTRsZ1kycGZaNjM0MnIyUHRIaTJGZk12RUxmcmQz?=
+ =?utf-8?B?R29KREJYSG55VmNqQ24vSlU3MXhmN3J6a3drZTQrMko0RExWdmk5TWpDQ0x1?=
+ =?utf-8?B?YXE2MUp4NEg3eHNBVlFCa1BUNERxY3prZE1CbmkzZzJKb01BNktaOU5lUjNr?=
+ =?utf-8?B?ZjdDekdFaHBHSDY0UTJoeENQYVI3YTU5UzY4WWVBTTZ2cVIycGlHSlpkTE5P?=
+ =?utf-8?B?RTY0UW9PNkk5N3dtazdYMDlFV0JENmw4c1lqbnZ1TDdJMG5zWXpscEZuV2hO?=
+ =?utf-8?B?UzBuTHZqTXpCMXVhUXc5a2dGV0EySThkZXBObDFMYTlaR3Nsd3RPRmdtbXhI?=
+ =?utf-8?B?QVFjZXdxMnRRdHQrbTNBd2NHTE1CZ3lUTm5Mdi92Vi9UMHhnWEV5WUpscTAy?=
+ =?utf-8?B?eWd6ZlJpZmtGOHRKQjlvMER2VENtVndYakVGbHpkdVFQQXd4OFRyQjZvWUtB?=
+ =?utf-8?B?NHpGc3grQUZXcXNXTWxtdEpqWmpFSFBTYmtVaVp2R1hQeUwvUEI2aWF6QnJa?=
+ =?utf-8?B?Y2tycWVIaGtwR0ZrTnBYbGV5M1hVVlRPQzhTVWNDaEtzR2tvRWQrTmY1dFdQ?=
+ =?utf-8?B?QlZTa2ovZ1Z0cnlmdzhVOVlZb0UyRGovcHNEM0xsNUVvU3JwNlVILzN3clZM?=
+ =?utf-8?B?Y0pNRGVUa0JLSldBdzd4OEE4NDVyQlpzdE9JTGVzSmRaRGZqam9oWEFUREZC?=
+ =?utf-8?B?QWZRaFJzZmJsaEZaRGZxSnlDUWZRaGZtb1hpWVFxUGtwZGtqUnpkVUd5UHVJ?=
+ =?utf-8?B?aDk5cldQeDFSc21KNEFtNjArWFB6dlF2TndyQ3kvYjduRjFmNFVzOWJHUFhx?=
+ =?utf-8?B?bzhoWDhYZ0dILzdQa1duS3pacVdJMVcrR1lIWlFVdm5mY2tORERROWFuQ0JR?=
+ =?utf-8?B?Qm5rcDM0T01FT2Nqb2NIcDRWZFp1dmlsYUNBSEFwbC9CVGQ1Zi9JYmJMR2ox?=
+ =?utf-8?B?aTUvcVBoWGhHZGVQTENWVlEzVytqd0d1OUY0K05GelNxNmk4SXpOcURySXcy?=
+ =?utf-8?B?aHUrZExad05NT29jQlRVQlBCandnUFh1N0dwNzhvNnZpNVp3NnNNMThhd0x2?=
+ =?utf-8?B?QWxJZVZkQXMwalRzRFJvYmNmcE9nY3VqYzlxU2tuRW9ZN3pwRS9GaWovTVV6?=
+ =?utf-8?B?ZFVEeCttYmhYV1RaZjlTOFRBSUI1U1dVOXlmQUxDT2ZLNmVoYyszakxPSnRx?=
+ =?utf-8?B?YTlLM0FVbWFVakIrZm1tMVRBUTZ5ZUppc3pOOFdtRTIxYkpsL1pVQTlyK1lz?=
+ =?utf-8?B?cEs2eFpJclhJMGdjbGEvZHZHYW5wZGdrY0tTMkJ1YWRCRUxRQUpwRzlFNW5j?=
+ =?utf-8?B?Tk5rM2hoRWFwUjFRNlFJalZIbnM0c0ZYQTd3aUpkYTd5b3hEV1NDNG5sQVNB?=
+ =?utf-8?B?Nm9pT0dTUnV0bkN5Y3g1RksrTDdVa0VxTWhrR2VDNW8xSGdzUDgrREF4Yith?=
+ =?utf-8?B?U0tvMGtyamUxQTk4RlFiQUdkUjVuVmFFbUVwVDJTY3ZaSnF3blIwTEJvM21z?=
+ =?utf-8?B?bmZLdTVheE9ZOE5mTCtveUpZQkJBOTJRSksvckpIaUJKQWQ3Qys1WXNEN0x6?=
+ =?utf-8?B?T2xQdHFxc2dVZzg5UGVGcTNzZXRJZDlKY0F6OHJKL0JWS2xBbXc4WHZ0dkpz?=
+ =?utf-8?B?QmZNZ05LeW9BdUpIK1cwWWNOdGFvRDZFWThjNHRmWEZJOEc2Tk41eEFTNmpl?=
+ =?utf-8?Q?1SjO4/GffIpb5EojNHiq6Kg=3D?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2021 11:24:39.4982
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44deb258-dd0c-4a49-3507-08d9b3f4304a
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3508.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2021 11:26:01.8824
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2df8a961-31fa-40c9-f3ac-08d9b3f3ff8b
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT006.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3580
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +CCZM5i8Yali2kdi4QExq0JRytVsNG605Dko734FycrNYoIYj8ITBoO9qMTLeNHKo9UMiWd70IEhkEvfd1OOqQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3508
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-STB (Smart Trace Buffer), is a debug trace buffer that isolates the
-failures by analyzing the last running feature of a system. This
-non-intrusive way always runs in the background and stores the trace
-into the SoC.
+Hi Hans,
 
-This patch enables the STB feature by passing module param
-"enable_stb=1" while loading the driver and provides mechanism to
-access the STB buffer using the read and write routines.
+On 16-Nov-21 19:01, Hans de Goede wrote:
+> [CAUTION: External Email]
+> 
+> Hi,
+> 
+> On 10/29/21 19:23, Sanket Goswami wrote:
+>> Store the root port information in amd_pmc_probe() so that the
+>> information can be used across multiple routines.
+>>
+>> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+>> ---
+>> Changes in v5:
+>> - Remove pci_dev_put() from amd_pmc_remove() as its no longer required.
+>>
+>> Changes in v4:
+>> - No change.
+>>
+>> Changes in v3:
+>> - Add pci_dev_put() in amd_pmc_remove().
+>>
+>> Changes in v2:
+>> - Store the rdev info in amd_pmc_probe() as suggested by Hans.
+>>
+>>  drivers/platform/x86/amd-pmc.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+>> index 9af02860ed59..ea099f7759f2 100644
+>> --- a/drivers/platform/x86/amd-pmc.c
+>> +++ b/drivers/platform/x86/amd-pmc.c
+>> @@ -121,6 +121,7 @@ struct amd_pmc_dev {
+>>       u16 minor;
+>>       u16 rev;
+>>       struct device *dev;
+>> +     struct pci_dev *rdev;
+>>       struct mutex lock; /* generic mutex lock */
+>>  #if IS_ENABLED(CONFIG_DEBUG_FS)
+>>       struct dentry *dbgfs_dir;
+>> @@ -538,6 +539,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
+>>       }
+>>
+>>       dev->cpu_id = rdev->device;
+>> +     dev->rdev = rdev;
+>>       err = pci_write_config_dword(rdev, AMD_PMC_SMU_INDEX_ADDRESS, AMD_PMC_BASE_ADDR_LO);
+>>       if (err) {
+>>               dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMC_SMU_INDEX_ADDRESS);
+>>
+> 
+> 
+> I'm afraid this is still not correct:
+> 
+> 1. The pci_dev_put() at line 570 is still there, so after that line
+>    you no longer have a reference to the pci_dev and the pointer may
+>    end up pointing to free-ed memory
+> 
+> 2. Once you drop the pci_dev_put() at line 570, all the error-exit
+>    paths from probe after that, like this one :
+> 
+>         dev->regbase = devm_ioremap(dev->dev, base_addr + AMD_PMC_BASE_ADDR_OFFSET,
+>                                     AMD_PMC_MAPPING_SIZE);
+>         if (!dev->regbase)
+>                 return -ENOMEM;
+> 
+>    need to be changed to now, put the rdev (since that is now no longer
+>    done on line 570), so this needs to be changed to:
+> 
+>         dev->regbase = devm_ioremap(dev->dev, base_addr + AMD_PMC_BASE_ADDR_OFFSET,
+>                                     AMD_PMC_MAPPING_SIZE);
+>         if (!dev->regbase) {
+>                 err = -ENOMEM;
+>                 goto err_pci_dev_put;
+>         }
+> 
+>    and the same for:
+> 
+>         dev->fch_virt_addr = devm_ioremap(dev->dev, fch_phys_addr, FCH_SSC_MAPPING_SIZE);
+>         if (!dev->fch_virt_addr)
+>                 return -ENOMEM;
+> 
+> 3. Since you now keep the reference on a succesfull probe, you need to add a
+> 
+>         pci_dev_put(dev->rdev);
+> 
+>    call to amd_pmc_remove()
+> 
+> 
+> Note that the changelog says you already did 3. in v3 but for some reason you
+> have completely dropped that and related changes now again :|
+> 
+> I've already asked for these changes and explained what you needed to do
+> several times now; and to be honest this is growing quite tiresome.
 
-Co-developed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
----
-Changes in v6:
-- Capture the read data directly into buf in amd_pmc_read_stb().
+Apologies for messing it up. I just sent out v6 for your review. Hope it would address the issues
 
-Changes in v5:
-- Use kfree() only once in .open as suggested by Hans.
 
-Changes in v4:
-- Use kzalloc() for memory allocation.
 
-Changes in v3:
-- Use sizeof(u32) with multiplier as suggested by Mark Gross.
-
-Changes in v2:
-- Create amd_pmc_stb_debugfs_fops structure to get STB data.
-- Address review comments from Hans.
-
- drivers/platform/x86/amd-pmc.c | 132 +++++++++++++++++++++++++++++++++
- 1 file changed, 132 insertions(+)
-
-diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-index b3b8a5daa02e..581cfd702082 100644
---- a/drivers/platform/x86/amd-pmc.c
-+++ b/drivers/platform/x86/amd-pmc.c
-@@ -35,6 +35,12 @@
- #define AMD_PMC_SCRATCH_REG_CZN		0x94
- #define AMD_PMC_SCRATCH_REG_YC		0xD14
- 
-+/* STB Registers */
-+#define AMD_PMC_STB_INDEX_ADDRESS	0xF8
-+#define AMD_PMC_STB_INDEX_DATA		0xFC
-+#define AMD_PMC_STB_PMI_0		0x03E30600
-+#define AMD_PMC_STB_PREDEF		0xC6000001
-+
- /* Base address of SMU for mapping physical address to virtual address */
- #define AMD_PMC_SMU_INDEX_ADDRESS	0xB8
- #define AMD_PMC_SMU_INDEX_DATA		0xBC
-@@ -82,6 +88,7 @@
- #define SOC_SUBSYSTEM_IP_MAX	12
- #define DELAY_MIN_US		2000
- #define DELAY_MAX_US		3000
-+#define FIFO_SIZE		4096
- enum amd_pmc_def {
- 	MSG_TEST = 0x01,
- 	MSG_OS_HINT_PCO,
-@@ -128,8 +135,14 @@ struct amd_pmc_dev {
- #endif /* CONFIG_DEBUG_FS */
- };
- 
-+static bool enable_stb;
-+module_param(enable_stb, bool, 0644);
-+MODULE_PARM_DESC(enable_stb, "Enable the STB debug mechanism");
-+
- static struct amd_pmc_dev pmc;
- static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
-+static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
-+static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
- 
- static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
- {
-@@ -176,6 +189,50 @@ static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
- 	return 0;
- }
- 
-+static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
-+{
-+	struct amd_pmc_dev *dev = filp->f_inode->i_private;
-+	u32 size = FIFO_SIZE * sizeof(u32);
-+	u32 *buf;
-+	int rc;
-+
-+	buf = kzalloc(size, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	rc = amd_pmc_read_stb(dev, buf);
-+	if (rc) {
-+		kfree(buf);
-+		return rc;
-+	}
-+
-+	filp->private_data = buf;
-+	return rc;
-+}
-+
-+static ssize_t amd_pmc_stb_debugfs_read(struct file *filp, char __user *buf, size_t size,
-+					loff_t *pos)
-+{
-+	if (!filp->private_data)
-+		return -EINVAL;
-+
-+	return simple_read_from_buffer(buf, size, pos, filp->private_data,
-+				       FIFO_SIZE * sizeof(u32));
-+}
-+
-+static int amd_pmc_stb_debugfs_release(struct inode *inode, struct file *filp)
-+{
-+	kfree(filp->private_data);
-+	return 0;
-+}
-+
-+const struct file_operations amd_pmc_stb_debugfs_fops = {
-+	.owner = THIS_MODULE,
-+	.open = amd_pmc_stb_debugfs_open,
-+	.read = amd_pmc_stb_debugfs_read,
-+	.release = amd_pmc_stb_debugfs_release,
-+};
-+
- static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
- 				 struct seq_file *s)
- {
-@@ -289,6 +346,10 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
- 			    &s0ix_stats_fops);
- 	debugfs_create_file("amd_pmc_idlemask", 0644, dev->dbgfs_dir, dev,
- 			    &amd_pmc_idlemask_fops);
-+	/* Enable STB only when the module_param is set */
-+	if (enable_stb)
-+		debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
-+				    &amd_pmc_stb_debugfs_fops);
- }
- #else
- static inline void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
-@@ -485,6 +546,13 @@ static int __maybe_unused amd_pmc_suspend(struct device *dev)
- 	if (rc)
- 		dev_err(pdev->dev, "suspend failed\n");
- 
-+	if (enable_stb)
-+		rc = amd_pmc_write_stb(pdev, AMD_PMC_STB_PREDEF);
-+	if (rc)	{
-+		dev_err(pdev->dev, "error writing to STB\n");
-+		return rc;
-+	}
-+
- 	return rc;
- }
- 
-@@ -505,6 +573,14 @@ static int __maybe_unused amd_pmc_resume(struct device *dev)
- 	/* Dump the IdleMask to see the blockers */
- 	amd_pmc_idlemask_read(pdev, dev, NULL);
- 
-+	/* Write data incremented by 1 to distinguish in stb_read */
-+	if (enable_stb)
-+		rc = amd_pmc_write_stb(pdev, AMD_PMC_STB_PREDEF + 1);
-+	if (rc)	{
-+		dev_err(pdev->dev, "error writing to STB\n");
-+		return rc;
-+	}
-+
- 	return 0;
- }
- 
-@@ -521,6 +597,62 @@ static const struct pci_device_id pmc_pci_ids[] = {
- 	{ }
- };
- 
-+static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
-+{
-+	int err;
-+
-+	err = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_ADDRESS, AMD_PMC_STB_PMI_0);
-+	if (err) {
-+		dev_err(dev->dev, "failed to write addr in stb: 0x%X\n",
-+			AMD_PMC_STB_INDEX_ADDRESS);
-+		err = pcibios_err_to_errno(err);
-+		goto err_pci_dev_put;
-+	}
-+
-+	err = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_DATA, data);
-+	if (err) {
-+		dev_err(dev->dev, "failed to write data in stb: 0x%X\n",
-+			AMD_PMC_STB_INDEX_DATA);
-+		err = pcibios_err_to_errno(err);
-+		goto err_pci_dev_put;
-+	}
-+
-+	return 0;
-+
-+err_pci_dev_put:
-+	pci_dev_put(dev->rdev);
-+	return err;
-+}
-+
-+static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
-+{
-+	int i, err;
-+
-+	err = pci_write_config_dword(dev->rdev, AMD_PMC_STB_INDEX_ADDRESS, AMD_PMC_STB_PMI_0);
-+	if (err) {
-+		dev_err(dev->dev, "error writing addr to stb: 0x%X\n",
-+			AMD_PMC_STB_INDEX_ADDRESS);
-+		err = pcibios_err_to_errno(err);
-+		goto err_pci_dev_put;
-+	}
-+
-+	for (i = 0; i < FIFO_SIZE; i++) {
-+		err = pci_read_config_dword(dev->rdev, AMD_PMC_STB_INDEX_DATA, buf++);
-+		if (err) {
-+			dev_err(dev->dev, "error reading data from stb: 0x%X\n",
-+				AMD_PMC_STB_INDEX_DATA);
-+			err = pcibios_err_to_errno(err);
-+			goto err_pci_dev_put;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_pci_dev_put:
-+	pci_dev_put(dev->rdev);
-+	return err;
-+}
-+
- static int amd_pmc_probe(struct platform_device *pdev)
- {
- 	struct amd_pmc_dev *dev = &pmc;
--- 
-2.25.1
-
+Thanks,
+Sanket
