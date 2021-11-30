@@ -2,228 +2,128 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1755C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Nov 2021 11:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3660FC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Nov 2021 11:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240759AbhK3L3Y (ORCPT
+        id S231514AbhK3LbU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 30 Nov 2021 06:29:24 -0500
-Received: from mail-mw2nam12on2066.outbound.protection.outlook.com ([40.107.244.66]:9678
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S236162AbhK3L3X (ORCPT
+        Tue, 30 Nov 2021 06:31:20 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42787 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231402AbhK3LbP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 30 Nov 2021 06:29:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dBsBsQ1o88NMI7DXCWcvDd+Z2If/nlG+6Xc+QBOAAf8LHEGnJch41EKeE3qS37NE3wCGL+chBdvIK6ax3+x/yAbcRkkt8p2WG2iJIoXkJG9IjLsZccuST/sxOOw7BjhAjPCgGtHol13mgbR+Sdn+IQMCSpgOTanIMQRmJLkf+YWMt8UJUOIb+3GcAyQiknVztjF93uk8OCSmAF85YdoLEi0mkcplF2Lmh9bPdJ747BwtwDEMrcp55QcUs16bPDw6UqPy2bR0Oy3jJJDpKPmQ42CeGZNv8YzExsrfusaIiuRCZaSmFTUjzkOvki+ztdZJbJsimbmibTbxNDAufv5eug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cm0iV+5947/Pwkj31yfv4ki+VWUK5lkA2N9FiKfdFMc=;
- b=oAyX8kd6hOJpH0iizXPgQhCHG0UK+32N3NNtVhH7JY1+JNc6MIyg41DnpGlUzAvBA7sHVItGgBYf8tX6uyIneTIbCeJBJJMFsyEauHThjsh/N7inuVolPQojOAnmwYO/W/eBwYV5+gObr7sUBGG7Ov1nrWpIuH8NjRhlRXA2e+G1eDnn5hSQ9d7txABqUwdWhhTQq+BmqjIBY1F9e0nWWEvljOkj1nJJYOQbJ3iLoxtK8E5JLLRlm/qVspe1NFSuPi9C0iw5PX6sSxLOwANnogcWfYq4nuHG3pqWP+ML0x0mJJ1ShAnPnsUsuOL6C2+ninoVPWtDPNHXJp6hN/ne7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cm0iV+5947/Pwkj31yfv4ki+VWUK5lkA2N9FiKfdFMc=;
- b=TJwKWko+01MNlXTBCmst5KC7SfR/Fi+Di5b6jBnUSHWdL3Ne2JDrupSBijKeVXB0Hu0bTOom9gFxW8/2G/uV3lsA1EspfHc9XGRCELgCZGc9Xw3ojP5+h9b9mnLP5MIBB37Q8kcQvQpIPedExvbJgCL7icdebpciu2AbES8ymiE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3508.namprd12.prod.outlook.com (2603:10b6:408:6b::19)
- by BN8PR12MB3508.namprd12.prod.outlook.com (2603:10b6:408:6b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Tue, 30 Nov
- 2021 11:26:02 +0000
-Received: from BN8PR12MB3508.namprd12.prod.outlook.com
- ([fe80::a907:e716:6d47:d3c8]) by BN8PR12MB3508.namprd12.prod.outlook.com
- ([fe80::a907:e716:6d47:d3c8%6]) with mapi id 15.20.4734.024; Tue, 30 Nov 2021
- 11:26:02 +0000
-Message-ID: <5768f078-733d-9960-583f-d5fd50edb051@amd.com>
-Date:   Tue, 30 Nov 2021 16:55:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [PATCH v5 2/3] platform/x86: amd-pmc: Store the pci_dev instance
- inside struct amd_pmc_dev
+        Tue, 30 Nov 2021 06:31:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1638271676;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZI0EqIJxMMw6xZ1nOqCVcGIiK10rxLlVfbQRFN9dX7Y=;
+        b=CScL8q1HO2shfeYSI1SIowSaarJ1MFKxW5nHwTu2xE1oAUq9CCeyfdwTMvcCZ3xEeWGYNe
+        2D8Xslu2QivV5F2QFe3LEAVnSxZORvdhOeMzg8x68zB3QP+poFNH4y3eGwod2HKqP5rVBJ
+        j9JF5UEE/kSQnbJB/mFSkwwPt3L308Y=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-380-94zCuGBXPeKln4-UhLxejg-1; Tue, 30 Nov 2021 06:27:55 -0500
+X-MC-Unique: 94zCuGBXPeKln4-UhLxejg-1
+Received: by mail-ed1-f69.google.com with SMTP id bx28-20020a0564020b5c00b003e7c42443dbso16595142edb.15
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Nov 2021 03:27:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ZI0EqIJxMMw6xZ1nOqCVcGIiK10rxLlVfbQRFN9dX7Y=;
+        b=Bg+/4woptl/BavKa0V6AUMsGHg9oW8yFoEcbpto7cnBfS1w80qhj8yjuIOG71p1ExH
+         PydL/g+FKM3qySO+qPRjND2TK5wFbp9AAop3PxV1IE3KoLdCRn4048siBja+h52BINqD
+         4aWNI/+0eNZWwBCwtUm5CdhYjkyx6+jkoMMSVat3YqmZL+n9iBy/SSrg7WeQyWJd8iO9
+         wS8jkL3wrh5Jt4l9gbfwYuhOamTLJOejUh+t0szwzb4Uwg+XCG2c9LnGyCprHui+6jxy
+         tv2FUnhIuhQyXU9kIsV+MUo/7z3toiRFYbql4Cn6qUkJAm+wMjH/zW04tbXg8F+NAFlK
+         NQYg==
+X-Gm-Message-State: AOAM532YCje3pakYBtb7fQMAijgXMEo7dlXXvodw9xMTIGpTSSwM3QND
+        VqBCvZ9CvPGna26Pm8Ocsj3v7MlNcJ6c7BsjUEWIo1sDo2VgCDv74OEH3C5oQEnwD3PhRE6Ly5D
+        7oTcX1+JcB7+09CczRnXLZ3oCDHSiMnyDog==
+X-Received: by 2002:a17:906:5209:: with SMTP id g9mr68056858ejm.145.1638271674188;
+        Tue, 30 Nov 2021 03:27:54 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJynJJzu/Jbk2Z+XGzlFr6LPlDOUe/N4GBdgsYfIWyibDDsPNoSUXzkrFpuuC0iAL7eg+zUS2w==
+X-Received: by 2002:a17:906:5209:: with SMTP id g9mr68056840ejm.145.1638271674021;
+        Tue, 30 Nov 2021 03:27:54 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id q7sm10892184edr.9.2021.11.30.03.27.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Nov 2021 03:27:53 -0800 (PST)
+Message-ID: <4a3d55d0-c53d-d0dc-8023-c059ddffc84c@redhat.com>
+Date:   Tue, 30 Nov 2021 12:27:53 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH 1/1] amd-pmu: fix s2idle failures on certain AMD laptops
 Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+To:     Fabrizio Bertocci <fabriziobertocci@gmail.com>,
+        platform-driver-x86@vger.kernel.org,
+        Sanket Goswami <Sanket.Goswami@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
         "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-References: <20211029172304.2998-1-Sanket.Goswami@amd.com>
- <20211029172304.2998-3-Sanket.Goswami@amd.com>
- <94fff162-0c75-496e-37bd-fd7dab980153@redhat.com>
-From:   "Goswami, Sanket" <Sanket.Goswami@amd.com>
-In-Reply-To: <94fff162-0c75-496e-37bd-fd7dab980153@redhat.com>
+References: <CADtzkx7TdfbwtaVEXUdD6YXPey52E-nZVQNs+Z41DTx7gqMqtw@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CADtzkx7TdfbwtaVEXUdD6YXPey52E-nZVQNs+Z41DTx7gqMqtw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BM1PR0101CA0068.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:19::30) To BN8PR12MB3508.namprd12.prod.outlook.com
- (2603:10b6:408:6b::19)
-MIME-Version: 1.0
-Received: from [10.136.45.90] (165.204.157.251) by BM1PR0101CA0068.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:19::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.11 via Frontend Transport; Tue, 30 Nov 2021 11:25:58 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 44deb258-dd0c-4a49-3507-08d9b3f4304a
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3508:
-X-Microsoft-Antispam-PRVS: <BN8PR12MB3508A9F43F94EB791109119D9C679@BN8PR12MB3508.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rwNoJsAkMUIBrWVpOliW8SlIvC82vcW35QtuNVmsydRW5+NaLtP2Jv5+zKE29suDoB+d/pHiGHB8QHij6CP3jVFwCVYGGWCM6ZlVEp766yP/AoPZjkE6zaaWn9lLsXOnnCeoCuIx6o8jfAVpCp6D8eOOeVuGuy7A0gW+tzCX4JSZ12hk0so0RxsRVCcpMeFfk7cA884ddbJ3ZTZYobufPu7ShaRq0yJ8p9+iiZrkmyg1F311KTv0R9qcgBwk8PY6GvSViNmrrut9vASJ4y8215DAn87+/3KbkglEE+rEpGzyo2Pp+p1aAJ7omX49r0ykt7YAXha3YQ3t/tvSK5YLdCB9yYQ7DlGj8Sw2b6jk4hyEJxVT6c1ZrGQJMPwZHwAPciWDKArquPMfOLTIBKJBg1e4AsHNFAF391QsWMhbPft/CYUc5a3x7yJYatCbmLnhR2nQem0G4Q50cXuRf7Tsfd3RZHwIYGpRPYd/wr58ZemxmPhL5egoell/m+UxeI+DrDpYEfUWTA5sXQwP3h3q+DylpyLY3SlSRkjgmS3AlIytq8cgljNu8TFZYZ3vr4IXiUwnqu8ZZ7Yijm7QfL8rlFbTBFzbL//VPTTts8/cXtUZSIPRGwxt5j8AtHCx0XpoIVU1uYVWCI9bTSgbxMBeAqlqZORZFAurbffFmX7SW9si3FyDG2IQ3P/kUj1h2OkUwg57VMCYBcOlXxvzUpG5WVnKXOx2EvLWTiwp1V2+r/77m3YQRl9sW99kuo4uAy3P
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3508.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8676002)(956004)(4326008)(8936002)(53546011)(6486002)(316002)(6636002)(508600001)(16576012)(2906002)(83380400001)(86362001)(26005)(2616005)(5660300002)(31696002)(66556008)(6666004)(66476007)(186003)(38100700002)(36756003)(66946007)(31686004)(110136005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZUlmTUlXUmRSQkJMLzFzak00T2VlL2Z1ays5Qnd5RUg4ZWpYQWk1c3RHcTk4?=
- =?utf-8?B?TThUYVR2VzJScDVWQWZNdGp3YTU1ZTNFUVoxV2FuVWZLeVVxSTBkUjM5Y1VX?=
- =?utf-8?B?ZzZoTGhwcStrekJiUU5yUHZ6MlFXYUtJcXliWFpzOStYMGlBYSt2S2d1WmZ2?=
- =?utf-8?B?Z2Z6Ky9ZSEFQQjJTbGlrRzZYR0tXZGt3a3ZBM0dwSlFjb0ZwZTh4dXAyZDFJ?=
- =?utf-8?B?UzBwTEk4N1dSWDUwcktwRjdUK2R0YzVJcmxvZ2FxL3VRM1NrYXNxdGQzQVZz?=
- =?utf-8?B?Y3dBVCtpWVdNSWswL1pWZlpMQkVLend5OGloV1B1OWdnMWpaSDJ4S1Q3MzY1?=
- =?utf-8?B?Z2x2N3ZTeGs4UGxvZU1wR0JLT0p5M2xkdXd1NVJ5TEUybnlrWDh5UnFZWVlj?=
- =?utf-8?B?RW9RdXhTNnZUcjBudzcxVDVvM1hMZnBWODUxWDE4U2NTaDltYmtTT1dlbkVW?=
- =?utf-8?B?WGZtQTd3d3pNWU1BNzVBbTRsZ1kycGZaNjM0MnIyUHRIaTJGZk12RUxmcmQz?=
- =?utf-8?B?R29KREJYSG55VmNqQ24vSlU3MXhmN3J6a3drZTQrMko0RExWdmk5TWpDQ0x1?=
- =?utf-8?B?YXE2MUp4NEg3eHNBVlFCa1BUNERxY3prZE1CbmkzZzJKb01BNktaOU5lUjNr?=
- =?utf-8?B?ZjdDekdFaHBHSDY0UTJoeENQYVI3YTU5UzY4WWVBTTZ2cVIycGlHSlpkTE5P?=
- =?utf-8?B?RTY0UW9PNkk5N3dtazdYMDlFV0JENmw4c1lqbnZ1TDdJMG5zWXpscEZuV2hO?=
- =?utf-8?B?UzBuTHZqTXpCMXVhUXc5a2dGV0EySThkZXBObDFMYTlaR3Nsd3RPRmdtbXhI?=
- =?utf-8?B?QVFjZXdxMnRRdHQrbTNBd2NHTE1CZ3lUTm5Mdi92Vi9UMHhnWEV5WUpscTAy?=
- =?utf-8?B?eWd6ZlJpZmtGOHRKQjlvMER2VENtVndYakVGbHpkdVFQQXd4OFRyQjZvWUtB?=
- =?utf-8?B?NHpGc3grQUZXcXNXTWxtdEpqWmpFSFBTYmtVaVp2R1hQeUwvUEI2aWF6QnJa?=
- =?utf-8?B?Y2tycWVIaGtwR0ZrTnBYbGV5M1hVVlRPQzhTVWNDaEtzR2tvRWQrTmY1dFdQ?=
- =?utf-8?B?QlZTa2ovZ1Z0cnlmdzhVOVlZb0UyRGovcHNEM0xsNUVvU3JwNlVILzN3clZM?=
- =?utf-8?B?Y0pNRGVUa0JLSldBdzd4OEE4NDVyQlpzdE9JTGVzSmRaRGZqam9oWEFUREZC?=
- =?utf-8?B?QWZRaFJzZmJsaEZaRGZxSnlDUWZRaGZtb1hpWVFxUGtwZGtqUnpkVUd5UHVJ?=
- =?utf-8?B?aDk5cldQeDFSc21KNEFtNjArWFB6dlF2TndyQ3kvYjduRjFmNFVzOWJHUFhx?=
- =?utf-8?B?bzhoWDhYZ0dILzdQa1duS3pacVdJMVcrR1lIWlFVdm5mY2tORERROWFuQ0JR?=
- =?utf-8?B?Qm5rcDM0T01FT2Nqb2NIcDRWZFp1dmlsYUNBSEFwbC9CVGQ1Zi9JYmJMR2ox?=
- =?utf-8?B?aTUvcVBoWGhHZGVQTENWVlEzVytqd0d1OUY0K05GelNxNmk4SXpOcURySXcy?=
- =?utf-8?B?aHUrZExad05NT29jQlRVQlBCandnUFh1N0dwNzhvNnZpNVp3NnNNMThhd0x2?=
- =?utf-8?B?QWxJZVZkQXMwalRzRFJvYmNmcE9nY3VqYzlxU2tuRW9ZN3pwRS9GaWovTVV6?=
- =?utf-8?B?ZFVEeCttYmhYV1RaZjlTOFRBSUI1U1dVOXlmQUxDT2ZLNmVoYyszakxPSnRx?=
- =?utf-8?B?YTlLM0FVbWFVakIrZm1tMVRBUTZ5ZUppc3pOOFdtRTIxYkpsL1pVQTlyK1lz?=
- =?utf-8?B?cEs2eFpJclhJMGdjbGEvZHZHYW5wZGdrY0tTMkJ1YWRCRUxRQUpwRzlFNW5j?=
- =?utf-8?B?Tk5rM2hoRWFwUjFRNlFJalZIbnM0c0ZYQTd3aUpkYTd5b3hEV1NDNG5sQVNB?=
- =?utf-8?B?Nm9pT0dTUnV0bkN5Y3g1RksrTDdVa0VxTWhrR2VDNW8xSGdzUDgrREF4Yith?=
- =?utf-8?B?U0tvMGtyamUxQTk4RlFiQUdkUjVuVmFFbUVwVDJTY3ZaSnF3blIwTEJvM21z?=
- =?utf-8?B?bmZLdTVheE9ZOE5mTCtveUpZQkJBOTJRSksvckpIaUJKQWQ3Qys1WXNEN0x6?=
- =?utf-8?B?T2xQdHFxc2dVZzg5UGVGcTNzZXRJZDlKY0F6OHJKL0JWS2xBbXc4WHZ0dkpz?=
- =?utf-8?B?QmZNZ05LeW9BdUpIK1cwWWNOdGFvRDZFWThjNHRmWEZJOEc2Tk41eEFTNmpl?=
- =?utf-8?Q?1SjO4/GffIpb5EojNHiq6Kg=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44deb258-dd0c-4a49-3507-08d9b3f4304a
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3508.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2021 11:26:01.8824
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +CCZM5i8Yali2kdi4QExq0JRytVsNG605Dko734FycrNYoIYj8ITBoO9qMTLeNHKo9UMiWd70IEhkEvfd1OOqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3508
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Hi,
 
-On 16-Nov-21 19:01, Hans de Goede wrote:
-> [CAUTION: External Email]
+On 11/30/21 05:15, Fabrizio Bertocci wrote:
+> On some AMD hardware laptops, the system fails communicating with the
+> PMU when entering s2idle and the machine is battery powered.
 > 
-> Hi,
+> Hardware description: HP Pavilion Aero Laptop 13-be0097nr
+> CPU: AMD Ryzen 7 5800U with Radeon Graphics
+> GPU: 03:00.0 VGA compatible controller [0300]: Advanced Micro Devices,
+> Inc. [AMD/ATI] Device [1002:1638] (rev c1)
 > 
-> On 10/29/21 19:23, Sanket Goswami wrote:
->> Store the root port information in amd_pmc_probe() so that the
->> information can be used across multiple routines.
->>
->> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
->> ---
->> Changes in v5:
->> - Remove pci_dev_put() from amd_pmc_remove() as its no longer required.
->>
->> Changes in v4:
->> - No change.
->>
->> Changes in v3:
->> - Add pci_dev_put() in amd_pmc_remove().
->>
->> Changes in v2:
->> - Store the rdev info in amd_pmc_probe() as suggested by Hans.
->>
->>  drivers/platform/x86/amd-pmc.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
->> index 9af02860ed59..ea099f7759f2 100644
->> --- a/drivers/platform/x86/amd-pmc.c
->> +++ b/drivers/platform/x86/amd-pmc.c
->> @@ -121,6 +121,7 @@ struct amd_pmc_dev {
->>       u16 minor;
->>       u16 rev;
->>       struct device *dev;
->> +     struct pci_dev *rdev;
->>       struct mutex lock; /* generic mutex lock */
->>  #if IS_ENABLED(CONFIG_DEBUG_FS)
->>       struct dentry *dbgfs_dir;
->> @@ -538,6 +539,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
->>       }
->>
->>       dev->cpu_id = rdev->device;
->> +     dev->rdev = rdev;
->>       err = pci_write_config_dword(rdev, AMD_PMC_SMU_INDEX_ADDRESS, AMD_PMC_BASE_ADDR_LO);
->>       if (err) {
->>               dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMC_SMU_INDEX_ADDRESS);
->>
+> Detailed description of the problem (and investigation) here:
+> https://gitlab.freedesktop.org/drm/amd/-/issues/1799
 > 
+> Patch is a single line: reduce the polling delay in half, from 100uSec
+> to 50uSec when waiting for a change in state from the PMC after a
+> write command operation.
 > 
-> I'm afraid this is still not correct:
+> Tested on kernel tree detached at tag 5.14
+> (7d2a07b769330c34b4deabeed939325c77a7ec2f)
+> After changing the delay, I did not see a single failure on this
+> machine (I have this fix for now more than one week and s2idle worked
+> every single time on battery power).
 > 
-> 1. The pci_dev_put() at line 570 is still there, so after that line
->    you no longer have a reference to the pci_dev and the pointer may
->    end up pointing to free-ed memory
-> 
-> 2. Once you drop the pci_dev_put() at line 570, all the error-exit
->    paths from probe after that, like this one :
-> 
->         dev->regbase = devm_ioremap(dev->dev, base_addr + AMD_PMC_BASE_ADDR_OFFSET,
->                                     AMD_PMC_MAPPING_SIZE);
->         if (!dev->regbase)
->                 return -ENOMEM;
-> 
->    need to be changed to now, put the rdev (since that is now no longer
->    done on line 570), so this needs to be changed to:
-> 
->         dev->regbase = devm_ioremap(dev->dev, base_addr + AMD_PMC_BASE_ADDR_OFFSET,
->                                     AMD_PMC_MAPPING_SIZE);
->         if (!dev->regbase) {
->                 err = -ENOMEM;
->                 goto err_pci_dev_put;
->         }
-> 
->    and the same for:
-> 
->         dev->fch_virt_addr = devm_ioremap(dev->dev, fch_phys_addr, FCH_SSC_MAPPING_SIZE);
->         if (!dev->fch_virt_addr)
->                 return -ENOMEM;
-> 
-> 3. Since you now keep the reference on a succesfull probe, you need to add a
-> 
->         pci_dev_put(dev->rdev);
-> 
->    call to amd_pmc_remove()
-> 
-> 
-> Note that the changelog says you already did 3. in v3 but for some reason you
-> have completely dropped that and related changes now again :|
-> 
-> I've already asked for these changes and explained what you needed to do
-> several times now; and to be honest this is growing quite tiresome.
+> Signed-off-by: Fabrizio Bertocci <fabriziobertocci@gmail.com>
 
-Apologies for messing it up. I just sent out v6 for your review. Hope it would address the issues
+Thank you for your patch. I've added a couple of AMD developers who
+work on this driver to the Cc.
 
+AMD folks, can you review/ack this patch please?
 
+Regards,
 
-Thanks,
-Sanket
+Hans
+
+> ---
+> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+> index b7e50ed050a8..841c44cd64c2 100644
+> --- a/drivers/platform/x86/amd-pmc.c
+> +++ b/drivers/platform/x86/amd-pmc.c
+> @@ -76,7 +76,7 @@
+>  #define AMD_CPU_ID_CZN                 AMD_CPU_ID_RN
+>  #define AMD_CPU_ID_YC                  0x14B5
+> 
+> -#define PMC_MSG_DELAY_MIN_US           100
+> +#define PMC_MSG_DELAY_MIN_US           50
+>  #define RESPONSE_REGISTER_LOOP_MAX     20000
+> 
+>  #define SOC_SUBSYSTEM_IP_MAX   12
+> ---
+> 
+
