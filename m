@@ -2,118 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EA5C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Nov 2021 19:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EA4C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Nov 2021 04:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239111AbhK2TTm (ORCPT
+        id S232646AbhK3ETM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 Nov 2021 14:19:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44742 "EHLO
+        Mon, 29 Nov 2021 23:19:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345426AbhK2TRk (ORCPT
+        with ESMTP id S232110AbhK3ETM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Nov 2021 14:17:40 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E5EBC0613E1;
-        Mon, 29 Nov 2021 07:35:46 -0800 (PST)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 553C92A5;
-        Mon, 29 Nov 2021 16:35:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1638200144;
-        bh=vQkTcVeubQtyPEvZTfPpWgr0xCoUlM+OeJ2wAvY6uCE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oe4PxyJ7rOJ6yNLwvZq0rwzDfKO/ZpsZplSPR/6rbcSz8KScSUcJ0sw74veOAAPjO
-         ch3/3pIXPkuEq9U2GunOyYN4O52w4iSSmKvnQ6vxxKxiKhhFYf8jYSYLTAcCEBLcjw
-         VUeAOCZFVl5N4nOZrvU3h5xf4e8THuPM1K5Y9mls=
-Date:   Mon, 29 Nov 2021 17:35:20 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6 05/15] regulator: Introduce tps68470-regulator driver
-Message-ID: <YaTzOA7uV5TzHDDR@pendragon.ideasonboard.com>
-References: <20211125165412.535063-1-hdegoede@redhat.com>
- <20211125165412.535063-6-hdegoede@redhat.com>
- <YaAdIG+2MZPsdI+F@pendragon.ideasonboard.com>
- <19aeff06-d397-5f88-6d07-f76a2073b682@redhat.com>
- <YaLBeq0+0A6R2FZG@pendragon.ideasonboard.com>
- <YaTCpgYaPDssQp+N@sirena.org.uk>
+        Mon, 29 Nov 2021 23:19:12 -0500
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C765AC061574
+        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Nov 2021 20:15:53 -0800 (PST)
+Received: by mail-lj1-x22d.google.com with SMTP id k23so38630744lje.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Nov 2021 20:15:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=oiLUBzfS5kVNp5nqG1DGs/sOGKQpjYJhcmwwqiFFqUc=;
+        b=anpwr2WTAPx9nP4LN4JdPP1yo/ibE2ZdQeZcVJ2tO2yumVmqirckoC78d0hNu6Jfur
+         YtYnnuK3VLxV/kNEuOokGMP+h7EEfYdpPXeR/ipri3jeIzH5mFNHkQsE1CyGtuxKercu
+         46OqN4uxI6FCklE6vx2V/z8gKNfVcH8ro0HCLcE29U0FQWOf7US2vFvHLal8adcsY6LR
+         tdF/SSZUvBC/1naiDjYUZEM8jEKt+g3R75zFlfjUa2CqlZgFK0uy84xUqfh6MgPexggO
+         6pMQkThFvON8ynrq8jiRJcHro2beeZVCi4KnCSTOKS1pFt50zrShWlMEJVdnz1j9uufu
+         7IeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=oiLUBzfS5kVNp5nqG1DGs/sOGKQpjYJhcmwwqiFFqUc=;
+        b=zSMZJWGzMg/rbFATpZaLHslEzfPMHUYM7sZ1uwC85oeFJ0ETMzsvUmpRJP5CLx/IVI
+         7j73DbqoXyXv9XBCBpZ/NssXzuHYJd5tdNYLM69cq3XykLuvA7cNzLhCJ7o+AojJoa53
+         GALE0gmixJYqXvm0OTC9lKWSM9GCIas0HAvn0/1kLIluAo7drWtLUonSOlBIAbKJFl4c
+         Ao6kYa3OtMPr4NNT4tPGlXRwtCfBYJT6l0Cnv7nIZjs0o0iWViKfy506jqBKrItQMx2M
+         G9hNecgQkJQ8WxT/64lumnzjFSH6O3WA19s65gqoYFpMiyItHsBLbW8vaJBYfz0QMCWA
+         1o3A==
+X-Gm-Message-State: AOAM530jsjVeTvRauLp6gexuyRXBmp7mmiq9eis0rP38lQLQRmvTiM0h
+        K/LYEsEgsIY+AGdEnQr7zG3kdvdZ8YWFMPThF3La7VrQ
+X-Google-Smtp-Source: ABdhPJyaTmc1vNv2BEzfQenSJP83dR/x59MW4TVZHWU7lOlXh5ofPRaSzHurb/Vn2aVF7LYPLGDb5tV54PzQxonSBX8=
+X-Received: by 2002:a2e:c42:: with SMTP id o2mr13402795ljd.126.1638245751797;
+ Mon, 29 Nov 2021 20:15:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YaTCpgYaPDssQp+N@sirena.org.uk>
+From:   Fabrizio Bertocci <fabriziobertocci@gmail.com>
+Date:   Mon, 29 Nov 2021 23:15:40 -0500
+Message-ID: <CADtzkx7TdfbwtaVEXUdD6YXPey52E-nZVQNs+Z41DTx7gqMqtw@mail.gmail.com>
+Subject: [PATCH 1/1] amd-pmu: fix s2idle failures on certain AMD laptops
+To:     platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+On some AMD hardware laptops, the system fails communicating with the
+PMU when entering s2idle and the machine is battery powered.
 
-On Mon, Nov 29, 2021 at 12:08:06PM +0000, Mark Brown wrote:
-> On Sun, Nov 28, 2021 at 01:38:34AM +0200, Laurent Pinchart wrote:
-> > On Fri, Nov 26, 2021 at 12:22:35PM +0100, Hans de Goede wrote:
-> > > On 11/26/21 00:32, Laurent Pinchart wrote:
-> > > > On Thu, Nov 25, 2021 at 05:54:02PM +0100, Hans de Goede wrote:
-> > > >> The TPS68470 PMIC provides Clocks, GPIOs and Regulators. At present in
-> > > >> the kernel the Regulators and Clocks are controlled by an OpRegion
-> > > >> driver designed to work with power control methods defined in ACPI, but
-> 
-> Please delete unneeded context from mails when replying.  Doing this
-> makes it much easier to find your reply in the message, helping ensure
-> it won't be missed by people scrolling through the irrelevant quoted
-> material.
+Hardware description: HP Pavilion Aero Laptop 13-be0097nr
+CPU: AMD Ryzen 7 5800U with Radeon Graphics
+GPU: 03:00.0 VGA compatible controller [0300]: Advanced Micro Devices,
+Inc. [AMD/ATI] Device [1002:1638] (rev c1)
 
-I have mixed feelings about that, someones the context is indeed not
-needed, but I've found myself more often than not replying deep in a
-mail thread and wishing the context hadn't been deleted, because it
-ended up being relevant.
+Detailed description of the problem (and investigation) here:
+https://gitlab.freedesktop.org/drm/amd/-/issues/1799
 
-> > > >> + * (1) This regulator must have the same voltage as VIO if S_IO LDO is used to
-> > > >> + *     power a sensor/VCM which I2C is daisy chained behind the PMIC.
-> > > >> + * (2) If there is no I2C daisy chain it can be set freely.
-> > > >> + */
-> 
-> > > > Do we need safety checks for this ?
-> 
-> > > There really is no way to deal this condition needs to matches inside the driver,
-> > > this should be enforced by setting proper constraints on the 2 regulators where
-> > > the PMIC is used with a sensor I2C daisy chained behind it.
-> 
-> > Right. I tend to be cautious here, as incorrect settings can destroy the
-> > hardware. We should err on the side of too many safety checks rather
-> > than too few. I was thinking that the cio2-bridge driver could set a
-> > daisy-chaining flag, which could trigger additional checks here, but it
-> > wouldn't protect against someone experimenting to support a new device
-> > and setting different voltages without the daisy-chaining flag.
-> 
-> > My biggest worry is that someone with an unsupported machine may start
-> > by copying and pasting an existing configuration to try it out, and fry
-> > their hardware.
-> 
-> There's really nothing you can do that prevents this, especially in the
-> cut'n'paste scenario.  Overrides tend to get copied along with the rest
-> of the configuration, or checks hacked out if people think they're
-> getting in the way without realising what they're there for.
+Patch is a single line: reduce the polling delay in half, from 100uSec
+to 50uSec when waiting for a change in state from the PMC after a
+write command operation.
 
-Maybe a big fat warning comment in the code ? Apart from that, I agree,
-I don't think we can do much.
+Tested on kernel tree detached at tag 5.14
+(7d2a07b769330c34b4deabeed939325c77a7ec2f)
+After changing the delay, I did not see a single failure on this
+machine (I have this fix for now more than one week and s2idle worked
+every single time on battery power).
 
--- 
-Regards,
+Signed-off-by: Fabrizio Bertocci <fabriziobertocci@gmail.com>
+---
+diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+index b7e50ed050a8..841c44cd64c2 100644
+--- a/drivers/platform/x86/amd-pmc.c
++++ b/drivers/platform/x86/amd-pmc.c
+@@ -76,7 +76,7 @@
+ #define AMD_CPU_ID_CZN                 AMD_CPU_ID_RN
+ #define AMD_CPU_ID_YC                  0x14B5
 
-Laurent Pinchart
+-#define PMC_MSG_DELAY_MIN_US           100
++#define PMC_MSG_DELAY_MIN_US           50
+ #define RESPONSE_REGISTER_LOOP_MAX     20000
+
+ #define SOC_SUBSYSTEM_IP_MAX   12
+---
