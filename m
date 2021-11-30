@@ -2,124 +2,100 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC1BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Nov 2021 19:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00A3C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Nov 2021 21:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233472AbhK3Tiy (ORCPT
+        id S244728AbhK3VTw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 30 Nov 2021 14:38:54 -0500
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:3446 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232989AbhK3Tiy (ORCPT
+        Tue, 30 Nov 2021 16:19:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236360AbhK3VTt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 30 Nov 2021 14:38:54 -0500
-Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AUJW0Eg009015;
-        Tue, 30 Nov 2021 19:34:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=uX3TIgoSD9/JBwbYFekuBk7vehHfGD91y40CU8no8E4=;
- b=TKGpr31geMq1wraUVPpdLjgNRxOKUCEzsv7AW4CZfisOJs7daDR6H07CjjXT5F5+Sskq
- QCSBhF4sSXI/+0Ih9kyqc5vSabbktfAs7wc51YPTyBTXdw4SB22hzODyDY1I5sVxqivx
- quxtQYQ+QRIlrLngeB/U3mW2EbuuISUyGmIPskgugtmqwrk7snJi0d1q3/473uCw54er
- IQqJM8z/G2ReVxUKwjzTHHkg6OTFUL8vGhonGsENqSHmHcZhcSziMAA7X9Sk9GkWcyRJ
- dE0csticfX+W4XjYeV1gz/wxtpcITxkFLQwDJIJhYeutB2Wku/9UFGDfarDZeb+J6zBT 9A== 
-Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
-        by mx0b-002e3701.pphosted.com with ESMTP id 3cncxjy5bd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Nov 2021 19:34:29 +0000
-Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
-        by g2t2353.austin.hpe.com (Postfix) with ESMTP id 46CA465;
-        Tue, 30 Nov 2021 19:34:25 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.99.162.214])
-        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id E230F3D;
-        Tue, 30 Nov 2021 19:34:22 +0000 (UTC)
-Date:   Tue, 30 Nov 2021 13:34:22 -0600
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Colin Ian King <colin.i.king@googlemail.com>
-Cc:     Steve Wahl <steve.wahl@hpe.com>, Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/platform/uv: make const pointer dots a static const
- array
-Message-ID: <YaZ8vtajDKUVDCne@swahl-home.5wahls.com>
-References: <20211127170320.77963-1-colin.i.king@gmail.com>
+        Tue, 30 Nov 2021 16:19:49 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9545EC061574
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Nov 2021 13:16:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id E0720CE1C63
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Nov 2021 21:16:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1E369C53FCF
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Nov 2021 21:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638306986;
+        bh=BFvcUO/e/Lcj8rVY567GsWMix55VTd7DAbh8R9TpSJM=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=LMhw7j7P88Ta4XruMUsYsPnxn0eQ/lKylb63nJNAX0nqo622q1G4Ir86aYap1wERF
+         xXLeq01V0jdkjog5G6gl+Rw5PYDa/WVMUIDIltFAp5qF5YA0f5Vi7x0Dm3EB4GWQ2h
+         cCwRjKQZbsTa8K/d/+iFcSveoI/krRV7lhpUY7Ou6fHXTFUYd5CpUgLnkLm2B4MrrU
+         /vyYWwJxKxhWuQWtNWRRbMSAPKENsuA0oWNPKhCbuSlSItQdf3jwPvqL2zKQj6Ftyg
+         HLqryEqH9V7jHTfKfvSjsNJKGaAu8+0oWpVCD1gH96qpV5jwkKkOJU8hvROiaf1QRd
+         DEb5AMAR9MBRg==
+Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
+        id F0D8F60F46; Tue, 30 Nov 2021 21:16:25 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 215177] Stop exporting platform_profile interface for Lenovo
+ T14/P14s Gen2 AMD
+Date:   Tue, 30 Nov 2021 21:16:25 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-215177-215701-OgwHqVKb0i@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-215177-215701@https.bugzilla.kernel.org/>
+References: <bug-215177-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211127170320.77963-1-colin.i.king@gmail.com>
-X-Proofpoint-ORIG-GUID: nAk4mZy6CxvkL1DBI41uWiXK86LjwcVX
-X-Proofpoint-GUID: nAk4mZy6CxvkL1DBI41uWiXK86LjwcVX
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-30_10,2021-11-28_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- mlxscore=0 adultscore=0 impostorscore=0 phishscore=0 spamscore=0
- priorityscore=1501 clxscore=1011 mlxlogscore=999 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2111300099
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Nov 27, 2021 at 05:03:20PM +0000, Colin Ian King wrote:
-> Don't populate the const array dots on the stack
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215177
 
-That is a misunderstanding of what the original code does.  The
-original code has a constant char array (string constant) that is
-placed in an initialized data section of memory, the address off which
-would be assigned to the pointer "dots" on the stack -- to be clear,
-stack contents would not be a full array, but a pointer to it.  Then
-that pointer would be passed to the pr_info function (which boils down
-to a call to printk).
+mario.limonciello@amd.com changed:
 
-Examination of the disassembly shows that the compiler actually
-eliminates the creation of the pointer "dots" on the stack and just
-passes the address of the string constant to the printk function.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |mario.limonciello@amd.com
 
-So this change should not have any actual effect (I don't know where
-you got the "shrinks object code" from), and in my humble opinion
-makes the code less clear.
+--- Comment #1 from mario.limonciello@amd.com ---
+It's fortunate that it's a noop right now and not causing a performance
+degradation.   Presumably these systems DYTC interface *does* work on Windo=
+ws
+though, and with the modified calls right?
 
-As such, unless there's something here I don't understand, I vote to
-reject this patch.
+I suppose there are two short term ways to approach this:
+1) Quirk thinkpad_acpi to these systems/ broken BIOS versions to disable
+platform profiles.  This assumes it will be fixed in a future BIOS version.
+2) Quirk thinkpad_acpi to use the corrected argument mapping on these syste=
+ms,
+mentioned in that linked issue.
 
---> Steve Wahl <steve.wahl@hpe.com>
+IMO between those two options the second sounds better.
 
-> but make it static
-> const and make the pointer an array to remove a dereference. Shrinks
-> object code a few bytes too.
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
->  arch/x86/platform/uv/uv_nmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
-> index 1e9ff28bc2e0..2c69a0c30632 100644
-> --- a/arch/x86/platform/uv/uv_nmi.c
-> +++ b/arch/x86/platform/uv/uv_nmi.c
-> @@ -725,7 +725,7 @@ static void uv_nmi_dump_cpu_ip(int cpu, struct pt_regs *regs)
->   */
->  static void uv_nmi_dump_state_cpu(int cpu, struct pt_regs *regs)
->  {
-> -	const char *dots = " ................................. ";
-> +	static const char dots[] = " ................................. ";
->  
->  	if (cpu == 0)
->  		uv_nmi_dump_cpu_ip_hdr();
-> -- 
-> 2.33.1
-> 
+In the longer term though I think the discrepancy of expectations needs to =
+be
+fixed in thinkpad_acpi.
 
--- 
-Steve Wahl, Hewlett Packard Enterprise
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
