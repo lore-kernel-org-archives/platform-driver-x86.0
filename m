@@ -2,90 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34540C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Dec 2021 00:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD727C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Dec 2021 02:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345789AbhLAAhV (ORCPT
+        id S231404AbhLACGc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 30 Nov 2021 19:37:21 -0500
-Received: from smtprelay0076.hostedemail.com ([216.40.44.76]:59962 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1345744AbhLAAhU (ORCPT
+        Tue, 30 Nov 2021 21:06:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230313AbhLACGb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 30 Nov 2021 19:37:20 -0500
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Nov 2021 19:37:20 EST
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id EBD6C18195891
-        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Dec 2021 00:26:55 +0000 (UTC)
-Received: from omf08.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 692D718200A04;
-        Wed,  1 Dec 2021 00:26:43 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf08.hostedemail.com (Postfix) with ESMTPA id 11D2B516;
-        Wed,  1 Dec 2021 00:26:39 +0000 (UTC)
-Message-ID: <c5a827c2b690aeadf7d633c29edaf4db23d94fdb.camel@perches.com>
-Subject: Re: [PATCH] x86/platform/uv: make const pointer dots a static const
- array
-From:   Joe Perches <joe@perches.com>
-To:     Steve Wahl <steve.wahl@hpe.com>,
-        Colin Ian King <colin.i.king@googlemail.com>
-Cc:     Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 30 Nov 2021 16:26:39 -0800
-In-Reply-To: <YaZ8vtajDKUVDCne@swahl-home.5wahls.com>
-References: <20211127170320.77963-1-colin.i.king@gmail.com>
-         <YaZ8vtajDKUVDCne@swahl-home.5wahls.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.40.4-1 
+        Tue, 30 Nov 2021 21:06:31 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 821EAC061574;
+        Tue, 30 Nov 2021 18:03:11 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id o20so94296359eds.10;
+        Tue, 30 Nov 2021 18:03:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hES9gSI2h5+HcFFnkzuuC76K+k6KUuP/8mebJNJ/D8M=;
+        b=oGwRhekbHIns8PudvJ6py7lKsEJLjCHae4d7iX9I5XdSDYv1AGpX6NAQb6VPsOfTC6
+         AbBooUm6Gi/oqOD77tI2DJTdTkBijDYSuyeRlqpgR+jzLe7lgrfyFb1YbASHRtB55FQe
+         6iGMFl8MPorTa1wNoMMUgRtauQEhY51jcJneZUPtw8HGvCIYICL76/rQpqj3YQ6wAqwm
+         EP82IEOOukvPM83aWQePwnAzZq60ItOkWc7nrGGx/I2OVfJ+ES89iBW34xkSa6D7PlC3
+         Z32j7z5inZTPOlmsmgBzJ2QmFWJiMcLUhbn1/oIeUlTlxYUXkv3UCSe1sb8TZfgyricc
+         4VxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hES9gSI2h5+HcFFnkzuuC76K+k6KUuP/8mebJNJ/D8M=;
+        b=rl+JNOwffgMoM/NE/CaN/OJFJjeD/ak9NW6jELRKWwZnF+RVz3Lhs+Nfcf9/Xyx5z4
+         nmQgXNde7Y8gPW+mM9r9+l4jI7jzTMN7Gs3xRd/UH7g7F4Rb4rcq3imDFEQSZH6Ci6wC
+         18eBS08da7uBz66Cy6iOYtQoDhRq+BHBwS3jiV5nzE6rwCR3FPNyJOb/Ak8VVA1mi0Ft
+         dusyMyF+PAeNGMsD5KJPItXZttGBeXMoNsoWMwIbYSAdJoD2oCAjvXAdC0ZGXwhLesE7
+         hpfBYBy9oeitAxBxtg9hKBFJxtz1hPFVR6BGgcAzVrLxd4nFLPTK+MYk9xNq7052YNYD
+         TxAw==
+X-Gm-Message-State: AOAM531FwtJ6bBZpbn7N8pTNqgCAcgsxaZEMnmXfROW/o7yja1EKGwFd
+        JftazwvnDArq6o/EvPewFLf0qW77eOFlA44Fqtwx5jbf+cI=
+X-Google-Smtp-Source: ABdhPJyGj/w78E7tRHzbzg7n98LMsQD5FQAldn+z75VXFXhhTwz15kmvRA8lmkfc8qywo7j4kfN8scGkYzp79/VLScc=
+X-Received: by 2002:a17:906:3a9b:: with SMTP id y27mr3414366ejd.563.1638324189997;
+ Tue, 30 Nov 2021 18:03:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 8nkmn1zqzbke8kb9g4xjpgqpxscyxiah
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 11D2B516
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/IurlOFoNDFvDHrR/xzjuMQccTBxFaNzg=
-X-HE-Tag: 1638318399-827544
+References: <20211130143526.1820249-1-mudongliangabcd@gmail.com> <20211130145056.GZ18178@kadam>
+In-Reply-To: <20211130145056.GZ18178@kadam>
+From:   Dongliang Mu <mudongliangabcd@gmail.com>
+Date:   Wed, 1 Dec 2021 10:02:44 +0800
+Message-ID: <CAD-N9QVt-5NepnmG-9ywo+JsO4PWOO1jLQ-_=cL=PFNKHYR=CQ@mail.gmail.com>
+Subject: Re: [PATCH] driver: pmc_atom: free pmc->regmap in pmc_setup_dev
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 2021-11-30 at 13:34 -0600, Steve Wahl wrote:
-> On Sat, Nov 27, 2021 at 05:03:20PM +0000, Colin Ian King wrote:
-> > Don't populate the const array dots on the stack
-[]
-> Examination of the disassembly shows that the compiler actually
-> eliminates the creation of the pointer "dots" on the stack and just
-> passes the address of the string constant to the printk function.
-> 
-> So this change should not have any actual effect (I don't know where
-> you got the "shrinks object code" from), and in my humble opinion
-> makes the code less clear.
+On Tue, Nov 30, 2021 at 10:51 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> On Tue, Nov 30, 2021 at 10:35:25PM +0800, Dongliang Mu wrote:
+> > Smatch reports:
+> >
+> > drivers/platform/x86/pmc_atom.c:496
+> > pmc_setup_dev() warn: 'pmc->regmap' not released on lines: 496.
+> >
+> > Fix this by deallocating pm->regmap.
+> >
+> > CC: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Dongliang Mu <mudongliangabcd@gmail.com>
+> > ---
+> >  drivers/platform/x86/pmc_atom.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+> > index a9d2a4b98e57..95ba108ed716 100644
+> > --- a/drivers/platform/x86/pmc_atom.c
+> > +++ b/drivers/platform/x86/pmc_atom.c
+> > @@ -492,6 +492,7 @@ static int pmc_setup_dev(struct pci_dev *pdev, const struct pci_device_id *ent)
+> >               dev_warn(&pdev->dev, "platform clocks register failed: %d\n",
+> >                        ret);
+> >
+> > +     iounmap(pmc->regmap);
+>
+> This releases it on the success path so it will break the driver.
 
-Probably shrinks an allmodconfig where the symbols are referenced.
-It probably doesn't do anything to a defconfig.
-
-> As such, unless there's something here I don't understand, I vote to
-> reject this patch.
-[]
-> > but make it static
-> > const and make the pointer an array to remove a dereference. Shrinks
-> > object code a few bytes too.
-[]
-> > diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
-[]
-> > @@ -725,7 +725,7 @@ static void uv_nmi_dump_cpu_ip(int cpu, struct pt_regs *regs)
-> >   */
-> >  static void uv_nmi_dump_state_cpu(int cpu, struct pt_regs *regs)
-> >  {
-> > -	const char *dots = " ................................. ";
-> > +	static const char dots[] = " ................................. ";
+Yes. I should only deallocate it in the failure handling of
+pm_setup_clks. Will modify it in the v2 version.
 
 
+>
+> regards,
+> dan carpenter
+>
+> >       pmc->init = true;
+> >       return ret;
+> >  }
+> > --
+> > 2.25.1
