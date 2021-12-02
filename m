@@ -2,92 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E585AC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Dec 2021 16:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55578C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Dec 2021 17:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359770AbhLBQ4n (ORCPT
+        id S1348043AbhLBRHd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Dec 2021 11:56:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41980 "EHLO
+        Thu, 2 Dec 2021 12:07:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359757AbhLBQ4f (ORCPT
+        with ESMTP id S1348007AbhLBRHd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Dec 2021 11:56:35 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4591C06174A;
-        Thu,  2 Dec 2021 08:53:12 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 657F662754;
-        Thu,  2 Dec 2021 16:53:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E453C00446;
-        Thu,  2 Dec 2021 16:53:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638463990;
-        bh=Xm0WA4hHGXe4BK5HdH6TJWZ1ld/3ywHizG+gb1ycEfw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pl5pToVZMFSh3GNT/vOudFUnvrWcu225AOeSTkrKmyw8mZvJmllgoFNYKGZPw5X+9
-         8i0QgajcuRxuLn/AocXNpwxmWotnCOK89JAyq0/qmTTV9e7++72FcESxHaxuUhLiUu
-         3LLdvZJCNcyKoL25wc+Ju2wU7YwqLm8MKoo64iJSV7CDKh2lXIiEzMQgs4nPoGiAO8
-         aH84xILN5641zYKu7UHHNoi9pDlTQqQirItbdpn3SIRrAIPKNVFCyjfesOA65MTt03
-         gvKkfSWY5xIqis0XM3km2d0/CZCMCTgQXtt5e3LMHA2F1HjXzuNDvrX7egbLVhdAup
-         sDmOTLuW6WN7g==
-Date:   Thu, 2 Dec 2021 16:53:05 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Stefan Binding <sbinding@opensource.cirrus.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@opensource.cirrus.com,
-        Lucas Tanure <tanureal@opensource.cirrus.com>
-Subject: Re: [PATCH 1/3] spi: Revert "spi: Remove unused function
- spi_busnum_to_master()"
-Message-ID: <Yaj58Znf7ioGSLLm@sirena.org.uk>
-References: <20211202162421.7628-1-sbinding@opensource.cirrus.com>
+        Thu, 2 Dec 2021 12:07:33 -0500
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEDFFC06174A;
+        Thu,  2 Dec 2021 09:04:10 -0800 (PST)
+Received: by mail-oi1-x22a.google.com with SMTP id o4so375042oia.10;
+        Thu, 02 Dec 2021 09:04:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a+ZMxgWaDs72S9/RaqRmm6O/RoDhwTRlXJky4RmwPBQ=;
+        b=izwvQZjwgCdFypNx1ZK8HWp/QX5hAPFPe3lO5NwsUZIDrivTHroJiRGBlY8zANJ3JW
+         KUB7vEezexCBzhsXvL17/R6eocWqzw0kxQrHQpkTMsy9Wnl7h9/brKEa+hsrwVDIfh/C
+         hjONag0mUBZklevnqgaihy9uf0hM0ZYwY0GsNQXykI6X2uS1qmp33rxj/gfqTxYar2ad
+         LT66PDtwnJvDrfgueFjkuevpLAz2TSNRxU43m7rx7mWDFGawFClMrqDtDeHWeQlgXW4Q
+         JHx3jbNq9RYjYZAww2Ehv13cziPGdVcjB7kFI+mFR2Iv/vWagOBfHFvtUBL1SStlv8eo
+         epUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a+ZMxgWaDs72S9/RaqRmm6O/RoDhwTRlXJky4RmwPBQ=;
+        b=OjLzcIjG7s/PGuvYLVkVxwhzjt/YAdeOcvz0/N/hXhCYXtJHUcn88H6VIvN3bTn1K4
+         Re3+scTyfJYGYmPeObfqeYHQuw2+jfne+36+nN7GeUXVMqPOjbbAdb5QiEUwNEWHFLEQ
+         mwtxoySs1cpKnW7rea1mdg0EpOCyLhHnt+SnbjgSgh9PAO0WQTdkNiBQu5tx+2+VL0j2
+         muTekPB2MCWwusvO1b/CTFbj7yseUQRqeW7gVyTHuf3/J5LqShAB5ffaEWx+UcI2n4Qx
+         bfr6hoGdrMPvn+bCE0v+V8hn5Nzi6IOCWQakPOIuTJBnA1azIHzaBObONMBlgFqQpC3f
+         QkEg==
+X-Gm-Message-State: AOAM531k+3RAQYjA+4oJiyDoEnutL82lNssdc4Nl21SexmFvJeA59P9y
+        eQmW+8N/cw/+xBUsymyE7FEW9TsnBM4=
+X-Google-Smtp-Source: ABdhPJznOCqy5+LmfVtV2nRQ7Y6jsVGYCEO0oLMI14Y43iu20z9mjNM7G2OTVZd0uPVDgoDx/0RzyA==
+X-Received: by 2002:a05:6808:53:: with SMTP id v19mr5412430oic.8.1638464649984;
+        Thu, 02 Dec 2021 09:04:09 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id t14sm130055otr.23.2021.12.02.09.04.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Dec 2021 09:04:09 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCH v2 0/3] hwmon: (nct6775) Support lock by ACPI mutex
+To:     Olli Asikainen <olli.asikainen@gmail.com>, pauk.denis@gmail.com
+Cc:     andy.shevchenko@gmail.com, eugene.shalygin@gmail.com,
+        jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <CAK9yiZAJRL9_Hj1zuuEEM4ngM7GVCgx56m1E5h_QzzXV255NGw@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <2a06e8de-d0ce-a2f4-d250-1cdf5f74f6c7@roeck-us.net>
+Date:   Thu, 2 Dec 2021 09:04:07 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4B24liYr2woZhgQ9"
-Content-Disposition: inline
-In-Reply-To: <20211202162421.7628-1-sbinding@opensource.cirrus.com>
-X-Cookie: Put no trust in cryptic comments.
+In-Reply-To: <CAK9yiZAJRL9_Hj1zuuEEM4ngM7GVCgx56m1E5h_QzzXV255NGw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
---4B24liYr2woZhgQ9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 12/2/21 7:04 AM, Olli Asikainen wrote:
+> I have tested the patch on my ASUS MAXIMUS VII HERO and it works, as
+> far as I can tell.
+> 
 
-On Thu, Dec 02, 2021 at 04:24:19PM +0000, Stefan Binding wrote:
-> From: Lucas Tanure <tanureal@opensource.cirrus.com>
->=20
-> Revert commit bdc7ca008e1f ("spi: Remove unused function
-> spi_busnum_to_master()")
-> This function is needed for the spi version of i2c multi
-> instantiate driver.
+from a maintainer perspective, I would suggest to provide formal
+"Tested-by:" tags to have a record as part of the commit log.
 
-If we're going to restore this API we should rename it to _controller()
-while we're at it.
-
---4B24liYr2woZhgQ9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmGo+fAACgkQJNaLcl1U
-h9Dwjwf/dUAC8fE1p6xCqErlc7IgO1UeO5bMU/AEJiPSfUUXCWTtxIuK8mVfk3w/
-4mxz36WI/UGrbK93y+38ONgwU7HOlLOftixSdjciDYWM9GKz2OZeYOVTCEkAYB3e
-cgZmcTQ/Mfm8kOjrth5wTswqhBc3k/08IKIqlENZ+aQioQWab86DOhFGWWfT1OsR
-VMK9VZ74yCsNVk0Xa4DkIX/y8RVdGteJoEXK0HcwBVqXzXHxSga+WfavRdDJxnvP
-xCEJN9iSeYoe+xoJ2yLfJFCg3o+yAuA7UstYlwE5EdWp2zE5GW4BBxSzIvQkUF3/
-fpooMbekY7XxxZQ26KJ1P74a95Gwgw==
-=x5pV
------END PGP SIGNATURE-----
-
---4B24liYr2woZhgQ9--
+Thanks,
+Guenter
