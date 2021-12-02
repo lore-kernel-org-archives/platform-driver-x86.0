@@ -2,84 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55578C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Dec 2021 17:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E6AC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Dec 2021 17:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348043AbhLBRHd (ORCPT
+        id S1376456AbhLBRzl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Dec 2021 12:07:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44494 "EHLO
+        Thu, 2 Dec 2021 12:55:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348007AbhLBRHd (ORCPT
+        with ESMTP id S1348064AbhLBRzk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Dec 2021 12:07:33 -0500
-Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEDFFC06174A;
-        Thu,  2 Dec 2021 09:04:10 -0800 (PST)
-Received: by mail-oi1-x22a.google.com with SMTP id o4so375042oia.10;
-        Thu, 02 Dec 2021 09:04:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=a+ZMxgWaDs72S9/RaqRmm6O/RoDhwTRlXJky4RmwPBQ=;
-        b=izwvQZjwgCdFypNx1ZK8HWp/QX5hAPFPe3lO5NwsUZIDrivTHroJiRGBlY8zANJ3JW
-         KUB7vEezexCBzhsXvL17/R6eocWqzw0kxQrHQpkTMsy9Wnl7h9/brKEa+hsrwVDIfh/C
-         hjONag0mUBZklevnqgaihy9uf0hM0ZYwY0GsNQXykI6X2uS1qmp33rxj/gfqTxYar2ad
-         LT66PDtwnJvDrfgueFjkuevpLAz2TSNRxU43m7rx7mWDFGawFClMrqDtDeHWeQlgXW4Q
-         JHx3jbNq9RYjYZAww2Ehv13cziPGdVcjB7kFI+mFR2Iv/vWagOBfHFvtUBL1SStlv8eo
-         epUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a+ZMxgWaDs72S9/RaqRmm6O/RoDhwTRlXJky4RmwPBQ=;
-        b=OjLzcIjG7s/PGuvYLVkVxwhzjt/YAdeOcvz0/N/hXhCYXtJHUcn88H6VIvN3bTn1K4
-         Re3+scTyfJYGYmPeObfqeYHQuw2+jfne+36+nN7GeUXVMqPOjbbAdb5QiEUwNEWHFLEQ
-         mwtxoySs1cpKnW7rea1mdg0EpOCyLhHnt+SnbjgSgh9PAO0WQTdkNiBQu5tx+2+VL0j2
-         muTekPB2MCWwusvO1b/CTFbj7yseUQRqeW7gVyTHuf3/J5LqShAB5ffaEWx+UcI2n4Qx
-         bfr6hoGdrMPvn+bCE0v+V8hn5Nzi6IOCWQakPOIuTJBnA1azIHzaBObONMBlgFqQpC3f
-         QkEg==
-X-Gm-Message-State: AOAM531k+3RAQYjA+4oJiyDoEnutL82lNssdc4Nl21SexmFvJeA59P9y
-        eQmW+8N/cw/+xBUsymyE7FEW9TsnBM4=
-X-Google-Smtp-Source: ABdhPJznOCqy5+LmfVtV2nRQ7Y6jsVGYCEO0oLMI14Y43iu20z9mjNM7G2OTVZd0uPVDgoDx/0RzyA==
-X-Received: by 2002:a05:6808:53:: with SMTP id v19mr5412430oic.8.1638464649984;
-        Thu, 02 Dec 2021 09:04:09 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t14sm130055otr.23.2021.12.02.09.04.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Dec 2021 09:04:09 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [PATCH v2 0/3] hwmon: (nct6775) Support lock by ACPI mutex
-To:     Olli Asikainen <olli.asikainen@gmail.com>, pauk.denis@gmail.com
-Cc:     andy.shevchenko@gmail.com, eugene.shalygin@gmail.com,
-        jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <CAK9yiZAJRL9_Hj1zuuEEM4ngM7GVCgx56m1E5h_QzzXV255NGw@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <2a06e8de-d0ce-a2f4-d250-1cdf5f74f6c7@roeck-us.net>
-Date:   Thu, 2 Dec 2021 09:04:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Thu, 2 Dec 2021 12:55:40 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC8DC06174A;
+        Thu,  2 Dec 2021 09:52:17 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 738161EC0545;
+        Thu,  2 Dec 2021 18:52:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1638467531;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=mYbyP91p7fEVRiuQVAocUUJu8tfWD5okvmoA1PcLyik=;
+        b=mXVWsIEQlUK1NUJHwJdTRdQSa/OMoVkPBdzhiw7yQkAV+fZSgxSmaG4nPj7qJ097OltURS
+        9K7IfoP8jj/OpMsUbPZIMMFljyRP4NUEFwcXSblIg3MzWWucj/p78B7x/W2l+7hzXj3UUA
+        +FvrTgY4gubdPoOhL6rIySU7+PCAGqU=
+Date:   Thu, 2 Dec 2021 18:52:15 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v7 10/45] x86/sev: Add support for hypervisor feature
+ VMGEXIT
+Message-ID: <YakHz5WCPcbNOPum@zn.tnic>
+References: <20211110220731.2396491-1-brijesh.singh@amd.com>
+ <20211110220731.2396491-11-brijesh.singh@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK9yiZAJRL9_Hj1zuuEEM4ngM7GVCgx56m1E5h_QzzXV255NGw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211110220731.2396491-11-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Wed, Nov 10, 2021 at 04:06:56PM -0600, Brijesh Singh wrote:
+> +/*
+> + * The hypervisor features are available from GHCB version 2 onward.
+> + */
+> +static bool get_hv_features(void)
+> +{
+> +	u64 val;
+> +
+> +	sev_hv_features = 0;
+> +
+> +	if (ghcb_version < 2)
+> +		return false;
+> +
+> +	sev_es_wr_ghcb_msr(GHCB_MSR_HV_FT_REQ);
+> +	VMGEXIT();
+> +
+> +	val = sev_es_rd_ghcb_msr();
+> +	if (GHCB_RESP_CODE(val) != GHCB_MSR_HV_FT_RESP)
+> +		return false;
+> +
+> +	sev_hv_features = GHCB_MSR_HV_FT_RESP_VAL(val);
+> +
+> +	return true;
+> +}
 
-On 12/2/21 7:04 AM, Olli Asikainen wrote:
-> I have tested the patch on my ASUS MAXIMUS VII HERO and it works, as
-> far as I can tell.
-> 
+I still don't like this.
 
-from a maintainer perspective, I would suggest to provide formal
-"Tested-by:" tags to have a record as part of the commit log.
+This is more of that run-me-in-the-exception-handler thing while this is
+purely feature detection stuff which needs to be done exactly once on
+init.
 
-Thanks,
-Guenter
+IOW, that stanza
+
+        if (!sev_es_negotiate_protocol())
+                sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SEV_ES_PROT_UNSUPPORTED);
+
+should be called once in sev_enable() for the decompressor kernel and
+once in sev_es_init_vc_handling() for kernel proper.
+
+Then you don't need to do any of that sev_hv_features = 0 thing but
+detect them exactly once and query them as much as you can.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
