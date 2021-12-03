@@ -2,85 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C2AC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Dec 2021 11:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461EAC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Dec 2021 13:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352060AbhLCLkO (ORCPT
+        id S1380903AbhLCN65 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 3 Dec 2021 06:40:14 -0500
-Received: from mga06.intel.com ([134.134.136.31]:1872 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1380494AbhLCLkN (ORCPT
+        Fri, 3 Dec 2021 08:58:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243650AbhLCN65 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Dec 2021 06:40:13 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10186"; a="297755269"
-X-IronPort-AV: E=Sophos;i="5.87,284,1631602800"; 
-   d="scan'208";a="297755269"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 03:36:49 -0800
-X-IronPort-AV: E=Sophos;i="5.87,284,1631602800"; 
-   d="scan'208";a="678068982"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 03:36:46 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1mt6qu-001kLf-EV;
-        Fri, 03 Dec 2021 13:35:44 +0200
-Date:   Fri, 3 Dec 2021 13:35:44 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Stefan Binding <sbinding@opensource.cirrus.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH 3/3] platform/x86: Support Spi in i2c-multi-instantiate
- driver
-Message-ID: <YaoBEKJtuAb9xUAk@smile.fi.intel.com>
-References: <20211202162421.7628-1-sbinding@opensource.cirrus.com>
- <20211202162421.7628-3-sbinding@opensource.cirrus.com>
+        Fri, 3 Dec 2021 08:58:57 -0500
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05DC9C06173E
+        for <platform-driver-x86@vger.kernel.org>; Fri,  3 Dec 2021 05:55:32 -0800 (PST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed10:3191:9890:620a:6f4])
+        by michel.telenet-ops.be with bizsmtp
+        id RpvT2600E3eLghq06pvTJX; Fri, 03 Dec 2021 14:55:31 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1mt926-002Lev-S6; Fri, 03 Dec 2021 14:55:26 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1mt926-000lV8-AW; Fri, 03 Dec 2021 14:55:26 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v3 resend] x86: ce4100: Replace "ti,pcf8575" by "nxp,pcf8575"
+Date:   Fri,  3 Dec 2021 14:55:23 +0100
+Message-Id: <0c00cec971f5c405e47d04e493d854de0efc2e49.1638539629.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211202162421.7628-3-sbinding@opensource.cirrus.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Dec 02, 2021 at 04:24:21PM +0000, Stefan Binding wrote:
-> Add support for spi bus in i2c-multi-instantiate driver
-> and rename it for a multiple purpose driver name
-> By adding spi support into this driver enables devices
-> to use the same _HID string for i2c and spi uses and
-> minimize the support for two drivers doing the same thing
-> for different busses
+The TI part is equivalent to the NXP part, and its compatible value is
+not documented in the DT bindings.
 
-Please take care about periods at the end of sentences.
-But this is minor in comparison to the following issues:
+Note that while the Linux driver DT match table does not contain the
+compatible value of the TI part, it could still match to this part, as
+i2c_device_id-based matching ignores the vendor part of the compatible
+value.
 
- - you enable this for existing I²C multi-instantiate devices,
-   are you sure it is fine?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+v3:
+  - Add Reviewed-by,
 
- - continuing above, how can you guarantee that the same ID would
-   be used I²C and SPI versions of the same chip and not, let's say,
-   for UART?
+v2:
+  - New.
+---
+ arch/x86/platform/ce4100/falconfalls.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- - or other way around, how do we know that the same component will
-   have the same ID for different bus types? (Yes, I understand that
-   this is logically appropriate assumption, but you never know OEMs
-   and others in their ways to (ab)use ACPI specifications and common
-   sense)
-
- - if we even go this way, it should be under drivers/acpi
-
-
+diff --git a/arch/x86/platform/ce4100/falconfalls.dts b/arch/x86/platform/ce4100/falconfalls.dts
+index 0ac3d43571361112..65fa3d866226ce97 100644
+--- a/arch/x86/platform/ce4100/falconfalls.dts
++++ b/arch/x86/platform/ce4100/falconfalls.dts
+@@ -249,7 +249,7 @@ i2c@1 {
+ 
+ 						gpio@26 {
+ 							#gpio-cells = <2>;
+-							compatible = "ti,pcf8575";
++							compatible = "nxp,pcf8575";
+ 							reg = <0x26>;
+ 							gpio-controller;
+ 						};
+@@ -263,7 +263,7 @@ i2c@2 {
+ 
+ 						gpio@26 {
+ 							#gpio-cells = <2>;
+-							compatible = "ti,pcf8575";
++							compatible = "nxp,pcf8575";
+ 							reg = <0x26>;
+ 							gpio-controller;
+ 						};
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
