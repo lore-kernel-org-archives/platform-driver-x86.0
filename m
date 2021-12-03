@@ -2,167 +2,114 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B358C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Dec 2021 21:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B840C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Dec 2021 23:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230142AbhLCVgd (ORCPT
+        id S1354246AbhLCXhm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 3 Dec 2021 16:36:33 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:32924 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229665AbhLCVgd (ORCPT
+        Fri, 3 Dec 2021 18:37:42 -0500
+Received: from mail-oo1-f42.google.com ([209.85.161.42]:35715 "EHLO
+        mail-oo1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240573AbhLCXhl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Dec 2021 16:36:33 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 15B4B1F473C5
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=collabora.com; s=mail;
-        t=1638567188; bh=TWfhDoZ7T3kxFpcrRg2+1+vWc0efe2B9az0y9QpaEWw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k1ThvJqbs8oj2qIPoCfZCCR6/TF/KqH+SPdgv4FIk7+3DcQuZ7x8VygZ5Wh44hvLh
-         PLR92hwRlCfSjCPtlUAkvH3DVvROoS6Twts5N+WlaqbsVdIS4VgJPG6+BktRQ8Cf15
-         bG8DSQ2TWplsPe+yhiVhRPZUrazDw6ZQKAmh4M8uXdTwZq/ijBR7I8IQJH8FBkEQic
-         67sibRlvpNBUPefzDiq+nj+es0KL7Sxfs7Gjynctnh1YlOIeHUjQ3p5K9fyYNdxmtz
-         0hUtAXh8EDefU6MpGF5DXAiKwysS1SQ2ytoS/Tdz35barzKs3eC5IAykTCMycopAd2
-         H2SBQH5oznvCQ==
-Received: by earth.universe (Postfix, from userid 1000)
-        id AA1843C0CA8; Fri,  3 Dec 2021 22:33:05 +0100 (CET)
-Date:   Fri, 3 Dec 2021 22:33:05 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc:     linux-pm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
+        Fri, 3 Dec 2021 18:37:41 -0500
+Received: by mail-oo1-f42.google.com with SMTP id e17-20020a4a8291000000b002c5ee0645e7so2520702oog.2;
+        Fri, 03 Dec 2021 15:34:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=HvmUO3stczSOHy4AZ2u5yjtXBe51DiBBMcIExmIvsPk=;
+        b=1JIchbjaLZzDknM343KPGEgCIqPPJrvHeVDDbfmLuaCZNcU7k0dOvAdCGp4Rc6TUuX
+         fL/1ABebaTigvQBCfPUcW4znZpo1rTYPLU0lcEhwMXwuKYRGrglsakmVTkZxGEdzKbOY
+         C3vTv9GILsq57fC/9Ww08EtIVOsfFUp6lfc5z7gxvsKxQep2x//CiwPM0TNSfugUSujY
+         dNMPUCjXRayLjWZ6uOBuuPvdg479WWSlCC6IMizDT8w7ZqQUebd+5IiLoW6ngrG9W5Rh
+         7qyOyR6CpxjgHBqjOyQATdYEKQJH7lLYmDrDanyKo7VE/705Q/6zBqSLbHUXovul7q3D
+         TIJg==
+X-Gm-Message-State: AOAM5325xrrAUXovEFxNYS0DHzf98OHq6Z82f+WTa2Rb1Ht1qHf5S+wF
+        Lx6WU403cVLdvTbxiEqn7Q==
+X-Google-Smtp-Source: ABdhPJwgEbmNp7uLje0JTDCKmsCzjEkEBrgzlOt1VkyxJTN4CmOwWISnvXbaId1z31yTwIqQdnFCXg==
+X-Received: by 2002:a4a:9406:: with SMTP id h6mr14654887ooi.80.1638574456759;
+        Fri, 03 Dec 2021 15:34:16 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id w71sm939444oiw.6.2021.12.03.15.34.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Dec 2021 15:34:16 -0800 (PST)
+Received: (nullmailer pid 1042998 invoked by uid 1000);
+        Fri, 03 Dec 2021 23:34:15 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Jarrett Schultz <jaschultzms@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+        platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
         Mark Gross <markgross@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        linux-kernel@vger.kernel.org, linrunner@gmx.net, bberg@redhat.com,
-        hadess@hadess.net, markpearson@lenovo.com,
-        nicolopiazzalunga@gmail.com, njoshi1@lenovo.com, smclt30p@gmail.com
-Subject: Re: [PATCH 0/4] power: supply: add charge_behaviour property
- (force-discharge, inhibit-charge)
-Message-ID: <20211203213305.dfjedjj3b25ftj2z@earth.universe>
-References: <20211123232704.25394-1-linux@weissschuh.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="j3n753rkkc5fqnaj"
-Content-Disposition: inline
-In-Reply-To: <20211123232704.25394-1-linux@weissschuh.net>
+        Jarrett Schultz <jaschultz@microsoft.com>
+In-Reply-To: <20211202191630.12450-2-jaschultz@microsoft.com>
+References: <20211202191630.12450-1-jaschultz@microsoft.com> <20211202191630.12450-2-jaschultz@microsoft.com>
+Subject: Re: [PATCH 1/5] dt-bindings: platform: microsoft: Document surface xbl
+Date:   Fri, 03 Dec 2021 17:34:15 -0600
+Message-Id: <1638574455.193372.1042997.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Thu, 02 Dec 2021 11:16:26 -0800, Jarrett Schultz wrote:
+> Introduce yaml for surface xbl driver.
+> 
+> Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
+> 
+> ---
+> 
+> Changes in v3:
+>  - Updated description to only pertain to the hardware
+>  - Updated the required field to properly reflect the binding
+>  - Removed the first example
+>  - Fixed the size of the reg field in the second example
+> 
+> ---
+> 
+> Changes in v2:
+>  - Removed json-schema dependence
+>  - Elaborated on description of driver
+>  - Updated example
+> ---
+>  .../platform/microsoft/surface-xbl.yaml       | 69 +++++++++++++++++++
+>  MAINTAINERS                                   |  7 ++
+>  2 files changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+> 
 
---j3n753rkkc5fqnaj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Hi,
+yamllint warnings/errors:
 
-On Wed, Nov 24, 2021 at 12:27:00AM +0100, Thomas Wei=DFschuh wrote:
-> This series adds support for the charge_behaviour property to the power
-> subsystem and thinkpad_acpi driver.
->=20
-> As thinkpad_acpi has to use the 'struct power_supply' created by the gene=
-ric
-> ACPI driver it has to rely on custom sysfs attributes instead of proper
-> power_supply properties to implement this property.
->=20
-> Patch 1: Adds the power_supply documentation and basic public API
-> Patch 2: Adds helpers to power_supply core to help drivers implement the
->   charge_behaviour attribute
-> Patch 3: Adds support for force-discharge to thinkpad_acpi.
-> Patch 4: Adds support for inhibit-discharge to thinkpad_acpi.
->=20
-> Patch 3 and 4 are largely taken from other patches and adapted to the new=
- API.
-> (Links are in the patch trailer)
->=20
-> Ognjen Galic:
->=20
-> Your S-o-b is on the original inhibit_charge and force_discharge patches.
-> I would like to add you as Co-developed-by but to do that it will also re=
-quire
-> your S-o-b. Could you give your sign-offs for the new patches, so you can=
- be
-> properly attributed?
->=20
-> Sebastian Reichel:
->=20
-> Currently the series does not actually support the property as a proper
-> powersupply property handled fully by power_supply_sysfs.c because there =
-would
-> be no user for this property.
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml: properties:properties: 'compatible' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'type', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml: properties: 'properties' should not be valid under {'enum': ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'if', 'items', 'maxItems', 'maximum', 'minItems', 'minimum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'propertyNames', 'required', 'then', 'unevaluatedProperties']}
+	hint: A json-schema keyword was found instead of a DT property name.
+	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml: ignoring, error in schema: properties: properties
+warning: no schema found in file: ./Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+Documentation/devicetree/bindings/platform/microsoft/surface-xbl.example.dt.yaml:0:0: /example-0/imem@146bf000/xbl@a94: failed to match any schema with compatible: ['microsoft,sm8150-surface-duo-xbl']
 
-I'm not too happy how the acpi-battery hooks work, but that's not
-your fault and this patchset does not really make the situation
-worse. So:
+doc reference errors (make refcheckdocs):
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+See https://patchwork.ozlabs.org/patch/1562961
 
--- Sebastian
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-> Previous discussions about the API:
->=20
-> https://lore.kernel.org/platform-driver-x86/20211108192852.357473-1-linux=
-@weissschuh.net/
-> https://lore.kernel.org/platform-driver-x86/21569a89-8303-8573-05fb-c2fec=
-29983d1@gmail.com/
->=20
-> v1: https://lore.kernel.org/lkml/20211113104225.141333-1-linux@weissschuh=
-=2Enet/
-> v1 -> v2:
->=20
-> * Use sysfs_emit-APIs instead of plain sprintf
-> * More cecks for actual feature availability
-> * Validation of the written values
-> * Read inhibit-charge via BICG instead of PSSG (peak shift state)
-> * Don't mangle error numbers in charge_behaviour_store()
->=20
-> Open points:
->=20
-> Thomas Koch has observed that on a T450s with two batteries
-> inhibit-charge on BAT0 will affect both batteries and for BAT1 it is igno=
-red
-> entirely, this seems to be a bug in the EC.
-> On my T460s with two batteries it works correctly.
->=20
-> Thomas Wei=DFschuh (4):
->   power: supply: add charge_behaviour attributes
->   power: supply: add helpers for charge_behaviour sysfs
->   platform/x86: thinkpad_acpi: support force-discharge
->   platform/x86: thinkpad_acpi: support inhibit-charge
->=20
->  Documentation/ABI/testing/sysfs-class-power |  14 ++
->  drivers/platform/x86/thinkpad_acpi.c        | 191 +++++++++++++++++++-
->  drivers/power/supply/power_supply_sysfs.c   |  51 ++++++
->  include/linux/power_supply.h                |  16 ++
->  4 files changed, 268 insertions(+), 4 deletions(-)
->=20
->=20
-> base-commit: 66f4beaa6c1d28161f534471484b2daa2de1dce0
-> --=20
-> 2.34.0
->=20
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
---j3n753rkkc5fqnaj
-Content-Type: application/pgp-signature; name="signature.asc"
+pip3 install dtschema --upgrade
 
------BEGIN PGP SIGNATURE-----
+Please check and re-submit.
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmGqjQ4ACgkQ2O7X88g7
-+pr7EQ//TwLf4PlRgra/IFkj+OYy3nFZzj7g3Wd/FaZBjGY9y6YCMddso8OTFKjU
-DgHHqZnfIxNdRYN0cGRTAc1Z0f3l01S+9PIN6AdLDAuCgOWwCYD8qev//O4YOY7P
-kg940EozI+PXog5yDFMB1Ig96tezWUG6ze3Ayga0BQ7ZtuheKAVyqvj6t2UUxGO4
-147ZLMko5+02pcPCnHRifikGkP840ramtjJCL19mqsxYUg/VWwphkxsrjUV0hvEl
-Fnrs1yKMcrp59GKCLK2gKdyTEdIlEKh93mkFzYw9xbnNUfFNQ09x8qmL9Z44GKqG
-5tmva2v4Adrr82xogDq576xP3nwj6UfxTWP5C4FASnHfD2OV9FYeUKgT49/jXy+L
-mniHt9FpeTMrBr+wtEJdpIaBT6uskuXkz7uUAV2eI+zPG6zCLq0Y8vd6FJzisxlI
-GV09P7UE52CsT6uHjKjCwhXJhWD+FuFXtS5xx7i+S/baYcTITrrObizoSjEyd4iT
-dau4mrLseASWD4gGLIzJYHRADYHkCZzVgxh1w+68kLQxdTd++/6ML9LcQ8hIWcif
-Gp354YHKfYV2CIuOcei/DtftRksHG2Ljry+gRAanzvgHKOalOoj9o3UtRj6btDbY
-GzWnoJkklOTe7GwGN0SEWE6QkVQz1mj4K9lpNNnZN10XcjloSpA=
-=2DMK
------END PGP SIGNATURE-----
-
---j3n753rkkc5fqnaj--
