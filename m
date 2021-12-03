@@ -2,205 +2,290 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7D9C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Dec 2021 16:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C66C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Dec 2021 17:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245437AbhLCQZg (ORCPT
+        id S1382245AbhLCRhi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 3 Dec 2021 11:25:36 -0500
-Received: from mail-bn8nam12on2047.outbound.protection.outlook.com ([40.107.237.47]:24161
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        Fri, 3 Dec 2021 12:37:38 -0500
+Received: from mail-eus2azlp17011013.outbound.protection.outlook.com ([40.93.12.13]:10773
+        "EHLO na01-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S245586AbhLCQZg (ORCPT
+        id S1343672AbhLCRhh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Dec 2021 11:25:36 -0500
+        Fri, 3 Dec 2021 12:37:37 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nhcIQqVAokr69DYbVxvN+nbMYuJseT6RCV8qPundJx7fdXGsT0gjVv2y5VMGImk+JVijRYJqJJzhe/IWS5gYWVFFC20lqCknp0hPkWH5gBXvzzn/h+T6pr/w5C1OqPhIqQX0Lbe1UWt4tmr76YarBAck9RJuYGc6kpl9+GsixBhuaBWoKzTBqrPxY4AQzg+rIQ2G9Q+H+1ZoXAbAtVbit9Juf1VRNPqT9C4UsKBolNq21524BcsYhCLxt2grwDqyVmEQZI1Xwn8jbDo/9lI2kUQIjzWNrpBEqcnDxlYmkVEiCPSfNOFC16IJy3o50FxwFvep0//mWhGmTl9fDJ85Ag==
+ b=MT8mQlC6TpoEaWX2//r+GEzoR6rdZ+XL/4HA4Qf4H/36Va/JXx7HNWXIiRd3I2i1Z22IHac0TGtD+0YTSoaG4zZzdCzSw0h4uv3RJgj11ADt4GQLfkvtKXQ/mwQY5r6k7USDKDUHnDZT7bcKCOQdX122baA5thU5M0PGiXSaVoWhbUdXKF4UirZhXpdt92idkepHT0c5rKk6ZVswovQQsmMfAXv4yO5QbL4mnHEI3QhHNdLQCDZUw8bMRkjkg3CFPr7uwfDeLElEndnALWp22sZNNFLxKlOd2sJXZztXAlbmfNPMWgfdoKEEEOCXiTQb8ApPRiU3rEUN1nMkQ/5eHA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mm9mUurDvch6b6m2+CflosQu0E/RWnvGqO2fgPX58Ho=;
- b=BTp3TEZ6gbqolDLSn3fp+ut8z6TqU/ckh+nULPQYNNGyS4l+xDMXAat9Yob+vbqIDQTL8dlKsZvEMHIYqPcARgSA/kDYPkWNlE93fSj8OaQnJuHHfqtZkdXE1IskIL8SYLksWLxGPuD3EkVezx8Y6X2+SYoDCWFiqvhgLSLxcS3t1is3nYk5JMVCn+iFUi/Bobt4qzamgtSzh3WwUEpzmwrpZ11jmpDKxZRw/10A9Zm4quhqf4GgXO+41FmrMsRx8DTUjAS/nyPHaJ2vNT1n/lmUgE4r3ziEoMdRANZbiW52jW9immNaUcTX/+tEDXAY6L6jPafXMzu6gu15US1cpA==
+ bh=pFomgNCTVpc24kYvom+3t2OSOLXqbeuaEyWdswtDQjk=;
+ b=MIB7sQNdyrDrjWajmUjp8CuzFX/z2IMxHHbJbveBvrAIF7iDz8A81tA8bCuMO3VFzWvjMiMkPedj3CLrRc2bMa/w9uQofU/MSz80+YwOygfpGhvFfpGAJ1S9VLrgY0Tqd/C+5kytubhxVDdgIj2l1yhMyksrzgzGAavtc2EaaVwaBqV5nrRarH7oscIwbgwagxCyrwqzH6fj+HwS0SHQS4jHqEvBLhgI4LRc+OKeni65CIaFTIetttTFhd9LYX5zWmeUJBJ4uLpxYa4Ts1cvvifBQHPrfCMHLL9vBScA0A5eylJIUM8D2v+nB8V+BVuoEijzVHhUrZCQw00zkv93Lw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mm9mUurDvch6b6m2+CflosQu0E/RWnvGqO2fgPX58Ho=;
- b=A921Jziii4fayFjBvbZHBOg/vu/7fDTtr+f/IZD4H9rgqZ63kFpffXtTVZfZMm7coLUY+1tVwbqPdr1GgkxTWbYz/UXltlcQLb3LxvaIcms/H+4dd/f8iKQW6Hwqk6wVo1EPvvILpKnhaeKAFGN/zJJwVBZgZji50cm3jGxdQOA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
- by DM4PR12MB5230.namprd12.prod.outlook.com (2603:10b6:5:399::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Fri, 3 Dec
- 2021 16:22:09 +0000
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::1ddd:71e4:5803:e44a]) by DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::1ddd:71e4:5803:e44a%3]) with mapi id 15.20.4734.028; Fri, 3 Dec 2021
- 16:22:08 +0000
-Subject: Re: [PATCH v2] x86/sme: Explicitly map new EFI memmap table as
- encrypted
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-References: <8afff0c64feb6b96db36112cb865243f4ae280ca.1634922135.git.thomas.lendacky@amd.com>
- <c997e8a2-b364-2a8e-d247-438e9d937a1e@amd.com>
- <CAMj1kXGH7aGR==o1L2dnA9U9L==gM0__10UGznnyZwkHrT84sw@mail.gmail.com>
- <YXmEo8iMNIn1esYC@zn.tnic>
- <CAMj1kXEZkw99MPssHWFRL_k0okeGF47VYL+o8p72hBWkqW927g@mail.gmail.com>
- <f939e968-149f-1caf-c1fb-5939eafae31c@amd.com>
- <15ceb556-0b56-2833-206e-0cf9b9d2cb45@amd.com>
- <CAMj1kXHKxObuebZJMWQQwg014rYzvoBgWPZxfCYakuf+GSoqhg@mail.gmail.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <6d6b4982-ce69-4fd4-1bb8-5c35b360a95f@amd.com>
-Date:   Fri, 3 Dec 2021 10:22:06 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-In-Reply-To: <CAMj1kXHKxObuebZJMWQQwg014rYzvoBgWPZxfCYakuf+GSoqhg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ bh=pFomgNCTVpc24kYvom+3t2OSOLXqbeuaEyWdswtDQjk=;
+ b=SJ+TKmntDJADchD742r+Sn6yjI07XfLXATePvhqidHS+vy5edwT+uqx4hqWJxMLmR3mRq2WhHaGPgIF8ncNdgnykgtWDF5vYIRgcFj49mFN0EZfWdT3+lRoxe7pTkLKptf0cMOqEmfwks5GykV7mC8stE9fuSu1YX0XRvtTtntU=
+Received: from BL0PR2101MB1316.namprd21.prod.outlook.com
+ (2603:10b6:208:92::10) by BL0PR2101MB1058.namprd21.prod.outlook.com
+ (2603:10b6:207:37::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.8; Fri, 3 Dec
+ 2021 17:34:11 +0000
+Received: from BL0PR2101MB1316.namprd21.prod.outlook.com
+ ([fe80::6116:3d9f:ef5:2c45]) by BL0PR2101MB1316.namprd21.prod.outlook.com
+ ([fe80::6116:3d9f:ef5:2c45%8]) with mapi id 15.20.4690.000; Fri, 3 Dec 2021
+ 17:34:11 +0000
+From:   Jarrett Schultz <jaschultz@microsoft.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Jarrett Schultz <jaschultzms@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Gross <markgross@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>
+CC:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH 2/5] platform: surface: Propagate ACPI
+ Dependency
+Thread-Topic: [EXTERNAL] Re: [PATCH 2/5] platform: surface: Propagate ACPI
+ Dependency
+Thread-Index: AQHX6CxyCPVI/q/kxkKAjnW/mFJf/qwhBu5Q
+Date:   Fri, 3 Dec 2021 17:34:10 +0000
+Message-ID: <BL0PR2101MB1316DFA13C3AB1A6620A6CA3A56A9@BL0PR2101MB1316.namprd21.prod.outlook.com>
+References: <20211202191630.12450-1-jaschultz@microsoft.com>
+ <20211202191630.12450-3-jaschultz@microsoft.com>
+ <639583df-a54a-eb9b-91ad-a60612a930b0@redhat.com>
+In-Reply-To: <639583df-a54a-eb9b-91ad-a60612a930b0@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0047.namprd13.prod.outlook.com
- (2603:10b6:806:22::22) To DM4PR12MB5229.namprd12.prod.outlook.com
- (2603:10b6:5:398::12)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=20746931-6de9-45ee-986a-6400c34298fa;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-12-03T17:31:43Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 952b086e-9ee5-4df9-8ede-08d9b6831e15
+x-ms-traffictypediagnostic: BL0PR2101MB1058:EE_
+x-microsoft-antispam-prvs: <BL0PR2101MB10584F4A1BEB2D0A289BC225A56A9@BL0PR2101MB1058.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ygz4hemT1ZhkHRenbUQVOKry42ieFG8BCbwPAh510o/xXqUv3g0x0M7j0+MUqRDxdGPrLdC1f4OfBDOKy7LPUmmug+cSqf8nuZbF/GWIYpOh4mLq6hgrLVwj2+N2KWNL3Dzz+tpu3qFUhVpe1KQU6TjmMFiKkXpj0M8AzmDZLwBrAfCMfreO7ldkaVd3+sp4tkDe+vpAyu9zZ6JSBJsA/vTlz6iPLfCwBy78WmFs+XKfMOCdJ4+fVBwksK8sGcU0DMD3EhXD5kLZzl6uWXHjybJfk0lWutYXys1k+cdfjuH+KYwk7jqCG8BvBheWgifKn16ldYBhsJuo9hvBdTZvNhZgsd9EVQh/3dOGPSOkezGE5HD5CSZVvMX//laZavHiQkSlxSTO+ejGcqdvPwjoBCW1hKMkDrajl5oUhs70lCd7SGo4V4v26q+cnI98/hdepIUZGyxY3fSKCIgyzrcPiscWzCfu7Xy7KNdaNOSm8F8Q9or+2jznOEzc46JsMx4+zX+x/O0s1zwjm4w5Gcxi4XJ6gJWsz5bc8M5Vtnr75MTbhuBiBpUVypH39cEksujM+NRdv2lvhxWmdGQH23JpQO/ZE41+mIbGmmgK1AIi73AvkAFseItx48/KpFx5/MfoVnN6/wJP0py9E0+vCShNdIKKaFSITr+s719biZQy7yhvAjnF+enr7YTW+dQT1haN5ZQtS4eLCB7eKl1lU0a5eM5rFKsjomTyZXxHAPM1FJoFGk1YUwrDS6xK/AL/ImuH
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1316.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(33656002)(8990500004)(7416002)(2906002)(55016003)(8676002)(82950400001)(83380400001)(7696005)(86362001)(82960400001)(10290500003)(186003)(5660300002)(38100700002)(316002)(76116006)(71200400001)(66476007)(52536014)(9686003)(66946007)(122000001)(38070700005)(966005)(54906003)(110136005)(6506007)(508600001)(66556008)(4326008)(53546011)(8936002)(66446008)(64756008)(20210929001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?X4HsOH1KQ/2rXsotste6CbcvGaB56/Fxa1MTnPSX1HtyW5A1MFK/GLipiw2i?=
+ =?us-ascii?Q?l4K4ym1mKW5+m6gHIOz+yF5cdUksMRkWbZKZMV5cVubRcHDulYZQpjRKBnKQ?=
+ =?us-ascii?Q?Q5aLJXKCwe6OtnONj7QOP5jn4K2A32GOh0R8Y+PwTvvXfGBb8ne2RGhmHO1M?=
+ =?us-ascii?Q?40/1pM9Qfmz93iIe2gu+qiAOk7vHSMtJq/fg2iCOR2b8yIBPsbGNiQuvfGvu?=
+ =?us-ascii?Q?eP+N2dkIC56DlIwzKzhH1h/atPXEbHcWoi1QGFbbMr80N4at0otZJy3KEivW?=
+ =?us-ascii?Q?ACWllNhxSfnLwOwvGgKmhXvZ692511YJz3+0lLtD2vUUiVbcwmZisXLitMlM?=
+ =?us-ascii?Q?NgsCeoLuX/EsU58N2U7YniZWlG4fSk4CFhy9Vd4cgfDthulDK1kk9/QmotbB?=
+ =?us-ascii?Q?ZfkSA5Gg9EIv/jxb0FOM/pd/05jTZ4pBTocfLqEXoK9hzVR6tIKzfLAAeODS?=
+ =?us-ascii?Q?+w4dIYArbGGLNXK5MLng/Z2ZmOZ8iK4AUuSv6kz5L0Npg2SUFl30J1//KsTL?=
+ =?us-ascii?Q?G8a465bSXPOk4nvk0TPvpWfE5TPGIZl2MebEkyfqd1gYA6HfTEvJ6P1CvdlC?=
+ =?us-ascii?Q?krJLeE9914DNsSbn7HTwIyedhgLSQkXvm6bfK3v8+I2fqJXGyZvSfpNGpqBT?=
+ =?us-ascii?Q?rhhDY9xkU5lcIV5qDKdXXgwoxk8TU+A93ci1whaQtnW+CIEOn4rggCZ1v2n0?=
+ =?us-ascii?Q?zYCJkrctXX99gWuPP/ldxVqwtsUv1YGRghjCzpxAJUUGlMkM4avdFxraHvHe?=
+ =?us-ascii?Q?1f5hy0VhkVvu+XULSxe7yuNIC6T0X/SZfp5uroq8nxYhjqCvOb8plWZHlITo?=
+ =?us-ascii?Q?QftRlCQ7bcEcaiCra5zgFdxvOJ8yc51deBF2asE0UrngdfQ3CoSXy6/yUpJh?=
+ =?us-ascii?Q?kItLw4ERMSw7pTQVWuXr9aBp9XY97gEF49tdXIGpOu1i/cwkiUkpOafelQl7?=
+ =?us-ascii?Q?2ooq9S6zUJKw0pBCd+pIa1YCd0F5dB3BmsMWHMOcuOQrF462WZLmyT5FAt59?=
+ =?us-ascii?Q?lOsJuHC9FhhT5M0OWc99WOJ4ZIhe+G6h72kymz/rmiwYWM94wN3VDA3Zd1BK?=
+ =?us-ascii?Q?AJf5IyTMKL6lKZGOFdk4PSH/SPzT/BREPgoonMMDv0cIvC07q4t0MpGrfDFh?=
+ =?us-ascii?Q?SOOA6/t23xixcDUYY5YTpaAx3YO6lC9dTVlDzsd1CZVuEKhwAx5D/Y5wXYAK?=
+ =?us-ascii?Q?JZNFaJTq0bDcixb3dwlml/tJgg2y50Sq8uA3hpsa6wLJBSz3FCqsR164auZI?=
+ =?us-ascii?Q?m3rO/rh/c0ifqN5tvoCTPHI1TJDRh2mXHGB8oK6NjsdkcQKDy3BEKnKPnAB6?=
+ =?us-ascii?Q?kgWel1NcssMpXxnWUfTba3Tz/vWleRnV6aqiB3zX1Wk4ZOQKmtk2qCVrYMQB?=
+ =?us-ascii?Q?1QedrrND+JFMvgOAjh4S+HeY48Xnb2y1NkjaMwyVrVA3v6io/JQ0V/PWiuu0?=
+ =?us-ascii?Q?E6rUl3I+2VF4niV0e1Dp/jouVLQMSdMVhOGPVo6d7EfFstSIa1SRIAxdYQIm?=
+ =?us-ascii?Q?fK/4fsQsHYDN6oCxtaBazWOLAoeOcHxftfe1f1XIrJYK+m9N8vrR4O3Emw0U?=
+ =?us-ascii?Q?SG62HhXTmvFIVNsmg/jbw4Cqnw3xz4rhU/W/3SJh3bGttRjnfgeb118WXMsg?=
+ =?us-ascii?Q?zA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Received: from office-ryzen.texastahm.com (67.79.209.213) by SA9PR13CA0047.namprd13.prod.outlook.com (2603:10b6:806:22::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.12 via Frontend Transport; Fri, 3 Dec 2021 16:22:07 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6a9e29f6-dded-4ea7-3373-08d9b6790db7
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5230:
-X-Microsoft-Antispam-PRVS: <DM4PR12MB523015C3788EB33460D5C500EC6A9@DM4PR12MB5230.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bwBeZG+459hNaMFaJ7ziO1njlv5AMEYQJVdB1teS/mt5vybeG6jVy0N+W8BB9ehRZtCBP7ucxqgDODN52FaAQJ/uQL7Nabx6yR3uzDfRUgQiD6KR1GW/Kttum7jKQexk4h2jooDGWwHMltcXmcHfiWQXypEmcSYkiTc+bq0ykbIfUo29aNa3JVZMaHdFS3KOTH8OrWbOMyV2lILIZCbH4tnjx6Mn53K/AR5DYYQf0iGtSt0qbxP0gMLsm1jgfubH2P40oXcvbx8LY53m6hd3FZvOD2aUDTWNnK9Mv+BZUBqiicWjwsjEpQhBShPsiDpgx0XnMbWxDnVgrRKigMY7ezP9cTejM9FGy/WifzJ2hTqZ/gtUEeC3DxYRbaFbrEyYsqKwJJ68pWOZ06EZTUyGwSDhDfEyIlqAZvLo1ZWKJgHoySWG7WVIM/DyjLzvRHB/WQ9UPmg2t3jhyg8qnKEe26kfY/7nJdCakz9U7aBvzVV+X+wrR32i5dxrjoAEUBdNzjYmxnjgHD8UC8b+mcJYVs1Td4z37mAF63ia1T9SKZVqGNPxNLbsd+EPBaaAw0uKEw3pgr7a4ec3eTNLpEtIehcxjN+OVQUe/+RxmgOuFLzrI2blopnnz2XomWBr14vGr0WIAApFqMrPzh/F8KRneotAAPDCGl6B/5w+aznF1hm6dUhZTGfbSg4bi8ICmWOntqBmsxM79d2sKS4xGWEO03uPkGvcqpYQ+ILjEk8yhU0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66556008)(83380400001)(38100700002)(186003)(53546011)(6512007)(8676002)(26005)(86362001)(316002)(31696002)(54906003)(6486002)(5660300002)(6916009)(66476007)(2616005)(8936002)(66946007)(2906002)(36756003)(6506007)(508600001)(31686004)(956004)(4326008)(7416002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dGVoaUdmdmVUVUNNWFg3Sk5qdWZRRGNiWkZ3RWx0SlpVRmJkZUk0TnIwbjU5?=
- =?utf-8?B?MlJPMmYxaVh0c0dka3dMU1BnNGc5T0F0WXZRNG1hQnJHUTRSRDU3NXEvVnFO?=
- =?utf-8?B?YmRqMWtDWmhVK2lzajNad1FKNVk3ZStTb3NNWC90VUFqMVNuNU8zWlhhOUdm?=
- =?utf-8?B?QzROdjh1OU8xV0tUSVYrQ1E4UTVYQ1BtazRXcXYzaXliM2F2cGhVU3AvcVF1?=
- =?utf-8?B?MDNoSld6YWtvaW5hVUlVS2tOeEJYUWxTdk44UjIyZnduU3FOY2hJV21JZ3Ir?=
- =?utf-8?B?MWIyOTNCMFlIT1VxaFVCSUV2Y3N5LzRyRzNQRFBwamZFWllrbmd2ZFlHbXhV?=
- =?utf-8?B?L2JpbGdEMEo4UmVMNGswQ1dsQ3FVS1lTVXVKVTRNb2tpd0tUMDVrbHRDNkVU?=
- =?utf-8?B?TFBVeGM1QTN3ZGpwNCtkMzZFcGdqMGlnOXRwa05RbDJDcERKeENvWi9YK0Fl?=
- =?utf-8?B?a0d4TFFPVW4yK215NUFhSVlpRFp3dWRTREtLcFcyeHlVZTk0UWl0Z2JBTWx5?=
- =?utf-8?B?OHIxRHU0Y1Fpckc0MHY1SkxWMkR0RHloemFwZlh6MlNTOXd5RVlqNG14M1FV?=
- =?utf-8?B?NmVrWTk1RWo4WnRUQUwvajZoV2d4ck8rVzMyVy9kekJpNVJ3Z0JrM0NiT1Ez?=
- =?utf-8?B?SEc5TUVZdkkxRWhaT1FoNEJueTZpVzFQWTdrYmdzcFoxNFkrZkY1WkpZY3VW?=
- =?utf-8?B?enVKczd2QU42eEM5ZW1mcnVCZFBJR1lmSzczZkI4Vk5USzRIVGdnd2RCdVl5?=
- =?utf-8?B?NlZERnhkUTZQQWtnTHJ6NXJEcjZwbVpERjUzZ0JLWFB6VkRwKzgrUUFHTTlJ?=
- =?utf-8?B?Q2pnTVJMcjNYcG1OVEkxelFDcGtKdEhkUXIydzdNY0gyKzd5OUl3OE9VVHha?=
- =?utf-8?B?QndMWm5qQ2c2eXBScmhvQnplRy9HMURrejZmbGY4bUxZVGkvRHNNUUVINlNa?=
- =?utf-8?B?WTE0SnY2eVI2V2RXSmFVYWdiRVdCOHBUVzZ1cDIyUE1PMzJLcW0vemgwQ291?=
- =?utf-8?B?eElnRDlydHkzQm4yOU9RRERYMkdlMDAzUXBTMDBydzgyL3h1ekpHd1B2OTJa?=
- =?utf-8?B?WGlwcm1ya3JSU3hrSkR0ZDFYa2VqbVBpNmlZTEdYK0h0MUlsRlJlbnpMZ0pz?=
- =?utf-8?B?b0FSZGhGTnF1QjE4SW15eW4xNWFwL3JGWDZobTh0NTJaeERxUDQ4ZGdXR2lr?=
- =?utf-8?B?L25FVGNkdkpzWWI0eDRWeU9jcTVaejRWL2hqeWtNREROdFF2alFuYkJzZHJO?=
- =?utf-8?B?ZEg2MGU1dmhLY2lkTzlGUktIQm03bUFrT001c05wekwxYVRVQTdPemNOL0kr?=
- =?utf-8?B?bnNkMVFsN0RCb25qSElwRURoeUh0TjRTVjVnanUrMTMyNmJ1SXJWblo4YzRm?=
- =?utf-8?B?Q2Z6YVk3ditjVk1qSkhXTU1hRGRETS9HempCYlYwSzZmUmZzcyszL0FHRkRa?=
- =?utf-8?B?WENpOVN6SGRxM293QzdSbFZrREZHVEk4cVFLVTV2YzNqaDJodXdyY1RBYTl5?=
- =?utf-8?B?RXJMUnZKdEtFcWdYbHZ4RDllNjBNcm1iL3A0OW9VaFRERDROL3duQ2xEY1hh?=
- =?utf-8?B?eGR0aGl3bE4xZFpZMzZySzlRUlZ4K2hlRElSUWdiMkxOeVFsUVB0NkJ2QUls?=
- =?utf-8?B?K2tvOU9YN1RVMld6T1QwMU5yRzZncEcyZDRyRUJ4bXdQaUdjYW1mbmxnalZp?=
- =?utf-8?B?WnZYTU5Na1NrVmNEZVAyOHZnNkxNR0FhbEFVMHQzQVc3TzVkdGd1UDFCV0Yy?=
- =?utf-8?B?TkVHa3NpaUw5NFB3QmIrdjh5R0lXL1JWYS9JektEaXVSbllNZUk3MjVLWFFq?=
- =?utf-8?B?NHdlZmFVc0hQanAxTmE4LzFnWVdveHJUbytFMjRaSHZ6enFGc2FyZXc0S2tI?=
- =?utf-8?B?cUJQS2JNSkV4bDVaY0FERWRhUnJ6SVhrNzZVcEJwR1YvOWdkZjJveStBVVNS?=
- =?utf-8?B?YnFqSHNjTWN5MnF2QzVkU05uSjFZS011V3NPZnpDTzhqVm1YRFZ5RStleENx?=
- =?utf-8?B?cHFsT2xlZEpJZEx6UCs4eEljQTNZVldnT0JzU2JwYVFCSTBqVzFwMkpCNnJB?=
- =?utf-8?B?L1AyUTNVdlI1THlGTDdPL1dybm9rMjFRSFRrbDVlekFaY2EvSldhekU5VWdX?=
- =?utf-8?B?eUNSYXR1MTFYVU9zWEp3MTljd0ZUaUI2NDZFS0NzRTZRYjdraUdDQTdWbSth?=
- =?utf-8?Q?MUMlNJxzmvOMjRl3Ja5E5ms=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a9e29f6-dded-4ea7-3373-08d9b6790db7
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
+X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2021 16:22:08.8756
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1316.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 952b086e-9ee5-4df9-8ede-08d9b6831e15
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2021 17:34:11.0479
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P+4j1NPs86mwzLoxeO1dl1lWGjow2M5aXEz9MTmWOsv+YhdisXqmnBGTlQ6eLYUGUxVRraJRIjpIVC+8Xxt8sg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5230
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Af8YMDkkajkfnKC+GK+8XhnaZkgimZrsuLW8LK/eJ3oejy/Abu8MtPts5qaswpPJclXlFX/zZbZPJZK3aQ1CPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1058
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 12/3/21 4:30 AM, Ard Biesheuvel wrote:
-> On Wed, 1 Dec 2021 at 15:06, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->>
->> On 10/27/21 12:04 PM, Tom Lendacky wrote:
->>>
->>>
->>> On 10/27/21 11:59 AM, Ard Biesheuvel wrote:
->>>> On Wed, 27 Oct 2021 at 18:56, Borislav Petkov <bp@alien8.de> wrote:
->>>>>
->>>>> On Wed, Oct 27, 2021 at 05:14:35PM +0200, Ard Biesheuvel wrote:
->>>>>> I could take it, but since it will ultimately go through -tip anyway,
->>>>>> perhaps better if they just take it directly? (This will change after
->>>>>> the next -rc1 though)
->>>>>>
->>>>>> Boris?
->>>>>
->>>>> Yeah, I'm being told this is not urgent enough to rush in now so you
->>>>> could queue it into your fixes branch for 5.16 once -rc1 is out and send
->>>>> it to Linus then. The stable tag is just so it gets backported to the
->>>>> respective trees.
->>>>>
->>>>> But if you prefer I should take it, then I can queue it after -rc1.
->>>>> It'll boil down to the same thing though.
->>>>>
->>>>
->>>> No, in that case, I can take it myself.
->>>>
->>>> Tom, does that work for you?
->>>
->>> Yup, that works for me. Thanks guys!
->>
->> I don't see this in any tree yet, so just a gentle reminder in case it
->> dropped off the radar.
->>
-> 
-> Apologies for the delay, I've pushed this out to -next now.
-> 
-> Before I send it to Linus, can you please confirm (for my peace of
-> mind) how this only affects systems that have memory encryption
-> available and enabled in the first place?
 
-Certainly.
 
-An early_memremap() call uses the FIXMAP_PAGE_NORMAL protection value for 
-performing the mapping. Prior to performing the actual mapping though, a 
-call to early_memremap_pgprot_adjust() is made to possibly alter the 
-protection value, but only if memory encryption is active.
+> -----Original Message-----
+> From: Hans de Goede <hdegoede@redhat.com>
+> Sent: Friday, December 3, 2021 1:59 AM
+> To: Jarrett Schultz <jaschultzms@gmail.com>; Rob Herring
+> <robh+dt@kernel.org>; Andy Gross <agross@kernel.org>; Bjorn Andersson
+> <bjorn.andersson@linaro.org>; Mark Gross <markgross@kernel.org>;
+> Maximilian Luz <luzmaximilian@gmail.com>
+> Cc: linux-arm-msm@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Felipe Balbi
+> <balbi@kernel.org>; Jarrett Schultz <jaschultz@microsoft.com>
+> Subject: [EXTERNAL] Re: [PATCH 2/5] platform: surface: Propagate ACPI
+> Dependency
+>=20
+> Hi Jarett,
+>=20
+> On 12/2/21 20:16, Jarrett Schultz wrote:
+> > Since the Surface XBL Driver does not depend on ACPI, the
+> > platform/surface directory as a whole no longer depends on ACPI. With
+> > respect to this, the ACPI dependency is moved into each config that
+> > depends on ACPI individually.
+> >
+> > Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
+>=20
+> I think I will already merge this patch into the pdx86 tree:
+>=20
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit.k
+> ernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fpdx86%2Fplatform-
+> drivers-
+> x86.git%2F&amp;data=3D04%7C01%7Cjaschultz%40microsoft.com%7C0ab6fcc6
+> 4a5c4fd8657308d9b64391dd%7C72f988bf86f141af91ab2d7cd011db47%7C0
+> %7C0%7C637741223627024908%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC
+> 4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&
+> amp;sdata=3DfEszuAgBLL3g2Z9Lh3DPQ%2BlzrWZR3o6aUst6fDmLOrE%3D&amp
+> ;reserved=3D0
+>=20
+> While we are waiting for the rest of the series to get hashed out.
+>=20
+> But as already pointed out by Trilok Soni your From: and Signed-off-by em=
+ail
+> addresses don't match.
+>=20
+> I can fix up the From to match the Signed-off-by while I apply this, but =
+before
+> I do that I wanted to check with you that setting both to "Jarrett Schult=
+z
+> <jaschultz@microsoft.com>" is the right thing to do ?
+>=20
+> Regards,
+>=20
+> Hans
+>=20
+>=20
 
-Changing the call to early_memremap_prot() and providing 
-pgprot_encrypted(FIXMAP_PAGE_NORMAL) as the protection value results in an 
-equivalent call to early_memremap() when memory encryption is not active. 
-This is because the pgprot_encrypted() is, in effect, a NOP when memory 
-encryption is not active.
+Hans,
 
-So when memory encryption is not available or active, the result of an 
-early_memremap_prot() call with a protection value of 
-pgprot_encrypted(FIXMAP_PAGE_NORMAL) is equivalent to an early_memremap() 
-call.
+Yes, that is the correct email. Still trying to get all the kinks worked ou=
+t, I appreciate your patience.
 
-Let me know if that answers your question.
+Thank you,
+Jarrett
 
-Thanks,
-Tom
+>=20
+>=20
+>=20
+>=20
+> >
+> > ---
+> >
+> > Changes in v3:
+> >  - Further propagated ACPI dependecy to SURFACE_AGGREGATOR
+> >
+> > ---
+> >
+> > Changes in v2:
+> >  - Created to propagate ACPI dependency
+> > ---
+> >  drivers/platform/surface/Kconfig            | 7 ++++++-
+> >  drivers/platform/surface/aggregator/Kconfig | 1 +
+> >  2 files changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/surface/Kconfig
+> > b/drivers/platform/surface/Kconfig
+> > index 3105f651614f..5f0578e25f71 100644
+> > --- a/drivers/platform/surface/Kconfig
+> > +++ b/drivers/platform/surface/Kconfig
+> > @@ -5,7 +5,6 @@
+> >
+> >  menuconfig SURFACE_PLATFORMS
+> >  	bool "Microsoft Surface Platform-Specific Device Drivers"
+> > -	depends on ACPI
+> >  	default y
+> >  	help
+> >  	  Say Y here to get to see options for platform-specific device
+> > drivers @@ -30,12 +29,14 @@ config SURFACE3_WMI
+> >
+> >  config SURFACE_3_BUTTON
+> >  	tristate "Power/home/volume buttons driver for Microsoft Surface 3
+> tablet"
+> > +	depends on ACPI
+> >  	depends on KEYBOARD_GPIO && I2C
+> >  	help
+> >  	  This driver handles the power/home/volume buttons on the
+> Microsoft Surface 3 tablet.
+> >
+> >  config SURFACE_3_POWER_OPREGION
+> >  	tristate "Surface 3 battery platform operation region support"
+> > +	depends on ACPI
+> >  	depends on I2C
+> >  	help
+> >  	  This driver provides support for ACPI operation @@ -126,6 +127,7
+> > @@ config SURFACE_DTX
+> >
+> >  config SURFACE_GPE
+> >  	tristate "Surface GPE/Lid Support Driver"
+> > +	depends on ACPI
+> >  	depends on DMI
+> >  	help
+> >  	  This driver marks the GPEs related to the ACPI lid device found on
+> > @@ -135,6 +137,7 @@ config SURFACE_GPE
+> >
+> >  config SURFACE_HOTPLUG
+> >  	tristate "Surface Hot-Plug Driver"
+> > +	depends on ACPI
+> >  	depends on GPIOLIB
+> >  	help
+> >  	  Driver for out-of-band hot-plug event signaling on Microsoft
+> > Surface @@ -154,6 +157,7 @@ config SURFACE_HOTPLUG
+> >
+> >  config SURFACE_PLATFORM_PROFILE
+> >  	tristate "Surface Platform Profile Driver"
+> > +	depends on ACPI
+> >  	depends on SURFACE_AGGREGATOR_REGISTRY
+> >  	select ACPI_PLATFORM_PROFILE
+> >  	help
+> > @@ -176,6 +180,7 @@ config SURFACE_PLATFORM_PROFILE
+> >
+> >  config SURFACE_PRO3_BUTTON
+> >  	tristate "Power/home/volume buttons driver for Microsoft Surface
+> Pro 3/4 tablet"
+> > +	depends on ACPI
+> >  	depends on INPUT
+> >  	help
+> >  	  This driver handles the power/home/volume buttons on the
+> Microsoft Surface Pro 3/4 tablet.
+> > diff --git a/drivers/platform/surface/aggregator/Kconfig
+> > b/drivers/platform/surface/aggregator/Kconfig
+> > index fd6dc452f3e8..cab020324256 100644
+> > --- a/drivers/platform/surface/aggregator/Kconfig
+> > +++ b/drivers/platform/surface/aggregator/Kconfig
+> > @@ -4,6 +4,7 @@
+> >  menuconfig SURFACE_AGGREGATOR
+> >  	tristate "Microsoft Surface System Aggregator Module Subsystem
+> and Drivers"
+> >  	depends on SERIAL_DEV_BUS
+> > +	depends on ACPI
+> >  	select CRC_CCITT
+> >  	help
+> >  	  The Surface System Aggregator Module (Surface SAM or SSAM) is an
+> >
 
-> 
