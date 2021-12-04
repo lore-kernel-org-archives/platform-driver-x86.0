@@ -2,81 +2,185 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01FBC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Dec 2021 11:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320AFC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Dec 2021 13:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230102AbhLDLKD (ORCPT
+        id S235843AbhLDN7c (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Dec 2021 06:10:03 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:39186 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350310AbhLDLKC (ORCPT
+        Sat, 4 Dec 2021 08:59:32 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:31770 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1344839AbhLDN7a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Dec 2021 06:10:02 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5BD8AB80CBD
-        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Dec 2021 11:06:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1A308C341CF
-        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Dec 2021 11:06:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638615995;
-        bh=87eMuxmf84X7XQGDkrsJx0ozAD6hMlPZdgLFE+IWO8o=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=gZCEqyTmTsMwexC/tl5nbygGhJL/9v7gdCwJx0MuNgD6TyDD4ZzDCfoZmz4t8go5F
-         id7Dkz+mMvv60VdIOiQeIiZfms/3cijmVHOkLK4jS1G4Bk+WYDQaFL5CIruXqP2jiN
-         li/AWbF5Q6HqFyNCKCd1RpSeYJXOuUsmguPYrpg+Z2QiKbysuBrN2REf24qRJjWI88
-         ehqwYvILDxs1tmTnCa1ShTa36mmVJR53k69zOHx/C2WzbjZqSNTh75/IhUPo2u+dZq
-         bpt3NJiRvlT1+vzyVakgXuSTtBsVjOAoCgyuvfNDpFD5pJ1BKW4Nd7L6Ej+tfPGF1p
-         mLyEN0XTmD7OQ==
-Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id F1EBC611AF; Sat,  4 Dec 2021 11:06:34 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 199715] hp_accel: probe of HPQ6007:00 failed with error -22 (HP
- Envy x360)
-Date:   Sat, 04 Dec 2021 11:06:34 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: andy.shevchenko@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-199715-215701-AsuNKP8ndG@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-199715-215701@https.bugzilla.kernel.org/>
-References: <bug-199715-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sat, 4 Dec 2021 08:59:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1638626164;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3DklwqLIbhF70738BmmNkWjzvOd8rpPIg3v//EXAr9M=;
+        b=Ol2YdVh72/0ynqC9dkgkJV+sFFqpT0qAIwBKgRoA/64MplAklXiO8TR6i335kd5QOv2Ht1
+        qnPe+HTbLEn0WXTnb1Sn0zQ1otsMec23163TQELdtoae0+qDfGKz7KtReYldcl88ApDO3E
+        drhC62Lcu4hzvutb33ilEd+A9NKp6Cs=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-541-vyvvIBU2OxC-lBuJ-hzTVw-1; Sat, 04 Dec 2021 08:56:03 -0500
+X-MC-Unique: vyvvIBU2OxC-lBuJ-hzTVw-1
+Received: by mail-ed1-f70.google.com with SMTP id q17-20020aa7da91000000b003e7c0641b9cso4816473eds.12
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Dec 2021 05:56:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=3DklwqLIbhF70738BmmNkWjzvOd8rpPIg3v//EXAr9M=;
+        b=eyGEZetDJcoyARug3S0Z8eXZRYKZu/F7NO3lKKQ8dT690yegAPzF67efC7DDJ+FvCo
+         xL1aVD4dZpBm/Bj0bFBGcUWPGUA92HclLvzRRA6JJZhWdugXiTu9qDuFWcdbRSjrUXI3
+         xzIul9ODgNxdt+ycMqTOrF6YCjAyoIGijXXFaFwpEdnBYX4CnygJpGukGyx4yP6w3HG6
+         XiuujRhT9mQY0mDOZY8Afef60UPPctw77/WeLK84yKH6GWOaIXk+fKXep+OPEzV2uEll
+         YFaWBvBCM3sqpcNW3CoeWS2SARX2gkW0ncTkaVL5tI5Edo+L/u1NT7K6fHVWqWS8Rl70
+         5Htw==
+X-Gm-Message-State: AOAM531GuZRIfjP7TYcKemt7nupcYABZyUe/vQLUYtOnPGmLEZ1dkXcw
+        0bH2ukIrN6Z4gxxWitxU9SKCOx8bTx/gVfMryLDh5T7/3/ewQFPOHtbOjX2Z4VW5DwKxtvNClP8
+        w3Vmmd7bYqr6gUU6ZDz8N/0HC6H8FEvhx0g==
+X-Received: by 2002:a05:6402:100e:: with SMTP id c14mr36308601edu.196.1638626161378;
+        Sat, 04 Dec 2021 05:56:01 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy720jlD8y093U5xCfFPqtufnO7SYwJMPNYXI69mU0Ze3KrgsMlDFozoRuc1r8FLrioVjtByg==
+X-Received: by 2002:a05:6402:100e:: with SMTP id c14mr36308579edu.196.1638626161173;
+        Sat, 04 Dec 2021 05:56:01 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id ho17sm3820836ejc.111.2021.12.04.05.56.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Dec 2021 05:56:00 -0800 (PST)
+Message-ID: <015913c3-171f-3ecb-2813-54404d6db273@redhat.com>
+Date:   Sat, 4 Dec 2021 14:56:00 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH 0/4] power: supply: add charge_behaviour property
+ (force-discharge, inhibit-charge)
+Content-Language: en-US
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>
+Cc:     linux-pm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        linux-kernel@vger.kernel.org, linrunner@gmx.net, bberg@redhat.com,
+        hadess@hadess.net, markpearson@lenovo.com,
+        nicolopiazzalunga@gmail.com, njoshi1@lenovo.com, smclt30p@gmail.com
+References: <20211123232704.25394-1-linux@weissschuh.net>
+ <20211203213305.dfjedjj3b25ftj2z@earth.universe>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211203213305.dfjedjj3b25ftj2z@earth.universe>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D199715
+Hi,
 
-Andy Shevchenko (andy.shevchenko@gmail.com) changed:
+On 12/3/21 22:33, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Wed, Nov 24, 2021 at 12:27:00AM +0100, Thomas Weißschuh wrote:
+>> This series adds support for the charge_behaviour property to the power
+>> subsystem and thinkpad_acpi driver.
+>>
+>> As thinkpad_acpi has to use the 'struct power_supply' created by the generic
+>> ACPI driver it has to rely on custom sysfs attributes instead of proper
+>> power_supply properties to implement this property.
+>>
+>> Patch 1: Adds the power_supply documentation and basic public API
+>> Patch 2: Adds helpers to power_supply core to help drivers implement the
+>>   charge_behaviour attribute
+>> Patch 3: Adds support for force-discharge to thinkpad_acpi.
+>> Patch 4: Adds support for inhibit-discharge to thinkpad_acpi.
+>>
+>> Patch 3 and 4 are largely taken from other patches and adapted to the new API.
+>> (Links are in the patch trailer)
+>>
+>> Ognjen Galic:
+>>
+>> Your S-o-b is on the original inhibit_charge and force_discharge patches.
+>> I would like to add you as Co-developed-by but to do that it will also require
+>> your S-o-b. Could you give your sign-offs for the new patches, so you can be
+>> properly attributed?
+>>
+>> Sebastian Reichel:
+>>
+>> Currently the series does not actually support the property as a proper
+>> powersupply property handled fully by power_supply_sysfs.c because there would
+>> be no user for this property.
+> 
+> I'm not too happy how the acpi-battery hooks work, but that's not
+> your fault and this patchset does not really make the situation
+> worse. So:
+> 
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |superm1@gmail.com
+I haven't looked at the thinkpad_apci.c bits closely yet (for this new version),
+but assuming those are ready for merging too, we need to discuss about how
+to merge this.
 
---- Comment #62 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
-Add Mario. Mario, can you pull the strings to unstale this efforts?
+The thinkpad_acpi code has already seen quite a lot of changes in -next,
+so I would like the thinkpad_acpi changes to go upstream through the
+platform-drivers-x86.git tree to avoid conflicts.
 
---=20
-You may reply to this email to add a comment.
+As such I think it is best if you (Sebastian) can prepare an immutable
+branch with patch 1 + 2 for me to merge. Then even if patch 3 + 4 need
+more work, Thomas can just respin those on top of the immutable branch.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Alternatively I can take the entire series upstream through the
+platform-drivers-x86.git tree if that is ok with you (Sebastian).
+
+Either way please let me know how you want to proceed with this.
+
+Regards,
+
+Hans
+
+
+
+>> Previous discussions about the API:
+>>
+>> https://lore.kernel.org/platform-driver-x86/20211108192852.357473-1-linux@weissschuh.net/
+>> https://lore.kernel.org/platform-driver-x86/21569a89-8303-8573-05fb-c2fec29983d1@gmail.com/
+>>
+>> v1: https://lore.kernel.org/lkml/20211113104225.141333-1-linux@weissschuh.net/
+>> v1 -> v2:
+>>
+>> * Use sysfs_emit-APIs instead of plain sprintf
+>> * More cecks for actual feature availability
+>> * Validation of the written values
+>> * Read inhibit-charge via BICG instead of PSSG (peak shift state)
+>> * Don't mangle error numbers in charge_behaviour_store()
+>>
+>> Open points:
+>>
+>> Thomas Koch has observed that on a T450s with two batteries
+>> inhibit-charge on BAT0 will affect both batteries and for BAT1 it is ignored
+>> entirely, this seems to be a bug in the EC.
+>> On my T460s with two batteries it works correctly.
+>>
+>> Thomas Weißschuh (4):
+>>   power: supply: add charge_behaviour attributes
+>>   power: supply: add helpers for charge_behaviour sysfs
+>>   platform/x86: thinkpad_acpi: support force-discharge
+>>   platform/x86: thinkpad_acpi: support inhibit-charge
+>>
+>>  Documentation/ABI/testing/sysfs-class-power |  14 ++
+>>  drivers/platform/x86/thinkpad_acpi.c        | 191 +++++++++++++++++++-
+>>  drivers/power/supply/power_supply_sysfs.c   |  51 ++++++
+>>  include/linux/power_supply.h                |  16 ++
+>>  4 files changed, 268 insertions(+), 4 deletions(-)
+>>
+>>
+>> base-commit: 66f4beaa6c1d28161f534471484b2daa2de1dce0
+>> -- 
+>> 2.34.0
+>>
+
