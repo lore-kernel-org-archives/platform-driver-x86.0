@@ -2,92 +2,97 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BF4C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Dec 2021 16:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DF6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Dec 2021 16:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355163AbhLDQQZ (ORCPT
+        id S1355341AbhLDQio (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Dec 2021 11:16:25 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:51970 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242107AbhLDQQZ (ORCPT
+        Sat, 4 Dec 2021 11:38:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1355316AbhLDQil (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Dec 2021 11:16:25 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 6DA2DCE0E02
-        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Dec 2021 16:12:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 99EBDC341CB
-        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Dec 2021 16:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638634376;
-        bh=p2qOMJMSAHinxiy0o7gHSvFsNoKmCcJN/bYWl4q1MX4=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=tUUveythVeZaO+4th4Sp05kjLAfFVI0YLgECdC/oxYuXSr1VGreIO2zzPJ+yoDfHW
-         vYyR6pRmKppEUreRp3pOUTgnPwBGEGIXB88bhroigkoIrYEEm9QJNPj+TplK9GBf5A
-         pypfAeuBfYzP6LEr0SvKu/1Rlx3GGqh7zOSTSnwy/kuZCO7+NxNuaccTn/YSlzXXjv
-         ChYbDoxNBwDIHbeZKAlrvpMyhKGBcNSJw/QdwlLZ8WHoO0yETk/vgjWOD8FDb9F3kA
-         SwZjRcr+ulzwYBHMuXfQAYv4T34ewgMEGXNRhwCMsp9r197n2rqoiu3B0OApVoDE5T
-         S73potn6X40bQ==
-Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id 8D09D61005; Sat,  4 Dec 2021 16:12:56 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 199715] hp_accel: probe of HPQ6007:00 failed with error -22 (HP
- Envy x360)
-Date:   Sat, 04 Dec 2021 16:12:55 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: n-fit@live.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-199715-215701-5ncYEOvrWx@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-199715-215701@https.bugzilla.kernel.org/>
-References: <bug-199715-215701@https.bugzilla.kernel.org/>
+        Sat, 4 Dec 2021 11:38:41 -0500
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D0A1C061751
+        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Dec 2021 08:35:16 -0800 (PST)
+Received: by mail-yb1-xb34.google.com with SMTP id x32so18641103ybi.12
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Dec 2021 08:35:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=il/vIhlI+W8GvY7WS35IRPzq+xTmUlqG5fBf6HYGkH8=;
+        b=P41QzUjoYrb18XLpmAVk9XuTbWU+TILYQlwFFYa1pwwsrCrIg/QLm+uy+ShxWKbuQm
+         m25NgyqrWFk7MB0MuveN3gRLEoF4depJJXEkfwBQf75N5jREmTlJNVu8/U5BpCmHrBb6
+         Cs4+WQQvl6V4OXYDAi7002U4d02ZtlEfVb1Z9Nj+v46Kfwpfjo98QKDIytXK3RcCWZzy
+         1WPdEORAkQTYNCY4qNqfWyPI3p0XA1gfOTlBsKJIzxpTsGEOFhADu/mFsWwtauf+ag8b
+         7CkCo7u3rQheha/9mc7nsTxIJkllu9sT+icJXUb8ZZeb0Lkt0uP+OAunRob/zX8HWCQ9
+         EnOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=il/vIhlI+W8GvY7WS35IRPzq+xTmUlqG5fBf6HYGkH8=;
+        b=AeX7nV2EcJ3F6d136VFmBu6lX12+EKz+tg+V5KYaNGdjc3TZ59gzWaI1hrnGrJUAiu
+         yUUcCEO0MhYQHoZSH/sbkVhNMWPSUWsSiCO5Ta3HzLNOswG2O4tfXsJa+6msWnel/EFZ
+         tuBLoUJ34FRr+v+HL6SJMYaKht+8ycxcYSL5xMPEcA6zToDoW/WYUstYpcUp+FRrSPiw
+         rqo5CZqZzm2fPILTALN7vIjd5W1dMOchczVpMwX581Klu3Jp5/w3VJ2TyG1yfrwuFK+N
+         DoNhAhLXo813L9hZjZFqe2dSdzlJGNC9ttLchn4gD0Q9hhqv7Zn9iOPT3YXK2yF0o/Ne
+         oEWQ==
+X-Gm-Message-State: AOAM533LVU+toLN37MPvzxH2wp9ieGqEyznge1iFbpAwcwblCT5A0AZV
+        ttCmrci61Hv/6rSCZeE0QAomj3/xjes7q3ZgVcHwWw==
+X-Google-Smtp-Source: ABdhPJzmsDPja10p+s6JvU9EsydcbZcjfqieT2bhdVCFdIRgHZtajPr4w+vcCu/amxvvvDimJwUsMhsl/oc5oxwr66w=
+X-Received: by 2002:a25:c8c3:: with SMTP id y186mr31410670ybf.20.1638635715516;
+ Sat, 04 Dec 2021 08:35:15 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a0d:c906:0:0:0:0:0 with HTTP; Sat, 4 Dec 2021 08:35:15 -0800 (PST)
+In-Reply-To: <YaslQCg2G1pWUPVV@kroah.com>
+References: <20211203192148.585399-1-martin.fernandez@eclypsium.com>
+ <20211203192148.585399-6-martin.fernandez@eclypsium.com> <YaslQCg2G1pWUPVV@kroah.com>
+From:   Martin Fernandez <martin.fernandez@eclypsium.com>
+Date:   Sat, 4 Dec 2021 13:35:15 -0300
+Message-ID: <CAKgze5Yw6=PjY9+cn=FKX5UsiSon5rVOK_Gc-3Hs8dQspSFaYA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] drivers/node: Show in sysfs node's crypto capabilities
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        rafael@kernel.org, rppt@kernel.org, akpm@linux-foundation.org,
+        daniel.gutson@eclypsium.com, hughsient@gmail.com,
+        alex.bazhaniuk@eclypsium.com, alison.schofield@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
-MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D199715
+On 12/4/21, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> You forgot a Documentation/ABI/ update for this new sysfs file you
+> added :(
+>
 
-Nikos Fytilis (n-fit@live.com) changed:
+Damn, I forgot to add it to the patch. It will be in my next patch,
+this is what it looks like:
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |n-fit@live.com
-
---- Comment #64 from Nikos Fytilis (n-fit@live.com) ---
-Hi, i stumbled across this report through the dkms sfh github issues.
-
-I have a flex 5 with a 4500U and have not installed the dkms module. I am
-getting in_accel_[xyz]_raw in the sysfs directory of the iio device and they
-work (i can move the laptop and they change consistantly)
-
-however the buffer0/* files do not change at all. is this the same issue wi=
-th
-all of you?
-
-if so, a userland solution could be very easy - basically a edited iio proxy
-capable of using the raw values.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+diff --git a/Documentation/ABI/testing/sysfs-devices-node
+b/Documentation/ABI/testing/sysfs-devices-node
+new file mode 100644
+index 000000000000..ab46fdd3f6a8
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-devices-node
+@@ -0,0 +1,10 @@
++What:		/sys/devices/system/node/nodeX/crypto_capable
++Date:		October 2021
++Contact:	Martin Fernandez <martin.fernandez@eclypsium.com>
++Users:		fwupd
++Description:
++		This value is 1 if all system memory in this node is
++		marked with EFI_MEMORY_CPU_CRYPTO, indicating that the
++		system memory is capable of being protected with the
++		CPU=E2=80=99s memory cryptographic capabilities. It is 0
++		otherwise.
+\ No newline at end of file
