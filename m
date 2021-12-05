@@ -2,126 +2,102 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8539C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Dec 2021 06:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BE3C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Dec 2021 08:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231744AbhLEGHy (ORCPT
+        id S232159AbhLEIsC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 5 Dec 2021 01:07:54 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:50474 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231733AbhLEGHy (ORCPT
+        Sun, 5 Dec 2021 03:48:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229543AbhLEIsC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 5 Dec 2021 01:07:54 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 21875B80AD2;
-        Sun,  5 Dec 2021 06:04:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E941DC341C4;
-        Sun,  5 Dec 2021 06:04:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638684264;
-        bh=W+BhYvwRnMSxubxXem1oJbW5QQzLfaT+3Ll8Oy5A6SE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SjVUrnzS8KR5VE+LYjtbeQ/QzrcE/Rb8hpK9yGjp8ZosOfKj1TB058IdVdKhtqggE
-         fSi2A/rUtt7sDlG2xO1d+trZF+em3OmMqcpVnLV5ni3yMboqvWH9SJCroa46hsnq8U
-         +NSc9pCOwAGBAX6+6lUf1gUdsV1gvWmdCWpow44LXtA0cMjS754Lifh5fAjgI8LOhP
-         pSxQjwgoAEqgENEUtBYAKX01iv7Dw94krrsmALJ3iVlV7qWL6wXCJGGudkLL72UHdp
-         SAr1r6wehi/C5pQljbFUU6Z76q9Bl9kCLcrq1OXrXJotSIJC8iI6s+1XcEWLfK/orq
-         iVNkq0aA51WBg==
-Date:   Sun, 5 Dec 2021 08:04:12 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Martin Fernandez <martin.fernandez@eclypsium.com>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com
-Subject: Re: [PATCH v3 0/5] x86: Show in sysfs if a memory node is able to do
- encryption
-Message-ID: <YaxWXACBguZxWmKS@kernel.org>
-References: <20211203192148.585399-1-martin.fernandez@eclypsium.com>
+        Sun, 5 Dec 2021 03:48:02 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DB6C061751;
+        Sun,  5 Dec 2021 00:44:35 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id gt5so5510160pjb.1;
+        Sun, 05 Dec 2021 00:44:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=82WlVRMynLPTBi/+2o8jeTUhlynvGd8hPKsx8jxby9g=;
+        b=Kdo86afCn6h6eoyD+L4ozMAgAfdhchSqSDqboavdIkUJS/bHXFff5myT2W86EBYBuM
+         blDY0hQ3hq77qvw9dytur38yMYV9Odg24XiaADUmm+aFl2WcVxrv2ap0q19BkLTVH02O
+         8mBbjFL43biwvfl66rqj/HBr5R3fPKj+hji0qihH+cPlXkYGxJlc+smV7zBL3fEvnNYu
+         PazrQftlZeo6ny2VKyFgwuomX2+Lhio+mxfO3WWmY7Kx0BO18CYZCqFDlusC2x81KvHB
+         BkcxfTBkG7BLp49njfCIjkhqWHVxOg7b8B1E54FcL+lNNuEjdOwEJq3ZHT7xKOuO+Kxg
+         a2Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=82WlVRMynLPTBi/+2o8jeTUhlynvGd8hPKsx8jxby9g=;
+        b=pF0hyp9mi/bo6TjImarH3WflKpCjy4mLen3VbeFVjkkf9atV9bbBlyJ6rZhViabw2L
+         +l0PH3RfI/lruyY4dwz8sruQOjKnFqL7BwjKNIZaFDRCT7Rjm7kH/Ql0AJhWfm34z2z5
+         NjysT7ZTHcqHIYKQ3VfSIZMYBSCEjiyDNsZ1J2OBN9SKbU95IiFKfliqpKxwrsPUzlNs
+         xHo/xbpWzuFuQyGXHwzVpFseOKKBxqqrZ1hC32/P0bql0RC1s53pO9eybyiWnHf+XlJF
+         f08z65TS45xnEYiCgyEYjY3ZZYcE0kZefO1jBsTSxT3epwujC+PwEi3Vgw7nPJWokQ0j
+         2eUw==
+X-Gm-Message-State: AOAM532df3gHSycZQyBRtk+s4HTKyhM+tJQ86FgsVO6JISIRRrcwXpNo
+        VZ9Nnmw2gBt+Ijk7jfSJKzs=
+X-Google-Smtp-Source: ABdhPJyX7JvgMADL4ddKNITzVyH5qRbq5H+s1xQRlApOXZIUFase5dGyREXs1V8i+FdOE4tvO9Ntiw==
+X-Received: by 2002:a17:902:e302:b0:141:af98:b5ea with SMTP id q2-20020a170902e30200b00141af98b5eamr35234269plc.53.1638693874444;
+        Sun, 05 Dec 2021 00:44:34 -0800 (PST)
+Received: from localhost.localdomain ([94.177.118.54])
+        by smtp.gmail.com with ESMTPSA id pi17sm10535114pjb.34.2021.12.05.00.44.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Dec 2021 00:44:34 -0800 (PST)
+From:   Dongliang Mu <mudongliangabcd@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Irina Tirdea <irina.tirdea@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dongliang Mu <mudongliangabcd@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] driver: pmc_atom: free pmc->regmap when pmc_setup_clks fails
+Date:   Sun,  5 Dec 2021 16:44:19 +0800
+Message-Id: <20211205084419.2382395-1-mudongliangabcd@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211203192148.585399-1-martin.fernandez@eclypsium.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Martin,
+Smatch reports:
 
-On Fri, Dec 03, 2021 at 04:21:43PM -0300, Martin Fernandez wrote:
-> Show for each node if every memory descriptor in that node has the
-> EFI_MEMORY_CPU_CRYPTO attribute.
-> 
-> fwupd project plans to use it as part of a check to see if the users
-> have properly configured memory hardware encryption capabilities. It's
-> planned to make it part of a specification that can be passed to
-> people purchasing hardware. It's called Host Security ID:
-> https://fwupd.github.io/libfwupdplugin/hsi.html
-> 
-> This also can be useful in the future if NUMA decides to prioritize
-> nodes that are able to do encryption.
- 
-I'm missing a description about *how* the new APIs/ABIs are going to be
-used. This comment also applies to the changelogs of the patches that
-mostly describe what the patch does and do not describe why is it needed.
- 
-> Changes since v2:
-> 
-> e820__range_mark_crypto -> e820__range_mark_crypto_capable.
-> 
-> In e820__range_remove: Create a region with crypto capabilities
-> instead of creating one without it and then mark it.
-> 
-> 
-> Changes since v1:
-> 
-> Modify __e820__range_update to update the crypto capabilities of a
-> range; now this function will change the crypto capability of a range
-> if it's called with the same old_type and new_type. Rework
-> efi_mark_e820_regions_as_crypto_capable based on this.
-> 
-> Update do_add_efi_memmap to mark the regions as it creates them.
-> 
-> Change the type of crypto_capable in e820_entry from bool to u8.
-> 
-> Fix e820__update_table changes.
-> 
-> Remove memblock_add_crypto_capable. Now you have to add the region and
-> mark it then.
-> 
-> Better place for crypto_capable in pglist_data.
-> 
-> 
-> Martin Fernandez (5):
->   mm/memblock: Tag memblocks with crypto capabilities
->   mm/mmzone: Tag pg_data_t with crypto capabilities
->   Tag e820_entry with crypto capabilities
->   x86/efi: Tag e820_entries as crypto capable from EFI memmap
->   drivers/node: Show in sysfs node's crypto capabilities
-> 
->  arch/x86/include/asm/e820/api.h   |  1 +
->  arch/x86/include/asm/e820/types.h |  1 +
->  arch/x86/kernel/e820.c            | 59 ++++++++++++++++++++++++-------
->  arch/x86/platform/efi/efi.c       | 25 +++++++++++++
->  drivers/base/node.c               | 10 ++++++
->  include/linux/memblock.h          |  5 +++
->  include/linux/mmzone.h            |  3 ++
->  mm/memblock.c                     | 49 +++++++++++++++++++++++++
->  mm/page_alloc.c                   |  1 +
->  9 files changed, 142 insertions(+), 12 deletions(-)
-> 
-> -- 
-> 2.30.2
-> 
+drivers/platform/x86/pmc_atom.c:496
+pmc_setup_dev() warn: 'pmc->regmap' not released on lines: 496.
 
+Fix this by deallocating pm->regmap when pmc_setup_clks fails.
+
+Fixes: 282a4e4ce5f9("platform/x86: Enable Atom PMC platform clocks")
+Signed-off-by: Dongliang Mu <mudongliangabcd@gmail.com>
+---
+ drivers/platform/x86/pmc_atom.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index a9d2a4b98e57..e338c1572237 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -488,9 +488,11 @@ static int pmc_setup_dev(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	/* Register platform clocks - PMC_PLT_CLK [0..5] */
+ 	ret = pmc_setup_clks(pdev, pmc->regmap, data);
+-	if (ret)
++	if (ret) {
++		iounmap(pmc->regmap);
+ 		dev_warn(&pdev->dev, "platform clocks register failed: %d\n",
+ 			 ret);
++	}
+ 
+ 	pmc->init = true;
+ 	return ret;
 -- 
-Sincerely yours,
-Mike.
+2.25.1
+
