@@ -2,88 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CE6C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Dec 2021 17:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD4AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Dec 2021 22:02:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236596AbhLERcy (ORCPT
+        id S239569AbhLEWGK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 5 Dec 2021 12:32:54 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:56904 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232874AbhLERcy (ORCPT
+        Sun, 5 Dec 2021 17:06:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239561AbhLEWGK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 5 Dec 2021 12:32:54 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E725EB80ED4
-        for <platform-driver-x86@vger.kernel.org>; Sun,  5 Dec 2021 17:29:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BB8FCC341D1
-        for <platform-driver-x86@vger.kernel.org>; Sun,  5 Dec 2021 17:29:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638725364;
-        bh=FiRqywRcWQ464hjXIThDWDx4OXi/AjZ89/0RL+guwjQ=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Z4cchonoVaAZTp9RVr+4v9xfz4J69pXazi7NcFN8SBw/RR3IoIVz9tQEb5Nn8ZELg
-         kx+DB35ol2ZFjV201/bH20dffB1JZmrmoig3rJT1wkOHSy7xzPx4ivdWtjo2zvUkkJ
-         Ru5ZhxIoF9lhd8Ouv7rkP9nxxBnL0ZmmOvJQluKWN0iCMy+W5hhBrgohKc9+5+N0vY
-         54MKvmDrvHxTqYskv62QMswgc2IL4GunCw/33gXStaRBoMjx5Zp12+iq87b4+b/PeE
-         T0yUMrur7d+pBETbggzCu7nUHklUi4ZiXggy5O3aQbiiWsJ1U4/wXb06/gUqKBBLx4
-         7Sk+raM3dyd1g==
-Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id ADB4E611CC; Sun,  5 Dec 2021 17:29:24 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Sun, 05 Dec 2021 17:29:22 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: vladdrako007@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-sUwSRhxpww@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sun, 5 Dec 2021 17:06:10 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CCFC061714
+        for <platform-driver-x86@vger.kernel.org>; Sun,  5 Dec 2021 14:02:42 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id l25so35067945eda.11
+        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Dec 2021 14:02:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:from
+         :subject:content-transfer-encoding;
+        bh=zW57z/mHfDhkYIG5+O+nmTT3HcS8kaxpmLSDbRZdY6E=;
+        b=JSqe6iamjxa5N5Ktr5FkCXLznL4hB3Ci4Bzekjb+FEIRm8KTuroaIdEmQaCXEIhz+I
+         uukBgQsv/ItQV+fMQkn5xKnCjtLmNkXOngcXWvatveU67fizd7MsTZKgunaiHqGCdx2q
+         bhqKf+SQLDEEAVEKntyi/3BQZw640Krbe25PqR9V88tuUSO5zECpWRkqKKKSaQzk4KKE
+         gyqEawSMj7d6LJBm6zDOLsXMv2XtvKIkBr/OHGZE1OJJBwjnxLkpDqjHWZxQuvh5GyAr
+         rlKpXeXXWWoWSXRQz7BuWffC53PtGIgNgzypSa0mH9v0pRJ2vd2mxKvTgctkm+IfVk2U
+         KgWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:from:subject:content-transfer-encoding;
+        bh=zW57z/mHfDhkYIG5+O+nmTT3HcS8kaxpmLSDbRZdY6E=;
+        b=2KCaCYz+YypssVaPEF+5kGDcC/khP+EabDKhxH1F1bWbjlw0SVDaHsVH7Rhg6Cywm/
+         /FaRaGnysgKzmu/7TGCL1ciS9RnpdXfEU8kTXScmGcKnQXind2v6Ith16Kl6FXd0BeAG
+         uDPPwM1iQZoQ0DM/d5cS+Iwv3JKvM6I1A8aryoiWgFTqTKw0P09EulJHNOpDUaa9bakL
+         p3B5RkXhD6qwB7rOvwkLsqluAKfiW3k0GiF1gf+3LpC5V3CF2tKoi1pMn5aaV39PhgfB
+         VvtWAwsOnPhlyeGJ4OCxLSuSkbNTVeZzoOGIrLoaVVz676Zs9ecghcd6WfQJYYNEjSmc
+         6B4w==
+X-Gm-Message-State: AOAM531eU3pj+/4yEUBaAR1gIKdteoQ1Uzel6M6io2dEzwR5A+vFqvyL
+        4bUdYyWeGGHdwR6pzY8WGCw+B4avJBo=
+X-Google-Smtp-Source: ABdhPJx63M99EI1O7Cc9WOJJDRSnmT/iPLhpz+o1xOW6OEO6rnkJqb1JcwdV0/3oFdYkwhw8XQ5PhQ==
+X-Received: by 2002:a17:907:e8b:: with SMTP id ho11mr42503654ejc.430.1638741761167;
+        Sun, 05 Dec 2021 14:02:41 -0800 (PST)
+Received: from ?IPV6:2001:981:6fec:1:3b80:361e:51b3:b61d? ([2001:981:6fec:1:3b80:361e:51b3:b61d])
+        by smtp.gmail.com with ESMTPSA id r11sm6806537edd.70.2021.12.05.14.02.40
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Dec 2021 14:02:40 -0800 (PST)
+Message-ID: <51b6676b-0000-ba23-0003-1b7e53158ef4@gmail.com>
+Date:   Sun, 5 Dec 2021 23:02:40 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Content-Language: en-US
+To:     platform-driver-x86@vger.kernel.org
+From:   Ferry Toth <fntoth@gmail.com>
+Subject: resource sanity check, mapping multiple BARs
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hi,
 
---- Comment #188 from Vladdrako (vladdrako007@gmail.com) ---
-> P8Z68-V is not in the list of supported boards, could you try add it to t=
-he
-> list (asus_wmi_info_table)?=20
+Between v5.15 and v5.16-rc the following (unrelated?) errors are 
+appearing in kernel.log:
 
-Added DMI_EXACT_MATCH_ASUS_BOARD_NAME("P8Z68-V LX", NULL),
-Nothing changed.
+resource sanity check: requesting [mem 0xff200000-0xff3fffff], which 
+spans more than 0000:00:0e.0 [mem 0xff298000-0xff29bfff]
+caller devm_ioremap+0x45/0x80 mapping multiple BARs
+pmd_set_huge: Cannot satisfy [mem 0x05e00000-0x06000000] with a 
+huge-page mapping due to MTRR override.
 
-> If it does not help, could you attach dump of your bios? (acpidump -b -n
-> DSDT). I  assume that bios does not support WMI methods from that patch a=
-nd
-> need to search fully different workaround.
+This is on Intel Edison (Merrifield), which has (from lspci):
 
-Here dump from CH341A https://www.upload.ee/files/13692045/P8Z68-V_LX.Bin.h=
-tml
+00:0e.0 System peripheral: Intel Corporation Device 119b (rev 01)
+     Flags: fast devsel, IRQ 25
+     Memory at ff298000 (32-bit, non-prefetchable) [size=16K]
+     Memory at ff2a2000 (32-bit, non-prefetchable) [size=4K]
+     Capabilities: [b0] Power Management version 3
+     Capabilities: [b8] Vendor Specific Information: Len=08 <?>
+     Capabilities: [c0] PCI-X non-bridge device
+     Capabilities: [100] Vendor Specific Information: ID=0000 Rev=0 
+Len=024 <?>
 
---=20
-You may reply to this email to add a comment.
+Any suggestions on the cause of this would be welcome.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Ferry
+
