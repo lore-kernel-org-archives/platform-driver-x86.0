@@ -2,113 +2,89 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08A8C43217
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Dec 2021 15:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA896C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Dec 2021 17:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350189AbhLFP2X (ORCPT
+        id S1345368AbhLFSCE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Dec 2021 10:28:23 -0500
-Received: from mga03.intel.com ([134.134.136.65]:4144 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1386075AbhLFP0H (ORCPT
+        Mon, 6 Dec 2021 13:02:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236253AbhLFSCE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Dec 2021 10:26:07 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10189"; a="237275625"
-X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
-   d="scan'208";a="237275625"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 07:15:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
-   d="scan'208";a="579399542"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Dec 2021 07:15:18 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 31B91144; Mon,  6 Dec 2021 17:15:24 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Eric Piel <eric.piel@tremplin-utc.net>,
-        Mark Gross <markgross@kernel.org>
-Subject: [PATCH v1 1/1] platform/x86: hp_accel: Use SIMPLE_DEV_PM_OPS() for PM ops
-Date:   Mon,  6 Dec 2021 17:15:21 +0200
-Message-Id: <20211206151521.22578-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
+        Mon, 6 Dec 2021 13:02:04 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1BCDC061746
+        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Dec 2021 09:58:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 77287B811E1
+        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Dec 2021 17:58:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 253D1C341E7
+        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Dec 2021 17:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638813513;
+        bh=r3tiiaEsWyl+fLhyS/O+ltk7hqXM8ckRjxoro547S3Q=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=YomTGLb9PUqLaLOQGnYZh4kXYKItaN0Xqgpo2Krj1rT26+9ukwfMEORiBKuXWesIo
+         ASalK6tbUARpmd0n0sat5lWmA9QJ9XtLukS5JldAO+drkpx79yrcx3f3i6QVcTXXba
+         6KX+D8ZNzNujnxIRC/2Hz/32AaNYjYQeld1qkfKtdKUbIvK0V970uLHUblldxL2Uis
+         uJTt8O4L+IvOzszPs3v3aaX9JNSBWaCwUpO19YdCGGV2yiqzhMyslFFmzbtRccd+aQ
+         dW9cfRjG9yvE0EWwHwzPPMUv79cmLOwsyWkFT8WoGj0721MDt4vkzDqVHpcUKo6C8D
+         4zFE0CZjtd6TA==
+Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
+        id 0B5A661182; Mon,  6 Dec 2021 17:58:33 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Mon, 06 Dec 2021 17:58:30 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: michael@theoddone.net
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-204807-215701-TwCGuij6ma@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-After the commit 34570a898eef ("platform/x86: hp_accel: Remove
-_INI method call") there is no need to have separate methods for
-resume and restore, hence we may fold them together and use
-SIMPLE_DEV_PM_OPS() for PM ops.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-While at it, switch to use __maybe_unused attribute.
+Michael Altizer (michael@theoddone.net) changed:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/hp_accel.c | 27 ++++-----------------------
- 1 file changed, 4 insertions(+), 23 deletions(-)
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |michael@theoddone.net
 
-diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
-index 435a91fe2568..e9f852f7c27f 100644
---- a/drivers/platform/x86/hp_accel.c
-+++ b/drivers/platform/x86/hp_accel.c
-@@ -355,39 +355,20 @@ static int lis3lv02d_remove(struct platform_device *device)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int lis3lv02d_suspend(struct device *dev)
-+static int __maybe_unused lis3lv02d_suspend(struct device *dev)
- {
- 	/* make sure the device is off when we suspend */
- 	lis3lv02d_poweroff(&lis3_dev);
- 	return 0;
- }
- 
--static int lis3lv02d_resume(struct device *dev)
-+static int __maybe_unused lis3lv02d_resume(struct device *dev)
- {
- 	lis3lv02d_poweron(&lis3_dev);
- 	return 0;
- }
- 
--static int lis3lv02d_restore(struct device *dev)
--{
--	lis3lv02d_poweron(&lis3_dev);
--	return 0;
--}
--
--static const struct dev_pm_ops hp_accel_pm = {
--	.suspend = lis3lv02d_suspend,
--	.resume = lis3lv02d_resume,
--	.freeze = lis3lv02d_suspend,
--	.thaw = lis3lv02d_resume,
--	.poweroff = lis3lv02d_suspend,
--	.restore = lis3lv02d_restore,
--};
--
--#define HP_ACCEL_PM (&hp_accel_pm)
--#else
--#define HP_ACCEL_PM NULL
--#endif
-+static SIMPLE_DEV_PM_OPS(hp_accel_pm, lis3lv02d_suspend, lis3lv02d_resume);
- 
- /* For the HP MDPS aka 3D Driveguard */
- static struct platform_driver lis3lv02d_driver = {
-@@ -395,7 +376,7 @@ static struct platform_driver lis3lv02d_driver = {
- 	.remove	= lis3lv02d_remove,
- 	.driver	= {
- 		.name	= "hp_accel",
--		.pm	= HP_ACCEL_PM,
-+		.pm	= &hp_accel_pm,
- 		.acpi_match_table = lis3lv02d_device_ids,
- 	},
- };
--- 
-2.33.0
+--- Comment #189 from Michael Altizer (michael@theoddone.net) ---
+Probably not the best place to put this, but I can confirm that this patch
+appears to work on my new ASUS motherboard after updating the asus_wmi_boar=
+ds
+table with its board name ("ROG STRIX B550-A GAMING" - it's just a B550-F w=
+ith
+a different color scheme).
 
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
