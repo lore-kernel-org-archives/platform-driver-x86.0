@@ -2,178 +2,153 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F271C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Dec 2021 18:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAAEC4321E
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Dec 2021 19:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346891AbhLFS31 (ORCPT
+        id S1349558AbhLFUBW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Dec 2021 13:29:27 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:57400 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346873AbhLFS31 (ORCPT
+        Mon, 6 Dec 2021 15:01:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1349551AbhLFUBC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Dec 2021 13:29:27 -0500
-Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 93E411EC04EC;
-        Mon,  6 Dec 2021 19:25:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1638815152;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=IQf1Aykvr0b9qh7v/aw8uwWh6TGGRbXZxaugyfZJEIU=;
-        b=jQJDfprBX9STJpmWLtePKc1tSSDwspxyBah1ghZ3nAe8tJ5k0wXElkUD+W6a30r7AWnl27
-        FGffroW/b0INl0Z1xMkePlp5g2X1IjvYEFFUVDpjwqiR8fVJZVyky8QAhUNlgw8/ddhPU2
-        6ByUvko7IcMgRj9+XIxxvhr6IaIm47k=
-Date:   Mon, 6 Dec 2021 19:25:54 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v7 13/45] x86/sev: Check the vmpl level
-Message-ID: <Ya5VsraetesqEkRi@zn.tnic>
-References: <20211110220731.2396491-1-brijesh.singh@amd.com>
- <20211110220731.2396491-14-brijesh.singh@amd.com>
+        Mon, 6 Dec 2021 15:01:02 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 674A6C0698C3;
+        Mon,  6 Dec 2021 11:57:32 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id z5so48110916edd.3;
+        Mon, 06 Dec 2021 11:57:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MDbD429x7EGhGMhsVDh9494mFqKE/H+dYpI7efBswy4=;
+        b=qyHAG2uEzGWAT0b3t0AT1UWTaT7NTaH8qGdIPfOphRXY0HMHmVtRT9PMuxqeZU4i7t
+         vDUVGwg+8WtDOjZ2/hghyXXhffb6oVw184AaM/Ib4u3T3hPhXJAaS/0cdsWUI3xGT3hX
+         BfZ0/qeiHd3FOLdK4PIe3izOUqYYK2W+bnY1/FKdscbcvQ9gt/vXZay3kbkZwuRArqPD
+         upUx6fnXzcThe1hfrh+04gD60srBXbRI5Xt4MERGIvIlYxKLC3lXPac+Tw7Wg6WrrjJj
+         e1cRzJcTYVtillCjhTHiFqHhs+fehdvFPxUtI6qbT7Naf1Ph9v0PCawauveywl8bfngc
+         F/Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MDbD429x7EGhGMhsVDh9494mFqKE/H+dYpI7efBswy4=;
+        b=AP9qe8mARfaLgXHIeGMyyastGGGZS/R+llUvtlBAW3OLyIPLV8l9GLyMgSqkxeg4CQ
+         OeSmKYNDzRw4T9LEN3zxCcEJ/Un3/Ei/7LGurhr6G/zeORiwVVM29SKAzV+IPDL16nI1
+         tTmSaJRK35F9AlWbN2SUIQt4uD4lhFlgSGEuTLiJ5xYPofwzFFW9DMPxOVjoq7Okb4AD
+         jwMAi1KHuAuN02fcAKRlbcXUDvHXGe34PsS+HVSaubyNxew7R41+51fTifpTvUcbZ2Cp
+         7vopiLZC+tv42YCVLc0fpPiqAADdP28FSp9Z+WtDKx72u97TPwAN811MaYXDJ3agPPxp
+         ifEA==
+X-Gm-Message-State: AOAM532HDfRr2DV8ZlArgJvF9H4NYxLjUY8CNp3ycr2vDgZCXDux3Ee8
+        TdlGbdk6+gLBOu14PSKdUjilEsmSO48nb5EqBas=
+X-Google-Smtp-Source: ABdhPJzWAtk+egcPYv+YJzS0Q5UW6JXgWqCbk4YgT7bZZlKPZAsHB+shis4xeMBPhZKqn9hbkv+BiK/vOUsqe4ZlBEg=
+X-Received: by 2002:a17:907:869e:: with SMTP id qa30mr45495850ejc.356.1638820650915;
+ Mon, 06 Dec 2021 11:57:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211110220731.2396491-14-brijesh.singh@amd.com>
+References: <20211206093318.45214-1-hdegoede@redhat.com> <20211206093318.45214-15-hdegoede@redhat.com>
+In-Reply-To: <20211206093318.45214-15-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 6 Dec 2021 21:55:56 +0200
+Message-ID: <CAHp75Vc+z0nqUXbqrX9YXi2+rzz4BKT7maFipyB8QgOEKQ9SPw@mail.gmail.com>
+Subject: Re: [PATCH v4 14/20] mfd: intel_soc_pmic_chtwc: Add cht_wc_model data
+ to struct intel_soc_pmic
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Yauhen Kharuzhy <jekhor@gmail.com>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 10, 2021 at 04:06:59PM -0600, Brijesh Singh wrote:
-> Virtual Machine Privilege Level (VMPL) is an optional feature in the
-> SEV-SNP architecture, which allows a guest VM to divide its address space
-> into four levels. The level can be used to provide the hardware isolated
-> abstraction layers with a VM.
+On Mon, Dec 6, 2021 at 11:35 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Tablet / laptop designs using an Intel Cherry Trail x86 main SoC with
+> an Intel Whiskey Cove PMIC do not use a single standard setup for
+> the charger, fuel-gauge and other chips surrounding the PMIC /
+> charging+data USB port.
+>
+> Unlike what is normal on x86 this diversity in designs is not handled
+> by the ACPI tables. On 2 of the 3 known designs there are no standard
+> (PNP0C0A) ACPI battery devices and on the 3th design the ACPI battery
+> device does not work under Linux due to it requiring non-standard
+> and undocumented ACPI behavior.
+>
+> So to make things work under Linux we use native charger and fuel-gauge
+> drivers on these devices, re-using the native drivers used on ARM boards
+> with the same charger / fuel-gauge ICs.
+>
+> This requires various MFD-cell drivers for the CHT-WC PMIC cells to
+> know which model they are exactly running on so that they can e.g.
+> instantiate an I2C-client for the right model charger-IC (the charger
+> is connected to an I2C-controller which is part of the PMIC).
+>
+> Rather then duplicating DMI-id matching to check which model we are
+> running on in each MFD-cell driver, add a check for this to the
+> shared drivers/mfd/intel_soc_pmic_chtwc.c code by using a
+> DMI table for all 3 known models:
+>
+> 1. The GPD Win and GPD Pocket mini-laptops, these are really 2 models
+> but the Pocket re-uses the GPD Win's design in a different housing:
+>
+> The WC PMIC is connected to a TI BQ24292i charger, paired with
+> a Maxim MAX17047 fuelgauge + a FUSB302 USB Type-C Controller +
+> a PI3USB30532 USB switch, for a fully functional Type-C port.
+>
+> 2. The Xiaomi Mi Pad 2:
+>
+> The WC PMIC is connected to a TI BQ25890 charger, paired with
+> a TI BQ27520 fuelgauge, using the TI BQ25890 for BC1.2 charger type
+> detection, for a USB-2 only Type-C port without PD.
+>
+> 3. The Lenovo Yoga Book YB1-X90 / Lenovo Yoga Book YB1-X91 series:
+>
+> The WC PMIC is connected to a TI BQ25892 charger, paired with
+> a TI BQ27542 fuelgauge, using the WC PMIC for BC1.2 charger type
+> detection and using the BQ25892's Mediatek Pump Express+ (1.0)
+> support to enable charging with up to 12V through a micro-USB port.
 
-That sentence needs improving.
+...
 
-> The VMPL0 is the highest privilege, and
-> VMPL3 is the least privilege. Certain operations must be done by the VMPL0
-> software, such as:
-> 
-> * Validate or invalidate memory range (PVALIDATE instruction)
-> * Allocate VMSA page (RMPADJUST instruction when VMSA=1)
-> 
-> The initial SEV-SNP support assumes that the guest kernel is running on
+> +enum intel_cht_wc_models {
+> +       INTEL_CHT_WC_UNKNOWN,
+> +       INTEL_CHT_WC_GPD_WIN_POCKET,
+> +       INTEL_CHT_WC_XIAOMI_MIPAD2,
+> +       INTEL_CHT_WC_LENOVO_YOGABOOK1,
+> +};
 
-assumes? I think it is "requires".
+...
 
-> VMPL0. Let's add a check to make sure that kernel is running at VMPL0
+> +       enum intel_cht_wc_models cht_wc_model;
 
-s/Let's //
+I'm wondering what will you do when something similar will be needed
+for another PMIC?
 
-> before continuing the boot. There is no easy method to query the current
-> VMPL level, so use the RMPADJUST instruction to determine whether its
+I see possible solutions to eliminate additional churn:
+- make just one enum for all models (can be done now, can be renamed later)
+- make a union if we have such situation
 
-"... whether the guest is running at VMPL0."
+because I wouldn't like to have another field for each possible
+variant of PMIC in the generic structure.
 
-> booted at the VMPL0.
-> 
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/boot/compressed/sev.c    | 34 ++++++++++++++++++++++++++++---
->  arch/x86/include/asm/sev-common.h |  1 +
->  arch/x86/include/asm/sev.h        | 16 +++++++++++++++
->  3 files changed, 48 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-> index e525fa74a551..21feb7f4f76f 100644
-> --- a/arch/x86/boot/compressed/sev.c
-> +++ b/arch/x86/boot/compressed/sev.c
-> @@ -124,6 +124,29 @@ static inline bool sev_snp_enabled(void)
->  	return sev_status & MSR_AMD64_SEV_SNP_ENABLED;
->  }
->  
-> +static bool is_vmpl0(void)
-> +{
-> +	u64 attrs;
-> +	int err;
-> +
-> +	/*
-> +	 * There is no straightforward way to query the current VMPL level. The
-> +	 * simplest method is to use the RMPADJUST instruction to change a page
-> +	 * permission to a VMPL level-1, and if the guest kernel is launched at
-> +	 * a level <= 1, then RMPADJUST instruction will return an error.
-> +	 */
-
-So I was wondering what this is changing because if the change you do is
-relevant, you'd have to undo it.
-
-But looking at RMPADJUST, TARGET_PERM_MASK is 0 for target VMPL1 so
-you're basically clearing all permissions for boot_ghcb_page on VMPL1.
-Which is fine currently as we do only VMPL0 but pls write that out
-explicitly what you're doing here and why it is ok to use RMPADJUST
-without having to restore any changes it has done to the RMP table.
-
-> +	attrs = 1;
-> +
-> +	/*
-> +	 * Any page-aligned virtual address is sufficient to test the VMPL level.
-> +	 * The boot_ghcb_page is page aligned memory, so lets use for the test.
-> +	 */
-> +	if (rmpadjust((unsigned long)&boot_ghcb_page, RMP_PG_SIZE_4K, attrs))
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
->  static bool do_early_sev_setup(void)
->  {
->  	if (!sev_es_negotiate_protocol())
-> @@ -132,10 +155,15 @@ static bool do_early_sev_setup(void)
->  	/*
->  	 * SNP is supported in v2 of the GHCB spec which mandates support for HV
->  	 * features. If SEV-SNP is enabled, then check if the hypervisor supports
-> -	 * the SEV-SNP features.
-> +	 * the SEV-SNP features and is launched at VMPL-0 level.
-
-"VMPL0" - no hyphen - like in the APM. Below too.
-
->  	 */
-> -	if (sev_snp_enabled() && !(sev_hv_features & GHCB_HV_FT_SNP))
-> -		sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
-> +	if (sev_snp_enabled()) {
-> +		if (!(sev_hv_features & GHCB_HV_FT_SNP))
-> +			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
-> +
-> +		if (!is_vmpl0())
-> +			sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
-> +	}
->  
->  	if (set_page_decrypted((unsigned long)&boot_ghcb_page))
->  		return false;
+Hence the question, does it make sense to just name it (enum and
+member) less cht_wc oriented?
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+With Best Regards,
+Andy Shevchenko
