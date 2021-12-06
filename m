@@ -2,85 +2,73 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7E3C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Dec 2021 21:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541A9C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Dec 2021 21:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352160AbhLFVoQ (ORCPT
+        id S245334AbhLFVrS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Dec 2021 16:44:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42910 "EHLO
+        Mon, 6 Dec 2021 16:47:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60241 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1352187AbhLFVoO (ORCPT
+        by vger.kernel.org with ESMTP id S240122AbhLFVrS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Dec 2021 16:44:14 -0500
+        Mon, 6 Dec 2021 16:47:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638826844;
+        s=mimecast20190719; t=1638827028;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=veukaapGBdz2yq7cvoWrlyqpvVVcueT7D3xH6m4YqRY=;
-        b=ZIp1TxwzJF1jpEQWPIjYHElD1JK3AuGfEREYfAA/Za3xT4qHeQqj2nM2/wSr6zaf3ycdmH
-        C6Gk1erUcvZ25+WkCjvSSLc+YiHu3smSeSHK37vOdQRCx6yTR+gLp61JyiBiZPNGnusCdE
-        ZI/kr5VJJW0MRTdvE7puUMolMIZ/cfE=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Z8x4Za6C1SKdjmI4dd+6+FORy8khSlP5uUZL1WRSnZI=;
+        b=K13uBl1CPrGl6C6GhQKbCnb4ZcX+I5G7yAFGrdBOFOuKefmf91KHokdWzynvv10sLHp4rs
+        33Lx1a5HK0tBHcXdKADyDewaeasqm7Lah83Zi2bR93Ud6Oli1UI2Ab7DrC90wKrkVSapJN
+        2ByulV7PrWdwCQI96JX06mSAezN3z8c=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-336-vAoHDYiSN1GNr1TseuONYg-1; Mon, 06 Dec 2021 16:40:43 -0500
-X-MC-Unique: vAoHDYiSN1GNr1TseuONYg-1
-Received: by mail-ed1-f71.google.com with SMTP id p4-20020aa7d304000000b003e7ef120a37so9411472edq.16
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Dec 2021 13:40:43 -0800 (PST)
+ us-mta-502-VpK4GedRMZSIRNizzZMkZg-1; Mon, 06 Dec 2021 16:43:47 -0500
+X-MC-Unique: VpK4GedRMZSIRNizzZMkZg-1
+Received: by mail-ed1-f70.google.com with SMTP id eg20-20020a056402289400b003eb56fcf6easo9430840edb.20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Dec 2021 13:43:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=veukaapGBdz2yq7cvoWrlyqpvVVcueT7D3xH6m4YqRY=;
-        b=HmWaQ+2bZ4l4FBM95T8frh4qUCvHY/scITEbHB/qzZOnpsCUTrLqoi/jbcW6+d5068
-         y0uFaEOsl/K497MpC3i+d8A3lVj+kQ/AJ+8wgpwLZwzbVWkKrMTNkpR7bYzIKbd+STz7
-         QW7sHAOA8y/Z/p0VBWGKOMtMVUbd4+NXVHqXbv1YGFMKuTtq7xBUnGfgoaXuxjbRR3CZ
-         0FCfyba35ikvCZZ0lIgIbXjm/qTbmusdsaA/N/NqXr+Fu0l0kMWxJRZO8m750kwEw4+V
-         23lkxFpsecfWu4jFBqjGxYGQmhP9RZJbR3Q21VELWStc1qqZz4DE3lG6ssw9VcnQ1Mii
-         a+Pg==
-X-Gm-Message-State: AOAM530EU6/MWwJ32pO2as+sex7L+cM0KuWwddvQBPWwi/Hx9gXqqAo9
-        D6Nf+vryuj8T6sVcXF992vrkwBX4OnF9sj1dgadXmR35Ho2YNoqG3FMigWRJDxldzS8p3Rkrtz+
-        ops2gGXg44lSTJ7eimUcF2N9OGgPtUdCVLg==
-X-Received: by 2002:a05:6402:348b:: with SMTP id v11mr2597933edc.276.1638826842505;
-        Mon, 06 Dec 2021 13:40:42 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwKc5sLVaRUlJAvnik7YO6sicX6i5fywo2lsr7E1JoY3p6ePADfa2FkOmTTHz54PEMiMunTqg==
-X-Received: by 2002:a05:6402:348b:: with SMTP id v11mr2597904edc.276.1638826842297;
-        Mon, 06 Dec 2021 13:40:42 -0800 (PST)
+        bh=Z8x4Za6C1SKdjmI4dd+6+FORy8khSlP5uUZL1WRSnZI=;
+        b=0R2t2MAdGB5wXp3f7jRrAy2FNlMmbcWbfECbF+LYwTZ0OiVMiADyaQyZEdRX7AbR/A
+         I/ngIcF42wGVULte1jvdll+8a1E49etiHY6jdGjBr/FQ4lBkaNS5OB6UPCDUdy2ygXNu
+         9IHDE2ZCRD1W+sR933LyfLGuDjU7O9RpwEybEEDs46ocOVeEboBfS54sJPPmEfqTPO+d
+         hb1MPioVRhuMEIPf2EDZir2b8YlieutfM8/1GZQUhrAWiKdTvqfeyX3+rk9eaXWr4SrG
+         rjKG6H+b9RA9i7Ny3vuO05+clGIUD3Xkf+GN4XPod0Sncak+ptABYaqnbKsWOc32kOAE
+         JGWg==
+X-Gm-Message-State: AOAM533kX6bgOoLE4mFXJYCXvyi3Dlp9HkeepEUxUjD0zXQwnl4oVWcT
+        srI4RnlFRVJbKGPe/5FDVbNVzYmI3sKhVVUYmsZPVr+bRqI0I7Hg7KrSxzfvNHJ+urMIBayMyQJ
+        44zL70NywkAvNVdMF0rsxtxYMGzhnjdDDFA==
+X-Received: by 2002:a05:6402:254f:: with SMTP id l15mr2560664edb.12.1638827026526;
+        Mon, 06 Dec 2021 13:43:46 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy4MsBIVkMvpki2o2EhIDEFsFDRxUuVK9K73jj6UOYn9igl17c+n/RVxAb0jg1mF5zcNeftbw==
+X-Received: by 2002:a05:6402:254f:: with SMTP id l15mr2560637edb.12.1638827026303;
+        Mon, 06 Dec 2021 13:43:46 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id qk40sm7232823ejc.2.2021.12.06.13.40.41
+        by smtp.gmail.com with ESMTPSA id x14sm7238396ejs.124.2021.12.06.13.43.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Dec 2021 13:40:41 -0800 (PST)
-Message-ID: <e0c42dca-9500-d4c8-ab93-c958a3b23348@redhat.com>
-Date:   Mon, 6 Dec 2021 22:40:41 +0100
+        Mon, 06 Dec 2021 13:43:45 -0800 (PST)
+Message-ID: <8138caf0-8c4d-de5f-6643-5da3214d3563@redhat.com>
+Date:   Mon, 6 Dec 2021 22:43:45 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [EXTERNAL] Re: [PATCH 2/5] platform: surface: Propagate ACPI
- Dependency
+Subject: Re: [PATCH v1 1/1] platform/x86: hp_accel: Use SIMPLE_DEV_PM_OPS()
+ for PM ops
 Content-Language: en-US
-To:     Jarrett Schultz <jaschultz@microsoft.com>,
-        Jarrett Schultz <jaschultzms@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Gross <markgross@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>
-References: <20211202191630.12450-1-jaschultz@microsoft.com>
- <20211202191630.12450-3-jaschultz@microsoft.com>
- <639583df-a54a-eb9b-91ad-a60612a930b0@redhat.com>
- <BL0PR2101MB1316DFA13C3AB1A6620A6CA3A56A9@BL0PR2101MB1316.namprd21.prod.outlook.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Eric Piel <eric.piel@tremplin-utc.net>,
+        Mark Gross <markgross@kernel.org>
+References: <20211206151521.22578-1-andriy.shevchenko@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <BL0PR2101MB1316DFA13C3AB1A6620A6CA3A56A9@BL0PR2101MB1316.namprd21.prod.outlook.com>
+In-Reply-To: <20211206151521.22578-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -89,66 +77,15 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/3/21 18:34, Jarrett Schultz wrote:
+On 12/6/21 16:15, Andy Shevchenko wrote:
+> After the commit 34570a898eef ("platform/x86: hp_accel: Remove
+> _INI method call") there is no need to have separate methods for
+> resume and restore, hence we may fold them together and use
+> SIMPLE_DEV_PM_OPS() for PM ops.
 > 
+> While at it, switch to use __maybe_unused attribute.
 > 
->> -----Original Message-----
->> From: Hans de Goede <hdegoede@redhat.com>
->> Sent: Friday, December 3, 2021 1:59 AM
->> To: Jarrett Schultz <jaschultzms@gmail.com>; Rob Herring
->> <robh+dt@kernel.org>; Andy Gross <agross@kernel.org>; Bjorn Andersson
->> <bjorn.andersson@linaro.org>; Mark Gross <markgross@kernel.org>;
->> Maximilian Luz <luzmaximilian@gmail.com>
->> Cc: linux-arm-msm@vger.kernel.org; platform-driver-x86@vger.kernel.org;
->> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Felipe Balbi
->> <balbi@kernel.org>; Jarrett Schultz <jaschultz@microsoft.com>
->> Subject: [EXTERNAL] Re: [PATCH 2/5] platform: surface: Propagate ACPI
->> Dependency
->>
->> Hi Jarett,
->>
->> On 12/2/21 20:16, Jarrett Schultz wrote:
->>> Since the Surface XBL Driver does not depend on ACPI, the
->>> platform/surface directory as a whole no longer depends on ACPI. With
->>> respect to this, the ACPI dependency is moved into each config that
->>> depends on ACPI individually.
->>>
->>> Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
->>
->> I think I will already merge this patch into the pdx86 tree:
->>
->> https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.k
->> ernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fpdx86%2Fplatform-
->> drivers-
->> x86.git%2F&amp;data=04%7C01%7Cjaschultz%40microsoft.com%7C0ab6fcc6
->> 4a5c4fd8657308d9b64391dd%7C72f988bf86f141af91ab2d7cd011db47%7C0
->> %7C0%7C637741223627024908%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC
->> 4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&
->> amp;sdata=fEszuAgBLL3g2Z9Lh3DPQ%2BlzrWZR3o6aUst6fDmLOrE%3D&amp
->> ;reserved=0
->>
->> While we are waiting for the rest of the series to get hashed out.
->>
->> But as already pointed out by Trilok Soni your From: and Signed-off-by email
->> addresses don't match.
->>
->> I can fix up the From to match the Signed-off-by while I apply this, but before
->> I do that I wanted to check with you that setting both to "Jarrett Schultz
->> <jaschultz@microsoft.com>" is the right thing to do ?
->>
->> Regards,
->>
->> Hans
->>
->>
-> 
-> Hans,
-> 
-> Yes, that is the correct email. Still trying to get all the kinks worked out, I appreciate your patience.
-
-Ok, I've merged this patch now, so you can drop it from the next version of
-the series.
-
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -167,101 +104,65 @@ Regards,
 Hans
 
 
-
-
-
->>> ---
->>>
->>> Changes in v3:
->>>  - Further propagated ACPI dependecy to SURFACE_AGGREGATOR
->>>
->>> ---
->>>
->>> Changes in v2:
->>>  - Created to propagate ACPI dependency
->>> ---
->>>  drivers/platform/surface/Kconfig            | 7 ++++++-
->>>  drivers/platform/surface/aggregator/Kconfig | 1 +
->>>  2 files changed, 7 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/platform/surface/Kconfig
->>> b/drivers/platform/surface/Kconfig
->>> index 3105f651614f..5f0578e25f71 100644
->>> --- a/drivers/platform/surface/Kconfig
->>> +++ b/drivers/platform/surface/Kconfig
->>> @@ -5,7 +5,6 @@
->>>
->>>  menuconfig SURFACE_PLATFORMS
->>>  	bool "Microsoft Surface Platform-Specific Device Drivers"
->>> -	depends on ACPI
->>>  	default y
->>>  	help
->>>  	  Say Y here to get to see options for platform-specific device
->>> drivers @@ -30,12 +29,14 @@ config SURFACE3_WMI
->>>
->>>  config SURFACE_3_BUTTON
->>>  	tristate "Power/home/volume buttons driver for Microsoft Surface 3
->> tablet"
->>> +	depends on ACPI
->>>  	depends on KEYBOARD_GPIO && I2C
->>>  	help
->>>  	  This driver handles the power/home/volume buttons on the
->> Microsoft Surface 3 tablet.
->>>
->>>  config SURFACE_3_POWER_OPREGION
->>>  	tristate "Surface 3 battery platform operation region support"
->>> +	depends on ACPI
->>>  	depends on I2C
->>>  	help
->>>  	  This driver provides support for ACPI operation @@ -126,6 +127,7
->>> @@ config SURFACE_DTX
->>>
->>>  config SURFACE_GPE
->>>  	tristate "Surface GPE/Lid Support Driver"
->>> +	depends on ACPI
->>>  	depends on DMI
->>>  	help
->>>  	  This driver marks the GPEs related to the ACPI lid device found on
->>> @@ -135,6 +137,7 @@ config SURFACE_GPE
->>>
->>>  config SURFACE_HOTPLUG
->>>  	tristate "Surface Hot-Plug Driver"
->>> +	depends on ACPI
->>>  	depends on GPIOLIB
->>>  	help
->>>  	  Driver for out-of-band hot-plug event signaling on Microsoft
->>> Surface @@ -154,6 +157,7 @@ config SURFACE_HOTPLUG
->>>
->>>  config SURFACE_PLATFORM_PROFILE
->>>  	tristate "Surface Platform Profile Driver"
->>> +	depends on ACPI
->>>  	depends on SURFACE_AGGREGATOR_REGISTRY
->>>  	select ACPI_PLATFORM_PROFILE
->>>  	help
->>> @@ -176,6 +180,7 @@ config SURFACE_PLATFORM_PROFILE
->>>
->>>  config SURFACE_PRO3_BUTTON
->>>  	tristate "Power/home/volume buttons driver for Microsoft Surface
->> Pro 3/4 tablet"
->>> +	depends on ACPI
->>>  	depends on INPUT
->>>  	help
->>>  	  This driver handles the power/home/volume buttons on the
->> Microsoft Surface Pro 3/4 tablet.
->>> diff --git a/drivers/platform/surface/aggregator/Kconfig
->>> b/drivers/platform/surface/aggregator/Kconfig
->>> index fd6dc452f3e8..cab020324256 100644
->>> --- a/drivers/platform/surface/aggregator/Kconfig
->>> +++ b/drivers/platform/surface/aggregator/Kconfig
->>> @@ -4,6 +4,7 @@
->>>  menuconfig SURFACE_AGGREGATOR
->>>  	tristate "Microsoft Surface System Aggregator Module Subsystem
->> and Drivers"
->>>  	depends on SERIAL_DEV_BUS
->>> +	depends on ACPI
->>>  	select CRC_CCITT
->>>  	help
->>>  	  The Surface System Aggregator Module (Surface SAM or SSAM) is an
->>>
+> ---
+>  drivers/platform/x86/hp_accel.c | 27 ++++-----------------------
+>  1 file changed, 4 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
+> index 435a91fe2568..e9f852f7c27f 100644
+> --- a/drivers/platform/x86/hp_accel.c
+> +++ b/drivers/platform/x86/hp_accel.c
+> @@ -355,39 +355,20 @@ static int lis3lv02d_remove(struct platform_device *device)
+>  	return 0;
+>  }
+>  
+> -#ifdef CONFIG_PM_SLEEP
+> -static int lis3lv02d_suspend(struct device *dev)
+> +static int __maybe_unused lis3lv02d_suspend(struct device *dev)
+>  {
+>  	/* make sure the device is off when we suspend */
+>  	lis3lv02d_poweroff(&lis3_dev);
+>  	return 0;
+>  }
+>  
+> -static int lis3lv02d_resume(struct device *dev)
+> +static int __maybe_unused lis3lv02d_resume(struct device *dev)
+>  {
+>  	lis3lv02d_poweron(&lis3_dev);
+>  	return 0;
+>  }
+>  
+> -static int lis3lv02d_restore(struct device *dev)
+> -{
+> -	lis3lv02d_poweron(&lis3_dev);
+> -	return 0;
+> -}
+> -
+> -static const struct dev_pm_ops hp_accel_pm = {
+> -	.suspend = lis3lv02d_suspend,
+> -	.resume = lis3lv02d_resume,
+> -	.freeze = lis3lv02d_suspend,
+> -	.thaw = lis3lv02d_resume,
+> -	.poweroff = lis3lv02d_suspend,
+> -	.restore = lis3lv02d_restore,
+> -};
+> -
+> -#define HP_ACCEL_PM (&hp_accel_pm)
+> -#else
+> -#define HP_ACCEL_PM NULL
+> -#endif
+> +static SIMPLE_DEV_PM_OPS(hp_accel_pm, lis3lv02d_suspend, lis3lv02d_resume);
+>  
+>  /* For the HP MDPS aka 3D Driveguard */
+>  static struct platform_driver lis3lv02d_driver = {
+> @@ -395,7 +376,7 @@ static struct platform_driver lis3lv02d_driver = {
+>  	.remove	= lis3lv02d_remove,
+>  	.driver	= {
+>  		.name	= "hp_accel",
+> -		.pm	= HP_ACCEL_PM,
+> +		.pm	= &hp_accel_pm,
+>  		.acpi_match_table = lis3lv02d_device_ids,
+>  	},
+>  };
 > 
 
