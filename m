@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5911AC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Dec 2021 23:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A479C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Dec 2021 23:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359463AbhLFXEq (ORCPT
+        id S1377188AbhLFXbR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Dec 2021 18:04:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56672 "EHLO
+        Mon, 6 Dec 2021 18:31:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353673AbhLFXEq (ORCPT
+        with ESMTP id S1377455AbhLFXbP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Dec 2021 18:04:46 -0500
+        Mon, 6 Dec 2021 18:31:15 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30702C061746
-        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Dec 2021 15:01:17 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0204BC0611F7
+        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Dec 2021 15:27:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DDA6CB811E6
-        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Dec 2021 23:01:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B0AA9C341ED
-        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Dec 2021 23:01:14 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AA07DB8160C
+        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Dec 2021 23:27:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 78928C341D3
+        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Dec 2021 23:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638831674;
-        bh=TYhMzClhi/d8bk2p1GRTgNmq9sIowuhZxLfrjRiZ6YI=;
+        s=k20201202; t=1638833259;
+        bh=Z6v8lyo/sbcin2mMv6YhslQWkwELHoPqiFBsjN2bpdY=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=DKaejCyH4zT9wX+UYGhxbRriPNd+XO9SvQA63+6pcSTZo6JctBZ+J7ibsGqcCDkmQ
-         fMmwMIUiSEuML2hHGlZ/O0N35kABQ73FzzwFxnqSje44Rp8llOoXqzDPNsO4Poxgvg
-         npaY3KKh3MDHzgIHO3t5CgcBSkzvNGa9tX8HkuCEhIBj+2DL6dSeIk5aG2hckj/9V+
-         FY4gTMUObQtd/iajsEph/4AcQ6Q8yq0b76UyRm3jYpRXSBH/XomX9vAioXZux99UUh
-         dZvhQ8Ke2FvUPs+8MsyKeU4LOGmNkaiqbPraqHHvSM6V1frzbwqIKrc//okE1gM7jR
-         Dc6TF4FlzxseA==
+        b=mZDWC7aqHe/Hhkv52xrC9b0JM6bOgP+JrbA2gsBjhP7iDGd3y14HIl+kF98WhaJNF
+         QSu3q2tr38s8UIqzOisGU+Xh5ji3hBua30fpvXxApk88o0NZ25N/2/2SeSskBV0sAX
+         Og2842AH2TNTwXpGGUs8O/LGxgmqRhge9xKWjpqrFfw8ukbipQi0rYdPvfGz3/CbrY
+         nfEDEktvU8ShSumheRHg/RZ7P7BgA2hSBcSSlO/43rwwfVvwvVW+oiWALx54Y7Mnl0
+         E7SwK6k4+q3ns9+kybkF50UyGchm5E4CzdFDvmRFLn7PXpBJJdTzQRR44Rly4470w3
+         UQLp27bU+YaSg==
 Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id 9D589611F0; Mon,  6 Dec 2021 23:01:14 +0000 (UTC)
+        id 67252611C1; Mon,  6 Dec 2021 23:27:39 +0000 (UTC)
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date:   Mon, 06 Dec 2021 23:01:11 +0000
+Date:   Mon, 06 Dec 2021 23:27:37 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,14 +48,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: mikhail.v.gavrilov@gmail.com
+X-Bugzilla-Who: eugene.shalygin@gmail.com
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-204807-215701-oncgmtOW4A@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-Z5ERRkdGy0@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -69,108 +69,22 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #190 from Mikhail (mikhail.v.gavrilov@gmail.com) ---
-Created attachment 299921
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D299921&action=3Dedit
-Photo of FANs indication in BIOS (ROG STRIX X570-I GAMING) (
+--- Comment #191 from Eugene Shalygin (eugene.shalygin@gmail.com) ---
+(In reply to Mikhail from comment #190)
 
-(In reply to Denis Pauk from comment #186)
-> Patch is based on stable v5.15 kernel version. Could you check with v5.15
-> kernel version from kernel.org.
+> For unknown reason  RPM of PCH FAN and RPM of HS FAN which displayed in B=
+IOS
+> didn't reading by driver. It's normal?
 
-Thanks, I beginning see CPU FAN RPM.
+That's because those sensors are read from another chip, the ACPI EC. You n=
+eed
+to add your board to either asus_emi_ec_sensors driver in kernel 5.16 or to=
+ not
+yet mainlined new iteration of that driver which is still at Github [1]. Th=
+at
+should be pretty straightforward now for your board.
 
-$ sensors
-iwlwifi_1-virtual-0
-Adapter: Virtual device
-temp1:        +55.0=C2=B0C=20=20
-
-amdgpu-pci-0b00
-Adapter: PCI adapter
-vddgfx:      775.00 mV=20
-fan1:           0 RPM  (min =3D    0 RPM, max =3D 3300 RPM)
-edge:         +52.0=C2=B0C  (crit =3D +100.0=C2=B0C, hyst =3D -273.1=C2=B0C)
-                       (emerg =3D +105.0=C2=B0C)
-junction:     +54.0=C2=B0C  (crit =3D +110.0=C2=B0C, hyst =3D -273.1=C2=B0C)
-                       (emerg =3D +115.0=C2=B0C)
-mem:          +56.0=C2=B0C  (crit =3D +100.0=C2=B0C, hyst =3D -273.1=C2=B0C)
-                       (emerg =3D +105.0=C2=B0C)
-power1:       15.00 W  (cap =3D 255.00 W)
-
-nvme-pci-0100
-Adapter: PCI adapter
-Composite:    +52.9=C2=B0C=20=20
-
-hidpp_battery_0-hid-3-9
-Adapter: HID adapter
-in0:           4.06 V=20=20
-
-nct6798-isa-0290
-Adapter: ISA adapter
-in0:                      976.00 mV (min =3D  +0.00 V, max =3D  +1.74 V)
-in1:                      1000.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  =
-ALARM
-in2:                        3.41 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in3:                        3.36 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in4:                      992.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in5:                      656.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in6:                      424.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in7:                        3.41 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in8:                        3.36 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in9:                      912.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in10:                     328.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in11:                     544.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in12:                       1.04 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in13:                     464.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in14:                     368.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-fan1:                        0 RPM  (min =3D    0 RPM)
-fan2:                      847 RPM  (min =3D    0 RPM)
-fan5:                        0 RPM  (min =3D    0 RPM)
-fan7:                        0 RPM  (min =3D    0 RPM)
-SYSTIN:                    +46.0=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
-75.0=C2=B0C)  sensor =3D
-thermistor
-CPUTIN:                    +48.5=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
-75.0=C2=B0C)  sensor =3D
-thermistor
-AUXTIN0:                   +66.5=C2=B0C    sensor =3D thermistor
-AUXTIN1:                   +46.0=C2=B0C    sensor =3D thermistor
-AUXTIN2:                   +21.0=C2=B0C    sensor =3D thermistor
-AUXTIN3:                   +67.0=C2=B0C    sensor =3D thermistor
-PECI Agent 0 Calibration:  +53.0=C2=B0C=20=20
-PCH_CHIP_CPU_MAX_TEMP:      +0.0=C2=B0C=20=20
-PCH_CHIP_TEMP:              +0.0=C2=B0C=20=20
-PCH_CPU_TEMP:               +0.0=C2=B0C=20=20
-intrusion0:               ALARM
-intrusion1:               ALARM
-beep_enable:              disabled
-
-k10temp-pci-00c3
-Adapter: PCI adapter
-Tctl:         +63.4=C2=B0C=20=20
-Tccd1:        +53.8=C2=B0C=20=20
-Tccd2:        +48.0=C2=B0C=20=20
-
-ucsi_source_psy_0_00081-i2c-0-08
-Adapter: Synopsys DesignWare I2C adapter
-in0:           0.00 V  (min =3D  +0.00 V, max =3D  +0.00 V)
-curr1:         0.00 A  (max =3D  +0.00 A)
-
-For unknown reason  RPM of PCH FAN and RPM of HS FAN which displayed in BIOS
-didn't reading by driver. It's normal?
+[1] https://github.com/zeule/asus-ec-sensors
 
 --=20
 You may reply to this email to add a comment.
