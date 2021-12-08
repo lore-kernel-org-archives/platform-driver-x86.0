@@ -2,122 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B280C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Dec 2021 17:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA731C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Dec 2021 17:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232434AbhLHRpZ (ORCPT
+        id S238341AbhLHR6L (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Dec 2021 12:45:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231695AbhLHRpW (ORCPT
+        Wed, 8 Dec 2021 12:58:11 -0500
+Received: from mga17.intel.com ([192.55.52.151]:30482 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238314AbhLHR6L (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Dec 2021 12:45:22 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53A4C061746;
-        Wed,  8 Dec 2021 09:41:50 -0800 (PST)
-Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 85D481EC04D3;
-        Wed,  8 Dec 2021 18:41:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1638985303;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=BVB1m3MrNRyz7QEt2fceR49E0yXRKK99UJ6lToflU+M=;
-        b=plYDMSSdy0AlmPWLQfXS/7oOeIwQCRt1HOSpB0McPkEavfxw4f8gLgIuMdXHY83gDJ/xJX
-        0RCjuXJK2+CkfQfDA6ItGYTPBrLza2XhPdTQUw/RYpNqE9/f6br44Xd7qmGMcAVyb8g9yN
-        XehNfufGbEq41gGE3w/dhMtObAW6vXE=
-Date:   Wed, 8 Dec 2021 18:41:46 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v7 16/45] x86/sev: Register GHCB memory when SEV-SNP is
- active
-Message-ID: <YbDuWl+zgtKrFi7D@zn.tnic>
-References: <20211110220731.2396491-1-brijesh.singh@amd.com>
- <20211110220731.2396491-17-brijesh.singh@amd.com>
+        Wed, 8 Dec 2021 12:58:11 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10192"; a="218575907"
+X-IronPort-AV: E=Sophos;i="5.88,190,1635231600"; 
+   d="scan'208";a="218575907"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2021 09:47:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,190,1635231600"; 
+   d="scan'208";a="580668623"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Dec 2021 09:47:27 -0800
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
+        by linux.intel.com (Postfix) with ESMTP id 06BF55807B4;
+        Wed,  8 Dec 2021 09:47:27 -0800 (PST)
+Message-ID: <7e78e6311cb0d261892f7361a1ef10130436f358.camel@linux.intel.com>
+Subject: Re: [PATCH RESEND V2 3/6] platform/x86/intel: Move intel_pmt from
+ MFD to Auxiliary Bus
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>
+Date:   Wed, 08 Dec 2021 09:47:26 -0800
+In-Reply-To: <YbDbql39x7Kw6iAC@kroah.com>
+References: <20211208015015.891275-1-david.e.box@linux.intel.com>
+         <20211208015015.891275-4-david.e.box@linux.intel.com>
+         <YbDbql39x7Kw6iAC@kroah.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211110220731.2396491-17-brijesh.singh@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 10, 2021 at 04:07:02PM -0600, Brijesh Singh wrote:
-> The SEV-SNP guest is required to perform GHCB GPA registration. This is
-> because the hypervisor may prefer that a guest use a consistent and/or
-> specific GPA for the GHCB associated with a vCPU. For more information,
-> see the GHCB specification section GHCB GPA Registration.
+On Wed, 2021-12-08 at 17:22 +0100, Greg KH wrote:
+> On Tue, Dec 07, 2021 at 05:50:12PM -0800, David E. Box wrote:
+> > +static struct pci_driver intel_vsec_pci_driver = {
+> > +       .name = "intel_vsec",
+> > +       .id_table = intel_vsec_pci_ids,
+> > +       .probe = intel_vsec_pci_probe,
+> > +};
 > 
-> During the boot, init_ghcb() allocates a per-cpu GHCB page. On very first
-> VC exception,
+> So when the PCI device is removed from the system you leak resources and
+> have dangling devices?
 
-That is not true anymore - you're doing proper init at init time - no
-more #VC hackery.
+No.
 
-> @@ -1977,6 +1978,10 @@ void cpu_init_exception_handling(void)
->  
->  	load_TR_desc();
->  
-> +	/* Register the GHCB before taking any VC exception */
-> +	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
+> 
+> Why no PCI remove driver callback?
 
-No need for that if branch - sev_snp_register_ghcb() already has an
-empty stub for the !CONFIG_AMD_MEM_ENCRYPT case so you can simply call
-it unconditionally.
+After probe all resources are device managed. There's nothing to explicitly clean up. When the PCI
+device is removed, all aux devices are automatically removed. This is the case for the SDSi driver
+as well.
 
-> +		sev_snp_register_ghcb();
-> +
->  	/* Finally load the IDT */
->  	load_current_idt();
->  }
-> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-> index 54bf0603002f..968105cec364 100644
-> --- a/arch/x86/kernel/head64.c
-> +++ b/arch/x86/kernel/head64.c
-> @@ -588,6 +588,9 @@ void early_setup_idt(void)
->  
->  	bringup_idt_descr.address = (unsigned long)bringup_idt_table;
->  	native_load_idt(&bringup_idt_descr);
-> +
-> +	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
-> +		sev_snp_register_ghcb();
+David
 
-Ditto.
+> 
+> thanks,
+> 
+> greg k-h
 
-Thx.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
