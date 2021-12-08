@@ -2,132 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3732C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Dec 2021 10:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC83C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Dec 2021 14:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231912AbhLHLAS (ORCPT
+        id S234717AbhLHOJW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Dec 2021 06:00:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47642 "EHLO
+        Wed, 8 Dec 2021 09:09:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230491AbhLHLAS (ORCPT
+        with ESMTP id S234713AbhLHOJW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Dec 2021 06:00:18 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E7C4C061746;
-        Wed,  8 Dec 2021 02:56:46 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 9849ECE211F;
-        Wed,  8 Dec 2021 10:56:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3112C00446;
-        Wed,  8 Dec 2021 10:56:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638961002;
-        bh=YmoSRhVx+XS3GhwZscBKqGixn80XjIhiN8IbjQ3yi8U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aZMauFwC8qHxW/F1ZfOS1j25FV4hGlbOXTlx8lisivGwI8BMpPgKNAKE64qf+vGYb
-         Mof7teYM3rSH1KC1mfoQSFid2LqVu8XzbV0KyBugJxpKemu7016aKhTYyYLkMgdCms
-         1UrNXxl4ImOURK2RUCXAdaoPXUxX8bAbxXdE7JuB7JUvfjAAzB4anqGr4Idlqjrwz/
-         hqBLrFLmpmtoe+Y4K0Qlw9rh6/g2tLGpewYsw9ZBQBumAnP0NNJomcBwwkbOrqSCcX
-         XWfpbaMZ1m8qr1kemhD5zL8rsEcjvbnoPcLeFET8LuKa9ecOmfbi4ladMzNiLmXjbF
-         AFdTDX6ovkHXA==
-Date:   Wed, 8 Dec 2021 12:56:38 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        srinivas.pandruvada@intel.com, shuah@kernel.org,
-        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [V2 4/6] platform/x86: Add Intel Software Defined Silicon driver
-Message-ID: <YbCPZjz6CIjJqZqm@unreal>
-References: <20211207171448.799376-1-david.e.box@linux.intel.com>
- <20211207171448.799376-5-david.e.box@linux.intel.com>
- <YbBbZ+JMk9eEgNKl@unreal>
- <e4bbeeec741c186090dc3da4fecfab034dde8d0f.camel@linux.intel.com>
+        Wed, 8 Dec 2021 09:09:22 -0500
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01ADFC0617A1;
+        Wed,  8 Dec 2021 06:05:50 -0800 (PST)
+Received: by mail-lj1-x232.google.com with SMTP id bn20so4030676ljb.8;
+        Wed, 08 Dec 2021 06:05:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rCf0zyvgJUgHg9QQB25FrOzOLqjtx+dGIHtF5AhWskA=;
+        b=Gay56VR7oXKZ61yYW2z5K9QvoVrW8L89rA0ixltHr5LjGbLNoA7io0bF8zKsp4DmjP
+         jQs7eK//M3hBdOAKMU5QrWIjUIsILYd3JOHIqsakVpSG02LOm3AoE7wG9SuqPFHl2lMW
+         XA/SbblXvb53io8vSasL5T1gXSlD7jefkWrMRwM0vTwc+0SjvFUNg4xmGBUpq1p2xwql
+         153GBe2uYprCMRfnaX5osln0KFPbNiqxvfE5cXxvIRrRAgO3wQ/yIB53bmDyFmz6Cqhu
+         EhXnwiithZcIGYmOupnyy2O57ghT5wCGXPYxGpZmZt5ZFh1VXjBjDI6pCEouXVbUFC2E
+         ocOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rCf0zyvgJUgHg9QQB25FrOzOLqjtx+dGIHtF5AhWskA=;
+        b=6Lzq/x/np6nwwPh1pvgLFD5oVPwKkwI8ctoC0CtbQdj9BzZE4NNZR6nlJWVIq4pr3D
+         I2oxtrAwW4QvXaDjfwoAccSIIQDGFVXjLrqGr0lKuAhZ3mjee19CmIUb/vNBnNPnAh4K
+         JZXGvealfQx+Jc7yH1SO9EzoxtcyPTCmdQSZN+sJvBXRjVRSF8zhq1SA5E6ycYCsqFpG
+         TY6PmY54oe8/eThNuotTZVXUjWt4jMKhojyyU0SpvtEBzxqxBWQ+wzI4OTBGnVuBVk3j
+         IUv8Q/LBuASOAzMpLP6BeQqRpH7i5KscGAMcaMeBqAHRSsoYa9cCO1m/XEkF0HH0+BjO
+         sXGw==
+X-Gm-Message-State: AOAM5331u6PmNK8mEwRirbmVyEWVdEMiB2JYLO/Qk8SsLpnyYTMEj1DK
+        t9aDZCBVTlCWgEsYGZfvO2nQbN4rOBxhJy1ML+w=
+X-Google-Smtp-Source: ABdhPJys22p+Nc7f14LfW5nZDfZN5sz0n/uzhuiDoDWANW0u5aCKvBxr4DDNPOGZvcC51LciLgu2KkgeaVdwfkOPZ0M=
+X-Received: by 2002:a2e:bb98:: with SMTP id y24mr47069192lje.315.1638972348282;
+ Wed, 08 Dec 2021 06:05:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e4bbeeec741c186090dc3da4fecfab034dde8d0f.camel@linux.intel.com>
+References: <20211203192148.585399-1-martin.fernandez@eclypsium.com>
+ <YaxWXACBguZxWmKS@kernel.org> <CAD2FfiG9wfeW_2xxZqBi9vsjzEJBRjJUZw+AQy1Taos4fh2TLA@mail.gmail.com>
+ <Ya8MUOKPOKVfBfjJ@kernel.org>
+In-Reply-To: <Ya8MUOKPOKVfBfjJ@kernel.org>
+From:   Richard Hughes <hughsient@gmail.com>
+Date:   Wed, 8 Dec 2021 14:05:36 +0000
+Message-ID: <CAD2FfiEkn7dXPpCAaMdh5w8p3gXWzNABzd-nhwdTEd_AOZ7vnw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] x86: Show in sysfs if a memory node is able to do encryption
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Martin Fernandez <martin.fernandez@eclypsium.com>,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        alex.bazhaniuk@eclypsium.com, alison.schofield@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Dec 08, 2021 at 02:42:42AM -0800, David E. Box wrote:
-> On Wed, 2021-12-08 at 09:14 +0200, Leon Romanovsky wrote:
-> > On Tue, Dec 07, 2021 at 09:14:46AM -0800, David E. Box wrote:
-> > > Intel Software Defined Silicon (SDSi) is a post manufacturing mechanism for
-> > > activating additional silicon features. Features are enabled through a
-> > > license activation process.  The SDSi driver provides a per socket, sysfs
-> > > attribute interface for applications to perform 3 main provisioning
-> > > functions:
-> > > 
-> > > 1. Provision an Authentication Key Certificate (AKC), a key written to
-> > >    internal NVRAM that is used to authenticate a capability specific
-> > >    activation payload.
-> > > 
-> > > 2. Provision a Capability Activation Payload (CAP), a token authenticated
-> > >    using the AKC and applied to the CPU configuration to activate a new
-> > >    feature.
-> > > 
-> > > 3. Read the SDSi State Certificate, containing the CPU configuration
-> > >    state.
-> > > 
-> > > The operations perform function specific mailbox commands that forward the
-> > > requests to SDSi hardware to perform authentication of the payloads and
-> > > enable the silicon configuration (to be made available after power
-> > > cycling).
-> > > 
-> > > The SDSi device itself is enumerated as an auxiliary device from the
-> > > intel_vsec driver and as such has a build dependency on CONFIG_INTEL_VSEC.
-> > > 
-> > > Link: https://github.com/intel/intel-sdsi
-> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > Reviewed-by: Mark Gross <markgross@kernel.org>
-> > > ---
-> > > V2
-> > >   - Use sysfs_emit() in guid_show()
-> > >   - Fix language in ABI, suggested by Bjorn
-> > >   - Fix wrong directory name in ABI doc
-> > 
-> > <...>
-> > 
-> > > @@ -0,0 +1,77 @@
-> > > +What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X
-> > 
-> > <...>
-> > 
-> > > +static const struct auxiliary_device_id sdsi_aux_id_table[] = {
-> > > +	{ .name = "intel_vsec.sdsi" },
-> > 
-> > Are you sure that this sysfs is correct?
-> > 
-> > Auxiliary bus set device name as a combination of module name plus suffix.
-> > 
-> >   172 int __auxiliary_device_add(struct auxiliary_device *auxdev, const char
-> > *modname)
-> >   173 {
-> >   174         struct device *dev = &auxdev->dev;
-> >   175         int ret;
-> >  ....
-> >   181
-> >   182         ret = dev_set_name(dev, "%s.%s.%d", modname, auxdev->name,
-> > auxdev->id);
-> > 
-> > Thanks
-> 
-> Yes. 'intel_vsec' is the module name, 'sdsi' is the suffix, and 'X' is meant to
-> indicate the unique id. Will change to '*' instead of 'X'.
+On Tue, 7 Dec 2021 at 07:25, Mike Rapoport <rppt@kernel.org> wrote:
+> Can you please describe the actual check for the memory encryption and how
+> it would impact the HSI rating?
 
-No, it is ok, I don't think that it is worth to change.
+The problem HSI is trying to solve is that customers are buying
+systems where the CPU supports memory encryption, where the
+motherboard and dram controller support memory encryption and where
+the vendor says it's supported. But in some cases it's not working,
+either because the system firmware is not working properly, or some
+component requires updating to enable the feature. We're found quite a
+few cases where people assumed this was all working fine, but on
+looking closer, finding out that it's not working at all. The higher
+HSI rating would only be available where most of the system RAM is
+encrypted, although we've not worked out a heuristic number for "good
+enough" yet.
 
-Thanks
+> I wonder, for example, why did you choose per-node reporting rather than
+> per-region as described in UEFI spec.
 
-> 
-> Thanks
-> 
-> David
-> 
+I think Dave is better to answer this question.
+
+Richard.
