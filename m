@@ -2,68 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34E8C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Dec 2021 23:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A8EC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Dec 2021 01:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238485AbhLGXq7 (ORCPT
+        id S243093AbhLHBxt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Dec 2021 18:46:59 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:38968 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238476AbhLGXq6 (ORCPT
+        Tue, 7 Dec 2021 20:53:49 -0500
+Received: from mga01.intel.com ([192.55.52.88]:35178 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243071AbhLHBxs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Dec 2021 18:46:58 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 3A02ECE1ECB;
-        Tue,  7 Dec 2021 23:43:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6870CC341C5;
-        Tue,  7 Dec 2021 23:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638920604;
-        bh=A1VWxkS6OKsobfyvHFd1lykapog0x06rQRpDfPGDBHA=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=gFQPljcbxIe1CEooBYvbAvgrFXql8iwyZN2i5IPUlftRvjaTIaWLwqO/bQzktnvIh
-         992xicAAmkwTvCsTsNElp3Bel1rj01txIzEL2WJXj/NWhJUadJwv7ncOZz/9SB6WSI
-         8Afd46g38f6WBHNFI+g5smI/qVynK3WeXF6QVjukSFXLoRueJ/NUjeWqpkseA1YHCY
-         56lQ3HYQDPrzY4Q34fvprZ5K2yWy2HTUa+Q23MurJZY6MwEqFVHV5hieNB1d8NNA/q
-         cYIL/IACXsnbZJ22aaozVJA0l6+95K4BgVw8o7OA7S4y4W02n0T9Fx1CaMbVlP2g/1
-         3WE/6y0hFnLfg==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 4AA9360973;
-        Tue,  7 Dec 2021 23:43:24 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 5.16-3
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <d158b42c-5a3a-8441-594c-32ca180e519d@redhat.com>
-References: <d158b42c-5a3a-8441-594c-32ca180e519d@redhat.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <d158b42c-5a3a-8441-594c-32ca180e519d@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.16-3
-X-PR-Tracked-Commit-Id: 7d0c009043f6a970f62dbf5aecda9f8c3ccafcff
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 957232439c2a647e450c21cd49ecadabba05e2a0
-Message-Id: <163892060429.27655.6094808560594056441.pr-tracker-bot@kernel.org>
-Date:   Tue, 07 Dec 2021 23:43:24 +0000
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
+        Tue, 7 Dec 2021 20:53:48 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="261808264"
+X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
+   d="scan'208";a="261808264"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:50:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
+   d="scan'208";a="462578908"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 07 Dec 2021 17:50:16 -0800
+Received: from debox1-desk4.hsd1.or.comcast.net (unknown [10.251.18.198])
+        by linux.intel.com (Postfix) with ESMTP id 674F6580842;
+        Tue,  7 Dec 2021 17:50:16 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, hdegoede@redhat.com,
+        david.e.box@linux.intel.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org, Mark Gross <markgross@kernel.org>
+Subject: [PATCH RESEND V2 2/6] driver core: auxiliary bus: Add driver data helpers
+Date:   Tue,  7 Dec 2021 17:50:11 -0800
+Message-Id: <20211208015015.891275-3-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211208015015.891275-1-david.e.box@linux.intel.com>
+References: <20211208015015.891275-1-david.e.box@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Tue, 7 Dec 2021 17:40:42 +0100:
+Adds get/set driver data helpers for auxiliary devices.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.16-3
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Mark Gross <markgross@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+V2
+  - No changes
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/957232439c2a647e450c21cd49ecadabba05e2a0
+ include/linux/auxiliary_bus.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Thank you!
-
+diff --git a/include/linux/auxiliary_bus.h b/include/linux/auxiliary_bus.h
+index fc51d45f106b..a8338d456e81 100644
+--- a/include/linux/auxiliary_bus.h
++++ b/include/linux/auxiliary_bus.h
+@@ -28,6 +28,16 @@ struct auxiliary_driver {
+ 	const struct auxiliary_device_id *id_table;
+ };
+ 
++static inline void *auxiliary_get_drvdata(struct auxiliary_device *auxdev)
++{
++	return dev_get_drvdata(&auxdev->dev);
++}
++
++static inline void auxiliary_set_drvdata(struct auxiliary_device *auxdev, void *data)
++{
++	dev_set_drvdata(&auxdev->dev, data);
++}
++
+ static inline struct auxiliary_device *to_auxiliary_dev(struct device *dev)
+ {
+ 	return container_of(dev, struct auxiliary_device, dev);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.25.1
+
