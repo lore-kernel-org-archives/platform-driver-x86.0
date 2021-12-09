@@ -2,104 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B7FC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Dec 2021 16:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA97FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Dec 2021 21:26:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241719AbhLIRAD (ORCPT
+        id S231573AbhLIVaW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Dec 2021 12:00:03 -0500
-Received: from mga04.intel.com ([192.55.52.120]:27927 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241588AbhLIQ7v (ORCPT
+        Thu, 9 Dec 2021 16:30:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229505AbhLIVaV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Dec 2021 11:59:51 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="236887011"
-X-IronPort-AV: E=Sophos;i="5.88,193,1635231600"; 
-   d="scan'208";a="236887011"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 08:55:19 -0800
-X-IronPort-AV: E=Sophos;i="5.88,193,1635231600"; 
-   d="scan'208";a="564887994"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 08:55:15 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mvMgS-004Arq-7Q;
-        Thu, 09 Dec 2021 18:54:16 +0200
-Date:   Thu, 9 Dec 2021 18:54:15 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David E. Box" <david.e.box@linux.intel.com>, hdegoede@redhat.com,
-        bhelgaas@google.com, srinivas.pandruvada@intel.com,
-        shuah@kernel.org, mgross@linux.intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [V2 2/6] driver core: auxiliary bus: Add driver data helpers
-Message-ID: <YbI0t2D5ute46Ty2@smile.fi.intel.com>
-References: <YbBxPPPaQwlcgz/c@kroah.com>
- <20211209163245.GA245119@bhelgaas>
+        Thu, 9 Dec 2021 16:30:21 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C56C061746
+        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Dec 2021 13:26:47 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AED80B82690
+        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Dec 2021 21:26:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6354CC341CA
+        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Dec 2021 21:26:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639085205;
+        bh=OjxvZJWgD9zKyKicYKpfHHq7zJuAIzlSK/3yDh0QnIM=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=i1btPaXijLahKpawVUaa0E5dZWP4skU1Oe1Qcy+hd/ty6c4WDOSpa08JP7dMrCRNH
+         VzBCC7FySm9saSqSSfv+hKh/pfut6RLq01KXhZTX2mN1AMwg7xNQWDyUkDGmZ7evjU
+         qQlLYfK1prPUsKq7elwocc/G9+gOjQADarErNk6wugABqJ6Wuo/MDxgNwba9JhWAMP
+         dA3vJ8wg8BCcBFCH/pZF6x5zZzD58Pre+9J0IYXwLlVADGjjeRBPCXL0MzXcQ7ZOp2
+         nlFdhwuoTb2mKzDem5lMxIlR8M66MAxgMjU0OBE7dLxsUD2mcPq/bDhZKfIuRbeH3g
+         2Ph5gd8FcwW3A==
+Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
+        id 5031061005; Thu,  9 Dec 2021 21:26:45 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 09 Dec 2021 21:26:43 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-2zFBygIR9x@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211209163245.GA245119@bhelgaas>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Dec 09, 2021 at 10:32:45AM -0600, Bjorn Helgaas wrote:
-> [+cc Rafael, since I used generic PM as an example]
-> On Wed, Dec 08, 2021 at 09:47:56AM +0100, Greg KH wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-...
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-Okay, more bikeshedding :-)
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #299887|0                           |1
+        is obsolete|                            |
 
-> In the very common situation of PCI drivers that use generic power
-> management, authors *do* have to use both (example from [1]):
-> 
->   ioh_gpio_probe(struct pci_dev *pdev)   # pci_driver.probe()
->     pci_set_drvdata(pdev, chip);
-> 
->   ioh_gpio_remove(struct pci_dev *pdev)  # pci_driver.remove()
->     struct ioh_gpio *chip = pci_get_drvdata(pdev);
-> 
->   ioh_gpio_suspend(struct device *dev)   # pci_driver.driver.pm.suspend()
->     struct ioh_gpio *chip = dev_get_drvdata(dev);   <--
-> 
-> The pci_driver methods receive a struct pci_dev and use the
-> pci_get_drvdata() wrapper.
-> 
-> The generic power management methods receive a struct device and use
-> the underlying dev_get_drvdata().
-> 
-> It's kind of ugly that readers have to know that pci_get_drvdata()
-> gives you the same thing as dev_get_drvdata().
-> 
-> I guess the generic PM methods could do something like:
-> 
->   pci_get_drvdata(to_pci_dev(dev));
-> 
-> but that seems a little bit circuitous.  It's slightly wordier, but I
-> might prefer to just use this everywhere and skip the pci_* wrappers:
-> 
->   dev_get_drvdata(&pdev->dev);
+--- Comment #194 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 299975
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D299975&action=3Dedit
+Add support for access via Asus WMI to nct6775 (2021.12.09)
 
-Strictly speaking the
+(In reply to Vladdrako from comment #193)
+> (In reply to Denis Pauk from comment #192)
+> > You can try with DMI_EXACT_MATCH_ASUS_BOARD_NAME("P8Z68-V
+> > LX", &acpi_board_LPCB_MUTEX), But I am not sure that it will lock corre=
+ct
+> > mutex or be safe.
+>=20
+> drivers/hwmon/nct6775.c:5443:56: error: =C2=ABacpi_board_LPCB_MUTEX=C2=BB=
+ undeclared
+> here (not in a function)
+>  5443 |         DMI_EXACT_MATCH_ASUS_BOARD_NAME("P8Z68-V LX",
+> &acpi_board_LPCB_MUTEX),
+>       |=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20
+> ^~~~~~~~~~~~~~~~~~~~~
+> drivers/hwmon/nct6775.c:5411:24: note: in expansion of macro
+> =C2=ABDMI_EXACT_MATCH_ASUS_BOARD_NAME=C2=BB
+>  5411 |         .driver_data =3D info,=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20
+> \
+>       |                        ^~~~
 
-   <$BUS)_get_drvdata(<$CONTAINER>) != dev_get_drvdata(dev)
+Could you check with updated patch?
 
-it's completely up to the container handling code what to do.
-In 99% (or 100%?) cases it's equal, but it's not obliged to be so.
+--=20
+You may reply to this email to add a comment.
 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpio/gpio-ml-ioh.c?id=v5.15#n505
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
