@@ -2,41 +2,41 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9065AC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Dec 2021 21:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FD5C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Dec 2021 05:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237671AbhLHV7F (ORCPT
+        id S229618AbhLIFUp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Dec 2021 16:59:05 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:60470 "EHLO
+        Thu, 9 Dec 2021 00:20:45 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:56682 "EHLO
         ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232640AbhLHV7E (ORCPT
+        with ESMTP id S229555AbhLIFUp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Dec 2021 16:59:04 -0500
+        Thu, 9 Dec 2021 00:20:45 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 00743B82313
-        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Dec 2021 21:55:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8CCCCC341C3
-        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Dec 2021 21:55:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1DED5B82373
+        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Dec 2021 05:17:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DCFAEC341EC
+        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Dec 2021 05:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639000529;
-        bh=6EGNV8PHZ1Fpwy5tWu5BYnxgqomGn6sELgs4WeDx4Qg=;
+        s=k20201202; t=1639027029;
+        bh=ywdGn+lSoNpH31H1WZ3wi+cxGqEoMMlV1Zd2mlBuf7Y=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=UOAQoH6GFbzvhMmf7vit6cTIPaqSlQasDmB5pp0YHdQkudXUtBDSuup5C1t1n1VEn
-         ibX9dX4CBPJSiXM4DxxV5QBIxZE9o4ST56WSoL52asnYyqxnCYCUYI0JKDGmsrGYk7
-         Q3wQ6tLmCNjy7FJIanbWlUrAZpgjGsz55NK95cSBYLuZlb9H8sk8O1iaJw8d2qm2j3
-         fWzZCW3Xl/Dm4/IFIJz6vBDVBtJrcyghzTtTdaKJDXkrcpcuB3PJUYB9qzPR7Zty4D
-         PrVSJ+SjgH9J8bh8g8dbtjToDNEZFFASsHqLPV9DfQeLyY6mFq4g5QXcOfjge04iMS
-         yaAPfRhGzGbnA==
+        b=eQCPjrHBwTCcpt21n+JbDdhehUYnVapINyasVe+wyhCyWUPKw/Xzc2MHwMPi1U3ZW
+         0bEfcjAlqneToPb/z2syUUtNH8t/XAR21Zif1RTmdHI2avylO2JEkCcO9zmmCxLwGR
+         lR9nMlE2sZF6aBUU05+uqv9xMl2HoE7/Zd8niSbVqoYCMb7r7iEZyB1acBQZsCZmX4
+         EVewfRpL4ozeQ//ALEplX9c0FkqeRB7k2Asy+kEOVX3+2xF+rnQ4kkR6y8ELqUZ3vU
+         6VZuPOMorol8+GaV3jLDY+UnJJPK4HMviqai9nZGOqYKxtICRU/k5U4YtJx/cJXO7b
+         dFKo7tkkUgy3w==
 Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id 7CA8260EBC; Wed,  8 Dec 2021 21:55:29 +0000 (UTC)
+        id C3F0260F38; Thu,  9 Dec 2021 05:17:09 +0000 (UTC)
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date:   Wed, 08 Dec 2021 21:55:27 +0000
+Date:   Thu, 09 Dec 2021 05:17:07 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -45,14 +45,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Who: vladdrako007@gmail.com
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-wLFOzQz7up@https.bugzilla.kernel.org/>
+Message-ID: <bug-204807-215701-zMq5NFb0J3@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,30 +66,28 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #192 from Denis Pauk (pauk.denis@gmail.com) ---
-(In reply to Vladdrako from comment #184)
-> No changes with the latest patch on old ASUS P8Z68-V LX. (sorry for post
-> spamming, newbie here) Kernel 5.15.2 Manjaro.
-> Attached DSDT dump and dmesg.
+--- Comment #193 from Vladdrako (vladdrako007@gmail.com) ---
+(In reply to Denis Pauk from comment #192)
+> You can try with DMI_EXACT_MATCH_ASUS_BOARD_NAME("P8Z68-V
+> LX", &acpi_board_LPCB_MUTEX), But I am not sure that it will lock correct
+> mutex or be safe.
 
-(In reply to Vladdrako from comment #188)
-> > P8Z68-V is not in the list of supported boards, could you try add it to=
- the
-> > list (asus_wmi_info_table)?=20
->=20
-> Added DMI_EXACT_MATCH_ASUS_BOARD_NAME("P8Z68-V LX", NULL),
-> Nothing changed.
->=20
-
-I am afraid "P8Z68-V LX" will be unsupported. I don't see any Acquire locks=
- in
-your dsdl related to 0x0290 region and all calls made direct operations with
-superio chip. You can try with DMI_EXACT_MATCH_ASUS_BOARD_NAME("P8Z68-V LX",
-&acpi_board_LPCB_MUTEX), But I am not sure that it will lock correct mutex =
-or
-be safe.=20
-
-@Eugene Shalygin Could you correct me if I have missed something?
+drivers/hwmon/nct6775.c:5443:56: error: =C2=ABacpi_board_LPCB_MUTEX=C2=BB u=
+ndeclared here
+(not in a function)
+ 5443 |         DMI_EXACT_MATCH_ASUS_BOARD_NAME("P8Z68-V LX",
+&acpi_board_LPCB_MUTEX),
+      |=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20
+^~~~~~~~~~~~~~~~~~~~~
+drivers/hwmon/nct6775.c:5411:24: note: in expansion of macro
+=C2=ABDMI_EXACT_MATCH_ASUS_BOARD_NAME=C2=BB
+ 5411 |         .driver_data =3D info,=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20
+        \
+      |                        ^~~~
 
 --=20
 You may reply to this email to add a comment.
