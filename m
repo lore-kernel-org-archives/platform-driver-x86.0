@@ -2,95 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FD5C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Dec 2021 05:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC1AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Dec 2021 16:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbhLIFUp (ORCPT
+        id S234874AbhLIQgY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Dec 2021 00:20:45 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:56682 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229555AbhLIFUp (ORCPT
+        Thu, 9 Dec 2021 11:36:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234595AbhLIQgX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Dec 2021 00:20:45 -0500
+        Thu, 9 Dec 2021 11:36:23 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF305C061746;
+        Thu,  9 Dec 2021 08:32:49 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1DED5B82373
-        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Dec 2021 05:17:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DCFAEC341EC
-        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Dec 2021 05:17:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 07D43B8253D;
+        Thu,  9 Dec 2021 16:32:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D9EC004DD;
+        Thu,  9 Dec 2021 16:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639027029;
-        bh=ywdGn+lSoNpH31H1WZ3wi+cxGqEoMMlV1Zd2mlBuf7Y=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=eQCPjrHBwTCcpt21n+JbDdhehUYnVapINyasVe+wyhCyWUPKw/Xzc2MHwMPi1U3ZW
-         0bEfcjAlqneToPb/z2syUUtNH8t/XAR21Zif1RTmdHI2avylO2JEkCcO9zmmCxLwGR
-         lR9nMlE2sZF6aBUU05+uqv9xMl2HoE7/Zd8niSbVqoYCMb7r7iEZyB1acBQZsCZmX4
-         EVewfRpL4ozeQ//ALEplX9c0FkqeRB7k2Asy+kEOVX3+2xF+rnQ4kkR6y8ELqUZ3vU
-         6VZuPOMorol8+GaV3jLDY+UnJJPK4HMviqai9nZGOqYKxtICRU/k5U4YtJx/cJXO7b
-         dFKo7tkkUgy3w==
-Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id C3F0260F38; Thu,  9 Dec 2021 05:17:09 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Thu, 09 Dec 2021 05:17:07 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: vladdrako007@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-zMq5NFb0J3@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        s=k20201202; t=1639067566;
+        bh=Hfp5b3v+XA/5IbK5LdC4TC8Lj3uCVLepSRSC6eo2XOk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=BD7+YWxCPnrx0AevCZXoBB0cD13QqzwkZV3TzG/yNMIBNdKtBTvKPnGo6liXV6rBr
+         Dk4mlyxC2FjLh2RTb90SjL7D5O4efldrfDOh2Hx6zOw/Muvmt6HCNKpY72FyxyRDoq
+         uHEr+aLYBPf2PSVsG6CJ0bVnHkeDpzyi4svZNXZZI0lUjgMjOebtKkR83tV0z1g41U
+         xMw+O4aj6ZsN9Y6yW/j7fi+YAJwG+59WG1hyXvCU0kT9WaUa+JjvkoBiHbCA59rNu8
+         0VfayzowRRDBB7cr5Lu/Ll7nN4jYvc+pVyMn4IQ/wKMJH7iZl/D/MgzVprihiUDodK
+         sjPemY3cJFpLA==
+Date:   Thu, 9 Dec 2021 10:32:45 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David E. Box" <david.e.box@linux.intel.com>, hdegoede@redhat.com,
+        bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, shuah@kernel.org,
+        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [V2 2/6] driver core: auxiliary bus: Add driver data helpers
+Message-ID: <20211209163245.GA245119@bhelgaas>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YbBxPPPaQwlcgz/c@kroah.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+[+cc Rafael, since I used generic PM as an example]
 
---- Comment #193 from Vladdrako (vladdrako007@gmail.com) ---
-(In reply to Denis Pauk from comment #192)
-> You can try with DMI_EXACT_MATCH_ASUS_BOARD_NAME("P8Z68-V
-> LX", &acpi_board_LPCB_MUTEX), But I am not sure that it will lock correct
-> mutex or be safe.
+On Wed, Dec 08, 2021 at 09:47:56AM +0100, Greg KH wrote:
+> On Wed, Dec 08, 2021 at 08:43:53AM +0000, Lee Jones wrote:
+> > On Wed, 08 Dec 2021, Greg KH wrote:
+> > > On Wed, Dec 08, 2021 at 09:03:16AM +0200, Leon Romanovsky wrote:
+> > > > On Tue, Dec 07, 2021 at 09:14:44AM -0800, David E. Box wrote:
+> > > > > Adds get/set driver data helpers for auxiliary devices.
+> > > > > 
+> > > > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > > > Reviewed-by: Mark Gross <markgross@kernel.org>
+> > > > > ---
+> > > > > V2
+> > > > >   - No changes
+> > > > > 
+> > > > >  include/linux/auxiliary_bus.h | 10 ++++++++++
+> > > > >  1 file changed, 10 insertions(+)
+> > > > 
+> > > > I would really like to see an explanation why such obfuscation is really
+> > > > needed. dev_*_drvdata() is a standard way to access driver data.
+> > 
+> > I wouldn't call it obfuscation, but it does looks like abstraction for
+> > the sake of abstraction, which I usually push back on.  What are the
+> > technical benefits over using the dev_*() variant?
+> 
+> See my response at:
+> 	https://lore.kernel.org/r/YbBwOb6JvWkT3JWI@kroah.com
+> for why it is a good thing to do.
+> 
+> In short, driver authors should not have to worry about mixing
+> bus-specific and low-level driver core functions.
 
-drivers/hwmon/nct6775.c:5443:56: error: =C2=ABacpi_board_LPCB_MUTEX=C2=BB u=
-ndeclared here
-(not in a function)
- 5443 |         DMI_EXACT_MATCH_ASUS_BOARD_NAME("P8Z68-V LX",
-&acpi_board_LPCB_MUTEX),
-      |=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20
-^~~~~~~~~~~~~~~~~~~~~
-drivers/hwmon/nct6775.c:5411:24: note: in expansion of macro
-=C2=ABDMI_EXACT_MATCH_ASUS_BOARD_NAME=C2=BB
- 5411 |         .driver_data =3D info,=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20
-        \
-      |                        ^~~~
+In the very common situation of PCI drivers that use generic power
+management, authors *do* have to use both (example from [1]):
 
---=20
-You may reply to this email to add a comment.
+  ioh_gpio_probe(struct pci_dev *pdev)   # pci_driver.probe()
+    pci_set_drvdata(pdev, chip);
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+  ioh_gpio_remove(struct pci_dev *pdev)  # pci_driver.remove()
+    struct ioh_gpio *chip = pci_get_drvdata(pdev);
+
+  ioh_gpio_suspend(struct device *dev)   # pci_driver.driver.pm.suspend()
+    struct ioh_gpio *chip = dev_get_drvdata(dev);   <--
+
+The pci_driver methods receive a struct pci_dev and use the
+pci_get_drvdata() wrapper.
+
+The generic power management methods receive a struct device and use
+the underlying dev_get_drvdata().
+
+It's kind of ugly that readers have to know that pci_get_drvdata()
+gives you the same thing as dev_get_drvdata().
+
+I guess the generic PM methods could do something like:
+
+  pci_get_drvdata(to_pci_dev(dev));
+
+but that seems a little bit circuitous.  It's slightly wordier, but I
+might prefer to just use this everywhere and skip the pci_* wrappers:
+
+  dev_get_drvdata(&pdev->dev);
+
+Bjorn
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpio/gpio-ml-ioh.c?id=v5.15#n505
