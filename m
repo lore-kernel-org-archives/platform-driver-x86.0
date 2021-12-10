@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B154C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Dec 2021 15:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96475C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Dec 2021 15:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243209AbhLJPtq (ORCPT
+        id S243611AbhLJPuM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Dec 2021 10:49:46 -0500
-Received: from mail-co1nam11on2045.outbound.protection.outlook.com ([40.107.220.45]:54304
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        Fri, 10 Dec 2021 10:50:12 -0500
+Received: from mail-bn8nam12on2075.outbound.protection.outlook.com ([40.107.237.75]:41056
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S243404AbhLJPsc (ORCPT
+        id S243571AbhLJPsW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Dec 2021 10:48:32 -0500
+        Fri, 10 Dec 2021 10:48:22 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cR1mwqENXeBy/G05gx3KdMSBqWInNRg8+9Hr9uGLpAU2ekk+0LSR455Tl/DPnBEg7JG8pRXFmMtmaL4banNhIrDgUTs1JtLct5WZNjxdmbvFQbKIxq1Znr0GR5zTpdWbrz7nvCOHp+DIDTD5EoaAsRv/1vJNW6ewJ00Yyyyh4I85UrjxX6ONPhQmLdOQU0XP0k7FF8X0RlJYYJU9fW9H2GdEU7VzOxspJobIzb0bFJofj4WBYmq7uogBAOJKjGHxC2CqhXlKM0BuoF6Q4W7gGQCPSnC9m0R1guy2+gfQsmHE57EDK48RiOyVlWCy7qAwlrr/BLdWfmgVsWRCE35q3A==
+ b=TlD1qhUXzkopopPl++bKnSJoDWEx0RHjFG5dBawPWQ070ll8sI4wO8xGfGKGssv5p1yOSNIq2eb7wTcD9dHVY99gImPY7HDEgJSstn/F1jWlOahLyRRXxV2TtxBq55CrJHOSdI9QlHrQDbWF9R5zldxKLqnReJnRQXiR4CP85prb082xC5O2o5r0kAHf1lLsVtaPeF3CgeAZnqu6C6G2NDS7ljxXqkPRB1ZmHo7C9/w9CmKRSV/m8vJzvvfuGoscEOZOPWuO3PKw2fVRlMdsNWfNEV0nVM/XBpbfkIdOqAVotlC6Rds6N/5hF6G+5EtZ2h4hNsTLQNH5royXvnDhGQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3wTSvT9TDHMsUoCuOgmeZlasbJT89D9btICoWEjd3E0=;
- b=ix2ih9yC/NWl0vBQEAbpBvBbRzy/ztiSutvk9NcPIApQRIfuWPp8zZG4W+hm7RD1TublDq98XKKbQJwiw8+9dNFMe3GRasblvwuyLZhybQjgOl71NEffbpf7Fjk7We9bvpFqXQPvSlcqP4x9mw0I0AcoOOJLBLhvNyEY+7q1hl0zONtJbP0pI9333eu7hDsps0O8jSd6jd/wp/1+WTguoV8RTM/Gei1oL43nJ1AfZtXJDVURSePa/A0jTVnXnqQMB3BBVm3PHwKy4mINTjr+AUz6LCQqsqymw6QwefKzbyY9rXs2jKCp5A3SCAz2rHMWK+BCHjqSIRDrTzjFFwjMQQ==
+ bh=CCMtUj7gAK3a2O6JUjlQ+fa4iaAGMlIgIZ7wm1T/dWU=;
+ b=JAxFO55/3JRpzg71wfVg75/ESlaJZxWsr57kIPUOIgGyYNsVgWD+PumdlSj5to7668Qbbap2zu/yaKbXtNgTA4BxomospnyOledY5SduozG4TfLdYJStGJFvl5suWTd4U3rgJmEOesk1OIStegv8hmDW3OBUb3oZfJgOaTcdbACmKE377Xpl2ge2YMYchiW9ilbMNSxIKg38EsBYn0WR4R5xrmmGaVJepmvW9+HxA1+EBdoUjQ7pHNgKyLMiOP1byC+2J+t85HUymzcgf1E045sS01PwkHNw4uqg+KwZbLYUC0UcCt65qaeCdLo6jHOn2nJV+t2tGwhS0bpB0En8ow==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3wTSvT9TDHMsUoCuOgmeZlasbJT89D9btICoWEjd3E0=;
- b=m6kLyXAHi4pO18Tf8Sp+8RLiv8bsZmQmfDwvly09ztlsrZRF6lBU7UTxA5tJXoYfmlYGqxenH7PxqNvvsElsa2wHWzrk8dB5IrLYnt9KAbOHNpP+XIkR4xq7R63430GTee9unpb8mDNfZ7QVHf0t/J5+7GVWkPwS0TRGEYEQ8/Y=
-Received: from BN6PR14CA0011.namprd14.prod.outlook.com (2603:10b6:404:79::21)
- by BN6PR12MB1729.namprd12.prod.outlook.com (2603:10b6:404:108::16) with
+ bh=CCMtUj7gAK3a2O6JUjlQ+fa4iaAGMlIgIZ7wm1T/dWU=;
+ b=OYtQhnWxtY1elQsWm28g65LPO1x88RjhpFcGRPnbuqQaachf+dM53yqs9quvBs8N3UGfYoac7ofIa7fyuyroxBrrUkKcHixuEEVE7U+6mjjRoR0wyIqdt9MXBMEgTqO+3wbPX37Ecq21nn8xk8oweNZHLqXkZZW4Xf22VS4EWSc=
+Received: from BN6PR14CA0022.namprd14.prod.outlook.com (2603:10b6:404:79::32)
+ by MW3PR12MB4476.namprd12.prod.outlook.com (2603:10b6:303:2d::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.19; Fri, 10 Dec
- 2021 15:44:54 +0000
-Received: from BN8NAM11FT035.eop-nam11.prod.protection.outlook.com
- (2603:10b6:404:79:cafe::1f) by BN6PR14CA0011.outlook.office365.com
- (2603:10b6:404:79::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.21 via Frontend
- Transport; Fri, 10 Dec 2021 15:44:54 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.20; Fri, 10 Dec
+ 2021 15:44:42 +0000
+Received: from BN8NAM11FT048.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:79:cafe::f2) by BN6PR14CA0022.outlook.office365.com
+ (2603:10b6:404:79::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.12 via Frontend
+ Transport; Fri, 10 Dec 2021 15:44:41 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -46,13 +46,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB03.amd.com;
 Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN8NAM11FT035.mail.protection.outlook.com (10.13.177.116) with Microsoft SMTP
+ BN8NAM11FT048.mail.protection.outlook.com (10.13.177.117) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4778.13 via Frontend Transport; Fri, 10 Dec 2021 15:44:54 +0000
+ 15.20.4778.13 via Frontend Transport; Fri, 10 Dec 2021 15:44:41 +0000
 Received: from sbrijesh-desktop.amd.com (10.180.168.240) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Fri, 10 Dec
- 2021 09:44:51 -0600
+ 2021 09:44:38 -0600
 From:   Brijesh Singh <brijesh.singh@amd.com>
 To:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
         <kvm@vger.kernel.org>, <linux-efi@vger.kernel.org>,
@@ -83,9 +83,9 @@ CC:     Thomas Gleixner <tglx@linutronix.de>,
         <tony.luck@intel.com>, <marcorr@google.com>,
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Brijesh Singh <brijesh.singh@amd.com>
-Subject: [PATCH v8 40/40] virt: sevguest: Add support to get extended report
-Date:   Fri, 10 Dec 2021 09:43:32 -0600
-Message-ID: <20211210154332.11526-41-brijesh.singh@amd.com>
+Subject: [PATCH v8 32/40] x86/compressed: use firmware-validated CPUID for SEV-SNP guests
+Date:   Fri, 10 Dec 2021 09:43:24 -0600
+Message-ID: <20211210154332.11526-33-brijesh.singh@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211210154332.11526-1-brijesh.singh@amd.com>
 References: <20211210154332.11526-1-brijesh.singh@amd.com>
@@ -97,249 +97,143 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB03.amd.com
  (10.181.40.144)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 00a702d3-39e1-4349-1a06-08d9bbf402aa
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1729:EE_
-X-Microsoft-Antispam-PRVS: <BN6PR12MB1729EDBCFEFC565764E57AF6E5719@BN6PR12MB1729.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
+X-MS-Office365-Filtering-Correlation-Id: f63aaba1-02f7-4783-78b2-08d9bbf3fb72
+X-MS-TrafficTypeDiagnostic: MW3PR12MB4476:EE_
+X-Microsoft-Antispam-PRVS: <MW3PR12MB447658A78AFC652E5DB31B57E5719@MW3PR12MB4476.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +m0ghY6fwm+VRvYk2MejYdtiwuR5Zd08FI6Ff3tWWIg8yLwKSRouvqSFBr2BFaOdp6Cc0kR18Q3OLKEe0J/kf8py8p/09D4DCUd6yzHIeTX5+ZlClDpvWmw7eNbRtr2OSbjBm83TMyBakfYbjkxbyKQbQJhrK2GYV2ENdbV7PNgqyEUfTeyckCo4ln5rzTSZS3mouYgJdSVQkCABC7Qfr0Q3itoGXhUocs4TYQBXihE5eo36CzALTx+mLs1SRZKJmzEjMov6DGRCNRk/U9tDe+8QQTj3fqxa6D2DMNsyTZm43AJcPbZylkX0cyuM73VAHI/NTrkQ0WLAwlwdoOzO1ob8gZmRKztV9jxaz0IwknOLHfcRi8P7Wc1wN7c/R7OtA8TuxLEGxbY0qyKvuWpAHKir0BaMw80oc7cQ8xqdCeFEqG4sIHd1raENrcJrkztD78+19cOztvgrYcmbAzym/4Gvc+/SZVYhs0ZHOy+6890uKmCuYWXofX8bpJDo7VSk8CknCBO3lDu3GGzSTg1zYwBb6YW0J8Bk0cJXB1D8sFdeMPK4U+M++Q4SJYYtg10agc/AXbKPWUav04Mfb43knts61RFmiEpuxa0at0CM2Qz3P+WTHZLZo7fVUHO68GnUKonUhItGNwIwCfqy5h5it+xrPWHLDmbx1CaNQJmRk42l5fJUhS5UVh+wYB3a2IGcObKC77YCo3YPDip6hisUqmeJ6D4RC+6TMD9pW57Dv7Ks5ZmEpRqbSxCUxpSvS3ZiMAbSS+gxt6nuG4AhljdjMEUCLVTUyukWx/2ZcXl7jgJGUavT0+Gxd9uAWa1UbwDc
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(40470700001)(316002)(336012)(54906003)(1076003)(6666004)(110136005)(508600001)(7696005)(5660300002)(40460700001)(36756003)(82310400004)(2906002)(16526019)(186003)(70586007)(356005)(70206006)(8936002)(7416002)(7406005)(8676002)(83380400001)(47076005)(86362001)(2616005)(44832011)(36860700001)(426003)(81166007)(4326008)(26005)(2101003)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: slKf12fDhd3BxfL2WL9T7lNlQ/oCo4Br7CVw5DcS3TDyXq+6G1e7y7pLwFA8WvIL5vm4/ru+zKPD9hdu2BO6ge1geojjzrD09g2gFzMsVbRDwmdW7HM3RfjHvRqTC7MQCfQp0+mWM9UwLP2qCoGBE4jeFUyRkp6K79I/o/mkd/MunfRtKdLczA1uJ9VLR94jt2pH7zJ8PoP0LMzjGV3D5+XH8xdFyIkSYqyplXgjN8rQIvW6FX9mosonC+iN59AhuPCB8EX3HfiSRycmKKxb5rMphXsuOjJejd6u9+512QpW3E9k/uuhxI7fTxhbcTy5YFWqbiaVungWjXcKMUeaiwZIVahQP2YFDlNROedTy44R8ssJF1sSKvqeuq7c8EKarhIIBZMAVkE1tU51jg9pZWx8G/wRsY9kz1gEA/omBp+qmhOrgurdnNfDF8OsmfG+1CFyETXHCGGsURPa2WEU7QSWbnvtQefk2BkA/fiavkPtMLKlroJ3xsyVJn570xDZVng1j9E4tuCzdggmLzzgOi3RUi3jkOnx3f3bBsGac9ZR5X3JZJ2s9S7BGC+HFtB3tzNN2PsTHlr0yaK3HSAg1aNVClyqG3hCTl41ty+x7wPkFLUs5NLIFy0AvhtFsgc/OmIqcY3wPssQ9M4jtRnoyuxiRqV/Bcdahk0k8wxYRCq4g8XYJUZerXZIVhG8VD4WQugje6sX9PWM5yZqTaLCzMsUYkFk8pVKMVyXFjoKtgIY/MrR+QxiURBOPNEh0dVGsmYHGvtJi7t1ZxZYK1YStNn+V5AmqZB/wXI1prx17Hylxe6gXxPzkocBBm3TKqnz
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(40470700001)(36756003)(47076005)(40460700001)(16526019)(15650500001)(7696005)(8676002)(83380400001)(1076003)(186003)(110136005)(81166007)(356005)(54906003)(36860700001)(8936002)(7406005)(7416002)(336012)(86362001)(426003)(70206006)(44832011)(6666004)(4326008)(2616005)(82310400004)(508600001)(5660300002)(2906002)(26005)(70586007)(316002)(2101003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2021 15:44:54.0283
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2021 15:44:41.9353
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00a702d3-39e1-4349-1a06-08d9bbf402aa
+X-MS-Exchange-CrossTenant-Network-Message-Id: f63aaba1-02f7-4783-78b2-08d9bbf3fb72
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT035.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT048.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1729
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4476
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Version 2 of GHCB specification defines Non-Automatic-Exit(NAE) to get
-the extended guest report. It is similar to the SNP_GET_REPORT ioctl.
-The main difference is related to the additional data that will be
-returned. The additional data returned is a certificate blob that can
-be used by the SNP guest user. The certificate blob layout is defined
-in the GHCB specification. The driver simply treats the blob as a opaque
-data and copies it to userspace.
+From: Michael Roth <michael.roth@amd.com>
 
+SEV-SNP guests will be provided the location of special 'secrets'
+'CPUID' pages via the Confidential Computing blob. This blob is
+provided to the boot kernel either through an EFI config table entry,
+or via a setup_data structure as defined by the Linux Boot Protocol.
+
+Locate the Confidential Computing from these sources and, if found,
+use the provided CPUID page/table address to create a copy that the
+boot kernel will use when servicing cpuid instructions via a #VC
+handler.
+
+Signed-off-by: Michael Roth <michael.roth@amd.com>
 Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 ---
- Documentation/virt/coco/sevguest.rst  | 23 +++++++
- drivers/virt/coco/sevguest/sevguest.c | 89 +++++++++++++++++++++++++++
- include/uapi/linux/sev-guest.h        | 13 ++++
- 3 files changed, 125 insertions(+)
+ arch/x86/boot/compressed/sev.c | 13 ++++++++++
+ arch/x86/include/asm/sev.h     |  1 +
+ arch/x86/kernel/sev-shared.c   | 43 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 57 insertions(+)
 
-diff --git a/Documentation/virt/coco/sevguest.rst b/Documentation/virt/coco/sevguest.rst
-index 8c22d514d44f..515af0d71469 100644
---- a/Documentation/virt/coco/sevguest.rst
-+++ b/Documentation/virt/coco/sevguest.rst
-@@ -90,6 +90,29 @@ on the various fields passed in the key derivation request.
- On success, the snp_derived_key_resp.data contains the derived key value. See
- the SEV-SNP specification for further details.
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index 93e125da12cf..29dfb34b5907 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -415,6 +415,19 @@ bool snp_init(struct boot_params *bp)
+ 	if (!cc_info)
+ 		return false;
  
++	/*
++	 * If SEV-SNP-specific Confidential Computing blob is present, then
++	 * firmware/bootloader have indicated SEV-SNP support. Verifying this
++	 * involves CPUID checks which will be more reliable if the SEV-SNP
++	 * CPUID table is used. See comments for snp_cpuid_info_create() for
++	 * more details.
++	 */
++	snp_cpuid_info_create(cc_info);
 +
-+2.3 SNP_GET_EXT_REPORT
-+----------------------
-+:Technology: sev-snp
-+:Type: guest ioctl
-+:Parameters (in/out): struct snp_ext_report_req
-+:Returns (out): struct snp_report_resp on success, -negative on error
++	/* SEV-SNP CPUID table should be set up now. */
++	if (!snp_cpuid_active())
++		sev_es_terminate(1, GHCB_TERM_CPUID);
 +
-+The SNP_GET_EXT_REPORT ioctl is similar to the SNP_GET_REPORT. The difference is
-+related to the additional certificate data that is returned with the report.
-+The certificate data returned is being provided by the hypervisor through the
-+SNP_SET_EXT_CONFIG.
-+
-+The ioctl uses the SNP_GUEST_REQUEST (MSG_REPORT_REQ) command provided by the SEV-SNP
-+firmware to get the attestation report.
-+
-+On success, the snp_ext_report_resp.data will contain the attestation report
-+and snp_ext_report_req.certs_address will contain the certificate blob. If the
-+length of the blob is smaller than expected then snp_ext_report_req.certs_len will
-+be updated with the expected value.
-+
-+See GHCB specification for further detail on how to parse the certificate blob.
-+
- Reference
- ---------
- 
-diff --git a/drivers/virt/coco/sevguest/sevguest.c b/drivers/virt/coco/sevguest/sevguest.c
-index d8dcafc32e11..f86fa13b8e5b 100644
---- a/drivers/virt/coco/sevguest/sevguest.c
-+++ b/drivers/virt/coco/sevguest/sevguest.c
-@@ -41,6 +41,7 @@ struct snp_guest_dev {
- 	struct device *dev;
- 	struct miscdevice misc;
- 
-+	void *certs_data;
- 	struct snp_guest_crypto *crypto;
- 	struct snp_guest_msg *request, *response;
- 	struct snp_secrets_page_layout *layout;
-@@ -433,6 +434,84 @@ static int get_derived_key(struct snp_guest_dev *snp_dev, struct snp_guest_reque
- 	return rc;
+ 	/*
+ 	 * Pass run-time kernel a pointer to CC info via boot_params so EFI
+ 	 * config table doesn't need to be searched again during early startup
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index cd189c20bcc4..4fa7ca20d7c9 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -157,6 +157,7 @@ bool snp_init(struct boot_params *bp);
+  * sev-shared.c via #include and these declarations can be dropped.
+  */
+ struct cc_blob_sev_info *snp_find_cc_blob_setup_data(struct boot_params *bp);
++void snp_cpuid_info_create(const struct cc_blob_sev_info *cc_info);
+ #else
+ static inline void sev_es_ist_enter(struct pt_regs *regs) { }
+ static inline void sev_es_ist_exit(void) { }
+diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+index bd58a4ce29c8..5cb8f87df4b3 100644
+--- a/arch/x86/kernel/sev-shared.c
++++ b/arch/x86/kernel/sev-shared.c
+@@ -403,6 +403,23 @@ snp_cpuid_find_validated_func(u32 func, u32 subfunc, u32 *eax, u32 *ebx,
+ 	return false;
  }
  
-+static int get_ext_report(struct snp_guest_dev *snp_dev, struct snp_guest_request_ioctl *arg)
++static void __init snp_cpuid_set_ranges(void)
 +{
-+	struct snp_guest_crypto *crypto = snp_dev->crypto;
-+	struct snp_ext_report_req req;
-+	struct snp_report_resp *resp;
-+	int ret, npages = 0, resp_len;
++	const struct snp_cpuid_info *cpuid_info = snp_cpuid_info_get_ptr();
++	int i;
 +
-+	if (!arg->req_data || !arg->resp_data)
-+		return -EINVAL;
++	for (i = 0; i < cpuid_info->count; i++) {
++		const struct snp_cpuid_fn *fn = &cpuid_info->fn[i];
 +
-+	/* Copy the request payload from userspace */
-+	if (copy_from_user(&req, (void __user *)arg->req_data, sizeof(req)))
-+		return -EFAULT;
-+
-+	if (req.certs_len) {
-+		if (req.certs_len > SEV_FW_BLOB_MAX_SIZE ||
-+		    !IS_ALIGNED(req.certs_len, PAGE_SIZE))
-+			return -EINVAL;
++		if (fn->eax_in == 0x0)
++			cpuid_std_range_max = fn->eax;
++		else if (fn->eax_in == 0x40000000)
++			cpuid_hyp_range_max = fn->eax;
++		else if (fn->eax_in == 0x80000000)
++			cpuid_ext_range_max = fn->eax;
 +	}
-+
-+	if (req.certs_address && req.certs_len) {
-+		if (!access_ok(req.certs_address, req.certs_len))
-+			return -EFAULT;
-+
-+		/*
-+		 * Initialize the intermediate buffer with all zero's. This buffer
-+		 * is used in the guest request message to get the certs blob from
-+		 * the host. If host does not supply any certs in it, then copy
-+		 * zeros to indicate that certificate data was not provided.
-+		 */
-+		memset(snp_dev->certs_data, 0, req.certs_len);
-+
-+		npages = req.certs_len >> PAGE_SHIFT;
-+	}
-+
-+	/*
-+	 * The intermediate response buffer is used while decrypting the
-+	 * response payload. Make sure that it has enough space to cover the
-+	 * authtag.
-+	 */
-+	resp_len = sizeof(resp->data) + crypto->a_len;
-+	resp = kzalloc(resp_len, GFP_KERNEL_ACCOUNT);
-+	if (!resp)
-+		return -ENOMEM;
-+
-+	snp_dev->input.data_npages = npages;
-+	ret = handle_guest_request(snp_dev, SVM_VMGEXIT_EXT_GUEST_REQUEST, arg->msg_version,
-+				   SNP_MSG_REPORT_REQ, &req.data.user_data,
-+				   sizeof(req.data.user_data), resp->data, resp_len, &arg->fw_err);
-+
-+	/* If certs length is invalid then copy the returned length */
-+	if (arg->fw_err == SNP_GUEST_REQ_INVALID_LEN) {
-+		req.certs_len = snp_dev->input.data_npages << PAGE_SHIFT;
-+
-+		if (copy_to_user((void __user *)arg->req_data, &req, sizeof(req)))
-+			ret = -EFAULT;
-+	}
-+
-+	if (ret)
-+		goto e_free;
-+
-+	/* Copy the certificate data blob to userspace */
-+	if (req.certs_address && req.certs_len &&
-+	    copy_to_user((void __user *)req.certs_address, snp_dev->certs_data,
-+			 req.certs_len)) {
-+		ret = -EFAULT;
-+		goto e_free;
-+	}
-+
-+	/* Copy the response payload to userspace */
-+	if (copy_to_user((void __user *)arg->resp_data, resp, sizeof(*resp)))
-+		ret = -EFAULT;
-+
-+e_free:
-+	kfree(resp);
-+	return ret;
 +}
 +
- static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long arg)
+ static bool snp_cpuid_check_range(u32 func)
  {
- 	struct snp_guest_dev *snp_dev = to_snp_dev(file);
-@@ -465,6 +544,9 @@ static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long
- 	case SNP_GET_DERIVED_KEY:
- 		ret = get_derived_key(snp_dev, &input);
- 		break;
-+	case SNP_GET_EXT_REPORT:
-+		ret = get_ext_report(snp_dev, &input);
-+		break;
- 	default:
- 		break;
- 	}
-@@ -593,6 +675,10 @@ static int __init snp_guest_probe(struct platform_device *pdev)
- 	if (!snp_dev->response)
- 		goto e_fail;
+ 	if (func <= cpuid_std_range_max ||
+@@ -968,3 +985,29 @@ snp_find_cc_blob_setup_data(struct boot_params *bp)
  
-+	snp_dev->certs_data = alloc_shared_pages(SEV_FW_BLOB_MAX_SIZE);
-+	if (!snp_dev->certs_data)
-+		goto e_fail;
+ 	return (struct cc_blob_sev_info *)(unsigned long)sd->cc_blob_address;
+ }
 +
- 	ret = -EIO;
- 	snp_dev->crypto = init_crypto(snp_dev, snp_dev->vmpck, VMPCK_KEY_LEN);
- 	if (!snp_dev->crypto)
-@@ -606,6 +692,7 @@ static int __init snp_guest_probe(struct platform_device *pdev)
- 	/* initial the input address for guest request */
- 	snp_dev->input.req_gpa = __pa(snp_dev->request);
- 	snp_dev->input.resp_gpa = __pa(snp_dev->response);
-+	snp_dev->input.data_gpa = __pa(snp_dev->certs_data);
- 
- 	ret =  misc_register(misc);
- 	if (ret)
-@@ -616,6 +703,7 @@ static int __init snp_guest_probe(struct platform_device *pdev)
- 
- e_fail:
- 	iounmap(layout);
-+	free_shared_pages(snp_dev->certs_data, SEV_FW_BLOB_MAX_SIZE);
- 	free_shared_pages(snp_dev->request, sizeof(struct snp_guest_msg));
- 	free_shared_pages(snp_dev->response, sizeof(struct snp_guest_msg));
- 
-@@ -628,6 +716,7 @@ static int __exit snp_guest_remove(struct platform_device *pdev)
- 
- 	free_shared_pages(snp_dev->request, sizeof(struct snp_guest_msg));
- 	free_shared_pages(snp_dev->response, sizeof(struct snp_guest_msg));
-+	free_shared_pages(snp_dev->certs_data, SEV_FW_BLOB_MAX_SIZE);
- 	deinit_crypto(snp_dev->crypto);
- 	misc_deregister(&snp_dev->misc);
- 
-diff --git a/include/uapi/linux/sev-guest.h b/include/uapi/linux/sev-guest.h
-index ce595539e00c..43127aa18026 100644
---- a/include/uapi/linux/sev-guest.h
-+++ b/include/uapi/linux/sev-guest.h
-@@ -53,6 +53,16 @@ struct snp_guest_request_ioctl {
- 	__u64 fw_err;
- };
- 
-+struct snp_ext_report_req {
-+	struct snp_report_req data;
++/*
++ * Initialize the kernel's copy of the SEV-SNP CPUID table, and set up the
++ * pointer that will be used to access it.
++ *
++ * Maintaining a direct mapping of the SEV-SNP CPUID table used by firmware
++ * would be possible as an alternative, but the approach is brittle since the
++ * mapping needs to be updated in sync with all the changes to virtual memory
++ * layout and related mapping facilities throughout the boot process.
++ */
++void __init snp_cpuid_info_create(const struct cc_blob_sev_info *cc_info)
++{
++	const struct snp_cpuid_info *cpuid_info_fw, *cpuid_info;
 +
-+	/* where to copy the certificate blob */
-+	__u64 certs_address;
++	if (!cc_info || !cc_info->cpuid_phys || cc_info->cpuid_len < PAGE_SIZE)
++		sev_es_terminate(1, GHCB_TERM_CPUID);
 +
-+	/* length of the certificate blob */
-+	__u32 certs_len;
-+};
++	cpuid_info_fw = (const struct snp_cpuid_info *)cc_info->cpuid_phys;
++	if (!cpuid_info_fw->count || cpuid_info_fw->count > SNP_CPUID_COUNT_MAX)
++		sev_es_terminate(1, GHCB_TERM_CPUID);
 +
- #define SNP_GUEST_REQ_IOC_TYPE	'S'
- 
- /* Get SNP attestation report */
-@@ -61,4 +71,7 @@ struct snp_guest_request_ioctl {
- /* Get a derived key from the root */
- #define SNP_GET_DERIVED_KEY _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x1, struct snp_guest_request_ioctl)
- 
-+/* Get SNP extended report as defined in the GHCB specification version 2. */
-+#define SNP_GET_EXT_REPORT _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x2, struct snp_guest_request_ioctl)
-+
- #endif /* __UAPI_LINUX_SEV_GUEST_H_ */
++	cpuid_info = snp_cpuid_info_get_ptr();
++	memcpy((void *)cpuid_info, cpuid_info_fw, sizeof(*cpuid_info));
++	snp_cpuid_initialized = true;
++	snp_cpuid_set_ranges();
++}
 -- 
 2.25.1
 
