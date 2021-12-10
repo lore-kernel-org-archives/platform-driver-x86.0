@@ -2,564 +2,340 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D25C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Dec 2021 15:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A71C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Dec 2021 15:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239611AbhLJPpz (ORCPT
+        id S235265AbhLJPrb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Dec 2021 10:45:55 -0500
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:21518 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S243013AbhLJPpq (ORCPT
+        Fri, 10 Dec 2021 10:47:31 -0500
+Received: from mail-dm6nam12on2075.outbound.protection.outlook.com ([40.107.243.75]:56289
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230255AbhLJPrb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Dec 2021 10:45:46 -0500
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BACurAT000494;
-        Fri, 10 Dec 2021 09:42:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=PODMain02222019;
- bh=MctcL98IV3iaEfaCDdDYLNgCwqh489vrd4Gf2yASCKY=;
- b=fEGnJ6zZrOYfzpmKmgUhayX1NDM6vPKHYTzr9qDD3X9/h8hp7bQcTUyv25GoEp8ofyUI
- ghT/lvpv08xzLZ5fUFeo45RDfAJI74QTMc2TMeot8gqVBJn8BQ/UU10FjrX88x58hOtz
- RQ9xcRZwxfI0PaOcCSyq2b16UvgLts9ZemcVg25y/gKmASEeJTfWNO2xKJbcQ69GOebH
- rpfzTmdrhde5PWQW/rCnAleaJbE702I27ExlRxcP6GAGPZFTxEDWfcyZ2xWjpJjsYR84
- VnU+p5KcIYmcXp0ZOyRimqu/aslGmWXNYWyPV/7oEjtQ4LIVSl95Sw6J7+O6ykQfEaBP Eg== 
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-        by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3cuds09y4p-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 10 Dec 2021 09:42:01 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 10 Dec 2021 10:47:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fU3sOnm7qj6oNITa6ZrXccfvzEj/BN3lm4xE/HV7jnIpM0FwL+yTZyqGnTVuuY/2QY9yv0Z3XPm56/eZvyIGystsklQd2APe61Wp2i4W/J3KuaWL0rKtu1VgJZc18d5SZ1t2NnbopShrpX3PyFwA4Sz9CwBV6OOBNdVSxFgy4uePvU7N9fgs7Y5KITtwoPlikG+Gbiebfv0RqBiTMNvzRRD2LVRyzZqzQiZxFaCDkgbOjtUwGpnbMsoMu3t9NI87eOluqAgzHK74IfQt3sj9+IySx9ci4yhBKD6im+xhF5Lm6Ij07e01lbYO/hExapjPPu20EuIlTUpCTyZ2oW6r7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cWICdsmfsM13g03TlnnuhKN8aNv8hpSqWxZLvsomreQ=;
+ b=CNlz7l5uRlMogeqffxFFX1K0J1VaKTrJslPATvqP7ruUQP9miXerarxdekymEJcm8bKLhWLQ+3W6avAJpxkyseWWHDYMq7iU5dj6FewHDerbUXYcJCpuWP9fRAm6tSb5GmQxchZu/eiCpf8cmxa0wAhvbVYlCw2twQYhTToVDJwarTT9f4BRSOuqKAzJPDKzmXCfHNWDkhIfxDBcRcdNGUsLihENtzwQfovkEtqDcHWS/eD7zJAT/TYN3ywN9SbERWLtIfzdPn9EG+inks5xzv+42KHipX7Wj8rfDtmVCdfj0wGuw+Poz1aZdMaI3kXfsup8/D6JEzENTMNzV9V2NQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cWICdsmfsM13g03TlnnuhKN8aNv8hpSqWxZLvsomreQ=;
+ b=v7CTAgAujO+DAWAt51IKifFHeti1rcXB3M/KudzJ70KsdwQCuCa8V7aCFdpL2tWdAgeX7NWq0EfVSDoAqGv1+C+lU8BIBJRTSvg9wCJCm7sKF2Mwof2f/eItrHGuRJXT6467DWFqnq4aAa0B9wsBLGlsUetM5nRKxTrp043mPsA=
+Received: from BN9PR03CA0076.namprd03.prod.outlook.com (2603:10b6:408:fc::21)
+ by BL0PR12MB2355.namprd12.prod.outlook.com (2603:10b6:207:3f::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.21; Fri, 10 Dec
+ 2021 15:43:53 +0000
+Received: from BN8NAM11FT065.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:fc:cafe::af) by BN9PR03CA0076.outlook.office365.com
+ (2603:10b6:408:fc::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.21 via Frontend
+ Transport; Fri, 10 Dec 2021 15:43:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com;
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BN8NAM11FT065.mail.protection.outlook.com (10.13.177.63) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4778.13 via Frontend Transport; Fri, 10 Dec 2021 15:43:52 +0000
+Received: from sbrijesh-desktop.amd.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Fri, 10 Dec
- 2021 15:41:59 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Fri, 10 Dec 2021 15:41:59 +0000
-Received: from LONN2DGDQ73.ad.cirrus.com (unknown [198.90.238.135])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id F122A2AA;
-        Fri, 10 Dec 2021 15:41:58 +0000 (UTC)
-From:   Stefan Binding <sbinding@opensource.cirrus.com>
-To:     Mark Brown <broonie@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>,
+ 2021 09:43:48 -0600
+From:   Brijesh Singh <brijesh.singh@amd.com>
+To:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>, <linux-efi@vger.kernel.org>,
         <platform-driver-x86@vger.kernel.org>,
-        <patches@opensource.cirrus.com>,
-        Stefan Binding <sbinding@opensource.cirrus.com>
-Subject: [PATCH v2 6/6] ACPI: bus-multi-instantiate: Add SPI support
-Date:   Fri, 10 Dec 2021 15:40:50 +0000
-Message-ID: <20211210154050.3713-7-sbinding@opensource.cirrus.com>
+        <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "Vitaly Kuznetsov" <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        <tony.luck@intel.com>, <marcorr@google.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: [PATCH v8 01/40] x86/compressed/64: detect/setup SEV/SME features earlier in boot
+Date:   Fri, 10 Dec 2021 09:42:53 -0600
+Message-ID: <20211210154332.11526-2-brijesh.singh@amd.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211210154050.3713-1-sbinding@opensource.cirrus.com>
-References: <20211210154050.3713-1-sbinding@opensource.cirrus.com>
+In-Reply-To: <20211210154332.11526-1-brijesh.singh@amd.com>
+References: <20211210154332.11526-1-brijesh.singh@amd.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: 6JfsD0UFRfs9G7dW9-JawkPQm232o3nX
-X-Proofpoint-ORIG-GUID: 6JfsD0UFRfs9G7dW9-JawkPQm232o3nX
-X-Proofpoint-Spam-Reason: safe
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB03.amd.com
+ (10.181.40.144)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7728a01d-f5a5-4562-0bb3-08d9bbf3de7b
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2355:EE_
+X-Microsoft-Antispam-PRVS: <BL0PR12MB2355D8933827589CB5926599E5719@BL0PR12MB2355.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 383ekUieqgFrNa5uUzs53ofdKOSMM9aO9zRQ6RoYQZoNKXiIQ5V/iws20HJDl4KXbNkOlmffEuDsX4i1YlIYFFwO/VH5euEtMyZb6nenvDInz5yDfGIC0PSaZ4b/g08SkMiH5julwDb889cy4My3AeHh59R61PbLXdmkfyECs0zwuCXapDcigKbIOqCABUK0CAJtwzEA5xHN2c+oD2J6cEmKsBRygXziCkQIO5TY1l5WDTfpGz413yRcK7+ty4LnoknXJ82ONi5vUH2034Lg2TU40WWwz6BSMro0SjuP8UWqy6YSrVTQwmN2WsozmdwoPGPsYBOz4IDuV9ODV4BU9At9fdYcaYrtzhkvnklCYsYvmRlXmhK3XU/ZzwL5iTsADhbWMDs+04WRJGSbx5MkPY6Xg8Li4JyjySjmqjjV/o0PrnZO4UzgnZB2qmv9+6wrcN9B5ROmIAjW17VcliaChJNnOqd3ymznGa/VEcIBAn09GframhAJRE/E2plUpZ19EQTe1dcwIGILk1VPvt3sjxNWCmbY2jPH132vUP2MKFKjGBkNX3MscE1zR9k2pAYP0DJcOQ+XQED6Dpg0iLATcZ8aEYrwc4tkmFRjNCkjfkRAozJ7fC+jiQTNi0J52eO7n0z+zj7OhoTo70zjb9y8OIq7ipi0PiP0e3uEgVRgXL5qIwa58bMGISka0OPNkxmYRnG7Y52GBdkPSenU9O6yCsHkYRSYxY0H7oHG6yY/iVHWJRsz1uMEslQdFkoLPzHJgCLFTJnHb1UOibPIuwFOOQClqOMNovYrcS/hP0vpK9BxiyvfvR4g91u0jcEFvkdu
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(40470700001)(186003)(36860700001)(4326008)(8936002)(16526019)(110136005)(82310400004)(5660300002)(81166007)(7696005)(83380400001)(6666004)(40460700001)(1076003)(47076005)(316002)(36756003)(426003)(54906003)(26005)(70586007)(8676002)(356005)(2616005)(2906002)(336012)(7416002)(44832011)(508600001)(70206006)(86362001)(7406005)(2101003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2021 15:43:52.5169
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7728a01d-f5a5-4562-0bb3-08d9bbf3de7b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT065.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2355
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support for spi bus in bus-multi-instantiate driver
+From: Michael Roth <michael.roth@amd.com>
 
-Some peripherals can have either a I2C or a SPI connection
-to the host (but not both) but use the same HID for both
-types. So it is not possible to use the HID to determine
-whether it is I2C or SPI. The driver must check the node
-to see if it contains I2cSerialBus or SpiSerialBus entries.
+With upcoming SEV-SNP support, SEV-related features need to be
+initialized earlier in boot, at the same point the initial #VC handler
+is set up, so that the SEV-SNP CPUID table can be utilized during the
+initial feature checks. Also, SEV-SNP feature detection will rely on
+EFI helper functions to scan the EFI config table for the Confidential
+Computing blob, and so would need to be implemented at least partially
+in C.
 
-For backwards-compatibility with the existing nodes I2C is
-checked first and if such entries are found ONLY I2C devices
-are created. Since some existing nodes that were already
-handled by this driver could also contain unrelated
-SpiSerialBus nodes that were previously ignored, and this
-preserves that behavior. If there is ever a need to handle
-a node where both I2C and SPI devices must be instantiated
-this can be added in future.
+Currently set_sev_encryption_mask() is used to initialize the
+sev_status and sme_me_mask globals that advertise what SEV/SME features
+are available in a guest. Rename it to sev_enable() to better reflect
+that (SME is only enabled in the case of SEV guests in the
+boot/compressed kernel), and move it to just after the stage1 #VC
+handler is set up so that it can be used to initialize SEV-SNP as well
+in future patches.
 
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+While at it, re-implement it as C code so that all SEV feature
+detection can be better consolidated with upcoming SEV-SNP feature
+detection, which will also be in C.
+
+The 32-bit entry path remains unchanged, as it never relied on the
+set_sev_encryption_mask() initialization to begin with, possibly due to
+the normal rva() helper for accessing globals only being usable by code
+in .head.text. Either way, 32-bit entry for SEV-SNP would likely only
+be supported for non-EFI boot paths, and so wouldn't rely on existing
+EFI helper functions, and so could be handled by a separate/simpler
+32-bit initializer in the future if needed.
+
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 ---
- drivers/acpi/Kconfig                 |  10 +-
- drivers/acpi/bus-multi-instantiate.c | 345 ++++++++++++++++++++++++---
- drivers/acpi/scan.c                  |  13 +-
- 3 files changed, 327 insertions(+), 41 deletions(-)
+ arch/x86/boot/compressed/head_64.S     | 32 ++++++++++--------
+ arch/x86/boot/compressed/mem_encrypt.S | 36 ---------------------
+ arch/x86/boot/compressed/misc.h        |  4 +--
+ arch/x86/boot/compressed/sev.c         | 45 ++++++++++++++++++++++++++
+ 4 files changed, 66 insertions(+), 51 deletions(-)
 
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index 6ba47dd39eb4..948f39d55595 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -296,12 +296,12 @@ config ACPI_PROCESSOR
- 	  the module will be called processor.
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 572c535cf45b..20b174adca51 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -191,9 +191,8 @@ SYM_FUNC_START(startup_32)
+ 	/*
+ 	 * Mark SEV as active in sev_status so that startup32_check_sev_cbit()
+ 	 * will do a check. The sev_status memory will be fully initialized
+-	 * with the contents of MSR_AMD_SEV_STATUS later in
+-	 * set_sev_encryption_mask(). For now it is sufficient to know that SEV
+-	 * is active.
++	 * with the contents of MSR_AMD_SEV_STATUS later via sev_enable(). For
++	 * now it is sufficient to know that SEV is active.
+ 	 */
+ 	movl	$1, rva(sev_status)(%ebp)
+ 1:
+@@ -447,6 +446,23 @@ SYM_CODE_START(startup_64)
+ 	call	load_stage1_idt
+ 	popq	%rsi
  
- config ACPI_BUS_MULTI_INST
--	tristate "I2C multi instantiate pseudo device driver"
--	depends on I2C
-+	tristate "I2C and SPI multi instantiate pseudo device driver"
-+	depends on I2C && SPI
- 	help
--	  Some ACPI-based systems list multiple i2c-devices in a single ACPI
--	  firmware-node. This driver will instantiate separate i2c-clients
--	  for each device in the firmware-node.
-+	  Some ACPI-based systems list multiple i2c/spi devices in a
-+	  single ACPI firmware-node. This driver will instantiate separate
-+	  i2c-clients or spi-devices for each device in the firmware-node.
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called bus-multi-instantiate.
-diff --git a/drivers/acpi/bus-multi-instantiate.c b/drivers/acpi/bus-multi-instantiate.c
-index 50f1540762e9..c1306a0ee13c 100644
---- a/drivers/acpi/bus-multi-instantiate.c
-+++ b/drivers/acpi/bus-multi-instantiate.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-  * Bus multi-instantiate driver, pseudo driver to instantiate multiple
-- * i2c-clients from a single fwnode.
-+ * i2c-clients or spi-devices from a single fwnode.
-  *
-  * Copyright 2018 Hans de Goede <hdegoede@redhat.com>
-  */
-@@ -14,6 +14,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-+#include <linux/spi/spi.h>
- #include <linux/types.h>
- 
- #define IRQ_RESOURCE_TYPE	GENMASK(1, 0)
-@@ -21,15 +22,38 @@
- #define IRQ_RESOURCE_GPIO	1
- #define IRQ_RESOURCE_APIC	2
- 
-+enum bmi_bus_type {
-+	BMI_I2C,
-+	BMI_SPI,
-+	BMI_AUTO_DETEC,
-+};
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	/*
++	 * Now that the stage1 interrupt handlers are set up, #VC exceptions from
++	 * CPUID instructions can be properly handled for SEV-ES guests.
++	 *
++	 * For SEV-SNP, the CPUID table also needs to be set up in advance of any
++	 * CPUID instructions being issued, so go ahead and do that now via
++	 * sev_enable(), which will also handle the rest of the SEV-related
++	 * detection/setup to ensure that has been done in advance of any dependent
++	 * code.
++	 */
++	pushq	%rsi
++	movq	%rsi, %rdi		/* real mode address */
++	call	sev_enable
++	popq	%rsi
++#endif
 +
-+struct bmi_spi_acpi {
-+	char *resource_source;
-+	struct acpi_resource_spi_serialbus sb;
-+};
-+
-+struct bmi_spi_sb_acpi {
-+	int count;
-+	struct bmi_spi_acpi acpi_data[];
-+};
-+
- struct bmi_instance {
- 	const char *type;
- 	unsigned int flags;
- 	int irq_idx;
- };
+ 	/*
+ 	 * paging_prepare() sets up the trampoline and checks if we need to
+ 	 * enable 5-level paging.
+@@ -559,17 +575,7 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 	shrq	$3, %rcx
+ 	rep	stosq
  
-+struct bmi_node {
-+	enum bmi_bus_type bus_type;
-+	struct bmi_instance instances[];
-+};
-+
- struct bmi {
- 	int i2c_num;
-+	int spi_num;
- 	struct i2c_client **i2c_devs;
-+	struct spi_device **spi_devs;
- };
+-/*
+- * If running as an SEV guest, the encryption mask is required in the
+- * page-table setup code below. When the guest also has SEV-ES enabled
+- * set_sev_encryption_mask() will cause #VC exceptions, but the stage2
+- * handler can't map its GHCB because the page-table is not set up yet.
+- * So set up the encryption mask here while still on the stage1 #VC
+- * handler. Then load stage2 IDT and switch to the kernel's own
+- * page-table.
+- */
+ 	pushq	%rsi
+-	call	set_sev_encryption_mask
+ 	call	load_stage2_idt
  
- static int bmi_get_irq(struct platform_device *pdev, struct acpi_device *adev,
-@@ -60,6 +84,230 @@ static void bmi_devs_unregister(struct bmi *bmi)
+ 	/* Pass boot_params to initialize_identity_maps() */
+diff --git a/arch/x86/boot/compressed/mem_encrypt.S b/arch/x86/boot/compressed/mem_encrypt.S
+index c1e81a848b2a..311d40f35a4b 100644
+--- a/arch/x86/boot/compressed/mem_encrypt.S
++++ b/arch/x86/boot/compressed/mem_encrypt.S
+@@ -187,42 +187,6 @@ SYM_CODE_END(startup32_vc_handler)
+ 	.code64
+ 
+ #include "../../kernel/sev_verify_cbit.S"
+-SYM_FUNC_START(set_sev_encryption_mask)
+-#ifdef CONFIG_AMD_MEM_ENCRYPT
+-	push	%rbp
+-	push	%rdx
+-
+-	movq	%rsp, %rbp		/* Save current stack pointer */
+-
+-	call	get_sev_encryption_bit	/* Get the encryption bit position */
+-	testl	%eax, %eax
+-	jz	.Lno_sev_mask
+-
+-	bts	%rax, sme_me_mask(%rip)	/* Create the encryption mask */
+-
+-	/*
+-	 * Read MSR_AMD64_SEV again and store it to sev_status. Can't do this in
+-	 * get_sev_encryption_bit() because this function is 32-bit code and
+-	 * shared between 64-bit and 32-bit boot path.
+-	 */
+-	movl	$MSR_AMD64_SEV, %ecx	/* Read the SEV MSR */
+-	rdmsr
+-
+-	/* Store MSR value in sev_status */
+-	shlq	$32, %rdx
+-	orq	%rdx, %rax
+-	movq	%rax, sev_status(%rip)
+-
+-.Lno_sev_mask:
+-	movq	%rbp, %rsp		/* Restore original stack pointer */
+-
+-	pop	%rdx
+-	pop	%rbp
+-#endif
+-
+-	xor	%rax, %rax
+-	ret
+-SYM_FUNC_END(set_sev_encryption_mask)
+ 
+ 	.data
+ 
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 16ed360b6692..23e0e395084a 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -120,12 +120,12 @@ static inline void console_init(void)
+ { }
+ #endif
+ 
+-void set_sev_encryption_mask(void);
+-
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
++void sev_enable(struct boot_params *bp);
+ void sev_es_shutdown_ghcb(void);
+ extern bool sev_es_check_ghcb_fault(unsigned long address);
+ #else
++static inline void sev_enable(struct boot_params *bp) { }
+ static inline void sev_es_shutdown_ghcb(void) { }
+ static inline bool sev_es_check_ghcb_fault(unsigned long address)
  {
- 	while (bmi->i2c_num > 0)
- 		i2c_unregister_device(bmi->i2c_devs[--bmi->i2c_num]);
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index 28bcf04c022e..8eebdf589a90 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -204,3 +204,48 @@ void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
+ 	else if (result != ES_RETRY)
+ 		sev_es_terminate(GHCB_SEV_ES_GEN_REQ);
+ }
 +
-+	while (bmi->spi_num > 0)
-+		spi_unregister_device(bmi->spi_devs[--bmi->spi_num]);
++static inline u64 rd_sev_status_msr(void)
++{
++	unsigned long low, high;
++
++	asm volatile("rdmsr" : "=a" (low), "=d" (high) :
++			"c" (MSR_AMD64_SEV));
++
++	return ((high << 32) | low);
 +}
 +
-+static int bmi_spi_count(struct acpi_resource *ares, void *data)
++void sev_enable(struct boot_params *bp)
 +{
-+	struct acpi_resource_spi_serialbus *sb;
-+	int *count = data;
++	unsigned int eax, ebx, ecx, edx;
 +
-+	if (ares->type != ACPI_RESOURCE_TYPE_SERIAL_BUS)
-+		return 1;
-+
-+	sb = &ares->data.spi_serial_bus;
-+	if (sb->type != ACPI_RESOURCE_SERIAL_TYPE_SPI)
-+		return 1;
-+
-+	*count = *count + 1;
-+
-+	return 1;
-+}
-+
-+static int bmi_spi_count_resources(struct acpi_device *adev)
-+{
-+	LIST_HEAD(r);
-+	int count = 0;
-+	int ret;
-+
-+	ret = acpi_dev_get_resources(adev, &r, bmi_spi_count, &count);
-+	if (ret < 0)
-+		return ret;
-+
-+	acpi_dev_free_resource_list(&r);
-+
-+	return count;
-+}
-+
-+static int bmi_spi_save_res(struct acpi_resource *ares, void *data)
-+{
-+	struct acpi_resource_spi_serialbus *sb;
-+	struct bmi_spi_sb_acpi *resources = data;
-+	struct bmi_spi_acpi *acpi_data;
-+
-+	if (ares->type != ACPI_RESOURCE_TYPE_SERIAL_BUS)
-+		return 1;
-+
-+	sb = &ares->data.spi_serial_bus;
-+	if (sb->type != ACPI_RESOURCE_SERIAL_TYPE_SPI)
-+		return 1;
-+
-+	acpi_data = &resources->acpi_data[resources->count];
-+	memcpy(&acpi_data->sb, sb, sizeof(*sb));
-+	acpi_data->resource_source = kstrndup(sb->resource_source.string_ptr,
-+					      sb->resource_source.string_length, GFP_KERNEL);
-+	if (!acpi_data->resource_source)
-+		return 1;
-+	resources->count++;
-+
-+	return 1;
-+}
-+
-+static void bmi_spi_res_free(struct bmi_spi_sb_acpi *resources)
-+{
-+	if (!resources)
++	/* Check for the SME/SEV support leaf */
++	eax = 0x80000000;
++	ecx = 0;
++	native_cpuid(&eax, &ebx, &ecx, &edx);
++	if (eax < 0x8000001f)
 +		return;
 +
-+	while (resources->count)
-+		kfree(resources->acpi_data[--resources->count].resource_source);
-+	kfree(resources);
-+}
-+
-+static struct bmi_spi_sb_acpi *bmi_spi_get_resources(struct device *dev,
-+						     struct acpi_device *adev, int count)
-+{
-+	struct bmi_spi_sb_acpi *resources;
-+	LIST_HEAD(r);
-+	int ret;
-+
-+	resources = kmalloc(struct_size(resources, acpi_data, count), GFP_KERNEL);
-+	if (!resources)
-+		return NULL;
-+
-+	ret = acpi_dev_get_resources(adev, &r, bmi_spi_save_res, resources);
-+	if (ret < 0)
-+		goto error;
-+
-+	acpi_dev_free_resource_list(&r);
-+
-+	return resources;
-+
-+error:
-+	bmi_spi_res_free(resources);
-+	return NULL;
-+}
-+
-+static struct spi_controller *bmi_find_spi_controller(char *path)
-+{
-+	acpi_handle parent_handle;
-+	struct acpi_device *adev;
-+	acpi_status status;
-+
-+	status = acpi_get_handle(NULL, path, &parent_handle);
-+	if (ACPI_FAILURE(status))
-+		return NULL;
-+
-+	if (acpi_bus_get_device(parent_handle, &adev))
-+		return NULL;
-+
-+	return acpi_spi_find_controller_by_adev(adev);
-+}
-+
-+/**
-+ * bmi_spi_probe - Instantiate multiple SPI devices from inst array
-+ * @pdev:	Platform device
-+ * @adev:	ACPI device
-+ * @bmi:	Internal struct for Bus multi instantiate driver
-+ * @inst:	Array of instances to probe
-+ *
-+ * Returns the number of SPI devices instantiate, Zero if none is found or a negative error code.
-+ */
-+static int bmi_spi_probe(struct platform_device *pdev, struct acpi_device *adev, struct bmi *bmi,
-+			 const struct bmi_instance *inst_array)
-+{
-+	struct bmi_spi_sb_acpi *acpi_data;
-+	struct device *dev = &pdev->dev;
-+	struct spi_controller *ctlr;
-+	struct spi_device *spi_dev;
-+	char name[50];
-+	int i, ret, count;
-+
-+	ret = bmi_spi_count_resources(adev);
-+	if (ret <= 0)
-+		return ret;
-+	count = ret;
-+
-+	bmi->spi_devs = devm_kcalloc(dev, count, sizeof(*bmi->spi_devs), GFP_KERNEL);
-+	if (!bmi->spi_devs)
-+		return -ENOMEM;
-+
-+	acpi_data = bmi_spi_get_resources(dev, adev, count);
-+	if (!acpi_data)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < count && inst_array[i].type; i++) {
-+		ctlr = bmi_find_spi_controller(acpi_data->acpi_data[i].resource_source);
-+		if (!ctlr) {
-+			ret = -EPROBE_DEFER;
-+			goto error;
-+		}
-+
-+		spi_dev = spi_alloc_device(ctlr);
-+		if (!spi_dev) {
-+			dev_err(&ctlr->dev, "failed to allocate SPI device for %s\n",
-+				dev_name(&adev->dev));
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+
-+		strscpy(spi_dev->modalias, inst_array[i].type, sizeof(spi_dev->modalias));
-+
-+		if (ctlr->fw_translate_cs) {
-+			ret = ctlr->fw_translate_cs(ctlr,
-+						    acpi_data->acpi_data[i].sb.device_selection);
-+			if (ret < 0) {
-+				spi_dev_put(spi_dev);
-+				goto error;
-+			}
-+			spi_dev->chip_select = ret;
-+		} else {
-+			spi_dev->chip_select = acpi_data->acpi_data[i].sb.device_selection;
-+		}
-+
-+		spi_dev->max_speed_hz = acpi_data->acpi_data[i].sb.connection_speed;
-+		spi_dev->bits_per_word = acpi_data->acpi_data[i].sb.data_bit_length;
-+
-+		if (acpi_data->acpi_data[i].sb.clock_phase == ACPI_SPI_SECOND_PHASE)
-+			spi_dev->mode |= SPI_CPHA;
-+		if (acpi_data->acpi_data[i].sb.clock_polarity == ACPI_SPI_START_HIGH)
-+			spi_dev->mode |= SPI_CPOL;
-+		if (acpi_data->acpi_data[i].sb.device_polarity == ACPI_SPI_ACTIVE_HIGH)
-+			spi_dev->mode |= SPI_CS_HIGH;
-+
-+		ret = bmi_get_irq(pdev, adev, &inst_array[i]);
-+		if (ret < 0) {
-+			spi_dev_put(spi_dev);
-+			goto error;
-+		}
-+		spi_dev->irq = ret;
-+
-+		snprintf(name, sizeof(name), "%s-%s-%s.%d", dev_name(&ctlr->dev), dev_name(dev),
-+			 inst_array[i].type, i);
-+		spi_dev->dev.init_name = name;
-+
-+		ret = spi_add_device(spi_dev);
-+		if (ret) {
-+			dev_err(&ctlr->dev, "failed to add SPI device %s from ACPI: %d\n",
-+				dev_name(&adev->dev), ret);
-+			spi_dev_put(spi_dev);
-+			goto error;
-+		}
-+
-+		dev_dbg(dev, "SPI device %s using chip select %u", name, spi_dev->chip_select);
-+
-+		bmi->spi_devs[i] = spi_dev;
-+		bmi->spi_num++;
-+	}
-+
-+	if (bmi->spi_num < count) {
-+		dev_err(dev, "Error finding driver, idx %d\n", i);
-+		ret = -ENODEV;
-+		goto error;
-+	}
-+
-+	dev_info(dev, "Instantiate %d SPI devices.\n", bmi->spi_num);
-+	bmi_spi_res_free(acpi_data);
-+
-+	return bmi->spi_num;
-+error:
-+	bmi_spi_res_free(acpi_data);
-+	bmi_devs_unregister(bmi);
-+	dev_err_probe(dev, ret, "SPI error %d\n", ret);
-+
-+	return ret;
-+
- }
- 
- /**
-@@ -125,14 +373,14 @@ static int bmi_i2c_probe(struct platform_device *pdev, struct acpi_device *adev,
- 
- static int bmi_probe(struct platform_device *pdev)
- {
--	const struct bmi_instance *inst_array;
- 	struct device *dev = &pdev->dev;
-+	const struct bmi_node *node;
- 	struct acpi_device *adev;
- 	struct bmi *bmi;
--	int ret;
-+	int i2c_ret = 0, spi_ret = 0;
- 
--	inst_array = device_get_match_data(dev);
--	if (!inst_array) {
-+	node = device_get_match_data(dev);
-+	if (!node) {
- 		dev_err(dev, "Error ACPI match data is missing\n");
- 		return -ENODEV;
- 	}
-@@ -147,13 +395,44 @@ static int bmi_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, bmi);
- 
--	ret = bmi_i2c_probe(pdev, adev, bmi, inst_array);
--	if (ret > 0)
-+	/* Each time this driver probes only one type of bus will be chosen.
-+	 * And I2C has preference, which means that if find a I2cSerialBus it assumes
-+	 * that all following devices will also be I2C.
-+	 * In case there are zero I2C devices, it assumes that all following devices are SPI.
++	/*
++	 * Check for the SME/SEV feature:
++	 *   CPUID Fn8000_001F[EAX]
++	 *   - Bit 0 - Secure Memory Encryption support
++	 *   - Bit 1 - Secure Encrypted Virtualization support
++	 *   CPUID Fn8000_001F[EBX]
++	 *   - Bits 5:0 - Pagetable bit position used to indicate encryption
 +	 */
-+	if (node->bus_type != BMI_SPI) {
-+		i2c_ret = bmi_i2c_probe(pdev, adev, bmi, node->instances);
-+		if (i2c_ret > 0)
-+			return 0;
-+		else if (i2c_ret == -EPROBE_DEFER)
-+			return i2c_ret;
-+		if (node->bus_type == BMI_I2C) {
-+			if (i2c_ret == 0)
-+				return -ENODEV;
-+			else
-+				return i2c_ret;
-+		}
-+	}
-+	/* BMI_SPI or BMI_AUTO_DETEC */
-+	spi_ret = bmi_spi_probe(pdev, adev, bmi, node->instances);
-+	if (spi_ret > 0)
- 		return 0;
--	if (ret == 0)
--		ret = -ENODEV;
-+	else if (spi_ret == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+	if (node->bus_type == BMI_SPI) {
-+		if (spi_ret == 0)
-+			return -ENODEV;
-+		else
-+			return spi_ret;
-+	}
- 
--	return ret;
-+	/* The only way to get here is BMI_AUTO_DETEC and i2c_ret <= 0 and spi_ret <= 0 */
-+	if (i2c_ret == 0 && spi_ret == 0)
-+		return -ENODEV;
-+	else if (i2c_ret == 0 && spi_ret)
-+		return spi_ret;
++	eax = 0x8000001f;
++	ecx = 0;
++	native_cpuid(&eax, &ebx, &ecx, &edx);
++	/* Check whether SEV is supported */
++	if (!(eax & BIT(1)))
++		return;
 +
-+	return i2c_ret;
- }
- 
- static int bmi_remove(struct platform_device *pdev)
-@@ -165,27 +444,33 @@ static int bmi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct bmi_instance bsg1160_data[]  = {
--	{ "bmc150_accel", IRQ_RESOURCE_GPIO, 0 },
--	{ "bmc150_magn" },
--	{ "bmg160" },
--	{}
-+static const struct bmi_node bsg1160_data = {
-+	.instances = {
-+		{ "bmc150_accel", IRQ_RESOURCE_GPIO, 0 },
-+		{ "bmc150_magn" },
-+		{ "bmg160" },
-+		{}
-+	},
- };
- 
--static const struct bmi_instance bsg2150_data[]  = {
--	{ "bmc150_accel", IRQ_RESOURCE_GPIO, 0 },
--	{ "bmc150_magn" },
--	/* The resources describe a 3th client, but it is not really there. */
--	{ "bsg2150_dummy_dev" },
--	{}
-+static const struct bmi_node bsg2150_data = {
-+	.instances = {
-+		{ "bmc150_accel", IRQ_RESOURCE_GPIO, 0 },
-+		{ "bmc150_magn" },
-+		/* The resources describe a 3th client, but it is not really there. */
-+		{ "bsg2150_dummy_dev" },
-+		{}
-+	},
- };
- 
--static const struct bmi_instance int3515_data[]  = {
--	{ "tps6598x", IRQ_RESOURCE_APIC, 0 },
--	{ "tps6598x", IRQ_RESOURCE_APIC, 1 },
--	{ "tps6598x", IRQ_RESOURCE_APIC, 2 },
--	{ "tps6598x", IRQ_RESOURCE_APIC, 3 },
--	{}
-+static const struct bmi_node int3515_data = {
-+	.instances = {
-+		{ "tps6598x", IRQ_RESOURCE_APIC, 0 },
-+		{ "tps6598x", IRQ_RESOURCE_APIC, 1 },
-+		{ "tps6598x", IRQ_RESOURCE_APIC, 2 },
-+		{ "tps6598x", IRQ_RESOURCE_APIC, 3 },
-+		{}
-+	},
- };
- 
- /*
-@@ -193,9 +478,9 @@ static const struct bmi_instance int3515_data[]  = {
-  * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-  */
- static const struct acpi_device_id bmi_acpi_ids[] = {
--	{ "BSG1160", (unsigned long)bsg1160_data },
--	{ "BSG2150", (unsigned long)bsg2150_data },
--	{ "INT3515", (unsigned long)int3515_data },
-+	{ "BSG1160", (unsigned long)&bsg1160_data },
-+	{ "BSG2150", (unsigned long)&bsg2150_data },
-+	{ "INT3515", (unsigned long)&int3515_data },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, bmi_acpi_ids);
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 969d8138d019..8b937fc20d23 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -1696,12 +1696,13 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
- 	struct list_head resource_list;
- 	bool is_serial_bus_slave = false;
- 	/*
--	 * These devices have multiple I2cSerialBus resources and an i2c-client
--	 * must be instantiated for each, each with its own i2c_device_id.
--	 * Normally we only instantiate an i2c-client for the first resource,
--	 * using the ACPI HID as id. These special cases are handled by the
--	 * drivers/acpi/bus-multi-instantiate.c driver, which knows
--	 * which i2c_device_id to use for each resource.
-+	 * These devices have multiple I2cSerialBus/SpiSerialBus resources
-+	 * and an (i2c/spi)-client must be instantiated for each, each with
-+	 * its own i2c_device_id/spi_device_id.
-+	 * Normally we only instantiate an (i2c/spi)-client for the first
-+	 * resource, using the ACPI HID as id. These special cases are handled
-+	 * by the drivers/acpi/bus-multi-instantiate.c driver, which
-+	 * knows which i2c_device_id or spi_device_id to use for each resource.
- 	 */
- 	static const struct acpi_device_id bus_multi_instantiate_ids[] = {
- 		{"BSG1160", },
++	/* Set the SME mask if this is an SEV guest. */
++	sev_status   = rd_sev_status_msr();
++
++	if (!(sev_status & MSR_AMD64_SEV_ENABLED))
++		return;
++
++	sme_me_mask = BIT_ULL(ebx & 0x3f);
++}
 -- 
 2.25.1
 
