@@ -2,44 +2,41 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F95C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Dec 2021 02:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F7EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Dec 2021 07:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232556AbhLLCVR (ORCPT
+        id S232307AbhLMHCP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 11 Dec 2021 21:21:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232495AbhLLCVQ (ORCPT
+        Mon, 13 Dec 2021 02:02:15 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:39292 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232318AbhLMHCN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 11 Dec 2021 21:21:16 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1F2C061714
-        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Dec 2021 18:21:16 -0800 (PST)
+        Mon, 13 Dec 2021 02:02:13 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E39DDB80C9F
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Dec 2021 02:21:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9E8D4C341CA
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Dec 2021 02:21:13 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 081D7B80DB1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Dec 2021 07:02:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 96A78C341EA
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Dec 2021 07:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639275673;
-        bh=uevMijiofo3Wg6O/V/vnm775lxz3FcklB+zfEQwP2v0=;
+        s=k20201202; t=1639378929;
+        bh=lx9CcqNNsfoRfuHL8gYO2STSIMUDnAPn0t3ENDDJ+ek=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=XoBQJV3BHl5DAPIxiJTJWg3H6CUJUyz99QpUKLKE1y+Xmi+e2e/dBSMe+Zafy1aVI
-         +GoPe3/CJHJNfSjs0gXbNHcRhOg2QDjB1YpAvgNaWPmJWpTAH+wqQ0mjh2GozYtQ+S
-         CTNRHvh8xCX8VB6HRD2ji5G8+5DAcEND3h5Qn4j3hhBV7vixJPjoI8ThMZtn20A4BQ
-         R6F9UAWcPgm13N3MTWyhrhk9kIyttWk770iW24oMYzArWfZW6FA6rwF4gClzc1Ey5U
-         +RtfC0HgG5gzngvC9oY3R5LAsqUmwdLhtTmjsIsnGAVyZO48f+Nu6f2CkuHrhNQuBb
-         +OR3lQWkqAtqw==
+        b=UDoUYk3qzAGlWPE9XPPdAZVFJzWRVJN1C5srJIFK3aSFmZkE7J0E4MmARZ+8xXQxs
+         b7iBGFq4IjDyQKWAzS5IEuln/6OfsM6AOpnHhKL9DxQEzg+Tm9DYtYU84+ZmpD0YcM
+         Mq4jYm42FOJr7wlyIaO8Se6EiFtvBQXhKxRudItm4rHo/arxxTBK/osvLi7ou7zINm
+         xfv1WEGHqekFjqSxkT5Rzcy/YaJFNTwuWF4N4xISgH5J0vrgGPiBb1NYfzJyj0ylc+
+         GQLfBYzgn3uUHSfne9k59CWQYFONeV7NXBYDujDhUUf1G4bJUR0z2Sk7ursv+Hi2+V
+         gorGl9AVfDaKg==
 Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id 900AA610C9; Sun, 12 Dec 2021 02:21:13 +0000 (UTC)
+        id 7D55061151; Mon, 13 Dec 2021 07:02:09 +0000 (UTC)
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date:   Sun, 12 Dec 2021 02:21:11 +0000
+Date:   Mon, 13 Dec 2021 07:02:07 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,14 +45,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: jason@joickle.com
+X-Bugzilla-Who: eugene.shalygin@gmail.com
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-204807-215701-duCNZDb3Rf@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-HV8iJ7F4ZL@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -69,18 +66,14 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Jason Oickle (jason@joickle.com) changed:
+--- Comment #197 from Eugene Shalygin (eugene.shalygin@gmail.com) ---
+(In reply to Denis Pauk from comment #192)
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |jason@joickle.com
+> @Eugene Shalygin Could you correct me if I have missed something?
 
---- Comment #196 from Jason Oickle (jason@joickle.com) ---
-I've been using the oct 10th version of this patch on 5.15 manjaro for a few
-weeks without issues. Amazing work by Denis and everyone else involved!
-
-I was just wondering if the patch is included in the 5.16 kernel or does it
-still need to be patched manually?
+Isn't the \_SB_.PCI0.LPCB.SIO1.MUT0 mutex, referenced by
+\_SB_.PCI0.LPCB.SIO1.ENFG() / \_SB_.PCI0.LPCB.SIO1.EXFG(), the one we are
+looking for?
 
 --=20
 You may reply to this email to add a comment.
