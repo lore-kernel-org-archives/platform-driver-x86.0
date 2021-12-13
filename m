@@ -2,93 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7673C4321E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Dec 2021 17:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742FEC43219
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Dec 2021 17:59:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241519AbhLMR7c (ORCPT
+        id S241503AbhLMR7c (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Mon, 13 Dec 2021 12:59:32 -0500
 Received: from mga18.intel.com ([134.134.136.126]:56114 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241455AbhLMR7a (ORCPT
+        id S241425AbhLMR73 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Dec 2021 12:59:30 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="225648983"
+        Mon, 13 Dec 2021 12:59:29 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="225648984"
 X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
-   d="scan'208";a="225648983"
+   d="scan'208";a="225648984"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 09:59:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
-   d="scan'208";a="505000139"
+   d="scan'208";a="505000141"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 13 Dec 2021 09:59:24 -0800
+  by orsmga007.jf.intel.com with ESMTP; 13 Dec 2021 09:59:25 -0800
 Received: from debox1-desk4.intel.com (unknown [10.212.243.203])
-        by linux.intel.com (Postfix) with ESMTP id 93861580A85;
-        Mon, 13 Dec 2021 09:59:24 -0800 (PST)
+        by linux.intel.com (Postfix) with ESMTP id 357A5580B54;
+        Mon, 13 Dec 2021 09:59:25 -0800 (PST)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     lee.jones@linaro.org, hdegoede@redhat.com,
         david.e.box@linux.intel.com, bhelgaas@google.com,
         gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
         srinivas.pandruvada@intel.com, mgross@linux.intel.com
 Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH V3 0/6] Auxiliary bus driver support for Intel PCIe VSEC/DVSEC
-Date:   Mon, 13 Dec 2021 09:59:15 -0800
-Message-Id: <20211213175921.1897860-1-david.e.box@linux.intel.com>
+        linux-pci@vger.kernel.org, Mark Gross <markgross@kernel.org>
+Subject: [PATCH V3 2/6] driver core: auxiliary bus: Add driver data helpers
+Date:   Mon, 13 Dec 2021 09:59:17 -0800
+Message-Id: <20211213175921.1897860-3-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211213175921.1897860-1-david.e.box@linux.intel.com>
+References: <20211213175921.1897860-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This series makes changes to the current intel_pmt driver to give it
-broader support for Intel defined PCIe VSEC and DVSEC features. It
-moves the implementation from MFD to the auxiliary bus and creates a
-generic framework for enumerating the extended capabilities. It also
-adds support for a new VSEC, Software Defined Silicon (SDSi).
+Adds get/set driver data helpers for auxiliary devices.
 
-David E. Box (6):
-  PCI: Add #defines for accessing PCIe DVSEC fields
-  driver core: auxiliary bus: Add driver data helpers
-  platform/x86/intel: Move intel_pmt from MFD to Auxiliary Bus
-  platform/x86: Add Intel Software Defined Silicon driver
-  tools arch x86: Add Intel SDSi provisiong tool
-  selftests: sdsi: test sysfs setup
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Mark Gross <markgross@kernel.org>
+---
+V3
+  - No changes
+V2
+  - No changes
 
- .../ABI/testing/sysfs-driver-intel_sdsi       |  77 +++
- MAINTAINERS                                   |  19 +-
- drivers/mfd/Kconfig                           |  10 -
- drivers/mfd/Makefile                          |   1 -
- drivers/mfd/intel_pmt.c                       | 261 --------
- drivers/platform/x86/intel/Kconfig            |  23 +
- drivers/platform/x86/intel/Makefile           |   4 +
- drivers/platform/x86/intel/pmt/Kconfig        |   4 +-
- drivers/platform/x86/intel/pmt/class.c        |  21 +-
- drivers/platform/x86/intel/pmt/class.h        |   5 +-
- drivers/platform/x86/intel/pmt/crashlog.c     |  47 +-
- drivers/platform/x86/intel/pmt/telemetry.c    |  46 +-
- drivers/platform/x86/intel/sdsi.c             | 571 ++++++++++++++++++
- drivers/platform/x86/intel/vsec.c             | 422 +++++++++++++
- drivers/platform/x86/intel/vsec.h             |  43 ++
- include/linux/auxiliary_bus.h                 |  10 +
- include/uapi/linux/pci_regs.h                 |   4 +
- tools/arch/x86/intel_sdsi/Makefile            |   9 +
- tools/arch/x86/intel_sdsi/sdsi.c              | 540 +++++++++++++++++
- tools/testing/selftests/drivers/sdsi/sdsi.sh  |  18 +
- .../selftests/drivers/sdsi/sdsi_test.py       | 226 +++++++
- 21 files changed, 2026 insertions(+), 335 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
- delete mode 100644 drivers/mfd/intel_pmt.c
- create mode 100644 drivers/platform/x86/intel/sdsi.c
- create mode 100644 drivers/platform/x86/intel/vsec.c
- create mode 100644 drivers/platform/x86/intel/vsec.h
- create mode 100644 tools/arch/x86/intel_sdsi/Makefile
- create mode 100644 tools/arch/x86/intel_sdsi/sdsi.c
- create mode 100755 tools/testing/selftests/drivers/sdsi/sdsi.sh
- create mode 100644 tools/testing/selftests/drivers/sdsi/sdsi_test.py
+ include/linux/auxiliary_bus.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
+diff --git a/include/linux/auxiliary_bus.h b/include/linux/auxiliary_bus.h
+index fc51d45f106b..a8338d456e81 100644
+--- a/include/linux/auxiliary_bus.h
++++ b/include/linux/auxiliary_bus.h
+@@ -28,6 +28,16 @@ struct auxiliary_driver {
+ 	const struct auxiliary_device_id *id_table;
+ };
+ 
++static inline void *auxiliary_get_drvdata(struct auxiliary_device *auxdev)
++{
++	return dev_get_drvdata(&auxdev->dev);
++}
++
++static inline void auxiliary_set_drvdata(struct auxiliary_device *auxdev, void *data)
++{
++	dev_set_drvdata(&auxdev->dev, data);
++}
++
+ static inline struct auxiliary_device *to_auxiliary_dev(struct device *dev)
+ {
+ 	return container_of(dev, struct auxiliary_device, dev);
 -- 
 2.25.1
 
