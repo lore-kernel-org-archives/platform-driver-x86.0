@@ -2,338 +2,198 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE00C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Dec 2021 11:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC3CC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Dec 2021 12:05:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235092AbhLMLkn (ORCPT
+        id S233943AbhLMMFQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Dec 2021 06:40:43 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:33572 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S231463AbhLMLkm (ORCPT
+        Mon, 13 Dec 2021 07:05:16 -0500
+Received: from mail-eopbgr60046.outbound.protection.outlook.com ([40.107.6.46]:32965
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229618AbhLMMFP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Dec 2021 06:40:42 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BD5StQO021923;
-        Mon, 13 Dec 2021 05:40:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- references : in-reply-to : subject : date : message-id : mime-version :
- content-type : content-transfer-encoding; s=PODMain02222019;
- bh=AyJDsqK4TktiOaHc93I1NcIFPacc8LcRVfCNYLD2O7k=;
- b=HDfpfr0+/AVc9nGh3qru+D9pPm1nSCza8DzBZj3Zy6s7NBf3a2KI+S6YIaF+uqKcZHeb
- vI4pMLOyddWgW0QC9Be4p+RRljAGAY4iQayTJ7oMnn4Lr9JNV2e6lZm7t5jJtrqq2NdV
- XK4EC5Kx2gy3EU7dCaQZ2OOIN8qlYT75fITAng9ab4S96f+2LxH4mG+betKRMF9nWKuq
- qToVOr+O/wi/UpKo9Cx9BIdo53BXYZM+af4zF45DSX6qEmLu7hS9gQwaG1+ShUUuOYvh
- aFVqHt2e0GJ5txTyowyKecKO0Rob/K2VO0SlPD0TZYfQ4HoRutKug0cTnIFpwtrNXKW0 8g== 
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3cwc0bs810-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 13 Dec 2021 05:40:33 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Mon, 13 Dec
- 2021 11:40:31 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Mon, 13 Dec 2021 11:40:31 +0000
-Received: from LONN2DGDQ73 (unknown [198.90.238.114])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id D027AB13;
-        Mon, 13 Dec 2021 11:40:30 +0000 (UTC)
-From:   Stefan Binding <sbinding@opensource.cirrus.com>
-To:     'Hans de Goede' <hdegoede@redhat.com>,
-        'Mark Brown' <broonie@kernel.org>,
-        "'Rafael J . Wysocki'" <rafael@kernel.org>,
-        'Len Brown' <lenb@kernel.org>,
-        'Mark Gross' <markgross@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>,
+        Mon, 13 Dec 2021 07:05:15 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hp6TmfKL8pC5mRvMejfEvq5neWcNC/Ods4EF93Cd5tdypnt85mX0njWDjbGwm4bzp1cImZOGWie9ur95hJ270OfNtxfJunxqRWLlxHckYlSg/ZoqOObsCjVbueGWFe8KYNiM0iDa+dcT80FwmSh9ANkaA7pgisJIUoHlmVq7yw+TZcc55wgqJwzmshh6T/sbfe/wR1FS4BXcaOd8Yqxlcbe1dP9tSUo+JzYMfmcmhdqj8V+v7Qeo+wnQKR+n6eAaw2upzQ3o8aoZ60naoU6f0A0kP5YMi2H+KZB3i7NjlIPQJlLvYBUfCsSFgZV1ndD9nTyoIhV4UGuM1MjAHIoG2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yMAWZj7JtMho6QTTu3ke3PjJz/uK+VQkd7jSZRXmIKQ=;
+ b=TZ77VuJS+ReTMyhEhXWqyuDm9+1YAGY0xxtt3lXaMg0moDukonyMonV1BnshelJSygMBCsiWHe+gKLOguRQGBnrjLjmm/WtEsUJfux+OmE6v7tFk89CyJikExTRhxZsT6p4hnWdzO+kRUzc50RVe96426QeH+/X2I0FfoKiZfrONbQojzRdNpgg+cNGw37xglw01+Ta09+ei2vnvY+D6+CNxLAIJUZGy4mtsCFWChc13Ub5rvhRv3VQMVIkR57dGhw5a2sQjMyNkvLcs884jInKMOr97xXmusedZsLXgFBuBQElBmpJ9feZoF0LSZkIBUT5jpQl+sPff5P89R/IILg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 194.138.21.72) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=siemens.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=siemens.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yMAWZj7JtMho6QTTu3ke3PjJz/uK+VQkd7jSZRXmIKQ=;
+ b=NU3eZ7SxcSA3CnnZT481gP6UcbjUHzMKZ+nLiVpYiqcWwLuglA3mSggJGp7pjfPFckaMhhi2uciEc/OYhQvqe9m6FIX62cicHexz8bVTzuALpVsPGh4/yCnm5hwxZ6F8KJaOPnSG4U7yNmCzM8ZUbSTDNwiAmb7XgHWnjtQmzNEpj1yHv8HLK4vn8hM2a+AYviQ+4V/ugXCrkqslIIh5w7vYHUaHW8RDwryU7Nj3S9p3fGZbphcqspB4Xyzh6+t8bjEgS6kSIp+RhSNvnH3G+R1USVkwHZvAIAHJAb7tsnXzow9L6kpFEpQ/EZq8aDE05tFbp55XE2kzLP9W05wX9g==
+Received: from DU2PR04CA0267.eurprd04.prod.outlook.com (2603:10a6:10:28e::32)
+ by AS8PR10MB4661.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:33e::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.11; Mon, 13 Dec
+ 2021 12:05:13 +0000
+Received: from DB5EUR01FT022.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:10:28e:cafe::5d) by DU2PR04CA0267.outlook.office365.com
+ (2603:10a6:10:28e::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.12 via Frontend
+ Transport; Mon, 13 Dec 2021 12:05:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.72)
+ smtp.mailfrom=siemens.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=siemens.com;
+Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
+ 194.138.21.72 as permitted sender) receiver=protection.outlook.com;
+ client-ip=194.138.21.72; helo=hybrid.siemens.com;
+Received: from hybrid.siemens.com (194.138.21.72) by
+ DB5EUR01FT022.mail.protection.outlook.com (10.152.4.244) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4778.12 via Frontend Transport; Mon, 13 Dec 2021 12:05:13 +0000
+Received: from DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) by
+ DEMCHDC9SMA.ad011.siemens.net (194.138.21.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Mon, 13 Dec 2021 13:05:13 +0100
+Received: from md1za8fc.ad001.siemens.net (139.25.69.80) by
+ DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Mon, 13 Dec 2021 13:05:12 +0100
+From:   Henning Schild <henning.schild@siemens.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
         <platform-driver-x86@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-References: <20211210154050.3713-1-sbinding@opensource.cirrus.com> <8160a1c8-544d-6d95-4f80-224c7a9a9d40@redhat.com>
-In-Reply-To: <8160a1c8-544d-6d95-4f80-224c7a9a9d40@redhat.com>
-Subject: RE: [PATCH v2 0/6] Support Spi in i2c-multi-instantiate driver
-Date:   Mon, 13 Dec 2021 11:40:30 +0000
-Message-ID: <002401d7f016$3bb4f260$b31ed720$@opensource.cirrus.com>
+        <linux-watchdog@vger.kernel.org>
+CC:     Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        "Gerd Haeussler" <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Enrico Weigelt <lkml@metux.net>
+Subject: [PATCH v5 0/4] add device drivers for Siemens Industrial PCs
+Date:   Mon, 13 Dec 2021 13:04:58 +0100
+Message-ID: <20211213120502.20661-1-henning.schild@siemens.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-gb
-Thread-Index: AQHKVo1VqSuCeo4owGzltFIRzsdrTwLFQoXGrDVIrYA=
-X-Proofpoint-ORIG-GUID: Ap_HBtL1SbmuCLSLjWcTDUoGQGP6jXpD
-X-Proofpoint-GUID: Ap_HBtL1SbmuCLSLjWcTDUoGQGP6jXpD
-X-Proofpoint-Spam-Reason: safe
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [139.25.69.80]
+X-ClientProxiedBy: DEMCHDC89YA.ad011.siemens.net (139.25.226.104) To
+ DEMCHDC8A0A.ad011.siemens.net (139.25.226.106)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c94555f7-4896-4a7c-4769-08d9be30d1ac
+X-MS-TrafficTypeDiagnostic: AS8PR10MB4661:EE_
+X-Microsoft-Antispam-PRVS: <AS8PR10MB46610579B4F6DED0A7E190A785749@AS8PR10MB4661.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mJcizBIiSeU58JtJvUx56IPt+agryRKti+ew1O1HxQcF3IfvuHvYNhBVIbvt1OINyUExBotpF+oXHtwhmymHfKDRXnYx5AOreeC3aAffnofGikhETM0h9fmRnEdlvSUujZx2zvB9AJOMahfs5aWE6z17MLd8ZvoSnE/lypk7kFxovCn/TQ5B7QtI5Mw3Zeti7pHbcQOMcsiz1xyYidCG0H/4KriTjFKd/kdGOBdlbX+DkJJYbrtUibuxUUhxKh0bw1MG4hhO3OaaxgdUOAltF/AG03T/0oI3cQEaTnBuYnQu+TwvZjo06kpKlwgINOVEuZQvYJIWuJGD5O3Y8Az6QDEy0H+S/8ngGsZuziPzNaUqK//mAaR33bdea/U2FCCkhFIMF51vygvGMLJACM683cox3f0s5alXmErxdIQDqHvIBzoxB0CVHFkXLIqLiiUZArcRFMzAXTKw7BHGtA1FwiqrV162HPDvDthyaHsrElO/ajqzbkpGg+XYo4+Y2iKElN95NNW8cAzlzjYPAebKmDTISg8dvuyRyJ6P9RSaJNqDH1QnX9QGkvNgawedwjKk1KjhzWtwptZqnum25sM1TfQV1lu13x7WoXSKgL4tHefzczN0V1ZRcNfPYNh7rQNcM7BaLciiso12RHlfB0lGNYAXIJV6XhunotopEjvbpRJxIf/h+f3N25GGyZ9sRm1q0y3b43fZTCbDhqu8RsROXdHNQa26K5HXo6dxwiHU9OI=
+X-Forefront-Antispam-Report: CIP:194.138.21.72;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(16526019)(336012)(36860700001)(4326008)(86362001)(2616005)(81166007)(8936002)(5660300002)(508600001)(6666004)(44832011)(356005)(70206006)(70586007)(316002)(186003)(110136005)(26005)(82960400001)(36756003)(1076003)(82310400004)(8676002)(956004)(47076005)(7416002)(2906002)(54906003)(83380400001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2021 12:05:13.4290
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c94555f7-4896-4a7c-4769-08d9be30d1ac
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.72];Helo=[hybrid.siemens.com]
+X-MS-Exchange-CrossTenant-AuthSource: DB5EUR01FT022.eop-EUR01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB4661
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+changes since v4:
+- make everything around GPIO memory usage more verbose
+  - commit messages, FIXME in p1, cover-letter
 
-> -----Original Message-----
-> From: Hans de Goede <hdegoede@redhat.com>
-> Sent: 10 December 2021 16:55
-> To: Stefan Binding <sbinding@opensource.cirrus.com>; Mark Brown
-> <broonie@kernel.org>; Rafael J . Wysocki <rafael@kernel.org>; Len =
-Brown
-> <lenb@kernel.org>; Mark Gross <markgross@kernel.org>
-> Cc: linux-kernel@vger.kernel.org; linux-spi@vger.kernel.org; linux-
-> acpi@vger.kernel.org; platform-driver-x86@vger.kernel.org;
-> patches@opensource.cirrus.com
-> Subject: Re: [PATCH v2 0/6] Support Spi in i2c-multi-instantiate =
-driver
->=20
-> Hi Stefan,
->=20
-> On 12/10/21 16:40, Stefan Binding wrote:
-> > Add support for SPI bus in the ic2-multi-instantiate driver as
-> > upcoming laptops will need to multi instantiate SPI devices from a
-> > single device node, which has multiple SpiSerialBus entries at the
-> > ACPI table.
-> >
-> > With the new SPI support, i2c-multi-instantiate becomes
-> > bus-multi-instantiate and is moved to the ACPI folder.
-> >
-> > The intention is to support the SPI bus by re-using the current I2C
-> > multi instantiate, instead of creating a new SPI multi instantiate, =
-to
-> > make it possible for peripherals that can be controlled by I2C or =
-SPI
-> > to have the same HID at the ACPI table.
-> >
-> > The new driver (Bus multi instantiate, bmi) checks for the =
-hard-coded
-> > bus type and returns -ENODEV in case of zero devices found for that
-> > bus. In the case of automatic bus detection, the driver will give
-> > preference to I2C.
-> >
-> > The expectation is for a device node in the ACPI table to have
-> > multiple I2cSerialBus only or multiple SpiSerialBus only, not a mix =
-of
-> > both; and for the case where there are both entries in one device
-> > node, only the I2C ones would be probed.
-> >
-> > This new bus multi instantiate will be used in CS35L41 HDA new =
-driver,
-> > being upstreamed:
-> > https://lkml.org/lkml/2021/11/23/723
->=20
-> Unfortunately you never really answered my questions about v1 of this
-> series:
->=20
-> https://lore.kernel.org/platform-driver-x86/a1f546c2-5c63-573a-c032-
-> 603c792f3f7c@redhat.com/
->=20
-> So looking at the linked CS35L41 HDA series there is a single ACPI =
-device node
-> with a HID of CLSA0100 which describes two CS35L41 amplifiers =
-connected
-> over I2C ?
+changes since v3:
 
-Yes, the related series uses HID CLSA0100, which contains 2 I2C devices =
-inside a
-single node. This ID was mistakenly used for this laptop, and instead =
-CSC3551=20
-has been used for subsequent laptops.
+- fix io access width and region reservations
+- fix style in p1
 
->=20
-> I assume you are doing this work because there are also designs where =
-there
-> is a similar CLSA0100 ACPI device which also describes two CS35L41 =
-amplifiers
-> but then connected over SPI ?
+changes since v2:
 
-Yes, there are several laptop designs which use an equivalent ACPI which =
-describes
-2 or 4 CS35L41 amplifiers which are connected either via I2C or via SPI.
-Both designs use the same ACPI design and have 2-4 devices (either I2C =
-or SPI)
-defined inside a single ACPI node for HID CSC3551.
-Note that the devices inside the node can be either SPI or I2C, but =
-never SPI
-and I2C.
+- remove "simatic-ipc" prefix from LED names
+- fix style issues found in v2, mainly LED driver
+- fix OEM specific dmi code, and remove magic numbers
+- more "simatic_ipc" name prefixing
+- improved pmc quirk code using callbacks
 
->=20
-> It would really help if you can:
->=20
-> 1. Answer my questions from v1
+changes since v1:
 
-I hope my colleague Lucas has answered these questions now.
+- fixed lots of style issues found in v1
+  - (debug) printing
+  - header ordering
+- fixed license issues GPLv2 and SPDX in all files
+- module_platform_driver instead of __init __exit
+- wdt simplifications cleanup
+- lots of fixes in wdt driver, all that was found in v1
+- fixed dmi length in dmi helper
+- changed LED names to allowed ones
+- move led driver to simple/
+- switched pmc_atom to dmi callback with global variable
 
-> 2. Provide a concrete example of a device where these changes will be
-> necessary to make things work, preferably with a link to an actual =
-ACPI DSDT
-> of that device.
 
-This is the CSC3551 node for a laptop with 4 SPI nodes, with a shared =
-IRQ:
+This series adds support for watchdogs and leds of several x86 devices
+from Siemens.
 
- Scope (_SB.PC00.SPI0)
-    {
-        Device (GSPK)
-        {
-            Name (_HID, "CSC3551")  // _HID: Hardware ID
-            Method (AUID, 0, NotSerialized)
-            {
-                Return ("103C89C3")
-            }
+It is structured with a platform driver that mainly does identification
+of the machines. It might trigger loading of the actual device drivers
+by attaching devices to the platform bus.
 
-            Method (_SUB, 0, NotSerialized)  // _SUB: Subsystem ID
-            {
-                Return (AUID ())
-            }
+The identification is vendor specific, parsing a special binary DMI
+entry. The implementation of that platform identification is applied on
+pmc_atom clock quirks in the final patch.
 
-            Name (_UID, One)  // _UID: Unique ID
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource =
-Settings
-            {
-                Name (RBUF, ResourceTemplate ()
-                {
-                    SpiSerialBusV2 (0x0000, PolarityLow, FourWireMode, =
-0x08,
-                        ControllerInitiated, 0x003D0900, =
-ClockPolarityLow,
-                        ClockPhaseFirst, "\\_SB.PC00.SPI0",
-                        0x00, ResourceConsumer, , Exclusive,
-                        )
-                    SpiSerialBusV2 (0x0001, PolarityLow, FourWireMode, =
-0x08,
-                        ControllerInitiated, 0x003D0900, =
-ClockPolarityLow,
-                        ClockPhaseFirst, "\\_SB.PC00.SPI0",
-                        0x00, ResourceConsumer, , Exclusive,
-                        )
-                    SpiSerialBusV2 (0x0002, PolarityLow, FourWireMode, =
-0x08,
-                        ControllerInitiated, 0x003D0900, =
-ClockPolarityLow,
-                        ClockPhaseFirst, "\\_SB.PC00.SPI0",
-                        0x00, ResourceConsumer, , Exclusive,
-                        )
-                    SpiSerialBusV2 (0x0003, PolarityLow, FourWireMode, =
-0x08,
-                        ControllerInitiated, 0x003D0900, =
-ClockPolarityLow,
-                        ClockPhaseFirst, "\\_SB.PC00.SPI0",
-                        0x00, ResourceConsumer, , Exclusive,
-                        )
-                    GpioIo (Exclusive, PullUp, 0x0000, 0x0000, =
-IoRestrictionOutputOnly,
-                        "\\_SB.GPI0", 0x00, ResourceConsumer, ,
-                        )
-                        {   // Pin list
-                            0x0000
-                        }
-                    GpioIo (Exclusive, PullUp, 0x0000, 0x0000, =
-IoRestrictionOutputOnly,
-                        "\\_SB.GPI0", 0x00, ResourceConsumer, ,
-                        )
-                        {   // Pin list
-                            0x0000
-                        }
-                    GpioIo (Exclusive, PullUp, 0x0000, 0x0000, =
-IoRestrictionOutputOnly,
-                        "\\_SB.GPI0", 0x00, ResourceConsumer, ,
-                        )
-                        {   // Pin list
-                            0x0000
-                        }
-                    GpioIo (Exclusive, PullDown, 0x0000, 0x0000, =
-IoRestrictionOutputOnly,
-                        "\\_SB.GPI0", 0x00, ResourceConsumer, ,
-                        )
-                        {   // Pin list
-                            0x0000
-                        }
-                    GpioIo (Shared, PullUp, 0x0064, 0x0000, =
-IoRestrictionInputOnly,
-                        "\\_SB.GPI0", 0x00, ResourceConsumer, ,
-                        )
-                        {   // Pin list
-                            0x0000
-                        }
-                    GpioInt (Edge, ActiveBoth, Shared, PullUp, 0x0064,
-                        "\\_SB.GPI0", 0x00, ResourceConsumer, ,
-                        )
-                        {   // Pin list
-                            0x0000
-                        }
-                })
-                CreateWordField (RBUF, 0xCA, ACS1)
-                CreateWordField (RBUF, 0xA7, ACS2)
-                CreateWordField (RBUF, 0xED, ACS3)
-                CreateWordField (RBUF, 0x0110, ARST)
-                CreateWordField (RBUF, 0x0133, AINT)
-                CreateWordField (RBUF, 0x0156, AIN2)
-                ACS1 =3D GNUM (0x090E0016)
-                ACS2 =3D GNUM (0x090E0017)
-                ACS3 =3D GNUM (0x090C0006)
-                ARST =3D GNUM (0x09070017)
-                AINT =3D GNUM (0x09070013)
-                AIN2 =3D GNUM (0x09070013)
-                Return (RBUF) /* \_SB_.PC00.SPI0.GSPK._CRS.RBUF */
-            }
+It is all structured in a way that we can easily add more devices and
+more platform drivers later. Internally we have some more code for
+hardware monitoring, more leds, watchdogs etc. This will follow some
+day.
 
-            Method (_STA, 0, NotSerialized)  // _STA: Status
-            {
-                Return (0x0F)
-            }
+The LED as well as the watchdog drivers access GPIO memory directly.
+Using pinctrl is not possible because the machines lack ACPI entries for
+the pinctrl drivers. Updates to the ACPI tables are not expected. So we
+can rule out a conflict where two drivers would try and access that GPIO
+memory.
+So we do not use those pins as "general purpose" but as "Siemens
+purpose", after having identified the devices very clearly. 
 
-            Method (_DIS, 0, NotSerialized)  // _DIS: Disable Device
-            {
-            }
-            Name (_DSD, Package ()  // _DSD: Device-Specific Data
-            {
-                ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301") /* =
-Device Properties for _DSD */,
-                Package ()
-                {
-                    Package () { "cirrus,dev-index", Package () { 0, 1, =
-2, 3 } },
-                    Package ()
-                    {
-                        "reset-gpios", Package ()
-                        {
-                            ^GSPK, 3, 0, 0,
-                            ^GSPK, 3, 0, 0,
-                            ^GSPK, 3, 0, 0,
-                            ^GSPK, 3, 0, 0,
-                        },
-                    },
-                    Package () { "cirrus,speaker-position",     Package =
-() { 1, 0, 1, 0 } },
-                    Package () { "cirrus,gpio1-func",           Package =
-() { 3, 3, 3, 3 } },
-                    Package () { "cirrus,gpio2-func",           Package =
-() { 2, 2, 2, 2 } },
-                    Package () { "cirrus,boost-ind-nanohenry",  Package =
-() { 1000, 1000, 1000, 1000 } },
-                    Package () { "cirrus,boost-peak-milliamp",  Package =
-() { 4500, 4500, 4500, 4500 } },
-                    Package () { "cirrus,boost-cap-microfarad", Package =
-() { 24, 24, 24, 24 } },
-                }
-            })
-        }
-    }
+Henning Schild (4):
+  platform/x86: simatic-ipc: add main driver for Siemens devices
+  leds: simatic-ipc-leds: add new driver for Siemens Industial PCs
+  watchdog: simatic-ipc-wdt: add new driver for Siemens Industrial PCs
+  platform/x86: pmc_atom: improve critclk_systems matching for Siemens
+    PCs
 
-This is just our node from the DSDT, we are working to obtain and share =
-the full DSDT, if still required.
+ drivers/leds/Kconfig                          |   3 +
+ drivers/leds/Makefile                         |   3 +
+ drivers/leds/simple/Kconfig                   |  11 +
+ drivers/leds/simple/Makefile                  |   2 +
+ drivers/leds/simple/simatic-ipc-leds.c        | 202 ++++++++++++++++
+ drivers/platform/x86/Kconfig                  |  12 +
+ drivers/platform/x86/Makefile                 |   3 +
+ drivers/platform/x86/pmc_atom.c               |  54 +++--
+ drivers/platform/x86/simatic-ipc.c            | 176 ++++++++++++++
+ drivers/watchdog/Kconfig                      |  11 +
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/simatic-ipc-wdt.c            | 228 ++++++++++++++++++
+ .../platform_data/x86/simatic-ipc-base.h      |  29 +++
+ include/linux/platform_data/x86/simatic-ipc.h |  72 ++++++
+ 14 files changed, 786 insertions(+), 21 deletions(-)
+ create mode 100644 drivers/leds/simple/Kconfig
+ create mode 100644 drivers/leds/simple/Makefile
+ create mode 100644 drivers/leds/simple/simatic-ipc-leds.c
+ create mode 100644 drivers/platform/x86/simatic-ipc.c
+ create mode 100644 drivers/watchdog/simatic-ipc-wdt.c
+ create mode 100644 include/linux/platform_data/x86/simatic-ipc-base.h
+ create mode 100644 include/linux/platform_data/x86/simatic-ipc.h
 
->=20
-> Until you can better clarify why this is necessary, this series gets a =
-nack from
-> me. The i2c-mult-instantiate code is a hack to deal with some rather =
-sub-
-> optimal choices made in DSDTs used on devices shipped with Windows and
-> unless absolutely necessary I would rather not see this get expanded =
-to SPI.
->=20
-> Regards,
->=20
-> Hans
-
-Thanks,
-
-Stefan
-
+-- 
+2.32.0
 
