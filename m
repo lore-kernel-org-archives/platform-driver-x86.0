@@ -2,145 +2,168 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AA6C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Dec 2021 15:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58774C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Dec 2021 15:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234861AbhLMPIM (ORCPT
+        id S235077AbhLMPsR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Dec 2021 10:08:12 -0500
-Received: from mga03.intel.com ([134.134.136.65]:41906 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233162AbhLMPIM (ORCPT
+        Mon, 13 Dec 2021 10:48:17 -0500
+Received: from mail-bn1nam07on2068.outbound.protection.outlook.com ([40.107.212.68]:27299
+        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232841AbhLMPsR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Dec 2021 10:08:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639408092; x=1670944092;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Ln0+vE8wrxPHB5+sl1PGPaxOXedMn7wnxkhrIv1Bgmc=;
-  b=UA9XDtpdRKDAPliumW57D8jafRpgKLcBqJ9kVphtReC9iz/c7gj13hAX
-   kAkUiMvKDYqE55SVUe5usYZC15f1tt+v93D8F6NjUlmxpb7Jf45oKtzZB
-   vk8Lc5o+HckKhaVR9zEwBNr+eKd9wgKwBZT81JiGHGhQDjlsSX6vPIFra
-   dkQ49YpSz2zBWCpflagkxu2E8xCl6BpgxYAA0caBQCPdsibl5Gio5x/Gx
-   nnhKg6Ehpnbsl70G7dOWDa+T5xwgKJM50eezauNO9zPhI0VUxosKe6AY2
-   d9U2x2eQgMKDvP5JBZmW+b43/FDY3S5JgCwYvbV6l6sWq+R/ibZFwfDzU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10196"; a="238696143"
-X-IronPort-AV: E=Sophos;i="5.88,202,1635231600"; 
-   d="scan'208";a="238696143"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 07:08:11 -0800
-X-IronPort-AV: E=Sophos;i="5.88,202,1635231600"; 
-   d="scan'208";a="752294967"
-Received: from chenb-mobl1.amr.corp.intel.com (HELO [10.212.210.237]) ([10.212.210.237])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 07:08:09 -0800
-Subject: Re: [PATCH v8 27/40] x86/boot: Add Confidential Computing type to
- setup_data
-To:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Mon, 13 Dec 2021 10:48:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NTObWRuBr/ORk+oPx0oykFczKFragho17x4KMUbX6F13bqvOMxRbPekW8AHuFks6fe5zPK8AXiLu4vCN1GghKFfduMCIGI0R2x9iTQ4ie65DnD8HMc0ZjQrFWnM65gD9q14fJCtQuAtflVnqoGSFEy4V9Mcqdkw4TcTkcqXviezcGxwzQ+BcSPiDf+zz4ZGVGN9A6Qd4hlADhyppHxc6g7jVDKCHjLA3ad6Gg3aCRk+A2SyxiDh6OTdve06VeOai3+Mv8BhR5HuhtB/PQNvA7mNjPaFVpGjrtCoWX03YwFvSXxvjaZQV9B0jllhe/hMt/ABsBAUPVZW3R7WB9cYGCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=87U+8v7gHyuWJ4hSa689RZ+ZVsCXjLnhoeYuroxDy4c=;
+ b=KFmIKx0f6DVA5Fnga304muuwQyNmP83JzhFAszFNbyPkjVtWbqr5tiSB7scXQZPEFf4g1Wm+ifk/x86Bu8LG0ZJaNNh6hh/hwhgbt7swFqtYWGBWnqW2bRkCe7HtXfrrXimpQJvSg3wKbVMZrxoLVtoeKU++Jzuz8lemAhKhRRGcE5/Jg3Hd3y1mj0OiIhgPEO2y86VM5c5Nnn7vemcer8KwaY1WQBJ8W3YC9HnsaKWrWmdnbxnnfIsq4MZtdoCiGISMjexwVJbOP6qFoMnd4frc107SDtcKZgoELfLFB21dGfj9H/VTdBXA0UOcGueahEJ6XhgtKtfR5Jr2V043YA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=87U+8v7gHyuWJ4hSa689RZ+ZVsCXjLnhoeYuroxDy4c=;
+ b=349pgGPmsG0o52j+3R/PXF3ENw+62oBDM/NsvkeiOChHcRDWb8zma2mqHe6SGGIBG1qv3YoXMuhh/UOGiWhACuNOGzn7K8NjFkDyi1ZuUll777IrIDmK+i2mlw0FTQDI9DbhgbSYPUHxF3MoJz4eMwjcoRvktl77QKR55Sbjr4Y=
+Received: from DM6PR01CA0003.prod.exchangelabs.com (2603:10b6:5:296::8) by
+ CH0PR12MB5058.namprd12.prod.outlook.com (2603:10b6:610:e1::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4778.17; Mon, 13 Dec 2021 15:48:13 +0000
+Received: from DM6NAM11FT049.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:296:cafe::6f) by DM6PR01CA0003.outlook.office365.com
+ (2603:10b6:5:296::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.12 via Frontend
+ Transport; Mon, 13 Dec 2021 15:48:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com;
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ DM6NAM11FT049.mail.protection.outlook.com (10.13.172.188) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4778.13 via Frontend Transport; Mon, 13 Dec 2021 15:48:13 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Mon, 13 Dec
+ 2021 09:48:12 -0600
+Date:   Mon, 13 Dec 2021 09:47:53 -0600
+From:   Michael Roth <michael.roth@amd.com>
+To:     Dave Hansen <dave.hansen@intel.com>, <fanc.fnst@cn.fujitsu.com>,
+        <j-nomura@ce.jp.nec.com>, <bp@suse.de>
+CC:     Brijesh Singh <brijesh.singh@amd.com>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+        <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Vitaly Kuznetsov" <vkuznets@redhat.com>,
         Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        "Andy Lutomirski" <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         David Rientjes <rientjes@google.com>,
         Dov Murik <dovmurik@linux.ibm.com>,
         Tobin Feldman-Fitzthum <tobin@ibm.com>,
         Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
         Vlastimil Babka <vbabka@suse.cz>,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
         Andi Kleen <ak@linux.intel.com>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
+        <tony.luck@intel.com>, <marcorr@google.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v8 24/40] x86/compressed/acpi: move EFI system table
+ lookup to helper
+Message-ID: <20211213154753.nkkxk6w25tdnagwt@amd.com>
 References: <20211210154332.11526-1-brijesh.singh@amd.com>
- <20211210154332.11526-28-brijesh.singh@amd.com>
- <1fdaca61-884a-ac13-fb33-a47db198f050@intel.com>
- <ba485a09-9c35-4115-decc-1b9c25519358@amd.com>
- <2a5cfbd0-865c-2a8b-b70b-f8f64aba5575@intel.com>
- <f442ca7f-4530-1443-27eb-206d6ca0e7a4@amd.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <48625a39-9e31-d7f2-dccf-74e9c27126f5@intel.com>
-Date:   Mon, 13 Dec 2021 07:08:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ <20211210154332.11526-25-brijesh.singh@amd.com>
+ <cd8f3190-75b3-1fd5-000a-370e6c53f766@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <f442ca7f-4530-1443-27eb-206d6ca0e7a4@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cd8f3190-75b3-1fd5-000a-370e6c53f766@intel.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB03.amd.com
+ (10.181.40.144)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 28614e60-2170-4edf-8435-08d9be4ff8d8
+X-MS-TrafficTypeDiagnostic: CH0PR12MB5058:EE_
+X-Microsoft-Antispam-PRVS: <CH0PR12MB5058B125EBE644067E283EF795749@CH0PR12MB5058.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YEtF+JRI2/tkQQK5Am9hIhBx6wd9xsY9FnHn44ZhoiVh5jMqt/45ijBN3HZoweYlIjaWzpmYMNS+pxauUAtec9nilPYS5oRsHswdWE6kjmRTi3kUdG7hrRfgw//GgJOaHfWlBjQXDtSi4JyeVQr0M9Litg3fUDkJHucawXF/uDSlB9BNF609FXfhXyEKcLYaIhT6woPcVzPRJB625k4Hs844oDzB5vbKX7xtFQqUud+uk9EenlIf0QGqcj2ChC6VsB4oQ+Rqq4blQQtUXvcbhVznInr2iHPPMsCOtnP+oFqizTV3Qd172YjX7S0WxpJaI+CgMByLdpQQ6SvpXF9xaKSFUwN6Yb1iQzVuBpHlugrGPolTstfGKk+sGKzTqUXZ1CjjnfW3EXu5eMEun+GCi8RxXaRA2g5QQg7MyJdAH3vVwphyPNV1kx/AFUZZIuuBac9LlsdqmeYYEO8zPhlKtwhafjvJg0IR+0vF8Qe/4WdAFdigpLm4cmz8+CCm+rZmZKIANCnt8F64SWPpNEQGSXDKkwK/kcRhomXpbO4Fe2kxAaaYZqlzVJ5EFePSsZ3KeV9Ut1zdYjkTct9ttiHp5sh+CUJg2/z7wC7S1o67EwrieLX++6SBwImtbqHJrsJ2qQIA3p/8FYk5y3pV5hcfABCSXD/Vb1wscqDtYS2LhhpccTgSV20PzfPQwp5ls44EAReXb5brVP3YAf04aVOy47LLluXTgDwCntjJE2Do2hBFfMEpWtntaAu9uTMFOAwlBPpLf/XbY2CMm2/uXYb1d8VpfZDnKPhJZ3VstNgPE5Y=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(40470700001)(1076003)(7406005)(7416002)(2616005)(82310400004)(4326008)(8936002)(26005)(110136005)(16526019)(186003)(336012)(6666004)(86362001)(47076005)(8676002)(40460700001)(81166007)(54906003)(36756003)(2906002)(356005)(316002)(44832011)(5660300002)(426003)(53546011)(70206006)(70586007)(508600001)(36860700001)(83380400001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2021 15:48:13.5331
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28614e60-2170-4edf-8435-08d9be4ff8d8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT049.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5058
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 12/13/21 6:49 AM, Brijesh Singh wrote:
->> I was more concerned that this structure could change sizes if it were
->> compiled on 32-bit versus 64-bit code.  For kernel ABIs, we try not to
->> do that.
->>
->> Is this somehow OK when talking to firmware?  Or can a 32-bit OS and
->> 64-bit firmware never interact?
+On Fri, Dec 10, 2021 at 10:54:35AM -0800, Dave Hansen wrote:
+> On 12/10/21 7:43 AM, Brijesh Singh wrote:
+> > +/*
+> > + * Helpers for early access to EFI configuration table
+> > + *
+> > + * Copyright (C) 2021 Advanced Micro Devices, Inc.
+> > + *
+> > + * Author: Michael Roth <michael.roth@amd.com>
+> > + */
 > 
-> For SNP, both the firmware and OS need to be 64-bit. IIRC, both the
-> Linux and OVMF do not enable the memory encryption for the 32-bit.
+> It doesn't seem quite right to slap this copyright on a file that's full
+> of content that came from other files.  It would be one thing if
+> arch/x86/boot/compressed/acpi.c had this banner in it already.  Also, a
 
-Could you please make the structure's size invariant?  That's great if
-there's no problem in today's implementation, but it's best no to leave
-little land mines like this around.  Let's say someone copies your code
-as an example of something that interacts with a firmware table a few
-years or months down the road.
+Yah, acpi.c didn't have any copyright banner so I used my 'default'
+template for new files here to cover any additions, but that does give
+a misleading impression.
+
+I'm not sure how this is normally addressed, but I'm planning on just
+continuing the acpi.c tradition of *not* adding copyright notices for new
+code, and simply document that the contents of the file are mostly movement
+from acpi.c
+
+> arch/x86/boot/compressed/acpi.c had this banner in it already.  Also, a
+> bunch of the lines in this file seem to come from:
+> 
+> 	commit 33f0df8d843deb9ec24116dcd79a40ca0ea8e8a9
+> 	Author: Chao Fan <fanc.fnst@cn.fujitsu.com>
+> 	Date:   Wed Jan 23 19:08:46 2019 +0800
+
+AFAICT the full author list for the changes in question are, in
+alphabetical order:
+
+  Chao Fan <fanc.fnst@cn.fujitsu.com>
+  Junichi Nomura <j-nomura@ce.jp.nec.com>
+  Borislav Petkov <bp@suse.de>
+
+Chao, Junichi, Borislav,
+
+If you would like to be listed as an author in efi.c (which is mainly just a
+movement of EFI config table parsing code from acpi.c into re-usable helper
+functions in efi.c), please let me know and I'll add you.
+
+Otherwise, I'll plan on adopting the acpi.c precedent for this as well, which
+is to not list individual authors, since it doesn't seem right to add Author
+fields retroactively without their permission.
