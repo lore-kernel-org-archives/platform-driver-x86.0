@@ -2,132 +2,87 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE804C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Dec 2021 10:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4FBC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Dec 2021 11:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236362AbhLMKs5 (ORCPT
+        id S234136AbhLMLIn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Dec 2021 05:48:57 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:28055 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235110AbhLMKsz (ORCPT
+        Mon, 13 Dec 2021 06:08:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229644AbhLMLIm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Dec 2021 05:48:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639392535;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hSMRWWvDwDZ8+s/iBej33Q+kZmQH43UiURk7nbOWwWQ=;
-        b=Guuhnn3Uof8zRW0JiHIxl5zq0LAH4t9BW5Qugw93Q2L7ljX3rBwTNrqTEvzjQphphh+bUA
-        QlddvftCDRfqCrfLN0/lImSNrtYLmcT0Ney2bde/+0hkEpilmeZLH/OEV2oFJlUNHW68qx
-        FBdq51kMB6Z9Syw5b/3NaoVQOxrTl3s=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-67-1angl2F2MiCysIRUV520FA-1; Mon, 13 Dec 2021 05:48:54 -0500
-X-MC-Unique: 1angl2F2MiCysIRUV520FA-1
-Received: by mail-ed1-f69.google.com with SMTP id m12-20020a056402430c00b003e9f10bbb7dso13510353edc.18
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Dec 2021 02:48:54 -0800 (PST)
+        Mon, 13 Dec 2021 06:08:42 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC8EC061574;
+        Mon, 13 Dec 2021 03:08:41 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id x15so51589033edv.1;
+        Mon, 13 Dec 2021 03:08:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q/71yqqSgNIZY+ASO/n4MTXd5OJrAF/rcrUjXVCQ3Vo=;
+        b=pG+Fe/DF1MAjTp8W4mjSC5umQah8vLr+W58OxtCphHCku/XW/mw2mDENc97DL6vJoJ
+         AvNho+lk+zY+Kmvq+tW7Vz/Oj7Q8V2S63f72RdTtZuggyBlAj0kQQCl4zF+NnkDDx8tE
+         U2PeMYNYFCiobGiUgUfRxqeCFK1tHwdEIA4dfLOnujJRKxRMCP0pztpBM2Bo2Cx0O7nQ
+         UyNvjvezFb3XSzMyH8qi8QcS66rBMsXM/CHhrPY5icMLVtFF7DooED8u6g3Q9LjjcHZa
+         4Gwr5GHtEH7NN8xA+63rhbVps8kTzb2tM5O3/olZPNx7u0hHTH26Jw/wHHGwAqK5CVZc
+         MJew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=hSMRWWvDwDZ8+s/iBej33Q+kZmQH43UiURk7nbOWwWQ=;
-        b=2LEAUbEdOX21ARJw7GZ9j0oNmudz5NGCKoH0OiU7dzuFIA2RYx3XqEUDfm5xhvJM+T
-         rFz4I/gGRr4Hs/o65vnCRJmXFpsV3gg4/uFk4qmYFGECIyPhBNIwBtEC47/IvDoVcOil
-         Aw0BfIQeYOGOMdsk3MGum2RQZrAqRLo07ZT+XPHQm5uhC0nG33zxTNgY+HzM/xwrqr9i
-         m5B3P+bVb5jB0lC6bNnhoh5OPTUchjXDyqJHrlFD75mmXNFcnA5esUhfLOMfSZLqtkgp
-         A0/zL8cEhR77zJbxpRlGeh5X8jLv5CKXfx/mGRtR0S+o89EctCbtEVIrE+Kqw34J/iFB
-         f4Qg==
-X-Gm-Message-State: AOAM530EJZ66gxqEnl9whlw13NJJwaMMSi8XCXwlDXcB/uQddZCxUv5b
-        d9NPq43Qv/dNsPEJDf6Kmw7TlLwasfo7LrGJ8rhLU2F7C4PUaWi14W+TCSooe2F7MrGsicAXOm1
-        pibOHeU6FoIMsSi0niMXooQTwU/MKfSniAg==
-X-Received: by 2002:a17:906:1697:: with SMTP id s23mr44596862ejd.60.1639392533085;
-        Mon, 13 Dec 2021 02:48:53 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwwFggy2dFOgUjYCsFjmoXFnFNZYH9/F2s6stMUwGL3v9+wBbcRAHCKqxo/kLkyq2T9/Q0jYg==
-X-Received: by 2002:a17:906:1697:: with SMTP id s23mr44596844ejd.60.1639392532881;
-        Mon, 13 Dec 2021 02:48:52 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id hg19sm5541132ejc.1.2021.12.13.02.48.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Dec 2021 02:48:52 -0800 (PST)
-Message-ID: <b11e9554-c3ac-10a8-63ad-46e4f3d1235b@redhat.com>
-Date:   Mon, 13 Dec 2021 11:48:51 +0100
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q/71yqqSgNIZY+ASO/n4MTXd5OJrAF/rcrUjXVCQ3Vo=;
+        b=EpoFjEzszhcIsvXPbvdEF9vDz812AijQEGzCocRpbtAZk3vIOSWjWjGaR3gvLnIhlv
+         ii+FK22h+RolZK5DdKwiCYXCSDNM3upRe9wYEDv4yJiJlAF9inxQeIdhjzBaElslkM+F
+         fPhBkLqMdMQ+r8sbkEZGURRvtfYGQRi12t2/4M7HeffG4ILH6hB0hG6UkS3OTPHW9c0+
+         Lp3e2I4komCVEjDTpBIkp5TP28UyU58xkbmJ9TvK11yvEeVc5ZYZ2N6PaaGGmIGJtDdj
+         5Q+Lav4Rr9KxFJdoF2ah6FpWX7M3cfcHk8ytRi2/q64JZS+acaBWkj3S6fYdylpy/ALw
+         2RuA==
+X-Gm-Message-State: AOAM530VJtDapqaWQtX36KPe74tjJ/Ieoj1f3krmIqvbfZLDrrtGco9R
+        r/yvg2TeMUgP8SphD56wXYXhEZn/XjOv/wt+0HcqoVBvVzDGnQ==
+X-Google-Smtp-Source: ABdhPJzL1y0aaGhWlq/0p1S9UngoP0zJdWnPNaed7hNmKpnDhz8uHEI7MMCIYP6c7MxET9hcARFowiUtaGTMlJ/8iaE=
+X-Received: by 2002:a17:906:489b:: with SMTP id v27mr42396720ejq.567.1639393720218;
+ Mon, 13 Dec 2021 03:08:40 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v7 06/14] clk: Introduce clk-tps68470 driver
-Content-Language: en-US
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J.Wysocki" <rjw@rjwysocki.net>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20211203102857.44539-1-hdegoede@redhat.com>
- <20211203102857.44539-7-hdegoede@redhat.com>
- <20211210005710.2BB88C004DD@smtp.kernel.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211210005710.2BB88C004DD@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20211210143529.10594-1-mario.limonciello@amd.com>
+In-Reply-To: <20211210143529.10594-1-mario.limonciello@amd.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 13 Dec 2021 13:07:10 +0200
+Message-ID: <CAHp75VfkK++Knyj1D85BbJQL_AYhByAN-wQcH6qfKgC8O1CZ=Q@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: amd-pmc: only use callbacks for suspend
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Stephen,
+On Fri, Dec 10, 2021 at 9:06 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> This driver is intended to be used exclusively for suspend to idle
+> so callbacks to send OS_HINT during hibernate and S5 will set OS_HINT
+> at the wrong time leading to an undefined behavior.
 
-On 12/10/21 01:57, Stephen Boyd wrote:
-> Quoting Hans de Goede (2021-12-03 02:28:49)
->> The TPS68470 PMIC provides Clocks, GPIOs and Regulators. At present in
->> the kernel the Regulators and Clocks are controlled by an OpRegion
->> driver designed to work with power control methods defined in ACPI, but
->> some platforms lack those methods, meaning drivers need to be able to
->> consume the resources of these chips through the usual frameworks.
->>
->> This commit adds a driver for the clocks provided by the tps68470,
->> and is designed to bind to the platform_device registered by the
->> intel_skl_int3472 module.
->>
->> This is based on this out of tree driver written by Intel:
->> https://github.com/intel/linux-intel-lts/blob/4.14/base/drivers/clk/clk-tps68470.c
->> with various cleanups added.
->>
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
-> 
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+...
 
-Thank you.
+>  static const struct dev_pm_ops amd_pmc_pm_ops = {
+> -       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(amd_pmc_suspend, amd_pmc_resume)
+> +       .suspend_noirq = amd_pmc_suspend,
+> +       .resume_noirq = amd_pmc_resume,
 
-I'm preparing an immutable branch based on 5.16-rc1 + patches 1-4 + 7-11
-from this series.
+Can you simply switch to SET_NOIRQ_SYSTEM_SLEEP_PM_OPS()?
 
-I can send you a pull-req for that once its ready (its building atm) and
-then you can merge the branch + this patch on top; or I can simply add this
-patch to that branch and take it upstream through the platform-driver-x86
-git tree.
-
-Please let me know how you want to proceed with this.
-
-Regards,
-
-Hans
+>  };
 
 
+-- 
+With Best Regards,
+Andy Shevchenko
