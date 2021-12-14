@@ -2,95 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225E5C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Dec 2021 15:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2996C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Dec 2021 16:34:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234383AbhLNPxv (ORCPT
+        id S236039AbhLNQeW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Dec 2021 10:53:51 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:50680 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231951AbhLNPxv (ORCPT
+        Tue, 14 Dec 2021 11:34:22 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:47430 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235989AbhLNQeV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Dec 2021 10:53:51 -0500
-Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 38EE91EC059D;
-        Tue, 14 Dec 2021 16:53:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1639497225;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=OlUC3lLRynZi+JY7FEvlz/ZRL8mKuuxtrhCfASCsERU=;
-        b=Mou9wxta1Vtvbw8Tn2z/E28PO17LKbLUS3B81uGspJgM8/CX1d5QbqQ6r4ZnpbUC9fPLNU
-        5K3Fz8G+kSCgyUTjaLA3+74zTDr78Fb5bqGmZWajsVeaDSdyykpOlAaRMtL1vhJCbGLNqX
-        h2ZHfnF4qXCvZi1bwVxagVu92iylrTk=
-Date:   Tue, 14 Dec 2021 16:53:46 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v8 03/40] x86/mm: Extend cc_attr to include AMD SEV-SNP
-Message-ID: <Ybi+ChUXwLRkWJY/@zn.tnic>
-References: <20211210154332.11526-1-brijesh.singh@amd.com>
- <20211210154332.11526-4-brijesh.singh@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211210154332.11526-4-brijesh.singh@amd.com>
+        Tue, 14 Dec 2021 11:34:21 -0500
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 4AB3F1F381;
+        Tue, 14 Dec 2021 16:34:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1639499660; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=77bABPJtSNxFAw/Xtugh+m2CCURtbLu9t56UQYXKviI=;
+        b=ltizkbQFfN1v1qDLj8gG/oO7fyxcQbvikRiUO50rlowAcfzxJVPVx8aAcAGjn5fEeYiG7s
+        PVHapEjw1sjiMZQPTYIze4vwX+CKzWhhQyWcj+s6uXtudd073XdEzlOZh39GEzAU9usTBo
+        vNNLWYGoyYA3lj2hjc0ZbmA1bUO6rVA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1639499660;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=77bABPJtSNxFAw/Xtugh+m2CCURtbLu9t56UQYXKviI=;
+        b=a7pfyxVm1Jcrr30RkT/TIczCZlsHs9c4RavcxTF49sgmZlxy3T37Zgr0470H3dpi/+oNaO
+        M4MAhIlorR9T7XBA==
+Received: from alsa1.suse.de (alsa1.suse.de [10.160.4.42])
+        by relay2.suse.de (Postfix) with ESMTP id 2C6D3A3B85;
+        Tue, 14 Dec 2021 16:34:20 +0000 (UTC)
+Date:   Tue, 14 Dec 2021 17:34:20 +0100
+Message-ID: <s5hlf0n9mcz.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Lucas Tanure <tanureal@opensource.cirrus.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <linux-acpi@vger.kernel.org>,
+        <patches@opensource.cirrus.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 09/10] ALSA: hda/realtek: Add support for Legion 7 16ACHg6 laptop
+In-Reply-To: <20211214135959.1317949-10-tanureal@opensource.cirrus.com>
+References: <20211214135959.1317949-1-tanureal@opensource.cirrus.com>
+        <20211214135959.1317949-10-tanureal@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Dec 10, 2021 at 09:42:55AM -0600, Brijesh Singh wrote:
-> diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
-> index a075b70b9a70..ef5e2209c9b8 100644
-> --- a/include/linux/cc_platform.h
-> +++ b/include/linux/cc_platform.h
-> @@ -61,6 +61,14 @@ enum cc_attr {
->  	 * Examples include SEV-ES.
->  	 */
->  	CC_ATTR_GUEST_STATE_ENCRYPT,
+On Tue, 14 Dec 2021 14:59:58 +0100,
+Lucas Tanure wrote:
+> 
+> Add Support for CS35L41 using the component binding
+> method
+> 
+> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
+
+Through a quick glance, the patch looks almost fine, just a few
+nitpicking:
+
+> @@ -6497,6 +6502,105 @@ static void alc287_fixup_legion_15imhg05_speakers(struct hda_codec *codec,
+>  	}
+>  }
+>  
+> +static int comp_match_dev_name(struct device *dev, void *data)
+> +{
+> +	if (strcmp(dev_name(dev), data) == 0)
+> +		return 1;
 > +
-> +	/**
-> +	 * @CC_ATTR_SEV_SNP: Guest SNP is active.
-> +	 *
-> +	 * The platform/OS is running as a guest/virtual machine and actively
-> +	 * using AMD SEV-SNP features.
-> +	 */
-> +	CC_ATTR_SEV_SNP = 0x100,
+> +	return 0;
 
-I guess CC_ATTR_GUEST_SEV_SNP. The Intel is called CC_ATTR_GUEST_TDX so
-at least they all say it is a guest thing, this way.
+This could be a oneliner:
+	return strcmp(dev_name(dev), data) == 0;
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> +void comp_generic_playback_hook(struct hda_pcm_stream *hinfo, struct hda_codec *codec,
+> +				struct snd_pcm_substream *sub, int action)
+
+Missing static?
+
+> +void alc287_legion_16achg6_playback_hook(struct hda_pcm_stream *hinfo, struct hda_codec *codec,
+> +					 struct snd_pcm_substream *sub, int action)
+
+Ditto.
+
+> +{
+> +	struct alc_spec *spec = codec->spec;
+> +	unsigned int rx_slot;
+> +	int i = 0;
+
+A superfluous variable initialization.
+
+
+thanks,
+
+Takashi
