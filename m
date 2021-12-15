@@ -2,181 +2,393 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D72AC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Dec 2021 21:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281A1C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Dec 2021 21:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229698AbhLOVXX (ORCPT
+        id S230171AbhLOVwO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Dec 2021 16:23:23 -0500
-Received: from mail-dm6nam12on2054.outbound.protection.outlook.com ([40.107.243.54]:44320
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229555AbhLOVXW (ORCPT
+        Wed, 15 Dec 2021 16:52:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230008AbhLOVwN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Dec 2021 16:23:22 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fXBRSd0g1WoxtjIDFejv41jgG7hM2p4eA5tb4cA0DlSiQvZsej3Zy/QIvqnH8fbTAJLQqr1E3jAUsy/Iap3JIzV7WcADwNx0oumXU5nQ3vVsVJcS7Gos1pv5CwvLf5oBUeePnTmqb6vBoUjsHZA2e/wckPNFkjx22Ls4w65obCXb0HEA6Z1AXxGNkUPbITrnBUAqS2CPGMNWoKbCWCQ+WpTZdD6apsyVtQKUpcSvKw4+Qwyp8dQyiK7ZfAUtpdT96vwWDKSp2bcSXNQuEZldVCvl++UCx0Zi6wjqKKbOub+2u0sl/B+q+DHIhEITlr+qfKGUwpW/KJX8ESonsvkGGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fph5THDqtk98ym810JEJEXyo/NwyePPMv/lxgiWbhAQ=;
- b=APpGBP+IlpTysKN88FcJl1/IQb994FAeipaNXG1zgW8O1QnY79zcBanOR3iiv13yp0NDrgabw5qqwDJ2Ukel/4LM9jGuZxy9ECF4BrLgHOlEj5xwPHDpRXqJ+2baPVsdgYQ9zwjMNzrSk7d7R83XWze2CyO0rwZhxxU8ftZzhFaSgXOWiLmAVpjxzJl5+D/IvBYqKaefmqE4XjpewmwFI7nCX31+5NGi5Dw5/02+OwcUqlxjyyUwOwIYKtTijUeqoOSlKuEKh39+RxuYDru1iD/wWKWKnL0EYh8QTFAPo6KGplj7x+9n3DM6C4s9RjVQ+CYPYOIcxlX95D8Wo3O4Yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fph5THDqtk98ym810JEJEXyo/NwyePPMv/lxgiWbhAQ=;
- b=H7dUAv7BywPy81qTwTC5b54cjA0BuOYiW7qiS8MYu/bAr5WI0fmGkImKVmgVBERae+n21NstizooK95EijWGb64NpMKNw8U4G8YbaUo6qzfrSYY5jtMegVupMgtD/5xiZrqcvzzbBkTOaRduCM3sbfnJthEvQNLTYbuQoJmKqxk=
-Received: from DM5PR19CA0062.namprd19.prod.outlook.com (2603:10b6:3:116::24)
- by BN6PR12MB1313.namprd12.prod.outlook.com (2603:10b6:404:18::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.14; Wed, 15 Dec
- 2021 21:23:18 +0000
-Received: from DM6NAM11FT040.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:116:cafe::5c) by DM5PR19CA0062.outlook.office365.com
- (2603:10b6:3:116::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.14 via Frontend
- Transport; Wed, 15 Dec 2021 21:23:18 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com;
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- DM6NAM11FT040.mail.protection.outlook.com (10.13.173.133) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4801.14 via Frontend Transport; Wed, 15 Dec 2021 21:23:17 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Wed, 15 Dec
- 2021 15:23:16 -0600
-Date:   Wed, 15 Dec 2021 15:22:57 -0600
-From:   Michael Roth <michael.roth@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Venu Busireddy <venu.busireddy@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Brijesh Singh <brijesh.singh@amd.com>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-        <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Srinivas Pandruvada" <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        "Tobin Feldman-Fitzthum" <tobin@ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        <tony.luck@intel.com>, <marcorr@google.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v8 01/40] x86/compressed/64: detect/setup SEV/SME
- features earlier in boot
-Message-ID: <20211215212257.r4xisg2tyiwdeleh@amd.com>
-References: <YbecS4Py2hAPBrTD@zn.tnic>
- <YbjYZtXlbRdUznUO@dt>
- <YbjsGHSUUwomjbpc@zn.tnic>
- <YbkzaiC31/DzO5Da@dt>
- <b18655e3-3922-2b5d-0c35-1dcfef568e4d@amd.com>
- <20211215174934.tgn3c7c4s3toelbq@amd.com>
- <YboxSPFGF0Cqo5Fh@dt>
- <Ybo1C6kpcPJBzMGq@zn.tnic>
- <20211215201734.glq5gsle6crj25sf@amd.com>
- <YbpSX4/WGsXpX6n0@zn.tnic>
+        Wed, 15 Dec 2021 16:52:13 -0500
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76C29C061574;
+        Wed, 15 Dec 2021 13:52:13 -0800 (PST)
+Received: by mail-oi1-x233.google.com with SMTP id n66so33563297oia.9;
+        Wed, 15 Dec 2021 13:52:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JaEF7VSE4Ll2WKCTsxWMUCv/rOEvrdHvLK00Ku9pPyM=;
+        b=CSWcul9YFJ9R6gUu4AX886TRL5rW8ovNjABc1Eq82Hemca8dCKRvFN+OjuDpprpdG0
+         P5uWvAlRv4dHtlz3R4uWjl2oBIa5hTSD/WhzL33dHsPRMDtkOtFHG9f/LmJSHHu/t+IC
+         AKDW0eZXylcjlqERPYIvj+5V+OOj6AaHkiWNU93oB933ZzRkmFs+2arN9xR4z7cgC56S
+         4rv/BtTY9zWrKGeVFGIa1ua4Nxy5sKyZTz/Sjom5kMrE+dNv7IFoQQWosbHGk+D2ND0u
+         3fb1UJSTxOgdUg4nA3JLgLIEjvPN1U3LFV2ugGnA4iYpOt36CfbWbAps4BCP6bgLv9lP
+         Ammw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JaEF7VSE4Ll2WKCTsxWMUCv/rOEvrdHvLK00Ku9pPyM=;
+        b=3rf9pI3szvDdPvL4dZbQDhSbSHnlYSp/OcnE7siwlpUR5O+J1IGZlMRSUswGeyiI/5
+         ct59vAAGq5u4U0hMld3KX3oxxFyq1Pkr8RQ2moX5eLFlCHqxG+w/9eQPfYmB5EIgL2z8
+         MEjT/r3k4z6Ux13nj+pvg1zZ3Ieg6nXz1qSVfPsDmRxx10AN0Yg1BAb8/FwSl32maTf7
+         jgno5HWmZxx8L5bBOv+2cEmkX3PBlLnDpePAKCprfNMZf4iBfLAhlXY94keKymf78WjI
+         iwy7dSxKOuCtiF7Wuz6EqTpnbhabFxZlqlUPFY6NJchJRfBCQyMmeNDJBCxm54cloah/
+         rtMQ==
+X-Gm-Message-State: AOAM532WIbuR0vW8r/mve3DCPS4wDsfBZUwYXu6MmiZ9oEMoAv/qmxDA
+        ynh8UGwtj4HpLtmwtoSB99IdVYEkd6M=
+X-Google-Smtp-Source: ABdhPJy1HX9o4YVXWoHTjacWz0gvkuwFQMg6k0vn9VQQPECpTX9aJ1tqgNnWrjlfLeiz+hH9yQi6bQ==
+X-Received: by 2002:a05:6808:20e:: with SMTP id l14mr1672084oie.119.1639605131498;
+        Wed, 15 Dec 2021 13:52:11 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w71sm571311oiw.6.2021.12.15.13.52.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Dec 2021 13:52:10 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCH v5 3/4] watchdog: simatic-ipc-wdt: add new driver for
+ Siemens Industrial PCs
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Enrico Weigelt <lkml@metux.net>,
+        Henning Schild <henning.schild@siemens.com>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20211213120502.20661-1-henning.schild@siemens.com>
+ <20211213120502.20661-4-henning.schild@siemens.com>
+ <982a7065-f814-d9e8-8dfd-7546f7b9dc85@redhat.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <0f1a7dac-37d4-c055-d402-1af90811e712@roeck-us.net>
+Date:   Wed, 15 Dec 2021 13:52:08 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <YbpSX4/WGsXpX6n0@zn.tnic>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB03.amd.com
- (10.181.40.144)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 03e0197a-b84c-44df-3b3d-08d9c0111c8c
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1313:EE_
-X-Microsoft-Antispam-PRVS: <BN6PR12MB13130BB07C755B878AC06CC095769@BN6PR12MB1313.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EYP2LTdOkRe38Lixu6kbYbEDJpPCmHcd8EZjk0MD0+lIfY1Vwk/QyaQC4QoM8HpO/zpmF+Xi5Yl/Ena2u0+R3uuNi6lARQEc654bMoR7HywGV12A6wHWcz5uwDSFx/DqCtIkxJALE3FhcChBb9uJT7sqYu/kJVZBMWlUmPwkLDoHSafQGEvrt4Pen647hUcX/RO7bBCASRRvgghhaG0sLVsuJUy1BpuKMBx5v3sdAfaGEbTm6UJ+sjpYeiLnzvaMmzAhI5s3bzsiMiOK3WIYSpERFaikTPjvbJAjvCerI1caL5ns1voHso0Iy1Udhqk8uoO8st4/os6v/uh6APJnlHUiQ2IEBGjG9QoqWDNd2Gda+2r4QoMP4L6pj4njxoM2iXRJWOs0bZQU7VQJeqhIKGVax/425n2Wn0bmwnrVsXdrjt3BwQcdVjfE0vTs3fzyQ7hHTck5yZnaOtWMDkKif7WUVnnDWmh0IWWhOlRj5GadQZOk+UUEkXV9+tzwKP3y1wTivtS46a2fNx/Sgz8tq91WvnfGBasePwbdNZgEycr1w4c2NQfuQXVx7Slz/FABVP14ro1BUFGvtIuojb/YlZbV9mVoBF1VhSk/X3dCHIhYnnRlqULW/Dtz8XHFPHMA7fzQmWZBnAFz5ISDdYZaSSPxWBDlZSpXVLLP84IrtDmQKnZuy+TIXmVICnL764YlnmUCYpz1oyYVW4ShKJlPlx2ncCDW7CVLGlI3Uyxu8rF4iEV0mZdmNwAI88qvn9xNBppDTMhmke3clv0yEYAn3Q/ulUmcmXtEGTSdW4j9qqBDAyp0dn2iQXUKd6LrESC3fHaodvI3NHgGIATq5M9DcD+jVlt3nj1EwWk6LJpbfT+cv1k9K8aILfpeEEa/hJTH
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(40470700001)(36860700001)(16526019)(186003)(508600001)(26005)(336012)(1076003)(316002)(45080400002)(426003)(83380400001)(6916009)(966005)(2906002)(47076005)(70206006)(7416002)(8936002)(40460700001)(5660300002)(7406005)(86362001)(36756003)(70586007)(44832011)(8676002)(82310400004)(81166007)(4326008)(54906003)(356005)(2616005)(6666004)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2021 21:23:17.4783
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03e0197a-b84c-44df-3b3d-08d9c0111c8c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT040.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1313
+In-Reply-To: <982a7065-f814-d9e8-8dfd-7546f7b9dc85@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Dec 15, 2021 at 09:38:55PM +0100, Borislav Petkov wrote:
-> On Wed, Dec 15, 2021 at 02:17:34PM -0600, Michael Roth wrote:
-> > and if fields are added in the future:
-> > 
-> >   sev_parse_cpuid(AMD_SEV_BIT, &me_bit_pos, &vte_enabled, &new_feature_enabled, etc..)
+On 12/15/21 12:56 PM, Hans de Goede wrote:
+> Hi Wim, Guenter,
 > 
-> And that will end up being a vararg function because of who knows what
-> other feature bits will have to get passed in? You have even added the
-> ellipsis in there.
+> On 12/13/21 13:05, Henning Schild wrote:
+>> This driver adds initial support for several devices from Siemens. It is
+>> based on a platform driver introduced in an earlier commit.
+>>
+>> One of the supported machines does access a GPIO pin to enable the
+>> watchdog. Here we poke GPIO memory because pinctrl does not come up.
+>>
+>> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> I see that this patch #includes linux/platform_data/x86/simatic-ipc-base.h
+> which gets added by patch 1/4.
+> 
+> Since this has already been reviewed, can I take this patch upstream
+> through the pdx86 tree? Or shall I prepare an immutable branch with
 
-Well, not varargs, just sort of anticipating how the function prototype
-might change over time as it's modified to parse for new features.
-
-> 
-> Nope. Definitely not.
-> 
-> > or if that eventually becomes unwieldly 
-> 
-> The above example is already unwieldy.
-> 
-> > it could later be changed to return a feature mask.
-> 
-> Yes, that. Clean and simple.
-> 
-> But it is hard to discuss anything without patches so we can continue
-> the topic with concrete patches. But this unification is not
-> super-pressing so it can go ontop of the SNP pile.
-
-Yah, it's all theoretical at this point. Didn't mean to derail things
-though. I mainly brought it up to suggest that Venu's original approach of
-returning the encryption bit via a pointer argument might make it easier to
-expand it for other purposes in the future, and that naming it for that
-future purpose might encourage future developers to focus their efforts
-there instead of potentially re-introducing duplicate code.
-
-But either way it's simple enough to rework things when we actually
-cross that bridge. So totally fine with saving all of this as a future
-follow-up, or picking up either of Venu's patches for now if you'd still
-prefer.
+Please go ahead and take the entire series.
 
 Thanks,
+Guenter
 
-Mike
+> patch 1 for you to merge ?
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+>> ---
+>>   drivers/watchdog/Kconfig           |  11 ++
+>>   drivers/watchdog/Makefile          |   1 +
+>>   drivers/watchdog/simatic-ipc-wdt.c | 228 +++++++++++++++++++++++++++++
+>>   3 files changed, 240 insertions(+)
+>>   create mode 100644 drivers/watchdog/simatic-ipc-wdt.c
+>>
+>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>> index 9d222ba17ec6..1dc86eb1361a 100644
+>> --- a/drivers/watchdog/Kconfig
+>> +++ b/drivers/watchdog/Kconfig
+>> @@ -1589,6 +1589,17 @@ config NIC7018_WDT
+>>   	  To compile this driver as a module, choose M here: the module will be
+>>   	  called nic7018_wdt.
+>>   
+>> +config SIEMENS_SIMATIC_IPC_WDT
+>> +	tristate "Siemens Simatic IPC Watchdog"
+>> +	depends on SIEMENS_SIMATIC_IPC
+>> +	select WATCHDOG_CORE
+>> +	help
+>> +	  This driver adds support for several watchdogs found in Industrial
+>> +	  PCs from Siemens.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module will be
+>> +	  called simatic-ipc-wdt.
+>> +
+>>   # M68K Architecture
+>>   
+>>   config M54xx_WATCHDOG
+>> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+>> index 2ee97064145b..31b931846e32 100644
+>> --- a/drivers/watchdog/Makefile
+>> +++ b/drivers/watchdog/Makefile
+>> @@ -143,6 +143,7 @@ obj-$(CONFIG_NI903X_WDT) += ni903x_wdt.o
+>>   obj-$(CONFIG_NIC7018_WDT) += nic7018_wdt.o
+>>   obj-$(CONFIG_MLX_WDT) += mlx_wdt.o
+>>   obj-$(CONFIG_KEEMBAY_WATCHDOG) += keembay_wdt.o
+>> +obj-$(CONFIG_SIEMENS_SIMATIC_IPC_WDT) += simatic-ipc-wdt.o
+>>   
+>>   # M68K Architecture
+>>   obj-$(CONFIG_M54xx_WATCHDOG) += m54xx_wdt.o
+>> diff --git a/drivers/watchdog/simatic-ipc-wdt.c b/drivers/watchdog/simatic-ipc-wdt.c
+>> new file mode 100644
+>> index 000000000000..8bac793c63fb
+>> --- /dev/null
+>> +++ b/drivers/watchdog/simatic-ipc-wdt.c
+>> @@ -0,0 +1,228 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Siemens SIMATIC IPC driver for Watchdogs
+>> + *
+>> + * Copyright (c) Siemens AG, 2020-2021
+>> + *
+>> + * Authors:
+>> + *  Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+>> + */
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/init.h>
+>> +#include <linux/io.h>
+>> +#include <linux/ioport.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/platform_data/x86/simatic-ipc-base.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/sizes.h>
+>> +#include <linux/util_macros.h>
+>> +#include <linux/watchdog.h>
+>> +
+>> +#define WD_ENABLE_IOADR			0x62
+>> +#define WD_TRIGGER_IOADR		0x66
+>> +#define GPIO_COMMUNITY0_PORT_ID		0xaf
+>> +#define PAD_CFG_DW0_GPP_A_23		0x4b8
+>> +#define SAFE_EN_N_427E			0x01
+>> +#define SAFE_EN_N_227E			0x04
+>> +#define WD_ENABLED			0x01
+>> +#define WD_TRIGGERED			0x80
+>> +#define WD_MACROMODE			0x02
+>> +
+>> +#define TIMEOUT_MIN	2
+>> +#define TIMEOUT_DEF	64
+>> +#define TIMEOUT_MAX	64
+>> +
+>> +#define GP_STATUS_REG_227E	0x404D	/* IO PORT for SAFE_EN_N on 227E */
+>> +
+>> +static bool nowayout = WATCHDOG_NOWAYOUT;
+>> +module_param(nowayout, bool, 0000);
+>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+>> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+>> +
+>> +static struct resource gp_status_reg_227e_res =
+>> +	DEFINE_RES_IO_NAMED(GP_STATUS_REG_227E, SZ_1, KBUILD_MODNAME);
+>> +
+>> +static struct resource io_resource_enable =
+>> +	DEFINE_RES_IO_NAMED(WD_ENABLE_IOADR, SZ_1,
+>> +			    KBUILD_MODNAME " WD_ENABLE_IOADR");
+>> +
+>> +static struct resource io_resource_trigger =
+>> +	DEFINE_RES_IO_NAMED(WD_TRIGGER_IOADR, SZ_1,
+>> +			    KBUILD_MODNAME " WD_TRIGGER_IOADR");
+>> +
+>> +/* the actual start will be discovered with pci, 0 is a placeholder */
+>> +static struct resource mem_resource =
+>> +	DEFINE_RES_MEM_NAMED(0, SZ_4, "WD_RESET_BASE_ADR");
+>> +
+>> +static u32 wd_timeout_table[] = {2, 4, 6, 8, 16, 32, 48, 64 };
+>> +static void __iomem *wd_reset_base_addr;
+>> +
+>> +static int wd_start(struct watchdog_device *wdd)
+>> +{
+>> +	outb(inb(WD_ENABLE_IOADR) | WD_ENABLED, WD_ENABLE_IOADR);
+>> +	return 0;
+>> +}
+>> +
+>> +static int wd_stop(struct watchdog_device *wdd)
+>> +{
+>> +	outb(inb(WD_ENABLE_IOADR) & ~WD_ENABLED, WD_ENABLE_IOADR);
+>> +	return 0;
+>> +}
+>> +
+>> +static int wd_ping(struct watchdog_device *wdd)
+>> +{
+>> +	inb(WD_TRIGGER_IOADR);
+>> +	return 0;
+>> +}
+>> +
+>> +static int wd_set_timeout(struct watchdog_device *wdd, unsigned int t)
+>> +{
+>> +	int timeout_idx = find_closest(t, wd_timeout_table,
+>> +				       ARRAY_SIZE(wd_timeout_table));
+>> +
+>> +	outb((inb(WD_ENABLE_IOADR) & 0xc7) | timeout_idx << 3, WD_ENABLE_IOADR);
+>> +	wdd->timeout = wd_timeout_table[timeout_idx];
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct watchdog_info wdt_ident = {
+>> +	.options	= WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING |
+>> +			  WDIOF_SETTIMEOUT,
+>> +	.identity	= KBUILD_MODNAME,
+>> +};
+>> +
+>> +static const struct watchdog_ops wdt_ops = {
+>> +	.owner		= THIS_MODULE,
+>> +	.start		= wd_start,
+>> +	.stop		= wd_stop,
+>> +	.ping		= wd_ping,
+>> +	.set_timeout	= wd_set_timeout,
+>> +};
+>> +
+>> +static void wd_secondary_enable(u32 wdtmode)
+>> +{
+>> +	u16 resetbit;
+>> +
+>> +	/* set safe_en_n so we are not just WDIOF_ALARMONLY */
+>> +	if (wdtmode == SIMATIC_IPC_DEVICE_227E) {
+>> +		/* enable SAFE_EN_N on GP_STATUS_REG_227E */
+>> +		resetbit = inb(GP_STATUS_REG_227E);
+>> +		outb(resetbit & ~SAFE_EN_N_227E, GP_STATUS_REG_227E);
+>> +	} else {
+>> +		/* enable SAFE_EN_N on PCH D1600 */
+>> +		resetbit = ioread16(wd_reset_base_addr);
+>> +		iowrite16(resetbit & ~SAFE_EN_N_427E, wd_reset_base_addr);
+>> +	}
+>> +}
+>> +
+>> +static int wd_setup(u32 wdtmode)
+>> +{
+>> +	unsigned int bootstatus = 0;
+>> +	int timeout_idx;
+>> +
+>> +	timeout_idx = find_closest(TIMEOUT_DEF, wd_timeout_table,
+>> +				   ARRAY_SIZE(wd_timeout_table));
+>> +
+>> +	if (inb(WD_ENABLE_IOADR) & WD_TRIGGERED)
+>> +		bootstatus |= WDIOF_CARDRESET;
+>> +
+>> +	/* reset alarm bit, set macro mode, and set timeout */
+>> +	outb(WD_TRIGGERED | WD_MACROMODE | timeout_idx << 3, WD_ENABLE_IOADR);
+>> +
+>> +	wd_secondary_enable(wdtmode);
+>> +
+>> +	return bootstatus;
+>> +}
+>> +
+>> +static struct watchdog_device wdd_data = {
+>> +	.info = &wdt_ident,
+>> +	.ops = &wdt_ops,
+>> +	.min_timeout = TIMEOUT_MIN,
+>> +	.max_timeout = TIMEOUT_MAX
+>> +};
+>> +
+>> +static int simatic_ipc_wdt_probe(struct platform_device *pdev)
+>> +{
+>> +	struct simatic_ipc_platform *plat = pdev->dev.platform_data;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct resource *res;
+>> +
+>> +	switch (plat->devmode) {
+>> +	case SIMATIC_IPC_DEVICE_227E:
+>> +		if (!devm_request_region(dev, gp_status_reg_227e_res.start,
+>> +					 resource_size(&gp_status_reg_227e_res),
+>> +					 KBUILD_MODNAME)) {
+>> +			dev_err(dev,
+>> +				"Unable to register IO resource at %pR\n",
+>> +				&gp_status_reg_227e_res);
+>> +			return -EBUSY;
+>> +		}
+>> +		fallthrough;
+>> +	case SIMATIC_IPC_DEVICE_427E:
+>> +		wdd_data.parent = dev;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (!devm_request_region(dev, io_resource_enable.start,
+>> +				 resource_size(&io_resource_enable),
+>> +				 io_resource_enable.name)) {
+>> +		dev_err(dev,
+>> +			"Unable to register IO resource at %#x\n",
+>> +			WD_ENABLE_IOADR);
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	if (!devm_request_region(dev, io_resource_trigger.start,
+>> +				 resource_size(&io_resource_trigger),
+>> +				 io_resource_trigger.name)) {
+>> +		dev_err(dev,
+>> +			"Unable to register IO resource at %#x\n",
+>> +			WD_TRIGGER_IOADR);
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	if (plat->devmode == SIMATIC_IPC_DEVICE_427E) {
+>> +		res = &mem_resource;
+>> +
+>> +		/* get GPIO base from PCI */
+>> +		res->start = simatic_ipc_get_membase0(PCI_DEVFN(0x1f, 1));
+>> +		if (res->start == 0)
+>> +			return -ENODEV;
+>> +
+>> +		/* do the final address calculation */
+>> +		res->start = res->start + (GPIO_COMMUNITY0_PORT_ID << 16) +
+>> +			     PAD_CFG_DW0_GPP_A_23;
+>> +		res->end += res->start;
+>> +
+>> +		wd_reset_base_addr = devm_ioremap_resource(dev, res);
+>> +		if (IS_ERR(wd_reset_base_addr))
+>> +			return PTR_ERR(wd_reset_base_addr);
+>> +	}
+>> +
+>> +	wdd_data.bootstatus = wd_setup(plat->devmode);
+>> +	if (wdd_data.bootstatus)
+>> +		dev_warn(dev, "last reboot caused by watchdog reset\n");
+>> +
+>> +	watchdog_set_nowayout(&wdd_data, nowayout);
+>> +	watchdog_stop_on_reboot(&wdd_data);
+>> +	return devm_watchdog_register_device(dev, &wdd_data);
+>> +}
+>> +
+>> +static struct platform_driver simatic_ipc_wdt_driver = {
+>> +	.probe = simatic_ipc_wdt_probe,
+>> +	.driver = {
+>> +		.name = KBUILD_MODNAME,
+>> +	},
+>> +};
+>> +
+>> +module_platform_driver(simatic_ipc_wdt_driver);
+>> +
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_ALIAS("platform:" KBUILD_MODNAME);
+>> +MODULE_AUTHOR("Gerd Haeussler <gerd.haeussler.ext@siemens.com>");
+>>
+> 
 
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpeople.kernel.org%2Ftglx%2Fnotes-about-netiquette&amp;data=04%7C01%7Cmichael.roth%40amd.com%7C10261dab334649b4b81408d9c00aec95%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637751975466658716%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=E3prWlptt32G%2FsgFg9wU8cMKec2cHywgNm1pPL3jzcI%3D&amp;reserved=0
