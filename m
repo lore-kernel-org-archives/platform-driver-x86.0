@@ -2,115 +2,149 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C0BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Dec 2021 06:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4313C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Dec 2021 06:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234109AbhLOGjx (ORCPT
+        id S236051AbhLOGro (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Dec 2021 01:39:53 -0500
-Received: from mga12.intel.com ([192.55.52.136]:28883 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233763AbhLOGjw (ORCPT
+        Wed, 15 Dec 2021 01:47:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236077AbhLOGro (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Dec 2021 01:39:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639550392; x=1671086392;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LXaG3RNyDTFgVc8HPZRc/tEwHLLs1D0tpqJvvdD9cpc=;
-  b=mNwPggS7m4ADrj8/XjscyFAu5XhMWuJ2batawrju2/CTvWIb0OY5pA6+
-   u53KWrFLueLAvqMvAf9kPHWsh2TR9OkiOfDXpGdjNCr6dtzl+9u2g3fsn
-   4pVZ1Euye/mrpagOAr7/Rmrj3jnW1xbNBe4na0BCllIz5xqmIkJIoILsj
-   QO4jPsnQJV1f9uLYq47n0TmKuiuhtoSo61q+2XXNakgf3dyqT0zKBxRLi
-   9eSqUpvsvXOnQQoCyRcnyk1mYLudaQDCzy33XtZ1a6W0KrGWJbrxy/IHg
-   eNIXgbstYHZnaPMM6gmrMOhYZe/iuSA2A6QtxjRwF0uJjm/rUmJOCQHxv
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10198"; a="219176483"
-X-IronPort-AV: E=Sophos;i="5.88,207,1635231600"; 
-   d="scan'208";a="219176483"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2021 22:39:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,207,1635231600"; 
-   d="scan'208";a="545476032"
-Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 14 Dec 2021 22:39:48 -0800
-Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mxNx5-0001OA-RK; Wed, 15 Dec 2021 06:39:47 +0000
-Date:   Wed, 15 Dec 2021 14:39:27 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
-        hdegoede@redhat.com, bhelgaas@google.com,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        srinivas.pandruvada@intel.com, mgross@linux.intel.com
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH V3 4/6] platform/x86: Add Intel Software Defined Silicon
- driver
-Message-ID: <202112151420.ZVi8YXOl-lkp@intel.com>
-References: <20211213175921.1897860-5-david.e.box@linux.intel.com>
+        Wed, 15 Dec 2021 01:47:44 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6B17C061574
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Dec 2021 22:47:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F3FD6184B
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Dec 2021 06:47:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E6123C34609
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Dec 2021 06:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639550862;
+        bh=RzTa60S8va7E7ly45arMmQuugz3w5SH1OlL3bfBLEdI=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=i6izlKiDyN/lNpmpdQgH1b9Rz1RbgwYlwaCVgawXhpo8ahkRPHEcjdt2iAOG1fStr
+         PMrcG0UZ+1e4xP8H2b9dwip1x9CaauKIbhYMt6XmhALawhhapxO5QklK2dt53jFpm4
+         E3YeMhHKdUXusoikrTDjg+A9LTaRcuVECyMqB7hvCE79U0p/vA6qU0nVqnExK8xszE
+         SUsgxlsHhpBXJyIqhdoSLmQpcAdyesckf3FAMVHqSLLxhDyRCyHHKFpE7NFSDutNKb
+         YH5W0AXsitdYg0NEmOP+Zxp5Tpmba/QI7B5c5lexKTt41SIZymNiJbdj7p8PSRWA8U
+         TFta80NKNQlww==
+Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
+        id CD72060F00; Wed, 15 Dec 2021 06:47:42 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Wed, 15 Dec 2021 06:47:40 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: vladdrako007@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-fLIInypXCc@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211213175921.1897860-5-david.e.box@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi "David,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-I love your patch! Yet something to improve:
+--- Comment #200 from Vladdrako (vladdrako007@gmail.com) ---
+(In reply to Denis Pauk from comment #199)
+> Could check with updated patch?
 
-[auto build test ERROR on lee-mfd/for-mfd-next]
-[also build test ERROR on helgaas-pci/next shuah-kselftest/next linus/master v5.16-rc5 next-20211214]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+Works fine.
 
-url:    https://github.com/0day-ci/linux/commits/David-E-Box/Auxiliary-bus-driver-support-for-Intel-PCIe-VSEC-DVSEC/20211214-020016
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-config: x86_64-randconfig-r013-20211214 (https://download.01.org/0day-ci/archive/20211215/202112151420.ZVi8YXOl-lkp@intel.com/config)
-compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project b6a2ddb6c8ac29412b1361810972e15221fa021c)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/405984bb2427331f6e97ffef42244a5d2d090da3
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review David-E-Box/Auxiliary-bus-driver-support-for-Intel-PCIe-VSEC-DVSEC/20211214-020016
-        git checkout 405984bb2427331f6e97ffef42244a5d2d090da3
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
+sudo dmesg | grep wmi
+[    7.943237] asus_wmi: ASUS WMI generic driver loaded
+[    8.052769] asus_wmi: Initialization: 0x0
+[    8.052805] asus_wmi: BIOS WMI version: 0.9
+[    8.052863] asus_wmi: SFUN value: 0x0
+[    8.052866] eeepc-wmi eeepc-wmi: Detected ASUSWMI, use DCTS
+[    8.053621] input: Eee PC WMI hotkeys as
+/devices/platform/eeepc-wmi/input/input13
+sudo dmesg | grep nct6775
+[    8.074613] nct6775: Can't read chip ID by Asus WMI.
+[    8.074982] nct6775: Using Asus WMI mutex: \_SB_.PCI0.LPCB.SIO1.MUT0
+[    8.075014] nct6775: Found NCT6776D/F or compatible chip at 0x2e:0x290
+[    8.075056] nct6775: i2c have not found
+sensors
+coretemp-isa-0000
+Adapter: ISA adapter
+Package id 0:  +37.0=C2=B0C  (high =3D +80.0=C2=B0C, crit =3D +99.0=C2=B0C)
+Core 0:        +37.0=C2=B0C  (high =3D +80.0=C2=B0C, crit =3D +99.0=C2=B0C)
+Core 1:        +36.0=C2=B0C  (high =3D +80.0=C2=B0C, crit =3D +99.0=C2=B0C)
+Core 2:        +37.0=C2=B0C  (high =3D +80.0=C2=B0C, crit =3D +99.0=C2=B0C)
+Core 3:        +31.0=C2=B0C  (high =3D +80.0=C2=B0C, crit =3D +99.0=C2=B0C)
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+acpitz-acpi-0
+Adapter: ACPI interface
+temp1:        +27.8=C2=B0C  (crit =3D +105.0=C2=B0C)
+temp2:        +29.8=C2=B0C  (crit =3D +105.0=C2=B0C)
 
-All errors (new ones prefixed by >>):
+nct6776-isa-0290
+Adapter: ISA adapter
+Vcore:         944.00 mV (min =3D  +0.00 V, max =3D  +1.74 V)
+in1:             1.02 V  (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
+AVCC:            3.41 V  (min =3D  +2.98 V, max =3D  +3.63 V)
++3.3V:           3.41 V  (min =3D  +2.98 V, max =3D  +3.63 V)
+in4:             1.02 V  (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
+in5:             2.04 V  (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
+in6:           832.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
+3VSB:            3.42 V  (min =3D  +2.98 V, max =3D  +3.63 V)
+Vbat:            3.38 V  (min =3D  +2.70 V, max =3D  +3.63 V)
+fan1:             0 RPM  (min =3D    0 RPM)
+fan2:           856 RPM  (min =3D    0 RPM)
+fan3:             0 RPM  (min =3D    0 RPM)
+fan4:             0 RPM  (min =3D    0 RPM)
+fan5:             0 RPM  (min =3D    0 RPM)
+SYSTIN:         +27.0=C2=B0C  (high =3D  +0.0=C2=B0C, hyst =3D  +0.0=C2=B0C=
+)  ALARM  sensor =3D
+thermistor
+CPUTIN:         +91.5=C2=B0C  (high =3D +81.0=C2=B0C, hyst =3D +76.0=C2=B0C=
+)  ALARM  sensor =3D
+thermistor
+AUXTIN:         +64.5=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +75.0=C2=B0C=
+)  sensor =3D thermistor
+PECI Agent 0:   +36.0=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +75.0=C2=B0C)
+                         (crit =3D +99.0=C2=B0C)
+PCH_CHIP_TEMP:   +0.0=C2=B0C=20=20
+PCH_CPU_TEMP:    +0.0=C2=B0C=20=20
+PCH_MCH_TEMP:    +0.0=C2=B0C=20=20
+intrusion0:    ALARM
+intrusion1:    ALARM
+beep_enable:   disabled
 
->> drivers/platform/x86/intel/sdsi.c:566:2: error: expected ';' after top level declarator
-   }
-    ^
-    ;
-   1 error generated.
+nvme-pci-0200
+Adapter: PCI adapter
+Composite:    +25.9=C2=B0C  (low  =3D  -0.1=C2=B0C, high =3D +69.8=C2=B0C)
+                       (crit =3D +84.8=C2=B0C)
+ERROR: Can't get value of subfeature temp2_min: I/O error
+ERROR: Can't get value of subfeature temp2_max: I/O error
+Sensor 1:     +37.9=C2=B0C  (low  =3D  +0.0=C2=B0C, high =3D  +0.0=C2=B0C)
 
+--=20
+You may reply to this email to add a comment.
 
-vim +566 drivers/platform/x86/intel/sdsi.c
-
-   558	
-   559	static struct auxiliary_driver sdsi_aux_driver = {
-   560		.driver = {
-   561			.dev_groups = sdsi_groups,
-   562		},
-   563		.id_table	= sdsi_aux_id_table,
-   564		.probe		= sdsi_probe,
-   565		/* No remove. All resources are handled under devm */
- > 566	}
-   567	module_auxiliary_driver(sdsi_aux_driver);
-   568	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+You are receiving this mail because:
+You are watching the assignee of the bug.=
