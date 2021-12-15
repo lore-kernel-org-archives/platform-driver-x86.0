@@ -2,208 +2,217 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5777C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Dec 2021 20:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8B8C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Dec 2021 20:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236505AbhLOUoT (ORCPT
+        id S230062AbhLOUyE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Dec 2021 15:44:19 -0500
-Received: from mail-mw2nam10on2051.outbound.protection.outlook.com ([40.107.94.51]:32356
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S235170AbhLOUoT (ORCPT
+        Wed, 15 Dec 2021 15:54:04 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60647 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231524AbhLOUyD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Dec 2021 15:44:19 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AYPY6rNmroqhvCmKgJvLjSRNtCktUziQ+ZtYRYFK/p1Ml86MUf6rswnQ1OkKSaTB+SmLiOhTCUB/uAdKVEoj+GCEHRHd95YGbUVrRCJr2BPTCtRpTfaEp8B61/jqhQlRP+MCWEQ5grCcgP9PRG8eIYiOGyHmbcaVlsevWNmhiAYMhBmFk5R57d/3sK/Vm528Fccowrf/4EYXJLO8YDs1fls8XcihXbyLl7vyY6j7TJoRCiQ8gyb7VmI87VOOEpXei0+lXqAVBSvQSCr3F0+h7PneObSp6tr50bvXJWostqIV00YI1nnJwmKP73ZDfeFKxhit1i2oxrbdlGDyOPbtGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2ZLona5DZ9C33MDnxdiWILaJcCR4MTePVXg0IaQsWsA=;
- b=kSASYt2P4huAVvejFEqq2eQftuRjfuvH9jKeI8dIHOMQU7+mHol+WcI8NdJBtbh9CfiAxUvkQQIuA/BEi1rMFCdYzNuJlum1kNf3Y7VmtZLQPUlu13KNVD4jxCU6blzy198MxzByIP5Rj669J1MXYJHKwDkVlmirsTSvhDIjaa0fHT5MjgckQEex0EI5Pb/fxZV/g22QxKHZy/nCLxaH1q9emlvwNR2U9Dd85ajAV5RThL+UgSsI4Yhgti0EZuGPObGK5ombMuFEYc79muPCcr47eLzS/zoO6PG7R/5O9xD0Wp4lhghmN3hKr7lU+tiVRYqexNd5x8mHXjEPloNiuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=oracle.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ZLona5DZ9C33MDnxdiWILaJcCR4MTePVXg0IaQsWsA=;
- b=FlHa6KzeKkFtML7BbmtoAohjVMH8xBRbgk+u1K8ZH7gOBNMlyAYzj9miAnXBbx42IOk813RpkCeeZE9He7y5S4gfDMHZm0EPjUolf+wd2NDqeGLVY6Iyha3tUt5kY1NZeiuZZAyzFl9KjOhVQeBIckBN4pwiE+MB5J7ME6QXrTs=
-Received: from DM5PR06CA0071.namprd06.prod.outlook.com (2603:10b6:3:37::33) by
- MN2PR12MB4990.namprd12.prod.outlook.com (2603:10b6:208:fe::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4778.13; Wed, 15 Dec 2021 20:44:16 +0000
-Received: from DM6NAM11FT065.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:37:cafe::1d) by DM5PR06CA0071.outlook.office365.com
- (2603:10b6:3:37::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.14 via Frontend
- Transport; Wed, 15 Dec 2021 20:44:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com;
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- DM6NAM11FT065.mail.protection.outlook.com (10.13.172.109) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4801.14 via Frontend Transport; Wed, 15 Dec 2021 20:44:15 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Wed, 15 Dec
- 2021 14:44:15 -0600
-Date:   Wed, 15 Dec 2021 14:43:55 -0600
-From:   Michael Roth <michael.roth@amd.com>
-To:     Venu Busireddy <venu.busireddy@oracle.com>
-CC:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Brijesh Singh <brijesh.singh@amd.com>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-        <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Srinivas Pandruvada" <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        "Tobin Feldman-Fitzthum" <tobin@ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        <tony.luck@intel.com>, <marcorr@google.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v8 01/40] x86/compressed/64: detect/setup SEV/SME
- features earlier in boot
-Message-ID: <20211215204355.mbzfaxco6ltx3oty@amd.com>
-References: <20211210154332.11526-1-brijesh.singh@amd.com>
- <20211210154332.11526-2-brijesh.singh@amd.com>
- <YbeaX+FViak2mgHO@dt>
- <YbecS4Py2hAPBrTD@zn.tnic>
- <YbjYZtXlbRdUznUO@dt>
- <YbjsGHSUUwomjbpc@zn.tnic>
- <YbkzaiC31/DzO5Da@dt>
- <b18655e3-3922-2b5d-0c35-1dcfef568e4d@amd.com>
- <20211215174934.tgn3c7c4s3toelbq@amd.com>
- <YboxSPFGF0Cqo5Fh@dt>
+        Wed, 15 Dec 2021 15:54:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639601642;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2XuSuTXhhLMWW5MExMvY+07UDK63es7OPWddsx5/ve8=;
+        b=Z3Agq5cXo6lbc/k+BodZZHDb4zNuHL3ZoBhtfyOmEsMepRgF7zqvTsaZgoQnfsQ9VeMwDx
+        CbUVFEI+e5sXNWy7j5Oqq9PhbqvTcDX3qDDpH+1kI6SvGtNDmIJmCUZcURE3g6XM01AJ0C
+        uZFbmoiis39V1Ze7aAIfB7b5HUQLgk0=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-456-WEwspd_VOZG3XtL_0ZMfvg-1; Wed, 15 Dec 2021 15:53:59 -0500
+X-MC-Unique: WEwspd_VOZG3XtL_0ZMfvg-1
+Received: by mail-ed1-f71.google.com with SMTP id i19-20020a05640242d300b003e7d13ebeedso21273505edc.7
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Dec 2021 12:53:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=2XuSuTXhhLMWW5MExMvY+07UDK63es7OPWddsx5/ve8=;
+        b=dSGB7/PoEjm5xfgUqWHEWIaEEdkqDqgbvlnytkMLObNLwnXnWRtMX0yFb0rMFAogo8
+         y5EztqzvPwGjbsCUR72uqVzVJz2YfjRZgzPopCwNp5ogDZp9IRBS8B2QvvL+fpJVhAH2
+         gBn6E/BtNB8GxGKEK2Zz3LPEYZeDyEenxu+7XeFyknTIGPezlZZGYKF72xWATajmx1A9
+         NMMhZdgcv0+TXVfp2m4t2QCsXSFsSlsFM7uC+kUmXWx3EOsxOayfrPUdOXGhfCDnQ58N
+         XvaIpRBFrHmEePC86bnrWhf81fcufEcIl2y6pRp0oPQw5aDKqmcrIS5CAsAYYa/EunV+
+         5utQ==
+X-Gm-Message-State: AOAM530F796+SJFLplcRNMHpq0YvDgjr4oJiiPXz1ChLqJiJ283KivEe
+        f2g74V/jyQ5aECLA9CU1miuSUNUb2sSQJXVg44H7ttu97/VOs9CBfpTNwTMSaSzeE9PvCdK0Net
+        Wt/z0A5mhBVbCerk7i3md6wXwPl5b4NcI5A==
+X-Received: by 2002:a17:906:5050:: with SMTP id e16mr12363111ejk.719.1639601637646;
+        Wed, 15 Dec 2021 12:53:57 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyL9AhACA2rSqUmiIL+ycw9yP6XEnblkXQBYJ/ZG7niVxhYPfIU/201q0vA+UGCp/JUf6WTqQ==
+X-Received: by 2002:a17:906:5050:: with SMTP id e16mr12363097ejk.719.1639601637450;
+        Wed, 15 Dec 2021 12:53:57 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id y15sm1584826eda.13.2021.12.15.12.53.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Dec 2021 12:53:57 -0800 (PST)
+Message-ID: <61983e62-bc3d-a711-c197-7436a2e33531@redhat.com>
+Date:   Wed, 15 Dec 2021 21:53:56 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <YboxSPFGF0Cqo5Fh@dt>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB03.amd.com
- (10.181.40.144)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 562fe0ad-d9fb-4bc2-04be-08d9c00ba8ce
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4990:EE_
-X-Microsoft-Antispam-PRVS: <MN2PR12MB4990C102E89CC93C6B79049795769@MN2PR12MB4990.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: B++HUZaYswxIAHFNGJ2wfFcoyvcHB8ND1468XM03iqTmDxLlpQ+dK443iEaoA3ylpxGUUfQ5DaDDsYYCAWPUKXtW0cU4vZ+3QvldB4hqqxfQeEMjWnye+gSBbJGlUFkf29tcGWJgWZMXgUZjyon0k1ODCYiJVr+OY6Gsq90b9Gm1vjsPnphKJVX49szg75u+vPYAV2130MW8RIq+EVpuHinxyOQl1PuTDf6U2OwxP2VqcHqcKwdvUd0/aJNL34NQR/a1x3y9RaybuDYAsDRHwO80SmjzMx4pmR7ePv82Q7QF0vsYRPZI4UYmwTWrZElzFxR/30vxl0zf8Xd2WZM8jggsSi4+73B4m6pnumv/MTttLR23Q5azYaR1kalvJunDPeeN6vzcsviLzIMurT2kP46X1Ois4ujuXZwMVCI2keUaEM0LtcBNtJeaK7DuHDdTE5+1FTZtpDxGMcE3DtGRXae541eAEwfBg8SQvouDnsQSFLXQiCDRsOLxHiGsv7MYUTvSfd3l6N4UGQuzs9Up5Z2k26Rxs4yibQqOcsYqFTbiKYxPYv04q8lGP/bE3fW7hlSGhQIWjrzv037kzwSJS62QEE/bxusUHTGA/q77g24NnW+U305q6OcrguOyz1oeRzuU4TL037QfadT3g3hv/tpiLvl9WySbHi1i8E1xlUFadEo3YMr1ByrQu3W1xig7hYmRn2kb1KHKOcUW00z1uPRJgGQvWF9MXivF3OV537f+EBkn6U0SHHyFFbamTi71P2oYD82sY9OZFAIkJDEoGdDn6kL91XO6+CetrY+JxKk=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(40470700001)(44832011)(70206006)(426003)(508600001)(4326008)(316002)(86362001)(40460700001)(82310400004)(54906003)(6916009)(356005)(81166007)(2616005)(8936002)(70586007)(6666004)(336012)(47076005)(5660300002)(1076003)(8676002)(4001150100001)(83380400001)(7406005)(7416002)(186003)(53546011)(36756003)(26005)(16526019)(2906002)(36860700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2021 20:44:15.7789
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 562fe0ad-d9fb-4bc2-04be-08d9c00ba8ce
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT065.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4990
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH v5 2/4] leds: simatic-ipc-leds: add new driver for Siemens
+ Industial PCs
+Content-Language: en-US
+To:     Pavel Machek <pavel@ucw.cz>,
+        Henning Schild <henning.schild@siemens.com>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Enrico Weigelt <lkml@metux.net>
+References: <20211213120502.20661-1-henning.schild@siemens.com>
+ <20211213120502.20661-3-henning.schild@siemens.com>
+ <20211215201800.GA28336@duo.ucw.cz>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211215201800.GA28336@duo.ucw.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Dec 15, 2021 at 12:17:44PM -0600, Venu Busireddy wrote:
-> On 2021-12-15 11:49:34 -0600, Michael Roth wrote:
-> > 
-> > I think in the greater context of consolidating all the SME/SEV setup
-> > and re-using code, this helper stands a high chance of eventually becoming
-> > something more along the lines of sme_sev_parse_cpuid(), since otherwise
-> > we'd end up re-introducing multiple helpers to parse the same 0x8000001F
-> > fields if we ever need to process any of the other fields advertised in
-> > there. Given that, it makes sense to reserve the return value as an
-> > indication that either SEV or SME are enabled, and then have a
-> > pass-by-pointer parameters list to collect the individual feature
-> > bits/encryption mask for cases where SEV/SME are enabled, which are only
-> > treated as valid if sme_sev_parse_cpuid() returns 0.
-> > 
-> > So Venu's original approach of passing the encryption mask by pointer
-> > seems a little closer toward that end, but I also agree Tom's approach
-> > is cleaner for the current code base, so I'm fine either way, just
-> > figured I'd mention this.
-> > 
-> > I think needing to pass in the SME/SEV CPUID bits to tell the helper when
-> > to parse encryption bit and when not to is a little bit awkward though.
-> > If there's some agreement that this will ultimately serve the purpose of
-> > handling all (or most) of SME/SEV-related CPUID parsing, then the caller
-> > shouldn't really need to be aware of any individual bit positions.
-> > Maybe a bool could handle that instead, e.g.:
-> > 
-> >   int get_me_bit(bool sev_only, ...)
-> > 
-> >   or
-> > 
-> >   int sme_sev_parse_cpuid(bool sev_only, ...)
-> > 
-> > where for boot/compressed sev_only=true, for kernel proper sev_only=false.
+Hi,
+
+On 12/15/21 21:18, Pavel Machek wrote:
+> On Mon 2021-12-13 13:05:00, Henning Schild wrote:
+>> This driver adds initial support for several devices from Siemens. It is
+>> based on a platform driver introduced in an earlier commit.
+>>
+>> One of the supported machines has GPIO connected LEDs, here we poke GPIO
+>> memory directly because pinctrl does not come up.
+>>
+>> Signed-off-by: Henning Schild <henning.schild@siemens.com>
 > 
-> I can implement it this way too. But I am wondering if having a
-> boolean argument limits us from handling any future additions to the
-> bit positions.
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 
-That's the thing, we'll pretty much always want to parse cpuid in
-boot/compressed if SEV is enabled, and in kernel proper if either SEV or
-SME are enabled, because they both require, at a minimum, the c-bit
-position. Extensions to either SEV/SME likely won't change this, but by
-using CPUID feature masks to handle this it gives the impression that
-this helper relies on individual features being present in the mask in
-order for the corresponding fields to be parsed, when in reality it
-boils down more to SEV features needing to be enabled earlier because
-they don't trust the host during early boot.
+I see that this patch #includes linux/platform_data/x86/simatic-ipc-base.h
+which gets added by patch 1/4.
 
-I agree the boolean flag makes things a bit less readable without
-checking the function prototype though. I was going to suggest 2
-separate functions that use a common helper and hide away the
-boolean, e.g:
+Pavel, can I take this patch upstream through the pdx86 tree (with you Ack
+added)? Or shall I prepare an immutable branch with patch 1 for you to
+merge ?
 
-  sev_parse_cpuid() //sev-only
+Regards,
 
-and
+Hans
 
-  sme_parse_cpuid() //sev or sme
-
-but the latter maybe is a bit misleading and I couldn't think of a
-better name. It's really more like sev_sme_parse_cpuid(), but I'm
-not sure that will fly. Maybe sme_parse_cpuid() is fine.
-
-You could also just have it take an enum as the first arg though:
-
-enum sev_parse_cpuid {
-    SEV_PARSE_CPUID_SEV_ONLY = 0
-    SEV_PARSE_CPUID_SME_ONLY //unused
-    SEV_PARSE_CPUID_BOTH
-}
-
-Personally I still prefer the boolean but just some alternatives
-you could consider otherwise.
 
 > 
-> Boris & Tom, which implementation would you prefer?
+>> index c636ec069612..1a719caf14c0 100644
+>> --- a/drivers/leds/Makefile
+>> +++ b/drivers/leds/Makefile
+>> @@ -105,3 +105,6 @@ obj-$(CONFIG_LEDS_TRIGGERS)		+= trigger/
+>>  
+>>  # LED Blink
+>>  obj-y					+= blink/
+>> +
+>> +# Simple LED drivers
+>> +obj-y					+= simple/
+>> diff --git a/drivers/leds/simple/Kconfig b/drivers/leds/simple/Kconfig
+>> new file mode 100644
+>> index 000000000000..9f6a68336659
+>> --- /dev/null
+>> +++ b/drivers/leds/simple/Kconfig
+>> @@ -0,0 +1,11 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +config LEDS_SIEMENS_SIMATIC_IPC
+>> +	tristate "LED driver for Siemens Simatic IPCs"
+>> +	depends on LEDS_CLASS
+>> +	depends on SIEMENS_SIMATIC_IPC
+>> +	help
+>> +	  This option enables support for the LEDs of several Industrial PCs
+>> +	  from Siemens.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module
+>> +	  will be called simatic-ipc-leds.
+>> diff --git a/drivers/leds/simple/Makefile b/drivers/leds/simple/Makefile
+>> new file mode 100644
+>> index 000000000000..8481f1e9e360
+>> --- /dev/null
+>> +++ b/drivers/leds/simple/Makefile
+>> @@ -0,0 +1,2 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds.o
+>> diff --git a/drivers/leds/simple/simatic-ipc-leds.c b/drivers/leds/simple/simatic-ipc-leds.c
+>> new file mode 100644
+>> index 000000000000..ff2c96e73241
+>> --- /dev/null
+>> +++ b/drivers/leds/simple/simatic-ipc-leds.c
+>> @@ -0,0 +1,202 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Siemens SIMATIC IPC driver for LEDs
+>> + *
+>> + * Copyright (c) Siemens AG, 2018-2021
+>> + *
+>> + * Authors:
+>> + *  Henning Schild <henning.schild@siemens.com>
+>> + *  Jan Kiszka <jan.kiszka@siemens.com>
+>> + *  Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+>> + */
+>> +
+>> +#include <linux/ioport.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/leds.h>
+>> +#include <linux/module.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/platform_data/x86/simatic-ipc-base.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/sizes.h>
+>> +#include <linux/spinlock.h>
+>> +
+>> +#define SIMATIC_IPC_LED_PORT_BASE	0x404E
+>> +
+>> +struct simatic_ipc_led {
+>> +	unsigned int value; /* mask for io and offset for mem */
+>> +	char *name;
+>> +	struct led_classdev cdev;
+>> +};
+>> +
+>> +static struct simatic_ipc_led simatic_ipc_leds_io[] = {
+>> +	{1 << 15, "green:" LED_FUNCTION_STATUS "-1" },
+>> +	{1 << 7,  "yellow:" LED_FUNCTION_STATUS "-1" },
+>> +	{1 << 14, "red:" LED_FUNCTION_STATUS "-2" },
+>> +	{1 << 6,  "yellow:" LED_FUNCTION_STATUS "-2" },
+>> +	{1 << 13, "red:" LED_FUNCTION_STATUS "-3" },
+>> +	{1 << 5,  "yellow:" LED_FUNCTION_STATUS "-3" },
+>> +	{ }
+>> +};
+>> +
+>> +/* the actual start will be discovered with PCI, 0 is a placeholder */
+>> +struct resource simatic_ipc_led_mem_res = DEFINE_RES_MEM_NAMED(0, SZ_4K, KBUILD_MODNAME);
+>> +
+>> +static void *simatic_ipc_led_memory;
+>> +
+>> +static struct simatic_ipc_led simatic_ipc_leds_mem[] = {
+>> +	{0x500 + 0x1A0, "red:" LED_FUNCTION_STATUS "-1"},
+>> +	{0x500 + 0x1A8, "green:" LED_FUNCTION_STATUS "-1"},
+>> +	{0x500 + 0x1C8, "red:" LED_FUNCTION_STATUS "-2"},
+>> +	{0x500 + 0x1D0, "green:" LED_FUNCTION_STATUS "-2"},
+>> +	{0x500 + 0x1E0, "red:" LED_FUNCTION_STATUS "-3"},
+>> +	{0x500 + 0x198, "green:" LED_FUNCTION_STATUS "-3"},
+>> +	{ }
+>> +};
 > 
-> Venu
+> Would it be possible to get some better naming for leds? status-1 to
+> status-3 is not quite useful.
 > 
+> Best regards,
+> 								Pavel
 > 
+
