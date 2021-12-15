@@ -2,115 +2,115 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECFEC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Dec 2021 10:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3747C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Dec 2021 11:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241653AbhLOK0H (ORCPT
+        id S242237AbhLOL5t (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Dec 2021 05:26:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58327 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241650AbhLOK0F (ORCPT
+        Wed, 15 Dec 2021 06:57:49 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:42512 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242231AbhLOL5s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Dec 2021 05:26:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639563965;
+        Wed, 15 Dec 2021 06:57:48 -0500
+Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A4F931EC0105;
+        Wed, 15 Dec 2021 12:57:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1639569462;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lTMyhmlUwtP+UZbN7o4sfE3CL8eyBS2/mVFpUPSzp54=;
-        b=NunX4qJwSlk4nXa4Z5Ye5EPLcJy0dm+1AypYb0MC/DSugV7mDbz2/ZHSAgcQbltc4H5MQp
-        rgwUG6zGBBzwByDfcvzQ1mAhWKEK2AqVLUr67o6OlJgXPkr0D8GXrwZpy4b8P4/d5CpS9u
-        aipYIwGE+5ocr0T7PMnX1RMoKFM3Vg4=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-534-OG68LyAmMriMxazNqEY3Zg-1; Wed, 15 Dec 2021 05:26:04 -0500
-X-MC-Unique: OG68LyAmMriMxazNqEY3Zg-1
-Received: by mail-ed1-f69.google.com with SMTP id s12-20020a50ab0c000000b003efdf5a226fso19637077edc.10
-        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Dec 2021 02:26:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=lTMyhmlUwtP+UZbN7o4sfE3CL8eyBS2/mVFpUPSzp54=;
-        b=VpQcy8JDOUfliw5MxeKs0NtJJfyFeyl5D38XKOhmBhC2Q/Xt1GPz6Bl0xvXGTwC+qb
-         wHNtofJAukhkZd5ZvFGBpgAWcbSJNWvlorfRSoVE4ECOv69Ng4VF6ogwg1vIwRadBfws
-         pAgkau3O93g3tAhhuHsv4E12rSnMNrPbDdeR1YrDTcy///svHIApQIl2jDB2VSXwzZap
-         1grYZR5xm9JWk8P8kJsbQTd5W6EJ4T4XIRfQIOXe2bNzhwGmpw1VT8wfgFa3qv4l56Ia
-         qV8Igix9N0a4BRR9TnYvPmcvfxAO/FtpCrfkYX2sIVvPcTIfsttwZ3vhxTQgtYnP/LMh
-         QsYw==
-X-Gm-Message-State: AOAM531+s5FdFpvg37I7Xt9MjphJZjVUNbp79SVsZm3+kAJ1BELTPMMz
-        Ke8b+V3RZs6EJpiKdOzmu7XT5wytFslPCPydB/ZsBxoF7M+EEmDqBzSKiYiX0HOWS93L4GQb01Q
-        LeEJTk7o982xxP9QAXr3jfxlexVXtHcx4Qg==
-X-Received: by 2002:a17:907:7b9f:: with SMTP id ne31mr10323771ejc.592.1639563962923;
-        Wed, 15 Dec 2021 02:26:02 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxn1xV7iE8sI1FQ9psjd60mn1dZq5+6ul60Aou6+YU3I+HarC9Iu3ebjWaLZ27pxPSyzL7C4w==
-X-Received: by 2002:a17:907:7b9f:: with SMTP id ne31mr10323749ejc.592.1639563962763;
-        Wed, 15 Dec 2021 02:26:02 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id h18sm658317edw.55.2021.12.15.02.26.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Dec 2021 02:26:02 -0800 (PST)
-Message-ID: <f7ddad0b-633f-9b86-55f5-dc148c0729a6@redhat.com>
-Date:   Wed, 15 Dec 2021 11:26:01 +0100
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ER+WXJjaSLqJ9tsy2K/I4s6XucuqFb6jbaTEpQwLM9Q=;
+        b=oVALQHceuC97MU8vwp2RvKFbCv04i7xOl8k4Ca5KpVBA7ycnsCaBZCdYFJ3J8uh1Xjy2a1
+        lMd8cgbY4wvmywNzJhcjUTf0J9qZmYqMhJ2Dw6VPF0npeJu9iaU2PyMc4yUcJBByqv7Rhe
+        uOrBuqi3PsspW9FkGuBYKAgzSzr1k4g=
+Date:   Wed, 15 Dec 2021 12:57:42 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Venu Busireddy <venu.busireddy@oracle.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v8 01/40] x86/compressed/64: detect/setup SEV/SME
+ features earlier in boot
+Message-ID: <YbnYNg/UXh/JGBBJ@zn.tnic>
+References: <20211210154332.11526-1-brijesh.singh@amd.com>
+ <20211210154332.11526-2-brijesh.singh@amd.com>
+ <YbeaX+FViak2mgHO@dt>
+ <YbecS4Py2hAPBrTD@zn.tnic>
+ <YbjYZtXlbRdUznUO@dt>
+ <YbjsGHSUUwomjbpc@zn.tnic>
+ <YbkzaiC31/DzO5Da@dt>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v2 3/6] platform/x86: i2c-multi-instantiate: Move it to
- drivers/acpi folder
-Content-Language: en-US
-To:     Mark Brown <broonie@kernel.org>,
-        Stefan Binding <sbinding@opensource.cirrus.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@opensource.cirrus.com,
-        Lucas Tanure <tanureal@opensource.cirrus.com>
-References: <20211210154050.3713-1-sbinding@opensource.cirrus.com>
- <20211210154050.3713-4-sbinding@opensource.cirrus.com>
- <YbOVf5eGwCqJDgvv@sirena.org.uk>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <YbOVf5eGwCqJDgvv@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <YbkzaiC31/DzO5Da@dt>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Tue, Dec 14, 2021 at 06:14:34PM -0600, Venu Busireddy wrote:
+> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> index 2c5f12ae7d04..41b096f28d02 100644
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -224,6 +224,43 @@ static inline void native_cpuid(unsigned int *eax, unsigned int *ebx,
+>  	    : "memory");
+>  }
+>  
+> +/*
+> + * Returns the pagetable bit position in pt_bit_pos,
+> + * iff the specified features are supported.
+> + */
+> +static inline int get_pagetable_bit_pos(unsigned long *pt_bit_pos,
+> +					unsigned long features)
 
-On 12/10/21 18:59, Mark Brown wrote:
-> On Fri, Dec 10, 2021 at 03:40:47PM +0000, Stefan Binding wrote:
->> From: Lucas Tanure <tanureal@opensource.cirrus.com>
->>
->> Moving I2C multi instantiate driver to drivers/acpi folder for
->> upcoming conversion into a generic bus multi instantiate
->> driver for SPI and I2C
->>
->> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
->> ---
-> 
-> You've not provided a Signed-off-by for this so people can't do anything
-> with it, please see Documentation/process/submitting-patches.rst for
-> details on what this is and why it's important.
+You can simply return pt_bit_pos:
 
-To clarify this, what I believe that Mark means here is that if you
-submit a patch which was originally authored by someone else, then
-you should add your own (the submitters) Signed-off-by after the
-author's Signed-off-by.
+static inline unsigned int get_pagetable_bit_pos(unsigned long features)
 
-The idea is that each person directly touching the patch (rather
-then merging a branch which has the patch) adds its S-o-b to the
-patch. You will also always see sub-system maintainers add their
-own S-o-b at the end when they pick up the patch from the list
-and then apply it to their own tree (and possibly resolve
-conflicts or touch up things a bit).
+and return a negative value on error.
 
-Regards,
+Also, the only duplication this is saving is visual - that function will
+get inlined at the call sites.
 
-Hans
+Also, I'd love to separate the compressed kernel headers from the
+kernel proper ones but I'm afraid that ship has sailed. But if I could,
+that would have to be in a special header that gets included by both
+stages...
 
+So I don't mind this but I'd let Brijesh and Tom have a look at it too.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
