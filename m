@@ -2,159 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D651DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 02:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA71C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 02:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232938AbhLPCbh (ORCPT
+        id S232951AbhLPCbt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Dec 2021 21:31:37 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:60096 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232921AbhLPCbg (ORCPT
+        Wed, 15 Dec 2021 21:31:49 -0500
+Received: from mga07.intel.com ([134.134.136.100]:24895 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232940AbhLPCbs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Dec 2021 21:31:36 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20211216023135epoutp0492a302973b1b8579c11099ddcef69b1f~BG20_hLE80320703207epoutp043
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 02:31:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20211216023135epoutp0492a302973b1b8579c11099ddcef69b1f~BG20_hLE80320703207epoutp043
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1639621895;
-        bh=YCk8PBK4gxiSCDGnADGiFelQE+j9CDtYg4RWWhaBXH8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=CjUotYpLg1m6N130m9meMnVZDK6D3kru6RMhVI0nBnTO3Sg8PvkoCuRbJ1em14w1o
-         RGwhRN0WshfDj22r3bwV/Uu0surDfuK5uHniziJrP84x93RTqiY/wA7nE6BDGgLqY4
-         KH0oklAXbCDf+y1fGr2kArqzVoUoMDdbRuB2kb+I=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20211216023134epcas1p403f4ac1502fd731fceaf47020b173851~BG20WcnnB3251332513epcas1p4Z;
-        Thu, 16 Dec 2021 02:31:34 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.38.235]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4JDx282N1pz4x9QD; Thu, 16 Dec
-        2021 02:31:28 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        26.4F.08277.DF4AAB16; Thu, 16 Dec 2021 11:31:25 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20211216023125epcas1p3878d322911155792f5724447a83470cb~BG2sB0tuc2540225402epcas1p3p;
-        Thu, 16 Dec 2021 02:31:25 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20211216023125epsmtrp2157c9e1d2c0fe16c75f8229ddba4a865~BG2r_0oEe3003730037epsmtrp2P;
-        Thu, 16 Dec 2021 02:31:25 +0000 (GMT)
-X-AuditID: b6c32a36-203ff70000002055-94-61baa4fd15ca
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        44.12.08738.DF4AAB16; Thu, 16 Dec 2021 11:31:25 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20211216023125epsmtip25575af7cbca89a2603192fbb6d16df81~BG2roxOcm1119311193epsmtip20;
-        Thu, 16 Dec 2021 02:31:25 +0000 (GMT)
-Subject: Re: [PATCH v4 17/20] extcon: intel-cht-wc: Support devs with
- Micro-B / USB-2 only Type-C connectors
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <49f6f8b2-3fdc-7d4e-93b6-73e58bcf9599@samsung.com>
-Date:   Thu, 16 Dec 2021 11:54:25 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Wed, 15 Dec 2021 21:31:48 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="302760068"
+X-IronPort-AV: E=Sophos;i="5.88,210,1635231600"; 
+   d="scan'208";a="302760068"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 18:31:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,210,1635231600"; 
+   d="scan'208";a="753855873"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 15 Dec 2021 18:31:47 -0800
+Received: from debox1-desk4.intel.com (unknown [10.209.86.221])
+        by linux.intel.com (Postfix) with ESMTP id E7393580D42;
+        Wed, 15 Dec 2021 18:31:46 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, hdegoede@redhat.com,
+        david.e.box@linux.intel.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH V4 0/6] Auxiliary bus driver support for Intel PCIe VSEC/DVSEC
+Date:   Wed, 15 Dec 2021 18:31:40 -0800
+Message-Id: <20211216023146.2361174-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20211206093318.45214-18-hdegoede@redhat.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf1AUVRzv7d7tHdTlciA80RCWzMDgbo8frQQOMzJ1VhNnDY1WM8fGbcBw
-        3F23d0kMQzgSAikRINQJZoNw/CgpuORHKIGgHZJGgvJDRhwvQwhRTkaQAbpjsfjv8/28z2c/
-        7/PeWyEq/hvzFiZrDIxeQ6sJzJV35nyAJGjpVBstXTbLqKKvV1Bq4eEMoP65WIZQnaer+NTw
-        424+dXOuB1Ctt6YxynzuS0Dl3BoB1NW2coyyH+0G1K/HSlGqpLlbQI0erMGo+vYJlOq79Cef
-        uvSLgar9zYRGi+WtpjGBvKkmUN5Yl4fJb1xrx+QnrHvlM+cGMbll8DBPXmCpA3Jrr40ntzf6
-        KFzfS4lMYmgVo/dlNAlaVbImMYp44x3lbmVYuJQMIndSLxO+GjqViSJi3lQEvZqsdnQifD+h
-        1UYHpaBZlpDsitRrjQbGN0nLGqIIRqdS68J0wSydyho1icEaxhBBSqWyMIcwPiWp5U4L0J0V
-        ps20PxRkARuWD1yEEA+FOdNDIB+4CsV4C4BzvXd43DAL4MCFEowb7ABaBhZ4Tyyf1/cKuIU2
-        ABv/sqxZZgDMLrrrsAiF7rgGdtZrnbwHno/C4bLlVQeKZyGwouSQwPkpDA+EHRNDqzvZgPvB
-        wfnbwIlF+C54uaeA78Q8fBusHe1HnHgj/i60nsle07hB6zc2njPMBY+A9f1xThrFveCI7VuE
-        w1th83Q56syFeLELLKr9QsBViIETM018DrvDyYuWNd4b2u+dxThDNYCPi/MQbmgA8K4pD+VU
-        IbCjqhhxJqN4AGxok3C0H2xdrABc8rPw3twRvlMCcRHMzRFzEn94dXwM4fAmWHk4DysEhGld
-        HdO6DqZ1HUz/h50EvDrgyejY1ESGJXWy/+47QZvaCFZffGB4Cyiavh/cBRAh6AJQiBIeItu+
-        NlosUtGfpjN6rVJvVDNsFwhzHPBXqPfGBK3jl9EYlGToTmlouCwklCLDScJLNBFbRovxRNrA
-        pDCMjtE/8SFCF+8s5Bnlhx99l399Mv7twq600T0bBFOKoPKncufBWIgqI0Cc2T+b+VqvbeH1
-        WFl+pP7jutofVfxTklca+2xV37+447LtUOdo/BXP60vRndYT2/f9XOqlthm2PT0g289OuPfG
-        9fQfn2I3h9kkizdfSFX0ufkZJpsaxioLh3/wD5gyeC97tl4Yet9teXxgZa+00q5RRVqMHrFJ
-        s6Rud2IUT/ycMqb0JV1cg6pwZP/RG9UZAeYPmhX2Her7iw1b2v3N2gfEsd83FdSYNj/qTjtd
-        +hNNYz6fRW+5EpE+n/HWgWsjD+LMf+i9TmanP8q8PXsEKXGVHEh4nt5Kk+TBjuqV3KXx8z7b
-        K9wIHptEk4GonqX/BbyrJ5B6BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Re0hTURyAOTt3d9eVdZumZwY9lhmN0loFp6gsrLj9E1b2sJfd6jZX27zs
-        up5EhpS0ar3McklpFJmLRhpO59TyUa3ndFpq7xxmD1llpYZlzRH438f5fR+/HxwKytxEBKXR
-        p3IGPatVkFKiuFoxatLvSw52cvodAp882wdxz3cfwJ/vnhHh29cvi3Hzrxoxfv2jFuDStx0k
-        vlJxDOCDb1sA9jhySNx5tAbgW6ezIM6010jw8/35JLY62yF++KBejB+UpeKr9yxwrowptbyU
-        MEX5Sqaw4BDJvHjqJJnzriWMr6KRZG42ZhCM+WYBYFz3vQTTWTgyXrpaOmszp9Vs5wwxczZI
-        k0vaSgBfTu30Ob9L0oCXNIEgCtHT0AHrfYkJSCkZXQLQp/R2SWAgR1l1tdAEqH8cgqqrhYDT
-        AVDv6Urod0JoPbKa3f0cSh+B6M+JoX4J0mki5D5+EgYKJ0BfL34V+y2SVqLK9qb+1UPpMaix
-        uxX4OZiegx7Xmvsdgh6Hrj6vE/l5OL0ClV5qFQWcYciV7SX8FwXRM5G1brn/GdLjUe/5ehjg
-        cNTivSAK8Chk78iBx0GIZUBtGZBYBiSWAUkuIAqAnOMFnVonTOFVem5HtMDqBKNeHb0pRVcI
-        +j9dqSwBzoIv0VVARIEqgCioCA32rnKwsuDN7K7dnCElyWDUckIVGEERivBgt8mVJKPVbCq3
-        jeN4zvB/KqKCItJEKafOjU0e1HPlQtg3ladYo6nMi+pTadcxUUXKaMfCybkVDWul5j2JfdPt
-        d9185Be9KnF0alPZtdYPTesUkbOlQ9bMMzZ0bdxv159o86jiFOr0uKVZnm2nZnwLcWjlD+fH
-        ut9T87aKX+zZuiiHr/EV7ZIfHXbx0ZbKvNwGNGhnQlFikqtvQfWTRL5LFxffpbhVW25L6/ZM
-        sEmpjFVWWJ+9mDcvDttXEdUWM63jKczoGa6dGhEffkPta9lbFhobSz5bf6busO1NvGbwu/zM
-        H0nbvWHNO2aZBE7em/Dx11Kjvjv7lbFQOSa9mbSXddti2ifyCZpOWzlbvNoStSz75c+VCkJI
-        ZqcooUFg/wIwmfZjYwMAAA==
-X-CMS-MailID: 20211216023125epcas1p3878d322911155792f5724447a83470cb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20211206093607epcas1p342d85b95bd4d0819017a0c756993faec
-References: <20211206093318.45214-1-hdegoede@redhat.com>
-        <CGME20211206093607epcas1p342d85b95bd4d0819017a0c756993faec@epcas1p3.samsung.com>
-        <20211206093318.45214-18-hdegoede@redhat.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 12/6/21 6:33 PM, Hans de Goede wrote:
-> So far the extcon-intel-cht-wc code has only been tested on devices with
-> a Type-C connector with USB-PD, USB3 (superspeed) and DP-altmode support
-> through a FUSB302 Type-C controller.
-> 
-> Some devices with the intel-cht-wc PMIC however come with an USB-micro-B
-> connector, or an USB-2 only Type-C connector without USB-PD.
-> 
-> Which device-model we are running on can be identified with the new
-> cht_wc_model intel_soc_pmic field. On models without a Type-C controller
-> the extcon code must control the Vbus 5V boost converter and the USB role
-> switch depending on the detected cable-type.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v3:
-> - Some minor tweaks / spelling fixes based on Andy's review
-> ---
->  drivers/extcon/Kconfig               |  2 +
->  drivers/extcon/extcon-intel-cht-wc.c | 91 ++++++++++++++++++++++++++++
->  2 files changed, 93 insertions(+)
+This series makes changes to the current intel_pmt driver to give it
+broader support for Intel defined PCIe VSEC and DVSEC features. It
+moves the implementation from MFD to the auxiliary bus and creates a
+generic framework for enumerating the extended capabilities. It also
+adds support for a new VSEC, Software Defined Silicon (SDSi).
 
-[snip]
+David E. Box (6):
+  PCI: Add #defines for accessing PCIe DVSEC fields
+  driver core: auxiliary bus: Add driver data helpers
+  platform/x86/intel: Move intel_pmt from MFD to Auxiliary Bus
+  platform/x86: Add Intel Software Defined Silicon driver
+  tools arch x86: Add Intel SDSi provisiong tool
+  selftests: sdsi: test sysfs setup
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+ .../ABI/testing/sysfs-driver-intel_sdsi       |  77 +++
+ MAINTAINERS                                   |  19 +-
+ drivers/mfd/Kconfig                           |  10 -
+ drivers/mfd/Makefile                          |   1 -
+ drivers/mfd/intel_pmt.c                       | 261 --------
+ drivers/platform/x86/intel/Kconfig            |  23 +
+ drivers/platform/x86/intel/Makefile           |   4 +
+ drivers/platform/x86/intel/pmt/Kconfig        |   4 +-
+ drivers/platform/x86/intel/pmt/class.c        |  21 +-
+ drivers/platform/x86/intel/pmt/class.h        |   5 +-
+ drivers/platform/x86/intel/pmt/crashlog.c     |  47 +-
+ drivers/platform/x86/intel/pmt/telemetry.c    |  46 +-
+ drivers/platform/x86/intel/sdsi.c             | 571 ++++++++++++++++++
+ drivers/platform/x86/intel/vsec.c             | 415 +++++++++++++
+ drivers/platform/x86/intel/vsec.h             |  43 ++
+ include/linux/auxiliary_bus.h                 |  10 +
+ include/uapi/linux/pci_regs.h                 |   4 +
+ tools/arch/x86/intel_sdsi/Makefile            |   9 +
+ tools/arch/x86/intel_sdsi/sdsi.c              | 540 +++++++++++++++++
+ tools/testing/selftests/drivers/sdsi/sdsi.sh  |  18 +
+ .../selftests/drivers/sdsi/sdsi_test.py       | 226 +++++++
+ 21 files changed, 2019 insertions(+), 335 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
+ delete mode 100644 drivers/mfd/intel_pmt.c
+ create mode 100644 drivers/platform/x86/intel/sdsi.c
+ create mode 100644 drivers/platform/x86/intel/vsec.c
+ create mode 100644 drivers/platform/x86/intel/vsec.h
+ create mode 100644 tools/arch/x86/intel_sdsi/Makefile
+ create mode 100644 tools/arch/x86/intel_sdsi/sdsi.c
+ create mode 100755 tools/testing/selftests/drivers/sdsi/sdsi.sh
+ create mode 100644 tools/testing/selftests/drivers/sdsi/sdsi_test.py
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.25.1
+
