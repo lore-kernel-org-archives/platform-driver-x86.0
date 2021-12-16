@@ -2,131 +2,178 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9B1C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 11:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1B9C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 15:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232873AbhLPLrY (ORCPT
+        id S238605AbhLPPlx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Dec 2021 06:47:24 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:43704 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S232814AbhLPLrX (ORCPT
+        Thu, 16 Dec 2021 10:41:53 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:32901 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238600AbhLPPlw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Dec 2021 06:47:23 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BG6WwLq019726;
-        Thu, 16 Dec 2021 05:43:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=PODMain02222019;
- bh=le5QrY93oJaQcrGed4nRdWn7iLRo6OoqajMw7T+4nho=;
- b=kUEwVVjNxG2iaZBS+e5BvZzB3J9yqqIqkjg/gbNt47N4/fGYGYIUObws9t60100juuve
- ZMLkna3RHWhERHMcrdxAWC9+HkEnnUsQCRqY4UCTXoc+Larioqyi6BYA4FkQB1U2AHtU
- lkzAXvFpbM3fOlPJ5C6xvmxLohfgAPOClQixziWlgO0oBSatzHSbJ+EaeWpDaqAPiao6
- sRqrh3Qn2VoVkEMtiEYOGzy99Doz/WVFEC5QAgOqxtRhqX8aTJUduTNz/kD1vmsEtxLD
- /BAs1ro0ZIWV6yCoE2KpDi9Nv34Zojm1bYtLf6/UG4IQmE0+89dJYRQAUpvSducEpJ8F ZQ== 
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3cymsc110q-7
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 16 Dec 2021 05:43:42 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Thu, 16 Dec
- 2021 11:43:39 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Thu, 16 Dec 2021 11:43:39 +0000
-Received: from aryzen.ad.cirrus.com (unknown [198.61.64.39])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id E3F12B13;
-        Thu, 16 Dec 2021 11:43:38 +0000 (UTC)
-From:   Lucas Tanure <tanureal@opensource.cirrus.com>
-To:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-acpi@vger.kernel.org>,
-        <patches@opensource.cirrus.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Lucas Tanure <tanureal@opensource.cirrus.com>
-Subject: [PATCH v5 08/10] ACPI / scan: Create platform device for CLSA0100 and CSC3551 ACPI nodes
-Date:   Thu, 16 Dec 2021 11:43:30 +0000
-Message-ID: <20211216114332.153409-9-tanureal@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211216114332.153409-1-tanureal@opensource.cirrus.com>
-References: <20211216114332.153409-1-tanureal@opensource.cirrus.com>
+        Thu, 16 Dec 2021 10:41:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639669310;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ns7kDMEcoaKNGUL81oUCnFc8/9AieN/OkLMyVTe3m3I=;
+        b=dzvFCdBJPLHjRFLrHNGG1s8lZ9/Qdkzz2KDb5ikiFh+a8SELSG2Bsf6phuTMQRbJdq7anF
+        92qUPmYE6E19PrhfLlkjzMrtdOVgtutLqra8MfQHzPgjfRr9+GB0A6QbNVnwepinSKa4wl
+        hBfbE2jZsVmo1U2xyTp/pgUtJ3KdF2w=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-101-tSYmxpB_MraibewMxZAJWA-1; Thu, 16 Dec 2021 10:41:49 -0500
+X-MC-Unique: tSYmxpB_MraibewMxZAJWA-1
+Received: by mail-ed1-f70.google.com with SMTP id l14-20020aa7cace000000b003f7f8e1cbbdso2873480edt.20
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 07:41:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Ns7kDMEcoaKNGUL81oUCnFc8/9AieN/OkLMyVTe3m3I=;
+        b=eCuYrJk5ckP1E9ftYYQnmisOVhsR2SZfaM1VX4X5coi6wUHXHVOajbTSENk9W4kQ8o
+         aM3HGnsBavaKB6v147G3WD7CEAnJVI5yl0+Q/ncDI4G2IrTzBzNoNEijkmLGTDLkuAtq
+         CeCN0wOMDkLObnDGy+6DkVnX3Nrsty9dQbefPPdFOntCb1JdgLs7cSDjTlIo+55V+n+L
+         W6z8oJIwiG59PsafLvc7deo1G97TXNxbjp8qVMj2DvFdPNBeuKWk2DZBy765HP6NCWeW
+         hcC81XYQWvVZ3VCLlkZiQ6K48Yfp5NpmaA+PY0iKWH1W4ho8ON0Ik1HB7iMbDZtZ2Qvb
+         bMeA==
+X-Gm-Message-State: AOAM5336bL0g4+X/MeOBzQj+gcmGPkLL8QGCe6RFFAp+YonQnAhAk89E
+        YygEKH75z2BByITl6Ux7ioOT1qUSY+jUShY9q6PUIzJFUhG60csK5jqg7pG2cWwKkMHESHzBzyL
+        gZ7SiP3O9O4XsxqniGsAZjfK37b5aVQZDdQ==
+X-Received: by 2002:a17:906:730d:: with SMTP id di13mr7423017ejc.557.1639669308379;
+        Thu, 16 Dec 2021 07:41:48 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJw1hty/NqPgPOCvuZBByYKKfw+FS2DPD3jcu2pyAp6MB4tRgVw73vipf1LyB4LBXvx9BUiuUQ==
+X-Received: by 2002:a17:906:730d:: with SMTP id di13mr7422994ejc.557.1639669308104;
+        Thu, 16 Dec 2021 07:41:48 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id 23sm1937056ejg.213.2021.12.16.07.41.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Dec 2021 07:41:47 -0800 (PST)
+Message-ID: <0a2a0f82-b914-e9fe-97a3-13a9608f2dde@redhat.com>
+Date:   Thu, 16 Dec 2021 16:41:45 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH 0/4] power: supply: add charge_behaviour property
+ (force-discharge, inhibit-charge)
+Content-Language: en-US
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>
+Cc:     linux-pm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        linux-kernel@vger.kernel.org, linrunner@gmx.net, bberg@redhat.com,
+        hadess@hadess.net, markpearson@lenovo.com,
+        nicolopiazzalunga@gmail.com, njoshi1@lenovo.com, smclt30p@gmail.com
+References: <20211123232704.25394-1-linux@weissschuh.net>
+ <20211203213305.dfjedjj3b25ftj2z@earth.universe>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211203213305.dfjedjj3b25ftj2z@earth.universe>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: VIoGxwT42pVH29GOsFdQk2F5396ErKdt
-X-Proofpoint-ORIG-GUID: VIoGxwT42pVH29GOsFdQk2F5396ErKdt
-X-Proofpoint-Spam-Reason: safe
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The ACPI device with CLSA0100 or CSC3551 is a sound card
-with multiple instances of CS35L41 connectec by I2C to
-the main CPU.
+Hi,
 
-We add an ID to the i2c_multi_instantiate_ids list to enumerate
-all I2C slaves correctly.
+On 12/3/21 22:33, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Wed, Nov 24, 2021 at 12:27:00AM +0100, Thomas Weißschuh wrote:
+>> This series adds support for the charge_behaviour property to the power
+>> subsystem and thinkpad_acpi driver.
+>>
+>> As thinkpad_acpi has to use the 'struct power_supply' created by the generic
+>> ACPI driver it has to rely on custom sysfs attributes instead of proper
+>> power_supply properties to implement this property.
+>>
+>> Patch 1: Adds the power_supply documentation and basic public API
+>> Patch 2: Adds helpers to power_supply core to help drivers implement the
+>>   charge_behaviour attribute
+>> Patch 3: Adds support for force-discharge to thinkpad_acpi.
+>> Patch 4: Adds support for inhibit-discharge to thinkpad_acpi.
+>>
+>> Patch 3 and 4 are largely taken from other patches and adapted to the new API.
+>> (Links are in the patch trailer)
+>>
+>> Ognjen Galic:
+>>
+>> Your S-o-b is on the original inhibit_charge and force_discharge patches.
+>> I would like to add you as Co-developed-by but to do that it will also require
+>> your S-o-b. Could you give your sign-offs for the new patches, so you can be
+>> properly attributed?
+>>
+>> Sebastian Reichel:
+>>
+>> Currently the series does not actually support the property as a proper
+>> powersupply property handled fully by power_supply_sysfs.c because there would
+>> be no user for this property.
+> 
+> I'm not too happy how the acpi-battery hooks work, but that's not
+> your fault and this patchset does not really make the situation
+> worse. So:
+> 
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
----
- drivers/acpi/scan.c                          |  3 +++
- drivers/platform/x86/i2c-multi-instantiate.c | 11 +++++++++++
- 2 files changed, 14 insertions(+)
+Sebastian, what is the plan for taking this upstream ? Does your ack mean that
+you are ok with me taking the entire series upstream through the pdx86 tree?
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 5991dddbc9ce..333ae8914cf5 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -1706,8 +1706,11 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
- 	static const struct acpi_device_id i2c_multi_instantiate_ids[] = {
- 		{"BSG1160", },
- 		{"BSG2150", },
-+		{"CSC3551", },
- 		{"INT33FE", },
- 		{"INT3515", },
-+		/* Non-conforming _HID for Cirrus Logic already released */
-+		{"CLSA0100", },
- 		{}
- 	};
- 
-diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
-index 4956a1df5b90..a889789b966c 100644
---- a/drivers/platform/x86/i2c-multi-instantiate.c
-+++ b/drivers/platform/x86/i2c-multi-instantiate.c
-@@ -147,6 +147,14 @@ static const struct i2c_inst_data int3515_data[]  = {
- 	{}
- };
- 
-+static const struct i2c_inst_data cs35l41_hda[] = {
-+	{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+	{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+	{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+	{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+	{}
-+};
-+
- /*
-  * Note new device-ids must also be added to i2c_multi_instantiate_ids in
-  * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-@@ -154,7 +162,10 @@ static const struct i2c_inst_data int3515_data[]  = {
- static const struct acpi_device_id i2c_multi_inst_acpi_ids[] = {
- 	{ "BSG1160", (unsigned long)bsg1160_data },
- 	{ "BSG2150", (unsigned long)bsg2150_data },
-+	{ "CSC3551", (unsigned long)cs35l41_hda },
- 	{ "INT3515", (unsigned long)int3515_data },
-+	/* Non-conforming _HID for Cirrus Logic already released */
-+	{ "CLSA0100", (unsigned long)cs35l41_hda },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, i2c_multi_inst_acpi_ids);
--- 
-2.34.1
+Or do you plan to apply patches 1-2 through linux-power-supply.git; and in that
+case can you provide an inmmutable branch with those patches for me to merge
+into pdx86/for-next so that I can then apply patches 3 + 4 there ?
+
+Note merging everything through the linux-power-supply.git tree is non ideal
+in this case because the thinkpad_acpi.c code already has a lot of changes
+in pdx86/for-next.
+
+Regards,
+
+Hans
+
+
+>> Previous discussions about the API:
+>>
+>> https://lore.kernel.org/platform-driver-x86/20211108192852.357473-1-linux@weissschuh.net/
+>> https://lore.kernel.org/platform-driver-x86/21569a89-8303-8573-05fb-c2fec29983d1@gmail.com/
+>>
+>> v1: https://lore.kernel.org/lkml/20211113104225.141333-1-linux@weissschuh.net/
+>> v1 -> v2:
+>>
+>> * Use sysfs_emit-APIs instead of plain sprintf
+>> * More cecks for actual feature availability
+>> * Validation of the written values
+>> * Read inhibit-charge via BICG instead of PSSG (peak shift state)
+>> * Don't mangle error numbers in charge_behaviour_store()
+>>
+>> Open points:
+>>
+>> Thomas Koch has observed that on a T450s with two batteries
+>> inhibit-charge on BAT0 will affect both batteries and for BAT1 it is ignored
+>> entirely, this seems to be a bug in the EC.
+>> On my T460s with two batteries it works correctly.
+>>
+>> Thomas Weißschuh (4):
+>>   power: supply: add charge_behaviour attributes
+>>   power: supply: add helpers for charge_behaviour sysfs
+>>   platform/x86: thinkpad_acpi: support force-discharge
+>>   platform/x86: thinkpad_acpi: support inhibit-charge
+>>
+>>  Documentation/ABI/testing/sysfs-class-power |  14 ++
+>>  drivers/platform/x86/thinkpad_acpi.c        | 191 +++++++++++++++++++-
+>>  drivers/power/supply/power_supply_sysfs.c   |  51 ++++++
+>>  include/linux/power_supply.h                |  16 ++
+>>  4 files changed, 268 insertions(+), 4 deletions(-)
+>>
+>>
+>> base-commit: 66f4beaa6c1d28161f534471484b2daa2de1dce0
+>> -- 
+>> 2.34.0
+>>
 
