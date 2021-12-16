@@ -2,178 +2,196 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1B9C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 15:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E87C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 15:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238605AbhLPPlx (ORCPT
+        id S238663AbhLPPrw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Dec 2021 10:41:53 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:32901 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238600AbhLPPlw (ORCPT
+        Thu, 16 Dec 2021 10:47:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232741AbhLPPrw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Dec 2021 10:41:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639669310;
+        Thu, 16 Dec 2021 10:47:52 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9299C061574;
+        Thu, 16 Dec 2021 07:47:51 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0A6E51EC01A2;
+        Thu, 16 Dec 2021 16:47:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1639669666;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ns7kDMEcoaKNGUL81oUCnFc8/9AieN/OkLMyVTe3m3I=;
-        b=dzvFCdBJPLHjRFLrHNGG1s8lZ9/Qdkzz2KDb5ikiFh+a8SELSG2Bsf6phuTMQRbJdq7anF
-        92qUPmYE6E19PrhfLlkjzMrtdOVgtutLqra8MfQHzPgjfRr9+GB0A6QbNVnwepinSKa4wl
-        hBfbE2jZsVmo1U2xyTp/pgUtJ3KdF2w=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-101-tSYmxpB_MraibewMxZAJWA-1; Thu, 16 Dec 2021 10:41:49 -0500
-X-MC-Unique: tSYmxpB_MraibewMxZAJWA-1
-Received: by mail-ed1-f70.google.com with SMTP id l14-20020aa7cace000000b003f7f8e1cbbdso2873480edt.20
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 07:41:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Ns7kDMEcoaKNGUL81oUCnFc8/9AieN/OkLMyVTe3m3I=;
-        b=eCuYrJk5ckP1E9ftYYQnmisOVhsR2SZfaM1VX4X5coi6wUHXHVOajbTSENk9W4kQ8o
-         aM3HGnsBavaKB6v147G3WD7CEAnJVI5yl0+Q/ncDI4G2IrTzBzNoNEijkmLGTDLkuAtq
-         CeCN0wOMDkLObnDGy+6DkVnX3Nrsty9dQbefPPdFOntCb1JdgLs7cSDjTlIo+55V+n+L
-         W6z8oJIwiG59PsafLvc7deo1G97TXNxbjp8qVMj2DvFdPNBeuKWk2DZBy765HP6NCWeW
-         hcC81XYQWvVZ3VCLlkZiQ6K48Yfp5NpmaA+PY0iKWH1W4ho8ON0Ik1HB7iMbDZtZ2Qvb
-         bMeA==
-X-Gm-Message-State: AOAM5336bL0g4+X/MeOBzQj+gcmGPkLL8QGCe6RFFAp+YonQnAhAk89E
-        YygEKH75z2BByITl6Ux7ioOT1qUSY+jUShY9q6PUIzJFUhG60csK5jqg7pG2cWwKkMHESHzBzyL
-        gZ7SiP3O9O4XsxqniGsAZjfK37b5aVQZDdQ==
-X-Received: by 2002:a17:906:730d:: with SMTP id di13mr7423017ejc.557.1639669308379;
-        Thu, 16 Dec 2021 07:41:48 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJw1hty/NqPgPOCvuZBByYKKfw+FS2DPD3jcu2pyAp6MB4tRgVw73vipf1LyB4LBXvx9BUiuUQ==
-X-Received: by 2002:a17:906:730d:: with SMTP id di13mr7422994ejc.557.1639669308104;
-        Thu, 16 Dec 2021 07:41:48 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id 23sm1937056ejg.213.2021.12.16.07.41.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Dec 2021 07:41:47 -0800 (PST)
-Message-ID: <0a2a0f82-b914-e9fe-97a3-13a9608f2dde@redhat.com>
-Date:   Thu, 16 Dec 2021 16:41:45 +0100
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=w2zw5w9zdbclGVjd2mcfzFrzgn7sBAWZNCdTsQYykhk=;
+        b=HOSNWrPkxPtVrP+QzbncJoQNAqagO6/nOkVG3sXbVKWfE/24GyfWge5/8230enJQIghU91
+        CeCqrdvkWGJYi0yOX1vOhtgg49xfGrdlGoiWDGDG64jPbOh+vwbdb5cViWyGbFySlIelWH
+        iebgN19BrUYcG6qBiaDh42Sp3lSWbhI=
+Date:   Thu, 16 Dec 2021 16:47:46 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v8 06/40] x86/sev: Check SEV-SNP features support
+Message-ID: <Ybtfon70/+lG63BP@zn.tnic>
+References: <20211210154332.11526-1-brijesh.singh@amd.com>
+ <20211210154332.11526-7-brijesh.singh@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH 0/4] power: supply: add charge_behaviour property
- (force-discharge, inhibit-charge)
-Content-Language: en-US
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>
-Cc:     linux-pm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        linux-kernel@vger.kernel.org, linrunner@gmx.net, bberg@redhat.com,
-        hadess@hadess.net, markpearson@lenovo.com,
-        nicolopiazzalunga@gmail.com, njoshi1@lenovo.com, smclt30p@gmail.com
-References: <20211123232704.25394-1-linux@weissschuh.net>
- <20211203213305.dfjedjj3b25ftj2z@earth.universe>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211203213305.dfjedjj3b25ftj2z@earth.universe>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211210154332.11526-7-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 12/3/21 22:33, Sebastian Reichel wrote:
-> Hi,
+On Fri, Dec 10, 2021 at 09:42:58AM -0600, Brijesh Singh wrote:
+> Version 2 of the GHCB specification added the advertisement of features
+> that are supported by the hypervisor. If hypervisor supports the SEV-SNP
+> then it must set the SEV-SNP features bit to indicate that the base
+> SEV-SNP is supported.
 > 
-> On Wed, Nov 24, 2021 at 12:27:00AM +0100, Thomas Weißschuh wrote:
->> This series adds support for the charge_behaviour property to the power
->> subsystem and thinkpad_acpi driver.
->>
->> As thinkpad_acpi has to use the 'struct power_supply' created by the generic
->> ACPI driver it has to rely on custom sysfs attributes instead of proper
->> power_supply properties to implement this property.
->>
->> Patch 1: Adds the power_supply documentation and basic public API
->> Patch 2: Adds helpers to power_supply core to help drivers implement the
->>   charge_behaviour attribute
->> Patch 3: Adds support for force-discharge to thinkpad_acpi.
->> Patch 4: Adds support for inhibit-discharge to thinkpad_acpi.
->>
->> Patch 3 and 4 are largely taken from other patches and adapted to the new API.
->> (Links are in the patch trailer)
->>
->> Ognjen Galic:
->>
->> Your S-o-b is on the original inhibit_charge and force_discharge patches.
->> I would like to add you as Co-developed-by but to do that it will also require
->> your S-o-b. Could you give your sign-offs for the new patches, so you can be
->> properly attributed?
->>
->> Sebastian Reichel:
->>
->> Currently the series does not actually support the property as a proper
->> powersupply property handled fully by power_supply_sysfs.c because there would
->> be no user for this property.
+> Check the SEV-SNP feature while establishing the GHCB, if failed,
+> terminate the guest.
 > 
-> I'm not too happy how the acpi-battery hooks work, but that's not
-> your fault and this patchset does not really make the situation
-> worse. So:
+> Version 2 of GHCB specification adds several new NAEs, most of them are
+> optional except the hypervisor feature. Now that hypervisor feature NAE
+> is implemented, so bump the GHCB maximum support protocol version.
 > 
-> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> While at it, move the GHCB protocol negotitation check from VC exception
 
-Sebastian, what is the plan for taking this upstream ? Does your ack mean that
-you are ok with me taking the entire series upstream through the pdx86 tree?
+Unknown word [negotitation] in commit message, suggestions:
+        ['negotiation', 'negotiator', 'negotiate', 'abnegation', 'vegetation']
 
-Or do you plan to apply patches 1-2 through linux-power-supply.git; and in that
-case can you provide an inmmutable branch with those patches for me to merge
-into pdx86/for-next so that I can then apply patches 3 + 4 there ?
+> handler to sev_enable() so that all feature detection happens before
+> the first VC exception.
+> 
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  arch/x86/boot/compressed/sev.c    | 21 ++++++++++++++++-----
+>  arch/x86/include/asm/sev-common.h |  6 ++++++
+>  arch/x86/include/asm/sev.h        |  2 +-
+>  arch/x86/include/uapi/asm/svm.h   |  2 ++
+>  arch/x86/kernel/sev-shared.c      | 20 ++++++++++++++++++++
+>  arch/x86/kernel/sev.c             | 16 ++++++++++++++++
+>  6 files changed, 61 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+> index 0b6cc6402ac1..a0708f359a46 100644
+> --- a/arch/x86/boot/compressed/sev.c
+> +++ b/arch/x86/boot/compressed/sev.c
+> @@ -119,11 +119,8 @@ static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
+>  /* Include code for early handlers */
+>  #include "../../kernel/sev-shared.c"
+>  
+> -static bool early_setup_sev_es(void)
+> +static bool early_setup_ghcb(void)
+>  {
+> -	if (!sev_es_negotiate_protocol())
+> -		sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SEV_ES_PROT_UNSUPPORTED);
+> -
+>  	if (set_page_decrypted((unsigned long)&boot_ghcb_page))
+>  		return false;
+>  
+> @@ -174,7 +171,7 @@ void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
+>  	struct es_em_ctxt ctxt;
+>  	enum es_result result;
+>  
+> -	if (!boot_ghcb && !early_setup_sev_es())
+> +	if (!boot_ghcb && !early_setup_ghcb())
+>  		sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SEV_ES_GEN_REQ);
 
-Note merging everything through the linux-power-supply.git tree is non ideal
-in this case because the thinkpad_acpi.c code already has a lot of changes
-in pdx86/for-next.
+Can you setup the GHCB in sev_enable() too, after the protocol version
+negotiation succeeds?
 
-Regards,
+>  	vc_ghcb_invalidate(boot_ghcb);
+> @@ -247,5 +244,19 @@ void sev_enable(struct boot_params *bp)
+>  	if (!(sev_status & MSR_AMD64_SEV_ENABLED))
+>  		return;
+>  
+> +	/* Negotiate the GHCB protocol version */
+> +	if (sev_status & MSR_AMD64_SEV_ES_ENABLED)
+> +		if (!sev_es_negotiate_protocol())
+> +			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SEV_ES_PROT_UNSUPPORTED);
+> +
+> +	/*
+> +	 * SNP is supported in v2 of the GHCB spec which mandates support for HV
+> +	 * features. If SEV-SNP is enabled, then check if the hypervisor supports
+> +	 * the SEV-SNP features.
+> +	 */
+> +	if (sev_status & MSR_AMD64_SEV_SNP_ENABLED && !(get_hv_features() & GHCB_HV_FT_SNP))
+> +		sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
+> +
+> +
+^ Superfluous newline.
 
-Hans
+>  	sme_me_mask = BIT_ULL(ebx & 0x3f);
 
+...
 
->> Previous discussions about the API:
->>
->> https://lore.kernel.org/platform-driver-x86/20211108192852.357473-1-linux@weissschuh.net/
->> https://lore.kernel.org/platform-driver-x86/21569a89-8303-8573-05fb-c2fec29983d1@gmail.com/
->>
->> v1: https://lore.kernel.org/lkml/20211113104225.141333-1-linux@weissschuh.net/
->> v1 -> v2:
->>
->> * Use sysfs_emit-APIs instead of plain sprintf
->> * More cecks for actual feature availability
->> * Validation of the written values
->> * Read inhibit-charge via BICG instead of PSSG (peak shift state)
->> * Don't mangle error numbers in charge_behaviour_store()
->>
->> Open points:
->>
->> Thomas Koch has observed that on a T450s with two batteries
->> inhibit-charge on BAT0 will affect both batteries and for BAT1 it is ignored
->> entirely, this seems to be a bug in the EC.
->> On my T460s with two batteries it works correctly.
->>
->> Thomas Weißschuh (4):
->>   power: supply: add charge_behaviour attributes
->>   power: supply: add helpers for charge_behaviour sysfs
->>   platform/x86: thinkpad_acpi: support force-discharge
->>   platform/x86: thinkpad_acpi: support inhibit-charge
->>
->>  Documentation/ABI/testing/sysfs-class-power |  14 ++
->>  drivers/platform/x86/thinkpad_acpi.c        | 191 +++++++++++++++++++-
->>  drivers/power/supply/power_supply_sysfs.c   |  51 ++++++
->>  include/linux/power_supply.h                |  16 ++
->>  4 files changed, 268 insertions(+), 4 deletions(-)
->>
->>
->> base-commit: 66f4beaa6c1d28161f534471484b2daa2de1dce0
->> -- 
->> 2.34.0
->>
+> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+> index 19ad09712902..a0cada8398a4 100644
+> --- a/arch/x86/kernel/sev.c
+> +++ b/arch/x86/kernel/sev.c
+> @@ -43,6 +43,10 @@ static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
+>   */
+>  static struct ghcb __initdata *boot_ghcb;
+>  
+> +/* Bitmap of SEV features supported by the hypervisor */
+> +static u64 sev_hv_features;
 
+__ro_after_init
+
+> +
+> +
+>  /* #VC handler runtime per-CPU data */
+>  struct sev_es_runtime_data {
+>  	struct ghcb ghcb_page;
+> @@ -766,6 +770,18 @@ void __init sev_es_init_vc_handling(void)
+>  	if (!sev_es_check_cpu_features())
+>  		panic("SEV-ES CPU Features missing");
+>  
+> +	/*
+> +	 * SNP is supported in v2 of the GHCB spec which mandates support for HV
+> +	 * features. If SEV-SNP is enabled, then check if the hypervisor supports
+
+s/SEV-SNP/SNP/g
+
+And please do that everywhere in sev-specific files.
+
+This file is called sev.c and there's way too many acronyms flying
+around so the simpler the better.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
