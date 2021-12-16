@@ -2,137 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49CFC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 16:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03F8C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 16:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235245AbhLPQuF (ORCPT
+        id S235916AbhLPQ66 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Dec 2021 11:50:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235165AbhLPQuE (ORCPT
+        Thu, 16 Dec 2021 11:58:58 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:37228 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234595AbhLPQ65 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Dec 2021 11:50:04 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D30C06173F
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 08:50:04 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id a9so45297529wrr.8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 08:50:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vhmTL0KZO8xE1Q1ZtB8enyE8YIQf8VRnDYjk8oCQEbI=;
-        b=x9x1R+hpjqWToV04byDktZCxaoqf3vIvvGK0kVWYSJhH1YmETUz7VAzd/khtHyGWqQ
-         gPfbYfXMsfO7dJuxOVxNL3T5Jc7QQteRey9X2Dn7cXEJQlXeh1MY5AuQGzMS9E03wak6
-         M8kxQs1NV14Hshv9ZJrLxSWSMiURcNbyu39JUIvWo7BDmPMcD/PGrZX9wKEHh8MO5vlX
-         GR4A8mfRWUtEfDJzcKKh2MDffSAbvuagzqkv7bVEP+5RV5O21GKu5KnCunAGHdYgTyfw
-         xB+WEeW1ydrbDsykzHiLtUU3gK4px44V//3eX8sE3r2xb61J/CVpkbo6WlMMsTYfKX9w
-         8cZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vhmTL0KZO8xE1Q1ZtB8enyE8YIQf8VRnDYjk8oCQEbI=;
-        b=Gwj1JESxSyoVT+z/ozvOOvaCzl6F2xwdKJ3Mfo3VSDmmtqVh+EQM2rX6BaagbsqLMq
-         bfX6Twpaj3/+3wlWuYkANPMfoJz2pwDdi+820bnvhiYZKCGr7i3O5SqE/XiVNKhmzvI7
-         mRI/tQBddPa3dByBcMUwN55faXv8qfXbPJfNtspfoGHNeeyq/L+SQofmdC77YOSgHUDZ
-         du3wcln9cf93BrOxS1H9zKofMev5zHNC3tDAipI47yegT/KdQ5eAd8y/B0F6L7tNjnuJ
-         vB+kf6GtBjGRXudTE0ogKTK54KQathXv8MHx3MohacOBNsLBEY/2fDCPZtGoClPPaTxL
-         yQYA==
-X-Gm-Message-State: AOAM533QbIL14A3/nqNIxUakl6h6KXQFNJszKAgirLE9ARgEO3QI5kvZ
-        DdoTrpAYRF5fdT67TLfsykvQ0w==
-X-Google-Smtp-Source: ABdhPJzMz7Qf3P70HSBUowYpb4vvHhmtQGskdnpHrddYIGSWQ8UV22/MLXpL+8qlJ8Bu8mYFMMDPig==
-X-Received: by 2002:adf:e4cc:: with SMTP id v12mr5673535wrm.653.1639673402819;
-        Thu, 16 Dec 2021 08:50:02 -0800 (PST)
-Received: from google.com ([2.31.167.18])
-        by smtp.gmail.com with ESMTPSA id p2sm8106752wmq.23.2021.12.16.08.49.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 08:50:02 -0800 (PST)
-Date:   Thu, 16 Dec 2021 16:49:53 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     hdegoede@redhat.com, bhelgaas@google.com,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        srinivas.pandruvada@intel.com, mgross@linux.intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org, Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH V4 3/6] platform/x86/intel: Move intel_pmt from MFD to
- Auxiliary Bus
-Message-ID: <YbtuMVoTbCUi82cm@google.com>
-References: <20211216023146.2361174-1-david.e.box@linux.intel.com>
- <20211216023146.2361174-4-david.e.box@linux.intel.com>
+        Thu, 16 Dec 2021 11:58:57 -0500
+Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DBA3B1EC0554;
+        Thu, 16 Dec 2021 17:58:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1639673932;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=pWUEpsE8ix8ctSY2BZMA53JnU2wfByQzeCxkRLFpc1c=;
+        b=o7ugRI55iHPXK9G3PKXYJcJLewQ7gLw1LKObNzgLkbdKRnJk0IOa0Y4GpnP5IlJTsKCVT8
+        FDWsPqFtEoUgwzI9kBLu08QGoarVHyULigW8/R0xwsYO2y9dbc3Qae/rkmwHdq2VxaQvMi
+        Qv8ykGXyRYVzjNyQmvkzz2qWx3FT7TI=
+Date:   Thu, 16 Dec 2021 17:58:54 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v8 06/40] x86/sev: Check SEV-SNP features support
+Message-ID: <YbtwTne5BjERZV1r@zn.tnic>
+References: <20211210154332.11526-1-brijesh.singh@amd.com>
+ <20211210154332.11526-7-brijesh.singh@amd.com>
+ <Ybtfon70/+lG63BP@zn.tnic>
+ <225fe4e5-02de-5e3e-06c8-d7af0f9dd161@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211216023146.2361174-4-david.e.box@linux.intel.com>
+In-Reply-To: <225fe4e5-02de-5e3e-06c8-d7af0f9dd161@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 15 Dec 2021, David E. Box wrote:
+On Thu, Dec 16, 2021 at 10:28:45AM -0600, Brijesh Singh wrote:
+> A good question; the GHCB page is needed only at the time of #VC.  If the
+> second stage VC handler is not called after the sev_enable() during the
+> decompression stage, setting up the GHC page in sev_enable() is a waste.
 
-> Intel Platform Monitoring Technology (PMT) support is indicated by presence
-> of an Intel defined PCIe Designated Vendor Specific Extended Capabilities
-> (DVSEC) structure with a PMT specific ID. The current MFD implementation
-> creates child devices for each PMT feature, currently telemetry, watcher,
-> and crashlog. However DVSEC structures may also be used by Intel to
-> indicate support for other features. The Out Of Band Management Services
-> Module (OOBMSM) uses DVSEC to enumerate several features, including PMT.
-> In order to support them it is necessary to modify the intel_pmt driver to
-> handle the creation of the child devices more generically. To that end,
-> modify the driver to create child devices for any VSEC/DVSEC features on
-> supported devices (indicated by PCI ID).  Additionally, move the
-> implementation from MFD to the Auxiliary bus.  VSEC/DVSEC features are
-> really multifunctional PCI devices, not platform devices as MFD was
-> designed for. Auxiliary bus gives more flexibility by allowing the
-> definition of custom structures that can be shared between associated
-> auxiliary devices and the parent device. Also, rename the driver from
-> intel_pmt to intel_vsec to better reflect the purpose.
-> 
-> This series also removes the current runtime pm support which was not
-> complete to begin with. None of the current devices require runtime pm.
-> However the support will be replaced when a device is added that requires
-> it.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Reviewed-by: Mark Gross <markgross@kernel.org>
-> ---
-> V4
->   - Add intel_vsec_extract_vsec() to combine common code and simplify
->     the extended capability loops. Suggested by Andy.
-> V3
->   - Add comment clarifying how driver cleanup is handled without remove().
-> 
-> V2
->   - Clarify status of missing pm support in commit message.
->   - Clarify why auxiliary bus is preferred in commit message.
-> 
->  MAINTAINERS                                |  12 +-
->  drivers/mfd/Kconfig                        |  10 -
->  drivers/mfd/Makefile                       |   1 -
->  drivers/mfd/intel_pmt.c                    | 261 -------------
+It would be a waste if no #VC would fire. But we set up a #VC handler so
+we might just as well set up the GHCB for it too.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+> But in practice, the second stage VC handler will be called during
+> decompression. It also brings a similar question for the kernel
+> proper, should we do the same over there?
 
->  drivers/platform/x86/intel/Kconfig         |  11 +
->  drivers/platform/x86/intel/Makefile        |   2 +
->  drivers/platform/x86/intel/pmt/Kconfig     |   4 +-
->  drivers/platform/x86/intel/pmt/class.c     |  21 +-
->  drivers/platform/x86/intel/pmt/class.h     |   5 +-
->  drivers/platform/x86/intel/pmt/crashlog.c  |  47 +--
->  drivers/platform/x86/intel/pmt/telemetry.c |  46 +--
->  drivers/platform/x86/intel/vsec.c          | 405 +++++++++++++++++++++
->  drivers/platform/x86/intel/vsec.h          |  43 +++
->  13 files changed, 533 insertions(+), 335 deletions(-)
->  delete mode 100644 drivers/mfd/intel_pmt.c
->  create mode 100644 drivers/platform/x86/intel/vsec.c
->  create mode 100644 drivers/platform/x86/intel/vsec.h
+I'd think so, yes.
+ 
+> Jorge did the initial ES support and may have other reasons he chose to set
+> up GHCB page in the handler. I was trying to avoid the flow change. We can
+> do this as a pre or post-SNP patch; let me know your thoughts?
+
+You can do a separate patch only with that change and if it causes
+trouble, we can always debug/delay it.
+
+Thx.
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
