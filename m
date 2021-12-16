@@ -2,157 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64958C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 02:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C31C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 07:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233113AbhLPCci (ORCPT
+        id S232014AbhLPHOS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Dec 2021 21:32:38 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:37829 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233203AbhLPCc3 (ORCPT
+        Thu, 16 Dec 2021 02:14:18 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:48030 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234369AbhLPHOR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Dec 2021 21:32:29 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20211216023228epoutp01d0159af893c34a31cd120c79fc3a8c3a~BG3mwRbME2359123591epoutp017
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 02:32:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20211216023228epoutp01d0159af893c34a31cd120c79fc3a8c3a~BG3mwRbME2359123591epoutp017
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1639621948;
-        bh=xu5NdfDMEXF3znzl++/5As5UWccl5/DV/1rVCJK+/Dk=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=tYIcLyXZTRyKmuwwwQ/NSCGKGqeA8vEiVRlZ8kjOtpRJrtikzBqFS3liG9k0PcWAF
-         P7HRAJen2QgLltDtHlj2KAA9w093R7t9DQKDTgC1+nk+N7hJ77HVvOYGFNBnBDl9f1
-         3QuiSxwa7jGR9bxsbfgXPK8Ja5pgixYKP6EbQROE=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20211216023227epcas1p37d6db1cb22b8de18a509ca77556bcc22~BG3l51JWK1412214122epcas1p3-;
-        Thu, 16 Dec 2021 02:32:27 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.38.231]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4JDx376Bztz4x9Q3; Thu, 16 Dec
-        2021 02:32:19 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A7.A9.21932.DE4AAB16; Thu, 16 Dec 2021 11:31:09 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20211216023219epcas1p4a3e4ac07ae62491a5c0871c7afd0c531~BG3d3pF3m1698516985epcas1p4P;
-        Thu, 16 Dec 2021 02:32:19 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20211216023219epsmtrp10a3d72a3ddc714b2a955009532261790~BG3d0Wtob0258602586epsmtrp1m;
-        Thu, 16 Dec 2021 02:32:19 +0000 (GMT)
-X-AuditID: b6c32a38-929ff700000255ac-df-61baa4edfdd9
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        30.32.08738.235AAB16; Thu, 16 Dec 2021 11:32:18 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20211216023218epsmtip107d0161f5f971769c7caa041d3f31de8~BG3djIiI60275402754epsmtip1b;
-        Thu, 16 Dec 2021 02:32:18 +0000 (GMT)
-Subject: Re: [PATCH v4 20/20] extcon: intel-cht-wc: Report RID_A for ACA
- adapters
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <827d2fe4-e50c-ce4c-9e6c-e10555bbabef@samsung.com>
-Date:   Thu, 16 Dec 2021 11:55:19 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Thu, 16 Dec 2021 02:14:17 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8817AB822FF
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 07:14:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4F436C36AE4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 07:14:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639638855;
+        bh=+yYvIxLTGaPpTu8lITMgoPsubYm5ZOWllAi9RP2K6Wo=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=mw6IH9BveF2U8MBSAoSSxwixofhmjKnDFI04Sy3vQBgjmQjcaBvNZgnnp51akSrjw
+         Hno9Y8cE+/rq1cONIOegk+PsTyFv0vd2PgL3Qtxz90M00wZSh+H32aIr2qQkUCBp/b
+         0/y/uUBMDNpvUh72aUL1kYp9PyLceF9evgk8zW7KcpLpLB22uR/oVhmo02K2Ep9+3x
+         YhNVIgFAVIRjEL/HDLlmPu5TIvkf/zO2VeFodT0MxEOa5bv+78eF+COQxCyzvYo9Mm
+         +5SE8FA8kLh+z3rcglB5zoCNXCainGljP8NnQTkSah3SD6Y9Tj3tAfA8eQGuo0Co1P
+         HiHXSEmhJ7fcQ==
+Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
+        id 3B8EF60F46; Thu, 16 Dec 2021 07:14:15 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 16 Dec 2021 07:14:12 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: logos128@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc attachments.created
+Message-ID: <bug-204807-215701-5fkHgV9OCk@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-In-Reply-To: <20211206093318.45214-21-hdegoede@redhat.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTVxze6S23Bce4KyjHzjm4yiK4IoUCBwF1QV2NLsOYkWmysSvctR2l
-        bXpbYFvMytTKU57y6AqaieBwmbzGoxgEhmPViaDBjZcIFhG2yhyaMWfYWi5u/Pf7fb/vO9/5
-        zoOPCaZwIV+h0tFaFaUkcTdu8/f+IpG9ykIFPazxRYVl/2Dor8dzAP3WW8pBXd+ec0FDT3tc
-        0PiTKwC1TdhxVNORB5BxYhigWxYzjuZzewDqPFWCoeKWHh4aST+PowuXHmDop2s3XdC1dh36
-        +kcTtkMgbTON8aSN5wOkDbWZuHT09iVcWmndL53rGMSlTYMnuNKTTbVAar1q40rnG9bHuh1K
-        ipLTVCKt9aFVCepEhUoWTe49EB8THxoWJBaJI1A46aOikulocue+WNFuhdKRifRJoZR6BxRL
-        MQy5ZVuUVq3X0T5yNaOLJmlNolITqglkqGRGr5IFqmjdVnFQUHCog/hhknw2+5mL5iY/rbxw
-        imsAz/As4MqHhAQWTRhBFnDjC4hWAFvu9gPnQED8AeB0XyI7mAdw1FzHe66wptfh7MAC4NGq
-        +zxWMQfgou2ws/YkDsD6zuNLy3oRWRgcKl3kORuMMHBgRfHRJQVOBMDLD35Z2ogH4QsHF+4t
-        ebsT22DGNz87OHw+l/CDBQPRTng1EQetzceWKS9Da7mN66S4ElvhaKWfE8YIbzhsO81h69dg
-        i92MOW0hke0K+3K/4rIJdkLjnarl2hPO9jYtJxPCmTwjjxVUA/i0KJPDNhcBnDFlYiwrBF4+
-        V8RxOmOEP7xo2cLCvrDt7wrAOr8EHz7JcXFSIOEOM4wClrIB3ro7xmHrtfDsiUw8H5CmFXFM
-        KzKYVmQw/W92BnBrwRpawyTLaEaskfx32wnq5Aaw9N4DUCuosP8e2A04fNANIB8jvdxt71ko
-        gXsi9cmntFYdr9UraaYbhDrOtwATrk5QOz6MShcvlkQEScKCQyRIHCYmvd2n3ymlBISM0tFJ
-        NK2htc91HL6r0MAxNNkzunLGrsb4D/8aNp7hms9bk7w2ztIeI8zf3PcYv55mOPm+sjn2SGVF
-        eYp5dKhE/idzWE4kzQim8k9vl714pzC3TqiwTdervGIu5HmAkRxl6m4R98i9iEnbwLsLHZ74
-        GdPGFz64EYKqlQNDP3SdPdizaqIkZ1/6nvx5xXBn3PXjXp6rZiPNYTbvHF515NyMoPXQuv4S
-        zfD9AuGp0sgr7ceK96ZOftc78aZHWs0C+ig1t976SBaxTl06O7jrYErw/uyKj7eH2qsasytb
-        9AbJq2WbHo0sjm8qeX2Otz5qo+iLsvA33vrMPKn3+9zjtsLY2hjxZfvbRmxh865XwmfoG/3E
-        DpLLyClxAKZlqH8BjOjEbXgEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRmVeSWpSXmKPExsWy7bCSnK7R0l2JBtPuqVtMmvGf2eLnl/eM
-        Fm+OT2eyOLhuKavFzV9HWC3ufz3KaLHz4Vs2i+X7+hkt2h7eYrS4vGsOm8Xn3iOMFgemTmO2
-        mLL9CLvF7cYVbBar97xgtjhz+hKrxendJRYrT8xidhDy2DnrLrvH5hVaHptWdbJ53Lm2h81j
-        3slAj/f7rrJ5bLnazuLRt2UVo8fJU09YPD5vkgvgiuKySUnNySxLLdK3S+DKeNX9h7XgEkfF
-        zElPWRoY/7B1MXJySAiYSJxs3ABkc3EICexglJhxq4MZIiEpMe3iUSCbA8gWljh8uBii5i2j
-        xJ9Jk9hBaoQFgiU2HmhlBLFFBHqYJf5N5AcpYhZoYJK4MGESM0THHkaJPWt3g1WxCWhJ7H9x
-        A2w1v4CixNUfj8HivAJ2Eh1rrrODbGMRUJWYeNEWJCwqECaxc8ljJogSQYmTM5+wgJRwClhJ
-        3JmnChJmFlCX+DPvEjOELS5x68l8JghbXmL72znMExiFZyHpnoWkZRaSlllIWhYwsqxilEwt
-        KM5Nzy02LDDKSy3XK07MLS7NS9dLzs/dxAiOcy2tHYx7Vn3QO8TIxMF4iFGCg1lJhPdJxK5E
-        Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rwXuk7GCwmkJ5akZqemFqQWwWSZODilGphOrJrXvNyL
-        yf2yz6H5nenGy5KtW60/SJtffsl4g8NK5v8HhnD90zc2fPP9c19bNlLsfarqd54wtfOcvsd5
-        HdxffTU4zt1zuX7Xx6ZlzZr31ulwXT2kpZ0qap1dmRP3Q53/9v114jO0XpUnr0ise3SuJ/bB
-        UkevT31bLPJKDjzmqResz/y3Lnvl6U6ZEykK038+uvvkU997zQye+L8SrPU1rQtE1l0vOvv7
-        9efqTr69EbGJShp56kHG3wSVecI3Hr7Px3eg2FUo7FBsrU7eqlj56vrQzSarc2Z38Cf/fxpa
-        3NV6pr57zq4JNx/MOGIUpabclOps+d/CJqt5Y7jY7E0/Ve4xZkzXeHSKZU37ZSWW4oxEQy3m
-        ouJEAPrUT51iAwAA
-X-CMS-MailID: 20211216023219epcas1p4a3e4ac07ae62491a5c0871c7afd0c531
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20211206093542epcas1p177d404c7a4889bcd80705fe4f6f30b62
-References: <20211206093318.45214-1-hdegoede@redhat.com>
-        <CGME20211206093542epcas1p177d404c7a4889bcd80705fe4f6f30b62@epcas1p1.samsung.com>
-        <20211206093318.45214-21-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 12/6/21 6:33 PM, Hans de Goede wrote:
-> Make cht_wc_extcon_get_id() report RID_A for ACA adapters, instead of
-> reporting ID_FLOAT.
-> 
-> According to the spec. we should read the USB-ID pin ADC value
-> to determine the resistance of the used pull-down resister and
-> then return RID_A / RID_B / RID_C based on this. But all "Accessory
-> Charger Adapter"s (ACAs) which users can actually buy always use
-> a combination of a charging port with one or more USB-A ports, so
-> they should always use a resistor indicating RID_A. But the spec
-> is hard to read / badly-worded so some of them actually indicate
-> they are a RID_B ACA even though they clearly are a RID_A ACA.
-> 
-> To workaround this simply always return INTEL_USB_RID_A, which
-> matches all the ACAs which users can actually buy.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/extcon/extcon-intel-cht-wc.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
-[snip]
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Ivo Ivanov (logos128@gmail.com) changed:
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |logos128@gmail.com
+
+--- Comment #201 from Ivo Ivanov (logos128@gmail.com) ---
+Created attachment 300039
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300039&action=3Dedit
+0001-hwmon-nct6775-Add-support-for-ROG-MAXIMUS-X-HERO.patch
+
+I can confirm that the sensors of Asus ROG MAXIMUS X HERO also work with the
+proposed patchset. The name of the board is "ROG MAXIMUS X HERO", and needs=
+ to
+use acpi_board_LPCB_MUTEX.
+
+Attached a patch based on the Linux 5.15 branch with applied latest patchset
+for nct6775 from 2021.12.14 (comment #199 from Denis Pauk).
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
