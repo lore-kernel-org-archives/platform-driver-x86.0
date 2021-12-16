@@ -2,138 +2,141 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E3FC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 22:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149CCC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 23:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232958AbhLPWWa (ORCPT
+        id S229830AbhLPXjl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Dec 2021 17:22:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42548 "EHLO
+        Thu, 16 Dec 2021 18:39:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230462AbhLPWW3 (ORCPT
+        with ESMTP id S229824AbhLPXjk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Dec 2021 17:22:29 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4155EC061574;
-        Thu, 16 Dec 2021 14:22:29 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id d38so906431lfv.0;
-        Thu, 16 Dec 2021 14:22:29 -0800 (PST)
+        Thu, 16 Dec 2021 18:39:40 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F60AC06173F
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 15:39:40 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id m6so1128671lfu.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 15:39:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:cc:subject:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=+HEWTxN0MDr0ZGvDvF7WwVJpOBhBbuSX1UZJkIu2GZk=;
-        b=VAazcsq7AbbriTGSYUvqxmPY8IF42ILQ5xzOvxTfUtJLkeUclB2j2lsNmdWc8lcj5W
-         vgEMq0X4KGbwUyG3nI1oj6WjJXIAx8c9/c/syX7/Q2KXeFeQIROmY4K6UvbbE0zO3glB
-         TwzqRZ3RFf95JLuEMFnXxkd/Kj+U/E5btiHSEG05TKaYT2oifgTXsItSOPW1N8D60cQu
-         1Mw90fwYazu0WaabIWEAncmncv2qhd0rZ49uyjC8hRD7NP2q/vk/d/ibGHWQfPUDWMKM
-         sWWXfNRoCqn3ouRKkUT/Mp5uLYveMhQ7GhkGHmhqchgKdwCv9cpW8iWmxbtT6AnGj8I6
-         otkA==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m/LjgsVegt/HRyKkkM2n6c0UK9wyNwAZfK1yqCRibBE=;
+        b=ZjNYT24fop4NBsOLESN28pcPFI76P21GY15lEKVa1tKR8Y6MixFR71XXHM7GhfF9Om
+         Mic+/EDIsAL+Oy0aBQJNKwWOjgm51UPxF4cZ/YnojHbYK5t7OKs/w0RJ0fMV/Jty5UP3
+         GD7cR728r/nXnJAOmo8UvAJPlaoac5Lt5ox6J43oGgiSlI+tzAmdbkGHwKtBLR6b03CD
+         7oHTeGaKYJVODZhzKZPRa/GHySInjAASy4QEqvKVn6IABK89mCJ8zObuLFxxpFd4M9oY
+         nNbcSS9gTr2YJoL93pnZ4nD3gzT76+OThD67D+uVZQJZKT64KbSwJ1kM4lJaQvROfOCD
+         Mpsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+HEWTxN0MDr0ZGvDvF7WwVJpOBhBbuSX1UZJkIu2GZk=;
-        b=329RQ7v7nMiIw3wI6zdhUQXjhIBCy5bh3v1/S0+SqqJ7fJMQNRjFAFYGMNW8UFtAdF
-         x4kNJlWzZvh/KrptBAMmH9SnfKqc0fR5fzqPNO6hb23ek4DFTbduizXpjsvK0wbdQK11
-         pSEZigAEsQzkOmluvkQAh2oSr7fZtgmjpB86CfdunbaESmJeemyPcQAmL/0FSqcHKyDG
-         cJaoepxdyBlvZ3Q2laIUwQbdoj8ekFk4Q83oYQwUH3Pi02hP39PUfpQNWyXXr0deCERH
-         SMq+tbzZnogokoNrRhLmChbBrb1Xkn72xTlML1zl4rWWtkoAppTSybvY5LwSAX/ZeI1e
-         fNTQ==
-X-Gm-Message-State: AOAM5336/VqK32r0sEHxucQP+cNuFO1ROq/h+e5AzWNHbTX2uFuiUV8L
-        ZAchAbvE0T4q8IrdRcEOtyDEI8eLlUxH6w==
-X-Google-Smtp-Source: ABdhPJy8dQJNPIazDdKfOzklHrBIo12MdaldzTWmrzxWAslICqqohGJxWtH9VJ4TfWIRmdKRG/lu7A==
-X-Received: by 2002:ac2:4c0b:: with SMTP id t11mr231727lfq.520.1639693347464;
-        Thu, 16 Dec 2021 14:22:27 -0800 (PST)
-Received: from netbook-debian (55-2-94-178.pool.ukrtel.net. [178.94.2.55])
-        by smtp.gmail.com with ESMTPSA id t23sm1074373lfg.63.2021.12.16.14.22.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 14:22:27 -0800 (PST)
-Date:   Fri, 17 Dec 2021 00:22:23 +0200
-From:   Denis Pauk <pauk.denis@gmail.com>
-Cc:     eugene.shalygin@gmail.com, andy.shevchenko@gmail.com,
-        platform-driver-x86@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] hwmon: (nct6775) Support lock by ACPI mutex
-Message-ID: <20211217002223.63b1e0a7@netbook-debian>
-In-Reply-To: <20211128184549.9161-1-pauk.denis@gmail.com>
-References: <20211128184549.9161-1-pauk.denis@gmail.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m/LjgsVegt/HRyKkkM2n6c0UK9wyNwAZfK1yqCRibBE=;
+        b=T8J0g9Bsou/0g9w/1zq44ZVLrQ2ZJcGzIjT6aztKlnsp67u37oMmvrSDTzJkf41KuN
+         3c9cIJByMZJixqJrMz/ZIldZ0OxlUX84nMi8Dxs/alSoFGDANabT9kTDQAO1hR2LQrKP
+         +2VWOj+VJBZ4OxgLlMAz3sc87LTefgtlxYOyGCQOWB6vHvZeV+QE/DBI2gKqdrASfgSv
+         TNFFnpXZmRBLlhTubJpHKApe3iHDlRpnr81BmCfcHzswXrnWDiNVePoWqmeIXYHcUO+X
+         a0Go7fIOrZuO0eGwClYKJnrw1M/iiCJc7/vqNwtcaWthAGAsQn+5AJvWkPEKz0U2+6Pg
+         zOdg==
+X-Gm-Message-State: AOAM530iCYRw94e2TU1emlkvncC2hv1FtveYrw6c2odc81qs37eHaniu
+        mXbJwt0/twxH4PJwCt1Xa6O0KiAD1h8Wn0fpaklUiQ==
+X-Google-Smtp-Source: ABdhPJzJ3Ag+Yv1KTmSJebYEdW20IHyaYIzqo6gVs4G5mbbZ7dHZUudFFNmxFE9zK8L0+gvaxQYp82IZFk5AQAuq/rc=
+X-Received: by 2002:a05:6512:1324:: with SMTP id x36mr432363lfu.495.1639697978059;
+ Thu, 16 Dec 2021 15:39:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20211210154332.11526-1-brijesh.singh@amd.com> <20211210154332.11526-9-brijesh.singh@amd.com>
+ <YbugbgXhApv9ECM2@dt>
+In-Reply-To: <YbugbgXhApv9ECM2@dt>
+From:   Mikolaj Lisik <lisik@google.com>
+Date:   Thu, 16 Dec 2021 15:39:26 -0800
+Message-ID: <CADtC8PX_bEk3rQR1sonbp-rX7rAG4fdbM41r3YLhfj3qWvqJrw@mail.gmail.com>
+Subject: Re: [PATCH v8 08/40] x86/sev: Check the vmpl level
+To:     Venu Busireddy <venu.busireddy@oracle.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <Thomas.Lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Thu, Dec 16, 2021 at 12:24 PM Venu Busireddy
+<venu.busireddy@oracle.com> wrote:
+>
+> On 2021-12-10 09:43:00 -0600, Brijesh Singh wrote:
+> > Virtual Machine Privilege Level (VMPL) feature in the SEV-SNP architecture
+> > allows a guest VM to divide its address space into four levels. The level
+> > can be used to provide the hardware isolated abstraction layers with a VM.
+> > The VMPL0 is the highest privilege, and VMPL3 is the least privilege.
+> > Certain operations must be done by the VMPL0 software, such as:
+> >
+> > * Validate or invalidate memory range (PVALIDATE instruction)
+> > * Allocate VMSA page (RMPADJUST instruction when VMSA=1)
+> >
+> > The initial SEV-SNP support requires that the guest kernel is running on
+> > VMPL0. Add a check to make sure that kernel is running at VMPL0 before
+> > continuing the boot. There is no easy method to query the current VMPL
+> > level, so use the RMPADJUST instruction to determine whether the guest is
+> > running at the VMPL0.
+> >
+> > Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> > ---
+> >  arch/x86/boot/compressed/sev.c    | 34 ++++++++++++++++++++++++++++---
+> >  arch/x86/include/asm/sev-common.h |  1 +
+> >  arch/x86/include/asm/sev.h        | 16 +++++++++++++++
+> >  3 files changed, 48 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+> > index a0708f359a46..9be369f72299 100644
+> > --- a/arch/x86/boot/compressed/sev.c
+> > +++ b/arch/x86/boot/compressed/sev.c
+> > @@ -212,6 +212,31 @@ static inline u64 rd_sev_status_msr(void)
+> >       return ((high << 32) | low);
+> >  }
+> >
+> > +static void enforce_vmpl0(void)
+> > +{
+> > +     u64 attrs;
+> > +     int err;
+> > +
+> > +     /*
+> > +      * There is no straightforward way to query the current VMPL level. The
+> > +      * simplest method is to use the RMPADJUST instruction to change a page
+> > +      * permission to a VMPL level-1, and if the guest kernel is launched at
+> > +      * a level <= 1, then RMPADJUST instruction will return an error.
+>
+> Perhaps a nit. When you say "level <= 1", do you mean a level lower than or
+> equal to 1 semantically, or numerically?
+>
 
-Could you please provide a some feedback about such idea?
++1 to this. Additionally I found the "level-1" confusing which I
+interpreted as "level minus one".
 
-I have bigger list of supported boards that requires ACPI mutex lock,
-but I prefer to have some feedback before send next version of patch.
-
-I have created separate patch[1] with only boards where WMI methods is
-enough. And if work on patch takes some time/additional patch
-versions(for sure it will), I prefer to have that patch merged and
-rebase current patch over resulted list of boards. 
-
-Thank you.  
-1. https://patchwork.kernel.org/project/linux-hwmon/list/?series=594167
-
-On Sun, 28 Nov 2021 20:45:45 +0200
-Denis Pauk <pauk.denis@gmail.com> wrote:
-
-> Lock by a ACPI mutex that is required for support ASUS MAXIMUS VII
-> HERO motherboard. In other case, all methods are returned zero
-> instead of real values. Code uses acpi mutex before any IO operations
-> in case when such acpi mutex is known.
-> 
-> Patch series adds additional check for chip ID, and if method
-> returned zero, all calls by acpi_wmi are disabled. 
-> 
-> @Andy Shevchenko: 
-> >> Do you need string_helpers.h after this change?  
-> It was not required in the original patch, as it was included as part
-> of some other header and I have left includes without changes.
-> 
-> I have a little bit changed conditionals in "add MAXIMUS VII HERO",
-> code can change access variable several times: 
-> * By the default, access is set to direct, 
-> * after code has checked that wmi methods can return something useful,
-> * and as the last step code has checked that mutext is existed and
-> set access back to direct.
-> 
-> But as for me, it should be less confusing.
-> 
-> What do you think?
-> 
-> ---
-> 
-> Changes in v2:
-> - Fix commit message.
-> - Remove default acpi_board_ANY and use NULL instead.
-> - Use chip ID everywhere.
-> - Use an anonymous union for mutexes.
-> - Use temporary status varibale in acpi calls.
-> ---
-> 
-> Denis Pauk (3):
->   hwmon: (nct6775) Use lock function pointers in nct6775_data
->   hwmon: (nct6775) Implement custom lock by ACPI mutex
->   hwmon: (nct6775) add MAXIMUS VII HERO
-> 
->  drivers/hwmon/nct6775.c | 364
-> +++++++++++++++++++++++++++++----------- 1 file changed, 263
-> insertions(+), 101 deletions(-)
-> 
-> 
-> base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
-
-
-
-Best regards,
-             Denis.
+Perhaps phrasing it as "level one", or "level=1" would be more explicit?
