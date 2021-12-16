@@ -2,188 +2,137 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E2AC43217
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 16:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49CFC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Dec 2021 16:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229539AbhLPQ2y (ORCPT
+        id S235245AbhLPQuF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Dec 2021 11:28:54 -0500
-Received: from mail-bn8nam11on2071.outbound.protection.outlook.com ([40.107.236.71]:32225
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233854AbhLPQ2x (ORCPT
+        Thu, 16 Dec 2021 11:50:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235165AbhLPQuE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Dec 2021 11:28:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WXPkmwQbV9UgszPDMsW01F8QIBt2PdLSMI0xQ3q96HMmYXuE2JxnX1aEVrOOrkOOxzMDnHuvRd5wPOyyQEYLk7cyk1ZJBHsDlgeH7eEhseB/BSLjsXg7KGPTVWwvAp/JBSM0LVY2lj2c6tWVRV8tWNfkk2XE5QOUDoUUAEJ/h+nQErfR39MebzXsfCjPkY/KqIiTF7KnH8MujbLzzevV5vXlB42FklX8MkwMb6HUt0XmqPe/EI/VaiJ2aaprJ/wopeBM8DSSsLYuEKrKDU7D3iWXSaPBXOhzX130LJ0lD9lhknKT3Hs3jfWDXhQrNFj/MKuC9GTtM/5WWQyIV+Jmrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j7OhKhPHsQ5ychtqhgnYj+OJWkZfAGF52K7lrOqPGJo=;
- b=IwIGyR36c3YsdxodQ6Z3n1QhORLRG59vMchjo7Vjb9XGwK9MkfsjF5iP6RZ2t2wwsJrYqYcR0lRwxtrViDJFrwL1KqbA/zNM+/hbia4Sxq7UyZcA+Ltr47c0Vi2HF35owiPQoCP9VU7npKfIRzA3H6tUi9QeWwslmJsh7jLVLwVRpEYdcog1fz6kbx6ji9UvXJm2m8rFu9cqJBWW6mgE6tJYqkDp1pJkNFqpuvKGJtmkzMG8jFibbInxEtWqCrNMNOsu3pGMt7H8MLeZvjlX0k5IRRFouqSUS8bJ7QJ98BzsLuGdRUJd6KFDnMf2iTcK69Aip776QJf9FoS42CmSYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j7OhKhPHsQ5ychtqhgnYj+OJWkZfAGF52K7lrOqPGJo=;
- b=mic58NHjPDFKV5K8dO325+f6CeDQQZMjgHNMLMm+USESo6+ufYLyupVrJWqVsrLHTcHFRG4bJfmExSjENBb3GMcjgRgYLXV3R6GWLn/dHdF3pxb3HvEsC7T1Jm4O+h4oLEDaWNMc4ZKXQIOjsQ6myHdygFP6CFyyXwByM/4+lOc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by SA0PR12MB4384.namprd12.prod.outlook.com (2603:10b6:806:9f::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4801.14; Thu, 16 Dec
- 2021 16:28:51 +0000
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::35:281:b7f8:ed4c]) by SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::35:281:b7f8:ed4c%6]) with mapi id 15.20.4778.018; Thu, 16 Dec 2021
- 16:28:51 +0000
-Cc:     brijesh.singh@amd.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v8 06/40] x86/sev: Check SEV-SNP features support
-To:     Borislav Petkov <bp@alien8.de>
-References: <20211210154332.11526-1-brijesh.singh@amd.com>
- <20211210154332.11526-7-brijesh.singh@amd.com> <Ybtfon70/+lG63BP@zn.tnic>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <225fe4e5-02de-5e3e-06c8-d7af0f9dd161@amd.com>
-Date:   Thu, 16 Dec 2021 10:28:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-In-Reply-To: <Ybtfon70/+lG63BP@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR07CA0028.namprd07.prod.outlook.com
- (2603:10b6:610:20::41) To SN6PR12MB2718.namprd12.prod.outlook.com
- (2603:10b6:805:6f::22)
+        Thu, 16 Dec 2021 11:50:04 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D30C06173F
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 08:50:04 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id a9so45297529wrr.8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Dec 2021 08:50:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=vhmTL0KZO8xE1Q1ZtB8enyE8YIQf8VRnDYjk8oCQEbI=;
+        b=x9x1R+hpjqWToV04byDktZCxaoqf3vIvvGK0kVWYSJhH1YmETUz7VAzd/khtHyGWqQ
+         gPfbYfXMsfO7dJuxOVxNL3T5Jc7QQteRey9X2Dn7cXEJQlXeh1MY5AuQGzMS9E03wak6
+         M8kxQs1NV14Hshv9ZJrLxSWSMiURcNbyu39JUIvWo7BDmPMcD/PGrZX9wKEHh8MO5vlX
+         GR4A8mfRWUtEfDJzcKKh2MDffSAbvuagzqkv7bVEP+5RV5O21GKu5KnCunAGHdYgTyfw
+         xB+WEeW1ydrbDsykzHiLtUU3gK4px44V//3eX8sE3r2xb61J/CVpkbo6WlMMsTYfKX9w
+         8cZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vhmTL0KZO8xE1Q1ZtB8enyE8YIQf8VRnDYjk8oCQEbI=;
+        b=Gwj1JESxSyoVT+z/ozvOOvaCzl6F2xwdKJ3Mfo3VSDmmtqVh+EQM2rX6BaagbsqLMq
+         bfX6Twpaj3/+3wlWuYkANPMfoJz2pwDdi+820bnvhiYZKCGr7i3O5SqE/XiVNKhmzvI7
+         mRI/tQBddPa3dByBcMUwN55faXv8qfXbPJfNtspfoGHNeeyq/L+SQofmdC77YOSgHUDZ
+         du3wcln9cf93BrOxS1H9zKofMev5zHNC3tDAipI47yegT/KdQ5eAd8y/B0F6L7tNjnuJ
+         vB+kf6GtBjGRXudTE0ogKTK54KQathXv8MHx3MohacOBNsLBEY/2fDCPZtGoClPPaTxL
+         yQYA==
+X-Gm-Message-State: AOAM533QbIL14A3/nqNIxUakl6h6KXQFNJszKAgirLE9ARgEO3QI5kvZ
+        DdoTrpAYRF5fdT67TLfsykvQ0w==
+X-Google-Smtp-Source: ABdhPJzMz7Qf3P70HSBUowYpb4vvHhmtQGskdnpHrddYIGSWQ8UV22/MLXpL+8qlJ8Bu8mYFMMDPig==
+X-Received: by 2002:adf:e4cc:: with SMTP id v12mr5673535wrm.653.1639673402819;
+        Thu, 16 Dec 2021 08:50:02 -0800 (PST)
+Received: from google.com ([2.31.167.18])
+        by smtp.gmail.com with ESMTPSA id p2sm8106752wmq.23.2021.12.16.08.49.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Dec 2021 08:50:02 -0800 (PST)
+Date:   Thu, 16 Dec 2021 16:49:53 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     hdegoede@redhat.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org, Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH V4 3/6] platform/x86/intel: Move intel_pmt from MFD to
+ Auxiliary Bus
+Message-ID: <YbtuMVoTbCUi82cm@google.com>
+References: <20211216023146.2361174-1-david.e.box@linux.intel.com>
+ <20211216023146.2361174-4-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2febced1-6ea7-4c4a-184d-08d9c0b1249e
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4384:EE_
-X-Microsoft-Antispam-PRVS: <SA0PR12MB43848A8EEB5130A85DD2639FE5779@SA0PR12MB4384.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: A76Tjz2mI9VXobBu8vGONoY08sZA2AFJA3ul8nhyVBniPsNtzb+N7ryR8Uw4oCesFO7YZd7e0IxbXHS8jxdkGmh1j5mtcTZYfYcftBxmbjqBVz/wyvCDVHrZxFCXUOxrTcZQYzbh9xck+HmqByo65DF3aBUtm0ZVYwckKB2ULIjHbbljtO6xboqlaR0z9c304sKp1fl5mw3bUVqwjC2BEaN1L5w2z4560jrt9LBZS9D9bEef1cSQLZgLa4qH0nTiY7t4YnAja09r09HFgPR7Y69i84klRHFxVruyGx1i9V+0zxq8Wm0m5dlqzu/R8vLaQkQTpMAOM+/e2JW6oC4pKvP0gCCS+0Gt1uvI3TEEi/OwzZ50vbc8H2bQnNIi8OCZQnNI6kUHeWUQKKKsHz9FjG6QxLwdQSsFcpEBdqVT2K5TAKlrkogU2iCS8epn6cot5eV5Ky3qOj5ICo75yDPM3jEx4SPgiTzEkSBGJ82bvcIlA5Ey5vuy+zsr+xsDeubVmONdmq0MwPD7Gy0m8ZiIGiUumKSGX65Yiy/Mre2uFLfjjpaskgGCiwTBAyD1jGcvesfnm9nrGGbP4vSwZiICfLbplzVaWNNLUXKvBo+oNtJ32yvwxOU9t22b4MzWn3vqKXV3/J597DCXvqLkZACeKuV4NzrRg7EEDwZ1lq0WZBT/Ao93bkFl02pHlA/wJmUV/ktbLLWoklIk47cMej4fQnybRw1bEIqXrlhDgKFXXME=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(2906002)(7416002)(66946007)(6506007)(7406005)(5660300002)(53546011)(44832011)(66476007)(4326008)(2616005)(6512007)(38100700002)(316002)(66556008)(186003)(86362001)(8936002)(31696002)(31686004)(508600001)(6916009)(8676002)(54906003)(26005)(6666004)(36756003)(6486002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bHd3M0UwMGVFUFlWY0hWL2t1Y1JmaEdrZ25YWFhZWmx4RktjMFBFVTI1dzlN?=
- =?utf-8?B?VFA3TkdZOGNVQmsyS2FHRVFLdllGZnkxK3lhYURRRTAyeER0ZEtFRUxpTldG?=
- =?utf-8?B?Z05PZlJzamNiRVJBdHU1TFdBSXhIMHZYVXBEbGFkaHVxZzNndEhHUnZqclg0?=
- =?utf-8?B?VWgwNmNYNktodG01YS9UTHdQQlBkNnNVU21WMEprbDFydmdldU1NRmNjK29X?=
- =?utf-8?B?cnhpakM3M3Q0TGhYajgxMDMySklueG03YU56bWF2WE14TXhOVlBkSnB2aHZ1?=
- =?utf-8?B?M01GUFRBY2R4cXNjWGVpYngvQ1BjM0dsZVpmUEZadUlvN3QvVWRYYW9VbEpy?=
- =?utf-8?B?YnA5c0thY3BTNFZYTEg5YU5CTXgyL3pOTzlTTWpGY1U2M00vTGxzTmtnWE10?=
- =?utf-8?B?emF3eFNxRy9ob1U4UEdDdFJCOXp4MDlrNzFCeGtmQmtCRHVaUHNMa0t0NXBQ?=
- =?utf-8?B?eG9yVnNNK0hkZnVHQTlTMFpBbWd1SG5WdWphOUNyNUZCUXBYSEhJbEVRVHo3?=
- =?utf-8?B?WFRJOFFwSDlBeTAvRTgvWnJ6bXBVNkVoSmlvbkM4QUJqTm55UjF0bE5OK1da?=
- =?utf-8?B?YkkwRmhhRXRoSFdxWnkrK21ZMGZGdnVpM0h6dGgyTW4zQit6cGRPcVJKeTNI?=
- =?utf-8?B?RCsvUjZDWmtMd01iU1RYOTgwVkRvaUlLM2lQZ3Eya3NBMEM3b01pUERlbFQr?=
- =?utf-8?B?S1Z5RGpvNmNLRVM0cEswY0dROENOajVQNGpycjRlYlZmanVLQXVZZDVvY1lq?=
- =?utf-8?B?UlNZWUg2TkNqQ3BjcE9UTTdnZ1R5N2VFb3pYNi9PWm1CWlBnWVkwT05jZzZm?=
- =?utf-8?B?N3FwaGpVZFoyRjZEK3FLeG1GWCt2bmROVU9vZmkxMjNTNHFTTWM5WTNONzFT?=
- =?utf-8?B?by9rRnBwczRraVRQbFUzaSthWmdTTDBuWDF0VWJxSFRzd2lUQ0lNZk1zek1v?=
- =?utf-8?B?K0tHTVFzZjF2SDVEZ2tpempHc2ZqOFpCTnRrQytoOFJUcWp5djhtSEZENXMz?=
- =?utf-8?B?ejJKVnMvVXJXaXRSYXhmOUFLcnBJck1zYjRIYlMvU1FsajVsdHpocXNHMGE5?=
- =?utf-8?B?RVRGckgrdDJ2SHRCRmlBeHgxSlUwYXhjN20xNmY2WFQyL2hXRDhTL1hSQzFC?=
- =?utf-8?B?KzZ1NWlOK2FVTFhZYUpHWE9BcW1Iekovb2ZDTlR2ZGhpSktKZFJ3N2pFOVkr?=
- =?utf-8?B?OUNkWUZjU2h4eGErUUFiTkxJdkxMRzBrQUlpeUJiRFpFSGkvMkNncFkzbU5H?=
- =?utf-8?B?aHR3LzV0V1Q1ZjVkTyt1d3BUNEZOaHZ6b2ZxM25mQ040NkI2dEdsMm01NTFV?=
- =?utf-8?B?bFFJR2IyaDFMQlBMeUd0ZWs2VDRheUNzcm5UR2FydjFQQlBmSHpDcTlyZlFR?=
- =?utf-8?B?QlhMWmtQNEIyYlVVY3lreWp2NDMxWFJ1SWVlbmU0NGd1THdvYmorejZKd0dq?=
- =?utf-8?B?enhvZE11RVQzci84RVhITTBaVWRtbE50WkJGc25pWUxVVDhHYkRJbmJyalFG?=
- =?utf-8?B?aFJtNVd3QnZ2bjVqU1JGbGdMRDZuVUFPZW1oUTc1TG1YSHJ0VXJKNTA2ZERx?=
- =?utf-8?B?VzgwM2hTT2RXU0xXanJrQUFZMStnYW9SZ2Y3M29pcEZ3elU5THM5ZjJTQW55?=
- =?utf-8?B?dENaMDA4MllNU1F6RjhMZ0RqbVpCYnErQWcwM2luVDNzTll5WHViNkpiYmh6?=
- =?utf-8?B?OUY5aHcxN2d5VkhWN0xSeVloc1dNYVdUeEQxQXlGV3h1YjN6ZXRwc1hnVC93?=
- =?utf-8?B?czNZZStoL3IzTXBLNWRoZ2o3bnF2Z2lUdFhOa2V1L21EYi9reFFrVjhac0tL?=
- =?utf-8?B?RVBNQlV3QURxR1Y0ckRKWStVUjBxVDZ3WFc4c2NWWFJUNm05WEVPNkFDT21L?=
- =?utf-8?B?RkhSaXBydVpBUkFFRWtFU1pFTFpTbS93NGxwK2tjOUNxb3UzUnlXY2cyTHd0?=
- =?utf-8?B?WDVicTJiYjE3aHhuVTdTK1VjWExxNm4rdlZBT3g0UmRTWTFTYmNGOTZnOGVq?=
- =?utf-8?B?dGh0dGY4dll0UkJKWG93OWppQ3YwN2Z1QUJDQ3NxR1hkZjM2TjRnTDhpVTJa?=
- =?utf-8?B?eXBDV1V3VW9TVDhGc0VwU3dhMWlrMmVrZHBERURRWE5iRnNtZmhnQUFxaXIz?=
- =?utf-8?B?a0hycUtCeEZLbnZWbjNoYldkY3lPcXhIK1pnMmRjd0FNcUxFcS9QbWoxRXdT?=
- =?utf-8?Q?PIiZPgX6+s9uzKZOLcPmvOQ=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2febced1-6ea7-4c4a-184d-08d9c0b1249e
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2021 16:28:50.9978
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6X0JeOm/yt296F8R6PE/GyJptm3ZKIstT6Tl0oqgRxTSLtv2ZaRjOuAraaMgwi+nxmIdazcPdJcS0pnDAdg6zw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4384
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211216023146.2361174-4-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, 15 Dec 2021, David E. Box wrote:
 
-
-On 12/16/21 9:47 AM, Borislav Petkov wrote:
-
->>   
->> -	if (!boot_ghcb && !early_setup_sev_es())
->> +	if (!boot_ghcb && !early_setup_ghcb())
->>   		sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SEV_ES_GEN_REQ);
+> Intel Platform Monitoring Technology (PMT) support is indicated by presence
+> of an Intel defined PCIe Designated Vendor Specific Extended Capabilities
+> (DVSEC) structure with a PMT specific ID. The current MFD implementation
+> creates child devices for each PMT feature, currently telemetry, watcher,
+> and crashlog. However DVSEC structures may also be used by Intel to
+> indicate support for other features. The Out Of Band Management Services
+> Module (OOBMSM) uses DVSEC to enumerate several features, including PMT.
+> In order to support them it is necessary to modify the intel_pmt driver to
+> handle the creation of the child devices more generically. To that end,
+> modify the driver to create child devices for any VSEC/DVSEC features on
+> supported devices (indicated by PCI ID).  Additionally, move the
+> implementation from MFD to the Auxiliary bus.  VSEC/DVSEC features are
+> really multifunctional PCI devices, not platform devices as MFD was
+> designed for. Auxiliary bus gives more flexibility by allowing the
+> definition of custom structures that can be shared between associated
+> auxiliary devices and the parent device. Also, rename the driver from
+> intel_pmt to intel_vsec to better reflect the purpose.
 > 
-> Can you setup the GHCB in sev_enable() too, after the protocol version
-> negotiation succeeds?
-
-A good question; the GHCB page is needed only at the time of #VC.  If 
-the second stage VC handler is not called after the sev_enable() during 
-the decompression stage, setting up the GHC page in sev_enable() is a 
-waste. But in practice, the second stage VC handler will be called 
-during decompression. It also brings a similar question for the kernel 
-proper, should we do the same over there?
-
-Jorge did the initial ES support and may have other reasons he chose to 
-set up GHCB page in the handler. I was trying to avoid the flow change. 
-We can do this as a pre or post-SNP patch; let me know your thoughts?
-
-
-
-
-
->> +	 * SNP is supported in v2 of the GHCB spec which mandates support for HV
->> +	 * features. If SEV-SNP is enabled, then check if the hypervisor supports
+> This series also removes the current runtime pm support which was not
+> complete to begin with. None of the current devices require runtime pm.
+> However the support will be replaced when a device is added that requires
+> it.
 > 
-> s/SEV-SNP/SNP/g
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Mark Gross <markgross@kernel.org>
+> ---
+> V4
+>   - Add intel_vsec_extract_vsec() to combine common code and simplify
+>     the extended capability loops. Suggested by Andy.
+> V3
+>   - Add comment clarifying how driver cleanup is handled without remove().
 > 
-> And please do that everywhere in sev-specific files.
+> V2
+>   - Clarify status of missing pm support in commit message.
+>   - Clarify why auxiliary bus is preferred in commit message.
 > 
-> This file is called sev.c and there's way too many acronyms flying
-> around so the simpler the better.
-> 
+>  MAINTAINERS                                |  12 +-
+>  drivers/mfd/Kconfig                        |  10 -
+>  drivers/mfd/Makefile                       |   1 -
+>  drivers/mfd/intel_pmt.c                    | 261 -------------
 
-Noted.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-thanks
+>  drivers/platform/x86/intel/Kconfig         |  11 +
+>  drivers/platform/x86/intel/Makefile        |   2 +
+>  drivers/platform/x86/intel/pmt/Kconfig     |   4 +-
+>  drivers/platform/x86/intel/pmt/class.c     |  21 +-
+>  drivers/platform/x86/intel/pmt/class.h     |   5 +-
+>  drivers/platform/x86/intel/pmt/crashlog.c  |  47 +--
+>  drivers/platform/x86/intel/pmt/telemetry.c |  46 +--
+>  drivers/platform/x86/intel/vsec.c          | 405 +++++++++++++++++++++
+>  drivers/platform/x86/intel/vsec.h          |  43 +++
+>  13 files changed, 533 insertions(+), 335 deletions(-)
+>  delete mode 100644 drivers/mfd/intel_pmt.c
+>  create mode 100644 drivers/platform/x86/intel/vsec.c
+>  create mode 100644 drivers/platform/x86/intel/vsec.h
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
