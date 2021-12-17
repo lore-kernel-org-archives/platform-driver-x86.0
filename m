@@ -2,47 +2,70 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AD6C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Dec 2021 17:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4C7C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Dec 2021 18:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239811AbhLQRTl (ORCPT
+        id S240374AbhLQS0z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Dec 2021 12:19:41 -0500
-Received: from mail-ot1-f42.google.com ([209.85.210.42]:36472 "EHLO
-        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239802AbhLQRTa (ORCPT
+        Fri, 17 Dec 2021 13:26:55 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:43727 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231609AbhLQS0z (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Dec 2021 12:19:30 -0500
-Received: by mail-ot1-f42.google.com with SMTP id w6-20020a9d77c6000000b0055e804fa524so3732980otl.3;
-        Fri, 17 Dec 2021 09:19:29 -0800 (PST)
+        Fri, 17 Dec 2021 13:26:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639765614;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KfxK0ejkXXY8vtQyFEY/7KMOpPsxa0viz0432kyxpNQ=;
+        b=I3HULvLJpbL5ibZCJvAjLdEao9iTZRK3A/Xn4U21PaYBqkofke+gJZtnv9SQEFZ7WtOSqu
+        KrE2zkyUJd82r7PJZ5xU223vz5Rx22DRfSWyoHlQN+unTDmRIDEGek1mpg1EipuFn7+Ck8
+        /nJCRUeF1EiZWqV5tNFHHPXRFHuyY1Y=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-374-cQeeMzkUO0aXJnvLLWs5eg-1; Fri, 17 Dec 2021 13:26:53 -0500
+X-MC-Unique: cQeeMzkUO0aXJnvLLWs5eg-1
+Received: by mail-ed1-f69.google.com with SMTP id l15-20020a056402124f00b003e57269ab87so2661722edw.6
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Dec 2021 10:26:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Zx+iGaRJx7HOeobGJtBFJYWR+l1UjgQTuzqvPExFxA=;
-        b=OBKyvldax38jIlnpPKhTu9pbhs2ZETjR7ogsPt3bO3Ymd46sSl57RxVPjCgmT1mEKX
-         UNUOxcwoR9PU2lRjIAK6AveJ+Bi+xipAk03oCKATotrUZRVqTcQUz9PQdYhbxJ6bf9QB
-         qj1SRf6RXsL60ShJXqgXDPWsDM68mF8NJdVItTw7wApSRFnntebdVnAiHHgJdP4cN18k
-         ihVHiIlB2ntJ8wpPWZZXFhJCrjaWz1pTGP59aVbJkOA0YEpSq1Nb0sK0TdAM1xJj+ksV
-         CqjhxdVnN7PAFB/MEon1I83NUkWkNLoYzxM0i79GP0ygm0uIijztHk73/57kgnurlJr9
-         3U9w==
-X-Gm-Message-State: AOAM5328tmSprvYRfpn48pOrg6ranNKvtWyz+WDx9TOTHXqYaQGTzs9s
-        dbnUo5ic3im3fTL8jHhyKbRDrE12u37i4G+1jS8=
-X-Google-Smtp-Source: ABdhPJztoPqn/1Su9cfXcuaCyeozUoTqwJGGdS30ToTcoGqzV+VCNtcC4Lcb+2ReZtjWo+NLFWB5n59F2HXnfpyLmtU=
-X-Received: by 2002:a05:6830:348f:: with SMTP id c15mr2958544otu.254.1639761569499;
- Fri, 17 Dec 2021 09:19:29 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=KfxK0ejkXXY8vtQyFEY/7KMOpPsxa0viz0432kyxpNQ=;
+        b=EmMZa4oOZVls0IeIRrUZi2fzD+wHN9hpYT1I68QJTnuWGSYeZDgcmdHKuYkgzK6DpR
+         CSQ62dOx5VMK6qRJcg7B7Wt+DhJ1dPBqp17bbTF7K3J7rn3desYEXrDc2xk4ISPD/Q+K
+         zqVHcvGrLc1iqhSq+EyAvg1GAd7nEe+fI6ti5jcQN5Zz1XD478O84WRD2VjoaDyqOQg9
+         tCfQbgsmqZ9Sjyc/NPWh7zktc0jmRuCrXrFm9/ezkKqR/H7CxGU4IyeEpS7k8J5kDgHn
+         IaTRcpoN/4Ry2g0eecTJ1RxjunEswU3OOE8DjYr9vbmIVmeJNk0/CbaPNROzwgb/4zMr
+         V3wg==
+X-Gm-Message-State: AOAM530ATC0d3hd23yl9McDgTMipJiFolx9CJKczYvG7frixmoF6HGyz
+        QPA/RVIElmOBTLBVEEmTndvpD+uMpSxQf3I0ewwpxIOkxn17mw1Jh+S4g1i7ew8Fw1DJAmOyE64
+        kbVKzEVuTwGvb8KNncQBl6KsxvEd/KSxcSg==
+X-Received: by 2002:aa7:c5ca:: with SMTP id h10mr3889466eds.401.1639765612422;
+        Fri, 17 Dec 2021 10:26:52 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJymzvx+9sN5uu3fOWCecyuooYD36PdLfEQ4rkNgUaVC2uS7EjeLyEo6xpsbKMtNHdFq3cZCYg==
+X-Received: by 2002:aa7:c5ca:: with SMTP id h10mr3889448eds.401.1639765612171;
+        Fri, 17 Dec 2021 10:26:52 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id cs15sm3032506ejc.31.2021.12.17.10.26.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Dec 2021 10:26:51 -0800 (PST)
+Message-ID: <4b5506b1-20c6-3983-d541-86dc2388b2a7@redhat.com>
+Date:   Fri, 17 Dec 2021 19:26:51 +0100
 MIME-Version: 1.0
-References: <20211217115708.882525-1-tanureal@opensource.cirrus.com> <20211217115708.882525-9-tanureal@opensource.cirrus.com>
-In-Reply-To: <20211217115708.882525-9-tanureal@opensource.cirrus.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 17 Dec 2021 18:19:18 +0100
-Message-ID: <CAJZ5v0jTELqFeO6q6w_mYNo_yf1R9SX66RrEz0ZSe27w7E6kog@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
 Subject: Re: [PATCH v6 08/10] ACPI / scan: Create platform device for CLSA0100
  and CSC3551 ACPI nodes
-To:     Lucas Tanure <tanureal@opensource.cirrus.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
+Content-Language: en-US
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lucas Tanure <tanureal@opensource.cirrus.com>,
+        Stefan Binding <sbinding@opensource.cirrus.com>
+Cc:     Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Jaroslav Kysela <perex@perex.cz>,
         Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
@@ -52,83 +75,121 @@ Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
         patches@opensource.cirrus.com,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
+ <20211217115708.882525-9-tanureal@opensource.cirrus.com>
+ <CAJZ5v0jTELqFeO6q6w_mYNo_yf1R9SX66RrEz0ZSe27w7E6kog@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAJZ5v0jTELqFeO6q6w_mYNo_yf1R9SX66RrEz0ZSe27w7E6kog@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Dec 17, 2021 at 12:57 PM Lucas Tanure
-<tanureal@opensource.cirrus.com> wrote:
->
-> The ACPI device with CLSA0100 or CSC3551 is a sound card
-> with multiple instances of CS35L41 connectec by I2C to
+Hi,
 
-"connected" I suppose?
+On 12/17/21 18:19, Rafael J. Wysocki wrote:
+> On Fri, Dec 17, 2021 at 12:57 PM Lucas Tanure
+> <tanureal@opensource.cirrus.com> wrote:
+>>
+>> The ACPI device with CLSA0100 or CSC3551 is a sound card
+>> with multiple instances of CS35L41 connectec by I2C to
+> 
+> "connected" I suppose?
+> 
+>> the main CPU.
+>>
+>> We add an ID to the i2c_multi_instantiate_ids list to enumerate
+>> all I2C slaves correctly.
+>>
+>> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
+> 
+> This requires an ACK from Hans.
+> 
+> If you receive one, please feel free to add my ACK to it too.
 
-> the main CPU.
->
-> We add an ID to the i2c_multi_instantiate_ids list to enumerate
-> all I2C slaves correctly.
->
-> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
+One problem which I see here is that this change conflicts with
+this series:
 
-This requires an ACK from Hans.
+https://lore.kernel.org/all/20211210154050.3713-1-sbinding@opensource.cirrus.com/
 
-If you receive one, please feel free to add my ACK to it too.
+I have reviewing that series on my todo list.
 
-Thanks!
+One interesting question for you (Rafael) about that series is
+that i2c-multi-instantiate.c, which after the series also handles
+spi devices,is being moved to drivers/acpi .
 
-> ---
->  drivers/acpi/scan.c                          |  3 +++
->  drivers/platform/x86/i2c-multi-instantiate.c | 11 +++++++++++
->  2 files changed, 14 insertions(+)
->
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index b7a6b982226e..8740cfa11f59 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -1712,8 +1712,11 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
->         static const struct acpi_device_id i2c_multi_instantiate_ids[] = {
->                 {"BSG1160", },
->                 {"BSG2150", },
-> +               {"CSC3551", },
->                 {"INT33FE", },
->                 {"INT3515", },
-> +               /* Non-conforming _HID for Cirrus Logic already released */
-> +               {"CLSA0100", },
->                 {}
->         };
->
-> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
-> index 4956a1df5b90..a889789b966c 100644
-> --- a/drivers/platform/x86/i2c-multi-instantiate.c
-> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
-> @@ -147,6 +147,14 @@ static const struct i2c_inst_data int3515_data[]  = {
->         {}
->  };
->
-> +static const struct i2c_inst_data cs35l41_hda[] = {
-> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +       {}
-> +};
-> +
->  /*
->   * Note new device-ids must also be added to i2c_multi_instantiate_ids in
->   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-> @@ -154,7 +162,10 @@ static const struct i2c_inst_data int3515_data[]  = {
->  static const struct acpi_device_id i2c_multi_inst_acpi_ids[] = {
->         { "BSG1160", (unsigned long)bsg1160_data },
->         { "BSG2150", (unsigned long)bsg2150_data },
-> +       { "CSC3551", (unsigned long)cs35l41_hda },
->         { "INT3515", (unsigned long)int3515_data },
-> +       /* Non-conforming _HID for Cirrus Logic already released */
-> +       { "CLSA0100", (unsigned long)cs35l41_hda },
->         { }
->  };
->  MODULE_DEVICE_TABLE(acpi, i2c_multi_inst_acpi_ids);
-> --
-> 2.34.1
->
+This is fine with me, but I wonder if it would not be better
+to keep it under drivers/platform/x86 ? Since the new SPI
+use-cases are also all on x86 laptops AFAICT.
+
+But back to this series, as said the 2 series conflict, since
+both are being submitted by @opensource.cirrus.com people,
+it would be good if the Cirrus folks can decide in which
+order these series should be merged.
+
+It might be best to just move this one patch to the other series?
+Thus removing the conflict between the 2 series.
+
+Regards,
+
+Hans
+
+
+
+>> ---
+>>  drivers/acpi/scan.c                          |  3 +++
+>>  drivers/platform/x86/i2c-multi-instantiate.c | 11 +++++++++++
+>>  2 files changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+>> index b7a6b982226e..8740cfa11f59 100644
+>> --- a/drivers/acpi/scan.c
+>> +++ b/drivers/acpi/scan.c
+>> @@ -1712,8 +1712,11 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
+>>         static const struct acpi_device_id i2c_multi_instantiate_ids[] = {
+>>                 {"BSG1160", },
+>>                 {"BSG2150", },
+>> +               {"CSC3551", },
+>>                 {"INT33FE", },
+>>                 {"INT3515", },
+>> +               /* Non-conforming _HID for Cirrus Logic already released */
+>> +               {"CLSA0100", },
+>>                 {}
+>>         };
+>>
+>> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+>> index 4956a1df5b90..a889789b966c 100644
+>> --- a/drivers/platform/x86/i2c-multi-instantiate.c
+>> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
+>> @@ -147,6 +147,14 @@ static const struct i2c_inst_data int3515_data[]  = {
+>>         {}
+>>  };
+>>
+>> +static const struct i2c_inst_data cs35l41_hda[] = {
+>> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+>> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+>> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+>> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+>> +       {}
+>> +};
+>> +
+>>  /*
+>>   * Note new device-ids must also be added to i2c_multi_instantiate_ids in
+>>   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
+>> @@ -154,7 +162,10 @@ static const struct i2c_inst_data int3515_data[]  = {
+>>  static const struct acpi_device_id i2c_multi_inst_acpi_ids[] = {
+>>         { "BSG1160", (unsigned long)bsg1160_data },
+>>         { "BSG2150", (unsigned long)bsg2150_data },
+>> +       { "CSC3551", (unsigned long)cs35l41_hda },
+>>         { "INT3515", (unsigned long)int3515_data },
+>> +       /* Non-conforming _HID for Cirrus Logic already released */
+>> +       { "CLSA0100", (unsigned long)cs35l41_hda },
+>>         { }
+>>  };
+>>  MODULE_DEVICE_TABLE(acpi, i2c_multi_inst_acpi_ids);
+>> --
+>> 2.34.1
+>>
+> 
+
