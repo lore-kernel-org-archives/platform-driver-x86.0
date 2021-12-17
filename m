@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADFEC43219
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Dec 2021 11:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B98DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Dec 2021 11:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235790AbhLQL5t (ORCPT
+        id S235808AbhLQL5v (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Dec 2021 06:57:49 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:55024 "EHLO
+        Fri, 17 Dec 2021 06:57:51 -0500
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:58798 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S235763AbhLQL5r (ORCPT
+        by vger.kernel.org with ESMTP id S235783AbhLQL5s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Dec 2021 06:57:47 -0500
+        Fri, 17 Dec 2021 06:57:48 -0500
 Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BH6BOD4024878;
-        Fri, 17 Dec 2021 05:57:26 -0600
+        by mx0a-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BH7xa1k006045;
+        Fri, 17 Dec 2021 05:57:24 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=PODMain02222019;
- bh=be1YA6C5MtqQT+lNNFlBqI02z6qBHSQQVqkasPJelNY=;
- b=Zc8CfjyrAhgkduejHb26l27Oc5C2J4BhwDtmvbjSUFheNm4Ub60QuV7VjRwHtq5B/Txu
- b+fj66qscnXsF32jBpsgmc56q0DsfJteu8SUWcIuO4xKJj2zYxmp/B0/6OAYUkc5bKN9
- FYjYNFqXV2o2bX1DT2ks+nSNSv8GMZqr0PPjxOYZr3RrPqkuOKsMmAMTd6lk6eapd3Ly
- Lsy9Hx2kMmbqNgaNM4KVA1gRH/VP1CbGk/o+VFaIZ2yLdYAwLGEyFrFoLQehDiyDd0No
- zQ1wYbnu4EOe4IlziObtghUxiAJT0O0nrRPy5ENWZzUihku5WNl2txlIvn55FfafmSI5 +A== 
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3cymsc2f3k-5
+ bh=jUXTJ7ictjIJSVYhOpCkqR3DNBf/qRCuaX47KxJkx6I=;
+ b=KvJMBtn1hD1exHh2nibd8NtjlwoBdQWvPbLNdWbaSkRYQLL2s0MDf9r8jJb88rsxvxEd
+ HGj29fEzr0Cjdx/UZn0CNyi16NgGBwy965Al2uadkSbd6ihK/oJSZh4eZPxqLzqULAdF
+ ZEP9mEtkFHUvrf2T7Z70KI2RzfkZ7FbMtFvrBprgvO0NIwpiUatRt3QLToVdv6tudWZB
+ /T8+U5e8cWXLMIMrB1D5lMMP3ftokjYCgopVMq0XqfeXOxqXD4rLyhzUiGOKQdXf+8xt
+ d9SAUrZCdwHMLO2z8cr0Z2o+gHSVAYpdo/0n29O9+WgYSujDR0s7K4Xca0AyjHNvUTL0 wQ== 
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3cymsc2f3n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 17 Dec 2021 05:57:26 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 17 Dec 2021 05:57:24 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Fri, 17 Dec
- 2021 11:57:24 +0000
+ 2021 11:57:22 +0000
 Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Fri, 17 Dec 2021 11:57:23 +0000
+ Transport; Fri, 17 Dec 2021 11:57:22 +0000
 Received: from aryzen.ad.cirrus.com (unknown [198.61.64.39])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 8E18111CB;
-        Fri, 17 Dec 2021 11:57:23 +0000 (UTC)
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2408C11CB;
+        Fri, 17 Dec 2021 11:57:22 +0000 (UTC)
 From:   Lucas Tanure <tanureal@opensource.cirrus.com>
 To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>,
@@ -52,81 +52,132 @@ CC:     <alsa-devel@alsa-project.org>, <linux-acpi@vger.kernel.org>,
         <platform-driver-x86@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Lucas Tanure <tanureal@opensource.cirrus.com>
-Subject: [PATCH v6 08/10] ACPI / scan: Create platform device for CLSA0100 and CSC3551 ACPI nodes
-Date:   Fri, 17 Dec 2021 11:57:06 +0000
-Message-ID: <20211217115708.882525-9-tanureal@opensource.cirrus.com>
+Subject: [PATCH v6 05/10] ASoC: cs35l41: Create shared function for setting channels
+Date:   Fri, 17 Dec 2021 11:57:03 +0000
+Message-ID: <20211217115708.882525-6-tanureal@opensource.cirrus.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
 References: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: JxPEaeZVVeKZ151ZIqhiz5WFZQaDfHpM
-X-Proofpoint-ORIG-GUID: JxPEaeZVVeKZ151ZIqhiz5WFZQaDfHpM
+X-Proofpoint-GUID: G0VGIDDXBy3iDkCFLkgqZPjyNmGZMWYp
+X-Proofpoint-ORIG-GUID: G0VGIDDXBy3iDkCFLkgqZPjyNmGZMWYp
 X-Proofpoint-Spam-Reason: safe
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The ACPI device with CLSA0100 or CSC3551 is a sound card
-with multiple instances of CS35L41 connectec by I2C to
-the main CPU.
-
-We add an ID to the i2c_multi_instantiate_ids list to enumerate
-all I2C slaves correctly.
+ASoC and HDA will use the same register to set channels
+for the device
 
 Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
 ---
- drivers/acpi/scan.c                          |  3 +++
- drivers/platform/x86/i2c-multi-instantiate.c | 11 +++++++++++
- 2 files changed, 14 insertions(+)
+ include/sound/cs35l41.h        |  3 +++
+ sound/soc/codecs/cs35l41-lib.c | 32 ++++++++++++++++++++++++++++++++
+ sound/soc/codecs/cs35l41.c     | 30 +++---------------------------
+ 3 files changed, 38 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index b7a6b982226e..8740cfa11f59 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -1712,8 +1712,11 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
- 	static const struct acpi_device_id i2c_multi_instantiate_ids[] = {
- 		{"BSG1160", },
- 		{"BSG2150", },
-+		{"CSC3551", },
- 		{"INT33FE", },
- 		{"INT3515", },
-+		/* Non-conforming _HID for Cirrus Logic already released */
-+		{"CLSA0100", },
- 		{}
- 	};
+diff --git a/include/sound/cs35l41.h b/include/sound/cs35l41.h
+index ad2e32a12b8c..39d150f61382 100644
+--- a/include/sound/cs35l41.h
++++ b/include/sound/cs35l41.h
+@@ -764,5 +764,8 @@ extern struct regmap_config cs35l41_regmap_spi;
  
-diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
-index 4956a1df5b90..a889789b966c 100644
---- a/drivers/platform/x86/i2c-multi-instantiate.c
-+++ b/drivers/platform/x86/i2c-multi-instantiate.c
-@@ -147,6 +147,14 @@ static const struct i2c_inst_data int3515_data[]  = {
- 	{}
- };
+ int cs35l41_otp_unpack(struct device *dev, struct regmap *regmap);
+ int cs35l41_register_errata_patch(struct device *dev, struct regmap *reg, unsigned int reg_revid);
++int cs35l41_set_channels(struct device *dev, struct regmap *reg,
++			 unsigned int tx_num, unsigned int *tx_slot,
++			 unsigned int rx_num, unsigned int *rx_slot);
  
-+static const struct i2c_inst_data cs35l41_hda[] = {
-+	{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+	{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+	{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+	{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+	{}
-+};
+ #endif /* __CS35L41_H */
+diff --git a/sound/soc/codecs/cs35l41-lib.c b/sound/soc/codecs/cs35l41-lib.c
+index 5e382eaea340..afcec715374d 100644
+--- a/sound/soc/codecs/cs35l41-lib.c
++++ b/sound/soc/codecs/cs35l41-lib.c
+@@ -934,6 +934,38 @@ int cs35l41_register_errata_patch(struct device *dev, struct regmap *reg, unsign
+ }
+ EXPORT_SYMBOL_GPL(cs35l41_register_errata_patch);
+ 
++int cs35l41_set_channels(struct device *dev, struct regmap *reg,
++			 unsigned int tx_num, unsigned int *tx_slot,
++			 unsigned int rx_num, unsigned int *rx_slot)
++{
++	unsigned int val, mask;
++	int i;
 +
- /*
-  * Note new device-ids must also be added to i2c_multi_instantiate_ids in
-  * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-@@ -154,7 +162,10 @@ static const struct i2c_inst_data int3515_data[]  = {
- static const struct acpi_device_id i2c_multi_inst_acpi_ids[] = {
- 	{ "BSG1160", (unsigned long)bsg1160_data },
- 	{ "BSG2150", (unsigned long)bsg2150_data },
-+	{ "CSC3551", (unsigned long)cs35l41_hda },
- 	{ "INT3515", (unsigned long)int3515_data },
-+	/* Non-conforming _HID for Cirrus Logic already released */
-+	{ "CLSA0100", (unsigned long)cs35l41_hda },
- 	{ }
++	if (tx_num > 4 || rx_num > 2)
++		return -EINVAL;
++
++	val = 0;
++	mask = 0;
++	for (i = 0; i < rx_num; i++) {
++		dev_dbg(dev, "rx slot %d position = %d\n", i, rx_slot[i]);
++		val |= rx_slot[i] << (i * 8);
++		mask |= 0x3F << (i * 8);
++	}
++	regmap_update_bits(reg, CS35L41_SP_FRAME_RX_SLOT, mask, val);
++
++	val = 0;
++	mask = 0;
++	for (i = 0; i < tx_num; i++) {
++		dev_dbg(dev, "tx slot %d position = %d\n", i, tx_slot[i]);
++		val |= tx_slot[i] << (i * 8);
++		mask |= 0x3F << (i * 8);
++	}
++	regmap_update_bits(reg, CS35L41_SP_FRAME_TX_SLOT, mask, val);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(cs35l41_set_channels);
++
+ MODULE_DESCRIPTION("CS35L41 library");
+ MODULE_AUTHOR("David Rhodes, Cirrus Logic Inc, <david.rhodes@cirrus.com>");
+ MODULE_AUTHOR("Lucas Tanure, Cirrus Logic Inc, <tanureal@opensource.cirrus.com>");
+diff --git a/sound/soc/codecs/cs35l41.c b/sound/soc/codecs/cs35l41.c
+index afc10f7ca65e..88d6e77fdb50 100644
+--- a/sound/soc/codecs/cs35l41.c
++++ b/sound/soc/codecs/cs35l41.c
+@@ -751,36 +751,12 @@ static const struct cs_dsp_region cs35l41_dsp1_regions[] = {
+ 	{. type = WMFW_ADSP2_YM,	.base = CS35L41_DSP1_YMEM_UNPACK24_0},
  };
- MODULE_DEVICE_TABLE(acpi, i2c_multi_inst_acpi_ids);
+ 
+-static int cs35l41_set_channel_map(struct snd_soc_dai *dai, unsigned int tx_num,
+-				   unsigned int *tx_slot, unsigned int rx_num,
+-				   unsigned int *rx_slot)
++static int cs35l41_set_channel_map(struct snd_soc_dai *dai, unsigned int tx_n,
++				   unsigned int *tx_slot, unsigned int rx_n, unsigned int *rx_slot)
+ {
+ 	struct cs35l41_private *cs35l41 = snd_soc_component_get_drvdata(dai->component);
+-	unsigned int val, mask;
+-	int i;
+-
+-	if (tx_num > 4 || rx_num > 2)
+-		return -EINVAL;
+ 
+-	val = 0;
+-	mask = 0;
+-	for (i = 0; i < rx_num; i++) {
+-		dev_dbg(cs35l41->dev, "rx slot %d position = %d\n", i, rx_slot[i]);
+-		val |= rx_slot[i] << (i * 8);
+-		mask |= 0x3F << (i * 8);
+-	}
+-	regmap_update_bits(cs35l41->regmap, CS35L41_SP_FRAME_RX_SLOT, mask, val);
+-
+-	val = 0;
+-	mask = 0;
+-	for (i = 0; i < tx_num; i++) {
+-		dev_dbg(cs35l41->dev, "tx slot %d position = %d\n", i, tx_slot[i]);
+-		val |= tx_slot[i] << (i * 8);
+-		mask |= 0x3F << (i * 8);
+-	}
+-	regmap_update_bits(cs35l41->regmap, CS35L41_SP_FRAME_TX_SLOT, mask, val);
+-
+-	return 0;
++	return cs35l41_set_channels(cs35l41->dev, cs35l41->regmap, tx_n, tx_slot, rx_n, rx_slot);
+ }
+ 
+ static int cs35l41_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
 -- 
 2.34.1
 
