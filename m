@@ -2,99 +2,86 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B16C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Dec 2021 16:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B25C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Dec 2021 17:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239071AbhLQQXC (ORCPT
+        id S233978AbhLQROe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Dec 2021 11:23:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42310 "EHLO
+        Fri, 17 Dec 2021 12:14:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238463AbhLQQXB (ORCPT
+        with ESMTP id S239570AbhLQROd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Dec 2021 11:23:01 -0500
-Received: from mail-oo1-xc32.google.com (mail-oo1-xc32.google.com [IPv6:2607:f8b0:4864:20::c32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B19A7C061574;
-        Fri, 17 Dec 2021 08:23:01 -0800 (PST)
-Received: by mail-oo1-xc32.google.com with SMTP id w15-20020a4a354f000000b002d85ef0533dso858281oog.7;
-        Fri, 17 Dec 2021 08:23:01 -0800 (PST)
+        Fri, 17 Dec 2021 12:14:33 -0500
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83E43C061574;
+        Fri, 17 Dec 2021 09:14:33 -0800 (PST)
+Received: by mail-io1-xd34.google.com with SMTP id p65so3965131iof.3;
+        Fri, 17 Dec 2021 09:14:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SWouGLhvvViiSRQIcz77xxUNZKE9YIw+jCvyIogx2qo=;
-        b=gVXZk6lefkDrmA1JgBaEyfz91cHaOp7MBXAqVt5Ffjh38o6ttNZL/KDAnryVeYENHB
-         B7stdvNm6neYJuz7OzZeve3PMO5Ia7UHSmCJqrmHmbcp3CfBZzli2xoOPKQsRAFBi5Zz
-         vOyBJ3Y6ojXoQk2yuTDzZawBq6VVjwHZ3s/cBcBrhIIJF0uwl9P95H+79ixRV6aDai+y
-         j8xVBy57g2x63/ifjMLajZKADUnu+3rFWBREg4SxMiqib/ywSNO3XyaQg8Y2+JuHDrRt
-         vfWOU2EymBZmU/H8xoJSnEDHmU9gQLii5ybzuha/0uyLcRzZZ2SdVEHItRGD5IWvZYay
-         lX9w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HRDj4HZx+TjmR/qEmd31zkJfvmvydMXTkEu7eSvoPHA=;
+        b=TFuWFBDQDSGyA+RduOmDGqkspWQoOzcZiqD01jHeWgT70glwDmSbi74m7pcMcNMG0Q
+         PSxUvXFHaN6MlUX7LnoruZA1DrVyjVnFVvXXYMgJNoBgTktx7CwScrSFnzZNnwoa+eBj
+         iL78nMjjNVTsR4lj+GbNGyiuXFwz1VngNCvsHk82KMOJlfjl5dEKLYsDDGZXbXoWHC6A
+         2GaQIZWEZkHF4sWR0PH+dxKolIdCpv0InJAUMLWGoLPWTd+4kZZNW14hccWm9uj8iZ7F
+         62aBQBDOFMoTvkXuPiygEcrUf7e4bB/u7ipIg353ACou0TXwB6td3Yhg0yqM1JRWUcca
+         09kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:to:cc:references:from:subject:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SWouGLhvvViiSRQIcz77xxUNZKE9YIw+jCvyIogx2qo=;
-        b=F/1DIM/XBuduW2VBnP8SNLB84xyAlbeW8uE3Rzo7w8AnaNcJBA6wN36ctYhC+G5r5H
-         UiKU4ab0BdRiNtKvJI/WZa83KgI9UsDRNgv6v0/Nqv84vDFWH4L/PeGBZtb0BYdRFugV
-         IKOGw9cLww2v0+LmWPXIesKydDMnhaAtHzUQ8IWSfSEJTHX3EgGNJB8BQIHm9AHjQR1O
-         AJggK9LQr7D3rVPY+kHV5zdp6FVM21aPraYhbPQaahEKU46TSOkctta4jF4vbcaa5YW6
-         WFrFfPqAqZBGpLFXEFFed+YWnvP0XkApTPTPQahpX1yMMQMjIWsXr6T5TfLutSJwOTBv
-         FtKA==
-X-Gm-Message-State: AOAM533+V9BblT9yVjMImT57VzFTdm35P/9WBzUeisijd3QPAFFIKOus
-        3BT5bzwWMC6zUekTKfI3uZonNWu4k+M=
-X-Google-Smtp-Source: ABdhPJzsKt3QzsUMKg8VRd8GOtk1w/RP311+v9SHCny7qC3j+JN/+H5GM1sNlds0P4UkllfajW6o0Q==
-X-Received: by 2002:a4a:d284:: with SMTP id h4mr2429603oos.31.1639758180843;
-        Fri, 17 Dec 2021 08:23:00 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n23sm1675549oig.4.2021.12.17.08.22.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Dec 2021 08:23:00 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-To:     Denis Pauk <pauk.denis@gmail.com>
-Cc:     eugene.shalygin@gmail.com, andy.shevchenko@gmail.com,
-        platform-driver-x86@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20211128184549.9161-1-pauk.denis@gmail.com>
- <20211217002223.63b1e0a7@netbook-debian>
-From:   Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 0/3] hwmon: (nct6775) Support lock by ACPI mutex
-Message-ID: <c6bf6ce9-8b45-e4a2-7167-83bdc8437fca@roeck-us.net>
-Date:   Fri, 17 Dec 2021 08:22:58 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HRDj4HZx+TjmR/qEmd31zkJfvmvydMXTkEu7eSvoPHA=;
+        b=Crn6C26dHzhG8zfZULm6scgWGoz5vH5xIsTqnpe5ZmfVeyE4QdwqHKDK+VdQFwUIsO
+         mMNKN1U+Iv+b/VDFBpc2x8BfKLgQN2ZW7pgo6Q8X+JMvb9feiQly8iU2P5dMVQ9RSIdP
+         SVip44St8BM4BP9ra/HQbT5Ut44tDqcIdqDTyEPyvgcVjLcrDmcXJdndVEhfn6NWZUhA
+         NUIat3wlTmkWmW0UpQjs71TZU0Q3/e0Wi/xINziK4vs+9SeZN9iA8UX+3tPfBZTmvWDh
+         UKe4ly3Wb2uqpKYEA/oMnNiFM2vQ/mYbSp7JUWmPX2aCd4F6daLuSBviRSdP36IiSyx5
+         TxZw==
+X-Gm-Message-State: AOAM531NPhuXEKXzoZAfS4BxOZnEdeHEiU/3WAFsAZmt49bJUmntxMCj
+        DFbxAMaEGO4YveVVgPchRmN1BD0VcFBYM/+9+2U=
+X-Google-Smtp-Source: ABdhPJwicZpGJ5z0mtVKWyHRmd62BjE2Tsi+vnZpUFcGPllul/iuGgQ6Zio/JpSlivtcagWLZ/qiEa2YncukzWpS4VU=
+X-Received: by 2002:a05:6638:2191:: with SMTP id s17mr2726181jaj.67.1639761271894;
+ Fri, 17 Dec 2021 09:14:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20211217002223.63b1e0a7@netbook-debian>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20211128184549.9161-1-pauk.denis@gmail.com> <20211217002223.63b1e0a7@netbook-debian>
+ <c6bf6ce9-8b45-e4a2-7167-83bdc8437fca@roeck-us.net>
+In-Reply-To: <c6bf6ce9-8b45-e4a2-7167-83bdc8437fca@roeck-us.net>
+From:   Eugene Shalygin <eugene.shalygin@gmail.com>
+Date:   Fri, 17 Dec 2021 18:14:19 +0100
+Message-ID: <CAB95QARN=iYNW5cUK+gsBj7NUdZG2pFXbqWsXsdjE-hqNiSXSQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] hwmon: (nct6775) Support lock by ACPI mutex
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Denis Pauk <pauk.denis@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 12/16/21 2:22 PM, Denis Pauk wrote:
-> Hi,
-> 
-> Could you please provide a some feedback about such idea?
-> 
-> I have bigger list of supported boards that requires ACPI mutex lock,
-> but I prefer to have some feedback before send next version of patch.
-> 
-> I have created separate patch[1] with only boards where WMI methods is
-> enough. And if work on patch takes some time/additional patch
-> versions(for sure it will), I prefer to have that patch merged and
-> rebase current patch over resulted list of boards.
-> 
+On Fri, 17 Dec 2021 at 17:23, Guenter Roeck <linux@roeck-us.net> wrote:
 
-Looking through the code, I am absolutely not happy with it. It makes
-the driver even more unreadable than it already is, and on top of that
-makes it vulnerable to problems in the ACPI code. Example: If ACPI fails
-to unlock the mutex, the driver will end up being non-functional.
+> At some point, we have to face it: ASUS doesn't support Linux, and they
+> make it hard to access chips like this. I think the chip should be
+> accessed through "official" channels only if provided (ie WMI/ACPI),
+> or not at all.
 
-At some point, we have to face it: ASUS doesn't support Linux, and they
-make it hard to access chips like this. I think the chip should be
-accessed through "official" channels only if provided (ie WMI/ACPI),
-or not at all.
+My two cents, if you please. Unfortunately, ASUS doesn't support
+Windows as well, they only support their own shitty software, and they
+change the WMI methods (both names and logic). For example, just
+recently they packed a full hardware monitoring solution in X470
+boards in WMI, then removed it in X570 and changed hardware access
+function names. In order to add support for their next WMI
+implementation, one needs to thoroughly read the decompiled DSDT code,
+find functions, learn their logic and test. This is hard to do
+remotely, without the hardware, obviously. On the other hand it is
+much easier to find the required mutex name from the DSDT code and
+access the chip normally.
 
-Guenter
+Best regards,
+Eugene
