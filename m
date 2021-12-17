@@ -2,86 +2,133 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B25C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Dec 2021 17:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AD6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Dec 2021 17:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233978AbhLQROe (ORCPT
+        id S239811AbhLQRTl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Dec 2021 12:14:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239570AbhLQROd (ORCPT
+        Fri, 17 Dec 2021 12:19:41 -0500
+Received: from mail-ot1-f42.google.com ([209.85.210.42]:36472 "EHLO
+        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239802AbhLQRTa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Dec 2021 12:14:33 -0500
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83E43C061574;
-        Fri, 17 Dec 2021 09:14:33 -0800 (PST)
-Received: by mail-io1-xd34.google.com with SMTP id p65so3965131iof.3;
-        Fri, 17 Dec 2021 09:14:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HRDj4HZx+TjmR/qEmd31zkJfvmvydMXTkEu7eSvoPHA=;
-        b=TFuWFBDQDSGyA+RduOmDGqkspWQoOzcZiqD01jHeWgT70glwDmSbi74m7pcMcNMG0Q
-         PSxUvXFHaN6MlUX7LnoruZA1DrVyjVnFVvXXYMgJNoBgTktx7CwScrSFnzZNnwoa+eBj
-         iL78nMjjNVTsR4lj+GbNGyiuXFwz1VngNCvsHk82KMOJlfjl5dEKLYsDDGZXbXoWHC6A
-         2GaQIZWEZkHF4sWR0PH+dxKolIdCpv0InJAUMLWGoLPWTd+4kZZNW14hccWm9uj8iZ7F
-         62aBQBDOFMoTvkXuPiygEcrUf7e4bB/u7ipIg353ACou0TXwB6td3Yhg0yqM1JRWUcca
-         09kQ==
+        Fri, 17 Dec 2021 12:19:30 -0500
+Received: by mail-ot1-f42.google.com with SMTP id w6-20020a9d77c6000000b0055e804fa524so3732980otl.3;
+        Fri, 17 Dec 2021 09:19:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HRDj4HZx+TjmR/qEmd31zkJfvmvydMXTkEu7eSvoPHA=;
-        b=Crn6C26dHzhG8zfZULm6scgWGoz5vH5xIsTqnpe5ZmfVeyE4QdwqHKDK+VdQFwUIsO
-         mMNKN1U+Iv+b/VDFBpc2x8BfKLgQN2ZW7pgo6Q8X+JMvb9feiQly8iU2P5dMVQ9RSIdP
-         SVip44St8BM4BP9ra/HQbT5Ut44tDqcIdqDTyEPyvgcVjLcrDmcXJdndVEhfn6NWZUhA
-         NUIat3wlTmkWmW0UpQjs71TZU0Q3/e0Wi/xINziK4vs+9SeZN9iA8UX+3tPfBZTmvWDh
-         UKe4ly3Wb2uqpKYEA/oMnNiFM2vQ/mYbSp7JUWmPX2aCd4F6daLuSBviRSdP36IiSyx5
-         TxZw==
-X-Gm-Message-State: AOAM531NPhuXEKXzoZAfS4BxOZnEdeHEiU/3WAFsAZmt49bJUmntxMCj
-        DFbxAMaEGO4YveVVgPchRmN1BD0VcFBYM/+9+2U=
-X-Google-Smtp-Source: ABdhPJwicZpGJ5z0mtVKWyHRmd62BjE2Tsi+vnZpUFcGPllul/iuGgQ6Zio/JpSlivtcagWLZ/qiEa2YncukzWpS4VU=
-X-Received: by 2002:a05:6638:2191:: with SMTP id s17mr2726181jaj.67.1639761271894;
- Fri, 17 Dec 2021 09:14:31 -0800 (PST)
+        bh=0Zx+iGaRJx7HOeobGJtBFJYWR+l1UjgQTuzqvPExFxA=;
+        b=OBKyvldax38jIlnpPKhTu9pbhs2ZETjR7ogsPt3bO3Ymd46sSl57RxVPjCgmT1mEKX
+         UNUOxcwoR9PU2lRjIAK6AveJ+Bi+xipAk03oCKATotrUZRVqTcQUz9PQdYhbxJ6bf9QB
+         qj1SRf6RXsL60ShJXqgXDPWsDM68mF8NJdVItTw7wApSRFnntebdVnAiHHgJdP4cN18k
+         ihVHiIlB2ntJ8wpPWZZXFhJCrjaWz1pTGP59aVbJkOA0YEpSq1Nb0sK0TdAM1xJj+ksV
+         CqjhxdVnN7PAFB/MEon1I83NUkWkNLoYzxM0i79GP0ygm0uIijztHk73/57kgnurlJr9
+         3U9w==
+X-Gm-Message-State: AOAM5328tmSprvYRfpn48pOrg6ranNKvtWyz+WDx9TOTHXqYaQGTzs9s
+        dbnUo5ic3im3fTL8jHhyKbRDrE12u37i4G+1jS8=
+X-Google-Smtp-Source: ABdhPJztoPqn/1Su9cfXcuaCyeozUoTqwJGGdS30ToTcoGqzV+VCNtcC4Lcb+2ReZtjWo+NLFWB5n59F2HXnfpyLmtU=
+X-Received: by 2002:a05:6830:348f:: with SMTP id c15mr2958544otu.254.1639761569499;
+ Fri, 17 Dec 2021 09:19:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20211128184549.9161-1-pauk.denis@gmail.com> <20211217002223.63b1e0a7@netbook-debian>
- <c6bf6ce9-8b45-e4a2-7167-83bdc8437fca@roeck-us.net>
-In-Reply-To: <c6bf6ce9-8b45-e4a2-7167-83bdc8437fca@roeck-us.net>
-From:   Eugene Shalygin <eugene.shalygin@gmail.com>
-Date:   Fri, 17 Dec 2021 18:14:19 +0100
-Message-ID: <CAB95QARN=iYNW5cUK+gsBj7NUdZG2pFXbqWsXsdjE-hqNiSXSQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] hwmon: (nct6775) Support lock by ACPI mutex
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Denis Pauk <pauk.denis@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+References: <20211217115708.882525-1-tanureal@opensource.cirrus.com> <20211217115708.882525-9-tanureal@opensource.cirrus.com>
+In-Reply-To: <20211217115708.882525-9-tanureal@opensource.cirrus.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 17 Dec 2021 18:19:18 +0100
+Message-ID: <CAJZ5v0jTELqFeO6q6w_mYNo_yf1R9SX66RrEz0ZSe27w7E6kog@mail.gmail.com>
+Subject: Re: [PATCH v6 08/10] ACPI / scan: Create platform device for CLSA0100
+ and CSC3551 ACPI nodes
+To:     Lucas Tanure <tanureal@opensource.cirrus.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        patches@opensource.cirrus.com,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 17 Dec 2021 at 17:23, Guenter Roeck <linux@roeck-us.net> wrote:
+On Fri, Dec 17, 2021 at 12:57 PM Lucas Tanure
+<tanureal@opensource.cirrus.com> wrote:
+>
+> The ACPI device with CLSA0100 or CSC3551 is a sound card
+> with multiple instances of CS35L41 connectec by I2C to
 
-> At some point, we have to face it: ASUS doesn't support Linux, and they
-> make it hard to access chips like this. I think the chip should be
-> accessed through "official" channels only if provided (ie WMI/ACPI),
-> or not at all.
+"connected" I suppose?
 
-My two cents, if you please. Unfortunately, ASUS doesn't support
-Windows as well, they only support their own shitty software, and they
-change the WMI methods (both names and logic). For example, just
-recently they packed a full hardware monitoring solution in X470
-boards in WMI, then removed it in X570 and changed hardware access
-function names. In order to add support for their next WMI
-implementation, one needs to thoroughly read the decompiled DSDT code,
-find functions, learn their logic and test. This is hard to do
-remotely, without the hardware, obviously. On the other hand it is
-much easier to find the required mutex name from the DSDT code and
-access the chip normally.
+> the main CPU.
+>
+> We add an ID to the i2c_multi_instantiate_ids list to enumerate
+> all I2C slaves correctly.
+>
+> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
 
-Best regards,
-Eugene
+This requires an ACK from Hans.
+
+If you receive one, please feel free to add my ACK to it too.
+
+Thanks!
+
+> ---
+>  drivers/acpi/scan.c                          |  3 +++
+>  drivers/platform/x86/i2c-multi-instantiate.c | 11 +++++++++++
+>  2 files changed, 14 insertions(+)
+>
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index b7a6b982226e..8740cfa11f59 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1712,8 +1712,11 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
+>         static const struct acpi_device_id i2c_multi_instantiate_ids[] = {
+>                 {"BSG1160", },
+>                 {"BSG2150", },
+> +               {"CSC3551", },
+>                 {"INT33FE", },
+>                 {"INT3515", },
+> +               /* Non-conforming _HID for Cirrus Logic already released */
+> +               {"CLSA0100", },
+>                 {}
+>         };
+>
+> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+> index 4956a1df5b90..a889789b966c 100644
+> --- a/drivers/platform/x86/i2c-multi-instantiate.c
+> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
+> @@ -147,6 +147,14 @@ static const struct i2c_inst_data int3515_data[]  = {
+>         {}
+>  };
+>
+> +static const struct i2c_inst_data cs35l41_hda[] = {
+> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+> +       {}
+> +};
+> +
+>  /*
+>   * Note new device-ids must also be added to i2c_multi_instantiate_ids in
+>   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
+> @@ -154,7 +162,10 @@ static const struct i2c_inst_data int3515_data[]  = {
+>  static const struct acpi_device_id i2c_multi_inst_acpi_ids[] = {
+>         { "BSG1160", (unsigned long)bsg1160_data },
+>         { "BSG2150", (unsigned long)bsg2150_data },
+> +       { "CSC3551", (unsigned long)cs35l41_hda },
+>         { "INT3515", (unsigned long)int3515_data },
+> +       /* Non-conforming _HID for Cirrus Logic already released */
+> +       { "CLSA0100", (unsigned long)cs35l41_hda },
+>         { }
+>  };
+>  MODULE_DEVICE_TABLE(acpi, i2c_multi_inst_acpi_ids);
+> --
+> 2.34.1
+>
