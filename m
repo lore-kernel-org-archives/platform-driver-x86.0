@@ -2,227 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A92C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Dec 2021 08:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92EEC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Dec 2021 13:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234768AbhLTIOp (ORCPT
+        id S232297AbhLTNBT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Dec 2021 03:14:45 -0500
-Received: from mail-eopbgr60077.outbound.protection.outlook.com ([40.107.6.77]:23365
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229464AbhLTIOo (ORCPT
+        Mon, 20 Dec 2021 08:01:19 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:52298 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231871AbhLTNBT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Dec 2021 03:14:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dIKCMeI9+ZHhU5oXhyqWuoZIAd4X4cAIj5eQRj8TA2yDBVFIAs2rP+vchBhuQkk+xKnJla4ViOBNDIXvGfPRoL3BLcMLgFQoUJzhlAxUMX/JwriSH6LebjIe6K/aAvO9EGT+sU+yptFqzhjuuNjK2XQegQke+EIDXt76R21IYhBu4AXbHmzZTOvJpWYqod09B9/4COba8Lqs+I8i1BHkM5yuRNN1CINCbsD0ImNAm/O6P9/XxDBatE6yFe78hADhhZxjbCTcNGiUrmitMD1kNTd2LSNWaJdgrASVqggvG+1UMbW4q4NsNWw5zwJqAW32nCFSGpYzXvHPRMbRwwFhdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qpa+A7wrhzYn8nGGLDa0KODWLsb5jw/swE1l7N8vc7c=;
- b=JrVTP6X9/MD3cQXyP8xVVd6jfJYa5xJP8TvHG3ohxT8M36XagPXNg/IlMyfMSw9XBoyrcnSoOpyP3p1COCGBHynkggj/OUN8I4+bfWe6u8dvSpHh1aP1AsYTlNJ2wpjcjRfIPEDtoEfvDhnqzUsq4AFIeLIFBO/3fvhIanPQjkWI7PDxz6BOQMRsZu5jDiI554Meh/iIH6RKEdyrxt3TxTd5DuV/9Kcv2mLqIb9ar94Ixq94dT6vtJ+TkbwrFBs7xJ2dXzSJUZTaqODk8y559+XCVl+ji4cf8e5Y39v0xRwBTIpQdzZn6XAVZWpumAWJTGf47CXNHQCspIWE69CaPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 194.138.21.70) smtp.rcpttodomain=ucw.cz smtp.mailfrom=siemens.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=siemens.com; dkim=none
- (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qpa+A7wrhzYn8nGGLDa0KODWLsb5jw/swE1l7N8vc7c=;
- b=XPt1erEm2BqwgW2zgcOR/Bu4DxClXz0ggENI+Dj285LPqY5XLYeooXhyKZVSaGzM0pw2Q5f+K/Xu3fyTSKYRikR7Ok7iWgH3QBACo3O35YjHLQIE9XiRGnNy8Vax0L5/ypIUg/gkEnFzp0broBl5ZGHJkZH7Y3Dkl4yibDr5q8QO177FcLCPFPXIIibKwIJDKHG6tyOf+/ecqzqQ/0vVHcE+cLD/lAmmQfQ5KA4zMDXMGZca8F0vbBlWwzOXoI+Meazo6tO5DIeM0sNHsGvE42GXhDbmVHgNaboET4x+b8ADqqq0JQYMqMvB15laNDWLTtQ2iYyJ/pQKvsWtrCY51A==
-Received: from OL1P279CA0054.NORP279.PROD.OUTLOOK.COM (2603:10a6:e10:14::23)
- by VI1PR10MB3295.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:13a::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4801.17; Mon, 20 Dec
- 2021 08:14:42 +0000
-Received: from HE1EUR01FT047.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:e10:14:cafe::da) by OL1P279CA0054.outlook.office365.com
- (2603:10a6:e10:14::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4801.14 via Frontend
- Transport; Mon, 20 Dec 2021 08:14:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.70)
- smtp.mailfrom=siemens.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=siemens.com;
-Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
- 194.138.21.70 as permitted sender) receiver=protection.outlook.com;
- client-ip=194.138.21.70; helo=hybrid.siemens.com;
-Received: from hybrid.siemens.com (194.138.21.70) by
- HE1EUR01FT047.mail.protection.outlook.com (10.152.1.5) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4801.14 via Frontend Transport; Mon, 20 Dec 2021 08:14:41 +0000
-Received: from DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) by
- DEMCHDC9SJA.ad011.siemens.net (194.138.21.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Mon, 20 Dec 2021 09:14:40 +0100
-Received: from md1za8fc.ad001.siemens.net (139.22.39.215) by
- DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Mon, 20 Dec 2021 09:14:39 +0100
-Date:   Mon, 20 Dec 2021 09:14:34 +0100
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     Hans de Goede <hdegoede@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        "Gerd Haeussler" <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Enrico Weigelt <lkml@metux.net>
-Subject: Re: [PATCH v5 2/4] leds: simatic-ipc-leds: add new driver for
- Siemens Industial PCs
-Message-ID: <20211220091434.2f696d76@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20211220085220.23753298@md1za8fc.ad001.siemens.net>
-References: <20211213120502.20661-1-henning.schild@siemens.com>
-        <20211213120502.20661-3-henning.schild@siemens.com>
-        <20211215201800.GA28336@duo.ucw.cz>
-        <61983e62-bc3d-a711-c197-7436a2e33531@redhat.com>
-        <20211219164903.GB28481@duo.ucw.cz>
-        <20211220085220.23753298@md1za8fc.ad001.siemens.net>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 20 Dec 2021 08:01:19 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 163F2CE102B;
+        Mon, 20 Dec 2021 13:01:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70C11C36AE7;
+        Mon, 20 Dec 2021 13:01:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640005275;
+        bh=REUKzYvTnWFtSseRl3TT7ssf0DMkQQjLPLGHo24Iw9o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AasdkjnnNJsF6oJgAWJT46rCcWhebElwpln7Xpf1P6NArnvIcFfIbpOGhC7lMsx4W
+         UsDtDACQOU78EolMCL/awrtb+O7ENvyEU7TnKFn3/UT94i7PufoeQCE/b18F3XyAHz
+         Y7eNUT4qNIGc65ebCagifqHyLXBQcCSPmjLpsUIhSsn/4SvvPbbsGDCuHR5zR/nOEL
+         /txjGN7JclFRQkedc7znxNTw9U0nsK3JyyfkNhYrKGvj/lUyuBW+Q7qKAF71bwQm8y
+         624/nIfXaukjrN8wceJstgK54zySU15CPhXC7B3fKNOzkc9/UmpaSwjUTQFFXJT/5G
+         5b8xH68R8hG6w==
+Date:   Mon, 20 Dec 2021 13:01:09 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lucas Tanure <tanureal@opensource.cirrus.com>,
+        Stefan Binding <sbinding@opensource.cirrus.com>,
+        Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        patches@opensource.cirrus.com,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 08/10] ACPI / scan: Create platform device for
+ CLSA0100 and CSC3551 ACPI nodes
+Message-ID: <YcB+lUePGlo1S9tX@sirena.org.uk>
+References: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
+ <20211217115708.882525-9-tanureal@opensource.cirrus.com>
+ <CAJZ5v0jTELqFeO6q6w_mYNo_yf1R9SX66RrEz0ZSe27w7E6kog@mail.gmail.com>
+ <4b5506b1-20c6-3983-d541-86dc2388b2a7@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [139.22.39.215]
-X-ClientProxiedBy: DEMCHDC89XA.ad011.siemens.net (139.25.226.103) To
- DEMCHDC8A0A.ad011.siemens.net (139.25.226.106)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c588ee29-1ed9-4af6-d063-08d9c390c610
-X-MS-TrafficTypeDiagnostic: VI1PR10MB3295:EE_
-X-Microsoft-Antispam-PRVS: <VI1PR10MB3295E72B820B0E28E9E4A5C9857B9@VI1PR10MB3295.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZjTIkOxSR1cpItxOcpJdoAGvkQj4oJ1uBaX5AywRSCJz7wy5pXslsuHrLHnJSQV5eIHetb3K5d7zbFWqqoQIRpSlsMNP0y5Zh4zhB8HeIoLAOqpcskbVUBkQ8yRh/yEtf0hcaawSSez1D1DzEs6xM6ghKE0W0xfmal8bhw1TIriYFQdEyddogtU1I3oEYxE3fR2ddMAxOaWKkHa+Zaryk6OX7qIccK8GyRb1AZIRNzu6YI1kuKxspVG9xV9Lv4nKdoeVLcfMC+T5719c2dBE6twuYTVNnOuDnb5+HueEtD2dPdYNKKC3ArgNRdjHhAf5zn1tWZH5b1eVfCnYSvY4ltb5f+vZFSIwRYgrl87G9XH7XpDtunNVQw+UIvmgPWxDLsO0zxS0eEAe+2M+8+80rWBFB9LhN8u4GSLlWsDpf0frLft0aMcsaMON8oHJGRDhnpUk4h29Gr8Rsl6AGkQXie3BXfeOgdRSg3+nZB1jF78Ab+0lVfgZh9YnhvKRtCfKgzWk+Dni3gcnchBPPX2Kau/9UapiRv4yEFYVVniH2WH0Yc2N78O1t3rEPiDzfjHfiX9u+Xlt6VuEq11dhTcbOjrGWpamC11+PrAfVp54vz2udV2RLAoHKeb/6wAKb0kTbsp2qdw4irBkXJAbR7zGBxrgYKCY3cm9ZUJ4OI5lDEkOJtxlr/olXd34xI7kh5H0Yi3STbuPSWFJNmHC/81xWrEm/oVyuapLiiD6k4Gsc3MIySG2ArpDnbjGQsbYPR7VlIpYKUohc3m3wY6ySNf3tLoFTQecwXAAJ+nclleBye5rZnDo4/zfSA5WaXEU98lF7qGJQI7ypgdefkpQ/w2UexDHW+/zjS0k6N1KBMO86+Q=
-X-Forefront-Antispam-Report: CIP:194.138.21.70;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:hybrid.siemens.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(40470700001)(356005)(4326008)(36860700001)(508600001)(44832011)(47076005)(82310400004)(70206006)(70586007)(40460700001)(55016003)(966005)(956004)(7416002)(5660300002)(26005)(9686003)(336012)(16526019)(186003)(4001150100001)(7696005)(1076003)(53546011)(6916009)(6666004)(7596003)(316002)(86362001)(54906003)(82960400001)(7636003)(2906002)(8936002)(8676002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2021 08:14:41.4489
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c588ee29-1ed9-4af6-d063-08d9c390c610
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.70];Helo=[hybrid.siemens.com]
-X-MS-Exchange-CrossTenant-AuthSource: HE1EUR01FT047.eop-EUR01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB3295
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9/Pqt07Ueb9aNBfT"
+Content-Disposition: inline
+In-Reply-To: <4b5506b1-20c6-3983-d541-86dc2388b2a7@redhat.com>
+X-Cookie: Christ was born in 4 B.C.
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Mon, 20 Dec 2021 08:53:55 +0100
-schrieb Henning Schild <henning.schild@siemens.com>:
 
-> Am Sun, 19 Dec 2021 17:49:03 +0100
-> schrieb Pavel Machek <pavel@ucw.cz>:
-> 
-> > On Wed 2021-12-15 21:53:56, Hans de Goede wrote:  
-> > > Hi,
-> > > 
-> > > On 12/15/21 21:18, Pavel Machek wrote:    
-> > > > On Mon 2021-12-13 13:05:00, Henning Schild wrote:    
-> > > >> This driver adds initial support for several devices from
-> > > >> Siemens. It is based on a platform driver introduced in an
-> > > >> earlier commit.
-> > > >>
-> > > >> One of the supported machines has GPIO connected LEDs, here we
-> > > >> poke GPIO memory directly because pinctrl does not come up.
-> > > >>
-> > > >> Signed-off-by: Henning Schild <henning.schild@siemens.com>    
-> > > > 
-> > > > Acked-by: Pavel Machek <pavel@ucw.cz>    
-> > > 
-> > > I see that this patch #includes
-> > > linux/platform_data/x86/simatic-ipc-base.h which gets added by
-> > > patch 1/4.
-> > > 
-> > > Pavel, can I take this patch upstream through the pdx86 tree (with
-> > > you Ack added)? Or shall I prepare an immutable branch with patch
-> > > 1 for you to merge ?    
-> > 
-> > Yes, you can.
-> > 
-> >   
-> > > >> +
-> > > >> +static struct simatic_ipc_led simatic_ipc_leds_io[] = {
-> > > >> +	{1 << 15, "green:" LED_FUNCTION_STATUS "-1" },
-> > > >> +	{1 << 7,  "yellow:" LED_FUNCTION_STATUS "-1" },
-> > > >> +	{1 << 14, "red:" LED_FUNCTION_STATUS "-2" },
-> > > >> +	{1 << 6,  "yellow:" LED_FUNCTION_STATUS "-2" },
-> > > >> +	{1 << 13, "red:" LED_FUNCTION_STATUS "-3" },
-> > > >> +	{1 << 5,  "yellow:" LED_FUNCTION_STATUS "-3" },
-> > > >> +	{ }
-> > > >> +};    
-> > 
-> > But I'd still like better naming than red:status-2.  
-> 
-> We had the name discussion already several times, and i have to admit
-> i am not too happy either.
-> 
-> But my impression was that this is an acceptable compromise. I am not
-> happy because the names lack scope, which i had in the first round
-> with "simatic-ipc:red:...".
-> 
-> Function is also a bit unclear, but with the numbers and the user
-> manual, or looking at the chassis it kind of adds up and should be
-> clear to users which is which.
-> 
-> But i agree with Hans that we should sort this out before merge. So
-> please say what makes you unhappy, maybe that can be fixed ... might
-> even make me happier about the names i feel i had to choose.
-> 
-> The LEDs are per definition of the manuals meant for
-> users/applications to signal whatever the use-case might want to
-> signal. There are 3 of them numbered 1-3 on the chassis, and next to
-> the number can often (not always) be found a string like "error",
-> "maint", "run-stop" So a function suggestion i would say.
-> 
-> I could envision to use "fault" or "alarm" instead of "status" for the
-> one labeled "error". And maybe "standby" for the one called "maint"
-> but i would really like to keep the numbers.
-> 
-> Which would look like
-> 
-> status-1
-> alarm-2
-> standby-3
-> 
-> But still i have to clue what those names stand for and choosing
-> and of those "undefined" names could just suggest things and break
-> expectations. Calling them all "status" is neutral ... 
-> 
-> Or can you explain the difference between "fault", "panic" and
-> "alarm". Ask 5 people and get at least 3 different expectations ... i
-> guess.
+--9/Pqt07Ueb9aNBfT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Long story short, i am also not happy but the current suggestion is the
-most generic and least "expectation-creating" i could come up with.
-While keeping a mapping between the name and the chassis/manual.
+On Fri, Dec 17, 2021 at 07:26:51PM +0100, Hans de Goede wrote:
 
-So i will stick with it, unless i get concrete suggestions on how to
-improve.
+> This is fine with me, but I wonder if it would not be better
+> to keep it under drivers/platform/x86 ? Since the new SPI
+> use-cases are also all on x86 laptops AFAICT.
 
-The misc functions
-https://elixir.bootlin.com/linux/latest/source/include/dt-bindings/leds/common.h#L63
+Someone's going to end up using it for one of the Arm devices with ACPI,
+*especially* if it's put in drivers/platform/x86.
 
-do not seem usable. Without a set of conventions they are nothing but
-"allowed but undefined strings". I could however introduce
-FUNCTION_ERROR FUNCTION_MAINT FUNCTION_RUN_STOP ... add more such random
-strings. Which would probably make me happy because it would create a
-better mapping between the names and the chassis ... but it would
-worsen the problem of "what are those misc functions anyway?"
+--9/Pqt07Ueb9aNBfT
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Henning
+-----BEGIN PGP SIGNATURE-----
 
-> Henning
-> 
-> 
-> > 								Pavel
-> >  
-> 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmHAfpQACgkQJNaLcl1U
+h9Ac8wf9FmAjh+2RRFMNCcPoRlzeJvaGXlVOENLgOET0tUOx6vtKf/bBmdZ04Jfn
+/EnxgiVJOnHRjALACEva0AvgeooyLzMROopnthAcw6fbR0t4mWTruzNn8uawTUU7
+Jdz52ctPsB3q0kLrYCvCMI3qvmUFUcN+0iyDhMlP5yxSBEJadzdlMYDtywlfoO3e
+URO0st0GO/Vmhlp/EqEiwbEnp48KbSi/YvSbYMGeSemQ+PU6t43NikAV80DWAZgt
+2kbHYXZEOV/HA2qPrtGRalL2CqpriYMbeF4lm1zml+DliGSVBYIVKOryZfz1cX0v
+JP7EXWfEgcaclQFKDq4295OGuW0K/A==
+=QTdH
+-----END PGP SIGNATURE-----
 
+--9/Pqt07Ueb9aNBfT--
