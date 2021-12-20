@@ -2,311 +2,223 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E4FC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Dec 2021 16:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD29C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Dec 2021 17:25:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232948AbhLTQhl (ORCPT
+        id S240189AbhLTRZ1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Dec 2021 11:37:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232941AbhLTQhk (ORCPT
+        Mon, 20 Dec 2021 12:25:27 -0500
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:38156 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240187AbhLTRZ1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Dec 2021 11:37:40 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADDD8C061574;
-        Mon, 20 Dec 2021 08:37:40 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4763061236;
-        Mon, 20 Dec 2021 16:37:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93174C36AE2;
-        Mon, 20 Dec 2021 16:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1640018259;
-        bh=0y4EA3j+C2zRXjKfcZnsg71PP3YQmaK34Chj/6+oScs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fRtnBe/AJPpB2U+SLEkr3UkT0ohTeC8c7uyPq3q5AXM/M81NcCTdkOUCwpvotynZw
-         TTI8soTgLfMavU28gGDWLX9EXFsSiJYJQ/+UbZ729bCHHW/TjWEcAgoqEeTabptjW7
-         9rKiib6u01/7qhNooFyV8F6AbrWW0kTlisfiMEU4=
-Date:   Mon, 20 Dec 2021 17:37:36 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Martin Fernandez <martin.fernandez@eclypsium.com>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        rafael@kernel.org, rppt@kernel.org, akpm@linux-foundation.org,
-        daniel.gutson@eclypsium.com, hughsient@gmail.com,
-        alex.bazhaniuk@eclypsium.com, alison.schofield@intel.com
-Subject: Re: [PATCH v4 3/5] x86/e820: Tag e820_entry with crypto capabilities
-Message-ID: <YcCxUHSMnUJgXIJF@kroah.com>
-References: <20211216192222.127908-1-martin.fernandez@eclypsium.com>
- <20211216192222.127908-4-martin.fernandez@eclypsium.com>
+        Mon, 20 Dec 2021 12:25:27 -0500
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BKBpnDB004263;
+        Mon, 20 Dec 2021 11:24:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ references : in-reply-to : subject : date : message-id : mime-version :
+ content-type : content-transfer-encoding; s=PODMain02222019;
+ bh=Ur4oCNLSBcusPp8m3eB1JJYW8fExWXXtlc0PG/qBVF4=;
+ b=pP1udFz/oHxh0Z9iLKoRB3q/F5dN9MPb2scU6lqZ31jJabtEnQTTwVDeT/ehVTbGMKO5
+ wTkB0T+lV40IULwY2w5YW/fyoSMelg+45qZ+euJhSB6FOs2PQsQY8mHz2csZKA4j/LYX
+ a+bPtudedUHLAwwUzxW31GGpRPxwWf4P2Wtd1CsO9p6v1fiJISeUic7cDeL2obWwYC6l
+ 865TnZmTZ+Pw2bJ5DiUPTUBinMfSFAZnpTDTIWtjWgBZYPbNxlN7TcbBAwsG1hClhUMF
+ GG40YUeiHyKXQjyrx7/deE8mUwRySINOTCRpUGTP7iXpxvaDsW4HzoWOrchVtVjCLy5Q tg== 
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+        by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3d2kt8grtj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 20 Dec 2021 11:24:32 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Mon, 20 Dec
+ 2021 17:24:31 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
+ Transport; Mon, 20 Dec 2021 17:24:31 +0000
+Received: from LONN2DGDQ73 (unknown [198.90.238.81])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 3FD2C2A9;
+        Mon, 20 Dec 2021 17:24:30 +0000 (UTC)
+From:   Stefan Binding <sbinding@opensource.cirrus.com>
+To:     'Hans de Goede' <hdegoede@redhat.com>,
+        "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        'Lucas Tanure' <tanureal@opensource.cirrus.com>
+CC:     'Len Brown' <lenb@kernel.org>, 'Mark Gross' <markgross@kernel.org>,
+        'Liam Girdwood' <lgirdwood@gmail.com>,
+        'Jaroslav Kysela' <perex@perex.cz>,
+        'Mark Brown' <broonie@kernel.org>,
+        'Takashi Iwai' <tiwai@suse.com>,
+        "'moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...'" 
+        <alsa-devel@alsa-project.org>,
+        'ACPI Devel Maling List' <linux-acpi@vger.kernel.org>,
+        <patches@opensource.cirrus.com>,
+        'Platform Driver' <platform-driver-x86@vger.kernel.org>,
+        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
+References: <20211217115708.882525-1-tanureal@opensource.cirrus.com> <20211217115708.882525-9-tanureal@opensource.cirrus.com> <CAJZ5v0jTELqFeO6q6w_mYNo_yf1R9SX66RrEz0ZSe27w7E6kog@mail.gmail.com> <4b5506b1-20c6-3983-d541-86dc2388b2a7@redhat.com>
+In-Reply-To: <4b5506b1-20c6-3983-d541-86dc2388b2a7@redhat.com>
+Subject: RE: [PATCH v6 08/10] ACPI / scan: Create platform device for CLSA0100 and CSC3551 ACPI nodes
+Date:   Mon, 20 Dec 2021 17:24:30 +0000
+Message-ID: <004001d7f5c6$7329d4d0$597d7e70$@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211216192222.127908-4-martin.fernandez@eclypsium.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-gb
+Thread-Index: AQFonMI0WTNmVk9vhQUnEV0YSPsGcgGkMuwYAgUuTOECRVQNZKzq2vIA
+X-Proofpoint-ORIG-GUID: tUzAAlnJajlhkW3wcG-HzLZr4h-wzfPI
+X-Proofpoint-GUID: tUzAAlnJajlhkW3wcG-HzLZr4h-wzfPI
+X-Proofpoint-Spam-Reason: safe
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Dec 16, 2021 at 04:22:20PM -0300, Martin Fernandez wrote:
-> Add a new member in e820_entry to hold whether an entry is able to do
-> hardware memory encryption or not.
-> 
-> Add a new argument to __e820__range_add to accept this new
-> crypto_capable.
-> 
-> Add a new argument to __e820__update_range to be able to change a
-> region's crypto_capable member. Also, change its behavior a little,
-> before if you wanted to update a region with its same type it was a
-> BUG_ON; now if you call it with both old_type and new_type equals,
-> then the function won't change the types, just crypto_capable.
-> 
-> Change e820__update_table to handle merging and overlap problems
-> taking into account crypto_capable.
-> 
-> Add a function to mark a range as crypto, using __e820__range_update
-> in the background. This will be called when initializing EFI.
-> 
-> Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
-> ---
->  arch/x86/include/asm/e820/api.h   |  1 +
->  arch/x86/include/asm/e820/types.h |  1 +
->  arch/x86/kernel/e820.c            | 59 ++++++++++++++++++++++++-------
->  3 files changed, 49 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/e820/api.h b/arch/x86/include/asm/e820/api.h
-> index e8f58ddd06d9..677dcbabcc8b 100644
-> --- a/arch/x86/include/asm/e820/api.h
-> +++ b/arch/x86/include/asm/e820/api.h
-> @@ -17,6 +17,7 @@ extern bool e820__mapped_all(u64 start, u64 end, enum e820_type type);
->  extern void e820__range_add   (u64 start, u64 size, enum e820_type type);
->  extern u64  e820__range_update(u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
->  extern u64  e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type);
-> +extern u64  e820__range_mark_as_crypto_capable(u64 start, u64 size);
->  
->  extern void e820__print_table(char *who);
->  extern int  e820__update_table(struct e820_table *table);
-> diff --git a/arch/x86/include/asm/e820/types.h b/arch/x86/include/asm/e820/types.h
-> index 314f75d886d0..7b510dffd3b9 100644
-> --- a/arch/x86/include/asm/e820/types.h
-> +++ b/arch/x86/include/asm/e820/types.h
-> @@ -56,6 +56,7 @@ struct e820_entry {
->  	u64			addr;
->  	u64			size;
->  	enum e820_type		type;
-> +	u8			crypto_capable;
+Hi,
 
-Why isn't this a bool?
+> -----Original Message-----
+> From: Hans de Goede <hdegoede@redhat.com>
+> Sent: 17 December 2021 18:27
+> To: Rafael J. Wysocki <rafael@kernel.org>; Lucas Tanure
+> <tanureal@opensource.cirrus.com>; Stefan Binding
+> <sbinding@opensource.cirrus.com>
+> Cc: Len Brown <lenb@kernel.org>; Mark Gross <markgross@kernel.org>;
+> Liam Girdwood <lgirdwood@gmail.com>; Jaroslav Kysela <perex@perex.cz>;
+> Mark Brown <broonie@kernel.org>; Takashi Iwai <tiwai@suse.com>;
+> moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...
+> <alsa-devel@alsa-project.org>; ACPI Devel Maling List <linux-
+> acpi@vger.kernel.org>; patches@opensource.cirrus.com; Platform Driver
+> <platform-driver-x86@vger.kernel.org>; Linux Kernel Mailing List =
+<linux-
+> kernel@vger.kernel.org>
+> Subject: Re: [PATCH v6 08/10] ACPI / scan: Create platform device for
+> CLSA0100 and CSC3551 ACPI nodes
+>=20
+> Hi,
+>=20
+> On 12/17/21 18:19, Rafael J. Wysocki wrote:
+> > On Fri, Dec 17, 2021 at 12:57 PM Lucas Tanure
+> > <tanureal@opensource.cirrus.com> wrote:
+> >>
+> >> The ACPI device with CLSA0100 or CSC3551 is a sound card
+> >> with multiple instances of CS35L41 connectec by I2C to
+> >
+> > "connected" I suppose?
+> >
+> >> the main CPU.
+> >>
+> >> We add an ID to the i2c_multi_instantiate_ids list to enumerate
+> >> all I2C slaves correctly.
+> >>
+> >> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
+> >
+> > This requires an ACK from Hans.
+> >
+> > If you receive one, please feel free to add my ACK to it too.
+>=20
+> One problem which I see here is that this change conflicts with
+> this series:
+>=20
+> https://lore.kernel.org/all/20211210154050.3713-1-
+> sbinding@opensource.cirrus.com/
+>=20
+> I have reviewing that series on my todo list.
+>=20
+> One interesting question for you (Rafael) about that series is
+> that i2c-multi-instantiate.c, which after the series also handles
+> spi devices,is being moved to drivers/acpi .
+>=20
+> This is fine with me, but I wonder if it would not be better
+> to keep it under drivers/platform/x86 ? Since the new SPI
+> use-cases are also all on x86 laptops AFAICT.
+>=20
+> But back to this series, as said the 2 series conflict, since
+> both are being submitted by @opensource.cirrus.com people,
+> it would be good if the Cirrus folks can decide in which
+> order these series should be merged.
+>=20
+> It might be best to just move this one patch to the other series?
+> Thus removing the conflict between the 2 series.
+>=20
+> Regards,
+>=20
+> Hans
+>=20
 
->  } __attribute__((packed));
->  
->  /*
-> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> index bc0657f0deed..001d64686938 100644
-> --- a/arch/x86/kernel/e820.c
-> +++ b/arch/x86/kernel/e820.c
-> @@ -163,7 +163,7 @@ int e820__get_entry_type(u64 start, u64 end)
->  /*
->   * Add a memory region to the kernel E820 map.
->   */
-> -static void __init __e820__range_add(struct e820_table *table, u64 start, u64 size, enum e820_type type)
-> +static void __init __e820__range_add(struct e820_table *table, u64 start, u64 size, enum e820_type type, u8 crypto_capable)
+We don=E2=80=99t really have a preference which order these two chains=20
+should be merged in. We would rebase the other chain if one
+got merged first.
+If pushed for an answer, maybe:
+https://lore.kernel.org/all/20211210154050.3713-1-sbinding@opensource.cir=
+rus.com/
+should be merged first?
 
-Horrid api change, but it's internal to this file so oh well :(
+Thanks,
+Stefan
 
-Hint, don't add flags to functions like this, it forces you to have to
-always remember what those flags are when you read the code.  Right now
-you stuck "0" and "1" in the function call, which is not instructional
-at all.
+>=20
+>=20
+> >> ---
+> >>  drivers/acpi/scan.c                          |  3 +++
+> >>  drivers/platform/x86/i2c-multi-instantiate.c | 11 +++++++++++
+> >>  2 files changed, 14 insertions(+)
+> >>
+> >> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> >> index b7a6b982226e..8740cfa11f59 100644
+> >> --- a/drivers/acpi/scan.c
+> >> +++ b/drivers/acpi/scan.c
+> >> @@ -1712,8 +1712,11 @@ static bool
+> acpi_device_enumeration_by_parent(struct acpi_device *device)
+> >>         static const struct acpi_device_id =
+i2c_multi_instantiate_ids[] =3D {
+> >>                 {"BSG1160", },
+> >>                 {"BSG2150", },
+> >> +               {"CSC3551", },
+> >>                 {"INT33FE", },
+> >>                 {"INT3515", },
+> >> +               /* Non-conforming _HID for Cirrus Logic already =
+released */
+> >> +               {"CLSA0100", },
+> >>                 {}
+> >>         };
+> >>
+> >> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c
+> b/drivers/platform/x86/i2c-multi-instantiate.c
+> >> index 4956a1df5b90..a889789b966c 100644
+> >> --- a/drivers/platform/x86/i2c-multi-instantiate.c
+> >> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
+> >> @@ -147,6 +147,14 @@ static const struct i2c_inst_data =
+int3515_data[]  =3D
+> {
+> >>         {}
+> >>  };
+> >>
+> >> +static const struct i2c_inst_data cs35l41_hda[] =3D {
+> >> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+> >> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+> >> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+> >> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
+> >> +       {}
+> >> +};
+> >> +
+> >>  /*
+> >>   * Note new device-ids must also be added to =
+i2c_multi_instantiate_ids in
+> >>   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
+> >> @@ -154,7 +162,10 @@ static const struct i2c_inst_data =
+int3515_data[]  =3D
+> {
+> >>  static const struct acpi_device_id i2c_multi_inst_acpi_ids[] =3D {
+> >>         { "BSG1160", (unsigned long)bsg1160_data },
+> >>         { "BSG2150", (unsigned long)bsg2150_data },
+> >> +       { "CSC3551", (unsigned long)cs35l41_hda },
+> >>         { "INT3515", (unsigned long)int3515_data },
+> >> +       /* Non-conforming _HID for Cirrus Logic already released */
+> >> +       { "CLSA0100", (unsigned long)cs35l41_hda },
+> >>         { }
+> >>  };
+> >>  MODULE_DEVICE_TABLE(acpi, i2c_multi_inst_acpi_ids);
+> >> --
+> >> 2.34.1
+> >>
+> >
 
-Heck, why not make it an enum to have it be self-describing?  Like the
-type is here.  that would make it much better and easier to understand
-and maintain over time.
 
->  {
->  	int x = table->nr_entries;
->  
-> @@ -176,12 +176,13 @@ static void __init __e820__range_add(struct e820_table *table, u64 start, u64 si
->  	table->entries[x].addr = start;
->  	table->entries[x].size = size;
->  	table->entries[x].type = type;
-> +	table->entries[x].crypto_capable = crypto_capable;
->  	table->nr_entries++;
->  }
->  
->  void __init e820__range_add(u64 start, u64 size, enum e820_type type)
->  {
-> -	__e820__range_add(e820_table, start, size, type);
-> +	__e820__range_add(e820_table, start, size, type, 0);
->  }
->  
->  static void __init e820_print_type(enum e820_type type)
-> @@ -211,6 +212,8 @@ void __init e820__print_table(char *who)
->  			e820_table->entries[i].addr + e820_table->entries[i].size - 1);
->  
->  		e820_print_type(e820_table->entries[i].type);
-> +		if (e820_table->entries[i].crypto_capable)
-> +			pr_cont("; crypto-capable");
->  		pr_cont("\n");
->  	}
->  }
-> @@ -327,6 +330,7 @@ int __init e820__update_table(struct e820_table *table)
->  	unsigned long long last_addr;
->  	u32 new_nr_entries, overlap_entries;
->  	u32 i, chg_idx, chg_nr;
-> +	u8 current_crypto, last_crypto;
->  
->  	/* If there's only one memory region, don't bother: */
->  	if (table->nr_entries < 2)
-> @@ -367,6 +371,7 @@ int __init e820__update_table(struct e820_table *table)
->  	new_nr_entries = 0;	 /* Index for creating new map entries */
->  	last_type = 0;		 /* Start with undefined memory type */
->  	last_addr = 0;		 /* Start with 0 as last starting address */
-> +	last_crypto = 0;
->  
->  	/* Loop through change-points, determining effect on the new map: */
->  	for (chg_idx = 0; chg_idx < chg_nr; chg_idx++) {
-> @@ -388,13 +393,17 @@ int __init e820__update_table(struct e820_table *table)
->  		 * 1=usable, 2,3,4,4+=unusable)
->  		 */
->  		current_type = 0;
-> +		current_crypto = 1;
->  		for (i = 0; i < overlap_entries; i++) {
-> +			current_crypto = current_crypto && overlap_list[i]->crypto_capable;
-
-Is it a u8 or not?  You treat it as a boolean a lot :(
-
->  			if (overlap_list[i]->type > current_type)
->  				current_type = overlap_list[i]->type;
->  		}
->  
->  		/* Continue building up new map based on this information: */
-> -		if (current_type != last_type || e820_nomerge(current_type)) {
-> +		if (current_type != last_type ||
-> +		    current_crypto != last_crypto ||
-> +		    e820_nomerge(current_type)) {
-
-Why check it before calling e820_nomerge()?  Is that required?
-
->  			if (last_type != 0)	 {
->  				new_entries[new_nr_entries].size = change_point[chg_idx]->addr - last_addr;
->  				/* Move forward only if the new size was non-zero: */
-> @@ -406,9 +415,12 @@ int __init e820__update_table(struct e820_table *table)
->  			if (current_type != 0)	{
->  				new_entries[new_nr_entries].addr = change_point[chg_idx]->addr;
->  				new_entries[new_nr_entries].type = current_type;
-> +				new_entries[new_nr_entries].crypto_capable = current_crypto;
-> +
->  				last_addr = change_point[chg_idx]->addr;
->  			}
->  			last_type = current_type;
-> +			last_crypto = current_crypto;
->  		}
->  	}
->  
-> @@ -459,14 +471,20 @@ static int __init append_e820_table(struct boot_e820_entry *entries, u32 nr_entr
->  	return __append_e820_table(entries, nr_entries);
->  }
->  
-> +/*
-> + * Update a memory range.
-> + *
-> + * If old_type and new_type are the same then ignore the types and
-> + * just change crypto_capable.
-> + */
->  static u64 __init
-> -__e820__range_update(struct e820_table *table, u64 start, u64 size, enum e820_type old_type, enum e820_type new_type)
-> +__e820__range_update(struct e820_table *table, u64 start, u64 size, enum e820_type old_type, enum e820_type new_type, u8 crypto_capable)
-
-Same api comment here.
-
->  {
->  	u64 end;
->  	unsigned int i;
->  	u64 real_updated_size = 0;
->  
-> -	BUG_ON(old_type == new_type);
-
-No more bug?
-
-> +	bool update_crypto = new_type == old_type;
-
-if statement?  This looks really odd and is easy to overlook.
-
->  
->  	if (size > (ULLONG_MAX - start))
->  		size = ULLONG_MAX - start;
-> @@ -476,6 +494,8 @@ __e820__range_update(struct e820_table *table, u64 start, u64 size, enum e820_ty
->  	e820_print_type(old_type);
->  	pr_cont(" ==> ");
->  	e820_print_type(new_type);
-> +	if (crypto_capable)
-> +		pr_cont("; crypto-capable");
->  	pr_cont("\n");
->  
->  	for (i = 0; i < table->nr_entries; i++) {
-> @@ -483,22 +503,27 @@ __e820__range_update(struct e820_table *table, u64 start, u64 size, enum e820_ty
->  		u64 final_start, final_end;
->  		u64 entry_end;
->  
-> -		if (entry->type != old_type)
-> +		if (entry->type != old_type && !update_crypto)
->  			continue;
->  
-> +		if (update_crypto)
-> +			new_type = entry->type;
-> +
->  		entry_end = entry->addr + entry->size;
->  
->  		/* Completely covered by new range? */
->  		if (entry->addr >= start && entry_end <= end) {
->  			entry->type = new_type;
-> +			entry->crypto_capable = crypto_capable;
->  			real_updated_size += entry->size;
->  			continue;
->  		}
->  
->  		/* New range is completely covered? */
->  		if (entry->addr < start && entry_end > end) {
-> -			__e820__range_add(table, start, size, new_type);
-> -			__e820__range_add(table, end, entry_end - end, entry->type);
-> +			__e820__range_add(table, start, size, new_type, crypto_capable);
-> +			__e820__range_add(table, end, entry_end - end,
-> +					  entry->type, entry->crypto_capable);
->  			entry->size = start - entry->addr;
->  			real_updated_size += size;
->  			continue;
-> @@ -510,7 +535,8 @@ __e820__range_update(struct e820_table *table, u64 start, u64 size, enum e820_ty
->  		if (final_start >= final_end)
->  			continue;
->  
-> -		__e820__range_add(table, final_start, final_end - final_start, new_type);
-> +		__e820__range_add(table, final_start, final_end - final_start,
-> +				  new_type, crypto_capable);
->  
->  		real_updated_size += final_end - final_start;
->  
-> @@ -527,14 +553,19 @@ __e820__range_update(struct e820_table *table, u64 start, u64 size, enum e820_ty
->  	return real_updated_size;
->  }
->  
-> +u64 __init e820__range_mark_as_crypto_capable(u64 start, u64 size)
-> +{
-> +	return __e820__range_update(e820_table, start, size, 0, 0, true);
-> +}
-> +
->  u64 __init e820__range_update(u64 start, u64 size, enum e820_type old_type, enum e820_type new_type)
->  {
-> -	return __e820__range_update(e820_table, start, size, old_type, new_type);
-> +	return __e820__range_update(e820_table, start, size, old_type, new_type, false);
-
-See, what does "false" here mean?  You have to now go look that up.
-
-thanks,
-
-greg k-h
