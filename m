@@ -2,223 +2,108 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD29C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Dec 2021 17:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C41C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Dec 2021 18:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240189AbhLTRZ1 (ORCPT
+        id S234079AbhLTSKj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Dec 2021 12:25:27 -0500
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:38156 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240187AbhLTRZ1 (ORCPT
+        Mon, 20 Dec 2021 13:10:39 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:48512 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230489AbhLTSKj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Dec 2021 12:25:27 -0500
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BKBpnDB004263;
-        Mon, 20 Dec 2021 11:24:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- references : in-reply-to : subject : date : message-id : mime-version :
- content-type : content-transfer-encoding; s=PODMain02222019;
- bh=Ur4oCNLSBcusPp8m3eB1JJYW8fExWXXtlc0PG/qBVF4=;
- b=pP1udFz/oHxh0Z9iLKoRB3q/F5dN9MPb2scU6lqZ31jJabtEnQTTwVDeT/ehVTbGMKO5
- wTkB0T+lV40IULwY2w5YW/fyoSMelg+45qZ+euJhSB6FOs2PQsQY8mHz2csZKA4j/LYX
- a+bPtudedUHLAwwUzxW31GGpRPxwWf4P2Wtd1CsO9p6v1fiJISeUic7cDeL2obWwYC6l
- 865TnZmTZ+Pw2bJ5DiUPTUBinMfSFAZnpTDTIWtjWgBZYPbNxlN7TcbBAwsG1hClhUMF
- GG40YUeiHyKXQjyrx7/deE8mUwRySINOTCRpUGTP7iXpxvaDsW4HzoWOrchVtVjCLy5Q tg== 
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-        by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3d2kt8grtj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 20 Dec 2021 11:24:32 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Mon, 20 Dec
- 2021 17:24:31 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Mon, 20 Dec 2021 17:24:31 +0000
-Received: from LONN2DGDQ73 (unknown [198.90.238.81])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 3FD2C2A9;
-        Mon, 20 Dec 2021 17:24:30 +0000 (UTC)
-From:   Stefan Binding <sbinding@opensource.cirrus.com>
-To:     'Hans de Goede' <hdegoede@redhat.com>,
-        "'Rafael J. Wysocki'" <rafael@kernel.org>,
-        'Lucas Tanure' <tanureal@opensource.cirrus.com>
-CC:     'Len Brown' <lenb@kernel.org>, 'Mark Gross' <markgross@kernel.org>,
-        'Liam Girdwood' <lgirdwood@gmail.com>,
-        'Jaroslav Kysela' <perex@perex.cz>,
-        'Mark Brown' <broonie@kernel.org>,
-        'Takashi Iwai' <tiwai@suse.com>,
-        "'moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...'" 
-        <alsa-devel@alsa-project.org>,
-        'ACPI Devel Maling List' <linux-acpi@vger.kernel.org>,
-        <patches@opensource.cirrus.com>,
-        'Platform Driver' <platform-driver-x86@vger.kernel.org>,
-        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
-References: <20211217115708.882525-1-tanureal@opensource.cirrus.com> <20211217115708.882525-9-tanureal@opensource.cirrus.com> <CAJZ5v0jTELqFeO6q6w_mYNo_yf1R9SX66RrEz0ZSe27w7E6kog@mail.gmail.com> <4b5506b1-20c6-3983-d541-86dc2388b2a7@redhat.com>
-In-Reply-To: <4b5506b1-20c6-3983-d541-86dc2388b2a7@redhat.com>
-Subject: RE: [PATCH v6 08/10] ACPI / scan: Create platform device for CLSA0100 and CSC3551 ACPI nodes
-Date:   Mon, 20 Dec 2021 17:24:30 +0000
-Message-ID: <004001d7f5c6$7329d4d0$597d7e70$@opensource.cirrus.com>
+        Mon, 20 Dec 2021 13:10:39 -0500
+Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E2F431EC02AD;
+        Mon, 20 Dec 2021 19:10:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1640023829;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=u3qadLJLiGlSgg2xgOL2YC+8FxEP43TobdqfUt7kZfs=;
+        b=QmswxF0+lNGM5M1aASyqrDia50ovg/fASW425kO6II3UgRUEDk7qDKW5x2diW9uBn4cFwN
+        8Go6v7DlrLikQSAnRE9A53xfP+VfrhPTF04qONhX2QpcnXQbJq28hRJ2+dpkX1JUdu1SCs
+        pp11efyKP/pk75Bs0dtNIKKVTQuMxVY=
+Date:   Mon, 20 Dec 2021 19:10:31 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>,
+        Mikolaj Lisik <lisik@google.com>,
+        Venu Busireddy <venu.busireddy@oracle.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v8 08/40] x86/sev: Check the vmpl level
+Message-ID: <YcDHF016tJLkempZ@zn.tnic>
+References: <20211210154332.11526-1-brijesh.singh@amd.com>
+ <20211210154332.11526-9-brijesh.singh@amd.com>
+ <YbugbgXhApv9ECM2@dt>
+ <CADtC8PX_bEk3rQR1sonbp-rX7rAG4fdbM41r3YLhfj3qWvqJrw@mail.gmail.com>
+ <79c91197-a7d8-4b93-b6c3-edb7b2da4807@amd.com>
+ <d56c2f64-9e31-81d8-f250-e9772ba37d7e@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-gb
-Thread-Index: AQFonMI0WTNmVk9vhQUnEV0YSPsGcgGkMuwYAgUuTOECRVQNZKzq2vIA
-X-Proofpoint-ORIG-GUID: tUzAAlnJajlhkW3wcG-HzLZr4h-wzfPI
-X-Proofpoint-GUID: tUzAAlnJajlhkW3wcG-HzLZr4h-wzfPI
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d56c2f64-9e31-81d8-f250-e9772ba37d7e@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Fri, Dec 17, 2021 at 04:33:02PM -0600, Tom Lendacky wrote:
+> > > > > +      * There is no straightforward way to query the current VMPL level. The
+> > > > > +      * simplest method is to use the RMPADJUST instruction to change a page
+> > > > > +      * permission to a VMPL level-1, and if the guest kernel is launched at
+> > > > > +      * a level <= 1, then RMPADJUST instruction will return an error.
+> > > > Perhaps a nit. When you say "level <= 1", do you mean a level lower than or
+> > > > equal to 1 semantically, or numerically?
+> > 
+> > Its numerically, please see the AMD APM vol 3.
+> 
+> Actually it is not numerically...  if it was numerically, then 0 <= 1 would
+> return an error, but VMPL0 is the highest permission level.
 
-> -----Original Message-----
-> From: Hans de Goede <hdegoede@redhat.com>
-> Sent: 17 December 2021 18:27
-> To: Rafael J. Wysocki <rafael@kernel.org>; Lucas Tanure
-> <tanureal@opensource.cirrus.com>; Stefan Binding
-> <sbinding@opensource.cirrus.com>
-> Cc: Len Brown <lenb@kernel.org>; Mark Gross <markgross@kernel.org>;
-> Liam Girdwood <lgirdwood@gmail.com>; Jaroslav Kysela <perex@perex.cz>;
-> Mark Brown <broonie@kernel.org>; Takashi Iwai <tiwai@suse.com>;
-> moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...
-> <alsa-devel@alsa-project.org>; ACPI Devel Maling List <linux-
-> acpi@vger.kernel.org>; patches@opensource.cirrus.com; Platform Driver
-> <platform-driver-x86@vger.kernel.org>; Linux Kernel Mailing List =
-<linux-
-> kernel@vger.kernel.org>
-> Subject: Re: [PATCH v6 08/10] ACPI / scan: Create platform device for
-> CLSA0100 and CSC3551 ACPI nodes
->=20
-> Hi,
->=20
-> On 12/17/21 18:19, Rafael J. Wysocki wrote:
-> > On Fri, Dec 17, 2021 at 12:57 PM Lucas Tanure
-> > <tanureal@opensource.cirrus.com> wrote:
-> >>
-> >> The ACPI device with CLSA0100 or CSC3551 is a sound card
-> >> with multiple instances of CS35L41 connectec by I2C to
-> >
-> > "connected" I suppose?
-> >
-> >> the main CPU.
-> >>
-> >> We add an ID to the i2c_multi_instantiate_ids list to enumerate
-> >> all I2C slaves correctly.
-> >>
-> >> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
-> >
-> > This requires an ACK from Hans.
-> >
-> > If you receive one, please feel free to add my ACK to it too.
->=20
-> One problem which I see here is that this change conflicts with
-> this series:
->=20
-> https://lore.kernel.org/all/20211210154050.3713-1-
-> sbinding@opensource.cirrus.com/
->=20
-> I have reviewing that series on my todo list.
->=20
-> One interesting question for you (Rafael) about that series is
-> that i2c-multi-instantiate.c, which after the series also handles
-> spi devices,is being moved to drivers/acpi .
->=20
-> This is fine with me, but I wonder if it would not be better
-> to keep it under drivers/platform/x86 ? Since the new SPI
-> use-cases are also all on x86 laptops AFAICT.
->=20
-> But back to this series, as said the 2 series conflict, since
-> both are being submitted by @opensource.cirrus.com people,
-> it would be good if the Cirrus folks can decide in which
-> order these series should be merged.
->=20
-> It might be best to just move this one patch to the other series?
-> Thus removing the conflict between the 2 series.
->=20
-> Regards,
->=20
-> Hans
->=20
+Just write in that comment exactly what this function does:
 
-We don=E2=80=99t really have a preference which order these two chains=20
-should be merged in. We would rebase the other chain if one
-got merged first.
-If pushed for an answer, maybe:
-https://lore.kernel.org/all/20211210154050.3713-1-sbinding@opensource.cir=
-rus.com/
-should be merged first?
+"RMPADJUST modifies RMP permissions of a lesser-privileged (numerically
+higher) privilege level. Here, clear the VMPL1 permission mask of the
+GHCB page. If the guest is not running at VMPL0, this will fail.
 
-Thanks,
-Stefan
+If the guest is running at VMP0, it will succeed. Even if that operation
+modifies permission bits, it is still ok to do currently because Linux
+SNP guests are supported only on VMPL0 so VMPL1 or higher permission
+masks changing is a don't-care."
 
->=20
->=20
-> >> ---
-> >>  drivers/acpi/scan.c                          |  3 +++
-> >>  drivers/platform/x86/i2c-multi-instantiate.c | 11 +++++++++++
-> >>  2 files changed, 14 insertions(+)
-> >>
-> >> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> >> index b7a6b982226e..8740cfa11f59 100644
-> >> --- a/drivers/acpi/scan.c
-> >> +++ b/drivers/acpi/scan.c
-> >> @@ -1712,8 +1712,11 @@ static bool
-> acpi_device_enumeration_by_parent(struct acpi_device *device)
-> >>         static const struct acpi_device_id =
-i2c_multi_instantiate_ids[] =3D {
-> >>                 {"BSG1160", },
-> >>                 {"BSG2150", },
-> >> +               {"CSC3551", },
-> >>                 {"INT33FE", },
-> >>                 {"INT3515", },
-> >> +               /* Non-conforming _HID for Cirrus Logic already =
-released */
-> >> +               {"CLSA0100", },
-> >>                 {}
-> >>         };
-> >>
-> >> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c
-> b/drivers/platform/x86/i2c-multi-instantiate.c
-> >> index 4956a1df5b90..a889789b966c 100644
-> >> --- a/drivers/platform/x86/i2c-multi-instantiate.c
-> >> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
-> >> @@ -147,6 +147,14 @@ static const struct i2c_inst_data =
-int3515_data[]  =3D
-> {
-> >>         {}
-> >>  };
-> >>
-> >> +static const struct i2c_inst_data cs35l41_hda[] =3D {
-> >> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> >> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> >> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> >> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> >> +       {}
-> >> +};
-> >> +
-> >>  /*
-> >>   * Note new device-ids must also be added to =
-i2c_multi_instantiate_ids in
-> >>   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-> >> @@ -154,7 +162,10 @@ static const struct i2c_inst_data =
-int3515_data[]  =3D
-> {
-> >>  static const struct acpi_device_id i2c_multi_inst_acpi_ids[] =3D {
-> >>         { "BSG1160", (unsigned long)bsg1160_data },
-> >>         { "BSG2150", (unsigned long)bsg2150_data },
-> >> +       { "CSC3551", (unsigned long)cs35l41_hda },
-> >>         { "INT3515", (unsigned long)int3515_data },
-> >> +       /* Non-conforming _HID for Cirrus Logic already released */
-> >> +       { "CLSA0100", (unsigned long)cs35l41_hda },
-> >>         { }
-> >>  };
-> >>  MODULE_DEVICE_TABLE(acpi, i2c_multi_inst_acpi_ids);
-> >> --
-> >> 2.34.1
-> >>
-> >
+and then everything is clear wrt numbering, privilege, etc.
 
+Ok?
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
