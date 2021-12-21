@@ -2,56 +2,57 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1646DC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Dec 2021 15:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31C3C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Dec 2021 15:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239377AbhLUP3i (ORCPT
+        id S236147AbhLUPlE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Dec 2021 10:29:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60332 "EHLO
+        Tue, 21 Dec 2021 10:41:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239365AbhLUP3h (ORCPT
+        with ESMTP id S236134AbhLUPlD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Dec 2021 10:29:37 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B766C061574
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 07:29:37 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id k21so12016718lfu.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 07:29:37 -0800 (PST)
+        Tue, 21 Dec 2021 10:41:03 -0500
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A6B5C061574
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 07:41:03 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id m12so22046206ljj.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 07:41:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TIEcZ4xvBTThicDG8gWW4fojXLw3Jbfr6V6W2qhapj4=;
-        b=J1yLUXDO+VyhgBGDf+l4KIcooCwNMq27gieIS4HYY250F+LvN8YcDhAHK8QjKW3hRx
-         9vyPDr2U3/NP4ktKyLjI8aKEcugIjiB75zG9CBaOsNdRftF33/RjHVxg3e0i1ay8ZISf
-         zuTAXbZhJaitDWquCYOqd+q5MI1KbjONQf06CMb4iylJ+kB7CvBpOqf5YO/lKlzxtfrV
-         Guf5HOUWgNrxdb1C16PV6/X/59Zh3wRx4kJ94lImD9jBaVKXf5sMWy0UZewx7wUv0rK3
-         A9mIjBeyhdXx0GeKhAu/x+40cfAz61NfyGQTt9o1n++Z7Ai77uuKqGCZ0jQcjgPJj2VS
-         b51w==
+        bh=hRNgLQZbMbv53iALETcjKGWkbYez+svWgF+5J0NW6yI=;
+        b=JVkuUKtJTmJIMbxYzbbSU4QHwdeH5YIAf9RN7CKlILCwbvWGKoBPwCbRdVGVZJM5yk
+         hRZz7NydQ8OinaPDduwIy/FOnYF0eeVtbaj0ebA81wlOoIddhtCt6322oVxFwGRI/Xzf
+         5tc4xBFGEdt8cBN6i+OqxNw1/N0j7Eviyzo0yrTAoq72HLj0E1adAwQD6zzLFDAr+c7I
+         rftShPSUohf+h1fYczYi09b3WDof98tBA6YKw5uu+GZDN2Jmh/MEQGYxg4rtg4aN6Qhl
+         21S8pmpxpFLIKNU5BqOH7D2vDCI6MZAhMAc+QR+ExXQOWi9LMhHyEryoG5RPkURmVVYI
+         Elyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TIEcZ4xvBTThicDG8gWW4fojXLw3Jbfr6V6W2qhapj4=;
-        b=KFEh7KFypy2b6xtCbdA3fQJ9qS89TB56OBREtvNFNcy1zhtINTyL0bSM4OcLhOHJlB
-         9ON5jQf1KG+uC6+rnJA84MrOEdOgWAVmc1lyQQ6w73RoqWWxvXbyIVSoxXVZ16BqE3NS
-         W3xff3yaQQE3Gh4S0gGGcrQ7xAB+Ir6Uhaob1kQ245pN3MFP0IfqnPCNCdSl49g7pffq
-         vLTPBGLWU3lY0ZieVRiEq0gKVdbud70c0/CDv8C9K9sFgaV9Vw98w54s7ueZjo+L41dY
-         UOcrNNwh01xnIaZg9R324SCTNJHinFXBrC22Xe5jdmZjlLExA7nwIFDPN3kVKRvoePWQ
-         nlUQ==
-X-Gm-Message-State: AOAM533yaEzcCS6eRKRkS8gKf2JljgX71vzbv8RS/9+DKNTQa9IGwkl7
-        3/PEBREhNnIUBbHoFcD3p8ytTeu/YV8Gkda3i2ngl2eE9S/sNA==
-X-Google-Smtp-Source: ABdhPJy61mD+hvK2TpUmCzB46O7IJK6rYVOlRbgTql6QKizhdNT52KYoQrh4yNqfbsO1jidrxEDKY3UKwkmSyTXfyMw=
-X-Received: by 2002:a19:6e42:: with SMTP id q2mr3419935lfk.60.1640100575482;
- Tue, 21 Dec 2021 07:29:35 -0800 (PST)
+        bh=hRNgLQZbMbv53iALETcjKGWkbYez+svWgF+5J0NW6yI=;
+        b=Q2TWxM1P4F14mjh331GFeGUoiTCi4yTX3Pek9cpDxC163STmaQQIkL8zswYjI1LPKj
+         cx3fCTlm6AgEuCHE0usHU2t48wrs1tmXL2R2w6s7GaF4XimZStftbJPZ9WDP7iWIiWPo
+         Y9sil0/XlyFEfOZwGQhxCW00JeMmFO6flUHAE1SBTNzGd/r8aC12Objvj+ghFMRj1Hzi
+         6BPP5vfJCAShrIDPHpvhofCdI/ad/EHB4TjKXyHygqTlMWMCAynXnDZPuesvMw8PiL4H
+         0jnKeb8MoApx+8u9RW2n+a4pcz0P8CbZ5K8iij9Dm24JVm+Fv4o9C7wFYGvSdeHPzAQH
+         vbJA==
+X-Gm-Message-State: AOAM530lg9I+gUxjSng1a2SCUMT8gE1PG7gJrllVg15p10mZ3cGLJjLo
+        lQEIuet7Z3c90Eu6ZpWANcyc5q2V7+WzQjL6yTc1ZxAYsRxGKA==
+X-Google-Smtp-Source: ABdhPJxJ6yN5EJ0Czc/Tu7GH71jULsXRfSP1CXZpb0AjoXKfy1JpMnXRDQaPp4AmC58eSyBpPd6lMz1pFpL2MoW6m8k=
+X-Received: by 2002:a2e:9e11:: with SMTP id e17mr1789379ljk.166.1640101261474;
+ Tue, 21 Dec 2021 07:41:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20211221151243.66216-1-hdegoede@redhat.com>
-In-Reply-To: <20211221151243.66216-1-hdegoede@redhat.com>
+References: <20211221151243.66216-1-hdegoede@redhat.com> <20211221151243.66216-2-hdegoede@redhat.com>
+In-Reply-To: <20211221151243.66216-2-hdegoede@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Dec 2021 17:27:36 +0200
-Message-ID: <CAHp75VcCMeuSHkQT=azcEZeFxqU9_Na2yiXESEBvNqniyhtDvg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] platform/x86: Add x86-acpi-irq-helpers.h
+Date:   Tue, 21 Dec 2021 17:39:02 +0200
+Message-ID: <CAHp75Ve8NP4FQO1R6tsRV7G4rSmch-dX5ADKCb7E7Q83zqKyew@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] platform/x86: x86-android-tablets: New driver for
+ x86 Android tablets
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@infradead.org>,
@@ -63,55 +64,121 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Tue, Dec 21, 2021 at 5:13 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Add helper code to get Linux IRQ numbers given a description of the IRQ
-> source (either IOAPIC index, or GPIO chip name + pin-number).
+> x86 tablets which ship with Android as (part of) the factory image
+> typically have various problems with their DSDTs. The factory kernels
+> shipped on these devices typically have device addresses and GPIOs
+> hardcoded in the kernel, rather then specified in their DSDT.
 >
-> This is intended to be used to lookup Linux IRQ numbers in cases where the
-> ACPI description for a device somehow lacks this info. This is only meant
-> for use on x86 ACPI platforms.
+> With the DSDT containing a random collection of devices which may or
+> may not actually be present as well as missing devices which are
+> actually present.
 >
-> This code is big/complex enough to warrant sharing, but too small to live
-> in its own module, therefor x86_acpi_irq_helper_get() is defined as
-> a static inline helper function.
+> This driver, which loads only on affected models based on DMI matching,
+> adds DMI based instantiating of kernel devices for devices which are
+> missing from the DSDT, fixing e.g. battery monitoring, touchpads and/or
+> accelerometers not working.
+>
+> Note the Kconfig help text also refers to "various fixes" ATM there are
+> no such fixes, but there are also known cases where entries are present
+> in the DSDT but they contain bugs, such as missing/wrong GPIOs. The plan
+> is to also add fixes for things like this here in the future.
+>
+> This is the least ugly option to get these devices to fully work and to
+> do so without adding any extra code to the main kernel image (vmlinuz)
+> when built as a module.
 
 ...
 
-> +/* For gpio_get_desc which is EXPORT_SYMBOL_GPL() */
+> +config X86_ANDROID_TABLETS
+> +       tristate "X86 Android tablet support"
+> +       depends on I2C && ACPI
+> +       help
+> +         X86 tablets which ship with Android as (part of) the factory image
+> +         typically have various problems with their DSDTs. The factory kernels
+> +         shipped on these devices typically have device addresses and GPIOs
+> +         hardcoded in the kernel, rather then specified in their DSDT.
 
-gpio_get_desc() and honestly I don't like this kind of includes (yes,
-I know sometimes it's the best compromise).
+than
 
-> +#include "../../gpio/gpiolib.h"
+> +
+> +         With the DSDT containing a random collection of devices which may or
+> +         may not actually be present. This driver contains various fixes for
+> +         such tablets, including instantiating kernel devices for devices which
+> +         are missing from the DSDT.
 
 ...
 
-> +               /* Like acpi_dev_gpio_irq_get(), but without parsing ACPI resources */
-> +               chip = gpiochip_find(data->gpio_chip, x86_acpi_irq_helper_gpiochip_find);
-> +               if (!chip)
-> +                       return -EPROBE_DEFER;
-> +
-> +               gpiod = gpiochip_get_desc(chip, data->index);
-> +               if (IS_ERR(gpiod)) {
-> +                       ret = PTR_ERR(gpiod);
-> +                       pr_err("error %d getting GPIO %s %d\n", ret,
-> +                              data->gpio_chip, data->index);
-> +                       return ret;
-> +               }
-> +
-> +               irq = gpiod_to_irq(gpiod);
-> +               if (irq < 0) {
-> +                       pr_err("error %d getting IRQ %s %d\n", irq,
-> +                              data->gpio_chip, data->index);
-> +                       return irq;
-> +               }
-> +
-> +               irq_type = acpi_dev_get_irq_type(data->trigger, data->polarity);
-> +               if (irq_type != IRQ_TYPE_NONE && irq_type != irq_get_trigger_type(irq))
-> +                       irq_set_irq_type(irq, irq_type);
-> +
-> +               return irq;
+> +static const char * const chuwi_hi8_mount_matrix[] = {
+> +       "1", "0", "0",
+> +       "0", "-1", "0",
+> +       "0", "0", "1"
 
-I'm wondering why it can't be a part of the GPIO ACPI library?
++ comma?
+
+> +};
+
+...
+
+> +       int ret = 0;
+
+> +       board_info.irq = x86_acpi_irq_helper_get(&client_info->irq_data);
+> +       if (board_info.irq < 0) {
+> +               ret = board_info.irq;
+> +               goto out;
+> +       }
+
+Can we rather use
+ret = ...
+if (ret < 0)
+ goto
+.irq = ret;
+
+?
+
+...
+
+> +       i2c_clients[idx] = i2c_new_client_device(adap, &board_info);
+> +       if (IS_ERR(i2c_clients[idx])) {
+
+> +               ret = PTR_ERR(i2c_clients[idx]);
+> +               pr_err("Error creating I2C-client %d: %d\n", idx, ret);
+
+dev_err_probe()? (device of the adapter)
+
+> +       }
+
+...
+
+> +out:
+
+out_put_device: ?
+
+> +       put_device(&adap->dev);
+> +       return ret;
+
+...
+
+> +       int i, ret = 0;
+
+Do you need this assignment? See below.
+
+...
+
+> +       for (i = 0; i < dev_info->i2c_client_count; i++) {
+> +               ret = x86_instantiate_i2c_client(dev_info, i);
+> +               if (ret < 0) {
+> +                       x86_android_tablet_cleanup();
+
+> +                       break;
+
+return ret; ?
+
+> +               }
+> +       }
+
+> +       return ret;
+
+return 0; ?
 
 -- 
 With Best Regards,
