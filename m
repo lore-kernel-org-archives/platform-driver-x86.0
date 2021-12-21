@@ -2,184 +2,186 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31C3C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Dec 2021 15:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3C4C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Dec 2021 16:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236147AbhLUPlE (ORCPT
+        id S236028AbhLUQGK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Dec 2021 10:41:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236134AbhLUPlD (ORCPT
+        Tue, 21 Dec 2021 11:06:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:24990 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234350AbhLUQGK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Dec 2021 10:41:03 -0500
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A6B5C061574
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 07:41:03 -0800 (PST)
-Received: by mail-lj1-x22e.google.com with SMTP id m12so22046206ljj.6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 07:41:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hRNgLQZbMbv53iALETcjKGWkbYez+svWgF+5J0NW6yI=;
-        b=JVkuUKtJTmJIMbxYzbbSU4QHwdeH5YIAf9RN7CKlILCwbvWGKoBPwCbRdVGVZJM5yk
-         hRZz7NydQ8OinaPDduwIy/FOnYF0eeVtbaj0ebA81wlOoIddhtCt6322oVxFwGRI/Xzf
-         5tc4xBFGEdt8cBN6i+OqxNw1/N0j7Eviyzo0yrTAoq72HLj0E1adAwQD6zzLFDAr+c7I
-         rftShPSUohf+h1fYczYi09b3WDof98tBA6YKw5uu+GZDN2Jmh/MEQGYxg4rtg4aN6Qhl
-         21S8pmpxpFLIKNU5BqOH7D2vDCI6MZAhMAc+QR+ExXQOWi9LMhHyEryoG5RPkURmVVYI
-         Elyw==
+        Tue, 21 Dec 2021 11:06:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1640102769;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h8j90K6L+jMTJ+92nwkdhzdimoieBEu9gIYMqpMiA+k=;
+        b=emQVO5V1BhYakmu1KBl7VMHMNUrWJGeR2VAjwn7Z/Pt4vTVaKMyUPWbp/XPxT3yu/zUl9V
+        dAckjmXZkV/iiQWMj26uxW8Jy+q7c/eLycqNgVJatGduXAy3MKbenBRGYEAmjkA0YrkQU2
+        xE4HCjrlMax49oXRTN7TnOwM6fH3uzE=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-267-gANw1VB5MK2ZLN74v5HKzg-1; Tue, 21 Dec 2021 11:06:08 -0500
+X-MC-Unique: gANw1VB5MK2ZLN74v5HKzg-1
+Received: by mail-ed1-f70.google.com with SMTP id y14-20020a056402440e00b003f81d896346so9899541eda.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 08:06:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hRNgLQZbMbv53iALETcjKGWkbYez+svWgF+5J0NW6yI=;
-        b=Q2TWxM1P4F14mjh331GFeGUoiTCi4yTX3Pek9cpDxC163STmaQQIkL8zswYjI1LPKj
-         cx3fCTlm6AgEuCHE0usHU2t48wrs1tmXL2R2w6s7GaF4XimZStftbJPZ9WDP7iWIiWPo
-         Y9sil0/XlyFEfOZwGQhxCW00JeMmFO6flUHAE1SBTNzGd/r8aC12Objvj+ghFMRj1Hzi
-         6BPP5vfJCAShrIDPHpvhofCdI/ad/EHB4TjKXyHygqTlMWMCAynXnDZPuesvMw8PiL4H
-         0jnKeb8MoApx+8u9RW2n+a4pcz0P8CbZ5K8iij9Dm24JVm+Fv4o9C7wFYGvSdeHPzAQH
-         vbJA==
-X-Gm-Message-State: AOAM530lg9I+gUxjSng1a2SCUMT8gE1PG7gJrllVg15p10mZ3cGLJjLo
-        lQEIuet7Z3c90Eu6ZpWANcyc5q2V7+WzQjL6yTc1ZxAYsRxGKA==
-X-Google-Smtp-Source: ABdhPJxJ6yN5EJ0Czc/Tu7GH71jULsXRfSP1CXZpb0AjoXKfy1JpMnXRDQaPp4AmC58eSyBpPd6lMz1pFpL2MoW6m8k=
-X-Received: by 2002:a2e:9e11:: with SMTP id e17mr1789379ljk.166.1640101261474;
- Tue, 21 Dec 2021 07:41:01 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=h8j90K6L+jMTJ+92nwkdhzdimoieBEu9gIYMqpMiA+k=;
+        b=H1WrWLCXrk6Bbn5Me70SOM/O58RLTizRq7YdINitPzlHf3iSBpQRTogdS+sgiQCwOF
+         +Tl8I0rL3oCdSciMISUWcn2hXmpbgLjQ2Xak6YnPtctQrMKyVEpYoUuf1KpKT7xhaypW
+         FhSydddrhV2PTqTPK8KNHcpFopXi8/YTwK8IJd8+yNhYT6VW47hVXVYHxJfvddKnNVNC
+         yTGizQ0e3/08SviGUjxkjWTqFKWZyZlZnDIZCVbCvRXaPf4Lk+kfs5nZsOXTCFWcCBOK
+         gcuLZ0QBEAD93Hdx01LCUph6ZZYZ81z48N+lPkopDI5z7ZXwFi89BxpvcqNOEzXDNyNi
+         x91w==
+X-Gm-Message-State: AOAM5313ElDR40H6lxCxifg3ToKgEAYilnoWsxQHnXPTcszU7Xc00Ft8
+        jAkPm4B78BrZGP3b99xbMAS6maxSKzk2YWpb4TEO74y16LLdyOb2Ri0qfsrQLq1Rg+ia9l+12EX
+        9RYhk1zOXSTOOMp3ZuTTwODcfrG1NzUAkjw==
+X-Received: by 2002:a17:906:c113:: with SMTP id do19mr3452285ejc.386.1640102766169;
+        Tue, 21 Dec 2021 08:06:06 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz+kRtxhqJ1CGneSm94jZP3MegGl113EQ2yZjMTqNZ5gCM6/LfJa6vjVtgAVr3CWxay7JN6Ig==
+X-Received: by 2002:a17:906:c113:: with SMTP id do19mr3452253ejc.386.1640102765935;
+        Tue, 21 Dec 2021 08:06:05 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id oz7sm2018016ejc.81.2021.12.21.08.06.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Dec 2021 08:06:05 -0800 (PST)
+Message-ID: <b858c808-6153-66fd-beb5-68595b148a7e@redhat.com>
+Date:   Tue, 21 Dec 2021 17:06:04 +0100
 MIME-Version: 1.0
-References: <20211221151243.66216-1-hdegoede@redhat.com> <20211221151243.66216-2-hdegoede@redhat.com>
-In-Reply-To: <20211221151243.66216-2-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Dec 2021 17:39:02 +0200
-Message-ID: <CAHp75Ve8NP4FQO1R6tsRV7G4rSmch-dX5ADKCb7E7Q83zqKyew@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/x86: x86-android-tablets: New driver for
- x86 Android tablets
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH 0/4] power: supply: add charge_behaviour property
+ (force-discharge, inhibit-charge)
+Content-Language: en-US
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>
+Cc:     linux-pm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        linux-kernel@vger.kernel.org, linrunner@gmx.net, bberg@redhat.com,
+        hadess@hadess.net, markpearson@lenovo.com,
+        nicolopiazzalunga@gmail.com, njoshi1@lenovo.com, smclt30p@gmail.com
+References: <20211123232704.25394-1-linux@weissschuh.net>
+ <20211203213305.dfjedjj3b25ftj2z@earth.universe>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211203213305.dfjedjj3b25ftj2z@earth.universe>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 5:13 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> x86 tablets which ship with Android as (part of) the factory image
-> typically have various problems with their DSDTs. The factory kernels
-> shipped on these devices typically have device addresses and GPIOs
-> hardcoded in the kernel, rather then specified in their DSDT.
->
-> With the DSDT containing a random collection of devices which may or
-> may not actually be present as well as missing devices which are
-> actually present.
->
-> This driver, which loads only on affected models based on DMI matching,
-> adds DMI based instantiating of kernel devices for devices which are
-> missing from the DSDT, fixing e.g. battery monitoring, touchpads and/or
-> accelerometers not working.
->
-> Note the Kconfig help text also refers to "various fixes" ATM there are
-> no such fixes, but there are also known cases where entries are present
-> in the DSDT but they contain bugs, such as missing/wrong GPIOs. The plan
-> is to also add fixes for things like this here in the future.
->
-> This is the least ugly option to get these devices to fully work and to
-> do so without adding any extra code to the main kernel image (vmlinuz)
-> when built as a module.
+Hi,
 
-...
+On 12/3/21 22:33, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Wed, Nov 24, 2021 at 12:27:00AM +0100, Thomas Weißschuh wrote:
+>> This series adds support for the charge_behaviour property to the power
+>> subsystem and thinkpad_acpi driver.
+>>
+>> As thinkpad_acpi has to use the 'struct power_supply' created by the generic
+>> ACPI driver it has to rely on custom sysfs attributes instead of proper
+>> power_supply properties to implement this property.
+>>
+>> Patch 1: Adds the power_supply documentation and basic public API
+>> Patch 2: Adds helpers to power_supply core to help drivers implement the
+>>   charge_behaviour attribute
+>> Patch 3: Adds support for force-discharge to thinkpad_acpi.
+>> Patch 4: Adds support for inhibit-discharge to thinkpad_acpi.
+>>
+>> Patch 3 and 4 are largely taken from other patches and adapted to the new API.
+>> (Links are in the patch trailer)
+>>
+>> Ognjen Galic:
+>>
+>> Your S-o-b is on the original inhibit_charge and force_discharge patches.
+>> I would like to add you as Co-developed-by but to do that it will also require
+>> your S-o-b. Could you give your sign-offs for the new patches, so you can be
+>> properly attributed?
+>>
+>> Sebastian Reichel:
+>>
+>> Currently the series does not actually support the property as a proper
+>> powersupply property handled fully by power_supply_sysfs.c because there would
+>> be no user for this property.
+> 
+> I'm not too happy how the acpi-battery hooks work, but that's not
+> your fault and this patchset does not really make the situation
+> worse. So:
+> 
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-> +config X86_ANDROID_TABLETS
-> +       tristate "X86 Android tablet support"
-> +       depends on I2C && ACPI
-> +       help
-> +         X86 tablets which ship with Android as (part of) the factory image
-> +         typically have various problems with their DSDTs. The factory kernels
-> +         shipped on these devices typically have device addresses and GPIOs
-> +         hardcoded in the kernel, rather then specified in their DSDT.
+Sebastian, I have taken the liberty to assume that this means that you are
+ok with merging the entire series through the pdx86 tree (I've done a test-merge
+with linux-power-supply/for-next and there are no conflicts).
 
-than
+Thomas, Thank you for your patch-series, I've applied the series
+to my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-> +
-> +         With the DSDT containing a random collection of devices which may or
-> +         may not actually be present. This driver contains various fixes for
-> +         such tablets, including instantiating kernel devices for devices which
-> +         are missing from the DSDT.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-...
+Regards,
 
-> +static const char * const chuwi_hi8_mount_matrix[] = {
-> +       "1", "0", "0",
-> +       "0", "-1", "0",
-> +       "0", "0", "1"
+Hans
 
-+ comma?
 
-> +};
 
-...
 
-> +       int ret = 0;
 
-> +       board_info.irq = x86_acpi_irq_helper_get(&client_info->irq_data);
-> +       if (board_info.irq < 0) {
-> +               ret = board_info.irq;
-> +               goto out;
-> +       }
+> 
+> -- Sebastian
+> 
+>> Previous discussions about the API:
+>>
+>> https://lore.kernel.org/platform-driver-x86/20211108192852.357473-1-linux@weissschuh.net/
+>> https://lore.kernel.org/platform-driver-x86/21569a89-8303-8573-05fb-c2fec29983d1@gmail.com/
+>>
+>> v1: https://lore.kernel.org/lkml/20211113104225.141333-1-linux@weissschuh.net/
+>> v1 -> v2:
+>>
+>> * Use sysfs_emit-APIs instead of plain sprintf
+>> * More cecks for actual feature availability
+>> * Validation of the written values
+>> * Read inhibit-charge via BICG instead of PSSG (peak shift state)
+>> * Don't mangle error numbers in charge_behaviour_store()
+>>
+>> Open points:
+>>
+>> Thomas Koch has observed that on a T450s with two batteries
+>> inhibit-charge on BAT0 will affect both batteries and for BAT1 it is ignored
+>> entirely, this seems to be a bug in the EC.
+>> On my T460s with two batteries it works correctly.
+>>
+>> Thomas Weißschuh (4):
+>>   power: supply: add charge_behaviour attributes
+>>   power: supply: add helpers for charge_behaviour sysfs
+>>   platform/x86: thinkpad_acpi: support force-discharge
+>>   platform/x86: thinkpad_acpi: support inhibit-charge
+>>
+>>  Documentation/ABI/testing/sysfs-class-power |  14 ++
+>>  drivers/platform/x86/thinkpad_acpi.c        | 191 +++++++++++++++++++-
+>>  drivers/power/supply/power_supply_sysfs.c   |  51 ++++++
+>>  include/linux/power_supply.h                |  16 ++
+>>  4 files changed, 268 insertions(+), 4 deletions(-)
+>>
+>>
+>> base-commit: 66f4beaa6c1d28161f534471484b2daa2de1dce0
+>> -- 
+>> 2.34.0
+>>
 
-Can we rather use
-ret = ...
-if (ret < 0)
- goto
-.irq = ret;
-
-?
-
-...
-
-> +       i2c_clients[idx] = i2c_new_client_device(adap, &board_info);
-> +       if (IS_ERR(i2c_clients[idx])) {
-
-> +               ret = PTR_ERR(i2c_clients[idx]);
-> +               pr_err("Error creating I2C-client %d: %d\n", idx, ret);
-
-dev_err_probe()? (device of the adapter)
-
-> +       }
-
-...
-
-> +out:
-
-out_put_device: ?
-
-> +       put_device(&adap->dev);
-> +       return ret;
-
-...
-
-> +       int i, ret = 0;
-
-Do you need this assignment? See below.
-
-...
-
-> +       for (i = 0; i < dev_info->i2c_client_count; i++) {
-> +               ret = x86_instantiate_i2c_client(dev_info, i);
-> +               if (ret < 0) {
-> +                       x86_android_tablet_cleanup();
-
-> +                       break;
-
-return ret; ?
-
-> +               }
-> +       }
-
-> +       return ret;
-
-return 0; ?
-
--- 
-With Best Regards,
-Andy Shevchenko
