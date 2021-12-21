@@ -2,70 +2,74 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5602C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Dec 2021 17:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6135AC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Dec 2021 17:58:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240743AbhLURzU (ORCPT
+        id S240798AbhLUR6V (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Dec 2021 12:55:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:49936 "EHLO
+        Tue, 21 Dec 2021 12:58:21 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:37335 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240738AbhLURzT (ORCPT
+        by vger.kernel.org with ESMTP id S240800AbhLUR6R (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Dec 2021 12:55:19 -0500
+        Tue, 21 Dec 2021 12:58:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640109318;
+        s=mimecast20190719; t=1640109496;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3YXqeevPDP+1UBV9Ug2JRSO8S/GdwQP1zLi0i9nvgv4=;
-        b=G5O5jfUvVEaX12qPZzX0C20hqpUvD6hQMjm/KaffHH1arcnvBzdk0Arm+uHML4QFrnPlB6
-        pehNABdPVxqdCwnKzoCI+LbsEDAmaiFYowGp6UVCZksveAZA6TGWldndpp7YvCNGt2M+pz
-        8SjDInbg/ykno6EkDIisxJsZ14eoSRQ=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=XcYSjP5MxF8ky63jKmhgS16ZkRXA53DCpgOi/5wh1dY=;
+        b=ODbrYJdo1HKq2QCJk5nIfglH7MOfRDQyDrDj3iDlcQxVsGxNIEm8OmaSkjSq9Ijn4xNKcF
+        gdNFMECSxo/BeZpvvzcL0l3pVrkypRkHqrSFwz0pal32cyqPq12IvxQfBq/LcVlmLM0dh/
+        ON415YVJ87vvhYG1ZK3sEk7sIobF/iQ=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-367-aQ8QW0qbM0u1hD-y_4ZCIw-1; Tue, 21 Dec 2021 12:55:17 -0500
-X-MC-Unique: aQ8QW0qbM0u1hD-y_4ZCIw-1
-Received: by mail-ed1-f69.google.com with SMTP id ay24-20020a056402203800b003f8491e499eso6344795edb.21
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 09:55:17 -0800 (PST)
+ us-mta-631-6Z8EZ5qMN9GD7S5-27BFbA-1; Tue, 21 Dec 2021 12:58:15 -0500
+X-MC-Unique: 6Z8EZ5qMN9GD7S5-27BFbA-1
+Received: by mail-ed1-f71.google.com with SMTP id c19-20020a05640227d300b003f81c7154fbso10318487ede.7
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 09:58:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=3YXqeevPDP+1UBV9Ug2JRSO8S/GdwQP1zLi0i9nvgv4=;
-        b=p0Jxr7wOwFFfc9Q4CXSE7e/Cy5NfMPbT3mjwYk4r8AWe/oCDqnlBb+5xbCgl/kk5dC
-         PCzv0704ORP93w456cQ2Sbj1TeexTGcRc3o+w9ce+tcEGWPYJGIHu1UpnmiyztoIrDsW
-         LQs+oVS93d1uXsaXQTXEz4fJ9wrXEGtMoRgsBnd2h86PwsXYrRAXkYfx/Kkep5wIMkGs
-         U8A1sxdCU52AQCbuiTRU8wVUbJAir7u31wisLhTWIEjJBeZJLn4YT0gnsnQ9ISqSkmiz
-         8rTFAUMvsoXpPmxD/qIa8MkJeicrcJshYK7CkrLgN5kyQAw0tejFEmhUYzquPT3ow0HV
-         IQvA==
-X-Gm-Message-State: AOAM533L8J/QpJc+O6CIUavmGKNIEWPhVsPqFeoB0aOogceVZIB2KnLq
-        lb1tsgawrEshHdnvHlduRYTqnVvaez4Jfh337MjEgeelWnSLG4VzNOjlDKCFDDnw2hQVUljtegC
-        10oFKxcJ4ev5FUsCyDiE+Y5gNnOOsb7SvoA==
-X-Received: by 2002:a17:906:4791:: with SMTP id cw17mr3628954ejc.493.1640109316431;
-        Tue, 21 Dec 2021 09:55:16 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxhnjbZGpEfw35mdVtyznmcec6Y6z3XDoARgDffbwJy9dlBGOtX35DazYuz05u65b4NohlByw==
-X-Received: by 2002:a17:906:4791:: with SMTP id cw17mr3628948ejc.493.1640109316280;
-        Tue, 21 Dec 2021 09:55:16 -0800 (PST)
+        bh=XcYSjP5MxF8ky63jKmhgS16ZkRXA53DCpgOi/5wh1dY=;
+        b=xCElwAIZpi81vl1NRAIcAL4DDy9/7beYan/b9tm6B67QHXAYelS6CTPCXR+7jvUM2G
+         RlKparZL3RXsYzwiN+M5bdeQoumlvv0CAipB/Xi4C/5afEIZq7kOLawpy+XH9Vjhu1bL
+         EwUVL/TqTihZ7+nfPJ9UvE5+5GBhftC7UdViCtKiftr1YZnwncAq+Ng06qWThmrIUVcm
+         8yEB2TnFR4eu5tqhQsZ/W88dZojniIA/EG/ndxtp9SqwXmVQfEjXHgVDJrhULQx2ddEB
+         rBRsIWi6qkYx0orP9Sv2KyDSXzMJKuemkmXQwuVZqeaiW8pMVIG4H89KLpczGxOaLeAs
+         2j7w==
+X-Gm-Message-State: AOAM531EFxzZhXDl+DflRaWzbqX57wUpE8R1l17MXsY8o7xiTAG4cuil
+        hxZzup04Xwc2fyKNVNAC7CRPsrqSABae28qCSVd5fvK2k3dJHWC0UUWTP6NjuzHQxHyUiOAFFsr
+        qbfgtaUge+rNNiuCd5KBaKfwvO+QfVH7o2w==
+X-Received: by 2002:a17:906:b047:: with SMTP id bj7mr3598173ejb.751.1640109494308;
+        Tue, 21 Dec 2021 09:58:14 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxuZAN4utpYI5CtBEON4RIMvzdZqcMLLNlWM8GTGHjVJImQn3HscBETkas7CT0bdtwB9kCUyQ==
+X-Received: by 2002:a17:906:b047:: with SMTP id bj7mr3598161ejb.751.1640109494090;
+        Tue, 21 Dec 2021 09:58:14 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id c30sm956098ejj.190.2021.12.21.09.55.15
+        by smtp.gmail.com with ESMTPSA id 1sm6792495ejg.163.2021.12.21.09.58.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Dec 2021 09:55:15 -0800 (PST)
-Message-ID: <3d99e6ad-bf81-43b4-9970-b91aa78b44e6@redhat.com>
-Date:   Tue, 21 Dec 2021 18:55:15 +0100
+        Tue, 21 Dec 2021 09:58:13 -0800 (PST)
+Message-ID: <ae75080a-e111-a4c5-81c4-6b5329f233ec@redhat.com>
+Date:   Tue, 21 Dec 2021 18:58:13 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH] platform: x86: use resource_size() with res
+Subject: Re: [PATCH] platform/x86: think-lmi: Prevent underflow in
+ index_store()
 Content-Language: en-US
-To:     Qing Wang <wangqing@vivo.com>, Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1639484316-75873-1-git-send-email-wangqing@vivo.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Mark Pearson <markpearson@lenovo.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20211217071209.GF26548@kili>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <1639484316-75873-1-git-send-email-wangqing@vivo.com>
+In-Reply-To: <20211217071209.GF26548@kili>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -74,13 +78,15 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/14/21 13:18, Qing Wang wrote:
-> From: Wang Qing <wangqing@vivo.com>
+On 12/17/21 08:12, Dan Carpenter wrote:
+> There needs to be a check to prevent negative offsets for
+> setting->index.  I have reviewed this code and I think that the
+> "if (block->instance_count <= instance)" check in __query_block() will
+> prevent this from resulting in an out of bounds access.  But it's
+> still worth fixing.
 > 
-> This should be (res->end - res->start + 1) here actually,
-> use resource_size() derectly.
-> 
-> Signed-off-by: Wang Qing <wangqing@vivo.com>
+> Fixes: 640a5fa50a42 ("platform/x86: think-lmi: Opcode support")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -100,21 +106,21 @@ Hans
 
 
 > ---
->  drivers/platform/x86/apple-gmux.c | 2 +-
+>  drivers/platform/x86/think-lmi.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-> index 9aae45a..57553f9
-> --- a/drivers/platform/x86/apple-gmux.c
-> +++ b/drivers/platform/x86/apple-gmux.c
-> @@ -625,7 +625,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  	}
+> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+> index 27ab8e4e5b83..0b73e16cccea 100644
+> --- a/drivers/platform/x86/think-lmi.c
+> +++ b/drivers/platform/x86/think-lmi.c
+> @@ -573,7 +573,7 @@ static ssize_t index_store(struct kobject *kobj,
+>  	if (err < 0)
+>  		return err;
 >  
->  	gmux_data->iostart = res->start;
-> -	gmux_data->iolen = res->end - res->start;
-> +	gmux_data->iolen = resource_size(res);
+> -	if (val > TLMI_INDEX_MAX)
+> +	if (val < 0 || val > TLMI_INDEX_MAX)
+>  		return -EINVAL;
 >  
->  	if (gmux_data->iolen < GMUX_MIN_IO_LEN) {
->  		pr_err("gmux I/O region too small (%lu < %u)\n",
+>  	setting->index = val;
 > 
 
