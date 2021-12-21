@@ -2,144 +2,155 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4176FC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Dec 2021 22:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B2FC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Dec 2021 06:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232540AbhLTW3W (ORCPT
+        id S233416AbhLUGlU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Dec 2021 17:29:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55172 "EHLO
+        Tue, 21 Dec 2021 01:41:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232537AbhLTW3W (ORCPT
+        with ESMTP id S233369AbhLUGlU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Dec 2021 17:29:22 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF11C06173E
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Dec 2021 14:29:21 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id l145-20020a25cc97000000b005c5d04a1d52so22097785ybf.23
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Dec 2021 14:29:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=fksgA1JsDJpYuy0g0e7IGPB8FkPT8ahC676Z+SBk5d0=;
-        b=e+5atsRINdfmhMu85Kr/tAJ7TrsaeUuxdCQLTvU0+Xrk4IYm96lVIa+5DRuZfPxMtY
-         MNbBAfxGzbhcucB8PMyMvRB7XBftaV5ZXWJxiiAoIqGt6ldQEPwx21iGX9GgZesD9jx3
-         htU6B+xl/3DoWdZupBUOHRLqmNnQd+CyigxzAJTFB3ABYke0O50KOencRIXmkEvRbllz
-         c6e+a3masCoiLqB33CZbf8dLtOO0/QqbPf9kVrvFEhvs6On0IdSUT53xBiUwh32VDhQK
-         SEThbYVuxk6HdFQ+lPeoHPIdaw/WhO4ddxGUTa3fgP/8XEb0Nh39J5sSd3fcFccajl9y
-         trkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=fksgA1JsDJpYuy0g0e7IGPB8FkPT8ahC676Z+SBk5d0=;
-        b=zqkYrUzz7rwRGfDL2MiCETr7a/21Gec61xd086oED8vLugG62NQ8muoGiSln/F+jKE
-         wP5Z03AOESEQn03Fv/eok4ZPftGhB0guPUkW+VawlGFSzK7Grxfafa+VGhoSsWSWGTd4
-         r0RZm3EC8Y5eeTCuTPmB0R+R1VCEBbPSo/GN2arGflQyLA0RPKolhHfae5uEebieJCS7
-         PF/UaUk2Fu+Hl+HQ3zEwiabFWqjizaYTGwTnwFrn48alYHCB/mGB/GbBTR+CGgel+AUa
-         wmwfd1ety4K0zY06eGsdoHDI59AzT+82tWA5ZX5ivaA6pdbhZnXols3eIFQEq3IFFilL
-         ohpw==
-X-Gm-Message-State: AOAM530fSOndCsOJwPGd+Xi84Pcn+KENyzVEudy8nlYee3dzZ16OI+J1
-        XPi60mVR6UFtDMv0o+FLqYYk6gGOISIs
-X-Google-Smtp-Source: ABdhPJzrXPMAorJsrHo+Qwly1Bs2XrhOf9wwHctqzTpYT/FCrcPqa8tsV3CcEMZ8RHpJyIAgOErATcevbHqr
-X-Received: from rajat2.mtv.corp.google.com ([2620:15c:202:201:f6d7:6572:2e42:ea7d])
- (user=rajatja job=sendgmr) by 2002:a25:3b95:: with SMTP id
- i143mr380252yba.423.1640039360896; Mon, 20 Dec 2021 14:29:20 -0800 (PST)
-Date:   Mon, 20 Dec 2021 14:28:28 -0800
-In-Reply-To: <20211220222828.2625444-1-rajatja@google.com>
-Message-Id: <20211220222828.2625444-3-rajatja@google.com>
-Mime-Version: 1.0
-References: <20211220222828.2625444-1-rajatja@google.com>
-X-Mailer: git-send-email 2.34.1.307.g9b7440fafd-goog
-Subject: [PATCH v3 3/3] drm/privacy_screen_x86: Add entry for ChromeOS privacy-screen
-From:   Rajat Jain <rajatja@google.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Benson Leung <bleung@chromium.org>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, gwendal@google.com,
-        seanpaul@google.com, marcheu@google.com, dtor@google.com
-Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 21 Dec 2021 01:41:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A36DC061574;
+        Mon, 20 Dec 2021 22:41:20 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C7748B811BC;
+        Tue, 21 Dec 2021 06:41:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF834C36AE7;
+        Tue, 21 Dec 2021 06:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1640068877;
+        bh=ylv71IjLQIClbad2LwfXZJJ7QyLDq1p0XqsAvIfjF0E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qHJOk3sLAlFO7TaKjGyzKiY0cn6b7FUC2krnWAIRaPlVdE30eujy5kqtZvXwZM4j9
+         x1m6PDM73EQaCKeFPtatH5b5fcnpEmc1cm7U+fLUW48b9eNEqZAaUUkSYMc2Qeqkk5
+         uD7KEfIsnrosa6gkKzFyUOG/oUDmqEUxiS+ljIU0=
+Date:   Tue, 21 Dec 2021 07:41:15 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Martin Fernandez <martin.fernandez@eclypsium.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        rafael@kernel.org, rppt@kernel.org, akpm@linux-foundation.org,
+        daniel.gutson@eclypsium.com, hughsient@gmail.com,
+        alex.bazhaniuk@eclypsium.com, alison.schofield@intel.com
+Subject: Re: [PATCH v4 3/5] x86/e820: Tag e820_entry with crypto capabilities
+Message-ID: <YcF3C9kfVoRqKamp@kroah.com>
+References: <20211216192222.127908-1-martin.fernandez@eclypsium.com>
+ <20211216192222.127908-4-martin.fernandez@eclypsium.com>
+ <YcCxUHSMnUJgXIJF@kroah.com>
+ <CAKgze5boi5h08ffpodqsKp5xNS=+u_zJWEVnExdbsXRgJ+eCTQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgze5boi5h08ffpodqsKp5xNS=+u_zJWEVnExdbsXRgJ+eCTQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a static entry in the x86 table, to detect and wait for
-privacy-screen on some ChromeOS platforms.
+On Mon, Dec 20, 2021 at 05:27:00PM -0300, Martin Fernandez wrote:
+> On 12/20/21, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > On Thu, Dec 16, 2021 at 04:22:20PM -0300, Martin Fernandez wrote:
+> >> diff --git a/arch/x86/include/asm/e820/types.h
+> >> b/arch/x86/include/asm/e820/types.h
+> >> index 314f75d886d0..7b510dffd3b9 100644
+> >> --- a/arch/x86/include/asm/e820/types.h
+> >> +++ b/arch/x86/include/asm/e820/types.h
+> >> @@ -56,6 +56,7 @@ struct e820_entry {
+> >>  	u64			addr;
+> >>  	u64			size;
+> >>  	enum e820_type		type;
+> >> +	u8			crypto_capable;
+> >
+> > Why isn't this a bool?
+> 
+> It was a bool initially, but Andy Shevchenko told me that it couldn't
+> be that way because boolean may not be part of firmware ABIs.
 
-Please note that this means that if CONFIG_CHROMEOS_PRIVACY_SCREEN is
-enabled, and if "GOOG0010" device is found in ACPI, then the i915 probe
-shall return EPROBE_DEFER until a platform driver actually registers the
-privacy-screen: https://hansdegoede.livejournal.com/25948.html
+Where does this structure hit an "ABI"?  Looks internal to me.  If not,
+then something just broke anyway.
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-v3: * Remove the pr_info() from detect_chromeos_privacy_screen(), instead
-      enhance the one already present in drm_privacy_screen_lookup_init()
-v2: * Use #if instead of #elif
-    * Reorder the patches in the series.
-    * Rebased on drm-tip
+> >> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> >> index bc0657f0deed..001d64686938 100644
+> >> --- a/arch/x86/kernel/e820.c
+> >> +++ b/arch/x86/kernel/e820.c
+> >> @@ -163,7 +163,7 @@ int e820__get_entry_type(u64 start, u64 end)
+> >>  /*
+> >>   * Add a memory region to the kernel E820 map.
+> >>   */
+> >> -static void __init __e820__range_add(struct e820_table *table, u64 start,
+> >> u64 size, enum e820_type type)
+> >> +static void __init __e820__range_add(struct e820_table *table, u64 start,
+> >> u64 size, enum e820_type type, u8 crypto_capable)
+> >
+> > Horrid api change, but it's internal to this file so oh well :(
+> >
+> > Hint, don't add flags to functions like this, it forces you to have to
+> > always remember what those flags are when you read the code.  Right now
+> > you stuck "0" and "1" in the function call, which is not instructional
+> > at all.
+> >
+> > Heck, why not make it an enum to have it be self-describing?  Like the
+> > type is here.  that would make it much better and easier to understand
+> > and maintain over time.
+> >
+> 
+> Yes, an enum will absolutely improve things. I'll do that.
+> 
+> >> @@ -327,6 +330,7 @@ int __init e820__update_table(struct e820_table
+> >> *table)
+> >>  	unsigned long long last_addr;
+> >>  	u32 new_nr_entries, overlap_entries;
+> >>  	u32 i, chg_idx, chg_nr;
+> >> +	u8 current_crypto, last_crypto;
+> >>
+> >>  	/* If there's only one memory region, don't bother: */
+> >>  	if (table->nr_entries < 2)
+> >> @@ -367,6 +371,7 @@ int __init e820__update_table(struct e820_table
+> >> *table)
+> >>  	new_nr_entries = 0;	 /* Index for creating new map entries */
+> >>  	last_type = 0;		 /* Start with undefined memory type */
+> >>  	last_addr = 0;		 /* Start with 0 as last starting address */
+> >> +	last_crypto = 0;
+> >>
+> >>  	/* Loop through change-points, determining effect on the new map: */
+> >>  	for (chg_idx = 0; chg_idx < chg_nr; chg_idx++) {
+> >> @@ -388,13 +393,17 @@ int __init e820__update_table(struct e820_table
+> >> *table)
+> >>  		 * 1=usable, 2,3,4,4+=unusable)
+> >>  		 */
+> >>  		current_type = 0;
+> >> +		current_crypto = 1;
+> >>  		for (i = 0; i < overlap_entries; i++) {
+> >> +			current_crypto = current_crypto && overlap_list[i]->crypto_capable;
+> >
+> > Is it a u8 or not?  You treat it as a boolean a lot :(
+> >
+> >>  			if (overlap_list[i]->type > current_type)
+> >>  				current_type = overlap_list[i]->type;
+> >>  		}
+> >>
+> >>  		/* Continue building up new map based on this information: */
+> >> -		if (current_type != last_type || e820_nomerge(current_type)) {
+> >> +		if (current_type != last_type ||
+> >> +		    current_crypto != last_crypto ||
+> >> +		    e820_nomerge(current_type)) {
+> >
+> > Why check it before calling e820_nomerge()?  Is that required?
+> >
+> 
+> I don't see how the order of the checks matter, am I missing something?
 
- drivers/gpu/drm/drm_privacy_screen_x86.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+It might prevent this function from being called now when it previously
+was.  Is that ok?
 
-diff --git a/drivers/gpu/drm/drm_privacy_screen_x86.c b/drivers/gpu/drm/drm_privacy_screen_x86.c
-index a2cafb294ca6..0fdd2b500e6d 100644
---- a/drivers/gpu/drm/drm_privacy_screen_x86.c
-+++ b/drivers/gpu/drm/drm_privacy_screen_x86.c
-@@ -47,6 +47,16 @@ static bool __init detect_thinkpad_privacy_screen(void)
- }
- #endif
- 
-+#if IS_ENABLED(CONFIG_CHROMEOS_PRIVACY_SCREEN)
-+static bool __init detect_chromeos_privacy_screen(void)
-+{
-+	if (!acpi_dev_present("GOOG0010", NULL, -1))
-+		return false;
-+
-+	return true;
-+}
-+#endif
-+
- static const struct arch_init_data arch_init_data[] __initconst = {
- #if IS_ENABLED(CONFIG_THINKPAD_ACPI)
- 	{
-@@ -58,6 +68,16 @@ static const struct arch_init_data arch_init_data[] __initconst = {
- 		.detect = detect_thinkpad_privacy_screen,
- 	},
- #endif
-+#if IS_ENABLED(CONFIG_CHROMEOS_PRIVACY_SCREEN)
-+	{
-+		.lookup = {
-+			.dev_id = NULL,
-+			.con_id = NULL,
-+			.provider = "privacy_screen-GOOG0010:00",
-+		},
-+		.detect = detect_chromeos_privacy_screen,
-+	},
-+#endif
- };
- 
- void __init drm_privacy_screen_lookup_init(void)
-@@ -68,7 +88,8 @@ void __init drm_privacy_screen_lookup_init(void)
- 		if (!arch_init_data[i].detect())
- 			continue;
- 
--		pr_info("Found '%s' privacy-screen provider\n",
-+		pr_info("Found '%s' privacy-screen provider."
-+			"Might have to defer probe for it...\n",
- 			arch_init_data[i].lookup.provider);
- 
- 		/* Make a copy because arch_init_data is __initconst */
--- 
-2.34.1.307.g9b7440fafd-goog
+thanks,
 
+greg k-h
