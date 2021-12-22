@@ -2,149 +2,185 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CDEC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 12:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82974C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 12:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241244AbhLVMv4 (ORCPT
+        id S245027AbhLVM5N (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Dec 2021 07:51:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40314 "EHLO
+        Wed, 22 Dec 2021 07:57:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241182AbhLVMv4 (ORCPT
+        with ESMTP id S233901AbhLVM5M (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Dec 2021 07:51:56 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D66C061574
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Dec 2021 04:51:55 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id j6so8160870edw.12
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Dec 2021 04:51:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zgO1V1cXjXM68tSLUV05SN02znR2LZXapD+QXrPlsNU=;
-        b=bWrg1GEBFuY0sNBjDQqua98nBf7W9HnYq+TAVOS4t45dFe4mdKIJMAaTqwnFdrkvD6
-         pfVYqNOCaVg8hl1YeIA907Io/EGEvpHup6AHktkv0phmB7GKqrfYpQZ8yoVSQSFKxxTM
-         G6pSOSoUpaTNfRlLRgJ/Jneom0mJxtBWg9FePx+Z6ii3Su5VLr6IfXvhrZFfnnoQD5/E
-         yom0ZxpKXKdKvAL+9s6+raQjfNLa9gvJxbAAgr7TdyW3j7JoSP8EvrQou6m6VcatKUsi
-         +TKKNutOaAvonXG6n5nHwspZpbvbIidleYO88fBLWkGSgxIcQbR+po7N99PDwquX1nnF
-         HoRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zgO1V1cXjXM68tSLUV05SN02znR2LZXapD+QXrPlsNU=;
-        b=DHGRNhqM9uN2FpxMcFMdiKZI+c3La6sNqzW3kMxYAzJ0UZTAllEr3jqOEMqg08WwGy
-         fBTYPm95MY7LRP2P36lWkhYXm3BFL1u4ZJafnuj2eocuKpQy0+vKWGBidOtfk6yFMCA2
-         l9fkIBhnlsA+acAxc7NTUT3vHthw9w/r53m7Z5XHPSxBsbftA+SJR/wNGvrNmBccYpnk
-         qDlj+yFElHr0O9nzyaayH0QbYFN0wbFT2mk8tEC0/SVlO0ClAT9TSFvarHP/f0n3cvlv
-         vjM96VAZwGEIn/qoZ2YLVSPYdkZXOEw7cmjKv2O+e0q26PcXL3Cvq41B5xbYWXTC1WP0
-         d8xg==
-X-Gm-Message-State: AOAM533S8CueQ14n3hbtb7qZVNqPu1s/kqcoS8A60ZG9pgg5uS6J2O/m
-        yb4docEKnCDLIfetRGAHf/lw8WwJye7/24sSrHc=
-X-Google-Smtp-Source: ABdhPJz3viJ71wUDckkypL/zUeTFFxsf415rpmkCFIfToUm9vbADCTyWMD+wp570UI9tNS4zL+gG/NIjYmAYFAWywEM=
-X-Received: by 2002:a17:906:c450:: with SMTP id ck16mr2246993ejb.579.1640177514470;
- Wed, 22 Dec 2021 04:51:54 -0800 (PST)
+        Wed, 22 Dec 2021 07:57:12 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B60C061574;
+        Wed, 22 Dec 2021 04:57:12 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 24042B819C9;
+        Wed, 22 Dec 2021 12:57:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 581CDC36AE8;
+        Wed, 22 Dec 2021 12:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1640177829;
+        bh=DZHZR74Wmdv1RT8DZTvhHyHxk/8UcomFC4JcqKGKo/U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EKq4/MTiROv1nwsHueBcs8ZE/6uIqEOgKnaQpwkSjKrPkl4rIkWWfuLSKJ9RYoveB
+         I6P+ixlixVbQomdzq7e2nZpOG2AExsXehfdnL08mjYs8ziFqN+uqqRN4Cjkt4GhQNP
+         W0RkGWGiz45rLiWzn8NOQJte0v1l+Zw71VJWU/uU=
+Date:   Wed, 22 Dec 2021 13:57:07 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     david.e.box@linux.intel.com, lee.jones@linaro.org,
+        bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org, Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH RESEND V2 3/6] platform/x86/intel: Move intel_pmt from
+ MFD to Auxiliary Bus
+Message-ID: <YcMgoxbi6PwLQXzM@kroah.com>
+References: <YbD1NsYHbU8FvtTN@kroah.com>
+ <a70956e1c4da10603e29087e893cbae62ce82631.camel@linux.intel.com>
+ <YbEFuN7fwdiNI8vW@kroah.com>
+ <622887d53eaf6e6ae36354bfa0ed483df1cd9214.camel@linux.intel.com>
+ <YcGEaH0oAAocziU2@kroah.com>
+ <e9648546c3fb751954e411dfa392f0e0f90f0c85.camel@linux.intel.com>
+ <YcIGwZqm2sfIixkH@kroah.com>
+ <3913dfd7-3872-7d69-24af-eba747a7a92d@redhat.com>
+ <be2a1cce5691e5dc7fb875f46d5f2085b6a55542.camel@linux.intel.com>
+ <8c9d0a86-cbbb-be1b-41b1-61f27890b77d@redhat.com>
 MIME-Version: 1.0
-References: <20211221151243.66216-1-hdegoede@redhat.com> <CAHp75VcCMeuSHkQT=azcEZeFxqU9_Na2yiXESEBvNqniyhtDvg@mail.gmail.com>
- <32e68787-66ec-1522-0fea-e11130a428b8@redhat.com> <YcMd7dn+RCVrKOlj@lahna>
-In-Reply-To: <YcMd7dn+RCVrKOlj@lahna>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 22 Dec 2021 14:49:56 +0200
-Message-ID: <CAHp75VcP1Ca1Y0tB0MeKmjxbCGO5puiQuNJmv0K4U1ase+XQvQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] platform/x86: Add x86-acpi-irq-helpers.h
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8c9d0a86-cbbb-be1b-41b1-61f27890b77d@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Dec 22, 2021 at 2:47 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> On Tue, Dec 21, 2021 at 07:58:26PM +0100, Hans de Goede wrote:
-> > On 12/21/21 16:27, Andy Shevchenko wrote:
-> > > On Tue, Dec 21, 2021 at 5:13 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> > >>
-> > >> Add helper code to get Linux IRQ numbers given a description of the IRQ
-> > >> source (either IOAPIC index, or GPIO chip name + pin-number).
-> > >>
-> > >> This is intended to be used to lookup Linux IRQ numbers in cases where the
-> > >> ACPI description for a device somehow lacks this info. This is only meant
-> > >> for use on x86 ACPI platforms.
-> > >>
-> > >> This code is big/complex enough to warrant sharing, but too small to live
-> > >> in its own module, therefor x86_acpi_irq_helper_get() is defined as
-> > >> a static inline helper function.
-> > >
-> > > ...
-> > >
-> > >> +/* For gpio_get_desc which is EXPORT_SYMBOL_GPL() */
-> > >
-> > > gpio_get_desc()
-> >
-> > Fixed in my local version.
-> >
-> > > and honestly I don't like this kind of includes (yes,
-> > > I know sometimes it's the best compromise).
-> > >
-> > >> +#include "../../gpio/gpiolib.h"
-> > >
-> > > ...
-> > >
-> > >> +               /* Like acpi_dev_gpio_irq_get(), but without parsing ACPI resources */
-> > >> +               chip = gpiochip_find(data->gpio_chip, x86_acpi_irq_helper_gpiochip_find);
-> > >> +               if (!chip)
-> > >> +                       return -EPROBE_DEFER;
-> > >> +
-> > >> +               gpiod = gpiochip_get_desc(chip, data->index);
-> > >> +               if (IS_ERR(gpiod)) {
-> > >> +                       ret = PTR_ERR(gpiod);
-> > >> +                       pr_err("error %d getting GPIO %s %d\n", ret,
-> > >> +                              data->gpio_chip, data->index);
-> > >> +                       return ret;
-> > >> +               }
-> > >> +
-> > >> +               irq = gpiod_to_irq(gpiod);
-> > >> +               if (irq < 0) {
-> > >> +                       pr_err("error %d getting IRQ %s %d\n", irq,
-> > >> +                              data->gpio_chip, data->index);
-> > >> +                       return irq;
-> > >> +               }
-> > >> +
-> > >> +               irq_type = acpi_dev_get_irq_type(data->trigger, data->polarity);
-> > >> +               if (irq_type != IRQ_TYPE_NONE && irq_type != irq_get_trigger_type(irq))
-> > >> +                       irq_set_irq_type(irq, irq_type);
-> > >> +
-> > >> +               return irq;
-> > >
-> > > I'm wondering why it can't be a part of the GPIO ACPI library?
-> >
-> > Interesting suggestion, but this really is only intended for the
-> > special case when the DSDT is missing this info. I'm a bit worried
-> > that having this available as a generic helper may lead to it
-> > getting used too much. But I guess we can just put a comment on it
-> > explaining that normally its use should be avoided.
-> >
-> > I've added Mika to the Cc, Mika, what do you think about adding this
-> > as a new helper to the GPIO ACPI library ?
->
-> Preferably no :-) Reason is that even if we add comment to the function
-> you don't remember it after two weeks so the next patch adding another
-> user will not be noticed by reviewers (unless tha name of the function
-> clearly says it is a quirk/workaround).
+On Tue, Dec 21, 2021 at 07:38:38PM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 12/21/21 19:16, David E. Box wrote:
+> > On Tue, 2021-12-21 at 18:04 +0100, Hans de Goede wrote:
+> >> Hi,
+> >>
+> >> On 12/21/21 17:54, Greg KH wrote:
+> >>> On Tue, Dec 21, 2021 at 08:44:57AM -0800, David E. Box wrote:
+> >>>> On Tue, 2021-12-21 at 08:38 +0100, Greg KH wrote:
+> >>>>> On Wed, Dec 08, 2021 at 01:30:06PM -0800, David E. Box wrote:
+> >>>>>> On Wed, 2021-12-08 at 20:21 +0100, Greg KH wrote:
+> >>>>>>> On Wed, Dec 08, 2021 at 11:09:48AM -0800, David E. Box wrote:
+> >>>>>>>> On Wed, 2021-12-08 at 19:11 +0100, Greg KH wrote:
+> >>>>>>>>> On Wed, Dec 08, 2021 at 09:47:26AM -0800, David E. Box wrote:
+> >>>>>>>>>> On Wed, 2021-12-08 at 17:22 +0100, Greg KH wrote:
+> >>>>>>>>>>> On Tue, Dec 07, 2021 at 05:50:12PM -0800, David E. Box
+> >>>>>>>>>>> wrote:
+> >>>>>>>>>>>> +static struct pci_driver intel_vsec_pci_driver = {
+> >>>>>>>>>>>> +       .name = "intel_vsec",
+> >>>>>>>>>>>> +       .id_table = intel_vsec_pci_ids,
+> >>>>>>>>>>>> +       .probe = intel_vsec_pci_probe,
+> >>>>>>>>>>>> +};
+> >>>>>>>>>>>
+> >>>>>>>>>>> So when the PCI device is removed from the system you leak
+> >>>>>>>>>>> resources and
+> >>>>>>>>>>> have dangling devices?
+> >>>>>>>>>>
+> >>>>>>>>>> No.
+> >>>>>>>>>>
+> >>>>>>>>>>> Why no PCI remove driver callback?
+> >>>>>>>>>>
+> >>>>>>>>>> After probe all resources are device managed. There's nothing
+> >>>>>>>>>> to
+> >>>>>>>>>> explicitly clean up. When
+> >>>>>>>>>> the
+> >>>>>>>>>> PCI
+> >>>>>>>>>> device is removed, all aux devices are automatically removed.
+> >>>>>>>>>> This
+> >>>>>>>>>> is the case for the SDSi
+> >>>>>>>>>> driver
+> >>>>>>>>>> as well.
+> >>>>>>>>>
+> >>>>>>>>> Where is the "automatic cleanup" happening?  As this pci driver
+> >>>>>>>>> is
+> >>>>>>>>> bound
+> >>>>>>>>> to the PCI device, when the device is removed, what is called in
+> >>>>>>>>> this
+> >>>>>>>>> driver to remove the resources allocated in the probe callback?
+> >>>>>>>>>
+> >>>>>>>>> confused,
+> >>>>>>>>
+> >>>>>>>> devm_add_action_or_reset(&pdev->dev, intel_vsec_remove_aux,
+> >>>>>>>> auxdev)
+> >>>>>>>
+> >>>>>>> Wow that is opaque.  Why not do it on remove instead?
+> >>>>>>
+> >>>>>> This code is common for auxdev cleanup. AFAICT most auxiliary bus code
+> >>>>>> is
+> >>>>>> done by drivers that have
+> >>>>>> some other primary function. They clean up their primary function
+> >>>>>> resources
+> >>>>>> in remove, but they
+> >>>>>> clean up the auxdev using the method above. In this case the sole
+> >>>>>> purpose of
+> >>>>>> this driver is to
+> >>>>>> create the auxdev. There are no other resources beyond what the auxdev
+> >>>>>> is
+> >>>>>> using.
+> >>>>>>
+> >>>>>> Adding runtime pm to the pci driver will change this. Remove will be
+> >>>>>> needed
+> >>>>>> then.
+> >>>>>
+> >>>>> And who will notice that being required when that happens?
+> >>>>>
+> >>>>> Why is there no runtime PM for this driver?  Do you not care about power
+> >>>>> consumption?  :)
+> >>>>
+> >>>> Of course. :)
+> >>>>
+> >>>> There's a backlog of patches waiting for this series. One adds support for
+> >>>> the
+> >>>> telemetry device (an auxdev) on the DG2 GPU. This device requires runtime
+> >>>> pm in
+> >>>> order for the slot to go D3. But this also requires changes to the
+> >>>> telemetry
+> >>>> driver in order for runtime pm to be handled correctly. These and other
+> >>>> patches,
+> >>>> including a series to have all current aux drivers use the new drvdata
+> >>>> helpers,
+> >>>> are waiting for this.
+> >>>
+> >>> I can take the aux driver drvdata patch now, through my tree, if you
+> >>> want, no need to make it wait for this tiny driver.
+> >>>
+> >>> Feel free to send it independant of the existing patchset, and with the
+> >>> cleanup patches at the same time, should be quite easy to get merged.
+> >>
+> >> If you're going to take that one, can you perhaps take patches
+> >> 1-3 for 5.17 through your tree as well (patch 3 depends on 2/it) ?
+> >>
+> >> Note there is a v4 of this series, see please use that :)
+> >>
+> >> I assume the follow up patches are also going to need patch 3
+> >> (the actual conversion of the driver to aux-bus).
+> > 
+> > Yes.
+> > 
+> >>
+> >> Here is my Ack for the pdx86 bits in patch 3:
+> >>
+> >> Acked-by: Hans de Goede <hdegoede@redhat.com>
+> >>
+> >> And patch 1 and 3 also have acks from the PCI resp. MFD subsys maintainers,
+> >> so I guess taking this all upstream through your tree is fine.
+> > 
+> > Should I send 1-3 plus the drvdata cleanup patches I have to Grep? V5?
+> 
+> No there is no need for that v4 is fine, since no changes have been
+> requested there is no need to send out a new version.
 
-Oh, we have a solution for this already, it's called an export
-namespace. We may export symbols in its own namespace and any user
-must to import it. It will show immediately who is trying to do "bad
-things". Code duplication makes kernel bigger and harder to maintain.
-Imagine if there is an issue or refactoring happening in one copy of
-the code and missed in the other. How long would it take to discover
-that and fix it?
+I've taken patches 1-3 of this series now, thanks.
 
--- 
-With Best Regards,
-Andy Shevchenko
+greg k-h
