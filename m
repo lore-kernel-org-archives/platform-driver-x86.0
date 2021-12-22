@@ -2,202 +2,164 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF46C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Dec 2021 23:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923E7C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 00:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237066AbhLUXXz (ORCPT
+        id S238312AbhLVALd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Dec 2021 18:23:55 -0500
-Received: from mail-qt1-f178.google.com ([209.85.160.178]:36655 "EHLO
-        mail-qt1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237047AbhLUXXy (ORCPT
+        Tue, 21 Dec 2021 19:11:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238309AbhLVALc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Dec 2021 18:23:54 -0500
-Received: by mail-qt1-f178.google.com with SMTP id t11so380867qtw.3;
-        Tue, 21 Dec 2021 15:23:54 -0800 (PST)
+        Tue, 21 Dec 2021 19:11:32 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294FBC06173F
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 16:11:32 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id q123-20020a252a81000000b00609e97bb74bso949197ybq.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 16:11:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Zf1L40lovHUL9SJ/tEH+usL7zMPf50vfNUe2p7oE4n0=;
+        b=cHD/hvO2XV4Ap+xwuZlnMwVgBK9f70YzvuReNTOUFc8qxoRwyuow2t4NfjtCNNSyN1
+         +SMvCAzozxHFM/4X4WIIAXZRVK3l7UTdOvLi/h3e+2nJWjJI+dNAQNuUvPKv5KhJEr6O
+         tqhpNyhaOKVnrXlDsZDj33W5nyi2i3z/yGNtLfkl5xH7z9/4lQdu0ES29RjCcgsQyuHW
+         M6Fds1uF3xg7UuagjFX6YvoWPxhC/QSyxHOAEdaBHeRyViN+ljsXP3HgNKO4zsvU/Evb
+         uxfpO83dEywhC/oTPRductb6X+CTVEyFdX8vd0bjqXpmiK3D0sYVGAypLn3B9aa4+d4B
+         cDXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5MQc/hNj4+GOUJzjR6yeM8B4B8YsX41VgZGOk9H3GV8=;
-        b=KtEhjnDGHkOZMxPfumq5OPX9KM5ZRkmOR5nxA9+b1M/P5axxqXlKGajb6SFC1YlBWo
-         D0KCyDi3IMp+/j+aE3RNI/w1WQkcXw5HMqR52RcYUYYk6PnbSjncGNYPmJF2LV0MJ7sX
-         75oIl1OCnNdynrpDSgWlK6PoOpU1OI+mj2KyW0DOHv6W5ToCagvBErmRGrjs+fJfUAox
-         SHrdS2xd6kiPx/rXYgI5OysrVER/K0WhZXcI7p1dqs6fdZEXPt9JVN5//eqqXqgRdyos
-         /EwaGKCYtqJgIkhU4WaowuU3/wKVHDeDNpY6XcQgXnPSAYLscyJbfMwfNznGLR++91L2
-         JUeg==
-X-Gm-Message-State: AOAM5319TGWvpYRy66D3HIrIcOdOEt752uKc9mAOTKkZimBKKepnuj7N
-        zzMapYY1OcqLHBPeAa5SiQ==
-X-Google-Smtp-Source: ABdhPJyoZR2FMM/fuaf7CtFHWhnwXucqmgTqGR1t2y8gxLZP6mUXsOWl0zCBITZHkfLpeV/Z3EXGKA==
-X-Received: by 2002:a05:622a:120d:: with SMTP id y13mr399630qtx.155.1640129033644;
-        Tue, 21 Dec 2021 15:23:53 -0800 (PST)
-Received: from robh.at.kernel.org ([24.55.105.145])
-        by smtp.gmail.com with ESMTPSA id e7sm288557qtx.72.2021.12.21.15.23.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Dec 2021 15:23:52 -0800 (PST)
-Received: (nullmailer pid 1708618 invoked by uid 1000);
-        Tue, 21 Dec 2021 23:23:50 -0000
-Date:   Tue, 21 Dec 2021 19:23:50 -0400
-From:   Rob Herring <robh@kernel.org>
-To:     Jarrett Schultz <jaschultzms@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>, bjorn.andersson@linaro.org,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Zf1L40lovHUL9SJ/tEH+usL7zMPf50vfNUe2p7oE4n0=;
+        b=AIh/OAyxqfbNDgbi5kufRaMhdnxsxePMqXKjL9JQ4KegEtB/4Le7UW7a5JYAyHeKfn
+         XdJ2VIdjL2HuX5TdlGACCT+xHK+IhmeVQYzEUpCYeZ69JcsnAPodulv/gd6VrVf6LP2e
+         sIe74Hbc6r6wPfHVOqNDjFMt+8N45KbLtRbA7Bb7cKFAqgvdjAZN5vrk9CohJ/ESG3Ly
+         yOjDr7nSuctYVeZC1jSrxKQhnJgIQqIgBmx4JcC3quHgZCMBKg/cUfeMp+eutDb+IdtE
+         MPRmKATIpuItZRF7STJPCS21R/m5lWY6UAQG1mCrL0bLOJlnjnSGeBaVCiguvqcncWwZ
+         7bwQ==
+X-Gm-Message-State: AOAM531b1jwu1JgCjOW3/I7yrmeOVXZcAmkEqqVXeSN3DeEy6QM6QkMk
+        hR9ovpGQnUaL9RLqja57C5jU5qAGBoPN
+X-Google-Smtp-Source: ABdhPJwnjW+UUDsxuYI0HjgRll7hXtnZtZAaPGK6D3q+0RJP2LzLOaJxw3AMeO9DTk5tn2PH/oMWU+XYQwCs
+X-Received: from rajat2.mtv.corp.google.com ([2620:15c:202:201:8d27:feea:1b0b:3782])
+ (user=rajatja job=sendgmr) by 2002:a25:a449:: with SMTP id
+ f67mr1063772ybi.368.1640131891238; Tue, 21 Dec 2021 16:11:31 -0800 (PST)
+Date:   Tue, 21 Dec 2021 16:11:25 -0800
+Message-Id: <20211222001127.3337471-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.1.307.g9b7440fafd-goog
+Subject: [PATCH v4 1/3] drm/privacy_screen: Add drvdata in drm_privacy_screen
+From:   Rajat Jain <rajatja@google.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
         Hans de Goede <hdegoede@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Benson Leung <bleung@chromium.org>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
         Mark Gross <markgross@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>, linux-arm-msm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jarrett Schultz <jaschultz@microsoft.com>
-Subject: Re: [PATCH RESEND v4 1/4] dt-bindings: platform: microsoft: Document
- surface xbl
-Message-ID: <YcJiBk5f071eJ5+n@robh.at.kernel.org>
-References: <20211221182826.2141789-1-jaschultzMS@gmail.com>
- <20211221182826.2141789-2-jaschultzMS@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211221182826.2141789-2-jaschultzMS@gmail.com>
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, gwendal@google.com,
+        seanpaul@google.com, marcheu@google.com, dtor@google.com
+Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 10:28:23AM -0800, Jarrett Schultz wrote:
-> From: Jarrett Schultz <jaschultz@microsoft.com>
-> 
-> Introduce yaml for surface xbl driver.
-> 
-> Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
-> 
-> ---
-> 
-> Changes in v4:
->  - Addressed small formatting changes
->  - Removed unnecessary lines
-> 
-> ---
-> 
-> Changes in v3:
->  - Updated description to only pertain to the hardware
->  - Updated the required field to properly reflect the binding
->  - Removed the first example
->  - Fixed the size of the reg field in the second example
-> 
-> ---
-> 
-> Changes in v2:
->  - Removed json-schema dependence
->  - Elaborated on description of driver
->  - Updated example
-> ---
->  .../platform/microsoft/surface-xbl.yaml       | 64 +++++++++++++++++++
->  MAINTAINERS                                   |  7 ++
->  2 files changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> new file mode 100644
-> index 000000000000..df5a87a016f4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/platform/microsoft/surface-xbl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Surface Extensible Bootloader for Microsoft Surface Duo
-> +
-> +maintainers:
-> +  - Jarrett Schultz <jaschultz@microsoft.com>
-> +
-> +description: |
-> +  Defined to expose information that is used during production when
-> +  device is in manufacturing mode. Some of the information included
-> +  in this imem section is -
+Allow a privacy screen provider to stash its private data pointer in the
+drm_privacy_screen, and update the drm_privacy_screen_register() call to
+accept that. Also introduce a *_get_drvdata() so that it can retrieved
+back when needed.
 
-If this is onchip sram, we have a binding for that. That's not an MFD.
+This also touches the IBM Thinkpad platform driver, the only user of
+privacy screen today, to pass NULL for now to the updated API.
 
-> +    * board_id
-> +    * battery_present
-> +    * hw_init_retries
-> +    * is_customer_mode
-> +    * is_act_mode
-> +    * pmic_reset_reason
-> +    * touch_fw_version
-> +    * ocp_error_location
+Signed-off-by: Rajat Jain <rajatja@google.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+---
+v4: Added "Reviewed-by" from Hans
+v3: Initial version. Came up due to review comments on v2 of other patches.
+v2: No v2
+v1: No v1
 
-nvmem binding doesn't work for describing these fields?
+ drivers/gpu/drm/drm_privacy_screen.c    |  5 ++++-
+ drivers/platform/x86/thinkpad_acpi.c    |  2 +-
+ include/drm/drm_privacy_screen_driver.h | 13 ++++++++++++-
+ 3 files changed, 17 insertions(+), 3 deletions(-)
 
-> +  See sysfs documentation for more information.
+diff --git a/drivers/gpu/drm/drm_privacy_screen.c b/drivers/gpu/drm/drm_privacy_screen.c
+index beaf99e9120a..03b149cc455b 100644
+--- a/drivers/gpu/drm/drm_privacy_screen.c
++++ b/drivers/gpu/drm/drm_privacy_screen.c
+@@ -387,7 +387,8 @@ static void drm_privacy_screen_device_release(struct device *dev)
+  * * An ERR_PTR(errno) on failure.
+  */
+ struct drm_privacy_screen *drm_privacy_screen_register(
+-	struct device *parent, const struct drm_privacy_screen_ops *ops)
++	struct device *parent, const struct drm_privacy_screen_ops *ops,
++	void *data)
+ {
+ 	struct drm_privacy_screen *priv;
+ 	int ret;
+@@ -404,6 +405,7 @@ struct drm_privacy_screen *drm_privacy_screen_register(
+ 	priv->dev.parent = parent;
+ 	priv->dev.release = drm_privacy_screen_device_release;
+ 	dev_set_name(&priv->dev, "privacy_screen-%s", dev_name(parent));
++	priv->drvdata = data;
+ 	priv->ops = ops;
+ 
+ 	priv->ops->get_hw_state(priv);
+@@ -439,6 +441,7 @@ void drm_privacy_screen_unregister(struct drm_privacy_screen *priv)
+ 	mutex_unlock(&drm_privacy_screen_devs_lock);
+ 
+ 	mutex_lock(&priv->lock);
++	priv->drvdata = NULL;
+ 	priv->ops = NULL;
+ 	mutex_unlock(&priv->lock);
+ 
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 341655d711ce..ccbfda2b0095 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -9782,7 +9782,7 @@ static int tpacpi_lcdshadow_init(struct ibm_init_struct *iibm)
+ 		return 0;
+ 
+ 	lcdshadow_dev = drm_privacy_screen_register(&tpacpi_pdev->dev,
+-						    &lcdshadow_ops);
++						    &lcdshadow_ops, NULL);
+ 	if (IS_ERR(lcdshadow_dev))
+ 		return PTR_ERR(lcdshadow_dev);
+ 
+diff --git a/include/drm/drm_privacy_screen_driver.h b/include/drm/drm_privacy_screen_driver.h
+index 24591b607675..4ef246d5706f 100644
+--- a/include/drm/drm_privacy_screen_driver.h
++++ b/include/drm/drm_privacy_screen_driver.h
+@@ -73,10 +73,21 @@ struct drm_privacy_screen {
+ 	 * for more info.
+ 	 */
+ 	enum drm_privacy_screen_status hw_state;
++	/**
++	 * @drvdata: Private data owned by the privacy screen provider
++	 */
++	void *drvdata;
+ };
+ 
++static inline
++void *drm_privacy_screen_get_drvdata(struct drm_privacy_screen *priv)
++{
++	return priv->drvdata;
++}
++
+ struct drm_privacy_screen *drm_privacy_screen_register(
+-	struct device *parent, const struct drm_privacy_screen_ops *ops);
++	struct device *parent, const struct drm_privacy_screen_ops *ops,
++	void *data);
+ void drm_privacy_screen_unregister(struct drm_privacy_screen *priv);
+ 
+ void drm_privacy_screen_call_notifier_chain(struct drm_privacy_screen *priv);
+-- 
+2.34.1.307.g9b7440fafd-goog
 
-sysfs? Not relevant to the binding.
-
-> +
-> +properties:
-> +  compatible:
-> +    const: simple-mfd
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - ranges
-> +  - address-cells
-> +  - size-cells
-> +
-> +examples:
-> +  - |
-> +    / {
-> +        compatible = "foo";
-> +        model = "foo";
-
-No need to make this the root node with a fake compatible.
-
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        imem@146bf000 {
-> +          compatible = "simple-mfd";
-> +          reg = <0x0 0x146bf000 0x0 0x1000>;
-> +          ranges = <0x0 0x0 0x146bf000 0x1000>;
-> +          #address-cells = <1>;
-> +          #size-cells = <1>;
-> +          status = "okay";
-
-Don't show status in examples.
-
-> +
-> +          xbl@a94 {
-> +            compatible = "microsoft,sm8150-surface-duo-xbl";
-> +            reg = <0xa94 0x100>;
-> +            status = "okay";
-> +          };
-> +        };
-> +      };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 13f9a84a617e..5d0ca2a98b57 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12649,6 +12649,13 @@ F:	Documentation/driver-api/surface_aggregator/clients/dtx.rst
->  F:	drivers/platform/surface/surface_dtx.c
->  F:	include/uapi/linux/surface_aggregator/dtx.h
->  
-> +MICROSOFT SURFACE DUO XBL DRIVER
-> +M:	Jarrett Schultz <jaschultz@microsoft.com>
-> +L:	linux-arm-msm@vger.kernel.org
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Supported
-> +F:	Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-> +
->  MICROSOFT SURFACE GPE LID SUPPORT DRIVER
->  M:	Maximilian Luz <luzmaximilian@gmail.com>
->  L:	platform-driver-x86@vger.kernel.org
-> -- 
-> 2.25.1
-> 
-> 
