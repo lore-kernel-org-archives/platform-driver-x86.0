@@ -2,87 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5E9C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 02:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7615EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 10:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238793AbhLVCs3 (ORCPT
+        id S240121AbhLVKvL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Dec 2021 21:48:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238744AbhLVCs2 (ORCPT
+        Wed, 22 Dec 2021 05:51:11 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:47248 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239538AbhLVKvK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Dec 2021 21:48:28 -0500
-Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F17FC06173F
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 18:48:28 -0800 (PST)
-Received: by mail-oi1-x232.google.com with SMTP id v6so1705669oib.13
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Dec 2021 18:48:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/FZUFL2wLkEGZGFTbPONkk6mLWd8J6cDzMFXomn323A=;
-        b=Niimf1jllbIyv3wnG8/DrqRRpShYICD8EWAfwYqJY8qcVGHPp/f2EqajPpp/OQ55iX
-         7avYtd0TmboDXiqV4tshfdp7cv/Y4/zbfmr6GhPhXYMEd3RJyNmCADsOeW/Vpwl+ZvIT
-         LCNinerXlMPpFLuJvTQh3YrZ3jK8M543vM7IfidOglerQpDjrYzdYHBP6gSN8eYW9nG8
-         ezvZHL4Eh4mkMiiOTgSwT3gL+IUApU4GILXtkZatXC0KV1jRk+jCLVJ86BMVK9p+m7zu
-         F5KqUESKLmMKEKql51KlJO9x+//yei5FefBnN6rCNbYCyK6dNQmRq+6xk8cp/8TH+Z84
-         sG1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/FZUFL2wLkEGZGFTbPONkk6mLWd8J6cDzMFXomn323A=;
-        b=AUttWIsENzi4nsqHaLoZNWBqC+ieII1u9HqeO7g31Vw6k5xPyRZgLiEG764mNO3qSj
-         JND3clSXP+dHy5LW5hzXNZ8ZXP4/BMdBNwmC9RAEfL0CSj7uTuFK/POi2CSv4HVH0UBe
-         fN5HY6TvjNkRzFGkf3MXi47xCtPO3berj8XKfiejJQmGhZXhE0Dv43wOEs7gALL+Alpk
-         ybi9QmIwphZDbkuIpy4TFJZ/Wb0mIvy/m1DyENte1u22n68hBdCr02FJv4LNY8sRuwDY
-         BPo2Y6+ZEBd+YGbCxn8WPZOSegixcHbyBfdzD5RsllI/aQS7HeW02Z2wgAMnhO0DAlkN
-         5ZTQ==
-X-Gm-Message-State: AOAM532OVoGjR/O6IslRlvqYvWjI7JCtmdkGOdzxbww+EkhET+dkqmBp
-        yYRI+oiGjqVMyEFE6k7fKl/cmgZ39BeRR7U3G65+KA==
-X-Google-Smtp-Source: ABdhPJzgjgZvCZer+0qK1pclgej1TT1RDlfQKfCQvqjVS3qOHMzJGGAXe5nK0e/t6ph4iTgc1ECudtqKVJBwg9u1Q/o=
-X-Received: by 2002:aca:120f:: with SMTP id 15mr742282ois.132.1640141307641;
- Tue, 21 Dec 2021 18:48:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 22 Dec 2021 03:48:15 +0100
-Message-ID: <CACRpkdbLk1aHEaiumq3d4qmg007QtZcitmCwdyFyLxyY=H7MXQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
+        Wed, 22 Dec 2021 05:51:10 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 70FC9B81B9D;
+        Wed, 22 Dec 2021 10:51:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B7A3C36AE5;
+        Wed, 22 Dec 2021 10:51:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640170268;
+        bh=MUIobF7kB+qoPfsVPCz/wGBHLj3A4hegrXWkDmi1LyM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=O1LV6JpQIRCWokfKZPuCMBXN1Wys6cIn7l2qgwdGKEDb67x8y3llTpVariRUGoPS+
+         hslFSJ+Z5j4KVAJna9sU4uh3NAWa4LZ2+F1RC4jXvfddxsOwBgBgGzxkH0TPgwJ6uY
+         l1/atFQzOyq6cgQm8krQn47TpPk5qNLvPnihWYJ3hQBp5nlgQFPEbJBPXta1VITJ0+
+         kxsGylc1qdYHOE8sPBKDHmwq3MKXhNbGYN7vaxYJM0Pi4PgxGwqJIevp8d0d09s88h
+         ESLNuxoqaNBr2exOza5hvohQ9VZCBnp1X5smPX4iiS82VIVL5gya7m3XPx2N4TdAxO
+         x5lIcY4S2PKVw==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1mzzD2-0001dJ-Dy; Wed, 22 Dec 2021 11:51:00 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH] platform/x86: intel_pmc_core: fix memleak on registration failure
+Date:   Wed, 22 Dec 2021 11:50:23 +0100
+Message-Id: <20211222105023.6205-1-johan@kernel.org>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 7:21 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+In case device registration fails during module initialisation, the
+platform device structure needs to be freed using platform_device_put()
+to properly free all resources (e.g. the device name).
 
-> Please, comment on the approach and individual patches.
+Fixes: 938835aa903a ("platform/x86: intel_pmc_core: do not create a static struct device")
+Cc: stable@vger.kernel.org      # 5.9
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/platform/x86/intel/pmc/pltdrv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This approach looks reasonable to me so FWIW:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-for the series.
+diff --git a/drivers/platform/x86/intel/pmc/pltdrv.c b/drivers/platform/x86/intel/pmc/pltdrv.c
+index 73797680b895..15ca8afdd973 100644
+--- a/drivers/platform/x86/intel/pmc/pltdrv.c
++++ b/drivers/platform/x86/intel/pmc/pltdrv.c
+@@ -65,7 +65,7 @@ static int __init pmc_core_platform_init(void)
+ 
+ 	retval = platform_device_register(pmc_core_device);
+ 	if (retval)
+-		kfree(pmc_core_device);
++		platform_device_put(pmc_core_device);
+ 
+ 	return retval;
+ }
+-- 
+2.32.0
 
-Yours,
-Linus Walleij
