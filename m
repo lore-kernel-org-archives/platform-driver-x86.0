@@ -2,152 +2,194 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68012C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 21:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AD1C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 23:27:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233208AbhLVVU3 (ORCPT
+        id S235575AbhLVX1B (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Dec 2021 16:20:29 -0500
-Received: from todd.t-8ch.de ([159.69.126.157]:50571 "EHLO todd.t-8ch.de"
+        Wed, 22 Dec 2021 18:27:01 -0500
+Received: from mga04.intel.com ([192.55.52.120]:58290 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230115AbhLVVU2 (ORCPT
+        id S230006AbhLVX1A (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Dec 2021 16:20:28 -0500
-From:   =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
-        s=mail; t=1640208026;
-        bh=aGCj4aiE4nMhMPOvZxmPkbOeYECl8rQcbNMEcl0EXbc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RnBBWeyrJ/gnUz0yHX9jlR0geQv63Kx0+04Y7c+L0Xx6RJqDMVg3rWI/83H5HUlLD
-         alZG1UojE7+4TR7NwKfduFEw+5e54+7Mm1+0L3fOsp5Y4YH62M5N+ZAQxFWzJzYGS/
-         3vQ02nk84ZoOwF6RkvN/mTkzdf0LXRWcDhZqT6gg=
-To:     linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, markpearson@lenovo.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ognjen Galic <smclt30p@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        David Zeuthen <davidz@redhat.com>,
-        Richard Hughes <richard@hughsie.com>
-Subject: [PATCH] ACPI: battery: Add the ThinkPad "Not Charging" quirk
-Date:   Wed, 22 Dec 2021 22:20:14 +0100
-Message-Id: <20211222212014.66971-1-linux@weissschuh.net>
-X-Mailer: git-send-email 2.34.1
+        Wed, 22 Dec 2021 18:27:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640215620; x=1671751620;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=bB8znHsTjCVe4GJqzQyTh+jC/b+POrhRB22P9Vzw70g=;
+  b=akncUFlJeYI+5Ml2ffvBWLQqqbFX94RRVS5TcHQoXkswQR/+lzoqBso/
+   BJcqu1W3Fr+Baq0erbhYJOtd6X9+lTej9I3fy6N3CxgowK+3ybf+pF3KL
+   8AatJK8jzR5QSGQ9WFG9i0z1xXY+qFLBhPSDe1aJbAV3tSr5yUJJEcuBQ
+   y3hLFNYEw/x5oLUcScL/oleDt3ZtmQECn9EdPGUL70AqVdqIhQU5zJtp/
+   qRzeEYSLdhIBq7UTarrffdKwDPfNuJySzl9qwkeaue/cakSTZqyJhgYUs
+   wIMg1WMgRZlrQe64vv1v65nwAQd6ZeMaTaUcsNiP803egcjuhc2MXKnQK
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10206"; a="239476660"
+X-IronPort-AV: E=Sophos;i="5.88,227,1635231600"; 
+   d="scan'208";a="239476660"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2021 15:26:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,227,1635231600"; 
+   d="scan'208";a="756542923"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 22 Dec 2021 15:26:58 -0800
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
+        by linux.intel.com (Postfix) with ESMTP id 361E25807C5;
+        Wed, 22 Dec 2021 15:26:58 -0800 (PST)
+Message-ID: <91a8399e9009654e6d014baab41829adf6e3c885.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: system76_acpi: Guard System76 EC specific
+ functionality
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Tim Crawford <tcrawford@system76.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     productdev@system76.com
+Date:   Wed, 22 Dec 2021 15:26:58 -0800
+In-Reply-To: <20211222185154.4560-1-tcrawford@system76.com>
+References: <20211222185154.4560-1-tcrawford@system76.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1640208009; l=3639; s=20211113; h=from:subject; bh=aGCj4aiE4nMhMPOvZxmPkbOeYECl8rQcbNMEcl0EXbc=; b=V4ltAs5HbLZJuv0HJiA8DNFuaS6cA+TfkoXpftD66G0oI3+a1Lfi7nnTjpqoEuQAaZBuCi4Th6V0 4oQ4R+6YA0Sfey7NObJdrg37MQq3l5anJc0hWKgNIkOC4nW4d9GP
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519; pk=9LP6KM4vD/8CwHW7nouRBhWLyQLcK1MkP6aTZbzUlj4=
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The EC/ACPI firmware on Lenovo ThinkPads used to report a status
-of "Unknown" when the battery is between the charge start and
-charge stop thresholds. On Windows, it reports "Not Charging"
-so the quirk has been added to also report correctly.
+Hi,
 
-Now the "status" attribute returns "Not Charging" when the
-battery on ThinkPads is not physicaly charging.
+On Wed, 2021-12-22 at 11:51 -0700, Tim Crawford wrote:
+> Certain functionality or its implementation in System76 EC firmware may
+> be different to the proprietary ODM EC firmware. Introduce a new bool,
+> `has_open_ec`, to guard our specific logic. Detect the use of this by
+> looking for a custom ACPI method name used in System76 firmware.
+> 
+> Signed-off-by: Tim Crawford <tcrawford@system76.com>
+> ---
+>  drivers/platform/x86/system76_acpi.c | 58 ++++++++++++++--------------
+>  1 file changed, 30 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
+> index 8b292ee95a14..7299ad08c838 100644
+> --- a/drivers/platform/x86/system76_acpi.c
+> +++ b/drivers/platform/x86/system76_acpi.c
+> @@ -35,6 +35,7 @@ struct system76_data {
+>         union acpi_object *nfan;
+>         union acpi_object *ntmp;
+>         struct input_dev *input;
+> +       bool has_open_ec;
+>  };
+>  
+>  static const struct acpi_device_id device_ids[] = {
+> @@ -279,20 +280,12 @@ static struct acpi_battery_hook system76_battery_hook = {
+>  
+>  static void system76_battery_init(void)
+>  {
+> -       acpi_handle handle;
+> -
+> -       handle = ec_get_handle();
+> -       if (handle && acpi_has_method(handle, "GBCT"))
+> -               battery_hook_register(&system76_battery_hook);
+> +       battery_hook_register(&system76_battery_hook);
+>  }
+>  
+>  static void system76_battery_exit(void)
+>  {
+> -       acpi_handle handle;
+> -
+> -       handle = ec_get_handle();
+> -       if (handle && acpi_has_method(handle, "GBCT"))
+> -               battery_hook_unregister(&system76_battery_hook);
+> +       battery_hook_unregister(&system76_battery_hook);
+>  }
+>  
+>  // Get the airplane mode LED brightness
+> @@ -673,6 +666,10 @@ static int system76_add(struct acpi_device *acpi_dev)
+>         acpi_dev->driver_data = data;
+>         data->acpi_dev = acpi_dev;
+>  
+> +       // Some models do not run open EC firmware. Check for an ACPI method
+> +       // that only exists on open EC to guard functionality specific to it.
+> +       data->has_open_ec = acpi_has_method(acpi_device_handle(data->acpi_dev), "NFAN");
+> +
+>         err = system76_get(data, "INIT");
+>         if (err)
+>                 return err;
+> @@ -718,27 +715,31 @@ static int system76_add(struct acpi_device *acpi_dev)
+>         if (err)
+>                 goto error;
+>  
+> -       err = system76_get_object(data, "NFAN", &data->nfan);
+> -       if (err)
+> -               goto error;
+> +       if (data->has_open_ec) {
+> +               err = system76_get_object(data, "NFAN", &data->nfan);
+> +               if (err)
+> +                       goto error;
+>  
+> -       err = system76_get_object(data, "NTMP", &data->ntmp);
+> -       if (err)
+> -               goto error;
+> +               err = system76_get_object(data, "NTMP", &data->ntmp);
+> +               if (err)
+> +                       goto error;
+>  
+> -       data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
+> -               "system76_acpi", data, &thermal_chip_info, NULL);
+> -       err = PTR_ERR_OR_ZERO(data->therm);
+> -       if (err)
+> -               goto error;
+> +               data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
+> +                       "system76_acpi", data, &thermal_chip_info, NULL);
+> +               err = PTR_ERR_OR_ZERO(data->therm);
+> +               if (err)
+> +                       goto error;
+>  
+> -       system76_battery_init();
+> +               system76_battery_init();
+> +       }
+>  
+>         return 0;
+>  
+>  error:
+> -       kfree(data->ntmp);
+> -       kfree(data->nfan);
+> +       if (data->has_open_ec) {
+> +               kfree(data->ntmp);
+> +               kfree(data->nfan);
+> +       }
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+It appears that calling system76_battery_(init/exit) depends on has_open_ec. If so would it make
+sense to just move the code to those functions (get_objects in init and kfrees in exit)? But I can't
+tell if there are other calls.
 
----
+David
 
-This is the same as: https://patchwork.kernel.org/patch/10205359/
+>         return err;
+>  }
+>  
+> @@ -749,14 +750,15 @@ static int system76_remove(struct acpi_device *acpi_dev)
+>  
+>         data = acpi_driver_data(acpi_dev);
+>  
+> -       system76_battery_exit();
+> +       if (data->has_open_ec) {
+> +               system76_battery_exit();
+> +               kfree(data->nfan);
+> +               kfree(data->ntmp);
+> +       }
+>  
+>         devm_led_classdev_unregister(&acpi_dev->dev, &data->ap_led);
+>         devm_led_classdev_unregister(&acpi_dev->dev, &data->kb_led);
+>  
+> -       kfree(data->nfan);
+> -       kfree(data->ntmp);
+> -
+>         system76_get(data, "FINI");
+>  
+>         return 0;
 
-Previously this patch has been applied[0] but then reverted from -next
-because it caused a regression in UPower.
-This regression however has been fixed in UPower in late 2018[1],
-with the fixed version 0.99.10 released in early 2019 [2].
-So maybe it is now time to reintroduce this change.
-
-Ognen:
-
-As the patch was originally developed by you, could send a
-Signed-off-by-tag, so I can attribute you as co-developer?
-
-Or maybe the original patch could just be re-applied?
-
-The original patch had the following tags, which I'm not sure to handle
-for this case:
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-Also Cc-ing the UPower maintainers for their opinion:
-
-Cc: Bastien Nocera <hadess@hadess.net>
-Cc: David Zeuthen <davidz@redhat.com>
-Cc: Richard Hughes <richard@hughsie.com>
-
-[0] Applied as 91eea70e5e5ce12eb1c7cd922e561fab43e201bd
-[1] https://gitlab.freedesktop.org/upower/upower/-/merge_requests/19/commits
-[2] https://gitlab.freedesktop.org/upower/upower/-/commit/215049e7b80c5f24cb35cd229a445c6cf19bd381
----
- drivers/acpi/battery.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
-index 8afa85d6eb6a..ead0114f27c9 100644
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -53,6 +53,7 @@ static int battery_bix_broken_package;
- static int battery_notification_delay_ms;
- static int battery_ac_is_broken;
- static int battery_check_pmic = 1;
-+static int battery_quirk_notcharging;
- static unsigned int cache_time = 1000;
- module_param(cache_time, uint, 0644);
- MODULE_PARM_DESC(cache_time, "cache time in milliseconds");
-@@ -217,6 +218,8 @@ static int acpi_battery_get_property(struct power_supply *psy,
- 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
- 		else if (acpi_battery_is_charged(battery))
- 			val->intval = POWER_SUPPLY_STATUS_FULL;
-+		else if (battery_quirk_notcharging)
-+			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
- 		else
- 			val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
- 		break;
-@@ -1111,6 +1114,12 @@ battery_do_not_check_pmic_quirk(const struct dmi_system_id *d)
- 	return 0;
- }
- 
-+static int __init battery_quirk_not_charging(const struct dmi_system_id *d)
-+{
-+	battery_quirk_notcharging = 1;
-+	return 0;
-+}
-+
- static const struct dmi_system_id bat_dmi_table[] __initconst = {
- 	{
- 		/* NEC LZ750/LS */
-@@ -1155,6 +1164,19 @@ static const struct dmi_system_id bat_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo MIIX 320-10ICR"),
- 		},
- 	},
-+	{
-+		/*
-+		 * On Lenovo ThinkPads the BIOS specification defines
-+		 * a state when the bits for charging and discharging
-+		 * are both set to 0. That state is "Not Charging".
-+		 */
-+		.callback = battery_quirk_not_charging,
-+		.ident = "Lenovo ThinkPad",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad"),
-+		},
-+	},
- 	{},
- };
- 
-
-base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
--- 
-2.34.1
 
