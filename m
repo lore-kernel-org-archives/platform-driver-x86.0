@@ -2,181 +2,185 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB805C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 15:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2399AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 18:52:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343730AbhLVPf1 (ORCPT
+        id S1344913AbhLVSwB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Dec 2021 10:35:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343726AbhLVPf0 (ORCPT
+        Wed, 22 Dec 2021 13:52:01 -0500
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:39379 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1344899AbhLVSv7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Dec 2021 10:35:26 -0500
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FAA4C061574
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Dec 2021 07:35:26 -0800 (PST)
-Received: by mail-yb1-xb2d.google.com with SMTP id f186so7811716ybg.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Dec 2021 07:35:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=cwnIm+Pjf1RTUBBb5BRinhHvVqdyboPG2JJubsE04f4=;
-        b=AG9Ug8PUwm0BhJU9O/vGcCjhoBDHg4gQq1bWPDSXIgj2KDi7CkFNOOv/u74Em02wkD
-         os3Dou1fSrFsMcV35l/mRKBXXmx4l863Jip4zBJa8a1TLFmnPbO9Jd0vgmU4/ml+SJp0
-         AbJnXpaUOdNLQG66dPGZNaDsXdpZLZUvB9A0B+yi6pz2BuCXZlzfZ8wO435oxxb1nos/
-         Dx2yzjDENAgI2RyCbAgtcM/VZf8vakzzP+L9t5KekKiQzZ51av9j06vf6w1T/JHM5hvF
-         Zp2YTI+rfHAO5KSW55ReosawsBPaxV2ZuuMmlvYvVHoHFiD3BN6TNjHpq7MrA88jUiOJ
-         sX0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=cwnIm+Pjf1RTUBBb5BRinhHvVqdyboPG2JJubsE04f4=;
-        b=3OJIYTkmKlu8RwEh6uZArwOVVJhN+KIFGK94fhB9WlKp8Lk12AQF7nIak9G/UH0zBe
-         J8/LiKR8ZtFnqlMwwE/7ltflNQmcVnvmNxB4EKWMiuTkmOuugRT+yJttHPxZDSVgAlLG
-         PbDXVAkZpTHWIBJcd2HjC0T4CxKCiK5wBpJLuRI4l3wb66PFDPr0P22Rr1spB/KHQ85K
-         O5OKdJQHG7LTEsaEF/IOOuLHcSmAngD7h8N2TlsWVZtpkAzzWjYB6ZKRGpb1e7gybQJ/
-         SpBviJrLdWwn/wdQFZSegzCKFPpKo+kgfczTrH6bYc/fdeVYX1c6yQpI8huWG2QohGpB
-         Kakg==
-X-Gm-Message-State: AOAM531MdwozOSq5/nEBe0wWK+Sl9p1FsZHklghk2m1r8KDOndWFvIfB
-        H2ioxOQvYHqVoNazusSMsoTElpoMSMeVKjSUG2aKBQ==
-X-Google-Smtp-Source: ABdhPJw7mITeuoygQFK1MhJbMGiGJKKDtAs86FI3UP7IrYs5kVS/hvOy/t4bTtqxhCrOxSYegmcjo3RH5D7EXfQqA5A=
-X-Received: by 2002:a25:3c07:: with SMTP id j7mr5487832yba.612.1640187325665;
- Wed, 22 Dec 2021 07:35:25 -0800 (PST)
+        Wed, 22 Dec 2021 13:51:59 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 6B34332009BB;
+        Wed, 22 Dec 2021 13:51:57 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 22 Dec 2021 13:51:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=gph2mbXCduLI/3nj1
+        N+O5b/iHj7DwDeHoD3bXmY4/Yo=; b=Q7idIIZde4LzZx8RkTd5Ogm1/IN2LRoaw
+        Ny2lRj0BWGaoh9oq0h0k6iD3BEAK+izwNomydfkM+KlZO9yiT/IwpogjsAfRIa5h
+        ku01RvXLwxBT6pxyYbCLfs2yEyEelMDSPianmhlqcghCMAzjEuUnAnKYXBn1WxXl
+        pErWgDM0y8ZI+n1EeSWU5OOKhkI47GiptJegCPTpSUsYwiiKkXwu93V5LaXwiYLY
+        3A8cYrceotLcHxyV3UJgKvfVEjeYzDx64xqr3ZQDr3n8ONfonNY8t3FHXirhvFuA
+        K3qnsPQBuMiFBcQIPaWOd6+BSZOcCMf4KIr3ILcEDdxA+WOW7B9qA==
+X-ME-Sender: <xms:zHPDYbgVJzwfFxYTPbyKgx-r8IYnLQSseieqGVryvSuJCzGO8n9p7w>
+    <xme:zHPDYYCrvZd5bCWgDEmGFVJqxUJ3HMiXN1n5du6kAiHh05cslecKOG-Sn7BNOGA_c
+    HEtbm3kdHL8Fllm0A>
+X-ME-Received: <xmr:zHPDYbFdNxWe358R8ngBxeATUK0PoHgez9o7g3aQ_OYTaqDDAXxtuAVYtCtDgxSB253i3jraPhvmYClTV0L0l9WmlSQAJ0OaW8kJ_iU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddruddtiedgudduudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpefvihhmucevrhgrfihfohhrugcuoehttghrrgiffhhorhgusehs
+    hihsthgvmhejiedrtghomheqnecuggftrfgrthhtvghrnhepgeeugffhieegledvuddtge
+    dtieetvdffkeeltdejhfejvefgtefgleetteehfefgnecuvehluhhsthgvrhfuihiivgep
+    tdenucfrrghrrghmpehmrghilhhfrhhomhepthgtrhgrfihfohhrugesshihshhtvghmje
+    eirdgtohhm
+X-ME-Proxy: <xmx:zHPDYYRWz-iwUCMZ3FzoqKMHLL-B4wX-E0uQzEzrcjlaOpN-aetBcw>
+    <xmx:zHPDYYwy9t0tPCIsZOJ17M03bM2yQ3J0r0o-dwlohNliEZvVKbiI_w>
+    <xmx:zHPDYe7pMzU07xcnfk22zZcxlPkyZaMx85WAT2WWCKZaTVjGkok21A>
+    <xmx:zHPDYeYfNsH7vD1r0sbEQcuX9egOxx1B6XpWHdAnQgpFUcDUGPPY5w>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 22 Dec 2021 13:51:56 -0500 (EST)
+From:   Tim Crawford <tcrawford@system76.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     productdev@system76.com
+Subject: [PATCH] platform/x86: system76_acpi: Guard System76 EC specific functionality
+Date:   Wed, 22 Dec 2021 11:51:54 -0700
+Message-Id: <20211222185154.4560-1-tcrawford@system76.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Received: by 2002:a81:58c2:0:0:0:0:0 with HTTP; Wed, 22 Dec 2021 07:35:25
- -0800 (PST)
-In-Reply-To: <YcF3C9kfVoRqKamp@kroah.com>
-References: <20211216192222.127908-1-martin.fernandez@eclypsium.com>
- <20211216192222.127908-4-martin.fernandez@eclypsium.com> <YcCxUHSMnUJgXIJF@kroah.com>
- <CAKgze5boi5h08ffpodqsKp5xNS=+u_zJWEVnExdbsXRgJ+eCTQ@mail.gmail.com> <YcF3C9kfVoRqKamp@kroah.com>
-From:   Martin Fernandez <martin.fernandez@eclypsium.com>
-Date:   Wed, 22 Dec 2021 12:35:25 -0300
-Message-ID: <CAKgze5a2Nv56e=wJwmBjPgAf2x7waZWXGJ1YDk6_DK-ahShXTg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] x86/e820: Tag e820_entry with crypto capabilities
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        rafael@kernel.org, rppt@kernel.org, akpm@linux-foundation.org,
-        daniel.gutson@eclypsium.com, hughsient@gmail.com,
-        alex.bazhaniuk@eclypsium.com, alison.schofield@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 12/21/21, Greg KH <gregkh@linuxfoundation.org> wrote:
-> On Mon, Dec 20, 2021 at 05:27:00PM -0300, Martin Fernandez wrote:
->> On 12/20/21, Greg KH <gregkh@linuxfoundation.org> wrote:
->> > On Thu, Dec 16, 2021 at 04:22:20PM -0300, Martin Fernandez wrote:
->> >> diff --git a/arch/x86/include/asm/e820/types.h
->> >> b/arch/x86/include/asm/e820/types.h
->> >> index 314f75d886d0..7b510dffd3b9 100644
->> >> --- a/arch/x86/include/asm/e820/types.h
->> >> +++ b/arch/x86/include/asm/e820/types.h
->> >> @@ -56,6 +56,7 @@ struct e820_entry {
->> >>  	u64			addr;
->> >>  	u64			size;
->> >>  	enum e820_type		type;
->> >> +	u8			crypto_capable;
->> >
->> > Why isn't this a bool?
->>
->> It was a bool initially, but Andy Shevchenko told me that it couldn't
->> be that way because boolean may not be part of firmware ABIs.
->
-> Where does this structure hit an "ABI"?  Looks internal to me.  If not,
-> then something just broke anyway.
->
+Certain functionality or its implementation in System76 EC firmware may
+be different to the proprietary ODM EC firmware. Introduce a new bool,
+`has_open_ec`, to guard our specific logic. Detect the use of this by
+looking for a custom ACPI method name used in System76 firmware.
 
-I prefer that Andy answers.
+Signed-off-by: Tim Crawford <tcrawford@system76.com>
+---
+ drivers/platform/x86/system76_acpi.c | 58 ++++++++++++++--------------
+ 1 file changed, 30 insertions(+), 28 deletions(-)
 
-Either way, I think that the enum will be the best option.
+diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
+index 8b292ee95a14..7299ad08c838 100644
+--- a/drivers/platform/x86/system76_acpi.c
++++ b/drivers/platform/x86/system76_acpi.c
+@@ -35,6 +35,7 @@ struct system76_data {
+ 	union acpi_object *nfan;
+ 	union acpi_object *ntmp;
+ 	struct input_dev *input;
++	bool has_open_ec;
+ };
+ 
+ static const struct acpi_device_id device_ids[] = {
+@@ -279,20 +280,12 @@ static struct acpi_battery_hook system76_battery_hook = {
+ 
+ static void system76_battery_init(void)
+ {
+-	acpi_handle handle;
+-
+-	handle = ec_get_handle();
+-	if (handle && acpi_has_method(handle, "GBCT"))
+-		battery_hook_register(&system76_battery_hook);
++	battery_hook_register(&system76_battery_hook);
+ }
+ 
+ static void system76_battery_exit(void)
+ {
+-	acpi_handle handle;
+-
+-	handle = ec_get_handle();
+-	if (handle && acpi_has_method(handle, "GBCT"))
+-		battery_hook_unregister(&system76_battery_hook);
++	battery_hook_unregister(&system76_battery_hook);
+ }
+ 
+ // Get the airplane mode LED brightness
+@@ -673,6 +666,10 @@ static int system76_add(struct acpi_device *acpi_dev)
+ 	acpi_dev->driver_data = data;
+ 	data->acpi_dev = acpi_dev;
+ 
++	// Some models do not run open EC firmware. Check for an ACPI method
++	// that only exists on open EC to guard functionality specific to it.
++	data->has_open_ec = acpi_has_method(acpi_device_handle(data->acpi_dev), "NFAN");
++
+ 	err = system76_get(data, "INIT");
+ 	if (err)
+ 		return err;
+@@ -718,27 +715,31 @@ static int system76_add(struct acpi_device *acpi_dev)
+ 	if (err)
+ 		goto error;
+ 
+-	err = system76_get_object(data, "NFAN", &data->nfan);
+-	if (err)
+-		goto error;
++	if (data->has_open_ec) {
++		err = system76_get_object(data, "NFAN", &data->nfan);
++		if (err)
++			goto error;
+ 
+-	err = system76_get_object(data, "NTMP", &data->ntmp);
+-	if (err)
+-		goto error;
++		err = system76_get_object(data, "NTMP", &data->ntmp);
++		if (err)
++			goto error;
+ 
+-	data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
+-		"system76_acpi", data, &thermal_chip_info, NULL);
+-	err = PTR_ERR_OR_ZERO(data->therm);
+-	if (err)
+-		goto error;
++		data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
++			"system76_acpi", data, &thermal_chip_info, NULL);
++		err = PTR_ERR_OR_ZERO(data->therm);
++		if (err)
++			goto error;
+ 
+-	system76_battery_init();
++		system76_battery_init();
++	}
+ 
+ 	return 0;
+ 
+ error:
+-	kfree(data->ntmp);
+-	kfree(data->nfan);
++	if (data->has_open_ec) {
++		kfree(data->ntmp);
++		kfree(data->nfan);
++	}
+ 	return err;
+ }
+ 
+@@ -749,14 +750,15 @@ static int system76_remove(struct acpi_device *acpi_dev)
+ 
+ 	data = acpi_driver_data(acpi_dev);
+ 
+-	system76_battery_exit();
++	if (data->has_open_ec) {
++		system76_battery_exit();
++		kfree(data->nfan);
++		kfree(data->ntmp);
++	}
+ 
+ 	devm_led_classdev_unregister(&acpi_dev->dev, &data->ap_led);
+ 	devm_led_classdev_unregister(&acpi_dev->dev, &data->kb_led);
+ 
+-	kfree(data->nfan);
+-	kfree(data->ntmp);
+-
+ 	system76_get(data, "FINI");
+ 
+ 	return 0;
+-- 
+2.33.1
 
->> >> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
->> >> index bc0657f0deed..001d64686938 100644
->> >> --- a/arch/x86/kernel/e820.c
->> >> +++ b/arch/x86/kernel/e820.c
->> >> @@ -163,7 +163,7 @@ int e820__get_entry_type(u64 start, u64 end)
->> >>  /*
->> >>   * Add a memory region to the kernel E820 map.
->> >>   */
->> >> -static void __init __e820__range_add(struct e820_table *table, u64
->> >> start,
->> >> u64 size, enum e820_type type)
->> >> +static void __init __e820__range_add(struct e820_table *table, u64
->> >> start,
->> >> u64 size, enum e820_type type, u8 crypto_capable)
->> >
->> > Horrid api change, but it's internal to this file so oh well :(
->> >
->> > Hint, don't add flags to functions like this, it forces you to have to
->> > always remember what those flags are when you read the code.  Right now
->> > you stuck "0" and "1" in the function call, which is not instructional
->> > at all.
->> >
->> > Heck, why not make it an enum to have it be self-describing?  Like the
->> > type is here.  that would make it much better and easier to understand
->> > and maintain over time.
->> >
->>
->> Yes, an enum will absolutely improve things. I'll do that.
->>
->> >> @@ -327,6 +330,7 @@ int __init e820__update_table(struct e820_table
->> >> *table)
->> >>  	unsigned long long last_addr;
->> >>  	u32 new_nr_entries, overlap_entries;
->> >>  	u32 i, chg_idx, chg_nr;
->> >> +	u8 current_crypto, last_crypto;
->> >>
->> >>  	/* If there's only one memory region, don't bother: */
->> >>  	if (table->nr_entries < 2)
->> >> @@ -367,6 +371,7 @@ int __init e820__update_table(struct e820_table
->> >> *table)
->> >>  	new_nr_entries = 0;	 /* Index for creating new map entries */
->> >>  	last_type = 0;		 /* Start with undefined memory type */
->> >>  	last_addr = 0;		 /* Start with 0 as last starting address */
->> >> +	last_crypto = 0;
->> >>
->> >>  	/* Loop through change-points, determining effect on the new map: */
->> >>  	for (chg_idx = 0; chg_idx < chg_nr; chg_idx++) {
->> >> @@ -388,13 +393,17 @@ int __init e820__update_table(struct e820_table
->> >> *table)
->> >>  		 * 1=usable, 2,3,4,4+=unusable)
->> >>  		 */
->> >>  		current_type = 0;
->> >> +		current_crypto = 1;
->> >>  		for (i = 0; i < overlap_entries; i++) {
->> >> +			current_crypto = current_crypto &&
->> >> overlap_list[i]->crypto_capable;
->> >
->> > Is it a u8 or not?  You treat it as a boolean a lot :(
->> >
->> >>  			if (overlap_list[i]->type > current_type)
->> >>  				current_type = overlap_list[i]->type;
->> >>  		}
->> >>
->> >>  		/* Continue building up new map based on this information: */
->> >> -		if (current_type != last_type || e820_nomerge(current_type)) {
->> >> +		if (current_type != last_type ||
->> >> +		    current_crypto != last_crypto ||
->> >> +		    e820_nomerge(current_type)) {
->> >
->> > Why check it before calling e820_nomerge()?  Is that required?
->> >
->>
->> I don't see how the order of the checks matter, am I missing something?
->
-> It might prevent this function from being called now when it previously
-> was.  Is that ok?
->
-
-Oh I see. No, that's not a problem. That if guard is to decide if you
-need to start/close a region. e820_nomerge is to prevent merging
-certain region types. In any case, the new check will cause less
-merging, complying with what e820_nomerge says.
