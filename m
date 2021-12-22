@@ -2,185 +2,117 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2399AC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 18:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EE5C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 19:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344913AbhLVSwB (ORCPT
+        id S1345319AbhLVTtx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Dec 2021 13:52:01 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:39379 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1344899AbhLVSv7 (ORCPT
+        Wed, 22 Dec 2021 14:49:53 -0500
+Received: from mga07.intel.com ([134.134.136.100]:25635 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1345312AbhLVTtv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Dec 2021 13:51:59 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 6B34332009BB;
-        Wed, 22 Dec 2021 13:51:57 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 22 Dec 2021 13:51:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=gph2mbXCduLI/3nj1
-        N+O5b/iHj7DwDeHoD3bXmY4/Yo=; b=Q7idIIZde4LzZx8RkTd5Ogm1/IN2LRoaw
-        Ny2lRj0BWGaoh9oq0h0k6iD3BEAK+izwNomydfkM+KlZO9yiT/IwpogjsAfRIa5h
-        ku01RvXLwxBT6pxyYbCLfs2yEyEelMDSPianmhlqcghCMAzjEuUnAnKYXBn1WxXl
-        pErWgDM0y8ZI+n1EeSWU5OOKhkI47GiptJegCPTpSUsYwiiKkXwu93V5LaXwiYLY
-        3A8cYrceotLcHxyV3UJgKvfVEjeYzDx64xqr3ZQDr3n8ONfonNY8t3FHXirhvFuA
-        K3qnsPQBuMiFBcQIPaWOd6+BSZOcCMf4KIr3ILcEDdxA+WOW7B9qA==
-X-ME-Sender: <xms:zHPDYbgVJzwfFxYTPbyKgx-r8IYnLQSseieqGVryvSuJCzGO8n9p7w>
-    <xme:zHPDYYCrvZd5bCWgDEmGFVJqxUJ3HMiXN1n5du6kAiHh05cslecKOG-Sn7BNOGA_c
-    HEtbm3kdHL8Fllm0A>
-X-ME-Received: <xmr:zHPDYbFdNxWe358R8ngBxeATUK0PoHgez9o7g3aQ_OYTaqDDAXxtuAVYtCtDgxSB253i3jraPhvmYClTV0L0l9WmlSQAJ0OaW8kJ_iU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddruddtiedgudduudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpefvihhmucevrhgrfihfohhrugcuoehttghrrgiffhhorhgusehs
-    hihsthgvmhejiedrtghomheqnecuggftrfgrthhtvghrnhepgeeugffhieegledvuddtge
-    dtieetvdffkeeltdejhfejvefgtefgleetteehfefgnecuvehluhhsthgvrhfuihiivgep
-    tdenucfrrghrrghmpehmrghilhhfrhhomhepthgtrhgrfihfohhrugesshihshhtvghmje
-    eirdgtohhm
-X-ME-Proxy: <xmx:zHPDYYRWz-iwUCMZ3FzoqKMHLL-B4wX-E0uQzEzrcjlaOpN-aetBcw>
-    <xmx:zHPDYYwy9t0tPCIsZOJ17M03bM2yQ3J0r0o-dwlohNliEZvVKbiI_w>
-    <xmx:zHPDYe7pMzU07xcnfk22zZcxlPkyZaMx85WAT2WWCKZaTVjGkok21A>
-    <xmx:zHPDYeYfNsH7vD1r0sbEQcuX9egOxx1B6XpWHdAnQgpFUcDUGPPY5w>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 22 Dec 2021 13:51:56 -0500 (EST)
-From:   Tim Crawford <tcrawford@system76.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     productdev@system76.com
-Subject: [PATCH] platform/x86: system76_acpi: Guard System76 EC specific functionality
-Date:   Wed, 22 Dec 2021 11:51:54 -0700
-Message-Id: <20211222185154.4560-1-tcrawford@system76.com>
-X-Mailer: git-send-email 2.32.0
+        Wed, 22 Dec 2021 14:49:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640202591; x=1671738591;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+u45g5FS9ncjvOzB2qszi41Ir5iwmdP/6PPp75iwrjs=;
+  b=B3zIJNi/ko5XbykmlWpMM6sAX5FqonzaGJecFHZbPaDeFuY4RHN87brj
+   54ySmnlf4ddPX0rVf3vEXwE1mM3DuG+o3S+BCEW0tlwc2wl+6Sycbt6sH
+   efMCd0rxsxm3TS8IjiVwz6yeN1BWH7Q8Hso4k3tHQHHa4VfhhOm7o7cnL
+   ZIClPhK9saEOwyRi9D2GYag9nl7fR5ciK7hUbMprFk1ZVL1fnkh6BJZdG
+   VI2gUVRcpRpr3QZsC9SK7j3xWB5q2LjwObhUI8cUMqv57XLRWxbwcQbj8
+   /rZj82zBIP+lcmaOhlBepB4cE/rOI6kCBjKGIPhDhqRd+uViX9m2G3vrv
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10206"; a="304067528"
+X-IronPort-AV: E=Sophos;i="5.88,227,1635231600"; 
+   d="scan'208";a="304067528"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2021 11:49:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,227,1635231600"; 
+   d="scan'208";a="664375492"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Dec 2021 11:49:36 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 1C601FE; Wed, 22 Dec 2021 21:49:44 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <markgross@kernel.org>
+Subject: [PATCH v1 1/1] platform/x86/intel: Remove X86_PLATFORM_DRIVERS_INTEL
+Date:   Wed, 22 Dec 2021 21:49:41 +0200
+Message-Id: <20211222194941.76054-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Certain functionality or its implementation in System76 EC firmware may
-be different to the proprietary ODM EC firmware. Introduce a new bool,
-`has_open_ec`, to guard our specific logic. Detect the use of this by
-looking for a custom ACPI method name used in System76 firmware.
+While introduction of this menu brings a nice view in the configuration tools,
+it brought more issues than solves, i.e. it prevents to locate files in the
+intel/ subfolder without touching non-related Kconfig dependencies elsewhere.
+Drop X86_PLATFORM_DRIVERS_INTEL altogether.
 
-Signed-off-by: Tim Crawford <tcrawford@system76.com>
+Note, on x86 it's enabled by default and it's quite unlikely anybody wants to
+disable all of the modules in this submenu.
+
+Fixes: 8bd836feb6ca ("platform/x86: intel_skl_int3472: Move to intel/ subfolder")
+Suggested-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/system76_acpi.c | 58 ++++++++++++++--------------
- 1 file changed, 30 insertions(+), 28 deletions(-)
+ drivers/platform/x86/Makefile      |  2 +-
+ drivers/platform/x86/intel/Kconfig | 15 ---------------
+ 2 files changed, 1 insertion(+), 16 deletions(-)
 
-diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
-index 8b292ee95a14..7299ad08c838 100644
---- a/drivers/platform/x86/system76_acpi.c
-+++ b/drivers/platform/x86/system76_acpi.c
-@@ -35,6 +35,7 @@ struct system76_data {
- 	union acpi_object *nfan;
- 	union acpi_object *ntmp;
- 	struct input_dev *input;
-+	bool has_open_ec;
- };
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index dfb7ca88f012..18b11769073b 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -69,7 +69,7 @@ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
  
- static const struct acpi_device_id device_ids[] = {
-@@ -279,20 +280,12 @@ static struct acpi_battery_hook system76_battery_hook = {
+ # Intel
+-obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
++obj-y				+= intel/
  
- static void system76_battery_init(void)
- {
--	acpi_handle handle;
+ # MSI
+ obj-$(CONFIG_MSI_LAPTOP)	+= msi-laptop.o
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index e0cc64dcf72c..f8b53f24f6f2 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -3,19 +3,6 @@
+ # Intel x86 Platform Specific Drivers
+ #
+ 
+-menuconfig X86_PLATFORM_DRIVERS_INTEL
+-	bool "Intel x86 Platform Specific Device Drivers"
+-	default y
+-	help
+-	  Say Y here to get to see options for device drivers for
+-	  various Intel x86 platforms, including vendor-specific
+-	  drivers. This option alone does not add any kernel code.
 -
--	handle = ec_get_handle();
--	if (handle && acpi_has_method(handle, "GBCT"))
--		battery_hook_register(&system76_battery_hook);
-+	battery_hook_register(&system76_battery_hook);
- }
- 
- static void system76_battery_exit(void)
- {
--	acpi_handle handle;
+-	  If you say N, all options in this submenu will be skipped
+-	  and disabled.
 -
--	handle = ec_get_handle();
--	if (handle && acpi_has_method(handle, "GBCT"))
--		battery_hook_unregister(&system76_battery_hook);
-+	battery_hook_unregister(&system76_battery_hook);
- }
- 
- // Get the airplane mode LED brightness
-@@ -673,6 +666,10 @@ static int system76_add(struct acpi_device *acpi_dev)
- 	acpi_dev->driver_data = data;
- 	data->acpi_dev = acpi_dev;
- 
-+	// Some models do not run open EC firmware. Check for an ACPI method
-+	// that only exists on open EC to guard functionality specific to it.
-+	data->has_open_ec = acpi_has_method(acpi_device_handle(data->acpi_dev), "NFAN");
-+
- 	err = system76_get(data, "INIT");
- 	if (err)
- 		return err;
-@@ -718,27 +715,31 @@ static int system76_add(struct acpi_device *acpi_dev)
- 	if (err)
- 		goto error;
- 
--	err = system76_get_object(data, "NFAN", &data->nfan);
--	if (err)
--		goto error;
-+	if (data->has_open_ec) {
-+		err = system76_get_object(data, "NFAN", &data->nfan);
-+		if (err)
-+			goto error;
- 
--	err = system76_get_object(data, "NTMP", &data->ntmp);
--	if (err)
--		goto error;
-+		err = system76_get_object(data, "NTMP", &data->ntmp);
-+		if (err)
-+			goto error;
- 
--	data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
--		"system76_acpi", data, &thermal_chip_info, NULL);
--	err = PTR_ERR_OR_ZERO(data->therm);
--	if (err)
--		goto error;
-+		data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
-+			"system76_acpi", data, &thermal_chip_info, NULL);
-+		err = PTR_ERR_OR_ZERO(data->therm);
-+		if (err)
-+			goto error;
- 
--	system76_battery_init();
-+		system76_battery_init();
-+	}
- 
- 	return 0;
- 
- error:
--	kfree(data->ntmp);
--	kfree(data->nfan);
-+	if (data->has_open_ec) {
-+		kfree(data->ntmp);
-+		kfree(data->nfan);
-+	}
- 	return err;
- }
- 
-@@ -749,14 +750,15 @@ static int system76_remove(struct acpi_device *acpi_dev)
- 
- 	data = acpi_driver_data(acpi_dev);
- 
--	system76_battery_exit();
-+	if (data->has_open_ec) {
-+		system76_battery_exit();
-+		kfree(data->nfan);
-+		kfree(data->ntmp);
-+	}
- 
- 	devm_led_classdev_unregister(&acpi_dev->dev, &data->ap_led);
- 	devm_led_classdev_unregister(&acpi_dev->dev, &data->kb_led);
- 
--	kfree(data->nfan);
--	kfree(data->ntmp);
+-if X86_PLATFORM_DRIVERS_INTEL
 -
- 	system76_get(data, "FINI");
+ source "drivers/platform/x86/intel/atomisp2/Kconfig"
+ source "drivers/platform/x86/intel/int1092/Kconfig"
+ source "drivers/platform/x86/intel/int33fe/Kconfig"
+@@ -195,5 +182,3 @@ config INTEL_UNCORE_FREQ_CONTROL
  
- 	return 0;
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel-uncore-frequency.
+-
+-endif # X86_PLATFORM_DRIVERS_INTEL
 -- 
-2.33.1
+2.34.1
 
