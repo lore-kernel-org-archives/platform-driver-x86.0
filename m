@@ -2,117 +2,152 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EE5C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 19:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68012C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 21:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345319AbhLVTtx (ORCPT
+        id S233208AbhLVVU3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Dec 2021 14:49:53 -0500
-Received: from mga07.intel.com ([134.134.136.100]:25635 "EHLO mga07.intel.com"
+        Wed, 22 Dec 2021 16:20:29 -0500
+Received: from todd.t-8ch.de ([159.69.126.157]:50571 "EHLO todd.t-8ch.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345312AbhLVTtv (ORCPT
+        id S230115AbhLVVU2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Dec 2021 14:49:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640202591; x=1671738591;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+u45g5FS9ncjvOzB2qszi41Ir5iwmdP/6PPp75iwrjs=;
-  b=B3zIJNi/ko5XbykmlWpMM6sAX5FqonzaGJecFHZbPaDeFuY4RHN87brj
-   54ySmnlf4ddPX0rVf3vEXwE1mM3DuG+o3S+BCEW0tlwc2wl+6Sycbt6sH
-   efMCd0rxsxm3TS8IjiVwz6yeN1BWH7Q8Hso4k3tHQHHa4VfhhOm7o7cnL
-   ZIClPhK9saEOwyRi9D2GYag9nl7fR5ciK7hUbMprFk1ZVL1fnkh6BJZdG
-   VI2gUVRcpRpr3QZsC9SK7j3xWB5q2LjwObhUI8cUMqv57XLRWxbwcQbj8
-   /rZj82zBIP+lcmaOhlBepB4cE/rOI6kCBjKGIPhDhqRd+uViX9m2G3vrv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10206"; a="304067528"
-X-IronPort-AV: E=Sophos;i="5.88,227,1635231600"; 
-   d="scan'208";a="304067528"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2021 11:49:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,227,1635231600"; 
-   d="scan'208";a="664375492"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Dec 2021 11:49:36 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 1C601FE; Wed, 22 Dec 2021 21:49:44 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Gross <markgross@kernel.org>
-Subject: [PATCH v1 1/1] platform/x86/intel: Remove X86_PLATFORM_DRIVERS_INTEL
-Date:   Wed, 22 Dec 2021 21:49:41 +0200
-Message-Id: <20211222194941.76054-1-andriy.shevchenko@linux.intel.com>
+        Wed, 22 Dec 2021 16:20:28 -0500
+From:   =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
+        s=mail; t=1640208026;
+        bh=aGCj4aiE4nMhMPOvZxmPkbOeYECl8rQcbNMEcl0EXbc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RnBBWeyrJ/gnUz0yHX9jlR0geQv63Kx0+04Y7c+L0Xx6RJqDMVg3rWI/83H5HUlLD
+         alZG1UojE7+4TR7NwKfduFEw+5e54+7Mm1+0L3fOsp5Y4YH62M5N+ZAQxFWzJzYGS/
+         3vQ02nk84ZoOwF6RkvN/mTkzdf0LXRWcDhZqT6gg=
+To:     linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, markpearson@lenovo.com,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ognjen Galic <smclt30p@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        David Zeuthen <davidz@redhat.com>,
+        Richard Hughes <richard@hughsie.com>
+Subject: [PATCH] ACPI: battery: Add the ThinkPad "Not Charging" quirk
+Date:   Wed, 22 Dec 2021 22:20:14 +0100
+Message-Id: <20211222212014.66971-1-linux@weissschuh.net>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1640208009; l=3639; s=20211113; h=from:subject; bh=aGCj4aiE4nMhMPOvZxmPkbOeYECl8rQcbNMEcl0EXbc=; b=V4ltAs5HbLZJuv0HJiA8DNFuaS6cA+TfkoXpftD66G0oI3+a1Lfi7nnTjpqoEuQAaZBuCi4Th6V0 4oQ4R+6YA0Sfey7NObJdrg37MQq3l5anJc0hWKgNIkOC4nW4d9GP
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519; pk=9LP6KM4vD/8CwHW7nouRBhWLyQLcK1MkP6aTZbzUlj4=
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-While introduction of this menu brings a nice view in the configuration tools,
-it brought more issues than solves, i.e. it prevents to locate files in the
-intel/ subfolder without touching non-related Kconfig dependencies elsewhere.
-Drop X86_PLATFORM_DRIVERS_INTEL altogether.
+The EC/ACPI firmware on Lenovo ThinkPads used to report a status
+of "Unknown" when the battery is between the charge start and
+charge stop thresholds. On Windows, it reports "Not Charging"
+so the quirk has been added to also report correctly.
 
-Note, on x86 it's enabled by default and it's quite unlikely anybody wants to
-disable all of the modules in this submenu.
+Now the "status" attribute returns "Not Charging" when the
+battery on ThinkPads is not physicaly charging.
 
-Fixes: 8bd836feb6ca ("platform/x86: intel_skl_int3472: Move to intel/ subfolder")
-Suggested-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+
 ---
- drivers/platform/x86/Makefile      |  2 +-
- drivers/platform/x86/intel/Kconfig | 15 ---------------
- 2 files changed, 1 insertion(+), 16 deletions(-)
 
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index dfb7ca88f012..18b11769073b 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -69,7 +69,7 @@ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+This is the same as: https://patchwork.kernel.org/patch/10205359/
+
+Previously this patch has been applied[0] but then reverted from -next
+because it caused a regression in UPower.
+This regression however has been fixed in UPower in late 2018[1],
+with the fixed version 0.99.10 released in early 2019 [2].
+So maybe it is now time to reintroduce this change.
+
+Ognen:
+
+As the patch was originally developed by you, could send a
+Signed-off-by-tag, so I can attribute you as co-developer?
+
+Or maybe the original patch could just be re-applied?
+
+The original patch had the following tags, which I'm not sure to handle
+for this case:
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+Also Cc-ing the UPower maintainers for their opinion:
+
+Cc: Bastien Nocera <hadess@hadess.net>
+Cc: David Zeuthen <davidz@redhat.com>
+Cc: Richard Hughes <richard@hughsie.com>
+
+[0] Applied as 91eea70e5e5ce12eb1c7cd922e561fab43e201bd
+[1] https://gitlab.freedesktop.org/upower/upower/-/merge_requests/19/commits
+[2] https://gitlab.freedesktop.org/upower/upower/-/commit/215049e7b80c5f24cb35cd229a445c6cf19bd381
+---
+ drivers/acpi/battery.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+index 8afa85d6eb6a..ead0114f27c9 100644
+--- a/drivers/acpi/battery.c
++++ b/drivers/acpi/battery.c
+@@ -53,6 +53,7 @@ static int battery_bix_broken_package;
+ static int battery_notification_delay_ms;
+ static int battery_ac_is_broken;
+ static int battery_check_pmic = 1;
++static int battery_quirk_notcharging;
+ static unsigned int cache_time = 1000;
+ module_param(cache_time, uint, 0644);
+ MODULE_PARM_DESC(cache_time, "cache time in milliseconds");
+@@ -217,6 +218,8 @@ static int acpi_battery_get_property(struct power_supply *psy,
+ 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
+ 		else if (acpi_battery_is_charged(battery))
+ 			val->intval = POWER_SUPPLY_STATUS_FULL;
++		else if (battery_quirk_notcharging)
++			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
+ 		else
+ 			val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
+ 		break;
+@@ -1111,6 +1114,12 @@ battery_do_not_check_pmic_quirk(const struct dmi_system_id *d)
+ 	return 0;
+ }
  
- # Intel
--obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
-+obj-y				+= intel/
++static int __init battery_quirk_not_charging(const struct dmi_system_id *d)
++{
++	battery_quirk_notcharging = 1;
++	return 0;
++}
++
+ static const struct dmi_system_id bat_dmi_table[] __initconst = {
+ 	{
+ 		/* NEC LZ750/LS */
+@@ -1155,6 +1164,19 @@ static const struct dmi_system_id bat_dmi_table[] __initconst = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo MIIX 320-10ICR"),
+ 		},
+ 	},
++	{
++		/*
++		 * On Lenovo ThinkPads the BIOS specification defines
++		 * a state when the bits for charging and discharging
++		 * are both set to 0. That state is "Not Charging".
++		 */
++		.callback = battery_quirk_not_charging,
++		.ident = "Lenovo ThinkPad",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad"),
++		},
++	},
+ 	{},
+ };
  
- # MSI
- obj-$(CONFIG_MSI_LAPTOP)	+= msi-laptop.o
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index e0cc64dcf72c..f8b53f24f6f2 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -3,19 +3,6 @@
- # Intel x86 Platform Specific Drivers
- #
- 
--menuconfig X86_PLATFORM_DRIVERS_INTEL
--	bool "Intel x86 Platform Specific Device Drivers"
--	default y
--	help
--	  Say Y here to get to see options for device drivers for
--	  various Intel x86 platforms, including vendor-specific
--	  drivers. This option alone does not add any kernel code.
--
--	  If you say N, all options in this submenu will be skipped
--	  and disabled.
--
--if X86_PLATFORM_DRIVERS_INTEL
--
- source "drivers/platform/x86/intel/atomisp2/Kconfig"
- source "drivers/platform/x86/intel/int1092/Kconfig"
- source "drivers/platform/x86/intel/int33fe/Kconfig"
-@@ -195,5 +182,3 @@ config INTEL_UNCORE_FREQ_CONTROL
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel-uncore-frequency.
--
--endif # X86_PLATFORM_DRIVERS_INTEL
+
+base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
 -- 
 2.34.1
 
