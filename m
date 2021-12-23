@@ -2,209 +2,140 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3946EC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 16:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D14D2C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 17:00:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349258AbhLWQg2 (ORCPT
+        id S1349370AbhLWRAX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Dec 2021 11:36:28 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:53730 "EHLO
+        Thu, 23 Dec 2021 12:00:23 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:34099 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349250AbhLWQg2 (ORCPT
+        by vger.kernel.org with ESMTP id S1349365AbhLWRAS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Dec 2021 11:36:28 -0500
+        Thu, 23 Dec 2021 12:00:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640277387;
+        s=mimecast20190719; t=1640278817;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VnMgFshQCk4H2aviO2aDotAcxDTpL1gsve23sQb3mus=;
-        b=COyr+qfeRNDZPF1C1Fq81yz7+GvGr0nkRG0c+owPy0kCP+a3E5mKjEoh35jXpiw/p2HXcR
-        XGYSVS60iPq9IloymslV7BZTagWvho+dd6b42OwqG9pQbYNJqzvB+Ne20KSj/MX1I8IklQ
-        Flf6MZCysyJ1BHPFXpyqZ6O0vIBnkKs=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=nvsfcMVBWJERgEqnOROoErbQ2mtiiEO1pkWlJPmYlIg=;
+        b=GjMjpYBJtNxLEJvjRJYNisE0QOVe7+1dOqRCyFtiMZ5kz2J0ZwwTEwT3Nvs783lQktIak7
+        PtgTz+JkqvzCaEmb8UUDhL7UMJNelpmMcf09AilF6W/zXstwlQc5ed6Tz704+o/G+b5Bqx
+        RVPp+4Fh/yadduQYiHuWfF2BM0RYsAI=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-151-_zmmRJpLPfenM4kgl7UKUQ-1; Thu, 23 Dec 2021 11:36:26 -0500
-X-MC-Unique: _zmmRJpLPfenM4kgl7UKUQ-1
-Received: by mail-ed1-f70.google.com with SMTP id l14-20020aa7cace000000b003f7f8e1cbbdso4862978edt.20
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 08:36:26 -0800 (PST)
+ us-mta-633-OlsZ113OPTGiOxPWd1lzSQ-1; Thu, 23 Dec 2021 12:00:16 -0500
+X-MC-Unique: OlsZ113OPTGiOxPWd1lzSQ-1
+Received: by mail-ed1-f72.google.com with SMTP id s7-20020a056402520700b003f841380832so4945028edd.5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 09:00:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=VnMgFshQCk4H2aviO2aDotAcxDTpL1gsve23sQb3mus=;
-        b=sH8H8KI76fbUXrPJq7yEt9w71j0daIzgGsWZz9ahPK2MNH4K4ySyZERwydxClVgmMl
-         bcyEt77tOvVjaThHqK/G+yN8QljPdQphRGtPEHAbBGmckaIw7J2cENbTc95X4klXx4vV
-         FTRcloQa/cGuuXHv5srf+dwVo3227KDdtFoZ0c7d0Gq1zcBXuY9qj6JbszwSrXABIt/z
-         d+LD8j1aoiaDMB0PXsA8jVUqq0vm3BV5exovGxEpnkM9kEXwuER4J3RzysiENq2bEFqe
-         fzt5DmEkxVqVSFdELveupAm6UDhXs6+Iq0QOlB0yFADaLm3IUy/h5mQ7jUxDr56FcTbv
-         SfTg==
-X-Gm-Message-State: AOAM533I+6JSV1d4xs88dN9mJ8nk38SJYDlO8AFtTwEupzVo53iitbuR
-        WO86J4mDcRGFlV3WsO3QvvhYC0MfsXn+dmMxDv64SgiJ/wqVnMqMClbc95UOglXNLgFlVsNOa9g
-        J6I/HRgMObgjF24RrwSZyXYFUW/9YhMvymw==
-X-Received: by 2002:a05:6402:4386:: with SMTP id o6mr2718886edc.47.1640277385415;
-        Thu, 23 Dec 2021 08:36:25 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJybYzBVsP6qb8DsgTwNs41sNtraY7y2+U2l4h5Ei5i/50HTzdvEGT1u4q5PFrTjOTqU1QpfDQ==
-X-Received: by 2002:a05:6402:4386:: with SMTP id o6mr2718865edc.47.1640277385250;
-        Thu, 23 Dec 2021 08:36:25 -0800 (PST)
+        bh=nvsfcMVBWJERgEqnOROoErbQ2mtiiEO1pkWlJPmYlIg=;
+        b=bpjtt5Ki28fcyMzXknjGpbmNgQUqBfUXcvff7YOmL1TrZ65KT2+OHHrt0SIB2cEA/M
+         laC4GOgIwmzzWmehGOFGYrjRvcSInxA2N1eh+MB6aekiB+ZSMpyt9BEO6eIl8FSSB9aI
+         7OgnFviUMS1cZkQnktiIvfyacI9sD5ci2UQdJCcyZfIZf901vvPQ7YAItU142CGDjh45
+         /ImYuVIFeC1p2k0xzGGP1BxETt+oSHwUIh9yUFwhhJL5zSrUPPoEvi5sqi2FlFUz7IFG
+         VtmT/UEZ3UKHoJC/kqBD/aBiYhyw2ja5HoRDfXdX4/Ig723qw8ICCWz5PvYbGDVdFozr
+         //9g==
+X-Gm-Message-State: AOAM532xx5o9GZMDIl21QvbyQw2ZNMFUFqPPYv6U42xFovZF3fNEQQr4
+        FaSZDSpYbG4OIlRSk+PddXN26VFSJ8h6OAZDFK6BWkk3sOItB4ZtwmiUAgrwe/xDkOEpAirfZza
+        xvnbYaTFoWjrN0Ogzzroszlbw3jNKPUqikg==
+X-Received: by 2002:a05:6402:d0a:: with SMTP id eb10mr2784906edb.48.1640278815469;
+        Thu, 23 Dec 2021 09:00:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJw87UhCINhB18oUYfK4gbd/3DsjSTlRJLtf/0Dh2g1Vscsz3MP7wWjdmIMopMNKIhj0qff5DA==
+X-Received: by 2002:a05:6402:d0a:: with SMTP id eb10mr2784889edb.48.1640278815306;
+        Thu, 23 Dec 2021 09:00:15 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id p7sm2134763edu.84.2021.12.23.08.36.24
+        by smtp.gmail.com with ESMTPSA id mp9sm1919620ejc.106.2021.12.23.09.00.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Dec 2021 08:36:24 -0800 (PST)
-Message-ID: <31a528b8-8318-dc09-3a06-80f76771744a@redhat.com>
-Date:   Thu, 23 Dec 2021 17:36:24 +0100
+        Thu, 23 Dec 2021 09:00:14 -0800 (PST)
+Message-ID: <08236e18-f1ae-303c-3d2e-96f795d96c1f@redhat.com>
+Date:   Thu, 23 Dec 2021 18:00:14 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH] ACPI: battery: Add the ThinkPad "Not Charging" quirk
+Subject: Re: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
 Content-Language: en-US
-To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, markpearson@lenovo.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ognjen Galic <smclt30p@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        David Zeuthen <davidz@redhat.com>,
-        Richard Hughes <richard@hughsie.com>
-References: <20211222212014.66971-1-linux@weissschuh.net>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Gross <markgross@kernel.org>,
+        Henning Schild <henning.schild@siemens.com>
+References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211222212014.66971-1-linux@weissschuh.net>
+In-Reply-To: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Thomas,
+Hi,
 
-On 12/22/21 22:20, Thomas Weißschuh wrote:
-> The EC/ACPI firmware on Lenovo ThinkPads used to report a status
-> of "Unknown" when the battery is between the charge start and
-> charge stop thresholds. On Windows, it reports "Not Charging"
-> so the quirk has been added to also report correctly.
+On 12/21/21 19:15, Andy Shevchenko wrote:
+> There are a few users and at least one more is coming that would
+> like to utilize P2SB mechanism of hiding and unhiding a device from
+> the PCI configuration space.
 > 
-> Now the "status" attribute returns "Not Charging" when the
-> battery on ThinkPads is not physicaly charging.
+> Here is the series to deduplicate existing users and provide
+> a generic way for new comers.
 > 
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> It also includes a patch to enable GPIO controllers on Apollo Lake
+> when it's used with ABL bootloader w/o ACPI support.
+> 
+> The patch that bring the helper ("platform/x86/intel: Add Primary
+> to Sideband (P2SB) bridge support") has a commit message that
+> sheds a light on what the P2SB is and why this is needed.
+> 
+> Please, comment on the approach and individual patches.
+> 
+> The changes made in v2 do not change the main idea and the functionality
+> in a big scale. What we need is probably one more (RE-)test done by Henning.
+> I hope to have it merged to v5.17-rc1 that Siemens can develop their changes
+> based on this series.
+> 
+> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+> since we have an ACPI device for GPIO I do not see any attempts to recreate
+> one).
+> 
+> (Since it's cross subsystem, the PDx86 seems the main one and
+> I think it makes sense to route it throught it with immutable
+> tag or branch provided for the others).
 
-Thanks, patch looks good to me.
+The series looks good to me:
 
-As for the userspace issues in dealing with the
-POWER_SUPPLY_STATUS_NOT_CHARGING status, those indeed
-have long been fixed and this status is already returned
-acpi//battery.c from the acpi_battery_handle_discharging()
-function for a while no; and we have had no complaints
-about that:
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+For the series.
+
+Not sure if this is really 5.17 material this late in the cycle though,
+but lets wait and see what Bjorn and Lee have to say (patch 8/8 still
+needs an ack from Lee).
+
+I'm fine with taking this upstream through the pdx86 tree, please
+prepare a pull-req for everyone involved with an immutable branch
+pushed to pdx86/platform-drivers-x86.git/
+based on 5.16-rc1 (if everyone is happy with merging this for 5.17) or
+based on 5.17-rc1 once that is out.
 
 Regards,
 
 Hans
-
-
-
-
-> ---
-> 
-> This is the same as: https://patchwork.kernel.org/patch/10205359/
-> 
-> Previously this patch has been applied[0] but then reverted from -next
-> because it caused a regression in UPower.
-> This regression however has been fixed in UPower in late 2018[1],
-> with the fixed version 0.99.10 released in early 2019 [2].
-> So maybe it is now time to reintroduce this change.
-> 
-> Ognen:
-> 
-> As the patch was originally developed by you, could send a
-> Signed-off-by-tag, so I can attribute you as co-developer?
-> 
-> Or maybe the original patch could just be re-applied?
-> 
-> The original patch had the following tags, which I'm not sure to handle
-> for this case:
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Also Cc-ing the UPower maintainers for their opinion:
-> 
-> Cc: Bastien Nocera <hadess@hadess.net>
-> Cc: David Zeuthen <davidz@redhat.com>
-> Cc: Richard Hughes <richard@hughsie.com>
-> 
-> [0] Applied as 91eea70e5e5ce12eb1c7cd922e561fab43e201bd
-> [1] https://gitlab.freedesktop.org/upower/upower/-/merge_requests/19/commits
-> [2] https://gitlab.freedesktop.org/upower/upower/-/commit/215049e7b80c5f24cb35cd229a445c6cf19bd381
-> ---
->  drivers/acpi/battery.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> 
-> base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
-> 
-> diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
-> index 8afa85d6eb6a..ead0114f27c9 100644
-> --- a/drivers/acpi/battery.c
-> +++ b/drivers/acpi/battery.c
-> @@ -53,6 +53,7 @@ static int battery_bix_broken_package;
->  static int battery_notification_delay_ms;
->  static int battery_ac_is_broken;
->  static int battery_check_pmic = 1;
-> +static int battery_quirk_notcharging;
->  static unsigned int cache_time = 1000;
->  module_param(cache_time, uint, 0644);
->  MODULE_PARM_DESC(cache_time, "cache time in milliseconds");
-> @@ -217,6 +218,8 @@ static int acpi_battery_get_property(struct power_supply *psy,
->  			val->intval = POWER_SUPPLY_STATUS_CHARGING;
->  		else if (acpi_battery_is_charged(battery))
->  			val->intval = POWER_SUPPLY_STATUS_FULL;
-> +		else if (battery_quirk_notcharging)
-> +			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
->  		else
->  			val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
->  		break;
-> @@ -1111,6 +1114,12 @@ battery_do_not_check_pmic_quirk(const struct dmi_system_id *d)
->  	return 0;
->  }
->  
-> +static int __init battery_quirk_not_charging(const struct dmi_system_id *d)
-> +{
-> +	battery_quirk_notcharging = 1;
-> +	return 0;
-> +}
-> +
->  static const struct dmi_system_id bat_dmi_table[] __initconst = {
->  	{
->  		/* NEC LZ750/LS */
-> @@ -1155,6 +1164,19 @@ static const struct dmi_system_id bat_dmi_table[] __initconst = {
->  			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo MIIX 320-10ICR"),
->  		},
->  	},
-> +	{
-> +		/*
-> +		 * On Lenovo ThinkPads the BIOS specification defines
-> +		 * a state when the bits for charging and discharging
-> +		 * are both set to 0. That state is "Not Charging".
-> +		 */
-> +		.callback = battery_quirk_not_charging,
-> +		.ident = "Lenovo ThinkPad",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +			DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad"),
-> +		},
-> +	},
->  	{},
->  };
->  
-> 
 
