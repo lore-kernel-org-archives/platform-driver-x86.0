@@ -2,134 +2,223 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1954C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 15:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D9AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 16:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244501AbhLWPzc (ORCPT
+        id S1349148AbhLWQYc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Dec 2021 10:55:32 -0500
-Received: from mga05.intel.com ([192.55.52.43]:47181 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231974AbhLWPzb (ORCPT
+        Thu, 23 Dec 2021 11:24:32 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51618 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1349031AbhLWQYc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Dec 2021 10:55:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640274931; x=1671810931;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Eoq3IQ3HEs2cTlYpYY/HXtuejXWzsO7qZJoQ6uinrMU=;
-  b=KpkDSfxkMD/+eOjwDqvI78OB9nfKqhTpr4RDlct/Y3LTtFZFPL4MFt64
-   9ettBKW0nxTL3p/OF8m1hMwmcB/ttYKTvsFrMoRlD65GHHjMNWOkBnWbm
-   XY1QNa94lqIt6SjIW4MdUmeHmTH6vWue5zDygOAFE+3rR1mLAQuCXPek+
-   XgJ5jUN11wmWE+Efh30O+s5IeMlNJoxLsvEX6x13/VqmUJVEpeJVcrPjf
-   mXVQmzaS141mYwc4ekbYldrzXVmNtxB7tdurTTOHYrFblqxN3Ti0ZBFMu
-   QV9PDvw1rMTpIjh5F4+hQ2nTXJ3RCDBWIWV/SlytoOM+p9tCIC4Cce4vi
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10206"; a="327157245"
-X-IronPort-AV: E=Sophos;i="5.88,229,1635231600"; 
-   d="scan'208";a="327157245"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 07:55:31 -0800
-X-IronPort-AV: E=Sophos;i="5.88,229,1635231600"; 
-   d="scan'208";a="587346317"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 07:55:26 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1n0QPp-001Iqq-B3;
-        Thu, 23 Dec 2021 17:54:01 +0200
-Date:   Thu, 23 Dec 2021 17:54:01 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
-Message-ID: <YcSbmQq4sCd9Dshy@smile.fi.intel.com>
-References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
+        Thu, 23 Dec 2021 11:24:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1640276671;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ce8s95Xpo94oUZFkoDBB8Qld5GnPUfFsIOCy0UOtJqE=;
+        b=NWiIGbLK+hwrL5+FtB+tGNVn799yvIVi/wlTu5lxdqnm0h/C+XXOagsqNK7bXst8Eo2L0s
+        uuQe8gtaobfpAYjYHCcv6C90MwzhTIxk/M1L9MUKCTpF81rvBxPK4AQrYbjnG7gKbWGHfz
+        6z+vOu0MBLjq0IzBT1uruROuI5+44Ao=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-144-d7_Zsy8rN2SWfRJWBIJ74Q-1; Thu, 23 Dec 2021 11:24:30 -0500
+X-MC-Unique: d7_Zsy8rN2SWfRJWBIJ74Q-1
+Received: by mail-ed1-f72.google.com with SMTP id z8-20020a056402274800b003f8580bfb99so4873360edd.11
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 08:24:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ce8s95Xpo94oUZFkoDBB8Qld5GnPUfFsIOCy0UOtJqE=;
+        b=WuMod/SfitQl4D1OqSZe8gvT0Hy1HmKU4nIag8JVgpo2kzLBWulExKF2t6LGN/KabW
+         uQR7MMtWUVFdyRznfvPN2iztcJgRcvD82LKnDEQIhxmhQU9Dlj/sVFGNKliCU2xihDEB
+         ZTHWGcnpFTnB+K72VCBvA9bwWDOXaeELJUB5Ih3svjSAg4vpy/gyXLRkCFFrxe9C/aZI
+         g9AMpcsfvByEKLxCIRZaU15+XzSavKQtU7i+YbQ4L7j/yHgysfJ053n4HzbYpWZkPAU9
+         RKBLeqbnn6m8r3Y3sV3scSIUhpASSLHLZM3FMnT7kYokpshdHBmOU8PBjJSmTOSe0p2+
+         wzfA==
+X-Gm-Message-State: AOAM531QoL/6oD5efwR97E79MnSiak8Emf2DkmJ7uXn6Cn+2wPkb3bHY
+        EKjU1m7mgUkjrUJNgnqRB3oK+qzp23lAi9GyChHRjq9Py8+umx9+MZ6/lKknton9ld0jGpd+CB3
+        lVUBWfwF+pKDapa5ak8G4prmhlKvswbnS2Q==
+X-Received: by 2002:a17:907:6092:: with SMTP id ht18mr2464622ejc.175.1640276668823;
+        Thu, 23 Dec 2021 08:24:28 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy4i+Y/sGDlLItDaVNm8EjQJGa+HMRxHawRag2A/fxkNNzRTIaP8L6Yu6wrGDkAUXp2Yq0lsg==
+X-Received: by 2002:a17:907:6092:: with SMTP id ht18mr2464613ejc.175.1640276668605;
+        Thu, 23 Dec 2021 08:24:28 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id c12sm2251779edx.80.2021.12.23.08.24.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Dec 2021 08:24:28 -0800 (PST)
+Message-ID: <f0735e45-aeb8-e5b9-fea4-807212129c3f@redhat.com>
+Date:   Thu, 23 Dec 2021 17:24:27 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH] platform/x86: system76_acpi: Guard System76 EC specific
+ functionality
+Content-Language: en-US
+To:     Tim Crawford <tcrawford@system76.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     productdev@system76.com
+References: <20211222185154.4560-1-tcrawford@system76.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211222185154.4560-1-tcrawford@system76.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 08:15:18PM +0200, Andy Shevchenko wrote:
-> There are a few users and at least one more is coming that would
-> like to utilize P2SB mechanism of hiding and unhiding a device from
-> the PCI configuration space.
-> 
-> Here is the series to deduplicate existing users and provide
-> a generic way for new comers.
-> 
-> It also includes a patch to enable GPIO controllers on Apollo Lake
-> when it's used with ABL bootloader w/o ACPI support.
-> 
-> The patch that bring the helper ("platform/x86/intel: Add Primary
-> to Sideband (P2SB) bridge support") has a commit message that
-> sheds a light on what the P2SB is and why this is needed.
-> 
-> Please, comment on the approach and individual patches.
-> 
-> The changes made in v2 do not change the main idea and the functionality
-> in a big scale. What we need is probably one more (RE-)test done by Henning.
-> I hope to have it merged to v5.17-rc1 that Siemens can develop their changes
-> based on this series.
-> 
-> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
-> since we have an ACPI device for GPIO I do not see any attempts to recreate
-> one).
-> 
-> (Since it's cross subsystem, the PDx86 seems the main one and
-> I think it makes sense to route it throught it with immutable
-> tag or branch provided for the others).
-> 
-> Bjorn, are you okay with this approach and the commit message in the main
-> patch?
-> 
-> Changes in v3:
-> - resent with cover letter
-> 
-> Changes in v2:
-> - added parentheses around bus in macros (Joe)
-> - added tag (Jean)
-> - fixed indentation and wrapping in the header (Christoph)
-> - moved out of PCI realm to PDx86 as the best common denominator (Bjorn)
-> - added a verbose commit message to explain P2SB thingy (Bjorn)
-> - converted first parameter from pci_dev to pci_bus
-> - made first two parameters (bus and devfn) optional (Henning, Lee)
-> - added Intel pin control patch to the series (Henning, Mika)
-> - fixed English style in the commit message of one of MFD patch (Lee)
-> - added tags to my MFD LPC ICH patches (Lee)
-> - used consistently (c) (Lee)
-> - made indexing for MFD cell and resource arrays (Lee)
-> - fixed the resource size in i801 (Jean)
+Hi,
 
-I'm going to be on vacation till 2022-01-03, I'll address comments if any
-during the first week of January and I hope it can make v5.17. Hans, what
-do you think?
+On 12/22/21 19:51, Tim Crawford wrote:
+> Certain functionality or its implementation in System76 EC firmware may
+> be different to the proprietary ODM EC firmware. Introduce a new bool,
+> `has_open_ec`, to guard our specific logic. Detect the use of this by
+> looking for a custom ACPI method name used in System76 firmware.
+> 
+> Signed-off-by: Tim Crawford <tcrawford@system76.com>
 
-(Meanwhile I'm expecting that my patch to fix dependencies will be applied,
- so kbuild bot won't complain anymore on them being broken)
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
--- 
-With Best Regards,
-Andy Shevchenko
+I will also add this to the pdx86/fixes branch and send it out
+to Linus with the next pdx86 fixes pull-req for Linus (since this
+fixes changes introduced in 5.16).
 
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+
+
+> ---
+>  drivers/platform/x86/system76_acpi.c | 58 ++++++++++++++--------------
+>  1 file changed, 30 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
+> index 8b292ee95a14..7299ad08c838 100644
+> --- a/drivers/platform/x86/system76_acpi.c
+> +++ b/drivers/platform/x86/system76_acpi.c
+> @@ -35,6 +35,7 @@ struct system76_data {
+>  	union acpi_object *nfan;
+>  	union acpi_object *ntmp;
+>  	struct input_dev *input;
+> +	bool has_open_ec;
+>  };
+>  
+>  static const struct acpi_device_id device_ids[] = {
+> @@ -279,20 +280,12 @@ static struct acpi_battery_hook system76_battery_hook = {
+>  
+>  static void system76_battery_init(void)
+>  {
+> -	acpi_handle handle;
+> -
+> -	handle = ec_get_handle();
+> -	if (handle && acpi_has_method(handle, "GBCT"))
+> -		battery_hook_register(&system76_battery_hook);
+> +	battery_hook_register(&system76_battery_hook);
+>  }
+>  
+>  static void system76_battery_exit(void)
+>  {
+> -	acpi_handle handle;
+> -
+> -	handle = ec_get_handle();
+> -	if (handle && acpi_has_method(handle, "GBCT"))
+> -		battery_hook_unregister(&system76_battery_hook);
+> +	battery_hook_unregister(&system76_battery_hook);
+>  }
+>  
+>  // Get the airplane mode LED brightness
+> @@ -673,6 +666,10 @@ static int system76_add(struct acpi_device *acpi_dev)
+>  	acpi_dev->driver_data = data;
+>  	data->acpi_dev = acpi_dev;
+>  
+> +	// Some models do not run open EC firmware. Check for an ACPI method
+> +	// that only exists on open EC to guard functionality specific to it.
+> +	data->has_open_ec = acpi_has_method(acpi_device_handle(data->acpi_dev), "NFAN");
+> +
+>  	err = system76_get(data, "INIT");
+>  	if (err)
+>  		return err;
+> @@ -718,27 +715,31 @@ static int system76_add(struct acpi_device *acpi_dev)
+>  	if (err)
+>  		goto error;
+>  
+> -	err = system76_get_object(data, "NFAN", &data->nfan);
+> -	if (err)
+> -		goto error;
+> +	if (data->has_open_ec) {
+> +		err = system76_get_object(data, "NFAN", &data->nfan);
+> +		if (err)
+> +			goto error;
+>  
+> -	err = system76_get_object(data, "NTMP", &data->ntmp);
+> -	if (err)
+> -		goto error;
+> +		err = system76_get_object(data, "NTMP", &data->ntmp);
+> +		if (err)
+> +			goto error;
+>  
+> -	data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
+> -		"system76_acpi", data, &thermal_chip_info, NULL);
+> -	err = PTR_ERR_OR_ZERO(data->therm);
+> -	if (err)
+> -		goto error;
+> +		data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
+> +			"system76_acpi", data, &thermal_chip_info, NULL);
+> +		err = PTR_ERR_OR_ZERO(data->therm);
+> +		if (err)
+> +			goto error;
+>  
+> -	system76_battery_init();
+> +		system76_battery_init();
+> +	}
+>  
+>  	return 0;
+>  
+>  error:
+> -	kfree(data->ntmp);
+> -	kfree(data->nfan);
+> +	if (data->has_open_ec) {
+> +		kfree(data->ntmp);
+> +		kfree(data->nfan);
+> +	}
+>  	return err;
+>  }
+>  
+> @@ -749,14 +750,15 @@ static int system76_remove(struct acpi_device *acpi_dev)
+>  
+>  	data = acpi_driver_data(acpi_dev);
+>  
+> -	system76_battery_exit();
+> +	if (data->has_open_ec) {
+> +		system76_battery_exit();
+> +		kfree(data->nfan);
+> +		kfree(data->ntmp);
+> +	}
+>  
+>  	devm_led_classdev_unregister(&acpi_dev->dev, &data->ap_led);
+>  	devm_led_classdev_unregister(&acpi_dev->dev, &data->kb_led);
+>  
+> -	kfree(data->nfan);
+> -	kfree(data->ntmp);
+> -
+>  	system76_get(data, "FINI");
+>  
+>  	return 0;
+> 
 
