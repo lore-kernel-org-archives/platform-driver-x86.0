@@ -2,217 +2,134 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1C0C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 11:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1954C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 15:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348032AbhLWLu3 (ORCPT
+        id S244501AbhLWPzc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Dec 2021 06:50:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348025AbhLWLu1 (ORCPT
+        Thu, 23 Dec 2021 10:55:32 -0500
+Received: from mga05.intel.com ([192.55.52.43]:47181 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231974AbhLWPzb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Dec 2021 06:50:27 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7FA9C061756;
-        Thu, 23 Dec 2021 03:50:26 -0800 (PST)
-Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 09C2A1EC054E;
-        Thu, 23 Dec 2021 12:50:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1640260221;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=cuJ+soGkmwGVdG30YPS/F1N7S/DbyJYTLWnol8x+5u4=;
-        b=Rsvnfq2qxXXOgXEVluwWck3R4Eyw+KHKRdwmXra1wDyjKVwD1FsCFugMErEl59E6zC09t+
-        7CnZ2kUaKkSUR4FmgVCit4Y+JvrquvY0CLpilS0y9xMwmq1YCHGFBnupRwRbzYYqxst3b+
-        O8/fud/q7zcxWW+af8iQXU/ftTyZoOs=
-Date:   Thu, 23 Dec 2021 12:50:22 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v8 12/40] x86/sev: Add helper for validating pages in
- early enc attribute changes
-Message-ID: <YcRifo82cGk+wP+a@zn.tnic>
-References: <20211210154332.11526-1-brijesh.singh@amd.com>
- <20211210154332.11526-13-brijesh.singh@amd.com>
+        Thu, 23 Dec 2021 10:55:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640274931; x=1671810931;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Eoq3IQ3HEs2cTlYpYY/HXtuejXWzsO7qZJoQ6uinrMU=;
+  b=KpkDSfxkMD/+eOjwDqvI78OB9nfKqhTpr4RDlct/Y3LTtFZFPL4MFt64
+   9ettBKW0nxTL3p/OF8m1hMwmcB/ttYKTvsFrMoRlD65GHHjMNWOkBnWbm
+   XY1QNa94lqIt6SjIW4MdUmeHmTH6vWue5zDygOAFE+3rR1mLAQuCXPek+
+   XgJ5jUN11wmWE+Efh30O+s5IeMlNJoxLsvEX6x13/VqmUJVEpeJVcrPjf
+   mXVQmzaS141mYwc4ekbYldrzXVmNtxB7tdurTTOHYrFblqxN3Ti0ZBFMu
+   QV9PDvw1rMTpIjh5F4+hQ2nTXJ3RCDBWIWV/SlytoOM+p9tCIC4Cce4vi
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10206"; a="327157245"
+X-IronPort-AV: E=Sophos;i="5.88,229,1635231600"; 
+   d="scan'208";a="327157245"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 07:55:31 -0800
+X-IronPort-AV: E=Sophos;i="5.88,229,1635231600"; 
+   d="scan'208";a="587346317"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 07:55:26 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1n0QPp-001Iqq-B3;
+        Thu, 23 Dec 2021 17:54:01 +0200
+Date:   Thu, 23 Dec 2021 17:54:01 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Gross <markgross@kernel.org>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: Re: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
+Message-ID: <YcSbmQq4sCd9Dshy@smile.fi.intel.com>
+References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211210154332.11526-13-brijesh.singh@amd.com>
+In-Reply-To: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Dec 10, 2021 at 09:43:04AM -0600, Brijesh Singh wrote:
-> The early_set_memory_{encrypt,decrypt}() are used for changing the
-					^
-					ed()
-
-
-> page from decrypted (shared) to encrypted (private) and vice versa.
-> When SEV-SNP is active, the page state transition needs to go through
-> additional steps.
+On Tue, Dec 21, 2021 at 08:15:18PM +0200, Andy Shevchenko wrote:
+> There are a few users and at least one more is coming that would
+> like to utilize P2SB mechanism of hiding and unhiding a device from
+> the PCI configuration space.
 > 
-> If the page is transitioned from shared to private, then perform the
-> following after the encryption attribute is set in the page table:
+> Here is the series to deduplicate existing users and provide
+> a generic way for new comers.
 > 
-> 1. Issue the page state change VMGEXIT to add the page as a private
->    in the RMP table.
-> 2. Validate the page after its successfully added in the RMP table.
+> It also includes a patch to enable GPIO controllers on Apollo Lake
+> when it's used with ABL bootloader w/o ACPI support.
 > 
-> To maintain the security guarantees, if the page is transitioned from
-> private to shared, then perform the following before clearing the
-> encryption attribute from the page table.
+> The patch that bring the helper ("platform/x86/intel: Add Primary
+> to Sideband (P2SB) bridge support") has a commit message that
+> sheds a light on what the P2SB is and why this is needed.
 > 
-> 1. Invalidate the page.
-> 2. Issue the page state change VMGEXIT to make the page shared in the
->    RMP table.
+> Please, comment on the approach and individual patches.
 > 
-> The early_set_memory_{encrypt,decrypt} can be called before the GHCB
-
-ditto.
-
-> is setup, use the SNP page state MSR protocol VMGEXIT defined in the GHCB
-> specification to request the page state change in the RMP table.
+> The changes made in v2 do not change the main idea and the functionality
+> in a big scale. What we need is probably one more (RE-)test done by Henning.
+> I hope to have it merged to v5.17-rc1 that Siemens can develop their changes
+> based on this series.
 > 
-> While at it, add a helper snp_prep_memory() that can be used outside
-> the sev specific files to change the page state for a specified memory
-
-"outside of the sev specific"? What is that trying to say?
-
-/me goes and looks at the whole patchset...
-
-Right, so that is used only in probe_roms(). So that should say:
-
-"Add a helper ... which will be used in probe_roms(), in a later patch."
-
-> range.
+> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+> since we have an ACPI device for GPIO I do not see any attempts to recreate
+> one).
 > 
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/include/asm/sev.h |  10 ++++
->  arch/x86/kernel/sev.c      | 102 +++++++++++++++++++++++++++++++++++++
->  arch/x86/mm/mem_encrypt.c  |  51 +++++++++++++++++--
+> (Since it's cross subsystem, the PDx86 seems the main one and
+> I think it makes sense to route it throught it with immutable
+> tag or branch provided for the others).
+> 
+> Bjorn, are you okay with this approach and the commit message in the main
+> patch?
+> 
+> Changes in v3:
+> - resent with cover letter
+> 
+> Changes in v2:
+> - added parentheses around bus in macros (Joe)
+> - added tag (Jean)
+> - fixed indentation and wrapping in the header (Christoph)
+> - moved out of PCI realm to PDx86 as the best common denominator (Bjorn)
+> - added a verbose commit message to explain P2SB thingy (Bjorn)
+> - converted first parameter from pci_dev to pci_bus
+> - made first two parameters (bus and devfn) optional (Henning, Lee)
+> - added Intel pin control patch to the series (Henning, Mika)
+> - fixed English style in the commit message of one of MFD patch (Lee)
+> - added tags to my MFD LPC ICH patches (Lee)
+> - used consistently (c) (Lee)
+> - made indexing for MFD cell and resource arrays (Lee)
+> - fixed the resource size in i801 (Jean)
 
-Right, for the next revision, that file is called mem_encrypt_amd.c now.
+I'm going to be on vacation till 2022-01-03, I'll address comments if any
+during the first week of January and I hope it can make v5.17. Hans, what
+do you think?
 
-...
-
-> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> index 3ba801ff6afc..5d19aad06670 100644
-> --- a/arch/x86/mm/mem_encrypt.c
-> +++ b/arch/x86/mm/mem_encrypt.c
-> @@ -31,6 +31,7 @@
->  #include <asm/processor-flags.h>
->  #include <asm/msr.h>
->  #include <asm/cmdline.h>
-> +#include <asm/sev.h>
->  
->  #include "mm_internal.h"
->  
-> @@ -49,6 +50,34 @@ EXPORT_SYMBOL_GPL(sev_enable_key);
->  /* Buffer used for early in-place encryption by BSP, no locking needed */
->  static char sme_early_buffer[PAGE_SIZE] __initdata __aligned(PAGE_SIZE);
->  
-> +/*
-> + * When SNP is active, change the page state from private to shared before
-> + * copying the data from the source to destination and restore after the copy.
-> + * This is required because the source address is mapped as decrypted by the
-> + * caller of the routine.
-> + */
-> +static inline void __init snp_memcpy(void *dst, void *src, size_t sz,
-> +				     unsigned long paddr, bool decrypt)
-> +{
-> +	unsigned long npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
-> +
-> +	if (!cc_platform_has(CC_ATTR_SEV_SNP) || !decrypt) {
-
-Yeah, looking at this again, I don't really like this multiplexing.
-Let's do this instead, diff ontop:
-
----
-diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
-index c14fd8254198..e3f7a84449bb 100644
---- a/arch/x86/mm/mem_encrypt_amd.c
-+++ b/arch/x86/mm/mem_encrypt_amd.c
-@@ -49,24 +49,18 @@ EXPORT_SYMBOL(sme_me_mask);
- static char sme_early_buffer[PAGE_SIZE] __initdata __aligned(PAGE_SIZE);
- 
- /*
-- * When SNP is active, change the page state from private to shared before
-- * copying the data from the source to destination and restore after the copy.
-- * This is required because the source address is mapped as decrypted by the
-- * caller of the routine.
-+ * SNP-specific routine which needs to additionally change the page state from
-+ * private to shared before copying the data from the source to destination and
-+ * restore after the copy.
-  */
- static inline void __init snp_memcpy(void *dst, void *src, size_t sz,
- 				     unsigned long paddr, bool decrypt)
- {
- 	unsigned long npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
- 
--	if (!cc_platform_has(CC_ATTR_SEV_SNP) || !decrypt) {
--		memcpy(dst, src, sz);
--		return;
--	}
--
- 	/*
--	 * With SNP, the paddr needs to be accessed decrypted, mark the page
--	 * shared in the RMP table before copying it.
-+	 * @paddr needs to be accessed decrypted, mark the page shared in the
-+	 * RMP table before copying it.
- 	 */
- 	early_snp_set_memory_shared((unsigned long)__va(paddr), paddr, npages);
- 
-@@ -124,8 +118,13 @@ static void __init __sme_early_enc_dec(resource_size_t paddr,
- 		 * Use a temporary buffer, of cache-line multiple size, to
- 		 * avoid data corruption as documented in the APM.
- 		 */
--		snp_memcpy(sme_early_buffer, src, len, paddr, enc);
--		snp_memcpy(dst, sme_early_buffer, len, paddr, !enc);
-+		if (cc_platform_has(CC_ATTR_SEV_SNP)) {
-+			snp_memcpy(sme_early_buffer, src, len, paddr, enc);
-+			snp_memcpy(dst, sme_early_buffer, len, paddr, !enc);
-+		} else {
-+			memcpy(sme_early_buffer, src, len);
-+			memcpy(dst, sme_early_buffer, len);
-+		}
- 
- 		early_memunmap(dst, len);
- 		early_memunmap(src, len);
+(Meanwhile I'm expecting that my patch to fix dependencies will be applied,
+ so kbuild bot won't complain anymore on them being broken)
 
 -- 
-Regards/Gruss,
-    Boris.
+With Best Regards,
+Andy Shevchenko
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
