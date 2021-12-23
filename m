@@ -2,194 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AD1C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Dec 2021 23:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D976C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 08:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235575AbhLVX1B (ORCPT
+        id S1347257AbhLWI3j (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Dec 2021 18:27:01 -0500
-Received: from mga04.intel.com ([192.55.52.120]:58290 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230006AbhLVX1A (ORCPT
+        Thu, 23 Dec 2021 03:29:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347232AbhLWI3h (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Dec 2021 18:27:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640215620; x=1671751620;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=bB8znHsTjCVe4GJqzQyTh+jC/b+POrhRB22P9Vzw70g=;
-  b=akncUFlJeYI+5Ml2ffvBWLQqqbFX94RRVS5TcHQoXkswQR/+lzoqBso/
-   BJcqu1W3Fr+Baq0erbhYJOtd6X9+lTej9I3fy6N3CxgowK+3ybf+pF3KL
-   8AatJK8jzR5QSGQ9WFG9i0z1xXY+qFLBhPSDe1aJbAV3tSr5yUJJEcuBQ
-   y3hLFNYEw/x5oLUcScL/oleDt3ZtmQECn9EdPGUL70AqVdqIhQU5zJtp/
-   qRzeEYSLdhIBq7UTarrffdKwDPfNuJySzl9qwkeaue/cakSTZqyJhgYUs
-   wIMg1WMgRZlrQe64vv1v65nwAQd6ZeMaTaUcsNiP803egcjuhc2MXKnQK
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10206"; a="239476660"
-X-IronPort-AV: E=Sophos;i="5.88,227,1635231600"; 
-   d="scan'208";a="239476660"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2021 15:26:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,227,1635231600"; 
-   d="scan'208";a="756542923"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Dec 2021 15:26:58 -0800
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
-        by linux.intel.com (Postfix) with ESMTP id 361E25807C5;
-        Wed, 22 Dec 2021 15:26:58 -0800 (PST)
-Message-ID: <91a8399e9009654e6d014baab41829adf6e3c885.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: system76_acpi: Guard System76 EC specific
- functionality
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Tim Crawford <tcrawford@system76.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     productdev@system76.com
-Date:   Wed, 22 Dec 2021 15:26:58 -0800
-In-Reply-To: <20211222185154.4560-1-tcrawford@system76.com>
-References: <20211222185154.4560-1-tcrawford@system76.com>
-Organization: David E. Box
+        Thu, 23 Dec 2021 03:29:37 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B9C3C061401
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 00:29:37 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 65D74B81F8F
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 08:29:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1F4B4C36AF6
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 08:29:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640248174;
+        bh=FgOuZiYGSP0JkM1jBJo8S6XMTUj0/Gw2KamLzBc5kbM=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=IXPYpbCmZnhpzX51PizFpyuYEZbEpYRZyWdk5RTVgqbXxDLjSYmlYov6TA52poTXR
+         METmYcHzAQO1rOUcssV8e5K6xqoMJmQlAsQT0ngknNZB+kLPsEQ2bek7QEvoY8MRfW
+         MV92Zgnwr7SX3KBSqoTzWin5FsZsq2ToTDkcQApuvKes1eAq4T+ZwBLhmQkkOBxvWJ
+         oqJr3tAScNs4TJXyteSdvzDW4Ifkk/B8Rt1ALlwuXPUD9bmTjfbX8o6gO+e3ijlZ/j
+         JVDgOY3BS4qg9baW1s6Ao7CC9tmQXnWjK/9RksDTlN0J6y25SWaa7SSDsAUC5adL8c
+         LwCUI3lv041Rw==
+Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
+        id 1040D60E98; Thu, 23 Dec 2021 08:29:34 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 23 Dec 2021 08:29:29 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: greg@krypto.org
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc attachments.created
+Message-ID: <bug-204807-215701-FzWxQESdUx@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-On Wed, 2021-12-22 at 11:51 -0700, Tim Crawford wrote:
-> Certain functionality or its implementation in System76 EC firmware may
-> be different to the proprietary ODM EC firmware. Introduce a new bool,
-> `has_open_ec`, to guard our specific logic. Detect the use of this by
-> looking for a custom ACPI method name used in System76 firmware.
-> 
-> Signed-off-by: Tim Crawford <tcrawford@system76.com>
-> ---
->  drivers/platform/x86/system76_acpi.c | 58 ++++++++++++++--------------
->  1 file changed, 30 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
-> index 8b292ee95a14..7299ad08c838 100644
-> --- a/drivers/platform/x86/system76_acpi.c
-> +++ b/drivers/platform/x86/system76_acpi.c
-> @@ -35,6 +35,7 @@ struct system76_data {
->         union acpi_object *nfan;
->         union acpi_object *ntmp;
->         struct input_dev *input;
-> +       bool has_open_ec;
->  };
->  
->  static const struct acpi_device_id device_ids[] = {
-> @@ -279,20 +280,12 @@ static struct acpi_battery_hook system76_battery_hook = {
->  
->  static void system76_battery_init(void)
->  {
-> -       acpi_handle handle;
-> -
-> -       handle = ec_get_handle();
-> -       if (handle && acpi_has_method(handle, "GBCT"))
-> -               battery_hook_register(&system76_battery_hook);
-> +       battery_hook_register(&system76_battery_hook);
->  }
->  
->  static void system76_battery_exit(void)
->  {
-> -       acpi_handle handle;
-> -
-> -       handle = ec_get_handle();
-> -       if (handle && acpi_has_method(handle, "GBCT"))
-> -               battery_hook_unregister(&system76_battery_hook);
-> +       battery_hook_unregister(&system76_battery_hook);
->  }
->  
->  // Get the airplane mode LED brightness
-> @@ -673,6 +666,10 @@ static int system76_add(struct acpi_device *acpi_dev)
->         acpi_dev->driver_data = data;
->         data->acpi_dev = acpi_dev;
->  
-> +       // Some models do not run open EC firmware. Check for an ACPI method
-> +       // that only exists on open EC to guard functionality specific to it.
-> +       data->has_open_ec = acpi_has_method(acpi_device_handle(data->acpi_dev), "NFAN");
-> +
->         err = system76_get(data, "INIT");
->         if (err)
->                 return err;
-> @@ -718,27 +715,31 @@ static int system76_add(struct acpi_device *acpi_dev)
->         if (err)
->                 goto error;
->  
-> -       err = system76_get_object(data, "NFAN", &data->nfan);
-> -       if (err)
-> -               goto error;
-> +       if (data->has_open_ec) {
-> +               err = system76_get_object(data, "NFAN", &data->nfan);
-> +               if (err)
-> +                       goto error;
->  
-> -       err = system76_get_object(data, "NTMP", &data->ntmp);
-> -       if (err)
-> -               goto error;
-> +               err = system76_get_object(data, "NTMP", &data->ntmp);
-> +               if (err)
-> +                       goto error;
->  
-> -       data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
-> -               "system76_acpi", data, &thermal_chip_info, NULL);
-> -       err = PTR_ERR_OR_ZERO(data->therm);
-> -       if (err)
-> -               goto error;
-> +               data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
-> +                       "system76_acpi", data, &thermal_chip_info, NULL);
-> +               err = PTR_ERR_OR_ZERO(data->therm);
-> +               if (err)
-> +                       goto error;
->  
-> -       system76_battery_init();
-> +               system76_battery_init();
-> +       }
->  
->         return 0;
->  
->  error:
-> -       kfree(data->ntmp);
-> -       kfree(data->nfan);
-> +       if (data->has_open_ec) {
-> +               kfree(data->ntmp);
-> +               kfree(data->nfan);
-> +       }
+Gregory P. Smith (greg@krypto.org) changed:
 
-It appears that calling system76_battery_(init/exit) depends on has_open_ec. If so would it make
-sense to just move the code to those functions (get_objects in init and kfrees in exit)? But I can't
-tell if there are other calls.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |greg@krypto.org
 
-David
+--- Comment #202 from Gregory P. Smith (greg@krypto.org) ---
+Created attachment 300125
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300125&action=3Dedit
+ASUS Pro B550M-C/CSM acpidump -b dsdt.dat
 
->         return err;
->  }
->  
-> @@ -749,14 +750,15 @@ static int system76_remove(struct acpi_device *acpi_dev)
->  
->         data = acpi_driver_data(acpi_dev);
->  
-> -       system76_battery_exit();
-> +       if (data->has_open_ec) {
-> +               system76_battery_exit();
-> +               kfree(data->nfan);
-> +               kfree(data->ntmp);
-> +       }
->  
->         devm_led_classdev_unregister(&acpi_dev->dev, &data->ap_led);
->         devm_led_classdev_unregister(&acpi_dev->dev, &data->kb_led);
->  
-> -       kfree(data->nfan);
-> -       kfree(data->ntmp);
-> -
->         system76_get(data, "FINI");
->  
->         return 0;
+The "Pro B550M-C" as mentioned in #c70 also appears to need to be in a list.
 
+$ cat /sys/class/dmi/id/board_name=20
+Pro B550M-C
 
+https://www.asus.com/us/Motherboards-Components/Motherboards/CSM/Pro-B550M-=
+C-CSM/
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
