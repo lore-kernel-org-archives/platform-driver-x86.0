@@ -2,65 +2,66 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14D2C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 17:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B46C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 17:02:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349370AbhLWRAX (ORCPT
+        id S1349376AbhLWRCd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Dec 2021 12:00:23 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:34099 "EHLO
+        Thu, 23 Dec 2021 12:02:33 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:53687 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349365AbhLWRAS (ORCPT
+        by vger.kernel.org with ESMTP id S1349299AbhLWRCc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Dec 2021 12:00:18 -0500
+        Thu, 23 Dec 2021 12:02:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640278817;
+        s=mimecast20190719; t=1640278952;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nvsfcMVBWJERgEqnOROoErbQ2mtiiEO1pkWlJPmYlIg=;
-        b=GjMjpYBJtNxLEJvjRJYNisE0QOVe7+1dOqRCyFtiMZ5kz2J0ZwwTEwT3Nvs783lQktIak7
-        PtgTz+JkqvzCaEmb8UUDhL7UMJNelpmMcf09AilF6W/zXstwlQc5ed6Tz704+o/G+b5Bqx
-        RVPp+4Fh/yadduQYiHuWfF2BM0RYsAI=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=0L3hrfGHh2CA7aMbkoiYJDWgrUzDP7juBauygQys1NE=;
+        b=crVJQlN/JO2zqnvPxXEnCgKzsYPLHvinA3HORg+Ug2CoYnVjDDsPajUCq19cqGZ+DLEDSd
+        y4EGgu8AC0AhSLlWZWTmCFH9mIkBdUH+nB/0q8Gsy1Wodvg8YUi8FBHxpSylaMBge8bbzk
+        IxWJMJpm9sbHgcKp9qShuXHhTtf7Rxw=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-633-OlsZ113OPTGiOxPWd1lzSQ-1; Thu, 23 Dec 2021 12:00:16 -0500
-X-MC-Unique: OlsZ113OPTGiOxPWd1lzSQ-1
-Received: by mail-ed1-f72.google.com with SMTP id s7-20020a056402520700b003f841380832so4945028edd.5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 09:00:16 -0800 (PST)
+ us-mta-619-Ch6fhlEVMQ6gHVdddqTibA-1; Thu, 23 Dec 2021 12:02:31 -0500
+X-MC-Unique: Ch6fhlEVMQ6gHVdddqTibA-1
+Received: by mail-ed1-f71.google.com with SMTP id c19-20020a05640227d300b003f81c7154fbso4954454ede.7
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 09:02:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+         :content-language:from:to:cc:references:in-reply-to
          :content-transfer-encoding;
-        bh=nvsfcMVBWJERgEqnOROoErbQ2mtiiEO1pkWlJPmYlIg=;
-        b=bpjtt5Ki28fcyMzXknjGpbmNgQUqBfUXcvff7YOmL1TrZ65KT2+OHHrt0SIB2cEA/M
-         laC4GOgIwmzzWmehGOFGYrjRvcSInxA2N1eh+MB6aekiB+ZSMpyt9BEO6eIl8FSSB9aI
-         7OgnFviUMS1cZkQnktiIvfyacI9sD5ci2UQdJCcyZfIZf901vvPQ7YAItU142CGDjh45
-         /ImYuVIFeC1p2k0xzGGP1BxETt+oSHwUIh9yUFwhhJL5zSrUPPoEvi5sqi2FlFUz7IFG
-         VtmT/UEZ3UKHoJC/kqBD/aBiYhyw2ja5HoRDfXdX4/Ig723qw8ICCWz5PvYbGDVdFozr
-         //9g==
-X-Gm-Message-State: AOAM532xx5o9GZMDIl21QvbyQw2ZNMFUFqPPYv6U42xFovZF3fNEQQr4
-        FaSZDSpYbG4OIlRSk+PddXN26VFSJ8h6OAZDFK6BWkk3sOItB4ZtwmiUAgrwe/xDkOEpAirfZza
-        xvnbYaTFoWjrN0Ogzzroszlbw3jNKPUqikg==
-X-Received: by 2002:a05:6402:d0a:: with SMTP id eb10mr2784906edb.48.1640278815469;
-        Thu, 23 Dec 2021 09:00:15 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJw87UhCINhB18oUYfK4gbd/3DsjSTlRJLtf/0Dh2g1Vscsz3MP7wWjdmIMopMNKIhj0qff5DA==
-X-Received: by 2002:a05:6402:d0a:: with SMTP id eb10mr2784889edb.48.1640278815306;
-        Thu, 23 Dec 2021 09:00:15 -0800 (PST)
+        bh=0L3hrfGHh2CA7aMbkoiYJDWgrUzDP7juBauygQys1NE=;
+        b=a8ZoQMOIManULjbemI1SP+3uLgRsPTyp4cS7Ry0eQKEx6KSWMs0lUcKtGgo0CeYTYy
+         /B4ztCzQfHdFZnOgkVkRAI9UaDrIwLsrokfKhg6YeUcD2UiwCi0+rnFv6gMJ2j4D53RM
+         XPVUmfHOCI18odSspwdy4+2r1a3DVkdYG+3fuUj5pO3DHRT4DDONMy+cSwemcm+Ngez/
+         YJCheY1lZ7MhkAFgueA12E6lA2m0F4l/Q+XQ13xAotheojmPeQlNJ3gVXeICInP9UCD+
+         lQ+/kJkjPLRODRUaCFl1yb2HFtDoRh/bOV+CqJWxm76x8Wh65XI0A+g12GX0KxeKKE29
+         l4XA==
+X-Gm-Message-State: AOAM531G74WkujqGBfQ+S3VsLBXrDafEXI2Q52r7krZVAr5+is42qpaK
+        PmkksDmAALzZVlnHwWWorTQu3gMEFenV6/YGYaDLGnm2TJraXhNR67LTLavqkY34MD4JFXtjseL
+        DO/xRwynJcZBzqGNQJ8eBYZEa3aQjxXQDDg==
+X-Received: by 2002:a17:906:f890:: with SMTP id lg16mr2710066ejb.757.1640278949782;
+        Thu, 23 Dec 2021 09:02:29 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxd6UhL94vaLcT6InDaVEGyzk60r+sLqen2QhcGsQrIMo2bSgdjMPwZF4AcdCPefw/JLHpfew==
+X-Received: by 2002:a17:906:f890:: with SMTP id lg16mr2710037ejb.757.1640278949597;
+        Thu, 23 Dec 2021 09:02:29 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id mp9sm1919620ejc.106.2021.12.23.09.00.14
+        by smtp.gmail.com with ESMTPSA id nc14sm1937751ejc.44.2021.12.23.09.02.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Dec 2021 09:00:14 -0800 (PST)
-Message-ID: <08236e18-f1ae-303c-3d2e-96f795d96c1f@redhat.com>
-Date:   Thu, 23 Dec 2021 18:00:14 +0100
+        Thu, 23 Dec 2021 09:02:29 -0800 (PST)
+Message-ID: <4f3eca9f-1d55-35f5-585d-d121b1c83920@redhat.com>
+Date:   Thu, 23 Dec 2021 18:02:28 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
 Subject: Re: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
 Content-Language: en-US
+From:   Hans de Goede <hdegoede@redhat.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
         Heiner Kallweit <hkallweit1@gmail.com>,
@@ -79,8 +80,8 @@ Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
         Mark Gross <markgross@kernel.org>,
         Henning Schild <henning.schild@siemens.com>
 References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
+ <08236e18-f1ae-303c-3d2e-96f795d96c1f@redhat.com>
+In-Reply-To: <08236e18-f1ae-303c-3d2e-96f795d96c1f@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -89,51 +90,57 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/21/21 19:15, Andy Shevchenko wrote:
-> There are a few users and at least one more is coming that would
-> like to utilize P2SB mechanism of hiding and unhiding a device from
-> the PCI configuration space.
+On 12/23/21 18:00, Hans de Goede wrote:
+> Hi,
 > 
-> Here is the series to deduplicate existing users and provide
-> a generic way for new comers.
+> On 12/21/21 19:15, Andy Shevchenko wrote:
+>> There are a few users and at least one more is coming that would
+>> like to utilize P2SB mechanism of hiding and unhiding a device from
+>> the PCI configuration space.
+>>
+>> Here is the series to deduplicate existing users and provide
+>> a generic way for new comers.
+>>
+>> It also includes a patch to enable GPIO controllers on Apollo Lake
+>> when it's used with ABL bootloader w/o ACPI support.
+>>
+>> The patch that bring the helper ("platform/x86/intel: Add Primary
+>> to Sideband (P2SB) bridge support") has a commit message that
+>> sheds a light on what the P2SB is and why this is needed.
+>>
+>> Please, comment on the approach and individual patches.
+>>
+>> The changes made in v2 do not change the main idea and the functionality
+>> in a big scale. What we need is probably one more (RE-)test done by Henning.
+>> I hope to have it merged to v5.17-rc1 that Siemens can develop their changes
+>> based on this series.
+>>
+>> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+>> since we have an ACPI device for GPIO I do not see any attempts to recreate
+>> one).
+>>
+>> (Since it's cross subsystem, the PDx86 seems the main one and
+>> I think it makes sense to route it throught it with immutable
+>> tag or branch provided for the others).
 > 
-> It also includes a patch to enable GPIO controllers on Apollo Lake
-> when it's used with ABL bootloader w/o ACPI support.
+> The series looks good to me:
 > 
-> The patch that bring the helper ("platform/x86/intel: Add Primary
-> to Sideband (P2SB) bridge support") has a commit message that
-> sheds a light on what the P2SB is and why this is needed.
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
 > 
-> Please, comment on the approach and individual patches.
+> For the series.
 > 
-> The changes made in v2 do not change the main idea and the functionality
-> in a big scale. What we need is probably one more (RE-)test done by Henning.
-> I hope to have it merged to v5.17-rc1 that Siemens can develop their changes
-> based on this series.
-> 
-> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
-> since we have an ACPI device for GPIO I do not see any attempts to recreate
-> one).
-> 
-> (Since it's cross subsystem, the PDx86 seems the main one and
-> I think it makes sense to route it throught it with immutable
-> tag or branch provided for the others).
+> Not sure if this is really 5.17 material this late in the cycle though,
+> but lets wait and see what Bjorn and Lee have to say (patch 8/8 still
+> needs an ack from Lee).
 
-The series looks good to me:
+Correction I just realized that that would be 7/8 that needs an ack from
+Lee and that 8/8 needs an ack from Wolfram.
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-For the series.
-
-Not sure if this is really 5.17 material this late in the cycle though,
-but lets wait and see what Bjorn and Lee have to say (patch 8/8 still
-needs an ack from Lee).
-
-I'm fine with taking this upstream through the pdx86 tree, please
-prepare a pull-req for everyone involved with an immutable branch
-pushed to pdx86/platform-drivers-x86.git/
-based on 5.16-rc1 (if everyone is happy with merging this for 5.17) or
-based on 5.17-rc1 once that is out.
+> I'm fine with taking this upstream through the pdx86 tree, please
+> prepare a pull-req for everyone involved with an immutable branch
+> pushed to pdx86/platform-drivers-x86.git/
+> based on 5.16-rc1 (if everyone is happy with merging this for 5.17) or
+> based on 5.17-rc1 once that is out.
 
 Regards,
 
