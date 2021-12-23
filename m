@@ -2,88 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0565BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 17:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60789C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 17:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349503AbhLWRVU (ORCPT
+        id S1349472AbhLWR0J (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Dec 2021 12:21:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:40520 "EHLO
+        Thu, 23 Dec 2021 12:26:09 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32641 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349498AbhLWRVP (ORCPT
+        by vger.kernel.org with ESMTP id S233445AbhLWR0I (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Dec 2021 12:21:15 -0500
+        Thu, 23 Dec 2021 12:26:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640280074;
+        s=mimecast20190719; t=1640280368;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lJwESBfXdLlRTQjVnn/8aRYzO0Ti75Ie9JZOs6s+vV4=;
-        b=UALuU9ofRq9UiAnh3tTtN2N6X4coaojwF7Gb+ba6eWYNI5u9fmdgIJc80oEPIPVIKMwEB9
-        RvPaOJ6T1NpybeQNvtpH6vThc6YVSE44IQ+4E/bGzZ+TFEDeJ+Yvnxb+ZfgjpLhlF/GbdW
-        xWhDT1RLkXa7vDxCxsl7AG76Y1jmNxw=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=D6DKkgDTDhxYtT7SE1MZ2gU4Qw7DNSyzKlW+Sc2CEo0=;
+        b=HVcy/iF84JrXFPV7ibFdcP8Jt+aQHF6mbh7MkEebGXjYrup9xnz6nqyPUCeQMGnRU39TGE
+        1xfuuJjVQA2/v9nQvMa9+oArwky2HXx+toL6e/oFRVJbRXUfPoEdWZt4duAYEO7pCDkbaT
+        L21/dECpA8sjOH83U9hgOXQSvUfUrUE=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-173-DLjYdb6LOxuOQaqiUO8esA-1; Thu, 23 Dec 2021 12:21:13 -0500
-X-MC-Unique: DLjYdb6LOxuOQaqiUO8esA-1
-Received: by mail-ed1-f71.google.com with SMTP id d7-20020aa7ce07000000b003f84e9b9c2fso4950649edv.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 09:21:13 -0800 (PST)
+ us-mta-180-zSHmx1DoN1GkQz-HRRRyPQ-1; Thu, 23 Dec 2021 12:26:06 -0500
+X-MC-Unique: zSHmx1DoN1GkQz-HRRRyPQ-1
+Received: by mail-ed1-f69.google.com with SMTP id t1-20020a056402524100b003f8500f6e35so4996766edd.8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 09:26:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=lJwESBfXdLlRTQjVnn/8aRYzO0Ti75Ie9JZOs6s+vV4=;
-        b=33g+uTLoZp5ZPJk5SFMgLYeUJrMtlf3rqC5QL8nLyBcZpvaEw2YB4aogYqZ7q5Eypt
-         04Q3dna29u3qnlwIuYDstt7geC/B40SFacoU3sMALW5xrZNx0PxurnOOpvbRR+9TE+YA
-         T4YnMYLNI0dByh3APufB8ZIjdwhnuEnUCIzE0512/hOcP1sNNPxPULAJ25klAYFW2i4g
-         Xkd4ysnCRG0qDNw6FDCr2jvvVy8jsp58ygo6Vm0bNWXeb24oP7YPpjVu0PdLT6J3I+MA
-         aslaz7Wc2x/hSHOogzToX6DUUrllEt5pVCABLM7FDGhst7vLlgAonWYrhsxTx4SBpYz4
-         SODw==
-X-Gm-Message-State: AOAM531fUJmUyUHkzRP8a74azXPSU+KxK5Axz2k+XDduyy5lbZUSE/qX
-        Y4xxMj63PXc+S2QCHuxlZQELEJwVgq45WB1Ka/F9GMzPR4W7u6BtSBZirs3OZMxunGsmv6cBuHU
-        WSSd2aa7loWJgSJWo4Y9DKIrAuHNgPIFc0A==
-X-Received: by 2002:a17:906:c155:: with SMTP id dp21mr2655138ejc.450.1640280072426;
-        Thu, 23 Dec 2021 09:21:12 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzvNU4yKsznSEc81cyS1hgx9aufJ9uYEg6EMe6Mdn+BVvceyCYvgQqJKD2ZsvULoMRudmj/Uw==
-X-Received: by 2002:a17:906:c155:: with SMTP id dp21mr2655118ejc.450.1640280072230;
-        Thu, 23 Dec 2021 09:21:12 -0800 (PST)
+        bh=D6DKkgDTDhxYtT7SE1MZ2gU4Qw7DNSyzKlW+Sc2CEo0=;
+        b=5vbPAB36zzn1ucNioEjgOOBBgzwlehHxZI0lCrI0ChchUupmKSwOcV2NX/61snDblf
+         a8bHnQBnzhzY7e4PVcIaJijmVTD+E1fPb1LOsF2UxnfgldxYnWU45Pb71HkU2DKC9ZqC
+         /eOmbSCxMtsJSEpEJtJyhATRYeuh+sNjELgJLa/CahZQFdcn2wbPnYHAtjT0R8j+z2qD
+         UJLcWc4fB29ggUHSPhCvQ3DzKBhg0W8KrlwwNDwgzwkW8LdGfpLfSoCcdc+CT4aAf1K4
+         1u0nj8a8nRYJCI+bTEKN5VokqhZkbVnUXQ+Yomu7V1QLQ2R0DxneOUTqIpGvLqEQb66m
+         Vacw==
+X-Gm-Message-State: AOAM531cS+lLbs/yyKN6CaB7dNYFHV98jEuLRsl/ZTt4R0UopD1l+D0k
+        Lzd/8phYGvMkW+ndYejp3vIbhm5yKlyxhS/wbYQ1esrx1cb/2NYGjpasegmYVn6bjtuBqB3qWf+
+        WQlJIMVcfkClMZ8ldo91aOpAraPwPGtBo/g==
+X-Received: by 2002:a05:6402:4389:: with SMTP id o9mr2846383edc.348.1640280365728;
+        Thu, 23 Dec 2021 09:26:05 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwntV11rt4+lhlGdS8MxSVHoWS+d9FKrsZW5VbZIavL9hRy3z6+qAQUEGXAK9r+I3+Y/BWoAw==
+X-Received: by 2002:a05:6402:4389:: with SMTP id o9mr2846366edc.348.1640280365561;
+        Thu, 23 Dec 2021 09:26:05 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id f26sm1915536ejf.131.2021.12.23.09.21.11
+        by smtp.gmail.com with ESMTPSA id c20sm739730ede.12.2021.12.23.09.26.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Dec 2021 09:21:11 -0800 (PST)
-Message-ID: <cb2915c5-831a-f2cf-55be-633ea21fa048@redhat.com>
-Date:   Thu, 23 Dec 2021 18:21:11 +0100
+        Thu, 23 Dec 2021 09:26:05 -0800 (PST)
+Message-ID: <499f6c66-8f6d-6b25-e941-f14f729257d7@redhat.com>
+Date:   Thu, 23 Dec 2021 18:26:04 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH v5 2/4] leds: simatic-ipc-leds: add new driver for Siemens
- Industial PCs
+Subject: Re: [PATCH v2 1/2] platform/x86: Add x86-acpi-irq-helpers.h
 Content-Language: en-US
-To:     Henning Schild <henning.schild@siemens.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Enrico Weigelt <lkml@metux.net>
-References: <20211213120502.20661-1-henning.schild@siemens.com>
- <20211213120502.20661-3-henning.schild@siemens.com>
- <20211215201800.GA28336@duo.ucw.cz>
- <61983e62-bc3d-a711-c197-7436a2e33531@redhat.com>
- <20211219164903.GB28481@duo.ucw.cz>
- <20211220085220.23753298@md1za8fc.ad001.siemens.net>
- <20211220091434.2f696d76@md1za8fc.ad001.siemens.net>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+References: <20211221151243.66216-1-hdegoede@redhat.com>
+ <CAHp75VcCMeuSHkQT=azcEZeFxqU9_Na2yiXESEBvNqniyhtDvg@mail.gmail.com>
+ <32e68787-66ec-1522-0fea-e11130a428b8@redhat.com> <YcMd7dn+RCVrKOlj@lahna>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211220091434.2f696d76@md1za8fc.ad001.siemens.net>
+In-Reply-To: <YcMd7dn+RCVrKOlj@lahna>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -92,103 +79,93 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/20/21 09:14, Henning Schild wrote:
-> Am Mon, 20 Dec 2021 08:53:55 +0100
-> schrieb Henning Schild <henning.schild@siemens.com>:
+On 12/22/21 13:45, Mika Westerberg wrote:
+> Hi,
 > 
->> Am Sun, 19 Dec 2021 17:49:03 +0100
->> schrieb Pavel Machek <pavel@ucw.cz>:
+> On Tue, Dec 21, 2021 at 07:58:26PM +0100, Hans de Goede wrote:
+>> Hi,
 >>
->>> On Wed 2021-12-15 21:53:56, Hans de Goede wrote:  
->>>> Hi,
+>> On 12/21/21 16:27, Andy Shevchenko wrote:
+>>> On Tue, Dec 21, 2021 at 5:13 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >>>>
->>>> On 12/15/21 21:18, Pavel Machek wrote:    
->>>>> On Mon 2021-12-13 13:05:00, Henning Schild wrote:    
->>>>>> This driver adds initial support for several devices from
->>>>>> Siemens. It is based on a platform driver introduced in an
->>>>>> earlier commit.
->>>>>>
->>>>>> One of the supported machines has GPIO connected LEDs, here we
->>>>>> poke GPIO memory directly because pinctrl does not come up.
->>>>>>
->>>>>> Signed-off-by: Henning Schild <henning.schild@siemens.com>    
->>>>>
->>>>> Acked-by: Pavel Machek <pavel@ucw.cz>    
+>>>> Add helper code to get Linux IRQ numbers given a description of the IRQ
+>>>> source (either IOAPIC index, or GPIO chip name + pin-number).
 >>>>
->>>> I see that this patch #includes
->>>> linux/platform_data/x86/simatic-ipc-base.h which gets added by
->>>> patch 1/4.
+>>>> This is intended to be used to lookup Linux IRQ numbers in cases where the
+>>>> ACPI description for a device somehow lacks this info. This is only meant
+>>>> for use on x86 ACPI platforms.
 >>>>
->>>> Pavel, can I take this patch upstream through the pdx86 tree (with
->>>> you Ack added)? Or shall I prepare an immutable branch with patch
->>>> 1 for you to merge ?    
+>>>> This code is big/complex enough to warrant sharing, but too small to live
+>>>> in its own module, therefor x86_acpi_irq_helper_get() is defined as
+>>>> a static inline helper function.
 >>>
->>> Yes, you can.
+>>> ...
 >>>
->>>   
->>>>>> +
->>>>>> +static struct simatic_ipc_led simatic_ipc_leds_io[] = {
->>>>>> +	{1 << 15, "green:" LED_FUNCTION_STATUS "-1" },
->>>>>> +	{1 << 7,  "yellow:" LED_FUNCTION_STATUS "-1" },
->>>>>> +	{1 << 14, "red:" LED_FUNCTION_STATUS "-2" },
->>>>>> +	{1 << 6,  "yellow:" LED_FUNCTION_STATUS "-2" },
->>>>>> +	{1 << 13, "red:" LED_FUNCTION_STATUS "-3" },
->>>>>> +	{1 << 5,  "yellow:" LED_FUNCTION_STATUS "-3" },
->>>>>> +	{ }
->>>>>> +};    
+>>>> +/* For gpio_get_desc which is EXPORT_SYMBOL_GPL() */
 >>>
->>> But I'd still like better naming than red:status-2.  
+>>> gpio_get_desc()
 >>
->> We had the name discussion already several times, and i have to admit
->> i am not too happy either.
+>> Fixed in my local version.
 >>
->> But my impression was that this is an acceptable compromise. I am not
->> happy because the names lack scope, which i had in the first round
->> with "simatic-ipc:red:...".
+>>> and honestly I don't like this kind of includes (yes,
+>>> I know sometimes it's the best compromise).
+>>>
+>>>> +#include "../../gpio/gpiolib.h"
+>>>
+>>> ...
+>>>
+>>>> +               /* Like acpi_dev_gpio_irq_get(), but without parsing ACPI resources */
+>>>> +               chip = gpiochip_find(data->gpio_chip, x86_acpi_irq_helper_gpiochip_find);
+>>>> +               if (!chip)
+>>>> +                       return -EPROBE_DEFER;
+>>>> +
+>>>> +               gpiod = gpiochip_get_desc(chip, data->index);
+>>>> +               if (IS_ERR(gpiod)) {
+>>>> +                       ret = PTR_ERR(gpiod);
+>>>> +                       pr_err("error %d getting GPIO %s %d\n", ret,
+>>>> +                              data->gpio_chip, data->index);
+>>>> +                       return ret;
+>>>> +               }
+>>>> +
+>>>> +               irq = gpiod_to_irq(gpiod);
+>>>> +               if (irq < 0) {
+>>>> +                       pr_err("error %d getting IRQ %s %d\n", irq,
+>>>> +                              data->gpio_chip, data->index);
+>>>> +                       return irq;
+>>>> +               }
+>>>> +
+>>>> +               irq_type = acpi_dev_get_irq_type(data->trigger, data->polarity);
+>>>> +               if (irq_type != IRQ_TYPE_NONE && irq_type != irq_get_trigger_type(irq))
+>>>> +                       irq_set_irq_type(irq, irq_type);
+>>>> +
+>>>> +               return irq;
+>>>
+>>> I'm wondering why it can't be a part of the GPIO ACPI library?
 >>
->> Function is also a bit unclear, but with the numbers and the user
->> manual, or looking at the chassis it kind of adds up and should be
->> clear to users which is which.
+>> Interesting suggestion, but this really is only intended for the
+>> special case when the DSDT is missing this info. I'm a bit worried
+>> that having this available as a generic helper may lead to it
+>> getting used too much. But I guess we can just put a comment on it
+>> explaining that normally its use should be avoided.
 >>
->> But i agree with Hans that we should sort this out before merge. So
->> please say what makes you unhappy, maybe that can be fixed ... might
->> even make me happier about the names i feel i had to choose.
->>
->> The LEDs are per definition of the manuals meant for
->> users/applications to signal whatever the use-case might want to
->> signal. There are 3 of them numbered 1-3 on the chassis, and next to
->> the number can often (not always) be found a string like "error",
->> "maint", "run-stop" So a function suggestion i would say.
->>
->> I could envision to use "fault" or "alarm" instead of "status" for the
->> one labeled "error". And maybe "standby" for the one called "maint"
->> but i would really like to keep the numbers.
->>
->> Which would look like
->>
->> status-1
->> alarm-2
->> standby-3
->>
->> But still i have to clue what those names stand for and choosing
->> and of those "undefined" names could just suggest things and break
->> expectations. Calling them all "status" is neutral ... 
->>
->> Or can you explain the difference between "fault", "panic" and
->> "alarm". Ask 5 people and get at least 3 different expectations ... i
->> guess.
+>> I've added Mika to the Cc, Mika, what do you think about adding this
+>> as a new helper to the GPIO ACPI library ?
 > 
-> Long story short, i am also not happy but the current suggestion is the
-> most generic and least "expectation-creating" i could come up with.
-> While keeping a mapping between the name and the chassis/manual.
-> 
-> So i will stick with it, unless i get concrete suggestions on how to
-> improve.
+> Preferably no :-) Reason is that even if we add comment to the function
+> you don't remember it after two weeks so the next patch adding another
+> user will not be noticed by reviewers (unless tha name of the function
+> clearly says it is a quirk/workaround).
 
-Ok, given the above I've gone ahead and merged this series.
+Right, I also just found another, better way of dealing with the second
+use-case for these helpers, which leaves only the upcoming
+x86-android-tablets kernel module as user. So for version 3 of that module
+I'm just going to fold these back into that module, since now that will
+be the only user of this kludge.
 
-I too believe the current status names are fine, but if someone disagrees,
-they still have the entire 5.17 cycle to come up with something better.
+Turning this into a separate helper did result in a nice cleanup, so I'm
+going to keep things as is but just put them back into x86-android-tablets.c
+keeping them as is will also make it easier to factor them out again
+if that ever becomes necessary.
 
 Regards,
 
