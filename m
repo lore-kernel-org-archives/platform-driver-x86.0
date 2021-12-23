@@ -2,86 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B46C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 17:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDA0C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 17:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349376AbhLWRCd (ORCPT
+        id S1349441AbhLWRRH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Dec 2021 12:02:33 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:53687 "EHLO
+        Thu, 23 Dec 2021 12:17:07 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42654 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349299AbhLWRCc (ORCPT
+        by vger.kernel.org with ESMTP id S1349407AbhLWRRH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Dec 2021 12:02:32 -0500
+        Thu, 23 Dec 2021 12:17:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640278952;
+        s=mimecast20190719; t=1640279827;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0L3hrfGHh2CA7aMbkoiYJDWgrUzDP7juBauygQys1NE=;
-        b=crVJQlN/JO2zqnvPxXEnCgKzsYPLHvinA3HORg+Ug2CoYnVjDDsPajUCq19cqGZ+DLEDSd
-        y4EGgu8AC0AhSLlWZWTmCFH9mIkBdUH+nB/0q8Gsy1Wodvg8YUi8FBHxpSylaMBge8bbzk
-        IxWJMJpm9sbHgcKp9qShuXHhTtf7Rxw=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=5tKxu5jvc2qNkzWCP2pb4IkOAYj+EJYXt6ivrVtbtg4=;
+        b=AX8V6Xm8R3ybVrGzprhX3WdrIx55WJGc25H3fMfb6Ax+tZIdynfEQDnQCYQiwZL452XELt
+        CNuyeWLksNZnfeYKoI4SfbkI+mCHBtMosvnYdfxniRoPn8FL3f/SIlbtgrVnB7S13yX4Zn
+        EFpwt3D27rsK9X1dYuWW+91//SwWB24=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-619-Ch6fhlEVMQ6gHVdddqTibA-1; Thu, 23 Dec 2021 12:02:31 -0500
-X-MC-Unique: Ch6fhlEVMQ6gHVdddqTibA-1
-Received: by mail-ed1-f71.google.com with SMTP id c19-20020a05640227d300b003f81c7154fbso4954454ede.7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 09:02:30 -0800 (PST)
+ us-mta-664-7nwzwvjjO0-HHXWVDQRZEQ-1; Thu, 23 Dec 2021 12:17:05 -0500
+X-MC-Unique: 7nwzwvjjO0-HHXWVDQRZEQ-1
+Received: by mail-ed1-f72.google.com with SMTP id d7-20020aa7ce07000000b003f84e9b9c2fso4943712edv.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 09:17:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=0L3hrfGHh2CA7aMbkoiYJDWgrUzDP7juBauygQys1NE=;
-        b=a8ZoQMOIManULjbemI1SP+3uLgRsPTyp4cS7Ry0eQKEx6KSWMs0lUcKtGgo0CeYTYy
-         /B4ztCzQfHdFZnOgkVkRAI9UaDrIwLsrokfKhg6YeUcD2UiwCi0+rnFv6gMJ2j4D53RM
-         XPVUmfHOCI18odSspwdy4+2r1a3DVkdYG+3fuUj5pO3DHRT4DDONMy+cSwemcm+Ngez/
-         YJCheY1lZ7MhkAFgueA12E6lA2m0F4l/Q+XQ13xAotheojmPeQlNJ3gVXeICInP9UCD+
-         lQ+/kJkjPLRODRUaCFl1yb2HFtDoRh/bOV+CqJWxm76x8Wh65XI0A+g12GX0KxeKKE29
-         l4XA==
-X-Gm-Message-State: AOAM531G74WkujqGBfQ+S3VsLBXrDafEXI2Q52r7krZVAr5+is42qpaK
-        PmkksDmAALzZVlnHwWWorTQu3gMEFenV6/YGYaDLGnm2TJraXhNR67LTLavqkY34MD4JFXtjseL
-        DO/xRwynJcZBzqGNQJ8eBYZEa3aQjxXQDDg==
-X-Received: by 2002:a17:906:f890:: with SMTP id lg16mr2710066ejb.757.1640278949782;
-        Thu, 23 Dec 2021 09:02:29 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxd6UhL94vaLcT6InDaVEGyzk60r+sLqen2QhcGsQrIMo2bSgdjMPwZF4AcdCPefw/JLHpfew==
-X-Received: by 2002:a17:906:f890:: with SMTP id lg16mr2710037ejb.757.1640278949597;
-        Thu, 23 Dec 2021 09:02:29 -0800 (PST)
+        bh=5tKxu5jvc2qNkzWCP2pb4IkOAYj+EJYXt6ivrVtbtg4=;
+        b=IgzZoWOefWRHCvaddW8zg/tMHAguXoNDpTPVhiLX3VG809ib2Y8m97cRoqmMKyGNE+
+         chRD1p1e/QDIa4qHvOLibtDsoRWFbAanUNAgOCGxVDEzB0lMypcSuiqBLQdbpDjfz83K
+         A6a1gnx7DGBklTivZfIN/k8WvczpLK4/uOY3Bh8Kq3d/ocaK7Ol/fCRvzpX0j7jT209U
+         gLiiYtx1YC6x9VtlTBpa1KYhzvJ6+R+E/opdVtEbSmE7BOh0TGBKv+fHz9budSS/0AoP
+         CjWNYF/mZcyhGkPAFlUsNYnIVuD5dEwxhM2ubWDDR7WsdLqfRfzIbriuSzXjC/Bz/QgC
+         gPqw==
+X-Gm-Message-State: AOAM5329kUShPza9yqZ6dcwXF8TdMvZ7LZhRN8/H0cBTMnEM0BSOu1Bm
+        TML4HEc500MYiCC5dv7v93CpK6otioPD6Q+QdTo5bkvGGngjT4G9TdAwxPa+RfYyE1aoefqZH2u
+        6OZF2EOR8YuFtJW0+uQtXrcIDpF06+1OdDA==
+X-Received: by 2002:a05:6402:1203:: with SMTP id c3mr2823840edw.253.1640279824642;
+        Thu, 23 Dec 2021 09:17:04 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzuQV2fwk4RqZ2vQ67AF5f6k8exjGMP0tCUN/8g51odv/cVFyvaVH9DnbUlOrIu52FAAhF7cg==
+X-Received: by 2002:a05:6402:1203:: with SMTP id c3mr2823817edw.253.1640279824478;
+        Thu, 23 Dec 2021 09:17:04 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id nc14sm1937751ejc.44.2021.12.23.09.02.28
+        by smtp.gmail.com with ESMTPSA id y5sm1906647ejk.203.2021.12.23.09.17.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Dec 2021 09:02:29 -0800 (PST)
-Message-ID: <4f3eca9f-1d55-35f5-585d-d121b1c83920@redhat.com>
-Date:   Thu, 23 Dec 2021 18:02:28 +0100
+        Thu, 23 Dec 2021 09:17:03 -0800 (PST)
+Message-ID: <674e8c50-ece7-9aad-7876-c739dbc96498@redhat.com>
+Date:   Thu, 23 Dec 2021 18:17:03 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
+Subject: Re: [PATCH v5 0/4] add device drivers for Siemens Industrial PCs
 Content-Language: en-US
+To:     Henning Schild <henning.schild@siemens.com>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc:     Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Enrico Weigelt <lkml@metux.net>
+References: <20211213120502.20661-1-henning.schild@siemens.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
- <08236e18-f1ae-303c-3d2e-96f795d96c1f@redhat.com>
-In-Reply-To: <08236e18-f1ae-303c-3d2e-96f795d96c1f@redhat.com>
+In-Reply-To: <20211213120502.20661-1-henning.schild@siemens.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -90,59 +84,110 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/23/21 18:00, Hans de Goede wrote:
-> Hi,
+On 12/13/21 13:04, Henning Schild wrote:
+> changes since v4:
+> - make everything around GPIO memory usage more verbose
+>   - commit messages, FIXME in p1, cover-letter
 > 
-> On 12/21/21 19:15, Andy Shevchenko wrote:
->> There are a few users and at least one more is coming that would
->> like to utilize P2SB mechanism of hiding and unhiding a device from
->> the PCI configuration space.
->>
->> Here is the series to deduplicate existing users and provide
->> a generic way for new comers.
->>
->> It also includes a patch to enable GPIO controllers on Apollo Lake
->> when it's used with ABL bootloader w/o ACPI support.
->>
->> The patch that bring the helper ("platform/x86/intel: Add Primary
->> to Sideband (P2SB) bridge support") has a commit message that
->> sheds a light on what the P2SB is and why this is needed.
->>
->> Please, comment on the approach and individual patches.
->>
->> The changes made in v2 do not change the main idea and the functionality
->> in a big scale. What we need is probably one more (RE-)test done by Henning.
->> I hope to have it merged to v5.17-rc1 that Siemens can develop their changes
->> based on this series.
->>
->> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
->> since we have an ACPI device for GPIO I do not see any attempts to recreate
->> one).
->>
->> (Since it's cross subsystem, the PDx86 seems the main one and
->> I think it makes sense to route it throught it with immutable
->> tag or branch provided for the others).
+> changes since v3:
 > 
-> The series looks good to me:
+> - fix io access width and region reservations
+> - fix style in p1
 > 
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
+> changes since v2:
 > 
-> For the series.
+> - remove "simatic-ipc" prefix from LED names
+> - fix style issues found in v2, mainly LED driver
+> - fix OEM specific dmi code, and remove magic numbers
+> - more "simatic_ipc" name prefixing
+> - improved pmc quirk code using callbacks
 > 
-> Not sure if this is really 5.17 material this late in the cycle though,
-> but lets wait and see what Bjorn and Lee have to say (patch 8/8 still
-> needs an ack from Lee).
+> changes since v1:
+> 
+> - fixed lots of style issues found in v1
+>   - (debug) printing
+>   - header ordering
+> - fixed license issues GPLv2 and SPDX in all files
+> - module_platform_driver instead of __init __exit
+> - wdt simplifications cleanup
+> - lots of fixes in wdt driver, all that was found in v1
+> - fixed dmi length in dmi helper
+> - changed LED names to allowed ones
+> - move led driver to simple/
+> - switched pmc_atom to dmi callback with global variable
+> 
+> 
+> This series adds support for watchdogs and leds of several x86 devices
+> from Siemens.
+> 
+> It is structured with a platform driver that mainly does identification
+> of the machines. It might trigger loading of the actual device drivers
+> by attaching devices to the platform bus.
+> 
+> The identification is vendor specific, parsing a special binary DMI
+> entry. The implementation of that platform identification is applied on
+> pmc_atom clock quirks in the final patch.
+> 
+> It is all structured in a way that we can easily add more devices and
+> more platform drivers later. Internally we have some more code for
+> hardware monitoring, more leds, watchdogs etc. This will follow some
+> day.
+> 
+> The LED as well as the watchdog drivers access GPIO memory directly.
+> Using pinctrl is not possible because the machines lack ACPI entries for
+> the pinctrl drivers. Updates to the ACPI tables are not expected. So we
+> can rule out a conflict where two drivers would try and access that GPIO
+> memory.
+> So we do not use those pins as "general purpose" but as "Siemens
+> purpose", after having identified the devices very clearly. 
+> 
+> Henning Schild (4):
+>   platform/x86: simatic-ipc: add main driver for Siemens devices
+>   leds: simatic-ipc-leds: add new driver for Siemens Industial PCs
+>   watchdog: simatic-ipc-wdt: add new driver for Siemens Industrial PCs
+>   platform/x86: pmc_atom: improve critclk_systems matching for Siemens
+>     PCs
 
-Correction I just realized that that would be 7/8 that needs an ack from
-Lee and that 8/8 needs an ack from Wolfram.
 
-> I'm fine with taking this upstream through the pdx86 tree, please
-> prepare a pull-req for everyone involved with an immutable branch
-> pushed to pdx86/platform-drivers-x86.git/
-> based on 5.16-rc1 (if everyone is happy with merging this for 5.17) or
-> based on 5.17-rc1 once that is out.
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
+
+
+> 
+>  drivers/leds/Kconfig                          |   3 +
+>  drivers/leds/Makefile                         |   3 +
+>  drivers/leds/simple/Kconfig                   |  11 +
+>  drivers/leds/simple/Makefile                  |   2 +
+>  drivers/leds/simple/simatic-ipc-leds.c        | 202 ++++++++++++++++
+>  drivers/platform/x86/Kconfig                  |  12 +
+>  drivers/platform/x86/Makefile                 |   3 +
+>  drivers/platform/x86/pmc_atom.c               |  54 +++--
+>  drivers/platform/x86/simatic-ipc.c            | 176 ++++++++++++++
+>  drivers/watchdog/Kconfig                      |  11 +
+>  drivers/watchdog/Makefile                     |   1 +
+>  drivers/watchdog/simatic-ipc-wdt.c            | 228 ++++++++++++++++++
+>  .../platform_data/x86/simatic-ipc-base.h      |  29 +++
+>  include/linux/platform_data/x86/simatic-ipc.h |  72 ++++++
+>  14 files changed, 786 insertions(+), 21 deletions(-)
+>  create mode 100644 drivers/leds/simple/Kconfig
+>  create mode 100644 drivers/leds/simple/Makefile
+>  create mode 100644 drivers/leds/simple/simatic-ipc-leds.c
+>  create mode 100644 drivers/platform/x86/simatic-ipc.c
+>  create mode 100644 drivers/watchdog/simatic-ipc-wdt.c
+>  create mode 100644 include/linux/platform_data/x86/simatic-ipc-base.h
+>  create mode 100644 include/linux/platform_data/x86/simatic-ipc.h
+> 
 
