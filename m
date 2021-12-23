@@ -2,73 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6806FC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 17:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0565BC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 17:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349467AbhLWRTb (ORCPT
+        id S1349503AbhLWRVU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Dec 2021 12:19:31 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:30430 "EHLO
+        Thu, 23 Dec 2021 12:21:20 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:40520 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244396AbhLWRTa (ORCPT
+        by vger.kernel.org with ESMTP id S1349498AbhLWRVP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Dec 2021 12:19:30 -0500
+        Thu, 23 Dec 2021 12:21:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640279969;
+        s=mimecast20190719; t=1640280074;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CijTsc167v3pAGmC2N7oOwhu+CF6iavgoBpCSS5GyC8=;
-        b=GqHDU2g1ew7Q2dkyOmk4h4tRM4UL7QgOFavgtBRC+9c/ys1+iVjPUn7NIV8PbaJxXhBpem
-        IqtFfCqZHrwXVpM7hh8Cblzp/W3HxWqHiskmayqONxrVXaR4AkM82bz1YGvtvaeTR3ERkR
-        osc/65H4RP/mFzGjE5nrpBf4+auP75U=
+        bh=lJwESBfXdLlRTQjVnn/8aRYzO0Ti75Ie9JZOs6s+vV4=;
+        b=UALuU9ofRq9UiAnh3tTtN2N6X4coaojwF7Gb+ba6eWYNI5u9fmdgIJc80oEPIPVIKMwEB9
+        RvPaOJ6T1NpybeQNvtpH6vThc6YVSE44IQ+4E/bGzZ+TFEDeJ+Yvnxb+ZfgjpLhlF/GbdW
+        xWhDT1RLkXa7vDxCxsl7AG76Y1jmNxw=
 Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
  [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-629-5uuzUvz9PJS0m67v_e3hzQ-1; Thu, 23 Dec 2021 12:19:28 -0500
-X-MC-Unique: 5uuzUvz9PJS0m67v_e3hzQ-1
-Received: by mail-ed1-f71.google.com with SMTP id d7-20020aa7ce07000000b003f84e9b9c2fso4947658edv.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 09:19:28 -0800 (PST)
+ us-mta-173-DLjYdb6LOxuOQaqiUO8esA-1; Thu, 23 Dec 2021 12:21:13 -0500
+X-MC-Unique: DLjYdb6LOxuOQaqiUO8esA-1
+Received: by mail-ed1-f71.google.com with SMTP id d7-20020aa7ce07000000b003f84e9b9c2fso4950649edv.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 09:21:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=CijTsc167v3pAGmC2N7oOwhu+CF6iavgoBpCSS5GyC8=;
-        b=bAh3QeBIGbrwp2DfO3ZIHKlXbtxlaE5VwYtIYINMJcuvXBV2qXmGXcP4ggo3QSnBS1
-         26xO70xLg8I0oINH/NrvPZNNZZq2w2FhXLWMTVFbwMuALGqK182VuKYxFpICICtSXYdP
-         00Q5bkjYcQieLJSk6+emunEC7CRl3odjbFOlw1dKMHjqxpG8UZcV/Iw6dXQQuj3Azv1G
-         kKmQSJwxfCx/rbR16lZ3H9Xh0T1524gvHoraZ7RmQVS9Wwu/EZTb/mlwGL99aPwZJc4J
-         semjtJmJQt5jonKgc+7Wfx1eui6XGxuKNO2jQNdhC+GDbLqMx5OEQzBNNMJS0zsEI2t9
-         5jcw==
-X-Gm-Message-State: AOAM530vQPLcG2BQxtpzMN9FmUzZHVVV69b7EqOJYnAidH+RSAKuy1XO
-        eC0aNxLc6/DNQ1VBjFWpIFUbvWuxuGsLVpAI691GwquEhXynW+rTFOKvhvM6WsCc9urkzIUa/2v
-        a92e1Y+swYZit/y0iDMQF4uOfduFFTT1qzg==
-X-Received: by 2002:a17:907:2ce1:: with SMTP id hz1mr2795176ejc.199.1640279967242;
-        Thu, 23 Dec 2021 09:19:27 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyT9S+JHIoW7NGHZadwBhgS0oce/K2kX1wdhNB/MBs3FMbd3d5gpaUfA8rQZMaCWLv2SCSqPQ==
-X-Received: by 2002:a17:907:2ce1:: with SMTP id hz1mr2795165ejc.199.1640279967030;
-        Thu, 23 Dec 2021 09:19:27 -0800 (PST)
+        bh=lJwESBfXdLlRTQjVnn/8aRYzO0Ti75Ie9JZOs6s+vV4=;
+        b=33g+uTLoZp5ZPJk5SFMgLYeUJrMtlf3rqC5QL8nLyBcZpvaEw2YB4aogYqZ7q5Eypt
+         04Q3dna29u3qnlwIuYDstt7geC/B40SFacoU3sMALW5xrZNx0PxurnOOpvbRR+9TE+YA
+         T4YnMYLNI0dByh3APufB8ZIjdwhnuEnUCIzE0512/hOcP1sNNPxPULAJ25klAYFW2i4g
+         Xkd4ysnCRG0qDNw6FDCr2jvvVy8jsp58ygo6Vm0bNWXeb24oP7YPpjVu0PdLT6J3I+MA
+         aslaz7Wc2x/hSHOogzToX6DUUrllEt5pVCABLM7FDGhst7vLlgAonWYrhsxTx4SBpYz4
+         SODw==
+X-Gm-Message-State: AOAM531fUJmUyUHkzRP8a74azXPSU+KxK5Axz2k+XDduyy5lbZUSE/qX
+        Y4xxMj63PXc+S2QCHuxlZQELEJwVgq45WB1Ka/F9GMzPR4W7u6BtSBZirs3OZMxunGsmv6cBuHU
+        WSSd2aa7loWJgSJWo4Y9DKIrAuHNgPIFc0A==
+X-Received: by 2002:a17:906:c155:: with SMTP id dp21mr2655138ejc.450.1640280072426;
+        Thu, 23 Dec 2021 09:21:12 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzvNU4yKsznSEc81cyS1hgx9aufJ9uYEg6EMe6Mdn+BVvceyCYvgQqJKD2ZsvULoMRudmj/Uw==
+X-Received: by 2002:a17:906:c155:: with SMTP id dp21mr2655118ejc.450.1640280072230;
+        Thu, 23 Dec 2021 09:21:12 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id di18sm1951390ejc.56.2021.12.23.09.19.26
+        by smtp.gmail.com with ESMTPSA id f26sm1915536ejf.131.2021.12.23.09.21.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Dec 2021 09:19:26 -0800 (PST)
-Message-ID: <496d2006-481d-a94b-9ab0-e4b4dde315a1@redhat.com>
-Date:   Thu, 23 Dec 2021 18:19:26 +0100
+        Thu, 23 Dec 2021 09:21:11 -0800 (PST)
+Message-ID: <cb2915c5-831a-f2cf-55be-633ea21fa048@redhat.com>
+Date:   Thu, 23 Dec 2021 18:21:11 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH v1 1/1] platform/x86/intel: Remove
- X86_PLATFORM_DRIVERS_INTEL
+Subject: Re: [PATCH v5 2/4] leds: simatic-ipc-leds: add new driver for Siemens
+ Industial PCs
 Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Gross <markgross@kernel.org>
-References: <20211222194941.76054-1-andriy.shevchenko@linux.intel.com>
+To:     Henning Schild <henning.schild@siemens.com>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Enrico Weigelt <lkml@metux.net>
+References: <20211213120502.20661-1-henning.schild@siemens.com>
+ <20211213120502.20661-3-henning.schild@siemens.com>
+ <20211215201800.GA28336@duo.ucw.cz>
+ <61983e62-bc3d-a711-c197-7436a2e33531@redhat.com>
+ <20211219164903.GB28481@duo.ucw.cz>
+ <20211220085220.23753298@md1za8fc.ad001.siemens.net>
+ <20211220091434.2f696d76@md1za8fc.ad001.siemens.net>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211222194941.76054-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20211220091434.2f696d76@md1za8fc.ad001.siemens.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -77,83 +92,105 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/22/21 20:49, Andy Shevchenko wrote:
-> While introduction of this menu brings a nice view in the configuration tools,
-> it brought more issues than solves, i.e. it prevents to locate files in the
-> intel/ subfolder without touching non-related Kconfig dependencies elsewhere.
-> Drop X86_PLATFORM_DRIVERS_INTEL altogether.
+On 12/20/21 09:14, Henning Schild wrote:
+> Am Mon, 20 Dec 2021 08:53:55 +0100
+> schrieb Henning Schild <henning.schild@siemens.com>:
 > 
-> Note, on x86 it's enabled by default and it's quite unlikely anybody wants to
-> disable all of the modules in this submenu.
+>> Am Sun, 19 Dec 2021 17:49:03 +0100
+>> schrieb Pavel Machek <pavel@ucw.cz>:
+>>
+>>> On Wed 2021-12-15 21:53:56, Hans de Goede wrote:  
+>>>> Hi,
+>>>>
+>>>> On 12/15/21 21:18, Pavel Machek wrote:    
+>>>>> On Mon 2021-12-13 13:05:00, Henning Schild wrote:    
+>>>>>> This driver adds initial support for several devices from
+>>>>>> Siemens. It is based on a platform driver introduced in an
+>>>>>> earlier commit.
+>>>>>>
+>>>>>> One of the supported machines has GPIO connected LEDs, here we
+>>>>>> poke GPIO memory directly because pinctrl does not come up.
+>>>>>>
+>>>>>> Signed-off-by: Henning Schild <henning.schild@siemens.com>    
+>>>>>
+>>>>> Acked-by: Pavel Machek <pavel@ucw.cz>    
+>>>>
+>>>> I see that this patch #includes
+>>>> linux/platform_data/x86/simatic-ipc-base.h which gets added by
+>>>> patch 1/4.
+>>>>
+>>>> Pavel, can I take this patch upstream through the pdx86 tree (with
+>>>> you Ack added)? Or shall I prepare an immutable branch with patch
+>>>> 1 for you to merge ?    
+>>>
+>>> Yes, you can.
+>>>
+>>>   
+>>>>>> +
+>>>>>> +static struct simatic_ipc_led simatic_ipc_leds_io[] = {
+>>>>>> +	{1 << 15, "green:" LED_FUNCTION_STATUS "-1" },
+>>>>>> +	{1 << 7,  "yellow:" LED_FUNCTION_STATUS "-1" },
+>>>>>> +	{1 << 14, "red:" LED_FUNCTION_STATUS "-2" },
+>>>>>> +	{1 << 6,  "yellow:" LED_FUNCTION_STATUS "-2" },
+>>>>>> +	{1 << 13, "red:" LED_FUNCTION_STATUS "-3" },
+>>>>>> +	{1 << 5,  "yellow:" LED_FUNCTION_STATUS "-3" },
+>>>>>> +	{ }
+>>>>>> +};    
+>>>
+>>> But I'd still like better naming than red:status-2.  
+>>
+>> We had the name discussion already several times, and i have to admit
+>> i am not too happy either.
+>>
+>> But my impression was that this is an acceptable compromise. I am not
+>> happy because the names lack scope, which i had in the first round
+>> with "simatic-ipc:red:...".
+>>
+>> Function is also a bit unclear, but with the numbers and the user
+>> manual, or looking at the chassis it kind of adds up and should be
+>> clear to users which is which.
+>>
+>> But i agree with Hans that we should sort this out before merge. So
+>> please say what makes you unhappy, maybe that can be fixed ... might
+>> even make me happier about the names i feel i had to choose.
+>>
+>> The LEDs are per definition of the manuals meant for
+>> users/applications to signal whatever the use-case might want to
+>> signal. There are 3 of them numbered 1-3 on the chassis, and next to
+>> the number can often (not always) be found a string like "error",
+>> "maint", "run-stop" So a function suggestion i would say.
+>>
+>> I could envision to use "fault" or "alarm" instead of "status" for the
+>> one labeled "error". And maybe "standby" for the one called "maint"
+>> but i would really like to keep the numbers.
+>>
+>> Which would look like
+>>
+>> status-1
+>> alarm-2
+>> standby-3
+>>
+>> But still i have to clue what those names stand for and choosing
+>> and of those "undefined" names could just suggest things and break
+>> expectations. Calling them all "status" is neutral ... 
+>>
+>> Or can you explain the difference between "fault", "panic" and
+>> "alarm". Ask 5 people and get at least 3 different expectations ... i
+>> guess.
 > 
-> Fixes: 8bd836feb6ca ("platform/x86: intel_skl_int3472: Move to intel/ subfolder")
-> Suggested-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Long story short, i am also not happy but the current suggestion is the
+> most generic and least "expectation-creating" i could come up with.
+> While keeping a mapping between the name and the chassis/manual.
+> 
+> So i will stick with it, unless i get concrete suggestions on how to
+> improve.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Ok, given the above I've gone ahead and merged this series.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+I too believe the current status names are fine, but if someone disagrees,
+they still have the entire 5.17 cycle to come up with something better.
 
 Regards,
 
 Hans
-
-
-> ---
->  drivers/platform/x86/Makefile      |  2 +-
->  drivers/platform/x86/intel/Kconfig | 15 ---------------
->  2 files changed, 1 insertion(+), 16 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index dfb7ca88f012..18b11769073b 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -69,7 +69,7 @@ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->  obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->  
->  # Intel
-> -obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
-> +obj-y				+= intel/
->  
->  # MSI
->  obj-$(CONFIG_MSI_LAPTOP)	+= msi-laptop.o
-> diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-> index e0cc64dcf72c..f8b53f24f6f2 100644
-> --- a/drivers/platform/x86/intel/Kconfig
-> +++ b/drivers/platform/x86/intel/Kconfig
-> @@ -3,19 +3,6 @@
->  # Intel x86 Platform Specific Drivers
->  #
->  
-> -menuconfig X86_PLATFORM_DRIVERS_INTEL
-> -	bool "Intel x86 Platform Specific Device Drivers"
-> -	default y
-> -	help
-> -	  Say Y here to get to see options for device drivers for
-> -	  various Intel x86 platforms, including vendor-specific
-> -	  drivers. This option alone does not add any kernel code.
-> -
-> -	  If you say N, all options in this submenu will be skipped
-> -	  and disabled.
-> -
-> -if X86_PLATFORM_DRIVERS_INTEL
-> -
->  source "drivers/platform/x86/intel/atomisp2/Kconfig"
->  source "drivers/platform/x86/intel/int1092/Kconfig"
->  source "drivers/platform/x86/intel/int33fe/Kconfig"
-> @@ -195,5 +182,3 @@ config INTEL_UNCORE_FREQ_CONTROL
->  
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called intel-uncore-frequency.
-> -
-> -endif # X86_PLATFORM_DRIVERS_INTEL
-> 
 
