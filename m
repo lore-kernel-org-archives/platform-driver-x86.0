@@ -2,100 +2,108 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D9AC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 16:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3946EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Dec 2021 16:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349148AbhLWQYc (ORCPT
+        id S1349258AbhLWQg2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Dec 2021 11:24:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51618 "EHLO
+        Thu, 23 Dec 2021 11:36:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:53730 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349031AbhLWQYc (ORCPT
+        by vger.kernel.org with ESMTP id S1349250AbhLWQg2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Dec 2021 11:24:32 -0500
+        Thu, 23 Dec 2021 11:36:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640276671;
+        s=mimecast20190719; t=1640277387;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ce8s95Xpo94oUZFkoDBB8Qld5GnPUfFsIOCy0UOtJqE=;
-        b=NWiIGbLK+hwrL5+FtB+tGNVn799yvIVi/wlTu5lxdqnm0h/C+XXOagsqNK7bXst8Eo2L0s
-        uuQe8gtaobfpAYjYHCcv6C90MwzhTIxk/M1L9MUKCTpF81rvBxPK4AQrYbjnG7gKbWGHfz
-        6z+vOu0MBLjq0IzBT1uruROuI5+44Ao=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=VnMgFshQCk4H2aviO2aDotAcxDTpL1gsve23sQb3mus=;
+        b=COyr+qfeRNDZPF1C1Fq81yz7+GvGr0nkRG0c+owPy0kCP+a3E5mKjEoh35jXpiw/p2HXcR
+        XGYSVS60iPq9IloymslV7BZTagWvho+dd6b42OwqG9pQbYNJqzvB+Ne20KSj/MX1I8IklQ
+        Flf6MZCysyJ1BHPFXpyqZ6O0vIBnkKs=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-144-d7_Zsy8rN2SWfRJWBIJ74Q-1; Thu, 23 Dec 2021 11:24:30 -0500
-X-MC-Unique: d7_Zsy8rN2SWfRJWBIJ74Q-1
-Received: by mail-ed1-f72.google.com with SMTP id z8-20020a056402274800b003f8580bfb99so4873360edd.11
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 08:24:30 -0800 (PST)
+ us-mta-151-_zmmRJpLPfenM4kgl7UKUQ-1; Thu, 23 Dec 2021 11:36:26 -0500
+X-MC-Unique: _zmmRJpLPfenM4kgl7UKUQ-1
+Received: by mail-ed1-f70.google.com with SMTP id l14-20020aa7cace000000b003f7f8e1cbbdso4862978edt.20
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Dec 2021 08:36:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=ce8s95Xpo94oUZFkoDBB8Qld5GnPUfFsIOCy0UOtJqE=;
-        b=WuMod/SfitQl4D1OqSZe8gvT0Hy1HmKU4nIag8JVgpo2kzLBWulExKF2t6LGN/KabW
-         uQR7MMtWUVFdyRznfvPN2iztcJgRcvD82LKnDEQIhxmhQU9Dlj/sVFGNKliCU2xihDEB
-         ZTHWGcnpFTnB+K72VCBvA9bwWDOXaeELJUB5Ih3svjSAg4vpy/gyXLRkCFFrxe9C/aZI
-         g9AMpcsfvByEKLxCIRZaU15+XzSavKQtU7i+YbQ4L7j/yHgysfJ053n4HzbYpWZkPAU9
-         RKBLeqbnn6m8r3Y3sV3scSIUhpASSLHLZM3FMnT7kYokpshdHBmOU8PBjJSmTOSe0p2+
-         wzfA==
-X-Gm-Message-State: AOAM531QoL/6oD5efwR97E79MnSiak8Emf2DkmJ7uXn6Cn+2wPkb3bHY
-        EKjU1m7mgUkjrUJNgnqRB3oK+qzp23lAi9GyChHRjq9Py8+umx9+MZ6/lKknton9ld0jGpd+CB3
-        lVUBWfwF+pKDapa5ak8G4prmhlKvswbnS2Q==
-X-Received: by 2002:a17:907:6092:: with SMTP id ht18mr2464622ejc.175.1640276668823;
-        Thu, 23 Dec 2021 08:24:28 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJy4i+Y/sGDlLItDaVNm8EjQJGa+HMRxHawRag2A/fxkNNzRTIaP8L6Yu6wrGDkAUXp2Yq0lsg==
-X-Received: by 2002:a17:907:6092:: with SMTP id ht18mr2464613ejc.175.1640276668605;
-        Thu, 23 Dec 2021 08:24:28 -0800 (PST)
+        bh=VnMgFshQCk4H2aviO2aDotAcxDTpL1gsve23sQb3mus=;
+        b=sH8H8KI76fbUXrPJq7yEt9w71j0daIzgGsWZz9ahPK2MNH4K4ySyZERwydxClVgmMl
+         bcyEt77tOvVjaThHqK/G+yN8QljPdQphRGtPEHAbBGmckaIw7J2cENbTc95X4klXx4vV
+         FTRcloQa/cGuuXHv5srf+dwVo3227KDdtFoZ0c7d0Gq1zcBXuY9qj6JbszwSrXABIt/z
+         d+LD8j1aoiaDMB0PXsA8jVUqq0vm3BV5exovGxEpnkM9kEXwuER4J3RzysiENq2bEFqe
+         fzt5DmEkxVqVSFdELveupAm6UDhXs6+Iq0QOlB0yFADaLm3IUy/h5mQ7jUxDr56FcTbv
+         SfTg==
+X-Gm-Message-State: AOAM533I+6JSV1d4xs88dN9mJ8nk38SJYDlO8AFtTwEupzVo53iitbuR
+        WO86J4mDcRGFlV3WsO3QvvhYC0MfsXn+dmMxDv64SgiJ/wqVnMqMClbc95UOglXNLgFlVsNOa9g
+        J6I/HRgMObgjF24RrwSZyXYFUW/9YhMvymw==
+X-Received: by 2002:a05:6402:4386:: with SMTP id o6mr2718886edc.47.1640277385415;
+        Thu, 23 Dec 2021 08:36:25 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJybYzBVsP6qb8DsgTwNs41sNtraY7y2+U2l4h5Ei5i/50HTzdvEGT1u4q5PFrTjOTqU1QpfDQ==
+X-Received: by 2002:a05:6402:4386:: with SMTP id o6mr2718865edc.47.1640277385250;
+        Thu, 23 Dec 2021 08:36:25 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id c12sm2251779edx.80.2021.12.23.08.24.28
+        by smtp.gmail.com with ESMTPSA id p7sm2134763edu.84.2021.12.23.08.36.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Dec 2021 08:24:28 -0800 (PST)
-Message-ID: <f0735e45-aeb8-e5b9-fea4-807212129c3f@redhat.com>
-Date:   Thu, 23 Dec 2021 17:24:27 +0100
+        Thu, 23 Dec 2021 08:36:24 -0800 (PST)
+Message-ID: <31a528b8-8318-dc09-3a06-80f76771744a@redhat.com>
+Date:   Thu, 23 Dec 2021 17:36:24 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH] platform/x86: system76_acpi: Guard System76 EC specific
- functionality
+Subject: Re: [PATCH] ACPI: battery: Add the ThinkPad "Not Charging" quirk
 Content-Language: en-US
-To:     Tim Crawford <tcrawford@system76.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     productdev@system76.com
-References: <20211222185154.4560-1-tcrawford@system76.com>
+To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
+        linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, markpearson@lenovo.com,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ognjen Galic <smclt30p@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        David Zeuthen <davidz@redhat.com>,
+        Richard Hughes <richard@hughsie.com>
+References: <20211222212014.66971-1-linux@weissschuh.net>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211222185154.4560-1-tcrawford@system76.com>
+In-Reply-To: <20211222212014.66971-1-linux@weissschuh.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Thomas,
 
-On 12/22/21 19:51, Tim Crawford wrote:
-> Certain functionality or its implementation in System76 EC firmware may
-> be different to the proprietary ODM EC firmware. Introduce a new bool,
-> `has_open_ec`, to guard our specific logic. Detect the use of this by
-> looking for a custom ACPI method name used in System76 firmware.
+On 12/22/21 22:20, Thomas Weißschuh wrote:
+> The EC/ACPI firmware on Lenovo ThinkPads used to report a status
+> of "Unknown" when the battery is between the charge start and
+> charge stop thresholds. On Windows, it reports "Not Charging"
+> so the quirk has been added to also report correctly.
 > 
-> Signed-off-by: Tim Crawford <tcrawford@system76.com>
+> Now the "status" attribute returns "Not Charging" when the
+> battery on ThinkPads is not physicaly charging.
+> 
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Thanks, patch looks good to me.
 
-I will also add this to the pdx86/fixes branch and send it out
-to Linus with the next pdx86 fixes pull-req for Linus (since this
-fixes changes introduced in 5.16).
+As for the userspace issues in dealing with the
+POWER_SUPPLY_STATUS_NOT_CHARGING status, those indeed
+have long been fixed and this status is already returned
+acpi//battery.c from the acpi_battery_handle_discharging()
+function for a while no; and we have had no complaints
+about that:
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
@@ -105,120 +113,98 @@ Hans
 
 
 > ---
->  drivers/platform/x86/system76_acpi.c | 58 ++++++++++++++--------------
->  1 file changed, 30 insertions(+), 28 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
-> index 8b292ee95a14..7299ad08c838 100644
-> --- a/drivers/platform/x86/system76_acpi.c
-> +++ b/drivers/platform/x86/system76_acpi.c
-> @@ -35,6 +35,7 @@ struct system76_data {
->  	union acpi_object *nfan;
->  	union acpi_object *ntmp;
->  	struct input_dev *input;
-> +	bool has_open_ec;
+> This is the same as: https://patchwork.kernel.org/patch/10205359/
+> 
+> Previously this patch has been applied[0] but then reverted from -next
+> because it caused a regression in UPower.
+> This regression however has been fixed in UPower in late 2018[1],
+> with the fixed version 0.99.10 released in early 2019 [2].
+> So maybe it is now time to reintroduce this change.
+> 
+> Ognen:
+> 
+> As the patch was originally developed by you, could send a
+> Signed-off-by-tag, so I can attribute you as co-developer?
+> 
+> Or maybe the original patch could just be re-applied?
+> 
+> The original patch had the following tags, which I'm not sure to handle
+> for this case:
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Also Cc-ing the UPower maintainers for their opinion:
+> 
+> Cc: Bastien Nocera <hadess@hadess.net>
+> Cc: David Zeuthen <davidz@redhat.com>
+> Cc: Richard Hughes <richard@hughsie.com>
+> 
+> [0] Applied as 91eea70e5e5ce12eb1c7cd922e561fab43e201bd
+> [1] https://gitlab.freedesktop.org/upower/upower/-/merge_requests/19/commits
+> [2] https://gitlab.freedesktop.org/upower/upower/-/commit/215049e7b80c5f24cb35cd229a445c6cf19bd381
+> ---
+>  drivers/acpi/battery.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> 
+> base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
+> 
+> diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+> index 8afa85d6eb6a..ead0114f27c9 100644
+> --- a/drivers/acpi/battery.c
+> +++ b/drivers/acpi/battery.c
+> @@ -53,6 +53,7 @@ static int battery_bix_broken_package;
+>  static int battery_notification_delay_ms;
+>  static int battery_ac_is_broken;
+>  static int battery_check_pmic = 1;
+> +static int battery_quirk_notcharging;
+>  static unsigned int cache_time = 1000;
+>  module_param(cache_time, uint, 0644);
+>  MODULE_PARM_DESC(cache_time, "cache time in milliseconds");
+> @@ -217,6 +218,8 @@ static int acpi_battery_get_property(struct power_supply *psy,
+>  			val->intval = POWER_SUPPLY_STATUS_CHARGING;
+>  		else if (acpi_battery_is_charged(battery))
+>  			val->intval = POWER_SUPPLY_STATUS_FULL;
+> +		else if (battery_quirk_notcharging)
+> +			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
+>  		else
+>  			val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
+>  		break;
+> @@ -1111,6 +1114,12 @@ battery_do_not_check_pmic_quirk(const struct dmi_system_id *d)
+>  	return 0;
+>  }
+>  
+> +static int __init battery_quirk_not_charging(const struct dmi_system_id *d)
+> +{
+> +	battery_quirk_notcharging = 1;
+> +	return 0;
+> +}
+> +
+>  static const struct dmi_system_id bat_dmi_table[] __initconst = {
+>  	{
+>  		/* NEC LZ750/LS */
+> @@ -1155,6 +1164,19 @@ static const struct dmi_system_id bat_dmi_table[] __initconst = {
+>  			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo MIIX 320-10ICR"),
+>  		},
+>  	},
+> +	{
+> +		/*
+> +		 * On Lenovo ThinkPads the BIOS specification defines
+> +		 * a state when the bits for charging and discharging
+> +		 * are both set to 0. That state is "Not Charging".
+> +		 */
+> +		.callback = battery_quirk_not_charging,
+> +		.ident = "Lenovo ThinkPad",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad"),
+> +		},
+> +	},
+>  	{},
 >  };
 >  
->  static const struct acpi_device_id device_ids[] = {
-> @@ -279,20 +280,12 @@ static struct acpi_battery_hook system76_battery_hook = {
->  
->  static void system76_battery_init(void)
->  {
-> -	acpi_handle handle;
-> -
-> -	handle = ec_get_handle();
-> -	if (handle && acpi_has_method(handle, "GBCT"))
-> -		battery_hook_register(&system76_battery_hook);
-> +	battery_hook_register(&system76_battery_hook);
->  }
->  
->  static void system76_battery_exit(void)
->  {
-> -	acpi_handle handle;
-> -
-> -	handle = ec_get_handle();
-> -	if (handle && acpi_has_method(handle, "GBCT"))
-> -		battery_hook_unregister(&system76_battery_hook);
-> +	battery_hook_unregister(&system76_battery_hook);
->  }
->  
->  // Get the airplane mode LED brightness
-> @@ -673,6 +666,10 @@ static int system76_add(struct acpi_device *acpi_dev)
->  	acpi_dev->driver_data = data;
->  	data->acpi_dev = acpi_dev;
->  
-> +	// Some models do not run open EC firmware. Check for an ACPI method
-> +	// that only exists on open EC to guard functionality specific to it.
-> +	data->has_open_ec = acpi_has_method(acpi_device_handle(data->acpi_dev), "NFAN");
-> +
->  	err = system76_get(data, "INIT");
->  	if (err)
->  		return err;
-> @@ -718,27 +715,31 @@ static int system76_add(struct acpi_device *acpi_dev)
->  	if (err)
->  		goto error;
->  
-> -	err = system76_get_object(data, "NFAN", &data->nfan);
-> -	if (err)
-> -		goto error;
-> +	if (data->has_open_ec) {
-> +		err = system76_get_object(data, "NFAN", &data->nfan);
-> +		if (err)
-> +			goto error;
->  
-> -	err = system76_get_object(data, "NTMP", &data->ntmp);
-> -	if (err)
-> -		goto error;
-> +		err = system76_get_object(data, "NTMP", &data->ntmp);
-> +		if (err)
-> +			goto error;
->  
-> -	data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
-> -		"system76_acpi", data, &thermal_chip_info, NULL);
-> -	err = PTR_ERR_OR_ZERO(data->therm);
-> -	if (err)
-> -		goto error;
-> +		data->therm = devm_hwmon_device_register_with_info(&acpi_dev->dev,
-> +			"system76_acpi", data, &thermal_chip_info, NULL);
-> +		err = PTR_ERR_OR_ZERO(data->therm);
-> +		if (err)
-> +			goto error;
->  
-> -	system76_battery_init();
-> +		system76_battery_init();
-> +	}
->  
->  	return 0;
->  
->  error:
-> -	kfree(data->ntmp);
-> -	kfree(data->nfan);
-> +	if (data->has_open_ec) {
-> +		kfree(data->ntmp);
-> +		kfree(data->nfan);
-> +	}
->  	return err;
->  }
->  
-> @@ -749,14 +750,15 @@ static int system76_remove(struct acpi_device *acpi_dev)
->  
->  	data = acpi_driver_data(acpi_dev);
->  
-> -	system76_battery_exit();
-> +	if (data->has_open_ec) {
-> +		system76_battery_exit();
-> +		kfree(data->nfan);
-> +		kfree(data->ntmp);
-> +	}
->  
->  	devm_led_classdev_unregister(&acpi_dev->dev, &data->ap_led);
->  	devm_led_classdev_unregister(&acpi_dev->dev, &data->kb_led);
->  
-> -	kfree(data->nfan);
-> -	kfree(data->ntmp);
-> -
->  	system76_get(data, "FINI");
->  
->  	return 0;
 > 
 
