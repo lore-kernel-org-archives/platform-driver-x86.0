@@ -2,56 +2,56 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03658C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Dec 2021 14:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B69C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Dec 2021 14:38:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231819AbhLYOUn (ORCPT
+        id S231876AbhLYOi1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 25 Dec 2021 09:20:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48382 "EHLO
+        Sat, 25 Dec 2021 09:38:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231607AbhLYOUn (ORCPT
+        with ESMTP id S229884AbhLYOi0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 25 Dec 2021 09:20:43 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C20F7C061401;
-        Sat, 25 Dec 2021 06:20:42 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id q14so35739023edi.3;
-        Sat, 25 Dec 2021 06:20:42 -0800 (PST)
+        Sat, 25 Dec 2021 09:38:26 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880F0C061401;
+        Sat, 25 Dec 2021 06:38:26 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id bm14so43530300edb.5;
+        Sat, 25 Dec 2021 06:38:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UsXJHC1uef9UNrnMagY0V1IAZ6G4dSU4+YNwVTURnEc=;
-        b=V23NF4wRfjuYTLxsRU/rJ1L3WeqPOEIhYXZ3zSl8u/S+oFWmOeNVSoleRRb2CjQF5g
-         8355xXybUzptDsi/YaW4EEIl1rtY0n2HyTRP5ql87lrkJ1+m5KlhFy/D6CL2gjuNKvZt
-         RooPmBBWgNdrODRTocEkPksrhHS/cR+XDzmqn1sF5XMhet6PUkCwcPCo1ToDC/LitYgc
-         S0Dfqky+qoqwyCsUL7gvMhTEEQ5LsrzyC+g3y9ZIA6xaY8QOTLxRp5fHE5tUkI08Fy6T
-         7OQd9IXTzsql1BUQri0fVSk6g8iMq+civthdxZfLkF8g8XwEr4UjwwTAZp9H4IXtzvVI
-         PhSw==
+        bh=gas+mk5kz+G9ppn3h9f4J9RG3FbqVjPn47iE2ucU3uM=;
+        b=GZ8kWjlQv2WIzY4/QVYQvmAC72HIdFbUVf1v4gHjfuAgzPWH1ZsWJY0VvvhQQh1AR2
+         sWZCz1tS6ShMWGoyb1xptq9wY+l71yzJGo49J/Bk7BH4RUcepqxQXn4IktlwM//kKve8
+         kjkiA0wqWezkdWf8iR+P4qLBeHFWoSFG7pGWxmu6SUo3kctR3rWcmZ27ukTBqgVvzi/J
+         p5gWUiNWusIcLPbSgcX6ti57pZa+twD+HUt7TqT4/1xvoJzxWVsL4AsNqKKuWBu1pB5d
+         dlDjcfTJjhRsf/TZQK7uQKxBNcYjoixY8NGJ1Dfyz5nVARgknDCknWFqJbuBxUnQzgAj
+         wuLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UsXJHC1uef9UNrnMagY0V1IAZ6G4dSU4+YNwVTURnEc=;
-        b=f9bSwhFtYkJFeKU25c3s+Jo4NTsTSsG7ylAqg97vQ4ynj0Uz3l9ME92nPW+cpms4dN
-         X8OYbGVNBUrAAWjFiapsC244KsRX84lEU9mXaFirfi7lDlZo2PZ55WWvCJKsZBkjEpj/
-         J9ozp7YBN45R5pRtk3BL+BL6A9y+VK5U8qp3VZQVAceFSGO+Fu4jdzUIPhS4LIdXx4Cs
-         nTJZevbXV8MAUEM4s0ExWMSm2ekN6VJ6TxFJgl4mXePbt5k6NEWx6GMV1pUhIwpoAlCt
-         H8+I4gvgZ5ED4gNqt5ZJvzgd378XsEsAH2W3fAXqu/WQgV95XlMMqV92vRg1Ceij9dc4
-         bRbA==
-X-Gm-Message-State: AOAM531ZGaczdHMMw0/lMhn6Nudo59O1m4L9dSCAucXvO81y9f1GVK9B
-        3ePgktSCsLPFiCgZ/OeftmzOIxFyyi2KEN+UVpI=
-X-Google-Smtp-Source: ABdhPJyEZvLjTQTPKPL3vyPNMtFo6dnn30YYXanK7ujrAXckO9QD2QFtH1ljmRaBYIx6gG1J0iGfGZ5z/uk9QPv31w0=
-X-Received: by 2002:a17:907:97cd:: with SMTP id js13mr8325021ejc.497.1640442041181;
- Sat, 25 Dec 2021 06:20:41 -0800 (PST)
+        bh=gas+mk5kz+G9ppn3h9f4J9RG3FbqVjPn47iE2ucU3uM=;
+        b=3bstskPBW9KGMlSvkeWzXvkrh1x6hK82PLs/thqLqZI2WErKd5KfA50Vn+CyXL+Qt5
+         hVaPez3w9Z9ggA2fj7h5j43BoxF5t1gTxLuj5LcyGUsi0JNeQfVqEbUvihRJf+eBkVS7
+         mFxjBe6X4h6j2B6fyPgzlTKVM5ilak90VYMXDfGa3KSwPrm7iZSUBpLx4d35/dT3fdhS
+         KeOspIGwKNzQUXPxnUu/X9obdbdzA6fv1i6VQCisRFLig/KR/uCXsIJy2dHcIQKuaHos
+         qVups7xjD1Drg5ypIPSyVx1v8OiliVy0XD6pI0ndsHntaac4jPK5qtYUi9V1/z3+TRI7
+         32gQ==
+X-Gm-Message-State: AOAM530Lt08TXz545wyLQFuZSViuTBEOFA2RF2N/yIuIWOVdy8wL0rIO
+        M16jDUSdOD8vgpHgtv30I9RLj25IlbwVroz/vKA=
+X-Google-Smtp-Source: ABdhPJyV2PHq40cZgaaY8zOtwav5vxdN7skSQ7I26dj8dXbcg3zUG6c6La7nxslPmVHXxWijbQHoBUfp/nR64K8XlVo=
+X-Received: by 2002:a17:906:c450:: with SMTP id ck16mr8054007ejb.579.1640443104924;
+ Sat, 25 Dec 2021 06:38:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20211225115509.94891-1-hdegoede@redhat.com> <20211225115509.94891-2-hdegoede@redhat.com>
-In-Reply-To: <20211225115509.94891-2-hdegoede@redhat.com>
+References: <20211225115509.94891-1-hdegoede@redhat.com> <20211225115509.94891-5-hdegoede@redhat.com>
+In-Reply-To: <20211225115509.94891-5-hdegoede@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 25 Dec 2021 16:20:04 +0200
-Message-ID: <CAHp75VfLcCKPa1J5qG=iLhZRT1JKQFbBiaf7D23zmctS2ojFhQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] mfd: intel_soc_pmic_crc: Sort cells by IRQ order
+Date:   Sat, 25 Dec 2021 16:37:48 +0200
+Message-ID: <CAHp75VcnPJvprayX+B_nHEahbrSyvAORyD9dAuMJ9zEP+Jq3hw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] platform/x86: Add crystal_cove_charger driver
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@infradead.org>,
@@ -66,29 +66,36 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Sat, Dec 25, 2021 at 1:55 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> The cells for the Crystal Cove PMIC are already mostly sorted by
-> function / IRQ order. Move the ADC cell so that they are fully sorted.
->
-> Also move some of the resource definitions so that their order matches
-> the (new) order of the cells.
+> Driver for the external-charger IRQ pass-through function of the
+> Bay Trail Crystal Cove PMIC.
 
+Intel Bay Trail (same in the code)
+
+> Note this is NOT a power_supply class driver, it just deals with IRQ
+> pass-through, this requires this separate driver because the PMIC's
+> level 2 interrupt for this must be explicitly acked.
+>
+> This new driver gets enabled by the existing X86_ANDROID_TABLETS Kconfig
+> option because the x86-android-tablets module is the only user of the
+> exported external-charger IRQ.
 
 ...
 
->  #define CRYSTAL_COVE_IRQ_GPIO          5
+>  drivers/platform/x86/crystal_cove_charger.c | 153 ++++++++++++++++++++
 
+I'm wondering why it's not under the intel/ subfolder. Do we expect to
+have the same PMIC used on other x86 vendors?
 
->         {
+...
 
-As Lee commented once in p2sb patch series I think it makes sense here
-as well, i.e.
+> +static int crystal_cove_charger_probe(struct platform_device *pdev)
+> +{
 
-[CRYSTAL_COVE_IRQ_GPIO] = {
+Adding
 
->                 .name = "crystal_cove_gpio",
->                 .num_resources = ARRAY_SIZE(gpio_resources),
+  struct device *dev = &pdev->dev;
 
-What do you think?
+may increase readability a bit and perhaps reduce the amount of LOCs.
 
 -- 
 With Best Regards,
