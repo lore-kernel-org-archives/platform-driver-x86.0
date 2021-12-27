@@ -2,48 +2,48 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AECC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Dec 2021 19:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF8FC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Dec 2021 19:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232641AbhL0THv (ORCPT
+        id S233340AbhL0TIH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Dec 2021 14:07:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57056 "EHLO
+        Mon, 27 Dec 2021 14:08:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232797AbhL0TGt (ORCPT
+        with ESMTP id S232860AbhL0THL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Dec 2021 14:06:49 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5AB4C061D60;
-        Mon, 27 Dec 2021 11:06:47 -0800 (PST)
+        Mon, 27 Dec 2021 14:07:11 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED98C0698C8;
+        Mon, 27 Dec 2021 11:06:56 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4A843B81131;
-        Mon, 27 Dec 2021 19:06:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 503C3C36AEC;
-        Mon, 27 Dec 2021 19:06:45 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id E8EE1CE1153;
+        Mon, 27 Dec 2021 19:06:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9052FC36AED;
+        Mon, 27 Dec 2021 19:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640632006;
-        bh=rcBFzJiCpsMCVAnHMP3OqwJO1EfdOVbUt3w6i8HljE8=;
+        s=k20201202; t=1640632013;
+        bh=RbbBhYv7tJD/nX0IphEc7Q9+M0qPa5iA4CJGq0LLQN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X1+GSn+BqXskZSba5kfxuBOIMhja0AygHBjkxPTxO45mI3SHmqJkJlx/K+dHM+avA
-         GsbKlnKkd4Yksmfdm7mo7fugwcgWxI7nt3RE2NqrfCT5WKtUiQF6PMGJta4ThesiVu
-         QEqPXNSWuq6fh6yCbSmO9sKo0RkOKbYor8wekKrqqEaI6EZF5T7b5ovcX5Pt7IueZZ
-         p9+WLDTuWxmnE2Hhmt2ihX1ivV/U8zplCpKG5M55AMdZJWxngDSUHh7XxMnDML3KQJ
-         ctw99tRK3fMJ1FFU0WaNCsRawdoSt08xOxfpqJFjNoOMRItm2Ur+pQR4dWIawDjf9S
-         x5n+uxVl+D9Vw==
+        b=jbyTAWtc7/b0pfp4RFNN93wE4cp9HKkdsqzBYW4eOO3BwnYVBub1B7Ji37O5hg7lo
+         3pkNGBhde3HMn7sqYhN4FzTHfu57RbgIfeBxJQmGHxTB+U+05TtGW5ZnjUYa0jZ4Ro
+         sqNTbBgf7jCIDh00WzigPTb6cec52oLDyF1Zdkp92KMQ/yh5r30lZu2vdgC1vgJK1P
+         zRWssxkzUF4ISauqMCK8BZJ7O18mdAWpr79q/cKP762rthVM4Rt+gDHcrpiUJOe6oo
+         AMyXBNTAaojrXb8uFAbz3gulVMaI9gMlfUy0X1U+uebvFp5xRGdthI42KivtQbZjr+
+         Y0g75EEAzLcsQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wang Qing <wangqing@vivo.com>, Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 4/4] platform/x86: apple-gmux: use resource_size() with res
-Date:   Mon, 27 Dec 2021 14:06:29 -0500
-Message-Id: <20211227190629.1043445-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 4/4] platform/x86: apple-gmux: use resource_size() with res
+Date:   Mon, 27 Dec 2021 14:06:46 -0500
+Message-Id: <20211227190647.1043514-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211227190629.1043445-1-sashal@kernel.org>
-References: <20211227190629.1043445-1-sashal@kernel.org>
+In-Reply-To: <20211227190647.1043514-1-sashal@kernel.org>
+References: <20211227190647.1043514-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,7 +69,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 7c4eb86c851ed..5463d740f3523 100644
+index a66be137324c0..76f5703bc4f65 100644
 --- a/drivers/platform/x86/apple-gmux.c
 +++ b/drivers/platform/x86/apple-gmux.c
 @@ -628,7 +628,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
