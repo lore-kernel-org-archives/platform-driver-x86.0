@@ -2,45 +2,45 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AE1C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Dec 2021 19:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F53DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Dec 2021 19:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232982AbhL0TGV (ORCPT
+        id S233380AbhL0THL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Dec 2021 14:06:21 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:42078 "EHLO
+        Mon, 27 Dec 2021 14:07:11 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:42856 "EHLO
         ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231936AbhL0TFg (ORCPT
+        with ESMTP id S232853AbhL0TGL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Dec 2021 14:05:36 -0500
+        Mon, 27 Dec 2021 14:06:11 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5D148B8113F;
-        Mon, 27 Dec 2021 19:05:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 674C1C36AE7;
-        Mon, 27 Dec 2021 19:05:33 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 037FFB8114B;
+        Mon, 27 Dec 2021 19:06:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23217C36AEA;
+        Mon, 27 Dec 2021 19:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640631934;
-        bh=TUmadFdk29V/j4ip7iNaRZQKjQD47/UXTdGrnEcl7YM=;
+        s=k20201202; t=1640631968;
+        bh=8rDkRL47WMlHdIagHXZwKR3Pclr3OqxqXZVbc6O+kOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RMb/MNAzUG2AOQ7MVpOJlDpvJeSl+MSWdvMHFfMy/WDKplEYODpa5kVhDJ+HluZLF
-         IrFTrWtUYQrToOUJwveiDdzpLh+yOQJ2IvMpuJuwtAfDldMfsTQc+54Q5R333TSKuS
-         z/kY7trWmwWgUIsHEYCMDs9YvMhcCYiGme6ZGDLTQPn94ab+13erKvAR3dfN7XBZ3n
-         Vn9s0VsPbWGGO+biVOcgQXJwRz9I/Ik/dUuMdN81uwv6ouLIr2r+gXls68gV9GC6Yv
-         G37Icq8amcBz7KhkkISBXGmsgGOZLVRdjcDP0MEiXaYcm1Qfr7lwjELzR8CSjULh3y
-         aWQEzvig35q2g==
+        b=sHUXobQ6PWbcYMVejvx9Kyn7SQ7QUZ951MluJ7JlvVMi4d1yNRaDTvnD1mstC+t6i
+         qIcgBTT97Kr6uBKEQj3YocZH9vy7l6oN589UQG0buduORD75krBtl6F+jTRi+HIFwU
+         Yio54SePbmhRiZwkR7c10QBfAFhCxzKkRx/o0vEyJtdtFg2HUHQLPGRbL87IFhbX5E
+         PTI9dtwNTpM8ej/0E3u/1TclmeBzB/7LqGYxf4XegM2I/GcNMJfSZ93DYzytc5C565
+         y4AARTAzW9nwF+RDFW3tmbJuETU7V0abCT0vjvOPT1NXu3vTKrlf/t/YI+LFlkBNZ4
+         iNiIoUXZKdFaQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wang Qing <wangqing@vivo.com>, Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 13/14] platform/x86: apple-gmux: use resource_size() with res
-Date:   Mon, 27 Dec 2021 14:04:51 -0500
-Message-Id: <20211227190452.1042714-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 8/9] platform/x86: apple-gmux: use resource_size() with res
+Date:   Mon, 27 Dec 2021 14:05:35 -0500
+Message-Id: <20211227190536.1042975-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211227190452.1042714-1-sashal@kernel.org>
-References: <20211227190452.1042714-1-sashal@kernel.org>
+In-Reply-To: <20211227190536.1042975-1-sashal@kernel.org>
+References: <20211227190536.1042975-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,7 +66,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 9aae45a452002..57553f9b4d1dc 100644
+index 7e3083deb1c5d..1b86005c0f5f4 100644
 --- a/drivers/platform/x86/apple-gmux.c
 +++ b/drivers/platform/x86/apple-gmux.c
 @@ -625,7 +625,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
