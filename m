@@ -2,116 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC31C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Dec 2021 16:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBB7C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Dec 2021 23:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236342AbhL2QT5 (ORCPT
+        id S232847AbhL2XOm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Dec 2021 11:19:57 -0500
-Received: from mga07.intel.com ([134.134.136.100]:64770 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229608AbhL2QT5 (ORCPT
+        Wed, 29 Dec 2021 18:14:42 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:36452 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232769AbhL2XOl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Dec 2021 11:19:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640794797; x=1672330797;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OIH24DPqwPhfyOD8IR1MCozu4WIeQBs3YXM7QI9yYGA=;
-  b=Ah7nsM+NtXY57KvFtulnPq5RZDd+FSZUlxP1kDuKmyUZ2IYC8qt7CSuW
-   Cs0Hoa3RKaf1az0IYa0E7LgwSWRf6ohJ9D1wUZV8fkdEkyyzZu9mfDLd0
-   f3F8WNYt4tmomxvsugM7zhD8gT4HCnpemhAIETUpFfiQE01SQR3h2YeZS
-   OZrPNUQmMjCSLqxRPFf3Tfs1YMdhagnko0ZddRhldUqMbyn1bRxYKDIsH
-   4RwNmoLGtjrtpybunewHY0CWdUAyb67OCBneZICxCh0fLKE7be7LBeYHk
-   v4QqzZtWNRK0TwoWrNL0wWlj9cd323W49Tjlu+S8SJwtglMp0Rz2ilo8f
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10211"; a="304897116"
-X-IronPort-AV: E=Sophos;i="5.88,245,1635231600"; 
-   d="scan'208";a="304897116"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2021 08:19:56 -0800
-X-IronPort-AV: E=Sophos;i="5.88,245,1635231600"; 
-   d="scan'208";a="619076607"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2021 08:19:54 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 29 Dec 2021 18:19:45 +0200
-Date:   Wed, 29 Dec 2021 18:19:45 +0200
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     "Khandelwal, Rajat" <rajat.khandelwal@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH] Keep polling IPC status if it reads IPC_STATUS_BUSY or
- IPC_STATUS_ERR until timeout expires
-Message-ID: <YcyKoZyBFzRtwRMm@lahna>
-References: <20211229132948.4738-1-rajat.khandelwal@intel.com>
- <CO1PR11MB4835D217B78F17BA6AD79F0096449@CO1PR11MB4835.namprd11.prod.outlook.com>
+        Wed, 29 Dec 2021 18:14:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1640819680;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=w3GL8tFlo58OCqQkXwG1ZEQDk8vRPPWSObGz0xUB/fE=;
+        b=Y/zmJATr49M2WlX5FwvZdaoMolSvQOCJoKA6hh47Of6hOoWCIU37TNlJNB8/XpelUPl/MP
+        ucWmFTbfh/RYHnT06X4cPG3/xwugp5BT3APxcdMEggrbL+MdVmbZ+nwpqgkVuUUpW3foQT
+        9VDDMlRdU4IB4XgSmpvNOphdMxPAmTA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-643-Xsg4AYuHN-6SZqoRUK0KrQ-1; Wed, 29 Dec 2021 18:14:37 -0500
+X-MC-Unique: Xsg4AYuHN-6SZqoRUK0KrQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4EBB31023F4D;
+        Wed, 29 Dec 2021 23:14:35 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3EC311037F5B;
+        Wed, 29 Dec 2021 23:14:32 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-i2c@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        linux-serial@vger.kernel.org
+Subject: [PATCH 00/12] ACPI / pdx86: Add support for x86 Android tablets with broken DSDTs
+Date:   Thu, 30 Dec 2021 00:14:19 +0100
+Message-Id: <20211229231431.437982-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CO1PR11MB4835D217B78F17BA6AD79F0096449@CO1PR11MB4835.namprd11.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi All,
 
-Now I got it.
+As a small(ish) hoppy project over the holidays I've been looking into
+getting some (somewhat older) x86 tablets which ship with Android as the
+only OS on their factory image working with the mainline kernel.
 
-Please run checkpatch.pl and fix all the issues it reports, and change
-the $subject line to match the style in that file and then re-send.
-Thanks!
+These typically have pretty broken DSDTs since the Android image kernel
+just has everything hardcoded.
 
-On Wed, Dec 29, 2021 at 06:13:56PM +0200, Khandelwal, Rajat wrote:
-> Hi @Westerberg, Mika
-> This was the original message!
-> 
-> -----Original Message-----
-> From: Khandelwal, Rajat <rajat.khandelwal@intel.com>
-> Sent: Wednesday, December 29, 2021 7:00 PM
-> To: mika.westerberg@linux.intel.com
-> Cc: Khandelwal, Rajat <rajat.khandelwal@intel.com>; linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org
-> Subject: [PATCH] Keep polling IPC status if it reads IPC_STATUS_BUSY or IPC_STATUS_ERR until timeout expires
-> 
-> The current implementation returns -EIO if and when IPC_STATUS_ERR is returned and returns -ETIMEDOUT even if the status is busy.
-> This patch polls the IPC status even if IPC_STATUS_ERR is returned until timeout expires and returns -EBUSY if the status shows busy.
-> Observed in multiple scenarios, trying to fetch the status of IPC after it shows ERR sometimes eradicates the ERR status.
-> 
-> Signed-off-by: Rajat-Khandelwal <rajat.khandelwal@intel.com>
-> ---
->  drivers/platform/x86/intel_scu_ipc.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-> index 7cc9089d1e14..91f716e84474 100644
-> --- a/drivers/platform/x86/intel_scu_ipc.c
-> +++ b/drivers/platform/x86/intel_scu_ipc.c
-> @@ -233,17 +233,19 @@ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)  static inline int busy_loop(struct intel_scu_ipc_dev *scu)  {
->         unsigned long end = jiffies + IPC_TIMEOUT;
-> +       u32 status;
-> 
->         do {
-> -               u32 status;
-> -
->                 status = ipc_read_status(scu);
->                 if (!(status & IPC_STATUS_BUSY)) {
-> -                       return (status & IPC_STATUS_ERR) ? -EIO : 0;
-> +                       if (!(status & IPC_STATUS_ERR))
-> +                               return 0;
-> +               }
-> 
->                 usleep_range(50, 100);
->         } while (time_before(jiffies, end));
-> 
-> +       if (status & IPC_STATUS_BUSY)
-> +               return -EBUSY;
-> +       if (status & IPC_STATUS_ERR)
-> +               return -EIO;
-> +
->         return -ETIMEDOUT;
->  }
-> 
-> --
-> 2.17.1
+This patch-series makes most things on 3 of these tablets work with the
+mainline kernel and lays the groundwork for adding support for similar
+tablets.
+
+Since the ACPI tables on these devices clearly are buggy this series is
+written so as to add minimal changes to the ACPI core code, leaving all
+of the heavy lifting to the recently introduced (in linux-next)
+drivers/platform/x86/x86-android-tablets.c module, which when built as
+a module only autoloads on affected devices based on DMI matching.
+
+And when this module is disabled the added acpi_quirk_skip_*_enumeration()
+helpers are replaced by inline stubs and even the minimally added core
+code will be optimized away.
+
+The ACPI core changes are in patches 1-3 of this series. Since the
+i2c and serdev ACPI enumeration changes are very small and depend on
+patch 1, I believe it would be best for patches 1-3 to all be merged
+through Rafael's ACPI tree.
+
+Greg and Wolfram, may we have your acks for this please?
+
+I will take care of merging the rest of the series through the pdx86
+tree (these 2 parts of this series can be merged independenly without
+issues).
+
+Regards,
+
+Hans
+
+
+Hans de Goede (12):
+  ACPI / x86: Add acpi_quirk_skip_[i2c_client|serdev]_enumeration()
+    helpers
+  i2c: acpi: Do not instantiate I2C-clients on boards with known bogus
+    DSDT entries
+  serdev: Do not instantiate serdevs on boards with known bogus DSDT
+    entries
+  platform/x86: x86-android-tablets: Don't return -EPROBE_DEFER from a
+    non probe() function
+  platform/x86: x86-android-tablets: Add support for PMIC interrupts
+  platform/x86: x86-android-tablets: Add support for instantiating
+    platform-devs
+  platform/x86: x86-android-tablets: Add support for instantiating
+    serdevs
+  platform/x86: x86-android-tablets: Add support for registering GPIO
+    lookup tables
+  platform/x86: x86-android-tablets: Add support for preloading modules
+  platform/x86: x86-android-tablets: Add Asus TF103C data
+  platform/x86: x86-android-tablets: Add Asus MeMO Pad 7 ME176C data
+  platform/x86: x86-android-tablets: Add TM800A550L data
+
+ drivers/acpi/x86/utils.c                   |  96 ++++
+ drivers/i2c/i2c-core-acpi.c                |  17 +
+ drivers/platform/x86/Kconfig               |   2 +-
+ drivers/platform/x86/x86-android-tablets.c | 562 ++++++++++++++++++++-
+ drivers/tty/serdev/core.c                  |  14 +
+ include/acpi/acpi_bus.h                    |  16 +
+ 6 files changed, 698 insertions(+), 9 deletions(-)
+
+-- 
+2.33.1
+
