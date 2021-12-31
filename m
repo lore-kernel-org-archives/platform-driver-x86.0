@@ -2,204 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18D1C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Dec 2021 18:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6B4C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Dec 2021 14:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240276AbhL3Sw5 (ORCPT
+        id S230207AbhLaOj6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 30 Dec 2021 13:52:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41246 "EHLO
+        Fri, 31 Dec 2021 09:39:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241742AbhL3Sw5 (ORCPT
+        with ESMTP id S229846AbhLaOj6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Dec 2021 13:52:57 -0500
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C1AAC06173E
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Dec 2021 10:52:57 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id b22so22011783pfb.5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Dec 2021 10:52:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7LN0LYaPJq+96WHHrtqpjEIWMUaO4vFF4rfqypL1bR0=;
-        b=rpWu9btVqmQ0QTbmhhUK9Dz89dFgfjXlqrAlod7GAGD11uxF9ibLliA+w90bMIj+yu
-         TIOjH72MZO8MQ7A8vUTAUp8oWRFg8/BipD06png87ugKRx0MKigkwcE4v6Ox7L1hPCRF
-         LbBZaDMOePI/nMwaCJr14Wu2PvJLwtFiw+54GL+KkzIMdHM3FccaqN4+6O48BHw6xq/Q
-         3+12yH+FzOyHGDuAJBoBoI7EUk7q5/X/DE5Ns7fdkWsox8rQ/8JYcof7evWLlW7OBNDI
-         +3dLx/XSBDQ6s6BWy9kD/uLxfdiPVleJt9v5d8jg2rY0ZTdLC080XnqpHl95VAbCakt7
-         +40w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7LN0LYaPJq+96WHHrtqpjEIWMUaO4vFF4rfqypL1bR0=;
-        b=5+Mo8f41a2fiJbG10auD3mhVkicM9aPU6rFwDPgPPp35mRpfYqVAAVsSV/QU6vKPnQ
-         qnttAi/ZOr59o9frIF97IjjIQTp1yJt46ydKRwbwOsy3/A396xtWHd76eVyMUEapYOMQ
-         dHFkMjNBsIlxKsH9eFLydw/ZaWw6hEYDYgxCKzsnpng433gck86BUgxW7/M3vHgdg2JO
-         1oLjPlbtQn41kxihj9t0X1c4lk+ywb+dA2+vbDAIR+8vvpzuhE+OJGFn1/wzrQXELohq
-         3JROHAm6yL0HyiA4x8SGM2yZdvYSg3olPJIAH/PICmbbMJSuMbT3F7jTZfJW2Y81/V4W
-         v8gw==
-X-Gm-Message-State: AOAM530ZQYgb1HKHC4UxrF0IwdQVFuvJlaWNhokUryObwz51hc87nlc8
-        8RYBQHYNgWc9kndTU0hfDUSwRtNoRNtgwg==
-X-Google-Smtp-Source: ABdhPJzjf15Pudr7gJPrk1rYboV0PPDYswWEE3HKGVacbEvnTAzwn3YOFqw0PNuZsiPShsWRZbt0GA==
-X-Received: by 2002:a05:6a00:21cd:b0:4bc:35e8:eaea with SMTP id t13-20020a056a0021cd00b004bc35e8eaeamr10048326pfj.23.1640890376505;
-        Thu, 30 Dec 2021 10:52:56 -0800 (PST)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id r7sm20049373pgm.15.2021.12.30.10.52.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Dec 2021 10:52:55 -0800 (PST)
-Date:   Thu, 30 Dec 2021 18:52:52 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v8 22/40] x86/sev: move MSR-based VMGEXITs for CPUID to
- helper
-Message-ID: <Yc4ABL2EbBlwjma5@google.com>
-References: <20211210154332.11526-1-brijesh.singh@amd.com>
- <20211210154332.11526-23-brijesh.singh@amd.com>
+        Fri, 31 Dec 2021 09:39:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B360C061574;
+        Fri, 31 Dec 2021 06:39:58 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D05A6617CA;
+        Fri, 31 Dec 2021 14:39:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6DB0C36AEC;
+        Fri, 31 Dec 2021 14:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640961597;
+        bh=2W2cwR7BA+V3M91KMdo9uv7m6sBpz3dbJ6TOw8ZwOsA=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=LpTeI5wQiK+t9XWW6ufpzlYWGvsTw4AUlwbgInViIurwwMafKLp23FAprisyCSv9U
+         eoMY08kYN4K7IEkdcRQldz/YyC5xWYUc/4utxzIInEFn7U985MFiMbtJH7vyxsg3WY
+         Fb/Imbs69sQydoYq2vveay+TxlBx62f7IQA5oCtw+jNV4pQqw3d5O60WO0DXrA6+w/
+         WbVTdrRFloRlZkL40jIw4orqWi6z3ddIO/JENu3Nwvl4EkWtTnMo8A5qDaMeozrQhq
+         fhrdsIAs3OQ+Q2R6sVV1uOu9jF1FQt0eUxjzXkwqcO/1Luk1Bf28K8d2iXaSR4/7Bo
+         W/YpqxRWr82Yw==
+From:   Mark Brown <broonie@kernel.org>
+To:     Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Lucas Tanure <tanureal@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+In-Reply-To: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
+References: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
+Subject: Re: (subset) [PATCH v6 00/10] Add support for CS35L41 in HDA systems
+Message-Id: <164096159451.2355590.17653987935012339046.b4-ty@kernel.org>
+Date:   Fri, 31 Dec 2021 14:39:54 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211210154332.11526-23-brijesh.singh@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Dec 10, 2021, Brijesh Singh wrote:
-> From: Michael Roth <michael.roth@amd.com>
+On Fri, 17 Dec 2021 11:56:58 +0000, Lucas Tanure wrote:
+> Add support for laptops that have CS35L41 connected to an HDA
+> codec by I2S and direct I2C connection to the CPU.
 > 
-> This code will also be used later for SEV-SNP-validated CPUID code in
-> some cases, so move it to a common helper.
+> Laptops that use CS35L41 and are SPI will be added in the future,
+> after the support for it is resolved at i2c-multi-instantiate driver.
+> i2c-multi-instantiate thread: https://lkml.org/lkml/2021/12/10/557
 > 
-> Signed-off-by: Michael Roth <michael.roth@amd.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/kernel/sev-shared.c | 84 +++++++++++++++++++++++++-----------
->  1 file changed, 58 insertions(+), 26 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
-> index 3aaef1a18ffe..d89481b31022 100644
-> --- a/arch/x86/kernel/sev-shared.c
-> +++ b/arch/x86/kernel/sev-shared.c
-> @@ -194,6 +194,58 @@ enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb, bool set_ghcb_msr,
->  	return verify_exception_info(ghcb, ctxt);
->  }
->  
-> +static int sev_cpuid_hv(u32 func, u32 subfunc, u32 *eax, u32 *ebx,
+> [...]
 
-Having @subfunc, a.k.a. index, in is weird/confusing/fragile because it's not consumed,
-nor is it checked.  Peeking ahead, it looks like all future users pass '0'.  Taking the
-index but dropping it on the floor is asking for future breakage.  Either drop it or
-assert that it's zero.
+Applied to
 
-> +			u32 *ecx, u32 *edx)
-> +{
-> +	u64 val;
-> +
-> +	if (eax) {
-> +		sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(func, GHCB_CPUID_REQ_EAX));
-> +		VMGEXIT();
-> +		val = sev_es_rd_ghcb_msr();
-> +
-> +		if (GHCB_RESP_CODE(val) != GHCB_MSR_CPUID_RESP)
-> +			return -EIO;
-> +
-> +		*eax = (val >> 32);
-> +	}
-> +
-> +	if (ebx) {
-> +		sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(func, GHCB_CPUID_REQ_EBX));
-> +		VMGEXIT();
-> +		val = sev_es_rd_ghcb_msr();
-> +
-> +		if (GHCB_RESP_CODE(val) != GHCB_MSR_CPUID_RESP)
-> +			return -EIO;
-> +
-> +		*ebx = (val >> 32);
-> +	}
-> +
-> +	if (ecx) {
-> +		sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(func, GHCB_CPUID_REQ_ECX));
-> +		VMGEXIT();
-> +		val = sev_es_rd_ghcb_msr();
-> +
-> +		if (GHCB_RESP_CODE(val) != GHCB_MSR_CPUID_RESP)
-> +			return -EIO;
-> +
-> +		*ecx = (val >> 32);
-> +	}
-> +
-> +	if (edx) {
-> +		sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(func, GHCB_CPUID_REQ_EDX));
-> +		VMGEXIT();
-> +		val = sev_es_rd_ghcb_msr();
-> +
-> +		if (GHCB_RESP_CODE(val) != GHCB_MSR_CPUID_RESP)
-> +			return -EIO;
-> +
-> +		*edx = (val >> 32);
-> +	}
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-That's a lot of pasta!  If you add
+Thanks!
 
-  static int __sev_cpuid_hv(u32 func, int reg_idx, u32 *reg)
-  {
-	u64 val;
+[01/10] ASoC: cs35l41: Convert tables to shared source code
+        commit: a87d42227cf5614fe0040ddd1fe642c54298b42c
+[02/10] ASoC: cs35l41: Move cs35l41_otp_unpack to shared code
+        commit: fe120d4cb6f6cd03007239e7c578b8703fe6d336
+[03/10] ASoC: cs35l41: Move power initializations to reg_sequence
+        commit: 062ce0593315e22aac527389dd6dd4328c49f0fb
+[04/10] ASoC: cs35l41: Create shared function for errata patches
+        commit: 8b2278604b6de27329ec7ed82ca696c4751111b6
+[05/10] ASoC: cs35l41: Create shared function for setting channels
+        commit: 3bc3e3da657f17c14df8ae8fab58183407bd7521
+[06/10] ASoC: cs35l41: Create shared function for boost configuration
+        commit: e8e4fcc047c6e0c5411faeb8cc29aed2e5036a00
 
-	if (!reg)
-		return 0;
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(func, reg_idx));
-	VMGEXIT();
-	val = sev_es_rd_ghcb_msr();
-	if (GHCB_RESP_CODE(val) != GHCB_MSR_CPUID_RESP)
-		return -EIO;
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-	*reg = (val >> 32);
-	return 0;
-  }
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-then this helper can become something like:
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-  static int sev_cpuid_hv(u32 func, u32 *eax, u32 *ebx, u32 *ecx, u32 *edx)
-  {
-	int ret;
-
-	ret = __sev_cpuid_hv(func, GHCB_CPUID_REQ_EAX, eax);
-	ret = ret ? : __sev_cpuid_hv(func, GHCB_CPUID_REQ_EBX, ebx);
-	ret = ret ? : __sev_cpuid_hv(func, GHCB_CPUID_REQ_ECX, ecx);
-	ret = ret ? : __sev_cpuid_hv(func, GHCB_CPUID_REQ_EDX, edx);
-
-	return ret;
-  }
-
-> +
-> +	return 0;
-> +}
-> +
+Thanks,
+Mark
