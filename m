@@ -2,230 +2,249 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB4CC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Jan 2022 12:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B0DC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Jan 2022 16:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232046AbiACMxo (ORCPT
+        id S234791AbiACQtr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 3 Jan 2022 07:53:44 -0500
-Received: from mail-eopbgr50078.outbound.protection.outlook.com ([40.107.5.78]:34784
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229514AbiACMxn (ORCPT
+        Mon, 3 Jan 2022 11:49:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234996AbiACQtr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Jan 2022 07:53:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fJkK5f3VWuXNcgsoUi6xIS1CchIHS24/Ub6G3ATkjwZSADgiGjEUm1ANRVGPwSR/9E/RfgVE05L0up8WUm6aYMUuhcH8SB4bZnltcR5rfJveXmUluM5nGrEEYCdwtMBb29UosPifNF8rWgQIp6ebAruwSHUYjuHAoulFzWymXeB7bRqZmqIaVB8a0kM0GVd+2NknXg9efoIu0ccpi80J7yA09gbuAzJ648ioGATGEUogO3ndO1cj7T1I3SHbE28OW00vUE5hjZtPRrk9e4l4F1BDjxESV5a/dQDnRzIcSphjEnps8J5NYdp45sfLTqj8iNVCalnIm8Eh7r3TxuV3Lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CmfGATzxK4wh9jah5VIVxLK23QoSNKCzIMwEN4QDHV0=;
- b=Qz1FkW0bhv0cJRto8+SMIMoDZFP8iSiDpXazXsqHsqbhfUzGXe+RXvKuUm1TGpker+Wab3veJLYVf8/hMpuwet1Ms/YKpfatRJlpWmZCfZSQsI4+tGB4rRl8O6g+xgQDlajlsXQnN8jDrDeEok9bBhtIvPfIXekDqCUYPvnkAwTW+kxc3LheYgyAWHEzDY6HkVer0qRR+DOuNwI+STOXxprYJGlA9gL+NTyrg+WE39TmI4JuWk+JzUGTQYxc6akjt7IFz9DPi053dn4V35FVVOP/XansKdmP8JKkWY2J8O1z4BAwe2dmrHXs6xRwFEBth5pi7bJB2ekv/M9WkinJSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 194.138.21.73) smtp.rcpttodomain=redhat.com smtp.mailfrom=siemens.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=siemens.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CmfGATzxK4wh9jah5VIVxLK23QoSNKCzIMwEN4QDHV0=;
- b=G7/khJJg/YpyXEaMyjlC9ChOoDQlp0WmfTszDIUTu9gqyq40DBOPOlnZuFfyfsW2Rd6mkdEWjD7Zp1UEHw5izvndg8VJKdHWMruTg48Iv/9uIAYt/4sBLorH8tvQhGA843kXXZDAy+VVde5ARoAjFiYjUzNdGQ7YpeTfD4eLYvj5CnnJcD/jPs2Xuq9LETPylk9ZNggF+t97IRtCoXYuyAUZeebanOV/Lfr8iyVSoeZAkJl2moX9GWHP9qbpmUE+vePqH78enXF+m9dZLns9FqhJ++XwkSWQwDA6WiMEPBYoMxGJD9k2o7ZY/U8jxc02TAFSo0I5dSbhWposbRPbUQ==
-Received: from AM6P191CA0091.EURP191.PROD.OUTLOOK.COM (2603:10a6:209:8a::32)
- by DB6PR1001MB0982.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:4:62::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.15; Mon, 3 Jan
- 2022 12:53:40 +0000
-Received: from VE1EUR01FT051.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:209:8a:cafe::37) by AM6P191CA0091.outlook.office365.com
- (2603:10a6:209:8a::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.14 via Frontend
- Transport; Mon, 3 Jan 2022 12:53:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.73)
- smtp.mailfrom=siemens.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=siemens.com;
-Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
- 194.138.21.73 as permitted sender) receiver=protection.outlook.com;
- client-ip=194.138.21.73; helo=hybrid.siemens.com;
-Received: from hybrid.siemens.com (194.138.21.73) by
- VE1EUR01FT051.mail.protection.outlook.com (10.152.3.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4844.14 via Frontend Transport; Mon, 3 Jan 2022 12:53:40 +0000
-Received: from DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) by
- DEMCHDC9SNA.ad011.siemens.net (194.138.21.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Mon, 3 Jan 2022 13:53:39 +0100
-Received: from md1za8fc.ad001.siemens.net (139.25.68.217) by
- DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Mon, 3 Jan 2022 13:53:39 +0100
-Date:   Mon, 3 Jan 2022 13:53:36 +0100
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Enrico Weigelt <lkml@metux.net>
-Subject: Re: [PATCH v5 0/4] add device drivers for Siemens Industrial PCs
-Message-ID: <20220103135336.2fc44711@md1za8fc.ad001.siemens.net>
-In-Reply-To: <674e8c50-ece7-9aad-7876-c739dbc96498@redhat.com>
-References: <20211213120502.20661-1-henning.schild@siemens.com>
-        <674e8c50-ece7-9aad-7876-c739dbc96498@redhat.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 3 Jan 2022 11:49:47 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A83BC061761;
+        Mon,  3 Jan 2022 08:49:46 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DBB481EC0380;
+        Mon,  3 Jan 2022 17:49:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1641228580;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=P798RWaZTr+okBNMCVL+1sl56MgtJUmphTduCouvUIE=;
+        b=ip+HPwItP/DquYMql6pC3Po65Wa5C8XWBZLq6hy+3IQt1D9EWyxbEfUBkQZGd+h8+zSPWi
+        X5/4SIi5AAR2dbjqWQjWlH/qDK5OuQxoQakMhvKtmHNJnB/4mtQS1N5aMHi698V0TubJ9X
+        yB2kwu78JKqbDVvlBS/bSARKlFBV54g=
+Date:   Mon, 3 Jan 2022 17:49:42 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v8 21/40] x86/head: re-enable stack protection for
+ 32/64-bit builds
+Message-ID: <YdMpJg3YSdoYMKaZ@zn.tnic>
+References: <20211210154332.11526-1-brijesh.singh@amd.com>
+ <20211210154332.11526-22-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [139.25.68.217]
-X-ClientProxiedBy: DEMCHDC89XA.ad011.siemens.net (139.25.226.103) To
- DEMCHDC8A0A.ad011.siemens.net (139.25.226.106)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5c345395-5d8a-4c8a-463f-08d9ceb810fc
-X-MS-TrafficTypeDiagnostic: DB6PR1001MB0982:EE_
-X-Microsoft-Antispam-PRVS: <DB6PR1001MB0982144A230A3AE180FC1E6285499@DB6PR1001MB0982.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ++lpG6zy3PgI++p7ydQBNDHpBVqvm3Z1E5p49aCXF954LB0gn4GXK9ochMwGnyba7908t2A8F3I2ZIS/O7+XTBoQIdSngw+5tHbmmCRE2apY7FhinTfeZBXwHv650Z5DMLu9EXQlP8iiJtPto5LxK5yMC+UQD9JClnbtwuUUQcr+xsc7r/+pC14T1bCJDWoGOV5brnsCV5g6lB9Z03knTRviFuVj6fZ2Zgo7AQ8y+jfK8h3/kKEQEHU0WRKwSKbhhXsF1r00U865zGVLO3PXpOqnzRDHPbIVRLXjyLLShs4ogaReUgetqujtG4+3y17dxM/i38ryFgiP4NCMg6+egTuwqZtjG72+XiqoaXuPBhkUHUSUGWNfaRTS+9jQmLqM57k4Cj9GPsRXIWSQ7QvxS2ViLsgfoCgbViG+xT1xL8vBs+fe3DrsW6lpXZM8JOQKGQJBsDZKG7q89/XWA3uBPMILm3io/hU9NE7EfzMNlSX4+tSd5m4VbYSzZpfRowSnUOcskiAnr6DHpjmxnFv+eSuBcPsA883xdA65HHiKMPb5Y55VHkAG3NOXoVR7N8GGHwuClOb3+W1z/VWuFQR2Wwk2WJozuMlsVs7PJlURPgt0U8vk+bNWTKuDSv6B/ztKZBm4totYnrGfDOQdpba0W5nPgrT6U0ScZEYdam1xsWh4WN7mvhF7fRSweEL309IgYkaEfHaqy92TaMdAEzECyupuy+k470ApXz40tRkyIGrUvlGmsp7OJf8aV/1ODXuIHAHjFLr0oXM/br5qG1f36RnZUmkpQRkSWeh8bFKDOo8L4c1rc2A+TotOUZEZntcM6btvWJUZkDuPc7R62pYAKOa2FSx5BOoe7WCvSXPkyQzrbza7tJN6+TYiCIZxQft8
-X-Forefront-Antispam-Report: CIP:194.138.21.73;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(40470700002)(46966006)(36840700001)(336012)(8936002)(508600001)(7416002)(47076005)(16526019)(40460700001)(82960400001)(1076003)(186003)(9686003)(2906002)(44832011)(26005)(5660300002)(956004)(70206006)(6916009)(53546011)(70586007)(81166007)(82310400004)(55016003)(7696005)(54906003)(966005)(4326008)(356005)(36860700001)(316002)(6666004)(8676002)(83380400001)(86362001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2022 12:53:40.3283
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c345395-5d8a-4c8a-463f-08d9ceb810fc
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.73];Helo=[hybrid.siemens.com]
-X-MS-Exchange-CrossTenant-AuthSource: VE1EUR01FT051.eop-EUR01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR1001MB0982
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211210154332.11526-22-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Thu, 23 Dec 2021 18:17:03 +0100
-schrieb Hans de Goede <hdegoede@redhat.com>:
+On Fri, Dec 10, 2021 at 09:43:13AM -0600, Brijesh Singh wrote:
 
-> Hi,
-> 
-> On 12/13/21 13:04, Henning Schild wrote:
-> > changes since v4:
-> > - make everything around GPIO memory usage more verbose
-> >   - commit messages, FIXME in p1, cover-letter
-> > 
-> > changes since v3:
-> > 
-> > - fix io access width and region reservations
-> > - fix style in p1
-> > 
-> > changes since v2:
-> > 
-> > - remove "simatic-ipc" prefix from LED names
-> > - fix style issues found in v2, mainly LED driver
-> > - fix OEM specific dmi code, and remove magic numbers
-> > - more "simatic_ipc" name prefixing
-> > - improved pmc quirk code using callbacks
-> > 
-> > changes since v1:
-> > 
-> > - fixed lots of style issues found in v1
-> >   - (debug) printing
-> >   - header ordering
-> > - fixed license issues GPLv2 and SPDX in all files
-> > - module_platform_driver instead of __init __exit
-> > - wdt simplifications cleanup
-> > - lots of fixes in wdt driver, all that was found in v1
-> > - fixed dmi length in dmi helper
-> > - changed LED names to allowed ones
-> > - move led driver to simple/
-> > - switched pmc_atom to dmi callback with global variable
-> > 
-> > 
-> > This series adds support for watchdogs and leds of several x86
-> > devices from Siemens.
-> > 
-> > It is structured with a platform driver that mainly does
-> > identification of the machines. It might trigger loading of the
-> > actual device drivers by attaching devices to the platform bus.
-> > 
-> > The identification is vendor specific, parsing a special binary DMI
-> > entry. The implementation of that platform identification is
-> > applied on pmc_atom clock quirks in the final patch.
-> > 
-> > It is all structured in a way that we can easily add more devices
-> > and more platform drivers later. Internally we have some more code
-> > for hardware monitoring, more leds, watchdogs etc. This will follow
-> > some day.
-> > 
-> > The LED as well as the watchdog drivers access GPIO memory directly.
-> > Using pinctrl is not possible because the machines lack ACPI
-> > entries for the pinctrl drivers. Updates to the ACPI tables are not
-> > expected. So we can rule out a conflict where two drivers would try
-> > and access that GPIO memory.
-> > So we do not use those pins as "general purpose" but as "Siemens
-> > purpose", after having identified the devices very clearly. 
-> > 
-> > Henning Schild (4):
-> >   platform/x86: simatic-ipc: add main driver for Siemens devices
-> >   leds: simatic-ipc-leds: add new driver for Siemens Industial PCs
-> >   watchdog: simatic-ipc-wdt: add new driver for Siemens Industrial
-> > PCs platform/x86: pmc_atom: improve critclk_systems matching for
-> > Siemens PCs  
-> 
-> 
-> Thank you for your patch-series, I've applied the series to my
-> review-hans branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-> 
-> Note it will show up in my review-hans branch once I've pushed my
-> local branch there, which might take a while.
-> 
-> Once I've run some tests on this branch the patches there will be
-> added to the platform-drivers-x86/for-next branch and eventually
-> will be included in the pdx86 pull-request to Linus for the next
-> merge-window.
+> Subject: Re: [PATCH v8 21/40] x86/head: re-enable stack protection for 32/64-bit builds
 
-Cool! Thanks all for the reviews and for allowing the drivers in. Stay
-tuned for more.
+The tip tree preferred format for patch subject prefixes is
+'subsys/component:', e.g. 'x86/apic:', 'x86/mm/fault:', 'sched/fair:',
+'genirq/core:'. Please do not use file names or complete file paths as
+prefix. 'git log path/to/file' should give you a reasonable hint in most
+cases.
 
-regards,
-Henning
+The condensed patch description in the subject line should start with a
+uppercase letter and should be written in imperative tone.
 
-> Regards,
-> 
-> Hans
-> 
-> 
-> > 
-> >  drivers/leds/Kconfig                          |   3 +
-> >  drivers/leds/Makefile                         |   3 +
-> >  drivers/leds/simple/Kconfig                   |  11 +
-> >  drivers/leds/simple/Makefile                  |   2 +
-> >  drivers/leds/simple/simatic-ipc-leds.c        | 202
-> > ++++++++++++++++ drivers/platform/x86/Kconfig                  |
-> > 12 + drivers/platform/x86/Makefile                 |   3 +
-> >  drivers/platform/x86/pmc_atom.c               |  54 +++--
-> >  drivers/platform/x86/simatic-ipc.c            | 176 ++++++++++++++
-> >  drivers/watchdog/Kconfig                      |  11 +
-> >  drivers/watchdog/Makefile                     |   1 +
-> >  drivers/watchdog/simatic-ipc-wdt.c            | 228
-> > ++++++++++++++++++ .../platform_data/x86/simatic-ipc-base.h      |
-> > 29 +++ include/linux/platform_data/x86/simatic-ipc.h |  72 ++++++
-> >  14 files changed, 786 insertions(+), 21 deletions(-)
-> >  create mode 100644 drivers/leds/simple/Kconfig
-> >  create mode 100644 drivers/leds/simple/Makefile
-> >  create mode 100644 drivers/leds/simple/simatic-ipc-leds.c
-> >  create mode 100644 drivers/platform/x86/simatic-ipc.c
-> >  create mode 100644 drivers/watchdog/simatic-ipc-wdt.c
-> >  create mode 100644
-> > include/linux/platform_data/x86/simatic-ipc-base.h create mode
-> > 100644 include/linux/platform_data/x86/simatic-ipc.h 
-> 
+In this case:
 
+x86/head/64: Re-enable stack protection
+
+There's no need for 32/64-bit builds - we don't have anything else :-)
+
+Please check all your subjects.
+
+> From: Michael Roth <michael.roth@amd.com>
+> 
+> As of commit 103a4908ad4d ("x86/head/64: Disable stack protection for
+> head$(BITS).o")
+
+verify_commit_quotation: Warning: The proper commit quotation format is:
+<newline>
+[  ]<sha1, 12 chars> ("commit name")
+<newline>
+
+> kernel/head64.c is compiled with -fno-stack-protector
+> to allow a call to set_bringup_idt_handler(), which would otherwise
+> have stack protection enabled with CONFIG_STACKPROTECTOR_STRONG. While
+> sufficient for that case, there may still be issues with calls to any
+> external functions that were compiled with stack protection enabled that
+> in-turn make stack-protected calls, or if the exception handlers set up
+> by set_bringup_idt_handler() make calls to stack-protected functions.
+> As part of 103a4908ad4d, stack protection was also disabled for
+> kernel/head32.c as a precaution.
+> 
+> Subsequent patches for SEV-SNP CPUID validation support will introduce
+> both such cases. Attempting to disable stack protection for everything
+> in scope to address that is prohibitive since much of the code, like
+> SEV-ES #VC handler, is shared code that remains in use after boot and
+> could benefit from having stack protection enabled. Attempting to inline
+> calls is brittle and can quickly balloon out to library/helper code
+> where that's not really an option.
+> 
+> Instead, re-enable stack protection for head32.c/head64.c and make the
+> appropriate changes to ensure the segment used for the stack canary is
+> initialized in advance of any stack-protected C calls.
+> 
+> for head64.c:
+> 
+> - The BSP will enter from startup_64 and call into C code
+
+Function names need to end with "()" so that it is clear they're
+functions.
+
+>   (startup_64_setup_env) shortly after setting up the stack, which may
+>   result in calls to stack-protected code. Set up %gs early to allow
+>   for this safely.
+> - APs will enter from secondary_startup_64*, and %gs will be set up
+>   soon after. There is one call to C code prior to this
+>   (__startup_secondary_64), but it is only to fetch sme_me_mask, and
+>   unlikely to be stack-protected, so leave things as they are, but add
+>   a note about this in case things change in the future.
+> 
+> for head32.c:
+> 
+> - BSPs/APs will set %fs to __BOOT_DS prior to any C calls. In recent
+>   kernels, the compiler is configured to access the stack canary at
+>   %fs:__stack_chk_guard,
+
+Add here somewhere:
+
+"See
+
+  3fb0fdb3bbe7 ("x86/stackprotector/32: Make the canary into a regular percpu variable")
+
+for details."
+
+> which overlaps with the initial per-cpu
+>   __stack_chk_guard variable in the initial/'master' .data..percpu
+>   area. This is sufficient to allow access to the canary for use
+>   during initial startup, so no changes are needed there.
+> 
+> Suggested-by: Joerg Roedel <jroedel@suse.de> #for 64-bit %gs set up
+> Signed-off-by: Michael Roth <michael.roth@amd.com>
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  arch/x86/kernel/Makefile  |  1 -
+>  arch/x86/kernel/head_64.S | 24 ++++++++++++++++++++++++
+>  2 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index 2ff3e600f426..4df8c8f7d2ac 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -48,7 +48,6 @@ endif
+>  # non-deterministic coverage.
+>  KCOV_INSTRUMENT		:= n
+>  
+> -CFLAGS_head$(BITS).o	+= -fno-stack-protector
+>  CFLAGS_cc_platform.o	+= -fno-stack-protector
+>  
+>  CFLAGS_irq.o := -I $(srctree)/$(src)/../include/asm/trace
+> diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+> index 99de8fd461e8..9f8a7e48aca7 100644
+> --- a/arch/x86/kernel/head_64.S
+> +++ b/arch/x86/kernel/head_64.S
+> @@ -65,6 +65,22 @@ SYM_CODE_START_NOALIGN(startup_64)
+>  	leaq	(__end_init_task - FRAME_SIZE)(%rip), %rsp
+>  
+>  	leaq	_text(%rip), %rdi
+> +
+> +	/*
+> +	 * initial_gs points to initial fixed_per_cpu struct with storage for
+
+$ git grep fixed_per_cpu
+$
+
+??
+
+Do you mean this:
+
+SYM_DATA(initial_gs,    .quad INIT_PER_CPU_VAR(fixed_percpu_data))
+
+?
+
+> +	 * the stack protector canary. Global pointer fixups are needed at this
+> +	 * stage, so apply them as is done in fixup_pointer(), and initialize %gs
+> +	 * such that the canary can be accessed at %gs:40 for subsequent C calls.
+> +	 */
+> +	movl	$MSR_GS_BASE, %ecx
+> +	movq	initial_gs(%rip), %rax
+> +	movq	$_text, %rdx
+> +	subq	%rdx, %rax
+> +	addq	%rdi, %rax
+> +	movq	%rax, %rdx
+> +	shrq	$32,  %rdx
+> +	wrmsr
+> +
+>  	pushq	%rsi
+>  	call	startup_64_setup_env
+>  	popq	%rsi
+> @@ -146,6 +162,14 @@ SYM_INNER_LABEL(secondary_startup_64_no_verify, SYM_L_GLOBAL)
+>  	 * added to the initial pgdir entry that will be programmed into CR3.
+>  	 */
+>  	pushq	%rsi
+
+<---- newline here.
+
+> +	/*
+> +	 * NOTE: %gs at this point is a stale data segment left over from the
+> +	 * real-mode trampoline, so the default stack protector canary location
+> +	 * at %gs:40 does not yet coincide with the expected fixed_per_cpu struct
+> +	 * that contains storage for the stack canary. So take care not to add
+> +	 * anything to the C functions in this path that would result in stack
+> +	 * protected C code being generated.
+> +	 */
+>  	call	__startup_secondary_64
+>  	popq	%rsi
+
+Can't you simply do
+
+	movq    sme_me_mask, %rax
+
+here instead and avoid the issue altogether?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
