@@ -2,88 +2,199 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB17C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jan 2022 20:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EBDC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jan 2022 22:00:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233562AbiADU5F (ORCPT
+        id S234915AbiADWAU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Jan 2022 15:57:05 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:52312 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230316AbiADU5F (ORCPT
+        Tue, 4 Jan 2022 17:00:20 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:57120 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232504AbiADWAT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Jan 2022 15:57:05 -0500
-Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
+        Tue, 4 Jan 2022 17:00:19 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9145B1EC0453;
-        Tue,  4 Jan 2022 21:56:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1641329819;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=6KjE4zfdnoJa8VcbKr5tWykH8nZeyvMUacQiyUUGOVY=;
-        b=nLvokjXzEdmDvpUARTmnGiFS3Asc47jqMMaRZkBcWW7StoAsBmGlZGPfBmKwKTBjBJedXN
-        W9gYGacnwZlT0e4/Rcho1z9vPnvpi+VnOzEMUi0fPuPrbvIkGMQlvIGArhzm0CEeuYKcx4
-        n5wB63ndM0lQY7kc2BLP+2EVDi0KVWY=
-Date:   Tue, 4 Jan 2022 21:57:03 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v8 22/40] x86/sev: move MSR-based VMGEXITs for CPUID to
- helper
-Message-ID: <YdS0n3qLFS6r0ksN@zn.tnic>
-References: <20211210154332.11526-1-brijesh.singh@amd.com>
- <20211210154332.11526-23-brijesh.singh@amd.com>
- <Yc4ABL2EbBlwjma5@google.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7477E615C8;
+        Tue,  4 Jan 2022 22:00:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7C4AC36AF4;
+        Tue,  4 Jan 2022 22:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641333618;
+        bh=0bNxva3vPLAvYpaAdpSuepoaCoKQQipx/GhAyegGbVo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=t+rXhHoLcOHJduijqYNRY8tlpXzVWh0KpYwk+rx6CkDbHFw6BWoQfc3dXLlcl/QFx
+         +kV+Z7BT64/xARfJOKkWifeu1AMyYJQFKfDHff+o/mgKAweYD+zH9+BhF7dptkNUTO
+         nI16YYjiCtACLrBZm7/ov98Ng3uHL5BBAyLMShiwuB5RxbHeTHQRyQpmOmLVPUEovT
+         DN+JF6bvRZwQCMyf2cNGPiOAUpMrNS6xvU/Nd+aaukmpYWRd3n481vuST5NmH43RyZ
+         DS3j1/aSAmWDAE4RVWLmiplHP5EnM9TQhn3QRQY/7v6RYL2suv8cYkTnjMw+oBjjrm
+         yNlw7OhM0TWbw==
+Received: by mail-ed1-f45.google.com with SMTP id f5so153927066edq.6;
+        Tue, 04 Jan 2022 14:00:18 -0800 (PST)
+X-Gm-Message-State: AOAM532lvLx0HMzogq+aAIA0KxyW70vfzP2Lxmqn/PvFTAwsSUfHb88c
+        ow41PJCBhXJbuLN0KAimiYnL/P1N4rXQ0jbo7g==
+X-Google-Smtp-Source: ABdhPJw1uhAiPnnIERGD8hUffX/5WwGrUbcSjfKqItL4XiR/0tBUqdIOj8MPuwRwRufmD5fbyNpWQWkXeqIby6m9mbY=
+X-Received: by 2002:a17:907:94c2:: with SMTP id dn2mr41415818ejc.325.1641333617085;
+ Tue, 04 Jan 2022 14:00:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Yc4ABL2EbBlwjma5@google.com>
+References: <20211221182826.2141789-1-jaschultzMS@gmail.com>
+ <20211221182826.2141789-2-jaschultzMS@gmail.com> <YcJiBk5f071eJ5+n@robh.at.kernel.org>
+ <DM6PR21MB13230483733ECB77304EC416A5429@DM6PR21MB1323.namprd21.prod.outlook.com>
+ <CAL_JsqLuwvxkxeOmZQVOpMX_aA83LzEc4Tg+bkcFp3mUZYiTKw@mail.gmail.com> <DM6PR21MB1323319815EFD885339C8F9BA5429@DM6PR21MB1323.namprd21.prod.outlook.com>
+In-Reply-To: <DM6PR21MB1323319815EFD885339C8F9BA5429@DM6PR21MB1323.namprd21.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 4 Jan 2022 16:00:05 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJPq=B+DEGFvg_JNvDiZiig-wGetNJ4u8ssnJV_ADp4QQ@mail.gmail.com>
+Message-ID: <CAL_JsqJPq=B+DEGFvg_JNvDiZiig-wGetNJ4u8ssnJV_ADp4QQ@mail.gmail.com>
+Subject: Re: [EXTERNAL] Re: [PATCH RESEND v4 1/4] dt-bindings: platform:
+ microsoft: Document surface xbl
+To:     Jarrett Schultz <jaschultz@microsoft.com>
+Cc:     Jarrett Schultz <jaschultzms@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Dec 30, 2021 at 06:52:52PM +0000, Sean Christopherson wrote:
-> Having @subfunc, a.k.a. index, in is weird/confusing/fragile because it's not consumed,
-> nor is it checked.  Peeking ahead, it looks like all future users pass '0'.  Taking the
-> index but dropping it on the floor is asking for future breakage.  Either drop it or
-> assert that it's zero.
+On Mon, Dec 27, 2021 at 10:17 AM Jarrett Schultz
+<jaschultz@microsoft.com> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Rob Herring <robh@kernel.org>
+> > Sent: Monday, December 27, 2021 9:46 AM
+> > To: Jarrett Schultz <jaschultz@microsoft.com>
+> > Cc: Jarrett Schultz <jaschultzms@gmail.com>; Andy Gross
+> > <agross@kernel.org>; bjorn.andersson@linaro.org; Hans de Goede
+> > <hdegoede@redhat.com>; Mark Gross <markgross@kernel.org>; Maximilian
+> > Luz <luzmaximilian@gmail.com>; Felipe Balbi <balbi@kernel.org>; linux-arm-
+> > msm@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; devicetree@vger.kernel.org
+> > Subject: Re: [EXTERNAL] Re: [PATCH RESEND v4 1/4] dt-bindings: platform:
+> > microsoft: Document surface xbl
 
-Yah, just drop it please. 
+Please fix your mail client reply style.
 
-It can always be added later if needed.
+> >
+> > On Mon, Dec 27, 2021 at 10:54 AM Jarrett Schultz
+> > <jaschultz@microsoft.com> wrote:
+> > >
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Rob Herring <robh@kernel.org>
+> > > > Sent: Tuesday, December 21, 2021 5:24 PM
+> > > > To: Jarrett Schultz <jaschultzms@gmail.com>
+> > > > Cc: Andy Gross <agross@kernel.org>; bjorn.andersson@linaro.org; Hans
+> > > > de Goede <hdegoede@redhat.com>; Mark Gross
+> > <markgross@kernel.org>;
+> > > > Maximilian Luz <luzmaximilian@gmail.com>; Felipe Balbi
+> > > > <balbi@kernel.org>; linux-arm-msm@vger.kernel.org; platform-driver-
+> > > > x86@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > devicetree@vger.kernel.org; Jarrett Schultz
+> > > > <jaschultz@microsoft.com>
+> > > > Subject: [EXTERNAL] Re: [PATCH RESEND v4 1/4] dt-bindings: platform:
+> > > > microsoft: Document surface xbl
+> > > >
+> > > > On Tue, Dec 21, 2021 at 10:28:23AM -0800, Jarrett Schultz wrote:
+> > > > > From: Jarrett Schultz <jaschultz@microsoft.com>
+> > > > >
+> > > > > Introduce yaml for surface xbl driver.
+> > > > >
+> > > > > Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
+> > > > >
+> > > > > ---
+> > > > >
+> > > > > Changes in v4:
+> > > > >  - Addressed small formatting changes
+> > > > >  - Removed unnecessary lines
+> > > > >
+> > > > > ---
+> > > > >
+> > > > > Changes in v3:
+> > > > >  - Updated description to only pertain to the hardware
+> > > > >  - Updated the required field to properly reflect the binding
+> > > > >  - Removed the first example
+> > > > >  - Fixed the size of the reg field in the second example
+> > > > >
+> > > > > ---
+> > > > >
+> > > > > Changes in v2:
+> > > > >  - Removed json-schema dependence
+> > > > >  - Elaborated on description of driver
+> > > > >  - Updated example
+> > > > > ---
+> > > > >  .../platform/microsoft/surface-xbl.yaml       | 64 +++++++++++++++++++
+> > > > >  MAINTAINERS                                   |  7 ++
+> > > > >  2 files changed, 71 insertions(+)  create mode 100644
+> > > > > Documentation/devicetree/bindings/platform/microsoft/surface-xbl.y
+> > > > > aml
+> > > > >
+> > > > > diff --git
+> > > > > a/Documentation/devicetree/bindings/platform/microsoft/surface-
+> > > > xbl.yam
+> > > > > l
+> > > > > b/Documentation/devicetree/bindings/platform/microsoft/surface-
+> > > > xbl.yam
+> > > > > l
+> > > > > new file mode 100644
+> > > > > index 000000000000..df5a87a016f4
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/platform/microsoft/surface
+> > > > > +++ -xbl
+> > > > > +++ .yaml
+> > > > > @@ -0,0 +1,64 @@
+> > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML
+> > > > > +1.2
+> > > > > +---
+> > > > > +$id:
+> > > > >
+> > > >
+> > +https://nam06.safelinks.protection.outlook.com/?url=http%3A%2F%2Fde
+> > > > +vi
+> > > > > +cetree.org%2Fschemas%2Fplatform%2Fmicrosoft%2Fsurface-
+> > > > xbl.yaml%23&amp
 
-Thx.
+And this...
 
--- 
-Regards/Gruss,
-    Boris.
+Or trim the context if not relevant to the discussion.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+[...]
+
+> > > > > +examples:
+> > > > > +  - |
+> > > > > +    / {
+> > > > > +        compatible = "foo";
+> > > > > +        model = "foo";
+> > > >
+> > > > No need to make this the root node with a fake compatible.
+> > >
+> > > I included this root node in order to make #address-cells =
+> > > #size-cells = 2, since this example raises errors otherwise.
+> >
+> > Why does your example require 2 cells? You only have 4KB of address space.
+>
+> The soc node that imem sits under in sm8150.dtsi defines it that way so for
+> continuity I figured that it would make sense for the example to mirror that.
+
+It's just an example. If you are just duplicating dts files, why have examples?
+
+>
+> Also, should imem and xbl be documented in separate files?
+
+No. That depends more on the size of the schema. So it's a judgment
+call typically.
+
+Rob
