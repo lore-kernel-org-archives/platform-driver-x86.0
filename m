@@ -2,80 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE93BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jan 2022 13:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230FEC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jan 2022 14:09:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233375AbiADNSO (ORCPT
+        id S232681AbiADOJt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Jan 2022 08:18:14 -0500
-Received: from forward102o.mail.yandex.net ([37.140.190.182]:50074 "EHLO
-        forward102o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233374AbiADNSN (ORCPT
+        Tue, 4 Jan 2022 09:09:49 -0500
+Received: from mga03.intel.com ([134.134.136.65]:52208 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232748AbiADOJs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Jan 2022 08:18:13 -0500
-X-Greylist: delayed 481 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Jan 2022 08:18:13 EST
-Received: from sas1-d367461f7756.qloud-c.yandex.net (sas1-d367461f7756.qloud-c.yandex.net [IPv6:2a02:6b8:c08:fe02:0:640:d367:461f])
-        by forward102o.mail.yandex.net (Yandex) with ESMTP id 4E43A6FF8F96;
-        Tue,  4 Jan 2022 16:10:11 +0300 (MSK)
-Received: from sas8-c6148047b62a.qloud-c.yandex.net (sas8-c6148047b62a.qloud-c.yandex.net [2a02:6b8:c1b:2a11:0:640:c614:8047])
-        by sas1-d367461f7756.qloud-c.yandex.net (mxback/Yandex) with ESMTP id 4AW5QZu7sy-AAeqSsAc;
-        Tue, 04 Jan 2022 16:10:11 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ngs.ru; s=mail; t=1641301811;
-        bh=aibARZXcrbaH73cgf7JYe3AOlnf+khcVeoZ8dUhPUzU=;
-        h=In-Reply-To:References:Date:From:To:Subject:Message-ID;
-        b=glXZYpuCYsqoyUdestY38yqE7WbeJNGBQlBwjBr67dfk8FU9kDUzCaoKxt1Fixe15
-         kG620PRYwAcaobVXE2JASyqSVQhiYOW33D8BQ0+BgMMlFgbgVbiLGkau1gP+yIB7yV
-         +ZIdKkZJEuKioTcYeep2obPdIfDc64Y8RSyOqmmk=
-Authentication-Results: sas1-d367461f7756.qloud-c.yandex.net; dkim=pass header.i=@ngs.ru
-Received: by sas8-c6148047b62a.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id ICpEPId7tD-A9Q4rHxQ;
-        Tue, 04 Jan 2022 16:10:10 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-X-Yandex-Fwd: 2
-Subject: Re: error fn f7 (asus)
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, jprvita@gmail.com,
-        andy@infradead.org
-References: <625e12e1-aee0-8b3c-8a4d-98e74739153c@ngs.ru>
- <3440f96b-291f-cd5e-7fc3-c3e9c0959f22@infradead.org>
-From:   "jack_solovey@ngs.ru" <jack_solovey@ngs.ru>
-Message-ID: <1180fe71-07c5-9de6-1d50-a16010773bcc@ngs.ru>
-Date:   Tue, 4 Jan 2022 20:10:08 +0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Tue, 4 Jan 2022 09:09:48 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="242185065"
+X-IronPort-AV: E=Sophos;i="5.88,261,1635231600"; 
+   d="scan'208";a="242185065"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 06:09:47 -0800
+X-IronPort-AV: E=Sophos;i="5.88,261,1635231600"; 
+   d="scan'208";a="688575793"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 06:09:45 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1n4kUG-006EDv-87;
+        Tue, 04 Jan 2022 16:08:28 +0200
+Date:   Tue, 4 Jan 2022 16:08:28 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 1/2] gpio: tps68470: Allow building as module
+Message-ID: <YdRU3DVsByJzyXmn@smile.fi.intel.com>
+References: <20211225120026.95268-1-hdegoede@redhat.com>
+ <CAHp75Vdz1zxE5V_ff+jSp6VUo34aRinLj-gK_HOi5-2Zgw3E8w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <3440f96b-291f-cd5e-7fc3-c3e9c0959f22@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vdz1zxE5V_ff+jSp6VUo34aRinLj-gK_HOi5-2Zgw3E8w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-03.04.2020 10:19, Randy Dunlap пишет:
-> [adding Cc's]
->
-> On 3/8/20 11:43 PM, jack_solovey@ngs.ru wrote:
->> Hello, sorry this machine translation.
->>
->> Laptop  Asus N56V
->> Prior to kernel 5, the FN+F7 buttons turned off the laptop screen.
->> Starting with kernel 5, these buttons turn on standby mode.
->> I have to use core 4.18
->>
->> Linux Asus-N56VB 4.18.0-25-generic #26~18.04.1-Ubuntu SMP Thu Jun 27 07:28:31 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
->>
->> Whether it is planned to return the legacy function to the fn+f7 buttons to disable the main monitor.
-> Hi,
->
-> Possibly caused by 78f3ac76d9e5219589718b9e4733bee21627b3f5
-> (platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey).
->
-Hello.
-Please tell me, is there anything to be done to solve this problem?
+On Sat, Dec 25, 2021 at 04:41:58PM +0200, Andy Shevchenko wrote:
+> On Sat, Dec 25, 2021 at 2:00 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >
+> > The gpio-tps68470 driver binds to a tps68470-gpio platform-device which
+> > itself gets instantiated by a special MFD driver from
+> > drivers/platform/x86/intel/int3472/tps68470.c
+> >
+> > This MFD driver itself can be build as a module, so it makes no sense to
+> 
+> built
+> 
+> > force the gpio-tps68470 driver to always be builtin.
+> 
+> built-in
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> (see one minor comment below)
+
+I don't see the next version, in any case it's too far from the beginning of
+the v5.16 cycle and I gave my tags so Bart may (or may not :-) apply them. If
+it's okay to be v5.18 material, I'll take a new version sent after v5.17-rc1.
 
 -- 
-___________________
-С уважением,
-Соловей Евгений
+With Best Regards,
+Andy Shevchenko
+
 
