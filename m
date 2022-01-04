@@ -2,150 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE2CC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jan 2022 15:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC498C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jan 2022 17:05:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231343AbiADPdy (ORCPT
+        id S235835AbiADRFk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Jan 2022 10:33:54 -0500
-Received: from mga06.intel.com ([134.134.136.31]:41447 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231406AbiADPdx (ORCPT
+        Tue, 4 Jan 2022 12:05:40 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:52258 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235724AbiADRF3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Jan 2022 10:33:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641310433; x=1672846433;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=xJZ9yposzbYbLGb5u6b9jzV8X8biepw/pQoGK27K7JY=;
-  b=gTmfAlAcDQ4GBD7iWPuJyuhG8EbeL21FXLhT3LtTwIXlyr+J5cxe2YLK
-   4zlyfsStIQIqKP2GhwTK2z4AmyRvYLg0brgDMzjGWzLIhW/ob9Sus39ON
-   34Rmk2yYz/zlWgp15qY5StliDrpmaL+mdchniYF5qRMd07FStSFAiFuGy
-   +0JdMkoTYIAto0X2cY/3+hR1ur8xhKUlOXj9LkF2+e+6gp1wABJJm7pvE
-   PAU1WlDDwTEeP08oI7pOD7TWA2N10EZvEFzkjwIjdoQCRINpaQ4lGZDzp
-   Va4WlZJLX06a4qhYOQ+RtlC7Dkib9iAt1gptnhqfkKVXj7nv7LaGML3Nk
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="302994878"
-X-IronPort-AV: E=Sophos;i="5.88,261,1635231600"; 
-   d="scan'208";a="302994878"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 07:33:52 -0800
-X-IronPort-AV: E=Sophos;i="5.88,261,1635231600"; 
-   d="scan'208";a="620687478"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 07:33:50 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1n4lnc-006GCZ-GZ;
-        Tue, 04 Jan 2022 17:32:32 +0200
-Date:   Tue, 4 Jan 2022 17:32:32 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
+        Tue, 4 Jan 2022 12:05:29 -0500
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id B8A87210DE;
+        Tue,  4 Jan 2022 17:05:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1641315926; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=AfBngmkoikoFNur2GoLsVjxFAUjb8tl7MPdE1R0s/Q0=;
+        b=b1VRJhKEXvbfDICsAbwkVXPH3dXdD+z6G9hT6HSf+Q9cREWiV/aNcitWK8tU55SX5Hbw6J
+        ZdnOlAujzbA5EvJoEDtgFvJcBHqcHqx93UDWBnikAmXb9phnMHOzcjKNZU0hV6n3IHu+6s
+        myMEjy4J2GO2vrtAcvIH4V9Pt2eFaYg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1641315926;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=AfBngmkoikoFNur2GoLsVjxFAUjb8tl7MPdE1R0s/Q0=;
+        b=IPS7QgO5/jdCIJeIoydxOs9ZvTr4HK0ZlHOLaQkr6NYIiC7skCbaxa3IPED+BAG1zo4+iu
+        GWmjHPu+nFLL+/Cw==
+Received: from kitsune.suse.cz (kitsune.suse.cz [10.100.12.127])
+        by relay2.suse.de (Postfix) with ESMTP id 304EDA3BAF;
+        Tue,  4 Jan 2022 17:05:26 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris <jmorris@namei.org>,
+        David Howells <dhowells@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Ion Agorria <ion@agorria.com>,
-        Svyatoslav Ryhel <clamor95@gmail.com>
-Subject: Re: [PATCH] platform/x86: Add Asus TF103C dock driver
-Message-ID: <YdRokPBoYYnF+D3D@smile.fi.intel.com>
-References: <20211226141849.156407-1-hdegoede@redhat.com>
+        Thomas Gleixner <tglx@linutronix.de>, Greg KH <greg@kroah.com>
+Subject: [PATCH] debugfs: lockdown: Allow reading debugfs files that are not world readable
+Date:   Tue,  4 Jan 2022 18:05:05 +0100
+Message-Id: <20220104170505.10248-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211226141849.156407-1-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Dec 26, 2021 at 03:18:49PM +0100, Hans de Goede wrote:
-> Add a driver for the keyboard, touchpad and USB port of
-> the keyboard dock for the Asus TF103C 2-in-1 tablet.
-> 
-> This keyboard dock has its own I2C attached embedded controller
-> and the keyboard and touchpad are also connected over I2C,
-> instead of using the usual USB connection. This means that the
-> keyboard dock requires this special driver to function.
 
-...
+When the kernel is locked down the kernel allows reading only debugfs
+files with mode 444. Mode 400 is also valid but is not allowed.
 
-> +MODULE_PARM_DESC(fnlock,
-> +		 "By default the kbd toprow sends multimedia key presses. AltGr "
-> +		 "can be pressed to change this to F1-F12. Set this to 1 to "
-> +		 "change the default. Press AltGr + Esc to toggle at runtime.");
+Make the 444 into a mask.
 
-I would still use long line instead of splitting.
+Fixes: 5496197f9b08 ("debugfs: Restrict debugfs when the kernel is locked down")
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+ fs/debugfs/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-...
-
-> +/* Byte 0 is the length of the rest of the packet */
-> +static const u8 tf103c_dock_enable_cmd[9] = { 8, 0x20, 0, 0, 0, 0, 0x20, 0, 0 };
-> +static const u8 tf103c_dock_usb_enable_cmd[9] = { 8, 0, 0, 0, 0, 0, 0, 0x40, 0 };
-> +static const u8 tf103c_dock_suspend_cmd[9] = { 8, 0, 0x20, 0, 0, 0x22, 0, 0, 0 };
-
-This seems to me rather
-
-struct {
-	u8 cmd;
-	DECLARE_BITMAP(payload, 64);
-};
-
-And those 2s and 4s are actually some bits in payload with some meaning.
-
-Would it be the case?
-
-...
-
-> +/*** keyboard related code ***/
-
-Not sure why you have all those fancy tri-stars comments. Probably it's
-feliz año nuevo style -)
-
-...
-
-> +	ret = i2c_transfer(client->adapter, msgs, 2);
-> +	if (ret != 2) {
-
-2 --> ARRAY_SIZE() ?
-
-> +		dev_err(dev, "error %d reading kbd data\n", ret);
-> +		return -EIO;
-> +	}
-
-...
-
-> +	buf[0] = TF103C_DOCK_KBD_CMD_REG & 0xff;
-> +	buf[1] = TF103C_DOCK_KBD_CMD_REG >> 8;
-> +	buf[2] = cmd & 0xff;
-> +	buf[3] = cmd >> 8;
-
-Seems to me like put_unaligned_le16() in both cases,
-
-...
-
-> +	ret = i2c_master_send(dock->kbd_client, buf, 4);
-> +	if (ret != 4)
-
-sizeof() / ARRAY_SIZE() ?
-
-> +		dev_err(dev, "error %d writing kbd cmd\n", ret);
-
-...
-
-> +static const struct acpi_device_id tf103c_dock_acpi_match[] = {
-> +	{"NPCE69A"},
-
-> +	{ },
-
-No comma is needed.
-
-> +};
-
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index 7d162b0efbf0..950c63fa4d0b 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -147,7 +147,7 @@ static int debugfs_locked_down(struct inode *inode,
+ 			       struct file *filp,
+ 			       const struct file_operations *real_fops)
+ {
+-	if ((inode->i_mode & 07777) == 0444 &&
++	if ((inode->i_mode & 07777 & ~0444) == 0 &&
+ 	    !(filp->f_mode & FMODE_WRITE) &&
+ 	    !real_fops->unlocked_ioctl &&
+ 	    !real_fops->compat_ioctl &&
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.31.1
 
