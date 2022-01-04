@@ -2,92 +2,115 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A00C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jan 2022 03:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0066DC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jan 2022 08:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231553AbiADDtJ (ORCPT
+        id S234182AbiADITo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 3 Jan 2022 22:49:09 -0500
-Received: from server.foto-kaesberg.de ([173.249.50.97]:55343 "EHLO
-        server.foto-kaesberg.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231165AbiADDtJ (ORCPT
+        Tue, 4 Jan 2022 03:19:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234180AbiADITo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Jan 2022 22:49:09 -0500
-X-Greylist: delayed 441 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Jan 2022 22:49:08 EST
-Received: from [IPv6:2003:c7:f722:b200:aab6:2f1b:b535:7005] (p200300c7F722B200AaB62F1bB5357005.dip0.t-ipconnect.de [IPv6:2003:c7:f722:b200:aab6:2f1b:b535:7005])
-        by server.foto-kaesberg.de (Postfix) with ESMTPSA id 652EF10CC04A;
-        Tue,  4 Jan 2022 04:41:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dreschner.net;
-        s=default; t=1641267706;
-        bh=y+GFaRJnex7Drg2DuCt7FZ3Xjrw7x2ZxB4DnHdAtlCU=; h=From:Subject:To;
-        b=EZjiC1BP7Lb6Nq9BNkmDuKxXsmZe3siA2wzdLgFTHTB2ogc9nIdpe5PPxmL4H1Lkn
-         C9COZl9nfxNmLJ/tvlP5itabnXJsGdW9aXljGIzVg1AyAQmK3Jo86+yOL9eSq0gTTp
-         fnnpWqW5qSiCEo9CNQpoLN+OEk55v42wjWbrkzzc=
-Authentication-Results: server.foto-kaesberg.de;
-        spf=pass (sender IP is 2003:c7:f722:b200:aab6:2f1b:b535:7005) smtp.mailfrom=david@dreschner.net smtp.helo=[IPv6:2003:c7:f722:b200:aab6:2f1b:b535:7005]
-Received-SPF: pass (server.foto-kaesberg.de: connection is authenticated)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.4 at server.foto-kaesberg.de
-From:   David Dreschner <david@dreschner.net>
-Subject: [PATCH] Update whitelisted ThinkPad models with dual fan support in
- thinkpad_acpi
-To:     ibm-acpi-devel@lists.sourceforge.net
-Cc:     platform-driver-x86@vger.kernel.org
-Message-ID: <ec04aa1e-1ac3-edbc-ac08-eec15ec5c952@dreschner.net>
-Date:   Tue, 4 Jan 2022 04:41:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Tue, 4 Jan 2022 03:19:44 -0500
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3842C061761
+        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jan 2022 00:19:43 -0800 (PST)
+Received: by mail-pg1-x52e.google.com with SMTP id r5so32103164pgi.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Jan 2022 00:19:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kLTkiMyNnQCtB7TRGqBS1d7XJq61IG4uEvm4IPsV6YA=;
+        b=Jo8SjkBs0/vdlXtBqXzWVz+u9I//wI7czOwsz3lKHn+P2YIqyPE+pnGcZKiIT7cPDN
+         1lQx8abB8J9CJhxhUlpvKIylm0Wc5aLt2YBE7pTLVVCBGkHU4r1+xO0VTqlYNsaUpabU
+         eXQXarFt2cSXUbkQwx8qbOUsiBKIkOlpR883VRu8fBYoplVJHBDl+02f1tbIgdsD9UZw
+         yjSFfHy6cLZwk1b5eDksb//+Y60ZQZ6xdo8/TILrotD1dlbR99I+S+XPIhF+3WCUGU00
+         owoTw/+2nb5Jq0x0n/bEeduUh26mGrtmXWw89xRgxH6Shs9oBePGI77hiHst2Cwu9Nql
+         AhoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kLTkiMyNnQCtB7TRGqBS1d7XJq61IG4uEvm4IPsV6YA=;
+        b=CuQh0heClMuJyG94Nh0yZCLaJeb3Qbz1KGoWsQmGeSxBbPJdmwTyEvSbW6CmWvz/Gq
+         KvSYS2GPX/sWIAPbCL+5fzpplSX2HhVBP2E6mX9DDbEQOMFv8ZXpIE84BzCEeN+NdkRw
+         lmCiQSdzxvIQZ94h5oygzuMj+LZ2qG4M6ClmIdLntH3TfH2hYbKcmTDlHU+scztDgljg
+         oPELW+Gv29bqbX6lJR+J8XESVhHnFP0pkQpXsp61myHLrQ+Ypm0omc3TWv/kuzD1xQVB
+         FWwbRiliUis+1+pcSHpDBUiBbvM/hk3N4Ej9dabRED68zVS3LRilFsXyGdx/806X1q3A
+         9sIQ==
+X-Gm-Message-State: AOAM533WNaefjNx1pjjmDLm8FY3hzmoJEYBzBExSwGjlBxVRJBlZHr5b
+        +pb/N0QHSvlEtUzx88T1u4o=
+X-Google-Smtp-Source: ABdhPJydi5LxyEzWa1E3Wd1H6s0YMJXdvgKP62Hhh9uZPC3/4aiM5ZyW+kBacbXFi+GKg2XFbMHwQA==
+X-Received: by 2002:a05:6a00:244b:b0:4ad:5852:f41d with SMTP id d11-20020a056a00244b00b004ad5852f41dmr50277291pfj.29.1641284383487;
+        Tue, 04 Jan 2022 00:19:43 -0800 (PST)
+Received: from localhost.localdomain ([133.159.152.132])
+        by smtp.gmail.com with ESMTPSA id w5sm38849298pfu.214.2022.01.04.00.19.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jan 2022 00:19:43 -0800 (PST)
+From:   yuk7 <yukx00@gmail.com>
+To:     hdegoede@redhat.com
+Cc:     platform-driver-x86@vger.kernel.org, yuk7 <yukx00@gmail.com>
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the RWC NANOTE P8 AY07J 2-in-1
+Date:   Tue,  4 Jan 2022 17:19:20 +0900
+Message-Id: <20220104081920.1794275-1-yukx00@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------732B6A79F15889DB05289BDE"
-Content-Language: en-US
-X-PPP-Message-ID: <164126770589.11858.14093033682084229985@server.foto-kaesberg.de>
-X-PPP-Vhost: dreschner.net
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------732B6A79F15889DB05289BDE
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Add touchscreen info for RWC NANOTE P8 (AY07J) 2-in-1.
 
-Hey guys,
-
-the attached patch updates the list of whitelisted ThinkPad models with 
-dual fan support.
-
-The changes were tested on my ThinkPad T15g Gen 2. According to Lenovo, 
-the BIOS version is the same for the P15 Gen 2 and the P17 Gen 2 ( 
-https://pcsupport.lenovo.com/us/en/downloads/ds551321-bios-update-utility-bootable-cd-for-windows-10-64-bit-thinkpad-p15-gen-2-p17-gen-2-t15g-gen-2 
-).
-
-I also added the P15v Gen 2 and T15p Gen 2 to the whitelist based on the 
-BIOS version listed on the Lenovo homepage ( 
-https://pcsupport.lenovo.com/us/en/downloads/ds551356-bios-update-utility-bootable-cd-for-windows-10-64-bit-thinkpad-p15v-gen-2-t15p-gen-2 
-). The first generation had two fans and where covered by the whitelist 
-entry for the P15 Gen 2. As the second generation has two fans, too, I 
-made that change for completeness.
-
-To apply the changes before it's merged in the mainline linux kernel, I 
-made a little dkms patch: 
-https://github.com/dreschner/thinkpad_acpi-dual-fan-patch
-
-Best reguards,
-David
-
---------------732B6A79F15889DB05289BDE
-Content-Type: text/x-patch; charset=UTF-8;
- name="update_whitelisted_thinkpad_models.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="update_whitelisted_thinkpad_models.patch"
-
-8845c8845
-< 	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v (1st gen) */
+Signed-off-by: yuk7 <yukx00@gmail.com>
 ---
-> 	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 / P17 / T15g / T15p / P15v (1st gen) */
-8846a8847,8848
-> 	TPACPI_Q_LNV3('N', '3', '7', TPACPI_FAN_2CTL),	/* P15 / P17 / T15g (2nd gen) */
-> 	TPACPI_Q_LNV3('N', '3', '8', TPACPI_FAN_2CTL),	/* P15v / T15p (2nd gen) */
+ drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
---------------732B6A79F15889DB05289BDE--
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 17dd54d4b..e318b4094 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -773,6 +773,21 @@ static const struct ts_dmi_data predia_basic_data = {
+ 	.properties	= predia_basic_props,
+ };
+ 
++static const struct property_entry rwc_nanote_p8_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 46),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-rwc-nanote-p8.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	{ }
++};
++
++static const struct ts_dmi_data rwc_nanote_p8_data = {
++	.acpi_name = "MSSL1680:00",
++	.properties = rwc_nanote_p8_props,
++};
++
+ static const struct property_entry schneider_sct101ctm_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+@@ -1406,6 +1421,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "0E57"),
+ 		},
+ 	},
++	{
++		/* RWC NANOTE P8 */
++		.driver_data = (void *)&rwc_nanote_p8_data,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "Default string"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "AY07J"),
++			DMI_MATCH(DMI_PRODUCT_SKU, "0001")
++		},
++	},
+ 	{
+ 		/* Schneider SCT101CTM */
+ 		.driver_data = (void *)&schneider_sct101ctm_data,
+-- 
+2.34.1
+
