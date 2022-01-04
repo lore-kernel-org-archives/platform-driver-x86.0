@@ -2,88 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F2CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jan 2022 11:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43018C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jan 2022 13:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230317AbiADLKT (ORCPT
+        id S233286AbiADNHx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Jan 2022 06:10:19 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:58172 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbiADLKT (ORCPT
+        Tue, 4 Jan 2022 08:07:53 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:36138 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233279AbiADNHx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Jan 2022 06:10:19 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 13190B811BB
-        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jan 2022 11:10:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CCBF5C36AEB
-        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jan 2022 11:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641294616;
-        bh=OaNnIyRvfnL52kXnXphoVjACVdETaQgCs6GctqlE5o0=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=suIh7MCKNq/x+UJrAyQulgjB2H1Ayvmg6H//2C08sRKS6Uc2JUFQVc2YuJjqeJGeD
-         8arn87qq/y9cQf4XlnkTENiezGyUB+I1irTSo3rwS7RDFEiDNVxJR882V0/KlXNa34
-         C4UBtrONjdTY+a+ryrL4RJNIZWI4nqGOtNu4rN980Wsa/NkSPSZ9K7URmd9tfH/GMc
-         qozbDzwyCkJBqkcUOEesiwh3eCHN1Hpp4yNDolpe6AvqlLozn4zQxTjY7yRi6yYPm0
-         G51q/qCMYCR1ewQQ1ztc1GPHCWP92Co5Ft4o6IpaXrxuIj6GOYrdCm1yKtIjSX4lvI
-         qWKyxm+6dn/SA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id AC9A8C05FDC; Tue,  4 Jan 2022 11:10:16 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 192831] acer_wmi spamming logs with iio-sensor-prox Could not
- open input accel Operation not permitted
-Date:   Tue, 04 Jan 2022 11:10:16 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: andy.shevchenko@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INSUFFICIENT_DATA
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-192831-215701-eRFK2aKwYE@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-192831-215701@https.bugzilla.kernel.org/>
-References: <bug-192831-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
-MIME-Version: 1.0
+        Tue, 4 Jan 2022 08:07:53 -0500
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id C9A2E1F386;
+        Tue,  4 Jan 2022 13:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1641301671; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tfjSgIg7XepgSJUbid2VyHDg323VjNL4qJ6wgeEpvuQ=;
+        b=t7B0BcFicuUynr5x7AL1eNGg49zlmxTbJGJWyp+rHuWH4GiimczcFtLkcPCqyO2UNi45fj
+        fREFdToDToGMwEG44vhKqQ7+dN/Oy0i3GLz+3u2g+gWs4MAjKuo9IeXQvzNBn4YAHOOcvl
+        A1Wj9z/0N2U5/HTx4xzbBZD4KZL01Ws=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1641301671;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tfjSgIg7XepgSJUbid2VyHDg323VjNL4qJ6wgeEpvuQ=;
+        b=zmqNWuIrK+SlApL8VKqldEqu7JoA4V2VkwBHfKAJv5Thu/nsFs6+lWBfnIjhzof9dHSD7b
+        nqRpRFosyVxpHrBQ==
+Received: from alsa1.suse.de (alsa1.suse.de [10.160.4.42])
+        by relay2.suse.de (Postfix) with ESMTP id A89A0A3B83;
+        Tue,  4 Jan 2022 13:07:51 +0000 (UTC)
+Date:   Tue, 04 Jan 2022 14:07:51 +0100
+Message-ID: <s5h35m3lkd4.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Lucas Tanure <tanureal@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: (subset) [PATCH v6 00/10] Add support for CS35L41 in HDA systems
+In-Reply-To: <164096159451.2355590.17653987935012339046.b4-ty@kernel.org>
+References: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
+        <164096159451.2355590.17653987935012339046.b4-ty@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D192831
+On Fri, 31 Dec 2021 15:39:54 +0100,
+Mark Brown wrote:
+> 
+> On Fri, 17 Dec 2021 11:56:58 +0000, Lucas Tanure wrote:
+> > Add support for laptops that have CS35L41 connected to an HDA
+> > codec by I2S and direct I2C connection to the CPU.
+> > 
+> > Laptops that use CS35L41 and are SPI will be added in the future,
+> > after the support for it is resolved at i2c-multi-instantiate driver.
+> > i2c-multi-instantiate thread: https://lkml.org/lkml/2021/12/10/557
+> > 
+> > [...]
+> 
+> Applied to
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> 
+> Thanks!
+> 
+> [01/10] ASoC: cs35l41: Convert tables to shared source code
+>         commit: a87d42227cf5614fe0040ddd1fe642c54298b42c
+> [02/10] ASoC: cs35l41: Move cs35l41_otp_unpack to shared code
+>         commit: fe120d4cb6f6cd03007239e7c578b8703fe6d336
+> [03/10] ASoC: cs35l41: Move power initializations to reg_sequence
+>         commit: 062ce0593315e22aac527389dd6dd4328c49f0fb
+> [04/10] ASoC: cs35l41: Create shared function for errata patches
+>         commit: 8b2278604b6de27329ec7ed82ca696c4751111b6
+> [05/10] ASoC: cs35l41: Create shared function for setting channels
+>         commit: 3bc3e3da657f17c14df8ae8fab58183407bd7521
+> [06/10] ASoC: cs35l41: Create shared function for boost configuration
+>         commit: e8e4fcc047c6e0c5411faeb8cc29aed2e5036a00
 
---- Comment #3 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
-(In reply to Andy Shevchenko from comment #2)
+Mark, could you send a PR including those for 5.17?
+The rest HD-audio part of the patch set depends on this new ASoC codec
+stuff (at least Kconfig), so I can't apply the patches before merging
+those.  The ACPI patch might be still not applicable through my tree,
+but it can be taken independently.
 
-> Note v4.10 is LTS, so if the bug is still there in the latest stable vers=
-ion
-> of it, but there is no such bug in the latest vanilla, try to bisect the =
-fix
-> commit and then you may require to backport it.
 
-Oops, v4.9 and v4.14 are, v4.10 is not LTS (v5.10 is), sorry for the wrong
-message above. It means if you are okay to switch either to vanilla or what=
-ever
-LTS kernel, which you want to have working it's fine. But in any case you n=
-eed
-to retest with latest vanilla first.
+thanks,
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Takashi
