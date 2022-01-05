@@ -2,115 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D5FC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Jan 2022 13:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251D5C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Jan 2022 16:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236887AbiAENMZ (ORCPT
+        id S241935AbiAEQcj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 5 Jan 2022 08:12:25 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:35956 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232983AbiAENMZ (ORCPT
+        Wed, 5 Jan 2022 11:32:39 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:57546 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241912AbiAEQci (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Jan 2022 08:12:25 -0500
+        Wed, 5 Jan 2022 11:32:38 -0500
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 033B0210FA;
-        Wed,  5 Jan 2022 13:12:24 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTP id F2AE21F37F;
+        Wed,  5 Jan 2022 16:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1641388344; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1641400357; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=TgqNXcHhamZNGVKg1hJQ64mpwXkw4AeSirQXhLHj9Z8=;
-        b=fdvqs690/hY20ATTHnfpXqIoDL9Mlbf8bNWBzWsBPMiAataE05lM6xsK//i/L6PrQpPId/
-        DekXff16q40k8NDpxD4opwY6YfZGJKumSInia3FoDur04PmnZNlQ+4A0k5SxURVp7OQGRk
-        +D9AWLBmPfRLsEkRS2zpefDhBojn58U=
+        bh=13XVbwWKMxc4zrZoBn7bnud/V8lnA2Mx9huBGxorA+U=;
+        b=1mwgH6B5GRx6oG8T5GGra2JmjVMvnbNBaLaRBDfPOtb4y4Xh0GWeV13MCBzMN0KTpYfUf2
+        azQz7/DJXRbYIsGYtZaR+M4LVm18oHUnRRpzDKDGjoYqgMaVaCkmWVGihr259F0wlX4Wbq
+        plEh57FHjE1uGZfqm1bQS/2jeGiUy/U=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1641388344;
+        s=susede2_ed25519; t=1641400357;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=TgqNXcHhamZNGVKg1hJQ64mpwXkw4AeSirQXhLHj9Z8=;
-        b=0FpgwTUQZF8Xx4tjSmBlFDGe047LE1gy15fEPKD3RVhrQh4gvOXf1xJuGc80wU/00sYlVF
-        331vXlNNUTP4ZFDQ==
-Received: from kunlun.suse.cz (unknown [10.100.128.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 57092A3B87;
-        Wed,  5 Jan 2022 13:12:23 +0000 (UTC)
-Date:   Wed, 5 Jan 2022 14:12:22 +0100
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        James Morris <jmorris@namei.org>,
-        David Howells <dhowells@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] debugfs: lockdown: Allow reading debugfs files that are
- not world readable
-Message-ID: <20220105131222.GG117207@kunlun.suse.cz>
-References: <20220104170505.10248-1-msuchanek@suse.de>
- <YdWGQ+Kxeo9Q7Kli@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YdWGQ+Kxeo9Q7Kli@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        bh=13XVbwWKMxc4zrZoBn7bnud/V8lnA2Mx9huBGxorA+U=;
+        b=I6/ExtKhBsjHTy/LkhjZZ3Wxuw7m5Fb+DTCI6Z4f9kQT38cwZnKK5Q5Wve2CA58SqpM+XZ
+        QeMCqFDLhbXKqgDA==
+Received: from alsa1.suse.de (alsa1.suse.de [10.160.4.42])
+        by relay2.suse.de (Postfix) with ESMTP id D4402A3B89;
+        Wed,  5 Jan 2022 16:32:36 +0000 (UTC)
+Date:   Wed, 05 Jan 2022 17:32:36 +0100
+Message-ID: <s5hczl6i1nf.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Lucas Tanure <tanureal@opensource.cirrus.com>
+Cc:     Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: (subset) [PATCH v6 00/10] Add support for CS35L41 in HDA systems
+In-Reply-To: <s5h35m3lkd4.wl-tiwai@suse.de>
+References: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
+        <164096159451.2355590.17653987935012339046.b4-ty@kernel.org>
+        <s5h35m3lkd4.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello,
-
-On Wed, Jan 05, 2022 at 12:51:31PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Jan 04, 2022 at 06:05:05PM +0100, Michal Suchanek wrote:
-> > 
-> > When the kernel is locked down the kernel allows reading only debugfs
-> > files with mode 444. Mode 400 is also valid but is not allowed.
-> > 
-> > Make the 444 into a mask.
-> > 
-> > Fixes: 5496197f9b08 ("debugfs: Restrict debugfs when the kernel is locked down")
-> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > ---
-> >  fs/debugfs/file.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, 04 Jan 2022 14:07:51 +0100,
+Takashi Iwai wrote:
 > 
-> Why has it taken so long for anyone to notice this (2 years!)?
-> 
-> Is that because no one uses the lockdown mode and tries to read debugfs
-> files?
-
-It's because people use those LTSS kernels that don't have this change.
-
+> On Fri, 31 Dec 2021 15:39:54 +0100,
+> Mark Brown wrote:
 > > 
-> > diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-> > index 7d162b0efbf0..950c63fa4d0b 100644
-> > --- a/fs/debugfs/file.c
-> > +++ b/fs/debugfs/file.c
-> > @@ -147,7 +147,7 @@ static int debugfs_locked_down(struct inode *inode,
-> >  			       struct file *filp,
-> >  			       const struct file_operations *real_fops)
-> >  {
-> > -	if ((inode->i_mode & 07777) == 0444 &&
-> > +	if ((inode->i_mode & 07777 & ~0444) == 0 &&
+> > On Fri, 17 Dec 2021 11:56:58 +0000, Lucas Tanure wrote:
+> > > Add support for laptops that have CS35L41 connected to an HDA
+> > > codec by I2S and direct I2C connection to the CPU.
+> > > 
+> > > Laptops that use CS35L41 and are SPI will be added in the future,
+> > > after the support for it is resolved at i2c-multi-instantiate driver.
+> > > i2c-multi-instantiate thread: https://lkml.org/lkml/2021/12/10/557
+> > > 
+> > > [...]
+> > 
+> > Applied to
+> > 
+> >    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> > 
+> > Thanks!
+> > 
+> > [01/10] ASoC: cs35l41: Convert tables to shared source code
+> >         commit: a87d42227cf5614fe0040ddd1fe642c54298b42c
+> > [02/10] ASoC: cs35l41: Move cs35l41_otp_unpack to shared code
+> >         commit: fe120d4cb6f6cd03007239e7c578b8703fe6d336
+> > [03/10] ASoC: cs35l41: Move power initializations to reg_sequence
+> >         commit: 062ce0593315e22aac527389dd6dd4328c49f0fb
+> > [04/10] ASoC: cs35l41: Create shared function for errata patches
+> >         commit: 8b2278604b6de27329ec7ed82ca696c4751111b6
+> > [05/10] ASoC: cs35l41: Create shared function for setting channels
+> >         commit: 3bc3e3da657f17c14df8ae8fab58183407bd7521
+> > [06/10] ASoC: cs35l41: Create shared function for boost configuration
+> >         commit: e8e4fcc047c6e0c5411faeb8cc29aed2e5036a00
 > 
-> You are now allowing more than just 0400, is that intentional?
+> Mark, could you send a PR including those for 5.17?
+> The rest HD-audio part of the patch set depends on this new ASoC codec
+> stuff (at least Kconfig), so I can't apply the patches before merging
+> those.  The ACPI patch might be still not applicable through my tree,
+> but it can be taken independently.
 
-The intent is to allow files that have permissions that are subset of
-0444. The only one that makes sense and people complain about is 0400
-but if you had 0440 or 0004 it would be permitted as well.
+Now I merged Mark's asoc tree, and applied the patches 7, 9 and 10.
+  ALSA: hda: cs35l41: Add support for CS35L41 in HDA systems
+  ALSA: hda/realtek: Add support for Legion 7 16ACHg6 laptop
+  ALSA: hda/realtek: Add CS35L41 support for Thinkpad laptops
 
-> I never understood why files that were 0666 were not able to be read
-> here as well, why not allow that as well?  What was magic about 0444
-> files?
+The patches 9 and 10 have been slightly modified to adjust the quirk
+entry positions.
 
-I don't understand that either but I am not really trying to challenge
-that part.
+The only missing patch is the ACPI patch.  I'm open in which way to
+take; it's fine to be applied via other trees.
 
-Thanks
+Let me know your favorite.
 
-Michal
+
+thanks,
+
+Takashi
