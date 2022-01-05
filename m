@@ -2,103 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B186EC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Jan 2022 11:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E9EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Jan 2022 11:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234768AbiAEL2C (ORCPT
+        id S239785AbiAELvh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 5 Jan 2022 06:28:02 -0500
-Received: from mga06.intel.com ([134.134.136.31]:31859 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233838AbiAEL2C (ORCPT
+        Wed, 5 Jan 2022 06:51:37 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:57850 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239802AbiAELvg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Jan 2022 06:28:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641382082; x=1672918082;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8VeuXiGzgGOwCJBVNY12Xld7RNyObSnZSQkX+iqDvkA=;
-  b=aVLzJ9FDaNkmAnnMXb8CUP3Xbp16HBueT/xWedQpwe5v+JS0be/Ta3AP
-   C/E3qA73DByFA+vzfNuaoAzlaHJRzTci1zRYhBaaZWSITHul5A5+dQVNI
-   YRFPJgAUVdTSbDAlBxoGHcJ8iQaYzUugLK8I8MOkagoS3i4ovXT8VD19E
-   wLc8xkcM0lVyuQLdLtAMPfDmYu9BjW6ImpSQ04VM2avsMTBtrxWyEPQeP
-   qqLanwLREtz1kSFyQJfE3WNCvm6/uP6D7/YxDceQ2WMulVLqSkdt5W7oh
-   7/YuVz0j0A5Vhq83na5XMZjcEElwTiggqGlF9k3KHKg2Ui7UCgt1HP+yL
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="303172950"
-X-IronPort-AV: E=Sophos;i="5.88,263,1635231600"; 
-   d="scan'208";a="303172950"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 03:28:01 -0800
-X-IronPort-AV: E=Sophos;i="5.88,263,1635231600"; 
-   d="scan'208";a="590990530"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 03:27:59 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1n54RG-006fiG-EG;
-        Wed, 05 Jan 2022 13:26:42 +0200
-Date:   Wed, 5 Jan 2022 13:26:42 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
+        Wed, 5 Jan 2022 06:51:36 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 901A5B81A96;
+        Wed,  5 Jan 2022 11:51:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBF1DC36AEB;
+        Wed,  5 Jan 2022 11:51:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1641383494;
+        bh=L80exkg+JyVXmxcwgt/4UVXd9r21FU3v+spEJTkUfd8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CjU857r5FFX3YWfEMp7P+PdrzOo9zcy+z6MkYPpWwlzYbWQZdJNKrmw2DC92obG0R
+         w/bKkVJsmAzct365bEkm0l4PJXwVgTfjW0IVE7bmNi4OQQvjW5kSL3kwmVSgeHiMVr
+         18iSh7rTab8aLiDnNXVa6Oy9Kgm2kalV56xwCgRk=
+Date:   Wed, 5 Jan 2022 12:51:31 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Michal Suchanek <msuchanek@suse.de>
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris <jmorris@namei.org>,
+        David Howells <dhowells@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Ion Agorria <ion@agorria.com>,
-        Svyatoslav Ryhel <clamor95@gmail.com>
-Subject: Re: [PATCH] platform/x86: Add Asus TF103C dock driver
-Message-ID: <YdWAcvCjKU0kcx+i@smile.fi.intel.com>
-References: <20211226141849.156407-1-hdegoede@redhat.com>
- <YdRokPBoYYnF+D3D@smile.fi.intel.com>
- <3504b30f-a63d-c0cd-00ce-38ab0089c5be@redhat.com>
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] debugfs: lockdown: Allow reading debugfs files that are
+ not world readable
+Message-ID: <YdWGQ+Kxeo9Q7Kli@kroah.com>
+References: <20220104170505.10248-1-msuchanek@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3504b30f-a63d-c0cd-00ce-38ab0089c5be@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20220104170505.10248-1-msuchanek@suse.de>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jan 05, 2022 at 12:06:57PM +0100, Hans de Goede wrote:
-> On 1/4/22 16:32, Andy Shevchenko wrote:
-> > On Sun, Dec 26, 2021 at 03:18:49PM +0100, Hans de Goede wrote:
-
-...
-
-> >> +/* Byte 0 is the length of the rest of the packet */
-> >> +static const u8 tf103c_dock_enable_cmd[9] = { 8, 0x20, 0, 0, 0, 0, 0x20, 0, 0 };
-> >> +static const u8 tf103c_dock_usb_enable_cmd[9] = { 8, 0, 0, 0, 0, 0, 0, 0x40, 0 };
-> >> +static const u8 tf103c_dock_suspend_cmd[9] = { 8, 0, 0x20, 0, 0, 0x22, 0, 0, 0 };
-> > 
-> > This seems to me rather
-> > 
-> > struct {
-> > 	u8 cmd;
-> > 	DECLARE_BITMAP(payload, 64);
-> > };
-> > 
-> > And those 2s and 4s are actually some bits in payload with some meaning.
-> > 
-> > Would it be the case?
+On Tue, Jan 04, 2022 at 06:05:05PM +0100, Michal Suchanek wrote:
 > 
-> Something like that yes, there are some hints that this is a bitfield in
-> the Android driver code, but then in other places it seems to be more of
-> a command structure then just individual bits having a meaning.
+> When the kernel is locked down the kernel allows reading only debugfs
+> files with mode 444. Mode 400 is also valid but is not allowed.
 > 
-> All in all we really don't know, so I'm going to keep this as just
-> an opaque array of bytes, because that is really what it is / what we know
-> about it.
+> Make the 444 into a mask.
+> 
+> Fixes: 5496197f9b08 ("debugfs: Restrict debugfs when the kernel is locked down")
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+>  fs/debugfs/file.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thinking more about this it rather __le64. then it's more easily to see the
-bits there. I still think the byte array here carries less information than
-what we can assume. In the case of __le64 you don't need to keep a length,
-you may derive it from the size of the supplied variable.
+Why has it taken so long for anyone to notice this (2 years!)?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Is that because no one uses the lockdown mode and tries to read debugfs
+files?
 
 
+> 
+> diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+> index 7d162b0efbf0..950c63fa4d0b 100644
+> --- a/fs/debugfs/file.c
+> +++ b/fs/debugfs/file.c
+> @@ -147,7 +147,7 @@ static int debugfs_locked_down(struct inode *inode,
+>  			       struct file *filp,
+>  			       const struct file_operations *real_fops)
+>  {
+> -	if ((inode->i_mode & 07777) == 0444 &&
+> +	if ((inode->i_mode & 07777 & ~0444) == 0 &&
+
+You are now allowing more than just 0400, is that intentional?
+
+I never understood why files that were 0666 were not able to be read
+here as well, why not allow that as well?  What was magic about 0444
+files?
+
+thanks,
+
+greg k-h
