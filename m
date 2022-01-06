@@ -2,104 +2,108 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7613CC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Jan 2022 13:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8871AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Jan 2022 14:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239338AbiAFNOa (ORCPT
+        id S240192AbiAFOsg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 6 Jan 2022 08:14:30 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:47118 "EHLO
+        Thu, 6 Jan 2022 09:48:36 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:57006 "EHLO
         ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238990AbiAFNO3 (ORCPT
+        with ESMTP id S239677AbiAFOsf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Jan 2022 08:14:29 -0500
+        Thu, 6 Jan 2022 09:48:35 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4D50AB8211F;
-        Thu,  6 Jan 2022 13:14:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F64C36AED;
-        Thu,  6 Jan 2022 13:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641474867;
-        bh=L3tHhN99WdYnI54VdTfT5qS89LBNk2dcS0QUxqv7Noo=;
+        by ams.source.kernel.org (Postfix) with ESMTPS id B23DFB821F9;
+        Thu,  6 Jan 2022 14:48:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5DDBC36AE3;
+        Thu,  6 Jan 2022 14:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1641480513;
+        bh=nWE1NvVdvw3F50Dw3lCt/graz38zrRc1KYnLhW89Lc0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AB/upQzN4QENiVzQ+Pog8BGuVnoYo7CWJ22nx6JVBvoNQYB6UPCWCsTeTUsyYmkUl
-         KoQkSpH+Q7TaE+5PKDTeZjNLZY8tH7u1wQFxFDMbjm2HJEXNhoW7NfOXqs60XZwUcR
-         eQG4EGTHUBREN7rdtl9qKKkcvwXmCy4O35DFewNdsA36K6gIlyyqRysFnMK9hy85z6
-         38+G3hbmqukSbL3S/UeBjDEC73zdLqJUga5YtGfUnJ5IZM0y7dMD8UY16z5UZxBWrc
-         uM1nMVNKLBaDLDsRePDnd3KeF6IId00l4G8+s4EtqTgqlU9FA82jpOtdHO8MI1WjUP
-         hZ7TIkiuORcmQ==
-Date:   Thu, 6 Jan 2022 14:14:23 +0100
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andrea Ippolito <andrea.ippo@gmail.com>, dmitry.torokhov@gmail.com,
-        Alex Hung <alex.hung@canonical.com>, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: Touchpad stickiness on Dell Inspiron/XPS
-Message-ID: <YdbrLz3tU4ohANDk@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andrea Ippolito <andrea.ippo@gmail.com>, dmitry.torokhov@gmail.com,
-        Alex Hung <alex.hung@canonical.com>, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <CAGhUXvBw4rzCQrqttyyS=Psxmhppk79c6fDoxPbV91jE7fO_9A@mail.gmail.com>
- <CAGhUXvDNj2v3O==+wWWKPYVzej8Vq+WNiBtPwmYxSQ2dTuLb9Q@mail.gmail.com>
- <CAGhUXvC8eHfxEKzkGN06VvRU6Z0ko7MJ9hF6uXNq+PxRZSbEmQ@mail.gmail.com>
- <70cbe360-6385-2536-32bd-ae803517d2b2@redhat.com>
+        b=h0DcCygoOq4XqozKgMCOKfKYk8oKfsJ+D9FIsvNW9I5yFzJ8lEG6dxXyre+LdVyP0
+         W/Rg5HThU6tdfE2gSV5OvSOYZ0glDWqXfZu0cCP7ZiFv5rFBYg1lEYvjlacV0jakae
+         etmb0yCwrs5RsLPY0WTPrxLOq5p9OIwi+DT9C8QI=
+Date:   Thu, 6 Jan 2022 15:48:30 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris <jmorris@namei.org>,
+        David Howells <dhowells@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] debugfs: lockdown: Allow reading debugfs files that are
+ not world readable
+Message-ID: <YdcBPmzaoibUEg4K@kroah.com>
+References: <20220104170505.10248-1-msuchanek@suse.de>
+ <YdWGQ+Kxeo9Q7Kli@kroah.com>
+ <20220105131222.GG117207@kunlun.suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hja5uk5JcqUG5UBg"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <70cbe360-6385-2536-32bd-ae803517d2b2@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220105131222.GG117207@kunlun.suse.cz>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, Jan 05, 2022 at 02:12:22PM +0100, Michal Suchánek wrote:
+> Hello,
+> 
+> On Wed, Jan 05, 2022 at 12:51:31PM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Jan 04, 2022 at 06:05:05PM +0100, Michal Suchanek wrote:
+> > > 
+> > > When the kernel is locked down the kernel allows reading only debugfs
+> > > files with mode 444. Mode 400 is also valid but is not allowed.
+> > > 
+> > > Make the 444 into a mask.
+> > > 
+> > > Fixes: 5496197f9b08 ("debugfs: Restrict debugfs when the kernel is locked down")
+> > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > > ---
+> > >  fs/debugfs/file.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > Why has it taken so long for anyone to notice this (2 years!)?
+> > 
+> > Is that because no one uses the lockdown mode and tries to read debugfs
+> > files?
+> 
+> It's because people use those LTSS kernels that don't have this change.
+> 
+> > > 
+> > > diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+> > > index 7d162b0efbf0..950c63fa4d0b 100644
+> > > --- a/fs/debugfs/file.c
+> > > +++ b/fs/debugfs/file.c
+> > > @@ -147,7 +147,7 @@ static int debugfs_locked_down(struct inode *inode,
+> > >  			       struct file *filp,
+> > >  			       const struct file_operations *real_fops)
+> > >  {
+> > > -	if ((inode->i_mode & 07777) == 0444 &&
+> > > +	if ((inode->i_mode & 07777 & ~0444) == 0 &&
+> > 
+> > You are now allowing more than just 0400, is that intentional?
+> 
+> The intent is to allow files that have permissions that are subset of
+> 0444. The only one that makes sense and people complain about is 0400
+> but if you had 0440 or 0004 it would be permitted as well.
+> 
+> > I never understood why files that were 0666 were not able to be read
+> > here as well, why not allow that as well?  What was magic about 0444
+> > files?
+> 
+> I don't understand that either but I am not really trying to challenge
+> that part.
 
---hja5uk5JcqUG5UBg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fair enough.  I don't care about the locked-down mode stuff, so I'll go
+queue this up now, thanks!
 
-Hi Hans,
-
-bumping this old thread because there might be some progress and it
-still affects quite some people.
-
-> But I must be honest here, I don't see much progress being made
-> on this until someone with a significant amount of kernel / hw-enablement
-> experience gets it hands on one of these models. Either because some
-
-So, I am quite optimistic that Andrea's issue is the same one which
-Miroslav Bendik dived into [1]. I will surely try to help with part of
-the PIIX I2C driver, but I lack the experience with the RMI4 driver. I
-wonder if you could have a look and maybe share your thoughts?
-
-Thanks and all the best,
-
-   Wolfram
-
-[1] https://lore.kernel.org/r/CAPoEpV0ZSidL6aMXvB6LN1uS-3CUHS4ggT8RwFgmkzzCiYJ-XQ@mail.gmail.com
-
-
---hja5uk5JcqUG5UBg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmHW6y8ACgkQFA3kzBSg
-KbZDxQ/9H1aSnRaT4BfYspnGtuGm4ZRcoYNF0WBs87UOzPQX4iTm0oBsJ6HLXNg/
-IvhhHbfIrMKivxB5jhw8a6ZAAppdZJlHgH3e/fcgQXI3wUH4yDeL3+jX02tZTVXR
-grLTtg07oajqro/IC9VF4LWZ1dYiRhsmdQHXu7DTEBVbYqL51PuSWy4VdOMv6AcG
-PxldjNFDWshjXWkVCKEJbPsGFPIezN36LxqVBf1glY+5zFPGeN8uTbclUGxRhe5F
-2wIJJMRkbuQeEigXVtnh7yab5fbb0pPXY5HI/T2aVFhHdSa4lSPsxd3xtiX5jkiV
-8fuyYzflipecKnS1wpMJGKkj9NEB13FjXKRp5RaoVnPI7MIyR124Adivkmzgn7hE
-hCibCjRGRnP+Xj/WUZuxeBU85M/e36XC7a/A4TrtVRMmk8SOnsb/WDVp3rGGGUHA
-jxHfbVkfarq7qDZalBtXYwKGR5/RmObPvBLiSv+oHJ+xlx7uE8kEDfJD0ZS2mv4v
-MwkW3xohgK/IvNcSZaMmVWBnw0Roc4Evka0GdJkSbhgAApTwlNDorvN9RtiTP35p
-yLmFc4RjPAT7QfNc0xKrhkGlEmPqusQaocMM03/7+MwwuOyPw9b+Eknapl1Fz8qC
-W2nrxpmIuhnKshpCm8yqwmXA68NUxHwqlmdLUfH10WzZcKLrx3E=
-=vOfh
------END PGP SIGNATURE-----
-
---hja5uk5JcqUG5UBg--
+greg k-h
