@@ -2,59 +2,60 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBA8C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 Jan 2022 19:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2B9C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 Jan 2022 19:05:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232414AbiAGTCV (ORCPT
+        id S229532AbiAGTFZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 7 Jan 2022 14:02:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50250 "EHLO
+        Fri, 7 Jan 2022 14:05:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232129AbiAGTCU (ORCPT
+        with ESMTP id S232022AbiAGTFW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 Jan 2022 14:02:20 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6289C061574
-        for <platform-driver-x86@vger.kernel.org>; Fri,  7 Jan 2022 11:02:19 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id e137-20020a25378f000000b0060c1f2f4939so13419400yba.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 07 Jan 2022 11:02:19 -0800 (PST)
+        Fri, 7 Jan 2022 14:05:22 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B880BC06173E
+        for <platform-driver-x86@vger.kernel.org>; Fri,  7 Jan 2022 11:05:22 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id v11so5914019pfu.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 07 Jan 2022 11:05:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=y6PAvnRuxROUR0bgSKQyDzG37YrnpW6c8zYDf6/qNiY=;
-        b=mtFavPz7VtUvwAWVsH2koev6PorVIE4+YmHl27H+yWyjx9Kv/U5dkUqKuWcsjNUcZA
-         GLpHvOwyUF9Iv04bkkwdi816HS0ia+I8fECRo3/EjzKblMJkC0AxPRIIxB0Ckm/H9wKe
-         247/BoUoAUEQxAestHEyr7jhivVhfV5ZKHf6u12FGeu3DcINtW04sKpYyyYWjnBSF9vM
-         QUjAyEgfk0cNjZi0ohudc2VzxLnFeoVi7+6ezxrUl0Ylxkrlmw6GItjxm/ru8icXz6JF
-         gHR+m6WtqAvm9CvmIGfx59cdrvENRfdjy3Uq/Vg5iJu+OyNSaAdI9HpCm9e36/Cdojxy
-         fG1g==
+        bh=+S72sOYOwXg9RPix1lZvjtLtkj3XFLsZ4gEDpSvt8vs=;
+        b=UNlRvA2ZuRZGr24qbY8d8HRyinc6EpOYSKt7DfYa7U+pylhqD10egaBHZVcWbFvg+d
+         HZZoCKimfsUYVZ6hLdx9fE8635nsrgDrj+L00L/QA/Cjac6/OItLx2Gm1LMQY7kdBjlm
+         gUl11sQ+hRSXhsijE3Lz0JsafCc/WMzMcjN+p2ZjS7WJkqTYR8lO8OzMXzBLllf3FZN8
+         6SuFHJFHb0+VTxIFi9KbZl/oUBDvS7ua7q/kqOUOmGT9RC+dhhVS1J2U1EpVpDJqJhew
+         Efg7LRldeNgMVDWyPjGhSj7BNZ5UuIesQ0y/zYKcFCgYdMO4ccJ3NrTfKraxrHj6N1TQ
+         QivQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=y6PAvnRuxROUR0bgSKQyDzG37YrnpW6c8zYDf6/qNiY=;
-        b=baOManWrxcoTnRxbzMRgWDuo5l1pB7wG+mGp01pLpm0zVQzqU0tIrZ5DFcbeOXvIs5
-         LYYLlQ2fElylatSIAX2IlT8KtCA0kmWKIY3KBGxA7FryV/IVFCMhyXEIwUG7vysxUepj
-         uFcjJfTL/74KQT6HEB8wtUi/gwdGWYCH8+06grAs9vRxn8pjF+aQeCnD9usV3p0pdROj
-         2xmtdKQFppIT9X8UD/bMMmzokF0QhsA3KnWqwTvw+gMB1Rg8BHseSDkAV3Xzv+vFiO5g
-         zaRyDGmWNbTsPnAkgDMnIBwdx1kXz1CK8l1ik4e2gvGehtnClnLzJKvCca4ieMqJj02B
-         zsfg==
-X-Gm-Message-State: AOAM532+uPRtNw0WINHoGzRqdZ3y8hLiKH7w03x5VX0Y2HiaV9Ro0GWY
-        6n5RQXSoaZxe6+4O/8u8FORr8TuJxuIB
-X-Google-Smtp-Source: ABdhPJwAIfW3yyucuEGk/1pEFnwommgSoZNuKwzDcO9qTu2l2mP/KrodOH1cfOSVrm0vTviLlJNHcdwWs8Do
-X-Received: from rajat2.mtv.corp.google.com ([2620:15c:202:201:6a56:3de8:84b7:696d])
- (user=rajatja job=sendgmr) by 2002:a25:ab45:: with SMTP id
- u63mr66456905ybi.480.1641582139012; Fri, 07 Jan 2022 11:02:19 -0800 (PST)
-Date:   Fri,  7 Jan 2022 11:02:08 -0800
-In-Reply-To: <20220107190208.95479-1-rajatja@google.com>
-Message-Id: <20220107190208.95479-3-rajatja@google.com>
-Mime-Version: 1.0
-References: <20220107190208.95479-1-rajatja@google.com>
-X-Mailer: git-send-email 2.34.1.575.g55b058a8bb-goog
-Subject: [PATCH v5 3/3] drm/privacy_screen_x86: Add entry for ChromeOS privacy-screen
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+S72sOYOwXg9RPix1lZvjtLtkj3XFLsZ4gEDpSvt8vs=;
+        b=YlviZcmomDLLMP49KU9CTpV3+hU04+5dg0KZ5c4v2WJQYY4B97+teJIHdqTLMvMhUW
+         riOi+YTL9g2fCCiNpjCddFHHufszq3vUZB0A/3UssAi1VsYy+WEhTlXiTqS68JI78oIO
+         E54RJ9GrcbljlzhdSRF2cXkdD+YITLVwlIE2xUvQm9Du7K0g/ukX5lQqfwQfo5E8ETZ/
+         +lETAj/W3P0YIuZFvwiMspWQchVl672BwpYhf8NobUHeKcQD+mBPnebyxm7mQ9fvrL3E
+         Ly9Ez09ZlEXbO6cLfRJWsjDa6E+js/piETuOkDswsybmqr0tixz6BnXN4iPmmkboK/ql
+         lnLQ==
+X-Gm-Message-State: AOAM532ehdzKvzfOPLl0JZi4kSpjZTT4zOezPR/cJDzGUBY0KGB55Ps7
+        7auA51Ussgiuw4wue2YomweLmpx0Pnux+d3JRtqobQ==
+X-Google-Smtp-Source: ABdhPJybEblBw8MdINxXy3+9JK7qlDbdUwo1shN48fzEsrE5iAHxprn/bdZ6bdR1DoPb8Rx12GSfNjxZRna6xpg2RNM=
+X-Received: by 2002:a05:6a00:1249:b0:4bb:4a31:1e0a with SMTP id
+ u9-20020a056a00124900b004bb4a311e0amr65535466pfi.81.1641582321973; Fri, 07
+ Jan 2022 11:05:21 -0800 (PST)
+MIME-Version: 1.0
+References: <20211222001127.3337471-1-rajatja@google.com> <20211222001127.3337471-2-rajatja@google.com>
+ <Ydh7u1kuXSMzwmW0@google.com>
+In-Reply-To: <Ydh7u1kuXSMzwmW0@google.com>
 From:   Rajat Jain <rajatja@google.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+Date:   Fri, 7 Jan 2022 11:04:46 -0800
+Message-ID: <CACK8Z6HbKR5QktJjK1+QCKoLCJUHK8btQN5Xbij8A66VYzhcHw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] platform/chrome: Add driver for ChromeOS privacy-screen
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -66,73 +67,73 @@ To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org, gwendal@google.com,
-        seanpaul@google.com, marcheu@google.com, dtor@google.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benson Leung <bleung@google.com>
-Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
+        seanpaul@google.com, marcheu@google.com, rajatxjain@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a static entry in the x86 table, to detect and wait for
-privacy-screen on some ChromeOS platforms.
+Hi Dmitry, Benson,
 
-Please note that this means that if CONFIG_CHROMEOS_PRIVACY_SCREEN is
-enabled, and if "GOOG0010" device is found in ACPI, then the i915 probe
-shall return EPROBE_DEFER until a platform driver actually registers the
-privacy-screen: https://hansdegoede.livejournal.com/25948.html
+On Fri, Jan 7, 2022 at 9:43 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> Hi Rajat,
+>
+> On Tue, Dec 21, 2021 at 04:11:26PM -0800, Rajat Jain wrote:
+> > +static int chromeos_privacy_screen_remove(struct acpi_device *adev)
+> > +{
+> > +     struct drm_privacy_screen *drm_privacy_screen = acpi_driver_data(adev);
+>
+> Please add an empty line here:
+>
+> WARNING: Missing a blank line after declarations
+> #292: FILE: drivers/platform/chrome/chromeos_privacy_screen.c:129:
+> +       struct drm_privacy_screen *drm_privacy_screen = acpi_driver_data(adev);
+> +       drm_privacy_screen_unregister(drm_privacy_screen);
+>
+> > +     drm_privacy_screen_unregister(drm_privacy_screen);
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct acpi_device_id chromeos_privacy_screen_device_ids[] = {
+> > +     {"GOOG0010", 0}, /* Google's electronic privacy screen for eDP-1 */
+> > +     {}
+> > +};
+> > +MODULE_DEVICE_TABLE(acpi, chromeos_privacy_screen_device_ids);
+> > +
+> > +static struct acpi_driver chromeos_privacy_screen_driver = {
+> > +     .name = "chromeos_privacy_screen_drvr",
+>
+> Could I buy 2 move vowels? ;)
+>
+> > +     .class = "ChromeOS",
+> > +     .ids = chromeos_privacy_screen_device_ids,
+> > +     .ops = {
+> > +             .add = chromeos_privacy_screen_add,
+> > +             .remove = chromeos_privacy_screen_remove,
+> > +     },
+> > +};
+> > +
+> > +module_acpi_driver(chromeos_privacy_screen_driver);
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_DESCRIPTION("ChromeOS ACPI Privacy Screen driver");
+> > +MODULE_AUTHOR("Rajat Jain <rajatja@google.com>");
+>
+> Otherwise
+>
+> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
----
-v5: * Add Hans' "Reviewed by"
-v4: * Simplify the detect_chromeos_privacy_screen() function
-    * Don't change the existing print statement
-v3: * Remove the pr_info() from detect_chromeos_privacy_screen(), instead
-      enhance the one already present in drm_privacy_screen_lookup_init()
-v2: * Use #if instead of #elif
-    * Reorder the patches in the series.
-    * Rebased on drm-tip
+Thanks! I took care of your comments and posted a v5:
+https://patchwork.kernel.org/project/platform-driver-x86/patch/20220107190208.95479-2-rajatja@google.com/
 
- drivers/gpu/drm/drm_privacy_screen_x86.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Thanks & Best Regards,
 
-diff --git a/drivers/gpu/drm/drm_privacy_screen_x86.c b/drivers/gpu/drm/drm_privacy_screen_x86.c
-index a2cafb294ca6..88802cd7a1ee 100644
---- a/drivers/gpu/drm/drm_privacy_screen_x86.c
-+++ b/drivers/gpu/drm/drm_privacy_screen_x86.c
-@@ -47,6 +47,13 @@ static bool __init detect_thinkpad_privacy_screen(void)
- }
- #endif
- 
-+#if IS_ENABLED(CONFIG_CHROMEOS_PRIVACY_SCREEN)
-+static bool __init detect_chromeos_privacy_screen(void)
-+{
-+	return acpi_dev_present("GOOG0010", NULL, -1);
-+}
-+#endif
-+
- static const struct arch_init_data arch_init_data[] __initconst = {
- #if IS_ENABLED(CONFIG_THINKPAD_ACPI)
- 	{
-@@ -58,6 +65,16 @@ static const struct arch_init_data arch_init_data[] __initconst = {
- 		.detect = detect_thinkpad_privacy_screen,
- 	},
- #endif
-+#if IS_ENABLED(CONFIG_CHROMEOS_PRIVACY_SCREEN)
-+	{
-+		.lookup = {
-+			.dev_id = NULL,
-+			.con_id = NULL,
-+			.provider = "privacy_screen-GOOG0010:00",
-+		},
-+		.detect = detect_chromeos_privacy_screen,
-+	},
-+#endif
- };
- 
- void __init drm_privacy_screen_lookup_init(void)
--- 
-2.34.1.575.g55b058a8bb-goog
+Rajat
 
+
+>
+> Thanks.
+>
+> --
+> Dmitry
