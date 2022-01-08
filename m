@@ -2,71 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C262C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 Jan 2022 15:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B1AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 Jan 2022 15:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbiAHP6R (ORCPT
+        id S229669AbiAHP62 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 8 Jan 2022 10:58:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49094 "EHLO
+        Sat, 8 Jan 2022 10:58:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:56213 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229521AbiAHP6Q (ORCPT
+        by vger.kernel.org with ESMTP id S229521AbiAHP62 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 8 Jan 2022 10:58:16 -0500
+        Sat, 8 Jan 2022 10:58:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641657495;
+        s=mimecast20190719; t=1641657508;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4rNbUDMs/nU0pK6hRZTA0pniGuuhHtut4pZqHhyROkQ=;
-        b=W12RWn32PHYkgkCotYuzN9dY0VWkiudKonDBqGOiNZR94HGzjgxwNHon1ktm/7U25nqVid
-        vnj40v1It4g1dtjMXGLdE2MenaxL+UmNt+PwLbwsdIc3rNy4TmriIkPe5YO9xIUqq6AgvC
-        xaNJVRKm9rVD7mDHRYADgDr96oj1o9A=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=5EjZCDBduRxxst5J8s6bnwtY//WLS1P1xb/JxpybY8k=;
+        b=fGGXH4KEN/TTe+F+pXbuAMXZlGi29CCqrS2VjjbzWsR9ykEkaU2w2wjN7gAAf0r5x9slW+
+        +YJG1xHdQWggmCsBQxJTi/lOrZSM2bH5MXKW/TxeJqqkGqMhrFXa5Crs+nSn+peXGX+73U
+        R6zSr5pUesCUxs7Mz2qLbmjBZL0SHzo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-116-jgagFZaGOZKkVrOIJwNZ8A-1; Sat, 08 Jan 2022 10:58:12 -0500
-X-MC-Unique: jgagFZaGOZKkVrOIJwNZ8A-1
-Received: by mail-ed1-f72.google.com with SMTP id i5-20020a05640242c500b003f84839a8c3so6973804edc.6
-        for <platform-driver-x86@vger.kernel.org>; Sat, 08 Jan 2022 07:58:12 -0800 (PST)
+ us-mta-308-TmQ4zkIkMl25DEHpBhTrTw-1; Sat, 08 Jan 2022 10:58:26 -0500
+X-MC-Unique: TmQ4zkIkMl25DEHpBhTrTw-1
+Received: by mail-ed1-f70.google.com with SMTP id m8-20020a056402510800b003f9d22c4d48so6929314edd.21
+        for <platform-driver-x86@vger.kernel.org>; Sat, 08 Jan 2022 07:58:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=4rNbUDMs/nU0pK6hRZTA0pniGuuhHtut4pZqHhyROkQ=;
-        b=veEIVJbAV/rrHxOw6Bq5rDzKwphCwWGvVBZK246rO9xLXyQ1tXdx9NpwTgie+OhMrM
-         /rC3RV0RYIPdepG/Xs3BoqoBJkzyCe5gIq7KNMKBQ7VCQcD4TGfRJCK+s78M3OQAOriw
-         TGYn0q7AchvS9TViEh6NVx3yShyBZN0Q3W3T1D596VBqSFEGm2nBB5WS8+ggUpW9EvlX
-         vwFKGtv+WwWwu+0jD1FTF3BcSWSYaQpei7xmB5jYn4a1L8NrkP/hfoF5HUZK7gCYuYkw
-         v1sgGBcdwnc9JE5OJepMgBXespa1QUQKi0Vh4MzTQZhDnyULkuc0anvQhBu9quxJK9KD
-         SG+g==
-X-Gm-Message-State: AOAM532k/T8+XGQS4VCPH/R3fS9w9QAjdxh7thzhNkul4XvLfZL65nzk
-        TplHo35XUsIt2UvVqgIRO9iJptgJSmwlt90LQtnYHaY0rjmECqBxvG7ukTjpbCF7DHJxquBv4wZ
-        fB4EBGnKOS5C9PgD9x6v0jzVKDJQzmu+vMA==
-X-Received: by 2002:a05:6402:1112:: with SMTP id u18mr2921014edv.150.1641657491306;
-        Sat, 08 Jan 2022 07:58:11 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzkVniCuztAIwuQofyO6kjJmJv0k62jmMj1IxPSHgF/bsHr5EijLhI8eC3roCTS6pVRluW6ww==
-X-Received: by 2002:a05:6402:1112:: with SMTP id u18mr2921004edv.150.1641657491156;
-        Sat, 08 Jan 2022 07:58:11 -0800 (PST)
+        bh=5EjZCDBduRxxst5J8s6bnwtY//WLS1P1xb/JxpybY8k=;
+        b=THGHurJHI/gKwL8sOzgv8/xhtIRwCSL+0RqIV3cjYg3qcrzH3p0fFn02DqfiH+zc9f
+         QlmLYTx7tl280KgX1N2j0mSnSbuS+Fycwor6hynnRR2DWhB/AtLHfUSphj2Obz/bsVZC
+         3mXvzebPwA7tv7LMN2S+XdAVZN8UGf6HW7dpsM0meNeioJeUqhpC7180aAv17f1M/spo
+         cb54YHyi1YVKC6/HjYCC5Y5bUDZZmNTNH2IrijwZPfXGyMEyomfRXr/cNt/n+jsBk5kS
+         /AfZSD5iq85jae80h7ALAy9+MIcDlZHB6gvKooCl6AGAQOdIzsc2Ghff7r/xI4HzrklR
+         8sKA==
+X-Gm-Message-State: AOAM5339RGwbjY4n8allzdMPm38UyE0X14kFXK9PIEEJvk2T0++PFMRj
+        uF1aXNDlJoEUNv8+Se16QY86wB7SBAmYhfasOCzvHQu34W0BgwlXPiFfGsZYfhA9+umkjjehCcU
+        uOIhy+T66+souZQX5nBFpdnYwu2TjymATWg==
+X-Received: by 2002:aa7:d411:: with SMTP id z17mr66124134edq.214.1641657505452;
+        Sat, 08 Jan 2022 07:58:25 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwyKejDwZ25SXOgzrbDPnmZb/hE2f/oF9iyl3u74URVJjFWs2Z2EAJPI1Bl878ftdhmJeEy6Q==
+X-Received: by 2002:aa7:d411:: with SMTP id z17mr66124125edq.214.1641657505288;
+        Sat, 08 Jan 2022 07:58:25 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id b4sm603378ejl.206.2022.01.08.07.58.10
+        by smtp.gmail.com with ESMTPSA id t20sm857616edv.81.2022.01.08.07.58.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Jan 2022 07:58:10 -0800 (PST)
-Message-ID: <1e7984c0-15e1-d9ad-9f67-243a8ea641f8@redhat.com>
-Date:   Sat, 8 Jan 2022 16:58:10 +0100
+        Sat, 08 Jan 2022 07:58:25 -0800 (PST)
+Message-ID: <4e15b971-0a97-af6d-0a1d-d76b696697e1@redhat.com>
+Date:   Sat, 8 Jan 2022 16:58:24 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH] platform/x86: int3472: Add board data for Surface Go 3
+Subject: Re: [PATCH] platform/x86: x86-android-tablets: Fix GPIO lookup leak
+ on error-exit
 Content-Language: en-US
-To:     Daniel Scally <djrscally@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     markgross@kernel.org
-References: <20220106232045.41291-1-djrscally@gmail.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20220108154947.136593-1-hdegoede@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220106232045.41291-1-djrscally@gmail.com>
+In-Reply-To: <20220108154947.136593-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -75,24 +76,14 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/7/22 00:20, Daniel Scally wrote:
-> The Surface Go 3 needs some board data in order to configure the
-> TPS68470 PMIC - add entries to the tables in tps68470_board_data.c
-> that define the configuration that's needed.
+On 1/8/22 16:49, Hans de Goede wrote:
+> Fix leaking the registered gpiod_lookup tables when the kcalloc() for the
+> i2c_clients array fails.
 > 
-> Signed-off-by: Daniel Scally <djrscally@gmail.com>
+> Fixes: ef2ac11493e2 ("platform/x86: x86-android-tablets: Add support for registering GPIO lookup tables")
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+I've added this to my review-hans (soon to be for-next) branch now.
 
 Regards,
 
@@ -100,43 +91,24 @@ Hans
 
 
 > ---
+>  drivers/platform/x86/x86-android-tablets.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> Hans - I based this onto the platform-drivers-x86-int3472 branch, hope that's
-> right. Let me know if it needs to be rebased.
-> 
->  .../x86/intel/int3472/tps68470_board_data.c         | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> index faa5570f6e6b..f93d437fd192 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> @@ -110,6 +110,12 @@ static const struct int3472_tps68470_board_data surface_go_tps68470_board_data =
->  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
->  };
+> diff --git a/drivers/platform/x86/x86-android-tablets.c b/drivers/platform/x86/x86-android-tablets.c
+> index d39da5fca6c5..3ba63ad91b28 100644
+> --- a/drivers/platform/x86/x86-android-tablets.c
+> +++ b/drivers/platform/x86/x86-android-tablets.c
+> @@ -815,8 +815,10 @@ static __init int x86_android_tablet_init(void)
+>  		gpiod_add_lookup_table(gpiod_lookup_tables[i]);
 >  
-> +static const struct int3472_tps68470_board_data surface_go3_tps68470_board_data = {
-> +	.dev_name = "i2c-INT3472:01",
-> +	.tps68470_gpio_lookup_table = &surface_go_tps68470_gpios,
-> +	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
-> +};
-> +
->  static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
->  	{
->  		.matches = {
-> @@ -125,6 +131,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
->  		},
->  		.driver_data = (void *)&surface_go_tps68470_board_data,
->  	},
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Go 3"),
-> +		},
-> +		.driver_data = (void *)&surface_go3_tps68470_board_data,
-> +	},
->  	{ }
->  };
+>  	i2c_clients = kcalloc(dev_info->i2c_client_count, sizeof(*i2c_clients), GFP_KERNEL);
+> -	if (!i2c_clients)
+> +	if (!i2c_clients) {
+> +		x86_android_tablet_cleanup();
+>  		return -ENOMEM;
+> +	}
 >  
+>  	i2c_client_count = dev_info->i2c_client_count;
+>  	for (i = 0; i < i2c_client_count; i++) {
 > 
 
