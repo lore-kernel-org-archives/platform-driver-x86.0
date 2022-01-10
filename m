@@ -2,193 +2,179 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDBDC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 10 Jan 2022 20:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D2DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 10 Jan 2022 21:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243975AbiAJUqh (ORCPT
+        id S1343803AbiAJVIn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 10 Jan 2022 15:46:37 -0500
-Received: from mail-bn8nam12on2053.outbound.protection.outlook.com ([40.107.237.53]:37569
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S242206AbiAJUqg (ORCPT
+        Mon, 10 Jan 2022 16:08:43 -0500
+Received: from mga04.intel.com ([192.55.52.120]:30171 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1343788AbiAJVIj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 10 Jan 2022 15:46:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cpiVwW5E862HJHrVYJ/Iz/7TK19VkQria/qW8yT0HjzN9eBeBaKDhEPppv04BXiAmZS9EtAdDyy2jmeuiH+UvPBSuKRwKyicwgZWZWNbMxtFCBU1SrpGhbYaf6VAl89KlvMCXclpWJc322CdXs+j9hvQhWKgkfx/VkW/uTi2ZKgvqb92F6xEB7d2wxihtm3LM5IMbLG/1TOWtxyeR8qFMmq4L4IPZIMmVSmUdRXRhNU6lW9z7MGNfqIUSkZWupvS/3nu0rYNZt88wnJ5glNProy67GrCh+GCSTipQWsygSCSwfNSUozOOz7YjYAZQWxM84jn5L3zihxdCA63Yw4EWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v3wSmiZy6UrSJdUTRIpQJhZlBT0LMLY2TXMV7P7SYdM=;
- b=Vnm6sKlPT+Wei8eO80VGEGI35p+cpWLHmD3gWIDK6/0DeZp/hVxj8mH8NWToiWigkP5Wko41m8q36ycrOestmyx4HjB7764sCPnOMjDVqVYoC1IJvoz1JsVsyOMRmvYyFPtFxAo1LnjSeKcbmHLGmtdk/33KSkcZvi3f8gIAm+WeoEEj5RbSuA79+jGZrrQz0SMvKXHHP90t15dzBQjkxGEk/QOI/5w5/4gD0Ed2daz2Txx3nr0Bh05oyj63Et63aU3qLCUk2pTnE6UVdA9KMNH7y0dZgANagkSnCwANFegqYbCFx+gpFhbOrpOFxhvOx+/YzmbhCdTmvmQX67ZCqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v3wSmiZy6UrSJdUTRIpQJhZlBT0LMLY2TXMV7P7SYdM=;
- b=RSjXRpuwsr8tDlyygVqLIERMt56sPiY6c+Yb3r8a9tc+HE/Fdl90HU5lz9zV+5rU7ZyOkrc5siHl7DWBUYgDqTvCdk728C+3Lyy10p7L/88KTu8ILwxM7yvQI/SEGHM4xRPR1061skj4u1NuLVMui4cbnoe1qCCWJbc60fyo7l0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by SN1PR12MB2510.namprd12.prod.outlook.com (2603:10b6:802:28::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.11; Mon, 10 Jan
- 2022 20:46:33 +0000
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::35:281:b7f8:ed4c]) by SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::35:281:b7f8:ed4c%6]) with mapi id 15.20.4867.012; Mon, 10 Jan 2022
- 20:46:33 +0000
-Cc:     brijesh.singh@amd.com, Borislav Petkov <bp@alien8.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v8 01/40] x86/compressed/64: detect/setup SEV/SME features
- earlier in boot
-To:     Venu Busireddy <venu.busireddy@oracle.com>,
-        Michael Roth <michael.roth@amd.com>
-References: <YbjYZtXlbRdUznUO@dt> <YbjsGHSUUwomjbpc@zn.tnic>
- <YbkzaiC31/DzO5Da@dt> <b18655e3-3922-2b5d-0c35-1dcfef568e4d@amd.com>
- <20211215174934.tgn3c7c4s3toelbq@amd.com> <YboxSPFGF0Cqo5Fh@dt>
- <Ybo1C6kpcPJBzMGq@zn.tnic> <20211215201734.glq5gsle6crj25sf@amd.com>
- <YbpSX4/WGsXpX6n0@zn.tnic> <20211215212257.r4xisg2tyiwdeleh@amd.com>
- <YdNKIOg+9LAaDDF6@dt> <5913c603-2505-7865-4f8e-2cbceba8bd12@amd.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <1148bed5-29dc-04b2-591b-c7ef2d2664c7@amd.com>
-Date:   Mon, 10 Jan 2022 14:46:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-In-Reply-To: <5913c603-2505-7865-4f8e-2cbceba8bd12@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BL1PR13CA0380.namprd13.prod.outlook.com
- (2603:10b6:208:2c0::25) To SN6PR12MB2718.namprd12.prod.outlook.com
- (2603:10b6:805:6f::22)
+        Mon, 10 Jan 2022 16:08:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641848919; x=1673384919;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=noXDmlMb/EBRvid+M0xTN4DJrqhApqmO9Jn6H9SNPpk=;
+  b=lrwTqACLWTe81ZxqCH/BWfzQGN91+hs8RtoBMi1k7VTBjiNpTA/5x7ha
+   d/8INGCxUD5A6e2YXt+QSceu40k/hxSwWoyqxyhEo04PQ2NAQ+vP1KjXl
+   2mNCg0Dsxu1XXtCMM4yTZEAtIrdIb8BaTD/uz2kPL7NO536uZDmpeY289
+   E3go6tZFo3D6y0blg0CWhbTxGjFUSM+qjQ1lr8c6pH6UwtgQFiB3tjd0L
+   X1EVaDHXV3/vdfuYootLB1E1utULamPpyTKWfQ2uO1Rz5Ycj6kQNhDgKY
+   UhIcZ6luhoLIm//3CNhMBAMS3P2O6qjM8mg8J8sZY789435IYjb5FUZwl
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10223"; a="242135056"
+X-IronPort-AV: E=Sophos;i="5.88,278,1635231600"; 
+   d="scan'208";a="242135056"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2022 13:08:38 -0800
+X-IronPort-AV: E=Sophos;i="5.88,278,1635231600"; 
+   d="scan'208";a="490132599"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2022 13:08:20 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1n71sd-00915P-Sm;
+        Mon, 10 Jan 2022 23:07:03 +0200
+Date:   Mon, 10 Jan 2022 23:07:03 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>, alsa-devel@alsa-project.org,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        openipmi-developer@lists.sourceforge.net,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        kvm@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Robert Richter <rric@kernel.org>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>, netdev@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>,
+        linux-mediatek@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+Message-ID: <Ydyf93VD8FrV7GH+@smile.fi.intel.com>
+References: <20220110195449.12448-1-s.shtylyov@omp.ru>
+ <20220110195449.12448-2-s.shtylyov@omp.ru>
+ <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 59b7a56d-6e20-4fa4-830a-08d9d47a4985
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2510:EE_
-X-Microsoft-Antispam-PRVS: <SN1PR12MB25109DBAA503DD0EDE68CC5FE5509@SN1PR12MB2510.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OtyWPiWZhyQyhhvFSyOsgAstFPynDQi+rJ5qoWgm43kTMvF9EJUmEVBZYBbjhHqAIIoaQCoTScy54QcqSiW7uU8dqp+b3nqbSlF8HxlpjdHkXJ0xDmbi3o5yr/mspAPHsKF5mOpbhdItMAIY2JcG9yH4oE3DlOcNuGPI5I7TThKkYzbuht9wsTaouCKBjtVrOKQLcTi3iCTKQAQ9PI+2ZgjuclYSct4NAIiQWKQmGhLQH08y9iw9W5A4ESElaAp31rGBcSu92FQ4T3GGcGffNsRKyuTWDbPDlA4WAcXcQwyY7anB6MRN6BE5G/34+uZqENzK0VoH1zNoYBDqvEvPz8x2wMUi0hOxD4Bim2RnEyOSPPzvlIw+HAOSXAL/5q/TtEhw0a5zn6kcOnx7pYu23qbv38ElnqEROFQOd53NNwIWRzRGoTkIbQTAeBVpldqRdPjTgRljlc70aKyjulgV+1VJhomkxEfbGOsxU6P51xXgiHrWsqAIm5vZrRENI3UooJHLKjt3goqbOAwhvPqUNfvlJn097xFQ2GxIpYAaXNtqB19kxH6nc+3ii1QhiNm4jl+mIi0hpNGBl+G6MRUEvvVSDYKIkzxCxZJk/TzZCvtIkPZm5BcH4yzzHP8Mwe7xpRzzOpu9+jR2SUvGc8+cm/3woQza9ABegx4OEExCZ6QgG+FX0EJRjVVdst07NQ2M19MHmg3IFpXc1bsai7umSs17VCl+jNW+WXxOQRCdixQR9LsLQZ+JJd63ApnKOdXz
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(36756003)(2906002)(7406005)(66556008)(66946007)(66476007)(31686004)(6636002)(6666004)(6506007)(4001150100001)(7416002)(5660300002)(186003)(53546011)(38100700002)(54906003)(110136005)(316002)(6512007)(26005)(4326008)(86362001)(508600001)(44832011)(8936002)(31696002)(83380400001)(2616005)(8676002)(6486002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QlpvZkZacVdaMkdyZGV5VlBmTlhCVVFqMTJwbUJETVF6WlNMZWRIcG1sbDNQ?=
- =?utf-8?B?ZGpybU1Tai80Tk1TNEJDWmJXTW5ORStZMkxodmZFZGdaNktQUUhLOHlOMGJE?=
- =?utf-8?B?RHp0NHk5bXVXbVNQNXNQbjhqV3BjYTVGMzVmZ0dNNFBHZXZqTzdYdFVzaTdz?=
- =?utf-8?B?S3BHSHRzWkxaNEpHbHprTUxLdWs2UDJIWkNsN2pBRGE3b1lVZE1LRzFUY2tF?=
- =?utf-8?B?REY3cGxuTWRpSDNxOGZWcHhlNkJ4T05zQ0pQUVF5SFhUdlZWQkkxZnZlZm5T?=
- =?utf-8?B?UmUzbkhnbEJGZmwyc3B0ZDJ4UlYwUGlYeVdpMVdJUVBIT3MzWkJSQldXbjFn?=
- =?utf-8?B?RWdUd2NzK2ROUWlaUHRtc0JTNWdabUlCcndhQUlZbGREWHdJZTR3K2JEZVRM?=
- =?utf-8?B?NmdTaG5tU1pzM1lYa1ZsMWNSbjU4WFVQbEtKSzRiTjlzV0c0SnhBd0k0ZGxZ?=
- =?utf-8?B?bk9RbG9qUlBXR3VSSzltc0VDdzlDaVpxRjNaVnkrNkhHZkFydVgrN3dFZmEw?=
- =?utf-8?B?ejRYVVlWSGc1bmt3NEhWTU9kZ1dKYTZNWUo5bm1QeW9rci93cG02aisvL0Rl?=
- =?utf-8?B?WDM1MmJwMXM0L25BWStlOVRrRVp0bVFuMGREN21YVVg2UUV2eXRkZ0FMemYx?=
- =?utf-8?B?V2dWVzU4ZG5LaUNjQ0FmT3FUR1hyL2ZxS0lNOEl1TnEvZEk5ZFpQL3lFSFpO?=
- =?utf-8?B?T0VwV1RZdU96elc4aUxhN2Y3OCtjRmN6TGhxMHRxWEtxSUx2VHRCSXJOWHRz?=
- =?utf-8?B?cVRWaWdZSEc2NXJ6VjVnVThqYnhmQ3R3RzZ3SWFsbzA0cW80ZklYd1ZzQ1NH?=
- =?utf-8?B?dXRCekFWcGZJcU4rZmtBWFpoS09nMUxPOE41VXJYd3luQTZoTFE5U3E0QUU1?=
- =?utf-8?B?Kyt5djhzYStmS1FMZUJyVGRPUFBNckRRRmgyV01NaEZRSEtrWnVpTSs3bUFv?=
- =?utf-8?B?V0JnSVlpMElzRWpKclcvK0lhcDZsWUVoTUhGenNURngwQnl4T3NocVc4cUNy?=
- =?utf-8?B?UlkzdU9lNFl3V1QydFArdXZVK1RKUFlHemZnbTBuMTR5dHZsemtrR2JzYmRa?=
- =?utf-8?B?OGkwLzRudzB2VSt1RVlVOFJqUWdRS1I0TFZZM08vQm5kTUp4cVRsSVJjUzkv?=
- =?utf-8?B?T3VVdHBGVHpEdnBQN2NLYm15TGFGUVExcU1sUHVHaFU2QTJCbHhBS2E1SGMy?=
- =?utf-8?B?N1p6TEwxbWRLelMwdHlJVDZ1eXNMcythRHkzMXlOUEF2T0F2Rm5Vb3UyWi9E?=
- =?utf-8?B?Y2E0WDlXdHhOVG1rWmFiazdCcWRCYnVPZkdlaVhoMTZUVXhjSEljcDAvbDZk?=
- =?utf-8?B?SjMrNld1bEcwbWVncUwzZkVWMmhqOVY3blVtcGxtSjNQSDJzWitldkNIc3Qz?=
- =?utf-8?B?SmxXOXBNaXI0TFJmN2lJVjk4TnJWWTh4WENtTmM1UlMvaUdsTTNRaGxLNjIz?=
- =?utf-8?B?cVVnbXR4aThwdnVwV0lBeUg1ZGR6ZGpEbUZkZDFuV0xHNy91WkVjRGd4dW5H?=
- =?utf-8?B?bTE2UGY4NlV4czQySWZjNnNrVVdsZS9ROWhmWVVYSk1Fc01XZG12QTc3VGV0?=
- =?utf-8?B?OGl2b2dkOHp6WmVBUGJpWEpmenhUQUNQQUtSdm53eURrS0RTYzhHQ3hWN3Z2?=
- =?utf-8?B?cVJzOXNkWXZySFNoYjZZWW15Umt1dGxzSC8zU1VZMnlDdWtDVDVEdzUwSlZD?=
- =?utf-8?B?Z29wTkRxemhvOE5sNmg5N0Q1eFo5cDJUSlpSTlFpdTh0Sm9pdHRJeFZMYXVQ?=
- =?utf-8?B?Q3RWZUNKTjYyUzF1QlBUS2FJc0V5dWs3dWxiT0sreFo1cFM4aFA0QXhCa0Nz?=
- =?utf-8?B?Z1ExT21BVWFTR0UvbG9JaHZQcGxEdTNyWk5FeHpSUFJOTG0zT0I3OFBOUlVl?=
- =?utf-8?B?M0p4VGkrcHdBbzF6ZjlYVlNFanZ1LzQvd0FXYWtrMkZZWXZQbzdmSU9DcFFN?=
- =?utf-8?B?SGR5dnZRWUhZNFdnS1RPL285eUxPMU1OMHllNXdlM1lEeXFzOGtnbUExanJD?=
- =?utf-8?B?anFkeEhuaFFSNXlWbFFMRDZKVVJUL0ZkWUtzRktIdWIvZ2UyK2lGMXlTYXQ1?=
- =?utf-8?B?MStmTnkvbGpES3RVd2RtVFFEb3hCanp6SjBiaGdhaEpyanMwVXJ5RFhzL2dD?=
- =?utf-8?B?a1F1RFdFVWdUOFMrcVpKZ3AvcVI2RGpoVFBiZUN4aENzb3M5cHp6K3hpT3k3?=
- =?utf-8?Q?b022HXUKdNzzPfd1pucPToQ=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59b7a56d-6e20-4fa4-830a-08d9d47a4985
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2022 20:46:33.7809
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QkaCiTq6NgxLgB+YUDiCwtf9FPPMl3R0X3ksIlsmGIJh7AOc5sbc/2+YzocoWOnRkxVJ4l8e72oemOZpzIX0hQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2510
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Venu,
+On Mon, Jan 10, 2022 at 09:10:14PM +0100, Uwe Kleine-König wrote:
+> On Mon, Jan 10, 2022 at 10:54:48PM +0300, Sergey Shtylyov wrote:
+> > This patch is based on the former Andy Shevchenko's patch:
+> > 
+> > https://lore.kernel.org/lkml/20210331144526.19439-1-andriy.shevchenko@linux.intel.com/
+> > 
+> > Currently platform_get_irq_optional() returns an error code even if IRQ
+> > resource simply has not been found. It prevents the callers from being
+> > error code agnostic in their error handling:
+> > 
+> > 	ret = platform_get_irq_optional(...);
+> > 	if (ret < 0 && ret != -ENXIO)
+> > 		return ret; // respect deferred probe
+> > 	if (ret > 0)
+> > 		...we get an IRQ...
+> > 
+> > All other *_optional() APIs seem to return 0 or NULL in case an optional
+> > resource is not available. Let's follow this good example, so that the
+> > callers would look like:
+> > 
+> > 	ret = platform_get_irq_optional(...);
+> > 	if (ret < 0)
+> > 		return ret;
+> > 	if (ret > 0)
+> > 		...we get an IRQ...
+> 
+> The difference to gpiod_get_optional (and most other *_optional) is that
+> you can use the NULL value as if it were a valid GPIO.
 
-On 1/5/22 1:34 PM, Brijesh Singh wrote:
-> 
-> 
-> On 1/3/22 1:10 PM, Venu Busireddy wrote:
->> On 2021-12-15 15:22:57 -0600, Michael Roth wrote:
->>> On Wed, Dec 15, 2021 at 09:38:55PM +0100, Borislav Petkov wrote:
->>>>
->>>> But it is hard to discuss anything without patches so we can continue
->>>> the topic with concrete patches. But this unification is not
->>>> super-pressing so it can go ontop of the SNP pile.
->>>
->>> Yah, it's all theoretical at this point. Didn't mean to derail things
->>> though. I mainly brought it up to suggest that Venu's original 
->>> approach of
->>> returning the encryption bit via a pointer argument might make it 
->>> easier to
->>> expand it for other purposes in the future, and that naming it for that
->>> future purpose might encourage future developers to focus their efforts
->>> there instead of potentially re-introducing duplicate code.
->>>
->>> But either way it's simple enough to rework things when we actually
->>> cross that bridge. So totally fine with saving all of this as a future
->>> follow-up, or picking up either of Venu's patches for now if you'd still
->>> prefer.
->>
->> So, what is the consensus? Do you want me to submit a patch after the
->> SNP changes go upstream? Or, do you want to roll in one of the patches
->> that I posted earlier?
->>
-> 
-> Will incorporate your changes in v9. And will see what others say about it.
-> 
+The problem is not only there, but also in the platform_get_irq() and that
+problem is called vIRQ0. Or as Linus put it "_cookie_" for IRQ, which never
+ever should be 0.
 
-Now that I am incorporating the feedback in my wip branch, at this time 
-I am dropping your cleanup mainly because some of recommendation may 
-require more rework down the line; you can submit your recommendation as 
-cleanup after the patches are in. I hope this is okay with you.
+> As this isn't given with for irqs, I don't think changing the return
+> value has much sense. In my eyes the problem with platform_get_irq() and
+> platform_get_irq_optional() is that someone considered it was a good
+> idea that a global function emits an error message. The problem is,
+> that's only true most of the time. (Sometimes the caller can handle an
+> error (here: the absence of an irq) just fine, sometimes the generic
+> error message just isn't as good as a message by the caller could be.
+> (here: The caller could emit "TX irq not found" which is a much nicer
+> message than "IRQ index 5 not found".)
+> 
+> My suggestion would be to keep the return value of
+> platform_get_irq_optional() as is, but rename it to
+> platform_get_irq_silent() to get rid of the expectation invoked by the
+> naming similarity that motivated you to change
+> platform_get_irq_optional().
 
-thanks
+This won't fix the issue with vIRQ0.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
