@@ -2,178 +2,133 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFCEC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 Jan 2022 17:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED6DC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 10 Jan 2022 06:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234803AbiAHRWQ (ORCPT
+        id S239049AbiAJGfv convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 8 Jan 2022 12:22:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234620AbiAHRWQ (ORCPT
+        Mon, 10 Jan 2022 01:35:51 -0500
+Received: from us-smtp-delivery-44.mimecast.com ([205.139.111.44]:43342 "EHLO
+        us-smtp-delivery-44.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S239037AbiAJGft (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 8 Jan 2022 12:22:16 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6E56C061401
-        for <platform-driver-x86@vger.kernel.org>; Sat,  8 Jan 2022 09:22:15 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id l10-20020a17090a384a00b001b22190e075so16373004pjf.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 08 Jan 2022 09:22:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6fj1m2KmOUrIku4T8f3lgj98uSandn+jvuNG7THLdFI=;
-        b=c7oZ/vQOfS6g+wsL600ZH9VSMOU9ZpP9pxc+dNwrbG13WPhauEYPubFq4cdxgiMnet
-         W8bJpAvZnmQad9aryi6B2WBfrkxoRzPWC71pLGazZdpf0lYTk6uHpbOL7SNDqF2mV8Dt
-         9YWvSjFQXZnMjke1RH4SqVw8rmtEy4jNEjuFDWLXXjcW11+M5XRbQ4nOcqSG2wOlfLgv
-         POlhDKoP9WG10xsjmouwacSyhQ3rhP86Z2HN1bYttxwmpC5+n4q47Gh1lzXJ3Jijx77e
-         FsHO8kwI7+rwGsDl+b0UqIOUVUGASM+ciM9Lv6cid0fExI1pyXWWllFsHPymkgSes1V9
-         1Teg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6fj1m2KmOUrIku4T8f3lgj98uSandn+jvuNG7THLdFI=;
-        b=owetZeHQhHwcJekv0gw112Fss2dTDgg88rDA8MRC9ZVnjjRdFgDll86wI2hiYn0Nqf
-         FQmByzIIKao4wdVwQ6CsbGxvvP24bW7qNfj4Kh4GRBPKWHFxlIk/yKHv95Va4O6oBHZB
-         14uQ12XLAsdhdfszPveqWp2bXZIP0dEBYkFh7EIjByKGNESoARqgoWgwcLpFyBtJpsbU
-         dy078WIkDe6nT/1US7ksnZBXYyy3CQl0TcqU1LRqVPWBasft8aymokzukKBP8FP0HJsS
-         JmwnrQBuDvVj10mUMHXmNwyL7gBcGlWZlWI5z4w9sBdmws4lmoyL/fiwLkENYsLf4fge
-         bnnw==
-X-Gm-Message-State: AOAM5335/P6QTF0A2/BIC3cqxGLWMMo/BTvTIv7qAhGgSVjDNlIQQohy
-        5ugNbitDTkQ924/ihye1dVjVA6QKN61Pg1jzxSfWDg==
-X-Google-Smtp-Source: ABdhPJzR1SBeA7+HeM7JwvdHbEXdFO+qjVCAXycudKaXHZqtmWgBHPjrcvRkyg0Zh7cEJ22YUTu6EM7XQ8kaf7r0xm0=
-X-Received: by 2002:a17:90a:bb05:: with SMTP id u5mr6390941pjr.64.1641662534915;
- Sat, 08 Jan 2022 09:22:14 -0800 (PST)
-MIME-Version: 1.0
-References: <20220107190208.95479-1-rajatja@google.com> <20220107190208.95479-3-rajatja@google.com>
- <YdiPOoU1JrqR7N6S@google.com> <d38ec2f9-a21f-d431-235a-9edb59fc40e9@redhat.com>
-In-Reply-To: <d38ec2f9-a21f-d431-235a-9edb59fc40e9@redhat.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Sat, 8 Jan 2022 09:21:38 -0800
-Message-ID: <CACK8Z6EB1Ji9D6hbWPtXHAa9Wy4jeFvMzXL6R81HBZp6GSYQHw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] drm/privacy_screen_x86: Add entry for ChromeOS privacy-screen
+        Mon, 10 Jan 2022 01:35:49 -0500
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-674-wqWs10RDN0iqQO3K92HJVQ-1; Mon, 10 Jan 2022 01:35:42 -0500
+X-MC-Unique: wqWs10RDN0iqQO3K92HJVQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F73C81CCB4;
+        Mon, 10 Jan 2022 06:35:41 +0000 (UTC)
+Received: from bzdocha.local (unknown [10.43.2.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C3E85E4A3;
+        Mon, 10 Jan 2022 06:35:22 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Benson Leung <bleung@google.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Benson Leung <bleung@chromium.org>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, gwendal@google.com,
-        seanpaul@google.com, marcheu@google.com, dtor@google.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        rajatxjain@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] platform/x86: x86-android-tablets: Fix the buttons on CZC P10T tablet
+Date:   Mon, 10 Jan 2022 07:35:12 +0100
+Message-Id: <20220110063512.273252-1-lkundrak@v3.sk>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=lkundrak@v3.sk
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: v3.sk
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=WINDOWS-1252
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Jan 8, 2022 at 8:10 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi All,
->
-> On 1/7/22 20:06, Benson Leung wrote:
-> > Hi Rajat,
-> >
-> > Thanks for your changes here.
-> >
-> > On Fri, Jan 07, 2022 at 11:02:08AM -0800, Rajat Jain wrote:
-> >> Add a static entry in the x86 table, to detect and wait for
-> >> privacy-screen on some ChromeOS platforms.
-> >>
-> >> Please note that this means that if CONFIG_CHROMEOS_PRIVACY_SCREEN is
-> >> enabled, and if "GOOG0010" device is found in ACPI, then the i915 probe
-> >> shall return EPROBE_DEFER until a platform driver actually registers the
-> >> privacy-screen: https://hansdegoede.livejournal.com/25948.html
-> >>
-> >> Signed-off-by: Rajat Jain <rajatja@google.com>
-> >> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> >
-> > Hi Hans,
-> >
-> > Since this change depends on the privacy screen changes staged for v5.17,
-> > I'm OK as platform/chrome maintainer to have this go through the drm tree.
-> >
-> > Acked-By: Benson Leung <bleung@chromium.org>
->
-> Ok, I will merge this into drm-misc-next coming Monday.
+This switches the P10T tablet to "Android" mode, where the Home button
+sends a single sancode instead of a Windows-specific key combination and
+the other button doesn't disable the Wi-Fi.
 
-Thank you so much for your help!
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+This applies on top of v5.16-rc8-792-gf3a343366741, commit
+f3a3433667418e ("platform/x86: x86-android-tablets: Workaround Lenovo
+Yoga Tablet 2 1050 poweroff hang) from
+<https://github.com/jwrdegoede/linux-sunxi>.
 
->
-> Note I'm afraid that it is too late for 5.17, the drm-misc maintainers
-> have already created the final drm-misc tag for the 5.17 pull-req.
+ drivers/platform/x86/x86-android-tablets.c | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-No problem, this works.
+diff --git a/drivers/platform/x86/x86-android-tablets.c b/drivers/platform/x86/x86-android-tablets.c
+index 9333bbec33e9..c3d0714b588a 100644
+--- a/drivers/platform/x86/x86-android-tablets.c
++++ b/drivers/platform/x86/x86-android-tablets.c
+@@ -776,6 +776,39 @@ static const struct x86_dev_info xiaomi_mipad2_info __initconst = {
+ 	.i2c_client_count = ARRAY_SIZE(xiaomi_mipad2_i2c_clients),
+ };
+ 
++#define CZC_EC_EXTRA_PORT	0x68
++#define CZC_EC_ANDROID_KEYS	0x63
++
++static int __init x86_czc_p10t_init(void)
++{
++	/*
++	 * The device boots up in "Windows 7" mode, when the home button sends a
++	 * Windows specific key sequence (Left Meta + D) and the second button
++	 * sends an unknown one while also toggling the Radio Kill Switch.
++	 * This is a surprising behavior when the second button is labeled "Back".
++	 *
++	 * The vendor-supplied Android-x86 build switches the device to a "Android"
++	 * mode by writing value 0x63 to the I/O port 0x68. This just seems to just
++	 * set bit 6 on address 0x96 in the EC region; switching the bit directly
++	 * seems to achieve the same result. It uses a "p10t_switcher" to do the
++	 * job. It doesn't seem to be able to do anything else, and no other use
++	 * of the port 0x68 is known.
++	 *
++	 * In the Android mode, the home button sends just a single scancode,
++	 * which can be handled in Linux userspace more reasonably and the back
++	 * button only sends a scancode without toggling the kill switch.
++	 * The scancode can then be mapped either to Back or RF Kill functionality
++	 * in userspace, depending on how the button is labeled on that particular
++	 * model.
++	 */
++	outb(CZC_EC_ANDROID_KEYS, CZC_EC_EXTRA_PORT);
++	return 0;
++}
++
++static const struct x86_dev_info czc_p10t __initconst = {
++	.init = x86_czc_p10t_init,
++};
++
+ static const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
+ 	{
+ 		/* Asus MeMO Pad 7 ME176C */
+@@ -803,6 +836,24 @@ static const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
+ 		},
+ 		.driver_data = (void *)&chuwi_hi8_info,
+ 	},
++	{
++		/* CZC P10T */
++		.ident = "CZC ODEON TPC-10 (\"P10T\")",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "CZC"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "ODEON*TPC-10"),
++		},
++		.driver_data = (void *)&czc_p10t,
++	},
++	{
++		/* A variant of CZC P10T */
++		.ident = "ViewSonic ViewPad 10",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ViewSonic"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "VPAD10"),
++		},
++		.driver_data = (void *)&czc_p10t,
++	},
+ 	{
+ 		/* Lenovo Yoga Tablet 1050F/L */
+ 		.matches = {
+-- 
+2.34.1
 
-Thanks & Best Regards,
-
-Rajat
-
->
-> Regards,
->
-> Hans
->
->
-> >
-> >
-> >> ---
-> >> v5: * Add Hans' "Reviewed by"
-> >> v4: * Simplify the detect_chromeos_privacy_screen() function
-> >>     * Don't change the existing print statement
-> >> v3: * Remove the pr_info() from detect_chromeos_privacy_screen(), instead
-> >>       enhance the one already present in drm_privacy_screen_lookup_init()
-> >> v2: * Use #if instead of #elif
-> >>     * Reorder the patches in the series.
-> >>     * Rebased on drm-tip
-> >>
-> >>  drivers/gpu/drm/drm_privacy_screen_x86.c | 17 +++++++++++++++++
-> >>  1 file changed, 17 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/drm_privacy_screen_x86.c b/drivers/gpu/drm/drm_privacy_screen_x86.c
-> >> index a2cafb294ca6..88802cd7a1ee 100644
-> >> --- a/drivers/gpu/drm/drm_privacy_screen_x86.c
-> >> +++ b/drivers/gpu/drm/drm_privacy_screen_x86.c
-> >> @@ -47,6 +47,13 @@ static bool __init detect_thinkpad_privacy_screen(void)
-> >>  }
-> >>  #endif
-> >>
-> >> +#if IS_ENABLED(CONFIG_CHROMEOS_PRIVACY_SCREEN)
-> >> +static bool __init detect_chromeos_privacy_screen(void)
-> >> +{
-> >> +    return acpi_dev_present("GOOG0010", NULL, -1);
-> >> +}
-> >> +#endif
-> >> +
-> >>  static const struct arch_init_data arch_init_data[] __initconst = {
-> >>  #if IS_ENABLED(CONFIG_THINKPAD_ACPI)
-> >>      {
-> >> @@ -58,6 +65,16 @@ static const struct arch_init_data arch_init_data[] __initconst = {
-> >>              .detect = detect_thinkpad_privacy_screen,
-> >>      },
-> >>  #endif
-> >> +#if IS_ENABLED(CONFIG_CHROMEOS_PRIVACY_SCREEN)
-> >> +    {
-> >> +            .lookup = {
-> >> +                    .dev_id = NULL,
-> >> +                    .con_id = NULL,
-> >> +                    .provider = "privacy_screen-GOOG0010:00",
-> >> +            },
-> >> +            .detect = detect_chromeos_privacy_screen,
-> >> +    },
-> >> +#endif
-> >>  };
-> >>
-> >>  void __init drm_privacy_screen_lookup_init(void)
-> >> --
-> >> 2.34.1.575.g55b058a8bb-goog
-> >>
-> >
->
