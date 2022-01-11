@@ -2,113 +2,152 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7182C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jan 2022 10:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64333C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jan 2022 11:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237993AbiAKK4m (ORCPT
+        id S237928AbiAKLBD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Jan 2022 05:56:42 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:45842 "EHLO
+        Tue, 11 Jan 2022 06:01:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:49135 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237960AbiAKK4l (ORCPT
+        by vger.kernel.org with ESMTP id S235439AbiAKLBC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Jan 2022 05:56:41 -0500
+        Tue, 11 Jan 2022 06:01:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641898600;
+        s=mimecast20190719; t=1641898862;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Sx0bVyil13cXnvelkgvonB3O44nr3D0XzjKCPxKtzKw=;
-        b=RsrLGSsanc2vxlK0k5/OTpmiMREYbKIDeO2N+8dRtK4wuKj00gbEgBSZZG+8HDPMU0B7kA
-        8c2ewENkOxACX4WHGURtfDxqKeVw2QVBiS12wxV2+wBQQNeT8oH3VwAgnSGi/0mPnHDyTI
-        661Ga3VFM9EcoK3QQOCxdqXbVp33FiU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kIK5nVjJ2vQi6tifrNqLLtdq4X64gcBvU0nnakHAM/c=;
+        b=LTIvqmfbzSa6bQo3A8xqR8QpXckAqjLn3C2P7VljY4tXPgRYVBf8VgDdgFpbpi0vVGYeCz
+        5Bu7u3NOQx5H7bMtRnv9zy4IjWIZDyGpCojP+UVPHnvyccCZNHvehUXpAVBrETXT/Nwu9f
+        kjhO5S68l88tekeZtOIHeBYPGdlZ0yQ=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-316-RA3Fn3WWN2ugbpvSSL-_XQ-1; Tue, 11 Jan 2022 05:56:36 -0500
-X-MC-Unique: RA3Fn3WWN2ugbpvSSL-_XQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7124189DF41;
-        Tue, 11 Jan 2022 10:56:34 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.195.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 557F47A8C7;
-        Tue, 11 Jan 2022 10:56:33 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v2] gpio: tps68470: Allow building as module
-Date:   Tue, 11 Jan 2022 11:56:32 +0100
-Message-Id: <20220111105632.219581-1-hdegoede@redhat.com>
+ us-mta-135-XnFKh5AYMF6APSZam3rvHA-1; Tue, 11 Jan 2022 06:01:00 -0500
+X-MC-Unique: XnFKh5AYMF6APSZam3rvHA-1
+Received: by mail-ed1-f71.google.com with SMTP id j10-20020a05640211ca00b003ff0e234fdfso316383edw.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 03:01:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=kIK5nVjJ2vQi6tifrNqLLtdq4X64gcBvU0nnakHAM/c=;
+        b=x33E5fiomTTQIn6YfkTN55FpG3NFXzc0iEk5+CS2hlcR6S191iZaozVrYlz0ZJjf//
+         HroULZJ+syRNDiPq7n9bLVcv3lMuqJ6q1602XOHAFIIWUsLQqh4cZAozmQWXjNTKOmNH
+         DYfzoIm3ICZ81WGvEoh0erkRJ6ZVoKPVARWUrJ7jmm5+lm9MK+Z2hJtHDW0O2U+nYYkp
+         KENbdRxMGikd8DqBtgRIWCENc1sbwm0Zxcfwito/96FWQHajcpO/rFDncID4Ywz5naSY
+         SjGxMrYglogukcuFbLwDoXEPx31P9ujNTaEZFMZj3G/DypfQGzTRqSXjotEjoNwkTWbL
+         MNKA==
+X-Gm-Message-State: AOAM532GyknIkSaCybNBWkIOf/NVi003pPOTKD5ZSSdB4lovuJG+AVqR
+        WhRZ80RXhoQv4+IzTGlJkOwkEi//d3wKmHjoS5uybZv48ovEh2GN8ZZALwFe5qVoNcYZMS84cbd
+        bGZ7wi6aQ2YokCDSvwZh3zW6wRfZbTn9iBA==
+X-Received: by 2002:a17:906:86c4:: with SMTP id j4mr3236596ejy.753.1641898859494;
+        Tue, 11 Jan 2022 03:00:59 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJypwmD27eJi/pXsJMeDq0LT+DoP9nLW9+yEk6c+dLdlIO9fODwWvJGZwT1lFGDdwTTMa+sK7A==
+X-Received: by 2002:a17:906:86c4:: with SMTP id j4mr3236588ejy.753.1641898859335;
+        Tue, 11 Jan 2022 03:00:59 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id l18sm3478646ejf.7.2022.01.11.03.00.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jan 2022 03:00:59 -0800 (PST)
+Message-ID: <54656fd1-3912-a6e6-5c66-12744073ab10@redhat.com>
+Date:   Tue, 11 Jan 2022 12:00:58 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the RWC
+ NANOTE P8 AY07J 2-in-1
+Content-Language: en-US
+To:     yuk7 <yukx00@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20220104081920.1794275-1-yukx00@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220104081920.1794275-1-yukx00@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The gpio-tps68470 driver binds to a tps68470-gpio platform-device which
-itself gets instantiated by a special MFD driver from
-drivers/platform/x86/intel/int3472/tps68470.c
+Hi,
 
-This MFD driver itself can be built as a module, so it makes no sense to
-force the gpio-tps68470 driver to always be built-in.
+On 1/4/22 09:19, yuk7 wrote:
+> Add touchscreen info for RWC NANOTE P8 (AY07J) 2-in-1.
+> 
+> Signed-off-by: yuk7 <yukx00@gmail.com>
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Fix some spelling errors in the commit msg
-- Remove blank line between tps68470_gpio_driver decleration and
-  module_platform_driver(tps68470_gpio_driver)
----
- drivers/gpio/Kconfig         | 6 +-----
- drivers/gpio/gpio-tps68470.c | 5 ++++-
- 2 files changed, 5 insertions(+), 6 deletions(-)
+Thank you for your patch.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 60d9374c72c0..3ac5860e0aeb 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1393,7 +1393,7 @@ config GPIO_TPS65912
- 	  This driver supports TPS65912 GPIO chip.
- 
- config GPIO_TPS68470
--	bool "TPS68470 GPIO"
-+	tristate "TPS68470 GPIO"
- 	depends on INTEL_SKL_INT3472
- 	help
- 	  Select this option to enable GPIO driver for the TPS68470
-@@ -1403,10 +1403,6 @@ config GPIO_TPS68470
- 	  input or output as appropriate, the sensor related GPIOs
- 	  are "output only" GPIOs.
- 
--	  This driver config is bool, as the GPIO functionality
--	  of the TPS68470 must be available before dependent
--	  drivers are loaded.
--
- config GPIO_TQMX86
- 	tristate "TQ-Systems QTMX86 GPIO"
- 	depends on MFD_TQMX86 || COMPILE_TEST
-diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
-index 423b7bc30ae8..aaddcabe9b35 100644
---- a/drivers/gpio/gpio-tps68470.c
-+++ b/drivers/gpio/gpio-tps68470.c
-@@ -154,5 +154,8 @@ static struct platform_driver tps68470_gpio_driver = {
- 	},
- 	.probe = tps68470_gpio_probe,
- };
-+module_platform_driver(tps68470_gpio_driver);
- 
--builtin_platform_driver(tps68470_gpio_driver)
-+MODULE_ALIAS("platform:tps68470-gpio");
-+MODULE_DESCRIPTION("GPIO driver for TPS68470 PMIC");
-+MODULE_LICENSE("GPL v2");
--- 
-2.33.1
+I'm afraid that the kernel rules do not allow accepting patches submitted
+under a nickname.
+
+Given that this patch is mostly data, not code, I can set
+myself as author, crediting you like this:
+
+Reported-and-tested-by: yuk7 <yukx00@gmail.com>
+
+And then merge it with me as the author, or you can resubmit
+it using "realname - real-last-name" in the author and
+signed-off-by fields (using the yukx00@gmail.com email address
+is fine).
+
+Please let me know how you want to proceed with this.
+
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index 17dd54d4b..e318b4094 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -773,6 +773,21 @@ static const struct ts_dmi_data predia_basic_data = {
+>  	.properties	= predia_basic_props,
+>  };
+>  
+> +static const struct property_entry rwc_nanote_p8_props[] = {
+> +	PROPERTY_ENTRY_U32("touchscreen-min-y", 46),
+> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
+> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-rwc-nanote-p8.fw"),
+> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +	{ }
+> +};
+> +
+> +static const struct ts_dmi_data rwc_nanote_p8_data = {
+> +	.acpi_name = "MSSL1680:00",
+> +	.properties = rwc_nanote_p8_props,
+> +};
+> +
+>  static const struct property_entry schneider_sct101ctm_props[] = {
+>  	PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
+>  	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+> @@ -1406,6 +1421,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+>  			DMI_EXACT_MATCH(DMI_BOARD_NAME, "0E57"),
+>  		},
+>  	},
+> +	{
+> +		/* RWC NANOTE P8 */
+> +		.driver_data = (void *)&rwc_nanote_p8_data,
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "Default string"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "AY07J"),
+> +			DMI_MATCH(DMI_PRODUCT_SKU, "0001")
+> +		},
+> +	},
+>  	{
+>  		/* Schneider SCT101CTM */
+>  		.driver_data = (void *)&schneider_sct101ctm_data,
+> 
 
