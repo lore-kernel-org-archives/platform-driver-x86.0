@@ -2,100 +2,117 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E6DC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jan 2022 15:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FCBC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jan 2022 15:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245717AbiAKPgu (ORCPT
+        id S1343634AbiAKPlt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Jan 2022 10:36:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43894 "EHLO
+        Tue, 11 Jan 2022 10:41:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349599AbiAKPgt (ORCPT
+        with ESMTP id S240342AbiAKPls (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Jan 2022 10:36:49 -0500
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7380C06173F
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 07:36:48 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id w26so5476801wmi.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 07:36:48 -0800 (PST)
+        Tue, 11 Jan 2022 10:41:48 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DD8EC06173F
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 07:41:48 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id n30-20020a17090a5aa100b001b2b6509685so6540964pji.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 07:41:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=EJ+Oq5F1/dMyzCOLj9sbLODEs7mhJAUL3TMU0NUxKDE=;
-        b=F5BdHot8Y/hFwA2TWNvmOJ/jhFLdGJFO7VEFSO9ZCaZXtuGKceACP06A9SyX3l3+NM
-         t5oYhYLIGxSD6oVpy26OSRQdwrcCxB7lb3qBjadSthbWh7MKK1Da2eTAcg8vVKuQ3be3
-         u/YZcgMGb/ufSWeIbVjny8GKWxP7OLeo37T2QFZorcwFWXDX2ZKslWFE9vLQ1xrwVWxN
-         kz7zxGRGmcut2QW9F9IHQDK1t3xu8msPt/znbxWJJsv7WB2RNSPQuCX1HH6OQAA3lxK6
-         RlPYIAHj1fYCaeaaKQiuPEQZgVke7sYNZc2+z+RnYb+83VSYMnQxGy7e/EXSgwUPQXZu
-         A1IQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=a1rcTVMhr+5X0OWDgh5EQnlakL72leepXFH5ExqfQJg=;
+        b=oDCuvDgyXkFKge6KeSC6QtHDPq7Ii3v7zLrazsIESG3AVZrt30TMPSUMVl8jgyige0
+         OWSjHBu0kRny9FA36J5TYvFiTbt2EbTKhn+skhMbMPqMinjggdOEsGlUwSbIcympq5/5
+         tkawaUR51fMZHCOuWBI4aQauoOrSMu+lJsnHaiQSW2CiBHcjtLM5PjqJWmGdzX9rtQ4P
+         sDpD5kpHUeAhJKjEr5MfR6ApvjstOPw9CH81/JE5dvtP/EJD9+NPawI/X9GVIjcfNav9
+         86zdaJ669ro8okQCkvCirimS5gbvpXCoLi7YOZBzgpRYgAna+zmK1c9+CZyTZzh1O7q1
+         9eKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=EJ+Oq5F1/dMyzCOLj9sbLODEs7mhJAUL3TMU0NUxKDE=;
-        b=bSqp+9w+npFpwsM5UG2rpw0GBfgLC7P0M0HS6IUG9HktI8NkpvH8NYIEoxFzw9+L/G
-         87URQcA/IZIez6NzcJ22hXqq++W+2CLIFvi9E/S0W0ZA7T01atuJkRK9XKCsM5YzLFve
-         MAtOJtylGb9EqA+SL2ave7KKlQVwCOVF4S4DenFD4yHdBFGf9RWuzOa3nmjRuNlzLBv7
-         PMEqAg1mrtG/RWWjwgzX6oCyxzMmIGHNOLY14ZeKtwyFBE59G6g4z6hmgivtClvyJt6A
-         Vq51jfADAFPpx4Dr450InKwq2Fg3SPIV7ORr1Mp3I1eJCeuSSrT3sd7PBwWhBpNSo2IV
-         zYWw==
-X-Gm-Message-State: AOAM533w8f1s7GcFQGs5j1RTrwPxhg6BzUlcG5UQlvJVE19pgaOIrmCd
-        5B/6bx3SITQY7qvH4jFdWyvbGlnmfuXVSaiEgGlZm8/bXitc7w==
-X-Google-Smtp-Source: ABdhPJwXB6SZDsUItRQWgY+F8/IS+3XBi3IVLbYrSJ95Z4gFR8858rgZdvKAgNt8SLRAKieUQiegI45RzlPlZ77WQIM=
-X-Received: by 2002:a1c:f613:: with SMTP id w19mr2955809wmc.58.1641915407370;
- Tue, 11 Jan 2022 07:36:47 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=a1rcTVMhr+5X0OWDgh5EQnlakL72leepXFH5ExqfQJg=;
+        b=fKLz9JaW5S/q9nk23pYT/6TgOjocdGf00EUJ0Svlqb3sFg4g0/CcOfjsod5HlaP46l
+         ejeuXw9WRm+iUC0eK+1xlLx3hXULPFq3b8bNAWYYv8YyMOozolt3oA38tAj9omKusVcU
+         mzQZS9miNkHowGHp5RyDJhp8nshznIWG7ooQMgmkR5uXEAJD2ZlZQG1XlojYUv6pp2qH
+         yd4cUtgx6UjsFCF6HiA6se1xURiK91sr1TTLFsHZHl2ItkFFoFzaUgWtoBwGHhTvJ+u/
+         1Kp0nAk6kBD3CKTY8x8iKBNHtHBOYHRsMjjx/Ycvuh/qCUnHE98GQHjObj1J/xZrt0fh
+         jeUQ==
+X-Gm-Message-State: AOAM533UVHcX2x0yjSFv8NfyG8kUplm9KudLAHTfLTO70zBN4AfhA0cT
+        Ghe0+0GlR/J+arMvTwpvN/0=
+X-Google-Smtp-Source: ABdhPJwKKw+Nnz/FXBxjde4ZDb6ld4pL1YEWPq60LHFOlxBiPv5d9nFnNSPOaGjm8k4rXlb8J3mVww==
+X-Received: by 2002:a63:3e02:: with SMTP id l2mr4460939pga.412.1641915707111;
+        Tue, 11 Jan 2022 07:41:47 -0800 (PST)
+Received: from localhost.localdomain (111.210.49.163.rev.vmobile.jp. [163.49.210.111])
+        by smtp.gmail.com with ESMTPSA id y64sm8600078pgy.12.2022.01.11.07.41.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jan 2022 07:41:46 -0800 (PST)
+From:   yuk7 <yukx00@gmail.com>
+To:     hdegoede@redhat.com
+Cc:     platform-driver-x86@vger.kernel.org, yuk7 <yukx00@gmail.com>
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the RWC NANOTE P8 AY07J 2-in-1
+Date:   Wed, 12 Jan 2022 00:40:21 +0900
+Message-Id: <20220111154019.4599-1-yukx00@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220104081920.1794275-1-yukx00@gmail.com>
+References: <20220104081920.1794275-1-yukx00@gmail.com>
 MIME-Version: 1.0
-From:   Matt DeVillier <matt.devillier@gmail.com>
-Date:   Tue, 11 Jan 2022 09:36:36 -0600
-Message-ID: <CAFTm+6Aa4_zrt76Jb0=8MoGWnUVNpiuT9946R8wvEW8rx47mrA@mail.gmail.com>
-Subject: [PATCH] platform/chrome: cros_ec_lpc: Fix DMI matching for newer
- Chrome devices
-To:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Since 2017, Chrome devices running custom coreboot firmware default
-to using 'Google' as the system vendor, vs 'GOOGLE' for older
-devices. Add a DMI match to cover this case as well.
+Add touchscreen info for RWC NANOTE P8 (AY07J) 2-in-1.
 
-Test: cros_ec_lpc successfully attaches to Chromebox running
-custom coreboot firmware with bios vendor 'coreboot' and
-system vendor 'Google'.
-
-Signed-off-by: Matt DeVillier <matt.devillier@gmail.com>
+Signed-off-by: Yuka Kawajiri <yukx00@gmail.com>
 ---
-drivers/platform/chrome/cros_ec_lpc.c | 8 +++++++-
-1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/platform/chrome/cros_ec_lpc.c
-b/drivers/platform/chrome/cros_ec_lpc.c
-index d6306d2a096f..ae366a34bb63 100644
---- a/drivers/platform/chrome/cros_ec_lpc.c
-+++ b/drivers/platform/chrome/cros_ec_lpc.c
-@@ -465,13 +465,19 @@ static const struct dmi_system_id
-cros_ec_lpc_dmi_table[] __initconst = {
-* If the box is running custom coreboot firmware then the
-* DMI BIOS version string will not be matched by "Google_",
-* but the system vendor string will still be matched by
-- * "GOOGLE".
-+ * "GOOGLE" or "Google".
-*/
-.matches = {
-DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
-DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
-},
-},
-+ {
-+ .matches = {
-+ DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
-+ DMI_MATCH(DMI_SYS_VENDOR, "Google"),
-+ },
-+ },
-{
-/* x86-link, the Chromebook Pixel. */
-.matches = {
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 17dd54d4b..e318b4094 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -773,6 +773,21 @@ static const struct ts_dmi_data predia_basic_data = {
+ 	.properties	= predia_basic_props,
+ };
+ 
++static const struct property_entry rwc_nanote_p8_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 46),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-rwc-nanote-p8.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	{ }
++};
++
++static const struct ts_dmi_data rwc_nanote_p8_data = {
++	.acpi_name = "MSSL1680:00",
++	.properties = rwc_nanote_p8_props,
++};
++
+ static const struct property_entry schneider_sct101ctm_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+@@ -1406,6 +1421,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "0E57"),
+ 		},
+ 	},
++	{
++		/* RWC NANOTE P8 */
++		.driver_data = (void *)&rwc_nanote_p8_data,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "Default string"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "AY07J"),
++			DMI_MATCH(DMI_PRODUCT_SKU, "0001")
++		},
++	},
+ 	{
+ 		/* Schneider SCT101CTM */
+ 		.driver_data = (void *)&schneider_sct101ctm_data,
 -- 
-2.32.0
+2.34.1
+
