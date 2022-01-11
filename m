@@ -2,79 +2,73 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895B1C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jan 2022 09:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDCDC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jan 2022 09:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349238AbiAKJUk (ORCPT
+        id S236692AbiAKJn5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Jan 2022 04:20:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:24911 "EHLO
+        Tue, 11 Jan 2022 04:43:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:43722 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349227AbiAKJUi (ORCPT
+        by vger.kernel.org with ESMTP id S229629AbiAKJn4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Jan 2022 04:20:38 -0500
+        Tue, 11 Jan 2022 04:43:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641892838;
+        s=mimecast20190719; t=1641894236;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uJ1YqPO7Xit3OrTXhT/TYDES9bJJk2fXlWiLmQ/iCOQ=;
-        b=irrRj5IBTgFCw1FGWFFAsRdn+4KcNsPgfKkekt5xbxexi2V761sdKHmFuY+wy/FynwogEg
-        LYJck1MR9YSQ4VW423NYgx4ruef5ACM76JhJVOuwnCMw5HPkvznR0Qe8yxQ/yC/Z6OFYx6
-        m/PnRIxsBWWZWc2VxYy+aEfSkZsu+NY=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=MeDN7L5fvXPYD1P5CV1dsnYsftRZGrUD7fGFef320Qg=;
+        b=AtxKpnpkcNOCfECtoF0jM9bi8UHtPkj19Skmk43dUe+r08NqSOqb/bXG/6gp8vvS/gun8s
+        ++qUHXgIgFKDOqtFgGIwfixhtDLRTUVCQvfgIErTjsdxSO+7aJcSCZcVBCi39my2dlm975
+        fcIX/WnJz7aZx2RL73MkFf3Bo3y98YQ=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-381-9JsBrWdaOCSu1hIf5oSucA-1; Tue, 11 Jan 2022 04:20:37 -0500
-X-MC-Unique: 9JsBrWdaOCSu1hIf5oSucA-1
-Received: by mail-ed1-f70.google.com with SMTP id eg24-20020a056402289800b003fe7f91df01so3737694edb.6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 01:20:36 -0800 (PST)
+ us-mta-144-j9Dn-jDsOE68bLkn9tYuMQ-1; Tue, 11 Jan 2022 04:43:55 -0500
+X-MC-Unique: j9Dn-jDsOE68bLkn9tYuMQ-1
+Received: by mail-ed1-f72.google.com with SMTP id eg24-20020a056402289800b003fe7f91df01so3792116edb.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 01:43:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=uJ1YqPO7Xit3OrTXhT/TYDES9bJJk2fXlWiLmQ/iCOQ=;
-        b=zrIMV9qMaIO++2O3Nsx/r636kRy/uLTx39yowx1+LpxxXl246HAuyxISUykF/r6uuO
-         LPtdJiPk9o1sVJQ4+X0JD0Mg/pXWNedRYsBPr79aWCOANEz0ie1z2YvVMT6dgOZJEFal
-         2hmqob/5gCxkdeLSwy6K32QZQVRoi40zJVAZbBelIb1f7OPnOHo9Rj2zc8zMmQSm/YjD
-         VJeLNOiLvaC0rUFhZJmEk17BeU52TCeS/tNoLv4gi4KeUrdo4IVOiSx7JjxIqkvUF+Vc
-         +SfIE6kAKHvtnmBxLWMW/IQZL5Vk+N6v99SP1hTx4TejL7v3lEXewlW9qjN6lx7I8UJH
-         +d+Q==
-X-Gm-Message-State: AOAM533+O4tGAlZWO9VlJDTk80a5TPmHareINcdFc23Epqw3C7DaGW7t
-        UloFHeabz+jWaO82RpRD1rSCGfBKDwBOOvLuYB7RVR2mgcylsu+aYb6ug4jFDVQn5sj1rL/A1TY
-        q0AVCP5PlxWflUvq3q0c2cZ0SMM0mtx1RMg==
-X-Received: by 2002:a17:906:4fd6:: with SMTP id i22mr2843870ejw.70.1641892835805;
-        Tue, 11 Jan 2022 01:20:35 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwXuRWJ4cHHSS27BhJ/iVwz/12FvR8jmZfdmnIZZPxYco9NzHX7vZnxSjKW05qyZhnGf2vOKg==
-X-Received: by 2002:a17:906:4fd6:: with SMTP id i22mr2843853ejw.70.1641892835568;
-        Tue, 11 Jan 2022 01:20:35 -0800 (PST)
+        bh=MeDN7L5fvXPYD1P5CV1dsnYsftRZGrUD7fGFef320Qg=;
+        b=J/iZ3ww6ihhhui0TF7pYaky+tlDm1YEOr83VW+VzSV2KE/GWbzRtAsSgzOFz9wPUJy
+         NviC/7yGna0K1zTvrSVz9//9+X/V4LMfAtPk9vYm96Ik+wWhE1Sh/3RKGVvod+kROF57
+         UByq2tTEHwF2P176RkopeFSN9VU4ivMbSM+0t3iu4ZXHbqFkY5M1p02nf7V5z3/yt8nX
+         EVPyAG6F5DEpdb89O74jE2PK0752levWhmrNB/gsDDednN33RXEeQmeiH2sj/fh9jGCn
+         TrrsyAjK4djDXR2TL4tsutOnYlXb7JhaWHJMS9nhC1A0D6gkdiWc7S3tFxGU0wWpgX+X
+         ixSw==
+X-Gm-Message-State: AOAM532FQd+/6GNaupAZ7/fiMHxokupB2uVuJPUZkpXIL3Jn3UnQvnF0
+        x067OQ95YfDze2x+TqDzAvZSJy9ymvGzbrDRcfWK6QZCd9QWnGtELljLA07v8FC7HT554QHs7Ix
+        DTO3VOhHFWRB4ffI5GXFQ3Hb5AOMTRfmPMA==
+X-Received: by 2002:a17:907:8687:: with SMTP id qa7mr1068004ejc.106.1641894233853;
+        Tue, 11 Jan 2022 01:43:53 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxD+7pzCYxoV2whYjacS3F5p/nBNdzHqazcWAamO75H6r64ROuBY/4Nq2pGN9h7TigyA/CmNw==
+X-Received: by 2002:a17:907:8687:: with SMTP id qa7mr1067991ejc.106.1641894233684;
+        Tue, 11 Jan 2022 01:43:53 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id kv11sm2255731ejc.156.2022.01.11.01.20.35
+        by smtp.gmail.com with ESMTPSA id cn9sm4769577edb.88.2022.01.11.01.43.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jan 2022 01:20:35 -0800 (PST)
-Message-ID: <a066f0bc-7b27-771c-544d-cacd15aa2374@redhat.com>
-Date:   Tue, 11 Jan 2022 10:20:34 +0100
+        Tue, 11 Jan 2022 01:43:53 -0800 (PST)
+Message-ID: <3be9c77e-ae9d-f3c5-39c5-34806e100f6d@redhat.com>
+Date:   Tue, 11 Jan 2022 10:43:52 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH v2 6/6] ACPI: bus-multi-instantiate: Add SPI support
+Subject: Re: [PATCH 1/3] platform/x86: x86-android-tablets: Add support for
+ disabling ACPI _AEI handlers
 Content-Language: en-US
-To:     Stefan Binding <sbinding@opensource.cirrus.com>,
-        'Mark Brown' <broonie@kernel.org>,
-        "'Rafael J . Wysocki'" <rafael@kernel.org>,
-        'Len Brown' <lenb@kernel.org>,
-        'Mark Gross' <markgross@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@opensource.cirrus.com
-References: <20211210154050.3713-1-sbinding@opensource.cirrus.com>
- <20211210154050.3713-7-sbinding@opensource.cirrus.com>
- <c311642f-38ab-4914-cf92-852e6a20cfc9@redhat.com>
- <00af01d8062f$75aed010$610c7030$@opensource.cirrus.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>,
+        platform-driver-x86@vger.kernel.org
+References: <20220110103952.48760-1-hdegoede@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <00af01d8062f$75aed010$610c7030$@opensource.cirrus.com>
+In-Reply-To: <20220110103952.48760-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -83,208 +77,109 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/10/22 15:36, Stefan Binding wrote:
-> Hi,
+On 1/10/22 11:39, Hans de Goede wrote:
+> Some of the broken DSDTs on these devices often also include broken / wrong
+> _AEI (ACPI Event Interrupt) handlers, which can cause e.g. interrupt storms
+> by listening to a floating GPIO pin.
 > 
->> -----Original Message-----
->> From: Hans de Goede <hdegoede@redhat.com>
->> Sent: 21 December 2021 18:32
->> To: Stefan Binding <sbinding@opensource.cirrus.com>; Mark Brown
->> <broonie@kernel.org>; Rafael J . Wysocki <rafael@kernel.org>; Len Brown
->> <lenb@kernel.org>; Mark Gross <markgross@kernel.org>
->> Cc: linux-kernel@vger.kernel.org; linux-spi@vger.kernel.org; linux-
->> acpi@vger.kernel.org; platform-driver-x86@vger.kernel.org;
->> patches@opensource.cirrus.com
->> Subject: Re: [PATCH v2 6/6] ACPI: bus-multi-instantiate: Add SPI support
+> Add support for disabling these and disable them on the Asus ME176C and
+> TF103C tablets.
 > 
->>> +	ret = bmi_spi_count_resources(adev);
->>> +	if (ret <= 0)
->>> +		return ret;
->>> +	count = ret;
->>
->> Ok, so why not do the following here instead (and drop a whole bunch of
->> functions above):
->>
->> 	ret = acpi_dev_get_resources(adev, &r, bmi_spi_count, &count);
->> 	if (ret < 0)
->> 		return ret;
->>
->> 	if (count <= 0) {
->> 		acpi_dev_free_resource_list(&r);
->> 		return count;
->> 	}
->>
->> 	/* Note we are not freeing the resource list yet here !!! */
->>
->>> +
->>> +	bmi->spi_devs = devm_kcalloc(dev, count, sizeof(*bmi->spi_devs),
->> GFP_KERNEL);
->>> +	if (!bmi->spi_devs)
->>> +		return -ENOMEM;
->>> +
->>> +	acpi_data = bmi_spi_get_resources(dev, adev, count);
->>> +	if (!acpi_data)
->>> +		return -ENOMEM;
->>
->> Remove the bmi_spi_get_resources() call here.
->>
->>> +
->>> +	for (i = 0; i < count && inst_array[i].type; i++) {
->>
->> Write a new:
->>
->> int bmi_get_spi_resource_by_index(list_head *resource_list, struct
->> acpi_resource_spi_serialbus *sb_ret, int index)
->> {}
->>
->> Helper which walks the list and fills in *sb_ret with the Nth (matching index)
->> SpiSerialBus resource found in the
->> list.
->>
->> And then do:
->>
->> 		ret = bmi_get_spi_resource_by_index(&r, &sb, i);
->> 		if (ret)
->> 			return ret;
->>
->> 		ctrl =
->> bmi_find_spi_controller(sb.resource_source.string_ptr);
->>
->>
->>> +		ctlr = bmi_find_spi_controller(acpi_data-
->>> acpi_data[i].resource_source);
->>> +		if (!ctlr) {
->>> +			ret = -EPROBE_DEFER;
->>> +			goto error;
->>> +		}
->>> +
->>> +		spi_dev = spi_alloc_device(ctlr);
->>> +		if (!spi_dev) {
->>> +			dev_err(&ctlr->dev, "failed to allocate SPI device for
->> %s\n",
->>> +				dev_name(&adev->dev));
->>> +			ret = -ENOMEM;
->>> +			goto error;
->>> +		}
->>> +
->>> +		strscpy(spi_dev->modalias, inst_array[i].type,
->> sizeof(spi_dev->modalias));
->>> +
->>
->> And replace all the "acpi_data->acpi_data[i].sb." reference below with
->> simple "sb.".
->>
->>
->>> +		if (ctlr->fw_translate_cs) {
->>> +			ret = ctlr->fw_translate_cs(ctlr,
->>> +						    acpi_data-
->>> acpi_data[i].sb.device_selection);
->>> +			if (ret < 0) {
->>> +				spi_dev_put(spi_dev);
->>> +				goto error;
->>> +			}
->>> +			spi_dev->chip_select = ret;
->>> +		} else {
->>> +			spi_dev->chip_select = acpi_data-
->>> acpi_data[i].sb.device_selection;
->>> +		}
->>> +
->>> +		spi_dev->max_speed_hz = acpi_data-
->>> acpi_data[i].sb.connection_speed;
->>> +		spi_dev->bits_per_word = acpi_data-
->>> acpi_data[i].sb.data_bit_length;
->>> +
->>> +		if (acpi_data->acpi_data[i].sb.clock_phase ==
->> ACPI_SPI_SECOND_PHASE)
->>> +			spi_dev->mode |= SPI_CPHA;
->>> +		if (acpi_data->acpi_data[i].sb.clock_polarity ==
->> ACPI_SPI_START_HIGH)
->>> +			spi_dev->mode |= SPI_CPOL;
->>> +		if (acpi_data->acpi_data[i].sb.device_polarity ==
->> ACPI_SPI_ACTIVE_HIGH)
->>> +			spi_dev->mode |= SPI_CS_HIGH;
->>> +
->>> +		ret = bmi_get_irq(pdev, adev, &inst_array[i]);
->>> +		if (ret < 0) {
->>> +			spi_dev_put(spi_dev);
->>> +			goto error;
->>> +		}
->>> +		spi_dev->irq = ret;
->>> +
->>> +		snprintf(name, sizeof(name), "%s-%s-%s.%d",
->> dev_name(&ctlr->dev), dev_name(dev),
->>> +			 inst_array[i].type, i);
->>> +		spi_dev->dev.init_name = name;
->>> +
->>> +		ret = spi_add_device(spi_dev);
->>> +		if (ret) {
->>> +			dev_err(&ctlr->dev, "failed to add SPI device %s from
->> ACPI: %d\n",
->>> +				dev_name(&adev->dev), ret);
->>> +			spi_dev_put(spi_dev);
->>> +			goto error;
->>> +		}
->>> +
->>> +		dev_dbg(dev, "SPI device %s using chip select %u", name,
->> spi_dev->chip_select);
->>> +
->>> +		bmi->spi_devs[i] = spi_dev;
->>> +		bmi->spi_num++;
->>> +	}
->>> +
->>> +	if (bmi->spi_num < count) {
->>> +		dev_err(dev, "Error finding driver, idx %d\n", i);
->>> +		ret = -ENODEV;
->>> +		goto error;
->>> +	}
->>> +
->>> +	dev_info(dev, "Instantiate %d SPI devices.\n", bmi->spi_num);
->>
->> And here replace the bmi_spi_res_free(acpi_data); call in both exit paths
->> with:
->> acpi_dev_free_resource_list(&r); .
->>
->> To me this way, simply using the already allocated resources from the list,
->> rather then making a temp copy of them and throwing that away seems like
->> a simpler solution ?
->>
->> If you go this route, please also remove the struct bmi_spi_acpi and
->> struct bmi_spi_sb_acpi data types which you now no longer need.
->>
-> 
-> I tried to implement this idea, and reuse the resource list, but I hit an issue. 
-> The resources saved in the list are not "struct acpi_resource", but instead the 
-> generic "struct resource".
-> We need the acpi_resource structure to pull the parameters from to be able to
-> create the spi devices.
-> As far as I know there is no way to convert the "struct resource" into a
-> "struct acpi_resource". Is there another way to do this?
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Ugh, you're right. Sorry about that. I still don't realy like the code
-from your original v2 patch for this.
-
-So maybe this comment from my second reply on this patch can help
-clean things up:
-
-"So thinking a bit more about this, then looking up the nth SpiSerialBus
-resource, and then turning that into a spi_client is something which
-the SPI core ACPI code should already be doing for index==0. So I think
-that you should be able to modify the SPI core ACPI code to take index
-as a parameter and then have it export a helper for this which you
-can use rather then duplicate the SPI core ACPI code  ? Note this is
-also what the I2C code is already doing.
-
-And if you go that route you may also want to consider to add the SPI
-equivalent of the i2c_acpi_client_count() helper."
-
-Maybe that is a possible route to go to clean this up?
-
-Note there are also 2 other small remarks pending:
-
-1. My comment about adding the _t_ at the end of detect
-2. + Mark's remark about patch 3/6 missing your Signed-off-by.
+I've added this series to my review-hans branch now, I will rebase this
+on top of 5.17-rc1 once it out and then push it to for-next.
 
 Regards,
 
 Hans
+
+> ---
+>  drivers/platform/x86/x86-android-tablets.c | 23 ++++++++++++++++++++--
+>  1 file changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/x86-android-tablets.c b/drivers/platform/x86/x86-android-tablets.c
+> index 3ba63ad91b28..d125d7a5189a 100644
+> --- a/drivers/platform/x86/x86-android-tablets.c
+> +++ b/drivers/platform/x86/x86-android-tablets.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/string.h>
+>  /* For gpio_get_desc() which is EXPORT_SYMBOL_GPL() */
+>  #include "../../gpio/gpiolib.h"
+> +#include "../../gpio/gpiolib-acpi.h"
+>  
+>  /*
+>   * Helper code to get Linux IRQ numbers given a description of the IRQ source
+> @@ -47,7 +48,7 @@ struct x86_acpi_irq_data {
+>  	int polarity; /* ACPI_ACTIVE_HIGH / ACPI_ACTIVE_LOW / ACPI_ACTIVE_BOTH */
+>  };
+>  
+> -static int x86_acpi_irq_helper_gpiochip_find(struct gpio_chip *gc, void *data)
+> +static int gpiochip_find_match_label(struct gpio_chip *gc, void *data)
+>  {
+>  	return gc->label && !strcmp(gc->label, data);
+>  }
+> @@ -73,7 +74,7 @@ static int x86_acpi_irq_helper_get(const struct x86_acpi_irq_data *data)
+>  		return irq;
+>  	case X86_ACPI_IRQ_TYPE_GPIOINT:
+>  		/* Like acpi_dev_gpio_irq_get(), but without parsing ACPI resources */
+> -		chip = gpiochip_find(data->chip, x86_acpi_irq_helper_gpiochip_find);
+> +		chip = gpiochip_find(data->chip, gpiochip_find_match_label);
+>  		if (!chip) {
+>  			pr_err("error cannot find GPIO chip %s\n", data->chip);
+>  			return -ENODEV;
+> @@ -143,6 +144,7 @@ struct x86_serdev_info {
+>  };
+>  
+>  struct x86_dev_info {
+> +	char *invalid_aei_gpiochip;
+>  	const char * const *modules;
+>  	struct gpiod_lookup_table **gpiod_lookup_tables;
+>  	const struct x86_i2c_client_info *i2c_client_info;
+> @@ -317,6 +319,7 @@ static const struct x86_dev_info asus_me176c_info __initconst = {
+>  	.serdev_count = ARRAY_SIZE(asus_me176c_serdevs),
+>  	.gpiod_lookup_tables = asus_me176c_gpios,
+>  	.modules = bq24190_modules,
+> +	.invalid_aei_gpiochip = "INT33FC:02",
+>  };
+>  
+>  /* Asus TF103C tablets have an Android factory img with everything hardcoded */
+> @@ -417,6 +420,7 @@ static const struct x86_dev_info asus_tf103c_info __initconst = {
+>  	.pdev_count = ARRAY_SIZE(int3496_pdevs),
+>  	.gpiod_lookup_tables = asus_tf103c_gpios,
+>  	.modules = bq24190_modules,
+> +	.invalid_aei_gpiochip = "INT33FC:02",
+>  };
+>  
+>  /*
+> @@ -795,6 +799,7 @@ static __init int x86_android_tablet_init(void)
+>  {
+>  	const struct x86_dev_info *dev_info;
+>  	const struct dmi_system_id *id;
+> +	struct gpio_chip *chip;
+>  	int i, ret = 0;
+>  
+>  	id = dmi_first_match(x86_android_tablet_ids);
+> @@ -803,6 +808,20 @@ static __init int x86_android_tablet_init(void)
+>  
+>  	dev_info = id->driver_data;
+>  
+> +	/*
+> +	 * The broken DSDTs on these devices often also include broken
+> +	 * _AEI (ACPI Event Interrupt) handlers, disable these.
+> +	 */
+> +	if (dev_info->invalid_aei_gpiochip) {
+> +		chip = gpiochip_find(dev_info->invalid_aei_gpiochip,
+> +				     gpiochip_find_match_label);
+> +		if (!chip) {
+> +			pr_err("error cannot find GPIO chip %s\n", dev_info->invalid_aei_gpiochip);
+> +			return -ENODEV;
+> +		}
+> +		acpi_gpiochip_free_interrupts(chip);
+> +	}
+> +
+>  	/*
+>  	 * Since this runs from module_init() it cannot use -EPROBE_DEFER,
+>  	 * instead pre-load any modules which are listed as requirements.
+> 
 
