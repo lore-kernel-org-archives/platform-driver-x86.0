@@ -2,41 +2,41 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625C0C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jan 2022 13:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458FDC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jan 2022 14:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240914AbiAKNqu (ORCPT
+        id S235352AbiAKOB5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Jan 2022 08:46:50 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:43596 "EHLO
+        Tue, 11 Jan 2022 09:01:57 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:50676 "EHLO
         dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240678AbiAKNqu (ORCPT
+        with ESMTP id S238129AbiAKOB5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Jan 2022 08:46:50 -0500
+        Tue, 11 Jan 2022 09:01:57 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 38E876165F
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 13:46:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9F361C36B13
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 13:46:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 19F1961677
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 14:01:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 82E33C36AFD
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 14:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641908809;
-        bh=StP8K7UQr/ITEbQjryYnjCMgg3vhjVg/m/hm6WUVLnw=;
+        s=k20201202; t=1641909716;
+        bh=6BSBjt3h3a3qxivq1rbnH+HpAI81/Umr6zukYNSBFUo=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=S6i3vG90Lfo1aQqCgc3ypg7J9vSFEJS6b0NDG218m5Tgz5bZZ0npMLGf0ObIVvgYx
-         ZVgpBrfkO1mYfK8AtSQFxkuNSK7w5ID9v8KzhbNctKcwGwPZ1laIsk0hbtyoC2yN4Z
-         CxhBlKgp5jYqRCX1gxNzn5CmdLk9/l7tj03nqarwszkdbuIPTN4iXQod6IfgLxtQtz
-         CPK3p0BTrTD/wDQp3pss+xJ4DV2fhCrDp31XibDffxCjHoLkZ1BhyyOFmq9vANWyuk
-         fGffTb8s7HdpMDuekCbjcrmPMYCN8dKuZxsziSZDQY4ZzwHmWZYPZsxnCGmfTdeu5Q
-         V9Pmy3+Tapb9Q==
+        b=oQqr+5HDsXYGoFvNwjFZY7f95/4TSaOh9PTV2S69Fd5xfxiacmrr+H1Ohv4MCuFZx
+         l5b0yD0xI/nFnJWc3nhVb/KvNHn9D2brwg3CFVFBTSF62xrnErgjnMHKZaHCEvtlz5
+         TIm4VV+XwhsZCHZoEix5IQ/DieQ1J0A40mhJyjTXUySu2ha4eLpsaMBVWL4sRzWuy6
+         B2Vt8ZRguOSBauvWtObrOghZVj9wBu/559+nSYT0tSdcnEJgOVwdp5AtS6yDAAVVFe
+         kytP/X+P3obBsJ4Zop1rIMoyFGeb3HI5kVP1b+2H37u6bVVBmhZQcPBcT5I/KL5YR3
+         rVwH5jiM/TTlA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 8DDBFC05FCD; Tue, 11 Jan 2022 13:46:49 +0000 (UTC)
+        id 73AA7C05FD1; Tue, 11 Jan 2022 14:01:56 +0000 (UTC)
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date:   Tue, 11 Jan 2022 13:46:47 +0000
+Date:   Tue, 11 Jan 2022 14:01:54 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -45,14 +45,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: eugene.shalygin@gmail.com
+X-Bugzilla-Who: savicaleksa83@gmail.com
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-3zZyn2KRKO@https.bugzilla.kernel.org/>
+Message-ID: <bug-204807-215701-mkPXbHm0LS@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,11 +66,9 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #207 from Eugene Shalygin (eugene.shalygin@gmail.com) ---
-(In reply to Aleksa Savic from comment #206)
-> Not sure what's up with Tsensor1.
-
-That's the blank value.
+--- Comment #208 from Aleksa Savic (savicaleksa83@gmail.com) ---
+That's what I suspected, thanks for confirming. Do I need to check anything
+else, is it good for addition?
 
 --=20
 You may reply to this email to add a comment.
