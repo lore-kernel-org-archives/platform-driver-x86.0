@@ -2,138 +2,142 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2AFC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jan 2022 11:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76052C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jan 2022 11:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238063AbiAKLKI (ORCPT
+        id S238521AbiAKLNX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Jan 2022 06:10:08 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32892 "EHLO
+        Tue, 11 Jan 2022 06:13:23 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:56333 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238050AbiAKLKH (ORCPT
+        by vger.kernel.org with ESMTP id S238485AbiAKLNW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Jan 2022 06:10:07 -0500
+        Tue, 11 Jan 2022 06:13:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641899406;
+        s=mimecast20190719; t=1641899601;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GK0syOgD4cEhkoYpGBGfx9XA+GWyfSHbLSt1HeHK17Q=;
-        b=Ff5YktyVzOaOgMMYLoT+bk+wd3FeKuNp3X3uJgsD7pUcK5eObjb8fgYKRmovCSYBH4Woke
-        Op81HPbO3AWgxANu7t7UoLBXSF0n0nvkEJMbGQXpBDurX7E2RDXz44bjMW9MsFC5YN3k8c
-        ia3ZtxIrj+m3RXPZOn39L+If2SChmXg=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=CJn1ZsUO+57yCIA3zW0DEiH6tI8kFy3djSlOrMnh6YQ=;
+        b=FCvo1UeVS2VWiqMeRDBar5MRwdL0V9A0K99kYOSgPEOR3G3Wk2iCt25o9PafHjtF+b+1iz
+        yPI+egJRYH/X+IGEvDEA2ASz3HT6gb4XsKHXCM57k28V0n5uDSPJvCnxfoxHHkxbl+QhZZ
+        Xn8nGdt+q9rSwltxLWV6xDa0k7FWLZI=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-668-IBVT1Uq2OyyyWqAAqszQ0w-1; Tue, 11 Jan 2022 06:09:46 -0500
-X-MC-Unique: IBVT1Uq2OyyyWqAAqszQ0w-1
-Received: by mail-ed1-f70.google.com with SMTP id y18-20020a056402271200b003fa16a5debcso12975850edd.14
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 03:09:46 -0800 (PST)
+ us-mta-659-7lVQgMWkPG2eA6JKwj1xkw-1; Tue, 11 Jan 2022 06:13:20 -0500
+X-MC-Unique: 7lVQgMWkPG2eA6JKwj1xkw-1
+Received: by mail-pj1-f69.google.com with SMTP id v8-20020a17090a778800b001b2e6d08cd1so3164364pjk.8
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2022 03:13:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=GK0syOgD4cEhkoYpGBGfx9XA+GWyfSHbLSt1HeHK17Q=;
-        b=23mReueGB5OLn6VbHJw81JjNMGxA1ewPn3Yk8F58cPtV13EDcGQujskSi7w4rTwPoS
-         A7jeqjjW1Ez7wwKRetjgHNLUvmqUAhbmCmGfpORgEI28c4solrf5xS1VoggRT73+QGai
-         mcZXtVkA+McMdkM/mLT/eduJwYjyonuhKHPcGxDrpFaHbItIcXheWLLBJI2arl0+Vej8
-         d+tki/j1IpoB3PEXLGZw+bbgHK45oLDnfLtA6+eUs6ZUR9oJHErHG5gNRe45QZ+zMA3C
-         lcOyh6AjQ9n9Dh/N2B4GdYg+qCxCGRTENImQ95FfGuAOBkdwZzohMH5Fi30lGYiJs1Hf
-         qxkQ==
-X-Gm-Message-State: AOAM5300vu/9fLKjScKJnxz6zokaRmMtCT3HlIQv8nF9mmX15KZA5WZG
-        1F7GvVFQSNFLoFb55iL+VEr4dg6RVv2hb9nbaK33WcXVY+wU2EPN7JrBRLESaEgubS5fCei37cQ
-        A5hqa+Z/I8URbFWMGe5Ow7HCJccnvsEpIzQ==
-X-Received: by 2002:a05:6402:11cf:: with SMTP id j15mr3938128edw.220.1641899385409;
-        Tue, 11 Jan 2022 03:09:45 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzF41CmUVGmRg3fQrUe/+R7/CvyVA0GZULagxPwJfNwQpdTC3khJv8ySRvPBhSpgu/rv5XUQA==
-X-Received: by 2002:a05:6402:11cf:: with SMTP id j15mr3938115edw.220.1641899385188;
-        Tue, 11 Jan 2022 03:09:45 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id 21sm3441507ejz.24.2022.01.11.03.09.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jan 2022 03:09:44 -0800 (PST)
-Message-ID: <aceddce7-6c43-967c-fadd-fa307068e916@redhat.com>
-Date:   Tue, 11 Jan 2022 12:09:44 +0100
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CJn1ZsUO+57yCIA3zW0DEiH6tI8kFy3djSlOrMnh6YQ=;
+        b=BldYMtYDa1sbJS4hW4AN+j3dkWOHharrMgokZcTGrgFTiI1iJuOOm1YCufpqpvs0q7
+         jI0AROfbQWB1N69P/Tn7qwpzTHhIPwdaxp6Ack/4apRs2uia9gmACSfXYaSBiUZOnmsi
+         ZxauvqQhPGQtmq/hbaehx/go/En3RIGoIDlVDKhrOJ4MFMuAZzRkdXcE/JmdOiXCV6Vd
+         +NfRH7Q65fsELQPvCxNMkMwhs4gUQogVOr/QSgduDb9YxW0uL0pP8mTXvbkoi9mxGdo4
+         YSbRsWMkrnb0c3E1toqYExG6DPAJLNNiT0Ac7IGXDPc5gIdkA+pLzduK4CbVO3+PN+Nk
+         apWg==
+X-Gm-Message-State: AOAM533Mt7syz3J4S/xrWDeq+pqefXzmoMFHCsPcLPX6w0SI2bfJBKV1
+        LtvlkkzZR4wZ9LEXuWcRBAjQPIIK1886gbvRjLRWk6y2AnLvF9GyBWvTQ6zKHgBSWndVvRTHIBM
+        XHd8Lzv1GAxvfcMZI2O9+lydrtlxYjNpx6q6s5gyCukD5njI0Zg==
+X-Received: by 2002:a17:90a:380b:: with SMTP id w11mr2568390pjb.113.1641899599514;
+        Tue, 11 Jan 2022 03:13:19 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxF/JTj/8l5xS1aq99JcTum7f5Q6llZ/VZkO/th5eIeq1asWLdONyuTs3xJ58A9ZBRt+zKQEiV4xn7ogC3kXmk=
+X-Received: by 2002:a17:90a:380b:: with SMTP id w11mr2568366pjb.113.1641899599281;
+ Tue, 11 Jan 2022 03:13:19 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH] Update whitelisted ThinkPad models with dual fan support
- in thinkpad_acpi
-Content-Language: en-US
-To:     David Dreschner <david@dreschner.net>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        Mark Pearson <markpearson@lenovo.com>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <ec04aa1e-1ac3-edbc-ac08-eec15ec5c952@dreschner.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ec04aa1e-1ac3-edbc-ac08-eec15ec5c952@dreschner.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAGhUXvBw4rzCQrqttyyS=Psxmhppk79c6fDoxPbV91jE7fO_9A@mail.gmail.com>
+ <CAGhUXvDNj2v3O==+wWWKPYVzej8Vq+WNiBtPwmYxSQ2dTuLb9Q@mail.gmail.com>
+ <CAGhUXvC8eHfxEKzkGN06VvRU6Z0ko7MJ9hF6uXNq+PxRZSbEmQ@mail.gmail.com>
+ <70cbe360-6385-2536-32bd-ae803517d2b2@redhat.com> <YdbrLz3tU4ohANDk@ninjato> <42c83ec8-bbac-85e2-9ab5-87e59a679f95@redhat.com>
+In-Reply-To: <42c83ec8-bbac-85e2-9ab5-87e59a679f95@redhat.com>
+From:   Benjamin Tissoires <btissoir@redhat.com>
+Date:   Tue, 11 Jan 2022 12:13:08 +0100
+Message-ID: <CAO-hwJJ9ALxpd5oRU8SQ3F65hZjDitR=MzmwDk=uiEguaXZYtw@mail.gmail.com>
+Subject: Re: Touchpad stickiness on AMD laptops (was Dell Inspiron/XPS)
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Wolfram Sang <wsa@kernel.org>,
+        Andrea Ippolito <andrea.ippo@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi David,
+On Tue, Jan 11, 2022 at 11:34 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi Wolfram,
+>
+> On 1/6/22 14:14, Wolfram Sang wrote:
+> > Hi Hans,
+> >
+> > bumping this old thread because there might be some progress and it
+> > still affects quite some people.
+> >
+> >> But I must be honest here, I don't see much progress being made
+> >> on this until someone with a significant amount of kernel / hw-enablement
+> >> experience gets it hands on one of these models. Either because some
+> >
+> > So, I am quite optimistic that Andrea's issue is the same one which
+> > Miroslav Bendik dived into [1]. I will surely try to help with part of
+> > the PIIX I2C driver, but I lack the experience with the RMI4 driver. I
+> > wonder if you could have a look and maybe share your thoughts?
+> >
+> > Thanks and all the best,
+> >
+> >    Wolfram
+> >
+> > [1] https://lore.kernel.org/r/CAPoEpV0ZSidL6aMXvB6LN1uS-3CUHS4ggT8RwFgmkzzCiYJ-XQ@mail.gmail.com
+>
+> Benjamin Tissoires really is the export on the synaptics PS/2 -> switch to
+> smbus mode devices, he did all the initial hw-enablement for them.
+>
+> Benjamin, see the email Wolfram linked above. It seems that on AMD
+> laptops we have synaptics intertouch devices connected to a plain
+> PIIX4 compatible I2C controller.
 
-On 1/4/22 04:41, David Dreschner wrote:
-> Hey guys,
-> 
-> the attached patch updates the list of whitelisted ThinkPad models with dual fan support.
-> 
-> The changes were tested on my ThinkPad T15g Gen 2. According to Lenovo, the BIOS version is the same for the P15 Gen 2 and the P17 Gen 2 ( https://pcsupport.lenovo.com/us/en/downloads/ds551321-bios-update-utility-bootable-cd-for-windows-10-64-bit-thinkpad-p15-gen-2-p17-gen-2-t15g-gen-2 ).
-> 
-> I also added the P15v Gen 2 and T15p Gen 2 to the whitelist based on the BIOS version listed on the Lenovo homepage ( https://pcsupport.lenovo.com/us/en/downloads/ds551356-bios-update-utility-bootable-cd-for-windows-10-64-bit-thinkpad-p15v-gen-2-t15p-gen-2 ). The first generation had two fans and where covered by the whitelist entry for the P15 Gen 2. As the second generation has two fans, too, I made that change for completeness.
-> 
-> To apply the changes before it's merged in the mainline linux kernel, I made a little dkms patch: https://github.com/dreschner/thinkpad_acpi-dual-fan-patch
+Oh, nice (looking at the thread). IIRC last time somebody tried to
+communicate with those touchpads it wasn't working at all.
 
-Thank you for your patch submission.
+>
+> So we need to either add support for SMBUS host-notify to the
+> PIIX4 smbus driver (at least for AMD parts) or we need to support
+> OOB IRQ signalling in the rmi4 code, assuming there is an OOB IRQ
+> at all.
 
-If I understand things correctly then you've only tested the addition of the:
+If the touchpad is using SMBus, we need to have Host Notify. Google
+gave me the following datasheet for PIIX4
+https://www.intel.com/Assets/PDF/datasheet/290562.pdf and it seems we
+would need to enable something in the section 7.3.9.
 
-TPACPI_Q_LNV3('N', '3', '7', TPACPI_FAN_2CTL),  /* P15 / P17 / T15g (2nd gen) */
+However, without the hardware it's going to be tough for me to enable :/
 
-quirk, correct? In that case we really only want to add that quirk, we don't
-want to go and add untested quirks. But perhaps Mark from Lenovo can confirm
-that this quirk:
+For regular I2C touchpads, there is an OOB IRQ we can set up, but when
+the devices are presented and enabled through PS/2 first, they are
+using SMBus only AFAICT.
 
-TPACPI_Q_LNV3('N', '3', '8', TPACPI_FAN_2CTL),  /* P15v / T15p (2nd gen) */
+Cheers,
+Benjamin
 
-also is correct and that those models really have 2 fans, Mark ?
-
-Mark, more in general can you perhaps talk to the firmware team and ask
-if there is a better way to detect if there are 2 fans in a thinkpad then
-maintaining a quirk table for this ?
-
-Besides the issue of the untested quirk, unfortunately your patch is not
-submitted in the right format, so I cannot accept it as is, esp. the
-missing of a Signed-off-by is a blocker.
-
-Kernel patches should be in git format-patch output format and
-your patch is missing a Signed-off-by line in the commit-message. I can only
-accept patches with a Signed-off-by line in the commit-message like this:
-
-Signed-off-by: Your Real Name <email@your.domain>
-
-By adding this line you indicate that you are the author of the code and
-are submitting it under the existing license for the file which you are
-modifying (typically GPL-2.0) or that you have permission from the author
-to submit it under this license. See:
-
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
-
-Given that this patch is trivial and mostly data, not code, I can turn
-it into a proper patch with myself as author, crediting you like this:
-
-Reported-and-tested-by: David Dreschner <david@dreschner.net>
-
-And then merge it with me as the author, or you can resubmit
-it in the proper format if you prefer.
-
-Please let me know how you want to proceed with this.
-
-Regards,
-
-Hans
+>
+> I've also added Mario Limonciello from AMD's client group to the Cc,
+>
+> Mario, we can really use some help / insight from AMD here, both with
+> the problem to detect the IO addresses of the AMD PIIX4 compatible
+> smbus controller as well as with smbus host-notify support, see:
+>
+> https://lore.kernel.org/r/CAPoEpV0ZSidL6aMXvB6LN1uS-3CUHS4ggT8RwFgmkzzCiYJ-XQ@mail.gmail.com
+>
+> Regards,
+>
+> Hans
+>
 
