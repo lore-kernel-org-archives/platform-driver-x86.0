@@ -2,230 +2,165 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50589C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jan 2022 13:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9D6C41535
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jan 2022 13:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353352AbiALNGL (ORCPT
+        id S1353684AbiALNkU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Jan 2022 08:06:11 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:22846 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1353345AbiALNGI (ORCPT
+        Wed, 12 Jan 2022 08:40:20 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:34014 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241154AbiALNkR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Jan 2022 08:06:08 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20C3aG3Y027128;
-        Wed, 12 Jan 2022 07:05:11 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=PODMain02222019;
- bh=6qEp7FIsfc2aS94Jjc56bNCIgPLbqWS3T1SvLIBjUzE=;
- b=RTcH2yqLWjxmklKE8NQMJ03l4vdJ07C+B4M6+eItgrJlND5bx7kfEJXNeANW09ELlMQ3
- JBam2b0z6Md05j+RIxYAX99ZFN7cNjnrd4k6+EZx29CLzFTAlrT1FJGUYM/FYWjm2JB0
- QP/6fSppab5gblhCXq5pHNklrUAL0RTTXSLpaVOXMOmQCv/Tj4I5ekc6x81ebpwrwrqj
- Nsj44n9P6GAe/ed17yTm19U8gYjsi45Gcah2LDNrdeGVSW2RXcknQ5zE4C2e5XXx7H5U
- EefrdFEGdY/eQ8MBDoSAdpZF0exoRGWnbn9d4NPWck+LZFsLVGFwzm55OP8gt2CdG5JN fw== 
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3dhmc30ja9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 12 Jan 2022 07:05:11 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Wed, 12 Jan
- 2022 13:05:09 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.18 via Frontend
- Transport; Wed, 12 Jan 2022 13:05:09 +0000
-Received: from [198.61.65.50] (unknown [198.61.65.50])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id EB8BCB10;
-        Wed, 12 Jan 2022 13:05:02 +0000 (UTC)
-Message-ID: <e2d39d52-c139-a94a-94cc-88841d3638e3@opensource.cirrus.com>
-Date:   Wed, 12 Jan 2022 13:05:02 +0000
+        Wed, 12 Jan 2022 08:40:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=S/pA7bUX6e4VB1GHe3hlypsDdeFRt4oGL0831NNCTJM=; b=REJii9uMw/mNDMEDkaB6nMl41t
+        HVia+zgOKIfzuMj09o6jQ+IaM7PowDfcCzSXN02NEw/KiBFCm/WUr1uWHbYcv6vi03Q5vZQPWTCZw
+        kZaHOnCDnZ4glu9pEOOBCeugcwmvyPmDFDeJp1Ck0ttEnrICihUcMQo96DS7dmh4ziSA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1n7dpl-001CDK-PQ; Wed, 12 Jan 2022 14:38:37 +0100
+Date:   Wed, 12 Jan 2022 14:38:37 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-phy@lists.infradead.org, Jiri Slaby <jirislaby@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        platform-driver-x86@vger.kernel.org,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        openipmi-developer@lists.sourceforge.net,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-edac@vger.kernel.org, Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Richard Weinberger <richard@nod.at>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>,
+        linux-mediatek@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+Message-ID: <Yd7Z3Qwevb/lEwQZ@lunn.ch>
+References: <20220110195449.12448-1-s.shtylyov@omp.ru>
+ <20220110195449.12448-2-s.shtylyov@omp.ru>
+ <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
+ <YdyilpjC6rtz6toJ@lunn.ch>
+ <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
+ <20220112085009.dbasceh3obfok5dc@pengutronix.de>
+ <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v6 08/10] ACPI / scan: Create platform device for CLSA0100
- and CSC3551 ACPI nodes
-Content-Language: en-US
-To:     Stefan Binding <sbinding@opensource.cirrus.com>,
-        'Hans de Goede' <hdegoede@redhat.com>,
-        "'Rafael J. Wysocki'" <rafael@kernel.org>
-CC:     'Len Brown' <lenb@kernel.org>, 'Mark Gross' <markgross@kernel.org>,
-        'Liam Girdwood' <lgirdwood@gmail.com>,
-        'Jaroslav Kysela' <perex@perex.cz>,
-        'Mark Brown' <broonie@kernel.org>,
-        'Takashi Iwai' <tiwai@suse.com>,
-        "'moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...'" 
-        <alsa-devel@alsa-project.org>,
-        'ACPI Devel Maling List' <linux-acpi@vger.kernel.org>,
-        <patches@opensource.cirrus.com>,
-        'Platform Driver' <platform-driver-x86@vger.kernel.org>,
-        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
-References: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
- <20211217115708.882525-9-tanureal@opensource.cirrus.com>
- <CAJZ5v0jTELqFeO6q6w_mYNo_yf1R9SX66RrEz0ZSe27w7E6kog@mail.gmail.com>
- <4b5506b1-20c6-3983-d541-86dc2388b2a7@redhat.com>
- <004001d7f5c6$7329d4d0$597d7e70$@opensource.cirrus.com>
-From:   Lucas tanure <tanureal@opensource.cirrus.com>
-In-Reply-To: <004001d7f5c6$7329d4d0$597d7e70$@opensource.cirrus.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: ajAjh2HRcUl_MYpVwTUQ65XDdiVlIFiQ
-X-Proofpoint-GUID: ajAjh2HRcUl_MYpVwTUQ65XDdiVlIFiQ
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 12/20/21 17:24, Stefan Binding wrote:
-> Hi,
-> 
->> -----Original Message-----
->> From: Hans de Goede <hdegoede@redhat.com>
->> Sent: 17 December 2021 18:27
->> To: Rafael J. Wysocki <rafael@kernel.org>; Lucas Tanure
->> <tanureal@opensource.cirrus.com>; Stefan Binding
->> <sbinding@opensource.cirrus.com>
->> Cc: Len Brown <lenb@kernel.org>; Mark Gross <markgross@kernel.org>;
->> Liam Girdwood <lgirdwood@gmail.com>; Jaroslav Kysela <perex@perex.cz>;
->> Mark Brown <broonie@kernel.org>; Takashi Iwai <tiwai@suse.com>;
->> moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...
->> <alsa-devel@alsa-project.org>; ACPI Devel Maling List <linux-
->> acpi@vger.kernel.org>; patches@opensource.cirrus.com; Platform Driver
->> <platform-driver-x86@vger.kernel.org>; Linux Kernel Mailing List <linux-
->> kernel@vger.kernel.org>
->> Subject: Re: [PATCH v6 08/10] ACPI / scan: Create platform device for
->> CLSA0100 and CSC3551 ACPI nodes
->>
->> Hi,
->>
->> On 12/17/21 18:19, Rafael J. Wysocki wrote:
->>> On Fri, Dec 17, 2021 at 12:57 PM Lucas Tanure
->>> <tanureal@opensource.cirrus.com> wrote:
->>>>
->>>> The ACPI device with CLSA0100 or CSC3551 is a sound card
->>>> with multiple instances of CS35L41 connectec by I2C to
->>>
->>> "connected" I suppose?
->>>
->>>> the main CPU.
->>>>
->>>> We add an ID to the i2c_multi_instantiate_ids list to enumerate
->>>> all I2C slaves correctly.
->>>>
->>>> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
->>>
->>> This requires an ACK from Hans.
->>>
->>> If you receive one, please feel free to add my ACK to it too.
->>
->> One problem which I see here is that this change conflicts with
->> this series:
->>
->> https://lore.kernel.org/all/20211210154050.3713-1-
->> sbinding@opensource.cirrus.com/
->>
->> I have reviewing that series on my todo list.
->>
->> One interesting question for you (Rafael) about that series is
->> that i2c-multi-instantiate.c, which after the series also handles
->> spi devices,is being moved to drivers/acpi .
->>
->> This is fine with me, but I wonder if it would not be better
->> to keep it under drivers/platform/x86 ? Since the new SPI
->> use-cases are also all on x86 laptops AFAICT.
->>
->> But back to this series, as said the 2 series conflict, since
->> both are being submitted by @opensource.cirrus.com people,
->> it would be good if the Cirrus folks can decide in which
->> order these series should be merged.
->>
->> It might be best to just move this one patch to the other series?
->> Thus removing the conflict between the 2 series.
->>
->> Regards,
->>
->> Hans
->>
-> 
-> We don’t really have a preference which order these two chains
-> should be merged in. We would rebase the other chain if one
-> got merged first.
-> If pushed for an answer, maybe:
-> https://lore.kernel.org/all/20211210154050.3713-1-sbinding@opensource.cirrus.com/
-> should be merged first?
-> 
-> Thanks,
-> Stefan
-> 
->>
->>
->>>> ---
->>>>   drivers/acpi/scan.c                          |  3 +++
->>>>   drivers/platform/x86/i2c-multi-instantiate.c | 11 +++++++++++
->>>>   2 files changed, 14 insertions(+)
->>>>
->>>> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
->>>> index b7a6b982226e..8740cfa11f59 100644
->>>> --- a/drivers/acpi/scan.c
->>>> +++ b/drivers/acpi/scan.c
->>>> @@ -1712,8 +1712,11 @@ static bool
->> acpi_device_enumeration_by_parent(struct acpi_device *device)
->>>>          static const struct acpi_device_id i2c_multi_instantiate_ids[] = {
->>>>                  {"BSG1160", },
->>>>                  {"BSG2150", },
->>>> +               {"CSC3551", },
->>>>                  {"INT33FE", },
->>>>                  {"INT3515", },
->>>> +               /* Non-conforming _HID for Cirrus Logic already released */
->>>> +               {"CLSA0100", },
->>>>                  {}
->>>>          };
->>>>
->>>> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c
->> b/drivers/platform/x86/i2c-multi-instantiate.c
->>>> index 4956a1df5b90..a889789b966c 100644
->>>> --- a/drivers/platform/x86/i2c-multi-instantiate.c
->>>> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
->>>> @@ -147,6 +147,14 @@ static const struct i2c_inst_data int3515_data[]  =
->> {
->>>>          {}
->>>>   };
->>>>
->>>> +static const struct i2c_inst_data cs35l41_hda[] = {
->>>> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
->>>> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
->>>> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
->>>> +       { "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
->>>> +       {}
->>>> +};
->>>> +
->>>>   /*
->>>>    * Note new device-ids must also be added to i2c_multi_instantiate_ids in
->>>>    * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
->>>> @@ -154,7 +162,10 @@ static const struct i2c_inst_data int3515_data[]  =
->> {
->>>>   static const struct acpi_device_id i2c_multi_inst_acpi_ids[] = {
->>>>          { "BSG1160", (unsigned long)bsg1160_data },
->>>>          { "BSG2150", (unsigned long)bsg2150_data },
->>>> +       { "CSC3551", (unsigned long)cs35l41_hda },
->>>>          { "INT3515", (unsigned long)int3515_data },
->>>> +       /* Non-conforming _HID for Cirrus Logic already released */
->>>> +       { "CLSA0100", (unsigned long)cs35l41_hda },
->>>>          { }
->>>>   };
->>>>   MODULE_DEVICE_TABLE(acpi, i2c_multi_inst_acpi_ids);
->>>> --
->>>> 2.34.1
->>>>
->>>
-> 
-> 
-As the ic2-multi-instantiate patch chain is still being worked out, we 
-would like to submit a new chain for CLSA0100 id and a few fixes for the 
-HDA cs35l41 driver.
-And to avoid conflicts the ic2-multi-instantiate patch chain will wait 
-for this new patch chain to be merged.
+> If an optional IRQ is not present, drivers either just ignore it (e.g.
+> for devices that can have multiple interrupts or a single muxed IRQ),
+> or they have to resort to polling. For the latter, fall-back handling
+> is needed elsewhere in the driver.
+> To me it sounds much more logical for the driver to check if an
+> optional irq is non-zero (available) or zero (not available), than to
+> sprinkle around checks for -ENXIO. In addition, you have to remember
+> that this one returns -ENXIO, while other APIs use -ENOENT or -ENOSYS
+> (or some other error code) to indicate absence. I thought not having
+> to care about the actual error code was the main reason behind the
+> introduction of the *_optional() APIs.
 
-Thanks,
-Lucas Tanure
+The *_optional() functions return an error code if there has been a
+real error which should be reported up the call stack. This excludes
+whatever error code indicates the requested resource does not exist,
+which can be -ENODEV etc. If the device does not exist, a magic cookie
+is returned which appears to be a valid resources but in fact is
+not. So the users of these functions just need to check for an error
+code, and fail the probe if present.
+
+You seems to be suggesting in binary return value: non-zero
+(available) or zero (not available)
+
+This discards the error code when something goes wrong. That is useful
+information to have, so we should not be discarding it.
+
+IRQ don't currently have a magic cookie value. One option would be to
+add such a magic cookie to the subsystem. Otherwise, since 0 is
+invalid, return 0 to indicate the IRQ does not exist.
+
+The request for a script checking this then makes sense. However, i
+don't know how well coccinelle/sparse can track values across function
+calls. They probably can check for:
+
+   ret = irq_get_optional()
+   if (ret < 0)
+      return ret;
+
+A missing if < 0 statement somewhere later is very likely to be an
+error. A comparison of <= 0 is also likely to be an error. A check for
+> 0 before calling any other IRQ functions would be good. I'm
+surprised such a check does not already existing in the IRQ API, but
+there are probably historical reasons for that.
+
+      Andrew
