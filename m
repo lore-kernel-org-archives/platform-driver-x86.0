@@ -2,179 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC255C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jan 2022 12:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0315BC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jan 2022 12:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353143AbiALM3p (ORCPT
+        id S1353144AbiALMaI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Jan 2022 07:29:45 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:34468 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1353158AbiALM3n (ORCPT
+        Wed, 12 Jan 2022 07:30:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240498AbiALMaI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Jan 2022 07:29:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641990582;
+        Wed, 12 Jan 2022 07:30:08 -0500
+X-Greylist: delayed 513 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 12 Jan 2022 04:30:07 PST
+Received: from server00.inetadmin.eu (server00.inetadmin.eu [IPv6:2a01:390:1:2:e1b1:2:0:d7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB06BC06173F;
+        Wed, 12 Jan 2022 04:30:07 -0800 (PST)
+Received: from [192.168.1.103] (ip-46.34.226.0.o2inet.sk [46.34.226.0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: miroslav@wisdomtech.sk)
+        by server00.inetadmin.eu (Postfix) with ESMTPSA id 709D413A569;
+        Wed, 12 Jan 2022 13:21:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wisdomtech.sk;
+        s=dkiminetadmin; t=1641990089;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GfBNnlwLmAcmJ2yGQp1CTmprPgU7Fh4RmKFk2QXUXEA=;
-        b=M/NbBus1P/cMikSnA2iy0Zeiu3H45zz7y9er6B22Lo/Ro9jERMsxtpqG/ka2WhOFhlFtTJ
-        ODX6Z0zOU7Ae+5c18WxMFkYFi5id86kSRj5jGB63Np39nlgI/8hUaOQsBEedYvGCDjsg+w
-        4P8aUS29xEDuFpjOhrVj0yzxozdst/s=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-496-I9KW-RUNOrehHEFr9E92sQ-1; Wed, 12 Jan 2022 07:29:41 -0500
-X-MC-Unique: I9KW-RUNOrehHEFr9E92sQ-1
-Received: by mail-ed1-f70.google.com with SMTP id h11-20020a05640250cb00b003fa024f87c2so2141843edb.4
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jan 2022 04:29:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=GfBNnlwLmAcmJ2yGQp1CTmprPgU7Fh4RmKFk2QXUXEA=;
-        b=Jqv8Kj68W/cGwBo9iSITIrr6LbMjOYLyrrEx21647rTvYk01GQymJxRqK6lwhpfWrf
-         LvO10A6131jL7VJZsaNA0DY6Tgmu7GKdC0tIq+A0BxM+efctfGr2jEBiUjZVMmGWqx2q
-         UcwuXdZCFOBhvYoqPOZCk9Gv0jNiqoy4rBV4tk0ag0i5bqAv7W9Y2CjbGlyuhXumiS27
-         2DQRHjv6KFQ2aCqDuWVMeXBDy02j91hmlyfTRoqE3AACprqUPwoPSmYkdkJjSKsfD53d
-         pBi7VPLnyiL742RfdhhQYONAz9leAtbS6TE7SYoqRB4w6X2yvV2+ridqQd5mbwcmm5+h
-         jQHw==
-X-Gm-Message-State: AOAM531oonww87Erq5CwFNF8ZAVcdMAaGuhNKR/J7WsreoPc6XRFAz8f
-        1EmRLHkDGiDIOqTQIpdremQGtqIYek49jDoFquGS8fEd+o8/bjR+Lnx/m5v/c+vJj8l4xNB5cTS
-        V5IYG7oM1K8I/yjZrDFue924vxMJfCbMTAA==
-X-Received: by 2002:a05:6402:2684:: with SMTP id w4mr8588205edd.139.1641990579720;
-        Wed, 12 Jan 2022 04:29:39 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxnnOP0Hx8forv87z1QvNr3/duR8culvxnQ1WOGwzIyhRKVdztrtCGzCCZart6/w1/LguIEOw==
-X-Received: by 2002:a05:6402:2684:: with SMTP id w4mr8588180edd.139.1641990579341;
-        Wed, 12 Jan 2022 04:29:39 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id w7sm6078604ede.66.2022.01.12.04.29.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jan 2022 04:29:38 -0800 (PST)
-Message-ID: <10f4870d-660a-0181-6e0a-1196dc1f2e70@redhat.com>
-Date:   Wed, 12 Jan 2022 13:29:38 +0100
+        bh=PrJWjC6rXy/yziDCyLYQTnCgivshgKBhKhOEpfD/N0Q=;
+        b=kVwogiEB7OXO3+wwYhozP2E3z5QphjWPAVi/fCUvECmjE/5Mqnqm0h6Pael4O3vB+/nA+h
+        D9si/yy1gPEnP8R6sAYFRbpU+X8bhFaigfyaWorpKt4Y0jqj/3O71CCKmcA1C0+AZrOhRN
+        ZCYQ+MRHZP4PUk8Ogak5vZcEV2+kEQg=
+Message-ID: <596d6af1-d67c-b9aa-0496-bd898350865c@wisdomtech.sk>
+Date:   Wed, 12 Jan 2022 13:21:27 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH] platform/x86: intel_crystal_cove_charger: Fix IRQ masking
- / unmasking
+ Thunderbird/91.4.0
+Subject: Re: Touchpad stickiness on AMD laptops (was Dell Inspiron/XPS)
 Content-Language: en-US
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20220111232309.377642-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220111232309.377642-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+To:     Wolfram Sang <wsa@kernel.org>,
+        "Limonciello, Mario" <mario.limonciello@amd.com>,
+        Benjamin Tissoires <btissoir@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andrea Ippolito <andrea.ippo@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>
+References: <CAGhUXvBw4rzCQrqttyyS=Psxmhppk79c6fDoxPbV91jE7fO_9A@mail.gmail.com>
+ <CAGhUXvDNj2v3O==+wWWKPYVzej8Vq+WNiBtPwmYxSQ2dTuLb9Q@mail.gmail.com>
+ <CAGhUXvC8eHfxEKzkGN06VvRU6Z0ko7MJ9hF6uXNq+PxRZSbEmQ@mail.gmail.com>
+ <70cbe360-6385-2536-32bd-ae803517d2b2@redhat.com> <YdbrLz3tU4ohANDk@ninjato>
+ <42c83ec8-bbac-85e2-9ab5-87e59a679f95@redhat.com>
+ <CAO-hwJJ9ALxpd5oRU8SQ3F65hZjDitR=MzmwDk=uiEguaXZYtw@mail.gmail.com>
+ <5409e747-0c51-24e2-7ffa-7dd9c8a7aec7@amd.com> <Yd6SRl7sm8zS85Al@ninjato>
+From:   =?UTF-8?Q?Miroslav_Bend=c3=adk?= <miroslav@wisdomtech.sk>
+In-Reply-To: <Yd6SRl7sm8zS85Al@ninjato>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+ > IIRC tests done by Miroslav showed that interrupt 7 was used for
+ > completing SMBus Block transfers and alike, but not for HostNotify. He
+ > suspects this is wired via GPIO somehow.
 
-On 1/12/22 00:23, Hans de Goede wrote:
-> The driver as originally submitted accidentally relied on Android having
-> run before and Android having unmasked the 2nd level IRQ-mask for the
-> charger IRQ. This worked since these are PMIC registers which are only
-> reset when the battery is fully drained or disconnected.
-> 
-> Fix the charger IRQ no longer working after loss of battery power by
-> properly setting the 2nd level IRQ-mask for the charger IRQ.
-> 
-> Note this removes the need to enable/disable our parent IRQ which just
-> sets the mask bit in the 1st level IRQ-mask register, setting one of
-> the 2 level masks is enough to stop the IRQ from getting reported.
-> 
-> Fixes: 761db353d9e2 ("platform/x86: Add intel_crystal_cove_charger driver")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  .../platform/x86/intel/crystal_cove_charger.c | 26 +++++++++----------
->  1 file changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/crystal_cove_charger.c b/drivers/platform/x86/intel/crystal_cove_charger.c
-> index 0374bc742513..eeaa926d2058 100644
-> --- a/drivers/platform/x86/intel/crystal_cove_charger.c
-> +++ b/drivers/platform/x86/intel/crystal_cove_charger.c
-> @@ -17,6 +17,7 @@
->  #include <linux/regmap.h>
->  
->  #define CHGRIRQ_REG					0x0a
-> +#define MCHGRIRQ_REG					0x17
->  
->  struct crystal_cove_charger_data {
->  	struct mutex buslock; /* irq_bus_lock */
-> @@ -25,8 +26,8 @@ struct crystal_cove_charger_data {
->  	struct irq_domain *irq_domain;
->  	int irq;
->  	int charger_irq;
-> -	bool irq_enabled;
-> -	bool irq_is_enabled;
-> +	u8 mask;
-> +	u8 new_mask;
->  };
->  
->  static irqreturn_t crystal_cove_charger_irq(int irq, void *data)
-> @@ -53,13 +54,9 @@ static void crystal_cove_charger_irq_bus_sync_unlock(struct irq_data *data)
->  {
->  	struct crystal_cove_charger_data *charger = irq_data_get_irq_chip_data(data);
->  
-> -	if (charger->irq_is_enabled != charger->irq_enabled) {
-> -		if (charger->irq_enabled)
-> -			enable_irq(charger->irq);
-> -		else
-> -			disable_irq(charger->irq);
-> -
-> -		charger->irq_is_enabled = charger->irq_enabled;
-> +	if (charger->mask != charger->new_mask) {
-> +		regmap_write(charger->regmap, MCHGRIRQ_REG, charger->new_mask);
-> +		charger->mask = charger->new_mask;
->  	}
->  
->  	mutex_unlock(&charger->buslock);
-> @@ -69,14 +66,14 @@ static void crystal_cove_charger_irq_unmask(struct irq_data *data)
->  {
->  	struct crystal_cove_charger_data *charger = irq_data_get_irq_chip_data(data);
->  
-> -	charger->irq_enabled = true;
-> +	charger->new_mask &= ~BIT(data->hwirq);
->  }
->  
->  static void crystal_cove_charger_irq_mask(struct irq_data *data)
->  {
->  	struct crystal_cove_charger_data *charger = irq_data_get_irq_chip_data(data);
->  
-> -	charger->irq_enabled = false;
-> +	charger->new_mask |= BIT(data->hwirq);
->  }
->  
->  static void crystal_cove_charger_rm_irq_domain(void *data)
-> @@ -130,10 +127,13 @@ static int crystal_cove_charger_probe(struct platform_device *pdev)
->  	irq_set_nested_thread(charger->charger_irq, true);
->  	irq_set_noprobe(charger->charger_irq);
->  
-> +	/* Mask the single 2nd level IRQ before enabling the 1st level IRQ */
-> +	charger->mask = BIT(0);
+This is just speculation. It may be routed to GPIO pin, but think it's more
+likely that AMD implements host notify. I have looked at windwos drivers and
+there is only SMBus driver bundled with synaptics.
 
-I just realized that this also needs to set charger->new_mask. I will fix this
-up when merging this.
+Lets look at https://www.intel.com/Assets/PDF/datasheet/290562.pdf 
+(PIIX4 from
+Intel). There is SMBSLVCNT register (page 152). Last bit (Slave Enable) 
+should
+enable interrupt on host notify if slave address matches content of SMBSLVC.
+This register is described on page 135 (SMBUS SLAVE COMMAND). Registers are
+accessible using PCI configuration registers. I have tried this code before
+enabling interrupts without success:
 
-> +	regmap_write(charger->regmap, MCHGRIRQ_REG, charger->mask);
-> +
->  	ret = devm_request_threaded_irq(&pdev->dev, charger->irq, NULL,
->  					crystal_cove_charger_irq,
-> -					IRQF_ONESHOT | IRQF_NO_AUTOEN,
-> -					KBUILD_MODNAME, charger);
-> +					IRQF_ONESHOT, KBUILD_MODNAME, charger);
->  	if (ret)
->  		return dev_err_probe(&pdev->dev, ret, "requesting irq\n");
->  
-> 
+pci_write_config_word(dev, SMBSLVC, 0x2c); // synaptics
 
-Regards,
+I don't know if this PDF is relevant for AMD. Newest documentation from AMD,
+which i found is:
+https://www.amd.com/system/files/TechDocs/55072_AMD_Family_15h_Models_70h-7Fh_BKDG.pdf
 
-Hans
+This document describes SMBusSlaveControl on same address (0x08) and 
+SlaveEnable
+looks almost identical.
+
+The interesting part is:
+
+"address that matches the host controller slave port of 10h, a command field
+that matches the SMBus slave control register, and a match of corresponding
+enabled events"
+
+Slave device should send address 10h automatically. Enabled events can 
+be set
+using SMBusSlaveEvent register. I have enabled all (set 0xff to 0x0a / 0x0b
+registers), but i don't know how to set "command field". There is no 
+register
+named "command field". Intel has SMBSLVC, but i can't find corresponding
+register on AMD.
+
+Constant activity on I2C pins can be repeated host notify request from 
+synaptics.
+
+Last interesting fact:
+
+I have recorded register value (except 0x02 and 0x07) after each SMBus
+transaction. This is from last 2 transactions:
+
+0200 0004 5801 0000 0fa9 00ff ff00 a8aa
+0200 0001 5802 0000 0fa9 40ff ff00 a8aa
+
+Every call has SMBusSlaveEvent (register 0x0a) 0x00 except of last 
+command after
+which device is initialized. After this call register has value 0x40. I have
+written 0xff to this register to enable all events in probe function. I 
+don't
+know why it's 0x00 until last transaction.
 
