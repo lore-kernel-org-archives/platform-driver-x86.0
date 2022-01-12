@@ -2,103 +2,136 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49145C43217
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jan 2022 07:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD54EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jan 2022 08:33:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351294AbiALHjm (ORCPT
+        id S1350539AbiALIdT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Jan 2022 02:39:42 -0500
-Received: from mail-vk1-f179.google.com ([209.85.221.179]:33685 "EHLO
-        mail-vk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351328AbiALHjj (ORCPT
+        Wed, 12 Jan 2022 03:33:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50664 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238074AbiALIdS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Jan 2022 02:39:39 -0500
-Received: by mail-vk1-f179.google.com with SMTP id g5so1133998vkg.0;
-        Tue, 11 Jan 2022 23:39:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MHfD03WmQisvwQlA0yVYr+t2tOrW8sr+EcU6Wg5KSck=;
-        b=1YMG+rRXfwavl134UZ73NS6rtboS3cxSjqHMnAkxxJbZOptDl9DzPUZbmjyGfXXksp
-         1kD9F3qW2KgAVydvfflcLxIHIix4CsvUxMb4bZMeegeICcRQJzRP5bpu99edyQxvbnsM
-         twyYG1hLfhElGdqknfmIV2qLSm4pSYjtjOWJL82iHHidOD1pOu36NsFf5d8VsMJ83G3J
-         YaVWQW6aot349tc1eLDzjBEa+tRt6JC2vZL5FfykUZcr+pyj92PpLvkh2xUGRKLN7G+U
-         5n96x8tgZA6WLCKBRo/6oxsO8HIs/SL512JtkzP3MDbSZtt7GlzssmJr9uQLWZJuLWDV
-         yqmA==
-X-Gm-Message-State: AOAM532MuuqpFexqY2FicgdHavTTWFcgAlxY9AjS3+Hi38qM6ATOx2Z+
-        wyNmkBNFbF0vVbwp2JdCbdP/v64mWA9zbQ==
-X-Google-Smtp-Source: ABdhPJzuxtsPnI37YIYK5BxpU/cRukaZdYXc3zFpmpzwFNlkrcvFJA/MFm52jHebuMxsnSbo8Nc/xA==
-X-Received: by 2002:a1f:3490:: with SMTP id b138mr3856785vka.31.1641973178972;
-        Tue, 11 Jan 2022 23:39:38 -0800 (PST)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id s47sm2201128uad.17.2022.01.11.23.39.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jan 2022 23:39:38 -0800 (PST)
-Received: by mail-vk1-f178.google.com with SMTP id n12so1073619vkc.12;
-        Tue, 11 Jan 2022 23:39:38 -0800 (PST)
-X-Received: by 2002:a1f:384b:: with SMTP id f72mr4068168vka.0.1641973178116;
- Tue, 11 Jan 2022 23:39:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20211202191630.12450-1-jaschultz@microsoft.com> <20211202191630.12450-3-jaschultz@microsoft.com>
-In-Reply-To: <20211202191630.12450-3-jaschultz@microsoft.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 12 Jan 2022 08:39:27 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUPwo7pCSwY8_9xTaDruTHt6d=wHiNHvRmE71k8hWeLBw@mail.gmail.com>
-Message-ID: <CAMuHMdUPwo7pCSwY8_9xTaDruTHt6d=wHiNHvRmE71k8hWeLBw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] platform: surface: Propagate ACPI Dependency
-To:     Jarrett Schultz <jaschultzms@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wed, 12 Jan 2022 03:33:18 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3063CC06173F;
+        Wed, 12 Jan 2022 00:33:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C4D6360AF5;
+        Wed, 12 Jan 2022 08:33:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8946FC36AEA;
+        Wed, 12 Jan 2022 08:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641976397;
+        bh=g/tmk3pAfTDGQWS5JwOnqJTU1VMtm32sdiN4+TEMDRw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g4RGnzJ/ULsyzn67BO0tvOKxkRDlahw1Oo5I8yOXkEMRLVdhEf1bUa1qjsubTnEsZ
+         EFnqdAWsyl6e7M52dHqaz9drgPI/B76yVVDvspClUl5v+T/57oBPAwdH9Kk2MUHX8E
+         agyJ3v0Efn5GGLekM1qc4q9YIgavaIedHQJKkG2O9bv6RvQEc6LzbBnDbVdYC0SFKF
+         VwHsOzLSgy4Itmxnf0aWDwX4+2Ihs/LJjo0MSHDzXofwApcIGF/kdVUbeubGOnIAmo
+         iDsz2eOCvfhXKVa7ISxhQWzqe/+HG3Arnafs24Dq7BA/6WEsThF2RGERbxDdhgWfW0
+         D8K73Loz0+f3w==
+Date:   Wed, 12 Jan 2022 09:33:10 +0100
+From:   Wolfram Sang <wsa@kernel.org>
+To:     "Limonciello, Mario" <mario.limonciello@amd.com>
+Cc:     Benjamin Tissoires <btissoir@redhat.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>,
-        Jarrett Schultz <jaschultz@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+        Andrea Ippolito <andrea.ippo@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>
+Subject: Re: Touchpad stickiness on AMD laptops (was Dell Inspiron/XPS)
+Message-ID: <Yd6SRl7sm8zS85Al@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        "Limonciello, Mario" <mario.limonciello@amd.com>,
+        Benjamin Tissoires <btissoir@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andrea Ippolito <andrea.ippo@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>
+References: <CAGhUXvBw4rzCQrqttyyS=Psxmhppk79c6fDoxPbV91jE7fO_9A@mail.gmail.com>
+ <CAGhUXvDNj2v3O==+wWWKPYVzej8Vq+WNiBtPwmYxSQ2dTuLb9Q@mail.gmail.com>
+ <CAGhUXvC8eHfxEKzkGN06VvRU6Z0ko7MJ9hF6uXNq+PxRZSbEmQ@mail.gmail.com>
+ <70cbe360-6385-2536-32bd-ae803517d2b2@redhat.com>
+ <YdbrLz3tU4ohANDk@ninjato>
+ <42c83ec8-bbac-85e2-9ab5-87e59a679f95@redhat.com>
+ <CAO-hwJJ9ALxpd5oRU8SQ3F65hZjDitR=MzmwDk=uiEguaXZYtw@mail.gmail.com>
+ <5409e747-0c51-24e2-7ffa-7dd9c8a7aec7@amd.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="orTsQsEWg79dvGxB"
+Content-Disposition: inline
+In-Reply-To: <5409e747-0c51-24e2-7ffa-7dd9c8a7aec7@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jarrett,
 
-On Mon, Dec 6, 2021 at 4:03 PM Jarrett Schultz <jaschultzms@gmail.com> wrote:
-> Since the Surface XBL Driver does not depend on ACPI, the
-> platform/surface directory as a whole no longer depends on ACPI. With
-> respect to this, the ACPI dependency is moved into each config that depends
-> on ACPI individually.
->
-> Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
+--orTsQsEWg79dvGxB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your patch, which is now commit 272479928172edf0 ("platform:
-surface: Propagate ACPI Dependency").
+Hi Mario,
 
-> --- a/drivers/platform/surface/Kconfig
-> +++ b/drivers/platform/surface/Kconfig
-> @@ -5,7 +5,6 @@
->
->  menuconfig SURFACE_PLATFORMS
->         bool "Microsoft Surface Platform-Specific Device Drivers"
-> -       depends on ACPI
->         default y
->         help
->           Say Y here to get to see options for platform-specific device drivers
+thanks for joining the discussion!
 
-Without any dependency, all users configuring a kernel are now asked
-about this. Is there any other platform dependency that can be used
-instead?
+> 1) Systems returning SMBUS address 0xff
+>=20
+> The address can be potentially be returned using port I/O or it can be do=
+ne
+> using MMIO.
+>=20
+> There is already a thread in process to add support for MMIO, but last I
+> heard it's waiting for review comments.
+>=20
+> https://lore.kernel.org/all/20210715221828.244536-1-Terry.Bowman@amd.com/
 
-Gr{oetje,eeting}s,
+This thread is under active discussion again.
 
-                        Geert
+> Now something else interesting - the SMBUS controller in these laptops of=
+ten
+> is listed in the ACPI tables on IRQ7 with a _HID of SMB0001.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+IIRC tests done by Miroslav showed that interrupt 7 was used for
+completing SMBus Block transfers and alike, but not for HostNotify. He
+suspects this is wired via GPIO somehow.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Would be really cool if we can fix the bugzilla entry you mentioned as
+well during all this!
+
+Happy hacking,
+
+   Wolfram
+
+
+--orTsQsEWg79dvGxB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmHekkIACgkQFA3kzBSg
+KbZT8w//XYOkaE+SCx4hZcqIYSK0qr9wH7cbYqwfTh+oZv6nMMMxCxTRHjWy3thM
+J8uT+/Cgnpjqj+ewXgS892gpum16MZ+iqa3HGPt4XXtkQjmzJ+mfAXnRmK9SyhAU
+wro340uGVWxw2XwY9pf0RVadqLrCvMZhO+n8p+RTlnJhUQxtVYsIKz+hbzzRWCio
+QQJ2qdoSjbGbEo/DEk5LeYgDY5uwZ4apBaQ/NTe9nmEJiwwBnMXkbPoP2mYJzdsv
+0yc5OElbaNEoxz0G2joc9/ko0yecbvQazlvwkBQv6U22i+XwfKCZut3gOOkvnR5A
+JJ+1C3m0/fuX6MmyCi2jKuH6v5ylOuVNDqxKX8umMOhYSrxCAh6rtD0K/YF+nS0h
+cjw5h3OGWCSMf4rSbLYEekFWjyUeJwNUq9G9TkicplpHMGfeZbPQgsNSknL8286r
+7/bLXHa9kdoLr3TWvROXHeXeBubd+N5F2te8SO9h2FMcK6+INx9lT39lK+YECZjL
+zKtDP4ya7BdunCB6OuGmUgkMo7vPbhdDFPF5PG2pUXHAes5Uzt8G4oniTgADZh2M
+pApLv8lQY8zDHxrFhxOMn7qvWl2EWkDUxcOisEsr4+eT1Aw+1ZZxzSJyidCdsd8G
+azWzMhlJWUjzjfPSSK4L0U83Pd4cm1DVWkMrPH7GL5QOZz1WmWE=
+=6bmH
+-----END PGP SIGNATURE-----
+
+--orTsQsEWg79dvGxB--
