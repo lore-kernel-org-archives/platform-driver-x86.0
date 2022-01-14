@@ -2,271 +2,189 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD404C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Jan 2022 09:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B48C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Jan 2022 09:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239980AbiANJj1 convert rfc822-to-8bit (ORCPT
+        id S237898AbiANJu4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 14 Jan 2022 04:39:27 -0500
-Received: from mail-vk1-f182.google.com ([209.85.221.182]:39619 "EHLO
-        mail-vk1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbiANJjX (ORCPT
+        Fri, 14 Jan 2022 04:50:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229785AbiANJux (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 14 Jan 2022 04:39:23 -0500
-Received: by mail-vk1-f182.google.com with SMTP id n14so4303363vkk.6;
-        Fri, 14 Jan 2022 01:39:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XIsXuJfmE8JES6Mbtb18c2n3rWZVUZhPWhasZQeRi6Q=;
-        b=B6fVIblE2YvZVeCArGcMUv0EJNHL+C2rkW//YimybgZ4VFOF6qnKGPJBYjiX+q9Dq5
-         nJVlZ2LbWqXpD7YGOyGSeudPe2r8bTHf3AuHH/E/JTEQch+crQsQwq7Xesx6PJuRoHVG
-         vZLoGUjBK4/tgccEHiWg5NGcjFeo/ZYdd/pZ8EadRA5wmgmCgLLaxqlpFck3zhsk9R3g
-         s5LGB2neA5o/2//SrAax7o4hmZkvRNgswZ5FI80jKNxgcY0VxYt74iZSKZnFkopMg/Ad
-         PWLhMOBCniba9fgx5U5sdkjls0O8hAWjVUS70uDszzCGQvcy7c6UaGPWrEX+dVtkV8jd
-         iOSg==
-X-Gm-Message-State: AOAM532dOoWuvtPRgS471+cj2DoVR7o0lPqEF04Zasu/K8Gtvx/nMOFM
-        FIhIPsgx3PVt64ddBzE7FJ0b535mFnUbhej7
-X-Google-Smtp-Source: ABdhPJyk3O8GzDxpL3/PrxHmPJiIYnb05POlLBdMiX4/E5+LHj71bMHAwA4rtBlCUD6Pjl/GZG0tmg==
-X-Received: by 2002:a05:6122:208a:: with SMTP id i10mr366113vkd.16.1642153161863;
-        Fri, 14 Jan 2022 01:39:21 -0800 (PST)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id x128sm2072722vkx.14.2022.01.14.01.39.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Jan 2022 01:39:19 -0800 (PST)
-Received: by mail-ua1-f41.google.com with SMTP id i5so15890425uaq.10;
-        Fri, 14 Jan 2022 01:39:19 -0800 (PST)
-X-Received: by 2002:a05:6102:3581:: with SMTP id h1mr3716211vsu.5.1642153159149;
- Fri, 14 Jan 2022 01:39:19 -0800 (PST)
+        Fri, 14 Jan 2022 04:50:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09BBC061574;
+        Fri, 14 Jan 2022 01:50:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 33DDF61EAA;
+        Fri, 14 Jan 2022 09:50:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11901C36AEA;
+        Fri, 14 Jan 2022 09:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642153852;
+        bh=qPzNVCCoAO7JZYE7iYAZoPJpbmPs2eM2hLzOcfDeZ5A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NNt1sa9GkIaJprmWQxUHodyPtEBvTEBvTU5VRbhBXxfMfnCbS0h6hvDUpkUrURMXC
+         6ocweaUvLEmsf0P+Uf0vOQQtOel7bvY6Kxp17F/bAZNWVgP+C5ktQqc7E6dZ27dars
+         IyLHg4K7IIpT2fbjLY/8JOCXD5JpTU+5HFLFMopmssk26sY5EH3JNfOSRX3+R6ca+z
+         48j83R/ZrFCvEIVOep9QDtPjd2WkwmOZf/jiSahxaIR1ecvBYMPpHcrQydOTc4DMy5
+         l538BfzFVnBh6pKbN5fNa//79MGVfqSPR++qLGX++FI41Nhf7fnx8zdrbtTtYZlLt/
+         jVqPuAmOdEXXQ==
+Date:   Fri, 14 Jan 2022 11:50:42 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Martin Fernandez <martin.fernandez@eclypsium.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com
+Subject: Re: [PATCH v5 1/5] mm/memblock: Tag memblocks with crypto
+ capabilities
+Message-ID: <YeFHcrUUopm5xrtZ@kernel.org>
+References: <20220113213027.457282-1-martin.fernandez@eclypsium.com>
+ <20220113213027.457282-2-martin.fernandez@eclypsium.com>
 MIME-Version: 1.0
-References: <20220110195449.12448-1-s.shtylyov@omp.ru> <20220110195449.12448-2-s.shtylyov@omp.ru>
- <20220110201014.mtajyrfcfznfhyqm@pengutronix.de> <YdyilpjC6rtz6toJ@lunn.ch>
- <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
- <20220112085009.dbasceh3obfok5dc@pengutronix.de> <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
- <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de> <Yd9L9SZ+g13iyKab@sirena.org.uk>
- <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru> <20220114092557.jrkfx7ihg26ekzci@pengutronix.de>
-In-Reply-To: <20220114092557.jrkfx7ihg26ekzci@pengutronix.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 14 Jan 2022 10:39:07 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVcMNMYf82-rz8_057BGwYWyPyhjAh3e9ynrv82GMiHvg@mail.gmail.com>
-Message-ID: <CAMuHMdVcMNMYf82-rz8_057BGwYWyPyhjAh3e9ynrv82GMiHvg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Mark Brown <broonie@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-phy@lists.infradead.org, Jiri Slaby <jirislaby@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        openipmi-developer@lists.sourceforge.net,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-edac@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        netdev@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        linux-mediatek@lists.infradead.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220113213027.457282-2-martin.fernandez@eclypsium.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Uwe,
+On Thu, Jan 13, 2022 at 06:30:23PM -0300, Martin Fernandez wrote:
+> Add the capability to mark regions of the memory memory_type able of
+> hardware memory encryption.
+> 
+> Also add the capability to query if all regions of a memory node are
+> able to do hardware memory encryption to call it when initializing the
+> nodes.
+> 
+> Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
+> ---
+>  include/linux/memblock.h |  5 ++++
+>  mm/memblock.c            | 49 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 54 insertions(+)
+> 
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index 9dc7cb239d21..374c03e10b2e 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -41,6 +41,7 @@ extern unsigned long long max_possible_pfn;
+>   * via a driver, and never indicated in the firmware-provided memory map as
+>   * system RAM. This corresponds to IORESOURCE_SYSRAM_DRIVER_MANAGED in the
+>   * kernel resource tree.
+> + * @MEMBLOCK_CRYPTO_CAPABLE: capable of hardware encryption
+>   */
+>  enum memblock_flags {
+>  	MEMBLOCK_NONE		= 0x0,	/* No special request */
+> @@ -48,6 +49,7 @@ enum memblock_flags {
+>  	MEMBLOCK_MIRROR		= 0x2,	/* mirrored region */
+>  	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
+>  	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
+> +	MEMBLOCK_CRYPTO_CAPABLE = 0x10,  /* capable of hardware encryption */
 
-On Fri, Jan 14, 2022 at 10:26 AM Uwe Kleine-König
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Thu, Jan 13, 2022 at 11:35:34PM +0300, Sergey Shtylyov wrote:
-> > On 1/13/22 12:45 AM, Mark Brown wrote:
-> > >>> To me it sounds much more logical for the driver to check if an
-> > >>> optional irq is non-zero (available) or zero (not available), than to
-> > >>> sprinkle around checks for -ENXIO. In addition, you have to remember
-> > >>> that this one returns -ENXIO, while other APIs use -ENOENT or -ENOSYS
-> > >>> (or some other error code) to indicate absence. I thought not having
-> > >>> to care about the actual error code was the main reason behind the
-> > >>> introduction of the *_optional() APIs.
-> > >
-> > >> No, the main benefit of gpiod_get_optional() (and clk_get_optional()) is
-> > >> that you can handle an absent GPIO (or clk) as if it were available.
-> >
-> >    Hm, I've just looked at these and must note that they match 1:1 with
-> > platform_get_irq_optional(). Unfortunately, we can't however behave the
-> > same way in request_irq() -- because it has to support IRQ0 for the sake
-> > of i8253 drivers in arch/...
->
-> Let me reformulate your statement to the IMHO equivalent:
->
->         If you set aside the differences between
->         platform_get_irq_optional() and gpiod_get_optional(),
->         platform_get_irq_optional() is like gpiod_get_optional().
->
-> The introduction of gpiod_get_optional() made it possible to simplify
-> the following code:
->
->         reset_gpio = gpiod_get(...)
->         if IS_ERR(reset_gpio):
->                 error = PTR_ERR(reset_gpio)
->                 if error != -ENDEV:
->                         return error
->         else:
->                 gpiod_set_direction(reset_gpiod, INACTIVE)
->
-> to
->
->         reset_gpio = gpiod_get_optional(....)
->         if IS_ERR(reset_gpio):
->                 return reset_gpio
->         gpiod_set_direction(reset_gpiod, INACTIVE)
->
-> and I never need to actually know if the reset_gpio actually exists.
-> Either the line is put into its inactive state, or it doesn't exist and
-> then gpiod_set_direction is a noop. For a regulator or a clk this works
-> in a similar way.
->
-> However for an interupt this cannot work. You will always have to check
-> if the irq is actually there or not because if it's not you cannot just
-> ignore that. So there is no benefit of an optional irq.
->
-> Leaving error message reporting aside, the introduction of
-> platform_get_irq_optional() allows to change
->
->         irq = platform_get_irq(...);
->         if (irq < 0 && irq != -ENXIO) {
->                 return irq;
->         } else if (irq >= 0) {
->                 ... setup irq operation ...
->         } else { /* irq == -ENXIO */
->                 ... setup polling ...
->         }
->
-> to
->
->         irq = platform_get_irq_optional(...);
->         if (irq < 0 && irq != -ENXIO) {
->                 return irq;
->         } else if (irq >= 0) {
->                 ... setup irq operation ...
->         } else { /* irq == -ENXIO */
->                 ... setup polling ...
->         }
->
-> which isn't a win. When changing the return value as you suggest, it can
-> be changed instead to:
->
->         irq = platform_get_irq_optional(...);
->         if (irq < 0) {
->                 return irq;
->         } else if (irq > 0) {
->                 ... setup irq operation ...
->         } else { /* irq == 0 */
->                 ... setup polling ...
->         }
->
-> which is a tad nicer. If that is your goal however I ask you to also
-> change the semantic of platform_get_irq() to return 0 on "not found".
+Nit: please keep the comments aligned with TAB.
 
-Please don't make that change. If platform_get_irq() would return 0 on
-"not found", all existing users have to be changed to:
+>  };
+>  
+>  /**
+> @@ -121,6 +123,9 @@ int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
+>  void memblock_trim_memory(phys_addr_t align);
+>  bool memblock_overlaps_region(struct memblock_type *type,
+>  			      phys_addr_t base, phys_addr_t size);
+> +bool memblock_node_is_crypto_capable(int nid);
+> +int memblock_mark_crypto_capable(phys_addr_t base, phys_addr_t size);
+> +int memblock_clear_crypto_capable(phys_addr_t base, phys_addr_t size);
+>  int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
+>  int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
+>  int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 1018e50566f3..61ec50647469 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -191,6 +191,27 @@ bool __init_memblock memblock_overlaps_region(struct memblock_type *type,
+>  	return i < type->cnt;
+>  }
+>  
+> +/**
+> + * memblock_node_is_crypto_capable - get if whole node is capable
+> + * of encryption
+> + * @nid: number of node
+> + *
+> + * Iterate over all memory memblock_type and find if all regions under
+> + * node @nid are capable of hardware encryption.
 
-        irq = platform_get_irq(...);
-        if (irq < 0) {
-                return irq;
-        } else if (!irq) {
-                return -ENOENT;
-        } else {
-                ... setup irq operation ...
-        }
+Please add Return: description, otherwise kernel-doc is unhappy
 
-If the IRQ is not optional, there should be an error code when it is
-not present. This keeps error handling simple.
+> + */
+> +bool __init_memblock memblock_node_is_crypto_capable(int nid)
+> +{
+> +	struct memblock_region *region;
+> +
+> +	for_each_mem_region(region) {
+> +		if ((memblock_get_region_node(region) == nid) &&
+> +		    !(region->flags & MEMBLOCK_CRYPTO_CAPABLE))
+> +			return false;
+> +	}
 
-The _optional() difference lies in the zero/NULL vs. error code in
-case of not present.
+As we discussed on v3, please add a printk if the same node has both
+crypto-capable and not crypto-capable regions.
 
-> Note the win is considerably less compared to gpiod_get_optional vs
-> gpiod_get however. And then it still lacks the semantic of a dummy irq
-> which IMHO forfeits the right to call it ..._optional().
->
-> Now I'm unwilling to continue the discussion unless there pops up a
-> suggestion that results in a considerable part (say > 10%) of the
-> drivers using platform_get_irq_optional not having to check if the
-> return value corresponds to "not found".
+https://lore.kernel.org/all/Ya++1FwWzKr2wYQH@kernel.org/
 
-Usually drivers do have to check if the interrupt was present or
-not, because they may have to change the operation of the driver,
-depending on interrupt-based or timer/polling-based processing.
+> +
+> +	return true;
+> +}
+> +
+>  /**
+>   * __memblock_find_range_bottom_up - find free area utility in bottom-up
+>   * @start: start of candidate range
+> @@ -885,6 +906,34 @@ static int __init_memblock memblock_setclr_flag(phys_addr_t base,
+>  	return 0;
+>  }
+>  
+> +/**
+> + * memblock_mark_crypto_capable - Mark memory regions capable of hardware
+> + * encryption with flag MEMBLOCK_CRYPTO_CAPABLE.
+> + * @base: the base phys addr of the region
+> + * @size: the size of the region
+> + *
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +int __init_memblock memblock_mark_crypto_capable(phys_addr_t base,
+> +						 phys_addr_t size)
+> +{
+> +	return memblock_setclr_flag(base, size, 1, MEMBLOCK_CRYPTO_CAPABLE);
+> +}
+> +
+> +/**
+> + * memblock_clear_crypto_capable - Clear flag MEMBLOCK_CRYPTO for a
+> + * specified region.
+> + * @base: the base phys addr of the region
+> + * @size: the size of the region
+> + *
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +int __init_memblock memblock_clear_crypto_capable(phys_addr_t base,
+> +						  phys_addr_t size)
+> +{
+> +	return memblock_setclr_flag(base, size, 0, MEMBLOCK_CRYPTO_CAPABLE);
+> +}
+> +
+>  /**
+>   * memblock_mark_hotplug - Mark hotpluggable memory with flag MEMBLOCK_HOTPLUG.
+>   * @base: the base phys addr of the region
+> -- 
+> 2.30.2
+> 
 
-Clocks, regulators, and resets are different, as their absence is
-really a no-op.  The absence of an interrupt is not a no-op (except
-for the separate interrupts vs. a single muxed interrupt case).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Sincerely yours,
+Mike.
