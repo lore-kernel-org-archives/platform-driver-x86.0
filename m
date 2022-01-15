@@ -2,113 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C92C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 15 Jan 2022 06:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12834C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 15 Jan 2022 09:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229546AbiAOG77 (ORCPT
+        id S232740AbiAOJjZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 15 Jan 2022 01:59:59 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:57674 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbiAOG76 (ORCPT
+        Sat, 15 Jan 2022 04:39:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231480AbiAOJjZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 15 Jan 2022 01:59:58 -0500
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 410171F394;
-        Sat, 15 Jan 2022 06:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1642229997; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        Sat, 15 Jan 2022 04:39:25 -0500
+Received: from server00.inetadmin.eu (server00.inetadmin.eu [IPv6:2a01:390:1:2:e1b1:2:0:d7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB30EC061574;
+        Sat, 15 Jan 2022 01:39:24 -0800 (PST)
+Received: from [192.168.1.103] (ip-46.34.226.0.o2inet.sk [46.34.226.0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: miroslav@wisdomtech.sk)
+        by server00.inetadmin.eu (Postfix) with ESMTPSA id F3AA713A1C6;
+        Sat, 15 Jan 2022 10:39:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wisdomtech.sk;
+        s=dkiminetadmin; t=1642239559;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hPpaLHDUo6nY/syh5TXQg7yaeRb8DjB9j4D5fpeu5QU=;
-        b=eIj4SZcQH/CYWjy15Su5W9fEiK6JctiCUhESZ71D31v4u3xY5Qu2QpM5PZ8dnwk6nquOsS
-        Kr+MOJYpjTlyhe1ai5O7VrgI70i5Uv3Fb/+F6cAdrUwqUm4hrvVWVmT3f+GRKAG4P5Tldo
-        j+Px+tp6RgvCNs160IurFCeWSYn3Edg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1642229997;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hPpaLHDUo6nY/syh5TXQg7yaeRb8DjB9j4D5fpeu5QU=;
-        b=+OfH3tSQvQJoCBCbbXCvvzgXhxSoR7XtPyWoqh7uYN+gOtDgu2UlPMoMAa+DBhz/lET7em
-        on82127RVloDarAQ==
-Received: from alsa1.suse.de (alsa1.suse.de [10.160.4.42])
-        by relay2.suse.de (Postfix) with ESMTP id 1C240A3B81;
-        Sat, 15 Jan 2022 06:59:57 +0000 (UTC)
-Date:   Sat, 15 Jan 2022 07:59:57 +0100
-Message-ID: <s5hy23h32mq.wl-tiwai@suse.de>
-From:   Takashi Iwai <tiwai@suse.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lucas Tanure <tanureal@opensource.cirrus.com>,
-        Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        patches@opensource.cirrus.com,
+        bh=gfeDWExe+wd+3DQxVnBg4hJPgt0RAPzKVg6T6rM3vFE=;
+        b=aAwwPXkU/0mS6EVYioVb2wEL0ikrtJF9rDiZAeI2JWOITiyKlPUvb04T4m6+zQDeh9grAf
+        oh8192Vdc+H5j0f9TG+1RDm+ynwkzI4dBL6MYpKvS9n20qSWsoL3hAtRxoBruIDLjGJEiw
+        GLS2CSogwzgPBSVCZROwR2CYpNfP3aM=
+Message-ID: <5c0ed06a-617e-077a-a4a4-549e91d372ba@wisdomtech.sk>
+Date:   Sat, 15 Jan 2022 10:39:16 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: Touchpad stickiness on AMD laptops (was Dell Inspiron/XPS)
+Content-Language: en-US
+To:     "Limonciello, Mario" <mario.limonciello@amd.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Benjamin Tissoires <btissoir@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andrea Ippolito <andrea.ippo@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] ACPI / scan: Create platform device for CLSA0100
-In-Reply-To: <55cb8127-65e2-4d56-5127-2722c5bfe11f@redhat.com>
-References: <20220113170728.1953559-1-tanureal@opensource.cirrus.com>
-        <20220113170728.1953559-5-tanureal@opensource.cirrus.com>
-        <s5hee5a47et.wl-tiwai@suse.de>
-        <CAJZ5v0ijGWNd9s-4mrFgK-QbPDhnj2K3DF+Z45t7ckV6ET0hpQ@mail.gmail.com>
-        <55cb8127-65e2-4d56-5127-2722c5bfe11f@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
- (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
-Content-Type: text/plain; charset=US-ASCII
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>
+References: <CAGhUXvBw4rzCQrqttyyS=Psxmhppk79c6fDoxPbV91jE7fO_9A@mail.gmail.com>
+ <CAGhUXvDNj2v3O==+wWWKPYVzej8Vq+WNiBtPwmYxSQ2dTuLb9Q@mail.gmail.com>
+ <CAGhUXvC8eHfxEKzkGN06VvRU6Z0ko7MJ9hF6uXNq+PxRZSbEmQ@mail.gmail.com>
+ <70cbe360-6385-2536-32bd-ae803517d2b2@redhat.com> <YdbrLz3tU4ohANDk@ninjato>
+ <42c83ec8-bbac-85e2-9ab5-87e59a679f95@redhat.com>
+ <CAO-hwJJ9ALxpd5oRU8SQ3F65hZjDitR=MzmwDk=uiEguaXZYtw@mail.gmail.com>
+ <5409e747-0c51-24e2-7ffa-7dd9c8a7aec7@amd.com> <Yd6SRl7sm8zS85Al@ninjato>
+ <596d6af1-d67c-b9aa-0496-bd898350865c@wisdomtech.sk>
+ <d39101a9-adc6-df32-12f5-fccc8fd34515@amd.com>
+From:   =?UTF-8?Q?Miroslav_Bend=c3=adk?= <miroslav@wisdomtech.sk>
+In-Reply-To: <d39101a9-adc6-df32-12f5-fccc8fd34515@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 14 Jan 2022 19:56:04 +0100,
-Hans de Goede wrote:
-> 
-> Hi,
-> 
-> On 1/14/22 18:51, Rafael J. Wysocki wrote:
-> > On Fri, Jan 14, 2022 at 5:19 PM Takashi Iwai <tiwai@suse.de> wrote:
-> >>
-> >> On Thu, 13 Jan 2022 18:07:28 +0100,
-> >> Lucas Tanure wrote:
-> >>>
-> >>> The ACPI device with CLSA0100 is a sound card with
-> >>> multiple instances of CS35L41 connected by I2C to
-> >>> the main CPU.
-> >>>
-> >>> We add an ID to the i2c_multi_instantiate_idsi list
-> >>> to enumerate all I2C slaves correctly.
-> >>>
-> >>> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
-> >>
-> >> I think it's better to merge this from sound git tree together with
-> >> others in the patch set, presumably for rc1.
-> >>
-> >> It'd be great if ACPI people can take a review and give an ack/nack.
-> > 
-> > Hans, what do you think?
-> 
-> This patch (5/5) applies on top of:
-> 
-> https://lore.kernel.org/linux-acpi/20211210154050.3713-1-sbinding@opensource.cirrus.com/
-> 
-> Which still needs some work and which really should be merged
-> through the ACPI tree. IMHO it would be best to simply drop
-> this (5/5) from this series and move it to the v3 of the
-> series which I've linked to above.
-> 
-> 1-4 can be merged through the alsa tree independently of 5/5 AFAIK.
+ > I think "SMBUSx11 I2CCommand" may be what you're looking for.
 
-OK, that's fine.
+This has no effect and i know (probably) why.
 
-Lucas, could you submit v3 patches in the suggested way?
+In AMD documentation is address ending with 0x20 ASF, not SMBus. Some 
+registers
+have same function and this is probably reason, why communication works.
 
+This code should write 0x2c address to I2CCommand. If this is RW, then 
+reading
+should return 0x2c, but it returns 0x00.
 
-thanks,
+outb_p(0x2c, (0x11 + piix4_smba)); // I2CCommand
+printk(KERN_INFO "smbus I2CCommand %02x\n", inb_p(0x11 + piix4_smba));
 
-Takashi
+If this is ASF, then 0x11 is read only. 0x0e, 0x0f should have initial value
+0xa8 0xaa. Here is register dump:
+
+0000 0002 5802 0000 0f59 00ff ff00 a8aa  0000 0081 0002 0400 0000 0000 
+0000 0000
+
+Now i am trying to change ASF registers instead of SMBus registers.
+
+I have tried to enable interrupts and set listen address, but it don't 
+work or
+i can't recognize the difference between interrupts generated by 
+transfers and
+interrupts generated from slave.
+
+outb_p(0x02, 0x15 + piix4_smba); // SlaveIntrListenEn
+outb_p(0x2c << 1 | 0x01, 0x09 + piix4_smba); // ListenAdr | ListenAdrEn
+
+Here is register dump for interrupts:
+
+https://pastebin.com/eYnb30sL
+
