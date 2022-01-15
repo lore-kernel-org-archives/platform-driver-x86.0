@@ -2,154 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CAFC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 15 Jan 2022 00:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C92C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 15 Jan 2022 06:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230200AbiAOAFh (ORCPT
+        id S229546AbiAOG77 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 14 Jan 2022 19:05:37 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:44088 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbiAOAFh (ORCPT
+        Sat, 15 Jan 2022 01:59:59 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:57674 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229529AbiAOG76 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 14 Jan 2022 19:05:37 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2D020B82A43
-        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Jan 2022 00:05:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5D42C36AE9;
-        Sat, 15 Jan 2022 00:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642205134;
-        bh=An1slhAruAVplvLVhxcW3sJqfFolzxrxpoEUeWAy4Ro=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N1+277DVy25eSzm2BSqpfUnOwOoI7MNqLiL+o+LaL5kGaLbuZV+YerzJ+4F4/qXlQ
-         C+TGKzocVBMCoFzDurO37vVWeQUuImGssiOMz6gqnAX8WZfIeBF3yn/yDqV7kD6m79
-         dTDdZNToiV8lGSTh9hZNNJvMRljIwCIXBPS8KOVoebheUH5SWQu2h5l5LbQpJnlA8Z
-         e3FyOb5YpSdNMbuu4ebzcsvLr2wiqTHGtmwiy6M7BRetwP02wCe7Kk0oWamQh4aPDH
-         NlTFadyM6kZNrMosPcflt7wQOsRGLjx0y4B472it0ZR0RMgv7w4NUJ+GorTGnhKviI
-         SkB7vbNS3Ak1A==
-Date:   Fri, 14 Jan 2022 16:05:33 -0800
-From:   Mark Gross <markgross@kernel.org>
+        Sat, 15 Jan 2022 01:59:58 -0500
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 410171F394;
+        Sat, 15 Jan 2022 06:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1642229997; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hPpaLHDUo6nY/syh5TXQg7yaeRb8DjB9j4D5fpeu5QU=;
+        b=eIj4SZcQH/CYWjy15Su5W9fEiK6JctiCUhESZ71D31v4u3xY5Qu2QpM5PZ8dnwk6nquOsS
+        Kr+MOJYpjTlyhe1ai5O7VrgI70i5Uv3Fb/+F6cAdrUwqUm4hrvVWVmT3f+GRKAG4P5Tldo
+        j+Px+tp6RgvCNs160IurFCeWSYn3Edg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1642229997;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hPpaLHDUo6nY/syh5TXQg7yaeRb8DjB9j4D5fpeu5QU=;
+        b=+OfH3tSQvQJoCBCbbXCvvzgXhxSoR7XtPyWoqh7uYN+gOtDgu2UlPMoMAa+DBhz/lET7em
+        on82127RVloDarAQ==
+Received: from alsa1.suse.de (alsa1.suse.de [10.160.4.42])
+        by relay2.suse.de (Postfix) with ESMTP id 1C240A3B81;
+        Sat, 15 Jan 2022 06:59:57 +0000 (UTC)
+Date:   Sat, 15 Jan 2022 07:59:57 +0100
+Message-ID: <s5hy23h32mq.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: intel_crystal_cove_charger: Fix IRQ
- masking / unmasking
-Message-ID: <20220115000533.GB133328@T470>
-References: <20220111232309.377642-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220111232309.377642-1-hdegoede@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lucas Tanure <tanureal@opensource.cirrus.com>,
+        Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        patches@opensource.cirrus.com,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/5] ACPI / scan: Create platform device for CLSA0100
+In-Reply-To: <55cb8127-65e2-4d56-5127-2722c5bfe11f@redhat.com>
+References: <20220113170728.1953559-1-tanureal@opensource.cirrus.com>
+        <20220113170728.1953559-5-tanureal@opensource.cirrus.com>
+        <s5hee5a47et.wl-tiwai@suse.de>
+        <CAJZ5v0ijGWNd9s-4mrFgK-QbPDhnj2K3DF+Z45t7ckV6ET0hpQ@mail.gmail.com>
+        <55cb8127-65e2-4d56-5127-2722c5bfe11f@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 12:23:09AM +0100, Hans de Goede wrote:
-> The driver as originally submitted accidentally relied on Android having
-> run before and Android having unmasked the 2nd level IRQ-mask for the
-> charger IRQ. This worked since these are PMIC registers which are only
-> reset when the battery is fully drained or disconnected.
-Correct me if I'm wrong but Android is a usermode stack.  It cannot unmask
-IRQ's form user mode.
+On Fri, 14 Jan 2022 19:56:04 +0100,
+Hans de Goede wrote:
+> 
+> Hi,
+> 
+> On 1/14/22 18:51, Rafael J. Wysocki wrote:
+> > On Fri, Jan 14, 2022 at 5:19 PM Takashi Iwai <tiwai@suse.de> wrote:
+> >>
+> >> On Thu, 13 Jan 2022 18:07:28 +0100,
+> >> Lucas Tanure wrote:
+> >>>
+> >>> The ACPI device with CLSA0100 is a sound card with
+> >>> multiple instances of CS35L41 connected by I2C to
+> >>> the main CPU.
+> >>>
+> >>> We add an ID to the i2c_multi_instantiate_idsi list
+> >>> to enumerate all I2C slaves correctly.
+> >>>
+> >>> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
+> >>
+> >> I think it's better to merge this from sound git tree together with
+> >> others in the patch set, presumably for rc1.
+> >>
+> >> It'd be great if ACPI people can take a review and give an ack/nack.
+> > 
+> > Hans, what do you think?
+> 
+> This patch (5/5) applies on top of:
+> 
+> https://lore.kernel.org/linux-acpi/20211210154050.3713-1-sbinding@opensource.cirrus.com/
+> 
+> Which still needs some work and which really should be merged
+> through the ACPI tree. IMHO it would be best to simply drop
+> this (5/5) from this series and move it to the v3 of the
+> series which I've linked to above.
+> 
+> 1-4 can be merged through the alsa tree independently of 5/5 AFAIK.
 
-I'm guessing the persistant PMIC registeres where set when running a vendor
-kernel that was in use with Anroid prior to installing one using this change
-and a modern kernel, and after the batteries ran out or where removed the
-charger didn't work.
+OK, that's fine.
 
---mark
+Lucas, could you submit v3 patches in the suggested way?
 
-> 
-> Fix the charger IRQ no longer working after loss of battery power by
-> properly setting the 2nd level IRQ-mask for the charger IRQ.
-> 
-> Note this removes the need to enable/disable our parent IRQ which just
-> sets the mask bit in the 1st level IRQ-mask register, setting one of
-> the 2 level masks is enough to stop the IRQ from getting reported.
-> 
-> Fixes: 761db353d9e2 ("platform/x86: Add intel_crystal_cove_charger driver")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  .../platform/x86/intel/crystal_cove_charger.c | 26 +++++++++----------
->  1 file changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/crystal_cove_charger.c b/drivers/platform/x86/intel/crystal_cove_charger.c
-> index 0374bc742513..eeaa926d2058 100644
-> --- a/drivers/platform/x86/intel/crystal_cove_charger.c
-> +++ b/drivers/platform/x86/intel/crystal_cove_charger.c
-> @@ -17,6 +17,7 @@
->  #include <linux/regmap.h>
->  
->  #define CHGRIRQ_REG					0x0a
-> +#define MCHGRIRQ_REG					0x17
->  
->  struct crystal_cove_charger_data {
->  	struct mutex buslock; /* irq_bus_lock */
-> @@ -25,8 +26,8 @@ struct crystal_cove_charger_data {
->  	struct irq_domain *irq_domain;
->  	int irq;
->  	int charger_irq;
-> -	bool irq_enabled;
-> -	bool irq_is_enabled;
-> +	u8 mask;
-> +	u8 new_mask;
->  };
->  
->  static irqreturn_t crystal_cove_charger_irq(int irq, void *data)
-> @@ -53,13 +54,9 @@ static void crystal_cove_charger_irq_bus_sync_unlock(struct irq_data *data)
->  {
->  	struct crystal_cove_charger_data *charger = irq_data_get_irq_chip_data(data);
->  
-> -	if (charger->irq_is_enabled != charger->irq_enabled) {
-> -		if (charger->irq_enabled)
-> -			enable_irq(charger->irq);
-> -		else
-> -			disable_irq(charger->irq);
-> -
-> -		charger->irq_is_enabled = charger->irq_enabled;
-> +	if (charger->mask != charger->new_mask) {
-> +		regmap_write(charger->regmap, MCHGRIRQ_REG, charger->new_mask);
-> +		charger->mask = charger->new_mask;
->  	}
->  
->  	mutex_unlock(&charger->buslock);
-> @@ -69,14 +66,14 @@ static void crystal_cove_charger_irq_unmask(struct irq_data *data)
->  {
->  	struct crystal_cove_charger_data *charger = irq_data_get_irq_chip_data(data);
->  
-> -	charger->irq_enabled = true;
-> +	charger->new_mask &= ~BIT(data->hwirq);
->  }
->  
->  static void crystal_cove_charger_irq_mask(struct irq_data *data)
->  {
->  	struct crystal_cove_charger_data *charger = irq_data_get_irq_chip_data(data);
->  
-> -	charger->irq_enabled = false;
-> +	charger->new_mask |= BIT(data->hwirq);
->  }
->  
->  static void crystal_cove_charger_rm_irq_domain(void *data)
-> @@ -130,10 +127,13 @@ static int crystal_cove_charger_probe(struct platform_device *pdev)
->  	irq_set_nested_thread(charger->charger_irq, true);
->  	irq_set_noprobe(charger->charger_irq);
->  
-> +	/* Mask the single 2nd level IRQ before enabling the 1st level IRQ */
-> +	charger->mask = BIT(0);
-> +	regmap_write(charger->regmap, MCHGRIRQ_REG, charger->mask);
-> +
->  	ret = devm_request_threaded_irq(&pdev->dev, charger->irq, NULL,
->  					crystal_cove_charger_irq,
-> -					IRQF_ONESHOT | IRQF_NO_AUTOEN,
-> -					KBUILD_MODNAME, charger);
-> +					IRQF_ONESHOT, KBUILD_MODNAME, charger);
->  	if (ret)
->  		return dev_err_probe(&pdev->dev, ret, "requesting irq\n");
->  
-> -- 
-> 2.33.1
-> 
+
+thanks,
+
+Takashi
