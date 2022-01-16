@@ -2,172 +2,189 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145ACC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 16 Jan 2022 15:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8634AC4167D
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 16 Jan 2022 18:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235499AbiAPPnl (ORCPT
+        id S236003AbiAPSPj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 16 Jan 2022 10:43:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232426AbiAPPnl (ORCPT
+        Sun, 16 Jan 2022 13:15:39 -0500
+Received: from mxout03.lancloud.ru ([45.84.86.113]:59572 "EHLO
+        mxout03.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235965AbiAPSPd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 16 Jan 2022 10:43:41 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174CEC061574
-        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Jan 2022 07:43:41 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7A67860F6D
-        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Jan 2022 15:43:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E0E0BC36AF7
-        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Jan 2022 15:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642347819;
-        bh=wHrCrWYI8Cnolv5UFHMghtiNdqPoGaI2rPnEDpFjIms=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=PFz3ebMiAeRbS6xdxua9aXmwWccfvUrlLpavD/pHMCr+ZxwDuk4xMxc6d+gtiF7Fz
-         rpLwuigNUbkOzOJBpi1YEcOf/EqHfs2CHYDzBmeNot5we16Gol+Gg/Z+U3wVpYue2s
-         dlubEnqP5ceoxbwZ7u9bx+5y9E8DcOuAUCOLEy3AEWy3AJCdnpCEuF08b/1fUuDPFi
-         89eXCiABMlxl8+nJkzSJpwLqTapK9H+nsBDauE4F81pshhOpJEAz4ITuZQee2mRnJr
-         hXEfKX9B+Fq29mTS+7AHDhv3FmT8rpoTsIWRSqJkTUBwckYogMPTvqkhQ2XSViYfrz
-         y5ypGJhuBhntQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id CFE91CC13AE; Sun, 16 Jan 2022 15:43:39 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Sun, 16 Jan 2022 15:43:38 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: kernel@melin.net
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-204807-215701-wkLA93iXK8@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sun, 16 Jan 2022 13:15:33 -0500
+Received: from LanCloud
+DKIM-Filter: OpenDKIM Filter v2.11.0 mxout03.lancloud.ru 2173F206F618
+Received: from LanCloud
+Received: from LanCloud
+Received: from LanCloud
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-iio@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <linux-phy@lists.infradead.org>, Jiri Slaby <jirislaby@kernel.org>,
+        <openipmi-developer@lists.sourceforge.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Sebastian Reichel <sre@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-edac@vger.kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Linux MMC List" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        <linux-mediatek@lists.infradead.org>,
+        "Brian Norris" <computersforpeace@gmail.com>,
+        <netdev@vger.kernel.org>
+References: <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
+ <YdyilpjC6rtz6toJ@lunn.ch>
+ <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
+ <20220112085009.dbasceh3obfok5dc@pengutronix.de>
+ <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
+ <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
+ <Yd9L9SZ+g13iyKab@sirena.org.uk>
+ <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru>
+ <20220114092557.jrkfx7ihg26ekzci@pengutronix.de>
+ <61b80939-357d-14f5-df99-b8d102a4e1a1@omp.ru>
+ <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <57af1851-9341-985e-7b28-d2ba86770ecb@omp.ru>
+Date:   Sun, 16 Jan 2022 21:15:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
+In-Reply-To: <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [192.168.11.198]
+X-ClientProxiedBy: LFEXT01.lancloud.ru (fd00:f066::141) To
+ LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hello!
 
-Per Melin (kernel@melin.net) changed:
+On 1/14/22 11:22 PM, Uwe Kleine-König wrote:
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |kernel@melin.net
+>>>>>>> To me it sounds much more logical for the driver to check if an
+>>>>>>> optional irq is non-zero (available) or zero (not available), than to
+>>>>>>> sprinkle around checks for -ENXIO. In addition, you have to remember
+>>>>>>> that this one returns -ENXIO, while other APIs use -ENOENT or -ENOSYS
+>>>>>>> (or some other error code) to indicate absence. I thought not having
+>>>>>>> to care about the actual error code was the main reason behind the
+>>>>>>> introduction of the *_optional() APIs.
+>>>>>
+>>>>>> No, the main benefit of gpiod_get_optional() (and clk_get_optional()) is
+>>>>>> that you can handle an absent GPIO (or clk) as if it were available.
+>>>>
+>>>>    Hm, I've just looked at these and must note that they match 1:1 with
+>>>> platform_get_irq_optional(). Unfortunately, we can't however behave the
+>>>> same way in request_irq() -- because it has to support IRQ0 for the sake
+>>>> of i8253 drivers in arch/...
+>>>
+>>> Let me reformulate your statement to the IMHO equivalent:
+>>>
+>>> 	If you set aside the differences between
+>>> 	platform_get_irq_optional() and gpiod_get_optional(),
+>>
+>>    Sorry, I should make it clear this is actually the diff between a would-be
+>> platform_get_irq_optional() after my patch, not the current code...
+> 
+> The similarity is that with your patch both gpiod_get_optional() and
+> platform_get_irq_optional() return NULL and 0 on not-found. The relevant
+> difference however is that for a gpiod NULL is a dummy value, while for
+> irqs it's not. So the similarity is only syntactically, but not
+> semantically.
 
---- Comment #210 from Per Melin (kernel@melin.net) ---
-One more board.
+   I have noting to say here, rather than optional IRQ could well have a different
+meaning than for clk/gpio/etc.
 
---- a/drivers/hwmon/nct6775.c
-+++ b/drivers/hwmon/nct6775.c
-@@ -5001,6 +5001,7 @@ static const char * const asus_wmi_boards[] =3D {
-        "ROG STRIX X570-F GAMING",
-        "ROG STRIX X570-I GAMING",
-        "ROG STRIX Z390-E GAMING",
-+       "ROG STRIX Z390-F GAMING",
-        "ROG STRIX Z490-I GAMING",
-        "TUF GAMING B550M-PLUS",
-        "TUF GAMING B550M-PLUS (WI-FI)",
+[...]
+>>> However for an interupt this cannot work. You will always have to check
+>>> if the irq is actually there or not because if it's not you cannot just
+>>> ignore that. So there is no benefit of an optional irq.
+>>>
+>>> Leaving error message reporting aside, the introduction of
+>>> platform_get_irq_optional() allows to change
+>>>
+>>> 	irq = platform_get_irq(...);
+>>> 	if (irq < 0 && irq != -ENXIO) {
+>>> 		return irq;
+>>> 	} else if (irq >= 0) {
+>>
+>>    Rather (irq > 0) actually, IRQ0 is considered invalid (but still returned).
+> 
+> This is a topic I don't feel strong for, so I'm sloppy here. If changing
+> this is all that is needed to convince you of my point ...
 
-And it works.
+   Note that we should absolutely (and first of all) stop returning 0 from platform_get_irq()
+on a "real" IRQ0. Handling that "still good" zero absolutely doesn't scale e.g. for the subsystems
+(like libata) which take 0 as an indication that the polling mode should be used... We can't afford
+to be sloppy here. ;-)
 
-[    8.534975] nct6775: Using Asus WMI to access 0xc1 chip.
-[    8.535102] nct6775: Enabling hardware monitor logical device mappings.
-[    8.535141] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
+[...]
 
-nct6798-isa-0290
-Adapter: ISA adapter
-in0:                      648.00 mV (min =3D  +0.00 V, max =3D  +1.74 V)
-in1:                      1000.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  =
-ALARM
-in2:                        3.38 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in3:                        3.36 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in4:                        1.01 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in5:                      176.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in6:                        0.00 V  (min =3D  +0.00 V, max =3D  +0.00 V)
-in7:                        3.38 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in8:                        3.12 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in9:                      528.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in10:                     584.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in11:                     512.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in12:                       1.06 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in13:                     296.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in14:                     560.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-fan1:                      481 RPM  (min =3D    0 RPM)
-fan2:                      520 RPM  (min =3D    0 RPM)
-fan3:                      435 RPM  (min =3D    0 RPM)
-fan4:                      484 RPM  (min =3D    0 RPM)
-fan5:                        0 RPM  (min =3D    0 RPM)
-fan6:                      517 RPM  (min =3D    0 RPM)
-fan7:                     4231 RPM  (min =3D    0 RPM)
-SYSTIN:                    +28.0=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
-75.0=C2=B0C)  sensor =3D
-thermistor
-CPUTIN:                    +32.5=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
-75.0=C2=B0C)  sensor =3D
-thermistor
-AUXTIN0:                  -128.0=C2=B0C    sensor =3D thermistor
-AUXTIN1:                   +17.0=C2=B0C    sensor =3D thermistor
-AUXTIN2:                   +25.0=C2=B0C    sensor =3D thermistor
-AUXTIN3:                   +53.0=C2=B0C    sensor =3D thermistor
-PECI Agent 0 Calibration:  +32.5=C2=B0C=20=20
-PCH_CHIP_CPU_MAX_TEMP:      +0.0=C2=B0C=20=20
-PCH_CHIP_TEMP:              +0.0=C2=B0C=20=20
-PCH_CPU_TEMP:               +0.0=C2=B0C=20=20
-intrusion0:               OK
-intrusion1:               ALARM
-beep_enable:              disabled
+> Best regards
+> Uwe
 
-acpitz-acpi-0
-Adapter: ACPI interface
-temp1:        +27.8=C2=B0C  (crit =3D +119.0=C2=B0C)
-
-coretemp-isa-0000
-Adapter: ISA adapter
-Package id 0:  +45.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
-Core 0:        +32.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
-Core 1:        +33.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
-Core 2:        +33.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
-Core 3:        +45.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
-Core 4:        +32.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
-Core 5:        +33.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
-Core 6:        +33.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
-Core 7:        +32.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+MBR, Sergey
