@@ -2,127 +2,172 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F276C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 16 Jan 2022 14:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145ACC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 16 Jan 2022 15:43:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235436AbiAPOTS (ORCPT
+        id S235499AbiAPPnl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 16 Jan 2022 09:19:18 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:50044 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbiAPOTM (ORCPT
+        Sun, 16 Jan 2022 10:43:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232426AbiAPPnl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 16 Jan 2022 09:19:12 -0500
+        Sun, 16 Jan 2022 10:43:41 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174CEC061574
+        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Jan 2022 07:43:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 31DF260F2E;
-        Sun, 16 Jan 2022 14:19:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D360C36AE7;
-        Sun, 16 Jan 2022 14:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1642342750;
-        bh=KujYZ44NbqHewC3hStYnBx16eqgxm1SsBiD7vgCzy1A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sKsNPdg/t/aehm0kbBx0+iaMt7Vs15thP7mY+lgsvv2wpHp7hhFp/CL3s/+VFunx8
-         VMGsJpG9T+206AG5qxqWiAVL+YwMP+lMdgO6G29sYG5yQOnXi5Wp9YcaTPGre6QZaH
-         1Q5W85dO5PtMcGij5VwJ57avVdKo6t7UZumaWiEk=
-Date:   Sun, 16 Jan 2022 15:19:06 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Sergey Shtylyov <s.shtylyov@omp.ru>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>, alsa-devel@alsa-project.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-phy@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        openipmi-developer@lists.sourceforge.net,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        kvm@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Robert Richter <rric@kernel.org>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
-        Peter Korsgaard <peter@korsgaard.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Eric Auger <eric.auger@redhat.com>, netdev@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>,
-        linux-mediatek@lists.infradead.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
- (summary)
-Message-ID: <YeQpWu2sUVOSaT9I@kroah.com>
-References: <20220110195449.12448-1-s.shtylyov@omp.ru>
- <20220110195449.12448-2-s.shtylyov@omp.ru>
- <20220115183643.6zxalxqxrhkfgdfq@pengutronix.de>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7A67860F6D
+        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Jan 2022 15:43:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E0E0BC36AF7
+        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Jan 2022 15:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642347819;
+        bh=wHrCrWYI8Cnolv5UFHMghtiNdqPoGaI2rPnEDpFjIms=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=PFz3ebMiAeRbS6xdxua9aXmwWccfvUrlLpavD/pHMCr+ZxwDuk4xMxc6d+gtiF7Fz
+         rpLwuigNUbkOzOJBpi1YEcOf/EqHfs2CHYDzBmeNot5we16Gol+Gg/Z+U3wVpYue2s
+         dlubEnqP5ceoxbwZ7u9bx+5y9E8DcOuAUCOLEy3AEWy3AJCdnpCEuF08b/1fUuDPFi
+         89eXCiABMlxl8+nJkzSJpwLqTapK9H+nsBDauE4F81pshhOpJEAz4ITuZQee2mRnJr
+         hXEfKX9B+Fq29mTS+7AHDhv3FmT8rpoTsIWRSqJkTUBwckYogMPTvqkhQ2XSViYfrz
+         y5ypGJhuBhntQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id CFE91CC13AE; Sun, 16 Jan 2022 15:43:39 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Sun, 16 Jan 2022 15:43:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: kernel@melin.net
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-204807-215701-wkLA93iXK8@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220115183643.6zxalxqxrhkfgdfq@pengutronix.de>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Jan 15, 2022 at 07:36:43PM +0100, Uwe Kleine-König wrote:
-> A possible compromise: We can have both. We rename
-> platform_get_irq_optional() to platform_get_irq_silent() (or
-> platform_get_irq_silently() if this is preferred) and once all users are
-> are changed (which can be done mechanically), we reintroduce a
-> platform_get_irq_optional() with Sergey's suggested semantic (i.e.
-> return 0 on not-found, no error message printking).
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Please do not do that as anyone trying to forward-port an old driver
-will miss the abi change of functionality and get confused.  Make
-build-breaking changes, if the way a function currently works is
-changed in order to give people a chance.
+Per Melin (kernel@melin.net) changed:
 
-thanks,
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |kernel@melin.net
 
-greg k-h
+--- Comment #210 from Per Melin (kernel@melin.net) ---
+One more board.
+
+--- a/drivers/hwmon/nct6775.c
++++ b/drivers/hwmon/nct6775.c
+@@ -5001,6 +5001,7 @@ static const char * const asus_wmi_boards[] =3D {
+        "ROG STRIX X570-F GAMING",
+        "ROG STRIX X570-I GAMING",
+        "ROG STRIX Z390-E GAMING",
++       "ROG STRIX Z390-F GAMING",
+        "ROG STRIX Z490-I GAMING",
+        "TUF GAMING B550M-PLUS",
+        "TUF GAMING B550M-PLUS (WI-FI)",
+
+And it works.
+
+[    8.534975] nct6775: Using Asus WMI to access 0xc1 chip.
+[    8.535102] nct6775: Enabling hardware monitor logical device mappings.
+[    8.535141] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
+
+nct6798-isa-0290
+Adapter: ISA adapter
+in0:                      648.00 mV (min =3D  +0.00 V, max =3D  +1.74 V)
+in1:                      1000.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  =
+ALARM
+in2:                        3.38 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in3:                        3.36 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in4:                        1.01 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in5:                      176.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in6:                        0.00 V  (min =3D  +0.00 V, max =3D  +0.00 V)
+in7:                        3.38 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in8:                        3.12 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in9:                      528.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in10:                     584.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in11:                     512.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in12:                       1.06 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in13:                     296.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in14:                     560.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+fan1:                      481 RPM  (min =3D    0 RPM)
+fan2:                      520 RPM  (min =3D    0 RPM)
+fan3:                      435 RPM  (min =3D    0 RPM)
+fan4:                      484 RPM  (min =3D    0 RPM)
+fan5:                        0 RPM  (min =3D    0 RPM)
+fan6:                      517 RPM  (min =3D    0 RPM)
+fan7:                     4231 RPM  (min =3D    0 RPM)
+SYSTIN:                    +28.0=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
+75.0=C2=B0C)  sensor =3D
+thermistor
+CPUTIN:                    +32.5=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
+75.0=C2=B0C)  sensor =3D
+thermistor
+AUXTIN0:                  -128.0=C2=B0C    sensor =3D thermistor
+AUXTIN1:                   +17.0=C2=B0C    sensor =3D thermistor
+AUXTIN2:                   +25.0=C2=B0C    sensor =3D thermistor
+AUXTIN3:                   +53.0=C2=B0C    sensor =3D thermistor
+PECI Agent 0 Calibration:  +32.5=C2=B0C=20=20
+PCH_CHIP_CPU_MAX_TEMP:      +0.0=C2=B0C=20=20
+PCH_CHIP_TEMP:              +0.0=C2=B0C=20=20
+PCH_CPU_TEMP:               +0.0=C2=B0C=20=20
+intrusion0:               OK
+intrusion1:               ALARM
+beep_enable:              disabled
+
+acpitz-acpi-0
+Adapter: ACPI interface
+temp1:        +27.8=C2=B0C  (crit =3D +119.0=C2=B0C)
+
+coretemp-isa-0000
+Adapter: ISA adapter
+Package id 0:  +45.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
+Core 0:        +32.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
+Core 1:        +33.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
+Core 2:        +33.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
+Core 3:        +45.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
+Core 4:        +32.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
+Core 5:        +33.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
+Core 6:        +33.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
+Core 7:        +32.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=B0C)
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
