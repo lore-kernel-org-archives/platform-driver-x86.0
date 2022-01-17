@@ -2,60 +2,60 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB161C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Jan 2022 09:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A67C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Jan 2022 09:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238186AbiAQJzv (ORCPT
+        id S238233AbiAQJzx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 Jan 2022 04:55:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:37181 "EHLO
+        Mon, 17 Jan 2022 04:55:53 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:41063 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235893AbiAQJzu (ORCPT
+        by vger.kernel.org with ESMTP id S235893AbiAQJzw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 Jan 2022 04:55:50 -0500
+        Mon, 17 Jan 2022 04:55:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1642413350;
+        s=mimecast20190719; t=1642413352;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
         bh=+Zavah50CCFVi2Vkp9ku57YSss8cl2fM7vlj/N5ldog=;
-        b=e59wMR+vcJ8VUUDtBjkuXyGshLdp+kXmsb0ehM9cbj3WjLp8x86v4a1oK6ZI78lP7FYKHK
-        jSNWeNHRZrs6nCAbqwLxj5z1C3XIokZonqgpJkJ6QtT0jINIT202qydIQU5nYW2hjX7WPc
-        +vnKdCCWp9pY5u7J2gxtPJhhgoEtgWk=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        b=G+Tpqw6rrT3/qtmZhsQMxQ4Vx7JkP3p9EZcbRVnOAV1cfKeVz53kZMYQTvuhc6tbBjKigN
+        Fuhg+beKSZAaBP1Bw2xLFqgfKcjgsoSGZS89p38gKKs1XlqjjrtrMXrr2tdzqNgNXRVckc
+        6Pr5uwdYh/JpRvYsrL2mBBl7dRtMhpw=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-151-TjfOftl8MyKDtFOVWMGdRQ-1; Mon, 17 Jan 2022 04:55:48 -0500
-X-MC-Unique: TjfOftl8MyKDtFOVWMGdRQ-1
-Received: by mail-ed1-f70.google.com with SMTP id r14-20020aa7da0e000000b004021fa39843so3090287eds.15
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Jan 2022 01:55:48 -0800 (PST)
+ us-mta-187-phL_vgISMbCNobWOQ9GvGg-1; Mon, 17 Jan 2022 04:55:51 -0500
+X-MC-Unique: phL_vgISMbCNobWOQ9GvGg-1
+Received: by mail-ed1-f71.google.com with SMTP id o10-20020a056402438a00b00403212b6b1aso652169edc.13
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Jan 2022 01:55:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:from:to:cc:references:in-reply-to
          :content-transfer-encoding;
         bh=+Zavah50CCFVi2Vkp9ku57YSss8cl2fM7vlj/N5ldog=;
-        b=m6foHfoMYqRanSHHrdJ01jY+G24CrsoxvceWslKWb+4ML0YVmSYV5cPYglnIqEoC8K
-         TuPkCoZz4J+ywwfTa8QB30VMD6x8yRfTpa7o4QvMNy9zG7tDsPzaQCpru3rYs4j3/JRs
-         gNC52SwxGQC4WcOjc4vBBpQyyvbgVfM7xuvjyCBAtj4Ks1ME8FhZwtTHcKySJjbE1Cax
-         InZWI4T2pGPIYOnXYay2PNjTcbTk/f5ymgqXZJGYYsyhRdYCdk3bXo0sCobCJp8sR1X/
-         1FW4gIUcLwzJcrdAkNlw7/30C40gJgDRs+2iMGtte3oHHX/6yujAL/5cIHvGxzU71ICz
-         V39g==
-X-Gm-Message-State: AOAM533z8w02clA47Ump02BcSbDo7MpkQUwJdujS96izBX5TiJOgmFYI
-        rdjWNO+jraeSj2i06Q1kJT0pdnw8UQO/oB2boxy5WL5WZIGyrYjLEI9AfUCMPHIqMyjIJOGWXgB
-        +ETJEVsz6cOo/TJjyIRKAVT/QRsKIH4O9JA==
-X-Received: by 2002:a17:906:5d16:: with SMTP id g22mr4334372ejt.295.1642413345943;
-        Mon, 17 Jan 2022 01:55:45 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx2KI0C/qgzfh/MppIpeQpRdklF/xZHpgTIX8ATMgvSSdKg4eCb403rM0L0HVtuNA3dNFP5XQ==
-X-Received: by 2002:a17:906:5d16:: with SMTP id g22mr4334293ejt.295.1642413344199;
-        Mon, 17 Jan 2022 01:55:44 -0800 (PST)
+        b=U0uruQ1CGH4InInxmuq1x/LuBnlc8+HBVE8R0b8eoOfxOl1kAOecFyT0z7CHy3qWLJ
+         E2hILllr/3jPGOSVSlj+Va625F8Y7k+mr8yNGtWokCLi9hFYVpx/vfumqSVYxpsRq7Or
+         uoQqlirp04Hwe6FXLG2rmWZIz9vTHVgL2WoxCoOlOscVKqIqAJaZ2Rwe+Hk4GQAQni0p
+         pxUvPIqOt7bIXuurf8ECMhTFNepvYe/2w7+3slwK7V+HFXgw5ON5IeuzhXGCLkJzcQAs
+         ZR8jmBe41gUshCeXnA28pDSqEuHSnZMdjZvSi15ICtGPL2gRg6Ln6Lh9KTL06DakozYq
+         2YPg==
+X-Gm-Message-State: AOAM530xt8+RVq4sUPzelM6nu/qiKvO/kRdB7WPuBRzea7LZI15sEFQe
+        LXealbnMvavj0kaYRVwl54zn39dYZzac33IdrzwXg478cpZv8t2R6YuCwJAB+LS3vmfpTdDEW1N
+        HJeTd/Sg6lbMDCs09ewuwMXVYXVa9jr5SCA==
+X-Received: by 2002:a17:906:7315:: with SMTP id di21mr15727291ejc.700.1642413349658;
+        Mon, 17 Jan 2022 01:55:49 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxhwwQ8HP6Jnulq/kXnN+vvBYk9fXpL+wB1IwApZ20yLVly4rnosnO6IvMl0Vjc0FXyV+hZGA==
+X-Received: by 2002:a17:906:7315:: with SMTP id di21mr15727274ejc.700.1642413349413;
+        Mon, 17 Jan 2022 01:55:49 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id x11sm5685209edq.55.2022.01.17.01.55.43
+        by smtp.gmail.com with ESMTPSA id a6sm801730edx.94.2022.01.17.01.55.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jan 2022 01:55:43 -0800 (PST)
-Message-ID: <f9ef9270-159e-7c7d-c6b3-72a2196933b2@redhat.com>
-Date:   Mon, 17 Jan 2022 10:55:43 +0100
+        Mon, 17 Jan 2022 01:55:48 -0800 (PST)
+Message-ID: <9e8d71ab-da70-71c5-9083-86cd671ea495@redhat.com>
+Date:   Mon, 17 Jan 2022 10:55:48 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
