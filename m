@@ -2,189 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8634AC4167D
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 16 Jan 2022 18:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13EDC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Jan 2022 08:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236003AbiAPSPj (ORCPT
+        id S233418AbiAQIjh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 16 Jan 2022 13:15:39 -0500
-Received: from mxout03.lancloud.ru ([45.84.86.113]:59572 "EHLO
-        mxout03.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235965AbiAPSPd (ORCPT
+        Mon, 17 Jan 2022 03:39:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238285AbiAQIje (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 16 Jan 2022 13:15:33 -0500
-Received: from LanCloud
-DKIM-Filter: OpenDKIM Filter v2.11.0 mxout03.lancloud.ru 2173F206F618
-Received: from LanCloud
-Received: from LanCloud
-Received: from LanCloud
-Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-iio@vger.kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        <linux-phy@lists.infradead.org>, Jiri Slaby <jirislaby@kernel.org>,
-        <openipmi-developer@lists.sourceforge.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-edac@vger.kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "Linux MMC List" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        <linux-mediatek@lists.infradead.org>,
-        "Brian Norris" <computersforpeace@gmail.com>,
-        <netdev@vger.kernel.org>
-References: <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
- <YdyilpjC6rtz6toJ@lunn.ch>
- <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
- <20220112085009.dbasceh3obfok5dc@pengutronix.de>
- <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
- <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
- <Yd9L9SZ+g13iyKab@sirena.org.uk>
- <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru>
- <20220114092557.jrkfx7ihg26ekzci@pengutronix.de>
- <61b80939-357d-14f5-df99-b8d102a4e1a1@omp.ru>
- <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <57af1851-9341-985e-7b28-d2ba86770ecb@omp.ru>
-Date:   Sun, 16 Jan 2022 21:15:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        Mon, 17 Jan 2022 03:39:34 -0500
+Received: from server00.inetadmin.eu (server00.inetadmin.eu [IPv6:2a01:390:1:2:e1b1:2:0:d7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 107EBC061574;
+        Mon, 17 Jan 2022 00:39:34 -0800 (PST)
+Received: from [192.168.1.103] (ip-46.34.226.0.o2inet.sk [46.34.226.0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: miroslav@wisdomtech.sk)
+        by server00.inetadmin.eu (Postfix) with ESMTPSA id 4E4D613A1B0;
+        Mon, 17 Jan 2022 09:39:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wisdomtech.sk;
+        s=dkiminetadmin; t=1642408771;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=v+W0OeyEs/aAhaW1aUtr5IDfrkfeKWnzFmDd9YiGUYw=;
+        b=eIeTB78Nytlun94F/ydkU0PPjYRed7iZUvtyfsYUAOdXOb4wibhuLNNHmSzZxszExWsuDR
+        mrhchEfoGru/DTHepjEze7bwYZU6aQ9HmZgaA4mgVV3md6rmWJdtUcrJCCpfYM5rgOHpG2
+        1kwSOB1MP9gAW/OoqZT1e9p+A6ux4QI=
+Message-ID: <541865be-207d-01db-efc4-7eff600d56dc@wisdomtech.sk>
+Date:   Mon, 17 Jan 2022 09:39:20 +0100
 MIME-Version: 1.0
-In-Reply-To: <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
-Content-Type: text/plain; charset="windows-1252"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: Touchpad stickiness on AMD laptops (was Dell Inspiron/XPS)
 Content-Language: en-US
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Benjamin Tissoires <btissoir@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andrea Ippolito <andrea.ippo@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>
+References: <CAGhUXvBw4rzCQrqttyyS=Psxmhppk79c6fDoxPbV91jE7fO_9A@mail.gmail.com>
+ <CAGhUXvDNj2v3O==+wWWKPYVzej8Vq+WNiBtPwmYxSQ2dTuLb9Q@mail.gmail.com>
+ <CAGhUXvC8eHfxEKzkGN06VvRU6Z0ko7MJ9hF6uXNq+PxRZSbEmQ@mail.gmail.com>
+ <70cbe360-6385-2536-32bd-ae803517d2b2@redhat.com> <YdbrLz3tU4ohANDk@ninjato>
+ <42c83ec8-bbac-85e2-9ab5-87e59a679f95@redhat.com>
+ <CAO-hwJJ9ALxpd5oRU8SQ3F65hZjDitR=MzmwDk=uiEguaXZYtw@mail.gmail.com>
+ <5409e747-0c51-24e2-7ffa-7dd9c8a7aec7@amd.com> <Yd6SRl7sm8zS85Al@ninjato>
+ <596d6af1-d67c-b9aa-0496-bd898350865c@wisdomtech.sk>
+ <d39101a9-adc6-df32-12f5-fccc8fd34515@amd.com>
+ <5c0ed06a-617e-077a-a4a4-549e91d372ba@wisdomtech.sk>
+ <BL1PR12MB5157412781B6C84B97C2A3E7E2559@BL1PR12MB5157.namprd12.prod.outlook.com>
+From:   =?UTF-8?Q?Miroslav_Bend=c3=adk?= <miroslav@wisdomtech.sk>
+In-Reply-To: <BL1PR12MB5157412781B6C84B97C2A3E7E2559@BL1PR12MB5157.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [192.168.11.198]
-X-ClientProxiedBy: LFEXT01.lancloud.ru (fd00:f066::141) To
- LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello!
+> [AMD Official Use Only]
+>
+>> Now i am trying to change ASF registers instead of SMBus registers.
+>> I have tried to enable interrupts and set listen address, but it don't
+>> work or
+>> i can't recognize the difference between interrupts generated by
+>> transfers and
+>> interrupts generated from slave.
+> Try reading the value of SFx0A ASFStatus bit 5 (it's write to clear if it's an interrupt).
+>
+>> outb_p(0x02, 0x15 + piix4_smba); // SlaveIntrListenEn
+>> outb_p(0x2c << 1 | 0x01, 0x09 + piix4_smba); // ListenAdr | ListenAdrEn
+> ASFx04 SlaveAddress instead of  ASFx09 ListenAdr
+> ?
+>
+>
+Little bit more informations:
 
-On 1/14/22 11:22 PM, Uwe Kleine-K�nig wrote:
+Interrupts are generated only if ASFx09 ListenAdr is:
 
->>>>>>> To me it sounds much more logical for the driver to check if an
->>>>>>> optional irq is non-zero (available) or zero (not available), than to
->>>>>>> sprinkle around checks for -ENXIO. In addition, you have to remember
->>>>>>> that this one returns -ENXIO, while other APIs use -ENOENT or -ENOSYS
->>>>>>> (or some other error code) to indicate absence. I thought not having
->>>>>>> to care about the actual error code was the main reason behind the
->>>>>>> introduction of the *_optional() APIs.
->>>>>
->>>>>> No, the main benefit of gpiod_get_optional() (and clk_get_optional()) is
->>>>>> that you can handle an absent GPIO (or clk) as if it were available.
->>>>
->>>>    Hm, I've just looked at these and must note that they match 1:1 with
->>>> platform_get_irq_optional(). Unfortunately, we can't however behave the
->>>> same way in request_irq() -- because it has to support IRQ0 for the sake
->>>> of i8253 drivers in arch/...
->>>
->>> Let me reformulate your statement to the IMHO equivalent:
->>>
->>> 	If you set aside the differences between
->>> 	platform_get_irq_optional() and gpiod_get_optional(),
->>
->>    Sorry, I should make it clear this is actually the diff between a would-be
->> platform_get_irq_optional() after my patch, not the current code...
-> 
-> The similarity is that with your patch both gpiod_get_optional() and
-> platform_get_irq_optional() return NULL and 0 on not-found. The relevant
-> difference however is that for a gpiod NULL is a dummy value, while for
-> irqs it's not. So the similarity is only syntactically, but not
-> semantically.
+(0x08 << 1) | 0x01
+(0x10 << 1) | 0x01
 
-   I have noting to say here, rather than optional IRQ could well have a different
-meaning than for clk/gpio/etc.
+and touchpad is initialized with synaptics_intertouch=1
 
-[...]
->>> However for an interupt this cannot work. You will always have to check
->>> if the irq is actually there or not because if it's not you cannot just
->>> ignore that. So there is no benefit of an optional irq.
->>>
->>> Leaving error message reporting aside, the introduction of
->>> platform_get_irq_optional() allows to change
->>>
->>> 	irq = platform_get_irq(...);
->>> 	if (irq < 0 && irq != -ENXIO) {
->>> 		return irq;
->>> 	} else if (irq >= 0) {
->>
->>    Rather (irq > 0) actually, IRQ0 is considered invalid (but still returned).
-> 
-> This is a topic I don't feel strong for, so I'm sloppy here. If changing
-> this is all that is needed to convince you of my point ...
+There is maybe small correlation between frequency and touch, but i am
+not 100% sure.
 
-   Note that we should absolutely (and first of all) stop returning 0 from platform_get_irq()
-on a "real" IRQ0. Handling that "still good" zero absolutely doesn't scale e.g. for the subsystems
-(like libata) which take 0 as an indication that the polling mode should be used... We can't afford
-to be sloppy here. ;-)
+There are no register changed in interrupt handler except of
+ASFx13 DataBankSel. I can't determine if interrupt is generated from
+transfer, or from external event.
 
-[...]
+ASF should be system for remote management. It should have access to
+SMBus and data / command registers are identical, this means, that SMBus
+should work (except block transfers).
 
-> Best regards
-> Uwe
+If ASF just mirrors SMBus, then question is, why i can't access to
+touchpad using SMBus? One strange thing is, that i2cdetect on standard
+SMbus (0xb00), port 0 returns:
 
-MBR, Sergey
+      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:                         -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- 36 37 -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: 50 -- -- -- -- -- -- -- 58 -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
+
+Address 0x58 is exactly 0x2c (synaptics) moved 1 bit left, but i2c-piix4
+correctly moves address.
+
