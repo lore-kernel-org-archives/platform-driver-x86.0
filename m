@@ -2,230 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B946C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Jan 2022 09:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14887C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Jan 2022 09:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235631AbiAQJZu (ORCPT
+        id S235731AbiAQJiV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 Jan 2022 04:25:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235640AbiAQJZt (ORCPT
+        Mon, 17 Jan 2022 04:38:21 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:31954 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235819AbiAQJiG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 Jan 2022 04:25:49 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C5ABC06173F
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Jan 2022 01:25:49 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1n9OFv-0006KR-Ei; Mon, 17 Jan 2022 10:24:51 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1n9OFp-00AnDX-Gd; Mon, 17 Jan 2022 10:24:44 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1n9OFo-0002fs-6r; Mon, 17 Jan 2022 10:24:44 +0100
-Date:   Mon, 17 Jan 2022 10:24:44 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Sergey Shtylyov <s.shtylyov@omp.ru>, Andrew Lunn <andrew@lunn.ch>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-phy@lists.infradead.org, netdev@vger.kernel.org,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Takashi Iwai <tiwai@suse.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        openipmi-developer@lists.sourceforge.net,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-edac@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        linux-mediatek@lists.infradead.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
-Message-ID: <20220117092444.opoedfcf5k5u6otq@pengutronix.de>
-References: <20220112085009.dbasceh3obfok5dc@pengutronix.de>
- <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
- <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
- <Yd9L9SZ+g13iyKab@sirena.org.uk>
- <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru>
- <20220114092557.jrkfx7ihg26ekzci@pengutronix.de>
- <61b80939-357d-14f5-df99-b8d102a4e1a1@omp.ru>
- <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
- <c9026f17-2b3f-ee94-0ea3-5630f981fbc1@omp.ru>
- <CAMuHMdXVbRudGs69f9ZzaP1PXhteDNZiXA658eMFAwP4nr9r3w@mail.gmail.com>
+        Mon, 17 Jan 2022 04:38:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1642412285;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=87TQKP21MvIUTnFRp1IlMrCnN3l9CJpODRDFyyIfhfE=;
+        b=O3AG/Hp9boFNuBmJi10zx0Nu6eE6kqhh7ok4Ci+R4zwbWH0wPSLp2ARelMJ7YVdEHVsWTq
+        HqU7pe3bso5zXwg4ZZzz++3O+GOKufAV99H1sVKZ7Gs2Olz8IEscmK0ljaG7poCmeAiy+T
+        2fDaSiN03G6/fO1UdCug4dVfgeJ96Fg=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-511-SmvufMu1N5yCYCmEHfeLVQ-1; Mon, 17 Jan 2022 04:38:03 -0500
+X-MC-Unique: SmvufMu1N5yCYCmEHfeLVQ-1
+Received: by mail-ed1-f69.google.com with SMTP id o10-20020a056402438a00b00403212b6b1aso604480edc.13
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Jan 2022 01:38:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=87TQKP21MvIUTnFRp1IlMrCnN3l9CJpODRDFyyIfhfE=;
+        b=yiZ1rJQAvD7jIzVDa+YEM0O6pX4uADNMexWFHfo4yaEgMajToRQ1pkK2dPPrvoS7vo
+         XWSdc1MfH+lAX+t/LayRg6ystpFsYt6HTwrR0F5qDoLoMRPu/wCITUmeWBnMKSNeo2eF
+         mzx3jnfg0p+3Qe3PB1ba+5X2R4Rnruo1E4H02QSJizTUGJpjmqUS6tBlx77HI5iWdhBA
+         QO0lwqynvSjLZ3U19I+isnbHCTIEoK13kb2ecGsjaN4S9zuBI8ztyy96L09Y2ZAwLh8I
+         A8CoKslfmBHAq9VU3QDsfhxo0jKxF+V5Wfy17J1/dc/wGaV5XlWRnAXC3MSlLvVlgFG6
+         1Bow==
+X-Gm-Message-State: AOAM533SvvekNvBrvDoCrHCdoZr/jWOyTtdWmuTfJYsB/zRHwHlUwoxW
+        /AnAxtQ2iSOj7JJJagTD+U/zeHpIjsxzR+bY82QGIQ6mqs6qu8JGh7rhWk0XxZyW6U5BFusunMt
+        egWdL4x8cbwMDi51PyR1DV6vKDB5Xd90W1Q==
+X-Received: by 2002:a17:906:b286:: with SMTP id q6mr11945525ejz.496.1642412282166;
+        Mon, 17 Jan 2022 01:38:02 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz2KK/fmStojUMqn34rE0EHBYoqOqN0OB1KrIqmFJam0AvqPc5evTRU+IpJZucQ2ivN2RAQ+g==
+X-Received: by 2002:a17:906:b286:: with SMTP id q6mr11945515ejz.496.1642412281936;
+        Mon, 17 Jan 2022 01:38:01 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id y2sm5686084eda.45.2022.01.17.01.38.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jan 2022 01:38:01 -0800 (PST)
+Message-ID: <a8bb5224-e77d-fc3e-4619-2ca5f46305a5@redhat.com>
+Date:   Mon, 17 Jan 2022 10:38:00 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ycu5k3o6g2lyq6o4"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXVbRudGs69f9ZzaP1PXhteDNZiXA658eMFAwP4nr9r3w@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH] platform/surface: Reinstate platform dependency
+Content-Language: en-US
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mark Gross <markgross@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Jarrett Schultz <jaschultz@microsoft.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220115140849.269479-1-geert@linux-m68k.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220115140849.269479-1-geert@linux-m68k.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
---ycu5k3o6g2lyq6o4
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 1/15/22 15:08, Geert Uytterhoeven wrote:
+> Microsoft Surface platform-specific devices are only present on
+> Microsoft Surface platforms, which are currently limited to arm64 and
+> x86.  Hence add a dependency on ARM64 || X86, to prevent asking the user
+> about drivers for these devices when configuring a kernel for an
+> architecture that does not support Microsoft Surface platforms.
+> 
+> Fixes: 272479928172edf0 ("platform: surface: Propagate ACPI Dependency")
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Hello Geert,
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-On Mon, Jan 17, 2022 at 09:41:42AM +0100, Geert Uytterhoeven wrote:
-> On Sat, Jan 15, 2022 at 9:22 PM Sergey Shtylyov <s.shtylyov@omp.ru> wrote:
-> > On 1/14/22 11:22 PM, Uwe Kleine-K=F6nig wrote:
-> > > You have to understand that for clk (and regulator and gpiod) NULL is=
- a
-> > > valid descriptor that can actually be used, it just has no effect. So
-> > > this is a convenience value for the case "If the clk/regulator/gpiod =
-in
-> > > question isn't available, there is nothing to do". This is what makes
-> > > clk_get_optional() and the others really useful and justifies their
-> > > existence. This doesn't apply to platform_get_irq_optional().
-> >
-> >    I do understand that. However, IRQs are a different beast with their
-> > own justifications...
->=20
-> > > clk_get_optional() is sane and sensible for cases where the clk might=
- be
-> > > absent and it helps you because you don't have to differentiate betwe=
-en
-> > > "not found" and "there is an actual resource".
-> > >
-> > > The reason for platform_get_irq_optional()'s existence is just that
-> > > platform_get_irq() emits an error message which is wrong or suboptimal
-> >
-> >    I think you are very wrong here. The real reason is to simplify the
-> > callers.
->=20
-> Indeed.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-The commit that introduced platform_get_irq_optional() said:
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-	Introduce a new platform_get_irq_optional() that works much like
-	platform_get_irq() but does not output an error on failure to
-	find the interrupt.
+Regards,
 
-So the author of 8973ea47901c81a1912bd05f1577bed9b5b52506 failed to
-mention the real reason? Or look at
-31a8d8fa84c51d3ab00bf059158d5de6178cf890:
+Hans
 
-	[...] use platform_get_irq_optional() to get second/third IRQ
-	which are optional to avoid below error message during probe:
-	[...]
 
-Look through the output of
+> ---
+>  drivers/platform/surface/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
+> index 5f0578e25f718f14..463f1ec5c14e9fa9 100644
+> --- a/drivers/platform/surface/Kconfig
+> +++ b/drivers/platform/surface/Kconfig
+> @@ -5,6 +5,7 @@
+>  
+>  menuconfig SURFACE_PLATFORMS
+>  	bool "Microsoft Surface Platform-Specific Device Drivers"
+> +	depends on ARM64 || X86 || COMPILE_TEST
+>  	default y
+>  	help
+>  	  Say Y here to get to see options for platform-specific device drivers
+> 
 
-	git log -Splatform_get_irq_optional
-
-to find several more of these.
-
-Also I fail to see how a caller of (today's) platform_get_irq_optional()
-is simpler than a caller of platform_get_irq() given that there is no
-semantic difference between the two. Please show me a single
-conversion from platform_get_irq to platform_get_irq_optional that
-yielded a simplification.
-
-So you need some more effort to convince me of your POV.
-
-> Even for clocks, you cannot assume that you can always blindly use
-> the returned dummy (actually a NULL pointer) to call into the clk
-> API.  While this works fine for simple use cases, where you just
-> want to enable/disable an optional clock (clk_prepare_enable() and
-> clk_disable_unprepare()), it does not work for more complex use cases.
-
-Agreed. But for clks and gpiods and regulators the simple case is quite
-usual. For irqs it isn't.
-
-And if you cannot blindly use the dummy, then you're not the targetted
-caller of *_get_optional() and should better use *_get() and handle
--ENODEV explicitly.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ycu5k3o6g2lyq6o4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmHlNdMACgkQwfwUeK3K
-7AkbyQf/dzwfw39nzRfi8yss0CiqoAU/yS+7MsnZvnWGKQxcIojgK1OX/xdxiMKI
-C4HnYtImt4dRHJdZDTL5+BWmwrkKo3ytJl8YRHBffgzQdKfAXOit1Pce623dbYvd
-wKJedLR6H9VXuTa1ULEvTnC0cXupHaoxjvQbKkUhlz/PahrhX91+dNJcoWTB6eB2
-YSb6MMcqwMFJ6y2P4pDKDoCf0RNjt8EzTKMWUdx1zcCrqT+wDzA0Ub0UvM7EpUXn
-ziLd4JEC+3SxJZvr2Y8jPQUGb4RMr+Z20vfEOG154m+zZ5lZe7Pcp1ggo6wb+fZ9
-qM6JVYjExAvA43UcTTna2uSeE/+nfA==
-=gHVT
------END PGP SIGNATURE-----
-
---ycu5k3o6g2lyq6o4--
