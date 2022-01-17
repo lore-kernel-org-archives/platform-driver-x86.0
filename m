@@ -2,244 +2,336 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE47C4167E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Jan 2022 10:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E738DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Jan 2022 10:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238634AbiAQKgM convert rfc822-to-8bit (ORCPT
+        id S236119AbiAQKkO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 Jan 2022 05:36:12 -0500
-Received: from mail-vk1-f178.google.com ([209.85.221.178]:44866 "EHLO
-        mail-vk1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235751AbiAQKgI (ORCPT
+        Mon, 17 Jan 2022 05:40:14 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:57523 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229744AbiAQKkO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 Jan 2022 05:36:08 -0500
-Received: by mail-vk1-f178.google.com with SMTP id b77so10050961vka.11;
-        Mon, 17 Jan 2022 02:36:06 -0800 (PST)
+        Mon, 17 Jan 2022 05:40:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1642416013;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QcGzXSqurtgAtfCF+SCc3518Y+qQIml8H+Z9V3VdthQ=;
+        b=fziIgT50Kny/N2NEBb89rHE/aKqVzQoHn1jvdeuiWzxZ/6XaTT0G76xRweHyRoqz5X6AsW
+        PTYUPv+ImNVYcKKfAEhBAgm9DSOu50e9+wOr+TsEXJA5LCm0Tk0H5lt6kEGNzQtzJigxlm
+        h34IWfjFvavMTuZNWkV8FGey73kzAKQ=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-7-0_Vo-K5eMxuXO8FnPm5k8Q-1; Mon, 17 Jan 2022 05:40:12 -0500
+X-MC-Unique: 0_Vo-K5eMxuXO8FnPm5k8Q-1
+Received: by mail-ed1-f71.google.com with SMTP id i9-20020a05640242c900b003fe97faab62so13757125edc.9
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Jan 2022 02:40:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8wbyaDOKHzyncR/a8atHHiwf57S6QrlnXekhvOqZ5Zc=;
-        b=LSqfAKSEMaEAYGbunuoNsuAo80Rk3bWRnbog4vmP3JZLEh9uYSltN70uJc84BpJSr7
-         JJnirAVOJlzWKyDEIR2Diay0j4XTt0t62ENC9pifrHEO7FBWiHhHxuDK1WzAc8e6ELXR
-         kQ9mlj4U0HJfB2+KW8z5oG8eumwZ7pBma/5Dw/MfcUBQY6urYwF8smbH7H3q2qCyOWnZ
-         WMftrgtX96eKLAO99UHB4hY/TEZK/0NkFFeXjMqVUQZMRIBvb4IgC5k585TkQC90Pjjl
-         OCO4TUh6V49qlC5LMsMRqBmcDWSn9b1oJydqBYMjT6BdgJQWG8UIu4fo3Rdo+xKpbYJ/
-         vCYw==
-X-Gm-Message-State: AOAM5305tSrFltxA7gBSd0tqguB9hBRHUBFEH4OLNLs0dzL4jrmjEiQD
-        BXv/dJZDl/cDrQpuSMLa9PFd1Pet6ZxLZku3
-X-Google-Smtp-Source: ABdhPJy0WUl6ljrrNQay/fQ0XF0Z1LDo996FsF8bsiQ2Edql4XjhP64FvczIhYIxWKkP7rQimMMsaw==
-X-Received: by 2002:a1f:2c54:: with SMTP id s81mr4062257vks.38.1642415766251;
-        Mon, 17 Jan 2022 02:36:06 -0800 (PST)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id b14sm3226412vkk.22.2022.01.17.02.36.04
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=QcGzXSqurtgAtfCF+SCc3518Y+qQIml8H+Z9V3VdthQ=;
+        b=Wsje7zZiwHNCVyDm/2+UZTPf3zYCFKntsQ8WyX6UcfuiBSSzV/rmRfCgrMFfdmGOee
+         fOxEr5Sc7f0rvxG13HxLaCd21yghm+oYr4udOb1UJlfIBAyO6L1Ip+4wnKeNWJ0oXi0u
+         O24whCCBvMxQw3x6bSSoD7p2Tg7WAvuV5lZDkysAQYQwmkdf5wnr1lZEihe8kmciVxIz
+         FwuJeEc0rmx/7TnRaoz9SiCaD4EbOXo7QKAZV5xtWo9Jy86rgaN/p9hCuB5rA2Qkxf7z
+         VgYXFuyaAQSRer9Jr5yHGXu3knCojmYcY05B8zTFJxu3TibakCkcNLjWV80d6swKN9tE
+         o3iQ==
+X-Gm-Message-State: AOAM5333zarW8fY5aw9hm8FfuMwRHVBaJ+eKdAJeFe3fo0l/yU3z+y9W
+        Vqm+OM6Lg5D+2RtYXkkzyrPu2xsllDkisA3zMRxv3a8SsGz9XdTtCbpZwxyZKR7prUKS/eR6zLd
+        NTSiluoWWQo7JUVIrPmQdQvR9/UYH7ugcdQ==
+X-Received: by 2002:a17:907:1c14:: with SMTP id nc20mr17351782ejc.618.1642416010573;
+        Mon, 17 Jan 2022 02:40:10 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwpr5O09kbO0c5GKJ5+UmUCI6fEtYiZK2pR4QOq/ogYk54w9H5OXp80+gpChlzZacbB1l1rLg==
+X-Received: by 2002:a17:907:1c14:: with SMTP id nc20mr17351763ejc.618.1642416010242;
+        Mon, 17 Jan 2022 02:40:10 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id e16sm5665312edu.15.2022.01.17.02.40.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jan 2022 02:36:04 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id c36so29466451uae.13;
-        Mon, 17 Jan 2022 02:36:04 -0800 (PST)
-X-Received: by 2002:ab0:4d42:: with SMTP id k2mr5738849uag.78.1642415764003;
- Mon, 17 Jan 2022 02:36:04 -0800 (PST)
+        Mon, 17 Jan 2022 02:40:09 -0800 (PST)
+Message-ID: <c0d8388b-a4c1-2723-0399-b17434da6d24@redhat.com>
+Date:   Mon, 17 Jan 2022 11:40:09 +0100
 MIME-Version: 1.0
-References: <20220112085009.dbasceh3obfok5dc@pengutronix.de>
- <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
- <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de> <Yd9L9SZ+g13iyKab@sirena.org.uk>
- <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru> <20220114092557.jrkfx7ihg26ekzci@pengutronix.de>
- <61b80939-357d-14f5-df99-b8d102a4e1a1@omp.ru> <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
- <c9026f17-2b3f-ee94-0ea3-5630f981fbc1@omp.ru> <CAMuHMdXVbRudGs69f9ZzaP1PXhteDNZiXA658eMFAwP4nr9r3w@mail.gmail.com>
- <20220117092444.opoedfcf5k5u6otq@pengutronix.de>
-In-Reply-To: <20220117092444.opoedfcf5k5u6otq@pengutronix.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 17 Jan 2022 11:35:52 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUgZUeraHadRAi2Z=DV+NuNBrKPkmAKsvFvir2MuquVoA@mail.gmail.com>
-Message-ID: <CAMuHMdUgZUeraHadRAi2Z=DV+NuNBrKPkmAKsvFvir2MuquVoA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Sergey Shtylyov <s.shtylyov@omp.ru>, Andrew Lunn <andrew@lunn.ch>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-phy@lists.infradead.org, netdev <netdev@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Takashi Iwai <tiwai@suse.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        openipmi-developer@lists.sourceforge.net,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-edac@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        linux-mediatek@lists.infradead.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH] platform/x86: ISST: Fix possible circular locking
+ dependency detected
+Content-Language: en-US
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        liwei.song@windriver.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220112022521.54669-1-srinivas.pandruvada@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220112022521.54669-1-srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Uwe,
+Hi,
 
-On Mon, Jan 17, 2022 at 10:24 AM Uwe Kleine-König
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Mon, Jan 17, 2022 at 09:41:42AM +0100, Geert Uytterhoeven wrote:
-> > On Sat, Jan 15, 2022 at 9:22 PM Sergey Shtylyov <s.shtylyov@omp.ru> wrote:
-> > > On 1/14/22 11:22 PM, Uwe Kleine-König wrote:
-> > > > You have to understand that for clk (and regulator and gpiod) NULL is a
-> > > > valid descriptor that can actually be used, it just has no effect. So
-> > > > this is a convenience value for the case "If the clk/regulator/gpiod in
-> > > > question isn't available, there is nothing to do". This is what makes
-> > > > clk_get_optional() and the others really useful and justifies their
-> > > > existence. This doesn't apply to platform_get_irq_optional().
-> > >
-> > >    I do understand that. However, IRQs are a different beast with their
-> > > own justifications...
-> >
-> > > > clk_get_optional() is sane and sensible for cases where the clk might be
-> > > > absent and it helps you because you don't have to differentiate between
-> > > > "not found" and "there is an actual resource".
-> > > >
-> > > > The reason for platform_get_irq_optional()'s existence is just that
-> > > > platform_get_irq() emits an error message which is wrong or suboptimal
-> > >
-> > >    I think you are very wrong here. The real reason is to simplify the
-> > > callers.
-> >
-> > Indeed.
->
-> The commit that introduced platform_get_irq_optional() said:
->
->         Introduce a new platform_get_irq_optional() that works much like
->         platform_get_irq() but does not output an error on failure to
->         find the interrupt.
->
-> So the author of 8973ea47901c81a1912bd05f1577bed9b5b52506 failed to
-> mention the real reason? Or look at
-> 31a8d8fa84c51d3ab00bf059158d5de6178cf890:
->
->         [...] use platform_get_irq_optional() to get second/third IRQ
->         which are optional to avoid below error message during probe:
->         [...]
->
-> Look through the output of
->
->         git log -Splatform_get_irq_optional
->
-> to find several more of these.
+On 1/12/22 03:25, Srinivas Pandruvada wrote:
+> As reported:
+> 
+> [  256.104522] ======================================================
+> [  256.113783] WARNING: possible circular locking dependency detected
+> [  256.120093] 5.16.0-rc6-yocto-standard+ #99 Not tainted
+> [  256.125362] ------------------------------------------------------
+> [  256.131673] intel-speed-sel/844 is trying to acquire lock:
+> [  256.137290] ffffffffc036f0d0 (punit_misc_dev_lock){+.+.}-{3:3}, at: isst_if_open+0x18/0x90 [isst_if_common]
+> [  256.147171]
+> [  256.147171] but task is already holding lock:
+> [  256.153135] ffffffff8ee7cb50 (misc_mtx){+.+.}-{3:3}, at: misc_open+0x2a/0x170
+> [  256.160407]
+> [  256.160407] which lock already depends on the new lock.
+> [  256.160407]
+> [  256.168712]
+> [  256.168712] the existing dependency chain (in reverse order) is:
+> [  256.176327]
+> [  256.176327] -> #1 (misc_mtx){+.+.}-{3:3}:
+> [  256.181946]        lock_acquire+0x1e6/0x330
+> [  256.186265]        __mutex_lock+0x9b/0x9b0
+> [  256.190497]        mutex_lock_nested+0x1b/0x20
+> [  256.195075]        misc_register+0x32/0x1a0
+> [  256.199390]        isst_if_cdev_register+0x65/0x180 [isst_if_common]
+> [  256.205878]        isst_if_probe+0x144/0x16e [isst_if_mmio]
+> ...
+> [  256.241976]
+> [  256.241976] -> #0 (punit_misc_dev_lock){+.+.}-{3:3}:
+> [  256.248552]        validate_chain+0xbc6/0x1750
+> [  256.253131]        __lock_acquire+0x88c/0xc10
+> [  256.257618]        lock_acquire+0x1e6/0x330
+> [  256.261933]        __mutex_lock+0x9b/0x9b0
+> [  256.266165]        mutex_lock_nested+0x1b/0x20
+> [  256.270739]        isst_if_open+0x18/0x90 [isst_if_common]
+> [  256.276356]        misc_open+0x100/0x170
+> [  256.280409]        chrdev_open+0xa5/0x1e0
+> ...
+> 
+> The call sequence suggested that misc_device /dev file can be opened
+> before misc device is yet to be registered, which is done only once.
+> 
+> Here punit_misc_dev_lock was used as common lock, to protect the
+> registration by multiple ISST HW drivers, one time setup, prevent
+> duplicate registry of misc device and prevent load/unload when device
+> is open.
+> 
+> We can split into locks:
+> - One which just prevent duplicate call to misc_register() and one
+> time setup. Also never call again if the misc_register() failed or
+> required one time setup is failed. This lock is not shared with
+> any misc device callbacks.
+> 
+> - The other lock protects registry, load and unload of HW drivers.
+> 
+> Sequence in isst_if_cdev_register()
+> - Register callbacks under punit_misc_dev_open_lock
+> - Call isst_misc_reg() which registers misc_device on the first
+> registry which is under punit_misc_dev_reg_lock, which is not
+> shared with callbacks.
+> 
+> Sequence in isst_if_cdev_unregister
+> Just opposite of isst_if_cdev_register
+> 
+> Reported-and-tested-by: Liwei Song <liwei.song@windriver.com>
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Commit 8973ea47901c81a1 ("driver core: platform: Introduce
-platform_get_irq_optional()") and the various fixups fixed the ugly
-printing of error messages that were not applicable.
-In hindsight, probably commit 7723f4c5ecdb8d83 ("driver core:
-platform: Add an error message to platform_get_irq*()") should have
-been reverted instead, until a platform_get_irq_optional() with proper
-semantics was introduced.  But as we were all in a hurry to kill
-the non-applicable error message, we went for the quick and dirty fix.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-> Also I fail to see how a caller of (today's) platform_get_irq_optional()
-> is simpler than a caller of platform_get_irq() given that there is no
-> semantic difference between the two. Please show me a single
-> conversion from platform_get_irq to platform_get_irq_optional that
-> yielded a simplification.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-That's exactly why we want to change the latter to return 0 ;-)
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-> So you need some more effort to convince me of your POV.
->
-> > Even for clocks, you cannot assume that you can always blindly use
-> > the returned dummy (actually a NULL pointer) to call into the clk
-> > API.  While this works fine for simple use cases, where you just
-> > want to enable/disable an optional clock (clk_prepare_enable() and
-> > clk_disable_unprepare()), it does not work for more complex use cases.
->
-> Agreed. But for clks and gpiods and regulators the simple case is quite
-> usual. For irqs it isn't.
+Regards,
 
-It is for devices that can have either separate interrupts, or a single
-multiplexed interrupt.
+Hans
 
-The logic in e.g. drivers/tty/serial/sh-sci.c and
-drivers/spi/spi-rspi.c could be simplified and improved (currently
-it doesn't handle deferred probe) if platform_get_irq_optional()
-would return 0 instead of -ENXIO.
 
-> And if you cannot blindly use the dummy, then you're not the targetted
-> caller of *_get_optional() and should better use *_get() and handle
-> -ENODEV explicitly.
+> ---
+>  .../intel/speed_select_if/isst_if_common.c    | 97 ++++++++++++-------
+>  1 file changed, 63 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> index c9a85eb2e860..e8424e70d81d 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> @@ -596,7 +596,10 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
+>  	return ret;
+>  }
+>  
+> -static DEFINE_MUTEX(punit_misc_dev_lock);
+> +/* Lock to prevent module registration when already opened by user space */
+> +static DEFINE_MUTEX(punit_misc_dev_open_lock);
+> +/* Lock to allow one share misc device for all ISST interace */
+> +static DEFINE_MUTEX(punit_misc_dev_reg_lock);
+>  static int misc_usage_count;
+>  static int misc_device_ret;
+>  static int misc_device_open;
+> @@ -606,7 +609,7 @@ static int isst_if_open(struct inode *inode, struct file *file)
+>  	int i, ret = 0;
+>  
+>  	/* Fail open, if a module is going away */
+> -	mutex_lock(&punit_misc_dev_lock);
+> +	mutex_lock(&punit_misc_dev_open_lock);
+>  	for (i = 0; i < ISST_IF_DEV_MAX; ++i) {
+>  		struct isst_if_cmd_cb *cb = &punit_callbacks[i];
+>  
+> @@ -628,7 +631,7 @@ static int isst_if_open(struct inode *inode, struct file *file)
+>  	} else {
+>  		misc_device_open++;
+>  	}
+> -	mutex_unlock(&punit_misc_dev_lock);
+> +	mutex_unlock(&punit_misc_dev_open_lock);
+>  
+>  	return ret;
+>  }
+> @@ -637,7 +640,7 @@ static int isst_if_relase(struct inode *inode, struct file *f)
+>  {
+>  	int i;
+>  
+> -	mutex_lock(&punit_misc_dev_lock);
+> +	mutex_lock(&punit_misc_dev_open_lock);
+>  	misc_device_open--;
+>  	for (i = 0; i < ISST_IF_DEV_MAX; ++i) {
+>  		struct isst_if_cmd_cb *cb = &punit_callbacks[i];
+> @@ -645,7 +648,7 @@ static int isst_if_relase(struct inode *inode, struct file *f)
+>  		if (cb->registered)
+>  			module_put(cb->owner);
+>  	}
+> -	mutex_unlock(&punit_misc_dev_lock);
+> +	mutex_unlock(&punit_misc_dev_open_lock);
+>  
+>  	return 0;
+>  }
+> @@ -662,6 +665,43 @@ static struct miscdevice isst_if_char_driver = {
+>  	.fops		= &isst_if_char_driver_ops,
+>  };
+>  
+> +static int isst_misc_reg(void)
+> +{
+> +	mutex_lock(&punit_misc_dev_reg_lock);
+> +	if (misc_device_ret)
+> +		goto unlock_exit;
+> +
+> +	if (!misc_usage_count) {
+> +		misc_device_ret = isst_if_cpu_info_init();
+> +		if (misc_device_ret)
+> +			goto unlock_exit;
+> +
+> +		misc_device_ret = misc_register(&isst_if_char_driver);
+> +		if (misc_device_ret) {
+> +			isst_if_cpu_info_exit();
+> +			goto unlock_exit;
+> +		}
+> +	}
+> +	misc_usage_count++;
+> +
+> +unlock_exit:
+> +	mutex_unlock(&punit_misc_dev_reg_lock);
+> +
+> +	return misc_device_ret;
+> +}
+> +
+> +static void isst_misc_unreg(void)
+> +{
+> +	mutex_lock(&punit_misc_dev_reg_lock);
+> +	if (misc_usage_count)
+> +		misc_usage_count--;
+> +	if (!misc_usage_count && !misc_device_ret) {
+> +		misc_deregister(&isst_if_char_driver);
+> +		isst_if_cpu_info_exit();
+> +	}
+> +	mutex_unlock(&punit_misc_dev_reg_lock);
+> +}
+> +
+>  /**
+>   * isst_if_cdev_register() - Register callback for IOCTL
+>   * @device_type: The device type this callback handling.
+> @@ -679,38 +719,31 @@ static struct miscdevice isst_if_char_driver = {
+>   */
+>  int isst_if_cdev_register(int device_type, struct isst_if_cmd_cb *cb)
+>  {
+> -	if (misc_device_ret)
+> -		return misc_device_ret;
+> +	int ret;
+>  
+>  	if (device_type >= ISST_IF_DEV_MAX)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&punit_misc_dev_lock);
+> +	mutex_lock(&punit_misc_dev_open_lock);
+> +	/* Device is already open, we don't want to add new callbacks */
+>  	if (misc_device_open) {
+> -		mutex_unlock(&punit_misc_dev_lock);
+> +		mutex_unlock(&punit_misc_dev_open_lock);
+>  		return -EAGAIN;
+>  	}
+> -	if (!misc_usage_count) {
+> -		int ret;
+> -
+> -		misc_device_ret = misc_register(&isst_if_char_driver);
+> -		if (misc_device_ret)
+> -			goto unlock_exit;
+> -
+> -		ret = isst_if_cpu_info_init();
+> -		if (ret) {
+> -			misc_deregister(&isst_if_char_driver);
+> -			misc_device_ret = ret;
+> -			goto unlock_exit;
+> -		}
+> -	}
+>  	memcpy(&punit_callbacks[device_type], cb, sizeof(*cb));
+>  	punit_callbacks[device_type].registered = 1;
+> -	misc_usage_count++;
+> -unlock_exit:
+> -	mutex_unlock(&punit_misc_dev_lock);
+> +	mutex_unlock(&punit_misc_dev_open_lock);
+>  
+> -	return misc_device_ret;
+> +	ret = isst_misc_reg();
+> +	if (ret) {
+> +		/*
+> +		 * No need of mutex as the misc device register failed
+> +		 * as no one can open device yet. Hence no contention.
+> +		 */
+> +		punit_callbacks[device_type].registered = 0;
+> +		return ret;
+> +	}
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(isst_if_cdev_register);
+>  
+> @@ -725,16 +758,12 @@ EXPORT_SYMBOL_GPL(isst_if_cdev_register);
+>   */
+>  void isst_if_cdev_unregister(int device_type)
+>  {
+> -	mutex_lock(&punit_misc_dev_lock);
+> -	misc_usage_count--;
+> +	isst_misc_unreg();
+> +	mutex_lock(&punit_misc_dev_open_lock);
+>  	punit_callbacks[device_type].registered = 0;
+>  	if (device_type == ISST_IF_DEV_MBOX)
+>  		isst_delete_hash();
+> -	if (!misc_usage_count && !misc_device_ret) {
+> -		misc_deregister(&isst_if_char_driver);
+> -		isst_if_cpu_info_exit();
+> -	}
+> -	mutex_unlock(&punit_misc_dev_lock);
+> +	mutex_unlock(&punit_misc_dev_open_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(isst_if_cdev_unregister);
+>  
+> 
 
-No, because the janitors tend to consolidate error message handling,
-by moving the printing up, inside the *_get() methods.  That's exactly
-what happened here.
-So there are three reasons: because the absence of an optional IRQ
-is not an error, and thus that should not cause (a) an error code
-to be returned, and (b) an error message to be printed, and (c)
-because it can simplify the logic in device drivers.
-
-Commit 8973ea47901c81a1 ("driver core: platform: Introduce
-platform_get_irq_optional()") fixed (b), but didn't address (a) and
-(c).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
