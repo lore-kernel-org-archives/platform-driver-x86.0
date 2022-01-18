@@ -2,169 +2,146 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F17C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 Jan 2022 14:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA784C43219
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 Jan 2022 14:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245690AbiAROiD (ORCPT
+        id S1344489AbiAROyU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 18 Jan 2022 09:38:03 -0500
-Received: from mail-bn8nam11on2066.outbound.protection.outlook.com ([40.107.236.66]:31232
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S245635AbiAROhy (ORCPT
+        Tue, 18 Jan 2022 09:54:20 -0500
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:43998 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1344201AbiAROxw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 18 Jan 2022 09:37:54 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BA0iG+ULplQSrOTW0hxc2Cg7WSMiP2iXCl+besc147VzWjFxDTkjvzlQiHkNnhNhiMCWAutydsx3h+uxVGVzPDMxjQ6rp0SvYjqxLvPFR9p2UTzn4OPN3M0DnxzAUfB2Im+AEs/W0/LdkHHW2t7qiJA81MMmngCnMkk7ZaK7qCJWzuTi8kJ0YOe45NM/K5suhQPkwto/+Y3jly9VbW3oAZADgpYob2YkYd9y3jJysedDTjFs4C0xZ/aDJImuwXUwlBdFIHD0imQN6VU5d5sXX31VNkz5N/o+lBCPP8zX6ylu0AcCwWsFTmFw4BD2Uyg9Httv7jLjMT0R0iyx0WTUiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qhnhaCxcmrW5xjD2TObMDQfVHXvaF+V3u+RbvouJJeY=;
- b=KlaqgZUn2cXjUGUuoMxZbMT5flNZbkexe7Tr4B1fwUldPlT/uqdyIR4JgdzL7OYIZg6VokvWTV/KiIS855o2bt5g/8pG5ihXWagTsXz6X40mm8UGN+GEUs+KcS/wkF7alJHviOCWiwgNJC3MoDlty2HrYQZx0A0c7kj6fAIfVsK2tPA0LMw8Y24U3/bBGQiEMi7q0ylQbhvwq/JEcd9pXlD+uT5QsZubnL7WQ+/h4HB53zEAJneigKD9qHUJ9Ncjh7iYKuZyStqkS72aB497J9+c3gcwdik7sl3uhZyxVLMd9NLiZ8AVVMy6oKrSvzphsfBRiOq3F9hkCtgBUgwVLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qhnhaCxcmrW5xjD2TObMDQfVHXvaF+V3u+RbvouJJeY=;
- b=sww1FLJgS1QFNDxTnoXkPZGFV6M5RY17FiOBmhkVQRb4oFQWWJtYpbZU+nSP0tPUvez18kAu9WvtrneSIOTA+HVusaz+olySpVfT3Dlgtb7f9xv92wehXVCvpKZgMC11sjuuX4lrk2La5CILUTr5gfV8CEzIF2gf4LqfT0AY2V0=
-Received: from DS7PR06CA0036.namprd06.prod.outlook.com (2603:10b6:8:54::14) by
- CO6PR12MB5459.namprd12.prod.outlook.com (2603:10b6:303:13b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.10; Tue, 18 Jan
- 2022 14:37:51 +0000
-Received: from DM6NAM11FT024.eop-nam11.prod.protection.outlook.com
- (2603:10b6:8:54:cafe::cb) by DS7PR06CA0036.outlook.office365.com
- (2603:10b6:8:54::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.10 via Frontend
- Transport; Tue, 18 Jan 2022 14:37:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT024.mail.protection.outlook.com (10.13.172.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4888.9 via Frontend Transport; Tue, 18 Jan 2022 14:37:49 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 18 Jan 2022 09:53:52 -0500
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20IA16xu003923;
+        Tue, 18 Jan 2022 08:53:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=PODMain02222019;
+ bh=LqwQlGSPZbY4FUWN/PCbYAVSFcGSRCshh6dVtPJgmMk=;
+ b=iQaAmvzKfAgl75NgBpFsVWVWgaE2U8YrKGScu3h6dP8o0BPwFxOG1SemejwN+08Qxv6F
+ KpzUDAenQPLDRVRaM90+iAcpn/MubiFvkJYwE76l5NMcMJlC6g4gl9g5Iq4D0S50/vz8
+ Mcz9FUOaOkNvVqiNAUkSxh/hNxNHGb7XiIlouuMrfcyVoCLahKczxOQIIF4Cv8xv9KJ0
+ wuHBkxOzGGPQgTNGtBuZ2fGyaPoVqi3BuwGsZx4dHsVDvQwOmEq7FoIOZTmF47yfJ5gc
+ B1Gvn11d08xdooOHpjdwPby3eMTNGTiP7loR/y01N/FNjjaZFRWKZU7n09gRj2wiJ4pP bg== 
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+        by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3dn8k2s8sx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 18 Jan 2022 08:53:33 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Tue, 18 Jan
- 2022 08:37:48 -0600
-Date:   Tue, 18 Jan 2022 08:37:30 -0600
-From:   Michael Roth <michael.roth@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Brijesh Singh <brijesh.singh@amd.com>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-        <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "Vitaly Kuznetsov" <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        <tony.luck@intel.com>, <marcorr@google.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v8 29/40] x86/compressed/64: add support for SEV-SNP
- CPUID table in #VC handlers
-Message-ID: <20220118143730.wenhm2bbityq7wwy@amd.com>
-References: <20211210154332.11526-1-brijesh.singh@amd.com>
- <20211210154332.11526-30-brijesh.singh@amd.com>
- <YeAmFePcPjvMoWCP@zn.tnic>
- <20220113163913.phpu4klrmrnedgic@amd.com>
- <YeGhKll2fTcTr2wS@zn.tnic>
- <20220118043521.exgma53qrzrbalpd@amd.com>
- <YebIiN6Ftq2aPtyF@zn.tnic>
- <20220118142345.65wuub2p3alavhpb@amd.com>
- <20220118143238.lu22npcktxuvadwk@amd.com>
+ 2022 14:53:31 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.18 via Frontend
+ Transport; Tue, 18 Jan 2022 14:53:31 +0000
+Received: from LONN2DGDQ73.ad.cirrus.com (unknown [198.90.238.138])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 967297C;
+        Tue, 18 Jan 2022 14:53:27 +0000 (UTC)
+From:   Stefan Binding <sbinding@opensource.cirrus.com>
+To:     Mark Brown <broonie@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <patches@opensource.cirrus.com>,
+        Stefan Binding <sbinding@opensource.cirrus.com>
+Subject: [PATCH v3 01/10] spi: Make spi_alloc_device and spi_add_device public again
+Date:   Tue, 18 Jan 2022 14:52:42 +0000
+Message-ID: <20220118145251.1548-2-sbinding@opensource.cirrus.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220118145251.1548-1-sbinding@opensource.cirrus.com>
+References: <20220118145251.1548-1-sbinding@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220118143238.lu22npcktxuvadwk@amd.com>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e4dbac7d-ecca-43bb-0665-08d9da9019da
-X-MS-TrafficTypeDiagnostic: CO6PR12MB5459:EE_
-X-Microsoft-Antispam-PRVS: <CO6PR12MB5459085B7FB182F32496101295589@CO6PR12MB5459.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kvcHbVw4BAH93+yfnO/WM7aa7tb5I0t9No8QRwWk3jC0Ye9dmDxcgKpIBuKgn14cU7cBncTuEZDKjfhM5FLp6O6zEHXvKhxQC9S7+7hF2y3qP3twytoS5IUsMl29yFliYHQeTdTBjrmsaeZIfnvojPNQaUob4q6OF/NDtPqDqWIqlMMaGvDySSIU8xo795VWTt3HW8lacQE5LuPTBDFbQjstRTKlwbXItwzBBa3coZ8I8by+8lGkF4bxlnnwsN4O4umH9dFVvb/0OWIwTrs+eCa9qjWieMh7IIG4o1zSYRou7d8zZ0tvPMc1Uj7osi6W9Sh2IutNfpG3ohCaFz4izpqeQbcKSgX2vZJFrxTDtlIGstnhO3slv9h0oMDUyDCNOXLXpnvBHprsP/P6iCzsSFLSCGz+g5x7M/bNaXFAPgAWE7uesbsuRC5AziSO97m+HLIYb2IqGHoQ/vs+TBIdzpzRryg1VYVi7uRopXaxn2WiVG4EerPiPU8haW+xFZ+OS2YGXztXhIxIIwzH6mucS4hbGitmIOU7iFzvXdMGNglTkySnOUTFeD7KqJrkpK4u4j8aL49OO6SeVr+l+XIggPUFoYJxptBRfptpWzSZEd+KhokBK0SCpqyyJELsNCppeOSHBkcfRuXZzKhpA6ki/DYekQL+kVMBuv1xRt4NxxYppLPOKd9Lye+OrLnoCyJGHK/PDOYj+y+N/s8EdG2omTafBzFAPHIxaOpqEzddWw/fLAP5lCutA9ZGUYMPbqVb/LThkJghYrbYr2KNxEkSJ6nzGv3O93y1SgKupdN2qBQ=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(40470700002)(36840700001)(1076003)(44832011)(2616005)(186003)(36860700001)(426003)(316002)(70206006)(70586007)(8676002)(54906003)(16526019)(336012)(47076005)(8936002)(40460700001)(508600001)(82310400004)(86362001)(6666004)(81166007)(4326008)(5660300002)(356005)(83380400001)(7406005)(36756003)(26005)(7416002)(2906002)(6916009)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jan 2022 14:37:49.2719
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4dbac7d-ecca-43bb-0665-08d9da9019da
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT024.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5459
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: UPN5TjpL9fMhPkZPYfJJDsAVS_c8EwjC
+X-Proofpoint-ORIG-GUID: UPN5TjpL9fMhPkZPYfJJDsAVS_c8EwjC
+X-Proofpoint-Spam-Reason: safe
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jan 18, 2022 at 08:32:38AM -0600, Michael Roth wrote:
-> On Tue, Jan 18, 2022 at 08:23:45AM -0600, Michael Roth wrote:
-> > On Tue, Jan 18, 2022 at 03:02:48PM +0100, Borislav Petkov wrote:
-> > > On Mon, Jan 17, 2022 at 10:35:21PM -0600, Michael Roth wrote:
-> > > > Unfortunately, in sev_enable(), between the point where snp_init() is
-> > > > called, and sev_status is actually set, there are a number of cpuid
-> > > > intructions which will make use of do_vc_no_ghcb() prior to sev_status
-> > > > being set (and it needs to happen in that order to set sev_status
-> > > > appropriately). After that point, snp_cpuid_active() would no longer be
-> > > > necessary, but during that span some indicator is needed in case this
-> > > > is just an SEV-ES guest trigger cpuid #VCs.
-> > > 
-> > > You mean testing what snp_cpuid_info_create() set up is not enough?
-> > > 
-> > > diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
-> > > index 7bc7e297f88c..17cfe804bad3 100644
-> > > --- a/arch/x86/kernel/sev-shared.c
-> > > +++ b/arch/x86/kernel/sev-shared.c
-> > > @@ -523,7 +523,9 @@ static int snp_cpuid_postprocess(u32 func, u32 subfunc, u32 *eax, u32 *ebx,
-> > >  static int snp_cpuid(u32 func, u32 subfunc, u32 *eax, u32 *ebx, u32 *ecx,
-> > >  		     u32 *edx)
-> > >  {
-> > > -	if (!snp_cpuid_active())
-> > > +	const struct snp_cpuid_info *c = snp_cpuid_info_get_ptr();
-> > > +
-> > > +	if (!c->count)
-> > >  		return -EOPNOTSUPP;
-> > >  
-> > >  	if (!snp_cpuid_find_validated_func(func, subfunc, eax, ebx, ecx, edx)) {
-> > 
-> > snp_cpuid_info_get_ptr() will always return non-NULL, since it's a
-> > pointer to the local copy of the cpuid page. But I can probably re-work
-> 
-> Doh, misread your patch. Yes I think checking the count would also work,
-> since a valid table should be non-zero.
+This functions were previously made private since they
+were not used. However, these functions will be needed
+again.
 
-Actually, no, because doing that would provide hypervisor a means to
-effectively disable CPUID page for an SNP guest by provided a table with
-count == 0, which needs to be guarded against.
+Partial revert of commit da21fde0fdb3
+("spi: Make several public functions private to spi.c")
 
-But can still implement something similar by having snp_cpuid_info_get_ptr()
-return NULL if local copy of cpuid page hasn't been initialized.
+Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+---
+ drivers/spi/spi.c       |  6 ++++--
+ include/linux/spi/spi.h | 12 ++++++++++++
+ 2 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 4599b121d744..1eb84101c4ad 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -532,7 +532,7 @@ static DEFINE_MUTEX(board_lock);
+  *
+  * Return: a pointer to the new device, or NULL.
+  */
+-static struct spi_device *spi_alloc_device(struct spi_controller *ctlr)
++struct spi_device *spi_alloc_device(struct spi_controller *ctlr)
+ {
+ 	struct spi_device	*spi;
+ 
+@@ -557,6 +557,7 @@ static struct spi_device *spi_alloc_device(struct spi_controller *ctlr)
+ 	device_initialize(&spi->dev);
+ 	return spi;
+ }
++EXPORT_SYMBOL_GPL(spi_alloc_device);
+ 
+ static void spi_dev_set_name(struct spi_device *spi)
+ {
+@@ -652,7 +653,7 @@ static int __spi_add_device(struct spi_device *spi)
+  *
+  * Return: 0 on success; negative errno on failure
+  */
+-static int spi_add_device(struct spi_device *spi)
++int spi_add_device(struct spi_device *spi)
+ {
+ 	struct spi_controller *ctlr = spi->controller;
+ 	struct device *dev = ctlr->dev.parent;
+@@ -673,6 +674,7 @@ static int spi_add_device(struct spi_device *spi)
+ 	mutex_unlock(&ctlr->add_lock);
+ 	return status;
+ }
++EXPORT_SYMBOL_GPL(spi_add_device);
+ 
+ static int spi_add_device_locked(struct spi_device *spi)
+ {
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 7ab3fed7b804..0346a3ff27fd 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -1452,7 +1452,19 @@ spi_register_board_info(struct spi_board_info const *info, unsigned n)
+  * use spi_new_device() to describe each device.  You can also call
+  * spi_unregister_device() to start making that device vanish, but
+  * normally that would be handled by spi_unregister_controller().
++ *
++ * You can also use spi_alloc_device() and spi_add_device() to use a two
++ * stage registration sequence for each spi_device. This gives the caller
++ * some more control over the spi_device structure before it is registered,
++ * but requires that caller to initialize fields that would otherwise
++ * be defined using the board info.
+  */
++extern struct spi_device *
++spi_alloc_device(struct spi_controller *ctlr);
++
++extern int
++spi_add_device(struct spi_device *spi);
++
+ extern struct spi_device *
+ spi_new_device(struct spi_controller *, struct spi_board_info *);
+ 
+-- 
+2.25.1
+
