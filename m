@@ -2,136 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09E4C43217
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 Jan 2022 14:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F25CEC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 Jan 2022 16:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345896AbiARO4m (ORCPT
+        id S243993AbiARQey (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 18 Jan 2022 09:56:42 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:14718 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1344980AbiAROyd (ORCPT
+        Tue, 18 Jan 2022 11:34:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243692AbiARQex (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 18 Jan 2022 09:54:33 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20I6SNEE013849;
-        Tue, 18 Jan 2022 08:53:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=PODMain02222019;
- bh=6+/rANZdRrEfJUZ4alDuEZX8fBBnd5Scc+NJ3tIuJJc=;
- b=awgKG5YwMnl+EnZ4Kcqo0ouhel6wo81CXmHGXha1esHm2ZY6DMzL8YRvblG4HXFkA/JL
- hCN0JgJ7+HFU/QWFSVaNKlkG2+xirMLYY4R5+yFGJ8Nnd4Q3JGIndUW5yavt20Luzr1D
- Kd7mK0qLwDuCMZUfd5laJgdQya4ZNIrdzd4ZUIW7AcTuVamHNimN6kqGLflapBOckO6e
- a4yWc3kyJWIyQOVbIUam+JhfVCGI8udgpEn86h65ynwLO7sfePOM6QmEV1PB16TqrKoB
- aPN0VHw71tQ8iE0iPh/qYmtOntfWR/KWV8WB6MTpq1VwLUzWDqpKng53Or6L5pnroXHi 6g== 
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3dnaxhs9nn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 18 Jan 2022 08:53:50 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Tue, 18 Jan
- 2022 14:53:48 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.18 via Frontend
- Transport; Tue, 18 Jan 2022 14:53:48 +0000
-Received: from LONN2DGDQ73.ad.cirrus.com (unknown [198.90.238.138])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id D4E50B13;
-        Tue, 18 Jan 2022 14:53:46 +0000 (UTC)
-From:   Stefan Binding <sbinding@opensource.cirrus.com>
-To:     Mark Brown <broonie@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <patches@opensource.cirrus.com>,
-        Lucas Tanure <tanureal@opensource.cirrus.com>,
-        Stefan Binding <sbinding@opensource.cirrus.com>
-Subject: [PATCH v3 10/10] ACPI / scan: Create platform device for CS35L41
-Date:   Tue, 18 Jan 2022 14:52:51 +0000
-Message-ID: <20220118145251.1548-11-sbinding@opensource.cirrus.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220118145251.1548-1-sbinding@opensource.cirrus.com>
-References: <20220118145251.1548-1-sbinding@opensource.cirrus.com>
+        Tue, 18 Jan 2022 11:34:53 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54DE4C061574;
+        Tue, 18 Jan 2022 08:34:53 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D29021EC056A;
+        Tue, 18 Jan 2022 17:34:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1642523687;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=xK1Ruqt0Z3LpMS/GeIOUADQcueEO2vAcwQe8tnfengs=;
+        b=bIZs6T3eRL29/2uilP6w7Rm92gPfcnQp2vi0QmpTHCgNpF01xtADYy6ZJfaiUEkVQxQ7rz
+        tTfqeCf214MnTZxLlL7syAvWgctc20H4w+1cxhqAXyOfZEU72KaDQPbBJ7erwJXEqkWN4y
+        xfQn8rJrSZmZg3PGrtGbOaU4fct01Es=
+Date:   Tue, 18 Jan 2022 17:34:49 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Roth <michael.roth@amd.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v8 29/40] x86/compressed/64: add support for SEV-SNP
+ CPUID table in #VC handlers
+Message-ID: <YebsKcpnYzvjaEjs@zn.tnic>
+References: <20211210154332.11526-1-brijesh.singh@amd.com>
+ <20211210154332.11526-30-brijesh.singh@amd.com>
+ <YeAmFePcPjvMoWCP@zn.tnic>
+ <20220113163913.phpu4klrmrnedgic@amd.com>
+ <YeGhKll2fTcTr2wS@zn.tnic>
+ <20220118043521.exgma53qrzrbalpd@amd.com>
+ <YebIiN6Ftq2aPtyF@zn.tnic>
+ <20220118142345.65wuub2p3alavhpb@amd.com>
+ <20220118143238.lu22npcktxuvadwk@amd.com>
+ <20220118143730.wenhm2bbityq7wwy@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: kwBsGPyxvH_suD7jNMUkws3PVo4gMDXu
-X-Proofpoint-ORIG-GUID: kwBsGPyxvH_suD7jNMUkws3PVo4gMDXu
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220118143730.wenhm2bbityq7wwy@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Lucas Tanure <tanureal@opensource.cirrus.com>
+On Tue, Jan 18, 2022 at 08:37:30AM -0600, Michael Roth wrote:
+> Actually, no, because doing that would provide hypervisor a means to
+> effectively disable CPUID page for an SNP guest by provided a table with
+> count == 0, which needs to be guarded against.
 
-The ACPI device with CSC3551 or CLSA0100 are sound cards
-with multiple instances of CS35L41 connectec by I2C or SPI
-to the main CPU.
+Err, I'm confused.
 
-We add an ID to the ignore_serial_bus_ids list to enumerate
-all I2C or SPI devices correctly.
+Isn't that "SEV-SNP guests will be provided the location of special
+'secrets' 'CPUID' pages via the Confidential Computing blob..." and the
+HV has no say in there?
 
-Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
----
- drivers/acpi/bus-multi-instantiate.c | 14 ++++++++++++++
- drivers/acpi/scan.c                  |  3 +++
- 2 files changed, 17 insertions(+)
+Why does the HV provide the CPUID page?
 
-diff --git a/drivers/acpi/bus-multi-instantiate.c b/drivers/acpi/bus-multi-instantiate.c
-index 05bc941a38fd..7a394b671f5a 100644
---- a/drivers/acpi/bus-multi-instantiate.c
-+++ b/drivers/acpi/bus-multi-instantiate.c
-@@ -328,6 +328,17 @@ static const struct bmi_node int3515_data = {
- 	.bus_type = BMI_I2C,
- };
- 
-+static const struct bmi_node cs35l41_hda = {
-+	.instances = {
-+		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+		{}
-+	},
-+	.bus_type = BMI_AUTO_DETECT,
-+};
-+
- /*
-  * Note new device-ids must also be added to bus_multi_instantiate_ids in
-  * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-@@ -336,6 +347,9 @@ static const struct acpi_device_id bmi_acpi_ids[] = {
- 	{ "BSG1160", (unsigned long)&bsg1160_data },
- 	{ "BSG2150", (unsigned long)&bsg2150_data },
- 	{ "INT3515", (unsigned long)&int3515_data },
-+	{ "CSC3551", (unsigned long)&cs35l41_hda },
-+	/* Non-conforming _HID for Cirrus Logic already released */
-+	{ "CLSA0100", (unsigned long)&cs35l41_hda },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, bmi_acpi_ids);
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 3a92b7bdb91d..6cab6465558d 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -1744,8 +1744,11 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
- 	 */
- 		{"BSG1160", },
- 		{"BSG2150", },
-+		{"CSC3551", },
- 		{"INT33FE", },
- 		{"INT3515", },
-+	/* Non-conforming _HID for Cirrus Logic already released */
-+		{"CLSA0100", },
- 	/*
- 	 * HIDs of device with an UartSerialBusV2 resource for which userspace
- 	 * expects a regular tty cdev to be created (instead of the in kernel
+And when I read "secrets page" I think, encrypted/signed and given
+directly to the guest, past the HV which cannot even touch it.
+
+Hmmm.
+
 -- 
-2.25.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
