@@ -2,148 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC006C4167E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 Jan 2022 11:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6963DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 Jan 2022 12:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354269AbiASLm1 (ORCPT
+        id S244422AbiASMz5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 19 Jan 2022 06:42:27 -0500
-Received: from mxout03.lancloud.ru ([45.84.86.113]:32826 "EHLO
-        mxout03.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236274AbiASLmT (ORCPT
+        Wed, 19 Jan 2022 07:55:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232897AbiASMz4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 Jan 2022 06:42:19 -0500
-Received: from LanCloud
-DKIM-Filter: OpenDKIM Filter v2.11.0 mxout03.lancloud.ru 3B47720D46BF
-Received: from LanCloud
-Received: from LanCloud
-Received: from LanCloud
-Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
- (summary)
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-iio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-mtd@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        <linux-phy@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        <openipmi-developer@lists.sourceforge.net>,
-        "Khuong Dinh" <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        "Jiri Slaby" <jirislaby@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-serial@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Jaroslav Kysela" <perex@perex.cz>, <linux-pwm@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>, <linux-pm@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "John Garry" <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "Sebastian Reichel" <sre@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-edac@vger.kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Eric Auger <eric.auger@redhat.com>, <netdev@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>, <linux-mmc@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>,
-        "Vinod Koul" <vkoul@kernel.org>, James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        <linux-mediatek@lists.infradead.org>,
-        "Brian Norris" <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20220110195449.12448-1-s.shtylyov@omp.ru>
- <20220110195449.12448-2-s.shtylyov@omp.ru>
- <20220115183643.6zxalxqxrhkfgdfq@pengutronix.de> <YeQpWu2sUVOSaT9I@kroah.com>
- <20220118091819.zzxpffrxbckoxiys@pengutronix.de>
- <b6038ec2-da4a-de92-b845-cac2be0efcd1@omp.ru>
- <20220119113314.tpqfdgi6nurmzfun@pengutronix.de>
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <a42e1c8b-2c3d-e3f2-e48c-ad145322ad3d@omp.ru>
-Date:   Wed, 19 Jan 2022 14:42:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        Wed, 19 Jan 2022 07:55:56 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB4E5C061574;
+        Wed, 19 Jan 2022 04:55:55 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D72F91EC0373;
+        Wed, 19 Jan 2022 13:55:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1642596950;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=9NkeC38NDHwqMNmxnwshSdaG9bUxrwB91bS9TAMfKIo=;
+        b=mvKNWpbjdzVyfWHExAFnc1xVkLATCq/T1K8CYTEeU6EwlfTl9kSRmHZYPFhwrMLQttQYgY
+        6rwufaIxMOl+zcMlA5jrKc8lXE6+rzNAwnTFN8xA2JqegyVg3ba9ZHrP6RrFQxQTGUxiDg
+        kgxZ7yzL+s2twDYiUNBTluU/8XLV2mA=
+Date:   Wed, 19 Jan 2022 13:55:43 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v8 31/40] x86/compressed: add SEV-SNP feature
+ detection/setup
+Message-ID: <YegKTxXHDSSh5xHl@zn.tnic>
+References: <20211210154332.11526-1-brijesh.singh@amd.com>
+ <20211210154332.11526-32-brijesh.singh@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20220119113314.tpqfdgi6nurmzfun@pengutronix.de>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [192.168.11.198]
-X-ClientProxiedBy: LFEXT02.lancloud.ru (fd00:f066::142) To
- LFEX1907.lancloud.ru (fd00:f066::207)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211210154332.11526-32-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 1/19/22 2:33 PM, Uwe Kleine-König wrote:
+On Fri, Dec 10, 2021 at 09:43:23AM -0600, Brijesh Singh wrote:
+> +/*
+> + * TODO: These are exported only temporarily while boot/compressed/sev.c is
+> + * the only user. This is to avoid unused function warnings for kernel/sev.c
+> + * during the build of kernel proper.
+> + *
+> + * Once the code is added to consume these in kernel proper these functions
+> + * can be moved back to being statically-scoped to units that pull in
+> + * sev-shared.c via #include and these declarations can be dropped.
+> + */
+> +struct cc_blob_sev_info *snp_find_cc_blob_setup_data(struct boot_params *bp);
 
-[...]
->>>>> A possible compromise: We can have both. We rename
->>>>> platform_get_irq_optional() to platform_get_irq_silent() (or
->>>>> platform_get_irq_silently() if this is preferred) and once all users are
->>>>> are changed (which can be done mechanically), we reintroduce a
->>>>> platform_get_irq_optional() with Sergey's suggested semantic (i.e.
->>>>> return 0 on not-found, no error message printking).
->>>>
->>>> Please do not do that as anyone trying to forward-port an old driver
->>>> will miss the abi change of functionality and get confused.  Make
->>>> build-breaking changes, if the way a function currently works is
->>>> changed in order to give people a chance.
->>>
->>> Fine for me. I assume this is a Nack for Sergey's patch?
->>
->>    Which patch do you mean? I'm starting to get really muddled... :-(
-> 
-> I'm talking about "[PATCH 1/2] platform: make
-> platform_get_irq_optional() optional"
+You don't need any of that - just add the function with the patch which
+uses it.
 
-   I thought GregKH was talking about your renaming patch... :-/
+> +/*
+> + * Search for a Confidential Computing blob passed in as a setup_data entry
+> + * via the Linux Boot Protocol.
+> + */
+> +struct cc_blob_sev_info *
+> +snp_find_cc_blob_setup_data(struct boot_params *bp)
 
-> because "trying to forward-port an
-> old driver will miss the abi" applies to it.
+Please break lines like that only if absolutely necessary. Which doesn't
+look like it here.
 
-   Mhm... why not tell me right from the start? Jr even tell that to Andy
-instead of merging his patch, so I wouldn't get sucked into this work? 
-I wouldn't bother with v2 and it would have saved a lot of time spent on
-email... :-(
-   Do we also remember that "the stable API is a nonsense" thing? :-)
+Thx.
 
-> Best regards
-> Uwe
+-- 
+Regards/Gruss,
+    Boris.
 
-MBR, Sergey
+https://people.kernel.org/tglx/notes-about-netiquette
