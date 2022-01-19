@@ -2,392 +2,231 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F43C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 Jan 2022 22:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242E0C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 Jan 2022 01:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349943AbiARW1Z (ORCPT
+        id S1350600AbiASBSe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 18 Jan 2022 17:27:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349967AbiARW1U (ORCPT
+        Tue, 18 Jan 2022 20:18:34 -0500
+Received: from mail-co1nam11on2070.outbound.protection.outlook.com ([40.107.220.70]:14471
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S238605AbiASBSd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 18 Jan 2022 17:27:20 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391F5C061747
-        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Jan 2022 14:27:11 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1n9wvk-0000Vm-NM; Tue, 18 Jan 2022 23:26:20 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1n9wvY-00B4m8-19; Tue, 18 Jan 2022 23:26:07 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1n9wvX-0003U8-0E; Tue, 18 Jan 2022 23:26:07 +0100
-Date:   Tue, 18 Jan 2022 23:26:06 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Sergey Shtylyov <s.shtylyov@omp.ru>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-phy@lists.infradead.org, Jiri Slaby <jirislaby@kernel.org>,
-        openipmi-developer@lists.sourceforge.net,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        platform-driver-x86@vger.kernel.org,
-        Benson Leung <bleung@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-edac@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>, netdev@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        linux-mediatek@lists.infradead.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
-Message-ID: <20220118222606.3iwuzbenl7g6oeiq@pengutronix.de>
-References: <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
- <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
- <Yd9L9SZ+g13iyKab@sirena.org.uk>
- <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru>
- <20220114092557.jrkfx7ihg26ekzci@pengutronix.de>
- <61b80939-357d-14f5-df99-b8d102a4e1a1@omp.ru>
- <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
- <57af1851-9341-985e-7b28-d2ba86770ecb@omp.ru>
- <20220117084732.cdy2sash5hxp4lwo@pengutronix.de>
- <68d3bb7a-7572-7495-d295-e1d512ef509e@omp.ru>
+        Tue, 18 Jan 2022 20:18:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l4PBFjB+3nBFgS9ZkAetpK3xHt17dSJ7QXKDPySrMs5T+F+Di4m9KZatSsnZQ/cLhZ0yukDZiMMfzejBnt8FDjSXnr7AtAMvOBBTMRVOYSD2GKZLXbKlsOj3OsGB3SFHkomSCmYDZbYSCmzbFoNpDjesT2UWv5Q/hbkcD1SJkw+dYgfObAkagUby2emWgRYYbc3hVpDMff2h8dU429TurRmx2JO5odf/7i1dQhQcFzVDvf8xH21cIaNFQKlV32RbnG5QCWdeUYYmyiYyCsftTttAnroWMTpzapTPzRjC8xm2nFlm6z53IhBoTMyEprADQGCwbcO2S5PpYOorcRaOYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XqvCQLTZkIfD6QpHY8rNtMGQ6189mSy+Rf5pFonC+F4=;
+ b=FsGe/8bEzXpJB1QeUb79DpDb4ASs75fxiqlf0d8ad9aFvS6QwQEugQbz0gmeFenWqdWerq6h84p+MR83JrqSHy8iBoGn1TqNMu0XTPK7I/mNlPlu8bc8Ur2DR2gdcGMfcLSjvo80TMHAIhx1KAsfXVJLPz5lWL66krDsabueoeGnGuaOdtOr6r6VvqndjXfbsTheqJdIZiwVbWUrmamwvgLxbZxnUXoPHB0ooS7EOZaH+P7qg4XHJP2JsX9RprZdKV7UHX6INrawviAz+ATf9ZxAEVpJ+WzPZD4GHYuoKU0kFGpJS06dzbIRGQ/TOBnwYPpPL6uOqvrxWz8Nat2y8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XqvCQLTZkIfD6QpHY8rNtMGQ6189mSy+Rf5pFonC+F4=;
+ b=JZcllDf4pnhpmdK/9ItP426msdoQgmbBMvxjvGdP+9p+QHgXrLVlPhpjoEs2pwu147Qyy0CPWffwWRqDlr30sCFmEgxLTtUEfUyLy9+/pj1cx7N3RjMLGf4Ohto+5JsH6/S3eAMmBlL4OprsTRa8LyhZVMno8cASXjOxFUcW8M0=
+Received: from BN6PR11CA0070.namprd11.prod.outlook.com (2603:10b6:404:f7::32)
+ by CH0PR12MB5089.namprd12.prod.outlook.com (2603:10b6:610:bc::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.7; Wed, 19 Jan
+ 2022 01:18:31 +0000
+Received: from BN8NAM11FT029.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:f7:cafe::9f) by BN6PR11CA0070.outlook.office365.com
+ (2603:10b6:404:f7::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.7 via Frontend
+ Transport; Wed, 19 Jan 2022 01:18:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT029.mail.protection.outlook.com (10.13.177.68) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4909.7 via Frontend Transport; Wed, 19 Jan 2022 01:18:30 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Tue, 18 Jan
+ 2022 19:18:29 -0600
+Date:   Tue, 18 Jan 2022 19:18:06 -0600
+From:   Michael Roth <michael.roth@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     Brijesh Singh <brijesh.singh@amd.com>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+        <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "Vitaly Kuznetsov" <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        <tony.luck@intel.com>, <marcorr@google.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v8 29/40] x86/compressed/64: add support for SEV-SNP
+ CPUID table in #VC handlers
+Message-ID: <20220119011806.av5rtxfv4et2sfkl@amd.com>
+References: <YeGhKll2fTcTr2wS@zn.tnic>
+ <20220118043521.exgma53qrzrbalpd@amd.com>
+ <YebIiN6Ftq2aPtyF@zn.tnic>
+ <20220118142345.65wuub2p3alavhpb@amd.com>
+ <20220118143238.lu22npcktxuvadwk@amd.com>
+ <20220118143730.wenhm2bbityq7wwy@amd.com>
+ <YebsKcpnYzvjaEjs@zn.tnic>
+ <20220118172043.djhy3dwg4fhhfqfs@amd.com>
+ <Yeb7vOaqDtH6Fpsb@zn.tnic>
+ <20220118184930.nnwbgrfr723qabnq@amd.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="a7pus3gvz76yet7d"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <68d3bb7a-7572-7495-d295-e1d512ef509e@omp.ru>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+In-Reply-To: <20220118184930.nnwbgrfr723qabnq@amd.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7c8197a3-5fdc-4d2c-b54a-08d9dae99ab8
+X-MS-TrafficTypeDiagnostic: CH0PR12MB5089:EE_
+X-Microsoft-Antispam-PRVS: <CH0PR12MB5089DA1DCB8E4F54095E00B595599@CH0PR12MB5089.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kQ2mFLt+XU1EwoxmefkJ7EWhb1MFzbg3w7/E+jfoOub3uRs3lRjOQElqDM/HG8AKhEfIXcvrVSnDFxnTMbjJ30tctSnQv5W8NqBhBP512RaVEgBdT4/sSAP2Np5gqAaLdikO+JzMdB05RYKTTZ+qz+DSd+PY/eLBrkkyrfKq+FRBq/2IrfTE3HahqtYgzt2SATWxZuveGfvaiMAWoZfDxSTCIeN/y0FIRmzkBfoPRMkeMiWulCZmc5zbCvVtHbN8gkNmoWXWBEK1gvR2diqf8X0K0Q6iPuWHvYymbtD2mlF3KkhiLj0Ve3XdntOomfeUbokK+6rwCDYMhcE/EXiHcF0a0ceFs9GynSV2BV50w1IATSL5HUKtiDi7F51GjANtRu/K9SHyboLunMmZwG1o7YGqxJg7kfKIvVEQwWzxkYBN2iK+hmTgDGwo/mGMOYQNgPRRfOXrlFblvyr4hE+frDoob5XMThgFk35UAyjXshZt7lVJGwzZ/D4ZrcXf7NO0VpofEzR8vWPR0lJlB1/wUKNAKJAIzH2iPtNqYyVgb/0/X63VKyGCk/AMQ0b7LvIOgce2DV7ZJk1w9M4oTYkUDs/Ya8iTeMfAdTCup2OcmRiUv4odW+2Kzcpl08TKOTEvRZSJkSBKG40qxer52rv2MHB/xIG46WTcMxnLdcwvfgDJS55yRW126kl6qHVXRxDJbKUO/v/L7jGTRiwha3dHe463/STxa8B5shwtC8AqcvErdi+T/EpnjRjduJSl3XDYtMFSQR8G+R+KR5jWSlUyzGibTP3+wi9+HZV/pSLA4h4=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(40470700002)(46966006)(36840700001)(7416002)(81166007)(70206006)(356005)(2906002)(2616005)(82310400004)(26005)(44832011)(8936002)(336012)(4326008)(40460700001)(6666004)(7406005)(8676002)(316002)(426003)(54906003)(1076003)(47076005)(5660300002)(86362001)(70586007)(36756003)(36860700001)(16526019)(6916009)(508600001)(186003)(83380400001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2022 01:18:30.6573
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c8197a3-5fdc-4d2c-b54a-08d9dae99ab8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT029.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5089
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Tue, Jan 18, 2022 at 12:49:30PM -0600, Michael Roth wrote:
+> On Tue, Jan 18, 2022 at 06:41:16PM +0100, Borislav Petkov wrote:
+> > On Tue, Jan 18, 2022 at 11:20:43AM -0600, Michael Roth wrote:
+> > > The HV fills out the initial contents of the CPUID page, which includes
+> > > the count. SNP/PSP firmware will validate the contents the HV tries to put
+> > > in the initial page, but does not currently enforce that the 'count' field
+> > > is non-zero.
+> > 
+> > And regardless, what if the HV fakes the count - how do you figure out
+> > what the proper count is? You go and read the whole CPUID page and try
+> > to make sense of what's there, even beyond the "last" function leaf.
+> 
+> 
 
---a7pus3gvz76yet7d
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+<snip>
 
-On Tue, Jan 18, 2022 at 11:21:45PM +0300, Sergey Shtylyov wrote:
-> Hello!
->=20
-> On 1/17/22 11:47 AM, Uwe Kleine-K=F6nig wrote:
->=20
-> [...]
-> >>>>>>>>> To me it sounds much more logical for the driver to check if an
-> >>>>>>>>> optional irq is non-zero (available) or zero (not available), t=
-han to
-> >>>>>>>>> sprinkle around checks for -ENXIO. In addition, you have to rem=
-ember
-> >>>>>>>>> that this one returns -ENXIO, while other APIs use -ENOENT or -=
-ENOSYS
-> >>>>>>>>> (or some other error code) to indicate absence. I thought not h=
-aving
-> >>>>>>>>> to care about the actual error code was the main reason behind =
-the
-> >>>>>>>>> introduction of the *_optional() APIs.
-> >>>>>>>
-> >>>>>>>> No, the main benefit of gpiod_get_optional() (and clk_get_option=
-al()) is
-> >>>>>>>> that you can handle an absent GPIO (or clk) as if it were availa=
-ble.
-> >>>>>>
-> >>>>>>    Hm, I've just looked at these and must note that they match 1:1=
- with
-> >>>>>> platform_get_irq_optional(). Unfortunately, we can't however behav=
-e the
-> >>>>>> same way in request_irq() -- because it has to support IRQ0 for th=
-e sake
-> >>>>>> of i8253 drivers in arch/...
-> >>>>>
-> >>>>> Let me reformulate your statement to the IMHO equivalent:
-> >>>>>
-> >>>>> 	If you set aside the differences between
-> >>>>> 	platform_get_irq_optional() and gpiod_get_optional(),
-> >>>>
-> >>>>    Sorry, I should make it clear this is actually the diff between a=
- would-be
-> >>>> platform_get_irq_optional() after my patch, not the current code...
-> >>>
-> >>> The similarity is that with your patch both gpiod_get_optional() and
-> >>> platform_get_irq_optional() return NULL and 0 on not-found. The relev=
-ant
-> >>> difference however is that for a gpiod NULL is a dummy value, while f=
-or
-> >>> irqs it's not. So the similarity is only syntactically, but not
-> >>> semantically.
-> >>
-> >>    I have noting to say here, rather than optional IRQ could well have=
- a different
-> >> meaning than for clk/gpio/etc.
-> >>
-> >> [...]
-> >>>>> However for an interupt this cannot work. You will always have to c=
-heck
-> >>>>> if the irq is actually there or not because if it's not you cannot =
-just
-> >>>>> ignore that. So there is no benefit of an optional irq.
-> >>>>>
-> >>>>> Leaving error message reporting aside, the introduction of
-> >>>>> platform_get_irq_optional() allows to change
-> >>>>>
-> >>>>> 	irq =3D platform_get_irq(...);
-> >>>>> 	if (irq < 0 && irq !=3D -ENXIO) {
-> >>>>> 		return irq;
-> >>>>> 	} else if (irq >=3D 0) {
-> >>>>
-> >>>>    Rather (irq > 0) actually, IRQ0 is considered invalid (but still =
-returned).
-> >>>
-> >>> This is a topic I don't feel strong for, so I'm sloppy here. If chang=
-ing
-> >>> this is all that is needed to convince you of my point ...
-> >>
-> >>    Note that we should absolutely (and first of all) stop returning 0 =
-=66rom platform_get_irq()
-> >> on a "real" IRQ0. Handling that "still good" zero absolutely doesn't s=
-cale e.g. for the subsystems
-> >> (like libata) which take 0 as an indication that the polling mode shou=
-ld be used... We can't afford
-> >> to be sloppy here. ;-)
-> >=20
-> > Then maybe do that really first?
->=20
->    I'm doing it first already:
->=20
-> https://lore.kernel.org/all/5e001ec1-d3f1-bcb8-7f30-a6301fd9930c@omp.ru/
->=20
->    This series is atop of the above patch...
+> > 
+> > But see above, how do you check whether the HV hasn't "hidden" some
+> > entries by modifying the count field?
+> > 
+> > Either I'm missing something or this sounds really weird...
+> 
+> ...count must match the actual number of entries in the table in all
+> cases.
 
-Ah, I missed that (probably because I didn't get the cover letter).
+Turns out in my testing earlier there was a separate check that was
+causing the PSP to fail, so I re-tested the behavior, and things are
+actually a bit more interesting, but nothing too concerning:
 
-> > I didn't recheck, but is this what the
-> > driver changes in your patch is about?
->=20
->    Partly, yes. We can afford to play with the meaning of 0 after the abo=
-ve patch.
+If 'fake_count'/'reported_count' is greater than the actual number of
+entries in the table, 'actual_count', then all table entries up to
+'fake_count' will also need to pass validation. Generally the table
+will be zero'd out initially, so those additional/bogus entries will
+be interpreted as a CPUID leaves where all fields are 0. Unfortunately,
+that's still considered a valid leaf, even if it's a duplicate of the
+*actual* 0x0 leaf present earlier in the table. The current code will
+handle this fine, since it scans the table in order, and uses the
+valid 0x0 leaf earlier in the table.
 
-But the changes that are in patch 1 are all needed?
-=20
-> > After some more thoughts I wonder if your focus isn't to align
-> > platform_get_irq_optional to (clk|gpiod|regulator)_get_optional, but to
-> > simplify return code checking. Because with your change we have:
-> >=20
-> >  - < 0 -> error
-> >  - =3D=3D 0 -> no irq
-> >  - > 0 -> irq
->=20
->    Mainly, yes. That's why the code examples were given in the descriptio=
-n.
->=20
-> > For my part I'd say this doesn't justify the change, but at least I
-> > could better life with the reasoning. If you start at:
-> >=20
-> > 	irq =3D platform_get_irq_optional(...)
-> > 	if (irq < 0 && irq !=3D -ENXIO)
-> > 		return irq
-> > 	else if (irq > 0)
-> > 		setup_irq(irq);
-> > 	else
-> > 		setup_polling()
-> >=20
-> > I'd change that to
-> >=20
-> > 	irq =3D platform_get_irq_optional(...)
-> > 	if (irq > 0) /* or >=3D 0 ? */
->=20
->    Not >=3D 0, no...
->=20
-> > 		setup_irq(irq)
-> > 	else if (irq =3D=3D -ENXIO)
-> > 		setup_polling()
-> > 	else
-> > 		return irq
-> >=20
-> > This still has to mention -ENXIO, but this is ok and checking for 0 just
-> > hardcodes a different return value.
->=20
->    I think comparing with 0 is simpler (and shorter) than with -ENXIO, if=
- you
-> consider the RISC CPUs, like e.g. MIPS...
+This is isn't really a special case though, it falls under the general
+category of a hypervisor inserting garbage entries that happen to pass
+validation, but don't reflect values that a guest would normally see.
+This will be detectable as part of guest owner attestation, since the
+guest code is careful to guarantee that the values seen after boot,
+once the attestation stage is reached, will be identical to the values
+seen during boot, so if this sort of manipulation of CPUID values
+occurred, the guest owner will notice this during attestation, and can
+abort the boot at that point. The Documentation patch addresses this
+in more detail.
 
-Hmm, I don't know MIPS good enough to judge. So I created a small C
-file:
+If 'fake_count' is less than 'actual_count', then the PSP skips
+validation for anything >= 'fake_count', and leaves them in the table.
+That should also be fine though, since guest code should never exceed
+'fake_count'/'reported_count', as that's a blatant violation of the
+spec, and it doesn't make any sense for a guest to do this. This will
+effectively 'hide' entries, but those resulting missing CPUID leaves
+will be noticeable to the guest owner once attestation phase is
+reached.
 
-	$ cat test.c
-	#include <errno.h>
+This does all highlight the need for some very thorough guidelines
+on how a guest owner should implement their attestation checks for
+cpuid, however. I think a section in the reference implementation
+notes/document that covers this would be a good starting point. I'll
+also check with the PSP team on tightening up some of these CPUID
+page checks to rule out some of these possibilities in the future.
 
-	int platform_get_irq_optional(void);
-	void a(void);
+> in the table. count==0 is only special in that code might erroneously
+> decide to treat it as an indicator that cpuid table isn't enabled at
+> all, but since that case causes termination it should actually be ok.
+> 
+> Though I wonder if we should do something like this to still keep
+> callers from relying on checking count==0 directly:
+> 
+>   static const struct snp_cpuid_info *
+>   snp_cpuid_info_get_ptr(void)
+>   {
+>           const struct snp_cpuid_info *cpuid_info;
+>           void *ptr;
+>   
+>           /*
+>            * This may be called early while still running on the initial identity
+>            * mapping. Use RIP-relative addressing to obtain the correct address
+>            * in both for identity mapping and after switch-over to kernel virtual
+>            * addresses.
+>            */
+>           asm ("lea cpuid_info_copy(%%rip), %0"
+>                : "=r" (ptr)
+>                : "p" (&cpuid_info_copy));
+>   
+>           cpuid_info = ptr;
+>           if (cpuid_info->count == 0)
+>                   return NULL
+>   
+>           return cpuid_info;
+>   }
 
-	int func_0()
-	{
-		int irq =3D platform_get_irq_optional();
+Nevermind, that doesn't work since snp_cpuid_info_get_ptr() is also called
+by snp_cpuid_info_get_ptr() *prior* to initializing the table, so it ends
+seeing cpuid->count==0 and fails right away. So your initial suggestion
+of checking cpuid->count==0 at the call-sites to determine if the table
+is enabled is probably the best option.
 
-		if (irq =3D=3D 0)
-			a();
-	}
-
-	int func_enxio()
-	{
-		int irq =3D platform_get_irq_optional();
-
-		if (irq =3D=3D -ENXIO)
-			a();
-	}
-
-With some cross compilers as provided by Debian doing
-
-	$CC -c -O3 test.c
-	nm --size-sort test.o
-
-I get:
-
-  compiler			|  size of func_0  | size of func_enxio
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-aarch64-linux-gnu-gcc		| 0000000000000024 | 0000000000000028
-arm-linux-gnueabi-gcc		|         00000018 |         00000018
-arm-linux-gnueabihf-gcc		|         00000010 |         00000012
-i686-linux-gnu-gcc		|         0000002a |         0000002a
-mips64el-linux-gnuabi64-gcc	| 0000000000000054 | 000000000000005c
-powerpc-linux-gnu-gcc		|         00000058 |         00000058
-s390x-linux-gnu-gcc		| 000000000000002e | 0000000000000030
-x86_64-linux-gnu-gcc		| 0000000000000022 | 0000000000000022
-
-So you save some bytes indeed.
-
-> > Anyhow, I think if you still want to change platform_get_irq_optional
-> > you should add a few patches converting some drivers which demonstrates
-> > the improvement for the callers.
->=20
->    Mhm, I did include all the drivers where the IRQ checks have to be mod=
-ified,
-> not sure what else you want me to touch...
-
-I somehow expected that the changes that are now necessary (or possible)
-to callers makes them prettier somehow. Looking at your patch again:
-
- - drivers/counter/interrupt-cnt.c
-   This one is strange in my eyes because it tests the return value of
-   gpiod_get_optional against NULL :-(
-
- - drivers/edac/xgene_edac.c
-   This one just wants a silent irq lookup and then throws away the
-   error code returned by platform_get_irq_optional() to return -EINVAL.
-   Not so nice, is it?
-
- - drivers/gpio/gpio-altera.c
-   This one just wants a silent irq lookup. And maybe it should only
-   goto skip_irq if the irq was not found, but on an other error code
-   abort the probe?!
-
- - drivers/gpio/gpio-mvebu.c
-   Similar to gpio-altera.c: Wants a silent irq and improved error
-   handling.
-
- - drivers/i2c/busses/i2c-brcmstb.c
-   A bit ugly that we now have dev->irq =3D=3D 0 if the irq isn't available,
-   but if requesting the irq failed irq =3D -1 is used?
-
- - drivers/mmc/host/sh_mmcif.c
-   Broken error handling. This one wants to abort on irq[1] < 0 (with
-   your changed semantic).
-
-I stopped here.
-
-It seems quite common that drivers assume a value < 0 returned by
-platform_get_irq means not-found and don't care for -EPROBE_DEFER (what
-else can happen?) Changing a relevant function in that mess seems
-unfortunate here :-\
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---a7pus3gvz76yet7d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmHnPnoACgkQwfwUeK3K
-7Akqngf/deJcg5Z6920bXlYUCFdp2KylFxWHucfT0qIrwGnPq8zaZFS9gHqJ0sdG
-7jQQJZSuB0RvjbvoR65zpQdPHzf+L5Mt7RcHB97mz9RBI0icUJxXPyCM5R+JJztU
-FwvRMasJJTaWprdySpKQ2NBP//sovxwwmoujXrWnzumTfyLR1rw66bTkDxHqwQO0
-aWnbojhdu/efNMVD8vDGDRvmyeWv2jVpsINrc/BxPET+KGaMZQUKGtk2vnJSgprv
-w/qDSARMcG/2W0EAD65b/kO9COe957sWbn7Pj9ylMp1Eb4kziV8OLLT8WYWtLiHw
-zStNC4/q9uZn5kXN2bo45YckhIG/gg==
-=ZjV7
------END PGP SIGNATURE-----
-
---a7pus3gvz76yet7d--
+Sorry for the noise/confusion.
