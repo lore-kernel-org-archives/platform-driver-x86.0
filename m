@@ -2,261 +2,168 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD75C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 Jan 2022 17:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC7BC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 Jan 2022 18:29:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356515AbiASRsZ (ORCPT
+        id S1356770AbiASS3o (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 19 Jan 2022 12:48:25 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:43390 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1356397AbiASRsX (ORCPT
+        Wed, 19 Jan 2022 13:29:44 -0500
+Received: from mxout02.lancloud.ru ([45.84.86.82]:60414 "EHLO
+        mxout02.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1356737AbiASS3l (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 Jan 2022 12:48:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1642614502;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YpDeVNV5+zY/wtrGfYxy2lEajeSHJy9f5dUQzPImNNs=;
-        b=hdgXy6QeBepFKJQ4tEclQtWaP6UZAsrpRxDwzVfxgNDAcrPbjTCyKkCjPuyNkMw8h3vbFK
-        ZDrBYISXCxb29q/7IK0hG2xSUVl4tUcL2nswoPSq4hGz0b4RNtm5NkJ3oJtXC5b0/kvGwx
-        ZjTXJ4vCzo73HvmriLS45MfI/kL63P8=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-86-sN1dyZicPQ6ksNytjkZORw-1; Wed, 19 Jan 2022 12:48:21 -0500
-X-MC-Unique: sN1dyZicPQ6ksNytjkZORw-1
-Received: by mail-ed1-f71.google.com with SMTP id ee53-20020a056402293500b004022f34edcbso3341792edb.11
-        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Jan 2022 09:48:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=YpDeVNV5+zY/wtrGfYxy2lEajeSHJy9f5dUQzPImNNs=;
-        b=Gon3Ru7R0Y6kk0VyM2anFUBtGio/Fc8xycf8MjaNHAcxaX98CTEaWJaKa/FHVpp4Ph
-         nrhmrtXj59LZZuGw9vBXizx6nbJr6MW16EvotR2gJBJi7JrJNB/UaoBYBj7d5n1D3xEl
-         o8Dmh9DCH120T3koagRXrHz2v9sD1Ah2C7BFCnzuY9C2AUaXgR2YULLGGCksHISykB/7
-         C6p6RQAvl8NnLuSTiB1WNe1GkNpRinM7avaSEKVX0ybblWTQcM2XariMVQ2F14+qrax3
-         DlDcZMdxQty7+plJz3g4AsqaGQBmp3rCzSiho3ttKAF3LApmbyCjtedoKnFTt0ltgAq4
-         LgMA==
-X-Gm-Message-State: AOAM530xI0i5TEQ0AEzKWvh5suD4ahhiJvmX+5wQLsFgHunSTNr1ibN6
-        sxaN2hJgkWeFADnhSffT6FXGgsclFF8jXmmhTRLn7U9qpBRFAcv5h2bFLvcOJmeDBhj5fwilXLr
-        PaERWYUXsYb1if496Se2wgcLo5ZMoxbJ8yw==
-X-Received: by 2002:a17:907:3e24:: with SMTP id hp36mr17603771ejc.584.1642614499589;
-        Wed, 19 Jan 2022 09:48:19 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx5iWS79JAvreWf3L6gIVZPiqWXYyiPVTLJMjomwG6E2H8+WN4B3GQwRNVgVkLtSBGLy4Uh7w==
-X-Received: by 2002:a17:907:3e24:: with SMTP id hp36mr17603759ejc.584.1642614499311;
-        Wed, 19 Jan 2022 09:48:19 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id r18sm172741edq.25.2022.01.19.09.48.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jan 2022 09:48:18 -0800 (PST)
-Message-ID: <f55ff70c-1578-afa7-999e-ba504aa325eb@redhat.com>
-Date:   Wed, 19 Jan 2022 18:48:17 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v3 05/10] platform/x86: i2c-multi-instantiate: Move it to
- drivers/acpi folder
-Content-Language: en-US
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lucas tanure <tanureal@opensource.cirrus.com>
-Cc:     Stefan Binding <sbinding@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
+        Wed, 19 Jan 2022 13:29:41 -0500
+Received: from LanCloud
+DKIM-Filter: OpenDKIM Filter v2.11.0 mxout02.lancloud.ru EFD8920BF006
+Received: from LanCloud
+Received: from LanCloud
+Received: from LanCloud
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>
+CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-iio@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
         Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <linux-phy@lists.infradead.org>,
         linux-spi <linux-spi@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        patches@opensource.cirrus.com
-References: <20220118145251.1548-1-sbinding@opensource.cirrus.com>
- <20220118145251.1548-6-sbinding@opensource.cirrus.com>
- <CAJZ5v0g0n201FPcG9LBNG3e4UdNYSWmj_1sN3MxLxmK=GoF+tA@mail.gmail.com>
- <a3522b5e-fb36-b959-d2ea-d141d3ad9999@opensource.cirrus.com>
- <CAJZ5v0h8MWb3sSuqWHUcm9TVWP0uJ+=GmzAuqVtNag2LP+0kYQ@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAJZ5v0h8MWb3sSuqWHUcm9TVWP0uJ+=GmzAuqVtNag2LP+0kYQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+        Jiri Slaby <jirislaby@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        "Saravanan Sekar" <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Mark Brown" <broonie@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <openipmi-developer@lists.sourceforge.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-edac@vger.kernel.org>, "Tony Luck" <tony.luck@intel.com>,
+        Richard Weinberger <richard@nod.at>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Linux MMC List" <linux-mmc@vger.kernel.org>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        "James Morse" <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        <linux-mediatek@lists.infradead.org>,
+        "Brian Norris" <computersforpeace@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+References: <20220117092444.opoedfcf5k5u6otq@pengutronix.de>
+ <CAMuHMdUgZUeraHadRAi2Z=DV+NuNBrKPkmAKsvFvir2MuquVoA@mail.gmail.com>
+ <20220117114923.d5vajgitxneec7j7@pengutronix.de>
+ <CAMuHMdWCKERO20R2iVHq8P=BaoauoBAtiampWzfMRYihi3Sb0g@mail.gmail.com>
+ <20220117170609.yxaamvqdkivs56ju@pengutronix.de>
+ <CAMuHMdXbuZqEpYivyS6hkaRN+CwTOGaHq_OROwVAWvDD6OXODQ@mail.gmail.com>
+ <20220118090913.pjumkq4zf4iqtlha@pengutronix.de>
+ <CAMuHMdUW8+Y_=uszD+JOZO3Lpa9oDayk+GO+cg276i2f2T285w@mail.gmail.com>
+ <20220118120806.pbjsat4ulg3vnhsh@pengutronix.de>
+ <CAMuHMdWkwV9XE_R5FZ=jPtDwLpDbEngG6+X2JmiDJCZJZvUjYA@mail.gmail.com>
+ <20220118142945.6y3rmvzt44pjpr4z@pengutronix.de>
+ <6370798a-7a7e-243d-99f9-09bf772ddbac@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <96ff907a-4ad2-5b2e-9bcc-09592d65a6df@omp.ru>
+Date:   Wed, 19 Jan 2022 21:29:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
+MIME-Version: 1.0
+In-Reply-To: <6370798a-7a7e-243d-99f9-09bf772ddbac@omp.ru>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.11.198]
+X-ClientProxiedBy: LFEXT02.lancloud.ru (fd00:f066::142) To
+ LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On 1/19/22 7:12 PM, Sergey Shtylyov wrote:
 
-On 1/19/22 18:44, Rafael J. Wysocki wrote:
-> On Wed, Jan 19, 2022 at 6:33 PM Lucas tanure
-> <tanureal@opensource.cirrus.com> wrote:
+[...]
+>>> So there's still a need for two functions.
 >>
->> On 1/19/22 16:53, Rafael J. Wysocki wrote:
->>> On Tue, Jan 18, 2022 at 3:53 PM Stefan Binding
->>> <sbinding@opensource.cirrus.com> wrote:
->>>>
->>>> From: Lucas Tanure <tanureal@opensource.cirrus.com>
->>>>
->>>> Moving I2C multi instantiate driver to drivers/acpi folder for
->>>> upcoming conversion into a generic bus multi instantiate
->>>> driver for SPI and I2C
->>>>
->>>> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
->>>> Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
->>>
->>> Why are you moving it away from platform/x86?
->>>
->>> Adding SPI to the mix doesn't seem to be a sufficient reason.
->>>
->>> If this were going to be needed on non-x86, that would be a good
->>> reason for moving it, but is that actually the case?  If so, why isn't
->>> that mentioned in the changelog above?
->>>
+>> Or a single function not emitting an error message together with the
+>> callers being responsible for calling dev_err().
 >>
->> It was a request made by Andy Shevchenko:
->> https://lkml.org/lkml/2021/12/3/347
-> 
-> But he hasn't given any reasons why that'd be better.
-> 
->> There is no plan to use our CS35L41 HDA with non-x86 platforms and we
->> can't comment about i2c-multi-instantiate use.
->> For us it can stay in x86 folder until an actual request.
-> 
-> I'd prefer that if Hans agrees.
-
-Ack, keeping this in drivers/platform/x86 is fine with me.
-
-I'll try to make some time to review this new version next week.
-
-Looking at the subjects of the patches I see that this now
-refactors the SPI code to re-use the existing SPI ACPI resource
-parsing there, thank you for doing that!
-
-Regards,
-
-Hans
-
-
-
-
-
-> 
->>>> ---
->>>>   MAINTAINERS                                           |  2 +-
->>>>   drivers/acpi/Kconfig                                  | 11 +++++++++++
->>>>   drivers/acpi/Makefile                                 |  1 +
->>>>   .../{platform/x86 => acpi}/i2c-multi-instantiate.c    |  0
->>>>   drivers/acpi/scan.c                                   |  2 +-
->>>>   drivers/platform/x86/Kconfig                          | 11 -----------
->>>>   drivers/platform/x86/Makefile                         |  1 -
->>>>   7 files changed, 14 insertions(+), 14 deletions(-)
->>>>   rename drivers/{platform/x86 => acpi}/i2c-multi-instantiate.c (100%)
->>>>
->>>> diff --git a/MAINTAINERS b/MAINTAINERS
->>>> index 4e828542b089..546f9e149d28 100644
->>>> --- a/MAINTAINERS
->>>> +++ b/MAINTAINERS
->>>> @@ -392,7 +392,7 @@ ACPI I2C MULTI INSTANTIATE DRIVER
->>>>   M:     Hans de Goede <hdegoede@redhat.com>
->>>>   L:     platform-driver-x86@vger.kernel.org
->>>>   S:     Maintained
->>>> -F:     drivers/platform/x86/i2c-multi-instantiate.c
->>>> +F:     drivers/acpi/i2c-multi-instantiate.c
->>>>
->>>>   ACPI PCC(Platform Communication Channel) MAILBOX DRIVER
->>>>   M:     Sudeep Holla <sudeep.holla@arm.com>
->>>> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
->>>> index ba45541b1f1f..2fd78366af6f 100644
->>>> --- a/drivers/acpi/Kconfig
->>>> +++ b/drivers/acpi/Kconfig
->>>> @@ -295,6 +295,17 @@ config ACPI_PROCESSOR
->>>>            To compile this driver as a module, choose M here:
->>>>            the module will be called processor.
->>>>
->>>> +config ACPI_I2C_MULTI_INST
->>>> +       tristate "I2C multi instantiate pseudo device driver"
->>>> +       depends on I2C
->>>> +       help
->>>> +         Some ACPI-based systems list multiple i2c-devices in a single ACPI
->>>> +         firmware-node. This driver will instantiate separate i2c-clients
->>>> +         for each device in the firmware-node.
->>>> +
->>>> +         To compile this driver as a module, choose M here: the module
->>>> +         will be called i2c-multi-instantiate.
->>>> +
->>>>   config ACPI_IPMI
->>>>          tristate "IPMI"
->>>>          depends on IPMI_HANDLER
->>>> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
->>>> index bb757148e7ba..d4db7fb0baf0 100644
->>>> --- a/drivers/acpi/Makefile
->>>> +++ b/drivers/acpi/Makefile
->>>> @@ -104,6 +104,7 @@ obj-$(CONFIG_ACPI_SPCR_TABLE)       += spcr.o
->>>>   obj-$(CONFIG_ACPI_DEBUGGER_USER) += acpi_dbg.o
->>>>   obj-$(CONFIG_ACPI_PPTT)        += pptt.o
->>>>   obj-$(CONFIG_ACPI_PFRUT)       += pfr_update.o pfr_telemetry.o
->>>> +obj-$(CONFIG_ACPI_I2C_MULTI_INST)      += i2c-multi-instantiate.o
->>>>
->>>>   # processor has its own "processor." module_param namespace
->>>>   processor-y                    := processor_driver.o
->>>> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/acpi/i2c-multi-instantiate.c
->>>> similarity index 100%
->>>> rename from drivers/platform/x86/i2c-multi-instantiate.c
->>>> rename to drivers/acpi/i2c-multi-instantiate.c
->>>> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
->>>> index 1331756d4cfc..3e85a02f6ba2 100644
->>>> --- a/drivers/acpi/scan.c
->>>> +++ b/drivers/acpi/scan.c
->>>> @@ -1738,7 +1738,7 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
->>>>           * must be instantiated for each, each with its own i2c_device_id.
->>>>           * Normally we only instantiate an i2c-client for the first resource,
->>>>           * using the ACPI HID as id. These special cases are handled by the
->>>> -        * drivers/platform/x86/i2c-multi-instantiate.c driver, which knows
->>>> +        * drivers/acpi/i2c-multi-instantiate.c driver, which knows
->>>>           * which i2c_device_id to use for each resource.
->>>>           */
->>>>                  {"BSG1160", },
->>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->>>> index 24deeeb29af2..37c1c150508d 100644
->>>> --- a/drivers/platform/x86/Kconfig
->>>> +++ b/drivers/platform/x86/Kconfig
->>>> @@ -990,17 +990,6 @@ config TOPSTAR_LAPTOP
->>>>
->>>>            If you have a Topstar laptop, say Y or M here.
->>>>
->>>> -config I2C_MULTI_INSTANTIATE
->>>> -       tristate "I2C multi instantiate pseudo device driver"
->>>> -       depends on I2C && ACPI
->>>> -       help
->>>> -         Some ACPI-based systems list multiple i2c-devices in a single ACPI
->>>> -         firmware-node. This driver will instantiate separate i2c-clients
->>>> -         for each device in the firmware-node.
->>>> -
->>>> -         To compile this driver as a module, choose M here: the module
->>>> -         will be called i2c-multi-instantiate.
->>>> -
->>>>   config MLX_PLATFORM
->>>>          tristate "Mellanox Technologies platform support"
->>>>          depends on I2C && REGMAP
->>>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->>>> index c12a9b044fd8..6c7870190564 100644
->>>> --- a/drivers/platform/x86/Makefile
->>>> +++ b/drivers/platform/x86/Makefile
->>>> @@ -110,7 +110,6 @@ obj-$(CONFIG_TOPSTAR_LAPTOP)        += topstar-laptop.o
->>>>
->>>>   # Platform drivers
->>>>   obj-$(CONFIG_FW_ATTR_CLASS)            += firmware_attributes_class.o
->>>> -obj-$(CONFIG_I2C_MULTI_INSTANTIATE)    += i2c-multi-instantiate.o
->>>>   obj-$(CONFIG_MLX_PLATFORM)             += mlx-platform.o
->>>>   obj-$(CONFIG_TOUCHSCREEN_DMI)          += touchscreen_dmi.o
->>>>   obj-$(CONFIG_WIRELESS_HOTKEY)          += wireless-hotkey.o
->>>> --
->>>> 2.25.1
->>>>
+>> So the options in my preference order (first is best) are:
 >>
+>>  - Remove the printk from platform_get_irq() and remove
+>>    platform_get_irq_optional();
 > 
+>    Strong NAK here:
+> - dev_err() in our function saves a lot of (repeatable!) comments;
 
+   s/comments/code/.
+   Actually, I think I can accept the removal of dev_err_probe() in platform_get_irq()
+as this is not a common practice anyway (yet? :-))...
+
+> - we've already discussed that it's more optimal to check againt 0 than
+
+   Against. :-)
+
+>   against -ENXIO in the callers.
+
+   And we also aim to be the error code agnostic in the callers...
+
+>>  - Rename platform_get_irq_optional() to platform_get_irq_silently()
+> 
+>    NAK as well. We'd better off complaining about irq < 0 in this function.
+
+>>  - Keep platform_get_irq_optional() as is
+> 
+>    NAK, it's suboptimal in the call sites.
+
+   s/in/on/.
+
+[...]
+
+>> Best regards
+>> Uwe
+
+MBR, Sergey
