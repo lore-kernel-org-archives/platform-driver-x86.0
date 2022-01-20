@@ -2,160 +2,150 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7656CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Jan 2022 16:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFFCC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Jan 2022 17:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377031AbiATQee (ORCPT
+        id S229581AbiATRo4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 Jan 2022 11:34:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42507 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S243806AbiATQed (ORCPT
+        Thu, 20 Jan 2022 12:44:56 -0500
+Received: from mail-dm3nam07on2073.outbound.protection.outlook.com ([40.107.95.73]:58838
+        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232221AbiATRoz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Jan 2022 11:34:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1642696472;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+1sc4JZ0+7MrtJWFMrOPG0iw0Wa1Lhn4BX5CbDefiMM=;
-        b=LdGD6B/dQQl4M/ZkdvFi4oa0oue1p9tPJ8RVz7C9Gz84NcJNX1tQ9n/CfS64j6KzZpU2wo
-        MURZcNWE2erDG4DUH9+Oid6nt7UkW9Kat2LvEYIrijGx8WG0ofSTdx/KC3DqOwZwO78+Ca
-        k94VCBAzy9uYJktBi178I4JYbBkVRH0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-308-CQltFvXLOCa7gMAv2aCU1g-1; Thu, 20 Jan 2022 11:34:31 -0500
-X-MC-Unique: CQltFvXLOCa7gMAv2aCU1g-1
-Received: by mail-ed1-f69.google.com with SMTP id el8-20020a056402360800b00403bbdcef64so6380417edb.14
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jan 2022 08:34:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=+1sc4JZ0+7MrtJWFMrOPG0iw0Wa1Lhn4BX5CbDefiMM=;
-        b=x8AILYPTgldQKIyB53EnKQ662IRZekjkSxBkQbyDmGq5VDTSM/EL4rlp91El0H6vB4
-         m9+WDmuLtPNUjYLm4RUBnWuOL/yCnJX2DUVdDeQgy3oxNB+hIhI887B9tCS4hJule8yq
-         NHKmKx4aE2M9dVfwwbtR5ftNNXI23Jrj73r2ouds/mJdqqOLhYVb9MYRYTo42hGB0KjM
-         t0D0iFa9nI1ECMajRaV1QxJxGuqEUM+d+IxNaLRZKtZg1g6PDfWHSRKTaGdFBze0H6Qg
-         UWilbNK4mIp452xX8WdbZTv07SlfcNlH6+9BCXeGoaBoM9RAWNDdzPf93I6vqMtjalIx
-         2Trg==
-X-Gm-Message-State: AOAM530Gl/dp2HSI1bde98CvfZ99F0F92eLxZa9xPlucUGGcA0hkcdiX
-        vE+ISk77lJspfyxqLGw27UgTzaK2UoJcgLNf1/212i88+TTSUD8BFlHhzmsXQQRCErqMLS75iRU
-        08dwVISrsFo5qfO2QFsZwxDNnnnGBvHSWGg==
-X-Received: by 2002:a17:907:6e0b:: with SMTP id sd11mr30574245ejc.132.1642696470222;
-        Thu, 20 Jan 2022 08:34:30 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwF9+NmsBb9KPVuUgSXvv1RUm6gGRw3HsBpgMAdYinUYF2Y/bfZO+s9YZARtMUaHR9LPOCCTg==
-X-Received: by 2002:a17:907:6e0b:: with SMTP id sd11mr30574226ejc.132.1642696470043;
-        Thu, 20 Jan 2022 08:34:30 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id dt15sm1157616ejb.190.2022.01.20.08.34.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jan 2022 08:34:29 -0800 (PST)
-Message-ID: <d6958153-7747-bc4b-2de0-57aa3226d984@redhat.com>
-Date:   Thu, 20 Jan 2022 17:34:28 +0100
+        Thu, 20 Jan 2022 12:44:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zwy6WIIv6WAa7U8n2rxEN/wpTYYFV/N3jKQvfmQVzhjVGHFHbNBN+Xko8HX15MVA6fpGqkZVWPRD8iup81tvl+Rb56aHIOyWy58xB1E9zSnG9/DVT0p35/WbmKelPGI6nlJ1NkpMgAp+Jvwe6DFi0APs+O+4JOCb+L85pMqcm2BHXxyRyR/e7Ng0RJDzGylrU0RRkLcSRC+u9a97ovewIpapxM50IptFBSoFsOhd22Nv1IGLuo9Rz45/GjTtYWG85J52C1b2ebR+wSWqxoQ8imbg/d65cUuit3Dkbc+1xe7BHncQE/B/pl1aeXK/8GieivQ7XR+hbJjuzu54XBt3yw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+siujHLVZ0/+7BvfR/Y9zkS3J5vExtaiTvZSO8OjauI=;
+ b=OGsXIqUE4yCrdiegPiR/fUonhIfhz+TWeP6nBgYls8WPGAZR1qaQmAVMokkXPN4vd1+MCNJlcgkHk3ZoGRNrvTCGJ2zifJK/VvRX8qgKD36s0FgscAGwTYQJhPPuQbJsknixybQEVS2wzl5pintat0oGQbibGl0vnI46+B+QABqOUWEG6r8t4+wVZPiDeqJBOMOVuVh7Fs9IoU7wx8caGpbZyq6PPdcEa9bovycFFth3jFNHgFmmpsRDVGgxfhCotqJf2RCE1/B5fVmJr1q20SGL/Rp6yYrYPhXE/p6X9pDvJp2byT6TmD+wFIHeBK1N1vT776tFprIwDtfrWGoJmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+siujHLVZ0/+7BvfR/Y9zkS3J5vExtaiTvZSO8OjauI=;
+ b=mTRXC+4a470DmINACn0fk5MCkj6aqFQi8Zo9RVW+HYCiY+nv+e8WHrPSnYdduJoavbVcojr/jU9gOIQJNr77HbEky9QfMEwRUxGXMUufseaHn28BTjKYTAuBYhrOoEmK8ZzLMsR/qBYHLre4g+PpGi130tC00GEKSNqeyyTNqCw=
+Received: from DM5PR20CA0002.namprd20.prod.outlook.com (2603:10b6:3:93::12) by
+ CY4PR12MB1477.namprd12.prod.outlook.com (2603:10b6:910:e::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4888.12; Thu, 20 Jan 2022 17:44:53 +0000
+Received: from DM6NAM11FT049.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:93:cafe::d3) by DM5PR20CA0002.outlook.office365.com
+ (2603:10b6:3:93::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.11 via Frontend
+ Transport; Thu, 20 Jan 2022 17:44:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT049.mail.protection.outlook.com (10.13.172.188) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4909.7 via Frontend Transport; Thu, 20 Jan 2022 17:44:52 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Thu, 20 Jan
+ 2022 11:44:51 -0600
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>
+CC:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Goswami Sanket <Sanket.Goswami@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH] platform/x86: amd-pmc: Correct usage of SMU version
+Date:   Thu, 20 Jan 2022 11:44:39 -0600
+Message-ID: <20220120174439.12770-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v4 0/9] Support Spi in i2c-multi-instantiate driver
-Content-Language: en-US
-To:     Stefan Binding <sbinding@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com
-References: <20220120134326.5295-1-sbinding@opensource.cirrus.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220120134326.5295-1-sbinding@opensource.cirrus.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 62d3b1c4-8bb6-4d61-fb38-08d9dc3c9061
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1477:EE_
+X-Microsoft-Antispam-PRVS: <CY4PR12MB14775B89338005196367566EE25A9@CY4PR12MB1477.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SxQxKF20bROy3V7L3caHqHqymVAOruiMzUB2DnadtYOWrdoxCeYhYONLKO88hKImVgnWo0BoBXNZIN2ilJntJUIvBBCF74Akt/NJWbK70Ve9y3QtvxdGL4bskZdpvBkXwt97X++dHwyEiykUjYL8Xvn6HEIUo0se/wbx89NQPUS1X5uNGjIYclXCna095ghZd/rryLb4XU0K4S+CP0hBy7+5uayvgCovG/BBdASaI0BNO2KvbZ0f+bCEkGwziPa/cqAcbllcU2c+IDtRMAvWKpVdOVJzOYw19iHN/APuqMY0JivyJRTApEM7oHO1VmyR4J06gwNI1jx6hRsJNcWPmP82hRp3icIsHUTxiUQSZAvRasMoe0GPy8sytV1IwDE/fFXH6JlJwv3xrumeZ4LlKRbOKilbLb5LL9K5dfexkyj09B0oTsVExUyHnI/PxsHS2PohCd2qOeIuB4gZ1+n/qeRjaXoknnsuJbiyQ+h7EK2ZzjEQ/rbaIviYXZAkfL1WawreLZKOZadw3oVdqpCuw8aJTaozOkrn63tpHYaWG5sSbEAAzlQ5M+NzjVrPQN/PqkfCooWSodBpMAtU4nZNKOMEfA9UsrUAPRBJRPQvbBCElvqUV76lX79GX3rzbBIHob98APZdTNm75FRNCcFHc5ouFSMSodCijb9W94vGn8WG5zqzVK8mr3TapiOPHuBoLkyAzbVI26VhIhCIRtw1J+na5ZOWratGXolbeXaGtVYvNrcNKhfSRiqqdd6I0oICbPnTa7dkrLNYFu6GnHd/mawN7RyT+hKBXLEZdVh9iUs=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(40470700002)(46966006)(36840700001)(1076003)(7696005)(36860700001)(70586007)(508600001)(356005)(2906002)(82310400004)(6666004)(8676002)(2616005)(110136005)(8936002)(47076005)(36756003)(40460700001)(966005)(426003)(54906003)(44832011)(186003)(336012)(16526019)(83380400001)(4326008)(81166007)(5660300002)(26005)(86362001)(70206006)(316002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2022 17:44:52.7187
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62d3b1c4-8bb6-4d61-fb38-08d9dc3c9061
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT049.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1477
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+Yellow carp has been outputting versions like `1093.24.0`, but this
+is supposed to be 69.24.0. That is the MSB is being interpreted
+incorrectly.
 
-On 1/20/22 14:43, Stefan Binding wrote:
-> Add support for SPI bus in the i2c-multi-instantiate driver as
-> upcoming laptops will need to multi instantiate SPI devices from
-> a single device node, which has multiple SpiSerialBus entries at
-> the ACPI table.
-> 
-> With the new SPI support, i2c-multi-instantiate becomes
-> bus-multi-instantiate and is moved to the ACPI folder.
-> 
-> The intention is to support the SPI bus by re-using the current
-> I2C multi instantiate, instead of creating a new SPI multi
-> instantiate, to make it possible for peripherals that can be
-> controlled by I2C or SPI to have the same HID at the ACPI table.
-> 
-> The new driver (Bus multi instantiate, bmi) checks for the
-> hard-coded bus type and returns -ENODEV in case of zero devices
-> found for that bus. In the case of automatic bus detection, 
-> the driver will give preference to I2C.
-> 
-> The expectation is for a device node in the ACPI table to have
-> multiple I2cSerialBus only or multiple SpiSerialBus only, not
-> a mix of both; and for the case where there are both entries in
-> one device node, only the I2C ones would be probed.
-> 
-> This new bus multi instantiate will be used in CS35L41 HDA new
-> driver.
+The MSB is not part of the major version, but has generally been
+treated that way thus far.  It's actually the program, and used to
+distinguish between two programs from a similar family but different
+codebase.
 
-Mark, since most of my review remarks are small(ish) I expect
-the next version of this (except patch 8/9) to be ready for
-merging.
+Link: https://patchwork.freedesktop.org/patch/469993/
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+This change also has been submitted to GPU driver.
 
-I can either merge all patches on top of 5.17-rc1 once released;
-and provide an immutable-branch for you to merge for the SPI
-bits; or you can merge patches 1-4 (the SPI patches) and then
-send me a pull-req for an immutable-branch with those 4,
-so that I can merge that and then the rest on top.
+ drivers/platform/x86/amd-pmc.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Mark, please let me know how you want to proceed with merging this.
-
-Regards,
-
-Hans
-
-
-
-
-> 
-> Changes since V2:
->  - Moved bus-multi-instantiate back into platform/x86
-> 
-> Lucas Tanure (4):
->   platform/x86: i2c-multi-instantiate: Rename it for a generic bus
->     driver name
->   platform/x86: bus-multi-instantiate: Reorganize I2C functions
->   ALSA: hda/realtek: Add support for HP Laptops
->   ACPI / scan: Create platform device for CS35L41
-> 
-> Stefan Binding (5):
->   spi: Make spi_alloc_device and spi_add_device public again
->   spi: Create helper API to lookup ACPI info for spi device
->   spi: Support selection of the index of the ACPI Spi Resource before
->     alloc
->   spi: Add API to count spi acpi resources
->   platform/x86: bus-multi-instantiate: Add SPI support
-> 
->  MAINTAINERS                                  |   4 +-
->  drivers/acpi/scan.c                          |  16 +-
->  drivers/platform/x86/Kconfig                 |  14 +-
->  drivers/platform/x86/Makefile                |   2 +-
->  drivers/platform/x86/bus-multi-instantiate.c | 369 +++++++++++++++++++
->  drivers/platform/x86/i2c-multi-instantiate.c | 174 ---------
->  drivers/spi/spi.c                            | 142 ++++++-
->  include/linux/spi/spi.h                      |  32 ++
->  sound/pci/hda/patch_realtek.c                |  43 ++-
->  9 files changed, 588 insertions(+), 208 deletions(-)
->  create mode 100644 drivers/platform/x86/bus-multi-instantiate.c
->  delete mode 100644 drivers/platform/x86/i2c-multi-instantiate.c
-> 
+diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+index 06b73d5c928f..c9c4db39ca62 100644
+--- a/drivers/platform/x86/amd-pmc.c
++++ b/drivers/platform/x86/amd-pmc.c
+@@ -124,9 +124,10 @@ struct amd_pmc_dev {
+ 	u32 cpu_id;
+ 	u32 active_ips;
+ /* SMU version information */
+-	u16 major;
+-	u16 minor;
+-	u16 rev;
++	u8 smu_program;
++	u8 major;
++	u8 minor;
++	u8 rev;
+ 	struct device *dev;
+ 	struct pci_dev *rdev;
+ 	struct mutex lock; /* generic mutex lock */
+@@ -180,11 +181,13 @@ static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
+ 	if (rc)
+ 		return rc;
+ 
+-	dev->major = (val >> 16) & GENMASK(15, 0);
++	dev->smu_program = (val >> 24) & GENMASK(7, 0);
++	dev->major = (val >> 16) & GENMASK(7, 0);
+ 	dev->minor = (val >> 8) & GENMASK(7, 0);
+ 	dev->rev = (val >> 0) & GENMASK(7, 0);
+ 
+-	dev_dbg(dev->dev, "SMU version is %u.%u.%u\n", dev->major, dev->minor, dev->rev);
++	dev_dbg(dev->dev, "SMU program %u version is %u.%u.%u\n",
++		dev->smu_program, dev->major, dev->minor, dev->rev);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
