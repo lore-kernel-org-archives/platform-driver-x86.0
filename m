@@ -2,65 +2,65 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7199C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Jan 2022 14:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44498C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Jan 2022 14:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354162AbiATOhy (ORCPT
+        id S231428AbiATOkH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 Jan 2022 09:37:54 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:59131 "EHLO
+        Thu, 20 Jan 2022 09:40:07 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:45913 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1353672AbiATOhv (ORCPT
+        by vger.kernel.org with ESMTP id S1356028AbiATOjd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Jan 2022 09:37:51 -0500
+        Thu, 20 Jan 2022 09:39:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1642689470;
+        s=mimecast20190719; t=1642689572;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dPyIPk6/0DSM39d75aqtLFcVP807/DRC2fXXT2y2VIg=;
-        b=VaoG3wOPTnYnxycMr1tHkMi/Ulmm1g5edLjUpioYoFSGqP6Jes367wzH/JcAWtwMaVwYz9
-        Fn6gCKUa2R5ymKOjkUy3I/nXAvgGSSSD316qodj8Ew/6X7RvCa2NA1kcfs/MbtHch10aSw
-        c5YmWsrel3Atl7EcnfYSXfoYReaKOO4=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=ZO9CxpXnVO0unS4PfDkiiWErEf+1QW6VcHAAffKfBTg=;
+        b=DDRp3YXkeBVrS0bAMMXNYfbjW6s2w8iLh0FjRf/eOXSdmOR+bv5+n1SCy84B1vGscnHdHF
+        WCnvSrRQLadiZ+J4fZjPDfQXIeNWc+pnyAPlv2i3Q7GDeJpbo4jjaTPhccEgXSLHMSwgoT
+        QsEWTnU+sGpZOc+UP457PRCJdXYyTpw=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-15-N3SHAX8dPAWwMuP8QDfLxA-1; Thu, 20 Jan 2022 09:37:49 -0500
-X-MC-Unique: N3SHAX8dPAWwMuP8QDfLxA-1
-Received: by mail-ed1-f70.google.com with SMTP id h11-20020a05640250cb00b003fa024f87c2so6088419edb.4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jan 2022 06:37:49 -0800 (PST)
+ us-mta-198-0Z6m4E9nOiOatoYRCuzDiQ-1; Thu, 20 Jan 2022 09:39:31 -0500
+X-MC-Unique: 0Z6m4E9nOiOatoYRCuzDiQ-1
+Received: by mail-ed1-f72.google.com with SMTP id en7-20020a056402528700b00404aba0a6ffso4924420edb.5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jan 2022 06:39:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=dPyIPk6/0DSM39d75aqtLFcVP807/DRC2fXXT2y2VIg=;
-        b=c7KPJXLXdcffZrbVzuQXPr+Bx3IE0jDP7Rka8OwQECwCAtrdxUH2D48eRfbExF7LMk
-         pT5CKqFh343yTSRwE9GP2NHluOLfmUvDQopvXe6+CYjsyLNwx89qHPRA2HSkj0t1C03F
-         QmpqIT+c+/5AcGV8L+uZQXwNNcQSahsS9AwbNryGSX1CWgA3WHf9A9acI0nPtVbM+Hlj
-         x02BhWru+zeJjv9xL9P2X+mcT7RBUg1mwd6OtU6Q7PocR+52bkDKFnXCmX9cbVyRKzk+
-         Nq1ht4m1xLaLsmnBdFbSa6rSMkIhF1uNw5LXuTKHbD3lBr6vOHYAVGgXrJJnIgbWQScN
-         Kv5Q==
-X-Gm-Message-State: AOAM533JzQjCP2qW3YqOqlytXEzxww5c8C6nuc7g6Sl1D+zSaVZRN2Q8
-        TJ4/inj6fNAOpag87Y7Ax9i+steIGwyT+Lx2lWYwxvvzs3U2QbNsjv06p/z+PiIjNCvXG1D2E3u
-        zfPUfwLgUEOTdkHBhdR1TpQS6a+P0GNromg==
-X-Received: by 2002:a05:6402:2791:: with SMTP id b17mr19574198ede.173.1642689468095;
-        Thu, 20 Jan 2022 06:37:48 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwjkrEhShTflpw7jGM6KhhUDT4r90ruG4S9WPGY374oNXbMYSf+ClZ5qzVw1EVHLqb/3Sd1Og==
-X-Received: by 2002:a05:6402:2791:: with SMTP id b17mr19574174ede.173.1642689467862;
-        Thu, 20 Jan 2022 06:37:47 -0800 (PST)
+        bh=ZO9CxpXnVO0unS4PfDkiiWErEf+1QW6VcHAAffKfBTg=;
+        b=XNgo0R+u3I0JmDt0WQ3lvlX39GMYRfKRF/95D6UdQhSTW4gNQBgw8/X02/Xf72Pq7h
+         4Z6xJaNJAKGd9Wo2iamPAPiYGjAYVFqniFydZVzrlLEczz7Va6Z09Emxl4yIlcTJu4Xh
+         vgP1ugSM34oTYdodplD5pFjdTE6EGv/xiVQPQSluLWaKakhiMQNT2S3DlyKxrKJ0UJC9
+         H4vbKJxXq+S7a9ye/HANRQC28vTJTotOrUOu3NEmM7zeukNXGLbaCaNK6ygOwIom6jYz
+         G9mYlWY0hP3bzE2oXzI6h1gNWBBGUw5hz1VhsomwxcNLhGP05N6L1cgxHGO3tgM6n8RG
+         3PUw==
+X-Gm-Message-State: AOAM531lDWLYFja/xBhSk+v4jecLhWIxB7bylpDinPzhprRs7DRBDn+H
+        tAbWenODTFSrJ0zLVL8Ek0SKGXH0WtqftkQO8uRy6mtGj9uQ154INHR93gvBCvnRViUmeC3eL8T
+        rUrOzhwSQgBF6zt49EH5iGPFq03mfO40eaQ==
+X-Received: by 2002:a17:906:d553:: with SMTP id cr19mr16848580ejc.2.1642689570132;
+        Thu, 20 Jan 2022 06:39:30 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxC8EiUO8zmKN0IM1R4oP/7CsqAviHdzhjNraDig7Z05SORbdwzW3MgHf7pVUwqUy+23nb9fQ==
+X-Received: by 2002:a17:906:d553:: with SMTP id cr19mr16848563ejc.2.1642689569933;
+        Thu, 20 Jan 2022 06:39:29 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id o18sm1076152ejb.111.2022.01.20.06.37.46
+        by smtp.gmail.com with ESMTPSA id gr7sm1108869ejb.2.2022.01.20.06.39.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jan 2022 06:37:47 -0800 (PST)
-Message-ID: <f849c693-86d3-8454-eda9-96c69daaf862@redhat.com>
-Date:   Thu, 20 Jan 2022 15:37:46 +0100
+        Thu, 20 Jan 2022 06:39:29 -0800 (PST)
+Message-ID: <d77c27ac-6721-1d3e-2d79-4e4dfae7cabe@redhat.com>
+Date:   Thu, 20 Jan 2022 15:39:28 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH v4 2/9] spi: Create helper API to lookup ACPI info for spi
- device
+Subject: Re: [PATCH v4 1/9] spi: Make spi_alloc_device and spi_add_device
+ public again
 Content-Language: en-US
 To:     Stefan Binding <sbinding@opensource.cirrus.com>,
         Mark Brown <broonie@kernel.org>,
@@ -71,164 +71,102 @@ Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com
 References: <20220120134326.5295-1-sbinding@opensource.cirrus.com>
- <20220120134326.5295-3-sbinding@opensource.cirrus.com>
+ <20220120134326.5295-2-sbinding@opensource.cirrus.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220120134326.5295-3-sbinding@opensource.cirrus.com>
+In-Reply-To: <20220120134326.5295-2-sbinding@opensource.cirrus.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Stefan,
-
-First of all thank you for doing the requested refactoring
-to reuse the existing ACPI SPI enumeration code from
-drivers/spi/spi.c .
+Hi,
 
 On 1/20/22 14:43, Stefan Binding wrote:
-> This can then be used to find a spi resource inside an
-> ACPI node, and allocate a spi device.
+> This functions were previously made private since they
+> were not used. However, these functions will be needed
+> again.
+> 
+> Partial revert of commit da21fde0fdb3
+> ("spi: Make several public functions private to spi.c")
 > 
 > Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
-> ---
->  drivers/spi/spi.c       | 46 ++++++++++++++++++++++++++++++++---------
->  include/linux/spi/spi.h | 12 +++++++++++
->  2 files changed, 48 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index 1eb84101c4ad..13f4701f0694 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -2410,8 +2410,18 @@ static int acpi_spi_add_resource(struct acpi_resource *ares, void *data)
->  	return 1;
->  }
->  
-> -static acpi_status acpi_register_spi_device(struct spi_controller *ctlr,
-> -					    struct acpi_device *adev)
-> +/**
-> + * acpi_spi_device_alloc - Allocate a spi device, and fill it in with ACPI information
-> + * @ctlr: controller to which the spi device belongs
-> + * @adev: ACPI Device for the spi device
-> + *
-> + * This should be used to allocate a new spi device from and ACPI Node.
-> + * The caller is responsible for calling spi_add_device to register the spi device.
-> + *
-> + * Return: a pointer to the new device, or ERR_PTR on error.
-> + */
-> +struct spi_device *acpi_spi_device_alloc(struct spi_controller *ctlr,
-> +					 struct acpi_device *adev)
->  {
->  	acpi_handle parent_handle = NULL;
->  	struct list_head resource_list;
-> @@ -2419,10 +2429,6 @@ static acpi_status acpi_register_spi_device(struct spi_controller *ctlr,
->  	struct spi_device *spi;
->  	int ret;
->  
-> -	if (acpi_bus_get_status(adev) || !adev->status.present ||
-> -	    acpi_device_enumerated(adev))
-> -		return AE_OK;
-> -
->  	lookup.ctlr		= ctlr;
->  	lookup.irq		= -1;
->  
-> @@ -2433,7 +2439,7 @@ static acpi_status acpi_register_spi_device(struct spi_controller *ctlr,
->  
->  	if (ret < 0)
->  		/* found SPI in _CRS but it points to another controller */
-> -		return AE_OK;
-> +		return ERR_PTR(-ENODEV);
->  
->  	if (!lookup.max_speed_hz &&
->  	    ACPI_SUCCESS(acpi_get_parent(adev->handle, &parent_handle)) &&
-> @@ -2443,16 +2449,15 @@ static acpi_status acpi_register_spi_device(struct spi_controller *ctlr,
->  	}
->  
->  	if (!lookup.max_speed_hz)
-> -		return AE_OK;
-> +		return ERR_PTR(-ENODEV);
->  
->  	spi = spi_alloc_device(ctlr);
->  	if (!spi) {
->  		dev_err(&ctlr->dev, "failed to allocate SPI device for %s\n",
->  			dev_name(&adev->dev));
-> -		return AE_NO_MEMORY;
-> +		return ERR_PTR(-ENOMEM);
->  	}
->  
-> -
->  	ACPI_COMPANION_SET(&spi->dev, adev);
->  	spi->max_speed_hz	= lookup.max_speed_hz;
->  	spi->mode		|= lookup.mode;
-> @@ -2460,6 +2465,27 @@ static acpi_status acpi_register_spi_device(struct spi_controller *ctlr,
->  	spi->bits_per_word	= lookup.bits_per_word;
->  	spi->chip_select	= lookup.chip_select;
->  
-> +	return spi;
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_spi_device_alloc);
-> +
-> +static acpi_status acpi_register_spi_device(struct spi_controller *ctlr,
-> +					    struct acpi_device *adev)
-> +{
-> +	struct spi_device *spi;
-> +
-> +	if (acpi_bus_get_status(adev) || !adev->status.present ||
-> +	    acpi_device_enumerated(adev))
-> +		return AE_OK;
-> +
-> +	spi = acpi_spi_device_alloc(ctlr, adev);
-> +	if (IS_ERR(spi)) {
-> +		if (PTR_ERR(spi) == -ENOMEM)
-> +			return AE_NO_MEMORY;
-> +		else
-> +			return AE_OK;
-> +	}
-> +
->  	acpi_set_modalias(adev, acpi_device_hid(adev), spi->modalias,
->  			  sizeof(spi->modalias));
->  
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 0346a3ff27fd..200725692b93 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -16,6 +16,7 @@
->  #include <linux/gpio/consumer.h>
->  
->  #include <uapi/linux/spi/spi.h>
-> +#include <linux/acpi.h>
->  
->  struct dma_chan;
->  struct software_node;
-> @@ -759,6 +760,17 @@ extern int devm_spi_register_controller(struct device *dev,
->  					struct spi_controller *ctlr);
->  extern void spi_unregister_controller(struct spi_controller *ctlr);
->  
-> +#if IS_ENABLED(CONFIG_ACPI)
-> +extern struct spi_device *acpi_spi_device_alloc(struct spi_controller *ctlr,
-> +						struct acpi_device *adev);
-> +#else
-> +static inline struct spi_device *acpi_spi_device_alloc(struct spi_controller *ctlr,
-> +						       struct acpi_device *adev);
-> +{
-> +	return ERR_PTR(-EOPNOTSUPP);
-> +}
-> +#endif
-> +
 
-I don't think having a stub here is necessary ? I would expect any callers
-of this to make sure that both CONFIG_SPI and CONFIG_ACPI are set. Note that
-not having CONFIG_SPI set is not caught by your stubbing here and there are
-no stubs for any of the other spi functions.
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
 
 
-
->  /*
->   * SPI resource management while processing a SPI message
+> ---
+>  drivers/spi/spi.c       |  6 ++++--
+>  include/linux/spi/spi.h | 12 ++++++++++++
+>  2 files changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index 4599b121d744..1eb84101c4ad 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -532,7 +532,7 @@ static DEFINE_MUTEX(board_lock);
+>   *
+>   * Return: a pointer to the new device, or NULL.
 >   */
+> -static struct spi_device *spi_alloc_device(struct spi_controller *ctlr)
+> +struct spi_device *spi_alloc_device(struct spi_controller *ctlr)
+>  {
+>  	struct spi_device	*spi;
+>  
+> @@ -557,6 +557,7 @@ static struct spi_device *spi_alloc_device(struct spi_controller *ctlr)
+>  	device_initialize(&spi->dev);
+>  	return spi;
+>  }
+> +EXPORT_SYMBOL_GPL(spi_alloc_device);
+>  
+>  static void spi_dev_set_name(struct spi_device *spi)
+>  {
+> @@ -652,7 +653,7 @@ static int __spi_add_device(struct spi_device *spi)
+>   *
+>   * Return: 0 on success; negative errno on failure
+>   */
+> -static int spi_add_device(struct spi_device *spi)
+> +int spi_add_device(struct spi_device *spi)
+>  {
+>  	struct spi_controller *ctlr = spi->controller;
+>  	struct device *dev = ctlr->dev.parent;
+> @@ -673,6 +674,7 @@ static int spi_add_device(struct spi_device *spi)
+>  	mutex_unlock(&ctlr->add_lock);
+>  	return status;
+>  }
+> +EXPORT_SYMBOL_GPL(spi_add_device);
+>  
+>  static int spi_add_device_locked(struct spi_device *spi)
+>  {
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index 7ab3fed7b804..0346a3ff27fd 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -1452,7 +1452,19 @@ spi_register_board_info(struct spi_board_info const *info, unsigned n)
+>   * use spi_new_device() to describe each device.  You can also call
+>   * spi_unregister_device() to start making that device vanish, but
+>   * normally that would be handled by spi_unregister_controller().
+> + *
+> + * You can also use spi_alloc_device() and spi_add_device() to use a two
+> + * stage registration sequence for each spi_device. This gives the caller
+> + * some more control over the spi_device structure before it is registered,
+> + * but requires that caller to initialize fields that would otherwise
+> + * be defined using the board info.
+>   */
+> +extern struct spi_device *
+> +spi_alloc_device(struct spi_controller *ctlr);
+> +
+> +extern int
+> +spi_add_device(struct spi_device *spi);
+> +
+>  extern struct spi_device *
+>  spi_new_device(struct spi_controller *, struct spi_board_info *);
+>  
 > 
 
