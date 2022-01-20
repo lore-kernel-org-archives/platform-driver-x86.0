@@ -2,64 +2,64 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8EEC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Jan 2022 16:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7656CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Jan 2022 16:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377037AbiATQbN (ORCPT
+        id S1377031AbiATQee (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 Jan 2022 11:31:13 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:50787 "EHLO
+        Thu, 20 Jan 2022 11:34:34 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42507 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1377017AbiATQbK (ORCPT
+        by vger.kernel.org with ESMTP id S243806AbiATQed (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Jan 2022 11:31:10 -0500
+        Thu, 20 Jan 2022 11:34:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1642696270;
+        s=mimecast20190719; t=1642696472;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=HG4KxWhwtWwNTvvRLfsMu7xjc8q7j8EF/CkudyE8uX0=;
-        b=EmRMGuOvimX2dUzdo+0A/inwC5jOTjzTErhzJwTvVENh7YWBDO+b2dsmOOTAG6bgKHNg0s
-        DY6+a5X3Lc6hMaPKpJUlkhm8/IeyilN76TKkgQ//UJyDoSYlfC8vFDvFZUugaeRWNJNH0j
-        sSmpgxKiNw7KQScakoTrlWCsgNY0yDY=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=+1sc4JZ0+7MrtJWFMrOPG0iw0Wa1Lhn4BX5CbDefiMM=;
+        b=LdGD6B/dQQl4M/ZkdvFi4oa0oue1p9tPJ8RVz7C9Gz84NcJNX1tQ9n/CfS64j6KzZpU2wo
+        MURZcNWE2erDG4DUH9+Oid6nt7UkW9Kat2LvEYIrijGx8WG0ofSTdx/KC3DqOwZwO78+Ca
+        k94VCBAzy9uYJktBi178I4JYbBkVRH0=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-464-HoAafxcOMJihenzpZVPPFQ-1; Thu, 20 Jan 2022 11:31:08 -0500
-X-MC-Unique: HoAafxcOMJihenzpZVPPFQ-1
-Received: by mail-ed1-f72.google.com with SMTP id z6-20020a50eb46000000b00403a7687b5bso6377300edp.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jan 2022 08:31:08 -0800 (PST)
+ us-mta-308-CQltFvXLOCa7gMAv2aCU1g-1; Thu, 20 Jan 2022 11:34:31 -0500
+X-MC-Unique: CQltFvXLOCa7gMAv2aCU1g-1
+Received: by mail-ed1-f69.google.com with SMTP id el8-20020a056402360800b00403bbdcef64so6380417edb.14
+        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jan 2022 08:34:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=HG4KxWhwtWwNTvvRLfsMu7xjc8q7j8EF/CkudyE8uX0=;
-        b=diw6cKRsitMyqUPx5az+JJERkLLGagq52upG6oYos2dWTlJyCCh1m8V213/npYb9Xb
-         BFsnvVvHSPceWbDGeytiCfipFMVk7fAkhq9uzzmtdYzcuNaPq5qH+Hw+So1f+d/YVgsw
-         l/rUW7NNPeZUSp8YyxSSsBwhP0NUHWch5nKHvihRgukY0H/WyciL4C/yVZacXdF+QPqT
-         xb0+8Yx2XnLxFpwNTgtxqCFiXwGJKI1RVlCtNZxAHuAd13/YN/8TWf4fnPNKuPJeXhO4
-         a4VaQ8xEfwKTTxKE+afS72cngdwIHDzWdv30ZZij7w4WDCwp0toGtddy0jvmWWEajOYt
-         4RHw==
-X-Gm-Message-State: AOAM5333Ezkme8TCyCxA00i6Gsj1g2m8Ije7mAXDnP+1mvf2+NUdA6tz
-        bObjf4RSWMNR8UhZ3oDK+rS8Nf33tm8kiidvHF25ZVWXC6fi3RFgYeylScprPc0w3+opRMgz89i
-        efJaKzuF6gTJtfcy765eExdhjeYWWvj5niw==
-X-Received: by 2002:a50:9d48:: with SMTP id j8mr37489593edk.192.1642696267498;
-        Thu, 20 Jan 2022 08:31:07 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwDfvucpGU9m/OqAkslPe7xRB1r1l5bfzYpyd7TKbIdzsNby116Ajn4L3Y5Opjls/YVVi/ksg==
-X-Received: by 2002:a50:9d48:: with SMTP id j8mr37489573edk.192.1642696267353;
-        Thu, 20 Jan 2022 08:31:07 -0800 (PST)
+        bh=+1sc4JZ0+7MrtJWFMrOPG0iw0Wa1Lhn4BX5CbDefiMM=;
+        b=x8AILYPTgldQKIyB53EnKQ662IRZekjkSxBkQbyDmGq5VDTSM/EL4rlp91El0H6vB4
+         m9+WDmuLtPNUjYLm4RUBnWuOL/yCnJX2DUVdDeQgy3oxNB+hIhI887B9tCS4hJule8yq
+         NHKmKx4aE2M9dVfwwbtR5ftNNXI23Jrj73r2ouds/mJdqqOLhYVb9MYRYTo42hGB0KjM
+         t0D0iFa9nI1ECMajRaV1QxJxGuqEUM+d+IxNaLRZKtZg1g6PDfWHSRKTaGdFBze0H6Qg
+         UWilbNK4mIp452xX8WdbZTv07SlfcNlH6+9BCXeGoaBoM9RAWNDdzPf93I6vqMtjalIx
+         2Trg==
+X-Gm-Message-State: AOAM530Gl/dp2HSI1bde98CvfZ99F0F92eLxZa9xPlucUGGcA0hkcdiX
+        vE+ISk77lJspfyxqLGw27UgTzaK2UoJcgLNf1/212i88+TTSUD8BFlHhzmsXQQRCErqMLS75iRU
+        08dwVISrsFo5qfO2QFsZwxDNnnnGBvHSWGg==
+X-Received: by 2002:a17:907:6e0b:: with SMTP id sd11mr30574245ejc.132.1642696470222;
+        Thu, 20 Jan 2022 08:34:30 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwF9+NmsBb9KPVuUgSXvv1RUm6gGRw3HsBpgMAdYinUYF2Y/bfZO+s9YZARtMUaHR9LPOCCTg==
+X-Received: by 2002:a17:907:6e0b:: with SMTP id sd11mr30574226ejc.132.1642696470043;
+        Thu, 20 Jan 2022 08:34:30 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id y17sm1206649ejw.172.2022.01.20.08.31.06
+        by smtp.gmail.com with ESMTPSA id dt15sm1157616ejb.190.2022.01.20.08.34.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jan 2022 08:31:06 -0800 (PST)
-Message-ID: <87c61164-47bf-c560-4e4d-78105a84531e@redhat.com>
-Date:   Thu, 20 Jan 2022 17:31:06 +0100
+        Thu, 20 Jan 2022 08:34:29 -0800 (PST)
+Message-ID: <d6958153-7747-bc4b-2de0-57aa3226d984@redhat.com>
+Date:   Thu, 20 Jan 2022 17:34:28 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH v4 9/9] ACPI / scan: Create platform device for CS35L41
+Subject: Re: [PATCH v4 0/9] Support Spi in i2c-multi-instantiate driver
 Content-Language: en-US
 To:     Stefan Binding <sbinding@opensource.cirrus.com>,
         Mark Brown <broonie@kernel.org>,
@@ -68,36 +68,56 @@ To:     Stefan Binding <sbinding@opensource.cirrus.com>,
         Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
 Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
-        Lucas Tanure <tanureal@opensource.cirrus.com>
+        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com
 References: <20220120134326.5295-1-sbinding@opensource.cirrus.com>
- <20220120134326.5295-10-sbinding@opensource.cirrus.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220120134326.5295-10-sbinding@opensource.cirrus.com>
+In-Reply-To: <20220120134326.5295-1-sbinding@opensource.cirrus.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Mark,
 
 On 1/20/22 14:43, Stefan Binding wrote:
-> From: Lucas Tanure <tanureal@opensource.cirrus.com>
+> Add support for SPI bus in the i2c-multi-instantiate driver as
+> upcoming laptops will need to multi instantiate SPI devices from
+> a single device node, which has multiple SpiSerialBus entries at
+> the ACPI table.
 > 
-> The ACPI device with CSC3551 or CLSA0100 are sound cards
-> with multiple instances of CS35L41 connectec by I2C or SPI
-> to the main CPU.
+> With the new SPI support, i2c-multi-instantiate becomes
+> bus-multi-instantiate and is moved to the ACPI folder.
 > 
-> We add an ID to the ignore_serial_bus_ids list to enumerate
-> all I2C or SPI devices correctly.
+> The intention is to support the SPI bus by re-using the current
+> I2C multi instantiate, instead of creating a new SPI multi
+> instantiate, to make it possible for peripherals that can be
+> controlled by I2C or SPI to have the same HID at the ACPI table.
 > 
-> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
-> Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+> The new driver (Bus multi instantiate, bmi) checks for the
+> hard-coded bus type and returns -ENODEV in case of zero devices
+> found for that bus. In the case of automatic bus detection, 
+> the driver will give preference to I2C.
+> 
+> The expectation is for a device node in the ACPI table to have
+> multiple I2cSerialBus only or multiple SpiSerialBus only, not
+> a mix of both; and for the case where there are both entries in
+> one device node, only the I2C ones would be probed.
+> 
+> This new bus multi instantiate will be used in CS35L41 HDA new
+> driver.
 
-Thanks, patch looks good to me:
+Mark, since most of my review remarks are small(ish) I expect
+the next version of this (except patch 8/9) to be ready for
+merging.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+I can either merge all patches on top of 5.17-rc1 once released;
+and provide an immutable-branch for you to merge for the SPI
+bits; or you can merge patches 1-4 (the SPI patches) and then
+send me a pull-req for an immutable-branch with those 4,
+so that I can merge that and then the rest on top.
+
+Mark, please let me know how you want to proceed with merging this.
 
 Regards,
 
@@ -106,58 +126,36 @@ Hans
 
 
 
-> ---
->  drivers/acpi/scan.c                          |  3 +++
->  drivers/platform/x86/bus-multi-instantiate.c | 14 ++++++++++++++
->  2 files changed, 17 insertions(+)
 > 
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 4fd1346d6e1f..2f2210c969c8 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -1744,8 +1744,11 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
->  	 */
->  		{"BSG1160", },
->  		{"BSG2150", },
-> +		{"CSC3551", },
->  		{"INT33FE", },
->  		{"INT3515", },
-> +	/* Non-conforming _HID for Cirrus Logic already released */
-> +		{"CLSA0100", },
->  	/*
->  	 * HIDs of device with an UartSerialBusV2 resource for which userspace
->  	 * expects a regular tty cdev to be created (instead of the in kernel
-> diff --git a/drivers/platform/x86/bus-multi-instantiate.c b/drivers/platform/x86/bus-multi-instantiate.c
-> index 05bc941a38fd..7a394b671f5a 100644
-> --- a/drivers/platform/x86/bus-multi-instantiate.c
-> +++ b/drivers/platform/x86/bus-multi-instantiate.c
-> @@ -328,6 +328,17 @@ static const struct bmi_node int3515_data = {
->  	.bus_type = BMI_I2C,
->  };
->  
-> +static const struct bmi_node cs35l41_hda = {
-> +	.instances = {
-> +		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +		{}
-> +	},
-> +	.bus_type = BMI_AUTO_DETECT,
-> +};
-> +
->  /*
->   * Note new device-ids must also be added to bus_multi_instantiate_ids in
->   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-> @@ -336,6 +347,9 @@ static const struct acpi_device_id bmi_acpi_ids[] = {
->  	{ "BSG1160", (unsigned long)&bsg1160_data },
->  	{ "BSG2150", (unsigned long)&bsg2150_data },
->  	{ "INT3515", (unsigned long)&int3515_data },
-> +	{ "CSC3551", (unsigned long)&cs35l41_hda },
-> +	/* Non-conforming _HID for Cirrus Logic already released */
-> +	{ "CLSA0100", (unsigned long)&cs35l41_hda },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(acpi, bmi_acpi_ids);
+> Changes since V2:
+>  - Moved bus-multi-instantiate back into platform/x86
+> 
+> Lucas Tanure (4):
+>   platform/x86: i2c-multi-instantiate: Rename it for a generic bus
+>     driver name
+>   platform/x86: bus-multi-instantiate: Reorganize I2C functions
+>   ALSA: hda/realtek: Add support for HP Laptops
+>   ACPI / scan: Create platform device for CS35L41
+> 
+> Stefan Binding (5):
+>   spi: Make spi_alloc_device and spi_add_device public again
+>   spi: Create helper API to lookup ACPI info for spi device
+>   spi: Support selection of the index of the ACPI Spi Resource before
+>     alloc
+>   spi: Add API to count spi acpi resources
+>   platform/x86: bus-multi-instantiate: Add SPI support
+> 
+>  MAINTAINERS                                  |   4 +-
+>  drivers/acpi/scan.c                          |  16 +-
+>  drivers/platform/x86/Kconfig                 |  14 +-
+>  drivers/platform/x86/Makefile                |   2 +-
+>  drivers/platform/x86/bus-multi-instantiate.c | 369 +++++++++++++++++++
+>  drivers/platform/x86/i2c-multi-instantiate.c | 174 ---------
+>  drivers/spi/spi.c                            | 142 ++++++-
+>  include/linux/spi/spi.h                      |  32 ++
+>  sound/pci/hda/patch_realtek.c                |  43 ++-
+>  9 files changed, 588 insertions(+), 208 deletions(-)
+>  create mode 100644 drivers/platform/x86/bus-multi-instantiate.c
+>  delete mode 100644 drivers/platform/x86/i2c-multi-instantiate.c
 > 
 
