@@ -2,210 +2,452 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E228C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 23 Jan 2022 17:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4C4C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 23 Jan 2022 17:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239240AbiAWRZo (ORCPT
+        id S239390AbiAWRxj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 23 Jan 2022 12:25:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36872 "EHLO
+        Sun, 23 Jan 2022 12:53:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239220AbiAWRZo (ORCPT
+        with ESMTP id S239388AbiAWRxf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 23 Jan 2022 12:25:44 -0500
-Received: from server00.inetadmin.eu (server00.inetadmin.eu [IPv6:2a01:390:1:2:e1b1:2:0:d7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCF8C06173B;
-        Sun, 23 Jan 2022 09:25:43 -0800 (PST)
-Received: from [192.168.1.103] (ip-46.34.226.180.o2inet.sk [46.34.226.180])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: miroslav@wisdomtech.sk)
-        by server00.inetadmin.eu (Postfix) with ESMTPSA id 574EE13A07D;
-        Sun, 23 Jan 2022 18:25:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wisdomtech.sk;
-        s=dkiminetadmin; t=1642958738;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=N+EE9E69tKIOkQyXfJAlJTexkD+QVb4eCukmRvui30w=;
-        b=cnWkMDM9CkOqhbN405GVVC0VL4FwDl8owce82eg2JODTXB3WG9gmvoyh0sbcTcpQIJUsdv
-        8LAwFRPp4bNOdFlo8iXCWBgLPEnRAXiKnVjM0jURaFiKbihsjwZDApKv3Ytpwe38ZIu8Fl
-        fgzIwqn0AA8X/etRGQXBiVVI6RPis0E=
-Message-ID: <cb4e9d68-78b0-583d-fa15-a841b0606785@wisdomtech.sk>
-Date:   Sun, 23 Jan 2022 18:25:37 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: Touchpad stickiness on AMD laptops (was Dell Inspiron/XPS)
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Benjamin Tissoires <btissoir@redhat.com>,
-        Andrea Ippolito <andrea.ippo@gmail.com>,
+        Sun, 23 Jan 2022 12:53:35 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C605C06173B
+        for <platform-driver-x86@vger.kernel.org>; Sun, 23 Jan 2022 09:53:35 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nBh2H-0007aG-Mg; Sun, 23 Jan 2022 18:52:17 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nBh28-00BycE-Ac; Sun, 23 Jan 2022 18:52:07 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nBh26-000tzT-Dk; Sun, 23 Jan 2022 18:52:06 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Markuss Broks <markuss.broks@gmail.com>,
+        Emma Anholt <emma@anholt.net>,
+        David Lechner <david@lechnology.com>,
+        Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>,
+        =?utf-8?q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dan Robertson <dan@dlrobertson.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Kent Gustavsson <kent@minoris.se>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Alex Hung <alex.hung@canonical.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>
-References: <CAGhUXvBw4rzCQrqttyyS=Psxmhppk79c6fDoxPbV91jE7fO_9A@mail.gmail.com>
- <CAGhUXvDNj2v3O==+wWWKPYVzej8Vq+WNiBtPwmYxSQ2dTuLb9Q@mail.gmail.com>
- <CAGhUXvC8eHfxEKzkGN06VvRU6Z0ko7MJ9hF6uXNq+PxRZSbEmQ@mail.gmail.com>
- <70cbe360-6385-2536-32bd-ae803517d2b2@redhat.com> <YdbrLz3tU4ohANDk@ninjato>
- <42c83ec8-bbac-85e2-9ab5-87e59a679f95@redhat.com>
- <CAO-hwJJ9ALxpd5oRU8SQ3F65hZjDitR=MzmwDk=uiEguaXZYtw@mail.gmail.com>
- <5409e747-0c51-24e2-7ffa-7dd9c8a7aec7@amd.com> <Yd6SRl7sm8zS85Al@ninjato>
- <596d6af1-d67c-b9aa-0496-bd898350865c@wisdomtech.sk>
- <d39101a9-adc6-df32-12f5-fccc8fd34515@amd.com>
- <5c0ed06a-617e-077a-a4a4-549e91d372ba@wisdomtech.sk>
- <BL1PR12MB5157412781B6C84B97C2A3E7E2559@BL1PR12MB5157.namprd12.prod.outlook.com>
- <541865be-207d-01db-efc4-7eff600d56dc@wisdomtech.sk>
- <cf3c89a5-f242-2c1f-f636-fd3241b18ff1@redhat.com>
-From:   =?UTF-8?Q?Miroslav_Bend=c3=adk?= <miroslav@wisdomtech.sk>
-In-Reply-To: <cf3c89a5-f242-2c1f-f636-fd3241b18ff1@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Pavel Machek <pavel@ucw.cz>,
+        Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Charles-Antoine Couret <charles-antoine.couret@nexvision.fr>,
+        Antti Palosaari <crope@iki.fi>,
+        Lee Jones <lee.jones@linaro.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Thomas Kopp <thomas.kopp@microchip.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        UNGLinuxDriver@microchip.com,
+        =?utf-8?q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
+        Alexander Aring <alex.aring@gmail.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        Harry Morris <h.morris@cascoda.com>,
+        Varka Bhadram <varkabhadram@gmail.com>,
+        Xue Liu <liuxuenetmail@gmail.com>, Alan Ott <alan@signal11.us>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        Ajay Singh <ajay.kathat@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Solomon Peachy <pizza@shaftnet.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Benson Leung <bleung@chromium.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?utf-8?b?SsOpcsO0bWUgUG91aWxsZXI=?= <jerome.pouiller@silabs.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        James Schulman <james.schulman@cirrus.com>,
+        David Rhodes <david.rhodes@cirrus.com>,
+        Lucas Tanure <tanureal@opensource.cirrus.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Alexandru Ardelean <ardeleanalex@gmail.com>,
+        Mike Looijmans <mike.looijmans@topic.nl>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Cai Huoqing <caihuoqing@baidu.com>,
+        Minghao Chi <chi.minghao@zte.com.cn>,
+        Antoniu Miclaus <antoniu.miclaus@analog.com>,
+        Julia Lawall <Julia.Lawall@inria.fr>,
+        =?utf-8?q?Ronald_Tschal=C3=A4r?= <ronald@innovation.ch>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Heiko Schocher <hs@denx.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Matt Kline <matt@bitbashing.io>,
+        Torin Cooper-Bennun <torin@maxiluxsystems.com>,
+        Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+        =?utf-8?q?Stefan_M=C3=A4tje?= <stefan.maetje@esd.eu>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Nanyong Sun <sunnanyong@huawei.com>,
+        Yang Shen <shenyang39@huawei.com>,
+        dingsenjie <dingsenjie@yulong.com>,
+        Aditya Srivastava <yashsri421@gmail.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michael Walle <michael@walle.cc>,
+        Yang Li <yang.lee@linux.alibaba.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        wengjianfeng <wengjianfeng@yulong.com>,
+        Sidong Yang <realwakka@gmail.com>,
+        Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
+        Zhang Qilong <zhangqilong3@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Davidlohr Bueso <dbueso@suse.de>, Claudius Heine <ch@denx.de>,
+        Jiri Prchal <jiri.prchal@aksignal.cz>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wpan@vger.kernel.org,
+        linux-wireless@vger.kernel.org, libertas-dev@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-omap@vger.kernel.org,
+        kernel@pengutronix.de, Noralf Tronnes <notro@tronnes.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Guenter Roeck <groeck@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH 0/5] spi: make remove callback a void function
+Date:   Sun, 23 Jan 2022 18:51:56 +0100
+Message-Id: <20220123175201.34839-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=13159; h=from:subject; bh=owUsrJiUxQg0WH9JiyxXcWg2QcQX/yEwEp5ObL2T9n0=; b=owGbwMvMwMV48I9IxdpTbzgZT6slMSS+nbpcuF1aSOHc7VvcKru0ItTvBT39tGSS6+W7Qqqsga+6 XV/1dDIaszAwcjHIiimy1BVpiU2QWPPfrmQJN8wgViaQKQxcnAIwkQJ1DoZJL1o6pbJMnj7jmr4qUS z5cENAvodiUGgJM7vdWk2x1lkXfyiGhedIbP/1ivHDvGRTmXL/wIg7PG/WnKtj3+Cxw3vSTCnTOzOd yi9M2O48eVabWmdxdar48r4nD8SX8C08EDSTi+vRDt+c6nvV3NfNWBp1n+gr+KXecpB0EyurXNg2We Uo48mJf1OlAs7efhjiFRf3rvCxJsfV54c496b3NyuWHJzSmuayo0HlZt6l61nCfqtvRPNVJB6OfXdb hs8hRbB7TVzWu4TqJTmrVkWmKp/49rnOYBtTkkTTztLDU1/M/GPS5CYxR5hB+kNfXS1Xv6L8fpUOs7 C3m3IdIjib3pfmHW2edIvrx04rAA==
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-
-Dňa 17. 1. 2022 o 10:08 Hans de Goede napísal(a):
-> Hi,
->
-> On 1/17/22 09:39, Miroslav Bendík wrote:
->>> [AMD Official Use Only]
->>>
->>>> Now i am trying to change ASF registers instead of SMBus registers.
->>>> I have tried to enable interrupts and set listen address, but it don't
->>>> work or
->>>> i can't recognize the difference between interrupts generated by
->>>> transfers and
->>>> interrupts generated from slave.
->>> Try reading the value of SFx0A ASFStatus bit 5 (it's write to clear if it's an interrupt).
->>>
->>>> outb_p(0x02, 0x15 + piix4_smba); // SlaveIntrListenEn
->>>> outb_p(0x2c << 1 | 0x01, 0x09 + piix4_smba); // ListenAdr | ListenAdrEn
->>> ASFx04 SlaveAddress instead of  ASFx09 ListenAdr
->>> ?
->>>
->>>
->> Little bit more informations:
->>
->> Interrupts are generated only if ASFx09 ListenAdr is:
->>
->> (0x08 << 1) | 0x01
->> (0x10 << 1) | 0x01
->>
->> and touchpad is initialized with synaptics_intertouch=1
->>
->> There is maybe small correlation between frequency and touch, but i am
->> not 100% sure.
-> I know very litlle about this, but I believe that when using
-> host-notify that after receiving the host-notify you are supposed to
-> do an I2C read from the SMBus Alert Response Address (ARA, 0x0c) to find
-> out the source of the notify (since multiple devices on the bus may
-> be notify capable). I guess that the controller may not do that itself
-> and that as long as you have not done it the touchpad may keep repeating
-> the notify.
->
-> But as said I know very little about this, so take this with a big
-> grain of salt :)  I guess you may want to read up a bit on how this
-> is supposed to work at the bus level. I believe that the SMBUS spec
-> is public.
->
-> Regards,
->
-> Hans
->
->
->
->
->> There are no register changed in interrupt handler except of
->> ASFx13 DataBankSel. I can't determine if interrupt is generated from
->> transfer, or from external event.
->>
->> ASF should be system for remote management. It should have access to
->> SMBus and data / command registers are identical, this means, that SMBus
->> should work (except block transfers).
->>
->> If ASF just mirrors SMBus, then question is, why i can't access to
->> touchpad using SMBus? One strange thing is, that i2cdetect on standard
->> SMbus (0xb00), port 0 returns:
->>
->>       0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
->> 00:                         -- -- -- -- -- -- -- --
->> 10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->> 20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->> 30: -- -- -- -- -- -- 36 37 -- -- -- -- -- -- -- --
->> 40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->> 50: 50 -- -- -- -- -- -- -- 58 -- -- -- -- -- -- --
->> 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->> 70: -- -- -- -- -- -- -- --
->>
->> Address 0x58 is exactly 0x2c (synaptics) moved 1 bit left, but i2c-piix4
->> correctly moves address.
->>
 Hello,
-i have no response from 0x0c (ARA). It returns -6 (ENXIO).
 
-Exact call is:
+this series goal is to change the spi remove callback's return value to void.
+After numerous patches nearly all drivers already return 0 unconditionally.
+The four first patches in this series convert the remaining three drivers to
+return 0, the final patch changes the remove prototype and converts all
+implementers.
 
-i2c_smbus_xfer(piix4_aux_adapter, 0x0c, 0x00, I2C_SMBUS_READ, 0x00, 
-I2C_SMBUS_BYTE, &data)
+The driver core doesn't support error handling on remove, the spi core issues
+only a very generic warning when a remove callback returns an error. If there
+is really the need for a function call that can fail, the driver can issue a
+more helpful error message. I didn't find a single driver where returning
+an error code and error handling in the spi core would have been helpful.
 
-I hava played with ARP (address 0x61), but alweays without response (-6).
+So change the prototype of the remove function to make it obvious for driver
+authors that there is no error handling in the spi core.
 
-I have tried to read event status from ASF. Exact command is 0000 0001b
-and subcommand 0001 0010b from ASF reference documentation. I have
-enabled automatic PEC appending. I have tried to manually calculate PEC
-too. To calculate PEC i have called i2c_smbus_pec with data {0xaa/b,
-0x01, 0x03, 0x12, 0x10, 0x00} and then set PEC byte register, but every
-call ends wih -6 (no response from device).
+The four preparatory patches were already send out, but not yet taken into
+next.
 
-ASF sensor address should be 0x55 is (from register ASFx0F SensorAdr
-- 0xaa shifted 1 bit right).
+Assuming Mark is fine with this change I'd like to have this go in during the
+next merge window. I guess we need a tag that can be pulled into trees that add
+a new driver in the next cycle. I can provide such a tag, but I'm open to
+alternatives.
 
-Exact code:
+The patch set survived an allmodconfig build on various archs (arm64 m68k
+powerpc riscv s390 sparc64 x86_64) after the following two commits from
+next-20220121 were added to fix an unrelated build problem:
 
-outb_p(0x20, SMBHSTCNT); // Automatically append PEC
+        be973481daaa ("pinctrl: thunderbay: rework loops looking for groups names")
+        8687999e47d4 ("pinctrl: thunderbay: comment process of building functions a bit")
 
-data.block[0] = 0x03; // size
-data.block[1] = 0x12; // subcommand
-data.block[2] = 0x10; // version
-data.block[3] = 0x00; // reserved
-status = i2c_smbus_xfer(piix4_aux_adapter, 0x55, 0x00, I2C_SMBUS_WRITE, 
-0x01, I2C_SMBUS_BLOCK_DATA, &data);
+Best regards
+Uwe
 
-Interrupts are always generated after transactions. Following conditions
-are necessary to generate interrupts spontaneously:
+Uwe Kleine-König (5):
+  staging: fbtft: Fix error path in fbtft_driver_module_init()
+  staging: fbtft: Deduplicate driver registration macros
+  tpm: st33zp24: Make st33zp24_remove() a void function
+  platform/chrome: cros_ec: Make cros_ec_unregister() return void
+  spi: make remove callback a void function
 
-- SlaveIntrListenEn of ASFx15 SlaveEn bit set
-- ListenAdr of ASFx09 set to 0x08 or 0x10
-- ListenAdrEn of ASFx09 bit set
-- psmouse loaded with synaptics_intertouch=1
+ drivers/bus/moxtet.c                          |  4 +-
+ drivers/char/tpm/st33zp24/i2c.c               |  5 +-
+ drivers/char/tpm/st33zp24/spi.c               |  9 +-
+ drivers/char/tpm/st33zp24/st33zp24.c          |  3 +-
+ drivers/char/tpm/st33zp24/st33zp24.h          |  2 +-
+ drivers/char/tpm/tpm_tis_spi_main.c           |  3 +-
+ drivers/clk/clk-lmk04832.c                    |  4 +-
+ drivers/gpio/gpio-74x164.c                    |  4 +-
+ drivers/gpio/gpio-max3191x.c                  |  4 +-
+ drivers/gpio/gpio-max7301.c                   |  4 +-
+ drivers/gpio/gpio-mc33880.c                   |  4 +-
+ drivers/gpio/gpio-pisosr.c                    |  4 +-
+ drivers/gpu/drm/panel/panel-abt-y030xx067a.c  |  4 +-
+ drivers/gpu/drm/panel/panel-ilitek-ili9322.c  |  4 +-
+ drivers/gpu/drm/panel/panel-ilitek-ili9341.c  |  3 +-
+ drivers/gpu/drm/panel/panel-innolux-ej030na.c |  4 +-
+ drivers/gpu/drm/panel/panel-lg-lb035q02.c     |  4 +-
+ drivers/gpu/drm/panel/panel-lg-lg4573.c       |  4 +-
+ drivers/gpu/drm/panel/panel-nec-nl8048hl11.c  |  4 +-
+ drivers/gpu/drm/panel/panel-novatek-nt39016.c |  4 +-
+ drivers/gpu/drm/panel/panel-samsung-db7430.c  |  3 +-
+ drivers/gpu/drm/panel/panel-samsung-ld9040.c  |  4 +-
+ drivers/gpu/drm/panel/panel-samsung-s6d27a1.c |  3 +-
+ .../gpu/drm/panel/panel-samsung-s6e63m0-spi.c |  3 +-
+ .../gpu/drm/panel/panel-sitronix-st7789v.c    |  4 +-
+ drivers/gpu/drm/panel/panel-sony-acx565akm.c  |  4 +-
+ drivers/gpu/drm/panel/panel-tpo-td028ttec1.c  |  4 +-
+ drivers/gpu/drm/panel/panel-tpo-td043mtea1.c  |  4 +-
+ drivers/gpu/drm/panel/panel-tpo-tpg110.c      |  3 +-
+ .../gpu/drm/panel/panel-widechips-ws2401.c    |  3 +-
+ drivers/gpu/drm/tiny/hx8357d.c                |  4 +-
+ drivers/gpu/drm/tiny/ili9163.c                |  4 +-
+ drivers/gpu/drm/tiny/ili9225.c                |  4 +-
+ drivers/gpu/drm/tiny/ili9341.c                |  4 +-
+ drivers/gpu/drm/tiny/ili9486.c                |  4 +-
+ drivers/gpu/drm/tiny/mi0283qt.c               |  4 +-
+ drivers/gpu/drm/tiny/repaper.c                |  4 +-
+ drivers/gpu/drm/tiny/st7586.c                 |  4 +-
+ drivers/gpu/drm/tiny/st7735r.c                |  4 +-
+ drivers/hwmon/adcxx.c                         |  4 +-
+ drivers/hwmon/adt7310.c                       |  3 +-
+ drivers/hwmon/max1111.c                       |  3 +-
+ drivers/hwmon/max31722.c                      |  4 +-
+ drivers/iio/accel/bma400_spi.c                |  4 +-
+ drivers/iio/accel/bmc150-accel-spi.c          |  4 +-
+ drivers/iio/accel/bmi088-accel-spi.c          |  4 +-
+ drivers/iio/accel/kxsd9-spi.c                 |  4 +-
+ drivers/iio/accel/mma7455_spi.c               |  4 +-
+ drivers/iio/accel/sca3000.c                   |  4 +-
+ drivers/iio/adc/ad7266.c                      |  4 +-
+ drivers/iio/adc/ltc2496.c                     |  4 +-
+ drivers/iio/adc/mcp320x.c                     |  4 +-
+ drivers/iio/adc/mcp3911.c                     |  4 +-
+ drivers/iio/adc/ti-adc12138.c                 |  4 +-
+ drivers/iio/adc/ti-ads7950.c                  |  4 +-
+ drivers/iio/adc/ti-ads8688.c                  |  4 +-
+ drivers/iio/adc/ti-tlc4541.c                  |  4 +-
+ drivers/iio/amplifiers/ad8366.c               |  4 +-
+ drivers/iio/common/ssp_sensors/ssp_dev.c      |  4 +-
+ drivers/iio/dac/ad5360.c                      |  4 +-
+ drivers/iio/dac/ad5380.c                      |  4 +-
+ drivers/iio/dac/ad5446.c                      |  4 +-
+ drivers/iio/dac/ad5449.c                      |  4 +-
+ drivers/iio/dac/ad5504.c                      |  4 +-
+ drivers/iio/dac/ad5592r.c                     |  4 +-
+ drivers/iio/dac/ad5624r_spi.c                 |  4 +-
+ drivers/iio/dac/ad5686-spi.c                  |  4 +-
+ drivers/iio/dac/ad5761.c                      |  4 +-
+ drivers/iio/dac/ad5764.c                      |  4 +-
+ drivers/iio/dac/ad5791.c                      |  4 +-
+ drivers/iio/dac/ad8801.c                      |  4 +-
+ drivers/iio/dac/ltc1660.c                     |  4 +-
+ drivers/iio/dac/ltc2632.c                     |  4 +-
+ drivers/iio/dac/mcp4922.c                     |  4 +-
+ drivers/iio/dac/ti-dac082s085.c               |  4 +-
+ drivers/iio/dac/ti-dac7311.c                  |  3 +-
+ drivers/iio/frequency/adf4350.c               |  4 +-
+ drivers/iio/gyro/bmg160_spi.c                 |  4 +-
+ drivers/iio/gyro/fxas21002c_spi.c             |  4 +-
+ drivers/iio/health/afe4403.c                  |  4 +-
+ drivers/iio/magnetometer/bmc150_magn_spi.c    |  4 +-
+ drivers/iio/magnetometer/hmc5843_spi.c        |  4 +-
+ drivers/iio/potentiometer/max5487.c           |  4 +-
+ drivers/iio/pressure/ms5611_spi.c             |  4 +-
+ drivers/iio/pressure/zpa2326_spi.c            |  4 +-
+ drivers/input/keyboard/applespi.c             |  4 +-
+ drivers/input/misc/adxl34x-spi.c              |  4 +-
+ drivers/input/touchscreen/ads7846.c           |  4 +-
+ drivers/input/touchscreen/cyttsp4_spi.c       |  4 +-
+ drivers/input/touchscreen/tsc2005.c           |  4 +-
+ drivers/leds/leds-cr0014114.c                 |  4 +-
+ drivers/leds/leds-dac124s085.c                |  4 +-
+ drivers/leds/leds-el15203000.c                |  4 +-
+ drivers/leds/leds-spi-byte.c                  |  4 +-
+ drivers/media/spi/cxd2880-spi.c               |  4 +-
+ drivers/media/spi/gs1662.c                    |  4 +-
+ drivers/media/tuners/msi001.c                 |  3 +-
+ drivers/mfd/arizona-spi.c                     |  4 +-
+ drivers/mfd/da9052-spi.c                      |  3 +-
+ drivers/mfd/ezx-pcap.c                        |  4 +-
+ drivers/mfd/madera-spi.c                      |  4 +-
+ drivers/mfd/mc13xxx-spi.c                     |  3 +-
+ drivers/mfd/rsmu_spi.c                        |  4 +-
+ drivers/mfd/stmpe-spi.c                       |  4 +-
+ drivers/mfd/tps65912-spi.c                    |  4 +-
+ drivers/misc/ad525x_dpot-spi.c                |  3 +-
+ drivers/misc/eeprom/eeprom_93xx46.c           |  4 +-
+ drivers/misc/lattice-ecp3-config.c            |  4 +-
+ drivers/misc/lis3lv02d/lis3lv02d_spi.c        |  4 +-
+ drivers/mmc/host/mmc_spi.c                    |  3 +-
+ drivers/mtd/devices/mchp23k256.c              |  4 +-
+ drivers/mtd/devices/mchp48l640.c              |  4 +-
+ drivers/mtd/devices/mtd_dataflash.c           |  4 +-
+ drivers/mtd/devices/sst25l.c                  |  4 +-
+ drivers/net/can/m_can/tcan4x5x-core.c         |  4 +-
+ drivers/net/can/spi/hi311x.c                  |  4 +-
+ drivers/net/can/spi/mcp251x.c                 |  4 +-
+ .../net/can/spi/mcp251xfd/mcp251xfd-core.c    |  4 +-
+ drivers/net/dsa/b53/b53_spi.c                 |  4 +-
+ drivers/net/dsa/microchip/ksz8795_spi.c       |  4 +-
+ drivers/net/dsa/microchip/ksz9477_spi.c       |  4 +-
+ drivers/net/dsa/sja1105/sja1105_main.c        |  6 +-
+ drivers/net/dsa/vitesse-vsc73xx-spi.c         |  6 +-
+ drivers/net/ethernet/asix/ax88796c_main.c     |  4 +-
+ drivers/net/ethernet/micrel/ks8851_spi.c      |  4 +-
+ drivers/net/ethernet/microchip/enc28j60.c     |  4 +-
+ drivers/net/ethernet/microchip/encx24j600.c   |  4 +-
+ drivers/net/ethernet/qualcomm/qca_spi.c       |  4 +-
+ drivers/net/ethernet/vertexcom/mse102x.c      |  4 +-
+ drivers/net/ethernet/wiznet/w5100-spi.c       |  4 +-
+ drivers/net/ieee802154/adf7242.c              |  4 +-
+ drivers/net/ieee802154/at86rf230.c            |  4 +-
+ drivers/net/ieee802154/ca8210.c               |  6 +-
+ drivers/net/ieee802154/cc2520.c               |  4 +-
+ drivers/net/ieee802154/mcr20a.c               |  4 +-
+ drivers/net/ieee802154/mrf24j40.c             |  4 +-
+ drivers/net/phy/spi_ks8995.c                  |  4 +-
+ drivers/net/wan/slic_ds26522.c                |  3 +-
+ drivers/net/wireless/intersil/p54/p54spi.c    |  4 +-
+ .../net/wireless/marvell/libertas/if_spi.c    |  4 +-
+ drivers/net/wireless/microchip/wilc1000/spi.c |  4 +-
+ drivers/net/wireless/st/cw1200/cw1200_spi.c   |  4 +-
+ drivers/net/wireless/ti/wl1251/spi.c          |  4 +-
+ drivers/net/wireless/ti/wlcore/spi.c          |  4 +-
+ drivers/nfc/nfcmrvl/spi.c                     |  3 +-
+ drivers/nfc/st-nci/spi.c                      |  4 +-
+ drivers/nfc/st95hf/core.c                     |  4 +-
+ drivers/nfc/trf7970a.c                        |  4 +-
+ drivers/platform/chrome/cros_ec.c             |  4 +-
+ drivers/platform/chrome/cros_ec.h             |  2 +-
+ drivers/platform/chrome/cros_ec_i2c.c         |  4 +-
+ drivers/platform/chrome/cros_ec_lpc.c         |  4 +-
+ drivers/platform/chrome/cros_ec_spi.c         |  4 +-
+ drivers/platform/olpc/olpc-xo175-ec.c         |  4 +-
+ drivers/rtc/rtc-ds1302.c                      |  3 +-
+ drivers/rtc/rtc-ds1305.c                      |  4 +-
+ drivers/rtc/rtc-ds1343.c                      |  4 +-
+ drivers/spi/spi-mem.c                         |  6 +-
+ drivers/spi/spi-slave-system-control.c        |  3 +-
+ drivers/spi/spi-slave-time.c                  |  3 +-
+ drivers/spi/spi-tle62x0.c                     |  3 +-
+ drivers/spi/spi.c                             | 11 +--
+ drivers/spi/spidev.c                          |  4 +-
+ drivers/staging/fbtft/fbtft.h                 | 97 ++++++++-----------
+ drivers/staging/pi433/pi433_if.c              |  4 +-
+ drivers/staging/wfx/bus_spi.c                 |  3 +-
+ drivers/tty/serial/max3100.c                  |  5 +-
+ drivers/tty/serial/max310x.c                  |  3 +-
+ drivers/tty/serial/sc16is7xx.c                |  4 +-
+ drivers/usb/gadget/udc/max3420_udc.c          |  4 +-
+ drivers/usb/host/max3421-hcd.c                |  3 +-
+ drivers/video/backlight/ams369fg06.c          |  3 +-
+ drivers/video/backlight/corgi_lcd.c           |  3 +-
+ drivers/video/backlight/ili922x.c             |  3 +-
+ drivers/video/backlight/l4f00242t03.c         |  3 +-
+ drivers/video/backlight/lms501kf03.c          |  3 +-
+ drivers/video/backlight/ltv350qv.c            |  3 +-
+ drivers/video/backlight/tdo24m.c              |  3 +-
+ drivers/video/backlight/tosa_lcd.c            |  4 +-
+ drivers/video/backlight/vgg2432a4.c           |  4 +-
+ drivers/video/fbdev/omap/lcd_mipid.c          |  4 +-
+ .../displays/panel-lgphilips-lb035q02.c       |  4 +-
+ .../omapfb/displays/panel-nec-nl8048hl11.c    |  4 +-
+ .../omapfb/displays/panel-sony-acx565akm.c    |  4 +-
+ .../omapfb/displays/panel-tpo-td028ttec1.c    |  4 +-
+ .../omapfb/displays/panel-tpo-td043mtea1.c    |  4 +-
+ include/linux/spi/spi.h                       |  2 +-
+ sound/pci/hda/cs35l41_hda_spi.c               |  4 +-
+ sound/soc/codecs/adau1761-spi.c               |  3 +-
+ sound/soc/codecs/adau1781-spi.c               |  3 +-
+ sound/soc/codecs/cs35l41-spi.c                |  4 +-
+ sound/soc/codecs/pcm3168a-spi.c               |  4 +-
+ sound/soc/codecs/pcm512x-spi.c                |  3 +-
+ sound/soc/codecs/tlv320aic32x4-spi.c          |  4 +-
+ sound/soc/codecs/tlv320aic3x-spi.c            |  4 +-
+ sound/soc/codecs/wm0010.c                     |  4 +-
+ sound/soc/codecs/wm8804-spi.c                 |  3 +-
+ sound/spi/at73c213.c                          |  4 +-
+ 198 files changed, 248 insertions(+), 617 deletions(-)
 
-Only ASFx13 DataBankSel is modified externally. Value is always 0x8?.
-I have tried to check Databank?Full and if it set i am calling
-i2c_handle_smbus_host_notify and cleaning bit. Sometimes it responds to
-cursor move action, sometimes not. Sampling rate varies.
 
-I don't know if this interrupt is host notify. It has some corellation,
-but it may be something like bus error or event buffer full. I don't
-know.
-
-Here is video demonstration:
-
-https://youtu.be/9pjxyiWA1a8
-
-Before loading psmouse with synaptics_intertouch there are no
-interrupts. After unloading, there are again no interrupts.
-
-In ASF documentation is description of ASF_ALRT field of ASF!
-description table, but my bios contains only ASFT record of MNVS
-OperationRegion. I don't know if i should access this, or something
-else.
+base-commit: e783362eb54cd99b2cac8b3a9aeac942e6f6ac07
+-- 
+2.34.1
 
