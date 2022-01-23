@@ -2,189 +2,210 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9657C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 Jan 2022 12:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E228C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 23 Jan 2022 17:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231856AbiAVMjE (ORCPT
+        id S239240AbiAWRZo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 22 Jan 2022 07:39:04 -0500
-Received: from server.atrad.com.au ([150.101.241.2]:41382 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230360AbiAVMjE (ORCPT
+        Sun, 23 Jan 2022 12:25:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239220AbiAWRZo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 22 Jan 2022 07:39:04 -0500
-X-Greylist: delayed 1781 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Jan 2022 07:39:02 EST
-Received: from marvin.atrad.com.au (IDENT:1008@marvin.atrad.com.au [192.168.0.2])
-        by server.atrad.com.au (8.17.1/8.17.1) with ESMTPS id 20MC7UKQ032381
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Sat, 22 Jan 2022 22:37:32 +1030
-Date:   Sat, 22 Jan 2022 22:37:30 +1030
-From:   Jonathan Woithe <jwoithe@just42.net>
-To:     Luiz Sampaio <sampaio.ime@gmail.com>
-Cc:     "Lee, Chun-Yi" <jlee@suse.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Matan Ziv-Av <matan@svgalib.org>,
-        Jeremy Soller <jeremy@system76.com>,
-        System76 Product Development <productdev@system76.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Herton Ronaldo Krzesinski <herton@canonical.com>,
-        Azael Avalos <coproscefalo@gmail.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net,
-        ibm-acpi-devel@lists.sourceforge.net
-Subject: Re: [PATCH 20/31] platform: x86: changing LED_* from enum
- led_brightness to actual value
-Message-ID: <20220122120730.GA12371@marvin.atrad.com.au>
-References: <20220121165436.30956-1-sampaio.ime@gmail.com>
- <20220121165436.30956-21-sampaio.ime@gmail.com>
+        Sun, 23 Jan 2022 12:25:44 -0500
+Received: from server00.inetadmin.eu (server00.inetadmin.eu [IPv6:2a01:390:1:2:e1b1:2:0:d7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCF8C06173B;
+        Sun, 23 Jan 2022 09:25:43 -0800 (PST)
+Received: from [192.168.1.103] (ip-46.34.226.180.o2inet.sk [46.34.226.180])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: miroslav@wisdomtech.sk)
+        by server00.inetadmin.eu (Postfix) with ESMTPSA id 574EE13A07D;
+        Sun, 23 Jan 2022 18:25:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wisdomtech.sk;
+        s=dkiminetadmin; t=1642958738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=N+EE9E69tKIOkQyXfJAlJTexkD+QVb4eCukmRvui30w=;
+        b=cnWkMDM9CkOqhbN405GVVC0VL4FwDl8owce82eg2JODTXB3WG9gmvoyh0sbcTcpQIJUsdv
+        8LAwFRPp4bNOdFlo8iXCWBgLPEnRAXiKnVjM0jURaFiKbihsjwZDApKv3Ytpwe38ZIu8Fl
+        fgzIwqn0AA8X/etRGQXBiVVI6RPis0E=
+Message-ID: <cb4e9d68-78b0-583d-fa15-a841b0606785@wisdomtech.sk>
+Date:   Sun, 23 Jan 2022 18:25:37 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220121165436.30956-21-sampaio.ime@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-MIMEDefang-action: accept
-X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: Touchpad stickiness on AMD laptops (was Dell Inspiron/XPS)
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Benjamin Tissoires <btissoir@redhat.com>,
+        Andrea Ippolito <andrea.ippo@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>
+References: <CAGhUXvBw4rzCQrqttyyS=Psxmhppk79c6fDoxPbV91jE7fO_9A@mail.gmail.com>
+ <CAGhUXvDNj2v3O==+wWWKPYVzej8Vq+WNiBtPwmYxSQ2dTuLb9Q@mail.gmail.com>
+ <CAGhUXvC8eHfxEKzkGN06VvRU6Z0ko7MJ9hF6uXNq+PxRZSbEmQ@mail.gmail.com>
+ <70cbe360-6385-2536-32bd-ae803517d2b2@redhat.com> <YdbrLz3tU4ohANDk@ninjato>
+ <42c83ec8-bbac-85e2-9ab5-87e59a679f95@redhat.com>
+ <CAO-hwJJ9ALxpd5oRU8SQ3F65hZjDitR=MzmwDk=uiEguaXZYtw@mail.gmail.com>
+ <5409e747-0c51-24e2-7ffa-7dd9c8a7aec7@amd.com> <Yd6SRl7sm8zS85Al@ninjato>
+ <596d6af1-d67c-b9aa-0496-bd898350865c@wisdomtech.sk>
+ <d39101a9-adc6-df32-12f5-fccc8fd34515@amd.com>
+ <5c0ed06a-617e-077a-a4a4-549e91d372ba@wisdomtech.sk>
+ <BL1PR12MB5157412781B6C84B97C2A3E7E2559@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <541865be-207d-01db-efc4-7eff600d56dc@wisdomtech.sk>
+ <cf3c89a5-f242-2c1f-f636-fd3241b18ff1@redhat.com>
+From:   =?UTF-8?Q?Miroslav_Bend=c3=adk?= <miroslav@wisdomtech.sk>
+In-Reply-To: <cf3c89a5-f242-2c1f-f636-fd3241b18ff1@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jan 21, 2022 at 01:54:25PM -0300, Luiz Sampaio wrote:
-> The enum led_brightness, which contains the declaration of LED_OFF,
-> LED_ON, LED_HALF and LED_FULL is obsolete, as the led class now supports
-> max_brightness.
-> ---
->  drivers/platform/x86/acer-wmi.c          |  6 ++---
->  drivers/platform/x86/asus-wireless.c     |  6 ++---
->  drivers/platform/x86/dell/dell-laptop.c  |  2 +-
->  drivers/platform/x86/dell/dell-wmi-led.c |  4 ++--
->  drivers/platform/x86/fujitsu-laptop.c    | 28 ++++++++++++------------
->  drivers/platform/x86/lg-laptop.c         | 18 +++++++--------
->  drivers/platform/x86/system76_acpi.c     |  4 ++--
->  drivers/platform/x86/thinkpad_acpi.c     | 14 ++++++------
->  drivers/platform/x86/topstar-laptop.c    |  4 ++--
->  drivers/platform/x86/toshiba_acpi.c      | 24 ++++++++++----------
->  10 files changed, 55 insertions(+), 55 deletions(-)
-> 
-> ...
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 80929380ec7e..6ebfda771209 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -584,10 +584,10 @@ static int logolamp_set(struct led_classdev *cdev,
->  	int poweron = FUNC_LED_ON, always = FUNC_LED_ON;
->  	int ret;
->  
-> -	if (brightness < LED_HALF)
-> +	if (brightness < 127)
->  		poweron = FUNC_LED_OFF;
->  
-> -	if (brightness < LED_FULL)
-> +	if (brightness < 255)
->  		always = FUNC_LED_OFF;
->  
->  	ret = call_fext_func(device, FUNC_LEDS, 0x1, LOGOLAMP_POWERON, poweron);
-> @@ -604,13 +604,13 @@ static enum led_brightness logolamp_get(struct led_classdev *cdev)
->  
->  	ret = call_fext_func(device, FUNC_LEDS, 0x2, LOGOLAMP_ALWAYS, 0x0);
->  	if (ret == FUNC_LED_ON)
-> -		return LED_FULL;
-> +		return 255;
->  
->  	ret = call_fext_func(device, FUNC_LEDS, 0x2, LOGOLAMP_POWERON, 0x0);
->  	if (ret == FUNC_LED_ON)
-> -		return LED_HALF;
-> +		return 127;
->  
-> -	return LED_OFF;
-> +	return 0;
->  }
->  
->  static int kblamps_set(struct led_classdev *cdev,
-> @@ -618,7 +618,7 @@ static int kblamps_set(struct led_classdev *cdev,
->  {
->  	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
->  
-> -	if (brightness >= LED_FULL)
-> +	if (brightness >= 255)
->  		return call_fext_func(device, FUNC_LEDS, 0x1, KEYBOARD_LAMPS,
->  				      FUNC_LED_ON);
->  	else
-> @@ -629,11 +629,11 @@ static int kblamps_set(struct led_classdev *cdev,
->  static enum led_brightness kblamps_get(struct led_classdev *cdev)
->  {
->  	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
-> -	enum led_brightness brightness = LED_OFF;
-> +	unsigned int brightness = 0;
->  
->  	if (call_fext_func(device,
->  			   FUNC_LEDS, 0x2, KEYBOARD_LAMPS, 0x0) == FUNC_LED_ON)
-> -		brightness = LED_FULL;
-> +		brightness = 255;
->  
->  	return brightness;
->  }
-> @@ -643,7 +643,7 @@ static int radio_led_set(struct led_classdev *cdev,
->  {
->  	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
->  
-> -	if (brightness >= LED_FULL)
-> +	if (brightness >= 255)
->  		return call_fext_func(device, FUNC_FLAGS, 0x5, RADIO_LED_ON,
->  				      RADIO_LED_ON);
->  	else
-> @@ -654,10 +654,10 @@ static int radio_led_set(struct led_classdev *cdev,
->  static enum led_brightness radio_led_get(struct led_classdev *cdev)
->  {
->  	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
-> -	enum led_brightness brightness = LED_OFF;
-> +	unsigned int brightness = 0;
->  
->  	if (call_fext_func(device, FUNC_FLAGS, 0x4, 0x0, 0x0) & RADIO_LED_ON)
-> -		brightness = LED_FULL;
-> +		brightness = 255;
->  
->  	return brightness;
->  }
-> @@ -669,7 +669,7 @@ static int eco_led_set(struct led_classdev *cdev,
->  	int curr;
->  
->  	curr = call_fext_func(device, FUNC_LEDS, 0x2, ECO_LED, 0x0);
-> -	if (brightness >= LED_FULL)
-> +	if (brightness >= 255)
->  		return call_fext_func(device, FUNC_LEDS, 0x1, ECO_LED,
->  				      curr | ECO_LED_ON);
->  	else
-> @@ -680,10 +680,10 @@ static int eco_led_set(struct led_classdev *cdev,
->  static enum led_brightness eco_led_get(struct led_classdev *cdev)
->  {
->  	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
-> -	enum led_brightness brightness = LED_OFF;
-> +	unsigned int brightness = 0;
->  
->  	if (call_fext_func(device, FUNC_LEDS, 0x2, ECO_LED, 0x0) & ECO_LED_ON)
-> -		brightness = LED_FULL;
-> +		brightness = 255;
->  
->  	return brightness;
->  }
 
-In a way it's less descriptive to revert from the identifiers to what amount
-to seemingly magic numbers.  However, since the value attributed to maximum
-LED brightness in the LED class is now variable I can see why the global
-enum no longer makes sense.  We could define a suitable enum within
-fujitsu-laptop.c, but there's probably little to be gained in the long run.
+Dňa 17. 1. 2022 o 10:08 Hans de Goede napísal(a):
+> Hi,
+>
+> On 1/17/22 09:39, Miroslav Bendík wrote:
+>>> [AMD Official Use Only]
+>>>
+>>>> Now i am trying to change ASF registers instead of SMBus registers.
+>>>> I have tried to enable interrupts and set listen address, but it don't
+>>>> work or
+>>>> i can't recognize the difference between interrupts generated by
+>>>> transfers and
+>>>> interrupts generated from slave.
+>>> Try reading the value of SFx0A ASFStatus bit 5 (it's write to clear if it's an interrupt).
+>>>
+>>>> outb_p(0x02, 0x15 + piix4_smba); // SlaveIntrListenEn
+>>>> outb_p(0x2c << 1 | 0x01, 0x09 + piix4_smba); // ListenAdr | ListenAdrEn
+>>> ASFx04 SlaveAddress instead of  ASFx09 ListenAdr
+>>> ?
+>>>
+>>>
+>> Little bit more informations:
+>>
+>> Interrupts are generated only if ASFx09 ListenAdr is:
+>>
+>> (0x08 << 1) | 0x01
+>> (0x10 << 1) | 0x01
+>>
+>> and touchpad is initialized with synaptics_intertouch=1
+>>
+>> There is maybe small correlation between frequency and touch, but i am
+>> not 100% sure.
+> I know very litlle about this, but I believe that when using
+> host-notify that after receiving the host-notify you are supposed to
+> do an I2C read from the SMBus Alert Response Address (ARA, 0x0c) to find
+> out the source of the notify (since multiple devices on the bus may
+> be notify capable). I guess that the controller may not do that itself
+> and that as long as you have not done it the touchpad may keep repeating
+> the notify.
+>
+> But as said I know very little about this, so take this with a big
+> grain of salt :)  I guess you may want to read up a bit on how this
+> is supposed to work at the bus level. I believe that the SMBUS spec
+> is public.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+>> There are no register changed in interrupt handler except of
+>> ASFx13 DataBankSel. I can't determine if interrupt is generated from
+>> transfer, or from external event.
+>>
+>> ASF should be system for remote management. It should have access to
+>> SMBus and data / command registers are identical, this means, that SMBus
+>> should work (except block transfers).
+>>
+>> If ASF just mirrors SMBus, then question is, why i can't access to
+>> touchpad using SMBus? One strange thing is, that i2cdetect on standard
+>> SMbus (0xb00), port 0 returns:
+>>
+>>       0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+>> 00:                         -- -- -- -- -- -- -- --
+>> 10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>> 20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>> 30: -- -- -- -- -- -- 36 37 -- -- -- -- -- -- -- --
+>> 40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>> 50: 50 -- -- -- -- -- -- -- 58 -- -- -- -- -- -- --
+>> 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>> 70: -- -- -- -- -- -- -- --
+>>
+>> Address 0x58 is exactly 0x2c (synaptics) moved 1 bit left, but i2c-piix4
+>> correctly moves address.
+>>
+Hello,
+i have no response from 0x0c (ARA). It returns -6 (ENXIO).
 
-To make the patch description a little clearer, could I suggest you add the
-word "variable" before "max_brightness", or even just use the phrase
-"variable maximum brightness"?
+Exact call is:
 
-For the fujitsu-laptop.c portion of this patch:
-    Acked-by: Jonathan Woithe <jwoithe@just42.net>
+i2c_smbus_xfer(piix4_aux_adapter, 0x0c, 0x00, I2C_SMBUS_READ, 0x00, 
+I2C_SMBUS_BYTE, &data)
 
-Regards
-  jonathan
+I hava played with ARP (address 0x61), but alweays without response (-6).
+
+I have tried to read event status from ASF. Exact command is 0000 0001b
+and subcommand 0001 0010b from ASF reference documentation. I have
+enabled automatic PEC appending. I have tried to manually calculate PEC
+too. To calculate PEC i have called i2c_smbus_pec with data {0xaa/b,
+0x01, 0x03, 0x12, 0x10, 0x00} and then set PEC byte register, but every
+call ends wih -6 (no response from device).
+
+ASF sensor address should be 0x55 is (from register ASFx0F SensorAdr
+- 0xaa shifted 1 bit right).
+
+Exact code:
+
+outb_p(0x20, SMBHSTCNT); // Automatically append PEC
+
+data.block[0] = 0x03; // size
+data.block[1] = 0x12; // subcommand
+data.block[2] = 0x10; // version
+data.block[3] = 0x00; // reserved
+status = i2c_smbus_xfer(piix4_aux_adapter, 0x55, 0x00, I2C_SMBUS_WRITE, 
+0x01, I2C_SMBUS_BLOCK_DATA, &data);
+
+Interrupts are always generated after transactions. Following conditions
+are necessary to generate interrupts spontaneously:
+
+- SlaveIntrListenEn of ASFx15 SlaveEn bit set
+- ListenAdr of ASFx09 set to 0x08 or 0x10
+- ListenAdrEn of ASFx09 bit set
+- psmouse loaded with synaptics_intertouch=1
+
+Only ASFx13 DataBankSel is modified externally. Value is always 0x8?.
+I have tried to check Databank?Full and if it set i am calling
+i2c_handle_smbus_host_notify and cleaning bit. Sometimes it responds to
+cursor move action, sometimes not. Sampling rate varies.
+
+I don't know if this interrupt is host notify. It has some corellation,
+but it may be something like bus error or event buffer full. I don't
+know.
+
+Here is video demonstration:
+
+https://youtu.be/9pjxyiWA1a8
+
+Before loading psmouse with synaptics_intertouch there are no
+interrupts. After unloading, there are again no interrupts.
+
+In ASF documentation is description of ASF_ALRT field of ASF!
+description table, but my bios contains only ASFT record of MNVS
+OperationRegion. I don't know if i should access this, or something
+else.
+
