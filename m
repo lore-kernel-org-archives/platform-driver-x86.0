@@ -2,107 +2,89 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D09FC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jan 2022 18:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B43C2BA4C
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Jan 2022 14:03:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233247AbiAYSoo (ORCPT
+        id S241886AbiAZODw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Jan 2022 13:44:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40198 "EHLO
+        Wed, 26 Jan 2022 09:03:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233409AbiAYSoD (ORCPT
+        with ESMTP id S234931AbiAZODw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Jan 2022 13:44:03 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 258E5C061770;
-        Tue, 25 Jan 2022 10:43:34 -0800 (PST)
-Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 760941EC052A;
-        Tue, 25 Jan 2022 19:43:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1643136208;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=wvIvlS2dO1ThS+LV2yQ6h0qiGd4NN+hsLFVW5buEbs0=;
-        b=ejvEMtrV/x1ErR80f7OgCzdqcxU5KzdO9+Ac3btdyfg/CxP+qm/1swhS/pWjt0C92J8iC5
-        uHKxx/bZxLwSU3b8spXf5TW0DlCut6rOPx7VoczJgu0PwancC+Xu1O4NzkoZ9SPpd/thwA
-        1SN8jQOFx0HVOzq0CPayGnJz5UBxBoc=
-Date:   Tue, 25 Jan 2022 19:43:23 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v8 34/40] x86/sev: add SEV-SNP feature detection/setup
-Message-ID: <YfBEy6QD38u9DSrP@zn.tnic>
-References: <20211210154332.11526-1-brijesh.singh@amd.com>
- <20211210154332.11526-35-brijesh.singh@amd.com>
+        Wed, 26 Jan 2022 09:03:52 -0500
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC643C061747
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jan 2022 06:03:51 -0800 (PST)
+Received: by mail-yb1-xb2b.google.com with SMTP id c6so71643397ybk.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jan 2022 06:03:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=KgAy15DDMAR2vjy8MiwG/RlJLyeMSxdmZmAbGV8zyZo=;
+        b=DuizcgPMiu9eosVBoNVF9GXmy/vOHlsyPY4EPNeMMFbDaxS4YbjLG2k3mZuPyZp6nf
+         mwFunqVxw0K+rEwzgUyTXfdvmL5BeLj26bqEJQ5veR0aakcJ78+I2l5VZqLFNLs9nCec
+         6ffY5vozp4KqeyHfj1dSwlC5t72zaZMoMUoLB7iKNaTa4LNVwHB8AfYmBB86NdbN2nsP
+         dv0UPQJzy5A02W0TAONv6Rn5Q9uyz/UWeKWfKPAu4n7G5yQPfYEZfMoE7+HRY/N/zpjU
+         qksxBQX2M7uHcfVpSH28kwZvNv2srrULTX2ONPPpjSyMqODUgLOOOEzpAeD8870RvkWs
+         W6rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=KgAy15DDMAR2vjy8MiwG/RlJLyeMSxdmZmAbGV8zyZo=;
+        b=b64hJ1U3FfZ4NF/BoKkKy/J8Kblnqd3GYAA/3tuiW5yBIR+JTwRMrZqmyWtPFKOxnf
+         yYGGEw5fOrxAHBkIUH1oqwUw4F2YSsBRnqRMXgOAk4ASoKnKGPldRScGVr9kd8I/csTH
+         sfdhjmxXxyBRNhxipp3HkMP05q4bp/SoJqJFQ1yewYB93mDVJ0TlE8r8jrua5K7Nf2aN
+         7BUGMEqiNzKrMnKVGS1vpco07RpTqbWBU4g2BxRjymjNq+EQpBbAfiaDv/Flj4I/xFQe
+         EFVghWyJpLsEwQkGdyfs5Lu/ke77gSkfqepSmwPM7kmT9IKvMVt5xsHg60QwNFldNNEu
+         HH9A==
+X-Gm-Message-State: AOAM5318dmMAVKaHfjWB7eHc2NrhQvrX/RwxaTMXBf3Y3Aa5oatPDQks
+        Cz9Bm0fxhf8mTq3XJyyt4fVc++a02rLIJr5s5xcdlQ==
+X-Google-Smtp-Source: ABdhPJxG2AiuBT6jF9/C4OMbB5sFSeC1iGSmdOO8xUnGvYsnanamPg5zDFyS9LKTGkMtjjtvdQEY1gfURY0fRsUqNGc=
+X-Received: by 2002:a25:b305:: with SMTP id l5mr30998617ybj.393.1643205831097;
+ Wed, 26 Jan 2022 06:03:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211210154332.11526-35-brijesh.singh@amd.com>
+Received: by 2002:a81:1756:0:0:0:0:0 with HTTP; Wed, 26 Jan 2022 06:03:50
+ -0800 (PST)
+In-Reply-To: <CAKgze5Z7U0R+HJ8_GajUsspYw+52+i2MW75KBGVOmE8zmT_BDQ@mail.gmail.com>
+References: <20220113213027.457282-1-martin.fernandez@eclypsium.com>
+ <20220113213027.457282-4-martin.fernandez@eclypsium.com> <eea2c529-b874-58e6-f0b2-1483cc7e30a6@intel.com>
+ <CAKgze5Z7U0R+HJ8_GajUsspYw+52+i2MW75KBGVOmE8zmT_BDQ@mail.gmail.com>
+From:   Martin Fernandez <martin.fernandez@eclypsium.com>
+Date:   Wed, 26 Jan 2022 11:03:50 -0300
+Message-ID: <CAKgze5ba429M=Aad9qBNL+CZLCVF09LQ6ZwXCT2jc86vDggp6g@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] x86/e820: Tag e820_entry with crypto capabilities
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Dec 10, 2021 at 09:43:26AM -0600, Brijesh Singh wrote:
-> +static struct cc_blob_sev_info *snp_find_cc_blob(struct boot_params *bp)
-> +{
-> +	struct cc_blob_sev_info *cc_info;
-> +
-> +	/* Boot kernel would have passed the CC blob via boot_params. */
-> +	if (bp->cc_blob_address) {
-> +		cc_info = (struct cc_blob_sev_info *)
-> +			  (unsigned long)bp->cc_blob_address;
+> On 1/14/22, Dave Hansen <dave.hansen@intel.com> wrote:
+>> On 1/13/22 1:30 PM, Martin Fernandez wrote:
+>>> +/*
+>>> + * Update crypto capabilities in a range
+>>> + */
+>>> +static u64 __init __e820__range_update_crypto(struct e820_table *table,
+>>> +					      u64 start, u64 size,
+>>> +					      enum e820_crypto_capabilities crypto_capable)
+>>
+>> This looks like an almost pure copy-and-paste of a 70-line function.
+>> That's not the end of the world, but it does seem like a place where
+>> refactoring is in order.
 
-No need to break that line.
-
-> +		goto found_cc_info;
-> +	}
-> +
-> +	/*
-> +	 * If kernel was booted directly, without the use of the
-> +	 * boot/decompression kernel, the CC blob may have been passed via
-> +	 * setup_data instead.
-> +	 */
-> +	cc_info = snp_find_cc_blob_setup_data(bp);
-> +	if (!cc_info)
-> +		return NULL;
-> +
-> +found_cc_info:
-> +	if (cc_info->magic != CC_BLOB_SEV_HDR_MAGIC)
-> +		sev_es_terminate(1, GHCB_SNP_UNSUPPORTED);
-
-snp_abort() if you're gonna call it that.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Introducing a for_each to iterate over the table is one of the
+improvements I'm thinking of. Do you think it's a good idea to
+introduce it in this patch (changing all the relevant for loops for
+this new for_each) or should I do it in a separate patch?
