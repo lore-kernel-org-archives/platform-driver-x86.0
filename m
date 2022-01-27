@@ -2,201 +2,248 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DA3C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Jan 2022 17:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E9AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Jan 2022 17:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244526AbiA0RWV (ORCPT
+        id S234529AbiA0RX5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 27 Jan 2022 12:22:21 -0500
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:15312 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244634AbiA0RWH (ORCPT
+        Thu, 27 Jan 2022 12:23:57 -0500
+Received: from mail-mw2nam08on2089.outbound.protection.outlook.com ([40.107.101.89]:42336
+        "EHLO NAM04-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230193AbiA0RX4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Jan 2022 12:22:07 -0500
-Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20RFPKWo009268;
-        Thu, 27 Jan 2022 17:20:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=QpjO5xsD8YzBkAUFyLkFIF/TwoWy4yKVLopWUDETO1c=;
- b=TfSONXEW9t4QqV2yAGRvk+7WVtGHYpojRLOmC3zzrxVcl9eU6Jnj5ogsw8bPXyjDKx7G
- smfKrSw9yCUIxqAPr+ELIYEpSLwimVT92TEOHKuKpMTgTQLYlTE+nlMryxrBJuh3tNsr
- YW0wrKI1sJkYjcP1QqL057GxawcNCtgHD9ABhDPTROlycSKcMxoMmGqWB4xjXffnZWNG
- bWErM5S7RDeGTstpyl4znPKSSQbs8SQwXLQg9tglWFxSi5OC4hr83Aj6DDenBHhnizhs
- IjiAzmiR8BCBTPists1F1QNNCs26hqADLiKTER2GJMaJGDNoMRF/7Y+NHqvIx6xw79AZ XQ== 
-Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
-        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3duprgw0fm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Jan 2022 17:20:43 +0000
-Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
-        by g2t2354.austin.hpe.com (Postfix) with ESMTP id 6D397C5;
-        Thu, 27 Jan 2022 17:20:40 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.99.224.14])
-        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 96FDF37;
-        Thu, 27 Jan 2022 17:20:33 +0000 (UTC)
-Date:   Thu, 27 Jan 2022 11:20:33 -0600
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Laight <David.Laight@aculab.com>,
-        Joe Perches <joe@perches.com>, Dennis Zhou <dennis@kernel.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
+        Thu, 27 Jan 2022 12:23:56 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Mh0Dvrya+ak7wnuStDXQ8bvmXwTPOevkg2dg1RWDFy9YabC1WuZ8kS+nz5KFguQHF4QcL+6xllDp8xEA/b9WbDe9BXKbRsT+R/h1aM2p1yLC6mi6psimd556J8g29Q2XJxBN3rC+EgUTB/AYtLeJ1WSxGzfdYXiuserHxk2aIrPDlN3lw1wqEC9/SIjjXBwjJnxiQp9oM7ept3JufeKrDeoIYaNdWrdktylHUcFPrTQDEHr3EY0dvcBJKJ51d0bE7ICr0TcPpZ6ypi+p8eUUXFX5dKzmCKjXP//eXs8Qyh9dD5FLBFaUICxVe0vvLyAzFrLsCwFgsFR2Z70K9AuiZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TE1VBFnA90hYRW1pYSUROKkXBeREUPNpDB1wYyPhPJE=;
+ b=jEJrbklYTYU6u+UIlB6uSdIMVcl05rW0qdfs3hpysydrhLNOhwtLS+UnYxGO0K84lIVfTn6nhLBuviILwDTgtT9bSukvqIWEuX65UWYmU6MxSCX/tx1264ztjB/z93cO0XTo/zsSaN/8gKHUhIFHy895LTAWH+AlKOUYE7Uznsmyl1R1z5hzYlIWw0u+ORUU8kIPslT+CjdT2+/WUmLkQu2G/izZ56kb1yIgBqtQLBEOE0wH6HVmOtOOy2EkIZbkl3Eo5Ihu8Uqt5lfArlxpHnlN/PcmumPBhgY39IMjib8vlASCgEatlQMyqEXiBXx0lclphDz+U4mlX/Cra4JifQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TE1VBFnA90hYRW1pYSUROKkXBeREUPNpDB1wYyPhPJE=;
+ b=P55ITN/rNRdleLBP4+HU3AVWWq2tVNKm3etpcZEf/Dk0sn7OalBMF6U13RwFNqtihs0FIK4/TkJrpGHrMEbzx/YXmgZ3SyY7YplaDz/fFdgHguErAn2CrWcrthcjK7sD4EH0xjevEqGhVVpGyf0xvpn1moBByE1qwy1ch9adlcw=
+Received: from MW4PR03CA0279.namprd03.prod.outlook.com (2603:10b6:303:b5::14)
+ by CO6PR12MB5410.namprd12.prod.outlook.com (2603:10b6:5:35b::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.17; Thu, 27 Jan
+ 2022 17:23:54 +0000
+Received: from CO1NAM11FT027.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:b5:cafe::ac) by MW4PR03CA0279.outlook.office365.com
+ (2603:10b6:303:b5::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.15 via Frontend
+ Transport; Thu, 27 Jan 2022 17:23:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT027.mail.protection.outlook.com (10.13.174.224) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4930.15 via Frontend Transport; Thu, 27 Jan 2022 17:23:53 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Thu, 27 Jan
+ 2022 11:23:52 -0600
+Date:   Thu, 27 Jan 2022 11:23:08 -0600
+From:   Michael Roth <michael.roth@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     Brijesh Singh <brijesh.singh@amd.com>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+        <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "Vitaly Kuznetsov" <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Pekka Paalanen <ppaalanen@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>, x86@kernel.org,
-        nouveau@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 15/54] arch/x86: replace cpumask_weight with
- cpumask_empty where appropriate
-Message-ID: <YfLUYSh8Qyv6wEHd@swahl-home.5wahls.com>
-References: <20220123183925.1052919-1-yury.norov@gmail.com>
- <20220123183925.1052919-16-yury.norov@gmail.com>
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        <tony.luck@intel.com>, <marcorr@google.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v8 29/40] x86/compressed/64: add support for SEV-SNP
+ CPUID table in #VC handlers
+Message-ID: <20220127172308.erfrpuwm6ivbdh5q@amd.com>
+References: <20220118142345.65wuub2p3alavhpb@amd.com>
+ <20220118143238.lu22npcktxuvadwk@amd.com>
+ <20220118143730.wenhm2bbityq7wwy@amd.com>
+ <YebsKcpnYzvjaEjs@zn.tnic>
+ <20220118172043.djhy3dwg4fhhfqfs@amd.com>
+ <Yeb7vOaqDtH6Fpsb@zn.tnic>
+ <20220118184930.nnwbgrfr723qabnq@amd.com>
+ <20220119011806.av5rtxfv4et2sfkl@amd.com>
+ <YefzQuqrV8kdLr9z@zn.tnic>
+ <20220119162747.ewgxirwcnrcajazm@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20220123183925.1052919-16-yury.norov@gmail.com>
-X-Proofpoint-ORIG-GUID: d1Kt8X-N0PUO31rBEkE346Fy5PGO5vIJ
-X-Proofpoint-GUID: d1Kt8X-N0PUO31rBEkE346Fy5PGO5vIJ
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-01-27_03,2022-01-27_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 impostorscore=0 clxscore=1011 bulkscore=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=626 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2201270102
+In-Reply-To: <20220119162747.ewgxirwcnrcajazm@amd.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 975bec9a-9af1-445c-0d81-08d9e1b9ca9c
+X-MS-TrafficTypeDiagnostic: CO6PR12MB5410:EE_
+X-Microsoft-Antispam-PRVS: <CO6PR12MB54102B7DB1569C521A28054795219@CO6PR12MB5410.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HZ0gjAw7w+vY7xxdns0CA8REuTzgDddVOIIWdRXgcIdl2PT97t8nSArgi3tedycMamY51MH6VEcJsU6l8rQYHaq/Twn0DTVtYAcqrQgRaZvferpSSaUS1j5AEmMSNw1zdoVJZgvilW8CuKA+kg3Yj0u5xwqtZYJEf+K8F+Me5DuBY4WPagLEHpAa1gYyTPNc4rdBysfhDr2AgEUbGu6Qyfva6OKqEoGCxkoBwvmDRoAa8jkmpBjqs53H+NceLvejo6G0pIZCwRL64NpjU+7G9av+L4MeNoIFSJj5DUTPJplOlYttv+nKwHHW2TxObyN63jmPRUbPVXj/Coe2CS8lwU8HRiqbRUJTZfBpHO40RPevqIVG0XYu8swGZrGefez4Cjc6DksLlbhvG9s+A3LiNB3QRFFDhwpkbQ8PPDEZ3mI5NTt1p87CZQUjzqwlZf4EqNapXZ3N/nPbRFb1v03SOCRXGda/veKhNM+IC2lEBpAhMB9NwYKL3sNNTxHLSn6fROFeBzyImsl8sdi2F39bAPGo3p9KVjF98SPsAe+zv3OJdNySYWJ5vHxU72RXMngL9E+VqKDJ24PFfnLNMapvPHxBcATrZTYLYgqIbRUZ7M21FIw3ewl6/EUsWJ8Ga4xgzaT4ouFkvR6HUXaeJdvZgR7ore6nbCCoDAlbP+q+YD5AtVIs88ogYN24FatqE2Set9L+oMsP3mnBkBUJyUfXrQ==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(16526019)(7416002)(36860700001)(6666004)(40460700003)(186003)(1076003)(26005)(7406005)(86362001)(82310400004)(83380400001)(5660300002)(47076005)(2616005)(426003)(508600001)(336012)(8936002)(8676002)(4326008)(44832011)(70206006)(70586007)(81166007)(316002)(356005)(36756003)(54906003)(6916009)(2906002)(36900700001)(20210929001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2022 17:23:53.2185
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 975bec9a-9af1-445c-0d81-08d9e1b9ca9c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT027.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5410
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
-
-On Sun, Jan 23, 2022 at 10:38:46AM -0800, Yury Norov wrote:
-> In some cases, arch/x86 code calls cpumask_weight() to check if any bit of
-> a given cpumask is set. We can do it more efficiently with cpumask_empty()
-> because cpumask_empty() stops traversing the cpumask as soon as it finds
-> first set bit, while cpumask_weight() counts all bits unconditionally.
-> 
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> ---
->  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 14 +++++++-------
->  arch/x86/mm/mmio-mod.c                 |  2 +-
->  arch/x86/platform/uv/uv_nmi.c          |  2 +-
->  3 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> index b57b3db9a6a7..e23ff03290b8 100644
-> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> @@ -341,14 +341,14 @@ static int cpus_mon_write(struct rdtgroup *rdtgrp, cpumask_var_t newmask,
->  
->  	/* Check whether cpus belong to parent ctrl group */
->  	cpumask_andnot(tmpmask, newmask, &prgrp->cpu_mask);
-> -	if (cpumask_weight(tmpmask)) {
-> +	if (!cpumask_empty(tmpmask)) {
->  		rdt_last_cmd_puts("Can only add CPUs to mongroup that belong to parent\n");
->  		return -EINVAL;
->  	}
->  
->  	/* Check whether cpus are dropped from this group */
->  	cpumask_andnot(tmpmask, &rdtgrp->cpu_mask, newmask);
-> -	if (cpumask_weight(tmpmask)) {
-> +	if (!cpumask_empty(tmpmask)) {
->  		/* Give any dropped cpus to parent rdtgroup */
->  		cpumask_or(&prgrp->cpu_mask, &prgrp->cpu_mask, tmpmask);
->  		update_closid_rmid(tmpmask, prgrp);
-> @@ -359,7 +359,7 @@ static int cpus_mon_write(struct rdtgroup *rdtgrp, cpumask_var_t newmask,
->  	 * and update per-cpu rmid
->  	 */
->  	cpumask_andnot(tmpmask, newmask, &rdtgrp->cpu_mask);
-> -	if (cpumask_weight(tmpmask)) {
-> +	if (!cpumask_empty(tmpmask)) {
->  		head = &prgrp->mon.crdtgrp_list;
->  		list_for_each_entry(crgrp, head, mon.crdtgrp_list) {
->  			if (crgrp == rdtgrp)
-> @@ -394,7 +394,7 @@ static int cpus_ctrl_write(struct rdtgroup *rdtgrp, cpumask_var_t newmask,
->  
->  	/* Check whether cpus are dropped from this group */
->  	cpumask_andnot(tmpmask, &rdtgrp->cpu_mask, newmask);
-> -	if (cpumask_weight(tmpmask)) {
-> +	if (!cpumask_empty(tmpmask)) {
->  		/* Can't drop from default group */
->  		if (rdtgrp == &rdtgroup_default) {
->  			rdt_last_cmd_puts("Can't drop CPUs from default group\n");
-> @@ -413,12 +413,12 @@ static int cpus_ctrl_write(struct rdtgroup *rdtgrp, cpumask_var_t newmask,
->  	 * and update per-cpu closid/rmid.
->  	 */
->  	cpumask_andnot(tmpmask, newmask, &rdtgrp->cpu_mask);
-> -	if (cpumask_weight(tmpmask)) {
-> +	if (!cpumask_empty(tmpmask)) {
->  		list_for_each_entry(r, &rdt_all_groups, rdtgroup_list) {
->  			if (r == rdtgrp)
->  				continue;
->  			cpumask_and(tmpmask1, &r->cpu_mask, tmpmask);
-> -			if (cpumask_weight(tmpmask1))
-> +			if (!cpumask_empty(tmpmask1))
->  				cpumask_rdtgrp_clear(r, tmpmask1);
->  		}
->  		update_closid_rmid(tmpmask, rdtgrp);
-> @@ -488,7 +488,7 @@ static ssize_t rdtgroup_cpus_write(struct kernfs_open_file *of,
->  
->  	/* check that user didn't specify any offline cpus */
->  	cpumask_andnot(tmpmask, newmask, cpu_online_mask);
-> -	if (cpumask_weight(tmpmask)) {
-> +	if (!cpumask_empty(tmpmask)) {
->  		ret = -EINVAL;
->  		rdt_last_cmd_puts("Can only assign online CPUs\n");
->  		goto unlock;
-> diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-> index 933a2ebad471..c3317f0650d8 100644
-> --- a/arch/x86/mm/mmio-mod.c
-> +++ b/arch/x86/mm/mmio-mod.c
-> @@ -400,7 +400,7 @@ static void leave_uniprocessor(void)
->  	int cpu;
->  	int err;
->  
-> -	if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
-> +	if (!cpumask_available(downed_cpus) || cpumask_empty(downed_cpus))
->  		return;
->  	pr_notice("Re-enabling CPUs...\n");
->  	for_each_cpu(cpu, downed_cpus) {
-> diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
-> index 1e9ff28bc2e0..ea277fc08357 100644
-> --- a/arch/x86/platform/uv/uv_nmi.c
-> +++ b/arch/x86/platform/uv/uv_nmi.c
-> @@ -985,7 +985,7 @@ static int uv_handle_nmi(unsigned int reason, struct pt_regs *regs)
->  
->  	/* Clear global flags */
->  	if (master) {
-> -		if (cpumask_weight(uv_nmi_cpu_mask))
-> +		if (!cpumask_empty(uv_nmi_cpu_mask))
->  			uv_nmi_cleanup_mask();
->  		atomic_set(&uv_nmi_cpus_in_nmi, -1);
->  		atomic_set(&uv_nmi_cpu, -1);
-> -- 
-> 2.30.2
+On Wed, Jan 19, 2022 at 10:27:47AM -0600, Michael Roth wrote:
+> On Wed, Jan 19, 2022 at 12:17:22PM +0100, Borislav Petkov wrote:
+> > On Tue, Jan 18, 2022 at 07:18:06PM -0600, Michael Roth wrote:
+> > > If 'fake_count'/'reported_count' is greater than the actual number of
+> > > entries in the table, 'actual_count', then all table entries up to
+> > > 'fake_count' will also need to pass validation. Generally the table
+> > > will be zero'd out initially, so those additional/bogus entries will
+> > > be interpreted as a CPUID leaves where all fields are 0. Unfortunately,
+> > > that's still considered a valid leaf, even if it's a duplicate of the
+> > > *actual* 0x0 leaf present earlier in the table. The current code will
+> > > handle this fine, since it scans the table in order, and uses the
+> > > valid 0x0 leaf earlier in the table.
+> > 
+> > I guess it would be prudent to have some warnings when enumerating those
+> > leafs and when the count index "goes off into the weeds", so to speak,
+> > and starts reading 0-CPUID entries. I.e., "dear guest owner, your HV is
+> > giving you a big lie: a weird/bogus CPUID leaf count..."
+> > 
+> > :-)
 > 
 
--- 
-Steve Wahl, Hewlett Packard Enterprise
+Sorry for the delay, this response got stuck in my mail queue apparently.
+
+> Ok, there's some sanity checks that happen a little later in boot via
+> snp_cpuid_check_status(), after printk is enabled, that reports some
+> basic details to dmesg like the number of entries in the table. I can
+> add some additional sanity checks to flag the above case (really,
+> all-zero entries never make sense, since CPUID 0x0 is supposed to report
+> the max standard-range CPUID leaf, and leaf 0x1 at least should always
+> be present). I'll print a warning for such cases, add maybe dump the
+> cpuid the table in that case so it can be examined more easily by
+> owner.
+> 
+> > 
+> > And lemme make sure I understand it: the ->count itself is not
+> > measured/encrypted because you want to be flexible here and supply
+> > different blobs with different CPUID leafs?
+> 
+> Yes, but to be clear it's the entire CPUID page, including the count,
+> that's not measured (though it is encrypted after passing PSP
+> validation). Probably the biggest reason is the logistics of having
+> untrusted cloud vendors provide a copy of the CPUID values they plan
+> to pass to the guest, since a new measurement would need to be
+> calculated for every new configuration (using different guest
+> cpuflags, SMP count, etc.), since those table values will need to be
+> made easily-accessible to guest owner for all these measurement
+> calculations, and they can't be trusted so each table would need to
+> be checked either manually or by some tooling that could be difficult
+> to implement unless it was something simple like "give me the expected
+> CPUID values and I'll check if the provided CPUID table agrees with
+> that".
+> 
+> At that point it's much easier for the guest owner to just check the
+> CPUID values directly against known good values for a particular
+> configuration as part of their attestation process and leave the
+> untrusted cloud vendor out of it completely. So not measuring the
+> CPUID page as part of SNP attestation allows for that flexibility.
+> 
+> > 
+> > > This is isn't really a special case though, it falls under the general
+> > > category of a hypervisor inserting garbage entries that happen to pass
+> > > validation, but don't reflect values that a guest would normally see.
+> > > This will be detectable as part of guest owner attestation, since the
+> > > guest code is careful to guarantee that the values seen after boot,
+> > > once the attestation stage is reached, will be identical to the values
+> > > seen during boot, so if this sort of manipulation of CPUID values
+> > > occurred, the guest owner will notice this during attestation, and can
+> > > abort the boot at that point. The Documentation patch addresses this
+> > > in more detail.
+> > 
+> > Yap, it is important this is properly explained there so that people can
+> > pay attention to during attestation.
+> > 
+> > > If 'fake_count' is less than 'actual_count', then the PSP skips
+> > > validation for anything >= 'fake_count', and leaves them in the table.
+> > > That should also be fine though, since guest code should never exceed
+> > > 'fake_count'/'reported_count', as that's a blatant violation of the
+> > > spec, and it doesn't make any sense for a guest to do this. This will
+> > > effectively 'hide' entries, but those resulting missing CPUID leaves
+> > > will be noticeable to the guest owner once attestation phase is
+> > > reached.
+> > 
+> > Noticeable because the guest owner did supply a CPUID table with X
+> > entries but the HV is reporting Y?
+> 
+> Or even more simply by the guest owner simply running 'cpuid -r -1' on
+> the guest after boot, and making sure all the expected entries are
+> present. If the HV manipulated the count to be lower, there would be
+> missing entries, if they manipulated it to be higher, then there would
+> either be extra duplicate entries at the end of the table (which the
+> #VC handler would ignore due to it using the first matching entry in
+> the table when doing lookups), or additional non-duplicate garbage
+> entries, which will show up in 'cpuid -r -1' as unexpected entries.
+> 
+> Really 'cpuid -r -1' is the guest owner/userspace view of things, so
+> some of these nuances about the table contents might be noteworthy,
+> but wouldn't actually affect guest behavior, which would be the main
+> thing attestation process should be concerned with.
+> 
+> > 
+> > If so, you can make this part of the attestation process: guest owners
+> > should always check the CPUID entries count to be of a certain value.
+> > 
+> > > This does all highlight the need for some very thorough guidelines
+> > > on how a guest owner should implement their attestation checks for
+> > > cpuid, however. I think a section in the reference implementation
+> > > notes/document that covers this would be a good starting point. I'll
+> > > also check with the PSP team on tightening up some of these CPUID
+> > > page checks to rule out some of these possibilities in the future.
+> > 
+> > Now you're starting to grow the right amount of paranoia - I'm glad I
+> > was able to sensitize you properly!
+> > 
+> > :-)))
+> 
+> Hehe =*D
+> 
+> Thanks!
+> 
+> -Mike
