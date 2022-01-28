@@ -2,91 +2,97 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E371BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Jan 2022 20:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0863FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Jan 2022 22:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351045AbiA1UDU (ORCPT
+        id S237653AbiA1W6n (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 28 Jan 2022 15:03:20 -0500
-Received: from mga05.intel.com ([192.55.52.43]:28403 "EHLO mga05.intel.com"
+        Fri, 28 Jan 2022 17:58:43 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:53298 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234277AbiA1UDS (ORCPT
+        id S229658AbiA1W6n (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Jan 2022 15:03:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643400198; x=1674936198;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3CBqo9wC6SYWLiBJXSytiwe5Oe58CLW3FLA0qDovUXU=;
-  b=jkJceV0cge9mXLXtGwQxnjg/l9Kc2WYVUpTX/ceY/uwa/JWvQa9F0xKV
-   QROttXf37r9CDCGtlzdRKbjRJSou4tCExiJmTshB7Hflfpx5fOcPbCSrE
-   +S9GooJ5SggxLv4aV5qwjDfaEkoxXmfB8+AVI97uuZa/xisA7sUjZKazn
-   lKTSxbh/vMwdM7Ow1OMKUKMg4naDfpun7IEyjqXBn7H2pPkTh8mEEGpIr
-   hj15kUvBZMlZpc8Uh/JuLJjHI/5YCwIMJ29HsCue5lW6dst7GOOn4SBHu
-   tNLkGgBrU9uKCchHlQ3PKGRLidgtFs+2muQ70sh/BYEzpADCYy03aD9jU
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10241"; a="333541639"
-X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="333541639"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 12:02:21 -0800
-X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="675188885"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 12:02:15 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nDXQj-00FYpG-UB;
-        Fri, 28 Jan 2022 22:01:09 +0200
-Date:   Fri, 28 Jan 2022 22:01:09 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v3 7/8] mfd: lpc_ich: Add support for pinctrl in non-ACPI
- system
-Message-ID: <YfRLhWwcf9CfKwSN@smile.fi.intel.com>
-References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
- <20211221181526.53798-8-andriy.shevchenko@linux.intel.com>
+        Fri, 28 Jan 2022 17:58:43 -0500
+Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 782941EC0541;
+        Fri, 28 Jan 2022 23:58:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1643410717;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=YiDtT4AmBwaBafxN19hikHkQnXHuV/Zji75Dg4d6z9o=;
+        b=JeMERGTf8a8RMw2DrlfHpHUsES5/Meq6ySSpY6TOuLfyFrvzNtDn7lveOsMTQ4SU6arz+m
+        vxDfM4FJAPWYkgfWaV36naGgiPVOxezlLHTHlm1xJzgUAY1EVilAiIfwlzUYOoK9QYfL72
+        YM+sGX1caWZrfkO6VxwW0DyxEL2P9J8=
+Date:   Fri, 28 Jan 2022 23:58:32 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Roth <michael.roth@amd.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v8 29/40] x86/compressed/64: add support for SEV-SNP
+ CPUID table in #VC handlers
+Message-ID: <YfR1GNb/yzKu4n5+@zn.tnic>
+References: <20220118142345.65wuub2p3alavhpb@amd.com>
+ <20220118143238.lu22npcktxuvadwk@amd.com>
+ <20220118143730.wenhm2bbityq7wwy@amd.com>
+ <YebsKcpnYzvjaEjs@zn.tnic>
+ <20220118172043.djhy3dwg4fhhfqfs@amd.com>
+ <Yeb7vOaqDtH6Fpsb@zn.tnic>
+ <20220118184930.nnwbgrfr723qabnq@amd.com>
+ <20220119011806.av5rtxfv4et2sfkl@amd.com>
+ <YefzQuqrV8kdLr9z@zn.tnic>
+ <20220119162747.ewgxirwcnrcajazm@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211221181526.53798-8-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20220119162747.ewgxirwcnrcajazm@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 08:15:25PM +0200, Andy Shevchenko wrote:
-> From: Tan Jui Nee <jui.nee.tan@intel.com>
-> 
-> Add support for non-ACPI systems, such as system that uses
-> Advanced Boot Loader (ABL) whereby a platform device has to be created
-> in order to bind with pin control and GPIO.
-> 
-> At the moment, Intel Apollo Lake In-Vehicle Infotainment (IVI) system
-> requires a driver to hide and unhide P2SB to lookup P2SB BAR and pass
-> the PCI BAR address to GPIO.
+On Wed, Jan 19, 2022 at 10:27:47AM -0600, Michael Roth wrote:
+> At that point it's much easier for the guest owner to just check the
+> CPUID values directly against known good values for a particular
+> configuration as part of their attestation process and leave the
+> untrusted cloud vendor out of it completely. So not measuring the
+> CPUID page as part of SNP attestation allows for that flexibility.
 
-Lee, are you fine with this change? I hope I fixed all your comments.
+Well, in that case, I guess you don't need the sanity-checking in the
+guest either - you simply add it to the attestation TODO-list for the
+guest owner to go through:
+
+Upon booting, the guest owner should compare the CPUID leafs the guest
+sees with the ones supplied during boot.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
