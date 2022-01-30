@@ -2,110 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9C8C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 29 Jan 2022 12:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0CCC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Jan 2022 08:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234610AbiA2MC1 (ORCPT
+        id S1346800AbiA3IhD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 29 Jan 2022 07:02:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229989AbiA2MC1 (ORCPT
+        Sun, 30 Jan 2022 03:37:03 -0500
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:58316 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239065AbiA3IhC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 29 Jan 2022 07:02:27 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1DCC061714;
-        Sat, 29 Jan 2022 04:02:26 -0800 (PST)
-Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2BF4B1EC01B7;
-        Sat, 29 Jan 2022 13:02:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1643457741;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=1SqI9kGrSv75+nJPwZYKxkcTL83Vduz6X2Q74CD9Idc=;
-        b=cpPOiblw8z2FwDfVV+8Cx0gJBEZNMWEIsqxMvsZI45g70BBWrD1cdgvk7WcuViGnXEW3Zt
-        w2dBeSBqEsUj1PwAVsBYj3Ix9UfYnGw4OVtjeo9/YFKg83b4EBpejQM5Gk0DJD94L1MujC
-        KQyEa3QGcWGmbyjQjsI3rua5JaZbDeo=
-Date:   Sat, 29 Jan 2022 13:02:18 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v8 36/40] x86/sev: Provide support for SNP guest request
- NAEs
-Message-ID: <YfUsygRVgPCrUvFX@zn.tnic>
-References: <20211210154332.11526-1-brijesh.singh@amd.com>
- <20211210154332.11526-37-brijesh.singh@amd.com>
- <YfLGcp8q5f+OW72p@zn.tnic>
- <87d4999a-14cc-5070-4f03-001dd5f1d2b1@amd.com>
- <YfUWgeonL4tfGf8P@zn.tnic>
- <fb90b0a5-a8cf-0c94-ebbe-a0d5343fe3b9@amd.com>
+        Sun, 30 Jan 2022 03:37:02 -0500
+Received: from pop-os.home ([90.126.236.122])
+        by smtp.orange.fr with ESMTPA
+        id E5hjnTVltuCn2E5hkn1lig; Sun, 30 Jan 2022 09:37:01 +0100
+X-ME-Helo: pop-os.home
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Sun, 30 Jan 2022 09:37:01 +0100
+X-ME-IP: 90.126.236.122
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] surface: surface3-wmi: Simplify resource management
+Date:   Sun, 30 Jan 2022 09:36:54 +0100
+Message-Id: <8b1a6d05036d5d9527241b2345482b369331ce5c.1643531799.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <fb90b0a5-a8cf-0c94-ebbe-a0d5343fe3b9@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Jan 29, 2022 at 05:49:06AM -0600, Brijesh Singh wrote:
-> The hypervisor must validate that the guest has supplied enough pages to
-> hold the certificates that will be returned before performing the SNP
-> guest request. If there are not enough guest pages to hold the
-> certificate table and certificate data, the hypervisor will return the
-> required number of pages needed to hold the certificate table and
-> certificate data in the RBX register and set the SW_EXITINFO2 field to
-> 0x0000000100000000.
+'s3_wmi.input' is a managed resource, so there should be no need to free it
+explicitly.
 
-Then you could call that one:
+Moreover, 's3_wmi' is a global variable. 's3_wmi.input' should be NULL
+when this error handling path is executed, because it has not been
+assigned yet.
 
-#define SNP_GUEST_REQ_ERR_NUM_PAGES       BIT_ULL(32)
+All this is puzzling. So simplify it and remove a few lines of code to have
+it be more straightforward.
 
-or so, to mean what exactly that error is. Because when you read the
-code, it is more "self-descriptive" this way:
+Fixes: 3dda3b3798f9 ("platform/x86: Add custom surface3 platform device for controlling LID")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only
+---
+ drivers/platform/surface/surface3-wmi.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-	...
-	ghcb->save.sw_exit_info_2 == SNP_GUEST_REQ_ERR_NUM_PAGES)
-		input->data_npages = ghcb_get_rbx(ghcb);
-
-> It does not spell it as invalid length. However, for *similar* failure,
-> the SEV-SNP spec spells out it as INVALID_LENGTH, so, I choose macro
-> name as INVALID_LENGTH.
-
-You can simply define a separate one here called ...INVALID_LENGTH.
-
-Thx.
-
+diff --git a/drivers/platform/surface/surface3-wmi.c b/drivers/platform/surface/surface3-wmi.c
+index 09ac9cfc40d8..b9a4b2d81f4b 100644
+--- a/drivers/platform/surface/surface3-wmi.c
++++ b/drivers/platform/surface/surface3-wmi.c
+@@ -190,14 +190,11 @@ static int s3_wmi_create_and_register_input(struct platform_device *pdev)
+ 
+ 	error = input_register_device(input);
+ 	if (error)
+-		goto out_err;
++		return error;
+ 
+ 	s3_wmi.input = input;
+ 
+ 	return 0;
+- out_err:
+-	input_free_device(s3_wmi.input);
+-	return error;
+ }
+ 
+ static int __init s3_wmi_probe(struct platform_device *pdev)
 -- 
-Regards/Gruss,
-    Boris.
+2.32.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
