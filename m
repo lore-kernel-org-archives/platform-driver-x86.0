@@ -2,192 +2,159 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC64C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Feb 2022 18:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056C4C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Feb 2022 19:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242048AbiBASxb (ORCPT
+        id S234622AbiBAT7L (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Feb 2022 13:53:31 -0500
-Received: from mga05.intel.com ([192.55.52.43]:6832 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229881AbiBASxa (ORCPT
+        Tue, 1 Feb 2022 14:59:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234295AbiBAT7K (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Feb 2022 13:53:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643741610; x=1675277610;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=L5s7qXF8ZnJhH7lDBIzCGnJ7UK6joH+p4ghvw+Jnw64=;
-  b=HqBfNQbi0e/9Ca/l1Jw4C4DUiLGfIdizzs+0EQl+Jx5MlYZI5g+6krGF
-   hXkhln3ApPBJMMjWFTnPLJVkCMxEKw5sDTDHXrdpSO14mlgV0NkgjWM1h
-   r2LeOoful8MjvMjCc92pO2cm3oKouW8Op4dFLT9PRuPE2d3OOh8y0Ffrt
-   p0EFhvDTRSriwQiH2Bqmho/0jwVOQK96IdZC/9Y3JJvOLYu5vtzINo3LC
-   vHBzIKCfOwXPES+zPU6O+tQqkNu7w7/35w7XgvIdoPRaYF2CcJKAI7jdI
-   L6uJMXA7I1jrqvj2xZrhHuAsQ9suWXSgvS6kI8H+6qpTdbA2SamNPUusz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="334119745"
-X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="334119745"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 10:53:30 -0800
-X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="534612213"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 10:53:25 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nEyGM-00HR0W-Bi;
-        Tue, 01 Feb 2022 20:52:22 +0200
-Date:   Tue, 1 Feb 2022 20:52:22 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v3 3/8] platform/x86/intel: Add Primary to Sideband
- (P2SB) bridge support
-Message-ID: <YfmBZvQ28y/Mh60J@smile.fi.intel.com>
-References: <YfQ2PGzOyiBfCppd@smile.fi.intel.com>
- <20220201181401.GA292815@bhelgaas>
+        Tue, 1 Feb 2022 14:59:10 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C925C06173B;
+        Tue,  1 Feb 2022 11:59:10 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DCFE21EC0523;
+        Tue,  1 Feb 2022 20:59:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1643745545;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=NQq1a82TXHHJ9pRBeQutIGcbAsj9VD5Dy+Q6arLSFXA=;
+        b=L98AlkeczP73F/Jv8YwWRWtrvYwE65aWamuUFqY5IDXPh0lG4oEq0oxMObNPRQXEdkx2Mc
+        WvV22P5Q4uqcERSjHp1+7ARhC+z1jhebpsQ/Ljh/7Of+wDcf296nXtS9bItOxUaq8lJ3ab
+        YqBIr81ua3MfzJQ6epfu/TAf/exu0es=
+Date:   Tue, 1 Feb 2022 20:59:01 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v9 10/43] x86/sev: Check SEV-SNP features support
+Message-ID: <YfmRBUtoWNb9BkuL@zn.tnic>
+References: <20220128171804.569796-1-brijesh.singh@amd.com>
+ <20220128171804.569796-11-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220201181401.GA292815@bhelgaas>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20220128171804.569796-11-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Feb 01, 2022 at 12:14:01PM -0600, Bjorn Helgaas wrote:
-> On Fri, Jan 28, 2022 at 08:30:20PM +0200, Andy Shevchenko wrote:
-> > On Fri, Jan 07, 2022 at 11:11:08AM -0600, Bjorn Helgaas wrote:
-> > > On Fri, Jan 07, 2022 at 04:56:42PM +0200, Andy Shevchenko wrote:
-> > 
-> > ...
-> > 
-> > > > The unhide/hide back has been tested and we have already users
-> > > > in the kernel (they have other issues though with the PCI rescan
-> > > > lock, but it doesn't mean it wasn't ever tested).
-> > > 
-> > > Does the firmware team that hid this device sign off on the OS
-> > > unhiding and using it?  How do we know that BIOS is not using the
-> > > device?
-> > 
-> > BIOS might use the device via OperationRegion() in ACPI, but that
-> > means that _CRS needs to have that region available. It seems not
-> > the case.
-> > 
-> > And as far I as see in the internal documentation the hide / unhide
-> > approach is not forbidden for OS side.
-> 
-> Unhiding is device-specific behavior, so generic PCI enumeration
-> cannot use it.  We have to know there's a P2SB device at some address
-> before we can safely do a config write to it.  PCI enumeration would
-> learn there's a P2SB device at an address by reading a Vendor/Device
-> ID.
-> 
-> > > My point is that the unhide is architecturally messed up.  The OS
-> > > runs on the platform as described by ACPI.  Devices that cannot be
-> > > enumerated are described in the ACPI namespace.
-> > 
-> > This device may or may not be _partially_ or _fully_ (due to being
-> > multifunctional) described in ACPI. I agree, that ideally the
-> > devices in question it has behind should be represented properly by
-> > firmware.  However, the firmwares in the wild for selected products
-> > / devices don't do that. We need to solve (work around) it in the
-> > software.
-> > 
-> > This is already done for a few devices. This series consolidates
-> > that and enables it for very known GPIO IPs.
-> 
-> Consolidating the code to unhide the device and size the BAR is fine.
-> 
-> I would prefer the PCI core to be involved as little as possible
-> because we're violating some key assumptions and we could trip over
-> those later.  We're assuming the existence of P2SB based on the fact
-> that we found some *other* device, we're assuming firmware isn't using
-> P2SB (may be true now, but impossible to verify), we're assuming the
-> P2SB BAR contains a valid address that's not used elsewhere but also
-> won't be assigned to anything.
-> 
-> > PCI core just provides a code that is very similar to what we need
-> > here. Are you specifically suggesting that we have to copy'n'paste
-> > that rather long function and maintain in parallel with PCI?
-> 
-> I think we're talking about __pci_read_base(), which is currently an
-> internal PCI interface.  This series adds pci_bus_info/warn/etc(),
+On Fri, Jan 28, 2022 at 11:17:31AM -0600, Brijesh Singh wrote:
+> diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
+> index 9b93567d663a..63e9044ab1d6 100644
+> --- a/arch/x86/boot/compressed/idt_64.c
+> +++ b/arch/x86/boot/compressed/idt_64.c
+> @@ -39,7 +39,15 @@ void load_stage1_idt(void)
+>  	load_boot_idt(&boot_idt_desc);
+>  }
+>  
+> -/* Setup IDT after kernel jumping to  .Lrelocated */
+> +/*
+> + * Setup IDT after kernel jumping to  .Lrelocated
+> + *
+> + * initialize_identity_maps() needs a PF handler setup. The PF handler setup
+> + * needs to happen in load_stage2_idt() where the IDT is loaded and there the
+> + * VC IDT entry gets setup too in order to handle VCs, one needs a GHCB which
+> + * gets setup with an already setup table which is done in
+> + * initialize_identity_maps() and this is where the circle is complete.
+> + */
 
-The patch that adds those macros is good on its own, if you think so...
-I tried to submit it separately, but it was no response, so I don't know.
+I've beefed it up more, please use this one instead:
 
-> reworks __pci_read_base() to operate on a struct pci_bus *, exports
-> it, and uses it via #include <../../../pci/pci.h>.
+/*
+ * Setup IDT after kernel jumping to  .Lrelocated.
+ *
+ * initialize_identity_maps() needs a #PF handler to be setup
+ * in order to be able to fault-in identity mapping ranges; see
+ * do_boot_page_fault().
+ *
+ * This #PF handler setup needs to happen in load_stage2_idt() where the
+ * IDT is loaded and there the #VC IDT entry gets setup too.
+ *
+ * In order to be able to handle #VCs, one needs a GHCB which
+ * gets setup with an already set up pagetable, which is done in
+ * initialize_identity_maps(). And there's the catch 22: the boot #VC
+ * handler do_boot_stage2_vc() needs to call early_setup_ghcb() itself
+ * (and, especially set_page_decrypted()) because the SEV-ES setup code
+ * cannot initialize a GHCB as there's no #PF handler yet...
+ */
 
-Yes, which allows at least to have the same code, doing same things to be
-in one copy in one place.
+> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+> index 19ad09712902..24df739c9c05 100644
+> --- a/arch/x86/kernel/sev.c
+> +++ b/arch/x86/kernel/sev.c
+> @@ -43,6 +43,9 @@ static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
+>   */
+>  static struct ghcb __initdata *boot_ghcb;
+>  
+> +/* Bitmap of SEV features supported by the hypervisor */
+> +static u64 sev_hv_features __ro_after_init;
+> +
+>  /* #VC handler runtime per-CPU data */
+>  struct sev_es_runtime_data {
+>  	struct ghcb ghcb_page;
+> @@ -766,6 +769,18 @@ void __init sev_es_init_vc_handling(void)
+>  	if (!sev_es_check_cpu_features())
+>  		panic("SEV-ES CPU Features missing");
+>  
+> +	/*
+> +	 * SEV-SNP is supported in v2 of the GHCB spec which mandates support for HV
+> +	 * features. If SEV-SNP is enabled, then check if the hypervisor supports
+> +	 * the SEV-SNP features.
 
-> __pci_read_base() is fairly long, but you apparently don't need all
-> the functionality there because the core of the patch is this:
-> 
->   -   pci_bus_read_config_dword(bus, spi, PCI_BASE_ADDRESS_0,
->   -                             &spi_base);
->   -   if (spi_base != ~0) {
->   -           res->start = spi_base & 0xfffffff0;
->   -           res->end = res->start + SPIBASE_APL_SZ - 1;
->   -   }
->   +   __pci_bus_read_base(bus, devfn, pci_bar_unknown, mem, PCI_BASE_ADDRESS_0, true)
+You guys have been completely brainwashed by marketing. I say:
 
-You probably took the least pleasant (to me) example, because it's buggy in a
-few ways:
+"s/SEV-SNP/SNP/g
 
-- it misses 64-bit handling code
-- it misses PCI rescan lock (in case PCI code decides to change addresses,
-  previously ones will be invalid, while other drivers may still use that
-  MMIO space
-- it doesn't check if (for a new version Hans suggested me to add this check as
-  it's done in one out of 3 cases)
+And please do that everywhere in sev-specific files."
 
-It also useful to have some messages to be printed just in cases of errors
-or success in a standard (PCI core provided) way.
+and you go and slap that "SEV-" thing everywhere instead. Why? That file
+is already called sev.c so it must be SEV-something. Lemme simplify that
+comment for ya:
 
-> I don't think it's worth all the __pci_read_base() changes to do that.
-> What if you made a library function that looks like this?
-> 
->   int p2sb_bar(...)
->   {
->     pci_bus_write_config_byte(bus, devfn_p2sb, P2SBC_HIDE_BYTE, 0);
->     pci_bus_read_config_dword(bus, devfn, PCI_BASE_ADDRESS_0, &orig);
->     if (orig) {
->       pci_bus_write_config_dword(bus, devfn, PCI_BASE_ADDRESS_0, ~0);
->       pci_bus_read_config_dword(bus, devfn, PCI_BASE_ADDRESS_0, &val);
->       pci_bus_write_config_dword(bus, devfn, PCI_BASE_ADDRESS_0, orig);
->       res->start = orig;
->       res->end = res->start + (~val + 1);
->     }
->     pci_bus_write_config_byte(bus, devfn, P2SBC_HIDE_BYTE, P2SBC_HIDE_BIT);
->   }
+	/*
+	 * SNP is supported in v2 of the GHCB spec which mandates support for HV
+	 * features.
+	 */
 
-It seems simple, but with the above mentioned adjustments, it will become
-closer to the size of the original __pci_read_base().
+That's it, no more needed - the rest should be visible from the code.
+
+Thx.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
