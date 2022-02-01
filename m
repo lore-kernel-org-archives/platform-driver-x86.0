@@ -2,163 +2,159 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F74C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Feb 2022 15:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16294C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Feb 2022 15:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239701AbiBAPDT (ORCPT
+        id S237717AbiBAPg7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Feb 2022 10:03:19 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:23819 "EHLO
+        Tue, 1 Feb 2022 10:36:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36839 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239695AbiBAPDS (ORCPT
+        by vger.kernel.org with ESMTP id S233563AbiBAPg7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Feb 2022 10:03:18 -0500
+        Tue, 1 Feb 2022 10:36:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643727798;
+        s=mimecast20190719; t=1643729818;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rtI+17/g93ZHkydx3wVerkIz2lCilB6XCltFF3RHwWE=;
-        b=WbW9al9M8LrDDkvxSlLxQbDLsAm1AtGuZRe8GEUjkAIJbwRE91YAwEmtt241Ivk4VTWGCT
-        9O/oNIxHIGI6ZfujcEVmff1zaFijPaZ+P4HVPafLfgfk97nd4oYdPcrAIkkTQSGt6rk7tS
-        334LCPNuyOr+3xVENW5VkuDz1FGR9Po=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=4+mwvevp+lBx2C3TUC37a6/R8OnJgh4vzRavUG5FVEY=;
+        b=YwJ9T1D11BYc+z8/ul9DEIt5uoGv0Q9HYt07mRDlfps1iA129/ogbR6hM2iVCoq7yphaI/
+        pl/s8xaEg4mJ8QQAYg37FDUtdLjuL7As4esN63PNuP65MNBGT03cINmgbEvAJeDzvuanrm
+        RgTSZutiRq1qFbujEa5nGLhFkmGeCjQ=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-613-8hCVDQ7_NLuauVV7_f5XCw-1; Tue, 01 Feb 2022 10:03:17 -0500
-X-MC-Unique: 8hCVDQ7_NLuauVV7_f5XCw-1
-Received: by mail-ed1-f70.google.com with SMTP id w23-20020a50d797000000b00406d33c039dso8817930edi.11
-        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Feb 2022 07:03:16 -0800 (PST)
+ us-mta-362-cZoRoSUyOPqbcu-_L5MZnw-1; Tue, 01 Feb 2022 10:36:57 -0500
+X-MC-Unique: cZoRoSUyOPqbcu-_L5MZnw-1
+Received: by mail-ej1-f71.google.com with SMTP id q21-20020a17090622d500b006bb15a59a68so4788479eja.18
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Feb 2022 07:36:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=rtI+17/g93ZHkydx3wVerkIz2lCilB6XCltFF3RHwWE=;
-        b=48gV3VLaKIaBLscN51iaiiA/mhVSbkhHAvZR6842o2k/kvWBdL7wAINH0ZeLrmOUIj
-         e7Q24Pf14/FLDGwmQbk+IWCMiL3F4nTEia7PoLiCc6IL6v92W/Io5p0EzCaDCg8PAQVq
-         sko3RQckeTFpHUV+F3hA+ctNWGefA+DTMmW3NPMjwonyc3BgZorhB3zgDR2Ta5KftMcR
-         cDCrzH0sGnI1BWBN9DguEBLlmt4/KXzBY+sy3J+7SbeIMhKtDQ5rJt58EJiaMKsMWAF7
-         bdzCg7nbR+aHLJl8x30qlgalI72WizlTIAkGxbFPVlvlNLZBnbecc/23QZoV5un/4LWA
-         2Fsg==
-X-Gm-Message-State: AOAM532LsZ7kB7Ujm5d8G0WqcFGLIvNcf0EvHg/MlQrXIxpKQCTCu9r7
-        2dKiHMope10eWANWLK/nekCT99ErY70pGtib9bzzpElwi1YU7j/oRV7eS4YLGG6rOZ//sMOlfVE
-        DwbUhRK3eAoO1KeYNxMo8yoo2B3OwjuAU+A==
-X-Received: by 2002:a17:906:ae8a:: with SMTP id md10mr21791566ejb.726.1643727795753;
-        Tue, 01 Feb 2022 07:03:15 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyGrVV48N+FUq374nh8LyAIR4m925bx4g5hSDNAlEqbx1WtR+fT4wQbdk5cvNtKgnuH0jDmyw==
-X-Received: by 2002:a17:906:ae8a:: with SMTP id md10mr21791538ejb.726.1643727795475;
-        Tue, 01 Feb 2022 07:03:15 -0800 (PST)
+        bh=4+mwvevp+lBx2C3TUC37a6/R8OnJgh4vzRavUG5FVEY=;
+        b=5oz2xg1dCVl23IDxwiKc31kBqivY74s4V+V9XBOjpoHJwiMA9blUDt4mmcgzm32XI7
+         LJE41QJy81YA84exqAyZubbq9bVpv+upuHiZeGybaAJPsuwp80xVoH7EEyeZL04qRNZJ
+         befsBbZcNFfIAVkhOBAooFk6yv1JOULME2Izq9YposT4jHKezBZxmS11XeffNWB0cAJI
+         TqoPRhMMIRlMWiKkya/Fd29ARMSZ1iZUJKdm9q70sSXZ666EDO14ldIH6cz7weTTSjeo
+         GtDsPTdkQON4uBRN4dJeyG8fBcj5cuU3cvamJOCHnoDWUvpOkNtRuSADXYARXkHBtA4e
+         i4oA==
+X-Gm-Message-State: AOAM532+fvk+AXAfE5VBf0L199ZR61eglnWoDauzRt6pTXwE3e9JcxXT
+        sWwqlVpNr0T//fj/BPekeCkhYmY2WqWGa2qRxNBBrl6p3IC1uVZCDCOnEPAyQQnMO19FqNidv7C
+        ujsmebn3J8K5aIJZXJDMZFgaIQxhLAolkWw==
+X-Received: by 2002:a17:906:5352:: with SMTP id j18mr21943163ejo.191.1643729816246;
+        Tue, 01 Feb 2022 07:36:56 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy9lknG99QhLjTpQgzODZzHQXW0Z9DGlwf6vyvFcFEhUjY7OhikCVLQ7wJ5f/aH7xQb7Sn82g==
+X-Received: by 2002:a17:906:5352:: with SMTP id j18mr21943150ejo.191.1643729815968;
+        Tue, 01 Feb 2022 07:36:55 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id gz12sm14715067ejc.124.2022.02.01.07.03.14
+        by smtp.gmail.com with ESMTPSA id j15sm14893577ejb.9.2022.02.01.07.36.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Feb 2022 07:03:15 -0800 (PST)
-Message-ID: <c66b7faa-f289-ff93-0d73-d2955f9c5bf0@redhat.com>
-Date:   Tue, 1 Feb 2022 16:03:14 +0100
+        Tue, 01 Feb 2022 07:36:55 -0800 (PST)
+Message-ID: <10bef89e-c1bc-5268-f244-c5f6b763f0f7@redhat.com>
+Date:   Tue, 1 Feb 2022 16:36:54 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH v6 9/9] ACPI / scan: Create platform device for CS35L41
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix incorrect use of
+ platform profile on AMD platforms
 Content-Language: en-US
-To:     Stefan Binding <sbinding@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
-        Lucas Tanure <tanureal@opensource.cirrus.com>
-References: <20220121172431.6876-1-sbinding@opensource.cirrus.com>
- <20220121172431.6876-10-sbinding@opensource.cirrus.com>
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org
+References: <markpearson@lenovo.com>
+ <20220127190358.4078-1-markpearson@lenovo.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220121172431.6876-10-sbinding@opensource.cirrus.com>
+In-Reply-To: <20220127190358.4078-1-markpearson@lenovo.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Mark,
 
-On 1/21/22 18:24, Stefan Binding wrote:
-> From: Lucas Tanure <tanureal@opensource.cirrus.com>
+On 1/27/22 20:03, Mark Pearson wrote:
+> Lenovo AMD based platforms have been offering platform_profiles but they
+> are not working correctly. This is because the mode we are using on the
+> Intel platforms (MMC) is not available on the AMD platforms.
 > 
-> The ACPI device with CSC3551 or CLSA0100 are sound cards
-> with multiple instances of CS35L41 connected by I2C or SPI
-> to the main CPU.
+> This commit adds checking of the functional capabilities returned by the
+> BIOS to confirm if MMC is supported or not. Profiles will not be
+> available if the platform is not MMC capable.
 > 
-> We add an ID to the ignore_serial_bus_ids list to enumerate
-> all I2C or SPI devices correctly.
+> I'm investigating and working on an alternative for AMD platforms but
+> that is still work-in-progress.
 > 
-> The same IDs are also added into serial-multi-instantiate
-> so that the driver can correctly enumerate the ACPI.
+> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+> ---
+> Changes in v2:
+>  - Rebased on review-hans branch to be in sync with latest
+>  - Return -ENODEV if funtion not available
 > 
-> Signed-off-by: Lucas Tanure <tanureal@opensource.cirrus.com>
-> Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+>  drivers/platform/x86/thinkpad_acpi.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 33f611af6e51..5e4de74586cd 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10119,6 +10119,9 @@ static struct ibm_struct proxsensor_driver_data = {
+>  #define DYTC_CMD_MMC_GET      8 /* To get current MMC function and mode */
+>  #define DYTC_CMD_RESET    0x1ff /* To reset back to default */
+>  
+> +#define DYTC_CMD_FUNC_CAP     3 /* To get DYTC capabilities */
+> +#define DYTC_FC_MMC           27 /* MMC Mode supported */
+> +
+>  #define DYTC_GET_FUNCTION_BIT 8  /* Bits  8-11 - function setting */
+>  #define DYTC_GET_MODE_BIT     12 /* Bits 12-15 - mode setting */
+>  
+> @@ -10331,6 +10334,15 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+>  	if (dytc_version < 5)
+>  		return -ENODEV;
+>  
+> +	/* Check what capabilities are supported. Currently MMC is needed */
+> +	err = dytc_command(DYTC_CMD_FUNC_CAP, &output);
+> +	if (err)
+> +		return err;
+> +	if (!test_bit(DYTC_FC_MMC, (void *)&output)) {
 
-Thanks, patch looks good to me:
+Erm test_bit operates on longs, so it may read an entire long from
+&output which is 64 bits on x86_64, thus exceeding the space allocated
+on the stack by 32 bits.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+To avoid this I've replaced the if with:
+
+	if (!(output & BIT(DYTC_FC_MMC))) {
+
+And verified on a x1c8 that the performance-profiles still work there
+after this change.
+
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+I will include this patch in the upcoming pdx86 fixes for 5.17
+pull-req which I will send out soon.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
-> ---
->  drivers/acpi/scan.c                             |  3 +++
->  drivers/platform/x86/serial-multi-instantiate.c | 14 ++++++++++++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 48db5e80c2dc..ebd10af3ff7f 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -1744,8 +1744,11 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
->  	 */
->  		{"BSG1160", },
->  		{"BSG2150", },
-> +		{"CSC3551", },
->  		{"INT33FE", },
->  		{"INT3515", },
-> +	/* Non-conforming _HID for Cirrus Logic already released */
-> +		{"CLSA0100", },
->  	/*
->  	 * HIDs of device with an UartSerialBusV2 resource for which userspace
->  	 * expects a regular tty cdev to be created (instead of the in kernel
-> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
-> index 3f05385ca2cf..d09f11eac4f8 100644
-> --- a/drivers/platform/x86/serial-multi-instantiate.c
-> +++ b/drivers/platform/x86/serial-multi-instantiate.c
-> @@ -308,6 +308,17 @@ static const struct smi_node int3515_data = {
->  	.bus_type = SMI_I2C,
->  };
->  
-> +static const struct smi_node cs35l41_hda = {
-> +	.instances = {
-> +		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-> +		{}
-> +	},
-> +	.bus_type = SMI_AUTO_DETECT,
-> +};
+> +		dbg_printk(TPACPI_DBG_INIT, " DYTC MMC mode not supported\n");
+> +		return -ENODEV;
+> +	}
 > +
->  /*
->   * Note new device-ids must also be added to serial_multi_instantiate_ids in
->   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-> @@ -316,6 +327,9 @@ static const struct acpi_device_id smi_acpi_ids[] = {
->  	{ "BSG1160", (unsigned long)&bsg1160_data },
->  	{ "BSG2150", (unsigned long)&bsg2150_data },
->  	{ "INT3515", (unsigned long)&int3515_data },
-> +	{ "CSC3551", (unsigned long)&cs35l41_hda },
-> +	/* Non-conforming _HID for Cirrus Logic already released */
-> +	{ "CLSA0100", (unsigned long)&cs35l41_hda },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(acpi, smi_acpi_ids);
+>  	dbg_printk(TPACPI_DBG_INIT,
+>  			"DYTC version %d: thermal mode available\n", dytc_version);
+>  	/*
 > 
 
