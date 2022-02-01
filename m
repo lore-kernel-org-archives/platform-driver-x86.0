@@ -2,108 +2,87 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE67C43217
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Jan 2022 17:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2C3C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Feb 2022 03:04:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380848AbiAaRPa (ORCPT
+        id S229672AbiBADE1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Jan 2022 12:15:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380804AbiAaRPK (ORCPT
+        Mon, 31 Jan 2022 22:04:27 -0500
+Received: from mga07.intel.com ([134.134.136.100]:8831 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229519AbiBADE1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Jan 2022 12:15:10 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4564C061401
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Jan 2022 09:15:00 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id f17so26805765wrx.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Jan 2022 09:15:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Bv5ugI/0207ARKbS3VyEyXTJNR8X5OcucA/nkFS7+t8=;
-        b=sE+Q6ElKhJO1zbpOihO6oifUcmmkdKXOHsPkBorcRSz6SttyxmLuJG9m3LF3Qliqx2
-         Tm093HE4pe+uTGfqXRs3K1nLnUUBS0sV2WZiBAuh12ujJrjLD6W8IzQcjynimIpMqYXr
-         Fmg1oXG77CmGUshzAwV5y/WLPgLrmy27Fhd3DG/RcMPYMpTzlXL/2qTCUsrjWQ1p6LlH
-         yVKVBTz3nhZ+1yd1BqQqgH6gSLrxttR0TaVY+f03KFaLW3u5VvT1H3GRHb4cUknr2Las
-         O30iJCXX57mcjFR7pY3GOT58ZL6dDWGiqqnuHUB1Tx5I03/JFEq91SoTpV3t3XBg72qH
-         stjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Bv5ugI/0207ARKbS3VyEyXTJNR8X5OcucA/nkFS7+t8=;
-        b=iyBr8nMgcqK7TTBuWo/J/rVq1ApPhPao+fOdV0PFA79FrgMaHc3t2XdrU2glUYaxKw
-         p8dpaA2QiSTls3P6vjl8v8Eft44VObv20OuS7SEFVUXKFzuF6vkV3SPlIeefCimoReac
-         G9PtSioQNdluOlNl488qTLOyr1Jxh1sRjJ67e8DnoCDeRo6aFND9Wq9jjSd1KOsjAsbc
-         yMWUgOPrg05tMUU3zTIPJ75qJ/mFbsYJLp0brDKUh1P1h+oRg8zZTWi0/k5kwEjtZciB
-         9ORRbhoCP3ZbRu3ULJ+Gw/pjYuxK+SaIa9lcj5qPpnozuZqxMqgsWKaj6X5jwEsnZAD9
-         HAtg==
-X-Gm-Message-State: AOAM530XgrYr91gkoMdHDfRt5av3P9ZjOve+bLlTnzt4Om4xl+B3NBsE
-        4VEUDXKYoQ/s6Ga2F42HdjGwqg==
-X-Google-Smtp-Source: ABdhPJwXJwqrDTKIzGbVgsjhxDeYvQ/YRm2P4684skSLDyMrYxp/9mbin0NVRaHjOnZiLDUqs2+FEg==
-X-Received: by 2002:a5d:64ad:: with SMTP id m13mr18782942wrp.671.1643649299419;
-        Mon, 31 Jan 2022 09:14:59 -0800 (PST)
-Received: from google.com (cpc106310-bagu17-2-0-cust853.1-3.cable.virginm.net. [86.15.223.86])
-        by smtp.gmail.com with ESMTPSA id y6sm9208984wma.48.2022.01.31.09.14.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jan 2022 09:14:59 -0800 (PST)
-Date:   Mon, 31 Jan 2022 17:14:57 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] mfd: intel_soc_pmic_crc: Set main IRQ domain bus
- token to DOMAIN_BUS_NEXUS
-Message-ID: <YfgZEeje9RPO6a28@google.com>
-References: <20211225115509.94891-1-hdegoede@redhat.com>
- <20211225115509.94891-4-hdegoede@redhat.com>
+        Mon, 31 Jan 2022 22:04:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643684667; x=1675220667;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jB4yUS0VqdJA5c9c23rwVYy7/CxI3rWJGy9nTFkSgao=;
+  b=ICt9i2s0PYaPfOG9QPHGB4IuokGugeMtwWDjqimL+bDBVXdR+1dGULOG
+   PzS9RoKckgdNGwW6Megmpm/U/rr8i5ZWwdohdP220wOSpN54GH+UsdCh0
+   8WxLu03KR2DYrmYmHY5AX0qUk+JCyqbeP3b53yHUBVhLKsOWP9w3z3v5s
+   w+g8n1zaaBE6DXIq0kNivFL5Su46ua/NLs0wQioJqvnWPDZWxVrOr+rs1
+   jf2Zyiht21lZRcSr9Qhj5R5jNGCZ5faOIMAFsIorPwmssovYiG2TLvM8T
+   tHyaZkoHV/YLDKnqcfGGBw0aBIWed6DSrPPqnf992Rn0cCi8y/7iVXs79
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="310918787"
+X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
+   d="scan'208";a="310918787"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 19:04:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
+   d="scan'208";a="479450421"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 31 Jan 2022 19:04:27 -0800
+Received: from debox1-desk4.intel.com (unknown [10.212.192.236])
+        by linux.intel.com (Postfix) with ESMTP id BB723580AD7;
+        Mon, 31 Jan 2022 19:04:26 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     hdegoede@redhat.com, david.e.box@linux.intel.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH 0/3] Intel Software Defined Silicon
+Date:   Mon, 31 Jan 2022 19:04:21 -0800
+Message-Id: <20220201030424.1068816-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211225115509.94891-4-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 25 Dec 2021, Hans de Goede wrote:
+This series adds support for Intel Software Defined Silicon. These
+patches are the same as patches 4-6 from this series [1]. Patches 1-3 
+of that series were pulled in during the 5.17 merge window.
 
-> For the CRC PMIC we end up with multiple IRQ domains with the same fwnode.
-> One for the irqchip which demultiplexes the actual PMIC interrupt into
-> interrupts for the various cells (known as the level 1 interrupts);
-> 
-> And 2 more for the irqchips which are part of the crystal_cove_gpio
-> and crystal_cove_charger cells.
-> 
-> This leads to the following error being printed when
-> CONFIG_GENERIC_IRQ_DEBUGFS is enabled:
->  debugfs: File '\_SB.I2C7.PMIC' in directory 'domains' already present!
-> 
-> Set the bus token of the main IRQ domain to DOMAIN_BUS_NEXUS to avoid
-> this error, this also allows irq_find_matching_fwspec() to find the
-> right domain if necessary.
-> 
-> Note all 3 domain registering drivers need to set the IRQ domain bus token.
-> This is necessary because the IRQ domain code defaults to creating
-> the debugfs dir with just the fwnode name and then renames it when
-> the bus token is set. So each one starts with the same default name and
-> all 3 must be given a different name to avoid problems when one of the
-> other drivers loads and starts with the same default name.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/mfd/intel_soc_pmic_core.c | 4 ++++
->  1 file changed, 4 insertions(+)
+David E. Box (3):
+  platform/x86: Add Intel Software Defined Silicon driver
+  tools arch x86: Add Intel SDSi provisioning tool
+  selftests: sdsi: test sysfs setup
 
-Applied, thanks.
+[1] https://lore.kernel.org/lkml/20211216023146.2361174-1-david.e.box@linux.intel.com/T/
+
+ .../ABI/testing/sysfs-driver-intel_sdsi       |  77 +++
+ MAINTAINERS                                   |   7 +
+ drivers/platform/x86/intel/Kconfig            |  12 +
+ drivers/platform/x86/intel/Makefile           |   2 +
+ drivers/platform/x86/intel/sdsi.c             | 571 ++++++++++++++++++
+ drivers/platform/x86/intel/vsec.c             |  12 +-
+ tools/arch/x86/intel_sdsi/Makefile            |   9 +
+ tools/arch/x86/intel_sdsi/sdsi.c              | 540 +++++++++++++++++
+ tools/testing/selftests/drivers/sdsi/sdsi.sh  |  18 +
+ .../selftests/drivers/sdsi/sdsi_test.py       | 226 +++++++
+ 10 files changed, 1473 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
+ create mode 100644 drivers/platform/x86/intel/sdsi.c
+ create mode 100644 tools/arch/x86/intel_sdsi/Makefile
+ create mode 100644 tools/arch/x86/intel_sdsi/sdsi.c
+ create mode 100755 tools/testing/selftests/drivers/sdsi/sdsi.sh
+ create mode 100644 tools/testing/selftests/drivers/sdsi/sdsi_test.py
 
 -- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.25.1
+
