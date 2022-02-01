@@ -2,159 +2,179 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16294C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Feb 2022 15:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9D2C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Feb 2022 15:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237717AbiBAPg7 (ORCPT
+        id S240505AbiBAPqB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Feb 2022 10:36:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36839 "EHLO
+        Tue, 1 Feb 2022 10:46:01 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39240 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233563AbiBAPg7 (ORCPT
+        by vger.kernel.org with ESMTP id S240504AbiBAPqB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Feb 2022 10:36:59 -0500
+        Tue, 1 Feb 2022 10:46:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643729818;
+        s=mimecast20190719; t=1643730361;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4+mwvevp+lBx2C3TUC37a6/R8OnJgh4vzRavUG5FVEY=;
-        b=YwJ9T1D11BYc+z8/ul9DEIt5uoGv0Q9HYt07mRDlfps1iA129/ogbR6hM2iVCoq7yphaI/
-        pl/s8xaEg4mJ8QQAYg37FDUtdLjuL7As4esN63PNuP65MNBGT03cINmgbEvAJeDzvuanrm
-        RgTSZutiRq1qFbujEa5nGLhFkmGeCjQ=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=V16Rg9PyE4F77OrMl7neP6fNLg9hugyZlwvmW/En9MU=;
+        b=gWxGBs+XGU103HS7WZ/ge/vKA0Bs/JaD3uetp9kuK84H+vdyqEdW0ITIefqhimuoK3bnCH
+        1xMNk1F+vVwKcYgvkDa62q1L5Hwld/UR/Uv0wz5ChgasxDT86Dm/1llzFbNbLfLylV8+28
+        fk2v+fMQnZsQxWGXiSi0iZ2Cl+1DtMo=
 Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
  [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-362-cZoRoSUyOPqbcu-_L5MZnw-1; Tue, 01 Feb 2022 10:36:57 -0500
-X-MC-Unique: cZoRoSUyOPqbcu-_L5MZnw-1
-Received: by mail-ej1-f71.google.com with SMTP id q21-20020a17090622d500b006bb15a59a68so4788479eja.18
-        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Feb 2022 07:36:57 -0800 (PST)
+ us-mta-208-Svt3TI4dN7iTl41D5feXaw-1; Tue, 01 Feb 2022 10:46:00 -0500
+X-MC-Unique: Svt3TI4dN7iTl41D5feXaw-1
+Received: by mail-ej1-f71.google.com with SMTP id m4-20020a170906160400b006be3f85906eso836250ejd.23
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Feb 2022 07:45:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=4+mwvevp+lBx2C3TUC37a6/R8OnJgh4vzRavUG5FVEY=;
-        b=5oz2xg1dCVl23IDxwiKc31kBqivY74s4V+V9XBOjpoHJwiMA9blUDt4mmcgzm32XI7
-         LJE41QJy81YA84exqAyZubbq9bVpv+upuHiZeGybaAJPsuwp80xVoH7EEyeZL04qRNZJ
-         befsBbZcNFfIAVkhOBAooFk6yv1JOULME2Izq9YposT4jHKezBZxmS11XeffNWB0cAJI
-         TqoPRhMMIRlMWiKkya/Fd29ARMSZ1iZUJKdm9q70sSXZ666EDO14ldIH6cz7weTTSjeo
-         GtDsPTdkQON4uBRN4dJeyG8fBcj5cuU3cvamJOCHnoDWUvpOkNtRuSADXYARXkHBtA4e
-         i4oA==
-X-Gm-Message-State: AOAM532+fvk+AXAfE5VBf0L199ZR61eglnWoDauzRt6pTXwE3e9JcxXT
-        sWwqlVpNr0T//fj/BPekeCkhYmY2WqWGa2qRxNBBrl6p3IC1uVZCDCOnEPAyQQnMO19FqNidv7C
-        ujsmebn3J8K5aIJZXJDMZFgaIQxhLAolkWw==
-X-Received: by 2002:a17:906:5352:: with SMTP id j18mr21943163ejo.191.1643729816246;
-        Tue, 01 Feb 2022 07:36:56 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJy9lknG99QhLjTpQgzODZzHQXW0Z9DGlwf6vyvFcFEhUjY7OhikCVLQ7wJ5f/aH7xQb7Sn82g==
-X-Received: by 2002:a17:906:5352:: with SMTP id j18mr21943150ejo.191.1643729815968;
-        Tue, 01 Feb 2022 07:36:55 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
+         :subject:to:cc:content-language:content-transfer-encoding;
+        bh=V16Rg9PyE4F77OrMl7neP6fNLg9hugyZlwvmW/En9MU=;
+        b=5ufPPs1+a43exgUeHQ8n7wiI4wPdScFrkwLcgWce/wrAwaWVPBkDgODlKwxjjOzK4p
+         0YP5gu1YSXd4HzKHQcsghjsY7nR9SA2/TGNtU9APb+tVkdgRyOwudg5vOY8AzOiySDuQ
+         uWNGBQnLxlCK4q3CCKI865c6dBNw9PMegTSflLmRkCYN9g0GAGWolSa51alIk/MRGqBv
+         FL56rnqD+jDUXelUOvLu+pdZ9dcmpPPciXZaFqujRb5DTpv8q9pqqcUCkN5y3bdLsTFJ
+         Q+BX3YIrZLgdKJQS4N++9Jy5Lk8xhyVd+fNKrnNqMPH11UxlHnt8WFkLAQUf96iGtbbU
+         DXrQ==
+X-Gm-Message-State: AOAM53296Xw6LsSyIlo6y/dZxhwxR/upnyaIzzMMZMoKcIZFZCEySzpd
+        cOIYMWfpjKRAQaYzZ76PUY6OpuSSkZJ1Q2hPX1Efms0LBxAJt46Z9Tr7hy7scKNxSPDst3bn9sH
+        8DX4jSayqGedEBf979btrqOtFspOF0cuMmw==
+X-Received: by 2002:a17:907:3e8a:: with SMTP id hs10mr21612101ejc.112.1643730358353;
+        Tue, 01 Feb 2022 07:45:58 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwdrUpN1gbDzc4IVQYH3CqIaSxdXvuszg5XkrEKt+aKypjCMSeE6cI9mdNsh9ljvHFvoHp8Aw==
+X-Received: by 2002:a17:907:3e8a:: with SMTP id hs10mr21612091ejc.112.1643730358083;
+        Tue, 01 Feb 2022 07:45:58 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id j15sm14893577ejb.9.2022.02.01.07.36.55
+        by smtp.gmail.com with ESMTPSA id a25sm4329945ejs.149.2022.02.01.07.45.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Feb 2022 07:36:55 -0800 (PST)
-Message-ID: <10bef89e-c1bc-5268-f244-c5f6b763f0f7@redhat.com>
-Date:   Tue, 1 Feb 2022 16:36:54 +0100
+        Tue, 01 Feb 2022 07:45:57 -0800 (PST)
+Message-ID: <37770642-bdab-bf37-c5c5-5c3edf9ad4a4@redhat.com>
+Date:   Tue, 1 Feb 2022 16:45:56 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix incorrect use of
- platform profile on AMD platforms
-Content-Language: en-US
-To:     Mark Pearson <markpearson@lenovo.com>
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org
-References: <markpearson@lenovo.com>
- <20220127190358.4078-1-markpearson@lenovo.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220127190358.4078-1-markpearson@lenovo.com>
+Subject: [GIT PULL] platform-drivers-x86 for 5.17-2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+Hi Linus,
 
-On 1/27/22 20:03, Mark Pearson wrote:
-> Lenovo AMD based platforms have been offering platform_profiles but they
-> are not working correctly. This is because the mode we are using on the
-> Intel platforms (MMC) is not available on the AMD platforms.
-> 
-> This commit adds checking of the functional capabilities returned by the
-> BIOS to confirm if MMC is supported or not. Profiles will not be
-> available if the platform is not MMC capable.
-> 
-> I'm investigating and working on an alternative for AMD platforms but
-> that is still work-in-progress.
-> 
-> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-> ---
-> Changes in v2:
->  - Rebased on review-hans branch to be in sync with latest
->  - Return -ENODEV if funtion not available
-> 
->  drivers/platform/x86/thinkpad_acpi.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 33f611af6e51..5e4de74586cd 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -10119,6 +10119,9 @@ static struct ibm_struct proxsensor_driver_data = {
->  #define DYTC_CMD_MMC_GET      8 /* To get current MMC function and mode */
->  #define DYTC_CMD_RESET    0x1ff /* To reset back to default */
->  
-> +#define DYTC_CMD_FUNC_CAP     3 /* To get DYTC capabilities */
-> +#define DYTC_FC_MMC           27 /* MMC Mode supported */
-> +
->  #define DYTC_GET_FUNCTION_BIT 8  /* Bits  8-11 - function setting */
->  #define DYTC_GET_MODE_BIT     12 /* Bits 12-15 - mode setting */
->  
-> @@ -10331,6 +10334,15 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
->  	if (dytc_version < 5)
->  		return -ENODEV;
->  
-> +	/* Check what capabilities are supported. Currently MMC is needed */
-> +	err = dytc_command(DYTC_CMD_FUNC_CAP, &output);
-> +	if (err)
-> +		return err;
-> +	if (!test_bit(DYTC_FC_MMC, (void *)&output)) {
+Here is the first round of bug-fixes for platform-drivers-x86
+for 5.17.
 
-Erm test_bit operates on longs, so it may read an entire long from
-&output which is 64 bits on x86_64, thus exceeding the space allocated
-on the stack by 32 bits.
-
-To avoid this I've replaced the if with:
-
-	if (!(output & BIT(DYTC_FC_MMC))) {
-
-And verified on a x1c8 that the performance-profiles still work there
-after this change.
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-I will include this patch in the upcoming pdx86 fixes for 5.17
-pull-req which I will send out soon.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+This consists of various build- and bug-fixes as well as
+a few hardware-id additions.
 
 Regards,
 
 Hans
 
 
-> +		dbg_printk(TPACPI_DBG_INIT, " DYTC MMC mode not supported\n");
-> +		return -ENODEV;
-> +	}
-> +
->  	dbg_printk(TPACPI_DBG_INIT,
->  			"DYTC version %d: thermal mode available\n", dytc_version);
->  	/*
-> 
+The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
+
+  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.17-2
+
+for you to fetch changes up to 836f35f79153ce09d813c83f341dba4481996966:
+
+  platform/x86: thinkpad_acpi: Fix incorrect use of platform profile on AMD platforms (2022-02-01 15:37:00 +0100)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.17-2
+
+Highlights:
+ - Bunch of fixes for the new x86-android-tablets module
+ - Misc. other fixes
+ - A couple of hw-id additions
+
+The following is an automated git shortlog grouped by driver:
+
+ISST:
+ -  Fix possible circular locking dependency detected
+
+amd-pmc:
+ -  Correct usage of SMU version
+ -  Make amd_pmc_stb_debugfs_fops static
+
+asus-tf103c-dock:
+ -  Make 2 global structs static
+
+intel_crystal_cove_charger:
+ -  Fix IRQ masking / unmasking
+
+platform/surface:
+ -  Reinstate platform dependency
+
+thinkpad_acpi:
+ -  Fix incorrect use of platform profile on AMD platforms
+ -  Add quirk for ThinkPads without a fan
+
+touchscreen_dmi:
+ -  Add info for the RWC NANOTE P8 AY07J 2-in-1
+
+x86-android-tablets:
+ -  Trivial typo fix for MODULE_AUTHOR
+ -  Fix the buttons on CZC P10T tablet
+ -  Constify the gpiod_lookup_tables arrays
+ -  Add an init() callback to struct x86_dev_info
+ -  Add support for disabling ACPI _AEI handlers
+ -  Correct crystal_cove_charger module name
+
+----------------------------------------------------------------
+Alexander Kobel (1):
+      platform/x86: thinkpad_acpi: Add quirk for ThinkPads without a fan
+
+Geert Uytterhoeven (1):
+      platform/surface: Reinstate platform dependency
+
+Hans de Goede (7):
+      platform/x86: x86-android-tablets: Correct crystal_cove_charger module name
+      platform/x86: x86-android-tablets: Add support for disabling ACPI _AEI handlers
+      platform/x86: x86-android-tablets: Add an init() callback to struct x86_dev_info
+      platform/x86: x86-android-tablets: Constify the gpiod_lookup_tables arrays
+      platform/x86: intel_crystal_cove_charger: Fix IRQ masking / unmasking
+      platform/x86: amd-pmc: Make amd_pmc_stb_debugfs_fops static
+      platform/x86: asus-tf103c-dock: Make 2 global structs static
+
+Lubomir Rintel (2):
+      platform/x86: x86-android-tablets: Fix the buttons on CZC P10T tablet
+      platform/x86: x86-android-tablets: Trivial typo fix for MODULE_AUTHOR
+
+Mario Limonciello (1):
+      platform/x86: amd-pmc: Correct usage of SMU version
+
+Mark Pearson (1):
+      platform/x86: thinkpad_acpi: Fix incorrect use of platform profile on AMD platforms
+
+Srinivas Pandruvada (1):
+      platform/x86: ISST: Fix possible circular locking dependency detected
+
+Yuka Kawajiri (1):
+      platform/x86: touchscreen_dmi: Add info for the RWC NANOTE P8 AY07J 2-in-1
+
+ drivers/platform/surface/Kconfig                   |   1 +
+ drivers/platform/x86/amd-pmc.c                     |  15 +--
+ drivers/platform/x86/asus-tf103c-dock.c            |   4 +-
+ drivers/platform/x86/intel/crystal_cove_charger.c  |  26 ++---
+ .../x86/intel/speed_select_if/isst_if_common.c     |  97 ++++++++++++-------
+ drivers/platform/x86/thinkpad_acpi.c               |  25 ++++-
+ drivers/platform/x86/touchscreen_dmi.c             |  24 +++++
+ drivers/platform/x86/x86-android-tablets.c         | 105 +++++++++++++++++++--
+ 8 files changed, 229 insertions(+), 68 deletions(-)
 
