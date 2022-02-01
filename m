@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0D2C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Feb 2022 13:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D8DC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Feb 2022 13:09:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238632AbiBANJP (ORCPT
+        id S238498AbiBANJf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Feb 2022 08:09:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:30822 "EHLO
+        Tue, 1 Feb 2022 08:09:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:53415 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238621AbiBANIm (ORCPT
+        by vger.kernel.org with ESMTP id S237849AbiBANI4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Feb 2022 08:08:42 -0500
+        Tue, 1 Feb 2022 08:08:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643720922;
+        s=mimecast20190719; t=1643720936;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jKVhXe4+iupRk5yH7m77eq2/qhSm3Tti3vtg4pz3iro=;
-        b=hLQegQYx8gAj5n6WtNt6XeC/ILCD7N0LpJ3T0I13uU4OF0CIagNHEKWyZNRAY0dxJB2WTY
-        hFxckA4NL4a9YEqz3pFLGBUHhoxhADsUzxs/ydpAO3Kbzrw9+uVky9oD9GsHu7yOZVXxal
-        94sEsXyFpFbl16bdQCOXXv3PGnUmatM=
+        bh=7VZNAPV6F77vtbHZa2Yo2uL5Wxj+Ynyq2sU6jDH3aJE=;
+        b=Q/sjhH+rFh2plAMvYYTY7MCINiPf8jVZvIcAyFiZMxo2Fq7UeR7A174nvF7MItAKBVgnsH
+        DDd9LBSeDM4eaoAOxjjMJTgDSTVp+ztN/Ngjivf3yr08irEYj3L/dBbAO3YaNvOxFs3rpK
+        23iVsuX26y+BSI5DasK34/BXLhaAb08=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-67-nk91SzYjPf-NdzgUqMfXXg-1; Tue, 01 Feb 2022 08:08:37 -0500
-X-MC-Unique: nk91SzYjPf-NdzgUqMfXXg-1
+ us-mta-665-fM-OcjlAODqQi6bo5gNLjw-1; Tue, 01 Feb 2022 08:08:53 -0500
+X-MC-Unique: fM-OcjlAODqQi6bo5gNLjw-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 929AF8519E1;
-        Tue,  1 Feb 2022 13:08:34 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7704F1B2C98B;
+        Tue,  1 Feb 2022 13:08:49 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.194.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 01C2A795B1;
-        Tue,  1 Feb 2022 13:08:30 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F31A795B1;
+        Tue,  1 Feb 2022 13:08:45 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -52,11 +52,10 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
         Tsuchiya Yuto <kitakar@gmail.com>,
         Fabio Aiuto <fabioaiuto83@gmail.com>,
         platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v5 15/20] i2c: cht-wc: Make charger i2c-client instantiation board/device-model specific
-Date:   Tue,  1 Feb 2022 14:07:01 +0100
-Message-Id: <20220201130706.46685-16-hdegoede@redhat.com>
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
+Subject: [PATCH v5 19/20] extcon: intel-cht-wc: Add support for registering a power_supply class-device
+Date:   Tue,  1 Feb 2022 14:07:05 +0100
+Message-Id: <20220201130706.46685-20-hdegoede@redhat.com>
 In-Reply-To: <20220201130706.46685-1-hdegoede@redhat.com>
 References: <20220201130706.46685-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -66,197 +65,170 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The i2c-controller on the Cherry Trail - Whiskey Cove PMIC is special
-in that it is always connected to the I2C charger IC of the board on
-which the PMIC is used; and the charger IC is not described in ACPI,
-so the i2c-cht-wc code needs to instantiate an i2c-client for it itself.
+The bq25890 used on the Yogabook YB1-X90 / -X91 models relies on
+the extcon-driver's BC-1.2 charger detection, and the bq25890 driver
+expect this info to be  available through a parent power_supply
+class-device which models the detected charger (idem to how the Type-C
+TCPM code registers a power_supply classdev for the connected charger).
 
-So far this was hardcoded to instantiate an i2c-client for the
-bq24292i, with all properties, etc. set to match how this charger
-is used on the GPD win and GPD pocket devices.
+Add support for registering the power_supply class-device expected
+by this setup.
 
-There is a rudimentary check to make sure the ACPI tables are at least
-somewhat as expected, but this is far from accurate, leading to
-a wrong i2c-client being instantiated for the charger on some boards.
-
-Switch to the new DMI based intel_cht_wc_get_model() helper which is
-exported by the MFD driver for the CHT Whiskey Cove PMIC to help PMIC
-cell drivers like the i2c-cht-wc code reliably detect which board
-they are running on.
-
-And add board_info for the charger ICs as found on the other 2 known
-boards with a Whisky Cove PMIC.
-
-This has been tested on all 3 known boards.
-
-Acked-by: Wolfram Sang <wsa@kernel.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v3:
-- Add Wolfram's Ack for taking this upstream through another tree
-  then the i2c tree
-- Some minor tweaks / spelling fixes based on Andy's review
+- Some minor tweaks based on Andy's review
 ---
- drivers/i2c/busses/i2c-cht-wc.c | 120 +++++++++++++++++++++++++++-----
- 1 file changed, 102 insertions(+), 18 deletions(-)
+ drivers/extcon/extcon-intel-cht-wc.c | 81 ++++++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
-index 1cf68f85b2e1..54e909f9eab6 100644
---- a/drivers/i2c/busses/i2c-cht-wc.c
-+++ b/drivers/i2c/busses/i2c-cht-wc.c
-@@ -18,6 +18,7 @@
+diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
+index a828ca89ca7f..cf74acb92fe3 100644
+--- a/drivers/extcon/extcon-intel-cht-wc.c
++++ b/drivers/extcon/extcon-intel-cht-wc.c
+@@ -14,6 +14,7 @@
  #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
  #include <linux/platform_device.h>
- #include <linux/power/bq24190_charger.h>
-+#include <linux/power/bq25890_charger.h>
- #include <linux/slab.h>
++#include <linux/power_supply.h>
+ #include <linux/property.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+@@ -106,6 +107,8 @@ struct cht_wc_extcon_data {
+ 	struct extcon_dev *edev;
+ 	struct usb_role_switch *role_sw;
+ 	struct regulator *vbus_boost;
++	struct power_supply *psy;
++	enum power_supply_usb_type usb_type;
+ 	unsigned int previous_cable;
+ 	bool usb_host;
+ 	bool vbus_boost_enabled;
+@@ -170,18 +173,23 @@ static int cht_wc_extcon_get_charger(struct cht_wc_extcon_data *ext,
+ 		dev_warn(ext->dev,
+ 			"Unhandled charger type %d, defaulting to SDP\n",
+ 			 ret);
++		ext->usb_type = POWER_SUPPLY_USB_TYPE_SDP;
+ 		return EXTCON_CHG_USB_SDP;
+ 	case CHT_WC_USBSRC_TYPE_SDP:
+ 	case CHT_WC_USBSRC_TYPE_FLOATING:
+ 	case CHT_WC_USBSRC_TYPE_OTHER:
++		ext->usb_type = POWER_SUPPLY_USB_TYPE_SDP;
+ 		return EXTCON_CHG_USB_SDP;
+ 	case CHT_WC_USBSRC_TYPE_CDP:
++		ext->usb_type = POWER_SUPPLY_USB_TYPE_CDP;
+ 		return EXTCON_CHG_USB_CDP;
+ 	case CHT_WC_USBSRC_TYPE_DCP:
+ 	case CHT_WC_USBSRC_TYPE_DCP_EXTPHY:
+ 	case CHT_WC_USBSRC_TYPE_MHL: /* MHL2+ delivers upto 2A, treat as DCP */
++		ext->usb_type = POWER_SUPPLY_USB_TYPE_DCP;
+ 		return EXTCON_CHG_USB_DCP;
+ 	case CHT_WC_USBSRC_TYPE_ACA:
++		ext->usb_type = POWER_SUPPLY_USB_TYPE_ACA;
+ 		return EXTCON_CHG_USB_ACA;
+ 	}
+ }
+@@ -266,6 +274,8 @@ static void cht_wc_extcon_pwrsrc_event(struct cht_wc_extcon_data *ext)
+ 	bool ignore_get_charger_errors = ext->usb_host;
+ 	enum usb_role role;
  
- #define CHT_WC_I2C_CTRL			0x5e24
-@@ -270,6 +271,7 @@ static const struct irq_chip cht_wc_i2c_irq_chip = {
- 	.name			= "cht_wc_ext_chrg_irq_chip",
- };
- 
-+/********** GPD Win / Pocket charger IC settings **********/
- static const char * const bq24190_suppliers[] = {
- 	"tcpm-source-psy-i2c-fusb302" };
- 
-@@ -304,17 +306,92 @@ static struct bq24190_platform_data bq24190_pdata = {
- 	.regulator_init_data = &bq24190_vbus_init_data,
- };
- 
-+static struct i2c_board_info gpd_win_board_info = {
-+	.type = "bq24190",
-+	.addr = 0x6b,
-+	.dev_name = "bq24190",
-+	.swnode = &bq24190_node,
-+	.platform_data = &bq24190_pdata,
-+};
++	ext->usb_type = POWER_SUPPLY_USB_TYPE_UNKNOWN;
 +
-+/********** Xiaomi Mi Pad 2 charger IC settings  **********/
-+static struct regulator_consumer_supply bq2589x_vbus_consumer = {
-+	.supply = "vbus",
-+	.dev_name = "cht_wcove_pwrsrc",
-+};
-+
-+static const struct regulator_init_data bq2589x_vbus_init_data = {
-+	.constraints = {
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.consumer_supplies = &bq2589x_vbus_consumer,
-+	.num_consumer_supplies = 1,
-+};
-+
-+static struct bq25890_platform_data bq2589x_pdata = {
-+	.regulator_init_data = &bq2589x_vbus_init_data,
-+};
-+
-+static const struct property_entry xiaomi_mipad2_props[] = {
-+	PROPERTY_ENTRY_BOOL("linux,skip-reset"),
-+	PROPERTY_ENTRY_BOOL("linux,read-back-settings"),
-+	{ }
-+};
-+
-+static const struct software_node xiaomi_mipad2_node = {
-+	.properties = xiaomi_mipad2_props,
-+};
-+
-+static struct i2c_board_info xiaomi_mipad2_board_info = {
-+	.type = "bq25890",
-+	.addr = 0x6a,
-+	.dev_name = "bq25890",
-+	.swnode = &xiaomi_mipad2_node,
-+	.platform_data = &bq2589x_pdata,
-+};
-+
-+/********** Lenovo Yogabook YB1-X90F/-X91F/-X91L charger settings **********/
-+static const char * const lenovo_yb1_bq25892_suppliers[] = { "cht_wcove_pwrsrc" };
-+
-+static const struct property_entry lenovo_yb1_bq25892_props[] = {
-+	PROPERTY_ENTRY_STRING_ARRAY("supplied-from",
-+				    lenovo_yb1_bq25892_suppliers),
-+	PROPERTY_ENTRY_U32("linux,pump-express-vbus-max", 12000000),
-+	PROPERTY_ENTRY_BOOL("linux,skip-reset"),
-+	/*
-+	 * The firmware sets everything to the defaults, which leads to a
-+	 * somewhat low charge-current of 2048mA and worse to a battery-voltage
-+	 * of 4.2V instead of 4.35V (when booted without a charger connected).
-+	 * Use our own values instead of "linux,read-back-settings" to fix this.
-+	 */
-+	PROPERTY_ENTRY_U32("ti,charge-current", 4224000),
-+	PROPERTY_ENTRY_U32("ti,battery-regulation-voltage", 4352000),
-+	PROPERTY_ENTRY_U32("ti,termination-current", 256000),
-+	PROPERTY_ENTRY_U32("ti,precharge-current", 128000),
-+	PROPERTY_ENTRY_U32("ti,minimum-sys-voltage", 3500000),
-+	PROPERTY_ENTRY_U32("ti,boost-voltage", 4998000),
-+	PROPERTY_ENTRY_U32("ti,boost-max-current", 1400000),
-+	PROPERTY_ENTRY_BOOL("ti,use-ilim-pin"),
-+	{ }
-+};
-+
-+static const struct software_node lenovo_yb1_bq25892_node = {
-+	.properties = lenovo_yb1_bq25892_props,
-+};
-+
-+static struct i2c_board_info lenovo_yogabook1_board_info = {
-+	.type = "bq25892",
-+	.addr = 0x6b,
-+	.dev_name = "bq25892",
-+	.swnode = &lenovo_yb1_bq25892_node,
-+	.platform_data = &bq2589x_pdata,
-+};
-+
- static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
- {
- 	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
-+	struct i2c_board_info *board_info = NULL;
- 	struct cht_wc_i2c_adap *adap;
--	struct i2c_board_info board_info = {
--		.type = "bq24190",
--		.addr = 0x6b,
--		.dev_name = "bq24190",
--		.swnode = &bq24190_node,
--		.platform_data = &bq24190_pdata,
--	};
- 	int ret, reg, irq;
- 
- 	irq = platform_get_irq(pdev, 0);
-@@ -379,17 +456,24 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
+ 	ret = regmap_read(ext->regmap, CHT_WC_PWRSRC_STS, &pwrsrc_sts);
+ 	if (ret) {
+ 		dev_err(ext->dev, "Error reading pwrsrc status: %d\n", ret);
+@@ -320,6 +330,9 @@ static void cht_wc_extcon_pwrsrc_event(struct cht_wc_extcon_data *ext)
+ 	ret = usb_role_switch_set_role(ext->role_sw, role);
  	if (ret)
- 		goto remove_irq_domain;
+ 		dev_err(ext->dev, "Error setting USB-role: %d\n", ret);
++
++	if (ext->psy)
++		power_supply_changed(ext->psy);
+ }
  
--	/*
--	 * Normally the Whiskey Cove PMIC is paired with a TI bq24292i charger,
--	 * connected to this i2c bus, and a max17047 fuel-gauge and a fusb302
--	 * USB Type-C controller connected to another i2c bus. In this setup
--	 * the max17047 and fusb302 devices are enumerated through an INT33FE
--	 * ACPI device. If this device is present register an i2c-client for
--	 * the TI bq24292i charger.
--	 */
--	if (acpi_dev_present("INT33FE", NULL, -1)) {
--		board_info.irq = adap->client_irq;
--		adap->client = i2c_new_client_device(&adap->adapter, &board_info);
-+	switch (pmic->cht_wc_model) {
-+	case INTEL_CHT_WC_GPD_WIN_POCKET:
-+		board_info = &gpd_win_board_info;
+ static irqreturn_t cht_wc_extcon_isr(int irq, void *data)
+@@ -420,6 +433,59 @@ static int cht_wc_extcon_get_role_sw_and_regulator(struct cht_wc_extcon_data *ex
+ 	return 0;
+ }
+ 
++static int cht_wc_extcon_psy_get_prop(struct power_supply *psy,
++				      enum power_supply_property psp,
++				      union power_supply_propval *val)
++{
++	struct cht_wc_extcon_data *ext = power_supply_get_drvdata(psy);
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_USB_TYPE:
++		val->intval = ext->usb_type;
 +		break;
-+	case INTEL_CHT_WC_XIAOMI_MIPAD2:
-+		board_info = &xiaomi_mipad2_board_info;
-+		break;
-+	case INTEL_CHT_WC_LENOVO_YOGABOOK1:
-+		board_info = &lenovo_yogabook1_board_info;
++	case POWER_SUPPLY_PROP_ONLINE:
++		val->intval = ext->usb_type ? 1 : 0;
 +		break;
 +	default:
-+		dev_warn(&pdev->dev, "Unknown model, not instantiating charger device\n");
-+		break;
++		return -EINVAL;
 +	}
 +
-+	if (board_info) {
-+		board_info->irq = adap->client_irq;
-+		adap->client = i2c_new_client_device(&adap->adapter, board_info);
- 		if (IS_ERR(adap->client)) {
- 			ret = PTR_ERR(adap->client);
- 			goto del_adapter;
++	return 0;
++}
++
++static const enum power_supply_usb_type cht_wc_extcon_psy_usb_types[] = {
++	POWER_SUPPLY_USB_TYPE_SDP,
++	POWER_SUPPLY_USB_TYPE_CDP,
++	POWER_SUPPLY_USB_TYPE_DCP,
++	POWER_SUPPLY_USB_TYPE_ACA,
++	POWER_SUPPLY_USB_TYPE_UNKNOWN,
++};
++
++static const enum power_supply_property cht_wc_extcon_psy_props[] = {
++	POWER_SUPPLY_PROP_USB_TYPE,
++	POWER_SUPPLY_PROP_ONLINE,
++};
++
++static const struct power_supply_desc cht_wc_extcon_psy_desc = {
++	.name = "cht_wcove_pwrsrc",
++	.type = POWER_SUPPLY_TYPE_USB,
++	.usb_types = cht_wc_extcon_psy_usb_types,
++	.num_usb_types = ARRAY_SIZE(cht_wc_extcon_psy_usb_types),
++	.properties = cht_wc_extcon_psy_props,
++	.num_properties = ARRAY_SIZE(cht_wc_extcon_psy_props),
++	.get_property = cht_wc_extcon_psy_get_prop,
++};
++
++static int cht_wc_extcon_register_psy(struct cht_wc_extcon_data *ext)
++{
++	struct power_supply_config psy_cfg = { .drv_data = ext };
++
++	ext->psy = devm_power_supply_register(ext->dev,
++					      &cht_wc_extcon_psy_desc,
++					      &psy_cfg);
++	return PTR_ERR_OR_ZERO(ext->psy);
++}
++
+ static int cht_wc_extcon_probe(struct platform_device *pdev)
+ {
+ 	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
+@@ -463,6 +529,21 @@ static int cht_wc_extcon_probe(struct platform_device *pdev)
+ 		cht_wc_extcon_set_5v_boost(ext, false);
+ 		break;
+ 	case INTEL_CHT_WC_LENOVO_YOGABOOK1:
++		/* Do this first, as it may very well return -EPROBE_DEFER. */
++		ret = cht_wc_extcon_get_role_sw_and_regulator(ext);
++		if (ret)
++			return ret;
++		/*
++		 * The bq25890 used here relies on this driver's BC-1.2 charger
++		 * detection, and the bq25890 driver expect this info to be
++		 * available through a parent power_supply class device which
++		 * models the detected charger (idem to how the Type-C TCPM code
++		 * registers a power_supply classdev for the connected charger).
++		 */
++		ret = cht_wc_extcon_register_psy(ext);
++		if (ret)
++			return ret;
++		break;
+ 	case INTEL_CHT_WC_XIAOMI_MIPAD2:
+ 		ret = cht_wc_extcon_get_role_sw_and_regulator(ext);
+ 		if (ret)
 -- 
 2.33.1
 
