@@ -2,98 +2,229 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A6AC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Feb 2022 13:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7858C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Feb 2022 13:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238301AbiBANCs (ORCPT
+        id S238371AbiBANHr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Feb 2022 08:02:48 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:42684 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238302AbiBANCr (ORCPT
+        Tue, 1 Feb 2022 08:07:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:54195 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238361AbiBANHq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Feb 2022 08:02:47 -0500
-Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E351A1EC0441;
-        Tue,  1 Feb 2022 14:02:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1643720562;
+        Tue, 1 Feb 2022 08:07:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643720865;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=V45qKhsa32BToHgvxiyQ7/0biiBqQBIo5RIp2z/c1p0=;
-        b=hKosanF82+uCnGcQ+cjuuUazkNmbqTKV0RwM8q/n3i2L7GrV3rzW6Jvlc7koykyvxaGdoe
-        4DhBNSdnJ0OFIZf1gE3H92X2xe+ExK5J9QAtuzmFjWGoF47/GtFsrsfO5Y6vfU073i/9xa
-        2SjcG/IcbeXeV6ocK0yqwXwA2QqceUs=
-Date:   Tue, 1 Feb 2022 14:02:42 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        Venu Busireddy <venu.busireddy@oracle.com>
-Subject: Re: [PATCH v9 02/43] KVM: SVM: Create a separate mapping for the
- SEV-ES save area
-Message-ID: <YfkvchuxmkHgnPWT@zn.tnic>
-References: <20220128171804.569796-1-brijesh.singh@amd.com>
- <20220128171804.569796-3-brijesh.singh@amd.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rLzMNmjGfcWldrSe/aObtDOjMXKb9TibT8drMTV25Fs=;
+        b=Oli/kAjaPTcrr0AAOMPfWBM9C7tHxii9IUo8JJNQtW2lFAVpXv/RHWroXfW3PHIoW7WQCa
+        HXf4agsEwcmmZlBh6BObLvd37u1R0uj7GxUD01+lDiPayJzzMRPSdkLWG4lJ3qdxW0N/8j
+        c9Xk1kmnSBBPhKx6XIQkVg+b4fOd6RM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-277-SaJjK7PzPXimshJsEHDNPA-1; Tue, 01 Feb 2022 08:07:42 -0500
+X-MC-Unique: SaJjK7PzPXimshJsEHDNPA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 426A7100C660;
+        Tue,  1 Feb 2022 13:07:39 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.194.196])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C0D77DE23;
+        Tue,  1 Feb 2022 13:07:35 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, Yauhen Kharuzhy <jekhor@gmail.com>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        Fabio Aiuto <fabioaiuto83@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 01/20] power: supply: core: Refactor power_supply_set_input_current_limit_from_supplier()
+Date:   Tue,  1 Feb 2022 14:06:47 +0100
+Message-Id: <20220201130706.46685-2-hdegoede@redhat.com>
+In-Reply-To: <20220201130706.46685-1-hdegoede@redhat.com>
+References: <20220201130706.46685-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220128171804.569796-3-brijesh.singh@amd.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 11:17:23AM -0600, Brijesh Singh wrote:
-> From: Tom Lendacky <thomas.lendacky@amd.com>
-> 
-> The save area for SEV-ES/SEV-SNP guests, as used by the hardware, is
-> different from the save area of a non SEV-ES/SEV-SNP guest.
-> 
-> This is the first step in defining the multiple save areas to keep them
-> separate and ensuring proper operation amongst the different types of
-> guests. Create an SEV-ES/SEV-SNP save area and adjust usage to the new
-> save area definition where needed.
-> 
-> Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/include/asm/svm.h | 87 +++++++++++++++++++++++++++++---------
->  arch/x86/kvm/svm/sev.c     | 24 +++++------
->  arch/x86/kvm/svm/svm.h     |  2 +-
->  3 files changed, 80 insertions(+), 33 deletions(-)
+Some (USB) charger ICs have variants with USB D+ and D- pins to do their
+own builtin charger-type detection, like e.g. the bq24190 and bq25890 and
+also variants which lack this functionality, e.g. the bq24192 and bq25892.
 
-https://lore.kernel.org/r/Yc2jzOunYej4vwSc@zn.tnic
+In case the charger-type; and thus the input-current-limit detection is
+done outside the charger IC then we need some way to communicate this to
+the charger IC. In the past extcon was used for this, but if the external
+detection does e.g. full USB PD negotiation then the extcon cable-types do
+not convey enough information.
 
+For these setups it was decided to model the external charging "brick"
+and the parameters negotiated with it as a power_supply class-device
+itself; and power_supply_set_input_current_limit_from_supplier() was
+introduced to allow drivers to get the input-current-limit this way.
+
+But in some cases psy drivers may want to know other properties, e.g. the
+bq25892 can do "quick-charge" negotiation by pulsing its current draw,
+but this should only be done if the usb_type psy-property of its supplier
+is set to DCP (and device-properties indicate the board allows higher
+voltages).
+
+Instead of adding extra helper functions for each property which
+a psy-driver wants to query from its supplier, refactor
+power_supply_set_input_current_limit_from_supplier() into a
+more generic power_supply_get_property_from_supplier() function.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v5:
+- Change the bq24190 changes to do an early exit on error, rather then
+  using code nested in a if (success) check.
+---
+ drivers/power/supply/bq24190_charger.c   | 12 ++++-
+ drivers/power/supply/power_supply_core.c | 57 +++++++++++++-----------
+ include/linux/power_supply.h             |  5 ++-
+ 3 files changed, 44 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/supply/bq24190_charger.c
+index 06c34b09349c..a1c957a26f07 100644
+--- a/drivers/power/supply/bq24190_charger.c
++++ b/drivers/power/supply/bq24190_charger.c
+@@ -1206,8 +1206,18 @@ static void bq24190_input_current_limit_work(struct work_struct *work)
+ 	struct bq24190_dev_info *bdi =
+ 		container_of(work, struct bq24190_dev_info,
+ 			     input_current_limit_work.work);
++	union power_supply_propval val;
++	int ret;
++
++	ret = power_supply_get_property_from_supplier(bdi->charger,
++						      POWER_SUPPLY_PROP_CURRENT_MAX,
++						      &val);
++	if (ret)
++		return;
+ 
+-	power_supply_set_input_current_limit_from_supplier(bdi->charger);
++	bq24190_charger_set_property(bdi->charger,
++				     POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
++				     &val);
+ }
+ 
+ /* Sync the input-current-limit with our parent supply (if we have one) */
+diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+index ec838c9bcc0a..df4471e50d33 100644
+--- a/drivers/power/supply/power_supply_core.c
++++ b/drivers/power/supply/power_supply_core.c
+@@ -376,46 +376,49 @@ int power_supply_is_system_supplied(void)
+ }
+ EXPORT_SYMBOL_GPL(power_supply_is_system_supplied);
+ 
+-static int __power_supply_get_supplier_max_current(struct device *dev,
+-						   void *data)
++struct psy_get_supplier_prop_data {
++	struct power_supply *psy;
++	enum power_supply_property psp;
++	union power_supply_propval *val;
++};
++
++static int __power_supply_get_supplier_property(struct device *dev, void *_data)
+ {
+-	union power_supply_propval ret = {0,};
+ 	struct power_supply *epsy = dev_get_drvdata(dev);
+-	struct power_supply *psy = data;
++	struct psy_get_supplier_prop_data *data = _data;
+ 
+-	if (__power_supply_is_supplied_by(epsy, psy))
+-		if (!epsy->desc->get_property(epsy,
+-					      POWER_SUPPLY_PROP_CURRENT_MAX,
+-					      &ret))
+-			return ret.intval;
++	if (__power_supply_is_supplied_by(epsy, data->psy))
++		if (!epsy->desc->get_property(epsy, data->psp, data->val))
++			return 1; /* Success */
+ 
+-	return 0;
++	return 0; /* Continue iterating */
+ }
+ 
+-int power_supply_set_input_current_limit_from_supplier(struct power_supply *psy)
++int power_supply_get_property_from_supplier(struct power_supply *psy,
++					    enum power_supply_property psp,
++					    union power_supply_propval *val)
+ {
+-	union power_supply_propval val = {0,};
+-	int curr;
+-
+-	if (!psy->desc->set_property)
+-		return -EINVAL;
++	struct psy_get_supplier_prop_data data = {
++		.psy = psy,
++		.psp = psp,
++		.val = val,
++	};
++	int ret;
+ 
+ 	/*
+ 	 * This function is not intended for use with a supply with multiple
+-	 * suppliers, we simply pick the first supply to report a non 0
+-	 * max-current.
++	 * suppliers, we simply pick the first supply to report the psp.
+ 	 */
+-	curr = class_for_each_device(power_supply_class, NULL, psy,
+-				      __power_supply_get_supplier_max_current);
+-	if (curr <= 0)
+-		return (curr == 0) ? -ENODEV : curr;
+-
+-	val.intval = curr;
++	ret = class_for_each_device(power_supply_class, NULL, &data,
++				    __power_supply_get_supplier_property);
++	if (ret < 0)
++		return ret;
++	if (ret == 0)
++		return -ENODEV;
+ 
+-	return psy->desc->set_property(psy,
+-				POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT, &val);
++	return 0;
+ }
+-EXPORT_SYMBOL_GPL(power_supply_set_input_current_limit_from_supplier);
++EXPORT_SYMBOL_GPL(power_supply_get_property_from_supplier);
+ 
+ int power_supply_set_battery_charged(struct power_supply *psy)
+ {
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index e218041cc000..006111917d1a 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -597,8 +597,9 @@ power_supply_temp2resist_simple(struct power_supply_resistance_temp_table *table
+ 				int table_len, int temp);
+ extern void power_supply_changed(struct power_supply *psy);
+ extern int power_supply_am_i_supplied(struct power_supply *psy);
+-extern int power_supply_set_input_current_limit_from_supplier(
+-					 struct power_supply *psy);
++int power_supply_get_property_from_supplier(struct power_supply *psy,
++					    enum power_supply_property psp,
++					    union power_supply_propval *val);
+ extern int power_supply_set_battery_charged(struct power_supply *psy);
+ 
+ #ifdef CONFIG_POWER_SUPPLY
 -- 
-Regards/Gruss,
-    Boris.
+2.33.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
