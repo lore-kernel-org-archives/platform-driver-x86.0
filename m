@@ -2,101 +2,112 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A789EC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Feb 2022 18:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872C6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Feb 2022 19:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346795AbiBBS5s (ORCPT
+        id S231486AbiBBTEg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 2 Feb 2022 13:57:48 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:45602 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232525AbiBBS5s (ORCPT
+        Wed, 2 Feb 2022 14:04:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230380AbiBBTEf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Feb 2022 13:57:48 -0500
-Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
+        Wed, 2 Feb 2022 14:04:35 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FEA3C061714
+        for <platform-driver-x86@vger.kernel.org>; Wed,  2 Feb 2022 11:04:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 609371EC04E2;
-        Wed,  2 Feb 2022 19:57:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1643828262;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=3U8ZC9BzawtxrXmVgjq+VFamXu78o7dgi9QKX8beiZs=;
-        b=MDv7m46t4sdlGD3qdQjScPzNa+EG0UH+UnAFyVxGzAhV3Yw72N/tVvr+2NA3yYhGoDTbJu
-        PE6ls7I9F+5AMJEBl0qU/58v49+c2NkvUKY0vgpJUixC5teLwmC0vBKwC3DIWDQG9Ieuj6
-        xKWLIOdRG/BdhXkeqLw2mxTSMaVUgJk=
-Date:   Wed, 2 Feb 2022 19:57:37 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Michael Roth <michael.roth@amd.com>
-Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v9 05/43] x86/compressed/64: Detect/setup SEV/SME
- features earlier in boot
-Message-ID: <YfrUIVv70fTwydZv@zn.tnic>
-References: <20220128171804.569796-1-brijesh.singh@amd.com>
- <20220128171804.569796-6-brijesh.singh@amd.com>
- <Yfl3FaTGPxE7qMCq@zn.tnic>
- <20220201203507.goibbaln6dxyoogv@amd.com>
- <YfmmBykN2s0HsiAJ@zn.tnic>
- <20220202005212.a3fnn6i76ko6u6t5@amd.com>
- <YfogFFOoHvCV+/2Y@zn.tnic>
- <20220202172801.4plsgy5ispu2bi7c@amd.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id A6C0AB83251
+        for <platform-driver-x86@vger.kernel.org>; Wed,  2 Feb 2022 19:04:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6F65DC340F8
+        for <platform-driver-x86@vger.kernel.org>; Wed,  2 Feb 2022 19:04:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643828672;
+        bh=HCVfq4K3BiJ2BX4asNyq6aZEeKgrgNpEkzAPi+DauLI=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=LlADaxDQhfxyWERfeGKLCVPPSOXd1PW2RyprHfzmj9yFlDaac4GY38ar5d6F9QDZP
+         1Gs8MdQHDgIUp7QeY8D7vdGwEt4KSoBCK/jwpvSK3QDBHAurGVzuH9jCNVEihew+dg
+         dkqO0zIa8+00dXwkt+0RqkOUGQ7MSKNTWalvKvh1PBGkw8Pp9+fx8vqWu1ez/S2XCP
+         6wr2GsYvTzPUaPYUbqur2DWFKFbO48IeugKqrH/dRztVBng5EFDTwSUsU7/gRhUts4
+         ZntELfLnhtU6OHXxLe5miPBvHPZD6thPj4c+38ipG32H1Fzc/RO308fZHMnOdAbneD
+         vR5AJ9QUP3v/g==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 5FD35C05FD6; Wed,  2 Feb 2022 19:04:32 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 199715] hp_accel: probe of HPQ6007:00 failed with error -22 (HP
+ Envy x360)
+Date:   Wed, 02 Feb 2022 19:04:31 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: rodomar705@protonmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-199715-215701-4TOioQhEFT@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-199715-215701@https.bugzilla.kernel.org/>
+References: <bug-199715-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220202172801.4plsgy5ispu2bi7c@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Feb 02, 2022 at 11:28:01AM -0600, Michael Roth wrote:
-> Indeed... it looks like linux/{elf,io,efi,acpi}.h all end up pulling in
-> kernel proper's rdmsr()/wrmsr() definitions, and pulling them out ends up
-> breaking a bunch of other stuff,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D199715
 
-It's a nightmare - just gave it a try. No wonder they call it include
-hell.
+--- Comment #65 from Marco (rodomar705@protonmail.com) ---
+(In reply to Richard Neumann from comment #63)
+> @Stuart
+> I am no longer interested in getting my refactored version upstream.
+> I tried to follow the upstream development of the driver by AMD to my best
+> abilities, but I've not yet seen further development on "interesting" par=
+ts,
+> such as the accelerometer support for the newest-generation sensor hubs o=
+r a
+> lid switch driver. So yes, this is basically a dead effort.
+> If I should have overlooked upstream commits regarding above features,
+> please let me know. I'm still interested in incorporating those into my
+> refactored driver version.
 
-> so I think we might be stuck using a different name like
-> rd_msr()/wr_msr() in the meantime.
+When I saw recently that you added lid switch support and I've got my hopes=
+ up
+in believing that at least that piece was fixed. Then I remembered that it
+unfortunately doesn't work under Ryzen 4000+ devices. I thought that the is=
+sue
+was on asus_nb_wmi driver, but there is no data for the lid sensor, I've ju=
+st
+recently confirmed when I had a copy of Windows and removed the AMD UMDF Se=
+nsor
+driver. The automatic keyboard disabler was gone.
 
-Ok, but then pls call them boot_rdmsr() and boot_wrmsr() so that there's
-a clear distinction from all the other msr helpers. And put a comment
-above them in arch/x86/boot/msr.h explaining why they're called this
-way.
+Essentially with the upstream kernel driver I have accelerometer data, but =
+no
+lid switch. With yours unfortunately I haven't both.
 
-One fine day I'll have this mess untangled and clean...
+I don't really get why they can't release documentation on this device if t=
+hey
+do not want to support in Linux properly, frankly.
 
-Thx.
+Hope that someone will be able to fix it,
 
--- 
-Regards/Gruss,
-    Boris.
+Marco.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
