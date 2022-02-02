@@ -2,32 +2,35 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EE2C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Feb 2022 10:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474D7C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Feb 2022 11:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343548AbiBBKfD (ORCPT
+        id S233681AbiBBLGm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 2 Feb 2022 05:35:03 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:51348 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245260AbiBBKfD (ORCPT
+        Wed, 2 Feb 2022 06:06:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236708AbiBBLGj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Feb 2022 05:35:03 -0500
+        Wed, 2 Feb 2022 06:06:39 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF2CC06173E;
+        Wed,  2 Feb 2022 03:06:39 -0800 (PST)
 Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5C3801EC057F;
-        Wed,  2 Feb 2022 11:34:57 +0100 (CET)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C5E0E1EC0513;
+        Wed,  2 Feb 2022 12:06:33 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1643798097;
+        t=1643799993;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=vkWy2p/ndu/o+uwPBWE2Sx+Zio2CCup5AcxLwBsCKIo=;
-        b=E1DiM/jmMmw1faOLJ+9vk08hJobgmK5QJeCOlv8fr+flGhrwsbAcAscgJzGskCs2KvjGAc
-        U2AY2ZAy16oscISuR2Hisdaix+fzOE/3vUIwykutoG/w3sY+XqGz+3asWHM3HUbZr4xwTd
-        pycMsV51BhescBJgCvgq/nIwy0PSTNw=
-Date:   Wed, 2 Feb 2022 11:34:48 +0100
+        bh=T5KarsviFxcdPdr91Ju50bIXrFx/Ww52H/WmFLJHWWk=;
+        b=oXHB2bMIYcC69Z2LEdY0Kp3e4q+aUB7LWsYhNn3wevkRodEY2WCg1LuVEpeNDtxTrfzab8
+        ct1X+4H0PojDxi5drGWWg6PRjOminwTVFtJA8ySyvP9PR9gy2fZC7eyO03NzYf5MlVpIpz
+        ttux2IT7OMBSjaXoLcwcmTzaun8uLjI=
+Date:   Wed, 2 Feb 2022 12:06:29 +0100
 From:   Borislav Petkov <bp@alien8.de>
 To:     Brijesh Singh <brijesh.singh@amd.com>
 Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
@@ -56,48 +59,67 @@ Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
         brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
         sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v9 15/43] x86/sev: Register GHCB memory when SEV-SNP is
- active
-Message-ID: <YfpeSErxB9KHOd7m@zn.tnic>
+Subject: Re: [PATCH v9 17/43] x86/kernel: Make the .bss..decrypted section
+ shared in RMP table
+Message-ID: <YfpltcR7IqhP5KTq@zn.tnic>
 References: <20220128171804.569796-1-brijesh.singh@amd.com>
- <20220128171804.569796-16-brijesh.singh@amd.com>
+ <20220128171804.569796-18-brijesh.singh@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220128171804.569796-16-brijesh.singh@amd.com>
+In-Reply-To: <20220128171804.569796-18-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 11:17:36AM -0600, Brijesh Singh wrote:
-> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-> index 24df739c9c05..b86b48b66a44 100644
-> --- a/arch/x86/kernel/sev.c
-> +++ b/arch/x86/kernel/sev.c
-> @@ -41,7 +41,7 @@ static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
->   * Needs to be in the .data section because we need it NULL before bss is
->   * cleared
->   */
-> -static struct ghcb __initdata *boot_ghcb;
-> +static struct ghcb *boot_ghcb __section(".data");
->  
->  /* Bitmap of SEV features supported by the hypervisor */
->  static u64 sev_hv_features __ro_after_init;
-> @@ -161,55 +161,6 @@ void noinstr __sev_es_ist_exit(void)
->  	this_cpu_write(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC], *(unsigned long *)ist);
->  }
->  
-> -/*
-> - * Nothing shall interrupt this code path while holding the per-CPU
-> - * GHCB. The backup GHCB is only for NMIs interrupting this path.
-> - *
-> - * Callers must disable local interrupts around it.
-> - */
-> -static noinstr struct ghcb *__sev_get_ghcb(struct ghcb_state *state)
+On Fri, Jan 28, 2022 at 11:17:38AM -0600, Brijesh Singh wrote:
+> The encryption attribute for the .bss..decrypted section is cleared in the
+> initial page table build. This is because the section contains the data
+> that need to be shared between the guest and the hypervisor.
+> 
+> When SEV-SNP is active, just clearing the encryption attribute in the
+> page table is not enough. The page state need to be updated in the RMP
+> table.
+> 
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  arch/x86/kernel/head64.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+> index 8075e91cff2b..1239bc104cda 100644
+> --- a/arch/x86/kernel/head64.c
+> +++ b/arch/x86/kernel/head64.c
+> @@ -143,7 +143,21 @@ static unsigned long sme_postprocess_startup(struct boot_params *bp, pmdval_t *p
+>  	if (sme_get_me_mask()) {
+>  		vaddr = (unsigned long)__start_bss_decrypted;
+>  		vaddr_end = (unsigned long)__end_bss_decrypted;
+> +
+>  		for (; vaddr < vaddr_end; vaddr += PMD_SIZE) {
+> +			/*
+> +			 * When SEV-SNP is active then transition the page to
+> +			 * shared in the RMP table so that it is consistent with
+> +			 * the page table attribute change.
+> +			 *
+> +			 * At this point, kernel is running in identity mapped mode.
+> +			 * The __start_bss_decrypted is a regular kernel address. The
+> +			 * early_snp_set_memory_shared() requires a valid virtual
+> +			 * address, so use __pa() against __start_bss_decrypted to
+> +			 * get valid virtual address.
+> +			 */
 
-That move doesn't look like it's needed anymore, does it?
+How's that?
 
-I mean, it builds even without it.
+                        /*
+                         * On SNP, transition the page to shared in the RMP table so that
+                         * it is consistent with the page table attribute change.
+                         *
+                         * __start_bss_decrypted has a virtual address in the high range
+                         * mapping (kernel .text). PVALIDATE, by way of
+                         * early_snp_set_memory_shared(), requires a valid virtual
+                         * address but the kernel is currently running off of the identity
+                         * mapping so use __pa() to get a *currently* valid virtual address.
+                         */
 
 -- 
 Regards/Gruss,
