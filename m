@@ -2,89 +2,102 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65163C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 10:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA549C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 10:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349745AbiBCKfD (ORCPT
+        id S233339AbiBCKkD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Feb 2022 05:35:03 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:41060 "EHLO
+        Thu, 3 Feb 2022 05:40:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:45809 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236669AbiBCKfC (ORCPT
+        by vger.kernel.org with ESMTP id S229533AbiBCKkC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Feb 2022 05:35:02 -0500
+        Thu, 3 Feb 2022 05:40:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643884502;
+        s=mimecast20190719; t=1643884802;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Iv+HnSVfFRA4dcKTXdg0IkPA/jRlX9Ca4xJ/f2UQXvQ=;
-        b=N7v+6Gw5alqS/W8EslrU0itW4Tx4Hv2kLmmOyrGVttidMdbKkKIlnpsFqONzW5dE/Lp3BF
-        s7PbjKJjzfxkelo5wcDcIXKuIMi9vVJEFBbuMe3djqTKIIGm2tsBrTnAVc0J3DxHealY5x
-        JnNkVezPwwKbD0reuq2eYkxkRB61r0U=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=cwHzozB1NnnUlG3K+Rs3ixs2CDHUV67xhx8QDRDqiE0=;
+        b=P5V1ifhE2/j9+12+p1veMnzeW/4liOxPZ4m5AWxVKwpMl4bHCNRvLc9bONAULTmx7xNUe/
+        k2pqJTk0K24d/TuQUIBimIp52cVd+KpwxGS0xiESyZydXwAk47QUyvJeI9ufZdrEMhutQh
+        OzOB2+ZJ1Ar+QjClU1E9n05WvyPGsnA=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-463-ifJypHLWON6hhSuzL7g8RQ-1; Thu, 03 Feb 2022 05:35:01 -0500
-X-MC-Unique: ifJypHLWON6hhSuzL7g8RQ-1
-Received: by mail-ed1-f70.google.com with SMTP id i22-20020a50fd16000000b00405039f2c59so1251935eds.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Feb 2022 02:35:00 -0800 (PST)
+ us-mta-315-cu_pRMa1OMSgMLS1UE2l2A-1; Thu, 03 Feb 2022 05:40:01 -0500
+X-MC-Unique: cu_pRMa1OMSgMLS1UE2l2A-1
+Received: by mail-ej1-f70.google.com with SMTP id p8-20020a1709060e8800b006b39ade8c12so985650ejf.10
+        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Feb 2022 02:40:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=Iv+HnSVfFRA4dcKTXdg0IkPA/jRlX9Ca4xJ/f2UQXvQ=;
-        b=mbix5wE8UvFDKI5w/3JSHeug/q2+iBpoeFBJgxWPSCuFXaq4dt0N2fBQKpig+q38nL
-         RVwZfYftG/rfvjlW5vR1KFhuxSKM42hUmIfb+ZbIGplvIBbKw3Ny5iIMAP8QDVfSQyLk
-         1jyns+AKTDR6lNxC5iBfDgodJn8IjOtcO8UK2fSSYX9TVigQuJyBhyxof/AAapWOwsDi
-         RKHB6T5gAP2RdM66Tf+GDjgdKc5XFs53thUgqUfnchqA/MNW1LsYxZes8iJ364VZnfeJ
-         wWxpI6N+qRHIfs+1oTY0yhJ5JaUhtvNDPkBkPF6Vb11tVcUX0/25SijoSpTpzdha90xG
-         oi/A==
-X-Gm-Message-State: AOAM532aQ82tFDVVKpq7QL9Cnu/dX0yTqoDD6+YvPDDzKTacsUKQLa+n
-        mIRt+z5GZyG2cUIVXlvUi5a76Uy6GWR070m1M0g7HAd287NurwCOVLohUAaWG5JPE7lEkJ4Jkv4
-        JhwBhI44voT5ylTKN3Gw7It0BkvDfJA+ijg==
-X-Received: by 2002:a17:906:2758:: with SMTP id a24mr27762473ejd.433.1643884499921;
-        Thu, 03 Feb 2022 02:34:59 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwvBqnmOh/E+vRcRxjK434t+eEd1ap4zf4ASjBpdYgL9Spvf/LG1G4CstfEkNpCGFwGV/sXUw==
-X-Received: by 2002:a17:906:2758:: with SMTP id a24mr27762461ejd.433.1643884499775;
-        Thu, 03 Feb 2022 02:34:59 -0800 (PST)
+        bh=cwHzozB1NnnUlG3K+Rs3ixs2CDHUV67xhx8QDRDqiE0=;
+        b=OQQr4ZzJZTaeV631iQbqv0rKcR9axXCL2YGmN6MS39wa8g/RWOGqZBaOf/dGgshQV+
+         Uxx5KiXbS8wVnSmzVN83nx4yiUyzN17ldigMvevilGlV7BbdaFc+8HQWAlM8v+T4+qUR
+         8lY8AwBK8R2vlH6Rk+HX+1a/zR4tpkwx8bEUq9toqsm3f9ywzShXQWKSeOPYF9TG9XcB
+         2aXQxdzp548mAYoj1+UEAxWihU9qKaQ+qA5I9hweP6m6RUT2LSIDUqWr/RHNo2n9DPLo
+         T4iPJVS/TuHtet1LHvuyuwHZEpDyimRL06u3BIrg2XckqOWGXYMqwUS+1mGOK5yYoOh7
+         3yKA==
+X-Gm-Message-State: AOAM531wAfsGsbPxCV1zixsPmBVWgXBfo9Y7rjFm6iVW8fOkIn89sjEe
+        toWx81ylet84YjE8XJdh+NGQTP/wqyZSlRF+TFbTPLFTaia/UbMCq2hjN+q5GKSLbTi8R/A+hWE
+        BvVISho3A5WnJtpeuCCO3Lym3sRrrJ3x8VA==
+X-Received: by 2002:a17:906:538d:: with SMTP id g13mr23496287ejo.276.1643884800218;
+        Thu, 03 Feb 2022 02:40:00 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx5tIb6LTSWF6doY2l2qSZQM9680Sau/5KeZQT0MzHt3FHeW9NEqCo5vOluSgvoZajKG8m4lg==
+X-Received: by 2002:a17:906:538d:: with SMTP id g13mr23496273ejo.276.1643884800028;
+        Thu, 03 Feb 2022 02:40:00 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id h16sm5634587ejj.56.2022.02.03.02.34.59
+        by smtp.gmail.com with ESMTPSA id q5sm9025564ejc.115.2022.02.03.02.39.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Feb 2022 02:34:59 -0800 (PST)
-Message-ID: <881a32a6-2a50-d1e3-5b5d-a300eb5841b0@redhat.com>
-Date:   Thu, 3 Feb 2022 11:34:58 +0100
+        Thu, 03 Feb 2022 02:39:58 -0800 (PST)
+Message-ID: <7350e94c-9df9-d195-193a-534a86ae3074@redhat.com>
+Date:   Thu, 3 Feb 2022 11:39:58 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add dual-fan quirk for T15g
- (2nd gen)
+Subject: Re: [PATCH] platform: x86: Replace acpi_bus_get_device()
 Content-Language: en-US
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        David Dreschner <david@dreschner.net>
-References: <20220203103302.49401-1-hdegoede@redhat.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org
+References: <2631712.mvXUDI8C0e@kreacher>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220203103302.49401-1-hdegoede@redhat.com>
+In-Reply-To: <2631712.mvXUDI8C0e@kreacher>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi all,
+Hi,
 
-On 2/3/22 11:33, Hans de Goede wrote:
-> The ThinkPad T15g Gen 2 has 2 fan, add a TPACPI_FAN_2CTL quirk entry for
-> it to the fan_quirk_table[] so that both fans can be controllerd.
+On 1/26/22 20:38, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Reported-and-tested-by: David Dreschner <david@dreschner.net>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Replace acpi_bus_get_device() that is going to be dropped with
+> acpi_fetch_acpi_dev().
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-I've added this to my review-hans (soon to be for-next) branch now.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
@@ -92,20 +105,138 @@ Hans
 
 
 > ---
->  drivers/platform/x86/thinkpad_acpi.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/platform/x86/intel/hid.c              |    7 ++-----
+>  drivers/platform/x86/intel/int3472/discrete.c |    5 ++---
+>  drivers/platform/x86/intel/vbtn.c             |    7 ++-----
+>  drivers/platform/x86/thinkpad_acpi.c          |   17 ++++++++---------
+>  drivers/platform/x86/x86-android-tablets.c    |    2 +-
+>  5 files changed, 15 insertions(+), 23 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index bd045486b933..3424b080db77 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -8703,6 +8703,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
->  	TPACPI_Q_LNV3('N', '4', '0', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (4nd gen) */
->  	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v (1st gen) */
->  	TPACPI_Q_LNV3('N', '3', '2', TPACPI_FAN_2CTL),	/* X1 Carbon (9th gen) */
-> +	TPACPI_Q_LNV3('N', '3', '7', TPACPI_FAN_2CTL),  /* T15g (2nd gen) */
->  	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
->  };
+> Index: linux-pm/drivers/platform/x86/intel/vbtn.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/intel/vbtn.c
+> +++ linux-pm/drivers/platform/x86/intel/vbtn.c
+> @@ -384,12 +384,9 @@ static acpi_status __init
+>  check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+>  {
+>  	const struct acpi_device_id *ids = context;
+> -	struct acpi_device *dev;
+> +	struct acpi_device *dev = acpi_fetch_acpi_dev(handle);
 >  
+> -	if (acpi_bus_get_device(handle, &dev) != 0)
+> -		return AE_OK;
+> -
+> -	if (acpi_match_device_ids(dev, ids) == 0)
+> +	if (dev && acpi_match_device_ids(dev, ids) == 0)
+>  		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
+>  			dev_info(&dev->dev,
+>  				 "intel-vbtn: created platform device\n");
+> Index: linux-pm/drivers/platform/x86/intel/hid.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/intel/hid.c
+> +++ linux-pm/drivers/platform/x86/intel/hid.c
+> @@ -726,12 +726,9 @@ static acpi_status __init
+>  check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+>  {
+>  	const struct acpi_device_id *ids = context;
+> -	struct acpi_device *dev;
+> +	struct acpi_device *dev = acpi_fetch_acpi_dev(handle);
+>  
+> -	if (acpi_bus_get_device(handle, &dev) != 0)
+> -		return AE_OK;
+> -
+> -	if (acpi_match_device_ids(dev, ids) == 0)
+> +	if (dev && acpi_match_device_ids(dev, ids) == 0)
+>  		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
+>  			dev_info(&dev->dev,
+>  				 "intel-hid: created platform device\n");
+> Index: linux-pm/drivers/platform/x86/thinkpad_acpi.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/thinkpad_acpi.c
+> +++ linux-pm/drivers/platform/x86/thinkpad_acpi.c
+> @@ -728,11 +728,10 @@ static void __init drv_acpi_handle_init(
+>  static acpi_status __init tpacpi_acpi_handle_locate_callback(acpi_handle handle,
+>  			u32 level, void *context, void **return_value)
+>  {
+> -	struct acpi_device *dev;
+>  	if (!strcmp(context, "video")) {
+> -		if (acpi_bus_get_device(handle, &dev))
+> -			return AE_OK;
+> -		if (strcmp(ACPI_VIDEO_HID, acpi_device_hid(dev)))
+> +		struct acpi_device *dev = acpi_fetch_acpi_dev(handle);
+> +
+> +		if (!dev || strcmp(ACPI_VIDEO_HID, acpi_device_hid(dev)))
+>  			return AE_OK;
+>  	}
+>  
+> @@ -786,7 +785,6 @@ static void dispatch_acpi_notify(acpi_ha
+>  static int __init setup_acpi_notify(struct ibm_struct *ibm)
+>  {
+>  	acpi_status status;
+> -	int rc;
+>  
+>  	BUG_ON(!ibm->acpi);
+>  
+> @@ -796,9 +794,9 @@ static int __init setup_acpi_notify(stru
+>  	vdbg_printk(TPACPI_DBG_INIT,
+>  		"setting up ACPI notify for %s\n", ibm->name);
+>  
+> -	rc = acpi_bus_get_device(*ibm->acpi->handle, &ibm->acpi->device);
+> -	if (rc < 0) {
+> -		pr_err("acpi_bus_get_device(%s) failed: %d\n", ibm->name, rc);
+> +	ibm->acpi->device = acpi_fetch_acpi_dev(*ibm->acpi->handle);
+> +	if (!ibm->acpi->device) {
+> +		pr_err("acpi_fetch_acpi_dev(%s) failed\n", ibm->name);
+>  		return -ENODEV;
+>  	}
+>  
+> @@ -6723,7 +6721,8 @@ static int __init tpacpi_query_bcl_level
+>  	struct acpi_device *device, *child;
+>  	int rc;
+>  
+> -	if (acpi_bus_get_device(handle, &device))
+> +	device = acpi_fetch_acpi_dev(handle);
+> +	if (!device)
+>  		return 0;
+>  
+>  	rc = 0;
+> Index: linux-pm/drivers/platform/x86/intel/int3472/discrete.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/intel/int3472/discrete.c
+> +++ linux-pm/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -112,7 +112,6 @@ static int skl_int3472_map_gpio_to_senso
+>  	struct acpi_device *adev;
+>  	acpi_handle handle;
+>  	acpi_status status;
+> -	int ret;
+>  
+>  	if (int3472->n_sensor_gpios >= INT3472_MAX_SENSOR_GPIOS) {
+>  		dev_warn(int3472->dev, "Too many GPIOs mapped\n");
+> @@ -139,8 +138,8 @@ static int skl_int3472_map_gpio_to_senso
+>  	if (ACPI_FAILURE(status))
+>  		return -EINVAL;
+>  
+> -	ret = acpi_bus_get_device(handle, &adev);
+> -	if (ret)
+> +	adev = acpi_fetch_acpi_dev(handle);
+> +	if (!adev)
+>  		return -ENODEV;
+>  
+>  	table_entry = &int3472->gpios.table[int3472->n_sensor_gpios];
+> Index: linux-pm/drivers/platform/x86/x86-android-tablets.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/x86-android-tablets.c
+> +++ linux-pm/drivers/platform/x86/x86-android-tablets.c
+> @@ -104,7 +104,7 @@ static int x86_acpi_irq_helper_get(const
+>  			return -ENODEV;
+>  		}
+>  
+> -		acpi_bus_get_device(handle, &adev);
+> +		adev = acpi_fetch_acpi_dev(handle);
+>  		if (!adev) {
+>  			pr_err("error could not get %s adev\n", data->chip);
+>  			return -ENODEV;
+> 
+> 
 > 
 
