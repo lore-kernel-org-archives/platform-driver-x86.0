@@ -2,53 +2,53 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6C3C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 16:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED49EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 16:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352382AbiBCQo0 (ORCPT
+        id S1352374AbiBCQo2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Feb 2022 11:44:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60710 "EHLO
+        Thu, 3 Feb 2022 11:44:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352380AbiBCQoV (ORCPT
+        with ESMTP id S1352375AbiBCQo1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Feb 2022 11:44:21 -0500
-Received: from mail-vk1-xa2b.google.com (mail-vk1-xa2b.google.com [IPv6:2607:f8b0:4864:20::a2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F74C06173B
-        for <platform-driver-x86@vger.kernel.org>; Thu,  3 Feb 2022 08:44:21 -0800 (PST)
-Received: by mail-vk1-xa2b.google.com with SMTP id w17so2068121vko.9
-        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Feb 2022 08:44:21 -0800 (PST)
+        Thu, 3 Feb 2022 11:44:27 -0500
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1593AC061714
+        for <platform-driver-x86@vger.kernel.org>; Thu,  3 Feb 2022 08:44:27 -0800 (PST)
+Received: by mail-ua1-x92a.google.com with SMTP id w18so2874286uar.8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Feb 2022 08:44:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=eclypsium.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2VGMhr11GA+eGLRm5CsL28eo528BHkwYTiIF+ncvNsE=;
-        b=IAiLk5cjQwcE3yLS3aO2GBCqcyaetSmqrMvYHWmRcTBrX/70H06j9PR2aE3QGP81gN
-         G6QDkvipCsGgjSUtRGArhWJu9iDWKOYWnm+NZ0aqk4cri2wqtuUQX+b9q3EK3qLf7feX
-         OImmnQkBiMNjk2/7Ue9/B8Qdinvi+e/rlfFOS1vMUliTuXgm65EiqOAZE9CaQY4tGH/U
-         /17cWo3icgYBFxnClGbVhoptcy+1QRAjpqIMCkUQhjxF94o8InjEYUfRnEDRxY6mI8V3
-         60dkSPCH/hnp20RoME00w3RlqarwXBsRUPrQ7hYsR3fup3yBWAysWmRuspyPg2EBrkB9
-         r+AQ==
+        bh=/7hWGiKDX/+3TtHvDCLSMJlu4NmyHYy7nVm6Glu5jcs=;
+        b=Eu44Mg8zNIVsl+UBg0lHCou2bGR731muhWBsGIFlH7Qlfig/tH9EjGG7LhYDeVUgL2
+         yBKfPclwTyg18UZrOiqfuJ89i8XybLNqTaYSX/a4KtBkhWzz5k8noCv5qKrQnf7pz9gC
+         cU9EIuCV0fRK8UzYYfyJ83sxVUdyV2whm2zfukAd37PEkif+0OQrFVjVtJRfk/NpB5kF
+         aTGPNskbxUyxI7LLEMPrnqlI95zdXOWkLpELHRbx4BnCz2oqk41Y/TO4YHXrNBFYCbhD
+         etxqFqFShnXPHvrKvugW+xoT0rdqJ0frp0xn6PltLCnhV9Fkya4hBOscS61TtYtWobdj
+         h4pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2VGMhr11GA+eGLRm5CsL28eo528BHkwYTiIF+ncvNsE=;
-        b=hUAF+xg6WQL9MtSp13SkFe9apdgKBNlWrLyG7QISGMQilsbBxhw1agTfkYVVrKBEi6
-         B5u2h2je62Jvmyz45oXziQ10RzDfgJCeyVRqjOuosaO40wBKjVWtrGFGokPHvGikjygH
-         X0xyNLtswo2nJQ55TJItykhvUtJ4M4lcCaIfADVkOS9uCUgFKG0+UWjqh3613vZEFaj0
-         4mZhGalw2ieTHN8jm2Eqataczw/D8HRiJYjkdUaw2PINuIuSXpe3p74TVqAgTF6wpOsd
-         igsShwC9SvbmvPNm/V+Y9bc/g0UYWt7tba2QVLf0fIlMSCyaWtaPdwy5VfaYFFSvKPPB
-         qjzA==
-X-Gm-Message-State: AOAM533smFZpmXQdgBa7MWDFlCYqMb9FxS5HsQg57tLRDPzRCZRLeoxB
-        6okmPSLCvdqluS1BO/ITFoFDHQ==
-X-Google-Smtp-Source: ABdhPJzsOFFOqxgDzTCzuaTzUcSCoJoy32VcScNJTJMZP7zNyU9OfyuKOow2hpJD7GfcAiCruPNRVA==
-X-Received: by 2002:a05:6122:c90:: with SMTP id ba16mr15282992vkb.39.1643906660499;
-        Thu, 03 Feb 2022 08:44:20 -0800 (PST)
+        bh=/7hWGiKDX/+3TtHvDCLSMJlu4NmyHYy7nVm6Glu5jcs=;
+        b=tEvIBH+VRJur/xeDiH2S40Ez/VQGOcW520oYHDUgwZe6tVnP5b6PaIVtaEoXdsNo+I
+         +7NYtTG+iBA2eIeSiENE+2iQc4gfIcZ7Vi00jpZJzb9hud8Aj43pT28FjZP4Pd7eoFtk
+         PWv2UN8+JFfWUkWiJKc1pnmY0OJ/TA/krdqGotcY81Z5ehwaNi/igO876/R199Ig7xSf
+         NDyUKDQs1ScOoBSCDSBtt1hKlCoYCu+ClJS862+ZrgtV+gDJsNNSFi8ROeHWY5cm3+s2
+         7Cuks/VxpwAFWpEFq9XCDxFQcQ1bkLPj3//lmTa8Y1+RmGBVWtgTjWPP6gb25pN/WXKO
+         uuNA==
+X-Gm-Message-State: AOAM531m8ODDjd1LiSPmD0jxYUGgFLZqOeBEfwjI/7BCiIRE/eRNKNDb
+        8DQP56WnUxY3Bp8Ry7uAZ+5mRg==
+X-Google-Smtp-Source: ABdhPJx2HB4OlovRK80h8tYU9Mdgc8buyu05GDejH1rOLWTHA+JswrW0YVKJpoDXnPTHBnmidcJ4GQ==
+X-Received: by 2002:a67:fd55:: with SMTP id g21mr14698421vsr.86.1643906666202;
+        Thu, 03 Feb 2022 08:44:26 -0800 (PST)
 Received: from localhost (host8.190-224-49.telecom.net.ar. [190.224.49.8])
-        by smtp.gmail.com with ESMTPSA id s11sm6623102vke.47.2022.02.03.08.44.15
+        by smtp.gmail.com with ESMTPSA id m185sm6362545vke.30.2022.02.03.08.44.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Feb 2022 08:44:20 -0800 (PST)
+        Thu, 03 Feb 2022 08:44:26 -0800 (PST)
 From:   Martin Fernandez <martin.fernandez@eclypsium.com>
 To:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, linux-mm@kvack.org
@@ -60,94 +60,73 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
         alison.schofield@intel.com, keescook@chromium.org,
         Martin Fernandez <martin.fernandez@eclypsium.com>
-Subject: [PATCH v6 5/6] x86/efi: Tag e820_entries as crypto capable from EFI memmap
-Date:   Thu,  3 Feb 2022 13:43:27 -0300
-Message-Id: <20220203164328.203629-6-martin.fernandez@eclypsium.com>
+Subject: [PATCH v6 6/6] drivers/node: Show in sysfs node's crypto capabilities
+Date:   Thu,  3 Feb 2022 13:43:28 -0300
+Message-Id: <20220203164328.203629-7-martin.fernandez@eclypsium.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
 References: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a function to iterate over the EFI Memory Map and mark the regions
-tagged with EFI_MEMORY_CPU_CRYPTO in the e820_table; and call it from
-efi_init if add_efi_memmap is disabled.
-
-Also modify do_add_efi_memmap to mark the regions there.
-
-If add_efi_memmap is false, also check that the e820_table has enough
-size to (possibly) store also the EFI memmap.
+Show in each node in sysfs if its memory is able to do be encrypted by
+the CPU, ie. if all its memory is marked with EFI_MEMORY_CPU_CRYPTO in
+the EFI memory map.
 
 Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
 ---
- arch/x86/platform/efi/efi.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ Documentation/ABI/testing/sysfs-devices-node | 10 ++++++++++
+ drivers/base/node.c                          | 10 ++++++++++
+ 2 files changed, 20 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-node
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 147c30a81f15..3efa1c620c75 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -184,6 +184,8 @@ static void __init do_add_efi_memmap(void)
- 		}
- 
- 		e820__range_add(start, size, e820_type);
-+		if (md->attribute & EFI_MEMORY_CPU_CRYPTO)
-+			e820__range_set_crypto_capable(start, size);
- 	}
- 	e820__update_table(e820_table);
+diff --git a/Documentation/ABI/testing/sysfs-devices-node b/Documentation/ABI/testing/sysfs-devices-node
+new file mode 100644
+index 000000000000..0d1fd86c9faf
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-devices-node
+@@ -0,0 +1,10 @@
++What:		/sys/devices/system/node/nodeX/crypto_capable
++Date:		February 2022
++Contact:	Martin Fernandez <martin.fernandez@eclypsium.com>
++Users:		fwupd (https://fwupd.org)
++Description:
++		This value is 1 if all system memory in this node is
++		marked with EFI_MEMORY_CPU_CRYPTO, indicating that the
++		system memory is capable of being protected with the
++		CPU’s memory cryptographic capabilities. It is 0
++		otherwise.
+\ No newline at end of file
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 87acc47e8951..dabaed997ecd 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -560,11 +560,21 @@ static ssize_t node_read_distance(struct device *dev,
  }
-@@ -441,6 +443,34 @@ static int __init efi_config_init(const efi_config_table_type_t *arch_tables)
- 	return ret;
- }
+ static DEVICE_ATTR(distance, 0444, node_read_distance, NULL);
  
-+static void __init efi_mark_e820_regions_as_crypto_capable(void)
++static ssize_t crypto_capable_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
 +{
-+	efi_memory_desc_t *md;
++	struct pglist_data *pgdat = NODE_DATA(dev->id);
 +
-+	/*
-+	 * Calling e820__range_set_crypto_capable several times
-+	 * creates a bunch of entries in the E820 table. They probably
-+	 * will get merged when calling update_table but we need the
-+	 * space there anyway
-+	 */
-+	if (efi.memmap.nr_map + e820_table->nr_entries >= E820_MAX_ENTRIES) {
-+		pr_err_once("E820 table is not large enough to fit EFI memmap; not marking entries as crypto capable\n");
-+		return;
-+	}
-+
-+	for_each_efi_memory_desc(md) {
-+		if (md->attribute & EFI_MEMORY_CPU_CRYPTO)
-+			e820__range_set_crypto_capable(md->phys_addr,
-+						       md->num_pages << EFI_PAGE_SHIFT);
-+	}
-+
-+	/*
-+	 * We added and modified regions so it's good to update the
-+	 * table to merge/sort
-+	 */
-+	e820__update_table(e820_table);
++	return sysfs_emit(buf, "%d\n", pgdat->crypto_capable);
 +}
++static DEVICE_ATTR_RO(crypto_capable);
 +
- void __init efi_init(void)
- {
- 	if (IS_ENABLED(CONFIG_X86_32) &&
-@@ -494,6 +524,13 @@ void __init efi_init(void)
- 	set_bit(EFI_RUNTIME_SERVICES, &efi.flags);
- 	efi_clean_memmap();
+ static struct attribute *node_dev_attrs[] = {
+ 	&dev_attr_meminfo.attr,
+ 	&dev_attr_numastat.attr,
+ 	&dev_attr_distance.attr,
+ 	&dev_attr_vmstat.attr,
++	&dev_attr_crypto_capable.attr,
+ 	NULL
+ };
  
-+	/*
-+	 * If add_efi_memmap then there is no need to mark the regions
-+	 * again
-+	 */
-+	if (!add_efi_memmap)
-+		efi_mark_e820_regions_as_crypto_capable();
-+
- 	if (efi_enabled(EFI_DBG))
- 		efi_print_memmap();
- }
 -- 
 2.30.2
 
