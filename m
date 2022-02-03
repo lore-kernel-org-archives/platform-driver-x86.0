@@ -2,126 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3082C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 18:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872DCC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 20:46:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353403AbiBCSYb (ORCPT
+        id S240307AbiBCUqk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Feb 2022 13:24:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56856 "EHLO
+        Thu, 3 Feb 2022 15:46:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353371AbiBCSYa (ORCPT
+        with ESMTP id S1355482AbiBCUph (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Feb 2022 13:24:30 -0500
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A8FC06173B
-        for <platform-driver-x86@vger.kernel.org>; Thu,  3 Feb 2022 10:24:30 -0800 (PST)
-Received: by mail-yb1-xb35.google.com with SMTP id j2so11769400ybu.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Feb 2022 10:24:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=1fRhWHaiX3rkmKEuOvxk4MdWU+5ch329S/1ViDgbzuQ=;
-        b=KX8rWrzrI4SmeeXMyhAJN94FJ/BtvuLWK+a+fEtNaIBeSUb/nXfmIj+MN9RQ0o7+mQ
-         SwQe77+rarjoaurkLkwjWstN1NWmV+xd9D3Wn3XvJSyJukBCZpXcmD/HDqOwApqaTAak
-         XGNvn02OrLI5jDtuy9UljW7DOLBN7KMgFEyXf/gf/4VpE4WqqiBa3B4q9wF3v5tDvzFs
-         AqHfqKsKQt/6eF0lcKT5E8BYQjGIkPqsswV9TXkfHqhy55m1gPO5L0xwD4gXLybdIrfq
-         zJUjnTeaQQUUkGj6vSUElVHZzCuVzQxX9ETcx+/12BQY9watxH97OYFpCpLkWbPlIgZz
-         tXfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=1fRhWHaiX3rkmKEuOvxk4MdWU+5ch329S/1ViDgbzuQ=;
-        b=m/3xYZjcyfZaPthdRhPPlzN5sCDIJGxeHYd7Ycen/BdAiAkLNYwV8sSW+h+Il3bi4c
-         of4wtiDedsOUNvhjgThs0jGgmNER8C+6K57+KM5Aw6SJRGXkzcI06UAWg3qDeXPhY8FP
-         /DF7dFNN5lqyJ68Pemqyk5UqR1POQOlw5un3Sqe913qbOH1CWDV1xVGEEMSds6qMhaIz
-         WZAV6DfErwsqZoT8yYe5IugBDkJcFOLSVN+pYiGQmGnuc0wyw6Ogj04smiVBhW4NM7bB
-         PQNbn6XVlgDJW4C7BV35+14f54MWGWMBjKSdxQhbcvvsOXj41ojP592ok5VYxGm/KW/7
-         fOXA==
-X-Gm-Message-State: AOAM5327T+nLA/v2Lf6crKeiYUQVtQkmdwH+EjAZImnZGpD1ArcpMfot
-        iC9CK1n5BrgC/ltOJeYvjA0xklGq+FoVB0yT65mmLw==
-X-Google-Smtp-Source: ABdhPJwUT60W3ByLAudmauSaRtgoF18uDF+5y3xNpKLwb86Fuj5obEj1Uw0y9+Xke1Xujg5UscpZstiv8/jNzr6gMZE=
-X-Received: by 2002:a81:1d8f:: with SMTP id d137mr5310092ywd.383.1643912669833;
- Thu, 03 Feb 2022 10:24:29 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a81:1756:0:0:0:0:0 with HTTP; Thu, 3 Feb 2022 10:24:29 -0800 (PST)
-In-Reply-To: <YfwZ6ne9ND1JaReS@kernel.org>
-References: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
- <20220203164328.203629-2-martin.fernandez@eclypsium.com> <YfwZ6ne9ND1JaReS@kernel.org>
-From:   Martin Fernandez <martin.fernandez@eclypsium.com>
-Date:   Thu, 3 Feb 2022 15:24:29 -0300
-Message-ID: <CAKgze5ZVHax5AWP3Q764dSmjAJWncyZbn4ENQCkYs0ahbG9Haw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/6] mm/memblock: Tag memblocks with crypto capabilities
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com, keescook@chromium.org
+        Thu, 3 Feb 2022 15:45:37 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA92C06173E
+        for <platform-driver-x86@vger.kernel.org>; Thu,  3 Feb 2022 12:41:45 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C64261584
+        for <platform-driver-x86@vger.kernel.org>; Thu,  3 Feb 2022 20:41:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E8688C36AEA
+        for <platform-driver-x86@vger.kernel.org>; Thu,  3 Feb 2022 20:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643920904;
+        bh=HSmbMAQJ+kbuxfaKNQ0ymQA04LvzBooc/FFyf+uoegA=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=nBaytEqXhX7iyi9EIi/tP9T0DE6M+fFauTpm2PikJUynO5LV7j8lFlpiCMjqXBIiB
+         u1+bbdLqmTpLwh4xRzmHqjYbvUwmnoevCft9l5D3T3rbW+IABaA1PHjJ+RoH51f9so
+         d3bWIMK9wgJTbqYiZnC1GTbjuciCM6IueWRDOAN9hk6d243NvtI4tOjHFX8jGMhYGA
+         3FJnCfWxvkP3lVlcl+fb41xibQB7lQbJ/3CuLC3d9AG3LJGvrFCxOxCZGGxOp8BFXj
+         YUT3tsT05lgu+rzLL0kokBpFpuxpbU+Su0M1x2wtLb0DVG+RW0NIqSnc5c2tGisoF4
+         nKzdOB/EJ18JA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id D7B4CC05FD1; Thu,  3 Feb 2022 20:41:44 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 03 Feb 2022 20:41:42 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-IotfWOwK5m@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2/3/22, Mike Rapoport <rppt@kernel.org> wrote:
-> On Thu, Feb 03, 2022 at 01:43:23PM -0300, Martin Fernandez wrote:
->> +/**
->> + * memblock_node_is_crypto_capable - get if whole node is capable
->> + * of encryption
->> + * @nid: number of node
->> + *
->> + * Iterate over all memory memblock_type and find if all regions under
->> + * node @nid are capable of hardware encryption.
->> + *
->> + * Return:
->> + * true if every region in memory memblock_type is capable of
->> + * encryption, false otherwise.
->> + */
->> +bool __init_memblock memblock_node_is_crypto_capable(int nid)
->> +{
->> +	struct memblock_region *region;
->> +	bool crypto_capable = false;
->> +	bool not_crypto_capable = false;
->> +
->> +	for_each_mem_region(region) {
->> +		if (memblock_get_region_node(region) == nid) {
->> +			crypto_capable =
->> +				crypto_capable ||
->> +				(region->flags & MEMBLOCK_CRYPTO_CAPABLE);
->> +			not_crypto_capable =
->> +				not_crypto_capable ||
->> +				!(region->flags & MEMBLOCK_CRYPTO_CAPABLE);
->
-> Isn't
->
->  			if (region->flags & MEMBLOCK_CRYPTO_CAPABLE)
-> 				crypto_capable++;
-> 			else
-> 				not_crypto_capable++;
->
-> simpler and clearer?
->
-> (of course s/bool/int in the declaration)
->
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Yes! It is. I like that.
+Denis Pauk (pauk.denis@gmail.com) changed:
 
->> +		}
->> +	}
->> +
->> +	if (crypto_capable && not_crypto_capable)
->> +		pr_warn_once("Node %d has regions that are encryptable and regions that
->> aren't",
->> +			     nid);
->
-> This will print only the first node with mixed regions. With a single
-> caller of memblock_node_is_crypto_capable() I think pr_warn() is ok.
->
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #300351|0                           |1
+        is obsolete|                            |
 
-Yes, you are correct, don't really want _once here.
+--- Comment #213 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 300389
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300389&action=3Dedit
+Asus WMI for nct6775 v5.16 base (2022.02.03)
+
+Added SENSORS_ASUS_EC driver.=20
+
+Same as SENSORS_ASUS_WMI_EC but much faster.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
