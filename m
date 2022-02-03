@@ -2,112 +2,155 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BE7C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 14:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B947EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 14:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236889AbiBCOOd (ORCPT
+        id S236515AbiBCOkJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Feb 2022 09:14:33 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:53144 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234727AbiBCOOb (ORCPT
+        Thu, 3 Feb 2022 09:40:09 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:39508 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229558AbiBCOkI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Feb 2022 09:14:31 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        Thu, 3 Feb 2022 09:40:08 -0500
+Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 305722114D;
-        Thu,  3 Feb 2022 14:14:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1643897670; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IsVlcPPz4fb5Gf2ImKOnD8UP/Sqe6RXNED24nJE5qKY=;
-        b=TdvsgBazf40G3Zr1OXu884xSANl5KtoMWSjvIFL1QtFI6DEIRomHKAvbkSPCY8f8jade6c
-        gtkp/jGWUimi84/2NsyRq93Cl/PIU8PIsmijCSLm7nidDZnlde4c1dxU8QCxiYoe8nnKci
-        icwsJBsgbD4JpDws/ubGrlApiz7G2E4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1643897670;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IsVlcPPz4fb5Gf2ImKOnD8UP/Sqe6RXNED24nJE5qKY=;
-        b=fwkYbBPid4pC93NTSV6xWGdFvVUHzDurGFrnYL0GBEcvMzOIvcZoOcxSMwN3nzXk8fLfKb
-        /6KZpAwTIvHjfnAw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 706F313C0F;
-        Thu,  3 Feb 2022 14:14:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 4mTgGUXj+2HsVQAAMHmgww
-        (envelope-from <jdelvare@suse.de>); Thu, 03 Feb 2022 14:14:29 +0000
-Date:   Thu, 3 Feb 2022 15:14:24 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v4 6/8] i2c: i801: convert to use common P2SB accessor
-Message-ID: <20220203151424.2a35c864@endymion>
-In-Reply-To: <20220131151346.45792-7-andriy.shevchenko@linux.intel.com>
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
-        <20220131151346.45792-7-andriy.shevchenko@linux.intel.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0CCAC1EC04C1;
+        Thu,  3 Feb 2022 15:40:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1643899203;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=uRkidV9rm70r65t8zRK5LUK617v6jjX8xXx77Av6a7w=;
+        b=jxAChagwEN26K+oMim082LNKxapBTumZtbjTBfRVFD5daY/HoWixlnEmKTAc2XEdLJT/gU
+        aySeLabM9BOVCerKWItMK/Zad5zUInAVLath7/aGR/VFOb88ZQ2S8iw6kifwf17//YIwtq
+        cXY5uMx2JCARDEOueHU8GEBBhBSbMUA=
+Date:   Thu, 3 Feb 2022 15:39:58 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v9 24/43] x86/compressed/acpi: Move EFI detection to
+ helper
+Message-ID: <YfvpPowvlz0reOZ/@zn.tnic>
+References: <20220128171804.569796-1-brijesh.singh@amd.com>
+ <20220128171804.569796-25-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220128171804.569796-25-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy,
+On Fri, Jan 28, 2022 at 11:17:45AM -0600, Brijesh Singh wrote:
+> diff --git a/arch/x86/boot/compressed/efi.c b/arch/x86/boot/compressed/efi.c
+> new file mode 100644
+> index 000000000000..daa73efdc7a5
+> --- /dev/null
+> +++ b/arch/x86/boot/compressed/efi.c
+> @@ -0,0 +1,50 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Helpers for early access to EFI configuration table.
+> + *
+> + * Originally derived from arch/x86/boot/compressed/acpi.c
+> + */
+> +
+> +#include "misc.h"
+> +#include <linux/efi.h>
+> +#include <asm/efi.h>
 
-On Mon, 31 Jan 2022 17:13:44 +0200, Andy Shevchenko wrote:
-> Since we have a common P2SB accessor in tree we may use it instead of
-> open coded variants.
-> 
-> Replace custom code by p2sb_bar() call.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/i2c/busses/Kconfig        |  1 +
->  drivers/i2c/busses/i2c-i801.c     | 39 +++++++------------------------
->  drivers/platform/x86/intel/p2sb.c |  6 +++++
->  3 files changed, 16 insertions(+), 30 deletions(-)
-> (...)
+Yap, it is includes like that which cause this whole decompressor
+include hell. One day...
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
+> +
+> +/**
+> + * efi_get_type - Given boot_params, determine the type of EFI environment.
+> + *
+> + * @boot_params:        pointer to boot_params
+> + *
+> + * Return: EFI_TYPE_{32,64} for valid EFI environments, EFI_TYPE_NONE otherwise.
+> + */
+> +enum efi_type efi_get_type(struct boot_params *boot_params)
 
-And thank you for taking the time to write this neat P2SB API and to
-convert all the code that was doing the same so far.
+				struct boot_params *bp
+
+> +{
+> +	struct efi_info *ei;
+> +	enum efi_type et;
+> +	const char *sig;
+> +
+> +	ei = &boot_params->efi_info;
+> +	sig = (char *)&ei->efi_loader_signature;
+> +
+> +	if (!strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
+> +		et = EFI_TYPE_64;
+> +	} else if (!strncmp(sig, EFI32_LOADER_SIGNATURE, 4)) {
+> +		et = EFI_TYPE_32;
+> +	} else {
+> +		debug_putstr("No EFI environment detected.\n");
+> +		et = EFI_TYPE_NONE;
+> +	}
+> +
+> +#ifndef CONFIG_X86_64
+> +	/*
+> +	 * Existing callers like acpi.c treat this case as an indicator to
+> +	 * fall-through to non-EFI, rather than an error, so maintain that
+> +	 * functionality here as well.
+> +	 */
+> +	if (ei->efi_systab_hi || ei->efi_memmap_hi) {
+> +		debug_putstr("EFI system table is located above 4GB and cannot be accessed.\n");
+> +		et = EFI_TYPE_NONE;
+> +	}
+> +#endif
+> +
+> +	return et;
+> +}
+> diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+> index 01cc13c12059..a26244c0fe01 100644
+> --- a/arch/x86/boot/compressed/misc.h
+> +++ b/arch/x86/boot/compressed/misc.h
+> @@ -176,4 +176,20 @@ void boot_stage2_vc(void);
+>  
+>  unsigned long sev_verify_cbit(unsigned long cr3);
+>  
+> +enum efi_type {
+> +	EFI_TYPE_64,
+> +	EFI_TYPE_32,
+> +	EFI_TYPE_NONE,
+> +};
+
+Haha, EFI folks will be wondering where in the spec that thing is... :-)))
 
 -- 
-Jean Delvare
-SUSE L3 Support
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
