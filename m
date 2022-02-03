@@ -2,156 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB00C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 06:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DD2C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 10:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344660AbiBCGuq (ORCPT
+        id S232580AbiBCKdP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Feb 2022 01:50:46 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:57642 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231599AbiBCGuq (ORCPT
+        Thu, 3 Feb 2022 05:33:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:56931 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230227AbiBCKdO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Feb 2022 01:50:46 -0500
-Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 31F5D1EC052A;
-        Thu,  3 Feb 2022 07:50:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1643871040;
+        Thu, 3 Feb 2022 05:33:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643884394;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=NgVVgxFrnWWDzRBeIt1G+nS4mvlLadpwFtGpi1OsBDY=;
-        b=W7PkXA4BWOfHL2epgzq64IxceglUapTsm9fVBcMxiZeVngOLhvuPVR+DGq/C1Pu2OClb4D
-        mLamS3Mf82FSRYNmXEKHrC7/Lkw3EEJRfL/mxplBkopLWeX0BwQFM6cYmYgg/RlwQWvLDH
-        n23VNqfMU2hBhj/hclxRdcF/wWaAdWQ=
-Date:   Thu, 3 Feb 2022 07:50:35 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v9 20/43] x86/sev: Use SEV-SNP AP creation to start
- secondary CPUs
-Message-ID: <Yft7O06d+iNPGCuL@zn.tnic>
-References: <20220128171804.569796-1-brijesh.singh@amd.com>
- <20220128171804.569796-21-brijesh.singh@amd.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=LseT0Vt6E0K1kNheTnIs5eam15SsxtUDjvPXR9oEMVI=;
+        b=YVtU0rLx7eSh0AQwnYJfhwvnteyr5KvpKPJInpj3eCsA7CL8asxO7snrjq+uSc2wKZ0PLW
+        LosQhe5oj527Dz7/o9sIU/rLyuwz1mHZDomS89aovt6I4oM3qMSAX1GM+nToJGt7TARd0Q
+        cwUda5gE7r9+pLgUx/Rj+y7BSOlE4Fo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-620-GuagzSSxOKmbJFJ4WBXIfg-1; Thu, 03 Feb 2022 05:33:11 -0500
+X-MC-Unique: GuagzSSxOKmbJFJ4WBXIfg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B91039396;
+        Thu,  3 Feb 2022 10:33:09 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.196.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 43BDC108B8;
+        Thu,  3 Feb 2022 10:33:08 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
+        David Dreschner <david@dreschner.net>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Add dual-fan quirk for T15g (2nd gen)
+Date:   Thu,  3 Feb 2022 11:33:02 +0100
+Message-Id: <20220203103302.49401-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220128171804.569796-21-brijesh.singh@amd.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 11:17:41AM -0600, Brijesh Singh wrote:
-> @@ -822,6 +842,236 @@ void snp_set_memory_private(unsigned long vaddr, unsigned int npages)
->  	pvalidate_pages(vaddr, npages, true);
->  }
->  
-> +static int snp_set_vmsa(void *va, bool vmsa)
-> +{
-> +	u64 attrs;
-> +
-> +	/*
-> +	 * Running at VMPL0 allows the kernel to change the VMSA bit for a page
-> +	 * using the RMPADJUST instruction. However, for the instruction to
-> +	 * succeed it must target the permissions of a lesser privileged
+The ThinkPad T15g Gen 2 has 2 fan, add a TPACPI_FAN_2CTL quirk entry for
+it to the fan_quirk_table[] so that both fans can be controllerd.
 
-"lesser privileged/higher number VMPL level"
+Reported-and-tested-by: David Dreschner <david@dreschner.net>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-so that it is perfectly clear what this means.
-
-> +	 * VMPL level, so use VMPL1 (refer to the RMPADJUST instruction in the
-> +	 * AMD64 APM Volume 3).
-> +	 */
-> +	attrs = 1;
-> +	if (vmsa)
-> +		attrs |= RMPADJUST_VMSA_PAGE_BIT;
-> +
-> +	return rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
-> +}
-
-...
-
-> +static int wakeup_cpu_via_vmgexit(int apic_id, unsigned long start_ip)
-> +{
-> +	struct sev_es_save_area *cur_vmsa, *vmsa;
-> +	struct ghcb_state state;
-> +	unsigned long flags;
-> +	struct ghcb *ghcb;
-> +	u8 sipi_vector;
-> +	int cpu, ret;
-> +	u64 cr4;
-> +
-> +	/*
-> +	 * SNP-SNP AP creation requires that the hypervisor must support SEV-SNP
-	   ^^^^^^^
-
-See what I mean? :-)
-
-That marketing has brainwashed y'all.
-
-> +	 * feature. The SEV-SNP feature check is already performed, so just check
-> +	 * for the AP_CREATION feature flag.
-> +	 */
-
-Let's clean this one:
-
-	/*
-	 * The hypervisor SNP feature support check has happened earlier, just check
-	 * the AP_CREATION one here.
-	 */
-
-
-> +	if (!(sev_hv_features & GHCB_HV_FT_SNP_AP_CREATION))
-> +		return -EOPNOTSUPP;
-> +
-> +	/*
-> +	 * Verify the desired start IP against the known trampoline start IP
-> +	 * to catch any future new trampolines that may be introduced that
-> +	 * would require a new protected guest entry point.
-> +	 */
-> +	if (WARN_ONCE(start_ip != real_mode_header->trampoline_start,
-> +		      "Unsupported SEV-SNP start_ip: %lx\n", start_ip))
-> +		return -EINVAL;
-> +
-> +	/* Override start_ip with known protected guest start IP */
-> +	start_ip = real_mode_header->sev_es_trampoline_start;
-
-Yah, I'd like to get rid of that ->sev_es_trampoline_start and use the
-normal ->trampoline_start. TDX is introducing a third one even and
-they're all mutually-exclusive u32 values.
-
-...
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index bd045486b933..3424b080db77 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -8703,6 +8703,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_Q_LNV3('N', '4', '0', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (4nd gen) */
+ 	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v (1st gen) */
+ 	TPACPI_Q_LNV3('N', '3', '2', TPACPI_FAN_2CTL),	/* X1 Carbon (9th gen) */
++	TPACPI_Q_LNV3('N', '3', '7', TPACPI_FAN_2CTL),  /* T15g (2nd gen) */
+ 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
+ };
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.33.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
