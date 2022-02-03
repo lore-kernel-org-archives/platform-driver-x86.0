@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F5FC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 10:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D801C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Feb 2022 10:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236370AbiBCKkU (ORCPT
+        id S241262AbiBCKpC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Feb 2022 05:40:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48969 "EHLO
+        Thu, 3 Feb 2022 05:45:02 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:23908 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234197AbiBCKkP (ORCPT
+        by vger.kernel.org with ESMTP id S234388AbiBCKpB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Feb 2022 05:40:15 -0500
+        Thu, 3 Feb 2022 05:45:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643884815;
+        s=mimecast20190719; t=1643885101;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iF9IVWvlzL/qClpscwHGHUc/fyfoMXfsUMhqjE8f3MA=;
-        b=IDpJ2/XxSOtng9C7GqnBhisbUOBgiQzkehn+1CHQdzqu3OM1UbMPIbfcbmhwhqIo15vLjv
-        Ouu5RLpHNPCWl7tD8LejBVIA5JUMNRKL5kSuV9CWjROa+fZJ853zmaJa0mgNzzCWu7dZdI
-        ya+XaZu6MOyWcWyRSMlNFXp1I4OoeMY=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=6jbdwerPehMJZgP+utUUo4nFfSR4t23J67pZxvwQ5qI=;
+        b=F9cNS0nonnU0YzTXQt6pyyld+UMD8ZVB/Bh9JH8NhPrgYk42k7U0LjBY1vZ1vUKEKNMS0o
+        FgUJ/RYIWToaf/skQzIWFzf5iYlnapkJysAB+jlmItd1ezrAcflvP/b0Ak20a8BKQPhJSM
+        JNS+lYqpIbetQ3RGsME6IVwAL8/wNjw=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-186-ltl0M42hNACXJsPtRWcoNw-1; Thu, 03 Feb 2022 05:40:12 -0500
-X-MC-Unique: ltl0M42hNACXJsPtRWcoNw-1
-Received: by mail-ed1-f71.google.com with SMTP id w3-20020a50c443000000b0040696821132so1208487edf.22
-        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Feb 2022 02:40:12 -0800 (PST)
+ us-mta-665-nB5gU9y4OOusysiNNRdCHw-1; Thu, 03 Feb 2022 05:44:59 -0500
+X-MC-Unique: nB5gU9y4OOusysiNNRdCHw-1
+Received: by mail-ej1-f72.google.com with SMTP id rl11-20020a170907216b00b006b73a611c1aso972830ejb.22
+        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Feb 2022 02:44:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=iF9IVWvlzL/qClpscwHGHUc/fyfoMXfsUMhqjE8f3MA=;
-        b=GJw+5YCMkdxdtEHFh+isAHUQGoeVfdKxUyaoAd2m3fj9cTxINvmoXt5M7FO0SK0Lqa
-         e7L9rlU7ydLOOmH0XVHyo7+207L4QYVtOtSxX+nqy4JuYcF6y8E3pYi8sNO4uKm3d3Bz
-         6jR2a9r3mhkSZwjvRh5J+ghmWi+W7kys67tEr2ds/3dQJIVA9EGJpOeObW9Smih8YLmx
-         wdSS66dXI+rWVdDXdsUU9SHgDd2AjLLXc+sGQWYPHjpyIbejh+y98cu+jR/S1NNs7uCx
-         A6kCXudAt+SsiYJFBgDcKV1NhFQn+cwEMnmb66/1kt2pxm2N8Yzoqg5gK+3KLz0yfdSJ
-         uCJA==
-X-Gm-Message-State: AOAM530dcRrwT2eVonzq8SBhUOXvoa9nzpVUlVcOn9F1bktpjUpNGiF2
-        Dkx+Xw8Gc9tTw8OXv3BjCAXdP4lW/svsTpYRmAIjoZzHx87Iygr/y5GF+jPRKstKb2u4pHtON9I
-        KjSodNyRa9Pfu305uYOY3wJFsVi88vx3yQw==
-X-Received: by 2002:a17:907:d0d:: with SMTP id gn13mr29254571ejc.266.1643884811000;
-        Thu, 03 Feb 2022 02:40:11 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJw38e8yKQ+50WABfgP/CdNnYgCDcDWAlrfBiwh9rs0Aw8aLmugQyqOluCm0HXTr4XjDcT5YtQ==
-X-Received: by 2002:a17:907:d0d:: with SMTP id gn13mr29254556ejc.266.1643884810787;
-        Thu, 03 Feb 2022 02:40:10 -0800 (PST)
+        bh=6jbdwerPehMJZgP+utUUo4nFfSR4t23J67pZxvwQ5qI=;
+        b=2KIBMODbvoncoBq8vR3J4hAGWPGyca4DDX90Cf57PqVYMNJiovAzU6hVMshiKSWmEH
+         OagN8qHq1k9Tunj25PTXQ3Fk1Fs0XS2JOIDTVj7Pr0M6/pXsQ0Xx0gaIYI+RIKH2LUfl
+         tefWPwbpdipPE2qDAzH6HMJLTfvL6KmjYwi/mKmnjSwJayq1VQRAtAFb9YRi5Xn6GYjT
+         IPd2p11jKB1WgxN3t3/gnqXzFrYhrlb3I8RMKQl3gkabhvolajgGXHrybf3DsByLkQnG
+         yyuaQRajBUr5d2iGzPTB1OPGVHlF7nTfrWaHfLTW3enG8GZER+7zJqo6oseMxqblfMpc
+         BLxw==
+X-Gm-Message-State: AOAM5326LFl5jmnP56VljpjYNP5Vl21zcVH79lngVeB+mKXSCowuM4Ls
+        kTEI+brpUavW/Y5DIGNXEvlgdxV6FwqafSZkzsHlU755gc5J44E4xj4FbrpifhGWr6AmUyrTgwE
+        c1fUA4on0ixSo/CStSdOWH+25U8antBKG1Q==
+X-Received: by 2002:a05:6402:348a:: with SMTP id v10mr34614491edc.249.1643885098352;
+        Thu, 03 Feb 2022 02:44:58 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJziGnZ4JGjZ6FxAD97378swmhF6EsF+lw6m58rqHfjOByG6S7DBP89wcwicAJQgVUaAaJkrQw==
+X-Received: by 2002:a05:6402:348a:: with SMTP id v10mr34614476edc.249.1643885098152;
+        Thu, 03 Feb 2022 02:44:58 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id f18sm16599860ejh.97.2022.02.03.02.40.10
+        by smtp.gmail.com with ESMTPSA id c14sm22295393edy.66.2022.02.03.02.44.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Feb 2022 02:40:10 -0800 (PST)
-Message-ID: <11cec5e6-e3b9-ca5b-7b21-da9eff82c24e@redhat.com>
-Date:   Thu, 3 Feb 2022 11:40:09 +0100
+        Thu, 03 Feb 2022 02:44:57 -0800 (PST)
+Message-ID: <155858a5-1736-caee-d44d-b56e54797664@redhat.com>
+Date:   Thu, 3 Feb 2022 11:44:56 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH] platform: surface: Replace acpi_bus_get_device()
+Subject: Re: [PATCH] surface: surface3-wmi: Simplify resource management
 Content-Language: en-US
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org,
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Mark Gross <markgross@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-References: <5805278.lOV4Wx5bFT@kreacher>
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <8b1a6d05036d5d9527241b2345482b369331ce5c.1643531799.git.christophe.jaillet@wanadoo.fr>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <5805278.lOV4Wx5bFT@kreacher>
+In-Reply-To: <8b1a6d05036d5d9527241b2345482b369331ce5c.1643531799.git.christophe.jaillet@wanadoo.fr>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,15 +79,19 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/26/22 20:41, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 1/30/22 09:36, Christophe JAILLET wrote:
+> 's3_wmi.input' is a managed resource, so there should be no need to free it
+> explicitly.
 > 
-> Replace acpi_bus_get_device() that is going to be dropped with
-> acpi_fetch_acpi_dev().
+> Moreover, 's3_wmi' is a global variable. 's3_wmi.input' should be NULL
+> when this error handling path is executed, because it has not been
+> assigned yet.
 > 
-> No intentional functional impact.
+> All this is puzzling. So simplify it and remove a few lines of code to have
+> it be more straightforward.
 > 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Fixes: 3dda3b3798f9 ("platform/x86: Add custom surface3 platform device for controlling LID")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -107,49 +111,30 @@ Hans
 
 
 > ---
->  drivers/platform/surface/surface3-wmi.c        |   12 ++++--------
->  drivers/platform/surface/surface_acpi_notify.c |    3 ++-
->  2 files changed, 6 insertions(+), 9 deletions(-)
+> Compile tested only
+> ---
+>  drivers/platform/surface/surface3-wmi.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 > 
-> Index: linux-pm/drivers/platform/surface/surface3-wmi.c
-> ===================================================================
-> --- linux-pm.orig/drivers/platform/surface/surface3-wmi.c
-> +++ linux-pm/drivers/platform/surface/surface3-wmi.c
-> @@ -116,15 +116,11 @@ static acpi_status s3_wmi_attach_spi_dev
->  					    void *data,
->  					    void **return_value)
->  {
-> -	struct acpi_device *adev, **ts_adev;
-> +	struct acpi_device *adev = acpi_fetch_acpi_dev(handle);
-> +	struct acpi_device **ts_adev = data;
+> diff --git a/drivers/platform/surface/surface3-wmi.c b/drivers/platform/surface/surface3-wmi.c
+> index 09ac9cfc40d8..b9a4b2d81f4b 100644
+> --- a/drivers/platform/surface/surface3-wmi.c
+> +++ b/drivers/platform/surface/surface3-wmi.c
+> @@ -190,14 +190,11 @@ static int s3_wmi_create_and_register_input(struct platform_device *pdev)
 >  
-> -	if (acpi_bus_get_device(handle, &adev))
-> -		return AE_OK;
-> -
-> -	ts_adev = data;
-> -
-> -	if (strncmp(acpi_device_bid(adev), SPI_TS_OBJ_NAME,
-> -	    strlen(SPI_TS_OBJ_NAME)))
-> +	if (!adev || strncmp(acpi_device_bid(adev), SPI_TS_OBJ_NAME,
-> +			     strlen(SPI_TS_OBJ_NAME)))
->  		return AE_OK;
+>  	error = input_register_device(input);
+>  	if (error)
+> -		goto out_err;
+> +		return error;
 >  
->  	if (*ts_adev) {
-> Index: linux-pm/drivers/platform/surface/surface_acpi_notify.c
-> ===================================================================
-> --- linux-pm.orig/drivers/platform/surface/surface_acpi_notify.c
-> +++ linux-pm/drivers/platform/surface/surface_acpi_notify.c
-> @@ -770,7 +770,8 @@ static acpi_status san_consumer_setup(ac
->  		return AE_OK;
+>  	s3_wmi.input = input;
 >  
->  	/* Ignore ACPI devices that are not present. */
-> -	if (acpi_bus_get_device(handle, &adev) != 0)
-> +	adev = acpi_fetch_acpi_dev(handle);
-> +	if (!adev)
->  		return AE_OK;
+>  	return 0;
+> - out_err:
+> -	input_free_device(s3_wmi.input);
+> -	return error;
+>  }
 >  
->  	san_consumer_dbg(&pdev->dev, handle, "creating device link\n");
-> 
-> 
+>  static int __init s3_wmi_probe(struct platform_device *pdev)
 > 
 
