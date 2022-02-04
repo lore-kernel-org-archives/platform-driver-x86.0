@@ -2,103 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CC7C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Feb 2022 13:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D505CC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Feb 2022 13:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354378AbiBDNXI (ORCPT
+        id S1351393AbiBDNiO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Feb 2022 08:23:08 -0500
-Received: from mga04.intel.com ([192.55.52.120]:56121 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235551AbiBDNXI (ORCPT
+        Fri, 4 Feb 2022 08:38:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229609AbiBDNiO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Feb 2022 08:23:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643980988; x=1675516988;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TV/vGanZAMh7EU9vt4bRAQbwXvJ/Ldm53ID5furO1tw=;
-  b=JwRWA76LYzJl8mxy3+QTgZQ4M/1g2c7c7VGq1bfFeTf6TfCH1a+GMYj7
-   N2EOn3ebi0QMK3zZy8QtmQ9lC9zsx8seStNtmWh3q0uBRAU0fxOD1geE0
-   NjHRqIAfhqMHKbQcD+DgQjuJq8xgoWlDcesf72x2fxOi/+48cbgHpO4hf
-   X5++PA36J74HdSJY7Kocr+B89JGLesKxDl1f0ZzvuqXBzLq7jZvfuucAj
-   hJvETrBIuNYbpoaFB4DjOICAqxRrsgM4T2mRDADR4zWJdNwl/KnYAcCB3
-   fkYzrJNXnO8gPpjc6lOESeopNCjcdpVG57awCCJz4nH9viUQWnK6fcP4I
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10247"; a="247198170"
-X-IronPort-AV: E=Sophos;i="5.88,342,1635231600"; 
-   d="scan'208";a="247198170"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2022 05:23:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,342,1635231600"; 
-   d="scan'208";a="535529645"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 04 Feb 2022 05:23:08 -0800
-Received: from colson-mobl.amr.corp.intel.com (colson-mobl.amr.corp.intel.com [10.251.2.6])
-        by linux.intel.com (Postfix) with ESMTP id D40EE580718;
-        Fri,  4 Feb 2022 05:23:07 -0800 (PST)
-Message-ID: <372f76f7b1b7cf3d0ca38a7a84bcc23322ff12ed.camel@linux.intel.com>
-Subject: Re: [PATCH V5 1/3] platform/x86: Add Intel Software Defined Silicon
- driver
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Joe Perches <joe@perches.com>, hdegoede@redhat.com,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        srinivas.pandruvada@intel.com, mgross@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>
-Date:   Fri, 04 Feb 2022 05:23:07 -0800
-In-Reply-To: <aa16191c1241473fbfd55995bbba37bd2ab4a41c.camel@perches.com>
-References: <20220204053046.2475671-1-david.e.box@linux.intel.com>
-         <20220204053046.2475671-2-david.e.box@linux.intel.com>
-         <aa16191c1241473fbfd55995bbba37bd2ab4a41c.camel@perches.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        Fri, 4 Feb 2022 08:38:14 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E6AC061714;
+        Fri,  4 Feb 2022 05:38:13 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A4F23B8373A;
+        Fri,  4 Feb 2022 13:38:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8CC3C004E1;
+        Fri,  4 Feb 2022 13:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643981890;
+        bh=ADsLWrDPUHmAqFOd35u++j4ThxtN9Oz6/99IGv9oiic=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iEBVddxxEGZ8Z/cP1AXKMf6eHPQ9U6NMkiaKUe7OdNODPCCunKqCWLvufroq8oqo+
+         IgLv5eRgIdm/TmPaDZ8qWYCU57rA6tK3EIHQqzn5BgEP1BNl/UXF26nhcm5Wcm3Kns
+         /dLBxNDC+S2C+0uUZEianRM9pmGbgYOvQzcGCRuR+Jsyywhf3eMVTaMzjGuZX6NSRn
+         R3DkFb2EXoy6v5eAuyUYxWq2eLHkQ8mwiPMSGb3qf1ccmUtTjBRbhFjhJ2zYtPuQqi
+         Zaxm9eILt6xbeMwAyuMOxYY21i1+ya9QM4ylXTdD6PCs+OnA91cqLXuFafI9zy+XjR
+         oYuJbZz7DegHQ==
+Date:   Fri, 4 Feb 2022 15:37:56 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Martin Fernandez <martin.fernandez@eclypsium.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com, keescook@chromium.org
+Subject: Re: [PATCH v6 6/6] drivers/node: Show in sysfs node's crypto
+ capabilities
+Message-ID: <Yf0sNKu1vJkIRAA3@kernel.org>
+References: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
+ <20220203164328.203629-7-martin.fernandez@eclypsium.com>
+ <Yfyx8s9n+CZ6TPgg@kernel.org>
+ <CAKgze5YZF09F3FTwD6kODd2RrWATutcmM5J7-wcLTK32C6aptg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgze5YZF09F3FTwD6kODd2RrWATutcmM5J7-wcLTK32C6aptg@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 2022-02-04 at 02:14 -0800, Joe Perches wrote:
-> On Thu, 2022-02-03 at 21:30 -0800, David E. Box wrote:
-> > Intel Software Defined Silicon (SDSi) is a post manufacturing mechanism for
-> > activating additional silicon features. Features are enabled through a
-> > license activation process.
+On Fri, Feb 04, 2022 at 09:27:42AM -0300, Martin Fernandez wrote:
+> On 2/4/22, Mike Rapoport <rppt@kernel.org> wrote:
+> > On Thu, Feb 03, 2022 at 01:43:28PM -0300, Martin Fernandez wrote:
+> >> +Description:
+> >> +		This value is 1 if all system memory in this node is
+> >> +		marked with EFI_MEMORY_CPU_CRYPTO, indicating that the
+> >
+> > It didn't jump at me at previous postings, but other architectures won't
+> > necessary have EFI_MEMORY_CPU_CRYPTO marking crypto-capable memory.
+> >
+> > How about
+> >
+> >   This value is 1 if all system memory in this node is capable of being
+> >   protected with the CPU's memory cryptographic capabilities. It is 0
+> >   otherwise.
+> >   On EFI architectures with value corresponds to EFI_MEMORY_CPU_CRYPTO.
+> >
+> >
 > 
-> Why isn't this a user process and not a kernel one?
+> Yes, sounds good to me.
+> 
+> Is there other architecture with something similar to this? Or are you
+> thinking on the possibility of such architecture?
 
-This is a mechanism for provisioning CPU features during runtime. It requires a
-driver to access the functionality. That functionality is discovered on a multi
-functional PCI device that is owned by the upstream intel_vsec driver.
+AFAIU, s390 and powerpc have memory encryption capabilities, I don't know
+the details though. 
 
-> 
-> > V5
-> >   - Update kernel version to 5.18 in API doc and copyrights to 2022.
-> >   - Remove unneeded prototypes.
-> >   - In binary attribute handlers where ret is only used for errors,
-> >     replace,
-> >               return (ret < 0) ? ret : size;
-> >     with,
-> >               return ret ?: size;
-> 
-> I think this style overly tricky.
-> 
-> Why not the canonical:
-> 
-> 	if (ret < 0)
-> 		return ret;
-> 
-> 	return size;
-
-I can see not using the 2 parameter shortcut of the ternary operator, but the
-regular 3 parameter expression is easy to read for simple operations.
-
-David
-
-> 
-> 
-
+-- 
+Sincerely yours,
+Mike.
