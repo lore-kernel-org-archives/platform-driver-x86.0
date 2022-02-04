@@ -2,91 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D505CC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Feb 2022 13:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB80AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Feb 2022 14:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351393AbiBDNiO (ORCPT
+        id S233765AbiBDOBT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Feb 2022 08:38:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbiBDNiO (ORCPT
+        Fri, 4 Feb 2022 09:01:19 -0500
+Received: from relay4.hostedemail.com ([64.99.140.35]:17816 "EHLO
+        relay4.hostedemail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1359186AbiBDOBT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Feb 2022 08:38:14 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E6AC061714;
-        Fri,  4 Feb 2022 05:38:13 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A4F23B8373A;
-        Fri,  4 Feb 2022 13:38:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8CC3C004E1;
-        Fri,  4 Feb 2022 13:38:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643981890;
-        bh=ADsLWrDPUHmAqFOd35u++j4ThxtN9Oz6/99IGv9oiic=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iEBVddxxEGZ8Z/cP1AXKMf6eHPQ9U6NMkiaKUe7OdNODPCCunKqCWLvufroq8oqo+
-         IgLv5eRgIdm/TmPaDZ8qWYCU57rA6tK3EIHQqzn5BgEP1BNl/UXF26nhcm5Wcm3Kns
-         /dLBxNDC+S2C+0uUZEianRM9pmGbgYOvQzcGCRuR+Jsyywhf3eMVTaMzjGuZX6NSRn
-         R3DkFb2EXoy6v5eAuyUYxWq2eLHkQ8mwiPMSGb3qf1ccmUtTjBRbhFjhJ2zYtPuQqi
-         Zaxm9eILt6xbeMwAyuMOxYY21i1+ya9QM4ylXTdD6PCs+OnA91cqLXuFafI9zy+XjR
-         oYuJbZz7DegHQ==
-Date:   Fri, 4 Feb 2022 15:37:56 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Martin Fernandez <martin.fernandez@eclypsium.com>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com, keescook@chromium.org
-Subject: Re: [PATCH v6 6/6] drivers/node: Show in sysfs node's crypto
- capabilities
-Message-ID: <Yf0sNKu1vJkIRAA3@kernel.org>
-References: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
- <20220203164328.203629-7-martin.fernandez@eclypsium.com>
- <Yfyx8s9n+CZ6TPgg@kernel.org>
- <CAKgze5YZF09F3FTwD6kODd2RrWATutcmM5J7-wcLTK32C6aptg@mail.gmail.com>
+        Fri, 4 Feb 2022 09:01:19 -0500
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+        by unirelay09.hostedemail.com (Postfix) with ESMTP id 9605B20C61;
+        Fri,  4 Feb 2022 14:01:17 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf09.hostedemail.com (Postfix) with ESMTPA id D433620034;
+        Fri,  4 Feb 2022 14:01:15 +0000 (UTC)
+Message-ID: <71d3f97b4d4937b6e57772a56603766be7dd1ac8.camel@perches.com>
+Subject: Re: [PATCH V5 1/3] platform/x86: Add Intel Software Defined Silicon
+ driver
+From:   Joe Perches <joe@perches.com>
+To:     david.e.box@linux.intel.com, hdegoede@redhat.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>
+Date:   Fri, 04 Feb 2022 06:01:15 -0800
+In-Reply-To: <372f76f7b1b7cf3d0ca38a7a84bcc23322ff12ed.camel@linux.intel.com>
+References: <20220204053046.2475671-1-david.e.box@linux.intel.com>
+         <20220204053046.2475671-2-david.e.box@linux.intel.com>
+         <aa16191c1241473fbfd55995bbba37bd2ab4a41c.camel@perches.com>
+         <372f76f7b1b7cf3d0ca38a7a84bcc23322ff12ed.camel@linux.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.4-1ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgze5YZF09F3FTwD6kODd2RrWATutcmM5J7-wcLTK32C6aptg@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 6hgnnr5yeyypf9q58swaqhbup7aap8w5
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: D433620034
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+zPY1J4OVuTtdXhL5t7hkag7tqQnJP210=
+X-HE-Tag: 1643983275-443063
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Feb 04, 2022 at 09:27:42AM -0300, Martin Fernandez wrote:
-> On 2/4/22, Mike Rapoport <rppt@kernel.org> wrote:
-> > On Thu, Feb 03, 2022 at 01:43:28PM -0300, Martin Fernandez wrote:
-> >> +Description:
-> >> +		This value is 1 if all system memory in this node is
-> >> +		marked with EFI_MEMORY_CPU_CRYPTO, indicating that the
-> >
-> > It didn't jump at me at previous postings, but other architectures won't
-> > necessary have EFI_MEMORY_CPU_CRYPTO marking crypto-capable memory.
-> >
-> > How about
-> >
-> >   This value is 1 if all system memory in this node is capable of being
-> >   protected with the CPU's memory cryptographic capabilities. It is 0
-> >   otherwise.
-> >   On EFI architectures with value corresponds to EFI_MEMORY_CPU_CRYPTO.
-> >
-> >
+On Fri, 2022-02-04 at 05:23 -0800, David E. Box wrote:
+> On Fri, 2022-02-04 at 02:14 -0800, Joe Perches wrote:
+> > On Thu, 2022-02-03 at 21:30 -0800, David E. Box wrote:
+[]
+> > >   - In binary attribute handlers where ret is only used for errors,
+> > >     replace,
+> > >               return (ret < 0) ? ret : size;
+> > >     with,
+> > >               return ret ?: size;
+> > 
+> > I think this style overly tricky.
+> > 
+> > Why not the canonical:
+> > 
+> > 	if (ret < 0)
+> > 		return ret;
+> > 
+> > 	return size;
 > 
-> Yes, sounds good to me.
-> 
-> Is there other architecture with something similar to this? Or are you
-> thinking on the possibility of such architecture?
+> I can see not using the 2 parameter shortcut of the ternary operator, but the
+> regular 3 parameter expression is easy to read for simple operations.
 
-AFAIU, s390 and powerpc have memory encryption capabilities, I don't know
-the details though. 
+The issue to me is it combines an error test and error return
+with the common return.
 
--- 
-Sincerely yours,
-Mike.
+it's also being used and avoided / naked with the similar
+
+	return min(ret, size);
+
+https://lore.kernel.org/lkml/20211116121014.1675-1-zhaoxiao@uniontech.com/T/
+
+
