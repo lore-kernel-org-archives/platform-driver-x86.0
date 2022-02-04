@@ -2,55 +2,71 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB80AC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Feb 2022 14:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49767C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Feb 2022 14:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233765AbiBDOBT (ORCPT
+        id S1358764AbiBDOGi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Feb 2022 09:01:19 -0500
-Received: from relay4.hostedemail.com ([64.99.140.35]:17816 "EHLO
-        relay4.hostedemail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359186AbiBDOBT (ORCPT
+        Fri, 4 Feb 2022 09:06:38 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:51992 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232992AbiBDOGi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Feb 2022 09:01:19 -0500
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay09.hostedemail.com (Postfix) with ESMTP id 9605B20C61;
-        Fri,  4 Feb 2022 14:01:17 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf09.hostedemail.com (Postfix) with ESMTPA id D433620034;
-        Fri,  4 Feb 2022 14:01:15 +0000 (UTC)
-Message-ID: <71d3f97b4d4937b6e57772a56603766be7dd1ac8.camel@perches.com>
+        Fri, 4 Feb 2022 09:06:38 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CB7D860AFD;
+        Fri,  4 Feb 2022 14:06:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67452C004E1;
+        Fri,  4 Feb 2022 14:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1643983597;
+        bh=RyIR8dJMc1IOcmZizEww/InxQ1bBAmYfnuCHIM1TwrA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KGOrqyOrclHpuY//lkGpSrXAgd+1/lmaoLA3C4sQEGbyJ48BfRQM37xUmncb7bYFP
+         gD6YyG59Y6eHrX9NKVKAMA/aMgQVtOm+JO/dT9hm98kl+BMIkAbwI6OgFxByAD/A3Y
+         gNNS31Tk5WCehSMMv3hFb9192ZfLmGCe8jNYqNDQ=
+Date:   Fri, 4 Feb 2022 14:43:04 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     Joe Perches <joe@perches.com>, hdegoede@redhat.com,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>
 Subject: Re: [PATCH V5 1/3] platform/x86: Add Intel Software Defined Silicon
  driver
-From:   Joe Perches <joe@perches.com>
-To:     david.e.box@linux.intel.com, hdegoede@redhat.com,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        srinivas.pandruvada@intel.com, mgross@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>
-Date:   Fri, 04 Feb 2022 06:01:15 -0800
-In-Reply-To: <372f76f7b1b7cf3d0ca38a7a84bcc23322ff12ed.camel@linux.intel.com>
+Message-ID: <Yf0taBe4PwTNbu9g@kroah.com>
 References: <20220204053046.2475671-1-david.e.box@linux.intel.com>
-         <20220204053046.2475671-2-david.e.box@linux.intel.com>
-         <aa16191c1241473fbfd55995bbba37bd2ab4a41c.camel@perches.com>
-         <372f76f7b1b7cf3d0ca38a7a84bcc23322ff12ed.camel@linux.intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.40.4-1ubuntu2 
+ <20220204053046.2475671-2-david.e.box@linux.intel.com>
+ <aa16191c1241473fbfd55995bbba37bd2ab4a41c.camel@perches.com>
+ <372f76f7b1b7cf3d0ca38a7a84bcc23322ff12ed.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 6hgnnr5yeyypf9q58swaqhbup7aap8w5
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: D433620034
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+zPY1J4OVuTtdXhL5t7hkag7tqQnJP210=
-X-HE-Tag: 1643983275-443063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <372f76f7b1b7cf3d0ca38a7a84bcc23322ff12ed.camel@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 2022-02-04 at 05:23 -0800, David E. Box wrote:
+On Fri, Feb 04, 2022 at 05:23:07AM -0800, David E. Box wrote:
 > On Fri, 2022-02-04 at 02:14 -0800, Joe Perches wrote:
 > > On Thu, 2022-02-03 at 21:30 -0800, David E. Box wrote:
-[]
+> > > Intel Software Defined Silicon (SDSi) is a post manufacturing mechanism for
+> > > activating additional silicon features. Features are enabled through a
+> > > license activation process.
+> > 
+> > Why isn't this a user process and not a kernel one?
+> 
+> This is a mechanism for provisioning CPU features during runtime. It requires a
+> driver to access the functionality. That functionality is discovered on a multi
+> functional PCI device that is owned by the upstream intel_vsec driver.
+> 
+> > 
+> > > V5
+> > >   - Update kernel version to 5.18 in API doc and copyrights to 2022.
+> > >   - Remove unneeded prototypes.
 > > >   - In binary attribute handlers where ret is only used for errors,
 > > >     replace,
 > > >               return (ret < 0) ? ret : size;
@@ -69,13 +85,8 @@ On Fri, 2022-02-04 at 05:23 -0800, David E. Box wrote:
 > I can see not using the 2 parameter shortcut of the ternary operator, but the
 > regular 3 parameter expression is easy to read for simple operations.
 
-The issue to me is it combines an error test and error return
-with the common return.
+Not always.  Spell it out please and be obvious.
 
-it's also being used and avoided / naked with the similar
+thanks,
 
-	return min(ret, size);
-
-https://lore.kernel.org/lkml/20211116121014.1675-1-zhaoxiao@uniontech.com/T/
-
-
+greg k-h
