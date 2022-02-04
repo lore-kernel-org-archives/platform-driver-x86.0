@@ -2,83 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2FDC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Feb 2022 16:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDBAC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Feb 2022 17:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234576AbiBDQ2v (ORCPT
+        id S1376705AbiBDRBI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Feb 2022 11:28:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230139AbiBDQ2v (ORCPT
+        Fri, 4 Feb 2022 12:01:08 -0500
+Received: from mga18.intel.com ([134.134.136.126]:18542 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233140AbiBDRBI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Feb 2022 11:28:51 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21123C061714;
-        Fri,  4 Feb 2022 08:28:51 -0800 (PST)
-Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 414B31EC0622;
-        Fri,  4 Feb 2022 17:28:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1643992124;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=cQ4SzNKx3zUshpOS52iKeUUnDT1JTg4DzobvVWJLUl4=;
-        b=hutPCjQ4kXRa9goBUgZS7qZcxK+wY1MNq8xOaINWMn8PfqNuBtg+Wq1aJ7lcmdo439in0W
-        ncibPfA78mJvETAWDxvaU2zI0O5sBqj0kl0Yf8EETupo55b56ZyDghdqQpwPGvQIZymeka
-        28y24wFfFi80jdzS2EbP2KOqdzJHuFk=
-Date:   Fri, 4 Feb 2022 17:28:43 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Martin Fernandez <martin.fernandez@eclypsium.com>,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
-        dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com, keescook@chromium.org
-Subject: Re: [PATCH v6 6/6] drivers/node: Show in sysfs node's crypto
- capabilities
-Message-ID: <Yf1UO6jF91o9k4jB@zn.tnic>
-References: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
- <20220203164328.203629-7-martin.fernandez@eclypsium.com>
- <67d2711b-200c-0894-4ff7-beb3eb304399@amd.com>
- <CAKgze5YM2+BRjj2nvb+_dnuCg5WtWvQ6FQyNYJ1c8G6Orn=aQw@mail.gmail.com>
- <5c5ffe29-d3d3-2955-cf78-ad275110f012@amd.com>
- <ec9e29a4-0d2b-1423-d92e-6f025b56f8cc@amd.com>
+        Fri, 4 Feb 2022 12:01:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643994068; x=1675530068;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=SjTd2W8zwH4XR40/3bPYFlpLsz+WD9O8mmJISj+9wIg=;
+  b=K5IhTlRo5JXuidEGh+TakVxPU+LkAgNMnf/d+o5m+XNRtQZQj4cD4aRU
+   /E5NN8GKaSg/Lp6xl4m7jFYXSYezeR7C6vQG/DJvWKcNqLf1gTaNRh3dI
+   MJkakVZfaiJ8oHHz4EaMpGdGfnpbtzHoh5REZojRpNPLEPvP6I0XbDs/a
+   eksVGfq7RwS5+HShVKk3uKyMephjnRaoEoHIZHbeUoTKOvlmySnCrqPhd
+   1VzJLGOS+27m6fm4BGvKDV13HYNjjGjStJ70tYJx3ymVX7DTMm5hXvVA5
+   kxTCLgZqidK1BCldaQLjN8Zu/yniarKaTQW0XVvYeLvlrP1i3avYk2Fps
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10247"; a="231968259"
+X-IronPort-AV: E=Sophos;i="5.88,343,1635231600"; 
+   d="scan'208";a="231968259"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2022 09:01:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,343,1635231600"; 
+   d="scan'208";a="566790056"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 04 Feb 2022 09:01:08 -0800
+Received: from tjjang-mobl.amr.corp.intel.com (unknown [10.255.231.211])
+        by linux.intel.com (Postfix) with ESMTP id CCD2B580279;
+        Fri,  4 Feb 2022 09:01:07 -0800 (PST)
+Message-ID: <682714ab20540935c972adfa9304482ba6999a0c.camel@linux.intel.com>
+Subject: Re: [PATCH V5 1/3] platform/x86: Add Intel Software Defined Silicon
+ driver
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Joe Perches <joe@perches.com>, hdegoede@redhat.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>
+Date:   Fri, 04 Feb 2022 09:01:07 -0800
+In-Reply-To: <71d3f97b4d4937b6e57772a56603766be7dd1ac8.camel@perches.com>
+References: <20220204053046.2475671-1-david.e.box@linux.intel.com>
+         <20220204053046.2475671-2-david.e.box@linux.intel.com>
+         <aa16191c1241473fbfd55995bbba37bd2ab4a41c.camel@perches.com>
+         <372f76f7b1b7cf3d0ca38a7a84bcc23322ff12ed.camel@linux.intel.com>
+         <71d3f97b4d4937b6e57772a56603766be7dd1ac8.camel@perches.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ec9e29a4-0d2b-1423-d92e-6f025b56f8cc@amd.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Feb 04, 2022 at 10:23:22AM -0600, Limonciello, Mario wrote:
-> > > > As there is interest in seeing these capabilities from userspace, it
+On Fri, 2022-02-04 at 06:01 -0800, Joe Perches wrote:
+> On Fri, 2022-02-04 at 05:23 -0800, David E. Box wrote:
+> > On Fri, 2022-02-04 at 02:14 -0800, Joe Perches wrote:
+> > > On Thu, 2022-02-03 at 21:30 -0800, David E. Box wrote:
+> []
+> > > >   - In binary attribute handlers where ret is only used for errors,
+> > > >     replace,
+> > > >               return (ret < 0) ? ret : size;
+> > > >     with,
+> > > >               return ret ?: size;
+> > > 
+> > > I think this style overly tricky.
+> > > 
+> > > Why not the canonical:
+> > > 
+> > > 	if (ret < 0)
+> > > 		return ret;
+> > > 
+> > > 	return size;
+> > 
+> > I can see not using the 2 parameter shortcut of the ternary operator, but
+> > the
+> > regular 3 parameter expression is easy to read for simple operations.
+> 
+> The issue to me is it combines an error test and error return
+> with the common return.
 
-This needs to be explained in a lot more detail: why, what is going to
-use it, how, etc.
+Ah, okay.
 
-We don't do user-visible APIs just because.
+> 
+> it's also being used and avoided / naked with the similar
+> 
+> 	return min(ret, size);
+> 
+> https://lore.kernel.org/lkml/20211116121014.1675-1-zhaoxiao@uniontech.com/T/
 
-> As Tom agreed in previous post, Boris is mistaken here.  I just double
-> checked on my side on a workstation that supports SME and comparing
-> /proc/cpuinfo before and after SME is enabled via mem_encrypt=on.  I
-> confirmed that nothing changed.
+Thanks.
 
-Then we should clear that "sme" flag if memory encryption is not
-enabled. Like we do for all other flags.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
