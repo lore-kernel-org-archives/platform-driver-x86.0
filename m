@@ -2,881 +2,202 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8E7C43219
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Feb 2022 00:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DA5C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Feb 2022 03:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356112AbiBDADd (ORCPT
+        id S1349084AbiBDDrL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Feb 2022 19:03:33 -0500
-Received: from mga01.intel.com ([192.55.52.88]:8519 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1356105AbiBDADc (ORCPT
+        Thu, 3 Feb 2022 22:47:11 -0500
+Received: from mail-bn8nam11on2074.outbound.protection.outlook.com ([40.107.236.74]:11712
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232345AbiBDDrK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Feb 2022 19:03:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643933012; x=1675469012;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XBJrLAs7KKxYfRcp9oEMbke9UiyzZW2mbdY6Qxvyhi8=;
-  b=NQr8NbvsR1qzP8/yqPQXXCYIRaYh5v4n8oxDgpSQN2ta8wngTP+rnR05
-   WYCbw1v5v4NFTrG2fVqmy+MXLNcmaq27yehni3NQ09iQ0jktVJNBIgWyB
-   uEXzOwTmMIe/2PZoav04QSp2ZFZQZcd/BcXUpfFqnXdEZYIVUVx2okGL3
-   yqroFskB+Mwp2xynVlwuaQlCcKsq/zxXmQ/DpXifGI06759cwrU6UkAA3
-   ESVbOXf3nuY8gj6PGe+IpyEXrASBcup1ELnjN8Y+2Mx4PYUkWzgyKhnFg
-   wIW8tMocwlLymEs1QUriHcurOxyHdF4Ns7qGEjMLcnK9lO6258rGQWwfn
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10247"; a="272779962"
-X-IronPort-AV: E=Sophos;i="5.88,340,1635231600"; 
-   d="scan'208";a="272779962"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2022 16:03:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,340,1635231600"; 
-   d="scan'208";a="620684684"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Feb 2022 16:03:31 -0800
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4/4] platform/x86/intel-uncore-freq: Split common and enumeration part
-Date:   Thu,  3 Feb 2022 16:03:06 -0800
-Message-Id: <20220204000306.2517447-5-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220204000306.2517447-1-srinivas.pandruvada@linux.intel.com>
-References: <20220204000306.2517447-1-srinivas.pandruvada@linux.intel.com>
-MIME-Version: 1.0
+        Thu, 3 Feb 2022 22:47:10 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nS6uY7f0OPTkIhqyf3vc/O3f0WUve59j/esDWvzVjXeF7MmAdp168PXs038o6jFrSu61RtX/qrGpp16Q07uLvmgSNQ+mGKli7XLi2vI3YZkHVomxXZpSVK+vFloWleLSuiA+rjf2wO5p3SOgNOEPxU7tAuprDgkvy+sDmKeNQP7fy4VN0v8G9opf134hVVmD3xlRwd4Un9sx8ZzIRliUgHJWWT/sl8RJAixVUXpd4ZXS26ubK+bjQGG4PXp8DXCaNiOBgmqxbyMAplpeZrivK+S38ZJ60QG5LjjrT8PT57scqQ5p6g/RpQXWECsx8NL/HdKpOLLWfLHw/YdvFfmBFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a2uG1D3QVrHsVl4D88DeXg3OThfJ2MtOcC7T1EM1NN4=;
+ b=eY+2pd54FugjtDI8rDDnlJg+IJ6Xg8Yyk4wAYmUZREI2HXPTuVNbOI3PwEXulMBhMmQxnWlsY66AgPTKg3uxysKTZr4GWzxKp+C2Gxha86kT48ppTAHIe4RybWAnqJZkX4xMWWUGNwntj/YY1E6oZSipSDlCI570sn+5P56IvkcMLQYEnzFaIHp3uY/TTCUiCRWCVfaI8dNKjjjDorVrQ14uzJIIeKxCXsCLnieWp7a9ayX3wf18BXqjEhfQbcBgNDlnmjh2V9Ga0d/3oqJQibwTynq/QYWZqMwHPZNLyuvEjtGWat1mcovQf0lwpE8BAMbjTnuoJx3NkFWU6BGP9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a2uG1D3QVrHsVl4D88DeXg3OThfJ2MtOcC7T1EM1NN4=;
+ b=zJXDisXwHC6VX0qlJPYRj0JUVuM55u2d14o6iPx7kaTDq3GcktLQAIGy3mILwdTc4OrWO08t06w2TOLLvOkZU6TbFTZdLJpaIIjE2UmKq2iXFSbckSdDcqMA8ugm0DdgI9wC13htJODPtgL7r2GZE2kckB2io5DWLdHRcxKyyfQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
+ by DM6PR12MB3481.namprd12.prod.outlook.com (2603:10b6:5:11a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.15; Fri, 4 Feb
+ 2022 03:47:07 +0000
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::42f:534d:e82:b59f]) by BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::42f:534d:e82:b59f%4]) with mapi id 15.20.4951.014; Fri, 4 Feb 2022
+ 03:47:07 +0000
+Message-ID: <67d2711b-200c-0894-4ff7-beb3eb304399@amd.com>
+Date:   Thu, 3 Feb 2022 21:47:02 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH v6 6/6] drivers/node: Show in sysfs node's crypto
+ capabilities
+Content-Language: en-US
+To:     Martin Fernandez <martin.fernandez@eclypsium.com>,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com, keescook@chromium.org,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+References: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
+ <20220203164328.203629-7-martin.fernandez@eclypsium.com>
+From:   "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <20220203164328.203629-7-martin.fernandez@eclypsium.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MN2PR03CA0018.namprd03.prod.outlook.com
+ (2603:10b6:208:23a::23) To BL1PR12MB5157.namprd12.prod.outlook.com
+ (2603:10b6:208:308::15)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e8a41fd5-332b-4eb3-b52d-08d9e79103a8
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3481:EE_
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3481C65DE2F8D0B40684CD5CE2299@DM6PR12MB3481.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 07yO1vs9Q0Je7qU9JV/kzlacML+LZ4Th8Qm2FRsBHonGdKfOWvlwdkhgTDrkzLWHdnlQaanlP9Lm4r+mARNHQBW3k9qdw3LYLzldbZOV8wUQLzlwjVG4WSeSJyN//vRbJhAcK4ff2/vqJ5DrTfegU4MUaBqPqfpvaUBJNm+DGXS70tzMV7GIjJdeTeHETpCgIQDNehZYPXxapdTO/tTQxw1pDm8KCcVqn8eL4dP4IuUdDKyt/kYNaLfas8CyZ+iGdkEtYeltqXlD+Yot6PyA5V0eU7+/PtxlvZdZIB6aScxALmukDjZrln8KYUr1JmPuI/BaBVyYtkU7AM+rLFkpKjjgqgW5U5Frz9UcaXTYq6gnIZuDpmialWdhjQIzLTb8XTc2uknLuQ7k8rX8nqRU0OOo5Y1EJubz+2MkFh84Z08JxyYfRFUcLryzGu4qQG5asxAQVZmCCwRWDi3HCWvLyhtgth1FYcvyasOfJv6ZcMBPDi7K7qCDF6871JtT9mFDP8aa8lsLIBjlX3Nr998tdyO1mR1f8GJCRZT8pGYLwgrK1+YG3nTVz/vfdJ6vrni6dXJ4nXJvoQd/T3msjIc9mWvZ3e79kCkCqhwWk1XWom6lJTbGZy4PuNmsydUsHJtsVZ+XlC5lWIlc0PXqeTbuIXrfsjSlFweeV63CHCZVh8rFwwxnjZxTNbQF3OmdTaxIFDkw1AHR6Jx/Xbyz98sXV4Da9W/YW31QmiTmusokR3OCjl0PtAzS4JLT3x0y1il0rFVgbJGTICN4fhGQzuc0Sfx3hib5M6XitZSrYLOKhbXDtwxNxplLsP9WyEN1TaOW
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(66556008)(38100700002)(4326008)(2906002)(8676002)(36756003)(66476007)(31686004)(6506007)(66946007)(6512007)(83380400001)(316002)(86362001)(8936002)(2616005)(31696002)(186003)(6486002)(508600001)(26005)(53546011)(5660300002)(6666004)(7416002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a2tZK2lDZWJqbzkzQnlhOHNVNFlvTU50M0JTVlY5aEhINGxObkZjaGI2Z1dJ?=
+ =?utf-8?B?S3JRZXVObjJmTENwbXg0dG1QU2RSOTFKMGE4TzQ4QUNOay9TRWFQTkxvMDRN?=
+ =?utf-8?B?UVRWVjhFVTZGcUoxVURjTVNiM2c2V0R6RWZ5alVzQWZrOXpMQk1aMytpdkw2?=
+ =?utf-8?B?OTdpNFhRaU1YTFNKakc2Ym9NSEtwYktJMTVpa3dQcHl2WEZVMVlyekt2dnc4?=
+ =?utf-8?B?OXhRVXIxZFI4U21mTTFqNVQ2c2tLK05RTlJSeU16aGhMWm14SkVGVjYrek9i?=
+ =?utf-8?B?amtKd0l4NXBlMFphdmVzV1F6UFVIYXMyN1BZL1VYeFF5emNBaEpHSlh4SlVH?=
+ =?utf-8?B?ek81aDlwUWkwa0JWKzM5a1NQNkJwZHI3eFZkNW5McXpNVFRoVHFoVGRacEda?=
+ =?utf-8?B?cFAway8reWJXcWY2SGNCYWdJQjdLb1c1QnQ1OHFTVFRCcW9TMGpaZmh2WU16?=
+ =?utf-8?B?VU83M01qZHE3Wm9KQmo4RHJBeUFreHJlMGZOR2lsS3JMK2tNM0xjaU4zR2ov?=
+ =?utf-8?B?TE9WVGNqblkxMmN0WmZlOFZDM0tXNVg0RVRpdHZ3NXVPeExXZUkxVlEwOU5I?=
+ =?utf-8?B?NU50cStXSWFJUTA4dGFBM0hHU05kOVhPRkFNK050U0lRL2tLZ3dxYjUyMVBn?=
+ =?utf-8?B?YThtRlFrSnUvaUcwbGcwaWd1Nzg3Ulk5N0E2aVRmZ1hlYTBIMkRmb0xHNXdo?=
+ =?utf-8?B?TktrMGQrVFZtSjBvNGZVeUNiQ0FZZkZ2N2V4N2ZseHNiSHZDMUZtR0J1RXNK?=
+ =?utf-8?B?RlQyQWE1dExtM25qeVBqb2lBdGlacE1BT0traFUveG1NQXZ0SDZhVUE0cVIr?=
+ =?utf-8?B?WVdHQjlqUWtId1NRK1ZncEVoUER1USsxbldaeGFidzFYbDlzL0lnWTlzM3Z6?=
+ =?utf-8?B?amtJVVNmTFc5YnFRR2JMM2JkNU5aRHNOSFhBWlk2VVFUMmthZ2ZueXdFTTZ5?=
+ =?utf-8?B?NUtXUmJ3cUlKdkZrcER2RUpCZWpoV0lIUUZqVUxwZzRubml2eHE2RE1oOUZl?=
+ =?utf-8?B?UnB0dFdadkkzZDJyVnZWbWZ6N3d5NXM1aTdnaWMxZk9mTHVqVXptWjAraUNi?=
+ =?utf-8?B?S2pMV3B6QnZieEUvSTJKRkNOUXhWd2xXeFBZbVdMUkhJSDNkQlJub3Y2N01q?=
+ =?utf-8?B?aVQrcDJyNFJtRHpSOXhUTWlleGxrOFgxRlBuYXBRUytFU20yL2toc3MwRHFW?=
+ =?utf-8?B?ZXNUNTc1dXNid1ZCM1VLelpiK0E5Q090WHUzOUxiZ1ZhQnMwbGNpbDVEUk1B?=
+ =?utf-8?B?MWZ4Q2t4WVJMYUltclV4VC9pRk9jUnNGUUtDcm0yUWVJNXk1bGFCNnJ0SUh4?=
+ =?utf-8?B?L09wdjhOOXZWRXpzaHhyZ1IwNDZZZDdaTE1SWGNlVlFoMUFxT20wemhQSGVW?=
+ =?utf-8?B?OW1EQWR2bU5KN2xWMlhnaVd2dXdEcTZIMFJJd1ZCNjZIVVBQNHNJQkFWZG9Q?=
+ =?utf-8?B?WnN0aWVVOXJmbmgwQXJoc0pKOEt4Z2FoTy9hcmVFKy8xOSttc1YyczFrTTNs?=
+ =?utf-8?B?Sm9OZXQvR1dNVms5dm1zUEVtbjJUMHphNnNWb0d1Y0VDY01tM0Z3NVVxclhW?=
+ =?utf-8?B?R0dXeUpOYWNyUm5rQ2FBNkNLVnVwYjU1NEh6cmpRUnVYUXlYVGdaekV6K3pl?=
+ =?utf-8?B?TFZsOUV6OGtCYWtaV2pDaDF5dGtWZ3FiNnZCdkkvRTNSOFhvZzBJWHd5MzJz?=
+ =?utf-8?B?ZTBCNHNBN3R2bzhycXNrSWNyTVFOOEZrelhER0hwYXd1UkFuclZaK3VSWnBU?=
+ =?utf-8?B?SDNRVk9icFoyWkFYK3d6MUxuQVRDL2ViWll1cWdaam9VMFdQcFBrb0xWYVRh?=
+ =?utf-8?B?OGI2d2w0Sy9LZHh4cnIvWDNiZFdZRkxhRVpoNVQ1VkJvcmlwb2xwR0JTOEpk?=
+ =?utf-8?B?ci8rc1BJUFExVzFmYmhkcldVRVhKNU1LVHk4L2VrOXIwTUROdXZ2d01Yd3V4?=
+ =?utf-8?B?TUdGSW9FbjF6Y2FrK05MajJqYTYyckF0azVlcldrYmIxeFY3MlQ4TzRxb1p3?=
+ =?utf-8?B?SWtrRnJtNm5vbWl2dXJId2NIOHEwNDBWMUdmU3UwK1pBQXBuSmtlaFNKaWR5?=
+ =?utf-8?B?QTV0ZnpGOTNlRlNzMmNGaGE1SmR0bXFubUdyM2k2TDUvTXdmb3RNWkNUQUxw?=
+ =?utf-8?B?SHU1bS9KVU02Z3lpVFp1R1RHN09MS3ZHU3RCNTMzanh4VFczcTZhZTRFejF4?=
+ =?utf-8?Q?dwMFmNTMkQEOcnvjEkhQuhE=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8a41fd5-332b-4eb3-b52d-08d9e79103a8
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2022 03:47:07.1672
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iAE+tjRTMZGPXTFt6+HOdZQ9hH+Txopxk1v3I63t6YVhHYvfMHvxbZ2oI9vuJ2lGUacnbNF+Y2e746NWdhkCew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3481
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+On 2/3/2022 10:43, Martin Fernandez wrote:
+> Show in each node in sysfs if its memory is able to do be encrypted by
+> the CPU, ie. if all its memory is marked with EFI_MEMORY_CPU_CRYPTO in
+> the EFI memory map.
+> 
+> Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
+> ---
+>   Documentation/ABI/testing/sysfs-devices-node | 10 ++++++++++
+>   drivers/base/node.c                          | 10 ++++++++++
+>   2 files changed, 20 insertions(+)
+>   create mode 100644 Documentation/ABI/testing/sysfs-devices-node
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-devices-node b/Documentation/ABI/testing/sysfs-devices-node
+> new file mode 100644
+> index 000000000000..0d1fd86c9faf
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-devices-node
+> @@ -0,0 +1,10 @@
+> +What:		/sys/devices/system/node/nodeX/crypto_capable
+> +Date:		February 2022
+> +Contact:	Martin Fernandez <martin.fernandez@eclypsium.com>
+> +Users:		fwupd (https://fwupd.org)
+> +Description:
+> +		This value is 1 if all system memory in this node is
+> +		marked with EFI_MEMORY_CPU_CRYPTO, indicating that the
+> +		system memory is capable of being protected with the
+> +		CPU’s memory cryptographic capabilities. It is 0
+> +		otherwise.
+> \ No newline at end of file
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index 87acc47e8951..dabaed997ecd 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -560,11 +560,21 @@ static ssize_t node_read_distance(struct device *dev,
+>   }
+>   static DEVICE_ATTR(distance, 0444, node_read_distance, NULL);
+>   
+> +static ssize_t crypto_capable_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
+> +{
+> +	struct pglist_data *pgdat = NODE_DATA(dev->id);
+> +
+> +	return sysfs_emit(buf, "%d\n", pgdat->crypto_capable);
 
-Split the current driver in two parts:
-- Common part: All the commom function other than enumeration function.
-- Enumeration/HW specific part: The current enumeration using CPU model
-is left in the old module. This uses service of common driver to register
-sysfs objects. Also provide callbacks for MSR access related to uncore.
-- Add MODULE_DEVICE_TABLE to uncore-frequency.c
+As there is interest in seeing these capabilities from userspace, it 
+seems like a logical time to also expose a `crypto_active` attribute.
 
-No functional changes are expected.
+Then userspace can make a judgement call if the system supports crypto 
+memory (`crypto_capable`) and then also whether or not it's been turned 
+on (`crypto_active`).
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- .../x86/intel/uncore-frequency/Makefile       |   2 +
- .../uncore-frequency-common.c                 | 252 +++++++++++++
- .../uncore-frequency-common.h                 |  62 ++++
- .../intel/uncore-frequency/uncore-frequency.c | 332 +++---------------
- 4 files changed, 365 insertions(+), 283 deletions(-)
- create mode 100644 drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
- create mode 100644 drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
+`crypto_active` could be detected with some existing support in the 
+kernel of `mem_encrypt_active()`.  This will then work for a variety of 
+architectures too that offer `mem_encrypt_active()`.
 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/Makefile b/drivers/platform/x86/intel/uncore-frequency/Makefile
-index e22186a480e2..e0f7968e8285 100644
---- a/drivers/platform/x86/intel/uncore-frequency/Makefile
-+++ b/drivers/platform/x86/intel/uncore-frequency/Makefile
-@@ -5,3 +5,5 @@
- 
- obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)	+= intel-uncore-frequency.o
- intel-uncore-frequency-y		:= uncore-frequency.o
-+obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)	+= intel-uncore-frequency-common.o
-+intel-uncore-frequency-common-y		:= uncore-frequency-common.o
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-new file mode 100644
-index 000000000000..e4d5a7960234
---- /dev/null
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-@@ -0,0 +1,252 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Uncore Frequency Control: Common code implementation
-+ * Copyright (c) 2022, Intel Corporation.
-+ * All rights reserved.
-+ *
-+ */
-+#include <linux/cpu.h>
-+#include <linux/module.h>
-+#include "uncore-frequency-common.h"
-+
-+/* Mutex to control all mutual exclusions */
-+static DEFINE_MUTEX(uncore_lock);
-+/* Root of the all uncore sysfs kobjs */
-+static struct kobject *uncore_root_kobj;
-+/* uncore instance count */
-+static int uncore_instance_count;
-+
-+/* callbacks for actual HW read/write */
-+static int (*uncore_read)(struct uncore_data *data, unsigned int *min, unsigned int *max);
-+static int (*uncore_write)(struct uncore_data *data, unsigned int input, unsigned int min_max);
-+static int (*uncore_read_freq)(struct uncore_data *data, unsigned int *freq);
-+
-+static ssize_t show_min_max_freq_khz(struct uncore_data *data,
-+				      char *buf, int min_max)
-+{
-+	unsigned int min, max;
-+	int ret;
-+
-+	mutex_lock(&uncore_lock);
-+	ret = uncore_read(data, &min, &max);
-+	mutex_unlock(&uncore_lock);
-+	if (ret)
-+		return ret;
-+
-+	if (min_max)
-+		return sprintf(buf, "%u\n", max);
-+
-+	return sprintf(buf, "%u\n", min);
-+}
-+
-+static ssize_t store_min_max_freq_khz(struct uncore_data *data,
-+				      const char *buf, ssize_t count,
-+				      int min_max)
-+{
-+	unsigned int input;
-+
-+	if (kstrtouint(buf, 10, &input))
-+		return -EINVAL;
-+
-+	mutex_lock(&uncore_lock);
-+	uncore_write(data, input, min_max);
-+	mutex_unlock(&uncore_lock);
-+
-+	return count;
-+}
-+
-+static ssize_t show_perf_status_freq_khz(struct uncore_data *data, char *buf)
-+{
-+	unsigned int freq;
-+	int ret;
-+
-+	mutex_lock(&uncore_lock);
-+	ret = uncore_read_freq(data, &freq);
-+	mutex_unlock(&uncore_lock);
-+	if (ret)
-+		return ret;
-+
-+	return sprintf(buf, "%u\n", freq);
-+}
-+
-+#define store_uncore_min_max(name, min_max)				\
-+	static ssize_t store_##name(struct device *dev,		\
-+				     struct device_attribute *attr,	\
-+				     const char *buf, size_t count)	\
-+	{								\
-+		struct uncore_data *data = container_of(attr, struct uncore_data, name##_dev_attr);\
-+									\
-+		return store_min_max_freq_khz(data, buf, count,	\
-+					      min_max);		\
-+	}
-+
-+#define show_uncore_min_max(name, min_max)				\
-+	static ssize_t show_##name(struct device *dev,		\
-+				    struct device_attribute *attr, char *buf)\
-+	{                                                               \
-+		struct uncore_data *data = container_of(attr, struct uncore_data, name##_dev_attr);\
-+									\
-+		return show_min_max_freq_khz(data, buf, min_max);	\
-+	}
-+
-+#define show_uncore_perf_status(name)					\
-+	static ssize_t show_##name(struct device *dev,		\
-+				   struct device_attribute *attr, char *buf)\
-+	{                                                               \
-+		struct uncore_data *data = container_of(attr, struct uncore_data, name##_dev_attr);\
-+									\
-+		return show_perf_status_freq_khz(data, buf); \
-+	}
-+
-+store_uncore_min_max(min_freq_khz, 0);
-+store_uncore_min_max(max_freq_khz, 1);
-+
-+show_uncore_min_max(min_freq_khz, 0);
-+show_uncore_min_max(max_freq_khz, 1);
-+
-+show_uncore_perf_status(current_freq_khz);
-+
-+#define show_uncore_data(member_name)					\
-+	static ssize_t show_##member_name(struct device *dev,	\
-+					   struct device_attribute *attr, char *buf)\
-+	{                                                               \
-+		struct uncore_data *data = container_of(attr, struct uncore_data,\
-+							  member_name##_dev_attr);\
-+									\
-+		return scnprintf(buf, PAGE_SIZE, "%u\n",		\
-+				 data->member_name);			\
-+	}								\
-+
-+show_uncore_data(initial_min_freq_khz);
-+show_uncore_data(initial_max_freq_khz);
-+
-+#define init_attribute_rw(_name)					\
-+	do {								\
-+		sysfs_attr_init(&data->_name##_dev_attr.attr);	\
-+		data->_name##_dev_attr.show = show_##_name;		\
-+		data->_name##_dev_attr.store = store_##_name;		\
-+		data->_name##_dev_attr.attr.name = #_name;		\
-+		data->_name##_dev_attr.attr.mode = 0644;		\
-+	} while (0)
-+
-+#define init_attribute_ro(_name)					\
-+	do {								\
-+		sysfs_attr_init(&data->_name##_dev_attr.attr);	\
-+		data->_name##_dev_attr.show = show_##_name;		\
-+		data->_name##_dev_attr.store = NULL;			\
-+		data->_name##_dev_attr.attr.name = #_name;		\
-+		data->_name##_dev_attr.attr.mode = 0444;		\
-+	} while (0)
-+
-+#define init_attribute_root_ro(_name)					\
-+	do {								\
-+		sysfs_attr_init(&data->_name##_dev_attr.attr);	\
-+		data->_name##_dev_attr.show = show_##_name;		\
-+		data->_name##_dev_attr.store = NULL;			\
-+		data->_name##_dev_attr.attr.name = #_name;		\
-+		data->_name##_dev_attr.attr.mode = 0400;		\
-+	} while (0)
-+
-+static int create_attr_group(struct uncore_data *data, char *name)
-+{
-+	int ret, index = 0;
-+
-+	init_attribute_rw(max_freq_khz);
-+	init_attribute_rw(min_freq_khz);
-+	init_attribute_ro(initial_min_freq_khz);
-+	init_attribute_ro(initial_max_freq_khz);
-+	init_attribute_root_ro(current_freq_khz);
-+
-+	data->uncore_attrs[index++] = &data->max_freq_khz_dev_attr.attr;
-+	data->uncore_attrs[index++] = &data->min_freq_khz_dev_attr.attr;
-+	data->uncore_attrs[index++] = &data->initial_min_freq_khz_dev_attr.attr;
-+	data->uncore_attrs[index++] = &data->initial_max_freq_khz_dev_attr.attr;
-+	data->uncore_attrs[index++] = &data->current_freq_khz_dev_attr.attr;
-+	data->uncore_attrs[index] = NULL;
-+
-+	data->uncore_attr_group.name = name;
-+	data->uncore_attr_group.attrs = data->uncore_attrs;
-+	ret = sysfs_create_group(uncore_root_kobj, &data->uncore_attr_group);
-+
-+	return ret;
-+}
-+
-+static void delete_attr_group(struct uncore_data *data, char *name)
-+{
-+	sysfs_remove_group(uncore_root_kobj, &data->uncore_attr_group);
-+}
-+
-+int uncore_freq_add_entry(struct uncore_data *data, int cpu)
-+{
-+	int ret = 0;
-+
-+	mutex_lock(&uncore_lock);
-+	if (data->valid) {
-+		/* control cpu changed */
-+		data->control_cpu = cpu;
-+		goto uncore_unlock;
-+	}
-+
-+	sprintf(data->name, "package_%02d_die_%02d", data->package_id, data->die_id);
-+
-+	uncore_read(data, &data->initial_min_freq_khz, &data->initial_max_freq_khz);
-+
-+	ret = create_attr_group(data, data->name);
-+	if (!ret) {
-+		data->control_cpu = cpu;
-+		data->valid = true;
-+	}
-+
-+uncore_unlock:
-+	mutex_unlock(&uncore_lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_NS_GPL(uncore_freq_add_entry, INTEL_UNCORE_FREQUENCY);
-+
-+void uncore_freq_remove_die_entry(struct uncore_data *data)
-+{
-+	mutex_lock(&uncore_lock);
-+	delete_attr_group(data, data->name);
-+	data->control_cpu = -1;
-+	data->valid = false;
-+	mutex_unlock(&uncore_lock);
-+}
-+EXPORT_SYMBOL_NS_GPL(uncore_freq_remove_die_entry, INTEL_UNCORE_FREQUENCY);
-+
-+int uncore_freq_common_init(int (*read_control_freq)(struct uncore_data *data, unsigned int *min, unsigned int *max),
-+			     int (*write_control_freq)(struct uncore_data *data, unsigned int input, unsigned int set_max),
-+			     int (*read_freq)(struct uncore_data *data, unsigned int *freq))
-+{
-+	mutex_lock(&uncore_lock);
-+
-+	uncore_read = read_control_freq;
-+	uncore_write = write_control_freq;
-+	uncore_read_freq = read_freq;
-+
-+	if (!uncore_root_kobj)
-+		uncore_root_kobj = kobject_create_and_add("intel_uncore_frequency",
-+							    &cpu_subsys.dev_root->kobj);
-+	if (uncore_root_kobj)
-+		++uncore_instance_count;
-+	mutex_unlock(&uncore_lock);
-+
-+	return (!!uncore_root_kobj);
-+}
-+EXPORT_SYMBOL_NS_GPL(uncore_freq_common_init, INTEL_UNCORE_FREQUENCY);
-+
-+void uncore_freq_common_exit(void)
-+{
-+	mutex_lock(&uncore_lock);
-+	--uncore_instance_count;
-+	if (!uncore_instance_count) {
-+		kobject_put(uncore_root_kobj);
-+		uncore_root_kobj = NULL;
-+	}
-+	mutex_unlock(&uncore_lock);
-+}
-+EXPORT_SYMBOL_NS_GPL(uncore_freq_common_exit, INTEL_UNCORE_FREQUENCY);
-+
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Intel Uncore Frequency Common Module");
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-new file mode 100644
-index 000000000000..f5dcfa2fb285
---- /dev/null
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Intel Uncore Frequency Control: Common defines and prototypes
-+ * Copyright (c) 2022, Intel Corporation.
-+ * All rights reserved.
-+ *
-+ */
-+
-+#ifndef __INTEL_UNCORE_FREQ_COMMON_H
-+#define __INTEL_UNCORE_FREQ_COMMON_H
-+
-+#include <linux/device.h>
-+
-+/**
-+ * struct uncore_data - Encapsulate all uncore data
-+ * @stored_uncore_data: Last user changed MSR 620 value, which will be restored
-+ *			on system resume.
-+ * @initial_min_freq_khz: Sampled minimum uncore frequency at driver init
-+ * @initial_max_freq_khz: Sampled maximum uncore frequency at driver init
-+ * @control_cpu:	Designated CPU for a die to read/write
-+ * @valid:		Mark the data valid/invalid
-+ * @package_id:	Package id for this instance
-+ * @die_id:		Die id for this instance
-+ * @name:		Sysfs entry name for this instance
-+ * @uncore_attr_group:	Attribute group storage
-+ * @max_freq_khz_dev_attr: Storage for device attribute max_freq_khz
-+ * @mix_freq_khz_dev_attr: Storage for device attribute min_freq_khz
-+ * @initial_max_freq_khz_dev_attr: Storage for device attribute initial_max_freq_khz
-+ * @initial_min_freq_khz_dev_attr: Storage for device attribute initial_min_freq_khz
-+ * @current_freq_khz_dev_attr: Storage for device attribute current_freq_khz
-+ * @uncore_attrs:	Attribute storage for group creation
-+ *
-+ * This structure is used to encapsulate all data related to uncore sysfs
-+ * settings for a die/package.
-+ */
-+struct uncore_data {
-+	u64 stored_uncore_data;
-+	u32 initial_min_freq_khz;
-+	u32 initial_max_freq_khz;
-+	int control_cpu;
-+	bool valid;
-+	int package_id;
-+	int die_id;
-+	char name[32];
-+
-+	struct attribute_group uncore_attr_group;
-+	struct device_attribute max_freq_khz_dev_attr;
-+	struct device_attribute min_freq_khz_dev_attr;
-+	struct device_attribute initial_max_freq_khz_dev_attr;
-+	struct device_attribute initial_min_freq_khz_dev_attr;
-+	struct device_attribute current_freq_khz_dev_attr;
-+	struct attribute *uncore_attrs[6];
-+};
-+
-+int uncore_freq_common_init(int (*read_control_freq)(struct uncore_data *data, unsigned int *min, unsigned int *max),
-+			     int (*write_control_freq)(struct uncore_data *data, unsigned int input, unsigned int min_max),
-+			     int (*uncore_read_freq)(struct uncore_data *data, unsigned int *freq));
-+void uncore_freq_common_exit(void);
-+int uncore_freq_add_entry(struct uncore_data *data, int cpu);
-+void uncore_freq_remove_die_entry(struct uncore_data *data);
-+
-+#endif
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-index f5e980163911..791af0e287e4 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-@@ -21,67 +21,23 @@
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- 
--#define MSR_UNCORE_RATIO_LIMIT			0x620
--#define MSR_UNCORE_PERF_STATUS			0x621
--#define UNCORE_FREQ_KHZ_MULTIPLIER		100000
--
--/**
-- * struct uncore_data -	Encapsulate all uncore data
-- * @stored_uncore_data:	Last user changed MSR 620 value, which will be restored
-- *			on system resume.
-- * @initial_min_freq_khz: Sampled minimum uncore frequency at driver init
-- * @initial_max_freq_khz: Sampled maximum uncore frequency at driver init
-- * @control_cpu:	Designated CPU for a die to read/write
-- * @valid:		Mark the data valid/invalid
-- * @package_id:	Package id for this instance
-- * @die_id:		Die id for this instance
-- * @name:		Sysfs entry name for this instance
-- * @uncore_attr_group:	Attribute group storage
-- * @max_freq_khz_dev_attr: Storage for device attribute max_freq_khz
-- * @mix_freq_khz_dev_attr: Storage for device attribute min_freq_khz
-- * @initial_max_freq_khz_dev_attr: Storage for device attribute initial_max_freq_khz
-- * @initial_min_freq_khz_dev_attr: Storage for device attribute initial_min_freq_khz
-- * @current_freq_khz_dev_attr: Storage for device attribute current_freq_khz
-- * @uncore_attrs:	Attribute storage for group creation
-- *
-- * This structure is used to encapsulate all data related to uncore sysfs
-- * settings for a die/package.
-- */
--struct uncore_data {
--	u64 stored_uncore_data;
--	u32 initial_min_freq_khz;
--	u32 initial_max_freq_khz;
--	int control_cpu;
--	bool valid;
--	int package_id;
--	int die_id;
--	char name[32];
--
--	struct attribute_group uncore_attr_group;
--	struct device_attribute max_freq_khz_dev_attr;
--	struct device_attribute min_freq_khz_dev_attr;
--	struct device_attribute initial_max_freq_khz_dev_attr;
--	struct device_attribute initial_min_freq_khz_dev_attr;
--	struct device_attribute current_freq_khz_dev_attr;
--	struct attribute *uncore_attrs[6];
--};
-+#include "uncore-frequency-common.h"
- 
- /* Max instances for uncore data, one for each die */
- static int uncore_max_entries __read_mostly;
- /* Storage for uncore data for all instances */
- static struct uncore_data *uncore_instances;
--/* Root of the all uncore sysfs kobjs */
--static struct kobject *uncore_root_kobj;
- /* Stores the CPU mask of the target CPUs to use during uncore read/write */
- static cpumask_t uncore_cpu_mask;
- /* CPU online callback register instance */
- static enum cpuhp_state uncore_hp_state __read_mostly;
--/* Mutex to control all mutual exclusions */
--static DEFINE_MUTEX(uncore_lock);
- 
--/* Common function to read MSR 0x620 and read min/max */
--static int uncore_read_ratio(struct uncore_data *data, unsigned int *min,
--			     unsigned int *max)
-+#define MSR_UNCORE_RATIO_LIMIT	0x620
-+#define MSR_UNCORE_PERF_STATUS	0x621
-+#define UNCORE_FREQ_KHZ_MULTIPLIER	100000
-+
-+static int uncore_read_control_freq(struct uncore_data *data, unsigned int *min,
-+				    unsigned int *max)
- {
- 	u64 cap;
- 	int ret;
-@@ -99,25 +55,24 @@ static int uncore_read_ratio(struct uncore_data *data, unsigned int *min,
- 	return 0;
- }
- 
--/* Common function to set min/max ratios to be used by sysfs callbacks */
--static int uncore_write_ratio(struct uncore_data *data, unsigned int input,
--			      int set_max)
-+static int uncore_write_control_freq(struct uncore_data *data, unsigned int input,
-+				     unsigned int min_max)
- {
- 	int ret;
- 	u64 cap;
- 
--	if (data->control_cpu < 0)
--		return -ENXIO;
--
- 	input /= UNCORE_FREQ_KHZ_MULTIPLIER;
- 	if (!input || input > 0x7F)
- 		return -EINVAL;
- 
-+	if (data->control_cpu < 0)
-+		return -ENXIO;
-+
- 	ret = rdmsrl_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, &cap);
- 	if (ret)
- 		return ret;
- 
--	if (set_max) {
-+	if (min_max) {
- 		cap &= ~0x7F;
- 		cap |= input;
- 	} else  {
-@@ -139,6 +94,9 @@ static int uncore_read_freq(struct uncore_data *data, unsigned int *freq)
- 	u64 ratio;
- 	int ret;
- 
-+	if (data->control_cpu < 0)
-+		return -ENXIO;
-+
- 	ret = rdmsrl_on_cpu(data->control_cpu, MSR_UNCORE_PERF_STATUS, &ratio);
- 	if (ret)
- 		return ret;
-@@ -148,161 +106,6 @@ static int uncore_read_freq(struct uncore_data *data, unsigned int *freq)
- 	return 0;
- }
- 
--static ssize_t show_perf_status_freq_khz(struct uncore_data *data, char *buf)
--{
--	unsigned int freq;
--	int ret;
--
--	mutex_lock(&uncore_lock);
--	ret = uncore_read_freq(data, &freq);
--	mutex_unlock(&uncore_lock);
--	if (ret)
--		return ret;
--
--	return sprintf(buf, "%u\n", freq);
--}
--
--static ssize_t store_min_max_freq_khz(struct uncore_data *data,
--				      const char *buf, ssize_t count,
--				      int min_max)
--{
--	unsigned int input;
--
--	if (kstrtouint(buf, 10, &input))
--		return -EINVAL;
--
--	mutex_lock(&uncore_lock);
--	uncore_write_ratio(data, input, min_max);
--	mutex_unlock(&uncore_lock);
--
--	return count;
--}
--
--static ssize_t show_min_max_freq_khz(struct uncore_data *data,
--				     char *buf, int min_max)
--{
--	unsigned int min, max;
--	int ret;
--
--	mutex_lock(&uncore_lock);
--	ret = uncore_read_ratio(data, &min, &max);
--	mutex_unlock(&uncore_lock);
--	if (ret)
--		return ret;
--
--	if (min_max)
--		return sprintf(buf, "%u\n", max);
--
--	return sprintf(buf, "%u\n", min);
--}
--
--#define store_uncore_min_max(name, min_max)				\
--	static ssize_t store_##name(struct device *dev,		\
--				    struct device_attribute *attr,	\
--				    const char *buf, size_t count)	\
--	{								\
--		struct uncore_data *data = container_of(attr, struct uncore_data, name##_dev_attr);\
--									\
--		return store_min_max_freq_khz(data, buf, count,	\
--					      min_max);		\
--	}
--
--#define show_uncore_min_max(name, min_max)				\
--	static ssize_t show_##name(struct device *dev,		\
--				   struct device_attribute *attr, char *buf)\
--	{                                                               \
--		struct uncore_data *data = container_of(attr, struct uncore_data, name##_dev_attr);\
--									\
--		return show_min_max_freq_khz(data, buf, min_max);	\
--	}
--
--#define show_uncore_perf_status(name)					\
--	static ssize_t show_##name(struct device *dev,		\
--				   struct device_attribute *attr, char *buf)\
--	{                                                               \
--		struct uncore_data *data = container_of(attr, struct uncore_data, name##_dev_attr);\
--									\
--		return show_perf_status_freq_khz(data, buf); \
--	}
--
--store_uncore_min_max(min_freq_khz, 0);
--store_uncore_min_max(max_freq_khz, 1);
--
--show_uncore_min_max(min_freq_khz, 0);
--show_uncore_min_max(max_freq_khz, 1);
--
--show_uncore_perf_status(current_freq_khz);
--
--#define show_uncore_data(member_name)					\
--	static ssize_t show_##member_name(struct device *dev,	\
--					  struct device_attribute *attr, char *buf)\
--	{                                                               \
--		struct uncore_data *data = container_of(attr, struct uncore_data,\
--							  member_name##_dev_attr);\
--									\
--		return scnprintf(buf, PAGE_SIZE, "%u\n",		\
--				 data->member_name);			\
--	}								\
--
--show_uncore_data(initial_min_freq_khz);
--show_uncore_data(initial_max_freq_khz);
--
--#define init_attribute_rw(_name)					\
--	do {								\
--		sysfs_attr_init(&data->_name##_dev_attr.attr);	\
--		data->_name##_dev_attr.show = show_##_name;		\
--		data->_name##_dev_attr.store = store_##_name;		\
--		data->_name##_dev_attr.attr.name = #_name;		\
--		data->_name##_dev_attr.attr.mode = 0644;		\
--	} while (0)
--
--#define init_attribute_ro(_name)					\
--	do {								\
--		sysfs_attr_init(&data->_name##_dev_attr.attr);	\
--		data->_name##_dev_attr.show = show_##_name;		\
--		data->_name##_dev_attr.store = NULL;			\
--		data->_name##_dev_attr.attr.name = #_name;		\
--		data->_name##_dev_attr.attr.mode = 0444;		\
--	} while (0)
--
--#define init_attribute_root_ro(_name)					\
--	do {								\
--		sysfs_attr_init(&data->_name##_dev_attr.attr);	\
--		data->_name##_dev_attr.show = show_##_name;		\
--		data->_name##_dev_attr.store = NULL;			\
--		data->_name##_dev_attr.attr.name = #_name;		\
--		data->_name##_dev_attr.attr.mode = 0400;		\
--	} while (0)
--
--static int create_attr_group(struct uncore_data *data, char *name)
--{
--	int ret, index = 0;
--
--	init_attribute_rw(max_freq_khz);
--	init_attribute_rw(min_freq_khz);
--	init_attribute_ro(initial_min_freq_khz);
--	init_attribute_ro(initial_max_freq_khz);
--	init_attribute_root_ro(current_freq_khz);
--
--	data->uncore_attrs[index++] = &data->max_freq_khz_dev_attr.attr;
--	data->uncore_attrs[index++] = &data->min_freq_khz_dev_attr.attr;
--	data->uncore_attrs[index++] = &data->initial_min_freq_khz_dev_attr.attr;
--	data->uncore_attrs[index++] = &data->initial_max_freq_khz_dev_attr.attr;
--	data->uncore_attrs[index++] = &data->current_freq_khz_dev_attr.attr;
--	data->uncore_attrs[index] = NULL;
--
--	data->uncore_attr_group.name = name;
--	data->uncore_attr_group.attrs = data->uncore_attrs;
--	ret = sysfs_create_group(uncore_root_kobj, &data->uncore_attr_group);
--
--	return ret;
--}
--
--static void delete_attr_group(struct uncore_data *data, char *name)
--{
--	sysfs_remove_group(uncore_root_kobj, &data->uncore_attr_group);
--}
--
- /* Caller provides protection */
- static struct uncore_data *uncore_get_instance(unsigned int cpu)
- {
-@@ -314,57 +117,9 @@ static struct uncore_data *uncore_get_instance(unsigned int cpu)
- 	return NULL;
- }
- 
--static void uncore_add_die_entry(int cpu)
--{
--	struct uncore_data *data;
--
--	mutex_lock(&uncore_lock);
--	data = uncore_get_instance(cpu);
--	if (!data) {
--		mutex_unlock(&uncore_lock);
--		return;
--	}
--
--	if (data->valid) {
--		/* control cpu changed */
--		data->control_cpu = cpu;
--	} else {
--		int ret;
--
--		memset(data, 0, sizeof(*data));
--		sprintf(data->name, "package_%02d_die_%02d",
--			topology_physical_package_id(cpu),
--			topology_die_id(cpu));
--
--		uncore_read_ratio(data, &data->initial_min_freq_khz,
--				  &data->initial_max_freq_khz);
--
--		ret = create_attr_group(data, data->name);
--		if (!ret) {
--			data->control_cpu = cpu;
--			data->valid = true;
--		}
--	}
--	mutex_unlock(&uncore_lock);
--}
--
--/* Last CPU in this die is offline, make control cpu invalid */
--static void uncore_remove_die_entry(int cpu)
--{
--	struct uncore_data *data;
--
--	mutex_lock(&uncore_lock);
--	data = uncore_get_instance(cpu);
--	if (data) {
--		delete_attr_group(data, data->name);
--		data->control_cpu = -1;
--		data->valid = false;
--	}
--	mutex_unlock(&uncore_lock);
--}
--
- static int uncore_event_cpu_online(unsigned int cpu)
- {
-+	struct uncore_data *data;
- 	int target;
- 
- 	/* Check if there is an online cpu in the package for uncore MSR */
-@@ -374,15 +129,26 @@ static int uncore_event_cpu_online(unsigned int cpu)
- 
- 	/* Use this CPU on this die as a control CPU */
- 	cpumask_set_cpu(cpu, &uncore_cpu_mask);
--	uncore_add_die_entry(cpu);
- 
--	return 0;
-+	data = uncore_get_instance(cpu);
-+	if (!data)
-+		return 0;
-+
-+	data->package_id = topology_physical_package_id(cpu);
-+	data->die_id = topology_die_id(cpu);
-+
-+	return uncore_freq_add_entry(data, cpu);
- }
- 
- static int uncore_event_cpu_offline(unsigned int cpu)
- {
-+	struct uncore_data *data;
- 	int target;
- 
-+	data = uncore_get_instance(cpu);
-+	if (!data)
-+		return 0;
-+
- 	/* Check if existing cpu is used for uncore MSRs */
- 	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
- 		return 0;
-@@ -392,9 +158,9 @@ static int uncore_event_cpu_offline(unsigned int cpu)
- 
- 	if (target < nr_cpu_ids) {
- 		cpumask_set_cpu(target, &uncore_cpu_mask);
--		uncore_add_die_entry(target);
-+		uncore_freq_add_entry(data, target);
- 	} else {
--		uncore_remove_die_entry(cpu);
-+		uncore_freq_remove_die_entry(data);
- 	}
- 
- 	return 0;
-@@ -403,24 +169,20 @@ static int uncore_event_cpu_offline(unsigned int cpu)
- static int uncore_pm_notify(struct notifier_block *nb, unsigned long mode,
- 			    void *_unused)
- {
--	int cpu;
-+	int i;
- 
- 	switch (mode) {
- 	case PM_POST_HIBERNATION:
- 	case PM_POST_RESTORE:
- 	case PM_POST_SUSPEND:
--		for_each_cpu(cpu, &uncore_cpu_mask) {
--			struct uncore_data *data;
--			int ret;
-+		for (i = 0; i < uncore_max_entries; ++i) {
-+			struct uncore_data *data = &uncore_instances[i];
- 
--			data = uncore_get_instance(cpu);
- 			if (!data || !data->valid || !data->stored_uncore_data)
--				continue;
-+				return 0;
- 
--			ret = wrmsrl_on_cpu(cpu, MSR_UNCORE_RATIO_LIMIT,
--					    data->stored_uncore_data);
--			if (ret)
--				return ret;
-+			wrmsrl_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT,
-+				      data->stored_uncore_data);
- 		}
- 		break;
- 	default:
-@@ -443,6 +205,7 @@ static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
- 	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, NULL),
- 	{}
- };
-+MODULE_DEVICE_TABLE(x86cpu, intel_uncore_cpu_ids);
- 
- static int __init intel_uncore_init(void)
- {
-@@ -460,12 +223,10 @@ static int __init intel_uncore_init(void)
- 	if (!uncore_instances)
- 		return -ENOMEM;
- 
--	uncore_root_kobj = kobject_create_and_add("intel_uncore_frequency",
--						  &cpu_subsys.dev_root->kobj);
--	if (!uncore_root_kobj) {
--		ret = -ENOMEM;
-+	ret = uncore_freq_common_init(uncore_read_control_freq, uncore_write_control_freq,
-+				      uncore_read_freq);
-+	if (!ret)
- 		goto err_free;
--	}
- 
- 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
- 				"platform/x86/uncore-freq:online",
-@@ -485,7 +246,7 @@ static int __init intel_uncore_init(void)
- err_rem_state:
- 	cpuhp_remove_state(uncore_hp_state);
- err_rem_kobj:
--	kobject_put(uncore_root_kobj);
-+	uncore_freq_common_exit();
- err_free:
- 	kfree(uncore_instances);
- 
-@@ -495,12 +256,17 @@ module_init(intel_uncore_init)
- 
- static void __exit intel_uncore_exit(void)
- {
-+	int i;
-+
- 	unregister_pm_notifier(&uncore_pm_nb);
- 	cpuhp_remove_state(uncore_hp_state);
--	kobject_put(uncore_root_kobj);
-+	for (i = 0; i < uncore_max_entries; ++i)
-+		uncore_freq_remove_die_entry(&uncore_instances[i]);
-+	uncore_freq_common_exit();
- 	kfree(uncore_instances);
- }
- module_exit(intel_uncore_exit)
- 
-+MODULE_IMPORT_NS(INTEL_UNCORE_FREQUENCY);
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("Intel Uncore Frequency Limits Driver");
--- 
-2.31.1
+As it stands today the only reliable way to tell from userspace (at 
+least for AMD's x86 implementation) is by grepping the system log for 
+the line "AMD Memory Encryption Features active".
+
+> +}
+> +static DEVICE_ATTR_RO(crypto_capable);
+> +
+>   static struct attribute *node_dev_attrs[] = {
+>   	&dev_attr_meminfo.attr,
+>   	&dev_attr_numastat.attr,
+>   	&dev_attr_distance.attr,
+>   	&dev_attr_vmstat.attr,
+> +	&dev_attr_crypto_capable.attr,
+>   	NULL
+>   };
+>   
 
