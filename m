@@ -2,89 +2,131 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C526C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Feb 2022 09:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547BEC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Feb 2022 10:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233699AbiBEJUM (ORCPT
+        id S1344346AbiBEKKQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 5 Feb 2022 04:20:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53660 "EHLO
+        Sat, 5 Feb 2022 05:10:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230226AbiBEJUL (ORCPT
+        with ESMTP id S239292AbiBEKKP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 5 Feb 2022 04:20:11 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB89C061346
-        for <platform-driver-x86@vger.kernel.org>; Sat,  5 Feb 2022 01:20:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C5E760A65
-        for <platform-driver-x86@vger.kernel.org>; Sat,  5 Feb 2022 09:20:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DD79EC34114
-        for <platform-driver-x86@vger.kernel.org>; Sat,  5 Feb 2022 09:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644052804;
-        bh=o0DEy9gZ7ZHkRy5kWMRLkR1XyrPjyUYE63HAYo4yeYQ=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=FTgCWge8bSvK6dF8i0UUu9CWKO0b+nXu775vuvVcucehItgc9ufKPLPAPjso38cMu
-         CbM/oojdPndbnqGDtYb6XphXd8Sk56oavyvX8OjgF8nvK7c5WIbFWuQMuidQA673NN
-         Yv/Elp9D3HgWgtNqEh2YYdXXjpUBP89ZekcpSqd+QE9qfInRd9jmMzZClqKhNyCK8T
-         gfrTaCdT5dFwW2Smzt1krNka7IVTuuf4u3npa38tUd+ZpyEah1tOGOCBn1qEwx56MB
-         bvs6uq+hA5iPo5Ycur7OpSt65n0V1M/JDHiNU1avNLDLf7IpxmPBeZHUZmvdpJR9zg
-         wZPF2fGLkqk1w==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id CDF0DC05FD4; Sat,  5 Feb 2022 09:20:04 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Sat, 05 Feb 2022 09:20:03 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: eugene.shalygin@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-lzT1EaMT0S@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sat, 5 Feb 2022 05:10:15 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63385C061346
+        for <platform-driver-x86@vger.kernel.org>; Sat,  5 Feb 2022 02:10:12 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id u12so115108plq.10
+        for <platform-driver-x86@vger.kernel.org>; Sat, 05 Feb 2022 02:10:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:from:subject:to:cc
+         :content-language:content-transfer-encoding;
+        bh=wEoU+g/vJlm2noHbumr4lvUXYEnzpeD4Vgp+5SFxHTE=;
+        b=gYwdHU0/yr/qVxR/v258E26+k7BDJ/3obRsg3Oeqgh1E2HMSbC/SN8KpHsmZiI9k2H
+         CZXH/Ps7BHC2rWjGpmCCKCCyhbDocboXRkZymNznCx+PoD4813ZmWptYgtB/lvwam4Zf
+         PH7mlxduhloGnR0Sdl7AIbmicXPuno/yJuo/AEIxB284VnOWpWlK91rXq5fxVZzphCRj
+         9jlMWGoIX8DEIqVfQnRSbaBV1tJFwTk/YwqH8tieWd9f+ms0AYL4WzQCNy4DtUUHkIoD
+         ZkGjxoapusfR38Qptt/xKcpaZ32Mq00znzcLzxQxhQCKV8Pvmb+mOw0JS7w5m8JU4T+V
+         jttw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
+         :subject:to:cc:content-language:content-transfer-encoding;
+        bh=wEoU+g/vJlm2noHbumr4lvUXYEnzpeD4Vgp+5SFxHTE=;
+        b=nNP+PACNTtQaKHcartaj6J+u3biVJyf5UGWoupaotP7fSWu0xMsfUUNEj0z+4afv0J
+         AR2BJe2S8YdlNBuBJF0B+dQoT+oRF2BujSGvS5Lum2qD66wZ9kdTqSLU5SoxLcbqCMha
+         EEfolpJM/QF5NrgW4ekjuRKvHfvkMTHu0HOn4jkYf179HmYnSueN4gOrhxCwokMh4odH
+         IWy/9/77P2ZQaaZUbnceVvT8Qy8geQn71Z70Uv48PPzY25OJ8fYT7zEmlp48Cd9iqVob
+         IFGZJI/K9PCppYFTaANuf9pD3WqMVNx0dIik2+J4sBujjOwsZa/vFVZbZv0TRkILuOJL
+         vISw==
+X-Gm-Message-State: AOAM532D1mJ4PeXtZ5fyadi6aVbRAOw0lkBmifvQuy0sTYxQdPrX4WcC
+        PHFI/bhPph1/r/2O4l45T84=
+X-Google-Smtp-Source: ABdhPJwGy3F60UHNY21cQqKAyUbZDx51I3OHLwEp/zYMVBfg3Jw+LTU20Ng9pFIWqo0NSlO9XMEWdw==
+X-Received: by 2002:a17:902:7c92:: with SMTP id y18mr7354981pll.131.1644055811570;
+        Sat, 05 Feb 2022 02:10:11 -0800 (PST)
+Received: from [192.168.18.53] ([59.93.24.175])
+        by smtp.gmail.com with ESMTPSA id lk8sm4873657pjb.40.2022.02.05.02.10.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Feb 2022 02:10:11 -0800 (PST)
+Message-ID: <6c52edb4-7cb4-7bfd-a40c-a0874569de72@gmail.com>
+Date:   Sat, 5 Feb 2022 15:40:03 +0530
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+From:   Abhijeet Viswa <abhijeetviswa@gmail.com>
+Subject: Regression in asus-wmi due to fan curve patches
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Luke D. Jones" <luke@ljones.dev>,
+        acpi4asus-user@lists.sourceforge.net,
+        Corentin Chary <corentin.chary@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hi,
 
---- Comment #216 from Eugene Shalygin (eugene.shalygin@gmail.com) ---
-(In reply to Jaap de Haan from comment #215)
-> My Board happens to report "PRIME X570-P" instead of "PRIME X570-PRO" (wh=
-at
-> I saw in the source code)...
+Firstly, apologies if I have included/excluded the wrong mailing list or 
+persons in this email. This is my first time doing this and I've tried 
+my best to make sure it is accurate.
 
-They look like two distinct models:
+I am facing a regression in the mainline of the kernel (commit 
+0457e5153e0e8420134f60921349099e907264ca) with the asus-wmi platform 
+driver. The driver fails to load with the following dmesg:
 
-https://www.asus.com/Motherboards-Components/Motherboards/PRIME/PRIME-X570-=
-PRO/
+	asus-nb-wmi: probe of asus-nb-wmi failed with error -61
 
-https://www.asus.com/Motherboards-Components/Motherboards/PRIME/PRIME-X570-=
-P/
+I have an ASUS TUF FX506 laptop.
 
---=20
-You may reply to this email to add a comment.
+I traced the regression to the method fan_curve_get_factory_default. It 
+calls a WMI method which is expected to return a data buffer. However, 
+if the device does not support fan curve method it is supposed to return 
+the integer error code ASUS_WMI_UNSUPPORTED_METHOD.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+However, my laptop returns a value 0 to indicate that the method is not 
+supported:
+
+                 If ((IIA0 == 0x00110024))
+                 {
+                     Return (Zero)
+                 }
+
+                 If ((IIA0 == 0x00110025))
+                 {
+                     Return (Zero)
+                 }
+
+This means that on lines 395-407 in the method 
+asus_wmi_evaluate_method_buf, the if condition err == 0 evaluates to 
+true an -ENODATA (-61) is returned.
+
+         case ACPI_TYPE_INTEGER:
+                 err = (u32)obj->integer.value;
+
+                 if (err == ASUS_WMI_UNSUPPORTED_METHOD)
+                         err = -ENODEV;
+                 /*
+                  * At least one method returns a 0 with no buffer if no arg
+                  * is provided, such as ASUS_WMI_DEVID_CPU_FAN_CURVE
+                  */
+                 if (err == 0)
+                         err = -ENODATA;
+                 break;
+
+I am not sure the extent of ASUS laptops that are affected. TUF series 
+laptops do not support fan curve control and so I presume many of them 
+are affected by this regression.
+
+I have tested a patch which selectively ignores the -ENODATA error code 
+when probing for fan curve control. However, I'm not sure if this is the 
+right way to do things and hence have no included the patch here.
+
+Once again, I apologize if this email is not how things are normally 
+done and would love to hear feedback on the same.
+
+Thanks
+Abhijeet
