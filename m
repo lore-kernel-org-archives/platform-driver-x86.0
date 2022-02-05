@@ -2,162 +2,131 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ECDC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Feb 2022 10:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C2CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Feb 2022 11:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237205AbiBEKyN (ORCPT
+        id S238741AbiBELBO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 5 Feb 2022 05:54:13 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:53540 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230020AbiBEKyL (ORCPT
+        Sat, 5 Feb 2022 06:01:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238327AbiBELBO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 5 Feb 2022 05:54:11 -0500
-Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E27091EC02DD;
-        Sat,  5 Feb 2022 11:54:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1644058446;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=uZ7YbZrJGPMPUOZHBNRpUaCuf4fbjJb2e0v1A635574=;
-        b=Wi4j4RdBU/nduEspCZ+AEnQggLzEGh95jTHEMmr+DClFcPOZ5VKO1AVl1fq1d6uEZnyIR9
-        94WXRdpFGpUC7ZltmJ5nyNtLaG7ckLTwcARlP7XhLQJFPS3GpUVCjl56uVAd6DMN/r7f/0
-        HzQGDF4BaAeJsfhozkPmEQqp4+mkgvI=
-Date:   Sat, 5 Feb 2022 11:54:01 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v9 31/43] x86/compressed/64: Add support for SEV-SNP
- CPUID table in #VC handlers
-Message-ID: <Yf5XScto3mDXnl9u@zn.tnic>
-References: <20220128171804.569796-1-brijesh.singh@amd.com>
- <20220128171804.569796-32-brijesh.singh@amd.com>
+        Sat, 5 Feb 2022 06:01:14 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB702C061346
+        for <platform-driver-x86@vger.kernel.org>; Sat,  5 Feb 2022 03:01:12 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id c194so7306640pfb.12
+        for <platform-driver-x86@vger.kernel.org>; Sat, 05 Feb 2022 03:01:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:from:subject:to:references
+         :content-language:cc:in-reply-to:content-transfer-encoding;
+        bh=d4b0HgP7j/7mVot/cOfseoBNwiauWynlLwBiBU/aQ/s=;
+        b=YSSeKR/0X09TWr7YWW/r93gmNH9BtimCV6/ATJurcU8r/crfvQpCeeFFIzP54oktm1
+         XEX8LTSbYpHkqM3PmbWCqQCqwsddHgB+8ozIpNma1U8Q5QgEiF9L97ayAtBHJWeORtZ6
+         821K78o226JJJPLse/CM9MSi+723UHUJA7DR/bF1aqjuLt51I45Qhv5N8+Qajda9tAEs
+         fRyFboBrD5TXJK+6u09M6N3WwtK/GxICyOuRWFoeFsMqskwIO9K4XqZkQCcJJxssM25d
+         P3ZF1AEezNdK92JZhsHNugvC6iPomFrrOxL1XoLoQhzs2rmx6Hn86A0ZDNjYCZWTc3tC
+         H/ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
+         :subject:to:references:content-language:cc:in-reply-to
+         :content-transfer-encoding;
+        bh=d4b0HgP7j/7mVot/cOfseoBNwiauWynlLwBiBU/aQ/s=;
+        b=pbP58ya2D/qW2RzwAFzLYkEVI1KCfhHQt9r0JsqSU7u5oFbX0usUm8o9tfLIvWDS0o
+         KEW3x4btpKhSkr9ck6SDWSLMO4ttlBijAbo40AQkUNa3D2gEQO1UqE1Y7Oph2JZ4VMk8
+         nQiVMmUbO2MRXQkiPFTzViB39YJwmxp0ooghjhnAskM/Kwv1Zhl5ourIGNrXlCpZU6VM
+         L9nWsU0Z1Zgb9EhLLRQK4OmmRut6QsVKCP9eUNnKN8opY02GbwoWInB3viwkzD8Btm27
+         AS9ykWoqDR2x8uqLoG5hPtRxiPjUinV/yIR379Y+ibiLXkKenH1I0kVoU3jNNBw79HST
+         5s7A==
+X-Gm-Message-State: AOAM530k6jbmM5BC6CF3zT7QqsN7ToQffCBdNqbF/u3ZAFVMaZOLtJYz
+        B/jFSF+7Km6oYLjt3gJYjD8=
+X-Google-Smtp-Source: ABdhPJyDO4f2UzwjEh89lzFzMQEA/yfriz+cVPd06Ci/H1D2TqqGL5q1qPV0fM9bGDIWIj1UHWqTIg==
+X-Received: by 2002:a05:6a00:1513:: with SMTP id q19mr7339414pfu.12.1644058872081;
+        Sat, 05 Feb 2022 03:01:12 -0800 (PST)
+Received: from [192.168.18.53] ([59.93.24.175])
+        by smtp.gmail.com with ESMTPSA id q9sm15780069pjm.20.2022.02.05.03.01.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Feb 2022 03:01:11 -0800 (PST)
+Message-ID: <3223414e-2f95-9945-f0c1-c36782281478@gmail.com>
+Date:   Sat, 5 Feb 2022 16:31:09 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220128171804.569796-32-brijesh.singh@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+From:   Abhijeet Viswa <abhijeetviswa@gmail.com>
+Subject: Re: Regression in asus-wmi due to fan curve patches
+To:     Hans de Goede <hdegoede@redhat.com>
+References: <6c52edb4-7cb4-7bfd-a40c-a0874569de72@gmail.com>
+ <fde23037-b9c7-adde-5a2b-79a67c329538@redhat.com>
+Content-Language: en-US
+Cc:     "Luke D. Jones" <luke@ljones.dev>,
+        acpi4asus-user@lists.sourceforge.net,
+        Corentin Chary <corentin.chary@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+In-Reply-To: <fde23037-b9c7-adde-5a2b-79a67c329538@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 11:17:52AM -0600, Brijesh Singh wrote:
-> +/*
-> + * Individual entries of the SEV-SNP CPUID table, as defined by the SEV-SNP
-> + * Firmware ABI, Revision 0.9, Section 7.1, Table 14.
-> + */
-> +struct snp_cpuid_fn {
-> +	u32 eax_in;
-> +	u32 ecx_in;
-> +	u64 xcr0_in;
-> +	u64 xss_in;
+Hi, 
 
-So what's the end result here:
+On 05/02/22 15:46, Hans de Goede wrote:
+>> Firstly, apologies if I have included/excluded the wrong mailing list or persons in this email. This is my first time doing this and I've tried my best to make sure it is accurate.
+> 
+> No worries, it looks like you've done a pretty good job at picking the
+> right people + lists. And even if you didn't with regressions like this
+> *the* most important thing is to get the word out quickly, so thank
+> you for doing that!
 
--+	u64 __unused;
--+	u64 __unused2;
-++	u64 xcr0_in;
-++	u64 xss_in;
+Thanks. I'm happy to hear this.
 
-those are not unused fields anymore but xcr0 and xss input values?
+I tried a git-format patch which created an email patch. Wasn't sure if I had to send a separate patch email, so I've decided to inline the patch contents at the end of this email. And, I certify that the changes are mine and license them under the same license as the files modified.
 
-Looking at the FW abi doc, they're only mentioned in "Table 14.
-CPUID_FUNCTION Structure" that they're XCR0 and XSS at the time of the
-CPUID execution.
+Hopefully inlining it is fine. If not, I could provide it as an attachment.
 
-But those values are input values to what exactly, guest or firmware?
+Thanks
+Abhijeet
 
-There's a typo in the FW doc, btw:
+~~~
 
-"The guest constructs an MSG_CPUID_REQ message as defined in Table 13.
-This message contains an array of CPUID function structures as defined
-in Table 13."
+From f5bae0a579dc211c329c7aa08837e462aee1af6b Mon Sep 17 00:00:00 2001
+From: Abhijeet V <abhijeetviswa@gmail.com>
+Date: Sat, 5 Feb 2022 15:57:23 +0530
+Subject: [PATCH] asus-wmi: Fix regression when probing for fan curve control
 
-That second "Table" is 14 not 13.
+The fan curve control patches introduced a regression for atleast the
+TUF FX506 and possibly other TUF series laptops that do not have support
+for fan curve control.
 
-So, if an array CPUID_FUNCTION[] is passed as part of an MSG_CPUID_REQ
-command, then, the two _IN variables contain what the guest received
-from the HV for XCR0 and XSS values. Which means, this is the guest
-asking the FW whether those values the HV gave the guest are kosher.
+As part of the probing process, asus_wmi_evaluate_method_buf is called
+to get the factory default fan curve . The WMI management function
+returns 0 on certain laptops to indicate lack of fan curve control
+instead of ASUS_WMI_UNSUPPORTED_METHOD. This 0 is transformed to
+-ENODATA which results in failure when probing.
 
-Am I close?
+Signed-off-by: Abhijeet V <abhijeetviswa@gmail.com>
+---
+ drivers/platform/x86/asus-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +static const struct snp_cpuid_info *snp_cpuid_info_get_ptr(void)
-> +{
-> +	void *ptr;
-> +
-> +	asm ("lea cpuid_info_copy(%%rip), %0"
-> +	     : "=r" (ptr)
-
-Same question as the last time:
-
-Why not "=g" and let the compiler decide?
-
-> +	     : "p" (&cpuid_info_copy));
-> +
-> +	return ptr;
-> +}
-
-...
-
-> +static bool snp_cpuid_check_range(u32 func)
-> +{
-> +	if (func <= cpuid_std_range_max ||
-> +	    (func >= 0x40000000 && func <= cpuid_hyp_range_max) ||
-> +	    (func >= 0x80000000 && func <= cpuid_ext_range_max))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static int snp_cpuid_postprocess(u32 func, u32 subfunc, u32 *eax, u32 *ebx,
-> +				 u32 *ecx, u32 *edx)
-
-And again, same question as the last time:
-
-I'm wondering if you could make everything a lot easier by doing
-
-static int snp_cpuid_postprocess(struct cpuid_leaf *leaf)
-
-and marshall around that struct cpuid_leaf which contains func, subfunc,
-e[abcd]x instead of dealing with 6 parameters.
-
-Callers of snp_cpuid() can simply allocate it on their stack and hand it
-in and it is all in sev-shared.c so nicely self-contained...
-
-Ok I'm ignoring this patch for now and I'll review it only after you've
-worked in all comments from the previous review.
-
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index a3b83b22a3b..adeb58765dc 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -3585,7 +3585,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 		goto fail_hwmon;
+ 
+ 	err = asus_wmi_custom_fan_curve_init(asus);
+-	if (err)
++	if (err && err != -ENODATA)
+ 		goto fail_custom_fan_curve;
+ 
+ 	err = asus_wmi_led_init(asus);
 -- 
-Regards/Gruss,
-    Boris.
+2.35.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
