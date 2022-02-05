@@ -2,114 +2,128 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58694C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Feb 2022 13:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69675C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Feb 2022 13:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379921AbiBENHw (ORCPT
+        id S1379998AbiBENpy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 5 Feb 2022 08:07:52 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:41948 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233802AbiBENHv (ORCPT
+        Sat, 5 Feb 2022 08:45:54 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41179 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234562AbiBENpy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 5 Feb 2022 08:07:51 -0500
-Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D113E1EC051E;
-        Sat,  5 Feb 2022 14:07:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1644066466;
+        Sat, 5 Feb 2022 08:45:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644068753;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0xuIpKje8zkOvUagGUNB86BnlJAw32mk/ZqXAf5Gr+4=;
-        b=IUy7dO+ddvE4dWRGM+hDG+rqKvIhsL8kvqBT5KM38cC4/cUWC6MfOWm65C16n50FTJPZDH
-        7/FulyBflZG+slZjlrj38QcIZqR67m9NUmcpP/4ywOtL6eod7Aihc4aY/wde7Da11/E3C1
-        B4WI1FS0d1xiONTe0XeAJWVQ5fF0CUM=
-Date:   Sat, 5 Feb 2022 14:07:45 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v9 32/43] x86/boot: Add a pointer to Confidential
- Computing blob in bootparams
-Message-ID: <Yf52oebXr+fKioTJ@zn.tnic>
-References: <20220128171804.569796-1-brijesh.singh@amd.com>
- <20220128171804.569796-33-brijesh.singh@amd.com>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=D6JG/BZaid8JhOZ1mbGLv87KT0IJJWRNq9H/HSBNA8Y=;
+        b=SyJi8cYFPb8I6/MCqDMdZBROY2eDfX/pPq+kDJJu3kmDnhxXwnaViv003V+hr147Kqn86v
+        SZTPCu7Uo7iIGYNZ1GmLQqbVB+0UfN8Ui3gCNM844K9d3TS9JFBUHcDTIK+phPbRd+8o7q
+        mv/u6XcJd3C83JLlj3eo8qWKuIJdhg0=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-316-iVwut8JTN-uUzhCFgSTVIA-1; Sat, 05 Feb 2022 08:45:52 -0500
+X-MC-Unique: iVwut8JTN-uUzhCFgSTVIA-1
+Received: by mail-ej1-f69.google.com with SMTP id q3-20020a17090676c300b006a9453c33b0so3537305ejn.13
+        for <platform-driver-x86@vger.kernel.org>; Sat, 05 Feb 2022 05:45:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=D6JG/BZaid8JhOZ1mbGLv87KT0IJJWRNq9H/HSBNA8Y=;
+        b=bYxqcJz+bHoRMy1mKX8MxsFtXf/hOfjwGD21WcpgM/E1eUM0PE0VKONGAT8omYFnVA
+         lU9p0rV1/KH8KQLHIs75FPGvTMTpKHwzIwf9N06BE5smO9tpGtZP1nB+AUyQ3Vp3oLaY
+         JbCvWeEqQTBm9fH0WVRVldFB7TJi3qF/iXzoX8u1vUncqAhJP0R35AgjGJsKV69pOmVJ
+         QVADfdzb3+4LnaoM2bF0u3jfPiZ5lkdQW/MK6fb76okmcyRt94crldBkW/MumTqyNxcO
+         AecZVzxTkZlcpRoIxolYroBq+0zWehIHh89RoAs+tpQx0fIR1rghmGPryO5eYh8pfC21
+         9qvA==
+X-Gm-Message-State: AOAM532gMgMF+i5e7WSk11KlRYfl5+ANKPJ9RjXRfU+5741J455BK4LW
+        LZ0iC2Xa+T/KyAGCP20ijL39OuANNaQvK76ES3osWKTjo1wCXiq2g1AyIBgmklrchRdciLnYxKI
+        UhDhis/F/oghATtIrO6cJKdZUQ2oZrYq/Rg==
+X-Received: by 2002:a05:6402:348b:: with SMTP id v11mr4365008edc.353.1644068751169;
+        Sat, 05 Feb 2022 05:45:51 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwibUMRMGY5sYezJ/ei6BMfKDySe52eoD+sRiINOGvddtUA2oaK66MJLuikRtG+ejh1K5OB7w==
+X-Received: by 2002:a05:6402:348b:: with SMTP id v11mr4364992edc.353.1644068751033;
+        Sat, 05 Feb 2022 05:45:51 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id la1sm488526ejb.22.2022.02.05.05.45.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Feb 2022 05:45:50 -0800 (PST)
+Message-ID: <9e5fb269-75e6-25f4-c111-1a5ce4a694cd@redhat.com>
+Date:   Sat, 5 Feb 2022 14:45:49 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220128171804.569796-33-brijesh.singh@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH] platform/x86: asus-wmi: Fix regression when probing for
+ fan curve control
+Content-Language: en-US
+To:     Abhijeet Viswa <abhijeetviswa@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20220205112840.33095-1-hdegoede@redhat.com>
+ <94d60c8a-3716-7b29-be79-10ecad96cae3@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <94d60c8a-3716-7b29-be79-10ecad96cae3@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 11:17:53AM -0600, Brijesh Singh wrote:
-> From: Michael Roth <michael.roth@amd.com>
-> 
-> The previously defined Confidential Computing blob is provided to the
-> kernel via a setup_data structure or EFI config table entry. Currently
-> these are both checked for by boot/compressed kernel to access the
-> CPUID table address within it for use with SEV-SNP CPUID enforcement.
-> 
-> To also enable SEV-SNP CPUID enforcement for the run-time kernel,
-> similar early access to the CPUID table is needed early on while it's
-> still using the identity-mapped page table set up by boot/compressed,
-> where global pointers need to be accessed via fixup_pointer().
-> 
-> This isn't much of an issue for accessing setup_data, and the EFI
-> config table helper code currently used in boot/compressed *could* be
-> used in this case as well since they both rely on identity-mapping.
-> However, it has some reliance on EFI helpers/string constants that
-> would need to be accessed via fixup_pointer(), and fixing it up while
-> making it shareable between boot/compressed and run-time kernel is
-> fragile and introduces a good bit of uglyness.
-> 
-> Instead, add a boot_params->cc_blob_address pointer that the
-> boot/compressed kernel can initialize so that the run-time kernel can
-> access the CC blob from there instead of re-scanning the EFI config
-> table.
-> 
-> Signed-off-by: Michael Roth <michael.roth@amd.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/include/asm/bootparam_utils.h | 1 +
->  arch/x86/include/uapi/asm/bootparam.h  | 3 ++-
->  2 files changed, 3 insertions(+), 1 deletion(-)
+Hi,
 
-Another review comment ignored:
+On 2/5/22 13:05, Abhijeet Viswa wrote:
+> Hi,
+> 
+> Tested this out and it works as expected. Thanks for the quick resolution!
 
-https://lore.kernel.org/r/YeWyCtr11rL7dxpT@zn.tnic
+Thank you,
 
-/me ignores this patch too.
+I've added this to my review-hans (soon to be for-next) branch now
+I'll also include this in my next fixes pull-req for 5.17 (the bug
+only exists in 5.17).
 
--- 
-Regards/Gruss,
-    Boris.
+Regards,
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Hans
+
+
+> On 05/02/22 16:58, Hans de Goede wrote:
+>> The fan curve control patches introduced a regression for at least the
+>> TUF FX506 and possibly other TUF series laptops that do not have support
+>> for fan curve control.
+>>
+>> As part of the probing process, asus_wmi_evaluate_method_buf is called
+>> to get the factory default fan curve . The WMI management function
+>> returns 0 on certain laptops to indicate lack of fan curve control
+>> instead of ASUS_WMI_UNSUPPORTED_METHOD. This 0 is transformed to
+>> -ENODATA which results in failure when probing.
+>>
+>> Fixes: 0f0ac158d28f ("platform/x86: asus-wmi: Add support for custom fan curves")
+>> Reported-by: Abhijeet V <abhijeetviswa@gmail.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>  drivers/platform/x86/asus-wmi.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>> index a3b83b22a3b1..2104a2621e50 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -2223,7 +2223,7 @@ static int fan_curve_check_present(struct asus_wmi *asus, bool *available,
+>>  
+>>  	err = fan_curve_get_factory_default(asus, fan_dev);
+>>  	if (err) {
+>> -		if (err == -ENODEV)
+>> +		if (err == -ENODEV || err == -ENODATA)
+>>  			return 0;
+>>  		return err;
+>>  	}
+> 
+
