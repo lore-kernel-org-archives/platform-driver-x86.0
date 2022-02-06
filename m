@@ -2,103 +2,188 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11105C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  6 Feb 2022 05:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1D6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  6 Feb 2022 13:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbiBFFdO (ORCPT
+        id S239863AbiBFNiT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 6 Feb 2022 00:33:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59764 "EHLO
+        Sun, 6 Feb 2022 08:38:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiBFFdO (ORCPT
+        with ESMTP id S234549AbiBFNiS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 6 Feb 2022 00:33:14 -0500
-Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86AE1C06173B;
-        Sat,  5 Feb 2022 21:33:13 -0800 (PST)
-Received: by mail-oo1-xc2a.google.com with SMTP id r15-20020a4ae5cf000000b002edba1d3349so9941988oov.3;
-        Sat, 05 Feb 2022 21:33:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MDwo1QignIVmB9o/CHw5md1FjaCAoJt0+t4hgZ76n4k=;
-        b=Ro9lbYd46vZhD5iB3lGlnpfI0K/fSBCxaQH60HL4hY1Sd+vwjJYmnXRwe6Ab/a3N27
-         btjwGxB1cKNKVgkhqT+LeUmenrboGbi8sXG1Jv59eugwo+C4lQ7rgjF655N9kVyDE3T7
-         kOaRRTcepyvsaWo7D9nA3spXl8VILyaQ9FJSMtpgKASrRGpbAPVpXiXBT38MzD5EKY09
-         QmFaDSr1wmlxTnUDB6N7ap1SOxaP7Z+ZU/e0FQGhN+QaQ9pbK3xmUM5sr9o5slbvVN/Y
-         u22/+U8WIrZZEM7uYdKWSGz9wx0p/0iDbGJPhwoAGyhOPd/+vsEhlM/uhxAdiWa8cgBt
-         twUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=MDwo1QignIVmB9o/CHw5md1FjaCAoJt0+t4hgZ76n4k=;
-        b=xVckakbkA7IOJvJv9Kxb2ENlZpmsBFLmvD2+we7na1wCLMDfgq7LI6AiJlnXZRJcXJ
-         hpJABcmWZHQapNWA1PWQxdrdo++da5aZgAz0/PhRgDGFQphIl9/bzKN08Z2qR25ZlP0W
-         d46P95fEMTnvx/ZGtx08nkfO8cDpsbOPINoVqXhLi4XFb7IRQuUG07py4T/R8rYfdJNi
-         zOlRM2WKiUrbsAdbQUk6uhxm8ekhsTj30d8L3sBBSqNoP8/jDwykMSB9hSbt9YyM+iYw
-         1KZGrlfWYtRp3KgUS96xV9RwIsoEThJSe9VHWPeKmd5ygUILcZrK2N++QM2fhS14Ftyt
-         CKEA==
-X-Gm-Message-State: AOAM530W7/CABU7/tn9mPbocoB3+wbmDG0JlKeWHwnFoS6DzZrSmRJEu
-        NeOhl1IN9iuxeQI7jQlf/DM=
-X-Google-Smtp-Source: ABdhPJxepkoupKH3w33rjx0UGoytxYV1Ko641roE4vZtXBtqhX65mttCOM97I/Zy5Bik6d89dGs03g==
-X-Received: by 2002:a05:6870:6296:: with SMTP id s22mr2630790oan.231.1644125592001;
-        Sat, 05 Feb 2022 21:33:12 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 124sm2759971oif.7.2022.02.05.21.33.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Feb 2022 21:33:11 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Sat, 5 Feb 2022 21:33:09 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: Add Steam Deck driver
-Message-ID: <20220206053309.GA3140643@roeck-us.net>
-References: <20220206022023.376142-1-andrew.smirnov@gmail.com>
+        Sun, 6 Feb 2022 08:38:18 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E44EC06173B;
+        Sun,  6 Feb 2022 05:38:15 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 469F21EC032C;
+        Sun,  6 Feb 2022 14:38:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1644154687;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=jAuLPEHRUsnnnDOtFbaDbZZRlFj8WlIUOHei0nXkJ54=;
+        b=jbvbDK7pFpV/x4yx6ITBACVsTMl0wUK77KfaIR7xczK/wojWL/Y8vhtEsgvLu26XTwC7PI
+        Nz9PPVVb6VHGVQpY6Foh5zHng53Jlg0EGsBrkFj744JlWapTsjbYADAAzPIIKpVHLw1009
+        gWqRhpncPL6J0yOFXGPgmb2QQ/lJg8Q=
+Date:   Sun, 6 Feb 2022 14:37:59 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Roth <michael.roth@amd.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com
+Subject: Re: [PATCH v9 31/43] x86/compressed/64: Add support for SEV-SNP
+ CPUID table in #VC handlers
+Message-ID: <Yf/PN8rBy3m5seU9@zn.tnic>
+References: <20220128171804.569796-1-brijesh.singh@amd.com>
+ <20220128171804.569796-32-brijesh.singh@amd.com>
+ <Yf5XScto3mDXnl9u@zn.tnic>
+ <20220205162249.4dkttihw6my7iha3@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220206022023.376142-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20220205162249.4dkttihw6my7iha3@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Feb 05, 2022 at 06:20:23PM -0800, Andrey Smirnov wrote:
-> Add a driver exposing various bits and pieces of functionality
-> provided by Steam Deck specific VLV0100 device presented by EC
-> firmware. This includes but not limited to:
-> 
->     - CPU/device's fan control
->     - Read-only access to DDIC registers
->     - Battery tempreature measurements
->     - Various display related control knobs
->     - USB Type-C connector event notification
-> 
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mark Gross <markgross@kernel.org>
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-kernel@vger.kernel.org (open list)
-> Cc: platform-driver-x86@vger.kernel.org
-> Cc: linux-hwmon@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> ---
-> 
-...
-> +
-> +static umode_t
-> +steamdeck_is_visible(struct kobject *kobj, struct attribute *attr, int index)
-> +{
-> +	return attr->mode;
-> +}
+First of all,
 
-This is unnecessary. Using attr->mode is the default operation if there
-is no is_visible function.
+let me give you a very important piece of advice for the future:
+ignoring review feedback is a very unfriendly thing to do:
 
-Guenter
+- if you agree with the feedback, you work it in in the next revision
+
+- if you don't agree, you *say* *why* you don't
+
+What you should avoid is what you've done - ignore it silently. Because
+reviewing submitters code is the most ungrateful work around the kernel,
+and, at the same time, it is the most important one.
+
+So please make sure you don't do that in the future when submitting
+patches for upstream inclusion. I'm sure you can imagine, the ignoring
+can go both ways.
+
+On Sat, Feb 05, 2022 at 10:22:49AM -0600, Michael Roth wrote:
+> The documentation for lea (APM Volume 3 Chapter 3) seemed to require
+> that the destination register be a general purpose register, so it
+> seemed like there was potential for breakage in allowing GCC to use
+> anything otherwise.
+
+There's no such potential: binutils encodes the unstruction operands
+and what types are allowed. IOW, the assembler knows that there goes a
+register.
+
+> Maybe GCC is smart enough to figure that out, but since we know the
+> constraint in advance it seemed safer to stick with the current
+> approach of enforcing that constraint.
+
+I guess in this particular case it won't matter whether it is "=r" or
+"=g" but still...
+
+> I did look into it and honestly it just seemed to add more abstractions that
+> made it harder to parse the specific operations taken place here. For
+> instance, post-processing of 0x8000001E entry, we have e{a,b,c,d}x from
+> the CPUID table, then to post process:
+> 
+>   switch (func):
+>   case 0x8000001E:
+>     /* extended APIC ID */
+>     snp_cpuid_hv(func, subfunc, eax, &ebx2, &ecx2, NULL);
+
+Well, my suggestion was to put it *all* in the subleaf struct - not just
+the regs:
+
+struct cpuid_leaf {
+	u32 func;
+	u32 subfunc;
+	u32 eax;
+	u32 ebx;
+	u32 ecx;
+	u32 edx;
+};
+
+so that the call signature is:
+
+	snp_cpuid_postprocess(struct cpuid_leaf *leaf)
+
+
+> and it all reads in a clear/familiar way to all the other
+> cpuid()/native_cpuid() users throughout the kernel,
+
+maybe it should read differently *on* *purpose*. Exactly because this is
+*not* the usual CPUID handling code but CPUID verification code for SNP
+guests.
+
+And please explain to me what's so unclear about leaf->eax vs *eax?!
+
+> and from the persective of someone auditing this from a security
+> perspective that needs to quickly check what registers come from the
+> CPUID table, what registers come from HV
+
+Having a struct which is properly named will actually be beneficial in
+this case:
+
+	hv_leaf->eax
+
+or even
+
+	hv_reported_leaf->eax
+
+vs
+
+	*eax
+
+Now guess which is which.
+
+> But if we start passing around this higher-level structure that does
+> not do anything other than abstract away e{a,b,c,x} to save on function
+> arguments, things become muddier, and there's more pointer dereference
+> operations and abstractions to sift through.
+
+Huh?! I'm sorry but I cannot follow that logic here.
+
+> I saved the diff from when I looked into it previously (was just a
+> rough-sketch, not build-tested), and included it below for reference,
+> but it just didn't seem to help with readability to me,
+
+Well, looking at it, the only difference is that the IO is done
+over a struct instead of separate pointers. And the diff is pretty
+straight-forward.
+
+So no, having a struct cpuid_leaf containing it all is actually better
+in this case because you know which is which if you name it properly and
+you have a single pointer argument which you pass around - something
+which is done all around the kernel.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
