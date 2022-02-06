@@ -2,178 +2,700 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE24C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  6 Feb 2022 22:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A5EC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  6 Feb 2022 22:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236378AbiBFWCk (ORCPT
+        id S239624AbiBFWjw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 6 Feb 2022 17:02:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59466 "EHLO
+        Sun, 6 Feb 2022 17:39:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233328AbiBFWCj (ORCPT
+        with ESMTP id S234987AbiBFWjv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 6 Feb 2022 17:02:39 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2A488C06173B
-        for <platform-driver-x86@vger.kernel.org>; Sun,  6 Feb 2022 14:02:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644184958;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nUtG1ryiKujba5wGdzEzaUdEMKZS356c89yxojpVMnE=;
-        b=Awmd3RNBfp+33ujEYDysamJ2hPCiHId/HLGjccTybR1LU2gqMwrL4jJut0pCQE/jyip9n7
-        Q4KDC6SQMnN94OAp0D5Kjq79MItzCC0daLMarGHIGuj0TrM/JF372rzq+Z0HCC3KCGyJsd
-        pVCgcXL9PhJ5nzdHUNoQ7kBNc2bkQnw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-541-1K807wCvNsajXOZai6usfQ-1; Sun, 06 Feb 2022 17:02:35 -0500
-X-MC-Unique: 1K807wCvNsajXOZai6usfQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 6 Feb 2022 17:39:51 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE1BBC06173B;
+        Sun,  6 Feb 2022 14:39:49 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E58481091DA1;
-        Sun,  6 Feb 2022 22:02:33 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F3BFC1037F5B;
-        Sun,  6 Feb 2022 22:02:32 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH 4/4] platform/x86: intel_cht_int33fe: Move to intel directory
-Date:   Sun,  6 Feb 2022 23:02:20 +0100
-Message-Id: <20220206220220.88491-4-hdegoede@redhat.com>
-In-Reply-To: <20220206220220.88491-1-hdegoede@redhat.com>
-References: <20220206220220.88491-1-hdegoede@redhat.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BAAC11EC01B7;
+        Sun,  6 Feb 2022 23:39:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1644187184;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=dC6k3ztP2dvmV0DFt5g2rRLOpah9Keh6CfQVtqUmc48=;
+        b=WpQHPJjZBaOnlzMDWuMOmBlWr7UrVHC1w7WE+G186DYurtWOLs6fyE4uvOfkHCfnC2KS4C
+        8bcaONzpgz+Muhkrw/wmF/FzSpwpKQUvFbhWo68mbNv/R6Xz52wcTBZgb2s96DOJN/XBii
+        ivw9UtRhjFZjuuO0CmSG8K2f6Ffu4T8=
+Date:   Sun, 6 Feb 2022 23:39:37 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v9 41/43] virt: Add SEV-SNP guest driver
+Message-ID: <YgBOKQKXEH5VqTO7@zn.tnic>
+References: <20220128171804.569796-1-brijesh.singh@amd.com>
+ <20220128171804.569796-42-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220128171804.569796-42-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Now that there is only 1 c-file left of the intel_cht_int33fe code,
-move it to the intel directory instead of it having its own int33fe
-sub-directory.
+On Fri, Jan 28, 2022 at 11:18:02AM -0600, Brijesh Singh wrote:
+> SEV-SNP specification provides the guest a mechanism to communicate with
+ ^
+ The
 
-Note this also renames the module from intel_cht_int33fe_typec to
-intel_chtwc_int33fe, to better match the names of other PMIC related
-modules like the intel_chtdc_ti_pwrbtn module.
+> the PSP without risk from a malicious hypervisor who wishes to read, alter,
+> drop or replay the messages sent. The driver uses snp_issue_guest_request()
+> to issue GHCB SNP_GUEST_REQUEST or SNP_EXT_GUEST_REQUEST NAE events to
+> submit the request to PSP.
+> 
+> The PSP requires that all communication should be encrypted using key
+> specified through the platform_data.
+> 
+> The userspace can use SNP_GET_REPORT ioctl() to query the guest
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/intel/Kconfig            | 21 ++++++++++++++++++-
- drivers/platform/x86/intel/Makefile           |  3 ++-
- ...el_cht_int33fe_typec.c => chtwc_int33fe.c} |  0
- drivers/platform/x86/intel/int33fe/Kconfig    | 20 ------------------
- drivers/platform/x86/intel/int33fe/Makefile   |  2 --
- 5 files changed, 22 insertions(+), 24 deletions(-)
- rename drivers/platform/x86/intel/{int33fe/intel_cht_int33fe_typec.c => chtwc_int33fe.c} (100%)
- delete mode 100644 drivers/platform/x86/intel/int33fe/Kconfig
- delete mode 100644 drivers/platform/x86/intel/int33fe/Makefile
+s/The u/U/
 
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index 8e65086bb6c8..2d9b49eed33d 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -5,7 +5,6 @@
+> attestation report.
+> 
+> See SEV-SNP spec section Guest Messages for more details.
+> 
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  Documentation/virt/coco/sevguest.rst  |  81 ++++
+>  drivers/virt/Kconfig                  |   3 +
+>  drivers/virt/Makefile                 |   1 +
+>  drivers/virt/coco/sevguest/Kconfig    |  12 +
+>  drivers/virt/coco/sevguest/Makefile   |   2 +
+>  drivers/virt/coco/sevguest/sevguest.c | 605 ++++++++++++++++++++++++++
+>  drivers/virt/coco/sevguest/sevguest.h |  98 +++++
+>  include/uapi/linux/sev-guest.h        |  50 +++
+>  8 files changed, 852 insertions(+)
+>  create mode 100644 Documentation/virt/coco/sevguest.rst
+>  create mode 100644 drivers/virt/coco/sevguest/Kconfig
+>  create mode 100644 drivers/virt/coco/sevguest/Makefile
+>  create mode 100644 drivers/virt/coco/sevguest/sevguest.c
+>  create mode 100644 drivers/virt/coco/sevguest/sevguest.h
+>  create mode 100644 include/uapi/linux/sev-guest.h
+> 
+> diff --git a/Documentation/virt/coco/sevguest.rst b/Documentation/virt/coco/sevguest.rst
+> new file mode 100644
+> index 000000000000..47ef3b0821d5
+> --- /dev/null
+> +++ b/Documentation/virt/coco/sevguest.rst
+
+Adding documentation is all fine and good but you need to link that file
+into the TOC somewhere so that it is visible when the documentation gets
+generated... I guess something like this:
+
+diff --git a/Documentation/virt/index.rst b/Documentation/virt/index.rst
+index edea7fea95a8..40ad0d20032e 100644
+--- a/Documentation/virt/index.rst
++++ b/Documentation/virt/index.rst
+@@ -13,6 +13,7 @@ Linux Virtualization Support
+    guest-halt-polling
+    ne_overview
+    acrn/index
++   coco/sevguest
  
- source "drivers/platform/x86/intel/atomisp2/Kconfig"
- source "drivers/platform/x86/intel/int1092/Kconfig"
--source "drivers/platform/x86/intel/int33fe/Kconfig"
- source "drivers/platform/x86/intel/int3472/Kconfig"
- source "drivers/platform/x86/intel/pmc/Kconfig"
- source "drivers/platform/x86/intel/pmt/Kconfig"
-@@ -89,6 +88,26 @@ config INTEL_CHTDC_TI_PWRBTN
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_chtdc_ti_pwrbtn.
+ .. only:: html and subproject
  
-+config INTEL_CHTWC_INT33FE
-+	tristate "Intel Cherry Trail Whiskey Cove ACPI INT33FE Driver"
-+	depends on X86 && ACPI && I2C && REGULATOR
-+	depends on CHARGER_BQ24190=y || (CHARGER_BQ24190=m && m)
-+	depends on USB_ROLES_INTEL_XHCI=y || (USB_ROLES_INTEL_XHCI=m && m)
-+	depends on TYPEC_MUX_PI3USB30532=y || (TYPEC_MUX_PI3USB30532=m && m)
-+	help
-+	  This driver add support for the Intel Cherry Trail Whiskey Cove
-+	  INT33FE ACPI device found on the GPD win and the GPD pocket.
-+
-+	  The INT33FE ACPI device on these mini laptops contains I2cSerialBusV2
-+	  resources for a MAX17042 Fuel Gauge, FUSB302 USB Type-C Controller
-+	  and PI3USB30532 USB switch.
-+	  This driver instantiates i2c-clients for these, so that standard
-+	  i2c drivers for these chips can bind to the them.
-+
-+	  If you enable this driver it is advised to also select
-+	  CONFIG_TYPEC_FUSB302=m, CONFIG_TYPEC_MUX_PI3USB30532=m and
-+	  CONFIG_BATTERY_MAX17042=m.
-+
- config INTEL_ISHTP_ECLITE
- 	tristate "Intel ISHTP eclite controller Driver"
- 	depends on INTEL_ISH_HID
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 35f2066578b2..053edc457ccb 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -6,7 +6,6 @@
- 
- obj-$(CONFIG_INTEL_ATOMISP2_PDX86)	+= atomisp2/
- obj-$(CONFIG_INTEL_SAR_INT1092)		+= int1092/
--obj-$(CONFIG_INTEL_CHT_INT33FE)		+= int33fe/
- obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
- obj-$(CONFIG_INTEL_PMC_CORE)		+= pmc/
- obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
-@@ -36,6 +35,8 @@ intel_crystal_cove_charger-y		:= crystal_cove_charger.o
- obj-$(CONFIG_X86_ANDROID_TABLETS)	+= intel_crystal_cove_charger.o
- intel_chtdc_ti_pwrbtn-y			:= chtdc_ti_pwrbtn.o
- obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
-+intel_chtwc_int33fe-y			:= chtwc_int33fe.o
-+obj-$(CONFIG_INTEL_CHTWC_INT33FE)	+= intel_chtwc_int33fe.o
- intel_mrfld_pwrbtn-y			:= mrfld_pwrbtn.o
- obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
- intel_punit_ipc-y			:= punit_ipc.o
-diff --git a/drivers/platform/x86/intel/int33fe/intel_cht_int33fe_typec.c b/drivers/platform/x86/intel/chtwc_int33fe.c
-similarity index 100%
-rename from drivers/platform/x86/intel/int33fe/intel_cht_int33fe_typec.c
-rename to drivers/platform/x86/intel/chtwc_int33fe.c
-diff --git a/drivers/platform/x86/intel/int33fe/Kconfig b/drivers/platform/x86/intel/int33fe/Kconfig
-deleted file mode 100644
-index 60a6cb689299..000000000000
---- a/drivers/platform/x86/intel/int33fe/Kconfig
-+++ /dev/null
-@@ -1,20 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--config INTEL_CHT_INT33FE
--	tristate "Intel Cherry Trail ACPI INT33FE Driver"
--	depends on X86 && ACPI && I2C && REGULATOR
--	depends on CHARGER_BQ24190=y || (CHARGER_BQ24190=m && m)
--	depends on USB_ROLES_INTEL_XHCI=y || (USB_ROLES_INTEL_XHCI=m && m)
--	depends on TYPEC_MUX_PI3USB30532=y || (TYPEC_MUX_PI3USB30532=m && m)
--	help
--	  This driver add support for the INT33FE ACPI device found on the
--	  GPD win and the GPD pocket.
--
--	  The INT33FE ACPI device on these mini laptops contains I2cSerialBusV2
--	  resources for a MAX17042 Fuel Gauge, FUSB302 USB Type-C Controller
--	  and PI3USB30532 USB switch.
--	  This driver instantiates i2c-clients for these, so that standard
--	  i2c drivers for these chips can bind to the them.
--
--	  If you enable this driver it is advised to also select
--	  CONFIG_TYPEC_FUSB302=m, CONFIG_TYPEC_MUX_PI3USB30532=m and
--	  CONFIG_BATTERY_MAX17042=m.
-diff --git a/drivers/platform/x86/intel/int33fe/Makefile b/drivers/platform/x86/intel/int33fe/Makefile
-deleted file mode 100644
-index 582aa7808c7a..000000000000
---- a/drivers/platform/x86/intel/int33fe/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--obj-$(CONFIG_INTEL_CHT_INT33FE) += intel_cht_int33fe_typec.o
+
+
+And once you do, do "make htmldocs" to see whether it complains about
+some formatting issues or other errors etc.
+
+/me goes and does it...
+
+Ah, here we go:
+
+Documentation/virt/coco/sevguest.rst:48: WARNING: Inline emphasis start-string without end-string.
+Documentation/virt/coco/sevguest.rst:51: WARNING: Inline emphasis start-string without end-string.
+Documentation/virt/coco/sevguest.rst:55: WARNING: Inline emphasis start-string without end-string.
+Documentation/virt/coco/sevguest.rst:57: WARNING: Definition list ends without a blank line; unexpected unindent.
+
+There's something it doesn't like about the struct. Yeah, when I look at
+the html output, it is all weird and not monospaced...
+
+> @@ -0,0 +1,81 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +===================================================================
+> +The Definitive SEV Guest API Documentation
+> +===================================================================
+> +
+> +1. General description
+> +======================
+> +
+> +The SEV API is a set of ioctls that are used by the guest or hypervisor
+> +to get or set certain aspect of the SEV virtual machine. The ioctls belong
+		^
+		a
+
+> +to the following classes:
+> +
+> + - Hypervisor ioctls: These query and set global attributes which affect the
+> +   whole SEV firmware.  These ioctl are used by platform provision tools.
+
+"provisioning" maybe?
+
+> +
+> + - Guest ioctls: These query and set attributes of the SEV virtual machine.
+> +
+> +2. API description
+> +==================
+> +
+> +This section describes ioctls that can be used to query or set SEV guests.
+							      ^^^^^^^^^^^^^^^
+
+That sounds weird.
+
+> +For each ioctl, the following information is provided along with a
+> +description:
+> +
+> +  Technology:
+> +      which SEV technology provides this ioctl. sev, sev-es, sev-snp or all.
+						   ^^^^^^^^^^^^^^^^^^^^
+
+Marketing is going to scold you - those need to be in all caps. :-P
+
+> +
+> +  Type:
+> +      hypervisor or guest. The ioctl can be used inside the guest or the
+> +      hypervisor.
+> +
+> +  Parameters:
+> +      what parameters are accepted by the ioctl.
+> +
+> +  Returns:
+> +      the return value.  General error numbers (ENOMEM, EINVAL)
+
+Those are negative: -ENOMEM, -EINVAL
+
+> +      are not detailed, but errors with specific meanings are.
+> +
+> +The guest ioctl should be issued on a file descriptor of the /dev/sev-guest device.
+> +The ioctl accepts struct snp_user_guest_request. The input and output structure is
+> +specified through the req_data and resp_data field respectively. If the ioctl fails
+> +to execute due to a firmware error, then fw_err code will be set otherwise the
+> +fw_err will be set to 0xff.
+
+fw_err is u64. What does 0xff mean? Everything above the least
+significant byte is reserved 0?
+
+> diff --git a/drivers/virt/coco/sevguest/Kconfig b/drivers/virt/coco/sevguest/Kconfig
+> new file mode 100644
+> index 000000000000..07ab9ec6471c
+> --- /dev/null
+> +++ b/drivers/virt/coco/sevguest/Kconfig
+> @@ -0,0 +1,12 @@
+> +config SEV_GUEST
+> +	tristate "AMD SEV Guest driver"
+> +	default y
+
+Definitely not. We don't enable drivers by default unless they're
+ubiquitous.
+
+> +	depends on AMD_MEM_ENCRYPT && CRYPTO_AEAD2
+> +	help
+> +	  SEV-SNP firmware provides the guest a mechanism to communicate with
+> +	  the PSP without risk from a malicious hypervisor who wishes to read,
+> +	  alter, drop or replay the messages sent. The driver provides
+> +	  userspace interface to communicate with the PSP to request the
+> +	  attestation report and more.
+> +
+> +	  If you choose 'M' here, this module will be called sevguest.
+
+...
+
+> +static bool is_vmpck_empty(struct snp_guest_dev *snp_dev)
+> +{
+> +	char zero_key[VMPCK_KEY_LEN] = {0};
+> +
+> +	if (snp_dev->vmpck)
+> +		return memcmp(snp_dev->vmpck, zero_key, VMPCK_KEY_LEN) == 0;
+
+		return !memcmp(...);
+> +
+> +	return true;
+> +}
+> +
+> +static void snp_disable_vmpck(struct snp_guest_dev *snp_dev)
+> +{
+> +	memzero_explicit(snp_dev->vmpck, VMPCK_KEY_LEN);
+> +	snp_dev->vmpck = NULL;
+> +}
+> +
+> +static inline u64 __snp_get_msg_seqno(struct snp_guest_dev *snp_dev)
+> +{
+> +	u64 count;
+> +
+> +	lockdep_assert_held(&snp_cmd_mutex);
+> +
+> +	/* Read the current message sequence counter from secrets pages */
+> +	count = *snp_dev->os_area_msg_seqno;
+> +
+> +	return count + 1;
+> +}
+> +
+> +/* Return a non-zero on success */
+> +static u64 snp_get_msg_seqno(struct snp_guest_dev *snp_dev)
+> +{
+> +	u64 count = __snp_get_msg_seqno(snp_dev);
+> +
+> +	/*
+> +	 * The message sequence counter for the SNP guest request is a  64-bit
+> +	 * value but the version 2 of GHCB specification defines a 32-bit storage
+> +	 * for it. If the counter exceeds the 32-bit value then return zero.
+> +	 * The caller should check the return value, but if the caller happens to
+> +	 * not check the value and use it, then the firmware treats zero as an
+> +	 * invalid number and will fail the  message request.
+> +	 */
+> +	if (count >= UINT_MAX) {
+> +		pr_err_ratelimited("SNP guest request message sequence counter overflow\n");
+
+How does error message help the user? Is she supposed to reboot the
+machine or so?
+
+Because it sounds to me like if this goes over 32-bit, this driver stops
+working. So what resets those sequence numbers?
+
+> +		return 0;
+> +	}
+> +
+> +	return count;
+> +}
+> +
+> +static void snp_inc_msg_seqno(struct snp_guest_dev *snp_dev)
+> +{
+> +	/*
+> +	 * The counter is also incremented by the PSP, so increment it by 2
+> +	 * and save in secrets page.
+> +	 */
+> +	*snp_dev->os_area_msg_seqno += 2;
+> +}
+> +
+> +static inline struct snp_guest_dev *to_snp_dev(struct file *file)
+> +{
+> +	struct miscdevice *dev = file->private_data;
+> +
+> +	return container_of(dev, struct snp_guest_dev, misc);
+> +}
+> +
+> +static struct snp_guest_crypto *init_crypto(struct snp_guest_dev *snp_dev, u8 *key, size_t keylen)
+> +{
+> +	struct snp_guest_crypto *crypto;
+> +
+> +	crypto = kzalloc(sizeof(*crypto), GFP_KERNEL_ACCOUNT);
+> +	if (!crypto)
+> +		return NULL;
+> +
+> +	crypto->tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
+> +	if (IS_ERR(crypto->tfm))
+> +		goto e_free;
+> +
+> +	if (crypto_aead_setkey(crypto->tfm, key, keylen))
+> +		goto e_free_crypto;
+> +
+> +	crypto->iv_len = crypto_aead_ivsize(crypto->tfm);
+> +	if (crypto->iv_len < 12) {
+> +		dev_err(snp_dev->dev, "IV length is less than 12.\n");
+
+And? < 12 is bad? Make that error message more user-friendly pls.
+
+> +		goto e_free_crypto;
+> +	}
+> +
+> +	crypto->iv = kmalloc(crypto->iv_len, GFP_KERNEL_ACCOUNT);
+> +	if (!crypto->iv)
+> +		goto e_free_crypto;
+> +
+> +	if (crypto_aead_authsize(crypto->tfm) > MAX_AUTHTAG_LEN) {
+> +		if (crypto_aead_setauthsize(crypto->tfm, MAX_AUTHTAG_LEN)) {
+> +			dev_err(snp_dev->dev, "failed to set authsize to %d\n", MAX_AUTHTAG_LEN);
+> +			goto e_free_crypto;
+> +		}
+> +	}
+> +
+> +	crypto->a_len = crypto_aead_authsize(crypto->tfm);
+> +	crypto->authtag = kmalloc(crypto->a_len, GFP_KERNEL_ACCOUNT);
+> +	if (!crypto->authtag)
+> +		goto e_free_crypto;
+> +
+> +	return crypto;
+> +
+> +e_free_crypto:
+> +	crypto_free_aead(crypto->tfm);
+> +e_free:
+> +	kfree(crypto->iv);
+> +	kfree(crypto->authtag);
+> +	kfree(crypto);
+
+The order of those free calls needs to be the opposite of the kmallocs
+above.
+
+> +
+> +	return NULL;
+> +}
+
+...
+
+> +static int handle_guest_request(struct snp_guest_dev *snp_dev, u64 exit_code, int msg_ver,
+> +				u8 type, void *req_buf, size_t req_sz, void *resp_buf,
+> +				u32 resp_sz, __u64 *fw_err)
+> +{
+> +	unsigned long err;
+> +	u64 seqno;
+> +	int rc;
+> +
+> +	/* Get message sequence and verify that its a non-zero */
+> +	seqno = snp_get_msg_seqno(snp_dev);
+> +	if (!seqno)
+> +		return -EIO;
+> +
+> +	memset(snp_dev->response, 0, sizeof(*snp_dev->response));
+
+				     sizeof(struct snp_guest_msg)
+
+> +
+> +	/* Encrypt the userspace provided payload */
+> +	rc = enc_payload(snp_dev, seqno, msg_ver, type, req_buf, req_sz);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Call firmware to process the request */
+> +	rc = snp_issue_guest_request(exit_code, &snp_dev->input, &err);
+> +	if (fw_err)
+> +		*fw_err = err;
+> +
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = verify_and_dec_payload(snp_dev, resp_buf, resp_sz);
+> +	if (rc) {
+> +		/*
+> +		 * The verify_and_dec_payload() will fail only if the hypervisor is
+> +		 * actively modifying the message header or corrupting the encrypted payload.
+> +		 * This hints that hypervisor is acting in a bad faith. Disable the VMPCK so that
+> +		 * the key cannot be used for any communication. The key is disabled to ensure
+> +		 * that AES-GCM does not use the same IV while encrypting the request payload.
+> +		 */
+
+Put that comment over the function call.
+
+> +		dev_alert(snp_dev->dev,
+> +			  "Detected unexpected decode failure, disabling the vmpck_id %d\n",
+> +			  vmpck_id);
+> +		snp_disable_vmpck(snp_dev);
+> +		return rc;
+> +	}
+> +
+> +	/* Increment to new message sequence after payload decryption was successful. */
+> +	snp_inc_msg_seqno(snp_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int get_report(struct snp_guest_dev *snp_dev, struct snp_guest_request_ioctl *arg)
+> +{
+> +	struct snp_guest_crypto *crypto = snp_dev->crypto;
+> +	struct snp_report_req req = {0};
+> +	struct snp_report_resp *resp;
+> +	int rc, resp_len;
+
+	lockdep_assert_held(&snp_cmd_mutex);
+
+> +	if (!arg->req_data || !arg->resp_data)
+> +		return -EINVAL;
+> +
+> +	/* Copy the request payload from userspace */
+> +	if (copy_from_user(&req, (void __user *)arg->req_data, sizeof(req)))
+> +		return -EFAULT;
+> +
+> +	/*
+> +	 * The intermediate response buffer is used while decrypting the
+> +	 * response payload. Make sure that it has enough space to cover the
+> +	 * authtag.
+> +	 */
+> +	resp_len = sizeof(resp->data) + crypto->a_len;
+> +	resp = kzalloc(resp_len, GFP_KERNEL_ACCOUNT);
+> +	if (!resp)
+> +		return -ENOMEM;
+> +
+> +	/* Issue the command to get the attestation report */
+> +	rc = handle_guest_request(snp_dev, SVM_VMGEXIT_GUEST_REQUEST, arg->msg_version,
+> +				  SNP_MSG_REPORT_REQ, &req, sizeof(req), resp->data,
+> +				  resp_len, &arg->fw_err);
+> +	if (rc)
+> +		goto e_free;
+> +
+> +	/* Copy the response payload to userspace */
+> +	if (copy_to_user((void __user *)arg->resp_data, resp, sizeof(*resp)))
+> +		rc = -EFAULT;
+> +
+> +e_free:
+> +	kfree(resp);
+> +	return rc;
+> +}
+> +
+> +static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long arg)
+> +{
+> +	struct snp_guest_dev *snp_dev = to_snp_dev(file);
+> +	void __user *argp = (void __user *)arg;
+> +	struct snp_guest_request_ioctl input;
+> +	int ret = -ENOTTY;
+> +
+> +	if (copy_from_user(&input, argp, sizeof(input)))
+> +		return -EFAULT;
+> +
+> +	input.fw_err = 0xff;
+> +
+> +	/* Message version must be non-zero */
+> +	if (!input.msg_version)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&snp_cmd_mutex);
+
+That mutex probably is to be held while issuing SNP commands but then
+you hold it here already for...
+
+> +
+> +	/* Check if the VMPCK is not empty */
+> +	if (is_vmpck_empty(snp_dev)) {
+
+... this here which is not really a SNP command issuing.
+
+Should that mutex be grabbed only around handle_guest_request() above or
+is it supposed to protect more stuff?
+
+> +		dev_err_ratelimited(snp_dev->dev, "VMPCK is disabled\n");
+> +		mutex_unlock(&snp_cmd_mutex);
+> +		return -ENOTTY;
+> +	}
+> +
+> +	switch (ioctl) {
+> +	case SNP_GET_REPORT:
+> +		ret = get_report(snp_dev, &input);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	mutex_unlock(&snp_cmd_mutex);
+> +
+> +	if (input.fw_err && copy_to_user(argp, &input, sizeof(input)))
+> +		return -EFAULT;
+> +
+> +	return ret;
+> +}
+> +
+> +static void free_shared_pages(void *buf, size_t sz)
+> +{
+> +	unsigned int npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
+> +
+> +	if (!buf)
+> +		return;
+> +
+> +	/* If fail to restore the encryption mask then leak it. */
+
+Useless comment - the error message says the same.
+
+> +	if (WARN_ONCE(set_memory_encrypted((unsigned long)buf, npages),
+> +		      "Failed to restore encryption mask (leak it)\n"))
+> +		return;
+> +
+> +	__free_pages(virt_to_page(buf), get_order(sz));
+> +}
+> +
+> +static void *alloc_shared_pages(size_t sz)
+> +{
+> +	unsigned int npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
+> +	struct page *page;
+> +	int ret;
+> +
+> +	page = alloc_pages(GFP_KERNEL_ACCOUNT, get_order(sz));
+> +	if (IS_ERR(page))
+> +		return NULL;
+> +
+> +	ret = set_memory_decrypted((unsigned long)page_address(page), npages);
+> +	if (ret) {
+> +		pr_err("SEV-SNP: failed to mark page shared, ret=%d\n", ret);
+
+Use pr_fmt, grep the tree for an example how and drop "SEV-SNP:" - that
+prefix should be "sevguest:".
+
+> +		__free_pages(page, get_order(sz));
+> +		return NULL;
+> +	}
+> +
+> +	return page_address(page);
+> +}
+
+...
+
+> +static int __init snp_guest_probe(struct platform_device *pdev)
+> +{
+> +	struct snp_secrets_page_layout *layout;
+> +	struct snp_guest_platform_data *data;
+> +	struct device *dev = &pdev->dev;
+> +	struct snp_guest_dev *snp_dev;
+> +	struct miscdevice *misc;
+> +	int ret;
+> +
+> +	if (!dev->platform_data)
+> +		return -ENODEV;
+> +
+> +	data = (struct snp_guest_platform_data *)dev->platform_data;
+> +	layout = (__force void *)ioremap_encrypted(data->secrets_gpa, PAGE_SIZE);
+> +	if (!layout)
+> +		return -ENODEV;
+> +
+> +	ret = -ENOMEM;
+> +	snp_dev = devm_kzalloc(&pdev->dev, sizeof(struct snp_guest_dev), GFP_KERNEL);
+> +	if (!snp_dev)
+> +		goto e_fail;
+> +
+> +	ret = -EINVAL;
+> +	snp_dev->vmpck = get_vmpck(vmpck_id, layout, &snp_dev->os_area_msg_seqno);
+> +	if (!snp_dev->vmpck) {
+> +		dev_err(dev, "invalid vmpck id %d\n", vmpck_id);
+> +		goto e_fail;
+> +	}
+> +
+> +	/* Verify that VMPCK is not zero. */
+> +	if (is_vmpck_empty(snp_dev)) {
+> +		dev_err(dev, "vmpck id %d is null\n", vmpck_id);
+> +		goto e_fail;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, snp_dev);
+> +	snp_dev->dev = dev;
+> +	snp_dev->layout = layout;
+> +
+> +	/* Allocate the shared page used for the request and response message. */
+> +	snp_dev->request = alloc_shared_pages(sizeof(struct snp_guest_msg));
+> +	if (!snp_dev->request)
+> +		goto e_fail;
+> +
+> +	snp_dev->response = alloc_shared_pages(sizeof(struct snp_guest_msg));
+> +	if (!snp_dev->response)
+> +		goto e_fail;
+> +
+> +	ret = -EIO;
+> +	snp_dev->crypto = init_crypto(snp_dev, snp_dev->vmpck, VMPCK_KEY_LEN);
+> +	if (!snp_dev->crypto)
+> +		goto e_fail;
+> +
+> +	misc = &snp_dev->misc;
+> +	misc->minor = MISC_DYNAMIC_MINOR;
+> +	misc->name = DEVICE_NAME;
+> +	misc->fops = &snp_guest_fops;
+> +
+> +	/* initial the input address for guest request */
+> +	snp_dev->input.req_gpa = __pa(snp_dev->request);
+> +	snp_dev->input.resp_gpa = __pa(snp_dev->response);
+> +
+> +	ret =  misc_register(misc);
+> +	if (ret)
+> +		goto e_fail;
+> +
+> +	dev_info(dev, "Initialized SEV-SNP guest driver (using vmpck_id %d)\n", vmpck_id);
+> +	return 0;
+> +
+> +e_fail:
+> +	iounmap(layout);
+> +	free_shared_pages(snp_dev->request, sizeof(struct snp_guest_msg));
+> +	free_shared_pages(snp_dev->response, sizeof(struct snp_guest_msg));
+
+The freeing needs to happen in the opposite order of the allocations.
+Audit all gotos.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static int __exit snp_guest_remove(struct platform_device *pdev)
+> +{
+> +	struct snp_guest_dev *snp_dev = platform_get_drvdata(pdev);
+> +
+> +	free_shared_pages(snp_dev->request, sizeof(struct snp_guest_msg));
+> +	free_shared_pages(snp_dev->response, sizeof(struct snp_guest_msg));
+> +	deinit_crypto(snp_dev->crypto);
+> +	misc_deregister(&snp_dev->misc);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver snp_guest_driver = {
+> +	.remove		= __exit_p(snp_guest_remove),
+> +	.driver		= {
+> +		.name = "snp-guest",
+> +	},
+> +};
+> +
+> +module_platform_driver_probe(snp_guest_driver, snp_guest_probe);
+> +
+> +MODULE_AUTHOR("Brijesh Singh <brijesh.singh@amd.com>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_VERSION("1.0.0");
+> +MODULE_DESCRIPTION("AMD SNP Guest Driver");
+> diff --git a/drivers/virt/coco/sevguest/sevguest.h b/drivers/virt/coco/sevguest/sevguest.h
+> new file mode 100644
+> index 000000000000..cfa76cf8a21a
+> --- /dev/null
+> +++ b/drivers/virt/coco/sevguest/sevguest.h
+> @@ -0,0 +1,98 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2021 Advanced Micro Devices, Inc.
+> + *
+> + * Author: Brijesh Singh <brijesh.singh@amd.com>
+> + *
+> + * SEV-SNP API spec is available at https://developer.amd.com/sev
+> + */
+> +
+> +#ifndef __LINUX_SEVGUEST_H_
+
+I guess VIRT_SEVGUEST_H is better fitting.
+
+> +#define __LINUX_SEVGUEST_H_
+
+...
+
 -- 
-2.33.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
