@@ -2,147 +2,228 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0864EC43217
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  6 Feb 2022 16:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D7DC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  6 Feb 2022 17:51:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241441AbiBFQll (ORCPT
+        id S1344781AbiBFRvX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 6 Feb 2022 11:41:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45852 "EHLO
+        Sun, 6 Feb 2022 12:51:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233293AbiBFQlk (ORCPT
+        with ESMTP id S236478AbiBFRvV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 6 Feb 2022 11:41:40 -0500
-X-Greylist: delayed 11005 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 06 Feb 2022 08:41:38 PST
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5E79C06173B;
-        Sun,  6 Feb 2022 08:41:38 -0800 (PST)
-Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3597F1EC01B7;
-        Sun,  6 Feb 2022 17:41:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1644165693;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Vf4uD77Lu81fzkyJFDjIK5AMPQsw8mdt+0qd3hoteKA=;
-        b=X1KzWt4kENbpoTW5g4vozGTNQPANq18LmTnDQ2DAE9tecHwlnKNuJDnjMhSDBVQt8EaGwK
-        isUMnTdSEnFc/dKWxahkZF0HJVXNcVjviK3CObEDSaAHBkUH1eycmrApfzGxtn8PhJEQQg
-        A9rixKjewzIEXSDO6AianN5uLuVtyhM=
-Date:   Sun, 6 Feb 2022 17:41:26 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v9 33/43] x86/compressed: Add SEV-SNP feature
- detection/setup
-Message-ID: <Yf/6NhnS50UDv4xV@zn.tnic>
-References: <20220128171804.569796-1-brijesh.singh@amd.com>
- <20220128171804.569796-34-brijesh.singh@amd.com>
+        Sun, 6 Feb 2022 12:51:21 -0500
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7768CC06173B;
+        Sun,  6 Feb 2022 09:51:20 -0800 (PST)
+Received: by mail-oi1-x22a.google.com with SMTP id r27so14759689oiw.4;
+        Sun, 06 Feb 2022 09:51:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:message-id:date:mime-version:user-agent:content-language:to
+         :cc:references:from:subject:in-reply-to:content-transfer-encoding;
+        bh=8d4aoAMxSo7HSTaBUTBVt7QQDEWKLHoC2XmqWjCbM1s=;
+        b=NJ8Ne+eOf4mOuh9t+V3b7sHoIaQ9e5iye2gnHPM1kP7Dtv9H4iTmymPzkDyXyy55x4
+         wWpOm3l8NRbJZH/39+oiZ6zCTSIPorZMjqH8EDlG/BHMvkz45wptFIS+hg8q/zv3pm/u
+         0c+6M8Et5mpgtgynPP7b4K7y5JFVxuA81gY+OV7mROzwGlGBS9L1TeJB+rT/l68DgOE9
+         oAwHyLLiMcvAWXK/cVDqvkeFZWDb7RiAXJIsqkSp5ZaeaDIgv57uyD/IsXK/qHJLsAV6
+         GhcEQUgS11Te7Xa916V9H3RwOX7CBmv+EDf3W5mCvO9QwvlFUYIhWkGM/ZXUFOaNqc8A
+         fJzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
+         :content-language:to:cc:references:from:subject:in-reply-to
+         :content-transfer-encoding;
+        bh=8d4aoAMxSo7HSTaBUTBVt7QQDEWKLHoC2XmqWjCbM1s=;
+        b=j3de3RQH3aRezdooqMebcIMY72UrHIaNTyxkQGuzmdbDZ6H1simdBXUe/J/rbwB1Ec
+         ZnOxGgSMVtTY9tPcJ2Uk8u+MdkECi8SjgDWW66xdojCjy0gIbEq71/UAHqFPQRj3za27
+         NAB6psC4iI46+LD+bW88jRqpPGFmKI/KwBUVu28fp4fBFKfhzSp11eWDeCr30PAxZP0v
+         NKcnf+H/BzCMmTmCW2hpklmPy0XgT1YIN0gNX9DY358bQBHbvmdPO4NiHv04Gt/z0KNl
+         qPLyP+ab8SuqqshtUbfcgYibZoFacmdunOVmMy7kjDHpLnYIeCeCHGUrFdD5iVm17dPy
+         0KQg==
+X-Gm-Message-State: AOAM531TuvzuHUtApPCgGhM1zXy7b+9IpFovVkBu+cGvVx4BOoiYODLj
+        MTWBDKzDAjtoolLzcawTEz4=
+X-Google-Smtp-Source: ABdhPJzO5VM3ko/6A7BUyOiMIr3hpCZ6njtpOYiBH3wHupxEo0yu2HFJiFFSO7VFCIi09cPwEv5vMA==
+X-Received: by 2002:a05:6808:e89:: with SMTP id k9mr5705620oil.263.1644169879745;
+        Sun, 06 Feb 2022 09:51:19 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z40sm3139056oap.37.2022.02.06.09.51.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Feb 2022 09:51:19 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <258c224c-c543-1756-4c1e-fe9d81e24e4c@roeck-us.net>
+Date:   Sun, 6 Feb 2022 09:51:16 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220128171804.569796-34-brijesh.singh@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-US
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org
+References: <20220206022023.376142-1-andrew.smirnov@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] platform/x86: Add Steam Deck driver
+In-Reply-To: <20220206022023.376142-1-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 11:17:54AM -0600, Brijesh Singh wrote:
-> +static struct cc_setup_data *get_cc_setup_data(struct boot_params *bp)
-> +{
-> +	struct setup_data *hdr = (struct setup_data *)bp->hdr.setup_data;
-> +
-> +	while (hdr) {
-> +		if (hdr->type == SETUP_CC_BLOB)
-> +			return (struct cc_setup_data *)hdr;
-> +		hdr = (struct setup_data *)hdr->next;
-> +	}
-> +
-> +	return NULL;
-> +}
+On 2/5/22 18:20, Andrey Smirnov wrote:
+> Add a driver exposing various bits and pieces of functionality
+> provided by Steam Deck specific VLV0100 device presented by EC
+> firmware. This includes but not limited to:
+> 
+>      - CPU/device's fan control
+>      - Read-only access to DDIC registers
+>      - Battery tempreature measurements
+>      - Various display related control knobs
+>      - USB Type-C connector event notification
+> 
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Mark Gross <markgross@kernel.org>
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: linux-kernel@vger.kernel.org (open list)
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: linux-hwmon@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+> 
+...
 
-Merge that function into its only caller.
+ > +config STEAMDECK
+ > +       tristate "Valve Steam Deck platform driver"
+ > +       depends on X86_64
+ > +       help
+ > +         Driver exposing various bits and pieces of functionality
+ > +	 provided by Steam Deck specific VLV0100 device presented by
+ > +	 EC firmware. This includes but not limited to:
+
+There seems to be some indentation issue.
+
+ > +	     - CPU/device's fan control
+ > +	     - Read-only access to DDIC registers
+ > +	     - Battery tempreature measurements
+ > +	     - Various display related control knobs
+ > +	     - USB Type-C connector event notification
+ > +
+ > +	 Say N unless you are running on a Steam Deck.
+ > +
+
+This doesn't depend on hwmon, yet it fails if devm_hwmon_device_register_with_info()
+returns an eror. That has a couple of problems: if HWMON=n, it won't compile,
+and if STEAMDECK=y and HWMON=m it won't compile either. You'll have to provide
+some dependency against HWMON to make this work.
 
 ...
 
-> +static struct cc_blob_sev_info *snp_find_cc_blob(struct boot_params *bp)
-
-static function, no need for the "snp_" prefix. Please audit all your
-patches for that and remove that prefix from all static functions.
-
+> +
+> +static int steamdeck_read_fan_speed(struct steamdeck *jup, long *speed)
 > +{
-> +	struct cc_blob_sev_info *cc_info;
+> +	unsigned long long val;
 > +
-> +	cc_info = snp_find_cc_blob_efi(bp);
-> +	if (cc_info)
-> +		goto found_cc_info;
+> +	if (ACPI_FAILURE(acpi_evaluate_integer(jup->adev->handle,
+> +					       "FANR", NULL, &val)))
+> +		return -EIO;
 > +
-> +	cc_info = snp_find_cc_blob_setup_data(bp);
-> +	if (!cc_info)
-> +		return NULL;
-> +
-> +found_cc_info:
-> +	if (cc_info->magic != CC_BLOB_SEV_HDR_MAGIC)
-> +		sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
-> +
-> +	return cc_info;
+> +	*speed = val;
+> +	return 0;
 > +}
 > +
-> +bool snp_init(struct boot_params *bp)
+> +static int
+> +steamdeck_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+> +		     u32 attr, int channel, long *out)
 > +{
-> +	struct cc_blob_sev_info *cc_info;
+> +	struct steamdeck *sd = dev_get_drvdata(dev);
+> +	unsigned long long val;
 > +
-> +	if (!bp)
-> +		return false;
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (attr != hwmon_temp_input)
+> +			return -EOPNOTSUPP;
 > +
-> +	cc_info = snp_find_cc_blob(bp);
-> +	if (!cc_info)
-> +		return false;
+> +		if (ACPI_FAILURE(acpi_evaluate_integer(sd->adev->handle,
+> +						       "BATT", NULL, &val)))
+> +			return -EIO;
+> +		/*
+> +		 * Assuming BATT returns deg C we need to mutiply it
+> +		 * by 1000 to convert to mC
+> +		 */
+> +		*out = val * 1000;
+> +		break;
+> +	case hwmon_fan:
+> +		switch (attr) {
+> +		case hwmon_fan_input:
+> +			return steamdeck_read_fan_speed(sd, out);
+
+There is a bit of inconsistency here: All other atributes are handled directly,
+except for this one, yet there isn't really a difference in the actual operation.
+Maybe I am missing something. What is the reason for using a function here
+but not for the other attributes ?
+
+> +		case hwmon_fan_target:
+> +			*out = sd->fan_target;
+> +			break;
+> +		case hwmon_fan_fault:
+> +			if (ACPI_FAILURE(acpi_evaluate_integer(
+> +						 sd->adev->handle,
+> +						 "FANC", NULL, &val)))
+> +				return -EIO;
+> +			/*
+> +			 * FANC (Fan check):
+> +			 * 0: Abnormal
+> +			 * 1: Normal
+> +			 */
+> +			*out = !val;
+> +			break;
+> +		default:
+> +			return -EOPNOTSUPP;
+> +		}
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
 > +
-> +	/*
-> +	 * Pass run-time kernel a pointer to CC info via boot_params so EFI
-> +	 * config table doesn't need to be searched again during early startup
-> +	 * phase.
-> +	 */
-> +	bp->cc_blob_address = (u32)(unsigned long)cc_info;
+> +	return 0;
+> +}
 > +
-> +	/*
-> +	 * Indicate SEV-SNP based on presence of SEV-SNP-specific CC blob.
-> +	 * Subsequent checks will verify SEV-SNP CPUID/MSR bits.
-> +	 */
+> +static int
+> +steamdeck_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
+> +			    u32 attr, int channel, const char **str)
+> +{
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		*str = "Battery Temp";
+> +		break;
+> +	case hwmon_fan:
+> +		*str = "System Fan";
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +steamdeck_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+> +		      u32 attr, int channel, long val)
+> +{
+> +	struct steamdeck *sd = dev_get_drvdata(dev);
+> +
+> +	if (type != hwmon_fan ||
+> +	    attr != hwmon_fan_target)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (val > U16_MAX)
+> +		return -EINVAL;
 
-Put that comment over the function name.
+This accepts negative values, and it expects the user to find
+valid ranges. I suggest to use clamp_val() instead.
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Guenter
