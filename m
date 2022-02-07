@@ -2,37 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B87C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Feb 2022 18:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8373C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Feb 2022 19:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231828AbiBGSrI (ORCPT
+        id S231898AbiBGTPA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Feb 2022 13:47:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58688 "EHLO
+        Mon, 7 Feb 2022 14:15:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232506AbiBGSnO (ORCPT
+        with ESMTP id S240130AbiBGTKS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Feb 2022 13:43:14 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1835AC0401DC;
-        Mon,  7 Feb 2022 10:43:13 -0800 (PST)
-Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 24AE01EC02B9;
-        Mon,  7 Feb 2022 19:43:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1644259387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=SZEc3K4WUssJFPuRZM4cYUdq0EX2pDa+Q3YePuI1VGc=;
-        b=qmClInz1dKwfOZbiO2QrY2gZK/xZolImE900/WaPmxRFwwOa2cp3K4OMeOEJsTi80Hu4Qp
-        G43sMx+xX8AUxdLvcgTvewjlRnNRSbTkdwsgOZ6e9vtHFY+GtTdk9DIq09oCjIgK1EE+5Z
-        CRyqtdz0t/QXSU+RToQpc+wZ3krqc2c=
-Date:   Mon, 7 Feb 2022 19:43:01 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Michael Roth <michael.roth@amd.com>
+        Mon, 7 Feb 2022 14:10:18 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2FFC0401DA;
+        Mon,  7 Feb 2022 11:10:17 -0800 (PST)
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 217Ih10O022971;
+        Mon, 7 Feb 2022 19:09:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=dyalkAeyKfjg5aHVd6mQRDQDqmWJOUBGs31kbZ3xnMM=;
+ b=XrtWCGa/awBKqiBsbGguRhzFJToZ/S9qxgv9tspsv9dQ1A3oTgwnh0Sm5APDP2+G/6Ea
+ X1bITEatT5H12jAc0i7qzp3CStUafiWQNd8ekLMC0cVhMXtBUIDHfiUv1dypCvAYKZlo
+ FjESWl2LqDxiea9CAV9ovGgzR7FBn2LvGZJWG1PCEOWDZ5zYneaMvxLGSIK2xqbHgDos
+ osRzUE1kwOTprZ6azRE0stdftcW1we3WX8bbRYGHdSAF3GTox8Dr4U+jTEjMg2KR/zve
+ cfw+N2TPcuQykGbNmHS2GF+E237+2aJqSJWqP/dQT6WRt3R0AIAkstmgFETwqIF5OCjE Sg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3e22whhfrf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Feb 2022 19:09:41 +0000
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 217IrMIw020670;
+        Mon, 7 Feb 2022 19:09:40 GMT
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3e22whhfr4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Feb 2022 19:09:40 +0000
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 217J7TCe002298;
+        Mon, 7 Feb 2022 19:09:39 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04wdc.us.ibm.com with ESMTP id 3e2bt9qrfe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Feb 2022 19:09:39 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 217J9cqi31588632
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 7 Feb 2022 19:09:38 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D37F6E058;
+        Mon,  7 Feb 2022 19:09:38 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 52ED86E059;
+        Mon,  7 Feb 2022 19:09:30 +0000 (GMT)
+Received: from [9.65.240.79] (unknown [9.65.240.79])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  7 Feb 2022 19:09:30 +0000 (GMT)
+Message-ID: <ae1644a3-bd2c-6966-4ae3-e26abd77b77b@linux.ibm.com>
+Date:   Mon, 7 Feb 2022 21:09:28 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH v9 42/43] virt: sevguest: Add support to derive key
+Content-Language: en-US
+To:     Brijesh Singh <brijesh.singh@amd.com>,
+        Borislav Petkov <bp@alien8.de>
 Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         linux-coco@lists.linux.dev, linux-mm@kvack.org,
@@ -50,71 +85,58 @@ Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>, brijesh.singh@amd.com,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
         Vlastimil Babka <vbabka@suse.cz>,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
         Andi Kleen <ak@linux.intel.com>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
         brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v9 38/43] x86/sev: Use firmware-validated CPUID for
- SEV-SNP guests
-Message-ID: <YgFoNeASrXizWMIa@zn.tnic>
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        Liam Merwick <liam.merwick@oracle.com>,
+        Dov Murik <dovmurik@linux.ibm.com>
 References: <20220128171804.569796-1-brijesh.singh@amd.com>
- <20220128171804.569796-39-brijesh.singh@amd.com>
- <20220205171901.kt47bahdmh64b45x@amd.com>
- <Yf/tQPqbP97lrVpg@zn.tnic>
- <20220207170018.sg37idc6nzlzgj6p@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220207170018.sg37idc6nzlzgj6p@amd.com>
+ <20220128171804.569796-43-brijesh.singh@amd.com> <YgDduR0mrptX5arB@zn.tnic>
+ <1cb4fdf5-7c1e-6c8f-1db6-8c976d6437c2@amd.com>
+From:   Dov Murik <dovmurik@linux.ibm.com>
+In-Reply-To: <1cb4fdf5-7c1e-6c8f-1db6-8c976d6437c2@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: lLM5b9KPIZBForkzNm7IOXi0hUj_4zqC
+X-Proofpoint-ORIG-GUID: PVCYRX9sBn7puUs3---zr3p73u8apODq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-02-07_06,2022-02-07_02,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1011 priorityscore=1501
+ bulkscore=0 spamscore=0 adultscore=0 mlxscore=0 phishscore=0
+ suspectscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2201110000 definitions=main-2202070115
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Feb 07, 2022 at 11:00:18AM -0600, Michael Roth wrote:
-> this is more a statement that an out-of-spec hypervisor should not
-> expect that their guests will continue working in future firmware
-> versions, and what's being determined here is whether to break
-> those out-of-spec hypervisor now, or later when/if we actually
-> make use of the fields in the guest code,
 
-I think you're missing a very important aspect here called reality.
 
-Let's say that HV is a huge cloud vendor who means a lot of $ and a
-huge use case for SEV tech. And let's say that same HV is doing those
-incompatible things.
+On 07/02/2022 18:23, Brijesh Singh wrote:
+> 
+> 
+> On 2/7/22 2:52 AM, Borislav Petkov wrote:
+>> Those are allocated on stack, why are you clearing them?
+> 
+> Yep, no need to explicitly clear it. I'll take it out in next rev.
+> 
 
-Now imagine you break it with the spec change. But they already have
-a gazillion of deployments on real hw which they can't simply update
-just like that. Hell, cloud vendors are even trying to dictate how CPU
-vendors should do microcode updates on a live system, without rebooting,
-and we're talking about some wimpy fields in some table.
+Wait, this is key material generated by PSP and passed to userspace.
+Why leave copies of it floating around kernel memory?  I thought that's
+the whole reason for these memzero_explicit() calls (maybe add a comment?).
 
-Now imagine your business unit calls your engineering and says, you need
-to fix this because a very persuasive chunk of money.
+As an example, in arch/x86/crypto/aesni-intel_glue.c there are two calls
+to memzero_explicit(), both on stack variables; the only reason for
+these calls (as I understand it) is to avoid some future possible leak
+of this sensitive data (keys, cipher context, etc.).  I'm sure there are
+other examples in the kernel code.
 
-What you most likely will end up with is an ugly ugly workaround after a
-lot of managers screaming at each other and you won't even think about
-breaking that HV.
 
-Now imagine you've designed it the right and unambiguous way from the
-getgo. You wake up and realize, it was all just a bad dream...
-
-> Ok, I'll follow up with the firmware team on this. But just to be clear,
-> what they're suggesting is that the firmware could enforce the MBZ checks
-> on the CPUID page, so out-of-spec hypervisors will fail immediately,
-> rather than in some future version of the spec/cpuid page, and guests
-> can continue ignoring them in the meantime.
-
-Yes, exactly. Fail immediately.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+-Dov
