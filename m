@@ -2,90 +2,147 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5561DC43219
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Feb 2022 01:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F53CC41535
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Feb 2022 01:06:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233384AbiBHBGN (ORCPT
+        id S240359AbiBHBGP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Feb 2022 20:06:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33108 "EHLO
+        Mon, 7 Feb 2022 20:06:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241939AbiBHAyr (ORCPT
+        with ESMTP id S1343680AbiBGXsS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Feb 2022 19:54:47 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5332C061355;
-        Mon,  7 Feb 2022 16:54:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644281686; x=1675817686;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wgt9cDpHFiIgyIo4vctyylP81ktaV/VnGl0eXCmjt9E=;
-  b=N6VOivxfX/XYgxbXqpY2Jqo7uf/RO4yZwmbmlkjDSh8N452uJH6KDwjt
-   W8HwDd3mIwNtNGH94JPPDuZg0oS2mqEmC4O7ceoon4+o2kU9Vtufs8f/6
-   HQIYaO0GF6s4eH6jf0yEQnvwp4IEktn11mo4dYJJ4O7/F5WIIA2IRuqOF
-   3tQq2oDl7wVGnjAC/OwMFLyL4bM+KBN5wsCzHOOY/HXqzD1aiJ/5UiU+Y
-   8SFVNR0iPVHjE7858OJcuvhq3aDrJK1AkzFL3GrXA7x4Ho7ZUY7oO9Hwl
-   CdMcJ8L4VGFObeEhdqwXwJMwZThRSGGJ6GRTCYMOv90jsYLguIaT5v5Wj
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10251"; a="249051629"
-X-IronPort-AV: E=Sophos;i="5.88,351,1635231600"; 
-   d="scan'208";a="249051629"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2022 16:54:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,351,1635231600"; 
-   d="scan'208";a="628713428"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Feb 2022 16:54:46 -0800
-Received: from debox1-desk4.intel.com (unknown [10.212.183.65])
-        by linux.intel.com (Postfix) with ESMTP id 5E528580970;
-        Mon,  7 Feb 2022 16:54:46 -0800 (PST)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     hdegoede@redhat.com, david.e.box@linux.intel.com,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        srinivas.pandruvada@intel.com, mgross@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH V6 0/3] Intel Software Defined Silicon
-Date:   Mon,  7 Feb 2022 16:54:41 -0800
-Message-Id: <20220208005444.487209-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 7 Feb 2022 18:48:18 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD703C0612A4
+        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Feb 2022 15:48:16 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id qe15so5037971pjb.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Feb 2022 15:48:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DmAjZsfccwaVaNtes6EmfPZ2rG4blpFc0pyFaBFNy/c=;
+        b=O48QwLhH9/EyfzfbZFDBuyW7NgAxpUfsKFo77vRIIp/J97PxXdR/Nfj2Q5oBXNcuPo
+         Jf+QknfQrGr7pgD1rVD/n/xLnaeB/v8ecoI8tICXQpFrYlc8ZMljeCsh4aBWr+MUr3+G
+         Z+isaq63CF1Tym+PBdMK6+axq9i8a6odmcOzGYnYQtwotEiike8g+3qsd0ovrJL+iHr9
+         IRWBaGik6wVgAJ2agrzQUCGB/xt89X7wnTl3AQVzdoaewv8FDh3sJaMY7Az0F+paU4cv
+         ZGtrP1Ka76pG+mtfqeJGLgKYnsm2YYJsLXjwUbqakndlRzflCo3MlbsGS63DJb4uRxOi
+         pbXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DmAjZsfccwaVaNtes6EmfPZ2rG4blpFc0pyFaBFNy/c=;
+        b=yL0QSqRutqVgSBb01JY2Ca93nX7igUVUbNEwprgXnLOmD4wAt7Tx46jKXKm076t4ka
+         RnHyGIiNKkIdwFqkEnWroIsfSCnIlMBQKz1aioWETsSAU0+Xdmovn+biUYdSW8mxlvN5
+         NUfXeTtlobAU/h6SILDYjCjiNVpsGxYBwU4Aww5bUsndzMG4NfJUX5XF0MUidgoL2JcZ
+         lNtRqn/rdMV6xqK6wVz74N5l8nOhd2b5h+IiiEj7Q87bkhyxMu9X66GUtXo1ivrQHher
+         gvagejo4n8pxzbH1olzhwAELwebssHWw7i5oSLsbHlRamZIWcmK7puMCtGd+m1z+c0yT
+         7OLQ==
+X-Gm-Message-State: AOAM530u4Fj4eE2ceAeThJvJKBvysgYvXW3Zv2CA6Ra47OqcIq4Q+OMq
+        S8UjGi+M7UOflan600psLL+NeA==
+X-Google-Smtp-Source: ABdhPJxqxfPIQtuam5GkZBepPAbS7V0Q8IGPcsrc+Vbtsq0AWBZ7iKtmXQsqTlN6H1uGOVjInIYmRw==
+X-Received: by 2002:a17:902:d487:: with SMTP id c7mr2089230plg.0.1644277695967;
+        Mon, 07 Feb 2022 15:48:15 -0800 (PST)
+Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
+        by smtp.gmail.com with ESMTPSA id u18sm13306160pfk.14.2022.02.07.15.48.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Feb 2022 15:48:15 -0800 (PST)
+Date:   Mon, 7 Feb 2022 23:48:11 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v9 30/43] KVM: SEV: Add documentation for SEV-SNP CPUID
+ Enforcement
+Message-ID: <YgGvu1BsYP9cihwh@google.com>
+References: <20220128171804.569796-1-brijesh.singh@amd.com>
+ <20220128171804.569796-31-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220128171804.569796-31-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This series adds support for Intel Software Defined Silicon. These
-patches are the same as patches 4-6 from this series [1]. Patches 1-3 
-of that series were pulled in during the 5.17 merge window.
+On Fri, Jan 28, 2022, Brijesh Singh wrote:
+> From: Michael Roth <michael.roth@amd.com>
+> 
+> Update the documentation with SEV-SNP CPUID enforcement.
+> 
+> Signed-off-by: Michael Roth <michael.roth@amd.com>
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  .../virt/kvm/amd-memory-encryption.rst        | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
+> index 1c6847fff304..0c72f44cc11a 100644
+> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
+> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
 
-[1] https://lore.kernel.org/lkml/20211216023146.2361174-1-david.e.box@linux.intel.com/T/
+This doc is specifically for KVM's host-side implemenation, whereas the below is
+(a) mostly targeted at the guest and (b) has nothing to do with KVM.
 
-David E. Box (3):
-  platform/x86: Add Intel Software Defined Silicon driver
-  tools arch x86: Add Intel SDSi provisiong tool
-  selftests: sdsi: test sysfs setup
+Documentation/x86/amd-memory-encryption.rst isn't a great fit either.
 
- .../ABI/testing/sysfs-driver-intel_sdsi       |  77 +++
- MAINTAINERS                                   |   7 +
- drivers/platform/x86/intel/Kconfig            |  12 +
- drivers/platform/x86/intel/Makefile           |   2 +
- drivers/platform/x86/intel/sdsi.c             | 574 ++++++++++++++++++
- drivers/platform/x86/intel/vsec.c             |  12 +-
- tools/arch/x86/intel_sdsi/Makefile            |   9 +
- tools/arch/x86/intel_sdsi/sdsi.c              | 540 ++++++++++++++++
- tools/testing/selftests/drivers/sdsi/sdsi.sh  |  18 +
- .../selftests/drivers/sdsi/sdsi_test.py       | 226 +++++++
- 10 files changed, 1476 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
- create mode 100644 drivers/platform/x86/intel/sdsi.c
- create mode 100644 tools/arch/x86/intel_sdsi/Makefile
- create mode 100644 tools/arch/x86/intel_sdsi/sdsi.c
- create mode 100755 tools/testing/selftests/drivers/sdsi/sdsi.sh
- create mode 100644 tools/testing/selftests/drivers/sdsi/sdsi_test.py
+Since TDX will need a fair bit of documentation, and SEV-ES could retroactively
+use docs as well, what about adding a sub-directory:
 
--- 
-2.25.1
+	Documentation/virt/confidential_compute
 
+to match the "cc_platform_has" stuffr, and then we can add sev.rst and tdx.rst
+there?  Or sev-es.rst, sev-snp.rst, etc... if we want to split things up more.
+
+It might be worth extracting the SEV details from x86/amd-memory-encryption.rst
+into virt/ as well.  A big chunk of that file appears to be SEV specific, and it
+appears to have gotten a little out-of-whack.  E.g. this section no longer makes
+sense as the last paragraph below appears to be talking about SME (bit 23 in MSR
+0xc0010010), but walking back "this bit" would reference SEV.  I suspect a
+mostly-standalone sev.rst would be easier to follow than an intertwined SME+SEV.
+
+  If support for SME is present, MSR 0xc00100010 (MSR_AMD64_SYSCFG) can be used to
+  determine if SME is enabled and/or to enable memory encryption::
+
+          0xc0010010:
+                  Bit[23]   0 = memory encryption features are disabled
+                            1 = memory encryption features are enabled
+
+  If SEV is supported, MSR 0xc0010131 (MSR_AMD64_SEV) can be used to determine if
+  SEV is active::
+
+          0xc0010131:
+                  Bit[0]    0 = memory encryption is not active
+                            1 = memory encryption is active
+
+  Linux relies on BIOS to set this bit if BIOS has determined that the reduction
+  in the physical address space as a result of enabling memory encryption (see
+  CPUID information above) will not conflict with the address space resource
+  requirements for the system.  If this bit is not set upon Linux startup then
+  Linux itself will not set it and memory encryption will not be possible.
