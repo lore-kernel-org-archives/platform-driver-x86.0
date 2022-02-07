@@ -2,132 +2,274 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE45C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Feb 2022 13:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFDDC47082
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Feb 2022 15:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245643AbiBGNXT (ORCPT
+        id S231912AbiBGPHM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Feb 2022 08:23:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51862 "EHLO
+        Mon, 7 Feb 2022 10:07:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442751AbiBGMVi (ORCPT
+        with ESMTP id S1377491AbiBGOl7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Feb 2022 07:21:38 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEC99C0401C2;
-        Mon,  7 Feb 2022 04:11:56 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ECA70B8120F;
-        Mon,  7 Feb 2022 12:11:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3B14C340EB;
-        Mon,  7 Feb 2022 12:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644235912;
-        bh=5gMb2sVTGroqNBeDfOf0Z9dK1PjhMmifCwWjbl/BngI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WNOwgobMcO+5QbbaE5uTv5JtVOctLDnzVB4gkvkG5W/jtjnQaIJsSNcsSrARrFuFs
-         iUDRb3Mq8U7l1AvhGZK8k6QNixcs3joakKnTAF2FLadTB4hptjP1+qiiKnPmyX1TVk
-         G+LCuoyZemDy5D1/VXAC1R+7EOg8NZZXyYqc1nKI6ibKOR7cGRQzmgoYdLjqIMGeGR
-         mhhedWDNCz+r+PRDEMtApgyVPY9SSF0jn/CcIWp2OBv7lOFkus/6W/kWwZaiU4L0WC
-         n/2z4KIc73RpZd5Ceg8Z5tZQP4RWouTViAVcEnqf60beaG2Z4w466nsNq1plDnltY5
-         eN+/sLYwrsXSA==
-Date:   Mon, 7 Feb 2022 13:11:49 +0100
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v4 6/8] i2c: i801: convert to use common P2SB accessor
-Message-ID: <YgEMhTT87aY76JQZ@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>, Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>, Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
- <20220131151346.45792-7-andriy.shevchenko@linux.intel.com>
+        Mon, 7 Feb 2022 09:41:59 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2087.outbound.protection.outlook.com [40.107.236.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE978C0401C1;
+        Mon,  7 Feb 2022 06:41:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k9EdlwJYQ3TmaDMwRVmGXO+no5qp62tq2fwhN1k6lv0ZcwR0hUPZDwrlZOS77ds5mb8cab+VSaz1+EhgBqmKDsJg48oDq+KTieKwTMw8///2KKh7Y1ZHJvYL3FWbvCjJa9hmvt7fodxHGTuWCwBZ4eLWqEVjkIagTx3P3SZ2r7NOjjpCBodSprF3R+4gSrEzhwwgjGjdTQ45tmFJ0BQh3zqwqSSGM1GfgkHCahNBsiUHauEIjZHijRILPwiGs3l1JZRKNvqqugSNhNZR4H7yOgLH8bU3BnX/91yBZ3E8m9OogFe1mo+nalRnxYy5ED80IyzOqiGMm1+4gsIPbQR9yw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9HnbdG3ozvi8jDOAd5srVqOwmEnciYis1tlw1MSkpa0=;
+ b=aL3xVqi8btXiHtS6tkQYINLX98rAiLgTAmvKyFJp7wMxyjWoXt3rzjm2tdbXsYkHuH9zkaMSJ3DV561yBxHmW7gvZ4w5ZLDQg3p4T+NcwH0fgu8t9G3CJAHOacilq+jff9wrPDffO+nyeYVHr07Xrig79brqch1OGTAeKLOyWZY0WnvgL48t+jtM4TS0R+1sKCibzHwBkNalM2aGicGv5E9PDFSH1CwhWPzqRBRsSFSYGug4ugg6QGxDsORBlGugzsyfokrEgxdeFHQ4O51Eb0mjpGvFuNh8xJXxIn+RlrZOZh0XxEn5I0IQ1hNlWk8SLw7cTnlbRpQpoks6pgQE8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9HnbdG3ozvi8jDOAd5srVqOwmEnciYis1tlw1MSkpa0=;
+ b=lhcvASTO+B3paUaBNlSZiVzaG6rZmKQjnSfAw+3r3Vs6V2d1NxfN2WxODHxhbxKEaMqz2jHIW2ehCqpBFDWmnbFU11nwMuVpuPTxO11s+X6gfuuSQpC8OHNB+TgRI3k/v4s1Ad6tZlU7uFdYlCLhoi5vaM1ahMXcNTeva8rXPoE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
+ by BN6PR12MB1524.namprd12.prod.outlook.com (2603:10b6:405:4::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.14; Mon, 7 Feb
+ 2022 14:41:52 +0000
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::500e:b264:8e8c:1817]) by SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::500e:b264:8e8c:1817%5]) with mapi id 15.20.4951.018; Mon, 7 Feb 2022
+ 14:41:52 +0000
+Cc:     brijesh.singh@amd.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v9 41/43] virt: Add SEV-SNP guest driver
+To:     Borislav Petkov <bp@alien8.de>
+References: <20220128171804.569796-1-brijesh.singh@amd.com>
+ <20220128171804.569796-42-brijesh.singh@amd.com> <YgBOKQKXEH5VqTO7@zn.tnic>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+Message-ID: <cb4aa4c4-11e9-163c-5101-8b0dea336fc1@amd.com>
+Date:   Mon, 7 Feb 2022 08:41:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+In-Reply-To: <YgBOKQKXEH5VqTO7@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL0PR05CA0019.namprd05.prod.outlook.com
+ (2603:10b6:208:91::29) To SN6PR12MB2718.namprd12.prod.outlook.com
+ (2603:10b6:805:6f::22)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="q6vDFucLg0OY10c4"
-Content-Disposition: inline
-In-Reply-To: <20220131151346.45792-7-andriy.shevchenko@linux.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c5c33f8f-7dea-4873-d7ef-08d9ea47fae6
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1524:EE_
+X-Microsoft-Antispam-PRVS: <BN6PR12MB1524A2CB79B5DB75C32F5787E52C9@BN6PR12MB1524.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sJGnK91zAcQlnUIq3m0vrkOh21NocCtP/AIMpe4MN3tfZWgx/tzxaYDdC5KpyqKyjs3loYuwtFwjPWT7PpZOb7GrayAtkfAXtE2Oko76T0BlO+dmoYZOnoYd8sYlCJeoaGuIHo40HALFc/GODcLbnxzHHFV6s0FX5AIdQS9pa3+4RF0G+Ttmd6X4W4h0exMXV1zKp40yHx0XwNa3UhwNI2FioFKRF0NJFivdGiAIBnE1btl+5QzdXiog/1IpnIzPwz2kKJQrSdrBgy89yv782wrjwJ6IS1Yp7pQPo7jtIQu1427qqAKQ7d9ypwY0Lez4fse4AY8EtG1IodUiU5n2jFBV63TV+wD9VUZmyLGIAsu8NXB73KI4TOlSSj5EXNYD1pRgSIprQKsFQhuj6oNAXVuQ8fbs3wT81avh1deHXhv/CfXStqsae65MrzpFTKqQi2oJwzz7CB29/TtMOJny+faEcTXBCgtqXaue8+2Z4QoaGc5R4lRdkU2Wxsw7PsxWXvWq62ArCNIN7hYG/jAn7iSqom/eV/wEY6ORBHsqsS24jnjozM8q9avAOBVFxYRvgB+GI26XRThta9wWAUCeaO4FbSBLTpZYEz3iWh6kY9+fK0urbAa4TZkMuX7CryyQ9DbpCtgRVSfgltOUvZjXHoGDcu1NN7nvkO1uyV51UYK/9eXdogJFjb7lJoMnuyIg0E9bRMM+/uj6oBoS60s0ctnwF6tysU64zP+5AP8bOwsaMOLlPh0gJsxHFgSVxu44jaibEM/k1F9QO8ZE+v3YWRklgarEARyDnrNJedmqhkP5oY0LDTF37yaDNwL07MOV
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(31696002)(6506007)(508600001)(53546011)(38100700002)(83380400001)(6486002)(86362001)(966005)(6512007)(7416002)(7406005)(5660300002)(6666004)(66946007)(6916009)(316002)(31686004)(66556008)(66476007)(8676002)(4326008)(8936002)(54906003)(36756003)(44832011)(2906002)(26005)(186003)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NnBQb2RRMk9nMnZ4cjFkMVlTNUFIRXdvckhLbWpsYmZpN0dXcWhiRkE5Q25M?=
+ =?utf-8?B?TDRoVjdIWmM3dlkwdStXWXVyWFVKSXN2LzdIV0c0K2VwUzZkMURFTHcySmRm?=
+ =?utf-8?B?NjJ5QUFxWktjQ3pwUkVKa08rVnF1SUpYUWE1SFp6RGtCQjUwQzhHNGRUblFn?=
+ =?utf-8?B?RXlhNlhhL1FlUDl0VWt4eVR0eFgwSUFVdzFkWndDSmtaS1h2SFF2V1lleENv?=
+ =?utf-8?B?WnFjN2R0TC9TYy8wM0NqdEZPRkhmN0J6MVFqY2N5NmUwYUlEVGxseEJuWTli?=
+ =?utf-8?B?R3A0bmdZOWRPUi9MbUZBeDFrTE1aaXp2VEtVOFZVYW53SlJabXo5MEpyQUVE?=
+ =?utf-8?B?MVdHa1NjTlhWVzh0MmVPclM0UHBFN3g5SGd1SUxPbDRzY0lxR1NuUENqcFk1?=
+ =?utf-8?B?WVFZdit4NjdaREFXbUxTWDF4QnZja0pwZmdKa2IrTEZnNVhxSU1ORkl2bG9l?=
+ =?utf-8?B?M09rOGs4OU5wWFZBK0FFY0tROWF5R21WZjVUNmVCQkExdDVjOWJMWVFyamNK?=
+ =?utf-8?B?R0x4cUQwKzJiMExYNHN0bDR0NW5MMnFOSkN0WU5qY0dPbnpPY2hXSnlZYUE2?=
+ =?utf-8?B?cTRUbXdsQU1LQXRFdW5qUW81VGdxak4yM2RXbFFXbllBbUxHUURDVnJaK0NV?=
+ =?utf-8?B?ejNQUkVMSDI4RTFSOXZiekU4dUF6VVB1dlhGVmJDS2FQa05hSm5RSlR6RFpH?=
+ =?utf-8?B?MzUrSU1DakJGNWtaRWt5ajcxN291ejVjWlcyU2J3Y2t1eEFCY2hWZnZYMktq?=
+ =?utf-8?B?UlA0YTFkQitBSkFlVG5BaVphdldRZzNoSUtyUU9SVVozK1F3K0h1ZHVjVVFW?=
+ =?utf-8?B?SWk0K1liVFQ3dWpMU25KUEVVUWJDVnFQV1IvcTcwb2xyQlp2UWhNdXRCc2lX?=
+ =?utf-8?B?MmJIbVhENlJzRGhBTkVpbTM4Wm1CU2wvVEJ3S21ScE84QjF2S2ZSYmxEaWda?=
+ =?utf-8?B?QWkzbFhWMFFlYkhnYnRkNlFZSy9jRWc4enJqWWJnY2xCcElQR0xGM2t1TEFq?=
+ =?utf-8?B?VXRkRks1NUdOZGdxWjdpR1VMWEtEODcydC9UTTlvRms0ampMTWVBemtmb1BQ?=
+ =?utf-8?B?OExia3ZYK21OZGorUTV4SWZ3NUhsUDNhc2I1M0hVM2RiSDBmL3JTeUtXQUY1?=
+ =?utf-8?B?ZTZBU09nN0JpcWl4MVpXVWh2QTl3bkNVdGEzNTF6V1lZZ2xUOUJIOEZUd1ly?=
+ =?utf-8?B?WVdJQ2ZrTTZmRFN4SjlUdHU4TjVrbUxUNHJjS1E2elo1ZCtxNktjdk1kNk1R?=
+ =?utf-8?B?NFpUMk44MjA0QzExcWNUMXJoVDg3RzE2QWJnQzlIQjNiYmJTR2w3ZDhnenVq?=
+ =?utf-8?B?RlB1R2dqcEd2Y0QwOFI1WHBrK2JZWVI2TUlvMlNoSDExbjhETjlBeXdrZkhJ?=
+ =?utf-8?B?aFdFaS83aGRlOFlrNW5TcE1UcU5BTWdlM0FvQ0RrS2I5NlBrVE1nVEdIRzdL?=
+ =?utf-8?B?dXdqZHBRdW9CbTF3RWk5ZzRaMk1BNVlQSjdGcmdzbkROQ2xmc1U4SU1uR2VN?=
+ =?utf-8?B?a0ZHYktpT3NaN2JPUk0wdnNGa0MrS1B6RXowL0dxR0xNclhMakVUNVNjVEtS?=
+ =?utf-8?B?VGd2elU1L1FYaWxLK2FPa29paWRLdGJvekRhczVnN3VwMzJOZjU4ZHdNV3lV?=
+ =?utf-8?B?K0xWTThFbUFwVUd0RnIyaW5HNE9rc3gwNWRUNlk1eE05d25paTliRzVMR1RT?=
+ =?utf-8?B?eFd1RGo4TTJoK0NnbGhqNlVYTFR4VXpTK3FtUjJqSitxUXo1ajFDQWFkc2hJ?=
+ =?utf-8?B?SU12QkQ5TXpGdVgrRWNENmsxNEZjaWo1ZDk0cEFqb0JzQVJmcFpFTlZJa2ll?=
+ =?utf-8?B?azMyQUtVWjVOSGxORlEzdmtZYU4yZVZXaDR5dUtsL3pQZzJwRGI3RVZvbmZB?=
+ =?utf-8?B?eDJFYnIrNG1tYXBCR3gxTXJTT2NjQlV4bExPNkdhQkJWS3NSbm5xWkoyOXA3?=
+ =?utf-8?B?NVFnMGc5L3Uxc1JYSmFrWFVGc2crTTRyQlIzRTkwU3gvRG5RMG9Yc1lXd2Vs?=
+ =?utf-8?B?c0kzUHFKanJTSTJCK0xrWEdJZEd3U0NvTU55VTI1WTROME9qdW5KcHhFNVBO?=
+ =?utf-8?B?bDhtS292U1d3NGdoT0pKSFErLzEyR3IweUZvYWFWNGVTMzFIb3Z4QVByWlJO?=
+ =?utf-8?B?S2JIMXNZdlBiUkprUWM2d0dkL3hHakxVSHp3eEJ0cFBhQ0NZOG1EOWtxRitL?=
+ =?utf-8?Q?jR5B/uACxTF+B08i/m2v0sk=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5c33f8f-7dea-4873-d7ef-08d9ea47fae6
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2022 14:41:52.4989
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FXo59zmIflJMpjhRihJQcykh7wYYbjJIrwKfmAdzDKJG3bkZmFFpo5ne8pInGvGnMoJykQB4k9pz1B70Wm5Cug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1524
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
---q6vDFucLg0OY10c4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 31, 2022 at 05:13:44PM +0200, Andy Shevchenko wrote:
-> Since we have a common P2SB accessor in tree we may use it instead of
-> open coded variants.
->=20
-> Replace custom code by p2sb_bar() call.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On 2/6/22 4:39 PM, Borislav Petkov wrote:
 
-Acked-by: Wolfram Sang <wsa@kernel.org>
+> And once you do, do "make htmldocs" to see whether it complains about
+> some formatting issues or other errors etc.
+> 
+> /me goes and does it...
+> 
+> Ah, here we go:
+> 
+> Documentation/virt/coco/sevguest.rst:48: WARNING: Inline emphasis start-string without end-string.
+> Documentation/virt/coco/sevguest.rst:51: WARNING: Inline emphasis start-string without end-string.
+> Documentation/virt/coco/sevguest.rst:55: WARNING: Inline emphasis start-string without end-string.
+> Documentation/virt/coco/sevguest.rst:57: WARNING: Definition list ends without a blank line; unexpected unindent.
+> 
+> There's something it doesn't like about the struct. Yeah, when I look at
+> the html output, it is all weird and not monospaced...
+
+I will fix those in next rev.
 
 
---q6vDFucLg0OY10c4
-Content-Type: application/pgp-signature; name="signature.asc"
+>> +
+>> +The guest ioctl should be issued on a file descriptor of the /dev/sev-guest device.
+>> +The ioctl accepts struct snp_user_guest_request. The input and output structure is
+>> +specified through the req_data and resp_data field respectively. If the ioctl fails
+>> +to execute due to a firmware error, then fw_err code will be set otherwise the
+>> +fw_err will be set to 0xff.
+> 
+> fw_err is u64. What does 0xff mean? Everything above the least
+> significant byte is reserved 0?
+> 
 
------BEGIN PGP SIGNATURE-----
+Yep, I will explicitly say that it should be set to 0x00000000000000FF.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmIBDIUACgkQFA3kzBSg
-KbZUaA/8DRJuCj7W7r4GvotOsX0pfGB7yfmokP/mtSPdJf2Dwu7d1QFlD1LAT4Bn
-Ne9tAGHdPQ+I2fkolX/+mojLbwBWBMtQELFQYJEOKcLpt77H8IR+9d0HvGXuycal
-bA59hcNywNJB6BVWYJXxJgCovLxZmet5Pvl+vo3+ArxbJI2UzZNwhg+6SfEj+mwE
-S0ZjZyD7+BJfFYZ44AGQn9p8bqDiC0vz7T/yTUz5GVylNJ4blPLcjEZ/gFDvXgBL
-L0Cio2QiPf7V7q/awOxmQr8iIWMbAu8/kjjQbr+2astCs92x65sv0QakJzJt+2GG
-3MSzyWKJIzUpJLG07IJlP98ZK0aB+hAkd2XWC5LTN92HRINYKbIuSvOHBGWFk4eG
-nJMxbq35p67nOdx0ba4w7NjyrysdKmqZrTbZC+e1j7KJMezTCP7PGLlB/68ic0RN
-mg7gEuBRltMw1CqLIZzR8cQRiPSwMd47msNoJ9l84FLk/N+0arFI/sw7lrUUgWUR
-ug0VLz3WfSfF6t+g7Vsqnk4ZbQ0g5FMOYQdDryqhoFDy9d2V+aoC98AG3JqoJ5Mg
-ejSV//Jtw2fYvbmbgvNmKMavq3tsbpcpkYukU9l/dbJAfo/q39ptyKpKRjNMfkjF
-ZW96HlhXKStsI6ei/0BFzZ2Il/ztJKtxBxMIJ3NMtqWw0Ipscxk=
-=Y6Q6
------END PGP SIGNATURE-----
 
---q6vDFucLg0OY10c4--
+>> diff --git a/drivers/virt/coco/sevguest/Kconfig b/drivers/virt/coco/sevguest/Kconfig
+>> new file mode 100644
+>> index 000000000000..07ab9ec6471c
+>> --- /dev/null
+>> +++ b/drivers/virt/coco/sevguest/Kconfig
+>> @@ -0,0 +1,12 @@
+>> +config SEV_GUEST
+>> +	tristate "AMD SEV Guest driver"
+>> +	default y
+> 
+> Definitely not. We don't enable drivers by default unless they're
+> ubiquitous.
+> 
+
+Randy asked me similar question on v7, and here is my response to it.
+
+https://lore.kernel.org/linux-mm/e6b412e4-f38e-d212-f52a-e7bdc9a26eff@infradead.org/
+
+Let me know if you still think that we should make it 'n'. I am not dead 
+against it but I have feeling that once distro's starts building SNP 
+aware guest kernel, then we may get asked to enable it by default so 
+that attestation report can be obtained by the initial ramdisk.
+
+
+
+>> +	 */
+>> +	if (count >= UINT_MAX) {
+>> +		pr_err_ratelimited("SNP guest request message sequence counter overflow\n");
+> 
+> How does error message help the user? Is she supposed to reboot the
+> machine or so?
+> 
+> Because it sounds to me like if this goes over 32-bit, this driver stops
+> working. So what resets those sequence numbers?
+
+After this condition is met, a guest will no longer get the attestation 
+report. It's up to the userspace to reboot the guest or continue without 
+attestation.
+
+The only thing that will reset the counter is re-launching the guest to 
+go through the entire PSP initialization sequence once again.
+
+
+>> +
+>> +	crypto->iv_len = crypto_aead_ivsize(crypto->tfm);
+>> +	if (crypto->iv_len < 12) {
+>> +		dev_err(snp_dev->dev, "IV length is less than 12.\n");
+> 
+> And? < 12 is bad? Make that error message more user-friendly pls.
+> 
+Okay.
+
+
+> 
+> The order of those free calls needs to be the opposite of the kmallocs
+> above.
+> 
+Okay
+
+
+>> +
+>> +	/* Message version must be non-zero */
+>> +	if (!input.msg_version)
+>> +		return -EINVAL;
+>> +
+>> +	mutex_lock(&snp_cmd_mutex);
+> 
+> That mutex probably is to be held while issuing SNP commands but then
+> you hold it here already for...
+> 
+>> +
+>> +	/* Check if the VMPCK is not empty */
+>> +	if (is_vmpck_empty(snp_dev)) {
+> 
+> ... this here which is not really a SNP command issuing.
+> 
+> Should that mutex be grabbed only around handle_guest_request() above or
+> is it supposed to protect more stuff?
+
+
+Yep, it need to protect more stuff.
+
+We allocate a shared buffers (request, response, cert-chain) that gets 
+populated before issuing the command, and then we copy the result from 
+reponse shared to callers buffer after the command completes. So, we 
+also want to ensure that the shared buffer is not touched before the 
+previous ioctl is finished.
+
+
+-Brijesh
