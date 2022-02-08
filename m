@@ -2,136 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE1DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Feb 2022 08:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A66C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Feb 2022 11:32:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351529AbiBHIvN (ORCPT
+        id S1356737AbiBHLcU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Feb 2022 03:51:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44822 "EHLO
+        Tue, 8 Feb 2022 06:32:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350546AbiBHIvJ (ORCPT
+        with ESMTP id S1346341AbiBHKv3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Feb 2022 03:51:09 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C7FCC03FEC0;
-        Tue,  8 Feb 2022 00:51:08 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Tue, 8 Feb 2022 05:51:29 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A21A2C03FEC0;
+        Tue,  8 Feb 2022 02:51:27 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 07F2661309;
-        Tue,  8 Feb 2022 08:51:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE671C004E1;
-        Tue,  8 Feb 2022 08:51:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1644310267;
-        bh=LF21Pve9wnpG/No0P1OZHAk/VrRqWJcQttpv2IYdL1Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RbADg1SI8fGdpeBVaFt3AEOknG01qJNSGYgx0juGBF/bdr/s0r+VJS3R7dWc4Q2TL
-         kJjGHycLQQ0uCcYRfYJYJMduTiPFLb+6+t6vTr6uC+q1bgBetUADfyjuBZWHc1PanZ
-         H9fqaZYQVKxRGAA9mnoLO8H41Ioya59f8DXbSYHs=
-Date:   Tue, 8 Feb 2022 09:51:04 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: Add Steam Deck driver
-Message-ID: <YgIu+Lrt0p85yog1@kroah.com>
-References: <20220206022023.376142-1-andrew.smirnov@gmail.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F0C0A1EC00F8;
+        Tue,  8 Feb 2022 11:51:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1644317482;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=yxZ0nR15n7mkZeUUipZpTNufPRwpkzb7/Yfx2nthKHw=;
+        b=T9Uwof1JPVAt8ASYSIUa3QaOxuvcwTqgS4A1/d8dSH3XsLJGSVDgzqkQEA3SpoBzGPKWbN
+        qK1A+0n4DUJlXw9Oy3UzYqF5LJ2Bi/mjDuQKYD5N5jE0WdXS382dpSohbyviT6xPIP402H
+        NxXMNHdzWIPMeDDmQa1BOpu9LiTkpxA=
+Date:   Tue, 8 Feb 2022 11:51:16 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dov Murik <dovmurik@linux.ibm.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        Liam Merwick <liam.merwick@oracle.com>
+Subject: Re: [PATCH v9 42/43] virt: sevguest: Add support to derive key
+Message-ID: <YgJLJJiosIOHLWYz@zn.tnic>
+References: <20220128171804.569796-1-brijesh.singh@amd.com>
+ <20220128171804.569796-43-brijesh.singh@amd.com>
+ <YgDduR0mrptX5arB@zn.tnic>
+ <1cb4fdf5-7c1e-6c8f-1db6-8c976d6437c2@amd.com>
+ <ae1644a3-bd2c-6966-4ae3-e26abd77b77b@linux.ibm.com>
+ <20ba1ac2-83d1-6766-7821-c9c8184fb59b@amd.com>
+ <cd3ef9dd-cfc5-ac8c-d524-d8d4416f5cad@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220206022023.376142-1-andrew.smirnov@gmail.com>
+In-Reply-To: <cd3ef9dd-cfc5-ac8c-d524-d8d4416f5cad@linux.ibm.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Feb 05, 2022 at 06:20:23PM -0800, Andrey Smirnov wrote:
-> +#define STEAMDECK_ATTR_RO(_name, _method)				\
-> +	static ssize_t _name##_show(struct device *dev,			\
-> +				    struct device_attribute *attr,	\
-> +				    char *buf)				\
-> +	{								\
-> +		struct steamdeck *jup = dev_get_drvdata(dev);		\
-> +		unsigned long long val;					\
-> +									\
-> +		if (ACPI_FAILURE(acpi_evaluate_integer(			\
-> +					 jup->adev->handle,		\
-> +					 _method, NULL, &val)))		\
-> +			return -EIO;					\
-> +									\
-> +		return sprintf(buf, "%llu\n", val);			\
+On Tue, Feb 08, 2022 at 09:56:52AM +0200, Dov Murik wrote:
+> Just to be clear, I didn't mean necessarily "leak the key to the
+> untrusted host" (even if a page is converted back from private to
+> shared, it is encrypted, so host can't read its contents).  But even
+> *inside* the guest, when dealing with sensitive data like keys, we
+> should minimize the amount of copies that float around (I assume this is
+> the reason for most of the uses of memzero_explicit() in the kernel).
 
-Please use sysfs_emit() for this and any other sysfs show functions.
+I don't know about Brijesh but I understood you exactly as you mean it.
+And yap, I agree we should always clear such sensitive buffers.
 
-Also, you have no Documenation/ABI/ entries for all of these new sysfs
-files you are creating.  How do we know what these entries are for, and
-what they contain?  Please add that in future versions of this commit,
-as-is we can't take this :(
+-- 
+Regards/Gruss,
+    Boris.
 
-
-> +	}								\
-> +	static DEVICE_ATTR_RO(_name)
-> +
-> +STEAMDECK_ATTR_RO(firmware_version, "PDFW");
-> +STEAMDECK_ATTR_RO(board_id, "BOID");
-> +STEAMDECK_ATTR_RO(pdcs, "PDCS");
-> +
-> +static umode_t
-> +steamdeck_is_visible(struct kobject *kobj, struct attribute *attr, int index)
-> +{
-> +	return attr->mode;
-> +}
-
-As Guenter pointed out, this is not needed.
-
-
-> +
-> +static struct attribute *steamdeck_attributes[] = {
-> +	&dev_attr_target_cpu_temp.attr,
-> +	&dev_attr_gain.attr,
-> +	&dev_attr_ramp_rate.attr,
-> +	&dev_attr_hysteresis.attr,
-> +	&dev_attr_maximum_battery_charge_rate.attr,
-> +	&dev_attr_recalculate.attr,
-> +	&dev_attr_power_cycle_display.attr,
-> +
-> +	&dev_attr_led_brightness.attr,
-> +	&dev_attr_content_adaptive_brightness.attr,
-> +	&dev_attr_gamma_set.attr,
-> +	&dev_attr_display_brightness.attr,
-> +	&dev_attr_ctrl_display.attr,
-> +	&dev_attr_cabc_minimum_brightness.attr,
-> +	&dev_attr_memory_data_access_control.attr,
-> +
-> +	&dev_attr_display_normal_mode_on.attr,
-> +	&dev_attr_display_inversion_off.attr,
-> +	&dev_attr_display_inversion_on.attr,
-> +	&dev_attr_idle_mode_on.attr,
-> +
-> +	&dev_attr_firmware_version.attr,
-> +	&dev_attr_board_id.attr,
-> +	&dev_attr_pdcs.attr,
-> +
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group steamdeck_group = {
-> +	.attrs = steamdeck_attributes,
-> +	.is_visible = steamdeck_is_visible,
-> +};
-> +
-> +static const struct attribute_group *steamdeck_groups[] = {
-> +	&steamdeck_group,
-> +	NULL
-> +};
-
-ATTRIBUTE_GROUPS()?
-
-thanks,
-
-greg k-h
+https://people.kernel.org/tglx/notes-about-netiquette
