@@ -2,82 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20F8C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Feb 2022 05:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E09C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Feb 2022 05:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347019AbiBHFio (ORCPT
+        id S241191AbiBHFzd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Feb 2022 00:38:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44368 "EHLO
+        Tue, 8 Feb 2022 00:55:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347038AbiBHFif (ORCPT
+        with ESMTP id S240505AbiBHFzd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Feb 2022 00:38:35 -0500
-Received: from relay5.hostedemail.com (relay5.hostedemail.com [64.99.140.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24D9FC03E968;
-        Mon,  7 Feb 2022 21:34:50 -0800 (PST)
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay11.hostedemail.com (Postfix) with ESMTP id 3704080D59;
-        Tue,  8 Feb 2022 05:34:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf09.hostedemail.com (Postfix) with ESMTPA id 8911B20024;
-        Tue,  8 Feb 2022 05:34:23 +0000 (UTC)
-Message-ID: <dd4150af8858115c96ebab690182190556669050.camel@perches.com>
+        Tue, 8 Feb 2022 00:55:33 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49834C0401DC;
+        Mon,  7 Feb 2022 21:55:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644299732; x=1675835732;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=hB8ZdgEN7x8JNCd2gvp3JSiGkG5Iwv8cQ5qYdVOM6l8=;
+  b=cSJ7G+XubQ9DFD/BacwZUzIwnChHlZ5r17TmdGKraX8nOvNinPyq6ngE
+   nPqP2vavc0KWkt/7sZACLR6/nTobB45utK9cZJjx+s/JDjrYW7BiBbnKo
+   3KUSg3xHaFgKLRmbFzg2g3l/rYVyhUpGdjUPB4/lCLis5MCHoSQkEGB21
+   uu5SQiNJH9ltdN8xv6/G0Tf3BpN1Pu5OJyKgvQD7UMhfDH0TGs840zuw1
+   SpluE/UVl+UBHy89DKPr9KzKA5EMfoQjjqXwdvV++D9bScy9NEfhXb8Gh
+   Mfla0DDDfMZfskpnnIB9B2uMqw3/j4KV1DBmbwvldcpHf+OEKssdOqDvH
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10251"; a="249088180"
+X-IronPort-AV: E=Sophos;i="5.88,351,1635231600"; 
+   d="scan'208";a="249088180"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2022 21:55:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,351,1635231600"; 
+   d="scan'208";a="567739156"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 07 Feb 2022 21:55:31 -0800
+Received: from cbaldes-mobl.amr.corp.intel.com (unknown [10.212.183.65])
+        by linux.intel.com (Postfix) with ESMTP id 7BAC5580970;
+        Mon,  7 Feb 2022 21:55:31 -0800 (PST)
+Message-ID: <89dacc424a729c247f6431e393b89dbf8901c4c8.camel@linux.intel.com>
 Subject: Re: [PATCH V6 1/3] platform/x86: Add Intel Software Defined Silicon
  driver
-From:   Joe Perches <joe@perches.com>
-To:     david.e.box@linux.intel.com, hdegoede@redhat.com,
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Joe Perches <joe@perches.com>, hdegoede@redhat.com,
         gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
         srinivas.pandruvada@intel.com, mgross@linux.intel.com
 Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         Mark Gross <markgross@kernel.org>
-Date:   Mon, 07 Feb 2022 21:34:22 -0800
-In-Reply-To: <d52b50f3b704280e476e60417323c98f45baf54a.camel@linux.intel.com>
+Date:   Mon, 07 Feb 2022 21:55:31 -0800
+In-Reply-To: <dd4150af8858115c96ebab690182190556669050.camel@perches.com>
 References: <20220208005444.487209-1-david.e.box@linux.intel.com>
          <20220208005444.487209-2-david.e.box@linux.intel.com>
          <103681860759d72b1acf712eed334b1d4ef6b7d5.camel@perches.com>
          <d52b50f3b704280e476e60417323c98f45baf54a.camel@linux.intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.40.4-1ubuntu2 
+         <dd4150af8858115c96ebab690182190556669050.camel@perches.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 9bmhhg7au4o3rkbkfsrjtm3ti5u7dj3q
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 8911B20024
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18nGjmqsA11IvQ+pY/sUSKZek1OHKssEwQ=
-X-HE-Tag: 1644298463-572210
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2022-02-07 at 18:54 -0800, David E. Box wrote:
-> On Mon, 2022-02-07 at 17:40 -0800, Joe Perches wrote:
-> > On Mon, 2022-02-07 at 16:54 -0800, David E. Box wrote:
-> > > Intel Software Defined Silicon (SDSi) is a post manufacturing mechanism for
-> > > activating additional silicon features. Features are enabled through a
-> > > license activation process.  The SDSi driver provides a per socket, sysfs
-> > > attribute interface for applications to perform 3 main provisioning
-> > > functions:
-[]
-> > > +static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info
-> > > *info,
-> > > +			      size_t *data_size)
-> > > +{
-> > > +	struct device *dev = priv->dev;
-> > > +	u32 total, loop, eom, status, message_size;
-> > []
-> > > +		if (packet_size > SDSI_SIZE_MAILBOX) {
-> > > +			dev_err(dev, "Packet size to large\n");
+On Mon, 2022-02-07 at 21:34 -0800, Joe Perches wrote:
+> On Mon, 2022-02-07 at 18:54 -0800, David E. Box wrote:
+> > On Mon, 2022-02-07 at 17:40 -0800, Joe Perches wrote:
+> > > On Mon, 2022-02-07 at 16:54 -0800, David E. Box wrote:
+> > > > Intel Software Defined Silicon (SDSi) is a post manufacturing mechanism
+> > > > for
+> > > > activating additional silicon features. Features are enabled through a
+> > > > license activation process.  The SDSi driver provides a per socket,
+> > > > sysfs
+> > > > attribute interface for applications to perform 3 main provisioning
+> > > > functions:
+> []
+> > > > +static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct
+> > > > sdsi_mbox_info
+> > > > *info,
+> > > > +			      size_t *data_size)
+> > > > +{
+> > > > +	struct device *dev = priv->dev;
+> > > > +	u32 total, loop, eom, status, message_size;
+> > > []
+> > > > +		if (packet_size > SDSI_SIZE_MAILBOX) {
+> > > > +			dev_err(dev, "Packet size to large\n");
+> > > 
+> > > too
 > > 
-> > too
+> > Sorry, I'm missing the question here. If it's whether packet_size could also
+> > not
+> > be a multiple of sizeof(u64) the answer here is yes. But I don't see how
+> > that
+> > matters. packet_size is a value read from the hardware. This is just a
+> > sanity
+> > check.
 > 
-> Sorry, I'm missing the question here. If it's whether packet_size could also not
-> be a multiple of sizeof(u64) the answer here is yes. But I don't see how that
-> matters. packet_size is a value read from the hardware. This is just a sanity
-> check.
+> just a to/too typo.
+> 
+> "Packet size too large\n"
 
-just a to/too typo.
+Doh!
 
-"Packet size too large\n"
-
+> 
+> 
 
