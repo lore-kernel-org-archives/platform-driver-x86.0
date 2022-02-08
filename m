@@ -2,100 +2,136 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBB7C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Feb 2022 08:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE1DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Feb 2022 08:51:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350645AbiBHIlD (ORCPT
+        id S1351529AbiBHIvN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Feb 2022 03:41:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37416 "EHLO
+        Tue, 8 Feb 2022 03:51:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350716AbiBHIkl (ORCPT
+        with ESMTP id S1350546AbiBHIvJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Feb 2022 03:40:41 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3207C03FECF;
-        Tue,  8 Feb 2022 00:40:36 -0800 (PST)
+        Tue, 8 Feb 2022 03:51:09 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C7FCC03FEC0;
+        Tue,  8 Feb 2022 00:51:08 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 85A1EB81768;
-        Tue,  8 Feb 2022 08:40:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3918C340ED;
-        Tue,  8 Feb 2022 08:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644309634;
-        bh=Qiy8w7jKXrvvylMq4I38caclQvB6xxH3iqeR0R/bAX0=;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 07F2661309;
+        Tue,  8 Feb 2022 08:51:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE671C004E1;
+        Tue,  8 Feb 2022 08:51:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1644310267;
+        bh=LF21Pve9wnpG/No0P1OZHAk/VrRqWJcQttpv2IYdL1Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RUDaeUvMZt3A1enVwQB7jukcGLYXbBN7fpsIXaAJoaaTwm4vvtBbGFbBTV2uyduuO
-         Vg4bsCVF0JvSBOfiYBx06D/MJk12aowlTO7UeZWZVJtpRBHBnqzMfv/VX3DgDG4BGn
-         HXN5imdeHKqLGeLd4DucRK8RzLhpCpMgWXT3Mmo5tBDs8Y2fQWh8J1DI5HxEqnVl9I
-         gpxI3Tj5NnJmMTJZnmM9y18QKvSCPvlFi575AeIdpIJXzv0HItdCRf6nUqQLSLg+yV
-         PmV8eXKsOesdN/PS3TinZRCuchRF7RsNtlu6hSCiIZ2RKg0k6vSHZoNBP2sfBDNU7g
-         yF3XklW7bPQdg==
-Date:   Tue, 8 Feb 2022 10:40:24 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Martin Fernandez <martin.fernandez@eclypsium.com>,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com
-Subject: Re: [PATCH v6 3/6] x86/e820: Refactor range_update and range_remove
-Message-ID: <YgIseIEMotD2jg83@kernel.org>
-References: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
- <20220203164328.203629-4-martin.fernandez@eclypsium.com>
- <202202071325.F8450B3B2D@keescook>
+        b=RbADg1SI8fGdpeBVaFt3AEOknG01qJNSGYgx0juGBF/bdr/s0r+VJS3R7dWc4Q2TL
+         kJjGHycLQQ0uCcYRfYJYJMduTiPFLb+6+t6vTr6uC+q1bgBetUADfyjuBZWHc1PanZ
+         H9fqaZYQVKxRGAA9mnoLO8H41Ioya59f8DXbSYHs=
+Date:   Tue, 8 Feb 2022 09:51:04 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: Add Steam Deck driver
+Message-ID: <YgIu+Lrt0p85yog1@kroah.com>
+References: <20220206022023.376142-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202202071325.F8450B3B2D@keescook>
+In-Reply-To: <20220206022023.376142-1-andrew.smirnov@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Feb 07, 2022 at 01:45:40PM -0800, Kees Cook wrote:
-> On Thu, Feb 03, 2022 at 01:43:25PM -0300, Martin Fernandez wrote:
-> > __e820__range_update and e820__range_remove had a very similar
-> > implementation with a few lines different from each other, the lines
-> > that actually perform the modification over the e820_table. The
-> > similiraties were found in the checks for the different cases on how
-> > each entry intersects with the given range (if it does at all). These
-> > checks were very presice and error prone so it was not a good idea to
-> > have them in both places.
-> 
-> Yay removing copy/paste code! :)
+On Sat, Feb 05, 2022 at 06:20:23PM -0800, Andrey Smirnov wrote:
+> +#define STEAMDECK_ATTR_RO(_name, _method)				\
+> +	static ssize_t _name##_show(struct device *dev,			\
+> +				    struct device_attribute *attr,	\
+> +				    char *buf)				\
+> +	{								\
+> +		struct steamdeck *jup = dev_get_drvdata(dev);		\
+> +		unsigned long long val;					\
+> +									\
+> +		if (ACPI_FAILURE(acpi_evaluate_integer(			\
+> +					 jup->adev->handle,		\
+> +					 _method, NULL, &val)))		\
+> +			return -EIO;					\
+> +									\
+> +		return sprintf(buf, "%llu\n", val);			\
 
-Removing copy/paste is nice but diffstat of
+Please use sysfs_emit() for this and any other sysfs show functions.
 
- arch/x86/kernel/e820.c | 383 ++++++++++++++++++++++++++++++-----------
- 1 file changed, 283 insertions(+), 100 deletions(-)
+Also, you have no Documenation/ABI/ entries for all of these new sysfs
+files you are creating.  How do we know what these entries are for, and
+what they contain?  Please add that in future versions of this commit,
+as-is we can't take this :(
 
-does not look nice even accounting for lots of comments :(
 
-I didn't look closely, but diffstat clues that the refactoring making
-things much more complex.
- 
-> > 
-> > I propose a refactor of those functions, given that I need to create a
-> > similar one for this patchset.
-> 
-> The diff here is pretty hard (for me) to review; I'll need more time
-> to check it. What might make review easier (at least for me), is to
-> incrementally change these routines. i.e. separate patches to:
-> 
-> - add the new infrastructure
-> - replace e820__range_remove
-> - replace __e820__range_update
-> 
-> If that's not actually useful, no worries. I'll just stare at it a bit
-> more. :)
+> +	}								\
+> +	static DEVICE_ATTR_RO(_name)
+> +
+> +STEAMDECK_ATTR_RO(firmware_version, "PDFW");
+> +STEAMDECK_ATTR_RO(board_id, "BOID");
+> +STEAMDECK_ATTR_RO(pdcs, "PDCS");
+> +
+> +static umode_t
+> +steamdeck_is_visible(struct kobject *kobj, struct attribute *attr, int index)
+> +{
+> +	return attr->mode;
+> +}
 
--- 
-Sincerely yours,
-Mike.
+As Guenter pointed out, this is not needed.
+
+
+> +
+> +static struct attribute *steamdeck_attributes[] = {
+> +	&dev_attr_target_cpu_temp.attr,
+> +	&dev_attr_gain.attr,
+> +	&dev_attr_ramp_rate.attr,
+> +	&dev_attr_hysteresis.attr,
+> +	&dev_attr_maximum_battery_charge_rate.attr,
+> +	&dev_attr_recalculate.attr,
+> +	&dev_attr_power_cycle_display.attr,
+> +
+> +	&dev_attr_led_brightness.attr,
+> +	&dev_attr_content_adaptive_brightness.attr,
+> +	&dev_attr_gamma_set.attr,
+> +	&dev_attr_display_brightness.attr,
+> +	&dev_attr_ctrl_display.attr,
+> +	&dev_attr_cabc_minimum_brightness.attr,
+> +	&dev_attr_memory_data_access_control.attr,
+> +
+> +	&dev_attr_display_normal_mode_on.attr,
+> +	&dev_attr_display_inversion_off.attr,
+> +	&dev_attr_display_inversion_on.attr,
+> +	&dev_attr_idle_mode_on.attr,
+> +
+> +	&dev_attr_firmware_version.attr,
+> +	&dev_attr_board_id.attr,
+> +	&dev_attr_pdcs.attr,
+> +
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group steamdeck_group = {
+> +	.attrs = steamdeck_attributes,
+> +	.is_visible = steamdeck_is_visible,
+> +};
+> +
+> +static const struct attribute_group *steamdeck_groups[] = {
+> +	&steamdeck_group,
+> +	NULL
+> +};
+
+ATTRIBUTE_GROUPS()?
+
+thanks,
+
+greg k-h
