@@ -2,141 +2,90 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F5C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Feb 2022 21:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5561DC43219
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Feb 2022 01:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243220AbiBGV4R (ORCPT
+        id S233384AbiBHBGN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Feb 2022 16:56:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36658 "EHLO
+        Mon, 7 Feb 2022 20:06:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240390AbiBGV4Q (ORCPT
+        with ESMTP id S241939AbiBHAyr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Feb 2022 16:56:16 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A883BC0612A4
-        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Feb 2022 13:56:15 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id x65so845916pfx.12
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Feb 2022 13:56:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tHxa2zKVaHBcu/brPJMMDCzteRvMa8lCYhxJZN7g04o=;
-        b=I3T0MgX3KD3D8din9AD4VmFgX5xNMlWkCITEwL0yWT4rotEFC5G/eY54wJX+04On6C
-         CHr+Fk8wpO7RGMsRViMvJA3/won/IUNX8Ak9LBq8aIS1CJfPR5C6w46zR1Z8O+YPMarK
-         I3WWGlNHdYu4PYfMgfgnwpeTxftKTY5LuLmhc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tHxa2zKVaHBcu/brPJMMDCzteRvMa8lCYhxJZN7g04o=;
-        b=Z+dQVm1CfnyqzBFAqSQaXN7D1V3vDZRsjO+alVXb5fB0O35K4JlR6UdUPRinJEKKcm
-         jyqVp9lP0qGFM34susxxcTNK+HyzqUretMCaLVMwF+9HgEiTXJU8TLVSGYtL/agqf3Sa
-         oJJ9LWTHPZcGpz4q1wUuYE345ZIhxm8akOikZeH+9hV6pZVG1wF+zPWTc0xzeCU+P+LQ
-         v/4jEB4L1yQxtMArgol4tU8cO7hX78MEbqbKaxqaXkQrQRnkYNR7ka918R8zgdB+hNnN
-         gLx9+TsIQeyNa7VUrTfcVbQE5b4dwl1hu5NUcW3nZ9BFf5ba41FZodUaDHeGhsVgKTpG
-         QnBg==
-X-Gm-Message-State: AOAM530B6NhkNewPS9zzFiBgmTH0M29lq/P8jRvqZ1uQJtFxeMeuSQYl
-        pqVpAbtRQcdYMbz0xBhIzA56UiBEfonLFg==
-X-Google-Smtp-Source: ABdhPJyCMZS8k4XqgP2140WPRUddkLLGFWtx/egtokuBNm31gkdMHe+p42tk+Kmo6pOth6YVBsHvXw==
-X-Received: by 2002:a63:4f4f:: with SMTP id p15mr1109735pgl.452.1644270975192;
-        Mon, 07 Feb 2022 13:56:15 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 6sm9348292pgx.36.2022.02.07.13.56.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Feb 2022 13:56:14 -0800 (PST)
-Date:   Mon, 7 Feb 2022 13:56:14 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Martin Fernandez <martin.fernandez@eclypsium.com>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com
-Subject: Re: [PATCH v6 4/6] x86/e820: Tag e820_entry with crypto capabilities
-Message-ID: <202202071351.AEEEA92@keescook>
-References: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
- <20220203164328.203629-5-martin.fernandez@eclypsium.com>
+        Mon, 7 Feb 2022 19:54:47 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5332C061355;
+        Mon,  7 Feb 2022 16:54:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644281686; x=1675817686;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wgt9cDpHFiIgyIo4vctyylP81ktaV/VnGl0eXCmjt9E=;
+  b=N6VOivxfX/XYgxbXqpY2Jqo7uf/RO4yZwmbmlkjDSh8N452uJH6KDwjt
+   W8HwDd3mIwNtNGH94JPPDuZg0oS2mqEmC4O7ceoon4+o2kU9Vtufs8f/6
+   HQIYaO0GF6s4eH6jf0yEQnvwp4IEktn11mo4dYJJ4O7/F5WIIA2IRuqOF
+   3tQq2oDl7wVGnjAC/OwMFLyL4bM+KBN5wsCzHOOY/HXqzD1aiJ/5UiU+Y
+   8SFVNR0iPVHjE7858OJcuvhq3aDrJK1AkzFL3GrXA7x4Ho7ZUY7oO9Hwl
+   CdMcJ8L4VGFObeEhdqwXwJMwZThRSGGJ6GRTCYMOv90jsYLguIaT5v5Wj
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10251"; a="249051629"
+X-IronPort-AV: E=Sophos;i="5.88,351,1635231600"; 
+   d="scan'208";a="249051629"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2022 16:54:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,351,1635231600"; 
+   d="scan'208";a="628713428"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Feb 2022 16:54:46 -0800
+Received: from debox1-desk4.intel.com (unknown [10.212.183.65])
+        by linux.intel.com (Postfix) with ESMTP id 5E528580970;
+        Mon,  7 Feb 2022 16:54:46 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     hdegoede@redhat.com, david.e.box@linux.intel.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH V6 0/3] Intel Software Defined Silicon
+Date:   Mon,  7 Feb 2022 16:54:41 -0800
+Message-Id: <20220208005444.487209-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220203164328.203629-5-martin.fernandez@eclypsium.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Feb 03, 2022 at 01:43:26PM -0300, Martin Fernandez wrote:
-> Add a new enum for crypto capabilities.
-> 
-> Add a new member in e820_entry to hold whether an entry is able to do
-> hardware memory encryption or not.
-> 
-> Add a new function e820__range_set_crypto_capable to mark all the
-> entries in a range of addresses as encryptable. This will be called
-> when initializing EFI.
-> 
-> Change e820__update_table to handle merging and overlap problems
-> taking into account crypto_capable.
-> 
-> Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
-> ---
->  arch/x86/include/asm/e820/api.h   |   1 +
->  arch/x86/include/asm/e820/types.h |  12 +++-
->  arch/x86/kernel/e820.c            | 114 ++++++++++++++++++++++++++++--
->  3 files changed, 119 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/e820/api.h b/arch/x86/include/asm/e820/api.h
-> index e8f58ddd06d9..4b3b01fafdd1 100644
-> --- a/arch/x86/include/asm/e820/api.h
-> +++ b/arch/x86/include/asm/e820/api.h
-> @@ -17,6 +17,7 @@ extern bool e820__mapped_all(u64 start, u64 end, enum e820_type type);
->  extern void e820__range_add   (u64 start, u64 size, enum e820_type type);
->  extern u64  e820__range_update(u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
->  extern u64  e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type);
-> +extern u64  e820__range_set_crypto_capable(u64 start, u64 size);
->  
->  extern void e820__print_table(char *who);
->  extern int  e820__update_table(struct e820_table *table);
-> diff --git a/arch/x86/include/asm/e820/types.h b/arch/x86/include/asm/e820/types.h
-> index 314f75d886d0..aef03c665f5e 100644
-> --- a/arch/x86/include/asm/e820/types.h
-> +++ b/arch/x86/include/asm/e820/types.h
-> @@ -46,6 +46,11 @@ enum e820_type {
->  	E820_TYPE_RESERVED_KERN	= 128,
->  };
->  
-> +enum e820_crypto_capabilities {
-> +	E820_NOT_CRYPTO_CAPABLE	= 0,
-> +	E820_CRYPTO_CAPABLE	= 1,
-> +};
+This series adds support for Intel Software Defined Silicon. These
+patches are the same as patches 4-6 from this series [1]. Patches 1-3 
+of that series were pulled in during the 5.17 merge window.
 
-Is this expected to grow beyond a bool?
+[1] https://lore.kernel.org/lkml/20211216023146.2361174-1-david.e.box@linux.intel.com/T/
 
-> +
->  /*
->   * A single E820 map entry, describing a memory range of [addr...addr+size-1],
->   * of 'type' memory type:
-> @@ -53,9 +58,10 @@ enum e820_type {
->   * (We pack it because there can be thousands of them on large systems.)
->   */
->  struct e820_entry {
-> -	u64			addr;
-> -	u64			size;
-> -	enum e820_type		type;
-> +	u64				addr;
-> +	u64				size;
-> +	enum e820_type			type;
-> +	enum e820_crypto_capabilities	crypto_capable;
->  } __attribute__((packed));
+David E. Box (3):
+  platform/x86: Add Intel Software Defined Silicon driver
+  tools arch x86: Add Intel SDSi provisiong tool
+  selftests: sdsi: test sysfs setup
 
-Is there any concern about growing this structure? The "thousands" note
-in the comment is likely rare. FWIW, this seems fine to me, but I
-thought I'd mention it.
+ .../ABI/testing/sysfs-driver-intel_sdsi       |  77 +++
+ MAINTAINERS                                   |   7 +
+ drivers/platform/x86/intel/Kconfig            |  12 +
+ drivers/platform/x86/intel/Makefile           |   2 +
+ drivers/platform/x86/intel/sdsi.c             | 574 ++++++++++++++++++
+ drivers/platform/x86/intel/vsec.c             |  12 +-
+ tools/arch/x86/intel_sdsi/Makefile            |   9 +
+ tools/arch/x86/intel_sdsi/sdsi.c              | 540 ++++++++++++++++
+ tools/testing/selftests/drivers/sdsi/sdsi.sh  |  18 +
+ .../selftests/drivers/sdsi/sdsi_test.py       | 226 +++++++
+ 10 files changed, 1476 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
+ create mode 100644 drivers/platform/x86/intel/sdsi.c
+ create mode 100644 tools/arch/x86/intel_sdsi/Makefile
+ create mode 100644 tools/arch/x86/intel_sdsi/sdsi.c
+ create mode 100755 tools/testing/selftests/drivers/sdsi/sdsi.sh
+ create mode 100644 tools/testing/selftests/drivers/sdsi/sdsi_test.py
 
 -- 
-Kees Cook
+2.25.1
+
