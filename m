@@ -2,116 +2,131 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EC7C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Feb 2022 07:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AB6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Feb 2022 12:23:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234943AbiBIH64 (ORCPT
+        id S231364AbiBIMXL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Feb 2022 02:58:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49264 "EHLO
+        Wed, 9 Feb 2022 07:23:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbiBIH6z (ORCPT
+        with ESMTP id S231229AbiBIMXK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Feb 2022 02:58:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A164AC0613CA
-        for <platform-driver-x86@vger.kernel.org>; Tue,  8 Feb 2022 23:58:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 385C1618B0
-        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Feb 2022 07:58:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9228EC340EE
-        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Feb 2022 07:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644393538;
-        bh=mjo7Kt0YXRGbabwbYxAlBiq2TnB7jcBehcBgJkS+yiE=;
-        h=From:To:Subject:Date:From;
-        b=Juq84T8+FFoXhYMyFKO70H6fFAOgl/2pl0v8MIz5odHmgyp4S32U3VPAphw261WL8
-         UXQ2u1TkdHm3mRXg5Af9aMTC4i5h7frenglYcxvtLhVG16JOmsAuciXqRU/lnhEh9z
-         0sLHq6K6YBezNbvwJ7wQ4Qb5Axm1U4oZ4NdwLBBTZrh1s5PMROaFOWA52NdfTYOR+q
-         f3afeG6J/SVjnMBXILn3Kop55QucctAa4OTCkAlXyJSH4WsatMm+NDszo78lTXwJDh
-         Juji58FnhijVc3JLwOr79OAcIokDt0t3d+FZ1Yd5eCY78SA+xbQHfg3KIWlSOtTgWs
-         06ggJEmLgqeIw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 671B0C05FD4; Wed,  9 Feb 2022 07:58:58 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 215584] New: ASUS laptop cannot suspend with external USB-C
- monitor
-Date:   Wed, 09 Feb 2022 07:58:58 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: william.a.wall.4@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
- priority component assigned_to reporter cf_regression attachments.created
-Message-ID: <bug-215584-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 9 Feb 2022 07:23:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D5479C05CB97
+        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Feb 2022 04:23:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644409393;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=K+6PWsGdUf8zUOs8GBfqgo0vxHAQpf/usivbTTkeWH4=;
+        b=Bod22PA0lr4/o+NAUx0mNvT3BMbAlQtDACPlaRdScsFQw6dnSAeAGd2vOTpjFXfMJuQEjo
+        W5VlmLxwdpBJox3cWhiMgbAKUvHOnnYnclkmFGQaUQJYOOBhPLMKGfRgX4qq5r3b2Dfka0
+        16k1lE8hiQirSiS6SEetidqSGCT4u3s=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-606-d9ZYg6M8PxK5zcunuG04PQ-1; Wed, 09 Feb 2022 07:23:11 -0500
+X-MC-Unique: d9ZYg6M8PxK5zcunuG04PQ-1
+Received: by mail-ed1-f71.google.com with SMTP id en7-20020a056402528700b00404aba0a6ffso1272654edb.5
+        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Feb 2022 04:23:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=K+6PWsGdUf8zUOs8GBfqgo0vxHAQpf/usivbTTkeWH4=;
+        b=JJ1P3FQWnpADwsi5YLhzA+VNWdrHFb11PkCuI+r7T8HmLTZey3V1AaMwkVQCHm1Mcf
+         RyG6ZxgzdhtI3kxLJI3FdGEDZX2nG+XbcWVSKss5iXyjYk5QPUa/AXwLK+zIFvyN4fIu
+         p6tPANUp3hwHBsWR/h2tD5inn4iWrtH5NYQ5JkGGWQP5cbBInq0GbDrpMPb24A/XTSOb
+         MeexSDIQ5NFpxLzSBkFyejItUVKiNlPudUCOv+wTa3jC0L7+xNvowqvl3UAu0Uhd2foX
+         C3GLw9et/2QcIgjIhOwtuCj5FrUO3lUWM8iDVYwlzDVr0UaaN4uOyou/Cr7J2JZUBjiM
+         uuOA==
+X-Gm-Message-State: AOAM530AXkeQTJOpYxc8wZPruAonyEU+TQyc1jKJmUxK4etIW0eGVMHP
+        J6Y2x8fIWAsD3uKpmEYLGLAWiXLJPWRyVF3RU/O2wjajyCJe4g51YVRgxMg9nh+JeOvaJfRq9Ap
+        TfB/93jdhOyZM0/yaGNZ3TeaI32I94wRq7A==
+X-Received: by 2002:a05:6402:3511:: with SMTP id b17mr2149874edd.244.1644409390708;
+        Wed, 09 Feb 2022 04:23:10 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwZ/hfZU/BxlpmKWPkXSArvzhAgBWjPCtIAUeEH6X8cdLOH821uUrxlHcA8MMYrtsH8t+7qBA==
+X-Received: by 2002:a05:6402:3511:: with SMTP id b17mr2149856edd.244.1644409390512;
+        Wed, 09 Feb 2022 04:23:10 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id s6sm2312550ejc.206.2022.02.09.04.23.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Feb 2022 04:23:10 -0800 (PST)
+Message-ID: <4732c476-f380-196f-6f37-a5c3c749dd4e@redhat.com>
+Date:   Wed, 9 Feb 2022 13:23:09 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH V6 0/3] Intel Software Defined Silicon
+Content-Language: en-US
+To:     "David E. Box" <david.e.box@linux.intel.com>,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20220208005444.487209-1-david.e.box@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220208005444.487209-1-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D215584
+Hi David,
 
-            Bug ID: 215584
-           Summary: ASUS laptop cannot suspend with external USB-C monitor
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 5.15.21
-          Hardware: x86-64
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: william.a.wall.4@gmail.com
-        Regression: No
+On 2/8/22 01:54, David E. Box wrote:
+> This series adds support for Intel Software Defined Silicon. These
+> patches are the same as patches 4-6 from this series [1]. Patches 1-3 
+> of that series were pulled in during the 5.17 merge window.
+> 
+> [1] https://lore.kernel.org/lkml/20211216023146.2361174-1-david.e.box@linux.intel.com/T/
 
-Created attachment 300421
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300421&action=3Dedit
-journalctl -b -k
+Thank you for taking all the feedback from others into account
+and doing new versions.
 
-I have an ASUS TUF Gaming A15 FA506QE_TUF506QE/FA506QE laptop. On kernel
-5.15.21, it suspends just fine when using only the laptop. However, when
-connected to an LG 43UD79-B monitor via USB-C (monitor supports DisplayPort
-1.2), it wakes up almost immediately after suspend.
+I was planning on doing an in-depth / foll review of this
+today, but unfortunately a kernel regression somewhere else
+has popped up and that is going to soak up all me work/$dayjob
+time this week, sorry.
 
-fwts s3 claims that this is due to:
+Assuming no major issues are found, the plan definitely is
+to get this in before the 5.18 merge window. I've made a note
+in my calendar to get a full review done no later then
+February 17th.
 
-kernel: asus_wmi: Unknown key c0 pressed
+Regards,
 
-(and that log does not occur when suspending without the external monitor).
+Hans
 
-I also attempted this on a 5.16 kernel, but I was unable to get the nvidia
-drivers compiled via DKMS and therefore it was not a similar test, as I am
-fairly sure that the integrated graphics are not capable of driving the
-external monitor.
 
-Is there a way to configure the system to ignore that keypress? I was unabl=
-e to
-recreate it by mashing every possible combination of function keys I could
-think of while running showkey.
 
---=20
-You may reply to this email to add a comment.
+> 
+> David E. Box (3):
+>   platform/x86: Add Intel Software Defined Silicon driver
+>   tools arch x86: Add Intel SDSi provisiong tool
+>   selftests: sdsi: test sysfs setup
+> 
+>  .../ABI/testing/sysfs-driver-intel_sdsi       |  77 +++
+>  MAINTAINERS                                   |   7 +
+>  drivers/platform/x86/intel/Kconfig            |  12 +
+>  drivers/platform/x86/intel/Makefile           |   2 +
+>  drivers/platform/x86/intel/sdsi.c             | 574 ++++++++++++++++++
+>  drivers/platform/x86/intel/vsec.c             |  12 +-
+>  tools/arch/x86/intel_sdsi/Makefile            |   9 +
+>  tools/arch/x86/intel_sdsi/sdsi.c              | 540 ++++++++++++++++
+>  tools/testing/selftests/drivers/sdsi/sdsi.sh  |  18 +
+>  .../selftests/drivers/sdsi/sdsi_test.py       | 226 +++++++
+>  10 files changed, 1476 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
+>  create mode 100644 drivers/platform/x86/intel/sdsi.c
+>  create mode 100644 tools/arch/x86/intel_sdsi/Makefile
+>  create mode 100644 tools/arch/x86/intel_sdsi/sdsi.c
+>  create mode 100755 tools/testing/selftests/drivers/sdsi/sdsi.sh
+>  create mode 100644 tools/testing/selftests/drivers/sdsi/sdsi_test.py
+> 
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
