@@ -2,198 +2,86 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 920F5C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Feb 2022 23:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F243C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Feb 2022 01:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345626AbiBJX1P (ORCPT
+        id S1346866AbiBKB3A (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Feb 2022 18:27:15 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40552 "EHLO
+        Thu, 10 Feb 2022 20:29:00 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345624AbiBJX1O (ORCPT
+        with ESMTP id S1346834AbiBKB27 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Feb 2022 18:27:14 -0500
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE7365F64;
-        Thu, 10 Feb 2022 15:27:14 -0800 (PST)
-Received: by mail-io1-xd34.google.com with SMTP id p63so9373194iod.11;
-        Thu, 10 Feb 2022 15:27:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=yuZUTT/rXi5dMjISKVJYU5DzInQNJ+fNjCOO2/f7G8k=;
-        b=j55OXYXTjVhdPRBFTmJ0hd/eeXByGxC4t0B3i9rQKb3+0S3rnp8xzD+hSP60/pxcNO
-         Be9jAJMFxu9ZbzBlEOboyCGBPjddFJA1TXkBcqAY+z9d3CdxBM5uLsA17zCPm+yi23p/
-         gSlhIvQ62GWYaoCo0t7FoT8VN3Q114+NR9c+g5+jWF4I1d9Jspb9+pcEmnD1SDzkq4Z6
-         Tf3I6aiau8yOugjCCnnL34w85f4avkSj1tiZzP1lz19DrCs3U9/H4Eqcj1915r+1/LfB
-         qOMjkORvNHKFa7feKj7YS2lbBSjbFfOFEUxlI+R9/OPdTHEf6h3Bnl6UeYP7tyc2kNHw
-         YQ4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yuZUTT/rXi5dMjISKVJYU5DzInQNJ+fNjCOO2/f7G8k=;
-        b=1+rSGKHDnW0ix2VML0ixEzn9tpE7OpM+1+iiBGahwmdzPFYgG7EeYIo0sUaaH1Xzwe
-         UK7nCEsAk1g7qXIukzYbO1o56kTBU6UEQ0M8fX8bbgqV4210Bx/0aPvPT+fd1us6dBGp
-         3G2zWH9B02FnGloOnmWYzHWQfGq3WkciKWrrZF369SukRcuKcooJ4790ZUu+voCzo9Wg
-         n/v0XVDyEjzVXXeCZoQ5vLft823H707V0SIF2wI67hb7Nj2c7EHONiyeokELDLMiLOf9
-         dCSAGhnMnA907DbZLBClT421E6ZHtecRUDKN3kJB1VdnMx5JCzOX1hrnjvPsrdfV3hKS
-         V07g==
-X-Gm-Message-State: AOAM5311UTXUYtHg+BMEDwTCJlJ9WJknQY6///RJmbqDGrma39eN1owh
-        d9+9Iw1/ApFxaGrUCftxe8g=
-X-Google-Smtp-Source: ABdhPJyuJyeIJ/FFP5Y/oWwaiFFlMwtt8E2cOYzuTD6rFFwrutNggg6s1UO76PCAuQUYz5PAgS7eNQ==
-X-Received: by 2002:a05:6638:101:: with SMTP id x1mr859923jao.23.1644535634329;
-        Thu, 10 Feb 2022 15:27:14 -0800 (PST)
-Received: from localhost ([12.28.44.171])
-        by smtp.gmail.com with ESMTPSA id t195sm5516476iof.47.2022.02.10.15.27.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 15:27:13 -0800 (PST)
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Laight <David.Laight@aculab.com>,
-        Joe Perches <joe@perches.com>, Dennis Zhou <dennis@kernel.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Pekka Paalanen <ppaalanen@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>, x86@kernel.org,
-        nouveau@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH 16/49] arch/x86: replace cpumask_weight with cpumask_empty where appropriate
-Date:   Thu, 10 Feb 2022 14:49:00 -0800
-Message-Id: <20220210224933.379149-17-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220210224933.379149-1-yury.norov@gmail.com>
-References: <20220210224933.379149-1-yury.norov@gmail.com>
+        Thu, 10 Feb 2022 20:28:59 -0500
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E6A5582;
+        Thu, 10 Feb 2022 17:28:56 -0800 (PST)
+X-UUID: a6ec2389a58f4263b294b95e622561b2-20220211
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:CC:To:Subject; bh=Lg5kOnGNKSvapUQuB5naaWkxSQNNEeSxqgnbrqpvqTM=;
+        b=AerbYxR7urkNPtKvleQipflkgkxmtw0ND9E/w7BXkaPXo/7cYb1ExtUA3TVrq0sWpoiEsKq/L4Oyc4DzDl1iuHQXRJ58HVHva2H1wwknidI+66kckSIScu83j6e3Sh1xuR4Wd6Ljj6hn2QkVGvmAFRhJ6MivqJZ4rPfETxNBMhM=;
+X-UUID: a6ec2389a58f4263b294b95e622561b2-20220211
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1085269837; Fri, 11 Feb 2022 09:28:52 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+ Fri, 11 Feb 2022 09:28:51 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 11 Feb 2022 09:28:51 +0800
+Subject: Re: [PATCH v2 4/9] PCI: mark USB4 devices as removable
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>
+CC:     Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>, <Alexander.Deucher@amd.com>
+References: <20220210224329.2793-1-mario.limonciello@amd.com>
+ <20220210224329.2793-5-mario.limonciello@amd.com>
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+Message-ID: <b1b47db2-b760-649a-d0e0-79ff22ece8c0@mediatek.com>
+Date:   Fri, 11 Feb 2022 09:28:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220210224329.2793-5-mario.limonciello@amd.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In some cases, arch/x86 code calls cpumask_weight() to check if any bit of
-a given cpumask is set. We can do it more efficiently with cpumask_empty()
-because cpumask_empty() stops traversing the cpumask as soon as it finds
-first set bit, while cpumask_weight() counts all bits unconditionally.
-
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 14 +++++++-------
- arch/x86/mm/mmio-mod.c                 |  2 +-
- arch/x86/platform/uv/uv_nmi.c          |  2 +-
- 3 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index b57b3db9a6a7..e23ff03290b8 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -341,14 +341,14 @@ static int cpus_mon_write(struct rdtgroup *rdtgrp, cpumask_var_t newmask,
- 
- 	/* Check whether cpus belong to parent ctrl group */
- 	cpumask_andnot(tmpmask, newmask, &prgrp->cpu_mask);
--	if (cpumask_weight(tmpmask)) {
-+	if (!cpumask_empty(tmpmask)) {
- 		rdt_last_cmd_puts("Can only add CPUs to mongroup that belong to parent\n");
- 		return -EINVAL;
- 	}
- 
- 	/* Check whether cpus are dropped from this group */
- 	cpumask_andnot(tmpmask, &rdtgrp->cpu_mask, newmask);
--	if (cpumask_weight(tmpmask)) {
-+	if (!cpumask_empty(tmpmask)) {
- 		/* Give any dropped cpus to parent rdtgroup */
- 		cpumask_or(&prgrp->cpu_mask, &prgrp->cpu_mask, tmpmask);
- 		update_closid_rmid(tmpmask, prgrp);
-@@ -359,7 +359,7 @@ static int cpus_mon_write(struct rdtgroup *rdtgrp, cpumask_var_t newmask,
- 	 * and update per-cpu rmid
- 	 */
- 	cpumask_andnot(tmpmask, newmask, &rdtgrp->cpu_mask);
--	if (cpumask_weight(tmpmask)) {
-+	if (!cpumask_empty(tmpmask)) {
- 		head = &prgrp->mon.crdtgrp_list;
- 		list_for_each_entry(crgrp, head, mon.crdtgrp_list) {
- 			if (crgrp == rdtgrp)
-@@ -394,7 +394,7 @@ static int cpus_ctrl_write(struct rdtgroup *rdtgrp, cpumask_var_t newmask,
- 
- 	/* Check whether cpus are dropped from this group */
- 	cpumask_andnot(tmpmask, &rdtgrp->cpu_mask, newmask);
--	if (cpumask_weight(tmpmask)) {
-+	if (!cpumask_empty(tmpmask)) {
- 		/* Can't drop from default group */
- 		if (rdtgrp == &rdtgroup_default) {
- 			rdt_last_cmd_puts("Can't drop CPUs from default group\n");
-@@ -413,12 +413,12 @@ static int cpus_ctrl_write(struct rdtgroup *rdtgrp, cpumask_var_t newmask,
- 	 * and update per-cpu closid/rmid.
- 	 */
- 	cpumask_andnot(tmpmask, newmask, &rdtgrp->cpu_mask);
--	if (cpumask_weight(tmpmask)) {
-+	if (!cpumask_empty(tmpmask)) {
- 		list_for_each_entry(r, &rdt_all_groups, rdtgroup_list) {
- 			if (r == rdtgrp)
- 				continue;
- 			cpumask_and(tmpmask1, &r->cpu_mask, tmpmask);
--			if (cpumask_weight(tmpmask1))
-+			if (!cpumask_empty(tmpmask1))
- 				cpumask_rdtgrp_clear(r, tmpmask1);
- 		}
- 		update_closid_rmid(tmpmask, rdtgrp);
-@@ -488,7 +488,7 @@ static ssize_t rdtgroup_cpus_write(struct kernfs_open_file *of,
- 
- 	/* check that user didn't specify any offline cpus */
- 	cpumask_andnot(tmpmask, newmask, cpu_online_mask);
--	if (cpumask_weight(tmpmask)) {
-+	if (!cpumask_empty(tmpmask)) {
- 		ret = -EINVAL;
- 		rdt_last_cmd_puts("Can only assign online CPUs\n");
- 		goto unlock;
-diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-index 933a2ebad471..c3317f0650d8 100644
---- a/arch/x86/mm/mmio-mod.c
-+++ b/arch/x86/mm/mmio-mod.c
-@@ -400,7 +400,7 @@ static void leave_uniprocessor(void)
- 	int cpu;
- 	int err;
- 
--	if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
-+	if (!cpumask_available(downed_cpus) || cpumask_empty(downed_cpus))
- 		return;
- 	pr_notice("Re-enabling CPUs...\n");
- 	for_each_cpu(cpu, downed_cpus) {
-diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
-index 1e9ff28bc2e0..ea277fc08357 100644
---- a/arch/x86/platform/uv/uv_nmi.c
-+++ b/arch/x86/platform/uv/uv_nmi.c
-@@ -985,7 +985,7 @@ static int uv_handle_nmi(unsigned int reason, struct pt_regs *regs)
- 
- 	/* Clear global flags */
- 	if (master) {
--		if (cpumask_weight(uv_nmi_cpu_mask))
-+		if (!cpumask_empty(uv_nmi_cpu_mask))
- 			uv_nmi_cleanup_mask();
- 		atomic_set(&uv_nmi_cpus_in_nmi, -1);
- 		atomic_set(&uv_nmi_cpu, -1);
--- 
-2.32.0
+T24gMi8xMS8yMiA2OjQzIEFNLCBNYXJpbyBMaW1vbmNpZWxsbyB3cm90ZToNCj4gVVNCNCBjbGFz
+cyBkZXZpY2VzIGFyZSBhbHNvIHJlbW92YWJsZSBsaWtlIEludGVsIFRodW5kZXJib2x0IGRldmlj
+ZXMuDQo+IA0KPiBEcml2ZXJzIG9mIGRvd25zdHJlYW0gZGV2aWNlcyB1c2UgdGhpcyBpbmZvcm1h
+dGlvbiB0byBkZWNsYXJlIGZ1bmN0aW9uYWwNCj4gZGlmZmVyZW5jZXMgaW4gaG93IHRoZSBkcml2
+ZXJzIHBlcmZvcm0gYnkga25vd2luZyB0aGF0IHRoZXkgYXJlIGNvbm5lY3RlZA0KPiB0byBhbiB1
+cHN0cmVhbSBUQlQvVVNCNCBwb3J0Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTWFyaW8gTGltb25j
+aWVsbG8gPG1hcmlvLmxpbW9uY2llbGxvQGFtZC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvcGNp
+L3Byb2JlLmMgfCAxICsNCj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gDQo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9wcm9iZS5jIGIvZHJpdmVycy9wY2kvcHJvYmUuYw0K
+PiBpbmRleCBlNDE2NTZjZGQ4ZjAuLjczNjczYTgzZWI1ZSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
+cy9wY2kvcHJvYmUuYw0KPiArKysgYi9kcml2ZXJzL3BjaS9wcm9iZS5jDQo+IEBAIC0xNjEwLDYg
+KzE2MTAsNyBAQCBzdGF0aWMgdm9pZCBwY2lfc2V0X3JlbW92YWJsZShzdHJ1Y3QgcGNpX2RldiAq
+ZGV2KQ0KPiAgIAkgKiBleHBvc2VkIGFzICJyZW1vdmFibGUiIHRvIHVzZXJzcGFjZS4NCj4gICAJ
+ICovDQo+ICAgCWlmICh2c2VjIHx8DQo+ICsJICAgIGRldi0+Y2xhc3MgPT0gUENJX0NMQVNTX1NF
+UklBTF9VU0JfVVNCNCB8fA0KPiAgIAkgICAgKHBhcmVudCAmJg0KPiAgIAkgICAgKHBhcmVudC0+
+ZXh0ZXJuYWxfZmFjaW5nIHx8IGRldl9pc19yZW1vdmFibGUoJnBhcmVudC0+ZGV2KSkpKQ0KPiAg
+IAkJZGV2X3NldF9yZW1vdmFibGUoJmRldi0+ZGV2LCBERVZJQ0VfUkVNT1ZBQkxFKTsNCj4gDQoN
+ClJldmlld2VkLWJ5OiBNYWNwYXVsIExpbiA8bWFjcGF1bC5saW5AbWVkaWF0ZWsuY29tPg0KDQpU
+aGFua3MhDQoNClJlZ2FyZHMsDQpNYWNwYXVsIExpbg==
 
