@@ -2,118 +2,131 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A20C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 12 Feb 2022 13:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E2EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 12 Feb 2022 19:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231487AbiBLNEG (ORCPT
+        id S230436AbiBLTJX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 12 Feb 2022 08:04:06 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54802 "EHLO
+        Sat, 12 Feb 2022 14:09:23 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:46272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229808AbiBLNEG (ORCPT
+        with ESMTP id S230425AbiBLTJW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 12 Feb 2022 08:04:06 -0500
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.148])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE10C2613A
-        for <platform-driver-x86@vger.kernel.org>; Sat, 12 Feb 2022 05:04:02 -0800 (PST)
-Received: (wp-smtpd smtp.tlen.pl 29251 invoked from network); 12 Feb 2022 13:57:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1644670640; bh=Hnc+Qdesfn7FUkkcgRMr4KZpAlSMn5aE+vkE9mocejA=;
-          h=From:To:Cc:Subject;
-          b=Z8Q/Kt/YF4VuS14b/kC1g44cW8Ofdo8diPajVufzEgLdKTbE6/mipKHP39j8AbL2P
-           g8hWmTMFTmK+fIGYELdEi88Pyol/dWX12IrHXSMG5zly+BjkP3f7VTrh+MQRu33a6q
-           chfq05jKQCTi+1nGmI2Lhfwss+DBRS4wwPCLNK4Q=
-Received: from aaem217.neoplus.adsl.tpnet.pl (HELO localhost.localdomain) (mat.jonczyk@o2.pl@[83.4.116.217])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with SMTP
-          for <linux-kernel@vger.kernel.org>; 12 Feb 2022 13:57:20 +0100
-From:   =?UTF-8?q?Mateusz=20Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
-To:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, x86@kernel.org
-Cc:     =?UTF-8?q?Mateusz=20Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mark Gross <markgross@kernel.org>,
+        Sat, 12 Feb 2022 14:09:22 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B4A6007E;
+        Sat, 12 Feb 2022 11:09:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644692958; x=1676228958;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dvxw7XxUhAZ4S9b9hBQyw/9Mc1dtJ0mAojzM9ohu4SQ=;
+  b=CRgy/2cOAkMVBlzUhNJeYhTGtnxw6BLdRrjsh3XNtdQPhV+18RcC/lLL
+   p/EO7fRfweNcnzmY/0y7oqrm+XINgZ1vWBbpGOi6x7zQ+q62rB+zbdBVH
+   phHrjoYJols2U83L1IVr+7VtS98hHm4R0IoWXdMuTtBW5mcKdMUU4omEc
+   1F1xw3y+SSRNNYHyQXwxl1Dhv64Ybmv0oizH+Fbr+mZGiptwJa3eHS+Zr
+   s6wSDVEl6fMDdA3PA0rCKaIBp/+PydSaWMl6zYezLWaiiL0W3smtD1Syg
+   Po9T7GrG0ccfSvKMpUMn3vLXzz0qoH4wi90iZUa90e8Zuw2aeXgSaG1Jm
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10256"; a="249845288"
+X-IronPort-AV: E=Sophos;i="5.88,364,1635231600"; 
+   d="scan'208";a="249845288"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2022 11:09:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,364,1635231600"; 
+   d="scan'208";a="569366672"
+Received: from lkp-server01.sh.intel.com (HELO d95dc2dabeb1) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 12 Feb 2022 11:09:16 -0800
+Received: from kbuild by d95dc2dabeb1 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nIxlj-0006YQ-DA; Sat, 12 Feb 2022 19:09:15 +0000
+Date:   Sun, 13 Feb 2022 03:08:29 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Abhijeet V <abhijeetviswa@gmail.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH 2/2] dell-smm-hwmon: rewrite CONFIG_I8K description
-Date:   Sat, 12 Feb 2022 13:56:54 +0100
-Message-Id: <20220212125654.357408-2-mat.jonczyk@o2.pl>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220212125654.357408-1-mat.jonczyk@o2.pl>
-References: <20220212125654.357408-1-mat.jonczyk@o2.pl>
+        Mark Gross <markgross@kernel.org>
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Abhijeet V <abhijeetviswa@gmail.com>
+Subject: Re: [PATCH 1/2] asus-wmi: Use led multicolor class for keyboard
+ backlight
+Message-ID: <202202130255.uwrbJQfB-lkp@intel.com>
+References: <20220211200122.9821-2-abhijeetviswa@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: df653e025b1fcc69e7e35d166c0b1581
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [AXM0]                               
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220211200122.9821-2-abhijeetviswa@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-It is not the laptops, but the /proc/i8k interface that is legacy (or so
-I think was the intention of the help text author). The old description
-was confusing, fix this.
+Hi Abhijeet,
 
-The phrase "Say Y if you intend to run this kernel on old Dell laptops
-or want to use userspace package i8kutils." was introduced in 2015, in
-commit 039ae58503f3 ("hwmon: Allow to compile dell-smm-hwmon driver without /proc/i8k")
+Thank you for the patch! Perhaps something to improve:
 
-I think that "old laptops" was about hotkey and Fn key support - this
-driver in the 2.4 kernels' era apparently had these capabilities
-(see: https://github.com/vitorafsr/i8kutils , description of
-"repeat_rate" kernel module parameter).
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.17-rc3 next-20220211]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-Signed-off-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
-Cc: Pali Rohár <pali@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Mark Gross <markgross@kernel.org>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+url:    https://github.com/0day-ci/linux/commits/Abhijeet-V/asus-wmi-Keyboard-rgb-led-multicolor-support/20220212-040427
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git f1baf68e1383f6ed93eb9cff2866d46562607a43
+config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20220213/202202130255.uwrbJQfB-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project f6685f774697c85d6a352dcea013f46a99f9fe31)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/860e9e7427b00b9dbd0c35851cecda00be1968f2
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Abhijeet-V/asus-wmi-Keyboard-rgb-led-multicolor-support/20220212-040427
+        git checkout 860e9e7427b00b9dbd0c35851cecda00be1968f2
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/platform/x86/
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/platform/x86/asus-wmi.c:958:5: warning: no previous prototype for function 'kbd_led_classdev_init' [-Wmissing-prototypes]
+   int kbd_led_classdev_init(struct asus_wmi *asus, int brightness)
+       ^
+   drivers/platform/x86/asus-wmi.c:958:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int kbd_led_classdev_init(struct asus_wmi *asus, int brightness)
+   ^
+   static 
+   1 warning generated.
+
+
+vim +/kbd_led_classdev_init +958 drivers/platform/x86/asus-wmi.c
+
+   957	
+ > 958	int kbd_led_classdev_init(struct asus_wmi *asus, int brightness)
+   959	{
+   960		int rv;
+   961	
+   962		asus->kbd_led_wk = brightness;
+   963		asus->kbd_led_mc.led_cdev.name = "asus::kbd_backlight";
+   964		asus->kbd_led_mc.led_cdev.flags = LED_BRIGHT_HW_CHANGED;
+   965		asus->kbd_led_mc.led_cdev.brightness_set = kbd_led_brightness_set;
+   966		asus->kbd_led_mc.led_cdev.brightness_get = kbd_led_brightness_get;
+   967		asus->kbd_led_mc.led_cdev.max_brightness = 3;
+   968	
+   969		asus->kbd_led_mc.num_colors = ASUS_KBD_SUBLED_COUNT;
+   970	
+   971		rv = led_classdev_multicolor_register(&asus->platform_device->dev,
+   972						&asus->kbd_led_mc);
+   973		return rv;
+   974	}
+   975	
 
 ---
-v2:
-  - help text language fixes (thanks: Randy Dunlap),
-  - modify commit description.
----
- drivers/hwmon/Kconfig | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 1ee4e5eff567..39aeecc72800 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -506,19 +506,18 @@ config SENSORS_DELL_SMM
- 	  userspace interface for i8kutils package.
- 
- config I8K
--	bool "Dell i8k legacy laptop support"
-+	bool "Legacy /proc/i8k interface of Dell laptop SMM BIOS hwmon driver"
- 	depends on SENSORS_DELL_SMM
- 	depends on PROC_FS
- 	help
--	  This option enables legacy /proc/i8k userspace interface in hwmon
--	  dell-smm-hwmon driver. Character file /proc/i8k reports bios version,
--	  temperature and allows controlling fan speeds of Dell laptops via
--	  System Management Mode. For old Dell laptops (like Dell Inspiron 8000)
--	  it reports also power and hotkey status. For fan speed control is
--	  needed userspace package i8kutils.
-+	  This option enables the legacy /proc/i8k userspace interface of the
-+	  dell-smm-hwmon driver. The character file /proc/i8k exposes the BIOS
-+	  version, temperatures and allows control of fan speeds of some Dell
-+	  laptops. Sometimes it also reports power and hotkey status.
- 
--	  Say Y if you intend to run this kernel on old Dell laptops or want to
--	  use userspace package i8kutils.
-+	  This interface is required to run programs from the i8kutils package.
-+
-+	  Say Y if you intend to run userspace programs that use this interface.
- 	  Say N otherwise.
- 
- config SENSORS_DA9052_ADC
--- 
-2.25.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
