@@ -2,165 +2,156 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746DBC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 12 Feb 2022 23:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86ACC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Feb 2022 06:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232592AbiBLXhi (ORCPT
+        id S231825AbiBMGUf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 12 Feb 2022 18:37:38 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47982 "EHLO
+        Sun, 13 Feb 2022 01:20:35 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232009AbiBLXhh (ORCPT
+        with ESMTP id S229538AbiBMGUd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 12 Feb 2022 18:37:37 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D565FF2D;
-        Sat, 12 Feb 2022 15:37:32 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id x3-20020a05600c21c300b0037c01ad715bso5487590wmj.2;
-        Sat, 12 Feb 2022 15:37:32 -0800 (PST)
+        Sun, 13 Feb 2022 01:20:33 -0500
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636895E779;
+        Sat, 12 Feb 2022 22:20:28 -0800 (PST)
+Received: by mail-pf1-x42c.google.com with SMTP id t36so12869953pfg.0;
+        Sat, 12 Feb 2022 22:20:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H3qL4EvCzkwRh/Z9xEpXSexUuSFqiqriVJEg3zbCkE4=;
-        b=KtTOUKpClQMuNg6GgkrINc7OSYQCiT/0VEjxLucHg/Fx5kSl/B3TsEUzoUYPgEzG6Y
-         zKR5f176F3djlXqKqkCLY2TV+8Xp8ND+ha/40KCIXodivtldme3KKAuz1zD+k/WlX5En
-         sYttZ6L+q1B8MPf+/uJoc+MmFbhjYBN4Um7VEz+haN5PW1wXzL2Kc3qXM0+lruem5uYf
-         GHZ2hVSDmz2Sq0/nveGjRAQDJSUwkG8wZxZf7/n/4E3LImrMZQu4crhOGP0TYvXAPSt7
-         h4Zjhq1NwbsRU8JMN2YHIT/zLI5js9KLFLMUWbeoJVslseO/z3PN6QyFMsGTqziCvfat
-         cspQ==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=EwOpItHmF01MRhvNotlE3+35KDc7jISQ9MeSkbZhiOM=;
+        b=jFkzqbzVYCGR07q38l2myBRsFboBfEy1n5EqKEWhBOblY+JDTc6uMJv5M/0Yqh6Gf+
+         ODoZsbCQwgYHjxO16stXyYoLX12N1QtHH0UzC60uu6c0mRPHIBdLQzsZJQFoL6Y4sXgE
+         nuBluOgd/6qypgU/Kq4YN4W0DsYGdpF0+4Tt/I4vJ5LyWNjJ8q/nYeXxfbiZWinvgWxh
+         mU2OSQ36r92ioqBcEzIexkjpSr7ODrUvBP3nhW19An2Rp+4AmACnwhFoI3WNIznh1Nj9
+         RcR25Zzuj5HApqb1UQvGv5Gz8Yep1AK08ir0bz6X4uBShX3n4t/98k6V5gm4LXn9NK5V
+         Goeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H3qL4EvCzkwRh/Z9xEpXSexUuSFqiqriVJEg3zbCkE4=;
-        b=dTS8vwqiidIX3JTEu2YdAwkhitasvLxhceGrbUE8ydMPH27J9PaEnPd6rpEXItMgjH
-         8MtxRGIgYKPVGKWA8lTqy6/mCAMkIwCIWI2GIZRnD7S54K00HrEUVCNh9WCdqGpgOPSm
-         +OLRGxNUozTPi0HI8c9hkDm11dg7KLzExLUROXz+8yl51r7UIgby77QhU47Vbd5X92cH
-         9tVyu7CJiO+TzFbbjLsiyJsWOhvByBRrCpbQ5XBSDxoQcpMF42WT5woycQL/Z6GEo12f
-         1sf6JbdWc/fqTtWhOMRTThZHupDelc+rpEMvVfZd9LXZYgYKDCzU0gKT0VTIO48n+QDd
-         f+xA==
-X-Gm-Message-State: AOAM5327xtopwYNx5GVKbTrlmRYjTEqLNdeW/vsY+LEYi8WPX2M+TBB2
-        gyOxhccbKXUWCgTawNNnhfeIFuKB+SnlAlSN4oIsyW14
-X-Google-Smtp-Source: ABdhPJwiauaVYLu/tCgy1jyc/SkzM1Lo5dz3EpoewmbwGRc4XlPyU9qQ6gisjTivTZGEYr9GgVZaiQjld4z493D3QNE=
-X-Received: by 2002:a05:600c:4204:: with SMTP id x4mr5245713wmh.123.1644709051504;
- Sat, 12 Feb 2022 15:37:31 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=EwOpItHmF01MRhvNotlE3+35KDc7jISQ9MeSkbZhiOM=;
+        b=hzX7d1WbPMklTfu3vgHEd556T2sWQLoTjzqupd1RyrMXGgI4ex0sN+HMKdYvckF1Gw
+         IdshqoY6vWBnNCy8gYU5opXTBguT1Tr9nQBja+TeL3NqS8qKJ4jpIHoIcY9VKaNMO6nD
+         X7gOrv2aUTCs4UgiBVCUYNIYiYoZw55zQKsUIuqW65/28ZfLbJLQctAD7+MAJh/M63pI
+         T4fCQX3bdo/Ue1hobeiDPgkp9U+yauhwmygqsXrk3RmdbQjpv72Tf37Pa1assypqW8Ho
+         eYUGMov+dD2zVdwjlaOlz+25li3CXGvqN5pHboNkN5HfM4M7T1k8oe/18pDI1QwjfFf/
+         1FSQ==
+X-Gm-Message-State: AOAM532/gNtZbPR/clrFvOxx3LTCoiiDH/IVDkbgNrEbNi2QATrzdtlR
+        oIOaHTL85lGCshOlb3/vQbP2E1fsVnAPXpXgRHI=
+X-Google-Smtp-Source: ABdhPJyIa4ReGsnAxEehoelR5HySECXMzkGRdqA9JyAmIqI3eKSGS9Lt7cWdJym49MgU/EgFiH22cw==
+X-Received: by 2002:a63:b50:: with SMTP id a16mr7314657pgl.185.1644733227672;
+        Sat, 12 Feb 2022 22:20:27 -0800 (PST)
+Received: from [192.168.18.53] ([117.194.171.90])
+        by smtp.gmail.com with ESMTPSA id j8sm33954273pfc.48.2022.02.12.22.20.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 12 Feb 2022 22:20:27 -0800 (PST)
+Message-ID: <3a944e41-b599-eb89-3da7-0067af60c731@gmail.com>
+Date:   Sun, 13 Feb 2022 11:50:23 +0530
 MIME-Version: 1.0
-References: <20220206022023.376142-1-andrew.smirnov@gmail.com> <YgIu+Lrt0p85yog1@kroah.com>
-In-Reply-To: <YgIu+Lrt0p85yog1@kroah.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Sat, 12 Feb 2022 15:37:19 -0800
-Message-ID: <CAHQ1cqE_iA0gKmqxS21JMAoFpz-ebhG+axVuUT9P62_JTB9kZQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: Add Steam Deck driver
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     platform-driver-x86@vger.kernel.org,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH 1/2] asus-wmi: Use led multicolor class for keyboard
+ backlight
+Content-Language: en-US
+To:     kernel test robot <lkp@intel.com>
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Hans de Goede <hdegoede@redhat.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
         Mark Gross <markgross@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        "Luke D. Jones" <luke@ljones.dev>
+References: <20220211200122.9821-2-abhijeetviswa@gmail.com>
+ <202202130255.uwrbJQfB-lkp@intel.com>
+From:   Abhijeet Viswa <abhijeetviswa@gmail.com>
+In-Reply-To: <202202130255.uwrbJQfB-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Feb 8, 2022 at 12:51 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Sat, Feb 05, 2022 at 06:20:23PM -0800, Andrey Smirnov wrote:
-> > +#define STEAMDECK_ATTR_RO(_name, _method)                            \
-> > +     static ssize_t _name##_show(struct device *dev,                 \
-> > +                                 struct device_attribute *attr,      \
-> > +                                 char *buf)                          \
-> > +     {                                                               \
-> > +             struct steamdeck *jup = dev_get_drvdata(dev);           \
-> > +             unsigned long long val;                                 \
-> > +                                                                     \
-> > +             if (ACPI_FAILURE(acpi_evaluate_integer(                 \
-> > +                                      jup->adev->handle,             \
-> > +                                      _method, NULL, &val)))         \
-> > +                     return -EIO;                                    \
-> > +                                                                     \
-> > +             return sprintf(buf, "%llu\n", val);                     \
->
-> Please use sysfs_emit() for this and any other sysfs show functions.
->
+Hi,
 
-Will fix, thanks.
+Not sure if this email is monitored. But since you asked me to, here ya go.
 
-> Also, you have no Documenation/ABI/ entries for all of these new sysfs
-> files you are creating.  How do we know what these entries are for, and
-> what they contain?  Please add that in future versions of this commit,
-> as-is we can't take this :(
->
+On 13/02/22 00:38, kernel test robot wrote:
+> Hi Abhijeet,
+> 
+> Thank you for the patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v5.17-rc3 next-20220211]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
+> 
 
-Yeah, my bad, will add in v2.
+Base is intended to be the linux-next/master tree (commit 6d9bd4ad4ca08b1114e814c2c42383b8b13be631).
 
->
-> > +     }                                                               \
-> > +     static DEVICE_ATTR_RO(_name)
-> > +
-> > +STEAMDECK_ATTR_RO(firmware_version, "PDFW");
-> > +STEAMDECK_ATTR_RO(board_id, "BOID");
-> > +STEAMDECK_ATTR_RO(pdcs, "PDCS");
-> > +
-> > +static umode_t
-> > +steamdeck_is_visible(struct kobject *kobj, struct attribute *attr, int index)
-> > +{
-> > +     return attr->mode;
-> > +}
->
-> As Guenter pointed out, this is not needed.
->
+> url:    https://github.com/0day-ci/linux/commits/Abhijeet-V/asus-wmi-Keyboard-rgb-led-multicolor-support/20220212-040427
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git f1baf68e1383f6ed93eb9cff2866d46562607a43
+> config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20220213/202202130255.uwrbJQfB-lkp@intel.com/config)
+> compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project f6685f774697c85d6a352dcea013f46a99f9fe31)
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # https://github.com/0day-ci/linux/commit/860e9e7427b00b9dbd0c35851cecda00be1968f2
+>         git remote add linux-review https://github.com/0day-ci/linux
+>         git fetch --no-tags linux-review Abhijeet-V/asus-wmi-Keyboard-rgb-led-multicolor-support/20220212-040427
+>         git checkout 860e9e7427b00b9dbd0c35851cecda00be1968f2
+>         # save the config file to linux build tree
+>         mkdir build_dir
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/platform/x86/
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>>> drivers/platform/x86/asus-wmi.c:958:5: warning: no previous prototype for function 'kbd_led_classdev_init' [-Wmissing-prototypes]
+>    int kbd_led_classdev_init(struct asus_wmi *asus, int brightness)
+>        ^
+>    drivers/platform/x86/asus-wmi.c:958:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+>    int kbd_led_classdev_init(struct asus_wmi *asus, int brightness)
+>    ^
+>    static 
+>    1 warning generated.
+> 
+> 
+> vim +/kbd_led_classdev_init +958 drivers/platform/x86/asus-wmi.c
+> 
+>    957	
+>  > 958	int kbd_led_classdev_init(struct asus_wmi *asus, int brightness)
+>    959	{
+>    960		int rv;
+>    961	
+>    962		asus->kbd_led_wk = brightness;
+>    963		asus->kbd_led_mc.led_cdev.name = "asus::kbd_backlight";
+>    964		asus->kbd_led_mc.led_cdev.flags = LED_BRIGHT_HW_CHANGED;
+>    965		asus->kbd_led_mc.led_cdev.brightness_set = kbd_led_brightness_set;
+>    966		asus->kbd_led_mc.led_cdev.brightness_get = kbd_led_brightness_get;
+>    967		asus->kbd_led_mc.led_cdev.max_brightness = 3;
+>    968	
+>    969		asus->kbd_led_mc.num_colors = ASUS_KBD_SUBLED_COUNT;
+>    970	
+>    971		rv = led_classdev_multicolor_register(&asus->platform_device->dev,
+>    972						&asus->kbd_led_mc);
+>    973		return rv;
+>    974	}
+>    975	
 
-Yup, will drop.
+Bot or not, thanks for the report.
+I'll fix these in a v2 after others get a chance to review v1.
 
->
-> > +
-> > +static struct attribute *steamdeck_attributes[] = {
-> > +     &dev_attr_target_cpu_temp.attr,
-> > +     &dev_attr_gain.attr,
-> > +     &dev_attr_ramp_rate.attr,
-> > +     &dev_attr_hysteresis.attr,
-> > +     &dev_attr_maximum_battery_charge_rate.attr,
-> > +     &dev_attr_recalculate.attr,
-> > +     &dev_attr_power_cycle_display.attr,
-> > +
-> > +     &dev_attr_led_brightness.attr,
-> > +     &dev_attr_content_adaptive_brightness.attr,
-> > +     &dev_attr_gamma_set.attr,
-> > +     &dev_attr_display_brightness.attr,
-> > +     &dev_attr_ctrl_display.attr,
-> > +     &dev_attr_cabc_minimum_brightness.attr,
-> > +     &dev_attr_memory_data_access_control.attr,
-> > +
-> > +     &dev_attr_display_normal_mode_on.attr,
-> > +     &dev_attr_display_inversion_off.attr,
-> > +     &dev_attr_display_inversion_on.attr,
-> > +     &dev_attr_idle_mode_on.attr,
-> > +
-> > +     &dev_attr_firmware_version.attr,
-> > +     &dev_attr_board_id.attr,
-> > +     &dev_attr_pdcs.attr,
-> > +
-> > +     NULL
-> > +};
-> > +
-> > +static const struct attribute_group steamdeck_group = {
-> > +     .attrs = steamdeck_attributes,
-> > +     .is_visible = steamdeck_is_visible,
-> > +};
-> > +
-> > +static const struct attribute_group *steamdeck_groups[] = {
-> > +     &steamdeck_group,
-> > +     NULL
-> > +};
->
-> ATTRIBUTE_GROUPS()?
->
+Thanks,
+Abhijeet
 
-Yes! Thank you.
-
-> thanks,
->
-> greg k-h
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
