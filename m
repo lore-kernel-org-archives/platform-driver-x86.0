@@ -2,91 +2,118 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F17CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Feb 2022 08:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7AEC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Feb 2022 12:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233809AbiBMItc (ORCPT
+        id S233441AbiBMMPh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Feb 2022 03:49:32 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55062 "EHLO
+        Sun, 13 Feb 2022 07:15:37 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:36808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbiBMItc (ORCPT
+        with ESMTP id S229980AbiBMMPf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Feb 2022 03:49:32 -0500
-X-Greylist: delayed 596 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 13 Feb 2022 00:49:27 PST
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA9D5EDCD
-        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Feb 2022 00:49:27 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        Sun, 13 Feb 2022 07:15:35 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 651A55C37F;
+        Sun, 13 Feb 2022 04:15:28 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 68846300002A0;
-        Sun, 13 Feb 2022 09:39:28 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 5AF1C2DEC3C; Sun, 13 Feb 2022 09:39:28 +0100 (CET)
-Date:   Sun, 13 Feb 2022 09:39:28 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Alexander.Deucher@amd.com
-Subject: Re: [PATCH v2 3/9] PCI: drop `is_thunderbolt` attribute
-Message-ID: <20220213083928.GB23572@wunner.de>
-References: <20220210224329.2793-1-mario.limonciello@amd.com>
- <20220210224329.2793-4-mario.limonciello@amd.com>
- <YgY5N1eVWmi0Xyuw@lahna>
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7703F1EC063A;
+        Sun, 13 Feb 2022 13:15:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1644754521;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=q6tD3Xsv4L3AVxoyHSluBEuFz9raJ3UAB6jSHO2SnV4=;
+        b=YZaHnBS6OIFdyl1RAQ15BetYbasA2SpQ/V80z/+R6aEZjdG+tOulyq4FUF0ow0zyOuOojl
+        LTNWn7Nz3PtghAolELPnETr6KmZk1XRq6/C3aU4SoABb3ZP+WSLeNz7lIlqTQe10T6Iwhr
+        q3L/K1+POZ/tne5qo0BVm2Vgp7/YV6s=
+Date:   Sun, 13 Feb 2022 13:15:23 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v10 21/45] x86/mm: Add support to validate memory when
+ changing C-bit
+Message-ID: <Ygj2Wx6jtNEEmbh9@zn.tnic>
+References: <20220209181039.1262882-1-brijesh.singh@amd.com>
+ <20220209181039.1262882-22-brijesh.singh@amd.com>
+ <YgZ427v95xcdOKSC@zn.tnic>
+ <0242e383-5406-7504-ff3d-cf2e8dfaf8a3@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YgY5N1eVWmi0Xyuw@lahna>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0242e383-5406-7504-ff3d-cf2e8dfaf8a3@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Feb 11, 2022 at 12:23:51PM +0200, Mika Westerberg wrote:
-> On Thu, Feb 10, 2022 at 04:43:23PM -0600, Mario Limonciello wrote:
-> > @@ -2955,7 +2955,7 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
-> >  			return true;
-> >  
-> >  		/* Even the oldest 2010 Thunderbolt controller supports D3. */
-> > -		if (bridge->is_thunderbolt)
-> > +		if (dev_is_removable(&bridge->dev))
+On Fri, Feb 11, 2022 at 11:27:54AM -0600, Brijesh Singh wrote:
+> > Simply have them always present. They will have !0 values on the
+> > respective guest types and 0 otherwise. This should simplify a lot of
+> > code and another unconditionally present u64 won't be the end of the
+> > world.
+> >
+> > Any other aspect I'm missing?
 > 
-> For this, I'm not entirely sure this is what we want. The purpose of
-> this check is to enable port power management of Apple systems with
-> Intel Thunderbolt controller and therefore checking for "removable" here
-> is kind of misleading IMHO.
-[...]
-> and then make a quirk in quirks.c that adds the software node property
-> for the Apple systems? Or something along those lines.
+> I think that's mostly about it. IIUC, the recommendation is to define a
+> new callback in x86_platform_op. The callback will be invoked
+> unconditionally; The default implementation for this callback is NOP;
+> The TDX and SEV will override with the platform specific implementation.
+> I think we may able to handle everything in one callback hook but having
+> pre and post will be a more desirable. Here is why I am thinking so:
+> 
+> * On SNP, the page must be invalidated before clearing the _PAGE_ENC
+> from the page table attribute
+> 
+> * On SNP, the page must be validated after setting the _PAGE_ENC in the
+> page table attribute.
 
-Honestly, that feels wrong to me.
+Right, we could have a pre- and post- callback, if that would make
+things simpler/clearer.
 
-There are non-Apple products with Thunderbolt controllers,
-e.g. Supermicro X10SAT was a Xeon board with Redwood Ridge
-which was introduced in 2013.  This was way before Microsoft
-came up with the HotPlugSupportInD3 property.  It was also way
-before the 2015 BIOS cut-off date that we use to disable
-power management on older boards.
+Also, in thinking further about the encryption mask, we could make it a
+*single*, *global* variable called cc_mask which each guest type sets it
+as it wants to.
 
-Still, we currently whitelist the Thunderbolt ports on that
-board for D3 because we know it works.  What if products like
-this one use their own power management scheme and we'd cause
-a power regression if we needlessly disable D3 for them now?
+Then, it would use it in the vendor-specific encrypt/decrypt helpers
+accordingly and that would simplify a lot of code. And we can get rid of
+all the ifdeffery around it too.
 
-Thanks,
+So I think the way to go should be we do the common functionality, I
+queue it on the common tip:x86/cc branch and then SNP and TDX will be
+both based ontop of it.
 
-Lukas
+Thoughts?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
