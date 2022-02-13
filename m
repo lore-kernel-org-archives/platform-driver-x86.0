@@ -2,156 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86ACC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Feb 2022 06:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F17CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Feb 2022 08:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231825AbiBMGUf (ORCPT
+        id S233809AbiBMItc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Feb 2022 01:20:35 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48316 "EHLO
+        Sun, 13 Feb 2022 03:49:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbiBMGUd (ORCPT
+        with ESMTP id S230153AbiBMItc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Feb 2022 01:20:33 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636895E779;
-        Sat, 12 Feb 2022 22:20:28 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id t36so12869953pfg.0;
-        Sat, 12 Feb 2022 22:20:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=EwOpItHmF01MRhvNotlE3+35KDc7jISQ9MeSkbZhiOM=;
-        b=jFkzqbzVYCGR07q38l2myBRsFboBfEy1n5EqKEWhBOblY+JDTc6uMJv5M/0Yqh6Gf+
-         ODoZsbCQwgYHjxO16stXyYoLX12N1QtHH0UzC60uu6c0mRPHIBdLQzsZJQFoL6Y4sXgE
-         nuBluOgd/6qypgU/Kq4YN4W0DsYGdpF0+4Tt/I4vJ5LyWNjJ8q/nYeXxfbiZWinvgWxh
-         mU2OSQ36r92ioqBcEzIexkjpSr7ODrUvBP3nhW19An2Rp+4AmACnwhFoI3WNIznh1Nj9
-         RcR25Zzuj5HApqb1UQvGv5Gz8Yep1AK08ir0bz6X4uBShX3n4t/98k6V5gm4LXn9NK5V
-         Goeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=EwOpItHmF01MRhvNotlE3+35KDc7jISQ9MeSkbZhiOM=;
-        b=hzX7d1WbPMklTfu3vgHEd556T2sWQLoTjzqupd1RyrMXGgI4ex0sN+HMKdYvckF1Gw
-         IdshqoY6vWBnNCy8gYU5opXTBguT1Tr9nQBja+TeL3NqS8qKJ4jpIHoIcY9VKaNMO6nD
-         X7gOrv2aUTCs4UgiBVCUYNIYiYoZw55zQKsUIuqW65/28ZfLbJLQctAD7+MAJh/M63pI
-         T4fCQX3bdo/Ue1hobeiDPgkp9U+yauhwmygqsXrk3RmdbQjpv72Tf37Pa1assypqW8Ho
-         eYUGMov+dD2zVdwjlaOlz+25li3CXGvqN5pHboNkN5HfM4M7T1k8oe/18pDI1QwjfFf/
-         1FSQ==
-X-Gm-Message-State: AOAM532/gNtZbPR/clrFvOxx3LTCoiiDH/IVDkbgNrEbNi2QATrzdtlR
-        oIOaHTL85lGCshOlb3/vQbP2E1fsVnAPXpXgRHI=
-X-Google-Smtp-Source: ABdhPJyIa4ReGsnAxEehoelR5HySECXMzkGRdqA9JyAmIqI3eKSGS9Lt7cWdJym49MgU/EgFiH22cw==
-X-Received: by 2002:a63:b50:: with SMTP id a16mr7314657pgl.185.1644733227672;
-        Sat, 12 Feb 2022 22:20:27 -0800 (PST)
-Received: from [192.168.18.53] ([117.194.171.90])
-        by smtp.gmail.com with ESMTPSA id j8sm33954273pfc.48.2022.02.12.22.20.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 12 Feb 2022 22:20:27 -0800 (PST)
-Message-ID: <3a944e41-b599-eb89-3da7-0067af60c731@gmail.com>
-Date:   Sun, 13 Feb 2022 11:50:23 +0530
+        Sun, 13 Feb 2022 03:49:32 -0500
+X-Greylist: delayed 596 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 13 Feb 2022 00:49:27 PST
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA9D5EDCD
+        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Feb 2022 00:49:27 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 68846300002A0;
+        Sun, 13 Feb 2022 09:39:28 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 5AF1C2DEC3C; Sun, 13 Feb 2022 09:39:28 +0100 (CET)
+Date:   Sun, 13 Feb 2022 09:39:28 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Mario Limonciello <mario.limonciello@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Alexander.Deucher@amd.com
+Subject: Re: [PATCH v2 3/9] PCI: drop `is_thunderbolt` attribute
+Message-ID: <20220213083928.GB23572@wunner.de>
+References: <20220210224329.2793-1-mario.limonciello@amd.com>
+ <20220210224329.2793-4-mario.limonciello@amd.com>
+ <YgY5N1eVWmi0Xyuw@lahna>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH 1/2] asus-wmi: Use led multicolor class for keyboard
- backlight
-Content-Language: en-US
-To:     kernel test robot <lkp@intel.com>
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        "Luke D. Jones" <luke@ljones.dev>
-References: <20220211200122.9821-2-abhijeetviswa@gmail.com>
- <202202130255.uwrbJQfB-lkp@intel.com>
-From:   Abhijeet Viswa <abhijeetviswa@gmail.com>
-In-Reply-To: <202202130255.uwrbJQfB-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YgY5N1eVWmi0Xyuw@lahna>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Fri, Feb 11, 2022 at 12:23:51PM +0200, Mika Westerberg wrote:
+> On Thu, Feb 10, 2022 at 04:43:23PM -0600, Mario Limonciello wrote:
+> > @@ -2955,7 +2955,7 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+> >  			return true;
+> >  
+> >  		/* Even the oldest 2010 Thunderbolt controller supports D3. */
+> > -		if (bridge->is_thunderbolt)
+> > +		if (dev_is_removable(&bridge->dev))
+> 
+> For this, I'm not entirely sure this is what we want. The purpose of
+> this check is to enable port power management of Apple systems with
+> Intel Thunderbolt controller and therefore checking for "removable" here
+> is kind of misleading IMHO.
+[...]
+> and then make a quirk in quirks.c that adds the software node property
+> for the Apple systems? Or something along those lines.
 
-Not sure if this email is monitored. But since you asked me to, here ya go.
+Honestly, that feels wrong to me.
 
-On 13/02/22 00:38, kernel test robot wrote:
-> Hi Abhijeet,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on linus/master]
-> [also build test WARNING on v5.17-rc3 next-20220211]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
+There are non-Apple products with Thunderbolt controllers,
+e.g. Supermicro X10SAT was a Xeon board with Redwood Ridge
+which was introduced in 2013.  This was way before Microsoft
+came up with the HotPlugSupportInD3 property.  It was also way
+before the 2015 BIOS cut-off date that we use to disable
+power management on older boards.
 
-Base is intended to be the linux-next/master tree (commit 6d9bd4ad4ca08b1114e814c2c42383b8b13be631).
-
-> url:    https://github.com/0day-ci/linux/commits/Abhijeet-V/asus-wmi-Keyboard-rgb-led-multicolor-support/20220212-040427
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git f1baf68e1383f6ed93eb9cff2866d46562607a43
-> config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20220213/202202130255.uwrbJQfB-lkp@intel.com/config)
-> compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project f6685f774697c85d6a352dcea013f46a99f9fe31)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # https://github.com/0day-ci/linux/commit/860e9e7427b00b9dbd0c35851cecda00be1968f2
->         git remote add linux-review https://github.com/0day-ci/linux
->         git fetch --no-tags linux-review Abhijeet-V/asus-wmi-Keyboard-rgb-led-multicolor-support/20220212-040427
->         git checkout 860e9e7427b00b9dbd0c35851cecda00be1968f2
->         # save the config file to linux build tree
->         mkdir build_dir
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/platform/x86/
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
->>> drivers/platform/x86/asus-wmi.c:958:5: warning: no previous prototype for function 'kbd_led_classdev_init' [-Wmissing-prototypes]
->    int kbd_led_classdev_init(struct asus_wmi *asus, int brightness)
->        ^
->    drivers/platform/x86/asus-wmi.c:958:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
->    int kbd_led_classdev_init(struct asus_wmi *asus, int brightness)
->    ^
->    static 
->    1 warning generated.
-> 
-> 
-> vim +/kbd_led_classdev_init +958 drivers/platform/x86/asus-wmi.c
-> 
->    957	
->  > 958	int kbd_led_classdev_init(struct asus_wmi *asus, int brightness)
->    959	{
->    960		int rv;
->    961	
->    962		asus->kbd_led_wk = brightness;
->    963		asus->kbd_led_mc.led_cdev.name = "asus::kbd_backlight";
->    964		asus->kbd_led_mc.led_cdev.flags = LED_BRIGHT_HW_CHANGED;
->    965		asus->kbd_led_mc.led_cdev.brightness_set = kbd_led_brightness_set;
->    966		asus->kbd_led_mc.led_cdev.brightness_get = kbd_led_brightness_get;
->    967		asus->kbd_led_mc.led_cdev.max_brightness = 3;
->    968	
->    969		asus->kbd_led_mc.num_colors = ASUS_KBD_SUBLED_COUNT;
->    970	
->    971		rv = led_classdev_multicolor_register(&asus->platform_device->dev,
->    972						&asus->kbd_led_mc);
->    973		return rv;
->    974	}
->    975	
-
-Bot or not, thanks for the report.
-I'll fix these in a v2 after others get a chance to review v1.
+Still, we currently whitelist the Thunderbolt ports on that
+board for D3 because we know it works.  What if products like
+this one use their own power management scheme and we'd cause
+a power regression if we needlessly disable D3 for them now?
 
 Thanks,
-Abhijeet
 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Lukas
