@@ -2,84 +2,179 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19DEC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Feb 2022 21:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1760AC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Feb 2022 21:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230213AbiBNVRl (ORCPT
+        id S231542AbiBNVf2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Feb 2022 16:17:41 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34310 "EHLO
+        Mon, 14 Feb 2022 16:35:28 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230429AbiBNVRk (ORCPT
+        with ESMTP id S231405AbiBNVfX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Feb 2022 16:17:40 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722291390E2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 13:17:31 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 30091B816C2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 21:17:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E5836C340EE
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 21:17:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644873448;
-        bh=81lHgp5yecCfKmDZWHL3YBY3gtjeaKx7KZekNMsSzFk=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=tugSOAVSkA5EY7nb4gSIE2qS1R+54A0MQ1U6KsoMTB58TdK/kPnx03aR5PMVr1/ex
-         AGvwvSi58wMe8z+cy5MbTnGn3dx/doOlPe335RFcSwJgsGLuJH76Q5YTq7tuRqHpIn
-         vCCd33YGZZlg5GmIfz3NMwXzagcb0iaqPJmXXvpaL2sNDrWBXMq57um0XiUlJZx8Wm
-         THfaC45I4mpCrItG0doiLAH/5E2icFwKpdX+JOen43BeJNpWAW25vqakAi0rc2+C3W
-         oqjVrPiiteU6Z8/8YTa9Uo5heGGkCnJBvsmXfjmB7YMiYd1ecb9T31ogpMEszQIrX0
-         M/Dmk8T9VznUA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id B5D03C05FD0; Mon, 14 Feb 2022 21:17:28 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 215531] Lenovo charge limit feature stops 1% short of the
- configured limit and says it's still charging
-Date:   Mon, 14 Feb 2022 21:17:28 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: nate@kde.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-215531-215701-wdVl8AW8oS@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-215531-215701@https.bugzilla.kernel.org/>
-References: <bug-215531-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 14 Feb 2022 16:35:23 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B346E15C1BB;
+        Mon, 14 Feb 2022 13:33:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644874400; x=1676410400;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=3VNpCeDMulLlJrE98YYeKShG9gqaFAeFwMgC+ghMVKU=;
+  b=Q5pWDkGNAZFgRKCV94yD4vTqR9GBHpWWyStZEkQEOEGIsAPcBjq83xjI
+   HF6dzY863VyWP0/0YMCn9TDsNqDCjOq5H15GAV/61X5AOeKWUCDDAw7tx
+   ++JKxxrq/tDsBfaRb8A23sgXcH9RhUQWnJE1QzjnU+yV7+xyLKsj6s15b
+   8s9APZ9/cDANiM887iqQWQnKSOPeUUFBp0U+OZfb/q1Em1z7+P8wA8L83
+   yy55PnG05qPJXi9tl2coJhBm6W/AXyX3+Taxp1Wwu0eHoZGJi0pqZOXdr
+   RFx2WnIOTdY6OINA+s/MX5CgWtOMTxnJFZtdEA+bWAv0Jdv9ynAnWJ4eb
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10258"; a="237599346"
+X-IronPort-AV: E=Sophos;i="5.88,368,1635231600"; 
+   d="scan'208";a="237599346"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2022 13:33:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,368,1635231600"; 
+   d="scan'208";a="603469909"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Feb 2022 13:33:06 -0800
+Received: from debox1-desk4.intel.com (unknown [10.255.228.161])
+        by linux.intel.com (Postfix) with ESMTP id B6AC6580D37;
+        Mon, 14 Feb 2022 13:33:06 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     hdegoede@redhat.com, david.e.box@linux.intel.com,
+        mgross@linux.intel.com, rjw@rjwysocki.net,
+        srinivas.pandruvada@intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH 2/3] platform/x86/intel: vsec: Enable runtime D3
+Date:   Mon, 14 Feb 2022 13:32:57 -0800
+Message-Id: <20220214213258.1929462-3-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220214213258.1929462-1-david.e.box@linux.intel.com>
+References: <20220214213258.1929462-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D215531
+Add pm_runtime helpers to allow the PCI device to go to D3 when
+not in use.
 
---- Comment #6 from Nate Graham (nate@kde.org) ---
-We do use upower, but upower is currently affected by the aforementioned bug
-that makes it not report that the battery is full when a charge threshold h=
-as
-been met, so we have code working around this until that gets fixed.
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ drivers/platform/x86/intel/pmt/class.c |  5 +++++
+ drivers/platform/x86/intel/pmt/class.h |  3 +++
+ drivers/platform/x86/intel/vsec.c      | 23 +++++++++++++++++++++++
+ 3 files changed, 31 insertions(+)
 
-Once upower correctly reports "plugged in and fully charged" when the charge
-level is at the limit and charging has stopped, we can remove that code.
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+index 85fc159961c1..a3ec09fe2f38 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -12,6 +12,7 @@
+ #include <linux/module.h>
+ #include <linux/mm.h>
+ #include <linux/pci.h>
++#include <linux/pm_runtime.h>
+ 
+ #include "../vsec.h"
+ #include "class.h"
+@@ -63,7 +64,10 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
+ 	if (count > entry->size - off)
+ 		count = entry->size - off;
+ 
++	pm_runtime_get_sync(&entry->pdev->dev);
+ 	memcpy_fromio(buf, entry->base + off, count);
++	pm_runtime_mark_last_busy(&entry->pdev->dev);
++	pm_runtime_put_autosuspend(&entry->pdev->dev);
+ 
+ 	return count;
+ }
+@@ -209,6 +213,7 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
+ 	}
+ 
+ 	entry->kobj = &dev->kobj;
++	entry->pdev = to_pci_dev(parent->parent);
+ 
+ 	if (ns->attr_grp) {
+ 		ret = sysfs_create_group(entry->kobj, ns->attr_grp);
+diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
+index db11d58867ce..b4df7ee91c51 100644
+--- a/drivers/platform/x86/intel/pmt/class.h
++++ b/drivers/platform/x86/intel/pmt/class.h
+@@ -18,9 +18,12 @@
+ #define GET_BIR(v)		((v) & GENMASK(2, 0))
+ #define GET_ADDRESS(v)		((v) & GENMASK(31, 3))
+ 
++struct pci_dev;
++
+ struct intel_pmt_entry {
+ 	struct bin_attribute	pmt_bin_attr;
+ 	struct kobject		*kobj;
++	struct pci_dev		*pdev;
+ 	void __iomem		*disc_table;
+ 	void __iomem		*base;
+ 	unsigned long		base_addr;
+diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+index c3bdd75ed690..d182122c261d 100644
+--- a/drivers/platform/x86/intel/vsec.c
++++ b/drivers/platform/x86/intel/vsec.c
+@@ -19,6 +19,7 @@
+ #include <linux/idr.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
++#include <linux/pm_runtime.h>
+ #include <linux/types.h>
+ 
+ #include "vsec.h"
+@@ -355,9 +356,21 @@ static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_device_id
+ 	if (!have_devices)
+ 		return -ENODEV;
+ 
++	pm_runtime_put(&pdev->dev);
++	pm_runtime_use_autosuspend(&pdev->dev);
++	pm_runtime_set_autosuspend_delay(&pdev->dev, 1000);
++	pm_runtime_allow(&pdev->dev);
++
+ 	return 0;
+ }
+ 
++static void intel_vsec_pci_remove(struct pci_dev *pdev)
++{
++	pm_runtime_forbid(&pdev->dev);
++	pm_runtime_dont_use_autosuspend(&pdev->dev);
++	pm_runtime_get(&pdev->dev);
++}
++
+ /* TGL info */
+ static const struct intel_vsec_platform_info tgl_info = {
+ 	.quirks = VSEC_QUIRK_NO_WATCHER | VSEC_QUIRK_NO_CRASHLOG | VSEC_QUIRK_TABLE_SHIFT,
+@@ -383,6 +396,10 @@ static const struct intel_vsec_platform_info dg1_info = {
+ 	.quirks = VSEC_QUIRK_NO_DVSEC,
+ };
+ 
++#ifdef CONFIG_PM_SLEEP
++static const struct dev_pm_ops intel_vsec_pm_ops = {};
++#endif
++
+ #define PCI_DEVICE_ID_INTEL_VSEC_ADL		0x467d
+ #define PCI_DEVICE_ID_INTEL_VSEC_DG1		0x490e
+ #define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM		0x09a7
+@@ -400,6 +417,12 @@ static struct pci_driver intel_vsec_pci_driver = {
+ 	.name = "intel_vsec",
+ 	.id_table = intel_vsec_pci_ids,
+ 	.probe = intel_vsec_pci_probe,
++	.remove = intel_vsec_pci_remove,
++	.driver = {
++#ifdef CONFIG_PM_SLEEP
++		.pm = &intel_vsec_pm_ops,
++#endif
++	},
+ };
+ module_pci_driver(intel_vsec_pci_driver);
+ 
+-- 
+2.25.1
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
