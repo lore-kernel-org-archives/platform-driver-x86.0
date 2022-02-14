@@ -2,78 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FC6C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Feb 2022 11:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119A2C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Feb 2022 11:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350446AbiBNLTl (ORCPT
+        id S232558AbiBNLVn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Feb 2022 06:19:41 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50420 "EHLO
+        Mon, 14 Feb 2022 06:21:43 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350622AbiBNLT0 (ORCPT
+        with ESMTP id S1351625AbiBNLVM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Feb 2022 06:19:26 -0500
+        Mon, 14 Feb 2022 06:21:12 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7B9016D85F
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 02:53:36 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E40A6251
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 02:56:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644836015;
+        s=mimecast20190719; t=1644836188;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2JFYtQvu7in7vu1T8T31MwbNQqwl0NvoKY4aQYJ09pk=;
-        b=O/1V+0cgjDDzzdrRkI7UMBS6fNhi4wMU7M5TU4+FoEoG7blRRbfkqfnXti0wNhgnjZqyf4
-        uXZPFmCpnrZASE0QI5bHWcdrC0ZqduP83XYn5BGKGIdYKzTpKln6CYgyYLKJ6zBz7EewjS
-        IYSQXw+CvzMvCg9hDTFNc7B1N1BQ+Nk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=1jQnDNLyDkGzr6PWxFVndVi39e7bGnAsUroiBRwsFOE=;
+        b=ijKYcvS9hGl9EPSvTpEAv4dve7il/FwbFgZa2xLThJKmRsdSUoYhzfAq254068AV/9TgQP
+        pWDu1aTGxY+MxYWRf80653YBJpzyx7/VAwEPDaHNuJXuCpW2rjqYTR7IiqCnXMM7HScmwm
+        1Krd/dQBlKk2XoXikKtUPkOcA4DtNuM=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-82-waT4f95BNcGQ03M2oEfB0Q-1; Mon, 14 Feb 2022 05:53:34 -0500
-X-MC-Unique: waT4f95BNcGQ03M2oEfB0Q-1
-Received: by mail-ej1-f69.google.com with SMTP id kw5-20020a170907770500b006ba314a753eso5642281ejc.21
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 02:53:33 -0800 (PST)
+ us-mta-412-5vjpVPWEMLqsnz1c72ei2Q-1; Mon, 14 Feb 2022 05:56:26 -0500
+X-MC-Unique: 5vjpVPWEMLqsnz1c72ei2Q-1
+Received: by mail-ej1-f70.google.com with SMTP id ga31-20020a1709070c1f00b006cec400422fso693424ejc.22
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 02:56:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=2JFYtQvu7in7vu1T8T31MwbNQqwl0NvoKY4aQYJ09pk=;
-        b=7CZ/ToUFl7Z5+KwgMqvphnLTXvzXscahWOywvrp30CqTQ1MCzSLBC6H0DS+JJ13d4L
-         GNaqfFJStCiXa4xzn75WVANtxJ62e6Es63126QZ3A4jsMGw8hjHjBZhDOgPCB/ptHjko
-         zeb1nQvnc6lFoC10wzkwX9TA7xcldpuIVuzg0uhEhtjrHHqJLw6oIYGh0foqKYqhwVnT
-         BD9joFp2vWa3pzLBo+hxJ5RhuOpu+hDk00nwOlT+a5uIvClpdY+GSN5IWadzSzFZKqZU
-         79BOd78zgmGqxNlJXyKGayQnxkeNn2BIkNHcuiT6o4fRokBx628eWz1MIDcBQb5laQPo
-         Zmqg==
-X-Gm-Message-State: AOAM532rNzEV1O4f46NUzyp0Gr+4uOIWI+gvSDBRM4GkdWI99J8XR90w
-        ZhLs9HlKOvvsgli4SzD8IdigCkRt7N2YVFODQs9zklgYznpb7C+UoEyCWbwqyOZ9Cd2wZ6xlM5y
-        hKU9HJKlZtAD+TJE9usus63cCYWmtix5XVA==
-X-Received: by 2002:a17:906:31d0:: with SMTP id f16mr10948605ejf.627.1644836012785;
-        Mon, 14 Feb 2022 02:53:32 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJy1MnlHCyrNfDJ6IVzAQFCCLG+VVluLJgv/P7hjhvXiwtz41qERDF4rvvT7hkUuMG0b5d7mxg==
-X-Received: by 2002:a17:906:31d0:: with SMTP id f16mr10948581ejf.627.1644836012360;
-        Mon, 14 Feb 2022 02:53:32 -0800 (PST)
+        bh=1jQnDNLyDkGzr6PWxFVndVi39e7bGnAsUroiBRwsFOE=;
+        b=DAlH23rEQO8jXAEMeK7N2V+y0wUDlbZXp2wJSW5ndq35yYAtbiHT24t9tOc8MeoNye
+         2Q6WT97CRllSyjD/YI5Z3mTrrZSa35EUbSjHAhTbnw+QCd6BKC8c6CfBByU8acjRU8fA
+         mMUhva2H5PIiTcixCquKhfPvuAqQ2rsyELt4fuIhC6flrs3OX12T3ch5Q4wZQPwp0URD
+         GjLg/NCBdIwHE1ELStdziAocn5lcYqA2YuXafHC5ezPEnfjwvvU36lmCEJB/Oq2Ric7a
+         GKusUJ1gI3xVP4ecJ4+kyZdzxpc6Ds8bSwlqCh72ebTWxOxe8hOHo5c46Ks1w2DU9y5x
+         oOXg==
+X-Gm-Message-State: AOAM5305//1JzqVu6pO2rHVZMkA2tjUhDmX2lrBj1pYGgEDDBbKMDm9+
+        Dns+VYVhoqjARmPMfpR3UulQDUqEgjlWZZqg+eMHt2EKEZGcx/87oYnt2L38Wy27vdnmtpSY0vq
+        bUNuwJsXiAR2sCEMF6ToK1TifpCsUldSSWA==
+X-Received: by 2002:a17:907:9244:: with SMTP id kb4mr4831838ejb.205.1644836185229;
+        Mon, 14 Feb 2022 02:56:25 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy+dAkkjseJGa1OMJQ88XY7qhR7pp6KQrg2SDQWPZyk/5kCzdhTqqxZdRtKKaOLEGOvyHokGg==
+X-Received: by 2002:a17:907:9244:: with SMTP id kb4mr4831820ejb.205.1644836184948;
+        Mon, 14 Feb 2022 02:56:24 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id d10sm1979904ejo.207.2022.02.14.02.53.31
+        by smtp.gmail.com with ESMTPSA id bl12sm10462372ejb.75.2022.02.14.02.56.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Feb 2022 02:53:31 -0800 (PST)
-Message-ID: <f55e606a-c107-cb00-a866-669e46cccb4d@redhat.com>
-Date:   Mon, 14 Feb 2022 11:53:31 +0100
+        Mon, 14 Feb 2022 02:56:24 -0800 (PST)
+Message-ID: <16187bb8-ebe6-f260-c255-530095472a03@redhat.com>
+Date:   Mon, 14 Feb 2022 11:56:23 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [PATCH V7 1/3] platform/x86: Add Intel Software Defined Silicon
- driver
+Subject: Re: [PATCH V7 2/3] tools arch x86: Add Intel SDSi provisiong tool
 Content-Language: en-US
 To:     "David E. Box" <david.e.box@linux.intel.com>,
         gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
         srinivas.pandruvada@intel.com, mgross@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 References: <20220212013252.1293396-1-david.e.box@linux.intel.com>
- <20220212013252.1293396-2-david.e.box@linux.intel.com>
+ <20220212013252.1293396-3-david.e.box@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220212013252.1293396-2-david.e.box@linux.intel.com>
+In-Reply-To: <20220212013252.1293396-3-david.e.box@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -83,863 +81,623 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 2/12/22 02:32, David E. Box wrote:
-> Intel Software Defined Silicon (SDSi) is a post manufacturing mechanism for
-> activating additional silicon features. Features are enabled through a
-> license activation process.  The SDSi driver provides a per socket, sysfs
-> attribute interface for applications to perform 3 main provisioning
-> functions:
+> Add tool for key certificate and activation payload provisioning on
+> Intel CPUs supporting Software Defined Silicon (SDSi).
 > 
-> 1. Provision an Authentication Key Certificate (AKC), a key written to
->    internal NVRAM that is used to authenticate a capability specific
->    activation payload.
-> 
-> 2. Provision a Capability Activation Payload (CAP), a token authenticated
->    using the AKC and applied to the CPU configuration to activate a new
->    feature.
-> 
-> 3. Read the SDSi State Certificate, containing the CPU configuration
->    state.
-> 
-> The operations perform function specific mailbox commands that forward the
-> requests to SDSi hardware to perform authentication of the payloads and
-> enable the silicon configuration (to be made available after power
-> cycling).
-> 
-> The SDSi device itself is enumerated as an auxiliary device from the
-> intel_vsec driver and as such has a build dependency on CONFIG_INTEL_VSEC.
-> 
-> Link: https://github.com/intel/intel-sdsi
 > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Reviewed-by: Mark Gross <markgross@kernel.org>
+> ---
+> V7
+>   - No changes.
+> V6
+>   - No changes.
+> V5
+>   - Update copyright to 2022
+> V4
+>   - No changes.
+> V3
+>   - Move from samples to tools.
+>   - Fix bit fields in availability structure.
+>   - Check provisioning availability before issuing command.
+> 
+> V2
+>   - New patch.
+> 
+>  MAINTAINERS                        |   1 +
+>  tools/arch/x86/intel_sdsi/Makefile |   9 +
+>  tools/arch/x86/intel_sdsi/sdsi.c   | 540 +++++++++++++++++++++++++++++
+>  3 files changed, 550 insertions(+)
+>  create mode 100644 tools/arch/x86/intel_sdsi/Makefile
+>  create mode 100644 tools/arch/x86/intel_sdsi/sdsi.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 29d0945f5a63..80325cbde3bd 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9873,6 +9873,7 @@ INTEL SDSI DRIVER
+>  M:	David E. Box <david.e.box@linux.intel.com>
+>  S:	Supported
+>  F:	drivers/platform/x86/intel/sdsi.c
+> +F:	tools/arch/x86/intel_sdsi/
+>  
+>  INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
+>  M:	Daniel Scally <djrscally@gmail.com>
+> diff --git a/tools/arch/x86/intel_sdsi/Makefile b/tools/arch/x86/intel_sdsi/Makefile
+> new file mode 100644
+> index 000000000000..1c2d102ff8fb
+> --- /dev/null
+> +++ b/tools/arch/x86/intel_sdsi/Makefile
+> @@ -0,0 +1,9 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +.PHONY: sdsi
+> +
+> +sdsi: sdsi.o
+> +	$(CC) -Wall $^ -o $@
+> +
+> +clean:
+> +	rm *.o sdsi
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+I assume that this is also going to be an official tool (next to a UI one?)
+which users may use to provision AKCs and CAPs ?
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+In that case the binary really should also be named intel_sdsi like the directory
+and an install target should be added, see for example how:
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+tools/arch/x86/kcpuid/Makefile
+
+does this.
 
 Regards,
 
 Hans
 
 
-> ---
-> V7
->   - Fix printk specifiers and typos. Suggested by Joe Perches.
-> 
-> V6
->   - Replace,
->               return (ret < 0) ? ret : size;
->     with,
->               if (ret)
->                    return ret;
->               return size
-> 
->     Besides the style change (suggested by GKH) this fixes a klocwork
->     warning.
-> 
-> V5
->   - Update kernel version to 5.18 in API doc and copyrights to 2022.
->   - Remove unneeded prototypes.
->   - In binary attribute handlers where ret is only used for errors,
->     replace,
->               return (ret < 0) ? ret : size;
->     with,
->               return ret ?: size;
-> 
-> V4
->   - Replace dropped semicolon on sdsi_aux_driver struct.
-> V3
->   - In state_certificate_read(), return the actual size instead of the
->     requested count. Return 0 if offset is non-zero so that subsequent
->     calls attempting to read the rest of the count end.
->   - s/folder/directory in ABI documentation.
->   - Add comment that all driver resources are devm managed so remove()
->     is not needed.
-> V2
->   - Use sysfs_emit() in guid_show()
->   - Fix language in ABI, suggested by Bjorn
->   - Fix wrong directory name in ABI doc
-> 
->  .../ABI/testing/sysfs-driver-intel_sdsi       |  77 +++
->  MAINTAINERS                                   |   5 +
->  drivers/platform/x86/intel/Kconfig            |  12 +
->  drivers/platform/x86/intel/Makefile           |   2 +
->  drivers/platform/x86/intel/sdsi.c             | 574 ++++++++++++++++++
->  drivers/platform/x86/intel/vsec.c             |  12 +-
->  6 files changed, 681 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
->  create mode 100644 drivers/platform/x86/intel/sdsi.c
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-driver-intel_sdsi b/Documentation/ABI/testing/sysfs-driver-intel_sdsi
+
+
+> diff --git a/tools/arch/x86/intel_sdsi/sdsi.c b/tools/arch/x86/intel_sdsi/sdsi.c
 > new file mode 100644
-> index 000000000000..ab122125ff9a
+> index 000000000000..8d59784e853e
 > --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-driver-intel_sdsi
-> @@ -0,0 +1,77 @@
-> +What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X
-> +Date:		Feb 2022
-> +KernelVersion:	5.18
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		This directory contains interface files for accessing Intel
-> +		Software Defined Silicon (SDSi) features on a CPU. X
-> +		represents the socket instance (though not the socket ID).
-> +		The socket ID is determined by reading the registers file
-> +		and decoding it per the specification.
-> +
-> +		Some files communicate with SDSi hardware through a mailbox.
-> +		Should the operation fail, one of the following error codes
-> +		may be returned:
-> +
-> +		Error Code	Cause
-> +	        ----------	-----
-> +	        EIO		General mailbox failure. Log may indicate cause.
-> +	        EBUSY		Mailbox is owned by another agent.
-> +	        EPERM		SDSI capability is not enabled in hardware.
-> +	        EPROTO		Failure in mailbox protocol detected by driver.
-> +				See log for details.
-> +	        EOVERFLOW	For provision commands, the size of the data
-> +				exceeds what may be written.
-> +	        ESPIPE		Seeking is not allowed.
-> +	        ETIMEDOUT	Failure to complete mailbox transaction in time.
-> +
-> +What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X/guid
-> +Date:		Feb 2022
-> +KernelVersion:	5.18
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		(RO) The GUID for the registers file. The GUID identifies
-> +		the layout of the registers file in this directory.
-> +		Information about the register layouts for a particular GUID
-> +		is available at http://github.com/intel/intel-sdsi
-> +
-> +What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X/registers
-> +Date:		Feb 2022
-> +KernelVersion:	5.18
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		(RO) Contains information needed by applications to provision
-> +		a CPU and monitor status information. The layout of this file
-> +		is determined by the GUID in this directory. Information about
-> +		the layout for a particular GUID is available at
-> +		http://github.com/intel/intel-sdsi
-> +
-> +What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X/provision_akc
-> +Date:		Feb 2022
-> +KernelVersion:	5.18
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		(WO) Used to write an Authentication Key Certificate (AKC) to
-> +		the SDSi NVRAM for the CPU. The AKC is used to authenticate a
-> +		Capability Activation Payload. Mailbox command.
-> +
-> +What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X/provision_cap
-> +Date:		Feb 2022
-> +KernelVersion:	5.18
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		(WO) Used to write a Capability Activation Payload (CAP) to the
-> +		SDSi NVRAM for the CPU. CAPs are used to activate a given CPU
-> +		feature. A CAP is validated by SDSi hardware using a previously
-> +		provisioned AKC file. Upon successful authentication, the CPU
-> +		configuration is updated. A cold reboot is required to fully
-> +		activate the feature. Mailbox command.
-> +
-> +What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X/state_certificate
-> +Date:		Feb 2022
-> +KernelVersion:	5.18
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		(RO) Used to read back the current State Certificate for the CPU
-> +		from SDSi hardware. The State Certificate contains information
-> +		about the current licenses on the CPU. Mailbox command.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 69a2935daf6c..29d0945f5a63 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9869,6 +9869,11 @@ S:	Maintained
->  F:	arch/x86/include/asm/intel_scu_ipc.h
->  F:	drivers/platform/x86/intel_scu_*
->  
-> +INTEL SDSI DRIVER
-> +M:	David E. Box <david.e.box@linux.intel.com>
-> +S:	Supported
-> +F:	drivers/platform/x86/intel/sdsi.c
-> +
->  INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
->  M:	Daniel Scally <djrscally@gmail.com>
->  S:	Maintained
-> diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-> index 8e65086bb6c8..99c8834ec979 100644
-> --- a/drivers/platform/x86/intel/Kconfig
-> +++ b/drivers/platform/x86/intel/Kconfig
-> @@ -134,6 +134,18 @@ config INTEL_RST
->  	  firmware will copy the memory contents back to RAM and resume the OS
->  	  as usual.
->  
-> +config INTEL_SDSI
-> +	tristate "Intel Software Defined Silicon Driver"
-> +	depends on INTEL_VSEC
-> +	depends on X86_64
-> +	help
-> +	  This driver enables access to the Intel Software Defined Silicon
-> +	  interface used to provision silicon features with an authentication
-> +	  certificate and capability license.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called intel_sdsi.
-> +
->  config INTEL_SMARTCONNECT
->  	tristate "Intel Smart Connect disabling driver"
->  	depends on ACPI
-> diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-> index 35f2066578b2..a765d60b6002 100644
-> --- a/drivers/platform/x86/intel/Makefile
-> +++ b/drivers/platform/x86/intel/Makefile
-> @@ -26,6 +26,8 @@ intel_int0002_vgpio-y			:= int0002_vgpio.o
->  obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
->  intel_oaktrail-y			:= oaktrail.o
->  obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
-> +intel_sdsi-y				:= sdsi.o
-> +obj-$(CONFIG_INTEL_SDSI)		+= intel_sdsi.o
->  intel_vsec-y				:= vsec.o
->  obj-$(CONFIG_INTEL_VSEC)		+= intel_vsec.o
->  
-> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-> new file mode 100644
-> index 000000000000..99ec93f465a8
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel/sdsi.c
-> @@ -0,0 +1,574 @@
+> +++ b/tools/arch/x86/intel_sdsi/sdsi.c
+> @@ -0,0 +1,540 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Intel Software Defined Silicon driver
+> + * sdsi: Intel Software Defined Silicon tool for provisioning certificates
+> + * and activation payloads on supported cpus.
 > + *
-> + * Copyright (c) 2022, Intel Corporation.
-> + * All Rights Reserved.
+> + * See https://github.com/intel/intel-sdsi/blob/master/os-interface.rst
+> + * for register descriptions.
 > + *
-> + * Author: "David E. Box" <david.e.box@linux.intel.com>
+> + * Copyright (C) 2022 Intel Corporation. All rights reserved.
 > + */
 > +
-> +#include <linux/auxiliary_bus.h>
-> +#include <linux/bits.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/device.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/slab.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/types.h>
-> +#include <linux/uaccess.h>
+> +#include <dirent.h>
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <stdbool.h>
+> +#include <stdio.h>
+> +#include <stdint.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <unistd.h>
 > +
-> +#include "vsec.h"
+> +#include <sys/types.h>
 > +
-> +#define ACCESS_TYPE_BARID		2
-> +#define ACCESS_TYPE_LOCAL		3
+> +#define SDSI_DEV		"intel_vsec.sdsi"
+> +#define AUX_DEV_PATH		"/sys/bus/auxiliary/devices/"
+> +#define SDSI_PATH		(AUX_DEV_DIR SDSI_DEV)
+> +#define GUID			0x6dd191
+> +#define REGISTERS_MIN_SIZE	72
 > +
-> +#define SDSI_MIN_SIZE_DWORDS		276
-> +#define SDSI_SIZE_CONTROL		8
-> +#define SDSI_SIZE_MAILBOX		1024
-> +#define SDSI_SIZE_REGS			72
-> +#define SDSI_SIZE_CMD			sizeof(u64)
+> +#define __round_mask(x, y) ((__typeof__(x))((y) - 1))
+> +#define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
 > +
-> +/*
-> + * Write messages are currently up to the size of the mailbox
-> + * while read messages are up to 4 times the size of the
-> + * mailbox, sent in packets
-> + */
-> +#define SDSI_SIZE_WRITE_MSG		SDSI_SIZE_MAILBOX
-> +#define SDSI_SIZE_READ_MSG		(SDSI_SIZE_MAILBOX * 4)
-> +
-> +#define SDSI_ENABLED_FEATURES_OFFSET	16
-> +#define SDSI_ENABLED			BIT(3)
-> +#define SDSI_SOCKET_ID_OFFSET		64
-> +#define SDSI_SOCKET_ID			GENMASK(3, 0)
-> +
-> +#define SDSI_MBOX_CMD_SUCCESS		0x40
-> +#define SDSI_MBOX_CMD_TIMEOUT		0x80
-> +
-> +#define MBOX_TIMEOUT_US			2000
-> +#define MBOX_TIMEOUT_ACQUIRE_US		1000
-> +#define MBOX_POLLING_PERIOD_US		100
-> +#define MBOX_MAX_PACKETS		4
-> +
-> +#define MBOX_OWNER_NONE			0x00
-> +#define MBOX_OWNER_INBAND		0x01
-> +
-> +#define CTRL_RUN_BUSY			BIT(0)
-> +#define CTRL_READ_WRITE			BIT(1)
-> +#define CTRL_SOM			BIT(2)
-> +#define CTRL_EOM			BIT(3)
-> +#define CTRL_OWNER			GENMASK(5, 4)
-> +#define CTRL_COMPLETE			BIT(6)
-> +#define CTRL_READY			BIT(7)
-> +#define CTRL_STATUS			GENMASK(15, 8)
-> +#define CTRL_PACKET_SIZE		GENMASK(31, 16)
-> +#define CTRL_MSG_SIZE			GENMASK(63, 48)
-> +
-> +#define DISC_TABLE_SIZE			12
-> +#define DT_ACCESS_TYPE			GENMASK(3, 0)
-> +#define DT_SIZE				GENMASK(27, 12)
-> +#define DT_TBIR				GENMASK(2, 0)
-> +#define DT_OFFSET(v)			((v) & GENMASK(31, 3))
-> +
-> +enum sdsi_command {
-> +	SDSI_CMD_PROVISION_AKC		= 0x04,
-> +	SDSI_CMD_PROVISION_CAP		= 0x08,
-> +	SDSI_CMD_READ_STATE		= 0x10,
+> +struct enabled_features {
+> +	uint64_t reserved:3;
+> +	uint64_t sdsi:1;
+> +	uint64_t reserved1:60;
 > +};
 > +
-> +struct sdsi_mbox_info {
-> +	u64	*payload;
-> +	u64	*buffer;
-> +	int	size;
+> +struct auth_fail_count {
+> +	uint64_t key_failure_count:3;
+> +	uint64_t key_failure_threshold:3;
+> +	uint64_t auth_failure_count:3;
+> +	uint64_t auth_failure_threshold:3;
+> +	uint64_t reserved:52;
 > +};
 > +
-> +struct disc_table {
-> +	u32	access_info;
-> +	u32	guid;
-> +	u32	offset;
+> +struct availability {
+> +	uint64_t reserved:48;
+> +	uint64_t available:3;
+> +	uint64_t threshold:3;
 > +};
 > +
-> +struct sdsi_priv {
-> +	struct mutex		mb_lock;	/* Mailbox access lock */
-> +	struct device		*dev;
-> +	void __iomem		*control_addr;
-> +	void __iomem		*mbox_addr;
-> +	void __iomem		*regs_addr;
-> +	u32			guid;
-> +	bool			sdsi_enabled;
+> +struct sdsi_regs {
+> +	uint64_t ppin;
+> +	uint64_t reserved;
+> +	struct enabled_features en_features;
+> +	uint64_t reserved1;
+> +	struct auth_fail_count auth_fail_count;
+> +	struct availability prov_avail;
+> +	uint64_t reserved2;
+> +	uint64_t reserved3;
+> +	uint64_t socket_id;
 > +};
 > +
-> +/* SDSi mailbox operations must be performed using 64bit mov instructions */
-> +static __always_inline void
-> +sdsi_memcpy64_toio(u64 __iomem *to, const u64 *from, size_t count_bytes)
+> +struct sdsi_dev {
+> +	struct sdsi_regs regs;
+> +	char *dev_name;
+> +	char *dev_path;
+> +	int guid;
+> +};
+> +
+> +enum command {
+> +	CMD_NONE,
+> +	CMD_LIST_DEVICES,
+> +	CMD_SOCKET_INFO,
+> +	CMD_DUMP_CERT,
+> +	CMD_PROV_AKC,
+> +	CMD_PROV_CAP,
+> +};
+> +
+> +static void sdsi_list_devices(void)
 > +{
-> +	size_t count = count_bytes / sizeof(*to);
-> +	int i;
+> +	struct dirent *entry;
+> +	DIR *aux_dir;
+> +	bool found = false;
 > +
-> +	for (i = 0; i < count; i++)
-> +		writeq(from[i], &to[i]);
-> +}
-> +
-> +static __always_inline void
-> +sdsi_memcpy64_fromio(u64 *to, const u64 __iomem *from, size_t count_bytes)
-> +{
-> +	size_t count = count_bytes / sizeof(*to);
-> +	int i;
-> +
-> +	for (i = 0; i < count; i++)
-> +		to[i] = readq(&from[i]);
-> +}
-> +
-> +static inline void sdsi_complete_transaction(struct sdsi_priv *priv)
-> +{
-> +	u64 control = FIELD_PREP(CTRL_COMPLETE, 1);
-> +
-> +	lockdep_assert_held(&priv->mb_lock);
-> +	writeq(control, priv->control_addr);
-> +}
-> +
-> +static int sdsi_status_to_errno(u32 status)
-> +{
-> +	switch (status) {
-> +	case SDSI_MBOX_CMD_SUCCESS:
-> +		return 0;
-> +	case SDSI_MBOX_CMD_TIMEOUT:
-> +		return -ETIMEDOUT;
-> +	default:
-> +		return -EIO;
+> +	aux_dir = opendir(AUX_DEV_PATH);
+> +	if (!aux_dir) {
+> +		fprintf(stderr, "Cannot open directory %s\n", AUX_DEV_PATH);
+> +		return;
 > +	}
+> +
+> +	while ((entry = readdir(aux_dir))) {
+> +		if (!strncmp(SDSI_DEV, entry->d_name, strlen(SDSI_DEV))) {
+> +			found = true;
+> +			printf("%s\n", entry->d_name);
+> +		}
+> +	}
+> +
+> +	if (!found)
+> +		fprintf(stderr, "No sdsi devices found.\n");
 > +}
 > +
-> +static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-> +			      size_t *data_size)
+> +static int sdsi_update_registers(struct sdsi_dev *s)
 > +{
-> +	struct device *dev = priv->dev;
-> +	u32 total, loop, eom, status, message_size;
-> +	u64 control;
+> +	FILE *regs_ptr;
 > +	int ret;
 > +
-> +	lockdep_assert_held(&priv->mb_lock);
+> +	memset(&s->regs, 0, sizeof(s->regs));
 > +
-> +	/* Format and send the read command */
-> +	control = FIELD_PREP(CTRL_EOM, 1) |
-> +		  FIELD_PREP(CTRL_SOM, 1) |
-> +		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
-> +		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
-> +	writeq(control, priv->control_addr);
-> +
-> +	/* For reads, data sizes that are larger than the mailbox size are read in packets. */
-> +	total = 0;
-> +	loop = 0;
-> +	do {
-> +		int offset = SDSI_SIZE_MAILBOX * loop;
-> +		void __iomem *addr = priv->mbox_addr + offset;
-> +		u64 *buf = info->buffer + offset / SDSI_SIZE_CMD;
-> +		u32 packet_size;
-> +
-> +		/* Poll on ready bit */
-> +		ret = readq_poll_timeout(priv->control_addr, control, control & CTRL_READY,
-> +					 MBOX_POLLING_PERIOD_US, MBOX_TIMEOUT_US);
-> +		if (ret)
-> +			break;
-> +
-> +		eom = FIELD_GET(CTRL_EOM, control);
-> +		status = FIELD_GET(CTRL_STATUS, control);
-> +		packet_size = FIELD_GET(CTRL_PACKET_SIZE, control);
-> +		message_size = FIELD_GET(CTRL_MSG_SIZE, control);
-> +
-> +		ret = sdsi_status_to_errno(status);
-> +		if (ret)
-> +			break;
-> +
-> +		/* Only the last packet can be less than the mailbox size. */
-> +		if (!eom && packet_size != SDSI_SIZE_MAILBOX) {
-> +			dev_err(dev, "Invalid packet size\n");
-> +			ret = -EPROTO;
-> +			break;
-> +		}
-> +
-> +		if (packet_size > SDSI_SIZE_MAILBOX) {
-> +			dev_err(dev, "Packet size too large\n");
-> +			ret = -EPROTO;
-> +			break;
-> +		}
-> +
-> +		sdsi_memcpy64_fromio(buf, addr, round_up(packet_size, SDSI_SIZE_CMD));
-> +
-> +		total += packet_size;
-> +
-> +		sdsi_complete_transaction(priv);
-> +	} while (!eom && ++loop < MBOX_MAX_PACKETS);
-> +
-> +	if (ret) {
-> +		sdsi_complete_transaction(priv);
+> +	/* Open the registers file */
+> +	ret = chdir(s->dev_path);
+> +	if (ret == -1) {
+> +		perror("chdir");
 > +		return ret;
 > +	}
 > +
-> +	if (!eom) {
-> +		dev_err(dev, "Exceeded read attempts\n");
-> +		return -EPROTO;
+> +	regs_ptr = fopen("registers", "r");
+> +	if (!regs_ptr) {
+> +		perror("Could not open 'registers' file");
+> +		return -1;
 > +	}
 > +
-> +	/* Message size check is only valid for multi-packet transfers */
-> +	if (loop && total != message_size)
-> +		dev_warn(dev, "Read count %u differs from expected count %u\n",
-> +			 total, message_size);
+> +	if (s->guid != GUID) {
+> +		fprintf(stderr, "Unrecognized guid, 0x%x\n", s->guid);
+> +		fclose(regs_ptr);
+> +		return -1;
+> +	}
 > +
-> +	*data_size = total;
+> +	/* Update register info for this guid */
+> +	ret = fread(&s->regs, sizeof(uint8_t), sizeof(s->regs), regs_ptr);
+> +	if (ret != sizeof(s->regs)) {
+> +		fprintf(stderr, "Could not read 'registers' file\n");
+> +		fclose(regs_ptr);
+> +		return -1;
+> +	}
+> +
+> +	fclose(regs_ptr);
 > +
 > +	return 0;
 > +}
 > +
-> +static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
+> +static int sdsi_read_reg(struct sdsi_dev *s)
 > +{
-> +	u64 control;
-> +	u32 status;
 > +	int ret;
 > +
-> +	lockdep_assert_held(&priv->mb_lock);
-> +
-> +	/* Write rest of the payload */
-> +	sdsi_memcpy64_toio(priv->mbox_addr + SDSI_SIZE_CMD, info->payload + 1,
-> +			   info->size - SDSI_SIZE_CMD);
-> +
-> +	/* Format and send the write command */
-> +	control = FIELD_PREP(CTRL_EOM, 1) |
-> +		  FIELD_PREP(CTRL_SOM, 1) |
-> +		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
-> +		  FIELD_PREP(CTRL_READ_WRITE, 1) |
-> +		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
-> +	writeq(control, priv->control_addr);
-> +
-> +	/* Poll on run_busy bit */
-> +	ret = readq_poll_timeout(priv->control_addr, control, !(control & CTRL_RUN_BUSY),
-> +				 MBOX_POLLING_PERIOD_US, MBOX_TIMEOUT_US);
-> +
+> +	ret = sdsi_update_registers(s);
 > +	if (ret)
-> +		goto release_mbox;
+> +		return ret;
 > +
-> +	status = FIELD_GET(CTRL_STATUS, control);
-> +	ret = sdsi_status_to_errno(status);
+> +	/* Print register info for this guid */
+> +	printf("\n");
+> +	printf("Socket information for device %s\n", s->dev_name);
+> +	printf("\n");
+> +	printf("PPIN:                           0x%lx\n", s->regs.ppin);
+> +	printf("Enabled Features\n");
+> +	printf("    SDSi:                       %s\n", !!s->regs.en_features.sdsi ? "Enabled" : "Disabled");
+> +	printf("Authorization Failure Count\n");
+> +	printf("    AKC Failure Count:          %d\n", s->regs.auth_fail_count.key_failure_count);
+> +	printf("    AKC Failure Threshold:      %d\n", s->regs.auth_fail_count.key_failure_threshold);
+> +	printf("    CAP Failure Count:          %d\n", s->regs.auth_fail_count.auth_failure_count);
+> +	printf("    CAP Failure Threshold:      %d\n", s->regs.auth_fail_count.auth_failure_threshold);
+> +	printf("Provisioning Availability\n");
+> +	printf("    Updates Available:          %d\n", s->regs.prov_avail.available);
+> +	printf("    Updates Threshold:          %d\n", s->regs.prov_avail.threshold);
+> +	printf("Socket ID:                      %ld\n", s->regs.socket_id & 0xF);
 > +
-> +release_mbox:
-> +	sdsi_complete_transaction(priv);
+> +	return 0;
+> +}
+> +
+> +static int sdsi_certificate_dump(struct sdsi_dev *s)
+> +{
+> +	uint64_t state_certificate[512] = {0};
+> +	bool first_instance;
+> +	uint64_t previous;
+> +	FILE *cert_ptr;
+> +	int i, ret, size;
+> +
+> +	ret = sdsi_update_registers(s);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!s->regs.en_features.sdsi) {
+> +		fprintf(stderr, "SDSi feature is present but not enabled.");
+> +		fprintf(stderr, " Unable to read state certificate");
+> +		return -1;
+> +	}
+> +
+> +	ret = chdir(s->dev_path);
+> +	if (ret == -1) {
+> +		perror("chdir");
+> +		return ret;
+> +	}
+> +
+> +	cert_ptr = fopen("state_certificate", "r");
+> +	if (!cert_ptr) {
+> +		perror("Could not open 'state_certificate' file");
+> +		return -1;
+> +	}
+> +
+> +	size = fread(state_certificate, 1, sizeof(state_certificate), cert_ptr);
+> +	if (!size) {
+> +		fprintf(stderr, "Could not read 'state_certificate' file\n");
+> +		fclose(cert_ptr);
+> +		return -1;
+> +	}
+> +
+> +	printf("%3d: 0x%lx\n", 0, state_certificate[0]);
+> +	previous = state_certificate[0];
+> +	first_instance = true;
+> +
+> +	for (i = 1; i < (round_up(size, sizeof(uint64_t))/sizeof(uint64_t)); i++) {
+> +		if (state_certificate[i] == previous) {
+> +			if (first_instance) {
+> +				puts("*");
+> +				first_instance = false;
+> +			}
+> +			continue;
+> +		}
+> +		printf("%3d: 0x%lx\n", i, state_certificate[i]);
+> +		previous = state_certificate[i];
+> +		first_instance = true;
+> +	}
+> +	printf("%3d\n", i);
+> +
+> +	fclose(cert_ptr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sdsi_provision(struct sdsi_dev *s, char *bin_file, enum command command)
+> +{
+> +	int bin_fd, prov_fd, size, ret;
+> +	char buf[4096] = { 0 };
+> +	char cap[] = "provision_cap";
+> +	char akc[] = "provision_akc";
+> +	char *prov_file;
+> +
+> +	if (!bin_file) {
+> +		fprintf(stderr, "No binary file provided\n");
+> +		return -1;
+> +	}
+> +
+> +	/* Open the binary */
+> +	bin_fd = open(bin_file, O_RDONLY);
+> +	if (bin_fd == -1) {
+> +		fprintf(stderr, "Could not open file %s: %s\n", bin_file, strerror(errno));
+> +		return bin_fd;
+> +	}
+> +
+> +	prov_file = (command == CMD_PROV_AKC) ? akc : cap;
+> +
+> +	ret = chdir(s->dev_path);
+> +	if (ret == -1) {
+> +		perror("chdir");
+> +		close(bin_fd);
+> +		return ret;
+> +	}
+> +
+> +	/* Open the provision file */
+> +	prov_fd = open(prov_file, O_WRONLY);
+> +	if (prov_fd == -1) {
+> +		fprintf(stderr, "Could not open file %s: %s\n", prov_file, strerror(errno));
+> +		close(bin_fd);
+> +		return prov_fd;
+> +	}
+> +
+> +	/* Read the binary file into the buffer */
+> +	size = read(bin_fd, buf, 4096);
+> +	if (size == -1) {
+> +		close(bin_fd);
+> +		close(prov_fd);
+> +		return -1;
+> +	}
+> +
+> +	ret = write(prov_fd, buf, size);
+> +	if (ret == -1) {
+> +		close(bin_fd);
+> +		close(prov_fd);
+> +		perror("Provisioning failed");
+> +		return ret;
+> +	}
+> +
+> +	printf("Provisioned %s file %s successfully\n", prov_file, bin_file);
+> +
+> +	close(bin_fd);
+> +	close(prov_fd);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sdsi_provision_akc(struct sdsi_dev *s, char *bin_file)
+> +{
+> +	int ret;
+> +
+> +	ret = sdsi_update_registers(s);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!s->regs.en_features.sdsi) {
+> +		fprintf(stderr, "SDSi feature is present but not enabled. Unable to provision");
+> +		return -1;
+> +	}
+> +
+> +	if (!s->regs.prov_avail.available) {
+> +		fprintf(stderr, "Maximum number of updates (%d) has been reached.\n",
+> +			s->regs.prov_avail.threshold);
+> +		return -1;
+> +	}
+> +
+> +	if (s->regs.auth_fail_count.key_failure_count ==
+> +	    s->regs.auth_fail_count.key_failure_threshold) {
+> +		fprintf(stderr, "Maximum number of AKC provision failures (%d) has been reached.\n",
+> +			s->regs.auth_fail_count.key_failure_threshold);
+> +		fprintf(stderr, "Power cycle the system to reset the counter\n");
+> +		return -1;
+> +	}
+> +
+> +	return sdsi_provision(s, bin_file, CMD_PROV_AKC);
+> +}
+> +
+> +static int sdsi_provision_cap(struct sdsi_dev *s, char *bin_file)
+> +{
+> +	int ret;
+> +
+> +	ret = sdsi_update_registers(s);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!s->regs.en_features.sdsi) {
+> +		fprintf(stderr, "SDSi feature is present but not enabled. Unable to provision");
+> +		return -1;
+> +	}
+> +
+> +	if (!s->regs.prov_avail.available) {
+> +		fprintf(stderr, "Maximum number of updates (%d) has been reached.\n",
+> +			s->regs.prov_avail.threshold);
+> +		return -1;
+> +	}
+> +
+> +	if (s->regs.auth_fail_count.auth_failure_count ==
+> +	    s->regs.auth_fail_count.auth_failure_threshold) {
+> +		fprintf(stderr, "Maximum number of CAP provision failures (%d) has been reached.\n",
+> +			s->regs.auth_fail_count.auth_failure_threshold);
+> +		fprintf(stderr, "Power cycle the system to reset the counter\n");
+> +		return -1;
+> +	}
+> +
+> +	return sdsi_provision(s, bin_file, CMD_PROV_CAP);
+> +}
+> +
+> +static int read_sysfs_data(const char *file, int *value)
+> +{
+> +	char buff[16];
+> +	FILE *fp;
+> +
+> +	fp = fopen(file, "r");
+> +	if (!fp) {
+> +		perror(file);
+> +		return -1;
+> +	}
+> +
+> +	if (!fgets(buff, 16, fp)) {
+> +		fprintf(stderr, "Failed to read file '%s'", file);
+> +		fclose(fp);
+> +		return -1;
+> +	}
+> +
+> +	fclose(fp);
+> +	*value = strtol(buff, NULL, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct sdsi_dev *sdsi_create_dev(char *dev_no)
+> +{
+> +	int dev_name_len = sizeof(SDSI_DEV) + strlen(dev_no) + 1;
+> +	struct sdsi_dev *s;
+> +	int guid;
+> +	DIR *dir;
+> +
+> +	s = (struct sdsi_dev *)malloc(sizeof(*s));
+> +	if (!s) {
+> +		perror("malloc");
+> +		return NULL;
+> +	}
+> +
+> +	s->dev_name = (char *)malloc(sizeof(SDSI_DEV) + strlen(dev_no) + 1);
+> +	if (!s->dev_name) {
+> +		perror("malloc");
+> +		free(s);
+> +		return NULL;
+> +	}
+> +
+> +	snprintf(s->dev_name, dev_name_len, "%s.%s", SDSI_DEV, dev_no);
+> +
+> +	s->dev_path = (char *)malloc(sizeof(AUX_DEV_PATH) + dev_name_len);
+> +	if (!s->dev_path) {
+> +		perror("malloc");
+> +		free(s->dev_name);
+> +		free(s);
+> +		return NULL;
+> +	}
+> +
+> +	snprintf(s->dev_path, sizeof(AUX_DEV_PATH) + dev_name_len, "%s%s", AUX_DEV_PATH,
+> +		 s->dev_name);
+> +	dir = opendir(s->dev_path);
+> +	if (!dir) {
+> +		fprintf(stderr, "Could not open directory '%s': %s\n", s->dev_path,
+> +			strerror(errno));
+> +		free(s->dev_path);
+> +		free(s->dev_name);
+> +		free(s);
+> +		return NULL;
+> +	}
+> +
+> +	if (chdir(s->dev_path) == -1) {
+> +		perror("chdir");
+> +		free(s->dev_path);
+> +		free(s->dev_name);
+> +		free(s);
+> +		return NULL;
+> +	}
+> +
+> +	if (read_sysfs_data("guid", &guid)) {
+> +		free(s->dev_path);
+> +		free(s->dev_name);
+> +		free(s);
+> +		return NULL;
+> +	}
+> +
+> +	s->guid = guid;
+> +
+> +	return s;
+> +}
+> +
+> +static void sdsi_free_dev(struct sdsi_dev *s)
+> +{
+> +	free(s->dev_path);
+> +	free(s->dev_name);
+> +	free(s);
+> +}
+> +
+> +static void print_help(char *prog)
+> +{
+> +	printf("Usage: %s [-l] [-d dev_no [-is] [-a file] [-c file]]\n", prog);
+> +
+> +	printf("\n");
+> +	printf("Commands:\n");
+> +	printf("  %-13s\t%s\n", "-l", "list available sdsi devices");
+> +	printf("  %-13s\t%s\n", "-d <dev_no>", "sdsi device number");
+> +	printf("  %-13s\t%s\n", "-i", "show socket information");
+> +	printf("  %-13s\t%s\n", "-s", "dump state certificate data");
+> +	printf("  %-13s\t%s\n", "-a <file>", "provision socket with AKC file");
+> +	printf("  %-13s\t%s\n", "-c <file>", "provision socket with CAP file");
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	char bin_file[PATH_MAX], *dev_no = NULL;
+> +	enum command command = CMD_NONE;
+> +	struct sdsi_dev *s;
+> +	int ret = 0, opt;
+> +
+> +	while ((opt = getopt(argc, argv, "d:lisa:c:h")) != -1) {
+> +		switch (opt) {
+> +		case 'd':
+> +			dev_no = optarg;
+> +			break;
+> +		case 'l':
+> +			command = CMD_LIST_DEVICES;
+> +			break;
+> +		case 'i':
+> +			command = CMD_SOCKET_INFO;
+> +			break;
+> +		case 's':
+> +			command = CMD_DUMP_CERT;
+> +			break;
+> +		case 'a':
+> +		case 'c':
+> +			if (!access(optarg, F_OK) == 0) {
+> +				fprintf(stderr, "Could not open file '%s': %s\n", optarg,
+> +					strerror(errno));
+> +				return -1;
+> +			}
+> +
+> +			if (!realpath(optarg, bin_file)) {
+> +				perror("realpath");
+> +				return -1;
+> +			}
+> +
+> +			command = (opt == 'a') ? CMD_PROV_AKC : CMD_PROV_CAP;
+> +			break;
+> +		case 'h':
+> +		default:
+> +			print_help(argv[0]);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	if (!dev_no && command != CMD_LIST_DEVICES) {
+> +		print_help(argv[0]);
+> +		return -1;
+> +	}
+> +
+> +	if (dev_no) {
+> +		s = sdsi_create_dev(dev_no);
+> +		if (!s)
+> +			return -1;
+> +	}
+> +
+> +	/* Run the command */
+> +	switch (command) {
+> +	case CMD_NONE:
+> +		fprintf(stderr, "need to specify a command\n");
+> +		print_help(argv[0]);
+> +		ret = -1;
+> +	case CMD_LIST_DEVICES:
+> +		sdsi_list_devices();
+> +		break;
+> +	case CMD_SOCKET_INFO:
+> +		ret = sdsi_read_reg(s);
+> +		break;
+> +	case CMD_DUMP_CERT:
+> +		ret = sdsi_certificate_dump(s);
+> +		break;
+> +	case CMD_PROV_AKC:
+> +		ret = sdsi_provision_akc(s, bin_file);
+> +		break;
+> +	case CMD_PROV_CAP:
+> +		ret = sdsi_provision_cap(s, bin_file);
+> +		break;
+> +	}
+> +
+> +
+> +	if (dev_no)
+> +		sdsi_free_dev(s);
 > +
 > +	return ret;
 > +}
-> +
-> +static int sdsi_mbox_acquire(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
-> +{
-> +	u64 control;
-> +	u32 owner;
-> +	int ret;
-> +
-> +	lockdep_assert_held(&priv->mb_lock);
-> +
-> +	/* Check mailbox is available */
-> +	control = readq(priv->control_addr);
-> +	owner = FIELD_GET(CTRL_OWNER, control);
-> +	if (owner != MBOX_OWNER_NONE)
-> +		return -EBUSY;
-> +
-> +	/* Write first qword of payload */
-> +	writeq(info->payload[0], priv->mbox_addr);
-> +
-> +	/* Check for ownership */
-> +	ret = readq_poll_timeout(priv->control_addr, control,
-> +				 FIELD_GET(CTRL_OWNER, control) & MBOX_OWNER_INBAND,
-> +				 MBOX_POLLING_PERIOD_US, MBOX_TIMEOUT_ACQUIRE_US);
-> +
-> +	return ret;
-> +}
-> +
-> +static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
-> +{
-> +	int ret;
-> +
-> +	lockdep_assert_held(&priv->mb_lock);
-> +
-> +	ret = sdsi_mbox_acquire(priv, info);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sdsi_mbox_cmd_write(priv, info);
-> +}
-> +
-> +static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, size_t *data_size)
-> +{
-> +	int ret;
-> +
-> +	lockdep_assert_held(&priv->mb_lock);
-> +
-> +	ret = sdsi_mbox_acquire(priv, info);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sdsi_mbox_cmd_read(priv, info, data_size);
-> +}
-> +
-> +static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
-> +			      enum sdsi_command command)
-> +{
-> +	struct sdsi_mbox_info info;
-> +	int ret;
-> +
-> +	if (!priv->sdsi_enabled)
-> +		return -EPERM;
-> +
-> +	if (count > (SDSI_SIZE_WRITE_MSG - SDSI_SIZE_CMD))
-> +		return -EOVERFLOW;
-> +
-> +	/* Qword aligned message + command qword */
-> +	info.size = round_up(count, SDSI_SIZE_CMD) + SDSI_SIZE_CMD;
-> +
-> +	info.payload = kzalloc(info.size, GFP_KERNEL);
-> +	if (!info.payload)
-> +		return -ENOMEM;
-> +
-> +	/* Copy message to payload buffer */
-> +	memcpy(info.payload, buf, count);
-> +
-> +	/* Command is last qword of payload buffer */
-> +	info.payload[(info.size - SDSI_SIZE_CMD) / SDSI_SIZE_CMD] = command;
-> +
-> +	ret = mutex_lock_interruptible(&priv->mb_lock);
-> +	if (ret)
-> +		goto free_payload;
-> +	ret = sdsi_mbox_write(priv, &info);
-> +	mutex_unlock(&priv->mb_lock);
-> +
-> +free_payload:
-> +	kfree(info.payload);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t provision_akc_write(struct file *filp, struct kobject *kobj,
-> +				   struct bin_attribute *attr, char *buf, loff_t off,
-> +				   size_t count)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct sdsi_priv *priv = dev_get_drvdata(dev);
-> +
-> +	if (off)
-> +		return -ESPIPE;
-> +
-> +	return sdsi_provision(priv, buf, count, SDSI_CMD_PROVISION_AKC);
-> +}
-> +static BIN_ATTR_WO(provision_akc, SDSI_SIZE_WRITE_MSG);
-> +
-> +static ssize_t provision_cap_write(struct file *filp, struct kobject *kobj,
-> +				   struct bin_attribute *attr, char *buf, loff_t off,
-> +				   size_t count)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct sdsi_priv *priv = dev_get_drvdata(dev);
-> +
-> +	if (off)
-> +		return -ESPIPE;
-> +
-> +	return sdsi_provision(priv, buf, count, SDSI_CMD_PROVISION_CAP);
-> +}
-> +static BIN_ATTR_WO(provision_cap, SDSI_SIZE_WRITE_MSG);
-> +
-> +static long state_certificate_read(struct file *filp, struct kobject *kobj,
-> +				   struct bin_attribute *attr, char *buf, loff_t off,
-> +				   size_t count)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct sdsi_priv *priv = dev_get_drvdata(dev);
-> +	u64 command = SDSI_CMD_READ_STATE;
-> +	struct sdsi_mbox_info info;
-> +	size_t size;
-> +	int ret;
-> +
-> +	if (!priv->sdsi_enabled)
-> +		return -EPERM;
-> +
-> +	if (off)
-> +		return 0;
-> +
-> +	/* Buffer for return data */
-> +	info.buffer = kmalloc(SDSI_SIZE_READ_MSG, GFP_KERNEL);
-> +	if (!info.buffer)
-> +		return -ENOMEM;
-> +
-> +	info.payload = &command;
-> +	info.size = sizeof(command);
-> +
-> +	ret = mutex_lock_interruptible(&priv->mb_lock);
-> +	if (ret)
-> +		goto free_buffer;
-> +	ret = sdsi_mbox_read(priv, &info, &size);
-> +	mutex_unlock(&priv->mb_lock);
-> +	if (ret < 0)
-> +		goto free_buffer;
-> +
-> +	if (size > count)
-> +		size = count;
-> +
-> +	memcpy(buf, info.buffer, size);
-> +
-> +free_buffer:
-> +	kfree(info.buffer);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	return size;
-> +}
-> +static BIN_ATTR(state_certificate, 0400, state_certificate_read, NULL, SDSI_SIZE_READ_MSG);
-> +
-> +static ssize_t registers_read(struct file *filp, struct kobject *kobj,
-> +			      struct bin_attribute *attr, char *buf, loff_t off,
-> +			      size_t count)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct sdsi_priv *priv = dev_get_drvdata(dev);
-> +	void __iomem *addr = priv->regs_addr;
-> +
-> +	memcpy_fromio(buf, addr + off, count);
-> +
-> +	return count;
-> +}
-> +static BIN_ATTR(registers, 0400, registers_read, NULL, SDSI_SIZE_REGS);
-> +
-> +static struct bin_attribute *sdsi_bin_attrs[] = {
-> +	&bin_attr_registers,
-> +	&bin_attr_state_certificate,
-> +	&bin_attr_provision_akc,
-> +	&bin_attr_provision_cap,
-> +	NULL
-> +};
-> +
-> +static ssize_t guid_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct sdsi_priv *priv = dev_get_drvdata(dev);
-> +
-> +	return sysfs_emit(buf, "0x%x\n", priv->guid);
-> +}
-> +static DEVICE_ATTR_RO(guid);
-> +
-> +static struct attribute *sdsi_attrs[] = {
-> +	&dev_attr_guid.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group sdsi_group = {
-> +	.attrs = sdsi_attrs,
-> +	.bin_attrs = sdsi_bin_attrs,
-> +};
-> +__ATTRIBUTE_GROUPS(sdsi);
-> +
-> +static int sdsi_map_mbox_registers(struct sdsi_priv *priv, struct pci_dev *parent,
-> +				   struct disc_table *disc_table, struct resource *disc_res)
-> +{
-> +	u32 access_type = FIELD_GET(DT_ACCESS_TYPE, disc_table->access_info);
-> +	u32 size = FIELD_GET(DT_SIZE, disc_table->access_info);
-> +	u32 tbir = FIELD_GET(DT_TBIR, disc_table->offset);
-> +	u32 offset = DT_OFFSET(disc_table->offset);
-> +	u32 features_offset;
-> +	struct resource res = {};
-> +
-> +	/* Starting location of SDSi MMIO region based on access type */
-> +	switch (access_type) {
-> +	case ACCESS_TYPE_LOCAL:
-> +		if (tbir) {
-> +			dev_err(priv->dev, "Unsupported BAR index %u for access type %u\n",
-> +				tbir, access_type);
-> +			return -EINVAL;
-> +		}
-> +
-> +		/*
-> +		 * For access_type LOCAL, the base address is as follows:
-> +		 * base address = end of discovery region + base offset + 1
-> +		 */
-> +		res.start = disc_res->end + offset + 1;
-> +		break;
-> +
-> +	case ACCESS_TYPE_BARID:
-> +		res.start = pci_resource_start(parent, tbir) + offset;
-> +		break;
-> +
-> +	default:
-> +		dev_err(priv->dev, "Unrecognized access_type %u\n", access_type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	res.end = res.start + size * sizeof(u32) - 1;
-> +	res.flags = IORESOURCE_MEM;
-> +
-> +	priv->control_addr = devm_ioremap_resource(priv->dev, &res);
-> +	if (IS_ERR(priv->control_addr))
-> +		return PTR_ERR(priv->control_addr);
-> +
-> +	priv->mbox_addr = priv->control_addr + SDSI_SIZE_CONTROL;
-> +	priv->regs_addr = priv->mbox_addr + SDSI_SIZE_MAILBOX;
-> +
-> +	features_offset = readq(priv->regs_addr + SDSI_ENABLED_FEATURES_OFFSET);
-> +	priv->sdsi_enabled = !!(features_offset & SDSI_ENABLED);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_device_id *id)
-> +{
-> +	struct intel_vsec_device *intel_cap_dev = auxdev_to_ivdev(auxdev);
-> +	struct disc_table disc_table;
-> +	struct resource *disc_res;
-> +	void __iomem *disc_addr;
-> +	struct sdsi_priv *priv;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&auxdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->dev = &auxdev->dev;
-> +	mutex_init(&priv->mb_lock);
-> +	auxiliary_set_drvdata(auxdev, priv);
-> +
-> +	/* Get the SDSi discovery table */
-> +	disc_res = &intel_cap_dev->resource[0];
-> +	disc_addr = devm_ioremap_resource(&auxdev->dev, disc_res);
-> +	if (IS_ERR(disc_addr))
-> +		return PTR_ERR(disc_addr);
-> +
-> +	memcpy_fromio(&disc_table, disc_addr, DISC_TABLE_SIZE);
-> +
-> +	priv->guid = disc_table.guid;
-> +
-> +	/* Map the SDSi mailbox registers */
-> +	ret = sdsi_map_mbox_registers(priv, intel_cap_dev->pcidev, &disc_table, disc_res);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct auxiliary_device_id sdsi_aux_id_table[] = {
-> +	{ .name = "intel_vsec.sdsi" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(auxiliary, sdsi_aux_id_table);
-> +
-> +static struct auxiliary_driver sdsi_aux_driver = {
-> +	.driver = {
-> +		.dev_groups = sdsi_groups,
-> +	},
-> +	.id_table	= sdsi_aux_id_table,
-> +	.probe		= sdsi_probe,
-> +	/* No remove. All resources are handled under devm */
-> +};
-> +module_auxiliary_driver(sdsi_aux_driver);
-> +
-> +MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
-> +MODULE_DESCRIPTION("Intel Software Defined Silicon driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-> index c3bdd75ed690..bed436bf181f 100644
-> --- a/drivers/platform/x86/intel/vsec.c
-> +++ b/drivers/platform/x86/intel/vsec.c
-> @@ -32,6 +32,7 @@
->  #define TABLE_OFFSET_SHIFT		3
->  
->  static DEFINE_IDA(intel_vsec_ida);
-> +static DEFINE_IDA(intel_vsec_sdsi_ida);
->  
->  /**
->   * struct intel_vsec_header - Common fields of Intel VSEC and DVSEC registers.
-> @@ -63,12 +64,14 @@ enum intel_vsec_id {
->  	VSEC_ID_TELEMETRY	= 2,
->  	VSEC_ID_WATCHER		= 3,
->  	VSEC_ID_CRASHLOG	= 4,
-> +	VSEC_ID_SDSI		= 65,
->  };
->  
->  static enum intel_vsec_id intel_vsec_allow_list[] = {
->  	VSEC_ID_TELEMETRY,
->  	VSEC_ID_WATCHER,
->  	VSEC_ID_CRASHLOG,
-> +	VSEC_ID_SDSI,
->  };
->  
->  static const char *intel_vsec_name(enum intel_vsec_id id)
-> @@ -83,6 +86,9 @@ static const char *intel_vsec_name(enum intel_vsec_id id)
->  	case VSEC_ID_CRASHLOG:
->  		return "crashlog";
->  
-> +	case VSEC_ID_SDSI:
-> +		return "sdsi";
-> +
->  	default:
->  		return NULL;
->  	}
-> @@ -211,7 +217,11 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
->  	intel_vsec_dev->resource = res;
->  	intel_vsec_dev->num_resources = header->num_entries;
->  	intel_vsec_dev->quirks = quirks;
-> -	intel_vsec_dev->ida = &intel_vsec_ida;
-> +
-> +	if (header->id == VSEC_ID_SDSI)
-> +		intel_vsec_dev->ida = &intel_vsec_sdsi_ida;
-> +	else
-> +		intel_vsec_dev->ida = &intel_vsec_ida;
->  
->  	return intel_vsec_add_aux(pdev, intel_vsec_dev, intel_vsec_name(header->id));
->  }
 
