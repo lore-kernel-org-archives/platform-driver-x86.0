@@ -2,180 +2,398 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5565C4167D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Feb 2022 11:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EF6C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Feb 2022 11:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350702AbiBNLYw convert rfc822-to-8bit (ORCPT
+        id S1351676AbiBNLaH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Feb 2022 06:24:52 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52632 "EHLO
+        Mon, 14 Feb 2022 06:30:07 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351226AbiBNLX7 (ORCPT
+        with ESMTP id S1351319AbiBNLaC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Feb 2022 06:23:59 -0500
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6AAC7E0AA;
-        Mon, 14 Feb 2022 02:59:32 -0800 (PST)
-Received: by mail-qv1-f50.google.com with SMTP id a19so14432712qvm.4;
-        Mon, 14 Feb 2022 02:59:32 -0800 (PST)
+        Mon, 14 Feb 2022 06:30:02 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A1CEA25C5A
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 03:10:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644837010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/Rizj8YnqZQJVyJKo81V8QYZR39z9NkMLTYR4Tc1pW0=;
+        b=epO+Bnecu2VULVf6eBqlx2PE+9w2AguUrC6ErHjk3D0baM4P651JDA7BAuKJUaz1Ydvhqd
+        D4XK0uUwNzaQxISc1QS2GqrDwecXbOjaWRFEEBti/VuFJhnXC0M30YdsFAhCExMuh54Em2
+        3kAm2iy4qLDdyo3vWCnMC7NGDKqAQQQ=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-55-RAaHc3G4PeaxFS3MovkYww-1; Mon, 14 Feb 2022 06:10:07 -0500
+X-MC-Unique: RAaHc3G4PeaxFS3MovkYww-1
+Received: by mail-ed1-f70.google.com with SMTP id b26-20020a056402139a00b004094fddbbdfso10063687edv.12
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 03:10:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3zUaM8opKL0LG20PPLjLO0sGhx6OMEFs8RjHjfjsiY4=;
-        b=tzYW5L5xOK2xjgIhwKD7wo4utCRQktTYnmyF5KtC7nyd4QwxINuVYG0oZDuj2UWxgT
-         v/aCYx8fYJ460CRM8cqFGhvZWVTV32Txdva7EilCtR5KuJUaUdqVVS7A7bSNU3h32VJ+
-         2pJ2Y3tGDfNi2ZOUy2aWpZT0nVb7NeQpDeHk76U1HFWgRfZgnwSl3z8nfQ4JYELBC7w+
-         anK5B90Xh4HPCL5PMFl7xyPXyFTTOvibl637EXBhEt2cmJo4/fZJ0Y71K7/l41QRDnHU
-         eA/djqj4anfQA78O8QEI0s/RYo5qs13hiZUR71hMLnibfSqINLjWfOOnZb42aq7YUf4q
-         CRrQ==
-X-Gm-Message-State: AOAM531hvoqH7tmhpaGYLCsoe+Zw1pr4CRNoNkqjMA02M0yksh9tEj9K
-        nnVGq0KJ/mQRARxLUWcaA+SwQIlmvrkhXw==
-X-Google-Smtp-Source: ABdhPJwrRq7LQh4v5o0CPVNGHtwumDUPKtYShp4qDGuprC6H2gTwWZ7lqh2fqI8sviBIFGzuhsrVZw==
-X-Received: by 2002:a1f:9092:: with SMTP id s140mr849683vkd.38.1644829287597;
-        Mon, 14 Feb 2022 01:01:27 -0800 (PST)
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
-        by smtp.gmail.com with ESMTPSA id o2sm1719696vke.47.2022.02.14.01.01.26
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=/Rizj8YnqZQJVyJKo81V8QYZR39z9NkMLTYR4Tc1pW0=;
+        b=Q7JX7AEPI7IxNDL/hHuyUH/HdYbQYeOnowD+h+dy4qbxOe7wvpc4IHjdXAF67UNyoP
+         /czoX7mFGHeFoGj4injkQlijFuCcBD9CgxeAJZjvJOCiUNnw1t5yflvwSlJlslvEAQt9
+         eWu3e6ewM9lREIgy0kWSA0Jhhr/LRf5A0/9rq5f2Z9yfm+Ev6QNRS0VIvbpiS5GbzSPT
+         akTNA7BunIbRoNXsK5C85Yu5vKnvlD+unDEwCELZPYNF3QQXllRR1MjGcblxXvgYayyl
+         slA0Ox/EuNSca6wX8NFh6vLXYUxvtWWp5RdegWKhVEz0nVP2xJFdfqF0K30EP6my5oOE
+         uuqQ==
+X-Gm-Message-State: AOAM532/SjBH6umlBLDxrmcUKCDAdm47fANEz610hQiwvJIP+CUN4nN+
+        4nxcDV53cyGCTVn8VgGaEUU5Q7Vg9GWyGTilC7aULbP8vIz0BF2uhXG2PjvDnKROZAim7tNS3/b
+        Z5iHzMgOBGgJR3PRfIYN8luDduiV2ldnVWw==
+X-Received: by 2002:a17:907:6283:: with SMTP id nd3mr11000851ejc.2.1644837006266;
+        Mon, 14 Feb 2022 03:10:06 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzn/b9jDxWKh+XTffTqJoZwvUs+V+VKPf4cH3b5eQDEDymHFXJl7LquA525Qwqk+v1shhC7eQ==
+X-Received: by 2002:a17:907:6283:: with SMTP id nd3mr11000831ejc.2.1644837005994;
+        Mon, 14 Feb 2022 03:10:05 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id b7sm1636601ejl.145.2022.02.14.03.10.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Feb 2022 01:01:27 -0800 (PST)
-Received: by mail-vk1-f171.google.com with SMTP id bj24so2718190vkb.8;
-        Mon, 14 Feb 2022 01:01:26 -0800 (PST)
-X-Received: by 2002:a1f:7307:: with SMTP id o7mr818150vkc.0.1644829286141;
- Mon, 14 Feb 2022 01:01:26 -0800 (PST)
+        Mon, 14 Feb 2022 03:10:05 -0800 (PST)
+Message-ID: <b431a81f-a2c0-cdc5-208b-7e8adb03cf23@redhat.com>
+Date:   Mon, 14 Feb 2022 12:10:04 +0100
 MIME-Version: 1.0
-References: <20220212201631.12648-1-s.shtylyov@omp.ru> <20220212201631.12648-2-s.shtylyov@omp.ru>
- <20220214071351.pcvstrzkwqyrg536@pengutronix.de>
-In-Reply-To: <20220214071351.pcvstrzkwqyrg536@pengutronix.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 14 Feb 2022 10:01:14 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWi8gno_FBbc=AwsdRtDJik8_bANjQrrRtUOOBRjFN=KA@mail.gmail.com>
-Message-ID: <CAMuHMdWi8gno_FBbc=AwsdRtDJik8_bANjQrrRtUOOBRjFN=KA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] platform: make platform_get_irq_optional() optional
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jiri Slaby <jirislaby@kernel.org>, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>, alsa-devel@alsa-project.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-phy@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Guenter Roeck <groeck@chromium.org>, linux-spi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        openipmi-developer@lists.sourceforge.net,
-        Peter Korsgaard <peter@korsgaard.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        kvm@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Eric Auger <eric.auger@redhat.com>, netdev@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        linux-renesas-soc@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Brian Norris <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH V7 3/3] selftests: sdsi: test sysfs setup
+Content-Language: en-US
+To:     "David E. Box" <david.e.box@linux.intel.com>,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20220212013252.1293396-1-david.e.box@linux.intel.com>
+ <20220212013252.1293396-4-david.e.box@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220212013252.1293396-4-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Uwe,
+Hi,
 
-On Mon, Feb 14, 2022 at 8:29 AM Uwe Kleine-König
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Sat, Feb 12, 2022 at 11:16:30PM +0300, Sergey Shtylyov wrote:
-> > This patch is based on the former Andy Shevchenko's patch:
-> >
-> > https://lore.kernel.org/lkml/20210331144526.19439-1-andriy.shevchenko@linux.intel.com/
-> >
-> > Currently platform_get_irq_optional() returns an error code even if IRQ
-> > resource simply has not been found.  It prevents the callers from being
-> > error code agnostic in their error handling:
-> >
-> >       ret = platform_get_irq_optional(...);
-> >       if (ret < 0 && ret != -ENXIO)
-> >               return ret; // respect deferred probe
-> >       if (ret > 0)
-> >               ...we get an IRQ...
-> >
-> > All other *_optional() APIs seem to return 0 or NULL in case an optional
-> > resource is not available.  Let's follow this good example, so that the
-> > callers would look like:
-> >
-> >       ret = platform_get_irq_optional(...);
-> >       if (ret < 0)
-> >               return ret;
-> >       if (ret > 0)
-> >               ...we get an IRQ...
-> >
-> > Reported-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> > Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
->
-> While this patch is better than v1, I still don't like it for the
-> reasons discussed for v1. (i.e. 0 isn't usable as a dummy value which I
-> consider the real advantage for the other _get_optional() functions.)
+On 2/12/22 02:32, David E. Box wrote:
+> Tests file configuration and error handling of the Intel Software
+> Defined Silicon sysfs ABI.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> V7
+>   - No changes.
+> V6
+>   - No changes.
+> V5
+>   - No changes.
+> V4
+>   - No changes.
+> V3
+>   - Add tests to check PCI device removal handling and to check for
+>     driver memory leaks.
+> V2
+>   - New patch.
+> 
+>  MAINTAINERS                                   |   1 +
+>  tools/testing/selftests/drivers/sdsi/sdsi.sh  |  18 ++
+>  .../selftests/drivers/sdsi/sdsi_test.py       | 226 ++++++++++++++++++
+>  3 files changed, 245 insertions(+)
+>  create mode 100755 tools/testing/selftests/drivers/sdsi/sdsi.sh
+>  create mode 100644 tools/testing/selftests/drivers/sdsi/sdsi_test.py
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 80325cbde3bd..a05c6b40601a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9874,6 +9874,7 @@ M:	David E. Box <david.e.box@linux.intel.com>
+>  S:	Supported
+>  F:	drivers/platform/x86/intel/sdsi.c
+>  F:	tools/arch/x86/intel_sdsi/
+> +F:	tools/testing/selftests/drivers/sdsi/
+>  
+>  INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
+>  M:	Daniel Scally <djrscally@gmail.com>
+> diff --git a/tools/testing/selftests/drivers/sdsi/sdsi.sh b/tools/testing/selftests/drivers/sdsi/sdsi.sh
+> new file mode 100755
+> index 000000000000..8db71961d164
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/sdsi/sdsi.sh
+> @@ -0,0 +1,18 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Runs tests for the intel_sdsi driver
+> +
+> +if ! /sbin/modprobe -q -r intel_sdsi; then
+> +	echo "drivers/sdsi: [SKIP]"
+> +	exit 77
+> +fi
 
-IMHO the real advantage is the simplified error handling, which is the
-area where most of the current bugs are. So I applaud the core change.
+You should also test that python3 and pytest are available and if not then
+also skip this test.
 
-Also IMHO, the dummy value handling is a red herring.  Contrary to
-optional clocks and resets, a missing optional interrupt does not
-always mean there is nothing to do: in case of polling, something
-else must definitely be done.  So even if request_irq() would accept
-a dummy interrupt zero and just do nothing, it would give the false
-impression that that is all there is to do, while an actual check
-for zero with polling code handling may still need to be present,
-thus leading to more not less bugs.
+> +
+> +if /sbin/modprobe -q intel_sdsi; then
+> +	python3 -m pytest sdsi_test.py
 
-> Apart from that, I think the subject is badly chosen. With "Make
-> somefunc() optional" I would expect that you introduce a Kconfig symbol
-> that results in the function not being available when disabled.
+You are ignoring the return value of the python script here, you probably want something like
+this instead:
 
-Agreed.
+if /sbin/modprobe -q intel_sdsi && python3 -m pytest sdsi_test.py; then
 
-Gr{oetje,eeting}s,
 
-                        Geert
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +	/sbin/modprobe -q -r intel_sdsi
+
+Why? now you are leaving the system behind in a different state then it was before?
+
+Regards,
+
+Hans
+
+
+> +
+> +	echo "drivers/sdsi: ok"
+> +else
+> +	echo "drivers/sdsi: [FAIL]"
+> +	exit 1
+> +fi
+> diff --git a/tools/testing/selftests/drivers/sdsi/sdsi_test.py b/tools/testing/selftests/drivers/sdsi/sdsi_test.py
+> new file mode 100644
+> index 000000000000..4922edfe461f
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/sdsi/sdsi_test.py
+> @@ -0,0 +1,226 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +from struct import pack
+> +from time import sleep
+> +
+> +import errno
+> +import glob
+> +import os
+> +import subprocess
+> +
+> +try:
+> +    import pytest
+> +except ImportError:
+> +    print("Unable to import pytest python module.")
+> +    print("\nIf not already installed, you may do so with:")
+> +    print("\t\tpip3 install pytest")
+> +    exit(1)
+> +
+> +SOCKETS = glob.glob('/sys/bus/auxiliary/devices/intel_vsec.sdsi.*')
+> +NUM_SOCKETS = len(SOCKETS)
+> +
+> +MODULE_NAME = 'sdsi'
+> +DEV_PREFIX = 'intel_vsec.sdsi'
+> +CLASS_DIR = '/sys/bus/auxiliary/devices'
+> +GUID = "0x6dd191"
+> +
+> +def read_bin_file(file):
+> +    with open(file, mode='rb') as f:
+> +        content = f.read()
+> +    return content
+> +
+> +def get_dev_file_path(socket, file):
+> +    return CLASS_DIR + '/' + DEV_PREFIX + '.' + str(socket) + '/' + file
+> +
+> +def kmemleak_enabled():
+> +    kmemleak = "/sys/kernel/debug/kmemleak"
+> +    return os.path.isfile(kmemleak)
+> +
+> +class TestSDSiDriver:
+> +    def test_driver_loaded(self):
+> +        lsmod_p = subprocess.Popen(('lsmod'), stdout=subprocess.PIPE)
+> +        result = subprocess.check_output(('grep', '-q', MODULE_NAME), stdin=lsmod_p.stdout)
+> +
+> +@pytest.mark.parametrize('socket', range(0, NUM_SOCKETS))
+> +class TestSDSiFilesClass:
+> +
+> +    def read_value(self, file):
+> +        f = open(file, "r")
+> +        value = f.read().strip("\n")
+> +        return value
+> +
+> +    def get_dev_folder(self, socket):
+> +        return CLASS_DIR + '/' + DEV_PREFIX + '.' + str(socket) + '/'
+> +
+> +    def test_sysfs_files_exist(self, socket):
+> +        folder = self.get_dev_folder(socket)
+> +        print (folder)
+> +        assert os.path.isfile(folder + "guid") == True
+> +        assert os.path.isfile(folder + "provision_akc") == True
+> +        assert os.path.isfile(folder + "provision_cap") == True
+> +        assert os.path.isfile(folder + "state_certificate") == True
+> +        assert os.path.isfile(folder + "registers") == True
+> +
+> +    def test_sysfs_file_permissions(self, socket):
+> +        folder = self.get_dev_folder(socket)
+> +        mode = os.stat(folder + "guid").st_mode & 0o777
+> +        assert mode == 0o444    # Read all
+> +        mode = os.stat(folder + "registers").st_mode & 0o777
+> +        assert mode == 0o400    # Read owner
+> +        mode = os.stat(folder + "provision_akc").st_mode & 0o777
+> +        assert mode == 0o200    # Read owner
+> +        mode = os.stat(folder + "provision_cap").st_mode & 0o777
+> +        assert mode == 0o200    # Read owner
+> +        mode = os.stat(folder + "state_certificate").st_mode & 0o777
+> +        assert mode == 0o400    # Read owner
+> +
+> +    def test_sysfs_file_ownership(self, socket):
+> +        folder = self.get_dev_folder(socket)
+> +
+> +        st = os.stat(folder + "guid")
+> +        assert st.st_uid == 0
+> +        assert st.st_gid == 0
+> +
+> +        st = os.stat(folder + "registers")
+> +        assert st.st_uid == 0
+> +        assert st.st_gid == 0
+> +
+> +        st = os.stat(folder + "provision_akc")
+> +        assert st.st_uid == 0
+> +        assert st.st_gid == 0
+> +
+> +        st = os.stat(folder + "provision_cap")
+> +        assert st.st_uid == 0
+> +        assert st.st_gid == 0
+> +
+> +        st = os.stat(folder + "state_certificate")
+> +        assert st.st_uid == 0
+> +        assert st.st_gid == 0
+> +
+> +    def test_sysfs_file_sizes(self, socket):
+> +        folder = self.get_dev_folder(socket)
+> +
+> +        if self.read_value(folder + "guid") == GUID:
+> +            st = os.stat(folder + "registers")
+> +            assert st.st_size == 72
+> +
+> +        st = os.stat(folder + "provision_akc")
+> +        assert st.st_size == 1024
+> +
+> +        st = os.stat(folder + "provision_cap")
+> +        assert st.st_size == 1024
+> +
+> +        st = os.stat(folder + "state_certificate")
+> +        assert st.st_size == 4096
+> +
+> +    def test_no_seek_allowed(self, socket):
+> +        folder = self.get_dev_folder(socket)
+> +        rand_file = bytes(os.urandom(8))
+> +
+> +        f = open(folder + "provision_cap", "wb", 0)
+> +        f.seek(1)
+> +        with pytest.raises(OSError) as error:
+> +            f.write(rand_file)
+> +        assert error.value.errno == errno.ESPIPE
+> +        f.close()
+> +
+> +        f = open(folder + "provision_akc", "wb", 0)
+> +        f.seek(1)
+> +        with pytest.raises(OSError) as error:
+> +            f.write(rand_file)
+> +        assert error.value.errno == errno.ESPIPE
+> +        f.close()
+> +
+> +    def test_registers_seek(self, socket):
+> +        folder = self.get_dev_folder(socket)
+> +
+> +        # Check that the value read from an offset of the entire
+> +        # file is none-zero and the same as the value read
+> +        # from seeking to the same location
+> +        f = open(folder + "registers", "rb")
+> +        data = f.read()
+> +        f.seek(64)
+> +        id = f.read()
+> +        assert id != bytes(0)
+> +        assert data[64:] == id
+> +        f.close()
+> +
+> +@pytest.mark.parametrize('socket', range(0, NUM_SOCKETS))
+> +class TestSDSiMailboxCmdsClass:
+> +    def test_provision_akc_eoverflow_1017_bytes(self, socket):
+> +
+> +        # The buffer for writes is 1k, of with 8 bytes must be
+> +        # reserved for the command, leaving 1016 bytes max.
+> +        # Check that we get an overflow error for 1017 bytes.
+> +        node = get_dev_file_path(socket, "provision_akc")
+> +        rand_file = bytes(os.urandom(1017))
+> +
+> +        f = open(node, 'wb', 0)
+> +        with pytest.raises(OSError) as error:
+> +            f.write(rand_file)
+> +        assert error.value.errno == errno.EOVERFLOW
+> +        f.close()
+> +
+> +@pytest.mark.parametrize('socket', range(0, NUM_SOCKETS))
+> +class TestSdsiDriverLocksClass:
+> +    def test_enodev_when_pci_device_removed(self, socket):
+> +        node = get_dev_file_path(socket, "provision_akc")
+> +        dev_name = DEV_PREFIX + '.' + str(socket)
+> +        driver_dir = CLASS_DIR + '/' + dev_name + "/driver/"
+> +        rand_file = bytes(os.urandom(8))
+> +
+> +        f = open(node, 'wb', 0)
+> +        g = open(node, 'wb', 0)
+> +
+> +        with open(driver_dir + 'unbind', 'w') as k:
+> +            print(dev_name, file = k)
+> +
+> +        with pytest.raises(OSError) as error:
+> +            f.write(rand_file)
+> +        assert error.value.errno == errno.ENODEV
+> +
+> +        with pytest.raises(OSError) as error:
+> +            g.write(rand_file)
+> +        assert error.value.errno == errno.ENODEV
+> +
+> +        f.close()
+> +        g.close()
+> +
+> +        # Short wait needed to allow file to close before pulling driver
+> +        sleep(1)
+> +
+> +        p = subprocess.Popen(('modprobe', '-r', 'intel_sdsi'))
+> +        p.wait()
+> +        p = subprocess.Popen(('modprobe', '-r', 'intel_vsec'))
+> +        p.wait()
+> +        p = subprocess.Popen(('modprobe', 'intel_vsec'))
+> +        p.wait()
+> +
+> +        # Short wait needed to allow driver time to get inserted
+> +        # before continuing tests
+> +        sleep(1)
+> +
+> +    def test_memory_leak(self, socket):
+> +        if not kmemleak_enabled:
+> +            pytest.skip("kmemleak not enabled in kernel")
+> +
+> +        dev_name = DEV_PREFIX + '.' + str(socket)
+> +        driver_dir = CLASS_DIR + '/' + dev_name + "/driver/"
+> +
+> +        with open(driver_dir + 'unbind', 'w') as k:
+> +            print(dev_name, file = k)
+> +
+> +        sleep(1)
+> +
+> +        subprocess.check_output(('modprobe', '-r', 'intel_sdsi'))
+> +        subprocess.check_output(('modprobe', '-r', 'intel_vsec'))
+> +
+> +        with open('/sys/kernel/debug/kmemleak', 'w') as f:
+> +            print('scan', file = f)
+> +        sleep(5)
+> +
+> +        assert os.stat('/sys/kernel/debug/kmemleak').st_size == 0
+> +
+> +        subprocess.check_output(('modprobe', 'intel_vsec'))
+> +        sleep(1)
+
