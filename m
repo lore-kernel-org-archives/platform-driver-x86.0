@@ -2,287 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0438CC3526F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Feb 2022 08:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CBCC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Feb 2022 09:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242498AbiBNIyh (ORCPT
+        id S243027AbiBNJwR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Feb 2022 03:54:37 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51256 "EHLO
+        Mon, 14 Feb 2022 04:52:17 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232624AbiBNIyf (ORCPT
+        with ESMTP id S1343651AbiBNJuz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Feb 2022 03:54:35 -0500
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36695F8F7;
-        Mon, 14 Feb 2022 00:54:27 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id d22so7786120uaw.2;
-        Mon, 14 Feb 2022 00:54:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PlmHX1HHokXQyxG79YUgUTlDvUDqxBtLYhszaegEBgU=;
-        b=h3i1Z8nzAqun82XBV2fD/ig2HLw+teGNCAASQWMQCFHDqI9t1uT19oEhh5zEZcIuU+
-         Bq3M8b9AmuTXFPT84yAOeBuUNlrysibURMR6OFHVHsD4WrkQnARv4DbIUAbb6fVafQYz
-         n172V7K6PZnDeeErnHT3ZVLSeODa4Uxr7vKqr+4Qh3IZkb1Lwq4hfOUAq6oanfaahh4c
-         ghhcMiriuy/5i9xtOyfs2wSI6J4suyWEIwgNarLHNyUsNJeti7MrmGpdUw77pFM2B3V0
-         /VJlWZc3rJUCup9upp+0A3Mec9VHJCM+6ibN/KD5zeMv88Z6ScxHA1wIuvLnRfmNFN+n
-         aU6A==
-X-Gm-Message-State: AOAM532F4oFYgfApr/7sdQbGuIoS9AFkHxff6rc6B32WlsyWg9I0qJIE
-        ufp0G3r2jjEdlorzDZU2+umJO9CvkAFUt1FE
-X-Google-Smtp-Source: ABdhPJxG80+yVkBa/7DTSNK/cqa8g80w345JgDTQHyE4Tngp2pMgRHKbDaroOYU2h5FNY9Fr2rotSQ==
-X-Received: by 2002:a05:6130:413:: with SMTP id ba19mr3797932uab.4.1644828866592;
-        Mon, 14 Feb 2022 00:54:26 -0800 (PST)
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com. [209.85.221.177])
-        by smtp.gmail.com with ESMTPSA id q131sm2271072vkq.23.2022.02.14.00.54.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Feb 2022 00:54:26 -0800 (PST)
-Received: by mail-vk1-f177.google.com with SMTP id l14so8568053vko.12;
-        Mon, 14 Feb 2022 00:54:25 -0800 (PST)
-X-Received: by 2002:a05:6122:c8f:: with SMTP id ba15mr3731293vkb.39.1644828865522;
- Mon, 14 Feb 2022 00:54:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20220212201631.12648-1-s.shtylyov@omp.ru> <20220212201631.12648-2-s.shtylyov@omp.ru>
-In-Reply-To: <20220212201631.12648-2-s.shtylyov@omp.ru>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 14 Feb 2022 09:54:14 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUPxX7Tja6BCjEb4KDobNFPMcM66Fk7Z+VsO7pgb8JnjA@mail.gmail.com>
-Message-ID: <CAMuHMdUPxX7Tja6BCjEb4KDobNFPMcM66Fk7Z+VsO7pgb8JnjA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] platform: make platform_get_irq_optional() optional
-To:     Sergey Shtylyov <s.shtylyov@omp.ru>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Corey Minyard <minyard@acm.org>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Peter Korsgaard <peter@korsgaard.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-phy@lists.infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-serial@vger.kernel.org, kvm@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+        Mon, 14 Feb 2022 04:50:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52CB657BC
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 01:41:54 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 34F49611DD
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 09:41:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 994B2C340F5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Feb 2022 09:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644831713;
+        bh=YuBYtyd7np8uevpp5gS9+Qgcxg4GYQSAsDw89IsRrIE=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=AdqvSBbaJekWZGyDrywL/K3KHnO9LFkgfipoZDOl4FAn/9UrjcPIOhAUzGOBEpt3z
+         nB8+gCfLY/cbF6hGlLN3PWd0O3enkGdwqbbwPnhjFWPbobhTwiSw9TdwkBIgd/hMj6
+         Ii13A/SwUk86jyLb67XAQKI68TqUiO06UOGxoc3D4yB3OLySXE12boC0H4y9cITGwU
+         AwJqgjwWufos0R9UbKrkD7TuZ6bB0m6sZM74j/wfVvlbVaWDf0+J8Uw7uhEQNdOiRA
+         9N0sDyKH6WxGkXl3zP+BCOgOYSctOmgpO4AYoy6x8j1DcVO1cnlk4I6JOWF3KEZ+Dq
+         DalbawcoteEgQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 84F05C05FE2; Mon, 14 Feb 2022 09:41:53 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 215531] Lenovo charge limit feature stops 1% short of the
+ configured limit and says it's still charging
+Date:   Mon, 14 Feb 2022 09:41:53 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_status cc resolution
+Message-ID: <bug-215531-215701-enHsJIPdRI@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-215531-215701@https.bugzilla.kernel.org/>
+References: <bug-215531-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Sergey,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215531
 
-On Sat, Feb 12, 2022 at 9:17 PM Sergey Shtylyov <s.shtylyov@omp.ru> wrote:
-> This patch is based on the former Andy Shevchenko's patch:
->
-> https://lore.kernel.org/lkml/20210331144526.19439-1-andriy.shevchenko@linux.intel.com/
->
-> Currently platform_get_irq_optional() returns an error code even if IRQ
-> resource simply has not been found.  It prevents the callers from being
-> error code agnostic in their error handling:
->
->         ret = platform_get_irq_optional(...);
->         if (ret < 0 && ret != -ENXIO)
->                 return ret; // respect deferred probe
->         if (ret > 0)
->                 ...we get an IRQ...
->
-> All other *_optional() APIs seem to return 0 or NULL in case an optional
-> resource is not available.  Let's follow this good example, so that the
-> callers would look like:
->
->         ret = platform_get_irq_optional(...);
->         if (ret < 0)
->                 return ret;
->         if (ret > 0)
->                 ...we get an IRQ...
->
-> Reported-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
-> ---
-> Changes in version 2:
+Hans de Goede (jwrdegoede@fedoraproject.org) changed:
 
-Thanks for the update!
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Status|NEW                         |RESOLVED
+                 CC|                            |jwrdegoede@fedoraproject.or
+                   |                            |g
+         Resolution|---                         |CODE_FIX
 
->  drivers/base/platform.c                  | 60 +++++++++++++++---------
+--- Comment #1 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+This has been fixed in kernels >=3D 5.16.3 with this commit:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3De96c1197aca628f7d2480a1cc3214912b40b3414
 
-The core change LGTM.
+With these kernels:
 
-I'm only looking at Renesas drivers below...
+cat /sys/class/power_supply/BAT0/status
 
-> --- a/drivers/mmc/host/sh_mmcif.c
-> +++ b/drivers/mmc/host/sh_mmcif.c
-> @@ -1465,14 +1465,14 @@ static int sh_mmcif_probe(struct platform_device *pdev)
->         sh_mmcif_sync_reset(host);
->         sh_mmcif_writel(host->addr, MMCIF_CE_INT_MASK, MASK_ALL);
->
-> -       name = irq[1] < 0 ? dev_name(dev) : "sh_mmc:error";
-> +       name = irq[1] <= 0 ? dev_name(dev) : "sh_mmc:error";
+Will now output "not charging" under these conditions. This is what the
+device's firmware gives us, so this is the best the kernel can do. Translat=
+ing
+"not charging" + the capacity in % being more or less equal to the
+charge_control_end_threshold(1) value to "full" is something for userspace
+(upower) to sort out. Since we are looking on adding UI options to set
+charge_control_end_threshold, it would be good if we can get upower reporti=
+ng
+"full" under these conditions.
 
-"== 0" should be sufficient here, if the code above would bail out
-on errors returned by platform_get_irq_optional(), which it currently
-doesn't do.
-As this adds missing error handling, this is to be fixed by a separate
-patch later?
+Note the upower issue should be re-opened to track this.
 
->         ret = devm_request_threaded_irq(dev, irq[0], sh_mmcif_intr,
->                                         sh_mmcif_irqt, 0, name, host);
->         if (ret) {
->                 dev_err(dev, "request_irq error (%s)\n", name);
->                 goto err_clk;
->         }
-> -       if (irq[1] >= 0) {
-> +       if (irq[1] > 0) {
+--=20
+You may reply to this email to add a comment.
 
-OK.
-
->                 ret = devm_request_threaded_irq(dev, irq[1],
->                                                 sh_mmcif_intr, sh_mmcif_irqt,
->                                                 0, "sh_mmc:int", host);
-
-> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> @@ -439,7 +439,7 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
->         u32 val;
->         int ret;
->
-> -       if (!rcar_gen3_is_any_rphy_initialized(channel) && channel->irq >= 0) {
-> +       if (!rcar_gen3_is_any_rphy_initialized(channel) && channel->irq > 0) {
->                 INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
->                 ret = request_irq(channel->irq, rcar_gen3_phy_usb2_irq,
->                                   IRQF_SHARED, dev_name(channel->dev), channel);
-> @@ -486,7 +486,7 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
->                 val &= ~USB2_INT_ENABLE_UCOM_INTEN;
->         writel(val, usb2_base + USB2_INT_ENABLE);
->
-> -       if (channel->irq >= 0 && !rcar_gen3_is_any_rphy_initialized(channel))
-> +       if (channel->irq > 0 && !rcar_gen3_is_any_rphy_initialized(channel))
->                 free_irq(channel->irq, channel);
->
->         return 0;
-
-LGTM, but note that all errors returned by platform_get_irq_optional()
-are currently ignored, even real errors, which should be propagated
-up.
-As this adds missing error handling, this is to be fixed by a separate
-patch later?
-
-> --- a/drivers/thermal/rcar_gen3_thermal.c
-> +++ b/drivers/thermal/rcar_gen3_thermal.c
-> @@ -432,6 +432,8 @@ static int rcar_gen3_thermal_request_irqs(struct rcar_gen3_thermal_priv *priv,
->                 irq = platform_get_irq_optional(pdev, i);
->                 if (irq < 0)
->                         return irq;
-> +               if (!irq)
-> +                       return -ENXIO;
-
-While correct, and preserving existing behavior, this looks strange
-to me.  Probably this should return zero instead (i.e. the check
-above should be changed to "<= 0"), and the caller should start caring
-about and propagating up real errors.
-As this adds missing error handling, this is to be fixed by a separate
-patch later?
-
->
->                 irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
->                                          dev_name(dev), i);
-> diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> index fb65dc601b23..328ab074fd89 100644
-
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-
-I think you missed
-
-    #define SCIx_IRQ_IS_MUXED(port)                 \
-            ((port)->irqs[SCIx_ERI_IRQ] ==  \
-             (port)->irqs[SCIx_RXI_IRQ]) || \
-            ((port)->irqs[SCIx_ERI_IRQ] &&  \
-             ((port)->irqs[SCIx_RXI_IRQ] < 0))
-
-above? The last condition should become "<= 0".
-
-> @@ -1915,7 +1915,7 @@ static int sci_request_irq(struct sci_port *port)
->                          * Certain port types won't support all of the
->                          * available interrupt sources.
->                          */
-> -                       if (unlikely(irq < 0))
-> +                       if (unlikely(irq <= 0))
->                                 continue;
->                 }
->
-> @@ -1963,7 +1963,7 @@ static void sci_free_irq(struct sci_port *port)
->                  * Certain port types won't support all of the available
->                  * interrupt sources.
->                  */
-> -               if (unlikely(irq < 0))
-> +               if (unlikely(irq <= 0))
->                         continue;
->
->                 /* Check if already freed (irq was muxed) */
-> @@ -2875,7 +2875,7 @@ static int sci_init_single(struct platform_device *dev,
->         if (sci_port->irqs[0] < 0)
->                 return -ENXIO;
->
-> -       if (sci_port->irqs[1] < 0)
-> +       if (sci_port->irqs[1] <= 0)
->                 for (i = 1; i < ARRAY_SIZE(sci_port->irqs); i++)
->                         sci_port->irqs[i] = sci_port->irqs[0];
->
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+You are receiving this mail because:
+You are watching the assignee of the bug.=
