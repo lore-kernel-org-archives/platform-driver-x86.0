@@ -2,115 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC3BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Feb 2022 21:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF54C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Feb 2022 21:35:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231486AbiBNVf1 (ORCPT
+        id S230491AbiBNVff (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Feb 2022 16:35:27 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51008 "EHLO
+        Mon, 14 Feb 2022 16:35:35 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231249AbiBNVfV (ORCPT
+        with ESMTP id S231337AbiBNVfV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Mon, 14 Feb 2022 16:35:21 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E85D5159EBA;
-        Mon, 14 Feb 2022 13:33:07 -0800 (PST)
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0431C159EB3;
+        Mon, 14 Feb 2022 13:33:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1644874387; x=1676410387;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IvBaQoac9SdSxMy/aBRplJsi4/+x3xY3JY7OPph3BGY=;
-  b=frBDgvVGv0wgpQ+W2J96s6F00fmebIRT3AEGIrvA/01l2FAp99+I8s9H
-   Pj3oMEoU5X0Txy6MWVO8JhYLNNCqnapugDws4gEO5NfqbYq45d2N5lXc+
-   6j+V8FPFhRK9Sw79wQ6fIc3pmuJCvjfr6lB2gDYUdTjOMHxrYjZKn4Yz3
-   /9h3JnHhs7JhMeyJQs1fn6RWa5bdkHneeAVhoBKQUIl4oBHONIpl6N3Qu
-   yalQxiVQl+tyb0nr7MJfYoCoGmUozcDv0iQI/O+yZdWe5MaVaLwIwNZxE
-   X7n6YnmcN+GTjWD+zx1Ct6tfk3UvkQVG1yRojXGSG2YHz97BIsTE4PdeN
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10258"; a="230827935"
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6nrphxgF8SY7mCC6VPn/wAB7S6cT013mVndDXmcmuMM=;
+  b=QPo2lWwASfCHyYmyCRG022PTiq/AsmHEftQCM/vs4fuDdn3Zyb3sFceB
+   fxj4JEaH1yUDLMYCrbsdf2JwS0MSquVChrLB5t6U9gLBZd662n6l1QSFW
+   fW3dk27c3G+/yWylfp5fqa2jLYnFzaQ7k/GpQIraLlcPmhAKcUGO/6fnm
+   pQBiXjpVy8wpDhkiISzISWtXYn7pD2Bl/hGQzfyemKjybUvATp74Hmv/2
+   mfhodqrWSnWRBcszT0wsOSIotooH8s/aP0wqdFSAXv7IN08ODWUp0PLkh
+   VPIHINOl6XZQOW/BrNSkiJa2fSTLo6L+5VRiuTuTfq8Zap3l7gofD+Dxi
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10258"; a="313464611"
 X-IronPort-AV: E=Sophos;i="5.88,368,1635231600"; 
-   d="scan'208";a="230827935"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2022 13:33:07 -0800
+   d="scan'208";a="313464611"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2022 13:33:06 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,368,1635231600"; 
-   d="scan'208";a="485726861"
+   d="scan'208";a="703299450"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 14 Feb 2022 13:33:07 -0800
+  by orsmga005.jf.intel.com with ESMTP; 14 Feb 2022 13:33:06 -0800
 Received: from debox1-desk4.intel.com (unknown [10.255.228.161])
-        by linux.intel.com (Postfix) with ESMTP id E4B47580D3A;
+        by linux.intel.com (Postfix) with ESMTP id 1B194580638;
         Mon, 14 Feb 2022 13:33:06 -0800 (PST)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     hdegoede@redhat.com, david.e.box@linux.intel.com,
         mgross@linux.intel.com, rjw@rjwysocki.net,
         srinivas.pandruvada@intel.com
 Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH 3/3] platform/x86/intel: vsec: Add DG2 support
-Date:   Mon, 14 Feb 2022 13:32:58 -0800
-Message-Id: <20220214213258.1929462-4-david.e.box@linux.intel.com>
+Subject: [PATCH 0/3] Add pm_runtime and DG2 support
+Date:   Mon, 14 Feb 2022 13:32:55 -0800
+Message-Id: <20220214213258.1929462-1-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220214213258.1929462-1-david.e.box@linux.intel.com>
-References: <20220214213258.1929462-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add Platform Monitoring Technology support for DG2 platforms.
+This series adds runtime pm support to the Intel Platform Monitoring
+Technology (PMT) driver. This is needed by devices whose slots cannot go to
+D3 without power gating the PMT endpoint. To do this, this series also
+removes the current binary mmap support since the implementation doesn't
+allow for a proper intercept point to perform runtime pm.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/platform/x86/intel/pmt/class.c | 2 ++
- drivers/platform/x86/intel/vsec.c      | 9 +++++++++
- 2 files changed, 11 insertions(+)
+David E. Box (3):
+  platform/x86/intel: pmt: Remove bin_attribute mmap support to runtime
+    pm
+  platform/x86/intel: vsec: Enable runtime D3
+  platform/x86/intel: vsec: Add DG2 support
 
-diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-index a3ec09fe2f38..d25fffb2103d 100644
---- a/drivers/platform/x86/intel/pmt/class.c
-+++ b/drivers/platform/x86/intel/pmt/class.c
-@@ -31,6 +31,8 @@
- static const struct pci_device_id pmt_telem_early_client_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x467d) }, /* ADL */
- 	{ PCI_VDEVICE(INTEL, 0x490e) }, /* DG1 */
-+	{ PCI_VDEVICE(INTEL, 0x4f93) }, /* DG2_G10 */
-+	{ PCI_VDEVICE(INTEL, 0x4f95) }, /* DG2_G11 */
- 	{ PCI_VDEVICE(INTEL, 0x9a0d) }, /* TGL */
- 	{ }
- };
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index d182122c261d..f256c7ca5452 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -396,17 +396,26 @@ static const struct intel_vsec_platform_info dg1_info = {
- 	.quirks = VSEC_QUIRK_NO_DVSEC,
- };
- 
-+/* DG2 info */
-+static const struct intel_vsec_platform_info dg2_info = {
-+	.quirks = VSEC_QUIRK_TABLE_SHIFT
-+};
-+
- #ifdef CONFIG_PM_SLEEP
- static const struct dev_pm_ops intel_vsec_pm_ops = {};
- #endif
- 
- #define PCI_DEVICE_ID_INTEL_VSEC_ADL		0x467d
- #define PCI_DEVICE_ID_INTEL_VSEC_DG1		0x490e
-+#define PCI_DEVICE_ID_INTEL_VSEC_DG2_G10	0x4f93
-+#define PCI_DEVICE_ID_INTEL_VSEC_DG2_G11	0x4f95
- #define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM		0x09a7
- #define PCI_DEVICE_ID_INTEL_VSEC_TGL		0x9a0d
- static const struct pci_device_id intel_vsec_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_ADL, &tgl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_DG1, &dg1_info) },
-+	{ PCI_DEVICE_DATA(INTEL, VSEC_DG2_G10, &dg2_info) },
-+	{ PCI_DEVICE_DATA(INTEL, VSEC_DG2_G11, &dg2_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM, NULL) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_TGL, &tgl_info) },
- 	{ }
+ .../ABI/testing/sysfs-class-intel_pmt         | 24 ++++++------
+ drivers/platform/x86/intel/pmt/class.c        | 38 ++++---------------
+ drivers/platform/x86/intel/pmt/class.h        |  3 ++
+ drivers/platform/x86/intel/vsec.c             | 32 ++++++++++++++++
+ 4 files changed, 54 insertions(+), 43 deletions(-)
+
 -- 
 2.25.1
 
