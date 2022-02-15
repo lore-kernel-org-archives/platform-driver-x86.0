@@ -2,132 +2,218 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4267CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Feb 2022 14:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE55C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Feb 2022 14:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237019AbiBOOOv (ORCPT
+        id S238750AbiBOOjj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Feb 2022 09:14:51 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60536 "EHLO
+        Tue, 15 Feb 2022 09:39:39 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233385AbiBOOOu (ORCPT
+        with ESMTP id S238599AbiBOOji (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Feb 2022 09:14:50 -0500
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D059C9AE61
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 06:14:40 -0800 (PST)
-Received: by mail-yb1-xb31.google.com with SMTP id v63so29268637ybv.10
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 06:14:40 -0800 (PST)
+        Tue, 15 Feb 2022 09:39:38 -0500
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9C810241A
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 06:39:28 -0800 (PST)
+Received: by mail-oi1-x229.google.com with SMTP id o23so1478408oie.10
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 06:39:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=5TB6dGxazC1uji3PM0bPijKJuSzmBt7/lbdUM4chpqU=;
-        b=YDCb3hCHhZLLEPG5t2STM5k0BBUZ1OEQR1TmPowgoYCROFj1eheYFEv8Zi7sstHXNL
-         VCBTAIw2bDn79YlEFIL/v80w7H7F5VUUrP4QmZylVQptNG183UARrdVBR1riwFhuPWLG
-         RnrdND1gvstyq87OFph0FtblJkH4LvT8UxjIaie/w22X2pX3Ju6XRdRu17qLHgEij1kk
-         xKLKK1zYpenx+E76kTXm1UPrgNnOneMahJtbCupPCBENe/oLh3Wlvj/ngbz/FBn/zGiv
-         b0mllHKRloGS5T5sYehEFiPGnwRjKHq7NGaMGcodGBBncoOYkFY+BppdgSRblGKXKrAB
-         +j6A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Lf/4yqUubIAsBX3zBqJUmMO3ziUy/Ck0QlY5xnv6TAw=;
+        b=gCNi9H6h5bownQSUa/VlA7DaUpzKEcyHZY+rUbUzonZgquaJz2Rg9EN+8hFdSbUT5Y
+         5Uj/XSNONMm2HRGEkBJEFXX3k10LrTPETlA2Bk8MUvsH5uUnDaH/YJoByOUVzXqKFVQz
+         juPMxVhFJ2wUNzdliMpAqPOtvUKmzBiUC+4wsobuYOgWHMDWBz0/pi9Txbr3nD7xYFoP
+         Xzo/H+26Pk5J83rLP2ymnZPGgE7ZaC4r5wIHXj5TF5TFbbVejqj3AmApIiAUB1fsCk4U
+         8JXQh2BkHfKK1wXPfgPRZZL4uY8VZsL921qAAsocG0C6h2idZgYi9kuUuvns+VUyDj0k
+         QaTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=5TB6dGxazC1uji3PM0bPijKJuSzmBt7/lbdUM4chpqU=;
-        b=71+RTeIcCe2E3plkmlPpRHPFDtleaT5DOkuOPHsAvx1CP+SX0yVUKCj5TmzlX9rkK4
-         Jannm3AoC8QBElM/G0o5NLGu7SzSgE1eCD1tXYiDuYySNmoWmjBf646oIu7TZJ/SNZF5
-         l1WrPUj/oHNa9Yv64qvmWhzcDL8fsCBJGl/vLtSybtbWjTXiRf6V94u6pMWZkMR5PkjL
-         tfP5IsqEjoUKZuKASirpA7IVf/qSo4szNXi2qjX4Aps3ZJn57F1HQwAHOltwrHK2N4ys
-         azuSJaXp4mi0V/X6vVPYhxrA3qMn29aifM5i2hOZVrBGLvef96N6EY/TXUgZWFBj3zW3
-         wtgg==
-X-Gm-Message-State: AOAM5327uvvqxFX8cc76Igxq2DzxrUBvSuQbzWFaZ5OoA+4Qd+4wMe7L
-        066iUBywZdaQcvmDGRu1TqeUNa5AknncMa61J7g77g==
-X-Google-Smtp-Source: ABdhPJxiNz0d2nqELO9RSvILyKX1eArLqLnZoM38DGg0w/FBN2U8DfR5PNrq+qbmCdAr+SwUpTSLA3xgu53apagAxwM=
-X-Received: by 2002:a25:ad51:: with SMTP id l17mr3946323ybe.20.1644934480016;
- Tue, 15 Feb 2022 06:14:40 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Lf/4yqUubIAsBX3zBqJUmMO3ziUy/Ck0QlY5xnv6TAw=;
+        b=7Y9j1TK5eEL+B70DpHaxVxO9T3pTlqqm1D29XLSKiFp/fijmCVYXNl3hxU/0+MaCJk
+         L6099ab+DZGkJXhAoSjvQvKJ5A/a3cRJY5c1fAVceJf7v/gvR32BUDs12HQzipI/1I2i
+         ug36Y1ns8BCAKyKa8laRDf6aTpe+FV047VaSwdycod3OtCAjyNQ+GqwTfxrwxW6Kaw5q
+         ku+nRtdNagynX6kKtTKGqpP0majX59BcwM3OafXdfQiL6Q2/wG9ndqBpws5svioR4noy
+         8LA/012dlLUZFoa1u2gH+RO98YTJYiSv7cA1Qwuv8WNsZQqDKWGLW7Hgsi5co5kQddyg
+         zKuA==
+X-Gm-Message-State: AOAM531TWdnN7GSzz1QM3v1ZDub3ss4BNwC6Rau3Miydg0TgnLeYquOQ
+        +Hc1maG5ITUFuo0vdrOLZSrhng==
+X-Google-Smtp-Source: ABdhPJxKNfH/q+wfB2DRDx/TNV/ggNE+Wkg7gQclH/9vKbhBCkLSPxGUW40rpsmK/TP/T3bl6N4Qqg==
+X-Received: by 2002:a05:6808:f05:: with SMTP id m5mr1561528oiw.337.1644935967969;
+        Tue, 15 Feb 2022 06:39:27 -0800 (PST)
+Received: from yoga ([2600:1700:a0:3dc8:5c39:baff:fe03:898d])
+        by smtp.gmail.com with ESMTPSA id u5sm14029206ooo.46.2022.02.15.06.39.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Feb 2022 06:39:27 -0800 (PST)
+Date:   Tue, 15 Feb 2022 08:39:25 -0600
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jarrett Schultz <jaschultz@microsoft.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Jarrett Schultz <jaschultzms@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH RESEND v4 1/4] dt-bindings: platform:
+ microsoft: Document surface xbl
+Message-ID: <Ygu7HdrLnzFj3BrV@yoga>
+References: <20211221182826.2141789-1-jaschultzMS@gmail.com>
+ <20211221182826.2141789-2-jaschultzMS@gmail.com>
+ <YcJiBk5f071eJ5+n@robh.at.kernel.org>
+ <DM6PR21MB13238271EE4163A0F8A52B19A5289@DM6PR21MB1323.namprd21.prod.outlook.com>
+ <BYAPR21MB1320B5FD66C8FA8C066A716AA5349@BYAPR21MB1320.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Received: by 2002:a81:174d:0:0:0:0:0 with HTTP; Tue, 15 Feb 2022 06:14:39
- -0800 (PST)
-In-Reply-To: <YgtR++NUG3w6DH11@kernel.org>
-References: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
- <20220203164328.203629-4-martin.fernandez@eclypsium.com> <202202071325.F8450B3B2D@keescook>
- <YgIseIEMotD2jg83@kernel.org> <CAKgze5a_o=+f6fE55p4D50qZSRNUEHUWBe+Fn8Fc=1RjFLfgeQ@mail.gmail.com>
- <YgtR++NUG3w6DH11@kernel.org>
-From:   Martin Fernandez <martin.fernandez@eclypsium.com>
-Date:   Tue, 15 Feb 2022 11:14:39 -0300
-Message-ID: <CAKgze5YFMugCsum8SX+qE26BwxQRW0Uu2qKjEYusFerqk3cEMA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/6] x86/e820: Refactor range_update and range_remove
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-mm@kvack.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, ardb@kernel.org, dvhart@infradead.org,
-        andy@infradead.org, gregkh@linuxfoundation.org, rafael@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR21MB1320B5FD66C8FA8C066A716AA5349@BYAPR21MB1320.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2/15/22, Mike Rapoport <rppt@kernel.org> wrote:
-> Hi Martin,
->
-> On Tue, Feb 08, 2022 at 06:01:21PM -0300, Martin Fernandez wrote:
->> On 2/8/22, Mike Rapoport <rppt@kernel.org> wrote:
->> > On Mon, Feb 07, 2022 at 01:45:40PM -0800, Kees Cook wrote:
->> >> On Thu, Feb 03, 2022 at 01:43:25PM -0300, Martin Fernandez wrote:
->> >> > __e820__range_update and e820__range_remove had a very similar
->> >> > implementation with a few lines different from each other, the lines
->> >> > that actually perform the modification over the e820_table. The
->> >> > similiraties were found in the checks for the different cases on how
->> >> > each entry intersects with the given range (if it does at all).
->> >> > These
->> >> > checks were very presice and error prone so it was not a good idea
->> >> > to
->> >> > have them in both places.
->> >>
->> >> Yay removing copy/paste code! :)
->> >
->> > Removing copy/paste is nice but diffstat of
->> >
->> >  arch/x86/kernel/e820.c | 383 ++++++++++++++++++++++++++++++-----------
->> >  1 file changed, 283 insertions(+), 100 deletions(-)
->> >
->> > does not look nice even accounting for lots of comments :(
->> >
->> > I didn't look closely, but diffstat clues that the refactoring making
->> > things much more complex.
->> >
->>
->> Yes, that diffstat surprised me as well.
->>
->> I have to mention that 110 of those lines are kerneldocs and blank
->> lines, which is quite a lot. Also you have to take into account that I
->> expanded most of the function definitions for better formatting, which
->> also took some space.
->
-> At last I had time to look more closely and I think that using a set of
-> callbacks is over-complicated.
->
-> I think this can be done way simpler, e.g like this (untested) draft:
->
-> https://git.kernel.org/rppt/h/x86/e820-update-range
->
+On Mon 14 Feb 19:04 CST 2022, Jarrett Schultz wrote:
 
-Thanks for taking the time to reviewing it.
+> Jarrett Schultz wrote:
+> > From: Jarrett Schultz
+> > 
+> > Rob Herring wrote:
+> > > From: Rob Herring <robh@kernel.org>
+> > >
+> > > On Tue, Dec 21, 2021 at 10:28:23AM -0800, Jarrett Schultz wrote:
+> > > > From: Jarrett Schultz <jaschultz@microsoft.com>
+> > > >
+> > > > +title: Surface Extensible Bootloader for Microsoft Surface Duo
+> > > > +
+> > > > +maintainers:
+> > > > +  - Jarrett Schultz <jaschultz@microsoft.com>
+> > > > +
+> > > > +description: |
+> > > > +  Defined to expose information that is used during production when
+> > > > +  device is in manufacturing mode. Some of the information included
+> > > > +  in this imem section is -
+> > >
+> > > If this is onchip sram, we have a binding for that. That's not an MFD.
+> > 
+> > I now have this driver working with nvmem, but I could not find the binding
+> > that you are talking about here. Could you point me to the binding?
+> > 
+> > Thanks,
+> > Jarrett
+> > 
+> 
+> Rob,
+> 
+> I followed up with my team members who have let me know that this lies
+> in DDR rather than SRAM. Could you please point me to the correct
+> binding to use?
+> 
 
-Yeah, I did something like that in a previous version. Altough I
-wasn't really happy with that.
+It might be DDR, but it's on-chip and the memory region that you
+describe is a region within "imem" - something used for various purposes
+by Qualcomm, presumably also in your device. Unfortunately we haven't
+specified a binding for "imem", only some of its regions.
 
-https://lore.kernel.org/linux-efi/20220113213027.457282-4-martin.fernandez@eclypsium.com/
+Perhaps it would be appropriate to express the entire imem as nvmem, in
+addition to the region-specific logic, if that suits you.
 
-I think that with the struct with the function arguments looks more
-clear than what I did, but you have to take into account that I need
-to create yet
-another function similar to those and another parameter to the struct,
-and with that I think that __e820__range_update will look scary.
+Regards,
+Bjorn
 
-I'll give it a try anyway!
+> Thanks,
+> Jarrett
+> 
+> > >
+> > > > +    * board_id
+> > > > +    * battery_present
+> > > > +    * hw_init_retries
+> > > > +    * is_customer_mode
+> > > > +    * is_act_mode
+> > > > +    * pmic_reset_reason
+> > > > +    * touch_fw_version
+> > > > +    * ocp_error_location
+> > >
+> > > nvmem binding doesn't work for describing these fields?
+> > >
+> > > > +  See sysfs documentation for more information.
+> > >
+> > > sysfs? Not relevant to the binding.
+> > >
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: simple-mfd
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +additionalProperties: false
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +  - ranges
+> > > > +  - address-cells
+> > > > +  - size-cells
+> > > > +
+> > > > +examples:
+> > > > +  - |
+> > > > +    / {
+> > > > +        compatible = "foo";
+> > > > +        model = "foo";
+> > >
+> > > No need to make this the root node with a fake compatible.
+> > >
+> > > > +        #address-cells = <2>;
+> > > > +        #size-cells = <2>;
+> > > > +
+> > > > +        imem@146bf000 {
+> > > > +          compatible = "simple-mfd";
+> > > > +          reg = <0x0 0x146bf000 0x0 0x1000>;
+> > > > +          ranges = <0x0 0x0 0x146bf000 0x1000>;
+> > > > +          #address-cells = <1>;
+> > > > +          #size-cells = <1>;
+> > > > +          status = "okay";
+> > >
+> > > Don't show status in examples.
+> > >
+> > > > +
+> > > > +          xbl@a94 {
+> > > > +            compatible = "microsoft,sm8150-surface-duo-xbl";
+> > > > +            reg = <0xa94 0x100>;
+> > > > +            status = "okay";
+> > > > +          };
+> > > > +        };
+> > > > +      };
+> > > > diff --git a/MAINTAINERS b/MAINTAINERS index
+> > > > 13f9a84a617e..5d0ca2a98b57 100644
+> > > > --- a/MAINTAINERS
+> > > > +++ b/MAINTAINERS
+> > > > @@ -12649,6 +12649,13 @@ F:	Documentation/driver-
+> > > api/surface_aggregator/clients/dtx.rst
+> > > >  F:	drivers/platform/surface/surface_dtx.c
+> > > >  F:	include/uapi/linux/surface_aggregator/dtx.h
+> > > >
+> > > > +MICROSOFT SURFACE DUO XBL DRIVER
+> > > > +M:	Jarrett Schultz <jaschultz@microsoft.com>
+> > > > +L:	linux-arm-msm@vger.kernel.org
+> > > > +L:	platform-driver-x86@vger.kernel.org
+> > > > +S:	Supported
+> > > > +F:	Documentation/devicetree/bindings/platform/microsoft/surface-
+> > > xbl.yaml
+> > > > +
+> > > >  MICROSOFT SURFACE GPE LID SUPPORT DRIVER
+> > > >  M:	Maximilian Luz <luzmaximilian@gmail.com>
+> > > >  L:	platform-driver-x86@vger.kernel.org
+> > > > --
+> > > > 2.25.1
+> > > >
+> > > >
