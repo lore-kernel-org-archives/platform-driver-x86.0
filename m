@@ -2,218 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE55C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Feb 2022 14:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB69C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Feb 2022 14:41:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238750AbiBOOjj (ORCPT
+        id S229714AbiBOOl0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Feb 2022 09:39:39 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48230 "EHLO
+        Tue, 15 Feb 2022 09:41:26 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238599AbiBOOji (ORCPT
+        with ESMTP id S233326AbiBOOlZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Feb 2022 09:39:38 -0500
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9C810241A
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 06:39:28 -0800 (PST)
-Received: by mail-oi1-x229.google.com with SMTP id o23so1478408oie.10
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 06:39:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Lf/4yqUubIAsBX3zBqJUmMO3ziUy/Ck0QlY5xnv6TAw=;
-        b=gCNi9H6h5bownQSUa/VlA7DaUpzKEcyHZY+rUbUzonZgquaJz2Rg9EN+8hFdSbUT5Y
-         5Uj/XSNONMm2HRGEkBJEFXX3k10LrTPETlA2Bk8MUvsH5uUnDaH/YJoByOUVzXqKFVQz
-         juPMxVhFJ2wUNzdliMpAqPOtvUKmzBiUC+4wsobuYOgWHMDWBz0/pi9Txbr3nD7xYFoP
-         Xzo/H+26Pk5J83rLP2ymnZPGgE7ZaC4r5wIHXj5TF5TFbbVejqj3AmApIiAUB1fsCk4U
-         8JXQh2BkHfKK1wXPfgPRZZL4uY8VZsL921qAAsocG0C6h2idZgYi9kuUuvns+VUyDj0k
-         QaTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Lf/4yqUubIAsBX3zBqJUmMO3ziUy/Ck0QlY5xnv6TAw=;
-        b=7Y9j1TK5eEL+B70DpHaxVxO9T3pTlqqm1D29XLSKiFp/fijmCVYXNl3hxU/0+MaCJk
-         L6099ab+DZGkJXhAoSjvQvKJ5A/a3cRJY5c1fAVceJf7v/gvR32BUDs12HQzipI/1I2i
-         ug36Y1ns8BCAKyKa8laRDf6aTpe+FV047VaSwdycod3OtCAjyNQ+GqwTfxrwxW6Kaw5q
-         ku+nRtdNagynX6kKtTKGqpP0majX59BcwM3OafXdfQiL6Q2/wG9ndqBpws5svioR4noy
-         8LA/012dlLUZFoa1u2gH+RO98YTJYiSv7cA1Qwuv8WNsZQqDKWGLW7Hgsi5co5kQddyg
-         zKuA==
-X-Gm-Message-State: AOAM531TWdnN7GSzz1QM3v1ZDub3ss4BNwC6Rau3Miydg0TgnLeYquOQ
-        +Hc1maG5ITUFuo0vdrOLZSrhng==
-X-Google-Smtp-Source: ABdhPJxKNfH/q+wfB2DRDx/TNV/ggNE+Wkg7gQclH/9vKbhBCkLSPxGUW40rpsmK/TP/T3bl6N4Qqg==
-X-Received: by 2002:a05:6808:f05:: with SMTP id m5mr1561528oiw.337.1644935967969;
-        Tue, 15 Feb 2022 06:39:27 -0800 (PST)
-Received: from yoga ([2600:1700:a0:3dc8:5c39:baff:fe03:898d])
-        by smtp.gmail.com with ESMTPSA id u5sm14029206ooo.46.2022.02.15.06.39.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Feb 2022 06:39:27 -0800 (PST)
-Date:   Tue, 15 Feb 2022 08:39:25 -0600
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jarrett Schultz <jaschultz@microsoft.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Jarrett Schultz <jaschultzms@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH RESEND v4 1/4] dt-bindings: platform:
- microsoft: Document surface xbl
-Message-ID: <Ygu7HdrLnzFj3BrV@yoga>
-References: <20211221182826.2141789-1-jaschultzMS@gmail.com>
- <20211221182826.2141789-2-jaschultzMS@gmail.com>
- <YcJiBk5f071eJ5+n@robh.at.kernel.org>
- <DM6PR21MB13238271EE4163A0F8A52B19A5289@DM6PR21MB1323.namprd21.prod.outlook.com>
- <BYAPR21MB1320B5FD66C8FA8C066A716AA5349@BYAPR21MB1320.namprd21.prod.outlook.com>
+        Tue, 15 Feb 2022 09:41:25 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB872102429;
+        Tue, 15 Feb 2022 06:41:14 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-221-104.088.067.pools.vodafone-ip.de [88.67.221.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 165F71EC0518;
+        Tue, 15 Feb 2022 15:41:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1644936069;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=SHIy0JOracxSZUX44JRM2zOEiCF50L0BbqI7lPnq/lg=;
+        b=D+daksFOoyoSLR0f2z09XUHDSNPn8LQA3tsgm5xo8bZfaH0AXftJ1PbhtIB8uFRTlDgeN3
+        IhZrPaWjYY55BMCz3b9qcWUAeCmuhJ5xY1m5uq066+kwXprdzCQI0pJsdrNDTp0Rcll5OI
+        qAHnm6YoNPR0BXK0WMHqnRqjx57sXwA=
+Date:   Tue, 15 Feb 2022 15:41:10 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v10 21/45] x86/mm: Add support to validate memory when
+ changing C-bit
+Message-ID: <Ygu7hotAeHAFWn6Y@zn.tnic>
+References: <20220209181039.1262882-1-brijesh.singh@amd.com>
+ <20220209181039.1262882-22-brijesh.singh@amd.com>
+ <YgZ427v95xcdOKSC@zn.tnic>
+ <0242e383-5406-7504-ff3d-cf2e8dfaf8a3@amd.com>
+ <Ygj2Wx6jtNEEmbh9@zn.tnic>
+ <20220215124331.i4vgww733fv5owrx@box.shutemov.name>
+ <YguimA5Au4t2A4oj@zn.tnic>
+ <20220215131522.l3xytgmy4ufrgnlb@box.shutemov.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <BYAPR21MB1320B5FD66C8FA8C066A716AA5349@BYAPR21MB1320.namprd21.prod.outlook.com>
+In-Reply-To: <20220215131522.l3xytgmy4ufrgnlb@box.shutemov.name>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon 14 Feb 19:04 CST 2022, Jarrett Schultz wrote:
+On Tue, Feb 15, 2022 at 04:15:22PM +0300, Kirill A. Shutemov wrote:
+> I have no problem with cc_vendor idea. It looks good.
 
-> Jarrett Schultz wrote:
-> > From: Jarrett Schultz
-> > 
-> > Rob Herring wrote:
-> > > From: Rob Herring <robh@kernel.org>
-> > >
-> > > On Tue, Dec 21, 2021 at 10:28:23AM -0800, Jarrett Schultz wrote:
-> > > > From: Jarrett Schultz <jaschultz@microsoft.com>
-> > > >
-> > > > +title: Surface Extensible Bootloader for Microsoft Surface Duo
-> > > > +
-> > > > +maintainers:
-> > > > +  - Jarrett Schultz <jaschultz@microsoft.com>
-> > > > +
-> > > > +description: |
-> > > > +  Defined to expose information that is used during production when
-> > > > +  device is in manufacturing mode. Some of the information included
-> > > > +  in this imem section is -
-> > >
-> > > If this is onchip sram, we have a binding for that. That's not an MFD.
-> > 
-> > I now have this driver working with nvmem, but I could not find the binding
-> > that you are talking about here. Could you point me to the binding?
-> > 
-> > Thanks,
-> > Jarrett
-> > 
-> 
-> Rob,
-> 
-> I followed up with my team members who have let me know that this lies
-> in DDR rather than SRAM. Could you please point me to the correct
-> binding to use?
-> 
+Good.
 
-It might be DDR, but it's on-chip and the memory region that you
-describe is a region within "imem" - something used for various purposes
-by Qualcomm, presumably also in your device. Unfortunately we haven't
-specified a binding for "imem", only some of its regions.
+> Regarding the masks, if we want to have common ground here we can add two
+> mask: cc_enc_mask and cc_dec_mask. And then
 
-Perhaps it would be appropriate to express the entire imem as nvmem, in
-addition to the region-specific logic, if that suits you.
+If we do two masks, then we can just as well leave the SME and TDX
+masks. The point of the whole exercise is to have simpler code and less
+ifdeffery.
 
-Regards,
-Bjorn
+If you "hide" how the mask works on each vendor in the respective
+functions - and yes, cc_pgprot_dec/enc() reads better - then it doesn't
+matter how the mask is defined.
 
-> Thanks,
-> Jarrett
-> 
-> > >
-> > > > +    * board_id
-> > > > +    * battery_present
-> > > > +    * hw_init_retries
-> > > > +    * is_customer_mode
-> > > > +    * is_act_mode
-> > > > +    * pmic_reset_reason
-> > > > +    * touch_fw_version
-> > > > +    * ocp_error_location
-> > >
-> > > nvmem binding doesn't work for describing these fields?
-> > >
-> > > > +  See sysfs documentation for more information.
-> > >
-> > > sysfs? Not relevant to the binding.
-> > >
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: simple-mfd
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +additionalProperties: false
-> > > > +
-> > > > +required:
-> > > > +  - compatible
-> > > > +  - reg
-> > > > +  - ranges
-> > > > +  - address-cells
-> > > > +  - size-cells
-> > > > +
-> > > > +examples:
-> > > > +  - |
-> > > > +    / {
-> > > > +        compatible = "foo";
-> > > > +        model = "foo";
-> > >
-> > > No need to make this the root node with a fake compatible.
-> > >
-> > > > +        #address-cells = <2>;
-> > > > +        #size-cells = <2>;
-> > > > +
-> > > > +        imem@146bf000 {
-> > > > +          compatible = "simple-mfd";
-> > > > +          reg = <0x0 0x146bf000 0x0 0x1000>;
-> > > > +          ranges = <0x0 0x0 0x146bf000 0x1000>;
-> > > > +          #address-cells = <1>;
-> > > > +          #size-cells = <1>;
-> > > > +          status = "okay";
-> > >
-> > > Don't show status in examples.
-> > >
-> > > > +
-> > > > +          xbl@a94 {
-> > > > +            compatible = "microsoft,sm8150-surface-duo-xbl";
-> > > > +            reg = <0xa94 0x100>;
-> > > > +            status = "okay";
-> > > > +          };
-> > > > +        };
-> > > > +      };
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS index
-> > > > 13f9a84a617e..5d0ca2a98b57 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -12649,6 +12649,13 @@ F:	Documentation/driver-
-> > > api/surface_aggregator/clients/dtx.rst
-> > > >  F:	drivers/platform/surface/surface_dtx.c
-> > > >  F:	include/uapi/linux/surface_aggregator/dtx.h
-> > > >
-> > > > +MICROSOFT SURFACE DUO XBL DRIVER
-> > > > +M:	Jarrett Schultz <jaschultz@microsoft.com>
-> > > > +L:	linux-arm-msm@vger.kernel.org
-> > > > +L:	platform-driver-x86@vger.kernel.org
-> > > > +S:	Supported
-> > > > +F:	Documentation/devicetree/bindings/platform/microsoft/surface-
-> > > xbl.yaml
-> > > > +
-> > > >  MICROSOFT SURFACE GPE LID SUPPORT DRIVER
-> > > >  M:	Maximilian Luz <luzmaximilian@gmail.com>
-> > > >  L:	platform-driver-x86@vger.kernel.org
-> > > > --
-> > > > 2.25.1
-> > > >
-> > > >
+Because you don't need two masks to encrypt/decrypt pages - you need a
+single mask but apply it differently.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
