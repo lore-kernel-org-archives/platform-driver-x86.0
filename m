@@ -2,135 +2,132 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D293C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Feb 2022 13:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4267CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Feb 2022 14:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238145AbiBONOn (ORCPT
+        id S237019AbiBOOOv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Feb 2022 08:14:43 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43632 "EHLO
+        Tue, 15 Feb 2022 09:14:51 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234188AbiBONOl (ORCPT
+        with ESMTP id S233385AbiBOOOu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Feb 2022 08:14:41 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8FDD007B
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 05:14:31 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id p22so3216859lfu.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 05:14:31 -0800 (PST)
+        Tue, 15 Feb 2022 09:14:50 -0500
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D059C9AE61
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 06:14:40 -0800 (PST)
+Received: by mail-yb1-xb31.google.com with SMTP id v63so29268637ybv.10
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 06:14:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6lHSX3nDfvtiD3huNGIKRJsACSoavhTr9PgfPRk1Big=;
-        b=ESudXjEoiYV67csMAz6wN1JL4hXkVwKkPOqRxXMFLxHapy+iAL6CtnAp5lJJKxftcc
-         tnEuFlvih63DPCMc5rMm8JaRH/xZVy8acSSvr+UGE3IQQ501svmUL3McYgPNYlDWiNzG
-         Tse3SmlGCSTcKPHd+PJNQYjoaLFm5XQEVVsiF5Nx2nsQqfOb8TS6CXG0S8KgWk0xkWmH
-         57y06dxQr31Od00TkqWsoE4vI7VaGSxiPmcouTy4BngG8hVxMt/dX4O7p0jhEkuEzuA8
-         WcRXRASzCPoJrQT99cPLKxNEsyWIcmdY70urf97+R+oah5HuBBpGYFe3aLxkP6kzdziV
-         D9oQ==
+        d=eclypsium.com; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=5TB6dGxazC1uji3PM0bPijKJuSzmBt7/lbdUM4chpqU=;
+        b=YDCb3hCHhZLLEPG5t2STM5k0BBUZ1OEQR1TmPowgoYCROFj1eheYFEv8Zi7sstHXNL
+         VCBTAIw2bDn79YlEFIL/v80w7H7F5VUUrP4QmZylVQptNG183UARrdVBR1riwFhuPWLG
+         RnrdND1gvstyq87OFph0FtblJkH4LvT8UxjIaie/w22X2pX3Ju6XRdRu17qLHgEij1kk
+         xKLKK1zYpenx+E76kTXm1UPrgNnOneMahJtbCupPCBENe/oLh3Wlvj/ngbz/FBn/zGiv
+         b0mllHKRloGS5T5sYehEFiPGnwRjKHq7NGaMGcodGBBncoOYkFY+BppdgSRblGKXKrAB
+         +j6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6lHSX3nDfvtiD3huNGIKRJsACSoavhTr9PgfPRk1Big=;
-        b=wsWv+qnAckfuV4vBJXuKcXo4/DKpcnqDwdRDrSmOOR/rlaXABq3RmI2zNsoKl7NsCZ
-         7NxiXCIU/EZlLbmLGsJpIff5O3882yRgnOvU1W1+SWxWA1uUbGmLVUn3TmG2qxGjV+AH
-         19tUy1tRLU26Tq51Y4oNsOWZGIgpHVFEIutTDYW7dFmFRi7KB7EvodREHlu+aG6KSowg
-         maKBRqmiMLRjr6lueYQAFn5piNqk8MRVwSXMN/TEjcYqK2J7aih34S+fOhIrsNrKAZvF
-         trRwYJAQThQWuikrI30jufvuUHDg42mu65Y4DG9dZOjSk0NaPZdHbE36/D1U4ycCAalk
-         BP9Q==
-X-Gm-Message-State: AOAM533tdJeiEeIh1lf+x5Orh9fuQDgerNEorWMp98D8tlo3/cpXFmvO
-        9mfbmFQql+cuyaS0cGg7jebY5w==
-X-Google-Smtp-Source: ABdhPJwpX7fwVZjUgY2Y9Z1gaYIpMXSKBhynYSWG9vsJYiEN+wWS3V2I3ZjIJAY26pVz/jAP6abjnA==
-X-Received: by 2002:a05:6512:6c7:: with SMTP id u7mr3265230lff.128.1644930869890;
-        Tue, 15 Feb 2022 05:14:29 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id y9sm4517142lfg.219.2022.02.15.05.14.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Feb 2022 05:14:29 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id DEEEF103F44; Tue, 15 Feb 2022 16:15:22 +0300 (+03)
-Date:   Tue, 15 Feb 2022 16:15:22 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v10 21/45] x86/mm: Add support to validate memory when
- changing C-bit
-Message-ID: <20220215131522.l3xytgmy4ufrgnlb@box.shutemov.name>
-References: <20220209181039.1262882-1-brijesh.singh@amd.com>
- <20220209181039.1262882-22-brijesh.singh@amd.com>
- <YgZ427v95xcdOKSC@zn.tnic>
- <0242e383-5406-7504-ff3d-cf2e8dfaf8a3@amd.com>
- <Ygj2Wx6jtNEEmbh9@zn.tnic>
- <20220215124331.i4vgww733fv5owrx@box.shutemov.name>
- <YguimA5Au4t2A4oj@zn.tnic>
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=5TB6dGxazC1uji3PM0bPijKJuSzmBt7/lbdUM4chpqU=;
+        b=71+RTeIcCe2E3plkmlPpRHPFDtleaT5DOkuOPHsAvx1CP+SX0yVUKCj5TmzlX9rkK4
+         Jannm3AoC8QBElM/G0o5NLGu7SzSgE1eCD1tXYiDuYySNmoWmjBf646oIu7TZJ/SNZF5
+         l1WrPUj/oHNa9Yv64qvmWhzcDL8fsCBJGl/vLtSybtbWjTXiRf6V94u6pMWZkMR5PkjL
+         tfP5IsqEjoUKZuKASirpA7IVf/qSo4szNXi2qjX4Aps3ZJn57F1HQwAHOltwrHK2N4ys
+         azuSJaXp4mi0V/X6vVPYhxrA3qMn29aifM5i2hOZVrBGLvef96N6EY/TXUgZWFBj3zW3
+         wtgg==
+X-Gm-Message-State: AOAM5327uvvqxFX8cc76Igxq2DzxrUBvSuQbzWFaZ5OoA+4Qd+4wMe7L
+        066iUBywZdaQcvmDGRu1TqeUNa5AknncMa61J7g77g==
+X-Google-Smtp-Source: ABdhPJxiNz0d2nqELO9RSvILyKX1eArLqLnZoM38DGg0w/FBN2U8DfR5PNrq+qbmCdAr+SwUpTSLA3xgu53apagAxwM=
+X-Received: by 2002:a25:ad51:: with SMTP id l17mr3946323ybe.20.1644934480016;
+ Tue, 15 Feb 2022 06:14:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YguimA5Au4t2A4oj@zn.tnic>
+Received: by 2002:a81:174d:0:0:0:0:0 with HTTP; Tue, 15 Feb 2022 06:14:39
+ -0800 (PST)
+In-Reply-To: <YgtR++NUG3w6DH11@kernel.org>
+References: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
+ <20220203164328.203629-4-martin.fernandez@eclypsium.com> <202202071325.F8450B3B2D@keescook>
+ <YgIseIEMotD2jg83@kernel.org> <CAKgze5a_o=+f6fE55p4D50qZSRNUEHUWBe+Fn8Fc=1RjFLfgeQ@mail.gmail.com>
+ <YgtR++NUG3w6DH11@kernel.org>
+From:   Martin Fernandez <martin.fernandez@eclypsium.com>
+Date:   Tue, 15 Feb 2022 11:14:39 -0300
+Message-ID: <CAKgze5YFMugCsum8SX+qE26BwxQRW0Uu2qKjEYusFerqk3cEMA@mail.gmail.com>
+Subject: Re: [PATCH v6 3/6] x86/e820: Refactor range_update and range_remove
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-mm@kvack.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, ardb@kernel.org, dvhart@infradead.org,
+        andy@infradead.org, gregkh@linuxfoundation.org, rafael@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Feb 15, 2022 at 01:54:48PM +0100, Borislav Petkov wrote:
-> On Tue, Feb 15, 2022 at 03:43:31PM +0300, Kirill A. Shutemov wrote:
-> > I don't think it works. TDX and SME/SEV has opposite polarity of the mask.
-> > SME/SEV has to clear the mask to share the page. TDX has to set it.
-> > 
-> > Making a single global mask only increases confusion.
-> 
-> Didn't you read the rest of the thread with Tom's suggestion? I think
-> there's a merit in having a cc_vendor or so which explicitly states what
-> type of HV the kernel runs on...
+On 2/15/22, Mike Rapoport <rppt@kernel.org> wrote:
+> Hi Martin,
+>
+> On Tue, Feb 08, 2022 at 06:01:21PM -0300, Martin Fernandez wrote:
+>> On 2/8/22, Mike Rapoport <rppt@kernel.org> wrote:
+>> > On Mon, Feb 07, 2022 at 01:45:40PM -0800, Kees Cook wrote:
+>> >> On Thu, Feb 03, 2022 at 01:43:25PM -0300, Martin Fernandez wrote:
+>> >> > __e820__range_update and e820__range_remove had a very similar
+>> >> > implementation with a few lines different from each other, the lines
+>> >> > that actually perform the modification over the e820_table. The
+>> >> > similiraties were found in the checks for the different cases on how
+>> >> > each entry intersects with the given range (if it does at all).
+>> >> > These
+>> >> > checks were very presice and error prone so it was not a good idea
+>> >> > to
+>> >> > have them in both places.
+>> >>
+>> >> Yay removing copy/paste code! :)
+>> >
+>> > Removing copy/paste is nice but diffstat of
+>> >
+>> >  arch/x86/kernel/e820.c | 383 ++++++++++++++++++++++++++++++-----------
+>> >  1 file changed, 283 insertions(+), 100 deletions(-)
+>> >
+>> > does not look nice even accounting for lots of comments :(
+>> >
+>> > I didn't look closely, but diffstat clues that the refactoring making
+>> > things much more complex.
+>> >
+>>
+>> Yes, that diffstat surprised me as well.
+>>
+>> I have to mention that 110 of those lines are kerneldocs and blank
+>> lines, which is quite a lot. Also you have to take into account that I
+>> expanded most of the function definitions for better formatting, which
+>> also took some space.
+>
+> At last I had time to look more closely and I think that using a set of
+> callbacks is over-complicated.
+>
+> I think this can be done way simpler, e.g like this (untested) draft:
+>
+> https://git.kernel.org/rppt/h/x86/e820-update-range
+>
 
-I have no problem with cc_vendor idea. It looks good.
+Thanks for taking the time to reviewing it.
 
-Regarding the masks, if we want to have common ground here we can add two
-mask: cc_enc_mask and cc_dec_mask. And then
+Yeah, I did something like that in a previous version. Altough I
+wasn't really happy with that.
 
-pgprotval_t cc_enc(pgprotval_t protval)
-{
-	protval |= cc_enc_mask;
-	protval &= ~cc_dec_mask;
-	return protval;
-}
+https://lore.kernel.org/linux-efi/20220113213027.457282-4-martin.fernandez@eclypsium.com/
 
-pgprotval_t cc_dec(pgprotval_t protval)
-{
-	protval |= cc_dec_mask;
-	protval &= ~cc_enc_mask;
-	return protval;
-}
+I think that with the struct with the function arguments looks more
+clear than what I did, but you have to take into account that I need
+to create yet
+another function similar to those and another parameter to the struct,
+and with that I think that __e820__range_update will look scary.
 
-It assumes (cc_enc_mask & cc_dec_mask) == 0.
-
-Any opinions?
-
--- 
- Kirill A. Shutemov
+I'll give it a try anyway!
