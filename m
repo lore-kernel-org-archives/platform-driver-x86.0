@@ -2,133 +2,140 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B189CC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Feb 2022 17:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD90C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Feb 2022 18:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242557AbiBORaH (ORCPT
+        id S233442AbiBOSVt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Feb 2022 12:30:07 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44032 "EHLO
+        Tue, 15 Feb 2022 13:21:49 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242558AbiBORaG (ORCPT
+        with ESMTP id S234053AbiBOSVs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Feb 2022 12:30:06 -0500
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E1DDB854
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 09:29:55 -0800 (PST)
-Received: by mail-wr1-x429.google.com with SMTP id d27so33340990wrc.6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 09:29:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ICO1ml37Huyez+etV+dT6D2+k0fK+dVgQX5aKLEtpWE=;
-        b=im6LJNHwlFAY9cu/QQdYtskumJ2IlnWWzqdt5Z9BVaTZVNb6jEK7vusRjOzoETzlLy
-         D8CRih2welvIHDPxp+CBf1zRAWFB46gczAOOyzgQoBImzsy1sUBHpK17HTxUymgTgY+4
-         k3OV3VwgNG34VgF+pPMAWCJ+0t3V1u9KfifiwaoSxom9ARUIvx/a2Mq54gahxgbpXCkM
-         xHHr1UsBoR0xMqLrL39HDlu+dvBcZQuK+Q0jSfIhSP2cacCDhNapx7cvb+CrUi3VYD7F
-         5w1bEqTDFVkfjQnDy6CGZEuG8TFGtZSsdrSsfrYE/OPXw2taYRSitUXrncwpTOU/rkyj
-         yUHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ICO1ml37Huyez+etV+dT6D2+k0fK+dVgQX5aKLEtpWE=;
-        b=HuOmHsapOqmstGuoqYoBxcP5FFJcxEPNx4LOuSXZ34q6LWBxHzpIH4yE012Np4R3cK
-         0ibmf2tkksAuXrF2mJvEK7iS5Db0dq21dpM5j9N14chdE1v+ZtIoPdcdg9TB600IZTiS
-         9aUwE/qMvh8iJ1vpzaJb6w/Htbzd0n/ZYs/huY2pbThrQ16BLsU3/cqZpBz6lHYlLQjS
-         sRyd+yG65O8Kn6By+z9sTJMk9aNlTX/hos530z11UpcqUdwjqdHYJM1Ba9/YumbfOUlX
-         mbocuRgnxmGKBhqhIjsMfJL5AGECi6wxdAMdx9L8H7saQtXcCS1mgKkEz2WT8Cb7tO11
-         yBrA==
-X-Gm-Message-State: AOAM532qmzIGipS4Q8f46aZ3RijeiIoUElJ7GU3617ONTqrJZJ4f0WMR
-        FwsVsuXFJCCh4OK554AI+lUmAw==
-X-Google-Smtp-Source: ABdhPJwOSH7G6HmOK9tUgixHAXjPC1RBzQXDR1s7T2yUWuUsnh1GJ/d+msUEl3DzoTdLHmv2ZT68gw==
-X-Received: by 2002:adf:e5cb:: with SMTP id a11mr17283wrn.255.1644946193787;
-        Tue, 15 Feb 2022 09:29:53 -0800 (PST)
-Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
-        by smtp.gmail.com with ESMTPSA id f8sm13204075wmq.19.2022.02.15.09.29.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Feb 2022 09:29:53 -0800 (PST)
-Date:   Tue, 15 Feb 2022 17:29:51 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v4 5/8] mfd: lpc_ich: Add support for pinctrl in non-ACPI
- system
-Message-ID: <YgvjDy1R06IC8FE5@google.com>
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
- <20220131151346.45792-6-andriy.shevchenko@linux.intel.com>
- <YgvaqBB8fNVWp1lN@google.com>
- <YgveyspHVXCp2ul+@smile.fi.intel.com>
+        Tue, 15 Feb 2022 13:21:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43904119433
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 10:21:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D391B6164A
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 18:21:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1A6C340EC
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 18:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644949297;
+        bh=ukZkbQgXB1bRJa8NtvuFQNOIV7zjP6r/iAzSnoQHbF8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mKgDwpavdOBzOtoc1zjGZEVw43TY0v5CGP18DJG0IpCMzGlUFUuS/EVo2APRDvLuM
+         jow+SGDctLrfIA4gvfV46jYUloUZ1paFM9RBGPQEqRCiPvKlgJj0SHP4Tc72z1qq6l
+         1zzKtRGAiJfubXR699EDacjV+TBBAaEp0AevbrmEdqhiMt+IOv4n5qn+iYAw5ijMkR
+         pMHbv0xn06cjeprv3c3uRk/lWdo5Qxf0b6JxoyHvvlqni0PVRp1JNeSBXZc0BqOZpo
+         1AccaqRjWaRdeDbBaWEhJVeY1c10JtxBfRrNV9ZLIPQpcW7U6VofUkFwts/TEjJ15Q
+         OdQChoLa36S2Q==
+Received: by mail-yb1-f173.google.com with SMTP id o19so58459444ybc.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Feb 2022 10:21:37 -0800 (PST)
+X-Gm-Message-State: AOAM5308c0svS0+adLwCm5RwYREZzilPNcv/q1EK+HGuXiP/nwdMI9UD
+        qHQYOuVCwIvSR8hOhqlcHF9jnOnF5EqthHg9QAo=
+X-Google-Smtp-Source: ABdhPJx72o9M1sqQH3Zp/5RnEpbYCURtTkrXVAT3sjITVP7c0SnxrEj84MkMdYf6e+N6AAhgfKnPPjj1ma/SXhfrwpU=
+X-Received: by 2002:a5b:a03:: with SMTP id k3mr169877ybq.219.1644949296396;
+ Tue, 15 Feb 2022 10:21:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YgveyspHVXCp2ul+@smile.fi.intel.com>
+References: <20220209184406.99938-1-nchatrad@amd.com> <80fdee03-541f-21ab-711a-87045d8fd248@amd.com>
+ <CAPhsuW5V0BJT+YSwv1U=hRG0k9zBWXeRd=E1n4U5hvcnwEV3mQ@mail.gmail.com>
+ <94c67a8f-a4b8-8275-53f4-98b56bf9994a@amd.com> <CAPhsuW7G18toN+LoHKEDa10UUUG0hD_RKHGi8nuJGRjDYVLJ_w@mail.gmail.com>
+ <aeb4d8d9-a43c-0697-5035-eff7f4ba3728@amd.com> <CAPhsuW6QHwpBH79GeNo22YNsRdcWvUupa10sbqup_qZ5V-__HA@mail.gmail.com>
+ <2549f688-c148-f893-1fe0-52a09a8fb1d5@amd.com> <CAPhsuW5OMLcFWt8iUu0K57iSvxGME=Dj1PCO8VZ0QL1gHZ-dpw@mail.gmail.com>
+ <e1249c0a-6729-c02b-45b2-80d0fde07f7b@amd.com>
+In-Reply-To: <e1249c0a-6729-c02b-45b2-80d0fde07f7b@amd.com>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 15 Feb 2022 10:21:25 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW7mDRswhVjYf+4iinO+sph_rQ1JykEof+apoiSOVwOXXQ@mail.gmail.com>
+Message-ID: <CAPhsuW7mDRswhVjYf+4iinO+sph_rQ1JykEof+apoiSOVwOXXQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] platforms/x86: Add AMD system management interface
+To:     Nathan Fontenot <nafonten@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Chatradhi, Naveen Krishna" <nchatrad@amd.com>
+Cc:     platform-driver-x86@vger.kernel.org, carlos.bilbao@amd.com,
+        siva.sathappan@amd.com, suma.hegde@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 15 Feb 2022, Andy Shevchenko wrote:
+Hi Naveen Krishna,
 
-> On Tue, Feb 15, 2022 at 04:54:00PM +0000, Lee Jones wrote:
-> > On Mon, 31 Jan 2022, Andy Shevchenko wrote:
-> 
-> Thank you for the review, my answers below.
-> 
-> ...
-> 
-> > > +static struct resource apl_gpio_resources[APL_GPIO_NR_DEVICES][2] = {
-> > > +	[APL_GPIO_NORTH] = {
-> > > +		DEFINE_RES_MEM(APL_GPIO_NORTH_OFFSET, 0x1000),
-> > 
-> > Are these 0x1000's being over-written in lpc_ich_init_pinctrl()?
-> > 
-> > If so, why pre-initialise?
-> 
-> You mean to pre-initialize the offsets, but leave the length to be added
-> in the function? It can be done, but it feels inconsistent, since we would
-> have offsets and lengths in different places for the same thingy. That said,
-> I prefer current way for the sake of consistency.
+On Tue, Feb 15, 2022 at 9:24 AM Nathan Fontenot <nafonten@amd.com> wrote:
+>
+> On 2/14/22 11:21, Song Liu wrote:
+> > On Mon, Feb 14, 2022 at 7:32 AM Chatradhi, Naveen Krishna
+> > <nchatrad@amd.com> wrote:
+> >>
+> >> Hi Song,
+> >>
+> >> On 2/11/2022 3:10 AM, Song Liu wrote:
+> > [...]
+> >>
+> >> HSMP mailbox messages are evolving and each platform defines a support=
+ed
+> >> list of messages.
+> >>
+> >> On a given platform these messages are described in the PPR.
+> >>
+> >> Eg: Milan PPR has "7 Host System Management Port (HSMP)", is made publ=
+ic
+> >>
+> >> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fww=
+w.amd.com%2Fsystem%2Ffiles%2FTechDocs%2F55898_B1_pub_0.50.zip&amp;data=3D04=
+%7C01%7CNathan.Fontenot%40amd.com%7C6026990f93ed41d04d0608d9efde79a1%7C3dd8=
+961fe4884e608e11a82d994e183d%7C0%7C0%7C637804561503265585%7CUnknown%7CTWFpb=
+GZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7=
+C3000&amp;sdata=3Do5BR%2FgHpjnNVa9zVu75I3RyzO8WNB4L7FMEvLNbzZVY%3D&amp;rese=
+rved=3D0
+> >>
+> >>
+> >> Bringing detailed description of these messages from PPR into the kern=
+el
+> >> would be a
+> >>
+> >> duplicating effort. Which will also bring in challenges such as
+> >> maintaining the details
+> >>
+> >> for every supported platform and submitting kernel patches for every
+> >> platform.
+> >>
+> >>
+> >> We would like to avoid bringing more details of these messages to the
+> >> kernel documentation.
+> >>
+> >> Such a structure can be described as part of esmi_oob_library to ease
+> >> user space tool development.
+> >
+> > I agree there is  extra effort to adding extra logic and documentations=
+ to
+> > the kernel. How about we ship current version with a few minor changes:
+> > 1). msg_desc_table is in the header, so please prefix it with hsmp_
+> > 2) as Nathan suggested, add more comments to msg_desc_table. Maybe
+> > something like:
+> > /*
+> >  * HSMP_GET_FCLK_MCLK,
+> >  * output arg0 =3D fclk (MHz); arg1 =3D mclk (MHz)
+> >  */
+>
+> Agreed, this is the type of update I was thinking of.
+>
+> -Nathan
+>
+> > {0, 2, GET},
+> >
+> > Besides these, I have a question. Per the hardware design, args and
+> > reponse in hsmp_message share the same registers. Shall we make
+> > them in/out argments in hsmp_message and save 256 bytes per
+> > hsmp_message?
 
-Don't you over-write this entry entirely?
+Do these make sense to you? We are hoping to back port these changes
+to unblock our tests. But we need them to be applied to pdx86 first.
 
-  for (i = 0; i < ARRAY_SIZE(apl_gpio_devices); i++) {
-        struct resource *mem = &apl_gpio_resources[i][0];
-
-        /* Fill MEM resource */
-        mem->start += base.start;
-        mem->end += base.start;
-        mem->flags = base.flags;
-  }
-
-Oh wait, you're just adding the base value to the offsets.
-
-In which case that comment is also confusing!
-
--- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+Song
