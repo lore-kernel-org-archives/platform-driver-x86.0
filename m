@@ -2,305 +2,348 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1A9C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Feb 2022 16:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FABC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Feb 2022 16:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231492AbiBPQGN (ORCPT
+        id S234041AbiBPQ2c (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Feb 2022 11:06:13 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59264 "EHLO
+        Wed, 16 Feb 2022 11:28:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235944AbiBPQGM (ORCPT
+        with ESMTP id S233074AbiBPQ2b (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Feb 2022 11:06:12 -0500
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam08on2086.outbound.protection.outlook.com [40.107.100.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 778E12A97D2;
-        Wed, 16 Feb 2022 08:05:59 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UEbHH0ZHb3ezgC4ywFuBNnuSLu53MMOkIExE7wLRyp0CeuhUzsvaqq4nexBULssa+bFz+b6ar1z7AIB2+OF0aBKGt57W/L7sRi5RhTOsiIg6QrbpXEZG3Mc1/exXH5ePFP3Zsh0HLpFCdoNMgizorAGbSMHWei5VH+BmWjHF1UPYP75TQGb140oSmS2favxzEwlC6JW8zjnjnrj1HGM+U3gbDBO3K5MQjdm6D8PZb6FeUj10Ufl67CjCy26HRXQXgaRjFdNX7sUnLgXlrOUcqTqxFt23YORp+X3jNlgUG/7Wzza5gOz1uiLrVvyxeaKra01zgTLmXyxIAaNFpkjjnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6wtGCjNdm53g9e6ZPbTsFsIZUK3WUdRmo4IrtFwaFYE=;
- b=ahX92M19s55j/nGZXs+HnHOeFThObF2EPCIJSz5HztMY1gC6nCAhF+FK6KWI/bca9B6HH6lRDTOSiRS9S8slohd2EtaL1yyfEUvzJQl1UlVWVb3O8pyEcuCZAmlzTY+o0mnJr2L0o/7eb/KAjYWQuQxLNUhFmQDcbAoX52XrU6VRsUir9iVuHR2SLOoZP+XHfws2EGMAN7yVjiBp6yI0yt2X88wtw3VA4Fnl9emFsF6zmOYI2/s/2TMZDIG5OeiexyDT+Pm4g3r6P1m4/lzbhxjTqGG1jDkL6ryp8FEemv2upG4/XidXXga7eNfqsYjLMq0x6XK9hBPu6U7oSrhnEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6wtGCjNdm53g9e6ZPbTsFsIZUK3WUdRmo4IrtFwaFYE=;
- b=tOJz938KMSKt9UZsKJPmN1Kyy1ZlK8+2rFlBT8lfrrl5upN70PMN0Rx7FX1koWkBIa2QVIEytaaReHKsRP4tVIqAAvcB+N51IeDvBqa6lcEVFOFH8On2MyGeQHjrbhcExiW3COjfTyONDAUBbLzBrPQtSPceCafUXkUY435tvSM=
-Received: from MW4PR03CA0088.namprd03.prod.outlook.com (2603:10b6:303:b6::33)
- by DM4PR12MB5167.namprd12.prod.outlook.com (2603:10b6:5:396::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.16; Wed, 16 Feb
- 2022 16:05:56 +0000
-Received: from CO1NAM11FT060.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:b6:cafe::78) by MW4PR03CA0088.outlook.office365.com
- (2603:10b6:303:b6::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.17 via Frontend
- Transport; Wed, 16 Feb 2022 16:05:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT060.mail.protection.outlook.com (10.13.175.132) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4975.11 via Frontend Transport; Wed, 16 Feb 2022 16:05:54 +0000
-Received: from sbrijesh-desktop.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Wed, 16 Feb
- 2022 10:05:51 -0600
-From:   Brijesh Singh <brijesh.singh@amd.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>
-CC:     Brijesh Singh <brijesh.singh@amd.com>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-        <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "Vitaly Kuznetsov" <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Andi Kleen" <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        <brijesh.ksingh@gmail.com>, <tony.luck@intel.com>,
-        <marcorr@google.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v10 21/45] x86/mm: Add support to validate memory when changing C-bit
-Date:   Wed, 16 Feb 2022 10:04:57 -0600
-Message-ID: <20220216160457.1748381-1-brijesh.singh@amd.com>
+        Wed, 16 Feb 2022 11:28:31 -0500
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74082AE70D
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Feb 2022 08:28:18 -0800 (PST)
+Received: by mail-oi1-x235.google.com with SMTP id 13so2947986oiz.12
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Feb 2022 08:28:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=osqcMlKjQIK1ExJ7Y9IWkZfTCHPmlvTvyOwfbklawuw=;
+        b=qHIkmmcIiu5l3l8yHtt/Z/TwVZtcvtL59TBL4lmUZlvp/cLLiU+Vy1R8vpHmX4JRDd
+         DJ1asoNalzHkFPwd8OPyHH80hdPOTH4i8NyfnXOD431NZ7wJec65z3B1eEfHn098pT93
+         uYdRLh6QpTibxLkvaN1yV20RaF+p5hIoIt5sd+d7leMRGO8BoLQLmv6960584QEvEp6W
+         3h0m4KYOpPJTVAgd3OLXebaHxn2cojqQ73eckIBi5M0Tt2PZugz1VZ3pAZPxNXpImt1D
+         HLpwgF8Gj0Zw7bqGYTCZgqXImyG8Hvzi8f0TDdG+mY1RlR+epCMfz6Bcweb4gVL7zE+g
+         c3rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=osqcMlKjQIK1ExJ7Y9IWkZfTCHPmlvTvyOwfbklawuw=;
+        b=ksh8GW32bevHv9q+hUGsagnMKDjQkRfOYQtdI2hDyCUKIiQoQ40HWw4f8MQtiDcP8/
+         4DNjSH9RGh1nbmrPWlEKYxOQRTwDFPfEE9E6pFmw2At0tJJVuK2o7l3W3woKfvC3IFo9
+         YWKY/aLHb+J5ypCWLKbsXddPBrznQWhtmTQuR9xMD67SepIcIFeKuERXqarIsHuydDxK
+         +nUhHhHs/y3R5NqwjAg9caQmBmatYOvzFcRlJEY6+0XbvHuhOSQVdxsHyuIIEulRJ9Dn
+         HATXdArDQV/hT0GxZ4q8h/QvwwRglBDIAVAyUbTODGicORoLFG3QARc/MjW8VFv5c2J5
+         5PgQ==
+X-Gm-Message-State: AOAM530CJmcyx9qnZ9G84XIMceMZR+JKtLgQbB1dAUwIr50UVBG7fbDh
+        c00Q376lIKEoArucAGbHctwc/yg8QOQ=
+X-Google-Smtp-Source: ABdhPJz4vCIiJcfv4Mw6536f4tqkaUjLi/f/SyzMqrHWjYkjYDGYx6tucqvALTEO5ubfUodm6JP2Ww==
+X-Received: by 2002:a05:6808:1808:b0:2ce:6ee7:2cd9 with SMTP id bh8-20020a056808180800b002ce6ee72cd9mr1084198oib.263.1645028897794;
+        Wed, 16 Feb 2022 08:28:17 -0800 (PST)
+Received: from localhost.localdomain (c-73-76-72-204.hsd1.tx.comcast.net. [73.76.72.204])
+        by smtp.googlemail.com with ESMTPSA id d23sm15122113ote.35.2022.02.16.08.28.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Feb 2022 08:28:17 -0800 (PST)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     platform-driver-x86@vger.kernel.org, jorgealtxwork@gmail.com
+Subject: [PATCH] Fix SW_TABLET_MODE detection method
+Date:   Wed, 16 Feb 2022 10:26:55 -0600
+Message-Id: <20220216162655.11195-1-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <Ygz88uacbwuTTNat@zn.tnic.mbx>
-References: <Ygz88uacbwuTTNat@zn.tnic.mbx>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5b7c46b2-31fb-40a3-9a5d-08d9f1663664
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5167:EE_
-X-Microsoft-Antispam-PRVS: <DM4PR12MB516731438D99C556E609DAC1E5359@DM4PR12MB5167.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XWzvDdeJA8Tlvpi1b/5D2jLawbWsrOCDpXYPf9hXwEcdXzn3zGclaTlrkpUcl6ExDswLZpfrpUFB2pOcCVHoOqhz0ioeLlTeTCw9DX1LZ3t5LgDz5+zjVBtPzdXzepsA1mfd/H3XOhQC3nfjyzNuyl+md0jkKmFzLFib/N+MGSApLd3s0tQV+LKGpjPj2hCnUyH+gO0IGvzsDkE0ShftH0Twh0EfI8tBOOv4lHTBn0W7dUt84seYGctQwvpwSJHE4+e+j8EjNx6lF4bPDwcH8wQXav13YGZ+KPbOmsSePHppyRSEuWpWxXWEozrqD8ufRJEbYZsvPQw8rNV76uvqldLRj1fzbAVvmZiIvHZlIRit+yrL6SiuTDMbSZeYi0/l6H4zfK9Lo4pVarjGPNZmq9h77MNB5/wo2A7dXC0tA2Hks187R4v7aO12t4tzlBaxOh7kWOZPrp7ZXK2N1pswgWjQxaENdno9voYkXkWz+KM8dNv9lrhbAN1LkIVLe8EryhkX3EENE/6RSHuVo9jomu4K9vvIckKBOaqvENgwZIBewOwQMCm/octkLuNZIHIUeJfp0Lavs6dXBa/4Anzzb5UKt7lCn53vN600aUVgqGqSg5dJE9Iw0XKMzd3QmxC2MbnUt7Mat+T0NwokFS+wqR8km7mYGXivHiU7hUBtFLRtJtWyKWkVrzlanVv3D8JLpFwNvxou3b+wwQEvTVBfug==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(8676002)(4326008)(70586007)(70206006)(316002)(54906003)(110136005)(508600001)(81166007)(356005)(36756003)(86362001)(36860700001)(426003)(26005)(16526019)(186003)(1076003)(47076005)(2616005)(7696005)(5660300002)(7406005)(7416002)(40460700003)(83380400001)(82310400004)(2906002)(8936002)(44832011)(336012)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2022 16:05:54.9125
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b7c46b2-31fb-40a3-9a5d-08d9f1663664
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT060.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5167
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Feb 11, 2022 at 03:55:23PM +0100, Borislav Petkov wrote:
->> Also, I think adding required functions to x86_platform.guest. is a very
->> nice way to solve the ugly if (guest_type) querying all over the place.
+The purpose of this patch is to introduce a fix and removal
+of the current hack when determining tablet mode status.
 
-> So I guess something like below. It builds here...
+Determining the tablet mode status requires reading Byte 0 bit 2 and 3
+as reported by HPWMI_HARDWARE_QUERY.  The investigation identified the
+failure was rooted in two areas; HPWMI_HARDWARE_QUERY failure (0x05)
+and reading Byte 0, bit 2 only to determine the table mode status.
+HPWMI_HARDWARE_QUERY WMI failure also rendered the dock state value invalid.
 
-I made a small change to use prepare() and finish(). The idea is that prepare()
-will be called before the encryption mask is changed in the page table, and
-finish() will be called after the change.
+Several WMI queries leverage hp_wmi_read_int function to read their data.
+hp_wmi_read_int function returns the appropiate value if
+the WMI command requires an input and output buffer size values
+greater than zero.  WMI queries such HPWMI_HARDWARE_QUERY,
+HPWMI_WIRELESS2_QUERY, and HPWMI_FEATURE2_QUERY requires calling
+hp_wmi_perform_query function with input buffer size value of zero.
+Any input buffer size greater than zero will cause error 0x05 to be
+returned.
 
-I have not tried integrating the SNP PSC yet, but want to check if approach
-will work for Krill.
+A limiting factor discovered during this investigation was the
+struct bios_args.data size restriction.  The data member size limits
+all possible WMI commands to those requiring buffer size of 128
+bytes or less.  Several WMI commands and queries require a buffer size
+larger than 128 bytes hence limiting current and feature supported by
+the driver.  It is for this reason, struct bios_args.data changed and
+it is dynamically allocated.  hp_wmi_perform_query function changed to
+handle the memory allocation and release of any required buffer size.
 
+All identified problems were resolved and their correct operation
+validated on a ZBook Workstation notebook.  Additional validation was
+included to ensure no other commands were failing or incorrectly handled.
 ---
- arch/x86/include/asm/set_memory.h |  1 -
- arch/x86/include/asm/sev.h        |  3 +++
- arch/x86/include/asm/x86_init.h   | 15 +++++++++++++++
- arch/x86/kernel/sev.c             |  3 +++
- arch/x86/mm/mem_encrypt_amd.c     | 14 ++++++++++----
- arch/x86/mm/pat/set_memory.c      | 13 +++++++------
- 6 files changed, 38 insertions(+), 11 deletions(-)
+ drivers/platform/x86/hp-wmi.c | 122 ++++++++++++++++++++++------------
+ 1 file changed, 79 insertions(+), 43 deletions(-)
 
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index ff0f2d90338a..ce8dd215f5b3 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -84,7 +84,6 @@ int set_pages_rw(struct page *page, int numpages);
- int set_direct_map_invalid_noflush(struct page *page);
- int set_direct_map_default_noflush(struct page *page);
- bool kernel_page_present(struct page *page);
--void notify_range_enc_status_changed(unsigned long vaddr, int npages, bool enc);
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 48a46466f086..5320c1eb5cfc 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -35,9 +35,6 @@ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
+ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
  
- extern int kernel_set_to_readonly;
+-static int enable_tablet_mode_sw = -1;
+-module_param(enable_tablet_mode_sw, int, 0444);
+-MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=auto, 0=no, 1=yes)");
  
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index ec060c433589..2ebd8c225257 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -87,6 +87,9 @@ extern enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
- 					  struct es_em_ctxt *ctxt,
- 					  u64 exit_code, u64 exit_info_1,
- 					  u64 exit_info_2);
-+void amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool enc);
-+void amd_enc_status_change_finish(unsigned long vaddr, int npages, bool enc);
-+
- #else
- static inline void sev_es_ist_enter(struct pt_regs *regs) { }
- static inline void sev_es_ist_exit(void) { }
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index 22b7412c08f6..da7fc1c0b917 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -141,6 +141,20 @@ struct x86_init_acpi {
- 	void (*reduced_hw_early_init)(void);
+ #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
+ #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
+@@ -86,12 +83,17 @@ enum hp_wmi_event_ids {
+ 	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
  };
  
 +/**
-+ * struct x86_guest - Functions used by misc guest incarnations like SEV, TDX, etc.
-+ *
-+ * @enc_status_change_prepare	Notify HV before the encryption status of a range
-+ * 				is changed.
-+ *
-+ * @enc_status_change_finish	Notify HV after the encryption status of a range
-+ * 				is changed.
++ * struct bios_args buffer is dynamically allocated.  New WMI command types
++ * were introduced that exceeds 128-byte data size.  Changes to handle
++ * the data size allocation scheme were kept in hp_wmi_perform_qurey function.
 + */
-+struct x86_guest {
-+	void (*enc_status_change_prepare)(unsigned long vaddr, int npages, bool enc);
-+	void (*enc_status_change_finish)(unsigned long vaddr, int npages, bool enc);
-+};
-+
- /**
-  * struct x86_init_ops - functions for platform specific setup
-  *
-@@ -287,6 +301,7 @@ struct x86_platform_ops {
- 	struct x86_legacy_features legacy;
- 	void (*set_legacy_features)(void);
- 	struct x86_hyper_runtime hyper;
-+	struct x86_guest guest;
+ struct bios_args {
+ 	u32 signature;
+ 	u32 command;
+ 	u32 commandtype;
+ 	u32 datasize;
+-	u8 data[128];
++	u8 data[0];
  };
  
- struct x86_apic_ops {
-diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index e6d316a01fdd..3b2133fd6682 100644
---- a/arch/x86/kernel/sev.c
-+++ b/arch/x86/kernel/sev.c
-@@ -760,6 +760,9 @@ void __init sev_es_init_vc_handling(void)
+ enum hp_wmi_commandtype {
+@@ -127,6 +129,7 @@ enum hp_wmi_command {
+ enum hp_wmi_hardware_mask {
+ 	HPWMI_DOCK_MASK		= 0x01,
+ 	HPWMI_TABLET_MASK	= 0x04,
++	HPWMI_DETACHABLE_MASK	= 0x08,
+ };
  
- 	BUILD_BUG_ON(offsetof(struct sev_es_runtime_data, ghcb_page) % PAGE_SIZE);
+ struct bios_return {
+@@ -260,39 +263,47 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 	struct bios_return *bios_return;
+ 	int actual_outsize;
+ 	union acpi_object *obj;
+-	struct bios_args args = {
+-		.signature = 0x55434553,
+-		.command = command,
+-		.commandtype = query,
+-		.datasize = insize,
+-		.data = { 0 },
+-	};
+-	struct acpi_buffer input = { sizeof(struct bios_args), &args };
++	size_t bios_args_size = sizeof(struct bios_args) + insize;
++	struct bios_args *args = NULL;
++	struct acpi_buffer input;
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	int ret = 0;
  
-+	x86_platform.guest.enc_status_change_prepare = amd_enc_status_change_prepare;
-+	x86_platform.guest.enc_status_change_finish = amd_enc_status_change_finish;
+-	mid = encode_outsize_for_pvsz(outsize);
+-	if (WARN_ON(mid < 0))
+-		return mid;
++	args = kmalloc(bios_args_size, GFP_KERNEL);
++	if (!args)
++		return -ENOMEM;
+ 
+-	if (WARN_ON(insize > sizeof(args.data)))
+-		return -EINVAL;
+-	memcpy(&args.data[0], buffer, insize);
++	input.length = bios_args_size;
++	input.pointer = args;
+ 
+-	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
++	mid = encode_outsize_for_pvsz(outsize);
++	if (WARN_ON(mid < 0)) {
++		ret = mid;
++		goto in_free;
++	}
+ 
+-	obj = output.pointer;
++	/* Avoid unnecessary copy to the data buffer if input buffer size is zero */
++	if (insize > 0)
++		memcpy(args->data, buffer, insize);
+ 
+-	if (!obj)
+-		return -EINVAL;
++	args->signature = 0x55434553;
++	args->command = command;
++	args->commandtype = query;
++	args->datasize = insize;
+ 
+-	if (obj->type != ACPI_TYPE_BUFFER) {
++	ret = wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
 +
- 	if (!cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
- 		return;
- 
-diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
-index 2b2d018ea345..c93b6c2fc6a3 100644
---- a/arch/x86/mm/mem_encrypt_amd.c
-+++ b/arch/x86/mm/mem_encrypt_amd.c
-@@ -256,7 +256,11 @@ static unsigned long pg_level_to_pfn(int level, pte_t *kpte, pgprot_t *ret_prot)
- 	return pfn;
- }
- 
--void notify_range_enc_status_changed(unsigned long vaddr, int npages, bool enc)
-+void amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool enc)
-+{
-+}
-+
-+void amd_enc_status_change_finish(unsigned long vaddr, int npages, bool enc)
- {
- #ifdef CONFIG_PARAVIRT
- 	unsigned long sz = npages << PAGE_SHIFT;
-@@ -280,7 +284,7 @@ void notify_range_enc_status_changed(unsigned long vaddr, int npages, bool enc)
- 		psize = page_level_size(level);
- 		pmask = page_level_mask(level);
- 
--		notify_page_enc_status_changed(pfn, psize >> PAGE_SHIFT, enc);
-+		amd_enc_status_change_finish(pfn, psize >> PAGE_SHIFT, enc);
- 
- 		vaddr = (vaddr & pmask) + psize;
++	obj = output.pointer;
++	if (!obj) {
++		pr_warn("query 0x%x returned a null obj 0x%x\n", query, ret);
+ 		ret = -EINVAL;
+-		goto out_free;
++		goto in_free;
  	}
-@@ -341,6 +345,8 @@ static int __init early_set_memory_enc_dec(unsigned long vaddr,
- 	vaddr_next = vaddr;
- 	vaddr_end = vaddr + size;
  
-+	amd_enc_status_change_prepare(start, PAGE_ALIGN(size) >> PAGE_SHIFT, enc);
+-	bios_return = (struct bios_return *)obj->buffer.pointer;
+-	ret = bios_return->return_code;
++	if (!ret && obj->type == ACPI_TYPE_BUFFER) {
++		bios_return = (struct bios_return *)obj->buffer.pointer;
++		ret = bios_return->return_code;
++	}
+ 
+ 	if (ret) {
+ 		if (ret != HPWMI_RET_UNKNOWN_COMMAND &&
+@@ -301,6 +312,12 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 		goto out_free;
+ 	}
+ 
++	if (obj->type != ACPI_TYPE_BUFFER) {
++		pr_warn("query 0x%x returned an invalid object 0x%x\n", query, ret);
++		ret = -EINVAL;
++		goto out_free;
++	}
 +
- 	for (; vaddr < vaddr_end; vaddr = vaddr_next) {
- 		kpte = lookup_address(vaddr, &level);
- 		if (!kpte || pte_none(*kpte)) {
-@@ -392,7 +398,7 @@ static int __init early_set_memory_enc_dec(unsigned long vaddr,
+ 	/* Ignore output data of zero size */
+ 	if (!outsize)
+ 		goto out_free;
+@@ -311,6 +328,8 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
  
- 	ret = 0;
- 
--	notify_range_enc_status_changed(start, PAGE_ALIGN(size) >> PAGE_SHIFT, enc);
-+	amd_enc_status_change_finish(start, PAGE_ALIGN(size) >> PAGE_SHIFT, enc);
- out:
- 	__flush_tlb_all();
+ out_free:
+ 	kfree(obj);
++in_free:
++	kfree(args);
  	return ret;
-@@ -410,7 +416,7 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size)
+ }
  
- void __init early_set_mem_enc_dec_hypercall(unsigned long vaddr, int npages, bool enc)
+@@ -347,12 +366,19 @@ static int hp_wmi_read_int(int query)
+ 
+ static int hp_wmi_hw_state(int mask)
  {
--	notify_range_enc_status_changed(vaddr, npages, enc);
-+	amd_enc_status_change_finish(vaddr, npages, enc);
+-	int state = hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
++	int state = 0, ret;
+ 
+-	if (state < 0)
+-		return state;
++	ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_READ, &state,
++				   0, sizeof(state));
++	
++	if (ret)
++		return ret < 0 ? ret : -EINVAL;
+ 
+-	return !!(state & mask);
++	/* determine if Detachable mode is enabled */
++	if (HPWMI_TABLET_MASK == mask) 
++		state = (state & HPWMI_DETACHABLE_MASK );
++	
++	return (state & mask);
  }
  
- void __init mem_encrypt_free_decrypted_mem(void)
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index b4072115c8ef..a55477a6e578 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2012,8 +2012,15 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
- 	 */
- 	cpa_flush(&cpa, !this_cpu_has(X86_FEATURE_SME_COHERENT));
+ static int omen_thermal_profile_set(int mode)
+@@ -437,7 +463,7 @@ static int __init hp_wmi_bios_2009_later(void)
+ {
+ 	u8 state[128];
+ 	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &state,
+-				       sizeof(state), sizeof(state));
++				       0, sizeof(state));
+ 	if (!ret)
+ 		return 1;
  
-+	/* Notify HV that we are about to set/clr encryption attribute. */
-+	x86_platform.guest.enc_status_change_prepare(addr, numpages, enc);
+@@ -472,25 +498,37 @@ static const struct rfkill_ops hp_wmi_rfkill_ops = {
+ static bool hp_wmi_get_sw_state(enum hp_wmi_radio r)
+ {
+ 	int mask = 0x200 << (r * 8);
++	int ret= 0;
++	int wireless = 0;
+ 
+-	int wireless = hp_wmi_read_int(HPWMI_WIRELESS_QUERY);
++	ret = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_READ, &wireless,
++				   0, sizeof(wireless));
 +
- 	ret = __change_page_attr_set_clr(&cpa, 1);
++	if (ret < 0)
++	  return -EINVAL;
  
-+	/* Notify HV that we have succesfully set/clr encryption attribute. */
-+	if (!ret)
-+		x86_platform.guest.enc_status_change_finish(addr, numpages, enc);
-+
- 	/*
- 	 * After changing the encryption attribute, we need to flush TLBs again
- 	 * in case any speculative TLB caching occurred (but no need to flush
-@@ -2023,12 +2030,6 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
- 	 */
- 	cpa_flush(&cpa, 0);
+ 	/* TBD: Pass error */
+ 	WARN_ONCE(wireless < 0, "error executing HPWMI_WIRELESS_QUERY");
  
--	/*
--	 * Notify hypervisor that a given memory range is mapped encrypted
--	 * or decrypted.
--	 */
--	notify_range_enc_status_changed(addr, numpages, enc);
--
- 	return ret;
+-	return !(wireless & mask);
++	return (wireless & mask);
  }
+ 
+ static bool hp_wmi_get_hw_state(enum hp_wmi_radio r)
+ {
+ 	int mask = 0x800 << (r * 8);
++	int ret= 0;
++	int wireless = 0;
++
++	ret = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_READ, &wireless,
++				   0, sizeof(wireless));
+ 
+-	int wireless = hp_wmi_read_int(HPWMI_WIRELESS_QUERY);
++	if (ret < 0)
++	  return -EINVAL;
+ 
+ 	/* TBD: Pass error */
+ 	WARN_ONCE(wireless < 0, "error executing HPWMI_WIRELESS_QUERY");
+ 
+-	return !(wireless & mask);
++	return (wireless & mask);
+ }
+ 
+ static int hp_wmi_rfkill2_set_block(void *data, bool blocked)
+@@ -515,7 +553,7 @@ static int hp_wmi_rfkill2_refresh(void)
+ 	int err, i;
+ 
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   sizeof(state), sizeof(state));
++				   0, sizeof(state));
+ 	if (err)
+ 		return err;
+ 
+@@ -781,18 +819,16 @@ static int __init hp_wmi_input_setup(void)
+ 
+ 	/* Dock */
+ 	val = hp_wmi_hw_state(HPWMI_DOCK_MASK);
+-	if (!(val < 0)) {
++	if (val > 0) {
+ 		__set_bit(SW_DOCK, hp_wmi_input_dev->swbit);
+ 		input_report_switch(hp_wmi_input_dev, SW_DOCK, val);
+ 	}
+ 
+ 	/* Tablet mode */
+-	if (enable_tablet_mode_sw > 0) {
+-		val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
+-		if (val >= 0) {
+-			__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
++	val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
++	if (val > 0) {
++		__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
+ 			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
+-		}
+ 	}
+ 
+ 	err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
+@@ -919,7 +955,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 	int err, i;
+ 
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   sizeof(state), sizeof(state));
++				   0, sizeof(state));
+ 	if (err)
+ 		return err < 0 ? err : -EINVAL;
  
 -- 
 2.25.1
