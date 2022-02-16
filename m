@@ -2,59 +2,59 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FABC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Feb 2022 16:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7135AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Feb 2022 16:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234041AbiBPQ2c (ORCPT
+        id S233574AbiBPQdQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Feb 2022 11:28:32 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55546 "EHLO
+        Wed, 16 Feb 2022 11:33:16 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233074AbiBPQ2b (ORCPT
+        with ESMTP id S229836AbiBPQdP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Feb 2022 11:28:31 -0500
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74082AE70D
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Feb 2022 08:28:18 -0800 (PST)
-Received: by mail-oi1-x235.google.com with SMTP id 13so2947986oiz.12
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Feb 2022 08:28:18 -0800 (PST)
+        Wed, 16 Feb 2022 11:33:15 -0500
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 793D1154707
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Feb 2022 08:33:03 -0800 (PST)
+Received: by mail-ot1-x333.google.com with SMTP id r18-20020a05683001d200b005ac516aa180so1869604ota.6
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Feb 2022 08:33:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=osqcMlKjQIK1ExJ7Y9IWkZfTCHPmlvTvyOwfbklawuw=;
-        b=qHIkmmcIiu5l3l8yHtt/Z/TwVZtcvtL59TBL4lmUZlvp/cLLiU+Vy1R8vpHmX4JRDd
-         DJ1asoNalzHkFPwd8OPyHH80hdPOTH4i8NyfnXOD431NZ7wJec65z3B1eEfHn098pT93
-         uYdRLh6QpTibxLkvaN1yV20RaF+p5hIoIt5sd+d7leMRGO8BoLQLmv6960584QEvEp6W
-         3h0m4KYOpPJTVAgd3OLXebaHxn2cojqQ73eckIBi5M0Tt2PZugz1VZ3pAZPxNXpImt1D
-         HLpwgF8Gj0Zw7bqGYTCZgqXImyG8Hvzi8f0TDdG+mY1RlR+epCMfz6Bcweb4gVL7zE+g
-         c3rQ==
+        b=InVVx/JEjbe1joC5KdNZu1EI1G4bkFIhDUHjc4EMh0HXUcDFoZQk/Djr6Wijr8G8IF
+         qAxlY1IZgJTROMHMRYzuumiJji6fXERwzv5boVY5G/qxB2XdK3b9j9YrQcb8QMRbZcAS
+         pLGplCSSwyNrmx4g6kx1sQvu/P2DhrRI4QJ1Dm1BGlLCkmUaeQJT5QEuIvWUHcjbjaan
+         8RpmaYDfnKpQvVj1aUFVzCoSOktr2SqjeOYOcdItPDnh52su2diw4J6cUpk3AiVMkoaJ
+         wbgb8MZETmTZ8JD3eyclXfh/qFHGEBi2O9ECTUORW2wyI4Jf46Pb3TeEnxPQ8t+4LI/v
+         3vGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=osqcMlKjQIK1ExJ7Y9IWkZfTCHPmlvTvyOwfbklawuw=;
-        b=ksh8GW32bevHv9q+hUGsagnMKDjQkRfOYQtdI2hDyCUKIiQoQ40HWw4f8MQtiDcP8/
-         4DNjSH9RGh1nbmrPWlEKYxOQRTwDFPfEE9E6pFmw2At0tJJVuK2o7l3W3woKfvC3IFo9
-         YWKY/aLHb+J5ypCWLKbsXddPBrznQWhtmTQuR9xMD67SepIcIFeKuERXqarIsHuydDxK
-         +nUhHhHs/y3R5NqwjAg9caQmBmatYOvzFcRlJEY6+0XbvHuhOSQVdxsHyuIIEulRJ9Dn
-         HATXdArDQV/hT0GxZ4q8h/QvwwRglBDIAVAyUbTODGicORoLFG3QARc/MjW8VFv5c2J5
-         5PgQ==
-X-Gm-Message-State: AOAM530CJmcyx9qnZ9G84XIMceMZR+JKtLgQbB1dAUwIr50UVBG7fbDh
-        c00Q376lIKEoArucAGbHctwc/yg8QOQ=
-X-Google-Smtp-Source: ABdhPJz4vCIiJcfv4Mw6536f4tqkaUjLi/f/SyzMqrHWjYkjYDGYx6tucqvALTEO5ubfUodm6JP2Ww==
-X-Received: by 2002:a05:6808:1808:b0:2ce:6ee7:2cd9 with SMTP id bh8-20020a056808180800b002ce6ee72cd9mr1084198oib.263.1645028897794;
-        Wed, 16 Feb 2022 08:28:17 -0800 (PST)
+        b=chsYf3CqprSG13Aq7ZmZ+Vk6hGvlrySS+E7vN3IvxHDwbDTo+wzIaFpjjYGCZpeBl3
+         n88k6ZGWKzbd0v1vbUSuyhfIcf+vQD6WjkhugQZEAa2gfY74M1baOtWha1EJejZE3YAD
+         UHl2eluv7KIhiM7iE/NBV113Miz9DcZT9EwvFpQYfMz9ethUOLSbYXrVgmXQ4hdfxJp+
+         QEouyjiidKTqJZrF/9QJiPaF1AVCTXj5Ax+uBiRXZnr4MGIXd087F7TO7k8ghHbkIh85
+         XhnF2SjXPeOnjncTY5pgItXgf3nomwlSFZqPSTH3fRR0PqHP58Y8dcl0/7xWnl/aoyf4
+         QdDg==
+X-Gm-Message-State: AOAM533akLfEi2ZIp1/HkZMvM3VNDB1ztpH87kX9/cRqFxboAhsV5MZA
+        1W1cm6RltHmGxgm0kpVxf1PPSesxMhQFjQ==
+X-Google-Smtp-Source: ABdhPJwdj/05pflJDOYIJvQ2lPCuJatI/HpetjpYbuDXL+Q5PGrplKcptAZC1dALl8VHXDiYIpgCuw==
+X-Received: by 2002:a9d:1c98:0:b0:5ad:f8:69bc with SMTP id l24-20020a9d1c98000000b005ad00f869bcmr678450ota.139.1645029182494;
+        Wed, 16 Feb 2022 08:33:02 -0800 (PST)
 Received: from localhost.localdomain (c-73-76-72-204.hsd1.tx.comcast.net. [73.76.72.204])
-        by smtp.googlemail.com with ESMTPSA id d23sm15122113ote.35.2022.02.16.08.28.17
+        by smtp.googlemail.com with ESMTPSA id x31sm12779369oao.13.2022.02.16.08.33.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Feb 2022 08:28:17 -0800 (PST)
+        Wed, 16 Feb 2022 08:33:02 -0800 (PST)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
-To:     platform-driver-x86@vger.kernel.org, jorgealtxwork@gmail.com
+To:     platform-driver-x86@vger.kernel.org, jorge.lopez2@hp.com
 Subject: [PATCH] Fix SW_TABLET_MODE detection method
-Date:   Wed, 16 Feb 2022 10:26:55 -0600
-Message-Id: <20220216162655.11195-1-jorge.lopez2@hp.com>
+Date:   Wed, 16 Feb 2022 10:31:47 -0600
+Message-Id: <20220216163147.11266-1-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
