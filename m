@@ -2,70 +2,27 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2275DC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Feb 2022 12:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79ABC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Feb 2022 12:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240491AbiBQMlG (ORCPT
+        id S235260AbiBQMqE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Feb 2022 07:41:06 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57262 "EHLO
+        Thu, 17 Feb 2022 07:46:04 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231514AbiBQMlG (ORCPT
+        with ESMTP id S230445AbiBQMqE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Feb 2022 07:41:06 -0500
-X-Greylist: delayed 366 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 17 Feb 2022 04:40:52 PST
-Received: from wnew2-smtp.messagingengine.com (wnew2-smtp.messagingengine.com [64.147.123.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6623826A2C0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Feb 2022 04:40:52 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.west.internal (Postfix) with ESMTP id CC16C2B0039E;
-        Thu, 17 Feb 2022 07:34:43 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Thu, 17 Feb 2022 07:34:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm3; bh=yxZqOhBw2SeYA0
-        cJinP5U9Ql0aV+14guz7+RfKVsZrA=; b=XaAj9u9nenf/hebmVeG2v7o5z0HhYI
-        irJeryp69aOXocxXYANTxFP5aaVXEGXobUicZpM0SqYCEYys1YT+xuzqtx/nrAp6
-        h3kTL+htxr0p3q89xC6sHPl2n82H3wKhANc4p3lwgnRErXGKydDfA3g8/vXVvqLr
-        NtdMymK0h35hqaldXgwtZMremGSh/ieKWDQ6420UH/trZCNviH1C/W3XU2mhreGm
-        xmJ+QTxZbLhbYSTR79QEh3XiedNGxHQcL6QB937b6zmSnbB+Rb/IsmN8XMcqeMWB
-        fXurcHe72XmBhGCuLNKkId0FH+ZhZqDPZkg61g4jaQ4zTj6ywuganJ8Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=yxZqOhBw2SeYA0cJinP5U9Ql0aV+14guz7+RfKVsZ
-        rA=; b=jq6NQuEktRCaUN9V56pCEL4p/lj3xA/loTUWe8L9rhH/rzaMQ0loHQi2Z
-        +uieCHZI6QfU+rZWVrNoEQwxmqv/X4+0/8hk4kBO9TuatDHo2OX0H8r7gYvjHFdS
-        mLJvC+d25wcDtXK0FK0+rBKai5D7GaqQ4PpM5qSD0PtSzKXHMe3J2XTd9uRMOk7a
-        dZ2Y8W+I1XsUJ9l9xhbstW1mvP9fOJbVjcLQkTEvtiOPO6jbvWc8FpSiEhunTs7E
-        fpwYnfsn6Xs/WwCvUhe/qYkuTK9Q9uGDguBPVXiDZLMQu9TQunz0oQO72x6VNyca
-        AaCmL8G/LIPtJIxbe/agn2HyHG9kQ==
-X-ME-Sender: <xms:4kAOYsNMMRV1XJc6nZpz0VZexcgRj8iteQhdwCwtnW2G3nudQP-PVw>
-    <xme:4kAOYi_9rnYesmH0D6IzLhD70uy1LiTQbaE_W5UjNLn9gT6trVGMt0HJhtxsewx-O
-    9U9Pq6X-foVcQ>
-X-ME-Received: <xmr:4kAOYjRfruB1wmP6tQormnwsw6KPvdEpYFox7633eB0_wdG3u4oo12x52COW_6ErPvcafzZEOwEsvF_K0U_k5lk7oNpjnLzx>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrjeekgdegtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtugfgjgesthekre
-    dttddtudenucfhrhhomhepfdhgrhgvgheskhhrohgrhhdrtghomhdfuceoghhrvghgsehk
-    rhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpedujefhgeejhfffuedvieeuvddtue
-    etkefhteelheejffegueduheelfefgkeekkeenucffohhmrghinhepihhnthgvlhdrtgho
-    mhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrh
-    gvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:4kAOYkutmnRnV3HUNOCZrzMYaUjfm5RPC-aLqofIq3AR9eE-H-XS8Q>
-    <xmx:4kAOYkfv9KR_edZtcS4HdCvmZLikjsgnZRfNxPZgWfDCHLgJJQSUfA>
-    <xmx:4kAOYo1HnvNuDhvDc5k3hRa3uxFCDfmt2Vq1IuzihK-ayzzNMfMwxQ>
-    <xmx:40AOYntC_uNPbMo-rcTsRfHrLnVFpa0RKa8UH7g0Kk7Gl-WT7fjGJSz19jU>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 17 Feb 2022 07:34:42 -0500 (EST)
-Date:   Thu, 17 Feb 2022 13:34:40 +0100
-From:   "greg@kroah.com" <greg@kroah.com>
-To:     Dmitrii Okunev <xaionaro@fb.com>
-Cc:     "pavel@ucw.cz" <pavel@ucw.cz>,
+        Thu, 17 Feb 2022 07:46:04 -0500
+X-Greylist: delayed 473 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 17 Feb 2022 04:45:50 PST
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C322A59A7
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Feb 2022 04:45:49 -0800 (PST)
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 560071C0B7F; Thu, 17 Feb 2022 13:37:54 +0100 (CET)
+Date:   Thu, 17 Feb 2022 13:37:53 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "greg@kroah.com" <greg@kroah.com>
+Cc:     Dmitrii Okunev <xaionaro@fb.com>,
         "qiaowei.ren@intel.com" <qiaowei.ren@intel.com>,
         "matthew.garrett@nebula.com" <matthew.garrett@nebula.com>,
         "xiaoyan.zhang@intel.com" <xiaoyan.zhang@intel.com>,
@@ -76,81 +33,112 @@ Cc:     "pavel@ucw.cz" <pavel@ucw.cz>,
         Jonathan McDowell <noodles@fb.com>
 Subject: Re: [discuss] Improve and merge a driver proposed in 2013: sysfs
  interfaces to access TXT config space
-Message-ID: <Yg5A4Mupue0V9diu@kroah.com>
+Message-ID: <20220217123753.GA21849@duo.ucw.cz>
 References: <1368465884-14779-1-git-send-email-qiaowei.ren@intel.com>
  <1368465884-14779-3-git-send-email-qiaowei.ren@intel.com>
  <20130516160311.GA12299@amd.pavel.ucw.cz>
  <4febd50da7e5007a2797e0f4c969fa5edd0bf725.camel@fb.com>
+ <Yg5A4Mupue0V9diu@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4febd50da7e5007a2797e0f4c969fa5edd0bf725.camel@fb.com>
+In-Reply-To: <Yg5A4Mupue0V9diu@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Feb 17, 2022 at 11:47:21AM +0000, Dmitrii Okunev wrote:
-> Hello!
-> 
-> As far as I see the patch wasn't merged. And I see that this is the
-> only unsolved thread in the discussion:
-> 
-> On Thu, 2013-05-16 at 18:03 +0200, Pavel Machek wrote:
-> > On Tue 2013-05-14 01:24:43, Qiaowei Ren wrote:
-> > > These interfaces are located in
-> > > /sys/devices/platform/intel_txt/config,
-> > > and including totally 37 files, providing access to Intel TXT
-> > > configuration registers.
-> > 
-> > This looks like very wrong interface... equivalent of /dev/mem.
-> 
-> As an active user of these registers I hope it will be merged, so I
-> would like to improve this patch (or rewrite it from scratch) to make
-> that happen. Otherwise one have to do hackery around `/dev/mem`, which
-> also creates problems with proper access control.
-> 
-> To be able to improve the patch, could somebody clarify why exactly
-> this is a "very wrong interface"?
-> 
-> > > +What:          /sys/devices/platform/intel_txt/config/STS_raw
-> > > +Date:          May 2013
-> > > +KernelVersion: 3.9
-> > > +Contact:       "Qiaowei Ren" <qiaowei.ren@intel.com>
-> > > +Description:   TXT.STS is the general status register. This read-
-> > > only register
-> > > +               is used by AC modules and the MLE to get the status
-> > > of various
-> > > +               Intel TXT features.
-> > 
-> > This is not enough to allow people to understand what this
-> > does/should
-> > do, nor does it allow (for example) ARM people to implement something
-> > compatible.
-> > 
-> > Is there specific reason why "better" interface is impossible?
-> 
-> I would love to reuse Intel's public documentation [1] to provide a
-> proper description (with bit layout of the value).
-> 
-> [1] https://cdrdv2.intel.com/v1/dl/getContent/315168
-> 
-> > [...], nor does it allow (for example) ARM people to
-> > implement something compatible.
-> 
-> Do I understand correctly that a proper documentation of the registers
-> solves the problem?
-> 
-> > Is there specific reason why "better" interface is impossible?
-> 
-> What are specific problems with the current interface?
 
-What do you mean by "current" here?  You are referring to an email from
-2013, 9 years ago.
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If you want to propose the change again, correctly update the patch and
-submit it that way.
+On Thu 2022-02-17 13:34:40, greg@kroah.com wrote:
+> On Thu, Feb 17, 2022 at 11:47:21AM +0000, Dmitrii Okunev wrote:
+> > Hello!
+> >=20
+> > As far as I see the patch wasn't merged. And I see that this is the
+> > only unsolved thread in the discussion:
+> >=20
+> > On Thu, 2013-05-16 at 18:03 +0200, Pavel Machek wrote:
+> > > On Tue 2013-05-14 01:24:43, Qiaowei Ren wrote:
+> > > > These interfaces are located in
+> > > > /sys/devices/platform/intel_txt/config,
+> > > > and including totally 37 files, providing access to Intel TXT
+> > > > configuration registers.
+> > >=20
+> > > This looks like very wrong interface... equivalent of /dev/mem.
+> >=20
+> > As an active user of these registers I hope it will be merged, so I
+> > would like to improve this patch (or rewrite it from scratch) to make
+> > that happen. Otherwise one have to do hackery around `/dev/mem`, which
+> > also creates problems with proper access control.
+> >=20
+> > To be able to improve the patch, could somebody clarify why exactly
+> > this is a "very wrong interface"?
+> >=20
+> > > > +What:=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0/sys/devices/platform/intel_txt=
+/config/STS_raw
+> > > > +Date:=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0May 2013
+> > > > +KernelVersion:=A03.9
+> > > > +Contact:=A0=A0=A0=A0=A0=A0=A0"Qiaowei Ren" <qiaowei.ren@intel.com>
+> > > > +Description:=A0=A0=A0TXT.STS is the general status register. This =
+read-
+> > > > only register
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0is used by AC modules=
+ and the MLE to get the status
+> > > > of various
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Intel TXT features.
+> > >=20
+> > > This is not enough to allow people to understand what this
+> > > does/should
+> > > do, nor does it allow (for example) ARM people to implement something
+> > > compatible.
+> > >=20
+> > > Is there specific reason why "better" interface is impossible?
+> >=20
+> > I would love to reuse Intel's public documentation [1] to provide a
+> > proper description (with bit layout of the value).
+> >=20
+> > [1] https://cdrdv2.intel.com/v1/dl/getContent/315168
+> >=20
+> > > [...], nor does it allow (for example) ARM people to
+> > > implement something compatible.
+> >=20
+> > Do I understand correctly that a proper documentation of the registers
+> > solves the problem?
+> >=20
+> > > Is there specific reason why "better" interface is impossible?
+> >=20
+> > What are specific problems with the current interface?
+>=20
+> What do you mean by "current" here?  You are referring to an email from
+> 2013, 9 years ago.
+>=20
+> If you want to propose the change again, correctly update the patch and
+> submit it that way.
 
-thanks,
+I don't believe taking hardware registers and exposing them 1-to-1 in
+sysfs is the way to go.
 
-greg k-h
+We would like same /sys interface on different hardware, and simply
+exposing Intel's registers in /sys will not do the job.
+
+Best regards,
+								Pavel
+--=20
+http://www.livejournal.com/~pavelmachek
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYg5BoQAKCRAw5/Bqldv6
+8v8ZAJ9vk4nE8zle4p8F69BdZK6tEpWlMgCgkM9md972WOtlpOLWKKys15Jc9CI=
+=2mYc
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
