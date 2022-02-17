@@ -2,154 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B371C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Feb 2022 07:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9115EC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Feb 2022 09:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236096AbiBQHRy (ORCPT
+        id S238918AbiBQJzv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Feb 2022 02:17:54 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37492 "EHLO
+        Thu, 17 Feb 2022 04:55:51 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229773AbiBQHRx (ORCPT
+        with ESMTP id S229830AbiBQJzu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Feb 2022 02:17:53 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC69DC7E5B
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Feb 2022 23:17:37 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 48473B82127
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Feb 2022 07:17:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9E03C340E8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Feb 2022 07:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645082254;
-        bh=B/xpGCZTo/TOIVskhY+Zpylv54bekr8tMldO5Ta4l+E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ejo3z5A+4bEoT3JIl8fXk7gchxTeUFLSruc95IFhMzrSU5wUTCqOKokqkfBRIrKaJ
-         tzMD31fkmi5qX2o3V0EWEFhotG+UKcpbnek/Lwm4l25ejE9wvoFIrt6FOll2gjIrUx
-         YtICEnfhX+Hnk5HZIEqdM5B1LU6XWaNdj3n2WXc998gzcCI+zUOjJIM9fJZPOp4OXM
-         NyopPpRc1nl4XHwZ9QhKQrP5ImX58UC6OlaWTIHo2JL68e5BACR2VewRFvO4C3XeLw
-         oGSxqSq8kOH2oIwYMAM0+Rgid6UM41KHNtjGqmRNvOlvw6ocELbMZvLXdmhntPsAjh
-         E+VSihvng7POg==
-Received: by mail-yb1-f172.google.com with SMTP id 124so11080186ybn.11
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Feb 2022 23:17:34 -0800 (PST)
-X-Gm-Message-State: AOAM530rJnDx0YkP+BkFNu2Ipe5fSQH9mOhC8ObAmPMV9zusOI2K+yZp
-        qK6kgnB5MMWQ4iaB1kW2rTDQ6OY1VGVjq2aTWrg=
-X-Google-Smtp-Source: ABdhPJyYCoiyZk3HQd5p5RXoCRMrd/9+YLgAa5eVic2FXQi2gRvasbrTbmmvzL3WkAVC6JTtYaQY5T8acjXwvEb5Zt4=
-X-Received: by 2002:a05:6902:1282:b0:61a:7abd:6785 with SMTP id
- i2-20020a056902128200b0061a7abd6785mr1364071ybu.558.1645082253813; Wed, 16
- Feb 2022 23:17:33 -0800 (PST)
+        Thu, 17 Feb 2022 04:55:50 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2512CD557B
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Feb 2022 01:55:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645091735;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eyehDj2VTQQcbrlQrKGbSsSHxAxbSKUJikiSyHYpsMY=;
+        b=fCyn8vBmt6hMeMH3s5IYlJ1iHBwExhkr+7g1qAzhYnKuvNIixWKLNsS8VDyRc+F+wV5kjp
+        9/RpTRk3uG+65sXcy7/yzUt2KYhqzH8hUPODF1zc5j6xcTfpscTBB5yrdciG5ISlVmWGoj
+        iavjl4svAuDEP2UY+xhkJg81X3xy/2U=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-637-Cv3qT2IhNWu_jHX53-nJkg-1; Thu, 17 Feb 2022 04:55:31 -0500
+X-MC-Unique: Cv3qT2IhNWu_jHX53-nJkg-1
+Received: by mail-ed1-f69.google.com with SMTP id bq19-20020a056402215300b0040f276105a4so3228491edb.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Feb 2022 01:55:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=eyehDj2VTQQcbrlQrKGbSsSHxAxbSKUJikiSyHYpsMY=;
+        b=5UvlSP7wdkqzRKYAHEszyl92MDY4zitu53yKXKdcoF8qJN98q2w6/uOr2tauwZL1g0
+         Jk41tuH1DBeT+dgfyEIjiJeaghPmJaIyLLtpPVwPHQcu3sjfv117Rr7PAYLGMYHR79MQ
+         G2PkvdUZ3oa+mnQTAhzVfcdaeCM7NlmpbpezATNwwAZ8MC8VbftWemPEBHEC/3uel8tm
+         fcjNQ93Etq52Da0TSeRbF0CVPJGZ3iRvQuKCRwfje5XZBrIuoPCnlIcHhvpZLoofdsvc
+         aRTKzuyT2rYlmKgijBJWIhEdswdZfIivvPgALvNZyUw8Pox/Y+Nb2fPWHiH2cUJLtAZu
+         G3Bw==
+X-Gm-Message-State: AOAM532knf/UNLpUyXGw9c/DPt89EOE2Y635uMak+dwxugRaQGxFu4Ev
+        w9sir69VLh6JdZkgH1akX+xVSTyieUEWPNJNahffJ3x/8t4uqSCloZ1eJ63d/QznKdjkhOVKpth
+        XceVOuouic7BadGP3S+KyYQRygjSIzlLpIQ==
+X-Received: by 2002:a17:906:71d7:b0:6bb:c057:3a6 with SMTP id i23-20020a17090671d700b006bbc05703a6mr1658500ejk.22.1645091730652;
+        Thu, 17 Feb 2022 01:55:30 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzDSILftK4zZpohcvCGqRpOvy2dnmE9rgV73s3LlEyfrOXVw8a8s5388bBYSA2m939HVhQSTA==
+X-Received: by 2002:a17:906:71d7:b0:6bb:c057:3a6 with SMTP id i23-20020a17090671d700b006bbc05703a6mr1658490ejk.22.1645091730425;
+        Thu, 17 Feb 2022 01:55:30 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id j6sm2970866edl.98.2022.02.17.01.55.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Feb 2022 01:55:29 -0800 (PST)
+Message-ID: <f2b58ed6-6c53-42af-6fa1-94b9fd746fc3@redhat.com>
+Date:   Thu, 17 Feb 2022 10:55:29 +0100
 MIME-Version: 1.0
-References: <20220216133336.108810-1-nchatrad@amd.com> <CAPhsuW7gbYinzABHiDri5xpiHPrNh2tbPz8X+kTo9qWZbjGzmQ@mail.gmail.com>
- <a130d618-c4c4-4a05-2401-74058275a8bb@amd.com> <26c020dd-bb27-a7ce-78d8-407f42e06282@amd.com>
-In-Reply-To: <26c020dd-bb27-a7ce-78d8-407f42e06282@amd.com>
-From:   Song Liu <song@kernel.org>
-Date:   Wed, 16 Feb 2022 23:17:22 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW4O_YptMGAMA5RK76Yoibp4M4GsXx09a7ccvBDLM=58DQ@mail.gmail.com>
-Message-ID: <CAPhsuW4O_YptMGAMA5RK76Yoibp4M4GsXx09a7ccvBDLM=58DQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] platforms/x86: Add AMD system management interface
-To:     "Chatradhi, Naveen Krishna" <nchatrad@amd.com>
-Cc:     Carlos Bilbao <carlos.bilbao@amd.com>,
-        platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>, siva.sathappan@amd.com,
-        nathan.fontenot@amd.com, Suma Hegde <suma.hegde@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH 0/6] Add multiple-consumer support to int3472-tps68470
+ driver
+Content-Language: en-US
+To:     Daniel Scally <djrscally@gmail.com>, linux-acpi@vger.kernel.org,
+        linux-clk@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc:     rafael@kernel.org, lenb@kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, markgross@kernel.org, robert.moore@intel.com
+References: <20220216225304.53911-1-djrscally@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220216225304.53911-1-djrscally@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 10:25 PM Chatradhi, Naveen Krishna
-<nchatrad@amd.com> wrote:
->
-> Hi Song, Carlos
->
-> On 2/17/2022 3:54 AM, Carlos Bilbao wrote:
-> > Hello,
-> >
-> > On 2/16/2022 4:06 PM, Song Liu wrote:
-> >> On Wed, Feb 16, 2022 at 5:34 AM Naveen Krishna Chatradhi
-> >> <nchatrad@amd.com> wrote:
-> >>> From: Suma Hegde <suma.hegde@amd.com>
-> >>>
-> >>> Recent Fam19h EPYC server line of processors from AMD support system
-> >>> management functionality via HSMP (Host System Management Port) inter=
-face.
-> >>>
-> >>> The Host System Management Port (HSMP) is an interface to provide
-> >>> OS-level software with access to system management functions via a
-> >>> set of mailbox registers.
-> >>>
-> >>> More details on the interface can be found in chapter
-> >>> "7 Host System Management Port (HSMP)" of the following PPR
-> >>> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fw=
-ww.amd.com%2Fsystem%2Ffiles%2FTechDocs%2F55898_B1_pub_0.50.zip&amp;data=3D0=
-4%7C01%7Ccarlos.bilbao%40amd.com%7Cb33402053aa6443bf4f308d9f198a7fe%7C3dd89=
-61fe4884e608e11a82d994e183d%7C0%7C0%7C637806460908911848%7CUnknown%7CTWFpbG=
-Zsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C=
-3000&amp;sdata=3DF%2BQgWoHlueI1CW14pJHhY4%2FwM5rOTOj0D3IO%2B7yhrbQ%3D&amp;r=
-eserved=3D0
-> >>>
-> >>> This patch adds new amd_hsmp module under the drivers/platforms/x86/
-> >>> which creates miscdevice with an IOCTL interface to the user space.
-> >>> /dev/hsmp is for running the hsmp mailbox commands.
-> >>>
-> >>> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> >>> Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
-> >>> Reviewed-by: Carlos Bilbao <carlos.bilbao@amd.com>
-> >> Acked-by: Song Liu <song@kernel.org>
-> >>
-> >> With a couple minor comments below.
-> >>
-> >>> ---
-> >> [...]
-> >>
-> >>> +
-> >>> +struct hsmp_message {
-> >>> +       __u32   msg_id;                 /* Message ID */
-> >>> +       __u16   num_args;               /* Number of input argument w=
-ords in message */
-> >>> +       __u16   response_sz;            /* Number of expected output/=
-response words */
-> >>> +       __u32   buf[HSMP_MAX_MSG_LEN];  /* argument/response buffer *=
-/
-> >> How about we call these args instead of buf?
->
-> Now that we are using this member for both input arguments and output
-> response, I've changed it to a
->
-> generic name, no problem will change it back to args.
->
-> >>
-> >> [...]
-> >>
-> >>> +
-> >>> +static long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned l=
-ong arg)
-> >>> +{
-> >>> +       int __user *arguser =3D (int  __user *)arg;
-> >>> +       struct hsmp_message msg =3D { 0 };
-> >>> +       int ret;
-> >>> +
-> >>> +       if (copy_struct_from_user(&msg, sizeof(msg), arguser, sizeof(=
-struct hsmp_message)))
-> >>> +               return -EFAULT;
-> >>> +
-> >>> +       ret =3D validate_message(&msg);
-> >> We call validate_message() twice in this path. This is not a big issue=
-, but it
-> >> will be nice if we can avoid the extra check.
-> > Yes, we can probably just rely on hsmp_send_message. We shouldn't remov=
-e it
-> > from there since we export that function.
->
-> We are using msg_id to reference elements from the table. so, i will
-> validate the msg.msg_id
->
-> is with in the array bounds of hsmp_msg_desc_table[] here.
+Hi Dan,
 
-Yeah, let's keep both checks for now.
+On 2/16/22 23:52, Daniel Scally wrote:
+> At the moment there are a few places in the int3472-tps68470 driver that are
+> limited to just working with a single consuming device dependent on the PMIC.
+> There are systems where multiple camera sensors share a single TPS68470, so
+> we need to extend the driver to support them. This requires a couple of tweaks
+> to the ACPI functions to fetch dependent devices, which also assumes that only
+> a single dependent will be found.
 
-Song
+This sounds great, thank you for your work on this. I have a bit of a backlog wrt
+pdx86 patches to review and I try to through those in FIFO order to keep things fair,
+so it may be a while (approx. 1-2 weeks) before I get around to reviewing
+these.
+
+Regards,
+
+Hans
+
+
+> 
+> Hans - this (plus a series to media [1]) adds support for the Surface Go 2's
+> IR camera...the regulator settings for the Go1/2/3 world facing camera are the
+> same, so I'd expect them to match for the IR sensor too, which means it should
+> enable support for your Go too.
+> 
+> Thanks
+> Dan
+> 
+> 
+> [1] https://lore.kernel.org/linux-media/20220215230737.1870630-1-djrscally@gmail.com/
+> 
+> Daniel Scally (6):
+>   ACPI: scan: Add acpi_dev_get_next_consumer_dev()
+>   ACPI: bus: Add iterator for dependent devices
+>   platform/x86: int3472: Support multiple clock consumers
+>   platform/x86: int3472: Add terminator to gpiod_lookup_table
+>   platform/x86: int3472: Support multiple gpio lookups in board data
+>   platform/x86: int3472: Add board data for Surface Go2 IR camera
+> 
+>  drivers/acpi/scan.c                           | 47 +++++++++--
+>  drivers/clk/clk-tps68470.c                    | 13 +++-
+>  drivers/platform/x86/intel/int3472/tps68470.c | 77 +++++++++++++++----
+>  drivers/platform/x86/intel/int3472/tps68470.h |  3 +-
+>  .../x86/intel/int3472/tps68470_board_data.c   | 58 +++++++++++++-
+>  include/acpi/acpi_bus.h                       | 14 ++++
+>  include/linux/platform_data/tps68470.h        |  7 +-
+>  7 files changed, 188 insertions(+), 31 deletions(-)
+> 
+
