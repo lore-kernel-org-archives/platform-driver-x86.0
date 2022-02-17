@@ -2,331 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C30C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Feb 2022 16:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C8CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Feb 2022 16:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243052AbiBQQRW (ORCPT
+        id S239160AbiBQQ27 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Feb 2022 11:17:22 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47888 "EHLO
+        Thu, 17 Feb 2022 11:28:59 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242955AbiBQQRV (ORCPT
+        with ESMTP id S242940AbiBQQ25 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Feb 2022 11:17:21 -0500
+        Thu, 17 Feb 2022 11:28:57 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 31BC822D915
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Feb 2022 08:17:07 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8A8F1B65E6
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Feb 2022 08:28:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645114626;
+        s=mimecast20190719; t=1645115316;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TdAgT3n4yEQkfTC3jSBmOZ+dNy1FI07UJ9BkHZpJoIM=;
-        b=SExlBhDeCJTzE2XHqaYQXoRgQsbFYMP+sQ/4o5tt4o+RUznYYpunE/Gwe/fiCYxybaHZ32
-        cRInhImEFqwTqHpSg8X1z5B3hQdlkEtPEHh6G/MILxH2uYLCfGqGQvJbT0vNhbebXcwvE9
-        oXJdjn+AYd5z1LpS4ISb1ts1SvhVpWA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=OJgq/KDxxDOjnZUJexh0KDqV30PHIV148TQLzey+mso=;
+        b=dEam0yCRoCsB7y58Z0FKG4PO3Vz6SMIWpTVWYScmXpV1TOXf4b+FL9m5b1kgf4GUrpcNIm
+        WOVGpz1NSoOHyysIGG7+WO4B8iU28APiabSJR50jNsLT+elxnjyCQzsxxIq8KoRoQIR/Nj
+        HSOcRGjWNPeC8qZw5ltnxgR4TXPim8M=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-528-dD1Fri9QMbGEUacs79D8Zw-1; Thu, 17 Feb 2022 11:17:04 -0500
-X-MC-Unique: dD1Fri9QMbGEUacs79D8Zw-1
-Received: by mail-ed1-f71.google.com with SMTP id m11-20020a056402430b00b00410678d119eso3788433edc.21
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Feb 2022 08:17:04 -0800 (PST)
+ us-mta-562-2jzOXh8DN1a-ljYd1HPlNg-1; Thu, 17 Feb 2022 11:28:34 -0500
+X-MC-Unique: 2jzOXh8DN1a-ljYd1HPlNg-1
+Received: by mail-ed1-f72.google.com with SMTP id e10-20020a056402190a00b00410f20467abso3829328edz.14
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Feb 2022 08:28:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=TdAgT3n4yEQkfTC3jSBmOZ+dNy1FI07UJ9BkHZpJoIM=;
-        b=HQ8ZZPiNpEGA52WMBA75pTBabK9KftsCJLKTDbiZr3QK5DNjkyoHciVyZnclRsOPeX
-         UqUhHxom2RSOV7eVRZILXy00FKqWnnMzpoh8AgexxovkJcbDN2uBDT5WGxIj4CO90V3z
-         2qbvXy9LiSi5iqqhZsT6vbgoa4YTIB7A8mHyN71dCBE7H98QumRiz2LUyuBIGYzD078B
-         t2zvW2hFN2c7HkLEz7kzCEIyLan4T9wq6MDRqyvNEdD+/capFYhS/63VOGLckJd41EbB
-         QBx5JfaSm8xhi1BR5P9RGTu/lFbckt1CqWzLyqaaTxLR+mySYFW5k8XA8+oxfM51BJAw
-         ZQEQ==
-X-Gm-Message-State: AOAM533y0TBYs6S0k8SyIc1MwEbAgY8m3lpwAGvLj+5mr7D8FF3Iaqgt
-        vAneWbdjOEIMA3mw0A8ckPKtc1t6bDVQXslLVtBn1R9xx4GGiXMYyPkiXiPqtzKHo5BbZEjdXy9
-        kgVoh5/UAIcjPPJR41uBncUTQhVnnG5RRpw==
-X-Received: by 2002:a05:6402:270a:b0:410:a3a4:ba06 with SMTP id y10-20020a056402270a00b00410a3a4ba06mr3349258edd.293.1645114623385;
-        Thu, 17 Feb 2022 08:17:03 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJy25JQ6VGe5t6ONYFTpEVFyoKUADp5oZTKNQAtYYWVnB3OdDaDzgJbZKDpRVKANVmCvD2h0Rg==
-X-Received: by 2002:a05:6402:270a:b0:410:a3a4:ba06 with SMTP id y10-20020a056402270a00b00410a3a4ba06mr3349233edd.293.1645114623137;
-        Thu, 17 Feb 2022 08:17:03 -0800 (PST)
+        bh=OJgq/KDxxDOjnZUJexh0KDqV30PHIV148TQLzey+mso=;
+        b=MKWCpnplKUw9mOmf1JJtn2B/wN7v9+rewIKRasVrA/JKsJQUID+uNs+0EWPC+6vBro
+         GXx/MjEuTZOWTmV3rU4Z/ryZwquhZru8cIOCxSCOIp7Q35jm1E5LjQxA49G62wsZk2+o
+         u/GuYlAzlmhgQgap0DlzmbxvGJyd1iA28INbCH0D8umUXZO44TVwsVjnMjKWVEboCLwc
+         klzO5tDx9Xa38z/FjlHPNaAnuSvAHe69f5GVUOOgZk0tNA7pTPX+y4URhQrZIwhanWPB
+         Ww6YhBha7HMyY4aZ6VvOVQ7Q1EaCLcV228yXyjvXN7AUMM0algKy2tvQyom2Va+Yq6mr
+         K+tA==
+X-Gm-Message-State: AOAM532ez3xAu5L2e3n/fm91vLXcyd+T5LZkl03ATKETCzZGKfd6oABV
+        0hl2Lm2TkEkzoJlquv55GPcsdNOOXbi4xUAf1Yo9/aDJ1vEvWXLuOlDMz76Cr5Y3MjZ5u1DtZad
+        OmhIiVOUUKTOMpwshJYJSEsUdsUZn28Qymg==
+X-Received: by 2002:a17:907:70c1:b0:6ce:78ff:bad4 with SMTP id yk1-20020a17090770c100b006ce78ffbad4mr2958947ejb.68.1645115313580;
+        Thu, 17 Feb 2022 08:28:33 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzHk0mBIn5UH4jO+7vKeoLKOM8666LODusd64tZnougD4T+k/q3YUvhnxrSBAizbwwT0+edxw==
+X-Received: by 2002:a17:907:70c1:b0:6ce:78ff:bad4 with SMTP id yk1-20020a17090770c100b006ce78ffbad4mr2958934ejb.68.1645115313445;
+        Thu, 17 Feb 2022 08:28:33 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id o10sm1339664ejj.6.2022.02.17.08.17.02
+        by smtp.gmail.com with ESMTPSA id ee30sm3403540edb.4.2022.02.17.08.28.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Feb 2022 08:17:02 -0800 (PST)
-Message-ID: <ecb6cb02-70a1-9227-5240-7d39bb9b226b@redhat.com>
-Date:   Thu, 17 Feb 2022 17:17:01 +0100
+        Thu, 17 Feb 2022 08:28:32 -0800 (PST)
+Message-ID: <84de2a98-3051-82ec-6686-ef4161535d23@redhat.com>
+Date:   Thu, 17 Feb 2022 17:28:32 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH 2/2] asus-wmi: Add support for keyboard rgb backlights
+Subject: Re: [PATCH] platform/x86: Add Steam Deck driver
 Content-Language: en-US
-To:     Abhijeet V <abhijeetviswa@gmail.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220211200122.9821-1-abhijeetviswa@gmail.com>
- <20220211200122.9821-3-abhijeetviswa@gmail.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+Cc:     platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org
+References: <20220206022023.376142-1-andrew.smirnov@gmail.com>
+ <gfQUxZHzyr7uH4TwqJwXGsxCIYa-VvrN955036G3kKr6ligJYTAI3dqhf-FJddyHVBomp3JUUBNFMmmR8rwm7WzSxprlclT9Cbkrr2dknP0=@protonmail.com>
+ <CAHQ1cqF5HCJVsmyMHMxU85Uwv_Yd8qoAUVMz7R_zo0S9_pFZfg@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220211200122.9821-3-abhijeetviswa@gmail.com>
+In-Reply-To: <CAHQ1cqF5HCJVsmyMHMxU85Uwv_Yd8qoAUVMz7R_zo0S9_pFZfg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Abhijeet,
+Hi,
 
-On 2/11/22 21:01, Abhijeet V wrote:
-> Uses the led multicolor classdev to change the rgb values.
-> The WMI function expects other settings in addition to the rgb values.
-> This patch assumes some defaults to get the base rgb functionality
-> working.
+On 2/13/22 00:30, Andrey Smirnov wrote:
+
+<snip>
+
+>>> +static struct attribute *steamdeck_attributes[] = {
+>>> +     &dev_attr_target_cpu_temp.attr,
+>>> +     &dev_attr_gain.attr,
+>>> +     &dev_attr_ramp_rate.attr,
+>>> +     &dev_attr_hysteresis.attr,
+>>> +     &dev_attr_maximum_battery_charge_rate.attr,
+>>> +     &dev_attr_recalculate.attr,
+>>> +     &dev_attr_power_cycle_display.attr,
+>>> +
+>>> +     &dev_attr_led_brightness.attr,
+>>
+>> Have you considered using a led class device instead? I think that should
+>> work even without the ability to query the brightness.
+>>
 > 
-> Signed-off-by: Abhijeet V <abhijeetviswa@gmail.com>
-
-Thank you for your patches. Other then the buildbot issue patch 1/2
-looks good to me. I do have some questions / remarks about this one:
-
-> ---
->  drivers/platform/x86/asus-wmi.c            | 137 +++++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h |   2 +
->  2 files changed, 139 insertions(+)
+> Not very seriously. Will take another look.
 > 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 117fbcb303d3..f8e92021399c 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -193,6 +193,12 @@ struct fan_curve_data {
->  	u8 percents[FAN_CURVE_POINTS];
->  };
->  
-> +struct asus_kbd_rgb {
-> +	u8 red;
-> +	u8 green;
-> +	u8 blue;
-> +};
-> +
->  struct asus_wmi {
->  	int dsts_id;
->  	int spec;
-> @@ -217,6 +223,8 @@ struct asus_wmi {
->  	struct led_classdev_mc kbd_led_mc;
->  	int kbd_led_wk;
->  	struct mc_subled subled_info[ASUS_KBD_SUBLED_COUNT];
-> +	struct asus_kbd_rgb kbd_rgb;
-> +	bool kbd_rgb_available;
->  
->  	struct asus_rfkill wlan;
->  	struct asus_rfkill bluetooth;
-> @@ -914,6 +922,114 @@ static void kbd_led_brightness_wmi_write(struct asus_wmi *asus, int value)
->  	asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
->  }
->  
-> +static int kbd_led_rgb_wmi_write(struct asus_wmi *asus)
-> +{
-> +	int err;
-> +	u32 retval;
-> +	u8 red;
-> +	u8 green;
-> +	u8 blue;
-> +	u8 speed_byte;
-> +	u8 mode_byte;
-> +	u8 speed;
-> +	u8 mode;
-> +	u8 flags;
-> +	u8 persistent;
-> +
-> +	speed = 0; // Sane default
-> +	switch (speed) {
-> +	case 0:
-> +	default:
-> +		speed_byte = 0xe1; // slow
-> +		speed = 0;
-> +		break;
-> +	case 1:
-> +		speed_byte = 0xeb; // medium
-> +		break;
-> +	case 2:
-> +		speed_byte = 0xf5; // fast
-> +		break;
-> +	}
-> +
-> +	mode = 0; // Sane default
-> +	switch (mode) {
-> +	case 0:
-> +	default:
-> +		mode_byte = 0x00; // static color
-> +		mode = 0;
-> +		break;
-> +	case 1:
-> +		mode_byte = 0x01; // breathing
-> +		break;
-> +	case 2:
-> +		mode_byte = 0x02; // color cycle
-> +		break;
-> +	case 3:
-> +		mode_byte = 0x0a; // strobing
-> +		break;
-> +	}
-> +
-> +	red = clamp_val(asus->kbd_led_mc.subled_info[0].intensity, 0, 255);
-> +	green = clamp_val(asus->kbd_led_mc.subled_info[1].intensity, 0, 255);
-> +	blue = clamp_val(asus->kbd_led_mc.subled_info[2].intensity, 0, 255);
-> +
-> +	/*
-> +	 * 00 - Reset on boot
-> +	 * 01 - Persist across boot
-> +	 */
-> +	persistent = 1; // Sane defaults
-> +
-> +	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS,
-> +		ASUS_WMI_DEVID_KBD_RGB,
-> +		(persistent ? 0xb4 : 0xb3) |
-> +		(mode_byte << 8) |
-> +		(red << 16) |
-> +		(green << 24),
-> +		(blue) |
-> +		(speed_byte << 8), &retval);
-> +	if (err) {
-> +		pr_warn("RGB keyboard device 1, write error: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (retval != 1) {
-> +		pr_warn("RGB keyboard device 1, write error (retval): %x\n",
-> +				retval);
-> +		return -EIO;
-> +	}
-> +
-> +	/*
-> +	 * Enable: 02 - on boot (until module load) | 08 - awake | 20 - sleep
-> +	 * (2a or ff to enable everything)
-> +	 *
-> +	 * Logically 80 would be shutdown, but no visible effects of this option
-> +	 * were observed so far
-> +	 */
-> +	flags = 0xff;
-> +
-> +	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS,
-> +		ASUS_WMI_DEVID_KBD_RGB2,
-> +		(0xbd) |
-> +		(flags << 16) |
-> +		(persistent ? 0x0100 : 0x0000), 0, &retval);
-> +	if (err) {
-> +		pr_warn("RGB keyboard device 2, write error: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (retval != 1) {
-> +		pr_warn("RGB keyboard device 2, write error (retval): %x\n",
-> +				retval);
-> +		return -EIO;
-> +	}
-> +
-> +	asus->kbd_rgb.red = red;
-> +	asus->kbd_rgb.green = green;
-> +	asus->kbd_rgb.blue = blue;
-> +
-> +	return 0;
-> +}
-> +
->  static void kbd_led_brightness_set(struct led_classdev *led_cdev,
->  		enum led_brightness value)
->  {
-> @@ -928,6 +1044,18 @@ static void kbd_led_brightness_set(struct led_classdev *led_cdev,
->  	asus = container_of(led_cdev_mc, struct asus_wmi, kbd_led_mc);
->  
->  	kbd_led_brightness_wmi_write(asus, value);
-> +
-> +	/* Check and set if rgb available */
-> +	if (!asus->kbd_rgb_available)
-> +		return;
-> +
-> +	if (asus->kbd_rgb.red == asus->subled_info[LED_COLOR_ID_RED].intensity &&
-> +			asus->kbd_rgb.green == asus->subled_info[LED_COLOR_ID_GREEN].intensity &&
-> +			asus->kbd_rgb.blue == asus->subled_info[LED_COLOR_ID_BLUE].intensity) {
-> +		return;
-> +	}
-> +
-> +	kbd_led_rgb_wmi_write(asus);
->  }
+>>
+>>> +     &dev_attr_content_adaptive_brightness.attr,
+>>> +     &dev_attr_gamma_set.attr,
+>>> +     &dev_attr_display_brightness.attr,
+>>
+>> Have you considered using a backlight class device?
+>>
+> 
+> Ditto.
 
-I notice you are still doing kbd_led_brightness_wmi_write(asus, value); in the 
-rgb case is that necessary ? I would expect the rgb settings from kbd_led_rgb_wmi_write()
-to also encode/overwrite the brightness setting ?
-
->  
->  static void kbd_led_set_brightness_by_hw(struct asus_wmi *asus,
-> @@ -959,6 +1087,7 @@ int kbd_led_classdev_init(struct asus_wmi *asus, int brightness)
->  {
->  	int rv;
->  
-> +	asus->kbd_rgb_available = true;
-
-Sorry but this is not acceptable, you need to detect that this is actually
-supported and not change the behavior of the code on laptops without rgb
-backlights.
-
-Perhaps Corentin can help with figuring out how to detect this?
-
->  	asus->kbd_led_wk = brightness;
->  	asus->kbd_led_mc.led_cdev.name = "asus::kbd_backlight";
->  	asus->kbd_led_mc.led_cdev.flags = LED_BRIGHT_HW_CHANGED;
-> @@ -966,6 +1095,14 @@ int kbd_led_classdev_init(struct asus_wmi *asus, int brightness)
->  	asus->kbd_led_mc.led_cdev.brightness_get = kbd_led_brightness_get;
->  	asus->kbd_led_mc.led_cdev.max_brightness = 3;
->  
-> +	asus->subled_info[0].color_index = LED_COLOR_ID_RED;
-> +	asus->subled_info[0].channel = 0;
-> +	asus->subled_info[1].color_index = LED_COLOR_ID_GREEN;
-> +	asus->subled_info[1].channel = 1;
-> +	asus->subled_info[2].color_index = LED_COLOR_ID_BLUE;
-> +	asus->subled_info[2].channel = 2;
-> +	asus->kbd_led_mc.subled_info = asus->subled_info;
-> +
-
-So with just patch 1/2 kbd_led_mc.subled_info is left as NULL, is this allowed?
-
->  	asus->kbd_led_mc.num_colors = ASUS_KBD_SUBLED_COUNT;
->  
->  	rv = led_classdev_multicolor_register(&asus->platform_device->dev,
-
-Maybe change this to:
-
-	if (asus->kbd_rgb_available)
-		rv = led_classdev_multicolor_register(&asus->platform_device->dev,
-						      &asus->kbd_led_mc);
-	else
-		rv led_classdev_register(&asus->platform_device->dev,
-					 &asus->kbd_led_mc.led_cdev);
-
-?
-
-(and the same for unregister).
+Note that for both of these I would go a bit further then
+"have you considered?". Since you are implementing standardized
+userspace APIs here you *must* use the shared subsystem code
+for registering a LED resp backlight class device here so that
+everything is guaranteed to behave as expected by userspace.
 
 Regards,
 
 Hans
-
-
-	
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index a571b47ff362..a20ca3787e9f 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -59,6 +59,8 @@
->  #define ASUS_WMI_DEVID_LIGHTBAR		0x00050025
->  #define ASUS_WMI_DEVID_FAN_BOOST_MODE	0x00110018
->  #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY 0x00120075
-> +#define ASUS_WMI_DEVID_KBD_RGB		0x00100056
-> +#define ASUS_WMI_DEVID_KBD_RGB2		0x00100057
->  
->  /* Misc */
->  #define ASUS_WMI_DEVID_PANEL_OD		0x00050019
-> 
 
