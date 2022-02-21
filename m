@@ -2,110 +2,71 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428DBC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Feb 2022 17:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3656BC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Feb 2022 17:15:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243674AbiBURHY (ORCPT
+        id S1381530AbiBURPi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Feb 2022 12:07:24 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55058 "EHLO
+        Mon, 21 Feb 2022 12:15:38 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240037AbiBURHW (ORCPT
+        with ESMTP id S1381527AbiBURPd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Feb 2022 12:07:22 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 564381D32F;
-        Mon, 21 Feb 2022 09:06:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645463218; x=1676999218;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=RZDvFcjNGzHfz6QJapWn9VmEfw3si9l1wOlygRoWuG8=;
-  b=dTldcRvdL3TB43GX5oDmRRR/PGPqswjY6qzz358+VfG7PXy/sIAQBN+z
-   IXcQxTqPugT/eK4Wq1k86h5a+npMe1JhsrB2tOV+qaQlV+FeOJ3myApo1
-   u/TqhPLAMvm1Tav2wJaboMtYvaYcz36tr5QXCSpbHIhSdVD07t80hkORk
-   Xzyhej/xJMeXrp8/sxvZOTudXf1g3dIkcr5PcovtxG0vgc49Hy0C2hObf
-   n4W2j5UqoiJEms+WZzQV8xuPak7oy3EuP/XdGj6/V4ZyvXM1KzN7Iqcif
-   kHENspKkPin3hFWciYa/acff6MvN57KpA5AoxhMsku7tUifAoS0vMuI5a
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10265"; a="232164088"
-X-IronPort-AV: E=Sophos;i="5.88,386,1635231600"; 
-   d="scan'208";a="232164088"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2022 09:06:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,386,1635231600"; 
-   d="scan'208";a="636723005"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Feb 2022 09:06:57 -0800
-Received: from bazacche-MOBL.amr.corp.intel.com (unknown [10.209.98.194])
-        by linux.intel.com (Postfix) with ESMTP id B2092580C7E;
-        Mon, 21 Feb 2022 09:06:57 -0800 (PST)
-Message-ID: <8cb2722299ecf8b4c6d24ff28a0a19024dcb41f0.camel@linux.intel.com>
-Subject: Re: [PATCH 1/3] platform/x86/intel: pmt: Remove bin_attribute mmap
- support to runtime pm
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Hans de Goede <hdegoede@redhat.com>, mgross@linux.intel.com,
-        rjw@rjwysocki.net, srinivas.pandruvada@intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Date:   Mon, 21 Feb 2022 09:06:57 -0800
-In-Reply-To: <5ba6e52c-d7e9-39fc-cb84-963a403385ca@redhat.com>
-References: <20220214213258.1929462-1-david.e.box@linux.intel.com>
-         <20220214213258.1929462-2-david.e.box@linux.intel.com>
-         <5ba6e52c-d7e9-39fc-cb84-963a403385ca@redhat.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 21 Feb 2022 12:15:33 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B38B926122;
+        Mon, 21 Feb 2022 09:15:10 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 66583B8169C;
+        Mon, 21 Feb 2022 17:15:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2B001C340E9;
+        Mon, 21 Feb 2022 17:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645463708;
+        bh=nbmya3JwWM1AJJmuDf5HSsPpK4nSioEJ/MYrhIw2rBM=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=IP4PaCz0N6B6Qy2g4JLwApVEgxDiFtf8/WEh2IpNblojxNyz239yyKIDtaiwzjBMK
+         5AnS3BoWDZVahXQJq+N/KcHJ/GSRIE0SMq7z+zZqvjtZ4r98JTF7pg1kjg3KYow53y
+         VcVZhJoJ/+Ron8zFEx7VdxTFiAy0aHJ5WjFJl8zYWMwoCZstVBnfK8xwFCUdNeOwSQ
+         xTpFwSFc14+uv8AZh9ShIlgdl58Zj19zdKFFl5NEz5IKHtw0Rit8zvk/QE3ioiqlCz
+         H8b0gofWt1Log1Os6fhyxmy4XSdAlolizZtdNCVFfMKdnGsYYlR7lJdYvnyF5x5OgG
+         I+NVBgQUgeZjA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1A54DE6D3E8;
+        Mon, 21 Feb 2022 17:15:08 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for 5.17-3
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <7ea773bf-c020-c815-fe1c-8401dbc6a86e@redhat.com>
+References: <7ea773bf-c020-c815-fe1c-8401dbc6a86e@redhat.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <7ea773bf-c020-c815-fe1c-8401dbc6a86e@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.17-3
+X-PR-Tracked-Commit-Id: ae09639e3b2a0291b37b122c94dd4f773cd4e513
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 038101e6b2cd5c55f888f85db42ea2ad3aecb4b6
+Message-Id: <164546370810.23801.1231884751699104221.pr-tracker-bot@kernel.org>
+Date:   Mon, 21 Feb 2022 17:15:08 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2022-02-21 at 10:05 +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 2/14/22 22:32, David E. Box wrote:
-> > PMT devices need to support runtime D3. However, binary attributes
-> > don't
-> > provide access to open/release methods that could be used to
-> > control
-> > runtime pm. Therefore, remove the mmap operation. The data may
-> > still be
-> > accessed with read() calls.
-> > 
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> > V0 comments:
-> > 
-> > I expect that this is an undesirable solution because of the ABI
-> > change.
-> > I don't know if anyone is using this ABI outside of our Intel tools
-> > which
-> > are willing to make this change. I'd rather find a solution to keep
-> > the
-> > mmap support. I initially wrote a patch to simply add the missing
-> > open and
-> > release callbacks to binary attributes but this was thought to be
-> > too heavy
-> > handed in our internal review. I'm open to suggestions. Thanks.
-> 
-> We really cannot go and break userspace API like this. Even if you
-> are
-> dropping mmap support from the Intel tools; and we assume that the
-> Intel
-> tools are the only consumer, then we still cannot drop mmap support
-> because users may install a new kernel without updating the tools.
-> 
-> The never break userspace rule applies here and that is a very clear
-> and hard rule.
-> 
-> So please respin the series using the approach with open and release
-> callbacks.
+The pull request you sent on Mon, 21 Feb 2022 17:01:36 +0100:
 
-Thanks Hans. I'll send out that series for comment.
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.17-3
 
-David
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/038101e6b2cd5c55f888f85db42ea2ad3aecb4b6
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
