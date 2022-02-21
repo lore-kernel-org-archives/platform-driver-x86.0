@@ -2,71 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3656BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Feb 2022 17:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D62C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Feb 2022 17:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381530AbiBURPi (ORCPT
+        id S229543AbiBURlw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Feb 2022 12:15:38 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41018 "EHLO
+        Mon, 21 Feb 2022 12:41:52 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381527AbiBURPd (ORCPT
+        with ESMTP id S229535AbiBURlU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Feb 2022 12:15:33 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B38B926122;
-        Mon, 21 Feb 2022 09:15:10 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 66583B8169C;
-        Mon, 21 Feb 2022 17:15:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2B001C340E9;
-        Mon, 21 Feb 2022 17:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645463708;
-        bh=nbmya3JwWM1AJJmuDf5HSsPpK4nSioEJ/MYrhIw2rBM=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=IP4PaCz0N6B6Qy2g4JLwApVEgxDiFtf8/WEh2IpNblojxNyz239yyKIDtaiwzjBMK
-         5AnS3BoWDZVahXQJq+N/KcHJ/GSRIE0SMq7z+zZqvjtZ4r98JTF7pg1kjg3KYow53y
-         VcVZhJoJ/+Ron8zFEx7VdxTFiAy0aHJ5WjFJl8zYWMwoCZstVBnfK8xwFCUdNeOwSQ
-         xTpFwSFc14+uv8AZh9ShIlgdl58Zj19zdKFFl5NEz5IKHtw0Rit8zvk/QE3ioiqlCz
-         H8b0gofWt1Log1Os6fhyxmy4XSdAlolizZtdNCVFfMKdnGsYYlR7lJdYvnyF5x5OgG
-         I+NVBgQUgeZjA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1A54DE6D3E8;
-        Mon, 21 Feb 2022 17:15:08 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 5.17-3
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <7ea773bf-c020-c815-fe1c-8401dbc6a86e@redhat.com>
-References: <7ea773bf-c020-c815-fe1c-8401dbc6a86e@redhat.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <7ea773bf-c020-c815-fe1c-8401dbc6a86e@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.17-3
-X-PR-Tracked-Commit-Id: ae09639e3b2a0291b37b122c94dd4f773cd4e513
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 038101e6b2cd5c55f888f85db42ea2ad3aecb4b6
-Message-Id: <164546370810.23801.1231884751699104221.pr-tracker-bot@kernel.org>
-Date:   Mon, 21 Feb 2022 17:15:08 +0000
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
+        Mon, 21 Feb 2022 12:41:20 -0500
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD04026AE2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Feb 2022 09:40:26 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id r20so15750789ljj.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Feb 2022 09:40:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20210112.gappssmtp.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xEuyjFrM9XwMrClBWbdS/xCWNoJfoXGzRHNpn8EHVe8=;
+        b=EvNZ4JN1PESakWqiNhVErkDTF8azxH7NkFupvW940zHErR8fbltkz8fMM3erSSAkua
+         SVbCJAx5x99BdcVvfCbuOi6eihjGnlTLy32uvWD8S02HQh5C6ntMJgadw9JJD95XWSe6
+         FYzVQ3ZEYFWfNS89g5hsLbaL7gMl81XsfzVoLPHnM9uLGNjC7SYyyUsU2Qwm8B1zZjsQ
+         opiHv5yc1+vfHrioBcT0Su4bI0Uo1cnoWi2VTaIof4su3DEprcGE3luxKhgjxtku3cgW
+         c2nbRU/0MTpXeAhcfUwbGoQnEXkyZAFRlK6RJqkkSBHexXVWxzj39goDYznkCJbICaie
+         0Eeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xEuyjFrM9XwMrClBWbdS/xCWNoJfoXGzRHNpn8EHVe8=;
+        b=ukcCnDdcgxXC9NcxQleeB8H734iTn3Os/nGmI3uk9+lOKBt+2F8Kl2FIshXNzFA6pN
+         wcsKkmAmIsY78EzxoM2vZMY8GqTynbOqBycdjSZlaQfWTWvPqxxK073aGpEk5lwjUvFJ
+         ddXmXNiplMMUrtPl38DXUQQ9Sib7yORJOjUGsFfBwfjmxibjI64Z2Q7HT65ivxc3I6Zd
+         uJ1tGdSbgnYhmdJtpTjsq1YBC+qddvCM27/ncfx7cNxKxyqQyjrb6c22+fvx07RnVH5g
+         nBJjaHjp1nLRDBZ0BjGVdvnFQapfJ9g8N3S9Q88B135EAsyCO/qChiR26Cl5HXh6rTmf
+         3Jvw==
+X-Gm-Message-State: AOAM530n4IsahiO9g8U9jq2nX4RygjlCatOBtjzBuGMXF5X8jNHw7QCi
+        NJAhcByodVV1wIy8PAlxU+W4KA==
+X-Google-Smtp-Source: ABdhPJyMpVcgpGjVDM1tE/A1ztFlJLD5B8plNpKCAvS4oAZ2w0SyAG5LTlNyt81HXrIEaGhcKYOhLA==
+X-Received: by 2002:a2e:a4ae:0:b0:244:dac8:4590 with SMTP id g14-20020a2ea4ae000000b00244dac84590mr8981123ljm.231.1645465224829;
+        Mon, 21 Feb 2022 09:40:24 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id v18sm1417023ljb.98.2022.02.21.09.40.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Feb 2022 09:40:24 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 748CC1039EE; Mon, 21 Feb 2022 20:41:21 +0300 (+03)
+Date:   Mon, 21 Feb 2022 20:41:21 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v10 21/45] x86/mm: Add support to validate memory when
+ changing C-bit
+Message-ID: <20220221174121.ceeplpoaz63q72kv@box>
+References: <Ygz88uacbwuTTNat@zn.tnic.mbx>
+ <20220216160457.1748381-1-brijesh.singh@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220216160457.1748381-1-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Mon, 21 Feb 2022 17:01:36 +0100:
+On Wed, Feb 16, 2022 at 10:04:57AM -0600, Brijesh Singh wrote:
+> @@ -287,6 +301,7 @@ struct x86_platform_ops {
+>  	struct x86_legacy_features legacy;
+>  	void (*set_legacy_features)(void);
+>  	struct x86_hyper_runtime hyper;
+> +	struct x86_guest guest;
+>  };
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.17-3
+I used 'cc' instead of 'guest'. 'guest' looks too generic.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/038101e6b2cd5c55f888f85db42ea2ad3aecb4b6
+Also, I'm not sure why not to use pointer to ops struct instead of stroing
+them directly in x86_platform. Yes, it is consistent with 'hyper', but I
+don't see it as a strong argument.
 
-Thank you!
+>  
+> index b4072115c8ef..a55477a6e578 100644
+> --- a/arch/x86/mm/pat/set_memory.c
+> +++ b/arch/x86/mm/pat/set_memory.c
+> @@ -2012,8 +2012,15 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
+>  	 */
+>  	cpa_flush(&cpa, !this_cpu_has(X86_FEATURE_SME_COHERENT));
+>  
+> +	/* Notify HV that we are about to set/clr encryption attribute. */
+> +	x86_platform.guest.enc_status_change_prepare(addr, numpages, enc);
+> +
+>  	ret = __change_page_attr_set_clr(&cpa, 1);
+
+This doesn't cover difference in flushing requirements. Can we get it too?
+
+>  
+> +	/* Notify HV that we have succesfully set/clr encryption attribute. */
+> +	if (!ret)
+> +		x86_platform.guest.enc_status_change_finish(addr, numpages, enc);
+> +
+
+Any particular reason you moved it above cpa_flush()? I don't think it
+makes a difference for TDX, but still.
+
+>  	/*
+>  	 * After changing the encryption attribute, we need to flush TLBs again
+>  	 * in case any speculative TLB caching occurred (but no need to flush
+> @@ -2023,12 +2030,6 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
+>  	 */
+>  	cpa_flush(&cpa, 0);
+>  
+> -	/*
+> -	 * Notify hypervisor that a given memory range is mapped encrypted
+> -	 * or decrypted.
+> -	 */
+> -	notify_range_enc_status_changed(addr, numpages, enc);
+> -
+>  	return ret;
+>  }
+>  
+> -- 
+> 2.25.1
+> 
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+ Kirill A. Shutemov
