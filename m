@@ -2,77 +2,77 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD243C43219
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Feb 2022 10:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1075FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Feb 2022 10:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355255AbiBUKkD (ORCPT
+        id S1350092AbiBUKnj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Feb 2022 05:40:03 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57042 "EHLO
+        Mon, 21 Feb 2022 05:43:39 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355243AbiBUKjw (ORCPT
+        with ESMTP id S1355189AbiBUKnX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Feb 2022 05:39:52 -0500
+        Mon, 21 Feb 2022 05:43:23 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3BA1C22A
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Feb 2022 02:01:34 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 946545EDF1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Feb 2022 02:04:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645437663;
+        s=mimecast20190719; t=1645437819;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=7zRfE52oN/QSXCEKNsEZ7++nbxAmr5JsTor+N2gBmzI=;
-        b=IJgyCidgiHGhfkqLQNdmYpM7BqQeVOJ8kpbCOl4mUyh5qwb1GtIlaAxxiWyuNw/ndVRELa
-        dN6yFbBfcqTfeup6WW9BPS7vIHyvgEsfsHr4zcHzStIzS81JLV0+TLLc/28QZ+FV89YFCB
-        eky9GoIs9VzNeA7TYQFmIpaG9GTE2FY=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=4s8BJxEDtsxmBqxIWggsGjTBGC1Oq+r/eNf7z8ANFYk=;
+        b=iAXOgab5ZM2p8GG049pYnIuof9DtwuYbOK6a1Q44erMWBelQR9KULpxklEf0qb5kzabeeb
+        ceVUy2SvMabdtOq9AdThHKxJidi1UXhNtOa+imiaSLKk4w7tXV5iw85vSiXkJzPmPjJWOz
+        SKHNh+5nGYeNc8ze4A7IoCVbnbgwWUE=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-646-AnvUNipBOYSJo02LsHq7dw-1; Mon, 21 Feb 2022 05:01:01 -0500
-X-MC-Unique: AnvUNipBOYSJo02LsHq7dw-1
-Received: by mail-ej1-f70.google.com with SMTP id r18-20020a17090609d200b006a6e943d09eso4444175eje.20
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Feb 2022 02:01:01 -0800 (PST)
+ us-mta-670-yNoVbshsMwmgJsrfdo3pcg-1; Mon, 21 Feb 2022 05:03:38 -0500
+X-MC-Unique: yNoVbshsMwmgJsrfdo3pcg-1
+Received: by mail-ed1-f72.google.com with SMTP id n7-20020a05640205c700b0040b7be76147so9860069edx.10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Feb 2022 02:03:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=7zRfE52oN/QSXCEKNsEZ7++nbxAmr5JsTor+N2gBmzI=;
-        b=qfvCQ+S2+DuSjXq76f7LlaH0PTLH4naAulBta0MW+4Qz0D3hCSDHda+Oko/R2kM99J
-         /dEyx2vGKy84ut7byv3IUT9Yb/cHat0pSV6H+Nlg38h+gt7PzC3RlJD1kWDHY4gr/ugc
-         fArKYFsJSu4oBniGf1sJh7vicCrq+NSuYtGLdGNmDctKmed45spZ0vQV1vudod707uJS
-         icJqcKuJ6i/MpcmLsKeJAoP2v6rqQud5ARlFRdog12nHvVLwQCgewAEMgG6X+71KEntt
-         3K6cSuntLmCnUrVbU8jDAdda70l0Mpaj4zxXS08wkO1Fji4+vyVCjqLK6MBkCv/OTjkz
-         Jchw==
-X-Gm-Message-State: AOAM53135X7MhBJYZx5SEkiu4eBHCZUd8S2Ut1NGBw0/h9AwzUNVcqZM
-        ooKzPJ6oySFeJEG/93XhxeZeSP1kFkVXWLR6qcxA/3lMprm0ZVFpnJpSD4REpmOhHyy3zeeZThw
-        gk8tKZw0itMiSfkVkHkjhZ+7zDe8G6ARP7w==
-X-Received: by 2002:aa7:d592:0:b0:410:b9f9:90f2 with SMTP id r18-20020aa7d592000000b00410b9f990f2mr20653672edq.327.1645437660452;
-        Mon, 21 Feb 2022 02:01:00 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwKxxF03XDkkjYZ6BX/PbJeA9bUIOPF7+CUVN7njnRJrqqGbBNAH8lOCWNvtEeuuU0wdXkISA==
-X-Received: by 2002:aa7:d592:0:b0:410:b9f9:90f2 with SMTP id r18-20020aa7d592000000b00410b9f990f2mr20653652edq.327.1645437660311;
-        Mon, 21 Feb 2022 02:01:00 -0800 (PST)
+        bh=4s8BJxEDtsxmBqxIWggsGjTBGC1Oq+r/eNf7z8ANFYk=;
+        b=iahHPO1F7kmOApKf9VNBTTYa/scB1vCdD+gEe4O3NbYjKVGiS+hqFnk/ixRYnUuuEu
+         pZHXpam+Mslr9ijglWjdL/iXzj9ZtSA9otPkCt+nF2yZB2208EAqzoXUEuIP2jOyZ7r3
+         UAPK/dSCHLDXd/2a8Vrd22+5lA3pX0ZFAapGv9rcxsneaOQl/whhxlfkgat3QNrsBpmL
+         UMFenEQYUHyljvRYLNa3nE0pbG5E1fhTEtIcHIQC7KXBENvkccIRgzjHsGhnhcodkk2P
+         5apmW56vYalDNvZROwVA/STXqnV26k1VhSTQFz0oRf167E8ZYmwlfDFp87Hl/wKbiVOB
+         UA2A==
+X-Gm-Message-State: AOAM533+snA/okSIzGFj/UGIzdkSQ2iC469b1+k8DJpReW9vAnFETJ6C
+        hnMgcDQY4uG5IPyh0KDOYAmFCJbwp0O7N2TO/olYwKPNVAF421ziyxAiPwlv0TjTqmx5/QaTIvX
+        TpP6uN2HCrcRgMfdpp5lcdfSDiBUqadKMWA==
+X-Received: by 2002:a17:907:9086:b0:6b3:fce8:50ee with SMTP id ge6-20020a170907908600b006b3fce850eemr15067873ejb.390.1645437816128;
+        Mon, 21 Feb 2022 02:03:36 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzvv6nlokX9BhhIjU9STNKNuRrTxESvHoQlBYb54BYeI5iJ0tI4/MuKELQ416ug8QhL5lmNhA==
+X-Received: by 2002:a17:907:9086:b0:6b3:fce8:50ee with SMTP id ge6-20020a170907908600b006b3fce850eemr15067860ejb.390.1645437815927;
+        Mon, 21 Feb 2022 02:03:35 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id z8sm4957427ejc.151.2022.02.21.02.00.59
+        by smtp.gmail.com with ESMTPSA id b7sm5130124ejl.145.2022.02.21.02.03.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Feb 2022 02:00:59 -0800 (PST)
-Message-ID: <7d5f6a24-3c2c-355a-7ea1-92c9e364bfa6@redhat.com>
-Date:   Mon, 21 Feb 2022 11:00:59 +0100
+        Mon, 21 Feb 2022 02:03:35 -0800 (PST)
+Message-ID: <922e686e-26df-a07b-1c82-860127e8403b@redhat.com>
+Date:   Mon, 21 Feb 2022 11:03:34 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [PATCH 4/6] platform/x86: int3472: Add terminator to
- gpiod_lookup_table
+Subject: Re: [PATCH 5/6] platform/x86: int3472: Support multiple gpio lookups
+ in board data
 Content-Language: en-US
 To:     Daniel Scally <djrscally@gmail.com>, linux-acpi@vger.kernel.org,
         linux-clk@vger.kernel.org, platform-driver-x86@vger.kernel.org
 Cc:     rafael@kernel.org, lenb@kernel.org, mturquette@baylibre.com,
         sboyd@kernel.org, markgross@kernel.org, robert.moore@intel.com
 References: <20220216225304.53911-1-djrscally@gmail.com>
- <20220216225304.53911-5-djrscally@gmail.com>
+ <20220216225304.53911-6-djrscally@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220216225304.53911-5-djrscally@gmail.com>
+In-Reply-To: <20220216225304.53911-6-djrscally@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -82,36 +82,146 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 2/16/22 23:53, Daniel Scally wrote:
-> Without the terminator, if a con_id is passed to gpio_find() that
-> does not exist in the lookup table the function will not stop looping
-> correctly, and eventually cause an oops.
+> Currently, we only support passing a single gpiod_lookup_table as part
+> of the board data for the tps68470 driver. This carries the implicit
+> assumption that each TPS68470 device will only support a single
+> sensor, which does not hold true.
 > 
-> Fixes: 1596ef1251b5 ("platform/x86: int3472: Pass tps68470_regulator_platform_data to the tps68470-regulator MFD-cell")
+> Extend the code to support the possibility of multiple sensors each
+> having a gpiod_lookup_table, and opportunistically add the lookup
+> table for the Surface Go line's IR camera.
+> 
 > Signed-off-by: Daniel Scally <djrscally@gmail.com>
 > ---
->  drivers/platform/x86/intel/int3472/tps68470_board_data.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/platform/x86/intel/int3472/tps68470.c | 18 ++++++++++-----
+>  drivers/platform/x86/intel/int3472/tps68470.h |  3 ++-
+>  .../x86/intel/int3472/tps68470_board_data.c   | 22 ++++++++++++++++---
+>  3 files changed, 33 insertions(+), 10 deletions(-)
 > 
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+> index b535564712bb..736480961ec3 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
+> @@ -150,6 +150,7 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>  	struct regmap *regmap;
+>  	int device_type;
+>  	int ret;
+> +	int i;
+>  
+>  	n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
+>  	if (n_consumers < 0)
+> @@ -194,15 +195,18 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>  		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
+>  		cells[2].name = "tps68470-gpio";
+>  
+> -		gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_table);
+> +		for (i = 0; i < board_data->n_gpiod_lookups; i++)
+> +			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+>  
+>  		ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
+>  					   cells, TPS68470_WIN_MFD_CELL_COUNT,
+>  					   NULL, 0, NULL);
+>  		kfree(cells);
+>  
+> -		if (ret)
+> -			gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_table);
+> +		if (ret) {
+> +			for (i = 0; i < board_data->n_gpiod_lookups; i++)
+> +				gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+> +		}
+>  
+>  		break;
+>  	case DESIGNED_FOR_CHROMEOS:
+> @@ -226,10 +230,12 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>  static int skl_int3472_tps68470_remove(struct i2c_client *client)
+>  {
+>  	const struct int3472_tps68470_board_data *board_data;
+> -
+> +	int i;
+
+Please keep an empty line between variable declarations and statements
+(I believe checkpatch should have warned about this?)
+
+>  	board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
+> -	if (board_data)
+> -		gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_table);
+> +	if (board_data) {
+> +		for (i = 0; i < board_data->n_gpiod_lookups; i++)
+> +			gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+> +	}
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470.h b/drivers/platform/x86/intel/int3472/tps68470.h
+> index cfd33eb62740..35915e701593 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470.h
+> +++ b/drivers/platform/x86/intel/int3472/tps68470.h
+> @@ -16,8 +16,9 @@ struct tps68470_regulator_platform_data;
+>  
+>  struct int3472_tps68470_board_data {
+>  	const char *dev_name;
+> -	struct gpiod_lookup_table *tps68470_gpio_lookup_table;
+>  	const struct tps68470_regulator_platform_data *tps68470_regulator_pdata;
+> +	unsigned int n_gpiod_lookups;
+> +	struct gpiod_lookup_table *tps68470_gpio_lookup_tables[];
+>  };
+>  
+>  const struct int3472_tps68470_board_data *int3472_tps68470_get_board_data(const char *dev_name);
 > diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> index f93d437fd192..525f09a3b5ff 100644
+> index 525f09a3b5ff..442a8a2de224 100644
 > --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
 > +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> @@ -100,7 +100,8 @@ static struct gpiod_lookup_table surface_go_tps68470_gpios = {
+> @@ -96,7 +96,7 @@ static const struct tps68470_regulator_platform_data surface_go_tps68470_pdata =
+>  	},
+>  };
+>  
+> -static struct gpiod_lookup_table surface_go_tps68470_gpios = {
+> +static struct gpiod_lookup_table surface_go_int347a_gpios = {
 >  	.dev_id = "i2c-INT347A:00",
 >  	.table = {
 >  		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
-> -		GPIO_LOOKUP("tps68470-gpio", 7, "powerdown", GPIO_ACTIVE_LOW)
-> +		GPIO_LOOKUP("tps68470-gpio", 7, "powerdown", GPIO_ACTIVE_LOW),
-> +		{ }
+> @@ -105,16 +105,32 @@ static struct gpiod_lookup_table surface_go_tps68470_gpios = {
 >  	}
 >  };
 >  
+> +static struct gpiod_lookup_table surface_go_int347e_gpios = {
+> +	.dev_id = "i2c-INT347E:00",
+> +	.table = {
+> +		GPIO_LOOKUP("tps68470-gpio", 5, "enable", GPIO_ACTIVE_HIGH),
+> +		{ }
+> +	}
+> +};
+> +
+>  static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+>  	.dev_name = "i2c-INT3472:05",
+> -	.tps68470_gpio_lookup_table = &surface_go_tps68470_gpios,
+>  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+> +	.n_gpiod_lookups = 2,
+> +	.tps68470_gpio_lookup_tables = {
+> +		&surface_go_int347a_gpios,
+> +		&surface_go_int347e_gpios,
+> +	}
+>  };
+>  
+>  static const struct int3472_tps68470_board_data surface_go3_tps68470_board_data = {
+>  	.dev_name = "i2c-INT3472:01",
+> -	.tps68470_gpio_lookup_table = &surface_go_tps68470_gpios,
+>  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+> +	.n_gpiod_lookups = 2,
+> +	.tps68470_gpio_lookup_tables = {
+> +		&surface_go_int347a_gpios,
+> +		&surface_go_int347e_gpios,
+> +	}
+>  };
+>  
+>  static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
 
+Otherwise this looks good to me:
 
-Oops, I'll got and apply this to pdx86/for-next and pdx86/fixes right away. Please drop this
-from the next version of the series.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
+
 
