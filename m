@@ -2,211 +2,726 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36482C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 14:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A46C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 14:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232906AbiBVOsV (ORCPT
+        id S229913AbiBVO4A (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Feb 2022 09:48:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39198 "EHLO
+        Tue, 22 Feb 2022 09:56:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232898AbiBVOsV (ORCPT
+        with ESMTP id S232978AbiBVO4A (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Feb 2022 09:48:21 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53AF91115C;
-        Tue, 22 Feb 2022 06:47:54 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id h6so33729550wrb.9;
-        Tue, 22 Feb 2022 06:47:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=Qm1gUW1WMgQrValQhtP7kyXyStpeZtkZnXBE+C7tPEw=;
-        b=n4UF1bZDE4nqRq8ywgwYQV2mSKjbKXEWCxAC1DibUypAFactYN470B/J+th7c6ptnW
-         NGYVceYzBRyCWQ/JYex1b7zyU77wvK4s1imB1kFEZpzKKqhhrtqXdXeLtaq+l+giB1Dc
-         JuNAmgIZtFGdRUEpSF4Z/abwP/IYBVeS4WGJfAIV2PEmJphgdED/+nXDWNAi9jAP+mlO
-         PrzQV/qlntkvP9eA8gP9Cc2svlzbxkBSXgFFls1apsj0+zybkDcNi/zsvChleHCtM77i
-         /e5U5+ZzxtmQ8y6NFvn9Zp/Aayn6M5Ox4FPfWnvoMzoNcvTSzjBNerzU8q5Ioeiw/vqG
-         l+qA==
+        Tue, 22 Feb 2022 09:56:00 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D30A110C513
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 06:55:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645541732;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tjhgz4su4f1Bugln8vM8f4WEr01520VNT7KgDIFfCKc=;
+        b=ALnV7b6s1MtOIYy/kwrdBIrmUPLZ/ilEF/7/OpgTRFq79brrJANUdrvKbE47yNr858MiEZ
+        9f/P2N/f3QN1V9y6i1PWVLhbUYxTNT2lEKBXN1UqFny6yIftE2oJDJpZNTT/iUVU+rZlNU
+        eAdxETndOz1+SOe20wgi3fmX9qtUEvU=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-586-B2s3jc30MVSZETVtQnImaQ-1; Tue, 22 Feb 2022 09:55:31 -0500
+X-MC-Unique: B2s3jc30MVSZETVtQnImaQ-1
+Received: by mail-ed1-f70.google.com with SMTP id b13-20020a056402278d00b0041311e02a9bso2908352ede.13
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 06:55:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=Qm1gUW1WMgQrValQhtP7kyXyStpeZtkZnXBE+C7tPEw=;
-        b=WKyGj1ARcw28UsAoSTe3YNAMimGxkPzgm5yYhB8OyLcM3bT8zQT8dILttBuIiXrAcm
-         zItGqgyI4AvNdpVFu7wa5KFc2d6jWO0ULkN4i/EdgMDmWG+/Xfqjk8Bmlbcgpe+V3oTy
-         S8eqlAa2cp1RsgBqRMsAVAfn9btJJ8S5TVd+UWE4/zPprKlpAWyJbKVXKiZuwMRwb+u1
-         73kOy7T3n1jueu+OUqwdNBX2BR7pcYZ8xkyy2sOmWqDOvlZXwMipsc29N4u6uM6IGYn2
-         hF7cGW9gCgWWCfFaT/6PpaY9CTnblIUctWAc0GW/TTYh98sMKYBZtk60Q1hfCDk1v/6R
-         9oXA==
-X-Gm-Message-State: AOAM531TlKoLkYaAaBoWlrFimcF4Zd+/eNbV2eX/FrwavQRXa4fF5b1e
-        Pj3A4LRtNp7f9mgB2hZJENU=
-X-Google-Smtp-Source: ABdhPJwUq557bc0oHkQyL1A1ZMTZsFqxUATrhtc8KaM+ZEf/FBBBC0JhbxFz2pQoWC6tgL2fB2vZKg==
-X-Received: by 2002:a5d:64a6:0:b0:1ea:80f8:a14e with SMTP id m6-20020a5d64a6000000b001ea80f8a14emr3736065wrp.513.1645541272756;
-        Tue, 22 Feb 2022 06:47:52 -0800 (PST)
-Received: from [192.168.0.14] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net. [86.13.91.161])
-        by smtp.gmail.com with ESMTPSA id a1sm55414531wrf.42.2022.02.22.06.47.51
+        bh=Tjhgz4su4f1Bugln8vM8f4WEr01520VNT7KgDIFfCKc=;
+        b=koCBctSY4nkDXJOExxbsPBZie7WwWLj42OHSIWDlrIYx3LmPG7styAMW9iuUGED01R
+         qBRsn8tqPyH3BH9FbJk/yomJHLGaDiI4bUu1lLLs/EU8FvDk6edp4xVvx49QiXEDuiDj
+         Zn+Zh9nnvxIN1y8ITKJXbHzQcQ28FwZ8RUIbRb3S/KelVrSfOYN8WGOsOGeT85QJMIxU
+         zIdAkN1hUaJvFICZL8Sgk+nGyRsDCMh08Qaj0Rj5ZTatL6QLeg/CFnKHW1B80PElMIEB
+         SMuPWygfsuD8r5A2qNDFGSEbc9f1WlVuTbN2Wii5xwlk0n6fnnPf3AGQ+i0esgLorndk
+         dG0g==
+X-Gm-Message-State: AOAM531KLjHlX/duR0ziF+JcqEXCEEb+rEgJJCme9A2Xp8//PIY4tUli
+        Eg6k+9dX67ezxuLYqtBwpZanZEnXnnZIzMnfpPLRZam5UWyhMH9S0wxcWmQj9TYwjOfVSdKpZIw
+        OFiZbR0yhwWXUQJB2CjnzvIvjnLSaS7SjCw==
+X-Received: by 2002:a17:906:80c7:b0:6cf:9c76:1404 with SMTP id a7-20020a17090680c700b006cf9c761404mr19430801ejx.207.1645541730050;
+        Tue, 22 Feb 2022 06:55:30 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyVRvXfjILttizRRsoRnVJgfREBNcX01EwcXP8+eTeA0zTRVBHsFnwjwVANolB/tdWQgPD2eg==
+X-Received: by 2002:a17:906:80c7:b0:6cf:9c76:1404 with SMTP id a7-20020a17090680c700b006cf9c761404mr19430784ejx.207.1645541729739;
+        Tue, 22 Feb 2022 06:55:29 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id s6sm1171622ejb.112.2022.02.22.06.55.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Feb 2022 06:47:52 -0800 (PST)
-Message-ID: <8f0b5cc3-8de9-95f0-53a5-71cb401c80e9@gmail.com>
-Date:   Tue, 22 Feb 2022 14:47:50 +0000
+        Tue, 22 Feb 2022 06:55:29 -0800 (PST)
+Message-ID: <7c91ef15-b4ac-ff58-cd88-e9871c0e8fd2@redhat.com>
+Date:   Tue, 22 Feb 2022 15:55:28 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 3/6] platform/x86: int3472: Support multiple clock
- consumers
+ Thunderbird/91.4.0
+Subject: Re: [PATCH V8 1/2] tools arch x86: Add Intel SDSi provisiong tool
 Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        kernel test robot <lkp@intel.com>,
-        linux-acpi@vger.kernel.org, linux-clk@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, rafael@kernel.org, lenb@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, markgross@kernel.org,
-        robert.moore@intel.com
-References: <20220216225304.53911-4-djrscally@gmail.com>
- <202202171110.7EOaTUJH-lkp@intel.com>
- <0bcc6093-4e38-3a0d-e619-3575bfeed410@redhat.com>
-From:   Daniel Scally <djrscally@gmail.com>
-In-Reply-To: <0bcc6093-4e38-3a0d-e619-3575bfeed410@redhat.com>
+To:     "David E. Box" <david.e.box@linux.intel.com>,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20220217230958.259360-1-david.e.box@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220217230958.259360-1-david.e.box@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans
+Hi David,
 
-On 22/02/2022 14:44, Hans de Goede wrote:
-> Hi,
->
-> On 2/17/22 04:22, kernel test robot wrote:
->> Hi Daniel,
->>
->> I love your patch! Perhaps something to improve:
->>
->> [auto build test WARNING on rafael-pm/linux-next]
->> [also build test WARNING on clk/clk-next linus/master v5.17-rc4 next-20220216]
->> [cannot apply to platform-drivers-x86/for-next]
->> [If your patch is applied to the wrong git tree, kindly drop us a note.
->> And when submitting patch, we suggest to use '--base' as documented in
->> https://git-scm.com/docs/git-format-patch]
->>
->> url:    https://github.com/0day-ci/linux/commits/Daniel-Scally/Add-multiple-consumer-support-to-int3472-tps68470-driver/20220217-065452
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
->> config: x86_64-randconfig-m001 (https://download.01.org/0day-ci/archive/20220217/202202171110.7EOaTUJH-lkp@intel.com/config)
->> compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kernel test robot <lkp@intel.com>
->>
->> smatch warnings:
->> drivers/platform/x86/intel/int3472/tps68470.c:155 skl_int3472_tps68470_probe() warn: unsigned 'n_consumers' is never less than zero.
-> Right this needs to be an int, not an unsigned int. Daniel, please fix this for v2.
+On 2/18/22 00:09, David E. Box wrote:
+> Add tool for key certificate and activation payload provisioning on
+> Intel CPUs supporting Software Defined Silicon (SDSi).
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+
+When building this with gcc12 I get:
+
+cc -Wextra -O2 -Wall -o intel_sdsi intel_sdsi.c 
+In function ‘sdsi_provision_cap’,
+    inlined from ‘main’ at intel_sdsi.c:532:9:
+intel_sdsi.c:326:15: warning: ‘s’ may be used uninitialized [-Wmaybe-uninitialized]
+  326 |         ret = sdsi_update_registers(s);
+      |               ^~~~~~~~~~~~~~~~~~~~~~~~
+intel_sdsi.c: In function ‘main’:
+intel_sdsi.c:462:26: note: ‘s’ was declared here
+  462 |         struct sdsi_dev *s;
+      |                          ^
+
+Please fix this.
+
+Regards,
+
+Hans
 
 
-Will do! And thanks for your comments / tags on the rest of the series;
-I'll post a new version some time this week.
+> ---
+> 
+> Applied on review-hans branch.
+> 
+> V8
+>   - Rename sdsi to intel_sdsi and add install target
+>   - Fix compiler warning for signedness mismatch
+>   - Add missing break in CMD_NONE case to avoid fall through
+> V7
+>   - No changes.
+> V6
+>   - No changes.
+> V5
+>   - Update copyright to 2022
+> V4
+>   - No changes.
+> V3
+>   - Move from samples to tools.
+>   - Fix bit fields in availability structure.
+>   - Check provisioning availability before issuing command.
+> 
+> V2
+>   - New patch.
+> 
+>  MAINTAINERS                            |   1 +
+>  tools/arch/x86/intel_sdsi/Makefile     |  21 +
+>  tools/arch/x86/intel_sdsi/intel_sdsi.c | 541 +++++++++++++++++++++++++
+>  3 files changed, 563 insertions(+)
+>  create mode 100644 tools/arch/x86/intel_sdsi/Makefile
+>  create mode 100644 tools/arch/x86/intel_sdsi/intel_sdsi.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 136f817428cf..dc3c9f271463 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9871,6 +9871,7 @@ INTEL SDSI DRIVER
+>  M:	David E. Box <david.e.box@linux.intel.com>
+>  S:	Supported
+>  F:	drivers/platform/x86/intel/sdsi.c
+> +F:	tools/arch/x86/intel_sdsi/
+>  
+>  INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
+>  M:	Daniel Scally <djrscally@gmail.com>
+> diff --git a/tools/arch/x86/intel_sdsi/Makefile b/tools/arch/x86/intel_sdsi/Makefile
+> new file mode 100644
+> index 000000000000..5de2288cda79
+> --- /dev/null
+> +++ b/tools/arch/x86/intel_sdsi/Makefile
+> @@ -0,0 +1,21 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Makefile for Intel Software Defined Silicon provisioning tool
+> +
+> +intel_sdsi: intel_sdsi.c
+> +
+> +CFLAGS = -Wextra
+> +
+> +BINDIR ?= /usr/sbin
+> +
+> +override CFLAGS += -O2 -Wall
+> +
+> +%: %.c
+> +	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+> +
+> +.PHONY : clean
+> +clean :
+> +	@rm -f intel_sdsi
+> +
+> +install : intel_sdsi
+> +	install -d  $(DESTDIR)$(BINDIR)
+> +	install -m 755 -p intel_sdsi $(DESTDIR)$(BINDIR)/intel_sdsi
+> diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> new file mode 100644
+> index 000000000000..52acb518e845
+> --- /dev/null
+> +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> @@ -0,0 +1,541 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * sdsi: Intel Software Defined Silicon tool for provisioning certificates
+> + * and activation payloads on supported cpus.
+> + *
+> + * See https://github.com/intel/intel-sdsi/blob/master/os-interface.rst
+> + * for register descriptions.
+> + *
+> + * Copyright (C) 2022 Intel Corporation. All rights reserved.
+> + */
+> +
+> +#include <dirent.h>
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <stdbool.h>
+> +#include <stdio.h>
+> +#include <stdint.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <unistd.h>
+> +
+> +#include <sys/types.h>
+> +
+> +#define SDSI_DEV		"intel_vsec.sdsi"
+> +#define AUX_DEV_PATH		"/sys/bus/auxiliary/devices/"
+> +#define SDSI_PATH		(AUX_DEV_DIR SDSI_DEV)
+> +#define GUID			0x6dd191
+> +#define REGISTERS_MIN_SIZE	72
+> +
+> +#define __round_mask(x, y) ((__typeof__(x))((y) - 1))
+> +#define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
+> +
+> +struct enabled_features {
+> +	uint64_t reserved:3;
+> +	uint64_t sdsi:1;
+> +	uint64_t reserved1:60;
+> +};
+> +
+> +struct auth_fail_count {
+> +	uint64_t key_failure_count:3;
+> +	uint64_t key_failure_threshold:3;
+> +	uint64_t auth_failure_count:3;
+> +	uint64_t auth_failure_threshold:3;
+> +	uint64_t reserved:52;
+> +};
+> +
+> +struct availability {
+> +	uint64_t reserved:48;
+> +	uint64_t available:3;
+> +	uint64_t threshold:3;
+> +};
+> +
+> +struct sdsi_regs {
+> +	uint64_t ppin;
+> +	uint64_t reserved;
+> +	struct enabled_features en_features;
+> +	uint64_t reserved1;
+> +	struct auth_fail_count auth_fail_count;
+> +	struct availability prov_avail;
+> +	uint64_t reserved2;
+> +	uint64_t reserved3;
+> +	uint64_t socket_id;
+> +};
+> +
+> +struct sdsi_dev {
+> +	struct sdsi_regs regs;
+> +	char *dev_name;
+> +	char *dev_path;
+> +	int guid;
+> +};
+> +
+> +enum command {
+> +	CMD_NONE,
+> +	CMD_LIST_DEVICES,
+> +	CMD_SOCKET_INFO,
+> +	CMD_DUMP_CERT,
+> +	CMD_PROV_AKC,
+> +	CMD_PROV_CAP,
+> +};
+> +
+> +static void sdsi_list_devices(void)
+> +{
+> +	struct dirent *entry;
+> +	DIR *aux_dir;
+> +	bool found = false;
+> +
+> +	aux_dir = opendir(AUX_DEV_PATH);
+> +	if (!aux_dir) {
+> +		fprintf(stderr, "Cannot open directory %s\n", AUX_DEV_PATH);
+> +		return;
+> +	}
+> +
+> +	while ((entry = readdir(aux_dir))) {
+> +		if (!strncmp(SDSI_DEV, entry->d_name, strlen(SDSI_DEV))) {
+> +			found = true;
+> +			printf("%s\n", entry->d_name);
+> +		}
+> +	}
+> +
+> +	if (!found)
+> +		fprintf(stderr, "No sdsi devices found.\n");
+> +}
+> +
+> +static int sdsi_update_registers(struct sdsi_dev *s)
+> +{
+> +	FILE *regs_ptr;
+> +	int ret;
+> +
+> +	memset(&s->regs, 0, sizeof(s->regs));
+> +
+> +	/* Open the registers file */
+> +	ret = chdir(s->dev_path);
+> +	if (ret == -1) {
+> +		perror("chdir");
+> +		return ret;
+> +	}
+> +
+> +	regs_ptr = fopen("registers", "r");
+> +	if (!regs_ptr) {
+> +		perror("Could not open 'registers' file");
+> +		return -1;
+> +	}
+> +
+> +	if (s->guid != GUID) {
+> +		fprintf(stderr, "Unrecognized guid, 0x%x\n", s->guid);
+> +		fclose(regs_ptr);
+> +		return -1;
+> +	}
+> +
+> +	/* Update register info for this guid */
+> +	ret = fread(&s->regs, sizeof(uint8_t), sizeof(s->regs), regs_ptr);
+> +	if (ret != sizeof(s->regs)) {
+> +		fprintf(stderr, "Could not read 'registers' file\n");
+> +		fclose(regs_ptr);
+> +		return -1;
+> +	}
+> +
+> +	fclose(regs_ptr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sdsi_read_reg(struct sdsi_dev *s)
+> +{
+> +	int ret;
+> +
+> +	ret = sdsi_update_registers(s);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Print register info for this guid */
+> +	printf("\n");
+> +	printf("Socket information for device %s\n", s->dev_name);
+> +	printf("\n");
+> +	printf("PPIN:                           0x%lx\n", s->regs.ppin);
+> +	printf("Enabled Features\n");
+> +	printf("    SDSi:                       %s\n", !!s->regs.en_features.sdsi ? "Enabled" : "Disabled");
+> +	printf("Authorization Failure Count\n");
+> +	printf("    AKC Failure Count:          %d\n", s->regs.auth_fail_count.key_failure_count);
+> +	printf("    AKC Failure Threshold:      %d\n", s->regs.auth_fail_count.key_failure_threshold);
+> +	printf("    CAP Failure Count:          %d\n", s->regs.auth_fail_count.auth_failure_count);
+> +	printf("    CAP Failure Threshold:      %d\n", s->regs.auth_fail_count.auth_failure_threshold);
+> +	printf("Provisioning Availability\n");
+> +	printf("    Updates Available:          %d\n", s->regs.prov_avail.available);
+> +	printf("    Updates Threshold:          %d\n", s->regs.prov_avail.threshold);
+> +	printf("Socket ID:                      %ld\n", s->regs.socket_id & 0xF);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sdsi_certificate_dump(struct sdsi_dev *s)
+> +{
+> +	uint64_t state_certificate[512] = {0};
+> +	bool first_instance;
+> +	uint64_t previous;
+> +	FILE *cert_ptr;
+> +	int i, ret, size;
+> +
+> +	ret = sdsi_update_registers(s);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!s->regs.en_features.sdsi) {
+> +		fprintf(stderr, "SDSi feature is present but not enabled.");
+> +		fprintf(stderr, " Unable to read state certificate");
+> +		return -1;
+> +	}
+> +
+> +	ret = chdir(s->dev_path);
+> +	if (ret == -1) {
+> +		perror("chdir");
+> +		return ret;
+> +	}
+> +
+> +	cert_ptr = fopen("state_certificate", "r");
+> +	if (!cert_ptr) {
+> +		perror("Could not open 'state_certificate' file");
+> +		return -1;
+> +	}
+> +
+> +	size = fread(state_certificate, 1, sizeof(state_certificate), cert_ptr);
+> +	if (!size) {
+> +		fprintf(stderr, "Could not read 'state_certificate' file\n");
+> +		fclose(cert_ptr);
+> +		return -1;
+> +	}
+> +
+> +	printf("%3d: 0x%lx\n", 0, state_certificate[0]);
+> +	previous = state_certificate[0];
+> +	first_instance = true;
+> +
+> +	for (i = 1; i < (int)(round_up(size, sizeof(uint64_t))/sizeof(uint64_t)); i++) {
+> +		if (state_certificate[i] == previous) {
+> +			if (first_instance) {
+> +				puts("*");
+> +				first_instance = false;
+> +			}
+> +			continue;
+> +		}
+> +		printf("%3d: 0x%lx\n", i, state_certificate[i]);
+> +		previous = state_certificate[i];
+> +		first_instance = true;
+> +	}
+> +	printf("%3d\n", i);
+> +
+> +	fclose(cert_ptr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sdsi_provision(struct sdsi_dev *s, char *bin_file, enum command command)
+> +{
+> +	int bin_fd, prov_fd, size, ret;
+> +	char buf[4096] = { 0 };
+> +	char cap[] = "provision_cap";
+> +	char akc[] = "provision_akc";
+> +	char *prov_file;
+> +
+> +	if (!bin_file) {
+> +		fprintf(stderr, "No binary file provided\n");
+> +		return -1;
+> +	}
+> +
+> +	/* Open the binary */
+> +	bin_fd = open(bin_file, O_RDONLY);
+> +	if (bin_fd == -1) {
+> +		fprintf(stderr, "Could not open file %s: %s\n", bin_file, strerror(errno));
+> +		return bin_fd;
+> +	}
+> +
+> +	prov_file = (command == CMD_PROV_AKC) ? akc : cap;
+> +
+> +	ret = chdir(s->dev_path);
+> +	if (ret == -1) {
+> +		perror("chdir");
+> +		close(bin_fd);
+> +		return ret;
+> +	}
+> +
+> +	/* Open the provision file */
+> +	prov_fd = open(prov_file, O_WRONLY);
+> +	if (prov_fd == -1) {
+> +		fprintf(stderr, "Could not open file %s: %s\n", prov_file, strerror(errno));
+> +		close(bin_fd);
+> +		return prov_fd;
+> +	}
+> +
+> +	/* Read the binary file into the buffer */
+> +	size = read(bin_fd, buf, 4096);
+> +	if (size == -1) {
+> +		close(bin_fd);
+> +		close(prov_fd);
+> +		return -1;
+> +	}
+> +
+> +	ret = write(prov_fd, buf, size);
+> +	if (ret == -1) {
+> +		close(bin_fd);
+> +		close(prov_fd);
+> +		perror("Provisioning failed");
+> +		return ret;
+> +	}
+> +
+> +	printf("Provisioned %s file %s successfully\n", prov_file, bin_file);
+> +
+> +	close(bin_fd);
+> +	close(prov_fd);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sdsi_provision_akc(struct sdsi_dev *s, char *bin_file)
+> +{
+> +	int ret;
+> +
+> +	ret = sdsi_update_registers(s);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!s->regs.en_features.sdsi) {
+> +		fprintf(stderr, "SDSi feature is present but not enabled. Unable to provision");
+> +		return -1;
+> +	}
+> +
+> +	if (!s->regs.prov_avail.available) {
+> +		fprintf(stderr, "Maximum number of updates (%d) has been reached.\n",
+> +			s->regs.prov_avail.threshold);
+> +		return -1;
+> +	}
+> +
+> +	if (s->regs.auth_fail_count.key_failure_count ==
+> +	    s->regs.auth_fail_count.key_failure_threshold) {
+> +		fprintf(stderr, "Maximum number of AKC provision failures (%d) has been reached.\n",
+> +			s->regs.auth_fail_count.key_failure_threshold);
+> +		fprintf(stderr, "Power cycle the system to reset the counter\n");
+> +		return -1;
+> +	}
+> +
+> +	return sdsi_provision(s, bin_file, CMD_PROV_AKC);
+> +}
+> +
+> +static int sdsi_provision_cap(struct sdsi_dev *s, char *bin_file)
+> +{
+> +	int ret;
+> +
+> +	ret = sdsi_update_registers(s);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!s->regs.en_features.sdsi) {
+> +		fprintf(stderr, "SDSi feature is present but not enabled. Unable to provision");
+> +		return -1;
+> +	}
+> +
+> +	if (!s->regs.prov_avail.available) {
+> +		fprintf(stderr, "Maximum number of updates (%d) has been reached.\n",
+> +			s->regs.prov_avail.threshold);
+> +		return -1;
+> +	}
+> +
+> +	if (s->regs.auth_fail_count.auth_failure_count ==
+> +	    s->regs.auth_fail_count.auth_failure_threshold) {
+> +		fprintf(stderr, "Maximum number of CAP provision failures (%d) has been reached.\n",
+> +			s->regs.auth_fail_count.auth_failure_threshold);
+> +		fprintf(stderr, "Power cycle the system to reset the counter\n");
+> +		return -1;
+> +	}
+> +
+> +	return sdsi_provision(s, bin_file, CMD_PROV_CAP);
+> +}
+> +
+> +static int read_sysfs_data(const char *file, int *value)
+> +{
+> +	char buff[16];
+> +	FILE *fp;
+> +
+> +	fp = fopen(file, "r");
+> +	if (!fp) {
+> +		perror(file);
+> +		return -1;
+> +	}
+> +
+> +	if (!fgets(buff, 16, fp)) {
+> +		fprintf(stderr, "Failed to read file '%s'", file);
+> +		fclose(fp);
+> +		return -1;
+> +	}
+> +
+> +	fclose(fp);
+> +	*value = strtol(buff, NULL, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct sdsi_dev *sdsi_create_dev(char *dev_no)
+> +{
+> +	int dev_name_len = sizeof(SDSI_DEV) + strlen(dev_no) + 1;
+> +	struct sdsi_dev *s;
+> +	int guid;
+> +	DIR *dir;
+> +
+> +	s = (struct sdsi_dev *)malloc(sizeof(*s));
+> +	if (!s) {
+> +		perror("malloc");
+> +		return NULL;
+> +	}
+> +
+> +	s->dev_name = (char *)malloc(sizeof(SDSI_DEV) + strlen(dev_no) + 1);
+> +	if (!s->dev_name) {
+> +		perror("malloc");
+> +		free(s);
+> +		return NULL;
+> +	}
+> +
+> +	snprintf(s->dev_name, dev_name_len, "%s.%s", SDSI_DEV, dev_no);
+> +
+> +	s->dev_path = (char *)malloc(sizeof(AUX_DEV_PATH) + dev_name_len);
+> +	if (!s->dev_path) {
+> +		perror("malloc");
+> +		free(s->dev_name);
+> +		free(s);
+> +		return NULL;
+> +	}
+> +
+> +	snprintf(s->dev_path, sizeof(AUX_DEV_PATH) + dev_name_len, "%s%s", AUX_DEV_PATH,
+> +		 s->dev_name);
+> +	dir = opendir(s->dev_path);
+> +	if (!dir) {
+> +		fprintf(stderr, "Could not open directory '%s': %s\n", s->dev_path,
+> +			strerror(errno));
+> +		free(s->dev_path);
+> +		free(s->dev_name);
+> +		free(s);
+> +		return NULL;
+> +	}
+> +
+> +	if (chdir(s->dev_path) == -1) {
+> +		perror("chdir");
+> +		free(s->dev_path);
+> +		free(s->dev_name);
+> +		free(s);
+> +		return NULL;
+> +	}
+> +
+> +	if (read_sysfs_data("guid", &guid)) {
+> +		free(s->dev_path);
+> +		free(s->dev_name);
+> +		free(s);
+> +		return NULL;
+> +	}
+> +
+> +	s->guid = guid;
+> +
+> +	return s;
+> +}
+> +
+> +static void sdsi_free_dev(struct sdsi_dev *s)
+> +{
+> +	free(s->dev_path);
+> +	free(s->dev_name);
+> +	free(s);
+> +}
+> +
+> +static void print_help(char *prog)
+> +{
+> +	printf("Usage: %s [-l] [-d dev_no [-is] [-a file] [-c file]]\n", prog);
+> +
+> +	printf("\n");
+> +	printf("Commands:\n");
+> +	printf("  %-13s\t%s\n", "-l", "list available sdsi devices");
+> +	printf("  %-13s\t%s\n", "-d <dev_no>", "sdsi device number");
+> +	printf("  %-13s\t%s\n", "-i", "show socket information");
+> +	printf("  %-13s\t%s\n", "-s", "dump state certificate data");
+> +	printf("  %-13s\t%s\n", "-a <file>", "provision socket with AKC file");
+> +	printf("  %-13s\t%s\n", "-c <file>", "provision socket with CAP file");
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	char bin_file[PATH_MAX], *dev_no = NULL;
+> +	enum command command = CMD_NONE;
+> +	struct sdsi_dev *s;
+> +	int ret = 0, opt;
+> +
+> +	while ((opt = getopt(argc, argv, "d:lisa:c:h")) != -1) {
+> +		switch (opt) {
+> +		case 'd':
+> +			dev_no = optarg;
+> +			break;
+> +		case 'l':
+> +			command = CMD_LIST_DEVICES;
+> +			break;
+> +		case 'i':
+> +			command = CMD_SOCKET_INFO;
+> +			break;
+> +		case 's':
+> +			command = CMD_DUMP_CERT;
+> +			break;
+> +		case 'a':
+> +		case 'c':
+> +			if (!access(optarg, F_OK) == 0) {
+> +				fprintf(stderr, "Could not open file '%s': %s\n", optarg,
+> +					strerror(errno));
+> +				return -1;
+> +			}
+> +
+> +			if (!realpath(optarg, bin_file)) {
+> +				perror("realpath");
+> +				return -1;
+> +			}
+> +
+> +			command = (opt == 'a') ? CMD_PROV_AKC : CMD_PROV_CAP;
+> +			break;
+> +		case 'h':
+> +		default:
+> +			print_help(argv[0]);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	if (!dev_no && command != CMD_LIST_DEVICES) {
+> +		print_help(argv[0]);
+> +		return -1;
+> +	}
+> +
+> +	if (dev_no) {
+> +		s = sdsi_create_dev(dev_no);
+> +		if (!s)
+> +			return -1;
+> +	}
+> +
+> +	/* Run the command */
+> +	switch (command) {
+> +	case CMD_NONE:
+> +		fprintf(stderr, "need to specify a command\n");
+> +		print_help(argv[0]);
+> +		ret = -1;
+> +		break;
+> +	case CMD_LIST_DEVICES:
+> +		sdsi_list_devices();
+> +		break;
+> +	case CMD_SOCKET_INFO:
+> +		ret = sdsi_read_reg(s);
+> +		break;
+> +	case CMD_DUMP_CERT:
+> +		ret = sdsi_certificate_dump(s);
+> +		break;
+> +	case CMD_PROV_AKC:
+> +		ret = sdsi_provision_akc(s, bin_file);
+> +		break;
+> +	case CMD_PROV_CAP:
+> +		ret = sdsi_provision_cap(s, bin_file);
+> +		break;
+> +	}
+> +
+> +
+> +	if (dev_no)
+> +		sdsi_free_dev(s);
+> +
+> +	return ret;
+> +}
+> 
+> base-commit: 42f8bcb37e2c65931799cdf61d086ed78456e798
 
-
-Dan
-
->
-> Regards,
->
-> Hans
->
->
->
->> vim +/n_consumers +155 drivers/platform/x86/intel/int3472/tps68470.c
->>
->>    142	
->>    143	static int skl_int3472_tps68470_probe(struct i2c_client *client)
->>    144	{
->>    145		struct acpi_device *adev = ACPI_COMPANION(&client->dev);
->>    146		const struct int3472_tps68470_board_data *board_data;
->>    147		struct tps68470_clk_platform_data *clk_pdata;
->>    148		unsigned int n_consumers;
->>    149		struct mfd_cell *cells;
->>    150		struct regmap *regmap;
->>    151		int device_type;
->>    152		int ret;
->>    153	
->>    154		n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
->>  > 155		if (n_consumers < 0)
->>    156			return n_consumers;
->>    157	
->>    158		regmap = devm_regmap_init_i2c(client, &tps68470_regmap_config);
->>    159		if (IS_ERR(regmap)) {
->>    160			dev_err(&client->dev, "Failed to create regmap: %ld\n", PTR_ERR(regmap));
->>    161			return PTR_ERR(regmap);
->>    162		}
->>    163	
->>    164		i2c_set_clientdata(client, regmap);
->>    165	
->>    166		ret = tps68470_chip_init(&client->dev, regmap);
->>    167		if (ret < 0) {
->>    168			dev_err(&client->dev, "TPS68470 init error %d\n", ret);
->>    169			return ret;
->>    170		}
->>    171	
->>    172		device_type = skl_int3472_tps68470_calc_type(adev);
->>    173		switch (device_type) {
->>    174		case DESIGNED_FOR_WINDOWS:
->>    175			board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
->>    176			if (!board_data)
->>    177				return dev_err_probe(&client->dev, -ENODEV, "No board-data found for this model\n");
->>    178	
->>    179			cells = kcalloc(TPS68470_WIN_MFD_CELL_COUNT, sizeof(*cells), GFP_KERNEL);
->>    180			if (!cells)
->>    181				return -ENOMEM;
->>    182	
->>    183			/*
->>    184			 * The order of the cells matters here! The clk must be first
->>    185			 * because the regulator depends on it. The gpios must be last,
->>    186			 * acpi_gpiochip_add() calls acpi_dev_clear_dependencies() and
->>    187			 * the clk + regulators must be ready when this happens.
->>    188			 */
->>    189			cells[0].name = "tps68470-clk";
->>    190			cells[0].platform_data = clk_pdata;
->>    191			cells[0].pdata_size = struct_size(clk_pdata, consumers, n_consumers);
->>    192			cells[1].name = "tps68470-regulator";
->>    193			cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
->>    194			cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
->>    195			cells[2].name = "tps68470-gpio";
->>    196	
->>    197			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_table);
->>    198	
->>    199			ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
->>    200						   cells, TPS68470_WIN_MFD_CELL_COUNT,
->>    201						   NULL, 0, NULL);
->>    202			kfree(cells);
->>    203	
->>    204			if (ret)
->>    205				gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_table);
->>    206	
->>    207			break;
->>    208		case DESIGNED_FOR_CHROMEOS:
->>    209			ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
->>    210						   tps68470_cros, ARRAY_SIZE(tps68470_cros),
->>    211						   NULL, 0, NULL);
->>    212			break;
->>    213		default:
->>    214			dev_err(&client->dev, "Failed to add MFD devices\n");
->>    215			return device_type;
->>    216		}
->>    217	
->>    218		/*
->>    219		 * No acpi_dev_clear_dependencies() here, since the acpi_gpiochip_add()
->>    220		 * for the GPIO cell already does this.
->>    221		 */
->>    222	
->>    223		return ret;
->>    224	}
->>    225	
->>
->> ---
->> 0-DAY CI Kernel Test Service, Intel Corporation
->> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->>
