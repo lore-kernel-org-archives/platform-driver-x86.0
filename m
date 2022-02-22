@@ -2,74 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A89A7C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 16:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47735C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 17:15:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230429AbiBVQW6 (ORCPT
+        id S234594AbiBVRPb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Feb 2022 11:22:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48856 "EHLO
+        Tue, 22 Feb 2022 12:15:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230295AbiBVQW5 (ORCPT
+        with ESMTP id S234597AbiBVRPa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Feb 2022 11:22:57 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C2753985AB
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 08:22:28 -0800 (PST)
+        Tue, 22 Feb 2022 12:15:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EECE5108769
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 09:15:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645546947;
+        s=mimecast20190719; t=1645550103;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rH3KhPQ5CQNPunsWJjNZRkr5GRYQnjL4cEYB1mz3YgE=;
-        b=dlvKxU69V16hsxUIjWH80uaUuP31VhW9gvU/oO2T5umw+OqQ1dvm0DYSx3cYsxFNfUwaC8
-        oMn7foXq6cv7kjGwgXPmHrq9fXSmO2L0K6CFP+zt+Olzndu3fb2ZWqrakK8cK2gsi0DweP
-        J8PX90ziW84DJmhKYhPqn+rQ0pVl8Vs=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=lWl+b64b/Izv3VJXyM/TvquMJfoN+EPi8bPxXU6eJwY=;
+        b=EMe8oY1dTyK05ZKwxnDTJBmwqxHEzHxnad+ouzFZLQAnUFHp3E3gbJ2E9fG5vXTIq2RSsx
+        KinQ/KZlPaNGSCnPzOOk5f4bKfDb7rMsORRstVlm9htdGhGT6eY1AFcDDHbubAhPOAEybl
+        +aBdZf+SrEjhziHnTz6r+R8dZoNTzpY=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-654-QjakKFJxNeKeehsRZ2aFUg-1; Tue, 22 Feb 2022 11:22:26 -0500
-X-MC-Unique: QjakKFJxNeKeehsRZ2aFUg-1
-Received: by mail-ed1-f72.google.com with SMTP id g5-20020a056402090500b0040f28e1da47so12278926edz.8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 08:22:25 -0800 (PST)
+ us-mta-171-4prffwYPPKmhxNZl-SH1hA-1; Tue, 22 Feb 2022 12:15:01 -0500
+X-MC-Unique: 4prffwYPPKmhxNZl-SH1hA-1
+Received: by mail-ej1-f72.google.com with SMTP id ky6-20020a170907778600b0068e4bd99fd1so6058194ejc.15
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 09:15:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=rH3KhPQ5CQNPunsWJjNZRkr5GRYQnjL4cEYB1mz3YgE=;
-        b=w5jzo6wIfpPC+2jU6av6sSroHynULMOCKU1NCcl6Rd5UFR0uCKkAOClckc6PuI3XVo
-         7ovQ8CvFEMnVVUxRWCo0GCkF9Kp1kwB1qGGJzZfap860ZvfazIG4MoOcyDLVJeyK19Yw
-         Edkw1+ywPd8sLyFltpxFOH9996hglcPJBRgftTWje2A/hmWhcCCr6+0XJKqgjaDzFY5R
-         iISsdNpFvc3gKiAjKbcwIxvw91Cf2sCYSr84wmywFJPiaHa27prs7t3y8ny2oR4vEUN1
-         OeTiJpApFVmIIE+UIy0sxS+NozRKXDKUZuA5ToqBjiS82U3w32Stb1B1c9HC3F5H9zby
-         6JJQ==
-X-Gm-Message-State: AOAM533FVtfYBrTqoNXGjqhVSWbHNItvdMBisomEgwc+zP/IlWFtOk8r
-        vYzAnW9om2W88rg8G4fMKCLkgCS91kkWgVR9UXfv4krD4JEFforGjbToUK8fR8we8IMfVo7IzTJ
-        oipJfo8YuQef5zH9A8sLSA134RZZL4q1SNA==
-X-Received: by 2002:a05:6402:742:b0:410:a427:3634 with SMTP id p2-20020a056402074200b00410a4273634mr27381195edy.304.1645546944695;
-        Tue, 22 Feb 2022 08:22:24 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJw/eh6bl6nbxjfNSFNiFKQzg1ZxmIUGwe4BpgteNkA8Jz7Ig7F4bIN1VUpjGAunQrfLD3SNBA==
-X-Received: by 2002:a05:6402:742:b0:410:a427:3634 with SMTP id p2-20020a056402074200b00410a4273634mr27381176edy.304.1645546944454;
-        Tue, 22 Feb 2022 08:22:24 -0800 (PST)
+        bh=lWl+b64b/Izv3VJXyM/TvquMJfoN+EPi8bPxXU6eJwY=;
+        b=ehwV/rHkzdpSmPAbPhqmE7zPg4kL3H/U5uTHbTvsZ3mpzkPDUWqZy9HN6nUent5wlV
+         Xls1A6/gw4OCsAx/GKBBcd6B5dyoHblA9vrB8o0Iu9wHo1iL3pIoKo/SdoNQJXdF3fQr
+         0qZ/P1rbYvKynwMl3+tmojBHyjgRhQQIxei9wtK03IIzqR+eBqKbTuFGSqrDn1sCHlSj
+         8WtqVQgdXLbrDVXZDtlhxW0toHOrlkc6pyk5tK/e5ozD0zdnYqCOf7oOh7ze8gOdCD5N
+         bMihXkrNGC+4fwiZyDdAGbkgajZxdIdHACqMtYoLJHjenvdOo/icZhOi1+e+InLOASOw
+         d+Kw==
+X-Gm-Message-State: AOAM531S+RGVfTYNztF3AjLZKlBAQUhAvg6o5d2Ol29sxpSMWm45rGC8
+        VKVKqeHK4BLaBVZ3XkUrOUBf7/1BYaTAXJgrapDIBdp1QD6NXBvpFuzfdDITUaBlMGHTQv9q4UZ
+        ymVHPb7Rvf6W8kBkHJPdGCdYB0bRCLIfsZA==
+X-Received: by 2002:a50:9b45:0:b0:410:7cdb:5d3a with SMTP id a5-20020a509b45000000b004107cdb5d3amr28285196edj.275.1645550100064;
+        Tue, 22 Feb 2022 09:15:00 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyE/IO/RcMbB1yx0e55cvm+pRWXFC5GHETijI6iTZNC+CQtqsnpiF4t9I4Gigdaj50zRwqUdA==
+X-Received: by 2002:a50:9b45:0:b0:410:7cdb:5d3a with SMTP id a5-20020a509b45000000b004107cdb5d3amr28285176edj.275.1645550099747;
+        Tue, 22 Feb 2022 09:14:59 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id x12sm10048656edv.57.2022.02.22.08.22.23
+        by smtp.gmail.com with ESMTPSA id p16sm504857ejn.33.2022.02.22.09.14.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Feb 2022 08:22:24 -0800 (PST)
-Message-ID: <4f2b4a16-8572-ee8f-d507-707fbd51c3e6@redhat.com>
-Date:   Tue, 22 Feb 2022 17:22:23 +0100
+        Tue, 22 Feb 2022 09:14:59 -0800 (PST)
+Message-ID: <eb0d491a-9f67-16ed-ee55-659c0e60ef3d@redhat.com>
+Date:   Tue, 22 Feb 2022 18:14:58 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [PATCH v2 2/3] Fix 0x05 error code reported by several WMI calls
+Subject: Re: [PATCH v2 3/3] Changing bios_args.data to be dynamically
+ allocated
 Content-Language: en-US
 To:     Jorge Lopez <jorgealtxwork@gmail.com>,
         platform-driver-x86@vger.kernel.org
 References: <20220218160907.3422-1-jorge.lopez2@hp.com>
- <20220218160907.3422-3-jorge.lopez2@hp.com>
+ <20220218160907.3422-4-jorge.lopez2@hp.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220218160907.3422-3-jorge.lopez2@hp.com>
+In-Reply-To: <20220218160907.3422-4-jorge.lopez2@hp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,192 +80,186 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 2/18/22 17:09, Jorge Lopez wrote:
-> Several WMI queries leverage hp_wmi_read_int function to read their data.
-> hp_wmi_read_int function returns the appropiate value if the WMI command
-> requires an input and output buffer size values greater than zero.
-> WMI queries such HPWMI_HARDWARE_QUERY, HPWMI_WIRELESS2_QUERY,
-> HPWMI_FEATURE2_QUERY, HPWMI_DISPLAY_QUERY, HPWMI_ALS_QUERY, and
-> HPWMI_POSTCODEERROR_QUERY requires calling hp_wmi_perform_query function
-> with input buffer size value of zero.  Any input buffer size greater
-> than zero will cause error 0x05 to be returned.
+> The purpose of this patch is to remove 128 bytes buffer limitation
+> imposed in bios_args structure.
+> 
+> A limiting factor discovered during this investigation was the struct
+> bios_args.data size restriction.  The data member size limits all possible
+> WMI commands to those requiring buffer size of 128 bytes or less.
+> Several WMI commands and queries require a buffer size larger than 128
+> bytes hence limiting current and feature supported by the driver.
+> It is for this reason, struct bios_args.data changed and is dynamically
+> allocated.  hp_wmi_perform_query function changed to handle the memory
+> allocation and release of any required buffer size.
 > 
 > All changes were validated on a ZBook Workstation notebook. Additional
 > validation was included to ensure no other commands were failing or
 > incorrectly handled.
 > 
 > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-
-So after this the only remaining callers of hp_wmi_read_int() are:
-
-1. hp_wmi_notify() case HPWMI_BEZEL_BUTTON
-2. hp_wmi_rfkill_setup()
-3. thermal_profile_get()
-
-Where 2. looks like you just forgot to convert it since it
-does a hp_wmi_read_int(HPWMI_WIRELESS_QUERY) which you do
-convert in the hp_wmi_get_sw_state() and hp_wmi_get_hw_state()
-helpers, suggesting that it should be converted in
-hp_wmi_rfkill_setup() too.
-
-This leaves just 1 and 3. So IMHO it would be better to
-fix hp_wmi_read_int() and if 1. and 3. indeed need the old
-behavior convert them to call hp_wmi_perform_query() directly.
-
-Regards,
-
-Hans
-
-
-
 > 
 > ---
 > Based on the latest platform-drivers-x86.git/for-next
 > ---
->  drivers/platform/x86/hp-wmi.c | 64 ++++++++++++++++++++++++-----------
->  1 file changed, 44 insertions(+), 20 deletions(-)
+>  drivers/platform/x86/hp-wmi.c | 67 +++++++++++++++++++++++------------
+>  1 file changed, 44 insertions(+), 23 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> index 544fce906ce7..de715687021a 100644
+> index de715687021a..11c8e9b6e64a 100644
 > --- a/drivers/platform/x86/hp-wmi.c
 > +++ b/drivers/platform/x86/hp-wmi.c
-> @@ -442,7 +442,7 @@ static int __init hp_wmi_bios_2009_later(void)
->  {
->  	u8 state[128];
->  	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &state,
-> -				       sizeof(state), sizeof(state));
-> +				       0, sizeof(state));
->  	if (!ret)
->  		return 1;
+> @@ -83,12 +83,17 @@ enum hp_wmi_event_ids {
+>  	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
+>  };
 >  
-> @@ -477,25 +477,37 @@ static const struct rfkill_ops hp_wmi_rfkill_ops = {
->  static bool hp_wmi_get_sw_state(enum hp_wmi_radio r)
->  {
->  	int mask = 0x200 << (r * 8);
-> +	int ret= 0;
-> +	int wireless = 0;
+> +/**
+> + * struct bios_args buffer is dynamically allocated.  New WMI command types
+> + * were introduced that exceeds 128-byte data size.  Changes to handle
+> + * the data size allocation scheme were kept in hp_wmi_perform_qurey function.
+> + */
+>  struct bios_args {
+>  	u32 signature;
+>  	u32 command;
+>  	u32 commandtype;
+>  	u32 datasize;
+> -	u8 data[128];
+> +	u8 data[0];
+>  };
+>  
+>  enum hp_wmi_commandtype {
+> @@ -258,39 +263,47 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+>  	struct bios_return *bios_return;
+>  	int actual_outsize;
+>  	union acpi_object *obj;
+> -	struct bios_args args = {
+> -		.signature = 0x55434553,
+> -		.command = command,
+> -		.commandtype = query,
+> -		.datasize = insize,
+> -		.data = { 0 },
+> -	};
+> -	struct acpi_buffer input = { sizeof(struct bios_args), &args };
+> +	size_t bios_args_size = sizeof(struct bios_args) + insize;
+> +	struct bios_args *args = NULL;
+> +	struct acpi_buffer input;
+>  	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+>  	int ret = 0;
+>  
+> -	mid = encode_outsize_for_pvsz(outsize);
+> -	if (WARN_ON(mid < 0))
+> -		return mid;
+> +	args = kmalloc(bios_args_size, GFP_KERNEL);
+> +	if (!args)
+> +		return -ENOMEM;
+>  
+> -	if (WARN_ON(insize > sizeof(args.data)))
+> -		return -EINVAL;
+> -	memcpy(&args.data[0], buffer, insize);
+> +	input.length = bios_args_size;
+> +	input.pointer = args;
+>  
+> -	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
+> +	mid = encode_outsize_for_pvsz(outsize);
+> +	if (WARN_ON(mid < 0)) {
+> +		ret = mid;
+> +		goto in_free;
+> +	}
+>  
+> -	obj = output.pointer;
+> +	/* Avoid unnecessary copy to the data buffer if input buffer size is zero */
+> +	if (insize > 0)
+
+This if is not necessary, memcpy should touch neither dst nor src when
+called with size==0.
+
+
+> +		memcpy(args->data, buffer, insize);
+>  
+> -	if (!obj)
+> -		return -EINVAL;
+> +	args->signature = 0x55434553;
+> +	args->command = command;
+> +	args->commandtype = query;
+> +	args->datasize = insize;
+>  
+> -	if (obj->type != ACPI_TYPE_BUFFER) {
+> +	ret = wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
+
+Add:
+	if (ret)
+		goto in_free;
+
+Here ? AFAIK if ret is set &output is not touched, so other
+wise you end up reading unitialized mem when doing:
+
+	obj = output.pointer;
+> +	if (!obj) {
+> +		pr_warn("query 0x%x returned a null obj 0x%x\n", query, ret);
+
+Are you sure this can never happen when e.g. querying features on
+older models ? I believe it is probably best to just drop this as
+it is an unrelated behavior change and if you really think this is
+a good idea, put the adding of the pr_warn in a separate commit
+with an explanation why this is being added.
+
+>  		ret = -EINVAL;
+> -		goto out_free;
+> +		goto in_free;
+>  	}
+>  
+> -	bios_return = (struct bios_return *)obj->buffer.pointer;
+> -	ret = bios_return->return_code;
+> +	if (!ret && obj->type == ACPI_TYPE_BUFFER) {
+> +		bios_return = (struct bios_return *)obj->buffer.pointer;
+> +		ret = bios_return->return_code;
+> +	}
+
+Please keep this in the form of:
+
+	if (unexpected_condition) {
+		ret = -EINVAL;
+		goto out_free;
+	}
+
+	straight-path-statements-here;
+
+This form is consistently used in most kernel code so that the
+"straight-path" code is always indented only 1 level which makes
+it easier to follow.
+
+And this would also mean that you end up making less changes
+in this patch.
+
+>  
+>  	if (ret) {
+>  		if (ret != HPWMI_RET_UNKNOWN_COMMAND &&
+> @@ -299,6 +312,12 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+>  		goto out_free;
+>  	}
+>  
+> +	if (obj->type != ACPI_TYPE_BUFFER) {
+> +		pr_warn("query 0x%x returned an invalid object 0x%x\n", query, ret);
+> +		ret = -EINVAL;
+> +		goto out_free;
+> +	}
 > +
-> +	ret = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_READ, &wireless,
-> +				   0, sizeof(wireless));
+>  	/* Ignore output data of zero size */
+>  	if (!outsize)
+>  		goto out_free;
+> @@ -309,6 +328,8 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
 >  
-> -	int wireless = hp_wmi_read_int(HPWMI_WIRELESS_QUERY);
-> +	if (ret < 0)
-> +	  return -EINVAL;
->  
->  	/* TBD: Pass error */
->  	WARN_ONCE(wireless < 0, "error executing HPWMI_WIRELESS_QUERY");
->  
-> -	return !(wireless & mask);
-> +	return (wireless & mask);
->  }
->  
->  static bool hp_wmi_get_hw_state(enum hp_wmi_radio r)
->  {
->  	int mask = 0x800 << (r * 8);
-> +	int ret= 0;
-> +	int wireless = 0;
->  
-> -	int wireless = hp_wmi_read_int(HPWMI_WIRELESS_QUERY);
-> +	ret = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_READ, &wireless,
-> +				   0, sizeof(wireless));
-> +
-> +	if (ret < 0)
-> +	  return -EINVAL;
->  
->  	/* TBD: Pass error */
->  	WARN_ONCE(wireless < 0, "error executing HPWMI_WIRELESS_QUERY");
->  
-> -	return !(wireless & mask);
-> +	return (wireless & mask);
->  }
->  
->  static int hp_wmi_rfkill2_set_block(void *data, bool blocked)
-> @@ -520,7 +532,7 @@ static int hp_wmi_rfkill2_refresh(void)
->  	int err, i;
->  
->  	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
-> -				   sizeof(state), sizeof(state));
-> +				   0, sizeof(state));
->  	if (err)
->  		return err;
->  
-> @@ -546,27 +558,36 @@ static int hp_wmi_rfkill2_refresh(void)
->  static ssize_t display_show(struct device *dev, struct device_attribute *attr,
->  			    char *buf)
->  {
-> -	int value = hp_wmi_read_int(HPWMI_DISPLAY_QUERY);
-> -	if (value < 0)
-> -		return value;
-> +	int value = 0;
-> +	int ret  = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, HPWMI_READ, &value,
-> +				   0, sizeof(value));
-> +	if (ret)
-> +		return ret < 0 ? ret : -EINVAL;
-> +
->  	return sprintf(buf, "%d\n", value);
->  }
->  
->  static ssize_t hddtemp_show(struct device *dev, struct device_attribute *attr,
->  			    char *buf)
->  {
-> -	int value = hp_wmi_read_int(HPWMI_HDDTEMP_QUERY);
-> -	if (value < 0)
-> -		return value;
-> +	int value = 0;
-> +	int ret  = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_READ, &value,
-> +				   0, sizeof(value));
-> +	if (ret)
-> +		return ret < 0 ? ret : -EINVAL;
-> +
->  	return sprintf(buf, "%d\n", value);
->  }
->  
->  static ssize_t als_show(struct device *dev, struct device_attribute *attr,
->  			char *buf)
->  {
-> -	int value = hp_wmi_read_int(HPWMI_ALS_QUERY);
-> -	if (value < 0)
-> -		return value;
-> +	int value = 0;
-> +	int ret  = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_READ, &value,
-> +				   0, sizeof(value));
-> +	if (ret)
-> +		return ret < 0 ? ret : -EINVAL;
-> +
->  	return sprintf(buf, "%d\n", value);
->  }
->  
-> @@ -592,9 +613,12 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
->  			     char *buf)
->  {
->  	/* Get the POST error code of previous boot failure. */
-> -	int value = hp_wmi_read_int(HPWMI_POSTCODEERROR_QUERY);
-> -	if (value < 0)
-> -		return value;
-> +	int value = 0;
-> +	int ret  = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, HPWMI_READ, &value,
-> +				   0, sizeof(value));
-> +	if (ret)
-> +		return ret < 0 ? ret : -EINVAL;
-> +
->  	return sprintf(buf, "0x%x\n", value);
->  }
->  
-> @@ -609,7 +633,7 @@ static ssize_t als_store(struct device *dev, struct device_attribute *attr,
->  		return ret;
->  
->  	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
-> -				       sizeof(tmp), sizeof(tmp));
-> +				   sizeof(tmp), 0);
->  	if (ret)
->  		return ret < 0 ? ret : -EINVAL;
->  
-> @@ -922,7 +946,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
->  	int err, i;
->  
->  	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
-> -				   sizeof(state), sizeof(state));
-> +				   0, sizeof(state));
->  	if (err)
->  		return err < 0 ? err : -EINVAL;
->  
+>  out_free:
+>  	kfree(obj);
+> +in_free:
+> +	kfree(args);
+>  	return ret;
+
+IMHO it would be better to have a single "out" label here and
+initialize obj to NULL when declared, kfree(NULL) is a no-op,
+so this way you don't need 2 labels and you also avoid potentially
+jumping to the wrong label.
+
+Regards,
+
+Hans
 
