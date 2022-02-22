@@ -2,95 +2,161 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E77C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 21:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF92C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 23:18:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234190AbiBVVEL (ORCPT
+        id S234685AbiBVXS0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Feb 2022 16:04:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45554 "EHLO
+        Tue, 22 Feb 2022 18:18:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232052AbiBVVEK (ORCPT
+        with ESMTP id S233405AbiBVXS0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Feb 2022 16:04:10 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02006C3C2D
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 13:03:44 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 940FE61703
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 21:03:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EFA00C34114
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 21:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645563824;
-        bh=SH+bFKWFzOMI5E095vp18Cw4ezZt6+yaAJT6naQWaDI=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=nrIoA75klTJxuj25xJuOpCENOlDvQ8Scik9xFi1h+VPQoEAOK6aYEvU4AmFPQQowa
-         JYAwnPdGonG2A86rza2917BzTnMovO8xP35dkkePCsk/EL/X1w0VModS+ICaJp3Bdl
-         ZO3wo5VLA2AECk0DNsqnzUyPd7mzBK4sF/l8O007sePa4QHtrrduWL7cnPwgDj5qJY
-         /VEfM4Nsge+KvhVrlrefxnaJhtPfUxSXocfhO7xNWhCtd4nammIphwINACG+v4hjqS
-         uv/K0I8aX1L3axQQ21yGWLi0j2Q1WIHwlpf6P7bgaEufZ59ju0ZZ5Bu/IX/N1McDnE
-         wgqYFDtcC9+WQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id E1010C05FD4; Tue, 22 Feb 2022 21:03:43 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Tue, 22 Feb 2022 21:03:41 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: pauk.denis@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
-Message-ID: <bug-204807-215701-5paKTUovUn@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 22 Feb 2022 18:18:26 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5443D9027F;
+        Tue, 22 Feb 2022 15:17:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645571879; x=1677107879;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sRi3Y0px8+ojBe6BJa3k8tR0XaiCszxkZ0yaIFLeAEE=;
+  b=Q9FpGganICMPmwANM53SvDjLaQPxZmfs2oMxTyo97qE0O2wZH7pXCupF
+   xMGw5MSib3rP7N5gqwgsU5owmfKMqr0DW8pXb81kfSBrcdEYnIgKaeQXY
+   +QTU+dbjyDDAqXfyOo/K5wzplWb3CvKocsxaw8e0/Scc8W4qEICB74jx6
+   bohVf8VMiKGEOa8QO2averLulF0F9cF/fiIRpa067aPdXBot9fNUJ3ZBs
+   80P35eQESAovgpY9O/rbaf4qQKWi6L3CbzS3PTZ9OkdXje87FyFskmpsb
+   njHtvbun3iER++yFQpMN5DGqwbP0jnn66+c/fNGioQ9qyBhierLCSFCGA
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10266"; a="231810092"
+X-IronPort-AV: E=Sophos;i="5.88,389,1635231600"; 
+   d="scan'208";a="231810092"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 15:17:59 -0800
+X-IronPort-AV: E=Sophos;i="5.88,389,1635231600"; 
+   d="scan'208";a="776476619"
+Received: from skoppolu-mobl4.amr.corp.intel.com (HELO skuppusw-desk1.amr.corp.intel.com) ([10.252.138.103])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 15:17:57 -0800
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>
+Cc:     "H . Peter Anvin" <hpa@zytor.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH v1 0/6] Add TDX Guest Attestation support
+Date:   Tue, 22 Feb 2022 15:17:29 -0800
+Message-Id: <20220222231735.268919-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hi All,
 
-Denis Pauk (pauk.denis@gmail.com) changed:
+Intel's Trust Domain Extensions (TDX) protect guest VMs from malicious
+hosts and some physical attacks. VM guest with TDX support is called
+as TD Guest.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
- Attachment #300417|0                           |1
-        is obsolete|                            |
+In TD Guest, the attestation process is used to verify the 
+trustworthiness of TD guest to the 3rd party servers. Such attestation
+process is required by 3rd party servers before sending sensitive
+information to TD guests. One usage example is to get encryption keys
+from the key server for mounting the encrypted rootfs or secondary drive.
+    
+Following patches add the attestation support to TDX guest which
+includes attestation user interface driver, user agent example, and
+related hypercall support.
 
---- Comment #220 from Denis Pauk (pauk.denis@gmail.com) ---
-Created attachment 300506
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300506&action=3Dedit
-Asus WMI for nct6775 v5.16 base (2022.02.22)
+In this series, only following patches are in arch/x86 and are
+intended for x86 maintainers review.
 
-Update code with up streamed Eugene Shalygin patches for asus_ec_sensors.
+* x86/tdx: Add TDREPORT TDX Module call support
+* x86/tdx: Add GetQuote TDX hypercall support
+* x86/tdx: Add SetupEventNotifyInterrupt TDX hypercall support
+* x86/tdx: Add TDX Guest event notify interrupt vector support
 
-asus_wmi_ec_sensors is also updated to be in sync with asus_ec_sensors. Cou=
-ld
-some one check with "ROG STRIX X570-F GAMING"/"ROG STRIX X570-I GAMING".=20
+Patch titled "platform/x86: intel_tdx_attest: Add TDX Guest attestation
+interface driver" adds the attestation driver support. This is supposed
+to be reviewed by platform-x86 maintainers.
 
-Could someone with a such boards check?
+Also, patch titled "tools/tdx: Add a sample attestation user app" adds
+a testing app for attestation feature which needs review from
+bpf@vger.kernel.org.
 
---=20
-You may reply to this email to add a comment.
+Dependencies:
+--------------
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+This feature has dependency on TDX guest core patch set series.
+
+https://lore.kernel.org/all/20220218161718.67148-1-kirill.shutemov@linux.intel.com/T/
+
+History:
+----------
+
+Previously this patch set was sent under title "Add TDX Guest
+Support (Attestation support)". In the previous version, only the
+attestation driver patch was reviewed and got acked. Rest of the
+patches need to be reviewed freshly.
+
+https://lore.kernel.org/bpf/20210806000946.2951441-1-sathyanarayanan.kuppuswamy@linux.intel.com/
+
+Changes since previous submission:
+ * Updated commit log and error handling in TDREPORT, GetQuote and
+   SetupEventNotifyInterrupt support patches.
+ * Added locking support in attestation driver.
+
+Kuppuswamy Sathyanarayanan (6):
+  x86/tdx: Add tdx_mcall_tdreport() API support
+  x86/tdx: Add tdx_hcall_get_quote() API support
+  x86/tdx: Add SetupEventNotifyInterrupt TDX hypercall support
+  platform/x86: intel_tdx_attest: Add TDX Guest attestation interface
+    driver
+  x86/tdx: Add TDX Guest event notify interrupt vector support
+  tools/tdx: Add a sample attestation user app
+
+ arch/x86/coco/tdx.c                           | 170 ++++++++++++
+ arch/x86/include/asm/hardirq.h                |   4 +
+ arch/x86/include/asm/idtentry.h               |   4 +
+ arch/x86/include/asm/irq_vectors.h            |   7 +-
+ arch/x86/include/asm/tdx.h                    |   5 +
+ arch/x86/kernel/irq.c                         |   7 +
+ drivers/platform/x86/intel/Kconfig            |   1 +
+ drivers/platform/x86/intel/Makefile           |   1 +
+ drivers/platform/x86/intel/tdx/Kconfig        |  13 +
+ drivers/platform/x86/intel/tdx/Makefile       |   3 +
+ .../platform/x86/intel/tdx/intel_tdx_attest.c | 241 ++++++++++++++++++
+ include/uapi/misc/tdx.h                       |  37 +++
+ tools/Makefile                                |  13 +-
+ tools/tdx/Makefile                            |  19 ++
+ tools/tdx/attest/.gitignore                   |   2 +
+ tools/tdx/attest/Makefile                     |  24 ++
+ tools/tdx/attest/tdx-attest-test.c            | 240 +++++++++++++++++
+ 17 files changed, 784 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/tdx/Kconfig
+ create mode 100644 drivers/platform/x86/intel/tdx/Makefile
+ create mode 100644 drivers/platform/x86/intel/tdx/intel_tdx_attest.c
+ create mode 100644 include/uapi/misc/tdx.h
+ create mode 100644 tools/tdx/Makefile
+ create mode 100644 tools/tdx/attest/.gitignore
+ create mode 100644 tools/tdx/attest/Makefile
+ create mode 100644 tools/tdx/attest/tdx-attest-test.c
+
+-- 
+2.25.1
+
