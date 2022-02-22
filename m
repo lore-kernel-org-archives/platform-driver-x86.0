@@ -2,42 +2,42 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C7EC43217
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 23:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C381C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 23:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236184AbiBVXS1 (ORCPT
+        id S236209AbiBVXSa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Feb 2022 18:18:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42008 "EHLO
+        Tue, 22 Feb 2022 18:18:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235525AbiBVXS0 (ORCPT
+        with ESMTP id S236193AbiBVXS1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Feb 2022 18:18:26 -0500
+        Tue, 22 Feb 2022 18:18:27 -0500
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B586A90FF5;
-        Tue, 22 Feb 2022 15:18:00 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ACC59027F;
+        Tue, 22 Feb 2022 15:18:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645571880; x=1677107880;
+  t=1645571881; x=1677107881;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=KfWWny0tde+zNt6efZi6Huwq5vdDEsQjuFuEw8RHIIc=;
-  b=Rq9jOsAwcsIxyegM6U4NzO+yj0HUEhEf+FSP+Ru3g8LO0rUkENg6Yupp
-   lfMMiWhhSUxexDSwLCxVdmenBZeqxH6iw8vvI+CGARdPPvMIJ40DVmiNA
-   v9rYfE3pGKJwHWpiG8ES2PZlcfCqr8oF7XcLne3+xT5k/ZFEXSi/CtXXl
-   FmjbmLuSLlCYV7YwSeu071xYsMNGlCbqGIGNmn1BV1ossb8oLvDVCXqVC
-   5Iy8Op3EyE08Aa7zZUlE6TCG3K6p/8hTpe/ZjfzJQ/O8R38xfmHEWLM9q
-   yW6F1R877KJjvafNmYSc8cNO9I6DD2WuepmetyblXcfRrl3571k5CVyKo
+  bh=KUNQWjpDSRdh+ji0vwxWvKmA2fta9psHurefSdvpBeQ=;
+  b=L+XnAUwd/4uMnuDK2vIDaXYGU9boeVLLMExhNuk93qhLQv18HYXb7/Gd
+   67AntiT0VnhQbfM6oExGoLkALkf1RX+Fidb0D/TL6hzpMN2+jEoQPPgA9
+   wbhRotrUHWXpxylGzQ7ZOEpAyqiUxT1htxPHuAd+N1iuRYgGD6EegVZ3r
+   tIb4OB/k8YWcc3X0v6Vq7nlBmlRAlx0AmmO3QRyKhthZ7qCPEAUFgvmB+
+   S+/sl9h749lZuUK/ah8gw3eK9FbJzXhbQBV0+4kM0P7wi6UgRAs9cSmde
+   qQUR0w542Q+GJakeuSZWxaqbCCzc73vev55pqZyAFpKYnWy7M6X3TOeYq
    w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10266"; a="231810093"
+X-IronPort-AV: E=McAfee;i="6200,9189,10266"; a="231810096"
 X-IronPort-AV: E=Sophos;i="5.88,389,1635231600"; 
-   d="scan'208";a="231810093"
+   d="scan'208";a="231810096"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 15:17:59 -0800
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 15:18:01 -0800
 X-IronPort-AV: E=Sophos;i="5.88,389,1635231600"; 
-   d="scan'208";a="776476625"
+   d="scan'208";a="776476639"
 Received: from skoppolu-mobl4.amr.corp.intel.com (HELO skuppusw-desk1.amr.corp.intel.com) ([10.252.138.103])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 15:17:58 -0800
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 15:18:00 -0800
 From:   Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
@@ -56,9 +56,9 @@ Cc:     "H . Peter Anvin" <hpa@zytor.com>,
         Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Subject: [PATCH v1 1/6] x86/tdx: Add tdx_mcall_tdreport() API support
-Date:   Tue, 22 Feb 2022 15:17:30 -0800
-Message-Id: <20220222231735.268919-2-sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v1 3/6] x86/tdx: Add SetupEventNotifyInterrupt TDX hypercall support
+Date:   Tue, 22 Feb 2022 15:17:32 -0800
+Message-Id: <20220222231735.268919-4-sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220222231735.268919-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <20220222231735.268919-1-sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -68,122 +68,78 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In TDX guest, attestation is mainly used to verify the trust worthiness
-of a TD to the 3rd party key servers. First step in attestation process
-is to get the TDREPORT data and the generated data is further used in
-subsequent steps of attestation process. TDREPORT data contains details
-like TDX module version information, measurement of the TD, along with a
-TD-specified nonce
+SetupEventNotifyInterrupt TDX hypercall is used by guest TD to specify
+which interrupt vector to use as an event-notify vector to the VMM.
+Such registered vector is also used by Host VMM to notify about
+completion of GetQuote requests to the Guest TD.
 
-Add a wrapper function (tdx_mcall_tdreport()) to get the TDREPORT from
-the TDX Module.
+Add tdx_hcall_set_notify_intr() helper function to implement the
+SetupEventNotifyInterrupt hypercall.
 
-More details about the TDREPORT TDCALL can be found in TDX Guest-Host
-Communication Interface (GHCI) for Intel TDX 1.5, section titled
-"TDCALL [MR.REPORT]".
+This will be used by the TD guest attestation driver.
 
-Steps involved in attestation process can be found in TDX Guest-Host
-Communication Interface (GHCI) for Intel TDX 1.5, section titled
-"TD attestation"
+Details about the SetupEventNotifyInterrupt TDVMCALL can be found in
+TDX Guest-Host Communication Interface (GHCI) Specification, sec 3.5
+"VP.VMCALL<SetupEventNotifyInterrupt>".
 
-[Xiaoyao: Proposed error code fix]
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- arch/x86/coco/tdx.c        | 51 ++++++++++++++++++++++++++++++++++++++
- arch/x86/include/asm/tdx.h |  2 ++
- 2 files changed, 53 insertions(+)
+ arch/x86/coco/tdx.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
 diff --git a/arch/x86/coco/tdx.c b/arch/x86/coco/tdx.c
-index 8a7826fe49e3..f01b03e41572 100644
+index 2c07f9551d3b..d18508e6150f 100644
 --- a/arch/x86/coco/tdx.c
 +++ b/arch/x86/coco/tdx.c
-@@ -16,6 +16,7 @@
- /* TDX module Call Leaf IDs */
- #define TDX_GET_INFO			1
- #define TDX_GET_VEINFO			3
-+#define TDX_GET_REPORT			4
- #define TDX_ACCEPT_PAGE			6
- 
+@@ -22,6 +22,7 @@
  /* TDX hypercall Leaf IDs */
-@@ -31,6 +32,12 @@
- #define VE_GET_PORT_NUM(e)	((e) >> 16)
- #define VE_IS_IO_STRING(e)	((e) & BIT(4))
+ #define TDVMCALL_MAP_GPA		0x10001
+ #define TDVMCALL_GET_QUOTE		0x10002
++#define TDVMCALL_SETUP_NOTIFY_INTR	0x10004
  
-+/* TDX Module call error codes */
-+#define TDCALL_RETURN_CODE_MASK		0xffffffff00000000
-+#define TDCALL_RETURN_CODE(a)		((a) & TDCALL_RETURN_CODE_MASK)
-+#define TDCALL_INVALID_OPERAND		0x8000000000000000
-+#define TDCALL_OPERAND_BUSY		0x8000020000000000
-+
- static struct {
- 	unsigned int gpa_width;
- 	unsigned long attributes;
-@@ -78,6 +85,50 @@ static inline void tdx_module_call(u64 fn, u64 rcx, u64 rdx, u64 r8, u64 r9,
- 		panic("TDCALL %lld failed (Buggy TDX module!)\n", fn);
+ /* MMIO direction */
+ #define EPT_READ	0
+@@ -175,6 +176,38 @@ int tdx_hcall_get_quote(void *data)
  }
+ EXPORT_SYMBOL_GPL(tdx_hcall_get_quote);
  
 +/*
-+ * tdx_mcall_tdreport() - Generate TDREPORT_STRUCT using TDCALL.
++ * tdx_hcall_set_notify_intr() - Setup Event Notify Interrupt Vector.
 + *
-+ * @data        : Address of 1024B aligned data to store
-+ *                TDREPORT_STRUCT.
-+ * @reportdata  : Address of 64B aligned report data
++ * @vector        : Vector address to be used for notification.
 + *
 + * return 0 on success or failure error number.
 + */
-+int tdx_mcall_tdreport(void *data, void *reportdata)
++static int tdx_hcall_set_notify_intr(u8 vector)
 +{
 +	u64 ret;
 +
-+	/*
-+	 * Use confidential guest TDX check to ensure this API is only
-+	 * used by TDX guest platforms.
-+	 */
-+	if (!data || !reportdata || !cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++	/* Minimum vector value allowed is 32 */
++	if (vector < 32)
 +		return -EINVAL;
 +
 +	/*
-+	 * Pass the physical address of user generated reportdata
-+	 * and the physical address of out pointer to store the
-+	 * tdreport data to the TDX module to generate the
-+	 * TD report. Generated data contains measurements/configuration
-+	 * data of the TD guest. More info about ABI can be found in TDX
-+	 * Guest-Host-Communication Interface (GHCI), sec titled
-+	 * "TDG.MR.REPORT".
++	 * Register callback vector address with VMM. More details
++	 * about the ABI can be found in TDX Guest-Host-Communication
++	 * Interface (GHCI), sec titled
++	 * "TDG.VP.VMCALL<SetupEventNotifyInterrupt>".
 +	 */
-+	ret = __tdx_module_call(TDX_GET_REPORT, virt_to_phys(data),
-+				virt_to_phys(reportdata), 0, 0, NULL);
++	ret = _tdx_hypercall(TDVMCALL_SETUP_NOTIFY_INTR, vector, 0, 0, 0);
 +
 +	if (ret) {
-+		if (TDCALL_RETURN_CODE(ret) == TDCALL_INVALID_OPERAND)
++		if (ret == TDCALL_INVALID_OPERAND)
 +			return -EINVAL;
-+		if (TDCALL_RETURN_CODE(ret) == TDCALL_OPERAND_BUSY)
-+			return -EBUSY;
 +		return -EIO;
 +	}
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(tdx_mcall_tdreport);
 +
  static void get_info(void)
  {
  	struct tdx_module_output out;
-diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-index 6a97d42b0de9..b2e76ae8fdf1 100644
---- a/arch/x86/include/asm/tdx.h
-+++ b/arch/x86/include/asm/tdx.h
-@@ -58,6 +58,8 @@ void tdx_safe_halt(void);
- 
- bool tdx_early_handle_ve(struct pt_regs *regs);
- 
-+int tdx_mcall_tdreport(void *data, void *reportdata);
-+
- #else
- 
- static inline void tdx_early_init(void) { };
 -- 
 2.25.1
 
