@@ -2,172 +2,209 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B12C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 09:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBA4C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 14:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229696AbiBVJba (ORCPT
+        id S232884AbiBVOp0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Feb 2022 04:31:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46774 "EHLO
+        Tue, 22 Feb 2022 09:45:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbiBVJba (ORCPT
+        with ESMTP id S232847AbiBVOpZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Feb 2022 04:31:30 -0500
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3721C15721C;
-        Tue, 22 Feb 2022 01:31:04 -0800 (PST)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 58E191C0B8D; Tue, 22 Feb 2022 10:31:02 +0100 (CET)
-Date:   Tue, 22 Feb 2022 10:31:01 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Jonathan McDowell <noodles@fb.com>
-Cc:     "greg@kroah.com" <greg@kroah.com>,
-        Dmitrii Okunev <xaionaro@fb.com>,
-        "qiaowei.ren@intel.com" <qiaowei.ren@intel.com>,
-        "mjg59@srcf.ucam.org" <mjg59@srcf.ucam.org>,
-        "xiaoyan.zhang@intel.com" <xiaoyan.zhang@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gang.wei@intel.com" <gang.wei@intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Subject: Re: [discuss] Improve and merge a driver proposed in 2013: sysfs
- interfaces to access TXT config space
-Message-ID: <20220222093101.GA23654@amd>
-References: <1368465884-14779-1-git-send-email-qiaowei.ren@intel.com>
- <1368465884-14779-3-git-send-email-qiaowei.ren@intel.com>
- <20130516160311.GA12299@amd.pavel.ucw.cz>
- <4febd50da7e5007a2797e0f4c969fa5edd0bf725.camel@fb.com>
- <Yg5A4Mupue0V9diu@kroah.com>
- <20220217123753.GA21849@duo.ucw.cz>
- <0cf678e0b01bf421f3db6693a15ac4060501a80a.camel@fb.com>
+        Tue, 22 Feb 2022 09:45:25 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 98E8B65427
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 06:44:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645541098;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Pi2rjzwWJCsz1l1I4uoWGPB26BchWaIZD/weN4Zfg3Y=;
+        b=GdUoonqkREq61kbMAs/2T2ACo8kxCyz+kSIia6KNvjosqlgWMTF5pYMgaoOIYf/Bpl4sI5
+        DWJQnFGyWoaq8sfg5XEULU5ZjN7zJO3MjX0zkHUv0nEYBqE5MS6JwZS0X5BtReg0evEO3i
+        fNx7J1LhV7GgrLGqrB+nYz9z3xY69C4=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-618-P_bbwhb4Nv-72hihdJOI1Q-1; Tue, 22 Feb 2022 09:44:57 -0500
+X-MC-Unique: P_bbwhb4Nv-72hihdJOI1Q-1
+Received: by mail-ed1-f70.google.com with SMTP id e10-20020a056402190a00b00410f20467abso12063340edz.14
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 06:44:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Pi2rjzwWJCsz1l1I4uoWGPB26BchWaIZD/weN4Zfg3Y=;
+        b=lh6jM6wWAVWjcmt11e72hf+/JoVdevd+9vFYG61l0tPiFI5SIrAmKI382OUA1O5890
+         LTZGSe3K0bpimaS2Tgfw6ke2kvnt0yud7yaJntgJzySYVNBswlxRbjHOLregY0EYn1BM
+         oe0VkcqalAx9vqXwIE32+0hEj+JSetzp4TLG9eUL0hquxTxnuVRMYnVojc9MgQn3By+U
+         2VlwIFCLF24ZAE5bvuX3Ztm31ECkXkfJTnT/ZQjAbwG8q7w5SodKkmO577gYTaSCM8VX
+         2rfLbBHxlDr+coPVBemPjZD7SOSBnOVciYJKQPGjGDSy7KC+nKXOo7nxw4jrXUElIwXz
+         1XTQ==
+X-Gm-Message-State: AOAM5302pfNb3IVZfFyjryQYDGawCLKYTJGh9aCXeNx0p3s64roYZnQZ
+        DMLX9Ue7rtwg96Rg4Iayz8xxsk7dtdYFPjK8sYB3Y52zw2SxKVQq//+i962ikVG1iurWczgwNAo
+        LwMP/w3/ZAuLKJzTs1i4rB1kUsO0/0Wp9Vg==
+X-Received: by 2002:a05:6402:350d:b0:410:b608:ff4f with SMTP id b13-20020a056402350d00b00410b608ff4fmr26942053edd.89.1645541096297;
+        Tue, 22 Feb 2022 06:44:56 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxvM5S5RkK76j3FGBHN8kvT6AFU1ejMN2c3FmagD8AC6C6lx/6xeCsefO8fOLWZtXqr9Vy3Bw==
+X-Received: by 2002:a05:6402:350d:b0:410:b608:ff4f with SMTP id b13-20020a056402350d00b00410b608ff4fmr26942029edd.89.1645541096041;
+        Tue, 22 Feb 2022 06:44:56 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id h19sm10458362edt.6.2022.02.22.06.44.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Feb 2022 06:44:55 -0800 (PST)
+Message-ID: <0bcc6093-4e38-3a0d-e619-3575bfeed410@redhat.com>
+Date:   Tue, 22 Feb 2022 15:44:54 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
-Content-Disposition: inline
-In-Reply-To: <0cf678e0b01bf421f3db6693a15ac4060501a80a.camel@fb.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH 3/6] platform/x86: int3472: Support multiple clock
+ consumers
+Content-Language: en-US
+To:     kernel test robot <lkp@intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        linux-acpi@vger.kernel.org, linux-clk@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, rafael@kernel.org, lenb@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, markgross@kernel.org,
+        robert.moore@intel.com
+References: <20220216225304.53911-4-djrscally@gmail.com>
+ <202202171110.7EOaTUJH-lkp@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <202202171110.7EOaTUJH-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
---k1lZvvs/B4yU6o8G
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2/17/22 04:22, kernel test robot wrote:
+> Hi Daniel,
+> 
+> I love your patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on rafael-pm/linux-next]
+> [also build test WARNING on clk/clk-next linus/master v5.17-rc4 next-20220216]
+> [cannot apply to platform-drivers-x86/for-next]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Daniel-Scally/Add-multiple-consumer-support-to-int3472-tps68470-driver/20220217-065452
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+> config: x86_64-randconfig-m001 (https://download.01.org/0day-ci/archive/20220217/202202171110.7EOaTUJH-lkp@intel.com/config)
+> compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> smatch warnings:
+> drivers/platform/x86/intel/int3472/tps68470.c:155 skl_int3472_tps68470_probe() warn: unsigned 'n_consumers' is never less than zero.
 
-On Fri 2022-02-18 18:05:47, Jonathan McDowell wrote:
-> On Thu, 2022-02-17 at 13:37 +0100, Pavel Machek wrote:
-> > On Thu 2022-02-17 13:34:40, greg@kroah.com=A0wrote:
-> > > On Thu, Feb 17, 2022 at 11:47:21AM +0000, Dmitrii Okunev wrote:
-> > > > Hello!
-> > > >=20
-> > > > As far as I see the patch wasn't merged. And I see that this is
-> > > > the only unsolved thread in the discussion:
-> > > >=20
-> > > > On Thu, 2013-05-16 at 18:03 +0200, Pavel Machek wrote:
-> > > > > On Tue 2013-05-14 01:24:43, Qiaowei Ren wrote:
-> > > > > > These interfaces are located in
-> > > > > > /sys/devices/platform/intel_txt/config,
-> > > > > > and including totally 37 files, providing access to Intel TXT
-> > > > > > configuration registers.
-> > > > >=20
-> > > > > This looks like very wrong interface... equivalent of /dev/mem.
-> > > >=20
-> > > > As an active user of these registers I hope it will be merged, so
-> > > > I would like to improve this patch (or rewrite it from scratch)
-> > > > to make that happen. Otherwise one have to do hackery around
-> > > > `/dev/mem`, which also creates problems with proper access
-> > > > control.
-> > > >=20
-> > > > To be able to improve the patch, could somebody clarify why
-> > > > exactly this is a "very wrong interface"?
-> > > >=20
-> > > > > > +What:=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0/sys/devices/platform/intel=
-_txt/config/STS_ra
-> > > > > > w
-> > > > > > +Date:=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0May 2013
-> > > > > > +KernelVersion:=A03.9
-> > > > > > +Contact:=A0=A0=A0=A0=A0=A0=A0"Qiaowei Ren" <qiaowei.ren@intel.=
-com>
-> > > > > > +Description:=A0=A0=A0TXT.STS is the general status register. T=
-his
-> > > > > > read-
-> > > > > > only register
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0is used by AC mod=
-ules and the MLE to get the
-> > > > > > status
-> > > > > > of various
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Intel TXT feature=
-s.
-> > > > >=20
-> > > > > This is not enough to allow people to understand what this
-> > > > > does/should do, nor does it allow (for example) ARM people to
-> > > > > implement something compatible.
-> > > > >=20
-> > > > > Is there specific reason why "better" interface is impossible?
-> > > >=20
-> > > > I would love to reuse Intel's public documentation [1] to provide
-> > > > a proper description (with bit layout of the value).
-> > > >=20
-> > > > [1] https://cdrdv2.intel.com/v1/dl/getContent/315168
-> > > >=20
-> > > > > [...], nor does it allow (for example) ARM people to
-> > > > > implement something compatible.
-> > > >=20
-> > > > Do I understand correctly that a proper documentation of the
-> > > > registers solves the problem?
-> > > >=20
-> > > > > Is there specific reason why "better" interface is impossible?
-> > > >=20
-> > > > What are specific problems with the current interface?
-> > >=20
-> > > What do you mean by "current" here?=A0 You are referring to an email
-> > > from 2013, 9 years ago.
-> > >=20
-> > > If you want to propose the change again, correctly update the patch
-> > > and submit it that way.
-> >=20
-> > I don't believe taking hardware registers and exposing them 1-to-1 in
-> > sysfs is the way to go.
-> >=20
-> > We would like same /sys interface on different hardware, and simply
-> > exposing Intel's registers in /sys will not do the job.
->=20
-> So, for our particular use case what we want to be able to see is the
-> status of the TXT device, so when attestation fails it's possible to
-> diagnose where that might have happened. At a minimum=A0details from the
-> status register are folded into the first measurement, and the error
-> register can provide valuable insight as to what the TXT device thinks
-> failed.
->=20
-> At present these details are retrieved from /dev/mem, but this is less
-> than ideal and prevents the use of, say, kernel lockdown. As a result
-> we'd like to export the appropriate details via sysfs. These are likely
-> to be extremely security block implementation specific, so I'm not
-> clear that a generic agnostic interface is appropriate to retrieve
-> these details.
+Right this needs to be an int, not an unsigned int. Daniel, please fix this for v2.
 
-> Do you have the same objection to a read only set of information
-> (rather than the full control offered by the initial submission)?
+Regards,
 
-Might be a job for debugfs?
-							Pavel
+Hans
 
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
---k1lZvvs/B4yU6o8G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> 
+> vim +/n_consumers +155 drivers/platform/x86/intel/int3472/tps68470.c
+> 
+>    142	
+>    143	static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>    144	{
+>    145		struct acpi_device *adev = ACPI_COMPANION(&client->dev);
+>    146		const struct int3472_tps68470_board_data *board_data;
+>    147		struct tps68470_clk_platform_data *clk_pdata;
+>    148		unsigned int n_consumers;
+>    149		struct mfd_cell *cells;
+>    150		struct regmap *regmap;
+>    151		int device_type;
+>    152		int ret;
+>    153	
+>    154		n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
+>  > 155		if (n_consumers < 0)
+>    156			return n_consumers;
+>    157	
+>    158		regmap = devm_regmap_init_i2c(client, &tps68470_regmap_config);
+>    159		if (IS_ERR(regmap)) {
+>    160			dev_err(&client->dev, "Failed to create regmap: %ld\n", PTR_ERR(regmap));
+>    161			return PTR_ERR(regmap);
+>    162		}
+>    163	
+>    164		i2c_set_clientdata(client, regmap);
+>    165	
+>    166		ret = tps68470_chip_init(&client->dev, regmap);
+>    167		if (ret < 0) {
+>    168			dev_err(&client->dev, "TPS68470 init error %d\n", ret);
+>    169			return ret;
+>    170		}
+>    171	
+>    172		device_type = skl_int3472_tps68470_calc_type(adev);
+>    173		switch (device_type) {
+>    174		case DESIGNED_FOR_WINDOWS:
+>    175			board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
+>    176			if (!board_data)
+>    177				return dev_err_probe(&client->dev, -ENODEV, "No board-data found for this model\n");
+>    178	
+>    179			cells = kcalloc(TPS68470_WIN_MFD_CELL_COUNT, sizeof(*cells), GFP_KERNEL);
+>    180			if (!cells)
+>    181				return -ENOMEM;
+>    182	
+>    183			/*
+>    184			 * The order of the cells matters here! The clk must be first
+>    185			 * because the regulator depends on it. The gpios must be last,
+>    186			 * acpi_gpiochip_add() calls acpi_dev_clear_dependencies() and
+>    187			 * the clk + regulators must be ready when this happens.
+>    188			 */
+>    189			cells[0].name = "tps68470-clk";
+>    190			cells[0].platform_data = clk_pdata;
+>    191			cells[0].pdata_size = struct_size(clk_pdata, consumers, n_consumers);
+>    192			cells[1].name = "tps68470-regulator";
+>    193			cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
+>    194			cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
+>    195			cells[2].name = "tps68470-gpio";
+>    196	
+>    197			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_table);
+>    198	
+>    199			ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
+>    200						   cells, TPS68470_WIN_MFD_CELL_COUNT,
+>    201						   NULL, 0, NULL);
+>    202			kfree(cells);
+>    203	
+>    204			if (ret)
+>    205				gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_table);
+>    206	
+>    207			break;
+>    208		case DESIGNED_FOR_CHROMEOS:
+>    209			ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
+>    210						   tps68470_cros, ARRAY_SIZE(tps68470_cros),
+>    211						   NULL, 0, NULL);
+>    212			break;
+>    213		default:
+>    214			dev_err(&client->dev, "Failed to add MFD devices\n");
+>    215			return device_type;
+>    216		}
+>    217	
+>    218		/*
+>    219		 * No acpi_dev_clear_dependencies() here, since the acpi_gpiochip_add()
+>    220		 * for the GPIO cell already does this.
+>    221		 */
+>    222	
+>    223		return ret;
+>    224	}
+>    225	
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> 
 
-iEYEARECAAYFAmIUrVUACgkQMOfwapXb+vKgrQCghttXJ7nTqOcDXJPclG6dbVcv
-hJsAoJGS6x8u/CYDqk2yNOu2JrH38ell
-=zuhO
------END PGP SIGNATURE-----
-
---k1lZvvs/B4yU6o8G--
