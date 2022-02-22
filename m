@@ -2,273 +2,204 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7171C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 18:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08070C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 18:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230219AbiBVSme (ORCPT
+        id S234844AbiBVSwf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Feb 2022 13:42:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33838 "EHLO
+        Tue, 22 Feb 2022 13:52:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233516AbiBVSmd (ORCPT
+        with ESMTP id S234306AbiBVSwe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Feb 2022 13:42:33 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A379BEB17F
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 10:42:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645555324;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Je42u+nOsXH+Xm7ZqrphSqKcvDPIcyYV/8QZo5Gua1c=;
-        b=cZoeAivkpcUeFRnaNzp9CFVTj7FYZkyTiKdixKCTXxA/BNW1mIpkrXeAqnlhS6njfh3oW4
-        E6qG5SIc79Qmr9BG3RZPd+3u1HuNeSDRA7Vb8kXvGIiJwd3fbUPRCD+46hVxZLSYnVTDdD
-        ObcpqtwLQ2EbvMZuCA538z3gscuF/6I=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-400-tfDpU7m9MdywqVAHHO4ilw-1; Tue, 22 Feb 2022 13:42:03 -0500
-X-MC-Unique: tfDpU7m9MdywqVAHHO4ilw-1
-Received: by mail-ej1-f71.google.com with SMTP id sa7-20020a170906eda700b006d1b130d65bso2207587ejb.13
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 10:42:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Je42u+nOsXH+Xm7ZqrphSqKcvDPIcyYV/8QZo5Gua1c=;
-        b=dcqZySoop1p8HWpgr+sAhUrYwP9RcaIo/reVwxNSAcxTbGMdJjKWjU+m7M6PADz031
-         YT1vIlGXZJSzUJAheIsoaJW/M3sG6bXHVTMZxJ6jTFCPpdmj0uprwqaKXxWWGrwdlb7F
-         Q6/+5NBkogGKR6rv447lnjPmPgQfnWR0XwtKCSSr3BjXGa3onqyivSGhD/IAhQQDlY7y
-         oeohIL645Iq8kuHCy2RUCCvMRVEiaFv2Olf0GpW3RbPukxtPt1jYDLPxohRu03tmaE0a
-         G5v6mT3SJ0kNNyO8o5WXGKVr7Bh8Y6FqisugcJnNCqigVHIwYQEdzWcF5WKPvTEIKBSE
-         BFDw==
-X-Gm-Message-State: AOAM530rwrMJU6ubrvhFq8SmoVPE5cYNeQDO4vaRfjfeDrVkEzpp1EBQ
-        JqTzIStwqHB7jcSl8+I/GVQwQb7eiPXEx5er4C/waEJk/lVeyGFffbHF9rTUfN50fcSf3xR+5od
-        bd4QEsJRnNvIelqf5T2EJZZSUBiX57loz2w==
-X-Received: by 2002:aa7:d343:0:b0:40a:1425:8896 with SMTP id m3-20020aa7d343000000b0040a14258896mr28502515edr.242.1645555321725;
-        Tue, 22 Feb 2022 10:42:01 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwiFquKTlXX4uRM45Y7DqgABN2UG5VsLWGaBGnoIsAOMlsM7cI1eh6hz5rsII5/QI2cLpJeLw==
-X-Received: by 2002:aa7:d343:0:b0:40a:1425:8896 with SMTP id m3-20020aa7d343000000b0040a14258896mr28502499edr.242.1645555321444;
-        Tue, 22 Feb 2022 10:42:01 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id 1sm6736788ejm.173.2022.02.22.10.42.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Feb 2022 10:42:01 -0800 (PST)
-Message-ID: <bf8692b8-0e54-ddd0-8684-6dc214f78190@redhat.com>
-Date:   Tue, 22 Feb 2022 19:42:00 +0100
+        Tue, 22 Feb 2022 13:52:34 -0500
+Received: from mail1.bemta35.messagelabs.com (mail1.bemta35.messagelabs.com [67.219.250.113])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0054E10C538
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 10:52:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
+        s=Selector; t=1645555926; i=@lenovo.com;
+        bh=cJwfREZ9CfCuLYwhRP26fVyyKBDlpILwnAw/mGPfWLg=;
+        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+         MIME-Version:Content-Transfer-Encoding:Content-Type;
+        b=LthSsM8ys6rxK9u9Ll11Fa/iBtWAjsURj3dRc4zW/+nBNJFwbFkVAFyTUeH3BmJna
+         mUoxondcXSHL9HOuvQgJGUjORXH+Sek1OVWRfeFJP1/3+hDpLl0m4CZup8vC+gXOKk
+         yox+Wb/ehhJXyHi6TssED0tJKNijQjCdRzu9SMQmuEEEe3qAPCMD1HPDQnUB1WO2mR
+         0Kmlwh95ulFWQ5ZNQD+CzqovhCWAdz9DgVgBrq5bJ5VzKDKKgVj6aX1TXCWAkLYjdP
+         +FeS63KqDVmRDu0y2snsdg29GDFM3THsFyQoSHEib5Uz6A3obXsrmx/sbjSp7zMOwc
+         wRJZ5YELSsGIw==
+Received: from [100.114.100.29] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-a.us-west-2.aws.ess.symcld.net id E5/BC-02723-6D035126; Tue, 22 Feb 2022 18:52:06 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCJsWRWlGSWpSXmKPExsWSoV9jpHvNQDT
+  JYOYEZos3x6czWRyYOo3ZYvWeF8wOzB6bVnWyebzfd5XN4/MmuQDmKNbMvKT8igTWjOtzHjMW
+  /BGvaP7xjLWB8aFwFyMXB6PAUmaJf+c/MHYxcgI5i1gl+g8GQSQ6mSQWdc9kA3GEBBYySRw5d
+  wLK2c8kcXnbbFaQFgmB44wS3avcIRKdjBK7t/6AqprIJNF54CQjhPOEUWLtpBnsEM4bRonJJ3
+  azgPSzCWhLbNnyC6iFg0NEQEbiw1pPkDCzQKTE1UffmUBsYQEHif277oNdyCKgKvF1yk52EJt
+  XwEqie/VkZogz5CW6//0BG8kJVHOm6zGYLSSgInH/wRI2iHpBiZMzn7BAzJeXaN46mxnClpA4
+  +OIFM0S9ssSv/vNwM6fffcoEYSdI9Px7xAZhS0pcu3mBHcKWlTh6dg4LhO0r8ffoJ6h6XYk9j
+  +dDzcmRaN69A8qWkzjVe44JZv7OjbdZJjDqzEJy3iwk581Cct4CRuZVjFZJRZnpGSW5iZk5uo
+  YGBrqGhia6lua6ZgZ6iVW6iXqlxbrlqcUlukZ6ieXFeqnFxXrFlbnJOSl6eaklmxiBSSelKNF
+  mB2Nn/0+9Q4ySHExKorwP5UWThPiS8lMqMxKLM+KLSnNSiw8xynBwKEnwTtUHygkWpaanVqRl
+  5gATIExagoNHSYR3HzdQmre4IDG3ODMdInWK0Zjjyra9e5k5Lh26spdZiCUvPy9VSpx3E8gkA
+  ZDSjNI8uEGwxHyJUVZKmJeRgYFBiKcgtSg3swRV/hWjOAejkjDvI12gKTyZeSVw+14BncIEdM
+  qULCGQU0oSEVJSDUzzzvxabbzT06qy46jNig3Of9W4fh7eG3+9erfTpUdVz3xPcfbzmtatzOx
+  X1tgwTfisxpfDcQ6tXc2zClOSV/o7Ld/zvn/xLrVF7q9S9WxUllqe45jzyv3b/Opwj/qPs9b/
+  /vPl4qt9W+1/PKxb9CzSzuRO+wS1IKNX3Zorn+5jXKNkY7uE724r76Sb4U15Cd2/llpdWGFy8
+  9FT19NNvWn8fVua783Tmdf0fqsI95aENq2woChvhr1zF34+IrzGXU6lOF7pov+9J82bIzYuaU
+  /bN7/2NkvFqxv329hEt2bNLTd4kxaYnyfKXnhLo8Zzw+7Hsy7NzYsyPCrdybMu67thqsvRX5V
+  v5N+sWf9+yzclJZbijERDLeai4kQAydK5xEcEAAA=
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-2.tower-636.messagelabs.com!1645555924!1283!1
+X-Originating-IP: [104.47.124.50]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.81.7; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 14536 invoked from network); 22 Feb 2022 18:52:05 -0000
+Received: from mail-hk2apc01lp2050.outbound.protection.outlook.com (HELO APC01-HK2-obe.outbound.protection.outlook.com) (104.47.124.50)
+  by server-2.tower-636.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 22 Feb 2022 18:52:05 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=elqRQHG0csdECBGb7IKo0wSnK04YlGqSPTvk0+0qHxQiRNXuOHG7L8PneY6c1WNWeaBXVq92cJH9JgAswjGqSjD0CKesyxSqjKMaz//HX+iUiONqaTwbIHhRDuX1oUNaNF02aMpUQltOMIQht9mxx5rnePimYOgVrL+UtGqEe0wNmMThedY2muDX114g54IzZun+h53DgTO2eXJWoaWU1V3KpEwJJlieiteLI+sSqtsVVJGPLsNUpn+7elXQLfdnL6y9WfP7h5xeZ2DVo37Qq0XJqDUctFeneyXIsroBc/CFupnf9PxXg9jzbq7Q/WQh/VXoIM8pysC2kxmy6nZ6Ww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cJwfREZ9CfCuLYwhRP26fVyyKBDlpILwnAw/mGPfWLg=;
+ b=XkD2TWtpkrCPYS2ury7/aHpfXcH+nnG7wfto7abM0SJOgxhcEx5CxBBKpl1dgVxVHjD+ViVeDQLGZYluexmFBvZ7ivriOSvTJFaV6KafxkzVp42ACuDvP16m8v1m72WmIII0TQEhDyTC7KUDPc1E9dRFY2M4aSOol1h11LgZuoUhyfna/BD0CHWmkQZOUjUBj43SZY0IM+FBJgGFJFyeeHuWZzIayZpwRAnnLgeT5wQPsdOYPJS4qh7nCYY0CJY2R+h1zivS4v1JIsnC26CAT3MjBKGAol7dlTiqOikd4QCxU8tU+wOwbGKDI+dKzEhoGreO+7/fUEXJZjjcrKJhTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 104.232.225.6) smtp.rcpttodomain=redhat.com smtp.mailfrom=lenovo.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=lenovo.com;
+ dkim=none (message not signed); arc=none
+Received: from SG2PR01CA0163.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:28::19) by TYZPR03MB5966.apcprd03.prod.outlook.com
+ (2603:1096:400:126::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.7; Tue, 22 Feb
+ 2022 18:52:03 +0000
+Received: from HK2APC01FT043.eop-APC01.prod.protection.outlook.com
+ (2603:1096:4:28:cafe::64) by SG2PR01CA0163.outlook.office365.com
+ (2603:1096:4:28::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.21 via Frontend
+ Transport; Tue, 22 Feb 2022 18:52:02 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 104.232.225.6) smtp.mailfrom=lenovo.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=lenovo.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ lenovo.com discourages use of 104.232.225.6 as permitted sender)
+Received: from mail.lenovo.com (104.232.225.6) by
+ HK2APC01FT043.mail.protection.outlook.com (10.152.249.92) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4995.20 via Frontend Transport; Tue, 22 Feb 2022 18:52:01 +0000
+Received: from reswpmail01.lenovo.com (10.62.32.20) by mail.lenovo.com
+ (10.62.123.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.21; Tue, 22 Feb
+ 2022 13:51:58 -0500
+Received: from fjara-pc0z45gl.lenovo.com (10.46.52.68) by
+ reswpmail01.lenovo.com (10.62.32.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.21; Tue, 22 Feb 2022 13:51:57 -0500
+From:   Mark Pearson <markpearson@lenovo.com>
+To:     <markpearson@lenovo.com>
+CC:     <hdegoede@redhat.com>, <markgross@kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Add dual fan probe
+Date:   Tue, 22 Feb 2022 13:51:37 -0500
+Message-ID: <20220222185137.4325-1-markpearson@lenovo.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH 2/2] lg-laptop: Move setting of battery charge limit to
- common location
-Content-Language: en-US
-To:     Matan Ziv-Av <matan@svgalib.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-References: <cover.1645278914.git.matan@svgalib.org>
- <eca2fa354f60b8a6e5a5c9c8e244fea56616970a.1645278914.git.matan@svgalib.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <eca2fa354f60b8a6e5a5c9c8e244fea56616970a.1645278914.git.matan@svgalib.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.46.52.68]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail01.lenovo.com (10.62.32.20)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 44806ed0-44d0-446b-e699-08d9f63469dc
+X-MS-TrafficTypeDiagnostic: TYZPR03MB5966:EE_
+X-Microsoft-Antispam-PRVS: <TYZPR03MB59666FC597C35585158CB72DC53B9@TYZPR03MB5966.apcprd03.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nMYjzAsCeU+2wDpBXHy7S+vxpxEWKe/tRwWfuWczfRlkAbUeA4gGEY1C5+n/wtvNI51XTr7asCcd+BSrigzFsICLdkSH7MHcc3H4XnxPzqn9C8uoGozE0k9S5QMbZu9bMWSV3nZh8BmD6wZcWdTJyjvmgTLSF+x6mhEpJDMtZyjbozpGG8+7imHbbBhVAHv3XscC93S9nzHcG0LfPoggOZEijYMmbL9P0gROiB1DJzYBAa4WASu6dYRvluNfw26DFfcJWOEy3HM/ZZB4zY4Mbc0uW7a+FmKr1Cecp8EALnZZ/8i3MxhKbZNlqmMh9VeIbOGirHissTXfvE42NI0bYdEi74CoFe0iiEelR3+1ShiDBp0Ett/HgT6nXqpRDMQ5ciNtmiybXQ21W7Zn/P+Yghtfp6yZ4nJ6/EqRNChP8OT/5E01LY4jsfJm+0XwMLeGQwcwp4cB4eJJ0pkYtMWIhehBdanlwP9Lz0p/VUTRov+d6LKi82bI0lDbsj67B8NewEtL+I9bqWzs7LmMtjtPTsfc1b0Peo/rOldGaPLv5ZPGJ6et3L1oE9nRRLXXqTbdxavWNeXmw+vrZ6V2vveTHtrDNBGBOsJtWb3mfc7aY1tc3nQmh6O+higwhyR/ig9cBY+f2FWJxjrcSKFYOpTgkIesREtH94wXZEMIHKLFCrU9wHpToKyGRVILtde/FtzUCNFQW6mlXh3o/2kcwyOReg==
+X-Forefront-Antispam-Report: CIP:104.232.225.6;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.lenovo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(40460700003)(2906002)(54906003)(36860700001)(82960400001)(82310400004)(86362001)(6200100001)(81166007)(7049001)(36906005)(37006003)(356005)(6666004)(70586007)(7696005)(508600001)(70206006)(5660300002)(4326008)(6862004)(8676002)(8936002)(26005)(186003)(316002)(2616005)(83380400001)(36756003)(336012)(16526019)(47076005)(426003)(1076003)(36900700001);DIR:OUT;SFP:1102;
+X-OriginatorOrg: lenovo.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2022 18:52:01.6484
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44806ed0-44d0-446b-e699-08d9f63469dc
+X-MS-Exchange-CrossTenant-Id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5c7d0b28-bdf8-410c-aa93-4df372b16203;Ip=[104.232.225.6];Helo=[mail.lenovo.com]
+X-MS-Exchange-CrossTenant-AuthSource: HK2APC01FT043.eop-APC01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB5966
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Instead of having quirks for systems that have a second fan it would
+be nice to detect this setup.
+Unfortunately, confirmed by the Lenovo FW team, there is no way to
+retrieve this information from the EC or BIOS. Recommendation was to
+attempt to read the fan and if successful then assume a 2nd fan is
+present.
 
-On 2/19/22 14:54, Matan Ziv-Av wrote:
-> For now leave also the driver specific location,
-> with deprecated warning in documentation.
-> 
-> Signed-off-by: Matan Ziv-Av <matan@svgalib.org>
-> ---
->  .../ABI/testing/sysfs-platform-lg-laptop      |  2 +-
->  .../admin-guide/laptops/lg-laptop.rst         |  2 +-
->  drivers/platform/x86/lg-laptop.c              | 57 ++++++++++++++++---
->  3 files changed, 51 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-lg-laptop b/Documentation/ABI/testing/sysfs-platform-lg-laptop
-> index cf47749b19df..d226058049ce 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-lg-laptop
-> +++ b/Documentation/ABI/testing/sysfs-platform-lg-laptop
-> @@ -16,7 +16,7 @@ What:		/sys/devices/platform/lg-laptop/battery_care_limit
->  Date:		October 2018
->  KernelVersion:	4.20
->  Contact:	"Matan Ziv-Av <matan@svgalib.org>
-> -Description:
-> +Description: <deprecated> use /sys/class/power_supply/CMB0/charge_control_end_threshold
->          Maximal battery charge level. Accepted values are 80 or 100.
->  
->  What:		/sys/devices/platform/lg-laptop/fan_mode
+The fans are also supposed to spin up on boot for some time, so in
+theory we could check for a speed > 0. In testing this seems to hold
+true but as I couldn't test on all platforms I've avoided implementing
+this. It also breaks for the corner case where you load the module
+once the fans are idle.
 
-We have some automatic scripts parsing these files now; and I'm not sure
-if those will like this form.
+Tested on P1G4, P1G3, X1C9 and T14 (no fans) and it works correctly.
+For the platforms with dual fans where it was confirmed to work I have
+removed the quirks. Potentially this could be done for all platforms
+but I've left untested platforms in for now. On these platforms the
+fans will be enabled and then detected - so no impact.
 
-So I've changed this to the following while merging it:
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-@@ -17,6 +17,7 @@ Date:		October 2018
- KernelVersion:	4.20
- Contact:	"Matan Ziv-Av <matan@svgalib.org>
- Description:
-+        Deprecated use /sys/class/power_supply/CMB0/charge_control_end_threshold
-         Maximal battery charge level. Accepted values are 80 or 100.
- 
- What:		/sys/devices/platform/lg-laptop/fan_mode
-
-
-
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-
-
-> diff --git a/Documentation/admin-guide/laptops/lg-laptop.rst b/Documentation/admin-guide/laptops/lg-laptop.rst
-> index 6fbe165dcd27..67fd6932cef4 100644
-> --- a/Documentation/admin-guide/laptops/lg-laptop.rst
-> +++ b/Documentation/admin-guide/laptops/lg-laptop.rst
-> @@ -38,7 +38,7 @@ FN lock.
->  Battery care limit
->  ------------------
->  
-> -Writing 80/100 to /sys/devices/platform/lg-laptop/battery_care_limit
-> +Writing 80/100 to /sys/class/power_supply/CMB0/charge_control_end_threshold
->  sets the maximum capacity to charge the battery. Limiting the charge
->  reduces battery capacity loss over time.
->  
-
-
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-> index a91847a551a7..332868b140ed 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -17,6 +17,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/types.h>
->  
-> +#include <acpi/battery.h>
-> +
->  #define LED_DEVICE(_name, max, flag) struct led_classdev _name = { \
->  	.name           = __stringify(_name),   \
->  	.max_brightness = max,                  \
-> @@ -458,14 +460,14 @@ static ssize_t fn_lock_show(struct device *dev,
->  	return sysfs_emit(buffer, "%d\n", status);
->  }
->  
-> -static ssize_t battery_care_limit_store(struct device *dev,
-> -					struct device_attribute *attr,
-> -					const char *buffer, size_t count)
-> +static ssize_t charge_control_end_threshold_store(struct device *dev,
-> +						  struct device_attribute *attr,
-> +						  const char *buf, size_t count)
->  {
->  	unsigned long value;
->  	int ret;
->  
-> -	ret = kstrtoul(buffer, 10, &value);
-> +	ret = kstrtoul(buf, 10, &value);
->  	if (ret)
->  		return ret;
->  
-> @@ -486,9 +488,9 @@ static ssize_t battery_care_limit_store(struct device *dev,
->  	return -EINVAL;
->  }
->  
-> -static ssize_t battery_care_limit_show(struct device *dev,
-> -				       struct device_attribute *attr,
-> -				       char *buffer)
-> +static ssize_t charge_control_end_threshold_show(struct device *device,
-> +						 struct device_attribute *attr,
-> +						 char *buf)
->  {
->  	unsigned int status;
->  	union acpi_object *r;
-> @@ -520,15 +522,52 @@ static ssize_t battery_care_limit_show(struct device *dev,
->  	if (status != 80 && status != 100)
->  		status = 0;
->  
-> -	return sysfs_emit(buffer, "%d\n", status);
-> +	return sysfs_emit(buf, "%d\n", status);
-> +}
-> +
-> +static ssize_t battery_care_limit_show(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       char *buffer)
-> +{
-> +	return charge_control_end_threshold_show(dev, attr, buffer);
-> +}
-> +
-> +static ssize_t battery_care_limit_store(struct device *dev,
-> +					struct device_attribute *attr,
-> +					const char *buffer, size_t count)
-> +{
-> +	return charge_control_end_threshold_store(dev, attr, buffer, count);
->  }
->  
->  static DEVICE_ATTR_RW(fan_mode);
->  static DEVICE_ATTR_RW(usb_charge);
->  static DEVICE_ATTR_RW(reader_mode);
->  static DEVICE_ATTR_RW(fn_lock);
-> +static DEVICE_ATTR_RW(charge_control_end_threshold);
->  static DEVICE_ATTR_RW(battery_care_limit);
->  
-> +static int lg_battery_add(struct power_supply *battery)
-> +{
-> +	if (device_create_file(&battery->dev,
-> +			       &dev_attr_charge_control_end_threshold))
-> +		return -ENODEV;
-> +
-> +	return 0;
-> +}
-> +
-> +static int lg_battery_remove(struct power_supply *battery)
-> +{
-> +	device_remove_file(&battery->dev,
-> +			   &dev_attr_charge_control_end_threshold);
-> +	return 0;
-> +}
-> +
-> +static struct acpi_battery_hook battery_hook = {
-> +	.add_battery = lg_battery_add,
-> +	.remove_battery = lg_battery_remove,
-> +	.name = "LG Battery Extension",
-> +};
-> +
->  static struct attribute *dev_attributes[] = {
->  	&dev_attr_fan_mode.attr,
->  	&dev_attr_usb_charge.attr,
-> @@ -711,6 +750,7 @@ static int acpi_add(struct acpi_device *device)
->  	led_classdev_register(&pf_device->dev, &tpad_led);
->  
->  	wmi_input_setup();
-> +	battery_hook_register(&battery_hook);
->  
->  	return 0;
->  
-> @@ -728,6 +768,7 @@ static int acpi_remove(struct acpi_device *device)
->  	led_classdev_unregister(&tpad_led);
->  	led_classdev_unregister(&kbd_backlight);
->  
-> +	battery_hook_unregister(&battery_hook);
->  	wmi_input_destroy();
->  	platform_device_unregister(pf_device);
->  	pf_device = NULL;
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index e9b1574729b9..d0599e8a7b4d 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -8698,10 +8698,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_Q_LNV3('N', '2', 'N', TPACPI_FAN_2CTL),	/* P53 / P73 */
+ 	TPACPI_Q_LNV3('N', '2', 'E', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (1st gen) */
+ 	TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (2nd gen) */
+-	TPACPI_Q_LNV3('N', '2', 'V', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (3nd gen) */
+-	TPACPI_Q_LNV3('N', '4', '0', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (4nd gen) */
+ 	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v (1st gen) */
+-	TPACPI_Q_LNV3('N', '3', '2', TPACPI_FAN_2CTL),	/* X1 Carbon (9th gen) */
+ 	TPACPI_Q_LNV3('N', '3', '7', TPACPI_FAN_2CTL),  /* T15g (2nd gen) */
+ 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
+ };
+@@ -8745,6 +8742,9 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+ 		 * ThinkPad ECs supports the fan control register */
+ 		if (likely(acpi_ec_read(fan_status_offset,
+ 					&fan_control_initial_status))) {
++			int res;
++			unsigned int speed;
++
+ 			fan_status_access_mode = TPACPI_FAN_RD_TPEC;
+ 			if (quirks & TPACPI_FAN_Q1)
+ 				fan_quirk1_setup();
+@@ -8757,6 +8757,15 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+ 				tp_features.second_fan_ctl = 1;
+ 				pr_info("secondary fan control enabled\n");
+ 			}
++			/* Try and probe the 2nd fan */
++			res = fan2_get_speed(&speed);
++			if (res >= 0) {
++				/* It responded - so let's assume it's there */
++				tp_features.second_fan = 1;
++				tp_features.second_fan_ctl = 1;
++				pr_info("secondary fan control detected & enabled\n");
++			}
++
+ 		} else {
+ 			pr_err("ThinkPad ACPI EC access misbehaving, fan status and control unavailable\n");
+ 			return -ENODEV;
+-- 
+2.34.1
 
