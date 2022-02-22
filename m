@@ -2,204 +2,244 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08070C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 18:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8830C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Feb 2022 20:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234844AbiBVSwf (ORCPT
+        id S235429AbiBVU75 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Feb 2022 13:52:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49292 "EHLO
+        Tue, 22 Feb 2022 15:59:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234306AbiBVSwe (ORCPT
+        with ESMTP id S232052AbiBVU74 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Feb 2022 13:52:34 -0500
-Received: from mail1.bemta35.messagelabs.com (mail1.bemta35.messagelabs.com [67.219.250.113])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0054E10C538
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 10:52:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
-        s=Selector; t=1645555926; i=@lenovo.com;
-        bh=cJwfREZ9CfCuLYwhRP26fVyyKBDlpILwnAw/mGPfWLg=;
-        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-         MIME-Version:Content-Transfer-Encoding:Content-Type;
-        b=LthSsM8ys6rxK9u9Ll11Fa/iBtWAjsURj3dRc4zW/+nBNJFwbFkVAFyTUeH3BmJna
-         mUoxondcXSHL9HOuvQgJGUjORXH+Sek1OVWRfeFJP1/3+hDpLl0m4CZup8vC+gXOKk
-         yox+Wb/ehhJXyHi6TssED0tJKNijQjCdRzu9SMQmuEEEe3qAPCMD1HPDQnUB1WO2mR
-         0Kmlwh95ulFWQ5ZNQD+CzqovhCWAdz9DgVgBrq5bJ5VzKDKKgVj6aX1TXCWAkLYjdP
-         +FeS63KqDVmRDu0y2snsdg29GDFM3THsFyQoSHEib5Uz6A3obXsrmx/sbjSp7zMOwc
-         wRJZ5YELSsGIw==
-Received: from [100.114.100.29] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-a.us-west-2.aws.ess.symcld.net id E5/BC-02723-6D035126; Tue, 22 Feb 2022 18:52:06 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCJsWRWlGSWpSXmKPExsWSoV9jpHvNQDT
-  JYOYEZos3x6czWRyYOo3ZYvWeF8wOzB6bVnWyebzfd5XN4/MmuQDmKNbMvKT8igTWjOtzHjMW
-  /BGvaP7xjLWB8aFwFyMXB6PAUmaJf+c/MHYxcgI5i1gl+g8GQSQ6mSQWdc9kA3GEBBYySRw5d
-  wLK2c8kcXnbbFaQFgmB44wS3avcIRKdjBK7t/6AqprIJNF54CQjhPOEUWLtpBnsEM4bRonJJ3
-  azgPSzCWhLbNnyC6iFg0NEQEbiw1pPkDCzQKTE1UffmUBsYQEHif277oNdyCKgKvF1yk52EJt
-  XwEqie/VkZogz5CW6//0BG8kJVHOm6zGYLSSgInH/wRI2iHpBiZMzn7BAzJeXaN46mxnClpA4
-  +OIFM0S9ssSv/vNwM6fffcoEYSdI9Px7xAZhS0pcu3mBHcKWlTh6dg4LhO0r8ffoJ6h6XYk9j
-  +dDzcmRaN69A8qWkzjVe44JZv7OjbdZJjDqzEJy3iwk581Cct4CRuZVjFZJRZnpGSW5iZk5uo
-  YGBrqGhia6lua6ZgZ6iVW6iXqlxbrlqcUlukZ6ieXFeqnFxXrFlbnJOSl6eaklmxiBSSelKNF
-  mB2Nn/0+9Q4ySHExKorwP5UWThPiS8lMqMxKLM+KLSnNSiw8xynBwKEnwTtUHygkWpaanVqRl
-  5gATIExagoNHSYR3HzdQmre4IDG3ODMdInWK0Zjjyra9e5k5Lh26spdZiCUvPy9VSpx3E8gkA
-  ZDSjNI8uEGwxHyJUVZKmJeRgYFBiKcgtSg3swRV/hWjOAejkjDvI12gKTyZeSVw+14BncIEdM
-  qULCGQU0oSEVJSDUzzzvxabbzT06qy46jNig3Of9W4fh7eG3+9erfTpUdVz3xPcfbzmtatzOx
-  X1tgwTfisxpfDcQ6tXc2zClOSV/o7Ld/zvn/xLrVF7q9S9WxUllqe45jzyv3b/Opwj/qPs9b/
-  /vPl4qt9W+1/PKxb9CzSzuRO+wS1IKNX3Zorn+5jXKNkY7uE724r76Sb4U15Cd2/llpdWGFy8
-  9FT19NNvWn8fVua783Tmdf0fqsI95aENq2woChvhr1zF34+IrzGXU6lOF7pov+9J82bIzYuaU
-  /bN7/2NkvFqxv329hEt2bNLTd4kxaYnyfKXnhLo8Zzw+7Hsy7NzYsyPCrdybMu67thqsvRX5V
-  v5N+sWf9+yzclJZbijERDLeai4kQAydK5xEcEAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-2.tower-636.messagelabs.com!1645555924!1283!1
-X-Originating-IP: [104.47.124.50]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.81.7; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 14536 invoked from network); 22 Feb 2022 18:52:05 -0000
-Received: from mail-hk2apc01lp2050.outbound.protection.outlook.com (HELO APC01-HK2-obe.outbound.protection.outlook.com) (104.47.124.50)
-  by server-2.tower-636.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 22 Feb 2022 18:52:05 -0000
+        Tue, 22 Feb 2022 15:59:56 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2068.outbound.protection.outlook.com [40.107.243.68])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F02B3E6E
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Feb 2022 12:59:30 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=elqRQHG0csdECBGb7IKo0wSnK04YlGqSPTvk0+0qHxQiRNXuOHG7L8PneY6c1WNWeaBXVq92cJH9JgAswjGqSjD0CKesyxSqjKMaz//HX+iUiONqaTwbIHhRDuX1oUNaNF02aMpUQltOMIQht9mxx5rnePimYOgVrL+UtGqEe0wNmMThedY2muDX114g54IzZun+h53DgTO2eXJWoaWU1V3KpEwJJlieiteLI+sSqtsVVJGPLsNUpn+7elXQLfdnL6y9WfP7h5xeZ2DVo37Qq0XJqDUctFeneyXIsroBc/CFupnf9PxXg9jzbq7Q/WQh/VXoIM8pysC2kxmy6nZ6Ww==
+ b=PkaYjEwZw5rE59qZCKF+SeVi/kJWQIen+JE/MDO1W//0CtfxXzxZWAqUyLRh42rImkrU6jhFOHsgh01IeR9gh/afzpk5Dwanfg2A0QucqyBVl8fatmyyCdQFNMRgChClTW/D9cSWYhvTlBVupmvE1wRVCFYcI0tzM04oxn1ACuRZigeRbsu5XIPDrtTFIuMGYypsrioXwuWENOxRH7NTa1JgbiB1qFqhCppFGnSDyGf3I6nbzmk0FWPrjH4wY1H5X7OidSVmUxTELbabo1zL4RfA8ufMopF77/oIVhNpVpjAASmbJyGMgJd4zD7/U0L5Nrd8JE4CV2tJjIrnK1PaYA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cJwfREZ9CfCuLYwhRP26fVyyKBDlpILwnAw/mGPfWLg=;
- b=XkD2TWtpkrCPYS2ury7/aHpfXcH+nnG7wfto7abM0SJOgxhcEx5CxBBKpl1dgVxVHjD+ViVeDQLGZYluexmFBvZ7ivriOSvTJFaV6KafxkzVp42ACuDvP16m8v1m72WmIII0TQEhDyTC7KUDPc1E9dRFY2M4aSOol1h11LgZuoUhyfna/BD0CHWmkQZOUjUBj43SZY0IM+FBJgGFJFyeeHuWZzIayZpwRAnnLgeT5wQPsdOYPJS4qh7nCYY0CJY2R+h1zivS4v1JIsnC26CAT3MjBKGAol7dlTiqOikd4QCxU8tU+wOwbGKDI+dKzEhoGreO+7/fUEXJZjjcrKJhTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 104.232.225.6) smtp.rcpttodomain=redhat.com smtp.mailfrom=lenovo.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=lenovo.com;
+ bh=mBipF7PuwfDqS9Co1oh7qfg2T3fWv60+2ksA7EtfDao=;
+ b=dUfx73lUoKVz1WQrSqXybu0e/aoetvjdMSFpgaOjp8ElZt/cJUMKHibhlc4yEyBcRM2B5bTquT44/hAvQAMXUcwVopooGvZWhXn06O/guQ5y+aI0m38iFlH7CW9FgZRfyeskg976g6EOQDhO4cXoCGhadQCBnbJBOiAsa4t3lbW803UfPR7hgSY7eIfNQcezMx13Or8YYEO4Y+0uAGtWfaUcHL+Hf7QeZ3DHY8l2NJWeqNbqc5MBVXFOFVQcEKmhAPKjmrl8nzbGYP/CYWdWJzo/3+vN5sLivxzIIlFzwEl7rz7sB2wryJ3Wq9IR0Fmkdg1Nh9pPorBcwHKLgMFUqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
-Received: from SG2PR01CA0163.apcprd01.prod.exchangelabs.com
- (2603:1096:4:28::19) by TYZPR03MB5966.apcprd03.prod.outlook.com
- (2603:1096:400:126::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.7; Tue, 22 Feb
- 2022 18:52:03 +0000
-Received: from HK2APC01FT043.eop-APC01.prod.protection.outlook.com
- (2603:1096:4:28:cafe::64) by SG2PR01CA0163.outlook.office365.com
- (2603:1096:4:28::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.21 via Frontend
- Transport; Tue, 22 Feb 2022 18:52:02 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 104.232.225.6) smtp.mailfrom=lenovo.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=lenovo.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- lenovo.com discourages use of 104.232.225.6 as permitted sender)
-Received: from mail.lenovo.com (104.232.225.6) by
- HK2APC01FT043.mail.protection.outlook.com (10.152.249.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4995.20 via Frontend Transport; Tue, 22 Feb 2022 18:52:01 +0000
-Received: from reswpmail01.lenovo.com (10.62.32.20) by mail.lenovo.com
- (10.62.123.116) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.21; Tue, 22 Feb
- 2022 13:51:58 -0500
-Received: from fjara-pc0z45gl.lenovo.com (10.46.52.68) by
- reswpmail01.lenovo.com (10.62.32.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.21; Tue, 22 Feb 2022 13:51:57 -0500
-From:   Mark Pearson <markpearson@lenovo.com>
-To:     <markpearson@lenovo.com>
-CC:     <hdegoede@redhat.com>, <markgross@kernel.org>,
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mBipF7PuwfDqS9Co1oh7qfg2T3fWv60+2ksA7EtfDao=;
+ b=Ou32+do0aTnN9y3JWz0+J9WuF5mDm0mx91ENP3PAmwGGSosS26LBaPFmfVijVvBSpFdj2wpdaT/FLgvtXnXdUJumibiO3HdwD7rihJqO3OkDOSNliLMb+5ynZ/YzMSWKLH64PBolSkUrQvv5Dcb06HQzHHIlYdmIaTKYFsYxP7M=
+Received: from DM3PR14CA0141.namprd14.prod.outlook.com (2603:10b6:0:53::25) by
+ PH7PR12MB5733.namprd12.prod.outlook.com (2603:10b6:510:1e0::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.24; Tue, 22 Feb
+ 2022 20:59:28 +0000
+Received: from DM6NAM11FT016.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:0:53:cafe::90) by DM3PR14CA0141.outlook.office365.com
+ (2603:10b6:0:53::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.22 via Frontend
+ Transport; Tue, 22 Feb 2022 20:59:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT016.mail.protection.outlook.com (10.13.173.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4995.15 via Frontend Transport; Tue, 22 Feb 2022 20:59:28 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Tue, 22 Feb
+ 2022 14:59:27 -0600
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:X86 PLATFORM DRIVERS" 
         <platform-driver-x86@vger.kernel.org>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Add dual fan probe
-Date:   Tue, 22 Feb 2022 13:51:37 -0500
-Message-ID: <20220222185137.4325-1-markpearson@lenovo.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <markpearson@lenovo.com>
-References: <markpearson@lenovo.com>
+CC:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Goswami Sanket <Sanket.Goswami@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v2] platform/x86: amd-pmc: Set QOS during suspend on CZN w/ timer wakeup
+Date:   Tue, 22 Feb 2022 14:59:26 -0600
+Message-ID: <20220222205926.25779-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Originating-IP: [10.46.52.68]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 44806ed0-44d0-446b-e699-08d9f63469dc
-X-MS-TrafficTypeDiagnostic: TYZPR03MB5966:EE_
-X-Microsoft-Antispam-PRVS: <TYZPR03MB59666FC597C35585158CB72DC53B9@TYZPR03MB5966.apcprd03.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 5c26c681-2ebd-4cd3-16ad-08d9f6463746
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5733:EE_
+X-Microsoft-Antispam-PRVS: <PH7PR12MB5733ECE0F53486262AFD53CAE23B9@PH7PR12MB5733.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nMYjzAsCeU+2wDpBXHy7S+vxpxEWKe/tRwWfuWczfRlkAbUeA4gGEY1C5+n/wtvNI51XTr7asCcd+BSrigzFsICLdkSH7MHcc3H4XnxPzqn9C8uoGozE0k9S5QMbZu9bMWSV3nZh8BmD6wZcWdTJyjvmgTLSF+x6mhEpJDMtZyjbozpGG8+7imHbbBhVAHv3XscC93S9nzHcG0LfPoggOZEijYMmbL9P0gROiB1DJzYBAa4WASu6dYRvluNfw26DFfcJWOEy3HM/ZZB4zY4Mbc0uW7a+FmKr1Cecp8EALnZZ/8i3MxhKbZNlqmMh9VeIbOGirHissTXfvE42NI0bYdEi74CoFe0iiEelR3+1ShiDBp0Ett/HgT6nXqpRDMQ5ciNtmiybXQ21W7Zn/P+Yghtfp6yZ4nJ6/EqRNChP8OT/5E01LY4jsfJm+0XwMLeGQwcwp4cB4eJJ0pkYtMWIhehBdanlwP9Lz0p/VUTRov+d6LKi82bI0lDbsj67B8NewEtL+I9bqWzs7LmMtjtPTsfc1b0Peo/rOldGaPLv5ZPGJ6et3L1oE9nRRLXXqTbdxavWNeXmw+vrZ6V2vveTHtrDNBGBOsJtWb3mfc7aY1tc3nQmh6O+higwhyR/ig9cBY+f2FWJxjrcSKFYOpTgkIesREtH94wXZEMIHKLFCrU9wHpToKyGRVILtde/FtzUCNFQW6mlXh3o/2kcwyOReg==
-X-Forefront-Antispam-Report: CIP:104.232.225.6;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.lenovo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(40460700003)(2906002)(54906003)(36860700001)(82960400001)(82310400004)(86362001)(6200100001)(81166007)(7049001)(36906005)(37006003)(356005)(6666004)(70586007)(7696005)(508600001)(70206006)(5660300002)(4326008)(6862004)(8676002)(8936002)(26005)(186003)(316002)(2616005)(83380400001)(36756003)(336012)(16526019)(47076005)(426003)(1076003)(36900700001);DIR:OUT;SFP:1102;
-X-OriginatorOrg: lenovo.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2022 18:52:01.6484
+X-Microsoft-Antispam-Message-Info: kIOEnDnq1F2dtOlxIZ0DSMfIryyvn4hNVTssw17i4GL7M9NUKQknM9QYQSy08pynrfqz8lvLkKww0TldGMnZ9w2/q5ebURNdpi0643dfC3mgREKB+1puUvKPG2tJIAfGgkqYXXmXYXO02c5SLpAN7aeKnACqt/E61Gg2BkcsIZKEXe+RoSQ+c1bMcAyQs0xQDznTtA5HpsWw4Gj1wUvn7zUqAOFvZIsxxniYkxLLIegMVPUmebCfJ0qaOoSEJjG2JfpwSNkyhC66TG/YmRs2dY8kJtzsKhjVfIKEgGi1ZtAGiNccKd2EANLGAZf0ZqSNBxdhL/038wRqYHO5lo6BKCUo3zqVOX9sTQVaDZdVtkKt6Nc12HOGNxmegzpztVhgLw9UAsQLZe96Q7kqxGleqD+XREOVGVepGl/Wy/QzXX+qhKJUX9Lt61NKfDkGHWxsUfiYcXMhx5pJkQILEJFaCz6U3Es3OVCTF+5LjzlQOpWBokmRC6NEc5Jydm3bina7QdiPcTKxI9F8ShVjDIN8F7UHcqFmCsDnL4/OXpdH8pmg5YspNIl3YeQvHiNBY30Gh8bnJ9vqG3yNvM5aEs5zXqGs85DoxDDpaYVUar5RgEHoi4flH+a0q7ucmGDMB9fY3yGK1oyF4YD6nF7hBgQxjVORT38E/ujhYMm0hP1n45SfhpGfKYek1/E2fmRoyfg5tN0RSkl7OzFLdeJGy1N5OPo2UKok5jchNK4rRXFFkU6cyzQKcSLEaUJuvrW1MGtlHhPXWfqfNtCPfA51JO8YqUtsbdQH4bNiGrRQdSTb/tI=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(36840700001)(46966006)(7696005)(508600001)(16526019)(26005)(316002)(4326008)(70586007)(45080400002)(15650500001)(5660300002)(110136005)(2616005)(966005)(83380400001)(47076005)(70206006)(8676002)(1076003)(36756003)(336012)(44832011)(186003)(426003)(8936002)(36860700001)(40460700003)(2906002)(54906003)(86362001)(82310400004)(356005)(81166007)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2022 20:59:28.4025
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44806ed0-44d0-446b-e699-08d9f63469dc
-X-MS-Exchange-CrossTenant-Id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5c7d0b28-bdf8-410c-aa93-4df372b16203;Ip=[104.232.225.6];Helo=[mail.lenovo.com]
-X-MS-Exchange-CrossTenant-AuthSource: HK2APC01FT043.eop-APC01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c26c681-2ebd-4cd3-16ad-08d9f6463746
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT016.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB5966
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5733
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Instead of having quirks for systems that have a second fan it would
-be nice to detect this setup.
-Unfortunately, confirmed by the Lenovo FW team, there is no way to
-retrieve this information from the EC or BIOS. Recommendation was to
-attempt to read the fan and if successful then assume a 2nd fan is
-present.
+commit 59348401ebed ("platform/x86: amd-pmc: Add special handling for
+timer based S0i3 wakeup") adds support for using another platform timer
+in lieu of the RTC which doesn't work properly on some systems. This path
+was validated and worked well before submission. During the 5.16-rc1 merge
+window other patches were merged that caused this to stop working properly.
 
-The fans are also supposed to spin up on boot for some time, so in
-theory we could check for a speed > 0. In testing this seems to hold
-true but as I couldn't test on all platforms I've avoided implementing
-this. It also breaks for the corner case where you load the module
-once the fans are idle.
+When this feature was used with 5.16-rc1 or later some OEM laptops with the
+matching firmware requirements from that commit would shutdown instead of
+program a timer based wakeup.
 
-Tested on P1G4, P1G3, X1C9 and T14 (no fans) and it works correctly.
-For the platforms with dual fans where it was confirmed to work I have
-removed the quirks. Potentially this could be done for all platforms
-but I've left untested platforms in for now. On these platforms the
-fans will be enabled and then detected - so no impact.
+This was bisected to commit 8d89835b0467 ("PM: suspend: Do not pause
+cpuidle in the suspend-to-idle path").  This wasn't supposed to cause any
+negative impacts and also tested well on both Intel and ARM platforms.
+However this changed the semantics of when CPUs are allowed to be in the
+deepest state. For the AMD systems in question it appears this causes a
+firmware crash for timer based wakeup.
 
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+It's hypothesized to be caused by the `amd-pmc` driver sending `OS_HINT`
+and all the CPUs going into a deep state while the timer is still being
+programmed. It's likely a firmware bug, but to avoid it don't allow setting
+CPUs into the deepest state while using CZN timer wakeup path.
+
+If later it's discovered that this also occurs from "regular" suspends
+without a timer as well or on other silicon, this may be later expanded to
+run in the suspend path for more scenarios.
+
+Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://lore.kernel.org/linux-acpi/BL1PR12MB51570F5BD05980A0DCA1F3F4E23A9@BL1PR12MB5157.namprd12.prod.outlook.com/T/#mee35f39c41a04b624700ab2621c795367f19c90e
+Fixes: 8d89835b0467 ("PM: suspend: Do not pause cpuidle in the suspend-to-idle path")
+Fixes: 23f62d7ab25b ("PM: sleep: Pause cpuidle later and resume it earlier during system transitions")
+Fixes: 59348401ebed ("platform/x86: amd-pmc: Add special handling for timer based S0i3 wakeup"
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+Changes from v1->v2:
+ * Update for Rafael's suggested changes:
+   - fix resume comment 
+   - undo QoS at end of resume instead
+   - Use smaller number for QoS to allow C1 entry
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index e9b1574729b9..d0599e8a7b4d 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8698,10 +8698,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_Q_LNV3('N', '2', 'N', TPACPI_FAN_2CTL),	/* P53 / P73 */
- 	TPACPI_Q_LNV3('N', '2', 'E', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (1st gen) */
- 	TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (2nd gen) */
--	TPACPI_Q_LNV3('N', '2', 'V', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (3nd gen) */
--	TPACPI_Q_LNV3('N', '4', '0', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (4nd gen) */
- 	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v (1st gen) */
--	TPACPI_Q_LNV3('N', '3', '2', TPACPI_FAN_2CTL),	/* X1 Carbon (9th gen) */
- 	TPACPI_Q_LNV3('N', '3', '7', TPACPI_FAN_2CTL),  /* T15g (2nd gen) */
- 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
- };
-@@ -8745,6 +8742,9 @@ static int __init fan_init(struct ibm_init_struct *iibm)
- 		 * ThinkPad ECs supports the fan control register */
- 		if (likely(acpi_ec_read(fan_status_offset,
- 					&fan_control_initial_status))) {
-+			int res;
-+			unsigned int speed;
+ drivers/platform/x86/amd-pmc.c | 39 ++++++++++++++++++++++++++--------
+ 1 file changed, 30 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+index 4c72ba68b315..248dc6735f5a 100644
+--- a/drivers/platform/x86/amd-pmc.c
++++ b/drivers/platform/x86/amd-pmc.c
+@@ -21,6 +21,7 @@
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_qos.h>
+ #include <linux/rtc.h>
+ #include <linux/suspend.h>
+ #include <linux/seq_file.h>
+@@ -131,6 +132,7 @@ struct amd_pmc_dev {
+ 	struct device *dev;
+ 	struct pci_dev *rdev;
+ 	struct mutex lock; /* generic mutex lock */
++	struct pm_qos_request amd_pmc_pm_qos_req;
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
+ 	struct dentry *dbgfs_dir;
+ #endif /* CONFIG_DEBUG_FS */
+@@ -521,6 +523,14 @@ static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
+ 	rc = rtc_alarm_irq_enable(rtc_device, 0);
+ 	dev_dbg(pdev->dev, "wakeup timer programmed for %lld seconds\n", duration);
+ 
++	/*
++	 * Prevent CPUs from getting into idle states while running the code
++	 * below which is generally safe to run when none of the CPUs are in
++	 * idle states.
++	 */
++	cpu_latency_qos_update_request(&pdev->amd_pmc_pm_qos_req, 3);
++	wake_up_all_idle_cpus();
 +
- 			fan_status_access_mode = TPACPI_FAN_RD_TPEC;
- 			if (quirks & TPACPI_FAN_Q1)
- 				fan_quirk1_setup();
-@@ -8757,6 +8757,15 @@ static int __init fan_init(struct ibm_init_struct *iibm)
- 				tp_features.second_fan_ctl = 1;
- 				pr_info("secondary fan control enabled\n");
- 			}
-+			/* Try and probe the 2nd fan */
-+			res = fan2_get_speed(&speed);
-+			if (res >= 0) {
-+				/* It responded - so let's assume it's there */
-+				tp_features.second_fan = 1;
-+				tp_features.second_fan_ctl = 1;
-+				pr_info("secondary fan control detected & enabled\n");
-+			}
+ 	return rc;
+ }
+ 
+@@ -538,24 +548,31 @@ static int __maybe_unused amd_pmc_suspend(struct device *dev)
+ 	/* Activate CZN specific RTC functionality */
+ 	if (pdev->cpu_id == AMD_CPU_ID_CZN) {
+ 		rc = amd_pmc_verify_czn_rtc(pdev, &arg);
+-		if (rc < 0)
+-			return rc;
++		if (rc)
++			goto fail;
+ 	}
+ 
+ 	/* Dump the IdleMask before we send hint to SMU */
+ 	amd_pmc_idlemask_read(pdev, dev, NULL);
+ 	msg = amd_pmc_get_os_hint(pdev);
+ 	rc = amd_pmc_send_cmd(pdev, arg, NULL, msg, 0);
+-	if (rc)
++	if (rc) {
+ 		dev_err(pdev->dev, "suspend failed\n");
++		goto fail;
++	}
+ 
+ 	if (enable_stb)
+ 		rc = amd_pmc_write_stb(pdev, AMD_PMC_STB_PREDEF);
+-	if (rc)	{
++	if (rc) {
+ 		dev_err(pdev->dev, "error writing to STB\n");
+-		return rc;
++		goto fail;
+ 	}
+ 
++	return 0;
++fail:
++	if (pdev->cpu_id == AMD_CPU_ID_CZN)
++		cpu_latency_qos_update_request(&pdev->amd_pmc_pm_qos_req,
++						PM_QOS_DEFAULT_VALUE);
+ 	return rc;
+ }
+ 
+@@ -579,12 +596,15 @@ static int __maybe_unused amd_pmc_resume(struct device *dev)
+ 	/* Write data incremented by 1 to distinguish in stb_read */
+ 	if (enable_stb)
+ 		rc = amd_pmc_write_stb(pdev, AMD_PMC_STB_PREDEF + 1);
+-	if (rc)	{
++	if (rc)
+ 		dev_err(pdev->dev, "error writing to STB\n");
+-		return rc;
+-	}
+ 
+-	return 0;
++	/* Restore the QoS request back to defaults if it was set */
++	if (pdev->cpu_id == AMD_CPU_ID_CZN)
++		cpu_latency_qos_update_request(&pdev->amd_pmc_pm_qos_req,
++						PM_QOS_DEFAULT_VALUE);
 +
- 		} else {
- 			pr_err("ThinkPad ACPI EC access misbehaving, fan status and control unavailable\n");
- 			return -ENODEV;
++	return rc;
+ }
+ 
+ static const struct dev_pm_ops amd_pmc_pm_ops = {
+@@ -722,6 +742,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
+ 	amd_pmc_get_smu_version(dev);
+ 	platform_set_drvdata(pdev, dev);
+ 	amd_pmc_dbgfs_register(dev);
++	cpu_latency_qos_add_request(&dev->amd_pmc_pm_qos_req, PM_QOS_DEFAULT_VALUE);
+ 	return 0;
+ 
+ err_pci_dev_put:
 -- 
 2.34.1
 
