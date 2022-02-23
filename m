@@ -2,121 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943F8C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Feb 2022 08:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2D8C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Feb 2022 09:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233919AbiBWIvk (ORCPT
+        id S239303AbiBWJh0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Feb 2022 03:51:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59488 "EHLO
+        Wed, 23 Feb 2022 04:37:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232440AbiBWIvj (ORCPT
+        with ESMTP id S238715AbiBWJhZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Feb 2022 03:51:39 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 086387B549
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Feb 2022 00:51:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645606271;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rabjGkMKoAH0YyMPAFX0LYPUhoMqUOIZnuU9A71lOME=;
-        b=YIimTb4CThb1SmzUiW5L1P4GoMXIyVO4Dc4kQOc120Zo7MmLfHtu0THGk4NwIuooFK6VAk
-        tWz7jeftfTzZHnP3/+SPV1Cgs1jZENBSvU+hOWeEPGofqVYl6fs7ediEmkEmtsYDGw+7+H
-        qZs87+uvI03onocEpvWLn3G+VNGY30Y=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-479-pAq4eryKPF2HoBfiF7nWew-1; Wed, 23 Feb 2022 03:51:09 -0500
-X-MC-Unique: pAq4eryKPF2HoBfiF7nWew-1
-Received: by mail-ej1-f71.google.com with SMTP id nb1-20020a1709071c8100b006d03c250b6fso6709430ejc.11
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Feb 2022 00:51:09 -0800 (PST)
+        Wed, 23 Feb 2022 04:37:25 -0500
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2267488AB;
+        Wed, 23 Feb 2022 01:36:58 -0800 (PST)
+Received: by mail-qk1-x731.google.com with SMTP id q4so3774381qki.11;
+        Wed, 23 Feb 2022 01:36:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O/nWq54aLnoBPA2OY9+4Ua6OhHSnHjOi//smrDEVze4=;
+        b=U/UF2VSng13xh7TYIcdZhyoqxbP214syzfRML65LozwHHn6Pviwu0XPWKn5BC2XiHn
+         bZ3/HYqQMWnjUIjNJaislhBbBICkfvfSPnuPEtRpf77VLTQivXJUUyztZifeBu19ajxH
+         BdVFj5xUphBufYY+3/Ky6Cjv5BdPLijHEwMlv6jJGnDhQ5otOga7VPcZ+J2NXAUafq0Z
+         hW6TqCbXRtna3Vz2g5EU1ThN+riBJMNynbK8Ain2B0xBOicNdDm7HgxdYp4JnUPHuVb/
+         tiOU20STT2tf4HBjTxDRKfR4EGWmobrugH/bWppQRkfRpPQcIQQElarSXGAzofM2K1lX
+         yaCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=rabjGkMKoAH0YyMPAFX0LYPUhoMqUOIZnuU9A71lOME=;
-        b=nGbnptLlABwNZdk4jn260+RsHG190cmlEobtc2Cg4pzQ32LwetcsD2PwUKzn/AOKR7
-         fqtdKmxV415ceVLdn5zFd4NB1Ke8aUioUd+Q6BcWqVMDr5z/wbBvRpibBn167KCokBxQ
-         0e9zrxpz16h7cEe5KC8nPLx0w4FFBt5ZQrqCT1kHo1nBYqOa3IKjaRo93s8o9UrSoigN
-         /cY1Nv6bbheiXG5QuStt6DCL3NNMRmuMa0yK6pCIip0hOHbZr1IYUloQ3Kbyu+9MQrQX
-         pjVlQTjZT3fdG2nCZrrMZOScHeAU8AV9WE+zCS47Hsd5qQfOWgWNZ5fhinCKerygmxPc
-         Stfg==
-X-Gm-Message-State: AOAM530TC/alYinKyDrpxh6wn0Q57Nc+sPBVJ9BRftlx2dzQ2sN1bGvD
-        XBzND3sT20nkEIyuR1J2ieshT/7vx7QtLxD2ilE26rex2K9fWkXCw3plYbWHzJTu+ESp+VqlLny
-        hdFO7SD35iWvYkOTJAYptUcvC8JAOE/LfKQ==
-X-Received: by 2002:a50:fe14:0:b0:410:8621:6e0c with SMTP id f20-20020a50fe14000000b0041086216e0cmr29675235edt.356.1645606268233;
-        Wed, 23 Feb 2022 00:51:08 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzmJ8NLNjyqtF+pIBg5b7t4oWrPu6Aff4smecKhR0FxJTywYO64LUzVmOmUQrFe2sqyNg8Ksw==
-X-Received: by 2002:a50:fe14:0:b0:410:8621:6e0c with SMTP id f20-20020a50fe14000000b0041086216e0cmr29675221edt.356.1645606268057;
-        Wed, 23 Feb 2022 00:51:08 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id jz17sm7178483ejb.195.2022.02.23.00.51.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Feb 2022 00:51:07 -0800 (PST)
-Message-ID: <4b9ae0d0-9692-4c8c-f88a-1e961812a8ae@redhat.com>
-Date:   Wed, 23 Feb 2022 09:51:06 +0100
+        bh=O/nWq54aLnoBPA2OY9+4Ua6OhHSnHjOi//smrDEVze4=;
+        b=Y5T3cbCMXdXuqiiZjjpSY1ngWAQmp83Pd/nH6btTSQmF46MMU+BCFql123SLftPT/T
+         j1MFTgnqaLWGl1q2FmYdB8R6Q3xFRoTJP0hEsYgNSjkD/gSSS1yCIPENqfd+HeWRWJny
+         lLgeDuNtHccWy3FpzXQ0Ti7Wn/FJn4hMfChF9IEVo4Bzn9mnTxsw2z4w95rZ23qTRB2c
+         9S/J2gpFqYfQSz0EzqFKALwsfWMkVsOaWHfYHxcsiiDb8oZJMDTMxBUHcg3Qoxd6W8y2
+         GWiBk5Lc5Od/pTp7Qww8yu1m+CEhR0LauTfGg1lW2zx5DUySeXU6eUguRGeJlJQloD8l
+         OlwQ==
+X-Gm-Message-State: AOAM532t9VzY3O7vrnNLkTq4ZDrBquPE9NBjByT/NyYS0paQmrq2wud2
+        Gif7dGCykC+be0IRBTsr0n3kMoHe7HU=
+X-Google-Smtp-Source: ABdhPJx2HMuX9P1TTeBc7I21YRWMQpgMTwy1YTU8mhxwTeFQiHXIV6p+G9bSBmBaGKA8283tjrtV3g==
+X-Received: by 2002:a37:a0c6:0:b0:60b:54ea:29dc with SMTP id j189-20020a37a0c6000000b0060b54ea29dcmr17779660qke.354.1645609017897;
+        Wed, 23 Feb 2022 01:36:57 -0800 (PST)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id z19sm1481805qts.18.2022.02.23.01.36.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Feb 2022 01:36:57 -0800 (PST)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: deng.changcheng@zte.com.cn
+To:     srinivas.pandruvada@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Changcheng Deng <deng.changcheng@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH] tools/power/x86/intel-speed-select: Remove unneeded semicolon
+Date:   Wed, 23 Feb 2022 09:36:33 +0000
+Message-Id: <20220223093633.1934362-1-deng.changcheng@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v7 1/2] platforms/x86: Add AMD system management interface
-Content-Language: en-US
-To:     Song Liu <song@kernel.org>,
-        Naveen Krishna Chatradhi <nchatrad@amd.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Carlos Bilbao <carlos.bilbao@amd.com>, siva.sathappan@amd.com,
-        nathan.fontenot@amd.com, Suma Hegde <suma.hegde@amd.com>
-References: <20220222050501.18789-1-nchatrad@amd.com>
- <CAPhsuW5yUXMY5DqhsDJP8i9RW5BPD9We3GQWyNDR_m90vnqfYg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAPhsuW5yUXMY5DqhsDJP8i9RW5BPD9We3GQWyNDR_m90vnqfYg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Song,
+From: Changcheng Deng <deng.changcheng@zte.com.cn>
 
-On 2/23/22 02:12, Song Liu wrote:
-> On Mon, Feb 21, 2022 at 9:05 PM Naveen Krishna Chatradhi
-> <nchatrad@amd.com> wrote:
->>
->> From: Suma Hegde <suma.hegde@amd.com>
->>
->> Recent Fam19h EPYC server line of processors from AMD support system
->> management functionality via HSMP (Host System Management Port) interface.
->>
->> The Host System Management Port (HSMP) is an interface to provide
->> OS-level software with access to system management functions via a
->> set of mailbox registers.
->>
->> More details on the interface can be found in chapter
->> "7 Host System Management Port (HSMP)" of the following PPR
->> https://www.amd.com/system/files/TechDocs/55898_B1_pub_0.50.zip
->>
->> This patch adds new amd_hsmp module under the drivers/platforms/x86/
->> which creates miscdevice with an IOCTL interface to the user space.
->> /dev/hsmp is for running the hsmp mailbox commands.
->>
->> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
->> Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
->> Reviewed-by: Carlos Bilbao <carlos.bilbao@amd.com>
->> Acked-by: Song Liu <song@kernel.org>
->> Reviewed-by: Nathan Fontenot <nathan.fontenot@amd.com>
-> 
-> What would be the next step for this set? We are hoping to back port it
-> to our kernel to unblock some tests. Ideally, we would like to do the
-> back port after it is applied to pdx86 tree.
+Fix the following coccicheck review:
+tools/power/x86/intel-speed-select/hfi-events.c: 147: Unneeded semicolon
 
-I plan to review this tomorrow, since it has already seen
-a lot of other reviews it will hopefully be fine and then
-I will merge it into the pdx86 tree tomorrow.
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
+---
+ tools/power/x86/intel-speed-select/hfi-events.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-
-Hans
+diff --git a/tools/power/x86/intel-speed-select/hfi-events.c b/tools/power/x86/intel-speed-select/hfi-events.c
+index e85676711372..2f871c108236 100644
+--- a/tools/power/x86/intel-speed-select/hfi-events.c
++++ b/tools/power/x86/intel-speed-select/hfi-events.c
+@@ -144,7 +144,7 @@ static int family_handler(struct nl_msg *msg, void *arg)
+ 			continue;
+ 		res->id = nla_get_u32(tb2[CTRL_ATTR_MCAST_GRP_ID]);
+ 		break;
+-	};
++	}
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
