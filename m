@@ -2,93 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2D8C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Feb 2022 09:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9FCC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Feb 2022 13:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239303AbiBWJh0 (ORCPT
+        id S236488AbiBWNck (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Feb 2022 04:37:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
+        Wed, 23 Feb 2022 08:32:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238715AbiBWJhZ (ORCPT
+        with ESMTP id S239491AbiBWNcj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Feb 2022 04:37:25 -0500
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2267488AB;
-        Wed, 23 Feb 2022 01:36:58 -0800 (PST)
-Received: by mail-qk1-x731.google.com with SMTP id q4so3774381qki.11;
-        Wed, 23 Feb 2022 01:36:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O/nWq54aLnoBPA2OY9+4Ua6OhHSnHjOi//smrDEVze4=;
-        b=U/UF2VSng13xh7TYIcdZhyoqxbP214syzfRML65LozwHHn6Pviwu0XPWKn5BC2XiHn
-         bZ3/HYqQMWnjUIjNJaislhBbBICkfvfSPnuPEtRpf77VLTQivXJUUyztZifeBu19ajxH
-         BdVFj5xUphBufYY+3/Ky6Cjv5BdPLijHEwMlv6jJGnDhQ5otOga7VPcZ+J2NXAUafq0Z
-         hW6TqCbXRtna3Vz2g5EU1ThN+riBJMNynbK8Ain2B0xBOicNdDm7HgxdYp4JnUPHuVb/
-         tiOU20STT2tf4HBjTxDRKfR4EGWmobrugH/bWppQRkfRpPQcIQQElarSXGAzofM2K1lX
-         yaCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O/nWq54aLnoBPA2OY9+4Ua6OhHSnHjOi//smrDEVze4=;
-        b=Y5T3cbCMXdXuqiiZjjpSY1ngWAQmp83Pd/nH6btTSQmF46MMU+BCFql123SLftPT/T
-         j1MFTgnqaLWGl1q2FmYdB8R6Q3xFRoTJP0hEsYgNSjkD/gSSS1yCIPENqfd+HeWRWJny
-         lLgeDuNtHccWy3FpzXQ0Ti7Wn/FJn4hMfChF9IEVo4Bzn9mnTxsw2z4w95rZ23qTRB2c
-         9S/J2gpFqYfQSz0EzqFKALwsfWMkVsOaWHfYHxcsiiDb8oZJMDTMxBUHcg3Qoxd6W8y2
-         GWiBk5Lc5Od/pTp7Qww8yu1m+CEhR0LauTfGg1lW2zx5DUySeXU6eUguRGeJlJQloD8l
-         OlwQ==
-X-Gm-Message-State: AOAM532t9VzY3O7vrnNLkTq4ZDrBquPE9NBjByT/NyYS0paQmrq2wud2
-        Gif7dGCykC+be0IRBTsr0n3kMoHe7HU=
-X-Google-Smtp-Source: ABdhPJx2HMuX9P1TTeBc7I21YRWMQpgMTwy1YTU8mhxwTeFQiHXIV6p+G9bSBmBaGKA8283tjrtV3g==
-X-Received: by 2002:a37:a0c6:0:b0:60b:54ea:29dc with SMTP id j189-20020a37a0c6000000b0060b54ea29dcmr17779660qke.354.1645609017897;
-        Wed, 23 Feb 2022 01:36:57 -0800 (PST)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id z19sm1481805qts.18.2022.02.23.01.36.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 01:36:57 -0800 (PST)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: deng.changcheng@zte.com.cn
-To:     srinivas.pandruvada@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Changcheng Deng <deng.changcheng@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH] tools/power/x86/intel-speed-select: Remove unneeded semicolon
-Date:   Wed, 23 Feb 2022 09:36:33 +0000
-Message-Id: <20220223093633.1934362-1-deng.changcheng@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        Wed, 23 Feb 2022 08:32:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 61278AB460
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Feb 2022 05:32:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645623131;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=9cRYg4PGSV79E94LwQ8YvSUOHhEjgaIqzNC1kDZLq9w=;
+        b=AZID2frMxmLN3GWWT2HSvYaxAiiWregI5XbTU8gOMn7RbEbkjc9jtNf/eatfeEyfQgz6vo
+        42rIp9ZX1dM7RKP3tnWm63ipYTTHFGVi84V8sLQpW5kxm0SNvW/aHxPsv/1nMfSIBmJYOf
+        xFwMv7Rx2ngfJOG1W32kaiU0DUNK1t0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-17-1Li8Wm0sNwm2iI5jTTkZ1A-1; Wed, 23 Feb 2022 08:32:08 -0500
+X-MC-Unique: 1Li8Wm0sNwm2iI5jTTkZ1A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6D9B5123;
+        Wed, 23 Feb 2022 13:32:06 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.195.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E4BD2832A4;
+        Wed, 23 Feb 2022 13:32:00 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH 0/5] pinctrl/baytrail platform/x86: SUS6 mux / Lenovo Yoga Tablet 2 support
+Date:   Wed, 23 Feb 2022 14:31:48 +0100
+Message-Id: <20220223133153.730337-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Changcheng Deng <deng.changcheng@zte.com.cn>
+Hi All,
 
-Fix the following coccicheck review:
-tools/power/x86/intel-speed-select/hfi-events.c: 147: Unneeded semicolon
+This series consists of 2 parts:
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
----
- tools/power/x86/intel-speed-select/hfi-events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Patch 1   : pinctrl: baytrail: Add pinconf group + function for the pmu_clk
+Patch 2-5 : platform/x86: x86-android-tablets: Add Lenovo Yoga Tab2 support
 
-diff --git a/tools/power/x86/intel-speed-select/hfi-events.c b/tools/power/x86/intel-speed-select/hfi-events.c
-index e85676711372..2f871c108236 100644
---- a/tools/power/x86/intel-speed-select/hfi-events.c
-+++ b/tools/power/x86/intel-speed-select/hfi-events.c
-@@ -144,7 +144,7 @@ static int family_handler(struct nl_msg *msg, void *arg)
- 			continue;
- 		res->id = nla_get_u32(tb2[CTRL_ATTR_MCAST_GRP_ID]);
- 		break;
--	};
-+	}
- 
- 	return 0;
- }
+Patch 5 has a runtime dependency on patch 1, but this is only  runtime and
+there are some other patches in flight to other subsystems which are also
+needed for the Lenovo Yoga Tab2 support.
+
+As such I believe that patch 1 can be merged independently through the
+pinctrl-intel tree and then I'll merge patches 2-5 through the pdx86 tree.
+
+The only reason for sending this out as a series is because patch 5
+uses the new pmu_clk pinconf added by patch 1.
+
+Regards,
+
+Hans
+
+
+Hans de Goede (5):
+  pinctrl: baytrail: Add pinconf group + function for the pmu_clk
+  platform/x86: x86-android-tablets: Fix EBUSY error when requesting
+    IOAPIC IRQs
+  platform/x86: x86-android-tablets: Add Lenovo Yoga Tablet 2 830 / 1050
+    data
+  platform/x86: x86-android-tablets: Workaround Lenovo Yoga Tablet 2
+    830/1050 poweroff hang
+  platform/x86: x86-android-tablets: Lenovo Yoga Tablet 2 830/1050 sound
+    support
+
+ drivers/pinctrl/intel/pinctrl-baytrail.c   |   9 +
+ drivers/platform/x86/x86-android-tablets.c | 280 +++++++++++++++++++++
+ 2 files changed, 289 insertions(+)
+
 -- 
-2.25.1
+2.35.1
 
