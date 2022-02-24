@@ -2,111 +2,141 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD773C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Feb 2022 15:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58D5C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Feb 2022 16:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235009AbiBXPtQ (ORCPT
+        id S229807AbiBXQnu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Feb 2022 10:49:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59590 "EHLO
+        Thu, 24 Feb 2022 11:43:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233935AbiBXPtP (ORCPT
+        with ESMTP id S230072AbiBXQnt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Feb 2022 10:49:15 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592F1B821C;
-        Thu, 24 Feb 2022 07:48:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645717725; x=1677253725;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ZZjGgYtRs7sm8n89V+YPONIkPGKkfnMdwvJnWV+kU4I=;
-  b=kP7A3UuotaKNvO6HFh9oYGHnnSAfpQxgazJqq4qMTFE1XNVnQKo6pNAQ
-   PE8kZFbTERZyvC/PYNTvfQzSl8ApubreJKSh7DrBW4nsNwvGE7Er0BxXh
-   G0+AzNPpsEKbiLUoGYrrQbRo4NGl+hTgzby1FawzwqeTSZD1oVg90OIrz
-   0SrdBIOKl3Vk55KD8K1j7gao5YOTd1KTuHScMBZC8rjKQno1vVy+288cg
-   5iw9afoo/sZoM5BBA9phnWIlwpz5NkWiJcuHnwgdSaSPKtx62uj5BSICA
-   MsZI9djKVSsaZ2qZm7IuEk7tadMQnVlPqgz3pOwWpu6VxXXUosRpIVs53
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10268"; a="251996304"
-X-IronPort-AV: E=Sophos;i="5.90,134,1643702400"; 
-   d="scan'208";a="251996304"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2022 07:48:30 -0800
-X-IronPort-AV: E=Sophos;i="5.90,134,1643702400"; 
-   d="scan'208";a="548798013"
-Received: from rsit-mobl.amr.corp.intel.com (HELO [10.209.25.56]) ([10.209.25.56])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2022 07:48:29 -0800
-Message-ID: <4b3e0e05-5721-ba96-2c5a-b7683a992d13@linux.intel.com>
-Date:   Thu, 24 Feb 2022 07:48:30 -0800
+        Thu, 24 Feb 2022 11:43:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7B42A140758
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Feb 2022 08:43:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645720998;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IjkZhGzKSvbLhlEUtM24hRkXnGsRdzxiWu7wlvpAAFc=;
+        b=MfKW/98oO3ijLnYg/3dU3hXx021zmloJujgssXfNY0DeGpg5MWwgqkJEt/gkk+itlG5iL4
+        /n2md6D3Yax5s9OvvHpZnhd0uJk3h0pCFkLt7ClKfXBNJAJpwgOvCWkcYmWbv6r/ka0HVx
+        p6CHim67fZz2u8RuWljNqxPrNxEnoW0=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-438-bLBZ0UkWPaeHJn3LHSVFLQ-1; Thu, 24 Feb 2022 11:43:17 -0500
+X-MC-Unique: bLBZ0UkWPaeHJn3LHSVFLQ-1
+Received: by mail-ed1-f72.google.com with SMTP id r11-20020a508d8b000000b00410a4fa4768so964048edh.9
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Feb 2022 08:43:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=IjkZhGzKSvbLhlEUtM24hRkXnGsRdzxiWu7wlvpAAFc=;
+        b=5PmuaHUfkgWOKRNpqxRcxPBTfojcJUhp8MBINIvJFZmItOybgNCUYjGHTAoDeTmK88
+         LGfP6eB/X3ZI2uABhUuSvW5XxHFJrOj0bljGp35EXQ0SUUwaELlRQvF2Uy4WVn3ANIJd
+         QD55oiE+ulumEjR8Rd7IaTSnd6PdgNrvF75z/Et5+XnJGhqkXFlPfaN7HT81FqeFymYn
+         TICMFSHEY3a2RL/NiMv6pPEaNALzWiPdJJzNiHYFaCKlY5jXkh7DzcBu2zxp2IHOBXoH
+         qMGdR4zzzIGILTM29PDQlgfLCXsiofhBOnBn+i55IjD4+ZYFAj96M8LPwR598l7+6Q/V
+         Uk7Q==
+X-Gm-Message-State: AOAM5307FnCvGBWXs9jUNJjIWg10vMvBWGqMQhnAnBVh2ssvVEDBUdIz
+        M5qoTbPbCjXSTZzEk93uTy6zoXpjIi9EJVCZeqsPXPSvbzgNVOW+6l6v0qtWF46GiM2JsDGNpr0
+        P7Oz9d4x5PocmLpyZaLyubMbgjC+Yuj9p6Q==
+X-Received: by 2002:a17:906:646:b0:6ce:a6fb:2854 with SMTP id t6-20020a170906064600b006cea6fb2854mr2855755ejb.675.1645720995997;
+        Thu, 24 Feb 2022 08:43:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzdKBIqpxp81Whr2YWyGGKRxrr/oCgPvaWV3pnV7BAfebmTEUVfyQQUGHR8jgmPEk00PYll2Q==
+X-Received: by 2002:a17:906:646:b0:6ce:a6fb:2854 with SMTP id t6-20020a170906064600b006cea6fb2854mr2855749ejb.675.1645720995815;
+        Thu, 24 Feb 2022 08:43:15 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id y22sm1597246ejm.225.2022.02.24.08.43.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Feb 2022 08:43:15 -0800 (PST)
+Message-ID: <298ee896-9bc4-9030-c2dd-21b6d541acb7@redhat.com>
+Date:   Thu, 24 Feb 2022 17:43:14 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.5.0
-Subject: Re: [PATCH v1 0/6] Add TDX Guest Attestation support
+ Thunderbird/91.4.0
+Subject: Re: [PATCH 0/5] pinctrl/baytrail platform/x86: SUS6 mux / Lenovo Yoga
+ Tablet 2 support
 Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Mark Gross <mgross@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>
-Cc:     "H . Peter Anvin" <hpa@zytor.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <20220222231735.268919-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <202e0882-35a6-766b-6c4a-137abd199247@redhat.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <202e0882-35a6-766b-6c4a-137abd199247@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20220223133153.730337-1-hdegoede@redhat.com>
+ <YhZK0VPc2tg6upYg@smile.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <YhZK0VPc2tg6upYg@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
-
-On 2/24/22 7:32 AM, Hans de Goede wrote:
->> Patch titled "platform/x86: intel_tdx_attest: Add TDX Guest attestation
->> interface driver" adds the attestation driver support. This is supposed
->> to be reviewed by platform-x86 maintainers.
-> At a quick glance this looks ok to me, but I really know very little
-> about TDX. I assume the rest of the series will be reviewed by someone
-> with more detailed knowledge of TDX as such I believe it would be good
-> if the platform/x86 patch is also reviewed as part of that.
+On 2/23/22 15:55, Andy Shevchenko wrote:
+> On Wed, Feb 23, 2022 at 02:31:48PM +0100, Hans de Goede wrote:
+>> Hi All,
+>>
+>> This series consists of 2 parts:
+>>
+>> Patch 1   : pinctrl: baytrail: Add pinconf group + function for the pmu_clk
+>> Patch 2-5 : platform/x86: x86-android-tablets: Add Lenovo Yoga Tab2 support
+>>
+>> Patch 5 has a runtime dependency on patch 1, but this is only  runtime and
+>> there are some other patches in flight to other subsystems which are also
+>> needed for the Lenovo Yoga Tab2 support.
+>>
+>> As such I believe that patch 1 can be merged independently through the
+>> pinctrl-intel tree and then I'll merge patches 2-5 through the pdx86 tree.
+>>
+>> The only reason for sending this out as a series is because patch 5
+>> uses the new pmu_clk pinconf added by patch 1.
 > 
-> Since the platform/x86 patch depends on the other patches I believe
-> it is also best if the entire series is merged in one go by the x86/tip
-> maintainers here is my ack for this:
-> 
-> Acked-by: Hans de Goede<hdegoede@redhat.com>
+> You may route via PDx86 and provide an IB to me, thanks!
 
-Thanks.
+Ok, I've just created an immutable-branch + signed tag for this,
+with your 2 small nitpicks fixed.
 
-> 
->> Also, patch titled "tools/tdx: Add a sample attestation user app" adds
->> a testing app for attestation feature which needs review from
->> bpf@vger.kernel.org.
-> I think that tool should be moved to tools/arch/x86/tdx regardless of
-> moving it, tools are typically reviewed together with the kernel side
-> and this has nothing to do with bpf.
+I'll send you a pull-req for this right away.
 
-I am fine with moving it to tools/arch/x86/*. I will do it in next
-version. I have included bpf because this is what I got out of
-./scripts/get_maintainer.pl.
+Regards,
+
+Hans
+
 
 > 
-> Regards,
-> 
-> Hans
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>> Hans de Goede (5):
+>>   pinctrl: baytrail: Add pinconf group + function for the pmu_clk
+>>   platform/x86: x86-android-tablets: Fix EBUSY error when requesting
+>>     IOAPIC IRQs
+>>   platform/x86: x86-android-tablets: Add Lenovo Yoga Tablet 2 830 / 1050
+>>     data
+>>   platform/x86: x86-android-tablets: Workaround Lenovo Yoga Tablet 2
+>>     830/1050 poweroff hang
+>>   platform/x86: x86-android-tablets: Lenovo Yoga Tablet 2 830/1050 sound
+>>     support
+>>
+>>  drivers/pinctrl/intel/pinctrl-baytrail.c   |   9 +
+>>  drivers/platform/x86/x86-android-tablets.c | 280 +++++++++++++++++++++
+>>  2 files changed, 289 insertions(+)
+>>
+>> -- 
+>> 2.35.1
+>>
 > 
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
