@@ -2,159 +2,161 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C60C4321E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Feb 2022 21:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BF7C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Feb 2022 22:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235105AbiBXVwK (ORCPT
+        id S229889AbiBXW00 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Feb 2022 16:52:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35742 "EHLO
+        Thu, 24 Feb 2022 17:26:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234987AbiBXVwH (ORCPT
+        with ESMTP id S229873AbiBXW0Z (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Feb 2022 16:52:07 -0500
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2047.outbound.protection.outlook.com [40.107.236.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0969211C2F;
-        Thu, 24 Feb 2022 13:51:36 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OK4pNmLU8xlq3XpRRHVa83FoKbPLITsTve3kbBdjSBUQnW0Gq4x+/4wR6+3WxqL97dniMvleHikcc4w56eaGUYdKhEKZLvuc0pnFeXj61ae8vJ3kw2Zi6f3r0/vst7hb0hroNZWQDy1VBEUB9DQOSkaPaEy8gpQWV/SFAomdJavTpSi/l2wgZa6RhrqTE5PjQsyZADOLB953D7wPGZCopXKQE2UXResCJHIqiT8XoKqLGHP+ycEY1sHUN73V3Qw5R2fEl9euxWXDNQSiy8mO9Lz1t42gtURY1b+/d/beBoF7W9LzS0zyGHiqAO9TxI+TZv6+IjYKyzFpnN6BJZh9NA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=neyootgBRunSQAJPnXb1dPCfoyhMOxPxpCnyWraQL7E=;
- b=ao3t+18q3Seaqi85VO2OCTQ82gyVgcHpKOWB5eBRnmvs/5/a0dZdczxNcm2x8a3WATBa8XklaGjleRoOnhl3/E6DBUIdC+fI8ZvTU71c7fkuvxbTv82mig+udE6mFSUvtNaZTzXayZzRTUt7pEFdnHl4jdunoBDXkWmJpVC0aOciJBFbDWfvv4NVpgg/nuLYL/oq5lHgoDG6P4Dodxc1PVDXa/X9f2PKxqVCd4DLrXl6zedtcHFP6M37ltMbKcCu71TPhirYObzjMc7EfdrD4psyPsSLZcvD7FIxpsPbGQNbZS3VOsShB7wsqWVL9Cqr9W2Tl21++7eaw3YQM1jioQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=neyootgBRunSQAJPnXb1dPCfoyhMOxPxpCnyWraQL7E=;
- b=u9WGQ1dZ6H8jO4/tvnMx5hmiuIbxbyZ4AblqGr/MZomAFWZToMw0KJ3/DHV/71SydavqY9QteVUOeHMjBbU7CSn6Jpt3wC0W3dMMyVwxjSP4CTmA0jV2k8NsY7FWbrgey+c0Ka8gbzmFSNuXneRJf65dpqo/7hULCJW8zOXoePI=
-Received: from MWHPR14CA0010.namprd14.prod.outlook.com (2603:10b6:300:ae::20)
- by BYAPR12MB2806.namprd12.prod.outlook.com (2603:10b6:a03:70::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.22; Thu, 24 Feb
- 2022 21:51:33 +0000
-Received: from CO1NAM11FT031.eop-nam11.prod.protection.outlook.com
- (2603:10b6:300:ae:cafe::16) by MWHPR14CA0010.outlook.office365.com
- (2603:10b6:300:ae::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.23 via Frontend
- Transport; Thu, 24 Feb 2022 21:51:33 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT031.mail.protection.outlook.com (10.13.174.118) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5017.22 via Frontend Transport; Thu, 24 Feb 2022 21:51:32 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Thu, 24 Feb
- 2022 15:51:28 -0600
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>
-CC:     Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>, <Alexander.Deucher@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v5 6/7] drm/radeon: drop the use of `pci_is_thunderbolt_attached`
-Date:   Thu, 24 Feb 2022 15:51:15 -0600
-Message-ID: <20220224215116.7138-7-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220224215116.7138-1-mario.limonciello@amd.com>
-References: <20220224215116.7138-1-mario.limonciello@amd.com>
+        Thu, 24 Feb 2022 17:26:25 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87B024776C;
+        Thu, 24 Feb 2022 14:25:54 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id l1-20020a7bcf01000000b0037f881182a8so655102wmg.2;
+        Thu, 24 Feb 2022 14:25:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:cc:from
+         :subject:content-transfer-encoding;
+        bh=5Hq+lkEI7xZAlQDIMuYtBf6mGhY9G0mOAIjlBDnfBJQ=;
+        b=UmRLmKwpE1vdy/e/gx1tql3bdI9YzVWhMpPcU+NWPLBnuDoWgL1aO2Rlx5UDnW7HZ4
+         WTN+x/0uEDZB9Q8AAVtYm+Hc1LFwTVPJtWC1HWryGizlzOZBx4BD9xpvbVoGN7rbxn+q
+         GhHZzHqivndkrhTRy/QT6QLI45H//UB4k3kFyBMN3MMK5TpsaBzseujqJ8twOKRH4JUL
+         8zaMJcdJ3uF80PJDGcQij9lBXEugImGeZqEbaxbZPaIamgGZC9fd6hBuj4UPQKVJwVuN
+         jSSHHxIfRvcc2+JAMwrRxtgX0oU63/3ZuIsbunWnu0OZ+sovRWF1uHgbpKx2gke9qwH1
+         k4/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:from:subject:content-transfer-encoding;
+        bh=5Hq+lkEI7xZAlQDIMuYtBf6mGhY9G0mOAIjlBDnfBJQ=;
+        b=A7zPC1KXUb4OyQGrMZNtDyKmRELSWGGdgAqt/Xq3s/YQjEdArmzqy1cAQTfXRSpjqy
+         C03O1nCoT6zsOiyTJ2eM2bYnXs2nY2beJMUJmY3tkMrT2MxflsckCnPVDIDJG8PuxvXs
+         tN16fSctKXUiN4xlk8HxaJl+hTzipXkZ+BYrgzgv5dOD+LM5dVlIpWJUXBl3+88c7aAf
+         rxKb9o4x4q3Q5YBPyiMO5qT2Dle0FYf+pZMiZcEM3GenFBJluwkJRkujFf4jb6Pg2V+N
+         eGHxKjwUi2RW0g16+mptJ+K7mQfGm2t4NLFpUthv0f5b8SQKqZFjr6W7JqxdwsHMFUo7
+         Gy2A==
+X-Gm-Message-State: AOAM5309M7mEpS6ChzlOLPX+cZ9D7SEdKH/CmZhpNdOnSR1Rud/UH/aD
+        J4pTRZLDpfxeW1wFXSzljxTiqTTRGwJ6YA==
+X-Google-Smtp-Source: ABdhPJxAylXwKa6WLKIXu7tstKIYLTuu9eCaUqpuTayQnJ4/I+oczd3YohQZ1CirB2jbeWmzjPyq/A==
+X-Received: by 2002:a05:600c:6019:b0:380:f8bc:ddf3 with SMTP id az25-20020a05600c601900b00380f8bcddf3mr168068wmb.117.1645741553544;
+        Thu, 24 Feb 2022 14:25:53 -0800 (PST)
+Received: from [192.168.0.210] (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.googlemail.com with ESMTPSA id k19-20020a05600c479300b00380e461a4d2sm4638224wmo.0.2022.02.24.14.25.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Feb 2022 14:25:53 -0800 (PST)
+Message-ID: <13f987a0-197a-d0db-6f97-c7358d4723da@gmail.com>
+Date:   Thu, 24 Feb 2022 22:25:51 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: baeaf2d3-bb47-4151-548e-08d9f7dfd27e
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2806:EE_
-X-Microsoft-Antispam-PRVS: <BYAPR12MB2806C72D064B0832911D27F3E23D9@BYAPR12MB2806.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ytElrkUYemFdosgRe9RAyd9IPlzZ3dHPoqWQZyuy2cr2qvcZNl4NvpYZzYFPAHn6wF5QZTbNcLei443UA1WLHyZSaYuXwrJ60ukIZRnm0qU52l2eliK1MhT/PqdhqgXC1R1nE9ZBLWb0UfGbNRgkacwlhGO8A4huZRp//IXrEz+/w3xp3/zHEfILBl9L++Xkq+18irNZslsFGHS/EkagpwelLpVtZw8XycTtDB25kAQy56BwSoKfyee/T38BHO90Ge7Vus2hc+0IqSnm5gpn9M89vcgBVgXflI6GNcW4bolNDJmyZa2nCR3Nm7EAJSemHyS6BAEZxvutLu8Dr3cGAoXm6lPyqs0T/5VAcaYYx/xrXnmrW7vucFa5Rgf971j27zGA5HCjV+sZayk5SUXGzaf7c8o2VAQjQDEo32rf37jjotiFX8VEKu3zIdJbb3FuSd0rpXsOoHaWlRUBu275k2fEkcn4zWiGhlADNi2g6vfn//5AfCNu5N4kdRyPUE5RaD7jyW7VLpqhK3eHIhC1FFNY135DblPSNeV/oHp0ldG0dxfTLEtqBViIxi6LsPbKQiraESGODYNrmYqQi18l8VjHnztzVupy9iP3/Br/kNZC7FWPOV9nf/HLkxieU8VzvhwlKv9RnGBYoqSh01eIrZvfYrFeO3bKfcEMWGPWGQmMI6oHmeoUqf8RFmJJMdx4Ivd1J9Qrdy0y/PWR5vO2idmD4fZ5+lWt5plXwiu60X8=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(36840700001)(46966006)(47076005)(316002)(426003)(1076003)(16526019)(186003)(336012)(82310400004)(36860700001)(508600001)(110136005)(2616005)(86362001)(70206006)(83380400001)(36756003)(44832011)(7416002)(4326008)(26005)(7696005)(8676002)(8936002)(5660300002)(2906002)(356005)(70586007)(54906003)(40460700003)(6666004)(81166007)(81973001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2022 21:51:32.9023
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: baeaf2d3-bb47-4151-548e-08d9f7dfd27e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT031.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2806
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-US
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
+From:   "Colin King (gmail)" <colin.i.king@gmail.com>
+Subject: re: platform/x86: Add Intel Software Defined Silicon driver
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently `pci_is_thunderbolt_attached` is used to indicate a device
-is connected externally.
+Hi,
 
-The PCI core now marks such devices as removable and downstream drivers
-can use this instead.
+Static analysis with clang scan has detected a potential issue in the 
+following commit:
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/gpu/drm/radeon/radeon_device.c | 4 ++--
- drivers/gpu/drm/radeon/radeon_kms.c    | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+commit 2546c60004309ede8e2d1d5341e0decd90e057bf
+Author: David E. Box <david.e.box@linux.intel.com>
+Date:   Fri Feb 11 17:32:50 2022 -0800
 
-diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/radeon/radeon_device.c
-index 4f0fbf667431..5117fce23b3f 100644
---- a/drivers/gpu/drm/radeon/radeon_device.c
-+++ b/drivers/gpu/drm/radeon/radeon_device.c
-@@ -1439,7 +1439,7 @@ int radeon_device_init(struct radeon_device *rdev,
- 
- 	if (rdev->flags & RADEON_IS_PX)
- 		runtime = true;
--	if (!pci_is_thunderbolt_attached(rdev->pdev))
-+	if (!dev_is_removable(&rdev->pdev->dev))
- 		vga_switcheroo_register_client(rdev->pdev,
- 					       &radeon_switcheroo_ops, runtime);
- 	if (runtime)
-@@ -1527,7 +1527,7 @@ void radeon_device_fini(struct radeon_device *rdev)
- 	/* evict vram memory */
- 	radeon_bo_evict_vram(rdev);
- 	radeon_fini(rdev);
--	if (!pci_is_thunderbolt_attached(rdev->pdev))
-+	if (!dev_is_removable(&rdev->pdev->dev))
- 		vga_switcheroo_unregister_client(rdev->pdev);
- 	if (rdev->flags & RADEON_IS_PX)
- 		vga_switcheroo_fini_domain_pm_ops(rdev->dev);
-diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
-index 11ad210919c8..e01ee7a5cf5d 100644
---- a/drivers/gpu/drm/radeon/radeon_kms.c
-+++ b/drivers/gpu/drm/radeon/radeon_kms.c
-@@ -139,7 +139,7 @@ int radeon_driver_load_kms(struct drm_device *dev, unsigned long flags)
- 	if ((radeon_runtime_pm != 0) &&
- 	    radeon_has_atpx() &&
- 	    ((flags & RADEON_IS_IGP) == 0) &&
--	    !pci_is_thunderbolt_attached(pdev))
-+	    !dev_is_removable(&pdev->dev))
- 		flags |= RADEON_IS_PX;
- 
- 	/* radeon_device_init should report only fatal error
--- 
-2.34.1
+     platform/x86: Add Intel Software Defined Silicon driver
+
+The issue is as follows:
+
+static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info 
+*info, size_t *data_size)
+{
+         int ret;
+
+         lockdep_assert_held(&priv->mb_lock);
+
+         ret = sdsi_mbox_acquire(priv, info);
+         if (ret)
+                 return ret;
+
+Note: the return above does not assign a value to *data_size
+
+
+         return sdsi_mbox_cmd_read(priv, info, data_size);
+}
+
+
+static long state_certificate_read(struct file *filp, struct kobject *kobj,
+                                    struct bin_attribute *attr, char 
+*buf, loff_t off,
+                                    size_t count)
+{
+         struct device *dev = kobj_to_dev(kobj);
+         struct sdsi_priv *priv = dev_get_drvdata(dev);
+         u64 command = SDSI_CMD_READ_STATE;
+         struct sdsi_mbox_info info;
+         size_t size;
+                ^
+Note: size is not initialized
+
+         int ret;
+
+         if (!priv->sdsi_enabled)
+                 return -EPERM;
+
+         if (off)
+                 return 0;
+
+         /* Buffer for return data */
+         info.buffer = kmalloc(SDSI_SIZE_READ_MSG, GFP_KERNEL);
+         if (!info.buffer)
+                 return -ENOMEM;
+
+         info.payload = &command;
+         info.size = sizeof(command);
+
+         ret = mutex_lock_interruptible(&priv->mb_lock);
+         if (ret)
+                 goto free_buffer;
+         ret = sdsi_mbox_read(priv, &info, &size);
+
+Note: a failure in scsi_mbox_read can lead to variable size not being 
+assigned a value.
+
+         mutex_unlock(&priv->mb_lock);
+         if (ret < 0)
+                 goto free_buffer;
+
+Note: failure with ret < 0 going to free_buffer
+
+         if (size > count)
+                 size = count;
+
+         memcpy(buf, info.buffer, size);
+
+free_buffer:
+         kfree(info.buffer);
+
+         if (ret)
+                 return ret;
+
+         return size;
+
+Note: uninitialized value in size being returned. This is an error.
+
+}
 
