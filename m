@@ -2,359 +2,125 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54B2C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Feb 2022 11:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC81EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Feb 2022 12:35:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233741AbiBXLDd (ORCPT
+        id S234330AbiBXMgY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Feb 2022 06:03:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33176 "EHLO
+        Thu, 24 Feb 2022 07:36:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233736AbiBXLDc (ORCPT
+        with ESMTP id S234329AbiBXMgX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Feb 2022 06:03:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 19FB928F949
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Feb 2022 03:03:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645700582;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GWEw6H14M1aLtfsyUMXO/aZgUscw6B2S499EVsod82o=;
-        b=U07rEDsEZFWhi3J5prnWeBqRHDr854krM+Oy/HqQdQMUDF/jUB2AYowRK8zWDb3AwDSuQZ
-        ULcFQoqpRA0C2p9+QN0GWhljPTrKa9Yn9dsK88EU4g8iwu4dEktpRa6ICzvjFl1BBRIrAV
-        YZMdeldM548IfyJUmlDAjcNIdAdUkb4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-546-XbmSZSMcONSVyYEcK6YoMg-1; Thu, 24 Feb 2022 06:02:57 -0500
-X-MC-Unique: XbmSZSMcONSVyYEcK6YoMg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B349B800496;
-        Thu, 24 Feb 2022 11:02:55 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.195.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07B7C7B6F6;
-        Thu, 24 Feb 2022 11:02:53 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
+        Thu, 24 Feb 2022 07:36:23 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A5AC27DF2D
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Feb 2022 04:35:53 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id i19so1012168wmq.5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Feb 2022 04:35:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=C7NQnYo2I1bu6ZKbCSiPu/hawbGcjV7VyXVe1b8Z0xo=;
+        b=TSQ7zKJcEWfsKj113zbPy0KjJtNWbzWXV6fODjwKtKLR5zyzSk6GnAXs0ZhM4ucJAE
+         3ZxOV7E9QKSgh4eP+ebUqluGpTCOFft1heBXCfTC8oJgjO55aFzXcJa9mt1nCfMdwABY
+         Cd1S0hW+/CqNfjML7SOA+KcHGI+k3VL7RzkcvHVguhOx5DbRI+Amwto0UHQVOvjbw98m
+         6p1d2tSGrCegJwK9lwh+sVTL4mzO59YIRjgCIZVPAo3Otpy+PmQorJ9vp5PFRJ6wjNRt
+         +7g/qEd+MjJ7TCNqcXJ9T7UsGG2LnmyhGwO7dzBhEbmzQevYfAQuJ99KzPIumDJUsEq/
+         GWkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=C7NQnYo2I1bu6ZKbCSiPu/hawbGcjV7VyXVe1b8Z0xo=;
+        b=DKpMAaSfImTXZwvMrpvPkV5f4pW2n7WF5TlMHaH8EYWBDLM+jnpkRbx5c+k1dTAk3q
+         xT8+EC1Nv3DAmQ1p5kJ+ypfcU6EJY2pPlEJbi9yAJHqYS2yGqQopc6OWlnE6tTXCsYIg
+         8uLzXG9dpfaucQp7RUIb1ph6NsSLbmsUiexfHgYbhzfrb8L2jcxpSP8I3d+Gpv38He9y
+         drfq7P78svRg2VgW/tPdbrvHPthg9xPUWgfKEP/xZgmCI8F+e61rY7pUxVcKk+KET2iq
+         LT/B/bwx0SlDXWOvAybiErzb1IOI3qaW4ldEj0VLbeDbIwK72jbYI3E44ylgQOYMQRqx
+         qTCQ==
+X-Gm-Message-State: AOAM531F83xQStFg6hsNy/VYHDuUn1ifJZ2lMlv52tzUikdAjdu6e5mf
+        ewKeRutWgznzdy/xGkv78QOd6903RNNmng==
+X-Google-Smtp-Source: ABdhPJxhU0h6gjD+XjaIIOVoD/BLojeAtBtPcazxB2TwKfRfmT4pTVf7hcC6C0Uu+ePNaY1aNqUq+Q==
+X-Received: by 2002:a7b:ce8f:0:b0:380:f8b9:4413 with SMTP id q15-20020a7bce8f000000b00380f8b94413mr2101790wmj.112.1645706151848;
+        Thu, 24 Feb 2022 04:35:51 -0800 (PST)
+Received: from [10.16.0.7] ([194.126.177.11])
+        by smtp.gmail.com with ESMTPSA id n11sm2464495wms.13.2022.02.24.04.35.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Feb 2022 04:35:51 -0800 (PST)
+Message-ID: <10442635-6629-cfd1-1c09-e4388a194bec@gmail.com>
+Date:   Thu, 24 Feb 2022 13:35:50 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH] surface: surface3_power: Fix battery readings on
+ batteries with a serial no
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH 2/2] platform/surface: Remove Surface 3 Button driver
-Date:   Thu, 24 Feb 2022 12:02:41 +0100
-Message-Id: <20220224110241.9613-3-hdegoede@redhat.com>
-In-Reply-To: <20220224110241.9613-1-hdegoede@redhat.com>
-References: <20220224110241.9613-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20220224101848.7219-1-hdegoede@redhat.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <20220224101848.7219-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The Surface 3 buttons are now handled by the generic soc_button_array
-driver. As part of adding support to soc_button_array the ACPI code
-now instantiates a platform_device rather then an i2c_client so there
-no longer is an i2c_client for this driver to bind to.
+On 2/24/22 11:18, Hans de Goede wrote:
+> The battery on the 2nd hand Surface 3 which I recently bought appears to
+> not have a serial no programmed in. This results in any I2C reads from
+> the registers containing the serial no failing with an I2C NACK.
+> 
+> This was causing mshw0011_bix() to fail causing the battery readings to
+> not work at all.
+> 
+> Ignore EREMOTEIO (I2C NACK) errors when retrieving the serial no and
+> continue with an empty serial no to fix this.
+> 
+> Fixes: b1f81b496b0d ("platform/x86: surface3_power: MSHW0011 rev-eng implementation")
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/surface/Kconfig           |   7 -
- drivers/platform/surface/Makefile          |   1 -
- drivers/platform/surface/surface3_button.c | 247 ---------------------
- 3 files changed, 255 deletions(-)
- delete mode 100644 drivers/platform/surface/surface3_button.c
+Thanks for fixing this! This has been bugging us over at
+https://github.com/linux-surface/linux-surface/issues/608.
 
-diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
-index 463f1ec5c14e..eb79fbed8059 100644
---- a/drivers/platform/surface/Kconfig
-+++ b/drivers/platform/surface/Kconfig
-@@ -28,13 +28,6 @@ config SURFACE3_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called surface3-wmi.
- 
--config SURFACE_3_BUTTON
--	tristate "Power/home/volume buttons driver for Microsoft Surface 3 tablet"
--	depends on ACPI
--	depends on KEYBOARD_GPIO && I2C
--	help
--	  This driver handles the power/home/volume buttons on the Microsoft Surface 3 tablet.
--
- config SURFACE_3_POWER_OPREGION
- 	tristate "Surface 3 battery platform operation region support"
- 	depends on ACPI
-diff --git a/drivers/platform/surface/Makefile b/drivers/platform/surface/Makefile
-index 32889482de55..0fc9cd3e4dd9 100644
---- a/drivers/platform/surface/Makefile
-+++ b/drivers/platform/surface/Makefile
-@@ -5,7 +5,6 @@
- #
- 
- obj-$(CONFIG_SURFACE3_WMI)		+= surface3-wmi.o
--obj-$(CONFIG_SURFACE_3_BUTTON)		+= surface3_button.o
- obj-$(CONFIG_SURFACE_3_POWER_OPREGION)	+= surface3_power.o
- obj-$(CONFIG_SURFACE_ACPI_NOTIFY)	+= surface_acpi_notify.o
- obj-$(CONFIG_SURFACE_AGGREGATOR)	+= aggregator/
-diff --git a/drivers/platform/surface/surface3_button.c b/drivers/platform/surface/surface3_button.c
-deleted file mode 100644
-index 48d77e7aae76..000000000000
---- a/drivers/platform/surface/surface3_button.c
-+++ /dev/null
-@@ -1,247 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Supports for the button array on the Surface tablets.
-- *
-- * (C) Copyright 2016 Red Hat, Inc
-- *
-- * Based on soc_button_array.c:
-- *
-- * {C} Copyright 2014 Intel Corporation
-- */
--
--#include <linux/module.h>
--#include <linux/input.h>
--#include <linux/init.h>
--#include <linux/kernel.h>
--#include <linux/i2c.h>
--#include <linux/slab.h>
--#include <linux/acpi.h>
--#include <linux/gpio/consumer.h>
--#include <linux/gpio_keys.h>
--#include <linux/gpio.h>
--#include <linux/platform_device.h>
--
--
--#define SURFACE_BUTTON_OBJ_NAME		"TEV2"
--#define MAX_NBUTTONS			4
--
--/*
-- * Some of the buttons like volume up/down are auto repeat, while others
-- * are not. To support both, we register two platform devices, and put
-- * buttons into them based on whether the key should be auto repeat.
-- */
--#define BUTTON_TYPES			2
--
--/*
-- * Power button, Home button, Volume buttons support is supposed to
-- * be covered by drivers/input/misc/soc_button_array.c, which is implemented
-- * according to "Windows ACPI Design Guide for SoC Platforms".
-- * However surface 3 seems not to obey the specs, instead it uses
-- * device TEV2(MSHW0028) for declaring the GPIOs. The gpios are also slightly
-- * different in which the Home button is active high.
-- * Compared to surfacepro3_button.c which also handles MSHW0028, the Surface 3
-- * is a reduce platform and thus uses GPIOs, not ACPI events.
-- * We choose an I2C driver here because we need to access the resources
-- * declared under the device node, while surfacepro3_button.c only needs
-- * the ACPI companion node.
-- */
--static const struct acpi_device_id surface3_acpi_match[] = {
--	{ "MSHW0028", 0 },
--	{ }
--};
--MODULE_DEVICE_TABLE(acpi, surface3_acpi_match);
--
--struct surface3_button_info {
--	const char *name;
--	int acpi_index;
--	unsigned int event_type;
--	unsigned int event_code;
--	bool autorepeat;
--	bool wakeup;
--	bool active_low;
--};
--
--struct surface3_button_data {
--	struct platform_device *children[BUTTON_TYPES];
--};
--
--/*
-- * Get the Nth GPIO number from the ACPI object.
-- */
--static int surface3_button_lookup_gpio(struct device *dev, int acpi_index)
--{
--	struct gpio_desc *desc;
--	int gpio;
--
--	desc = gpiod_get_index(dev, NULL, acpi_index, GPIOD_ASIS);
--	if (IS_ERR(desc))
--		return PTR_ERR(desc);
--
--	gpio = desc_to_gpio(desc);
--
--	gpiod_put(desc);
--
--	return gpio;
--}
--
--static struct platform_device *
--surface3_button_device_create(struct i2c_client *client,
--			      const struct surface3_button_info *button_info,
--			      bool autorepeat)
--{
--	const struct surface3_button_info *info;
--	struct platform_device *pd;
--	struct gpio_keys_button *gpio_keys;
--	struct gpio_keys_platform_data *gpio_keys_pdata;
--	int n_buttons = 0;
--	int gpio;
--	int error;
--
--	gpio_keys_pdata = devm_kzalloc(&client->dev,
--				       sizeof(*gpio_keys_pdata) +
--				       sizeof(*gpio_keys) * MAX_NBUTTONS,
--				       GFP_KERNEL);
--	if (!gpio_keys_pdata)
--		return ERR_PTR(-ENOMEM);
--
--	gpio_keys = (void *)(gpio_keys_pdata + 1);
--
--	for (info = button_info; info->name; info++) {
--		if (info->autorepeat != autorepeat)
--			continue;
--
--		gpio = surface3_button_lookup_gpio(&client->dev,
--						   info->acpi_index);
--		if (!gpio_is_valid(gpio))
--			continue;
--
--		gpio_keys[n_buttons].type = info->event_type;
--		gpio_keys[n_buttons].code = info->event_code;
--		gpio_keys[n_buttons].gpio = gpio;
--		gpio_keys[n_buttons].active_low = info->active_low;
--		gpio_keys[n_buttons].desc = info->name;
--		gpio_keys[n_buttons].wakeup = info->wakeup;
--		n_buttons++;
--	}
--
--	if (n_buttons == 0) {
--		error = -ENODEV;
--		goto err_free_mem;
--	}
--
--	gpio_keys_pdata->buttons = gpio_keys;
--	gpio_keys_pdata->nbuttons = n_buttons;
--	gpio_keys_pdata->rep = autorepeat;
--
--	pd = platform_device_alloc("gpio-keys", PLATFORM_DEVID_AUTO);
--	if (!pd) {
--		error = -ENOMEM;
--		goto err_free_mem;
--	}
--
--	error = platform_device_add_data(pd, gpio_keys_pdata,
--					 sizeof(*gpio_keys_pdata));
--	if (error)
--		goto err_free_pdev;
--
--	error = platform_device_add(pd);
--	if (error)
--		goto err_free_pdev;
--
--	return pd;
--
--err_free_pdev:
--	platform_device_put(pd);
--err_free_mem:
--	devm_kfree(&client->dev, gpio_keys_pdata);
--	return ERR_PTR(error);
--}
--
--static int surface3_button_remove(struct i2c_client *client)
--{
--	struct surface3_button_data *priv = i2c_get_clientdata(client);
--
--	int i;
--
--	for (i = 0; i < BUTTON_TYPES; i++)
--		if (priv->children[i])
--			platform_device_unregister(priv->children[i]);
--
--	return 0;
--}
--
--static struct surface3_button_info surface3_button_surface3[] = {
--	{ "power", 0, EV_KEY, KEY_POWER, false, true, true },
--	{ "home", 1, EV_KEY, KEY_LEFTMETA, false, true, false },
--	{ "volume_up", 2, EV_KEY, KEY_VOLUMEUP, true, false, true },
--	{ "volume_down", 3, EV_KEY, KEY_VOLUMEDOWN, true, false, true },
--	{ }
--};
--
--static int surface3_button_probe(struct i2c_client *client,
--				 const struct i2c_device_id *id)
--{
--	struct device *dev = &client->dev;
--	struct surface3_button_data *priv;
--	struct platform_device *pd;
--	int i;
--	int error;
--
--	if (strncmp(acpi_device_bid(ACPI_COMPANION(&client->dev)),
--		    SURFACE_BUTTON_OBJ_NAME,
--		    strlen(SURFACE_BUTTON_OBJ_NAME)))
--		return -ENODEV;
--
--	error = gpiod_count(dev, NULL);
--	if (error < 0) {
--		dev_dbg(dev, "no GPIO attached, ignoring...\n");
--		return error;
--	}
--
--	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
--	if (!priv)
--		return -ENOMEM;
--
--	i2c_set_clientdata(client, priv);
--
--	for (i = 0; i < BUTTON_TYPES; i++) {
--		pd = surface3_button_device_create(client,
--						   surface3_button_surface3,
--						   i == 0);
--		if (IS_ERR(pd)) {
--			error = PTR_ERR(pd);
--			if (error != -ENODEV) {
--				surface3_button_remove(client);
--				return error;
--			}
--			continue;
--		}
--
--		priv->children[i] = pd;
--	}
--
--	if (!priv->children[0] && !priv->children[1])
--		return -ENODEV;
--
--	return 0;
--}
--
--static const struct i2c_device_id surface3_id[] = {
--	{ }
--};
--MODULE_DEVICE_TABLE(i2c, surface3_id);
--
--static struct i2c_driver surface3_driver = {
--	.probe = surface3_button_probe,
--	.remove = surface3_button_remove,
--	.id_table = surface3_id,
--	.driver = {
--		.name = "surface3",
--		.acpi_match_table = ACPI_PTR(surface3_acpi_match),
--	},
--};
--module_i2c_driver(surface3_driver);
--
--MODULE_AUTHOR("Benjamin Tissoires <benjamin.tissoires@gmail.com>");
--MODULE_DESCRIPTION("surface3 button array driver");
--MODULE_LICENSE("GPL v2");
--- 
-2.35.1
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
 
+> ---
+>   drivers/platform/surface/surface3_power.c | 13 ++++++++++---
+>   1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/surface/surface3_power.c b/drivers/platform/surface/surface3_power.c
+> index abac3eec565e..b283bc9bb5fd 100644
+> --- a/drivers/platform/surface/surface3_power.c
+> +++ b/drivers/platform/surface/surface3_power.c
+> @@ -232,14 +232,21 @@ static int mshw0011_bix(struct mshw0011_data *cdata, struct bix *bix)
+>   	}
+>   	bix->last_full_charg_capacity = ret;
+>   
+> -	/* get serial number */
+> +	/*
+> +	 * get serial number, on some devices (with unofficial replacement
+> +	 * battery?) reading any of the serial no range addresses gets nacked
+> +	 * in this case just leave the serial no empty.
+> +	 */
+>   	ret = i2c_smbus_read_i2c_block_data(client, MSHW0011_BAT0_REG_SERIAL_NO,
+>   					    sizeof(buf), buf);
+> -	if (ret != sizeof(buf)) {
+> +	if (ret == -EREMOTEIO) {
+> +		/* no serial number available */
+> +	} else if (ret != sizeof(buf)) {
+>   		dev_err(&client->dev, "Error reading serial no: %d\n", ret);
+>   		return ret;
+> +	} else {
+> +		snprintf(bix->serial, ARRAY_SIZE(bix->serial), "%3pE%6pE", buf + 7, buf);
+>   	}
+> -	snprintf(bix->serial, ARRAY_SIZE(bix->serial), "%3pE%6pE", buf + 7, buf);
+>   
+>   	/* get cycle count */
+>   	ret = i2c_smbus_read_word_data(client, MSHW0011_BAT0_REG_CYCLE_CNT);
