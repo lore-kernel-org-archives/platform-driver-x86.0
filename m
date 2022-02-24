@@ -2,24 +2,24 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11E8C4167E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Feb 2022 08:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3539AC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Feb 2022 08:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbiBXINs (ORCPT
+        id S231833AbiBXIOC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Feb 2022 03:13:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39838 "EHLO
+        Thu, 24 Feb 2022 03:14:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231672AbiBXIM1 (ORCPT
+        with ESMTP id S231644AbiBXIM0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Feb 2022 03:12:27 -0500
+        Thu, 24 Feb 2022 03:12:26 -0500
 Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CEF3AA43;
-        Thu, 24 Feb 2022 00:11:45 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0V5N6CVO_1645690298;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0V5N6CVO_1645690298)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CCBBB;
+        Thu, 24 Feb 2022 00:11:38 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0V5NDoCU_1645690291;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0V5NDoCU_1645690291)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 24 Feb 2022 16:11:39 +0800
+          Thu, 24 Feb 2022 16:11:32 +0800
 From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 To:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
 Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
@@ -50,9 +50,9 @@ Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
         linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
         linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
         kvm@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH v6 17/26] virtio_pci: queue_reset: support VIRTIO_F_RING_RESET
-Date:   Thu, 24 Feb 2022 16:10:53 +0800
-Message-Id: <20220224081102.80224-18-xuanzhuo@linux.alibaba.com>
+Subject: [PATCH v6 14/26] virtio: add helper for queue reset
+Date:   Thu, 24 Feb 2022 16:10:50 +0800
+Message-Id: <20220224081102.80224-15-xuanzhuo@linux.alibaba.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20220224081102.80224-1-xuanzhuo@linux.alibaba.com>
 References: <20220224081102.80224-1-xuanzhuo@linux.alibaba.com>
@@ -63,158 +63,67 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This patch implements virtio pci support for QUEUE RESET.
+Add helper for virtio queue reset.
 
-Performing reset on a queue is divided into these steps:
-
- 1. virtio_reset_vq()              - notify the device to reset the queue
- 2. virtqueue_detach_unused_buf()  - recycle the buffer submitted
- 3. virtqueue_reset_vring()        - reset the vring (may re-alloc)
- 4. virtio_enable_resetq()         - mmap vring to device, and enable the queue
-
-This patch implements virtio_reset_vq(), virtio_enable_resetq() in the
-pci scenario.
+* virtio_reset_vq(): reset a queue individually
+* virtio_enable_resetq(): enable a reset queue
 
 Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 ---
- drivers/virtio/virtio_pci_common.c |  8 +--
- drivers/virtio/virtio_pci_modern.c | 83 ++++++++++++++++++++++++++++++
- 2 files changed, 88 insertions(+), 3 deletions(-)
+ include/linux/virtio_config.h | 40 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
-index fdbde1db5ec5..863d3a8a0956 100644
---- a/drivers/virtio/virtio_pci_common.c
-+++ b/drivers/virtio/virtio_pci_common.c
-@@ -248,9 +248,11 @@ static void vp_del_vq(struct virtqueue *vq)
- 	struct virtio_pci_vq_info *info = vp_dev->vqs[vq->index];
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&vp_dev->lock, flags);
--	list_del(&info->node);
--	spin_unlock_irqrestore(&vp_dev->lock, flags);
-+	if (!vq->reset) {
-+		spin_lock_irqsave(&vp_dev->lock, flags);
-+		list_del(&info->node);
-+		spin_unlock_irqrestore(&vp_dev->lock, flags);
-+	}
- 
- 	vp_dev->del_vq(info);
- 	kfree(info);
-diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-index 49a4493732cf..3c67d3607802 100644
---- a/drivers/virtio/virtio_pci_modern.c
-+++ b/drivers/virtio/virtio_pci_modern.c
-@@ -34,6 +34,9 @@ static void vp_transport_features(struct virtio_device *vdev, u64 features)
- 	if ((features & BIT_ULL(VIRTIO_F_SR_IOV)) &&
- 			pci_find_ext_capability(pci_dev, PCI_EXT_CAP_ID_SRIOV))
- 		__virtio_set_bit(vdev, VIRTIO_F_SR_IOV);
-+
-+	if (features & BIT_ULL(VIRTIO_F_RING_RESET))
-+		__virtio_set_bit(vdev, VIRTIO_F_RING_RESET);
+diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+index d51906b1389f..0b81fbe17c85 100644
+--- a/include/linux/virtio_config.h
++++ b/include/linux/virtio_config.h
+@@ -230,6 +230,46 @@ int virtio_find_vqs_ctx(struct virtio_device *vdev, unsigned nvqs,
+ 				      desc);
  }
  
- /* virtio config->finalize_features() implementation */
-@@ -199,6 +202,82 @@ static int vp_active_vq(struct virtqueue *vq, u16 msix_vec)
- 	return 0;
- }
- 
-+static int vp_modern_reset_vq(struct virtqueue *vq)
++/**
++ * virtio_reset_vq - reset a queue individually
++ * @vq: the virtqueue
++ *
++ * returns 0 on success or error status
++ *
++ * The api process of reset under normal circumstances:
++ *	1. virtio_reset_vq()              - notify the device to reset the queue
++ *	2. virtqueue_detach_unused_buf()  - recycle the buffer submitted
++ *	3. virtqueue_reset_vring()        - reset the vring (may re-alloc)
++ *	4. virtio_enable_resetq()         - mmap vring to device, and enable the queue
++ *
++ * Caller should guarantee that the vring is not accessed by any functions
++ * of virtqueue.
++ */
++static inline
++int virtio_reset_vq(struct virtqueue *vq)
 +{
-+	struct virtio_pci_device *vp_dev = to_vp_device(vq->vdev);
-+	struct virtio_pci_modern_device *mdev = &vp_dev->mdev;
-+	struct virtio_pci_vq_info *info;
-+	unsigned long flags;
-+	unsigned int irq;
-+
-+	if (!virtio_has_feature(vq->vdev, VIRTIO_F_RING_RESET))
++	if (!vq->vdev->config->reset_vq)
 +		return -ENOENT;
 +
-+	vp_modern_set_queue_reset(mdev, vq->index);
-+
-+	info = vp_dev->vqs[vq->index];
-+
-+	/* delete vq from irq handler */
-+	spin_lock_irqsave(&vp_dev->lock, flags);
-+	list_del(&info->node);
-+	spin_unlock_irqrestore(&vp_dev->lock, flags);
-+
-+	INIT_LIST_HEAD(&info->node);
-+
-+	vq->reset = VIRTIO_VQ_RESET_STEP_DEVICE;
-+
-+	/* sync irq callback. */
-+	if (vp_dev->intx_enabled) {
-+		irq = vp_dev->pci_dev->irq;
-+
-+	} else {
-+		if (info->msix_vector == VIRTIO_MSI_NO_VECTOR)
-+			return 0;
-+
-+		irq = pci_irq_vector(vp_dev->pci_dev, info->msix_vector);
-+	}
-+
-+	synchronize_irq(irq);
-+
-+	return 0;
++	return vq->vdev->config->reset_vq(vq);
 +}
 +
-+static int vp_modern_enable_reset_vq(struct virtqueue *vq)
++/**
++ * virtio_enable_resetq - enable a reset queue
++ * @vq: the virtqueue
++ *
++ * returns 0 on success or error status
++ *
++ */
++static inline
++int virtio_enable_resetq(struct virtqueue *vq)
 +{
-+	struct virtio_pci_device *vp_dev = to_vp_device(vq->vdev);
-+	struct virtio_pci_modern_device *mdev = &vp_dev->mdev;
-+	struct virtio_pci_vq_info *info;
-+	unsigned long flags, index;
-+	int err;
++	if (!vq->vdev->config->enable_reset_vq)
++		return -ENOENT;
 +
-+	if (vq->reset != VIRTIO_VQ_RESET_STEP_VRING_ATTACH)
-+		return -EBUSY;
-+
-+	index = vq->index;
-+	info = vp_dev->vqs[index];
-+
-+	/* check queue reset status */
-+	if (vp_modern_get_queue_reset(mdev, index) != 1)
-+		return -EBUSY;
-+
-+	err = vp_active_vq(vq, info->msix_vector);
-+	if (err)
-+		return err;
-+
-+	if (vq->callback) {
-+		spin_lock_irqsave(&vp_dev->lock, flags);
-+		list_add(&info->node, &vp_dev->virtqueues);
-+		spin_unlock_irqrestore(&vp_dev->lock, flags);
-+	} else {
-+		INIT_LIST_HEAD(&info->node);
-+	}
-+
-+	vp_modern_set_queue_enable(&vp_dev->mdev, index, true);
-+	vq->reset = VIRTIO_VQ_RESET_STEP_NONE;
-+
-+	return 0;
++	return vq->vdev->config->enable_reset_vq(vq);
 +}
 +
- static u16 vp_config_vector(struct virtio_pci_device *vp_dev, u16 vector)
- {
- 	return vp_modern_config_vector(&vp_dev->mdev, vector);
-@@ -407,6 +486,8 @@ static const struct virtio_config_ops virtio_pci_config_nodev_ops = {
- 	.set_vq_affinity = vp_set_vq_affinity,
- 	.get_vq_affinity = vp_get_vq_affinity,
- 	.get_shm_region  = vp_get_shm_region,
-+	.reset_vq	 = vp_modern_reset_vq,
-+	.enable_reset_vq = vp_modern_enable_reset_vq,
- };
- 
- static const struct virtio_config_ops virtio_pci_config_ops = {
-@@ -425,6 +506,8 @@ static const struct virtio_config_ops virtio_pci_config_ops = {
- 	.set_vq_affinity = vp_set_vq_affinity,
- 	.get_vq_affinity = vp_get_vq_affinity,
- 	.get_shm_region  = vp_get_shm_region,
-+	.reset_vq	 = vp_modern_reset_vq,
-+	.enable_reset_vq = vp_modern_enable_reset_vq,
- };
- 
- /* the PCI probing function */
+ /**
+  * virtio_device_ready - enable vq use in probe function
+  * @vdev: the device
 -- 
 2.31.0
 
