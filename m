@@ -2,86 +2,125 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5EAC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Feb 2022 13:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA25C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Feb 2022 13:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234158AbiBXNJy (ORCPT
+        id S235165AbiBXNyg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Feb 2022 08:09:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44248 "EHLO
+        Thu, 24 Feb 2022 08:54:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234656AbiBXNJq (ORCPT
+        with ESMTP id S234755AbiBXNyf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Feb 2022 08:09:46 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 427D664BE7;
-        Thu, 24 Feb 2022 05:09:14 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id j17so3017815wrc.0;
-        Thu, 24 Feb 2022 05:09:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=0AbxvT+UyjtLUUrp5lGkKPXG8e9imCtSOESDE/pQxuM=;
-        b=lIXgRwvFNHNnJeIBba6FtLtsdPzBhww7T0PlUQ3GNveupxGShGNu4bQYdbykvAYv2q
-         2YVoIgYrVtcJ5rQaeCSYBjUZKezKLe3bK5M4aWNCbJw1JRS5X9hw3LxURmgBGcHbyBp8
-         sKMKIG8oeSSFjwidD6Dusjo3iLkHGDYaomSD1DCDsEoLrBpBIiCwp3ljttbfr6rn6sBM
-         fMQgrDy9sMbojMM+ryTteps7Q0CDoN7TYgoUxXZFhPOresET8LsPwlC3y8cfMHs2d7KS
-         aAZYBLcoI4WKqvg93LkTTG+cu3BC6SZs18Re4IvnnGBrMvo+qiIcun9FwtvJgTemibsb
-         kz3A==
+        Thu, 24 Feb 2022 08:54:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9172C1A39D0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Feb 2022 05:54:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645710844;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=feRIEn1EMTywS/YZ2elPMkem2Aupjr0V2pvxGMXyLJA=;
+        b=ANr0mFTd5rjkjK8P+fGzbEG+tUwzB1qxAYnFhg6lu6/c1nnaW8imdLzXyP52d4UrIZ+jfA
+        GW5KaW3G+E0neGsbk/5EVPEvBcxqRwlTSCawNJLkSU6Dc8SHqYe3UtGAcrsbnb8G0SUHyC
+        nx0qpPbbboU2Q/lNHgiEKSLC9898qqM=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-166-I80l_A2kPbyHM2ISRIEI3w-1; Thu, 24 Feb 2022 08:54:03 -0500
+X-MC-Unique: I80l_A2kPbyHM2ISRIEI3w-1
+Received: by mail-ej1-f71.google.com with SMTP id o22-20020a1709061d5600b006d1aa593787so1266060ejh.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Feb 2022 05:54:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=0AbxvT+UyjtLUUrp5lGkKPXG8e9imCtSOESDE/pQxuM=;
-        b=Z+HsLyjlCbpZD60AJrUmtZmgjeVu5NZy4AYvbHH6cDrmcXUnSLovKVaTAOwLNbhLU+
-         VVMF2sGTi1knUVyTr0B02Db265h1DXYrbwESKwqQggYwiJ1wsaxTEI9dm0ckknz9edt9
-         SwOzURFwjA2f95sX5EkhWxvyuxvbXJZX2dfaydbE3C+4u4Vhe2NPvNTFFMwukLFWAhcN
-         pUcWfGuvbFamavlSWjm4AMgeOPW/Ta4ypFh3SkVXEa87J5xZRDojEXapeLL0q87ypcKa
-         i/ax67gw8lR84ED1H8JRtNPTA7dV1Bk6jyrxyN8u445yT1zKP/a/o87FWa09MDWNi7GU
-         KhgQ==
-X-Gm-Message-State: AOAM532r5S56LmCMVUEu2fhJ+nTEOW+nW4uEZbVmqDn1vNtzyJ20Yc5Q
-        5YQfvG7CwlQX83wmzRuf5gFRZzqt9kwVZA==
-X-Google-Smtp-Source: ABdhPJwrwJOBEQIN411koZhXcJQVzbWRCkdHf4VrhmdhbK0fuboz36Lw/UjrsU4p4SXyL2FVBU46Qg==
-X-Received: by 2002:a5d:628d:0:b0:1ed:f981:ccc with SMTP id k13-20020a5d628d000000b001edf9810cccmr1520491wru.616.1645708152879;
-        Thu, 24 Feb 2022 05:09:12 -0800 (PST)
-Received: from [10.16.0.7] ([194.126.177.11])
-        by smtp.gmail.com with ESMTPSA id r2-20020a05600c35c200b00352cdcdd7b2sm12326027wmq.0.2022.02.24.05.09.11
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
+         :subject:to:cc:content-language:content-transfer-encoding;
+        bh=feRIEn1EMTywS/YZ2elPMkem2Aupjr0V2pvxGMXyLJA=;
+        b=sVPxG4NrBeMmGTo1BALJF0Fqf3btkEa8C7Qx1MhtUsbA+8IhWLSR4VR1tWmpPKCZB9
+         AD5rjSbYZJpF9bpNPa9ao38YvyayZbBWeqmR9H3tBXQP3EpuPj2XXW07miR9XeZvLFnN
+         V9voQ8kCB4C2oCIRlieE4nCMdQOdjoGb7o782jZwI2vxg9gH4MqsLF3WgLUaMuq9PlFb
+         0kMX3MDQ0Kyg+BHo+2ad7lldpzt7EXFFs982OfycoXlmlgUkQ8Bb3y/XxFkNP830oACM
+         /IRSQAQwaeiTEtxnJFANmygCy6Jg7l7T8Izdz3+N67+g4LE5v0q9uTg8Hgx+pDnfGGOi
+         mTzQ==
+X-Gm-Message-State: AOAM530oKSLCO9RqOKqHuvX6zHrIN4JO+3x2BV7kRBaWZX8C8GxAbivc
+        f9Oj6QD2Xnh+OLy6RWejmEC6M6nPZlHWRhjvmXKwmmIrhLfVsEkb4ht7AJQYMmgFNifQtCpb1wT
+        7k6/WN7Iuo3c+i1UGItCJUXkmyj4esv5n7A==
+X-Received: by 2002:a05:6402:294e:b0:40f:905b:dab5 with SMTP id ed14-20020a056402294e00b0040f905bdab5mr2406924edb.103.1645710841537;
+        Thu, 24 Feb 2022 05:54:01 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwoCnD4zV3OaNb0QEnnNVFM30U+N2AP2i9f7OL+iW7JbQVkIf4rYvgG8Fud0UtUx/4zPLvqHg==
+X-Received: by 2002:a05:6402:294e:b0:40f:905b:dab5 with SMTP id ed14-20020a056402294e00b0040f905bdab5mr2406910edb.103.1645710841294;
+        Thu, 24 Feb 2022 05:54:01 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id 18sm1395613ejj.1.2022.02.24.05.54.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Feb 2022 05:09:12 -0800 (PST)
-Message-ID: <fc05d480-49f4-bb6f-3f21-531085ec226f@gmail.com>
-Date:   Thu, 24 Feb 2022 14:09:10 +0100
+        Thu, 24 Feb 2022 05:54:00 -0800 (PST)
+Message-ID: <0cacb607-64a1-47de-7cf4-294d89045806@redhat.com>
+Date:   Thu, 24 Feb 2022 14:54:00 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH 2/2] platform/surface: Remove Surface 3 Button driver
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
+ Thunderbird/91.4.0
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] platform-drivers-x86 for 5.17-4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         platform-driver-x86@vger.kernel.org
-References: <20220224110241.9613-1-hdegoede@redhat.com>
- <20220224110241.9613-3-hdegoede@redhat.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20220224110241.9613-3-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2/24/22 12:02, Hans de Goede wrote:
-> The Surface 3 buttons are now handled by the generic soc_button_array
-> driver. As part of adding support to soc_button_array the ACPI code
-> now instantiates a platform_device rather then an i2c_client so there
-> no longer is an i2c_client for this driver to bind to.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Hi Linus,
 
-Looks good to me.
+Here is another set of 2 bug-fixes for platform-drivers-x86
+for 5.17:
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com
+ -  Fix suspend/resume regression on AMD Cezanne APUs in >= 5.16
+ -  Fix Microsoft Surface 3 battery readings
+
+Regards,
+
+Hans
+
+
+The following changes since commit ae09639e3b2a0291b37b122c94dd4f773cd4e513:
+
+  platform/x86: int3472: Add terminator to gpiod_lookup_table (2022-02-21 14:47:59 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.17-4
+
+for you to fetch changes up to 21d90aaee8d5c2a097ef41f1430d97661233ecc6:
+
+  surface: surface3_power: Fix battery readings on batteries without a serial number (2022-02-24 13:48:39 +0100)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.17-4
+
+2 fixes:
+ -  Fix suspend/resume regression on AMD Cezanne APUs in >= 5.16
+ -  Fix Microsoft Surface 3 battery readings
+
+The following is an automated git shortlog grouped by driver:
+
+amd-pmc:
+ -  Set QOS during suspend on CZN w/ timer wakeup
+
+surface:
+ -  surface3_power: Fix battery readings on batteries without a serial number
+
+----------------------------------------------------------------
+Hans de Goede (1):
+      surface: surface3_power: Fix battery readings on batteries without a serial number
+
+Mario Limonciello (1):
+      platform/x86: amd-pmc: Set QOS during suspend on CZN w/ timer wakeup
+
+ drivers/platform/surface/surface3_power.c | 13 +++++++---
+ drivers/platform/x86/amd-pmc.c            | 42 ++++++++++++++++++++++++-------
+ 2 files changed, 43 insertions(+), 12 deletions(-)
+
