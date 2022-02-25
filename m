@@ -2,174 +2,372 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D136C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Feb 2022 01:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C88C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Feb 2022 01:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236331AbiBYBYX (ORCPT
+        id S236334AbiBYBZc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Feb 2022 20:24:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
+        Thu, 24 Feb 2022 20:25:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236325AbiBYBYX (ORCPT
+        with ESMTP id S234560AbiBYBZb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Feb 2022 20:24:23 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6244C225008;
-        Thu, 24 Feb 2022 17:23:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id CE18DCE21CE;
-        Fri, 25 Feb 2022 01:23:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15EC8C340E9;
-        Fri, 25 Feb 2022 01:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645752229;
-        bh=WT9Bxm8hy9Zx9+4uOpWY97MNM6hQYpRoQq/T1hnrs4g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=C50+Ss5Q8B6EjURcCBRIy/cJHNllf+HiDwblGn44q80pk/g8LPFXaGsNp1Ms+hMwb
-         e9WEtVvnwLxTu8UArBuZa6jBZ/ajgdf0E4OiqkEGfVcrehsXRaXRznQQBdpKktAKJd
-         n/qT1+2TyV0A9k7thsT6KGnXHzdQr9qHHvxP2xLIix2uC9Yh87yTjFXXP1x2ChiIna
-         3VYSqX8pIMhrJerZekdFP9Ml8M+gf15kzW8NffwXIuRhpqnskM3BsVX+dXp8II/J8Q
-         u0S0kJI76PBA2395AP3dDfni+E2pF+qYp6kQiJYZvL5lWHP2IlqDfI1Eygmz/NTLP5
-         D1apyl5izGSPw==
-Date:   Thu, 24 Feb 2022 19:23:46 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Alexander.Deucher@amd.com, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v5 3/7] PCI: Drop the `is_thunderbolt` attribute from PCI
- core
-Message-ID: <20220225012346.GA317859@bhelgaas>
+        Thu, 24 Feb 2022 20:25:31 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA3712692D8;
+        Thu, 24 Feb 2022 17:24:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645752299; x=1677288299;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0wutWA/lmMAPxa4yjGC9r50Auvd0z+7McW7AjO8HBZg=;
+  b=gI5NxsCNYCvKC0QQSQ5mQGT9Lemk7iLfU9enGDn2MGhk8ApSTmeBRzDp
+   b26X2ESvi+Kkk8h4Npc7cWO00t19bzHc3162nTcYji0Kksr9yrnp8bxEG
+   ymXUjdO50K6XKKTTCSrokOCxj6r+oqbCO/0Pl/rYs07UHSiYNopQ5glY2
+   rQydJz8lJvBjA1rcRgenrPN4z8IN4/jKu1Z9l7gCLGZnzfQlJJObZL1tk
+   B3vlQTInwUL1NCzPUy0YDAs7GX8ikpjOtIPsKR1GXfU9KiYIESWIT6Pks
+   TfFd05sMaoNU1mzUwUBegemI505bqr+S2qv6WCz3DExx2RS1SeZ7L667R
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10268"; a="315612254"
+X-IronPort-AV: E=Sophos;i="5.90,134,1643702400"; 
+   d="scan'208";a="315612254"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2022 17:24:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,134,1643702400"; 
+   d="scan'208";a="638057992"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Feb 2022 17:24:58 -0800
+Received: from debox1-desk4.intel.com (tjmaciei-mobl5.ger.corp.intel.com [10.255.228.125])
+        by linux.intel.com (Postfix) with ESMTP id 41C14580CDA;
+        Thu, 24 Feb 2022 17:24:58 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     hdegoede@redhat.com, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        mgross@linux.intel.com, gayatri.kammela@intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        "David E . Box" <david.e.box@linux.intel.com>
+Subject: [PATCH V9 2/2] selftests: sdsi: test sysfs setup
+Date:   Thu, 24 Feb 2022 17:24:57 -0800
+Message-Id: <20220225012457.1661574-2-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220225012457.1661574-1-david.e.box@linux.intel.com>
+References: <20220225012457.1661574-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220224215116.7138-4-mario.limonciello@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 03:51:12PM -0600, Mario Limonciello wrote:
-> The `is_thunderbolt` attribute originally had a well defined list of
-> quirks that it existed for, but it has been overloaded with more
-> meaning.
-> 
-> Instead use the driver core removable attribute to indicate the
-> detail a device is attached to a thunderbolt or USB4 chain.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/pci/probe.c               | 2 +-
->  drivers/platform/x86/apple-gmux.c | 2 +-
->  include/linux/pci.h               | 5 ++---
->  3 files changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 17a969942d37..1b752d425c47 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1584,7 +1584,7 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
->  	/* Is the device part of a Thunderbolt controller? */
->  	vsec = pci_find_vsec_capability(dev, PCI_VENDOR_ID_INTEL, PCI_VSEC_ID_INTEL_TBT);
->  	if (vsec)
-> -		dev->is_thunderbolt = 1;
-> +		dev->external_facing = true;
+Tests file configuration and error handling of the Intel Software
+Defined Silicon sysfs ABI.
 
-I assume there's a spec for the PCI_VSEC_ID_INTEL_TBT Capability.  Is
-that public?  Does the spec say that a device with that capability
-must be external-facing?
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+V9
+  - Add long options with getopt_long
+  - Add error messages for cmdline parsing errors
+  - Fix "may be used uninitialized" warning
+V8
+  - Skip if python3 or pytest aren't installed
+  - Do not remove driver after test is run
+V7
+  - No changes.
+V6
+  - No changes.
+V5
+  - No changes.
+V4
+  - No changes.
+V3
+  - Add tests to check PCI device removal handling and to check for
+    driver memory leaks.
+V2
+  - New patch.
 
-Even if it's not public, I think a citation (name, revision, section)
-would be useful.
+ MAINTAINERS                                   |   1 +
+ tools/testing/selftests/drivers/sdsi/sdsi.sh  |  25 ++
+ .../selftests/drivers/sdsi/sdsi_test.py       | 226 ++++++++++++++++++
+ 3 files changed, 252 insertions(+)
+ create mode 100755 tools/testing/selftests/drivers/sdsi/sdsi.sh
+ create mode 100644 tools/testing/selftests/drivers/sdsi/sdsi_test.py
 
->  }
->  
->  static void set_pcie_untrusted(struct pci_dev *dev)
-> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-> index 57553f9b4d1d..4444da0c39b0 100644
-> --- a/drivers/platform/x86/apple-gmux.c
-> +++ b/drivers/platform/x86/apple-gmux.c
-> @@ -596,7 +596,7 @@ static int gmux_resume(struct device *dev)
->  
->  static int is_thunderbolt(struct device *dev, void *data)
->  {
-> -	return to_pci_dev(dev)->is_thunderbolt;
-> +	return to_pci_dev(dev)->external_facing;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b1281f44a5a2..a09e383d9d11 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9882,6 +9882,7 @@ M:	David E. Box <david.e.box@linux.intel.com>
+ S:	Supported
+ F:	drivers/platform/x86/intel/sdsi.c
+ F:	tools/arch/x86/intel_sdsi/
++F:	tools/testing/selftests/drivers/sdsi/
+ 
+ INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
+ M:	Daniel Scally <djrscally@gmail.com>
+diff --git a/tools/testing/selftests/drivers/sdsi/sdsi.sh b/tools/testing/selftests/drivers/sdsi/sdsi.sh
+new file mode 100755
+index 000000000000..9b84b9b82b49
+--- /dev/null
++++ b/tools/testing/selftests/drivers/sdsi/sdsi.sh
+@@ -0,0 +1,25 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# Runs tests for the intel_sdsi driver
++
++if ! command -v python3 > /dev/null 2>&1; then
++	echo "drivers/sdsi: [SKIP] python3 not installed"
++	exit 77
++fi
++
++if ! python3 -c "import pytest" > /dev/null 2>&1; then
++	echo "drivers/sdsi: [SKIP] pytest module not installed"
++	exit 77
++fi
++
++if ! /sbin/modprobe -q -r intel_sdsi; then
++	echo "drivers/sdsi: [SKIP]"
++	exit 77
++fi
++
++if /sbin/modprobe -q intel_sdsi && python3 -m pytest sdsi_test.py; then
++	echo "drivers/sdsi: [OK]"
++else
++	echo "drivers/sdsi: [FAIL]"
++	exit 1
++fi
+diff --git a/tools/testing/selftests/drivers/sdsi/sdsi_test.py b/tools/testing/selftests/drivers/sdsi/sdsi_test.py
+new file mode 100644
+index 000000000000..5efb29feee70
+--- /dev/null
++++ b/tools/testing/selftests/drivers/sdsi/sdsi_test.py
+@@ -0,0 +1,226 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
++
++from struct import pack
++from time import sleep
++
++import errno
++import glob
++import os
++import subprocess
++
++try:
++    import pytest
++except ImportError:
++    print("Unable to import pytest python module.")
++    print("\nIf not already installed, you may do so with:")
++    print("\t\tpip3 install pytest")
++    exit(1)
++
++SOCKETS = glob.glob('/sys/bus/auxiliary/devices/intel_vsec.sdsi.*')
++NUM_SOCKETS = len(SOCKETS)
++
++MODULE_NAME = 'intel_sdsi'
++DEV_PREFIX = 'intel_vsec.sdsi'
++CLASS_DIR = '/sys/bus/auxiliary/devices'
++GUID = "0x6dd191"
++
++def read_bin_file(file):
++    with open(file, mode='rb') as f:
++        content = f.read()
++    return content
++
++def get_dev_file_path(socket, file):
++    return CLASS_DIR + '/' + DEV_PREFIX + '.' + str(socket) + '/' + file
++
++def kmemleak_enabled():
++    kmemleak = "/sys/kernel/debug/kmemleak"
++    return os.path.isfile(kmemleak)
++
++class TestSDSiDriver:
++    def test_driver_loaded(self):
++        lsmod_p = subprocess.Popen(('lsmod'), stdout=subprocess.PIPE)
++        result = subprocess.check_output(('grep', '-q', MODULE_NAME), stdin=lsmod_p.stdout)
++
++@pytest.mark.parametrize('socket', range(0, NUM_SOCKETS))
++class TestSDSiFilesClass:
++
++    def read_value(self, file):
++        f = open(file, "r")
++        value = f.read().strip("\n")
++        return value
++
++    def get_dev_folder(self, socket):
++        return CLASS_DIR + '/' + DEV_PREFIX + '.' + str(socket) + '/'
++
++    def test_sysfs_files_exist(self, socket):
++        folder = self.get_dev_folder(socket)
++        print (folder)
++        assert os.path.isfile(folder + "guid") == True
++        assert os.path.isfile(folder + "provision_akc") == True
++        assert os.path.isfile(folder + "provision_cap") == True
++        assert os.path.isfile(folder + "state_certificate") == True
++        assert os.path.isfile(folder + "registers") == True
++
++    def test_sysfs_file_permissions(self, socket):
++        folder = self.get_dev_folder(socket)
++        mode = os.stat(folder + "guid").st_mode & 0o777
++        assert mode == 0o444    # Read all
++        mode = os.stat(folder + "registers").st_mode & 0o777
++        assert mode == 0o400    # Read owner
++        mode = os.stat(folder + "provision_akc").st_mode & 0o777
++        assert mode == 0o200    # Read owner
++        mode = os.stat(folder + "provision_cap").st_mode & 0o777
++        assert mode == 0o200    # Read owner
++        mode = os.stat(folder + "state_certificate").st_mode & 0o777
++        assert mode == 0o400    # Read owner
++
++    def test_sysfs_file_ownership(self, socket):
++        folder = self.get_dev_folder(socket)
++
++        st = os.stat(folder + "guid")
++        assert st.st_uid == 0
++        assert st.st_gid == 0
++
++        st = os.stat(folder + "registers")
++        assert st.st_uid == 0
++        assert st.st_gid == 0
++
++        st = os.stat(folder + "provision_akc")
++        assert st.st_uid == 0
++        assert st.st_gid == 0
++
++        st = os.stat(folder + "provision_cap")
++        assert st.st_uid == 0
++        assert st.st_gid == 0
++
++        st = os.stat(folder + "state_certificate")
++        assert st.st_uid == 0
++        assert st.st_gid == 0
++
++    def test_sysfs_file_sizes(self, socket):
++        folder = self.get_dev_folder(socket)
++
++        if self.read_value(folder + "guid") == GUID:
++            st = os.stat(folder + "registers")
++            assert st.st_size == 72
++
++        st = os.stat(folder + "provision_akc")
++        assert st.st_size == 1024
++
++        st = os.stat(folder + "provision_cap")
++        assert st.st_size == 1024
++
++        st = os.stat(folder + "state_certificate")
++        assert st.st_size == 4096
++
++    def test_no_seek_allowed(self, socket):
++        folder = self.get_dev_folder(socket)
++        rand_file = bytes(os.urandom(8))
++
++        f = open(folder + "provision_cap", "wb", 0)
++        f.seek(1)
++        with pytest.raises(OSError) as error:
++            f.write(rand_file)
++        assert error.value.errno == errno.ESPIPE
++        f.close()
++
++        f = open(folder + "provision_akc", "wb", 0)
++        f.seek(1)
++        with pytest.raises(OSError) as error:
++            f.write(rand_file)
++        assert error.value.errno == errno.ESPIPE
++        f.close()
++
++    def test_registers_seek(self, socket):
++        folder = self.get_dev_folder(socket)
++
++        # Check that the value read from an offset of the entire
++        # file is none-zero and the same as the value read
++        # from seeking to the same location
++        f = open(folder + "registers", "rb")
++        data = f.read()
++        f.seek(64)
++        id = f.read()
++        assert id != bytes(0)
++        assert data[64:] == id
++        f.close()
++
++@pytest.mark.parametrize('socket', range(0, NUM_SOCKETS))
++class TestSDSiMailboxCmdsClass:
++    def test_provision_akc_eoverflow_1017_bytes(self, socket):
++
++        # The buffer for writes is 1k, of with 8 bytes must be
++        # reserved for the command, leaving 1016 bytes max.
++        # Check that we get an overflow error for 1017 bytes.
++        node = get_dev_file_path(socket, "provision_akc")
++        rand_file = bytes(os.urandom(1017))
++
++        f = open(node, 'wb', 0)
++        with pytest.raises(OSError) as error:
++            f.write(rand_file)
++        assert error.value.errno == errno.EOVERFLOW
++        f.close()
++
++@pytest.mark.parametrize('socket', range(0, NUM_SOCKETS))
++class TestSdsiDriverLocksClass:
++    def test_enodev_when_pci_device_removed(self, socket):
++        node = get_dev_file_path(socket, "provision_akc")
++        dev_name = DEV_PREFIX + '.' + str(socket)
++        driver_dir = CLASS_DIR + '/' + dev_name + "/driver/"
++        rand_file = bytes(os.urandom(8))
++
++        f = open(node, 'wb', 0)
++        g = open(node, 'wb', 0)
++
++        with open(driver_dir + 'unbind', 'w') as k:
++            print(dev_name, file = k)
++
++        with pytest.raises(OSError) as error:
++            f.write(rand_file)
++        assert error.value.errno == errno.ENODEV
++
++        with pytest.raises(OSError) as error:
++            g.write(rand_file)
++        assert error.value.errno == errno.ENODEV
++
++        f.close()
++        g.close()
++
++        # Short wait needed to allow file to close before pulling driver
++        sleep(1)
++
++        p = subprocess.Popen(('modprobe', '-r', 'intel_sdsi'))
++        p.wait()
++        p = subprocess.Popen(('modprobe', '-r', 'intel_vsec'))
++        p.wait()
++        p = subprocess.Popen(('modprobe', 'intel_vsec'))
++        p.wait()
++
++        # Short wait needed to allow driver time to get inserted
++        # before continuing tests
++        sleep(1)
++
++    def test_memory_leak(self, socket):
++        if not kmemleak_enabled():
++            pytest.skip("kmemleak not enabled in kernel")
++
++        dev_name = DEV_PREFIX + '.' + str(socket)
++        driver_dir = CLASS_DIR + '/' + dev_name + "/driver/"
++
++        with open(driver_dir + 'unbind', 'w') as k:
++            print(dev_name, file = k)
++
++        sleep(1)
++
++        subprocess.check_output(('modprobe', '-r', 'intel_sdsi'))
++        subprocess.check_output(('modprobe', '-r', 'intel_vsec'))
++
++        with open('/sys/kernel/debug/kmemleak', 'w') as f:
++            print('scan', file = f)
++        sleep(5)
++
++        assert os.stat('/sys/kernel/debug/kmemleak').st_size == 0
++
++        subprocess.check_output(('modprobe', 'intel_vsec'))
++        sleep(1)
+-- 
+2.25.1
 
-This looks ... sort of weird.  I don't know anything about
-apple-gmux.c, so I guess I don't care, but assuming any
-external-facing device must be a Thunderbolt device seems like a
-stretch.
-
-Ugh.  This is used via "bus_for_each_dev(&pci_bus_type)", which means
-it's not hotplug-safe.  I'm sure we "know" implicitly that hotplug
-isn't an issue in apple-gmux, but it's better not to have examples
-that get copied to places where it *is* an issue.
-
->  }
->  
->  static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 1e5b769e42fc..d9719eb14654 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -442,7 +442,6 @@ struct pci_dev {
->  	unsigned int	is_virtfn:1;
->  	unsigned int	is_hotplug_bridge:1;
->  	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
-> -	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
->  	unsigned int	no_cmd_complete:1;	/* Lies about command completed events */
->  
->  	/*
-> @@ -2447,11 +2446,11 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
->  {
->  	struct pci_dev *parent = pdev;
->  
-> -	if (pdev->is_thunderbolt)
-> +	if (dev_is_removable(&pdev->dev))
->  		return true;
->  
->  	while ((parent = pci_upstream_bridge(parent)))
-> -		if (parent->is_thunderbolt)
-> +		if (dev_is_removable(&parent->dev))
->  			return true;
-
-I don't get this.  Plain old PCI devices can be removable, too.
-
-pci_is_thunderbolt_attached() is only used by GPU drivers.  What
-property of Thunderbolt do they care about?
-
-nouveau_vga_init() and radeon_device_init() use it to decide to
-register with vga_switcheroo.  So maybe that's something to do with
-removability?  Of course, that's not specific to Thunderbolt, because
-garden-variety PCIe devices are removable.
-
-amdgpu_driver_load_kms() and radeon_driver_load_kms() apparently use
-it for something related to power control.  I don't know what the
-Thunderbolt connection is.
-
-nbio_v2_3_enable_aspm() looks like it uses it to change some ASPM
-parameters.  Seems like potentially a device erratum or quirk
-material?
-
-If these things are not specifically related to Thunderbolt, I'd
-prefer to get rid of pci_is_thunderbolt_attached() and see if we can
-help the GPU folks figure out what they really need.
-
->  	return false;
-> -- 
-> 2.34.1
-> 
