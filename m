@@ -2,82 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7C6C43219
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Feb 2022 19:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FF9C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Feb 2022 22:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229785AbiB1T6p (ORCPT
+        id S230440AbiB1WO3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Feb 2022 14:58:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33756 "EHLO
+        Mon, 28 Feb 2022 17:14:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbiB1T6n (ORCPT
+        with ESMTP id S229545AbiB1WO2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Feb 2022 14:58:43 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE1E42E09F;
-        Mon, 28 Feb 2022 11:58:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646078284; x=1677614284;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=e74w0OEGEp4eOrov/OjcyDae/25MPuueAdebpU/hUcQ=;
-  b=ekRJ1tF2gWP1QPvuPq1PyyGsV2P+Ptui/NaQ45NYzJ4k/tivbC5UpwjM
-   /rWenSHjGZXMtGk/Uh4jJHPYwCf4r8F6wfzBxawNAi4PMMeRA2CkNBJsY
-   vYHPig/L/MIr5P2dUIdaioBrQ1F0Q+JUV+mpQezml1oft9JUCWRQiZIkk
-   /JeZpu5MUjWWaP6qUE6nWLXb8NTytlKU1vmMapgSHmEm4v+sAy1FK3hmE
-   hTaCjEqSIQ2u9wSh4r3nWqviNQH0Sn5tdPr5t99zRlm7a4SQHOXo99RX0
-   i9atYcmfOXqIVeQL+0h1tHy5wNgGExNf11yVsL3wQrN442b4AGkkupI/f
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10272"; a="339406630"
-X-IronPort-AV: E=Sophos;i="5.90,144,1643702400"; 
-   d="scan'208";a="339406630"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2022 11:58:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,144,1643702400"; 
-   d="scan'208";a="685459499"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Feb 2022 11:58:02 -0800
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     corbet@lwn.net, rafael@kernel.org, hdegoede@redhat.com,
-        markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2 2/2] MAINTAINERS: Add additional file to uncore frequency control
-Date:   Mon, 28 Feb 2022 11:58:00 -0800
-Message-Id: <20220228195800.1422004-2-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220228195800.1422004-1-srinivas.pandruvada@linux.intel.com>
-References: <20220228195800.1422004-1-srinivas.pandruvada@linux.intel.com>
+        Mon, 28 Feb 2022 17:14:28 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99EE6C5586;
+        Mon, 28 Feb 2022 14:13:48 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 45884B8167C;
+        Mon, 28 Feb 2022 22:13:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABC48C340F1;
+        Mon, 28 Feb 2022 22:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646086425;
+        bh=cnDWJ0mUKsMIK/kUZBxrtwaDai/t/1pEAH68lPV8FNI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=g3J98SrFRq1BbJxPN1kJdH/0NbFXhkBE307szRWU7LmrbHX2s2cJ5zQ3v4x9DqVul
+         W+UT8Tz7QZYUmLyHrBFi8AlchvPhAIsNb5N/t/1Vum4HNk2hB+M5oV3EPkQCL/YldK
+         Yl1lpm9CV0w78mMuBs7wpXWCPyDYS8tFO9ylRSiAoaVrZIBgYz/Fvgxz8o2bG2gMGk
+         SFSk5Az0KRyVF0mxmQZLvhhhRajROlVvK/8fDFVWhMxRoD8TO07Q8LkJUySVWRD90T
+         lrt8hJFlJ3TW01ylg3BJslwJE+g9BnROM4YsHrUpbHVmWmLR9oT1VQBPyACxUK62w6
+         +ISVACI6FIWZA==
+Date:   Mon, 28 Feb 2022 16:13:44 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Subject: Re: [PATCH v5 3/7] PCI: Drop the `is_thunderbolt` attribute from PCI
+ core
+Message-ID: <20220228221344.GA529289@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL1PR12MB5157004F38E3FEFF046D9BE4E2019@BL1PR12MB5157.namprd12.prod.outlook.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add additional Documentation file in the list of files.
+On Mon, Feb 28, 2022 at 03:33:13PM +0000, Limonciello, Mario wrote:
+> [AMD Official Use Only]
+> 
+> > 
+> > On Fri, Feb 25, 2022 at 11:42:24AM -0600, Bjorn Helgaas wrote:
+> > > That would just leave the "PCI_VSEC_ID_INTEL_TBT implies external-
+> > facing"
+> > > assumption above.  Not having a Thunderbolt spec, I have no idea how
+> > > you deal with that.
+> > 
+> > You can download the spec here:
+> > 
+> > https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fww
+> > w.usb.org%2Fsites%2Fdefault%2Ffiles%2FUSB4%2520Specification%2520202
+> > 11116.zip&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7Ca26e64
+> > 7a4acf4e7681d308d9faa358fd%7C3dd8961fe4884e608e11a82d994e183d%7C0
+> > %7C0%7C637816402472428689%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC
+> > 4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&
+> > amp;sdata=HSDqx%2BHzSnczTZxaBij8sgqvJSS8ajtjCzZd2CPSbR4%3D&amp;re
+> > served=0
+> > 
+> > Inside the archive there is also the DVSEC spec with name "USB4 DVSEC
+> > Version 1.0.pdf".
+> 
+> The spec has Host_Router_indication (bits 18-19) as meaning external facing.
+> I'll respin the patch 3 for using that.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
-New patch to add file to maintainers list.
+Thanks, please include the spec citation when you do.  And probably
+the URL, because it's not at all obvious how the casual reader would
+get from "is_thunderbolt" to a recent add-on to the USB4 spec.
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dc4a1370ef1b..d36a51dee153 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9891,6 +9891,7 @@ INTEL UNCORE FREQUENCY CONTROL
- M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
-+F:	Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
- F:	drivers/platform/x86/intel/uncore-frequency.c
- 
- INTEL VENDOR SPECIFIC EXTENDED CAPABILITIES DRIVER
--- 
-2.34.1
-
+Bjorn
