@@ -2,108 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24147C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Mar 2022 20:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6FBC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Mar 2022 21:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235588AbiCAUmU (ORCPT
+        id S237668AbiCAVCK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Mar 2022 15:42:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
+        Tue, 1 Mar 2022 16:02:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231341AbiCAUmT (ORCPT
+        with ESMTP id S235428AbiCAVCJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Mar 2022 15:42:19 -0500
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3AF550E0C;
-        Tue,  1 Mar 2022 12:41:37 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id g1so15399498pfv.1;
-        Tue, 01 Mar 2022 12:41:37 -0800 (PST)
+        Tue, 1 Mar 2022 16:02:09 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D447C70337;
+        Tue,  1 Mar 2022 13:01:27 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id q11so14464150pln.11;
+        Tue, 01 Mar 2022 13:01:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=TuDxY2Y3DgjEY7geDOUxhhZwwH4120aDoumyCpAjTiY=;
-        b=chn1tLNNsUbz59uS4Gbx+F7iSWmr2rTViZtA1d0euu5WjneMT3vYIinNhoIE+exd9E
-         b0z8lTmOL8xGQQH78nmzYwdhPntPqL9SwTNyFxBl48DD2WXkPf3GgdvrB43Lcm+ziFn0
-         BaWNzVD9j1IUHuNxAHCn5S8anh2udLFc6bq3aXB3Z8Oc2PXfLGhtFbRZuohXnu9ZbiMB
-         OUv3TnZq20qrstuVPURmQ8/oiN6USF4KPJXXForCmCq0iCxqm97wrnV3yVBMYaHePvIF
-         7n52ngsg4OKN3wSDtdzu3CicjIl1x9N9R17tx62gXYQDXY0ahCS2VqJ1VekHPq/LSJOq
-         brDg==
+        bh=bOIBe7yMZ/zlQEAPp3pgauJ01CCSXHq9UiJfLThwzls=;
+        b=m4VXiXXvucihG1BfyCSBgKCpoAf7bhBPUcVd5IrlUqcBAGHfDiLwfTtbIlUnF4Atwb
+         wcRx3TglHBg6sS1yR7Rhpe/w08SL5+q4J2nJLF5RmIhrttU9FUE6gphazEQ656d8qARF
+         D5AVW+dQqIVyiFPifrhmmA2g0jl6oCE5gZa/I6x3MwhBZ2Zh6CwEZ5gmo0r4sf/cXzg8
+         PPVOaeGHAWRxyZKAuipGFb9tX0jfrbPeO0TvrBjbnQ3DGKsVKelB2IJlCh9sD0pL4dVs
+         nQ5MluWth6bP49ozpElfURqf9E36CSPeG11ig0kgbDLbT2aTuIf1EJKdm5fPAUQgWnzm
+         mTpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TuDxY2Y3DgjEY7geDOUxhhZwwH4120aDoumyCpAjTiY=;
-        b=I/5VY0VNR1umt+8F8bUv7tkn5UyeqmUXw+kirBWBwGaqrA8CImp1kNPxny3Qp96c4D
-         456UeeaP4Ca4OIXlat0YPdcZq8L517etjz/UAwdYTkBMqONCMrhL9dvczfifuFs2YkeA
-         jCHAqYonnt2N9of4s7k1xh+CSnGIagrdk9p3YhBEbocjFAsYrE91CxSJza6VqKphUOiT
-         RY0EpQnX/P4eiDcYdrybwcBGuLJj39aZzzKx0yGR5pVC0SyKBlx7YxABF7aUGdonvz5H
-         HA7RUjKffuw7kULdFh+PxUP2kNoH5SuyoXFAXoSXP5HkXN/wFMQbcHTMvJ9iBjRJtkKI
-         LGIw==
-X-Gm-Message-State: AOAM533K97FKtbsr3DAofXB1sTs/uxeybig9w6v1Mk1PYkxzdaa0csD3
-        uPMSxCz97qY+zynA6HlPiD8=
-X-Google-Smtp-Source: ABdhPJwCYn2dhcyQ/3Szh1NMeDK4pMFK/BjkCiJ72jGg1Tw4YwnTnO28ZaiCe9pw4DSe9acLtfIRHg==
-X-Received: by 2002:aa7:8d0f:0:b0:4e1:31de:9080 with SMTP id j15-20020aa78d0f000000b004e131de9080mr29471174pfe.1.1646167297110;
-        Tue, 01 Mar 2022 12:41:37 -0800 (PST)
+        bh=bOIBe7yMZ/zlQEAPp3pgauJ01CCSXHq9UiJfLThwzls=;
+        b=NR0oFBmOyBnNOH3aBriEvdGkR+X1q4AjkGmImA+Mgv5tKj5cXzUvVaF9Yv/uyadHR+
+         iE9OL3t9nByXh8AMQ/yBf6IIiJ+whGas5srbi92PzOQTn5Tk8HEYunXvQGGnoGo3xJQC
+         YPIJnzDHjxf/7qpbKp5+MUIJIEHvoDCNorNpjRfslGDi/a0xZCGSKwiS/xKBHHlKbjq9
+         XEfbCc7hWgUoXyA9/g9MqOsRD82X7z8TfGFVQT08v2tvsgvXwAjhS5TC2dqkE8R9cxIk
+         ucBta5E3QXt5FK8TJ+R7DzDIGk8wAhM/yXOcyqAvauLyuGi5f/fgkZXL95EkwXdJf+i3
+         9X7Q==
+X-Gm-Message-State: AOAM532fDhzTf6oNmCBSWsfDOiJ7NKOxfaYDuJ1vx2A1evI4uyNwAVoC
+        5dnw+XW7UpKUaa9nY3wKjp8=
+X-Google-Smtp-Source: ABdhPJxusFXIHW71NmkrejK1bs/xU2Fg5c+yf70kwofRE+uJGNcQbQTRIVy1oOGoXzTe+9Bf5OnySA==
+X-Received: by 2002:a17:902:c14d:b0:14f:f1b9:1eab with SMTP id 13-20020a170902c14d00b0014ff1b91eabmr27002705plj.129.1646168487197;
+        Tue, 01 Mar 2022 13:01:27 -0800 (PST)
 Received: from google.com ([2620:15c:202:201:c110:510b:4b7b:d004])
-        by smtp.gmail.com with ESMTPSA id 16-20020a056a00073000b004dfe2217090sm17628672pfm.200.2022.03.01.12.41.35
+        by smtp.gmail.com with ESMTPSA id q9-20020a056a00088900b004e03b051040sm18280946pfj.112.2022.03.01.13.01.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Mar 2022 12:41:36 -0800 (PST)
-Date:   Tue, 1 Mar 2022 12:41:33 -0800
+        Tue, 01 Mar 2022 13:01:26 -0800 (PST)
+Date:   Tue, 1 Mar 2022 13:01:23 -0800
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Sachi King <nakato@nakato.io>, Chen Yu <yu.c.chen@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/2] Input: soc_button_array - add support for Microsoft
- Surface 3 (MSHW0028) buttons
-Message-ID: <Yh6E/QkwLl47X6IG@google.com>
-References: <20220224110241.9613-1-hdegoede@redhat.com>
- <20220224110241.9613-2-hdegoede@redhat.com>
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] platform/surface: surfacepro3_button: don't load on
+ amd variant
+Message-ID: <Yh6Joy2HDnsuK6LN@google.com>
+References: <20211109081125.41410-1-nakato@nakato.io>
+ <20211109081125.41410-2-nakato@nakato.io>
+ <CAHp75Vcw-ARNZCRRJGzbQ7xc3ZB=98eFCuEFc4cj5W3vAj5EZw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220224110241.9613-2-hdegoede@redhat.com>
+In-Reply-To: <CAHp75Vcw-ARNZCRRJGzbQ7xc3ZB=98eFCuEFc4cj5W3vAj5EZw@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 12:02:40PM +0100, Hans de Goede wrote:
-> The drivers/platform/surface/surface3_button.c code is alsmost a 1:1 copy
-> of the soc_button_array code.
+On Tue, Nov 09, 2021 at 11:12:34AM +0200, Andy Shevchenko wrote:
+> On Tue, Nov 9, 2021 at 10:11 AM Sachi King <nakato@nakato.io> wrote:
+> >
+> > The AMD variant of the Surface Laptop report 0 for their OEM platform
+> > revision.  The Surface devices that require the surfacepro3_button
+> > driver do not have the _DSM that gets the OEM platform revision.  If the
+> > method does not exist, load surfacepro3_button.
 > 
-> The only big difference is that it binds to an i2c_client rather then to
-> a platform_device. The cause of this is the ACPI resources for the MSHW0028
-> device containing a bogus I2cSerialBusV2 resource which causes the kernel
-> to instantiate an i2c_client for it instead of a platform_device.
+> ...
 > 
-> Add "MSHW0028" to the ignore_serial_bus_ids[] list in drivers/apci/scan.c,
-> so that a platform_device will be instantiated and add support for
-> the MSHW0028 HID to soc_button_array.
+> >   * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
+> >   * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
+> > - * device by checking for the _DSM method and OEM Platform Revision.
+> > + * device by checking for the _DSM method and OEM Platform Revision DSM
+> > + * function.
 > 
-> This fully replaces surface3_button, which will be removed in a separate
-> commit (since it binds to the now no longer created i2c_client it no
-> longer does anyyhing after this commit).
+> Not sure what this change means (not a native speaker).
 > 
-> Note the MSHW0028 id is used by Microsoft to describe the tablet buttons on
-> both the Surface 3 and the Surface 3 Pro and the actual API/implementation
-> for the Surface 3 Pro is quite different. The changes in this commit should
-> not impact the separate surfacepro3_button driver:
+> ...
 > 
-> 1. Because of the bogus I2cSerialBusV2 resource problem that driver binds
->    to the acpi_device itself, so instantiating a platform_device instead of
->    an i2c_client does not matter.
+> > -       dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
 > 
-> 2. The soc_button_array driver will not bind to the MSHW0028 device on
->    the Surface 3 Pro, because it has no GPIO resources.
+> I think this is useful to have.
 > 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> What about leaving it as is for debugging purposes and just replacing
+> the last test?
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+I agree it is nice to be able to print it for debug purposes, but it has
+to be fetched separately, as with the proposed change we are not reading
+it.
 
-Please feel free to merge through platform tree.
+If I am understanding the change it wants to call acpi_dsm_check()
+to verify whether MSHW0040_DSM_GET_OMPR function exists at all (which is
+done by reading _DSM MSHW0040_DSM_UUID, revision MSHW0040_DSM_REVISION,
+function 0. Only if function 0 indicates that function
+MSHW0040_DSM_GET_OMPR is supported in this _DSM, we can read it to get
+the real version number, which can be 0.
+
+Treating 0 as an invalid version as it was done in original change is
+wrong.
+
+I propose we combine the old and new code, call acpi_dsm_check() and
+bail if it returns false, otherwise proceed to calling
+acpi_evaluate_dsm_typed() and dev_dbg() the version.
+
+Sachi, are you going to update the patch? You do not need to adjust the
+surface driver as Hans is getting rid of it.
 
 Thanks.
 
