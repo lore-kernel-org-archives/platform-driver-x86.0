@@ -2,90 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A39B2C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Mar 2022 16:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1737C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Mar 2022 16:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240190AbiCBQPl (ORCPT
+        id S234388AbiCBQVC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 2 Mar 2022 11:15:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60682 "EHLO
+        Wed, 2 Mar 2022 11:21:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230254AbiCBQPl (ORCPT
+        with ESMTP id S241849AbiCBQVC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Mar 2022 11:15:41 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D984CCCC5B;
-        Wed,  2 Mar 2022 08:14:57 -0800 (PST)
-Received: from nazgul.tnic (nat0.nue.suse.com [IPv6:2001:67c:2178:4000::1111])
+        Wed, 2 Mar 2022 11:21:02 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667297D01D;
+        Wed,  2 Mar 2022 08:20:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 765761EC03AD;
-        Wed,  2 Mar 2022 17:14:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1646237692;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=awylhfIR8fI0vfB+Q4tGaWL6X/Z9qgE2EUHkemQv5MY=;
-        b=fvEIawZRy1ItnJXYqlVf415zSrdtK2Tt/7zQyoUxd71Lzc/DXKG+G31uKqqugg+TVr1B84
-        DvvCmJccsylPfqGkz1z2eNFkIxtZITxjPP2y3eMK+pHEq16soA5qz0IECP9042vAqkl3Ww
-        d2v50azdyWX5Dx+ruad9aYUz4bWprcs=
-Date:   Wed, 2 Mar 2022 17:14:57 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v11 00/45] Add AMD Secure Nested Paging (SEV-SNP) Guest
- Support
-Message-ID: <Yh+YAWu3K4xBillV@nazgul.tnic>
-References: <20220224165625.2175020-1-brijesh.singh@amd.com>
- <Yh99pBI/RwZY1yf7@nazgul.tnic>
- <519f5e8e-18d1-43ac-ef90-0320d21c3a55@redhat.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1C175B81F51;
+        Wed,  2 Mar 2022 16:20:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E8D8C004E1;
+        Wed,  2 Mar 2022 16:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1646238015;
+        bh=XNeX32660m2tVj90WpPs9Can/L/FmgVh79u8e7ojpKQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AoU+nU+YqqvJSnaT8yDbv2jky19r3fSFdyBOTmY/9L7i5GSmg/XiGmnv7e7wWKIPq
+         hZ47SBXIvruM/TqMWGfmOpOENgy+oNLuGgr/Kn7z8+tIQdYaS0ai5CprR11K42mHDN
+         HdEu0/4+zvxOUzWTubQU957FZvRfgpdakNdzpJgo=
+Date:   Wed, 2 Mar 2022 17:20:13 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Jithu Joseph <jithu.joseph@intel.com>, hdegoede@redhat.com,
+        markgross@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, corbet@lwn.net, andriy.shevchenko@linux.intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com
+Subject: Re: [RFC 00/10] Introduce In Field Scan driver
+Message-ID: <Yh+ZPa0y0aVLimU2@kroah.com>
+References: <20220301195457.21152-1-jithu.joseph@intel.com>
+ <Yh59rOIH24X+6GyI@kroah.com>
+ <20220302103313.3bacd10b@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <519f5e8e-18d1-43ac-ef90-0320d21c3a55@redhat.com>
+In-Reply-To: <20220302103313.3bacd10b@gandalf.local.home>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Mar 02, 2022 at 05:09:34PM +0100, Paolo Bonzini wrote:
-> Sure: https://git.kernel.org/pub/scm/virt/kvm/kvm.git, branch svm-for-snp.
+On Wed, Mar 02, 2022 at 10:33:13AM -0500, Steven Rostedt wrote:
+> On Tue, 1 Mar 2022 21:10:20 +0100
+> Greg KH <gregkh@linuxfoundation.org> wrote:
 > 
-> $ git log -4 --oneline --reverse
-> 3c95d3fab229 KVM: SVM: Define sev_features and vmpl field in the VMSA
-> 0c86f9cf27f7 KVM: SVM: Create a separate mapping for the SEV-ES save area
-> c5e0ec4c742d KVM: SVM: Create a separate mapping for the GHCB save area
-> 88c955d1fc93 (HEAD -> kvm/svm-for-snp) KVM: SVM: Update the SEV-ES save area mapping
+> > "RFC" means you are not comfortable submitting the changes yet, so you
+> > don't need my review at this point in time.  Become confident in your
+> > changes before asking for others to review the code please.
+> 
+> I guess you and I have a different understanding of RFC (Request for
+> Comments). As to me, comments are a form of review.
+> 
+> In other words, RFC to me means the review is "does this design look like
+> it will work", and we should be reviewing the design and overview of the
+> patches. Not the nitty gritty details (like missed error handling, unless
+> the design will prevent it). Although, you could add those comments in a
+> review.
+> 
+> When I post RFCs, it's not that I'm not comfortable submitting the change,
+> it's because I want to know if what I'm doing makes sense, and I might be
+> missing something that will make this effort in vain.
+> 
+> What ever happen to the "Submit early, submit often" mantra?
 
-Thanks!
+For patches from "experienced" submitters like this, with reviews from
+other experienced reviewers already (look at the s-o-b chain here),
+there's no excuse for it to be a RFC unless something is really odd as
+the experienced reviewers should have already handled the "comments"
+portion already.  Otherwise their review was kind of pointless, right?
 
--- 
-Regards/Gruss,
-    Boris.
+I'm all for submitting early, but be confident!
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Also, I have way too many non-RFC patches to review in my queue, so that
+means any RFC patches fall to the bottom so I like to give people a
+reason why I'm not reviewing them, like I did here.
+
+thanks,
+
+greg k-h
