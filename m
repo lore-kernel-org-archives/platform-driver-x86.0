@@ -2,227 +2,399 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D76C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Mar 2022 14:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 352F9C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Mar 2022 14:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238247AbiCBOeR (ORCPT
+        id S243230AbiCBOsn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 2 Mar 2022 09:34:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53424 "EHLO
+        Wed, 2 Mar 2022 09:48:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237439AbiCBOeP (ORCPT
+        with ESMTP id S241521AbiCBOsm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Mar 2022 09:34:15 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2059.outbound.protection.outlook.com [40.107.244.59])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 905203701A;
-        Wed,  2 Mar 2022 06:33:28 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CwHuZ78euGoD67e1o3LUmvuinEnFQyoNQAKeChEP8J21NSxzX6x1qbeO6EAmIjQFmzSkkfIFolkBjdvvrONBTm3TuUChubrEce+RHFlH8+gf24fMzq+l8VaikVuvj4I3aMRj5z4WlGpgiz9HPENJzMhPAKsALpjUk4IXsBOzw8B8nQZ3EDipENAy65W602cZFwAz0VLMDSdyLxWMVQrsiT3AiXAXS06/Xl/rzhq7QyrUkx86kO98Rl1A2lvKRoNgHzKWVV7YQLaU3CmbbY1YgPpym52YZ2ncSzK14G03u0ISQBTGAHfWV0E1xruhoIKrFSBe/a6gw3y+o+jc14v8rA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=98p80NeXqvujj7Hovlh7xtZah1YYbwsL8W1gv2jMo1A=;
- b=iDqL9iJ6K72tB78nFjNEJhfDiDqUvqYfNr42WkKIAA3A3bICuM9Ecg3oI8iOjREqzvuao/p1fSICovizLplh6vXSTZGE3j2MjmWN6SatPnLQZwmUL8BKVwL3FcbdWZPtszGBoip1G8o8k1QFIhXoin8nhTXdO2XtVStxNs2TNZnflc65FAp2r8DYVkCYMuMrFOToCxNUgtYYWejbUdPsKFVmQwyNoq5CsTbF59pP8WeobJfcMHZkmd0lxSDeGlghlVlA2jLSyG7ROUHYqbkbW9Jw0MVvUMs4teK3TtnDRToPsUVqCh1TimrrG4kK6bQfnrFtvFKQ+MwxohcKQyJl9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=98p80NeXqvujj7Hovlh7xtZah1YYbwsL8W1gv2jMo1A=;
- b=Li1gYDziEF1IoMX1oEmUEz18LYlE5YwW56UC34vFY10tNiKLjfyEbB2/H85t7RJx/8CC/BVtQtmzHYu/L3nU2JCiMFVohuE+Rxe58MG9YiwnQiQiXXHWHRste8Bvut3W8lm0lrscTFA0sFteim47dIdrITL55sCgzmUpczgWBHA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by MN0PR12MB5738.namprd12.prod.outlook.com (2603:10b6:208:371::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.22; Wed, 2 Mar
- 2022 14:33:25 +0000
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::500e:b264:8e8c:1817]) by SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::500e:b264:8e8c:1817%5]) with mapi id 15.20.5017.027; Wed, 2 Mar 2022
- 14:33:25 +0000
-Message-ID: <9d621439-108b-db42-d5ea-b390748d243b@amd.com>
-Date:   Wed, 2 Mar 2022 08:33:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Cc:     brijesh.singh@amd.com, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v11 42/45] virt: Add SEV-SNP guest driver
-Content-Language: en-US
-To:     Dov Murik <dovmurik@linux.ibm.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org
-References: <20220224165625.2175020-1-brijesh.singh@amd.com>
- <20220224165625.2175020-43-brijesh.singh@amd.com>
- <c197dc02-b63a-eb45-8e52-275934177d7e@linux.ibm.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-In-Reply-To: <c197dc02-b63a-eb45-8e52-275934177d7e@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR12CA0014.namprd12.prod.outlook.com
- (2603:10b6:208:a8::27) To SN6PR12MB2718.namprd12.prod.outlook.com
- (2603:10b6:805:6f::22)
+        Wed, 2 Mar 2022 09:48:42 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6948A10FE6
+        for <platform-driver-x86@vger.kernel.org>; Wed,  2 Mar 2022 06:47:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646232476;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XupR4D98oHCefTo859Ywqo2HMyr0Sne92+ZqBpxIpVo=;
+        b=Fdpkavv6MDsJhg71hBIVlrUqsrVNY/TMqDkR2X2ZbV532g3K4Y5vxIYFIWm5IrBT+hTdV7
+        aQV9logvLfpSTS13LtuE7r+sCx7DyFi9lRWXXwh9psf7IDWYkIW5nTG/KNMkaIleJXV8gv
+        SNn+Yltyk83tggM1Yr+xhMffKj118z8=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-474-_hlDZfypMSmDc313TAnOZg-1; Wed, 02 Mar 2022 09:47:51 -0500
+X-MC-Unique: _hlDZfypMSmDc313TAnOZg-1
+Received: by mail-ej1-f71.google.com with SMTP id m12-20020a1709062acc00b006cfc98179e2so1108206eje.6
+        for <platform-driver-x86@vger.kernel.org>; Wed, 02 Mar 2022 06:47:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=XupR4D98oHCefTo859Ywqo2HMyr0Sne92+ZqBpxIpVo=;
+        b=FxaHfdyV/xo8kJsmDZU3Qx7yr7vcoCAnA/iCv6svxGqcUqKR/cZ2PHVuw9Mnu1EwWy
+         fDXyzZJeaSWw2hDyzM2ArAn4srcv7N/vHfUP1382BPimDsswfqzcOqKoIwMrgbblcuvO
+         ay2tNpCj3uVaFkM4tvOdoM5DPSdSfHzBx6HdLQdoVsbvtnYWlwvIDzx0yNKxwXjzzygb
+         DyvNl6HRTdkgZ8Iws+2UB+sRIni8ZIweusHAbrVTHZ7KO5vzosFaJek5YEaYVk2idNR9
+         3QXM7rOhUbJI+T33ldEB0hnmZ3JH0zNbYCUwzFdVm9AxA2hucM1NUimNurI6JCLP7UHf
+         /Htw==
+X-Gm-Message-State: AOAM530pRvJfLVToZxnVX5z+SuhREQPpyxHVbYWuen92y65CQg7ODa7w
+        x5QoCrjzA/SKduBN0MXUTPi55hrVCPCeP1oSFuLzkvgM6qqt6XHTYQ664qpUZMgSXkBgdcpljmX
+        m6cOMi+80DDivJvN8JJZ1nUNCn5a0tNdtcA==
+X-Received: by 2002:a17:907:3ea5:b0:6da:6ef4:b058 with SMTP id hs37-20020a1709073ea500b006da6ef4b058mr1738036ejc.124.1646232469914;
+        Wed, 02 Mar 2022 06:47:49 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxob8zNIou+tkCBFDR/q5r1DfLjbibEFoBhfyWgeqIvTGP72v2/9jwCLdRngTuR91MTWfO6pw==
+X-Received: by 2002:a17:907:3ea5:b0:6da:6ef4:b058 with SMTP id hs37-20020a1709073ea500b006da6ef4b058mr1738018ejc.124.1646232469608;
+        Wed, 02 Mar 2022 06:47:49 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id o21-20020a170906289500b006d144662b24sm6411057ejd.152.2022.03.02.06.47.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Mar 2022 06:47:49 -0800 (PST)
+Message-ID: <81dfe7a3-5882-1f9f-7271-a952846d44cc@redhat.com>
+Date:   Wed, 2 Mar 2022 15:47:48 +0100
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e07740fb-7591-4c7a-72a2-08d9fc599c0c
-X-MS-TrafficTypeDiagnostic: MN0PR12MB5738:EE_
-X-Microsoft-Antispam-PRVS: <MN0PR12MB573896226F6C6FF60118D4B7E5039@MN0PR12MB5738.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ehik+t7UlYqfbXQnwKgc+8yiBrzJsPwJv4rICMSvdF6QNohJStMQ24Gb/dTyz8SXYAk3hOUpQu01ynQU76EAcIlpb8MjnJYLRSRWSpsMAO7M68HZrIpvPNb3nwaCs3/5aRFHhMZfD3c/rtLW+d3TV8FFx7F5W7zjBg+ezT8lrkCfcaFVauMRoRbIL27kHJIwdi7SVsQoJ44+Kbtcu4tETKnKZkXxowXYiCGdSGYTVTl7rxE5PMaiYvViioSLUHqYoSZqjLXGmfp09obBcmdA+IgC0PfxLOX7anzAzJokD8RpRXGQpbhy5ue1iV5qaZJpspocZRJWsZhPXTjmAnF4UlLbaU1RdKPYxcEYQmN9cIn8kYSLYzvjICcVDRYFzs/JS1vhM36eAxVpvco8ZX3hxxfAtLdE1fUj75ELqIhqPi+QY3BrbZ+PL4uXKZBGi5a8DbtBibkcH8LGnWxqXB8VjbKbhxTiOOl1BdGUWwSBvQKxJsggH8MuxHOdHlxz5pjLZGvt9tnO0ziQoCEqJN1dTWPl2Vh7kuAMQzM9etgcyVdZ6Zlw5sEVhu1snbHnOTjU5nUlZn9FZHjLM9dexMiWJ9NUBA+RFndmUZQGB7IGbXknM9D5CebfbptA1cqpS0gO5aUz4MrFfsCb7WE+Yrw78HxKeG6NIBEvEPytMRFawHbjocezYyZBir8TdaNJY41gzQpTSt4tx3xvtImcEf10ErQSqIIvSMlTu6xlosQWFe1uE5K2egtJT8ZkG+QlVtx6
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(8676002)(4326008)(31696002)(66476007)(186003)(86362001)(66946007)(38100700002)(316002)(54906003)(26005)(7406005)(6512007)(66556008)(2616005)(83380400001)(508600001)(6486002)(6666004)(53546011)(6506007)(2906002)(5660300002)(8936002)(44832011)(36756003)(7416002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TVd0Y3Bwc3hiOUZ1a3kvRE5FVHFpMDAvMVBOU0V3RlBLTnRDcS9xVks3VDNp?=
- =?utf-8?B?NmNRcW9hZVNkU1llaW5nQmtDQ0tuTHlWS3k2VndBT3c0aDFUYXl1M3FxTlMr?=
- =?utf-8?B?bHFWY3ljK005cHM4OWlCak1BRVp4dHZicWgza0JMQVNkSjJDMFM4dGZEMUc1?=
- =?utf-8?B?THRmK29sUzZIaFNBSSt3QWphUzZjWllZTHNzb3ZzVVBSc3AwZ014TTVUYlBX?=
- =?utf-8?B?Z2lUR3pNV2Z2WFMyVkc4emxQOGFhZjZjbjkzTWZMczRVS3M4UHg2Sk9sTXdY?=
- =?utf-8?B?OURTSkFoQVVwN1FiMnc3RTVnQVVYNVZyZ1ROUzJ1OFN3eHFXSFFjWjNRT2VL?=
- =?utf-8?B?VWJjMXY4SHNTWUtDNCtZNWhxSFZNc1VSYmtyRXE3NGtBNEFOWmJBRDNqZE4x?=
- =?utf-8?B?amRJbFNPbFhxVHNjUjVQSGtTd0h6NDByZnAzdjFrNXpQbjkxNDJxQWI4WkFz?=
- =?utf-8?B?eGYyQmlFL2RKT1B0Zzc3SU1ERng3bGpRMzVZcGQxNVVwRmVDVDBuUWlxMjNw?=
- =?utf-8?B?c0c5c0VUMmJUN0plWDlMOVkwNGdPUDdGMnNieXlFUEpaTytGOXA3WnFNNGY5?=
- =?utf-8?B?eHc2NTVYV3BMYmhkUUxyUnR4dXB1Ums5ZEVINE5oaEhaMG9xVVd4SkdRZUI3?=
- =?utf-8?B?YTNQeGExZXprc1QrNTkwYVBKVEwvVFkzdWJVMUhPWU1Rb0xQNklQY2Jub1lz?=
- =?utf-8?B?U3R0d3J0Q2kyUTlQMEVzZFFTMnZNQWlHUENqUll4N3BsUXFmOE9pK21xTG5Z?=
- =?utf-8?B?ZVhvUGN4bkxkRHNZbUtXTDEyeExpQ1FZN3FSSXRrY3c1VitQeG9IOVdFSWtL?=
- =?utf-8?B?NUplTTk5a0V4R1ZWb2U1RUNiVm1SUTJzTlhYMitHT0tGMFNpL2xJQ1pMSWcx?=
- =?utf-8?B?eVk4Z3NRREFVMzV0UnR2UHpibnJsWTJVeGp2cmlTTWVpSFlKb3E4VlkvdDlm?=
- =?utf-8?B?b1RPME5VS01tdDFNbTBXc1RBN2c4WFk4bS9sZTc0U0RTUEVJZGdyR0V5VTdt?=
- =?utf-8?B?TTFYZkZtOU5TMU5SUTExenR2QXNFOVpaMVo2NDlCQ0ZUck81WTdxYzBaTnNu?=
- =?utf-8?B?Q2xHa0ZWUXYxYzZUY1hRMVk4Slp1a3ZrK1pBSkowOXdWc2ozQmRyM0lWenRH?=
- =?utf-8?B?OEw1VkhRSk0rV1RCc1hWUHNvek1OQVFDb3FxV0dzN3IrbUVMeWVMSWtjam9B?=
- =?utf-8?B?VkxIbzFiWXlSKzMwQUVwbTZMeGpiU1V0RVZIWStZRFUxc0h0Um1QVDh5SUNU?=
- =?utf-8?B?MWphVWVnODRrS2VPNHVnelBLaVB5MHV4VVBxQ28xV2J2bSt2Nno0RHduZkhK?=
- =?utf-8?B?cGlIVDljQ3lpVDJDMnlGN3BoSTlHNEZWV0k4OXV0ckRvWEovelI2L29ibjFB?=
- =?utf-8?B?MEVYa2ttdUo1MlpnKzJKQVRDR2ZpQk93ZjRQL0hsbXFQYTUwVGJOR1NXdmRy?=
- =?utf-8?B?NnZ4N1pkSVNrM0FraHVhSUlIeFBMbnU4VW80NFNjUkZkZC9SWlpiNW1kQzVG?=
- =?utf-8?B?SlhoRllKbE4rRjNQd1cwNCtZYU0wL1FKMmh3ODF4bHRCTUgxSlBBSkU2M3pJ?=
- =?utf-8?B?QVd2TVU0VUNxaUhqUDRscFFHSUJJNlNUR1VoSi9tRGpjak56a3dTcU1uZi8y?=
- =?utf-8?B?QjdVYmk4U25RR21OYWplR0ZoajVSQ0c4TjFoQUVmVUswNW1kTlBDRlFoOU9v?=
- =?utf-8?B?WTVrRGJvNk5HYlU5TUJCUlppMUwwcGQ0b0VnNE40eWo3VllCdmRqbkZnS1VM?=
- =?utf-8?B?OGFNQlZxd2tTdDM5dHZlN0d4cUFjK1lsYWJtTzB5QmxuUWVEaVh6ZFNzZWd3?=
- =?utf-8?B?QzdPa0tjWm44dHBlZ1F1WXcvNzBET281L1dwb0lsMG0vWEVRMkxnb3BZY3dH?=
- =?utf-8?B?cHh4Nk1zbElWWnkwSko3YVhtQ2RYK3ZPTWpFV0Q5anJjV2hMWHpLTHhsY3ZV?=
- =?utf-8?B?U3V4TElWRFFKVkNKblloSFZCR1M0V1kvZzBycWpTckwyU3hDMEpXZFBlQzBo?=
- =?utf-8?B?dVBZYWk2TWE3cVlHWE9qZDkrQU9XM01PcHg1Z1Nla1VwMVpFdnNTSDY2dTRh?=
- =?utf-8?B?V0lqYlNtc0xubkRtOHYrNTFkYW1Gb0k5TkZjVllCSFA0N0FiTTJRcEhCclE2?=
- =?utf-8?B?ZHdHN2ptWmNQbmgrY3BpMVFNTEhiZXlyNFliK082dUd4d2UxRzN4STRZQ2RJ?=
- =?utf-8?Q?UNn5IJVk5I+IqgrDSyM/IX0=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e07740fb-7591-4c7a-72a2-08d9fc599c0c
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2022 14:33:25.2017
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qoFgBqAyXjDzzq2xBGBwJkKFJn7YTHBvijj9lMadCFOjgqZbnRX7Fz9jx+O+ItbnguhEcmsSHzq8gkbUmuia3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5738
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add PSC mode support
+Content-Language: en-US
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org
+References: <markpearson@lenovo.com>
+ <20220225182505.7234-1-markpearson@lenovo.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220225182505.7234-1-markpearson@lenovo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Dov,
+Hi,
 
-On 3/2/22 04:03, Dov Murik wrote:
-> Hi Brijesh,
+On 2/25/22 19:25, Mark Pearson wrote:
+> The Lenovo AMD platforms use PSC mode for providing platform
+> profile support.
 > 
-> On 24/02/2022 18:56, Brijesh Singh wrote:
->> The SEV-SNP specification provides the guest a mechanism to communicate
->> with the PSP without risk from a malicious hypervisor who wishes to
->> read, alter, drop or replay the messages sent. The driver uses
->> snp_issue_guest_request() to issue GHCB SNP_GUEST_REQUEST or
->> SNP_EXT_GUEST_REQUEST NAE events to submit the request to PSP.
->>
->> The PSP requires that all communication should be encrypted using key
->> specified through the platform_data.
->>
->> Userspace can use SNP_GET_REPORT ioctl() to query the guest attestation
->> report.
->>
->> See SEV-SNP spec section Guest Messages for more details.
->>
->> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
->> ---
+> Detect if PSC mode is available and add support for setting the
+> different profile modes appropriately.
 > 
-> [...]
+> Note - if both MMC mode and PSC mode are available then MMC mode
+> will be used in preference.
 > 
->> +
->> +static struct snp_guest_crypto *init_crypto(struct snp_guest_dev *snp_dev, u8 *key, size_t keylen)
->> +{
->> +	struct snp_guest_crypto *crypto;
->> +
->> +	crypto = kzalloc(sizeof(*crypto), GFP_KERNEL_ACCOUNT);
->> +	if (!crypto)
->> +		return NULL;
->> +
->> +	crypto->tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
->> +	if (IS_ERR(crypto->tfm))
->> +		goto e_free;
+> Tested on T14 G1 AMD and T14s G2 AMD.
 > 
-> 
-> When trying this series, the sevguest module didn't load (and printed no
-> error message).  After adding some debug messages, I found that the
-> crypto_alloc_read() call returned an error.  I found out that
-> CONFIG_CRYPTO_GCM was disabled in my config.
-> 
-> Consider modifying sevguest/Kconfig to force it in:
-> 
-> 
-> 
-> diff --git a/drivers/virt/coco/sevguest/Kconfig b/drivers/virt/coco/sevguest/Kconfig
-> index 2be45820e86c..74ca1fe09437 100644
-> --- a/drivers/virt/coco/sevguest/Kconfig
-> +++ b/drivers/virt/coco/sevguest/Kconfig
-> @@ -1,7 +1,9 @@
->   config SEV_GUEST
->          tristate "AMD SEV Guest driver"
->          default m
-> -       depends on AMD_MEM_ENCRYPT && CRYPTO_AEAD2
-> +       depends on AMD_MEM_ENCRYPT
-> +       select CRYPTO_AEAD2
-> +       select CRYPTO_GCM
->          help
->            SEV-SNP firmware provides the guest a mechanism to communicate with
->            the PSP without risk from a malicious hypervisor who wishes to read,
-> 
-> 
-> 
-> Another thing to consider is to add messages to the various error paths
-> in snp_guest_probe().  Not sure what is the common practice in other modules.
-> 
+> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
 
-I am not sure about sparkling the error message on the various paths, 
-but I agree with adding the 'select'.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-If I happen to do v12, I will include it in my series; otherwise, the 
-maintainer can pull your above fixup on top of it.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-thanks for looking into it.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-~Brijesh
+Regards,
+
+Hans
+
+
+
+p.s.
+
+One small thing which I noticed which could be improved is to
+move the 2 convert_profile_to_dytc() calls in dytc_profile_set()
+to a single call at the top of the function (before taking the
+lock even) to avoid code duplication between the DYTC_FUNCMODE_MMC
+vs DYTC_FUNCMODE_PSC paths.
+
+I didn't want to block merging the patch on this, if you can
+do a follow up patch with that as cleanup that would be great.
+
+
+
+
+
+
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 172 ++++++++++++++++++---------
+>  1 file changed, 119 insertions(+), 53 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index d0599e8a7b4d..d9117f824ce9 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10130,6 +10130,7 @@ static struct ibm_struct proxsensor_driver_data = {
+>  
+>  #define DYTC_CMD_FUNC_CAP     3 /* To get DYTC capabilities */
+>  #define DYTC_FC_MMC           27 /* MMC Mode supported */
+> +#define DYTC_FC_PSC           29 /* PSC Mode supported */
+>  
+>  #define DYTC_GET_FUNCTION_BIT 8  /* Bits  8-11 - function setting */
+>  #define DYTC_GET_MODE_BIT     12 /* Bits 12-15 - mode setting */
+> @@ -10140,12 +10141,17 @@ static struct ibm_struct proxsensor_driver_data = {
+>  
+>  #define DYTC_FUNCTION_STD     0  /* Function = 0, standard mode */
+>  #define DYTC_FUNCTION_CQL     1  /* Function = 1, lap mode */
+> -#define DYTC_FUNCTION_MMC     11 /* Function = 11, desk mode */
+> +#define DYTC_FUNCTION_MMC     11 /* Function = 11, MMC mode */
+> +#define DYTC_FUNCTION_PSC     13 /* Function = 13, PSC mode */
+>  
+> -#define DYTC_MODE_PERFORM     2  /* High power mode aka performance */
+> -#define DYTC_MODE_LOWPOWER    3  /* Low power mode */
+> -#define DYTC_MODE_BALANCE   0xF  /* Default mode aka balanced */
+> -#define DYTC_MODE_MMC_BALANCE 0  /* Default mode from MMC_GET, aka balanced */
+> +#define DYTC_MODE_MMC_PERFORM  2  /* High power mode aka performance */
+> +#define DYTC_MODE_MMC_LOWPOWER 3  /* Low power mode */
+> +#define DYTC_MODE_MMC_BALANCE  0xF  /* Default mode aka balanced */
+> +#define DYTC_MODE_MMC_DEFAULT  0  /* Default mode from MMC_GET, aka balanced */
+> +
+> +#define DYTC_MODE_PSC_LOWPOWER 3  /* Low power mode */
+> +#define DYTC_MODE_PSC_BALANCE  5  /* Default mode aka balanced */
+> +#define DYTC_MODE_PSC_PERFORM  7  /* High power mode aka performance */
+>  
+>  #define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the error result */
+>  #define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
+> @@ -10155,10 +10161,16 @@ static struct ibm_struct proxsensor_driver_data = {
+>  	 (mode) << DYTC_SET_MODE_BIT | \
+>  	 (on) << DYTC_SET_VALID_BIT)
+>  
+> -#define DYTC_DISABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_BALANCE, 0)
+> +#define DYTC_DISABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_MMC_BALANCE, 0)
+> +#define DYTC_ENABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_MMC_BALANCE, 1)
+>  
+> -#define DYTC_ENABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_BALANCE, 1)
+> +enum dytc_profile_funcmode {
+> +	DYTC_FUNCMODE_NONE = 0,
+> +	DYTC_FUNCMODE_MMC,
+> +	DYTC_FUNCMODE_PSC,
+> +};
+>  
+> +static enum dytc_profile_funcmode dytc_profile_available;
+>  static enum platform_profile_option dytc_current_profile;
+>  static atomic_t dytc_ignore_event = ATOMIC_INIT(0);
+>  static DEFINE_MUTEX(dytc_mutex);
+> @@ -10166,19 +10178,37 @@ static bool dytc_mmc_get_available;
+>  
+>  static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *profile)
+>  {
+> -	switch (dytcmode) {
+> -	case DYTC_MODE_LOWPOWER:
+> -		*profile = PLATFORM_PROFILE_LOW_POWER;
+> -		break;
+> -	case DYTC_MODE_BALANCE:
+> -	case DYTC_MODE_MMC_BALANCE:
+> -		*profile =  PLATFORM_PROFILE_BALANCED;
+> -		break;
+> -	case DYTC_MODE_PERFORM:
+> -		*profile =  PLATFORM_PROFILE_PERFORMANCE;
+> -		break;
+> -	default: /* Unknown mode */
+> -		return -EINVAL;
+> +	if (dytc_profile_available == DYTC_FUNCMODE_MMC) {
+> +		switch (dytcmode) {
+> +		case DYTC_MODE_MMC_LOWPOWER:
+> +			*profile = PLATFORM_PROFILE_LOW_POWER;
+> +			break;
+> +		case DYTC_MODE_MMC_DEFAULT:
+> +		case DYTC_MODE_MMC_BALANCE:
+> +			*profile =  PLATFORM_PROFILE_BALANCED;
+> +			break;
+> +		case DYTC_MODE_MMC_PERFORM:
+> +			*profile =  PLATFORM_PROFILE_PERFORMANCE;
+> +			break;
+> +		default: /* Unknown mode */
+> +			return -EINVAL;
+> +		}
+> +		return 0;
+> +	}
+> +	if (dytc_profile_available == DYTC_FUNCMODE_PSC) {
+> +		switch (dytcmode) {
+> +		case DYTC_MODE_PSC_LOWPOWER:
+> +			*profile = PLATFORM_PROFILE_LOW_POWER;
+> +			break;
+> +		case DYTC_MODE_PSC_BALANCE:
+> +			*profile =  PLATFORM_PROFILE_BALANCED;
+> +			break;
+> +		case DYTC_MODE_PSC_PERFORM:
+> +			*profile =  PLATFORM_PROFILE_PERFORMANCE;
+> +			break;
+> +		default: /* Unknown mode */
+> +			return -EINVAL;
+> +		}
+>  	}
+>  	return 0;
+>  }
+> @@ -10187,13 +10217,22 @@ static int convert_profile_to_dytc(enum platform_profile_option profile, int *pe
+>  {
+>  	switch (profile) {
+>  	case PLATFORM_PROFILE_LOW_POWER:
+> -		*perfmode = DYTC_MODE_LOWPOWER;
+> +		if (dytc_profile_available == DYTC_FUNCMODE_MMC)
+> +			*perfmode = DYTC_MODE_MMC_LOWPOWER;
+> +		else if (dytc_profile_available == DYTC_FUNCMODE_PSC)
+> +			*perfmode = DYTC_MODE_PSC_LOWPOWER;
+>  		break;
+>  	case PLATFORM_PROFILE_BALANCED:
+> -		*perfmode = DYTC_MODE_BALANCE;
+> +		if (dytc_profile_available == DYTC_FUNCMODE_MMC)
+> +			*perfmode = DYTC_MODE_MMC_BALANCE;
+> +		else if (dytc_profile_available == DYTC_FUNCMODE_PSC)
+> +			*perfmode = DYTC_MODE_PSC_BALANCE;
+>  		break;
+>  	case PLATFORM_PROFILE_PERFORMANCE:
+> -		*perfmode = DYTC_MODE_PERFORM;
+> +		if (dytc_profile_available == DYTC_FUNCMODE_MMC)
+> +			*perfmode = DYTC_MODE_MMC_PERFORM;
+> +		else if (dytc_profile_available == DYTC_FUNCMODE_PSC)
+> +			*perfmode = DYTC_MODE_PSC_PERFORM;
+>  		break;
+>  	default: /* Unknown profile */
+>  		return -EOPNOTSUPP;
+> @@ -10266,25 +10305,39 @@ static int dytc_profile_set(struct platform_profile_handler *pprof,
+>  	if (err)
+>  		return err;
+>  
+> -	if (profile == PLATFORM_PROFILE_BALANCED) {
+> -		/*
+> -		 * To get back to balanced mode we need to issue a reset command.
+> -		 * Note we still need to disable CQL mode before hand and re-enable
+> -		 * it afterwards, otherwise dytc_lapmode gets reset to 0 and stays
+> -		 * stuck at 0 for aprox. 30 minutes.
+> -		 */
+> -		err = dytc_cql_command(DYTC_CMD_RESET, &output);
+> -		if (err)
+> -			goto unlock;
+> -	} else {
+> +	if (dytc_profile_available == DYTC_FUNCMODE_MMC) {
+> +		if (profile == PLATFORM_PROFILE_BALANCED) {
+> +			/*
+> +			 * To get back to balanced mode we need to issue a reset command.
+> +			 * Note we still need to disable CQL mode before hand and re-enable
+> +			 * it afterwards, otherwise dytc_lapmode gets reset to 0 and stays
+> +			 * stuck at 0 for aprox. 30 minutes.
+> +			 */
+> +			err = dytc_cql_command(DYTC_CMD_RESET, &output);
+> +			if (err)
+> +				goto unlock;
+> +		} else {
+> +			int perfmode;
+> +
+> +			err = convert_profile_to_dytc(profile, &perfmode);
+> +			if (err)
+> +				goto unlock;
+> +
+> +			/* Determine if we are in CQL mode. This alters the commands we do */
+> +			err = dytc_cql_command(DYTC_SET_COMMAND(DYTC_FUNCTION_MMC, perfmode, 1),
+> +						&output);
+> +			if (err)
+> +				goto unlock;
+> +		}
+> +	}
+> +	if (dytc_profile_available == DYTC_FUNCMODE_PSC) {
+>  		int perfmode;
+>  
+>  		err = convert_profile_to_dytc(profile, &perfmode);
+>  		if (err)
+>  			goto unlock;
+>  
+> -		/* Determine if we are in CQL mode. This alters the commands we do */
+> -		err = dytc_cql_command(DYTC_SET_COMMAND(DYTC_FUNCTION_MMC, perfmode, 1), &output);
+> +		err = dytc_command(DYTC_SET_COMMAND(DYTC_FUNCTION_PSC, perfmode, 1), &output);
+>  		if (err)
+>  			goto unlock;
+>  	}
+> @@ -10302,10 +10355,14 @@ static void dytc_profile_refresh(void)
+>  	int perfmode;
+>  
+>  	mutex_lock(&dytc_mutex);
+> -	if (dytc_mmc_get_available)
+> -		err = dytc_command(DYTC_CMD_MMC_GET, &output);
+> -	else
+> -		err = dytc_cql_command(DYTC_CMD_GET, &output);
+> +	if (dytc_profile_available == DYTC_FUNCMODE_MMC) {
+> +		if (dytc_mmc_get_available)
+> +			err = dytc_command(DYTC_CMD_MMC_GET, &output);
+> +		else
+> +			err = dytc_cql_command(DYTC_CMD_GET, &output);
+> +	} else if (dytc_profile_available == DYTC_FUNCMODE_PSC)
+> +		err = dytc_command(DYTC_CMD_GET, &output);
+> +
+>  	mutex_unlock(&dytc_mutex);
+>  	if (err)
+>  		return;
+> @@ -10332,6 +10389,7 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+>  	set_bit(PLATFORM_PROFILE_BALANCED, dytc_profile.choices);
+>  	set_bit(PLATFORM_PROFILE_PERFORMANCE, dytc_profile.choices);
+>  
+> +	dytc_profile_available = DYTC_FUNCMODE_NONE;
+>  	err = dytc_command(DYTC_CMD_QUERY, &output);
+>  	if (err)
+>  		return err;
+> @@ -10343,27 +10401,34 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+>  	if (dytc_version < 5)
+>  		return -ENODEV;
+>  
+> -	/* Check what capabilities are supported. Currently MMC is needed */
+> +	/* Check what capabilities are supported */
+>  	err = dytc_command(DYTC_CMD_FUNC_CAP, &output);
+>  	if (err)
+>  		return err;
+> -	if (!(output & BIT(DYTC_FC_MMC))) {
+> -		dbg_printk(TPACPI_DBG_INIT, " DYTC MMC mode not supported\n");
+> +
+> +	if (test_bit(DYTC_FC_MMC, (void *)&output)) { /* MMC MODE */
+> +		dytc_profile_available = DYTC_FUNCMODE_MMC;
+> +
+> +		/*
+> +		 * Check if MMC_GET functionality available
+> +		 * Version > 6 and return success from MMC_GET command
+> +		 */
+> +		dytc_mmc_get_available = false;
+> +		if (dytc_version >= 6) {
+> +			err = dytc_command(DYTC_CMD_MMC_GET, &output);
+> +			if (!err && ((output & DYTC_ERR_MASK) == DYTC_ERR_SUCCESS))
+> +				dytc_mmc_get_available = true;
+> +		}
+> +	} else if (test_bit(DYTC_FC_PSC, (void *)&output)) { /*PSC MODE */
+> +		dytc_profile_available = DYTC_FUNCMODE_PSC;
+> +	} else {
+> +		dbg_printk(TPACPI_DBG_INIT, "No DYTC support available\n");
+>  		return -ENODEV;
+>  	}
+>  
+>  	dbg_printk(TPACPI_DBG_INIT,
+>  			"DYTC version %d: thermal mode available\n", dytc_version);
+> -	/*
+> -	 * Check if MMC_GET functionality available
+> -	 * Version > 6 and return success from MMC_GET command
+> -	 */
+> -	dytc_mmc_get_available = false;
+> -	if (dytc_version >= 6) {
+> -		err = dytc_command(DYTC_CMD_MMC_GET, &output);
+> -		if (!err && ((output & DYTC_ERR_MASK) == DYTC_ERR_SUCCESS))
+> -			dytc_mmc_get_available = true;
+> -	}
+> +
+>  	/* Create platform_profile structure and register */
+>  	err = platform_profile_register(&dytc_profile);
+>  	/*
+> @@ -10381,6 +10446,7 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+>  
+>  static void dytc_profile_exit(void)
+>  {
+> +	dytc_profile_available = DYTC_FUNCMODE_NONE;
+>  	platform_profile_remove();
+>  }
+>  
+
