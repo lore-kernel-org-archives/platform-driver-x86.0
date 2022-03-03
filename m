@@ -2,237 +2,281 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794AAC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Mar 2022 16:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C5CC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Mar 2022 17:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234726AbiCCQsN (ORCPT
+        id S233902AbiCCRJP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Mar 2022 11:48:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56638 "EHLO
+        Thu, 3 Mar 2022 12:09:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbiCCQsN (ORCPT
+        with ESMTP id S230229AbiCCRJO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Mar 2022 11:48:13 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2061.outbound.protection.outlook.com [40.107.237.61])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 775EBE48;
-        Thu,  3 Mar 2022 08:47:26 -0800 (PST)
+        Thu, 3 Mar 2022 12:09:14 -0500
+Received: from mail1.bemta35.messagelabs.com (mail1.bemta35.messagelabs.com [67.219.250.2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E2441480DF;
+        Thu,  3 Mar 2022 09:08:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
+        s=Selector; t=1646327306; i=@lenovo.com;
+        bh=yBYfeaFpKcucpizFUhw+umPHHg4sbc2bRvws1fya/FI=;
+        h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+         In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        b=rgziB7QzsHoZ5wgcTl4qiEhHSHwglwOsZJHMaBgnRHBCyrYFokAzPcOgMlwwMB/fN
+         iuL6fqKXlRQvaQmIPZUfw26TNW5LSmu+/UdbjGOJ21QyQzlir6J9AbKujfDmf7kuj3
+         20EE1w4BlopU+wGeuUa+tORm/Y4vrM7c5uelikRRqIr55v+5mt7Y0LQKG/wvn81J4C
+         eJItIwdJvHK27z3cn7QC+N1SMfTprjd68XWL62r6a4r8/NIDE77Hecmq+KsdWsqXic
+         ljiGRwEvReuqCirkQKvMVUnxpSKSi4GnJDKyEyv5qDCJyupAGzD6D21b+KXtBpmJq5
+         +h4dTrTOxv7yg==
+Received: from [100.114.100.29] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-a.us-west-2.aws.ess.symcld.net id D7/CD-21932-A06F0226; Thu, 03 Mar 2022 17:08:26 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNJsWRWlGSWpSXmKPExsWSoV9jpsv1TSH
+  J4O0JRos3x6czWSzf189osXj9MkaL1XteMFvM/TKV2YHVo/XSXzaPTas62Tze77vK5vF5k1wA
+  SxRrZl5SfkUCa8a1nS+YCi7pVSx5sJG5gfG0WhcjFwejwFJmiUmTJjFDOItYJb7eamWCcNqYJ
+  LbNu8MC4ggJzGWSOD/vOCOEc4hJon/LOqAeTg4JgeOMEt2r3CESnYwSu7f+YINwJjJJLJ+1B6
+  r/MaPEiTkTmCGch4wSXavusHcxcnDwCthKTD8vBzKKRUBFYtGdV2wgNq+AoMTJmU9YQGxRgXC
+  J+88+g8WFBUIlru39AWYzC4hL3HoynwnEFhEwlJiz4DoLRLxEYsPm51BXtDBK9B3pYgRJsAlo
+  S2zZ8osNZC+ngLXEpUW6EPWaEq3bf7ND2PISzVtng70mJKAs8av/PNSbChJLf12CshMkmqccZ
+  YSwJSWu3bzADmHLShw9O4cFwvaVmD5lI5StK/Fp7RpGkLUSAjkSs5/4QoTlJE71nmOawKg7C8
+  nHs5B8NgvJdbOQXLeAkWUVo01SUWZ6RkluYmaOrqGBga6hoQmQNtQ1MjTUS6zSTdQrLdYtTy0
+  u0TXSSywv1kstLtYrrsxNzknRy0st2cQITFcpRamXdzDO6P+pd4hRkoNJSZT31SmFJCG+pPyU
+  yozE4oz4otKc1OJDjDIcHEoSvD8+AuUEi1LTUyvSMnOAqRMmLcHBoyTCO+cVUJq3uCAxtzgzH
+  SJ1ilGX48q2vXuZhVjy8vNSpcR514LMEAApyijNgxsBS+OXGGWlhHkZGRgYhHgKUotyM0tQ5V
+  8xinMwKgnzun8FmsKTmVcCt+kV0BFMQEds9ZADOaIkESEl1cDUrJwt+SfmW20p91W2aOm9t79
+  fn9r/qNx6h5Wne8bjZ6Ive+T2576MW+gn93yzQdPZkNV78hh1LeZ8m7dpk+GUebd3Ki5+L+Vu
+  VHBVNyAucI900VO968+uh39e1zjJ88fC6n7pa80aMX75GwSTn5rsnFZozhFh+f+PrerT+fyFR
+  6uCv3w0Pb+h8mGx7aVplS352RO+iizPNdY7vLh774WVUqWyjNzHEtNucBr4Lu2R8DxoKSW6nv
+  dZVOV/Zv7WB19aP26S3rxFcYr9LH3uDQbfjQ+IWn84ZBBdFRHl8bKr4lX3Brd3bJp9YfuqDGZ
+  PuMa3Rt9BbsIkrZVs2QpFik/eXtP7FXPaeOPcnwGvdL8qsRRnJBpqMRcVJwIAKHq1fl4EAAA=
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-6.tower-636.messagelabs.com!1646327304!15310!1
+X-Originating-IP: [104.47.124.54]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.81.8; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 8540 invoked from network); 3 Mar 2022 17:08:25 -0000
+Received: from mail-hk2apc01lp2054.outbound.protection.outlook.com (HELO APC01-HK2-obe.outbound.protection.outlook.com) (104.47.124.54)
+  by server-6.tower-636.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 3 Mar 2022 17:08:25 -0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cRX5+F1XCT/nI7Y/sTJ2SHAYSG+qU4M8Q1TUga1KuRs6XlQ0k4caeMCg3WLVMn35IJCxdiEiB3uX64tT4CzA6igdAzEwz+76qc13U9FyYQxuyRQYl7CoD4yg6OJjVhRksWK0gbOUGkGLeOikF8dXmf076Bp15rZbuGKX+2Uto+go+1/zrh/NgflOepLxHYPPoz+IiHy/i0psHisCV6zT4gfKhIuhBKKsf8FIgn73l3xl+iJIe5ooVy3bVPnbO97SgNBjNh1XAcZdlYkw5ptFYf6zcNkkyO1Cb3OITYyfmbua67A0O9+e5LJVtkH1mzCTbkRYr6qpJYcWzbXIiyjEzg==
+ b=cFWfQCWmWXvBuybAMLuI6CFZF7WQTJAJS4yE/3wwXqBLCFAeoYaEmC07UG1zlHeHXQK/PIPHfj1eCF6/OqIWUlDFE2At/ERZSWft2Kt/ti1vI8Zt+Qr76X27Vwnl1OIv+mMruTQyo9QmrhHWnxgNMNZ2D+70T5xojPL2z0GoRHeFREzr2zwkPj4jv8n95XmV+ihH6Wt7oHKnn/15sfADRRTLxdpd6914KIiKkNLqNySmvWU9Y5jSiWgwyUQSfb9NxGEVsC5HEZg9Umq7ud3wdYzJs+HaggF4tHU8XZjHp01oQDsJk4a76oOp/4EcA3gVTVgqNoLcIXWRgUrKeXGBZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BG7715QI1Glj0SyhZsl0JiDQWN21fJQ2iNWcI4ICbEc=;
- b=mP3IXI4nDVXCbVnM0blnjyOT7rcQ3UfyU2nJrMXr95x5nGwQX1HBlCkJdSo86CbS7cbyyES9ilxQfO/tq1nSqI0M0DxZp62gdy0dv45CB/TDrYiIf/NHhXXAq1hyWSPNzu1SDfG8tADt8k1IO/3ziB1XoiT+0QWP/tge4VV++2NN8rZ19mtJdM2MBDXGvZ/FgYSkocP5Fa6mU/VrRUXc5FZ139DBUwkJGLzQMS5XFyIvt2x7OT+bz52kgzy0D4qNFmMFHkiHBMAZIP2z59rU+qY3WP9nRisd6Zup2GC6+9k0LXzV8LhMcOAsTqP3zDKfkIqEcZxB1OFODt4YP8kkSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BG7715QI1Glj0SyhZsl0JiDQWN21fJQ2iNWcI4ICbEc=;
- b=Vl+fBUcvkVgQl7kvD5GmjPm/sdZt2lab96mjX9yEVsAg7p9qUlLNizQ3ag9Ig9OGiHCbs9isltOgDxhiybawuHpbVgp3h0DdHko7rVN1mgzC9L5HtmZjTVBZ/32/mfKzqppQ4udM6HYIWmTo8V7Jp1zw4Ttn9nDnY1u61a2mFwI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB2714.namprd12.prod.outlook.com (2603:10b6:5:42::18) by
- DM5PR12MB1578.namprd12.prod.outlook.com (2603:10b6:4:e::7) with Microsoft
+ bh=yBYfeaFpKcucpizFUhw+umPHHg4sbc2bRvws1fya/FI=;
+ b=Ut4eMhjqUeO2VYOBhG9WuOahTrTPzm8rQlBP3+dwltuyMikha3OoxQ86ABrBzmRvFSEpAtoUS/slpzffXsCIw7cKuAJPGEE6U0C4UvGOQTNx7SFLNmfj7+2jMKogEuXBwRS/7sqELN9/rkpj+jWk8525gKqKSdnXDWNL1bnHuStwMlH3WHmzVRLeH+xjDKUagpPdH6ZvLr9vqT1IGvEu7r5ws9k3XvNPMofQ61kTQxHkGGJLaRm5z4DyM0G1Z6MablHdtfH1FEQMCGZQHFRvNW+Xl1dwGpP/aDVivA9cYmYXrJ/n0CH04gZJmq+AGpMjSZTRoICbBgh08RzA/MGD1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 104.232.225.6) smtp.rcpttodomain=amd.com smtp.mailfrom=lenovo.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=lenovo.com;
+ dkim=none (message not signed); arc=none
+Received: from PU1PR06CA0016.apcprd06.prod.outlook.com (2603:1096:803:2a::28)
+ by PUZPR03MB6045.apcprd03.prod.outlook.com (2603:1096:301:b4::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.3; Thu, 3 Mar
+ 2022 17:08:22 +0000
+Received: from HK2APC01FT038.eop-APC01.prod.protection.outlook.com
+ (2603:1096:803:2a:cafe::f6) by PU1PR06CA0016.outlook.office365.com
+ (2603:1096:803:2a::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14 via Frontend
+ Transport; Thu, 3 Mar 2022 17:08:21 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 104.232.225.6) smtp.mailfrom=lenovo.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=lenovo.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ lenovo.com discourages use of 104.232.225.6 as permitted sender)
+Received: from mail.lenovo.com (104.232.225.6) by
+ HK2APC01FT038.mail.protection.outlook.com (10.152.248.243) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5038.14; Thu, 3 Mar 2022 16:47:24 +0000
-Received: from DM6PR12MB2714.namprd12.prod.outlook.com
- ([fe80::15e2:e664:c56d:4d91]) by DM6PR12MB2714.namprd12.prod.outlook.com
- ([fe80::15e2:e664:c56d:4d91%5]) with mapi id 15.20.5038.014; Thu, 3 Mar 2022
- 16:47:24 +0000
-Message-ID: <7c562d34-27cd-6e63-a0fb-35b13104d41f@amd.com>
-Date:   Thu, 3 Mar 2022 10:47:20 -0600
+ 15.20.5038.14 via Frontend Transport; Thu, 3 Mar 2022 17:08:21 +0000
+Received: from reswpmail01.lenovo.com (10.62.32.20) by mail.lenovo.com
+ (10.62.123.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.21; Thu, 3 Mar
+ 2022 12:08:19 -0500
+Received: from [10.38.59.144] (10.38.59.144) by reswpmail01.lenovo.com
+ (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.21; Thu, 3 Mar
+ 2022 12:08:18 -0500
+Message-ID: <73656cdd-64d7-b9d0-aff7-61e5b98c2799@lenovo.com>
+Date:   Thu, 3 Mar 2022 12:08:17 -0500
+MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Cc:     brijesh.singh@amd.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v11 44/45] virt: sevguest: Add support to get extended
- report
+Subject: Re: [External] Re: [RFC] ACPI: platform-profile: support for AC vs DC
+ modes
 Content-Language: en-US
-To:     Borislav Petkov <bp@alien8.de>
-References: <20220224165625.2175020-1-brijesh.singh@amd.com>
- <20220224165625.2175020-45-brijesh.singh@amd.com>
- <YiDegxDviQ81VH0H@nazgul.tnic>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-In-Reply-To: <YiDegxDviQ81VH0H@nazgul.tnic>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR03CA0114.namprd03.prod.outlook.com
- (2603:10b6:610:cd::29) To DM6PR12MB2714.namprd12.prod.outlook.com
- (2603:10b6:5:42::18)
-MIME-Version: 1.0
+To:     Mario Limonciello <mario.limonciello@amd.com>
+CC:     <rafael@kernel.org>, <hdegoede@redhat.com>,
+        <linux-acpi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>
+References: <markpearson@lenovo.com>
+ <20220301201554.4417-1-markpearson@lenovo.com>
+ <e6a3380d-dcc4-8e61-cba0-813d2404ee1e@amd.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+In-Reply-To: <e6a3380d-dcc4-8e61-cba0-813d2404ee1e@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.38.59.144]
+X-ClientProxiedBy: reswpmail01.lenovo.com (10.62.32.20) To
+ reswpmail01.lenovo.com (10.62.32.20)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f3c1f970-31c1-49af-cd0d-08d9fd357dee
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1578:EE_
-X-Microsoft-Antispam-PRVS: <DM5PR12MB15784C6EB1EA524D31AD5671E5049@DM5PR12MB1578.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 05efca1f-a460-4fe7-67b5-08d9fd386bb1
+X-MS-TrafficTypeDiagnostic: PUZPR03MB6045:EE_
+X-Microsoft-Antispam-PRVS: <PUZPR03MB6045E51CC50BF88CBD9AA809C5049@PUZPR03MB6045.apcprd03.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +L7TU+6hzfy21gAJNYVuRNDwIb/WZ/9v/8ou+2iiUCgWTryq+w4sAPBtBTCXlCa9ejoQxd8lHVebxdr27vpWlryNi1EChsA2chxxQCTy9yy+y6Amg41liNhnhx47F8Y70c2ozzuZFntvNNg2nj4i35IpTyOy9VziJs5rDqQvlPwqB755f/uCW+Q5kJw5oUEbLb9IlRAuCGMLxQUJUuMFPlpqtVIZ1zGLxrwrVaDxjYGgrmok/cqhtr0+DkFEMgcCKDANgIvWx5kFddgLnKOJouIN1bTe1Tk1Xz2J/xA4vMvVTp7RuawDUSTB3kIdAYrUwjXPIJ+BVSKvZM4bej5VBVIM2cFqUMLuHggwuBo/Nh3BMSVo0kkFsSDtVYoKl4nlZJm/eZa2NUuYeiK2dPyYd97phDIOE24aNApGdOLMcqgBex0e3vXkWHrHyam4Ieo7/QvNaBlo4zUP+CdrQLfZU1sLSSuxtXgNUd7AGujyuSzRBsxxEcnRGySNIuESAZcJE5uWfsUyg6idstd1ugSj0CkbgsgtuC3OddvooMu2/+kOwLz5Q4jalhaawzSjUt/z51eh4nCzVl89IuHfY2vXJtx418ISQuWJUwR1WvqYckyoxuzdnfnNWPqD8cJTpYaadjnQaRbXffey2quEp7jbC3QjIkixeKnS+El0Kpaa/e7S/YNyusZSdd0DgLMZot7VHfpjbEMFruSElye3Bo3tvgppHFsMHQDRLzluRvsJFb/jSR+V3g51Br6HN/3Soy/sHbsbnwuyVy+hK2QCrqGCWM/W9DmJS1Trkpm4Ld4pRyirsLH0PvhYORDzV0ATN1YB
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2714.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(8676002)(66556008)(66476007)(4326008)(26005)(66946007)(186003)(83380400001)(316002)(6916009)(54906003)(6512007)(38100700002)(2616005)(966005)(6486002)(36756003)(31686004)(6666004)(508600001)(44832011)(8936002)(86362001)(5660300002)(31696002)(2906002)(53546011)(7416002)(7406005)(6506007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eWsyZE9QZ21MSWdMZHR6Rk5FcFZCbXdURFNsVlJFNG93Tlo1RVpMNGhXSHNN?=
- =?utf-8?B?Mm1SQWdmbk5OS3VKRlBjS25FSHhPaWEydzZsWlZLRFR1MXhKd2JoN0RZS0pR?=
- =?utf-8?B?Uy9JdjljRlg3WnpIWEp2djdrcDNQRzVoRmlmQ0Vnd2NLVFB1bzhXdUdhVXpl?=
- =?utf-8?B?MCs5Q3JDNzhWZUd0QlBTRWpKQUYrbkx1RTErTURhYmdTL1pIN1ZUT3I2SEJL?=
- =?utf-8?B?bUJScEdmQkEzYjBab0ZJc0pKeFB2ZDFIVGc1Y1dJRHpjaTRNYitpNXByaXY3?=
- =?utf-8?B?cTNBSGMvM044eWNrUnQwbVkvSW1WTFcxR1M5RHp0SFFjanE3VEJ2eURRUW9E?=
- =?utf-8?B?L2JNVWZUanVvYTR6M0ZISHFnb2tTajdyeEllUjNjRTZjbndsSkZTeFIrRFNL?=
- =?utf-8?B?WFdYWDlyWjQyaUFvcGtrN1NhUmJ3Z2F4ZXFvQzNCUjhqVS9LNXVQTGtGWUxj?=
- =?utf-8?B?cFZqNjhtMHFDcDkyS2FkOTZ5OUtiQ1g2RFVHTEpQYlhvUUxDWVlDdlZXbW5t?=
- =?utf-8?B?cm9RV1U1TVoxWCtNQ1c4NzNObUdlcjB4bEx0eG1tU3hkVEUxdnorRzZkd1Fl?=
- =?utf-8?B?U3lTeGRwa2Rka2hjbVI4Qy9uODRXL2o3UkNHelhnWWRUMXlvSlR5WGtHUDBu?=
- =?utf-8?B?ejlEemRpSWtUMkpJTkFoWGtWSFZyTTh3emZjQ2FWUFkyUC80S01ITldKVWF4?=
- =?utf-8?B?NWdUd0tpTlB6UTdBTmp5dm1yRnpML0RUR0xoNlEzNmtNL01waUVhRSt2bWpY?=
- =?utf-8?B?TTZZTlJIRnhMczNYOWhXb1pJd0tQMEYwcFlCUTBDem9MMTloMURETys4Nlk2?=
- =?utf-8?B?azh0L0wxYVNtdVVpOEptOW1sbGN5alFSVEI5MEVMdFRKNEVLd1FvcGNrL1dy?=
- =?utf-8?B?amlTOGgvb2xYSlMxWkJubUVNR3ZKRzdKRUJQSk9tcTMxSG56dGdhd2d1TGU5?=
- =?utf-8?B?bVNodzBrYnVqQmN0c01OTWYva0pVWHpCSTMwcyswM0k1cWJTZU9HZVdRem9a?=
- =?utf-8?B?d1grK0xGWGhiOGlSNjRmbXl3RXp3alJNc094VFRTQTlITUFFalhhenAvSlVB?=
- =?utf-8?B?RGdoUS92eDZ1R3JiektObm5NUE16MllvS0ZKNlRXdlVPTDFtcjFzNGE2bnlS?=
- =?utf-8?B?S0s2NGJtRmdyNVRtMU5JYmlHeFpmWm5mSmlxOWYzditDTEh1cGlFRjRyY3kv?=
- =?utf-8?B?a1h2K1Y2b3h4T09jVmo0YmF2dGpNRWhxQ2R2Rk1ZMU1peXpSZUFzZ1k3dThU?=
- =?utf-8?B?cFJBKzdmaGZPSi9DczR4OWZ0TnBMaHkvN0V0d2JpTHE2U05rS0w2Vjc4V2pz?=
- =?utf-8?B?K09zbHovODkwQysrVlhaZDZxcGdkQUZhTjczaFVVT3BJS2o5K3kyMk9OaXM3?=
- =?utf-8?B?N2pFZStYeDNrbXo1SjYxYmtuckU1Z0dzV0FtSE9XekFIRDhxWWJGbHk0UytX?=
- =?utf-8?B?ZXZrZS9UMXg5My9QZzhaZTFOM3pucVVxYzZLYnQxRFFvSHBuUkpSTE9nVmYr?=
- =?utf-8?B?czlUK0ZhdGlOQ2RlVFFxdnpzdXJ3NFdpOWFYU1hJM2w2MDZpQUpuMGlUNjRw?=
- =?utf-8?B?TTlZenM3UXhyQUlmdUlreVI4a3VaaEs3Wlh0NjVtRElxNUs3NmlVa0xMZk1o?=
- =?utf-8?B?dGxRNlA3dnFpL3NYTjh2bVBwalhDejRyZGlKK1F0R2Q1QjFtUE5vVEIyNXdw?=
- =?utf-8?B?dVpIRjB1Y2ZuM1pHd0hFR0poL3hDdm5vU2V4c1UvVEdMYmZ5Z2p6Z1R4N1pF?=
- =?utf-8?B?MUdXRWpQdTZBSm93Vk5jMnRtZjBSMEJ1QWZ3QnB6MGZkRWtvck94aTgyYTV2?=
- =?utf-8?B?eEs3dlJkc2VUMlhHWjlFMGNsa2R5T0tnZXhhRzRKOGlKRmVnQU16UFIrT09X?=
- =?utf-8?B?NHBIcjFRTmhEbTdwbHFZNWFPdzVWZFp0bWlmdk9aejgyODhsV0ZyckxCT29L?=
- =?utf-8?B?Si9sZWVyVkZYTUlMUmIwSWUvenhQVWZMY0xLYUtCeUc0d2lUQlZaQ2ZzdThn?=
- =?utf-8?B?UUZuR0dhVVFJQlBiMWFWR3pDU1BBOUk5L3hJVEN1a3VjSlk3RitkdlRydkdx?=
- =?utf-8?B?TkhtdFY4T0FzQm9CQ0g1K2lubDhxaW5HQ2lSR3ZuZnhoQ2RjcmJrdFJVdTBB?=
- =?utf-8?B?UW5KaEhCcE1BSHRzWHkzcDZVY3NMMXhOVDllUUlxMDN3dUZVdDBTWDBXWE8x?=
- =?utf-8?Q?GqtAvN6NOJ8X5hIzsfqFZRo=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3c1f970-31c1-49af-cd0d-08d9fd357dee
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2714.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2022 16:47:24.0344
+X-Microsoft-Antispam-Message-Info: J6UuEQbI9FVeEV9mtSb2NBJXmhxXCNX1bIv3anQpjrCEWYkxvs5AARsrHIo8YLVAntsOnclMqYtBoCc3Nn4905A6dqb9Yw1H2k8YXaYS4iajXaXZgcRmRrm3VJF028JUgJxoIckN2PfQj3WtGilcv3WJXJQ8ifbx/6Cd3px4NuplrZ2iwLvofrkYNiT11CyxVRB+c94G5Y+hCgOi5dFFTcYeyplMnnk9nL2+znnobp9Ql+pMEVu+6en7D+un63bceSc3KtFz0O6b4YqWzNmWFu4VW3cbZivEQ2m/0VkyNv7ZdxZvxNrAaIDfdY9+ubFTpiKoqmJPu3gjY/V+cCGg7gYTejzNclgduGG0HB0DTKBXyaPS2XTdb65Dr8Opn6+ivlQ2J6oqAaGeDXsEC/aGdK73h9ClgtD6PApH5IXc5dZ7eLQQvF0E6vLfp7lktrGd1E3J6wNUPGyE7YqtmrPgaiDaF01ZYrqymlB70IUK8qGia0olK6Z+u0fpeUaETtw0hxMiRUAtRZXSdaZfIygSZhGdZ5nrvOCd8vHtZBWKDwSUb8eR4rwiRLvE0DSFbi2yz/qZiKHK13SxMHCIwfYJ3fdkKkGzymo/9POUT8oJmTeNcpujfWnSlAN+LsH15yxEJB6xc9OxeCraKoVDvyGEF/8dMSwgGYTanqjqCQHAiM2Qxne9uvfOfZpZgP6gqiwCr0LN4LLjQMSPUMCykFrjJNOGeiYz8EZg+KyJ18lGu6b1X6gA5bWDQLp02zZ1eVn32vsj7d52pZX5f7wV4vYJrEUzJPctiwMv+1SeGAWbTgap2kEMeCo65FUsGCXNDrJJ
+X-Forefront-Antispam-Report: CIP:104.232.225.6;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.lenovo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(40470700004)(508600001)(8936002)(356005)(82310400004)(83380400001)(5660300002)(2906002)(82960400001)(16576012)(2616005)(36906005)(53546011)(316002)(31696002)(426003)(336012)(6916009)(40460700003)(186003)(26005)(54906003)(16526019)(86362001)(81166007)(4326008)(8676002)(31686004)(47076005)(36860700001)(36756003)(70206006)(70586007)(3940600001)(43740500002)(36900700001);DIR:OUT;SFP:1102;
+X-OriginatorOrg: lenovo.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2022 17:08:21.1576
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7zwctsuSfAQS9BN8NzyjqIDOx0VX4dqUmbjb5lYrwJVfDS1lJh005BaEW4KI3yX0BceoP61U/wQoIiYNS5g0SQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1578
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05efca1f-a460-4fe7-67b5-08d9fd386bb1
+X-MS-Exchange-CrossTenant-Id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5c7d0b28-bdf8-410c-aa93-4df372b16203;Ip=[104.232.225.6];Helo=[mail.lenovo.com]
+X-MS-Exchange-CrossTenant-AuthSource: HK2APC01FT038.eop-APC01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR03MB6045
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Boris,
 
-On 3/3/22 09:28, Borislav Petkov wrote:
-> On Thu, Feb 24, 2022 at 10:56:24AM -0600, Brijesh Singh wrote:
->> +static int get_ext_report(struct snp_guest_dev *snp_dev, struct snp_guest_request_ioctl *arg)
->> +{
->> +	struct snp_guest_crypto *crypto = snp_dev->crypto;
->> +	struct snp_ext_report_req req = {0};
->> +	struct snp_report_resp *resp;
->> +	int ret, npages = 0, resp_len;
->> +
->> +	lockdep_assert_held(&snp_cmd_mutex);
->> +
->> +	if (!arg->req_data || !arg->resp_data)
->> +		return -EINVAL;
->> +
->> +	if (copy_from_user(&req, (void __user *)arg->req_data, sizeof(req)))
->> +		return -EFAULT;
->> +
->> +	if (req.certs_len) {
->> +		if (req.certs_len > SEV_FW_BLOB_MAX_SIZE ||
->> +		    !IS_ALIGNED(req.certs_len, PAGE_SIZE))
->> +			return -EINVAL;
->> +	}
->> +
->> +	if (req.certs_address && req.certs_len) {
->> +		if (!access_ok(req.certs_address, req.certs_len))
->> +			return -EFAULT;
->> +
->> +		/*
->> +		 * Initialize the intermediate buffer with all zeros. This buffer
->> +		 * is used in the guest request message to get the certs blob from
->> +		 * the host. If host does not supply any certs in it, then copy
->> +		 * zeros to indicate that certificate data was not provided.
->> +		 */
->> +		memset(snp_dev->certs_data, 0, req.certs_len);
->> +
->> +		npages = req.certs_len >> PAGE_SHIFT;
->> +	}
+Thanks Mario!
+
+On 2022-03-02 21:53, Mario Limonciello wrote:
+> On 3/1/22 14:15, Mark Pearson wrote:
+>> Looking for feedback on this feature. Whether it is worth
+>> pursuing and any concerns with the general implementation.
+>>
+>> I've recently been working on PSC platform profile mode support
+>> for Lenovo AMD platforms (patch proposed upstream last week).
+>> One of the interesting pieces with the Lenovo PSC implementation
+>> is it supports different profiles for AC (plugged in) vs DC
+>> (running from battery).
+>>
+>> I was thinking of adding this support in the thinkpad_acpi driver,
+>> but it seems it would be nicer to make this generally available for
+>> all platforms that offer profile support.
+>>
+>> This implementation allows the user to set one profile for when a
+>> system is plugged in, and a different profile for when they are
+>> unplugged. I imagine this would be used so that performance mode
+>> is used when plugged in and low-power used when unplugged (as an
+>> example). The user could configure it to match their preference.
+>>
+>> If the user doesn't configure a DC profile it behaves the same as
+>> previously and any ACPI power events will be ignored. If the user
+>> configures a DC profile then when a system is unplugged it will
+>> automatically configure this setting.
+>>
+>> I've added platform_profile_ac and platform_profile_dc sysfs nodes.
+>> The platform_profile and platform_profile_ac nodes will behave the
+>> same when setting a profile to maintain backwards compatibility.
 > 
-> I think all those checks should be made more explicit. This makes the
-> code a lot more readable and straight-forward (pasting the full excerpt
-> because the incremental diff ontop is less readable):
+> To make it more deterministic I would say configure it like this:
+> 1) If you write a profile to `platform_profile` and the backend supports
+> both DC and AC profiles make it the default profile for both.  This is
+> more like "backwards compatibility" mode
+> 2) If you write a profile to `platform_profile_dc` and the backend
+> supports both then don't do anything in `platform_profile_ac` and vice
+> versa.  Require a user to write both of them explicitly.
 > 
-> 	...
+> That means you have a new state of "unset" for the profiles, but if you
+> don't include the state then I think it can lead to confusing behaviors
+> if userspace writes one vs the other first.
 > 
->          if (copy_from_user(&req, (void __user *)arg->req_data, sizeof(req)))
->                  return -EFAULT;
+So I don't think any backend support is particularly needed. If a platform
+supports platform profiles, then having an AC vs DC mode doesn't need
+anything special - it's just switching modes.
+
+On the Lenovo AMD platforms in the thinkpad_acpi driver this will
+trigger some extra niceness to use a separate set of profiles, but even
+for the platforms that don't have this it's still nice to auto-switch to
+(for example) a low-power mode when you unplug - and that doesn't need
+any extra support beyond just supporting platform profiles
+
+I like the suggestion on updating both if platform_profile is update but
+I'm worried that it changes the current behaviour:
+
+- on the Lenovo AMD profiles, the battery profile set are all lower
+power/performance than the plugged-in profiles (by design)
+- with the implicit setting of the dc mode we'd be changing the behavior
+so that when you unplug performance will drop.
+
+This is (usually) a good thing, and is I think what Windows users get,
+but it's not what currently happens on Linux. To get back to full power mode
+you'd have to disable the DC setting - which isn't particularly
+intuitive. It's why in this initial implementation I made the dc setting
+'opt-in'....but maybe I'm being over cautious.
+
+Once user space has two sliders the whole point is moot - I suspect I'm
+overthinking this :)
+
+Ack on the unset state - I'll add that.
+
+>>
+>> If you read the platform_profile it will return the currently
+>> active profile.
+>> If you read the platform_profile_ac or platform_profile_dc node it
+>> will return the configured profile. This is something missing from
+>> the current implementation that I think is a nice bonus.
 > 
->          if (!req.certs_len || !req.certs_address)
->                  return -EINVAL;
+> Yeah nice bonus.  Some inline comments on this.
 > 
->          if (req.certs_len > SEV_FW_BLOB_MAX_SIZE ||
->              !IS_ALIGNED(req.certs_len, PAGE_SIZE))
->                  return -EINVAL;
+>>
+>> User space implementation could potentially be used to do the same
+>> idea, but having this available allows users to configure from
+>> cmdline or use scripts seemed valuable.
+>>
+>> Note - I'm aware that I still need to:
+>>   1) Update the API documentation file
+>>   2) Implement a disable/unconfigure on the profile_dc setting
+>> But I figured this was far enough along that it would be good to get
+>> comments.
+> 
+> If backend doesn't support AC/DC I think you should return an error for
+> one of them rather than trying to hide the difference.  Think about
+> userspace - it might want to have say two sliders and hide one if one of
+> them isn't supported.
+
+See above - I don't think there are cases where this wouldn't be
+supported. Let me know if I'm missing something
+
+> 
+>>
+>> Thanks in advance for any feedback.
+>>
+>> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+>> ---
+>>   drivers/acpi/platform_profile.c  | 130 +++++++++++++++++++++++++++++--
+>>   include/linux/platform_profile.h |   1 +
+>>   2 files changed, 125 insertions(+), 6 deletions(-)
+>>
+<snip<
+>> @@ -117,10 +227,14 @@ static ssize_t platform_profile_store(struct
+>> device *dev,
+>>     static DEVICE_ATTR_RO(platform_profile_choices);
+>>   static DEVICE_ATTR_RW(platform_profile);
+>> +static DEVICE_ATTR_RW(platform_profile_ac);
+>> +static DEVICE_ATTR_RW(platform_profile_dc);
+> 
+> My opinion here is that if you are keeping the existing one in place to
+> show "current" active profile and make the new ones to show you
+> "selected" profile they should have a different naming convention.
+> 
+> Some ideas:
+> - selected_*_profile
+> - platform_profile_policy_*
+> - *_policy
+> 
+> Something else that comes to mind is you can rename "platform_profile"
+> as "active_profile" (but create a compatibility symlink back to
+> platform_profile), but I don't know that's really needed as long as it's
+> all well documented.
 > 
 
+I like the selected_*_profile - I'll go with that.
+I'm less enthusiastic about symlinks - just feels messy.
 
-I did not fail on !req.cert_len, because my read of the GHCB spec says 
-that additional data (certificate blob) is optional. A user could call 
-SNP_GET_EXT_REPORT without asking for the extended certificate. In this 
-case, SNP_GET_EXT_REPORT == SNP_GET_REPORT.
-
-Text from the GHCB spec section 4.1.8
----------------
-https://developer.amd.com/wp-content/resources/56421.pdf
-
-The SNP Extended Guest Request NAE event is very similar to the SNP 
-Guest Request NAE event. The difference is related to the additional 
-data that can be returned based on the guest request. Any SNP Guest 
-Request that does not support returning additional data must execute as 
-if invoked as an SNP Guest Request.
---------------
-
->          if (!access_ok(req.certs_address, req.certs_len))
->                  return -EFAULT;
-> 
->          /*
->           * Initialize the intermediate buffer with all zeros. This buffer
->           * is used in the guest request message to get the certs blob from
->           * the host. If host does not supply any certs in it, then copy
->           * zeros to indicate that certificate data was not provided.
->           */
->          memset(snp_dev->certs_data, 0, req.certs_len);
-> 
->          npages = req.certs_len >> PAGE_SHIFT;
-> 
-
+Thanks for the feedback - very much appreciated
+Mark
