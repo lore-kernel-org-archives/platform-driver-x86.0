@@ -2,257 +2,202 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF64DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Mar 2022 17:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDECC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Mar 2022 18:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234403AbiCCRlC (ORCPT
+        id S235107AbiCCSDA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Mar 2022 12:41:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48434 "EHLO
+        Thu, 3 Mar 2022 13:03:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234546AbiCCRlA (ORCPT
+        with ESMTP id S235597AbiCCSCw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Mar 2022 12:41:00 -0500
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam07on2070.outbound.protection.outlook.com [40.107.95.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89B5B1A06F4;
-        Thu,  3 Mar 2022 09:40:11 -0800 (PST)
+        Thu, 3 Mar 2022 13:02:52 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2087.outbound.protection.outlook.com [40.107.243.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFB81A276F;
+        Thu,  3 Mar 2022 10:02:06 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=izGmmoiJek64qIzjjaj43IPKUAi49BxyO+EUVFl3rd0rggmA6acgJ72xyqdrvYeZ8BIheY9IKusPLvb4O3sGGGa/2wfDvM23TqtyvOZfB1jt5/s9g1RO1Ql15e1wYBSfdUv723AbBmkw9NWyS8+vSlA93eoCgqygAoLV7m0mkswKModzDT8O19C7G0DVHNKEI/47mdv0D2ubPZOfiyIMgLiWcFbu5XuPWKNIuJF/yNV0IRdi5984SyGtDSeremXDgAFn3DT5qreQRIvnHAia7XXzCFhJNTFmb0jTk4IgLXzMHuuM6XUteT+ruLoWnE+/JNVwY6fQSkzOU2cnX1skkg==
+ b=aNhBF8KSTqiNeOacBBz9dkg6tSkVqBMik1McMSzaOOygdPSYslEDmyXisS5vCdP9uv7AGHP4RNUhFgcmXjmhMdYC1CueN+55cj4BeBrwS/tNJffELbeZZ+VjMe7cZEnui4/nGsiFOxXXvm5DxUDWaIQtD8OFo00MYF6zdAM1+D6G52xIYwNcL+YJ2TGGLfvBNQKkrRvBr2nIuCGmZF27WIDWKwZ33p01YRl+gWjyNKw/OSvr9kY+3Hu47/713mdWkejrioEmDJJ991A//mAQgoVrYbgMekuMQXob/ZUUTpWR6lqXCISz3542zFsQUqRFRD55s7uWCIsY6JvvMnmXpA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DR3+6I/3rbn1GbAHR9A18OmV+Co0kR5enaNISDDKL7I=;
- b=jiFmLnZG7CQOPPPGpIpEs1UsAplpGhzxPhtHF1nEdyzKzHHNXRgcivwUVvNiYp66SAXPIu4LIhe/X0RI10kee1ADYQdBp0QEQkqRtxz0J55gNbodniLHbpZLCG5E/AEqhRiziq27YHgKZWtZepvRkqgRsiO0aDueIzRqk1sj0/ZqpgqUijiqWLSOplGaPAzLKJUwOhXgZLd3555JS2oA5kYURo2zGSRzQZqyuRdl+WdBDvgUkG5A79PIYtbD2/OiMZg5kG7ResjUTaiI2Zv9kvPwTKx69HsoN4hGUgp/8PgfSnFI6XYXdj04eClcHRYE7ipR3NgRUjS9kfAVMfunZw==
+ bh=+qciY0PruJUL6w2bIQLQsiuO9bECgQvOcxhgr76koAA=;
+ b=ZrdFidmRrl91O9GpuyDUO4pnn/cGCqLmhVRI9Istd/Av/KsKIC/VdWl5+6ZSg4qFJ+5zc0kDysTOEygLQyPFP2tyvJxv88Ilt2k/6Ha9d4kwKouJ0A9iJMcXF0Nk77fSEC0yL+S2KDF1m3nvM22D8iq8UjcABErEXA2qJNHgQoti6TVEOlCut6nFcQXDxNPJUhLSEh6UTx702UMitpxG/853/24D01rSBlhzWNIOcNKswOOsuroQZUyM9HrgvIl1VbldWy3qS+zKsUrvQwHqq2krZQ/z6k+j5EeIvHCLfb4TOJW9Kv+nOoyE/oYeLCSah18qHC8BQ12WtHBkJcom6Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DR3+6I/3rbn1GbAHR9A18OmV+Co0kR5enaNISDDKL7I=;
- b=0xIIjYCECpuXyl0fEL7iY0o379N0mORckIr1uKZZh5KeRB3WO8C+3pFTvuieb2LQO6WWJEgIYkcKgNDeTTRohGfWyFSUgxTWsoIWrV9vh1u10arAuRkdN2K5x1Thzb3kS2fwykaKMY73Gpn5edkQxvMON/JDgzPo8ia97Tw20VE=
+ bh=+qciY0PruJUL6w2bIQLQsiuO9bECgQvOcxhgr76koAA=;
+ b=wTuK9ui16Eg0dVnv+qdePQ/T4pq4mch5QwhEqqVhMkZpUhtq0GEIojzGbtaZs86aSEvniq05OlXjFQdsFjmMMXWL4F99PDYCJoMrmyhE5Xu1RnSlrc5t/Q8LWrWVX13DFokb/n05X8HLuZMshnoYOxlL1NhOL42u1EE6ppZcqhU=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
- by SN1PR12MB2511.namprd12.prod.outlook.com (2603:10b6:802:23::12) with
+Received: from DM6PR12MB2714.namprd12.prod.outlook.com (2603:10b6:5:42::18) by
+ MWHPR1201MB0063.namprd12.prod.outlook.com (2603:10b6:301:4d::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.15; Thu, 3 Mar
- 2022 17:40:09 +0000
-Received: from BL1PR12MB5157.namprd12.prod.outlook.com
- ([fe80::692d:9532:906b:2b08]) by BL1PR12MB5157.namprd12.prod.outlook.com
- ([fe80::692d:9532:906b:2b08%5]) with mapi id 15.20.5038.014; Thu, 3 Mar 2022
- 17:40:09 +0000
-Message-ID: <dfd8d8e1-9736-6c7c-1fc0-46dd00d58f10@amd.com>
-Date:   Thu, 3 Mar 2022 11:40:07 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [External] Re: [RFC] ACPI: platform-profile: support for AC vs DC
- modes
+ 2022 18:02:02 +0000
+Received: from DM6PR12MB2714.namprd12.prod.outlook.com
+ ([fe80::15e2:e664:c56d:4d91]) by DM6PR12MB2714.namprd12.prod.outlook.com
+ ([fe80::15e2:e664:c56d:4d91%5]) with mapi id 15.20.5038.014; Thu, 3 Mar 2022
+ 18:02:01 +0000
+Message-ID: <25cd29d7-df95-14ad-2fa6-0f4876544789@amd.com>
+Date:   Thu, 3 Mar 2022 12:01:57 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Cc:     brijesh.singh@amd.com, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v11 22/45] x86/sev: Use SEV-SNP AP creation to start
+ secondary CPUs
 Content-Language: en-US
-To:     Mark Pearson <markpearson@lenovo.com>
-Cc:     rafael@kernel.org, hdegoede@redhat.com, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <markpearson@lenovo.com>
- <20220301201554.4417-1-markpearson@lenovo.com>
- <e6a3380d-dcc4-8e61-cba0-813d2404ee1e@amd.com>
- <73656cdd-64d7-b9d0-aff7-61e5b98c2799@lenovo.com>
-From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <73656cdd-64d7-b9d0-aff7-61e5b98c2799@lenovo.com>
+To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org
+References: <20220224165625.2175020-1-brijesh.singh@amd.com>
+ <20220224165625.2175020-23-brijesh.singh@amd.com>
+ <5ca2583b-a873-fc5d-ece6-d4bdbd133a89@intel.com>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+In-Reply-To: <5ca2583b-a873-fc5d-ece6-d4bdbd133a89@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN2PR22CA0026.namprd22.prod.outlook.com
- (2603:10b6:208:238::31) To BL1PR12MB5157.namprd12.prod.outlook.com
- (2603:10b6:208:308::15)
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR16CA0026.namprd16.prod.outlook.com
+ (2603:10b6:610:50::36) To DM6PR12MB2714.namprd12.prod.outlook.com
+ (2603:10b6:5:42::18)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6b1816de-fce7-4962-d646-08d9fd3cdcbc
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2511:EE_
-X-Microsoft-Antispam-PRVS: <SN1PR12MB2511631C6801E127E33CB3C4E2049@SN1PR12MB2511.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: c2770561-10b1-4bae-2190-08d9fd3fead6
+X-MS-TrafficTypeDiagnostic: MWHPR1201MB0063:EE_
+X-Microsoft-Antispam-PRVS: <MWHPR1201MB0063F3E7D200B5403EE2CFE9E5049@MWHPR1201MB0063.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8NorQfgO9K7BadZtntUkwFfYiGNGhpGUo37V5eMZYEbei+0aI1dUFrrSotmiEsLfblDV7pNHDcfslPnbBxSzNZUWDOC7qMeRadmsVuKjB0wY5OBY3WPHcTgMMbedPcj9LAlxJ4S0n96L0Smd4BqxP7ty2Zl9EAfe2w6x1Z56PSaJQ1NiEHqQQp4+7uIfrPe7LChbvRvfa0vYwgzWhzE9QXpM25BEpTb5FGqsp7xdql6zUBb9gQRyhVpy0u/I6YFWpaldtdV54gbJHFIKqj5GrkN9Nj0nTurGCfOtPgNwa8DDYqN+/0vqGbCvqDG+9UOcTuyXoPMmkb9tvuadLof9ukMXhCDMkoRI52/a9IkM4zWdqvdqna2BE8Wjr72KLbX7a8779g2wQ53ECxF35SYcWcBgpDc+3oL5Xcopuq7TPpsu9LwEVOe//ajSLPWQ7edsta1Ewnk3/5xdtCSQLx7jTqwzqHl3kRPW4jA9d78sGVzdlNzi8pkh6I2i/rwqRNVcCsyQyFOYytY5yMN9UwVLsjDx1AZCQnq+3LODUvIUTY8QvXJltNkF974mH71QVAdtUuISTq+RH2wTflGcKdaeoOgrh0+wmzUdqk3mFj/CAk4mcS+GQ+j8hYNvvHqFZ9tyfqHUgt7Wq7bQgGhnFCy/SIkNEMppaQhzhuCOsq4nTTrefQ1vf4pxQcm7G87UUcigGdFi98owwUE5c7f7IgIKicIuibxB9hCNvdphSbpHHwnn0mdmQzp2IqYZUNVuV9ZT
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6506007)(31696002)(86362001)(2906002)(8936002)(66476007)(66556008)(5660300002)(8676002)(2616005)(66946007)(4326008)(508600001)(26005)(186003)(6486002)(31686004)(38100700002)(6512007)(316002)(83380400001)(36756003)(6916009)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: pZGI/saW/k06qWUkOkA9MjMtadYOWuME4KXw65H/9pN3j+0hyNj+tzV0mh6jvNjfmbn2KXNbItaAEGNDguVfhXNhfsoRaAi5MQqBWAaH/ibLaVtcw2uFReiLoWSnHg9AwL/uqhdifoTCVa+FNcrFPfJOjlDfjxmNhUBvQJsNOpWX3VgdppmM8/1y4o7dHbKJYFVJqNauhbr27fi8+Lb2o1BMJpuQvIu1SAlxPatxqsGUHIpWWWLvKVuBw/Y6QGAEz94EYh+gQINhGarLUCLnxI0hX8DThKfokhMOki1f4fY5t0q7LdQcyc1dvQmnRbr6rwgY8xvRM/JUqPBH/I7DUJhuCqzt++dpNwlaSyBJdB8z98+8hxdZsbWtnCsdG2HQ9ELJ7yNnaIK+YxAuhtiOjjpT1l2jQkcpfUh6KEL4+DlxFVQsE+paezCS4B8JBOLD43xjYP1vxLNAXBAcQ1Ye/nJ+RdZwD890KZreeVTZnmPIz52XPXOZ6ezgjJ/LRfzYyRv/u3YboPp5e+wHbAmFSXiCVE3r6SFE0isCxeXgkeHedOBdg5XKZZS1ZHKpY+dIgQXLgcv6renoeqlgYs0nMEmaux0b19mBvxOpFAZ7RvdsH0e0dwby+MRe4Z6xm6SCfJAth8M2oFgd0svGyxynkIfO2rXphTTHDRun3tV+j6lqj5aivJmKklkl4tUnv8WwU2t29/CTT3kma26nJOJKyzQMpZAAlTH/ZHkVJ0fiOsJwam2SRimLR4AAp9o3qheG
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2714.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2906002)(508600001)(86362001)(4326008)(66476007)(66946007)(316002)(66556008)(8676002)(54906003)(8936002)(5660300002)(44832011)(31696002)(38100700002)(6486002)(7416002)(7406005)(6512007)(6666004)(2616005)(6506007)(53546011)(83380400001)(36756003)(31686004)(186003)(26005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cGxvdVJ6c1BrYzFpYzdpVG95VENZVlpjcHBtV3Z1K3c5TTJBT0treTZsU2xw?=
- =?utf-8?B?ZUFOR1hETlpmSENKWUJmdTdhQkltYU5Ga1FIQnBLUGVaaTJVZUpSemhtd3h3?=
- =?utf-8?B?WDVJekRMYk13dFFWdEx0MkxEOFBuTFRCMmFiRlJMVklwdTh2T3FRd2t0alJZ?=
- =?utf-8?B?WklQTUpFaFZxc2dNNG41RW1BOHhzOUszSkEwWDRYcGFIeDA0M1UxRUt4aHU2?=
- =?utf-8?B?ZTZxTyswUjBTcDVmalVGMkg2LzBEbXJhcE1sU0ZLem82bUpVMHg2U25uVXVJ?=
- =?utf-8?B?bjd1OGJ0OCszZkE3UmxpaDJkT1M4WUlwRzJUN2MxM1RpbWpxNlFhUVhlTEM3?=
- =?utf-8?B?VlZocjhFRzNpaUd1NElXK1NHbTJtZHJlVS8xSDNuWm5uYWZrVk5nMVBXL29I?=
- =?utf-8?B?UktTVmtTYW9BSlEwS1V6OUpYREVXYnIzU1pITUh6NG1UWjlBeHAzZGwzUUQ0?=
- =?utf-8?B?eGI2N0pQQ2FXd1F1czRiTkh0YVR4NDRHanBHWFN1Z3FCaWE3OG1XVW83eFBj?=
- =?utf-8?B?dVlHV1JwUThYTmdicVo4VHMzWW9Jcm11d0d0UmVGaDdSSHpSWHNvcFBzM1Nu?=
- =?utf-8?B?RzUvWlhqNXpablkySkJHRHEwcEg4NzliazhJRWp2TUNDVHBCeGNva2xGcFBl?=
- =?utf-8?B?bXBNaVM2NkNuVXFqTXRuSmdHWFJJcUhVUGRqNlA2NC8vQjdKUFJ6cVRNc1A5?=
- =?utf-8?B?VEF3TzA0ZlpyS3h6QVphS1BNY1U2TTYxQm12anVxYmZiUzRXRmt0NjBIQ1pt?=
- =?utf-8?B?YWxWYk9lU1VDckNrRXFPWFI4Zk9oeTRMcWdwdWw5Z2VINFZOSWJIVVhkWE1B?=
- =?utf-8?B?UGs2Z3JsTk1MMWVYZXFoT2V1cVplS2xnU05NRFlaQWtGMlptaVhqdnljZnkz?=
- =?utf-8?B?L21zSWdnZzFBN1hwbnZpODVEc1dGTlErekhLQ1N6SzZFdER5dlhDdmh4Y0Rz?=
- =?utf-8?B?YTF0aFptVTJKbXFXTDRGWTdodFZSWDloTURudHdZR0RvMGxLdkF5SmY1bmkx?=
- =?utf-8?B?TFZSNjNZUzZEU3cxV1hWTlRGUWRiQ09aQlYzOG9PNmpkMzQvcW4ybldOT3Bv?=
- =?utf-8?B?ZTJIdmN0alNvR1VSOG5HeVNZYVZLdkNPaGk2QnlGbTlkZnAwKytCUmtRMXht?=
- =?utf-8?B?VXVDMEo3dXlZY2toamIxZ0JYTVY0Q3IvRjNCa0dYV0FCVFZ5YWFmVXFJWVBp?=
- =?utf-8?B?VHRFUzRFQkNRVE1BcUZCS1dWdU13MFNMWjZhMGVXM1ZBQWFmQ1BSMTkrM2kx?=
- =?utf-8?B?Y2lSVVI4UkEwME5YNERhQXp6TC9iR3FQMFd2cE5hd1JMcloyQkJkclAxUnIr?=
- =?utf-8?B?cTMvZExIZ2JZNThySm5DSlRYaUpFV1RrWndKMVo4NDlLZGd5MGl6TnRheXpp?=
- =?utf-8?B?cWdwR1pmcUdkSWlNQlpuaEZQQVltendlckp4VGFEc1IvWmdMUWhUd1VZbXZN?=
- =?utf-8?B?MVROOFd2Vnl0RlA1dXhJclBsaWtsOGRDVjZvYjJMRzFxVW91L3UweUVMdjFh?=
- =?utf-8?B?MWczK2N6YUwxT1BrclRJNGZkL0tDMWhqSEtwNmJuUWhxMUhKSmM5K1poNTJK?=
- =?utf-8?B?RjloV3U1RlhoUkZOWVpLZUJIUmhCUTVaYzhnUmt4RlhOSEFLSUx4VDJGK3dQ?=
- =?utf-8?B?ZkpGblA0ekFmL1JwWXh4STJ6SU9lUm9Vb1B5T2QrNnpXZEE0TW5VNjQwclNk?=
- =?utf-8?B?SXFPeHg5RlVQb1hHY0NjVmFrelI4dlNPYUgvMDB5NjhUZXcxYmtodFQrcEhs?=
- =?utf-8?B?OVBzQlJaRkI5ME9Fams3SldmVGhYcENZYjVRai83WWNSeGY5UDhEbzJnMzQ2?=
- =?utf-8?B?REdpU1dYUFRXbW1yc2loRXpncy9tVDRTMjdRaDRRNmpaU2xkNkdQMTEwbnor?=
- =?utf-8?B?MnRCQXJaOEU0cm4vWHNBVDRCbXorSUZQRUdOOWx5MHVBNmdBOHJlYjlDTWl4?=
- =?utf-8?B?T0FoRDM2WHdZVlh1SW9HR0tRNzdmZ3FNL09CcW4vYmdaNnkyWVg0b2tLdGNU?=
- =?utf-8?B?UnpnOXdUZm1oTFd3d0MyQ0VXNldRdUdpWnlmV0dBMzJyK0RZcmtoU1YrTUta?=
- =?utf-8?B?MEdEQXp0aVNHaE9XNklqdE9TNVpJQ1EydGtxcFQyQU9XYjZTYVR2WDEyT1RR?=
- =?utf-8?B?Y2QvT3Yrek9lZGtDbTFTeTAzR0c2WU9LeDdVUTB6MFhrT25qNEt1SkxpTlBh?=
- =?utf-8?Q?K9AaCIs/kgaZSRrOfwHxQQY=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZjdzbGtDcG1DVDc3cXp3WmFRZmRQeGFHT0s4ZFpIU1JGSks1OU1pYS93cjNl?=
+ =?utf-8?B?a3N3TFdBb0tNYXNxdTBkK1FVdjdDUlhVeUFsUFNJZ3FxRndtaWNoRUozWmJL?=
+ =?utf-8?B?U1M5c2luVnREa1d5b3JuQ2RYcVpDSmVtY3BGYW84amF2Yy85dktPTXQ0ejFT?=
+ =?utf-8?B?dWswK09XRFp5bWhQNEljOEdhc21XVkZJcEkzaDR4UXRZb3RGRUlobUczbHA0?=
+ =?utf-8?B?Z3p5Z0V4dlI2R2dlVWRYZWR6S3pkU1c1N1FIR0ZNYXFvQ0lheXlXbi9NamRO?=
+ =?utf-8?B?aVdqSnB0aHZjK21uYUZ3MVBLZ3AvMU1aaWV6RmtPTlEweWN0RlZmc2FyekhF?=
+ =?utf-8?B?eWFhaDl3ckYzd2QzSllEcElPdi9ZZzMwSUpOVFIyMGFLdGxUM3dYOTNJSWpW?=
+ =?utf-8?B?Tk1wTXFmZExzRDF6MGNIeW11RVo4WEZIZkVPRVErc2liekxpdzlxWCtSK0lD?=
+ =?utf-8?B?eThPVjhTK09UVFN0dnpkRmZGMStvNHFtL3RSaXU2L05ZQzhxYVVzM25Bb0VW?=
+ =?utf-8?B?cTVTU0dqUWJKMDNWM3ZxbC9UZlRUQkVWN1YwdmRPaUxFTkp1MFIyVFJQaXV0?=
+ =?utf-8?B?MVhCYVV0MnZNMXdqUUpQZHRLVzJSYkt3TDZta2tzcU5vc1I4WFkvbGp2Mlh1?=
+ =?utf-8?B?Z3UxdFZ0MmhWZ3Q0VGkxWEZMWEFZWElVQVNlUU91M0wxTDA5MWhTYVN1Zytq?=
+ =?utf-8?B?TjE4azg5ZXF0WExNT0dHSkczZFdaNmJOdjl5ek91bHFxZDloR2V2RVp4cTZH?=
+ =?utf-8?B?TzNxQVI4TEpOaU1aNi9SSkFKRXdpcGJWRGlmQjhpbnl5RlNTYzQ2Z2JzanRK?=
+ =?utf-8?B?UnpSWkM5eTFSNTlZWUJqcjllcSt4dllNcHJVY1pjTE9BYlRKTGJBWVp4aUVm?=
+ =?utf-8?B?dzcvR1VqSHdZWVU3WHkxUVJLaEZXaEFIS25BRUltVGR1eGNxbjlVNy9iTjlo?=
+ =?utf-8?B?VUllcC9OaXpqWnlsYnFBNWJUSktoRHU3engvUGxNVUNwTEpnN2FTZmppUC9T?=
+ =?utf-8?B?bUFTYi9aVCs5UzIvWlh2T1g5Ky9XUS91b3YwNW9UaGpuODc3UlQxckhRMnR0?=
+ =?utf-8?B?bHowZERwWlM0SU9tay80enA1YjJ3WTB5WWdNT1JySC9KVzRyY3BPbEhWbDNm?=
+ =?utf-8?B?WUYrckRGUHdLbjlDRmZNcXhHWUFwSXVsVmhyRmJ0V0c0dTFXSXFvcnNTZWJD?=
+ =?utf-8?B?bHhzL1R4c2tqbXBFQXJieXZiQm1kdEZ2cjBDUXpHQUZHaXJTSFJpUU53UnNI?=
+ =?utf-8?B?dU96eVo1REc2NVk0YXZKeTNrYXFocmNZVnAxVkl6VXhqUktZTG5xYU9Mdjlp?=
+ =?utf-8?B?WUN6bm9BaTF0Rlk2eUx5SGwrWVdJV05XSDZkK0l4VjNocDFldkJhOFZhRklQ?=
+ =?utf-8?B?YVNWZHNJczI2L1hIRkpKMTQyQWUxTVhPcGJyT0JWK1d3RHFxMkRoVWl4eWQ4?=
+ =?utf-8?B?VmNkM0RyYXBjTjhudENvUE1jQ3VhQVRDdmNSajFrN244djNnMkl5bFZzMFV6?=
+ =?utf-8?B?N2VnVXZSS2syOU0vT3g3azVtVmw0dWRzandHK1JzS1lXR1h6cjJQVzRKMGpR?=
+ =?utf-8?B?Z2RSa2lPQkZwSnVkRzdPbnhpVk9PYjB0Zi82TVcrZ3VOd1BKSno4M29IOEZY?=
+ =?utf-8?B?N2ZSdGxMUnFuQWFtZjNZaUhxY1hDMFc3QmZjUHhlUEs1T2hkZExYckNqdUVM?=
+ =?utf-8?B?OUhkemppWEt1MGhYVDZ5OFpRRGFNMHZnamFJWkFhdG9sT3lkUDhXUjNFM1Fu?=
+ =?utf-8?B?dEh5RXpZbFkrMlJYazNwVmtlVytHU3lONVRaTmFZcVg2VVQ4eUR5RXZCbDE1?=
+ =?utf-8?B?YjdaWGx3eE5mL084YnZkTEN6YXhBV3Roamd0MkpMclo5Ulk1d2w0dS9lRlFu?=
+ =?utf-8?B?c0hmaVIyVklJQzNDSzZWZmZtZEpYbE4xSHRoVGNLL0UvNHZpWGk3WUdWbnM3?=
+ =?utf-8?B?bmU4Y0VoQnk3T1BjZ0ordCsrZVFhVEFUekNPaEd5cytsZG1PcFJ5Qm8yRi95?=
+ =?utf-8?B?ZDdmNEVsR2VJRWpMZGxoenlFaVdjQ3Z0ZXRtTW9IMkpjVytOM1pJd05SdnVj?=
+ =?utf-8?B?NGk4SC95d0JQVHRweTBoMlhiS1JHYW96M01hSkIxSFlQZDVCT0trbGtPamN1?=
+ =?utf-8?B?ZGpVRExzSXI5THhXd3BMVm82Q2pvdFlkOGpha1hoYVdZMTdzMS9WSXVtWS9a?=
+ =?utf-8?Q?JoMUBBMzGsaUd9Hmw5eS0Tk=3D?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b1816de-fce7-4962-d646-08d9fd3cdcbc
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2770561-10b1-4bae-2190-08d9fd3fead6
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2714.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2022 17:40:09.4125
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2022 18:02:01.7273
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: c1lYg/cIZZoEC1AsCBxZFy54/b0Al4M+s82BbvjNk1yf5AB5r41b4+iIPSC93ej91NgvGw7gOi9lZr3cbzuYnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2511
+X-MS-Exchange-CrossTenant-UserPrincipalName: FiagLtvt31eXv5LTDZ8N2eKqbkzHKOGS+6C09xHXcT5op6Im7dArysQvM5JQtvZ1Hu9+6EghueS7QhwzVrb/sA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1201MB0063
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
->> To make it more deterministic I would say configure it like this:
->> 1) If you write a profile to `platform_profile` and the backend supports
->> both DC and AC profiles make it the default profile for both.  This is
->> more like "backwards compatibility" mode
->> 2) If you write a profile to `platform_profile_dc` and the backend
->> supports both then don't do anything in `platform_profile_ac` and vice
->> versa.  Require a user to write both of them explicitly.
->>
->> That means you have a new state of "unset" for the profiles, but if you
->> don't include the state then I think it can lead to confusing behaviors
->> if userspace writes one vs the other first.
->>
-> So I don't think any backend support is particularly needed. If a platform
-> supports platform profiles, then having an AC vs DC mode doesn't need
-> anything special - it's just switching modes.
+
+
+On 3/3/22 11:09, Dave Hansen wrote:
+> On 2/24/22 08:56, Brijesh Singh wrote:
+>> +	/*
+>> +	 * Allocate VMSA page to work around the SNP erratum where the CPU will
+>> +	 * incorrectly signal an RMP violation #PF if a large page (2MB or 1GB)
+>> +	 * collides with the RMP entry of VMSA page. The recommended workaround
+>> +	 * is to not use a large page.
+>> +	 *
+>> +	 * Allocate one extra page, use a page which is not 2MB-aligned
+>> +	 * and free the other.
+>> +	 */
+>> +	p = alloc_pages(GFP_KERNEL_ACCOUNT | __GFP_ZERO, 1);
+>> +	if (!p)
+>> +		return NULL;
+>> +
+>> +	split_page(p, 1);
+>> +
+>> +	pfn = page_to_pfn(p);
+>> +	if (IS_ALIGNED(__pfn_to_phys(pfn), PMD_SIZE)) {
+>> +		pfn++;
+>> +		__free_page(p);
+>> +	} else {
+>> +		__free_page(pfn_to_page(pfn + 1));
+>> +	}
+>> +
+>> +	return page_address(pfn_to_page(pfn));
+>> +}
 > 
-> On the Lenovo AMD platforms in the thinkpad_acpi driver this will
-> trigger some extra niceness to use a separate set of profiles, but even
-> for the platforms that don't have this it's still nice to auto-switch to
-> (for example) a low-power mode when you unplug - and that doesn't need
-> any extra support beyond just supporting platform profiles
+> This can be simplified.  There's no need for all the sill pfn_to_page()
+> conversions or even an alignment check.  The second page (page[1]) of an
+> order-1 page is never 2M/1G aligned.  Just use that:
+> 
+> 	// Alloc an 8k page which is also 8k-aligned:
+> 	p = alloc_pages(GFP_KERNEL_ACCOUNT | __GFP_ZERO, 1);
+> 	if (!p)
+> 		return NULL;
+> 
+> 	split_page(p, 1);
+> 
+> 	// Free the first 4k.  This page _may_
+> 	// be 2M/1G aligned and can not be used:
+> 	__free_page(p);
+> 	
+> 	// Return the unaligned page:
+> 	return page_address(p+1);
 > 
 
-Oh - right good point.  It didn't occur to me that if you only have one 
-set of profiles that you could still assign one of the profiles in that 
-pool to AC and another to DC.
+Ack, I am good with using your version.
 
-> I like the suggestion on updating both if platform_profile is update but
-> I'm worried that it changes the current behaviour:
-> 
-> - on the Lenovo AMD profiles, the battery profile set are all lower
-> power/performance than the plugged-in profiles (by design)
-> - with the implicit setting of the dc mode we'd be changing the behavior
-> so that when you unplug performance will drop.
-> 
-> This is (usually) a good thing, and is I think what Windows users get,
-
-Yes that's correct.
-
-> but it's not what currently happens on Linux. To get back to full power mode
-> you'd have to disable the DC setting - which isn't particularly
-> intuitive. It's why in this initial implementation I made the dc setting
-> 'opt-in'....but maybe I'm being over cautious.
-
-It might be jarring the first time, but it's the right behavior in my 
-mind.  And if someone doesn't like it they can always just write 
-something to the other sysfs file to avoid it.
-
-The other thing is thinkpad_acpi AMD support is new.  Define how it 
-works now!
-
-I don't think it affects any other platform profile provider any 
-differently.
-
-> 
-> Once user space has two sliders the whole point is moot - I suspect I'm
-> overthinking this :)
-> 
-> Ack on the unset state - I'll add that.
-> 
->>>
->>> If you read the platform_profile it will return the currently
->>> active profile.
->>> If you read the platform_profile_ac or platform_profile_dc node it
->>> will return the configured profile. This is something missing from
->>> the current implementation that I think is a nice bonus.
->>
->> Yeah nice bonus.  Some inline comments on this.
->>
->>>
->>> User space implementation could potentially be used to do the same
->>> idea, but having this available allows users to configure from
->>> cmdline or use scripts seemed valuable.
->>>
->>> Note - I'm aware that I still need to:
->>>    1) Update the API documentation file
->>>    2) Implement a disable/unconfigure on the profile_dc setting
->>> But I figured this was far enough along that it would be good to get
->>> comments.
->>
->> If backend doesn't support AC/DC I think you should return an error for
->> one of them rather than trying to hide the difference.  Think about
->> userspace - it might want to have say two sliders and hide one if one of
->> them isn't supported.
-> 
-> See above - I don't think there are cases where this wouldn't be
-> supported. Let me know if I'm missing something
-
-Yup you're right.
-
-> 
->>
->>>
->>> Thanks in advance for any feedback.
->>>
->>> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
->>> ---
->>>    drivers/acpi/platform_profile.c  | 130 +++++++++++++++++++++++++++++--
->>>    include/linux/platform_profile.h |   1 +
->>>    2 files changed, 125 insertions(+), 6 deletions(-)
->>>
-> <snip<
->>> @@ -117,10 +227,14 @@ static ssize_t platform_profile_store(struct
->>> device *dev,
->>>      static DEVICE_ATTR_RO(platform_profile_choices);
->>>    static DEVICE_ATTR_RW(platform_profile);
->>> +static DEVICE_ATTR_RW(platform_profile_ac);
->>> +static DEVICE_ATTR_RW(platform_profile_dc);
->>
->> My opinion here is that if you are keeping the existing one in place to
->> show "current" active profile and make the new ones to show you
->> "selected" profile they should have a different naming convention.
->>
->> Some ideas:
->> - selected_*_profile
->> - platform_profile_policy_*
->> - *_policy
->>
->> Something else that comes to mind is you can rename "platform_profile"
->> as "active_profile" (but create a compatibility symlink back to
->> platform_profile), but I don't know that's really needed as long as it's
->> all well documented.
->>
-> 
-> I like the selected_*_profile - I'll go with that.
-> I'm less enthusiastic about symlinks - just feels messy.
-> 
-> Thanks for the feedback - very much appreciated
-> Mark
-
-Sounds good, thanks.
+-Brijesh
