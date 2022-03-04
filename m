@@ -2,92 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CA3C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Mar 2022 18:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FC3C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Mar 2022 20:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241464AbiCDSCR (ORCPT
+        id S230118AbiCDUcf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Mar 2022 13:02:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59450 "EHLO
+        Fri, 4 Mar 2022 15:32:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241449AbiCDSCL (ORCPT
+        with ESMTP id S230120AbiCDUc1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Mar 2022 13:02:11 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C78B71C57D9
-        for <platform-driver-x86@vger.kernel.org>; Fri,  4 Mar 2022 10:01:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 3E645CE2DB9
-        for <platform-driver-x86@vger.kernel.org>; Fri,  4 Mar 2022 18:01:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7BF6EC34116
-        for <platform-driver-x86@vger.kernel.org>; Fri,  4 Mar 2022 18:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646416880;
-        bh=2RLMDP/pNxGV5cSq/VFe/4lWfhT8AYg4PrN3Eg2QF08=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=VmV72iV9ZleqNrxfcFNNU3gLyVJJqXBunmgT8gbez3Q/5raEOayNUzeoftDjNh7Yj
-         jQJSuBZXjLpn9fDbBDBIu9u+VeoznbI3RtHbc+D6twYSQjfbwwlHz2psELzrev0Y5g
-         TEnLSulL9v4m7A8Es4wsJK0t7kBzITCVxnaiOKvhV6p5JQF6NXGCqJSWXMszsQgEq8
-         n8sVD1DAR2RSFgssSPxIPqxXfQaCGoXNCClnN+ri5JUv+XGZEQ/5wuoEzB6OTuGGCt
-         zSjI0/IOOzhicT+0M8LUyLIM96QNXvgOvx+T2krtDiwslWkkCww14YrNfWRksDpSED
-         QjtNGLhwCCM5w==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 6C86DC05F98; Fri,  4 Mar 2022 18:01:20 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
+        Fri, 4 Mar 2022 15:32:27 -0500
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB141E747E
+        for <platform-driver-x86@vger.kernel.org>; Fri,  4 Mar 2022 12:31:33 -0800 (PST)
+Received: by mail-qt1-x82d.google.com with SMTP id bc10so8425396qtb.5
+        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Mar 2022 12:31:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SzyztJ5GRz/Bab7ba8IwVJyzNlv8p3R99wbJp7O+MoI=;
+        b=anPH+pBPigDblFt9rcebNAO+V3mIS7m8HEqbllkLggeluyoHmWzwFlRB8a+K06OQVL
+         g4EL5gkUOPn2JDt7aiVezzMPLltk50MisS5I20xMFo06SWziorfusa43UtdJo81kD0qG
+         MJm6lYgKNu4RQZpZ5/hkVrYWh4kqD2DZ8st41B/2HKbfXjgxVlZyHyAe18Jm5uYvrfW/
+         tMt2X3O6n6eXnqwAWWgAKC49/cC3gh+sLyphI/VAVQ2kcb7SHOam0nk4oK/fLnm4s5Xu
+         3uwcPwn0reftKUBf6/KbRrqRE7R8Xz1DtOZpkK4k65Ghsp6wBGFBUNmGwooyoZvMWoOG
+         nGaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SzyztJ5GRz/Bab7ba8IwVJyzNlv8p3R99wbJp7O+MoI=;
+        b=JCOJiCq8PxyaLF5No+vBpvJ3b58WZZygm3cS5727PCObPTygfpvnTlxvqT7hm11dJl
+         oMYohOxsxKrGl3OKhvymIQ84k4hPO0yO8uYlR8EawROEgTtk9Ew3G61Mr2sXeKJk80hS
+         7wnZGLj/nSJ/aBPwmteIPDaUcXeO1aoavJ+o/ZYuSZfs3zkXSnnUtS6nKFdgWlpV5mXP
+         RzhX2MlCFkjCIap7TPRmi/JVsMiZZ2+pzymaQIbnXGyCGTDUyEDtSoLd/HagHF9darS/
+         nAGEQdhaktbTgmrbGswFqDSRc99IezwQbLJNK/ofFOSl/IcQNOzwBUZvmcbcF6tSgtPF
+         JQzw==
+X-Gm-Message-State: AOAM531/K7gBJgnZOwpzwE2SbENNt9z/YVCN4Qlf60llNBdzxDu7i82p
+        +obL16g1ie9wYTBzyvtS9xBpbZjjdT8=
+X-Google-Smtp-Source: ABdhPJxQLr3Mt3YXY+QH8zBP4D/NVoXj/9p3oVnK8P1aoJ9qCNmBI9mI3i95PWyokXejWo11Q4H6hg==
+X-Received: by 2002:ac8:5b56:0:b0:2cc:2dc9:9a89 with SMTP id n22-20020ac85b56000000b002cc2dc99a89mr493135qtw.182.1646425892331;
+        Fri, 04 Mar 2022 12:31:32 -0800 (PST)
+Received: from grumpy-vm.hsd1.tx.comcast.net ([2601:2c3:480:7390:27a2:529c:40d3:26aa])
+        by smtp.gmail.com with ESMTPSA id de18-20020a05620a371200b00662cf4b5631sm2974513qkb.23.2022.03.04.12.31.31
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Mar 2022 12:31:31 -0800 (PST)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Fri, 04 Mar 2022 18:01:18 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: emayor@live.com.ar
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-204807-215701-CzFCE4fF2W@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+Subject: [PATCH v3 0/3] Fix SW_TABLET_MODE detection method
+Date:   Fri,  4 Mar 2022 14:31:27 -0600
+Message-Id: <20220304203130.43150-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+The intension for this patch was to address SW_TABLET_MODE detection 
+problem.  It is during the initial investigation; two other issues were 
+identified and are related to the initial task.  
 
-Emmanuel Mayor (emayor@live.com.ar) changed:
+First, several WMI queries were reporting error 0x05 including 
+HPWMI_HARDWARE_QUERY that is responsible for returning dock and table 
+modes values. See patch v3 part 2 comments for list of WMI queries 
+affected.  The driver now reports the appropriate states and values 
+correctly.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |emayor@live.com.ar
+Lastly, a limiting data size restriction was discovered. 
+struct bios_args data member size limits all possible WMI commands 
+to those requiring buffer size of 128 bytes or less.  Several WMI 
+commands and queries require a buffer size larger than 128 bytes 
+hence limiting current and new feature supported by the driver. 
+hp_wmi_perform_query function changed to handle the memory 
+allocation and release of any required buffer size. 
 
---- Comment #223 from Emmanuel Mayor (emayor@live.com.ar) ---
-Same issue with Rog Strix Z370-H Gaming, which has Nuvoton NCT6793D
 
-Kernel version: 5.16.11-zen1-1-zen
+Jorge Lopez (3):
+  Fix SW_TABLET_MODE detection method
+  Fix 0x05 error code reported by several WMI calls
+  Changing bios_args.data to be dynamically allocated
 
-[    2.018193] ACPI Warning: SystemIO range
-0x0000000000000295-0x0000000000000296 conflicts with OpRegion
-0x0000000000000290-0x0000000000000299 (\_GPE.HWM) (20210930/utaddress-204)
-[    2.018199] ACPI: OSL: Resource conflict; ACPI support missing from driv=
-er?
+ drivers/platform/x86/hp-wmi.c | 119 ++++++++++++++++++++++------------
+ 1 file changed, 76 insertions(+), 43 deletions(-)
 
---=20
-You may reply to this email to add a comment.
+-- 
+2.25.1
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
