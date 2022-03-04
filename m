@@ -2,80 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699A9C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Mar 2022 17:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CA3C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Mar 2022 18:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238664AbiCDRLL (ORCPT
+        id S241464AbiCDSCR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Mar 2022 12:11:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41304 "EHLO
+        Fri, 4 Mar 2022 13:02:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231630AbiCDRLK (ORCPT
+        with ESMTP id S241449AbiCDSCL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Mar 2022 12:11:10 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97CE91CBA97;
-        Fri,  4 Mar 2022 09:10:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=WbFFgJ3TOElNmD+ADc11e8q9EbVb53G89PRSG/O0iSU=; b=HABnBLdjCuVOVOvY7g92QYd3LH
-        wL06Bw1jB1JQ0fhcGnX9IeNAMOKhbYyKMn74p8qAX1S9CnfsPzk8tWDPTR1RwhmdoHcn3zabgqNIS
-        kZIbAumkfljep8Cw1F2aHRJd/q1z4FV+86aIq/QhJ4uTFO6hJWDhT5FplV7UQ2EFf37eIjz9/yfRK
-        dwLUdLUtlOamhoIx/CZJMOi3+TI3nCfdH6qqP8bAAD8oZ6YYwZ4X6JuvmisnBDPMqk5VU5e3uJRju
-        7XWGaHiJOEssEykkqemoPAI7vu+tTUJEjdokwmJPf3vHSS6yEpdOd66k/NiJrCQJULU6WGlo941Wl
-        8SRcBXzg==;
-Received: from [2601:1c0:6280:3f0::aa0b]
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nQBRP-00CoTk-7I; Fri, 04 Mar 2022 17:10:07 +0000
-Message-ID: <e1a5f3ad-c33d-46f1-48c6-9c6b377ea211@infradead.org>
-Date:   Fri, 4 Mar 2022 09:10:02 -0800
+        Fri, 4 Mar 2022 13:02:11 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C78B71C57D9
+        for <platform-driver-x86@vger.kernel.org>; Fri,  4 Mar 2022 10:01:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 3E645CE2DB9
+        for <platform-driver-x86@vger.kernel.org>; Fri,  4 Mar 2022 18:01:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7BF6EC34116
+        for <platform-driver-x86@vger.kernel.org>; Fri,  4 Mar 2022 18:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646416880;
+        bh=2RLMDP/pNxGV5cSq/VFe/4lWfhT8AYg4PrN3Eg2QF08=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=VmV72iV9ZleqNrxfcFNNU3gLyVJJqXBunmgT8gbez3Q/5raEOayNUzeoftDjNh7Yj
+         jQJSuBZXjLpn9fDbBDBIu9u+VeoznbI3RtHbc+D6twYSQjfbwwlHz2psELzrev0Y5g
+         TEnLSulL9v4m7A8Es4wsJK0t7kBzITCVxnaiOKvhV6p5JQF6NXGCqJSWXMszsQgEq8
+         n8sVD1DAR2RSFgssSPxIPqxXfQaCGoXNCClnN+ri5JUv+XGZEQ/5wuoEzB6OTuGGCt
+         zSjI0/IOOzhicT+0M8LUyLIM96QNXvgOvx+T2krtDiwslWkkCww14YrNfWRksDpSED
+         QjtNGLhwCCM5w==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 6C86DC05F98; Fri,  4 Mar 2022 18:01:20 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Fri, 04 Mar 2022 18:01:18 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: emayor@live.com.ar
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-204807-215701-CzFCE4fF2W@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: mmotm 2022-03-03-21-24 uploaded
- [drivers/platform/x86/x86-android-tablets.ko]
-Content-Language: en-US
-To:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        mhocko@suse.cz, sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20220304052444.C157EC340E9@smtp.kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20220304052444.C157EC340E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-On 3/3/22 21:24, Andrew Morton wrote:
-> The mm-of-the-moment snapshot 2022-03-03-21-24 has been uploaded to
-> 
->    https://www.ozlabs.org/~akpm/mmotm/
-> 
-> mmotm-readme.txt says
-> 
-> README for mm-of-the-moment:
-> 
-> https://www.ozlabs.org/~akpm/mmotm/
-> 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
-> 
-> You will need quilt to apply these patches to the latest Linus release (5.x
-> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> https://ozlabs.org/~akpm/mmotm/series
+Emmanuel Mayor (emayor@live.com.ar) changed:
 
-on i386:
-when CONFIG_SPI is not set/enabled:
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |emayor@live.com.ar
 
-ERROR: modpost: "spi_bus_type" [drivers/platform/x86/x86-android-tablets.ko] undefined!
+--- Comment #223 from Emmanuel Mayor (emayor@live.com.ar) ---
+Same issue with Rog Strix Z370-H Gaming, which has Nuvoton NCT6793D
 
--- 
-~Randy
+Kernel version: 5.16.11-zen1-1-zen
+
+[    2.018193] ACPI Warning: SystemIO range
+0x0000000000000295-0x0000000000000296 conflicts with OpRegion
+0x0000000000000290-0x0000000000000299 (\_GPE.HWM) (20210930/utaddress-204)
+[    2.018199] ACPI: OSL: Resource conflict; ACPI support missing from driv=
+er?
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
