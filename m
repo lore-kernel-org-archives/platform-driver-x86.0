@@ -2,60 +2,60 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB57C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Mar 2022 20:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C7FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Mar 2022 20:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229828AbiCDUeP (ORCPT
+        id S229641AbiCDUeP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Fri, 4 Mar 2022 15:34:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54784 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbiCDUcc (ORCPT
+        with ESMTP id S230177AbiCDUcd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Mar 2022 15:32:32 -0500
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B61C1E6EA9
+        Fri, 4 Mar 2022 15:32:33 -0500
+Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C2E1E745E
         for <platform-driver-x86@vger.kernel.org>; Fri,  4 Mar 2022 12:31:35 -0800 (PST)
-Received: by mail-qk1-x730.google.com with SMTP id bm39so7418414qkb.0
+Received: by mail-qk1-x736.google.com with SMTP id 185so7397737qkh.1
         for <platform-driver-x86@vger.kernel.org>; Fri, 04 Mar 2022 12:31:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=ett/uv6sbqbFCZS9vI57Mx/wXVZkqvckGL/Cdf6KLho=;
-        b=nWSGj8DThy/zbb99CAdWD6uTLncybbmO4Huf7f44x5LTAt4PzJ8f++dKpfXULsjdSd
-         G6b3LQ04aP1EtEYHROV9IYoZlStdPWvAS0cRFvSMhfGJf7DhGUmNKFBp+hWOGwqattOo
-         TT+2Hn3czT+Gt+iWpP1IZW6i/y3QtxepNZTDMz8ECbRh3ZbtYtJnS+MC89NV6xlzpr6m
-         WKaB3Xlp4FeomPd9NEyEg4gk+t4/u2N5tngiO5Px1742OVJ9qf9qyhWB4Oo9mgxU0qQU
-         weImFkft86K6R/CZ6m5O32f7BLQHCaA+LSU+viAURwLabaen7hBoex7T7FAk2eqaiIR9
-         j9lA==
+        bh=P+dj1OE6cszYcWyWwPfzXXeiPtA9PrXWU9gSaPAos2o=;
+        b=o0NlPAsJ6EeDr/sjT0U3wCXzkTkZ4t/tITNLb/P9SphdOzcXty+Jd30Fi7BO3KnycU
+         PqeqPW0uECctunRHoDUcgyhA9++9PD1Zg7ePc24T3yH+9KMOz1w9PoBb88CQdYkxcp6n
+         ZgxYLT0+wqxxKaxINwJu08kOp7uIPn9Gkuk+iDb0HUYfEMNJ8CYN1uUxWhNqgFYidR1j
+         RJjDLIe6+MbOHk0OstARTojt9Mg8eO6d85ixDzyv2+eI6hUfH1TKnvcgG1R5213t+aB/
+         XWRZEcg7Ivm9PX+ly2aM0kLs9cHOMSHCZGSEN3iWhQhuJUEXToHeIFAN2zczP0Ecnkkk
+         ELRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ett/uv6sbqbFCZS9vI57Mx/wXVZkqvckGL/Cdf6KLho=;
-        b=ZadecBg9EQim0M2HpjOAMnc4gxQ70PGBlUIWUorH/EPWPAY0T8tIgeW7ehc7BeBtOd
-         q3YyMReEPVVivFFtsA5Gsw98h5wpFRy5FKZSL3bI/Ne/VExOlTjGs0nHgH118PecWZgt
-         1deu6S/FuK2jen71SQPmLqwhv9ho3OcwpVA0X5SE7aS2NiVkxRN2KcwWY3sBKyq71LQ/
-         km5eGEQX9DN23QdcMSWaopPwXNB8oLR64+8FbVSasWmxjGIVMNVnM0G8t+YJcFAm2oCt
-         l1JxL5aUgaNOKzj1a98QTNnvYElCmIrsNCvBjTdMTPrsfftPn4v0NTdYdG9oOdY77mAd
-         wrNA==
-X-Gm-Message-State: AOAM532KmIDKoGwFViF6nklN3wSQSx3NAwqU+uEXLLQEZ4EYtYirOhCm
-        RfUY+4VdLRaEtQu3K5TfL5cFtnobXlI=
-X-Google-Smtp-Source: ABdhPJxUbYP5DcjMzVq0TI2av/40EPHNE6NVmDwFRaoizwhfYYJ0CggOtFQjvN526ugRyjVFI+K+YQ==
-X-Received: by 2002:ae9:ef09:0:b0:506:aadb:1f1b with SMTP id d9-20020ae9ef09000000b00506aadb1f1bmr248566qkg.609.1646425893794;
-        Fri, 04 Mar 2022 12:31:33 -0800 (PST)
+        bh=P+dj1OE6cszYcWyWwPfzXXeiPtA9PrXWU9gSaPAos2o=;
+        b=OYuQl1GL37UDiDVmdeJJLlikbB8Pk4V5OlgSslLW6oHqBEw4mooFBtDyy9tfML8kXA
+         x0TuUdY8GqVwys4bDBARrjHu2Hbq42Fw4Tz9/E6A8gggc0Tu33l4xFyrMwH3yVvOVIR8
+         WMAZov8MSJ1lLsg8GHNnhqL1eTQnX0TC4iTCRKvHKLVrT8j4kA2fcf0hnKYm+bI2m8LT
+         yyFIAM5r+dQyXA0YWRbDF/sWNLVUJpqCxNCangelzS7jX2PcS7A2qMsd2iVwUQycvNis
+         aFl/YnIzjPGyHBUwVvdHxyADgXnpgywYGoOBrujgXR6fBvEsllLp9OnjwvlmqcEcKWI6
+         HOvA==
+X-Gm-Message-State: AOAM5301BPlmH2/aB+ey/NlMFrHdwh6T2OUI6+yE/DN22Cy5RZPZnhrl
+        7NoCWzljffB1JfL3H//Uck1U27bu/Yw=
+X-Google-Smtp-Source: ABdhPJxtZNnteDLm/YlbH7HEjlCK3JnhI8Qmdbu233Dm3dT1p91CnLVzr5ghAWi7098v6QYPA6QmJw==
+X-Received: by 2002:a37:755:0:b0:60d:d47b:aaa1 with SMTP id 82-20020a370755000000b0060dd47baaa1mr274747qkh.688.1646425894485;
+        Fri, 04 Mar 2022 12:31:34 -0800 (PST)
 Received: from grumpy-vm.hsd1.tx.comcast.net ([2601:2c3:480:7390:27a2:529c:40d3:26aa])
         by smtp.gmail.com with ESMTPSA id de18-20020a05620a371200b00662cf4b5631sm2974513qkb.23.2022.03.04.12.31.33
         for <platform-driver-x86@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Mar 2022 12:31:33 -0800 (PST)
+        Fri, 04 Mar 2022 12:31:34 -0800 (PST)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 2/3] Fix 0x05 error code reported by several WMI calls
-Date:   Fri,  4 Mar 2022 14:31:29 -0600
-Message-Id: <20220304203130.43150-3-jorge.lopez2@hp.com>
+Subject: [PATCH v3 3/3] Changing bios_args.data to be dynamically allocated
+Date:   Fri,  4 Mar 2022 14:31:30 -0600
+Message-Id: <20220304203130.43150-4-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220304203130.43150-1-jorge.lopez2@hp.com>
 References: <20220304203130.43150-1-jorge.lopez2@hp.com>
@@ -65,36 +65,19 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Several WMI queries leverage hp_wmi_read_int function to read their data.
-hp_wmi_read_int function was corrected in a previous patch.  Now, this
-function invokes hp_wmi_perform_query with input parameter of size zero
-and the output buffer of size 4.
+The purpose of this patch is to remove 128 bytes buffer limitation
+imposed in bios_args structure.
 
-WMI commands calling hp_wmi_perform_query with input buffer size value
-of zero are listed below.
+A limiting factor discovered during this investigation was the struct
+bios_args.data size restriction.  The data member size limits all possible
+WMI commands to those requiring buffer size of 128 bytes or less.
+Several WMI commands and queries require a buffer size larger than 128
+bytes hence limiting current and feature supported by the driver.
+It is for this reason, struct bios_args.data changed and is dynamically
+allocated.  hp_wmi_perform_query function changed to handle the memory
+allocation and release of any required buffer size.
 
-HPWMI_DISPLAY_QUERY
-HPWMI_HDDTEMP_QUERY
-HPWMI_ALS_QUERY
-HPWMI_HARDWARE_QUERY
-HPWMI_WIRELESS_QUERY
-HPWMI_BIOS_QUERY
-HPWMI_FEATURE_QUERY
-HPWMI_HOTKEY_QUERY
-HPWMI_FEATURE2_QUERY
-HPWMI_WIRELESS2_QUERY
-HPWMI_POSTCODEERROR_QUERY
-HPWMI_THERMAL_PROFILE_QUERY
-HPWMI_FAN_SPEED_MAX_GET_QUERY
-
-Invoking those WMI commands with an input buffer size greater
-than zero will cause error 0x05 to be returned.
-
-All WMI commands executed by the driver were reviewed and changes
-were made to ensure the expected input and output buffer size match
-the WMI specification.
-
-Changes were validated on a HP ZBook Workstation notebook,
+All changes were validated on a HP ZBook Workstation notebook,
 HP EliteBook x360, and HP EliteBook 850 G8.  Additional
 validation was included in the test process to ensure no other
 commands were incorrectly handled.
@@ -104,105 +87,112 @@ Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- drivers/platform/x86/hp-wmi.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/platform/x86/hp-wmi.c | 59 ++++++++++++++++++++++-------------
+ 1 file changed, 38 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index a19f8b2b629e..ecf2a3a8ed78 100644
+index ecf2a3a8ed78..95a95535aea0 100644
 --- a/drivers/platform/x86/hp-wmi.c
 +++ b/drivers/platform/x86/hp-wmi.c
-@@ -320,7 +320,7 @@ static int hp_wmi_get_fan_speed(int fan)
- 	char fan_data[4] = { fan, 0, 0, 0 };
+@@ -86,12 +86,17 @@ enum hp_wmi_event_ids {
+ 	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
+ };
  
- 	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
--				       &fan_data, sizeof(fan_data),
-+				       &fan_data, sizeof(char),
- 				       sizeof(fan_data));
++/**
++ * struct bios_args buffer is dynamically allocated.  New WMI command types
++ * were introduced that exceeds 128-byte data size.  Changes to handle
++ * the data size allocation scheme were kept in hp_wmi_perform_qurey function.
++ */
+ struct bios_args {
+ 	u32 signature;
+ 	u32 command;
+ 	u32 commandtype;
+ 	u32 datasize;
+-	u8 data[128];
++	u8 data[0];
+ };
  
- 	if (ret != 0)
-@@ -380,7 +380,7 @@ static int omen_thermal_profile_set(int mode)
- 		return -EINVAL;
+ enum hp_wmi_commandtype {
+@@ -259,34 +264,39 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 	int mid;
+ 	struct bios_return *bios_return;
+ 	int actual_outsize;
+-	union acpi_object *obj;
+-	struct bios_args args = {
+-		.signature = 0x55434553,
+-		.command = command,
+-		.commandtype = query,
+-		.datasize = insize,
+-		.data = { 0 },
+-	};
+-	struct acpi_buffer input = { sizeof(struct bios_args), &args };
++	union acpi_object *obj = NULL;
++	size_t bios_args_size = sizeof(struct bios_args) + insize;
++	struct bios_args *args = NULL;
++	struct acpi_buffer input;
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	int ret = 0;
  
- 	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
--				   &buffer, sizeof(buffer), sizeof(buffer));
-+				   &buffer, sizeof(buffer), 0);
+-	mid = encode_outsize_for_pvsz(outsize);
+-	if (WARN_ON(mid < 0))
+-		return mid;
++	args = kmalloc(bios_args_size, GFP_KERNEL);
++	if (!args)
++		return -ENOMEM;
  
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -417,7 +417,7 @@ static int hp_wmi_fan_speed_max_set(int enabled)
- 	int ret;
+-	if (WARN_ON(insize > sizeof(args.data)))
+-		return -EINVAL;
+-	memcpy(&args.data[0], buffer, insize);
++	input.length = bios_args_size;
++	input.pointer = args;
  
- 	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
--				   &enabled, sizeof(enabled), sizeof(enabled));
-+				   &enabled, sizeof(enabled), 0);
+-	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
++	mid = encode_outsize_for_pvsz(outsize);
++	if (WARN_ON(mid < 0)) {
++		ret = mid;
++		goto out_free;
++	}
  
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -430,7 +430,7 @@ static int hp_wmi_fan_speed_max_get(void)
- 	int val = 0, ret;
+-	obj = output.pointer;
++	memcpy(args->data, buffer, insize);
  
- 	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
--				   &val, sizeof(val), sizeof(val));
-+				   &val, 0, sizeof(val));
+-	if (!obj)
+-		return -EINVAL;
++	args->signature = 0x55434553;
++	args->command = command;
++	args->commandtype = query;
++	args->datasize = insize;
  
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -442,7 +442,7 @@ static int __init hp_wmi_bios_2008_later(void)
- {
- 	int state = 0;
- 	int ret = hp_wmi_perform_query(HPWMI_FEATURE_QUERY, HPWMI_READ, &state,
--				       sizeof(state), sizeof(state));
-+				       0, sizeof(state));
- 	if (!ret)
- 		return 1;
+-	if (obj->type != ACPI_TYPE_BUFFER) {
++	ret = wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
++	if (ret)
++		goto out_free;
++
++	obj = output.pointer;
++	if (!obj) {
+ 		ret = -EINVAL;
+ 		goto out_free;
+ 	}
+@@ -301,6 +311,12 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 		goto out_free;
+ 	}
  
-@@ -453,7 +453,7 @@ static int __init hp_wmi_bios_2009_later(void)
- {
- 	u8 state[128];
- 	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &state,
--				       sizeof(state), sizeof(state));
-+				       0, sizeof(state));
- 	if (!ret)
- 		return 1;
++	if (obj->type != ACPI_TYPE_BUFFER) {
++		pr_warn("query 0x%x returned an invalid object 0x%x\n", query, ret);
++		ret = -EINVAL;
++		goto out_free;
++	}
++
+ 	/* Ignore output data of zero size */
+ 	if (!outsize)
+ 		goto out_free;
+@@ -311,6 +327,7 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
  
-@@ -531,7 +531,7 @@ static int hp_wmi_rfkill2_refresh(void)
- 	int err, i;
- 
- 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
--				   sizeof(state), sizeof(state));
-+				   0, sizeof(state));
- 	if (err)
- 		return err;
- 
-@@ -620,7 +620,7 @@ static ssize_t als_store(struct device *dev, struct device_attribute *attr,
- 		return ret;
- 
- 	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
--				       sizeof(tmp), sizeof(tmp));
-+				       sizeof(tmp), 0);
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
- 
-@@ -641,9 +641,9 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
- 	if (clear == false)
- 		return -EINVAL;
- 
--	/* Clear the POST error code. It is kept until until cleared. */
-+	/* Clear the POST error code. It is kept until cleared. */
- 	ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, HPWMI_WRITE, &tmp,
--				       sizeof(tmp), sizeof(tmp));
-+				       sizeof(tmp), 0);
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
- 
-@@ -935,7 +935,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
- 	int err, i;
- 
- 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
--				   sizeof(state), sizeof(state));
-+				   0, sizeof(state));
- 	if (err)
- 		return err < 0 ? err : -EINVAL;
+ out_free:
+ 	kfree(obj);
++	kfree(args);
+ 	return ret;
+ }
  
 -- 
 2.25.1
