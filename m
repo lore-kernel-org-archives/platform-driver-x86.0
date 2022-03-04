@@ -2,377 +2,208 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D4DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Mar 2022 20:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB57C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Mar 2022 20:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230379AbiCDUdx (ORCPT
+        id S229828AbiCDUeP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Mar 2022 15:33:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59308 "EHLO
+        Fri, 4 Mar 2022 15:34:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231684AbiCDUdZ (ORCPT
+        with ESMTP id S229641AbiCDUcc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Mar 2022 15:33:25 -0500
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 497951F5855
-        for <platform-driver-x86@vger.kernel.org>; Fri,  4 Mar 2022 12:32:22 -0800 (PST)
-Received: by mail-yb1-xb36.google.com with SMTP id j2so19238099ybu.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Mar 2022 12:32:22 -0800 (PST)
+        Fri, 4 Mar 2022 15:32:32 -0500
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B61C1E6EA9
+        for <platform-driver-x86@vger.kernel.org>; Fri,  4 Mar 2022 12:31:35 -0800 (PST)
+Received: by mail-qk1-x730.google.com with SMTP id bm39so7418414qkb.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Mar 2022 12:31:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=5Va0AzpfFrj2CIxQZYECbB+NvfeYwGm1BAKxA+n6QB4=;
-        b=aqiySkX9xXwyx0pXK5VRBPZs+THKKNzuz8P4dXhtgCvyYD83k10XEbPITizjiFC5+1
-         +uJJ/WstvMVQTxU+LxuP8XvWADlDCdusBlVQa6BMMZVrW+OvyLaQ8uvd5/vC5a3PIP7E
-         7y8BB4T4piZJGQnj00J7i5/x2Tvr9Q2Vswp09xESARUUFkWHsHOeWImu8+bTyTXXx/eQ
-         bg48wFjeuxt3dXnyUZI9XGuyC+9UU7Mxo4DmQDp55ReOUMP1xATcFBsHN4NlsMWvv7SO
-         XFJtejMlR6DmbxBbJo6wJuIsEUUP9J9LGUSnI+XbbgA5eFTL5pRLbzkWbAK92pr+ZBX7
-         OlDg==
+        d=gmail.com; s=20210112;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=ett/uv6sbqbFCZS9vI57Mx/wXVZkqvckGL/Cdf6KLho=;
+        b=nWSGj8DThy/zbb99CAdWD6uTLncybbmO4Huf7f44x5LTAt4PzJ8f++dKpfXULsjdSd
+         G6b3LQ04aP1EtEYHROV9IYoZlStdPWvAS0cRFvSMhfGJf7DhGUmNKFBp+hWOGwqattOo
+         TT+2Hn3czT+Gt+iWpP1IZW6i/y3QtxepNZTDMz8ECbRh3ZbtYtJnS+MC89NV6xlzpr6m
+         WKaB3Xlp4FeomPd9NEyEg4gk+t4/u2N5tngiO5Px1742OVJ9qf9qyhWB4Oo9mgxU0qQU
+         weImFkft86K6R/CZ6m5O32f7BLQHCaA+LSU+viAURwLabaen7hBoex7T7FAk2eqaiIR9
+         j9lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=5Va0AzpfFrj2CIxQZYECbB+NvfeYwGm1BAKxA+n6QB4=;
-        b=FPfPWNJtA4BFwGzwmMs8hIX4a22QTH/F5q/ZzJ9F4lOHCrPCyiCm0CsrRY6pBlW1dk
-         yKcnyuZc65AyjIuzgFjx1s5t6m/raYCjTL6+t2RZ7u4zUUJ/GFI0SxgJphRywYwS7i6B
-         5UMLfcfjLTWgBzzovjso8Ng7Ee20fnmqYo5Jamwrgv27sdiOtqK0y4ZTriegun8qZZ+d
-         u2bObI+N6bOSWA7Yzxfa4h8txNyxztUjHfV7+MtNOqcSshx1eDmltLYodRfiEscmdOep
-         3hiC9HYXptEc0Ge9W+eLcG80niYAXO0NoB//KK5Yub31rdL7YNqY2qIgKmKB7MKcyexO
-         ST4g==
-X-Gm-Message-State: AOAM533f0CtP/qolE3U/P15NFuGsRDabLXEilig5s73tPWd7ZN+wg/TK
-        gJL51r+3QBeSEyJCM/m3l0j0+qaOWOd8DJ9jDRJdXg==
-X-Google-Smtp-Source: ABdhPJzxs23o8/HFTUjwCIU9Csa6E4rXqxc9gfNR5DpVCPks40rysm/OfOjtL91itmtSRi55jiNUior2jV/kxeE11DA=
-X-Received: by 2002:a25:c487:0:b0:61d:9570:e77f with SMTP id
- u129-20020a25c487000000b0061d9570e77fmr202540ybf.229.1646425927962; Fri, 04
- Mar 2022 12:32:07 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ett/uv6sbqbFCZS9vI57Mx/wXVZkqvckGL/Cdf6KLho=;
+        b=ZadecBg9EQim0M2HpjOAMnc4gxQ70PGBlUIWUorH/EPWPAY0T8tIgeW7ehc7BeBtOd
+         q3YyMReEPVVivFFtsA5Gsw98h5wpFRy5FKZSL3bI/Ne/VExOlTjGs0nHgH118PecWZgt
+         1deu6S/FuK2jen71SQPmLqwhv9ho3OcwpVA0X5SE7aS2NiVkxRN2KcwWY3sBKyq71LQ/
+         km5eGEQX9DN23QdcMSWaopPwXNB8oLR64+8FbVSasWmxjGIVMNVnM0G8t+YJcFAm2oCt
+         l1JxL5aUgaNOKzj1a98QTNnvYElCmIrsNCvBjTdMTPrsfftPn4v0NTdYdG9oOdY77mAd
+         wrNA==
+X-Gm-Message-State: AOAM532KmIDKoGwFViF6nklN3wSQSx3NAwqU+uEXLLQEZ4EYtYirOhCm
+        RfUY+4VdLRaEtQu3K5TfL5cFtnobXlI=
+X-Google-Smtp-Source: ABdhPJxUbYP5DcjMzVq0TI2av/40EPHNE6NVmDwFRaoizwhfYYJ0CggOtFQjvN526ugRyjVFI+K+YQ==
+X-Received: by 2002:ae9:ef09:0:b0:506:aadb:1f1b with SMTP id d9-20020ae9ef09000000b00506aadb1f1bmr248566qkg.609.1646425893794;
+        Fri, 04 Mar 2022 12:31:33 -0800 (PST)
+Received: from grumpy-vm.hsd1.tx.comcast.net ([2601:2c3:480:7390:27a2:529c:40d3:26aa])
+        by smtp.gmail.com with ESMTPSA id de18-20020a05620a371200b00662cf4b5631sm2974513qkb.23.2022.03.04.12.31.33
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Mar 2022 12:31:33 -0800 (PST)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     platform-driver-x86@vger.kernel.org
+Subject: [PATCH v3 2/3] Fix 0x05 error code reported by several WMI calls
+Date:   Fri,  4 Mar 2022 14:31:29 -0600
+Message-Id: <20220304203130.43150-3-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220304203130.43150-1-jorge.lopez2@hp.com>
+References: <20220304203130.43150-1-jorge.lopez2@hp.com>
 MIME-Version: 1.0
-Received: by 2002:a0d:df06:0:0:0:0:0 with HTTP; Fri, 4 Mar 2022 12:32:07 -0800 (PST)
-In-Reply-To: <202202071325.F8450B3B2D@keescook>
-References: <20220203164328.203629-1-martin.fernandez@eclypsium.com>
- <20220203164328.203629-4-martin.fernandez@eclypsium.com> <202202071325.F8450B3B2D@keescook>
-From:   Martin Fernandez <martin.fernandez@eclypsium.com>
-Date:   Fri, 4 Mar 2022 17:32:07 -0300
-Message-ID: <CAKgze5ZXzVYHK+iR0RMRy+M9ws6kFiq0XY55+fmxmo3baUu+Bw@mail.gmail.com>
-Subject: Re: [PATCH v6 3/6] x86/e820: Refactor range_update and range_remove
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2/7/22, Kees Cook <keescook@chromium.org> wrote:
-> Something I think would be really amazing here is if you could add KUnit
-> tests here to exercise the corner cases and validate the changes. It
-> should be pretty easy to add. Here's a quick example for the boilerplate
-> and testing a bit of __e820__range_add():
->
-> #ifdef CONFIG_E820_KUNIT_TEST
-> #include <kunit/test.h>
->
-> static void __init test_e820_range_add(struct kunit *context)
-> {
-> 	struct e820_table table;
-> 	u32 full;
->
-> 	full = ARRAY_SIZE(table.entries);
-> 	/* Add last entry. */
-> 	table->nr_entries = full - 1;
-> 	__e820__range_add(&table, 0, 15, 0);
-> 	KUNIT_EXPECT_EQ(table->nr_entries, full)
-> 	/* Skip new entry when full. */
-> 	__e820__range_add(&table, 0, 15, 0);
-> 	KUNIT_EXPECT_EQ(table->nr_entries, full)
-> }
->
-> static void __init test_e820_update(struct kunit *context)
-> {
-> ...
-> }
->
-> static struct kunit_case __refdata e820_test_cases[] = {
->         KUNIT_CASE(test_e820_range_add),
->         KUNIT_CASE(test_e820_update),
-> 	...
->         {}
-> };
->
-> static struct kunit_suite e820_test_suite = {
->         .name = "e820",
->         .test_cases = e820_test_cases,
-> };
->
-> kunit_test_suites(&e820_test_suite);
-> #endif
+Several WMI queries leverage hp_wmi_read_int function to read their data.
+hp_wmi_read_int function was corrected in a previous patch.  Now, this
+function invokes hp_wmi_perform_query with input parameter of size zero
+and the output buffer of size 4.
 
-I almost got it. Although when added the tests I have a warning
-when compiling, because KUnit doens't want to deal with __init things:
+WMI commands calling hp_wmi_perform_query with input buffer size value
+of zero are listed below.
 
-    WARNING: modpost: vmlinux.o(.data+0x26800): Section mismatch in
-reference from the variable __UNIQUE_ID_array286 to the variable
-.init.data:e820_test_suite
-    The variable __UNIQUE_ID_array286 references
-    the variable __initdata e820_test_suite
-    If the reference is valid then annotate the
-    variable with __init* or __refdata (see linux/init.h) or name the variable:
-    *_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console
+HPWMI_DISPLAY_QUERY
+HPWMI_HDDTEMP_QUERY
+HPWMI_ALS_QUERY
+HPWMI_HARDWARE_QUERY
+HPWMI_WIRELESS_QUERY
+HPWMI_BIOS_QUERY
+HPWMI_FEATURE_QUERY
+HPWMI_HOTKEY_QUERY
+HPWMI_FEATURE2_QUERY
+HPWMI_WIRELESS2_QUERY
+HPWMI_POSTCODEERROR_QUERY
+HPWMI_THERMAL_PROFILE_QUERY
+HPWMI_FAN_SPEED_MAX_GET_QUERY
 
-I need to test __init functions. I couldn't find any other similar
-cases in existant code. Is there a nice way to solve this?
+Invoking those WMI commands with an input buffer size greater
+than zero will cause error 0x05 to be returned.
 
-I'm adding the file that contains the tests just in case..
+All WMI commands executed by the driver were reviewed and changes
+were made to ensure the expected input and output buffer size match
+the WMI specification.
 
+Changes were validated on a HP ZBook Workstation notebook,
+HP EliteBook x360, and HP EliteBook 850 G8.  Additional
+validation was included in the test process to ensure no other
+commands were incorrectly handled.
 
-#include <kunit/test.h>
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
-#include <asm/e820/api.h>
-#include <asm/setup.h>
+---
+Based on the latest platform-drivers-x86.git/for-next
+---
+ drivers/platform/x86/hp-wmi.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-#define KUNIT_EXPECT_E820_ENTRY_EQ(test, entry, _addr, _size, _type,           \
-				   _crypto_capable)                            \
-	do {                                                                   \
-		KUNIT_EXPECT_EQ((test), (entry).addr, (_addr));                \
-		KUNIT_EXPECT_EQ((test), (entry).size, (_size));                \
-		KUNIT_EXPECT_EQ((test), (entry).type, (_type));                \
-		KUNIT_EXPECT_EQ((test), (entry).crypto_capable,                \
-				(_crypto_capable));                            \
-	} while (0)
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index a19f8b2b629e..ecf2a3a8ed78 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -320,7 +320,7 @@ static int hp_wmi_get_fan_speed(int fan)
+ 	char fan_data[4] = { fan, 0, 0, 0 };
+ 
+ 	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
+-				       &fan_data, sizeof(fan_data),
++				       &fan_data, sizeof(char),
+ 				       sizeof(fan_data));
+ 
+ 	if (ret != 0)
+@@ -380,7 +380,7 @@ static int omen_thermal_profile_set(int mode)
+ 		return -EINVAL;
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
+-				   &buffer, sizeof(buffer), sizeof(buffer));
++				   &buffer, sizeof(buffer), 0);
+ 
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
+@@ -417,7 +417,7 @@ static int hp_wmi_fan_speed_max_set(int enabled)
+ 	int ret;
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
+-				   &enabled, sizeof(enabled), sizeof(enabled));
++				   &enabled, sizeof(enabled), 0);
+ 
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
+@@ -430,7 +430,7 @@ static int hp_wmi_fan_speed_max_get(void)
+ 	int val = 0, ret;
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
+-				   &val, sizeof(val), sizeof(val));
++				   &val, 0, sizeof(val));
+ 
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
+@@ -442,7 +442,7 @@ static int __init hp_wmi_bios_2008_later(void)
+ {
+ 	int state = 0;
+ 	int ret = hp_wmi_perform_query(HPWMI_FEATURE_QUERY, HPWMI_READ, &state,
+-				       sizeof(state), sizeof(state));
++				       0, sizeof(state));
+ 	if (!ret)
+ 		return 1;
+ 
+@@ -453,7 +453,7 @@ static int __init hp_wmi_bios_2009_later(void)
+ {
+ 	u8 state[128];
+ 	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &state,
+-				       sizeof(state), sizeof(state));
++				       0, sizeof(state));
+ 	if (!ret)
+ 		return 1;
+ 
+@@ -531,7 +531,7 @@ static int hp_wmi_rfkill2_refresh(void)
+ 	int err, i;
+ 
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   sizeof(state), sizeof(state));
++				   0, sizeof(state));
+ 	if (err)
+ 		return err;
+ 
+@@ -620,7 +620,7 @@ static ssize_t als_store(struct device *dev, struct device_attribute *attr,
+ 		return ret;
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
+-				       sizeof(tmp), sizeof(tmp));
++				       sizeof(tmp), 0);
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
+ 
+@@ -641,9 +641,9 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
+ 	if (clear == false)
+ 		return -EINVAL;
+ 
+-	/* Clear the POST error code. It is kept until until cleared. */
++	/* Clear the POST error code. It is kept until cleared. */
+ 	ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, HPWMI_WRITE, &tmp,
+-				       sizeof(tmp), sizeof(tmp));
++				       sizeof(tmp), 0);
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
+ 
+@@ -935,7 +935,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 	int err, i;
+ 
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   sizeof(state), sizeof(state));
++				   0, sizeof(state));
+ 	if (err)
+ 		return err < 0 ? err : -EINVAL;
+ 
+-- 
+2.25.1
 
-struct e820_table test_table __initdata;
-
-static void __init test_e820_range_add(struct kunit *test)
-{
-        u32 full;
-
-        full = ARRAY_SIZE(test_table.entries);
-        /* Add last entry. */
-        test_table.nr_entries = full - 1;
-        __e820__range_add(&test_table, 0, 15, 0, 0);
-        KUNIT_EXPECT_EQ(test, test_table.nr_entries, full);
-        /* Skip new entry when full. */
-        __e820__range_add(&test_table, 0, 15, 0, 0);
-        KUNIT_EXPECT_EQ(test, test_table.nr_entries, full);
-}
-
-static void __init test_e820_range_update(struct kunit *test)
-{
-	u64 entry_size = 15;
-	u64 updated_size = 0;
-	/* Initialize table */
-	test_table.nr_entries = 0;
-	__e820__range_add(&test_table, 0, entry_size, E820_TYPE_RAM,
-			  E820_NOT_CRYPTO_CAPABLE);
-	__e820__range_add(&test_table, entry_size, entry_size, E820_TYPE_RAM,
-			  E820_NOT_CRYPTO_CAPABLE);
-	__e820__range_add(&test_table, entry_size * 2, entry_size,
-			  E820_TYPE_ACPI, E820_NOT_CRYPTO_CAPABLE);
-
-	updated_size = __e820__range_update(&test_table, 0, entry_size * 2,
-					    E820_TYPE_RAM, E820_TYPE_RESERVED);
-	/* The first 2 regions were updated */
-	KUNIT_EXPECT_EQ(test, updated_size, entry_size * 2);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[0], 0, entry_size,
-				   E820_TYPE_RESERVED, E820_NOT_CRYPTO_CAPABLE);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[1], entry_size,
-				   entry_size, E820_TYPE_RESERVED,
-				   E820_NOT_CRYPTO_CAPABLE);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[2], entry_size * 2,
-				   entry_size, E820_TYPE_ACPI,
-				   E820_NOT_CRYPTO_CAPABLE);
-
-	updated_size = __e820__range_update(&test_table, 0, entry_size * 3,
-					    E820_TYPE_RESERVED, E820_TYPE_RAM);
-	/* Only the first 2 regions were updated */
-	KUNIT_EXPECT_EQ(test, updated_size, entry_size * 2);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[0], 0, entry_size,
-				   E820_TYPE_RAM, E820_NOT_CRYPTO_CAPABLE);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[1], entry_size,
-				   entry_size, E820_TYPE_RAM,
-				   E820_NOT_CRYPTO_CAPABLE);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[2], entry_size * 2,
-				   entry_size, E820_TYPE_ACPI,
-				   E820_NOT_CRYPTO_CAPABLE);
-}
-
-static void __init test_e820_range_remove(struct kunit *test)
-{
-	u64 entry_size = 15;
-	u64 removed_size = 0;
-
-	struct e820_entry_updater updater = {
-		.should_update = remover__should_update,
-		.update = remover__update,
-		.new = remover__new
-	};
-
-	struct e820_remover_data data = {
-		.check_type = true,
-		.old_type = E820_TYPE_RAM
-	};
-
-	/* Initialize table */
-	test_table.nr_entries = 0;
-	__e820__range_add(&test_table, 0, entry_size, E820_TYPE_RAM,
-			  E820_NOT_CRYPTO_CAPABLE);
-	__e820__range_add(&test_table, entry_size, entry_size, E820_TYPE_RAM,
-			  E820_NOT_CRYPTO_CAPABLE);
-	__e820__range_add(&test_table, entry_size * 2, entry_size,
-			  E820_TYPE_ACPI, E820_NOT_CRYPTO_CAPABLE);
-
-	/*
-	 * Need to use __e820__handle_range_update because
-	 * e820__range_remove doesn't ask for the table
-	 */
-	removed_size = __e820__handle_range_update(&test_table,
-						   0, entry_size * 2,
-						   &updater, &data);
-	/* The first two regions were removed */
-	KUNIT_EXPECT_EQ(test, removed_size, entry_size * 2);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[0], 0, 0, 0, 0);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[1], 0, 0, 0, 0);
-
-	removed_size = __e820__handle_range_update(&test_table,
-						   0, entry_size * 3,
-						   &updater, &data);
-	/* Nothing was removed */
-	KUNIT_EXPECT_EQ(test, removed_size, 0);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[0], 0, 0, 0, 0);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[1], 0, 0, 0, 0);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[2], entry_size * 2,
-				   entry_size, E820_TYPE_ACPI,
-				   E820_NOT_CRYPTO_CAPABLE);
-}
-
-static void __init test_e820_range_crypto_update(struct kunit *test)
-{
-	u64 entry_size = 15;
-	u64 updated_size = 0;
-	/* Initialize table */
-	test_table.nr_entries = 0;
-	__e820__range_add(&test_table, 0, entry_size, E820_TYPE_RAM,
-			  E820_CRYPTO_CAPABLE);
-	__e820__range_add(&test_table, entry_size, entry_size, E820_TYPE_RAM,
-			  E820_NOT_CRYPTO_CAPABLE);
-	__e820__range_add(&test_table, entry_size * 2, entry_size,
-			  E820_TYPE_RAM, E820_CRYPTO_CAPABLE);
-
-	updated_size = __e820__range_update_crypto(&test_table, 0, entry_size * 3,
-						   E820_CRYPTO_CAPABLE);
-	/* Only the region in the middle was updated */
-	KUNIT_EXPECT_EQ(test, updated_size, entry_size);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[0], 0, entry_size,
-				   E820_TYPE_RAM, E820_CRYPTO_CAPABLE);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[1], entry_size,
-				   entry_size, E820_TYPE_RAM,
-				   E820_CRYPTO_CAPABLE);
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[2], entry_size * 2,
-				   entry_size, E820_TYPE_RAM,
-				   E820_CRYPTO_CAPABLE);
-}
-
-static void __init test_e820_handle_range_update_intersection(struct
-kunit *test)
-{
-	struct e820_entry_updater updater = {
-		.should_update = type_updater__should_update,
-		.update = type_updater__update,
-		.new = type_updater__new
-	};
-
-	struct e820_type_updater_data data = {
-		.old_type = E820_TYPE_RAM,
-		.new_type = E820_TYPE_RESERVED
-	};
-
-	u64 entry_size = 15;
-	u64 updated_size = 0;
-	/* Initialize table */
-	test_table.nr_entries = 0;
-	__e820__range_add(&test_table, 0, entry_size, E820_TYPE_RAM,
-			  E820_NOT_CRYPTO_CAPABLE);
-
-	updated_size = __e820__handle_range_update(&test_table,
-						   0, entry_size - 2,
-						   &updater, &data);
-
-	KUNIT_EXPECT_EQ(test, updated_size, entry_size - 2);
-
-	/* There is a new entry */
-	KUNIT_EXPECT_EQ(test, test_table.nr_entries, 2);
-
-	/* The original entry now is moved */
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[0], entry_size - 2,
-				   2, E820_TYPE_RAM, E820_NOT_CRYPTO_CAPABLE);
-
-	/* The new entry has the correct values */
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[1], 0, 13,
-				   E820_TYPE_RESERVED, E820_NOT_CRYPTO_CAPABLE);
-}
-
-static void __init test_e820_handle_range_update_inside(struct kunit *test)
-{
-	struct e820_entry_updater updater = {
-		.should_update = type_updater__should_update,
-		.update = type_updater__update,
-		.new = type_updater__new
-	};
-
-	struct e820_type_updater_data data = {
-		.old_type = E820_TYPE_RAM,
-		.new_type = E820_TYPE_RESERVED
-	};
-
-	u64 entry_size = 15;
-	u64 updated_size = 0;
-	/* Initialize table */
-	test_table.nr_entries = 0;
-	__e820__range_add(&test_table, 0, entry_size, E820_TYPE_RAM,
-			  E820_NOT_CRYPTO_CAPABLE);
-
-	updated_size = __e820__handle_range_update(&test_table,
-						   5, entry_size - 10,
-						   &updater, &data);
-
-	KUNIT_EXPECT_EQ(test, updated_size, entry_size - 10);
-
-	/* There are two new entrie */
-	KUNIT_EXPECT_EQ(test, test_table.nr_entries, 3);
-
-	/* The original entry now shrinked */
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[0], 0, 5,
-				   E820_TYPE_RAM, E820_NOT_CRYPTO_CAPABLE);
-
-	/* The new entries have the correct values */
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[1], 5,
-				   entry_size - 10, E820_TYPE_RESERVED,
-				   E820_NOT_CRYPTO_CAPABLE);
-	/* Left over of the original region */
-	KUNIT_EXPECT_E820_ENTRY_EQ(test, test_table.entries[2], entry_size - 5,
-				   5, E820_TYPE_RAM, E820_NOT_CRYPTO_CAPABLE);
-}
-
-static struct kunit_case e820_test_cases[] __initdata = {
-        KUNIT_CASE(test_e820_range_add),
-        KUNIT_CASE(test_e820_range_update),
-        KUNIT_CASE(test_e820_range_remove),
-        KUNIT_CASE(test_e820_range_crypto_update),
-        KUNIT_CASE(test_e820_handle_range_update_intersection),
-        KUNIT_CASE(test_e820_handle_range_update_inside),
-        {}
-};
-
-static struct kunit_suite e820_test_suite __initdata = {
-        .name = "e820",
-        .test_cases = e820_test_cases,
-};
-
-kunit_test_suite(e820_test_suite);
