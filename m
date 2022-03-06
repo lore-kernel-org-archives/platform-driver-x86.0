@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3696C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  6 Mar 2022 19:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621A3C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  6 Mar 2022 19:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234150AbiCFTvl (ORCPT
+        id S234154AbiCFTy7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 6 Mar 2022 14:51:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58330 "EHLO
+        Sun, 6 Mar 2022 14:54:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233066AbiCFTvk (ORCPT
+        with ESMTP id S234152AbiCFTy7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 6 Mar 2022 14:51:40 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0384C286FB
-        for <platform-driver-x86@vger.kernel.org>; Sun,  6 Mar 2022 11:50:47 -0800 (PST)
+        Sun, 6 Mar 2022 14:54:59 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 141A03B28C
+        for <platform-driver-x86@vger.kernel.org>; Sun,  6 Mar 2022 11:54:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 77A17B80ECF
-        for <platform-driver-x86@vger.kernel.org>; Sun,  6 Mar 2022 19:50:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 22F11C34117
-        for <platform-driver-x86@vger.kernel.org>; Sun,  6 Mar 2022 19:50:45 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A4EA960FCF
+        for <platform-driver-x86@vger.kernel.org>; Sun,  6 Mar 2022 19:54:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 119DFC340FB
+        for <platform-driver-x86@vger.kernel.org>; Sun,  6 Mar 2022 19:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646596245;
-        bh=YC8S8sQVZ8WL3aGunHwuqYyZnnJb0t9UEzNy4lYMXtg=;
+        s=k20201202; t=1646596446;
+        bh=0hKZPJwhyOqQWiNr1VuRNoSzlOxwNF/ZLYb48qe5QUA=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=X3x2VFMn5M7QWr53/RsX1SLCOTH7LZmxQxMA2dz+OlMurqxLQ+mGcxr/xplcmDG3X
-         QFZP4rA8s61fYvwqYcIqAq3902ZRgDeu7SNppouXhAO90myLzsKcp44ljh+GproIve
-         IVuD1H9riK1L9h1RxiHg8NwGUXVSQGxVFWD0UXWYpx6b/an8ZLZ/VJtNhUXbwYuRpR
-         oAIwd7YGkYhKSjzXWCa5MvIp73M5+U1Hy0nDdratdlG7UVWksIPKkp0FMUFiWvEnJu
-         vXWbrMVkh8KMl3VceFmdofObGbl1t6N26Et9hxGr5FYnx3flWlGQkEZfLoqhwqCsUN
-         nQ+eFJ9aEIatA==
+        b=G9ynr8FPzT4vXvAczRg5PfnJYwIXnFIdFlTHH7IVDdJUXZBNk4dIbDlhwlR2HLSRJ
+         T8T0qrHI4Fwg+NhhARQQ9qS+uuOCc5QjPikt029gBubq44yHQ+10aFte8b2hNYmqdP
+         TY0tVdqxTlD4V13VJzNTJCgIMCQOmf7O49MKmE+JTNJemA5liS32Tu8Kem+IH3N7Je
+         uLxZfLTpa0HJh3RvuqtP8TuA+7+UxltqKTUg9F760xU/y+3Ua2zizLayGIfexMjy3X
+         orgp4eY82Bg4WeGJu9WkEMkzoguD0nNnMrKnhftokbh1izvx76xSbHFTFS7Hcp8hie
+         FWJThBq39/S2w==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 12F88CAC6E2; Sun,  6 Mar 2022 19:50:45 +0000 (UTC)
+        id 02430CAC6E2; Sun,  6 Mar 2022 19:54:06 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date:   Sun, 06 Mar 2022 19:50:43 +0000
+Date:   Sun, 06 Mar 2022 19:54:04 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -54,8 +54,8 @@ X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-204807-215701-1h2AGYYF8Y@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-204807-215701-lmpr6sHcjS@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -69,50 +69,10 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Hubert Banas (hubert.banas@gmail.com) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |hubert.banas@gmail.com
-
---- Comment #225 from Hubert Banas (hubert.banas@gmail.com) ---
-First I would like to thank all of you who contributed to this patch. Speci=
-al
-thanks to Denis who took it upstream.
-
-I have another candidate and was hoping we can have it added to the patch.
-
-$ cat /sys/class/dmi/id/board_name
-ROG STRIX X570-E GAMING WIFI II
-
-$ dmesg
-[    4.244908] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
-[    4.244914] ACPI Warning: SystemIO range
-0x0000000000000295-0x0000000000000296 conflicts with OpRegion
-0x0000000000000290-0x0000000000000299 (\AMW0.SHWM) (20210930/utaddress-204)
-[    4.244919] ACPI: OSL: Resource conflict; ACPI support missing from driv=
-er?
-
-$ uname -a
-Linux pop-os 5.16.11-76051611-generic #202202230823~1646248261~21.10~2b22243
-SMP PREEMPT Wed Mar 2 20: x86_64 x86_64 x86_64 GNU/Linux
-
-$ cat /etc/os-release
-NAME=3D"Pop!_OS"
-VERSION=3D"21.10"
-ID=3Dpop
-ID_LIKE=3D"ubuntu debian"
-PRETTY_NAME=3D"Pop!_OS 21.10"
-VERSION_ID=3D"21.10"
-HOME_URL=3D"https://pop.system76.com"
-SUPPORT_URL=3D"https://support.system76.com"
-BUG_REPORT_URL=3D"https://github.com/pop-os/pop/issues"
-PRIVACY_POLICY_URL=3D"https://system76.com/privacy"
-VERSION_CODENAME=3Dimpish
-UBUNTU_CODENAME=3Dimpish
-LOGO=3Ddistributor-logo-pop-os
-
-Thank you!
+--- Comment #227 from Hubert Banas (hubert.banas@gmail.com) ---
+Created attachment 300540
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300540&action=3Dedit
+DSDT dump - ROG STRIX X570-E GAMING WIFI II
 
 --=20
 You may reply to this email to add a comment.
