@@ -2,45 +2,45 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979C3C4321E
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 21:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49EFC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 21:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343516AbiCGVju (ORCPT
+        id S1343544AbiCGVjw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Mar 2022 16:39:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39640 "EHLO
+        Mon, 7 Mar 2022 16:39:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343520AbiCGVgn (ORCPT
+        with ESMTP id S1343736AbiCGVh5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Mar 2022 16:36:43 -0500
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB28689CF9;
-        Mon,  7 Mar 2022 13:35:18 -0800 (PST)
+        Mon, 7 Mar 2022 16:37:57 -0500
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2055.outbound.protection.outlook.com [40.107.220.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 051188BF0A;
+        Mon,  7 Mar 2022 13:36:03 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hcU6ZTnqlfxZPFK2gaK7QKTtGLTOfSShk4xGXa1VRolkWIpWbNg02hZbXWw0vst7NwB/tVQt94Bgs0W8O7+QhzBy5OE65EfXa9LB6n7d1JEfI3OMmZCkOZ4V5OFICoTU4yP7i2p35uo4Eh4xueFxyGgGhNUT0ETpqpHOvCkyp9kQKImoR3JMu934l27LNqtb0JEPKbhG0naVGWlft9zwiZlaMXFgUC6FZ+CNMpDRhCSUYX1WznzJN4yZ6H4WB6rGf2IbnSWIR+cryhW/x827xK0oyAbgYjsBEWVlM18Vzv4X5FJZLD+KoquHuaRXIKwxWCdPYc5yM29V3YEVcalX7g==
+ b=TQCtjw1/WhkqmZ9r29H5DJcvzyHwkdJJhbXnffvz+WzWlzTVdJdBNG7iQEaaVETp0BoOG0mnRVA/1DjCc28UJkwiY7RvUtYsAFPSsRgGS7J2dqcUMILlRFr/1xGVaDs8qLHXkMFUhasi/3INANJkLjQWIWbQQNvI//XXlGk3oVohEBcJDodDf7AljnGm5BNi4fjmJ/P3SphSuy1f3X5/cXIPucHLgSnDVGmDKgBCwAdKpW/YEfPHGGvaYrD2FxG4KGj9IMF/io8qfMzJH4Shc4sQyQMHyZTj7R7a/PM7LPmkhm5KTJWeO1UJJmbW0Jgiw8dyKmiRyV6Po8MNOp4EIg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8xgavE+Qngi0lQtzohwL6zfz8vtyDWyBLLQYa+FsZ3M=;
- b=PIiH/fKEEt88JMDeNifngYscsi3BiH/Cx6cPsILY0lxS8myzydlt7dbOubwgeHgOVFvU/x9vWfNhj1t2t2toUEoBUoePMekqcvdOrMw4I7bv6gMOZ+CF8zOvmwv3FSFXYhIeTiJkbCjrRYb9yyp6OJCd0vl/KrngMZEKymvpa9eZiipGu9VPR/mRF71TTH4z671rUrQxoK6I7DClVJ/52WnmwL8XnSclNhEMEGduU146N0y9vM1upYcHY0Vp1q2nFhVUhjpiT4Z54Ae8++aQhMSSpTIIQi+mHp2/i+PVMZAq5eC2HWXeYS3gjNrCDDw7DzsJNj23RCFtjoZyoUV/yQ==
+ bh=BpeeAuxcN22a6G98X6yAnloxx3qxLBlOuroK2GohjWE=;
+ b=FsmWunX4LW2Fl9eMrnjh2sEObSQD7KtKDUjyRE734XeNb671c/TUeNLxnVyU9d7aVcqKIrW2AcjaQ5C+KGycMV0+Iqjy62Ikf2kv6mZngwCSR5HoX3ceEOo15GyYXAOxUCVHzbgwR28Z10W6p2niMkcIR87QdrDp09+6rjrsEUeBeRAtOd69YioGMEfwGjvMOy7zQGqC09CovL5t2xTw81CH1Ifm9H5RV7GWyj4XkQB6BvVCESHT+iNDw8A5QEUQiA9/ZqFlvVyS6wMTg3uGr8E8QL1WNA7mTErjtwtily/brd4cbnp+y2lGfrj45DpxLUJlbOLYqNwOlPCTHWOw0w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8xgavE+Qngi0lQtzohwL6zfz8vtyDWyBLLQYa+FsZ3M=;
- b=MxXI0VGChPbHUhK4o5Fi31fJNfzHTSnsssvRXNq9m/epXyDjRozT7MmVddyDwPTAxK951i/jhOr5IslVlDuljvbSXbL9HCmENelwPK/B3MiitMMX0sJbOpmRi7XGbbl5m2IUTk3M22L/HVLhvLnXp1g6vd2UCkBhlISps+voHCU=
-Received: from BN9PR03CA0140.namprd03.prod.outlook.com (2603:10b6:408:fe::25)
- by DM6PR12MB2619.namprd12.prod.outlook.com (2603:10b6:5:45::18) with
+ bh=BpeeAuxcN22a6G98X6yAnloxx3qxLBlOuroK2GohjWE=;
+ b=3ZjbxZBtOE+5p0JbJ/84B8JZTSh1E2k8oT6bBUYuqY66PbYAGW/v/cP+TfcyD0PvKwFooucLZRoBdFH3me8TLnJouLvVhIMS1UGHPvkz08G8bQP1n+D5X21anpgxCH2D7wcm/EyFfitNRQ0labBDv1++Zypl2tQFpVaj/P3Cym0=
+Received: from BN9PR03CA0130.namprd03.prod.outlook.com (2603:10b6:408:fe::15)
+ by MWHPR12MB1693.namprd12.prod.outlook.com (2603:10b6:301:10::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Mon, 7 Mar
- 2022 21:35:14 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.16; Mon, 7 Mar
+ 2022 21:35:38 +0000
 Received: from BN8NAM11FT009.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:fe:cafe::44) by BN9PR03CA0140.outlook.office365.com
- (2603:10b6:408:fe::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.15 via Frontend
- Transport; Mon, 7 Mar 2022 21:35:14 +0000
+ (2603:10b6:408:fe:cafe::5d) by BN9PR03CA0130.outlook.office365.com
+ (2603:10b6:408:fe::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14 via Frontend
+ Transport; Mon, 7 Mar 2022 21:35:37 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,11 +50,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  BN8NAM11FT009.mail.protection.outlook.com (10.13.176.65) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5038.14 via Frontend Transport; Mon, 7 Mar 2022 21:35:14 +0000
+ 15.20.5038.14 via Frontend Transport; Mon, 7 Mar 2022 21:35:37 +0000
 Received: from sbrijesh-desktop.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Mon, 7 Mar
- 2022 15:35:09 -0600
+ 2022 15:35:34 -0600
 From:   Brijesh Singh <brijesh.singh@amd.com>
 To:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
         <kvm@vger.kernel.org>, <linux-efi@vger.kernel.org>,
@@ -84,11 +84,11 @@ CC:     Thomas Gleixner <tglx@linutronix.de>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
         <brijesh.ksingh@gmail.com>, <tony.luck@intel.com>,
         <marcorr@google.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Venu Busireddy <venu.busireddy@oracle.com>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: [PATCH v12 30/46] KVM: x86: Move lookup of indexed CPUID leafs to helper
-Date:   Mon, 7 Mar 2022 15:33:40 -0600
-Message-ID: <20220307213356.2797205-31-brijesh.singh@amd.com>
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Liam Merwick <liam.merwick@oracle.com>
+Subject: [PATCH v12 44/46] virt: sevguest: Add support to derive key
+Date:   Mon, 7 Mar 2022 15:33:54 -0600
+Message-ID: <20220307213356.2797205-45-brijesh.singh@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220307213356.2797205-1-brijesh.singh@amd.com>
 References: <20220307213356.2797205-1-brijesh.singh@amd.com>
@@ -100,121 +100,167 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f362ed2f-51c5-4644-6260-08da00825dca
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2619:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR12MB2619E1A6622E76DA671BFB43E5089@DM6PR12MB2619.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: d0a51855-269d-4f3e-0139-08da00826b82
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1693:EE_
+X-Microsoft-Antispam-PRVS: <MWHPR12MB1693357079CC4D51B9959432E5089@MWHPR12MB1693.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Kt2An9lWKwWf05/dhKZZQ6Kyq0L577z8/qBmVsbSvYCARHhEgPFT1QXBXDthTXDpKKHcdpaN2KNgy272guLpdf3PjX56T+mLxfn9H+2R59Tt9qBcudCrI/HjLSmCDNKzDl7VPpAAYf1kALQkHUobVvgiy0LizW5JLJtxgjfvEJVy03lJvoajoX7Xm6OAYBaBqY4mbSyAtYvhVhQmfmEVLkrTkRpM51OLuEcpaOBavPrjR0xHpAyoSrnGojb4iCf6FyMLS57O2ABK5OpiSY/b7V9UBB5szE36qbVdeWS1i5XK00tBqMYxQWEFLOzQZfvk6Sh/1s0gxFciiwXYC4Mc9ZHaH6akDYEmXjtH9lr3JoyUKyxtZ+6LpKzl5n0R427GZpU4imrdDQAgESxy7vlXgvDk6NHZgdv72/0/hxe61f0YK4Kj8Vadhz/pxmC1AV+WTbEuVB3gdYZZTlMwcg5S28i3ATpVHFu9tRZk1HQPAtI2lUQyJjghjA999MqWaNfxk8au81b8FIQIhSQv0gz6IbxyhMWo5eFl0xb9XJzOCDNQbhUAe++zf2BbFhkSbpmwjU/fmZEMJbCcdEgWQTaANWbVGxl4SPQltrGD0ZaEg6R8wu4q2bvGIJJo8Ne4ab9ipdjgs0EmVxalGJTJaAWZcCZjaD+dY87W21DvGM7ITtCFoTVxYVQgVMMi1qQUOSyU6BtAL3OBsTkn3c/sMBQfCsu7MYD01kxCTBGCP7ZJQEE=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(46966006)(36840700001)(47076005)(36860700001)(36756003)(7696005)(2616005)(83380400001)(2906002)(7406005)(7416002)(5660300002)(40460700003)(316002)(26005)(54906003)(82310400004)(8936002)(81166007)(70206006)(70586007)(44832011)(336012)(426003)(356005)(86362001)(186003)(1076003)(6666004)(16526019)(8676002)(4326008)(110136005)(508600001)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: JpHOIPNhUqJfenDoAFghIkOAW2OEI2F5wvC4CJKWmnwbUHPdgHSy/HqVAR/rT7FEbl66HK+ge/qbrr/lPYvDGZ/+SDRtkvJh3TVj6izbijU358UPUw7UDvEkpa9LOqG2gGwui0jSbgDWIC84OqpT86clKc5zG3owmLOo+uH5gjzGFFIXC/dkxg/F/qI0j4bp8UwgXNSCEkorD+FssO+dWiBx2KNMgIBIUFHZDQ7V73uzrNmKRD7NAfb9sLDxy5KKC788uiFg6wv+Q/kHfyB3+2speoIfIefoahRhpEpIXG4rBSBwi0K1PFpFF9RpHcuZ1/xDRoWPvNLq9rSysNsXXrO0FZTv8RLGH+FTTqUPfR9K1eIsbajs+AEvd6gBqzjMny7yQdccoMqhnYEcCvGx0VQZBq2QHohZ/MU8YWZ7ZhqiP+qjkoTuHhokhCFCbYOwLs3/Vgu8j0+zkKNNnouvEbXGzrUv066E+of0J+ffLJNLaqm13gRIyRiz3CNYgC4kyviTsFSIEgPeut5DKAx7fTtrAuOaLgzIpOnE19SEQCUHWhRYm2Eux8W7eiunVKM8PKv3tvqKNNQBXZ85olV3ehe2O37ddDzS+/qijb/ZdoPZTHOyvIrIii8NnzqzOXjl9k03NJt3iLax1heUG1X0rou//LB8Y/9jqrafsvtW2Y9uT5Vr+fbHPJSMINNtX0Xqs5C0gbznfxEsNAxCVL0hKTa4a0aQWjtdOHpFB6Zaai8=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(316002)(26005)(5660300002)(16526019)(7416002)(2616005)(1076003)(7406005)(83380400001)(186003)(426003)(336012)(82310400004)(508600001)(86362001)(54906003)(110136005)(8676002)(4326008)(70586007)(70206006)(7696005)(6666004)(8936002)(36860700001)(36756003)(44832011)(47076005)(40460700003)(2906002)(356005)(81166007)(2101003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 21:35:14.5014
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 21:35:37.4683
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f362ed2f-51c5-4644-6260-08da00825dca
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0a51855-269d-4f3e-0139-08da00826b82
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT009.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2619
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1693
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Michael Roth <michael.roth@amd.com>
+The SNP_GET_DERIVED_KEY ioctl interface can be used by the SNP guest to
+ask the firmware to provide a key derived from a root key. The derived
+key may be used by the guest for any purposes it chooses, such as a
+sealing key or communicating with the external entities.
 
-Determining which CPUID leafs have significant ECX/index values is
-also needed by guest kernel code when doing SEV-SNP-validated CPUID
-lookups. Move this to common code to keep future updates in sync.
+See SEV-SNP firmware spec for more information.
 
-Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
-Signed-off-by: Michael Roth <michael.roth@amd.com>
+Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
 Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 ---
- arch/x86/include/asm/cpuid.h | 34 ++++++++++++++++++++++++++++++++++
- arch/x86/kvm/cpuid.c         | 19 ++-----------------
- 2 files changed, 36 insertions(+), 17 deletions(-)
- create mode 100644 arch/x86/include/asm/cpuid.h
+ Documentation/virt/coco/sevguest.rst  | 17 ++++++++++
+ drivers/virt/coco/sevguest/sevguest.c | 45 +++++++++++++++++++++++++++
+ include/uapi/linux/sev-guest.h        | 17 ++++++++++
+ 3 files changed, 79 insertions(+)
 
-diff --git a/arch/x86/include/asm/cpuid.h b/arch/x86/include/asm/cpuid.h
-new file mode 100644
-index 000000000000..70b2db18165e
---- /dev/null
-+++ b/arch/x86/include/asm/cpuid.h
-@@ -0,0 +1,34 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * CPUID-related helpers/definitions
-+ *
-+ * Derived from arch/x86/kvm/cpuid.c
-+ */
+diff --git a/Documentation/virt/coco/sevguest.rst b/Documentation/virt/coco/sevguest.rst
+index 34feff6d5940..ae2e76f59435 100644
+--- a/Documentation/virt/coco/sevguest.rst
++++ b/Documentation/virt/coco/sevguest.rst
+@@ -77,6 +77,23 @@ On success, the snp_report_resp.data will contains the report. The report
+ contain the format described in the SEV-SNP specification. See the SEV-SNP
+ specification for further details.
+ 
++2.2 SNP_GET_DERIVED_KEY
++-----------------------
++:Technology: sev-snp
++:Type: guest ioctl
++:Parameters (in): struct snp_derived_key_req
++:Returns (out): struct snp_derived_key_resp on success, -negative on error
 +
-+#ifndef _ASM_X86_CPUID_H
-+#define _ASM_X86_CPUID_H
++The SNP_GET_DERIVED_KEY ioctl can be used to get a key derive from a root key.
++The derived key can be used by the guest for any purpose, such as sealing keys
++or communicating with external entities.
 +
-+static __always_inline bool cpuid_function_is_indexed(u32 function)
++The ioctl uses the SNP_GUEST_REQUEST (MSG_KEY_REQ) command provided by the
++SEV-SNP firmware to derive the key. See SEV-SNP specification for further details
++on the various fields passed in the key derivation request.
++
++On success, the snp_derived_key_resp.data contains the derived key value. See
++the SEV-SNP specification for further details.
+ 
+ Reference
+ ---------
+diff --git a/drivers/virt/coco/sevguest/sevguest.c b/drivers/virt/coco/sevguest/sevguest.c
+index 97b98a3f5f89..9057e8a661f6 100644
+--- a/drivers/virt/coco/sevguest/sevguest.c
++++ b/drivers/virt/coco/sevguest/sevguest.c
+@@ -391,6 +391,48 @@ static int get_report(struct snp_guest_dev *snp_dev, struct snp_guest_request_io
+ 	return rc;
+ }
+ 
++static int get_derived_key(struct snp_guest_dev *snp_dev, struct snp_guest_request_ioctl *arg)
 +{
-+	switch (function) {
-+	case 4:
-+	case 7:
-+	case 0xb:
-+	case 0xd:
-+	case 0xf:
-+	case 0x10:
-+	case 0x12:
-+	case 0x14:
-+	case 0x17:
-+	case 0x18:
-+	case 0x1d:
-+	case 0x1e:
-+	case 0x1f:
-+	case 0x8000001d:
-+		return true;
-+	}
++	struct snp_guest_crypto *crypto = snp_dev->crypto;
++	struct snp_derived_key_resp resp;
++	struct snp_derived_key_req req;
++	int rc, resp_len;
++	/* Response data is 64 bytes and max authsize for GCM is 16 bytes. */
++	u8 buf[64 + 16];
 +
-+	return false;
++	lockdep_assert_held(&snp_cmd_mutex);
++
++	if (!arg->req_data || !arg->resp_data)
++		return -EINVAL;
++
++	/*
++	 * The intermediate response buffer is used while decrypting the
++	 * response payload. Make sure that it has enough space to cover the
++	 * authtag.
++	 */
++	resp_len = sizeof(resp.data) + crypto->a_len;
++	if (sizeof(buf) < resp_len)
++		return -ENOMEM;
++
++	if (copy_from_user(&req, (void __user *)arg->req_data, sizeof(req)))
++		return -EFAULT;
++
++	rc = handle_guest_request(snp_dev, SVM_VMGEXIT_GUEST_REQUEST, arg->msg_version,
++				  SNP_MSG_KEY_REQ, &req, sizeof(req), buf, resp_len,
++				  &arg->fw_err);
++	if (rc)
++		return rc;
++
++	memcpy(resp.data, buf, sizeof(resp.data));
++	if (copy_to_user((void __user *)arg->resp_data, &resp, sizeof(resp)))
++		rc = -EFAULT;
++
++	/* The response buffer contains the sensitive data, explicitly clear it. */
++	memzero_explicit(buf, sizeof(buf));
++	memzero_explicit(&resp, sizeof(resp));
++	return rc;
 +}
 +
-+#endif /* _ASM_X86_CPUID_H */
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 8bf541b24b4b..848ad1723fae 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -19,6 +19,7 @@
- #include <asm/user.h>
- #include <asm/fpu/xstate.h>
- #include <asm/sgx.h>
-+#include <asm/cpuid.h>
- #include "cpuid.h"
- #include "lapic.h"
- #include "mmu.h"
-@@ -722,24 +723,8 @@ static struct kvm_cpuid_entry2 *do_host_cpuid(struct kvm_cpuid_array *array,
- 	cpuid_count(entry->function, entry->index,
- 		    &entry->eax, &entry->ebx, &entry->ecx, &entry->edx);
+ static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long arg)
+ {
+ 	struct snp_guest_dev *snp_dev = to_snp_dev(file);
+@@ -420,6 +462,9 @@ static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long
+ 	case SNP_GET_REPORT:
+ 		ret = get_report(snp_dev, &input);
+ 		break;
++	case SNP_GET_DERIVED_KEY:
++		ret = get_derived_key(snp_dev, &input);
++		break;
+ 	default:
+ 		break;
+ 	}
+diff --git a/include/uapi/linux/sev-guest.h b/include/uapi/linux/sev-guest.h
+index 38f11d723c68..598367f12064 100644
+--- a/include/uapi/linux/sev-guest.h
++++ b/include/uapi/linux/sev-guest.h
+@@ -30,6 +30,20 @@ struct snp_report_resp {
+ 	__u8 data[4000];
+ };
  
--	switch (function) {
--	case 4:
--	case 7:
--	case 0xb:
--	case 0xd:
--	case 0xf:
--	case 0x10:
--	case 0x12:
--	case 0x14:
--	case 0x17:
--	case 0x18:
--	case 0x1d:
--	case 0x1e:
--	case 0x1f:
--	case 0x8000001d:
-+	if (cpuid_function_is_indexed(function))
- 		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
--		break;
--	}
++struct snp_derived_key_req {
++	__u32 root_key_select;
++	__u32 rsvd;
++	__u64 guest_field_select;
++	__u32 vmpl;
++	__u32 guest_svn;
++	__u64 tcb_version;
++};
++
++struct snp_derived_key_resp {
++	/* response data, see SEV-SNP spec for the format */
++	__u8 data[64];
++};
++
+ struct snp_guest_request_ioctl {
+ 	/* message version number (must be non-zero) */
+ 	__u8 msg_version;
+@@ -47,4 +61,7 @@ struct snp_guest_request_ioctl {
+ /* Get SNP attestation report */
+ #define SNP_GET_REPORT _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x0, struct snp_guest_request_ioctl)
  
- 	return entry;
- }
++/* Get a derived key from the root */
++#define SNP_GET_DERIVED_KEY _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x1, struct snp_guest_request_ioctl)
++
+ #endif /* __UAPI_LINUX_SEV_GUEST_H_ */
 -- 
 2.25.1
 
