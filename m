@@ -2,307 +2,148 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6DDC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 22:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFC3C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 22:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343712AbiCGWS7 (ORCPT
+        id S238224AbiCGW3U (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Mar 2022 17:18:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33508 "EHLO
+        Mon, 7 Mar 2022 17:29:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343710AbiCGWS6 (ORCPT
+        with ESMTP id S232865AbiCGW3T (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Mar 2022 17:18:58 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 42F5045AD1
-        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Mar 2022 14:18:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646691482;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iFnTaI43lavXr0zuCkHA2ZcyUcWqspn6tFseaLpKUCE=;
-        b=jI8rsE0dVuztYUBZAiGb5jX/970D2Suda8Kbc61nYw0E1b0x48ZU1qNALumJsnUs6lsZXI
-        1lyu4wncOQX0ONy1nyD7MWdBJ5beNoSXcU0HZ130PuGdyDbaJqp+CUh8rGqb7kNS2xVkK9
-        hXiTluGMcZSEILW+S3qMFuz1mvE1zsk=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-222-paJ7AyCPPbKgIWAMtpOKPA-1; Mon, 07 Mar 2022 17:18:01 -0500
-X-MC-Unique: paJ7AyCPPbKgIWAMtpOKPA-1
-Received: by mail-ed1-f71.google.com with SMTP id h17-20020a05640250d100b004133863d836so9453291edb.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Mar 2022 14:18:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iFnTaI43lavXr0zuCkHA2ZcyUcWqspn6tFseaLpKUCE=;
-        b=E2YAcDcjvgO1lQFsU8iCVXPpyBGP1dArXsbow+nREnUuL2mFg8QUt2z0yicd7QY/E5
-         VzdyATYJSY9QMew+sYpuOgEyxWTU4E/HSY3RnPD5VQeky/dPN2SgITNTBi+WRN8aiu30
-         QbOU8Gr7ZPDLfAAroMdGPwrhPy80jBUL1nWT4HTKGra49rPe4p4naeXpa/rfEOft1se2
-         7jiOJs/JJ9V+9UiqGrf/onpA3sXpEXUoHfr8QFS8+3SplGdaTIO2Hxnmnn4Ph3G91hCW
-         JUKi1nU77ZmAZe62wOeA7U4mb2dUAliktsD1cIxLYNIA0w6SFMfmQvTcOzaL6Yd1A5iG
-         Jskw==
-X-Gm-Message-State: AOAM530FiT3O9CL6+AoKmf7mfOCkiMJ0bY4vXB6tRFLdUD7GLMupcjp1
-        aEcqS7vw+sP0xDxjptG8RNmA+sWco8q0MRCza7DmRgr65GlGkwIu8A/DXhrK1gGu5bU6dEp5lLy
-        BpBJqXL2PX/9tCQwJvaBwTPtMBlI9839tJA==
-X-Received: by 2002:a17:907:3e9a:b0:6db:b5e:676c with SMTP id hs26-20020a1709073e9a00b006db0b5e676cmr8489749ejc.314.1646691479819;
-        Mon, 07 Mar 2022 14:17:59 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwDeGEIDmtuFmkZLr82drLK9sutEnJoYFwl22WhDCUdWElmN9EcTUW1/sSRnLfyl48w2KixZw==
-X-Received: by 2002:a17:907:3e9a:b0:6db:b5e:676c with SMTP id hs26-20020a1709073e9a00b006db0b5e676cmr8489720ejc.314.1646691479562;
-        Mon, 07 Mar 2022 14:17:59 -0800 (PST)
-Received: from redhat.com ([2.55.138.228])
-        by smtp.gmail.com with ESMTPSA id s14-20020aa7cb0e000000b00410bf015567sm6554353edt.92.2022.03.07.14.17.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Mar 2022 14:17:58 -0800 (PST)
-Date:   Mon, 7 Mar 2022 17:17:51 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v6 06/26] virtio_ring: packed: extrace the logic of
- creating vring
-Message-ID: <20220307171629-mutt-send-email-mst@kernel.org>
-References: <20220224081102.80224-1-xuanzhuo@linux.alibaba.com>
- <20220224081102.80224-7-xuanzhuo@linux.alibaba.com>
+        Mon, 7 Mar 2022 17:29:19 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2063.outbound.protection.outlook.com [40.107.243.63])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53866193FE
+        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Mar 2022 14:28:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N1V1S4KfJxurkX7gYvGSUBXjiQlhtZRh7gNVN8V/F4u4R+kWw9WIIHV4w1I3ZDbiY3nr53SiFmZCMd7U8L3uaq3iizbo2rmBwjZ4392N8CJkv/ebQlCdpCgE4nEi/Omg6FY33Ru1P2z+D5SvkFukwo/gF5o9tc+JM7U2ZHtucMr75IvKAmeOHN2V2Sg2JmJhVgioiG3O0iMC8uT6X71DmhFazrgaWrfx0N40fKpl6xWwQc8RdHIESMt1z6qiCwqn2KEUWiQ+2aeL3hvA4WRsv2P7k13+HSXmTSnPMIcQ1DySg5CrqU20fAybK4BshkNZHEnPJU4TYO46gd1Y4E9i1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iJnkEjSh57QBlyGyNV0hYPxIv2bi3lz49bBSFkd9/f8=;
+ b=SvmysvKre6sGwTrwIOHcDf23RancbGA/RHoCWYKmQ/SMPZzkOKmw/UERB/YERAVFhBd+42oTynaGCZ6sg526O8+myotnEKPx9zRDtcRGJaLEZztehkcv4D6exqr8FwgrzYaTgPdluC1O7r966PsVNBFIre+TFv2Qwur46xXkRdY8NzFkY7K/kTuchFJhtRCWa5QYSo8qWN6RMF5UFpJ29hRNC6M6pxdU9Oyxg8vLDRsD3gsvbXB+OK9dY1DH0k9S1w+Jvr6wIvAcbA5nfKALDrYOFxk517lCaaVMDv34sfV70ykioRL5sze27RxoMDnz2pu8+hPvT+UP/9Z/A6Omkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iJnkEjSh57QBlyGyNV0hYPxIv2bi3lz49bBSFkd9/f8=;
+ b=PRaBwyfH1+kmqj6+Xl1NmUU3PPCMeC39y4AJ3cQ+iE7D4M1h46cKrLmfBaGMKtRD9mxO6cUaIwLqvCzbckCtbtXfqzxs9VoBevEmF199TyO+LNZmKBsirp40SkC48ji5XQkECjKTpOuHTo/8Kcd+ADGTySSXvEdKJwyKOBAyaVM=
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
+ by BL1PR12MB5048.namprd12.prod.outlook.com (2603:10b6:208:30a::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.13; Mon, 7 Mar
+ 2022 22:28:22 +0000
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::692d:9532:906b:2b08]) by BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::692d:9532:906b:2b08%5]) with mapi id 15.20.5038.027; Mon, 7 Mar 2022
+ 22:28:22 +0000
+From:   "Limonciello, Mario" <Mario.Limonciello@amd.com>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>
+CC:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: RE: [PATCH v4 3/3] Changing bios_args.data to be dynamically
+ allocated
+Thread-Topic: [PATCH v4 3/3] Changing bios_args.data to be dynamically
+ allocated
+Thread-Index: AQHYMnAM3cB6CUxdfEqfowWG8TKog6y0e88wgAADBICAAAFPAA==
+Date:   Mon, 7 Mar 2022 22:28:22 +0000
+Message-ID: <BL1PR12MB5157918486C804397EB96B53E2089@BL1PR12MB5157.namprd12.prod.outlook.com>
+References: <20220307220932.23607-1-jorge.lopez2@hp.com>
+ <20220307220932.23607-4-jorge.lopez2@hp.com>
+ <BL1PR12MB5157BEF156685B3DE7B09096E2089@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <CAOOmCE89Tj00ZTAh2Jnf_ALX0LKz8AkRteC1PS2Rvjx-Y1HScA@mail.gmail.com>
+In-Reply-To: <CAOOmCE89Tj00ZTAh2Jnf_ALX0LKz8AkRteC1PS2Rvjx-Y1HScA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2022-03-07T22:28:19Z;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=83ff93ef-0d00-4e06-8693-196999016ae2;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2022-03-07T22:28:20Z
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid: d7fffa9a-e18d-4b76-8c54-73955543546d
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: deedb3c1-abdb-443a-8e0a-08da0089c9c5
+x-ms-traffictypediagnostic: BL1PR12MB5048:EE_
+x-microsoft-antispam-prvs: <BL1PR12MB50487B619298385E7387435AE2089@BL1PR12MB5048.namprd12.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zuTjo4bpJ+L+ctr6ZQmq3eKHg3F/bRQe5GOXIITBTQTxL0xsJhaqP1kx2U/qaB2vzDbDrsZJCy7kLtRXxCL4PWSgYTPYWa2GAgUvZ5qm+DPusPzoEI039i8znYPPAVWfBvh3Kv/XXH9YD2qqKJZAbhNnQzvd6HkFsVGuTTQCsqKxDF/MczRNuI2YUKgeNDeo0xQ6evAF9px10L3aDK2NmFWrC85+C9JlWLPc1S0+BPdXLKFNB/GXzjal+eTmSWz1h089FZo/dRKRg+9GQ2LBWWo31m/tGSlIRTJlujyOA1+ioxNh2QMfwu5cVSfdPZGssF2CtGIxxv7rz+j2sLR8n7td7mwTySxMFcEi8Yw/i6c2EEMxLNHbTYGVe0RCXRym3FgK7SGVojQubxp2tB/b+xGiRh01ln3tJ0RilT2w5zlcG/He+EwlJJoKlhOUqX42ocB86ztwL26eEaZgUpruR4ozogKF/Q3T7ksNSy1nDa2I+1tAYGEi3in21TzoB7iYR2swUApbPx73YwAMzF+xdZzadMMRampNV1eCEO2VlKQ/ATDxhGLrOP7elKP+880ULrosAMySY2mLmatT6CaObcI1wXFl2MkHYrFx+fH4uM82CeuW7HZjwJjmPHdj+rC82rb4Nms22mCoJkzOAELVYd+S2ttb3Zs9PqE7N37LL7tSUF+zw1u5B9fLT8NNpjEp/BbSQi3qoaNlJ1c4504Rpw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(4326008)(2906002)(86362001)(186003)(66476007)(64756008)(52536014)(8676002)(7696005)(6506007)(9686003)(66446008)(76116006)(66946007)(66556008)(38070700005)(316002)(6916009)(8936002)(71200400001)(508600001)(38100700002)(55016003)(33656002)(122000001)(5660300002)(4744005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?L3hJZGkybTVVZjJ5MXovby9Wei9GNk1JdW9Ncy9Ec0VuS0hIcFRoNkZCNXFs?=
+ =?utf-8?B?SitGYTU4cGJsaXp2eU9xK0RQbEVQVE1FMGRramxWTmpjNjlVejgvL0F2ZXEz?=
+ =?utf-8?B?STVpT0l4VE9zV1BZVnViVVFqbXNTb2ZMZ1RVV0R2RGRtRzFGVVlwL1Y4NWta?=
+ =?utf-8?B?aTNKeTRiamNvM3MwMjVUT0U2T0xxbWx4RjNXR2doelF2Nk5sK3lTQkZ1UGRx?=
+ =?utf-8?B?SWlSZ1ZHakJCRlVtOXlxb0pRSG1MYlBnVVp1YXNIaFB0OWRvMXdqVk9ueE5L?=
+ =?utf-8?B?d1FGYk5YbmRocU1sM2l6ZHZJUGVQRGVySUcvOXJEVjlsbU55Y0VrbFpiMG5S?=
+ =?utf-8?B?bTZEWkVVd093d2RzY2RGRTlMRitUaWRRTHVFOS9NRjIzbW9wNS9DZXptMUdk?=
+ =?utf-8?B?WHBvT1B0L0Z6Mmg4R2VpQTlZUHIvZytKcjAyUHp2L1dPZGlYUmtYS1Q1bFpj?=
+ =?utf-8?B?YUk5NHo2cCtGQnNnSis3OFU5WlFDalNjL1k3TjBDT08xTUloWmxreE5yUkhN?=
+ =?utf-8?B?UFBhRHZ3Wk90dzFtMythUzNiV2pveWdIZjRtWjI2UGNkMWtmeVhyeUpyQ2dw?=
+ =?utf-8?B?NGQ0OWRLZkQ2MEVOenFHNlFQZ0RiNDZ4cE1uS2l2ajNBSDZ1RjlkbWRGL1Aw?=
+ =?utf-8?B?di9Rd2lVNHN5Y0M3cWxtcHpHQ2JzMDZUQVBQOEkyL3g3V1NzYjFIeGx3d0FM?=
+ =?utf-8?B?WXJaenZSTVAvWEViemVrbVBVK05mRytmdFFGazBta2NCRGxSZnIyc0lZdk5S?=
+ =?utf-8?B?SHJuYjJlVEl0UU52R0E1dDJDZ1o0VkxDMFhSVWh6SlU5NzFXbXdWdlpteUo0?=
+ =?utf-8?B?REI1SmRmWXdZZGQ5amoxMVpHa3dDSGx5SjZIT3liMUFVTTF2WXl3UUZFTTF2?=
+ =?utf-8?B?bFgwZTFaNUFTdE1FZXgvRmVDazgycjlnRFNmOG9NTUlQaW5BWXlDRmpaT2Uw?=
+ =?utf-8?B?Z2MyVG1KV3JBbWs3em9TQndERlRYTHpXc0RtSzlNUlNpWUpQZ3I3OC9jMEdn?=
+ =?utf-8?B?dXVTUHN5a3Bja3ptVjFKSzViRFN5WTFLaWg0eWU1bnZQN1R5UHhhdXBIZ1BO?=
+ =?utf-8?B?VHpYejJIZTFUYUk1YUxqWS9SMnlNbTlVeklDUy9KNGNpbWhLYktxbFNqc0Fu?=
+ =?utf-8?B?aFhQZGJTMSs4RVpmMzdWRlo4TWtBdGI2clgwVzRqVDJ3b0ExK0U5S2NDeEtQ?=
+ =?utf-8?B?Ynlpcmh4SGFsNitnMktsR1d0UUt6MVlUNlpLdlZNcGJOKyt4akEzSDRoNUx4?=
+ =?utf-8?B?eGJBWkY4UVNPclpwQ3JjZitQSTFZNy83cHUwOGRkeURub0o3ZWNuSGY2YnRD?=
+ =?utf-8?B?RmdGY3JwQkt4N2NJYVlDRVhSUlF0Qk5xYUJCTlhiZ3hCb3h3Q2hncHorT1Q5?=
+ =?utf-8?B?K1d3b2tERllvRExPQ2ZmRzVVVEFWeW4wSXJGcklxeXhjRTlTakQ1eVVvUmc5?=
+ =?utf-8?B?RkwzM2FVSVd5ZzdvQjFob2s0cnFINjdLRWZabGtOeWNOSnBab2NWdWFMaDk1?=
+ =?utf-8?B?dm05SW4xQjRIaEtQV0w2QmNlUmRSSExxM1JuVUtlaE9SNk1SWTN0UGZUQnhB?=
+ =?utf-8?B?VHpxL0NDLzFXRmQwa3dicGZFajJQaCt0amxFb3Fwc3dXbTRBZWUzK1BYR3ZY?=
+ =?utf-8?B?UmI2Slp4Z1FqSHJVM3pKVUQ4cVJpeXVoMmdRNndRSk9TUmFPS3Z6bkM1a3pv?=
+ =?utf-8?B?RlB2WWpKSGNFRkhCdmc2UkFxQ0x2VkgxcDl5ZEhSYThSK29aTGFNdVhUWnBM?=
+ =?utf-8?B?M0ltNms3TVg4ZTdOK2JTNXNUOXBHb2NwSXZuNmMvU2lYYTI3a25TNnQxcStN?=
+ =?utf-8?B?WEt1Q1QvQVYzZk1LbUp4N1FSc0E3aFF5VHh1NGNZVVgrRUpTY0JTM2pmM1V0?=
+ =?utf-8?B?V3ZOcWdySGtiR0JnTDdWb0pRdHhkeXhQWVMzb3UxWW51QmlmOU5kdFpPYkJ5?=
+ =?utf-8?B?b2hzcTFiVGtoaTdrWUlLRmp4b1h3VnF5RE8zNnN6RlI5K2g5end4dmdQM1c5?=
+ =?utf-8?B?Yjh1UnRFcGhNbFFqZS80Z0NseW9DaGxrWU5LZHNlblQzd1daQjU4dUkyWmRy?=
+ =?utf-8?B?YndtSkFBNm1ZdFRXZ3J6V2p6TzFjTll5ckxHOU1DNTRDQjUzRWo5NVJJWWdi?=
+ =?utf-8?B?M3RGZmMvK1VYZnBacTJhS0t5b0dLM01xSy9oNk1jd0l5Q090Vys4T29pKzBI?=
+ =?utf-8?B?alVjQy9lZnYrY3gwbzhJemI0UTk4VWUvZmF0STNqY1I5SThkUC9iUHRVZWRl?=
+ =?utf-8?Q?0eP44vL6KUV98YBoc2ZkEzxHxaGk6WP4tEcSgHtkaE=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220224081102.80224-7-xuanzhuo@linux.alibaba.com>
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: deedb3c1-abdb-443a-8e0a-08da0089c9c5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2022 22:28:22.0471
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 08/URZR9z/y4pmdHxx3SHh2VT4SRjPqF5EK3ktl1pp3GlzLnvk5KDLytUptP4V6cDFfTTphq+6tiMLj09PtWJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5048
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 04:10:42PM +0800, Xuan Zhuo wrote:
-> Separate the logic of packed to create vring queue.
-> 
-> For the convenience of passing parameters, add a structure
-> vring_packed.
-> 
-> This feature is required for subsequent virtuqueue reset vring.
-> 
-> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-
-Subject has a typo.
-Besides:
-
-> ---
->  drivers/virtio/virtio_ring.c | 121 ++++++++++++++++++++++++++---------
->  1 file changed, 92 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index dc6313b79305..41864c5e665f 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -92,6 +92,18 @@ struct vring_split {
->  	struct vring vring;
->  };
->  
-> +struct vring_packed {
-> +	u32 num;
-> +	struct vring_packed_desc *ring;
-> +	struct vring_packed_desc_event *driver;
-> +	struct vring_packed_desc_event *device;
-> +	dma_addr_t ring_dma_addr;
-> +	dma_addr_t driver_event_dma_addr;
-> +	dma_addr_t device_event_dma_addr;
-> +	size_t ring_size_in_bytes;
-> +	size_t event_size_in_bytes;
-> +};
-> +
->  struct vring_virtqueue {
->  	struct virtqueue vq;
->  
-> @@ -1683,45 +1695,101 @@ static struct vring_desc_extra *vring_alloc_desc_extra(struct vring_virtqueue *v
->  	return desc_extra;
->  }
->  
-> -static struct virtqueue *vring_create_virtqueue_packed(
-> -	unsigned int index,
-> -	unsigned int num,
-> -	unsigned int vring_align,
-> -	struct virtio_device *vdev,
-> -	bool weak_barriers,
-> -	bool may_reduce_num,
-> -	bool context,
-> -	bool (*notify)(struct virtqueue *),
-> -	void (*callback)(struct virtqueue *),
-> -	const char *name)
-> +static void vring_free_vring_packed(struct vring_packed *vring,
-> +				    struct virtio_device *vdev)
-> +{
-> +	dma_addr_t ring_dma_addr, driver_event_dma_addr, device_event_dma_addr;
-> +	struct vring_packed_desc_event *driver, *device;
-> +	size_t ring_size_in_bytes, event_size_in_bytes;
-> +	struct vring_packed_desc *ring;
-> +
-> +	ring                  = vring->ring;
-> +	driver                = vring->driver;
-> +	device                = vring->device;
-> +	ring_dma_addr         = vring->ring_size_in_bytes;
-> +	event_size_in_bytes   = vring->event_size_in_bytes;
-> +	ring_dma_addr         = vring->ring_dma_addr;
-> +	driver_event_dma_addr = vring->driver_event_dma_addr;
-> +	device_event_dma_addr = vring->device_event_dma_addr;
-> +
-> +	if (device)
-> +		vring_free_queue(vdev, event_size_in_bytes, device, device_event_dma_addr);
-> +
-> +	if (driver)
-> +		vring_free_queue(vdev, event_size_in_bytes, driver, driver_event_dma_addr);
-> +
-> +	if (ring)
-> +		vring_free_queue(vdev, ring_size_in_bytes, ring, ring_dma_addr);
-
-ring_size_in_bytes is uninitialized here.
-
-Which begs the question how was this tested patchset generally and
-this patch in particular.
-Please add note on tested configurations and tests run to the patchset.
-
-> +}
-> +
-> +static int vring_create_vring_packed(struct vring_packed *vring,
-> +				    struct virtio_device *vdev,
-> +				    u32 num)
->  {
-> -	struct vring_virtqueue *vq;
->  	struct vring_packed_desc *ring;
->  	struct vring_packed_desc_event *driver, *device;
->  	dma_addr_t ring_dma_addr, driver_event_dma_addr, device_event_dma_addr;
->  	size_t ring_size_in_bytes, event_size_in_bytes;
->  
-> +	memset(vring, 0, sizeof(*vring));
-> +
->  	ring_size_in_bytes = num * sizeof(struct vring_packed_desc);
->  
->  	ring = vring_alloc_queue(vdev, ring_size_in_bytes,
->  				 &ring_dma_addr,
->  				 GFP_KERNEL|__GFP_NOWARN|__GFP_ZERO);
->  	if (!ring)
-> -		goto err_ring;
-> +		goto err;
-> +
-> +	vring->num = num;
-> +	vring->ring = ring;
-> +	vring->ring_size_in_bytes = ring_size_in_bytes;
-> +	vring->ring_dma_addr = ring_dma_addr;
->  
->  	event_size_in_bytes = sizeof(struct vring_packed_desc_event);
-> +	vring->event_size_in_bytes = event_size_in_bytes;
->  
->  	driver = vring_alloc_queue(vdev, event_size_in_bytes,
->  				   &driver_event_dma_addr,
->  				   GFP_KERNEL|__GFP_NOWARN|__GFP_ZERO);
->  	if (!driver)
-> -		goto err_driver;
-> +		goto err;
-> +
-> +	vring->driver = driver;
-> +	vring->driver_event_dma_addr = driver_event_dma_addr;
->  
->  	device = vring_alloc_queue(vdev, event_size_in_bytes,
->  				   &device_event_dma_addr,
->  				   GFP_KERNEL|__GFP_NOWARN|__GFP_ZERO);
->  	if (!device)
-> -		goto err_device;
-> +		goto err;
-> +
-> +	vring->device = device;
-> +	vring->device_event_dma_addr = device_event_dma_addr;
-> +	return 0;
-> +
-> +err:
-> +	vring_free_vring_packed(vring, vdev);
-> +	return -ENOMEM;
-> +}
-> +
-> +static struct virtqueue *vring_create_virtqueue_packed(
-> +	unsigned int index,
-> +	unsigned int num,
-> +	unsigned int vring_align,
-> +	struct virtio_device *vdev,
-> +	bool weak_barriers,
-> +	bool may_reduce_num,
-> +	bool context,
-> +	bool (*notify)(struct virtqueue *),
-> +	void (*callback)(struct virtqueue *),
-> +	const char *name)
-> +{
-> +	struct vring_virtqueue *vq;
-> +	struct vring_packed vring;
-> +
-> +	if (vring_create_vring_packed(&vring, vdev, num))
-> +		goto err_vq;
->  
->  	vq = kmalloc(sizeof(*vq), GFP_KERNEL);
->  	if (!vq)
-> @@ -1753,17 +1821,17 @@ static struct virtqueue *vring_create_virtqueue_packed(
->  	if (virtio_has_feature(vdev, VIRTIO_F_ORDER_PLATFORM))
->  		vq->weak_barriers = false;
->  
-> -	vq->packed.ring_dma_addr = ring_dma_addr;
-> -	vq->packed.driver_event_dma_addr = driver_event_dma_addr;
-> -	vq->packed.device_event_dma_addr = device_event_dma_addr;
-> +	vq->packed.ring_dma_addr = vring.ring_dma_addr;
-> +	vq->packed.driver_event_dma_addr = vring.driver_event_dma_addr;
-> +	vq->packed.device_event_dma_addr = vring.device_event_dma_addr;
->  
-> -	vq->packed.ring_size_in_bytes = ring_size_in_bytes;
-> -	vq->packed.event_size_in_bytes = event_size_in_bytes;
-> +	vq->packed.ring_size_in_bytes = vring.ring_size_in_bytes;
-> +	vq->packed.event_size_in_bytes = vring.event_size_in_bytes;
->  
->  	vq->packed.vring.num = num;
-> -	vq->packed.vring.desc = ring;
-> -	vq->packed.vring.driver = driver;
-> -	vq->packed.vring.device = device;
-> +	vq->packed.vring.desc = vring.ring;
-> +	vq->packed.vring.driver = vring.driver;
-> +	vq->packed.vring.device = vring.device;
->  
->  	vq->packed.next_avail_idx = 0;
->  	vq->packed.avail_wrap_counter = 1;
-> @@ -1804,12 +1872,7 @@ static struct virtqueue *vring_create_virtqueue_packed(
->  err_desc_state:
->  	kfree(vq);
->  err_vq:
-> -	vring_free_queue(vdev, event_size_in_bytes, device, device_event_dma_addr);
-> -err_device:
-> -	vring_free_queue(vdev, event_size_in_bytes, driver, driver_event_dma_addr);
-> -err_driver:
-> -	vring_free_queue(vdev, ring_size_in_bytes, ring, ring_dma_addr);
-> -err_ring:
-> +	vring_free_vring_packed(&vring, vdev);
->  	return NULL;
->  }
->  
-> -- 
-> 2.31.0
-
+W1B1YmxpY10NCg0KPiBUaGUgb25seSBjaGFuZ2VzIGFwcGx5IHRvIFYzLTAwMDEuwqAgwqBQYXRj
+aGVzIFYzLTAwMDIgYW5kIFYzLTAwMDMgZGlkIG5vdCBjaGFuZ2VkIGluIHZlcnNpb24gVjQuDQoN
+CkluIGdlbmVyYWwgaXQncyBuaWNlIHRvIGluY2x1ZGUgZWl0aGVyIGluIHlvdXIgY292ZXIgbGV0
+dGVyICJjaGFuZ2VzIGZyb20gWC1ZIiBvciBpbiBpbmRpdmlkdWFsIHBhdGNoZXMgYmVsb3cgdGhl
+IC0tLg0KSXQgbWFrZXMgaXQgZWFzaWVyIGZvciBhbnlvbmUgd2hvIHJldmlld2VkIHByZXZpb3Vz
+IHZlcnNpb24gdG8gc3BvdCB0aGUgZGlmZmVyZW5jZXMuDQoNCg==
