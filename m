@@ -2,170 +2,242 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B81C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 14:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F804C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 16:52:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236104AbiCGOTw (ORCPT
+        id S230017AbiCGQxt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Mar 2022 09:19:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47598 "EHLO
+        Mon, 7 Mar 2022 11:53:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232301AbiCGOTv (ORCPT
+        with ESMTP id S237988AbiCGQxs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Mar 2022 09:19:51 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AF8D3A184;
-        Mon,  7 Mar 2022 06:18:57 -0800 (PST)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 227BtcwI006652;
-        Mon, 7 Mar 2022 14:18:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : content-type : mime-version; s=corp-2021-07-09;
- bh=VqtIgnutTGKQGJfYXkJ9tsHS9v4w9he3u5/HMIT6Ge0=;
- b=yQ/L0dMK7skZz/xQTMik8dn07aFywtwBk4i/uwuI3Taf83jD8IW6X8JKJSi+Z4TN2fKp
- mh8kvxr9rkDEhtTkG7hnfINzlKV3C+AMS1ivokLV3sER1m25G001btnN9mwq8f1ZrIC8
- qFu87yKjNrsH+DkjacqDzTy3U91NVYHUR3giri/Il8/w1tKkBThjDGuKlDHIRuHlE/bA
- BIy8vP6H7WTW02gEb3vS/z3CHmL9Y0/lY8s59Iq56Bp0YSao38hXOiFZtjtVx60yu98b
- gVTTUMmfQVbKC1c6/i20gyW0B6FYfnXfMla5JsnamhpV87AuzZzB7BrMQIHJgQtv1vu1 gw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3ekxn2bxbh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Mar 2022 14:18:48 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 227EFFA5101010;
-        Mon, 7 Mar 2022 14:18:47 GMT
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam08lp2048.outbound.protection.outlook.com [104.47.74.48])
-        by userp3030.oracle.com with ESMTP id 3ekvytju59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Mar 2022 14:18:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A6I6AA4Nt5gGgors+p+WCAs3UxDNVKBBL+/x6r7AyJ/BcfTOUMBdn16W4hpYmFtjbRGOXJwBg4RbAuybcUan3dBku0td99GEaCdmrfkiDkX4jd7u+Jq5Ak3bD/Vt6vVLBy3K/OG71JPWRN5+1lcwvPxysgxiz5Xqc+m280Fx3r9hwyK+FOqNqL8mtKR1kvO7y4awfTXQdd9y0a6zERhZtiyMiJlO8FQPuY1bQgoM1npYSdObOfyzCGS31p+xn97nUtbYtZRzhJX8BmGisUOwowL/6WDSZFQrXIMshUTbgXYuCjcH5Y8YpS3YU1kcEsgcHojCBkCGwHJp3nKU2MAZuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VqtIgnutTGKQGJfYXkJ9tsHS9v4w9he3u5/HMIT6Ge0=;
- b=h0HjEV8DHXuYNs2V7gg2rxGtIos3ITVs0+saYVYYVGlUC8u+Su2UQezcnwpNHtbnEdvgTGLo/mvzalngJNEzfDVr6v44EyrlHUc6YDDKollnEW7sDzVNxHo3FcN9br0m+w8A0gXRB0B5jpUw4FnwU3dO0rHXL1YKflL+1igPbPrA+an3PFfmSsS4YWTb/LVNUD+H05pKlon+nF2N70fULulFka87xiX6lvxW8f9F/1PnrOi2tJ8Z1b4HiEOGEPgq2aMPwoDwsJXuk0Ebfw2RpNsEDqEPmERFEssmnqO8xWYIlGiEj9V+xWsUzL6rfDwDQrgJezKB6ZhmhP64Yn+f4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        Mon, 7 Mar 2022 11:53:48 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0531F2DD7C
+        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Mar 2022 08:52:54 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id z12-20020a17090ad78c00b001bf022b69d6so13607165pju.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Mar 2022 08:52:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VqtIgnutTGKQGJfYXkJ9tsHS9v4w9he3u5/HMIT6Ge0=;
- b=qdyK/NeoHkEKvcmydb5JD0322vo2g5FD1bDfgbWopTccAzzs7xm4rvZ+vhPjXlmgSJcB/ZOSEbL1o6Y7NXTJMK+8eUxx/iod9Z8xNQlNlFeqh0KCzY5KPNWtCIJIS3H+fP32298JPF8oJDzZ0xvWstFgfofb9++sEXfJW0+3NRs=
-Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
- (2603:10b6:301:2d::28) by MWHPR10MB1502.namprd10.prod.outlook.com
- (2603:10b6:300:21::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.15; Mon, 7 Mar
- 2022 14:18:45 +0000
-Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
- ([fe80::2c3d:92b5:42b3:c1c5]) by MWHPR1001MB2365.namprd10.prod.outlook.com
- ([fe80::2c3d:92b5:42b3:c1c5%4]) with mapi id 15.20.5038.026; Mon, 7 Mar 2022
- 14:18:45 +0000
-Date:   Mon, 7 Mar 2022 17:18:32 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Sanket Goswami <Sanket.Goswami@amd.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] platform/x86: amd-pmc: uninitialized variable in
- amd_pmc_s2d_init()
-Message-ID: <20220307141832.GA19660@kili>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: ZRAP278CA0013.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:10::23) To MWHPR1001MB2365.namprd10.prod.outlook.com
- (2603:10b6:301:2d::28)
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vL4YwE7tYa3Y01MHIJ9wMqV9n4oV1xcyqck3EB7a8Uw=;
+        b=ODOS8TaRivkbMrCQdxGZB9ku05H2tP3eQzrcHIjQprhEE6RkiQRJo+B6SpabdFrO1K
+         cuIDFVVuRQBiXGM2cvBLLXkBs/ktz/H/VAE+/SxgAemWvAlFhjWJwiSoCcbhlpTMvdGi
+         qMMf8LM/LNeDF0iuw2aydULDwhUlvAEiZpTXR+UphXx0whGm+vKQrmY3ttkWesIZR3qp
+         11lVdUK4U/gYBeipOIfMo0GTXeLYAEJSxBSQgfi4CWmwDrv/Co2SQmwLki74fUTk8QCD
+         fUZGxM2YiQpwm0+M8B9oc81+br1oZB1BxJC+mUB5FMxv1WLkr+pLeorpnubUJ1U1E9hj
+         BxDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vL4YwE7tYa3Y01MHIJ9wMqV9n4oV1xcyqck3EB7a8Uw=;
+        b=w3dhlgGW4l3wuSrETwH4S8Ig/ANcCrwJeaGVacD2TnN3DnI/sBdvqdNfoLkDZQZ+je
+         Oc2N8obT66N/GjqO/HJn3JcCvIADForGySqElqwe7wJO+D/uJV56IhwrCzL1vkQDNHVI
+         JpKW1DEY2MFMW6tkZL/O1OjfT47UIe0JAXw/J4QBHUjuSJKjqdEVJfVJf2VLrT8Isumh
+         GRjYAwW2tjAbnh/xThdc/TieM6ekqNOZu+668NDkrXkoKsDFSOGqhMTgUUSqcGCfKnZT
+         1zGzztD9P4hzOBiVy6segBePR7tWe4DklUh0fcKKntEcIiSrB1BT0lGoMwv7SsJryw9S
+         5c3Q==
+X-Gm-Message-State: AOAM5313gdYDERrjskhnh8MRbQaTZ8UBCJBTK2v6ou/n6gr1wrR0dPUF
+        k6DSXjXGm+v6hz3P1C2c7ZFu8uFrbpwdjWMyi0m7FA==
+X-Google-Smtp-Source: ABdhPJywcchzxpEjs8LqsQz7iZ/kl4FGjgJE/a56/donerPGzTzg3QGeaPTZBHhugLSS8UedUrGOIaTESfJpqP4Y3Y0=
+X-Received: by 2002:a17:902:7296:b0:14b:4bc6:e81 with SMTP id
+ d22-20020a170902729600b0014b4bc60e81mr13029503pll.132.1646671973397; Mon, 07
+ Mar 2022 08:52:53 -0800 (PST)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cd2155d0-7ad9-448a-7938-08da00456364
-X-MS-TrafficTypeDiagnostic: MWHPR10MB1502:EE_
-X-Microsoft-Antispam-PRVS: <MWHPR10MB1502C3614C6345AA69E6461D8E089@MWHPR10MB1502.namprd10.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ewirMoiNZjHF5kg5SFQ0RTuNkrhNxhUV4V1tLLj2pMc8XAwnaWC5iZuhl5gzV/D/eMNj3TX/62/BRR9B3mRyfYvtGrgm53E9pXXKQUTq8eZH3RbnbpNl+MLuwUEjxbhyviyjGYknttqPkvHdoZ5LoFkiVS8yrc9C0c+JxGOV9c2ja+Sd6xtuacnIlJ18I1cbj/kGN6aJJxTBwJGkgrsTl0ZImLyP5dfimdNbU65m6rKnaSVi7VGj5u2o/nNqVhXaoX04VeW/FNjlxyfpFfIjSpfxxaTcCLtVIZ39BBJVSbQLxD3CpVcqBw8UyYw/gDuwV/IboAWEWgRsBgxrn0Olht3t5xenoozhGM62z7UNvjWIH7W6fpHyzzBXautqftimq+sB0TclmTYgRvT/ZNb3a+twCKYh+xyFM8WUn7JlJQfmgduLAa0aYZLn1fWRMyHnMuJvmMmHciVX2mSYsOXCpREwNYnZZkTmRajI/KnKhgw+FRllOC9s+5tSaCMmGUyCW5pphmfv9ZsPgdC5OXKfWs5EB1SwU3AOwBqCzZRb5JMGmlaMBaV/dLkbDlWPOHPEnJHgOH5n9TdkdlgdZb9+fxREGyRxeEbMls4XY3y+Mw/o/VuYtM/A/U/ewfM6e0iR4vJtiDdTSi8xOrPxkXRgD7GiLww9oE9tbztRdt3IMduabmHcYxsHy72/mSzrcj7ZRuzihGZlG/BowWHckhFW5w+Y+N1cjTrURtYhHLt9qwMLIurRo3W/dl+d8l5v1Fr4
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2365.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(366004)(5660300002)(66946007)(8676002)(4326008)(66556008)(66476007)(38100700002)(38350700002)(33656002)(8936002)(54906003)(110136005)(316002)(33716001)(44832011)(4744005)(2906002)(9686003)(186003)(1076003)(6512007)(52116002)(86362001)(6486002)(26005)(6666004)(508600001)(83380400001)(6506007)(70780200001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AE0asfcHF4V6gYykrZl9Dk2D5I/uNWTtq6uVOjSIFWF5lERWORA6vtZfFV40?=
- =?us-ascii?Q?BebdX42WR8S009KtEfcpHJybBJHbSuGTHi/UqPOQlHOy/gfXZbd/p1yhdGU1?=
- =?us-ascii?Q?i9NxZDEDtKW0xVMPPYzL0JAXTJdZ53KxDcBlxNNLtfryAUuANGAyTiPp8Dfk?=
- =?us-ascii?Q?JAo+E0uPFQLIMsAol5CRAzo+r/k/MrKh8aCbPRmYfpHVNKzazPyOZHFDnjRt?=
- =?us-ascii?Q?MIkN7QbnudlSAs9g0ME+D0hzGJlkCgHMqsv6pVF7EAppmOACeRhb9bcUWWOO?=
- =?us-ascii?Q?9U/2L5MpqeuIgjT4H8b9szhjKzSGwAnlhjrZXOgwI7owbRyGCukKr5bDHXVI?=
- =?us-ascii?Q?8RU2daHXGm6tEZKDrG11X0CUmOoGPhEgs4BnEUJnyYJt5PgFMYsOUvijKmtp?=
- =?us-ascii?Q?U0/Mf3YH+zJ9+M37TKaS1YjOFxljj/tGF4CxDA8rWSN9jVg3A0qoyS4iLdMX?=
- =?us-ascii?Q?eFna88ooAfMTKok7pvxwPxd1i4TiL2svkjfATNV1d0BYdbuwV8sG2SbegUA2?=
- =?us-ascii?Q?4KnbcglnDz99bP3z6B1FSAWXjJ2blf7/IqQZYfCWwZjwrWHdQs57giELT2zq?=
- =?us-ascii?Q?G1oFPPt8RAB3VG7aAyuGSOJwiGq3qFOmCdfOIwQbL8g/Ga5CxM8U0z3R2+lE?=
- =?us-ascii?Q?y7Le+BXVV2Pf9nQSiVu7fkI+DtDV5b5Qetg0BErjWH7ZrPWZbB2lYI4U47px?=
- =?us-ascii?Q?j8Rnryd7uEP/k0Nl5Z7jNsoRyDfi96xfqXiElj4ZDDZj9/oB5x27lHVD6RZA?=
- =?us-ascii?Q?buKYWBy815VZE2qEshqUxwjfdca662LyNS53gH6371PbYFD2x8zAmU8O7ISX?=
- =?us-ascii?Q?dtepW+XD1kSUWZjfd8Qvm4WCpGICaREPk5fmgD1vUa7mNu3KCW1eRflf/CNs?=
- =?us-ascii?Q?PwMHY/ERxS56NLTNrgrWW6kdN7y3xW7k4u3sb/VnyVK0jTutzBbIe1fn0yKF?=
- =?us-ascii?Q?0pcqcQfk0HUYYubwt0Du+WfxZc5Lv0Pza/CO8GWtPXkxYaGmkSWv31IZWa4K?=
- =?us-ascii?Q?2R7cwh4ilkWc3JpcblZ3NlsDXnbNzCEEOZhAiPAgUPoS44upfCiIzc+nRjtq?=
- =?us-ascii?Q?SOSSvygbSZTNUNTPFAb4xNGXd8lEfNiuDXsfJpxUj0yaHon1ZQFuCOIfwngY?=
- =?us-ascii?Q?+tcDJl1V4YXDZU/JIybQZ87xy0v8c8P6cCGqNCAEfpcqaHgSKTjmX+hdkkuO?=
- =?us-ascii?Q?WsKxp9RqJYDknW3nQFCVMFsdQQQ7XblVTkseNjWQgCMgHaS6yitcl37FLhJx?=
- =?us-ascii?Q?nBq2EYJa07G1Bu/Ggf5jjfrhtT9b+myU8hYl+a6Kw6s6vybDstkqLnSgRgoQ?=
- =?us-ascii?Q?6LqdodZ6silSVAfRltcZhQYhhBNg7bhiFZjvTx8zZL3A0HXx3Jj4OPc1280w?=
- =?us-ascii?Q?wY/PaZtW5itsE4DGmtYSUP3a5B+I5FgRWkNFThLNyzaK0aVVGfyzJa+dGu6K?=
- =?us-ascii?Q?S7crgApvGt3g8prwLMJVy89iENA9DTl/FK61KTIBkRhIBh3ym6kl7fltpAXT?=
- =?us-ascii?Q?pBRnzPn2vSgJtzIFGZWcfv1J6mK9CIjTOC4fLpwugQbSHmZsqnsRV5Ao/l13?=
- =?us-ascii?Q?byhK4iwxaEiKt9iEQKwyyiKDe1EikU05ha6ouGhXuopH7vApslFTmlN7bjYk?=
- =?us-ascii?Q?gcVJxHUs7BodWZ5W+ckYzNGC98CU+fv4yDqeJbYliLOs/8E2bUDbIcAAxadf?=
- =?us-ascii?Q?QL6wmA=3D=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd2155d0-7ad9-448a-7938-08da00456364
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2365.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 14:18:45.0212
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: enHerj56OJmfuvPxZWBJBaj/85a1WKoJoImY7LCeOpji/tJnaEEduS6Y1RO3qhazC8wqmkJ8Jf+Z1HzDLtbBJ8qizBf0tBqFsIH/XisteIM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR10MB1502
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10278 signatures=690470
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- suspectscore=0 bulkscore=0 mlxlogscore=999 adultscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203070083
-X-Proofpoint-ORIG-GUID: FJkKi8OWgjdfLB29MRf09rxvd-C1POfp
-X-Proofpoint-GUID: FJkKi8OWgjdfLB29MRf09rxvd-C1POfp
+References: <20220301195457.21152-1-jithu.joseph@intel.com>
+ <20220301195457.21152-8-jithu.joseph@intel.com> <09b5b05018a8600ca8fab896790ab16827c80e4e.camel@intel.com>
+ <e282377b-8ee4-99fc-432f-2aa3441b2989@intel.com>
+In-Reply-To: <e282377b-8ee4-99fc-432f-2aa3441b2989@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 7 Mar 2022 08:52:45 -0800
+Message-ID: <CAPcyv4gcfMZu38EAGBq59A-RPUmR3fFiamRiR6QaP=D1gPS+6A@mail.gmail.com>
+Subject: Re: [RFC 07/10] platform/x86/intel/ifs: Create kthreads for online
+ cpus for scan test
+To:     "Joseph, Jithu" <jithu.joseph@intel.com>
+Cc:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The "size" variable can be uninitialized if amd_pmc_send_cmd() fails.
+On Fri, Mar 4, 2022 at 11:20 AM Joseph, Jithu <jithu.joseph@intel.com> wrote:
+>
+>
+>
+> On 3/2/2022 8:17 PM, Williams, Dan J wrote:
+> > On Tue, 2022-03-01 at 11:54 -0800, Jithu Joseph wrote:
+> >> Create scan kthreads for online logical cpus. Once scan test is triggered,
+> >> it wakes up the corresponding thread and its sibling threads to execute
+> >> the test. Once the scan test is done, the threads go back to thread wait
+> >> for next signal to start a new scan.
+> >>
+> ...
+> >> +
+> >> +static int retry = 5;
+> >> +module_param_cb(retry, &ifs_retry_ops, &retry, 0644);
+> >> +
+> >> +MODULE_PARM_DESC(retry, "Maximum retry count when the test is not executed");
+> >
+> > Why does this retry need to be in the kernel? Can't the test runner
+> > retry the test if they want? If it stays in the kernel, why a module
+> > parameter and not a sysfs attribute?
+>
+> A core is tested by writing 1 to "runtest" file.  When user writes  a 1 to run_test file it tests all the subtests (chunks) on a core.
+> Distinct from this, retry parameter describes the autoretry driver would do at  "chunk" granularity (bit more on why, is available in the doc)
+>
+> Why not a sysfs attribute: good qn,  Our earlier prototype had this as a percpu sysfs attribute, however this was removed to keep the sysfs entries simple/minimal and less confusing.
+> (and tunable options which are not strictly needed in the normal course of use were moved to module parameters)
+> In the percpu sysfs we now only have the essential stuff i.e  run_test , status , and details making it simpler for user who wants to test the core.
 
-Fixes: 3d7d407dfb05 ("platform/x86: amd-pmc: Add support for AMD Spill to DRAM STB feature")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/platform/x86/amd-pmc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+...but you are putting it in sysfs, just in a different directory:
 
-diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-index 425a86108f75..fc0b4d628dec 100644
---- a/drivers/platform/x86/amd-pmc.c
-+++ b/drivers/platform/x86/amd-pmc.c
-@@ -708,8 +708,9 @@ static const struct pci_device_id pmc_pci_ids[] = {
- 
- static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
- {
--	u32 size, phys_addr_low, phys_addr_hi;
-+	u32 phys_addr_low, phys_addr_hi;
- 	u64 stb_phys_addr;
-+	u32 size = 0;
- 
- 	/* Spill to DRAM feature uses separate SMU message port */
- 	dev->msg_port = 1;
--- 
-2.20.1
+/sys/module/ifs/parameters
 
+vs
+
+/sys/devices/{system/cpu/,platform}/ifs
+
+Just unify it all in one place, otherwise, I fail to see the
+simplification for the user over spreading settings over multiple
+locations.
+
+>
+>
+> >
+> >> +
+> >> +static bool noint = 1;
+> >> +module_param(noint, bool, 0644);
+> >> +MODULE_PARM_DESC(noint, "Option to enable/disable interrupt during test");
+> >
+> > Same sysfs vs module parameter question...
+>
+> Same as above
+
+Same multiple sysfs ABI location concern.
+
+>
+> >
+>
+> >> +
+> >> +static const char * const scan_test_status[] = {
+> >> +       "SCAN no error",
+> >> +       "Other thread could not join.",
+> >> +       "Interrupt occurred prior to SCAN coordination.",
+> >> +       "Core Abort SCAN Response due to power management condition.",
+> >> +       "Non valid chunks in the range",
+> >> +       "Mismatch in arguments between threads T0/T1.",
+> >> +       "Core not capable of performing SCAN currently",
+> >> +       "Unassigned error code 0x7",
+> >> +       "Exceeded number of Logical Processors (LP) allowed to run Scan-At-Field concurrently",
+> >> +       "Interrupt occurred prior to SCAN start",
+> >
+> > This looks unmaintainable...
+> >
+> > /me finds large comment block around IFS_* error codes and suggests
+> > killing 2 birds with one stone, i.e. delete that comment and make this
+> > self documenting:
+> >
+> > static const char * const scan_test_status[] = {
+> >     [IFS_NO_ERROR] = "SCAN no error",
+> >     [IFS_OTHER_THREAD_DID_NOT_JOIN] = "Other thread could not join.",
+> >     ...etc...
+> > };
+>
+> Will use this format.
+>
+> >
+> > Btw, which is it "did not join" and "could not join"? If the symbol
+> > name is going to be that long might as well make it match the log
+> > message verbatim.
+>
+> Will make them identical. Thanks for pointing this out.
+>
+> >
+> > That way you can add / delete error codes without wondering if you
+> > managed to match the code number to the right position in the array.
+> >
+> > Even better would be to kick this out of the kernel and let the user
+> > tool translate the error codes to test result log messages.
+> >
+> >> +};
+> >> +
+> >> +static void message_not_tested(int cpu, union ifs_status status)
+> >> +{
+> >> +       if (status.error_code < ARRAY_SIZE(scan_test_status))
+> >> +               pr_warn("CPU %d: SCAN operation did not start. %s\n", cpu,
+> >> +                       scan_test_status[status.error_code]);
+> >> +       else if (status.error_code == IFS_SW_TIMEOUT)
+> >> +               pr_warn("CPU %d: software timeout during scan\n", cpu);
+> >> +       else if (status.error_code == IFS_SW_PARTIAL_COMPLETION)
+> >> +               pr_warn("CPU %d: %s\n", cpu,
+> >> +                       "Not all scan chunks were executed. Maximum forward progress retries exceeded");
+> >
+> > Why are these codes not in the scan_test_status set? I see that
+> > IFS_SW_PARTIAL_COMPLETION and IFS_SW_TIMEOUT are defined with larger
+> > values, but why?
+>
+> These are software(driver) defined error codes. Rest of the error codes are supplied by
+> the hardware. Software defined error codes were kept at the other end to provide ample space
+> in case (future) hardware decides to provide extend error codes.
+
+Why put them in the same number space? Separate software results from
+the raw hardware results and have a separate mechanism to convey each.
+
+>
+> >
+> >> +       else
+> >> +               pr_warn("CPU %d: SCAN unknown status %llx\n", cpu, status.data);
+> >> +}
+> >> +
+> >> +static void message_fail(int cpu, union ifs_status status)
+> >> +{
+> >> +       if (status.control_error) {
+> >> +               pr_err("CPU %d: scan failed. %s\n", cpu,
+> >> +                      "Suggest reload scan file: # echo 1 > /sys/devices/system/cpu/ifs/reload");
+> >> +       }
+> >> +       if (status.signature_error) {
+> >> +               pr_err("CPU %d: test signature incorrect. %s\n", cpu,
+> >> +                      "Suggest retry scan to check if problem is transient");
+> >> +       }
+> >
+> > This looks and feels more like tools/testing/selftests/ style code
+> > printing information for a kernel developer to read. For a production
+> > capability I would expect these debug messages to be elided and have an
+> > ifs user tool that knows when to "Suggest reload scan file". Otherwise,
+> > it's not scalable to use the kernel log buffer like a utility's stdout.
+>
+> The two pr_err here are for really really grave errors and warrants being displayed to console,
+> possibly indicating some fault with the particular core. They are never expected to come in normal
+> course of testing on a working core.
+
+Kernel log messages with user action recommendations belong in a user tool.
+
+> But I see your larger point. We will convert all the pr_warn preceeding this (in message_not_tested())
+> to pr_dbg so that they dont normally take up the kernel log buffer. (they are not as grave a scenario as the earlier one).
+>
+> The same information is also available from percpu sysfs/cpu#/ifs/status for user spaces tools to operate on
+
+"Suggest retry" does not seem like "grave error" to me. User feedback
+belongs in a user tool.
