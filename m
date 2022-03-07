@@ -2,117 +2,181 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E052C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 21:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C440C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 21:34:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240550AbiCGVeo (ORCPT
+        id S245342AbiCGVfT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Mar 2022 16:34:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60040 "EHLO
+        Mon, 7 Mar 2022 16:35:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232501AbiCGVen (ORCPT
+        with ESMTP id S235250AbiCGVfT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Mar 2022 16:34:43 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0547450457;
-        Mon,  7 Mar 2022 13:33:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646688829; x=1678224829;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=P7fA5VAziyLx4eErnIxNtk976YKxMu7dfIcAeyiLxV0=;
-  b=CtRBnAEk995hrpSLj8dkq0b8//iZBcS4hN5Heu9La8xxk/4tW+uY62er
-   rmIKDt1Grhv+JE/SjhNmGNdOe00YefpNdEQeKVaSl7g4+6ijBu2q1k9Si
-   lLOlVaVFvSgo7+0UGNW/RASGE6LjBoMxSLM8iqu3iYEWHNes7O0Z6wDQQ
-   LDPLKsBMMRoB/p3j1sYwuT0tExMXkeVMip3u7KhxoPml5v4t8P4bwfkqM
-   vfwZ2qvPVvstaS0gLKbGdsvI5rlwNLjdhN1qo7P82nK7Ht5K2t6UuoGkx
-   ouLRXhCrYATESwtgw/vuFvf61qEjrfqD0R3GmnD74NU+ICjrxOomzEQ03
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10279"; a="317743362"
-X-IronPort-AV: E=Sophos;i="5.90,163,1643702400"; 
-   d="scan'208";a="317743362"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2022 13:33:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,163,1643702400"; 
-   d="scan'208";a="687687259"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Mar 2022 13:33:48 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 7 Mar 2022 13:33:47 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 7 Mar 2022 13:33:46 -0800
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.021;
- Mon, 7 Mar 2022 13:33:46 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>
-CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "platform-driver-x86@vger.kernel.org" 
+        Mon, 7 Mar 2022 16:35:19 -0500
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2040.outbound.protection.outlook.com [40.107.223.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB986D952;
+        Mon,  7 Mar 2022 13:34:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UCNVBhT29fMmngy+uvG7FjMtUHwiB+ZIEyZBokGMBNZQ621dUvNgXzcMDXAe4zVsS3zVaa+y5F25AxymKCucB8t1k4e5ybyugu8zOsB1hZmy4ys52oQpUKtQzkSccXr2HIN8X+VkJ7wnbEHhl9iutXGVQ2xrcagN6tyRMQkrkb2urh0vmPayaSapJIZiq6R0om4TsyumQWImjYE8BNl47eKdPXG5bQjZ0M6x/8wPQp6I+pBCg+OwwVxxaqevBTHqWr4069KBVdNj35w+d+gx+aLDDZCi2nPEgUBhtIvpW8mRwPYy3oC57Y6tWE9jTJBUIY//PERxrkfii1v5Fp7jpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zzMGXQUBI5kqNpqQYV8JzSAxqABXO60VgfPmaqML3Cc=;
+ b=lp/FBuo/UmlYBnCtef845cHd7szimOSY+YSIBFQEnC3lBdzJ4WxNYAyRYs9ahBuOSPF/Ru7qX57HKmasCit6dx9/TKcybaSuJbeqWUrx7O7gnzOXUwG6GEdJE5cm3BwJQel6S3rPFh12UclFsiUmZ2yJAE0yt5OWqe4fM2tEAuSmXdh5VCGp0x1TzkITfoz5TCtzVqffhlx2oez+EXPjklHv/4a3m0QtDciI5pT6HsV8t/tL3QEHttRhPLueMsXM5aKCOL4Ikcl79Z5/KRz9pstrMGk1zE7CpQ4/ew3Qr4ToLlEWitV7U0Ra+Q72M/W+2KB4WFy/PYBPeb7k31lSkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zzMGXQUBI5kqNpqQYV8JzSAxqABXO60VgfPmaqML3Cc=;
+ b=mcJA+WPg1nlLitdlqRd7p6koxygcuQHmzBM9ANUOIOvEh7bvNdibgWcXpSMuWfgqFjZMK21Em4J/1fhtSWEifPxhk2MLGztC3bHsM10MfUmkiTMnnH4qVGxE5Ufo5ux2UaxmWiUGhqaE2zKqIj7yyjW8oVOMU6onWeKkHEkrWDE=
+Received: from BN9PR03CA0259.namprd03.prod.outlook.com (2603:10b6:408:ff::24)
+ by DM6PR12MB4451.namprd12.prod.outlook.com (2603:10b6:5:2ab::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Mon, 7 Mar
+ 2022 21:34:21 +0000
+Received: from BN8NAM11FT056.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:ff:cafe::da) by BN9PR03CA0259.outlook.office365.com
+ (2603:10b6:408:ff::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14 via Frontend
+ Transport; Mon, 7 Mar 2022 21:34:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT056.mail.protection.outlook.com (10.13.177.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5038.14 via Frontend Transport; Mon, 7 Mar 2022 21:34:20 +0000
+Received: from sbrijesh-desktop.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Mon, 7 Mar
+ 2022 15:34:18 -0600
+From:   Brijesh Singh <brijesh.singh@amd.com>
+To:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>, <linux-efi@vger.kernel.org>,
         <platform-driver-x86@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [RFC 08/10] platform/x86/intel/ifs: Add IFS sysfs interface
-Thread-Topic: [RFC 08/10] platform/x86/intel/ifs: Add IFS sysfs interface
-Thread-Index: AQHYLaZd5d+yEBuhdEqmhIRDOkET6qyu6T6AgAFSX4CABIOMgIAAGXcAgAABjACAAAs3AIAACG0AgAAIiACAAAmQgP//ejMg
-Date:   Mon, 7 Mar 2022 21:33:46 +0000
-Message-ID: <5129ec667d734f3da4043ce1b7df0439@intel.com>
-References: <20220301195457.21152-1-jithu.joseph@intel.com>
- <20220301195457.21152-9-jithu.joseph@intel.com>
- <188492dc80c017375da76d444347b1d00c2031f6.camel@intel.com>
- <7b9c788e-21dc-eedc-a1b4-9c6877fa48fe@intel.com>
- <CAPcyv4h=qPFrP+mRqaZhkh5ZmYjuQawsqvf+-R036ZJVKBNK4Q@mail.gmail.com>
- <33d0e764-86d9-8504-17fa-14b31c87de4e@intel.com>
- <CAPcyv4g5bq9+u0iLjhpeJw8bkbCREUw60H2z_KfDz4hHCrKdFQ@mail.gmail.com>
- <7c620f8a-189e-5ac4-30fe-1fa14ba799ea@intel.com>
- <CAPcyv4iUuZ0aAWckWvwbxJJgt5tDJRpeonfE4DegWS6KPtJq8A@mail.gmail.com>
- <eab8177d-eb73-ec64-ec1f-4f2a51be8aee@intel.com> <YiZ5bYPvssUFYGZj@kroah.com>
-In-Reply-To: <YiZ5bYPvssUFYGZj@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.6.401.20
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "Vitaly Kuznetsov" <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        <brijesh.ksingh@gmail.com>, <tony.luck@intel.com>,
+        <marcorr@google.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Venu Busireddy <venu.busireddy@oracle.com>
+Subject: [PATCH v12 01/46] KVM: SVM: Define sev_features and vmpl field in the VMSA
+Date:   Mon, 7 Mar 2022 15:33:11 -0600
+Message-ID: <20220307213356.2797205-2-brijesh.singh@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220307213356.2797205-1-brijesh.singh@amd.com>
+References: <20220307213356.2797205-1-brijesh.singh@amd.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 714cea4e-6488-4e95-ee72-08da00823dc8
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4451:EE_
+X-Microsoft-Antispam-PRVS: <DM6PR12MB44511E64CEA119A55D29860BE5089@DM6PR12MB4451.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PoTARZzT0BZUArf3VaqK6pDlf3Ch4hnFpx4g59TpEdIiiHc6GrzI7aTUS1ruPNZ72Yc5Dkb0rxMif7KBya8HOUSZuevF7jpSt0NMax/0h450pjexSYRX+CwXt1vdDdY0BeKzMOVyGLhNaMWbGVd+3dm742eMQ3z5ovXM4zUJzJmoNLBwuEdaYcnLPppzAfB6Pbwwfk4TytZN4hMbYnLQBDbt+Z+MGIyjzJeCnZOl+WOlgvTHOiXVi8Vxs2Egc3n1ShURaBwut+F/jDthlyET5hs93qdSAeXXHO1034epwWF1HbxBvBZdC7Y8z3ASrt4cdWuDV3GDZZITvEGb5q8Tv6Ooo97wGKlUcuI+PzbztUf6oIlr46x7WzuQYegUNdYQaPzCl7ZSZyTLu5K26wfbhrF6C0OnrWq/EeIelFX9EqWjzD83yCxHm5XA5oxsiJ+PKrrTrNp5z76SF7Ck+4qVKylSE0M3Pn1ugAhqcpTpaqxBHFEC9xWOfTa1SJYyd/C4K+CcgjLysc32ZlMyWlijkrGq89POOuo0hIJa8zzJPkzExci+yktl+D+ShznWD9Ba+Z9jrhZbuXquUeuMktRg8tPJ+Z3SPqhFg8PwLuudnmapELRnznoXv2OWS34CmLRD1St2/2dQBkTcbMGjG3/jiP+zoQDsp42yK1zBYuOlyD325jz5jo9ucY1PXucfJAoD68tNF9YSvzWKEe0Mut0taeofoAOaEBD7VpBgENYrYYk=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(40470700004)(4326008)(2906002)(40460700003)(86362001)(186003)(16526019)(426003)(336012)(8676002)(83380400001)(7696005)(47076005)(70586007)(70206006)(1076003)(316002)(36756003)(54906003)(8936002)(2616005)(508600001)(110136005)(26005)(36860700001)(6666004)(356005)(81166007)(82310400004)(5660300002)(7416002)(7406005)(44832011)(2101003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 21:34:20.8048
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 714cea4e-6488-4e95-ee72-08da00823dc8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT056.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4451
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-> > Also some context on test frequency: Hardware has  strict rate limiting=
- of tests.
-> > Every core can be tested only once in every 30 minutes. So it is pointl=
-ess to test at high frequency.
->
-> What limits this, the kernel?
+The hypervisor uses the sev_features field (offset 3B0h) in the Save State
+Area to control the SEV-SNP guest features such as SNPActive, vTOM,
+ReflectVC etc. An SEV-SNP guest can read the SEV_FEATURES fields through
+the SEV_STATUS MSR.
 
-Microcode enforces the per-core repeat rate on the first implementation.
+While at it, update the dump_vmcb() to log the VMPL level.
 
-But this limit isn't architectural. Future implementations may not have
-the same, or perhaps any, limit.
+See APM2 Table 15-34 and B-4 for more details.
 
--Tony
+Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+---
+ arch/x86/include/asm/svm.h | 6 ++++--
+ arch/x86/kvm/svm/svm.c     | 4 ++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+index bb2fb78523ce..b25b4e5ae6f9 100644
+--- a/arch/x86/include/asm/svm.h
++++ b/arch/x86/include/asm/svm.h
+@@ -274,7 +274,8 @@ struct vmcb_save_area {
+ 	struct vmcb_seg ldtr;
+ 	struct vmcb_seg idtr;
+ 	struct vmcb_seg tr;
+-	u8 reserved_1[43];
++	u8 reserved_1[42];
++	u8 vmpl;
+ 	u8 cpl;
+ 	u8 reserved_2[4];
+ 	u64 efer;
+@@ -339,7 +340,8 @@ struct vmcb_save_area {
+ 	u64 sw_exit_info_1;
+ 	u64 sw_exit_info_2;
+ 	u64 sw_scratch;
+-	u8 reserved_11[56];
++	u64 sev_features;
++	u8 reserved_11[48];
+ 	u64 xcr0;
+ 	u8 valid_bitmap[16];
+ 	u64 x87_state_gpa;
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index fd3a00c892c7..fd92af40c280 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3118,8 +3118,8 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
+ 	       "tr:",
+ 	       save01->tr.selector, save01->tr.attrib,
+ 	       save01->tr.limit, save01->tr.base);
+-	pr_err("cpl:            %d                efer:         %016llx\n",
+-		save->cpl, save->efer);
++	pr_err("vmpl: %d   cpl:  %d               efer:          %016llx\n",
++	       save->vmpl, save->cpl, save->efer);
+ 	pr_err("%-15s %016llx %-13s %016llx\n",
+ 	       "cr0:", save->cr0, "cr2:", save->cr2);
+ 	pr_err("%-15s %016llx %-13s %016llx\n",
+-- 
+2.25.1
+
