@@ -2,326 +2,193 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95D8C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 18:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92450C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 18:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244771AbiCGSWu (ORCPT
+        id S244073AbiCGSdO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Mar 2022 13:22:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43942 "EHLO
+        Mon, 7 Mar 2022 13:33:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244750AbiCGSWs (ORCPT
+        with ESMTP id S244843AbiCGSc5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Mar 2022 13:22:48 -0500
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2057.outbound.protection.outlook.com [40.107.22.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23FE88EB62;
-        Mon,  7 Mar 2022 10:21:52 -0800 (PST)
+        Mon, 7 Mar 2022 13:32:57 -0500
+Received: from mail1.bemta35.messagelabs.com (mail1.bemta35.messagelabs.com [67.219.250.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B67A65801
+        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Mar 2022 10:32:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
+        s=Selector; t=1646677922; i=@lenovo.com;
+        bh=Y7EwYWq62Fbry2WkTn0CcTP50n733ClyXeNm3Wq5fSQ=;
+        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+         MIME-Version:Content-Transfer-Encoding:Content-Type;
+        b=GouRyb6Dlev/5YMstvvtUFK5GN+dk7vKkmOGeqI/fGlL0l85Sih2PwN0+TrKlD3OG
+         qYoxaVvQBHqvm5WA9ESmBc3doou+qmO+lO6xjAQQBGAIMjRjrSs7ldjkIlAxlN6wjJ
+         8Pq8KWiC3TsbeJ4SZaAgf42SPKWjqD0UG1yXzJ+b72m+pZc26gTHSuOed2jf3y7JvJ
+         XE9mAGsxhL4u8wGWmL+MdXtpbMMnljhHokrjoI5Ydw+KXGNCs8BZuN1iRO05CdvIQc
+         /tVy++J1+6X3uXJCZIf7Sko+f3w5qr4kDmmcvfOcTMOCtCtvItAqg55Sv8FvMLbSP+
+         W/+S86N+hJXiw==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFJsWRWlGSWpSXmKPExsWSoS+Vp7vIXy3
+  J4NgxEYs3x6czWRyYOo3ZYvWeF8wOzB6bVnWyebzfd5XN4/MmuQDmKNbMvKT8igTWjLdrrQqW
+  81XMmKnfwPiPu4uRi4NRYCmzxKQ3nxghnEWsEv8vHGKCcDqZJBZ1z2QDcYQEZjFJPG++zwLh7
+  GeSmDLtO1CGk0NC4DijRPcqd4hEJ6PE7q0/oFomMEm03dnICOE8ZpQ49qWDGc65P6+ZFaSfTU
+  BbYsuWX0AtHBwiAjISH9Z6goSZBSIlrj76zgRiCwt4S8x//58FxGYRUJH4PuEGI4jNK2Alsf/
+  mKxaIM+Qluv/9AbM5BVQlznQ9BrOFgOrvP1jCBlEvKHFy5hMWiPnyEs1bZzND2BISB1+8YIao
+  V5b41X+eGWZm66OpTBB2gkTPv0dQL0tKXLt5gR3ClpU4enYO1A2+Ev8vn4Wq15U427IbqiZHY
+  vOhE1C2nMSp3nNMMPN3brzNMoFRZxaS82YhOW8WkvMWMDKvYrROKspMzyjJTczM0TU0MNA1ND
+  TRtTTTNTKx1Eus0k3UKy3WLU8tLtE10kssL9ZLLS7WK67MTc5J0ctLLdnECEw6KUUJP3cwrur
+  /qXeIUZKDSUmUt9ZLLUmILyk/pTIjsTgjvqg0J7X4EKMMB4eSBO8uH6CcYFFqempFWmYOMAHC
+  pCU4eJREeKtBWnmLCxJzizPTIVKnGC05rmzbu5eZ48GJk0Dy2voF+5iFWPLy81KlxHnj/YAaB
+  EAaMkrz4MbBkvQlRlkpYV5GBgYGIZ6C1KLczBJU+VeM4hyMSsK8C3yBpvBk5pXAbX0FdBAT0E
+  F2RmAHlSQipKQamKyCaiLjj3SUpp7/0nh34sOcq6ax/yrSz+wxE3yWZFK1cH7sAT/xuG8LJvw
+  VOGTMNDHKS6f8eElD4bXlW1inSPpyznozs2N+zYaey05Tc9/KzrlQuvDKqb5yy8khB3Y+Yd0r
+  /Txsa9yxFZ5q92ZNWHzh0SfDLwtPnuU3KlAqjPYRXjFh+YGZZ+KZ15TV1AcsuKE/Q+PwYU2nY
+  t+5l3yX94bf4jvKeCf6XOBaPe7Fs9NWScwrjeRwk05Yb1vBxNozidlQ++Qn+cLp235vW/HzS5
+  NNlPA+d7HXh1oK7G4Luwu02C3RaRa/p7e8X2e3sMO/xm+c/7x4JvJty5scN+/Z9NNajj5y3f6
+  Rf+Pl83Y9eqrEUpyRaKjFXFScCAA+za2TTQQAAA==
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-10.tower-636.messagelabs.com!1646677920!9786!1
+X-Originating-IP: [104.47.26.110]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.81.8; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 12799 invoked from network); 7 Mar 2022 18:32:02 -0000
+Received: from mail-sgaapc01lp2110.outbound.protection.outlook.com (HELO APC01-SG2-obe.outbound.protection.outlook.com) (104.47.26.110)
+  by server-10.tower-636.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 7 Mar 2022 18:32:02 -0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OKu1h0YkEBpaSIj/LRTrApHQpXHTGQ8i6cy7x8o3mcC020TjArJHj3xbSRwoXr07qny5/NyCFTPKZ7zxRD/kFp0ZkR6DiWkgl6fp2k8aCcuy/JyNFBXdjZ8PNlxAjW6gc0ghjgH8FALW1PTWbB9nlTgX8IUOlDPjE3VPpwUscKjORFyO7sw30/H4u1kkyJ0mX0yqK/yeo2AxsWscJWi3VOH9V8ufPsZV1+GbWIYWsSPe+Egn/9KI0ZkeI1DbLhpRXnjlPT+pIZX3E4pSbkboi6TGyEb5uGB5vdyVOcTujrfkmyzRF1GsaY5lm1Qg8lipPC2jwmcmvYqITR01zlgIOg==
+ b=RFoDCnrd3Z/GyG+vpjZq4peknynsYAJpHed8CgFQSTLDrSDdGugpFv+dvRhk+kRZQjEbUJ3/UqZAvHJy6zGpYxC9nUqO1TwfVEH2DFRQrKo8B5qjZH1negjoGIo10oaEWrzaNOzK9sWTtpUG6gZngMQ5hsMlm6jiGRcJEVw1+82L8RQIeWmszYeew2oz3iYNMWWGBIz0W0Nt+Q8r7gSt783G7AjJ6RDvVAvLwBBPUZglefG31ggeJEuQviGpnc3DWCNjMvlwhpBYM5Ut4mVWw67JohYz71tZqsLDXolJv/PYqCf6z0SwerIdOtNQQ7DPTundraLuQUqqs9yn8yzLsw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MTwpdlm3WQOWuVKA7A3iq8vTeeshQul8+q9/nSglbwA=;
- b=XrJzsEV7fJf0Jxo4WOLnnPlHQgztzt3ds0/8ZW44kkN0ArEYMupajcwXpiHk7/lta/XyHaPrhoCRtiCUWyVvPfBsJ7jM91tO7PG+w+D1pGdBly6yi1tss79atZ2NQiMRwQ6PHycpzYPR2s3FTOWo5BrnC1QOg3L6XXpY+gRiRqRV4U8ce2Tdp5MC3gjNO4JuI/NfnXTOsKr1KeFr3rt7Mo8GObZqVFHrcdU516FIW7zxoKoZ4UEtCR2dA9IpOZtnzFv0fxo/EXarnXZ1xxgEbQrRNiJ/Wks/nHdZsQ/5BUiwXRroYVHhxTazZ0lk3/YF5kAOK8eQ1mrPwdlO1+cBlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MTwpdlm3WQOWuVKA7A3iq8vTeeshQul8+q9/nSglbwA=;
- b=bheLpUo6vSJ8Zn/oe/lH3VdBvEZeH79BNvUKK4r5Tou337BH28ecCX0SO55obRlLUUS05pJtTL3D77dLXo9bolVwkktBVubtbGIXrx3Ye/EekqiHR57wDdUC+NMuSYcjKb88DaJxQe803W/WI+9758xe3wxNoZjgUQb7a273k6roCKGXhr5bOpvK96v5rEWjZXoThHwcvS//gEP7bmWFq0QMEmtIsWQCWUGQoGvtOyjgcI68vdMC/7iNPg0SrIMCHsvGqETiFZb22E0FJJunAMDGcBjqJJ2CVOOlhfn7ZRTLG30Nro///ih/OkKFRN0OliXefaZWKmXT3C4sv/oLxA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:155::20)
- by AM0PR10MB1970.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:41::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Mon, 7 Mar
- 2022 18:21:44 +0000
-Received: from AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::d433:79c4:958b:1551]) by AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::d433:79c4:958b:1551%7]) with mapi id 15.20.5038.027; Mon, 7 Mar 2022
- 18:21:44 +0000
-Date:   Mon, 7 Mar 2022 19:21:38 +0100
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v4 5/8] mfd: lpc_ich: Add support for pinctrl in
- non-ACPI system
-Message-ID: <20220307192138.10f5fc32@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20220131151346.45792-6-andriy.shevchenko@linux.intel.com>
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
-        <20220131151346.45792-6-andriy.shevchenko@linux.intel.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM6P194CA0039.EURP194.PROD.OUTLOOK.COM
- (2603:10a6:209:84::16) To AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:155::20)
+ bh=Y7EwYWq62Fbry2WkTn0CcTP50n733ClyXeNm3Wq5fSQ=;
+ b=gmtPRbZTUGuy7dlyUN/YS7DebkCeieWUvGZFx4IEbSwEezkQAWZ4Bo3RJHg155QPSr88zW3JpLrNTgJYyv0dPkBPVz1j58Vsad6WPf31CAOPAFoZujFvXXKjb+flgM3TT4mkYBD1wVq25GjbLG0fAZ0wvTvMGzzVvaL8vuB3PP8qOoZpuzGe9zOiShONgVGcp6aX9lFhoqIUzrJim0hv3t/1rJjLKqFpPJJcuKNcaujtQRWnabwHy0QAWABD9gtqBQY1w0M+zBPKudg4dgInOeOQ5HigARPBsPD4xqGvnCQktl5PRTPrRM4sLp2bo2RwqnJsBtQqs8FQiO3qnd1SaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 104.232.225.6) smtp.rcpttodomain=redhat.com smtp.mailfrom=lenovo.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=lenovo.com;
+ dkim=none (message not signed); arc=none
+Received: from SG2PR02CA0102.apcprd02.prod.outlook.com (2603:1096:4:92::18) by
+ HK0PR03MB2916.apcprd03.prod.outlook.com (2603:1096:203:1c::17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5061.8; Mon, 7 Mar 2022 18:31:59 +0000
+Received: from SG2APC01FT0037.eop-APC01.prod.protection.outlook.com
+ (2603:1096:4:92:cafe::be) by SG2PR02CA0102.outlook.office365.com
+ (2603:1096:4:92::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14 via Frontend
+ Transport; Mon, 7 Mar 2022 18:31:59 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 104.232.225.6) smtp.mailfrom=lenovo.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=lenovo.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ lenovo.com discourages use of 104.232.225.6 as permitted sender)
+Received: from mail.lenovo.com (104.232.225.6) by
+ SG2APC01FT0037.mail.protection.outlook.com (10.13.36.190) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5038.14 via Frontend Transport; Mon, 7 Mar 2022 18:31:58 +0000
+Received: from reswpmail01.lenovo.com (10.62.32.20) by mail.lenovo.com
+ (10.62.123.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.21; Mon, 7 Mar
+ 2022 13:31:19 -0500
+Received: from fedora.Lenovo.com (10.46.49.99) by reswpmail01.lenovo.com
+ (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.21; Mon, 7 Mar
+ 2022 13:31:18 -0500
+From:   Mark Pearson <markpearson@lenovo.com>
+To:     <markpearson@lenovo.com>
+CC:     <hdegoede@redhat.com>, <markgross@kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH] platform/x86: thinkpad_acpi: clean up dytc profile convert
+Date:   Mon, 7 Mar 2022 13:30:41 -0500
+Message-ID: <20220307183041.4467-1-markpearson@lenovo.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.46.49.99]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail01.lenovo.com (10.62.32.20)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 501aa817-39c6-48a6-520e-08da00675587
-X-MS-TrafficTypeDiagnostic: AM0PR10MB1970:EE_
-X-Microsoft-Antispam-PRVS: <AM0PR10MB1970CE62B0C132919C35068685089@AM0PR10MB1970.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Office365-Filtering-Correlation-Id: 2b534753-8b6f-4c76-c2ae-08da0068c41a
+X-MS-TrafficTypeDiagnostic: HK0PR03MB2916:EE_
+X-Microsoft-Antispam-PRVS: <HK0PR03MB29164798E1DCDF69026A0E4AC5089@HK0PR03MB2916.apcprd03.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AUEvlGp6Cr1IfD9wREo29VvgB1bpVjNQB1kTgIwKaoLbcNwJkNm6diOlKEw0WZtGzg9Z6YGyMCKK/ZFijVJ+m4T5gOOF4wvSF0JPyEQhRFQOmi6BN+CXAMAQOO8N+UBQuxg0TaXHzcEmtgzW/w8keWsJckqaAGxOVjp/Nwh7iYiz4buDEhDxBzdHedOjcAD5IU3N+lvZ3E+fQ9w3Iy9em7Bpbb1haMtdSUD3R7NFqKnbH6dIpGTfsWwyT1hYlYZsP9vvSG7eLaVB2hr4epVLTocU5swdP+8qaVyUt1HuaRqr4epHvjKFixDibGc3OC0Zm3JcH6LRnNvn0D/nlmpU1wmFUIZhq9PqLwKseSd+WrJ9Q1D92GQkpmzq+f5Q8xeE49sm6U21k2XmCEwFyRuUhoU6XXrT6clGtekyMFDJLoNTqbJt76ucqQhTn+tpvsXJJbUBbUmmCWzmBU+FHVAljKCdK0ZMnj3eY1SJ31cuElZW0aPI8sYsCCFW3pRNKQ67r2Xm3b9dFaXjHuGJ92WdOV/dTR3Nh2mZrCKD5WKOtMlCYGwzCH+JSVsYtlF6Qr48pyH2hQVv8RpI3wRnrhEBKfc0NpV3PNRmsUGLaXUDcft2dUmjRl0PUpDV9boHwUsid0DbJs/8L5NIwMH+YzcyyA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6486002)(82960400001)(86362001)(38100700002)(316002)(54906003)(6916009)(2906002)(508600001)(7416002)(4326008)(8936002)(5660300002)(8676002)(44832011)(66556008)(66476007)(66946007)(6506007)(6512007)(6666004)(9686003)(83380400001)(26005)(186003)(1076003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zeS3DrAR58Wmglk59Ifbs6bTQuM2rCEeowucHbD4A90KXv1efh47Vf8YGlC1?=
- =?us-ascii?Q?ueY0NtJqHC/B0vmEPuzTGTpIohTNxP9YV1KCI0Rmkx7EgYQBQxBeMfkz3U+C?=
- =?us-ascii?Q?isDl/L25+DRY5CVJi5JLjYG1MGrBf0pdM25OeCzqGLo+VJPVqoZIufETF1uS?=
- =?us-ascii?Q?jd2paf/tX4I1YZ0HmqkWVk5L8wUd4UN6Kdp3S+hKuWv6l1DfFHvM4L5LXrKl?=
- =?us-ascii?Q?qkEoAxs0qTECVmfSFmmKsMsvKS8T3GXSA/K55lOl7Vtso+fu7aN7GlWgVXP9?=
- =?us-ascii?Q?tYL/isVKgpwyJ57iyF+gc2RE+9aloOByBCtpC1em1MJ3qrxChddTHim/69PY?=
- =?us-ascii?Q?kU5BZl0/bbdOmf4popqBDfLegWEIrNx7zinmtv6FjMTR1pU+K7SMAIpFbHl3?=
- =?us-ascii?Q?ds8LQcz8KnoHJsM8ZSNJE2leMMED/MWsc9CRqsn9FxH2ObnXVVCC6xz/PbkH?=
- =?us-ascii?Q?B3N6Hz1k3g3YU80AgPj2+PeK2jHQYyeNMBUOXHBAms4LPNSdKhgEX+aAu38A?=
- =?us-ascii?Q?uMgfmNJqSCAU3UGY5izHJzuW4S2r2ak94g7jQJ7PwF1VtOifYe0uMPrUkbbb?=
- =?us-ascii?Q?EkRubbTREn2yqPZIIbwowi1pPg8Kn9klLDFNtoLMsjLceIQXIvKwQ1V660I6?=
- =?us-ascii?Q?LTsqRgCe9yv8aK6k+QF8F+onZ1ebDSTXlly/rZoNNFSscjkqKq8WbScRHeZE?=
- =?us-ascii?Q?G5SKsSFvNwssFM1mc4Jb5YQpcZdeJ9Y5f8zNIdJyOXduLoMPFaM0nZVGlFCo?=
- =?us-ascii?Q?GMYEO1OovqR+z6LrOkepgFK+0S4UprBNvd52lR+oBko4+KQU8oEvWNjl3SXP?=
- =?us-ascii?Q?oSNuIqGDlCxUZng/G9PqtYid6qK/Uo4C4fMJcvuCBsDksXkX8WuMJ423Ddl/?=
- =?us-ascii?Q?Yhu+e7lMcMv/1MIIzKcCHSAFQMbQ0VyQfqz0lxMYT3gKls9NYbhxbVfGaJ45?=
- =?us-ascii?Q?mSNK0ixmYzAcFX24IzOE5CCoRL8iaiGIDvg6cCJhlyO/stB4WEoSFHFlePua?=
- =?us-ascii?Q?y+zCE6d/cTygM+ZILdO4J78uIiqHjIgCerxNiHEyBHI8L7GrT9Qc5W0uWn5Q?=
- =?us-ascii?Q?KG0J2fol1a8pY4y3rFK3gKUbAKyGMyvz6h+xTWxcpHHg2WNtwql4jL/aYjd8?=
- =?us-ascii?Q?IpKalHZ6KiLevbcE48AGFwEcdT3/zJmIbe0dJz3uRsrK5wYQFePKsZJakMve?=
- =?us-ascii?Q?eLi3eQvRM+ez6rCq4j0z5xF9H9+o2xyc/Bc26a669zRzd4Vrbj0MpE+vAbqf?=
- =?us-ascii?Q?fu2hUJTpCCgiHx9Qj1vVHJR9TlEkHjwoSplXipWD8HUkKCTHiTJt9WGjOkN4?=
- =?us-ascii?Q?moFtRbcxUTzrwYzWjRtsB4EErWa0nL1PV17hD9cnDJ4/Boi9vAN4ewFyMnv4?=
- =?us-ascii?Q?ZiW8HyyQ7PMNc2gNDTxMBdWeWft8bNmhYFm4rA4xx+kkAP0kR4PRCvd0n/Ae?=
- =?us-ascii?Q?4NlfmxAjpQUF+39q3/XE6KIZ/YxgWjjXj8qhMVKnTK4f0aKitlpCyxEVTR+t?=
- =?us-ascii?Q?it9UTkns65yO/7vifQAj+kPux4aeN/UlHdPIFIHV4PycApFfTCMyABnOlFTl?=
- =?us-ascii?Q?9qQH9MNmli0qlji9xTUQZho0d+mkjT1EdJTh3+AVwfQ/JzfBytbbuf/Gf4X5?=
- =?us-ascii?Q?C8k7xX3Rq4sVKPLBDKxkIOjFH/49C1tZq/0j/9nkIJBjTckvsBkuDLl/UCqM?=
- =?us-ascii?Q?HUOV2s3pip6lrxPgq+yGLmiqYZA=3D?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 501aa817-39c6-48a6-520e-08da00675587
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 18:21:44.4940
+X-Microsoft-Antispam-Message-Info: NFhJihqe2b+G9+eL5jsEpl/L9EhfZvMgbIbUBGcqXowNIzWz1A9CeuiiCBEqYEYvLThd78WBZOwN/kPVZmwysdYQpr9Ap3jsRdKdT12MGfreiWcyIiVqcsUF+L+6zkDfxCCzerPTL3E8TL1hhFnw1Dm1ijVx22mTDbBT6VbE8m0YYkiwAwXOQhurtQgJwzmWH8nVKRxxbHUl/K9oGLyRoMrgE0WYU3ARGyKl07FdFB7ZJGINOKrCtoDpQhbhmydPEQeh44PG4PMsCBi12q4mBzc3Ygtc2BV3d52lnIFlkWfrzlcD9pTEaZPpkRC08pmrl2fITZiUZq7GoTaRq1MNbDSUl5Jaw2qMhrfJl5XCNBo8npM54Xroa9e7nJ3oPSiPehSpu2BYJM66wfLpCPwJ7LF4E3j5+9wPA3n5qS1shkNKFLKG508B51pSmxX+nLMEiJNKIkZHe9l4UdsjUPOfCH5K50HTcd5iSmoCP0MDHOCRX9fDFCr6tOI9B+NpdkSGpSiZVIOhegrQyqnInxbmf3Q/dSINF0Mfvr3fgSM3qV0chyqryIZnifH3+Apu5LERd6heLU/737jidJz6FCHgCykR+CToSnF6SW3TWZnJDcrttVkEWJxDHz/BlLcHKrKRkbefJnAppPDhQx9A4TsgrdVMkmeZmaIDfzUfb2oLqms7dxP++amboI6OZAuS1IPxjEfhVTn/IJbMQE+p+aC+tP787tR4tHOCOhbYJYufFI+93feBukPK3lbTviCvweQCSOLIzUTV8XmyUkScBRWz3Q==
+X-Forefront-Antispam-Report: CIP:104.232.225.6;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.lenovo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(4326008)(26005)(8676002)(6666004)(7696005)(5660300002)(83380400001)(6862004)(82960400001)(426003)(16526019)(2616005)(186003)(336012)(1076003)(8936002)(70586007)(47076005)(508600001)(36860700001)(2906002)(7049001)(40460700003)(81166007)(356005)(86362001)(36906005)(82310400004)(316002)(37006003)(54906003)(36756003)(6200100001)(70206006)(36900700001);DIR:OUT;SFP:1102;
+X-OriginatorOrg: lenovo.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 18:31:58.7565
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YRfCuOVnMaO2oH2yXuNyAS44d2C4tJiECDkxlvIImEIN9s+Xk+GwRxeMD0695qc8k5Bn55knQAlx0obNHcL8C8aGnlfH7eDbYuinkrCEt7k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB1970
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b534753-8b6f-4c76-c2ae-08da0068c41a
+X-MS-Exchange-CrossTenant-Id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5c7d0b28-bdf8-410c-aa93-4df372b16203;Ip=[104.232.225.6];Helo=[mail.lenovo.com]
+X-MS-Exchange-CrossTenant-AuthSource: SG2APC01FT0037.eop-APC01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR03MB2916
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Can this patch not be proposed separately? Maybe i am wrong but it
-seems unrelated to the p2sb story.
+Minor update cleaning up the code around convert_profile_to_dytc as
+identified in the previous commit.
 
-The whole p2sb base and size discovery is easy and switching the
-simatic drivers is also. It is an interface change, where the old open
-coding remains working.
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
-But having to switch to GPIO in the same series is kind of weird. That
-is a functional change which even might deserve its own cover letter. I
-bet there are tons of out-of-tree modules which will stop working on
-apl after that gets merged.
-
-I still did not understand why apl is special and other boards do not
-get their pinctrl brought up without ACPI/p2sb-visible.
-
-I have patches floating around, but still would be happy if we could do
-one thing at a time.
-
-Or maybe it is strongly coupled and i do not understand why.
-
-regards,
-Henning
-
-Am Mon, 31 Jan 2022 17:13:43 +0200
-schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
-
-> From: Tan Jui Nee <jui.nee.tan@intel.com>
-> 
-> Add support for non-ACPI systems, such as system that uses
-> Advanced Boot Loader (ABL) whereby a platform device has to be created
-> in order to bind with pin control and GPIO.
-> 
-> At the moment, Intel Apollo Lake In-Vehicle Infotainment (IVI) system
-> requires a driver to hide and unhide P2SB to lookup P2SB BAR and pass
-> the PCI BAR address to GPIO.
-> 
-> Signed-off-by: Tan Jui Nee <jui.nee.tan@intel.com>
-> Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/mfd/lpc_ich.c | 101
-> +++++++++++++++++++++++++++++++++++++++++- 1 file changed, 100
-> insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/lpc_ich.c b/drivers/mfd/lpc_ich.c
-> index 95dca5434917..e1bca5325ce7 100644
-> --- a/drivers/mfd/lpc_ich.c
-> +++ b/drivers/mfd/lpc_ich.c
-> @@ -8,7 +8,8 @@
->   *  Configuration Registers.
->   *
->   *  This driver is derived from lpc_sch.
-> -
-> + *
-> + *  Copyright (c) 2017, 2021-2022 Intel Corporation
->   *  Copyright (c) 2011 Extreme Engineering Solution, Inc.
->   *  Author: Aaron Sierra <asierra@xes-inc.com>
->   *
-> @@ -42,6 +43,7 @@
->  #include <linux/errno.h>
->  #include <linux/acpi.h>
->  #include <linux/pci.h>
-> +#include <linux/pinctrl/pinctrl.h>
->  #include <linux/mfd/core.h>
->  #include <linux/mfd/lpc_ich.h>
->  #include <linux/platform_data/itco_wdt.h>
-> @@ -140,6 +142,70 @@ static struct mfd_cell lpc_ich_gpio_cell = {
->  	.ignore_resource_conflicts = true,
->  };
->  
-> +#define APL_GPIO_NORTH		0
-> +#define APL_GPIO_NORTHWEST	1
-> +#define APL_GPIO_WEST		2
-> +#define APL_GPIO_SOUTHWEST	3
-> +#define APL_GPIO_NR_DEVICES	4
-> +
-> +/* Offset data for Apollo Lake GPIO controllers */
-> +#define APL_GPIO_NORTH_OFFSET		0xc50000
-> +#define APL_GPIO_NORTHWEST_OFFSET	0xc40000
-> +#define APL_GPIO_WEST_OFFSET		0xc70000
-> +#define APL_GPIO_SOUTHWEST_OFFSET	0xc00000
-> +
-> +#define APL_GPIO_IRQ			14
-> +
-> +static struct resource apl_gpio_resources[APL_GPIO_NR_DEVICES][2] = {
-> +	[APL_GPIO_NORTH] = {
-> +		DEFINE_RES_MEM(APL_GPIO_NORTH_OFFSET, 0x1000),
-> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
-> +	},
-> +	[APL_GPIO_NORTHWEST] = {
-> +		DEFINE_RES_MEM(APL_GPIO_NORTHWEST_OFFSET, 0x1000),
-> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
-> +	},
-> +	[APL_GPIO_WEST] = {
-> +		DEFINE_RES_MEM(APL_GPIO_WEST_OFFSET, 0x1000),
-> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
-> +	},
-> +	[APL_GPIO_SOUTHWEST] = {
-> +		DEFINE_RES_MEM(APL_GPIO_SOUTHWEST_OFFSET, 0x1000),
-> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
-> +	},
-> +};
-> +
-> +/* The order must be in sync with apl_pinctrl_soc_data */
-> +static const struct mfd_cell apl_gpio_devices[APL_GPIO_NR_DEVICES] =
-> {
-> +	[APL_GPIO_NORTH] = {
-> +		.name = "apollolake-pinctrl",
-> +		.id = APL_GPIO_NORTH,
-> +		.num_resources =
-> ARRAY_SIZE(apl_gpio_resources[APL_GPIO_NORTH]),
-> +		.resources = apl_gpio_resources[APL_GPIO_NORTH],
-> +		.ignore_resource_conflicts = true,
-> +	},
-> +	[APL_GPIO_NORTHWEST] = {
-> +		.name = "apollolake-pinctrl",
-> +		.id = APL_GPIO_NORTHWEST,
-> +		.num_resources =
-> ARRAY_SIZE(apl_gpio_resources[APL_GPIO_NORTHWEST]),
-> +		.resources = apl_gpio_resources[APL_GPIO_NORTHWEST],
-> +		.ignore_resource_conflicts = true,
-> +	},
-> +	[APL_GPIO_WEST] = {
-> +		.name = "apollolake-pinctrl",
-> +		.id = APL_GPIO_WEST,
-> +		.num_resources =
-> ARRAY_SIZE(apl_gpio_resources[APL_GPIO_WEST]),
-> +		.resources = apl_gpio_resources[APL_GPIO_WEST],
-> +		.ignore_resource_conflicts = true,
-> +	},
-> +	[APL_GPIO_SOUTHWEST] = {
-> +		.name = "apollolake-pinctrl",
-> +		.id = APL_GPIO_SOUTHWEST,
-> +		.num_resources =
-> ARRAY_SIZE(apl_gpio_resources[APL_GPIO_SOUTHWEST]),
-> +		.resources = apl_gpio_resources[APL_GPIO_SOUTHWEST],
-> +		.ignore_resource_conflicts = true,
-> +	},
-> +};
->  
->  static struct mfd_cell lpc_ich_spi_cell = {
->  	.name = "intel-spi",
-> @@ -1083,6 +1149,33 @@ static int lpc_ich_init_wdt(struct pci_dev
-> *dev) return ret;
->  }
->  
-> +static int lpc_ich_init_pinctrl(struct pci_dev *dev)
-> +{
-> +	struct resource base;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	/* Check, if GPIO has been exported as an ACPI device */
-> +	if (acpi_dev_present("INT3452", NULL, -1))
-> +		return -EEXIST;
-> +
-> +	ret = p2sb_bar(dev->bus, 0, &base);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(apl_gpio_devices); i++) {
-> +		struct resource *mem = &apl_gpio_resources[i][0];
-> +
-> +		/* Fill MEM resource */
-> +		mem->start += base.start;
-> +		mem->end += base.start;
-> +		mem->flags = base.flags;
-> +	}
-> +
-> +	return mfd_add_devices(&dev->dev, 0, apl_gpio_devices,
-> +			       ARRAY_SIZE(apl_gpio_devices), NULL,
-> 0, NULL); +}
-> +
->  static void lpc_ich_test_spi_write(struct pci_dev *dev, unsigned int
-> devfn, struct intel_spi_boardinfo *info)
->  {
-> @@ -1199,6 +1292,12 @@ static int lpc_ich_probe(struct pci_dev *dev,
->  			cell_added = true;
->  	}
->  
-> +	if (priv->chipset == LPC_APL) {
-> +		ret = lpc_ich_init_pinctrl(dev);
-> +		if (!ret)
-> +			cell_added = true;
-> +	}
-> +
->  	if (lpc_chipset_info[priv->chipset].spi_type) {
->  		ret = lpc_ich_init_spi(dev);
->  		if (!ret)
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index d9117f824ce9..cb8f52be8253 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -10298,6 +10298,7 @@ static int dytc_cql_command(int command, int *output)
+ static int dytc_profile_set(struct platform_profile_handler *pprof,
+ 			    enum platform_profile_option profile)
+ {
++	int perfmode;
+ 	int output;
+ 	int err;
+ 
+@@ -10305,6 +10306,10 @@ static int dytc_profile_set(struct platform_profile_handler *pprof,
+ 	if (err)
+ 		return err;
+ 
++	err = convert_profile_to_dytc(profile, &perfmode);
++	if (err)
++		goto unlock;
++
+ 	if (dytc_profile_available == DYTC_FUNCMODE_MMC) {
+ 		if (profile == PLATFORM_PROFILE_BALANCED) {
+ 			/*
+@@ -10317,12 +10322,6 @@ static int dytc_profile_set(struct platform_profile_handler *pprof,
+ 			if (err)
+ 				goto unlock;
+ 		} else {
+-			int perfmode;
+-
+-			err = convert_profile_to_dytc(profile, &perfmode);
+-			if (err)
+-				goto unlock;
+-
+ 			/* Determine if we are in CQL mode. This alters the commands we do */
+ 			err = dytc_cql_command(DYTC_SET_COMMAND(DYTC_FUNCTION_MMC, perfmode, 1),
+ 						&output);
+@@ -10331,12 +10330,6 @@ static int dytc_profile_set(struct platform_profile_handler *pprof,
+ 		}
+ 	}
+ 	if (dytc_profile_available == DYTC_FUNCMODE_PSC) {
+-		int perfmode;
+-
+-		err = convert_profile_to_dytc(profile, &perfmode);
+-		if (err)
+-			goto unlock;
+-
+ 		err = dytc_command(DYTC_SET_COMMAND(DYTC_FUNCTION_PSC, perfmode, 1), &output);
+ 		if (err)
+ 			goto unlock;
+-- 
+2.35.1
 
