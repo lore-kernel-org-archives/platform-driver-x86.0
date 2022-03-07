@@ -2,60 +2,60 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F72C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 22:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632C4C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 22:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232229AbiCGWKb (ORCPT
+        id S235685AbiCGWKb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Mon, 7 Mar 2022 17:10:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42342 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235685AbiCGWKa (ORCPT
+        with ESMTP id S238966AbiCGWKa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Mon, 7 Mar 2022 17:10:30 -0500
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D7A49FBF
+Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3CE549FBD
         for <platform-driver-x86@vger.kernel.org>; Mon,  7 Mar 2022 14:09:35 -0800 (PST)
-Received: by mail-oi1-x22e.google.com with SMTP id q189so1203830oia.9
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Mar 2022 14:09:34 -0800 (PST)
+Received: by mail-oo1-xc31.google.com with SMTP id k13-20020a4a948d000000b003172f2f6bdfso19684336ooi.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Mar 2022 14:09:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=20H4QEdS43y+gnKl13/cvTJvGXZbqcq9HDsDJ1m4ONw=;
-        b=dMzqWvJXDi8hc0o1FIdpZ2D7+t0yY9K5xvKNp22qVOCJoS3U1qGHw/bEe1r5oZIUMb
-         zNw36br75yY43UoXtZtFk2ArbRXZpIsUuf5vjeCo5Lw6qh6RV8QI3z5l4nfibC5NrILg
-         ErHBCxWiHVG/HqYgQ4gO9i64VXGPFkqb4S2pBcrPZhlYPkZR99n9uLActeEGjtEUFME0
-         eGipR2APBSodptfdbjvGzkOGBFx5JezY8sh806UbqeV54YNqhn6F4bDZWe/Dpv69941R
-         YoNBw9fHciW1ROfMvuXZNj4H7KDN7kILX/PmR8BCSSvsexewGyJk2NCGmyaJkncgMzh6
-         zpPw==
+        bh=0Uq31nAQr8iLo1VgbRzTyRDIRnNep4UU9dPszGMjhtU=;
+        b=aqY5qZUNGrLx49gauvnpNhvOgrR50pvcrhhyjRKQQF84ZlgMxD3g4HSUCN7PG/+QjT
+         Pu+7MWDaEmoe22LyIrxnrbHRtqg1To4bhcOWZ8mW8SB7Tttpht2Z22doyS/MdLkANqdY
+         R2yXfbtFWLOhzIk5vNeOgSEyz2r+KJw3PJQqgFMXrMESomTq7ylNkRblOx5BE05M+4aD
+         ZBhqSGNa9kxqIrK6oyEMOJtK3TIUlQp22qUmU7L/Hl+JBLL45YlcZYSPk023ErPuTtMo
+         2D41z17AeD+w9C6NIWV/yjvCwIeK/oI8NHMbydv5lawxkIudULUYMAQAzfwV7HVtaHWR
+         +e3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=20H4QEdS43y+gnKl13/cvTJvGXZbqcq9HDsDJ1m4ONw=;
-        b=x+SWrqtovv95AZJGWQ8BlxvNOYd8GvR/eCtA9Wi+2/0rynfJE2MQjfE6OwGoAj6ehA
-         Ci2H73ZbYeQqqXzqcMYTjc9a/vW3EoSrUjX00FDEA4bluBDopApYapTacEx+JFUib/MF
-         VkWAKtGychmOV/vz0mMo3ZFEbE5OWm5bmF6yagEOzlywxnkI3LR8y2Lbnjq932KC+YYT
-         JHFcrmZqVDeUV3U1GhaN0dGo3JdXpC8SUVi1cJ137MGeMwftkaeOOfryStpdKMep4wDO
-         6lx5ULN+cBwz+J295TJXWZ3wVyJ7BrEZEDtICRPpYtRupIQ2SQvi0EVXSWgWIQ1DhQwW
-         O53Q==
-X-Gm-Message-State: AOAM530116lo4OUyitGglYFuS1YMTxuYayf3ahHUJMPT4qukV1FD0eaH
-        CEf2u/9RRybiNuapKPgAXuL9bJ2M/8I=
-X-Google-Smtp-Source: ABdhPJxtKDD4vBXBbjIH9PQNVq8Dj19S2Km3qjQQ4OpzW6JuHBhzGm3savtyw80+XG7VBZLANx5IPA==
-X-Received: by 2002:aca:bec4:0:b0:2d9:7254:1019 with SMTP id o187-20020acabec4000000b002d972541019mr740512oif.144.1646690974136;
+        bh=0Uq31nAQr8iLo1VgbRzTyRDIRnNep4UU9dPszGMjhtU=;
+        b=YfgOdarkijo+YV6nHK0dsvNY+Od37/YSzXPsuG/snKC5/46ZFECytjGx+ksfnOJkmA
+         Dg5UYcn7K1Egqx6mctRC4mOsdhDbefd89+iwCd8j2SoR62HwCmD107X+2AQmGCN1enlH
+         sV1nXfn3rYonehMvfe96lSNM37sNMzYMfzDhgxVa6E/2SRo2ldCpOqHroZt0BGpoXhQm
+         ShwmktR96A+aIC15abf0o17JFuAS9aouEUkJYqcnOG98OPR/mn1Q63m6Iu6SMmkZ1ynZ
+         J/8CCuiIYa4Tj5UIfcZ4MMFLMEl7nO0nGeha8avbkr4ei+OR5bh2iZSx9Op7PaPuMUpE
+         et0w==
+X-Gm-Message-State: AOAM5306boQ/pZwFo93m7UfkoPh4UajdomsTEPGk1dGtuJZ376j01tAe
+        bTTXO6bpGkLAioDisNShVFNBeMwOAG4=
+X-Google-Smtp-Source: ABdhPJy+GLrQ+PCfld3Gk26u2uqf2zmSYMr3HJHHFl6XDXGRLN9b1fOKB6OGneTBhiOkqhybc9DpYQ==
+X-Received: by 2002:a05:6870:9a1d:b0:d9:f73c:d990 with SMTP id fo29-20020a0568709a1d00b000d9f73cd990mr652707oab.26.1646690974856;
         Mon, 07 Mar 2022 14:09:34 -0800 (PST)
 Received: from grumpy-vm.hsd1.tx.comcast.net ([2601:2c3:480:7390:c8fd:9e42:5ced:850e])
-        by smtp.gmail.com with ESMTPSA id z25-20020a056808065900b002d97bda386esm6892644oih.51.2022.03.07.14.09.33
+        by smtp.gmail.com with ESMTPSA id z25-20020a056808065900b002d97bda386esm6892644oih.51.2022.03.07.14.09.34
         for <platform-driver-x86@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Mar 2022 14:09:33 -0800 (PST)
+        Mon, 07 Mar 2022 14:09:34 -0800 (PST)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     platform-driver-x86@vger.kernel.org
-Subject: [PATCH v4 1/3] Fix SW_TABLET_MODE detection method
-Date:   Mon,  7 Mar 2022 16:09:30 -0600
-Message-Id: <20220307220932.23607-2-jorge.lopez2@hp.com>
+Subject: [PATCH v4 2/3] Fix 0x05 error code reported by several WMI calls
+Date:   Mon,  7 Mar 2022 16:09:31 -0600
+Message-Id: <20220307220932.23607-3-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220307220932.23607-1-jorge.lopez2@hp.com>
 References: <20220307220932.23607-1-jorge.lopez2@hp.com>
@@ -65,203 +65,144 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The purpose of this patch is to introduce a fix and removal
-of the current hack when determining tablet mode status.
+Several WMI queries leverage hp_wmi_read_int function to read their data.
+hp_wmi_read_int function was corrected in a previous patch.  Now, this
+function invokes hp_wmi_perform_query with input parameter of size zero
+and the output buffer of size 4.
 
-Determining the tablet mode status requires reading Byte 0 bit 2
-as reported by HPWMI_HARDWARE_QUERY.  The investigation identified the
-failure was rooted in two areas: HPWMI_HARDWARE_QUERY failure (0x05)
-and reading Byte 0, bit 2 only to determine the table mode status.
-HPWMI_HARDWARE_QUERY WMI failure also rendered the dock state value invalid.
+WMI commands calling hp_wmi_perform_query with input buffer size value
+of zero are listed below.
 
-The latest changes use SMBIOS Type 3 (chassis type) and WMI Command 0x40
-(device_mode_status) information to determine if the device is in tablet
-mode or not.
+HPWMI_DISPLAY_QUERY
+HPWMI_HDDTEMP_QUERY
+HPWMI_ALS_QUERY
+HPWMI_HARDWARE_QUERY
+HPWMI_WIRELESS_QUERY
+HPWMI_BIOS_QUERY
+HPWMI_FEATURE_QUERY
+HPWMI_HOTKEY_QUERY
+HPWMI_FEATURE2_QUERY
+HPWMI_WIRELESS2_QUERY
+HPWMI_POSTCODEERROR_QUERY
+HPWMI_THERMAL_PROFILE_QUERY
+HPWMI_FAN_SPEED_MAX_GET_QUERY
 
-hp_wmi_hw_state function was split into two functions; hp_wmi_get_dock_state
-and hp_wmi_get_tablet_mode.  The new functions separate how dock_state and
-tablet_mode is handled in a cleaner manner.
+Invoking those WMI commands with an input buffer size greater
+than zero will cause error 0x05 to be returned.
 
-All changes were validated on a HP ZBook Workstation notebook,
-HP EliteBook x360, and HP EliteBook 850 G8.
+All WMI commands executed by the driver were reviewed and changes
+were made to ensure the expected input and output buffer size match
+the WMI specification.
+
+Changes were validated on a HP ZBook Workstation notebook,
+HP EliteBook x360, and HP EliteBook 850 G8.  Additional
+validation was included in the test process to ensure no other
+commands were incorrectly handled.
 
 Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- drivers/platform/x86/hp-wmi.c | 80 ++++++++++++++++++++++++++---------
- 1 file changed, 60 insertions(+), 20 deletions(-)
+ drivers/platform/x86/hp-wmi.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 48a46466f086..e142e9a0d317 100644
+index e142e9a0d317..a0aba7db8a1c 100644
 --- a/drivers/platform/x86/hp-wmi.c
 +++ b/drivers/platform/x86/hp-wmi.c
-@@ -35,10 +35,6 @@ MODULE_LICENSE("GPL");
- MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
- MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+@@ -329,7 +329,7 @@ static int hp_wmi_get_fan_speed(int fan)
+ 	char fan_data[4] = { fan, 0, 0, 0 };
  
--static int enable_tablet_mode_sw = -1;
--module_param(enable_tablet_mode_sw, int, 0444);
--MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=auto, 0=no, 1=yes)");
--
- #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
- #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
- #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
-@@ -107,6 +103,7 @@ enum hp_wmi_commandtype {
- 	HPWMI_FEATURE2_QUERY		= 0x0d,
- 	HPWMI_WIRELESS2_QUERY		= 0x1b,
- 	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
-+	HPWMI_SYSTEM_DEVICE_MODE       = 0x40,
- 	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
- };
+ 	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
+-				       &fan_data, sizeof(fan_data),
++				       &fan_data, sizeof(char),
+ 				       sizeof(fan_data));
  
-@@ -217,6 +214,18 @@ struct rfkill2_device {
- static int rfkill2_count;
- static struct rfkill2_device rfkill2[HPWMI_MAX_RFKILL2_DEVICES];
+ 	if (ret != 0)
+@@ -406,7 +406,7 @@ static int omen_thermal_profile_set(int mode)
+ 		return -EINVAL;
  
-+/* Chassis Types values were obtained from SMBIOS reference
-+ * specification version 3.00. A complete list of system enclosures
-+ * and chassis types is available on Table 17. 
-+ */
-+static const char * const tablet_chassis_types[] = {
-+	"30", /* Tablet*/
-+	"31", /* Convertible */
-+	"32"  /* Detachable */
-+};
-+
-+#define DEVICE_MODE_TABLET	0x06
-+
- /* map output size to the corresponding WMI method id */
- static inline int encode_outsize_for_pvsz(int outsize)
- {
-@@ -337,7 +346,7 @@ static int hp_wmi_read_int(int query)
- 	int val = 0, ret;
- 
- 	ret = hp_wmi_perform_query(query, HPWMI_READ, &val,
--				   sizeof(val), sizeof(val));
-+				   0, sizeof(val));
+ 	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
+-				   &buffer, sizeof(buffer), sizeof(buffer));
++				   &buffer, sizeof(buffer), 0);
  
  	if (ret)
  		return ret < 0 ? ret : -EINVAL;
-@@ -345,14 +354,47 @@ static int hp_wmi_read_int(int query)
- 	return val;
- }
+@@ -443,7 +443,7 @@ static int hp_wmi_fan_speed_max_set(int enabled)
+ 	int ret;
  
--static int hp_wmi_hw_state(int mask)
-+static int hp_wmi_get_dock_state(void)
+ 	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
+-				   &enabled, sizeof(enabled), sizeof(enabled));
++				   &enabled, sizeof(enabled), 0);
+ 
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
+@@ -456,7 +456,7 @@ static int hp_wmi_fan_speed_max_get(void)
+ 	int val = 0, ret;
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
+-				   &val, sizeof(val), sizeof(val));
++				   &val, 0, sizeof(val));
+ 
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
+@@ -468,7 +468,7 @@ static int __init hp_wmi_bios_2008_later(void)
  {
- 	int state = hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
+ 	int state = 0;
+ 	int ret = hp_wmi_perform_query(HPWMI_FEATURE_QUERY, HPWMI_READ, &state,
+-				       sizeof(state), sizeof(state));
++				       0, sizeof(state));
+ 	if (!ret)
+ 		return 1;
  
- 	if (state < 0)
- 		return state;
- 
--	return !!(state & mask);
-+	if (!(state & HPWMI_DOCK_MASK))
-+		return 0;
-+
-+	return 1;
-+}
-+
-+static int hp_wmi_get_tablet_mode(void)
-+{
-+	char system_device_mode[4] = { 0 };
-+	int ret;
-+	bool tablet_found = false;
-+
-+	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
-+
-+	if (!chassis_type)
-+		return 0;
-+
-+	tablet_found = match_string(tablet_chassis_types,
-+			    ARRAY_SIZE(tablet_chassis_types),
-+			    chassis_type) >= 0;
-+	
-+	if (!tablet_found)
-+		return 0;
-+
-+	ret = hp_wmi_perform_query(HPWMI_SYSTEM_DEVICE_MODE, HPWMI_READ,
-+				       system_device_mode, 0, sizeof(system_device_mode));
-+
-+	if (ret < 0)
-+		return 0;
-+
-+	if (system_device_mode[0] == DEVICE_MODE_TABLET) 
-+		return 1;
-+	
-+	return 0;
- }
- 
- static int omen_thermal_profile_set(int mode)
-@@ -568,7 +610,7 @@ static ssize_t als_show(struct device *dev, struct device_attribute *attr,
- static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
+@@ -479,7 +479,7 @@ static int __init hp_wmi_bios_2009_later(void)
  {
--	int value = hp_wmi_hw_state(HPWMI_DOCK_MASK);
-+	int value = hp_wmi_get_dock_state();
- 	if (value < 0)
- 		return value;
- 	return sprintf(buf, "%d\n", value);
-@@ -577,7 +619,7 @@ static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
- static ssize_t tablet_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
- {
--	int value = hp_wmi_hw_state(HPWMI_TABLET_MASK);
-+	int value = hp_wmi_get_tablet_mode();
- 	if (value < 0)
- 		return value;
- 	return sprintf(buf, "%d\n", value);
-@@ -699,10 +741,10 @@ static void hp_wmi_notify(u32 value, void *context)
- 	case HPWMI_DOCK_EVENT:
- 		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
- 			input_report_switch(hp_wmi_input_dev, SW_DOCK,
--					    hp_wmi_hw_state(HPWMI_DOCK_MASK));
-+					    hp_wmi_get_dock_state());
- 		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
- 			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
--					    hp_wmi_hw_state(HPWMI_TABLET_MASK));
-+					    hp_wmi_get_tablet_mode());
- 		input_sync(hp_wmi_input_dev);
- 		break;
- 	case HPWMI_PARK_HDD:
-@@ -780,19 +822,17 @@ static int __init hp_wmi_input_setup(void)
- 	__set_bit(EV_SW, hp_wmi_input_dev->evbit);
+ 	u8 state[128];
+ 	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &state,
+-				       sizeof(state), sizeof(state));
++				       0, sizeof(state));
+ 	if (!ret)
+ 		return 1;
  
- 	/* Dock */
--	val = hp_wmi_hw_state(HPWMI_DOCK_MASK);
-+	val = hp_wmi_get_dock_state();
- 	if (!(val < 0)) {
- 		__set_bit(SW_DOCK, hp_wmi_input_dev->swbit);
- 		input_report_switch(hp_wmi_input_dev, SW_DOCK, val);
- 	}
+@@ -557,7 +557,7 @@ static int hp_wmi_rfkill2_refresh(void)
+ 	int err, i;
  
- 	/* Tablet mode */
--	if (enable_tablet_mode_sw > 0) {
--		val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
--		if (val >= 0) {
--			__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
--			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
--		}
-+	val = hp_wmi_get_tablet_mode();
-+	if (!(val < 0)) {
-+		__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
-+		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
- 	}
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   sizeof(state), sizeof(state));
++				   0, sizeof(state));
+ 	if (err)
+ 		return err;
  
- 	err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
-@@ -1227,10 +1267,10 @@ static int hp_wmi_resume_handler(struct device *device)
- 	if (hp_wmi_input_dev) {
- 		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
- 			input_report_switch(hp_wmi_input_dev, SW_DOCK,
--					    hp_wmi_hw_state(HPWMI_DOCK_MASK));
-+					    hp_wmi_get_dock_state());
- 		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
- 			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
--					    hp_wmi_hw_state(HPWMI_TABLET_MASK));
-+					    hp_wmi_get_tablet_mode());
- 		input_sync(hp_wmi_input_dev);
- 	}
+@@ -646,7 +646,7 @@ static ssize_t als_store(struct device *dev, struct device_attribute *attr,
+ 		return ret;
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
+-				       sizeof(tmp), sizeof(tmp));
++				       sizeof(tmp), 0);
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
+ 
+@@ -667,9 +667,9 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
+ 	if (clear == false)
+ 		return -EINVAL;
+ 
+-	/* Clear the POST error code. It is kept until until cleared. */
++	/* Clear the POST error code. It is kept until cleared. */
+ 	ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, HPWMI_WRITE, &tmp,
+-				       sizeof(tmp), sizeof(tmp));
++				       sizeof(tmp), 0);
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
+ 
+@@ -959,7 +959,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 	int err, i;
+ 
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   sizeof(state), sizeof(state));
++				   0, sizeof(state));
+ 	if (err)
+ 		return err < 0 ? err : -EINVAL;
  
 -- 
 2.25.1
