@@ -2,45 +2,45 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C38AC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 21:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5849C4167B
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Mar 2022 21:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245730AbiCGVgw (ORCPT
+        id S245605AbiCGVgz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Mar 2022 16:36:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37294 "EHLO
+        Mon, 7 Mar 2022 16:36:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245677AbiCGVgZ (ORCPT
+        with ESMTP id S245726AbiCGVgY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Mar 2022 16:36:25 -0500
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2084.outbound.protection.outlook.com [40.107.220.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA3E9887B4;
+        Mon, 7 Mar 2022 16:36:24 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2057.outbound.protection.outlook.com [40.107.93.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17A3170CDE;
         Mon,  7 Mar 2022 13:35:01 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c8TmT6vJBRcFCk8eUb8GnxaQ6mkV6ftIiyQ9OQW6H105RaCpczJDf9PDL/yZzfRWLW+W+2Ju5O+q9CYzXRj35GA5eehGUW9p0bkhBEos+Wc+Bb1Bp/SoAZSJgxzOnF6b45VAYKJaxP0vAOV1z7oSq8fWC23DP0DiWuEGZ/pNZJmeAMMY4TjtRSz6IuVQQgKwZT2R+BFQiDF1ilW24wS8la9a/N6cspNGVgE8D+f4IqJ1Q1xwzsqycEJYiX2YePzYYwkZJZt9WKdfpNM1NZr3yDLQkpCSBWStSfNey4QOHP9JBzuxJpPsw1BJ9AKX+ftsoeS4B5193daOZVj+HbbAyQ==
+ b=E62p/u6Kd0IPUzigsg/vXSqo9KHZO1Y/+IsHH+ZPNCjZm/cVyKhq4DbefE+viPDIYfVZ8up+iLTJ9xcbgk51z8t6n8uyPFjccSTvogtUIy8LqaY7dZ4sQE1UqY/w7cvgKH3Sk8CaQ45T5bYRMF4JTgMvMY4riQoC2h5xy1+xK2tuEfnTOCxUlWinck6AdhtZMRUcBJbOW6Mq+dAHP8nECWUgzdynvDwXcCqOTLcGVJXml3g9CbqVhWTeZg4sgk3QBQzUmr8OwwiV8LVda0zjwcYLJrfPGu03TdqHy+GPoRERMbbsXQbjv5eD6eJ8TtICaboWxuFVDCybc4poOCtA0A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VIl7FGcVVCCTXlpIwuSotWlAhVTgllnaxmtLpaZNBXA=;
- b=jfIZtdxdPrrKCAxhTLRsA9hA+R/p2zPfkR/iUPfrZOGDAX2ItCyVhyLjolgtYxu7C4c8OzLI3A48WmZoFl1o/XPrx4NlkhZxdKG+rsoOkpsNThM1S1sY0LTPM7/ZkMAQ2agRSFottCmmAAudOPzkk+oNGfQBaTuWR5Mcr7mbQS4kSeFwL1Jx6ZnhJ9D/XTdstBs1ajk8JKms5iANFlMOclhYKms6Y15P2D2jMvqTei4O4klb9AoZcto9v3eygEnbJsaakwZHsHqsQRCFJIXTPG04WIgcojN6nXFKqjzIgAN6ZIlDrRKB0K6EUWDyZWhLpDJnbESehRc5ehOd5Fi0pg==
+ bh=lzs0LZinnI7EO7mq2eHmSBeymZECA63jxrm9GSOGHa0=;
+ b=i6nZsp4kZXwD09jCVpLFQVILrFGZ/1lT2xSF0eVlt9jN9VzznpkY2XkOvcbO816RkuyRvYPGGtBB5ylidj2CSGVZlXtj9tgCJZ4KafpN4GVGUCXFqrMbI7a7rHxugrMv4Jv83MKMPEXPLTWja8QWgBhAK6hTF++4dzMj29rqvc8b6Wld/NyVoXQvsMxqZAgUNu5RGOMRKyp4MnYVe7IQXWNzCE0h/cG0rzhijkC4gq4qXw0ZEVKX2dts0AX2AhWou+NBN4sIpRuKQwU+f4NzZ1LOiMQm9cqvHwHebBqO84Hhnx7KnPG6D0L5+IdfmcbXEMwA9GuzBNQ64McERQ6bmQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VIl7FGcVVCCTXlpIwuSotWlAhVTgllnaxmtLpaZNBXA=;
- b=qpNcV8eVO4439doWBiIaOtnDv23M/CqT3cJNOfPQVi7GezS3pavEBxCjmNmJbmCa+lUxCO6uJ7HXKdLkZp+6UH0bkatcwW1j/jjoVme4alT59y85Ww0Rn/JjFOUUhE2+eAm1xcHWF+HhB0gPxzaL0y1EwPB9CqPLXlzZOCIr5E8=
-Received: from BN0PR10CA0028.namprd10.prod.outlook.com (2603:10b6:408:143::34)
- by BN8PR12MB3588.namprd12.prod.outlook.com (2603:10b6:408:41::13) with
+ bh=lzs0LZinnI7EO7mq2eHmSBeymZECA63jxrm9GSOGHa0=;
+ b=mq+m2Wc0sRLArlxHFlF2CCqQ/IElCtvBWJTOrnLTIV0dfEzXOmmfz65eGywOTclwnocqemRJNgXeEV3joe39RpmbVqTJKC6+kI3VJ26PaW+ZqaGiOpu93JizmJ6T3X+sT/sE0Dym9sk3isQKxlLRkcqgtMzvF7gNSMsf7E1mRgY=
+Received: from BN9PR03CA0364.namprd03.prod.outlook.com (2603:10b6:408:f7::9)
+ by DM5PR12MB2391.namprd12.prod.outlook.com (2603:10b6:4:b3::27) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.13; Mon, 7 Mar
- 2022 21:34:59 +0000
-Received: from BN8NAM11FT048.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:143:cafe::cb) by BN0PR10CA0028.outlook.office365.com
- (2603:10b6:408:143::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Mon, 7 Mar
+ 2022 21:34:57 +0000
+Received: from BN8NAM11FT031.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:f7:cafe::3d) by BN9PR03CA0364.outlook.office365.com
+ (2603:10b6:408:f7::9) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14 via Frontend
- Transport; Mon, 7 Mar 2022 21:34:59 +0000
+ Transport; Mon, 7 Mar 2022 21:34:57 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT048.mail.protection.outlook.com (10.13.177.117) with Microsoft SMTP
+ BN8NAM11FT031.mail.protection.outlook.com (10.13.177.25) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5038.14 via Frontend Transport; Mon, 7 Mar 2022 21:34:59 +0000
+ 15.20.5038.14 via Frontend Transport; Mon, 7 Mar 2022 21:34:56 +0000
 Received: from sbrijesh-desktop.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Mon, 7 Mar
- 2022 15:34:52 -0600
+ 2022 15:34:48 -0600
 From:   Brijesh Singh <brijesh.singh@amd.com>
 To:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
         <kvm@vger.kernel.org>, <linux-efi@vger.kernel.org>,
@@ -84,10 +84,11 @@ CC:     Thomas Gleixner <tglx@linutronix.de>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
         <brijesh.ksingh@gmail.com>, <tony.luck@intel.com>,
         <marcorr@google.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: [PATCH v12 20/46] x86/kernel: Validate ROM memory before accessing when SEV-SNP is active
-Date:   Mon, 7 Mar 2022 15:33:30 -0600
-Message-ID: <20220307213356.2797205-21-brijesh.singh@amd.com>
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Venu Busireddy <venu.busireddy@oracle.com>
+Subject: [PATCH v12 18/46] x86/sev: Add helper for validating pages in early enc attribute changes
+Date:   Mon, 7 Mar 2022 15:33:28 -0600
+Message-ID: <20220307213356.2797205-19-brijesh.singh@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220307213356.2797205-1-brijesh.singh@amd.com>
 References: <20220307213356.2797205-1-brijesh.singh@amd.com>
@@ -99,79 +100,298 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 87a244a1-ead2-4e45-fe75-08da008254a6
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3588:EE_
-X-Microsoft-Antispam-PRVS: <BN8PR12MB35888B8D936627BF53961C38E5089@BN8PR12MB3588.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 9d06c6da-95d2-4503-6fc0-08da0082535b
+X-MS-TrafficTypeDiagnostic: DM5PR12MB2391:EE_
+X-Microsoft-Antispam-PRVS: <DM5PR12MB2391590CDECFA7F0AB62C193E5089@DM5PR12MB2391.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pJgrx4pSorpnmacgz78GSOz94TjiQCqnsaiE8FaZtD6DFLGmisHxiVAAP+VGozuuUJEazneqKpjnTIJzU30vzwPfuQdJTxwcHx+M8Bcew/X3px6w40msUR1H86kFAlZ9g+kHUC5jBY/ROvlfE95mU47BxEo7k6GgBeph56bNCDzw9Z9q1itWCB68nRjla7Kw+9YxxuSoVaHcFdRw352YrqxzbP4fQZohHceJWz2JV3uJepheT+X8ppJ4S4nv/0bpyiEOdusxNc5t28w/LK7zdPZ4JVqhyHKeAO546YE9Svm2yMg85IGTvDvC0ULb4o7q14ERHyUS0/C1dLuz2o0LzRSkj57EHxWAO78z1y2CiAE2XUyguoMTAltfaEzMDuRlSykCplJV1y1+lrBzNDvq57ivIDDcmQw1B874m0X60moLnFhVeV4v29dXu2dew1PL/i1qLLyf+N8bwP9Aw5mimLRvuv1YV2Eo1Yj67W8QCRDB79lKc/4gxcYH1BxmNn7oWZtmsCJ3ihZXol4SJzhJcSiCYsUMHa0DWvkQBXG4rRpxWtMbPX25PiAkImwRnnmtceFyW11a38dB/MBaqXDiZfCHqceAh5v5ZtafVNFqRwsB7ATPA/AvLzPQuPX45p/X1LwUjxFmMBCvHaPf8D58uAP1CIe/fqztao/Rbk2g6C2T4HlmtczQTi8GDYitgeFZUAWqtrrLiKQujjLiD1oF4nuK/JCnouXY1f+EfCm4JKg=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(40470700004)(36840700001)(1076003)(336012)(426003)(54906003)(36860700001)(5660300002)(2906002)(26005)(2616005)(44832011)(15650500001)(86362001)(8676002)(7416002)(7406005)(110136005)(508600001)(40460700003)(16526019)(186003)(8936002)(6666004)(47076005)(83380400001)(316002)(36756003)(356005)(81166007)(70586007)(70206006)(7696005)(82310400004)(4326008)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: ZjA/UBmvpKN7vRonD7W5z/nyvCtd/1dS1mplCJPPVGrLvOq1ECADlzdJX3xFMbxFdkDIxT81UikoBGrM2/8SUd0a3T4A7QgOFuAEO4IctX6GGLzddqbBN8CbIcz9OvT+09tjLC692gvzb3UME6XV5Rxfu7ZTvSGNUzvAck2GuoZ/9+ila9t/VxfWOTv4Kx7s6dKwz8Xsmw7r5W7Nq3UV4JOkpPmbC3EXB7uJhojlW3AxbkIJpp2TKzIglQUNxQOlNqShhczjHw7RndhwGV6bmGXq6lucI9XNBtMn1Cyhf1qeUCH4neoauZfUCFcZ3R+YGrK/iyHzv6KwH3t/66D/CBlBiVPo9PopBvw1Uy65/q9Hansh1j1tkAwgnFnTL9FbejLwaCVJk+HBtJNKY+RBLo7oZYF+XmSSwtkhTXY4U71xqugmvlJp19zyu68AhW6Bo4kfNCmmSm75obMt/1tlzX6Cfips12q3s1NriWCpk4ZoID14VxG7EiE8/ITpV4lxNzJErG4v7A5lfIeTEzVaEr/PJE/y5ywsjjQFBz4OAUF0SxxFovFO7CuLRp8Cp+xUQ1gSV0tNd6oDhhglmlAwpGsZU6YXDf9tVwxox5TXdsoSFWmL6Kwxq43mq1qdjfOEVjuJpaJZOyV7CdpkgrS7YOd9faGCqq0+p/E2Offr2HLrsrG6AtGZHBDSk1g15SH3cFOt+NtzNTbPjc3HVkfXNM7UEIfolKBH0XsbuAL+MUI=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(36840700001)(46966006)(7416002)(5660300002)(44832011)(508600001)(7696005)(7406005)(86362001)(8936002)(6666004)(70206006)(1076003)(2906002)(16526019)(186003)(26005)(40460700003)(4326008)(8676002)(82310400004)(70586007)(2616005)(47076005)(110136005)(356005)(81166007)(36860700001)(316002)(54906003)(336012)(426003)(36756003)(83380400001)(36900700001)(2101003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 21:34:59.1544
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 21:34:56.9815
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87a244a1-ead2-4e45-fe75-08da008254a6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d06c6da-95d2-4503-6fc0-08da0082535b
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT048.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT031.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3588
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2391
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-probe_roms() accesses the memory range (0xc0000 - 0x10000) to probe
-various ROMs. The memory range is not part of the E820 system RAM
-range. The memory range is mapped as private (i.e encrypted) in page
+The early_set_memory_{encrypted,decrypted}() are used for changing the
+page from decrypted (shared) to encrypted (private) and vice versa.
+When SEV-SNP is active, the page state transition needs to go through
+additional steps.
+
+If the page is transitioned from shared to private, then perform the
+following after the encryption attribute is set in the page table:
+
+1. Issue the page state change VMGEXIT to add the page as a private
+   in the RMP table.
+2. Validate the page after its successfully added in the RMP table.
+
+To maintain the security guarantees, if the page is transitioned from
+private to shared, then perform the following before clearing the
+encryption attribute from the page table.
+
+1. Invalidate the page.
+2. Issue the page state change VMGEXIT to make the page shared in the
+   RMP table.
+
+The early_set_memory_{encrypted,decrypted} can be called before the
+GHCB is setup, use the SNP page state MSR protocol VMGEXIT defined in
+the GHCB specification to request the page state change in the RMP
 table.
 
-When SEV-SNP is active, all the private memory must be validated before
-the access. The ROM range was not part of E820 map, so the guest BIOS
-did not validate it. An access to invalidated memory will cause a VC
-exception. The guest does not support handling not-validated VC exception
-yet, so validate the ROM memory regions before it is accessed.
+While at it, add a helper snp_prep_memory() which will be used in
+probe_roms(), in a later patch.
 
+Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
 Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 ---
- arch/x86/kernel/probe_roms.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/sev.h    | 10 ++++
+ arch/x86/kernel/sev.c         | 99 +++++++++++++++++++++++++++++++++++
+ arch/x86/mm/mem_encrypt_amd.c | 58 ++++++++++++++++++--
+ 3 files changed, 163 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/probe_roms.c b/arch/x86/kernel/probe_roms.c
-index 36e84d904260..319fef37d9dc 100644
---- a/arch/x86/kernel/probe_roms.c
-+++ b/arch/x86/kernel/probe_roms.c
-@@ -21,6 +21,7 @@
- #include <asm/sections.h>
- #include <asm/io.h>
- #include <asm/setup_arch.h>
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 48df02713ee0..f65d257e3d4a 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -123,6 +123,11 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
+ 	return rc;
+ }
+ void setup_ghcb(void);
++void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
++					 unsigned int npages);
++void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
++					unsigned int npages);
++void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op);
+ #else
+ static inline void sev_es_ist_enter(struct pt_regs *regs) { }
+ static inline void sev_es_ist_exit(void) { }
+@@ -132,6 +137,11 @@ static inline int sev_es_efi_map_ghcbs(pgd_t *pgd) { return 0; }
+ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate) { return 0; }
+ static inline int rmpadjust(unsigned long vaddr, bool rmp_psize, unsigned long attrs) { return 0; }
+ static inline void setup_ghcb(void) { }
++static inline void __init
++early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr, unsigned int npages) { }
++static inline void __init
++early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr, unsigned int npages) { }
++static inline void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op) { }
+ #endif
+ 
+ #endif
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index cc382c4f89ef..1e8dc71e7ba6 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -556,6 +556,105 @@ static u64 get_jump_table_addr(void)
+ 	return ret;
+ }
+ 
++static void pvalidate_pages(unsigned long vaddr, unsigned int npages, bool validate)
++{
++	unsigned long vaddr_end;
++	int rc;
++
++	vaddr = vaddr & PAGE_MASK;
++	vaddr_end = vaddr + (npages << PAGE_SHIFT);
++
++	while (vaddr < vaddr_end) {
++		rc = pvalidate(vaddr, RMP_PG_SIZE_4K, validate);
++		if (WARN(rc, "Failed to validate address 0x%lx ret %d", vaddr, rc))
++			sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PVALIDATE);
++
++		vaddr = vaddr + PAGE_SIZE;
++	}
++}
++
++static void __init early_set_pages_state(unsigned long paddr, unsigned int npages, enum psc_op op)
++{
++	unsigned long paddr_end;
++	u64 val;
++
++	paddr = paddr & PAGE_MASK;
++	paddr_end = paddr + (npages << PAGE_SHIFT);
++
++	while (paddr < paddr_end) {
++		/*
++		 * Use the MSR protocol because this function can be called before
++		 * the GHCB is established.
++		 */
++		sev_es_wr_ghcb_msr(GHCB_MSR_PSC_REQ_GFN(paddr >> PAGE_SHIFT, op));
++		VMGEXIT();
++
++		val = sev_es_rd_ghcb_msr();
++
++		if (WARN(GHCB_RESP_CODE(val) != GHCB_MSR_PSC_RESP,
++			 "Wrong PSC response code: 0x%x\n",
++			 (unsigned int)GHCB_RESP_CODE(val)))
++			goto e_term;
++
++		if (WARN(GHCB_MSR_PSC_RESP_VAL(val),
++			 "Failed to change page state to '%s' paddr 0x%lx error 0x%llx\n",
++			 op == SNP_PAGE_STATE_PRIVATE ? "private" : "shared",
++			 paddr, GHCB_MSR_PSC_RESP_VAL(val)))
++			goto e_term;
++
++		paddr = paddr + PAGE_SIZE;
++	}
++
++	return;
++
++e_term:
++	sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
++}
++
++void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
++					 unsigned int npages)
++{
++	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
++		return;
++
++	 /*
++	  * Ask the hypervisor to mark the memory pages as private in the RMP
++	  * table.
++	  */
++	early_set_pages_state(paddr, npages, SNP_PAGE_STATE_PRIVATE);
++
++	/* Validate the memory pages after they've been added in the RMP table. */
++	pvalidate_pages(vaddr, npages, true);
++}
++
++void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
++					unsigned int npages)
++{
++	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
++		return;
++
++	/* Invalidate the memory pages before they are marked shared in the RMP table. */
++	pvalidate_pages(vaddr, npages, false);
++
++	 /* Ask hypervisor to mark the memory pages shared in the RMP table. */
++	early_set_pages_state(paddr, npages, SNP_PAGE_STATE_SHARED);
++}
++
++void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op)
++{
++	unsigned long vaddr, npages;
++
++	vaddr = (unsigned long)__va(paddr);
++	npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
++
++	if (op == SNP_PAGE_STATE_PRIVATE)
++		early_snp_set_memory_private(vaddr, paddr, npages);
++	else if (op == SNP_PAGE_STATE_SHARED)
++		early_snp_set_memory_shared(vaddr, paddr, npages);
++	else
++		WARN(1, "invalid memory op %d\n", op);
++}
++
+ int sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
+ {
+ 	u16 startup_cs, startup_ip;
+diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
+index 6169053c2854..8539dd6f24ff 100644
+--- a/arch/x86/mm/mem_encrypt_amd.c
++++ b/arch/x86/mm/mem_encrypt_amd.c
+@@ -31,6 +31,7 @@
+ #include <asm/processor-flags.h>
+ #include <asm/msr.h>
+ #include <asm/cmdline.h>
 +#include <asm/sev.h>
  
- static struct resource system_rom_resource = {
- 	.name	= "System ROM",
-@@ -197,11 +198,21 @@ static int __init romchecksum(const unsigned char *rom, unsigned long length)
+ #include "mm_internal.h"
  
- void __init probe_roms(void)
- {
--	const unsigned char *rom;
- 	unsigned long start, length, upper;
-+	const unsigned char *rom;
- 	unsigned char c;
- 	int i;
+@@ -47,6 +48,36 @@ EXPORT_SYMBOL(sme_me_mask);
+ /* Buffer used for early in-place encryption by BSP, no locking needed */
+ static char sme_early_buffer[PAGE_SIZE] __initdata __aligned(PAGE_SIZE);
  
-+	/*
-+	 * The ROM memory range is not part of the e820 table and is therefore not
-+	 * pre-validated by BIOS. The kernel page table maps the ROM region as encrypted
-+	 * memory, and SNP requires encrypted memory to be validated before access.
-+	 * Do that here.
-+	 */
-+	snp_prep_memory(video_rom_resource.start,
-+			((system_rom_resource.end + 1) - video_rom_resource.start),
-+			SNP_PAGE_STATE_PRIVATE);
++/*
++ * SNP-specific routine which needs to additionally change the page state from
++ * private to shared before copying the data from the source to destination and
++ * restore after the copy.
++ */
++static inline void __init snp_memcpy(void *dst, void *src, size_t sz,
++				     unsigned long paddr, bool decrypt)
++{
++	unsigned long npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
 +
- 	/* video rom */
- 	upper = adapter_rom_resources[0].start;
- 	for (start = video_rom_resource.start; start < upper; start += 2048) {
++	if (decrypt) {
++		/*
++		 * @paddr needs to be accessed decrypted, mark the page shared in
++		 * the RMP table before copying it.
++		 */
++		early_snp_set_memory_shared((unsigned long)__va(paddr), paddr, npages);
++
++		memcpy(dst, src, sz);
++
++		/* Restore the page state after the memcpy. */
++		early_snp_set_memory_private((unsigned long)__va(paddr), paddr, npages);
++	} else {
++		/*
++		 * @paddr need to be accessed encrypted, no need for the page state
++		 * change.
++		 */
++		memcpy(dst, src, sz);
++	}
++}
++
+ /*
+  * This routine does not change the underlying encryption setting of the
+  * page(s) that map this memory. It assumes that eventually the memory is
+@@ -95,8 +126,13 @@ static void __init __sme_early_enc_dec(resource_size_t paddr,
+ 		 * Use a temporary buffer, of cache-line multiple size, to
+ 		 * avoid data corruption as documented in the APM.
+ 		 */
+-		memcpy(sme_early_buffer, src, len);
+-		memcpy(dst, sme_early_buffer, len);
++		if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
++			snp_memcpy(sme_early_buffer, src, len, paddr, enc);
++			snp_memcpy(dst, sme_early_buffer, len, paddr, !enc);
++		} else {
++			memcpy(sme_early_buffer, src, len);
++			memcpy(dst, sme_early_buffer, len);
++		}
+ 
+ 		early_memunmap(dst, len);
+ 		early_memunmap(src, len);
+@@ -322,14 +358,28 @@ static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
+ 	clflush_cache_range(__va(pa), size);
+ 
+ 	/* Encrypt/decrypt the contents in-place */
+-	if (enc)
++	if (enc) {
+ 		sme_early_encrypt(pa, size);
+-	else
++	} else {
+ 		sme_early_decrypt(pa, size);
+ 
++		/*
++		 * ON SNP, the page state in the RMP table must happen
++		 * before the page table updates.
++		 */
++		early_snp_set_memory_shared((unsigned long)__va(pa), pa, 1);
++	}
++
+ 	/* Change the page encryption mask. */
+ 	new_pte = pfn_pte(pfn, new_prot);
+ 	set_pte_atomic(kpte, new_pte);
++
++	/*
++	 * If page is set encrypted in the page table, then update the RMP table to
++	 * add this page as private.
++	 */
++	if (enc)
++		early_snp_set_memory_private((unsigned long)__va(pa), pa, 1);
+ }
+ 
+ static int __init early_set_memory_enc_dec(unsigned long vaddr,
 -- 
 2.25.1
 
