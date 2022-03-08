@@ -2,442 +2,249 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8081DC43219
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Mar 2022 19:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1A6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Mar 2022 19:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350038AbiCHTgk (ORCPT
+        id S1348588AbiCHTvW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Mar 2022 14:36:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41016 "EHLO
+        Tue, 8 Mar 2022 14:51:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350029AbiCHTgi (ORCPT
+        with ESMTP id S1350081AbiCHTvV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Mar 2022 14:36:38 -0500
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80082.outbound.protection.outlook.com [40.107.8.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5256054BC0;
-        Tue,  8 Mar 2022 11:35:40 -0800 (PST)
+        Tue, 8 Mar 2022 14:51:21 -0500
+Received: from EUR02-HE1-obe.outbound.protection.outlook.com (mail-eopbgr10051.outbound.protection.outlook.com [40.107.1.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F7E3EB96;
+        Tue,  8 Mar 2022 11:50:23 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Bws+cYYERIEykc1PlRfUOlejT4RZ9rt4nNsOdQRaDZddYNcNMoqRNYwzKEC7GF7cjMC7LC8s2EMnbHLMLB5wtwL0hnfmTHscO7pFbaSfiAeSiRVx6wzk8p1av1hWjZ0VXSCq+tFB+/v54GsnCQPnYRwt+vKDK5BWtH0vg2CNWqAwayOma0t2GB9+Q2YS59hVbGw+8wMMaUNO5mFy5IBpZFkxwSfo3zazglBmi0DtQShZooVm7w0/kjH986/4mUcDw1otIJkpgo488wnVI6XQsk0keIciKmtjw3Mz+QzUkwlT/6DvkNzzKBXBKZbreyBhviM+pIEONHBbvGCzXzkC4w==
+ b=NUUHfkWG/qiG70YzNmZA+kjid3BjeFUoDIDQN6ur3nVFChL7qtjdLF5IpEp65p21HzPntNoaH+fZGa1qmt3oYM3TBMUcvQZ17X2GrOPnpukZqIUbbN1+oXWHkuQ1EeisM1KoP8nlRsjfomqDG+Uwjo+Zf7jnucAPmNxYeMzMx2Djyd00pOYAY1uOUl/MFGlFilplIkWjbX+xErCTJdD/zpvxc7T6RZQwfD057FrbNNEtafclTwlIbBbdM0dRrAXwHSocqEHDIllsCslW3VdRdmRVYqMEnLvhavI7xZjMqOPyd/aRP/Js54YltLMtoQK2Yh0zdqMokvNSDFB6asw7YQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4P/pZiBUzjfO1TSlGB10tzMEhZLzoCZVJDPflngopzw=;
- b=d/hWoh5JufIl/rn2NXUCO8BPeZor/qqYwNfSGJavPmyYDOuVtPDRFtt/oLdlIb9VN7NGQHEFq18iCJFOX4ebkvPOEGv/3t+4RDCCoo2Lh6gcbgo08j3tfJLYdbdk1Cf5rP9dX0lkYthipiKq4rT09NfYqLuuh9NrfRMKgEj4UVC1uCeLWMEZawjnbqj986CCtKVwvniec0WsW6g4/fBO5SA60WeV1F7Yi8VW6YCW/pciE57G1qgX3nQJwimDQ2+E/fqEnbJP80vGsbTOoVjXXFTDemqlYf9ak1Lr9tDHkyC7YU53efVq5Hno8yZqmKmp3OediMDa7md5BiFebNYLBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 194.138.21.73) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=siemens.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=siemens.com;
- dkim=none (message not signed); arc=none
+ bh=BauGMmcFV6nOTP7nCHJQ9Dx/TSMt7p8NOwTZxAC0LBE=;
+ b=CK4zbWR1PHkdIAY+iCzFECpPH9uJfHVtr4a4+eQ9I75S4BpImOf2MjFExTQFUw4jd+RX9IlTjn0ivlsF1Ygp3ZU875h1qpeoRgaBgYGopMvUlCCL1Hl8kaYFxSgCpQxYy/+fzr40FzCfBlu/itBTeWa/leyDIZ3MJQL5Cgf+8UnIR+M/2IZfqYU6fmG6uoPxsHwXHKG4JJ+ZkUxKt+fRjrogzRjAU+uou/oe5l6Pb71cfMNyMklGX5FiAMNrJcXwNFGS8Qz3nbeoI234au6cLSnefcpIfYutwq3C43v1h6C5Jv3PBOjaFZD7lEWotq/ttDQuxXInYnx7zBAEpj0Hyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4P/pZiBUzjfO1TSlGB10tzMEhZLzoCZVJDPflngopzw=;
- b=LuFWKqgQB4lv0NjVQ4DwpDSLYMLffW2cGlwseGB3ESVNVfEVhnYILmKkaVQ7s2UR10B0d5iTQKC1mixjnKDwmjHPZ2tMGcwcD39xuZIuawWPEIQqz6Ug1EsSoPSfxVwFtk8OEYfP1GGjZ2CrjNZ+BZ7xSpxbwVQNGV7fVa08WGqQaZ9hUoSPqx3UDD8Ue5ZOmY+yZ/kAqJTBOg81e9u7mebjc7+D9Noa/iWX6/HaqeSc/wDTCE3TiIDSYmLc/j7rfSCYwYKr0jfOR0G3sfQJozHoDzKP2r4v6IfBM5GCW+kuIgOMatT2FuuXnt2knlc29z5KzLDpStYkxoPLfMksKg==
-Received: from DU2PR04CA0039.eurprd04.prod.outlook.com (2603:10a6:10:234::14)
- by VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:e3::20) with
+ bh=BauGMmcFV6nOTP7nCHJQ9Dx/TSMt7p8NOwTZxAC0LBE=;
+ b=covDre2xQNqnSBOOXkFiaBQH55lY5rLvRK4KVgbg/8uCROl5iuzUwuCXRuRAMDuzKpalSyyvCadMD54Wq4BzSUHS0TwU0dAr1aXEzRd1pjZJuMeBO65Pt/kKUSPA7KmpRquUgTpikpezSOCU9HlVNs2NBTtbSspbCApp4ycDCoUjCk+lZW6AEeCamQxXnLxJz7e+aYY5JYAqqhkR5uUQrxLgKDh1R4t7CtWj8c8Gg7dJVw8AWwkeZYpBrVLxWd9yhDArqkD+t0fXoi30d+qV+pDJXcS2cTkRZL9suF4qpR+W42UVussKD+NtE4hP7RRQWcgjdah5BQcCgqHE6nPCaA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:155::20)
+ by AM6PR10MB2902.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:e8::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.16; Tue, 8 Mar
- 2022 19:35:36 +0000
-Received: from DB5EUR01FT053.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:10:234:cafe::7b) by DU2PR04CA0039.outlook.office365.com
- (2603:10a6:10:234::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14 via Frontend
- Transport; Tue, 8 Mar 2022 19:35:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.73)
- smtp.mailfrom=siemens.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=siemens.com;
-Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
- 194.138.21.73 as permitted sender) receiver=protection.outlook.com;
- client-ip=194.138.21.73; helo=hybrid.siemens.com;
-Received: from hybrid.siemens.com (194.138.21.73) by
- DB5EUR01FT053.mail.protection.outlook.com (10.152.5.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5038.14 via Frontend Transport; Tue, 8 Mar 2022 19:35:36 +0000
-Received: from DEMCHDC89XA.ad011.siemens.net (139.25.226.103) by
- DEMCHDC9SNA.ad011.siemens.net (194.138.21.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.18; Tue, 8 Mar 2022 20:35:35 +0100
-Received: from localhost.localdomain (167.87.32.5) by
- DEMCHDC89XA.ad011.siemens.net (139.25.226.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.18; Tue, 8 Mar 2022 20:35:35 +0100
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.17; Tue, 8 Mar
+ 2022 19:50:20 +0000
+Received: from AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::d433:79c4:958b:1551]) by AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::d433:79c4:958b:1551%7]) with mapi id 15.20.5038.027; Tue, 8 Mar 2022
+ 19:50:20 +0000
+Date:   Tue, 8 Mar 2022 20:50:16 +0100
 From:   Henning Schild <henning.schild@siemens.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Mark Gross <markgross@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, Enrico Weigelt <lkml@metux.net>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: [PATCH 2/2] leds: simatic-ipc-leds-gpio: add GPIO version of Siemens driver
-Date:   Tue, 8 Mar 2022 20:35:22 +0100
-Message-ID: <20220308193522.26696-3-henning.schild@siemens.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220308193522.26696-1-henning.schild@siemens.com>
+Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v4 0/8] platform/x86: introduce p2sb_bar() helper
+Message-ID: <20220308205016.2c0112ad@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
 References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
- <20220308193522.26696-1-henning.schild@siemens.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM6P195CA0049.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:209:87::26) To AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:155::20)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [167.87.32.5]
-X-ClientProxiedBy: DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) To
- DEMCHDC89XA.ad011.siemens.net (139.25.226.103)
-X-TM-AS-Product-Ver: SMEX-14.0.0.3080-8.6.1018-26680.007
-X-TM-AS-Result: No-10--8.549500-8.000000
-X-TMASE-MatchedRID: cFv5M0vAheta0fQUqAzR3e3DB3+/CehKE34mKqQRielKtJAbYAprczMD
-        HwdijHSHBph69XjMbdmAecOigRAlta3aC25avUuaSwG3KDMI8e8i0gNgcOfRtoY5QY8KaJtTdFS
-        hyLDxof9WtqPVHVdXmMRLhY4YFk6tSpLsaBDNZu9NiTj8hqiOOFCmyOJJq7C0TvKpZzlxUs+NY/
-        pqxovzxSiho3Yx5jAibuUFf/ftHinvTdvFoUrn/1PN/NUwB3i/MNC3Xj2tG7LfSQNpZkETVDFcf
-        92WG8u/WaGFzkcqBkl79xCSa3QbsXjfaEUd3sukxtBcxzOivxZ8Ce7b2ZEcq1N7BS4nAhYVhVDn
-        kfzD7uYOkJQR4QWbsMRf0/tVPfcblOSYZlnQW/AiTMW5ZqQa6FP8N0xmYb7azNIobH2DzGFVogW
-        RsEaR/msoHwKHdDo36dAjf9Fk9GpL0qen/wedYdoP5MB/iAfxlCv0a7truiKeAiCmPx4NwBnUJ0
-        Ek6yhjxEHRux+uk8jHUU+U0ACZwHqMCzY77a4j0Vld27YPhBhkd0fT8AYHwRVt3i2HPS02nqg/V
-        rSZEiM=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--8.549500-8.000000
-X-TMASE-Version: SMEX-14.0.0.3080-8.6.1018-26680.007
-X-TM-SNTS-SMTP: BD2C0BDDC919A38E5A4C1749FD5AAE3AB33D97C4C9A76F87F2E99345013E8B8D2000:8
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 60eae7c2-d319-4d37-299b-08da013ad1b0
-X-MS-TrafficTypeDiagnostic: VI1PR10MB2672:EE_
-X-Microsoft-Antispam-PRVS: <VI1PR10MB2672450BB36033A5ACAC7DE385099@VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Office365-Filtering-Correlation-Id: 34239209-7079-46c7-c4cb-08da013ce045
+X-MS-TrafficTypeDiagnostic: AM6PR10MB2902:EE_
+X-Microsoft-Antispam-PRVS: <AM6PR10MB2902614339348065812C823B85099@AM6PR10MB2902.EURPRD10.PROD.OUTLOOK.COM>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XI0bBFjoZaBNSI4Gqe7tXobyrsLlMGlBZQskbyn/xp01PyaA8ycJLwT5vqZkT9scVYfVccIla6I9rd49EIB2tIG7g9gGyec90vYHXb7bjZvJT+5Xt0ETweG6Y8fPMzOf9wDtDzcvvDxGELmh9QgD/aJih3lUkeGqck0OG+vgFSvmTsd6JLS5N6/uSb3Ss9IcaRN4AJFpiXGQFDYdS4/N1yiuenWLGBU60w/JdAO1n9WWafV1ILvlCZ8jFRkiVpwwglJsBj+sC7VEUDA7WWAumAo3u1QazrPmxReMrWP50kCtiz41F3bqUH3PJq0CIKKAl2pbxQ/2jZluTkSZd1CYgBbA+BFPkhrMvtXXIz/z4rb+YRCNORyJp7LMQ5/bOI4TcBKciFH/PP51LQiAzhwZ6TFFVUvGy8hO3m26ChysV4U+aT96Z/H/1eDzJuA5IOBoBGGrGthx3QFWnY805TwvRyfHaR9fYtS4W1URN1CM3f6gd/m1549AGohgBgSUw90+Uoon8t5wW/vmINSRj74umk9xQbCeYzOef+z96mHqdbF93DGlcCiqYImCMzoeT83HMsdqY20xCL1VSV14DCkDiwbqIjy0qjJA04GmDgg0kdBDcgiYBdqN+S8EetbkQiPOkiTuHjPetlwoBX7h3MOxGj3sma6Nhw6Y5j9pVJQKDzXAzb8WTC/fBczEFO+7DqAn/jLsdtLkpHu13hTMyySipg==
-X-Forefront-Antispam-Report: CIP:194.138.21.73;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(46966006)(36840700001)(2616005)(16526019)(40460700003)(82960400001)(2906002)(82310400004)(81166007)(5660300002)(30864003)(36756003)(356005)(86362001)(8936002)(44832011)(316002)(6916009)(107886003)(956004)(336012)(186003)(26005)(508600001)(54906003)(6666004)(1076003)(47076005)(8676002)(36860700001)(4326008)(83380400001)(70586007)(70206006)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: tcOEEc7MxJXqhPx9ibzhVfGGL6EKXUIdFezZ7KtPx65GQ/QDx1BAic9pfIZdVyeK/9nyqv75VtwM0osUEekool2kXWTgeZDUyVAljIvatV/D4x7gcvus6W6NcDFavk9OLI7iZzbGwhGmpwEGQkdtcJ2Y6mBaxSZywcJ/hlDppWDaj8ozaSh3r/JF2Km+bN0diS3ta9FgwsIQOVBichPQfRwyfRw2mbOO8nkWrBULHTw5YYyKPEhPGrr59nn1VOKfn4ko+rfFr0RU9S8wH3WvMlP3Gftzlgfd/soFO7YlXaKzk7H/ziEH4arm+7UOtQ8TfJRSTT58RMbhaOsUr7/MrNfzmowplFZoBFOqwA3IQRx4jGCsiIOcBFKtxWoFmDC/LN7wiBCqbJyXDLMuJon32GfZd7Ujp27jbdFx4u0Tq3kQJ1MkrV/Fpwq1DXXF0uWRmwIjr+iyORueeCLNqXLeEYK7SJe0Y5OtKnG1wRDIEQ5PbpjyZmLplfqFHNxAG/m7TR2wL6w4vj3U6dcM1tOwuDyKsHkCrndAfeY5OfJDemeU9UcurXyNL528IrRfbpfOtrhLo9aQ1BWFlRa9/3Q1kujJky27hyr632gRvqMa0mImpQwejyw+5L1Mbm8Qbc7c8QUL3Y3yBJcbs4OJJNscjg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(4326008)(316002)(8676002)(44832011)(38100700002)(66946007)(66556008)(66476007)(5660300002)(7416002)(1076003)(86362001)(9686003)(6512007)(83380400001)(186003)(8936002)(6486002)(54906003)(6916009)(6666004)(6506007)(508600001)(82960400001)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OrgvmHROX9OOO2PWbeddvmmKo/iO+z4+IYaQFaV+/fFobIvS4Y3BREUfc2j6?=
+ =?us-ascii?Q?tsZwZetYwyAQ4aK5hTNselt0mV0yC7TjZz9J7eTu4XYHkcCoc9M+o/d9V+6V?=
+ =?us-ascii?Q?Avcc2rl/J2Q9IzzS5RWcwRit3gy0O9g797T+0t9o6hr4D6XEZnci2JKlhWI/?=
+ =?us-ascii?Q?eg8h2aYDnkixHy+2BpOeiY/iDJ2QYx6yYmtxLKJ/MhifMEBRYZ3PM1JbjLQp?=
+ =?us-ascii?Q?RCTkZDt/4Ga5LdMVFXLaTJ3ukNHGgMHoyTjXNE+CTx0jnUm3giQKyczUadjP?=
+ =?us-ascii?Q?jhwO9uLM2Pzsv8mZ0njk5JnOxCnUWB6eJuvQKp6QMmGQjFihkIwrIAWmAFVg?=
+ =?us-ascii?Q?w1FL9ThjFYnDycruMDP2v/rgA2qyfBYvFkLwcx51gSn18Ch+SluqRZAmBjvM?=
+ =?us-ascii?Q?8WWIgV5RdSISdo4YiPHOp8f2V4xvDySm4Z+FZP2GLk11xLtnucKbpznx2b+F?=
+ =?us-ascii?Q?NSe6f1fMX9gP7NxwWVl2t+3DYHnXU4UcvQXoltqXWCYoYh3PoPBsaqslnuKK?=
+ =?us-ascii?Q?CyYyo2u/E1AOzy1m4jR78bRpfmMh+DSoy4vMr1Ny7SmqKpp0atOu5LZ8C0t3?=
+ =?us-ascii?Q?WMXFBqNmV6yhdQ70waXcRJEydqdl1Bn5gGFIyKB0zxKga4bafVpNzZdWR1y5?=
+ =?us-ascii?Q?rL4EolU87lscWTn0wbRmQqCv58jZraFJYAjek23wVATlnt8Oh3ETTamDf2wb?=
+ =?us-ascii?Q?mJ+eV13fi4OE3SoyjOlCwKosKYOsW2PDxjZu8Qkw+91O/d66CGngV9mPOCU/?=
+ =?us-ascii?Q?ZC9jrPNT65OkahpU9NqSbSMBixk5ZwtBLbkdmmpVBpkx6SJ7hpyuHVH/lc1S?=
+ =?us-ascii?Q?CjIsSYPHdZG7+MT35avdwjyLYwBcv+bXkk+g15kRcIZNagkeN9FNzGal+aQE?=
+ =?us-ascii?Q?kKDcE+wJozG3xeGdCs2CkfJlI9vcQxhkhSEoo+q1CIx1oQgN1KtzOIVRBCj3?=
+ =?us-ascii?Q?f5jyH1oB06DKAUEpdn/qD/V18CB5Yl+7eHlGd1HWFJXHOJdRwQ4/djTYVPDq?=
+ =?us-ascii?Q?O6ST0/KbDwBkxDpe+LH0tE13kOZDb3hgRHL/R/XLzCfNNN0fL9A55DWN0CyC?=
+ =?us-ascii?Q?hooW7eTMKeqxkhK2QdLw9bpWav+Zpgaf8RQ8YSIFQYel4rj7IjaLY2wATBOf?=
+ =?us-ascii?Q?RtAFAsXZNzuYRKzRo2jEvxRcVIbm55SEnuvzsLnZBFvl6C1agBfTU5vFvTLD?=
+ =?us-ascii?Q?M/Eyrx0g2bCaaJZSnkEiW2HvR5GiU14HmL9fhbbiv3IDjS/eJkeTuI9km/sa?=
+ =?us-ascii?Q?X0fHP9uk2bT/uhTpVy1mq96uOMEALkcIZyR9cTMviH0fATGEN7tJ3qQGSOWG?=
+ =?us-ascii?Q?OEkS7xmDBOAV8xMX/upptn3fb4k7HCEInyBBLEHlYChgjEomLfiReeBGvSww?=
+ =?us-ascii?Q?QXicy+fwsxoJnAjoR3Otw7UH7hSQLP10UsRSvkdKHrfzr7faFoQOviRsYePY?=
+ =?us-ascii?Q?3Lawm6/3nD5SFziE9469wnJdHEh7bscqKzmX7Q1i3hAnnkFRtPIO2vwV6ld0?=
+ =?us-ascii?Q?dT1+qzpolKlAhl2PYuYV360NN5e/RMKjYIao4wI84NUIWdrP9hXLybumKVuS?=
+ =?us-ascii?Q?+HGndhF/R1XZGvu4MO0+Y5YOm63mBTw4Oq5O3U2wcs/QEaMr5meyge2JnLvw?=
+ =?us-ascii?Q?gX1bXJSDNjizFBC5zFnLcF7DoOm0sOyRo3d43+Kts0WtY7d2p+Wmgw7fIsP9?=
+ =?us-ascii?Q?Hf7FbdM+TQh7znekrhNF7HRA1r8xMlOiNWU+SrxNkoElfesd/BlsnSqKdJsF?=
+ =?us-ascii?Q?e4gZenp6GA=3D=3D?=
 X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2022 19:35:36.3346
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34239209-7079-46c7-c4cb-08da013ce045
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB3459.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2022 19:50:20.1336
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60eae7c2-d319-4d37-299b-08da013ad1b0
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.73];Helo=[hybrid.siemens.com]
-X-MS-Exchange-CrossTenant-AuthSource: DB5EUR01FT053.eop-EUR01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2672
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5pGmGufhXnxRXz2Gz9K1hTmfZ5q1rTS2PN66NpijRCcrvWjowK4HWhgUvoRvehxbH8X1qmZ2TfHByDk1lUn3ulX8fY0XGmsc0tHWba6d72Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2902
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Apollo Lake the pinctrl drivers will now come up without ACPI. Use
-that instead of open coding it.
-Create a new driver for that which can later be filled with more GPIO
-based models, and which has different dependencies.
+Am Mon, 31 Jan 2022 17:13:38 +0200
+schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
 
-Signed-off-by: Henning Schild <henning.schild@siemens.com>
----
- drivers/leds/simple/Kconfig                 |  12 ++-
- drivers/leds/simple/Makefile                |   3 +-
- drivers/leds/simple/simatic-ipc-leds-gpio.c | 108 ++++++++++++++++++++
- drivers/leds/simple/simatic-ipc-leds.c      |  75 +-------------
- drivers/platform/x86/simatic-ipc.c          |   5 +-
- 5 files changed, 129 insertions(+), 74 deletions(-)
- create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio.c
+> There are a few users and at least one more is coming (*) that would
+> like to utilize P2SB mechanism of hiding and unhiding a device from
+> the PCI configuration space.
+> 
+> Here is the series to consolidate p2sb handling code for existing
+> users and provide a generic way for new comer(s).
+> 
+> It also includes a patch to enable GPIO controllers on Apollo Lake
+> when it's used with ABL bootloader w/o ACPI support.
+> 
+> The patch that bring the helper ("platform/x86/intel: Add Primary
+> to Sideband (P2SB) bridge support") has a commit message that
+> sheds a light on what the P2SB is and why this is needed.
+> 
+> The changes made in v2 do not change the main idea and the
+> functionality in a big scale. What we need is probably one more
+> (RE-)test done by Henning. I hope to have it merged to v5.18-rc1 that
+> Siemens can develop their changes based on this series.
 
-diff --git a/drivers/leds/simple/Kconfig b/drivers/leds/simple/Kconfig
-index 9293e6b36c75..9d2487908743 100644
---- a/drivers/leds/simple/Kconfig
-+++ b/drivers/leds/simple/Kconfig
-@@ -3,10 +3,20 @@ config LEDS_SIEMENS_SIMATIC_IPC
- 	tristate "LED driver for Siemens Simatic IPCs"
- 	depends on LEDS_CLASS
- 	depends on SIEMENS_SIMATIC_IPC
--	select P2SB if X86
- 	help
- 	  This option enables support for the LEDs of several Industrial PCs
- 	  from Siemens.
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called simatic-ipc-leds.
-+
-+config LEDS_SIEMENS_SIMATIC_IPC_GPIO
-+	tristate "LED driver for Siemens Simatic IPCs, GPIO based"
-+	depends on SIEMENS_SIMATIC_IPC
-+	depends on LEDS_GPIO
-+	help
-+	  This option enables support for the LEDs of several Industrial PCs
-+	  from Siemens.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called simatic-ipc-leds-gpio.
-diff --git a/drivers/leds/simple/Makefile b/drivers/leds/simple/Makefile
-index 8481f1e9e360..e1df74fb5915 100644
---- a/drivers/leds/simple/Makefile
-+++ b/drivers/leds/simple/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds.o
-+obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)		+= simatic-ipc-leds.o
-+obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_GPIO)	+= simatic-ipc-leds-gpio.o
-diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio.c b/drivers/leds/simple/simatic-ipc-leds-gpio.c
-new file mode 100644
-index 000000000000..552b65a72e04
---- /dev/null
-+++ b/drivers/leds/simple/simatic-ipc-leds-gpio.c
-@@ -0,0 +1,108 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Siemens SIMATIC IPC driver for GPIO based LEDs
-+ *
-+ * Copyright (c) Siemens AG, 2022
-+ *
-+ * Authors:
-+ *  Henning Schild <henning.schild@siemens.com>
-+ */
-+
-+#include <linux/gpio/machine.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
-+	.dev_id = "leds-gpio",
-+	.table = {
-+		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 0, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 52, NULL, 1, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 53, NULL, 2, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 57, NULL, 3, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 58, NULL, 4, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 60, NULL, 5, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 56, NULL, 6, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 59, NULL, 7, GPIO_ACTIVE_HIGH),
-+	}
-+};
-+
-+static const struct gpio_led simatic_ipc_gpio_leds[] = {
-+	{ .name = "green:" LED_FUNCTION_STATUS "-3" },
-+	{ .name = "red:" LED_FUNCTION_STATUS "-1" },
-+	{ .name = "green:" LED_FUNCTION_STATUS "-1" },
-+	{ .name = "red:" LED_FUNCTION_STATUS "-2" },
-+	{ .name = "green:" LED_FUNCTION_STATUS "-2" },
-+	{ .name = "red:" LED_FUNCTION_STATUS "-3" },
-+};
-+
-+static const struct gpio_led_platform_data simatic_ipc_gpio_leds_pdata = {
-+	.num_leds	= ARRAY_SIZE(simatic_ipc_gpio_leds),
-+	.leds		= simatic_ipc_gpio_leds,
-+};
-+
-+static struct platform_device *simatic_leds_pdev;
-+
-+static int simatic_ipc_leds_gpio_remove(struct platform_device *pdev)
-+{
-+	gpiod_remove_lookup_table(&simatic_ipc_led_gpio_table);
-+	platform_device_unregister(simatic_leds_pdev);
-+
-+	return 0;
-+}
-+
-+static int simatic_ipc_leds_gpio_probe(struct platform_device *pdev)
-+{
-+	struct gpio_desc *gpiod;
-+	int err;
-+
-+	gpiod_add_lookup_table(&simatic_ipc_led_gpio_table);
-+	simatic_leds_pdev = platform_device_register_resndata(NULL,
-+		"leds-gpio", PLATFORM_DEVID_NONE, NULL, 0,
-+		&simatic_ipc_gpio_leds_pdata,
-+		sizeof(simatic_ipc_gpio_leds_pdata));
-+	if (IS_ERR(simatic_leds_pdev)) {
-+		err = PTR_ERR(simatic_leds_pdev);
-+		goto out;
-+	}
-+
-+	/* PM_BIOS_BOOT_N */
-+	gpiod = gpiod_get_index(&simatic_leds_pdev->dev, NULL, 6, 0);
-+	if (IS_ERR(gpiod)) {
-+		err = PTR_ERR(gpiod);
-+		goto out;
-+	}
-+	gpiod_set_value(gpiod, 0);
-+	gpiod_put(gpiod);
-+
-+	/* PM_WDT_OUT */
-+	gpiod = gpiod_get_index(&simatic_leds_pdev->dev, NULL, 7, 0);
-+	if (IS_ERR(gpiod)) {
-+		err = PTR_ERR(gpiod);
-+		goto out;
-+	}
-+	gpiod_set_value(gpiod, 0);
-+	gpiod_put(gpiod);
-+
-+	return 0;
-+out:
-+	simatic_ipc_leds_gpio_remove(pdev);
-+
-+	return err;
-+}
-+
-+static struct platform_driver simatic_ipc_led_gpio_driver = {
-+	.probe = simatic_ipc_leds_gpio_probe,
-+	.remove = simatic_ipc_leds_gpio_remove,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+	}
-+};
-+
-+module_platform_driver(simatic_ipc_led_gpio_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:" KBUILD_MODNAME);
-+MODULE_SOFTDEP("pre: platform:leds-gpio");
-+MODULE_AUTHOR("Henning Schild <henning.schild@siemens.com>");
-diff --git a/drivers/leds/simple/simatic-ipc-leds.c b/drivers/leds/simple/simatic-ipc-leds.c
-index 215ef5b74236..0f0dee053aa1 100644
---- a/drivers/leds/simple/simatic-ipc-leds.c
-+++ b/drivers/leds/simple/simatic-ipc-leds.c
-@@ -24,7 +24,7 @@
- #define SIMATIC_IPC_LED_PORT_BASE	0x404E
- 
- struct simatic_ipc_led {
--	unsigned int value; /* mask for io and offset for mem */
-+	unsigned int value; /* mask for io */
- 	char *name;
- 	struct led_classdev cdev;
- };
-@@ -39,21 +39,6 @@ static struct simatic_ipc_led simatic_ipc_leds_io[] = {
- 	{ }
- };
- 
--/* the actual start will be discovered with p2sb, 0 is a placeholder */
--struct resource simatic_ipc_led_mem_res = DEFINE_RES_MEM_NAMED(0, 0, KBUILD_MODNAME);
--
--static void *simatic_ipc_led_memory;
--
--static struct simatic_ipc_led simatic_ipc_leds_mem[] = {
--	{0x500 + 0x1A0, "red:" LED_FUNCTION_STATUS "-1"},
--	{0x500 + 0x1A8, "green:" LED_FUNCTION_STATUS "-1"},
--	{0x500 + 0x1C8, "red:" LED_FUNCTION_STATUS "-2"},
--	{0x500 + 0x1D0, "green:" LED_FUNCTION_STATUS "-2"},
--	{0x500 + 0x1E0, "red:" LED_FUNCTION_STATUS "-3"},
--	{0x500 + 0x198, "green:" LED_FUNCTION_STATUS "-3"},
--	{ }
--};
--
- static struct resource simatic_ipc_led_io_res =
- 	DEFINE_RES_IO_NAMED(SIMATIC_IPC_LED_PORT_BASE, SZ_2, KBUILD_MODNAME);
- 
-@@ -89,27 +74,6 @@ static enum led_brightness simatic_ipc_led_get_io(struct led_classdev *led_cd)
- 	return inw(SIMATIC_IPC_LED_PORT_BASE) & led->value ? LED_OFF : led_cd->max_brightness;
- }
- 
--static void simatic_ipc_led_set_mem(struct led_classdev *led_cd,
--				    enum led_brightness brightness)
--{
--	struct simatic_ipc_led *led = cdev_to_led(led_cd);
--
--	u32 *p;
--
--	p = simatic_ipc_led_memory + led->value;
--	*p = (*p & ~1) | (brightness == LED_OFF);
--}
--
--static enum led_brightness simatic_ipc_led_get_mem(struct led_classdev *led_cd)
--{
--	struct simatic_ipc_led *led = cdev_to_led(led_cd);
--
--	u32 *p;
--
--	p = simatic_ipc_led_memory + led->value;
--	return (*p & 1) ? LED_OFF : led_cd->max_brightness;
--}
--
- static int simatic_ipc_leds_probe(struct platform_device *pdev)
- {
- 	const struct simatic_ipc_platform *plat = pdev->dev.platform_data;
-@@ -117,8 +81,7 @@ static int simatic_ipc_leds_probe(struct platform_device *pdev)
- 	struct simatic_ipc_led *ipcled;
- 	struct led_classdev *cdev;
- 	struct resource *res;
--	int err, type;
--	u32 *p;
-+	int err;
- 
- 	switch (plat->devmode) {
- 	case SIMATIC_IPC_DEVICE_227D:
-@@ -133,35 +96,10 @@ static int simatic_ipc_leds_probe(struct platform_device *pdev)
- 			}
- 			ipcled = simatic_ipc_leds_io;
- 		}
--		type = IORESOURCE_IO;
- 		if (!devm_request_region(dev, res->start, resource_size(res), KBUILD_MODNAME)) {
- 			dev_err(dev, "Unable to register IO resource at %pR\n", res);
- 			return -EBUSY;
- 		}
--		break;
--	case SIMATIC_IPC_DEVICE_127E:
--		res = &simatic_ipc_led_mem_res;
--		ipcled = simatic_ipc_leds_mem;
--		type = IORESOURCE_MEM;
--
--		err = p2sb_bar(NULL, 0, res);
--		if (err)
--			return err;
--
--		/* do the final address calculation */
--		res->start = res->start + (0xC5 << 16);
--		res->end = res->start + SZ_4K - 1;
--
--		simatic_ipc_led_memory = devm_ioremap_resource(dev, res);
--		if (IS_ERR(simatic_ipc_led_memory))
--			return PTR_ERR(simatic_ipc_led_memory);
--
--		/* initialize power/watchdog LED */
--		p = simatic_ipc_led_memory + 0x500 + 0x1D8; /* PM_WDT_OUT */
--		*p = (*p & ~1);
--		p = simatic_ipc_led_memory + 0x500 + 0x1C0; /* PM_BIOS_BOOT_N */
--		*p = (*p | 1);
--
- 		break;
- 	default:
- 		return -ENODEV;
-@@ -169,13 +107,8 @@ static int simatic_ipc_leds_probe(struct platform_device *pdev)
- 
- 	while (ipcled->value) {
- 		cdev = &ipcled->cdev;
--		if (type == IORESOURCE_MEM) {
--			cdev->brightness_set = simatic_ipc_led_set_mem;
--			cdev->brightness_get = simatic_ipc_led_get_mem;
--		} else {
--			cdev->brightness_set = simatic_ipc_led_set_io;
--			cdev->brightness_get = simatic_ipc_led_get_io;
--		}
-+		cdev->brightness_set = simatic_ipc_led_set_io;
-+		cdev->brightness_get = simatic_ipc_led_get_io;
- 		cdev->max_brightness = LED_ON;
- 		cdev->name = ipcled->name;
- 
-diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
-index 26c35e1660cb..ca3647b751d5 100644
---- a/drivers/platform/x86/simatic-ipc.c
-+++ b/drivers/platform/x86/simatic-ipc.c
-@@ -51,6 +51,7 @@ static int register_platform_devices(u32 station_id)
- {
- 	u8 ledmode = SIMATIC_IPC_DEVICE_NONE;
- 	u8 wdtmode = SIMATIC_IPC_DEVICE_NONE;
-+	char *pdevname = KBUILD_MODNAME "_leds";
- 	int i;
- 
- 	platform_data.devmode = SIMATIC_IPC_DEVICE_NONE;
-@@ -64,10 +65,12 @@ static int register_platform_devices(u32 station_id)
- 	}
- 
- 	if (ledmode != SIMATIC_IPC_DEVICE_NONE) {
-+		if (ledmode == SIMATIC_IPC_DEVICE_127E)
-+			pdevname = KBUILD_MODNAME "_leds_gpio";
- 		platform_data.devmode = ledmode;
- 		ipc_led_platform_device =
- 			platform_device_register_data(NULL,
--				KBUILD_MODNAME "_leds", PLATFORM_DEVID_NONE,
-+				pdevname, PLATFORM_DEVID_NONE,
- 				&platform_data,
- 				sizeof(struct simatic_ipc_platform));
- 		if (IS_ERR(ipc_led_platform_device))
--- 
-2.34.1
+I did test this series and it works as expected. Only problem is that
+the leds driver will not work together with the pinctrl. Because two
+"in tree drivers" will try to reserve the same memory region when both
+are enabled. Who wins is a matter of probing order ...
+
+If you can take my changes into your series we will not have a problem.
+Otherwise we might need to create sort of a conflict which my series
+would revert when switching apl lake to gpio.
+
+I would not know the process, let us see what the reviews bring and how
+to continue here.
+
+Thanks so much for taking care, especially the pinctrl coming up
+without ACPI really improves the simatic leds on the apl lake.
+
+In fact i will have to double check if i really need the p2sb for the
+427E wdt ... but until i have an answer, p2sb works just fine.
+
+regards,
+Henning
+
+> I have tested this on Apollo Lake platform (I'm able to see SPI NOR
+> and since we have an ACPI device for GPIO I do not see any attempts
+> to recreate one).
+> 
+> *) One in this series, and one is a due after merge in the Simatic
+> IPC drivers
+> 
+> The series may be routed either via MFD (and I guess Lee would prefer
+> that) or via PDx86, whichever seems better for you, folks. As of
+> today patches are ACKed by the respective maintainers, but I2C one
+> and one of the MFD.
+> 
+> Wolfram, can you ACK the patch against i2c-i801 driver, if you have no
+> objections?
+> 
+> Changes in v4:
+> - added tag to the entire series (Hans)
+> - added tag to pin control patch (Mika)
+> - dropped PCI core changes (PCI core doesn't want modifications to be
+> made)
+> - as a consequence of the above merged necessary bits into p2sb.c
+> - added a check that p2sb is really hidden (Hans)
+> - added EDAC patches (reviewed by maintainer internally)
+> 
+> Changes in v3:
+> - resent with cover letter
+> 
+> Changes in v2:
+> - added parentheses around bus in macros (Joe)
+> - added tag (Jean)
+> - fixed indentation and wrapping in the header (Christoph)
+> - moved out of PCI realm to PDx86 as the best common denominator
+> (Bjorn)
+> - added a verbose commit message to explain P2SB thingy (Bjorn)
+> - converted first parameter from pci_dev to pci_bus
+> - made first two parameters (bus and devfn) optional (Henning, Lee)
+> - added Intel pin control patch to the series (Henning, Mika)
+> - fixed English style in the commit message of one of MFD patch (Lee)
+> - added tags to my MFD LPC ICH patches (Lee)
+> - used consistently (c) (Lee)
+> - made indexing for MFD cell and resource arrays (Lee)
+> - fixed the resource size in i801 (Jean)
+> 
+> Andy Shevchenko (6):
+>   pinctrl: intel: Check against matching data instead of ACPI
+> companion mfd: lpc_ich: Factor out lpc_ich_enable_spi_write()
+>   mfd: lpc_ich: Switch to generic p2sb_bar()
+>   i2c: i801: convert to use common P2SB accessor
+>   EDAC, pnd2: Use proper I/O accessors and address space annotation
+>   EDAC, pnd2: convert to use common P2SB accessor
+> 
+> Jonathan Yong (1):
+>   platform/x86/intel: Add Primary to Sideband (P2SB) bridge support
+> 
+> Tan Jui Nee (1):
+>   mfd: lpc_ich: Add support for pinctrl in non-ACPI system
+> 
+>  drivers/edac/Kconfig                   |   1 +
+>  drivers/edac/pnd2_edac.c               |  62 ++---
+>  drivers/i2c/busses/Kconfig             |   1 +
+>  drivers/i2c/busses/i2c-i801.c          |  39 +---
+>  drivers/mfd/Kconfig                    |   1 +
+>  drivers/mfd/lpc_ich.c                  | 136 +++++++++--
+>  drivers/pinctrl/intel/pinctrl-intel.c  |  14 +-
+>  drivers/platform/x86/intel/Kconfig     |  12 +
+>  drivers/platform/x86/intel/Makefile    |   1 +
+>  drivers/platform/x86/intel/p2sb.c      | 305
+> +++++++++++++++++++++++++ include/linux/platform_data/x86/p2sb.h |
+> 27 +++ 11 files changed, 500 insertions(+), 99 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/p2sb.c
+>  create mode 100644 include/linux/platform_data/x86/p2sb.h
+> 
 
