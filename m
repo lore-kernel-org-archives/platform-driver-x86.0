@@ -2,145 +2,167 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3923FC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Mar 2022 16:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7E8C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Mar 2022 16:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236240AbiCHQLG (ORCPT
+        id S239802AbiCHQLw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Mar 2022 11:11:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56304 "EHLO
+        Tue, 8 Mar 2022 11:11:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233693AbiCHQLF (ORCPT
+        with ESMTP id S1348227AbiCHQLv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Mar 2022 11:11:05 -0500
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3260F4BB8A;
-        Tue,  8 Mar 2022 08:10:09 -0800 (PST)
-Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 228F561U031509;
-        Tue, 8 Mar 2022 16:09:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=ni2RcHbBWbxRqXJonIpINAZ0VoX/b33Cib5ToW/CQGI=;
- b=DHzWU5SjE7wpEDAGRDbYX9jspPgrNg8qviHUblWtzURUtD/L1cCZhPwAUB9FyG5B3VMY
- u+sl05OH2gIoEJRunC7YJ4K0l/4n4gHX/wEWyoOB45wmuedCF++K4oh7g8kn55X1QTjU
- 5Bo+KqD+a3D7p4DzvS0GYIuYc9fgSEZnfwbcQ+7Oxp1BQpH4geQR0uB/26yDMTec/YjF
- n6KgU0vUx6hYOY8jPvinY50XD3PU22yC2tLVD6gfJcnn9OgfgNTotvYRAkqjO4qhHhGo
- LkHpaOVSSh8Uqfw88kG/dT+WD2sL2btroFJjYQ5X43utgm6D2u26lgxtZgRqeWLFoWRf Sw== 
-Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
-        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3ep9f60pm6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Mar 2022 16:09:47 +0000
-Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
-        by g2t2353.austin.hpe.com (Postfix) with ESMTP id 0A0EA86;
-        Tue,  8 Mar 2022 16:09:46 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [10.207.218.77])
-        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 2CDAB36;
-        Tue,  8 Mar 2022 16:09:44 +0000 (UTC)
-Date:   Tue, 8 Mar 2022 10:09:43 -0600
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 4/4] x86/platform/uv: Add gap hole end size
-Message-ID: <Yid/x8NUqOP8fO+7@swahl-home.5wahls.com>
-References: <20220308010537.70150-1-mike.travis@hpe.com>
- <20220308010537.70150-5-mike.travis@hpe.com>
+        Tue, 8 Mar 2022 11:11:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E499750B0C
+        for <platform-driver-x86@vger.kernel.org>; Tue,  8 Mar 2022 08:10:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646755851;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Dv+uw+2rrXTMM+vcd9FCY5PV+xXeY+hl2kQeSGF/NeI=;
+        b=VwjzjtDHxKjT7vuken1x2gDavw5QdxZpJohGVP1wSqz2BffEk9pMUB34O1QnfjFuSXmay0
+        gHxuBTFWzq/BSEs6l62m/KHeiJhzDzRAiRJFB/Eh7uiqkRSg2Zf7DWQE5hZC+dkJ/itLDa
+        HPCcRaN82bUyYUeCRTRfSfawlFGINJs=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-564-fomtDDy3M9m7CUkz3tdD6Q-1; Tue, 08 Mar 2022 11:10:49 -0500
+X-MC-Unique: fomtDDy3M9m7CUkz3tdD6Q-1
+Received: by mail-ed1-f72.google.com with SMTP id bq19-20020a056402215300b0040f276105a4so10884677edb.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Mar 2022 08:10:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Dv+uw+2rrXTMM+vcd9FCY5PV+xXeY+hl2kQeSGF/NeI=;
+        b=Rgzr5yHXO0ZSP6SmLxBKe+5Dv4eIb2p7Z1BbBBi50CnjR4ryVFYTSYZnCl70y+rjnA
+         yVgzjHP7VimZvVSFLvNjditlMQRDeJTLtEc+fWrt5Vxz3OC4zxbqC+8J3NXBy6448ngZ
+         0qn7mqbGg25v+he2It3InG1MXKcwC4RQWydIGWTNA40spQzXCbRjau6Dm6GBtvexdYjW
+         ybkpXyUsl3PC0xF39Puct8Sf3xa435c7KkGftdJE7vLR3HUWf3uJPAVsvtH8fN6QHtES
+         vbqD7bmM4HsRHAN9EvYnFA09PR1HMxRwQGhoNOiTGKkXXD/2q/9pcSRHP0ktmfLYLDwD
+         tnAw==
+X-Gm-Message-State: AOAM532sS0UBGFQsKuc/HFPCXTLdI32vicX3xBt7lOL7V1nM7cEr1ir5
+        hEwpqdAvPIaQ7jnqItOtf80pZ25eJuyF+o/Te9gjBc+GWBUueDvRvh0s+wrJBxd4tiHa5g6zzwh
+        EFU3Wm6CobcHSJrHSpwhcP6t/kqkbQ23QIA==
+X-Received: by 2002:a50:9fa6:0:b0:415:fd95:6afa with SMTP id c35-20020a509fa6000000b00415fd956afamr16882250edf.200.1646755848513;
+        Tue, 08 Mar 2022 08:10:48 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxdxEBpiTYSM+aqpN0SbP0mQe7lFZ2I69ZtomHgIraDoSzTJTphY3a4RfGcRHBEcKzP1LVB1w==
+X-Received: by 2002:a50:9fa6:0:b0:415:fd95:6afa with SMTP id c35-20020a509fa6000000b00415fd956afamr16882225edf.200.1646755848249;
+        Tue, 08 Mar 2022 08:10:48 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id s8-20020a170906354800b006da9dec91f2sm5734379eja.163.2022.03.08.08.10.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Mar 2022 08:10:47 -0800 (PST)
+Message-ID: <1cd4ae24-ae92-302e-ac87-76ef15472a9f@redhat.com>
+Date:   Tue, 8 Mar 2022 17:10:47 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220308010537.70150-5-mike.travis@hpe.com>
-X-Proofpoint-ORIG-GUID: sM0N9yHvhj5r9rnLtS38Y1m-6bv9beEO
-X-Proofpoint-GUID: sM0N9yHvhj5r9rnLtS38Y1m-6bv9beEO
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-03-08_06,2022-03-04_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- mlxlogscore=898 mlxscore=0 suspectscore=0 lowpriorityscore=0
- malwarescore=0 priorityscore=1501 bulkscore=0 impostorscore=0
- clxscore=1011 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203080087
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [RFC] ACPI: platform-profile: support for AC vs DC modes
+Content-Language: en-US
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        Mark Pearson <markpearson@lenovo.com>
+Cc:     "rafael@kernel.org" <rafael@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+References: <markpearson@lenovo.com>
+ <20220301201554.4417-1-markpearson@lenovo.com>
+ <65d8cf3b-0eea-0583-fa23-e2c71287fb85@redhat.com>
+ <BL1PR12MB5157CDB77675859B7F279578E2099@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <7b281a37-5163-6cd7-360e-1c63bde714a8@redhat.com>
+ <BL1PR12MB5157125246817A70649C12F7E2099@BL1PR12MB5157.namprd12.prod.outlook.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <BL1PR12MB5157125246817A70649C12F7E2099@BL1PR12MB5157.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Mike,
+Hi,
 
-I know you're trying to get this out and don't really need another
-delta, and I'd be holding it back if I didn't think it might make
-things smoother upstream.
-
-But what I'd consider for this one is:  Add the word log to the
-subject line, perhaps "Add gap hole end size to log", or just "Log gap
-hole end size".  Without it, the reviewer has to ask "add to *where*?"
-
-And I believe the second sentence of the description, "The structure
-stores PA bits 56:26, for > 64MB granularity, up to 64PB max size," is
-perhaps not necessary, and I think it may slow down somebody trying to
-read the patch quickly.  So I'd consider deleting it.
-
-With those two changes the description still matches the code, and
-seems simpler and easier to accept.
-
-Your call on either / both, of course.
-
---> Steve
-
-On Mon, Mar 07, 2022 at 07:05:37PM -0600, Mike Travis wrote:
-> Show value of gap end in kernel log which equates to number of physical
-> address bits used by system.  The structure stores PA bits 56:26, for
-> 64MB granularity, up to 64PB max size.
+On 3/8/22 16:55, Limonciello, Mario wrote:
+> [AMD Official Use Only]
 > 
-> Signed-off-by: Mike Travis <mike.travis@hpe.com>
-> Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
-> ---
->  arch/x86/kernel/apic/x2apic_uv_x.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>>> I don't think that's right for the PSC Thinkpads.  They have dedicated
+>>> different tunings for each of the slider positions on AC vs DC.
+>>>
+>>> So "balanced" on AC will not be the same as "balanced" on DC.
+>>
+>> I see, but it is not like balanced on AC is closer to performance
+>> on DC then it is to balanced on DC, right? IOW in the UI we should
+>> still call them both balanced ?
 > 
-> diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-> index 387d6533549a..146f0f63a43b 100644
-> --- a/arch/x86/kernel/apic/x2apic_uv_x.c
-> +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-> @@ -1346,7 +1346,7 @@ static void __init decode_gam_params(unsigned long ptr)
->  static void __init decode_gam_rng_tbl(unsigned long ptr)
->  {
->  	struct uv_gam_range_entry *gre = (struct uv_gam_range_entry *)ptr;
-> -	unsigned long lgre = 0;
-> +	unsigned long lgre = 0, gend = 0;
->  	int index = 0;
->  	int sock_min = 999999, pnode_min = 99999;
->  	int sock_max = -1, pnode_max = -1;
-> @@ -1380,6 +1380,9 @@ static void __init decode_gam_rng_tbl(unsigned long ptr)
->  			flag, size, suffix[order],
->  			gre->type, gre->nasid, gre->sockid, gre->pnode);
->  
-> +		if (gre->type == UV_GAM_RANGE_TYPE_HOLE)
-> +			gend = (unsigned long)gre->limit << UV_GAM_RANGE_SHFT;
-> +
->  		/* update to next range start */
->  		lgre = gre->limit;
->  		if (sock_min > gre->sockid)
-> @@ -1397,7 +1400,8 @@ static void __init decode_gam_rng_tbl(unsigned long ptr)
->  	_max_pnode	= pnode_max;
->  	_gr_table_len	= index;
->  
-> -	pr_info("UV: GRT: %d entries, sockets(min:%x,max:%x) pnodes(min:%x,max:%x)\n", index, _min_socket, _max_socket, _min_pnode, _max_pnode);
-> +	pr_info("UV: GRT: %d entries, sockets(min:%x,max:%x), pnodes(min:%x,max:%x), gap_end(%d)\n",
-> +	  index, _min_socket, _max_socket, _min_pnode, _max_pnode, fls64(gend));
->  }
->  
->  /* Walk through UVsystab decoding the fields */
-> -- 
-> 2.26.2
+> I feel that's a gross oversimplification to say balanced on AC is close
+> to performance on DC.  There are *so many* other (otherwise invisible)
+> tuning knobs behind what PSC does that Lenovo has weighed out the benefits
+> of using for different circumstances.  
 > 
+> You nerf all this by just having one user space facing knob and let userspace
+> change to performance mode when you on charger.
 
--- 
-Steve Wahl, Hewlett Packard Enterprise
+The way I see this there are 2 ways this can work on the kernel to fw/ec
+boundary:
+
+1. There are actually 6 values we can write to a single slot:
+   ac-low-power,dc-lowpower,ac-balanced,dc-balanced,ac-performance,dc-performance
+
+2. There are separate ac-setting + dc-setting slots to which we can
+   write one of 3 values: low-power, balanced, performance; and the fw/ec
+   automatically picks which slot to used based on ac vs battery status
+
+If 1 is the case for PSC then I agree that the kernel should indeed get involved
+and it should automatically write either the ac or dc variant of the last
+userspace requested value so that things behave as expected.
+
+If 2 however is the case then I think all that is necessary is for the
+driver to just write the last userspace selected value to both slots.
+
+Note that neither case requires a userspace API change when solved
+as I suggest.
+
+> At least the way Windows does this is that it offers "one" UI slider but you
+> have last selected values based on if you're plugged in or on battery.
+> 
+> 1) So on battery I might have balanced selected to start out.
+> 2) Then I plug in a charger, and balanced is still selected but this has
+> different characteristics from balanced on battery.
+> 3) Now I change to performance while on charger.
+> 4) Then I unplug charger and it goes back to my selection for battery: "balanced".
+
+The above is more about policy then it is about mechanism, userspace
+can easily remember 2 separate settings for ac vs battery and restore
+the last set value for ac or battery when changing between the 2.
+
+Since this mostly about the policy which profile to set when this
+really belongs in userspace IMHO and solving this in userspace means that
+we will have a single universal solution for all the different
+platform_profile implementations, and we seem to have quite a lot of
+those (at least one per laptop vendor, Lenovo currently has 2)
+
+>> If that is right then I think my point still stands, if PSC
+>> has 2 separate slots (one AC one DC) for the performance
+>> setting, then we can just set both when userspace selects a
+>> performance level and have the actual e.g. balanced -> performance
+>> change be done by userspace when userspace select the machine
+>> has been connected to a charger.
+> 
+> But you *don't want to* actually select performance when you switch to a
+> charger.  If you have 3 value slots for AC and 3 value slots for DC you
+> should only be swapping between what is in those 3 values slots.
+
+That only works if all implementation have separate AC and DC profile
+slots, which most won't have. If we just sync the 2 slots for implementations
+which do have 2 slots and then always "fake" 2 slots in userspace we
+have a universal implementation which will work well everywhere, without
+any significant downside to the implementations which do have 2 slots.
+
+Regards,
+
+Hans
+
