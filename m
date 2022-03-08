@@ -2,179 +2,145 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30823C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Mar 2022 15:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3923FC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Mar 2022 16:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348177AbiCHP4m (ORCPT
+        id S236240AbiCHQLG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Mar 2022 10:56:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57472 "EHLO
+        Tue, 8 Mar 2022 11:11:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348136AbiCHP4a (ORCPT
+        with ESMTP id S233693AbiCHQLF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Mar 2022 10:56:30 -0500
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2063.outbound.protection.outlook.com [40.107.94.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7165E4FC73;
-        Tue,  8 Mar 2022 07:55:30 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TOz3tjSaanCed4oPf5Gbn/wpM/AxW3bFBORSE8+KatDWzt3QDaJJJMMXOa1dkioIGPHwjGa/LLsUFCJZbwzqBxsT4SdCPdPJwj29SW9M3LEfDLSNjQOfK8yS6ywMaCkxpvtcqKxxEjTScn6OvLEng1kI4pVEPnRpzaN+3CSspvjyQFOHyxQOCWAyT+ojWbzx6g59Ls3QtS5EhVOcHQKlz+Qfe2MbVBcKXtUjoQPZ9HX+O9vDwYsdZwzfn0BH3VVz/PKAzeExIvFxD4juwryMEFdrim7CTlobrJEOrVg9CBmXHc3ZTAyD6V67fBUpqPYmAjDMf7xsCCvUZMLewE/57A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=n6jGxtIihlcW9yPQGltXPfxMWMoAMXpX5Cejk1xPoXQ=;
- b=FWCajj28boM1e7HOsCDJUFTonvANA/df4jnsAnHcZD8TXeRRwuOJ124ckOmHCf/6qgvyTvqjvrytW24cojiypID+OFEHXN0wGt8l/z1rEnhHBTexl8vdvmE3Y+p+YHA6B6w1tVFP57JECDEEcduJF0SXv6ZyjXUeK6hr+lvpij5waCWv3gRcv5UK44PDLSPXq2NhmyEUygJklthNQtLjcIR/38oecy38PSSzVZWSYkPNFtgrt8BmWSghRS2ZXqmG9WOAmLh0bbPyTq37vfyTFqORP+SnPbqVmhBVo4vevIB5F1NE7rw9TlBFiSUgL2vPwFA7ynvZ/XUMUBGyNABHng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n6jGxtIihlcW9yPQGltXPfxMWMoAMXpX5Cejk1xPoXQ=;
- b=PG5DP865Lu5bQZd1an2jKqjQw6/mtngFsqc1B66j4HYPVd7PhNDG23/rT1o7rdQQ88sFCcgea6+0kU40L//8aT5x7R4/ci0rTIKnpPAdS988KhcHdasJxe4OCn0d2o30W6M5IH4X304k4fj9CLFSvF0pCJJdJS7lkjS8QwHBQqQ=
-Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
- by MWHPR12MB1551.namprd12.prod.outlook.com (2603:10b6:301:9::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.16; Tue, 8 Mar
- 2022 15:55:26 +0000
-Received: from BL1PR12MB5157.namprd12.prod.outlook.com
- ([fe80::692d:9532:906b:2b08]) by BL1PR12MB5157.namprd12.prod.outlook.com
- ([fe80::692d:9532:906b:2b08%5]) with mapi id 15.20.5038.027; Tue, 8 Mar 2022
- 15:55:26 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@amd.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>
-CC:     "rafael@kernel.org" <rafael@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Subject: RE: [RFC] ACPI: platform-profile: support for AC vs DC modes
-Thread-Topic: [RFC] ACPI: platform-profile: support for AC vs DC modes
-Thread-Index: AQHYMvpOgF/dWfErcUSFT4Dgm8wHfqy1kShQgAAH2ACAAAKsEA==
-Date:   Tue, 8 Mar 2022 15:55:26 +0000
-Message-ID: <BL1PR12MB5157125246817A70649C12F7E2099@BL1PR12MB5157.namprd12.prod.outlook.com>
-References: <markpearson@lenovo.com>
- <20220301201554.4417-1-markpearson@lenovo.com>
- <65d8cf3b-0eea-0583-fa23-e2c71287fb85@redhat.com>
- <BL1PR12MB5157CDB77675859B7F279578E2099@BL1PR12MB5157.namprd12.prod.outlook.com>
- <7b281a37-5163-6cd7-360e-1c63bde714a8@redhat.com>
-In-Reply-To: <7b281a37-5163-6cd7-360e-1c63bde714a8@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_Enabled=true;
- MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_SetDate=2022-03-08T15:55:24Z;
- MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_Method=Standard;
- MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_Name=AMD Official Use
- Only-AIP 2.0;
- MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_ActionId=2561bc53-d6dc-4d01-9c4f-4db5e43f0b58;
- MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_ContentBits=1
-msip_label_88914ebd-7e6c-4e12-a031-a9906be2db14_enabled: true
-msip_label_88914ebd-7e6c-4e12-a031-a9906be2db14_setdate: 2022-03-08T15:55:24Z
-msip_label_88914ebd-7e6c-4e12-a031-a9906be2db14_method: Standard
-msip_label_88914ebd-7e6c-4e12-a031-a9906be2db14_name: AMD Official Use
- Only-AIP 2.0
-msip_label_88914ebd-7e6c-4e12-a031-a9906be2db14_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_88914ebd-7e6c-4e12-a031-a9906be2db14_actionid: 7a3739b9-478f-401e-bd10-2b9b405671fa
-msip_label_88914ebd-7e6c-4e12-a031-a9906be2db14_contentbits: 0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e9ce40a-75ff-476a-3b5d-08da011c0fc7
-x-ms-traffictypediagnostic: MWHPR12MB1551:EE_
-x-microsoft-antispam-prvs: <MWHPR12MB1551304782BDCA94C8C90D02E2099@MWHPR12MB1551.namprd12.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fAnSrABV2Z2DcDuW49KlR2VuR548VGsBWFe3hP4ocUt+C405565RmHpMpuWBSSNRLqtDr3FoI4eW10UyJ4qJl/FUOLhKHmCH+3589se1H7sx4whepU4CYPHDVKdtq/RqTDs8AJYLSwfJ/2Por9MViO2Za4DiM4Cr1oDhDQQT4JdU9rXt0WN9ubKN8EXCI7h0ctBf7S7/TFoupETc8XPrvrNs2RMvanqxHXR+9Pe7suMI1vv2ol/a1wnuMPY605FN23XtMPtQk/Zv3PIoiTkzowGTNy79+cwr32s4sgwhnNn5cXTwNgXQajlk5M49d93Jb87baYnYu3uf+flEEVdT1m4Sp5qU+jz1gH04IIulJs8l6Z0sXQYC9qtz9ikk3+Iw6p5Rb/pR2+X6o6GQF7NGioJvHIMzDRa24zOvByQIcoAxxpUx2KcaK4Pyajtwf4dM6JMgji2XHEN42wKFD9s3TptSftj0ZT8oTdnmrjoKgc+7omU90pQB11eC7Ibd1zVh7PmMyw7dYjVRCbcHOo6ejGK3BpIDwYbQbJ1CCzn47T6glaIW2oVN8BXSnVFrPYZAJhTlqBynQW+dMyphTlVlZl7d95Ok/MDLZiYFNV8En7Q/Aq3bSfCxPyb65BuNtkmtpah6qo4n4u0ncEHLF+dYHWZs8FHuiLGg8vt1OK+RLUqkRSD8NRDQZf++Gn0JI+Kp9GG6TtOrCjyHPw+NvSlsfg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(76116006)(122000001)(33656002)(5660300002)(83380400001)(8936002)(66946007)(66476007)(508600001)(2906002)(38070700005)(8676002)(64756008)(66556008)(4326008)(86362001)(66446008)(316002)(55016003)(38100700002)(7696005)(54906003)(9686003)(6506007)(110136005)(71200400001)(52536014)(26005)(186003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eFVWQ0kxV1VJZC9QQTJnNjJuQzRlb1BNN3h2UTh5d0tCZzAzd25KalFON1Bq?=
- =?utf-8?B?WFdPaUFBS3BYNkRQaXlXSWxaQTVsK092L1JYeEJ4NE9vOU5WVlNLS3BWYkZF?=
- =?utf-8?B?d0g3dmU5dS91ZVlPL2RiVytVaDI2aEY4SXI3RlUwNTFBVW12R210SURXUXMx?=
- =?utf-8?B?aURjTW1OYVh4MGNqOUNPV040eXgxSEI5UWZ6c0Z2VXhzWGVCdmNxVDB6c2xv?=
- =?utf-8?B?bVJaNzIxK3VXd2lzK0lRMy96cUdpdUxmTm1VSnk1ZjBGU0JvV09iYnJkQnhn?=
- =?utf-8?B?NlBMMVAxMFBDckFoZld1d2dsaWhucm0vOTFIVjRBRDJ4QzFFWDBUQ2l2eUNW?=
- =?utf-8?B?cXYydHJzSjlzcitBRmN5dVR3bTYxOURMOVhaa20zd2hjZklCd3B4MFB4b1Ft?=
- =?utf-8?B?UDZoOHlMRHpEbkZINzQ5ZzdvRG5BZlN2eHQyVmlHN3RzeEdzOTYrNHRVSTlG?=
- =?utf-8?B?UUF6TEVSa1lFaGE2UEtMZEVmNXpJaG9lOXVWNWlyeEliOGhKdzltbWRBMTV2?=
- =?utf-8?B?bmRLcjkvOE84elVHRU1haG9tUlpkaGM3aGt0cmM5clpJNStZNCt6cjZKS0tr?=
- =?utf-8?B?U3FhRm4veGpuV3pOVVNlbkVNUTBLUFQzUWQzRHltc0gzZzRWZHBBYzdiSWNL?=
- =?utf-8?B?d3BycVcwaDVKZno2aHM2WHV4OEJYbW41OVVlTk1EMVVGN2o5VnhkRzB6Tk1p?=
- =?utf-8?B?UmZVeFlKTUNHbklOT0tLYlBmTU1vbVlMZlFET2tCK04raHp6MEtzTDVQYVVN?=
- =?utf-8?B?NEJPeVJRZFZ1U2VJUHNJSUdiRDJEMjZPeWZnYjBzUGpsK0wvcFFSN3JIa1Zi?=
- =?utf-8?B?ZnNWKzBIVjcwWmhrNTJmRGlrRi9NM1FpTGZ5S2t2TS9vYU1HNG5LQ0d6T2ox?=
- =?utf-8?B?UGZZRGFVTTZoZ1F0UzNPRW1FK1dTTGsweE1DVm14Um5hYWVpWlo1N2plVUJV?=
- =?utf-8?B?cU1BbmpKMCtTOUYrK2kwRHdTbFhVR0hHOElIczN1ZVBQdE8yTWJpZVZoN1NU?=
- =?utf-8?B?L1hDRnFpVlRJNWtYQ09mbFRKT21CY29qNmd1azk2cFhlOU1RSG5oZ2VFU1hq?=
- =?utf-8?B?eVRreW9KNjIvaUR4blZYaWtCcnpGV1FpVXZ3bm51RzJLR09XTkpKOHJDVGdV?=
- =?utf-8?B?Zm1FQ2VHWDZudmsreDMraVYvTDMyRE5lRkc0dTEyRkZOUUVDbWg5OUp0NG11?=
- =?utf-8?B?QWg0ZGVmMldzcEc1S1p4b0FlZGM4eW1JWHU3bUJxYUk0YmJqZVMrbWEyMTV6?=
- =?utf-8?B?RVpNeEpscTNVU2ZMMGs2SlFMOWpjZTZ2K0xCTGM4cUVBVlR3aHlRYXVldlF0?=
- =?utf-8?B?bFJ4RzY2bmRZL1p1b0ZlRm5GeFRIa1A4SWdpODN2SE12amU4V1VWRm1XSDNX?=
- =?utf-8?B?TUNUeXBoVFAzajBJRDNEUk5GVVdjZWpESCthRlFCSE5yMUhydEpBQTkrVzV2?=
- =?utf-8?B?SEVkT05hSnB6MGh3SVMwWHNzaGpjZk53SitXZGFBNDlPQWJVQy9jdTRwZnVF?=
- =?utf-8?B?M0U1UXUrWFVSakU0RllveTBRQ255M3g1OVpKQ0VOQmphRkVvZHVaUmt5V2tV?=
- =?utf-8?B?VDlaeFl0QVVYYTdxK2crVE1xWGh0Nmo3K0cxanQrQld3NEpLL1FJbENtUmdL?=
- =?utf-8?B?YmpCL1J0M2l6K0pOSnFrOHRVT2RMSUJDVGZXTjBBd1cvODc1eEdwSDN6T0hU?=
- =?utf-8?B?eGN2aFVJWTFmdjV3cTZqdW9wYjllZzBIbGhXTjVQaTM1cGdFR2gxbFJvV0hp?=
- =?utf-8?B?dzlvQkhDNklqVk9VRmRFb0FVakwxWnZFZnpORzZoemdZdDhJNnNHQUxHdWs0?=
- =?utf-8?B?OWZJME43Ykg2bllCSTBSZzgrRkV2WGk0ZlIwZjBlaTZobjhXZnJwdkZRRCtS?=
- =?utf-8?B?OHllMmtoZkptOVZvTWFmWHg4SWNTN0JoQ0JjMzdNRHc3TlhZejFXRnRQVXlt?=
- =?utf-8?B?UHpjUUVsSmhYWlZDUHozaW9ETWErK2ZQYVJraVdxb2VYblUxVGkzNzJoazl3?=
- =?utf-8?B?dlo4NXhncHVxS2JiOU9TQVNtRjcxQ2pjOFdUWG5vODRjS0ExTFF6MG40Qyt5?=
- =?utf-8?B?WFV3YUR4YktFMi93ZFRkRHJVWXNoYTlWdFdVSUZ0aC85ZHZQRDNtUFJMdnM0?=
- =?utf-8?B?QXpsb0MwKy9wZmM4NDZNZ2tlSmxkdjBRcnNaV3JtVnprbGFMemlVRDVoWVhT?=
- =?utf-8?Q?BwokS+igJyRBe5n8k1oHVV4=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 8 Mar 2022 11:11:05 -0500
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3260F4BB8A;
+        Tue,  8 Mar 2022 08:10:09 -0800 (PST)
+Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 228F561U031509;
+        Tue, 8 Mar 2022 16:09:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pps0720; bh=ni2RcHbBWbxRqXJonIpINAZ0VoX/b33Cib5ToW/CQGI=;
+ b=DHzWU5SjE7wpEDAGRDbYX9jspPgrNg8qviHUblWtzURUtD/L1cCZhPwAUB9FyG5B3VMY
+ u+sl05OH2gIoEJRunC7YJ4K0l/4n4gHX/wEWyoOB45wmuedCF++K4oh7g8kn55X1QTjU
+ 5Bo+KqD+a3D7p4DzvS0GYIuYc9fgSEZnfwbcQ+7Oxp1BQpH4geQR0uB/26yDMTec/YjF
+ n6KgU0vUx6hYOY8jPvinY50XD3PU22yC2tLVD6gfJcnn9OgfgNTotvYRAkqjO4qhHhGo
+ LkHpaOVSSh8Uqfw88kG/dT+WD2sL2btroFJjYQ5X43utgm6D2u26lgxtZgRqeWLFoWRf Sw== 
+Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
+        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3ep9f60pm6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Mar 2022 16:09:47 +0000
+Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
+        by g2t2353.austin.hpe.com (Postfix) with ESMTP id 0A0EA86;
+        Tue,  8 Mar 2022 16:09:46 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [10.207.218.77])
+        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 2CDAB36;
+        Tue,  8 Mar 2022 16:09:44 +0000 (UTC)
+Date:   Tue, 8 Mar 2022 10:09:43 -0600
+From:   Steve Wahl <steve.wahl@hpe.com>
+To:     Mike Travis <mike.travis@hpe.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 4/4] x86/platform/uv: Add gap hole end size
+Message-ID: <Yid/x8NUqOP8fO+7@swahl-home.5wahls.com>
+References: <20220308010537.70150-1-mike.travis@hpe.com>
+ <20220308010537.70150-5-mike.travis@hpe.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e9ce40a-75ff-476a-3b5d-08da011c0fc7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2022 15:55:26.1461
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: n735Vbo/IbEa17TfYGz9WzJals8kC55YyndBYSfL0iQumriKu5TqJbgS/AxUUVmnYy/GY2h60rMHtajnTMZGdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1551
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220308010537.70150-5-mike.travis@hpe.com>
+X-Proofpoint-ORIG-GUID: sM0N9yHvhj5r9rnLtS38Y1m-6bv9beEO
+X-Proofpoint-GUID: sM0N9yHvhj5r9rnLtS38Y1m-6bv9beEO
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-03-08_06,2022-03-04_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ mlxlogscore=898 mlxscore=0 suspectscore=0 lowpriorityscore=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 impostorscore=0
+ clxscore=1011 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2203080087
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-W0FNRCBPZmZpY2lhbCBVc2UgT25seV0NCg0KPiA+IEkgZG9uJ3QgdGhpbmsgdGhhdCdzIHJpZ2h0
-IGZvciB0aGUgUFNDIFRoaW5rcGFkcy4gIFRoZXkgaGF2ZSBkZWRpY2F0ZWQNCj4gPiBkaWZmZXJl
-bnQgdHVuaW5ncyBmb3IgZWFjaCBvZiB0aGUgc2xpZGVyIHBvc2l0aW9ucyBvbiBBQyB2cyBEQy4N
-Cj4gPg0KPiA+IFNvICJiYWxhbmNlZCIgb24gQUMgd2lsbCBub3QgYmUgdGhlIHNhbWUgYXMgImJh
-bGFuY2VkIiBvbiBEQy4NCj4gDQo+IEkgc2VlLCBidXQgaXQgaXMgbm90IGxpa2UgYmFsYW5jZWQg
-b24gQUMgaXMgY2xvc2VyIHRvIHBlcmZvcm1hbmNlDQo+IG9uIERDIHRoZW4gaXQgaXMgdG8gYmFs
-YW5jZWQgb24gREMsIHJpZ2h0PyBJT1cgaW4gdGhlIFVJIHdlIHNob3VsZA0KPiBzdGlsbCBjYWxs
-IHRoZW0gYm90aCBiYWxhbmNlZCA/DQoNCkkgZmVlbCB0aGF0J3MgYSBncm9zcyBvdmVyc2ltcGxp
-ZmljYXRpb24gdG8gc2F5IGJhbGFuY2VkIG9uIEFDIGlzIGNsb3NlDQp0byBwZXJmb3JtYW5jZSBv
-biBEQy4gIFRoZXJlIGFyZSAqc28gbWFueSogb3RoZXIgKG90aGVyd2lzZSBpbnZpc2libGUpDQp0
-dW5pbmcga25vYnMgYmVoaW5kIHdoYXQgUFNDIGRvZXMgdGhhdCBMZW5vdm8gaGFzIHdlaWdoZWQg
-b3V0IHRoZSBiZW5lZml0cw0Kb2YgdXNpbmcgZm9yIGRpZmZlcmVudCBjaXJjdW1zdGFuY2VzLiAg
-DQoNCllvdSBuZXJmIGFsbCB0aGlzIGJ5IGp1c3QgaGF2aW5nIG9uZSB1c2VyIHNwYWNlIGZhY2lu
-ZyBrbm9iIGFuZCBsZXQgdXNlcnNwYWNlDQpjaGFuZ2UgdG8gcGVyZm9ybWFuY2UgbW9kZSB3aGVu
-IHlvdSBvbiBjaGFyZ2VyLg0KDQpBdCBsZWFzdCB0aGUgd2F5IFdpbmRvd3MgZG9lcyB0aGlzIGlz
-IHRoYXQgaXQgb2ZmZXJzICJvbmUiIFVJIHNsaWRlciBidXQgeW91DQpoYXZlIGxhc3Qgc2VsZWN0
-ZWQgdmFsdWVzIGJhc2VkIG9uIGlmIHlvdSdyZSBwbHVnZ2VkIGluIG9yIG9uIGJhdHRlcnkuDQoN
-CjEpIFNvIG9uIGJhdHRlcnkgSSBtaWdodCBoYXZlIGJhbGFuY2VkIHNlbGVjdGVkIHRvIHN0YXJ0
-IG91dC4NCjIpIFRoZW4gSSBwbHVnIGluIGEgY2hhcmdlciwgYW5kIGJhbGFuY2VkIGlzIHN0aWxs
-IHNlbGVjdGVkIGJ1dCB0aGlzIGhhcw0KZGlmZmVyZW50IGNoYXJhY3RlcmlzdGljcyBmcm9tIGJh
-bGFuY2VkIG9uIGJhdHRlcnkuDQozKSBOb3cgSSBjaGFuZ2UgdG8gcGVyZm9ybWFuY2Ugd2hpbGUg
-b24gY2hhcmdlci4NCjQpIFRoZW4gSSB1bnBsdWcgY2hhcmdlciBhbmQgaXQgZ29lcyBiYWNrIHRv
-IG15IHNlbGVjdGlvbiBmb3IgYmF0dGVyeTogImJhbGFuY2VkIi4NCg0KPiANCj4gSWYgdGhhdCBp
-cyByaWdodCB0aGVuIEkgdGhpbmsgbXkgcG9pbnQgc3RpbGwgc3RhbmRzLCBpZiBQU0MNCj4gaGFz
-IDIgc2VwYXJhdGUgc2xvdHMgKG9uZSBBQyBvbmUgREMpIGZvciB0aGUgcGVyZm9ybWFuY2UNCj4g
-c2V0dGluZywgdGhlbiB3ZSBjYW4ganVzdCBzZXQgYm90aCB3aGVuIHVzZXJzcGFjZSBzZWxlY3Rz
-IGENCj4gcGVyZm9ybWFuY2UgbGV2ZWwgYW5kIGhhdmUgdGhlIGFjdHVhbCBlLmcuIGJhbGFuY2Vk
-IC0+IHBlcmZvcm1hbmNlDQo+IGNoYW5nZSBiZSBkb25lIGJ5IHVzZXJzcGFjZSB3aGVuIHVzZXJz
-cGFjZSBzZWxlY3QgdGhlIG1hY2hpbmUNCj4gaGFzIGJlZW4gY29ubmVjdGVkIHRvIGEgY2hhcmdl
-ci4NCg0KQnV0IHlvdSAqZG9uJ3Qgd2FudCB0byogYWN0dWFsbHkgc2VsZWN0IHBlcmZvcm1hbmNl
-IHdoZW4geW91IHN3aXRjaCB0byBhDQpjaGFyZ2VyLiAgSWYgeW91IGhhdmUgMyB2YWx1ZSBzbG90
-cyBmb3IgQUMgYW5kIDMgdmFsdWUgc2xvdHMgZm9yIERDIHlvdQ0Kc2hvdWxkIG9ubHkgYmUgc3dh
-cHBpbmcgYmV0d2VlbiB3aGF0IGlzIGluIHRob3NlIDMgdmFsdWVzIHNsb3RzLg0KDQo+IA0KPiBS
-ZWdhcmRzLA0KPiANCj4gSGFucw0KPiANCj4gDQo=
+Mike,
+
+I know you're trying to get this out and don't really need another
+delta, and I'd be holding it back if I didn't think it might make
+things smoother upstream.
+
+But what I'd consider for this one is:  Add the word log to the
+subject line, perhaps "Add gap hole end size to log", or just "Log gap
+hole end size".  Without it, the reviewer has to ask "add to *where*?"
+
+And I believe the second sentence of the description, "The structure
+stores PA bits 56:26, for > 64MB granularity, up to 64PB max size," is
+perhaps not necessary, and I think it may slow down somebody trying to
+read the patch quickly.  So I'd consider deleting it.
+
+With those two changes the description still matches the code, and
+seems simpler and easier to accept.
+
+Your call on either / both, of course.
+
+--> Steve
+
+On Mon, Mar 07, 2022 at 07:05:37PM -0600, Mike Travis wrote:
+> Show value of gap end in kernel log which equates to number of physical
+> address bits used by system.  The structure stores PA bits 56:26, for
+> 64MB granularity, up to 64PB max size.
+> 
+> Signed-off-by: Mike Travis <mike.travis@hpe.com>
+> Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+> ---
+>  arch/x86/kernel/apic/x2apic_uv_x.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+> index 387d6533549a..146f0f63a43b 100644
+> --- a/arch/x86/kernel/apic/x2apic_uv_x.c
+> +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+> @@ -1346,7 +1346,7 @@ static void __init decode_gam_params(unsigned long ptr)
+>  static void __init decode_gam_rng_tbl(unsigned long ptr)
+>  {
+>  	struct uv_gam_range_entry *gre = (struct uv_gam_range_entry *)ptr;
+> -	unsigned long lgre = 0;
+> +	unsigned long lgre = 0, gend = 0;
+>  	int index = 0;
+>  	int sock_min = 999999, pnode_min = 99999;
+>  	int sock_max = -1, pnode_max = -1;
+> @@ -1380,6 +1380,9 @@ static void __init decode_gam_rng_tbl(unsigned long ptr)
+>  			flag, size, suffix[order],
+>  			gre->type, gre->nasid, gre->sockid, gre->pnode);
+>  
+> +		if (gre->type == UV_GAM_RANGE_TYPE_HOLE)
+> +			gend = (unsigned long)gre->limit << UV_GAM_RANGE_SHFT;
+> +
+>  		/* update to next range start */
+>  		lgre = gre->limit;
+>  		if (sock_min > gre->sockid)
+> @@ -1397,7 +1400,8 @@ static void __init decode_gam_rng_tbl(unsigned long ptr)
+>  	_max_pnode	= pnode_max;
+>  	_gr_table_len	= index;
+>  
+> -	pr_info("UV: GRT: %d entries, sockets(min:%x,max:%x) pnodes(min:%x,max:%x)\n", index, _min_socket, _max_socket, _min_pnode, _max_pnode);
+> +	pr_info("UV: GRT: %d entries, sockets(min:%x,max:%x), pnodes(min:%x,max:%x), gap_end(%d)\n",
+> +	  index, _min_socket, _max_socket, _min_pnode, _max_pnode, fls64(gend));
+>  }
+>  
+>  /* Walk through UVsystab decoding the fields */
+> -- 
+> 2.26.2
+> 
+
+-- 
+Steve Wahl, Hewlett Packard Enterprise
