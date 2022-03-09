@@ -2,150 +2,86 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107B2C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Mar 2022 17:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EF6C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Mar 2022 17:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239128AbiCIRPo (ORCPT
+        id S236561AbiCIRUN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Mar 2022 12:15:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36588 "EHLO
+        Wed, 9 Mar 2022 12:20:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237292AbiCIRM7 (ORCPT
+        with ESMTP id S236444AbiCIRUB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Mar 2022 12:12:59 -0500
-Received: from mail1.bemta35.messagelabs.com (mail1.bemta35.messagelabs.com [67.219.250.3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2851625C49
-        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Mar 2022 09:07:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
-        s=Selector; t=1646845652; i=@lenovo.com;
-        bh=0BPgwSaistS+Od67voGRKh5M33F+md9a+DOt8vF31FQ=;
-        h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-         In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        b=HXQJF3wIu/UhA6tITsBOJcmgVb4agS08L1HtGT/gNMkQuc14wkAotQ43A8uEZVBPg
-         75b065BEsECbjrMN0BztHp+Ghp9drLmQtMZE50TBWolnYEU2YExvQxoeZCU+KZ4+GU
-         leD8IpacqphEapd1/1zDTs9Aa6+Nh0FD/RlxOIybN7RefLVSXhRF9FzmvMIQC7qNoR
-         T92UGhMh0D4XTuSNJmItZ4EHI95zUDGNA4yXMXGFf/plVHgnGVBnr+VPeBlJy+2RfM
-         +AvnAK5huUiyjXAPLq3O2M9c8MoQ/3D3WPI7Iimi2fk5H4k2SPA9oh+XfKMTlOmqdB
-         fgbqUa8B/JyAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHJsWRWlGSWpSXmKPExsWSoS+Vq3v5nka
-  SwexT1hYHj2xks3hzfDqTxavmR2wWB6ZOY7ZYvecFswOrx+I9L5k8Nq3qZPN4v+8qm8fnTXIB
-  LFGsmXlJ+RUJrBlb795jLbjGUfFq7X+WBsa17F2MXByMAkuZJR6dOAnlLGKVeH3sHxOE08kks
-  ah7JhuIIyQwl0miY/VqdgjnEJPEiydXgTKcHBICxxklule5QyQ6GSV2b/0B1dLHJPHl6RSwKi
-  GBx4wSXaej4OyOi5wgNq+ArcTurnYWEJtFQEVi3e5JjBBxQYmTM5+AxUUFwiXuP/sMNkdYoFy
-  ie+JWsBpmAXGJW0/mM4HYIgJ5ElNnvgKq5wCK+0j8nJ0NYgoJWErcX5YBUsEmoC2xZcsvsCmc
-  AlYS09t7oaZoSrRu/80OYctLbH87hxniSmWJX/3nmSF+VJRY8f0c1L8JEs1TjjJC2JIS125eY
-  IewZSWOnp3DAmH7SjSeX8cEYetKvPx4hxXCzpFonrEaao6cxKnec0wTGHVnIXl4FpLHZiE5bx
-  aS8xYwsqxitE4qykzPKMlNzMzRNTQw0DU0NNG1tNQ1NDXTS6zSTdQrLdYtTy0u0TXSSywv1ks
-  tLtYrrsxNzknRy0st2cQITFQpRclzdjDO7v+pd4hRkoNJSZRX6IBGkhBfUn5KZUZicUZ8UWlO
-  avEhRhkODiUJ3hOngXKCRanpqRVpmTnApAmTluDgURLhXXkeKM1bXJCYW5yZDpE6xWjMcWXb3
-  r3MHOd37t/LLMSSl5+XKiXOe+kuUKkASGlGaR7cIFgyv8QoKyXMy8jAwCDEU5BalJtZgir/il
-  Gcg1FJmHfRHaApPJl5JXD7XgGdwgR0ip2RGsgpJYkIKakGJp4LvnqNZ1Z6PZdO/vBR8obOe/H
-  H8gU819RTl6y+O5k/8L9XQnHdge6tEmfXyPtLfPK1ujKNT7SXSe9M8ZfMGfw33h+ff2BLrLnO
-  qk17/Jvdn2436OM5PE919c3O+08EEk/M337zvfLV41/utDGfzOtckssl2ea9QuZKeQLvp3P77
-  EtdbiSL8rOe0l51x+SFpXPxA4OCwzJaas0rQ/d9Wuyg/HCxvlqiSe+ati/yASsKz8x5+T5i6k
-  Ye0Zu/8jdzCj45vcnD33a6nGNwZs3nafK3bu6808skwVinW5i6sfFYYX5pCKt9T4de65FX5h7
-  L7669oxJ9yv3wyu6b5+bziPLliNw5e+T7hNN7pRcqaSuxFGckGmoxFxUnAgAEZwfNYQQAAA==
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-10.tower-655.messagelabs.com!1646845650!12230!1
-X-Originating-IP: [104.47.26.109]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.81.8; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 18340 invoked from network); 9 Mar 2022 17:07:31 -0000
-Received: from mail-sgaapc01lp2109.outbound.protection.outlook.com (HELO APC01-SG2-obe.outbound.protection.outlook.com) (104.47.26.109)
-  by server-10.tower-655.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 9 Mar 2022 17:07:31 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FPEsntVKK8NERY0kml34VS67OGa/QTYWcPB75t9MFTcFVpHIdKlxNUkg5JYHK7c/W6s8R1nEK7W+Uyd0zpetC08duywtXIEt77ocKJxRtzFkhRwTv8Hi14RoArrrRJsr4zeqVMLBdh9d25njD6ZbyxEhGhtQ17OGP/L3Cejc4JU/ijV9VZCOZ5Gas1fBwz008TFbJV0fzwmhm4zRS6sJ5da3N+DsCUI8W56e7PyeyTlI2utZGPsltE1C4niqqekLy7/OzWWXDgmD+hvBjdmaGsZmCK7f52EE6ka9lhiAx+QV8zpzLUMrOaq/dyJtQBIgKnSxWWYNh3dVxfmqXcECBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0BPgwSaistS+Od67voGRKh5M33F+md9a+DOt8vF31FQ=;
- b=cms1Mmd8D/YTAiuHsAwdQjvLU3+P4tYNXMgh0NVAqQBoJypmgF2RioD7KVe7bjXStBiwzr3APBkN6e3iuVsJGOS7aHODQunOMulrFKYr8mIdZGA0jfna2CeahOFejP5697m6KMA793yz9yrVqUZCs1aK/sArx9HavBM9BzDyXNq9dbC4hgUQCl8rWoMjWQqJ0YzkHOcbz0Tt5xbD34E3QVW6HRi2fjcprCw4Vq/sUg1uxR6W4w3fe9QMoc8PmE4zQvkEfDkS1Z4A3jMnT7c9TY/dDuNCsJtAZByHIUOpNajxo7bfS5IXaiKM9eb5B/jWavtgW2svTLIzZ8JBDK2KNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 104.232.225.6) smtp.rcpttodomain=redhat.com smtp.mailfrom=lenovo.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=lenovo.com;
- dkim=none (message not signed); arc=none
-Received: from PS2P216CA0078.KORP216.PROD.OUTLOOK.COM (2603:1096:300:2c::16)
- by TYZPR03MB6189.apcprd03.prod.outlook.com (2603:1096:400:12d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.7; Wed, 9 Mar
- 2022 17:07:28 +0000
-Received: from PSAAPC01FT011.eop-APC01.prod.protection.outlook.com
- (2603:1096:300:2c:cafe::e3) by PS2P216CA0078.outlook.office365.com
- (2603:1096:300:2c::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.20 via Frontend
- Transport; Wed, 9 Mar 2022 17:07:28 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 104.232.225.6) smtp.mailfrom=lenovo.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=lenovo.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- lenovo.com discourages use of 104.232.225.6 as permitted sender)
-Received: from mail.lenovo.com (104.232.225.6) by
- PSAAPC01FT011.mail.protection.outlook.com (10.13.38.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5038.14 via Frontend Transport; Wed, 9 Mar 2022 17:07:27 +0000
-Received: from reswpmail01.lenovo.com (10.62.32.20) by mail.lenovo.com
- (10.62.123.116) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.21; Wed, 9 Mar
- 2022 12:07:25 -0500
-Received: from [10.38.104.226] (10.38.104.226) by reswpmail01.lenovo.com
- (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.21; Wed, 9 Mar
- 2022 12:07:25 -0500
-Message-ID: <d515fb57-0fd4-5891-0a8c-d252bcb6413b@lenovo.com>
-Date:   Wed, 9 Mar 2022 12:07:24 -0500
+        Wed, 9 Mar 2022 12:20:01 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 357C4CF3A3
+        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Mar 2022 09:18:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646846331;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GAWXQT3+SwSu0KWipMzLVBxSzWWkxNmB9Hors9hSoPE=;
+        b=bn/NXiOfjLWj+Vou0OsHtWFFTdnmAev/zprGxylNM05DpKrS8QMNjiCReM0tbRi3myjAPX
+        DlAbOw7u/CV3bgagDk4nt6v4LyEij+si5OxTDNq/XRkjOvLPxqBLHdQxB3Bj6yEhtFMB8I
+        YvivL4zOQ5C5C8iBEWoyqkVXikwe1zE=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-584-a6Xlp39kMoyk-dUlTUiG6Q-1; Wed, 09 Mar 2022 12:18:50 -0500
+X-MC-Unique: a6Xlp39kMoyk-dUlTUiG6Q-1
+Received: by mail-ej1-f69.google.com with SMTP id le4-20020a170907170400b006dab546bc40so1643537ejc.15
+        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Mar 2022 09:18:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=GAWXQT3+SwSu0KWipMzLVBxSzWWkxNmB9Hors9hSoPE=;
+        b=di8Cg19/TFCtdT+nLIHvZwI4WXqES13EZt1ZEFeRy8Jnzdl9Ve5A5dV7enVTRbm8Zz
+         3Lr0y1bAbiDjIDQ8XIWOMohEjue7V7jXS1CLUPhBKEHbyBJqkDsCFh0HZKVyUm/0+RfR
+         +wItWh0+Lsybo2oRfzXM3x/iuv6tqdQL2iU1qEvRAB1rhlzNrzjYOGGBi8Ww/WcFRn10
+         3pmAJPn913k34BkqLwfRXpTNs2Wu4MwVMVoky27eL21fCQ5Ry+60SHEpv/KGi8IcY8kA
+         eL4uu4GU5jD03H7XVeX5KXbsHlP3ksNJ26Hhv6SAKupsEk3P0OgC1eCRsw6hP0zO97mP
+         qx+w==
+X-Gm-Message-State: AOAM532txJZNYfJOdKNR3z1ZEJi0lvaUrljtS+OXSShRzzDXiQxS5wm8
+        8d8YXXV0054SwkZmv2yo8jedITZkW+yMA+k1AZVzASLp+8T91ur6DsISKug+RCeCmovxqB3G9j1
+        CNZ0bpJBfTnRmP4kyCRPPcs4OetimzBVShw==
+X-Received: by 2002:a17:906:7056:b0:6d6:dd99:f2a4 with SMTP id r22-20020a170906705600b006d6dd99f2a4mr715911ejj.43.1646846328765;
+        Wed, 09 Mar 2022 09:18:48 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzi8c2jYa3zdg0quYt5/j1jgXmEytYjtzAnK/xMNAlTFzNniw1PAlOk+JsUOniGct1OgQ4oKg==
+X-Received: by 2002:a17:906:7056:b0:6d6:dd99:f2a4 with SMTP id r22-20020a170906705600b006d6dd99f2a4mr715894ejj.43.1646846328554;
+        Wed, 09 Mar 2022 09:18:48 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
+        by smtp.gmail.com with ESMTPSA id m25-20020a170906161900b006d43be5b95fsm985939ejd.118.2022.03.09.09.18.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Mar 2022 09:18:48 -0800 (PST)
+Message-ID: <e3d62a2f-793b-8b4f-bdab-faf638aee825@redhat.com>
+Date:   Wed, 9 Mar 2022 18:18:47 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [External] [PATCH 1/2] platform/x86: thinkpad_acpi: Fix compiler
- warning about uninitialized err variable
+ Thunderbird/91.4.0
+Subject: Re: [PATCH 1/2] platform/x86: thinkpad_acpi: Fix compiler warning
+ about uninitialized err variable
 Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-CC:     <platform-driver-x86@vger.kernel.org>,
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>
+Cc:     platform-driver-x86@vger.kernel.org,
         kernel test robot <lkp@intel.com>
 References: <20220309170532.343384-1-hdegoede@redhat.com>
-From:   Mark Pearson <markpearson@lenovo.com>
+From:   Hans de Goede <hdegoede@redhat.com>
 In-Reply-To: <20220309170532.343384-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.38.104.226]
-X-ClientProxiedBy: reswpmail01.lenovo.com (10.62.32.20) To
- reswpmail01.lenovo.com (10.62.32.20)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 50a6fc50-8d65-49cd-f6b5-08da01ef4a29
-X-MS-TrafficTypeDiagnostic: TYZPR03MB6189:EE_
-X-Microsoft-Antispam-PRVS: <TYZPR03MB6189DB4C818F412B8E0ED5F8C50A9@TYZPR03MB6189.apcprd03.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: K4bFcqD8ihCBXvVsuO7G49RJh+HAmpL5RYSZrIXOGvcbjZqqVfkNsi8tbmc4VvWOvEcjCgqdBIKgLEUSwSxhqPb0tVOi7iJfX5zWwA+9BHOGlQV84nSJ/z42prM86+FxkdGNzqql0M1w9CZtHXHR8N6/F+4pkPAWdDo6GkR4Wnm6DpT7W4/p3kFLF+IRmjb68avhtYbFDTXGP6g6xifk2vjPGMcojgLW/YmxdvrLhpuM3+eiD7sm4p5BP9hpcKxxfm/eE7wOxuGsCis5I2DfnWlPuFJ6RT3U1ElUz5OHCi3tCFTBiSB/dKG3KrSwapmYvjEdcGa7Vxib8S8qGm/ONkOlZqqbnQs2S134yVLZE7NiU+/jytBjHbkhBwqxsW+hqiHmKKP8R07cnGSyz8om3cxe+eAhRX1i6oy5k6Ib+sJBLwpAcM9Oicvhqie/uJKVp3RW4Q8CzuuFjtz72hSlu2izxbGgbzCwDeh2uxwPowxZ2CNdbYrUFgdD0VYfXM+78zzLFzQ4YlFonTuMavbG6f1CAp4dPuSQMWXFxeu1f1DPiknLccOHpMzmkxCmVAZN/oCWQR6b/guu9qPxaVKIvCFcwjNDmKzTEPUKao99wGuv25mr95BOBr10e81hoVYmhbZvMWngnUnzsacTclxXqHEiCWkPi3efqah/wlL5ysnBWX9kepIXQmzNYeOxVGhPx0vOQ7hjD69Dz9oxkVFucGTMTxQEgLvWPWP6e6MlET0uSfZrGpKV7AyXvBV4dHb0VLt8k5rS0hYwVUCIjrwWcgE8wEu6EDK+vS3ixWdCNyEh9tDOqXHTdS602pNRoW0k
-X-Forefront-Antispam-Report: CIP:104.232.225.6;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.lenovo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(40470700004)(70206006)(86362001)(2616005)(82310400004)(8676002)(16526019)(26005)(336012)(426003)(186003)(47076005)(53546011)(508600001)(31696002)(16576012)(4326008)(83380400001)(36860700001)(70586007)(2906002)(82960400001)(110136005)(36756003)(40460700003)(54906003)(36906005)(5660300002)(81166007)(8936002)(31686004)(356005)(316002)(3940600001)(43740500002)(36900700001);DIR:OUT;SFP:1102;
-X-OriginatorOrg: lenovo.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2022 17:07:27.5047
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50a6fc50-8d65-49cd-f6b5-08da01ef4a29
-X-MS-Exchange-CrossTenant-Id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5c7d0b28-bdf8-410c-aa93-4df372b16203;Ip=[104.232.225.6];Helo=[mail.lenovo.com]
-X-MS-Exchange-CrossTenant-AuthSource: PSAAPC01FT011.eop-APC01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB6189
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks Hans,
+Hi,
 
-This was on my todo list but appreciate you doing it so fast :)
-Change looks good.
-
-Mark
-
-On 2022-03-09 12:05, Hans de Goede wrote:
+On 3/9/22 18:05, Hans de Goede wrote:
 > err is always set because if we get here then dytc_profile_available
 > is always one of DYTC_FUNCMODE_MMC or DYTC_FUNCMODE_PSC, but the
 > compiler cannot now that, so initialize err to 0 to avoid a
@@ -153,6 +89,13 @@ On 2022-03-09 12:05, Hans de Goede wrote:
 > 
 > Reported-by: kernel test robot <lkp@intel.com>
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
+I've added these 2 patches to my review-hans (soon to be for-next) branch now.
+
+Regards,
+
+Hans
+
 > ---
 >  drivers/platform/x86/thinkpad_acpi.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
