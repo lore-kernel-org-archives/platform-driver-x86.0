@@ -2,85 +2,242 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143F8C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Mar 2022 21:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96EDC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Mar 2022 04:46:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241473AbiCHVg6 (ORCPT
+        id S229501AbiCIErQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Mar 2022 16:36:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
+        Tue, 8 Mar 2022 23:47:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232088AbiCHVg4 (ORCPT
+        with ESMTP id S229482AbiCIErP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Mar 2022 16:36:56 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7EC854FA6
-        for <platform-driver-x86@vger.kernel.org>; Tue,  8 Mar 2022 13:35:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=ZK2wx0jndJ6aUb4odh4PBQssSBT8ZmCXlS8UExtgL7Y=; b=QZHeIWyACHxDeB1tq9mSKxuKOk
-        t2fZ6eRjbCwXWRjfDgOeohN9y/O4PCpzYS2wFvAvjRLzNqej+FCdJEkEtnSElZSC8cpwKuYoO/aT8
-        wPysdo/KRQ1iXeSfgi6F0Kmqj0FnQC+kUH4L6ku7EMj1MWRfAysOQhFAZyAYjLv9A8tNFpHaRpw5A
-        4GLIWeyNViSyFSJdJKWpHeUfiYqh/u7I5emHB3ioMCTLLRF/7zIqIb/TbTyj7anZAPF9ZszpjaTUT
-        ENO3hwgKPpvEJd/nlTehDKCzn8sIB7YJ1wXa4I77yL/eze/h2aFNDKFa7M80SzXNPSBkY1IDluFvt
-        Jx7NSgfQ==;
-Received: from [2601:1c0:6280:3f0::aa0b]
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nRhUp-00GYZh-Gr; Tue, 08 Mar 2022 21:35:56 +0000
-Message-ID: <6b2b0e8e-a2c5-c1cd-f34c-51eb62370b11@infradead.org>
-Date:   Tue, 8 Mar 2022 13:35:52 -0800
+        Tue, 8 Mar 2022 23:47:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D3E6FF11B3
+        for <platform-driver-x86@vger.kernel.org>; Tue,  8 Mar 2022 20:46:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646801174;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=O9y7hYtf8DIbE/b1LIIjEL5hDziwE2SHgt9FQ5yzHZY=;
+        b=Rw4HgqxFdx9R5XkzimF6Q9vaE+dGRjq1OMXXjp7p85D65q11yr3aRAPXED6Qoe6GjCoD2S
+        sQSpzf87Gil43Ninq0cTK7PoOn9yk/cjLYbmHiDeUkKVnrr/j+vDSBVVqtyj9T3RBGJZiy
+        rwPY3QURaQOEi0scarEuUK/0yqVt9sM=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-295-ZAl5yAoNM_S3iPLdGIUZWA-1; Tue, 08 Mar 2022 23:46:13 -0500
+X-MC-Unique: ZAl5yAoNM_S3iPLdGIUZWA-1
+Received: by mail-pg1-f199.google.com with SMTP id h12-20020a63530c000000b0037c8f45bf1bso662110pgb.7
+        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Mar 2022 20:46:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=O9y7hYtf8DIbE/b1LIIjEL5hDziwE2SHgt9FQ5yzHZY=;
+        b=cC5Sw196PMQgYRWKKZ/v7SCLr2OtlW8hnbvMAiBKyEA7WJvHjCgwXdITNrAsPTCRpp
+         bLQauAs3iklH3RWCvnBv/Yqhld0VpvcHI1SSpU/50g6wOKDJi/jDkDpFCEMZILaiCno7
+         N8Bi6yaqKJCCXGeJvow100gvP7av4fNFglNCo4mtuWLRf5rWL5j/R2gw+XX4VAWzWehr
+         dXJL0GKxltJ6xe0ymYzag9EFbJN0Kbwbszc9vaTuSOpJ7zGSWuXy8qYWQ27qHvHoNsAT
+         ueFW+usV8mdshexq456hkPB5ohF5z2dxB/KkQQewH7ILVBaXTOZcG67d6RL33Of9FYru
+         vNnQ==
+X-Gm-Message-State: AOAM533Qp4/cWW362yydwbeL3zoFZCl5EcQcXv0zUCpbgCPSgdq4QRPF
+        E1NToMULFt/7kupRQG3Cg/Uy5Ci1btcOhEAsTJWej4IrUbIuu/+VAbPcHa7rQhwpxdhoQRJ8usP
+        hLZPvegxFkt0dAGWhI5j+i9itbmg2U6qKZA==
+X-Received: by 2002:a17:90a:17ab:b0:1bf:9519:fe86 with SMTP id q40-20020a17090a17ab00b001bf9519fe86mr5407284pja.25.1646801172048;
+        Tue, 08 Mar 2022 20:46:12 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzNoaLCqq9sRt9psO5uqafOMqGFVYmxmfOSqOlDkq0FsYupDy1WKwY2W2xGCXK65aGhCKiuiQ==
+X-Received: by 2002:a17:90a:17ab:b0:1bf:9519:fe86 with SMTP id q40-20020a17090a17ab00b001bf9519fe86mr5407253pja.25.1646801171689;
+        Tue, 08 Mar 2022 20:46:11 -0800 (PST)
+Received: from [10.72.13.251] ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id o5-20020a056a00214500b004bd7036b50asm810863pfk.172.2022.03.08.20.46.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Mar 2022 20:46:11 -0800 (PST)
+Message-ID: <2c823fed-8024-39e7-f6f5-176fb518fc1a@redhat.com>
+Date:   Wed, 9 Mar 2022 12:45:57 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Subject: Re: [PATCH] platform/x86: x86-android-tablets: Depend on EFI and SPI
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.1
+Subject: Re: [PATCH v7 00/26] virtio pci support VIRTIO_F_RING_RESET
 Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
+To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20220308152942.262130-1-hdegoede@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20220308152942.262130-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org
+References: <20220308123518.33800-1-xuanzhuo@linux.alibaba.com>
+From:   Jason Wang <jasowang@redhat.com>
+In-Reply-To: <20220308123518.33800-1-xuanzhuo@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
+在 2022/3/8 下午8:34, Xuan Zhuo 写道:
+> The virtio spec already supports the virtio queue reset function. This patch set
+> is to add this function to the kernel. The relevant virtio spec information is
+> here:
+>
+>      https://github.com/oasis-tcs/virtio-spec/issues/124
+>
+> Also regarding MMIO support for queue reset, I plan to support it after this
+> patch is passed.
+>
+> Performing reset on a queue is divided into four steps:
+>       1. virtio_reset_vq()              - notify the device to reset the queue
+>       2. virtqueue_detach_unused_buf()  - recycle the buffer submitted
+>       3. virtqueue_reset_vring()        - reset the vring (may re-alloc)
+>       4. virtio_enable_resetq()         - mmap vring to device, and enable the queue
+>
+> The first part 1-17 of this patch set implements virtio pci's support and API
+> for queue reset. The latter part is to make virtio-net support set_ringparam. Do
+> these things for this feature:
+>
+>        1. virtio-net support rx,tx reset
+>        2. find_vqs() support to special the max size of each vq
+>        3. virtio-net support set_ringparam
+>
+> #1 -#3 :       prepare
+> #4 -#12:       virtio ring support reset vring of the vq
+> #13-#14:       add helper
+> #15-#17:       virtio pci support reset queue and re-enable
+> #18-#21:       find_vqs() support sizes to special the max size of each vq
+> #23-#24:       virtio-net support rx, tx reset
+> #22, #25, #26: virtio-net support set ringparam
+>
+> Test environment:
+>      Host: 4.19.91
+>      Qemu: QEMU emulator version 6.2.50 (with vq reset support)
+>      Test Cmd:  ethtool -G eth1 rx $1 tx $2; ethtool -g eth1
+>
+>      The default is split mode, modify Qemu virtio-net to add PACKED feature to test
+>      packed mode.
+>
+>
+> Please review. Thanks.
+>
+> v7:
+>    1. fix #6 subject typo
+>    2. fix #6 ring_size_in_bytes is uninitialized
+>    3. check by: make W=12
+>
+> v6:
+>    1. virtio_pci: use synchronize_irq(irq) to sync the irq callbacks
+>    2. Introduce virtqueue_reset_vring() to implement the reset of vring during
+>       the reset process. May use the old vring if num of the vq not change.
+>    3. find_vqs() support sizes to special the max size of each vq
+>
+> v5:
+>    1. add virtio-net support set_ringparam
+>
+> v4:
+>    1. just the code of virtio, without virtio-net
+>    2. Performing reset on a queue is divided into these steps:
+>      1. reset_vq: reset one vq
+>      2. recycle the buffer from vq by virtqueue_detach_unused_buf()
+>      3. release the ring of the vq by vring_release_virtqueue()
+>      4. enable_reset_vq: re-enable the reset queue
+>    3. Simplify the parameters of enable_reset_vq()
+>    4. add container structures for virtio_pci_common_cfg
+>
+> v3:
+>    1. keep vq, irq unreleased
 
-On 3/8/22 07:29, Hans de Goede wrote:
-> The recently added support for Lenovo Yoga Tablet 2 tablets uses
-> symbols from EFI and SPI add "depends on EFI && SPI" to the
-> X86_ANDROID_TABLETS Kconfig entry.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+The series became kind of huge.
 
-thanks.
+I'd suggest to split it into two series.
 
-> ---
->  drivers/platform/x86/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 0d51011d5d90..5d9dd70e4e0f 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1041,7 +1041,7 @@ config TOUCHSCREEN_DMI
->  
->  config X86_ANDROID_TABLETS
->  	tristate "X86 Android tablet support"
-> -	depends on I2C && SERIAL_DEV_BUS && ACPI && GPIOLIB
-> +	depends on I2C && SPI && SERIAL_DEV_BUS && ACPI && EFI && GPIOLIB
->  	help
->  	  X86 tablets which ship with Android as (part of) the factory image
->  	  typically have various problems with their DSDTs. The factory kernels
+1) refactoring of the virtio_ring to prepare for the resize
+2) the reset support + virtio-net support
 
--- 
-~Randy
+Thanks
+
+
+>
+> *** BLURB HERE ***
+>
+> Xuan Zhuo (26):
+>    virtio_pci: struct virtio_pci_common_cfg add queue_notify_data
+>    virtio: queue_reset: add VIRTIO_F_RING_RESET
+>    virtio: add helper virtqueue_get_vring_max_size()
+>    virtio_ring: split: extract the logic of creating vring
+>    virtio_ring: split: extract the logic of init vq and attach vring
+>    virtio_ring: packed: extract the logic of creating vring
+>    virtio_ring: packed: extract the logic of init vq and attach vring
+>    virtio_ring: extract the logic of freeing vring
+>    virtio_ring: split: implement virtqueue_reset_vring_split()
+>    virtio_ring: packed: implement virtqueue_reset_vring_packed()
+>    virtio_ring: introduce virtqueue_reset_vring()
+>    virtio_ring: update the document of the virtqueue_detach_unused_buf
+>      for queue reset
+>    virtio: queue_reset: struct virtio_config_ops add callbacks for
+>      queue_reset
+>    virtio: add helper for queue reset
+>    virtio_pci: queue_reset: update struct virtio_pci_common_cfg and
+>      option functions
+>    virtio_pci: queue_reset: extract the logic of active vq for modern pci
+>    virtio_pci: queue_reset: support VIRTIO_F_RING_RESET
+>    virtio: find_vqs() add arg sizes
+>    virtio_pci: support the arg sizes of find_vqs()
+>    virtio_mmio: support the arg sizes of find_vqs()
+>    virtio: add helper virtio_find_vqs_ctx_size()
+>    virtio_net: get ringparam by virtqueue_get_vring_max_size()
+>    virtio_net: split free_unused_bufs()
+>    virtio_net: support rx/tx queue reset
+>    virtio_net: set the default max ring size by find_vqs()
+>    virtio_net: support set_ringparam
+>
+>   arch/um/drivers/virtio_uml.c             |   2 +-
+>   drivers/net/virtio_net.c                 | 257 ++++++++--
+>   drivers/platform/mellanox/mlxbf-tmfifo.c |   3 +-
+>   drivers/remoteproc/remoteproc_virtio.c   |   2 +-
+>   drivers/s390/virtio/virtio_ccw.c         |   2 +-
+>   drivers/virtio/virtio_mmio.c             |  12 +-
+>   drivers/virtio/virtio_pci_common.c       |  28 +-
+>   drivers/virtio/virtio_pci_common.h       |   3 +-
+>   drivers/virtio/virtio_pci_legacy.c       |   8 +-
+>   drivers/virtio/virtio_pci_modern.c       | 146 +++++-
+>   drivers/virtio/virtio_pci_modern_dev.c   |  36 ++
+>   drivers/virtio/virtio_ring.c             | 584 +++++++++++++++++------
+>   drivers/virtio/virtio_vdpa.c             |   2 +-
+>   include/linux/virtio.h                   |  12 +
+>   include/linux/virtio_config.h            |  74 ++-
+>   include/linux/virtio_pci_modern.h        |   2 +
+>   include/uapi/linux/virtio_config.h       |   7 +-
+>   include/uapi/linux/virtio_pci.h          |  14 +
+>   18 files changed, 979 insertions(+), 215 deletions(-)
+>
+> --
+> 2.31.0
+>
+
