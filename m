@@ -2,115 +2,213 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EF6C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Mar 2022 17:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256A3C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Mar 2022 17:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236561AbiCIRUN (ORCPT
+        id S232638AbiCIR4W (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Mar 2022 12:20:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50600 "EHLO
+        Wed, 9 Mar 2022 12:56:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236444AbiCIRUB (ORCPT
+        with ESMTP id S235389AbiCIR4Q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Mar 2022 12:20:01 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 357C4CF3A3
-        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Mar 2022 09:18:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646846331;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GAWXQT3+SwSu0KWipMzLVBxSzWWkxNmB9Hors9hSoPE=;
-        b=bn/NXiOfjLWj+Vou0OsHtWFFTdnmAev/zprGxylNM05DpKrS8QMNjiCReM0tbRi3myjAPX
-        DlAbOw7u/CV3bgagDk4nt6v4LyEij+si5OxTDNq/XRkjOvLPxqBLHdQxB3Bj6yEhtFMB8I
-        YvivL4zOQ5C5C8iBEWoyqkVXikwe1zE=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-584-a6Xlp39kMoyk-dUlTUiG6Q-1; Wed, 09 Mar 2022 12:18:50 -0500
-X-MC-Unique: a6Xlp39kMoyk-dUlTUiG6Q-1
-Received: by mail-ej1-f69.google.com with SMTP id le4-20020a170907170400b006dab546bc40so1643537ejc.15
-        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Mar 2022 09:18:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=GAWXQT3+SwSu0KWipMzLVBxSzWWkxNmB9Hors9hSoPE=;
-        b=di8Cg19/TFCtdT+nLIHvZwI4WXqES13EZt1ZEFeRy8Jnzdl9Ve5A5dV7enVTRbm8Zz
-         3Lr0y1bAbiDjIDQ8XIWOMohEjue7V7jXS1CLUPhBKEHbyBJqkDsCFh0HZKVyUm/0+RfR
-         +wItWh0+Lsybo2oRfzXM3x/iuv6tqdQL2iU1qEvRAB1rhlzNrzjYOGGBi8Ww/WcFRn10
-         3pmAJPn913k34BkqLwfRXpTNs2Wu4MwVMVoky27eL21fCQ5Ry+60SHEpv/KGi8IcY8kA
-         eL4uu4GU5jD03H7XVeX5KXbsHlP3ksNJ26Hhv6SAKupsEk3P0OgC1eCRsw6hP0zO97mP
-         qx+w==
-X-Gm-Message-State: AOAM532txJZNYfJOdKNR3z1ZEJi0lvaUrljtS+OXSShRzzDXiQxS5wm8
-        8d8YXXV0054SwkZmv2yo8jedITZkW+yMA+k1AZVzASLp+8T91ur6DsISKug+RCeCmovxqB3G9j1
-        CNZ0bpJBfTnRmP4kyCRPPcs4OetimzBVShw==
-X-Received: by 2002:a17:906:7056:b0:6d6:dd99:f2a4 with SMTP id r22-20020a170906705600b006d6dd99f2a4mr715911ejj.43.1646846328765;
-        Wed, 09 Mar 2022 09:18:48 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzi8c2jYa3zdg0quYt5/j1jgXmEytYjtzAnK/xMNAlTFzNniw1PAlOk+JsUOniGct1OgQ4oKg==
-X-Received: by 2002:a17:906:7056:b0:6d6:dd99:f2a4 with SMTP id r22-20020a170906705600b006d6dd99f2a4mr715894ejj.43.1646846328554;
-        Wed, 09 Mar 2022 09:18:48 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id m25-20020a170906161900b006d43be5b95fsm985939ejd.118.2022.03.09.09.18.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Mar 2022 09:18:48 -0800 (PST)
-Message-ID: <e3d62a2f-793b-8b4f-bdab-faf638aee825@redhat.com>
-Date:   Wed, 9 Mar 2022 18:18:47 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH 1/2] platform/x86: thinkpad_acpi: Fix compiler warning
- about uninitialized err variable
+        Wed, 9 Mar 2022 12:56:16 -0500
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF313E38B3;
+        Wed,  9 Mar 2022 09:55:14 -0800 (PST)
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 22961Ncg005807;
+        Wed, 9 Mar 2022 09:55:14 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : mime-version; s=facebook;
+ bh=CaO3rycb2hQFNcTYCKw8XzBrhdmzulJeQJCErwlPENw=;
+ b=GKaE1QiOZUWwkU7WcMlChaOQYMFkvholxOcfQGPq/wDgXy1kxEeGkhg+V0LaMHjSv0+F
+ LJiT7OHyeiZ2G51h4JL2biF93pa3yjJKTPQUIdjYryd1ovi/M3sl2raA0FBM5aaRifSv
+ 9uqmsbz1afhUpggIHNxTlCpCUEiAgO55vmY= 
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2103.outbound.protection.outlook.com [104.47.70.103])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3eppkk3ybp-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Mar 2022 09:55:13 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OhR9dwxhWqnp5oDCyLcY7Ko67uCeTEbp0CUQ+5tqz1F5xzLQHwYr5gVEx9cVjO/vHeGFRWvuiKTkXxagD5bta1UdleJrssCyUCSAenxATPExulaS0AmIBAA9TWXRL0zHw3SjvTv5o1zcyICWSlbqTaut4xdGOeyjrBo/Wl4L6yqhipVvdyN1F3wRXNmK/y+VHOcPhehzpiEm1UfyZGWZ3hZzjan8mFAmiR7XrbV0g/4ahuY8AuVTPwRktFnAzeY7Csbb/1XhdANWy+akPxLLCtkHARJoiKRH5xhmrccA4uGgIrXulelAqr9GkZalUC9wj7C5oZ5j9eulF7hvZTfmJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CaO3rycb2hQFNcTYCKw8XzBrhdmzulJeQJCErwlPENw=;
+ b=od4rCD0BffehJWy9Ez4l74/doB4qKnJYiUzF4Ncrbh8AWRJoBqOv5KEaKlQBFBMCIUBvY5zeVK/8pJ9whz15wIoxORaoH4Axh2f9UOiAp96HlS8YzolobwKbnHnjpVaLbkb9Bet0TuM5xzGfenM7JatJBIluJNUe5JN/ZOh/2uZsHf5dXeeL9z95eSZyHFSHd1CnxkvpkUAEQHEjwi7HgR6yt93ZLHwHsn7udpk3iQuwlZnwWSGVRi4Xmn4Nlfc1GQK6ArwVVulHuY0o2VbHHErZJk1ILQELvnSVhTdZg8PNQcRkCkSQSBM5iZ8om8TJokL7Z+tXTgXIjb20SriXGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+Received: from SJ0PR15MB4552.namprd15.prod.outlook.com (2603:10b6:a03:379::12)
+ by MN2PR15MB2878.namprd15.prod.outlook.com (2603:10b6:208:e9::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.21; Wed, 9 Mar
+ 2022 17:55:11 +0000
+Received: from SJ0PR15MB4552.namprd15.prod.outlook.com
+ ([fe80::7cbb:e9df:5833:370e]) by SJ0PR15MB4552.namprd15.prod.outlook.com
+ ([fe80::7cbb:e9df:5833:370e%8]) with mapi id 15.20.5038.027; Wed, 9 Mar 2022
+ 17:55:10 +0000
+From:   Jonathan McDowell <noodles@fb.com>
+To:     Matthew Garrett <mjg59@srcf.ucam.org>
+CC:     Dmitrii Okunev <xaionaro@fb.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Qiaowei Ren <qiaowei.ren@intel.com>,
+        Xiaoyan Zhang <xiaoyan.zhang@intel.com>,
+        Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [RFC PATCH] platform/x86: Add sysfs interface for Intel TXT
+ status
+Thread-Topic: [RFC PATCH] platform/x86: Add sysfs interface for Intel TXT
+ status
+Thread-Index: AQHYM6IJ2oHmymlKRU22/keFD+BGbqy24J6AgAB0YAA=
+Date:   Wed, 9 Mar 2022 17:55:10 +0000
+Message-ID: <Yijo1rutEdEVbH2u@noodles-fedora-PC23Y6EG.dhcp.thefacebook.com>
+References: <1368465884-14779-1-git-send-email-qiaowei.ren@intel.com>
+ <1368465884-14779-3-git-send-email-qiaowei.ren@intel.com>
+ <20130516160311.GA12299@amd.pavel.ucw.cz>
+ <4febd50da7e5007a2797e0f4c969fa5edd0bf725.camel@fb.com>
+ <Yg5A4Mupue0V9diu@kroah.com> <20220217123753.GA21849@duo.ucw.cz>
+ <0cf678e0b01bf421f3db6693a15ac4060501a80a.camel@fb.com>
+ <20220222093101.GA23654@amd>
+ <YiiD3WM76L3jbMyW@noodles-fedora-PC23Y6EG.dhcp.thefacebook.com>
+ <20220309105343.GA14476@srcf.ucam.org>
+In-Reply-To: <20220309105343.GA14476@srcf.ucam.org>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-References: <20220309170532.343384-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220309170532.343384-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9a1897f4-ff79-4c5c-7128-08da01f5f460
+x-ms-traffictypediagnostic: MN2PR15MB2878:EE_
+x-microsoft-antispam-prvs: <MN2PR15MB28782D5B2FF2AC2DB78906DDC10A9@MN2PR15MB2878.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: O5b2qXsMmL6JB/g4Zy36m2V1kapJDQ+zqpQmYHRwXyQTBMhGzRIPkLOvsiFj8e0RbOH5FnmIgqLercU+4VBc9q1P5SP5PZwDeC1o1aACeqIfZMTzUKjQleUXxx8VFF1ms768P25FrLvl1kjYO9ija53dEEepqYJVywiDYJ89/CHxUKQJYpqE2q4ddBQpUwI8KuXPvOXA8rL1SMNlY0kZAIXlcmxz9gA39KLbcxFAydcSbLPg1p9bbiJGAATjS8gKht4qBybvDJu2pHL8grsk/f8f/lkHme/FxgS4ucuIjEVYJloJEfZ2Ukqom0eg/4QTKFK2vI2KxuCFnN4quqnjlJiN17FKr6MmOgkeXudMraOuZqqO5ZCuC26AXEQvnLma9eTstdghss/sjXyVhBnfDF6YpsGMEmN6TcHQuocCBT8Mvvf5BPJEM0zsLEF7B+0QI8T3VUSW/qrLmPqHwKvsTW58wyd0nSSBJYUhO5fBuO02ClM+aGv4fjaa2uoDJuDMuh/sDjkTk+iM9nobxz9so3FzXRnsnHvxHK2Eu/ERlsWw6ckV4dlEfvngibjo/ha61fTB/cCCPT+ZY1qodgDdTQEvND5RSHb4XCasF8q1aHILr9jZymuY6/0iwco/pghiniZwGEjVWNP5t49zPqqztnxi7g0x0NdDp7+Lw8i4orfYNdhk+TRA9awDTpr9e9FbYVlPgvWQ/sa/2MSp++I+Eg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR15MB4552.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(5660300002)(83380400001)(8936002)(7416002)(26005)(508600001)(54906003)(91956017)(76116006)(71200400001)(4326008)(66946007)(66446008)(66556008)(66476007)(86362001)(6506007)(6512007)(9686003)(2906002)(8676002)(6486002)(186003)(122000001)(38100700002)(38070700005)(316002)(6916009)(64756008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?+m5ncWm6Q9Dfw5VDvl0ygROpWDCkld0a9yaj/KTfCrFoVLhCF8oXf8QkXs7H?=
+ =?us-ascii?Q?SdfE+7TUFL072wkpRj9CEa4FjqvE2VIWo7jrVTyUIF5m0TulQVvXWul9bDj+?=
+ =?us-ascii?Q?ZBLR7hZxMh2OzVzKrTvIl+yJ8X8oO9X9xXIZ2MNdNHayztYv8Ydn5RX4QeKd?=
+ =?us-ascii?Q?+0pwSG3Tw1HS4WQvbYJQ026h4tbW1TFPyR8ErGjH2JCaiWep9zbGvdLJe21P?=
+ =?us-ascii?Q?vy7Sin2/B//SuAfSq2HWWy0+lEnKaVya81F1zfrTMX/wh1qAboB9moJm/Czz?=
+ =?us-ascii?Q?HdgYTK72V6i/YvXQ3KGuHynAqjWzv35GvuZGLw0AHtZ1lMr82za6fVMUvEFL?=
+ =?us-ascii?Q?dksOQ8a/ekmFbs1T4ObxUWostmJ5jkVIBaDPbZYQ45I5rKWvn/FdEnVqjHQ/?=
+ =?us-ascii?Q?3yndT/dF1QGSfjarH+yt1hEQYso/szCURhl7lJcP2786prGtOOLpIghjlcUx?=
+ =?us-ascii?Q?OYjwsk/xDp4Ig3IAFI4GAaKDprHS5JJjYmaf7N0jBNKiKRn5g//OEOK1tkr2?=
+ =?us-ascii?Q?Th8r8SpEnhufSDqPTkzWjjg32Ut7ZX+41STfvsMuEbDfFaBgpyT1kD9VF6h8?=
+ =?us-ascii?Q?ejA1mZGB4Ltpz4RKx3aFyFIxQ2Ver1GMMaNyaXUMdMptSDSPk/e3+r1KUMBd?=
+ =?us-ascii?Q?nxlGvf0iZgOusF9IfkCS+vUQK09mArzE1PWLSbPWL2JggxJ3vbBFkg9v0y8q?=
+ =?us-ascii?Q?fz4ksq8EDphQUMuOO3FhA2zfZEmZkaOiKAPX83zzM5mV5Db9ONry0uvVK9up?=
+ =?us-ascii?Q?JQp3yOSsa6WF7hMoIW+ZbssdpW1uqu7W1La4X7zfIwU9pRfjeJFEDA9dekXa?=
+ =?us-ascii?Q?9r1R9cAMLANFCilKu0rlfYlN9eYnX6bgtzf48AkKAZ3gL9J02ge8xK9aYso1?=
+ =?us-ascii?Q?eDWP2ZGWvHUUfWJzqwcssc5zIcnOJ82ykbLdl9u/2wCH2OfjL3Z0BasuAcd7?=
+ =?us-ascii?Q?f0mQcAAl1hbRrTPWWPXNhACloqTnt+PimFu+Ibe6r58ulkDkfsGotmKTQwcK?=
+ =?us-ascii?Q?YjN7H7BD0YHgFQcf5NVu6JBql0LPF57sj9aDQ2B8g9zMYbnjEaSBMkowoCje?=
+ =?us-ascii?Q?T2cqJ+4ymsmP8VJIsQXEuynJPvILeFusBuXcr9gPdn3iE9ioeNI2Fco5FHOa?=
+ =?us-ascii?Q?hk1ze7SrBTP+KjjREPBYVgh9layj29R7niBXWHuv+gtHEPrIEhlNuRHrtfqe?=
+ =?us-ascii?Q?320w37CjUGB7Ujxozfi7tG+IsTIDVsFTGw1vE3J9vvIQr3MvHXLicjkjPVZM?=
+ =?us-ascii?Q?u+UjICfTSU+xPFrixwkqCx2ELhQHhee+gUnke557HlyS3i4DNxxJwKLH/vx0?=
+ =?us-ascii?Q?pigF85CK8De0UbEUjsNMbACPPtoIMF6rLaoQ7m825FKO5b/eMSLi+fdkD1u+?=
+ =?us-ascii?Q?sfGZ4J6h63DgmozoCxnq3fpXLJlI+JitQkgrvhLqcoa1xmEdSsHigOuBvhjq?=
+ =?us-ascii?Q?qn5gyz75KVgpcUkq5/gwNVQ+/olKqcMy?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <95FBBE519844CF46B5283C91411AFD97@namprd15.prod.outlook.com>
+MIME-Version: 1.0
+X-OriginatorOrg: fb.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR15MB4552.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a1897f4-ff79-4c5c-7128-08da01f5f460
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2022 17:55:10.2735
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +ht1zI705tHMD8qLFQVDQBNUyzuORnyL+K7BsQNWWGWQSm7OJwLHA7qr10UO+huz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB2878
+X-Proofpoint-ORIG-GUID: FNk62J3Usc3oenJTUapHTd-hyUABQ9PC
+X-Proofpoint-GUID: FNk62J3Usc3oenJTUapHTd-hyUABQ9PC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-03-09_07,2022-03-09_01,2022-02-23_01
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 3/9/22 18:05, Hans de Goede wrote:
-> err is always set because if we get here then dytc_profile_available
-> is always one of DYTC_FUNCMODE_MMC or DYTC_FUNCMODE_PSC, but the
-> compiler cannot now that, so initialize err to 0 to avoid a
-> compiler warning about err being uninitialized.
+On Wed, Mar 09, 2022 at 10:53:43AM +0000, Matthew Garrett wrote:
+> On Wed, Mar 09, 2022 at 10:40:03AM +0000, Jonathan McDowell wrote:
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-
-I've added these 2 patches to my review-hans (soon to be for-next) branch now.
-
-Regards,
-
-Hans
-
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > This module provides read-only access to the Intel TXT (Trusted
+> > Execution Technology) status registers, allowing userspace to determine
+> > the status of measured boot and whether the dynamic root of trust for
+> > measurement (DRTM) has been fully enabled.
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index cb8f52be8253..7016c7fc3440 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -10344,7 +10344,7 @@ static int dytc_profile_set(struct platform_profile_handler *pprof,
->  static void dytc_profile_refresh(void)
->  {
->  	enum platform_profile_option profile;
-> -	int output, err;
-> +	int output, err = 0;
->  	int perfmode;
->  
->  	mutex_lock(&dytc_mutex);
+> So there's the obvious issue that in the event that the system has been 
+> compromised this information is no longer trustworthy - is this expected 
+> to just be informative for diagnostic purposes rather than forming any 
+> part of security policy?
 
+This is purely for diagnostic purposes when the system ends up in an
+unexpected state, to aid automated remediation. In particular dealing
+with unexpected PCR0 values that have failed attestation; the state of
+TXT helps with trying to diagnose how we got to the unexpected value.
+
+> > +	  These registers provide details about the status of the platform's
+> > +	  measured launch and execution environment, allowing userspace to
+> > +	  make trust based decisions. See tboot
+> 
+> Mm. This makes it sound like it's expected that userspace make decisions 
+> based on this, which sounds like a bad plan?
+
+I should clean up the description to be clearer for v2.
+
+> > +/* Shows if TXT has been enabled */
+> > +static int txt_enabled_show(struct seq_file *m, void *v)
+> > +{
+> > +	/* If the BIOS has enabled TXT then the heap base will be set */
+> 
+> Sorry it's not that I want to say "Wait are you trusting that the BIOS 
+> will do the right thing here" but wait are you trusting that the BIOS 
+> will do the right thing here? Does setting the heap base guarantee that 
+> TXT was enabled (and, conversely, are there any scenarios where TXT was 
+> enabled and the BIOS could have cleared the heap base after a 
+> measurement event?)
+
+If the BIOS hasn't enabled the heap then it won't have been able to pass
+any data to the system for a managed launch environment, so I think it's
+fairly safe to assume if it's never been set we're not in a situation
+where anything has tried to initialise TXT. If we're in a situation
+where we've tried to initialise it and then something has gone wrong and
+the BIOS has managed to clear it that's probably a firmware bug and I'd
+expect to see some status register oddities too. We're not trusting the
+BIOS here, we're just using the fact the heap is actually setup to
+indicate that we've tried to do TXT in terms of diagnosis. (And, in
+fact, one of the failure modes we've seen is where TXT is supposed to be
+configured in the BIOS but it doesn't actually get setup at all and we
+correctly see a 0 entry here.)
+
+> > +/* Shows the 256 bit hash of the public key */
+> > +static int txt_key_show(struct seq_file *m, void *v)
+> > +{
+> > +	seq_printf(m, "%016llx%016llx%016llx%016llx\n",
+> > +		cpu_to_be64(*(u64 *)(txt_pub_regs + TXT_CR_PUBLIC_KEY)),
+> > +		cpu_to_be64(*(u64 *)(txt_pub_regs + TXT_CR_PUBLIC_KEY + 8)),
+> > +		cpu_to_be64(*(u64 *)(txt_pub_regs + TXT_CR_PUBLIC_KEY + 16)),
+> > +		cpu_to_be64(*(u64 *)(txt_pub_regs + TXT_CR_PUBLIC_KEY + 24)));
+> 
+> What's the expected consumer of this, and what are they expected to do
+> with it?
+
+I added it purely because txt-stat is already showing it, and it differs
+between platforms. I note 315168-017 says newer platforms use CPU MSRs
+0x20::0x23 instead. So it's informational at this point for older
+platforms.
+
+J.
