@@ -2,307 +2,329 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDBBC43217
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 13:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2B8C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 13:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242271AbiCJNFj (ORCPT
+        id S236946AbiCJNwP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Mar 2022 08:05:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52634 "EHLO
+        Thu, 10 Mar 2022 08:52:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242273AbiCJNFj (ORCPT
+        with ESMTP id S242583AbiCJNwO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Mar 2022 08:05:39 -0500
+        Thu, 10 Mar 2022 08:52:14 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2E3FF14A6CD
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 05:04:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 19DF314FBF3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 05:51:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646917476;
+        s=mimecast20190719; t=1646920272;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bdyc38wZ2iH9r3WKn+t93MmqB7rhoqJHCNg2E4+WN7U=;
-        b=SpEFkZV/zuSBLNW8fJmhMLfrDvIjSwHymuv1ZMoL918rp13XovnL7A5lI9zLVaARMwDDnj
-        XkRR7Xo6BCX11czI383MreDHa6TLGpqNouK2l1tP5aovX8BNlZrk6qojnFbtcyQPB2Vtbw
-        VX6B22kxhOVzZ7hUJTHa+f7qpP5LT4M=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=GiQABXRAm0cy+gJcDFdLgXcgTLU56NCEfNsuWSo5h1I=;
+        b=KYC3RNUoktNya6QILdDowwZDBSfDGQdjrO9wGN6Wo1PVGYFJlzSweJFwe3CL7IhPFWSG7q
+        VmQ+K8dSDbgwUi188zgjyCh0reI7NRaAf1V6jRNw8+k8vIMzpp2E4F1P5IqJtFUq8Wqpar
+        huUeBNqX/x1Il+YMe426LNDVI1vYzpg=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-517-N8WFEAovNAOcDwmUWUQ4IQ-1; Thu, 10 Mar 2022 08:04:35 -0500
-X-MC-Unique: N8WFEAovNAOcDwmUWUQ4IQ-1
-Received: by mail-wm1-f70.google.com with SMTP id k41-20020a05600c1ca900b00389a2b983efso2061197wms.4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 05:04:35 -0800 (PST)
+ us-mta-85-fIOupNE9PtKf9zG7B2H41w-1; Thu, 10 Mar 2022 08:51:10 -0500
+X-MC-Unique: fIOupNE9PtKf9zG7B2H41w-1
+Received: by mail-ed1-f72.google.com with SMTP id l8-20020a056402028800b0041636072ef0so3105098edv.13
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 05:51:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bdyc38wZ2iH9r3WKn+t93MmqB7rhoqJHCNg2E4+WN7U=;
-        b=JAECUbCi4QzM0QOdvrnHz/wuOqOKAzmnlcYip3QhMVLD6/6nqIgoqEJPvB2RlFT+PN
-         /JhYXNQ0GLASiltc2yZUyxYL2+Hel/firzyEaHw0vNuiWnSHIJPwz50oH1BdP6T8VI/t
-         bWWGIvzgZKZYrQqnVJqWuxCI0oW1vV8lQ4i6WS8gRq5I0os/8EAF5XWqumjHxS3s+YK+
-         pvKhUmTIHqqO05BHep+YAVmg6FdvP3Cs88Q4ygjlaiK7kbcnuNH34EeUqSMh5P+15OsL
-         th096+koM6GQWZvnfsU/PYSicgjKhW9TyU6Khrhmb4MspROOaZpt29HPR9yJSzD6BXy5
-         4d+g==
-X-Gm-Message-State: AOAM531a7nFRgmbECPCMay5ALv2PEK35Z0dHLaWn9my98Cqxcv5fOtGu
-        D3u0AIH9DVYom0yKG61Z9EHeGVthzAnSMpne/NQiRNdWlyR6ZDbwVOMfuiFiBVyQ7v4Fv1zVb9I
-        TPwaecQe4xb7D+55vlfw5dUF9aIDpjZwJmw==
-X-Received: by 2002:adf:de8b:0:b0:203:7a51:9cd2 with SMTP id w11-20020adfde8b000000b002037a519cd2mr3317908wrl.596.1646917473924;
-        Thu, 10 Mar 2022 05:04:33 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwFfnvrAlCV1H1HX6YvfASjcXGHtL+mw46jnJLY1T+Nd4lSI9nkDqnoZvkqahCBW9kDpy9wvg==
-X-Received: by 2002:adf:de8b:0:b0:203:7a51:9cd2 with SMTP id w11-20020adfde8b000000b002037a519cd2mr3317878wrl.596.1646917473640;
-        Thu, 10 Mar 2022 05:04:33 -0800 (PST)
-Received: from redhat.com ([2.53.27.107])
-        by smtp.gmail.com with ESMTPSA id u10-20020adfa18a000000b001f04c24afe7sm4182953wru.41.2022.03.10.05.04.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 05:04:32 -0800 (PST)
-Date:   Thu, 10 Mar 2022 08:04:27 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v7 09/26] virtio_ring: split: implement
- virtqueue_reset_vring_split()
-Message-ID: <20220310080212-mutt-send-email-mst@kernel.org>
-References: <20220308123518.33800-1-xuanzhuo@linux.alibaba.com>
- <20220308123518.33800-10-xuanzhuo@linux.alibaba.com>
- <20220310015418-mutt-send-email-mst@kernel.org>
- <1646896623.3794115-2-xuanzhuo@linux.alibaba.com>
- <20220310025930-mutt-send-email-mst@kernel.org>
- <1646900056.7775025-1-xuanzhuo@linux.alibaba.com>
- <20220310071335-mutt-send-email-mst@kernel.org>
- <1646915610.3936472-1-xuanzhuo@linux.alibaba.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=GiQABXRAm0cy+gJcDFdLgXcgTLU56NCEfNsuWSo5h1I=;
+        b=wJAYwz9pMqQa9NBWhKJYzYsZsSzlMfYAGcFWMirelo3u6E0Fe7eftXtwO+0tHopFHO
+         BbOMgaBSrRvHbmp/IHMkVcOWXhtITDyzb3/DbeSEBsq1UL+dlSAkyzo3q/Unx2PS+HyX
+         OMplF6TzytQjywa0xSNm4yUUIw/LSq9aK8GeoMukmRrF2h93irgQ1iA7JW0Lk+8ngZ/v
+         xBUlPXmgKRKeGCIuY2eIRJSBL2uqoLIt3mMlMkxmIs8UxMg1baj2owqNZ1pAcyVoQYjp
+         7zdiqqb35ZatkDtnJFp+Kj6eclM53Ic3j2zMiZZFOKWrF+fahfI2DgP5ofpk0S6gW+Tk
+         O+AA==
+X-Gm-Message-State: AOAM5305mu5S/0GSfBgVvM9LplyE7mnTHqVkEMtywOuhSqBw/MU3bs8k
+        RbpOoZFpK6h7s4mJqk0XeWQTg1yEIRMlHUCwr7haC5QD2vU6p/qLdtvagIQdcZW8w8DhDkAGayZ
+        c8SgADzimNoLPWmO/jZcsDZGqA/yPAcHHqA==
+X-Received: by 2002:a05:6402:8c9:b0:415:a145:9482 with SMTP id d9-20020a05640208c900b00415a1459482mr4559336edz.415.1646920269208;
+        Thu, 10 Mar 2022 05:51:09 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwezhcM86YS8wERzCUfJe1RrtPMu77otXb0lpEs7DiwLwW7Ek00SBoFr9WAGsCmJQBDlq8NGQ==
+X-Received: by 2002:a05:6402:8c9:b0:415:a145:9482 with SMTP id d9-20020a05640208c900b00415a1459482mr4559310edz.415.1646920268957;
+        Thu, 10 Mar 2022 05:51:08 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
+        by smtp.gmail.com with ESMTPSA id z10-20020aa7cf8a000000b004160af67840sm1993119edx.66.2022.03.10.05.51.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Mar 2022 05:51:08 -0800 (PST)
+Message-ID: <3cc6b081-ac09-018c-f5d2-0c19d43a4635@redhat.com>
+Date:   Thu, 10 Mar 2022 14:51:07 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1646915610.3936472-1-xuanzhuo@linux.alibaba.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH v4 1/3] Fix SW_TABLET_MODE detection method
+Content-Language: en-US
+To:     Jorge Lopez <jorgealtxwork@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+References: <20220307220932.23607-1-jorge.lopez2@hp.com>
+ <20220307220932.23607-2-jorge.lopez2@hp.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220307220932.23607-2-jorge.lopez2@hp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 08:33:30PM +0800, Xuan Zhuo wrote:
-> On Thu, 10 Mar 2022 07:17:09 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > On Thu, Mar 10, 2022 at 04:14:16PM +0800, Xuan Zhuo wrote:
-> > > On Thu, 10 Mar 2022 03:07:22 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > > On Thu, Mar 10, 2022 at 03:17:03PM +0800, Xuan Zhuo wrote:
-> > > > > On Thu, 10 Mar 2022 02:00:39 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > > > > On Tue, Mar 08, 2022 at 08:35:01PM +0800, Xuan Zhuo wrote:
-> > > > > > > virtio ring supports reset.
-> > > > > > >
-> > > > > > > Queue reset is divided into several stages.
-> > > > > > >
-> > > > > > > 1. notify device queue reset
-> > > > > > > 2. vring release
-> > > > > > > 3. attach new vring
-> > > > > > > 4. notify device queue re-enable
-> > > > > > >
-> > > > > > > After the first step is completed, the vring reset operation can be
-> > > > > > > performed. If the newly set vring num does not change, then just reset
-> > > > > > > the vq related value.
-> > > > > > >
-> > > > > > > Otherwise, the vring will be released and the vring will be reallocated.
-> > > > > > > And the vring will be attached to the vq. If this process fails, the
-> > > > > > > function will exit, and the state of the vq will be the vring release
-> > > > > > > state. You can call this function again to reallocate the vring.
-> > > > > > >
-> > > > > > > In addition, vring_align, may_reduce_num are necessary for reallocating
-> > > > > > > vring, so they are retained when creating vq.
-> > > > > > >
-> > > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > > > > ---
-> > > > > > >  drivers/virtio/virtio_ring.c | 69 ++++++++++++++++++++++++++++++++++++
-> > > > > > >  1 file changed, 69 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> > > > > > > index e0422c04c903..148fb1fd3d5a 100644
-> > > > > > > --- a/drivers/virtio/virtio_ring.c
-> > > > > > > +++ b/drivers/virtio/virtio_ring.c
-> > > > > > > @@ -158,6 +158,12 @@ struct vring_virtqueue {
-> > > > > > >  			/* DMA address and size information */
-> > > > > > >  			dma_addr_t queue_dma_addr;
-> > > > > > >  			size_t queue_size_in_bytes;
-> > > > > > > +
-> > > > > > > +			/* The parameters for creating vrings are reserved for
-> > > > > > > +			 * creating new vrings when enabling reset queue.
-> > > > > > > +			 */
-> > > > > > > +			u32 vring_align;
-> > > > > > > +			bool may_reduce_num;
-> > > > > > >  		} split;
-> > > > > > >
-> > > > > > >  		/* Available for packed ring */
-> > > > > > > @@ -217,6 +223,12 @@ struct vring_virtqueue {
-> > > > > > >  #endif
-> > > > > > >  };
-> > > > > > >
-> > > > > > > +static void vring_free(struct virtqueue *vq);
-> > > > > > > +static void __vring_virtqueue_init_split(struct vring_virtqueue *vq,
-> > > > > > > +					 struct virtio_device *vdev);
-> > > > > > > +static int __vring_virtqueue_attach_split(struct vring_virtqueue *vq,
-> > > > > > > +					  struct virtio_device *vdev,
-> > > > > > > +					  struct vring vring);
-> > > > > > >
-> > > > > > >  /*
-> > > > > > >   * Helpers.
-> > > > > > > @@ -1012,6 +1024,8 @@ static struct virtqueue *vring_create_virtqueue_split(
-> > > > > > >  		return NULL;
-> > > > > > >  	}
-> > > > > > >
-> > > > > > > +	to_vvq(vq)->split.vring_align = vring_align;
-> > > > > > > +	to_vvq(vq)->split.may_reduce_num = may_reduce_num;
-> > > > > > >  	to_vvq(vq)->split.queue_dma_addr = vring.dma_addr;
-> > > > > > >  	to_vvq(vq)->split.queue_size_in_bytes = vring.queue_size_in_bytes;
-> > > > > > >  	to_vvq(vq)->we_own_ring = true;
-> > > > > > > @@ -1019,6 +1033,59 @@ static struct virtqueue *vring_create_virtqueue_split(
-> > > > > > >  	return vq;
-> > > > > > >  }
-> > > > > > >
-> > > > > > > +static int virtqueue_reset_vring_split(struct virtqueue *_vq, u32 num)
-> > > > > > > +{
-> > > > > > > +	struct vring_virtqueue *vq = to_vvq(_vq);
-> > > > > > > +	struct virtio_device *vdev = _vq->vdev;
-> > > > > > > +	struct vring_split vring;
-> > > > > > > +	int err;
-> > > > > > > +
-> > > > > > > +	if (num > _vq->num_max)
-> > > > > > > +		return -E2BIG;
-> > > > > > > +
-> > > > > > > +	switch (vq->vq.reset) {
-> > > > > > > +	case VIRTIO_VQ_RESET_STEP_NONE:
-> > > > > > > +		return -ENOENT;
-> > > > > > > +
-> > > > > > > +	case VIRTIO_VQ_RESET_STEP_VRING_ATTACH:
-> > > > > > > +	case VIRTIO_VQ_RESET_STEP_DEVICE:
-> > > > > > > +		if (vq->split.vring.num == num || !num)
-> > > > > > > +			break;
-> > > > > > > +
-> > > > > > > +		vring_free(_vq);
-> > > > > > > +
-> > > > > > > +		fallthrough;
-> > > > > > > +
-> > > > > > > +	case VIRTIO_VQ_RESET_STEP_VRING_RELEASE:
-> > > > > > > +		if (!num)
-> > > > > > > +			num = vq->split.vring.num;
-> > > > > > > +
-> > > > > > > +		err = vring_create_vring_split(&vring, vdev,
-> > > > > > > +					       vq->split.vring_align,
-> > > > > > > +					       vq->weak_barriers,
-> > > > > > > +					       vq->split.may_reduce_num, num);
-> > > > > > > +		if (err)
-> > > > > > > +			return -ENOMEM;
-> > > > > > > +
-> > > > > > > +		err = __vring_virtqueue_attach_split(vq, vdev, vring.vring);
-> > > > > > > +		if (err) {
-> > > > > > > +			vring_free_queue(vdev, vring.queue_size_in_bytes,
-> > > > > > > +					 vring.queue,
-> > > > > > > +					 vring.dma_addr);
-> > > > > > > +			return -ENOMEM;
-> > > > > > > +		}
-> > > > > > > +
-> > > > > > > +		vq->split.queue_dma_addr = vring.dma_addr;
-> > > > > > > +		vq->split.queue_size_in_bytes = vring.queue_size_in_bytes;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	__vring_virtqueue_init_split(vq, vdev);
-> > > > > > > +	vq->we_own_ring = true;
-> > > > > > > +	vq->vq.reset = VIRTIO_VQ_RESET_STEP_VRING_ATTACH;
-> > > > > > > +
-> > > > > > > +	return 0;
-> > > > > > > +}
-> > > > > > > +
-> > > > > >
-> > > > > > I kind of dislike this state machine.
-> > > > > >
-> > > > > > Hacks like special-casing num = 0 to mean "reset" are especially
-> > > > > > confusing.
-> > > > >
-> > > > > I'm removing it. I'll say in the function description that this function is
-> > > > > currently only called when vq has been reset. I'm no longer checking it based on
-> > > > > state.
-> > > > >
-> > > > > >
-> > > > > > And as Jason points out, when we want a resize then yes this currently
-> > > > > > implies reset but that is an implementation detail.
-> > > > > >
-> > > > > > There should be a way to just make these cases separate functions
-> > > > > > and then use them to compose consistent external APIs.
-> > > > >
-> > > > > Yes, virtqueue_resize_split() is fine for ethtool -G.
-> > > > >
-> > > > > But in the case of AF_XDP, just execute reset to free the buffer. The name
-> > > > > virtqueue_reset_vring_split() I think can cover both cases. Or we use two apis
-> > > > > to handle both scenarios?
-> > > > >
-> > > > > Or can anyone think of a better name. ^_^
-> > > > >
-> > > > > Thanks.
-> > > >
-> > > >
-> > > > I'd say resize should be called resize and reset should be called reset.
-> > >
-> > >
-> > > OK, I'll change it to resize here.
-> > >
-> > > But I want to know that when I implement virtio-net to support AF_XDP, its
-> > > requirement is to release all submitted buffers. Then should I add a new api
-> > > such as virtqueue_reset_vring()?
-> >
-> > Sounds like a reasonable name.
-> >
-> > > >
-> > > > The big issue is a sane API for resize. Ideally it would resubmit
-> > > > buffers which did not get used. Question is what to do
-> > > > about buffers which don't fit (if ring has been downsized)?
-> > > > Maybe a callback that will handle them?
-> > > > And then what? Queue them up and readd later? Drop?
-> > > > If we drop we should drop from the head not the tail ...
-> > >
-> > > It's a good idea, let's implement it later.
-> > >
-> > > Thanks.
-> >
-> > Well ... not sure how you are going to support resize
-> > if you don't know what to do with buffers that were
-> > in the ring.
+Hi Jorge,
+
+On 3/7/22 23:09, Jorge Lopez wrote:
+> The purpose of this patch is to introduce a fix and removal
+> of the current hack when determining tablet mode status.
 > 
-> The current solution is to call virtqueue_detach_unused_buf() to release buffers
-> before resize ring.
+> Determining the tablet mode status requires reading Byte 0 bit 2
+> as reported by HPWMI_HARDWARE_QUERY.  The investigation identified the
+> failure was rooted in two areas: HPWMI_HARDWARE_QUERY failure (0x05)
+> and reading Byte 0, bit 2 only to determine the table mode status.
+> HPWMI_HARDWARE_QUERY WMI failure also rendered the dock state value invalid.
 > 
-> Thanks.
+> The latest changes use SMBIOS Type 3 (chassis type) and WMI Command 0x40
+> (device_mode_status) information to determine if the device is in tablet
+> mode or not.
+> 
+> hp_wmi_hw_state function was split into two functions; hp_wmi_get_dock_state
+> and hp_wmi_get_tablet_mode.  The new functions separate how dock_state and
+> tablet_mode is handled in a cleaner manner.
+> 
+> All changes were validated on a HP ZBook Workstation notebook,
+> HP EliteBook x360, and HP EliteBook 850 G8.
+> 
+> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
-This requires basically a richer api:
-- stop
-- detach
-- resize
-- start
+This is mostly looking good, some small remarks / request for tweaks
+below. After those I believe that this patch will be ready for merging.
 
-with a callback you would just have a resize, and the fact
-it resets internally becomes an implementation detail.
 
--- 
-MST
+
+> 
+> ---
+> Based on the latest platform-drivers-x86.git/for-next
+> ---
+>  drivers/platform/x86/hp-wmi.c | 80 ++++++++++++++++++++++++++---------
+>  1 file changed, 60 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index 48a46466f086..e142e9a0d317 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -35,10 +35,6 @@ MODULE_LICENSE("GPL");
+>  MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
+>  MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+>  
+> -static int enable_tablet_mode_sw = -1;
+> -module_param(enable_tablet_mode_sw, int, 0444);
+> -MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=auto, 0=no, 1=yes)");
+> -
+>  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
+>  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
+>  #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
+> @@ -107,6 +103,7 @@ enum hp_wmi_commandtype {
+>  	HPWMI_FEATURE2_QUERY		= 0x0d,
+>  	HPWMI_WIRELESS2_QUERY		= 0x1b,
+>  	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
+> +	HPWMI_SYSTEM_DEVICE_MODE       = 0x40,
+>  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
+>  };
+>  
+> @@ -217,6 +214,18 @@ struct rfkill2_device {
+>  static int rfkill2_count;
+>  static struct rfkill2_device rfkill2[HPWMI_MAX_RFKILL2_DEVICES];
+>  
+> +/* Chassis Types values were obtained from SMBIOS reference
+> + * specification version 3.00. A complete list of system enclosures
+> + * and chassis types is available on Table 17. 
+> + */
+> +static const char * const tablet_chassis_types[] = {
+> +	"30", /* Tablet*/
+> +	"31", /* Convertible */
+> +	"32"  /* Detachable */
+> +};
+> +
+> +#define DEVICE_MODE_TABLET	0x06
+> +
+>  /* map output size to the corresponding WMI method id */
+>  static inline int encode_outsize_for_pvsz(int outsize)
+>  {
+> @@ -337,7 +346,7 @@ static int hp_wmi_read_int(int query)
+>  	int val = 0, ret;
+>  
+>  	ret = hp_wmi_perform_query(query, HPWMI_READ, &val,
+> -				   sizeof(val), sizeof(val));
+> +				   0, sizeof(val));
+>  
+>  	if (ret)
+>  		return ret < 0 ? ret : -EINVAL;
+
+This change impacts all callers of hp_wmi_read_int(),
+please put this in a new 1/4 patch with its own
+commit message giving more details about this change.
+
+> @@ -345,14 +354,47 @@ static int hp_wmi_read_int(int query)
+>  	return val;
+>  }
+>  
+> -static int hp_wmi_hw_state(int mask)
+> +static int hp_wmi_get_dock_state(void)
+>  {
+>  	int state = hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
+>  
+>  	if (state < 0)
+>  		return state;
+>  
+> -	return !!(state & mask);
+> +	if (!(state & HPWMI_DOCK_MASK))
+> +		return 0;
+> +
+> +	return 1;
+
+please use:
+
+	return !!(state & HPWMI_DOCK_MASK);
+
+Here so that there only is a single return statement
+for the success path.
+
+> +}
+> +
+> +static int hp_wmi_get_tablet_mode(void)
+> +{
+> +	char system_device_mode[4] = { 0 };
+> +	int ret;
+> +	bool tablet_found = false;
+> +
+> +	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+> +
+> +	if (!chassis_type)
+> +		return 0;
+
+return -ENODEV here so that hp_wmi_input_setup() does not
+register a SW_TABLET_MODE capability in this case.
+
+Userspace *always* will behave as if the device is not a tablet
+(e.g. NOT show on screen keyboard when focussing text fields)
+if the driver advertises SW_TABLET_MODE capability which
+always reports 0. So it is important to not advertise
+SW_TABLET_MODE at all when it is not available.
+
+> +
+> +	tablet_found = match_string(tablet_chassis_types,
+> +			    ARRAY_SIZE(tablet_chassis_types),
+> +			    chassis_type) >= 0;
+> +	
+> +	if (!tablet_found)
+> +		return 0;
+
+Again return -ENODEV.
+
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_SYSTEM_DEVICE_MODE, HPWMI_READ,
+> +				       system_device_mode, 0, sizeof(system_device_mode));
+> +
+> +	if (ret < 0)
+> +		return 0;
+
+If this fails once it will likely fail always, so please do
+"return ret" here, so that hp_wmi_input_setup() does not
+register a SW_TABLET_MODE capability in this case.
+
+> +
+> +	if (system_device_mode[0] == DEVICE_MODE_TABLET) 
+> +		return 1;
+> +	
+> +	return 0;
+
+Please do:
+
+	return system_device_mode[0] == DEVICE_MODE_TABLET;
+
+here instead.
+
+
+>  }
+>  
+>  static int omen_thermal_profile_set(int mode)
+> @@ -568,7 +610,7 @@ static ssize_t als_show(struct device *dev, struct device_attribute *attr,
+>  static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
+>  			 char *buf)
+>  {
+> -	int value = hp_wmi_hw_state(HPWMI_DOCK_MASK);
+> +	int value = hp_wmi_get_dock_state();
+>  	if (value < 0)
+>  		return value;
+>  	return sprintf(buf, "%d\n", value);
+> @@ -577,7 +619,7 @@ static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
+>  static ssize_t tablet_show(struct device *dev, struct device_attribute *attr,
+>  			   char *buf)
+>  {
+> -	int value = hp_wmi_hw_state(HPWMI_TABLET_MASK);
+> +	int value = hp_wmi_get_tablet_mode();
+>  	if (value < 0)
+>  		return value;
+>  	return sprintf(buf, "%d\n", value);
+> @@ -699,10 +741,10 @@ static void hp_wmi_notify(u32 value, void *context)
+>  	case HPWMI_DOCK_EVENT:
+>  		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
+>  			input_report_switch(hp_wmi_input_dev, SW_DOCK,
+> -					    hp_wmi_hw_state(HPWMI_DOCK_MASK));
+> +					    hp_wmi_get_dock_state());
+>  		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
+>  			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+> -					    hp_wmi_hw_state(HPWMI_TABLET_MASK));
+> +					    hp_wmi_get_tablet_mode());
+>  		input_sync(hp_wmi_input_dev);
+>  		break;
+>  	case HPWMI_PARK_HDD:
+> @@ -780,19 +822,17 @@ static int __init hp_wmi_input_setup(void)
+>  	__set_bit(EV_SW, hp_wmi_input_dev->evbit);
+>  
+>  	/* Dock */
+> -	val = hp_wmi_hw_state(HPWMI_DOCK_MASK);
+> +	val = hp_wmi_get_dock_state();
+>  	if (!(val < 0)) {
+>  		__set_bit(SW_DOCK, hp_wmi_input_dev->swbit);
+>  		input_report_switch(hp_wmi_input_dev, SW_DOCK, val);
+>  	}
+>  
+>  	/* Tablet mode */
+> -	if (enable_tablet_mode_sw > 0) {
+> -		val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
+> -		if (val >= 0) {
+> -			__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
+> -			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
+> -		}
+> +	val = hp_wmi_get_tablet_mode();
+> +	if (!(val < 0)) {
+> +		__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
+> +		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
+>  	}
+>  
+>  	err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
+> @@ -1227,10 +1267,10 @@ static int hp_wmi_resume_handler(struct device *device)
+>  	if (hp_wmi_input_dev) {
+>  		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
+>  			input_report_switch(hp_wmi_input_dev, SW_DOCK,
+> -					    hp_wmi_hw_state(HPWMI_DOCK_MASK));
+> +					    hp_wmi_get_dock_state());
+>  		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
+>  			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+> -					    hp_wmi_hw_state(HPWMI_TABLET_MASK));
+> +					    hp_wmi_get_tablet_mode());
+>  		input_sync(hp_wmi_input_dev);
+>  	}
+>  
+
+
+Regards,
+
+Hans
 
