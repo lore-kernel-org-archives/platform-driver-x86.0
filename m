@@ -2,240 +2,169 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96403C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 15:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76955C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 15:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344806AbiCJPMq (ORCPT
+        id S243506AbiCJPP6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Mar 2022 10:12:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43554 "EHLO
+        Thu, 10 Mar 2022 10:15:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344882AbiCJPMV (ORCPT
+        with ESMTP id S235394AbiCJPPk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Mar 2022 10:12:21 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7EEE0692A6
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 07:07:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646924861;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rvHIRvpd13CgLqsri2yobHE1WO98tVZlRSYP0Xx5P3w=;
-        b=ImDwGd93VfFN+DjaCeNXVDK3Z00sRjhWPfos35rYZcajdFz6XJbg91NBJu6DaPVATRC8FZ
-        qfgL0TOXUKVuyYYhIvLnVSguH5/JUJ0EglpayAybZAvu9F+7PZBne5ud+hGEBbPbLMt/8A
-        U1gYw3uBEJTNSoYaDeO9WsTS51NJL/0=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-670-RKQ9Uhv3OUCMbKntmwGy2A-1; Thu, 10 Mar 2022 10:07:39 -0500
-X-MC-Unique: RKQ9Uhv3OUCMbKntmwGy2A-1
-Received: by mail-ej1-f70.google.com with SMTP id lf15-20020a170906ae4f00b006da86a43346so3255420ejb.14
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 07:07:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=rvHIRvpd13CgLqsri2yobHE1WO98tVZlRSYP0Xx5P3w=;
-        b=4AQgtbeCdqYnykYNLw2LIyInlzU9TrmseCFnH2V4B15PDp3tATyQIm4h+gPrBi9llR
-         gkrLVsgLPMNArO+VG2BdB+0teVV3L6kw33YU+UqHBPIk5WbJWlT4Lss6HHcdyP5HzXuI
-         xAsMQEHaJ8hIvfqAduxjyZT7jYh8dIXuTpijIVkZaHG5wf84YoJnfk4VS5qanw2WCMmj
-         WTM+86AHKZzj9pdFXRcwzBMbb1fQaAdZAWa4+Wis4oYYbhg46zOb9TvtJhl1YG4XvBfm
-         z25Vvtu+MtYcrmSz9vkxEV3ldzp3ldx+FDETVizdiAysK2Xj+S1oR5AsebbbpBEczzF7
-         RcmA==
-X-Gm-Message-State: AOAM533D0JUCeKi5aF4DAje7Qol9Xxs+0TSQQhoFAvTQHCTgCf5gFztN
-        0ub5jInIJDu9DVENzPjPpxRHv6/d3jSt9wtCikRmZWo2a3dETTGZtKNxibZLYcfAhRZQOnF1TbH
-        6tCZb/8+0W3XWpjbZeRhjPkrRoMeOQ6RD9Q==
-X-Received: by 2002:a17:906:7315:b0:6da:820d:4e02 with SMTP id di21-20020a170906731500b006da820d4e02mr4651234ejc.65.1646924858675;
-        Thu, 10 Mar 2022 07:07:38 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxL3IOSW57v7b5enV5OsqFvKslsA5/Zi8GqCSZR5MAB3/JermdbkwCsWc261ihSygEhC0Gz5g==
-X-Received: by 2002:a17:906:7315:b0:6da:820d:4e02 with SMTP id di21-20020a170906731500b006da820d4e02mr4651207ejc.65.1646924858274;
-        Thu, 10 Mar 2022 07:07:38 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id b9-20020a1709063ca900b006cea15612cbsm1943816ejh.176.2022.03.10.07.07.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Mar 2022 07:07:37 -0800 (PST)
-Message-ID: <f031d40b-7162-e15c-ce40-4536486f7a62@redhat.com>
-Date:   Thu, 10 Mar 2022 16:07:37 +0100
+        Thu, 10 Mar 2022 10:15:40 -0500
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2056.outbound.protection.outlook.com [40.107.244.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5E6EA1463
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 07:14:30 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S9LBUP6ljdB5spllzs9yPz1453lJrNLcknpUjSFNBeVhgP0Zhep0ng8hoDooGVK2VveObEeT5fxj/Mgt7jL+hZVeTxCmNFdupa0esIfyubp/bibruQb1jzRMNQvCqo+X21q8vHxT7gJyBuFPuj7GGSgEZBglEryf73u4SYpz6fAiI1Ic52eeDOt5AkDGkQVRfSQXa4xy7WwrCcW9kcbaZbvKJv65LmMw/7QyifYIwiKgeex46lwWed2koKzd35CX5SL17QBbnTn6sYm0owCwNyC+rYk2W9MD5AYrFKq7Op76Tl6F4kRtTPs1mTOupuJlPB+VImbsNjpxJcbALSguhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T4PrvGe+Mujn6p9bdXDqiDC/zlJ/+JZjKAEjCyHt7M0=;
+ b=I+YcbliqC46YW6v7dSawVUjIt4lZBIswairzX3xNGlWWVZDZMnDNCbhNp2/JTvZC/oiGZEdvgHm8XrKDqDo8ChV+6Igq5j8vLt4HFi8z23WAlu70g2AJCg7eklT2yCaQVJFhUarTM8q1FRiVoaZ1xon7VaLAimWFKUn2uPJDNG4TEJlDqsN3+kHW4IIZMr33WdpoE0Ws6wGJDs1ZXBadDRKg8lbg+sRHk4mHeS7wp2uLDq/z5222nvIHIPaiPfMyNymMdRL2nTfWUd9Z8ozzQ27tiXKesWLS0nL7iDccEGfnu5AcCQWGslW7YmDppWHNX2/BDjaJ7fdkRhsQPgtNsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T4PrvGe+Mujn6p9bdXDqiDC/zlJ/+JZjKAEjCyHt7M0=;
+ b=SG0Z7qelZYCHHw7BPHZokt61TLLF6+Bu4DM3fXf0rX4O5/JO2vxKyDyGbCTya+z3eHIa0+b2zHc0/RAoZH8OL2AzCJ0ATYF6nNZ5DxxH3mwZ5BsSAF56aWNh414eMIxaJGJLYhB9z5Q6FtgpPRGi9L1nI/RQXN/0JKehOLVAunY=
+Received: from DM6PR03CA0016.namprd03.prod.outlook.com (2603:10b6:5:40::29) by
+ BL0PR12MB2578.namprd12.prod.outlook.com (2603:10b6:207:49::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5061.22; Thu, 10 Mar 2022 15:14:28 +0000
+Received: from DM6NAM11FT051.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:40:cafe::78) by DM6PR03CA0016.outlook.office365.com
+ (2603:10b6:5:40::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.22 via Frontend
+ Transport; Thu, 10 Mar 2022 15:14:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT051.mail.protection.outlook.com (10.13.172.243) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5061.22 via Frontend Transport; Thu, 10 Mar 2022 15:14:28 +0000
+Received: from localhost.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 10 Mar
+ 2022 09:14:25 -0600
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>
+CC:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Goswami Sanket <Sanket.Goswami@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v2] platform/x86: amd-pmc: Validate entry into the deepest state on resume
+Date:   Thu, 10 Mar 2022 09:09:20 -0600
+Message-ID: <20220310150920.560583-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v4 3/3] Changing bios_args.data to be dynamically
- allocated
-Content-Language: en-US
-To:     Jorge Lopez <jorgealtxwork@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20220307220932.23607-1-jorge.lopez2@hp.com>
- <20220307220932.23607-4-jorge.lopez2@hp.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220307220932.23607-4-jorge.lopez2@hp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2092c712-2f1e-44b2-89fb-08da02a8abb3
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2578:EE_
+X-Microsoft-Antispam-PRVS: <BL0PR12MB2578050EDFF435CCDF4AF4F5E20B9@BL0PR12MB2578.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hjqE0NfVZJEOwOK1A169OlZxap5f6sKiGIMdYinUtRG5RuDh4/rBeZzkT3sWSHDDp/JHRgc3sswXZT+dUb4KXt5k9WmAoB6TMcPfyq2rmbmRp6E7QdSCjICSCLAI8X5KB2jGZLI1YQoPNkz8Kd0hilzYYQTbXnrXRjDNUBUZIS4Rttu7R3BAyIOVlF7FNeru7J610YFjRQTK923vWRKZ0hdMx13gCiwIphlFt1WcV3twqNCYsSftKmweSVSx7yt/hx7Rokk4+si/Hhz1xRWR1vvu8jnjUZQ88axsneCg1BtFqjtbTI3P3H77VaQASZY/KxgASQYl0k4q5dbFzEM6rEtzRU/juFGOZ4rVMAVOd8QxC7SrGcxF2iqaUJHPBgmFLDYYTI94kyb+b9EU5Q2PJXyEoEUZsn+AeFwkQN/PcAFq+2B8yylNcaC6L37dltNchD5Q7RaXCd2UqYB/YYqg3gZpD2sZY7hEPTMYA+sQZVRgSWK5vORI7OV/d8Z+w47rAUItZSEoHeezlqhCUEZf2/tNfPUFJA/HrMvU0fPrxDrRWw+s53xRMsU3kjD1ZW1NqlEZ+wHMBNqU/yvMX4YIR8osY53K+/608lD3XJjX3HNVFVl9BxwH83haiKOl/mcvezzc5wM8g1YySrarmEDkHruv7UcHDFkE/zNOqGsOD0c4To7SY32iXlWv7S3wpZa15aVX5ni86QaFLMbtxMgcPA==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(40470700004)(36840700001)(47076005)(16526019)(186003)(2616005)(36860700001)(70586007)(36756003)(4326008)(426003)(8936002)(86362001)(70206006)(8676002)(26005)(336012)(316002)(110136005)(54906003)(5660300002)(40460700003)(82310400004)(83380400001)(508600001)(1076003)(84970400001)(2906002)(15650500001)(6666004)(356005)(44832011)(81166007)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2022 15:14:28.3684
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2092c712-2f1e-44b2-89fb-08da02a8abb3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT051.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2578
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Currently the only way to discover if a system went into the deepest sleep
+state is to read from sysfs after you finished suspend.
 
-On 3/7/22 23:09, Jorge Lopez wrote:
-> The purpose of this patch is to remove 128 bytes buffer limitation
-> imposed in bios_args structure.
-> 
-> A limiting factor discovered during this investigation was the struct
-> bios_args.data size restriction.  The data member size limits all possible
-> WMI commands to those requiring buffer size of 128 bytes or less.
-> Several WMI commands and queries require a buffer size larger than 128
-> bytes hence limiting current and feature supported by the driver.
-> It is for this reason, struct bios_args.data changed and is dynamically
-> allocated.  hp_wmi_perform_query function changed to handle the memory
-> allocation and release of any required buffer size.
-> 
-> All changes were validated on a HP ZBook Workstation notebook,
-> HP EliteBook x360, and HP EliteBook 850 G8.  Additional
-> validation was included in the test process to ensure no other
-> commands were incorrectly handled.
-> 
-> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-> 
-> ---
-> Based on the latest platform-drivers-x86.git/for-next
-> ---
->  drivers/platform/x86/hp-wmi.c | 59 ++++++++++++++++++++++-------------
->  1 file changed, 38 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> index a0aba7db8a1c..a04723fdea60 100644
-> --- a/drivers/platform/x86/hp-wmi.c
-> +++ b/drivers/platform/x86/hp-wmi.c
-> @@ -82,12 +82,17 @@ enum hp_wmi_event_ids {
->  	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
->  };
->  
-> +/**
-> + * struct bios_args buffer is dynamically allocated.  New WMI command types
-> + * were introduced that exceeds 128-byte data size.  Changes to handle
-> + * the data size allocation scheme were kept in hp_wmi_perform_qurey function.
-> + */
->  struct bios_args {
->  	u32 signature;
->  	u32 command;
->  	u32 commandtype;
->  	u32 datasize;
-> -	u8 data[128];
-> +	u8 data[0];
+To better illustrate to users that problems have occurred, check as part
+of resume and display a warning.
 
-This should be:
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+changes from v1->v2
+ * rebase on platform-x86.git/review-hans
+ drivers/platform/x86/amd-pmc.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-	u8 data[];
-
-See:
-
-https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
-
-
-
-
->  };
->  
->  enum hp_wmi_commandtype {
-> @@ -268,34 +273,39 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
->  	int mid;
->  	struct bios_return *bios_return;
->  	int actual_outsize;
-> -	union acpi_object *obj;
-> -	struct bios_args args = {
-> -		.signature = 0x55434553,
-> -		.command = command,
-> -		.commandtype = query,
-> -		.datasize = insize,
-> -		.data = { 0 },
-> -	};
-> -	struct acpi_buffer input = { sizeof(struct bios_args), &args };
-> +	union acpi_object *obj = NULL;
-> +	size_t bios_args_size = sizeof(struct bios_args) + insize;
-
-Please use the struct_size() macro for this, see the end of:
-
-https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
-
-for an example.
-
-> +	struct bios_args *args = NULL;
-> +	struct acpi_buffer input;
->  	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->  	int ret = 0;
->  
-> -	mid = encode_outsize_for_pvsz(outsize);
-> -	if (WARN_ON(mid < 0))
-> -		return mid;
-> +	args = kmalloc(bios_args_size, GFP_KERNEL);
-> +	if (!args)
-> +		return -ENOMEM;
->  
-> -	if (WARN_ON(insize > sizeof(args.data)))
-> -		return -EINVAL;
-> -	memcpy(&args.data[0], buffer, insize);
-> +	input.length = bios_args_size;
-> +	input.pointer = args;
->  
-> -	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
-> +	mid = encode_outsize_for_pvsz(outsize);
-> +	if (WARN_ON(mid < 0)) {
-> +		ret = mid;
-> +		goto out_free;
-> +	}
->  
-> -	obj = output.pointer;
-> +	memcpy(args->data, buffer, insize);
->  
-> -	if (!obj)
-> -		return -EINVAL;
-> +	args->signature = 0x55434553;
-> +	args->command = command;
-> +	args->commandtype = query;
-> +	args->datasize = insize;
->  
-> -	if (obj->type != ACPI_TYPE_BUFFER) {
-> +	ret = wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
-> +	if (ret)
-> +		goto out_free;
-> +
-> +	obj = output.pointer;
-> +	if (!obj) {
->  		ret = -EINVAL;
->  		goto out_free;
->  	}
-> @@ -310,6 +320,12 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
->  		goto out_free;
->  	}
->  
-> +	if (obj->type != ACPI_TYPE_BUFFER) {
-> +		pr_warn("query 0x%x returned an invalid object 0x%x\n", query, ret);
-> +		ret = -EINVAL;
-> +		goto out_free;
-> +	}
-> +
->  	/* Ignore output data of zero size */
->  	if (!outsize)
->  		goto out_free;
-
-Should we maybe have  a "ret = -EINVAL" here, or
-maybe ret = 0 ? Or is ret always 0 here already ?
-
-> @@ -320,6 +336,7 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
->  
->  out_free:
->  	kfree(obj);
-> +	kfree(args);
->  	return ret;
->  }
->  
-
-Otherwise this looks good to me.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+index fc0b4d628dec..971aaabaa9c8 100644
+--- a/drivers/platform/x86/amd-pmc.c
++++ b/drivers/platform/x86/amd-pmc.c
+@@ -322,6 +322,28 @@ static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
+ 	return 0;
+ }
+ 
++static int get_metrics_table(struct amd_pmc_dev *pdev, struct smu_metrics *table)
++{
++	if (pdev->cpu_id == AMD_CPU_ID_PCO)
++		return -ENODEV;
++	memcpy_fromio(table, pdev->smu_virt_addr, sizeof(struct smu_metrics));
++	return 0;
++}
++
++static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
++{
++	struct smu_metrics table;
++
++	if (get_metrics_table(pdev, &table))
++		return;
++
++	if (!table.s0i3_last_entry_status)
++		dev_warn(pdev->dev, "Last suspend didn't reach deepest state\n");
++	else
++		dev_dbg(pdev->dev, "Last suspend in deepest state for %lluus\n",
++			 table.timein_s0i3_lastcapture);
++}
++
+ #ifdef CONFIG_DEBUG_FS
+ static int smu_fw_info_show(struct seq_file *s, void *unused)
+ {
+@@ -329,11 +351,9 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
+ 	struct smu_metrics table;
+ 	int idx;
+ 
+-	if (dev->cpu_id == AMD_CPU_ID_PCO)
++	if (get_metrics_table(dev, &table))
+ 		return -EINVAL;
+ 
+-	memcpy_fromio(&table, dev->smu_virt_addr, sizeof(struct smu_metrics));
+-
+ 	seq_puts(s, "\n=== SMU Statistics ===\n");
+ 	seq_printf(s, "Table Version: %d\n", table.table_version);
+ 	seq_printf(s, "Hint Count: %d\n", table.hint_count);
+@@ -689,6 +709,9 @@ static int __maybe_unused amd_pmc_resume(struct device *dev)
+ 		cpu_latency_qos_update_request(&pdev->amd_pmc_pm_qos_req,
+ 						PM_QOS_DEFAULT_VALUE);
+ 
++	/* Notify on failed entry */
++	amd_pmc_validate_deepest(pdev);
++
+ 	return rc;
+ }
+ 
+-- 
+2.34.1
 
