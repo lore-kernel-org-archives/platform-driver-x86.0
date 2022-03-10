@@ -2,230 +2,302 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D01C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 13:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D20C43219
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 14:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242590AbiCJOAG (ORCPT
+        id S243391AbiCJOVr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Mar 2022 09:00:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54066 "EHLO
+        Thu, 10 Mar 2022 09:21:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231335AbiCJOAF (ORCPT
+        with ESMTP id S243817AbiCJOSY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Mar 2022 09:00:05 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 04293132950
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 05:59:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646920743;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=witWEpyp7FhjgX5CPs+i/yo052vLQXTNyB7o1kFw4Pg=;
-        b=igWL08pm8/enPmrUuRjEAB84zQfEV+PORbUDBK4RIfsS3g+9S1HNWAaiS86YVLwo3nRybR
-        sg+IJ+8L8kdmMi98ar4APyhF28DgyOGIPrn952i9KOURfVwh6Bmd6TqJVZQZ1LnoHLiqbP
-        okdS9n1FAWqayevEv5t6g3DhDep6vP4=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-633-NB-4bdoBNgCA8tBnEiirNg-1; Thu, 10 Mar 2022 08:59:00 -0500
-X-MC-Unique: NB-4bdoBNgCA8tBnEiirNg-1
-Received: by mail-ej1-f71.google.com with SMTP id m12-20020a1709062acc00b006cfc98179e2so3162176eje.6
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 05:58:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=witWEpyp7FhjgX5CPs+i/yo052vLQXTNyB7o1kFw4Pg=;
-        b=ej7FPLeSEpbJ4qFdNjg8f7+8s2SsOsgM9AQGBYyOsocz4siar6TJd00dwU/f8rTmor
-         6zGQbW5NGwpuzgTv1IBno9q/owhmqOp+NdUXEFS20uUwlzunglLz9qb99yo0M4xZvRR2
-         GSF11nXzhN101NHLdOzpntYjv4kJkp363WodLP2piXFa0ABJ14GuAy5W7YXPM3WqWfZu
-         b+EstXlwbrgr8yRVAvOeInrVGhlcTl/0kgPZVll3M7iGSUIxrK1xxb9RAx+A/ryy6Yrk
-         5OU9edggiyKwtBoJ1iLm3HTexQJ5Gl4JOmJ5nSegL2uqvSkLmiJYDn3Vth//kGRyMsjp
-         apTg==
-X-Gm-Message-State: AOAM533+qB8XxdS1FGkSJugRaJ/jg/HBK/WSvf6ex5CJilX4/QSL8wdk
-        g7TMZo/jLf7qCBuvhXpkB2+PGnspar4uFDUca5oGRQmGsglX4euGPzMUYTGgK97jqHpKHtS3Ffa
-        gXPcldayL7yqKl/hekzhdVkj3WMiE8fl3MQ==
-X-Received: by 2002:aa7:dc0b:0:b0:413:ce06:898e with SMTP id b11-20020aa7dc0b000000b00413ce06898emr4530175edu.244.1646920738600;
-        Thu, 10 Mar 2022 05:58:58 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzHlSzcX+fRFtBDXhUkmRp5e/YL23tvLXGdCG1T3gpHF6NZeeRO2t/DLB4sE+oNhLvy+/Fiwg==
-X-Received: by 2002:aa7:dc0b:0:b0:413:ce06:898e with SMTP id b11-20020aa7dc0b000000b00413ce06898emr4529945edu.244.1646920734588;
-        Thu, 10 Mar 2022 05:58:54 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id uz4-20020a170907118400b006dab1ea6e3asm1820365ejb.51.2022.03.10.05.58.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Mar 2022 05:58:54 -0800 (PST)
-Message-ID: <f6c2d3a2-b455-735b-533e-22af0a1883d5@redhat.com>
-Date:   Thu, 10 Mar 2022 14:58:53 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v4 2/3] Fix 0x05 error code reported by several WMI calls
-Content-Language: en-US
-To:     Jorge Lopez <jorgealtxwork@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20220307220932.23607-1-jorge.lopez2@hp.com>
- <20220307220932.23607-3-jorge.lopez2@hp.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220307220932.23607-3-jorge.lopez2@hp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Thu, 10 Mar 2022 09:18:24 -0500
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2981E166E31;
+        Thu, 10 Mar 2022 06:14:51 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0V6onflR_1646921659;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0V6onflR_1646921659)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 10 Mar 2022 22:14:20 +0800
+Message-ID: <1646921388.7015996-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH v7 09/26] virtio_ring: split: implement virtqueue_reset_vring_split()
+Date:   Thu, 10 Mar 2022 22:09:48 +0800
+From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org
+References: <20220308123518.33800-1-xuanzhuo@linux.alibaba.com>
+ <20220308123518.33800-10-xuanzhuo@linux.alibaba.com>
+ <20220310015418-mutt-send-email-mst@kernel.org>
+ <1646896623.3794115-2-xuanzhuo@linux.alibaba.com>
+ <20220310025930-mutt-send-email-mst@kernel.org>
+ <1646900056.7775025-1-xuanzhuo@linux.alibaba.com>
+ <20220310071335-mutt-send-email-mst@kernel.org>
+ <1646915610.3936472-1-xuanzhuo@linux.alibaba.com>
+ <20220310080212-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20220310080212-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Thu, 10 Mar 2022 08:04:27 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> On Thu, Mar 10, 2022 at 08:33:30PM +0800, Xuan Zhuo wrote:
+> > On Thu, 10 Mar 2022 07:17:09 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> > > On Thu, Mar 10, 2022 at 04:14:16PM +0800, Xuan Zhuo wrote:
+> > > > On Thu, 10 Mar 2022 03:07:22 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> > > > > On Thu, Mar 10, 2022 at 03:17:03PM +0800, Xuan Zhuo wrote:
+> > > > > > On Thu, 10 Mar 2022 02:00:39 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> > > > > > > On Tue, Mar 08, 2022 at 08:35:01PM +0800, Xuan Zhuo wrote:
+> > > > > > > > virtio ring supports reset.
+> > > > > > > >
+> > > > > > > > Queue reset is divided into several stages.
+> > > > > > > >
+> > > > > > > > 1. notify device queue reset
+> > > > > > > > 2. vring release
+> > > > > > > > 3. attach new vring
+> > > > > > > > 4. notify device queue re-enable
+> > > > > > > >
+> > > > > > > > After the first step is completed, the vring reset operation can be
+> > > > > > > > performed. If the newly set vring num does not change, then just reset
+> > > > > > > > the vq related value.
+> > > > > > > >
+> > > > > > > > Otherwise, the vring will be released and the vring will be reallocated.
+> > > > > > > > And the vring will be attached to the vq. If this process fails, the
+> > > > > > > > function will exit, and the state of the vq will be the vring release
+> > > > > > > > state. You can call this function again to reallocate the vring.
+> > > > > > > >
+> > > > > > > > In addition, vring_align, may_reduce_num are necessary for reallocating
+> > > > > > > > vring, so they are retained when creating vq.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > > > > > > > ---
+> > > > > > > >  drivers/virtio/virtio_ring.c | 69 ++++++++++++++++++++++++++++++++++++
+> > > > > > > >  1 file changed, 69 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > > > > > > > index e0422c04c903..148fb1fd3d5a 100644
+> > > > > > > > --- a/drivers/virtio/virtio_ring.c
+> > > > > > > > +++ b/drivers/virtio/virtio_ring.c
+> > > > > > > > @@ -158,6 +158,12 @@ struct vring_virtqueue {
+> > > > > > > >  			/* DMA address and size information */
+> > > > > > > >  			dma_addr_t queue_dma_addr;
+> > > > > > > >  			size_t queue_size_in_bytes;
+> > > > > > > > +
+> > > > > > > > +			/* The parameters for creating vrings are reserved for
+> > > > > > > > +			 * creating new vrings when enabling reset queue.
+> > > > > > > > +			 */
+> > > > > > > > +			u32 vring_align;
+> > > > > > > > +			bool may_reduce_num;
+> > > > > > > >  		} split;
+> > > > > > > >
+> > > > > > > >  		/* Available for packed ring */
+> > > > > > > > @@ -217,6 +223,12 @@ struct vring_virtqueue {
+> > > > > > > >  #endif
+> > > > > > > >  };
+> > > > > > > >
+> > > > > > > > +static void vring_free(struct virtqueue *vq);
+> > > > > > > > +static void __vring_virtqueue_init_split(struct vring_virtqueue *vq,
+> > > > > > > > +					 struct virtio_device *vdev);
+> > > > > > > > +static int __vring_virtqueue_attach_split(struct vring_virtqueue *vq,
+> > > > > > > > +					  struct virtio_device *vdev,
+> > > > > > > > +					  struct vring vring);
+> > > > > > > >
+> > > > > > > >  /*
+> > > > > > > >   * Helpers.
+> > > > > > > > @@ -1012,6 +1024,8 @@ static struct virtqueue *vring_create_virtqueue_split(
+> > > > > > > >  		return NULL;
+> > > > > > > >  	}
+> > > > > > > >
+> > > > > > > > +	to_vvq(vq)->split.vring_align = vring_align;
+> > > > > > > > +	to_vvq(vq)->split.may_reduce_num = may_reduce_num;
+> > > > > > > >  	to_vvq(vq)->split.queue_dma_addr = vring.dma_addr;
+> > > > > > > >  	to_vvq(vq)->split.queue_size_in_bytes = vring.queue_size_in_bytes;
+> > > > > > > >  	to_vvq(vq)->we_own_ring = true;
+> > > > > > > > @@ -1019,6 +1033,59 @@ static struct virtqueue *vring_create_virtqueue_split(
+> > > > > > > >  	return vq;
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > > +static int virtqueue_reset_vring_split(struct virtqueue *_vq, u32 num)
+> > > > > > > > +{
+> > > > > > > > +	struct vring_virtqueue *vq = to_vvq(_vq);
+> > > > > > > > +	struct virtio_device *vdev = _vq->vdev;
+> > > > > > > > +	struct vring_split vring;
+> > > > > > > > +	int err;
+> > > > > > > > +
+> > > > > > > > +	if (num > _vq->num_max)
+> > > > > > > > +		return -E2BIG;
+> > > > > > > > +
+> > > > > > > > +	switch (vq->vq.reset) {
+> > > > > > > > +	case VIRTIO_VQ_RESET_STEP_NONE:
+> > > > > > > > +		return -ENOENT;
+> > > > > > > > +
+> > > > > > > > +	case VIRTIO_VQ_RESET_STEP_VRING_ATTACH:
+> > > > > > > > +	case VIRTIO_VQ_RESET_STEP_DEVICE:
+> > > > > > > > +		if (vq->split.vring.num == num || !num)
+> > > > > > > > +			break;
+> > > > > > > > +
+> > > > > > > > +		vring_free(_vq);
+> > > > > > > > +
+> > > > > > > > +		fallthrough;
+> > > > > > > > +
+> > > > > > > > +	case VIRTIO_VQ_RESET_STEP_VRING_RELEASE:
+> > > > > > > > +		if (!num)
+> > > > > > > > +			num = vq->split.vring.num;
+> > > > > > > > +
+> > > > > > > > +		err = vring_create_vring_split(&vring, vdev,
+> > > > > > > > +					       vq->split.vring_align,
+> > > > > > > > +					       vq->weak_barriers,
+> > > > > > > > +					       vq->split.may_reduce_num, num);
+> > > > > > > > +		if (err)
+> > > > > > > > +			return -ENOMEM;
+> > > > > > > > +
+> > > > > > > > +		err = __vring_virtqueue_attach_split(vq, vdev, vring.vring);
+> > > > > > > > +		if (err) {
+> > > > > > > > +			vring_free_queue(vdev, vring.queue_size_in_bytes,
+> > > > > > > > +					 vring.queue,
+> > > > > > > > +					 vring.dma_addr);
+> > > > > > > > +			return -ENOMEM;
+> > > > > > > > +		}
+> > > > > > > > +
+> > > > > > > > +		vq->split.queue_dma_addr = vring.dma_addr;
+> > > > > > > > +		vq->split.queue_size_in_bytes = vring.queue_size_in_bytes;
+> > > > > > > > +	}
+> > > > > > > > +
+> > > > > > > > +	__vring_virtqueue_init_split(vq, vdev);
+> > > > > > > > +	vq->we_own_ring = true;
+> > > > > > > > +	vq->vq.reset = VIRTIO_VQ_RESET_STEP_VRING_ATTACH;
+> > > > > > > > +
+> > > > > > > > +	return 0;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > >
+> > > > > > > I kind of dislike this state machine.
+> > > > > > >
+> > > > > > > Hacks like special-casing num = 0 to mean "reset" are especially
+> > > > > > > confusing.
+> > > > > >
+> > > > > > I'm removing it. I'll say in the function description that this function is
+> > > > > > currently only called when vq has been reset. I'm no longer checking it based on
+> > > > > > state.
+> > > > > >
+> > > > > > >
+> > > > > > > And as Jason points out, when we want a resize then yes this currently
+> > > > > > > implies reset but that is an implementation detail.
+> > > > > > >
+> > > > > > > There should be a way to just make these cases separate functions
+> > > > > > > and then use them to compose consistent external APIs.
+> > > > > >
+> > > > > > Yes, virtqueue_resize_split() is fine for ethtool -G.
+> > > > > >
+> > > > > > But in the case of AF_XDP, just execute reset to free the buffer. The name
+> > > > > > virtqueue_reset_vring_split() I think can cover both cases. Or we use two apis
+> > > > > > to handle both scenarios?
+> > > > > >
+> > > > > > Or can anyone think of a better name. ^_^
+> > > > > >
+> > > > > > Thanks.
+> > > > >
+> > > > >
+> > > > > I'd say resize should be called resize and reset should be called reset.
+> > > >
+> > > >
+> > > > OK, I'll change it to resize here.
+> > > >
+> > > > But I want to know that when I implement virtio-net to support AF_XDP, its
+> > > > requirement is to release all submitted buffers. Then should I add a new api
+> > > > such as virtqueue_reset_vring()?
+> > >
+> > > Sounds like a reasonable name.
+> > >
+> > > > >
+> > > > > The big issue is a sane API for resize. Ideally it would resubmit
+> > > > > buffers which did not get used. Question is what to do
+> > > > > about buffers which don't fit (if ring has been downsized)?
+> > > > > Maybe a callback that will handle them?
+> > > > > And then what? Queue them up and readd later? Drop?
+> > > > > If we drop we should drop from the head not the tail ...
+> > > >
+> > > > It's a good idea, let's implement it later.
+> > > >
+> > > > Thanks.
+> > >
+> > > Well ... not sure how you are going to support resize
+> > > if you don't know what to do with buffers that were
+> > > in the ring.
+> >
+> > The current solution is to call virtqueue_detach_unused_buf() to release buffers
+> > before resize ring.
+> >
+> > Thanks.
+>
+> This requires basically a richer api:
+> - stop
+> - detach
+> - resize
+> - start
 
-On 3/7/22 23:09, Jorge Lopez wrote:
-> Several WMI queries leverage hp_wmi_read_int function to read their data.
-> hp_wmi_read_int function was corrected in a previous patch.  Now, this
-> function invokes hp_wmi_perform_query with input parameter of size zero
-> and the output buffer of size 4.
-> 
-> WMI commands calling hp_wmi_perform_query with input buffer size value
-> of zero are listed below.
-> 
-> HPWMI_DISPLAY_QUERY
-> HPWMI_HDDTEMP_QUERY
-> HPWMI_ALS_QUERY
-> HPWMI_HARDWARE_QUERY
-> HPWMI_WIRELESS_QUERY
-> HPWMI_BIOS_QUERY
-> HPWMI_FEATURE_QUERY
-> HPWMI_HOTKEY_QUERY
-> HPWMI_FEATURE2_QUERY
-> HPWMI_WIRELESS2_QUERY
-> HPWMI_POSTCODEERROR_QUERY
-> HPWMI_THERMAL_PROFILE_QUERY
-> HPWMI_FAN_SPEED_MAX_GET_QUERY
-> 
-> Invoking those WMI commands with an input buffer size greater
-> than zero will cause error 0x05 to be returned.
-> 
-> All WMI commands executed by the driver were reviewed and changes
-> were made to ensure the expected input and output buffer size match
-> the WMI specification.
-> 
-> Changes were validated on a HP ZBook Workstation notebook,
-> HP EliteBook x360, and HP EliteBook 850 G8.  Additional
-> validation was included in the test process to ensure no other
-> commands were incorrectly handled.
-> 
-> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+Yes, that's how it is currently implemented.
 
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
+>
+> with a callback you would just have a resize, and the fact
+> it resets internally becomes an implementation detail.
 
 
-> 
-> ---
-> Based on the latest platform-drivers-x86.git/for-next
-> ---
->  drivers/platform/x86/hp-wmi.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> index e142e9a0d317..a0aba7db8a1c 100644
-> --- a/drivers/platform/x86/hp-wmi.c
-> +++ b/drivers/platform/x86/hp-wmi.c
-> @@ -329,7 +329,7 @@ static int hp_wmi_get_fan_speed(int fan)
->  	char fan_data[4] = { fan, 0, 0, 0 };
->  
->  	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
-> -				       &fan_data, sizeof(fan_data),
-> +				       &fan_data, sizeof(char),
->  				       sizeof(fan_data));
->  
->  	if (ret != 0)
-> @@ -406,7 +406,7 @@ static int omen_thermal_profile_set(int mode)
->  		return -EINVAL;
->  
->  	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
-> -				   &buffer, sizeof(buffer), sizeof(buffer));
-> +				   &buffer, sizeof(buffer), 0);
->  
->  	if (ret)
->  		return ret < 0 ? ret : -EINVAL;
-> @@ -443,7 +443,7 @@ static int hp_wmi_fan_speed_max_set(int enabled)
->  	int ret;
->  
->  	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
-> -				   &enabled, sizeof(enabled), sizeof(enabled));
-> +				   &enabled, sizeof(enabled), 0);
->  
->  	if (ret)
->  		return ret < 0 ? ret : -EINVAL;
-> @@ -456,7 +456,7 @@ static int hp_wmi_fan_speed_max_get(void)
->  	int val = 0, ret;
->  
->  	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
-> -				   &val, sizeof(val), sizeof(val));
-> +				   &val, 0, sizeof(val));
->  
->  	if (ret)
->  		return ret < 0 ? ret : -EINVAL;
-> @@ -468,7 +468,7 @@ static int __init hp_wmi_bios_2008_later(void)
->  {
->  	int state = 0;
->  	int ret = hp_wmi_perform_query(HPWMI_FEATURE_QUERY, HPWMI_READ, &state,
-> -				       sizeof(state), sizeof(state));
-> +				       0, sizeof(state));
->  	if (!ret)
->  		return 1;
->  
-> @@ -479,7 +479,7 @@ static int __init hp_wmi_bios_2009_later(void)
->  {
->  	u8 state[128];
->  	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &state,
-> -				       sizeof(state), sizeof(state));
-> +				       0, sizeof(state));
->  	if (!ret)
->  		return 1;
->  
-> @@ -557,7 +557,7 @@ static int hp_wmi_rfkill2_refresh(void)
->  	int err, i;
->  
->  	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
-> -				   sizeof(state), sizeof(state));
-> +				   0, sizeof(state));
->  	if (err)
->  		return err;
->  
-> @@ -646,7 +646,7 @@ static ssize_t als_store(struct device *dev, struct device_attribute *attr,
->  		return ret;
->  
->  	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
-> -				       sizeof(tmp), sizeof(tmp));
-> +				       sizeof(tmp), 0);
->  	if (ret)
->  		return ret < 0 ? ret : -EINVAL;
->  
-> @@ -667,9 +667,9 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
->  	if (clear == false)
->  		return -EINVAL;
->  
-> -	/* Clear the POST error code. It is kept until until cleared. */
-> +	/* Clear the POST error code. It is kept until cleared. */
->  	ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, HPWMI_WRITE, &tmp,
-> -				       sizeof(tmp), sizeof(tmp));
-> +				       sizeof(tmp), 0);
->  	if (ret)
->  		return ret < 0 ? ret : -EINVAL;
->  
-> @@ -959,7 +959,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
->  	int err, i;
->  
->  	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
-> -				   sizeof(state), sizeof(state));
-> +				   0, sizeof(state));
->  	if (err)
->  		return err < 0 ? err : -EINVAL;
->  
+I think, I understand what you mean, we encapsulate the following code into a
+function as an external interface.
 
+int virtqueue_resize(vq, callback)
+{
+	err = virtqueue_reset(sq->vq);
+	if (err) {
+		netif_start_subqueue(vi->dev, qindex);
+		goto err;
+	}
+
+	/* detach */
+	while ((buf = virtqueue_detach_unused_buf(sq->vq)) != NULL) {
+		callback(vq, buf);
+	}
+
+	err = virtqueue_resize(sq->vq, ring_num);
+	if (err)
+		goto err;
+
+	err = virtqueue_enable_resetq(sq->vq);
+	if (err)
+		goto err;
+}
+
+Thanks.
+
+>
+> --
+> MST
+>
