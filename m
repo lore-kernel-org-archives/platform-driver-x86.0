@@ -2,68 +2,39 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3421FC4167B
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Mar 2022 18:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9303C4167D
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 04:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235824AbiCISUC (ORCPT
+        id S239534AbiCJEzW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Mar 2022 13:20:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53080 "EHLO
+        Wed, 9 Mar 2022 23:55:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235907AbiCISUB (ORCPT
+        with ESMTP id S239525AbiCJEzU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Mar 2022 13:20:01 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A25D50065
-        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Mar 2022 10:19:01 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id z12-20020a17090ad78c00b001bf022b69d6so3058773pju.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Mar 2022 10:19:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=b+36kVZ1eH5PrAKCZPHq/6t1l0kSLjZrSsqHo52p/gc=;
-        b=YaAM0kKpKNyog0nOM4LpTWfxvQm7eBvZSmTf372GHlXkpbn5Wfh+vAnoVJ64RDuxqO
-         o3ji8HtjLIPYxZyh3iPoWAi0ZHCiIjgaPKxSHS7e4+aFV8bm7fY6XfzGY1MsxTOLlDn4
-         d6oLZtBuRYyC/QaCRgw0VjP9vbMFblCt0ZTeIOs11T5PCRs/XH01lfT32h+Fg5MsJACT
-         IVWqu+V/cnikT6a6J8wgg6wRbL5MS5wmbwxKOt/BgJpiCfHFG5RFrvZ+ELO253RguktB
-         VEaIeuorazetYhtnji7l/TL16TYMuuy2og4r3ur66Guy6lMh40xCGZDTR/54bXtRjWWv
-         60Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=b+36kVZ1eH5PrAKCZPHq/6t1l0kSLjZrSsqHo52p/gc=;
-        b=u60VTQwTUprQ774WBW+4rjKzP2ezD3N7PQWTlWmB3iJBW5K/UbEPzvzezPYElWycBY
-         3lPRoSMTTapss2pZeMlzxzEF/URtjnN0azA5sHNhG+J08U8Jto2O5z6DLiDgKnk9RK9V
-         zDtIrJjFkuMrqk1LFWh5+3ZVRr8m2yVuw4NXOAfU6oUwJMkqM+crAC/rH3UjGiwRsjOS
-         z/0/F7hIh83Vyo+F7wrqaswtXAxM5ts4ZXTW8oM4YXD0mIIVj4+KhV87yjwTfkUebWJu
-         ygd3zYuleOevIxBHc4Wr5L6IRAzxrDUt6oeKUARwH7C0xg+Vz4xPxI6ERWIpEbd9pTHD
-         D/HQ==
-X-Gm-Message-State: AOAM532a6PyiJsOCNOU39vgskKwmRJ+//MhWCNh/tbsP0ZTuLaPuN7lP
-        1zZm6o0Wn7cRGx1K/EPKQtlA5A==
-X-Google-Smtp-Source: ABdhPJxUJ6DmW4ZhilNw+HZY2kVwYjGWFeIawYHJDlOcnrsGSJmPBnG2yQNz2rWEiRM35qcfGa3+yQ==
-X-Received: by 2002:a17:90a:c68c:b0:1bf:a7c9:957a with SMTP id n12-20020a17090ac68c00b001bfa7c9957amr738367pjt.177.1646849940523;
-        Wed, 09 Mar 2022 10:19:00 -0800 (PST)
-Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id d2-20020a056a0010c200b004f102a13040sm3834120pfu.19.2022.03.09.10.18.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Mar 2022 10:18:58 -0800 (PST)
-Date:   Wed, 9 Mar 2022 11:18:55 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
+        Wed, 9 Mar 2022 23:55:20 -0500
+Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 027E5129BA3;
+        Wed,  9 Mar 2022 20:54:18 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R761e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0V6n5VCi_1646888052;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0V6n5VCi_1646888052)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 10 Mar 2022 12:54:13 +0800
+Message-ID: <1646887597.810321-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH v7 09/26] virtio_ring: split: implement virtqueue_reset_vring_split()
+Date:   Thu, 10 Mar 2022 12:46:37 +0800
+From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
         Anton Ivanov <anton.ivanov@cambridgegreys.com>,
         "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         Vadim Pasternak <vadimp@nvidia.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Cornelia Huck <cohuck@redhat.com>,
         Halil Pasic <pasic@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
@@ -79,222 +50,192 @@ Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
         Vincent Whitchurch <vincent.whitchurch@axis.com>,
         linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
         linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v7 18/26] virtio: find_vqs() add arg sizes
-Message-ID: <20220309181855.GA1983245@p14s>
+        kvm@vger.kernel.org, bpf@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
 References: <20220308123518.33800-1-xuanzhuo@linux.alibaba.com>
- <20220308123518.33800-19-xuanzhuo@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220308123518.33800-19-xuanzhuo@linux.alibaba.com>
+ <20220308123518.33800-10-xuanzhuo@linux.alibaba.com>
+ <512de020-b36e-8473-69c8-8b3925fbb6c1@redhat.com>
+In-Reply-To: <512de020-b36e-8473-69c8-8b3925fbb6c1@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Mar 08, 2022 at 08:35:10PM +0800, Xuan Zhuo wrote:
-> find_vqs() adds a new parameter sizes to specify the size of each vq
-> vring.
-> 
-> 0 means use the maximum size supported by the backend.
-> 
-> In the split scenario, the meaning of size is the largest size, because
-> it may be limited by memory, the virtio core will try a smaller size.
-> And the size is power of 2.
-> 
-> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> ---
->  arch/um/drivers/virtio_uml.c             |  2 +-
->  drivers/platform/mellanox/mlxbf-tmfifo.c |  3 ++-
->  drivers/remoteproc/remoteproc_virtio.c   |  2 +-
+On Wed, 9 Mar 2022 15:55:44 +0800, Jason Wang <jasowang@redhat.com> wrote:
+>
+> =E5=9C=A8 2022/3/8 =E4=B8=8B=E5=8D=888:35, Xuan Zhuo =E5=86=99=E9=81=93:
+> > virtio ring supports reset.
+> >
+> > Queue reset is divided into several stages.
+> >
+> > 1. notify device queue reset
+> > 2. vring release
+> > 3. attach new vring
+> > 4. notify device queue re-enable
+> >
+> > After the first step is completed, the vring reset operation can be
+> > performed. If the newly set vring num does not change, then just reset
+> > the vq related value.
+> >
+> > Otherwise, the vring will be released and the vring will be reallocated.
+> > And the vring will be attached to the vq. If this process fails, the
+> > function will exit, and the state of the vq will be the vring release
+> > state. You can call this function again to reallocate the vring.
+> >
+> > In addition, vring_align, may_reduce_num are necessary for reallocating
+> > vring, so they are retained when creating vq.
+> >
+> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > ---
+> >   drivers/virtio/virtio_ring.c | 69 ++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 69 insertions(+)
+> >
+> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > index e0422c04c903..148fb1fd3d5a 100644
+> > --- a/drivers/virtio/virtio_ring.c
+> > +++ b/drivers/virtio/virtio_ring.c
+> > @@ -158,6 +158,12 @@ struct vring_virtqueue {
+> >   			/* DMA address and size information */
+> >   			dma_addr_t queue_dma_addr;
+> >   			size_t queue_size_in_bytes;
+> > +
+> > +			/* The parameters for creating vrings are reserved for
+> > +			 * creating new vrings when enabling reset queue.
+> > +			 */
+> > +			u32 vring_align;
+> > +			bool may_reduce_num;
+> >   		} split;
+> >
+> >   		/* Available for packed ring */
+> > @@ -217,6 +223,12 @@ struct vring_virtqueue {
+> >   #endif
+> >   };
+> >
+> > +static void vring_free(struct virtqueue *vq);
+> > +static void __vring_virtqueue_init_split(struct vring_virtqueue *vq,
+> > +					 struct virtio_device *vdev);
+> > +static int __vring_virtqueue_attach_split(struct vring_virtqueue *vq,
+> > +					  struct virtio_device *vdev,
+> > +					  struct vring vring);
+> >
+> >   /*
+> >    * Helpers.
+> > @@ -1012,6 +1024,8 @@ static struct virtqueue *vring_create_virtqueue_s=
+plit(
+> >   		return NULL;
+> >   	}
+> >
+> > +	to_vvq(vq)->split.vring_align =3D vring_align;
+> > +	to_vvq(vq)->split.may_reduce_num =3D may_reduce_num;
+> >   	to_vvq(vq)->split.queue_dma_addr =3D vring.dma_addr;
+> >   	to_vvq(vq)->split.queue_size_in_bytes =3D vring.queue_size_in_bytes;
+> >   	to_vvq(vq)->we_own_ring =3D true;
+> > @@ -1019,6 +1033,59 @@ static struct virtqueue *vring_create_virtqueue_=
+split(
+> >   	return vq;
+> >   }
+> >
+> > +static int virtqueue_reset_vring_split(struct virtqueue *_vq, u32 num)
+> > +{
+>
+>
+> So what this function does is to resize the virtqueue actually, I
+> suggest to rename it as virtqueue_resize_split().
 
-For the remoteproc changes:
+In addition to resize, when num is 0, the function is to reinitialize vq ri=
+ng
+related variables. For example avail_idx_shadow.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+So I think 'reset' is more appropriate.
 
->  drivers/s390/virtio/virtio_ccw.c         |  2 +-
->  drivers/virtio/virtio_mmio.c             |  2 +-
->  drivers/virtio/virtio_pci_common.c       |  2 +-
->  drivers/virtio/virtio_pci_common.h       |  2 +-
->  drivers/virtio/virtio_pci_modern.c       |  5 +++--
->  drivers/virtio/virtio_vdpa.c             |  2 +-
->  include/linux/virtio_config.h            | 11 +++++++----
->  10 files changed, 19 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
-> index ba562d68dc04..055b91ccbe8a 100644
-> --- a/arch/um/drivers/virtio_uml.c
-> +++ b/arch/um/drivers/virtio_uml.c
-> @@ -998,7 +998,7 @@ static struct virtqueue *vu_setup_vq(struct virtio_device *vdev,
->  static int vu_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->  		       struct virtqueue *vqs[], vq_callback_t *callbacks[],
->  		       const char * const names[], const bool *ctx,
-> -		       struct irq_affinity *desc)
-> +		       struct irq_affinity *desc, u32 sizes[])
->  {
->  	struct virtio_uml_device *vu_dev = to_virtio_uml_device(vdev);
->  	int i, queue_idx = 0, rc;
-> diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> index 38800e86ed8a..aea7aa218b22 100644
-> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> @@ -929,7 +929,8 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
->  					vq_callback_t *callbacks[],
->  					const char * const names[],
->  					const bool *ctx,
-> -					struct irq_affinity *desc)
-> +					struct irq_affinity *desc,
-> +					u32 sizes[])
->  {
->  	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
->  	struct mlxbf_tmfifo_vring *vring;
-> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-> index 70ab496d0431..3a167bec5b09 100644
-> --- a/drivers/remoteproc/remoteproc_virtio.c
-> +++ b/drivers/remoteproc/remoteproc_virtio.c
-> @@ -157,7 +157,7 @@ static int rproc_virtio_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
->  				 vq_callback_t *callbacks[],
->  				 const char * const names[],
->  				 const bool * ctx,
-> -				 struct irq_affinity *desc)
-> +				 struct irq_affinity *desc, u32 sizes[])
->  {
->  	int i, ret, queue_idx = 0;
->  
-> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-> index d35e7a3f7067..b74e08c71534 100644
-> --- a/drivers/s390/virtio/virtio_ccw.c
-> +++ b/drivers/s390/virtio/virtio_ccw.c
-> @@ -632,7 +632,7 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->  			       vq_callback_t *callbacks[],
->  			       const char * const names[],
->  			       const bool *ctx,
-> -			       struct irq_affinity *desc)
-> +			       struct irq_affinity *desc, u32 sizes[])
->  {
->  	struct virtio_ccw_device *vcdev = to_vc_device(vdev);
->  	unsigned long *indicatorp = NULL;
-> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-> index a41abc8051b9..55d575f6ef2d 100644
-> --- a/drivers/virtio/virtio_mmio.c
-> +++ b/drivers/virtio/virtio_mmio.c
-> @@ -462,7 +462,7 @@ static int vm_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->  		       vq_callback_t *callbacks[],
->  		       const char * const names[],
->  		       const bool *ctx,
-> -		       struct irq_affinity *desc)
-> +		       struct irq_affinity *desc, u32 sizes[])
->  {
->  	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
->  	int irq = platform_get_irq(vm_dev->pdev, 0);
-> diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
-> index 863d3a8a0956..8e8fa7e5ad80 100644
-> --- a/drivers/virtio/virtio_pci_common.c
-> +++ b/drivers/virtio/virtio_pci_common.c
-> @@ -428,7 +428,7 @@ static int vp_find_vqs_intx(struct virtio_device *vdev, unsigned nvqs,
->  int vp_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->  		struct virtqueue *vqs[], vq_callback_t *callbacks[],
->  		const char * const names[], const bool *ctx,
-> -		struct irq_affinity *desc)
-> +		struct irq_affinity *desc, u32 sizes[])
->  {
->  	int err;
->  
-> diff --git a/drivers/virtio/virtio_pci_common.h b/drivers/virtio/virtio_pci_common.h
-> index 23f6c5c678d5..9dbf1d555dff 100644
-> --- a/drivers/virtio/virtio_pci_common.h
-> +++ b/drivers/virtio/virtio_pci_common.h
-> @@ -114,7 +114,7 @@ void vp_del_vqs(struct virtio_device *vdev);
->  int vp_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->  		struct virtqueue *vqs[], vq_callback_t *callbacks[],
->  		const char * const names[], const bool *ctx,
-> -		struct irq_affinity *desc);
-> +		struct irq_affinity *desc, u32 sizes[]);
->  const char *vp_bus_name(struct virtio_device *vdev);
->  
->  /* Setup the affinity for a virtqueue:
-> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-> index 3c67d3607802..342795175c29 100644
-> --- a/drivers/virtio/virtio_pci_modern.c
-> +++ b/drivers/virtio/virtio_pci_modern.c
-> @@ -343,11 +343,12 @@ static int vp_modern_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->  			      struct virtqueue *vqs[],
->  			      vq_callback_t *callbacks[],
->  			      const char * const names[], const bool *ctx,
-> -			      struct irq_affinity *desc)
-> +			      struct irq_affinity *desc, u32 sizes[])
->  {
->  	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
->  	struct virtqueue *vq;
-> -	int rc = vp_find_vqs(vdev, nvqs, vqs, callbacks, names, ctx, desc);
-> +	int rc = vp_find_vqs(vdev, nvqs, vqs, callbacks, names, ctx, desc,
-> +			     sizes);
->  
->  	if (rc)
->  		return rc;
-> diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
-> index 7767a7f0119b..ee08d01ee8b1 100644
-> --- a/drivers/virtio/virtio_vdpa.c
-> +++ b/drivers/virtio/virtio_vdpa.c
-> @@ -268,7 +268,7 @@ static int virtio_vdpa_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->  				vq_callback_t *callbacks[],
->  				const char * const names[],
->  				const bool *ctx,
-> -				struct irq_affinity *desc)
-> +				struct irq_affinity *desc, u32 sizes[])
->  {
->  	struct virtio_vdpa_device *vd_dev = to_virtio_vdpa_device(vdev);
->  	struct vdpa_device *vdpa = vd_get_vdpa(vdev);
-> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-> index 0b81fbe17c85..5157524d8036 100644
-> --- a/include/linux/virtio_config.h
-> +++ b/include/linux/virtio_config.h
-> @@ -57,6 +57,7 @@ struct virtio_shm_region {
->   *		include a NULL entry for vqs that do not need a callback
->   *	names: array of virtqueue names (mainly for debugging)
->   *		include a NULL entry for vqs unused by driver
-> + *	sizes: array of virtqueue sizes
->   *	Returns 0 on success or error status
->   * @del_vqs: free virtqueues found by find_vqs().
->   * @get_features: get the array of feature bits for this device.
-> @@ -98,7 +99,8 @@ struct virtio_config_ops {
->  	int (*find_vqs)(struct virtio_device *, unsigned nvqs,
->  			struct virtqueue *vqs[], vq_callback_t *callbacks[],
->  			const char * const names[], const bool *ctx,
-> -			struct irq_affinity *desc);
-> +			struct irq_affinity *desc,
-> +			u32 sizes[]);
->  	void (*del_vqs)(struct virtio_device *);
->  	u64 (*get_features)(struct virtio_device *vdev);
->  	int (*finalize_features)(struct virtio_device *vdev);
-> @@ -205,7 +207,7 @@ struct virtqueue *virtio_find_single_vq(struct virtio_device *vdev,
->  	const char *names[] = { n };
->  	struct virtqueue *vq;
->  	int err = vdev->config->find_vqs(vdev, 1, &vq, callbacks, names, NULL,
-> -					 NULL);
-> +					 NULL, NULL);
->  	if (err < 0)
->  		return ERR_PTR(err);
->  	return vq;
-> @@ -217,7 +219,8 @@ int virtio_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->  			const char * const names[],
->  			struct irq_affinity *desc)
->  {
-> -	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, NULL, desc);
-> +	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, NULL,
-> +				      desc, NULL);
->  }
->  
->  static inline
-> @@ -227,7 +230,7 @@ int virtio_find_vqs_ctx(struct virtio_device *vdev, unsigned nvqs,
->  			struct irq_affinity *desc)
->  {
->  	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, ctx,
-> -				      desc);
-> +				      desc, NULL);
->  }
->  
->  /**
-> -- 
-> 2.31.0
-> 
+Thanks.
+
+>
+>
+> > +	struct vring_virtqueue *vq =3D to_vvq(_vq);
+> > +	struct virtio_device *vdev =3D _vq->vdev;
+> > +	struct vring_split vring;
+> > +	int err;
+> > +
+> > +	if (num > _vq->num_max)
+> > +		return -E2BIG;
+> > +
+> > +	switch (vq->vq.reset) {
+> > +	case VIRTIO_VQ_RESET_STEP_NONE:
+> > +		return -ENOENT;
+> > +
+> > +	case VIRTIO_VQ_RESET_STEP_VRING_ATTACH:
+> > +	case VIRTIO_VQ_RESET_STEP_DEVICE:
+> > +		if (vq->split.vring.num =3D=3D num || !num)
+> > +			break;
+> > +
+> > +		vring_free(_vq);
+> > +
+> > +		fallthrough;
+> > +
+> > +	case VIRTIO_VQ_RESET_STEP_VRING_RELEASE:
+> > +		if (!num)
+> > +			num =3D vq->split.vring.num;
+> > +
+> > +		err =3D vring_create_vring_split(&vring, vdev,
+> > +					       vq->split.vring_align,
+> > +					       vq->weak_barriers,
+> > +					       vq->split.may_reduce_num, num);
+> > +		if (err)
+> > +			return -ENOMEM;
+>
+>
+> We'd better need a safe fallback here like:
+>
+> If we can't allocate new memory, we can keep using the current one.
+> Otherwise an ethtool -G fail may make the device not usable.
+>
+> This could be done by not freeing the old vring and virtqueue states
+> until new is allocated.
+>
+>
+> > +
+> > +		err =3D __vring_virtqueue_attach_split(vq, vdev, vring.vring);
+> > +		if (err) {
+> > +			vring_free_queue(vdev, vring.queue_size_in_bytes,
+> > +					 vring.queue,
+> > +					 vring.dma_addr);
+> > +			return -ENOMEM;
+> > +		}
+> > +
+> > +		vq->split.queue_dma_addr =3D vring.dma_addr;
+> > +		vq->split.queue_size_in_bytes =3D vring.queue_size_in_bytes;
+> > +	}
+> > +
+> > +	__vring_virtqueue_init_split(vq, vdev);
+> > +	vq->we_own_ring =3D true;
+>
+>
+> This seems wrong, we have the transport (rproc/mlxtbf) that allocate the
+> vring by themselves. I think we need to fail the resize for we_own_ring
+> =3D=3D false.
+>
+> Thanks
+>
+>
+>
+> > +	vq->vq.reset =3D VIRTIO_VQ_RESET_STEP_VRING_ATTACH;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >
+> >   /*
+> >    * Packed ring specific functions - *_packed().
+> > @@ -2317,6 +2384,8 @@ static int __vring_virtqueue_attach_split(struct =
+vring_virtqueue *vq,
+> >   static void __vring_virtqueue_init_split(struct vring_virtqueue *vq,
+> >   					 struct virtio_device *vdev)
+> >   {
+> > +	vq->vq.reset =3D VIRTIO_VQ_RESET_STEP_NONE;
+> > +
+> >   	vq->packed_ring =3D false;
+> >   	vq->we_own_ring =3D false;
+> >   	vq->broken =3D false;
+>
