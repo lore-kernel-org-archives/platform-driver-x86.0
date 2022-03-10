@@ -2,152 +2,223 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D658CC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 21:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136D5C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 21:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239804AbiCJVnI (ORCPT
+        id S236297AbiCJVor (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Mar 2022 16:43:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35992 "EHLO
+        Thu, 10 Mar 2022 16:44:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230387AbiCJVnH (ORCPT
+        with ESMTP id S231620AbiCJVoq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Mar 2022 16:43:07 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A694192CB8;
-        Thu, 10 Mar 2022 13:42:06 -0800 (PST)
+        Thu, 10 Mar 2022 16:44:46 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35772114FFF;
+        Thu, 10 Mar 2022 13:43:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646948526; x=1678484526;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Wu9xQh13qOE2SQCUN+y0wm4du69ScDsFeOiJ0FkDQCg=;
-  b=hu5I3kLUlNxdMCRcYV9cnVBayhOR06Nxg62cf/odlqFUTxua12rU2iHE
-   ah5uJko2e+wzA+HWmz9tQW1lrTX/Od/Xenm9Y8EgQKMlo8dnSn6WIa4MT
-   E1oeemwQp1Nku5xIknUrljMj9R3QmMzEUsMiACbXahJ60cPKYM7CjC4Ka
-   7pZm/iLK/5BaHMCu8GeTuXCmk6ra4Tmxj+GwtEusQLyDnbFh8X9aHISK+
-   L68RMiwhAOksG2tldnN0aezPmzoRG9Zro5FH/JZM22HQRoaJSaId+qXwx
-   7w/m9hiEOfdziZVtKeOXvPiWVBx6lL75tVteYUTPrf4HsWVtH19i4vTII
+  t=1646948625; x=1678484625;
+  h=message-id:subject:from:reply-to:to:cc:in-reply-to:
+   references:mime-version:date:content-transfer-encoding;
+  bh=XUapZ7Q6wJqYykO/dgmAlR+1FZT3PPjUZrZiDoyk/OQ=;
+  b=WsPbEd8fF0eHIG+fVYwym7gvSA4T5sEd1jLNhBoDx1bR1G4xWPVRwY05
+   V1PRtIAdc1RDdLGL1cZT99xH1OCBGN+7gaf71WggvCy2Ld25BcGNlhF9B
+   ahbBbdBWG4/bPwk5hZbRvCwx8VkOokIiB6kTLN72Q4HDW87x7gc8WaE57
+   virDdwBsMN7B7jLBdT2F5u1nc7IQ2LbXKGmHzK7N/A74xb0WvNJqMBdF6
+   hyUehLsCfyiXzQ7c2WgF4591zLFeAmGOSxi83Cua+Lqr4qbCM8pFP71x9
+   OJlYdOw19ph4tJmfA8oor8b9SKTbFxS8/WgqhZMLngsqqszvlc4KpAkHO
    w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10282"; a="235338638"
+X-IronPort-AV: E=McAfee;i="6200,9189,10282"; a="242835293"
 X-IronPort-AV: E=Sophos;i="5.90,171,1643702400"; 
-   d="scan'208";a="235338638"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 13:42:05 -0800
+   d="scan'208";a="242835293"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 13:43:44 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,171,1643702400"; 
-   d="scan'208";a="596833491"
-Received: from dhrumil1-mobl1.amr.corp.intel.com (HELO [10.209.77.231]) ([10.209.77.231])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 13:42:03 -0800
-Message-ID: <4062bb5c-1e9c-5e1f-5b27-2a4a8fb58078@intel.com>
-Date:   Thu, 10 Mar 2022 13:42:01 -0800
+   d="scan'208";a="496425844"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 10 Mar 2022 13:43:44 -0800
+Received: from smirmobi-mobl.amr.corp.intel.com (smirmobi-mobl.amr.corp.intel.com [10.212.177.154])
+        by linux.intel.com (Postfix) with ESMTP id 98B0F580BF8;
+        Thu, 10 Mar 2022 13:43:44 -0800 (PST)
+Message-ID: <ece072c74b107d2327a12ca3d328b0e6e8d7d4e0.camel@linux.intel.com>
+Subject: Re: [PATCH v2 1/5] ACPI / x86: Add support for LPS0 callback
+ handler
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>, linux-acpi@vger.kernel.org,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Goswami Sanket <Sanket.Goswami@amd.com>
+In-Reply-To: <20220310191724.1440-1-mario.limonciello@amd.com>
+References: <20220310191724.1440-1-mario.limonciello@amd.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [RFC 07/10] platform/x86/intel/ifs: Create kthreads for online
- cpus for scan test
-Content-Language: en-US
-To:     "Luck, Tony" <tony.luck@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>
-Cc:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-References: <20220301195457.21152-1-jithu.joseph@intel.com>
- <20220301195457.21152-8-jithu.joseph@intel.com>
- <09b5b05018a8600ca8fab896790ab16827c80e4e.camel@intel.com>
- <e282377b-8ee4-99fc-432f-2aa3441b2989@intel.com>
- <CAPcyv4gcfMZu38EAGBq59A-RPUmR3fFiamRiR6QaP=D1gPS+6A@mail.gmail.com>
- <1503c7940a7149679025173a46dd0daf@intel.com>
-From:   "Kok, Auke" <auke-jan.h.kok@intel.com>
-In-Reply-To: <1503c7940a7149679025173a46dd0daf@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Date:   Thu, 10 Mar 2022 13:43:25 -0800
+User-Agent: Evolution 3.36.5-0ubuntu1 
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Thu, 2022-03-10 at 13:17 -0600, Mario Limonciello wrote:
+> Currenty the latest thing run during a suspend to idle attempt is
+> the LPS0 `prepare_late` callback and the earliest thing is the
+> `resume_early` callback.
+> 
+> There is a desire for the `amd-pmc` driver to suspend later in the
+> suspend process (ideally the very last thing), so create a callback
+> that it or any other driver can hook into to do this.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> changes from v1->v2:
+>  * Change register/unregister arguments to be struct
+> 
+>  drivers/acpi/x86/s2idle.c | 65 ++++++++++++++++++++++++++++++++++++++-
+>  include/linux/acpi.h      | 11 ++++++-
+>  2 files changed, 74 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
+> index abc06e7f89d8..7418443580d4 100644
+> --- a/drivers/acpi/x86/s2idle.c
+> +++ b/drivers/acpi/x86/s2idle.c
+> @@ -86,6 +86,9 @@ struct lpi_device_constraint_amd {
+>  	int min_dstate;
+>  };
+>  
+> +static LIST_HEAD(lps0_callback_handler_head);
+> +static DEFINE_MUTEX(lps0_callback_handler_mutex);
+> +
+>  static struct lpi_constraints *lpi_constraints_table;
+>  static int lpi_constraints_table_size;
+>  static int rev_id;
+> @@ -444,6 +447,9 @@ static struct acpi_scan_handler lps0_handler = {
+>  
+>  int acpi_s2idle_prepare_late(void)
+>  {
+> +	struct lps0_callback_handler *handler;
+> +	int rc = 0;
+> +
+>  	if (!lps0_device_handle || sleep_no_lps0)
+>  		return 0;
+>  
+> @@ -474,14 +480,31 @@ int acpi_s2idle_prepare_late(void)
+>  		acpi_sleep_run_lps0_dsm(ACPI_LPS0_MS_ENTRY,
+>  				lps0_dsm_func_mask_microsoft,
+> lps0_dsm_guid_microsoft);
+>  	}
+> -	return 0;
+> +
+> +	mutex_lock(&lps0_callback_handler_mutex);
+> +	list_for_each_entry(handler, &lps0_callback_handler_head, list_node) {
+> +		rc = handler->prepare_late_callback(handler->context);
 
-On 3/7/22 09:46, Luck, Tony wrote:
->>> These are software(driver) defined error codes. Rest of the error codes are supplied by
->>> the hardware. Software defined error codes were kept at the other end to provide ample space
->>> in case (future) hardware decides to provide extend error codes.
->> Why put them in the same number space? Separate software results from
->> the raw hardware results and have a separate mechanism to convey each.
-> We wanted to include in the "details" file, which is otherwise a direct copy of
-> the SCAN_STATUS MSR. Making sure the software error codes didn't overlap
-> with any h/w generated codes seemed like a good idea.
->
-> But maybe we should have done this with additional string values in the status
-> file:
->
-> Current:
->
-> pass
-> untested
-> fail
->
-> Add a couple of new options for the s/w cases:
->
-> sw_timeout
-> sw_retries_exceeded
+Check callback exists first. Sorry I missed earlier.
 
+> +		if (rc)
+> +			goto out;
+> +	}
+> +out:
+> +	mutex_unlock(&lps0_callback_handler_mutex);
+> +
+> +	return rc;
+>  }
+>  
+>  void acpi_s2idle_restore_early(void)
+>  {
+> +	struct lps0_callback_handler *handler;
+> +
+>  	if (!lps0_device_handle || sleep_no_lps0)
+>  		return;
+>  
+> +	mutex_lock(&lps0_callback_handler_mutex);
+> +	list_for_each_entry(handler, &lps0_callback_handler_head, list_node)
+> +		handler->restore_early_callback(handler->context);
 
-We've made a userspace implementation for this API already as part of 
-opendcdiag that uses it:
+Here too.
 
-https://github.com/opendcdiag/opendcdiag/commit/0cbfcee30e0666b0f79a2e452d7f8167d2a0cb90
+David
 
-What I really like is that with this proposed API, we can unambiguously 
-determine whether "the core failed" or "everything is fine, for now" by 
-reading a single file. I hate to see this file become unusable because 
-its content changes from "pass" to "sw_timeout" or, even worse, it 
-changes from "fail" to "sw_timeout". That would render it useless for 
-the purpose that I think our users will be looking at it.
-
-So, my preference would be to keep this file functioning as-is in this 
-patch series.
-
-I would think that some sort of expandable "statistics" file would be a 
-better way to output various metrics:
-
-```
-
-sw_timeout: 0
-
-sw_retries_exceeded: 2
-
-runs: 42
-
-first_run: 1405529347
-
-last_run: 1646948140
-
-<etc..>
-
-```
-
-just as a suggested alternative for more/incompatble output values or a 
-complex, dynamic format.
-
-I don't have any use in opendcdiag for these values and data. If someone 
-does, they should want to chime in perhaps.
-
-
-Auke
+> +	mutex_unlock(&lps0_callback_handler_mutex);
+> +
+>  	/* Modern standby exit */
+>  	if (lps0_dsm_func_mask_microsoft > 0)
+>  		acpi_sleep_run_lps0_dsm(ACPI_LPS0_MS_EXIT,
+> @@ -524,4 +547,44 @@ void acpi_s2idle_setup(void)
+>  	s2idle_set_ops(&acpi_s2idle_ops_lps0);
+>  }
+>  
+> +int acpi_register_lps0_callbacks(struct lps0_callback_handler *arg)
+> +{
+> +	struct lps0_callback_handler *handler;
+> +
+> +	if (!lps0_device_handle || sleep_no_lps0)
+> +		return -ENODEV;
+> +
+> +	handler = kmalloc(sizeof(*handler), GFP_KERNEL);
+> +	if (!handler)
+> +		return -ENOMEM;
+> +	handler->prepare_late_callback = arg->prepare_late_callback;
+> +	handler->restore_early_callback = arg->restore_early_callback;
+> +	handler->context = arg->context;
+> +
+> +	mutex_lock(&lps0_callback_handler_mutex);
+> +	list_add(&handler->list_node, &lps0_callback_handler_head);
+> +	mutex_unlock(&lps0_callback_handler_mutex);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_register_lps0_callbacks);
+> +
+> +void acpi_unregister_lps0_callbacks(struct lps0_callback_handler *arg)
+> +{
+> +	struct lps0_callback_handler *handler;
+> +
+> +	mutex_lock(&lps0_callback_handler_mutex);
+> +	list_for_each_entry(handler, &lps0_callback_handler_head, list_node) {
+> +		if (handler->prepare_late_callback == arg->prepare_late_callback 
+> &&
+> +		    handler->restore_early_callback == arg-
+> >restore_early_callback &&
+> +		    handler->context == arg->context) {
+> +			list_del(&handler->list_node);
+> +			kfree(handler);
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&lps0_callback_handler_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_unregister_lps0_callbacks);
+> +
+>  #endif /* CONFIG_SUSPEND */
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 6274758648e3..df105f5e03e5 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -1023,7 +1023,16 @@ void acpi_os_set_prepare_extended_sleep(int (*func)(u8
+> sleep_state,
+>  
+>  acpi_status acpi_os_prepare_extended_sleep(u8 sleep_state,
+>  					   u32 val_a, u32 val_b);
+> -
+> +#ifdef CONFIG_X86
+> +struct lps0_callback_handler {
+> +	struct list_head list_node;
+> +	int (*prepare_late_callback)(void *context);
+> +	void (*restore_early_callback)(void *context);
+> +	void *context;
+> +};
+> +int acpi_register_lps0_callbacks(struct lps0_callback_handler *arg);
+> +void acpi_unregister_lps0_callbacks(struct lps0_callback_handler *arg);
+> +#endif /* CONFIG_X86 */
+>  #ifndef CONFIG_IA64
+>  void arch_reserve_mem_area(acpi_physical_address addr, size_t size);
+>  #else
 
