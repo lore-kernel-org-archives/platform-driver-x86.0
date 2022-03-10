@@ -2,119 +2,109 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50667C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 21:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4C3C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 21:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245447AbiCJVJ6 (ORCPT
+        id S1343879AbiCJVJ7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Mar 2022 16:09:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42938 "EHLO
+        Thu, 10 Mar 2022 16:09:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343889AbiCJVJ5 (ORCPT
+        with ESMTP id S242662AbiCJVJ6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Mar 2022 16:09:57 -0500
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D16B4DF62
+        Thu, 10 Mar 2022 16:09:58 -0500
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D347E4E39F
         for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 13:08:56 -0800 (PST)
-Received: by mail-qk1-x72a.google.com with SMTP id b67so5506063qkc.6
+Received: by mail-qk1-x733.google.com with SMTP id k125so95845qkf.0
         for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 13:08:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=BaN2X6S2vmGHmBF2JvnqxMLfO356sLvA2TzLY2ExQw8=;
-        b=FReYSSEA6QCa6/HKbNMenbpQj0Xbvk9IzVn5fqO9kwFIGtcfXMlSHJHHha/RGgW4QM
-         jlFMig0SUxUqg33BMKbRI0/vTqgREje6wiXwKlEso7cx1B+1MdADhckHfktpke9+vnLR
-         GfqyfAfUCsXHcogdrR/ZZEpOigKsDYpdA8Nq9X0Y2vZhRWhNxRapLEVOBh9DQZIFtgHZ
-         PZd/d98XpFF3TRvRjemaDLAWrONN/dgmCWKvSMGrMZ8J0Bs7SQw94v8+itexgXJWTpru
-         Wa9qkqAuSMxR2Y8fa16+86duyK0e/Pf8G7BAKWj3eCB862OJZ71ccAzKwkDLKkoPLgpM
-         YWfw==
+        bh=hT9GBFHhgAIWzF/ewVI8GFvXyI97EyT2euSkepLdhXQ=;
+        b=pQBhLzrEe7A1tdJqVp4tIJbfCzm10Sc3XMNC8gqjPuOUGekGubkIJ2zkAgjjuJS9FK
+         yDJLN1xR08sQNtPkYkPDH2blSBGEiqzjOzpRmway+x5ZFZbHM8XYgiEcUAvXv8AggA/m
+         E8fybQPlWDWPcbMkcPB/hq70gBz6r4TO0l0OxOLsqjTf3l+vL4iMBTCYPq3KzK3A3veS
+         cbsA3nFx/C+xT0Kjf9at/1Jlgzej7Wvc+bosT2NIpUcA7s608tGQXJofHEhRRKXVJju/
+         jVAaJYFgrQNGjCQ8O7FON7AnH+FKvohwsiN8m/JeAwkWp9B9PamF+0qtajZLuR0+sgN5
+         uuDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BaN2X6S2vmGHmBF2JvnqxMLfO356sLvA2TzLY2ExQw8=;
-        b=n3fnN1Rw8fwSgVx/jxj6n1ej8gEIx+13kGu/xmT4YW/OTMO4v6k+PYDSq+ba/JEoC0
-         MK3MdkW7rxA/twuzAxvVPGhMvdzAjIKcE8MR5Am7jLXOlR7me4TmuN0HwyXZDljKW5BI
-         k/BBLYxIYVkCG9fB//YSoRRrD+ZJ8nzKuy+Il8x3Bj4t1HHN4MTAT86ANZFlNiSXPDHr
-         rE/5NZ9cTw+rgEC+GEYJrnoxbb2Da/GXsZ/srOBY1ow/fAMJtlj4YkezhXEU1L6JiOAi
-         hQ4fW9WaYM9T4X6KTB9N6P3zARPmvu6Y/qrHlrDbudSQFUXhRunrxiO9ZKUuAc3ybHTT
-         y4wA==
-X-Gm-Message-State: AOAM532QsCRmi9qlYQ7g+Yayngj7zk3yObBara3RwRFjQUO/GrQSU4WR
-        DTOHylHMMuMgVeJhpNjDB92VcHd4ruE=
-X-Google-Smtp-Source: ABdhPJxokPrbuD8b7nKsrykrFJIXqKAuGGPckcyPa2vE3TLbHflSyeMnffdB/wd4WwMeLHJFCdGgRg==
-X-Received: by 2002:a05:620a:1665:b0:67b:305d:323c with SMTP id d5-20020a05620a166500b0067b305d323cmr4483592qko.781.1646946535036;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hT9GBFHhgAIWzF/ewVI8GFvXyI97EyT2euSkepLdhXQ=;
+        b=4Nd4BTLXdCHvUZNG/9mJpitHqD/Zys/SOaN44cFitENNqP2EL7IDLvAuGRBd2QNaOp
+         WFutLLHYjAqHZnaZQiDUQw/adxaHqipBoslycA5B12N31caDDcDi8N2k7h6P+kki5VwR
+         e2ywTNSefpIu0igdQgr/tAF3XzU9fnb8NaSG9IT6a0IKtSaQOlvDO8hrbAOfoXJN3O5Y
+         opUALsikL6dQht69BMn8A2OUr4gwVcU+hsP7QXm87P5paQbM0Do/ljCh9pKQuQMuvYxT
+         BrwwgByHnbuwGIWpHQw/O1kyETTxgb1DV3n5G1nY5ohoJ5MMRyGZAz4NKcNynGi8tcsL
+         0HyQ==
+X-Gm-Message-State: AOAM53292rkAzeBrszOhhhfyoNRvs5qh616co4mTiM8bjM25uv2n1af8
+        +U3jEx4LqMbn22DzWsY9fuOeiBi7Ajs=
+X-Google-Smtp-Source: ABdhPJwqluFRzapPAZKLC9eeCEV/CiXUGu9wvAZqO2BK8W2i+JH6Mganz2gIulUMlpqSv3oY3LGRQA==
+X-Received: by 2002:a05:620a:22db:b0:67d:72f5:bc60 with SMTP id o27-20020a05620a22db00b0067d72f5bc60mr775951qki.633.1646946535715;
         Thu, 10 Mar 2022 13:08:55 -0800 (PST)
 Received: from grumpy-vm.hsd1.tx.comcast.net ([2601:2c3:480:7390:c0b0:4de4:5b27:f2e7])
-        by smtp.gmail.com with ESMTPSA id k6-20020a378806000000b0064915d9584fsm2881727qkd.8.2022.03.10.13.08.53
+        by smtp.gmail.com with ESMTPSA id k6-20020a378806000000b0064915d9584fsm2881727qkd.8.2022.03.10.13.08.55
         for <platform-driver-x86@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 13:08:54 -0800 (PST)
+        Thu, 10 Mar 2022 13:08:55 -0800 (PST)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     platform-driver-x86@vger.kernel.org
-Subject: [PATCH v5 0/4] Fix SW_TABLET_MODE detection method
-Date:   Thu, 10 Mar 2022 15:08:49 -0600
-Message-Id: <20220310210853.28367-1-jorge.lopez2@hp.com>
+Subject: [PATCH v5 1/4] Fix hp_wmi_read_int() reporting error (0x05)
+Date:   Thu, 10 Mar 2022 15:08:50 -0600
+Message-Id: <20220310210853.28367-2-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220310210853.28367-1-jorge.lopez2@hp.com>
+References: <20220310210853.28367-1-jorge.lopez2@hp.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The intension for this patch was to address SW_TABLET_MODE detection 
-problem.  It is during the initial investigation; two other issues were 
-identified and are related to the initial task.  
+The purpose of this patch is to introduce a fix to hp_wmi_read_int()
+and eliminate failure error (0x05). Several WMI queries leverage
+hp_wmi_read_int() to read their data and were failing with error 0x05.
 
-First, several WMI queries were reporting error 0x05 including 
-HPWMI_HARDWARE_QUERY that is responsible for returning dock and table 
-modes values. See patch v5 part 2 and 3 comments for list of WMI queries 
-affected.  The driver now reports the appropriate states and values 
-correctly.
+HPWMI_DISPLAY_QUERY
+HPWMI_HDDTEMP_QUERY
+HPWMI_ALS_QUERY
+HPWMI_HARDWARE_QUERY
+HPWMI_WIRELESS_QUERY
+HPWMI_POSTCODEERROR_QUERY
 
-Lastly, a limiting data size restriction was discovered. 
-struct bios_args data member size limits all possible WMI commands 
-to those requiring buffer size of 128 bytes or less.  Several WMI 
-commands and queries require a buffer size larger than 128 bytes 
-hence limiting current and new feature supported by the driver. 
-hp_wmi_perform_query function changed to handle the memory 
-allocation and release of any required buffer size. 
+The failure occurs because hp_wmi_read_int() calls
+hp_wmi_perform_query() with input parameter of size greater than zero.
+Invoking those WMI commands with an input buffer size greater than
+zero causes the command to be rejected and error 0x05 be returned.
 
+All changes were validated on a HP ZBook Workstation notebook,
+HP EliteBook x360, and HP EliteBook 850 G8.
 
-Description of changes between version 4 and version 5
-------------------------------------------------------
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
-v5 patch 1: Fix hp_wmi_read_int() reporting error (0x05)
-	-Moved hp_wmi_read_int() to a separate patch.
-	-Initially part of v4 patch 1
-	
-v5 patch 2: Fix SW_TABLET_MODE detection method
-	-Remaining part are changes included in v4 patch 1
-	-Replaced return values with -ENODEV errors
-	-Updated how the closing return value is calculated.
-	-Patch 2 is dependent of patch 1 in order for tablet 
-	 mode detection to work properly
-	
+---
+Based on the latest platform-drivers-x86.git/for-next
+---
+ drivers/platform/x86/hp-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v5 patch 3: Fix 0x05 error code reported by several WMI calls
-	-No new changes were introduced.
-	-Patch is identical to v4 patch 2
-	
-v5 patch 4: Changing bios_args.data to be dynamically allocated
-	-Replace sizeof() with struct_size() and flex_array_size() helpers
-	-Added ret variable value when the output buffer is zero
-
-
-Jorge Lopez (4):
-  Fix hp_wmi_read_int() reporting error (0x05)
-  Fix SW_TABLET_MODE detection method
-  Fix 0x05 error code reported by several WMI calls
-  Changing bios_args.data to be dynamically allocated
-
- drivers/platform/x86/hp-wmi.c | 159 ++++++++++++++++++++++------------
- 1 file changed, 106 insertions(+), 53 deletions(-)
-
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 48a46466f086..103f56399ed0 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -337,7 +337,7 @@ static int hp_wmi_read_int(int query)
+ 	int val = 0, ret;
+ 
+ 	ret = hp_wmi_perform_query(query, HPWMI_READ, &val,
+-				   sizeof(val), sizeof(val));
++				   0, sizeof(val));
+ 
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
 -- 
 2.25.1
 
