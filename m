@@ -2,167 +2,523 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A40C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 14:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E066BC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 14:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235753AbiCJOyP (ORCPT
+        id S231704AbiCJOyN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Mar 2022 09:54:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53440 "EHLO
+        Thu, 10 Mar 2022 09:54:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347158AbiCJOue (ORCPT
+        with ESMTP id S1344005AbiCJOwn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Mar 2022 09:50:34 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7388918F201;
-        Thu, 10 Mar 2022 06:45:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646923547; x=1678459547;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=QaPegg1jNSdooo38T77D3oKrBjhFtC11zzudIxnPRLo=;
-  b=Lfha/SC6mGJLFFRe8FbDBC8jFAwjZe7h2OxcU7Q+vYTLN16Xg8FBTLdz
-   HTiZbCUKXfYnRKhwGFjr8V8iX3ig+Y1Ua+DU5xa1XtepvVoVtpDsTCdjv
-   bbwNAbx5NNf45cRXIbc0Kgv35IdvY86oWYaj8VySrPFwXebPhf6KM00/p
-   JiF+dhPQy4MqONAUxbjgitm322CbGm0P8qG05q/p7g56uDcmqr8F7MnC/
-   bZjAT7YgLhvSFjA4jAWyygip7LhHJQ4EEG0RdWls4BYU5koMrN0eMOiSG
-   WgvOettJwRJ5mfffihZlPCGR2WBjhanDcTenhzM69ckcm/8/1XaoZtj2P
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="252830990"
-X-IronPort-AV: E=Sophos;i="5.90,170,1643702400"; 
-   d="scan'208";a="252830990"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 06:45:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,170,1643702400"; 
-   d="scan'208";a="644464959"
-Received: from aubrey-app.sh.intel.com (HELO [10.239.53.25]) ([10.239.53.25])
-  by orsmga004.jf.intel.com with ESMTP; 10 Mar 2022 06:45:42 -0800
-Subject: Re: [PATCH v1 0/6] Add TDX Guest Attestation support
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>
-Cc:     "H . Peter Anvin" <hpa@zytor.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <20220222231735.268919-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-From:   Aubrey Li <aubrey.li@linux.intel.com>
-Message-ID: <93767fe9-9edd-8e31-c3ca-155bfa807915@linux.intel.com>
-Date:   Thu, 10 Mar 2022 22:45:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 10 Mar 2022 09:52:43 -0500
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A4DB158786
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 06:51:32 -0800 (PST)
+Received: by mail-lj1-x236.google.com with SMTP id 25so8055541ljv.10
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 06:51:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nX8DHqzGGIh8VXWXli7Q9VWCrZ0diUnq6RW+HJu2z+w=;
+        b=k8bpp3Qz6w1Ori2GaIS3vAJnymoKizHkjSM2pbKS5HLEWs61RqC8rcJaJz6q5CWxtC
+         GXG5sUn2Thmz5tBFiT3j2HthVKklGd2B/mlhN3G4qkWP4XLVSZftQiGImoG6pJWAa48l
+         nrknDuPIJ9/0vZvmbgfOCHA5P98NprkdmhnP2nGksyh84eA+kFxeu5ml9tQXFl5jFih3
+         pzjTTOj34nWAAyBl8nyb4DwSCSdVvCgNsvWR9hncOFUF0h6o3rcUchervhGG9m0yYbhs
+         t5nd2IWuuuyTEprSuF2ReL2VAm6m3335jTuiz5fs6QqaKjuS9bm87uNH3rQFq6/yLA9b
+         S9nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nX8DHqzGGIh8VXWXli7Q9VWCrZ0diUnq6RW+HJu2z+w=;
+        b=mwq2MLAj9oSVeDG1Ub2MW8sQGBez7sQ8MREq/tEZQCAK+o37Eel5sIw/cj4lC8Y9kt
+         NUycFTL7u7sLMzhqdYQST243DJGPz8k6rlMAp1YYYRZd31+psHZmM+MUKMHpbUNNDmIo
+         K4AJzAkTn5d/fbMXFRsJAQCLanQTKFlyd872pg+zZfGUnR4fNuu9dBAWOTvL6Q0DgFeS
+         EDuyn/b3TKMAiArxqaNUZ8fo80UZDRDEFdz/htuTseEuPDYkjtNDiHaCJIMTVE0kpY9y
+         GBljFF/kh/IXvw0XvIHjb/5hfnbiJXK2I38d0InJ4159LOldvb6mHgcxm3BAQzhpNAyR
+         UlwQ==
+X-Gm-Message-State: AOAM531LAY6grn7PzlYXNOFxtMvzfRMoIXCNq4BEfzcSKsCIXyzBm2pn
+        z7y1ODtSQXqru9QZUFnRXz+0vfH12sKxmsjkNmLkxg==
+X-Google-Smtp-Source: ABdhPJzuHjyFVpmAlqMYopymRxphckm6YKWg8DSSI/RCaYrUp1EcYkyVPnDt0L4CVC1s5g5fjoqDBYSo7ut3HvLFmqM=
+X-Received: by 2002:a05:651c:b07:b0:247:e06d:8943 with SMTP id
+ b7-20020a05651c0b0700b00247e06d8943mr3100152ljr.426.1646923890370; Thu, 10
+ Mar 2022 06:51:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20220222231735.268919-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20220307213356.2797205-1-brijesh.singh@amd.com> <20220307213356.2797205-33-brijesh.singh@amd.com>
+In-Reply-To: <20220307213356.2797205-33-brijesh.singh@amd.com>
+From:   Peter Gonda <pgonda@google.com>
+Date:   Thu, 10 Mar 2022 07:51:17 -0700
+Message-ID: <CAMkAt6pO0xZb2pye-VEKdFQ_dYFgLA21fkYmnYPTWo8mzPrKDQ@mail.gmail.com>
+Subject: Re: [PATCH v12 32/46] x86/compressed/64: Add support for SEV-SNP
+ CPUID table in #VC handlers
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-coco@lists.linux.dev,
+        linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, Tony Luck <tony.luck@intel.com>,
+        Marc Orr <marcorr@google.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2022/2/23 上午7:17, Kuppuswamy Sathyanarayanan wrote:
-> Hi All,
-> 
-> Intel's Trust Domain Extensions (TDX) protect guest VMs from malicious
-> hosts and some physical attacks. VM guest with TDX support is called
-> as TD Guest.
-> 
-> In TD Guest, the attestation process is used to verify the 
-> trustworthiness of TD guest to the 3rd party servers. Such attestation
-> process is required by 3rd party servers before sending sensitive
-> information to TD guests. One usage example is to get encryption keys
-> from the key server for mounting the encrypted rootfs or secondary drive.
->     
-> Following patches add the attestation support to TDX guest which
-> includes attestation user interface driver, user agent example, and
-> related hypercall support.
-> 
-> In this series, only following patches are in arch/x86 and are
-> intended for x86 maintainers review.
-> 
-> * x86/tdx: Add TDREPORT TDX Module call support
-> * x86/tdx: Add GetQuote TDX hypercall support
-> * x86/tdx: Add SetupEventNotifyInterrupt TDX hypercall support
-> * x86/tdx: Add TDX Guest event notify interrupt vector support
-> 
-> Patch titled "platform/x86: intel_tdx_attest: Add TDX Guest attestation
-> interface driver" adds the attestation driver support. This is supposed
-> to be reviewed by platform-x86 maintainers.
-> 
-> Also, patch titled "tools/tdx: Add a sample attestation user app" adds
-> a testing app for attestation feature which needs review from
-> bpf@vger.kernel.org.
-> 
-> Dependencies:
-> --------------
-> 
-> This feature has dependency on TDX guest core patch set series.
-> 
-> https://lore.kernel.org/all/20220218161718.67148-1-kirill.shutemov@linux.intel.com/T/
+()
 
-Does this feature also have dependency on QEMU tdx support?
+On Mon, Mar 7, 2022 at 2:35 PM Brijesh Singh <brijesh.singh@amd.com> wrote:
+>
+> From: Michael Roth <michael.roth@amd.com>
+>
+> CPUID instructions generate a #VC exception for SEV-ES/SEV-SNP guests,
+> for which early handlers are currently set up to handle. In the case
+> of SEV-SNP, guests can use a configurable location in guest memory
+> that has been pre-populated with a firmware-validated CPUID table to
+> look up the relevant CPUID values rather than requesting them from
+> hypervisor via a VMGEXIT. Add the various hooks in the #VC handlers to
+> allow CPUID instructions to be handled via the table. The code to
+> actually configure/enable the table will be added in a subsequent
+> commit.
+>
+> Signed-off-by: Michael Roth <michael.roth@amd.com>
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  arch/x86/include/asm/sev-common.h |   2 +
+>  arch/x86/kernel/sev-shared.c      | 324 ++++++++++++++++++++++++++++++
+>  2 files changed, 326 insertions(+)
+>
+> diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
+> index e9b6815b3b3d..0759af9b1acf 100644
+> --- a/arch/x86/include/asm/sev-common.h
+> +++ b/arch/x86/include/asm/sev-common.h
+> @@ -152,6 +152,8 @@ struct snp_psc_desc {
+>  #define GHCB_TERM_PSC                  1       /* Page State Change failure */
+>  #define GHCB_TERM_PVALIDATE            2       /* Pvalidate failure */
+>  #define GHCB_TERM_NOT_VMPL0            3       /* SNP guest is not running at VMPL-0 */
+> +#define GHCB_TERM_CPUID                        4       /* CPUID-validation failure */
+> +#define GHCB_TERM_CPUID_HV             5       /* CPUID failure during hypervisor fallback */
+>
+>  #define GHCB_RESP_CODE(v)              ((v) & GHCB_MSR_INFO_MASK)
+>
+> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+> index b4d5558c9d0a..0f1375164ff0 100644
+> --- a/arch/x86/kernel/sev-shared.c
+> +++ b/arch/x86/kernel/sev-shared.c
+> @@ -24,6 +24,36 @@ struct cpuid_leaf {
+>         u32 edx;
+>  };
+>
+> +/*
+> + * Individual entries of the SNP CPUID table, as defined by the SNP
+> + * Firmware ABI, Revision 0.9, Section 7.1, Table 14.
+> + */
+> +struct snp_cpuid_fn {
+> +       u32 eax_in;
+> +       u32 ecx_in;
+> +       u64 xcr0_in;
+> +       u64 xss_in;
+> +       u32 eax;
+> +       u32 ebx;
+> +       u32 ecx;
+> +       u32 edx;
+> +       u64 __reserved;
+> +} __packed;
+> +
+> +/*
+> + * SNP CPUID table, as defined by the SNP Firmware ABI, Revision 0.9,
+> + * Section 8.14.2.6. Also noted there is the SNP firmware-enforced limit
+> + * of 64 entries per CPUID table.
+> + */
+> +#define SNP_CPUID_COUNT_MAX 64
+> +
+> +struct snp_cpuid_table {
+> +       u32 count;
+> +       u32 __reserved1;
+> +       u64 __reserved2;
+> +       struct snp_cpuid_fn fn[SNP_CPUID_COUNT_MAX];
+> +} __packed;
+> +
+>  /*
+>   * Since feature negotiation related variables are set early in the boot
+>   * process they must reside in the .data section so as not to be zeroed
+> @@ -33,6 +63,19 @@ struct cpuid_leaf {
+>   */
+>  static u16 ghcb_version __ro_after_init;
+>
+> +/* Copy of the SNP firmware's CPUID page. */
+> +static struct snp_cpuid_table cpuid_table_copy __ro_after_init;
+> +
+> +/*
+> + * These will be initialized based on CPUID table so that non-present
+> + * all-zero leaves (for sparse tables) can be differentiated from
+> + * invalid/out-of-range leaves. This is needed since all-zero leaves
+> + * still need to be post-processed.
+> + */
+> +static u32 cpuid_std_range_max __ro_after_init;
+> +static u32 cpuid_hyp_range_max __ro_after_init;
+> +static u32 cpuid_ext_range_max __ro_after_init;
+> +
+>  static bool __init sev_es_check_cpu_features(void)
+>  {
+>         if (!has_cpuflag(X86_FEATURE_RDRAND)) {
+> @@ -242,6 +285,252 @@ static int sev_cpuid_hv(struct cpuid_leaf *leaf)
+>         return ret;
+>  }
+>
+> +/*
+> + * This may be called early while still running on the initial identity
+> + * mapping. Use RIP-relative addressing to obtain the correct address
+> + * while running with the initial identity mapping as well as the
+> + * switch-over to kernel virtual addresses later.
+> + */
+> +static const struct snp_cpuid_table *snp_cpuid_get_table(void)
+> +{
+> +       void *ptr;
+> +
+> +       asm ("lea cpuid_table_copy(%%rip), %0"
+> +            : "=r" (ptr)
+> +            : "p" (&cpuid_table_copy));
+> +
+> +       return ptr;
+> +}
+> +
+> +/*
+> + * The SNP Firmware ABI, Revision 0.9, Section 7.1, details the use of
+> + * XCR0_IN and XSS_IN to encode multiple versions of 0xD subfunctions 0
+> + * and 1 based on the corresponding features enabled by a particular
+> + * combination of XCR0 and XSS registers so that a guest can look up the
+> + * version corresponding to the features currently enabled in its XCR0/XSS
+> + * registers. The only values that differ between these versions/table
+> + * entries is the enabled XSAVE area size advertised via EBX.
+> + *
+> + * While hypervisors may choose to make use of this support, it is more
+> + * robust/secure for a guest to simply find the entry corresponding to the
+> + * base/legacy XSAVE area size (XCR0=1 or XCR0=3), and then calculate the
+> + * XSAVE area size using subfunctions 2 through 64, as documented in APM
+> + * Volume 3, Rev 3.31, Appendix E.3.8, which is what is done here.
+> + *
+> + * Since base/legacy XSAVE area size is documented as 0x240, use that value
+> + * directly rather than relying on the base size in the CPUID table.
+> + *
+> + * Return: XSAVE area size on success, 0 otherwise.
+> + */
+> +static u32 snp_cpuid_calc_xsave_size(u64 xfeatures_en, bool compacted)
+> +{
+> +       const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
+> +       u64 xfeatures_found = 0;
+> +       u32 xsave_size = 0x240;
+> +       int i;
+> +
+> +       for (i = 0; i < cpuid_table->count; i++) {
+> +               const struct snp_cpuid_fn *e = &cpuid_table->fn[i];
+> +
+> +               if (!(e->eax_in == 0xD && e->ecx_in > 1 && e->ecx_in < 64))
+> +                       continue;
+> +               if (!(xfeatures_en & (BIT_ULL(e->ecx_in))))
+> +                       continue;
+> +               if (xfeatures_found & (BIT_ULL(e->ecx_in)))
+> +                       continue;
+> +
+> +               xfeatures_found |= (BIT_ULL(e->ecx_in));
+> +
+> +               if (compacted)
+> +                       xsave_size += e->eax;
+> +               else
+> +                       xsave_size = max(xsave_size, e->eax + e->ebx);
+> +       }
+> +
+> +       /*
+> +        * Either the guest set unsupported XCR0/XSS bits, or the corresponding
+> +        * entries in the CPUID table were not present. This is not a valid
+> +        * state to be in.
+> +        */
+> +       if (xfeatures_found != (xfeatures_en & GENMASK_ULL(63, 2)))
+> +               return 0;
+> +
+> +       return xsave_size;
+> +}
+> +
+> +static bool
+> +snp_cpuid_get_validated_func(struct cpuid_leaf *leaf)
+> +{
+> +       const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
+> +       int i;
+> +
+> +       for (i = 0; i < cpuid_table->count; i++) {
+> +               const struct snp_cpuid_fn *e = &cpuid_table->fn[i];
+> +
+> +               if (e->eax_in != leaf->fn)
+> +                       continue;
+> +
+> +               if (cpuid_function_is_indexed(leaf->fn) && e->ecx_in != leaf->subfn)
+> +                       continue;
+> +
+> +               /*
+> +                * For 0xD subfunctions 0 and 1, only use the entry corresponding
+> +                * to the base/legacy XSAVE area size (XCR0=1 or XCR0=3, XSS=0).
+> +                * See the comments above snp_cpuid_calc_xsave_size() for more
+> +                * details.
+> +                */
+> +               if (e->eax_in == 0xD && (e->ecx_in == 0 || e->ecx_in == 1))
+> +                       if (!(e->xcr0_in == 1 || e->xcr0_in == 3) || e->xss_in)
+> +                               continue;
+> +
+> +               leaf->eax = e->eax;
+> +               leaf->ebx = e->ebx;
+> +               leaf->ecx = e->ecx;
+> +               leaf->edx = e->edx;
+> +
+> +               return true;
+> +       }
+> +
+> +       return false;
+> +}
+> +
+> +static void snp_cpuid_hv(struct cpuid_leaf *leaf)
+> +{
+> +       if (sev_cpuid_hv(leaf))
+> +               sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_CPUID_HV);
+> +}
+> +
+> +static int snp_cpuid_postprocess(struct cpuid_leaf *leaf)
+> +{
+> +       struct cpuid_leaf leaf_hv = *leaf;
+> +
+> +       switch (leaf->fn) {
+> +       case 0x1:
+> +               snp_cpuid_hv(&leaf_hv);
+> +
+> +               /* initial APIC ID */
+> +               leaf->ebx = (leaf_hv.ebx & GENMASK(31, 24)) | (leaf->ebx & GENMASK(23, 0));
+> +               /* APIC enabled bit */
+> +               leaf->edx = (leaf_hv.edx & BIT(9)) | (leaf->edx & ~BIT(9));
+> +
+> +               /* OSXSAVE enabled bit */
+> +               if (native_read_cr4() & X86_CR4_OSXSAVE)
+> +                       leaf->ecx |= BIT(27);
+> +               break;
+> +       case 0x7:
+> +               /* OSPKE enabled bit */
+> +               leaf->ecx &= ~BIT(4);
+> +               if (native_read_cr4() & X86_CR4_PKE)
+> +                       leaf->ecx |= BIT(4);
+> +               break;
+> +       case 0xB:
+> +               leaf_hv.subfn = 0;
+> +               snp_cpuid_hv(&leaf_hv);
+> +
+> +               /* extended APIC ID */
+> +               leaf->edx = leaf_hv.edx;
+> +               break;
+> +       case 0xD: {
+> +               bool compacted = false;
+> +               u64 xcr0 = 1, xss = 0;
+> +               u32 xsave_size;
+> +
+> +               if (leaf->subfn != 0 && leaf->subfn != 1)
+> +                       return 0;
+> +
+> +               if (native_read_cr4() & X86_CR4_OSXSAVE)
+> +                       xcr0 = xgetbv(XCR_XFEATURE_ENABLED_MASK);
+> +               if (leaf->subfn == 1) {
+> +                       /* Get XSS value if XSAVES is enabled. */
+> +                       if (leaf->eax & BIT(3)) {
+> +                               unsigned long lo, hi;
+> +
+> +                               asm volatile("rdmsr" : "=a" (lo), "=d" (hi)
+> +                                                    : "c" (MSR_IA32_XSS));
+> +                               xss = (hi << 32) | lo;
+> +                       }
+> +
+> +                       /*
+> +                        * The PPR and APM aren't clear on what size should be
+> +                        * encoded in 0xD:0x1:EBX when compaction is not enabled
+> +                        * by either XSAVEC (feature bit 1) or XSAVES (feature
+> +                        * bit 3) since SNP-capable hardware has these feature
+> +                        * bits fixed as 1. KVM sets it to 0 in this case, but
+> +                        * to avoid this becoming an issue it's safer to simply
+> +                        * treat this as unsupported for SNP guests.
+> +                        */
+> +                       if (!(leaf->eax & (BIT(1) | BIT(3))))
+> +                               return -EINVAL;
 
-> 
-> History:
-> ----------
-> 
-> Previously this patch set was sent under title "Add TDX Guest
-> Support (Attestation support)". In the previous version, only the
-> attestation driver patch was reviewed and got acked. Rest of the
-> patches need to be reviewed freshly.
-> 
-> https://lore.kernel.org/bpf/20210806000946.2951441-1-sathyanarayanan.kuppuswamy@linux.intel.com/
-> 
-> Changes since previous submission:
->  * Updated commit log and error handling in TDREPORT, GetQuote and
->    SetupEventNotifyInterrupt support patches.
->  * Added locking support in attestation driver.
-> 
-> Kuppuswamy Sathyanarayanan (6):
->   x86/tdx: Add tdx_mcall_tdreport() API support
->   x86/tdx: Add tdx_hcall_get_quote() API support
->   x86/tdx: Add SetupEventNotifyInterrupt TDX hypercall support
->   platform/x86: intel_tdx_attest: Add TDX Guest attestation interface
->     driver
->   x86/tdx: Add TDX Guest event notify interrupt vector support
->   tools/tdx: Add a sample attestation user app
-> 
->  arch/x86/coco/tdx.c                           | 170 ++++++++++++
->  arch/x86/include/asm/hardirq.h                |   4 +
->  arch/x86/include/asm/idtentry.h               |   4 +
->  arch/x86/include/asm/irq_vectors.h            |   7 +-
->  arch/x86/include/asm/tdx.h                    |   5 +
->  arch/x86/kernel/irq.c                         |   7 +
->  drivers/platform/x86/intel/Kconfig            |   1 +
->  drivers/platform/x86/intel/Makefile           |   1 +
->  drivers/platform/x86/intel/tdx/Kconfig        |  13 +
->  drivers/platform/x86/intel/tdx/Makefile       |   3 +
->  .../platform/x86/intel/tdx/intel_tdx_attest.c | 241 ++++++++++++++++++
->  include/uapi/misc/tdx.h                       |  37 +++
->  tools/Makefile                                |  13 +-
->  tools/tdx/Makefile                            |  19 ++
->  tools/tdx/attest/.gitignore                   |   2 +
->  tools/tdx/attest/Makefile                     |  24 ++
->  tools/tdx/attest/tdx-attest-test.c            | 240 +++++++++++++++++
->  17 files changed, 784 insertions(+), 7 deletions(-)
->  create mode 100644 drivers/platform/x86/intel/tdx/Kconfig
->  create mode 100644 drivers/platform/x86/intel/tdx/Makefile
->  create mode 100644 drivers/platform/x86/intel/tdx/intel_tdx_attest.c
->  create mode 100644 include/uapi/misc/tdx.h
->  create mode 100644 tools/tdx/Makefile
->  create mode 100644 tools/tdx/attest/.gitignore
->  create mode 100644 tools/tdx/attest/Makefile
->  create mode 100644 tools/tdx/attest/tdx-attest-test.c
-> 
+I couldn't get this patch set to boot and I found that I was setting
+these XSAVE cpuid bits wrong. This took me a while to debug because
+inside of handle_vc_boot_ghcb() this -EINVAL means we jump into the
+halt loop, in addition the early_printk()s inside of that function
+don't seem to  be working for me but should the halt in
+handle_vc_boot_ghcb() be replaced with an sev_es_terminate() or
+something?
 
+I am still working on why the early_printk()s in that function are not
+working, it seems that they lead to a different halt. Have you tested
+any of those error paths manually? For example if you set your CPUID
+bits to explicitly fail here do you see the expected printks?
+
+> +
+> +                       compacted = true;
+> +               }
+> +
+> +               xsave_size = snp_cpuid_calc_xsave_size(xcr0 | xss, compacted);
+> +               if (!xsave_size)
+> +                       return -EINVAL;
+> +
+> +               leaf->ebx = xsave_size;
+> +               }
+> +               break;
+> +       case 0x8000001E:
+> +               snp_cpuid_hv(&leaf_hv);
+> +
+> +               /* extended APIC ID */
+> +               leaf->eax = leaf_hv.eax;
+> +               /* compute ID */
+> +               leaf->ebx = (leaf->ebx & GENMASK(31, 8)) | (leaf_hv.ebx & GENMASK(7, 0));
+> +               /* node ID */
+> +               leaf->ecx = (leaf->ecx & GENMASK(31, 8)) | (leaf_hv.ecx & GENMASK(7, 0));
+> +               break;
+> +       default:
+> +               /* No fix-ups needed, use values as-is. */
+> +               break;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +/*
+> + * Returns -EOPNOTSUPP if feature not enabled. Any other non-zero return value
+> + * should be treated as fatal by caller.
+> + */
+> +static int snp_cpuid(struct cpuid_leaf *leaf)
+> +{
+> +       const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
+> +
+> +       if (!cpuid_table->count)
+> +               return -EOPNOTSUPP;
+> +
+> +       if (!snp_cpuid_get_validated_func(leaf)) {
+> +               /*
+> +                * Some hypervisors will avoid keeping track of CPUID entries
+> +                * where all values are zero, since they can be handled the
+> +                * same as out-of-range values (all-zero). This is useful here
+> +                * as well as it allows virtually all guest configurations to
+> +                * work using a single SNP CPUID table.
+> +                *
+> +                * To allow for this, there is a need to distinguish between
+> +                * out-of-range entries and in-range zero entries, since the
+> +                * CPUID table entries are only a template that may need to be
+> +                * augmented with additional values for things like
+> +                * CPU-specific information during post-processing. So if it's
+> +                * not in the table, set the values to zero. Then, if they are
+> +                * within a valid CPUID range, proceed with post-processing
+> +                * using zeros as the initial values. Otherwise, skip
+> +                * post-processing and just return zeros immediately.
+> +                */
+> +               leaf->eax = leaf->ebx = leaf->ecx = leaf->edx = 0;
+> +
+> +               /* Skip post-processing for out-of-range zero leafs. */
+> +               if (!(leaf->fn <= cpuid_std_range_max ||
+> +                     (leaf->fn >= 0x40000000 && leaf->fn <= cpuid_hyp_range_max) ||
+> +                     (leaf->fn >= 0x80000000 && leaf->fn <= cpuid_ext_range_max)))
+> +                       return 0;
+> +       }
+> +
+> +       return snp_cpuid_postprocess(leaf);
+> +}
+> +
+>  /*
+>   * Boot VC Handler - This is the first VC handler during boot, there is no GHCB
+>   * page yet, so it only supports the MSR based communication with the
+> @@ -252,6 +541,7 @@ void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
+>         unsigned int subfn = lower_bits(regs->cx, 32);
+>         unsigned int fn = lower_bits(regs->ax, 32);
+>         struct cpuid_leaf leaf;
+> +       int ret;
+>
+>         /* Only CPUID is supported via MSR protocol */
+>         if (exit_code != SVM_EXIT_CPUID)
+> @@ -259,9 +549,18 @@ void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
+>
+>         leaf.fn = fn;
+>         leaf.subfn = subfn;
+> +
+> +       ret = snp_cpuid(&leaf);
+> +       if (!ret)
+> +               goto cpuid_done;
+> +
+> +       if (ret != -EOPNOTSUPP)
+> +               goto fail;
+> +
+>         if (sev_cpuid_hv(&leaf))
+>                 goto fail;
+>
+> +cpuid_done:
+>         regs->ax = leaf.eax;
+>         regs->bx = leaf.ebx;
+>         regs->cx = leaf.ecx;
+> @@ -556,12 +855,37 @@ static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+>         return ret;
+>  }
+>
+> +static int vc_handle_cpuid_snp(struct pt_regs *regs)
+> +{
+> +       struct cpuid_leaf leaf;
+> +       int ret;
+> +
+> +       leaf.fn = regs->ax;
+> +       leaf.subfn = regs->cx;
+> +       ret = snp_cpuid(&leaf);
+> +       if (!ret) {
+> +               regs->ax = leaf.eax;
+> +               regs->bx = leaf.ebx;
+> +               regs->cx = leaf.ecx;
+> +               regs->dx = leaf.edx;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
+>                                       struct es_em_ctxt *ctxt)
+>  {
+>         struct pt_regs *regs = ctxt->regs;
+>         u32 cr4 = native_read_cr4();
+>         enum es_result ret;
+> +       int snp_cpuid_ret;
+> +
+> +       snp_cpuid_ret = vc_handle_cpuid_snp(regs);
+> +       if (!snp_cpuid_ret)
+> +               return ES_OK;
+> +       if (snp_cpuid_ret != -EOPNOTSUPP)
+> +               return ES_VMM_ERROR;
+>
+>         ghcb_set_rax(ghcb, regs->ax);
+>         ghcb_set_rcx(ghcb, regs->cx);
+> --
+> 2.25.1
+>
