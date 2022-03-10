@@ -2,173 +2,188 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FE5C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 17:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04803C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 19:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242681AbiCJRvq (ORCPT
+        id S1343508AbiCJTSf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Mar 2022 12:51:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41502 "EHLO
+        Thu, 10 Mar 2022 14:18:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237937AbiCJRvq (ORCPT
+        with ESMTP id S239336AbiCJTSe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Mar 2022 12:51:46 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B5CE115696B
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 09:50:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646934643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IE8iDtjMPxES1pixTwbm5l65Q9z9YePgh/TVyJi1zQM=;
-        b=FRt/UiZOJQUbp70wMk4EwpX6KsmhrMiqor5JTJHxgBbq6vS0eY4fPDrstxHxmyuTauKClg
-        T4Fkx4eMzKkrzRVPIKP0wxmo5IJcPYGh8JulS5EKnyV6ltrznczu4rLRQeKhB/ga9qHcck
-        5/DM9B1gUhY436pJ/ryhhSak9lHeBt8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-352-U2UobH1cNf-5W7-53nYO5w-1; Thu, 10 Mar 2022 12:50:42 -0500
-X-MC-Unique: U2UobH1cNf-5W7-53nYO5w-1
-Received: by mail-ej1-f72.google.com with SMTP id d7-20020a1709061f4700b006bbf73a7becso3508469ejk.17
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 09:50:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=IE8iDtjMPxES1pixTwbm5l65Q9z9YePgh/TVyJi1zQM=;
-        b=O9bbi71yGGoNygRUY/SdMsmcc0hC94kh131bzwFmhZUzefHfUTH6/FUGsjb75V7gXK
-         2PGmz6cSK2twpBJ1esK6NCYl0unCmEknDndoiLLDxahXBSii9LBe6JGXGW9icrgqy+C5
-         cR7CXyhNSEEOGg4i/mIrTBlXxv25D7XN2iAotvgRr0+F7/xim3ayn9XTKm4W4sP35TQw
-         jLqY9gH+naHPi5OphYlMDoIfZ4RigWLSpihOMavfMwFJJ/xJb0taitX3ecwhJ9/Alali
-         6MSqMuJyEfb7+M6Azq6cRNWYjAgJwyxvkju2X/GPFspjwzgqnBxIdlcC1RDm0Cm3UfYd
-         hW+A==
-X-Gm-Message-State: AOAM530VNFt12PPpnomi1bLnS47Pcyad22KpT0jSZxEvk1+UOI6dYQwD
-        eYR3EUIkd/eJMX4w/qNnrsVJEGNvBW7TvB4eh7KKIYHACKksLPGTKtSYvVNZj+VuHdebsvnQQCm
-        1f5fDurGLYfhqLUSUhMvcZBCOmf9yYL4STQ==
-X-Received: by 2002:a17:906:eb51:b0:6db:a3d:3a0b with SMTP id mc17-20020a170906eb5100b006db0a3d3a0bmr5250658ejb.140.1646934641461;
-        Thu, 10 Mar 2022 09:50:41 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwu4Mvf/4G3zWfgDaXb0BR2PiGQcdInEOpPjZETJpCRyoeh5v6uub8QzusHoq0zjnDFRwLwuQ==
-X-Received: by 2002:a17:906:eb51:b0:6db:a3d:3a0b with SMTP id mc17-20020a170906eb5100b006db0a3d3a0bmr5250639ejb.140.1646934641259;
-        Thu, 10 Mar 2022 09:50:41 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id js24-20020a170906ca9800b006c8aeca8fe8sm2024123ejb.58.2022.03.10.09.50.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Mar 2022 09:50:40 -0800 (PST)
-Message-ID: <f3a95d3e-a7eb-8a68-b062-d25b8d7d7c98@redhat.com>
-Date:   Thu, 10 Mar 2022 18:50:40 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v2] platform/x86: amd-pmc: Validate entry into the deepest
- state on resume
-Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Thu, 10 Mar 2022 14:18:34 -0500
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam07on2046.outbound.protection.outlook.com [40.107.95.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A27552BA;
+        Thu, 10 Mar 2022 11:17:28 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hEuf4mSyHN8/HZ+qU8MjN9C1QqNee/4CDhsjhr2K2XYDDx+K1vSrWXI/c3L9JGEBVdIinkTw3XmGw76I3D6mdjL7bJPrandBpaN0o+j9vBYrUAlRsSGFPRMhGlkfXEVuwJ125GhLsreEhrbAR3vWR5T70WDiaO8pM2QH20W5qqfunDVsnJlKNp3/YNx92k1XDXRfNiTA+WeHMN1D2pKaLO3b/X2P3CPNQr6UDUfRTPTc9xoIsxH3weIdokW2L3D9pA0hJ8mepWydeqPDJESOMIXG6EIZ0JdxEWtJpuO0b5RqX0oU+k4trS6xpii76tKRj9p1hsMMRMRlCvQFHfMoOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0jRRPkonHidepZmgfkaTFkoBgoAmRLDfAZgQBeG0+J8=;
+ b=T3zL5Bmzm0/UkvdpoSXOjC8eH5uzi/XAAa+M6wSlvxA3wmt4vgzZKpnjC4C+7zMoUnCgAmjG1rg3RGgyViB4FCF6/hq3Xv18+j3yWylt0YQcble5OgLLJ/TDNVl6IPakVBBBBP6TM32aVVeqf3piEI2cY8kd5d+FbxNzPdvM3l2tLoXbN8IweHB5k/395F1aoGJH1pwoJ+NbLl1FTmiubBUmzRmiO/FkewN0AbdZhDsA5CHC1pNH2/z+PZ6PmVzZDCeeSNAga9H+12s6eagweA8HfTTHrAuIl6+CJjQr2i+ILet26cbqM1pII7IGZepQpJ1GBCtCAYJ11OxYMCiOLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0jRRPkonHidepZmgfkaTFkoBgoAmRLDfAZgQBeG0+J8=;
+ b=RtHLA5ytRZ1W+sDJfHV9Yo1FRkpBTuXaoN95Pf6eSE8ZeUftDLBo+GpnE5Yd4ylG8fwpGn4Brey6ubi7ERjdpa5Uyx3vpfksm846cyGaYHBWjzl4KCDuDCRufOecMEa0tlifU7uj1bj1urVTjQMzFMh88j5JEFKSuqxzjVG97zo=
+Received: from MWHPR14CA0046.namprd14.prod.outlook.com (2603:10b6:300:12b::32)
+ by MWHPR1201MB0013.namprd12.prod.outlook.com (2603:10b6:300:e0::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.17; Thu, 10 Mar
+ 2022 19:17:26 +0000
+Received: from CO1NAM11FT018.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:300:12b:cafe::2b) by MWHPR14CA0046.outlook.office365.com
+ (2603:10b6:300:12b::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.22 via Frontend
+ Transport; Thu, 10 Mar 2022 19:17:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT018.mail.protection.outlook.com (10.13.175.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5061.22 via Frontend Transport; Thu, 10 Mar 2022 19:17:26 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 10 Mar
+ 2022 13:17:24 -0600
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>
-Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Goswami Sanket <Sanket.Goswami@amd.com>
-References: <20220310150920.560583-1-mario.limonciello@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220310150920.560583-1-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+CC:     "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Goswami Sanket <Sanket.Goswami@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v2 2/5] ACPI / x86: Pass the constraints checking result to LPS0 callback
+Date:   Thu, 10 Mar 2022 13:17:21 -0600
+Message-ID: <20220310191724.1440-2-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220310191724.1440-1-mario.limonciello@amd.com>
+References: <20220310191724.1440-1-mario.limonciello@amd.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e1942461-0e63-4a08-2a07-08da02ca9cbb
+X-MS-TrafficTypeDiagnostic: MWHPR1201MB0013:EE_
+X-Microsoft-Antispam-PRVS: <MWHPR1201MB00133AB6D257FE7134C6B2BDE20B9@MWHPR1201MB0013.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UrT3MlZ4p3t+yUA/bpY6E0b8Pxq7BvRqkXbRcomLg6NqDwtJw7p9MUO7r1xrLgLqiqQG19hwd4C6VrLdrL/EvNdASyJGFOhbXIlEmbIl8T6dByS8ec5KLTszLNuEX7iT9wo7JljhaM7EDtgy+a5e2IDM5tB+G2teS7V0COK9BenjsOPXF1ogCZ0l6rk+9R6nidcGkU0ixcHC+LLr5ukc4sqaoKswBu1Q0XURKRqGmvSnNK+w7KzYzOyN6n2SEt84yA1v9dscsQOk1Ra+1Q83WjuGQGfkA4GfqIrvmNctOm0mRAAu2u9daO+yLWhCc81+tQnPrKLcXn12NxF7fIZlaYzsGIFeRr3Vc5YgdRWjS82n4sAGn5M/9FzRltCRbhu5f8k/DXZXe13QcPg7nq2TgsLCirBtITuT5fmJ+HWTLFzkkuqIbIhQNZuF0gtwD9XxNXUtkHVnSIuquR9uDaFFurUBLF5zvupp+5Dr77uRBPpJicdddtgqmLqXVbp5nVfcvFDyqICZHzuk3R9nTvnKyEmgZ2gg5jX4e/XiKwtFbWD0HIVzoiTCCG0gE4cN+owXb4mWJkuQTYLM1tHJue/KN6wqiPM1zhhVoMxxxTTtNbFrSuEdUSiattOxXYc7XgcI1Tt17scz2Tw57dD7Cr2Qvh9iecEoNQZ06QAphjg/KhJQelBQezMhXx/7XYKsT3Sy0dwTnekkiqUy/+lq81Sc6Q==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(40470700004)(36840700001)(36860700001)(44832011)(7696005)(81166007)(86362001)(83380400001)(8936002)(54906003)(508600001)(356005)(8676002)(82310400004)(5660300002)(70586007)(4326008)(70206006)(2906002)(1076003)(40460700003)(16526019)(426003)(336012)(6666004)(2616005)(186003)(316002)(26005)(36756003)(110136005)(47076005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2022 19:17:26.0632
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1942461-0e63-4a08-2a07-08da02ca9cbb
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT018.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1201MB0013
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+If constraints checking has been enabled by the LPS0 code, it may
+also be useful for drivers using the callback to make a decision what
+to do.
 
-On 3/10/22 16:09, Mario Limonciello wrote:
-> Currently the only way to discover if a system went into the deepest sleep
-> state is to read from sysfs after you finished suspend.
-> 
-> To better illustrate to users that problems have occurred, check as part
-> of resume and display a warning.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+For example this may in the future allow a failing constraints check
+preventing another driver from notifying firmware that all required
+devices have entered the deepest state.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+Changes from v1->v2:
+ * rebase on top of changes in first patch
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+ drivers/acpi/x86/s2idle.c | 11 +++++++----
+ include/linux/acpi.h      |  2 +-
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
-> changes from v1->v2
->  * rebase on platform-x86.git/review-hans
->  drivers/platform/x86/amd-pmc.c | 29 ++++++++++++++++++++++++++---
->  1 file changed, 26 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-> index fc0b4d628dec..971aaabaa9c8 100644
-> --- a/drivers/platform/x86/amd-pmc.c
-> +++ b/drivers/platform/x86/amd-pmc.c
-> @@ -322,6 +322,28 @@ static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
->  	return 0;
->  }
->  
-> +static int get_metrics_table(struct amd_pmc_dev *pdev, struct smu_metrics *table)
-> +{
-> +	if (pdev->cpu_id == AMD_CPU_ID_PCO)
-> +		return -ENODEV;
-> +	memcpy_fromio(table, pdev->smu_virt_addr, sizeof(struct smu_metrics));
-> +	return 0;
-> +}
-> +
-> +static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
-> +{
-> +	struct smu_metrics table;
-> +
-> +	if (get_metrics_table(pdev, &table))
-> +		return;
-> +
-> +	if (!table.s0i3_last_entry_status)
-> +		dev_warn(pdev->dev, "Last suspend didn't reach deepest state\n");
-> +	else
-> +		dev_dbg(pdev->dev, "Last suspend in deepest state for %lluus\n",
-> +			 table.timein_s0i3_lastcapture);
-> +}
-> +
->  #ifdef CONFIG_DEBUG_FS
->  static int smu_fw_info_show(struct seq_file *s, void *unused)
->  {
-> @@ -329,11 +351,9 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
->  	struct smu_metrics table;
->  	int idx;
->  
-> -	if (dev->cpu_id == AMD_CPU_ID_PCO)
-> +	if (get_metrics_table(dev, &table))
->  		return -EINVAL;
->  
-> -	memcpy_fromio(&table, dev->smu_virt_addr, sizeof(struct smu_metrics));
-> -
->  	seq_puts(s, "\n=== SMU Statistics ===\n");
->  	seq_printf(s, "Table Version: %d\n", table.table_version);
->  	seq_printf(s, "Hint Count: %d\n", table.hint_count);
-> @@ -689,6 +709,9 @@ static int __maybe_unused amd_pmc_resume(struct device *dev)
->  		cpu_latency_qos_update_request(&pdev->amd_pmc_pm_qos_req,
->  						PM_QOS_DEFAULT_VALUE);
->  
-> +	/* Notify on failed entry */
-> +	amd_pmc_validate_deepest(pdev);
-> +
->  	return rc;
->  }
->  
+diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
+index 7418443580d4..808018bbab90 100644
+--- a/drivers/acpi/x86/s2idle.c
++++ b/drivers/acpi/x86/s2idle.c
+@@ -290,7 +290,7 @@ static void lpi_device_get_constraints(void)
+ 	ACPI_FREE(out_obj);
+ }
+ 
+-static void lpi_check_constraints(void)
++static void lpi_check_constraints(bool *met)
+ {
+ 	int i;
+ 
+@@ -312,11 +312,13 @@ static void lpi_check_constraints(void)
+ 			continue;
+ 		}
+ 
+-		if (adev->power.state < lpi_constraints_table[i].min_dstate)
++		if (adev->power.state < lpi_constraints_table[i].min_dstate) {
+ 			acpi_handle_info(handle,
+ 				"LPI: Constraint not met; min power state:%s current power state:%s\n",
+ 				acpi_power_state_string(lpi_constraints_table[i].min_dstate),
+ 				acpi_power_state_string(adev->power.state));
++			*met = false;
++		}
+ 	}
+ }
+ 
+@@ -448,13 +450,14 @@ static struct acpi_scan_handler lps0_handler = {
+ int acpi_s2idle_prepare_late(void)
+ {
+ 	struct lps0_callback_handler *handler;
++	bool constraints_met = true;
+ 	int rc = 0;
+ 
+ 	if (!lps0_device_handle || sleep_no_lps0)
+ 		return 0;
+ 
+ 	if (pm_debug_messages_on)
+-		lpi_check_constraints();
++		lpi_check_constraints(&constraints_met);
+ 
+ 	/* Screen off */
+ 	if (lps0_dsm_func_mask > 0)
+@@ -483,7 +486,7 @@ int acpi_s2idle_prepare_late(void)
+ 
+ 	mutex_lock(&lps0_callback_handler_mutex);
+ 	list_for_each_entry(handler, &lps0_callback_handler_head, list_node) {
+-		rc = handler->prepare_late_callback(handler->context);
++		rc = handler->prepare_late_callback(handler->context, constraints_met);
+ 		if (rc)
+ 			goto out;
+ 	}
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index df105f5e03e5..4906db854554 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1026,7 +1026,7 @@ acpi_status acpi_os_prepare_extended_sleep(u8 sleep_state,
+ #ifdef CONFIG_X86
+ struct lps0_callback_handler {
+ 	struct list_head list_node;
+-	int (*prepare_late_callback)(void *context);
++	int (*prepare_late_callback)(void *context, bool constraints);
+ 	void (*restore_early_callback)(void *context);
+ 	void *context;
+ };
+-- 
+2.34.1
 
