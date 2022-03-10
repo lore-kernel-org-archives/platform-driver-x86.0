@@ -2,302 +2,167 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D20C43219
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 14:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A40C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 14:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243391AbiCJOVr (ORCPT
+        id S235753AbiCJOyP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Mar 2022 09:21:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43462 "EHLO
+        Thu, 10 Mar 2022 09:54:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243817AbiCJOSY (ORCPT
+        with ESMTP id S1347158AbiCJOue (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Mar 2022 09:18:24 -0500
-Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2981E166E31;
-        Thu, 10 Mar 2022 06:14:51 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0V6onflR_1646921659;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0V6onflR_1646921659)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 10 Mar 2022 22:14:20 +0800
-Message-ID: <1646921388.7015996-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v7 09/26] virtio_ring: split: implement virtqueue_reset_vring_split()
-Date:   Thu, 10 Mar 2022 22:09:48 +0800
-From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
+        Thu, 10 Mar 2022 09:50:34 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7388918F201;
+        Thu, 10 Mar 2022 06:45:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646923547; x=1678459547;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=QaPegg1jNSdooo38T77D3oKrBjhFtC11zzudIxnPRLo=;
+  b=Lfha/SC6mGJLFFRe8FbDBC8jFAwjZe7h2OxcU7Q+vYTLN16Xg8FBTLdz
+   HTiZbCUKXfYnRKhwGFjr8V8iX3ig+Y1Ua+DU5xa1XtepvVoVtpDsTCdjv
+   bbwNAbx5NNf45cRXIbc0Kgv35IdvY86oWYaj8VySrPFwXebPhf6KM00/p
+   JiF+dhPQy4MqONAUxbjgitm322CbGm0P8qG05q/p7g56uDcmqr8F7MnC/
+   bZjAT7YgLhvSFjA4jAWyygip7LhHJQ4EEG0RdWls4BYU5koMrN0eMOiSG
+   WgvOettJwRJ5mfffihZlPCGR2WBjhanDcTenhzM69ckcm/8/1XaoZtj2P
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="252830990"
+X-IronPort-AV: E=Sophos;i="5.90,170,1643702400"; 
+   d="scan'208";a="252830990"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 06:45:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,170,1643702400"; 
+   d="scan'208";a="644464959"
+Received: from aubrey-app.sh.intel.com (HELO [10.239.53.25]) ([10.239.53.25])
+  by orsmga004.jf.intel.com with ESMTP; 10 Mar 2022 06:45:42 -0800
+Subject: Re: [PATCH v1 0/6] Add TDX Guest Attestation support
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org
-References: <20220308123518.33800-1-xuanzhuo@linux.alibaba.com>
- <20220308123518.33800-10-xuanzhuo@linux.alibaba.com>
- <20220310015418-mutt-send-email-mst@kernel.org>
- <1646896623.3794115-2-xuanzhuo@linux.alibaba.com>
- <20220310025930-mutt-send-email-mst@kernel.org>
- <1646900056.7775025-1-xuanzhuo@linux.alibaba.com>
- <20220310071335-mutt-send-email-mst@kernel.org>
- <1646915610.3936472-1-xuanzhuo@linux.alibaba.com>
- <20220310080212-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20220310080212-mutt-send-email-mst@kernel.org>
+        Andrii Nakryiko <andrii@kernel.org>
+Cc:     "H . Peter Anvin" <hpa@zytor.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+References: <20220222231735.268919-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+From:   Aubrey Li <aubrey.li@linux.intel.com>
+Message-ID: <93767fe9-9edd-8e31-c3ca-155bfa807915@linux.intel.com>
+Date:   Thu, 10 Mar 2022 22:45:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20220222231735.268919-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 10 Mar 2022 08:04:27 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> On Thu, Mar 10, 2022 at 08:33:30PM +0800, Xuan Zhuo wrote:
-> > On Thu, 10 Mar 2022 07:17:09 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > On Thu, Mar 10, 2022 at 04:14:16PM +0800, Xuan Zhuo wrote:
-> > > > On Thu, 10 Mar 2022 03:07:22 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > > > On Thu, Mar 10, 2022 at 03:17:03PM +0800, Xuan Zhuo wrote:
-> > > > > > On Thu, 10 Mar 2022 02:00:39 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > > > > > On Tue, Mar 08, 2022 at 08:35:01PM +0800, Xuan Zhuo wrote:
-> > > > > > > > virtio ring supports reset.
-> > > > > > > >
-> > > > > > > > Queue reset is divided into several stages.
-> > > > > > > >
-> > > > > > > > 1. notify device queue reset
-> > > > > > > > 2. vring release
-> > > > > > > > 3. attach new vring
-> > > > > > > > 4. notify device queue re-enable
-> > > > > > > >
-> > > > > > > > After the first step is completed, the vring reset operation can be
-> > > > > > > > performed. If the newly set vring num does not change, then just reset
-> > > > > > > > the vq related value.
-> > > > > > > >
-> > > > > > > > Otherwise, the vring will be released and the vring will be reallocated.
-> > > > > > > > And the vring will be attached to the vq. If this process fails, the
-> > > > > > > > function will exit, and the state of the vq will be the vring release
-> > > > > > > > state. You can call this function again to reallocate the vring.
-> > > > > > > >
-> > > > > > > > In addition, vring_align, may_reduce_num are necessary for reallocating
-> > > > > > > > vring, so they are retained when creating vq.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > > > > > ---
-> > > > > > > >  drivers/virtio/virtio_ring.c | 69 ++++++++++++++++++++++++++++++++++++
-> > > > > > > >  1 file changed, 69 insertions(+)
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> > > > > > > > index e0422c04c903..148fb1fd3d5a 100644
-> > > > > > > > --- a/drivers/virtio/virtio_ring.c
-> > > > > > > > +++ b/drivers/virtio/virtio_ring.c
-> > > > > > > > @@ -158,6 +158,12 @@ struct vring_virtqueue {
-> > > > > > > >  			/* DMA address and size information */
-> > > > > > > >  			dma_addr_t queue_dma_addr;
-> > > > > > > >  			size_t queue_size_in_bytes;
-> > > > > > > > +
-> > > > > > > > +			/* The parameters for creating vrings are reserved for
-> > > > > > > > +			 * creating new vrings when enabling reset queue.
-> > > > > > > > +			 */
-> > > > > > > > +			u32 vring_align;
-> > > > > > > > +			bool may_reduce_num;
-> > > > > > > >  		} split;
-> > > > > > > >
-> > > > > > > >  		/* Available for packed ring */
-> > > > > > > > @@ -217,6 +223,12 @@ struct vring_virtqueue {
-> > > > > > > >  #endif
-> > > > > > > >  };
-> > > > > > > >
-> > > > > > > > +static void vring_free(struct virtqueue *vq);
-> > > > > > > > +static void __vring_virtqueue_init_split(struct vring_virtqueue *vq,
-> > > > > > > > +					 struct virtio_device *vdev);
-> > > > > > > > +static int __vring_virtqueue_attach_split(struct vring_virtqueue *vq,
-> > > > > > > > +					  struct virtio_device *vdev,
-> > > > > > > > +					  struct vring vring);
-> > > > > > > >
-> > > > > > > >  /*
-> > > > > > > >   * Helpers.
-> > > > > > > > @@ -1012,6 +1024,8 @@ static struct virtqueue *vring_create_virtqueue_split(
-> > > > > > > >  		return NULL;
-> > > > > > > >  	}
-> > > > > > > >
-> > > > > > > > +	to_vvq(vq)->split.vring_align = vring_align;
-> > > > > > > > +	to_vvq(vq)->split.may_reduce_num = may_reduce_num;
-> > > > > > > >  	to_vvq(vq)->split.queue_dma_addr = vring.dma_addr;
-> > > > > > > >  	to_vvq(vq)->split.queue_size_in_bytes = vring.queue_size_in_bytes;
-> > > > > > > >  	to_vvq(vq)->we_own_ring = true;
-> > > > > > > > @@ -1019,6 +1033,59 @@ static struct virtqueue *vring_create_virtqueue_split(
-> > > > > > > >  	return vq;
-> > > > > > > >  }
-> > > > > > > >
-> > > > > > > > +static int virtqueue_reset_vring_split(struct virtqueue *_vq, u32 num)
-> > > > > > > > +{
-> > > > > > > > +	struct vring_virtqueue *vq = to_vvq(_vq);
-> > > > > > > > +	struct virtio_device *vdev = _vq->vdev;
-> > > > > > > > +	struct vring_split vring;
-> > > > > > > > +	int err;
-> > > > > > > > +
-> > > > > > > > +	if (num > _vq->num_max)
-> > > > > > > > +		return -E2BIG;
-> > > > > > > > +
-> > > > > > > > +	switch (vq->vq.reset) {
-> > > > > > > > +	case VIRTIO_VQ_RESET_STEP_NONE:
-> > > > > > > > +		return -ENOENT;
-> > > > > > > > +
-> > > > > > > > +	case VIRTIO_VQ_RESET_STEP_VRING_ATTACH:
-> > > > > > > > +	case VIRTIO_VQ_RESET_STEP_DEVICE:
-> > > > > > > > +		if (vq->split.vring.num == num || !num)
-> > > > > > > > +			break;
-> > > > > > > > +
-> > > > > > > > +		vring_free(_vq);
-> > > > > > > > +
-> > > > > > > > +		fallthrough;
-> > > > > > > > +
-> > > > > > > > +	case VIRTIO_VQ_RESET_STEP_VRING_RELEASE:
-> > > > > > > > +		if (!num)
-> > > > > > > > +			num = vq->split.vring.num;
-> > > > > > > > +
-> > > > > > > > +		err = vring_create_vring_split(&vring, vdev,
-> > > > > > > > +					       vq->split.vring_align,
-> > > > > > > > +					       vq->weak_barriers,
-> > > > > > > > +					       vq->split.may_reduce_num, num);
-> > > > > > > > +		if (err)
-> > > > > > > > +			return -ENOMEM;
-> > > > > > > > +
-> > > > > > > > +		err = __vring_virtqueue_attach_split(vq, vdev, vring.vring);
-> > > > > > > > +		if (err) {
-> > > > > > > > +			vring_free_queue(vdev, vring.queue_size_in_bytes,
-> > > > > > > > +					 vring.queue,
-> > > > > > > > +					 vring.dma_addr);
-> > > > > > > > +			return -ENOMEM;
-> > > > > > > > +		}
-> > > > > > > > +
-> > > > > > > > +		vq->split.queue_dma_addr = vring.dma_addr;
-> > > > > > > > +		vq->split.queue_size_in_bytes = vring.queue_size_in_bytes;
-> > > > > > > > +	}
-> > > > > > > > +
-> > > > > > > > +	__vring_virtqueue_init_split(vq, vdev);
-> > > > > > > > +	vq->we_own_ring = true;
-> > > > > > > > +	vq->vq.reset = VIRTIO_VQ_RESET_STEP_VRING_ATTACH;
-> > > > > > > > +
-> > > > > > > > +	return 0;
-> > > > > > > > +}
-> > > > > > > > +
-> > > > > > >
-> > > > > > > I kind of dislike this state machine.
-> > > > > > >
-> > > > > > > Hacks like special-casing num = 0 to mean "reset" are especially
-> > > > > > > confusing.
-> > > > > >
-> > > > > > I'm removing it. I'll say in the function description that this function is
-> > > > > > currently only called when vq has been reset. I'm no longer checking it based on
-> > > > > > state.
-> > > > > >
-> > > > > > >
-> > > > > > > And as Jason points out, when we want a resize then yes this currently
-> > > > > > > implies reset but that is an implementation detail.
-> > > > > > >
-> > > > > > > There should be a way to just make these cases separate functions
-> > > > > > > and then use them to compose consistent external APIs.
-> > > > > >
-> > > > > > Yes, virtqueue_resize_split() is fine for ethtool -G.
-> > > > > >
-> > > > > > But in the case of AF_XDP, just execute reset to free the buffer. The name
-> > > > > > virtqueue_reset_vring_split() I think can cover both cases. Or we use two apis
-> > > > > > to handle both scenarios?
-> > > > > >
-> > > > > > Or can anyone think of a better name. ^_^
-> > > > > >
-> > > > > > Thanks.
-> > > > >
-> > > > >
-> > > > > I'd say resize should be called resize and reset should be called reset.
-> > > >
-> > > >
-> > > > OK, I'll change it to resize here.
-> > > >
-> > > > But I want to know that when I implement virtio-net to support AF_XDP, its
-> > > > requirement is to release all submitted buffers. Then should I add a new api
-> > > > such as virtqueue_reset_vring()?
-> > >
-> > > Sounds like a reasonable name.
-> > >
-> > > > >
-> > > > > The big issue is a sane API for resize. Ideally it would resubmit
-> > > > > buffers which did not get used. Question is what to do
-> > > > > about buffers which don't fit (if ring has been downsized)?
-> > > > > Maybe a callback that will handle them?
-> > > > > And then what? Queue them up and readd later? Drop?
-> > > > > If we drop we should drop from the head not the tail ...
-> > > >
-> > > > It's a good idea, let's implement it later.
-> > > >
-> > > > Thanks.
-> > >
-> > > Well ... not sure how you are going to support resize
-> > > if you don't know what to do with buffers that were
-> > > in the ring.
-> >
-> > The current solution is to call virtqueue_detach_unused_buf() to release buffers
-> > before resize ring.
-> >
-> > Thanks.
->
-> This requires basically a richer api:
-> - stop
-> - detach
-> - resize
-> - start
+On 2022/2/23 上午7:17, Kuppuswamy Sathyanarayanan wrote:
+> Hi All,
+> 
+> Intel's Trust Domain Extensions (TDX) protect guest VMs from malicious
+> hosts and some physical attacks. VM guest with TDX support is called
+> as TD Guest.
+> 
+> In TD Guest, the attestation process is used to verify the 
+> trustworthiness of TD guest to the 3rd party servers. Such attestation
+> process is required by 3rd party servers before sending sensitive
+> information to TD guests. One usage example is to get encryption keys
+> from the key server for mounting the encrypted rootfs or secondary drive.
+>     
+> Following patches add the attestation support to TDX guest which
+> includes attestation user interface driver, user agent example, and
+> related hypercall support.
+> 
+> In this series, only following patches are in arch/x86 and are
+> intended for x86 maintainers review.
+> 
+> * x86/tdx: Add TDREPORT TDX Module call support
+> * x86/tdx: Add GetQuote TDX hypercall support
+> * x86/tdx: Add SetupEventNotifyInterrupt TDX hypercall support
+> * x86/tdx: Add TDX Guest event notify interrupt vector support
+> 
+> Patch titled "platform/x86: intel_tdx_attest: Add TDX Guest attestation
+> interface driver" adds the attestation driver support. This is supposed
+> to be reviewed by platform-x86 maintainers.
+> 
+> Also, patch titled "tools/tdx: Add a sample attestation user app" adds
+> a testing app for attestation feature which needs review from
+> bpf@vger.kernel.org.
+> 
+> Dependencies:
+> --------------
+> 
+> This feature has dependency on TDX guest core patch set series.
+> 
+> https://lore.kernel.org/all/20220218161718.67148-1-kirill.shutemov@linux.intel.com/T/
 
-Yes, that's how it is currently implemented.
+Does this feature also have dependency on QEMU tdx support?
 
->
-> with a callback you would just have a resize, and the fact
-> it resets internally becomes an implementation detail.
+> 
+> History:
+> ----------
+> 
+> Previously this patch set was sent under title "Add TDX Guest
+> Support (Attestation support)". In the previous version, only the
+> attestation driver patch was reviewed and got acked. Rest of the
+> patches need to be reviewed freshly.
+> 
+> https://lore.kernel.org/bpf/20210806000946.2951441-1-sathyanarayanan.kuppuswamy@linux.intel.com/
+> 
+> Changes since previous submission:
+>  * Updated commit log and error handling in TDREPORT, GetQuote and
+>    SetupEventNotifyInterrupt support patches.
+>  * Added locking support in attestation driver.
+> 
+> Kuppuswamy Sathyanarayanan (6):
+>   x86/tdx: Add tdx_mcall_tdreport() API support
+>   x86/tdx: Add tdx_hcall_get_quote() API support
+>   x86/tdx: Add SetupEventNotifyInterrupt TDX hypercall support
+>   platform/x86: intel_tdx_attest: Add TDX Guest attestation interface
+>     driver
+>   x86/tdx: Add TDX Guest event notify interrupt vector support
+>   tools/tdx: Add a sample attestation user app
+> 
+>  arch/x86/coco/tdx.c                           | 170 ++++++++++++
+>  arch/x86/include/asm/hardirq.h                |   4 +
+>  arch/x86/include/asm/idtentry.h               |   4 +
+>  arch/x86/include/asm/irq_vectors.h            |   7 +-
+>  arch/x86/include/asm/tdx.h                    |   5 +
+>  arch/x86/kernel/irq.c                         |   7 +
+>  drivers/platform/x86/intel/Kconfig            |   1 +
+>  drivers/platform/x86/intel/Makefile           |   1 +
+>  drivers/platform/x86/intel/tdx/Kconfig        |  13 +
+>  drivers/platform/x86/intel/tdx/Makefile       |   3 +
+>  .../platform/x86/intel/tdx/intel_tdx_attest.c | 241 ++++++++++++++++++
+>  include/uapi/misc/tdx.h                       |  37 +++
+>  tools/Makefile                                |  13 +-
+>  tools/tdx/Makefile                            |  19 ++
+>  tools/tdx/attest/.gitignore                   |   2 +
+>  tools/tdx/attest/Makefile                     |  24 ++
+>  tools/tdx/attest/tdx-attest-test.c            | 240 +++++++++++++++++
+>  17 files changed, 784 insertions(+), 7 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/tdx/Kconfig
+>  create mode 100644 drivers/platform/x86/intel/tdx/Makefile
+>  create mode 100644 drivers/platform/x86/intel/tdx/intel_tdx_attest.c
+>  create mode 100644 include/uapi/misc/tdx.h
+>  create mode 100644 tools/tdx/Makefile
+>  create mode 100644 tools/tdx/attest/.gitignore
+>  create mode 100644 tools/tdx/attest/Makefile
+>  create mode 100644 tools/tdx/attest/tdx-attest-test.c
+> 
 
-
-I think, I understand what you mean, we encapsulate the following code into a
-function as an external interface.
-
-int virtqueue_resize(vq, callback)
-{
-	err = virtqueue_reset(sq->vq);
-	if (err) {
-		netif_start_subqueue(vi->dev, qindex);
-		goto err;
-	}
-
-	/* detach */
-	while ((buf = virtqueue_detach_unused_buf(sq->vq)) != NULL) {
-		callback(vq, buf);
-	}
-
-	err = virtqueue_resize(sq->vq, ring_num);
-	if (err)
-		goto err;
-
-	err = virtqueue_enable_resetq(sq->vq);
-	if (err)
-		goto err;
-}
-
-Thanks.
-
->
-> --
-> MST
->
