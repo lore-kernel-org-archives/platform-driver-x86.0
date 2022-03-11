@@ -2,329 +2,159 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB2DC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Mar 2022 05:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003F1C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Mar 2022 17:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241949AbiCKFKz (ORCPT
+        id S1350606AbiCKRII (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 11 Mar 2022 00:10:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55314 "EHLO
+        Fri, 11 Mar 2022 12:08:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242014AbiCKFKy (ORCPT
+        with ESMTP id S1350607AbiCKRH4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 11 Mar 2022 00:10:54 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C91781AAFC8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 21:09:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646975390;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Fri, 11 Mar 2022 12:07:56 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08611D63A2;
+        Fri, 11 Mar 2022 09:06:52 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 200491F441;
+        Fri, 11 Mar 2022 17:06:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1647018411; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9nBenv8s0AYm2+pJMUm/jGEPBjH6r3BWfbAB/qp2ZZE=;
-        b=NWVQDmdOIHj3vLiw+Bp5Ehb5JIh06xg0j0yI7sVx0gU6MTKZ05CEj42gQgnv84aqLuiByn
-        YoGrE76Ojge8fxc9L0V7heGAuy6RlE39h7OZ1WmWy9ob17who6TbE+e1DmmgW8ZRc11JyT
-        avlFQpWlX+IFE8KhE9kVNtgcU8d/syM=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-536-vEHOpmtPMBCG_KB3Hb4iNw-1; Fri, 11 Mar 2022 00:09:48 -0500
-X-MC-Unique: vEHOpmtPMBCG_KB3Hb4iNw-1
-Received: by mail-pj1-f69.google.com with SMTP id gm17-20020a17090b101100b001c21939cad2so1781805pjb.8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 21:09:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=9nBenv8s0AYm2+pJMUm/jGEPBjH6r3BWfbAB/qp2ZZE=;
-        b=Ti+SErSW+g0JRjapr9+yHwjbNZrt0mtQ1YxVg+EgFsI5/AbzxzggXj7JyYrB2MV/PM
-         cM1+PL2cBfkIVbsRQsYSnFohhjaIEdsUOANxrel02TrvG3haiPjk/CRj5jqtXe7PxBBB
-         s1zwTEAL009cj8l6fjrLuTvpZzyQX1Tbsc56YkRsm0E2iHQutIARnM1ZkcBWoNMERym5
-         4rnv1/2K2zEIBe21/AnFZG9XguZHIAuHM0ShjHGQTGDal3BFL70NJePIUrGL/eQABeoj
-         fl36+sdtjaw0swJHm2Ud6lBcBbp6seQQfZHa8RQpkfY5HpbKxSh5ljFLLmXXJ/406iW2
-         Snjw==
-X-Gm-Message-State: AOAM531HzQarDCjj4vMxGTj5/9/aPA5r1dDZEVebcSfYfDq05Ety+9Hc
-        c672uyaA5HYFP70mI5546P4IMf4DrsgRss3igHJTIot30Do//F6Kvff/G8ZEMdDkAo5zVvfkyXG
-        mM9MCA5aSlCmwvorZV3cwz6X5CUy0dP3qKQ==
-X-Received: by 2002:a17:90a:d3d0:b0:1bb:f5b3:2fbf with SMTP id d16-20020a17090ad3d000b001bbf5b32fbfmr8820719pjw.87.1646975387531;
-        Thu, 10 Mar 2022 21:09:47 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx8JKZXffEodSfmEHpMRgYWBvpIlhcshqGZgVYLA+ugGNosDsbJfihtdbxn5vtUMGsfzlzXdw==
-X-Received: by 2002:a17:90a:d3d0:b0:1bb:f5b3:2fbf with SMTP id d16-20020a17090ad3d000b001bbf5b32fbfmr8820693pjw.87.1646975387226;
-        Thu, 10 Mar 2022 21:09:47 -0800 (PST)
-Received: from [10.72.13.226] ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id z7-20020a056a00240700b004e1cde37bc1sm8792099pfh.84.2022.03.10.21.09.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Mar 2022 21:09:46 -0800 (PST)
-Message-ID: <06b3adbb-6777-7022-00d2-beca2b166e10@redhat.com>
-Date:   Fri, 11 Mar 2022 13:09:36 +0800
+        bh=JSXcqRdGy8e39Bfyh4bjxSE8ya8/hJV+iGXqtr1mwZU=;
+        b=zQyt4+5n13hOeCa9xgCswD1KUwJoBAVHqClZsOVB/PC81hDRKVuQgH1NmYqJHrPtu7uSBy
+        PhKQMACw5TXT3jEJnxs41RXUlcaW2trrHTw/O9jZxqtPwhLGzXcXKc1h5hTKvlf/IDc0dP
+        5Ixbw+BN/hU3tzWgbjphSRqoV6EI8m0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1647018411;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JSXcqRdGy8e39Bfyh4bjxSE8ya8/hJV+iGXqtr1mwZU=;
+        b=QCVBTLAApqTWfX+QacBXJ4GMfGLfvOFCxwcaEUXx1xHk0oPnraa4sv0x634bkXioi9HjnJ
+        26OphLW7CWS9nCDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 05DD013A8E;
+        Fri, 11 Mar 2022 17:06:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 7gxNOqmBK2IROQAAMHmgww
+        (envelope-from <jroedel@suse.de>); Fri, 11 Mar 2022 17:06:49 +0000
+Date:   Fri, 11 Mar 2022 18:06:49 +0100
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Michael Roth <michael.roth@amd.com>
+Cc:     Peter Gonda <pgonda@google.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-coco@lists.linux.dev,
+        linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, Tony Luck <tony.luck@intel.com>,
+        Marc Orr <marcorr@google.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v12 32/46] x86/compressed/64: Add support for SEV-SNP
+ CPUID table in #VC handlers
+Message-ID: <YiuBqZnjEUyMfBMu@suse.de>
+References: <20220307213356.2797205-1-brijesh.singh@amd.com>
+ <20220307213356.2797205-33-brijesh.singh@amd.com>
+ <CAMkAt6pO0xZb2pye-VEKdFQ_dYFgLA21fkYmnYPTWo8mzPrKDQ@mail.gmail.com>
+ <20220310212504.2kt6sidexljh2s6p@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.2
-Subject: Re: [PATCH v7 17/26] virtio_pci: queue_reset: support
- VIRTIO_F_RING_RESET
-Content-Language: en-US
-To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <20220308123518.33800-1-xuanzhuo@linux.alibaba.com>
- <20220308123518.33800-18-xuanzhuo@linux.alibaba.com>
- <8b9d337d-71c2-07b4-8e65-6f83cf09bf7a@redhat.com>
- <1646900411.6481435-2-xuanzhuo@linux.alibaba.com>
-From:   Jason Wang <jasowang@redhat.com>
-In-Reply-To: <1646900411.6481435-2-xuanzhuo@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220310212504.2kt6sidexljh2s6p@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Thu, Mar 10, 2022 at 03:25:04PM -0600, Michael Roth wrote:
+> Joerg, do you have more background on that? Would it make sense, outside
+> of this series, to change it to a terminate? Maybe with a specific set
+> of error codes for ES_{OK,UNSUPPORTED,VMM_ERROR,DECODE_FAILED}?
 
-åœ¨ 2022/3/10 ä¸‹åˆ4:20, Xuan Zhuo å†™é“:
-> On Wed, 9 Mar 2022 16:54:10 +0800, Jason Wang <jasowang@redhat.com> wrote:
->> åœ¨ 2022/3/8 ä¸‹åˆ8:35, Xuan Zhuo å†™é“:
->>> This patch implements virtio pci support for QUEUE RESET.
->>>
->>> Performing reset on a queue is divided into these steps:
->>>
->>>    1. virtio_reset_vq()              - notify the device to reset the queue
->>>    2. virtqueue_detach_unused_buf()  - recycle the buffer submitted
->>>    3. virtqueue_reset_vring()        - reset the vring (may re-alloc)
->>>    4. virtio_enable_resetq()         - mmap vring to device, and enable the queue
->>>
->>> This patch implements virtio_reset_vq(), virtio_enable_resetq() in the
->>> pci scenario.
->>>
->>> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
->>> ---
->>>    drivers/virtio/virtio_pci_common.c |  8 +--
->>>    drivers/virtio/virtio_pci_modern.c | 83 ++++++++++++++++++++++++++++++
->>>    2 files changed, 88 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
->>> index fdbde1db5ec5..863d3a8a0956 100644
->>> --- a/drivers/virtio/virtio_pci_common.c
->>> +++ b/drivers/virtio/virtio_pci_common.c
->>> @@ -248,9 +248,11 @@ static void vp_del_vq(struct virtqueue *vq)
->>>    	struct virtio_pci_vq_info *info = vp_dev->vqs[vq->index];
->>>    	unsigned long flags;
->>>
->>> -	spin_lock_irqsave(&vp_dev->lock, flags);
->>> -	list_del(&info->node);
->>> -	spin_unlock_irqrestore(&vp_dev->lock, flags);
->>> +	if (!vq->reset) {
->>> +		spin_lock_irqsave(&vp_dev->lock, flags);
->>> +		list_del(&info->node);
->>> +		spin_unlock_irqrestore(&vp_dev->lock, flags);
->>> +	}
->>>
->>>    	vp_dev->del_vq(info);
->>>    	kfree(info);
->>> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
->>> index 49a4493732cf..3c67d3607802 100644
->>> --- a/drivers/virtio/virtio_pci_modern.c
->>> +++ b/drivers/virtio/virtio_pci_modern.c
->>> @@ -34,6 +34,9 @@ static void vp_transport_features(struct virtio_device *vdev, u64 features)
->>>    	if ((features & BIT_ULL(VIRTIO_F_SR_IOV)) &&
->>>    			pci_find_ext_capability(pci_dev, PCI_EXT_CAP_ID_SRIOV))
->>>    		__virtio_set_bit(vdev, VIRTIO_F_SR_IOV);
->>> +
->>> +	if (features & BIT_ULL(VIRTIO_F_RING_RESET))
->>> +		__virtio_set_bit(vdev, VIRTIO_F_RING_RESET);
->>>    }
->>>
->>>    /* virtio config->finalize_features() implementation */
->>> @@ -199,6 +202,82 @@ static int vp_active_vq(struct virtqueue *vq, u16 msix_vec)
->>>    	return 0;
->>>    }
->>>
->>> +static int vp_modern_reset_vq(struct virtqueue *vq)
->>> +{
->>> +	struct virtio_pci_device *vp_dev = to_vp_device(vq->vdev);
->>> +	struct virtio_pci_modern_device *mdev = &vp_dev->mdev;
->>> +	struct virtio_pci_vq_info *info;
->>> +	unsigned long flags;
->>> +	unsigned int irq;
->>> +
->>> +	if (!virtio_has_feature(vq->vdev, VIRTIO_F_RING_RESET))
->>> +		return -ENOENT;
->>> +
->>> +	vp_modern_set_queue_reset(mdev, vq->index);
->>> +
->>> +	info = vp_dev->vqs[vq->index];
->>> +
->>> +	/* delete vq from irq handler */
->>> +	spin_lock_irqsave(&vp_dev->lock, flags);
->>> +	list_del(&info->node);
->>> +	spin_unlock_irqrestore(&vp_dev->lock, flags);
->>> +
->>> +	INIT_LIST_HEAD(&info->node);
->>> +
->>> +	vq->reset = VIRTIO_VQ_RESET_STEP_DEVICE;
->>> +
->>> +	/* sync irq callback. */
->>> +	if (vp_dev->intx_enabled) {
->>> +		irq = vp_dev->pci_dev->irq;
->>> +
->>> +	} else {
->>> +		if (info->msix_vector == VIRTIO_MSI_NO_VECTOR)
->>> +			return 0;
->>> +
->>> +		irq = pci_irq_vector(vp_dev->pci_dev, info->msix_vector);
->>> +	}
->>> +
->>> +	synchronize_irq(irq);
->>
->> Synchronize_irq() is not sufficient here since it breaks the effort of
->> the interrupt hardening which is done by commits:
->>
->> 080cd7c3ac87 virtio-pci: harden INTX interrupts
->> 9e35276a5344 virtio_pci: harden MSI-X interrupts
->>
->> UnfortunatelyÂ  080cd7c3ac87 introduces an issue that disable_irq() were
->> used for the affinity managed irq but we're discussing a fix.
->>
->
-> ok, I think disable_irq() is still used here.
->
-> I want to determine the solution for this detail first. So I posted the code, I
-> hope Jason can help confirm this point first.
->
-> There are three situations in which vq corresponds to an interrupt
->
-> 1. intx
-> 2. msix: per vq vectors
-> 2. msix: share irq
->
-> Essentially can be divided into two categories: per vq vectors and share irq.
->
-> For share irq is based on virtqueues to find vq, so I think it is safe as long
-> as list_del() is executed under the protection of the lock.
->
-> In the case of per vq vectors, disable_irq() is used.
+This seems to be a left over from development of the SEV-ES guest
+patch-set. I wanted to see whether the VM crashed due to a triple fault
+or an error in the #VC handler. The halt loop can be replaced by
+termination request now.
 
+> > I am still working on why the early_printk()s in that function are not
+> > working, it seems that they lead to a different halt.
+> 
+> I don't see a different halt. They just don't seem to print anything.
+> (keep in mind you still need to advance the IP or else the guest is
+> still gonna end up spinning here, even if you're removing the halt loop
+> for testing purposes)
 
-See the discussion here[1], disable_irq() could be problematic for the 
-block and scsi device that using affinity managed irq. We're waiting for 
-the IRQ maintainer to comment on a solution. Other looks sane.
+The early_printks() also cause #VC exceptions, and if that handling is
+broken for some reason nothing will be printed.
 
-Thanks
+> 
+> > working, it seems that they lead to a different halt. Have you tested
+> > any of those error paths manually? For example if you set your CPUID
+> > bits to explicitly fail here do you see the expected printks?
+> 
+> I think at that point in the code, when the XSAVE stuff is setup, the
+> console hasn't been enabled yet, so messages would get buffered until they
+> get flushed later (which won't happen since there's halt loop after). I
+> know in some cases devs will dump the log buffer from memory instead to get
+> at the error messages for early failures. (Maybe that's also why Joerg
+> decided to use a halt loop there instead of terminating?)
 
-[1] https://lkml.org/lkml/2022/3/8/743
+It is hard to dump the log-buffer from encrypted memory :) But I
+remember having seen messages from these early_printks under SEV-ES for
+different bugs. Not sure why they don't appear in this situation.
 
+> So maybe reworking the error handling in handle_vc_boot_ghcb() to use
+> sev_es_terminate() might be warranted, but probably worth checking with
+> Joerg first, and should be done as a separate series since it is not
+> SNP-related.
 
->
-> Thanks.
->
-> +static int vp_modern_reset_vq(struct virtqueue *vq)
-> +{
-> +       struct virtio_pci_device *vp_dev = to_vp_device(vq->vdev);
-> +       struct virtio_pci_modern_device *mdev = &vp_dev->mdev;
-> +       struct virtio_pci_vq_info *info;
-> +       unsigned long flags;
-> +       unsigned int irq;
-> +
-> +       if (!virtio_has_feature(vq->vdev, VIRTIO_F_RING_RESET))
-> +               return -ENOENT;
-> +
-> +       vp_modern_set_queue_reset(mdev, vq->index);
-> +
-> +       info = vp_dev->vqs[vq->index];
-> +
-> +       /* delete vq from irq handler */
-> +       spin_lock_irqsave(&vp_dev->lock, flags);
-> +       list_del(&info->node);
-> +       vp_modern_set_queue_reset(mdev, vq->index);
-> +
-> +       info = vp_dev->vqs[vq->index];
-> +
-> +       /* delete vq from irq handler */
-> +       spin_lock_irqsave(&vp_dev->lock, flags);
-> +       list_del(&info->node);
-> +       spin_unlock_irqrestore(&vp_dev->lock, flags);
-> +
-> +       INIT_LIST_HEAD(&info->node);
-> +
-> +       /* For the case where vq has an exclusive irq, to prevent the irq from
-> +        * being received again and the pending irq, call disable_irq().
-> +        *
-> +        * In the scenario based on shared interrupts, vq will be searched from
-> +        * the queue virtqueues. Since the previous list_del() has been deleted
-> +        * from the queue, it is impossible for vq to be called in this case.
-> +        * There is no need to close the corresponding interrupt.
-> +        */
-> +       if (vp_dev->per_vq_vectors && msix_vec != VIRTIO_MSI_NO_VECTOR)
-> +               disable_irq(pci_irq_vector(vp_dev->pci_dev, info->msix_vector));
-> +
-> +       vq->reset = true;
-> +
-> +       return 0;
-> +}
-> +
-> +static int vp_modern_enable_reset_vq(struct virtqueue *vq)
-> +{
-> +       struct virtio_pci_device *vp_dev = to_vp_device(vq->vdev);
-> +       struct virtio_pci_modern_device *mdev = &vp_dev->mdev;
-> +       struct virtio_pci_vq_info *info;
-> +       unsigned long flags, index;
-> +       int err;
-> +
-> +       if (!vq->reset)
-> +               return -EBUSY;
-> +
-> +       index = vq->index;
-> +       info = vp_dev->vqs[index];
-> +
-> +       /* check queue reset status */
-> +       if (vp_modern_get_queue_reset(mdev, index) != 1)
-> +               return -EBUSY;
-> +
-> +       err = vp_active_vq(vq, info->msix_vector);
-> +       if (err)
-> +               return err;
-> +
-> +       if (vq->callback) {
-> +               spin_lock_irqsave(&vp_dev->lock, flags);
-> +               list_add(&info->node, &vp_dev->virtqueues);
-> +               spin_unlock_irqrestore(&vp_dev->lock, flags);
-> +       } else {
-> +               INIT_LIST_HEAD(&info->node);
-> +       }
-> +
-> +       vp_modern_set_queue_enable(&vp_dev->mdev, index, true);
-> +       vq->reset = false;
-> +
-> +       if (vp_dev->per_vq_vectors && msix_vec != VIRTIO_MSI_NO_VECTOR)
-> +               enable_irq(pci_irq_vector(vp_dev->pci_dev, info->msix_vector));
-> +
-> +       return 0;
-> +}
->
->
+I am fine with this change.
+
+Regards,
+
+-- 
+Jörg Rödel
+jroedel@suse.de
+
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5
+90409 Nürnberg
+Germany
+ 
+(HRB 36809, AG Nürnberg)
+Geschäftsführer: Ivo Totev
 
