@@ -2,223 +2,288 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136D5C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Mar 2022 21:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D826C43217
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Mar 2022 05:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236297AbiCJVor (ORCPT
+        id S229910AbiCKFCp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Mar 2022 16:44:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40342 "EHLO
+        Fri, 11 Mar 2022 00:02:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231620AbiCJVoq (ORCPT
+        with ESMTP id S235537AbiCKFCl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Mar 2022 16:44:46 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35772114FFF;
-        Thu, 10 Mar 2022 13:43:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646948625; x=1678484625;
-  h=message-id:subject:from:reply-to:to:cc:in-reply-to:
-   references:mime-version:date:content-transfer-encoding;
-  bh=XUapZ7Q6wJqYykO/dgmAlR+1FZT3PPjUZrZiDoyk/OQ=;
-  b=WsPbEd8fF0eHIG+fVYwym7gvSA4T5sEd1jLNhBoDx1bR1G4xWPVRwY05
-   V1PRtIAdc1RDdLGL1cZT99xH1OCBGN+7gaf71WggvCy2Ld25BcGNlhF9B
-   ahbBbdBWG4/bPwk5hZbRvCwx8VkOokIiB6kTLN72Q4HDW87x7gc8WaE57
-   virDdwBsMN7B7jLBdT2F5u1nc7IQ2LbXKGmHzK7N/A74xb0WvNJqMBdF6
-   hyUehLsCfyiXzQ7c2WgF4591zLFeAmGOSxi83Cua+Lqr4qbCM8pFP71x9
-   OJlYdOw19ph4tJmfA8oor8b9SKTbFxS8/WgqhZMLngsqqszvlc4KpAkHO
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10282"; a="242835293"
-X-IronPort-AV: E=Sophos;i="5.90,171,1643702400"; 
-   d="scan'208";a="242835293"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 13:43:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,171,1643702400"; 
-   d="scan'208";a="496425844"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 10 Mar 2022 13:43:44 -0800
-Received: from smirmobi-mobl.amr.corp.intel.com (smirmobi-mobl.amr.corp.intel.com [10.212.177.154])
-        by linux.intel.com (Postfix) with ESMTP id 98B0F580BF8;
-        Thu, 10 Mar 2022 13:43:44 -0800 (PST)
-Message-ID: <ece072c74b107d2327a12ca3d328b0e6e8d7d4e0.camel@linux.intel.com>
-Subject: Re: [PATCH v2 1/5] ACPI / x86: Add support for LPS0 callback
- handler
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>, linux-acpi@vger.kernel.org,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Goswami Sanket <Sanket.Goswami@amd.com>
-In-Reply-To: <20220310191724.1440-1-mario.limonciello@amd.com>
-References: <20220310191724.1440-1-mario.limonciello@amd.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 11 Mar 2022 00:02:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C6F081AC29C
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 21:01:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646974897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ClxhKYkVRI4wjgf/neqah0SebFq73Qnvze+JfcOkoWE=;
+        b=IQq9HaLTepJW2VIKqYDuNySk2pG46XpUS+Fz8bU1QjaegPbnoMbBBH9RPVo4ux2iD5iH/8
+        zOcj8/aZzTUwJCszU+oKR37vn3mbkdRmdc2uFuuPWk3gLgnP61PfedPZDAjzgsI3TrPzVv
+        UT+y9Syhkl7KHJdth20CtDw1mNRasu8=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-196-Fv28rkZbPrCYkFZAVC-1sA-1; Fri, 11 Mar 2022 00:01:35 -0500
+X-MC-Unique: Fv28rkZbPrCYkFZAVC-1sA-1
+Received: by mail-pf1-f199.google.com with SMTP id w68-20020a62dd47000000b004f6aa5e4824so4553449pff.4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Mar 2022 21:01:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ClxhKYkVRI4wjgf/neqah0SebFq73Qnvze+JfcOkoWE=;
+        b=kCeAJiu6WpFG//MC2wUBeZVjabyaCDP7TEdgmLz5/ZKxNki3E3NYR5AtdtKvi01ALr
+         qX3enoapMf1pVl4vZfZXnbJyUgatiUtO23AUA3qeeUUPJL1AVT5DO1H2x2i53nrMH05A
+         udOn16eigBehbu1LpufxOVVBFNnZp2pgg8yazwDEd7L2Y/NvDXAVl0vTRW+LiYNK2Jay
+         Y5UBHh2sk/++60mh39UcWEUc95fQGWyd7IeMmpGPXI8Jg8Cz5pJQhHkdQVst4Mosh9U5
+         KdeZrWZHaSYuALEUwDLY/TruxtBVbwtlwWp9bmFtkGUl+ySpEWrMDgBSo2SngwoUobUj
+         gfgQ==
+X-Gm-Message-State: AOAM533YDp9n4WPsa4nnpuFkM400a3nIJE51Eyy279oV5FQGSt99r3Q7
+        VEdwZ1nxec0W+jhWqihj4nJq3YbUEO92YH+zEKA8xfwtHHKRcVOEfznFwbruzqwYsEVbVAh9gVP
+        sDHAXpb5bNXLHYOfkLQUk4RWBr00ofHXaFQ==
+X-Received: by 2002:a17:903:2287:b0:151:dab2:aacc with SMTP id b7-20020a170903228700b00151dab2aaccmr8931069plh.64.1646974894632;
+        Thu, 10 Mar 2022 21:01:34 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyjhAHibdrN+PAZOgUOITJB4K7Do8Ys0otdg7SyrCfQr2FG1PKdSe+p69caWpelZLkCRgx01w==
+X-Received: by 2002:a17:903:2287:b0:151:dab2:aacc with SMTP id b7-20020a170903228700b00151dab2aaccmr8931038plh.64.1646974894266;
+        Thu, 10 Mar 2022 21:01:34 -0800 (PST)
+Received: from [10.72.13.226] ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id x6-20020a17090aa38600b001bce781ce03sm7437875pjp.18.2022.03.10.21.01.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Mar 2022 21:01:33 -0800 (PST)
+Message-ID: <cd774778-6cdc-9ebe-141c-1f47ad1c3109@redhat.com>
+Date:   Fri, 11 Mar 2022 13:01:23 +0800
 MIME-Version: 1.0
-Date:   Thu, 10 Mar 2022 13:43:25 -0800
-User-Agent: Evolution 3.36.5-0ubuntu1 
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.2
+Subject: Re: [PATCH v7 09/26] virtio_ring: split: implement
+ virtqueue_reset_vring_split()
+Content-Language: en-US
+To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20220308123518.33800-1-xuanzhuo@linux.alibaba.com>
+ <20220308123518.33800-10-xuanzhuo@linux.alibaba.com>
+ <512de020-b36e-8473-69c8-8b3925fbb6c1@redhat.com>
+ <1646887597.810321-1-xuanzhuo@linux.alibaba.com>
+From:   Jason Wang <jasowang@redhat.com>
+In-Reply-To: <1646887597.810321-1-xuanzhuo@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 2022-03-10 at 13:17 -0600, Mario Limonciello wrote:
-> Currenty the latest thing run during a suspend to idle attempt is
-> the LPS0 `prepare_late` callback and the earliest thing is the
-> `resume_early` callback.
-> 
-> There is a desire for the `amd-pmc` driver to suspend later in the
-> suspend process (ideally the very last thing), so create a callback
-> that it or any other driver can hook into to do this.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> changes from v1->v2:
->  * Change register/unregister arguments to be struct
-> 
->  drivers/acpi/x86/s2idle.c | 65 ++++++++++++++++++++++++++++++++++++++-
->  include/linux/acpi.h      | 11 ++++++-
->  2 files changed, 74 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
-> index abc06e7f89d8..7418443580d4 100644
-> --- a/drivers/acpi/x86/s2idle.c
-> +++ b/drivers/acpi/x86/s2idle.c
-> @@ -86,6 +86,9 @@ struct lpi_device_constraint_amd {
->  	int min_dstate;
->  };
->  
-> +static LIST_HEAD(lps0_callback_handler_head);
-> +static DEFINE_MUTEX(lps0_callback_handler_mutex);
-> +
->  static struct lpi_constraints *lpi_constraints_table;
->  static int lpi_constraints_table_size;
->  static int rev_id;
-> @@ -444,6 +447,9 @@ static struct acpi_scan_handler lps0_handler = {
->  
->  int acpi_s2idle_prepare_late(void)
->  {
-> +	struct lps0_callback_handler *handler;
-> +	int rc = 0;
-> +
->  	if (!lps0_device_handle || sleep_no_lps0)
->  		return 0;
->  
-> @@ -474,14 +480,31 @@ int acpi_s2idle_prepare_late(void)
->  		acpi_sleep_run_lps0_dsm(ACPI_LPS0_MS_ENTRY,
->  				lps0_dsm_func_mask_microsoft,
-> lps0_dsm_guid_microsoft);
->  	}
-> -	return 0;
-> +
-> +	mutex_lock(&lps0_callback_handler_mutex);
-> +	list_for_each_entry(handler, &lps0_callback_handler_head, list_node) {
-> +		rc = handler->prepare_late_callback(handler->context);
 
-Check callback exists first. Sorry I missed earlier.
+在 2022/3/10 下午12:46, Xuan Zhuo 写道:
+> On Wed, 9 Mar 2022 15:55:44 +0800, Jason Wang <jasowang@redhat.com> wrote:
+>> 在 2022/3/8 下午8:35, Xuan Zhuo 写道:
+>>> virtio ring supports reset.
+>>>
+>>> Queue reset is divided into several stages.
+>>>
+>>> 1. notify device queue reset
+>>> 2. vring release
+>>> 3. attach new vring
+>>> 4. notify device queue re-enable
+>>>
+>>> After the first step is completed, the vring reset operation can be
+>>> performed. If the newly set vring num does not change, then just reset
+>>> the vq related value.
+>>>
+>>> Otherwise, the vring will be released and the vring will be reallocated.
+>>> And the vring will be attached to the vq. If this process fails, the
+>>> function will exit, and the state of the vq will be the vring release
+>>> state. You can call this function again to reallocate the vring.
+>>>
+>>> In addition, vring_align, may_reduce_num are necessary for reallocating
+>>> vring, so they are retained when creating vq.
+>>>
+>>> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+>>> ---
+>>>    drivers/virtio/virtio_ring.c | 69 ++++++++++++++++++++++++++++++++++++
+>>>    1 file changed, 69 insertions(+)
+>>>
+>>> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+>>> index e0422c04c903..148fb1fd3d5a 100644
+>>> --- a/drivers/virtio/virtio_ring.c
+>>> +++ b/drivers/virtio/virtio_ring.c
+>>> @@ -158,6 +158,12 @@ struct vring_virtqueue {
+>>>    			/* DMA address and size information */
+>>>    			dma_addr_t queue_dma_addr;
+>>>    			size_t queue_size_in_bytes;
+>>> +
+>>> +			/* The parameters for creating vrings are reserved for
+>>> +			 * creating new vrings when enabling reset queue.
+>>> +			 */
+>>> +			u32 vring_align;
+>>> +			bool may_reduce_num;
+>>>    		} split;
+>>>
+>>>    		/* Available for packed ring */
+>>> @@ -217,6 +223,12 @@ struct vring_virtqueue {
+>>>    #endif
+>>>    };
+>>>
+>>> +static void vring_free(struct virtqueue *vq);
+>>> +static void __vring_virtqueue_init_split(struct vring_virtqueue *vq,
+>>> +					 struct virtio_device *vdev);
+>>> +static int __vring_virtqueue_attach_split(struct vring_virtqueue *vq,
+>>> +					  struct virtio_device *vdev,
+>>> +					  struct vring vring);
+>>>
+>>>    /*
+>>>     * Helpers.
+>>> @@ -1012,6 +1024,8 @@ static struct virtqueue *vring_create_virtqueue_split(
+>>>    		return NULL;
+>>>    	}
+>>>
+>>> +	to_vvq(vq)->split.vring_align = vring_align;
+>>> +	to_vvq(vq)->split.may_reduce_num = may_reduce_num;
+>>>    	to_vvq(vq)->split.queue_dma_addr = vring.dma_addr;
+>>>    	to_vvq(vq)->split.queue_size_in_bytes = vring.queue_size_in_bytes;
+>>>    	to_vvq(vq)->we_own_ring = true;
+>>> @@ -1019,6 +1033,59 @@ static struct virtqueue *vring_create_virtqueue_split(
+>>>    	return vq;
+>>>    }
+>>>
+>>> +static int virtqueue_reset_vring_split(struct virtqueue *_vq, u32 num)
+>>> +{
+>>
+>> So what this function does is to resize the virtqueue actually, I
+>> suggest to rename it as virtqueue_resize_split().
+> In addition to resize, when num is 0, the function is to reinitialize vq ring
+> related variables. For example avail_idx_shadow.
 
-> +		if (rc)
-> +			goto out;
-> +	}
-> +out:
-> +	mutex_unlock(&lps0_callback_handler_mutex);
-> +
-> +	return rc;
->  }
->  
->  void acpi_s2idle_restore_early(void)
->  {
-> +	struct lps0_callback_handler *handler;
-> +
->  	if (!lps0_device_handle || sleep_no_lps0)
->  		return;
->  
-> +	mutex_lock(&lps0_callback_handler_mutex);
-> +	list_for_each_entry(handler, &lps0_callback_handler_head, list_node)
-> +		handler->restore_early_callback(handler->context);
 
-Here too.
+We need to move those logic to virtio_reset_vq() (I think we agree to 
+have a better name of it).
 
-David
 
-> +	mutex_unlock(&lps0_callback_handler_mutex);
-> +
->  	/* Modern standby exit */
->  	if (lps0_dsm_func_mask_microsoft > 0)
->  		acpi_sleep_run_lps0_dsm(ACPI_LPS0_MS_EXIT,
-> @@ -524,4 +547,44 @@ void acpi_s2idle_setup(void)
->  	s2idle_set_ops(&acpi_s2idle_ops_lps0);
->  }
->  
-> +int acpi_register_lps0_callbacks(struct lps0_callback_handler *arg)
-> +{
-> +	struct lps0_callback_handler *handler;
-> +
-> +	if (!lps0_device_handle || sleep_no_lps0)
-> +		return -ENODEV;
-> +
-> +	handler = kmalloc(sizeof(*handler), GFP_KERNEL);
-> +	if (!handler)
-> +		return -ENOMEM;
-> +	handler->prepare_late_callback = arg->prepare_late_callback;
-> +	handler->restore_early_callback = arg->restore_early_callback;
-> +	handler->context = arg->context;
-> +
-> +	mutex_lock(&lps0_callback_handler_mutex);
-> +	list_add(&handler->list_node, &lps0_callback_handler_head);
-> +	mutex_unlock(&lps0_callback_handler_mutex);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_register_lps0_callbacks);
-> +
-> +void acpi_unregister_lps0_callbacks(struct lps0_callback_handler *arg)
-> +{
-> +	struct lps0_callback_handler *handler;
-> +
-> +	mutex_lock(&lps0_callback_handler_mutex);
-> +	list_for_each_entry(handler, &lps0_callback_handler_head, list_node) {
-> +		if (handler->prepare_late_callback == arg->prepare_late_callback 
-> &&
-> +		    handler->restore_early_callback == arg-
-> >restore_early_callback &&
-> +		    handler->context == arg->context) {
-> +			list_del(&handler->list_node);
-> +			kfree(handler);
-> +			break;
-> +		}
-> +	}
-> +	mutex_unlock(&lps0_callback_handler_mutex);
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_unregister_lps0_callbacks);
-> +
->  #endif /* CONFIG_SUSPEND */
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 6274758648e3..df105f5e03e5 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -1023,7 +1023,16 @@ void acpi_os_set_prepare_extended_sleep(int (*func)(u8
-> sleep_state,
->  
->  acpi_status acpi_os_prepare_extended_sleep(u8 sleep_state,
->  					   u32 val_a, u32 val_b);
-> -
-> +#ifdef CONFIG_X86
-> +struct lps0_callback_handler {
-> +	struct list_head list_node;
-> +	int (*prepare_late_callback)(void *context);
-> +	void (*restore_early_callback)(void *context);
-> +	void *context;
-> +};
-> +int acpi_register_lps0_callbacks(struct lps0_callback_handler *arg);
-> +void acpi_unregister_lps0_callbacks(struct lps0_callback_handler *arg);
-> +#endif /* CONFIG_X86 */
->  #ifndef CONFIG_IA64
->  void arch_reserve_mem_area(acpi_physical_address addr, size_t size);
->  #else
+> So I think 'reset' is more appropriate.
+
+
+The name is confusing at least to me, since we've already had 
+virtio_reset_vq() and most of the logic is to do the resize.
+
+Thanks
+
+
+>
+> Thanks.
+>
+>>
+>>> +	struct vring_virtqueue *vq = to_vvq(_vq);
+>>> +	struct virtio_device *vdev = _vq->vdev;
+>>> +	struct vring_split vring;
+>>> +	int err;
+>>> +
+>>> +	if (num > _vq->num_max)
+>>> +		return -E2BIG;
+>>> +
+>>> +	switch (vq->vq.reset) {
+>>> +	case VIRTIO_VQ_RESET_STEP_NONE:
+>>> +		return -ENOENT;
+>>> +
+>>> +	case VIRTIO_VQ_RESET_STEP_VRING_ATTACH:
+>>> +	case VIRTIO_VQ_RESET_STEP_DEVICE:
+>>> +		if (vq->split.vring.num == num || !num)
+>>> +			break;
+>>> +
+>>> +		vring_free(_vq);
+>>> +
+>>> +		fallthrough;
+>>> +
+>>> +	case VIRTIO_VQ_RESET_STEP_VRING_RELEASE:
+>>> +		if (!num)
+>>> +			num = vq->split.vring.num;
+>>> +
+>>> +		err = vring_create_vring_split(&vring, vdev,
+>>> +					       vq->split.vring_align,
+>>> +					       vq->weak_barriers,
+>>> +					       vq->split.may_reduce_num, num);
+>>> +		if (err)
+>>> +			return -ENOMEM;
+>>
+>> We'd better need a safe fallback here like:
+>>
+>> If we can't allocate new memory, we can keep using the current one.
+>> Otherwise an ethtool -G fail may make the device not usable.
+>>
+>> This could be done by not freeing the old vring and virtqueue states
+>> until new is allocated.
+>>
+>>
+>>> +
+>>> +		err = __vring_virtqueue_attach_split(vq, vdev, vring.vring);
+>>> +		if (err) {
+>>> +			vring_free_queue(vdev, vring.queue_size_in_bytes,
+>>> +					 vring.queue,
+>>> +					 vring.dma_addr);
+>>> +			return -ENOMEM;
+>>> +		}
+>>> +
+>>> +		vq->split.queue_dma_addr = vring.dma_addr;
+>>> +		vq->split.queue_size_in_bytes = vring.queue_size_in_bytes;
+>>> +	}
+>>> +
+>>> +	__vring_virtqueue_init_split(vq, vdev);
+>>> +	vq->we_own_ring = true;
+>>
+>> This seems wrong, we have the transport (rproc/mlxtbf) that allocate the
+>> vring by themselves. I think we need to fail the resize for we_own_ring
+>> == false.
+>>
+>> Thanks
+>>
+>>
+>>
+>>> +	vq->vq.reset = VIRTIO_VQ_RESET_STEP_VRING_ATTACH;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>>
+>>>    /*
+>>>     * Packed ring specific functions - *_packed().
+>>> @@ -2317,6 +2384,8 @@ static int __vring_virtqueue_attach_split(struct vring_virtqueue *vq,
+>>>    static void __vring_virtqueue_init_split(struct vring_virtqueue *vq,
+>>>    					 struct virtio_device *vdev)
+>>>    {
+>>> +	vq->vq.reset = VIRTIO_VQ_RESET_STEP_NONE;
+>>> +
+>>>    	vq->packed_ring = false;
+>>>    	vq->we_own_ring = false;
+>>>    	vq->broken = false;
 
