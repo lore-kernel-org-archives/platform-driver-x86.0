@@ -2,153 +2,228 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0113C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 12 Mar 2022 14:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 304E1C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Mar 2022 19:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230198AbiCLOyr (ORCPT
+        id S231414AbiCMTHl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 12 Mar 2022 09:54:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35002 "EHLO
+        Sun, 13 Mar 2022 15:07:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229801AbiCLOyq (ORCPT
+        with ESMTP id S235516AbiCMTHf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 12 Mar 2022 09:54:46 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 191E85BD12
-        for <platform-driver-x86@vger.kernel.org>; Sat, 12 Mar 2022 06:53:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1647096819;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=idEHkhQAaOBliwENS0wsp/XJ+A6XVFB7baxao15C+mw=;
-        b=UbBFl/vXPIqBnVs0oLDaHY5nCVFWOejUfWSJtUuPBj2KSMepMu7uTgTkTzo9DMvmepL8lK
-        KqyEyHwPjCBF1tAn1wgj+3u6MrHdvht1qOhlxgOuk10bBNhUAW+ThgUp/m5sO8oN/Xgmf0
-        gcG5f9ZAv4uA4zQ/0CSCzy3A2FZ+7nk=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-37-IkKZnPQfO-iLobUNFOwwtQ-1; Sat, 12 Mar 2022 09:53:37 -0500
-X-MC-Unique: IkKZnPQfO-iLobUNFOwwtQ-1
-Received: by mail-qt1-f200.google.com with SMTP id r7-20020a05622a034700b002e06ebbc866so8779171qtw.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 12 Mar 2022 06:53:37 -0800 (PST)
+        Sun, 13 Mar 2022 15:07:35 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EED268E1AE;
+        Sun, 13 Mar 2022 12:06:04 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id m12so17004464edc.12;
+        Sun, 13 Mar 2022 12:06:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=SVeDRTZlPApsEAfDXxDR5Jk81+D0iJD2TyLZwO9wr2U=;
+        b=HF9z4rmS65SexmXov8wMy98lKq4GWWePayPR2f4uvUXWZEtrZc7G17Fgl//IYgq9V8
+         ce8YkE+nUZpsny6scBl/T7037A9U+e/PpmL0eDK2aimMjdF2uJ+7VL0onqnTU5hNSDTm
+         tOX7obYsVf3LU3zoVM7D6xFqluzMSV15yLjfYwBToB9ifsdM4+/yuW5AuKa/8exVQP29
+         qrdwAoDE5XoXvvEL11Ufv1zhxRsbcHehLrPXLWHk2YiCFlaMlT48Zn2/rUuItm7WOs5B
+         kV8zETbtT8m1NTJF6X564BHh9aW5VIL3VP3m7bFXDXd58WKVqaLAkmyfAFEE0t5pMdrj
+         1nrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=idEHkhQAaOBliwENS0wsp/XJ+A6XVFB7baxao15C+mw=;
-        b=oHHkD8M6y6ydZzumYVdO5kv+F09/iJQh70h2YMfEeNEhtoqL4dnJockFHPEW8Y5PG5
-         H8DtJkRGf7g14cnpWyNLcpBPXRTOW1Wi1o7QDUHy6nq4m3vTDiXaRD8kHSm9G3FrAOiN
-         0ZYR+dvQZ5zelm5InEIvaojCDLx0zjmp18KEgfB7YLK7CkjURN9fhFkYxMOmxRMB9NOD
-         A/K2NQSabxB6AZcyIy+7WmJ0adQmRJ/iQsLiVACJJCsoPtfNuEWruVtzE86Ut/Cm7eL6
-         ZwhhSmnLj94sJYVVVSAMRMropzDJkKxRmaeVKmBv6ZkzGquWUuGDP5t5iYqZoLe/BGAY
-         cKIA==
-X-Gm-Message-State: AOAM533J+1wgAxjjqn0VvNLQr9vIlMCrPpm7Li8o7Qq47kwBaRmMMXC/
-        EfHaoE5yevk0D5wSbxzBChlkk/avS+kiwtZ7/td7xc5mFfIs/B4NjyidZ+6jrs3TQaamYVvVyZz
-        8dcfkrt8n2oIgv6Q1gVd+Zv3mclv7iYKA1w==
-X-Received: by 2002:a05:622a:1a12:b0:2e1:a631:aecc with SMTP id f18-20020a05622a1a1200b002e1a631aeccmr12502475qtb.383.1647096817452;
-        Sat, 12 Mar 2022 06:53:37 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyedg6i9wIc8nITyii9SK3A7/ikxZR+w6n+U2G2GpCA5FFJbmerz+UION3dSN4kxgzqvNDuqA==
-X-Received: by 2002:a05:622a:1a12:b0:2e1:a631:aecc with SMTP id f18-20020a05622a1a1200b002e1a631aeccmr12502459qtb.383.1647096817232;
-        Sat, 12 Mar 2022 06:53:37 -0800 (PST)
-Received: from localhost.localdomain.com (024-205-208-113.res.spectrum.com. [24.205.208.113])
-        by smtp.gmail.com with ESMTPSA id h62-20020a37b741000000b0067da4164f8fsm669640qkf.126.2022.03.12.06.53.35
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=SVeDRTZlPApsEAfDXxDR5Jk81+D0iJD2TyLZwO9wr2U=;
+        b=O7io/j2I8xdHkOsgeR1mAaGLze2/KeLLJ33XHnIDD33us3LLWgowM/cbyPJyToNYAg
+         O+Og+8hrvOJtu/Xt39NhXAn51zmyLYPimiUPVJcMoGbPKIgpH585omW/2s2VrPrI7/T2
+         /UwXyQ6Jvj0PWtjj68HXFPBPlMXXnLuqp6TuTHId0ZU+rLUQbGrE/FA46igfIzxCPltw
+         PfxvICzhA2RYGONANV3MgEaJgx0mqcmxBX2wJ+gpudfsHtgch0tABLi9jaAsdQNe+BXf
+         ir/dvKTt24GC40+AlWaSzSco/fUbKtwviguvcG+l6asODZVpbU7eNffwW9ozQXbrsWT+
+         mrDg==
+X-Gm-Message-State: AOAM532k/AebwZ8ry83EIf5HzqnXgAP+1SNYs4WOe5L3Idd6v7+e8VZD
+        l+Ky/VOybbGrN2JlsWj10NI=
+X-Google-Smtp-Source: ABdhPJylUFOrym+Y3jJ9hf4vxXLAQceumEA3mDjbFPcJOcmHSt3JusOMW+Vk3Pdi0wrzUCJ/EllrHg==
+X-Received: by 2002:a05:6402:35d0:b0:416:cee9:53d9 with SMTP id z16-20020a05640235d000b00416cee953d9mr12152788edc.82.1647198335358;
+        Sun, 13 Mar 2022 12:05:35 -0700 (PDT)
+Received: from omen ([188.127.98.149])
+        by smtp.gmail.com with ESMTPSA id kw3-20020a170907770300b006d2a835ac33sm5895333ejc.197.2022.03.13.12.05.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Mar 2022 06:53:36 -0800 (PST)
-From:   trix@redhat.com
-To:     hmh@hmh.eng.br, hdegoede@redhat.com, markgross@kernel.org,
-        nathan@kernel.org, ndesaulniers@google.com
-Cc:     ibm-acpi-devel@lists.sourceforge.net,
+        Sun, 13 Mar 2022 12:05:34 -0700 (PDT)
+Date:   Sun, 13 Mar 2022 20:05:32 +0100
+From:   Enver Balalic <balalic.enver@gmail.com>
+To:     hdegoede@redhat.com, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, Tom Rix <trix@redhat.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: consistently check fan_get_status return.
-Date:   Sat, 12 Mar 2022 06:53:27 -0800
-Message-Id: <20220312145327.1398510-1-trix@redhat.com>
-X-Mailer: git-send-email 2.26.3
+        pobrn@protonmail.com
+Subject: [PATCH] platform/x86: hp-wmi: support omen thermal profile policy v1
+Message-ID: <20220313190532.vpeuytz2ergnfsyt@omen>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+As it turns out, these laptops have 2 thermal profile versions.
+A previous patch added support for v0, this patch adds support
+for v1 thermal policies that are in use on some devices.
+We obtain the thermal policy version by querying the get system
+design data WMI call and looking at the fourth byte it returns,
+except if the system board DMI Board ID is in a specific array
+that the windows command center app overrides to thermal policy
+v0 for some reason.
 
-Clang static analysis returns this false positive
-thinkpad_acpi.c:8926:19: warning: The left operand
-  of '!=' is a garbage value
-  (status != 0) ? "enabled" : "disabled", status);
-   ~~~~~~ ^
-
-The return of fan_get_status* is checked inconsistenly.
-Sometime ret < 0 is an error, sometimes !ret.
-Both fan_get_status() and fan_get_status_safe() return
-0 on success and return negative otherwise.  Change
-the checks for error, ret < 0, into checks for
-not success, !ret.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Enver Balalic <balalic.enver@gmail.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/platform/x86/hp-wmi.c | 69 +++++++++++++++++++++++++++++++----
+ 1 file changed, 62 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 708743ec9ae79..c568fae56db29 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8285,7 +8285,7 @@ static int fan_set_enable(void)
- 	case TPACPI_FAN_WR_ACPI_FANS:
- 	case TPACPI_FAN_WR_TPEC:
- 		rc = fan_get_status(&s);
--		if (rc < 0)
-+		if (rc)
- 			break;
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 48a46466f086..ed5c729f8da1 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -61,6 +61,14 @@ static const char * const omen_thermal_profile_boards[] = {
+ 	"8917", "8918", "8949", "894A", "89EB"
+ };
  
- 		/* Don't go out of emergency fan mode */
-@@ -8304,7 +8304,7 @@ static int fan_set_enable(void)
++/* DMI Board names of Omen laptops that are specifically set to be thermal
++ * profile version 0 by the Omen Command Center app, regardless of what
++ * the get system design information WMI call returns
++ */
++static const char *const omen_thermal_profile_force_v0_boards[] = {
++	"8607", "8746", "8747", "8749", "874A", "8748"
++};
++
+ enum hp_wmi_radio {
+ 	HPWMI_WIFI	= 0x0,
+ 	HPWMI_BLUETOOTH	= 0x1,
+@@ -115,6 +123,7 @@ enum hp_wmi_gm_commandtype {
+ 	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
+ 	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
+ 	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
++	HPWMI_GET_SYSTEM_DESIGN_DATA = 0x28,
+ };
  
- 	case TPACPI_FAN_WR_ACPI_SFAN:
- 		rc = fan_get_status(&s);
--		if (rc < 0)
-+		if (rc)
- 			break;
+ enum hp_wmi_command {
+@@ -149,6 +158,12 @@ enum hp_wireless2_bits {
+ 	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
+ };
  
- 		s &= 0x07;
-@@ -8843,7 +8843,7 @@ static void fan_suspend(void)
- 	/* Store fan status in cache */
- 	fan_control_resume_level = 0;
- 	rc = fan_get_status_safe(&fan_control_resume_level);
--	if (rc < 0)
-+	if (rc)
- 		pr_notice("failed to read fan level for later restore during resume: %d\n",
- 			  rc);
++enum hp_thermal_profile_omen_v1 {
++	HP_OMEN_V1_THERMAL_PROFILE_DEFAULT	= 0x30,
++	HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE	= 0x31,
++	HP_OMEN_V1_THERMAL_PROFILE_COOL		= 0x50,
++};
++
+ enum hp_thermal_profile_omen {
+ 	HP_OMEN_THERMAL_PROFILE_DEFAULT     = 0x00,
+ 	HP_OMEN_THERMAL_PROFILE_PERFORMANCE = 0x01,
+@@ -360,9 +375,6 @@ static int omen_thermal_profile_set(int mode)
+ 	char buffer[2] = {0, mode};
+ 	int ret;
  
-@@ -8864,7 +8864,7 @@ static void fan_resume(void)
+-	if (mode < 0 || mode > 2)
+-		return -EINVAL;
+-
+ 	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
+ 				   &buffer, sizeof(buffer), sizeof(buffer));
  
- 	if (!fan_control_allowed ||
- 	    !fan_control_resume_level ||
--	    (fan_get_status_safe(&current_level) < 0))
-+	    fan_get_status_safe(&current_level))
- 		return;
+@@ -384,6 +396,30 @@ static bool is_omen_thermal_profile(void)
+ 			    board_name) >= 0;
+ }
  
- 	switch (fan_control_access_mode) {
-@@ -8918,7 +8918,7 @@ static int fan_read(struct seq_file *m)
- 	case TPACPI_FAN_RD_ACPI_GFAN:
- 		/* 570, 600e/x, 770e, 770x */
- 		rc = fan_get_status_safe(&status);
--		if (rc < 0)
-+		if (rc)
- 			return rc;
++static int omen_get_thermal_policy_version(void)
++{
++	unsigned char buffer[8] = { 0 };
++	int ret;
++
++	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
++
++	if (board_name) {
++		int matches = match_string(omen_thermal_profile_force_v0_boards,
++			ARRAY_SIZE(omen_thermal_profile_force_v0_boards),
++			board_name);
++		if (matches >= 0)
++			return 1;
++	}
++
++	ret = hp_wmi_perform_query(HPWMI_GET_SYSTEM_DESIGN_DATA, HPWMI_GM,
++				   &buffer, sizeof(buffer), sizeof(buffer));
++
++	if (ret)
++		return ret < 0 ? ret : -EINVAL;
++
++	return buffer[3];
++}
++
+ static int omen_thermal_profile_get(void)
+ {
+ 	u8 data;
+@@ -1009,12 +1045,15 @@ static int platform_profile_omen_get(struct platform_profile_handler *pprof,
  
- 		seq_printf(m, "status:\t\t%s\n"
-@@ -8929,7 +8929,7 @@ static int fan_read(struct seq_file *m)
- 	case TPACPI_FAN_RD_TPEC:
- 		/* all except 570, 600e/x, 770e, 770x */
- 		rc = fan_get_status_safe(&status);
--		if (rc < 0)
-+		if (rc)
- 			return rc;
+ 	switch (tp) {
+ 	case HP_OMEN_THERMAL_PROFILE_PERFORMANCE:
++	case HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE:
+ 		*profile = PLATFORM_PROFILE_PERFORMANCE;
+ 		break;
+ 	case HP_OMEN_THERMAL_PROFILE_DEFAULT:
++	case HP_OMEN_V1_THERMAL_PROFILE_DEFAULT:
+ 		*profile = PLATFORM_PROFILE_BALANCED;
+ 		break;
+ 	case HP_OMEN_THERMAL_PROFILE_COOL:
++	case HP_OMEN_V1_THERMAL_PROFILE_COOL:
+ 		*profile = PLATFORM_PROFILE_COOL;
+ 		break;
+ 	default:
+@@ -1027,23 +1066,38 @@ static int platform_profile_omen_get(struct platform_profile_handler *pprof,
+ static int platform_profile_omen_set(struct platform_profile_handler *pprof,
+ 				     enum platform_profile_option profile)
+ {
+-	int err, tp;
++	int err, tp, tp_version;
++
++	tp_version = omen_get_thermal_policy_version();
++
++	if (tp_version < 0 || tp_version > 1)
++		return -EOPNOTSUPP;
  
- 		seq_printf(m, "status:\t\t%s\n",
+ 	switch (profile) {
+ 	case PLATFORM_PROFILE_PERFORMANCE:
+-		tp = HP_OMEN_THERMAL_PROFILE_PERFORMANCE;
++		if (tp_version == 0)
++			tp = HP_OMEN_THERMAL_PROFILE_PERFORMANCE;
++		else
++			tp = HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE;
+ 		break;
+ 	case PLATFORM_PROFILE_BALANCED:
+-		tp = HP_OMEN_THERMAL_PROFILE_DEFAULT;
++		if (tp_version == 0)
++			tp = HP_OMEN_THERMAL_PROFILE_DEFAULT;
++		else
++			tp = HP_OMEN_V1_THERMAL_PROFILE_DEFAULT;
+ 		break;
+ 	case PLATFORM_PROFILE_COOL:
+-		tp = HP_OMEN_THERMAL_PROFILE_COOL;
++		if (tp_version == 0)
++			tp = HP_OMEN_THERMAL_PROFILE_COOL;
++		else
++			tp = HP_OMEN_V1_THERMAL_PROFILE_COOL;
+ 		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+ 	err = omen_thermal_profile_set(tp);
++
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -1128,6 +1182,7 @@ static int thermal_profile_setup(void)
+ 		 */
+ 
+ 		err = omen_thermal_profile_set(tp);
++
+ 		if (err < 0)
+ 			return err;
+ 
 -- 
-2.26.3
+2.35.1
 
