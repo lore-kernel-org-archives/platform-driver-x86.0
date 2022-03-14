@@ -2,113 +2,134 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062CCC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Mar 2022 19:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A5C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Mar 2022 20:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237813AbiCNTBT (ORCPT
+        id S245061AbiCNUb1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Mar 2022 15:01:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40200 "EHLO
+        Mon, 14 Mar 2022 16:31:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229896AbiCNTBT (ORCPT
+        with ESMTP id S239124AbiCNUbX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Mar 2022 15:01:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BA4613D53
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Mar 2022 12:00:09 -0700 (PDT)
+        Mon, 14 Mar 2022 16:31:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8449739812;
+        Mon, 14 Mar 2022 13:30:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0F9EFB80FA1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Mar 2022 19:00:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8138DC34117
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Mar 2022 19:00:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E0BE9611E3;
+        Mon, 14 Mar 2022 20:30:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 395EAC340EE;
+        Mon, 14 Mar 2022 20:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647284406;
-        bh=PRcgKQrbeTp8117ke/nKss+WtQTDUrDa+wDswNEqRmY=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=eHn//KtiRROrAO+vSW8XKUs3OuyQxiGGynvVgZwXzeC25KzI/O6MV0hKwLgiShx6o
-         v9ThP/r0z6+TAK9erWY7Po6SuLXAa+OTJCPCNHvo2SBEnOVnizbgtvEs/ObwvSrh4b
-         FyXbN9QxuBSGnlvLCreyB6YNCR1P0QB7wd1czhHRRSHFcK//HU4Wvyrl5HbduP3okk
-         4TbZ9j151BSya8qN0YJ8CJIRTSRiDnmIomnOLclXpF0nu4X0t6BGpH71BqvZh+XvWh
-         KDQRpaqMHH9rJuJ4313ivcJMgOE6Bw5feGuTq9fPdiF/ToWbA1o95Br/977WGYEC4O
-         RV/ioNoql9yaw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 6FB4BC05FD2; Mon, 14 Mar 2022 19:00:06 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Mon, 14 Mar 2022 19:00:03 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: renedis@hotmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-204807-215701-3OQovQxzCF@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        s=k20201202; t=1647289811;
+        bh=5slkzW/wYFCAJdfNlCFTBba0nZcr16X7BRShsWGs8e4=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=leggAOjDGLqu5Y16iRzmCapGpn9MgtEwT4CrU4eyl+t2E31oSfK39qKDLg3AehmbU
+         40wH8plobcUAZegoJFqfw9/xkqsBBPmZP9vZVSFOcI/Xp23ZGUf+pgmWTjQguJdafL
+         aR+7p6LxqiE9iThzqyS8jQ9G6EB+4tZZi+yCfGQiapJJIo9jcBYm9fR9I2LX08BkN2
+         bFDWmepy5ZVI6q23q7h6GXJ7SL0Svf5wH1oJCuTgacReCjqPgety1pGCFxOBEiOwa4
+         z9SA1gQwBNf2EwKLfJ+KdExejyFckwalTlOP/U5FXz63cZ94Vo7u6CrKogKN+nyC4B
+         +CVXdED/jOy7Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0DC0AE6D3DE;
+        Mon, 14 Mar 2022 20:30:11 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 00/30] fix typos in comments
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <164728981105.21494.10764025984714254687.git-patchwork-notify@kernel.org>
+Date:   Mon, 14 Mar 2022 20:30:11 +0000
+References: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+In-Reply-To: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     linux-can@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, linux-spi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, jernej.skrabec@gmail.com,
+        linux-leds@vger.kernel.org, shayne.chen@mediatek.com,
+        sean.wang@mediatek.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org, rafael@kernel.org,
+        linux-rdma@vger.kernel.org, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, linux-s390@vger.kernel.org,
+        matti.vaittinen@fi.rohmeurope.com, linux-power@fi.rohmeurope.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hello:
 
-renedis (renedis@hotmail.com) changed:
+This series was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |renedis@hotmail.com
+On Mon, 14 Mar 2022 12:53:24 +0100 you wrote:
+> Various spelling mistakes in comments.
+> Detected with the help of Coccinelle.
+> 
+> ---
+> 
+>  drivers/base/devres.c                               |    4 ++--
+>  drivers/clk/qcom/gcc-sm6125.c                       |    2 +-
+>  drivers/clk/ti/clkctrl.c                            |    2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c              |    4 ++--
+>  drivers/gpu/drm/amd/display/dc/bios/command_table.c |    6 +++---
+>  drivers/gpu/drm/amd/pm/amdgpu_pm.c                  |    2 +-
+>  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c  |    4 ++--
+>  drivers/gpu/drm/sti/sti_gdp.c                       |    2 +-
+>  drivers/infiniband/hw/qib/qib_iba7220.c             |    4 ++--
+>  drivers/leds/leds-pca963x.c                         |    2 +-
+>  drivers/media/i2c/ov5695.c                          |    2 +-
+>  drivers/mfd/rohm-bd9576.c                           |    2 +-
+>  drivers/mtd/ubi/block.c                             |    2 +-
+>  drivers/net/can/usb/ucan.c                          |    4 ++--
+>  drivers/net/ethernet/packetengines/yellowfin.c      |    2 +-
+>  drivers/net/wireless/ath/ath6kl/htc_mbox.c          |    2 +-
+>  drivers/net/wireless/cisco/airo.c                   |    2 +-
+>  drivers/net/wireless/mediatek/mt76/mt7915/init.c    |    2 +-
+>  drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c |    6 +++---
+>  drivers/platform/x86/uv_sysfs.c                     |    2 +-
+>  drivers/s390/crypto/pkey_api.c                      |    2 +-
+>  drivers/scsi/aic7xxx/aicasm/aicasm.c                |    2 +-
+>  drivers/scsi/elx/libefc_sli/sli4.c                  |    2 +-
+>  drivers/scsi/lpfc/lpfc_mbox.c                       |    2 +-
+>  drivers/scsi/qla2xxx/qla_gs.c                       |    2 +-
+>  drivers/spi/spi-sun4i.c                             |    2 +-
+>  drivers/staging/rtl8723bs/core/rtw_mlme.c           |    2 +-
+>  drivers/usb/gadget/udc/snps_udc_core.c              |    2 +-
+>  fs/kernfs/file.c                                    |    2 +-
+>  kernel/events/core.c                                |    2 +-
+>  30 files changed, 39 insertions(+), 39 deletions(-)
 
---- Comment #228 from renedis (renedis@hotmail.com) ---
-Thanks all for the effort en support. please also add:
+Here is the summary with links:
+  - [03/30] ath6kl: fix typos in comments
+    (no matching commit)
+  - [10/30] mt76: mt7915: fix typos in comments
+    (no matching commit)
+  - [12/30] drivers: net: packetengines: fix typos in comments
+    https://git.kernel.org/netdev/net-next/c/ebc0b8b5374e
+  - [19/30] rtlwifi: rtl8821ae: fix typos in comments
+    (no matching commit)
+  - [20/30] airo: fix typos in comments
+    (no matching commit)
+  - [27/30] can: ucan: fix typos in comments
+    (no matching commit)
 
-cat /sys/class/dmi/id/board_name
-PRO H410T
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-[    5.478347] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
-[    5.478351] ACPI Warning: SystemIO range
-0x0000000000000295-0x0000000000000296 conflicts with OpRegion
-0x0000000000000290-0x0000000000000299 (\AMW0.SHWM) (20210331/utaddress-204)
-[    5.478356] ACPI: OSL: Resource conflict; ACPI support missing from driv=
-er?
 
-uname -a
-Linux rd-nas01 5.13.0-35-generic #40-Ubuntu SMP Mon Mar 7 08:03:10 UTC 2022
-x86_64 x86_64 x86_64 GNU/Linux
-
-cat /etc/os-release
-PRETTY_NAME=3D"Ubuntu 21.10"
-NAME=3D"Ubuntu"
-VERSION_ID=3D"21.10"
-VERSION=3D"21.10 (Impish Indri)"
-VERSION_CODENAME=3Dimpish
-ID=3Dubuntu
-ID_LIKE=3Ddebian
-HOME_URL=3D"https://www.ubuntu.com/"
-SUPPORT_URL=3D"https://help.ubuntu.com/"
-BUG_REPORT_URL=3D"https://bugs.launchpad.net/ubuntu/"
-PRIVACY_POLICY_URL=3D"https://www.ubuntu.com/legal/terms-and-policies/priva=
-cy-policy"
-UBUNTU_CODENAME=3Dimpish
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
