@@ -2,78 +2,90 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD66C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Mar 2022 16:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A291AC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Mar 2022 16:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232270AbiCNQxt (ORCPT
+        id S232932AbiCNQ51 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Mar 2022 12:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33628 "EHLO
+        Mon, 14 Mar 2022 12:57:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232398AbiCNQxp (ORCPT
+        with ESMTP id S232007AbiCNQ50 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Mar 2022 12:53:45 -0400
+        Mon, 14 Mar 2022 12:57:26 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 552B131DE7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Mar 2022 09:52:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 450C13AA76
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Mar 2022 09:56:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1647276754;
+        s=mimecast20190719; t=1647276975;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UW4PA0HusSRlTEBiDBr9SYC11FMJgDOAGkeboPMyYyU=;
-        b=XZ1IMvMXb0xPTeT7sLx0p6t7BpOk147rBsOPhuKZ1mTXN+4X41mNCXm6xKBIMOd58nqbwI
-        m/Kr2vRZPflHZJyOXG3kHSk+Y5YP+BtStqcLutHZRNyVQrxZ7kIjoE3te9XMqclinoQU1y
-        noaw9KkHQO+LYHZCbImy0/Djcj7fujw=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=yJwT368S/akmsx6REUgVkKdPn+bNcYk1uByzAbR+MCw=;
+        b=PLdUT4TA8c7UpLE20WFNb61Ik/YPTY14fNpGaTkTsnKGUc7Y+7zSj0EBVOjsAC9H7X/+GY
+        WlAvklbm/aFNYH2No0axFqE8P8ovO0q0rvrYYcfebyBUYYf8uGTHm/3CG33Tl3aEHkULKt
+        VQmRfNbR8emG/bJUTEwgRZbDRZJX+i4=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-17-A0N2qe0JOHubLxq-_Krbeg-1; Mon, 14 Mar 2022 12:52:31 -0400
-X-MC-Unique: A0N2qe0JOHubLxq-_Krbeg-1
-Received: by mail-ed1-f72.google.com with SMTP id l24-20020a056402231800b00410f19a3103so9118251eda.5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Mar 2022 09:52:30 -0700 (PDT)
+ us-mta-599-uRNRLi_SM82_O0PCBGgf3w-1; Mon, 14 Mar 2022 12:56:12 -0400
+X-MC-Unique: uRNRLi_SM82_O0PCBGgf3w-1
+Received: by mail-ed1-f69.google.com with SMTP id l14-20020aa7cace000000b003f7f8e1cbbdso9102578edt.20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Mar 2022 09:56:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=UW4PA0HusSRlTEBiDBr9SYC11FMJgDOAGkeboPMyYyU=;
-        b=SxXz4RZyZB3pf4v4OXmIFf/X0OaVRdRN0+yX8H2jaI/nohoNaAo49E0SG+m5IevG9O
-         RlV6shzB5Nn4li2/xcAowm9dcZibIryJtdnKOvso/6zDuSoHgQIIkTvXy2qaTSBflgnh
-         2tZ0U6YZLncPggWpucvaL/fBZtPGdThjeszN61M2oEW+t5NKVplpl6NmPzwhAkx8xtZ3
-         GJrNOPxuS//tpk+NOQTut/I6VKDlHi3cu3vy0DzfzA8OFQ7edWrREOXJIQvGO3yYN06f
-         VSn22WY8s7/QEdLIG3LhsrZerPG7Op2CH9MqeCuCNGLXT6crFlRlns77xEVtdKKGixxV
-         YmjA==
-X-Gm-Message-State: AOAM531VFouNZpdJkZ3SiK5Mw4GIshdwEXLq/BR64UHxsJPvW9X/Cj+a
-        XKRpOVKjavrW3xqwDSb0cm/QJKCMfHJMAdfOvvvcct2CzPRKwIHsbSRIBt9C0hyhWrTRtjqatHC
-        1tAeuuo8QwCuvbFsCudiIGCZiSMwAepYJNw==
-X-Received: by 2002:a17:906:2991:b0:6cf:6b24:e92f with SMTP id x17-20020a170906299100b006cf6b24e92fmr19215788eje.748.1647276749730;
-        Mon, 14 Mar 2022 09:52:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyyOpC8yysiJVH51l9L/mXMwtlyu7EGjhuCG+uo+INLqaQ8DnZfCWdUift74RtnItnATS82qA==
-X-Received: by 2002:a17:906:2991:b0:6cf:6b24:e92f with SMTP id x17-20020a170906299100b006cf6b24e92fmr19215768eje.748.1647276749387;
-        Mon, 14 Mar 2022 09:52:29 -0700 (PDT)
+        bh=yJwT368S/akmsx6REUgVkKdPn+bNcYk1uByzAbR+MCw=;
+        b=1Of4OJ1bmNdxyEhErOBoY2yT+GYkMQF27fiB/2NxxUBcyWz90bFzZ0ir5bUjsSjJ63
+         WHl7v6RM2cLuuUE5vZ9a95L7VXhTaDd2fz60hB9R0mIAxHhvpQIoewhp7B4jJw7Ith8v
+         gYR61us0raTrCtVjz6LeEzU4AEVJtW8nbPKnlFTrmSeyRzpv76QtwQx2I0c2411GYQex
+         cSvAbT3in+ki2XyJVUfaJ1uO+eHC/bVMb+NlzembRsclcZwLOhTEl7P6Je1qMkSvdlR3
+         zAxAnB3fdYPx0ffbRXEBnMgHWgnN9eLplFrdKqD1+2QcEQrYZUTY3ANwfmI90BmYpi+k
+         LASg==
+X-Gm-Message-State: AOAM531p9/b8SXETk5LgTKvTdr+807wCZCsEGmYDStZJCLeE9H8j5VZZ
+        XUAD1ja0J5SUVPNR12/9d4lwjxl+hGUWMXi7liPTGX5PF7oe0CFKpbE2/xBhNQjHnAvkc8s8Uhz
+        eLs6tKPHXbbHfJNzsbVVJforYntde2t1xkA==
+X-Received: by 2002:a17:907:7b86:b0:6da:8a95:35bf with SMTP id ne6-20020a1709077b8600b006da8a9535bfmr18818972ejc.652.1647276970824;
+        Mon, 14 Mar 2022 09:56:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzc6Sc+pkE5bSOD6c4a1XkwCGwDUBadmqD6sTwfXL5OUX6ewjpvDTvR0DHDkiKMYA/ha35ygQ==
+X-Received: by 2002:a17:907:7b86:b0:6da:8a95:35bf with SMTP id ne6-20020a1709077b8600b006da8a9535bfmr18818950ejc.652.1647276970547;
+        Mon, 14 Mar 2022 09:56:10 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id a1-20020a1709063e8100b006ce06ed8aa7sm7025681ejj.142.2022.03.14.09.52.28
+        by smtp.gmail.com with ESMTPSA id c5-20020a170906d18500b006ce371f09d4sm7078762ejz.57.2022.03.14.09.56.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Mar 2022 09:52:28 -0700 (PDT)
-Message-ID: <a53719db-f367-5033-c726-8fde794c7c4f@redhat.com>
-Date:   Mon, 14 Mar 2022 17:52:28 +0100
+        Mon, 14 Mar 2022 09:56:09 -0700 (PDT)
+Message-ID: <f0d069d0-40c7-b875-0f24-d3a89451d272@redhat.com>
+Date:   Mon, 14 Mar 2022 17:56:09 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [External] Re: [PATCH 2/2] platform/x86: think-lmi: Certificate
- authentication support
+Subject: Re: [External] Re: [RFC] ACPI: platform-profile: support for AC vs DC
+ modes
 Content-Language: en-US
-To:     Mark Pearson <markpearson@lenovo.com>
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org
+To:     Mark Pearson <markpearson@lenovo.com>,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     "rafael@kernel.org" <rafael@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
 References: <markpearson@lenovo.com>
- <20220312000439.4143-1-markpearson@lenovo.com>
- <20220312000439.4143-2-markpearson@lenovo.com>
- <7f8a13f6-8615-b952-5523-e13bbc4b98be@redhat.com>
- <615cf1a0-e62f-2758-e4a4-f2ee7bae2886@lenovo.com>
+ <20220301201554.4417-1-markpearson@lenovo.com>
+ <65d8cf3b-0eea-0583-fa23-e2c71287fb85@redhat.com>
+ <BL1PR12MB5157CDB77675859B7F279578E2099@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <7b281a37-5163-6cd7-360e-1c63bde714a8@redhat.com>
+ <BL1PR12MB5157125246817A70649C12F7E2099@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <1cd4ae24-ae92-302e-ac87-76ef15472a9f@redhat.com>
+ <2180533b-c921-5ae4-e6bc-569728a4f990@lenovo.com>
+ <c18abb55-6874-6e1e-bdb0-9d96d52987cd@redhat.com>
+ <BL1PR12MB5157C14DE5F521D4B5C08366E20F9@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <c16ea8ba-5944-0384-4bc3-d5438fe5e1f7@redhat.com>
+ <78fc0363-2ae6-bd75-ecfb-606ce411c79a@redhat.com>
+ <49205849-4239-3558-f377-797e7561848e@lenovo.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <615cf1a0-e62f-2758-e4a4-f2ee7bae2886@lenovo.com>
+In-Reply-To: <49205849-4239-3558-f377-797e7561848e@lenovo.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -82,320 +94,102 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 3/14/22 16:46, Mark Pearson wrote:
-> Thanks for the review Hans
+On 3/14/22 16:32, Mark Pearson wrote:
 > 
-> On 2022-03-14 11:15, Hans de Goede wrote:
+> 
+> On 2022-03-14 11:31, Hans de Goede wrote:
 >> Hi,
 >>
->> On 3/12/22 01:04, Mark Pearson wrote:
->>> Implementation of certificate authentication feature for Lenovo
->>> platforms. This allows for signed updates of BIOS settings.
+>> On 3/14/22 15:43, Hans de Goede wrote:
+>>> Hi Mario,
 >>>
->>> Functionality supported:
->>>  - Cert support available check. At initialisation check if BIOS
->>>    supports certification authentication and if a certificate is
->>>    installed. Enable the sysfs nodes appropriately
->>>  - certificate and signature authentication attributes to enable
->>>    a user to install, update and delete a certificate using signed
->>>    signatures
->>>  - certificate_thumbprint to confirm installed certificate details
->>>  - support to go from certificate to password based authentication
->>>  - set_signature and save_signature attributes needed for setting
->>>    BIOS attributes using certificate authentication
+>>> On 3/14/22 14:39, Limonciello, Mario wrote:
+>>>> [Public]
+>>>>
+>>>>>>
+>>>>>> I cycled through a few different implementations but came down on what I
+>>>>>> proposed. I considered 6 values - but I don't think that makes sense and
+>>>>>> makes it overall more complicated than it needs to be and less flexible.
+>>>>>
+>>>>> Ah, so to be clear, my 2 scenarios above were theoretical scenarios,
+>>>>> because I'm wondering how the firmware API here actually looks like,
+>>>>> something which so far is not really clear to me.
+>>>>>
+>>>>> When you say that you considered using 6 values, then I guess that
+>>>>> the firmware API actually offers 6 values which we can write to a single slot:
+>>>>> ac-low-power,dc-lowpower,ac-balanced,dc-balanced,ac-performance,dc-
+>>>>> performance
+>>>>>
+>>>>> ?
+>>>>>
+>>>>> But that is not what the RFC patch that started this thread shows at all,
+>>>>> the API to the driver is totally unchanged and does not get passed
+>>>>> any info on ac/dc selection ?  So it seems to me that the ACPI API Linux
+>>>>> uses for this writes only 1 of 3 values to a single slot and the EC automatically
+>>>>> switches between say ac-balanced and dc-balanced internally.
+>>>>>
+>>>>> IOW there really being 2 differently tuned balance-profiles is not visible to
+>>>>> the OS at all, this is handled internally inside the EC, correct ?
+>>>>>
+>>>>
+>>>> No - on Lenovo's platform there are 6 different profiles that can be selected
+>>>> from the kernel driver.  3 are intended for use on battery, 3 are intended for
+>>>> use on AC.
 >>>
->>> Tested on X1 Carbon 10 with special trial BIOS. This feature is not
->>> generally available yet but will be released later this year.
+>>> Ah, I already got that feeling from the rest of the thread, so I reread
+>>> Mark's RFC again before posting my reply today and the RFC looked like
+>>> the same 3 profiles were being set and the only functionality added
+>>> was auto profile switching when changing between AC/battery.
 >>>
->>> Note, I also cleaned up the formating of the GUIDs when I was adding
->>> the new defines. Hope that's OK to combine in this commit.
+>>> Thank you for clarifying this. Having 6 different stories
+>>> indeed is a very different story.
 >>>
->>> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
->>> ---
->>>  drivers/platform/x86/think-lmi.c | 560 ++++++++++++++++++++++++++-----
->>>  drivers/platform/x86/think-lmi.h |   7 +
->>>  2 files changed, 475 insertions(+), 92 deletions(-)
+>>>>> Otherwise I would expect the kernel internal driver API to also change and
+>>>>> to also see a matching thinkpad_acpi patch in the RFC series?
+>>>>
+>>>> The idea I see from Mark's thread was to send out RFC change for the platform profile
+>>>> and based on the direction try to implement the thinkpad-acpi change after that.
+>>>>
+>>>> Because of the confusion @Mark I think you should send out an RFC v2 with thinkpad acpi
+>>>> modeled on top of this the way that you want.
 >>>
->>> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
->>> index 0b73e16cccea..54ce71f97c37 100644
->>> --- a/drivers/platform/x86/think-lmi.c
->>> +++ b/drivers/platform/x86/think-lmi.c
->>> @@ -16,6 +16,7 @@
-> 
-> <snip>
->>>  
->>> +static ssize_t cert_thumbprint(char *buf, const char *arg, int count)
->>> +{
->>> +	const struct acpi_buffer input = { strlen(arg), (char *)arg };
->>> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->>> +	const union acpi_object *obj;
->>> +	acpi_status status;
->>> +
->>> +	output.length = ACPI_ALLOCATE_BUFFER;
->>> +	output.pointer = NULL;
+>>> I fully agree and since you introduce the concept of being on AC/battery to the
+>>> drivers/acpi/platform_profile.c cpde, please change the 
+>>> profile_set and profile_get function prototypes in struct platform_profile_handler
+>>> to also take a "bool on_battery" extra argument and use that in the thinkpad
+>>> driver to select either the ac or the battery tuned low/balanced/performance 
+>>> profile.
+>>>
+>>> And please also include an update to Documentation/ABI/testing/sysfs-platform_profile
+>>> in the next RFC.
+>>>
+>>> Also notice how I've tried to consistently use AC/battery in my last reply,
+>>> DC really is not a good term for "on battery". AC also is sort of dubious
+>>> for "connected to an external power-supply" but its use for that is sorta
+>>> common and it is nice and short.
 >>
->> This initialization of output is redundant, it is already initialized
->> when it is declared.
-> Ack
-> 
-> <snip>
->>> +
->>> +static ssize_t certificate_store(struct kobject *kobj,
->>> +				  struct kobj_attribute *attr,
->>> +				  const char *buf, size_t count)
->>> +{
->>> +	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
->>> +	char *auth_str, *new_cert, *p;
->>> +	int ret;
->>> +
->>> +	if (!capable(CAP_SYS_ADMIN))
->>> +		return -EPERM;
->>> +
->>> +	if (!tlmi_priv.certificate_support)
->>> +		return -EOPNOTSUPP;
->>> +
->>> +	new_cert = kstrdup(buf, GFP_KERNEL);
->>> +	if (!new_cert)
->>> +		return -ENOMEM;
->>> +	/* Strip out CR if one is present */
->>> +	p = strchrnul(new_cert, '\n');
->>> +	*p = '\0';
->>> +
->>> +	/* If empty then clear installed certificate */
->>> +	if (new_cert[0] == '\0') { /* Clear installed certificate */
+>> One last request for the v2 RFC, please also Cc Bastien Nocera, so that
+>> he can take a look at the proposed uapi changes from the userspace side
+>> of things.
 >>
->> You don't need new_cert anymore here, so do:
->>
->> 		kfree(new_cert);
->>
->> here.
->>
->>> +		/* Check that signature is set */
->>> +		if (!setting->signature || !setting->signature[0]) {
->>> +			kfree(new_cert);
->>
->> and drop it here,
->>
->>> +			return -EACCES;
->>> +		}
->>> +		/* Format: 'serial#, signature' */
->>> +		auth_str = kasprintf(GFP_KERNEL, "%s,%s",
->>> +				dmi_get_system_info(DMI_PRODUCT_SERIAL),
->>> +				setting->signature);
->>> +		if (!auth_str) {
->>> +			kfree(new_cert);
->>
->> and here.
->>
->>> +			return -ENOMEM;
->>> +		}
->>> +		ret = tlmi_simple_call(LENOVO_CLEAR_BIOS_CERT_GUID, auth_str);
->>> +		kfree(auth_str);
->>
->> Because you were missing a kfree(new_cert) here. Also you should free + clear
->> setting->certificate here. So this if block should end up like this:
->>
->> 	/* If empty then clear installed certificate */
->> 	if (new_cert[0] == '\0') { /* Clear installed certificate */
->> 		kfree(new_cert);
->>
->> 		/* Check that signature is set */
->> 		if (!setting->signature || !setting->signature[0])
->> 			return -EACCES;
->>
->> 		/* Format: 'serial#, signature' */
->> 		auth_str = kasprintf(GFP_KERNEL, "%s,%s",
->> 				dmi_get_system_info(DMI_PRODUCT_SERIAL),
->> 				setting->signature);
->> 		if (!auth_str)
->> 			return -ENOMEM;
->>
->> 		ret = tlmi_simple_call(LENOVO_CLEAR_BIOS_CERT_GUID, auth_str);
->> 		kfree(auth_str);
->> 		if (ret)
->> 			return ret;
->>
->> 		kfree(setting->certificate);
->> 		setting->certificate = NULL;
->> 		return count;
->> 	}
->>
->>
-> Agreed - that all makes sense. Will update.
-> 
->>> +	}
->>> +
->>> +	if (setting->cert_installed) {
->>> +		/* Certificate is installed so this is an update */
->>> +		if (!setting->signature || !setting->signature[0]) {
->>> +			kfree(new_cert);
->>> +			return -EACCES;
->>> +		}
->>> +		/* Format: 'Certificate,Signature' */
->>> +		auth_str = kasprintf(GFP_KERNEL, "%s,%s",
->>> +				new_cert, setting->signature);> +		if (!auth_str) {
->>> +			kfree(new_cert);
->>> +			return -ENOMEM;
->>> +		}
->>> +		ret = tlmi_simple_call(LENOVO_UPDATE_BIOS_CERT_GUID, auth_str);
->>> +		kfree(auth_str);
->>> +	} else {
->>> +		/* This is a fresh install */
->>> +		if (!setting->valid || !setting->password[0]) {
->>> +			kfree(new_cert);
->>> +			return -EACCES;
->>> +		}
->>> +		/* Format: 'Certificate,Admin-password' */
->>> +		auth_str = kasprintf(GFP_KERNEL, "%s,%s",
->>> +				new_cert, setting->password);
->>> +		if (!auth_str) {
->>> +			kfree(new_cert);
->>> +			return -ENOMEM;
->>> +		}
->>> +		ret = tlmi_simple_call(LENOVO_SET_BIOS_CERT_GUID, auth_str);
->>> +		kfree(auth_str);
->>> +	}
->>> +
->>> +	/* If successful update stored certificate */
->>> +	if (!ret) {
->>> +		kfree(setting->certificate);
->>> +		setting->certificate = new_cert;
->>> +	} else
->>> +		kfree(new_cert);
->>> +
->>> +	return ret ?: count;
->>
->> You have 2 "if (ret)" statements here (1 hidden in the return), please change this to:
->>
->> 	if (ret) {
->> 		kfree(new_cert);
->> 		return ret;
->> 	}
->>
->> 	kfree(setting->certificate);
->> 	setting->certificate = new_cert;
->> 	return count;
->>
-> Will do
-> 
->>
->>> +}
->>> +
->>> +static ssize_t certificate_show(struct kobject *kobj, struct kobj_attribute *attr,
->>> +			 char *buf)
->>> +{
->>> +	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
->>> +
->>
->> setting->certificate may be NULL here, you need to check for that and in
->> that case only emit a "\n" I guess.
-> Ack.
-> 
->>
->>> +	return sysfs_emit(buf, "%s\n", setting->certificate);
->>> +}
->>> +
->>> +static struct kobj_attribute auth_certificate = __ATTR_RW(certificate);
->>> +
->>> +static ssize_t signature_store(struct kobject *kobj,
->>> +				  struct kobj_attribute *attr,
->>> +				  const char *buf, size_t count)
->>> +{
->>> +	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
->>> +	char *new_signature, *p;
->>> +	int ret;
->>> +
->>> +	if (!capable(CAP_SYS_ADMIN))
->>> +		return -EPERM;
->>> +
->>> +	if (!tlmi_priv.certificate_support)
->>> +		return -EOPNOTSUPP;
->>> +
->>> +	new_signature = kstrdup(buf, GFP_KERNEL);
->>> +	if (!new_signature)
->>> +		return -ENOMEM;
->>> +
->>> +	/* Strip out CR if one is present */
->>> +	p = strchrnul(new_signature, '\n');
->>> +	*p = '\0';
->>
->> Idea for a follow-up clean-up patch: this pattern of kstrdup user-argument
->> (buf) + strip '\n' is repeated all over the driver, maybe add a little helper
->> for this?
->>
-> Yes - that would make sense. Will do.
-> 
->>> +
->>> +	/* Free any previous signature */
->>> +	kfree(setting->signature);
->>> +	setting->signature = new_signature;
->>> +
->>> +	return ret ?: count;
->>> +}
->>> +
->>> +static ssize_t signature_show(struct kobject *kobj, struct kobj_attribute *attr,
->>> +			 char *buf)
->>> +{
->>> +	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
->>> +
->>
->> setting->signature can be NULL here.
-> 
-> Ack
-> 
-> <snip>
-> 
->>> +
->>> +static ssize_t set_signature_show(struct kobject *kobj, struct kobj_attribute *attr,
->>> +			 char *buf)
->>> +{
->>> +	return sysfs_emit(buf, "%s\n", tlmi_priv.set_signature);
->>> +}
->>> +
->>> +static ssize_t save_signature_show(struct kobject *kobj, struct kobj_attribute *attr,
->>> +			 char *buf)
->>> +{
->>> +	return sysfs_emit(buf, "%s\n", tlmi_priv.save_signature);
->>> +}
->>> +
->>> +static struct kobj_attribute attr_set_signature = __ATTR_RW(set_signature);
->>> +static struct kobj_attribute attr_save_signature = __ATTR_RW(save_signature);
->>
->> <note I missed this while reviewing the documentation patch...>
->>
->> Why not just use the /sys/class/firmware-attributes/thinklmi/authentication/Admin/signature
->> value here ?
->>
->> /sys/class/firmware-attributes/thinklmi/authentication/Admin/current_password is
->> what is used for password based setting of fw-attributes as well as for changing
->> the password; and
->>
->> /sys/class/firmware-attributes/thinklmi/authentication/Admin/signature is set
->> for changing the certificate, so it would be much more consitent to also use
->> that for setting attributes when using certificate based auth?
->>
->> Can / will the set and save signature ever be different from one another ? If yes
->> then I guess we may need 2 attributes for this, I guess maybe just signature +
->> save_signature ? Either way IMHO these 2 attributes / the 1 extra attribute
->> for a separate save-signature really belongs under
->> /sys/class/firmware-attributes/thinklmi/authentication/Admin/ IMHO and
->> not under /sys/class/firmware-attributes/thinklmi/attributes/
->>
->> What do you think about moving these there ?
->>
-> I have no issues with moving them. I had originally intended to have
-> them in auth but as I needed two signatures (the set and save are
-> different) I decided to make it explicit and to keep them in the same
-> place as the attribute being modified. But I can see it making sense to
-> just keep those under Authentication instead.
-> 
-> I'll update and get rid of set_signature and move save_signature.
+> Ack - will do.
 
-Sounds good, thank you.
+So I've been thinking a bit more about this while I was outside for some
+fresh air.
 
-> Many thanks for the review
+First of all let me say that I do agree that the having in essence 6
+different profiles thing needs a kernel solution.
 
-You're welcome.
+What I'm not entirely sure about is if this needs to be something
+generic, with a new userspace-API as you proposed in the v1 RFC,
+or if it would be better to just solve this in thinkpad_acpi.c .
+
+Now that I've a better grasp of the problem, I'll start a new email
+thread on this tomorrow with all the various take-holders in the Cc
+to try and answer that question.
+
+It probably is a good idea to wait with doing a v2 of the RFC until
+we've had that discussion...
 
 Regards,
 
