@@ -2,106 +2,143 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08096C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Mar 2022 23:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFDDC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 01:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343580AbiCNXLv (ORCPT
+        id S1344077AbiCOBCT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Mar 2022 19:11:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40866 "EHLO
+        Mon, 14 Mar 2022 21:02:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230021AbiCNXLu (ORCPT
+        with ESMTP id S233143AbiCOBCS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Mar 2022 19:11:50 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A64273BF8E;
-        Mon, 14 Mar 2022 16:10:40 -0700 (PDT)
+        Mon, 14 Mar 2022 21:02:18 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FE4931911;
+        Mon, 14 Mar 2022 18:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647299440; x=1678835440;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6C9nVg8jyii5VHo88KHjPTiSG9eWD7pgA09gtw2HDFo=;
-  b=RsAX6IxqipUuwfY7L5im2eSk7jSsDzRGNpSRuCJNOK3xhy7X8PCFAaZM
-   +Y9fQWmMewXbJNdDydzHKR99l+Sbu17WRI+QegzDqbac43yL9KdaM1nca
-   4XCvv4J8S2+pUZwfnUrwuUkJXsmZYsRlyNcR0vK0MKYtIFlatUTdm17dA
-   7UmjjRxYqG99NXIXoYV25OFZslmANhf8KzGUCSPDUH4HVcvUZEvjcqtxi
-   fhKiFhY8OJkIqW21P/M+Vj3ua4sdGxT4IIPduhgrx6unKT3o52AlgkS5A
-   1dxpxxuXStS7yo315mwf4lgB4cPd3813eysApsHQft7W7Zs+oH52yMpWV
+  t=1647306067; x=1678842067;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=NWusIOIo+vyDfRBYbXa+JW6qvU98GxBj6Z5YtR9TtG0=;
+  b=NlJjVTYHnBuGLse/ZPfYj2Zd799XgktYx4q4hv9lg7lW6k3PG5nZLqVG
+   eXcU/UGAGoeonXZtDxhAqkdRwNADS3mOA22J5amppe4SS6RwaKhI84MGO
+   SqVqyPdxJYV5lC541hpa4tQSDkOrf6sr3AcYtmnwndycC5/JGdWkdWxie
+   /Or2zUhmIkoDpAKmQFSi4KrB6Mb3kzhbc4/QURqYA02wktseBmAUc+I7d
+   98z/ysbVn0WouiBdwHs5YxYW4nGdCZHRLXe+Xmr0PgMlBcPH1VJONU9NK
+   OnTT9ohC/95b3+QO+hmN9/7pns5OQ0FJs79ZwNGBFcMx/XzqH0MTWFMAo
    w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="253726560"
+X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="280949601"
 X-IronPort-AV: E=Sophos;i="5.90,181,1643702400"; 
-   d="scan'208";a="253726560"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 16:10:40 -0700
+   d="scan'208";a="280949601"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 18:01:07 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,181,1643702400"; 
-   d="scan'208";a="598096916"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.60])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 16:10:40 -0700
-Date:   Mon, 14 Mar 2022 16:10:39 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Jithu Joseph <jithu.joseph@intel.com>, hdegoede@redhat.com,
-        markgross@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, corbet@lwn.net, andriy.shevchenko@linux.intel.com,
-        ashok.raj@intel.com, rostedt@goodmis.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
-        ravi.v.shankar@intel.com, Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [RFC 00/10] Introduce In Field Scan driver
-Message-ID: <Yi/Lb5laEki0JHft@agluck-desk3.sc.intel.com>
-References: <20220301195457.21152-1-jithu.joseph@intel.com>
- <Yh59rOIH24X+6GyI@kroah.com>
- <Yh5+om/Nr06V0+Qj@kroah.com>
+   d="scan'208";a="634413805"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Mar 2022 18:01:06 -0700
+Received: from zehall-mobl.amr.corp.intel.com (unknown [10.209.53.245])
+        by linux.intel.com (Postfix) with ESMTP id 9E357580690;
+        Mon, 14 Mar 2022 18:01:06 -0700 (PDT)
+Message-ID: <4121875ff3ee2999e50c687ed9f808d1dc98a68f.camel@linux.intel.com>
+Subject: Re: [PATCH v3 1/5] ACPI / x86: Add support for LPS0 callback handler
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "Goswami, Sanket" <Sanket.Goswami@amd.com>
+Date:   Mon, 14 Mar 2022 18:01:06 -0700
+In-Reply-To: <BL1PR12MB5157664C2AA7D80E7DF48EC9E20F9@BL1PR12MB5157.namprd12.prod.outlook.com>
+References: <20220314050340.1176-1-mario.limonciello@amd.com>
+         <0101142d-3ea6-a47b-be26-76aaaac46b0a@redhat.com>
+         <BL1PR12MB5157664C2AA7D80E7DF48EC9E20F9@BL1PR12MB5157.namprd12.prod.outlook.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yh5+om/Nr06V0+Qj@kroah.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Mar 01, 2022 at 09:14:26PM +0100, Greg KH wrote:
-> On Tue, Mar 01, 2022 at 09:10:20PM +0100, Greg KH wrote:
-> > On Tue, Mar 01, 2022 at 11:54:47AM -0800, Jithu Joseph wrote:
-> > > Note to Maintainers:
-> > > Requesting x86 Maintainers to take a look at patch01 as it
-> > > touches arch/x86 portion of the kernel. Also would like to guide them
-> > > to patch07 which sets up hotplug notifiers and creates kthreads.
-> > > 
-> > > Patch 2/10 - Adds Documentation. Requesting Documentation maintainer to review it.
-> > > 
-> > > Requesting Greg KH to review the sysfs changes added by patch08.
-> > 
-> > "RFC" means you are not comfortable submitting the changes yet, so you
-> > don't need my review at this point in time.  Become confident in your
-> > changes before asking for others to review the code please.
+On Mon, 2022-03-14 at 13:32 +0000, Limonciello, Mario wrote:
+> [Public]
 > 
-> Hint, it needs work, sysfs_emit() for one thing, lack of reference
-> counting on your cpu objects is another...
+> > > +int acpi_register_lps0_callbacks(struct lps0_callback_handler *arg)
+> > > +{
+> > > +	struct lps0_callback_handler *handler;
+> > > +
+> > > +	if (!lps0_device_handle || sleep_no_lps0)
+> > > +		return -ENODEV;
+> > > +
+> > > +	handler = kmalloc(sizeof(*handler), GFP_KERNEL);
+> > > +	if (!handler)
+> > > +		return -ENOMEM;
+> > > +	handler->prepare_late_callback = arg->prepare_late_callback;
+> > > +	handler->restore_early_callback = arg->restore_early_callback;
+> > > +	handler->context = arg->context;
+> > > +
+> > > +	mutex_lock(&lps0_callback_handler_mutex);
+> > > +	list_add(&handler->list_node, &lps0_callback_handler_head);
+> > > +	mutex_unlock(&lps0_callback_handler_mutex);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(acpi_register_lps0_callbacks);
+> > 
+> > Typically with calls like these we simply let the caller own the struct
+> > lps0_callback_handler
+> > and only make the list_add() call here. Typically the struct
+> > lps0_callback_handler will
+> > be embedded in the driver_data of the driver registering the handler and it
+> > will
+> > call the unregister function before free-ing its driver_data.
+> > 
+> 
+> When I put this together I was modeling it off of `struct acpi_wakeup_handler`
+> which the handling and the use in the kernel doesn't seem to follow the design
+> pattern
+> you describe.
+> 
+> Rafael - can you please confirm which direction you want to see here for this?
+> 
+> > > +
+> > > +void acpi_unregister_lps0_callbacks(struct lps0_callback_handler *arg)
+> > > +{
+> > > +	struct lps0_callback_handler *handler;
+> > > +
+> > > +	mutex_lock(&lps0_callback_handler_mutex);
+> > > +	list_for_each_entry(handler, &lps0_callback_handler_head,
+> > list_node) {
+> > > +		if (handler->prepare_late_callback == arg-
+> > > prepare_late_callback &&
+> > > +		    handler->restore_early_callback == arg-
+> > > restore_early_callback &&
+> > > +		    handler->context == arg->context) {
+> > > +			list_del(&handler->list_node);
+> > > +			kfree(handler);
+> > > +			break;
+> > > +		}
+> > > +	}
+> > > +	mutex_unlock(&lps0_callback_handler_mutex);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(acpi_unregister_lps0_callbacks);
+> > 
+> > And this then becomes just lock, list_del, unlock.
+> > 
+> > Regards,
+> > 
+> > Hans
 
-Greg,
+If you keep v3,
 
-Thanks for the comments. They triggered a bunch of internal
-re-thinking of the interface.  One idea that has some traction
-(Credit/Blame: Dan Williams) is to:
+Reviewed-by: David E. Box <david.e.box@linux.intel.com>
 
-1) Don't put anything in /sys/devices/system/cpu/*
-2) Driver creates some info/control files in its own
-   corner of /sys/devices/.../ifs
-3) No per-cpu files ... run a test with:
-   # echo ${cpu} > /sys/devices/.../ifs/run_test
-4) No test result files.
-   When tests complete they report using uevents
-
-Using uevent to report means that we can easily have
-mutiple parts to the result (pass/fail/incomplete status, as well
-as diagnostic details about the reason for the failure,
-or why the test was not completed).
-
-This seems a novel use of uevent ... is it OK, or is is abuse?
-
-Thanks
-
--Tony
