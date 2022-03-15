@@ -2,90 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245C0C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 10:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A372C4167B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 13:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346944AbiCOKOS (ORCPT
+        id S1348795AbiCONmU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Mar 2022 06:14:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46774 "EHLO
+        Tue, 15 Mar 2022 09:42:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346916AbiCOKOR (ORCPT
+        with ESMTP id S1348757AbiCONmS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Mar 2022 06:14:17 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A491CDEB5;
-        Tue, 15 Mar 2022 03:13:05 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id dr20so39288904ejc.6;
-        Tue, 15 Mar 2022 03:13:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pJ4a52EFU+2U7vD9nmXwHNCP7eYdGu/W7wP1LyBYDtY=;
-        b=cnKxIuWSGk7xnetybBsS4AllQmhegUDXEtGAfBL9sBETaY387QPhrjERHGMmrfnNVq
-         hggvnpYJfifO0QlwANcDGq8B7hWogf/WUb2KZ+zPDJoiT2zDQz24OBDfkJi1qZ3gCf6z
-         Zu9Xyd32/Njuceng5fZjoX/tfJYnBfSM/BtFptC1a7cuo6T7oBa8T66kpWJmWtaiXtL0
-         kkzCshfuBmMYu988Unrz9foXvvDT466Q0zvSSY7jIIm6GXHtSwa6tMNjtUirH1eId44U
-         cSVEuooTC2tLHuLwqTXMiG0W5Q1844U9dF+G7kEPePC9uzdX0e+iIIstOW2MbX/a26p/
-         1QYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pJ4a52EFU+2U7vD9nmXwHNCP7eYdGu/W7wP1LyBYDtY=;
-        b=XOOYhZFZr7KvapW9M8ZSa5FgqpPKMjF9/BeH+D4nSFHMwETI5ctS/KdSUEAqQdZGqI
-         tILFnxjrDNdPAaQiA+XtLh/o/HnQpSCL1GgGr60AepSXNGhcjAp/+P9qyAs8HesMLsb/
-         F5lgmYa3QBaAJW0SfH5LFax4S9h95dbbNWtfzsBJMZIG4G15z5fNXEeMQHIL1JXSTahC
-         w5dUjX/IQ8CNajt7SCR9GPUPsVCcN8YqjcN5siTdp/lp30RRfCC3R48ZYrsBMLgcf5Wr
-         mvyLN/8O9LbyhlhRIfXwoBP2zrejDRl9n4DNF/bX6KNS6oin/mroBp/Kmbz9ogA+xlxu
-         FubQ==
-X-Gm-Message-State: AOAM530xXSHGzmdmsfOLwFuWRppxQJKPmyUHjUdgbeNw7vu95fY1h4a9
-        ySlpzP3AMT20MuTRaLgGFg4NaIkgMCleHRwDr3w=
-X-Google-Smtp-Source: ABdhPJysvL41Rndn/yfaFBTWshIJVj1+JDO+Wuwx3p5+4IxmhxfJN1FdbumvudNZrO1A0oJKNNXuw+8JzPsoM5oVasw=
-X-Received: by 2002:a17:906:4cc7:b0:6d0:7efb:49f with SMTP id
- q7-20020a1709064cc700b006d07efb049fmr21528297ejt.639.1647339183972; Tue, 15
- Mar 2022 03:13:03 -0700 (PDT)
+        Tue, 15 Mar 2022 09:42:18 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DA152E66;
+        Tue, 15 Mar 2022 06:41:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AD8FFB81677;
+        Tue, 15 Mar 2022 13:41:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07A13C340E8;
+        Tue, 15 Mar 2022 13:40:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647351662;
+        bh=gvl9SFrDd+2JfY4XpOU21w5Fgp3RnrxgO3xzRNMW3ig=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=FpIzPAInqwcWVe7lVXyZMo10uysAvQH5/+0FSS06nOQud/sjKtVu2eXUrgVVwDtnS
+         K9saXWWZ1hCdhU07mL3gP1lbyLMM5ncodj0hAGG1sCe8guzPWwUCxCvCMd4UnYk0ij
+         MiKnX5ElR8cklFLsknUpJxfH63KChYC/OCTeoHADKe2d7sJJxnj+KlqJSXMWCfA0RW
+         7IMl8VYJBtsy0LvBdpwYawlVvfm1y/uovTsdBOXZktA8NvrkBJg6F9XHpbVdi97yvv
+         ktn0TMEJDT+qVku5scquwwLC4arp4ujY52Gxd5XtzcUD53EHdZUC9sEswg4SOYFru/
+         p422dM8tR7ngQ==
+From:   Mark Brown <broonie@kernel.org>
+To:     Julia Lawall <Julia.Lawall@inria.fr>, linux-can@vger.kernel.org
+Cc:     netdev@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Shayne Chen <shayne.chen@mediatek.com>,
+        linux-media@vger.kernel.org,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        target-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-s390@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>, linux-sunxi@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-power@fi.rohmeurope.com,
+        linux-omap@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-leds@vger.kernel.org, linux-spi@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-wireless@vger.kernel.org
+In-Reply-To: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+References: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+Subject: Re: (subset) [PATCH 00/30] fix typos in comments
+Message-Id: <164735165474.3687547.1964402001196947729.b4-ty@kernel.org>
+Date:   Tue, 15 Mar 2022 13:40:54 +0000
 MIME-Version: 1.0
-References: <7640f9ac-88af-ace7-0bd4-990d852567dd@redhat.com>
- <CACRpkdbDWrrDPK9=5NErtM81109qtTHyFcTON=zXtB2B86wAdA@mail.gmail.com>
- <CAHp75Ve9s+hEjhWwdjbRJhEU-Efno_TyAUH+D7iRrE8enivvtg@mail.gmail.com> <aab9d25e-f6f9-b831-769b-ab95cd1bea74@redhat.com>
-In-Reply-To: <aab9d25e-f6f9-b831-769b-ab95cd1bea74@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 15 Mar 2022 12:11:50 +0200
-Message-ID: <CAHp75VcXRcvV61ZreVGBEAArhgfKv9nAPhjCTdMY6+nBw=5jrw@mail.gmail.com>
-Subject: Re: [GIT PULL] Immutable branch with 5.17-rc1 + "pinctrl: baytrail:
- Add pinconf,group + function for the pmu_clk"
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 11:18 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 3/15/22 07:19, Andy Shevchenko wrote:
-> > On Tue, Mar 15, 2022 at 3:01 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >> On Thu, Feb 24, 2022 at 5:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Mon, 14 Mar 2022 12:53:24 +0100, Julia Lawall wrote:
+> Various spelling mistakes in comments.
+> Detected with the help of Coccinelle.
+> 
 
-> >>> As discussed here is a pull-req for an immutable branch with 5.17-rc1 +
-> >>> "pinctrl: baytrail: Add pinconf,group + function for the pmu_clk".
-> >>
-> >> I suppose this is for Andy possibly I already pulled the pulled tree.
-> >
-> > Nope, but it appears not necessary. We have nothing to update in my
-> > tree which is dependent on this PR.
->
-> Ok, note this is already in the platform-drivers-x86 tree, since this
-> was a dep for another patch there. So I guess the single patch in the PR
-> will find its way upstream through the pdx86 tree then (which is fine).
+Applied to
 
-That is my expectation as well.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks!
+
+[21/30] spi: sun4i: fix typos in comments
+        commit: 2002c13243d595e211c0dad6b8e2e87f906f474b
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
