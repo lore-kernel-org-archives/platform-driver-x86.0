@@ -2,121 +2,172 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD67C43217
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 15:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FEAC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 16:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349712AbiCOPo7 (ORCPT
+        id S245178AbiCOQFp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Mar 2022 11:44:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51134 "EHLO
+        Tue, 15 Mar 2022 12:05:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349701AbiCOPo5 (ORCPT
+        with ESMTP id S238915AbiCOQFo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Mar 2022 11:44:57 -0400
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B81DC12A88;
-        Tue, 15 Mar 2022 08:43:44 -0700 (PDT)
-Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 22FEP12T027492;
-        Tue, 15 Mar 2022 15:43:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pps0720;
- bh=EqEV7oOPRCwvP9zFRtxS2amJ0sojOOK340QCkQmT5GQ=;
- b=MmbDNkZcN0nDJ/dIAy0JV5+9mSxYT+G5aSV76VaEeid11XLoJzABNDBNuI69a4n6Egqf
- oA4eAx2t7m6ByKzIzF+CmR9yNsKOV1PnCrgggwHE6ivDkCElQok1IVujap1MR2bd9f6f
- K+1snqnxI/v4bFnmeGMMLhrdObFohMHAa75bBa9F/6Clg46N+AgLWc/L6MxV7y/g/HL7
- //V8/46GALm+6TrpdjYCk9PfffoZFT+U1LpfCCkU71+u2ntQdg6n+dGGxJlOcQjkduup
- OJGsidMIvW6bFpo+p0BU06VFmM0X+sDivrxeDfq4cJjvzEW5sT4qrsLz5ZHevUsBqOef tA== 
-Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
-        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3etvhvrsny-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Mar 2022 15:43:09 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g9t5009.houston.hpe.com (Postfix) with ESMTP id B87D865;
-        Tue, 15 Mar 2022 15:43:08 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id D81E448;
-        Tue, 15 Mar 2022 15:43:07 +0000 (UTC)
-From:   Mike Travis <mike.travis@hpe.com>
-To:     Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org
-Cc:     Mike Travis <mike.travis@hpe.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 3/3] x86/platform/uv: Log gap hole end size
-Date:   Tue, 15 Mar 2022 10:42:49 -0500
-Message-Id: <20220315154249.201067-4-mike.travis@hpe.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20220315154249.201067-1-mike.travis@hpe.com>
-References: <20220315154249.201067-1-mike.travis@hpe.com>
+        Tue, 15 Mar 2022 12:05:44 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 735B41FA5E
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Mar 2022 09:04:32 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id lj8-20020a17090b344800b001bfaa46bca3so2706181pjb.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Mar 2022 09:04:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gvkC3jGwM0BSWnuGpgckFHOiTk6SWYeHrSDlcpLuLck=;
+        b=3gqdwDRiCpRYgnbCiljAUJPe+a2nTGkGs2zkB5QHuuedEezypdquacGD/eUaQO1L48
+         W8q+bQNYgZzYuWRLozKeXY/T6eFQRQeF0zEZJj2Uj51n8r+WEVn59ZGNDqZ3WRH9Ixbr
+         vjfaZmO3t+A/a04EBXTmKgmCaYz6pFUFvcPblzGN9GWeI0uTrZv+8qlpHoRUapzOJIA0
+         0LAxv4xPNTNd8ErCac5s+GPIxnEWbZF6vtS5bIIgEOOeBIDJ+DEp1UkRkXlpE8LPq4pU
+         4LskO51J4VqSAb83p4KhKkgt/VPsn4Al4Dr/pozZ5fSQdu/gp2Ukcgmrc5f3QRI8t8tu
+         7VRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gvkC3jGwM0BSWnuGpgckFHOiTk6SWYeHrSDlcpLuLck=;
+        b=gtnWFNvU/IjirZk6TJOGr+GfbahiwKzQvOT42nfISJbC2OkLfsN7CtiH6bPMRDx6JN
+         KFCkjnN0h9PvZPdsN/R4mVs+Z7Ufl3FKVttLofpnNp21taAtGewiJMW/P40ZNNgG0UQq
+         Ts2OAr5MDFI56C/2e31AkypW9psIYudhC5Vu5RA9drUtRHq6mDLp5M1EX6Skq1XRHIbV
+         jhkZ0a3r38rduswseHVE/9TkWfvQcdsziR/Fpu8P4cNcuwB1t+oFj0Z64sDhHMgNgo2H
+         lP79Vy3URnWeL7/ZzNapBK2fYiiGJ79rHcYdnt4/1cA1gE4A/EVqfK+Y7TwLrbl5jwUT
+         rN9w==
+X-Gm-Message-State: AOAM531b5B+tLf1i6oQeUwdWJ/OEOEMkQtWrEovmHRpwDGIuQsm3Q3xP
+        2nxs2LWCrzBQ3gudlttvPrRgnpSUPmwyGMgkshybkw==
+X-Google-Smtp-Source: ABdhPJx4iexvZ9E7ec4YTysWAlz/seulvJb3IeWy/vdbRcyyJyL0GKEJRsaIdVfIyVQD8KsXXN09cpfz7Pj3dHUw5t0=
+X-Received: by 2002:a17:90a:430d:b0:1bc:f340:8096 with SMTP id
+ q13-20020a17090a430d00b001bcf3408096mr5395590pjg.93.1647360271908; Tue, 15
+ Mar 2022 09:04:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: BE3uXUHf4-i6l9HxgDzanucSqv8fiPR1
-X-Proofpoint-GUID: BE3uXUHf4-i6l9HxgDzanucSqv8fiPR1
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-03-15_03,2022-03-15_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 clxscore=1015 bulkscore=0 adultscore=0 spamscore=0
- malwarescore=0 mlxscore=0 priorityscore=1501 mlxlogscore=901
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203150101
+References: <20220301195457.21152-1-jithu.joseph@intel.com>
+ <Yh59rOIH24X+6GyI@kroah.com> <Yh5+om/Nr06V0+Qj@kroah.com> <Yi/Lb5laEki0JHft@agluck-desk3.sc.intel.com>
+ <YjBBmEjbIaqTbVt+@kroah.com> <c4af81bd788e43dda915a1052af0be55@intel.com> <YjCwI4N00reBuIqA@kroah.com>
+In-Reply-To: <YjCwI4N00reBuIqA@kroah.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 15 Mar 2022 09:04:20 -0700
+Message-ID: <CAPcyv4iU5mXAjkUe-c_-Ba4Ejse90gqd=db+00jybnkV1-K6=g@mail.gmail.com>
+Subject: Re: [RFC 00/10] Introduce In Field Scan driver
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Show value of gap end in the kernel log which equates to number of physical
-address bits used by system.  The end address of the gap holds PA bits 56:26
-which gives the range up to 64PB max size with 64MB of granularity.
+On Tue, Mar 15, 2022 at 8:27 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Mar 15, 2022 at 02:59:03PM +0000, Luck, Tony wrote:
+> > >> This seems a novel use of uevent ... is it OK, or is is abuse?
+> > >
+> > > Don't create "novel" uses of uevents.  They are there to express a
+> > > change in state of a device so that userspace can then go and do
+> > > something with that information.  If that pattern fits here, wonderful.
+> >
+> > Maybe Dan will chime in here to better explain his idea. I think for
+> > the case where the core test fails, there is a good match with uevent.
+> > The device (one CPU core) has changed state from "working" to
+> > "untrustworthy". Userspace can do things like: take the logical CPUs
+> > on that core offline, initiate a service call, or in a VMM cluster environment
+> > migrate work to a different node.
+>
+> Again, I have no idea what you are doing at all with this driver, nor
+> what you want to do with it.
+>
+> Start over please.
+>
+> What is the hardware you have to support?
+>
+> What is the expectation from userspace with regards to using the
+> hardware?
 
-Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
----
-v2: Update patch description to be more explanatory.
----
- arch/x86/kernel/apic/x2apic_uv_x.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Here is what I have learned about this driver since engaging on this
+patch set. Cores go bad at run time. Datacenters can detect them at
+scale. When I worked at Facebook there was an epic story of debugging
+random user login failures that resulted in the discovery of a
+marginal lot-number of CPUs in a certain cluster. In that case the
+crypto instructions on a few cores of those CPUs gave wrong answers.
+Whether that was an electromigration effect, or just a marginal bin of
+CPUs, the only detection method was A-B testing different clusters of
+CPUs to isolate the differences.
 
-diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index 387d6533549a..146f0f63a43b 100644
---- a/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -1346,7 +1346,7 @@ static void __init decode_gam_params(unsigned long ptr)
- static void __init decode_gam_rng_tbl(unsigned long ptr)
- {
- 	struct uv_gam_range_entry *gre = (struct uv_gam_range_entry *)ptr;
--	unsigned long lgre = 0;
-+	unsigned long lgre = 0, gend = 0;
- 	int index = 0;
- 	int sock_min = 999999, pnode_min = 99999;
- 	int sock_max = -1, pnode_max = -1;
-@@ -1380,6 +1380,9 @@ static void __init decode_gam_rng_tbl(unsigned long ptr)
- 			flag, size, suffix[order],
- 			gre->type, gre->nasid, gre->sockid, gre->pnode);
- 
-+		if (gre->type == UV_GAM_RANGE_TYPE_HOLE)
-+			gend = (unsigned long)gre->limit << UV_GAM_RANGE_SHFT;
-+
- 		/* update to next range start */
- 		lgre = gre->limit;
- 		if (sock_min > gre->sockid)
-@@ -1397,7 +1400,8 @@ static void __init decode_gam_rng_tbl(unsigned long ptr)
- 	_max_pnode	= pnode_max;
- 	_gr_table_len	= index;
- 
--	pr_info("UV: GRT: %d entries, sockets(min:%x,max:%x) pnodes(min:%x,max:%x)\n", index, _min_socket, _max_socket, _min_pnode, _max_pnode);
-+	pr_info("UV: GRT: %d entries, sockets(min:%x,max:%x), pnodes(min:%x,max:%x), gap_end(%d)\n",
-+	  index, _min_socket, _max_socket, _min_pnode, _max_pnode, fls64(gend));
- }
- 
- /* Walk through UVsystab decoding the fields */
--- 
-2.26.2
+This driver takes advantage of a CPU feature to inject a diagnostic
+test similar to what can be done via JTAG to validate the
+functionality of a given core on a CPU at a low level. The diagnostic
+is run periodically since some failures may be sensitive to thermals
+while other failures may be be related to the lifetime of the CPU. The
+result of the diagnostic is "here are 1 or more cores that may
+miscalculate, stop using them and replace the CPU".
 
+At a base level the ABI need only be something that conveys "core X
+failed its last diagnostic". All the other details are just extra, and
+in my opinion can be dropped save for maybe "core X was unable to run
+the diagnostic".
+
+The thought process that got me from the proposal on the table "extend
+/sys/devices/system/cpu with per-cpu result state and other details"
+to "emit uevents on each test completion" were the following:
+-The complexity and maintenance burden of dynamically extending
+/sys/devices/system/cpu: Given that you identified a reference
+counting issue, I wondered why this was trying to use
+/sys/devices/system/cpu in the first instance.
+
+- The result of the test is an event that kicks off remediation
+actions: When this fails a tech is paged to replace the CPU and in the
+meantime the system can either be taken offline, or if some of the
+cores are still good the workloads can be moved off of the bad cores
+to keep some capacity online until the replacement can be made.
+
+- KOBJ_CHANGE uevents are already deployed in NVME for AEN
+(Asynchronous Event Notifications): If the results of the test were
+conveyed only in sysfs then there would be a program that would scrape
+sysfs and turn around and fire an event for the downstream remediation
+actions. Uevent cuts to the chase and lets udev rule policy log,
+notify, and/or take pre-emptive CPU offline action. The CPU state has
+changed after a test run. It has either changed to a failed CPU, or it
+has changed to one that has recently asserted its health.
+
+> > > I doubt you can report "test results" via a uevent in a way that the
+> > > current uevent states and messages would properly convey, but hey, maybe
+> > > I'm wrong.
+> >
+> > But here things get a bit sketchy. Reporting "pass", or "didn't complete the test"
+> > isn't a state change.  But it seems like a poor interface if there is no feedback
+> > that the test was run. Using different methods to report pass/fail/incomplete
+> > also seems user hostile.
+>
+> We have an in-kernel "test" framework.  Yes, it's for kernel code, but
+> why not extend that to also include hardware tests?
+
+This is where my head was at when starting out with this, but this is
+more of an asynchronous error reporting mechanism like machine check,
+or PCIe AER, than a test. The only difference being that the error in
+this case is only reported by first requesting an error check. So it
+is more similar to something like a background patrol scrub that seeks
+out latent ECC errors in memory.
