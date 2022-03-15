@@ -2,143 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFDDC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 01:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F40C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 01:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344077AbiCOBCT (ORCPT
+        id S1344081AbiCOBC3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Mar 2022 21:02:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37284 "EHLO
+        Mon, 14 Mar 2022 21:02:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233143AbiCOBCS (ORCPT
+        with ESMTP id S1344079AbiCOBC2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Mar 2022 21:02:18 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FE4931911;
-        Mon, 14 Mar 2022 18:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647306067; x=1678842067;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NWusIOIo+vyDfRBYbXa+JW6qvU98GxBj6Z5YtR9TtG0=;
-  b=NlJjVTYHnBuGLse/ZPfYj2Zd799XgktYx4q4hv9lg7lW6k3PG5nZLqVG
-   eXcU/UGAGoeonXZtDxhAqkdRwNADS3mOA22J5amppe4SS6RwaKhI84MGO
-   SqVqyPdxJYV5lC541hpa4tQSDkOrf6sr3AcYtmnwndycC5/JGdWkdWxie
-   /Or2zUhmIkoDpAKmQFSi4KrB6Mb3kzhbc4/QURqYA02wktseBmAUc+I7d
-   98z/ysbVn0WouiBdwHs5YxYW4nGdCZHRLXe+Xmr0PgMlBcPH1VJONU9NK
-   OnTT9ohC/95b3+QO+hmN9/7pns5OQ0FJs79ZwNGBFcMx/XzqH0MTWFMAo
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="280949601"
-X-IronPort-AV: E=Sophos;i="5.90,181,1643702400"; 
-   d="scan'208";a="280949601"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 18:01:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,181,1643702400"; 
-   d="scan'208";a="634413805"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 Mar 2022 18:01:06 -0700
-Received: from zehall-mobl.amr.corp.intel.com (unknown [10.209.53.245])
-        by linux.intel.com (Postfix) with ESMTP id 9E357580690;
-        Mon, 14 Mar 2022 18:01:06 -0700 (PDT)
-Message-ID: <4121875ff3ee2999e50c687ed9f808d1dc98a68f.camel@linux.intel.com>
-Subject: Re: [PATCH v3 1/5] ACPI / x86: Add support for LPS0 callback handler
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "Goswami, Sanket" <Sanket.Goswami@amd.com>
-Date:   Mon, 14 Mar 2022 18:01:06 -0700
-In-Reply-To: <BL1PR12MB5157664C2AA7D80E7DF48EC9E20F9@BL1PR12MB5157.namprd12.prod.outlook.com>
-References: <20220314050340.1176-1-mario.limonciello@amd.com>
-         <0101142d-3ea6-a47b-be26-76aaaac46b0a@redhat.com>
-         <BL1PR12MB5157664C2AA7D80E7DF48EC9E20F9@BL1PR12MB5157.namprd12.prod.outlook.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        Mon, 14 Mar 2022 21:02:28 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE2C31911
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Mar 2022 18:01:18 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id t11so2582590ybi.6
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Mar 2022 18:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gwzntja23CXu4nGypeSr/YvTugWSt8x1I0iZeIrduiw=;
+        b=w/1wPl5nG6eMDlh7Z0yU3HXqeLwQ5QBWszqv5df0uqy1LxL3+rLlGYIRK+WzT0GIH8
+         Mq1jlON/2+qWJTWVpnLnPoW6TjFdpB+gpxHiFud/0k+BEvaLFtB40YWONxyJDsgZxap7
+         +LPnW26Ve7/T6IKr7x/jcoqX+IAhYpP6W4PvyhqZb0v7oVg4L32LzW2+b4triLeX5/Jq
+         KLSSpWyENZ/1/w/KMSXxpVmA/pj0c0VJUOv4TYwKADmyfx6MtiO26K8c8TlolQPOYCJ+
+         gshgl8Zsx9fUk/1LgCXo3Df055vqnFe15EftZTWRrGyXj8VhWCWI7Fi6aYuvRVEIVFjg
+         W5kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gwzntja23CXu4nGypeSr/YvTugWSt8x1I0iZeIrduiw=;
+        b=TMdEZ5dKWAnEaNaVa3y+wf+ABuI8YWER3wTsz61jpWAu9sOnSqaO853noXYUlQXq/k
+         OLYo1efJfBVdiwDwyjd/BlUM6+9+LRi3Pz6qTRtD+2A3APk4j3RMOp47SAa2MLRFGFik
+         VVxxv1gYyhfe5sYl1TG/DP+95CoMzH4MQnBnh2jAaNTtX2H8Lrgi1adNyV0K25NhATEh
+         ll/IjaoiPFCkhGnUQyFPdi/wdkuI/ggEsNgML5xJdswO4gBVF1ZKhtcQ2SlhxnTJaWRT
+         ptHX9zLwysZZqtUU5FbVcrlyU3O3PsypmOvqvMsiH3PToSjQrj+7EdoOau62W9MgH0gZ
+         iMgg==
+X-Gm-Message-State: AOAM533jh4zj3ZOB1MtOZWO8KsUVrzwHbnxdsxVgOteirVVrplLigIUH
+        /rpvbKWTHMBXiXL0hO/fpkOUrBonjbayKLcQW0zb7w==
+X-Google-Smtp-Source: ABdhPJxu4gmQuoPTkL8MiSyXdebzsRdwsuGk37SWTmhlwfgJWlYUbSuxcacb8hStJKAfGOje6uvJr+q5hilUnnsniEk=
+X-Received: by 2002:a05:6902:203:b0:628:7b6f:2845 with SMTP id
+ j3-20020a056902020300b006287b6f2845mr21223883ybs.533.1647306077478; Mon, 14
+ Mar 2022 18:01:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <7640f9ac-88af-ace7-0bd4-990d852567dd@redhat.com>
+In-Reply-To: <7640f9ac-88af-ace7-0bd4-990d852567dd@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 15 Mar 2022 02:01:06 +0100
+Message-ID: <CACRpkdbDWrrDPK9=5NErtM81109qtTHyFcTON=zXtB2B86wAdA@mail.gmail.com>
+Subject: Re: [GIT PULL] Immutable branch with 5.17-rc1 + "pinctrl: baytrail:
+ Add pinconf,group + function for the pmu_clk"
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2022-03-14 at 13:32 +0000, Limonciello, Mario wrote:
-> [Public]
-> 
-> > > +int acpi_register_lps0_callbacks(struct lps0_callback_handler *arg)
-> > > +{
-> > > +	struct lps0_callback_handler *handler;
-> > > +
-> > > +	if (!lps0_device_handle || sleep_no_lps0)
-> > > +		return -ENODEV;
-> > > +
-> > > +	handler = kmalloc(sizeof(*handler), GFP_KERNEL);
-> > > +	if (!handler)
-> > > +		return -ENOMEM;
-> > > +	handler->prepare_late_callback = arg->prepare_late_callback;
-> > > +	handler->restore_early_callback = arg->restore_early_callback;
-> > > +	handler->context = arg->context;
-> > > +
-> > > +	mutex_lock(&lps0_callback_handler_mutex);
-> > > +	list_add(&handler->list_node, &lps0_callback_handler_head);
-> > > +	mutex_unlock(&lps0_callback_handler_mutex);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(acpi_register_lps0_callbacks);
-> > 
-> > Typically with calls like these we simply let the caller own the struct
-> > lps0_callback_handler
-> > and only make the list_add() call here. Typically the struct
-> > lps0_callback_handler will
-> > be embedded in the driver_data of the driver registering the handler and it
-> > will
-> > call the unregister function before free-ing its driver_data.
-> > 
-> 
-> When I put this together I was modeling it off of `struct acpi_wakeup_handler`
-> which the handling and the use in the kernel doesn't seem to follow the design
-> pattern
-> you describe.
-> 
-> Rafael - can you please confirm which direction you want to see here for this?
-> 
-> > > +
-> > > +void acpi_unregister_lps0_callbacks(struct lps0_callback_handler *arg)
-> > > +{
-> > > +	struct lps0_callback_handler *handler;
-> > > +
-> > > +	mutex_lock(&lps0_callback_handler_mutex);
-> > > +	list_for_each_entry(handler, &lps0_callback_handler_head,
-> > list_node) {
-> > > +		if (handler->prepare_late_callback == arg-
-> > > prepare_late_callback &&
-> > > +		    handler->restore_early_callback == arg-
-> > > restore_early_callback &&
-> > > +		    handler->context == arg->context) {
-> > > +			list_del(&handler->list_node);
-> > > +			kfree(handler);
-> > > +			break;
-> > > +		}
-> > > +	}
-> > > +	mutex_unlock(&lps0_callback_handler_mutex);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(acpi_unregister_lps0_callbacks);
-> > 
-> > And this then becomes just lock, list_del, unlock.
-> > 
-> > Regards,
-> > 
-> > Hans
+On Thu, Feb 24, 2022 at 5:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-If you keep v3,
+> Hello Intel pinctrl maintainers,
+>
+> As discussed here is a pull-req for an immutable branch with 5.17-rc1 +
+> "pinctrl: baytrail: Add pinconf,group + function for the pmu_clk".
 
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
+I suppose this is for Andy possibly I already pulled the pulled tree.
 
+Yours,
+Linus Walleij
