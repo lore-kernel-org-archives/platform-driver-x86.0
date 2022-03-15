@@ -2,63 +2,57 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B570C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 16:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC832C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 16:11:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349828AbiCOQKn (ORCPT
+        id S1348824AbiCOQMY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Mar 2022 12:10:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55262 "EHLO
+        Tue, 15 Mar 2022 12:12:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238235AbiCOQKm (ORCPT
+        with ESMTP id S1348623AbiCOQMX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Mar 2022 12:10:42 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC3142A24
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Mar 2022 09:09:29 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id u17so18285967pfk.11
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Mar 2022 09:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L/3evLoiUxyduQgTRbFtXBiM1S258zVm+UJtnMloKak=;
-        b=0YcD70QC0MgG+ea9Hyfe1KDOhrj7ONcEkvDRV6M9sMdA6lBfa3vlxGaB1+hzovZQOs
-         nurK8WNaWNkB/vGSQtA4Lq31WE9AExhGngDlI+yUnN8qWySuU6IBhWONrdiHFdV6PG6B
-         sbLG2d10zU9EuEgpQQ637mwVNaUrgXnqa/6yF3t6jaDhmTRw/xdLrWfPkJvFyDNuy3Xk
-         WomPnsVYKvLH1B+xPE4kDOTzN85NvKrs+YT5dfMGxH9GSbsYL7HmtJwNrMD/6pGis5Js
-         F89yrxdEhLffsaTI1cft4JLc1BxFIVR1hgR2KurWjoapaPEJuPPbvYpjO/lpEfCcpLue
-         sU7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L/3evLoiUxyduQgTRbFtXBiM1S258zVm+UJtnMloKak=;
-        b=ZUJhI+/o5LlmpKSkZx94efEoxCDfCbd4+iTNVt4f9T/lbeAfGr/xKdoRHL5qi1codB
-         eAsRKyT204Hl5vGHhxs9rGBxgj7GpLlHqju+omCK77SWwn9cCty9SREmPu6QuClSZ6wB
-         9vujsfgB8I5CgdTZpOWxuHUUVfSPcee3m5Ub4ICamA9Z0b1SzKZGBGC3vP0C4fbNFKah
-         dhymY3kz/udrDT7wvWQLEa0EjpSYNyIn8Cy+4RVK9UTwXEkDnjXhc4E06qCaDhp4OHnj
-         mdZeCChhV45ZZXAU+9xFDEXkGLgwyJTy+ozZFLc7Bgs6Pv/syhpC1cTDzgLoUw3ctGZG
-         l8jg==
-X-Gm-Message-State: AOAM532RhEFRdcWtB1qoKj/58bL27O0wlEMkjtpbR7gfL9w5JgALg32m
-        bm09XqeQ7dKKB3L6aj7vCz7GVfq7LOCkePBs7xFo5A==
-X-Google-Smtp-Source: ABdhPJyMgwt0K1/knvdgQkdrvVvr4QZNZtkwOk/zi74i6418fAFiBNttZxLgdpHinFyQTs23rFNvPhfWer6YMjV+1IM=
-X-Received: by 2002:a05:6a00:8ca:b0:4e0:2ed3:5630 with SMTP id
- s10-20020a056a0008ca00b004e02ed35630mr29577774pfu.3.1647360568827; Tue, 15
- Mar 2022 09:09:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220301195457.21152-1-jithu.joseph@intel.com>
- <Yh59rOIH24X+6GyI@kroah.com> <Yh5+om/Nr06V0+Qj@kroah.com> <Yi/Lb5laEki0JHft@agluck-desk3.sc.intel.com>
- <YjBBmEjbIaqTbVt+@kroah.com> <c4af81bd788e43dda915a1052af0be55@intel.com>
- <YjCwI4N00reBuIqA@kroah.com> <CAPcyv4iU5mXAjkUe-c_-Ba4Ejse90gqd=db+00jybnkV1-K6=g@mail.gmail.com>
-In-Reply-To: <CAPcyv4iU5mXAjkUe-c_-Ba4Ejse90gqd=db+00jybnkV1-K6=g@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 15 Mar 2022 09:09:18 -0700
-Message-ID: <CAPcyv4gdbjHem9zwoCjj+6a2KJ5dyYro3OwPvNLSPTKpjeF0hg@mail.gmail.com>
-Subject: Re: [RFC 00/10] Introduce In Field Scan driver
+        Tue, 15 Mar 2022 12:12:23 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A1C56743;
+        Tue, 15 Mar 2022 09:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647360671; x=1678896671;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=glOFaMsZQ3qIAkOB+ER/W8hoSjZuYOqUjaQuQNhbfuY=;
+  b=U8dcUBtgGWu/TM8xZqUzpME1QZREue1vS21pkK568uO7/4n8tMud+Nju
+   WwgpZVrmTSMeelfqa9hdmkbOUHbzvd7REXnEnA3NKqBOap3h+daK7b1Nv
+   z18DLw7f715mE9yDZDDAYVHHTfWOx5qeDn0GrNCIhXbZmEb7jkAvCKceL
+   mGnHHdktlAJQLaEzGpOvb7zx3mhedVjrRCrLAtdCkNRpIoNNGHqLL1Sap
+   r6SgO1avJqT5SVx0oI+b/1Msx5Zt+oAoWqn2ZbxsfBiXpFy9dcfn8Ai+w
+   a+/VoHRa+ol+ACDN0uJT5f8ShrBb9RgoI93hpDiQZCYE5WBNIrsdJsLbU
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="236292957"
+X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
+   d="scan'208";a="236292957"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 09:11:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
+   d="scan'208";a="540498624"
+Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
+  by orsmga007.jf.intel.com with ESMTP; 15 Mar 2022 09:11:00 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Tue, 15 Mar 2022 09:11:00 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Tue, 15 Mar 2022 09:10:59 -0700
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.021;
+ Tue, 15 Mar 2022 09:10:59 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
 To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
+CC:     "Joseph, Jithu" <jithu.joseph@intel.com>,
         "hdegoede@redhat.com" <hdegoede@redhat.com>,
         "markgross@kernel.org" <markgross@kernel.org>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
@@ -76,44 +70,77 @@ Cc:     "Luck, Tony" <tony.luck@intel.com>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
         "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>
+Subject: RE: [RFC 00/10] Introduce In Field Scan driver
+Thread-Topic: [RFC 00/10] Introduce In Field Scan driver
+Thread-Index: AQHYLaZcmKq0UuRYGU6xp1k7P7vRw6yre5AAgAABJQCAFBlxgIABAjIAgAAEKTCAAH+egP//kvKw
+Date:   Tue, 15 Mar 2022 16:10:59 +0000
+Message-ID: <de895b9617aa412e95fdd14fcad285fa@intel.com>
+References: <20220301195457.21152-1-jithu.joseph@intel.com>
+ <Yh59rOIH24X+6GyI@kroah.com> <Yh5+om/Nr06V0+Qj@kroah.com>
+ <Yi/Lb5laEki0JHft@agluck-desk3.sc.intel.com> <YjBBmEjbIaqTbVt+@kroah.com>
+ <c4af81bd788e43dda915a1052af0be55@intel.com> <YjCwI4N00reBuIqA@kroah.com>
+In-Reply-To: <YjCwI4N00reBuIqA@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.6.401.20
+x-originating-ip: [10.1.200.100]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 9:04 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> Again, I have no idea what you are doing at all with this driver, nor
+> what you want to do with it.
 >
-> On Tue, Mar 15, 2022 at 8:27 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Mar 15, 2022 at 02:59:03PM +0000, Luck, Tony wrote:
-> > > >> This seems a novel use of uevent ... is it OK, or is is abuse?
-> > > >
-> > > > Don't create "novel" uses of uevents.  They are there to express a
-> > > > change in state of a device so that userspace can then go and do
-> > > > something with that information.  If that pattern fits here, wonderful.
-> > >
-> > > Maybe Dan will chime in here to better explain his idea. I think for
-> > > the case where the core test fails, there is a good match with uevent.
-> > > The device (one CPU core) has changed state from "working" to
-> > > "untrustworthy". Userspace can do things like: take the logical CPUs
-> > > on that core offline, initiate a service call, or in a VMM cluster environment
-> > > migrate work to a different node.
-> >
-> > Again, I have no idea what you are doing at all with this driver, nor
-> > what you want to do with it.
-> >
-> > Start over please.
-> >
-> > What is the hardware you have to support?
-> >
-> > What is the expectation from userspace with regards to using the
-> > hardware?
->
-> Here is what I have learned about this driver since engaging on this
-> patch set. Cores go bad at run time. Datacenters can detect them at
-> scale.
+> Start over please.
 
-Tony pointed me to this video if you have not seen it:
+TL;DR is that silicon ages and some things break that don't have parity/ECC=
+ checks.
+So systems start behaving erratically. If you are lucky they crash. If you =
+are less lucky
+they give incorrect results.
 
-https://www.youtube.com/watch?v=QMF3rqhjYuM
+There's a paper (and even a movie 11 minutes) that describe the research by
+Google on this.
+https://sigops.org/s/conferences/hotos/2021/papers/hotos21-s01-hochschild.p=
+df =20
+(https://www.youtube.com/watch?v=3DQMF3rqhjYuM)   =20
+
+> What is the hardware you have to support?
+
+Feature first available in Sapphire Rapids (Xeon: coming later this year)
+
+> What is the expectation from userspace with regards to using the
+> hardware?
+
+Expectation from users is that they can run these tests frequently (many ti=
+mes
+per day) to catch silicon that has developed faults quickly and take action=
+ to
+isolate the cores that have issues.
+
+On HT enabled systems both threads that share a core need to be put into
+test mode together. The current version of tests takes around 50 milli-seco=
+nds
+(so for many workloads doesn't need much prep ... those with high sensitivi=
+ty
+to latency would need to do some additional userspace task binding to make
+sure those workloads were moved to another core while the h/w test runs).
+
+There are three outcomes from running a test:
+
+1) The test passes all stages.
+2) The test did not complete (for a variety of reasons, e.g. power states)
+3) The test indicates failure. Recommendation is to run one more time in ca=
+se
+    the failure was transient .. e.g. cause by a neutron/alpha strike.
+
+-Tony
