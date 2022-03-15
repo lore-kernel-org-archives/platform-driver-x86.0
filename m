@@ -2,83 +2,117 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AD5C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 06:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF291C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 07:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345168AbiCOGVU (ORCPT
+        id S236824AbiCOHgL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Mar 2022 02:21:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45892 "EHLO
+        Tue, 15 Mar 2022 03:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240909AbiCOGVT (ORCPT
+        with ESMTP id S232431AbiCOHgK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Mar 2022 02:21:19 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB8645AC1;
-        Mon, 14 Mar 2022 23:20:04 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id dr20so38156920ejc.6;
-        Mon, 14 Mar 2022 23:20:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uflOwtUGg1izDwkmA4xRHZXY2C86sXCaglry8tcOahg=;
-        b=XRuvaiqFAk4qobG6aA75vdGIZJi6SHw5AthrnnPDuXehrptnxYB+1C6YExFtikl5dx
-         RXUww2xe7yAQZL1fqJtg6op9V45gm8yKcpGJH/Uvc7n4hBieg8D5YhbmOe0/q+CERC8G
-         hBCcgKXew/Oq6v3e8qrsfJjmFu72Sf4bZaYrS/GZm4MN/a/2N6iQAi4Q4tp+f0xx2+Bs
-         5jtQOBQ8HdMd7ZmX2Lw0RqcXmnTAIffti2B4jpe20z7IM/yhwPA53hwA//2MAy2V/e/c
-         8FUCaEMcVm0tD2TNhGba1nBq7Th1/cY9cTQPQkH0eVM1M5H3tTGwstBQiTl5OS8w65Bb
-         Gflg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uflOwtUGg1izDwkmA4xRHZXY2C86sXCaglry8tcOahg=;
-        b=O6DBZOw3mr55XMBO8UMmtkner/IG1tPva6Lq8c4BOVueziiEXH8jLQOlyp14BXVMi5
-         lib2UICQ2ZOs8GvVLMP/tMVr427j/P0gK+3vPFSR5L0GJ7qh6IZZk1P3g6ZFJP4VA+s2
-         44hwR8qVaLiVtZ9imeKKma6axCsUcxRnR/zyi+V9OkajYeNPPkrMl95mF8g2L8cXAggI
-         7LH/9YnQqOrueRZwPlZubR3yIxtPwc9L9eSm5Vh6CartiUXqFM2G0QkebG5203NiltAF
-         MsYOFipbHJBApZ0jsaINAkRYcmr0p6/FJk3RO+mPBS7vwTn+z1U5L1zafLJqjq1KqJeN
-         fX3g==
-X-Gm-Message-State: AOAM533CX8h/apdLucOACv30Yai6Bp90PfVIlg7nWOG7jsNbGGyoeInq
-        rPo+qMtyR4RgyHMlubWvKCCvf+9PSGnUsnkLmDc=
-X-Google-Smtp-Source: ABdhPJyKb5GBPbyAC7wf9c67MF5u3gefdQwh5K6VkEOcb4za79AKaqqXk7zYY7k3U4pV7gPoty7oDcvAphrlfzG41Lo=
-X-Received: by 2002:a17:907:6e01:b0:6d0:562c:e389 with SMTP id
- sd1-20020a1709076e0100b006d0562ce389mr21493706ejc.497.1647325203231; Mon, 14
- Mar 2022 23:20:03 -0700 (PDT)
+        Tue, 15 Mar 2022 03:36:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF7384B1C0;
+        Tue, 15 Mar 2022 00:34:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E2852613DC;
+        Tue, 15 Mar 2022 07:34:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6BA6C340E8;
+        Tue, 15 Mar 2022 07:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1647329693;
+        bh=9t5nbjS6o46IYV0HqycSY7vUg/zpQpjyLn2xTnP5TPs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u/OKLCXN+zqRQwxpMuvhRoVL7KZucbSVV/Qg665/NCRsHNj7b/kZNMB1x/9ARSknA
+         hS7mtBLvMgnVqF1frARHwFl5GT7PUmPkkgIjWBW9HMcoa3rJLRFvOdSBD02WE32FJV
+         d+fkNpzTwsZUws600ExqZVL7xWS7HUpDjs2znJn0=
+Date:   Tue, 15 Mar 2022 08:34:48 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Jithu Joseph <jithu.joseph@intel.com>, hdegoede@redhat.com,
+        markgross@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, corbet@lwn.net, andriy.shevchenko@linux.intel.com,
+        ashok.raj@intel.com, rostedt@goodmis.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com, Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [RFC 00/10] Introduce In Field Scan driver
+Message-ID: <YjBBmEjbIaqTbVt+@kroah.com>
+References: <20220301195457.21152-1-jithu.joseph@intel.com>
+ <Yh59rOIH24X+6GyI@kroah.com>
+ <Yh5+om/Nr06V0+Qj@kroah.com>
+ <Yi/Lb5laEki0JHft@agluck-desk3.sc.intel.com>
 MIME-Version: 1.0
-References: <7640f9ac-88af-ace7-0bd4-990d852567dd@redhat.com> <CACRpkdbDWrrDPK9=5NErtM81109qtTHyFcTON=zXtB2B86wAdA@mail.gmail.com>
-In-Reply-To: <CACRpkdbDWrrDPK9=5NErtM81109qtTHyFcTON=zXtB2B86wAdA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 15 Mar 2022 08:19:27 +0200
-Message-ID: <CAHp75Ve9s+hEjhWwdjbRJhEU-Efno_TyAUH+D7iRrE8enivvtg@mail.gmail.com>
-Subject: Re: [GIT PULL] Immutable branch with 5.17-rc1 + "pinctrl: baytrail:
- Add pinconf,group + function for the pmu_clk"
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yi/Lb5laEki0JHft@agluck-desk3.sc.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 3:01 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Feb 24, 2022 at 5:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> > Hello Intel pinctrl maintainers,
-> >
-> > As discussed here is a pull-req for an immutable branch with 5.17-rc1 +
-> > "pinctrl: baytrail: Add pinconf,group + function for the pmu_clk".
->
-> I suppose this is for Andy possibly I already pulled the pulled tree.
+On Mon, Mar 14, 2022 at 04:10:39PM -0700, Luck, Tony wrote:
+> On Tue, Mar 01, 2022 at 09:14:26PM +0100, Greg KH wrote:
+> > On Tue, Mar 01, 2022 at 09:10:20PM +0100, Greg KH wrote:
+> > > On Tue, Mar 01, 2022 at 11:54:47AM -0800, Jithu Joseph wrote:
+> > > > Note to Maintainers:
+> > > > Requesting x86 Maintainers to take a look at patch01 as it
+> > > > touches arch/x86 portion of the kernel. Also would like to guide them
+> > > > to patch07 which sets up hotplug notifiers and creates kthreads.
+> > > > 
+> > > > Patch 2/10 - Adds Documentation. Requesting Documentation maintainer to review it.
+> > > > 
+> > > > Requesting Greg KH to review the sysfs changes added by patch08.
+> > > 
+> > > "RFC" means you are not comfortable submitting the changes yet, so you
+> > > don't need my review at this point in time.  Become confident in your
+> > > changes before asking for others to review the code please.
+> > 
+> > Hint, it needs work, sysfs_emit() for one thing, lack of reference
+> > counting on your cpu objects is another...
+> 
+> Greg,
+> 
+> Thanks for the comments. They triggered a bunch of internal
+> re-thinking of the interface.  One idea that has some traction
+> (Credit/Blame: Dan Williams) is to:
 
-Nope, but it appears not necessary. We have nothing to update in my
-tree which is dependent on this PR.
+First off, I did not pay attention to this thread at all, given that the
+very basics of this patch series had such obvious problems.  I only saw
+the contents, not the context in which you wanted to make these changes.
 
+So I have no real thoughts as to what your design should be, as I have
+no idea what it is you even want to accomplish at all.
 
--- 
-With Best Regards,
-Andy Shevchenko
+That being said, I do have one comment:
+
+> 1) Don't put anything in /sys/devices/system/cpu/*
+> 2) Driver creates some info/control files in its own
+>    corner of /sys/devices/.../ifs
+> 3) No per-cpu files ... run a test with:
+>    # echo ${cpu} > /sys/devices/.../ifs/run_test
+> 4) No test result files.
+>    When tests complete they report using uevents
+> 
+> Using uevent to report means that we can easily have
+> mutiple parts to the result (pass/fail/incomplete status, as well
+> as diagnostic details about the reason for the failure,
+> or why the test was not completed).
+> 
+> This seems a novel use of uevent ... is it OK, or is is abuse?
+
+Don't create "novel" uses of uevents.  They are there to express a
+change in state of a device so that userspace can then go and do
+something with that information.  If that pattern fits here, wonderful.
+
+I doubt you can report "test results" via a uevent in a way that the
+current uevent states and messages would properly convey, but hey, maybe
+I'm wrong.
+
+good luck!
+
+greg k-h
