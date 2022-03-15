@@ -2,117 +2,172 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF291C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 07:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A81F0C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Mar 2022 09:17:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236824AbiCOHgL (ORCPT
+        id S1346433AbiCOJSQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Mar 2022 03:36:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46476 "EHLO
+        Tue, 15 Mar 2022 05:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232431AbiCOHgK (ORCPT
+        with ESMTP id S1346476AbiCOJRy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Mar 2022 03:36:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF7384B1C0;
-        Tue, 15 Mar 2022 00:34:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E2852613DC;
-        Tue, 15 Mar 2022 07:34:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6BA6C340E8;
-        Tue, 15 Mar 2022 07:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1647329693;
-        bh=9t5nbjS6o46IYV0HqycSY7vUg/zpQpjyLn2xTnP5TPs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u/OKLCXN+zqRQwxpMuvhRoVL7KZucbSVV/Qg665/NCRsHNj7b/kZNMB1x/9ARSknA
-         hS7mtBLvMgnVqF1frARHwFl5GT7PUmPkkgIjWBW9HMcoa3rJLRFvOdSBD02WE32FJV
-         d+fkNpzTwsZUws600ExqZVL7xWS7HUpDjs2znJn0=
-Date:   Tue, 15 Mar 2022 08:34:48 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Jithu Joseph <jithu.joseph@intel.com>, hdegoede@redhat.com,
-        markgross@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, corbet@lwn.net, andriy.shevchenko@linux.intel.com,
-        ashok.raj@intel.com, rostedt@goodmis.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
-        ravi.v.shankar@intel.com, Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [RFC 00/10] Introduce In Field Scan driver
-Message-ID: <YjBBmEjbIaqTbVt+@kroah.com>
-References: <20220301195457.21152-1-jithu.joseph@intel.com>
- <Yh59rOIH24X+6GyI@kroah.com>
- <Yh5+om/Nr06V0+Qj@kroah.com>
- <Yi/Lb5laEki0JHft@agluck-desk3.sc.intel.com>
+        Tue, 15 Mar 2022 05:17:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 06F234BBBF
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Mar 2022 02:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1647335801;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=0B1oK7Y6TPvG7zAZhjELzTA7yBvJZn6FNRyXd99mRMY=;
+        b=eEIe8rDHAeQZUIs2stM/1KfnLvT/+TqSCOIQEtbdSHDToBSp2P4z+Na9a50EU3cimNyPwo
+        1MUZdwCKQQ6GP7C8Oo8bp2TVASNjZLyv8TyLX/F6PfvYvr3idHXIeMu647aeNWOdF1EPhS
+        v7S918Ekx+Xs4b94c2qlCohbqRZBi80=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-637-XAHiy8qqNXyklqRvhfx13Q-1; Tue, 15 Mar 2022 05:16:39 -0400
+X-MC-Unique: XAHiy8qqNXyklqRvhfx13Q-1
+Received: by mail-ed1-f70.google.com with SMTP id l14-20020a056402344e00b0041593c729adso10260230edc.18
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Mar 2022 02:16:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:from:subject:content-transfer-encoding;
+        bh=0B1oK7Y6TPvG7zAZhjELzTA7yBvJZn6FNRyXd99mRMY=;
+        b=sE33x1wLk+rTGDi8ILy1zjYNkatmhMBi0sy532X2pn4tWmgp0HxKKrm5ZERm3RZhNy
+         P6TJjHVdxm9LAa/juvbvSb5JvwK4sKZ4Stj6s7wEttVvpoJL3i+jPzocYRV+SrPo1N9o
+         9Mn+WOMwgVxHqDI86zwtm/mpXjX1u2+NK+2MwZii2tuq2opfzYI73uoE2L35r0eaFTdH
+         Ivs7ZHorZU9uoDAe+cegf/q+Zaimqv9Xp7It7LfduBWGlNi16LTL7y/ipDVFM5tSejuV
+         Bv8OJlnK2EtM8SAclpBsdvG4QPZLOWpD8fUjsftJn8OpZ/WRm/R2Iy2Ae6oM2Ph4QYdO
+         UYrQ==
+X-Gm-Message-State: AOAM5317wcbLa75PWLIsZ4NlBQWQM4Ido8mYieXXVtr/Lv0hnYHgosF7
+        GVt6HrGE+TeSXOS5H+2ty2ZX5qlBUItro9g2sRdPa1I6ZgiBZBLmkvenwWH9OWGU6Kr3D8TPSmi
+        MxSAQdJdLHzKdAy8b6CPVjOTjcnbXhSBQHg==
+X-Received: by 2002:a17:907:6daa:b0:6d7:27b2:409 with SMTP id sb42-20020a1709076daa00b006d727b20409mr21745575ejc.409.1647335798608;
+        Tue, 15 Mar 2022 02:16:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyxbCUYuGgPpzuD7z5QyZ/Ck26bsrYBabxgdm25czevlgNVKiVh/R1vp23kSXFuwavPg32vcg==
+X-Received: by 2002:a17:907:6daa:b0:6d7:27b2:409 with SMTP id sb42-20020a1709076daa00b006d727b20409mr21745559ejc.409.1647335798364;
+        Tue, 15 Mar 2022 02:16:38 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
+        by smtp.gmail.com with ESMTPSA id z9-20020a05640235c900b00416c894bd41sm7439690edc.16.2022.03.15.02.16.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Mar 2022 02:16:37 -0700 (PDT)
+Message-ID: <03b7d1dc-42af-7964-ab7a-bdcc6644cc71@redhat.com>
+Date:   Tue, 15 Mar 2022 10:16:37 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yi/Lb5laEki0JHft@agluck-desk3.sc.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Content-Language: en-US
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        Bastien Nocera <hadess@hadess.net>
+Cc:     linux-acpi <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: [discuss] Split /sys/firmware/acpi/platform_profile into ac and
+ battery profiles?
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Mar 14, 2022 at 04:10:39PM -0700, Luck, Tony wrote:
-> On Tue, Mar 01, 2022 at 09:14:26PM +0100, Greg KH wrote:
-> > On Tue, Mar 01, 2022 at 09:10:20PM +0100, Greg KH wrote:
-> > > On Tue, Mar 01, 2022 at 11:54:47AM -0800, Jithu Joseph wrote:
-> > > > Note to Maintainers:
-> > > > Requesting x86 Maintainers to take a look at patch01 as it
-> > > > touches arch/x86 portion of the kernel. Also would like to guide them
-> > > > to patch07 which sets up hotplug notifiers and creates kthreads.
-> > > > 
-> > > > Patch 2/10 - Adds Documentation. Requesting Documentation maintainer to review it.
-> > > > 
-> > > > Requesting Greg KH to review the sysfs changes added by patch08.
-> > > 
-> > > "RFC" means you are not comfortable submitting the changes yet, so you
-> > > don't need my review at this point in time.  Become confident in your
-> > > changes before asking for others to review the code please.
-> > 
-> > Hint, it needs work, sysfs_emit() for one thing, lack of reference
-> > counting on your cpu objects is another...
-> 
-> Greg,
-> 
-> Thanks for the comments. They triggered a bunch of internal
-> re-thinking of the interface.  One idea that has some traction
-> (Credit/Blame: Dan Williams) is to:
+Hi All,
 
-First off, I did not pay attention to this thread at all, given that the
-very basics of this patch series had such obvious problems.  I only saw
-the contents, not the context in which you wanted to make these changes.
+AMD based ThinkPads (1) have separate ac (connected to an external
+powersource) and on battery tuned versions of the low-power, balanced and
+performance profiles. So in essence they have six profiles: low-power-ac,
+low-power-battery, balanced-ac, balanced-battery, performance-ac and
+performance-battery.
 
-So I have no real thoughts as to what your design should be, as I have
-no idea what it is you even want to accomplish at all.
+The question is how to deal with this. There is a previous discussion
+about this here:
+https://lore.kernel.org/platform-driver-x86/20220301201554.4417-1-markpearson@lenovo.com/
 
-That being said, I do have one comment:
+From that previous discussions 3 possible solutions come to mind:
 
-> 1) Don't put anything in /sys/devices/system/cpu/*
-> 2) Driver creates some info/control files in its own
->    corner of /sys/devices/.../ifs
-> 3) No per-cpu files ... run a test with:
->    # echo ${cpu} > /sys/devices/.../ifs/run_test
-> 4) No test result files.
->    When tests complete they report using uevents
-> 
-> Using uevent to report means that we can easily have
-> mutiple parts to the result (pass/fail/incomplete status, as well
-> as diagnostic details about the reason for the failure,
-> or why the test was not completed).
-> 
-> This seems a novel use of uevent ... is it OK, or is is abuse?
+1. Simply treat this as 6 different profiles, maybe with documenting
+   -ac/-battery postfixes for the profile-names and let userspace
+   sort it out.
 
-Don't create "novel" uses of uevents.  They are there to express a
-change in state of a device so that userspace can then go and do
-something with that information.  If that pattern fits here, wonderful.
+Pro:    -Simple from the kernel side
+Contra: -Does not work with existing userspace code
+        -This is quite ugly IMHO / does not feel right
 
-I doubt you can report "test results" via a uevent in a way that the
-current uevent states and messages would properly convey, but hey, maybe
-I'm wrong.
+2. Only export three profiles to userspace, while going "all in" on this
+   concept and change drivers/acpi/platform_profile.c to add new:
+   /sys/firmware/acpi/platform_profile_ac
+   /sys/firmware/acpi/platform_profile_battery
+   files which can contain different desired settings for the ac/battery
+   case and have the kernel automatically switch between the two and
+   also have it pass the ac/battery state to
+   platform_profile_handler.profile_set so that for hw which has
+   different ac/battery flavors of the profile the driver knows which
+   one to select (without needing to detect this itself)
 
-good luck!
+Pro:    -This matches well with the behavior which we want for the user
+         (which is for the system to save the profile as 2 separate settings
+          for ac/battery and switch the profile to the last selected setting
+          for ac/battery when the state changes)
+        -Solve the ac/battery state listening/notification only once
+         instead of having all platform_profile drivers DIY
+Contra: -This means deprecating /sys/firmware/acpi/platform_profile and
+         defining how it maps to the 2 new files, e.g. if it is written
+         does that only set the current active profile, or both ?
+        -Userspace needs to be adjusted to use the new uapi and once it
+         has been adjusted it also still needs to work on the older
+         kernels which will be tricky/nasty to implement and also is
+         a problem from CI / testing pov.
 
-greg k-h
+3. Only export three profiles to userspace and have the
+   drivers/acpi/platform_profile.c "core" code pass the ac/battery state
+   to platform_profile_handler.profile_set so that for hw which has
+   different ac/battery flavors of the profile the driver knows which
+   one to select (without needing to detect this itself)
+
+Pro:    -Solve the ac/battery state listening/notification only once
+         instead of having all platform_profile drivers DIY
+        -Leaves the existing userspace API 100% unchanged and leaves
+         existing userspace code working without it requiring any
+         changes
+Contra: -As part of the discussion on this the RFE to "have separate
+         "last selected" ac/battery profile settings and automatically
+         switch when the state changes" has surfaced; and that is
+         not solved
+
+
+Writing it down like this, to me 3. is the clear winner. The only
+downside of 3. I can come up with arguably is better solved in
+userspace (2), esp. since this will likely also require some UI design
+work to somehow make it clear to the user that there are two different
+settings (3).
+
+Also even if no UI changes are deemed necessary this will still require
+userspace changes to save+restore the two separate "last selected"
+profile settings over reboots.
+
+Please let me know what you think of this, and of course another
+completely different approach is welcome too.
+
+Regards,
+
+Hans
+
+
+1) Although AMD based ThinkPads are the trigger for this discussion,
+   this applies to more new AMD based laptops, so this is not ThinkPad
+   specific
+
+2) IMHO it would be good to file a RFE issue for this against p-p-d:
+   https://gitlab.freedesktop.org/hadess/power-profiles-daemon/-/issues/new
+
+3) AFAICT Windows does the 2 separate "last selected" ac/battery profile
+   settings thing while just showing a single slider in its UI, but that
+   really is a whole other discussion which the userspace/UI folks can have.
+
