@@ -2,99 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EEBC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Mar 2022 08:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F902C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Mar 2022 15:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347338AbiCPIKl (ORCPT
+        id S231613AbiCPPEV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Mar 2022 04:10:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42302 "EHLO
+        Wed, 16 Mar 2022 11:04:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346256AbiCPIKk (ORCPT
+        with ESMTP id S235051AbiCPPEU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Mar 2022 04:10:40 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FDAC5E779;
-        Wed, 16 Mar 2022 01:09:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7ED88B81A1F;
-        Wed, 16 Mar 2022 08:09:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8213CC340E9;
-        Wed, 16 Mar 2022 08:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1647418163;
-        bh=9MeOuZ7Yb5TifZzFGIEaV3LSES97K18572IADr0rgLw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ds4oKayjlDznyeIMcJbkfh4rTkv1b4It02XA8am1nY113Xy4U/FEyNmAreeBKRikd
-         0YzEDewn6u91E4uZxR3Gj4Kcl2amkC0qh4XGWeEWrU+d7UpanofIwKmelRTgMWBcgu
-         m0hpfVhCYrZpDtSU52Y4BbaI7lrs8Bl6n+ko7J9k=
-Date:   Wed, 16 Mar 2022 09:09:19 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>
-Subject: Re: [RFC 00/10] Introduce In Field Scan driver
-Message-ID: <YjGbL2HzksucTn0h@kroah.com>
-References: <20220301195457.21152-1-jithu.joseph@intel.com>
- <Yh59rOIH24X+6GyI@kroah.com>
- <Yh5+om/Nr06V0+Qj@kroah.com>
- <Yi/Lb5laEki0JHft@agluck-desk3.sc.intel.com>
- <YjBBmEjbIaqTbVt+@kroah.com>
- <c4af81bd788e43dda915a1052af0be55@intel.com>
- <YjCwI4N00reBuIqA@kroah.com>
- <de895b9617aa412e95fdd14fcad285fa@intel.com>
+        Wed, 16 Mar 2022 11:04:20 -0400
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 050BDDD1;
+        Wed, 16 Mar 2022 08:03:05 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-2db2add4516so26819407b3.1;
+        Wed, 16 Mar 2022 08:03:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T3SJ5YDfAg8vxk1lUsDwNCTnUNWTHuR0rmjK28qtH6A=;
+        b=O1jvcTCZKE+RdBAVzuf2wkBlSPe7CjGnXjGauF7C9qyBFb6ADMe4vcHs9OJEUM7a4J
+         bamEuV8o7QBVwwhfqV3J2roYgil3Ty/U8aLKN8kYWIInpFb5t7aDraVybZqcLV+ybPJs
+         MCwi0PoOxPiOruJ7zU1cpkjoIUYKBnOU3NqW/J6BCIRR0UTsUf3XBRF7HaSs1rJb9ks3
+         pMN0JBL6YggwgzM3rq0ZjHbU4HmnN7xEb7UWrkOZiXa0zX5mO1TjsPdMoJh1ejS8I3MP
+         l3/wLHNHq64reyR9jp/9KsidZmqOr7u+FE7kOXIz+17ZqmTCMazqdRuB+VlVYXXvo+Jn
+         KQhA==
+X-Gm-Message-State: AOAM532yOi4Y//UuwII6hlnO9rb0mrp7/XvH7cT8s6iJJcTB+G4pk4/1
+        r3dAdJzRuJjnIIEcCx7hYc6e1yYOD90+N71grWYn+Mbxye8=
+X-Google-Smtp-Source: ABdhPJx8XwkPb1qcu9vvLsSY/8j8oi5nMsx+tdOnwwU214adK0Mui6x11R9aruJ0nRP2rnd7nNv7wBdA7ed1eIaDe1w=
+X-Received: by 2002:a81:36cf:0:b0:2e5:2597:a026 with SMTP id
+ d198-20020a8136cf000000b002e52597a026mr452477ywa.301.1647442984221; Wed, 16
+ Mar 2022 08:03:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <de895b9617aa412e95fdd14fcad285fa@intel.com>
+References: <20220314050340.1176-1-mario.limonciello@amd.com>
+ <0101142d-3ea6-a47b-be26-76aaaac46b0a@redhat.com> <BL1PR12MB5157664C2AA7D80E7DF48EC9E20F9@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <8841ecb6-6c2c-164f-76df-54c4410faa20@redhat.com>
+In-Reply-To: <8841ecb6-6c2c-164f-76df-54c4410faa20@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 16 Mar 2022 16:02:53 +0100
+Message-ID: <CAJZ5v0gFzDAKHxDLf7Wq52fcGPx+jTWMqBb9oNWuqOSDJrgb1g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] ACPI / x86: Add support for LPS0 callback handler
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "Goswami, Sanket" <Sanket.Goswami@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 04:10:59PM +0000, Luck, Tony wrote:
-> > Again, I have no idea what you are doing at all with this driver, nor
-> > what you want to do with it.
+On Mon, Mar 14, 2022 at 2:37 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 3/14/22 14:32, Limonciello, Mario wrote:
+> > [Public]
 > >
-> > Start over please.
-> 
-> TL;DR is that silicon ages and some things break that don't have parity/ECC checks.
-> So systems start behaving erratically. If you are lucky they crash. If you are less lucky
-> they give incorrect results.
-> 
-> There's a paper (and even a movie 11 minutes) that describe the research by
-> Google on this.
-> https://sigops.org/s/conferences/hotos/2021/papers/hotos21-s01-hochschild.pdf  
-> (https://www.youtube.com/watch?v=QMF3rqhjYuM)    
+> >>> +int acpi_register_lps0_callbacks(struct lps0_callback_handler *arg)
+> >>> +{
+> >>> +   struct lps0_callback_handler *handler;
+> >>> +
+> >>> +   if (!lps0_device_handle || sleep_no_lps0)
+> >>> +           return -ENODEV;
+> >>> +
+> >>> +   handler = kmalloc(sizeof(*handler), GFP_KERNEL);
+> >>> +   if (!handler)
+> >>> +           return -ENOMEM;
+> >>> +   handler->prepare_late_callback = arg->prepare_late_callback;
+> >>> +   handler->restore_early_callback = arg->restore_early_callback;
+> >>> +   handler->context = arg->context;
+> >>> +
+> >>> +   mutex_lock(&lps0_callback_handler_mutex);
+> >>> +   list_add(&handler->list_node, &lps0_callback_handler_head);
+> >>> +   mutex_unlock(&lps0_callback_handler_mutex);
+> >>> +
+> >>> +   return 0;
+> >>> +}
+> >>> +EXPORT_SYMBOL_GPL(acpi_register_lps0_callbacks);
+> >>
+> >> Typically with calls like these we simply let the caller own the struct
+> >> lps0_callback_handler
+> >> and only make the list_add() call here. Typically the struct
+> >> lps0_callback_handler will
+> >> be embedded in the driver_data of the driver registering the handler and it
+> >> will
+> >> call the unregister function before free-ing its driver_data.
+> >>
+> >
+> > When I put this together I was modeling it off of `struct acpi_wakeup_handler`
 
-Both you and Dan are assuming that I actually care about this hardware
-and driver enough to read a presentation or watch a video about it.
-Sorry, but that's not happening :)
+The structure added by this patch is more like struct dev_pm_ops, though.
 
-I'm saying these questions as you all need to be asking yourself that,
-and figuring out what the proper api is.  That's not my job here.  I was
-just pointing out the problems in your original submission that you all
-should have caught before sending it out...
+> > which the handling and the use in the kernel doesn't seem to follow the design pattern
+> > you describe.
+>
+> Ah, fair enough. Whatever Rafael prefers works for me.
 
-good luck!
+My preference at this point would be to use a notifier chain, unless
+that's not sufficient for some reason, because it appears to match the
+notifier usage model.
 
-greg k-h
+> I pointed this out, because making this change would also make 4/5 a bit
+> cleaner. You are recreating the same struct lps0_callback_handler on
+> stack twice there, which looked weird to me.
+>
+> Note if Rafael wants to stick with the approach from this v3, then
+> I guess that the approach in 4/5 is fine.
+> > Rafael - can you please confirm which direction you want to see here for this?
+
+Done above.
