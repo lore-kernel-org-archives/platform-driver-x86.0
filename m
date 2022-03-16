@@ -2,486 +2,136 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE3AC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Mar 2022 18:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF043C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Mar 2022 19:24:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240709AbiCPSvV (ORCPT
+        id S237072AbiCPTZ0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Mar 2022 14:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44240 "EHLO
+        Wed, 16 Mar 2022 15:25:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238021AbiCPSvV (ORCPT
+        with ESMTP id S241391AbiCPTZU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Mar 2022 14:51:21 -0400
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F07EF6BDC1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Mar 2022 11:50:04 -0700 (PDT)
-Received: by mail-qk1-x72c.google.com with SMTP id b189so2615836qkf.11
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Mar 2022 11:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=kinBQ92i7AYgDCpxSEfZc5B1byENnLsFEOXSvuF1v0U=;
-        b=CTnJ6+EEg9PUlF3ldalS0tgViF8FCeuybn93msbQXrXlxQVmB2+R6W7mYT/Zze/JmM
-         FxSkJrWHd5YSfa6wKBKUBvQGZGDNViL6TJ9ugj9x1H2jAY0hjSgMI/HfIjAPRrK5fR8I
-         DLruOaIa9EDTS1gxH/noidB/NscFNmlobI6k5KkX7+D4USy4QXsdxLzbbKibLxGjAf9c
-         e4uMD7ZIdYHn2QlSLIiu0Y6Oa3g7tggrWC2r8LeJvWtVB/xJZ6HgLsmrfIfA/vBYpg10
-         kkbGXKhj10nuMBTyZA/nstjmS/nYSFpQMqackZoyIn6pMfJRw9KiAV5nTd7oFhlfxpQg
-         P+rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=kinBQ92i7AYgDCpxSEfZc5B1byENnLsFEOXSvuF1v0U=;
-        b=5c//6n3sKgVlF2FoT6J6lKq2AYrXeUZPANcx+F1viqrqxEBmI8GF+n96ZjgjaImOY9
-         eU5Tlaz2WJSaaUGHnL/eZBvKxxyV/q7Lfz4hbkoCY9DAmcxi9pvrNqkDFSxSCuA70BMW
-         OUmVwi54M5fFnHYMgRWEsHGKzlS3oxBtb0bS5IbtkxKELdOQGa3NaIWcKAmsUTrCQalZ
-         hFdQzM1xjzVlMzpigX66k7zEv61wDWTEgkeAqvaivLoqFMXXKV//a6cvjHpUdihO5F49
-         q3+Kmlgv9MPbODXIN5tfemLUXQpSi+C6N2vWCg81+9CYEpTMSGCtnChelKkRtzNY9svH
-         WwcQ==
-X-Gm-Message-State: AOAM530gcRYrs3gHkyLOmIDD4zKz/tuwp1jF4VXl3raNFTExBDqT0W80
-        1+UwCLK2l1VAgeTj00bVl6RLykFnHCFYJ7qRYbRxPAKYd9ckmA==
-X-Google-Smtp-Source: ABdhPJx4w1Hl59NtPhOhQGA73odgLIjjOnvVbxSUZSV+rucPsIguR+z3cIDyCopSxTFa8P0jYGbpRiFSfEHxMt1JMlU=
-X-Received: by 2002:a05:620a:2a13:b0:67d:926a:ea8b with SMTP id
- o19-20020a05620a2a1300b0067d926aea8bmr840308qkp.130.1647456603892; Wed, 16
- Mar 2022 11:50:03 -0700 (PDT)
+        Wed, 16 Mar 2022 15:25:20 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2060.outbound.protection.outlook.com [40.107.93.60])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3766C366BE
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Mar 2022 12:24:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ag+LoO8I6aNBhHqy+41SSUZtbdXQ/HgQyRgMYEu+/RhBfF3UemWX2vtWrPQm/fYqLB5DvI1mdAX4mTZKF4BjEzwF4CeHcSX+bJmuy9k6Iz4ILiPNWnLabMkgAoLRmZeeFe6ri1BnCcxF2Vz7lHeI9ee6vK8CJxAq5puwMQXNmRXGiqpwX+c7/ABbFKklV2PSDt6yJjeBz231ToV0bUqsemY/51kO1TeAPCEYIZADilXvBn5FtXqFvCzPVQ8nif5EqxxrQ1usPuDikPx/Y6XHDVfgBocah/dmDD4AZANhPiqX5+HIeUFJHA+GH9tZ/OLmTrbHbHZKEiHIxIpiBnju8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g7lz5BOHkt5yP/RPIfhvwdMcQUwoRW9XjvBqy/idhJg=;
+ b=ACmJFBcELhYbVlIJMjwChsw8V07ggjPGreddCn1IsrOzuDJiPO0CT0SvjCk3kJ0C96byVO0WiK4b9mzZc6qB84dQmPtKhTg7Hp4+3/jjTfrlmcNeqVHkcCNZEzm0bsm6h4I4MTJDvwwwzenqUalGWucP2UHoUCEFHmWdnA3UkdzfFiVQmFJsLef+si9SFpjvHRw/QYSzmaEg5+R5bvBCftTrhFRTUA3OkYGmf+LuSovgcG9DKI4nkZjt9JEVlkvoAkvRqy8dIvIMF9kYh4uyXLqgnw416FGNedMfJV0TV7pJirEr2ZEOC8deRtBaKW00z5xLkNYML2M5Xil+GLVyhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 12.22.5.235) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g7lz5BOHkt5yP/RPIfhvwdMcQUwoRW9XjvBqy/idhJg=;
+ b=nV25Ltr2Ec2IW1i9wQ47fQjb47qv8y/3IE60pTfWEZm9XtOuOwKmBYNTzsUOvOaLjVT/DfyaDoOPlIiKAYsVpQ5zPOmLJhu6JCVQ6FAzETZDyC1LF4B3Aqg6Myl/E3AZ+q0C1bXE3Pb/2elbf5Vlm61L62f1JnyfdS3yr46XDpC5N/6sWeLXAMneCSnLgU92W4dYI2CC4p9kdWRQvkGf2qq8tK6WPPsEASL0y2l2cGmBxHDQ1apWE33zc+katoxGFfeoMOF1fGPtyrkMZLFyHSodsakLlHDV0afTyQdjObW9+Itn1mVbQu+sy5gRfOtTo9yl19PO5vSbSXPHPSp33g==
+Received: from BN6PR11CA0053.namprd11.prod.outlook.com (2603:10b6:404:f7::15)
+ by MWHPR12MB1774.namprd12.prod.outlook.com (2603:10b6:300:112::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.14; Wed, 16 Mar
+ 2022 19:24:02 +0000
+Received: from BN8NAM11FT003.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:f7:cafe::89) by BN6PR11CA0053.outlook.office365.com
+ (2603:10b6:404:f7::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.14 via Frontend
+ Transport; Wed, 16 Mar 2022 19:24:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.235)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 12.22.5.235 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.235; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (12.22.5.235) by
+ BN8NAM11FT003.mail.protection.outlook.com (10.13.177.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.5081.14 via Frontend Transport; Wed, 16 Mar 2022 19:24:01 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.32; Wed, 16 Mar
+ 2022 19:23:57 +0000
+Received: from [10.20.113.98] (10.126.231.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 16 Mar
+ 2022 12:23:54 -0700
+Message-ID: <884d57c1-5f41-ea80-dfaa-ab5b2f310891@nvidia.com>
+Date:   Wed, 16 Mar 2022 14:23:46 -0500
 MIME-Version: 1.0
-References: CAJOTRr7_hQ+DRav5VSYmBxwnEr5ZtZ5RbSvUBMidRAxehCDCsQ@mail.gmail.com <20220316184452.836313C4B1@lindbergh.monkeyblade.net>
-In-Reply-To: <20220316184452.836313C4B1@lindbergh.monkeyblade.net>
-From:   Alexandru Dinu <alex.dinu07@gmail.com>
-Date:   Wed, 16 Mar 2022 20:49:27 +0200
-Message-ID: <CAJOTRr4YzHO==FCsRF6kYkLs7MaUVc_RWEvcbnV9zn6-9946cw@mail.gmail.com>
-Subject: Re: Undelivered Mail Returned to Sender
-To:     platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH] nvidia-wmi-ec-backlight: Add workarounds for confused
+ firmware
+Content-Language: en-US
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+CC:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Alexandru Dinu <alex.dinu07@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+References: <20220316012516.2233984-1-ddadap@nvidia.com>
+ <v_ODhOndx3g1l-BhfKGCB6_nLY83LTc5vz1YDrVEVVF5CmgKUs1x9bmROyWXhmYkeQRVVnvfBnyrFyHaEKqtoZE5P7lKJJ1j_vE0J1Piq2Y=@protonmail.com>
+ <0fbfd32e-904d-1e04-8508-e863c357a2ff@nvidia.com>
+ <BL1PR12MB5157B047D2DD5548FE08F0ABE2119@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <7d56afc0-3428-6ab5-ba41-c5ce4f1a7ad7@nvidia.com>
+ <BL1PR12MB5157CA033FD8117DCC79D0A4E2119@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <d3d86512-42c6-a5df-752d-efbb89257d3a@nvidia.com>
+ <BL1PR12MB5157FD128325F8CCB77E390EE2119@BL1PR12MB5157.namprd12.prod.outlook.com>
+From:   Daniel Dadap <ddadap@nvidia.com>
+In-Reply-To: <BL1PR12MB5157FD128325F8CCB77E390EE2119@BL1PR12MB5157.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.231.35]
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 240489c1-bb2e-47c8-5498-08da078286f7
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1774:EE_
+X-Microsoft-Antispam-PRVS: <MWHPR12MB1774354C7DE4D9571D99E174BC119@MWHPR12MB1774.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7f7AaB3o1mAyzvDlDyuQT5+CI1bqyt3q98RpJ2t25UU1o9ORPgrRnJhk2sdd2GhrzS16ixoMg2MyS3Tu/oIuTpfC6nEuIslL46hkGOg3ZMXN3EfSNB1zet7YR1kxqcHqQ0X1QimWKUZi9O6Xaz1IlEV2MlQIDdAbvbbXC1kGFOY2JYKXGTZKhYLFUoaOAmr39zCOoLE7VsHnOW3h7+zrBo+lGLSPBeTZN3UI99kh/SZ/lByrlFE2tbn5QFqPnvtydgv1nbJH2TPqmnHh34xmfge88LYV5oTguslBTMhuIthodk5g1UQwdtAeWL/0/NTBYsVzDN8wttf6Dh5NptR+6y/mVJg7UZ3C/BF7NZbREgp9SE2JCUAdtxn/1KK2IR+cBLDi9sVGGy9qViZsh5uObpi75J32JC0Xc4onbTVhQvWziqooV82mqR+bl6vl3UiQbkjfSyqWnFrQHR3n+KLEmS+uZ7DGmsqzp4I/FO+RZcqC0TjHrHi1bw6JouoV5PnG3oeFTh4+mq+uTdjHNtjIZCvEJIp1106s8caf6iex5PNoDz1JjiLnZ3/6NlIYMXm47oLoKg26FqIH4nw2JTDpZUJigwX1SMTWrMVAneLQniAexMG6E9BxrHjtkpbkzHBpaPcSevlWbAKJDxvXkGXR7+ULwOleFOhl5AoeG70hqkwbqSMQx5CFL/BBUVvY5PomaNobNDCWuDbuderstZJb6ZM8STlCG5YoLLsac2XPto5xhhNPVMpKiKN9UrAjCzJC
+X-Forefront-Antispam-Report: CIP:12.22.5.235;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(36840700001)(46966006)(110136005)(54906003)(16576012)(316002)(26005)(53546011)(356005)(4744005)(36860700001)(5660300002)(16526019)(186003)(31686004)(2906002)(81166007)(336012)(426003)(83380400001)(8936002)(36756003)(47076005)(82310400004)(31696002)(4326008)(8676002)(508600001)(2616005)(70206006)(70586007)(86362001)(40460700003)(6666004)(43740500002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2022 19:24:01.5970
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 240489c1-bb2e-47c8-5498-08da078286f7
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.235];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT003.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1774
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On 3/16/22 13:25, Limonciello, Mario wrote:
+> [Public]
+>
+>
+> I guess when we see backlight issues on these A+N designs the checks should be:
+> 1) Are they supposed to be using the nvidia-wmi-ec-backlight driver?
+> 2) Is their kernel new enough to have it?
+> 3) Do they have the config enabled?
+>
+> Do you have a script or could you perhaps include some documentation we can
+> point people to check "1" so we don't always have to go tear apart ACPI tables
+> and make guesses?
+>
+> I guess it's something like grab _WDG and then parse it to see if there is an entry.
 
-> I'll send out a v2 shortly: Alex, can you
-> please retest when I do to make sure there aren't any regressions? None
-> of these suggestions affect the core flow of how either of the
-> workarounds work, so I'm not expecting any that wouldn't also reproduce
-> on my EC backlight system that doesn't have either of these problems,
-> but I can send you the updated version off-list first if you prefer.
 
-It's ok either way. You can send me an updated version off-list.
+Probably the most foolproof way would be to check for the GUID 
+603E9613-EF25-4338-A3D0-C46177516DB7 in /sys/bus/wmi/devices. (2) should 
+be true for vanilla 5.16 and later, and many recent pre-5.16 distro 
+kernels with HWE backports.
 
-> Alex, just FYI this was something that came to an AMD bug tracker and wan=
-ted you to be aware there are W/A going into nvidia-wmi-ec-backlight for so=
-me firmware problems with the mux.
-> IIRC that was the original suspicion too on the bug reports.
-
-Yes, thanks -- I followed this issue first:
-https://gitlab.freedesktop.org/drm/amd/-/issues/1671.
-
-> However I think it's still worth at least noting near the quirk in a comm=
-ent
-> what firmware version it was identified.  If later there is confirmation =
-that
-> a particular firmware version had fixed it the quirk can be adjusted to b=
-e
-> dropped.
-
-That's a good tip. The laptop I tested this on (Lenovo Legion S7
-15ACH6) originally shipped with:
-
-UEFI: LENOVO v: HACN27WW date: 08/02/2021
-
-There is an update to version HACN31WW (see lenovo support:
-https://support.lenovo.com/ro/en/downloads/ds550201-bios-update-for-windows=
--10-64-bit-legion-s7-15ach6)
--- which I applied, however, the issue was not addressed, which seems
-to be expected given the rather short /changelog:
-HACN31WW
-BIOS Notification    :
-1. Fixed
- 1) N/A.
-2. Add
-  1) Add BOE0A1C support with Cookie and DR Key
-3. Modified
-  1) Modify MinShortTerm & MinLongTerm PowerLimit value
-EC Notification      :
-1. Fixed
-  1) None.
-2. Add
-   1) None.
-3. Modified
-  1)None.
-
-> If you end up introducing a module parameter to try to activate these qui=
-rks
-> it might be viable to ask the folks in those issues to try the v2 of your=
- patch too
-> when you're ready with the module parameter.
-
-I posted a link to this mailing list to
-https://gitlab.freedesktop.org/drm/amd/-/issues/1671, so people can be
-aware and try to test.
-
-Regards,
-Alex
-
-On Wed, 16 Mar 2022 at 20:45, Mail Delivery System
-<MAILER-DAEMON@lindbergh.monkeyblade.net> wrote:
->
-> This is the mail system at host lindbergh.monkeyblade.net.
->
-> I'm sorry to have to inform you that your message could not
-> be delivered to one or more recipients. It's attached below.
->
-> For further assistance, please send mail to postmaster.
->
-> If you do so, please include this problem report. You can
-> delete your own text from the attached returned message.
->
->                    The mail system
->
-> <platform-driver-x86@vger.kernel.org>: host 23.128.96.18[23.128.96.18] sa=
-id:
->     550 5.7.1 Content-Policy reject msg: The message contains HTML subpar=
-t,
->     therefore we consider it SPAM or Outlook Virus.  TEXT/PLAIN is accept=
-ed.!
->     BF:<U 0.5>; S1353677AbiCPSqF (in reply to end of DATA command)
->
->
->
-> ---------- Forwarded message ----------
-> From: Alexandru Dinu <alex.dinu07@gmail.com>
-> To: platform-driver-x86@vger.kernel.org
-> Cc:
-> Bcc:
-> Date: Wed, 16 Mar 2022 20:44:13 +0200
-> Subject: Re: Undelivered Mail Returned to Sender
-> Hi,
->
-> > I'll send out a v2 shortly: Alex, can you
-> > please retest when I do to make sure there aren't any regressions? None
-> > of these suggestions affect the core flow of how either of the
-> > workarounds work, so I'm not expecting any that wouldn't also reproduce
-> > on my EC backlight system that doesn't have either of these problems,
-> > but I can send you the updated version off-list first if you prefer.
->
-> It's ok either way. You can send me an updated version off-list.
->
-> > Alex, just FYI this was something that came to an AMD bug tracker and w=
-anted you to be aware there are W/A going into nvidia-wmi-ec-backlight for =
-some firmware problems with the mux.
-> > IIRC that was the original suspicion too on the bug reports.
->
-> Yes, thanks -- I followed this issue first: https://gitlab.freedesktop.or=
-g/drm/amd/-/issues/1671.
->
-> > However I think it's still worth at least noting near the quirk in a co=
-mment
-> > what firmware version it was identified.  If later there is confirmatio=
-n that
-> > a particular firmware version had fixed it the quirk can be adjusted to=
- be
-> > dropped.
->
-> That's a good tip. The laptop I tested this on (Lenovo Legion S7 15ACH6) =
-originally shipped with:
->
-> UEFI: LENOVO v: HACN27WW date: 08/02/2021
->
-> There is an update to version HACN31WW (see lenovo support: https://suppo=
-rt.lenovo.com/ro/en/downloads/ds550201-bios-update-for-windows-10-64-bit-le=
-gion-s7-15ach6) -- which I applied, however, the issue was not addressed, w=
-hich seems to be expected given the rather short /changelog:
-> HACN31WW
-> BIOS Notification    :
-> 1. Fixed
->  1) N/A.
-> 2. Add
->   1) Add BOE0A1C support with Cookie and DR Key
-> 3. Modified
->   1) Modify MinShortTerm & MinLongTerm PowerLimit value
-> EC Notification      :
-> 1. Fixed
->   1) None.
-> 2. Add
->    1) None.
-> 3. Modified
->   1)None.
->
-> > If you end up introducing a module parameter to try to activate these q=
-uirks
-> > it might be viable to ask the folks in those issues to try the v2 of yo=
-ur patch too
-> > when you're ready with the module parameter.
->
-> I posted a link to this mailing list to https://gitlab.freedesktop.org/dr=
-m/amd/-/issues/1671, so people can be aware and try to test.
-> Regards,
-> Alex
->
-> On Wed, 16 Mar 2022 at 20:40, Mail Delivery System <MAILER-DAEMON@lindber=
-gh.monkeyblade.net> wrote:
->>
->> This is the mail system at host lindbergh.monkeyblade.net.
->>
->> I'm sorry to have to inform you that your message could not
->> be delivered to one or more recipients. It's attached below.
->>
->> For further assistance, please send mail to postmaster.
->>
->> If you do so, please include this problem report. You can
->> delete your own text from the attached returned message.
->>
->>                    The mail system
->>
->> <platform-driver-x86@vger.kernel.org>: host 23.128.96.18[23.128.96.18] s=
-aid:
->>     550 5.7.1 Content-Policy reject msg: The message contains HTML subpa=
-rt,
->>     therefore we consider it SPAM or Outlook Virus.  TEXT/PLAIN is accep=
-ted.!
->>     BF:<U 0.499997>; S240813AbiCPSkN (in reply to end of DATA command)
->>
->>
->>
->> ---------- Forwarded message ----------
->> From: Alexandru Dinu <alex.dinu07@gmail.com>
->> To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
->> Cc: Daniel Dadap <ddadap@nvidia.com>, "Barnab=C3=A1s P=C5=91cze" <pobrn@=
-protonmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86=
-@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, "markgross@kernel.o=
-rg" <markgross@kernel.org>, "Deucher, Alexander" <Alexander.Deucher@amd.com=
->
->> Bcc:
->> Date: Wed, 16 Mar 2022 20:38:21 +0200
->> Subject: Re: [PATCH] nvidia-wmi-ec-backlight: Add workarounds for confus=
-ed firmware
->> Hi,
->>
->>> > I'll send out a v2 shortly: Alex, can you
->>> please retest when I do to make sure there aren't any regressions? None
->>> of these suggestions affect the core flow of how either of the
->>> workarounds work, so I'm not expecting any that wouldn't also reproduce
->>> on my EC backlight system that doesn't have either of these problems,
->>> but I can send you the updated version off-list first if you prefer.
->>
->>
->> It's ok either way. You can send me an updated version off-list.
->>
->>> > Alex, just FYI this was something that came to an AMD bug tracker and=
- wanted you to be aware there are W/A going into nvidia-wmi-ec-backlight fo=
-r some firmware problems with the mux.
->>> IIRC that was the original suspicion too on the bug reports.
->>
->>
->> Yes, thanks -- I followed this issue first: https://gitlab.freedesktop.o=
-rg/drm/amd/-/issues/1671.
->>
->>> > However I think it's still worth at least noting near the quirk in a =
-comment
->>> what firmware version it was identified.  If later there is confirmatio=
-n that
->>> a particular firmware version had fixed it the quirk can be adjusted to=
- be
->>> dropped.
->>
->>
->> That's a good tip. The laptop I tested this on (Lenovo Legion S7 15ACH6)=
- originally shipped with:
->>
->> UEFI: LENOVO v: HACN27WW date: 08/02/2021
->>
->> There is an update to version HACN31WW (see lenovo support) -- which I a=
-pplied, however, the issue was not addressed, which seems to be expected gi=
-ven the rather short /changelog:
->> HACN31WW
->> BIOS Notification    :
->> 1. Fixed
->>  1) N/A.
->> 2. Add
->>   1) Add BOE0A1C support with Cookie and DR Key
->> 3. Modified
->>   1) Modify MinShortTerm & MinLongTerm PowerLimit value
->> EC Notification      :
->> 1. Fixed
->>   1) None.
->> 2. Add
->>    1) None.
->> 3. Modified
->>   1)None.
->>>
->>> > If you end up introducing a module parameter to try to activate these=
- quirks
->>> it might be viable to ask the folks in those issues to try the v2 of yo=
-ur patch too
->>> when you're ready with the module parameter.
->>
->>
->> I posted a link to this mailing list to https://gitlab.freedesktop.org/d=
-rm/amd/-/issues/1671, so people can be aware and try to test.
->>
->> Regards,
->> Alex
->>
->> On Wed, 16 Mar 2022 at 20:25, Limonciello, Mario <Mario.Limonciello@amd.=
-com> wrote:
->>>
->>> [Public]
->>>
->>> > >
->>> > > IIRC this is the bug you want linked in the commit message:
->>> > >
->>> > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fg=
-itla
->>> > b.freedesktop.org%2Fdrm%2Famd%2F-
->>> > %2Fissues%2F1671&amp;data=3D04%7C01%7CMario.Limonciello%40amd.com
->>> > %7C5559a4f23f46426add1808da0773b4ac%7C3dd8961fe4884e608e11a82d994
->>> > e183d%7C0%7C0%7C637830490785879396%7CUnknown%7CTWFpbGZsb3d8
->>> > eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3
->>> > D%7C3000&amp;sdata=3DP%2FBcLeN9rnjGam4kh68ZQUBAPIDM4G%2Bk1ukb5
->>> > k%2BRFVg%3D&amp;reserved=3D0
->>> >
->>> >
->>> > Ah, thanks. Most of the people on this bug seem like their problem wa=
-s
->>> > that they didn't have the nvidia-wmi-ec-backlight driver, which also
->>> > didn't exist at the time the bug was filed. There is one person with =
-a
->>> > newer comment reporting behavior that sounds like what this patch wor=
-ks
->>> > around, and it is the same person who initially reported the issue to=
- me. :)
->>> >
->>> >
->>>
->>> Thanks for looking at those.
->>>
->>> > > But these two look possible to be the same root cause:
->>> > >
->>> > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fg=
-itla
->>> > b.freedesktop.org%2Fdrm%2Famd%2F-
->>> > %2Fissues%2F1791&amp;data=3D04%7C01%7CMario.Limonciello%40amd.com
->>> > %7C5559a4f23f46426add1808da0773b4ac%7C3dd8961fe4884e608e11a82d994
->>> > e183d%7C0%7C0%7C637830490785879396%7CUnknown%7CTWFpbGZsb3d8
->>> > eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3
->>> > D%7C3000&amp;sdata=3DBv3lJJOG7BZxlvizh0L4gmHgakzjlJkl7TqGh9HTho4%3D
->>> > &amp;reserved=3D0
->>> >
->>> >
->>> > This one sounds like it might be a different issue, since it was
->>> > apparently working at some point with a kernel that didn't have the E=
-C
->>> > backlight driver, and then not working on a newer kernel that also
->>> > didn't have the EC backlight driver. That is, of course, assuming
->>> > vanilla kernels: it is certainly possible that the EC backlight drive=
-r
->>> > was backported.
->>> >
->>> > >
->>> > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fg=
-itla
->>> > b.freedesktop.org%2Fdrm%2Famd%2F-
->>> > %2Fissues%2F1794&amp;data=3D04%7C01%7CMario.Limonciello%40amd.com
->>> > %7C5559a4f23f46426add1808da0773b4ac%7C3dd8961fe4884e608e11a82d994
->>> > e183d%7C0%7C0%7C637830490785879396%7CUnknown%7CTWFpbGZsb3d8
->>> > eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3
->>> > D%7C3000&amp;sdata=3DJfUhLPRIMVLypLXoAxKhpSw7WIN4M%2BS4Y48MQ
->>> > %2BzXdbk%3D&amp;reserved=3D0
->>> >
->>> >
->>> > This sounds like it could possibly be a simple case of not having the=
- EC
->>> > backlight driver. Notably, the backlight device exposed by the amdgpu
->>> > driver never works, in contrast to the system these workarounds are
->>> > targeting, where the amdgpu driver's backlight device initially works=
-,
->>> > but then stops working after the first suspend/resume cycle (and the =
-EC
->>> > backlight driver doesn't work initially, but then starts working afte=
-r
->>> > suspend/resume).
->>>
->>> I guess when we see backlight issues on these A+N designs the checks sh=
-ould be:
->>> 1) Are they supposed to be using the nvidia-wmi-ec-backlight driver?
->>> 2) Is their kernel new enough to have it?
->>> 3) Do they have the config enabled?
->>>
->>> Do you have a script or could you perhaps include some documentation we=
- can
->>> point people to check "1" so we don't always have to go tear apart ACPI=
- tables
->>> and make guesses?
->>>
->>> I guess it's something like grab _WDG and then parse it to see if there=
- is an entry.
->>>
->>> >
->>> >
->>> > >
->>> > > If you end up introducing a module parameter to try to activate the=
-se
->>> > quirks
->>> > > it might be viable to ask the folks in those issues to try the v2 o=
-f your patch
->>> > too
->>> > > when you're ready with the module parameter.
->>> > >
->>> >
->>> > v1 already has the quirks plumbed up to module parameters (those modu=
-le
->>> > parameters just don't have corresponding sysfs entries). In any case,=
- I
->>> > only see one report between those bugs that sounds like the issue the=
-se
->>> > WARs are meant to address, and since it's from the same reporter, it
->>> > sounds like we won't need to be adding any additional quirks table
->>> > entries right away.
->>> >
->>> >
->>> > >>
->>> > >>> Comments inline as well.
->>> > >>>
->>> > >>>> -----Original Message-----
->>> > >>>> From: Daniel Dadap <ddadap@nvidia.com>
->>> > >>>> Sent: Wednesday, March 16, 2022 10:11
->>> > >>>> To: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
->>> > >>>> Cc: platform-driver-x86@vger.kernel.org; Alexandru Dinu
->>> > >>>> <alex.dinu07@gmail.com>; Hans de Goede <hdegoede@redhat.com>;
->>> > >>>> markgross@kernel.org
->>> > >>>> Subject: Re: [PATCH] nvidia-wmi-ec-backlight: Add workarounds fo=
-r
->>> > >>>> confused firmware
->>> > >>>>
->>> > >> [ ... ]
->>> > >>
->>> > >>
->>> > >>>> On 3/15/22 9:50 PM, Barnab=C3=A1s P=C5=91cze wrote:
->>> > >>>>>    [ ... ]
->>> > >>>>> Lastly, is it expected that these bugs will be properly fixed?
->>> > >>>> Possibly, but I wouldn't hold out hope for it for an issue at th=
-is scale
->>> > >>>> on an already shipping system.
->>> > >>> This question I'm assuming was aimed at narrowing the quirk to on=
-ly
->>> > >>> match certain FW versions or so.  If there is no certainty of whe=
-n/if it
->>> > >>> will be fixed I agree with current direction.
->>> > >>> However I think it's still worth at least noting near the quirk i=
-n a
->>> > comment
->>> > >>> what firmware version it was identified.  If later there is confi=
-rmation
->>> > that
->>> > >>> a particular firmware version had fixed it the quirk can be adjus=
-ted to be
->>> > >>> dropped.
->>> > >>>
->>> > >> Thanks, Mario. Sure, I'll make sure the firmware version this was =
-first
->>> > >> observed in is noted.
->>> > >>
->>> > >>
