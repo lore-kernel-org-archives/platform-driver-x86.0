@@ -2,547 +2,474 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E2FC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Mar 2022 15:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A7EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Mar 2022 15:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243796AbiCPPOh (ORCPT
+        id S1345275AbiCPPbB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Mar 2022 11:14:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46480 "EHLO
+        Wed, 16 Mar 2022 11:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357837AbiCPPN5 (ORCPT
+        with ESMTP id S235673AbiCPPbB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Mar 2022 11:13:57 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2084.outbound.protection.outlook.com [40.107.92.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7FFE6E285
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Mar 2022 08:11:37 -0700 (PDT)
+        Wed, 16 Mar 2022 11:31:01 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2044.outbound.protection.outlook.com [40.107.243.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDFC6AA4E
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Mar 2022 08:29:45 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HzoSM2RVRVq3tKGvvT2kOrTE21upscoXn4m2V0jsldXV4B+Rv11uqGnyrzYwJVhhnW2xkCQoj8EnjLEso/9QDarx/FFTPf4H1oL86eRMBrZSBWr2jbdLq4/KTIcR1U3hcqua9mwo7ETzAPNumZq+OrM2ce+6evj0yUeeNJ+9ZOVYUniZXNXn35LIyCpWX2limGQ8s3elGtJt8IjQ6Ru+c2eeeltvrFPUBtlQuPFapEFjXWpPcCvhiPT6uS5zieR62FIWizqB0o+4r7oFI4twahH5LTKJWMVF8b88pJKfHnZANitOSLEndp6doVE/s8NKjvaFXDzZRoVm7EVAtDcYfw==
+ b=bEotCwZEdx7h7Df6L2Xg2FofR7+zAewyZ7iR+hE+J1L/kx5uGZr48wkymJaM6lDFt94TScui7wgPsdddwRcuWapLORi/oewrIaeng7m5uLMIID8dsCU2ddrDOr+Dr+oaiksLFPOG+Y6/7VMSr9YR9PAL1kOkiXpXjaVDMNVosAOuAkUrObzui7/ed0W87QKixy4g8EOWd5bg7su1nUSRk7eaRXoMFJGEli8tAn/3BEUVNNZGxPGNwxv1ZMRpaMedHAtjJqqRFhBEwarxOa8CVV0vAcEAMlmaGQzCmU8kDYAcTg7MgC5zw1flulHe5hf4OAkXDYHQRd8hcH0H5kMrcw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TZOUFurnJLYeL2CRnvYRB0geaY2qyzOxYT9kMOw5eGQ=;
- b=DXe+NngCyngKXqVXW6wrD6p7NHsBrdsw3LSbp/g5f50yaz5oLWuV13bIDdBBpi6caJdJrUFy/EZjcJa2yv0pFRNpO0jstLiVSGdLGYed/bsj6rFdzhSilPTLGsdRqw3jYnNwjyhXtqSf6i+mNg9ANuO4RDYEd5y5pqBY36x9E7y3jMhx86gF5k3TqbIiW7xJIAoZBMY3ikD1MZZnMGjDLz8Iluqyb3nhPmu+YzftUNpLQUEiF/57z0kfwSZrzo0YGdLlBqiVQIq5gs7isRp0SYWDXtQ+bGHh75ACErmsN70k68t5OCO5GNTe4ZddoQlJDVQtU4whFK9ItFlYc6NEJw==
+ bh=mfxwutYEoRyeFEWFO4ZBZ8gD5nv6EIZDIHb/FCJiCq4=;
+ b=gV0+g9pskgOW9EqeLvWtV27A4F05sSYDS8sRsHZapBL3ox3YmMKkhHog1r2DXg+is3YGqcczh0SOvfYuB3LDi2FvGAEXNWIX2C0kasio4TFdvb2ADOeT0/UTTIaBRlB0iDPU+A/OFqK2SgryQqwYtRfPYyD1BFolGDmBr9zQrTdyOxi9FUPJUg/HV7Nzx7x8xTHIUSjcdDAL14jYvJbn1Sod7T4EBfHMhBUb6e85lMipxEBYJsgXejslOE/okqpRGv7u2Z0BjxDzelMZzs/ZtOmuHXf7rT7jI+dvyCDEqOm7n/0EqieWnvKVpUM74KqAUp7DHyNF8YuiyIsFbMdRIA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TZOUFurnJLYeL2CRnvYRB0geaY2qyzOxYT9kMOw5eGQ=;
- b=rfGXc6I8s49TXgNs853qSA3AFnE8Bmgv17IxNFgBY4AcyGdQ0fuTNBTmqfhJsSM3FDo1Qhl/SP6WfeW88fdk7YH8rc/WFaLpoWJgnphkybg7BN1+80+HqGHNDnF0sUzimp4UbJtyMdeypEtptPSI9Xu7YM2B6KdZPL9xA7KESuk9IYlLsO5SpQsb4c248NuqLVSMaTtcC98+DzAMrHF1ZooHz1LT+nJSXXTtKXHlVIUJH6YFA44FWP94oEUroDjCIeGQ3YLdu7X2fJVMDFr466JsSLYtBSWWwfvVV511mMWkYlCK4Ta0x9+RhaTvXjNXCe8jVUMx+fVyekn0757MAw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB2763.namprd12.prod.outlook.com (2603:10b6:5:48::16) by
- CY4PR1201MB2535.namprd12.prod.outlook.com (2603:10b6:903:db::15) with
+ bh=mfxwutYEoRyeFEWFO4ZBZ8gD5nv6EIZDIHb/FCJiCq4=;
+ b=sWNMUXkF1VL5J3JwNz4/MgLLzs+A4MTRLzujMAyC4t2gsCWfh+gXI0qhHRjM+UTo3CGQsMEdCKJxIdfgB+D/VAgYS+UnKHyEw90JJUbYhzr5Zugxozdh09n6DSX4H9oE/HyujMXOsQBRSbylrgxv0EttOM1zHjt9JVHfrZ0FX84=
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
+ by DM6PR12MB2796.namprd12.prod.outlook.com (2603:10b6:5:50::23) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.26; Wed, 16 Mar
- 2022 15:11:14 +0000
-Received: from DM6PR12MB2763.namprd12.prod.outlook.com
- ([fe80::99a5:ac34:8767:b7f4]) by DM6PR12MB2763.namprd12.prod.outlook.com
- ([fe80::99a5:ac34:8767:b7f4%6]) with mapi id 15.20.5061.026; Wed, 16 Mar 2022
- 15:11:14 +0000
-Subject: Re: [PATCH] nvidia-wmi-ec-backlight: Add workarounds for confused
- firmware
-To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc:     platform-driver-x86@vger.kernel.org,
+ 2022 15:29:39 +0000
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::692d:9532:906b:2b08]) by BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::692d:9532:906b:2b08%5]) with mapi id 15.20.5081.014; Wed, 16 Mar 2022
+ 15:29:39 +0000
+From:   "Limonciello, Mario" <Mario.Limonciello@amd.com>
+To:     Daniel Dadap <ddadap@nvidia.com>,
+        =?utf-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
+CC:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
         Alexandru Dinu <alex.dinu07@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org
+        Hans de Goede <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Subject: RE: [PATCH] nvidia-wmi-ec-backlight: Add workarounds for confused
+ firmware
+Thread-Topic: [PATCH] nvidia-wmi-ec-backlight: Add workarounds for confused
+ firmware
+Thread-Index: AQHYONTN37ZmrvSyq0ixjjgRCkZtxqzBT4WAgADO84CAAAQKgA==
+Date:   Wed, 16 Mar 2022 15:29:39 +0000
+Message-ID: <BL1PR12MB5157B047D2DD5548FE08F0ABE2119@BL1PR12MB5157.namprd12.prod.outlook.com>
 References: <20220316012516.2233984-1-ddadap@nvidia.com>
  <v_ODhOndx3g1l-BhfKGCB6_nLY83LTc5vz1YDrVEVVF5CmgKUs1x9bmROyWXhmYkeQRVVnvfBnyrFyHaEKqtoZE5P7lKJJ1j_vE0J1Piq2Y=@protonmail.com>
-From:   Daniel Dadap <ddadap@nvidia.com>
-Message-ID: <0fbfd32e-904d-1e04-8508-e863c357a2ff@nvidia.com>
-Date:   Wed, 16 Mar 2022 10:11:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.1
-In-Reply-To: <v_ODhOndx3g1l-BhfKGCB6_nLY83LTc5vz1YDrVEVVF5CmgKUs1x9bmROyWXhmYkeQRVVnvfBnyrFyHaEKqtoZE5P7lKJJ1j_vE0J1Piq2Y=@protonmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <0fbfd32e-904d-1e04-8508-e863c357a2ff@nvidia.com>
+In-Reply-To: <0fbfd32e-904d-1e04-8508-e863c357a2ff@nvidia.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-ClientProxiedBy: SN7PR04CA0213.namprd04.prod.outlook.com
- (2603:10b6:806:127::8) To DM6PR12MB2763.namprd12.prod.outlook.com
- (2603:10b6:5:48::16)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2022-03-16T15:27:39Z;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=2d68a71f-f74a-49fb-b34e-1463326b77f9;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2022-03-16T15:29:38Z
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid: 6356faed-df56-432a-a1a6-8ca1e7d1486a
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3af098e4-cd58-46ef-5e51-08da0761c970
+x-ms-traffictypediagnostic: DM6PR12MB2796:EE_
+x-microsoft-antispam-prvs: <DM6PR12MB2796E39295EBE38A0AFD3311E2119@DM6PR12MB2796.namprd12.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IOorNmNr66CQ/drWxKBTWyPEheio/MInI71FfUyIUWy8ufJUX+sQvNH2bIVQCzoBOYJK4fKntABhaF3TqrRLn7zE4HDuiskqAmY1FlPIFWLq6Ry7rZh3hTTcjSCpigaRO4Z01Ll0WSjecicZTZNei9qtCQyGJDm0+En2712XKCbA4AEbGXFdk49R4bFRF1Mt0kKArQFN3NV1sm2fsuUPr3vc5BIpDyPdXnEA3xE31dsY1UHQwhVVz/1zCJRAM4yD4gQHuJMq61NQDbHodcU4BcyFBcnhRpVXyNBmGZDkLT4blE8d+7UAdRbidXBGrd33w2v/Q6WBTVihng9IHDrhJdk6+FB/9vVqIw0wGRKEnZDm6XyI8GfRWWeFpJxmBGX3fg7jwfO3fmOL3jTFb9nRi7FtfHhCQmtCLJ2GQJErs9JMDZfkAW87I5p6wmHcySvgnp1cYkFnlATSSXTvUJGQrwqFtvdBjrZg9jPJmRmCPWGf1yrhBHtgyHjhAwuCdL8MIdd+j6InR0uF37F4ASo9EDcI4+Asd/qDik65hdXmF97+zJXv8gbXNFw4Jj+lRzUwRDhKCzxIW1Jq5sctaJeOqhJxAac+ItzRVpIYILAuuY5PDOu4bMWYQgXDZtT+jZ3ssD1VdQENEtRTxwPIRznoiHMAwrrm0fUk5qYmyuOdgodgpEb1jy2Yao+Pq4ADE24SNCCeBCVulEUl8JTjUnOg/Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(8676002)(66476007)(66946007)(71200400001)(86362001)(76116006)(4326008)(5660300002)(66446008)(66556008)(64756008)(52536014)(30864003)(508600001)(55016003)(33656002)(186003)(8936002)(83380400001)(316002)(54906003)(53546011)(2906002)(6506007)(7696005)(9686003)(122000001)(38100700002)(110136005)(38070700005)(66574015);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?b09wcFYwanZwUlVsOTU0dnlPb2xoODA4RFVqTm5XcFhpSlMrU1A5MXdHbFFS?=
+ =?utf-8?B?Y216dThUNjZ4RGoyR2hCNjU4SDBOSXU2aUZOTkhRQXlhZGlmSTdza1llUjg3?=
+ =?utf-8?B?UDhTbmFXS09sN3VUd1hWcmQvejVmYVI4TXhXU1hrRHhkUldwd3pwZFp1cjI0?=
+ =?utf-8?B?ckhHTWNGbVU2Vnc3UExxTEZNN2xUMGZCZkYxUkloVmQyU1ZSL2tZUmlHREky?=
+ =?utf-8?B?cDhBQ01FcDFMcWljcDkwZ1lIYkhPT1ZqMVFOeVFjNnZxVG1BbU5qU3U3NnZR?=
+ =?utf-8?B?N3M4MHJuSFM0R3ZPSUhzdDA2NGd2MlEzQi8rZndOT3JsNTdXbThhbU1PbGJE?=
+ =?utf-8?B?UGlvSkJhQUdQQ3M1MG5GWW5FWWgvQy81N1FJZit3WDMzbnVDYlE3U295NHdG?=
+ =?utf-8?B?ckhFNURKczBVOFkwa1RkbnNrSThVbWRxTmcveisrMVVwcUtNdTYwYXRFYmRC?=
+ =?utf-8?B?L3ZiVTRBaUhnd0RLSnFXdmthK2YweWlDZVFmTFJzeEFhR3FOK0dIYjdmcVlk?=
+ =?utf-8?B?SFJqMGdyWXQ5M2VYckJLdXM4UkF0bzR2NmxtNCt2RUVqTnMycldFbFJ5Q1BV?=
+ =?utf-8?B?TUJqcFBJLzl2dmZFYUpmKy9oMlZxS0pLRWcxZnJQeFBoWDBaZmd1KzhHWTJ4?=
+ =?utf-8?B?TzlNaWVJREw4ZlNEckpGMnBIWFVmUi80dDhjclhxb0ZYRWRCWldEMFlJM1Jj?=
+ =?utf-8?B?Q2dLcTFBMjh3WVU2YUZUK1lYYldTWkJ4NDR1NW55Y0tkRDFGZXRST2dkVG5O?=
+ =?utf-8?B?VDBCcmozOXFCeVZlakx0TS9Wa2txMExxamhQV3dFT01kV1pmMnlUcmhvM1dV?=
+ =?utf-8?B?cW43TU5HWEcvaUhqUDlva2Jsa2xrdStKZS8vVU9mZU9NUWFTWFFISGlCaEdl?=
+ =?utf-8?B?dUdYbEduVUZia2pPdGwwc1Q2U2hOTmREcG5TQ1FXS1p1Qk5zSlFYd2tqVzBq?=
+ =?utf-8?B?SjJMWm54WWVaL0JJMGgxMDI5QlNTL3RNMlg2RnJpSlJ0U3ZtMjQwZm1MOC9R?=
+ =?utf-8?B?VWtFZjdxMENlN2thdVM4Q0FjOTJWTG1mZldlVi9EZktqSGp3Nys1Ukppck5B?=
+ =?utf-8?B?ZG1OcnI2Zi9IUTVuYTdOTXNvQTVhMElFYTI4NUZYLzFodHhOTUliSGRFNlM0?=
+ =?utf-8?B?TXNDV0VrVFpjNlg2RVUwck04MmFka2F1L01vVlVIeFI4V3Rrai8rNnE3d240?=
+ =?utf-8?B?Z1FmOFVyQlFIemVaZGlGKzFHSGJzWENHSEZzVmplYnBVbHlDQ3lxL3lURmph?=
+ =?utf-8?B?R3lHdyt2YlhJZ0Jualp0NHk0QkhjVEVoTUNOS2lORUkvT1FaMzVwY1F5VE1l?=
+ =?utf-8?B?RVZ3MWhaMTlSMmp3T1JSNks2UlAzTGZjTlAwSEp3dWhqS3VqYUJFdGJDS1Jk?=
+ =?utf-8?B?dHFoOXRxV05YbjBlNjNad013d0JGT0IvVnM2S3hxNTdCNmNzcHNoR2pvUCsr?=
+ =?utf-8?B?bU5LZUJHU3U4OVRnS1N3UjdmdENqOXVnbzVIcmxUUjN4S0NwMFV5Y2tQTzlW?=
+ =?utf-8?B?QzBJTTVkTDhUZEZKN2RnR2VSblprVmt1ZW9HQkhRSE9nL0Q0cG81QzAvR21s?=
+ =?utf-8?B?Q0FJM0xEbDBXNXBKd253T05WclRaV1k1YjlWcitvYmpad1RxOVoxb05pMFkv?=
+ =?utf-8?B?eDE2Q0licFNzRy90YVdiSzRPMGJsdDRFdVpHS05nTHVBUWdaLzFHWG1hd2ND?=
+ =?utf-8?B?MnZPeFBjRGcvR3ZXSVRPMndyUE1XeVFOMVZMdy9KeEN0dk5GNythOGR6aTNL?=
+ =?utf-8?B?ZVhFbjRsYTQwQjRnd3Z4bEhQWm1hdGpSV0x1N2dJU0RoeUZ2SnBsenJCVlVJ?=
+ =?utf-8?B?K2JnOFp6N1hYK1h6V1VZTmpiaEFrd1JSZTd6dTR3SG5WUE8yTHFVN1kwa1Fa?=
+ =?utf-8?B?QkRja2wyWkh2SEV2NHhOMGRYSzFNbkUyeGs0VW9RWmZ2YjBLRzlTTnYrU0hM?=
+ =?utf-8?B?L3JrNkl0cHVmaHVqSkJxL2srODFXRHFMd1MwNDJ5UXJWWUh1c3RMeTkzd0Ux?=
+ =?utf-8?B?OTVIZFg0N0JvSjNjTnBqc0JSQzNwbHhqZkFuWHlTVUltSWlGTENiVWlEMlZ5?=
+ =?utf-8?Q?svwY3N?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 551b61c9-e999-4d1f-ffdc-08da075f3628
-X-MS-TrafficTypeDiagnostic: CY4PR1201MB2535:EE_
-X-Microsoft-Antispam-PRVS: <CY4PR1201MB2535CA6DAB072548D2D46892BC119@CY4PR1201MB2535.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IWAleXOX3irOyJQRuRAcwdKzOmHQzbooKgrDjAFr1BlwjC8sqFCYoSQ8rMSOWE/4+OGez/SVJ5pQli+8n18FqIuC/H/hAzPSK3Nh9ndvsce23WeBrIzQrCAEG90M7PmV66GHI4muZkPAfpo3Vws64RGwb8MkUecl2a1PtP6nzCs9s1n/7aUrU3wqgai4a9CabXFjYdDKq0AgCDCjUl+4faLqRrisqkKVGDhB5vbWUru5hu/SCccrAMm9VhEh0BuNGdk+UPUHXZig1DwKVcuQQyyB5fM/j5GYtQhkgHLj8Ca3vE93LH8Htzp41PFNQ7rK3sLs06uai96DzfqZJxhNYEIMAttACUzNtlIIqDMw33d8k/35ttmhFXLfOydoMxDFl6C/cn/5xJR0dbRArKsbFzvce7MzhYz8edItLnLaUB/tb36JzEKn8xsu3o4S2zUxNO8aymODMAAOZvkGWKhUowH40KtebFt61bzbJJMv66jCsB3K/EUmhwQQK2qnArC+RBH2kQumH8X53SQGuMEORn2e8UYC73m2LrlpIu5mpV2hnxGox23W54qAD/nUwotEgkbPZ95eU1Gydl7ArrR+1/WHlPZt2qA7v3xXiIVKp69M8vsIpZSaLJNn1qawbaS4VsdSI+j7oaznbwqQ0kcJF0VgbJrHJXzLB+Hxzte6qltHo6U9SD/xkPvFgAu749rqwr774Oaa+YsFB5WIZrwvE2kf1aP5SAMZIXMLX/AfUwo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2763.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6506007)(53546011)(66946007)(31686004)(31696002)(5660300002)(2906002)(30864003)(66574015)(508600001)(36756003)(8936002)(66476007)(66556008)(2616005)(38100700002)(316002)(26005)(83380400001)(186003)(8676002)(54906003)(86362001)(6486002)(6666004)(4326008)(6512007)(6916009)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?KzdmVkkydXlMdXovcG9LVTFaOUpxTzdlUDIxaTArU1lFZ1ovMnRDVWZXWnRL?=
- =?utf-8?B?NnlHaXp1aitYblNyRUdoZVBqYkE5Q3JxWk9CZE1JcmV6amdYRzUzUTdXc0g3?=
- =?utf-8?B?TFhhZFpmREZ5VEpybXJ3UUkwMnFXNEJ2YjFTYW9LYWUwVnJzRmZUV0JIc08x?=
- =?utf-8?B?aXI5UnpoTmlpSFcwb2RrLzMxWWRpN21OaFFiSHFTVDRMWk5GNkV2VXQ1QU9n?=
- =?utf-8?B?Slp5aGdxUzRleTc4akJwNEpnOW81dGhWemZIYTNTQ3h2ZWFpSmd3U2FNWkxl?=
- =?utf-8?B?WURRUVUzZjZ1WmVTcU1HSmhNV0t5ejFjNHp5MXhpdjArMFhPVm8xQnp6bGlo?=
- =?utf-8?B?eDArbWFFb29LTHN6YjlJR3NzYWlLNFQ5UGVpdHV4TXJhMFp3Y0tPN0RnVjVO?=
- =?utf-8?B?eXpleEVtdjJaSHdIZmg5cGNQY2M0TFVCM2ZIbnloMTV2VmVsTVRLV0ErakZB?=
- =?utf-8?B?NHVyd2c0Q1FQY3duZHg1ejVGSWRmY1FBV1Y0MWU5TGFJQlVnZmRFTjB3WTJW?=
- =?utf-8?B?bjRxWS9hU2pOclhjUVZ4ZGErcENWS3VLN3RSR1AxM09QMzNQMnZjQ0VYb05U?=
- =?utf-8?B?cHhuU25TK2hNOENKbXJrZTFWZEZBMXBqaG1oTUlXS0psbkRoKzZ6NmVlT2Ny?=
- =?utf-8?B?amJnRWZkcERZblhtdzhMcXVGOXRRTHlMbDllZS8zTmpiNW1zNndwZGNicVJx?=
- =?utf-8?B?d0ppLzNIbkcxNFNmQW5oOVBCb295SG5iNlNwM2hCdENBamRrTFFxSk1ESUpj?=
- =?utf-8?B?anZTcFdBZEJrT2d3ZTJURld1am9IT0hkNTlUeXhPWUNyeGdSSTQ4elB0TXVT?=
- =?utf-8?B?Rm1LV09aeHptY244TE9zeUwzSXgrZ2svSm1FU3NUbWdQaDd1emlWbyt2a0NM?=
- =?utf-8?B?cnN2NEpEY2VCNithK3l2NTBLNXZ5MzRYSUR5N3dsQVZwU1FsWUxHTFpsbThJ?=
- =?utf-8?B?Zm4zdG5JdFUvVXdReFcyNXZwSVN2bnBieEZSeEdUM0oyVGZPUFBYQ2c1aXpi?=
- =?utf-8?B?TkRhemlVS3lyREt5ZVYvSWVHK29wbXpIcHJkWmRRaE0vVVdEMjVpK2FqSGdW?=
- =?utf-8?B?QjBhd1lUSmVCK1lRaERPUFI3UW1WQk10MExHMDNLVldUNkFKZ2RrSjJrVlhW?=
- =?utf-8?B?WG5xMGdEZGFrRkhUTFVCZ2EydXdUV1ZRMTQ2eHJXcFdXc0xyYjcwNVdneURG?=
- =?utf-8?B?WDJLNDZtNUNsSU04QUZkNDNZT1ZVVzk4RGh2eThUR0dLS2Z5K2RudW1HSkw1?=
- =?utf-8?B?ZkdoQVJobHJrenVRbFdHMjFDb0c0emRuYmJxaFFHaU82ZCt6TXRpRTByeUgz?=
- =?utf-8?B?bXJnWVg1N2MzTS82eUFQSjRxeW5CVm5hMkwzbUlkMU04RUVWOFU4QnZyQW1o?=
- =?utf-8?B?SFdKTmNmMGl3SVZzdWZtTWpaUVNPVUFJUFluTW55WDAxeXliTWxHc3lxVUMz?=
- =?utf-8?B?ajR1dUdUR0oxS0dRU2FjRUcxR2hhMWo2eUNCYUR0RFdOcjJ0MGFubENwN3B4?=
- =?utf-8?B?R2FGcWhNeEFlTkh3a0tRUGxsdUoxbzF0QnlzOHlIV29OQm9ZUmtQNVBXRjBV?=
- =?utf-8?B?YVBYZ0xucE9oVG1vclZObE5LMzE1bGpDWnVNWFI1dVF2R05WVTlZZ2dpVlRC?=
- =?utf-8?B?NjlNUm9mZ3hRV0ZvWGFWOEhCSXZvNWtxcjdYODFnZHdUMjB3RzIyenhhRmho?=
- =?utf-8?B?c3kzOExDRUUyZXcvWEozWTRZME95elpKM3Rid29YcHpoV0dTTmY5OWhTdDFZ?=
- =?utf-8?B?Ukp6cGRzdFp5UGRJNWpjR1BuYUdldmhZZnB5NlZSeTEwVEFmUzVKU2hDNkVQ?=
- =?utf-8?B?clRHWG5TaFZyZ2xremMzOWlQL0ducHZpbVRST2l6SDkxSXNRVTVKZS9RcjJE?=
- =?utf-8?B?YjBmOC96b0RiVkFuK3dUdjZsYW1SZDA3aythR3Z2RXNnWmdBbG9yZy9JN2Zj?=
- =?utf-8?Q?f4qQzKylVWYOfTdPhBTdAC5lCtebbp0O?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 551b61c9-e999-4d1f-ffdc-08da075f3628
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2763.namprd12.prod.outlook.com
+X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2022 15:11:14.1102
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3af098e4-cd58-46ef-5e51-08da0761c970
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Mar 2022 15:29:39.7903
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hisuqgnw3g6IkowTigTRYB/3LV0JHfdcnxQiAME9k5wGuHnUdXuqVuBKdRuoSZ6hz4qz0oM5YGUEIIXuUy0+pg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2535
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KQkCqzOHCsnAEv863b1WN/S49C4u5znfnf61b/UB660SYC+jvPJkDSArakInSe43GBk9ZaZgj/M3wrP8Gsw4ow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2796
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks for the feedback. I'll send out a v2 shortly: Alex, can you 
-please retest when I do to make sure there aren't any regressions? None 
-of these suggestions affect the core flow of how either of the 
-workarounds work, so I'm not expecting any that wouldn't also reproduce 
-on my EC backlight system that doesn't have either of these problems, 
-but I can send you the updated version off-list first if you prefer.
-
-Detailed replies below:
-
-On 3/15/22 9:50 PM, Barnabás Pőcze wrote:
-> Hi
->
->
-> The platform-driver-x86 maintainers should've probably been
-> CCd. You may or may not know, but the `scripts/get_maintainers.pl`
-> script can be used to determine the appropriate recipients.
-
-
-Indeed. I've copied the pdx86 maintainers on this message and will for 
-future correspondence regarding this patch.
-
-
-> 2022. március 16., szerda 2:25 keltezéssel, Daniel Dadap írta:
->> Some notebook systems with EC-driven backlight control appear to have a
->> firmware bug which causes the system to use GPU-driven backlight control
->> upon a fresh boot, but then switches to EC-driven backlight control
->> after completing a suspend/resume cycle. All the while, the firmware
->> reports that the backlight is under EC control, regardless of what is
->> actually controlling the backlight brightness.
->>
->> This leads to the following behavior:
->>
->> * nvidia-wmi-ec-backlight gets probed on a fresh boot, due to the
->>    WMI-wrapped ACPI method erroneously reporting EC control.
->> * nvidia-wmi-ec-backlight does not work until after a suspend/resume
->>    cycle, due to the backlight control actually being GPU-driven.
->> * GPU drivers also register their own backlight handlers: in the case
->>    of the notebook system where this behavior has been observed, both
->>    amdgpu and the NVIDIA proprietary driver register backlight handlers.
->> * The GPU which has backlight control upon a fresh boot (amdgpu in the
->>    case observed so far) can successfully control the backlight through
->>    its backlight driver's sysfs interface, but stops working after the
->>    first suspend/resume cycle.
->> * nvidia-wmi-ec-backlight is unable to control the backlight upon a
->>    fresh boot, but begins to work after the first suspend/resume cycle.
->> * The GPU which does not have backlight control (NVIDIA in this case)
->>    is not able to control the backlight at any point while the system
->>    is in operation. On similar hybrid systems with an EC-controlled
->>    backlight, and AMD/NVIDIA iGPU/dGPU, the NVIDIA proprietary driver
->>    does not register its backlight handler. It has not been determined
->>    whether the non-functional handler registered by the NVIDIA driver
->>    is due to another firmware bug, or a bug in the NVIDIA driver.
->>
->> Since nvidia-wmi-ec-backlight registers as a BACKLIGHT_FIRMWARE type
->> device, it takes precedence over the BACKLIGHT_RAW devices registered
->> by the GPU drivers. This in turn leads to backlight control appearing
->> to be non-functional until after completing a suspend/resume cycle.
->> However, it is still possible to control the backlight through direct
->> interaction with the working GPU driver's backlight sysfs interface.
->>
->> These systems also appear to have a second firmware bug which resets
->> the EC's brightness level to 100% on resume, but leaves the state in
->> the kernel at the pre-suspend level. This causes attempts to save
->> and restore the backlight level across the suspend/resume cycle to
->> fail, due to the level appearing not to change even though it did.
->>
->> In order to work around these issue, add quirk tables to detect
->> systems that are known to show these behaviors. So far, there is
->> only one known system that requires these workarounds, and both
->> issues are present on that system, but the quirks are tracked in
->> separate tables to make it easier to add them to other systems which
->> may exhibit one of the bugs, but not the other. The original systems
->> that this driver was tested on during development do not exhibit
->> either of these quirks.
->>
->> If a system with the "GPU driver has backlight control" quirk is
->> detected, nvidia-wmi-ec-backlight will grab a reference to the working
->> (when freshly booted) GPU backlight handler and relays any backlight
->> brightness level change requests directed at the EC to also be applied
->> to the GPU backlight interface. This leads to redundant updates
->> directed at the GPU backlight driver after a suspend/resume cycle, but
->> it does allow the EC backlight control to work when the system is
->> freshly booted.
->>
->> If a system with the "backlight level reset to full on resume" quirk
->> is detected, nvidia-wmi-ec-backlight will register a PM notifier to
->> reset the backlight to the previous level upon resume.
->>
->> These workarounds are also plumbed through to kernel module parameters,
->> to make it easier for users who suspect they may be affected by one or
->> both of these bugs to test whether these workarounds are effective on
->> their systems as well.
->>
->> Signed-off-by: Daniel Dadap <ddadap@nvidia.com>
->> Tested-by: Alexandru Dinu <alex.dinu07@gmail.com>
->> ---
->>   .../platform/x86/nvidia-wmi-ec-backlight.c    | 181 +++++++++++++++++-
->>   1 file changed, 179 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/nvidia-wmi-ec-backlight.c b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
->> index 61e37194df70..ccb3b506c12c 100644
->> --- a/drivers/platform/x86/nvidia-wmi-ec-backlight.c
->> +++ b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
->> @@ -3,8 +3,11 @@
->>    * Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
->>    */
->>
->> +#define pr_fmt(f) "%s: " f "\n", KBUILD_MODNAME
-> `KBUILD_MODNAME` is a string literal, so you can do e.g.
->
->    #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->
->
->> +
->>   #include <linux/acpi.h>
->>   #include <linux/backlight.h>
->> +#include <linux/dmi.h>
->>   #include <linux/mod_devicetable.h>
->>   #include <linux/module.h>
->>   #include <linux/types.h>
->> @@ -75,6 +78,69 @@ struct wmi_brightness_args {
->>   	u32 ignored[3];
->>   };
->>
->> +/**
->> + * struct nvidia_wmi_ec_backlight_priv - driver private data
->> + * @bl_dev:       the associated backlight device
->> + * @proxy_target: backlight device which receives relayed brightness changes
->> + * @notifier:     notifier block for resume callback
->> + */
->> +struct nvidia_wmi_ec_backlight_priv {
->> +	struct backlight_device *bl_dev;
->> +	struct backlight_device *proxy_target;
->> +	struct notifier_block nb;
->> +};
->> +
->> +static char *backlight_proxy_target;
->> +module_param(backlight_proxy_target, charp, 0);
-> It seems these module parameters are neither readable nor writable,
-> is that intentional?
-
-
-It was intentional that they not be writable, because I didn't want to 
-have to plumb everything through to handle changing the values after 
-probe. However, you are right that it could still be useful to set up 
-the sysfs entries to allow reading the values, as this could be useful 
-information for someone who wants to check if either of these quirks are 
-enabled.
-
-
->
->> +MODULE_PARM_DESC(backlight_proxy_target, "Relay brightness change requests to the named backlight driver, on systems which erroneously report EC backlight control.");
->> +
->> +static int max_reprobe_attempts = 128;
-> Can you elaborate how this number was arrived at?
->
-
-It's just a medium-small round number. I didn't want probe to return 
--EPROBE_DEFER forever if e.g. somebody specified a wrong device name or 
-if the target device name changes and the entry in the quirks table goes 
-out of date. On the system I tested this on, the amdgpu_bl1 device was 
-accessible on the 14th probe attempt. If there's some better value to 
-plug in here, or if it's actually considered more correct to just never 
-succeed at probe if the workaround is enabled but the target device can 
-be found, I'd be happy to change it.
-
-
->> +module_param(max_reprobe_attempts, int, 0);
->> +MODULE_PARM_DESC(max_reprobe_attempts, "Limit of reprobe attempts when relaying brightness change requests.");
->> +
->> +static bool restore_level_on_resume;
->> +module_param(restore_level_on_resume, bool, 0);
->> +MODULE_PARM_DESC(restore_level_on_resume, "Restore the backlight level when resuming from suspend, on systems which reset the EC's backlight level on resume.");
->> +
->> +static int assign_relay_quirk(const struct dmi_system_id *id)
->> +{
->> +	backlight_proxy_target = id->driver_data;
->> +	return true;
->> +}
->> +
->> +#define PROXY_QUIRK_ENTRY(vendor, product, quirk_data) { \
->> +	.callback = assign_relay_quirk,                  \
->> +	.matches = {                                     \
->> +		DMI_MATCH(DMI_SYS_VENDOR, vendor),       \
->> +		DMI_MATCH(DMI_PRODUCT_VERSION, product)  \
->> +	},                                               \
->> +	.driver_data = quirk_data                        \
->> +}
->> +
->> +static const struct dmi_system_id proxy_quirk_table[] = {
->> +	PROXY_QUIRK_ENTRY("LENOVO", "Legion S7 15ACH6", "amdgpu_bl1"),
->> +	{ }
->> +};
->> +
->> +static int assign_restore_quirk(const struct dmi_system_id *id)
->> +{
->> +	restore_level_on_resume = true;
->> +	return true;
->> +}
->> +
->> +#define RESTORE_QUIRK_ENTRY(vendor, product) {           \
->> +	.callback = assign_restore_quirk,                \
->> +	.matches = {                                     \
->> +		DMI_MATCH(DMI_SYS_VENDOR, vendor),       \
->> +		DMI_MATCH(DMI_PRODUCT_VERSION, product), \
->> +	}                                                \
->> +}
->> +
->> +static const struct dmi_system_id restore_quirk_table[] = {
->> +	RESTORE_QUIRK_ENTRY("LENOVO", "Legion S7 15ACH6"),
->> +	{ }
->> +};
->> +
->>   /**
->>    * wmi_brightness_notify() - helper function for calling WMI-wrapped ACPI method
->>    * @w:    Pointer to the struct wmi_device identified by %WMI_BRIGHTNESS_GUID
->> @@ -119,9 +185,30 @@ static int wmi_brightness_notify(struct wmi_device *w, enum wmi_brightness_metho
->>   	return 0;
->>   }
->>
->> +static int scale_backlight_level(struct backlight_device *a,
->> +				 struct backlight_device *b)
->> +{
->> +	/* because floating point math in the kernel is annoying */
->> +	const int scaling_factor = 65536;
->> +	int level = a->props.brightness;
->> +	int relative_level = level * scaling_factor / a->props.max_brightness;
->> +
->> +	return relative_level * b->props.max_brightness / scaling_factor;
->> +}
-> Maybe
->
->    fixp_linear_interpolate(0, 0, a->props.max_brightness, b->props.max_brightness, a->props.brightness);
->
-> ? (from `linux/fixp-arith.h`)
-
-
-Yes, this is exactly what I want; thank you.
-
-
->
->> +
->>   static int nvidia_wmi_ec_backlight_update_status(struct backlight_device *bd)
->>   {
->>   	struct wmi_device *wdev = bl_get_data(bd);
->> +	struct nvidia_wmi_ec_backlight_priv *priv = dev_get_drvdata(&wdev->dev);
->> +	struct backlight_device *proxy_target = priv->proxy_target;
->> +
->> +	if (proxy_target) {
->> +		int level = scale_backlight_level(bd, proxy_target);
->> +
->> +		if (backlight_device_set_brightness(proxy_target, level))
->> +			pr_warn("Failed to relay backlight update to \"%s\"",
->> +				backlight_proxy_target);
->> +	}
->>
->>   	return wmi_brightness_notify(wdev, WMI_BRIGHTNESS_METHOD_LEVEL,
->>   	                             WMI_BRIGHTNESS_MODE_SET,
->> @@ -147,13 +234,65 @@ static const struct backlight_ops nvidia_wmi_ec_backlight_ops = {
->>   	.get_brightness = nvidia_wmi_ec_backlight_get_brightness,
->>   };
->>
->> +static int nvidia_wmi_ec_backlight_pm_notifier(struct notifier_block *nb, unsigned long event, void *d)
->> +{
->> +
->> +	/*
->> +	 * On some systems, the EC backlight level gets reset to 100% when
->> +	 * resuming from suspend, but the backlight device state still reflects
->> +	 * the pre-suspend value. Refresh the existing state to sync the EC's
->> +	 * state back up with the kernel's.
->> +	 */
->> +	if (event == PM_POST_SUSPEND) {
->> +		struct nvidia_wmi_ec_backlight_priv *p;
->> +
->> +		p = container_of(nb, struct nvidia_wmi_ec_backlight_priv, nb);
->> +		return backlight_update_status(p->bl_dev);
-> `backlight_update_status()` returns a negative errno while the notifier chain
-> expects something else. It would probably be better to return `NOTIFY_DONE`
-> in all cases. Currently a suitable error from `backlight_update_status()` will
-> stop the notifier chain.
-
-
-Thanks for catching that: I should have paid more attention to the 
-notifier callback signature.
-
-
->
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ctx)
->>   {
->> +	struct backlight_device *bdev, *target = NULL;
->> +	struct nvidia_wmi_ec_backlight_priv *priv;
->>   	struct backlight_properties props = {};
->> -	struct backlight_device *bdev;
->>   	u32 source;
->>   	int ret;
->>
->> +	/*
->> +	 * Check quirks tables to see if this system needs any of the firmware
->> +	 * bug workarounds.
->> +	 */
->> +
->> +	/* User-set quirks from the module parameters take precedence */
->> +	if (!backlight_proxy_target)
->> +		dmi_check_system(proxy_quirk_table);
->> +
->> +	dmi_check_system(restore_quirk_table);
->> +
->> +	if (backlight_proxy_target && backlight_proxy_target[0]) {
->> +		static int num_reprobe_attempts;
->> +
->> +		target = backlight_device_get_by_name(backlight_proxy_target);
->> +
->> +		if (!target) {
->> +			/*
->> +			 * The target backlight device might not be ready;
->> +			 * try again and disable backlight proxying if it
->> +			 * fails too many times.
->> +			 */
->> +			if (num_reprobe_attempts < max_reprobe_attempts) {
->> +				num_reprobe_attempts++;
->> +				return -EPROBE_DEFER;
->> +			}
->> +
->> +			pr_warn("Unable to acquire %s after %d attempts. Disabling backlight proxy.",
->> +				backlight_proxy_target, max_reprobe_attempts);
->> +		}
->> +	}
-> I think `target` is not put in case of error. You probably need to add something like:
->
->    if (target) {
->      ret = devm_add_action_or_reset(&wdev->dev, put_device_wrapper, target);
->      if (ret < 0)
->        return ret;
->    }
->
->
->> +
->>   	ret = wmi_brightness_notify(wdev, WMI_BRIGHTNESS_METHOD_SOURCE,
->>   	                           WMI_BRIGHTNESS_MODE_GET, &source);
->>   	if (ret)
->> @@ -188,7 +327,44 @@ static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ct
->>   					      &wdev->dev, wdev,
->>   					      &nvidia_wmi_ec_backlight_ops,
->>   					      &props);
->> -	return PTR_ERR_OR_ZERO(bdev);
->> +
->> +	if (IS_ERR(bdev))
->> +		return PTR_ERR(bdev);
->> +
->> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> `devm_kzalloc()` would probably be better and you should check if `!priv`.
->
->
->> +	priv->bl_dev = bdev;
->> +
->> +	dev_set_drvdata(&wdev->dev, priv);
->> +
->> +	if (target) {
->> +		int level = scale_backlight_level(target, bdev);
->> +
->> +		if (backlight_device_set_brightness(bdev, level))
->> +			pr_warn("Unable to import initial brightness level from %s.",
->> +				backlight_proxy_target);
->> +		priv->proxy_target = target;
->> +	}
->> +
->> +	if (restore_level_on_resume) {
->> +		priv->nb.notifier_call = nvidia_wmi_ec_backlight_pm_notifier;
->> +		register_pm_notifier(&priv->nb);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void nvidia_wmi_ec_backlight_remove(struct wmi_device *wdev)
->> +{
->> +	struct nvidia_wmi_ec_backlight_priv *priv = dev_get_drvdata(&wdev->dev);
->> +	struct backlight_device *proxy_target = priv->proxy_target;
->> +
->> +	if (proxy_target)
->> +		put_device(&proxy_target->dev);
-> If you switch to `devm_add_action_or_reset()`, this will not be needed.
->
->
->> +
->> +	if (priv->nb.notifier_call)
->> +		unregister_pm_notifier(&priv->nb);
->> +
->> +	kfree(priv);
-> If you switch to `devm_kzalloc()`, this won't be needed.
-
-
-Thank you, the devm_*() variants are indeed useful.
-
-
->
->>   }
->>
->>   #define WMI_BRIGHTNESS_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
->> @@ -204,6 +380,7 @@ static struct wmi_driver nvidia_wmi_ec_backlight_driver = {
->>   		.name = "nvidia-wmi-ec-backlight",
->>   	},
->>   	.probe = nvidia_wmi_ec_backlight_probe,
->> +	.remove = nvidia_wmi_ec_backlight_remove,
->>   	.id_table = nvidia_wmi_ec_backlight_id_table,
->>   };
->>   module_wmi_driver(nvidia_wmi_ec_backlight_driver);
->> --
->> 2.27.0
->>
-> Lastly, is it expected that these bugs will be properly fixed?
-
-
-Possibly, but I wouldn't hold out hope for it for an issue at this scale 
-on an already shipping system.
-
-
->
-> Regards,
-> Barnabás Pőcze
+W1B1YmxpY10NCg0KKyBBbGV4IEQNCg0KQWxleCwganVzdCBGWUkgdGhpcyB3YXMgc29tZXRoaW5n
+IHRoYXQgY2FtZSB0byBhbiBBTUQgYnVnIHRyYWNrZXIgYW5kIHdhbnRlZCB5b3UgdG8gYmUgYXdh
+cmUgdGhlcmUgYXJlIFcvQSBnb2luZyBpbnRvIG52aWRpYS13bWktZWMtYmFja2xpZ2h0IGZvciBz
+b21lIGZpcm13YXJlIHByb2JsZW1zIHdpdGggdGhlIG11eC4NCklJUkMgdGhhdCB3YXMgdGhlIG9y
+aWdpbmFsIHN1c3BpY2lvbiB0b28gb24gdGhlIGJ1ZyByZXBvcnRzLg0KDQpDb21tZW50cyBpbmxp
+bmUgYXMgd2VsbC4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEYW5p
+ZWwgRGFkYXAgPGRkYWRhcEBudmlkaWEuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIE1hcmNoIDE2
+LCAyMDIyIDEwOjExDQo+IFRvOiBCYXJuYWLDoXMgUMWRY3plIDxwb2JybkBwcm90b25tYWlsLmNv
+bT4NCj4gQ2M6IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBBbGV4YW5kcnUg
+RGludQ0KPiA8YWxleC5kaW51MDdAZ21haWwuY29tPjsgSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVA
+cmVkaGF0LmNvbT47DQo+IG1hcmtncm9zc0BrZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0hdIG52aWRpYS13bWktZWMtYmFja2xpZ2h0OiBBZGQgd29ya2Fyb3VuZHMgZm9yDQo+IGNvbmZ1
+c2VkIGZpcm13YXJlDQo+IA0KPiBUaGFua3MgZm9yIHRoZSBmZWVkYmFjay4gSSdsbCBzZW5kIG91
+dCBhIHYyIHNob3J0bHk6IEFsZXgsIGNhbiB5b3UNCj4gcGxlYXNlIHJldGVzdCB3aGVuIEkgZG8g
+dG8gbWFrZSBzdXJlIHRoZXJlIGFyZW4ndCBhbnkgcmVncmVzc2lvbnM/IE5vbmUNCj4gb2YgdGhl
+c2Ugc3VnZ2VzdGlvbnMgYWZmZWN0IHRoZSBjb3JlIGZsb3cgb2YgaG93IGVpdGhlciBvZiB0aGUN
+Cj4gd29ya2Fyb3VuZHMgd29yaywgc28gSSdtIG5vdCBleHBlY3RpbmcgYW55IHRoYXQgd291bGRu
+J3QgYWxzbyByZXByb2R1Y2UNCj4gb24gbXkgRUMgYmFja2xpZ2h0IHN5c3RlbSB0aGF0IGRvZXNu
+J3QgaGF2ZSBlaXRoZXIgb2YgdGhlc2UgcHJvYmxlbXMsDQo+IGJ1dCBJIGNhbiBzZW5kIHlvdSB0
+aGUgdXBkYXRlZCB2ZXJzaW9uIG9mZi1saXN0IGZpcnN0IGlmIHlvdSBwcmVmZXIuDQo+IA0KPiBE
+ZXRhaWxlZCByZXBsaWVzIGJlbG93Og0KPiANCj4gT24gMy8xNS8yMiA5OjUwIFBNLCBCYXJuYWLD
+oXMgUMWRY3plIHdyb3RlOg0KPiA+IEhpDQo+ID4NCj4gPg0KPiA+IFRoZSBwbGF0Zm9ybS1kcml2
+ZXIteDg2IG1haW50YWluZXJzIHNob3VsZCd2ZSBwcm9iYWJseSBiZWVuDQo+ID4gQ0NkLiBZb3Ug
+bWF5IG9yIG1heSBub3Qga25vdywgYnV0IHRoZSBgc2NyaXB0cy9nZXRfbWFpbnRhaW5lcnMucGxg
+DQo+ID4gc2NyaXB0IGNhbiBiZSB1c2VkIHRvIGRldGVybWluZSB0aGUgYXBwcm9wcmlhdGUgcmVj
+aXBpZW50cy4NCj4gDQo+IA0KPiBJbmRlZWQuIEkndmUgY29waWVkIHRoZSBwZHg4NiBtYWludGFp
+bmVycyBvbiB0aGlzIG1lc3NhZ2UgYW5kIHdpbGwgZm9yDQo+IGZ1dHVyZSBjb3JyZXNwb25kZW5j
+ZSByZWdhcmRpbmcgdGhpcyBwYXRjaC4NCj4gDQo+IA0KPiA+IDIwMjIuIG3DoXJjaXVzIDE2Liwg
+c3plcmRhIDI6MjUga2VsdGV6w6lzc2VsLCBEYW5pZWwgRGFkYXAgw61ydGE6DQo+ID4+IFNvbWUg
+bm90ZWJvb2sgc3lzdGVtcyB3aXRoIEVDLWRyaXZlbiBiYWNrbGlnaHQgY29udHJvbCBhcHBlYXIg
+dG8gaGF2ZSBhDQo+ID4+IGZpcm13YXJlIGJ1ZyB3aGljaCBjYXVzZXMgdGhlIHN5c3RlbSB0byB1
+c2UgR1BVLWRyaXZlbiBiYWNrbGlnaHQNCj4gY29udHJvbA0KPiA+PiB1cG9uIGEgZnJlc2ggYm9v
+dCwgYnV0IHRoZW4gc3dpdGNoZXMgdG8gRUMtZHJpdmVuIGJhY2tsaWdodCBjb250cm9sDQo+ID4+
+IGFmdGVyIGNvbXBsZXRpbmcgYSBzdXNwZW5kL3Jlc3VtZSBjeWNsZS4gQWxsIHRoZSB3aGlsZSwg
+dGhlIGZpcm13YXJlDQo+ID4+IHJlcG9ydHMgdGhhdCB0aGUgYmFja2xpZ2h0IGlzIHVuZGVyIEVD
+IGNvbnRyb2wsIHJlZ2FyZGxlc3Mgb2Ygd2hhdCBpcw0KPiA+PiBhY3R1YWxseSBjb250cm9sbGlu
+ZyB0aGUgYmFja2xpZ2h0IGJyaWdodG5lc3MuDQo+ID4+DQo+ID4+IFRoaXMgbGVhZHMgdG8gdGhl
+IGZvbGxvd2luZyBiZWhhdmlvcjoNCj4gPj4NCj4gPj4gKiBudmlkaWEtd21pLWVjLWJhY2tsaWdo
+dCBnZXRzIHByb2JlZCBvbiBhIGZyZXNoIGJvb3QsIGR1ZSB0byB0aGUNCj4gPj4gICAgV01JLXdy
+YXBwZWQgQUNQSSBtZXRob2QgZXJyb25lb3VzbHkgcmVwb3J0aW5nIEVDIGNvbnRyb2wuDQo+ID4+
+ICogbnZpZGlhLXdtaS1lYy1iYWNrbGlnaHQgZG9lcyBub3Qgd29yayB1bnRpbCBhZnRlciBhIHN1
+c3BlbmQvcmVzdW1lDQo+ID4+ICAgIGN5Y2xlLCBkdWUgdG8gdGhlIGJhY2tsaWdodCBjb250cm9s
+IGFjdHVhbGx5IGJlaW5nIEdQVS1kcml2ZW4uDQo+ID4+ICogR1BVIGRyaXZlcnMgYWxzbyByZWdp
+c3RlciB0aGVpciBvd24gYmFja2xpZ2h0IGhhbmRsZXJzOiBpbiB0aGUgY2FzZQ0KPiA+PiAgICBv
+ZiB0aGUgbm90ZWJvb2sgc3lzdGVtIHdoZXJlIHRoaXMgYmVoYXZpb3IgaGFzIGJlZW4gb2JzZXJ2
+ZWQsIGJvdGgNCj4gPj4gICAgYW1kZ3B1IGFuZCB0aGUgTlZJRElBIHByb3ByaWV0YXJ5IGRyaXZl
+ciByZWdpc3RlciBiYWNrbGlnaHQgaGFuZGxlcnMuDQo+ID4+ICogVGhlIEdQVSB3aGljaCBoYXMg
+YmFja2xpZ2h0IGNvbnRyb2wgdXBvbiBhIGZyZXNoIGJvb3QgKGFtZGdwdSBpbiB0aGUNCj4gPj4g
+ICAgY2FzZSBvYnNlcnZlZCBzbyBmYXIpIGNhbiBzdWNjZXNzZnVsbHkgY29udHJvbCB0aGUgYmFj
+a2xpZ2h0IHRocm91Z2gNCj4gPj4gICAgaXRzIGJhY2tsaWdodCBkcml2ZXIncyBzeXNmcyBpbnRl
+cmZhY2UsIGJ1dCBzdG9wcyB3b3JraW5nIGFmdGVyIHRoZQ0KPiA+PiAgICBmaXJzdCBzdXNwZW5k
+L3Jlc3VtZSBjeWNsZS4NCj4gPj4gKiBudmlkaWEtd21pLWVjLWJhY2tsaWdodCBpcyB1bmFibGUg
+dG8gY29udHJvbCB0aGUgYmFja2xpZ2h0IHVwb24gYQ0KPiA+PiAgICBmcmVzaCBib290LCBidXQg
+YmVnaW5zIHRvIHdvcmsgYWZ0ZXIgdGhlIGZpcnN0IHN1c3BlbmQvcmVzdW1lIGN5Y2xlLg0KPiA+
+PiAqIFRoZSBHUFUgd2hpY2ggZG9lcyBub3QgaGF2ZSBiYWNrbGlnaHQgY29udHJvbCAoTlZJRElB
+IGluIHRoaXMgY2FzZSkNCj4gPj4gICAgaXMgbm90IGFibGUgdG8gY29udHJvbCB0aGUgYmFja2xp
+Z2h0IGF0IGFueSBwb2ludCB3aGlsZSB0aGUgc3lzdGVtDQo+ID4+ICAgIGlzIGluIG9wZXJhdGlv
+bi4gT24gc2ltaWxhciBoeWJyaWQgc3lzdGVtcyB3aXRoIGFuIEVDLWNvbnRyb2xsZWQNCj4gPj4g
+ICAgYmFja2xpZ2h0LCBhbmQgQU1EL05WSURJQSBpR1BVL2RHUFUsIHRoZSBOVklESUEgcHJvcHJp
+ZXRhcnkgZHJpdmVyDQo+ID4+ICAgIGRvZXMgbm90IHJlZ2lzdGVyIGl0cyBiYWNrbGlnaHQgaGFu
+ZGxlci4gSXQgaGFzIG5vdCBiZWVuIGRldGVybWluZWQNCj4gPj4gICAgd2hldGhlciB0aGUgbm9u
+LWZ1bmN0aW9uYWwgaGFuZGxlciByZWdpc3RlcmVkIGJ5IHRoZSBOVklESUEgZHJpdmVyDQo+ID4+
+ICAgIGlzIGR1ZSB0byBhbm90aGVyIGZpcm13YXJlIGJ1Zywgb3IgYSBidWcgaW4gdGhlIE5WSURJ
+QSBkcml2ZXIuDQo+ID4+DQo+ID4+IFNpbmNlIG52aWRpYS13bWktZWMtYmFja2xpZ2h0IHJlZ2lz
+dGVycyBhcyBhIEJBQ0tMSUdIVF9GSVJNV0FSRSB0eXBlDQo+ID4+IGRldmljZSwgaXQgdGFrZXMg
+cHJlY2VkZW5jZSBvdmVyIHRoZSBCQUNLTElHSFRfUkFXIGRldmljZXMgcmVnaXN0ZXJlZA0KPiA+
+PiBieSB0aGUgR1BVIGRyaXZlcnMuIFRoaXMgaW4gdHVybiBsZWFkcyB0byBiYWNrbGlnaHQgY29u
+dHJvbCBhcHBlYXJpbmcNCj4gPj4gdG8gYmUgbm9uLWZ1bmN0aW9uYWwgdW50aWwgYWZ0ZXIgY29t
+cGxldGluZyBhIHN1c3BlbmQvcmVzdW1lIGN5Y2xlLg0KPiA+PiBIb3dldmVyLCBpdCBpcyBzdGls
+bCBwb3NzaWJsZSB0byBjb250cm9sIHRoZSBiYWNrbGlnaHQgdGhyb3VnaCBkaXJlY3QNCj4gPj4g
+aW50ZXJhY3Rpb24gd2l0aCB0aGUgd29ya2luZyBHUFUgZHJpdmVyJ3MgYmFja2xpZ2h0IHN5c2Zz
+IGludGVyZmFjZS4NCj4gPj4NCj4gPj4gVGhlc2Ugc3lzdGVtcyBhbHNvIGFwcGVhciB0byBoYXZl
+IGEgc2Vjb25kIGZpcm13YXJlIGJ1ZyB3aGljaCByZXNldHMNCj4gPj4gdGhlIEVDJ3MgYnJpZ2h0
+bmVzcyBsZXZlbCB0byAxMDAlIG9uIHJlc3VtZSwgYnV0IGxlYXZlcyB0aGUgc3RhdGUgaW4NCj4g
+Pj4gdGhlIGtlcm5lbCBhdCB0aGUgcHJlLXN1c3BlbmQgbGV2ZWwuIFRoaXMgY2F1c2VzIGF0dGVt
+cHRzIHRvIHNhdmUNCj4gPj4gYW5kIHJlc3RvcmUgdGhlIGJhY2tsaWdodCBsZXZlbCBhY3Jvc3Mg
+dGhlIHN1c3BlbmQvcmVzdW1lIGN5Y2xlIHRvDQo+ID4+IGZhaWwsIGR1ZSB0byB0aGUgbGV2ZWwg
+YXBwZWFyaW5nIG5vdCB0byBjaGFuZ2UgZXZlbiB0aG91Z2ggaXQgZGlkLg0KPiA+Pg0KPiA+PiBJ
+biBvcmRlciB0byB3b3JrIGFyb3VuZCB0aGVzZSBpc3N1ZSwgYWRkIHF1aXJrIHRhYmxlcyB0byBk
+ZXRlY3QNCj4gPj4gc3lzdGVtcyB0aGF0IGFyZSBrbm93biB0byBzaG93IHRoZXNlIGJlaGF2aW9y
+cy4gU28gZmFyLCB0aGVyZSBpcw0KPiA+PiBvbmx5IG9uZSBrbm93biBzeXN0ZW0gdGhhdCByZXF1
+aXJlcyB0aGVzZSB3b3JrYXJvdW5kcywgYW5kIGJvdGgNCj4gPj4gaXNzdWVzIGFyZSBwcmVzZW50
+IG9uIHRoYXQgc3lzdGVtLCBidXQgdGhlIHF1aXJrcyBhcmUgdHJhY2tlZCBpbg0KPiA+PiBzZXBh
+cmF0ZSB0YWJsZXMgdG8gbWFrZSBpdCBlYXNpZXIgdG8gYWRkIHRoZW0gdG8gb3RoZXIgc3lzdGVt
+cyB3aGljaA0KPiA+PiBtYXkgZXhoaWJpdCBvbmUgb2YgdGhlIGJ1Z3MsIGJ1dCBub3QgdGhlIG90
+aGVyLiBUaGUgb3JpZ2luYWwgc3lzdGVtcw0KPiA+PiB0aGF0IHRoaXMgZHJpdmVyIHdhcyB0ZXN0
+ZWQgb24gZHVyaW5nIGRldmVsb3BtZW50IGRvIG5vdCBleGhpYml0DQo+ID4+IGVpdGhlciBvZiB0
+aGVzZSBxdWlya3MuDQo+ID4+DQo+ID4+IElmIGEgc3lzdGVtIHdpdGggdGhlICJHUFUgZHJpdmVy
+IGhhcyBiYWNrbGlnaHQgY29udHJvbCIgcXVpcmsgaXMNCj4gPj4gZGV0ZWN0ZWQsIG52aWRpYS13
+bWktZWMtYmFja2xpZ2h0IHdpbGwgZ3JhYiBhIHJlZmVyZW5jZSB0byB0aGUgd29ya2luZw0KPiA+
+PiAod2hlbiBmcmVzaGx5IGJvb3RlZCkgR1BVIGJhY2tsaWdodCBoYW5kbGVyIGFuZCByZWxheXMg
+YW55IGJhY2tsaWdodA0KPiA+PiBicmlnaHRuZXNzIGxldmVsIGNoYW5nZSByZXF1ZXN0cyBkaXJl
+Y3RlZCBhdCB0aGUgRUMgdG8gYWxzbyBiZSBhcHBsaWVkDQo+ID4+IHRvIHRoZSBHUFUgYmFja2xp
+Z2h0IGludGVyZmFjZS4gVGhpcyBsZWFkcyB0byByZWR1bmRhbnQgdXBkYXRlcw0KPiA+PiBkaXJl
+Y3RlZCBhdCB0aGUgR1BVIGJhY2tsaWdodCBkcml2ZXIgYWZ0ZXIgYSBzdXNwZW5kL3Jlc3VtZSBj
+eWNsZSwgYnV0DQo+ID4+IGl0IGRvZXMgYWxsb3cgdGhlIEVDIGJhY2tsaWdodCBjb250cm9sIHRv
+IHdvcmsgd2hlbiB0aGUgc3lzdGVtIGlzDQo+ID4+IGZyZXNobHkgYm9vdGVkLg0KPiA+Pg0KPiA+
+PiBJZiBhIHN5c3RlbSB3aXRoIHRoZSAiYmFja2xpZ2h0IGxldmVsIHJlc2V0IHRvIGZ1bGwgb24g
+cmVzdW1lIiBxdWlyaw0KPiA+PiBpcyBkZXRlY3RlZCwgbnZpZGlhLXdtaS1lYy1iYWNrbGlnaHQg
+d2lsbCByZWdpc3RlciBhIFBNIG5vdGlmaWVyIHRvDQo+ID4+IHJlc2V0IHRoZSBiYWNrbGlnaHQg
+dG8gdGhlIHByZXZpb3VzIGxldmVsIHVwb24gcmVzdW1lLg0KPiA+Pg0KPiA+PiBUaGVzZSB3b3Jr
+YXJvdW5kcyBhcmUgYWxzbyBwbHVtYmVkIHRocm91Z2ggdG8ga2VybmVsIG1vZHVsZQ0KPiBwYXJh
+bWV0ZXJzLA0KPiA+PiB0byBtYWtlIGl0IGVhc2llciBmb3IgdXNlcnMgd2hvIHN1c3BlY3QgdGhl
+eSBtYXkgYmUgYWZmZWN0ZWQgYnkgb25lIG9yDQo+ID4+IGJvdGggb2YgdGhlc2UgYnVncyB0byB0
+ZXN0IHdoZXRoZXIgdGhlc2Ugd29ya2Fyb3VuZHMgYXJlIGVmZmVjdGl2ZSBvbg0KPiA+PiB0aGVp
+ciBzeXN0ZW1zIGFzIHdlbGwuDQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IERhbmllbCBEYWRh
+cCA8ZGRhZGFwQG52aWRpYS5jb20+DQo+ID4+IFRlc3RlZC1ieTogQWxleGFuZHJ1IERpbnUgPGFs
+ZXguZGludTA3QGdtYWlsLmNvbT4NCj4gPj4gLS0tDQo+ID4+ICAgLi4uL3BsYXRmb3JtL3g4Ni9u
+dmlkaWEtd21pLWVjLWJhY2tsaWdodC5jICAgIHwgMTgxDQo+ICsrKysrKysrKysrKysrKysrLQ0K
+PiA+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxNzkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkN
+Cj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L252aWRpYS13bWkt
+ZWMtYmFja2xpZ2h0LmMNCj4gYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9udmlkaWEtd21pLWVjLWJh
+Y2tsaWdodC5jDQo+ID4+IGluZGV4IDYxZTM3MTk0ZGY3MC4uY2NiM2I1MDZjMTJjIDEwMDY0NA0K
+PiA+PiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9udmlkaWEtd21pLWVjLWJhY2tsaWdodC5j
+DQo+ID4+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L252aWRpYS13bWktZWMtYmFja2xpZ2h0
+LmMNCj4gPj4gQEAgLTMsOCArMywxMSBAQA0KPiA+PiAgICAqIENvcHlyaWdodCAoYykgMjAyMCwg
+TlZJRElBIENPUlBPUkFUSU9OLiAgQWxsIHJpZ2h0cyByZXNlcnZlZC4NCj4gPj4gICAgKi8NCj4g
+Pj4NCj4gPj4gKyNkZWZpbmUgcHJfZm10KGYpICIlczogIiBmICJcbiIsIEtCVUlMRF9NT0ROQU1F
+DQo+ID4gYEtCVUlMRF9NT0ROQU1FYCBpcyBhIHN0cmluZyBsaXRlcmFsLCBzbyB5b3UgY2FuIGRv
+IGUuZy4NCj4gPg0KPiA+ICAgICNkZWZpbmUgcHJfZm10KGZtdCkgS0JVSUxEX01PRE5BTUUgIjog
+IiBmbXQNCj4gPg0KPiA+DQo+ID4+ICsNCj4gPj4gICAjaW5jbHVkZSA8bGludXgvYWNwaS5oPg0K
+PiA+PiAgICNpbmNsdWRlIDxsaW51eC9iYWNrbGlnaHQuaD4NCj4gPj4gKyNpbmNsdWRlIDxsaW51
+eC9kbWkuaD4NCj4gPj4gICAjaW5jbHVkZSA8bGludXgvbW9kX2RldmljZXRhYmxlLmg+DQo+ID4+
+ICAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+PiAgICNpbmNsdWRlIDxsaW51eC90eXBl
+cy5oPg0KPiA+PiBAQCAtNzUsNiArNzgsNjkgQEAgc3RydWN0IHdtaV9icmlnaHRuZXNzX2FyZ3Mg
+ew0KPiA+PiAgIAl1MzIgaWdub3JlZFszXTsNCj4gPj4gICB9Ow0KPiA+Pg0KPiA+PiArLyoqDQo+
+ID4+ICsgKiBzdHJ1Y3QgbnZpZGlhX3dtaV9lY19iYWNrbGlnaHRfcHJpdiAtIGRyaXZlciBwcml2
+YXRlIGRhdGENCj4gPj4gKyAqIEBibF9kZXY6ICAgICAgIHRoZSBhc3NvY2lhdGVkIGJhY2tsaWdo
+dCBkZXZpY2UNCj4gPj4gKyAqIEBwcm94eV90YXJnZXQ6IGJhY2tsaWdodCBkZXZpY2Ugd2hpY2gg
+cmVjZWl2ZXMgcmVsYXllZCBicmlnaHRuZXNzDQo+IGNoYW5nZXMNCj4gPj4gKyAqIEBub3RpZmll
+cjogICAgIG5vdGlmaWVyIGJsb2NrIGZvciByZXN1bWUgY2FsbGJhY2sNCj4gPj4gKyAqLw0KPiA+
+PiArc3RydWN0IG52aWRpYV93bWlfZWNfYmFja2xpZ2h0X3ByaXYgew0KPiA+PiArCXN0cnVjdCBi
+YWNrbGlnaHRfZGV2aWNlICpibF9kZXY7DQo+ID4+ICsJc3RydWN0IGJhY2tsaWdodF9kZXZpY2Ug
+KnByb3h5X3RhcmdldDsNCj4gPj4gKwlzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgbmI7DQo+ID4+ICt9
+Ow0KPiA+PiArDQo+ID4+ICtzdGF0aWMgY2hhciAqYmFja2xpZ2h0X3Byb3h5X3RhcmdldDsNCj4g
+Pj4gK21vZHVsZV9wYXJhbShiYWNrbGlnaHRfcHJveHlfdGFyZ2V0LCBjaGFycCwgMCk7DQo+ID4g
+SXQgc2VlbXMgdGhlc2UgbW9kdWxlIHBhcmFtZXRlcnMgYXJlIG5laXRoZXIgcmVhZGFibGUgbm9y
+IHdyaXRhYmxlLA0KPiA+IGlzIHRoYXQgaW50ZW50aW9uYWw/DQo+IA0KPiANCj4gSXQgd2FzIGlu
+dGVudGlvbmFsIHRoYXQgdGhleSBub3QgYmUgd3JpdGFibGUsIGJlY2F1c2UgSSBkaWRuJ3Qgd2Fu
+dCB0bw0KPiBoYXZlIHRvIHBsdW1iIGV2ZXJ5dGhpbmcgdGhyb3VnaCB0byBoYW5kbGUgY2hhbmdp
+bmcgdGhlIHZhbHVlcyBhZnRlcg0KPiBwcm9iZS4gSG93ZXZlciwgeW91IGFyZSByaWdodCB0aGF0
+IGl0IGNvdWxkIHN0aWxsIGJlIHVzZWZ1bCB0byBzZXQgdXANCj4gdGhlIHN5c2ZzIGVudHJpZXMg
+dG8gYWxsb3cgcmVhZGluZyB0aGUgdmFsdWVzLCBhcyB0aGlzIGNvdWxkIGJlIHVzZWZ1bA0KPiBp
+bmZvcm1hdGlvbiBmb3Igc29tZW9uZSB3aG8gd2FudHMgdG8gY2hlY2sgaWYgZWl0aGVyIG9mIHRo
+ZXNlIHF1aXJrcyBhcmUNCj4gZW5hYmxlZC4NCj4gDQo+IA0KPiA+DQo+ID4+ICtNT0RVTEVfUEFS
+TV9ERVNDKGJhY2tsaWdodF9wcm94eV90YXJnZXQsICJSZWxheSBicmlnaHRuZXNzDQo+IGNoYW5n
+ZSByZXF1ZXN0cyB0byB0aGUgbmFtZWQgYmFja2xpZ2h0IGRyaXZlciwgb24gc3lzdGVtcyB3aGlj
+aA0KPiBlcnJvbmVvdXNseSByZXBvcnQgRUMgYmFja2xpZ2h0IGNvbnRyb2wuIik7DQo+ID4+ICsN
+Cj4gPj4gK3N0YXRpYyBpbnQgbWF4X3JlcHJvYmVfYXR0ZW1wdHMgPSAxMjg7DQo+ID4gQ2FuIHlv
+dSBlbGFib3JhdGUgaG93IHRoaXMgbnVtYmVyIHdhcyBhcnJpdmVkIGF0Pw0KPiA+DQo+IA0KPiBJ
+dCdzIGp1c3QgYSBtZWRpdW0tc21hbGwgcm91bmQgbnVtYmVyLiBJIGRpZG4ndCB3YW50IHByb2Jl
+IHRvIHJldHVybg0KPiAtRVBST0JFX0RFRkVSIGZvcmV2ZXIgaWYgZS5nLiBzb21lYm9keSBzcGVj
+aWZpZWQgYSB3cm9uZyBkZXZpY2UgbmFtZSBvcg0KPiBpZiB0aGUgdGFyZ2V0IGRldmljZSBuYW1l
+IGNoYW5nZXMgYW5kIHRoZSBlbnRyeSBpbiB0aGUgcXVpcmtzIHRhYmxlIGdvZXMNCj4gb3V0IG9m
+IGRhdGUuIE9uIHRoZSBzeXN0ZW0gSSB0ZXN0ZWQgdGhpcyBvbiwgdGhlIGFtZGdwdV9ibDEgZGV2
+aWNlIHdhcw0KPiBhY2Nlc3NpYmxlIG9uIHRoZSAxNHRoIHByb2JlIGF0dGVtcHQuIElmIHRoZXJl
+J3Mgc29tZSBiZXR0ZXIgdmFsdWUgdG8NCj4gcGx1ZyBpbiBoZXJlLCBvciBpZiBpdCdzIGFjdHVh
+bGx5IGNvbnNpZGVyZWQgbW9yZSBjb3JyZWN0IHRvIGp1c3QgbmV2ZXINCj4gc3VjY2VlZCBhdCBw
+cm9iZSBpZiB0aGUgd29ya2Fyb3VuZCBpcyBlbmFibGVkIGJ1dCB0aGUgdGFyZ2V0IGRldmljZSBj
+YW4NCj4gYmUgZm91bmQsIEknZCBiZSBoYXBweSB0byBjaGFuZ2UgaXQuDQo+IA0KPiANCj4gPj4g
+K21vZHVsZV9wYXJhbShtYXhfcmVwcm9iZV9hdHRlbXB0cywgaW50LCAwKTsNCj4gPj4gK01PRFVM
+RV9QQVJNX0RFU0MobWF4X3JlcHJvYmVfYXR0ZW1wdHMsICJMaW1pdCBvZiByZXByb2JlDQo+IGF0
+dGVtcHRzIHdoZW4gcmVsYXlpbmcgYnJpZ2h0bmVzcyBjaGFuZ2UgcmVxdWVzdHMuIik7DQo+ID4+
+ICsNCj4gPj4gK3N0YXRpYyBib29sIHJlc3RvcmVfbGV2ZWxfb25fcmVzdW1lOw0KPiA+PiArbW9k
+dWxlX3BhcmFtKHJlc3RvcmVfbGV2ZWxfb25fcmVzdW1lLCBib29sLCAwKTsNCj4gPj4gK01PRFVM
+RV9QQVJNX0RFU0MocmVzdG9yZV9sZXZlbF9vbl9yZXN1bWUsICJSZXN0b3JlIHRoZQ0KPiBiYWNr
+bGlnaHQgbGV2ZWwgd2hlbiByZXN1bWluZyBmcm9tIHN1c3BlbmQsIG9uIHN5c3RlbXMgd2hpY2gg
+cmVzZXQgdGhlDQo+IEVDJ3MgYmFja2xpZ2h0IGxldmVsIG9uIHJlc3VtZS4iKTsNCj4gPj4gKw0K
+PiA+PiArc3RhdGljIGludCBhc3NpZ25fcmVsYXlfcXVpcmsoY29uc3Qgc3RydWN0IGRtaV9zeXN0
+ZW1faWQgKmlkKQ0KPiA+PiArew0KPiA+PiArCWJhY2tsaWdodF9wcm94eV90YXJnZXQgPSBpZC0+
+ZHJpdmVyX2RhdGE7DQo+ID4+ICsJcmV0dXJuIHRydWU7DQo+ID4+ICt9DQo+ID4+ICsNCj4gPj4g
+KyNkZWZpbmUgUFJPWFlfUVVJUktfRU5UUlkodmVuZG9yLCBwcm9kdWN0LCBxdWlya19kYXRhKSB7
+IFwNCj4gPj4gKwkuY2FsbGJhY2sgPSBhc3NpZ25fcmVsYXlfcXVpcmssICAgICAgICAgICAgICAg
+ICAgXA0KPiA+PiArCS5tYXRjaGVzID0geyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBcDQo+ID4+ICsJCURNSV9NQVRDSChETUlfU1lTX1ZFTkRPUiwgdmVuZG9yKSwgICAgICAg
+XA0KPiA+PiArCQlETUlfTUFUQ0goRE1JX1BST0RVQ1RfVkVSU0lPTiwgcHJvZHVjdCkgIFwNCj4g
+Pj4gKwl9LCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXA0K
+PiA+PiArCS5kcml2ZXJfZGF0YSA9IHF1aXJrX2RhdGEgICAgICAgICAgICAgICAgICAgICAgICBc
+DQo+ID4+ICt9DQo+ID4+ICsNCj4gPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZG1pX3N5c3RlbV9p
+ZCBwcm94eV9xdWlya190YWJsZVtdID0gew0KPiA+PiArCVBST1hZX1FVSVJLX0VOVFJZKCJMRU5P
+Vk8iLCAiTGVnaW9uIFM3IDE1QUNINiIsDQo+ICJhbWRncHVfYmwxIiksDQo+ID4+ICsJeyB9DQo+
+ID4+ICt9Ow0KPiA+PiArDQo+ID4+ICtzdGF0aWMgaW50IGFzc2lnbl9yZXN0b3JlX3F1aXJrKGNv
+bnN0IHN0cnVjdCBkbWlfc3lzdGVtX2lkICppZCkNCj4gPj4gK3sNCj4gPj4gKwlyZXN0b3JlX2xl
+dmVsX29uX3Jlc3VtZSA9IHRydWU7DQo+ID4+ICsJcmV0dXJuIHRydWU7DQo+ID4+ICt9DQo+ID4+
+ICsNCj4gPj4gKyNkZWZpbmUgUkVTVE9SRV9RVUlSS19FTlRSWSh2ZW5kb3IsIHByb2R1Y3QpIHsg
+ICAgICAgICAgIFwNCj4gPj4gKwkuY2FsbGJhY2sgPSBhc3NpZ25fcmVzdG9yZV9xdWlyaywgICAg
+ICAgICAgICAgICAgXA0KPiA+PiArCS5tYXRjaGVzID0geyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBcDQo+ID4+ICsJCURNSV9NQVRDSChETUlfU1lTX1ZFTkRPUiwgdmVuZG9y
+KSwgICAgICAgXA0KPiA+PiArCQlETUlfTUFUQ0goRE1JX1BST0RVQ1RfVkVSU0lPTiwgcHJvZHVj
+dCksIFwNCj4gPj4gKwl9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgXA0KPiA+PiArfQ0KPiA+PiArDQo+ID4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRtaV9z
+eXN0ZW1faWQgcmVzdG9yZV9xdWlya190YWJsZVtdID0gew0KPiA+PiArCVJFU1RPUkVfUVVJUktf
+RU5UUlkoIkxFTk9WTyIsICJMZWdpb24gUzcgMTVBQ0g2IiksDQo+ID4+ICsJeyB9DQo+ID4+ICt9
+Ow0KPiA+PiArDQo+ID4+ICAgLyoqDQo+ID4+ICAgICogd21pX2JyaWdodG5lc3Nfbm90aWZ5KCkg
+LSBoZWxwZXIgZnVuY3Rpb24gZm9yIGNhbGxpbmcgV01JLXdyYXBwZWQNCj4gQUNQSSBtZXRob2QN
+Cj4gPj4gICAgKiBAdzogICAgUG9pbnRlciB0byB0aGUgc3RydWN0IHdtaV9kZXZpY2UgaWRlbnRp
+ZmllZCBieQ0KPiAlV01JX0JSSUdIVE5FU1NfR1VJRA0KPiA+PiBAQCAtMTE5LDkgKzE4NSwzMCBA
+QCBzdGF0aWMgaW50IHdtaV9icmlnaHRuZXNzX25vdGlmeShzdHJ1Y3QNCj4gd21pX2RldmljZSAq
+dywgZW51bSB3bWlfYnJpZ2h0bmVzc19tZXRobw0KPiA+PiAgIAlyZXR1cm4gMDsNCj4gPj4gICB9
+DQo+ID4+DQo+ID4+ICtzdGF0aWMgaW50IHNjYWxlX2JhY2tsaWdodF9sZXZlbChzdHJ1Y3QgYmFj
+a2xpZ2h0X2RldmljZSAqYSwNCj4gPj4gKwkJCQkgc3RydWN0IGJhY2tsaWdodF9kZXZpY2UgKmIp
+DQo+ID4+ICt7DQo+ID4+ICsJLyogYmVjYXVzZSBmbG9hdGluZyBwb2ludCBtYXRoIGluIHRoZSBr
+ZXJuZWwgaXMgYW5ub3lpbmcgKi8NCj4gPj4gKwljb25zdCBpbnQgc2NhbGluZ19mYWN0b3IgPSA2
+NTUzNjsNCj4gPj4gKwlpbnQgbGV2ZWwgPSBhLT5wcm9wcy5icmlnaHRuZXNzOw0KPiA+PiArCWlu
+dCByZWxhdGl2ZV9sZXZlbCA9IGxldmVsICogc2NhbGluZ19mYWN0b3IgLyBhLT5wcm9wcy5tYXhf
+YnJpZ2h0bmVzczsNCj4gPj4gKw0KPiA+PiArCXJldHVybiByZWxhdGl2ZV9sZXZlbCAqIGItPnBy
+b3BzLm1heF9icmlnaHRuZXNzIC8gc2NhbGluZ19mYWN0b3I7DQo+ID4+ICt9DQo+ID4gTWF5YmUN
+Cj4gPg0KPiA+ICAgIGZpeHBfbGluZWFyX2ludGVycG9sYXRlKDAsIDAsIGEtPnByb3BzLm1heF9i
+cmlnaHRuZXNzLCBiLQ0KPiA+cHJvcHMubWF4X2JyaWdodG5lc3MsIGEtPnByb3BzLmJyaWdodG5l
+c3MpOw0KPiA+DQo+ID4gPyAoZnJvbSBgbGludXgvZml4cC1hcml0aC5oYCkNCj4gDQo+IA0KPiBZ
+ZXMsIHRoaXMgaXMgZXhhY3RseSB3aGF0IEkgd2FudDsgdGhhbmsgeW91Lg0KPiANCj4gDQo+ID4N
+Cj4gPj4gKw0KPiA+PiAgIHN0YXRpYyBpbnQgbnZpZGlhX3dtaV9lY19iYWNrbGlnaHRfdXBkYXRl
+X3N0YXR1cyhzdHJ1Y3QNCj4gYmFja2xpZ2h0X2RldmljZSAqYmQpDQo+ID4+ICAgew0KPiA+PiAg
+IAlzdHJ1Y3Qgd21pX2RldmljZSAqd2RldiA9IGJsX2dldF9kYXRhKGJkKTsNCj4gPj4gKwlzdHJ1
+Y3QgbnZpZGlhX3dtaV9lY19iYWNrbGlnaHRfcHJpdiAqcHJpdiA9DQo+IGRldl9nZXRfZHJ2ZGF0
+YSgmd2Rldi0+ZGV2KTsNCj4gPj4gKwlzdHJ1Y3QgYmFja2xpZ2h0X2RldmljZSAqcHJveHlfdGFy
+Z2V0ID0gcHJpdi0+cHJveHlfdGFyZ2V0Ow0KPiA+PiArDQo+ID4+ICsJaWYgKHByb3h5X3Rhcmdl
+dCkgew0KPiA+PiArCQlpbnQgbGV2ZWwgPSBzY2FsZV9iYWNrbGlnaHRfbGV2ZWwoYmQsIHByb3h5
+X3RhcmdldCk7DQo+ID4+ICsNCj4gPj4gKwkJaWYgKGJhY2tsaWdodF9kZXZpY2Vfc2V0X2JyaWdo
+dG5lc3MocHJveHlfdGFyZ2V0LCBsZXZlbCkpDQo+ID4+ICsJCQlwcl93YXJuKCJGYWlsZWQgdG8g
+cmVsYXkgYmFja2xpZ2h0IHVwZGF0ZSB0byBcIiVzXCIiLA0KPiA+PiArCQkJCWJhY2tsaWdodF9w
+cm94eV90YXJnZXQpOw0KPiA+PiArCX0NCj4gPj4NCj4gPj4gICAJcmV0dXJuIHdtaV9icmlnaHRu
+ZXNzX25vdGlmeSh3ZGV2LA0KPiBXTUlfQlJJR0hUTkVTU19NRVRIT0RfTEVWRUwsDQo+ID4+ICAg
+CSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgV01JX0JSSUdIVE5FU1NfTU9ERV9TRVQsDQo+
+ID4+IEBAIC0xNDcsMTMgKzIzNCw2NSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGJhY2tsaWdodF9v
+cHMNCj4gbnZpZGlhX3dtaV9lY19iYWNrbGlnaHRfb3BzID0gew0KPiA+PiAgIAkuZ2V0X2JyaWdo
+dG5lc3MgPSBudmlkaWFfd21pX2VjX2JhY2tsaWdodF9nZXRfYnJpZ2h0bmVzcywNCj4gPj4gICB9
+Ow0KPiA+Pg0KPiA+PiArc3RhdGljIGludCBudmlkaWFfd21pX2VjX2JhY2tsaWdodF9wbV9ub3Rp
+ZmllcihzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sNCj4gKm5iLCB1bnNpZ25lZCBsb25nIGV2ZW50LCB2
+b2lkICpkKQ0KPiA+PiArew0KPiA+PiArDQo+ID4+ICsJLyoNCj4gPj4gKwkgKiBPbiBzb21lIHN5
+c3RlbXMsIHRoZSBFQyBiYWNrbGlnaHQgbGV2ZWwgZ2V0cyByZXNldCB0byAxMDAlIHdoZW4NCj4g
+Pj4gKwkgKiByZXN1bWluZyBmcm9tIHN1c3BlbmQsIGJ1dCB0aGUgYmFja2xpZ2h0IGRldmljZSBz
+dGF0ZSBzdGlsbCByZWZsZWN0cw0KPiA+PiArCSAqIHRoZSBwcmUtc3VzcGVuZCB2YWx1ZS4gUmVm
+cmVzaCB0aGUgZXhpc3Rpbmcgc3RhdGUgdG8gc3luYyB0aGUgRUMncw0KPiA+PiArCSAqIHN0YXRl
+IGJhY2sgdXAgd2l0aCB0aGUga2VybmVsJ3MuDQo+ID4+ICsJICovDQo+ID4+ICsJaWYgKGV2ZW50
+ID09IFBNX1BPU1RfU1VTUEVORCkgew0KPiA+PiArCQlzdHJ1Y3QgbnZpZGlhX3dtaV9lY19iYWNr
+bGlnaHRfcHJpdiAqcDsNCj4gPj4gKw0KPiA+PiArCQlwID0gY29udGFpbmVyX29mKG5iLCBzdHJ1
+Y3QgbnZpZGlhX3dtaV9lY19iYWNrbGlnaHRfcHJpdiwNCj4gbmIpOw0KPiA+PiArCQlyZXR1cm4g
+YmFja2xpZ2h0X3VwZGF0ZV9zdGF0dXMocC0+YmxfZGV2KTsNCj4gPiBgYmFja2xpZ2h0X3VwZGF0
+ZV9zdGF0dXMoKWAgcmV0dXJucyBhIG5lZ2F0aXZlIGVycm5vIHdoaWxlIHRoZSBub3RpZmllcg0K
+PiBjaGFpbg0KPiA+IGV4cGVjdHMgc29tZXRoaW5nIGVsc2UuIEl0IHdvdWxkIHByb2JhYmx5IGJl
+IGJldHRlciB0byByZXR1cm4NCj4gYE5PVElGWV9ET05FYA0KPiA+IGluIGFsbCBjYXNlcy4gQ3Vy
+cmVudGx5IGEgc3VpdGFibGUgZXJyb3IgZnJvbSBgYmFja2xpZ2h0X3VwZGF0ZV9zdGF0dXMoKWAg
+d2lsbA0KPiA+IHN0b3AgdGhlIG5vdGlmaWVyIGNoYWluLg0KPiANCj4gDQo+IFRoYW5rcyBmb3Ig
+Y2F0Y2hpbmcgdGhhdDogSSBzaG91bGQgaGF2ZSBwYWlkIG1vcmUgYXR0ZW50aW9uIHRvIHRoZQ0K
+PiBub3RpZmllciBjYWxsYmFjayBzaWduYXR1cmUuDQo+IA0KPiANCj4gPg0KPiA+PiArCX0NCj4g
+Pj4gKw0KPiA+PiArCXJldHVybiAwOw0KPiA+PiArfQ0KPiA+PiArDQo+ID4+ICAgc3RhdGljIGlu
+dCBudmlkaWFfd21pX2VjX2JhY2tsaWdodF9wcm9iZShzdHJ1Y3Qgd21pX2RldmljZSAqd2RldiwN
+Cj4gY29uc3Qgdm9pZCAqY3R4KQ0KPiA+PiAgIHsNCj4gPj4gKwlzdHJ1Y3QgYmFja2xpZ2h0X2Rl
+dmljZSAqYmRldiwgKnRhcmdldCA9IE5VTEw7DQo+ID4+ICsJc3RydWN0IG52aWRpYV93bWlfZWNf
+YmFja2xpZ2h0X3ByaXYgKnByaXY7DQo+ID4+ICAgCXN0cnVjdCBiYWNrbGlnaHRfcHJvcGVydGll
+cyBwcm9wcyA9IHt9Ow0KPiA+PiAtCXN0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICpiZGV2Ow0KPiA+
+PiAgIAl1MzIgc291cmNlOw0KPiA+PiAgIAlpbnQgcmV0Ow0KPiA+Pg0KPiA+PiArCS8qDQo+ID4+
+ICsJICogQ2hlY2sgcXVpcmtzIHRhYmxlcyB0byBzZWUgaWYgdGhpcyBzeXN0ZW0gbmVlZHMgYW55
+IG9mIHRoZSBmaXJtd2FyZQ0KPiA+PiArCSAqIGJ1ZyB3b3JrYXJvdW5kcy4NCj4gPj4gKwkgKi8N
+Cj4gPj4gKw0KPiA+PiArCS8qIFVzZXItc2V0IHF1aXJrcyBmcm9tIHRoZSBtb2R1bGUgcGFyYW1l
+dGVycyB0YWtlIHByZWNlZGVuY2UgKi8NCj4gPj4gKwlpZiAoIWJhY2tsaWdodF9wcm94eV90YXJn
+ZXQpDQo+ID4+ICsJCWRtaV9jaGVja19zeXN0ZW0ocHJveHlfcXVpcmtfdGFibGUpOw0KPiA+PiAr
+DQo+ID4+ICsJZG1pX2NoZWNrX3N5c3RlbShyZXN0b3JlX3F1aXJrX3RhYmxlKTsNCj4gPj4gKw0K
+PiA+PiArCWlmIChiYWNrbGlnaHRfcHJveHlfdGFyZ2V0ICYmIGJhY2tsaWdodF9wcm94eV90YXJn
+ZXRbMF0pIHsNCj4gPj4gKwkJc3RhdGljIGludCBudW1fcmVwcm9iZV9hdHRlbXB0czsNCj4gPj4g
+Kw0KPiA+PiArCQl0YXJnZXQgPQ0KPiBiYWNrbGlnaHRfZGV2aWNlX2dldF9ieV9uYW1lKGJhY2ts
+aWdodF9wcm94eV90YXJnZXQpOw0KPiA+PiArDQo+ID4+ICsJCWlmICghdGFyZ2V0KSB7DQo+ID4+
+ICsJCQkvKg0KPiA+PiArCQkJICogVGhlIHRhcmdldCBiYWNrbGlnaHQgZGV2aWNlIG1pZ2h0IG5v
+dCBiZSByZWFkeTsNCj4gPj4gKwkJCSAqIHRyeSBhZ2FpbiBhbmQgZGlzYWJsZSBiYWNrbGlnaHQg
+cHJveHlpbmcgaWYgaXQNCj4gPj4gKwkJCSAqIGZhaWxzIHRvbyBtYW55IHRpbWVzLg0KPiA+PiAr
+CQkJICovDQo+ID4+ICsJCQlpZiAobnVtX3JlcHJvYmVfYXR0ZW1wdHMgPA0KPiBtYXhfcmVwcm9i
+ZV9hdHRlbXB0cykgew0KPiA+PiArCQkJCW51bV9yZXByb2JlX2F0dGVtcHRzKys7DQo+ID4+ICsJ
+CQkJcmV0dXJuIC1FUFJPQkVfREVGRVI7DQo+ID4+ICsJCQl9DQo+ID4+ICsNCj4gPj4gKwkJCXBy
+X3dhcm4oIlVuYWJsZSB0byBhY3F1aXJlICVzIGFmdGVyICVkIGF0dGVtcHRzLg0KPiBEaXNhYmxp
+bmcgYmFja2xpZ2h0IHByb3h5LiIsDQo+ID4+ICsJCQkJYmFja2xpZ2h0X3Byb3h5X3RhcmdldCwN
+Cj4gbWF4X3JlcHJvYmVfYXR0ZW1wdHMpOw0KPiA+PiArCQl9DQo+ID4+ICsJfQ0KPiA+IEkgdGhp
+bmsgYHRhcmdldGAgaXMgbm90IHB1dCBpbiBjYXNlIG9mIGVycm9yLiBZb3UgcHJvYmFibHkgbmVl
+ZCB0byBhZGQNCj4gc29tZXRoaW5nIGxpa2U6DQo+ID4NCj4gPiAgICBpZiAodGFyZ2V0KSB7DQo+
+ID4gICAgICByZXQgPSBkZXZtX2FkZF9hY3Rpb25fb3JfcmVzZXQoJndkZXYtPmRldiwgcHV0X2Rl
+dmljZV93cmFwcGVyLA0KPiB0YXJnZXQpOw0KPiA+ICAgICAgaWYgKHJldCA8IDApDQo+ID4gICAg
+ICAgIHJldHVybiByZXQ7DQo+ID4gICAgfQ0KPiA+DQo+ID4NCj4gPj4gKw0KPiA+PiAgIAlyZXQg
+PSB3bWlfYnJpZ2h0bmVzc19ub3RpZnkod2RldiwNCj4gV01JX0JSSUdIVE5FU1NfTUVUSE9EX1NP
+VVJDRSwNCj4gPj4gICAJICAgICAgICAgICAgICAgICAgICAgICAgICAgV01JX0JSSUdIVE5FU1Nf
+TU9ERV9HRVQsICZzb3VyY2UpOw0KPiA+PiAgIAlpZiAocmV0KQ0KPiA+PiBAQCAtMTg4LDcgKzMy
+Nyw0NCBAQCBzdGF0aWMgaW50IG52aWRpYV93bWlfZWNfYmFja2xpZ2h0X3Byb2JlKHN0cnVjdA0K
+PiB3bWlfZGV2aWNlICp3ZGV2LCBjb25zdCB2b2lkICpjdA0KPiA+PiAgIAkJCQkJICAgICAgJndk
+ZXYtPmRldiwgd2RldiwNCj4gPj4gICAJCQkJCSAgICAgICZudmlkaWFfd21pX2VjX2JhY2tsaWdo
+dF9vcHMsDQo+ID4+ICAgCQkJCQkgICAgICAmcHJvcHMpOw0KPiA+PiAtCXJldHVybiBQVFJfRVJS
+X09SX1pFUk8oYmRldik7DQo+ID4+ICsNCj4gPj4gKwlpZiAoSVNfRVJSKGJkZXYpKQ0KPiA+PiAr
+CQlyZXR1cm4gUFRSX0VSUihiZGV2KTsNCj4gPj4gKw0KPiA+PiArCXByaXYgPSBremFsbG9jKHNp
+emVvZigqcHJpdiksIEdGUF9LRVJORUwpOw0KPiA+IGBkZXZtX2t6YWxsb2MoKWAgd291bGQgcHJv
+YmFibHkgYmUgYmV0dGVyIGFuZCB5b3Ugc2hvdWxkIGNoZWNrIGlmIGAhcHJpdmAuDQo+ID4NCj4g
+Pg0KPiA+PiArCXByaXYtPmJsX2RldiA9IGJkZXY7DQo+ID4+ICsNCj4gPj4gKwlkZXZfc2V0X2Ry
+dmRhdGEoJndkZXYtPmRldiwgcHJpdik7DQo+ID4+ICsNCj4gPj4gKwlpZiAodGFyZ2V0KSB7DQo+
+ID4+ICsJCWludCBsZXZlbCA9IHNjYWxlX2JhY2tsaWdodF9sZXZlbCh0YXJnZXQsIGJkZXYpOw0K
+PiA+PiArDQo+ID4+ICsJCWlmIChiYWNrbGlnaHRfZGV2aWNlX3NldF9icmlnaHRuZXNzKGJkZXYs
+IGxldmVsKSkNCj4gPj4gKwkJCXByX3dhcm4oIlVuYWJsZSB0byBpbXBvcnQgaW5pdGlhbCBicmln
+aHRuZXNzIGxldmVsDQo+IGZyb20gJXMuIiwNCj4gPj4gKwkJCQliYWNrbGlnaHRfcHJveHlfdGFy
+Z2V0KTsNCj4gPj4gKwkJcHJpdi0+cHJveHlfdGFyZ2V0ID0gdGFyZ2V0Ow0KPiA+PiArCX0NCj4g
+Pj4gKw0KPiA+PiArCWlmIChyZXN0b3JlX2xldmVsX29uX3Jlc3VtZSkgew0KPiA+PiArCQlwcml2
+LT5uYi5ub3RpZmllcl9jYWxsID0NCj4gbnZpZGlhX3dtaV9lY19iYWNrbGlnaHRfcG1fbm90aWZp
+ZXI7DQo+ID4+ICsJCXJlZ2lzdGVyX3BtX25vdGlmaWVyKCZwcml2LT5uYik7DQo+ID4+ICsJfQ0K
+PiA+PiArDQo+ID4+ICsJcmV0dXJuIDA7DQo+ID4+ICt9DQo+ID4+ICsNCj4gPj4gK3N0YXRpYyB2
+b2lkIG52aWRpYV93bWlfZWNfYmFja2xpZ2h0X3JlbW92ZShzdHJ1Y3Qgd21pX2RldmljZSAqd2Rl
+dikNCj4gPj4gK3sNCj4gPj4gKwlzdHJ1Y3QgbnZpZGlhX3dtaV9lY19iYWNrbGlnaHRfcHJpdiAq
+cHJpdiA9DQo+IGRldl9nZXRfZHJ2ZGF0YSgmd2Rldi0+ZGV2KTsNCj4gPj4gKwlzdHJ1Y3QgYmFj
+a2xpZ2h0X2RldmljZSAqcHJveHlfdGFyZ2V0ID0gcHJpdi0+cHJveHlfdGFyZ2V0Ow0KPiA+PiAr
+DQo+ID4+ICsJaWYgKHByb3h5X3RhcmdldCkNCj4gPj4gKwkJcHV0X2RldmljZSgmcHJveHlfdGFy
+Z2V0LT5kZXYpOw0KPiA+IElmIHlvdSBzd2l0Y2ggdG8gYGRldm1fYWRkX2FjdGlvbl9vcl9yZXNl
+dCgpYCwgdGhpcyB3aWxsIG5vdCBiZSBuZWVkZWQuDQo+ID4NCj4gPg0KPiA+PiArDQo+ID4+ICsJ
+aWYgKHByaXYtPm5iLm5vdGlmaWVyX2NhbGwpDQo+ID4+ICsJCXVucmVnaXN0ZXJfcG1fbm90aWZp
+ZXIoJnByaXYtPm5iKTsNCj4gPj4gKw0KPiA+PiArCWtmcmVlKHByaXYpOw0KPiA+IElmIHlvdSBz
+d2l0Y2ggdG8gYGRldm1fa3phbGxvYygpYCwgdGhpcyB3b24ndCBiZSBuZWVkZWQuDQo+IA0KPiAN
+Cj4gVGhhbmsgeW91LCB0aGUgZGV2bV8qKCkgdmFyaWFudHMgYXJlIGluZGVlZCB1c2VmdWwuDQo+
+IA0KPiANCj4gPg0KPiA+PiAgIH0NCj4gPj4NCj4gPj4gICAjZGVmaW5lIFdNSV9CUklHSFRORVNT
+X0dVSUQgIjYwM0U5NjEzLUVGMjUtNDMzOC1BM0QwLQ0KPiBDNDYxNzc1MTZEQjciDQo+ID4+IEBA
+IC0yMDQsNiArMzgwLDcgQEAgc3RhdGljIHN0cnVjdCB3bWlfZHJpdmVyDQo+IG52aWRpYV93bWlf
+ZWNfYmFja2xpZ2h0X2RyaXZlciA9IHsNCj4gPj4gICAJCS5uYW1lID0gIm52aWRpYS13bWktZWMt
+YmFja2xpZ2h0IiwNCj4gPj4gICAJfSwNCj4gPj4gICAJLnByb2JlID0gbnZpZGlhX3dtaV9lY19i
+YWNrbGlnaHRfcHJvYmUsDQo+ID4+ICsJLnJlbW92ZSA9IG52aWRpYV93bWlfZWNfYmFja2xpZ2h0
+X3JlbW92ZSwNCj4gPj4gICAJLmlkX3RhYmxlID0gbnZpZGlhX3dtaV9lY19iYWNrbGlnaHRfaWRf
+dGFibGUsDQo+ID4+ICAgfTsNCj4gPj4gICBtb2R1bGVfd21pX2RyaXZlcihudmlkaWFfd21pX2Vj
+X2JhY2tsaWdodF9kcml2ZXIpOw0KPiA+PiAtLQ0KPiA+PiAyLjI3LjANCj4gPj4NCj4gPiBMYXN0
+bHksIGlzIGl0IGV4cGVjdGVkIHRoYXQgdGhlc2UgYnVncyB3aWxsIGJlIHByb3Blcmx5IGZpeGVk
+Pw0KPiANCj4gDQo+IFBvc3NpYmx5LCBidXQgSSB3b3VsZG4ndCBob2xkIG91dCBob3BlIGZvciBp
+dCBmb3IgYW4gaXNzdWUgYXQgdGhpcyBzY2FsZQ0KPiBvbiBhbiBhbHJlYWR5IHNoaXBwaW5nIHN5
+c3RlbS4NCg0KVGhpcyBxdWVzdGlvbiBJJ20gYXNzdW1pbmcgd2FzIGFpbWVkIGF0IG5hcnJvd2lu
+ZyB0aGUgcXVpcmsgdG8gb25seQ0KbWF0Y2ggY2VydGFpbiBGVyB2ZXJzaW9ucyBvciBzby4gIElm
+IHRoZXJlIGlzIG5vIGNlcnRhaW50eSBvZiB3aGVuL2lmIGl0DQp3aWxsIGJlIGZpeGVkIEkgYWdy
+ZWUgd2l0aCBjdXJyZW50IGRpcmVjdGlvbi4NCkhvd2V2ZXIgSSB0aGluayBpdCdzIHN0aWxsIHdv
+cnRoIGF0IGxlYXN0IG5vdGluZyBuZWFyIHRoZSBxdWlyayBpbiBhIGNvbW1lbnQNCndoYXQgZmly
+bXdhcmUgdmVyc2lvbiBpdCB3YXMgaWRlbnRpZmllZC4gIElmIGxhdGVyIHRoZXJlIGlzIGNvbmZp
+cm1hdGlvbiB0aGF0DQphIHBhcnRpY3VsYXIgZmlybXdhcmUgdmVyc2lvbiBoYWQgZml4ZWQgaXQg
+dGhlIHF1aXJrIGNhbiBiZSBhZGp1c3RlZCB0byBiZQ0KZHJvcHBlZC4NCg0KPiANCj4gDQo+ID4N
+Cj4gPiBSZWdhcmRzLA0KPiA+IEJhcm5hYsOhcyBQxZFjemUNCg==
