@@ -2,273 +2,243 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D483C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Mar 2022 16:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B79C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Mar 2022 17:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236693AbiCQQ5F (ORCPT
+        id S236695AbiCQRJz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Mar 2022 12:57:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54898 "EHLO
+        Thu, 17 Mar 2022 13:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236691AbiCQQ5E (ORCPT
+        with ESMTP id S231339AbiCQRJz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Mar 2022 12:57:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 92E6D19E38F
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Mar 2022 09:55:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1647536145;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TJsa7wvKwd46/cVQtbi6SOYKqPTE93PM/OCUFtfITc4=;
-        b=HZ3WRNzrLY4tgpb5H/KmX2JBGsb+mlBYziyE2V2YeTjW7sySezSN7ahy1qJniu21xyRagG
-        lJGGWT+jhLvu1g+iy2lkKR/eqhL7TzCm+IzBnMSO0VmVgH009QC6fUKK6Wr6XNhk9vQqb8
-        u6X4qpPNca57/d162mBYru15ivSCw6Y=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-18-D6MMNngdMD2-PD9bRsNaZQ-1; Thu, 17 Mar 2022 12:55:44 -0400
-X-MC-Unique: D6MMNngdMD2-PD9bRsNaZQ-1
-Received: by mail-ej1-f70.google.com with SMTP id ga31-20020a1709070c1f00b006cec400422fso3213415ejc.22
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Mar 2022 09:55:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=TJsa7wvKwd46/cVQtbi6SOYKqPTE93PM/OCUFtfITc4=;
-        b=KYH4uJoGY7604RjHD/8f7sdiIvVSNEJHKR08P+k1dQuTc1URJEYH5bp2plvHmpYoIw
-         AvWU7H7pA9u4Do/cUdKAJCW56Th4ABJXA0GDTogjkA94lQUwsHQ2UpdsImQJTf/6uJgX
-         pvYRo+WSehJg7tNT/j8ppqxTllhlXgRHciaKECPd97pIUL3lJ0b/vEq8hkItN4Jx6XX3
-         EXL5iHBEQz0WphRCG0WGI8W4b4F8S6ega2D/IGJsx6ZUj3dop/kYxkXLo9hHtBrCik3b
-         USxHYO2CSRt84Fdtv4CA+e3ULaAzxvoK5Q9OVfNZLBHmlKMh3b6/2nwEV/dH8sRmf7i0
-         kS3g==
-X-Gm-Message-State: AOAM530b6oIbbqZGg0yyY7RTPpS1hlOnLxVX2K8DzPFl2zqcS1gf8oPG
-        T9K6VNBD5Aj2z+qMTpuIPuFTOtoI7l1u2f7zCRrBS2giBdROrQUjMzVzDv9jh0NwHmW0/wgrFR3
-        r/65iGxHQwP9oyab0W6GAKQNMdW9MnCEW9w==
-X-Received: by 2002:a17:907:7ea6:b0:6db:ca53:9b0a with SMTP id qb38-20020a1709077ea600b006dbca539b0amr5132124ejc.763.1647536142938;
-        Thu, 17 Mar 2022 09:55:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwBEImm5BYXKSo5OkQxxyw652H58hocO6yKICi65qeBQqy7YWwwSDnJUiMxonGFflVcPxBmTw==
-X-Received: by 2002:a17:907:7ea6:b0:6db:ca53:9b0a with SMTP id qb38-20020a1709077ea600b006dbca539b0amr5132106ejc.763.1647536142725;
-        Thu, 17 Mar 2022 09:55:42 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id z22-20020a17090655d600b006d229436793sm2610066ejp.223.2022.03.17.09.55.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Mar 2022 09:55:42 -0700 (PDT)
-Message-ID: <a3fc1c3d-8650-2a96-4e9e-2680ec1c8540@redhat.com>
-Date:   Thu, 17 Mar 2022 17:55:41 +0100
+        Thu, 17 Mar 2022 13:09:55 -0400
+Received: from mail1.bemta33.messagelabs.com (mail1.bemta33.messagelabs.com [67.219.247.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A86049E9CA
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Mar 2022 10:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
+        s=Selector; t=1647536913; i=@lenovo.com;
+        bh=5g9kemcZxIxwvwioi/3AlKwz0vH7IUCDONZUNPzbDe8=;
+        h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+         In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        b=LRLl0N3iHeCcLAbCb3i2koDAIMGd8MpUtwjIAufSJhgejL7ng4E6a2/vArEzSw9QN
+         yXRrRANx3IyF3IN4utYiDfu6EzrA3cH1+W3Opq4PbxXUWLI1D3cCivZz7aWthZ1oTv
+         8W0gR/wgzso9bZCa3ASF8mD636C6Vcv0PYaT4gY754nlc1yKrGi2Pxs6tSmzj9Gukr
+         NzuB0jDckg7UMKDQepuyX6DzGepsQ+bDEwoMwqeRPfWa8MywA+UQhkska0vxWgPWUc
+         nUN1Y2/hYFweDa0Z+Th6xo0QiU+WGtghs08ThvN+HAq3Y10ASMHLSuJq0AAg63nw12
+         qjrQnK4PQHhcA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLJsWRWlGSWpSXmKPExsWSoS+VqSuYbZx
+  kcGORlMWb49OZLA5MncZssXrPC2YHZo9NqzrZPN7vu8rm8XmTXABzFGtmXlJ+RQJrxv+T/xgL
+  XspUfLx4jLWBcZl4FyMXB6PAUmaJM/teMUI4i1glnj5/A+V0Mkks6p7JBuIICcxjkrh84yyUc
+  5BJYu27yaxdjJwcEgLHGSW6V7lDJDoZJXZv/QFVNZFJYvbMFawQzhNGia4Hy6Gce4wS36YeYg
+  Tp5xWwlThz4gUziM0ioCqx4OFPJoi4oMTJmU9YQGxRgXCJ+88+s4HYwgKlEuv6v4DZzALiEre
+  ezAerFxFQl5ja0QMU5wCKO0o0HOSD2NXOKNE7cS/YHDYBbYktW36B9XIK2Ek8/vmOHWKOpkTr
+  9t9QtrzE9rdzwO4RElCW+NV/nhniTzmJFXuvQ9kJEs1TjjJC2JIS125eYIewZSWOnp3DAmH7S
+  pxYtYwJwtaVeHR3B5SdI/H11C9WmJmnes8xTWDUnYXk5VlIXpuF5LxZSM5bwMiyitE6qSgzPa
+  MkNzEzR9fQwEDX0NBE19xQ18jQSC+xSjdRr7RYNzWxuEQXyC0v1kstLtYrrsxNzknRy0st2cQ
+  ITEkpRe5XdjDeX/lT7xCjJAeTkijvUXXjJCG+pPyUyozE4oz4otKc1OJDjDIcHEoSvBKZQDnB
+  otT01Iq0zBxgeoRJS3DwKInwhusApXmLCxJzizPTIVKnGHU5rmzbu5dZiCUvPy9VSpxXIBGoS
+  ACkKKM0D24ELFVfYpSVEuZlZGBgEOIpSC3KzSxBlX/FKM7BqCTMOwXkEp7MvBK4Ta+AjmACOq
+  JRwAjkiJJEhJRUA1PT45isdfXvy9obU39tE3nebq26VC3HY3bx/IPKfyyV0k9siVISrXXIr2E
+  MdPR4efXo6puvX5ZFuLRPd/45M+Dz8rVPFuQte3AyzezyliUM94R7Z37y0Zwn1R16ufvuyYR0
+  v7Lfl13yt538uY9V1rdmV+LGrk1mXHpmAh84b1/6mfwgMO3MxinOr+L4jpaHdX7fLSYbz3Vq3
+  mK+F1/sp/K7dczIm8IVs/vzpEiveZZfJhVoRaazl06w3Fx6+bLZu1Veb2UO+Nnp29s0L7vHnv
+  bNQjDEqv19FdfP35Eb1N7VX3nzrbzaOHhpv/myHb4yhdVLnv0t19n6/thJ+0MbTA5+2DSB231
+  9x0vGxqniZZFKLMUZiYZazEXFiQDiSKUsUAQAAA==
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-3.tower-715.messagelabs.com!1647536911!34254!1
+X-Originating-IP: [104.47.26.105]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.81.10; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 19245 invoked from network); 17 Mar 2022 17:08:33 -0000
+Received: from mail-sgaapc01lp2105.outbound.protection.outlook.com (HELO APC01-SG2-obe.outbound.protection.outlook.com) (104.47.26.105)
+  by server-3.tower-715.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 17 Mar 2022 17:08:33 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BKysMCJhd9HuJhBzMcGcYOdWBvWcKSrklH/81IxxSumKGV3oy91xpQLv8J3HQxaJpS7hdYAcv6xmnsCA+ckpx1rFs2zaRvamCyrKQR35mjMGZ+4MYs+Ceynexn5Yg8ETRvWJ0TTcsrKCFYljPtvWjwrVdOCG798DNYXdTcb/V1jVYSj7vLa1P4LspYo2on5oVqkGDf8V3wKTqsEHOPJwupBXMim7OOnCFI1bs5db7qRcUg0dx3BbG8ScI+mf4OBGzpv8gjCrcsFwdztu/zRISWviFs3mYt9qVRiy0Bk9HYMwR/CdPIUZX2DYh54aK0ScYPbLez8fXVEoOodz6YmlOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5g9kemcZxIxwvwioi/3AlKwz0vH7IUCDONZUNPzbDe8=;
+ b=R4+3Y8MMQJJIn3gC8rzp9mWwhQ9/qyi74+fykYp9hlosQ8eRLwcQx8q+m+fw+EoS1l41K0qq7+/yHG3gd/30AxbE66nfRbXZxIKL0FdR4N4khYMpkD9SV6lQb4yerk1dZe4nWnhNKQGHgX1jJhvC4jyB9KVf0HzSvJuikNwx9ykYvoy3tTuJntyAGLkeQWkFzuE3xuQVwFvGn491jzaLvq5FYTW75yz09Cx7B3kKBd6ajkud6jbIjF7k5l58KfPt6EqqxL3TJV+8YVKJf0zQclPa87blOe8CUtJXTMKHuR/3uiGjOQbRKgLkhqxgr3LXssgd9gOp3ZY8K2HeZIe2tQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 104.232.225.6) smtp.rcpttodomain=redhat.com smtp.mailfrom=lenovo.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=lenovo.com;
+ dkim=none (message not signed); arc=none
+Received: from HK2P15301CA0020.APCP153.PROD.OUTLOOK.COM (2603:1096:202:1::30)
+ by SI2PR03MB5999.apcprd03.prod.outlook.com (2603:1096:4:14b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.10; Thu, 17 Mar
+ 2022 17:08:30 +0000
+Received: from HK2APC01FT047.eop-APC01.prod.protection.outlook.com
+ (2603:1096:202:1:cafe::1) by HK2P15301CA0020.outlook.office365.com
+ (2603:1096:202:1::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.6 via Frontend
+ Transport; Thu, 17 Mar 2022 17:08:30 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 104.232.225.6) smtp.mailfrom=lenovo.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=lenovo.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ lenovo.com discourages use of 104.232.225.6 as permitted sender)
+Received: from mail.lenovo.com (104.232.225.6) by
+ HK2APC01FT047.mail.protection.outlook.com (10.152.249.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5081.14 via Frontend Transport; Thu, 17 Mar 2022 17:08:29 +0000
+Received: from reswpmail01.lenovo.com (10.62.32.20) by mail.lenovo.com
+ (10.62.123.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.21; Thu, 17 Mar
+ 2022 13:08:28 -0400
+Received: from [10.38.63.5] (10.38.63.5) by reswpmail01.lenovo.com
+ (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.21; Thu, 17 Mar
+ 2022 13:08:27 -0400
+Message-ID: <90f1a4ce-a3ba-ed14-f27a-348af368afad@lenovo.com>
+Date:   Thu, 17 Mar 2022 13:08:26 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v5 1/4] ACPI / x86: Add support for LPS0 callback handler
+ Thunderbird/91.5.0
+Subject: Re: [External] Re: [PATCH v2 1/2] Documentation:
+ syfs-class-firmware-attributes: Lenovo Certificate support
 Content-Language: en-US
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "Goswami, Sanket" <Sanket.Goswami@amd.com>
-References: <20220317141445.6498-1-mario.limonciello@amd.com>
- <CAJZ5v0hNKmXWJ5uNaAFWsDkBm7FpKexkx5sCFHvx=OBJdVt+aA@mail.gmail.com>
- <BL1PR12MB5157188AC154FEA11F775674E2129@BL1PR12MB5157.namprd12.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <BL1PR12MB5157188AC154FEA11F775674E2129@BL1PR12MB5157.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+To:     Hans de Goede <hdegoede@redhat.com>
+CC:     <markgross@kernel.org>, <platform-driver-x86@vger.kernel.org>
+References: <markpearson@lenovo.com>
+ <20220315195630.3209-1-markpearson@lenovo.com>
+ <c3ef4c4e-9862-88f6-ef7f-2fd741ce9ea9@redhat.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+In-Reply-To: <c3ef4c4e-9862-88f6-ef7f-2fd741ce9ea9@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.38.63.5]
+X-ClientProxiedBy: reswpmail01.lenovo.com (10.62.32.20) To
+ reswpmail01.lenovo.com (10.62.32.20)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a0d306c3-3ec9-4e50-deee-08da0838c2a7
+X-MS-TrafficTypeDiagnostic: SI2PR03MB5999:EE_
+X-Microsoft-Antispam-PRVS: <SI2PR03MB5999ECD8628FD21C5A066C44C5129@SI2PR03MB5999.apcprd03.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2xhugUyk5PjkIh19WHG62ylqBmz6brKr8qARA88GWl4P0BuD5Mbh5q/nqnkPh2bNZMcTv0I8zeT+w3SYJbYMwFUZ31F6dXMGPJNgtAAVbWgmj3FFg1S0IudJmTdc9tP+nmh9w845KynFXrV4eew/8t/tPBrSWwwKiR/GxrO6anSGRbztoIYJZnb2zHdxtnH3WWqu3ZgF8is5tgpRsU9Rx96jpRHCVLvH3JVxUxUKjGObCayHOMA6cvFbI26dQq2T6VLq+ZwS0i8n8xPJlcxiw6iGV3JrenMR/XPq4kUh5mz4gH5kJAa+DzvkLpM5a17jEFjWkV5eu6vsZ3v38FJcOJQXJYH/KPYD3PPoBYDtt0cdJSJJScWCfOw8CXIOCL/dDayJk7K8RC0RqE2PyvxyuD6i8VTFyxS8RRjlRm8y1Ae3kPgrH2f3zdUMVVKe/AbVJtmPsmgvkxs+VGCYt47VsDq+lcuIOWcwi1wkRqThDwZZp7egQ86nsRO5J96GsmAk4jke4EHE9fr+mX86QOsfX6hV2D4N33R3Dqn5YiNW6QZFZQozMKXjS1kkBnGwTRlpa5wns0V8fqNUg35h78FJzIQCo8uveivUpJ5UouSg7xX+VWob08zSf9xfimMb1AIUsInB2w6xANL2GoeBu3n+OYq8I29+FdyCBDF655X5tbvAmBTx/gZ6vfvno7R2sDBZDphMBAtGPJ1xNptQe3eS6klSYM/6Fzj5nWsoyklBCLjUpebg+yULBNDuIgpYjwz65FqGwnLb+3/OikhblSsxP9fJ8cbMEpCMAvDneAC/se98+uy8GX0WOIk/Hj3+ixuB
+X-Forefront-Antispam-Report: CIP:104.232.225.6;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.lenovo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(40470700004)(36840700001)(2906002)(83380400001)(2616005)(82310400004)(186003)(336012)(26005)(16526019)(426003)(81166007)(356005)(82960400001)(86362001)(31696002)(40460700003)(47076005)(36860700001)(4326008)(53546011)(70206006)(70586007)(8676002)(508600001)(31686004)(8936002)(5660300002)(36756003)(36906005)(316002)(54906003)(16576012)(6916009)(3940600001)(43740500002)(36900700001);DIR:OUT;SFP:1102;
+X-OriginatorOrg: lenovo.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2022 17:08:29.8631
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0d306c3-3ec9-4e50-deee-08da0838c2a7
+X-MS-Exchange-CrossTenant-Id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5c7d0b28-bdf8-410c-aa93-4df372b16203;Ip=[104.232.225.6];Helo=[mail.lenovo.com]
+X-MS-Exchange-CrossTenant-AuthSource: HK2APC01FT047.eop-APC01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR03MB5999
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All,
 
-On 3/17/22 17:49, Limonciello, Mario wrote:
-> [Public]
+Hi Hans,
+
+Thanks for the review
+
+On 2022-03-17 06:58, Hans de Goede wrote:
+> Hi,
 > 
-> 
-> 
->> -----Original Message-----
->> From: Rafael J. Wysocki <rafael@kernel.org>
->> Sent: Thursday, March 17, 2022 11:46
->> To: Limonciello, Mario <Mario.Limonciello@amd.com>
->> Cc: Hans de Goede <hdegoede@redhat.com>; Mark Gross
->> <mgross@linux.intel.com>; Rafael J . Wysocki <rjw@rjwysocki.net>; open
->> list:X86 PLATFORM DRIVERS <platform-driver-x86@vger.kernel.org>; ACPI
->> Devel Maling List <linux-acpi@vger.kernel.org>; S-k, Shyam-sundar <Shyam-
->> sundar.S-k@amd.com>; Goswami, Sanket <Sanket.Goswami@amd.com>
->> Subject: Re: [PATCH v5 1/4] ACPI / x86: Add support for LPS0 callback handler
+> On 3/15/22 20:56, Mark Pearson wrote:
+>> Certificate based authentication is available as an alternative to
+>> password based authentication.
 >>
->> On Thu, Mar 17, 2022 at 3:15 PM Mario Limonciello
->> <mario.limonciello@amd.com> wrote:
->>>
->>> Currenty the latest thing run during a suspend to idle attempt is
->>> the LPS0 `prepare_late` callback and the earliest thing is the
->>> `resume_early` callback.
->>>
->>> There is a desire for the `amd-pmc` driver to suspend later in the
->>> suspend process (ideally the very last thing), so create a callback
->>> that it or any other driver can hook into to do this.
->>>
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> The WMI commands are cryptographically signed using a separate
+>> signing server and will be verified by the BIOS before being
+>> accepted.
 >>
->> This looks good to me, so:
+>> This commit details the fields that are needed to support that
+>> implementation. At present the changes are intended for Lenovo
+>> platforms, but have been designed to keep them as flexible as possible
+>> for future implementations from other vendors.
 >>
->> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>
+>> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
 > 
-> Thanks!
+> This looks good, but looking at this a second time I still
+> have one open question:
 > 
->> and I don't have any conflicting changes queued up for 5.17, so from
->> my POV it can go in via the x86 platform drivers tree along with the
->> other patches in the series.
-> 
-> Hans,
-> 
-> FYI the series is based off of platform-x86/for-next also with changes to amd-pmc
-> Rafael doesn't have in his tree, so I also agree it's better to go through x86 platform
-> drivers.
-
-Ok, the entire series looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-So I'll go and merge this into review-hans, do some compile
-tests and then push this directly to for-next to give it some
-minimum baking time there before the 5.18 merge-window opens.
-
-Regards,
-
-Hans
-
-
+> What is the difference between removing a certificate and
+> switching back to password auth?
+The main difference is clear goes to no-authentication, and switching
+obviously switches to password
 
 > 
->>
->>> ---
->>> changes from v4->v5:
->>> * fix a check for handler->prepare
->>>   Reported by Dan Carpenter <dan.carpenter@oracle.com>
->>> changes from v3->v4:
->>> * drop use of mutex, use lock_system_sleep instead
->>> * don't pass argument of context, driver will maintain this internally
->>> * don't allow failing prepare stage
->>> * don't allow unregistering if sleep_no_lps0 is set
->>> changes from v2->v3:
->>> * Check that callbacks exist before calling
->>> changes from v1->v2:
->>> * Change register/unregister arguments to be struct
->>>
->>>  drivers/acpi/x86/s2idle.c | 40
->> +++++++++++++++++++++++++++++++++++++++
->>>  include/linux/acpi.h      | 10 +++++++++-
->>>  2 files changed, 49 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
->>> index abc06e7f89d8..031b20a547f9 100644
->>> --- a/drivers/acpi/x86/s2idle.c
->>> +++ b/drivers/acpi/x86/s2idle.c
->>> @@ -86,6 +86,8 @@ struct lpi_device_constraint_amd {
->>>         int min_dstate;
->>>  };
->>>
->>> +static LIST_HEAD(lps0_s2idle_devops_head);
->>> +
->>>  static struct lpi_constraints *lpi_constraints_table;
->>>  static int lpi_constraints_table_size;
->>>  static int rev_id;
->>> @@ -444,6 +446,8 @@ static struct acpi_scan_handler lps0_handler = {
->>>
->>>  int acpi_s2idle_prepare_late(void)
->>>  {
->>> +       struct acpi_s2idle_dev_ops *handler;
->>> +
->>>         if (!lps0_device_handle || sleep_no_lps0)
->>>                 return 0;
->>>
->>> @@ -474,14 +478,26 @@ int acpi_s2idle_prepare_late(void)
->>>                 acpi_sleep_run_lps0_dsm(ACPI_LPS0_MS_ENTRY,
->>>                                 lps0_dsm_func_mask_microsoft,
->> lps0_dsm_guid_microsoft);
->>>         }
->>> +
->>> +       list_for_each_entry(handler, &lps0_s2idle_devops_head, list_node) {
->>> +               if (handler->prepare)
->>> +                       handler->prepare();
->>> +       }
->>> +
->>>         return 0;
->>>  }
->>>
->>>  void acpi_s2idle_restore_early(void)
->>>  {
->>> +       struct acpi_s2idle_dev_ops *handler;
->>> +
->>>         if (!lps0_device_handle || sleep_no_lps0)
->>>                 return;
->>>
->>> +       list_for_each_entry(handler, &lps0_s2idle_devops_head, list_node)
->>> +               if (handler->restore)
->>> +                       handler->restore();
->>> +
->>>         /* Modern standby exit */
->>>         if (lps0_dsm_func_mask_microsoft > 0)
->>>                 acpi_sleep_run_lps0_dsm(ACPI_LPS0_MS_EXIT,
->>> @@ -524,4 +540,28 @@ void acpi_s2idle_setup(void)
->>>         s2idle_set_ops(&acpi_s2idle_ops_lps0);
->>>  }
->>>
->>> +int acpi_register_lps0_dev(struct acpi_s2idle_dev_ops *arg)
->>> +{
->>> +       if (!lps0_device_handle || sleep_no_lps0)
->>> +               return -ENODEV;
->>> +
->>> +       lock_system_sleep();
->>> +       list_add(&arg->list_node, &lps0_s2idle_devops_head);
->>> +       unlock_system_sleep();
->>> +
->>> +       return 0;
->>> +}
->>> +EXPORT_SYMBOL_GPL(acpi_register_lps0_dev);
->>> +
->>> +void acpi_unregister_lps0_dev(struct acpi_s2idle_dev_ops *arg)
->>> +{
->>> +       if (!lps0_device_handle || sleep_no_lps0)
->>> +               return;
->>> +
->>> +       lock_system_sleep();
->>> +       list_del(&arg->list_node);
->>> +       unlock_system_sleep();
->>> +}
->>> +EXPORT_SYMBOL_GPL(acpi_unregister_lps0_dev);
->>> +
->>>  #endif /* CONFIG_SUSPEND */
->>> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
->>> index 6274758648e3..47c16cdc8e0e 100644
->>> --- a/include/linux/acpi.h
->>> +++ b/include/linux/acpi.h
->>> @@ -1023,7 +1023,15 @@ void acpi_os_set_prepare_extended_sleep(int
->> (*func)(u8 sleep_state,
->>>
->>>  acpi_status acpi_os_prepare_extended_sleep(u8 sleep_state,
->>>                                            u32 val_a, u32 val_b);
->>> -
->>> +#ifdef CONFIG_X86
->>> +struct acpi_s2idle_dev_ops {
->>> +       struct list_head list_node;
->>> +       void (*prepare)(void);
->>> +       void (*restore)(void);
->>> +};
->>> +int acpi_register_lps0_dev(struct acpi_s2idle_dev_ops *arg);
->>> +void acpi_unregister_lps0_dev(struct acpi_s2idle_dev_ops *arg);
->>> +#endif /* CONFIG_X86 */
->>>  #ifndef CONFIG_IA64
->>>  void arch_reserve_mem_area(acpi_physical_address addr, size_t size);
->>>  #else
->>> --
->>> 2.34.1
->>>
+> Looking at the WMI calls there are 4 different calls:
+> 
+> LENOVO_SET_BIOS_CERT_GUID
+> LENOVO_UPDATE_BIOS_CERT_GUID
+> LENOVO_CLEAR_BIOS_CERT_GUI
+> LENOVO_CERT_TO_PASSWORD_GUID
+> 
+> Going by these names I guess there can be only 1 certificate
+> otherwise I would expect:
+> 
+> 1. add/remove naming
+> 2. update to take an id of which certificate to replace
+> 
+Correct - there is only one certificate
 
+> So I guess that LENOVO_CLEAR_BIOS_CERT_GUI disables all
+> authentication. IOW, installing a cert replaces/clears
+> the supervisor password and the difference between
+> clearing the certificate and cert-to-password is that
+> after clearing it we end up with no supervisor password
+> set, where as cert-to-password sets the passed in password
+> as the new supervisor password?
+Correct
+
+> 
+> Or does clearing the certificate fall back to the old
+> supervisor password if one was set?  (that might lead to
+> some interesting issues if users clear the certificate
+> many years after the password was last used ...)
+clearing reverts to no password
+
+> 
+> Given where we are in the cycle I was planning on adding
+> this to my review-hans branch so that it could maybe still
+> get into 5.18, but given the above questions as well
+> the remark about the test X1 BIOS you are using I've
+> a feeling it would be better to give this some more time
+> to bake and target 5.19 instead. Do you agree ?
+
+I'd love to have it in 5.18 as I expect his feature to be available in
+our 2022 platforms and they're all going to start landing in the next
+couple of months. If that's unrealistic I can live with it so I'll defer
+to your preference
+
+> 
+> Regardless  of this is 5.18 or 5.19 material can you? :
+> 
+> a) confirm that I've understood how the clearing vs cert-to-password
+>    works correctly ?
+Confirmed :)
+
+> b) confirm that despite you using a test BIOS the WMI API for this is
+>    final and that it will *not* change before there are production
+>    BIOS-es with this ?
+I think I'm safe confirming this (I always get slightly nervous as it's
+outside my control, and weird things happen...) We have an internal spec for
+this feature and this implementation is meeting that spec. I'd be very
+surprised if there are extra changes.
+
+> c) submit a version to clarify the clearing vs cert-to-password thing, e.g.:
+> 
+> @@ -276,6 +276,8 @@ Description:
+>  
+>  					You cannot enable certificate authentication if a supervisor password
+>  					has not been set.
+> +					Clearing the certificate results in no bios-admin authentication
+> +					method being configured allowing anyone to make changes.
+>  					After any of these operations the system must reboot for the changes to
+>  					take effect.
+> 
+Ack will do
+
+Mark
