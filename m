@@ -2,111 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9C0C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Mar 2022 19:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9893CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Mar 2022 20:20:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234893AbiCQTE2 (ORCPT
+        id S229590AbiCQUWG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Mar 2022 15:04:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41456 "EHLO
+        Thu, 17 Mar 2022 16:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237814AbiCQTE1 (ORCPT
+        with ESMTP id S229474AbiCQUWG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Mar 2022 15:04:27 -0400
-Received: from srv1.home.kabele.me (unknown [IPv6:2a02:768:2704:8c1a:3eec:efff:fe00:2ce4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4CBC6BD7CA;
-        Thu, 17 Mar 2022 12:03:05 -0700 (PDT)
-Received: from srv1.home.kabele.me (localhost [IPv6:::1])
-        by srv1.home.kabele.me (Postfix) with ESMTP id C6C421692B3;
-        Thu, 17 Mar 2022 20:03:08 +0100 (CET)
-Received: from localhost ([2a01:c22:8dfa:1400:beea:2810:7764:7afc])
-        by srv1.home.kabele.me with ESMTPSA
-        id CG36LOyFM2ITWTQAnmUwTQ
-        (envelope-from <vit@kabele.me>); Thu, 17 Mar 2022 20:03:08 +0100
-Date:   Thu, 17 Mar 2022 20:03:03 +0100
-From:   Vit Kabele <vit@kabele.me>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     r.marek@assembler.cz, devel@acpica.org, mingo@redhat.com,
-        robert.moore@intel.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH 3/3 RESEND] acpica: Do not touch VGA memory when EBDA < 1KiB
-Message-ID: <YjOF5y0Edc0IdSOR@czspare1-lap.sysgo.cz>
-Mail-Followup-To: platform-driver-x86@vger.kernel.org, r.marek@assembler.cz,
-        devel@acpica.org, mingo@redhat.com, robert.moore@intel.com,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <cover.1647526995.git.vit@kabele.me>
+        Thu, 17 Mar 2022 16:22:06 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E259133DB8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Mar 2022 13:20:49 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id 17so8786890lji.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Mar 2022 13:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ByaGDxG5X1KUgztH3SIHl92iZntE1/kLAfg0SkefsmM=;
+        b=EjumO/osdajILuAhSqSQ/Da7QJir8FzyqTQFbc4UpDaN9fXvRfiv40LZLT+eA7gkRB
+         3vrFp/3jfymjknQthDrJSkB7xwoAOJvsz5Di0hyjlAaE9gN3uxJTEwY9XyMaCjozjoVc
+         HJC0mUBHn0IlY0e7CK/wBrjxwXuJPdYWxPSteqHXsHHQSWOZ0f9MLWUtNY1JHrSc3gJ9
+         oxFmp2K8l/AnAaP3yd3LR+9tPCxgtg+5YNpkIsyFWyvAdd/pDdzg6/VBo/pOHywTahXB
+         bZW50vBFEwtpEAkIYgnseTsBUvSdfqcEbIBWmWkh9gGTDgrOtN0oRmFiO3hBahEVXDEB
+         ijZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ByaGDxG5X1KUgztH3SIHl92iZntE1/kLAfg0SkefsmM=;
+        b=b0yQ2djY4NwCbZVBDS1Snz7RJyD4WqP4hR6Qp8YuIbx4NLo0pjyW+P4cKXf9h9hDO3
+         itF+7IzVkij2avv8/roT6vn9GY/IqB2ED8leRsJwbBs9pZHJ1uLce62fDO3q9RMdkHXC
+         XUWzY5x1J0lEJaSMYUs3hrU2GXHllgyCIG/y4i7j7ySZFZAswchwvZ4ob3p6iSTbf0AS
+         LH/jqx+kdHioN4foanzB3e2dvIlGu+qlQbAzdLKa62qGlWx/sn8pA56odXtO2B17Z5nD
+         qtaJTWCGIND+GoQhUKFL7E7pchoxUn4U2cZdeue6RIP1FzmPB1QzVSReiUXj2cLaBG+X
+         NXJw==
+X-Gm-Message-State: AOAM531qCt2uI9UhJy2oo2rpEH54sPcm0MZjBNqhh8p1RuVf2OSezlDz
+        RtZYkdYBd6MqDFmDu85Wfp/4whmILaxebSXoI9VJVg==
+X-Google-Smtp-Source: ABdhPJwDEfWHv2pGVJTBNzJFj6FyJ5V3aLxhQdKByl4OEnifeiYrk0bX3nPrSRiG85pauGo4XpR1S23j9NY/aPe/dHg=
+X-Received: by 2002:a2e:9e81:0:b0:248:7c35:385a with SMTP id
+ f1-20020a2e9e81000000b002487c35385amr4103253ljk.527.1647548447219; Thu, 17
+ Mar 2022 13:20:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1647526995.git.vit@kabele.me>
+References: <20220307213356.2797205-1-brijesh.singh@amd.com>
+ <20220307213356.2797205-33-brijesh.singh@amd.com> <CAMkAt6pO0xZb2pye-VEKdFQ_dYFgLA21fkYmnYPTWo8mzPrKDQ@mail.gmail.com>
+ <20220310212504.2kt6sidexljh2s6p@amd.com> <YiuBqZnjEUyMfBMu@suse.de>
+ <CAMkAt6r==_=U4Ha6ZTmii-JL3htJ3-dD4tc+QBqN7dVt711N2A@mail.gmail.com> <23728EEA-37B8-478E-9576-DBFD6FE2A294@suse.de>
+In-Reply-To: <23728EEA-37B8-478E-9576-DBFD6FE2A294@suse.de>
+From:   Peter Gonda <pgonda@google.com>
+Date:   Thu, 17 Mar 2022 14:20:35 -0600
+Message-ID: <CAMkAt6qeSYbsGCsgu0+mfYoYVxS25OMoRYzhEebFvfZzNkxOaA@mail.gmail.com>
+Subject: Re: [PATCH v12 32/46] x86/compressed/64: Add support for SEV-SNP
+ CPUID table in #VC handlers
+To:     Boris Petkov <bp@suse.de>
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Sergio Lopez <slp@redhat.com>, linux-efi@vger.kernel.org,
+        linux-coco@lists.linux.dev, Ingo Molnar <mingo@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, linux-mm@kvack.org,
+        Jim Mattson <jmattson@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>, brijesh.ksingh@gmail.com,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Marc Orr <marcorr@google.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The ACPICA code assumes that EBDA region must be at least 1KiB in size.
-Because this is not guaranteed, it might happen that while scanning the
-memory for RSDP pointer, the kernel touches memory above 640KiB.
+On Thu, Mar 17, 2022 at 7:11 AM Boris Petkov <bp@suse.de> wrote:
+>
+> On March 14, 2022 5:34:42 PM UTC, Peter Gonda <pgonda@google.com> wrote:
+> >I was also thinking about adding a vcpu run exit reason for
+> >termination. It would be nice to get a more informative exit reason
+> >than -EINVAL in userspace. Thoughts?
+>
+> Absolutely - it should be unambiguously clear why we're terminating.
+>
+> --
+> Sent from a small device: formatting sux and brevity is inevitable.
 
-This is unwanted as the VGA memory range may not be decoded or
-even present when running under virtualization.
-
-Signed-off-by: Vit Kabele <vit@kabele.me>
-Reviewed-by: Rudolf Marek <r.marek@assembler.cz>
----
- drivers/acpi/acpica/tbxfroot.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/acpi/acpica/tbxfroot.c b/drivers/acpi/acpica/tbxfroot.c
-index 67b7df1c0520..b1f4a91044d9 100644
---- a/drivers/acpi/acpica/tbxfroot.c
-+++ b/drivers/acpi/acpica/tbxfroot.c
-@@ -114,6 +114,7 @@ acpi_find_root_pointer(acpi_physical_address *table_address)
- 	u8 *table_ptr;
- 	u8 *mem_rover;
- 	u32 physical_address;
-+	u32 ebda_window_size;
- 
- 	ACPI_FUNCTION_TRACE(acpi_find_root_pointer);
- 
-@@ -143,25 +144,32 @@ acpi_find_root_pointer(acpi_physical_address *table_address)
- 	 */
- 	if (physical_address > 0x400 &&
- 	    physical_address < 0xA0000) {
-+		/* Calculate the scan window size
-+		 * The EBDA is not guaranteed to be larger than a KiB
-+		 * and in case that it is smaller the scanning function would
-+		 * leave the low memory and continue to the VGA range.
-+		 */
-+		ebda_window_size = ACPI_MIN(ACPI_EBDA_WINDOW_SIZE,
-+					    0xA0000 - physical_address);
-+
- 		/*
--		 * 1b) Search EBDA paragraphs (EBDA is required to be a
--		 *     minimum of 1K length)
-+		 * 1b) Search EBDA paragraphs
- 		 */
- 		table_ptr = acpi_os_map_memory((acpi_physical_address)
- 					       physical_address,
--					       ACPI_EBDA_WINDOW_SIZE);
-+					       ebda_window_size);
- 		if (!table_ptr) {
- 			ACPI_ERROR((AE_INFO,
- 				    "Could not map memory at 0x%8.8X for length %u",
--				    physical_address, ACPI_EBDA_WINDOW_SIZE));
-+				    physical_address, ebda_window_size));
- 
- 			return_ACPI_STATUS(AE_NO_MEMORY);
- 		}
- 
- 		mem_rover =
- 		    acpi_tb_scan_memory_for_rsdp(table_ptr,
--						 ACPI_EBDA_WINDOW_SIZE);
--		acpi_os_unmap_memory(table_ptr, ACPI_EBDA_WINDOW_SIZE);
-+						 ebda_window_size);
-+		acpi_os_unmap_memory(table_ptr, ebda_window_size);
- 
- 		if (mem_rover) {
- 
--- 
-2.30.2
-
+Great, I can work on that too.
