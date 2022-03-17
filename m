@@ -2,77 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAD2C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Mar 2022 10:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC48C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Mar 2022 10:59:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbiCQKh4 (ORCPT
+        id S232777AbiCQLAQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Mar 2022 06:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41684 "EHLO
+        Thu, 17 Mar 2022 07:00:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232657AbiCQKhz (ORCPT
+        with ESMTP id S232774AbiCQLAP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Mar 2022 06:37:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0FF5F1427D3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Mar 2022 03:36:38 -0700 (PDT)
+        Thu, 17 Mar 2022 07:00:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7B026122997
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Mar 2022 03:58:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1647513398;
+        s=mimecast20190719; t=1647514738;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VhGQgg69D/W2UH6So3aOmkQBD1nBD2QYvTDiVp5TQb4=;
-        b=HmDigwkLB8zVxL81wlC8ardA1Y+aQzVaMkRu8NDzBigH/x8WCwwVmiQ/uIf4K0S3KOAx0l
-        C3bOS7nBheHLQ0TCsKAC9s2GbfNXyqjrDHC976epGToyhAnqkQts3YrirQs7Xw0AZhVPcg
-        OQC7/wrdy8AqRJQpHuTVETPBUx1XuqI=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=AKCKqAy14Xe3pT/HVDH4e3L7zNJgq75sXQRbdajCM0s=;
+        b=BAYpJijkRAiSf5RvfKpCByujWEc1kmPMAVskgSmyjQN4WhnA86WjEuRmVlDvTslZaF0Cdf
+        gaggAQLAcszzR/OnF9OlqnFuH6HZN0n0XS+fOSqP+XGX7k/ww8iyJKKNeIhnOaVSW7mNdc
+        qPlPFCT089WXtrnamZ8zj4UFx+Uj0bc=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-120-CPTwVEMcPTO31B5saaH8pQ-1; Thu, 17 Mar 2022 06:36:37 -0400
-X-MC-Unique: CPTwVEMcPTO31B5saaH8pQ-1
-Received: by mail-ej1-f72.google.com with SMTP id h22-20020a1709060f5600b006b11a2d3dcfso2699664ejj.4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Mar 2022 03:36:36 -0700 (PDT)
+ us-mta-509-6OzM0UjxOlqXjaDwDBkLzA-1; Thu, 17 Mar 2022 06:58:57 -0400
+X-MC-Unique: 6OzM0UjxOlqXjaDwDBkLzA-1
+Received: by mail-ej1-f71.google.com with SMTP id hr26-20020a1709073f9a00b006d6d1ee8cf8so2681100ejc.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Mar 2022 03:58:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=VhGQgg69D/W2UH6So3aOmkQBD1nBD2QYvTDiVp5TQb4=;
-        b=LYkPh+F4QTpjgyeutK37JOxex2WVopWfS5g8Xz3Z3SH7zor7ZrQ+iLpopTzfAlTmHc
-         4irogZnenWPhZAhJHea/uWXiILXEpZP0z1XPflMYtt917C2TXDbq6EgqGH9yAw01ssPf
-         7ZAI7oR2Wuz/EiEHK7nnz8GetxcOfY8JMB4qhXkpHHdY9oxzb5p2Vbf7g41riUn/JXIO
-         cBDitDper+ypPZWLd6VnY6aDXGhtw9CBGGxZuNHnefWQyYsxWd6M+wJFdcRwa4qsUygr
-         PQhIJVaoP1vMAuzmv5r5PhZ+DCyBqaZP6pImUGdF1XQbAEc3hILszkChSMj7zOpR7vd3
-         JJxw==
-X-Gm-Message-State: AOAM532f1YHGA19WpNtWLFYATBoZaGGlKTIWGl842+U21nHcDTdTmhds
-        oPVLMpe8Aft+I4htlCYsLjChRmzqgCTqUuZmCiyvtEHKlr6frMb5WfK5pnn27/O9VZlddiUVMGA
-        tFBufR5H44fjERXrnff26XE5Ahvr8RLyurg==
-X-Received: by 2002:a17:907:7ea7:b0:6db:b3c7:95d6 with SMTP id qb39-20020a1709077ea700b006dbb3c795d6mr3684676ejc.480.1647513395735;
-        Thu, 17 Mar 2022 03:36:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxEoVZh3TzQ4lQTTV6YzBs9xVQBu2woIMRxvvWZk7+gMktZ4kAkGP6OY5baLJUzqEC21QSNcw==
-X-Received: by 2002:a17:907:7ea7:b0:6db:b3c7:95d6 with SMTP id qb39-20020a1709077ea700b006dbb3c795d6mr3684657ejc.480.1647513395502;
-        Thu, 17 Mar 2022 03:36:35 -0700 (PDT)
+        bh=AKCKqAy14Xe3pT/HVDH4e3L7zNJgq75sXQRbdajCM0s=;
+        b=Cp6qjjszKAlXyvqmnP/a9PLld3SEo5Nbz9CasuXHFz3At/6R8PF5HR1HKoBAomfUJm
+         8E8g3ZsJ5lEsHnHspIpKiVR2oHg8LF98NP/6CfdsG04ay0TEChQ/6oqddfuF8MPnyOGD
+         fY11mBQ1JbFrqDmUhznUlzS4g8hAmsL916islhHxPhTsRvDYNq75tJ02GyIO40dsgf/K
+         Wfpr/vzkzOM5yyBHHtYA+gw8HOd6SqPw+TfCWF9EXFXJR6+btYa5I49xQPOA7oOvpafn
+         vCv8nDG55S6BgzMokVtxz2WevHuwLqMYDSLPBr8MFk7YCunr83tCc9OiFrHN+QcmZlgJ
+         gXKw==
+X-Gm-Message-State: AOAM531TUOcqMd2UO7yZE8GR1Cg74I+NVfaXzSLcbp79uc7MdiLE+6LY
+        piFP6EOaOowHPQRTy47mzUZR4NCbsKj9yR+RbWhL2ds0hF196jT/5sUqn/X12WKv3yTdDDQjcza
+        OjKL3DNGT9P0OHlRJglG2W+qAJDi74HClHA==
+X-Received: by 2002:a17:907:9812:b0:6da:aaaf:7713 with SMTP id ji18-20020a170907981200b006daaaaf7713mr3760178ejc.163.1647514735900;
+        Thu, 17 Mar 2022 03:58:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz8MaL0IhfRWJY/Y8wm8PH8/4wurFVYe+OfiAzRD6ynpDyLS9UXqqDZVwls99lRGtihgAYHKw==
+X-Received: by 2002:a17:907:9812:b0:6da:aaaf:7713 with SMTP id ji18-20020a170907981200b006daaaaf7713mr3760163ejc.163.1647514735587;
+        Thu, 17 Mar 2022 03:58:55 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id j11-20020a05640211cb00b00418572a3638sm2541794edw.38.2022.03.17.03.36.34
+        by smtp.gmail.com with ESMTPSA id a1-20020a1709063e8100b006ce06ed8aa7sm2219679ejj.142.2022.03.17.03.58.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Mar 2022 03:36:35 -0700 (PDT)
-Message-ID: <a3f2a34a-1abf-76d5-967f-b41f4c135951@redhat.com>
-Date:   Thu, 17 Mar 2022 11:36:34 +0100
+        Thu, 17 Mar 2022 03:58:55 -0700 (PDT)
+Message-ID: <c3ef4c4e-9862-88f6-ef7f-2fd741ce9ea9@redhat.com>
+Date:   Thu, 17 Mar 2022 11:58:54 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: consistently check
- fan_get_status return.
+Subject: Re: [PATCH v2 1/2] Documentation: syfs-class-firmware-attributes:
+ Lenovo Certificate support
 Content-Language: en-US
-To:     trix@redhat.com, hmh@hmh.eng.br, markgross@kernel.org,
-        nathan@kernel.org, ndesaulniers@google.com
-Cc:     ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-References: <20220312145327.1398510-1-trix@redhat.com>
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org
+References: <markpearson@lenovo.com>
+ <20220315195630.3209-1-markpearson@lenovo.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220312145327.1398510-1-trix@redhat.com>
+In-Reply-To: <20220315195630.3209-1-markpearson@lenovo.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,100 +79,148 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 3/12/22 15:53, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
+On 3/15/22 20:56, Mark Pearson wrote:
+> Certificate based authentication is available as an alternative to
+> password based authentication.
 > 
-> Clang static analysis returns this false positive
-> thinkpad_acpi.c:8926:19: warning: The left operand
->   of '!=' is a garbage value
->   (status != 0) ? "enabled" : "disabled", status);
->    ~~~~~~ ^
+> The WMI commands are cryptographically signed using a separate
+> signing server and will be verified by the BIOS before being
+> accepted.
 > 
-> The return of fan_get_status* is checked inconsistenly.
-> Sometime ret < 0 is an error, sometimes !ret.
-> Both fan_get_status() and fan_get_status_safe() return
-> 0 on success and return negative otherwise.  Change
-> the checks for error, ret < 0, into checks for
-> not success, !ret.
+> This commit details the fields that are needed to support that
+> implementation. At present the changes are intended for Lenovo
+> platforms, but have been designed to keep them as flexible as possible
+> for future implementations from other vendors.
 > 
-> Signed-off-by: Tom Rix <trix@redhat.com>
+> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+This looks good, but looking at this a second time I still
+have one open question:
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+What is the difference between removing a certificate and
+switching back to password auth?
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Looking at the WMI calls there are 4 different calls:
+
+LENOVO_SET_BIOS_CERT_GUID
+LENOVO_UPDATE_BIOS_CERT_GUID
+LENOVO_CLEAR_BIOS_CERT_GUI
+LENOVO_CERT_TO_PASSWORD_GUID
+
+Going by these names I guess there can be only 1 certificate
+otherwise I would expect:
+
+1. add/remove naming
+2. update to take an id of which certificate to replace
+
+So I guess that LENOVO_CLEAR_BIOS_CERT_GUI disables all
+authentication. IOW, installing a cert replaces/clears
+the supervisor password and the difference between
+clearing the certificate and cert-to-password is that
+after clearing it we end up with no supervisor password
+set, where as cert-to-password sets the passed in password
+as the new supervisor password?
+
+Or does clearing the certificate fall back to the old
+supervisor password if one was set?  (that might lead to
+some interesting issues if users clear the certificate
+many years after the password was last used ...)
+
+Given where we are in the cycle I was planning on adding
+this to my review-hans branch so that it could maybe still
+get into 5.18, but given the above questions as well
+the remark about the test X1 BIOS you are using I've
+a feeling it would be better to give this some more time
+to bake and target 5.19 instead. Do you agree ?
+
+Regardless  of this is 5.18 or 5.19 material can you? :
+
+a) confirm that I've understood how the clearing vs cert-to-password
+   works correctly ?
+b) confirm that despite you using a test BIOS the WMI API for this is
+   final and that it will *not* change before there are production
+   BIOS-es with this ?
+c) submit a version to clarify the clearing vs cert-to-password thing, e.g.:
+
+@@ -276,6 +276,8 @@ Description:
+ 
+ 					You cannot enable certificate authentication if a supervisor password
+ 					has not been set.
++					Clearing the certificate results in no bios-admin authentication
++					method being configured allowing anyone to make changes.
+ 					After any of these operations the system must reboot for the changes to
+ 					take effect.
+
 
 Regards,
 
 Hans
 
+
+
+
+
 > ---
->  drivers/platform/x86/thinkpad_acpi.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+> Changes in v2:
+>  - Combined set_signature with signature and moved save_signature under
+> the authorisation folder
+>  - Fixed mistake in example for clearing certificate
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 708743ec9ae79..c568fae56db29 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -8285,7 +8285,7 @@ static int fan_set_enable(void)
->  	case TPACPI_FAN_WR_ACPI_FANS:
->  	case TPACPI_FAN_WR_TPEC:
->  		rc = fan_get_status(&s);
-> -		if (rc < 0)
-> +		if (rc)
->  			break;
+>  .../testing/sysfs-class-firmware-attributes   | 43 +++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> index 13e31c6a0e9c..7ad52cf70ac9 100644
+> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> @@ -246,6 +246,49 @@ Description:
+>  					that is being referenced (e.g hdd0, hdd1 etc)
+>  					This attribute defaults to device 0.
 >  
->  		/* Don't go out of emergency fan mode */
-> @@ -8304,7 +8304,7 @@ static int fan_set_enable(void)
+> +		certificate:
+> +		signature:
+> +		save_signature:
+> +					These attributes are used for certificate based authentication. This is
+> +					used in conjunction with a signing server as an alternative to password
+> +					based authentication.
+> +					The user writes to the attribute(s) with a BASE64 encoded string obtained
+> +					from the signing server.
+> +					The attributes can be displayed to check the stored value.
+> +
+> +					Some usage examples:
+> +					Installing a certificate to enable feature:
+> +						echo <supervisor password > authentication/Admin/current_password
+> +						echo <signed certificate> > authentication/Admin/certificate
+> +
+> +					Updating the installed certificate:
+> +						echo <signature> > authentication/Admin/signature
+> +						echo <signed certificate> > authentication/Admin/certificate
+> +
+> +					Removing the installed certificate:
+> +						echo <signature> > authentication/Admin/signature
+> +						echo '' > authentication/Admin/certificate
+> +
+> +					Changing a BIOS setting:
+> +						echo <signature> > authentication/Admin/signature
+> +						echo <save signature> > authentication/Admin/save_signature
+> +						echo Enable > attribute/PasswordBeep/current_value
+> +
+> +					You cannot enable certificate authentication if a supervisor password
+> +					has not been set.
+> +					After any of these operations the system must reboot for the changes to
+> +					take effect.
+> +
+> +		certificate_thumbprint:
+> +					Read only attribute used to display the MD5, SHA1 and SHA256 thumbprints
+> +					for the certificate installed in the BIOS.
+> +
+> +		certificate_to_password:
+> +					Write only attribute used to switch from certificate based authentication
+> +					back to password based.
+> +					Usage:
+> +						echo <signature> > authentication/Admin/signature
+> +						echo <password> > authentication/Admin/certificate_to_password
 >  
->  	case TPACPI_FAN_WR_ACPI_SFAN:
->  		rc = fan_get_status(&s);
-> -		if (rc < 0)
-> +		if (rc)
->  			break;
 >  
->  		s &= 0x07;
-> @@ -8843,7 +8843,7 @@ static void fan_suspend(void)
->  	/* Store fan status in cache */
->  	fan_control_resume_level = 0;
->  	rc = fan_get_status_safe(&fan_control_resume_level);
-> -	if (rc < 0)
-> +	if (rc)
->  		pr_notice("failed to read fan level for later restore during resume: %d\n",
->  			  rc);
->  
-> @@ -8864,7 +8864,7 @@ static void fan_resume(void)
->  
->  	if (!fan_control_allowed ||
->  	    !fan_control_resume_level ||
-> -	    (fan_get_status_safe(&current_level) < 0))
-> +	    fan_get_status_safe(&current_level))
->  		return;
->  
->  	switch (fan_control_access_mode) {
-> @@ -8918,7 +8918,7 @@ static int fan_read(struct seq_file *m)
->  	case TPACPI_FAN_RD_ACPI_GFAN:
->  		/* 570, 600e/x, 770e, 770x */
->  		rc = fan_get_status_safe(&status);
-> -		if (rc < 0)
-> +		if (rc)
->  			return rc;
->  
->  		seq_printf(m, "status:\t\t%s\n"
-> @@ -8929,7 +8929,7 @@ static int fan_read(struct seq_file *m)
->  	case TPACPI_FAN_RD_TPEC:
->  		/* all except 570, 600e/x, 770e, 770x */
->  		rc = fan_get_status_safe(&status);
-> -		if (rc < 0)
-> +		if (rc)
->  			return rc;
->  
->  		seq_printf(m, "status:\t\t%s\n",
+>  What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
 
