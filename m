@@ -2,68 +2,68 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BC0C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Mar 2022 08:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBE2C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Mar 2022 08:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233984AbiCRIwR (ORCPT
+        id S234038AbiCRI4H (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 18 Mar 2022 04:52:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40756 "EHLO
+        Fri, 18 Mar 2022 04:56:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233979AbiCRIwR (ORCPT
+        with ESMTP id S234034AbiCRI4F (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Mar 2022 04:52:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5022D9D0C4
-        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Mar 2022 01:50:58 -0700 (PDT)
+        Fri, 18 Mar 2022 04:56:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6B86A1F51A1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Mar 2022 01:54:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1647593457;
+        s=mimecast20190719; t=1647593685;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=vWPskzqcY46f0JaJnrGxtCfxiJknIp7ZEMxWr9RfTK4=;
-        b=Kg1YjP9q6u3uRwgwu3NQ5Ny2TKIeTxtPbnqUP8iQa6vy+0DZmqSi7w7EU2Nseis8hSEE1P
-        N825lspCiDTIi5dXCgxNr034h6n6TRw7EbfU4YgOQtlHJNju6qivq9BSb/opTNZDIB+BDv
-        f0qfaEDVBuyFPEr8iXOl+9xhIwEXQb4=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=7HWeZEMEGqeavewyZo9xEKkkuF2oYbesigQSr2n3rD8=;
+        b=CfbcVT3nk/DBMU4ZRiSgzAzLXJ3V5gfZN+J8x6GSWwsw94fdeYFyAn0EKe7w7yQmmnck/C
+        1Vby6GNBYjuZJplnx9BNRoXz1dYAybHkEzLl1QHdN9rfdH1zgYoNsE+938Bs1kvBZNnF5Y
+        rimjRe90IZpwygIa4Jf2wlb600k7LJY=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-218-ttk8NqkROga4YZ1R9ENiYg-1; Fri, 18 Mar 2022 04:50:56 -0400
-X-MC-Unique: ttk8NqkROga4YZ1R9ENiYg-1
-Received: by mail-ej1-f72.google.com with SMTP id h22-20020a1709060f5600b006b11a2d3dcfso4223313ejj.4
-        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Mar 2022 01:50:55 -0700 (PDT)
+ us-mta-651-hqoBnLuLPlGpnT5txPGi0w-1; Fri, 18 Mar 2022 04:54:43 -0400
+X-MC-Unique: hqoBnLuLPlGpnT5txPGi0w-1
+Received: by mail-ed1-f72.google.com with SMTP id d28-20020a50f69c000000b00419125c67f4so294094edn.17
+        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Mar 2022 01:54:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
+         :subject:to:cc:references:content-language:in-reply-to
          :content-transfer-encoding;
-        bh=vWPskzqcY46f0JaJnrGxtCfxiJknIp7ZEMxWr9RfTK4=;
-        b=yxZb5q3BtKC/GrQQ5Udt0GYRac6lha5Cc29nvOa8JDDZ4sh5qfwEEpqnlsM86px555
-         PIFJvX060mcdZY1LY+AOXeoRUR3cGgh+jN8Ltkkfm5wh4NdkWAo0AH7GlsLbYbEUJNQA
-         b2nZ7+5AzTuaTfv102aXnh+xmH53Un2rIOIBYdOE82eifw8lE9R3mmjNYUH+2R35bm7P
-         rJQ+orD13j0hXftsYQx74vS1BT3JcStsOUV0Gs3jg0naeKuvgkZvY0o687HB3jkyOeEl
-         YIo8wDJGiPeE7Lss1P6IgUXDQIi1eHpV2eH7BTukknQIECshrLijqWvVER5c6pe8+4Sp
-         RZMw==
-X-Gm-Message-State: AOAM531KOf84y+1/yaALyGBS/YrABNczgQSpBlGT/B3SVd1KJ+Tfrv/O
-        tfKukaXw8ZBUgeNKiiDc0HzAoJztyGo2wevBVkO9lKCJRPR5DDn1RTuxY/650kaWhtHubd4ZB0c
-        st2/WVM/m/r2ta1pSJKTeyEyFJR2h3sjZSA==
-X-Received: by 2002:a17:907:3fa8:b0:6d3:477a:efe with SMTP id hr40-20020a1709073fa800b006d3477a0efemr8338451ejc.401.1647593454979;
-        Fri, 18 Mar 2022 01:50:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzJay5hdPvuYvu3/VMN0nnuMDTYfBT+fr0PDYGOsPRW9BUBjZ0o1c7V1picE8ujxf73nYdLYg==
-X-Received: by 2002:a17:907:3fa8:b0:6d3:477a:efe with SMTP id hr40-20020a1709073fa800b006d3477a0efemr8338438ejc.401.1647593454796;
-        Fri, 18 Mar 2022 01:50:54 -0700 (PDT)
+        bh=7HWeZEMEGqeavewyZo9xEKkkuF2oYbesigQSr2n3rD8=;
+        b=R/WZgyhslPPUnRQCHfRGbxo0wapOMQClXdvM3xFYDpOUiM5aUPAMgAC0Ws75Qa3qgb
+         XR50LsOh7pr4BTNZjzC6tgE2NTV7S4miJtSlsRjSWByunR0cYT8+jn8gOEeG3bURu5s5
+         52Z3jhrPLq4gkBlak8bGAEtmy1L7sk20st7ja+mtI+NCzgOuFn/BFRwOtJb/S2Ubdt7u
+         zQLVkRTRQaw5PDg2jUoVYkQipL6dUtQKQFTx6HJ2Mht94/5VsUJtBLLs8np7p27fuxHs
+         PTZl3hUVAkURvDSi/HB0MBM/65U1vhmUxHUGe8mQ+mQVHR3lOy+5EKCypfSLApLcxT0B
+         l4kA==
+X-Gm-Message-State: AOAM533SILEO9djX5WlPk9EBwwrW9kLqQMhfpsf1D5nIXeYp0pK4X6x6
+        fbFoFsYU4JYKEKX5yxyPS1kfvwI4VZCj3jEt0Ki2dkcLru3s5dtZ99UpJLzH+fDqGf0yVLIJqhu
+        ZCOxS0I6U5iZsrFHGxYH8shGVfTKKX1lftw==
+X-Received: by 2002:a17:906:478c:b0:6df:6b35:156d with SMTP id cw12-20020a170906478c00b006df6b35156dmr7957515ejc.578.1647593679647;
+        Fri, 18 Mar 2022 01:54:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwsXvTobev8ekDmCXMyLZm4Ixi/HitCEGGFxxCXfM+2lFdhiFrZC7EyPUeQPNh8CCeSG3v9+A==
+X-Received: by 2002:a17:906:478c:b0:6df:6b35:156d with SMTP id cw12-20020a170906478c00b006df6b35156dmr7957502ejc.578.1647593679411;
+        Fri, 18 Mar 2022 01:54:39 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id q11-20020a170906144b00b006cf61dfb03esm3430834ejc.62.2022.03.18.01.50.53
+        by smtp.gmail.com with ESMTPSA id s15-20020a170906778f00b006df84c19995sm2898424ejm.224.2022.03.18.01.54.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Mar 2022 01:50:54 -0700 (PDT)
-Message-ID: <aac830c9-6c65-d824-4cb8-2dd81f2347b3@redhat.com>
-Date:   Fri, 18 Mar 2022 09:50:53 +0100
+        Fri, 18 Mar 2022 01:54:39 -0700 (PDT)
+Message-ID: <d1192588-8993-5052-6018-7a2f8393cff9@redhat.com>
+Date:   Fri, 18 Mar 2022 09:54:38 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
+From:   Hans de Goede <hdegoede@redhat.com>
 Subject: Re: Dell laptop touchpad disabling?
-Content-Language: en-US
 To:     Randy Dunlap <rdunlap@infradead.org>, linux-input@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com
 Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
@@ -72,13 +72,15 @@ Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
         Prasanth Ksr <prasanth.ksr@dell.com>,
         Perry Yuan <Perry.Yuan@dell.com>
 References: <b9d9171d-1287-e5aa-46d2-2475817074ba@infradead.org>
-From:   Hans de Goede <hdegoede@redhat.com>
+Content-Language: en-US
 In-Reply-To: <b9d9171d-1287-e5aa-46d2-2475817074ba@infradead.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
+
+<attempt 2, fat-fingered send>
 
 Hi Randy,
 
@@ -118,5 +120,22 @@ so you want it to show up as "DELL0B24:00 04F3:3147 Touchpad", as
 you said this likely depends on your kernel config.
 
 And then usually the desktop environment will give you an option
-to disable it. At least GNOME offers a clear on/off toggle see:
+to disable it. At least GNOME offers a clear on/off toggle see e.g. :
+
+https://blog.separateconcerns.com/img/gnome-touchpad-settings.jpg
+
+Or you could use xinput properties to set the matching xinput
+device, to disabled which you can do by device-name:
+
+https://linuxhint.com/change_mouse_touchpad_settings_xinput_linux/
+
+And then change the "Device Enabled" property.
+
+Regardless of the method, the kernel's responsibility here is
+to make sure the touchpad gets seen as a touchpad and after that
+"disabling" it is a userspace problem.
+
+Regards,
+
+Hans
 
