@@ -2,115 +2,109 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8168C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Mar 2022 22:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3BFC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 19 Mar 2022 03:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241352AbiCRWpT (ORCPT
+        id S242205AbiCSEAH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 18 Mar 2022 18:45:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56610 "EHLO
+        Sat, 19 Mar 2022 00:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241343AbiCRWpP (ORCPT
+        with ESMTP id S242119AbiCSD7u (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Mar 2022 18:45:15 -0400
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80A7819B087;
-        Fri, 18 Mar 2022 15:43:53 -0700 (PDT)
-Received: from pps.filterd (m0148664.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 22IMbsiP020011;
-        Fri, 18 Mar 2022 22:43:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pps0720;
- bh=BqkAywTgWdlW1+XBiXg5Rfy8g9DvAfqYPHFJLBdTzOk=;
- b=ja2jcvQw1ZuQnneZx5pTsQ7ncsg2jrUi8WGCyRij34aRr4/nw/QSmFQli4ATQfjfdcjm
- xlZmolnOnQiTORyC9vRo7yhile1VX07gsUvqAWNzN0pIa+9LaSEsX2QNmtcBHAcWMzhH
- lbZ9TegffocGLCiz5QJhV0maQYZnp0kVIYERpfR+jTu262FQfeWvSy36XN+LSZYSjVUO
- 9j1Kkl6ccFQ2y4UgbqlK3+5Y+UbKw4ls/87OGrd1BWO8MN8nerQn28OePeXDj53ymAVV
- H0XckecD1aNdO28Ff9VU17Gy4GzMhfxZdDzIpCdkU1mOsL15CIM0t5RrNSHVMMdVg5KT 2A== 
-Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
-        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3evu2wc1hs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 18 Mar 2022 22:43:14 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3426.houston.hpe.com (Postfix) with ESMTP id D6B904E;
-        Fri, 18 Mar 2022 22:43:13 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id ED66149;
-        Fri, 18 Mar 2022 22:43:12 +0000 (UTC)
-From:   Mike Travis <mike.travis@hpe.com>
-To:     Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org
-Cc:     Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 2/3] x86/platform/uv: Update TSC sync state for UV5
-Date:   Fri, 18 Mar 2022 17:43:03 -0500
-Message-Id: <20220318224304.174967-3-mike.travis@hpe.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20220318224304.174967-1-mike.travis@hpe.com>
-References: <20220318224304.174967-1-mike.travis@hpe.com>
+        Fri, 18 Mar 2022 23:59:50 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6918C12A8F3;
+        Fri, 18 Mar 2022 20:57:52 -0700 (PDT)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22J2ro58012531;
+        Sat, 19 Mar 2022 03:57:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2021-07-09;
+ bh=dOCvppNUKgOlcA89bNUdrq8FTQRYfsjfsvR3rEo7hmg=;
+ b=rB4F0btdvmuQ8qSVzB0TI/MVdj6L1wLlPT1srOv4birzBP2VsA5D9mxqDnty9FGI031e
+ OhuXiDi8PP/hnk9+43pScgnlvc1Msx3IXhpur+XlVll5oz+03KUF4YG2ZJeO5ctAVyuc
+ ABInatOkvEpdjQe0XOBM3Vw23gTi3RCDw1NbsqI8/p8gXop58M1CrcTLpLi34DxilkOw
+ aIKWvxzBLmxogO1BmHkA0n6pbxmOlCrA4EQcUelFgQP2O0W9a5LqlQOoSqpIeuQaOZbZ
+ 7pKjNVt7qrQPqi5lf6wtbxwtbMHhpxhomcEA8IcEfMLaUK5a8MKBz0qkUbZ41JgSbvMB dA== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3ew6ss016q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 19 Mar 2022 03:57:15 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 22J3uvsm007045;
+        Sat, 19 Mar 2022 03:57:14 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3ew5kyshp1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 19 Mar 2022 03:57:14 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 22J3v5Qm007126;
+        Sat, 19 Mar 2022 03:57:13 GMT
+Received: from ca-mkp.mkp.ca.oracle.com (ca-mkp.ca.oracle.com [10.156.108.201])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3ew5kyshmn-6;
+        Sat, 19 Mar 2022 03:57:13 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Julia Lawall <Julia.Lawall@inria.fr>, linux-can@vger.kernel.org
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        linux-rdma@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
+        linux-s390@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        Shayne Chen <shayne.chen@mediatek.com>, netdev@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Jiri Olsa <jolsa@kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-staging@lists.linux.dev, Namhyung Kim <namhyung@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-wireless@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-sunxi@lists.linux.dev,
+        Sven Schnelle <svens@linux.ibm.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-power@fi.rohmeurope.com, linux-mtd@lists.infradead.org,
+        target-devel@vger.kernel.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-mediatek@lists.infradead.org,
+        Christian Borntraeger <borntraeger@linux.ibm.com>
+Subject: Re: [PATCH 00/30] fix typos in comments
+Date:   Fri, 18 Mar 2022 23:56:56 -0400
+Message-Id: <164766213032.31329.14855996441316567317.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+References: <20220314115354.144023-1-Julia.Lawall@inria.fr>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: HHwULhifDUkZaLVnbF7EARGsKPn2ztiA
-X-Proofpoint-GUID: HHwULhifDUkZaLVnbF7EARGsKPn2ztiA
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-03-18_14,2022-03-15_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- mlxlogscore=999 priorityscore=1501 impostorscore=0 bulkscore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 clxscore=1015 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203180122
+X-Proofpoint-ORIG-GUID: ryygBDbx4ESlJehbCVsBuy2qL-PPuldd
+X-Proofpoint-GUID: ryygBDbx4ESlJehbCVsBuy2qL-PPuldd
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Update TSC to not check TSC sync state for uv5+ as it is not available.
-It is assumed that TSC will always be in sync for multiple chassis and
-will pass the tests for the kernel to accept it as the clocksource.
-To disable this check use the kernel start options tsc=reliable
-clocksource=tsc.
+On Mon, 14 Mar 2022 12:53:24 +0100, Julia Lawall wrote:
 
-Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
----
-v2: Update patch description to be more explanatory.
----
- arch/x86/kernel/apic/x2apic_uv_x.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+> Various spelling mistakes in comments.
+> Detected with the help of Coccinelle.
+> 
 
-diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index f5a48e66e4f5..387d6533549a 100644
---- a/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -199,10 +199,16 @@ static void __init uv_tsc_check_sync(void)
- 	int mmr_shift;
- 	char *state;
- 
--	/* Different returns from different UV BIOS versions */
-+	/* UV5+, sync state from bios not available, assumed valid */
-+	if (!is_uv(UV2|UV3|UV4)) {
-+		pr_debug("UV: TSC sync state for UV5+ assumed valid\n");
-+		mark_tsc_async_resets("UV5+");
-+		return;
-+	}
-+
-+	/* UV2,3,4, UV BIOS TSC sync state available */
- 	mmr = uv_early_read_mmr(UVH_TSC_SYNC_MMR);
--	mmr_shift =
--		is_uv2_hub() ? UVH_TSC_SYNC_SHIFT_UV2K : UVH_TSC_SYNC_SHIFT;
-+	mmr_shift = is_uv2_hub() ? UVH_TSC_SYNC_SHIFT_UV2K : UVH_TSC_SYNC_SHIFT;
- 	sync_state = (mmr >> mmr_shift) & UVH_TSC_SYNC_MASK;
- 
- 	/* Check if TSC is valid for all sockets */
+Applied to 5.18/scsi-queue, thanks!
+
+[02/30] scsi: lpfc: fix typos in comments
+        https://git.kernel.org/mkp/scsi/c/9a866e6aaf4e
+[17/30] scsi: elx: libefc_sli: fix typos in comments
+        https://git.kernel.org/mkp/scsi/c/8037185d1ad8
+[24/30] scsi: qla2xxx: fix typos in comments
+        https://git.kernel.org/mkp/scsi/c/5419e0f15622
+[25/30] treewide: fix typos in comments
+        https://git.kernel.org/mkp/scsi/c/9d05790f5187
+
 -- 
-2.26.2
-
+Martin K. Petersen	Oracle Linux Engineering
