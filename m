@@ -2,41 +2,41 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344B7C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Mar 2022 19:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4D4C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Mar 2022 20:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343623AbiCTT74 (ORCPT
+        id S243854AbiCTUEQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 20 Mar 2022 15:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34054 "EHLO
+        Sun, 20 Mar 2022 16:04:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343619AbiCTT7x (ORCPT
+        with ESMTP id S236833AbiCTUEQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 20 Mar 2022 15:59:53 -0400
+        Sun, 20 Mar 2022 16:04:16 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBBEA3632A;
-        Sun, 20 Mar 2022 12:58:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BBCE186F8B
+        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Mar 2022 13:02:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
         :In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
         Sender:Reply-To:Content-ID:Content-Description;
-        bh=vROVO+ZWBaANfJn15veOaP16wW9kTkJdzaKa8pMEZLM=; b=AL5Gue4RQqpA1TTLEP0wQktSLa
-        MNJgDt/pUYyDrT2atIh+6pn3HXbDFy0UPJS7TGiDQDcHZ/Q3VKnf9dwmXjifk13BkmlvCIwATyoZM
-        TE3GoxUcRtsnByrShKooFEd6PtvCDk5IpZcTxEdinar66xpJnHxcoYuuwZCM8eCl+BYUDx+/NP3SF
-        nDVhXnY0wLRMqqHLRWTNcPpr0M+ZfDizt3eOqCREO1nlNNEcfBNaK+DzhodX4qPdrtOoYlNWkWFch
-        +KAuIRFXFhfG1ye5QL4WNrjbMGvQN7HdS0kTUL89uaJisW5uC58O6FSrrRIyqc6mGiivCISoAi9sL
-        egcSGAtg==;
+        bh=sqJn2u3aJJYMdP0FnI8nyiQhw/n1oIA13AGVimaa/28=; b=o95GP3q0pkZmm0RLGocyDBtABB
+        SB2YngG9NOpYLsd/uXRFSdUrlMJPzoYb7Nc8mOFlZXa7TnSFh1O3bEHfcfnI+0noa3In4EzjCIVpw
+        5E6m4jzaO904aX1HorzSz2xm6F/aoSRw80Af1021RbvD6kSOCT+imQT9oy6JKQ4to+9G0D5Zkcaxu
+        brz//e34cdRI7833epeN9QODJSqtWeAwPu+kBXtbtFA0FCo7aNCYwER6WsXa8vmi+k3q32gKgPH9D
+        zXs2KvFAomHtF1wKirL/qvFOY1RblbwXwGyx0SNRvthfuverDXSNtyuvKeZLX28Kr2V1brK51z+uJ
+        C2c/7wjg==;
 Received: from [2601:1c0:6280:3f0::6c43]
         by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nW1gy-002tpt-ES; Sun, 20 Mar 2022 19:58:20 +0000
-Message-ID: <f9058afc-cbf0-8bea-1191-ed7cc285eaa9@infradead.org>
-Date:   Sun, 20 Mar 2022 12:57:46 -0700
+        id 1nW1lD-002tvV-Pn; Sun, 20 Mar 2022 20:02:48 +0000
+Message-ID: <8dc33bd4-0877-cbe5-38b6-b827d2234299@infradead.org>
+Date:   Sun, 20 Mar 2022 13:02:39 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
 Subject: Re: Dell laptop touchpad disabling?
 Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org,
+To:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com
 Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
         Stuart Hayes <stuart.w.hayes@gmail.com>,
@@ -53,7 +53,7 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+
 
 On 3/18/22 01:54, Hans de Goede wrote:
 > <attempt 2, fat-fingered send>
@@ -77,45 +77,14 @@ On 3/18/22 01:54, Hans de Goede wrote:
 >> "i2c-DELL0B24:00". (The different discoveries might have something
 >> to do with my kernel configuration/builds, but I don't know that
 >> for sure.)
->>
->> I have some very hackish scripts that I can run to toggle the
->> 'inhibited' flag in sysfs (/sys/class/input/ for the I2C device or
->> or /sys/devices/platform/i8042/ for the i8042 AUX port device),
->> but that requires root (sudo), so that does not qualify as "easily"
->> IMO.
->>
->> E.g.,
->> $ sudo toggle-aux-mouse
->> or
->> $ sudo toggle-i2c-touchpad
->>
->> depending on which configuration the device is in.
-> 
-> The touchpad is supposed to be always recognized as, well a touchpad,
-> so you want it to show up as "DELL0B24:00 04F3:3147 Touchpad", as
-> you said this likely depends on your kernel config.
-> 
-> And then usually the desktop environment will give you an option
-> to disable it. At least GNOME offers a clear on/off toggle see e.g. :
-> 
-> https://blog.separateconcerns.com/img/gnome-touchpad-settings.jpg
 
-OK, I finally found that. and it works.
 
-> Or you could use xinput properties to set the matching xinput
-> device, to disabled which you can do by device-name:
-> 
-> https://linuxhint.com/change_mouse_touchpad_settings_xinput_linux/
-> 
-> And then change the "Device Enabled" property.
 
-and that also works.
+BTW, it seems that Perry Yuan is no longer at Dell, so would someone
+from Dell please update this entry in the MAINTAINERS file?
 
-> Regardless of the method, the kernel's responsibility here is
-> to make sure the touchpad gets seen as a touchpad and after that
-> "disabling" it is a userspace problem.
 
-Sure, I get it.
+DELL WMI HARDWARE PRIVACY SUPPORT
+M:	Perry Yuan <Perry.Yuan@dell.com>
 
-Thanks for your help.
-
+Thanks.
