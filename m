@@ -2,109 +2,120 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3BFC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 19 Mar 2022 03:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344B7C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Mar 2022 19:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242205AbiCSEAH (ORCPT
+        id S1343623AbiCTT74 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 19 Mar 2022 00:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59790 "EHLO
+        Sun, 20 Mar 2022 15:59:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242119AbiCSD7u (ORCPT
+        with ESMTP id S1343619AbiCTT7x (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Mar 2022 23:59:50 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6918C12A8F3;
-        Fri, 18 Mar 2022 20:57:52 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22J2ro58012531;
-        Sat, 19 Mar 2022 03:57:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2021-07-09;
- bh=dOCvppNUKgOlcA89bNUdrq8FTQRYfsjfsvR3rEo7hmg=;
- b=rB4F0btdvmuQ8qSVzB0TI/MVdj6L1wLlPT1srOv4birzBP2VsA5D9mxqDnty9FGI031e
- OhuXiDi8PP/hnk9+43pScgnlvc1Msx3IXhpur+XlVll5oz+03KUF4YG2ZJeO5ctAVyuc
- ABInatOkvEpdjQe0XOBM3Vw23gTi3RCDw1NbsqI8/p8gXop58M1CrcTLpLi34DxilkOw
- aIKWvxzBLmxogO1BmHkA0n6pbxmOlCrA4EQcUelFgQP2O0W9a5LqlQOoSqpIeuQaOZbZ
- 7pKjNVt7qrQPqi5lf6wtbxwtbMHhpxhomcEA8IcEfMLaUK5a8MKBz0qkUbZ41JgSbvMB dA== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3ew6ss016q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 19 Mar 2022 03:57:15 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 22J3uvsm007045;
-        Sat, 19 Mar 2022 03:57:14 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3ew5kyshp1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 19 Mar 2022 03:57:14 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 22J3v5Qm007126;
-        Sat, 19 Mar 2022 03:57:13 GMT
-Received: from ca-mkp.mkp.ca.oracle.com (ca-mkp.ca.oracle.com [10.156.108.201])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3ew5kyshmn-6;
-        Sat, 19 Mar 2022 03:57:13 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Julia Lawall <Julia.Lawall@inria.fr>, linux-can@vger.kernel.org
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        linux-rdma@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
-        linux-s390@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
-        Shayne Chen <shayne.chen@mediatek.com>, netdev@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Jiri Olsa <jolsa@kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-staging@lists.linux.dev, Namhyung Kim <namhyung@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-wireless@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-sunxi@lists.linux.dev,
-        Sven Schnelle <svens@linux.ibm.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-power@fi.rohmeurope.com, linux-mtd@lists.infradead.org,
-        target-devel@vger.kernel.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-mediatek@lists.infradead.org,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-Subject: Re: [PATCH 00/30] fix typos in comments
-Date:   Fri, 18 Mar 2022 23:56:56 -0400
-Message-Id: <164766213032.31329.14855996441316567317.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220314115354.144023-1-Julia.Lawall@inria.fr>
-References: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+        Sun, 20 Mar 2022 15:59:53 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBBEA3632A;
+        Sun, 20 Mar 2022 12:58:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+        :In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=vROVO+ZWBaANfJn15veOaP16wW9kTkJdzaKa8pMEZLM=; b=AL5Gue4RQqpA1TTLEP0wQktSLa
+        MNJgDt/pUYyDrT2atIh+6pn3HXbDFy0UPJS7TGiDQDcHZ/Q3VKnf9dwmXjifk13BkmlvCIwATyoZM
+        TE3GoxUcRtsnByrShKooFEd6PtvCDk5IpZcTxEdinar66xpJnHxcoYuuwZCM8eCl+BYUDx+/NP3SF
+        nDVhXnY0wLRMqqHLRWTNcPpr0M+ZfDizt3eOqCREO1nlNNEcfBNaK+DzhodX4qPdrtOoYlNWkWFch
+        +KAuIRFXFhfG1ye5QL4WNrjbMGvQN7HdS0kTUL89uaJisW5uC58O6FSrrRIyqc6mGiivCISoAi9sL
+        egcSGAtg==;
+Received: from [2601:1c0:6280:3f0::6c43]
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nW1gy-002tpt-ES; Sun, 20 Mar 2022 19:58:20 +0000
+Message-ID: <f9058afc-cbf0-8bea-1191-ed7cc285eaa9@infradead.org>
+Date:   Sun, 20 Mar 2022 12:57:46 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: ryygBDbx4ESlJehbCVsBuy2qL-PPuldd
-X-Proofpoint-GUID: ryygBDbx4ESlJehbCVsBuy2qL-PPuldd
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: Dell laptop touchpad disabling?
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com
+Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Divya Bharathi <divya.bharathi@dell.com>,
+        Prasanth Ksr <prasanth.ksr@dell.com>,
+        Perry Yuan <Perry.Yuan@dell.com>
+References: <b9d9171d-1287-e5aa-46d2-2475817074ba@infradead.org>
+ <d1192588-8993-5052-6018-7a2f8393cff9@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <d1192588-8993-5052-6018-7a2f8393cff9@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 14 Mar 2022 12:53:24 +0100, Julia Lawall wrote:
+Hi Hans,
 
-> Various spelling mistakes in comments.
-> Detected with the help of Coccinelle.
+On 3/18/22 01:54, Hans de Goede wrote:
+> <attempt 2, fat-fingered send>
 > 
+> Hi Randy,
+> 
+> On 3/18/22 01:32, Randy Dunlap wrote:
+>> Hi all,
+>>
+>> I have a Dell Inspiron 15 5510 laptop. Of course, it has a touchpad
+>> (which I think of as a nuisance pad).
+>> I would like to be able to disable the touchpad easily.
+>>
+>> Are there any best practices or suggestions for how to do this?
+>> (I am using xfce4 as the desktop environment if that matters.)
+>>
+>>
+>> Sometimes the touchpad is discovered as a PS/2 Generic Mouse on
+>> the i8042 AUX port, and sometimes it is discovered as this
+>> touchpad: "DELL0B24:00 04F3:3147 Touchpad" on some I2C device:
+>> "i2c-DELL0B24:00". (The different discoveries might have something
+>> to do with my kernel configuration/builds, but I don't know that
+>> for sure.)
+>>
+>> I have some very hackish scripts that I can run to toggle the
+>> 'inhibited' flag in sysfs (/sys/class/input/ for the I2C device or
+>> or /sys/devices/platform/i8042/ for the i8042 AUX port device),
+>> but that requires root (sudo), so that does not qualify as "easily"
+>> IMO.
+>>
+>> E.g.,
+>> $ sudo toggle-aux-mouse
+>> or
+>> $ sudo toggle-i2c-touchpad
+>>
+>> depending on which configuration the device is in.
+> 
+> The touchpad is supposed to be always recognized as, well a touchpad,
+> so you want it to show up as "DELL0B24:00 04F3:3147 Touchpad", as
+> you said this likely depends on your kernel config.
+> 
+> And then usually the desktop environment will give you an option
+> to disable it. At least GNOME offers a clear on/off toggle see e.g. :
+> 
+> https://blog.separateconcerns.com/img/gnome-touchpad-settings.jpg
 
-Applied to 5.18/scsi-queue, thanks!
+OK, I finally found that. and it works.
 
-[02/30] scsi: lpfc: fix typos in comments
-        https://git.kernel.org/mkp/scsi/c/9a866e6aaf4e
-[17/30] scsi: elx: libefc_sli: fix typos in comments
-        https://git.kernel.org/mkp/scsi/c/8037185d1ad8
-[24/30] scsi: qla2xxx: fix typos in comments
-        https://git.kernel.org/mkp/scsi/c/5419e0f15622
-[25/30] treewide: fix typos in comments
-        https://git.kernel.org/mkp/scsi/c/9d05790f5187
+> Or you could use xinput properties to set the matching xinput
+> device, to disabled which you can do by device-name:
+> 
+> https://linuxhint.com/change_mouse_touchpad_settings_xinput_linux/
+> 
+> And then change the "Device Enabled" property.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+and that also works.
+
+> Regardless of the method, the kernel's responsibility here is
+> to make sure the touchpad gets seen as a touchpad and after that
+> "disabling" it is a userspace problem.
+
+Sure, I get it.
+
+Thanks for your help.
+
