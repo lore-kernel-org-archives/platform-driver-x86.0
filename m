@@ -2,306 +2,247 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E13EC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Mar 2022 18:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54284C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Mar 2022 21:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240204AbiCVSLv (ORCPT
+        id S236941AbiCVVwq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Mar 2022 14:11:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60976 "EHLO
+        Tue, 22 Mar 2022 17:52:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240202AbiCVSLt (ORCPT
+        with ESMTP id S236897AbiCVVwn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Mar 2022 14:11:49 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75BCA69CD6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Mar 2022 11:10:20 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id i11so15477826plr.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Mar 2022 11:10:20 -0700 (PDT)
+        Tue, 22 Mar 2022 17:52:43 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 623A76D96D
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Mar 2022 14:51:15 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id i11-20020a9d4a8b000000b005cda3b9754aso1359165otf.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Mar 2022 14:51:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tirotech-co-nz.20210112.gappssmtp.com; s=20210112;
-        h=message-id:from:date:subject:to:cc;
-        bh=0ZmCf9inQQlaAMkLDfQi5G3GC7i0IucLx+YZMvY3eE0=;
-        b=aUSwTLIu9jsDOiTZa1l/Ii2QSRdbo8n+xuROXD/MbxRhJY7LfsmrXiu+cDGCxuX9Dt
-         YI75R0tqf8+NRTPvI0ZKTQebSijbz6YmBePdlNts3EQbLE23jHK7Gy9l5frV9KHrVMLn
-         mjQU/pSkub5NlCE2dZOU7Y8EStoZC0bhjSCOf/Kx/fGsVKzEnDPuSw0CorIVU0ZfDJLo
-         bU04EeYEezw68AJWIb/4vrhOb3E/GOqgM3GsqJ7Vy9o35i2gePeA5BRT7gduYB40vdfA
-         mUUMO8aOSKahMqeOpikG8U7r/z+yYdF2b6kvrl8XeTS4mHv1CRmA6OupUCm5h0R3TJBM
-         Ichw==
+        d=gmail.com; s=20210112;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ecP9Iq53zz5AasvC2URp0G6060mXxCava9IKAzYlB7w=;
+        b=O+L9hQNzmfynhuyh1v/YEKih8AfgbZtK9GekBUrzQ8JLt6EY/TiiPkPyGxytQBRbqz
+         i+3J2h6oqq7HW/HJ5DlTRVT5D0E6MGJ4PtOXstZvgVouASERqu1TkwBLHYbqvcTS90eG
+         6CQVujP5xPvIDtcVtQnKAa6POPJJHsFobRfiVcvjdzUNIxabh1IY5hj+RKBy61AXv7SY
+         JSRVrJ9bZGPbFerGI7MkdWNGQqPacyk4cVdB/7+AOE2AjxMVSPM0U8iSg30kOluJl3SO
+         gvMGg8WTkvfpMLmWQsYwpMJhi5asy/wmGBUMhnbrfpjU/rJw/kD0YLbHXeDv1HIytE99
+         Kmmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:from:date:subject:to:cc;
-        bh=0ZmCf9inQQlaAMkLDfQi5G3GC7i0IucLx+YZMvY3eE0=;
-        b=6RhJMSnotNeIkHdnp0HJBAd/FEJRgVARlRZJcgT7vA0adnCJ5lqIpFO54KjSvsUBUg
-         tGUAccN6Of2XfjZhrqQGcuJWKbVeRNqwxaiLIdrG6LwUwIWzw86Kr4vpmsMQr4eOOZxJ
-         ePhUXg+4JGydTnCsp0DFvcOuu2lUZ5r++YBcAugnaGhQTYaaIj50sGxIQe+DWoZjySYv
-         mmViIjpQaSY8kddphBtxlDJPCv4CxT5+uwE6qFWlW7ZZ/d7EKUja0Py0mJcUvptlX5St
-         JFjuRwV6d6289MjoRgSnqjtjLNxMBstdp1h1EoAcWDsg5SBFObPwiVt3i5PYCMOH8B9H
-         xjBA==
-X-Gm-Message-State: AOAM533xN8hnCMnNi0GkPf0FJhlubHkTPNfOH7YnzLSBqC+mB+oXoElo
-        /n66O5MMj7RPo6CvM/5SupNEeA==
-X-Google-Smtp-Source: ABdhPJwHp2K6CIqYUctrguiVYcZGZ1hf6oOCnMQh2wFtI5A778h9IHpi94vYHaVJPYGjbmlWGEpowg==
-X-Received: by 2002:a17:90b:2496:b0:1b9:a6dd:ae7 with SMTP id nt22-20020a17090b249600b001b9a6dd0ae7mr6566054pjb.35.1647972619868;
-        Tue, 22 Mar 2022 11:10:19 -0700 (PDT)
-Received: from localhost ([121.99.145.49])
-        by smtp.gmail.com with ESMTPSA id y14-20020a62f24e000000b004f7d604f5ddsm23411878pfl.181.2022.03.22.11.10.17
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ecP9Iq53zz5AasvC2URp0G6060mXxCava9IKAzYlB7w=;
+        b=LekBkt7ylkAOSMcBl5s6QG2vzPOGnZa0YwJ3FaEXfqNG9Tr5792ZqN/T4yCtNApGDM
+         xqaMfKDZNGssEIWLBC27Q9PNg2cL51grwyFqhU69dqGSbtCw0N16hPG/cuHdINb9u+3p
+         vBAVlIfik2/zg03BBXMdjbpUXGviNZLnqVjLY6Sp0EXfNj+xSNWXb4HU6CrCSWzMsAGw
+         nfr3NkzcNgVAEf11mH/29LMo1KsDHzHXXfd3+8dxDybYxLcDg9VzAfjGs64rxULIYSxu
+         XiIt6aks6sX1TeFGyxL3H7+8dbIVIXhjJhQJ/UIQODxj3ffdQ8gaahMKIhMtCG42VhrY
+         J3mw==
+X-Gm-Message-State: AOAM533YEoJYoBVXtF13v2F7HT2gf7rOOcaSeQloZxFTYcpH4NCY6Hug
+        vXHAzUL7NLAIQjH5jp4DDlLAC7gEW0A=
+X-Google-Smtp-Source: ABdhPJzRMJWtlnJjsmNevreJK+RCJy1oHWQ83FyWMRbOmB7bqrYG37lejMn6pnV5FmNEp3eMFIwm3g==
+X-Received: by 2002:a9d:6c58:0:b0:5cd:8ccb:c128 with SMTP id g24-20020a9d6c58000000b005cd8ccbc128mr4976161otq.254.1647985874313;
+        Tue, 22 Mar 2022 14:51:14 -0700 (PDT)
+Received: from grumpy-vm.hsd1.tx.comcast.net ([2601:2c3:480:7390:8a31:5c82:5969:c7ae])
+        by smtp.gmail.com with ESMTPSA id n6-20020a9d6f06000000b005b266e43c92sm9070830otq.73.2022.03.22.14.51.13
+        for <platform-driver-x86@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Mar 2022 11:10:18 -0700 (PDT)
-Message-ID: <623a110a.1c69fb81.64f39.0118@mx.google.com>
-From:   Daniel Beer <daniel.beer@tirotech.co.nz>
-Date:   Mon, 21 Mar 2022 16:16:27 +1300
-Subject: [PATCH v2] winmate-fm07-keys: Winmate FM07/FM07P buttons
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Beer <daniel.beer@tirotech.co.nz>
+        Tue, 22 Mar 2022 14:51:14 -0700 (PDT)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     platform-driver-x86@vger.kernel.org
+Subject: [PATCH v1] HP Security Features solutions Documentation
+Date:   Tue, 22 Mar 2022 16:51:13 -0500
+Message-Id: <20220322215113.3110-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Winmate FM07 and FM07P in-vehicle computers have a row of five buttons
-below the display. This module adds an input device that delivers key
-events when these buttons are pressed.
+The purpose for this patch is add documentation for the HP WMI driver.
+It describes how to use and manage BIOS settings & security
+solutions on HP Inc.’s commercial platforms.  Patches to integrate
+the security features in hp-wmi driver will follow shortly.
 
-Signed-off-by: Daniel Beer <daniel.beer@tirotech.co.nz>
+Many features of HP Commercial PC’s can be managed using Windows
+Management Instrumentation (WMI). WMI is an implementation of Web-Based
+Enterprise Management (WBEM) that provides a standards-based interface
+for changing and monitoring system settings.  HP WMI driver provides
+a native Linux solution and the exposed features facilitates the
+migration to Linux environments.
+
+The Linux security features to be provided in hp-wmi driver enables
+managing the BIOS settings and security solutions via sysfs, a virtual
+filesystem that can be used by usermode applications.   The new
+documentation cover features such Secure Platform Management, Sure
+Admin, and Sure Start.  Each section provides security feature
+description and identifies sysfs directories and files exposed by
+the driver.
+
+Many HP Commercial PC’s include a feature called Secure Platform
+Management (SPM), which replaces older password-based BIOS settings
+management with public key cryptography. PC secure product management
+begins when a target system is provisioned with cryptographic keys
+that are used to ensure the integrity of communications between system
+management utilities and the BIOS.
+
+HP Commercial PC’s have several BIOS settings that control its behaviour
+and capabilities, many of which are related to security. To prevent
+unauthorized changes to these settings, the system can be configured
+to use a Sure Admin cryptographic signature-based authorization string
+that the BIOS will use to verify authorization to modify the setting.
+
+Document contents was reviewed and approved by HP internal team for
+accuracy.
+
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+
 ---
-Changes in v2:
-  - Ratelimit message on poll timeout.
-  - Explain polling rate.
-  - Fix fm07keys_dmi_table and add missing macro.
-  - Fix check of platform_device_register_simple return value.
+Based on the latest platform-drivers-x86.git/for-next
+---
+ Documentation/admin-guide/hp_wmi.rst | 115 +++++++++++++++++++++++++++
+ Documentation/admin-guide/index.rst  |   1 +
+ 2 files changed, 116 insertions(+)
+ create mode 100644 Documentation/admin-guide/hp_wmi.rst
 
- drivers/platform/x86/Kconfig             |   8 +
- drivers/platform/x86/Makefile            |   3 +
- drivers/platform/x86/winmate-fm07-keys.c | 189 +++++++++++++++++++++++
- 3 files changed, 200 insertions(+)
- create mode 100644 drivers/platform/x86/winmate-fm07-keys.c
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 24deeeb29af2..62a5754d6ac9 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1138,6 +1138,14 @@ config SIEMENS_SIMATIC_IPC
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called simatic-ipc.
- 
-+config WINMATE_FM07_KEYS
-+	tristate "Winmate FM07/FM07P front-panel keys driver"
-+	depends on INPUT
-+	help
-+	  Winmate FM07 and FM07P in-vehicle computers have a row of five
-+	  buttons below the display. This module adds an input device
-+	  that delivers key events when these buttons are pressed.
-+
- endif # X86_PLATFORM_DEVICES
- 
- config PMC_ATOM
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index c12a9b044fd8..04e7c995b838 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -129,3 +129,6 @@ obj-$(CONFIG_PMC_ATOM)			+= pmc_atom.o
- 
- # Siemens Simatic Industrial PCs
- obj-$(CONFIG_SIEMENS_SIMATIC_IPC)	+= simatic-ipc.o
-+
-+# Winmate
-+obj-$(CONFIG_WINMATE_FM07_KEYS)		+= winmate-fm07-keys.o
-diff --git a/drivers/platform/x86/winmate-fm07-keys.c b/drivers/platform/x86/winmate-fm07-keys.c
+diff --git a/Documentation/admin-guide/hp_wmi.rst b/Documentation/admin-guide/hp_wmi.rst
 new file mode 100644
-index 000000000000..8c03a4d171b8
+index 000000000000..745de80a7386
 --- /dev/null
-+++ b/drivers/platform/x86/winmate-fm07-keys.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Driver for the Winmate FM07 front-panel keys
-+//
-+// Author: Daniel Beer <daniel.beer@tirotech.co.nz>
++++ b/Documentation/admin-guide/hp_wmi.rst
+@@ -0,0 +1,115 @@
++.. SPDX-License-Identifier: GPL-2.0
++===========================
++HP Inc. WMI driver (hp_wmi)
++===========================
 +
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/input.h>
-+#include <linux/ioport.h>
-+#include <linux/platform_device.h>
-+#include <linux/dmi.h>
-+#include <linux/io.h>
++Purpose
++=======
++To document the use of the HP WMI driver to manage BIOS settings & security
++solutions on HP Inc.’s commercial platforms
 +
-+#define DRV_NAME	"winmate-fm07keys"
++Scope
++=====
++This document discusses the functionality of the hp_wmi driver only.
++It does not cover the support needed from applications to configure the BIOS
++settings and enable the security features.
 +
-+#define PORT_CMD	0x6c
-+#define PORT_DATA	0x68
++Overview
++========
++Many features of HP Commercial PC’s can be managed using Windows Management
++Instrumentation (WMI).  WMI is an implementation of Web-Based Enterprise
++Management (WBEM) that provides a standards-based interface for changing and
++monitoring system settings.
 +
-+#define EC_ADDR_KEYS	0x3b
-+#define EC_CMD_READ	0x80
++The hp-wmi driver enables managing the BIOS settings and security solutions
++via sysfs, a virtual filesystem that can be used by usermode applications.
 +
-+#define BASE_KEY	KEY_F13
-+#define NUM_KEYS	5
++When the driver loads, it creates the following directories and files in the
++/sys file system: ::
 +
-+/* Typically we're done in fewer than 10 iterations */
-+#define LOOP_TIMEOUT	1000
++	/sys/devices/platform/hp-wmi/spm/kek
++	/sys/devices/platform/hp-wmi/spm/sk
++	/sys/devices/platform/hp-wmi/spm/status
++	/sys/devices/platform/hp-wmi/spm/statusbin
++	/sys/devices/platform/hp-wmi/sure_admin/settings
++	/sys/devices/platform/hp-wmi/sure_start/audit_log_entries
++	/sys/devices/platform/hp-wmi/sure_start/audit_log_entry_count
 +
-+static void fm07keys_poll(struct input_dev *input)
-+{
-+	uint8_t k;
-+	int i;
++If the driver is unloaded, all the allocated memory is freed and directories
++and files in the /sys file system removed.
 +
-+	/* Flush output buffer */
-+	i = 0;
-+	while (inb(PORT_CMD) & 0x01) {
-+		if (++i >= LOOP_TIMEOUT)
-+			goto timeout;
-+		inb(PORT_DATA);
-+	}
++Secure Platform Management
++==========================
++Many HP Commercial PC’s include a feature called Secure Platform Management
++(SPM), which replaces older password-based BIOS settings management with public
++key cryptography.  PC secure product management begins when a target system is
++provisioned with cryptographic keys that are used to ensure the integrity of
++communications between system management utilities and the BIOS.
 +
-+	/* Send request and wait for write completion */
-+	outb(EC_CMD_READ, PORT_CMD);
-+	i = 0;
-+	while (inb(PORT_CMD) & 0x02)
-+		if (++i >= LOOP_TIMEOUT)
-+			goto timeout;
++The private key is used by system management utilities to sign payloads
++containing configuration changes.  The BIOS on a target system uses the
++associated public key to verify the integrity of the payload and apply the
++changes.
 +
-+	outb(EC_ADDR_KEYS, PORT_DATA);
-+	i = 0;
-+	while (inb(PORT_CMD) & 0x02)
-+		if (++i >= LOOP_TIMEOUT)
-+			goto timeout;
++At the end of the PC’s lifecycle a signed deprovisioning command restores
++the factory default state.
 +
-+	/* Wait for data ready */
-+	i = 0;
-+	while (!(inb(PORT_CMD) & 0x01))
-+		if (++i >= LOOP_TIMEOUT)
-+			goto timeout;
-+	k = inb(PORT_DATA);
++KEK Certificate (KEK) and Signing Key (SK) get provisioned and status can
++be read either as text from the status file or binary from statusbin. ::
 +
-+	/* Notify of new key states */
-+	for (i = 0; i < NUM_KEYS; i++) {
-+		input_report_key(input, BASE_KEY + i, (~k) & 1);
-+		k >>= 1;
-+	}
++	/sys/devices/platform/hp-wmi/spm/kek
++	/sys/devices/platform/hp-wmi/spm/sk
++	/sys/devices/platform/hp-wmi/spm/status
++	/sys/devices/platform/hp-wmi/spm/statusbin
 +
-+	input_sync(input);
-+	return;
++**status** is a read-only file that returns ASCII text reporting the
++following values: ::
 +
-+timeout:
-+	dev_warn_ratelimited(&input->dev, "timeout polling IO memory\n");
-+}
++	State:  Not Provisioned / Provisioned / Provisioning in progress
++	Version:  Major.   Minor
++	Feature Bit Mask: <16-bit unsigned number display in hex>
++	SPM Counter: <16-bit unsigned number display in base 10>
++	Signing Key Public Key Modulus (base64):
++	KEK Public Key Modulus (base64):
 +
-+static int fm07keys_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct input_dev *input;
-+	int ret;
-+	int i;
++**kek** is a write-only file that can be used to configure the RSA public
++key that will be used by the BIOS to verify signatures when setting the
++signing key.  When written, the bytes should correspond to the KEK
++certificate (x509 .DER format containing an OU).  The size of the
++certificate must be less than or equal to 4095 bytes.
 +
-+	input = devm_input_allocate_device(dev);
-+	if (!input) {
-+		dev_err(dev, "no memory for input device\n");
-+		return -ENOMEM;
-+	}
++**sk** is a write-only file that can be used to configure the RSA public
++key that will be used by the BIOS to verify signatures when configuring
++BIOS settings and security features.  When written, the bytes should
++correspond to the modulus of the public key.  The exponent is assumed
++to be 0x10001.
 +
-+	if (!devm_request_region(dev, PORT_CMD, 1, "Winmate FM07 EC"))
-+		return -EBUSY;
-+	if (!devm_request_region(dev, PORT_DATA, 1, "Winmate FM07 EC"))
-+		return -EBUSY;
++Sure Admin
++==========
++HP Commercial PC’s have several BIOS settings that control its behaviour and
++capabilities, many of which are related to security.  To prevent unauthorized
++changes to these settings, the system can be configured to use a Sure Admin
++cryptographic signature-based authorization string that the BIOS will use to
++verify authorization to modify the setting.
++Behind the scenes, Sure Admin uses Secure Platform Management (SPM) and WMI
 +
-+	input->name = "Winmate FM07 front-panel keys";
-+	input->phys = DRV_NAME "/input0";
++**settings** is a file associated with Sure Admin. BIOS settings can be read
++or written through the Sure Admin settings file in sysfs. ::
 +
-+	input->id.bustype = BUS_HOST;
-+	input->id.vendor = 0x0001;
-+	input->id.product = 0x0001;
-+	input->id.version = 0x0100;
++	/sys/devices/platform/hp-wmi/sure_admin/settings
 +
-+	__set_bit(EV_KEY, input->evbit);
++Sure Start
++==========
++Sure Start provides advanced firmware protection and resiliency by identifying
++and repairing unauthorized BIOS changes.  It maintains an audit log of these
++events and other important system configuration changes.  The following sysfs
++entries can be used to read the contents of the audit log.
 +
-+	for (i = 0; i < NUM_KEYS; i++)
-+		__set_bit(BASE_KEY + i, input->keybit);
++**audit_log_entry_count** is a read-only file that returns the number of
++existing audit log events available to be read. ::
 +
-+	ret = input_setup_polling(input, fm07keys_poll);
-+	if (ret) {
-+		dev_err(dev, "unable to set up polling, err=%d\n", ret);
-+		return ret;
-+	}
++	/sys/devices/platform/hp-wmi/sure_start/audit_log_entry_count
 +
-+	/* These are silicone buttons. They can't be pressed in rapid
-+	 * succession too quickly, and 50 Hz seems to be an adequate
-+	 * sampling rate without missing any events when tested.
-+	 */
-+	input_set_poll_interval(input, 20);
++**audit_log_entries** is a read-only file that returns the events in the log. ::
 +
-+	ret = input_register_device(input);
-+	if (ret) {
-+		dev_err(dev, "unable to register polled device, err=%d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	input_sync(input);
-+	return 0;
-+}
-+
-+static struct platform_driver fm07keys_driver = {
-+	.probe		= fm07keys_probe,
-+	.driver		= {
-+		.name	= DRV_NAME
-+	},
-+};
-+
-+static struct platform_device *dev;
-+
-+static const struct dmi_system_id fm07keys_dmi_table[] __initconst = {
-+	{
-+		/* FM07 and FM07P */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Winmate Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "IP30"),
-+		},
-+	},
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(dmi, fm07keys_dmi_table);
-+
-+static int __init fm07keys_init(void)
-+{
-+	int ret;
-+
-+	if (!dmi_check_system(fm07keys_dmi_table))
-+		return -ENODEV;
-+
-+	ret = platform_driver_register(&fm07keys_driver);
-+	if (ret) {
-+		pr_err("fm07keys: failed to register driver, err=%d\n", ret);
-+		return ret;
-+	}
-+
-+	dev = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
-+	if (IS_ERR(dev)) {
-+		ret = PTR_ERR(dev);
-+		pr_err("fm07keys: failed to allocate device, err = %d\n", ret);
-+		goto fail_register;
-+	}
-+
-+	return 0;
-+
-+fail_register:
-+	platform_driver_unregister(&fm07keys_driver);
-+	return ret;
-+}
-+
-+static void __exit fm07keys_exit(void)
-+{
-+	platform_driver_unregister(&fm07keys_driver);
-+	platform_device_unregister(dev);
-+}
-+
-+module_init(fm07keys_init);
-+module_exit(fm07keys_exit);
-+
-+MODULE_AUTHOR("Daniel Beer <daniel.beer@tirotech.co.nz>");
-+MODULE_DESCRIPTION("Winmate FM07 front-panel keys driver");
-+MODULE_LICENSE("GPL v2");
++	/sys/devices/platform/hp-wmi/sure_start/audit_log_entries
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index 1bedab498104..58b9b0541cb5 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -86,6 +86,7 @@ configure specific aspects of kernel behavior to your liking.
+    nfs/index
+    gpio/index
+    highuid
++   hp_wmi
+    hw_random
+    initrd
+    iostats
 -- 
-2.30.2
+2.25.1
 
