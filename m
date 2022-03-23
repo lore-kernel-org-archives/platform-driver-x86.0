@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A1EC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Mar 2022 09:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8B6C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Mar 2022 19:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239488AbiCWJtL (ORCPT
+        id S238380AbiCWTLv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Mar 2022 05:49:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45886 "EHLO
+        Wed, 23 Mar 2022 15:11:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241948AbiCWJtJ (ORCPT
+        with ESMTP id S232772AbiCWTLu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Mar 2022 05:49:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 442EA25C7E
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2022 02:47:40 -0700 (PDT)
+        Wed, 23 Mar 2022 15:11:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11DAF3AA52
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2022 12:10:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D44A160B64
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2022 09:47:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3FD4CC340E8
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2022 09:47:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A41746156E
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2022 19:10:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 07FC3C340EE
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2022 19:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648028859;
-        bh=069bxH+4ajrrkq+ABK9Utz2JosizG711aoe3Yoq8efU=;
+        s=k20201202; t=1648062620;
+        bh=XU74ughpIppzb/PVDsEi+OUc1tq9tN/GBI6iUzE9pt8=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=nG3d3m4b/+DORGLKLk7waPhiQWMhAH6wEbp4N9TJFCi6ibd/3r59xGCjLdjgoA+dG
-         DDrPmvL1h/ytkpzrc97wSoAACVbE3C/duMXixTEIJov9RdddIz5xFCxBOjCYIn+2se
-         9u3PMVg+dXoZWCejVt54OOwHhrn4DsVaLnObSXJJJLiAAeQNMw1T3NZBXLoBXomUWj
-         JmGEM/fefpRIMML73XUHTzretyQrsSoRDbsQps43jd6+uE826R+DXZ6IqjCwo22vpC
-         KCShl/RcULCjw3OnZQvzFS0GqeVj7RTRXbsOrJnEleV3ZPgci2legeZhYw+CNtyKRg
-         delVOL1pgzy8w==
+        b=k3k4PmQVWZw5U+WkupZKjpC/8aQ98H0RCuq+5WMHArLKBLD48+SM/P8MWsT/omZOu
+         RGmFYKrCa1aTJMIa3cDBdyIoCv9sM4g40OjlZ1vKOixvYvDRKcZ3FUdUG4G1qA9PUt
+         tVGBLO1yrkW/c9RPazZBGBOJ5lqDmvIjL531FZQbGxSPoR9hJbOLKvO4PAt05Pi8ra
+         vg8m7nhISRo6wBPdGbC1zm6+5fq/mVNICRo1NHzpv2saqNIVY6u5sIqnkVwcwGPp8u
+         Ou7YbsItiwWLeqGtUDrvnmPTGShJ2ZUZQdt4MkdBeh42EddfxFFdSop2JV+gqwJz3L
+         droOInUowrAtA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 23991C05F98; Wed, 23 Mar 2022 09:47:39 +0000 (UTC)
+        id DD1F9C05F98; Wed, 23 Mar 2022 19:10:19 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 215730] acpi_bus_register_driver() does not work on Alder Lake
-Date:   Wed, 23 Mar 2022 09:47:39 +0000
+Date:   Wed, 23 Mar 2022 19:10:19 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,14 +47,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: xuemin.wu@dbh.dynabook.com
+X-Bugzilla-Who: mjg59-kernel@srcf.ucam.org
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-215730-215701-xKip6azhxk@https.bugzilla.kernel.org/>
+Message-ID: <bug-215730-215701-cl8Byn4vRw@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-215730-215701@https.bugzilla.kernel.org/>
 References: <bug-215730-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -68,24 +68,8 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D215730
 
---- Comment #8 from xuemin (xuemin.wu@dbh.dynabook.com) ---
-All functions which depending on toshiba_acpi are not working.
-
-static struct acpi_driver toshiba_acpi_driver =3D {
-        .name   =3D "Toshiba ACPI driver",
-        .owner  =3D THIS_MODULE,
-        .ids    =3D toshiba_device_ids,
-        .flags  =3D ACPI_DRIVER_ALL_NOTIFY_EVENTS,
-        .ops    =3D {
-                .add            =3D toshiba_acpi_add, // =3D=3D=3D> here
-                .remove         =3D toshiba_acpi_remove,
-                .notify         =3D toshiba_acpi_notify,
-        },
-        .drv.pm =3D &toshiba_acpi_pm,
-};
-
-the toshiba_acpi_add(...){ ...} not be excuted on that device.
-Thanks.
+--- Comment #9 from Matthew Garrett (mjg59-kernel@srcf.ucam.org) ---
+Your laptop does not implement the ACPI interfaces that this driver needs.
 
 --=20
 You may reply to this email to add a comment.
