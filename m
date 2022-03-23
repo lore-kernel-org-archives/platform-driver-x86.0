@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2CFC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Mar 2022 05:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0473C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Mar 2022 05:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230324AbiCWFiR (ORCPT
+        id S236943AbiCWFrk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Mar 2022 01:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35452 "EHLO
+        Wed, 23 Mar 2022 01:47:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229870AbiCWFiR (ORCPT
+        with ESMTP id S229870AbiCWFrj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Mar 2022 01:38:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B9470F58
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Mar 2022 22:36:48 -0700 (PDT)
+        Wed, 23 Mar 2022 01:47:39 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 277AC710C8
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Mar 2022 22:46:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E852A615C4
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2022 05:36:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 487FEC340F2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2022 05:36:47 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BDC94B81DC9
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2022 05:46:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 645B0C340E8
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2022 05:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648013807;
-        bh=dYbQln+l27Zt+PruTE3a+U8Hc4ifneW2nbFm8VVii/0=;
+        s=k20201202; t=1648014367;
+        bh=QIP17ICUJSGXm1byl23fwlTKT7Ub/ZjbuJUA0eSRwuk=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=h8afGpNyZyoZD7Y0u6MxtBQ5a0mxv7ky29t+vpu2ci+aylBW1MoPeEPLRakg3Vjxy
-         99V6VEBAAk+Uz4NeQoyuiFuZXGCoYmHUfLdw7tW970j3Uj2xbCRwqJPh/YCuqepZuw
-         5PxhANcwaH+6FWFBUJWuM/D0fzaxd0ixt4NX979XNBv3IEKpWzDUTeCgJs+/8U7lBk
-         1P+PlPItT6B2dH7cetElNDNepWTWdrMM6NXCDPxtoO2t+fHt2O/3+n/qWM0DNupcEE
-         efhIC3OHQJibc0uA+lmiGlXadrXRIdr39qVX73ddnHTzNEsx2PxDyQtcBNcrEfraZw
-         Tbndui9KNjN8A==
+        b=ohVDtRrSYrsLpexC0ZzkNZ77jx56wj6gHuP96KCYNYvYKrUxeQeMJY7buMDivRRpJ
+         AbU77lWe+lIMV8Hgilc1gfDlIEpKCYylmvj9cllkH0qVaug70cQERTTcUa3gxTKkRw
+         b+0awOMZXzolbapO4AfhPSSjoa8olBZm1Ygum24YyDfBAsHZ6IJg9Cv1IH0P7llYTF
+         qAOQ50sfBpZPLQdL5iPjtYOY7dzI8S3cERPAVnW25fCacksMQtfAH/51SU8/wb6SSu
+         73Ny6GotIVAPtBDcqvNx60Xs3vAdycBOMGFn7d8m4XUz0tvPODNeTHdvuUWSjqMvdH
+         7eVFqDH9uVwkA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 2041CC05F98; Wed, 23 Mar 2022 05:36:47 +0000 (UTC)
+        id 441C0C05F98; Wed, 23 Mar 2022 05:46:07 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 215730] acpi_bus_register_driver() does not work on Alder Lake
-Date:   Wed, 23 Mar 2022 05:36:46 +0000
+Date:   Wed, 23 Mar 2022 05:46:07 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -53,8 +53,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-215730-215701-4eN0yZwRKg@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-215730-215701-lLvE0KzOqS@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-215730-215701@https.bugzilla.kernel.org/>
 References: <bug-215730-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -68,10 +68,13 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D215730
 
---- Comment #2 from xuemin (xuemin.wu@dbh.dynabook.com) ---
-Created attachment 300602
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300602&action=3Dedit
-acpidump.output.txt
+--- Comment #3 from xuemin (xuemin.wu@dbh.dynabook.com) ---
+(In reply to Matthew Garrett from comment #1)
+> Can you attach the output of acpidump? It's unlikely that this is down to
+> the CPU, but more likely that the device ID has changed.
+Hi Garrett,
+Thank you for the infomation.
+Please see the attached file above.
 
 --=20
 You may reply to this email to add a comment.
