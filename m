@@ -2,85 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A2BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Mar 2022 03:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFCFC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Mar 2022 07:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231992AbiCXD7w (ORCPT
+        id S1347805AbiCXHWR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Mar 2022 23:59:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45210 "EHLO
+        Thu, 24 Mar 2022 03:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239978AbiCXD7t (ORCPT
+        with ESMTP id S230138AbiCXHWQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Mar 2022 23:59:49 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76CED7CB0E
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2022 20:58:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CB2A5B82227
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Mar 2022 03:58:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 525A0C340EE
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Mar 2022 03:58:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648094294;
-        bh=h6VJQWIj+Q3XVqqj1WtKcnD3aoOKZAx4o9DXipwHC4k=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=lNvzJ67TJNmMSOHUjadakN4QB1exHRUcFcRfdnE9Amjy1FNuMkmX+1oMgnnw/mQOy
-         fCgPeMBuVpg2vgTjtH5fd2K23LROV0jD0tHFgCuvxFeIQu3ViRmVmxmXKaktBAx5MK
-         w2HoPSNEQkGQHJsbMrUSiS1L4Y6ChyzgeHaeyVHqKH+2H8TS09hi5FZuMOPAlLo4aQ
-         /nDeXTHOGVpnJVthfto+43o5gitbeecrHAvEbJxuc5ut7COte2R+xkftM4ptc/CtId
-         TsbGz3GIgYNiQBt1hvz+KzrhOUf6vkm7/e3k4Ehwxfse4P5DrIjzDft/fKlkQZ728O
-         3TzHo2wupfoQg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 42DB4C05FD5; Thu, 24 Mar 2022 03:58:14 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 215724] acpi_bus_register_driver does not work on Alder Lake
-Date:   Thu, 24 Mar 2022 03:58:14 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: CC drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: xuemin.wu@dbh.dynabook.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: DUPLICATE
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: acpi_power-other@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: resolution
-Message-ID: <bug-215724-215701-becY7rgYoT@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-215724-215701@https.bugzilla.kernel.org/>
-References: <bug-215724-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Thu, 24 Mar 2022 03:22:16 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D6B85A09F;
+        Thu, 24 Mar 2022 00:20:44 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id qa43so7265361ejc.12;
+        Thu, 24 Mar 2022 00:20:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OZ30SALDCdF6ve1jmx8o4UeGTC9W1dlBNNl9mV+QfPY=;
+        b=d9eKEqeBGQjuStvECA/Izr927dwj0JKnWImmODXq196m7snXz/5gmKmzjlyLT7PP++
+         gZ0E5eA2KjHlqmgyA2u+VfOx38B6rl8G8Fxj8TEfMXGTQDL2ohIHGdX3bKESfod/sBdz
+         Q6uA7IWNYGi765VMr4JopZUUf4RaxrnfZBi9zIrChfYIxBT3CSe742dMXej+BvUSB2xh
+         sloc/H71kMmQqn24YX7kZgpO0wKoM501xH2Xk8nsKYp30iNoP3oFahrC2po9lUEX7AuL
+         z4kddmMVY3upaYkbnLmcM1C5Uxdql5HYc5yVsjsgNBKAlNBhvmJ5jefo0f1NmpsRHNHY
+         371Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OZ30SALDCdF6ve1jmx8o4UeGTC9W1dlBNNl9mV+QfPY=;
+        b=MB+cfmBgxqVUk1ZK06NbSv0cPk0ikwQaTk4GsRoj2AR4RIFWVA2XUU972ndNVyw5pe
+         PM7zsKDoOEwyKtDw0jROk0Rie6gvcLnzrth20R4LvA5zEOJg9MWGg0iHJNyX8WyNNZp6
+         ZmeLWkKHtXmW0ZarDG7CMvpqtxtfpR9qBZzubB1vQ1A5VomgkQCGS/UQgxmHjW3NjfdG
+         DbYnFODzq11db+ozOWThBJBoI4uxTyNPNZy7Mk6QdRdZbZOfhBGO3aP1JPt5KuwBMULL
+         AS+OLEBYe0xJOpsHW8d7zV+9uvJ5mBpuOcrzvC+NOh/nfW9ucrnFPrHrmxptau7ZVUB9
+         FrJQ==
+X-Gm-Message-State: AOAM532uuAtmYYRDSOkrenR4HcLkYqjL7WofmBKrX2OuGOKklXbwrgqn
+        jyGqJHkLozeD41enKZmlJek=
+X-Google-Smtp-Source: ABdhPJx3JQ8gNE82asV1UbXAVUZNjIRCfJZ5V6bEHEK69fbvEF3AxeZ/p3Xr/hj8zaWnmwA/hKvHqg==
+X-Received: by 2002:a17:906:174f:b0:6d0:5629:e4be with SMTP id d15-20020a170906174f00b006d05629e4bemr4152151eje.525.1648106439694;
+        Thu, 24 Mar 2022 00:20:39 -0700 (PDT)
+Received: from localhost.localdomain (i130160.upc-i.chello.nl. [62.195.130.160])
+        by smtp.googlemail.com with ESMTPSA id l4-20020aa7c304000000b004192b7825a2sm956913edq.12.2022.03.24.00.20.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Mar 2022 00:20:39 -0700 (PDT)
+From:   Jakob Koschel <jakobkoschel@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@kernel.org>,
+        "Brian Johannesmeyer" <bjohannesmeyer@gmail.com>,
+        Cristiano Giuffrida <c.giuffrida@vu.nl>,
+        "Bos, H.J." <h.j.bos@vu.nl>, Jakob Koschel <jakobkoschel@gmail.com>
+Subject: [PATCH] platform/x86: wmi: replace usage of found with dedicated list iterator variable
+Date:   Thu, 24 Mar 2022 08:20:15 +0100
+Message-Id: <20220324072015.62063-1-jakobkoschel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D215724
+To move the list iterator variable into the list_for_each_entry_*()
+macro in the future it should be avoided to use the list iterator
+variable after the loop body.
 
-xuemin (xuemin.wu@dbh.dynabook.com) changed:
+To *never* use the list iterator variable after the loop it was
+concluded to use a separate iterator variable instead of a
+found boolean [1].
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-         Resolution|CODE_FIX                    |DUPLICATE
+This removes the need to use a found variable and simply checking if
+the variable was set, can determine if the break/goto was hit.
 
---- Comment #1 from xuemin (xuemin.wu@dbh.dynabook.com) ---
+Link: https://lore.kernel.org/all/CAHk-=wgRr_D8CB-D9Kg-c=EHreAsk5SqXPwr9Y7k9sA6cWXJ6w@mail.gmail.com/
+Signed-off-by: Jakob Koschel <jakobkoschel@gmail.com>
+---
+ drivers/platform/x86/wmi.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 58a23a9adbef..aed293b5af81 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -1308,21 +1308,20 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physical_address address,
+ static void acpi_wmi_notify_handler(acpi_handle handle, u32 event,
+ 				    void *context)
+ {
+-	struct wmi_block *wblock;
+-	bool found_it = false;
++	struct wmi_block *wblock = NULL, *iter;
+ 
+-	list_for_each_entry(wblock, &wmi_block_list, list) {
+-		struct guid_block *block = &wblock->gblock;
++	list_for_each_entry(iter, &wmi_block_list, list) {
++		struct guid_block *block = &iter->gblock;
+ 
+-		if (wblock->acpi_device->handle == handle &&
++		if (iter->acpi_device->handle == handle &&
+ 		    (block->flags & ACPI_WMI_EVENT) &&
+ 		    (block->notify_id == event)) {
+-			found_it = true;
++			wblock = iter;
+ 			break;
+ 		}
+ 	}
+ 
+-	if (!found_it)
++	if (!wblock)
+ 		return;
+ 
+ 	/* If a driver is bound, then notify the driver. */
 
-*** This bug has been marked as a duplicate of bug 215730 ***
+base-commit: f443e374ae131c168a065ea1748feac6b2e76613
+-- 
+2.25.1
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching someone on the CC list of the bug.=
