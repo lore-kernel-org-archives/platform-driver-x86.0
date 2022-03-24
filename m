@@ -2,93 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01897C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Mar 2022 16:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37C9C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Mar 2022 17:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351802AbiCXQt2 (ORCPT
+        id S235817AbiCXRwX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Mar 2022 12:49:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49288 "EHLO
+        Thu, 24 Mar 2022 13:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351820AbiCXQtZ (ORCPT
+        with ESMTP id S234338AbiCXRwX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Mar 2022 12:49:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4A532ADD74
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Mar 2022 09:47:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1648140472;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o3yznAVa11IPBnnYwZf5Cua2JEMNbm4oYIGv6D2ELLY=;
-        b=XOXJiO5FxwhLeqo6g0XiJmjOsQZKNReOTLO1DNkMZ32x/Jd/K679vxOy6+fllFdgEiIf+q
-        9qNpoCwuOX+feiFsYLPZeDknU6KhPGfcCuJlSysDKNgTyFqPscy5MS1dRx7V92wDKToVU5
-        c3DCrUizX9xbBevNNVGezsywQ4K9SWs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-594-IOys9a3oPNWp4-Zu6myxvg-1; Thu, 24 Mar 2022 12:47:47 -0400
-X-MC-Unique: IOys9a3oPNWp4-Zu6myxvg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 24 Mar 2022 13:52:23 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CDD3986D8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Mar 2022 10:50:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 88142185A7A4;
-        Thu, 24 Mar 2022 16:47:46 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.192.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 169F3417E32;
-        Thu, 24 Mar 2022 16:47:44 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH 4/4] Documentation/ABI: sysfs-class-power: Fix Sphinx error
-Date:   Thu, 24 Mar 2022 17:47:37 +0100
-Message-Id: <20220324164737.21765-5-hdegoede@redhat.com>
-In-Reply-To: <20220324164737.21765-1-hdegoede@redhat.com>
-References: <20220324164737.21765-1-hdegoede@redhat.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id DE218B82502
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Mar 2022 17:50:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 85D05C340FE
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Mar 2022 17:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648144248;
+        bh=+pSJiTgvHyh2SFRR0QP6q+M6KKaQbbkY6OxYYXFQyg4=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=p4CAvpgCRjAx9Gfy3YnGkLTCISsXt8zGw9snYtRLxPsYmjVoXaJlMMLkTifDSFj8b
+         7FOwdq7FyTCdBxUNOR8+b7FV+6FcptreXFLjOoCyY0b8Ji+OpMRbQYK4mCPxtnF7oY
+         cHfuVfyu/On81AxbnXeLedVG5goLq3tamlaqA1HCppb0mXT92yKKzQWDUL8Oy0ekuS
+         TaiSziiNwDrR7pvWn+OegdKXmyQ7fRwV41xWgn9j5mAj9YUMN0EeIG2Iyh2foSyD5G
+         kBCuyBdQ71Wsm2ft9frsf5RF5TGKtFuNyqPWBGGN95j9Nqde8u1fg6u3z0a9sLc0JZ
+         S3IXGGnVGFdYA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 75A50C05FCE; Thu, 24 Mar 2022 17:50:48 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 24 Mar 2022 17:50:46 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: greg@krypto.org
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-Jy90imgR7Z@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Fix the following error from "make htmldocs":
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Documentation/ABI/testing/sysfs-class-power:459: ERROR:
-No bottom table border found.
+--- Comment #230 from Gregory P. Smith (greg@krypto.org) ---
+I hope someone works on the big picture problem: Maintaining hard coded lis=
+ts
+of random vendor specific strings in the kernel source code does not scale.
 
-================ ====================================
-auto:            Charge normally, respect thresholds
-inhibit-charge:  Do not charge while AC is attached
-force-discharge: Force discharge while AC is attached
+The only solution for anyone overlooked or unidentified is to modify a list=
+ in
+the kernel source code and maintain their own fork of the distro's kernel f=
+or
+years? That is unfriendly and leaves most actual users stuck.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- Documentation/ABI/testing/sysfs-class-power | 1 +
- 1 file changed, 1 insertion(+)
+A way to choose which settings to use at boot and/or module load time (or a=
+mend
+these lists) via configuration external to the kernel (ex: parameters) would
+avoid this endless "me too" string submission dance.
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index fde21d900420..859501366777 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -468,6 +468,7 @@ Description:
- 			auto:            Charge normally, respect thresholds
- 			inhibit-charge:  Do not charge while AC is attached
- 			force-discharge: Force discharge while AC is attached
-+			================ ====================================
- 
- What:		/sys/class/power_supply/<supply_name>/technology
- Date:		May 2007
--- 
-2.35.1
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
