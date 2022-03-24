@@ -2,122 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFCFC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Mar 2022 07:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA07C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Mar 2022 11:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347805AbiCXHWR (ORCPT
+        id S1348133AbiCXLZ0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Mar 2022 03:22:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54964 "EHLO
+        Thu, 24 Mar 2022 07:25:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230138AbiCXHWQ (ORCPT
+        with ESMTP id S1347752AbiCXLZW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Mar 2022 03:22:16 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D6B85A09F;
-        Thu, 24 Mar 2022 00:20:44 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id qa43so7265361ejc.12;
-        Thu, 24 Mar 2022 00:20:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OZ30SALDCdF6ve1jmx8o4UeGTC9W1dlBNNl9mV+QfPY=;
-        b=d9eKEqeBGQjuStvECA/Izr927dwj0JKnWImmODXq196m7snXz/5gmKmzjlyLT7PP++
-         gZ0E5eA2KjHlqmgyA2u+VfOx38B6rl8G8Fxj8TEfMXGTQDL2ohIHGdX3bKESfod/sBdz
-         Q6uA7IWNYGi765VMr4JopZUUf4RaxrnfZBi9zIrChfYIxBT3CSe742dMXej+BvUSB2xh
-         sloc/H71kMmQqn24YX7kZgpO0wKoM501xH2Xk8nsKYp30iNoP3oFahrC2po9lUEX7AuL
-         z4kddmMVY3upaYkbnLmcM1C5Uxdql5HYc5yVsjsgNBKAlNBhvmJ5jefo0f1NmpsRHNHY
-         371Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OZ30SALDCdF6ve1jmx8o4UeGTC9W1dlBNNl9mV+QfPY=;
-        b=MB+cfmBgxqVUk1ZK06NbSv0cPk0ikwQaTk4GsRoj2AR4RIFWVA2XUU972ndNVyw5pe
-         PM7zsKDoOEwyKtDw0jROk0Rie6gvcLnzrth20R4LvA5zEOJg9MWGg0iHJNyX8WyNNZp6
-         ZmeLWkKHtXmW0ZarDG7CMvpqtxtfpR9qBZzubB1vQ1A5VomgkQCGS/UQgxmHjW3NjfdG
-         DbYnFODzq11db+ozOWThBJBoI4uxTyNPNZy7Mk6QdRdZbZOfhBGO3aP1JPt5KuwBMULL
-         AS+OLEBYe0xJOpsHW8d7zV+9uvJ5mBpuOcrzvC+NOh/nfW9ucrnFPrHrmxptau7ZVUB9
-         FrJQ==
-X-Gm-Message-State: AOAM532uuAtmYYRDSOkrenR4HcLkYqjL7WofmBKrX2OuGOKklXbwrgqn
-        jyGqJHkLozeD41enKZmlJek=
-X-Google-Smtp-Source: ABdhPJx3JQ8gNE82asV1UbXAVUZNjIRCfJZ5V6bEHEK69fbvEF3AxeZ/p3Xr/hj8zaWnmwA/hKvHqg==
-X-Received: by 2002:a17:906:174f:b0:6d0:5629:e4be with SMTP id d15-20020a170906174f00b006d05629e4bemr4152151eje.525.1648106439694;
-        Thu, 24 Mar 2022 00:20:39 -0700 (PDT)
-Received: from localhost.localdomain (i130160.upc-i.chello.nl. [62.195.130.160])
-        by smtp.googlemail.com with ESMTPSA id l4-20020aa7c304000000b004192b7825a2sm956913edq.12.2022.03.24.00.20.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Mar 2022 00:20:39 -0700 (PDT)
-From:   Jakob Koschel <jakobkoschel@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@kernel.org>,
-        "Brian Johannesmeyer" <bjohannesmeyer@gmail.com>,
-        Cristiano Giuffrida <c.giuffrida@vu.nl>,
-        "Bos, H.J." <h.j.bos@vu.nl>, Jakob Koschel <jakobkoschel@gmail.com>
-Subject: [PATCH] platform/x86: wmi: replace usage of found with dedicated list iterator variable
-Date:   Thu, 24 Mar 2022 08:20:15 +0100
-Message-Id: <20220324072015.62063-1-jakobkoschel@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 24 Mar 2022 07:25:22 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04DF73ED1E
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Mar 2022 04:23:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A8603B8233B
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Mar 2022 11:23:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4CE8EC34119
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Mar 2022 11:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648121027;
+        bh=T2EQSy0/li0c5niJJINxohmogeTCVNC1gjnTTJY0sEw=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=XlPv1M0+ipUxMWm5JzZcd7KqKGqzYu634YXT7x9ZGZnZgpBF0nOwUwyBrwfOmWg4o
+         Xny4GhqSHR7GIS/17h7nOL8jlTaj7YHQde8ksG0VJT7D+yxc+x0eGkkg/Ivawc2eR2
+         AdPwJuUhtzqql10ImtDWZXNm2DvmTY8ByK6q5Ze/olp6tr2E1H1JLEOYZYmJPETXVE
+         lSMjb3+Kz4RfDSJNiIVClHaMCu1SsLmwHK2JlvOvpoX2CvSnqE2tJ374FXBIMYBdaG
+         GvxqEDAJcKi4p9pRQSlNzAYDlRigb70q4888ApYVTF/Eynj4zkbMXZaPdnfXTHx254
+         9Sd9DreqdjlnQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 3C59DCAC6E2; Thu, 24 Mar 2022 11:23:47 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 24 Mar 2022 11:23:45 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: hubert.banas@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-sdPRI1tVin@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-To move the list iterator variable into the list_for_each_entry_*()
-macro in the future it should be avoided to use the list iterator
-variable after the loop body.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-To *never* use the list iterator variable after the loop it was
-concluded to use a separate iterator variable instead of a
-found boolean [1].
+--- Comment #229 from Hubert Banas (hubert.banas@gmail.com) ---
+Would it be possible to get these new motherboard in during Linux 5.18 merge
+window?
 
-This removes the need to use a found variable and simply checking if
-the variable was set, can determine if the break/goto was hit.
+--=20
+You may reply to this email to add a comment.
 
-Link: https://lore.kernel.org/all/CAHk-=wgRr_D8CB-D9Kg-c=EHreAsk5SqXPwr9Y7k9sA6cWXJ6w@mail.gmail.com/
-Signed-off-by: Jakob Koschel <jakobkoschel@gmail.com>
----
- drivers/platform/x86/wmi.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 58a23a9adbef..aed293b5af81 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -1308,21 +1308,20 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physical_address address,
- static void acpi_wmi_notify_handler(acpi_handle handle, u32 event,
- 				    void *context)
- {
--	struct wmi_block *wblock;
--	bool found_it = false;
-+	struct wmi_block *wblock = NULL, *iter;
- 
--	list_for_each_entry(wblock, &wmi_block_list, list) {
--		struct guid_block *block = &wblock->gblock;
-+	list_for_each_entry(iter, &wmi_block_list, list) {
-+		struct guid_block *block = &iter->gblock;
- 
--		if (wblock->acpi_device->handle == handle &&
-+		if (iter->acpi_device->handle == handle &&
- 		    (block->flags & ACPI_WMI_EVENT) &&
- 		    (block->notify_id == event)) {
--			found_it = true;
-+			wblock = iter;
- 			break;
- 		}
- 	}
- 
--	if (!found_it)
-+	if (!wblock)
- 		return;
- 
- 	/* If a driver is bound, then notify the driver. */
-
-base-commit: f443e374ae131c168a065ea1748feac6b2e76613
--- 
-2.25.1
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
