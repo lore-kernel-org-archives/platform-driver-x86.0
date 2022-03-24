@@ -2,42 +2,42 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7C9C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Mar 2022 16:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C58C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Mar 2022 16:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351733AbiCXQsi (ORCPT
+        id S235237AbiCXQtQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Mar 2022 12:48:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48624 "EHLO
+        Thu, 24 Mar 2022 12:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235237AbiCXQsh (ORCPT
+        with ESMTP id S1351785AbiCXQtQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Mar 2022 12:48:37 -0400
+        Thu, 24 Mar 2022 12:49:16 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 03B739F39A
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Mar 2022 09:47:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 899DFAC933
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Mar 2022 09:47:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1648140425;
+        s=mimecast20190719; t=1648140463;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding;
         bh=UpCGOPzrBlCTuSLxyy7t5OA4eAmMttPs1iO1RjGpOPM=;
-        b=H5MfS8mmor0WxMhBnXqTG+Jo/A5f1UKjqOb78qjWNcCRZdtBxwFkTyvuSVhCNdYj1rkqZP
-        vXk2xjl16g7OFh3AMft36H7Q+wWsnu1kyEGyT49/mDDWI0ozn82DGb0bRaQ6EqS9eAfOBU
-        3EpLeSKCQRCWzC/UZl2whckqPu6AROc=
+        b=YZ2pID/YkDW+PLdY60NAQpcXVgd0DN2z+NQgZl9xFzXhrwRIXkkOQCHlf7FWfOorEyzzw/
+        Kh7wQbWhndf52DDgrsqSXQ6qdAiKTzb61sQeYnu12V+yObOAqvAmc7bxHXITNj06iDqAnC
+        CWP8Ahupssy4GePva4aQTBZjR123RCc=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-58-sLUBI_nLOv2CuHEM17eIlA-1; Thu, 24 Mar 2022 12:46:59 -0400
-X-MC-Unique: sLUBI_nLOv2CuHEM17eIlA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+ us-mta-322-dIf3rhLWMo-LZ_2lu4oU5Q-1; Thu, 24 Mar 2022 12:47:40 -0400
+X-MC-Unique: dIf3rhLWMo-LZ_2lu4oU5Q-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3E4BD380670D;
-        Thu, 24 Mar 2022 16:46:59 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C810E1C05AE0;
+        Thu, 24 Mar 2022 16:47:39 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.192.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DFD840D2853;
-        Thu, 24 Mar 2022 16:46:57 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 49797417E32;
+        Thu, 24 Mar 2022 16:47:38 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
@@ -46,14 +46,15 @@ To:     Mark Gross <markgross@kernel.org>,
         =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
         Sebastian Reichel <sre@kernel.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org
 Subject: [PATCH 0/4] Documentation/ABI: platform/x86: Sphinx warning fixes
-Date:   Thu, 24 Mar 2022 17:46:52 +0100
-Message-Id: <20220324164656.21725-1-hdegoede@redhat.com>
+Date:   Thu, 24 Mar 2022 17:47:33 +0100
+Message-Id: <20220324164737.21765-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
