@@ -2,124 +2,95 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CEFC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Mar 2022 10:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D2BC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Mar 2022 01:53:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358924AbiCYKlk (ORCPT
+        id S229556AbiCZBzS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 25 Mar 2022 06:41:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59648 "EHLO
+        Fri, 25 Mar 2022 21:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351631AbiCYKlj (ORCPT
+        with ESMTP id S230143AbiCZBzQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 25 Mar 2022 06:41:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 66FA1C627C
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Mar 2022 03:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1648204805;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TrfAZ0qzao0ZEtbHRPfVRmwmNq2i/Jw+hPAR+QAaxzk=;
-        b=TgNjEyZ3HJmCbLXSeg6CyVAsQW7ilrbzAcd1Fjw5YbtLY8Cz+OR35Bgj/xIMj3keGUbUVf
-        tbMt/ziNu79j36ZunOKRnnMNqBrOfokBJwqsbbGg6xUpsRS5CMD2PEZviqGBIcu5gaCYoO
-        3riE4xAJ9tm1xVGDvPDaMen3aF6QtNk=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-451-Igl4M8KoMgWfU3uh4BOqIQ-1; Fri, 25 Mar 2022 06:40:04 -0400
-X-MC-Unique: Igl4M8KoMgWfU3uh4BOqIQ-1
-Received: by mail-ed1-f71.google.com with SMTP id j39-20020a05640223a700b0041992453601so2424694eda.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Mar 2022 03:40:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=TrfAZ0qzao0ZEtbHRPfVRmwmNq2i/Jw+hPAR+QAaxzk=;
-        b=TfVPwXLaqj3EqlUz1ib8dTid05aeo7s8X+oR/KjO6M24CxFGwjexZTkv4czLE0UzsM
-         jszOgnV9SPlGdFAxBHdNjwa7mn1+mobPbWn9lucKLcjooyN2wRSNNF9EEJRx3/Ieuj0H
-         v01rLA6JwXTQVFVe0ZzDWc+bCgeEQwCW/WR+5U6WfkNu1OqT7WyprE2V+enwpPlefiYT
-         U/fysamaThZVYoivcm4vQrU8/Fy4MJVW77R/D1zF9f2nnQlQMlxPySehQTI881FYqyzZ
-         ZEaqXuL+VdaFqiEO0n58V6Fxwe/RjF9gM2OjiX7fKTVenfq2gLjyJpsqtwClriWmbl6C
-         KSvQ==
-X-Gm-Message-State: AOAM531vLMetLtXU6DYieoKiwXjSL2G1cxAupKcjMojuqJjzor+ugFWR
-        Mg5b/En+NDxryHyAF0/EyJ+y20h/FFKRL1+lXny2i9f3mfwUUwxblTktZyGdlXI1qDJfXSamaQG
-        esAMOwRP+oxi902jnZmUxZE9FfyBy6MAk0A==
-X-Received: by 2002:a17:907:d2a:b0:6e0:963c:97d9 with SMTP id gn42-20020a1709070d2a00b006e0963c97d9mr4574199ejc.736.1648204802908;
-        Fri, 25 Mar 2022 03:40:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyMnCBBkEIFXU/Xo8yMmB+B0JwunTv09fo/5qHHm1J86glb+mcfRbtW0qcUumoVXxb2Wbrxzg==
-X-Received: by 2002:a17:907:d2a:b0:6e0:963c:97d9 with SMTP id gn42-20020a1709070d2a00b006e0963c97d9mr4574177ejc.736.1648204802679;
-        Fri, 25 Mar 2022 03:40:02 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id d7-20020a50cd47000000b004187eacb4d6sm2717357edj.37.2022.03.25.03.40.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Mar 2022 03:40:02 -0700 (PDT)
-Message-ID: <5bbb34bc-0dbe-05b0-ea56-c37fca0db814@redhat.com>
-Date:   Fri, 25 Mar 2022 11:40:01 +0100
+        Fri, 25 Mar 2022 21:55:16 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB5B972C2;
+        Fri, 25 Mar 2022 18:53:41 -0700 (PDT)
+Received: from canpemm500002.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KQMPs3W3KzCrDl;
+        Sat, 26 Mar 2022 09:51:29 +0800 (CST)
+Received: from localhost.localdomain (10.175.103.91) by
+ canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Sat, 26 Mar 2022 09:53:38 +0800
+From:   Wei Li <liwei391@huawei.com>
+To:     Peter Kaestle <peter@piie.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rui.xiang@huawei.com>
+Subject: [PATCH] platform/x86: acerhdf: Cleanup str_starts_with()
+Date:   Sat, 26 Mar 2022 10:02:49 +0800
+Message-ID: <20220326020249.3266561-1-liwei391@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH 4/4] Documentation/ABI: sysfs-class-power: Fix Sphinx
- error
-Content-Language: en-US
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20220324164737.21765-1-hdegoede@redhat.com>
- <20220324164737.21765-5-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220324164737.21765-5-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500002.china.huawei.com (7.192.104.244)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Since there is already a generic function strstarts() that check if a
+string starts with a given prefix, cleanup str_starts_with().
 
-On 3/24/22 17:47, Hans de Goede wrote:
-> Fix the following error from "make htmldocs":
-> 
-> Documentation/ABI/testing/sysfs-class-power:459: ERROR:
-> No bottom table border found.
-> 
-> ================ ====================================
-> auto:            Charge normally, respect thresholds
-> inhibit-charge:  Do not charge while AC is attached
-> force-discharge: Force discharge while AC is attached
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  Documentation/ABI/testing/sysfs-class-power | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> index fde21d900420..859501366777 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -468,6 +468,7 @@ Description:
->  			auto:            Charge normally, respect thresholds
->  			inhibit-charge:  Do not charge while AC is attached
->  			force-discharge: Force discharge while AC is attached
-> +			================ ====================================
->  
->  What:		/sys/class/power_supply/<supply_name>/technology
->  Date:		May 2007
+Signed-off-by: Wei Li <liwei391@huawei.com>
+---
+ drivers/platform/x86/acerhdf.c | 21 +++------------------
+ 1 file changed, 3 insertions(+), 18 deletions(-)
 
-
-I see a similar change has already landed in linux-power-supply/for-next, so
-I'll drop this patch from the set.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+index 6b8b3ab8db48..3c589437b41e 100644
+--- a/drivers/platform/x86/acerhdf.c
++++ b/drivers/platform/x86/acerhdf.c
+@@ -584,21 +584,6 @@ static struct platform_driver acerhdf_driver = {
+ 	.remove = acerhdf_remove,
+ };
+ 
+-/* checks if str begins with start */
+-static int str_starts_with(const char *str, const char *start)
+-{
+-	unsigned long str_len = 0, start_len = 0;
+-
+-	str_len = strlen(str);
+-	start_len = strlen(start);
+-
+-	if (str_len >= start_len &&
+-			!strncmp(str, start, start_len))
+-		return 1;
+-
+-	return 0;
+-}
+-
+ /* check hardware */
+ static int __init acerhdf_check_hardware(void)
+ {
+@@ -651,9 +636,9 @@ static int __init acerhdf_check_hardware(void)
+ 		 * check if actual hardware BIOS vendor, product and version
+ 		 * IDs start with the strings of BIOS table entry
+ 		 */
+-		if (str_starts_with(vendor, bt->vendor) &&
+-				str_starts_with(product, bt->product) &&
+-				str_starts_with(version, bt->version)) {
++		if (strstarts(vendor, bt->vendor) &&
++				strstarts(product, bt->product) &&
++				strstarts(version, bt->version)) {
+ 			found = 1;
+ 			break;
+ 		}
+-- 
+2.25.1
 
