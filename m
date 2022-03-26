@@ -2,31 +2,31 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F34C3527B
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Mar 2022 06:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8715FC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Mar 2022 06:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231520AbiCZG3W (ORCPT
+        id S231522AbiCZG3Y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 26 Mar 2022 02:29:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53682 "EHLO
+        Sat, 26 Mar 2022 02:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231460AbiCZG3N (ORCPT
+        with ESMTP id S231489AbiCZG3R (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 26 Mar 2022 02:29:13 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C4427B;
-        Fri, 25 Mar 2022 23:27:37 -0700 (PDT)
-Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KQTVc4bgHzfZK4;
-        Sat, 26 Mar 2022 14:26:00 +0800 (CST)
+        Sat, 26 Mar 2022 02:29:17 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A07A2E68F;
+        Fri, 25 Mar 2022 23:27:42 -0700 (PDT)
+Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.55])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KQTXJ1VSHz1GD1t;
+        Sat, 26 Mar 2022 14:27:28 +0800 (CST)
 Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Sat, 26 Mar 2022 14:27:35 +0800
+ 15.1.2308.21; Sat, 26 Mar 2022 14:27:40 +0800
 Received: from localhost.localdomain (10.175.112.125) by
  dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Sat, 26 Mar 2022 14:27:34 +0800
+ 15.1.2308.21; Sat, 26 Mar 2022 14:27:38 +0800
 From:   Wupeng Ma <mawupeng1@huawei.com>
 To:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
         <will@kernel.org>, <corbet@lwn.net>
@@ -44,9 +44,9 @@ CC:     <ardb@kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
         <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: [PATCH 2/9] arm64: efi: Add fake memory support
-Date:   Sat, 26 Mar 2022 14:46:25 +0800
-Message-ID: <20220326064632.131637-3-mawupeng1@huawei.com>
+Subject: [PATCH 5/9] mm: Ratelimited mirrored memory related warning messages
+Date:   Sat, 26 Mar 2022 14:46:28 +0800
+Message-ID: <20220326064632.131637-6-mawupeng1@huawei.com>
 X-Mailer: git-send-email 2.18.0.huawei.25
 In-Reply-To: <20220326064632.131637-1-mawupeng1@huawei.com>
 References: <20220326064632.131637-1-mawupeng1@huawei.com>
@@ -62,71 +62,41 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Ma Wupeng <mawupeng1@huawei.com>
 
-Fake memory map is used for faking memory's attribute values.
-Commit 0f96a99dab36 ("efi: Add "efi_fake_mem" boot option") introduce the
-efi_fake_mem function. Now it can support arm64 with this patch.
-For example you can mark 0-6G memory as EFI_MEMORY_MORE_RELIABLE by adding
-efi_fake_mem=6G@0:0x10000 in the bootarg. You find more info about
-fake memmap in kernel-parameters.txt.
+If system has mirrored memory, memblock will try to allocate mirrored
+memory firstly and fallback to non-mirrored memory when fails, but if with
+limited mirrored memory or some numa node without mirrored memory, lots of
+warning message about memblock allocation will occur.
 
-Variable memstart_addr is only confirmed after arm64_memblock_init(). So
-efi_fake_memmap() is needed to add after arm64_memblock_init().
-
-Otherwise:
-
-efi_memmap_alloc
-   memblock_phys_alloc
-     kmemleak_alloc_phys
-        kmemleak_alloc(__va(phys), size, min_count, gfp);
-
-this __va() will convert phys to a fault va and lead to a kmemleak error.
+This patch ratelimit the warning message to avoid a very long print during
+bootup.
 
 Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 2 +-
- arch/arm64/kernel/setup.c                       | 2 ++
- drivers/firmware/efi/Kconfig                    | 2 +-
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ mm/memblock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b7ccaa2ea867..e064839895ee 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1357,7 +1357,7 @@
- 			you are really sure that your UEFI does sane gc and
- 			fulfills the spec otherwise your board may brick.
+diff --git a/mm/memblock.c b/mm/memblock.c
+index b12a364f2766..19ae4a63fc08 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -327,7 +327,7 @@ static phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
+ 					    NUMA_NO_NODE, flags);
  
--	efi_fake_mem=	nn[KMG]@ss[KMG]:aa[,nn[KMG]@ss[KMG]:aa,..] [EFI; X86]
-+	efi_fake_mem=	nn[KMG]@ss[KMG]:aa[,nn[KMG]@ss[KMG]:aa,..] [EFI; X86; ARM64]
- 			Add arbitrary attribute to specific memory range by
- 			updating original EFI memory map.
- 			Region of memory which aa attribute is added to is
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 3505789cf4bd..daade64889ff 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -344,6 +344,8 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+ 	if (!ret && (flags & MEMBLOCK_MIRROR)) {
+-		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
++		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
+ 			&size);
+ 		flags &= ~MEMBLOCK_MIRROR;
+ 		goto again;
+@@ -1385,7 +1385,7 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
  
- 	arm64_memblock_init();
- 
-+	efi_fake_memmap();
-+
- 	paging_init();
- 
- 	acpi_table_upgrade();
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index 2c3dac5ecb36..3c91bbd4097a 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -50,7 +50,7 @@ config EFI_RUNTIME_MAP
- 
- config EFI_FAKE_MEMMAP
- 	bool "Enable EFI fake memory map"
--	depends on EFI && X86
-+	depends on EFI && (X86 || ARM64)
- 	default n
- 	help
- 	  Saying Y here will enable "efi_fake_mem" boot option.
+ 	if (flags & MEMBLOCK_MIRROR) {
+ 		flags &= ~MEMBLOCK_MIRROR;
+-		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
++		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
+ 			&size);
+ 		goto again;
+ 	}
 -- 
 2.18.0.huawei.25
 
