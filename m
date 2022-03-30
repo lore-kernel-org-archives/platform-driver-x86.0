@@ -2,184 +2,141 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B84AC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Mar 2022 11:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F08C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Mar 2022 22:18:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235503AbiC2LFZ (ORCPT
+        id S1351528AbiC3WU2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Mar 2022 07:05:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52270 "EHLO
+        Wed, 30 Mar 2022 18:20:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231437AbiC2LFZ (ORCPT
+        with ESMTP id S242574AbiC3WUZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Mar 2022 07:05:25 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F071A82E;
-        Tue, 29 Mar 2022 04:03:39 -0700 (PDT)
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.55])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KSRWF10D9z1GD1m;
-        Tue, 29 Mar 2022 19:03:21 +0800 (CST)
-Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 29 Mar 2022 19:03:37 +0800
-Received: from [10.174.178.120] (10.174.178.120) by
- dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.21; Tue, 29 Mar 2022 19:03:35 +0800
-Message-ID: <4136ec1c-51a9-3874-9bf3-c81cd88e868a@huawei.com>
-Date:   Tue, 29 Mar 2022 19:03:35 +0800
+        Wed, 30 Mar 2022 18:20:25 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 600EF22BD5;
+        Wed, 30 Mar 2022 15:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648678719; x=1680214719;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=B/SXSbw/wvdd4mRHtWjAddPGT3KI5g2InIOBTHsjt+I=;
+  b=IwxloTx8V/DQFT/xaAVChNrWYRz7HTIE/6JROBpyrauePIwTvkuOsZML
+   nH23UDQ5tcINTv11EhDBLPH+jT+W4Wyj/az4xuJS5Z5msr9yXHynHtSqQ
+   XBbA4zrCD9owPKrpmkR6gDKoveZ1UVXmdbnhPCl3bvT8aW8/PxvXMHBjX
+   Ujc/II2Oo/Q9z8bf3TZPZ0suoiNhkQ7h6szb0Zo0CWX9Uvhzsfdh+tmiY
+   r4X75M/oFtMV1eOm9G/vSbfOoSelMY59pKVTQZ+h682DbMMwGBvaaChhM
+   hWHn0siqxICLasddOw6pT4hdtjYpDBfxhTvzGHjdfRZ0aetOm4hNyxWC5
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10302"; a="346095962"
+X-IronPort-AV: E=Sophos;i="5.90,223,1643702400"; 
+   d="scan'208";a="346095962"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 15:18:23 -0700
+X-IronPort-AV: E=Sophos;i="5.90,223,1643702400"; 
+   d="scan'208";a="788171878"
+Received: from ksanitha-mobl3.amr.corp.intel.com (HELO skuppusw-desk1.amr.corp.intel.com) ([10.209.123.221])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 15:18:22 -0700
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     "H . Peter Anvin" <hpa@zytor.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 3/6] x86/tdx: Add SetupEventNotifyInterrupt TDX hypercall support
+Date:   Wed, 30 Mar 2022 15:18:02 -0700
+Message-Id: <a748ec62754a974c71963193aa6dd269fe548903.1648664666.git.sathyanarayanan.kuppuswamy@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1648664666.git.sathyanarayanan.kuppuswamy@intel.com>
+References: <cover.1648664666.git.sathyanarayanan.kuppuswamy@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH 0/9] introduce mirrored memory support for arm64
-To:     <ardb@kernel.org>
-CC:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <corbet@lwn.net>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-        <x86@kernel.org>, <hpa@zyccr.com>, <dvhart@infradead.org>,
-        <andy@infradead.org>, <rppt@kernel.org>, <paulmck@kernel.org>,
-        <peterz@infradead.org>, <jroedel@suse.de>,
-        <songmuchun@bytedance.com>, <macro@orcam.me.uk>,
-        <frederic@kernel.org>, <W_Armin@gmx.de>, <john.garry@huawei.com>,
-        <seanjc@google.com>, <tsbogend@alpha.franken.de>,
-        <anshuman.khandual@arm.com>, <chenhuacai@kernel.org>,
-        <david@redhat.com>, <gpiccoli@igalia.com>, <mark.rutland@arm.com>,
-        <wangkefeng.wang@huawei.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>
-References: <20220326064632.131637-1-mawupeng1@huawei.com>
- <CAMj1kXEwzJE8V-tqJJwZ-RqHB3atKJvoRZ8C6_EVM7caNbttxw@mail.gmail.com>
-From:   mawupeng <mawupeng1@huawei.com>
-In-Reply-To: <CAMj1kXEwzJE8V-tqJJwZ-RqHB3atKJvoRZ8C6_EVM7caNbttxw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.120]
-X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+SetupEventNotifyInterrupt TDX hypercall is used by guest TD to specify
+which interrupt vector to use as an event-notify vector to the VMM.
+Such registered vector is also used by Host VMM to notify about
+completion of GetQuote requests to the Guest TD.
 
+Add tdx_hcall_set_notify_intr() helper function to implement the
+SetupEventNotifyInterrupt hypercall.
 
-在 2022/3/29 16:26, Ard Biesheuvel 写道:
-> On Sat, 26 Mar 2022 at 07:27, Wupeng Ma <mawupeng1@huawei.com> wrote:
->>
->> From: Ma Wupeng <mawupeng1@huawei.com>
->>
->> Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
->> introduced mirrored memory support for x86. This support rely on UEFI to
->> report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-158:
->>
->>    http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
->>
->> Arm64 can support this too. So mirrored memory support is added to support
->> arm64.
->>
-> 
-> What is the point of this if the kernel itself is not loaded in
-> EFI_MORE_RELIABLE memory? On x86, this is handled by the decompressor,
-> but that does not exist on arm64.
+This will be used by the TD guest attestation driver.
 
-Do you mean this is x86, commit c05cd79750fb
-("x86/boot/KASLR: Prefer mirrored memory regions for the kernel physical address").
-This scenario is not considered.
+Details about the SetupEventNotifyInterrupt TDVMCALL can be found in
+TDX Guest-Host Communication Interface (GHCI) Specification, sec 3.5
+"VP.VMCALL<SetupEventNotifyInterrupt>".
 
->  
-> The problem here is that UEFI defines this as a memory *attribute*
-> rather than a memory *type*, which means you cannot allocate
-> EFI_MORE_RELIABLE memory easily: you have to iterate over the memory
-> map and look for regions with the desired attribute, and allocate
-> those pages explicitly. I'd prefer to implement this in the
-> bootloader, and only add minimal logic to the stub to respect the
-> placement of the kernel by the loader if the loader signals it to do
-> so (there are other reasons for this - I will cc you on a patch
-> shortly that implements this)
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ arch/x86/coco/tdx/tdx.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-Thanks for your incoming patch.
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 54b54e321c63..14ba87b1e885 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -22,6 +22,7 @@
+ /* TDX hypercall Leaf IDs */
+ #define TDVMCALL_MAP_GPA		0x10001
+ #define TDVMCALL_GET_QUOTE		0x10002
++#define TDVMCALL_SETUP_NOTIFY_INTR	0x10004
+ 
+ /* MMIO direction */
+ #define EPT_READ	0
+@@ -198,6 +199,38 @@ int tdx_hcall_get_quote(void *data, u64 len)
+ }
+ EXPORT_SYMBOL_GPL(tdx_hcall_get_quote);
+ 
++/*
++ * tdx_hcall_set_notify_intr() - Setup Event Notify Interrupt Vector.
++ *
++ * @vector        : Vector address to be used for notification.
++ *
++ * return 0 on success or failure error number.
++ */
++static int tdx_hcall_set_notify_intr(u8 vector)
++{
++	u64 ret;
++
++	/* Minimum vector value allowed is 32 */
++	if (vector < 32)
++		return -EINVAL;
++
++	/*
++	 * Register callback vector address with VMM. More details
++	 * about the ABI can be found in TDX Guest-Host-Communication
++	 * Interface (GHCI), sec titled
++	 * "TDG.VP.VMCALL<SetupEventNotifyInterrupt>".
++	 */
++	ret = _tdx_hypercall(TDVMCALL_SETUP_NOTIFY_INTR, vector, 0, 0, 0);
++
++	if (ret) {
++		if (ret == TDCALL_INVALID_OPERAND)
++			return -EINVAL;
++		return -EIO;
++	}
++
++	return 0;
++}
++
+ static u64 get_cc_mask(void)
+ {
+ 	struct tdx_module_output out;
+-- 
+2.25.1
 
-> 
-> This also means that the fake_mem stuff is not going to work: the
-> memory map observed by the stub comes straight from the firmware, and
-> if the stub needs to be involved in placing (or respecting the
-> placement by the loader of) the kernel image, it needs to observe
-> those EFI_MORE_RELIABLE regions too. If you don't have access to a
-> machine that actually exposes EFI_MORE_RELIABLE memory, I suggest you
-> prototype it in QEMU/edk2 instead.
-
-You are right fake_mem stuff is not going to work. But, efi_fake_mem is
-used for testing mirrored features and will not be used in production
-environment. This test features can fake memory's attribute values.
-
-The reason why efi_fake_mem support is put first is that memory's attribute
-is reported by BIOS which is hard to simulate. With this support, any arm64
-machines with efi support can easily test mirrored features.
-
-> 
-> In fact, we have been trying very hard not to touch the firmware
-> provided memory map at all on ARM, rather than use it as a scratchpad
-> for all kinds of annotations. This means, for instance, that kexec is
-> idempotent - the next kernel should not be affected by modifications
-> to the memory map applied by the previous kernel.
-
-Yes, you're absolutely right. Efi_fake_mem is incompatible with kdump which
-will use kexec. But we can remove specify cmdline(efi_fake_mem=xx) by
-modofing /etc/sysconfig/kdump. Efi_fake_mem is only used for testing and
-will not be used in production environment.
-
-> 
-> In summary, implementing kernelcore=mirror for arm64 is fine with me,
-> but there are some issues we need to address first.
->
-Can you be clear what the issues are?
-
-The main purpose of this patchset is to introduce mirrored support for
-arm64 and we have already fixed the problems we had which is shown in
-patch #5 to patch #7 and try to bring total isolation in patch #8 which
-will disable mirror feature if kernelcore is not specified.
-
-Thanks for reviewing.
-
-> 
-> 
-> 
->> Patch #1-#2 introduce efi_fake_mem support for arm64.
->> Patch #3-#4 introduce mirrored memory support form arm64.
->> Patch #5-#7 fix some bugs for arm64 if memory reliable is enabled.
->> Patch #8 disable mirror feature if kernelcore is not specified.
->> Patch #9 remove some redundant code in ia64 efi_init.
->>
->> Ma Wupeng (9):
->>    efi: Make efi_print_memmap() public
->>    arm64: efi: Add fake memory support
->>    efi: Make efi_find_mirror() public
->>    arm64/mirror: arm64 enabling - find mirrored memory ranges
->>    mm: Ratelimited mirrored memory related warning messages
->>    mm: Demote warning message in vmemmap_verify() to debug level
->>    mm: Calc the right pfn if page size is not 4K
->>    efi: Disable mirror feature if kernelcore is not specified
->>    ia64/efi: Code simplification in efi_init
->>
->>   .../admin-guide/kernel-parameters.txt         |  4 +-
->>   arch/arm64/kernel/setup.c                     |  3 ++
->>   arch/ia64/kernel/efi.c                        | 37 +-----------------
->>   arch/x86/include/asm/efi.h                    |  5 ---
->>   arch/x86/platform/efi/efi.c                   | 39 -------------------
->>   drivers/firmware/efi/Kconfig                  |  2 +-
->>   drivers/firmware/efi/efi.c                    | 26 +++++++++++++
->>   drivers/firmware/efi/memmap.c                 | 16 ++++++++
->>   include/linux/efi.h                           |  4 ++
->>   include/linux/mm.h                            |  2 +
->>   mm/memblock.c                                 |  4 +-
->>   mm/page_alloc.c                               |  4 +-
->>   mm/sparse-vmemmap.c                           |  2 +-
->>   13 files changed, 60 insertions(+), 88 deletions(-)
->>
->> --
->> 2.18.0.huawei.25
->>
-> .
