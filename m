@@ -2,49 +2,49 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30BFC4167D
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Apr 2022 14:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D5AC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Apr 2022 15:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245428AbiDAOhc (ORCPT
+        id S1352056AbiDAPHn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 1 Apr 2022 10:37:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57796 "EHLO
+        Fri, 1 Apr 2022 11:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348346AbiDAOeL (ORCPT
+        with ESMTP id S1350328AbiDAOrZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 1 Apr 2022 10:34:11 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A508ABC7;
-        Fri,  1 Apr 2022 07:32:21 -0700 (PDT)
+        Fri, 1 Apr 2022 10:47:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE562A2650;
+        Fri,  1 Apr 2022 07:37:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2588FB82507;
-        Fri,  1 Apr 2022 14:32:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AFE2C34111;
-        Fri,  1 Apr 2022 14:32:17 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D27F60B9F;
+        Fri,  1 Apr 2022 14:37:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE8A0C36AE2;
+        Fri,  1 Apr 2022 14:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648823538;
+        s=k20201202; t=1648823831;
         bh=9+CJce3zi7zJk3H7CtrwgSw+is0x8Hf2+lYfYxr2l14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gg93b9bbTgZL+gZ5Kz+35lPdc5d//CDCcg050+tglklPJsgxCxquFgC/WUkPw0n0c
-         cBsAUJ1TZS/al483ucGWvbFFPIk7Z8BvTCIZegAFw6Iwu60gF6uXs2ZomlzraHoCsV
-         dixJ1fRTHs+v6gLDGQoMMBXiudKtjbslgzmoUGjzdMKYYuuh/RmguKHM+4qpIK+a5V
-         xpeeYUayegsuZT0z/i9wAze2+GMHm/0Ro06WUCwGmm/tUxCEzgQnz4DkXbbiSjKJDF
-         v15NiMtKfLzbOnfkWHhIVJed6VHrvbpf2GJT70fSAkK88p4Gs8k4annTx1hIeTA3Jd
-         8sKXXDnvxYDPQ==
+        b=MoSFWMUOywt05pgp1Z2BelZZhzfk+0nZybMhLeKP9k1MoPNXvrJzyH693upQepB9W
+         wUkLLuAopeNjoJsqU83x0Ht3LV35nDpstE7DKEByi/Ogdx6EX9yI52fxZBoSJc44Ju
+         +hrXnM36i7UMmX5g8GsBgX5eeA3zQF6Fb4/bud4lECabTbK21vCUPaEieKOSNMBbEe
+         RD4t2agdGaGeqkA4ZXsb9N07sKu5TD5yQBPUsoaTrfpIawJEewnRhF/ntVNVJszym4
+         qEQ2jSkePqVVMe8z9QnBqyRfrcA4kE6BpEtr1Fagy9X+/GXkuLui/FI3nbbPwRaz3q
+         YPEC9/nRjQMRg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jorge Lopez <jorge.lopez2@hp.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.17 133/149] platform/x86: hp-wmi: Fix SW_TABLET_MODE detection method
-Date:   Fri,  1 Apr 2022 10:25:20 -0400
-Message-Id: <20220401142536.1948161-133-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.16 095/109] platform/x86: hp-wmi: Fix SW_TABLET_MODE detection method
+Date:   Fri,  1 Apr 2022 10:32:42 -0400
+Message-Id: <20220401143256.1950537-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220401142536.1948161-1-sashal@kernel.org>
-References: <20220401142536.1948161-1-sashal@kernel.org>
+In-Reply-To: <20220401143256.1950537-1-sashal@kernel.org>
+References: <20220401143256.1950537-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
