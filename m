@@ -2,47 +2,46 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4746CC43219
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Apr 2022 14:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D97C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Apr 2022 14:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348097AbiDAOh1 (ORCPT
+        id S1348111AbiDAOh1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Fri, 1 Apr 2022 10:37:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55834 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348239AbiDAOdv (ORCPT
+        with ESMTP id S1348306AbiDAOdy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 1 Apr 2022 10:33:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D40A61DEC09;
-        Fri,  1 Apr 2022 07:31:25 -0700 (PDT)
+        Fri, 1 Apr 2022 10:33:54 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F168B86E;
+        Fri,  1 Apr 2022 07:32:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 71DB861C0C;
-        Fri,  1 Apr 2022 14:31:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBFAFC340F2;
-        Fri,  1 Apr 2022 14:31:23 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 58128B8250D;
+        Fri,  1 Apr 2022 14:31:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A4FC34111;
+        Fri,  1 Apr 2022 14:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648823484;
-        bh=nb1BfveGHdAFBMBASJ1bcZjrexzu4aBwmM6gxjQV74k=;
+        s=k20201202; t=1648823518;
+        bh=ByhBYzofePU6Tas8c4DovQWKKLR8w9G3c/X2fMZCPFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=maYx76lwmgl+mjdSh1WCoyeFAuPr7hb1dTq6bFFITgZsF57XcN5XTt44IQLgUtYjp
-         ODJWxeqRF36H72FkNjJ8uRdEMH7cxvv9wurOM70Q6IkpMnBxtb+INTEKVrB6fLPbl0
-         R+5JKPwUVdxvpSwFyMGDBZNS8yIvihyi3avv+WvhPpVEDIHGeB5LiuKkXcP7mkE8Z/
-         X88U26co5a75vGVD6od/KhDpNuycBqQDBkvFneK/TBP7hntH0f3dPO4OweVwBNvMn8
-         3uqNYc/MCaT4Bv9Na7N0ZhT9CqTB3ZYxisFAqn3sn7DENo1f1tPBzmRUFPOKRZOd7E
-         61UiykL6iBOfQ==
+        b=pcW86vdqUNyfc6148X4vXlajq8712UxiPDFaLOw92U7o8DGK++qIdQU/FeqCEZjPe
+         4GA5tmYYvIPyaALjq8PYxO5h3njp9OSVhxoTv2BNWY/sXEUIUbFKxC0kx7qKzNUYhX
+         ZnZAtXEW59QIWWZiEVcwqB4toCd6sHp1jH6Gb7wLSmU9pp8a+tORfHUg1r36J/Q2ms
+         X2X23tk67vHrQZBTBoENXKXxIx7bbZq1pLgbFXyh/ASwK1dyabSNbQPbudpD9C5Z57
+         dMXn/EfWeNJ2F26QAvFXSOIqUtTpS3uHoiIHKfaqjQSUyCHYphpsRrURNdgIy3ffnB
+         rcGJVE0llGogw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Pearson <markpearson@lenovo.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, hmh@hmh.eng.br,
-        markgross@kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.17 113/149] platform/x86: thinkpad_acpi: Add dual fan probe
-Date:   Fri,  1 Apr 2022 10:25:00 -0400
-Message-Id: <20220401142536.1948161-113-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.17 126/149] platform/x86: x86-android-tablets: Depend on EFI and SPI
+Date:   Fri,  1 Apr 2022 10:25:13 -0400
+Message-Id: <20220401142536.1948161-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220401142536.1948161-1-sashal@kernel.org>
 References: <20220401142536.1948161-1-sashal@kernel.org>
@@ -54,79 +53,37 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Mark Pearson <markpearson@lenovo.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit bf779aaf56ea23864e39e9862b3b3a8436236e07 ]
+[ Upstream commit 1e8aa2aa1274953e8e595f0630436744597d0d64 ]
 
-Instead of having quirks for systems that have a second fan it would
-be nice to detect this setup.
-Unfortunately, confirmed by the Lenovo FW team, there is no way to
-retrieve this information from the EC or BIOS. Recommendation was to
-attempt to read the fan and if successful then assume a 2nd fan is
-present.
+The recently added support for Lenovo Yoga Tablet 2 tablets uses
+symbols from EFI and SPI add "depends on EFI && SPI" to the
+X86_ANDROID_TABLETS Kconfig entry.
 
-The fans are also supposed to spin up on boot for some time, so in
-theory we could check for a speed > 0. In testing this seems to hold
-true but as I couldn't test on all platforms I've avoided implementing
-this. It also breaks for the corner case where you load the module
-once the fans are idle.
-
-Tested on P1G4, P1G3, X1C9 and T14 (no fans) and it works correctly.
-For the platforms with dual fans where it was confirmed to work I have
-removed the quirks. Potentially this could be done for all platforms
-but I've left untested platforms in for now. On these platforms the
-fans will be enabled and then detected - so no impact.
-
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-Link: https://lore.kernel.org/r/20220222185137.4325-1-markpearson@lenovo.com
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lore.kernel.org/r/20220308152942.262130-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/platform/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 3424b080db77..3fb8cda31eb9 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8699,10 +8699,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_Q_LNV3('N', '2', 'N', TPACPI_FAN_2CTL),	/* P53 / P73 */
- 	TPACPI_Q_LNV3('N', '2', 'E', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (1st gen) */
- 	TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (2nd gen) */
--	TPACPI_Q_LNV3('N', '2', 'V', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (3nd gen) */
--	TPACPI_Q_LNV3('N', '4', '0', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (4nd gen) */
- 	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v (1st gen) */
--	TPACPI_Q_LNV3('N', '3', '2', TPACPI_FAN_2CTL),	/* X1 Carbon (9th gen) */
- 	TPACPI_Q_LNV3('N', '3', '7', TPACPI_FAN_2CTL),  /* T15g (2nd gen) */
- 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
- };
-@@ -8746,6 +8743,9 @@ static int __init fan_init(struct ibm_init_struct *iibm)
- 		 * ThinkPad ECs supports the fan control register */
- 		if (likely(acpi_ec_read(fan_status_offset,
- 					&fan_control_initial_status))) {
-+			int res;
-+			unsigned int speed;
-+
- 			fan_status_access_mode = TPACPI_FAN_RD_TPEC;
- 			if (quirks & TPACPI_FAN_Q1)
- 				fan_quirk1_setup();
-@@ -8758,6 +8758,15 @@ static int __init fan_init(struct ibm_init_struct *iibm)
- 				tp_features.second_fan_ctl = 1;
- 				pr_info("secondary fan control enabled\n");
- 			}
-+			/* Try and probe the 2nd fan */
-+			res = fan2_get_speed(&speed);
-+			if (res >= 0) {
-+				/* It responded - so let's assume it's there */
-+				tp_features.second_fan = 1;
-+				tp_features.second_fan_ctl = 1;
-+				pr_info("secondary fan control detected & enabled\n");
-+			}
-+
- 		} else {
- 			pr_err("ThinkPad ACPI EC access misbehaving, fan status and control unavailable\n");
- 			return -ENODEV;
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 24deeeb29af2..53abd553b842 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1027,7 +1027,7 @@ config TOUCHSCREEN_DMI
+ 
+ config X86_ANDROID_TABLETS
+ 	tristate "X86 Android tablet support"
+-	depends on I2C && SERIAL_DEV_BUS && ACPI && GPIOLIB
++	depends on I2C && SPI && SERIAL_DEV_BUS && ACPI && EFI && GPIOLIB
+ 	help
+ 	  X86 tablets which ship with Android as (part of) the factory image
+ 	  typically have various problems with their DSDTs. The factory kernels
 -- 
 2.34.1
 
