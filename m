@@ -2,49 +2,49 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D5AC4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAEDC43217
 	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Apr 2022 15:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352056AbiDAPHn (ORCPT
+        id S1352073AbiDAPHo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 1 Apr 2022 11:07:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60582 "EHLO
+        Fri, 1 Apr 2022 11:07:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350328AbiDAOrZ (ORCPT
+        with ESMTP id S1352416AbiDAOuT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 1 Apr 2022 10:47:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE562A2650;
-        Fri,  1 Apr 2022 07:37:34 -0700 (PDT)
+        Fri, 1 Apr 2022 10:50:19 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D53EB2B2B7A;
+        Fri,  1 Apr 2022 07:41:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D27F60B9F;
-        Fri,  1 Apr 2022 14:37:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE8A0C36AE2;
-        Fri,  1 Apr 2022 14:37:10 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 72823B82518;
+        Fri,  1 Apr 2022 14:41:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EC51C3410F;
+        Fri,  1 Apr 2022 14:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648823831;
-        bh=9+CJce3zi7zJk3H7CtrwgSw+is0x8Hf2+lYfYxr2l14=;
+        s=k20201202; t=1648824098;
+        bh=eSxdwjxtoAX3WJ5wZExLEC81LKayAfMQygkAyerS00E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MoSFWMUOywt05pgp1Z2BelZZhzfk+0nZybMhLeKP9k1MoPNXvrJzyH693upQepB9W
-         wUkLLuAopeNjoJsqU83x0Ht3LV35nDpstE7DKEByi/Ogdx6EX9yI52fxZBoSJc44Ju
-         +hrXnM36i7UMmX5g8GsBgX5eeA3zQF6Fb4/bud4lECabTbK21vCUPaEieKOSNMBbEe
-         RD4t2agdGaGeqkA4ZXsb9N07sKu5TD5yQBPUsoaTrfpIawJEewnRhF/ntVNVJszym4
-         qEQ2jSkePqVVMe8z9QnBqyRfrcA4kE6BpEtr1Fagy9X+/GXkuLui/FI3nbbPwRaz3q
-         YPEC9/nRjQMRg==
+        b=ACvVk6n7wKY853acj0p0oteQODFhr+j4ZwBSWuCcJBsEa3aimmsnwVrXjv366hBFE
+         dN1hLMFmS5e+PSDzTAASvWAxhD6R96y0/z/FP3PaRlGPq2bF5/cyE68H10ZR8ua2MK
+         CmEO5Qkp8UpsODSB4M8huhlyEosJzp0QNuVFRGJreqWrJwK3LwAwIhUBRoHxth6V0c
+         /GxLFEAXOAI6VVQmyJtza/BOGQ54fHp/6Q/P/yRTthyBBdTqcFRUdp96A+l1iaS8g5
+         /+qOVYWXm7+7lbM4QSv8r41zS1FFZv7f6vbmjSzS43pm/j2votFdCCQ2bVLQ3h8xqe
+         jxkt8+GD2B2wQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jorge Lopez <jorge.lopez2@hp.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.16 095/109] platform/x86: hp-wmi: Fix SW_TABLET_MODE detection method
-Date:   Fri,  1 Apr 2022 10:32:42 -0400
-Message-Id: <20220401143256.1950537-95-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 85/98] platform/x86: hp-wmi: Fix SW_TABLET_MODE detection method
+Date:   Fri,  1 Apr 2022 10:37:29 -0400
+Message-Id: <20220401143742.1952163-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220401143256.1950537-1-sashal@kernel.org>
-References: <20220401143256.1950537-1-sashal@kernel.org>
+In-Reply-To: <20220401143742.1952163-1-sashal@kernel.org>
+References: <20220401143742.1952163-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -89,10 +89,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 52 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 48a46466f086..f822ef6eb93c 100644
+index 027a1467d009..6bdf0606f6e6 100644
 --- a/drivers/platform/x86/hp-wmi.c
 +++ b/drivers/platform/x86/hp-wmi.c
-@@ -35,10 +35,6 @@ MODULE_LICENSE("GPL");
+@@ -33,10 +33,6 @@ MODULE_LICENSE("GPL");
  MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
  MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
  
@@ -102,8 +102,8 @@ index 48a46466f086..f822ef6eb93c 100644
 -
  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
- #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
-@@ -107,6 +103,7 @@ enum hp_wmi_commandtype {
+ 
+@@ -86,6 +82,7 @@ enum hp_wmi_commandtype {
  	HPWMI_FEATURE2_QUERY		= 0x0d,
  	HPWMI_WIRELESS2_QUERY		= 0x1b,
  	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
@@ -111,7 +111,7 @@ index 48a46466f086..f822ef6eb93c 100644
  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
  };
  
-@@ -217,6 +214,19 @@ struct rfkill2_device {
+@@ -182,6 +179,19 @@ struct rfkill2_device {
  static int rfkill2_count;
  static struct rfkill2_device rfkill2[HPWMI_MAX_RFKILL2_DEVICES];
  
@@ -131,7 +131,7 @@ index 48a46466f086..f822ef6eb93c 100644
  /* map output size to the corresponding WMI method id */
  static inline int encode_outsize_for_pvsz(int outsize)
  {
-@@ -345,14 +355,39 @@ static int hp_wmi_read_int(int query)
+@@ -292,14 +302,39 @@ static int hp_wmi_read_int(int query)
  	return val;
  }
  
@@ -172,8 +172,8 @@ index 48a46466f086..f822ef6eb93c 100644
 +	return system_device_mode[0] == DEVICE_MODE_TABLET;
  }
  
- static int omen_thermal_profile_set(int mode)
-@@ -568,7 +603,7 @@ static ssize_t als_show(struct device *dev, struct device_attribute *attr,
+ static int __init hp_wmi_bios_2008_later(void)
+@@ -448,7 +483,7 @@ static ssize_t als_show(struct device *dev, struct device_attribute *attr,
  static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
  			 char *buf)
  {
@@ -182,7 +182,7 @@ index 48a46466f086..f822ef6eb93c 100644
  	if (value < 0)
  		return value;
  	return sprintf(buf, "%d\n", value);
-@@ -577,7 +612,7 @@ static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
+@@ -457,7 +492,7 @@ static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
  static ssize_t tablet_show(struct device *dev, struct device_attribute *attr,
  			   char *buf)
  {
@@ -191,7 +191,7 @@ index 48a46466f086..f822ef6eb93c 100644
  	if (value < 0)
  		return value;
  	return sprintf(buf, "%d\n", value);
-@@ -699,10 +734,10 @@ static void hp_wmi_notify(u32 value, void *context)
+@@ -579,10 +614,10 @@ static void hp_wmi_notify(u32 value, void *context)
  	case HPWMI_DOCK_EVENT:
  		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
  			input_report_switch(hp_wmi_input_dev, SW_DOCK,
@@ -204,7 +204,7 @@ index 48a46466f086..f822ef6eb93c 100644
  		input_sync(hp_wmi_input_dev);
  		break;
  	case HPWMI_PARK_HDD:
-@@ -780,19 +815,17 @@ static int __init hp_wmi_input_setup(void)
+@@ -660,19 +695,17 @@ static int __init hp_wmi_input_setup(void)
  	__set_bit(EV_SW, hp_wmi_input_dev->evbit);
  
  	/* Dock */
@@ -229,7 +229,7 @@ index 48a46466f086..f822ef6eb93c 100644
  	}
  
  	err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
-@@ -1227,10 +1260,10 @@ static int hp_wmi_resume_handler(struct device *device)
+@@ -1028,10 +1061,10 @@ static int hp_wmi_resume_handler(struct device *device)
  	if (hp_wmi_input_dev) {
  		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
  			input_report_switch(hp_wmi_input_dev, SW_DOCK,
