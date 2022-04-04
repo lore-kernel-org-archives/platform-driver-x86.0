@@ -2,75 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FD0C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Apr 2022 14:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C07C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Apr 2022 14:26:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234979AbiDDO1X (ORCPT
+        id S1345102AbiDDO2k (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Apr 2022 10:27:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49900 "EHLO
+        Mon, 4 Apr 2022 10:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230041AbiDDO1X (ORCPT
+        with ESMTP id S1377252AbiDDO2i (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Apr 2022 10:27:23 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 360F73A1A0
-        for <platform-driver-x86@vger.kernel.org>; Mon,  4 Apr 2022 07:25:27 -0700 (PDT)
+        Mon, 4 Apr 2022 10:28:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8C31D3EF34
+        for <platform-driver-x86@vger.kernel.org>; Mon,  4 Apr 2022 07:26:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649082326;
+        s=mimecast20190719; t=1649082399;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=7sHibVkOaKYcZky1fBvELrAejFdIIbZy2kYf1v6ONMw=;
-        b=anxX+ceKCrR9de8GqhFW/EwyKiLAO3adhyMSLLeJY6pTHtbQqhEeou8/DwmkAFvkSacIv6
-        FKdvT4sd6J2qgrytPJf053t09BpjY/eGEPKVxl+vz+mnJebgy4P/lQo5xYnHV3x6ZZjchb
-        UC54E3fmsxWgky9x5BG1wVa4N0K+Qs0=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=nO4Vsb15oR17Yzv04L9f4VYMb25RsLfbcFYd1ahx3m0=;
+        b=iRA4tlUBzq1cV6NndWMEoQdNtO8gtPJcsLv5MFMjNlRfTgPpVDwTv/zcBBPsIXKF76FpOd
+        RYUqSvz247lIQxVNfUsXx82dJfO27w4RB2/f1ugvmdzAwr/ILqoTruJunuw8L/wUKxGN5g
+        5NTbK8w99SvmqORqcYKbeEyXPqvlUxE=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-563-2zRxa7ZPOhOd-goVVIEs8w-1; Mon, 04 Apr 2022 10:25:25 -0400
-X-MC-Unique: 2zRxa7ZPOhOd-goVVIEs8w-1
-Received: by mail-ej1-f72.google.com with SMTP id m12-20020a1709062acc00b006cfc98179e2so4627382eje.6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Apr 2022 07:25:24 -0700 (PDT)
+ us-mta-588-GWtyBqS0Pzu_l0RmVNYPAg-1; Mon, 04 Apr 2022 10:26:38 -0400
+X-MC-Unique: GWtyBqS0Pzu_l0RmVNYPAg-1
+Received: by mail-ej1-f71.google.com with SMTP id sg13-20020a170907a40d00b006e7e8234ae2so1510255ejc.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Apr 2022 07:26:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=7sHibVkOaKYcZky1fBvELrAejFdIIbZy2kYf1v6ONMw=;
-        b=66qPiZ0IyadDP6la9+EAEw84+M1JxnVnTkCKvPlOplIht/8qatuVKab4tgxE20weNC
-         iDscMXM2X+SMv1x/IKPL05ueJidT5IbwvNvK9dXhLzx/1+6wgx6L4H9gCN7Md1T8tBIA
-         e4JWGkRiSsEbM8OgKl8EngIaTZwj/Ui95D7UEC0Lsaj6HTbY42QE2AV2zRiscdfq+k13
-         w1lFXueDx2fVUPi0IRTyz9Cv8eOSqYSWwSi8nNeiyG1ogD34Hm17RvhfNUy3xzqJSsBX
-         lpvpLi2Wrm0YYTfz4nGxO6x6M7hEZ4B+shT51u1imRWndpOGGOPuSJB4WQW8/BkD+8Ia
-         PJMA==
-X-Gm-Message-State: AOAM531C/GbIHkZE3w691EfG4/yr7S/G3anpHY5AMS3dnkNhkhHJi+y6
-        5W6DasgqNaheLezbGPXYL7Ms2XQ2jcpVtvYdjtFBzaJYv9hic7WcnPfLTyPoyl2FLE+Yv9U7srn
-        aOz+6q5kBmS+69w0i575O19eaHK+O65G57A==
-X-Received: by 2002:a17:906:5d12:b0:6e7:eb3a:eae5 with SMTP id g18-20020a1709065d1200b006e7eb3aeae5mr298907ejt.644.1649082323685;
-        Mon, 04 Apr 2022 07:25:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxLETcDlvTPckmX/v16yKBGxwUPw9/RGG+yVqtYnX0l8y1I39Ld3a73FYCa4KSgwT5Jn++z9Q==
-X-Received: by 2002:a17:906:5d12:b0:6e7:eb3a:eae5 with SMTP id g18-20020a1709065d1200b006e7eb3aeae5mr298886ejt.644.1649082323491;
-        Mon, 04 Apr 2022 07:25:23 -0700 (PDT)
+        bh=nO4Vsb15oR17Yzv04L9f4VYMb25RsLfbcFYd1ahx3m0=;
+        b=fZtvY0QNnZGUf6c5UW7bbt8d7EVx9YcAM8+60w0kcaRTUu1KzyDQtxCybvf2DXnc/0
+         korjvYhf2J/SXXqAaAwoXDYr4rhwUFfC7QIlMr2ejtbt63dT7X1VC/q5vYGPFmd5VRoV
+         ZtKx/qC3mPxFMtK0yKVEL+LLHYobwKsOi6yR/5NlBO/JmOFjMckLL2uG42p+P2vmr9nw
+         wOYf+dJHc2XZv02GhqN7om43fa4m+oDuSRT+cI46dUoFgLp4zYhNm0WHGy3OvC+Y6Sb+
+         Y7qUU06PXiKsJ7Vs99UBZUdxqbvvf/L8qq9/DEJyXkHYstvOWk/FEkPINAhql2lJzXMj
+         0Fkw==
+X-Gm-Message-State: AOAM531II30rrOaAgJH8MJ23lVYn6CKu/XKv+w2i7CstCBkjk5+4nFxk
+        WKNyEWOssVn5rPA5tod3q4e2hkV1+TQL4439KzOpcB8YyXwbWTXAfYaDE26guZbZniKqOChgUOs
+        +f6L9Nvz5+T+VeCzSRO5n468p5GZtfMETNg==
+X-Received: by 2002:a50:f106:0:b0:41c:d793:3ae5 with SMTP id w6-20020a50f106000000b0041cd7933ae5mr333808edl.390.1649082397267;
+        Mon, 04 Apr 2022 07:26:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyljtq4pzygt4R3P59RgJ5828Mv7qeS1R3m1LHCn4LtDi/3+FrL6uXXUpPPYvl+mY5k3F+EcA==
+X-Received: by 2002:a50:f106:0:b0:41c:d793:3ae5 with SMTP id w6-20020a50f106000000b0041cd7933ae5mr333787edl.390.1649082397042;
+        Mon, 04 Apr 2022 07:26:37 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id dd6-20020a1709069b8600b006df08710d00sm4545618ejc.85.2022.04.04.07.25.21
+        by smtp.gmail.com with ESMTPSA id i11-20020a50fd0b000000b0041936bc0f7esm5425888eds.52.2022.04.04.07.26.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Apr 2022 07:25:21 -0700 (PDT)
-Message-ID: <e8c35673-c8b4-b44c-3ca0-e1f3f22a16af@redhat.com>
-Date:   Mon, 4 Apr 2022 16:25:21 +0200
+        Mon, 04 Apr 2022 07:26:36 -0700 (PDT)
+Message-ID: <69d9995d-5a47-8ad5-82c6-945e2ed0e775@redhat.com>
+Date:   Mon, 4 Apr 2022 16:26:36 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [PATCH] platform/x86: acerhdf: Cleanup str_starts_with()
+Subject: Re: [PATCH v2] platform/x86: amd-pmc: Fix compilation without
+ CONFIG_SUSPEND
 Content-Language: en-US
-To:     Wei Li <liwei391@huawei.com>, Peter Kaestle <peter@piie.net>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rui.xiang@huawei.com
-References: <20220326020249.3266561-1-liwei391@huawei.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>
+Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Goswami Sanket <Sanket.Goswami@amd.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+References: <20220402231122.3877-1-mario.limonciello@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220326020249.3266561-1-liwei391@huawei.com>
+In-Reply-To: <20220402231122.3877-1-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,11 +83,18 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 3/26/22 03:02, Wei Li wrote:
-> Since there is already a generic function strstarts() that check if a
-> string starts with a given prefix, cleanup str_starts_with().
+On 4/3/22 01:11, Mario Limonciello wrote:
+> Since commit b1f66033cd4e ("platform/x86: amd-pmc: Move to later in the
+> suspend process") amd-pmc doesn't use traditional suspend resume
+> callback anymore but relies on functions only created declared when
+> CONFIG_SUSPEND is set.
 > 
-> Signed-off-by: Wei Li <liwei391@huawei.com>
+> Check for CONFIG_SUSPEND and only use those functions in those
+> circumstances.
+> 
+> Fixes: commit b1f66033cd4e ("platform/x86: amd-pmc: Move to later in the suspend process")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -104,46 +115,96 @@ Hans
 
 
 > ---
->  drivers/platform/x86/acerhdf.c | 21 +++------------------
->  1 file changed, 3 insertions(+), 18 deletions(-)
+> v1->v2:
+>  * Fix warnings on unused stuff when no CONFIG_SUSPEND too.
 > 
-> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-> index 6b8b3ab8db48..3c589437b41e 100644
-> --- a/drivers/platform/x86/acerhdf.c
-> +++ b/drivers/platform/x86/acerhdf.c
-> @@ -584,21 +584,6 @@ static struct platform_driver acerhdf_driver = {
->  	.remove = acerhdf_remove,
->  };
+>  drivers/platform/x86/amd-pmc.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+> index e9d0dbbb2887..fa4123dbdf7f 100644
+> --- a/drivers/platform/x86/amd-pmc.c
+> +++ b/drivers/platform/x86/amd-pmc.c
+> @@ -160,8 +160,10 @@ MODULE_PARM_DESC(enable_stb, "Enable the STB debug mechanism");
 >  
-> -/* checks if str begins with start */
-> -static int str_starts_with(const char *str, const char *start)
-> -{
-> -	unsigned long str_len = 0, start_len = 0;
-> -
-> -	str_len = strlen(str);
-> -	start_len = strlen(start);
-> -
-> -	if (str_len >= start_len &&
-> -			!strncmp(str, start, start_len))
-> -		return 1;
-> -
-> -	return 0;
-> -}
-> -
->  /* check hardware */
->  static int __init acerhdf_check_hardware(void)
+>  static struct amd_pmc_dev pmc;
+>  static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
+> -static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
+>  static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
+> +#ifdef CONFIG_SUSPEND
+> +static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
+> +#endif
+>  
+>  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
 >  {
-> @@ -651,9 +636,9 @@ static int __init acerhdf_check_hardware(void)
->  		 * check if actual hardware BIOS vendor, product and version
->  		 * IDs start with the strings of BIOS table entry
->  		 */
-> -		if (str_starts_with(vendor, bt->vendor) &&
-> -				str_starts_with(product, bt->product) &&
-> -				str_starts_with(version, bt->version)) {
-> +		if (strstarts(vendor, bt->vendor) &&
-> +				strstarts(product, bt->product) &&
-> +				strstarts(version, bt->version)) {
->  			found = 1;
->  			break;
->  		}
+> @@ -325,6 +327,7 @@ static int get_metrics_table(struct amd_pmc_dev *pdev, struct smu_metrics *table
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_SUSPEND
+>  static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
+>  {
+>  	struct smu_metrics table;
+> @@ -338,6 +341,7 @@ static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
+>  		dev_dbg(pdev->dev, "Last suspend in deepest state for %lluus\n",
+>  			 table.timein_s0i3_lastcapture);
+>  }
+> +#endif
+>  
+>  #ifdef CONFIG_DEBUG_FS
+>  static int smu_fw_info_show(struct seq_file *s, void *unused)
+> @@ -569,6 +573,7 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg,
+>  	return rc;
+>  }
+>  
+> +#ifdef CONFIG_SUSPEND
+>  static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
+>  {
+>  	switch (dev->cpu_id) {
+> @@ -694,6 +699,7 @@ static struct acpi_s2idle_dev_ops amd_pmc_s2idle_dev_ops = {
+>  	.prepare = amd_pmc_s2idle_prepare,
+>  	.restore = amd_pmc_s2idle_restore,
+>  };
+> +#endif
+>  
+>  static const struct pci_device_id pmc_pci_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_YC) },
+> @@ -733,6 +739,7 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_SUSPEND
+>  static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
+>  {
+>  	int err;
+> @@ -753,6 +760,7 @@ static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
+>  
+>  	return 0;
+>  }
+> +#endif
+>  
+>  static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
+>  {
+> @@ -859,9 +867,11 @@ static int amd_pmc_probe(struct platform_device *pdev)
+>  
+>  	amd_pmc_get_smu_version(dev);
+>  	platform_set_drvdata(pdev, dev);
+> +#ifdef CONFIG_SUSPEND
+>  	err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
+>  	if (err)
+>  		dev_warn(dev->dev, "failed to register LPS0 sleep handler, expect increased power consumption\n");
+> +#endif
+>  
+>  	amd_pmc_dbgfs_register(dev);
+>  	return 0;
+> @@ -875,7 +885,9 @@ static int amd_pmc_remove(struct platform_device *pdev)
+>  {
+>  	struct amd_pmc_dev *dev = platform_get_drvdata(pdev);
+>  
+> +#ifdef CONFIG_SUSPEND
+>  	acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
+> +#endif
+>  	amd_pmc_dbgfs_unregister(dev);
+>  	pci_dev_put(dev->rdev);
+>  	mutex_destroy(&dev->lock);
 
