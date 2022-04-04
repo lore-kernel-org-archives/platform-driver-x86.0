@@ -2,107 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D279C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Apr 2022 21:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D69C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Apr 2022 21:37:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382543AbiDDVbF (ORCPT
+        id S1382549AbiDDVbK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Apr 2022 17:31:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49118 "EHLO
+        Mon, 4 Apr 2022 17:31:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380586AbiDDUi0 (ORCPT
+        with ESMTP id S1380706AbiDDVH3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Apr 2022 16:38:26 -0400
-Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FFB387AD
-        for <platform-driver-x86@vger.kernel.org>; Mon,  4 Apr 2022 13:36:29 -0700 (PDT)
-Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-deb9295679so12148209fac.6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Apr 2022 13:36:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=RFWauzAcxF9+f2KuUsBcynERWFeESDCqiR4hYHgGVl8=;
-        b=LTXPTSHaYS6wDtSlv5vTcZrbAmBWDYs8NKXkUEpDDe2EHjy1/6PjkKaW2lcWQcDHEi
-         8CmI1TmTQbd4g/vRkH5bQY3WjQV5lsk2Jv5zMuFaFEhqrcb/nSz9sEfnhuZYMkU9Zpad
-         rNdJANe5YT71u4Y93qty6wFojJkR7/J/hGVTAO4IzJkIAD/9AqHKDDZIMYCeYhq/5CNv
-         z1DqPo4r16aTYCbdJdGnE3U8thy2dwz4+J4TEgrzeuJpLLvmE96CritY4+AJmju0L9Mi
-         DW9VqIyin2xO3sQinP6CfcK3xN9hO7tpV6PGvTlPv/O+8LIcU0fBgyy09eKjDpB97T6t
-         +Y0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RFWauzAcxF9+f2KuUsBcynERWFeESDCqiR4hYHgGVl8=;
-        b=o6fMCZ2gXwxSIrs8SrLbGd8Axm1mQTq4aO54Xp6Uj8uw5NIu+bEVKgVp3T+vYvLN1q
-         bnwm1wovk75MMq50q6XEvtDhwJ09li8SiEaaC4Auh354xz0SeR8GQRgF/A8pr9JYSJ0d
-         QJADrM9iR4eDn+2fO3UFLFjrOpzRVHP2U12m7HTwpe9j3SkX/CQofqD0cGF7wqCvnFpT
-         +4NCD9GMkMjvzORRxR3odogqDUbX+6Xcm28BmslrQuyx/YRo0TLpiE3fc/HeHElpEQ9T
-         +xL/MeyBdkfVVsB20tiRXn4grQjEE3fdZr5nic+OUwjghe0v5+WKo/u5S0+OSCiOI/V3
-         c4+w==
-X-Gm-Message-State: AOAM531HrucvlNFWhLkxNJdTiYiM4MegYhNQNgV0MejEKSQSIaDEU/He
-        NUn7b5lo6kmN7uIgyyx1ykS4LF5wY0o=
-X-Google-Smtp-Source: ABdhPJygdWKaULElKzyMlFcE3G7defgDYa0Zd1HlU/rDldSXOCU32rM2IFLX4unj3M1mK8jmJ3AskQ==
-X-Received: by 2002:a05:6870:c142:b0:dd:d5a3:767c with SMTP id g2-20020a056870c14200b000ddd5a3767cmr548184oad.291.1649104589076;
-        Mon, 04 Apr 2022 13:36:29 -0700 (PDT)
-Received: from grumpy-vm.hsd1.tx.comcast.net ([2601:2c3:480:7390:c57b:f63e:33f5:caed])
-        by smtp.gmail.com with ESMTPSA id u20-20020a4a9e94000000b003291f6ac4b2sm3765786ook.28.2022.04.04.13.36.28
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Apr 2022 13:36:28 -0700 (PDT)
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+        Mon, 4 Apr 2022 17:07:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7367B2E08B
+        for <platform-driver-x86@vger.kernel.org>; Mon,  4 Apr 2022 14:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1649106330;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=u3K/5hHN3t4V2HevYPCxjEW6MqCP3nN8ZuIEpU6KQ1w=;
+        b=PbCzCTTBVoPmewIGf/QGJdU8tqIOQCGgpsO2FEfD+36x0vj33sSe4vV7660g+fKTfpT+AQ
+        tIxPfsTATQ+c7Kv0H/Mv5D3fGBox5QpNQWT73D+tw+MviEJLz9i8m1lXGekhXz9PHwb5Oc
+        PXLTHYGD9rnD57pd/NQJ5y2hRWCy8T0=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-434-mxVA_H3lOeaboYXZ0NvXpA-1; Mon, 04 Apr 2022 17:05:29 -0400
+X-MC-Unique: mxVA_H3lOeaboYXZ0NvXpA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 13B142999B28;
+        Mon,  4 Apr 2022 21:05:29 +0000 (UTC)
+Received: from redhat.com (ovpn-116-22.gru2.redhat.com [10.97.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B8154087D61;
+        Mon,  4 Apr 2022 21:05:27 +0000 (UTC)
+From:   "Herton R. Krzesinski" <herton@redhat.com>
 To:     platform-driver-x86@vger.kernel.org
-Subject: [PATCH v1 2/6] Update hp_wmi_group to simplify feature addition
-Date:   Mon,  4 Apr 2022 15:36:22 -0500
-Message-Id: <20220404203626.4311-3-jorge.lopez2@hp.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220404203626.4311-1-jorge.lopez2@hp.com>
-References: <20220404203626.4311-1-jorge.lopez2@hp.com>
+Cc:     srinivas.pandruvada@linux.intel.com, prarit@redhat.com,
+        jforbes@redhat.com, darcari@redhat.com, dzickus@redhat.com,
+        herton@redhat.com
+Subject: [PATCH] tools/power/x86/intel-speed-select: fix build failure when using -Wl,--as-needed
+Date:   Mon,  4 Apr 2022 18:05:25 -0300
+Message-Id: <20220404210525.725611-1-herton@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Introduction of hp_wmi_groups to simplify the integration of driver
-security features with sysfs.
+Build of intel-speed-select will fail if you run:
 
-All changes were validated on a HP ZBook Workstation,
-HP EliteBook x360, and HP EliteBook 850 G8 notebooks.
+$ LDFLAGS="-Wl,--as-needed" /usr/bin/make V=1
+...
+gcc -O2 -Wall -g -D_GNU_SOURCE -Iinclude -I/usr/include/libnl3 -Wl,--as-needed -lnl-genl-3 -lnl-3 intel-speed-select-in.o -o intel-speed-select
+/usr/bin/ld: intel-speed-select-in.o: in function `handle_event':
+(...)/linux/tools/power/x86/intel-speed-select/hfi-events.c:189: undefined reference to `nlmsg_hdr'
+...
 
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+In this case the problem is that order when linking matters when using
+the flag -Wl,--as-needed, symbols not used at that point are discarded.
+So since intel-speed-select-in.o comes after, at that point the
+libraries/symbols are already discarded and then missing/undefined
+references are reported.
 
+To fix this, make sure we specify LDFLAGS after the object file.
+
+Signed-off-by: Herton R. Krzesinski <herton@redhat.com>
 ---
-Based on the latest platform-drivers-x86.git/for-next
+ tools/power/x86/intel-speed-select/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v1-0001-Update-hp_wmi_group-to-simplify-feature-addition patch was
-broken in two separate patches.  This patch is patch 2 of 2
----
- drivers/platform/x86/hp-wmi.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 667f94bba905..0c7d863b8aab 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -740,7 +740,15 @@ static struct attribute *hp_wmi_attrs[] = {
- 	&dev_attr_postcode.attr,
- 	NULL,
- };
--ATTRIBUTE_GROUPS(hp_wmi);
-+
-+static const struct attribute_group hp_wmi_group = {
-+	.attrs = hp_wmi_attrs,
-+};
-+
-+static const struct attribute_group *hp_wmi_groups[] = {
-+	&hp_wmi_group,
-+	NULL,
-+};
+diff --git a/tools/power/x86/intel-speed-select/Makefile b/tools/power/x86/intel-speed-select/Makefile
+index 846f785e278d..7221f2f55e8b 100644
+--- a/tools/power/x86/intel-speed-select/Makefile
++++ b/tools/power/x86/intel-speed-select/Makefile
+@@ -42,7 +42,7 @@ ISST_IN := $(OUTPUT)intel-speed-select-in.o
+ $(ISST_IN): prepare FORCE
+ 	$(Q)$(MAKE) $(build)=intel-speed-select
+ $(OUTPUT)intel-speed-select: $(ISST_IN)
+-	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
++	$(QUIET_LINK)$(CC) $(CFLAGS) $< $(LDFLAGS) -o $@
  
- static void hp_wmi_notify(u32 value, void *context)
- {
+ clean:
+ 	rm -f $(ALL_PROGRAMS)
 -- 
-2.25.1
+2.35.1
 
