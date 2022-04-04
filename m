@@ -2,121 +2,175 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F52C3527B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E49CC4707A
 	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Apr 2022 21:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382591AbiDDVbb (ORCPT
+        id S1382586AbiDDVb1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Apr 2022 17:31:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49498 "EHLO
+        Mon, 4 Apr 2022 17:31:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379597AbiDDRoL (ORCPT
+        with ESMTP id S1380392AbiDDT6d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Apr 2022 13:44:11 -0400
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A8A31DF0;
-        Mon,  4 Apr 2022 10:42:14 -0700 (PDT)
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 234GjdVc003316;
-        Mon, 4 Apr 2022 17:41:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pps0720;
- bh=EqEV7oOPRCwvP9zFRtxS2amJ0sojOOK340QCkQmT5GQ=;
- b=EV0Vr4+6eloFzWx5Y1ZMrKC5Px9evjvYC7Z4dxkoQLYxRnv7UzMwAxlrsr7NnwpOKpnV
- VoW37agoBOd20YXvRgnY3Mx6POmmLawnAg2RhtvBOe6m/HoRB+YWLzIdkw0d+N5sdLWN
- k6t2X6heFO1Tvtj/8UP0zNwh7Kd93QcU9jaOD6xLa6To6yBNg8zawkMVnM75dnd31xdZ
- aLxL9jzgW+EGdD8omvyPhF6rwHEm8YCBxywmt4zRgMbLLxwVQBVW8V1EdcqJoFDbx5Ec
- mMAvm28AiG6/OyB4213RhN2m/0LhMrDWX8VkuP073MHNT6RQnbyCQ4vkJOx4wgvcyXhz SA== 
-Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
-        by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3f84f6rmjf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Apr 2022 17:41:38 +0000
-Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g9t5009.houston.hpe.com (Postfix) with ESMTP id 038E755;
-        Mon,  4 Apr 2022 17:41:38 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 2682C5C;
-        Mon,  4 Apr 2022 17:41:37 +0000 (UTC)
-From:   Mike Travis <mike.travis@hpe.com>
-To:     Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org
-Cc:     Mike Travis <mike.travis@hpe.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 3/3] x86/platform/uv: Log gap hole end size
-Date:   Mon,  4 Apr 2022 12:41:11 -0500
-Message-Id: <20220404174111.262414-4-mike.travis@hpe.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20220404174111.262414-1-mike.travis@hpe.com>
-References: <20220404174111.262414-1-mike.travis@hpe.com>
+        Mon, 4 Apr 2022 15:58:33 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC9B2FE42;
+        Mon,  4 Apr 2022 12:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649102196; x=1680638196;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qVd2+lCgjElgVwX9Ld2sTZVzh1JVcgMBp6qK+c5LCoo=;
+  b=cCdp8jrmCBythpZyyT6LT89aC5fwDremHSG/wm+26i64/4TyA8S+31Cg
+   cQtlBlHddCIOlAbrBjUHGwwImYJmVAZOBJbavQWHIxpgKcsQIxaZvOjly
+   kx/K7fHyHIVBXOsLm/n1l7fF7UeWC3kLn/+DKcKx/EWCrOrPB/IEFXDKf
+   U6EK/YGD/0fatA4/Kkp0vj0w+SZ995FwAflTTZU0IWNi0XfEVPpAHIres
+   yMDjhz7TvvK7YL4OeMGw36BXLPibzVsH4Bq3gvtjDsCp+GR1WpxTTwFtL
+   vD4yrZAFAafHJIQYhvL5aTVH7Is9eiFlhLYJ3FBOkVZtBW6uUAuAUNx75
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10307"; a="241183795"
+X-IronPort-AV: E=Sophos;i="5.90,235,1643702400"; 
+   d="scan'208";a="241183795"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 12:56:36 -0700
+X-IronPort-AV: E=Sophos;i="5.90,235,1643702400"; 
+   d="scan'208";a="721773941"
+Received: from skokoori-mobl1.amr.corp.intel.com (HELO [10.209.7.74]) ([10.209.7.74])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 12:56:35 -0700
+Message-ID: <aece84e1-2c90-2c18-993a-96f8fed7bb46@linux.intel.com>
+Date:   Mon, 4 Apr 2022 12:56:35 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: kTl_aozcDXnjKZ6sWmQ_-q3atMRYhzkm
-X-Proofpoint-GUID: kTl_aozcDXnjKZ6sWmQ_-q3atMRYhzkm
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-04-04_06,2022-03-31_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 priorityscore=1501 clxscore=1015
- spamscore=0 mlxlogscore=911 phishscore=0 mlxscore=0 bulkscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2202240000 definitions=main-2204040100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.5.0
+Subject: Re: [PATCH v2 5/6] platform/x86: intel_tdx_attest: Add TDX Guest
+ attestation interface driver
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     "H . Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <cover.1648664666.git.sathyanarayanan.kuppuswamy@intel.com>
+ <054b22e81e88379a5a8459c19e89a335531c1bdd.1648664666.git.sathyanarayanan.kuppuswamy@intel.com>
+ <8308a830-3096-3f94-4f12-5fd2c290524e@redhat.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <8308a830-3096-3f94-4f12-5fd2c290524e@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Show value of gap end in the kernel log which equates to number of physical
-address bits used by system.  The end address of the gap holds PA bits 56:26
-which gives the range up to 64PB max size with 64MB of granularity.
+Hi Hans,
 
-Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
----
-v2: Update patch description to be more explanatory.
----
- arch/x86/kernel/apic/x2apic_uv_x.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+On 4/4/22 3:07 AM, Hans de Goede wrote:
+>> +static int __init tdx_attest_init(void)
+>> +{
+>> +	dma_addr_t handle;
+>> +	long ret = 0;
+>> +
+>> +	mutex_lock(&attestation_lock);
+>> +
+>> +	ret = misc_register(&tdx_attest_device);
+>> +	if (ret) {
+>> +		pr_err("misc device registration failed\n");
+>> +		mutex_unlock(&attestation_lock);
+>> +		return ret;
+>> +	}
+> Why not do this as the last thing of the probe?
 
-diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index 387d6533549a..146f0f63a43b 100644
---- a/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -1346,7 +1346,7 @@ static void __init decode_gam_params(unsigned long ptr)
- static void __init decode_gam_rng_tbl(unsigned long ptr)
- {
- 	struct uv_gam_range_entry *gre = (struct uv_gam_range_entry *)ptr;
--	unsigned long lgre = 0;
-+	unsigned long lgre = 0, gend = 0;
- 	int index = 0;
- 	int sock_min = 999999, pnode_min = 99999;
- 	int sock_max = -1, pnode_max = -1;
-@@ -1380,6 +1380,9 @@ static void __init decode_gam_rng_tbl(unsigned long ptr)
- 			flag, size, suffix[order],
- 			gre->type, gre->nasid, gre->sockid, gre->pnode);
- 
-+		if (gre->type == UV_GAM_RANGE_TYPE_HOLE)
-+			gend = (unsigned long)gre->limit << UV_GAM_RANGE_SHFT;
+We need misc device reference in dma_alloc_coherent() and
+dma_set_coherent_mask() calls. This is the reason for keeping
+misc_register() at the beginining of the init function.
+
+> 
+> That will avoid the need to unregister this again in all
+> the error-exit paths and also fixes a possible deadlock.
+> 
+
+Agree. But, unless we create another device locally, I don't
+think we can avoid this. Do you prefer this approach?
+
+> Right now you possibly have:
+> 
+> 1. probe() locks attestation_lock
+> 2. probe() registers misc-device
+> 3. userspace calls tdx_attest_ioctl
+> 4. tdx_attest_ioctl blocks waiting for attestastion_lock
+> 5. Something goes wrong in probe, probe calls
+>     misc_deregister()
+> 6. misc_deregister waits for the ioctl to finish
+> 7. deadlock
+> 
+> I'm not sure about 6, but if 6 does not happen then
+> instead we now have tdx_attest_ioctl running
+> after the misc_deregister, with tdquote_data and
+> tdreport_data as NULL, or pointing to free-ed memory
+> leading to various crash scenarios.
+
+Makes sense. But as I have mentioned above, we have reason
+for keeping the misc_register() at the begining of the
+init function.
+
+One way to avoid this deadlock is to use global initalization
+check.
+
+--- a/drivers/platform/x86/intel/tdx/intel_tdx_attest.c
++++ b/drivers/platform/x86/intel/tdx/intel_tdx_attest.c
+@@ -48,6 +48,8 @@ static void *tdreport_data;
+  /* DMA handle used to allocate and free tdquote DMA buffer */
+  dma_addr_t tdquote_dma_handle;
+
++static bool device_initialized;
 +
- 		/* update to next range start */
- 		lgre = gre->limit;
- 		if (sock_min > gre->sockid)
-@@ -1397,7 +1400,8 @@ static void __init decode_gam_rng_tbl(unsigned long ptr)
- 	_max_pnode	= pnode_max;
- 	_gr_table_len	= index;
- 
--	pr_info("UV: GRT: %d entries, sockets(min:%x,max:%x) pnodes(min:%x,max:%x)\n", index, _min_socket, _max_socket, _min_pnode, _max_pnode);
-+	pr_info("UV: GRT: %d entries, sockets(min:%x,max:%x), pnodes(min:%x,max:%x), gap_end(%d)\n",
-+	  index, _min_socket, _max_socket, _min_pnode, _max_pnode, fls64(gend));
- }
- 
- /* Walk through UVsystab decoding the fields */
--- 
-2.26.2
+  static void attestation_callback_handler(void)
+  {
+         complete(&attestation_done);
+@@ -60,6 +62,9 @@ static long tdx_attest_ioctl(struct file *file, 
+unsigned int cmd,
+         struct tdx_gen_quote tdquote_req;
+         long ret = 0;
 
++       if (!device_initialized)
++               return -ENODEV;
++
+         mutex_lock(&attestation_lock);
+
+         switch (cmd) {
+@@ -191,6 +196,8 @@ static int __init tdx_attest_init(void)
+
+         mutex_unlock(&attestation_lock);
+
++       device_initialized = true;
++
+         pr_debug("module initialization success\n");
+
+         return 0;
+
+Please let me know your comment on above solution.
+
+> 
+> TL;DR: you must always delay registering any
+> interfaces for userspace until your code is
+> ready to deal with userspace calls.
+> 
+> Regards,
+> 
+> Hans
+> 
+> p.s.
+> 
+> As I mentioned with v1:
+> 
+> 
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
