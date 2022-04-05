@@ -2,106 +2,210 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BDEC46467
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20DCC35273
 	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Apr 2022 02:02:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1844601AbiDFBui (ORCPT
+        id S1844691AbiDFBvR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Apr 2022 21:50:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58388 "EHLO
+        Tue, 5 Apr 2022 21:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1573366AbiDES5N (ORCPT
+        with ESMTP id S1387733AbiDEVvU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Apr 2022 14:57:13 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A90F7B8239;
-        Tue,  5 Apr 2022 11:55:12 -0700 (PDT)
-Received: from zn.tnic (p2e55dff8.dip0.t-ipconnect.de [46.85.223.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 37C3B1EC0374;
-        Tue,  5 Apr 2022 20:55:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1649184907;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=v2FjWdRnczI9WKt4ClfJ913bandBLADmN4fX24w4Ui4=;
-        b=CW65VH61kzlILvC1aaS6x77amEDhT358yeIFIwhXHg0LUuLo1KxyindYNWNBcB1Epm/PUa
-        Jqj4LEo84G6aE0DNebEuwx7BIznR/jTVutvGPaZnMXa8z6VxzJHewH2E+sqx/sDun0fsBh
-        Oj7RQRh1ieLt6mNg0xVJpuSJWuKqmes=
-Date:   Tue, 5 Apr 2022 20:55:05 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        Venu Busireddy <venu.busireddy@oracle.com>
-Subject: Re: [PATCH v12 2.1/46] KVM: SVM: Create a separate mapping for the
- SEV-ES save area
-Message-ID: <YkyQib4Jda1epH3G@zn.tnic>
-References: <20220307213356.2797205-3-brijesh.singh@amd.com>
- <20220405182743.308853-1-brijesh.singh@amd.com>
+        Tue, 5 Apr 2022 17:51:20 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A069D07B;
+        Tue,  5 Apr 2022 14:08:03 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id c23so253205plo.0;
+        Tue, 05 Apr 2022 14:08:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=v4P43Rlgh7lp3dK9b+CJw9yfXarFDQYYvfeGV1gD3+w=;
+        b=VkFq7Q4P0VGmu8j8cSFfCxdujs/azHKmlZgnXZhYehJTQEo+JjpFPlm7Utpt8o8ztB
+         LiiyI+pf9sk7VUdHRVC6q85jMEYbWzMxQRe96Up1Dz7eDEBSa+Kn3+p4HS774DIOZcll
+         DbyrE4EpCiB7wJF4GGyaiceSXkktFr1hdRm30kx3URX7FBoUX8+TvGXN93aJSTz+LsXt
+         gvqLUD/St1ElLhWmcyjI+9d+ZZLydKmoxOm16TUri4uviXINg7lQCvXgm+OQ/NRqPrI3
+         hYfgl6MITzpjre+tmJeXJJEQJ2wjH60KbCSwN0nqeD5DKj+oTISYnnCjqGbTPzIR9UFm
+         LIZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=v4P43Rlgh7lp3dK9b+CJw9yfXarFDQYYvfeGV1gD3+w=;
+        b=DijYSoa6RTBcIj6QPwa6qsNWRhYJGh2pgelQSpqR59QR7U5FpVvzswDfWbdYl8yL/X
+         A+nTQNv6j5cJeW2tdODcD3TVh9msn4nx6JMZv8SNPMWs0QXI9px54vzVTRpjjonpGpOx
+         yWQQrn/BV2MVM437sUwYomKfCW3oxmEMlCKD+Mr4h/syP+PEylLfedrdFJcVQL2LnUf/
+         i4wbRJZOu7NtTWRzjgG5HZKrvSlwvuOH5CUn4VpfoUtHlDoGW9rQ8dqzmKwdQHwO8xRI
+         OWRNDURqgLeN709NQbibLDeVNo9oo6Jv+5k09o4M+yr1NXS515qCYSVVt1omxjl5E0Vo
+         5Ibg==
+X-Gm-Message-State: AOAM5330LJlZzPgG9h+wuKia64ByXW2Ftx4J8TvR7sPEVKS6Aje/O2pb
+        x+wCCj8VkB1uqZlg0NWyMP4=
+X-Google-Smtp-Source: ABdhPJxYDCsEJ7bIjriQ/OhhT1U21JJYCTTy9aDkWmQOFWjJPOx/bnNNOg3v2fPea8QaKrMfPG7tgw==
+X-Received: by 2002:a17:902:c401:b0:154:3b8a:5e6e with SMTP id k1-20020a170902c40100b001543b8a5e6emr5307619plk.18.1649192883418;
+        Tue, 05 Apr 2022 14:08:03 -0700 (PDT)
+Received: from jaschultz-Thelio-Major.corp.microsoft.com ([2001:4898:80e8:3:511c:41a7:57f7:f826])
+        by smtp.gmail.com with ESMTPSA id k22-20020aa788d6000000b004faaf897064sm16240010pff.106.2022.04.05.14.08.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Apr 2022 14:08:03 -0700 (PDT)
+From:   Jarrett Schultz <jaschultzms@gmail.com>
+X-Google-Original-From: Jarrett Schultz <jaschultzMS@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Jarrett Schultz <jaschultz@microsoft.com>
+Subject: [PATCH v5 1/4] dt-bindings: platform: microsoft: Document surface xbl
+Date:   Tue,  5 Apr 2022 14:07:47 -0700
+Message-Id: <20220405210750.619511-2-jaschultzMS@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220405210750.619511-1-jaschultzMS@gmail.com>
+References: <20220405210750.619511-1-jaschultzMS@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220405182743.308853-1-brijesh.singh@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Apr 05, 2022 at 01:27:43PM -0500, Brijesh Singh wrote:
-> From: Tom Lendacky <thomas.lendacky@amd.com>
-> 
-> The save area for SEV-ES/SEV-SNP guests, as used by the hardware, is
-> different from the save area of a non SEV-ES/SEV-SNP guest.
-> 
-> This is the first step in defining the multiple save areas to keep them
-> separate and ensuring proper operation amongst the different types of
-> guests. Create an SEV-ES/SEV-SNP save area and adjust usage to the new
-> save area definition where needed.
-> 
-> Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
-> 
-> Hi Paolo,
-> 
-> Now there is a conflict when applying this patch on 5.18-rc1. Please
-> use the updated patch when merging the first four patches from the
-> series.
+From: Jarrett Schultz <jaschultz@microsoft.com>
 
-Right, or if you'd prefer I carried them through the tip tree, lemme
-know.
+Introduce yaml for surface xbl driver.
 
-Thx.
+Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
 
+---
+
+Changed in v5:
+
+ - Updated description
+ - Added child node for imem
+ - Simplified example
+
+---
+
+Changes in v4:
+ - Addressed small formatting changes
+ - Removed unnecessary lines
+
+---
+
+Changes in v3:
+ - Updated description to only pertain to the hardware
+ - Updated the required field to properly reflect the binding
+ - Removed the first example
+ - Fixed the size of the reg field in the second example
+
+---
+
+Changes in v2:
+ - Removed json-schema dependence
+ - Elaborated on description of driver
+ - Updated example
+---
+ .../platform/microsoft/surface-xbl.yaml       | 70 +++++++++++++++++++
+ MAINTAINERS                                   |  7 ++
+ 2 files changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+
+diff --git a/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+new file mode 100644
+index 000000000000..648476670bbd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/platform/microsoft/surface-xbl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Surface Extensible Bootloader for Microsoft Surface Duo
++
++maintainers:
++  - Jarrett Schultz <jaschultz@microsoft.com>
++
++description: |
++  Defined to expose information that is used during production when
++  the device is in manufacturing mode. Some of the information included
++  in the imem section is -
++    * board_id
++    * battery_present
++    * hw_init_retries
++    * is_customer_mode
++    * is_act_mode
++    * pmic_reset_reason
++    * touch_fw_version
++    * ocp_error_location
++
++properties:
++  compatible:
++    const: simple-mfd
++
++  reg:
++    maxItems: 1
++
++  child-node:
++    description: A description of the xbl space within imem
++
++    type: object
++
++    properties:
++      compatible: 
++        const: microsoft,sm8150-surface-duo-xbl
++
++      reg:
++        maxItems: 1
++
++    required:
++      - compatible
++      - reg
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - ranges
++  - address-cells
++  - size-cells
++
++examples:
++  - |
++    imem@146bf000 {
++      compatible = "simple-mfd";
++      reg = <0x146bf000 0x1000>;
++      ranges = <0x0 0x146bf000 0x1000>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++
++      xbl@a94 {
++        compatible = "microsoft,sm8150-surface-duo-xbl";
++        reg = <0xa94 0x100>;
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 13f9a84a617e..5d0ca2a98b57 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12649,6 +12649,13 @@ F:	Documentation/driver-api/surface_aggregator/clients/dtx.rst
+ F:	drivers/platform/surface/surface_dtx.c
+ F:	include/uapi/linux/surface_aggregator/dtx.h
+ 
++MICROSOFT SURFACE DUO XBL DRIVER
++M:	Jarrett Schultz <jaschultz@microsoft.com>
++L:	linux-arm-msm@vger.kernel.org
++L:	platform-driver-x86@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
++
+ MICROSOFT SURFACE GPE LID SUPPORT DRIVER
+ M:	Maximilian Luz <luzmaximilian@gmail.com>
+ L:	platform-driver-x86@vger.kernel.org
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
