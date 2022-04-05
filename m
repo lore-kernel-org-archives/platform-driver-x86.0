@@ -2,77 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26780C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Apr 2022 09:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4F4C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Apr 2022 11:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343948AbiDEJQA (ORCPT
+        id S234340AbiDELIf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Apr 2022 05:16:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46858 "EHLO
+        Tue, 5 Apr 2022 07:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245068AbiDEIxF (ORCPT
+        with ESMTP id S1347720AbiDEJqm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Apr 2022 04:53:05 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B75103E;
-        Tue,  5 Apr 2022 01:51:01 -0700 (PDT)
-Received: from zn.tnic (p2e55dff8.dip0.t-ipconnect.de [46.85.223.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A27331EC03D2;
-        Tue,  5 Apr 2022 10:50:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1649148655;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0ktS2SIjmKrtK22LLClo6EqQScwdtGgTFjzqLBa5r/k=;
-        b=lmleDHRM0KvhUep7AsjnLgP+qh35HqZQnDNl1VigAi/Fmg+AJ7FGFoXdm30SWJE0b59YjQ
-        slYIKd0SpjaYbnip4EKof+r/bjKVht4u7aLKkDriIVAc7a6tcLCfN55oanq5KiHaFWW/HX
-        70nm8ixMWRIn7qbJuViWP4LM64za0O4=
-Date:   Tue, 5 Apr 2022 10:50:53 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] x86/platform/uv: UV Kernel support for UV5
-Message-ID: <YkwC7TCRMM0ejFvh@zn.tnic>
-References: <20220318224304.174967-1-mike.travis@hpe.com>
+        Tue, 5 Apr 2022 05:46:42 -0400
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29622DFD4A;
+        Tue,  5 Apr 2022 02:32:58 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0V9GYmUY_1649151171;
+Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0V9GYmUY_1649151171)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 05 Apr 2022 17:32:53 +0800
+Date:   Tue, 5 Apr 2022 17:32:50 +0800
+From:   Gao Xiang <hsiangkao@linux.alibaba.com>
+To:     Bagas Sanjaya <bagasdotme@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-doc@vger.kernel.org,
+        'Linux Kernel' <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
+        linux-iio@vger.kernel.org, Huang Jianan <huangjianan@oppo.com>,
+        Chao Yu <chao@kernel.org>,
+        Divya Bharathi <divya.bharathi@dell.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: unexpected indentation warning in
+ Documentation/ABI/testing/sysfs-*
+Message-ID: <YkwMwqWDPokAxfY0@B-P7TQMD6M-0146.local>
+References: <564f87a9-dd57-d3a1-d476-d81350baf75d@gmail.com>
+ <4df1fc93-2a2a-3482-085f-3a88970440ff@redhat.com>
+ <1b01580f-f888-5725-e571-816073148303@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220318224304.174967-1-mike.travis@hpe.com>
+In-Reply-To: <1b01580f-f888-5725-e571-816073148303@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Mar 18, 2022 at 05:43:01PM -0500, Mike Travis wrote:
-> Mike Travis (3):
->   x86/platform/uv: Update NMI Handler for UV5
->   x86/platform/uv: Update TSC sync state for UV5
->   x86/platform/uv: Log gap hole end size
+Hi,
+
+On Tue, Apr 05, 2022 at 02:52:18PM +0700, Bagas Sanjaya wrote:
+> On 04/04/22 19.54, Hans de Goede wrote:
+> > 
+> > These 2 are fixed by this (pending) patch:
+> > https://lore.kernel.org/linux-kernel/20220324165918.22005-4-hdegoede@redhat.com/
+> > 
+> > And I also have this pending patch for a pre-existing warning:
+> > https://lore.kernel.org/linux-kernel/20220324165918.22005-3-hdegoede@redhat.com/
+> > 
+> > I'm not sure who should pick these 2 up ?
+> > 
 > 
->  arch/x86/kernel/apic/x2apic_uv_x.c | 20 +++++++++++++++-----
->  arch/x86/platform/uv/uv_nmi.c      | 21 +++++++++++----------
->  2 files changed, 26 insertions(+), 15 deletions(-)
+> I think linux-doc can pick them, if no subsystems do it.
+> 
 
-All three zapped from tip until
+btw, I can pick the erofs one up though, but since it's a doc-specific
+series, I think it can go with linux-doc too.
 
-  https://lore.kernel.org/r/87zgl02w6v.ffs@tglx
+Thanks,
+Gao Xiang
 
-is resolved.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> -- 
+> An old man doll... just what I always wanted! - Clara
