@@ -2,106 +2,102 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB38DC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Apr 2022 02:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0392C43219
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Apr 2022 08:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229884AbiDECtz (ORCPT
+        id S233160AbiDEIFW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Apr 2022 22:49:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48132 "EHLO
+        Tue, 5 Apr 2022 04:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230197AbiDECtn (ORCPT
+        with ESMTP id S234466AbiDEH6g (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Apr 2022 22:49:43 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F9B0435371
-        for <platform-driver-x86@vger.kernel.org>; Mon,  4 Apr 2022 18:56:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649123780; x=1680659780;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lXwlo5llKx1M4ft5++59ERj9vMO/akB0+4OqqozEBng=;
-  b=c+Y+La7x1OTmn5MCrv58Fcp33tUE+BIgglNOsp8wInd4qAGU7TtI96Rq
-   q2x+sHD+hajX9vZBlUZKZTnvT21YFwnWs31RE+ktWEvpjX8VTUGGmKzgN
-   9o5wZ7DYSAs8jzy2zPuQeftMESrf2msbe2rGWh668QM8Atraq129cmcFI
-   tQ0yEPU891mT4dJ2JABkWy8h86kqXlpg19BZQ19t1t8poQt0hw+RcWyvm
-   ivnmCOFLmCdkhSFzw/SgdABzpGyqojkgyWYwviC9IGdlhkSVlRYLXyNsF
-   WB+J05dTC4CDwQ3Ouiv0FrguJ9m5yDrrx3WN6ttWVKSQJY8C0rm1BPVHY
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10307"; a="260819056"
-X-IronPort-AV: E=Sophos;i="5.90,235,1643702400"; 
-   d="scan'208";a="260819056"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 18:08:22 -0700
-X-IronPort-AV: E=Sophos;i="5.90,235,1643702400"; 
-   d="scan'208";a="548866574"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 18:08:21 -0700
-Message-ID: <082d09960f881ab8fd5cd5cc80431b34dd6cc036.camel@linux.intel.com>
-Subject: Re: [PATCH] tools/power/x86/intel-speed-select: fix build failure
- when using -Wl,--as-needed
-From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     "Herton R. Krzesinski" <herton@redhat.com>,
-        platform-driver-x86@vger.kernel.org, hdegoede@redhat.com
-Cc:     prarit@redhat.com, jforbes@redhat.com, darcari@redhat.com,
-        dzickus@redhat.com
-Date:   Mon, 04 Apr 2022 18:08:20 -0700
-In-Reply-To: <20220404210525.725611-1-herton@redhat.com>
-References: <20220404210525.725611-1-herton@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        Tue, 5 Apr 2022 03:58:36 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9E8AA1473;
+        Tue,  5 Apr 2022 00:52:29 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id kw18so4846585pjb.5;
+        Tue, 05 Apr 2022 00:52:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=TgBLJeTUy6jVJ2xafVPcKSUbrGijHeGdKDekFNJpES0=;
+        b=aSMeYscyjfPJ2j6WMIt8esKgLv+cCuEG4DZPmO25jSIgyFHFNthTEgjQWkML+GAsZo
+         sfyoc9olWYN1DoYbUFMZJz/3xOg9AI+pSaG6rQGNVombA5eN5censAMjYkrUnh0N7cp0
+         VasbFqTcDXjOKc4QvMO3qHl8UxazmUpkfUXfedYDhKa3qmj2oviN65D+MClQTzAc8kW5
+         4U7v6v+wpnTFd/6mazsybeib5GY/iM8b1zIvJ63foPySXQKx7b6zaUEFg5Am08pNPbB1
+         zrqvFH1xVq/0iC0tIEaTAq05uIyEJlRGxNCVYCatVgBpvP6VF2IzpeBmxQ8OLcpjjxWD
+         dREw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=TgBLJeTUy6jVJ2xafVPcKSUbrGijHeGdKDekFNJpES0=;
+        b=7G606hXRhc0SU/ms8DpFDf6iz06FnZodNfV/u9PlyQI+x1VNoNSZ3sxgvREuTn2QMW
+         /5uiG4qh5HSipvaGEuH+x+f24+VVFTsB+3Ra+RbwmWCtWUrr+nqdwprZWbaISaTnlQdO
+         suP5/Aalgkr7Jl10QyHVBTCJ4pUMbILP6aI+g+Pc7L0FpzGFdoM9lp9WpJeqeKK4QPKy
+         iw3Y4Y6eXAJhYnsqE0UcocYcnV1lgT9qS7M74NA36AIZ4H0dCnbSPkFeMlKO/ug65K9I
+         vrwDvzk/BoN1fYWNf+SXmglrWiQk9yc2+cXhxigqaFW5Jrwp4R0obGULxGy/dTRlpQZC
+         cFqQ==
+X-Gm-Message-State: AOAM530d7mxSrjNR9Pc/fWPP5a/oE/Lweduz/DUHubQtBDtsKj3Ebksi
+        1FedWG0RFmWRdwE9rnEqkis=
+X-Google-Smtp-Source: ABdhPJxwe5VM3sjwzmEQs7uSfq/7UjTSJjpOPqAE2YvqWv6No8h0U9MnptFRrXgdvlyfWFHIJLhlTg==
+X-Received: by 2002:a17:902:bf07:b0:150:9b8a:a14f with SMTP id bi7-20020a170902bf0700b001509b8aa14fmr2206809plb.127.1649145148521;
+        Tue, 05 Apr 2022 00:52:28 -0700 (PDT)
+Received: from [192.168.43.80] (subs28-116-206-12-39.three.co.id. [116.206.12.39])
+        by smtp.gmail.com with ESMTPSA id g3-20020a63ad03000000b003821d0f0ef4sm12821367pgf.71.2022.04.05.00.52.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Apr 2022 00:52:27 -0700 (PDT)
+Message-ID: <1b01580f-f888-5725-e571-816073148303@gmail.com>
+Date:   Tue, 5 Apr 2022 14:52:18 +0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: unexpected indentation warning in
+ Documentation/ABI/testing/sysfs-*
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>, linux-doc@vger.kernel.org,
+        'Linux Kernel' <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
+        linux-iio@vger.kernel.org
+Cc:     Gao Xiang <hsiangkao@linux.alibaba.com>,
+        Huang Jianan <huangjianan@oppo.com>, Chao Yu <chao@kernel.org>,
+        Divya Bharathi <divya.bharathi@dell.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>
+References: <564f87a9-dd57-d3a1-d476-d81350baf75d@gmail.com>
+ <4df1fc93-2a2a-3482-085f-3a88970440ff@redhat.com>
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <4df1fc93-2a2a-3482-085f-3a88970440ff@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2022-04-04 at 18:05 -0300, Herton R. Krzesinski wrote:
-> Build of intel-speed-select will fail if you run:
+On 04/04/22 19.54, Hans de Goede wrote:
 > 
-> $ LDFLAGS="-Wl,--as-needed" /usr/bin/make V=1
-
-We realized this for some OS recently have an internal patch.
-So agree with the change.
-
-> ...
-> gcc -O2 -Wall -g -D_GNU_SOURCE -Iinclude -I/usr/include/libnl3 -Wl,--
-> as-needed -lnl-genl-3 -lnl-3 intel-speed-select-in.o -o intel-speed-
-> select
-> /usr/bin/ld: intel-speed-select-in.o: in function `handle_event':
-> (...)/linux/tools/power/x86/intel-speed-select/hfi-events.c:189:
-> undefined reference to `nlmsg_hdr'
-> ...
+> These 2 are fixed by this (pending) patch:
+> https://lore.kernel.org/linux-kernel/20220324165918.22005-4-hdegoede@redhat.com/
 > 
-> In this case the problem is that order when linking matters when using
-> the flag -Wl,--as-needed, symbols not used at that point are discarded.
-> So since intel-speed-select-in.o comes after, at that point the
-> libraries/symbols are already discarded and then missing/undefined
-> references are reported.
+> And I also have this pending patch for a pre-existing warning:
+> https://lore.kernel.org/linux-kernel/20220324165918.22005-3-hdegoede@redhat.com/
 > 
-> To fix this, make sure we specify LDFLAGS after the object file.
+> I'm not sure who should pick these 2 up ?
 > 
-> Signed-off-by: Herton R. Krzesinski <herton@redhat.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-> ---
->  tools/power/x86/intel-speed-select/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/power/x86/intel-speed-select/Makefile
-> b/tools/power/x86/intel-speed-select/Makefile
-> index 846f785e278d..7221f2f55e8b 100644
-> --- a/tools/power/x86/intel-speed-select/Makefile
-> +++ b/tools/power/x86/intel-speed-select/Makefile
-> @@ -42,7 +42,7 @@ ISST_IN := $(OUTPUT)intel-speed-select-in.o
->  $(ISST_IN): prepare FORCE
->         $(Q)$(MAKE) $(build)=intel-speed-select
->  $(OUTPUT)intel-speed-select: $(ISST_IN)
-> -       $(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-> +       $(QUIET_LINK)$(CC) $(CFLAGS) $< $(LDFLAGS) -o $@
->  
->  clean:
->         rm -f $(ALL_PROGRAMS)
+I think linux-doc can pick them, if no subsystems do it.
 
-
+-- 
+An old man doll... just what I always wanted! - Clara
