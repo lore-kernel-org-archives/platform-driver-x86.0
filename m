@@ -2,210 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20DCC35273
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Apr 2022 02:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB716C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Apr 2022 10:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1844691AbiDFBvR (ORCPT
+        id S1378690AbiDFKUA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Apr 2022 21:51:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55962 "EHLO
+        Wed, 6 Apr 2022 06:20:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1387733AbiDEVvU (ORCPT
+        with ESMTP id S1376984AbiDFKSg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Apr 2022 17:51:20 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A069D07B;
-        Tue,  5 Apr 2022 14:08:03 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id c23so253205plo.0;
-        Tue, 05 Apr 2022 14:08:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=v4P43Rlgh7lp3dK9b+CJw9yfXarFDQYYvfeGV1gD3+w=;
-        b=VkFq7Q4P0VGmu8j8cSFfCxdujs/azHKmlZgnXZhYehJTQEo+JjpFPlm7Utpt8o8ztB
-         LiiyI+pf9sk7VUdHRVC6q85jMEYbWzMxQRe96Up1Dz7eDEBSa+Kn3+p4HS774DIOZcll
-         DbyrE4EpCiB7wJF4GGyaiceSXkktFr1hdRm30kx3URX7FBoUX8+TvGXN93aJSTz+LsXt
-         gvqLUD/St1ElLhWmcyjI+9d+ZZLydKmoxOm16TUri4uviXINg7lQCvXgm+OQ/NRqPrI3
-         hYfgl6MITzpjre+tmJeXJJEQJ2wjH60KbCSwN0nqeD5DKj+oTISYnnCjqGbTPzIR9UFm
-         LIZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=v4P43Rlgh7lp3dK9b+CJw9yfXarFDQYYvfeGV1gD3+w=;
-        b=DijYSoa6RTBcIj6QPwa6qsNWRhYJGh2pgelQSpqR59QR7U5FpVvzswDfWbdYl8yL/X
-         A+nTQNv6j5cJeW2tdODcD3TVh9msn4nx6JMZv8SNPMWs0QXI9px54vzVTRpjjonpGpOx
-         yWQQrn/BV2MVM437sUwYomKfCW3oxmEMlCKD+Mr4h/syP+PEylLfedrdFJcVQL2LnUf/
-         i4wbRJZOu7NtTWRzjgG5HZKrvSlwvuOH5CUn4VpfoUtHlDoGW9rQ8dqzmKwdQHwO8xRI
-         OWRNDURqgLeN709NQbibLDeVNo9oo6Jv+5k09o4M+yr1NXS515qCYSVVt1omxjl5E0Vo
-         5Ibg==
-X-Gm-Message-State: AOAM5330LJlZzPgG9h+wuKia64ByXW2Ftx4J8TvR7sPEVKS6Aje/O2pb
-        x+wCCj8VkB1uqZlg0NWyMP4=
-X-Google-Smtp-Source: ABdhPJxYDCsEJ7bIjriQ/OhhT1U21JJYCTTy9aDkWmQOFWjJPOx/bnNNOg3v2fPea8QaKrMfPG7tgw==
-X-Received: by 2002:a17:902:c401:b0:154:3b8a:5e6e with SMTP id k1-20020a170902c40100b001543b8a5e6emr5307619plk.18.1649192883418;
-        Tue, 05 Apr 2022 14:08:03 -0700 (PDT)
-Received: from jaschultz-Thelio-Major.corp.microsoft.com ([2001:4898:80e8:3:511c:41a7:57f7:f826])
-        by smtp.gmail.com with ESMTPSA id k22-20020aa788d6000000b004faaf897064sm16240010pff.106.2022.04.05.14.08.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Apr 2022 14:08:03 -0700 (PDT)
-From:   Jarrett Schultz <jaschultzms@gmail.com>
-X-Google-Original-From: Jarrett Schultz <jaschultzMS@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wed, 6 Apr 2022 06:18:36 -0400
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CBDD28255C;
+        Tue,  5 Apr 2022 20:44:51 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0V9K2XHM_1649216685;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0V9K2XHM_1649216685)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 06 Apr 2022 11:44:46 +0800
+From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To:     virtualization@lists.linux-foundation.org
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Jarrett Schultz <jaschultz@microsoft.com>
-Subject: [PATCH v5 1/4] dt-bindings: platform: microsoft: Document surface xbl
-Date:   Tue,  5 Apr 2022 14:07:47 -0700
-Message-Id: <20220405210750.619511-2-jaschultzMS@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220405210750.619511-1-jaschultzMS@gmail.com>
-References: <20220405210750.619511-1-jaschultzMS@gmail.com>
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH v9 27/32] virtio: add helper virtio_find_vqs_ctx_size()
+Date:   Wed,  6 Apr 2022 11:43:41 +0800
+Message-Id: <20220406034346.74409-28-xuanzhuo@linux.alibaba.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
+References: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
 MIME-Version: 1.0
+X-Git-Hash: 881cb3483d12
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Jarrett Schultz <jaschultz@microsoft.com>
+Introduce helper virtio_find_vqs_ctx_size() to call find_vqs and specify
+the maximum size of each vq ring.
 
-Introduce yaml for surface xbl driver.
-
-Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
-
+Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 ---
+ include/linux/virtio_config.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Changed in v5:
-
- - Updated description
- - Added child node for imem
- - Simplified example
-
----
-
-Changes in v4:
- - Addressed small formatting changes
- - Removed unnecessary lines
-
----
-
-Changes in v3:
- - Updated description to only pertain to the hardware
- - Updated the required field to properly reflect the binding
- - Removed the first example
- - Fixed the size of the reg field in the second example
-
----
-
-Changes in v2:
- - Removed json-schema dependence
- - Elaborated on description of driver
- - Updated example
----
- .../platform/microsoft/surface-xbl.yaml       | 70 +++++++++++++++++++
- MAINTAINERS                                   |  7 ++
- 2 files changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-
-diff --git a/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-new file mode 100644
-index 000000000000..648476670bbd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/platform/microsoft/surface-xbl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Surface Extensible Bootloader for Microsoft Surface Duo
-+
-+maintainers:
-+  - Jarrett Schultz <jaschultz@microsoft.com>
-+
-+description: |
-+  Defined to expose information that is used during production when
-+  the device is in manufacturing mode. Some of the information included
-+  in the imem section is -
-+    * board_id
-+    * battery_present
-+    * hw_init_retries
-+    * is_customer_mode
-+    * is_act_mode
-+    * pmic_reset_reason
-+    * touch_fw_version
-+    * ocp_error_location
-+
-+properties:
-+  compatible:
-+    const: simple-mfd
-+
-+  reg:
-+    maxItems: 1
-+
-+  child-node:
-+    description: A description of the xbl space within imem
-+
-+    type: object
-+
-+    properties:
-+      compatible: 
-+        const: microsoft,sm8150-surface-duo-xbl
-+
-+      reg:
-+        maxItems: 1
-+
-+    required:
-+      - compatible
-+      - reg
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - ranges
-+  - address-cells
-+  - size-cells
-+
-+examples:
-+  - |
-+    imem@146bf000 {
-+      compatible = "simple-mfd";
-+      reg = <0x146bf000 0x1000>;
-+      ranges = <0x0 0x146bf000 0x1000>;
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+
-+      xbl@a94 {
-+        compatible = "microsoft,sm8150-surface-duo-xbl";
-+        reg = <0xa94 0x100>;
-+      };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 13f9a84a617e..5d0ca2a98b57 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12649,6 +12649,13 @@ F:	Documentation/driver-api/surface_aggregator/clients/dtx.rst
- F:	drivers/platform/surface/surface_dtx.c
- F:	include/uapi/linux/surface_aggregator/dtx.h
+diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+index 0f7def7ddfd2..22e29c926946 100644
+--- a/include/linux/virtio_config.h
++++ b/include/linux/virtio_config.h
+@@ -235,6 +235,18 @@ int virtio_find_vqs_ctx(struct virtio_device *vdev, unsigned nvqs,
+ 				      ctx, desc);
+ }
  
-+MICROSOFT SURFACE DUO XBL DRIVER
-+M:	Jarrett Schultz <jaschultz@microsoft.com>
-+L:	linux-arm-msm@vger.kernel.org
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
++static inline
++int virtio_find_vqs_ctx_size(struct virtio_device *vdev, u32 nvqs,
++				 struct virtqueue *vqs[],
++				 vq_callback_t *callbacks[],
++				 const char * const names[],
++				 u32 sizes[],
++				 const bool *ctx, struct irq_affinity *desc)
++{
++	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, sizes,
++				      ctx, desc);
++}
 +
- MICROSOFT SURFACE GPE LID SUPPORT DRIVER
- M:	Maximilian Luz <luzmaximilian@gmail.com>
- L:	platform-driver-x86@vger.kernel.org
+ /**
+  * virtio_device_ready - enable vq use in probe function
+  * @vdev: the device
 -- 
-2.25.1
+2.31.0
 
