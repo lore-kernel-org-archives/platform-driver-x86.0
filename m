@@ -2,180 +2,216 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106DEC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Apr 2022 14:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5863DC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Apr 2022 19:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344361AbiDGO7f (ORCPT
+        id S234973AbiDGTQ0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 7 Apr 2022 10:59:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57964 "EHLO
+        Thu, 7 Apr 2022 15:16:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238723AbiDGO7d (ORCPT
+        with ESMTP id S233885AbiDGTQY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Apr 2022 10:59:33 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (unknown [40.107.244.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A27D1EF5F9;
-        Thu,  7 Apr 2022 07:57:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VDWRjJaRTBFnel5loemcx6IHnFblgVIe7385CfjMgrGzEWH04nePIw5H2i1/pdQKMPyUmks8Tj0LzmmMTTJ/VGchUx54lsYacc7SmZGhdSpNdXogL0sHsJhq+Uh/mmXkjA75oiWgKJmC7yqziNssJKB6qGoCeYn9TUw8khD/aFMPblVmS0YyqKAgS/yMnK5rwGlj2H+9mbNvdb2GSAjO9p8xVvQFQtzGuSmE9qxH8QKPv87aW2+AStMLqaQUATce+V0R6bOTyqMUj/UAyESdG/mh0T/I4og55PAf0ABN4rsrpaRe9VO9pt1UV+KgzdIkwirCucj1dxPum7vPnakE8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H2P+OLgVp3XnlsPW6YnpOujLSjKXqCG3omraTih1D38=;
- b=ZVbTVV7GWsWngbPcxIfCOHl2bBkvIjESCPO0HQ9CO+4IOZGQJcEW6E1joIZ4LV2//tSUoS4pbmMnW90JeH8CZ7fTIeK1/hMwDot+nLvpGtx0bytkXV8KVi36XCKTI1PPHa5YU91AszO3i/+syA+yXpblaqYFcZogjHyZPY6NiQfdPAYJ7FfcpNhSMfZaWkbvUI7in3SaYmsbLD/MZZ3Rg14TTgzmree9Unv7l/GbyHzUPYHT6IhYrZQ0SVw8GXrXBpENc1N/YarR2m062HOBFrE8zGT9r1x2p0QCCleT7UqrkCSPQbP2nQNdF9+0mGfmdvk/ERXXUIP/1Ye6XxorjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H2P+OLgVp3XnlsPW6YnpOujLSjKXqCG3omraTih1D38=;
- b=zEY4JmE4ToAE/zEmYN/Km74uwe/27zsezEVFueR2GJDce7yDHDCV1UNwFmXBc5u0aw1wnrF1gN9ys1Kf5GPK8FiaBZllSc+uYGdNtaDVzLedDHkG+Avvy94QgLTsEAudpiLiZj4u+lwJ42Vc4skuxFpXl6Dr9K3lcZS0Vm1d7Yc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by DM4PR12MB5230.namprd12.prod.outlook.com (2603:10b6:5:399::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5144.22; Thu, 7 Apr
- 2022 14:57:29 +0000
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::d957:4025:eebd:5107]) by SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::d957:4025:eebd:5107%3]) with mapi id 15.20.5144.022; Thu, 7 Apr 2022
- 14:57:27 +0000
-Message-ID: <91ed3c18-6cff-c6d4-a628-81f1f71b21dc@amd.com>
-Date:   Thu, 7 Apr 2022 09:57:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Cc:     brijesh.singh@amd.com, Ingo Molnar <mingo@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v12 29/46] x86/boot: Add Confidential Computing type to
- setup_data
-Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org
-References: <20220307213356.2797205-1-brijesh.singh@amd.com>
- <20220307213356.2797205-30-brijesh.singh@amd.com> <87v8vlzz8x.ffs@tglx>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-In-Reply-To: <87v8vlzz8x.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR03CA0418.namprd03.prod.outlook.com
- (2603:10b6:610:11b::19) To SN6PR12MB2718.namprd12.prod.outlook.com
- (2603:10b6:805:6f::22)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9462e515-0a71-44fa-f611-08da18a6ee8a
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5230:EE_
-X-Microsoft-Antispam-PRVS: <DM4PR12MB523091F1D1EE1BC50D9418A7E5E69@DM4PR12MB5230.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bKsl20Rah8j7emqSzGVQEmZ9yCT/gJeC/sNfwm3cgKXmSennqIaBLgUp7JGh9coKdBh0h8fg/8Lptk+iY0NXlfz9kFOpUxI3zvmB8/Rt0PJDD00Ox1H6GYbRqY2PuxJvQk+eOfivoSihqQ5oSAXFKs0eD0bc0g+rgQaqQ4wVWgOas4Vp7E9i4e1TPyhRfmWh2MymQ2ZzRh7bt70WLXuLBQSujlYiYDzXAQeXRGIr4SzXIOInMmVjaonpcHYhgUsP2z6G4bybYaMrveAxMe4XWvSoOVEn1R5zPnyqLbiq1hFFv2sIgQeJWYD1r8dptj2X4jkJgrbz147t/DkI3ZULmzGuPa0Ew6c/ugFSpTw/5O1mdXeOE6/o4aSNEVgbgBZcwRNEx0uGL+mmlEewSnFQdF2dKcA9Fn1ldNdu3vpEa21NBsOrnw7nvP0yoMhdK+oRQ34obUFVococxSloalBHmj8Xsl3qb5SrQzvsSnvI1D05j/z/UFwQqImMulwTwEX0/VL8RJKl9/lD8VwZ30u9y6oER4f1T+bXbVZizuYYSGChCM0v+koA5WxliqhMFldrLk/aNkD51MOn8G8TJc/TvuQ7Hfb1NKGVs0s2JXulgm4epBX++23H5DsckO7sTPuzX6ticUmTvapcMtn/5lAa5d+aN8s5RbXHvQUbhdhbwEanb7ypLIf0wrpCf2lcgEsYNbmjITA54CKUPSB+DkAY89aglbj1FtdKfNFUqIsfXQHI39WCLA6uvcRrs4qN1yCEfdaEbN2yfZfT4aSx8eeTndFkb7J7zf+qeVmem2bDlQpzHi4bxOAcJQGmoLsqiK8H
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(36756003)(186003)(508600001)(966005)(4744005)(54906003)(8936002)(6666004)(44832011)(26005)(7406005)(7416002)(2616005)(31686004)(6486002)(2906002)(66946007)(66556008)(66476007)(5660300002)(4326008)(8676002)(38100700002)(6506007)(316002)(6512007)(86362001)(31696002)(53546011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VWpGdE5HMUo5T3pUSDc2R1BINDdFUVJ0a2xyTWFCSFVld05xNlEyTmJVTVNC?=
- =?utf-8?B?SzVuc0hWM0t1Q2lqL0paN0RNTE5kT2FMNm00NjZPKzgvYWUzSFEzNUZVMHFF?=
- =?utf-8?B?bHEyd200RmVRam4yZU9HSjIxTWt3bWJMTXdHcmJGVXhGYm5hdHdnOTVSZ2Ju?=
- =?utf-8?B?RW50eTdPQzJCd1RXTTlJMytra0dmUml5Y2pPZ3B6TzMzYWJCaTJUUVNST0pn?=
- =?utf-8?B?aGhLN2l3VGJnQXYwQm5FbUZuclk0Wm9aVmRHNHVLSU4vS3Foa0pyZE5oUkxP?=
- =?utf-8?B?bnNCczNsbHlKZGQvWDcvRUJpT1FWT0QwSzluNGp0R2RJUS92eTMrcVhhMzYy?=
- =?utf-8?B?VlNlZk5Lbk9TbzB1OW8wdFJOUnY2WHZGRzY4MHZQckl4SnZObjVTWkxHVkRl?=
- =?utf-8?B?ZE9MNkxrVTNYOVdIVlFWbUsrRUtSVjdqOEFiZDAxSGJ6ejNNK1lhS3hTSGlx?=
- =?utf-8?B?WGtJRGc2ZlBrU2VmUHM1ZGh4NG96UE1ndjBaTHo5ZHlkVU1VVVdBVkhCd21t?=
- =?utf-8?B?WDZMWkt5VnFLN3V0aGpDSmdwaGxVU2hiR0ZqWUluWDRGSHNWaVpmNnJ2dXMr?=
- =?utf-8?B?UEtCOFhuZ3VTU1lKNGRPbmgxb2JwWWxZWGtBRVAvbnM1YjFyUTRUbkNlaFEv?=
- =?utf-8?B?cEgvNGMyd09xVnVzejBKVS9BRU16RHp4M2JpN0p4TEt6RzAveUdiRlB3bEhk?=
- =?utf-8?B?MkFIUXFXcXlUK2ExWm8wbUsxdi9PUE4raHhxTUFzbStCU011VU1BOGpDTFlv?=
- =?utf-8?B?R2xzVXNjS3RiK1hnYXFhdS9VQzc5cXF6UDl5b0kxTXdON2JubEdRSW4vY2VS?=
- =?utf-8?B?Wjk0c1FScFozT1lFall6NkJiVGVXWVJ3Qi96R1pDNE1tVTlKamRCb3NjdVMv?=
- =?utf-8?B?aVQvSlJackdhdmxKWjlqQ1FZQTZsMURRL2Q0UDRUVnl5Mk1mWjgwWGVBNzNr?=
- =?utf-8?B?S0JteTQyY3FCOTg2YnpTV3gzTVdUcjZRQ2NnQmVXZXRScE03eFNSRXhRV2ww?=
- =?utf-8?B?VjZ4STZuSEsyRVB5RVROT1hya2RTSkVlQVBsWHh2bEg0TjRSUkxpdGlTZDJ4?=
- =?utf-8?B?Zk5aU3c4TEkxalpWd0xrbXVZblFhUnY3Ry9QQldlVWliS0JPdXd3Q21lV1ow?=
- =?utf-8?B?YUFQc2RaY3gvNkZNOWVQYmhxai9MdVZwV0NjOGZuL3RNQXNIckVBalBHK1FS?=
- =?utf-8?B?VDRaUWZhS2dnNDhERGlTQVBzNDNhOU5GbE5teUMzeThRV2Z6K0FqNTFQM05E?=
- =?utf-8?B?WFFIMmYydW5KdkN0azUvdGJtMi9RaTlxUFNLcU56YnhLZVBMK3NGSXVoUmxK?=
- =?utf-8?B?Y0dxbG1VR3V3Z1kxZXVKMVpIRERta3BZOVVHWTQwcS9VWU1hYmMzVUwxQ2Rz?=
- =?utf-8?B?eldhMnQzNGh5MTIreXlBM3RLU1NJVTNSVUF6bGZ4SzlhaStPelBQa2NaVTF0?=
- =?utf-8?B?TjVsVkFWOEFHQXVFVGRPMDVqWGtuVUxFNW91amRrMFV2QjhQQ1pMaXBsOGdm?=
- =?utf-8?B?Z1RlbXUvTlV0WXI2V1RxSnZoSmhUZHJXN014UkNpbi84aElhamlMZHcxWE1B?=
- =?utf-8?B?NENnOGQvUkhwVVk5ZXdQU21DaENEcGtBVE5iVHBlS0pjZmNKUGl2T05vNXVB?=
- =?utf-8?B?UGRnWDlTMU1SR1FrcWQwRnlzNmVzcVdJWXoxckFRdDRvL0dFWkhwYzdmdDFW?=
- =?utf-8?B?ZDFYdWRVSWYveUFTNzkybUlnWGg1YzYwS1pRVFc0c1lZVmNBRFZxY2lVRXAy?=
- =?utf-8?B?bW5hU1dOTm9OSlNIV3YyVVh6NFpoQ29DczJBbW9LLzliMElFbktBQUNzNlgw?=
- =?utf-8?B?MzZBWllPMW03R01iRFYrMkg5eVdiVVVKdllYZExDZ2ZmV0NmNWFnYkNaVmEr?=
- =?utf-8?B?TTJsOVVTbjFvMGZQREdVWjdnbVFGTkxZZVFpWDVNK1daSGtmNnAxRkJYN2pM?=
- =?utf-8?B?VzB6dW5Rem9KOGt3Z0VpTXJSUFlQY2JsMEd0bWgyQVVaMGZsQ3FuR0I4Mmpx?=
- =?utf-8?B?UVZQVlJzemplSWJobkRGVVhaL3NraUlrbkNFVTRzUGFsdUZ1RTNRcVFGN3RZ?=
- =?utf-8?B?bWwwQmdreTB1YzVVbk50NHU0VU5VZHV2dnpKMmZUUFhyVDE0K2F6T1dEVVd6?=
- =?utf-8?B?QUM3NGFjeVZtSzFQR2l5RERsdlFycm51cGtlR3NGWmV5SnBmSGVvVXVuTkpX?=
- =?utf-8?B?NGFPUTUxVnlVemdrNi9pV0Z6VjlidTFYY2RFcGFaWWtSSmNnQU5JQTg0VDRh?=
- =?utf-8?B?WHdydzlpTmgyREtpQ2J5WStHUlBwNkc2dDd6bHpGZ25Ja2dDVmR6WXRwVEla?=
- =?utf-8?B?QmV6SitrMlNicTBCcGdMdlBMcEFVelhMTkNDZ05BM0lZMUxhOGhidz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9462e515-0a71-44fa-f611-08da18a6ee8a
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2022 14:57:27.4412
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: p9wgeYsQsh5n04T2pRtOqrPYxLsJIWfzAamT8NVDRl++28INLDZqsBZSS+0VkSBb7O5+9bPukQ/YdKAXCgaT6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5230
+        Thu, 7 Apr 2022 15:16:24 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D064523EC55;
+        Thu,  7 Apr 2022 12:14:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649358862; x=1680894862;
+  h=from:to:cc:subject:date:message-id;
+  bh=Nh2EfB8DTwSlal0AZxLBzMYGFtwXC55JTovhfbgkI7g=;
+  b=AdaFAx/8eFDJlct+hkDBzwr0SX2jgiq2wUPQ+mippZDYU4Lk7KuhTrCN
+   e703lMcFlkgds/IjVqVMDAy6NgMWTMkBzkD/nbIhz8Wf/JN1vree0F8y3
+   7zXcH8QaHeYeeDYgNrRpkl1TjDgsmi87Mh+Pj7HUc8r2whSMIWBvTrkYg
+   dld6ZKujdxpnTs5fvZsW1xZH1cCQ0Lv1SJyPQtAE7mi+keYEl+cwYefcH
+   M35uEu0b3UUGibkH5t/kh/XapZ0Vj5C7TfzMez3IPd2KcmRzGnAbdvm+I
+   diUJ1okklM4+hYrfvSP51KVAc8Pcna1Usx1TAJhXYGpNx2Pdw1R+D4lkd
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10310"; a="260255375"
+X-IronPort-AV: E=Sophos;i="5.90,242,1643702400"; 
+   d="scan'208";a="260255375"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2022 12:14:15 -0700
+X-IronPort-AV: E=Sophos;i="5.90,242,1643702400"; 
+   d="scan'208";a="571193697"
+Received: from coffy.sc.intel.com ([10.3.79.166])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2022 12:14:15 -0700
+From:   Jithu Joseph <jithu.joseph@intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        corbet@lwn.net, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com, rostedt@goodmis.org,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com
+Subject: [PATCH v2 00/10] Introduce In Field Scan driver
+Date:   Thu,  7 Apr 2022 12:13:37 -0700
+Message-Id: <20220407191347.9681-1-jithu.joseph@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Note to Maintainers:
+Requesting x86 Maintainers to take a look at patch1 as it
+touches arch/x86 portion of the kernel.
 
+Patch 2/10 - Adds Documentation. Requesting Documentation maintainer to review it.
 
-On 4/6/22 16:19, Thomas Gleixner wrote:
-> On Mon, Mar 07 2022 at 15:33, Brijesh Singh wrote:
->>   
->> +/*
->> + * AMD SEV Confidential computing blob structure. The structure is
->> + * defined in OVMF UEFI firmware header:
->> + * https://github.com/tianocore/edk2/blob/master/OvmfPkg/Include/Guid/ConfidentialComputingSevSnpBlob.h
->> + */
->> +#define CC_BLOB_SEV_HDR_MAGIC	0x45444d41
->> +struct cc_blob_sev_info {
->> +	u32 magic;
->> +	u16 version;
->> +	u16 reserved;
->> +	u64 secrets_phys;
->> +	u32 secrets_len;
->> +	u32 rsvd1;
->> +	u64 cpuid_phys;
->> +	u32 cpuid_len;
->> +	u32 rsvd2;
->> +};
-> 
-> Shouldn't this be packed?
-> 
+Requesting Greg KH to review the sysfs changes added by patch8 (note that in
+this revision we no longer touch /sys/devices/system/cpu as in previous version
+and limit ourselves to only /sys/devices/platform/intel_ifs)
 
-Yep, to avoid any additional compiler alignment we should pack it.
+Patch10 - adds tracing support, requesting Steven Rostedt to review that.
 
-thanks
+Rest of the patches adds the IFS platform driver, requesting Platform driver maintainers
+to review them.
+
+This is the v2 version incorporating the review feedback from the RFC version [1]
+
+In Field Scan (IFS) is a hardware feature to run circuit level tests on
+a CPU core to detect problems that are not caught by parity or ECC checks.
+See References section to understand more about CPU core errors and how
+and when they are encountered.
+
+Intel will provide a firmware file containing the scan tests.  Similar to
+microcode there is a separate file for each family-model-stepping. The
+tests in the file are divided into some number of "chunks" that can be
+run individually.
+
+The driver loads the tests into memory reserved BIOS local to each CPU
+socket in a two step process using writes to MSRs to first load the
+SHA hashes for the test. Then the tests themselves. Status MSRs provide
+feedback on the success/failure of these steps.
+
+Tests are run by synchronizing execution of all threads on a core and
+then writing to the ACTIVATE_SCAN MSR on all threads. Instruction
+execution continues when:
+
+1) all tests have completed
+2) execution was interrupted
+3) a test detected a problem
+
+In all cases reading the SCAN_STATUS MSR provides details on what
+happened. Interrupted tests may be restarted.
+
+The IFS driver provides interfaces from /sys to control execution:
+
+/sys/devices/platform/intel_ifs/run_test
+  Writing <cpu#> to this file will trigger a scan on that core
+  e.g echo 5 > sys/devices/platform/intel_ifs/run_test will trigger
+  scan on the core containing cpu5
+
+Results of the tests are also provided in /sys:
+
+/sys/devices/platform/intel_ifs/status
+  Status (pass/fail/untested) for the last test
+
+/sys/devices/platform/intel_ifs/details
+  Hex value of the SCAN_STATUS MSR for the most recent test.
+  Note that the error_code field may contain driver
+  defined software code not defined in the Intel SDM.
+
+Driver design choices:
+
+1) The ACTIVATE_SCAN MSR allows for running any consecutive subrange or
+available tests. But the driver always tries to run all tests and only
+uses the subrange feature to restart an interrupted test.
+
+2) Hardware allows for some number of cores to be tested in parallel.
+The driver does not make use of this, it only tests one core at a time.
+
+References
+Links to a few articles, papers, presentation  [2] [3] [4] [5] which
+talk about cpu core errors encountered in the wild which could be
+relevant to this work.
+
+[1] https://lore.kernel.org/lkml/20220301195457.21152-1-jithu.joseph@intel.com/
+[2] https://sigops.org/s/conferences/hotos/2021/papers/hotos21-s01-hochschild.pdf
+[3] https://www.youtube.com/watch?v=QMF3rqhjYuM
+[4] https://engineering.fb.com/2021/02/23/data-infrastructure/silent-data-corruption/
+[5] https://www.theregister.com/2021/06/04/google_chip_flaws/
+
+Changes since RFC:
+ - Renamed collect_cpu_info_early() - >cpu_collect_info_early() (Patch 1; GregKH)
+ - Refactored collect_cpu_info_early(), cpu_signatures_match() from
+    microcode specific file to intel-generic file (Patch 1; Borislav Petkov)
+ - Keep the same platform driver object through-out the life-time of
+   the driver (patch 4; Dan Wiliiams)
+ - Replace platform_device_register_simple() with platform_device_alloc/add()
+   so that sysfs files are available instantateously (patch 4;  Dan Wiliiams)
+ - Move IFS binary loading to driver_probe context from module_init
+   context (patch4;  Dan Wiliiams)
+ - Remove the version check during scan image load so as to allow user
+   to move to any IFS binary (Patch 4)
+ - Replace pr_* macros with dev_* macros (Patches 3-9;  Dan Wiliiams)
+ - Replace percpu kthreads with work_queue worker threads  (Patch 7; Dan Wiliiams)
+ - Remove hotplug callbacks which are no longer required due to above
+   change (Patch 7;  Dan Wiliiams)
+ - Remove percpu ifs_state data structure as it is no longer needed (Patch 7)
+ - Refactored test logic into a separate runtest.c file (Patch 7, Tony Luck)
+ - Moved sysfs interface from /sys/devices/system/cpu/ifs and
+   /sys/devices/system/cpu/cpu#/ifs to /sys/devices/platform/intel_ifs
+ - Done away with global/percpu testing interfaces. To trigger a test,
+   there is a single run_test file which takes cpu_number as input.
+   This hugely reduces the number of sysfs file needed. Userspace can iterate
+   over all the cpus to achevie global testing (Patch8;  Dan Wiliiams)
+ - Remove the reload sysfs interface for IFS binary loading. Since binary loading
+   is done from the probe context, reloading can be acheieved using driver
+   bind sysfs interface (Patch 8; Dan Williams)
+ - Updated the Documentation/ ABI files to reflect the sysfs changes
+ - Change trace event structure field ordering (patch 10; Steven Rostedt)
+ - misc changes
+     - adding enum type for ifs_status_err_code
+     - replace sprintf with sysfs_emit in sysfs.c
+
+Jithu Joseph (8):
+  x86/microcode/intel: expose collect_cpu_info_early() for IFS
+  platform/x86/intel/ifs: Add driver for In-Field Scan
+  platform/x86/intel/ifs: Load IFS Image
+  platform/x86/intel/ifs: Check IFS Image sanity
+  platform/x86/intel/ifs: Authenticate and copy to secured memory
+  platform/x86/intel/ifs: Add scan test support
+  platform/x86/intel/ifs: Add IFS sysfs interface
+  platform/x86/intel/ifs: add ABI documentation for IFS
+
+Tony Luck (2):
+  Documentation: In-Field Scan
+  trace: platform/x86/intel/ifs: Add trace point to track Intel IFS
+    operations
+
+ .../ABI/testing/sysfs-platform-intel-ifs      |  54 ++++
+ Documentation/x86/ifs.rst                     | 114 +++++++
+ Documentation/x86/index.rst                   |   1 +
+ MAINTAINERS                                   |   7 +
+ arch/x86/include/asm/microcode_intel.h        |   4 +
+ arch/x86/kernel/cpu/intel.c                   |  47 +++
+ arch/x86/kernel/cpu/microcode/intel.c         |  55 +---
+ drivers/platform/x86/intel/Kconfig            |   1 +
+ drivers/platform/x86/intel/Makefile           |   1 +
+ drivers/platform/x86/intel/ifs/Kconfig        |   9 +
+ drivers/platform/x86/intel/ifs/Makefile       |   3 +
+ drivers/platform/x86/intel/ifs/core.c         | 121 +++++++
+ drivers/platform/x86/intel/ifs/ifs.h          | 137 ++++++++
+ drivers/platform/x86/intel/ifs/load.c         | 285 +++++++++++++++++
+ drivers/platform/x86/intel/ifs/runtest.c      | 300 ++++++++++++++++++
+ drivers/platform/x86/intel/ifs/sysfs.c        | 139 ++++++++
+ include/trace/events/intel_ifs.h              |  38 +++
+ 17 files changed, 1266 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-intel-ifs
+ create mode 100644 Documentation/x86/ifs.rst
+ create mode 100644 drivers/platform/x86/intel/ifs/Kconfig
+ create mode 100644 drivers/platform/x86/intel/ifs/Makefile
+ create mode 100644 drivers/platform/x86/intel/ifs/core.c
+ create mode 100644 drivers/platform/x86/intel/ifs/ifs.h
+ create mode 100644 drivers/platform/x86/intel/ifs/load.c
+ create mode 100644 drivers/platform/x86/intel/ifs/runtest.c
+ create mode 100644 drivers/platform/x86/intel/ifs/sysfs.c
+ create mode 100644 include/trace/events/intel_ifs.h
+
+-- 
+2.17.1
+
