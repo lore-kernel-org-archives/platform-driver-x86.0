@@ -2,117 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1BEC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Apr 2022 08:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FECC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Apr 2022 08:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232036AbiDHIg1 (ORCPT
+        id S232299AbiDHIvM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 8 Apr 2022 04:36:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51960 "EHLO
+        Fri, 8 Apr 2022 04:51:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232042AbiDHIgY (ORCPT
+        with ESMTP id S232263AbiDHIvK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Apr 2022 04:36:24 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C49052FF599;
-        Fri,  8 Apr 2022 01:34:20 -0700 (PDT)
-Received: from zn.tnic (p200300ea971561a9329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9715:61a9:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5116B1EC0445;
-        Fri,  8 Apr 2022 10:34:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1649406855;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=+UM7gmu9BXYvquOX3OamJYimXfFmDeZA/dtmCZUBglw=;
-        b=k1y/zw+J9AQWVow8qwgv05yji5qd8InFZbomSek/ZxF0rApG5eH5fq0qUwCQ5FXz4ni7HF
-        IhPcVjKeKNKkaiAie5vHf5rYNByHSJt4ZoZuogfwB3JVkLi0qaxdvnKjhNR9BbZcB01V1X
-        1oK94rVdY/dg5+zzOYYOC+4r6XIWWwY=
-Date:   Fri, 8 Apr 2022 10:34:13 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jithu Joseph <jithu.joseph@intel.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, corbet@lwn.net, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, ashok.raj@intel.com,
-        tony.luck@intel.com, rostedt@goodmis.org, dan.j.williams@intel.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
-        ravi.v.shankar@intel.com
-Subject: Re: [PATCH v2 01/10] x86/microcode/intel: expose
- collect_cpu_info_early() for IFS
-Message-ID: <Yk/zhV3SGib6TaI5@zn.tnic>
-References: <20220407191347.9681-1-jithu.joseph@intel.com>
- <20220407191347.9681-2-jithu.joseph@intel.com>
+        Fri, 8 Apr 2022 04:51:10 -0400
+Received: from srv1.home.kabele.me (gw.home.kabele.me [195.88.143.223])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ABC32357713;
+        Fri,  8 Apr 2022 01:49:06 -0700 (PDT)
+Received: from srv1.home.kabele.me (localhost [IPv6:::1])
+        by srv1.home.kabele.me (Postfix) with ESMTP id 05783188967;
+        Fri,  8 Apr 2022 10:49:02 +0200 (CEST)
+Received: from localhost ([77.8.79.100])
+        by srv1.home.kabele.me with ESMTPSA
+        id jqVFOf72T2LBmRcAnmUwTQ
+        (envelope-from <vit@kabele.me>); Fri, 08 Apr 2022 10:49:02 +0200
+Date:   Fri, 8 Apr 2022 10:46:46 +0200
+From:   Vit Kabele <vit@kabele.me>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     r.marek@assembler.cz, x86@kernel.org, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, mingo@redhat.com
+Subject: [PATCH v2] arch/x86: Check validity of EBDA pointer in mpparse.c
+Message-ID: <Yk/2dh4kDobivStp@czspare1-lap.sysgo.cz>
+References: <CAJZ5v0gBbdzUO9MRxbKESEnaeaNAu-+3oP6ADMretch=iHPNJA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220407191347.9681-2-jithu.joseph@intel.com>
+In-Reply-To: <CAJZ5v0gBbdzUO9MRxbKESEnaeaNAu-+3oP6ADMretch=iHPNJA@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Apr 07, 2022 at 12:13:38PM -0700, Jithu Joseph wrote:
-> diff --git a/arch/x86/include/asm/microcode_intel.h b/arch/x86/include/asm/microcode_intel.h
-> index d85a07d7154f..cf0fd1d712b4 100644
-> --- a/arch/x86/include/asm/microcode_intel.h
-> +++ b/arch/x86/include/asm/microcode_intel.h
-> @@ -68,6 +68,10 @@ static inline u32 intel_get_microcode_revision(void)
->  	return rev;
->  }
->  
-> +int cpu_collect_info_early(struct ucode_cpu_info *uci);
-> +bool cpu_signatures_match(unsigned int s1, unsigned int p1,
-> +			  unsigned int s2, unsigned int p2);
-> +
+The pointer to EBDA area is retrieved from a word at 0x40e in BDA.
+In case that the memory there is not initialized and contains garbage,
+it might happen that the kernel touches memory above 640K.
 
-So you can't move the functions to cpu/intel.c but put the
-prototype declarations in the microcode header - they should go to
-arch/x86/include/asm/cpu.h or so.
+This may cause unwanted reads from VGA memory which may not be decoded,
+or even present when running under virtualization.
 
+This patch adds sanity check for the EBDA pointer retrieved from the memory
+so that scanning EBDA does not leave the low memory.
 
->  #ifdef CONFIG_MICROCODE_INTEL
->  extern void __init load_ucode_intel_bsp(void);
->  extern void load_ucode_intel_ap(void);
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 8321c43554a1..2008c8267fd3 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -181,6 +181,53 @@ static bool bad_spectre_microcode(struct cpuinfo_x86 *c)
->  	return false;
->  }
->  
-> +bool cpu_signatures_match(unsigned int s1, unsigned int p1,
+Signed-off-by: Vit Kabele <vit@kabele.me>
+Reviewed-by: Rudolf Marek <r.marek@assembler.cz>
+---
+changes in v2:
+ * Fix the comment formating
+ * Change the condition. I used already defined symbol for easier
+    interpretation
 
-That function is Intel-specific:
+ arch/x86/include/asm/bios_ebda.h |  3 +++
+ arch/x86/kernel/ebda.c           |  3 ---
+ arch/x86/kernel/mpparse.c        | 14 ++++++++++++--
+ 3 files changed, 15 insertions(+), 5 deletions(-)
 
-intel_cpu_signatures_match()
-
-and it is small enough to stick it in the above header and make it an
-inline without the need for an export.
-
-> +			  unsigned int s2, unsigned int p2)
-> +{
-> +	if (s1 != s2)
-> +		return false;
-> +
-> +	/* Processor flags are either both 0 ... */
-> +	if (!p1 && !p2)
-> +		return true;
-> +
-> +	/* ... or they intersect. */
-> +	return p1 & p2;
-> +}
-> +EXPORT_SYMBOL_GPL(cpu_signatures_match);
-> +
-> +int cpu_collect_info_early(struct ucode_cpu_info *uci)
-
-intel_collect_cpu_info_early()
-
+diff --git a/arch/x86/include/asm/bios_ebda.h b/arch/x86/include/asm/bios_ebda.h
+index 4d5a17e2febe..c3133c01d5b7 100644
+--- a/arch/x86/include/asm/bios_ebda.h
++++ b/arch/x86/include/asm/bios_ebda.h
+@@ -4,6 +4,9 @@
+ 
+ #include <asm/io.h>
+ 
++#define BIOS_START_MIN		0x20000U	/* 128K, less than this is insane */
++#define BIOS_START_MAX		0x9f000U	/* 640K, absolute maximum */
++
+ /*
+  * Returns physical address of EBDA.  Returns 0 if there is no EBDA.
+  */
+diff --git a/arch/x86/kernel/ebda.c b/arch/x86/kernel/ebda.c
+index 38e7d597b660..86c0801fc3ce 100644
+--- a/arch/x86/kernel/ebda.c
++++ b/arch/x86/kernel/ebda.c
+@@ -50,9 +50,6 @@
+ 
+ #define BIOS_RAM_SIZE_KB_PTR	0x413
+ 
+-#define BIOS_START_MIN		0x20000U	/* 128K, less than this is insane */
+-#define BIOS_START_MAX		0x9f000U	/* 640K, absolute maximum */
+-
+ void __init reserve_bios_regions(void)
+ {
+ 	unsigned int bios_start, ebda_start;
+diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+index fed721f90116..9e0b4820f33b 100644
+--- a/arch/x86/kernel/mpparse.c
++++ b/arch/x86/kernel/mpparse.c
+@@ -633,8 +633,18 @@ void __init default_find_smp_config(void)
+ 	 */
+ 
+ 	address = get_bios_ebda();
+-	if (address)
+-		smp_scan_config(address, 0x400);
++
++	/*
++	 * Check that the EBDA address is sane and the get_bios_ebda() did not
++	 * return just garbage from memory.
++	 * The upper bound is considered valid if it points below 1K before
++	 * end of the lower memory (i.e. 639K). The EBDA can be smaller
++	 * than 1K in which case the pointer will point above 639K but that
++	 * case is handled in step 2) above, and we don't need to adjust scan
++	 * size to not bump into the memory above 640K.
++	 */
++	if (address >= BIOS_START_MIN && address < (BIOS_START_MAX - 1024))
++		smp_scan_config(address, 1024);
+ }
+ 
+ #ifdef CONFIG_X86_IO_APIC
 -- 
-Regards/Gruss,
-    Boris.
+2.30.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
