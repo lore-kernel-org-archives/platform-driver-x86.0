@@ -2,145 +2,144 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3423C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Apr 2022 14:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021CFC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Apr 2022 14:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242727AbiDKOkb (ORCPT
+        id S1347125AbiDKOky (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Apr 2022 10:40:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53920 "EHLO
+        Mon, 11 Apr 2022 10:40:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245412AbiDKOka (ORCPT
+        with ESMTP id S240420AbiDKOky (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Apr 2022 10:40:30 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2047.outbound.protection.outlook.com [40.107.93.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 475B7C2D
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 07:38:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DugvAD4ziHQ1LVR196oYniFMI1r3XcWCon3BJiOgmdLpZ+dus0hg8r6Wj4O+pxNuec1dC5423R3PKBYkqKisSfjaO+gTELJr4B5y9pV9V1HjcWkRWID6kWPPNwEIXojPuu7HbMFgfFOLwZujd+x0hb6GhZvmfOPgrA1itbgFTjey3z1zlzboA/kr1rkzCnIg1gtkkLH6IQc2iQdYp53syy7KZwqxbYYZ846x+axtpBotgvlIQqqZkICDCuLr2NRueSKWEvzaKoIUUpL4zLLWAB0eZNq+8NmVfzKjpy8vKCapPIvXDUguC2tQyK/LszasQo3nyJu+H2QZbReZXFgXgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TafCmvMaeq1H3y4/oDPm+CGtaW/9EjLUZDOD7QdxG+I=;
- b=AvenSgk5kYrTkGEdWhAOUgBxk3omIAe+2EeGCrEShzchkx1Ub0+PVtdsvECwRf1QcM86CMLCq2IeORAiE1u6097VdJ5imAUVPrypyvccQQxgAX1gNOCWXUjMdGRXOmDspHYkZRmzyadxtN2NGI9f+mvVxlDB8TXsmvXKo+rVDaVU7tmGR3XroCl8LA/XvO7ggyX0V7pbU5/oAUkwDKvyqYDZjiUE6aeMmp+UpjWqJvknHd6ZXMYAHoec7jyw7sUXWXYWf8eERFxHOzHM++1UqffhVcvBLC312Af564heuOWa1sahMFd1bJIKZRsOJaV2l+QBmt2cASsd6/VapwDUgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TafCmvMaeq1H3y4/oDPm+CGtaW/9EjLUZDOD7QdxG+I=;
- b=wWvIbXWljJAHAbxgasN5tqwnGGl4QlRyH/+3/r3zC4ud+jLSDTAh3P/7UAd+56/qQwkkxHZVb9iQ8zBcL9LCrGAqFA06Ds8oYM5+8//BiFTiGGVztzqtu9jwzwvkM2QApsuh/G8rFm2+wibpyeC1RhaDBIf/PhzD9FcntNqilG8=
-Received: from DS7PR03CA0078.namprd03.prod.outlook.com (2603:10b6:5:3bb::23)
- by BN8PR12MB3092.namprd12.prod.outlook.com (2603:10b6:408:48::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5144.29; Mon, 11 Apr
- 2022 14:38:10 +0000
-Received: from DM6NAM11FT056.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:3bb:cafe::5d) by DS7PR03CA0078.outlook.office365.com
- (2603:10b6:5:3bb::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5144.29 via Frontend
- Transport; Mon, 11 Apr 2022 14:38:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT056.mail.protection.outlook.com (10.13.173.99) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5144.20 via Frontend Transport; Mon, 11 Apr 2022 14:38:10 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 11 Apr
- 2022 09:38:08 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>
-CC:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Goswami Sanket <Sanket.Goswami@amd.com>,
-        <rrangel@chromium.org>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v2 3/3] platform/x86: amd-pmc: Avoid reading SMU version at probe time
-Date:   Mon, 11 Apr 2022 09:38:20 -0500
-Message-ID: <20220411143820.13971-3-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220411143820.13971-1-mario.limonciello@amd.com>
-References: <20220411143820.13971-1-mario.limonciello@amd.com>
+        Mon, 11 Apr 2022 10:40:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8453B288
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 07:38:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1649687917;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JK8TKPeiyxEXuySdlAaQF1ZMqCXVr2+cAzKpkD5p+PE=;
+        b=g9vN6dxNn27kIkWwY4tKgXp9Q1w+afn1iVWdv04ZL/MxoahS53cxAOSA1g9q5J/V38HzYA
+        TWZOukC7li7Wkzxc5nVmXWBKElyI74iIHRKGAILFxVXyxu5ZKgzabkTc9gShaBFojxOsKr
+        VY7efOHuqnhZvgaflfyyWu0tH2AyR3c=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-645-zCwimD1JMQi79VZeMnIl8Q-1; Mon, 11 Apr 2022 10:38:36 -0400
+X-MC-Unique: zCwimD1JMQi79VZeMnIl8Q-1
+Received: by mail-ej1-f71.google.com with SMTP id nd34-20020a17090762a200b006e0ef16745cso7104418ejc.20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 07:38:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=JK8TKPeiyxEXuySdlAaQF1ZMqCXVr2+cAzKpkD5p+PE=;
+        b=6habZTAS3f8IJi5V5sq7QSfJKGLZ5GMXSueiFrAzjW6+gfMQ7kC8mIxZbrNoRdw5RC
+         Aa/km5552VfTvrW9QG8VPVo2zG6tnOTVThvMKU1hXFjRwjH4ptKJeAr0QUUIYvywLb6/
+         PONekX3WKxvLTECX8kURTb5eqeialrWX1Jzeul/C9akHQIf0CFXLWQEi1iGCs5JDaXI2
+         tmD63qNQsuYXdX+vIN4ixx8LXE5X1iHnrI/Y/6xyLrvpI6ymQNczGrgDOK74YcwX0KXz
+         OHABwIfKeGDsNK5dTJEAviNhSdRcDzSPMdDGAmeLrzHyfKicw07uhrFQx4JKYREp5pGc
+         Ka2w==
+X-Gm-Message-State: AOAM531LnGEx/aZ0Y//3fOLFPLmXMZAMRJJJx09okZ9UVrZ1kpAItTeo
+        TY3Ik39Bz51GV1VGnKsSiRe6/8uQ3wtDJ6fWOpR8K9thD9Jms/T5HicnWNuq10gh7AZbh15koz+
+        nxltgbBUB1uiSRzGLIKD445eQS9c6r0d1Bg==
+X-Received: by 2002:a17:906:1c0d:b0:6e8:94a5:c5d6 with SMTP id k13-20020a1709061c0d00b006e894a5c5d6mr3955160ejg.134.1649687915167;
+        Mon, 11 Apr 2022 07:38:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzLuvc5BS9rb+kgcbCN++QKhhBHdOIePF/MfbCeD2ZyVqKeiu79VBWOfFyf8VZTBybMX2u2Og==
+X-Received: by 2002:a17:906:1c0d:b0:6e8:94a5:c5d6 with SMTP id k13-20020a1709061c0d00b006e894a5c5d6mr3955140ejg.134.1649687914988;
+        Mon, 11 Apr 2022 07:38:34 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id gv9-20020a170906f10900b006d7128b2e6fsm12056991ejb.162.2022.04.11.07.38.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Apr 2022 07:38:34 -0700 (PDT)
+Message-ID: <47d06f45-c1b5-2c8f-d937-3abacbf10321@redhat.com>
+Date:   Mon, 11 Apr 2022 16:38:33 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v2 5/6] platform/x86: intel_tdx_attest: Add TDX Guest
+ attestation interface driver
+Content-Language: en-US
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     "H . Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <cover.1648664666.git.sathyanarayanan.kuppuswamy@intel.com>
+ <054b22e81e88379a5a8459c19e89a335531c1bdd.1648664666.git.sathyanarayanan.kuppuswamy@intel.com>
+ <8308a830-3096-3f94-4f12-5fd2c290524e@redhat.com>
+ <aece84e1-2c90-2c18-993a-96f8fed7bb46@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <aece84e1-2c90-2c18-993a-96f8fed7bb46@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 14ee10b7-54e7-4534-2a8a-08da1bc8e68b
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3092:EE_
-X-Microsoft-Antispam-PRVS: <BN8PR12MB3092364884D9B15B465E19D7E2EA9@BN8PR12MB3092.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MlzD1S7QYR8WZxGn7bvXnoSr1Y75A3G2A6OXZQBvi+yLZNrJksLvNYyP12evsDAOSpphV5BZb6u8kwFYHyjVuaW27uVpCBdEpW1AY/vbd/FosHP2gYaBqsOxf/1PSXHtVkEbTsKv5KV0D3JyY4N834KD/B0TNVXUhysjsVqc+jT1AoebkjAOdF1/J4MDb+3OyCBmRZPT4cWxQVu/YdR7FRsiQaS2W06sRU7EdwISrrmgwlt+bbaBcPi1uB7oxd87c9kZfzHa5jCKsVeA6X14l1PQ2CmrryZ1gh6SEnz0A0CkYV7dVyRML29+pCmn7gPAukBeBkidnU9WbZqYBBkjCDfFlTHZ2n7vBwFZvBCi+jpFdnX37/fqSo9H0jc39Abo2qi08kSf+xqeR+JmGIqLdN/BkvpxC9rsugeUPFE8Vm8EzyvxIhdXagUumUx0RZm81Kdpyid6BUY42/vSA+XhJvRx4w4xczVgirgbGdjkxgPJUNmZXsQvqGEnsAtQ4Wj+h8uQmcKPqP1wkm4B/D86u3uqj8pQbMTKc79uhDWJim9g7VSb22KLxEoou3GzrkNt6pqbSQx9N9M2RwMav/KzspKiSp6TyTQ4FVdKTl5d7eFbrbIaBeowT84jjTKM+PUNz2qgcvI3gevYRRnp9lukBaVljV+dvhh/RZFZVB8eHqA3KjTZ5w29epGQwBqQbtp1wz9TD+tpCxeVbf27W7BZMA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(36840700001)(46966006)(186003)(36860700001)(44832011)(47076005)(5660300002)(54906003)(16526019)(356005)(110136005)(86362001)(6666004)(40460700003)(36756003)(1076003)(2616005)(8936002)(81166007)(8676002)(7696005)(316002)(336012)(426003)(4326008)(2906002)(82310400005)(70586007)(70206006)(26005)(508600001)(83380400001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2022 14:38:10.0542
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14ee10b7-54e7-4534-2a8a-08da1bc8e68b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT056.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3092
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently the SMU version only used to determine whether the SMU supports
-reading the idle mask. To speed up startup, move it to the first time
-the idle mask is read.
+Hi,
 
-This decreases the startup time from ~28500us to 100us.
+On 4/4/22 21:56, Sathyanarayanan Kuppuswamy wrote:
+> Hi Hans,
+> 
+> On 4/4/22 3:07 AM, Hans de Goede wrote:
+>>> +static int __init tdx_attest_init(void)
+>>> +{
+>>> +    dma_addr_t handle;
+>>> +    long ret = 0;
+>>> +
+>>> +    mutex_lock(&attestation_lock);
+>>> +
+>>> +    ret = misc_register(&tdx_attest_device);
+>>> +    if (ret) {
+>>> +        pr_err("misc device registration failed\n");
+>>> +        mutex_unlock(&attestation_lock);
+>>> +        return ret;
+>>> +    }
+>> Why not do this as the last thing of the probe?
+> 
+> We need misc device reference in dma_alloc_coherent() and
+> dma_set_coherent_mask() calls. This is the reason for keeping
+> misc_register() at the beginining of the init function.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v1->v2:
- * Add tag
+Erm, you are supposed to pass an actual device-device as
+parameter to dma_alloc_coherent(), so that it can see
+what bus/dma-domain the device is connected to and if
+an ioMMU might be involved...
 
- drivers/platform/x86/amd-pmc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+>> That will avoid the need to unregister this again in all
+>> the error-exit paths and also fixes a possible deadlock.
+>>
+> 
+> Agree. But, unless we create another device locally, I don't
+> think we can avoid this. Do you prefer this approach?
 
-diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-index 1f68a3cb1973..be781b4e2ce3 100644
---- a/drivers/platform/x86/amd-pmc.c
-+++ b/drivers/platform/x86/amd-pmc.c
-@@ -418,6 +418,13 @@ static int amd_pmc_idlemask_show(struct seq_file *s, void *unused)
- 	struct amd_pmc_dev *dev = s->private;
- 	int rc;
- 
-+	/* we haven't yet read SMU version */
-+	if (!dev->major) {
-+		rc = amd_pmc_get_smu_version(dev);
-+		if (rc)
-+			return rc;
-+	}
-+
- 	if (dev->major > 56 || (dev->major >= 55 && dev->minor >= 37)) {
- 		rc = amd_pmc_idlemask_read(dev, NULL, s);
- 		if (rc)
-@@ -867,7 +874,6 @@ static int amd_pmc_probe(struct platform_device *pdev)
- 			return err;
- 	}
- 
--	amd_pmc_get_smu_version(dev);
- 	platform_set_drvdata(pdev, dev);
- 	err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
- 	if (err)
--- 
-2.34.1
+Yes, passing the "struct device" which is embedded inside
+a miscdevice as device to dma_alloc_coherent() is just
+wrong. Please make your module_init function register
+a platform_device using platform_device_register_simple()
+(on systems with TDX support) and then turn your code/driver
+into a standard platform_driver using the platform_device
+which the driver binds to as parameter to dma_alloc_coherent().
+
+See: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?id=c4d2ff35d350428eca2ae1a1e2119e4c6297811d
+
+for a simple (completely unrelated) driver which uses this
+method to have a device to bind to for talking to a secondary
+function of the embedded-controller on some platforms.
+
+Regards,
+
+Hans
 
