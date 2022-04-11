@@ -2,183 +2,342 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45F6C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Apr 2022 12:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B81C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Apr 2022 12:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345199AbiDKMQC (ORCPT
+        id S235361AbiDKMlo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Apr 2022 08:16:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44484 "EHLO
+        Mon, 11 Apr 2022 08:41:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240712AbiDKMQC (ORCPT
+        with ESMTP id S1346165AbiDKMlh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Apr 2022 08:16:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7E98740A05
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 05:13:47 -0700 (PDT)
+        Mon, 11 Apr 2022 08:41:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B4C3026F2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 05:39:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649679226;
+        s=mimecast20190719; t=1649680761;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dfJKHQAC5Jvnr02zMyniqOPetfe6aLaGCnFQ9aCHPXo=;
-        b=XYrp/YrcXBJG564tvXukEhxS/3lf6N1ytiYhF1MsfnwKaYlL6cM1mYTQdIrxKbJu5DGX+p
-        pmEHiv1aTIq8ARTxB5sbjTogoKut+F+J/0HsZf7UVYl5p6MINEHGyE5cw96Q5SH8ME4LMM
-        yr9cmZ/JOUWUj81ggTOjWzbjdX81m5I=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=nA3CtNRCA0UufTEt113jych7eO+TCXjgMtNbeSmlQMk=;
+        b=hyhp7GRJXc0owse+lQGhN3w4Zk2V8+KNJhhByrNH2JJ0lZ8XSNKhibUlFhwGvUL7dmGtJ3
+        rE8oq2cYCA5EEwnHo4r+c+JZW2EgYDP0CtJvTFO2BEKdb1tlUZjS3AlC08I0bOdGpPV3a3
+        xvm7cmbKaLG+kkmSBZMyGcwfo8hxwkw=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-290-DiLKgtWSPtOWxOEWdRTu8A-1; Mon, 11 Apr 2022 08:13:45 -0400
-X-MC-Unique: DiLKgtWSPtOWxOEWdRTu8A-1
-Received: by mail-ed1-f69.google.com with SMTP id s28-20020a05640217dc00b0041d69ecc528so3881060edy.12
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 05:13:45 -0700 (PDT)
+ us-mta-279-ETpro1-ANuahV0Bh2jbUNA-1; Mon, 11 Apr 2022 08:39:20 -0400
+X-MC-Unique: ETpro1-ANuahV0Bh2jbUNA-1
+Received: by mail-ej1-f71.google.com with SMTP id k16-20020a17090632d000b006ae1cdb0f07so6941970ejk.16
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 05:39:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=dfJKHQAC5Jvnr02zMyniqOPetfe6aLaGCnFQ9aCHPXo=;
-        b=YMsIn4sMh5oKHEiycfU/GvwhJXbjnT2ErCjmzd8o/nWERyw/wuNcMJbXG1QHuZ8c9R
-         MlmKh1dQT9EMlO/eLvClCrPZnqjMni96tzaewfvMVI+AbVB5VxLXnOs2gviVdK74j28r
-         a8Ty6mt3fFfJHqIfCmR8aFMiHlZMuHLv1l+uoB6U/xda84ocjMeNrXsf53gALj/wa7am
-         IH6G7URgbfuISaDEymkhmCFXYJ1LHxA99EnkcXAa9rC+zfXIH1oFLjE5DQ9gJ4MFKtGN
-         T3fvk3jAmjH4crHH6WvPZvqXbHT8mzn3smRCSw9r3Jyllvq5kK4alden0DX3OVVI4Sa2
-         q3Iw==
-X-Gm-Message-State: AOAM533SHpV43qMVg4z4O6whjzgEbc3VXd9UnS/Rk3+cpmIhqvleS0qs
-        q7KXUpCdj28PpQ7+HG3DOgMaQqPRv9MsFwiZkPGovmAUePHa5ZZiu9Bfay2SLki3pSIjvZPUJ/S
-        SOU8iWp6HmNPCJFYz7QFKfjag11Iw6DivlQ==
-X-Received: by 2002:a17:906:1604:b0:6e8:7c02:c5a with SMTP id m4-20020a170906160400b006e87c020c5amr7412140ejd.690.1649679224268;
-        Mon, 11 Apr 2022 05:13:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxKGm4XGa2KIa96YZ4mvOMQ7ZLrYpFilFPuGfmwMl2L0tdNghlMPIVVb5P2HwvQuikJw3KOhw==
-X-Received: by 2002:a17:906:1604:b0:6e8:7c02:c5a with SMTP id m4-20020a170906160400b006e87c020c5amr7412124ejd.690.1649679223960;
-        Mon, 11 Apr 2022 05:13:43 -0700 (PDT)
+        bh=nA3CtNRCA0UufTEt113jych7eO+TCXjgMtNbeSmlQMk=;
+        b=CPgXFoJHWkk45SmdoEf3renFg4ay7KTIAIRplE9X/m/GAnczwKq5DWRhjY2mmBQ47g
+         fafXs72NE9/zoShyou+/XfcDbnIkOoQCehQuaxexLdc9KthARWPkXcEEzMuz5Paw7dTZ
+         46ZghLxpeeZCN1TsAtiTbr7DbUfUzJ72Gto4qJwyF/BFrjTkAAHW3DUiVhizcp3zeIKX
+         jQBCyb1jJT0xJdprA8IhqXAYD5+Z2hDX1zwm0hjK+7RJ7wwfP2IcauUr753VPD8v1jKq
+         P3l8b4mf/P6YxkoAZIZyRqsMLZdQe7FCpAPdj3yKOmDX2yY9Oii+xdYurvWZFaMl45vj
+         5q3A==
+X-Gm-Message-State: AOAM53224TykgvInQDy/Sj2wn+u7cQMGA881UI3eZg52oee8wLDpC9p6
+        WwWbmQGUiTu9n0ajWhDOH5BrdiVvruKvXYeHz4VWCiki8/2K00qRop5QlSooN8eiset1AvCLNJb
+        nr8R+9gBI3W3kDKvBAmM9bkKVIfkeuR54Cg==
+X-Received: by 2002:a05:6402:d62:b0:41d:79e6:1617 with SMTP id ec34-20020a0564020d6200b0041d79e61617mr5824344edb.378.1649680758858;
+        Mon, 11 Apr 2022 05:39:18 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxUjRFzwg8G2sDhHFiZJd6i9tKywIZzxI02eAWGeefUREJ3DQmQJ9t/0FLMxLAtpRrHX4pUmw==
+X-Received: by 2002:a05:6402:d62:b0:41d:79e6:1617 with SMTP id ec34-20020a0564020d6200b0041d79e61617mr5824321edb.378.1649680758654;
+        Mon, 11 Apr 2022 05:39:18 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id t7-20020a50d907000000b0041cda2f0548sm10670845edj.10.2022.04.11.05.13.43
+        by smtp.gmail.com with ESMTPSA id d4-20020a056402000400b00412d60fee38sm14987722edu.11.2022.04.11.05.39.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Apr 2022 05:13:43 -0700 (PDT)
-Message-ID: <d648629e-2339-449f-f63c-41af85ba35b5@redhat.com>
-Date:   Mon, 11 Apr 2022 14:13:42 +0200
+        Mon, 11 Apr 2022 05:39:18 -0700 (PDT)
+Message-ID: <f9ab29c1-24f2-66d7-8b13-222c0d110a92@redhat.com>
+Date:   Mon, 11 Apr 2022 14:39:17 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: [PATCH v5 0/4] platform: surface: Introduce Surface XBL Driver
+Subject: Re: [PATCH v2] winmate-fm07-keys: Winmate FM07/FM07P buttons
 Content-Language: en-US
-To:     Jarrett Schultz <jaschultzms@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Gross <markgross@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Jarrett Schultz <jaschultz@microsoft.com>
-References: <20220405210750.619511-1-jaschultzMS@gmail.com>
+To:     Daniel Beer <daniel.beer@tirotech.co.nz>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <623a110a.1c69fb81.64f39.0118@mx.google.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220405210750.619511-1-jaschultzMS@gmail.com>
+In-Reply-To: <623a110a.1c69fb81.64f39.0118@mx.google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jarrett,
+Hi,
 
-On 1/1/70 01:00, Jarrett Schultz wrote:
-> After v4, there were some suggestions to change the driver again to use
-> nvmem that would include some other changes to the sm8150 dtsi. While
-> the suggestions make sense, this driver was supposed to remain simple
-> for the introduction in order to get it into the tree and I think that
-> it would be best to implement those and any other suggestions in a future
-> patch. Hopefully this patch is now in a state where it can be accepted.
-> Thanks to all who have helped and been patient along the way, this was
-> my first patch :)
-I appreciate your efforts to get this upstream, but this is not
-how upstream development typically works. We usually iterate a patch
-until all stakeholders are happy and then merge it.
+On 3/21/22 04:16, Daniel Beer wrote:
+> Winmate FM07 and FM07P in-vehicle computers have a row of five buttons
+> below the display. This module adds an input device that delivers key
+> events when these buttons are pressed.
+> 
+> Signed-off-by: Daniel Beer <daniel.beer@tirotech.co.nz>
 
-So unless Rob changes its mind and gives his Reviewed-by for the
-devicetree bits from this v5, then this cannot be merged as is.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
-
-> ~ Jarrett
-> 
 > ---
-> 
-> Introduce the Surface Extensible Boot Loader driver for the Surface Duo.
-> Exposes information about the driver to user space via sysfs for
-> consumption in manufacturing mode.
-> 
-> ---
-> 
-> Changes in v5:
-> 
->  - Minor changes to yaml
-> 
-> ---
-> 
-> Changes in v4:
-> 
->  - Small binding definition changes
->  - Removed ACPI propagation from patch series since it has been
->    cherry-picked
->  - Fixed the Signed-off-by: and From: mismatch
-> 
-> ---
-> 
-> Changes in v3:
->  - For the yaml documentation:
->     * Updated description
->     * Fixed examples
->     * Updated 'required' field
->  - Further propogated ACPI dependency in Kconfigs
->  - Updated sysfs several binding descriptions
->  - Renamed files to conform to naming conventions
-> 
-> ---
-> 
 > Changes in v2:
->  - Per Maximilian, added patch 2: propagated ACPI dependency from the
->    directory as a whole to each individual driver
->  - For the yaml documentation:
->     * Removed json-schema dependence
->     * Elaborated on description of driver
->     * Updated example
->  - Changed target KernelVersion in sysfs documentation
->  - Updated MAINTAINER changes to be properly applied across patches
->  - For the driver itself,
->     * Added types.h inclusion and removed unused inclusions
->     * Minor updates to code and acronym style
->     * Remove __packed attribute on driver struct
->     * Use .dev_groups for sysfs
->  - Added more in-depth description of driver in Kconfig
->  - Modified dts to reference a newly added section in sm8150.dtsi
+>   - Ratelimit message on poll timeout.
+>   - Explain polling rate.
+>   - Fix fm07keys_dmi_table and add missing macro.
+>   - Fix check of platform_device_register_simple return value.
 > 
-> ---
+>  drivers/platform/x86/Kconfig             |   8 +
+>  drivers/platform/x86/Makefile            |   3 +
+>  drivers/platform/x86/winmate-fm07-keys.c | 189 +++++++++++++++++++++++
+>  3 files changed, 200 insertions(+)
+>  create mode 100644 drivers/platform/x86/winmate-fm07-keys.c
 > 
-> Jarrett Schultz (4):
->   dt-bindings: platform: microsoft: Document surface xbl
->   platform: surface: Add surface xbl
->   arm64: dts: qcom: sm8150: Add imem section
->   arm64: dts: qcom: surface-duo: Add surface xbl
-> 
->  .../ABI/testing/sysfs-platform-surface-xbl    |  79 ++++++++
->  .../platform/microsoft/surface-xbl.yaml       |  70 +++++++
->  MAINTAINERS                                   |   9 +
->  .../dts/qcom/sm8150-microsoft-surface-duo.dts |  10 +
->  arch/arm64/boot/dts/qcom/sm8150.dtsi          |   8 +
->  drivers/platform/surface/Kconfig              |  12 ++
->  drivers/platform/surface/Makefile             |   1 +
->  drivers/platform/surface/surface_xbl.c        | 186 ++++++++++++++++++
->  8 files changed, 375 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-platform-surface-xbl
->  create mode 100644 Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
->  create mode 100644 drivers/platform/surface/surface_xbl.c
-> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 24deeeb29af2..62a5754d6ac9 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1138,6 +1138,14 @@ config SIEMENS_SIMATIC_IPC
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called simatic-ipc.
+>  
+> +config WINMATE_FM07_KEYS
+> +	tristate "Winmate FM07/FM07P front-panel keys driver"
+> +	depends on INPUT
+> +	help
+> +	  Winmate FM07 and FM07P in-vehicle computers have a row of five
+> +	  buttons below the display. This module adds an input device
+> +	  that delivers key events when these buttons are pressed.
+> +
+>  endif # X86_PLATFORM_DEVICES
+>  
+>  config PMC_ATOM
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index c12a9b044fd8..04e7c995b838 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -129,3 +129,6 @@ obj-$(CONFIG_PMC_ATOM)			+= pmc_atom.o
+>  
+>  # Siemens Simatic Industrial PCs
+>  obj-$(CONFIG_SIEMENS_SIMATIC_IPC)	+= simatic-ipc.o
+> +
+> +# Winmate
+> +obj-$(CONFIG_WINMATE_FM07_KEYS)		+= winmate-fm07-keys.o
+> diff --git a/drivers/platform/x86/winmate-fm07-keys.c b/drivers/platform/x86/winmate-fm07-keys.c
+> new file mode 100644
+> index 000000000000..8c03a4d171b8
+> --- /dev/null
+> +++ b/drivers/platform/x86/winmate-fm07-keys.c
+> @@ -0,0 +1,189 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Driver for the Winmate FM07 front-panel keys
+> +//
+> +// Author: Daniel Beer <daniel.beer@tirotech.co.nz>
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/input.h>
+> +#include <linux/ioport.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/dmi.h>
+> +#include <linux/io.h>
+> +
+> +#define DRV_NAME	"winmate-fm07keys"
+> +
+> +#define PORT_CMD	0x6c
+> +#define PORT_DATA	0x68
+> +
+> +#define EC_ADDR_KEYS	0x3b
+> +#define EC_CMD_READ	0x80
+> +
+> +#define BASE_KEY	KEY_F13
+> +#define NUM_KEYS	5
+> +
+> +/* Typically we're done in fewer than 10 iterations */
+> +#define LOOP_TIMEOUT	1000
+> +
+> +static void fm07keys_poll(struct input_dev *input)
+> +{
+> +	uint8_t k;
+> +	int i;
+> +
+> +	/* Flush output buffer */
+> +	i = 0;
+> +	while (inb(PORT_CMD) & 0x01) {
+> +		if (++i >= LOOP_TIMEOUT)
+> +			goto timeout;
+> +		inb(PORT_DATA);
+> +	}
+> +
+> +	/* Send request and wait for write completion */
+> +	outb(EC_CMD_READ, PORT_CMD);
+> +	i = 0;
+> +	while (inb(PORT_CMD) & 0x02)
+> +		if (++i >= LOOP_TIMEOUT)
+> +			goto timeout;
+> +
+> +	outb(EC_ADDR_KEYS, PORT_DATA);
+> +	i = 0;
+> +	while (inb(PORT_CMD) & 0x02)
+> +		if (++i >= LOOP_TIMEOUT)
+> +			goto timeout;
+> +
+> +	/* Wait for data ready */
+> +	i = 0;
+> +	while (!(inb(PORT_CMD) & 0x01))
+> +		if (++i >= LOOP_TIMEOUT)
+> +			goto timeout;
+> +	k = inb(PORT_DATA);
+> +
+> +	/* Notify of new key states */
+> +	for (i = 0; i < NUM_KEYS; i++) {
+> +		input_report_key(input, BASE_KEY + i, (~k) & 1);
+> +		k >>= 1;
+> +	}
+> +
+> +	input_sync(input);
+> +	return;
+> +
+> +timeout:
+> +	dev_warn_ratelimited(&input->dev, "timeout polling IO memory\n");
+> +}
+> +
+> +static int fm07keys_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct input_dev *input;
+> +	int ret;
+> +	int i;
+> +
+> +	input = devm_input_allocate_device(dev);
+> +	if (!input) {
+> +		dev_err(dev, "no memory for input device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	if (!devm_request_region(dev, PORT_CMD, 1, "Winmate FM07 EC"))
+> +		return -EBUSY;
+> +	if (!devm_request_region(dev, PORT_DATA, 1, "Winmate FM07 EC"))
+> +		return -EBUSY;
+> +
+> +	input->name = "Winmate FM07 front-panel keys";
+> +	input->phys = DRV_NAME "/input0";
+> +
+> +	input->id.bustype = BUS_HOST;
+> +	input->id.vendor = 0x0001;
+> +	input->id.product = 0x0001;
+> +	input->id.version = 0x0100;
+> +
+> +	__set_bit(EV_KEY, input->evbit);
+> +
+> +	for (i = 0; i < NUM_KEYS; i++)
+> +		__set_bit(BASE_KEY + i, input->keybit);
+> +
+> +	ret = input_setup_polling(input, fm07keys_poll);
+> +	if (ret) {
+> +		dev_err(dev, "unable to set up polling, err=%d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* These are silicone buttons. They can't be pressed in rapid
+> +	 * succession too quickly, and 50 Hz seems to be an adequate
+> +	 * sampling rate without missing any events when tested.
+> +	 */
+> +	input_set_poll_interval(input, 20);
+> +
+> +	ret = input_register_device(input);
+> +	if (ret) {
+> +		dev_err(dev, "unable to register polled device, err=%d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	input_sync(input);
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver fm07keys_driver = {
+> +	.probe		= fm07keys_probe,
+> +	.driver		= {
+> +		.name	= DRV_NAME
+> +	},
+> +};
+> +
+> +static struct platform_device *dev;
+> +
+> +static const struct dmi_system_id fm07keys_dmi_table[] __initconst = {
+> +	{
+> +		/* FM07 and FM07P */
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Winmate Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "IP30"),
+> +		},
+> +	},
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(dmi, fm07keys_dmi_table);
+> +
+> +static int __init fm07keys_init(void)
+> +{
+> +	int ret;
+> +
+> +	if (!dmi_check_system(fm07keys_dmi_table))
+> +		return -ENODEV;
+> +
+> +	ret = platform_driver_register(&fm07keys_driver);
+> +	if (ret) {
+> +		pr_err("fm07keys: failed to register driver, err=%d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	dev = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
+> +	if (IS_ERR(dev)) {
+> +		ret = PTR_ERR(dev);
+> +		pr_err("fm07keys: failed to allocate device, err = %d\n", ret);
+> +		goto fail_register;
+> +	}
+> +
+> +	return 0;
+> +
+> +fail_register:
+> +	platform_driver_unregister(&fm07keys_driver);
+> +	return ret;
+> +}
+> +
+> +static void __exit fm07keys_exit(void)
+> +{
+> +	platform_driver_unregister(&fm07keys_driver);
+> +	platform_device_unregister(dev);
+> +}
+> +
+> +module_init(fm07keys_init);
+> +module_exit(fm07keys_exit);
+> +
+> +MODULE_AUTHOR("Daniel Beer <daniel.beer@tirotech.co.nz>");
+> +MODULE_DESCRIPTION("Winmate FM07 front-panel keys driver");
+> +MODULE_LICENSE("GPL v2");
 
