@@ -2,180 +2,250 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765CBC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Apr 2022 14:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA8DC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Apr 2022 14:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233843AbiDKODD (ORCPT
+        id S237958AbiDKODd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Apr 2022 10:03:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35658 "EHLO
+        Mon, 11 Apr 2022 10:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346853AbiDKOCc (ORCPT
+        with ESMTP id S1346834AbiDKODc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Apr 2022 10:02:32 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DEE331372
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 07:00:16 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id x200so3925061ybe.13
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 07:00:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wpxnhZcBxsbjxpzh0nDQb5QFg803+Nsugrw8GgXzo3Y=;
-        b=in8BgyS/WQHHv7p539xP09o+9sagxNCCbiyqAwYREj/Q1v4k0NES0HMqTrEGtrmRjO
-         Ehq0f16SU0O+xKEDH/nmnzg7xKb8/ek7pDnDl+4KdYzRQl/SBrJ2CaNMhEKndS5Rpy/b
-         y8XAdFdr2MAfNi/vBDvjs3yVqENm89ZGYhq/MVAqWFlBJ10htxOKCFzf/Cy55irqlY6h
-         xqx8vj6BQoraXs8CUe1PD0hvkc/CPiNxdfzY9tUqDD+MhgOQoRbPSTf2hDpPpMZfXpAV
-         Qr26QwC6f00FD9kIwVn7HfFZnDdQ8ShDmaqB1+aAsuMNdlMQEzOiuFaqeL8OfkSD5/SU
-         IQqQ==
+        Mon, 11 Apr 2022 10:03:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 566B431DEE
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 07:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1649685677;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=y4F8dqXHcBu4Aif1bka3gidub9+IdsEqN8o95WTESwk=;
+        b=Ys5CSH+LjoW2zqOsmpxzc5jpCINEN6zqidC1fX3tW/9Q2ucQFTnUiyphOEdWzsHtN5QiQc
+        GBPkFWJUDoU8xCUaXA8vzphwWKSn/vzCJZLHSXqrFUYORB6r0f4Ambpa2TXVJtTadmkoV9
+        rRUD8JYC8gXg97BRuTq3djUkMmoUZ9Y=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-215-NUq70mK0NtG1d9n9TclSIA-1; Mon, 11 Apr 2022 10:01:15 -0400
+X-MC-Unique: NUq70mK0NtG1d9n9TclSIA-1
+Received: by mail-ej1-f69.google.com with SMTP id oz37-20020a1709077da500b006e88d00043dso1081077ejc.15
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 07:01:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wpxnhZcBxsbjxpzh0nDQb5QFg803+Nsugrw8GgXzo3Y=;
-        b=MEClNSSjewjbNCHA4FKWmDp0k1ufkcdnKBxG9gkj9i7MgBOefRSx31dNPPgEEn8tET
-         HgiDBZXOJdySL7n2ohC0HSZaqyuUWQdfr8jkEK8QlQzyOQwzQegbzg3a/1MtENeX7iZZ
-         UBUXyJHGup3d7KQwTsjsgmFj34s70CO8x0PTyMvZMkAL58yDtFFN639gwUNdRWO6rJRL
-         YKi9NvKdZvrkJ7K6WxiIJUutFCNiwyRS8VIWYLdPMALzXpKtDE6iqZBzvD7YdZHto7kg
-         ShtO9dsO8xfLm674PeLNE09sAm2u64DCi63uVXgu7lsTkYMAjlj0EHhWSS/a3DUhDBN0
-         COWw==
-X-Gm-Message-State: AOAM53306N5slkQfsKigxkteQ4BG/xLs/cuYBZswckQ70JiHJ343p2NE
-        n+Je1zeF0q1n8SS5p+lKh9av0L7oukDd/LXjQer2w+RS
-X-Google-Smtp-Source: ABdhPJy4C9WIKvmoJvvt7s+If7tW+vp+5tM5IcEL4lC4K7WusRzMyEHJ1wQw6/LEdUOtEvGSk7D3fWkgUGih9vqi/FM=
-X-Received: by 2002:a5b:483:0:b0:634:dd7:9569 with SMTP id n3-20020a5b0483000000b006340dd79569mr22404297ybp.214.1649685615625;
- Mon, 11 Apr 2022 07:00:15 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=y4F8dqXHcBu4Aif1bka3gidub9+IdsEqN8o95WTESwk=;
+        b=MVXq8n1g9dGUbp8nOxQuMibp0HJhDP4Njy04ViW5pTXeOXDmICM1sQMYQpPyq8/6jp
+         KuvmZ8zs/HOJVPIKg9X3A3/hcLVXDy/5A/fU51JcDTmkcZGUq0SjKVaciWhgh1Gc8CIt
+         S2Q8Ldb0yXlq7GTwsLoJaw4Uf4QTtkRthVJVid0IMaxarGF6CXaronLtny1LauafcHG8
+         2jB7e584tn3QO56t844nMmk2NV6Kub274rFY3E6EP+vAsJ9xf3sAUBax4rUYkAm1wZ33
+         ZPFANiGCkl/Hw8CsX5bSrxs98uIhEe2Nba0I9wpqmKWl2sHT4tAydTro6k+1l2pUAHLC
+         xnSQ==
+X-Gm-Message-State: AOAM5331cpxELyb3/+SkiO0mlU4odQmZLBIOfaGX3gxge2nr4JDd4HEB
+        p2aUZOrRHNIJSDiH4SZ64wsCbQwv+dvA68deUVzMlu7pnEaEInQX2qC0sIngRo/nDN848/gjMRj
+        riWC6yQ3cVkgx3zr5W3MdahCoB0B83MxHmA==
+X-Received: by 2002:a17:907:1b20:b0:6da:649b:d99e with SMTP id mp32-20020a1709071b2000b006da649bd99emr30060025ejc.712.1649685673427;
+        Mon, 11 Apr 2022 07:01:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx4xzb1BjJ/58+VPibM2TbZRBOLWheMfWS3L+4AvaOAVyXa61wjTMGMfUCBt5PtxsG84x9vKg==
+X-Received: by 2002:a17:907:1b20:b0:6da:649b:d99e with SMTP id mp32-20020a1709071b2000b006da649bd99emr30059978ejc.712.1649685672932;
+        Mon, 11 Apr 2022 07:01:12 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id p14-20020aa7cc8e000000b0040f13865fa9sm14716997edt.3.2022.04.11.07.01.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Apr 2022 07:01:12 -0700 (PDT)
+Message-ID: <d60c470a-ba46-f719-5cc0-8a4b1c9c8cc3@redhat.com>
+Date:   Mon, 11 Apr 2022 16:01:11 +0200
 MIME-Version: 1.0
-References: <20220404203626.4311-1-jorge.lopez2@hp.com> <20220404203626.4311-2-jorge.lopez2@hp.com>
- <337981fc-3041-fd18-5d22-62584233e730@redhat.com>
-In-Reply-To: <337981fc-3041-fd18-5d22-62584233e730@redhat.com>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Mon, 11 Apr 2022 09:00:04 -0500
-Message-ID: <CAOOmCE_N99NnKFKts02e8NsdWmpyM6pts=FJaOPNGwst7S-0Rg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/6] Correct code style related issues in hp-wmi
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [External] [discuss] Split /sys/firmware/acpi/platform_profile
+ into ac and battery profiles?
+Content-Language: en-US
+To:     Mark Pearson <markpearson@lenovo.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        Bastien Nocera <hadess@hadess.net>
+Cc:     linux-acpi <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+References: <03b7d1dc-42af-7964-ab7a-bdcc6644cc71@redhat.com>
+ <4b3c2dce-6271-57c3-b9d0-a186b7c82b33@lenovo.com>
+ <d9aa08ef-cc0a-9edf-19a4-6fe75959b3b8@lenovo.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <d9aa08ef-cc0a-9edf-19a4-6fe75959b3b8@lenovo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 7:47 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 4/4/22 22:36, Jorge Lopez wrote:
-> > Update hp-wmi driver to address all code style issues reported
-> > by checkpatch.pl script.
-> >
-> > All changes were validated on a HP ZBook Workstation,
-> > HP EliteBook x360, and HP EliteBook 850 G8 notebooks.
-> >
-> > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
->
-> Thank you for your patch, I've applied this patch to my review-hans
-> branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->
-> Note it will show up in my review-hans branch once I've pushed my
-> local branch there, which might take a while.
->
-> Once I've run some tests on this branch the patches there will be
-> added to the platform-drivers-x86/for-next branch and eventually
-> will be included in the pdx86 pull-request to Linus for the next
-> merge-window.
->
-> Regards,
->
-> Hans
->
-> p.s.
->
-> Note I've decided to not merge the "Update hp_wmi_group to simplify
-> feature addition" patch for now, since this may turn out to not
-> be necessary when you change things to use the firmware-atrributes
-> class.
->
+Hi Mark,
 
-Thank you.   I will reach out if I have questions about some of the
-fields and possible backwards compatibility issues.
->
->
-> > ---
-> > Based on the latest platform-drivers-x86.git/for-next
-> >
-> > v1-0001-Update-hp_wmi_group-to-simplify-feature-addition patch was
-> > broken in two separate patches.  This patch is patch 1 of 2
-> > ---
-> >  drivers/platform/x86/hp-wmi.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> > index 0e9a25b56e0e..667f94bba905 100644
-> > --- a/drivers/platform/x86/hp-wmi.c
-> > +++ b/drivers/platform/x86/hp-wmi.c
-> > @@ -605,6 +605,7 @@ static int hp_wmi_rfkill2_refresh(void)
-> >       for (i = 0; i < rfkill2_count; i++) {
-> >               int num = rfkill2[i].num;
-> >               struct bios_rfkill2_device_state *devstate;
-> > +
-> >               devstate = &state.device[num];
-> >
-> >               if (num >= state.count ||
-> > @@ -625,6 +626,7 @@ static ssize_t display_show(struct device *dev, struct device_attribute *attr,
-> >                           char *buf)
-> >  {
-> >       int value = hp_wmi_read_int(HPWMI_DISPLAY_QUERY);
-> > +
-> >       if (value < 0)
-> >               return value;
-> >       return sprintf(buf, "%d\n", value);
-> > @@ -634,6 +636,7 @@ static ssize_t hddtemp_show(struct device *dev, struct device_attribute *attr,
-> >                           char *buf)
-> >  {
-> >       int value = hp_wmi_read_int(HPWMI_HDDTEMP_QUERY);
-> > +
-> >       if (value < 0)
-> >               return value;
-> >       return sprintf(buf, "%d\n", value);
-> > @@ -643,6 +646,7 @@ static ssize_t als_show(struct device *dev, struct device_attribute *attr,
-> >                       char *buf)
-> >  {
-> >       int value = hp_wmi_read_int(HPWMI_ALS_QUERY);
-> > +
-> >       if (value < 0)
-> >               return value;
-> >       return sprintf(buf, "%d\n", value);
-> > @@ -652,6 +656,7 @@ static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
-> >                        char *buf)
-> >  {
-> >       int value = hp_wmi_get_dock_state();
-> > +
-> >       if (value < 0)
-> >               return value;
-> >       return sprintf(buf, "%d\n", value);
-> > @@ -661,6 +666,7 @@ static ssize_t tablet_show(struct device *dev, struct device_attribute *attr,
-> >                          char *buf)
-> >  {
-> >       int value = hp_wmi_get_tablet_mode();
-> > +
-> >       if (value < 0)
-> >               return value;
-> >       return sprintf(buf, "%d\n", value);
-> > @@ -671,6 +677,7 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
-> >  {
-> >       /* Get the POST error code of previous boot failure. */
-> >       int value = hp_wmi_read_int(HPWMI_POSTCODEERROR_QUERY);
-> > +
-> >       if (value < 0)
-> >               return value;
-> >       return sprintf(buf, "0x%x\n", value);
-> > @@ -1013,6 +1020,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
-> >               struct rfkill *rfkill;
-> >               enum rfkill_type type;
-> >               char *name;
-> > +
-> >               switch (state.device[i].radio_type) {
-> >               case HPWMI_WIFI:
-> >                       type = RFKILL_TYPE_WLAN;
->
+On 4/1/22 21:24, Mark Pearson wrote:
+> Hi
+> 
+> On 3/21/22 18:29, Mark Pearson wrote:
+>>
+>> Thanks Hans
+>>
+>> On 2022-03-15 05:16, Hans de Goede wrote:
+>>> Hi All,
+>>>
+>>> AMD based ThinkPads (1) have separate ac (connected to an external 
+>>> powersource) and on battery tuned versions of the low-power, balanced
+>>> and performance profiles. So in essence they have six profiles:
+>>> low-power-ac, low-power-battery, balanced-ac, balanced-battery,
+>>> performance-ac and performance-battery.
+>>>
+>>> The question is how to deal with this. There is a previous
+>>> discussion about this here: 
+>>> https://lore.kernel.org/platform-driver-x86/20220301201554.4417-1-markpearson@lenovo.com/>>>  From that previous discussions 3 possible solutions come to mind:
+>>>
+>>> 1. Simply treat this as 6 different profiles, maybe with documenting 
+>>> -ac/-battery postfixes for the profile-names and let userspace sort
+>>> it out.
+>>>
+>>> Pro:    -Simple from the kernel side Contra: -Does not work with
+>>> existing userspace code -This is quite ugly IMHO / does not feel
+>>> right
+>> Agreed - I initially looked at implementing it this way and it's not
+>> good. I don't recommend it
+>>
+>>>
+>>> 2. Only export three profiles to userspace, while going "all in" on
+>>> this concept and change drivers/acpi/platform_profile.c to add new: 
+>>> /sys/firmware/acpi/platform_profile_ac 
+>>> /sys/firmware/acpi/platform_profile_battery files which can contain
+>>> different desired settings for the ac/battery case and have the
+>>> kernel automatically switch between the two and also have it pass the
+>>> ac/battery state to platform_profile_handler.profile_set so that for
+>>> hw which has different ac/battery flavors of the profile the driver
+>>> knows which one to select (without needing to detect this itself)
+>>>
+>>> Pro:    -This matches well with the behavior which we want for the
+>>> user (which is for the system to save the profile as 2 separate
+>>> settings for ac/battery and switch the profile to the last selected
+>>> setting for ac/battery when the state changes) -Solve the ac/battery
+>>> state listening/notification only once instead of having all
+>>> platform_profile drivers DIY Contra: -This means deprecating
+>>> /sys/firmware/acpi/platform_profile and defining how it maps to the 2
+>>> new files, e.g. if it is written does that only set the current
+>>> active profile, or both ? -Userspace needs to be adjusted to use the
+>>> new uapi and once it has been adjusted it also still needs to work on
+>>> the older kernels which will be tricky/nasty to implement and also
+>>> is a problem from CI / testing pov.
+>>
+>> I don't think the contra here is that complicated or causing backwards
+>> compatibility issues.
+>>
+>> For the platform_profile attribute
+>>  - If you read it then you get the current active configured profile
+>> regardless of whether you are plugged in or not.
+>>  - If you set it then it sets both ac and battery profile and they
+>> stay in sync
+>>
+>> For the platform_profile_ac and platform_profile_dc
+>>  - If you read it you get the configured setting for that power mode
+>>  - If you set it, then that mode is active for the appropriate power mode
+>>
+>> I think that keeps this backwards compatible and user space can decide
+>> on their own schedule/preferences/design if they implement something extra.
+>> Am I missing something?
+>>
+>>>
+>>> 3. Only export three profiles to userspace and have the 
+>>> drivers/acpi/platform_profile.c "core" code pass the ac/battery
+>>> state to platform_profile_handler.profile_set so that for hw which
+>>> has different ac/battery flavors of the profile the driver knows
+>>> which one to select (without needing to detect this itself)
+>>>
+>>> Pro:    -Solve the ac/battery state listening/notification only once 
+>>> instead of having all platform_profile drivers DIY -Leaves the
+>>> existing userspace API 100% unchanged and leaves existing userspace
+>>> code working without it requiring any changes Contra: -As part of the
+>>> discussion on this the RFE to "have separate "last selected"
+>>> ac/battery profile settings and automatically switch when the state
+>>> changes" has surfaced; and that is not solved
+>>>
+>> All looks reasonable to me.
+>>
+>>>
+>>> Writing it down like this, to me 3. is the clear winner. The only 
+>>> downside of 3. I can come up with arguably is better solved in 
+>>> userspace (2), esp. since this will likely also require some UI
+>>> design work to somehow make it clear to the user that there are two
+>>> different settings (3).
+>>
+>> For me I went with #2 in the RFC implementation as I thought it was a
+>> nice feature to have generally which is it's big plus - but I'm
+>> genuinely fairly split as to whether #2 or #3 is best. I could easily go
+>> either way.
+>>
+>> One Q I have is that I would like our platforms to have the ability to
+>> auto-switch between AC and battery profile for their configured mode
+>> automatically. So if we go with option #3 I want to implement an event
+>> handler in the thinkpad_acpi driver for these platforms. Does that raise
+>> any flags or concerns? I prototyped this before I wrote the RFC and it's
+>> pretty simple.
+>>
+>>>
+>>> Also even if no UI changes are deemed necessary this will still
+>>> require userspace changes to save+restore the two separate "last
+>>> selected" profile settings over reboots.
+>>>
+>>> Please let me know what you think of this, and of course another 
+>>> completely different approach is welcome too.
+>>>
+>>> Regards,
+>>>
+>>> Hans
+>>>
+>>>
+>>> 1) Although AMD based ThinkPads are the trigger for this discussion, 
+>>> this applies to more new AMD based laptops, so this is not ThinkPad 
+>>> specific
+>> It's not even really AMD specific - doing support for them was just want
+>> got the idea started.
+>>>
+>>> 2) IMHO it would be good to file a RFE issue for this against p-p-d: 
+>>> https://gitlab.freedesktop.org/hadess/power-profiles-daemon/-/issues/new>> Once we reach conclusion if this is a ack or nack I can do that.
+>> I'd love for my team to get more involved with development at that level
+>> if possible.
+>>
+>>>  3) AFAICT Windows does the 2 separate "last selected" ac/battery
+>>> profile settings thing while just showing a single slider in its UI,
+>>> but that really is a whole other discussion which the userspace/UI
+>>> folks can have.
+>>
+>> Thanks
+>> Mark
+> 
+> Just wanted to check that, with limited responses, this thread is
+> effectively closed and the decision is to go with #3 - we'll leave any
+> implementation up to user space (if they want to take it on).
+
+Yes I was hoping for some more feedback here from e.g. Rafael, but
+I agree that it seems that the conclusion is to go with 3. which
+is also the option which I prefer myself.
+
+> Maybe this
+> is the prod I needed to go and play there. As a note, if anybody does
+> take this and needs help testing etc just let me know.
+> 
+> I do plan to follow up with a thinkpad_acpi specific patch for our
+> platforms using PSC mode.
+
+Sounds good, note as I indicated in the original description of 3.
+I think it might be good to do the AC/battery switching listening
+inside the core platform_profile code as I expect more drivers to
+eventually need this.
+
+Regards,
+
+Hans
+
+
