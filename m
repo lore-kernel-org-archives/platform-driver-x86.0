@@ -2,267 +2,311 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ADDC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Apr 2022 22:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DD8C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Apr 2022 02:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242458AbiDKWsh (ORCPT
+        id S243748AbiDLCnk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Apr 2022 18:48:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
+        Mon, 11 Apr 2022 22:43:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234169AbiDKWsh (ORCPT
+        with ESMTP id S235995AbiDLCni (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Apr 2022 18:48:37 -0400
-X-Greylist: delayed 433 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 11 Apr 2022 15:46:10 PDT
-Received: from mail.toke.dk (mail.toke.dk [IPv6:2a0c:4d80:42:2001::664])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6C7A2ED73;
-        Mon, 11 Apr 2022 15:46:10 -0700 (PDT)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
-        t=1649716733; bh=eHIYved+gls8iq5JSt/1c0VpMtou2nqFl3j4XieDeA4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EYSSdfnN8IrceqDNsN4P1BsqR7NU/29OV0MjYcVR60E4+kKe6Zv8nbouy7SVyjSG0
-         Uv4G+GIMhWdnB8fea1SZHnDP2nNhEezw8BSBvX7ilJveim5IR1mnpulZ1OfKfZz6QV
-         h/oEmfFNunfdHjDLlwsmKBhBs9UtssszdzspHR6Y4bmtDis+eW0ESowUq+g6GJ6UUq
-         GCnEM/iO3fr5XR1N8QGvsnCA2FFE5dtqq195UfsA7jMjE9HYCyriM/8WYxRK2vnE/Y
-         FmVU4PodMMz3hu2ctQtkRJ8d3JjlqROaUMmnloscjTHNoktbVVuezV8bTFe9BQhKPQ
-         AAiaGoBU6gnVQ==
-To:     wendy.wang@intel.com, david.e.box@intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org
-Subject: PCIE ASPM-related trouble with S0ix on Thinkpad X1 (NVME-related?)
-Date:   Tue, 12 Apr 2022 00:38:52 +0200
-X-Clacks-Overhead: GNU Terry Pratchett
-Message-ID: <87k0bvutxf.fsf@toke.dk>
+        Mon, 11 Apr 2022 22:43:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D7C1E1A04C
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 19:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1649731280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=n9AHGuoWN5DEsfFR6+n4EfGTHU/AybM73SzeXCbd8ow=;
+        b=ACe0R2OUN9l7uNXS6WRuGFkqkpm7wlwczAh0Fi5kskZ8Q2EH/LFVP9vZD5TE2Q3RwUFy6s
+        TA0G3BxVlfNpeWByzC1iXB5lxrK8yttmQUd6XehuAehnDAE/tNBCdF6btQNpZN1h7/rF9T
+        66tG0U+G/ljM+DtgANnJQwwDSqpfevg=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-357-ZXubm2GyPjqBhWYDNGyMsA-1; Mon, 11 Apr 2022 22:41:19 -0400
+X-MC-Unique: ZXubm2GyPjqBhWYDNGyMsA-1
+Received: by mail-pf1-f197.google.com with SMTP id z20-20020a62d114000000b0050567b73da5so6266469pfg.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Apr 2022 19:41:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=n9AHGuoWN5DEsfFR6+n4EfGTHU/AybM73SzeXCbd8ow=;
+        b=iQk2YmhRaLU/YolYEZLbxCSWub6KXxhX/bCPwvQo68TbRNzsrWE1Q2oLjyYo1ROJqC
+         uMFm7+sEoJuZP+WmaBzFHe5DEtk4PhMuvnycD1cVpH6kS8hSaIfExAf3zNVpVSZws7YW
+         ZkcSG9CdegBr7mUDR2dLs00Rpy33fpSfbjtdObZp1z1rLo1g1iYNhZQ/30PJnK5+lP68
+         lVvYhZC9RTFgIYAtDhRBnFAqiNY3eS/lS/zmKrDvMWe+6lNUf1miE8rBBh2loF7zbRfi
+         uoXSfyuiFO+3GpYwS35tzfABZsEs7+Oq3cm7TtHghjje8Jda81ce83pVuAPgaWaibs6F
+         bT5Q==
+X-Gm-Message-State: AOAM532YOiIJaozSDHWaqMRMA+iaKkk8Fk7KdA7G7Hg5YrFGO7qm3/85
+        uHi2Gmi6CQVr+m4l2VT/o5r2BeUbOx8PDhtVq0IphyafvvZNkLYW/SUGMcry7X9VoevMOVxYhnb
+        KLjtzGg5H91VPa59XnuwW83SmNXciuGSzJQ==
+X-Received: by 2002:a62:6c6:0:b0:505:6713:d584 with SMTP id 189-20020a6206c6000000b005056713d584mr24781219pfg.24.1649731278352;
+        Mon, 11 Apr 2022 19:41:18 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyu8dJKKRcfWvkZcrPOwXnT9oC6pEqkxORnHFmtqyXX3kWAnTX/n0o1+l48eCQVygLz/+MBtA==
+X-Received: by 2002:a62:6c6:0:b0:505:6713:d584 with SMTP id 189-20020a6206c6000000b005056713d584mr24781195pfg.24.1649731278023;
+        Mon, 11 Apr 2022 19:41:18 -0700 (PDT)
+Received: from [10.72.14.5] ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id oa16-20020a17090b1bd000b001c72b632222sm795721pjb.32.2022.04.11.19.41.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Apr 2022 19:41:17 -0700 (PDT)
+Message-ID: <71fbd7fc-20db-024b-ec66-b875216be4bd@redhat.com>
+Date:   Tue, 12 Apr 2022 10:41:03 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.7.0
+Subject: Re: [PATCH v9 01/32] virtio: add helper
+ virtqueue_get_vring_max_size()
+Content-Language: en-US
+To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        virtualization@lists.linux-foundation.org
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org
+References: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
+ <20220406034346.74409-2-xuanzhuo@linux.alibaba.com>
+From:   Jason Wang <jasowang@redhat.com>
+In-Reply-To: <20220406034346.74409-2-xuanzhuo@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi folks
 
-I'm trying to get S0ix idle to work properly on my Thinkpad X1 (9th
-gen), and am having some trouble which leads to high battery usage on
-suspend. I've been using the S0ixSelftestTool[0] which is telling me
-that it's related to PCI ASPM, so I'm hoping to reach some people who
-might be able to help me debug this.
-
-Specifically, the selftest script is telling me that:
-
-"The pcieroot port 0000:00:06.0 ASPM setting is Enabled, its D state and
-Link PM are not expected."
-
-This appears to be the slot my NVME is in:
-
-Checking PCI Devices tree diagram:
--[0000:00]-+-00.0  Intel Corporation 11th Gen Core Processor Host Bridge/DR=
-AM Registers
-           +-02.0  Intel Corporation TigerLake-LP GT2 [Iris Xe Graphics]
-           +-04.0  Intel Corporation TigerLake-LP Dynamic Tuning Processor =
-Participant
-           +-06.0-[04]----00.0  Seagate Technology PLC FireCuda 530 SSD
-
-[snip - full output below]
-
-According to the manufacturer[1], the NVME device in question should
-support suspending to L1.2. The S0ix troubleshooting guide[2] mentions
-that the 5.3 kernel added special handling for NVME devices, but I'm
-trying this on a 5.17 kernel, so that should already be there?
-
-Anyone has any ideas and/or more things to try? I'm including the full
-output of the s0ixSelftestTool below.
-
--Toke
-
-[0] https://github.com/intel/S0ixSelftestTool
-[1] https://www.seagate.com/files/www-content/datasheets/pdfs/firecuda-530-=
-ssd-DS2059-3-2112GB-en_GB.pdf
-[2] https://01.org/blogs/qwang59/2020/linux-s0ix-troubleshooting
-
-
----Check S2idle path S0ix Residency---:
-
-The system OS Kernel version is:
-Linux alrua-x1 5.17.1-arch1-1 #1 SMP PREEMPT Mon, 28 Mar 2022 20:55:33 +000=
-0 x86_64 GNU/Linux
-
----Check whether your system supports S0ix or not---:
-
-Low Power S0 Idle is:1
-Your system supports low power S0 idle capability.
-
-
-
----Check whether intel_pmc_core sysfs files exit---:
-
-The pmc_core debug sysfs files are OK on your system.
-
-
-
----Judge PC10, S0ix residency available status---:
-
-Test system supports S0ix.y substate
-
-S0ix substate before S2idle:
-  S0i2.0 S0i3.0
-
-S0ix substate residency before S2idle:
-  0 0
-
-Turbostat output:=20
-16.006725 sec
-CPU%c1	CPU%c6	CPU%c7	GFX%rc6	Pkg%pc2	Pkg%pc3	Pkg%pc6	Pkg%pc7	Pkg%pc8	Pkg%pc=
-9	Pk%pc10	SYS%LPI
-2.41	0.00	96.53	15717.64	21.13	71.28	0.00	0.00	0.00	0.00	0.00	0.00
-2.44	0.00	96.99	15717.57	21.13	71.28	0.00	0.00	0.00	0.00	0.00	0.00
-2.47
-2.13	0.00	95.57
-2.89
-2.86	0.00	96.09
-3.27
-1.64	0.00	97.46
-1.59
-
-CPU Core C7 residency after S2idle is: 96.53
-GFX RC6 residency after S2idle is: 15717.64
-CPU Package C-state 2 residency after S2idle is: 21.13
-CPU Package C-state 3 residency after S2idle is: 71.28
-CPU Package C-state 8 residency after S2idle is: 0.00
-CPU Package C-state 9 residency after S2idle is: 0.00
-CPU Package C-state 10 residency after S2idle is: 0.00
-S0ix residency after S2idle is: 0.00
-
-Your system achieved PC3 residency: 71.28, but no PC8 residency during S2id=
-le: 0.00
-
----Debug no PC8 residency scenario---:
-
-Turbostat output:=20
-
-turbostat: cpu3 jitter 1232 6150
-16.634450 sec
-CPU%c1	CPU%c6	CPU%c7	GFX%rc6	Pkg%pc2	Pkg%pc3	Pkg%pc6	Pkg%pc7	Pkg%pc8	Pkg%pc=
-9	Pk%pc10	SYS%LPI
-1.61	0.00	97.51	15283.84	21.80	71.84	0.00	0.00	0.00	0.00	0.00	0.00
-1.44	0.00	98.09	15283.74	21.80	71.84	0.00	0.00	0.00	0.00	0.00	0.00
-1.43
-1.04	0.00	96.83
-2.50
-1.45	0.00	97.95
-1.52
-1.22	0.00	97.16
-2.29
-
-Your CPU Core C7 residency is available: 97.51
-
-Your system Intel graphics RC6 residency is available:15283.84
-
-Checking PCIe Device D state and Bridge Link state:
+在 2022/4/6 上午11:43, Xuan Zhuo 写道:
+> Record the maximum queue num supported by the device.
+>
+> virtio-net can display the maximum (supported by hardware) ring size in
+> ethtool -g eth0.
+>
+> When the subsequent patch implements vring reset, it can judge whether
+> the ring size passed by the driver is legal based on this.
+>
+> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> ---
+>   arch/um/drivers/virtio_uml.c             |  1 +
+>   drivers/platform/mellanox/mlxbf-tmfifo.c |  2 ++
+>   drivers/remoteproc/remoteproc_virtio.c   |  2 ++
+>   drivers/s390/virtio/virtio_ccw.c         |  3 +++
+>   drivers/virtio/virtio_mmio.c             |  2 ++
+>   drivers/virtio/virtio_pci_legacy.c       |  2 ++
+>   drivers/virtio/virtio_pci_modern.c       |  2 ++
+>   drivers/virtio/virtio_ring.c             | 14 ++++++++++++++
+>   drivers/virtio/virtio_vdpa.c             |  2 ++
+>   include/linux/virtio.h                   |  2 ++
+>   10 files changed, 32 insertions(+)
+>
+> diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
+> index ba562d68dc04..904993d15a85 100644
+> --- a/arch/um/drivers/virtio_uml.c
+> +++ b/arch/um/drivers/virtio_uml.c
+> @@ -945,6 +945,7 @@ static struct virtqueue *vu_setup_vq(struct virtio_device *vdev,
+>   		goto error_create;
+>   	}
+>   	vq->priv = info;
+> +	vq->num_max = num;
+>   	num = virtqueue_get_vring_size(vq);
+>   
+>   	if (vu_dev->protocol_features &
+> diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> index 38800e86ed8a..1ae3c56b66b0 100644
+> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> @@ -959,6 +959,8 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
+>   			goto error;
+>   		}
+>   
+> +		vq->num_max = vring->num;
+> +
+>   		vqs[i] = vq;
+>   		vring->vq = vq;
+>   		vq->priv = vring;
+> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+> index 70ab496d0431..7611755d0ae2 100644
+> --- a/drivers/remoteproc/remoteproc_virtio.c
+> +++ b/drivers/remoteproc/remoteproc_virtio.c
+> @@ -125,6 +125,8 @@ static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
+>   		return ERR_PTR(-ENOMEM);
+>   	}
+>   
+> +	vq->num_max = len;
 
 
-The PCIe bridge link power management state is:
-0000:00:06.0 Link is in L0
+I wonder if this is correct.
 
-The link power management state of PCIe bridge: 0000:00:06.0 is not expecte=
-d.=20
-which is expected to be L1.1 or L1.2, or user would run this script again.
+It looks to me len is counted in bytes:
 
-
-The L1SubCap of the failed 0000:00:06.0 is:
-		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-
-The L1SubCtl1 of the failed 0000:00:06.0 is:
-		L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
-
-
-Checking PCI Devices tree diagram:
--[0000:00]-+-00.0  Intel Corporation 11th Gen Core Processor Host Bridge/DR=
-AM Registers
-           +-02.0  Intel Corporation TigerLake-LP GT2 [Iris Xe Graphics]
-           +-04.0  Intel Corporation TigerLake-LP Dynamic Tuning Processor =
-Participant
-           +-06.0-[04]----00.0  Seagate Technology PLC FireCuda 530 SSD
-           +-07.0-[20-49]--
-           +-07.2-[50-79]--
-           +-08.0  Intel Corporation GNA Scoring Accelerator module
-           +-0a.0  Intel Corporation Tigerlake Telemetry Aggregator Driver
-           +-0d.0  Intel Corporation Tiger Lake-LP Thunderbolt 4 USB Contro=
-ller
-           +-0d.2  Intel Corporation Tiger Lake-LP Thunderbolt 4 NHI #0
-           +-0d.3  Intel Corporation Tiger Lake-LP Thunderbolt 4 NHI #1
-           +-14.0  Intel Corporation Tiger Lake-LP USB 3.2 Gen 2x1 xHCI Hos=
-t Controller
-           +-14.2  Intel Corporation Tiger Lake-LP Shared SRAM
-           +-14.3  Intel Corporation Wi-Fi 6 AX201
-           +-15.0  Intel Corporation Tiger Lake-LP Serial IO I2C Controller=
- #0
-           +-16.0  Intel Corporation Tiger Lake-LP Management Engine Interf=
-ace
-           +-1f.0  Intel Corporation Tiger Lake-LP LPC Controller
-           +-1f.3  Intel Corporation Tiger Lake-LP Smart Sound Technology A=
-udio Controller
-           +-1f.4  Intel Corporation Tiger Lake-LP SMBus Controller
-           \-1f.5  Intel Corporation Tiger Lake-LP SPI Controller
+/**
+  * struct rproc_vring - remoteproc vring state
+  * @va: virtual address
+  * @len: length, in bytes
+  * @da: device address
+  * @align: vring alignment
+  * @notifyid: rproc-specific unique vring index
+  * @rvdev: remote vdev
+  * @vq: the virtqueue of this vring
+  */
+struct rproc_vring {
+         void *va;
+         int len;
+         u32 da;
+         u32 align;
+         int notifyid;
+         struct rproc_vdev *rvdev;
+         struct virtqueue *vq;
+};
 
 
-Checking PCI Devices D3 States:
-[36580.351015] sof-audio-pci-intel-tgl 0000:00:1f.3: PCI PM: Suspend power =
-state: D3hot
-[36580.366546] i801_smbus 0000:00:1f.4: PCI PM: Suspend power state: D0
-[36580.366614] i801_smbus 0000:00:1f.4: PCI PM: Skipped
-[36580.369308] i915 0000:00:02.0: PCI PM: Suspend power state: D3hot
-[36580.383006] mei_me 0000:00:16.0: PCI PM: Suspend power state: D3hot
-[36580.384120] intel-lpss 0000:00:15.0: PCI PM: Suspend power state: D3hot
-[36580.386213] proc_thermal 0000:00:04.0: PCI PM: Suspend power state: D3hot
-[36580.387549] nvme 0000:04:00.0: PCI PM: Suspend power state: D3hot
-[36580.387843] xhci_hcd 0000:00:14.0: PCI PM: Suspend power state: D3hot
-[36580.388168] iwlwifi 0000:00:14.3: PCI PM: Suspend power state: D3hot
-[36580.388210] pcieport 0000:00:06.0: PCI PM: Suspend power state: D0
-[36580.388215] pcieport 0000:00:06.0: PCI PM: Skipped
-[36580.389618] xhci_hcd 0000:00:0d.0: PCI PM: Suspend power state: D3cold
-[36580.406682] thunderbolt 0000:00:0d.2: PCI PM: Suspend power state: D3cold
-[36580.411535] thunderbolt 0000:00:0d.3: PCI PM: Suspend power state: D3cold
+Other looks good.
+
+Thanks
 
 
-Checking PCI Devices tree diagram:
--[0000:00]-+-00.0  Intel Corporation 11th Gen Core Processor Host Bridge/DR=
-AM Registers
-           +-02.0  Intel Corporation TigerLake-LP GT2 [Iris Xe Graphics]
-           +-04.0  Intel Corporation TigerLake-LP Dynamic Tuning Processor =
-Participant
-           +-06.0-[04]----00.0  Seagate Technology PLC FireCuda 530 SSD
-           +-07.0-[20-49]--
-           +-07.2-[50-79]--
-           +-08.0  Intel Corporation GNA Scoring Accelerator module
-           +-0a.0  Intel Corporation Tigerlake Telemetry Aggregator Driver
-           +-0d.0  Intel Corporation Tiger Lake-LP Thunderbolt 4 USB Contro=
-ller
-           +-0d.2  Intel Corporation Tiger Lake-LP Thunderbolt 4 NHI #0
-           +-0d.3  Intel Corporation Tiger Lake-LP Thunderbolt 4 NHI #1
-           +-14.0  Intel Corporation Tiger Lake-LP USB 3.2 Gen 2x1 xHCI Hos=
-t Controller
-           +-14.2  Intel Corporation Tiger Lake-LP Shared SRAM
-           +-14.3  Intel Corporation Wi-Fi 6 AX201
-           +-15.0  Intel Corporation Tiger Lake-LP Serial IO I2C Controller=
- #0
-           +-16.0  Intel Corporation Tiger Lake-LP Management Engine Interf=
-ace
-           +-1f.0  Intel Corporation Tiger Lake-LP LPC Controller
-           +-1f.3  Intel Corporation Tiger Lake-LP Smart Sound Technology A=
-udio Controller
-           +-1f.4  Intel Corporation Tiger Lake-LP SMBus Controller
-           \-1f.5  Intel Corporation Tiger Lake-LP SPI Controller
-
-The pcieport 0000:00:06.0 ASPM enable status:
-		LnkCtl:	ASPM L1 Enabled; RCB 64 bytes, Disabled- CommClk+
-
-Pcieport is not in D3cold=EF=BC=9A=20=20=20=20
-m0000:00:06.0
-
-
-The pcieroot port 0000:00:06.0 ASPM setting is Enabled, its D state and Lin=
-k PM are not expected,
-please investigate or report a bug.
+> +
+>   	rvring->vq = vq;
+>   	vq->priv = rvring;
+>   
+> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+> index d35e7a3f7067..468da60b56c5 100644
+> --- a/drivers/s390/virtio/virtio_ccw.c
+> +++ b/drivers/s390/virtio/virtio_ccw.c
+> @@ -529,6 +529,9 @@ static struct virtqueue *virtio_ccw_setup_vq(struct virtio_device *vdev,
+>   		err = -ENOMEM;
+>   		goto out_err;
+>   	}
+> +
+> +	vq->num_max = info->num;
+> +
+>   	/* it may have been reduced */
+>   	info->num = virtqueue_get_vring_size(vq);
+>   
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index 56128b9c46eb..a41abc8051b9 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -390,6 +390,8 @@ static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsigned index,
+>   		goto error_new_virtqueue;
+>   	}
+>   
+> +	vq->num_max = num;
+> +
+>   	/* Activate the queue */
+>   	writel(virtqueue_get_vring_size(vq), vm_dev->base + VIRTIO_MMIO_QUEUE_NUM);
+>   	if (vm_dev->version == 1) {
+> diff --git a/drivers/virtio/virtio_pci_legacy.c b/drivers/virtio/virtio_pci_legacy.c
+> index 34141b9abe27..b68934fe6b5d 100644
+> --- a/drivers/virtio/virtio_pci_legacy.c
+> +++ b/drivers/virtio/virtio_pci_legacy.c
+> @@ -135,6 +135,8 @@ static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
+>   	if (!vq)
+>   		return ERR_PTR(-ENOMEM);
+>   
+> +	vq->num_max = num;
+> +
+>   	q_pfn = virtqueue_get_desc_addr(vq) >> VIRTIO_PCI_QUEUE_ADDR_SHIFT;
+>   	if (q_pfn >> 32) {
+>   		dev_err(&vp_dev->pci_dev->dev,
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> index 5455bc041fb6..86d301f272b8 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -218,6 +218,8 @@ static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
+>   	if (!vq)
+>   		return ERR_PTR(-ENOMEM);
+>   
+> +	vq->num_max = num;
+> +
+>   	/* activate the queue */
+>   	vp_modern_set_queue_size(mdev, index, virtqueue_get_vring_size(vq));
+>   	vp_modern_queue_address(mdev, index, virtqueue_get_desc_addr(vq),
+> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> index 962f1477b1fa..b87130c8f312 100644
+> --- a/drivers/virtio/virtio_ring.c
+> +++ b/drivers/virtio/virtio_ring.c
+> @@ -2371,6 +2371,20 @@ void vring_transport_features(struct virtio_device *vdev)
+>   }
+>   EXPORT_SYMBOL_GPL(vring_transport_features);
+>   
+> +/**
+> + * virtqueue_get_vring_max_size - return the max size of the virtqueue's vring
+> + * @_vq: the struct virtqueue containing the vring of interest.
+> + *
+> + * Returns the max size of the vring.
+> + *
+> + * Unlike other operations, this need not be serialized.
+> + */
+> +unsigned int virtqueue_get_vring_max_size(struct virtqueue *_vq)
+> +{
+> +	return _vq->num_max;
+> +}
+> +EXPORT_SYMBOL_GPL(virtqueue_get_vring_max_size);
+> +
+>   /**
+>    * virtqueue_get_vring_size - return the size of the virtqueue's vring
+>    * @_vq: the struct virtqueue containing the vring of interest.
+> diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
+> index 7767a7f0119b..39e4c08eb0f2 100644
+> --- a/drivers/virtio/virtio_vdpa.c
+> +++ b/drivers/virtio/virtio_vdpa.c
+> @@ -183,6 +183,8 @@ virtio_vdpa_setup_vq(struct virtio_device *vdev, unsigned int index,
+>   		goto error_new_virtqueue;
+>   	}
+>   
+> +	vq->num_max = max_num;
+> +
+>   	/* Setup virtqueue callback */
+>   	cb.callback = virtio_vdpa_virtqueue_cb;
+>   	cb.private = info;
+> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> index 72292a62cd90..d59adc4be068 100644
+> --- a/include/linux/virtio.h
+> +++ b/include/linux/virtio.h
+> @@ -31,6 +31,7 @@ struct virtqueue {
+>   	struct virtio_device *vdev;
+>   	unsigned int index;
+>   	unsigned int num_free;
+> +	unsigned int num_max;
+>   	void *priv;
+>   };
+>   
+> @@ -80,6 +81,7 @@ bool virtqueue_enable_cb_delayed(struct virtqueue *vq);
+>   
+>   void *virtqueue_detach_unused_buf(struct virtqueue *vq);
+>   
+> +unsigned int virtqueue_get_vring_max_size(struct virtqueue *vq);
+>   unsigned int virtqueue_get_vring_size(struct virtqueue *vq);
+>   
+>   bool virtqueue_is_broken(struct virtqueue *vq);
 
