@@ -2,27 +2,27 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E9BC43217
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Apr 2022 03:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5754AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Apr 2022 06:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231478AbiDMD27 (ORCPT
+        id S233053AbiDMGnW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 12 Apr 2022 23:28:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59052 "EHLO
+        Wed, 13 Apr 2022 02:43:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiDMD26 (ORCPT
+        with ESMTP id S233041AbiDMGnU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 12 Apr 2022 23:28:58 -0400
-Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF01F1127;
-        Tue, 12 Apr 2022 20:26:37 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0V9xXClK_1649820390;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0V9xXClK_1649820390)
+        Wed, 13 Apr 2022 02:43:20 -0400
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5ED286C0;
+        Tue, 12 Apr 2022 23:40:58 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0V9yQeE6_1649832051;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0V9yQeE6_1649832051)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 13 Apr 2022 11:26:32 +0800
-Message-ID: <1649820210.3432868-4-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v9 12/32] virtio_ring: packed: extract the logic of alloc queue
-Date:   Wed, 13 Apr 2022 11:23:30 +0800
+          Wed, 13 Apr 2022 14:40:53 +0800
+Message-ID: <1649831529.7724812-5-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH v9 11/32] virtio_ring: split: introduce virtqueue_resize_split()
+Date:   Wed, 13 Apr 2022 14:32:09 +0800
 From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 To:     Jason Wang <jasowang@redhat.com>
 Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
@@ -54,173 +54,150 @@ Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
         kvm@vger.kernel.org, bpf@vger.kernel.org,
         virtualization@lists.linux-foundation.org
 References: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
- <20220406034346.74409-13-xuanzhuo@linux.alibaba.com>
- <4da7b8dc-74ca-fc1b-fbdb-21f9943e8d45@redhat.com>
-In-Reply-To: <4da7b8dc-74ca-fc1b-fbdb-21f9943e8d45@redhat.com>
+ <20220406034346.74409-12-xuanzhuo@linux.alibaba.com>
+ <f79fc367-7ac5-961b-83c5-90f3d097c672@redhat.com>
+In-Reply-To: <f79fc367-7ac5-961b-83c5-90f3d097c672@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 12 Apr 2022 14:28:24 +0800, Jason Wang <jasowang@redhat.com> wrote:
+On Tue, 12 Apr 2022 13:53:44 +0800, Jason Wang <jasowang@redhat.com> wrote:
 >
 > =E5=9C=A8 2022/4/6 =E4=B8=8A=E5=8D=8811:43, Xuan Zhuo =E5=86=99=E9=81=93:
-> > Separate the logic of packed to create vring queue.
+> > virtio ring split supports resize.
 > >
-> > For the convenience of passing parameters, add a structure
-> > vring_packed.
+> > Only after the new vring is successfully allocated based on the new num,
+> > we will release the old vring. In any case, an error is returned,
+> > indicating that the vring still points to the old vring.
 > >
-> > This feature is required for subsequent virtuqueue reset vring.
+> > In the case of an error, the caller must
+> > re-initialize(virtqueue_reinit_split()) the virtqueue to ensure that the
+> > vring can be used.
+> >
+> > In addition, vring_align, may_reduce_num are necessary for reallocating
+> > vring, so they are retained for creating vq.
 > >
 > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 > > ---
-> >   drivers/virtio/virtio_ring.c | 70 ++++++++++++++++++++++++++++--------
-> >   1 file changed, 56 insertions(+), 14 deletions(-)
+> >   drivers/virtio/virtio_ring.c | 47 ++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 47 insertions(+)
 > >
 > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> > index 33864134a744..ea451ae2aaef 100644
+> > index 3dc6ace2ba7a..33864134a744 100644
 > > --- a/drivers/virtio/virtio_ring.c
 > > +++ b/drivers/virtio/virtio_ring.c
-> > @@ -1817,19 +1817,17 @@ static struct vring_desc_extra *vring_alloc_des=
-c_extra(unsigned int num)
-> >   	return desc_extra;
+> > @@ -139,6 +139,12 @@ struct vring_virtqueue {
+> >   			/* DMA address and size information */
+> >   			dma_addr_t queue_dma_addr;
+> >   			size_t queue_size_in_bytes;
+> > +
+> > +			/* The parameters for creating vrings are reserved for
+> > +			 * creating new vring.
+> > +			 */
+> > +			u32 vring_align;
+> > +			bool may_reduce_num;
+> >   		} split;
+> >
+> >   		/* Available for packed ring */
+> > @@ -199,6 +205,7 @@ struct vring_virtqueue {
+> >   };
+> >
+> >   static struct vring_desc_extra *vring_alloc_desc_extra(unsigned int n=
+um);
+> > +static void vring_free(struct virtqueue *_vq);
+> >
+> >   /*
+> >    * Helpers.
+> > @@ -1088,6 +1095,8 @@ static struct virtqueue *vring_create_virtqueue_s=
+plit(
+> >   		return NULL;
+> >   	}
+> >
+> > +	to_vvq(vq)->split.vring_align =3D vring_align;
+> > +	to_vvq(vq)->split.may_reduce_num =3D may_reduce_num;
+>
+>
+> It looks to me the above should belong to patch 6.
+
+patch 6 just extracts a function, no logical modification.
+
+to_vvq(vq)->split.may_reduce_num is newly added, so I don't think it should=
+ be
+merged into patch 6.
+
+>
+>
+> >   	to_vvq(vq)->split.queue_dma_addr =3D dma_addr;
+> >   	to_vvq(vq)->split.queue_size_in_bytes =3D queue_size_in_bytes;
+> >   	to_vvq(vq)->we_own_ring =3D true;
+> > @@ -1095,6 +1104,44 @@ static struct virtqueue *vring_create_virtqueue_=
+split(
+> >   	return vq;
 > >   }
 > >
-> > -static struct virtqueue *vring_create_virtqueue_packed(
-> > -	unsigned int index,
-> > -	unsigned int num,
-> > -	unsigned int vring_align,
-> > -	struct virtio_device *vdev,
-> > -	bool weak_barriers,
-> > -	bool may_reduce_num,
-> > -	bool context,
-> > -	bool (*notify)(struct virtqueue *),
-> > -	void (*callback)(struct virtqueue *),
-> > -	const char *name)
-> > +static int vring_alloc_queue_packed(struct virtio_device *vdev,
-> > +				    u32 num,
-> > +				    struct vring_packed_desc **_ring,
-> > +				    struct vring_packed_desc_event **_driver,
-> > +				    struct vring_packed_desc_event **_device,
-> > +				    dma_addr_t *_ring_dma_addr,
-> > +				    dma_addr_t *_driver_event_dma_addr,
-> > +				    dma_addr_t *_device_event_dma_addr,
-> > +				    size_t *_ring_size_in_bytes,
-> > +				    size_t *_event_size_in_bytes)
-> >   {
-> > -	struct vring_virtqueue *vq;
-> >   	struct vring_packed_desc *ring;
-> >   	struct vring_packed_desc_event *driver, *device;
-> >   	dma_addr_t ring_dma_addr, driver_event_dma_addr, device_event_dma_ad=
-dr;
-> > @@ -1857,6 +1855,52 @@ static struct virtqueue *vring_create_virtqueue_=
-packed(
-> >   	if (!device)
-> >   		goto err_device;
-> >
-> > +	*_ring                   =3D ring;
-> > +	*_driver                 =3D driver;
-> > +	*_device                 =3D device;
-> > +	*_ring_dma_addr          =3D ring_dma_addr;
-> > +	*_driver_event_dma_addr  =3D driver_event_dma_addr;
-> > +	*_device_event_dma_addr  =3D device_event_dma_addr;
-> > +	*_ring_size_in_bytes     =3D ring_size_in_bytes;
-> > +	*_event_size_in_bytes    =3D event_size_in_bytes;
+> > +static int virtqueue_resize_split(struct virtqueue *_vq, u32 num)
+> > +{
+> > +	struct vring_virtqueue *vq =3D to_vvq(_vq);
+> > +	struct virtio_device *vdev =3D _vq->vdev;
+> > +	struct vring_desc_state_split *state;
+> > +	struct vring_desc_extra *extra;
+> > +	size_t queue_size_in_bytes;
+> > +	dma_addr_t dma_addr;
+> > +	struct vring vring;
+> > +	int err =3D -ENOMEM;
+> > +	void *queue;
+> > +
+> > +	queue =3D vring_alloc_queue_split(vdev, &dma_addr, &num,
+> > +					vq->split.vring_align,
+> > +					vq->weak_barriers,
+> > +					vq->split.may_reduce_num);
+> > +	if (!queue)
+> > +		return -ENOMEM;
+> > +
+> > +	queue_size_in_bytes =3D vring_size(num, vq->split.vring_align);
+> > +
+> > +	err =3D vring_alloc_state_extra_split(num, &state, &extra);
+> > +	if (err) {
+> > +		vring_free_queue(vdev, queue_size_in_bytes, queue, dma_addr);
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	vring_free(&vq->vq);
+> > +
+> > +	vring_init(&vring, num, queue, vq->split.vring_align);
+> > +	vring_virtqueue_attach_split(vq, vring, state, extra);
+> > +	vq->split.queue_dma_addr =3D dma_addr;
+> > +	vq->split.queue_size_in_bytes =3D queue_size_in_bytes;
 >
 >
-> I wonder if we can simply factor out split and packed from struct
-> vring_virtqueue:
->
-> struct vring_virtqueue {
->  =C2=A0=C2=A0=C2=A0 union {
->  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 struct {} split;
->  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 struct {} packed;
->  =C2=A0=C2=A0=C2=A0 };
-> };
->
-> to
->
-> struct vring_virtqueue_split {};
-> struct vring_virtqueue_packed {};
->
-> Then we can do things like:
->
-> vring_create_virtqueue_packed(struct virtio_device *vdev, u32 num,
-> struct vring_virtqueue_packed *packed);
->
-> and
->
-> vring_vritqueue_attach_packed(struct vring_virtqueue *vq, struct
-> vring_virtqueue_packed packed);
+> I wonder if it's better to move the above assignments to
+> vring_virtqueue_attach_split().
 
-This idea is very similar to my previous idea, just without introducing a n=
-ew
-structure.
+I also think so, the reason for not doing this is that there is no dma_addr=
+ and
+queue_size_in_bytes when vring_virtqueue_attach_split is called in
+__vring_new_virtqueue.
 
-I'd be more than happy to revise this.
+As discussed in patch 12, we can pass the struct struct vring_virtqueue_spl=
+it to
+vring_virtqueue_attach_split(). This is much more convenient.
 
 Thanks.
 
-
+>
+> Other looks good.
 >
 > Thanks
 >
 >
 > > +
+> > +	vring_virtqueue_init_split(vq, vdev, true);
 > > +	return 0;
-> > +
-> > +err_device:
-> > +	vring_free_queue(vdev, event_size_in_bytes, driver, driver_event_dma_=
-addr);
-> > +
-> > +err_driver:
-> > +	vring_free_queue(vdev, ring_size_in_bytes, ring, ring_dma_addr);
-> > +
-> > +err_ring:
-> > +	return -ENOMEM;
 > > +}
 > > +
-> > +static struct virtqueue *vring_create_virtqueue_packed(
-> > +	unsigned int index,
-> > +	unsigned int num,
-> > +	unsigned int vring_align,
-> > +	struct virtio_device *vdev,
-> > +	bool weak_barriers,
-> > +	bool may_reduce_num,
-> > +	bool context,
-> > +	bool (*notify)(struct virtqueue *),
-> > +	void (*callback)(struct virtqueue *),
-> > +	const char *name)
-> > +{
-> > +	dma_addr_t ring_dma_addr, driver_event_dma_addr, device_event_dma_add=
-r;
-> > +	struct vring_packed_desc_event *driver, *device;
-> > +	size_t ring_size_in_bytes, event_size_in_bytes;
-> > +	struct vring_packed_desc *ring;
-> > +	struct vring_virtqueue *vq;
-> > +
-> > +	if (vring_alloc_queue_packed(vdev, num, &ring, &driver, &device,
-> > +				     &ring_dma_addr, &driver_event_dma_addr,
-> > +				     &device_event_dma_addr,
-> > +				     &ring_size_in_bytes,
-> > +				     &event_size_in_bytes))
-> > +		goto err_ring;
-> > +
-> >   	vq =3D kmalloc(sizeof(*vq), GFP_KERNEL);
-> >   	if (!vq)
-> >   		goto err_vq;
-> > @@ -1939,9 +1983,7 @@ static struct virtqueue *vring_create_virtqueue_p=
-acked(
-> >   	kfree(vq);
-> >   err_vq:
-> >   	vring_free_queue(vdev, event_size_in_bytes, device, device_event_dma=
-_addr);
-> > -err_device:
-> >   	vring_free_queue(vdev, event_size_in_bytes, driver, driver_event_dma=
-_addr);
-> > -err_driver:
-> >   	vring_free_queue(vdev, ring_size_in_bytes, ring, ring_dma_addr);
-> >   err_ring:
-> >   	return NULL;
+> >
+> >   /*
+> >    * Packed ring specific functions - *_packed().
 >
