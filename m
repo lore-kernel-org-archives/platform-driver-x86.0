@@ -2,218 +2,231 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC66C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Apr 2022 12:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2BAC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Apr 2022 18:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235367AbiDMMZP (ORCPT
+        id S237671AbiDMS3w (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Apr 2022 08:25:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60360 "EHLO
+        Wed, 13 Apr 2022 14:29:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229714AbiDMMZM (ORCPT
+        with ESMTP id S235824AbiDMS3v (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Apr 2022 08:25:12 -0400
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D295AEE6;
-        Wed, 13 Apr 2022 05:22:50 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0V9zbh3._1649852563;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0V9zbh3._1649852563)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 13 Apr 2022 20:22:44 +0800
-Message-ID: <1649852469.9980721-2-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v9 18/32] virtio_ring: introduce virtqueue_resize()
-Date:   Wed, 13 Apr 2022 20:21:09 +0800
-From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
+        Wed, 13 Apr 2022 14:29:51 -0400
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3A8050E2C;
+        Wed, 13 Apr 2022 11:27:29 -0700 (PDT)
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-deb9295679so2877580fac.6;
+        Wed, 13 Apr 2022 11:27:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=btSn7KJkD9DzOqsQDn9EPHniydQknHc2Bnj77isZ6JA=;
+        b=swkT+FBqwpp5/z5b0BPPUxyvCv8xwCN1tJDeetevPyJdiXUbtShZWbvc+Tiw5LwBH1
+         8UrbRj4BDmolPWl7uQus6LOMacQY73QqxRDoOk6e3wRTIFzHx/wocRNG50Rl8cestU7y
+         u6P9eohcw38o53JtKSerLCqGoBD6C2H9ofRHmWvtLHIJT6SBEvANWvPIn0H6ZQmP72vd
+         LcloupVQ86c2RBkBwGX3c7lOQ1Nj4i7jDXxhTUbEubfa28zJ/7Hz410LPD3j59LeGu82
+         XAD+3rqyiMSWZMvcDD0C8nmZAOdUFm/KubFJCWMQswYYZm3q5Tbzr1jqd6DE+LNmSe8d
+         n76g==
+X-Gm-Message-State: AOAM531t7+3V0L9Z/YE4/1nhnefEMEwwUYOhoOWkZ66VuEnZK5uaxUAZ
+        ymQpcZVTZ5cKbC/RWL1q8Q==
+X-Google-Smtp-Source: ABdhPJyfpYzS/4HRUaNYp0NECr1Sl72YsYnASZXQ2gJTQDx52i8uj2HR4ZxW12pCjBcyh7hQ/gbvGg==
+X-Received: by 2002:a05:6870:f713:b0:d2:8adb:aaeb with SMTP id ej19-20020a056870f71300b000d28adbaaebmr11542oab.111.1649874448981;
+        Wed, 13 Apr 2022 11:27:28 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id oq12-20020a0568707d8c00b000e2deaf9a65sm2962110oab.40.2022.04.13.11.27.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Apr 2022 11:27:28 -0700 (PDT)
+Received: (nullmailer pid 3600281 invoked by uid 1000);
+        Wed, 13 Apr 2022 18:27:27 -0000
+Date:   Wed, 13 Apr 2022 13:27:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jarrett Schultz <jaschultzms@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
- <20220406034346.74409-19-xuanzhuo@linux.alibaba.com>
- <92622553-e02d-47bd-06f9-0ce24c22650c@redhat.com>
-In-Reply-To: <92622553-e02d-47bd-06f9-0ce24c22650c@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Jarrett Schultz <jaschultz@microsoft.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: platform: microsoft: Document
+ surface xbl
+Message-ID: <YlcWD3dnqotAEnfA@robh.at.kernel.org>
+References: <20220405210750.619511-1-jaschultzMS@gmail.com>
+ <20220405210750.619511-2-jaschultzMS@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220405210750.619511-2-jaschultzMS@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 12 Apr 2022 14:41:18 +0800, Jason Wang <jasowang@redhat.com> wrote:
->
-> =E5=9C=A8 2022/4/6 =E4=B8=8A=E5=8D=8811:43, Xuan Zhuo =E5=86=99=E9=81=93:
-> > Introduce virtqueue_resize() to implement the resize of vring.
-> > Based on these, the driver can dynamically adjust the size of the vring.
-> > For example: ethtool -G.
-> >
-> > virtqueue_resize() implements resize based on the vq reset function. In
-> > case of failure to allocate a new vring, it will give up resize and use
-> > the original vring.
-> >
-> > During this process, if the re-enable reset vq fails, the vq can no
-> > longer be used. Although the probability of this situation is not high.
-> >
-> > The parameter recycle is used to recycle the buffer that is no longer
-> > used.
-> >
-> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > ---
-> >   drivers/virtio/virtio_ring.c | 69 ++++++++++++++++++++++++++++++++++++
-> >   include/linux/virtio.h       |  3 ++
-> >   2 files changed, 72 insertions(+)
-> >
-> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> > index 06f66b15c86c..6250e19fc5bf 100644
-> > --- a/drivers/virtio/virtio_ring.c
-> > +++ b/drivers/virtio/virtio_ring.c
-> > @@ -2554,6 +2554,75 @@ struct virtqueue *vring_create_virtqueue(
-> >   }
-> >   EXPORT_SYMBOL_GPL(vring_create_virtqueue);
-> >
-> > +/**
-> > + * virtqueue_resize - resize the vring of vq
-> > + * @_vq: the struct virtqueue we're talking about.
-> > + * @num: new ring num
-> > + * @recycle: callback for recycle the useless buffer
-> > + *
-> > + * When it is really necessary to create a new vring, it will set the =
-current vq
-> > + * into the reset state. Then call the passed callback to recycle the =
-buffer
-> > + * that is no longer used. Only after the new vring is successfully cr=
-eated, the
-> > + * old vring will be released.
-> > + *
-> > + * Caller must ensure we don't call this with other virtqueue operatio=
-ns
-> > + * at the same time (except where noted).
-> > + *
-> > + * Returns zero or a negative error.
->
->
-> Should we document that the virtqueue is kept unchanged (still
-> available) on (specific) failure?
->
->
-> > + */
-> > +int virtqueue_resize(struct virtqueue *_vq, u32 num,
-> > +		     void (*recycle)(struct virtqueue *vq, void *buf))
-> > +{
-> > +	struct vring_virtqueue *vq =3D to_vvq(_vq);
-> > +	struct virtio_device *vdev =3D vq->vq.vdev;
-> > +	bool packed;
-> > +	void *buf;
-> > +	int err;
-> > +
-> > +	if (!vq->we_own_ring)
-> > +		return -EINVAL;
-> > +
-> > +	if (num > vq->vq.num_max)
-> > +		return -E2BIG;
-> > +
-> > +	if (!num)
-> > +		return -EINVAL;
-> > +
-> > +	packed =3D virtio_has_feature(vdev, VIRTIO_F_RING_PACKED) ? true : fa=
-lse;
-> > +
-> > +	if ((packed ? vq->packed.vring.num : vq->split.vring.num) =3D=3D num)
-> > +		return 0;
-> > +
-> > +	if (!vdev->config->reset_vq)
-> > +		return -ENOENT;
-> > +
-> > +	if (!vdev->config->enable_reset_vq)
-> > +		return -ENOENT;
-> > +
-> > +	err =3D vdev->config->reset_vq(_vq);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	while ((buf =3D virtqueue_detach_unused_buf(_vq)) !=3D NULL)
-> > +		recycle(_vq, buf);
-> > +
-> > +	if (packed) {
-> > +		err =3D virtqueue_resize_packed(_vq, num);
-> > +		if (err)
-> > +			virtqueue_reinit_packed(vq);
->
->
-> Calling reinit here seems a little bit odd, it looks more like a reset
+On Tue, Apr 05, 2022 at 02:07:47PM -0700, Jarrett Schultz wrote:
+> From: Jarrett Schultz <jaschultz@microsoft.com>
+> 
+> Introduce yaml for surface xbl driver.
 
+From Bjorn's reply on v4, it sounds like the QCom folks need to work out 
+how to describe 'imem' first. I'd think that would use 'mmio-sram' 
+binding and then this could be a child of that. If it's DDR, then it 
+belongs under /reserved-memory node. Either way, that's all kind of 
+outside the scope of the binding unless there's something special about 
+'imem'.
 
-I also feel that this is a bit odd, I will put virtqueue_reinit_* into
-virtqueue_resize_*.
+> 
+> Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
+> 
+> ---
+> 
+> Changed in v5:
+> 
+>  - Updated description
+>  - Added child node for imem
+>  - Simplified example
+> 
+> ---
+> 
+> Changes in v4:
+>  - Addressed small formatting changes
+>  - Removed unnecessary lines
+> 
+> ---
+> 
+> Changes in v3:
+>  - Updated description to only pertain to the hardware
+>  - Updated the required field to properly reflect the binding
+>  - Removed the first example
+>  - Fixed the size of the reg field in the second example
+> 
+> ---
+> 
+> Changes in v2:
+>  - Removed json-schema dependence
+>  - Elaborated on description of driver
+>  - Updated example
+> ---
+>  .../platform/microsoft/surface-xbl.yaml       | 70 +++++++++++++++++++
 
-Thanks.
+That's not a binding path. Probably bindings/nvmem/.
 
-> of the virtqueue. Consider we may re-use virtqueue reset for more
-> purpose, I wonder if we need a helper like:
->
-> virtqueue_resize() {
->  =C2=A0=C2=A0=C2=A0 vdev->config->reset_vq(_vq);
->  =C2=A0=C2=A0=C2=A0 if (packed)
->  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 virtqueue_reinit_packed(_vq)
->  =C2=A0=C2=A0=C2=A0 else
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 virtqueue_reinit_split(_vq)
-> }
->
-> Thanks
->
->
-> > +	} else {
-> > +		err =3D virtqueue_resize_split(_vq, num);
-> > +		if (err)
-> > +			virtqueue_reinit_split(vq);
-> > +	}
-> > +
-> > +	if (vdev->config->enable_reset_vq(_vq))
-> > +		return -EBUSY;
-> > +
-> > +	return err;
-> > +}
-> > +EXPORT_SYMBOL_GPL(virtqueue_resize);
-> > +
-> >   /* Only available for split ring */
-> >   struct virtqueue *vring_new_virtqueue(unsigned int index,
-> >   				      unsigned int num,
-> > diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-> > index d59adc4be068..c86ff02e0ca0 100644
-> > --- a/include/linux/virtio.h
-> > +++ b/include/linux/virtio.h
-> > @@ -91,6 +91,9 @@ dma_addr_t virtqueue_get_desc_addr(struct virtqueue *=
-vq);
-> >   dma_addr_t virtqueue_get_avail_addr(struct virtqueue *vq);
-> >   dma_addr_t virtqueue_get_used_addr(struct virtqueue *vq);
-> >
-> > +int virtqueue_resize(struct virtqueue *vq, u32 num,
-> > +		     void (*recycle)(struct virtqueue *vq, void *buf));
-> > +
-> >   /**
-> >    * virtio_device - representation of a device using virtio
-> >    * @index: unique position on the virtio bus
->
+>  MAINTAINERS                                   |  7 ++
+>  2 files changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+> new file mode 100644
+> index 000000000000..648476670bbd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/platform/microsoft/surface-xbl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Surface Extensible Bootloader for Microsoft Surface Duo
+> +
+> +maintainers:
+> +  - Jarrett Schultz <jaschultz@microsoft.com>
+> +
+> +description: |
+> +  Defined to expose information that is used during production when
+> +  the device is in manufacturing mode. Some of the information included
+> +  in the imem section is -
+> +    * board_id
+> +    * battery_present
+> +    * hw_init_retries
+> +    * is_customer_mode
+> +    * is_act_mode
+> +    * pmic_reset_reason
+> +    * touch_fw_version
+> +    * ocp_error_location
+> +
+> +properties:
+> +  compatible:
+> +    const: simple-mfd
+
+This schema will never be applied (your example would fail if it did) 
+because we filter out matching on 'simple-mfd' as it is not valid on its 
+own.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  child-node:
+
+This literally means you have a node called 'child-node'.
+
+> +    description: A description of the xbl space within imem
+> +
+> +    type: object
+> +
+> +    properties:
+> +      compatible: 
+> +        const: microsoft,sm8150-surface-duo-xbl
+
+This should be moved up a level removing 'simple-mfd'.
+
+> +
+> +      reg:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - ranges
+
+> +  - address-cells
+> +  - size-cells
+
+Not documented and also the wrong names (missing '#').
+
+> +
+> +examples:
+> +  - |
+> +    imem@146bf000 {
+> +      compatible = "simple-mfd";
+> +      reg = <0x146bf000 0x1000>;
+> +      ranges = <0x0 0x146bf000 0x1000>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +
+> +      xbl@a94 {
+> +        compatible = "microsoft,sm8150-surface-duo-xbl";
+> +        reg = <0xa94 0x100>;
+> +      };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 13f9a84a617e..5d0ca2a98b57 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12649,6 +12649,13 @@ F:	Documentation/driver-api/surface_aggregator/clients/dtx.rst
+>  F:	drivers/platform/surface/surface_dtx.c
+>  F:	include/uapi/linux/surface_aggregator/dtx.h
+>  
+> +MICROSOFT SURFACE DUO XBL DRIVER
+> +M:	Jarrett Schultz <jaschultz@microsoft.com>
+> +L:	linux-arm-msm@vger.kernel.org
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Supported
+> +F:	Documentation/devicetree/bindings/platform/microsoft/surface-xbl.yaml
+> +
+>  MICROSOFT SURFACE GPE LID SUPPORT DRIVER
+>  M:	Maximilian Luz <luzmaximilian@gmail.com>
+>  L:	platform-driver-x86@vger.kernel.org
+> -- 
+> 2.25.1
+> 
+> 
