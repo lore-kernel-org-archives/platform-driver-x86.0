@@ -2,31 +2,31 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA1BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 09:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B618C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 09:55:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242118AbiDNJ5S (ORCPT
+        id S242093AbiDNJ5Z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Apr 2022 05:57:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51332 "EHLO
+        Thu, 14 Apr 2022 05:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242008AbiDNJ5D (ORCPT
+        with ESMTP id S242087AbiDNJ5M (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Apr 2022 05:57:03 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50CC120BE;
-        Thu, 14 Apr 2022 02:54:36 -0700 (PDT)
-Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KfFBN63JSzgYlp;
-        Thu, 14 Apr 2022 17:52:44 +0800 (CST)
+        Thu, 14 Apr 2022 05:57:12 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C8618399;
+        Thu, 14 Apr 2022 02:54:42 -0700 (PDT)
+Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KfFCv4bddz1HBwy;
+        Thu, 14 Apr 2022 17:54:03 +0800 (CST)
 Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 14 Apr 2022 17:54:34 +0800
+ 15.1.2375.24; Thu, 14 Apr 2022 17:54:40 +0800
 Received: from localhost.localdomain (10.175.112.125) by
  dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 14 Apr 2022 17:54:33 +0800
+ 15.1.2375.24; Thu, 14 Apr 2022 17:54:39 +0800
 From:   Wupeng Ma <mawupeng1@huawei.com>
 To:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
         <will@kernel.org>, <corbet@lwn.net>
@@ -44,9 +44,9 @@ CC:     <ardb@kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
         <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: [PATCH v2 5/9] mm: Ratelimited mirrored memory related warning messages
-Date:   Thu, 14 Apr 2022 18:13:10 +0800
-Message-ID: <20220414101314.1250667-6-mawupeng1@huawei.com>
+Subject: [PATCH v2 9/9] ia64/efi: Code simplification in efi_init
+Date:   Thu, 14 Apr 2022 18:13:14 +0800
+Message-ID: <20220414101314.1250667-10-mawupeng1@huawei.com>
 X-Mailer: git-send-email 2.18.0.huawei.25
 In-Reply-To: <20220414101314.1250667-1-mawupeng1@huawei.com>
 References: <20220414101314.1250667-1-mawupeng1@huawei.com>
@@ -62,41 +62,62 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Ma Wupeng <mawupeng1@huawei.com>
 
-If system has mirrored memory, memblock will try to allocate mirrored
-memory firstly and fallback to non-mirrored memory when fails, but if with
-limited mirrored memory or some numa node without mirrored memory, lots of
-warning message about memblock allocation will occur.
-
-This patch ratelimit the warning message to avoid a very long print during
-bootup.
+Since efi_print_memmap() was made public, print EFI memory map in
+efi_init() can be simplified by using efi_print_memmap().
 
 Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
 ---
- mm/memblock.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/ia64/kernel/efi.c | 37 +------------------------------------
+ 1 file changed, 1 insertion(+), 36 deletions(-)
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index e4f03a6e8e56..b1d2a0009733 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -327,7 +327,7 @@ static phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
- 					    NUMA_NO_NODE, flags);
+diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
+index 31149e41f9be..4b8209b8797d 100644
+--- a/arch/ia64/kernel/efi.c
++++ b/arch/ia64/kernel/efi.c
+@@ -557,42 +557,7 @@ efi_init (void)
  
- 	if (!ret && (flags & MEMBLOCK_MIRROR)) {
--		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
-+		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
- 			&size);
- 		flags &= ~MEMBLOCK_MIRROR;
- 		goto again;
-@@ -1384,7 +1384,7 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ #if EFI_DEBUG
+ 	/* print EFI memory map: */
+-	{
+-		efi_memory_desc_t *md;
+-		void *p;
+-		unsigned int i;
+-
+-		for (i = 0, p = efi_map_start; p < efi_map_end;
+-		     ++i, p += efi_desc_size)
+-		{
+-			const char *unit;
+-			unsigned long size;
+-			char buf[64];
+-
+-			md = p;
+-			size = md->num_pages << EFI_PAGE_SHIFT;
+-
+-			if ((size >> 40) > 0) {
+-				size >>= 40;
+-				unit = "TB";
+-			} else if ((size >> 30) > 0) {
+-				size >>= 30;
+-				unit = "GB";
+-			} else if ((size >> 20) > 0) {
+-				size >>= 20;
+-				unit = "MB";
+-			} else {
+-				size >>= 10;
+-				unit = "KB";
+-			}
+-
+-			printk("mem%02d: %s "
+-			       "range=[0x%016llx-0x%016llx) (%4lu%s)\n",
+-			       i, efi_md_typeattr_format(buf, sizeof(buf), md),
+-			       md->phys_addr,
+-			       md->phys_addr + efi_md_size(md), size, unit);
+-		}
+-	}
++	efi_print_memmap();
+ #endif
  
- 	if (flags & MEMBLOCK_MIRROR) {
- 		flags &= ~MEMBLOCK_MIRROR;
--		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
-+		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
- 			&size);
- 		goto again;
- 	}
+ 	efi_map_pal_code();
 -- 
 2.18.0.huawei.25
 
