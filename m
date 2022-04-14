@@ -2,170 +2,159 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67642C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 06:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F2FC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 09:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238295AbiDNG1Z (ORCPT
+        id S241466AbiDNJKI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Apr 2022 02:27:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50566 "EHLO
+        Thu, 14 Apr 2022 05:10:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231788AbiDNG1Y (ORCPT
+        with ESMTP id S241325AbiDNJKH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Apr 2022 02:27:24 -0400
-Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97631FA6F;
-        Wed, 13 Apr 2022 23:24:56 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0VA0zc-G_1649917489;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VA0zc-G_1649917489)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 14 Apr 2022 14:24:51 +0800
-Message-ID: <1649917349.6242197-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v9 22/32] virtio_pci: queue_reset: extract the logic of active vq for modern pci
-Date:   Thu, 14 Apr 2022 14:22:29 +0800
-From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
+        Thu, 14 Apr 2022 05:10:07 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7B7E6D962;
+        Thu, 14 Apr 2022 02:07:43 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: usama.anjum)
+        with ESMTPSA id 148F51F4778C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1649927262;
+        bh=SGjdvm2jxn/wrvUxD5fVBXM2K5YNhQcQ079/GSOHMTM=;
+        h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+        b=m1VxcuIEimr1pL6AXUPBpixE9KfydqWy+Yvf7QNvQCWgfZo4BqCHbv/VeS0fgkaK7
+         1ce043sto+XbA7wCsuXlYMm46Pjr3b0K6ijEEEcnMa6OIa5IhG6naZZ0B0mS1aC/qL
+         2ufKmOPdsV2BBhhBlrzCxZjPMf+FDyA8YmhcGALPXXotqpUQEmZcuWAtJiz6ZUdJAy
+         Uh0QoNEw2Z//xRPlNnYNYWhQ9ZlX6/aPt4WMKtsKe5/fejMMQn6EujuyDQtbjSCmqE
+         Lzbad2vaSYyKkCJMUe1hKffhFCSqfhhPys50gVT1hhVV6JWn0OCVD5fngPfWivyCTN
+         jgs2mwU7cXpgQ==
+Message-ID: <fdd5ac4e-bff1-af65-23f8-d73d6b5306e7@collabora.com>
+Date:   Thu, 14 Apr 2022 14:07:30 +0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Cc:     usama.anjum@collabora.com, Len Brown <lenb@kernel.org>,
         Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
- <20220406034346.74409-23-xuanzhuo@linux.alibaba.com>
- <d228a41f-a3a1-029d-f259-d4fbab822e78@redhat.com>
-In-Reply-To: <d228a41f-a3a1-029d-f259-d4fbab822e78@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Collabora Kernel ML <kernel@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH RESEND v6] platform: x86: Add ChromeOS ACPI device driver
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+References: <Yk7aeAcKIBrTupcq@debian-BULLSEYE-live-builder-AMD64>
+ <708fb1ec-4e57-7a1d-b0a0-a3a10b3cacf3@redhat.com>
+ <CAJZ5v0g2UDOR3mYsdqnPcpYgmecY706YQcTKTWMRtezkK0sfaQ@mail.gmail.com>
+ <e25f5599-10f5-90b7-227a-01616f722cca@redhat.com>
+From:   Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <e25f5599-10f5-90b7-227a-01616f722cca@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 12 Apr 2022 14:58:19 +0800, Jason Wang <jasowang@redhat.com> wrote:
->
-> =E5=9C=A8 2022/4/6 =E4=B8=8A=E5=8D=8811:43, Xuan Zhuo =E5=86=99=E9=81=93:
-> > Introduce vp_active_vq() to configure vring to backend after vq attach
-> > vring. And configure vq vector if necessary.
-> >
-> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > ---
-> >   drivers/virtio/virtio_pci_modern.c | 46 ++++++++++++++++++------------
-> >   1 file changed, 28 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio=
-_pci_modern.c
-> > index 86d301f272b8..49a4493732cf 100644
-> > --- a/drivers/virtio/virtio_pci_modern.c
-> > +++ b/drivers/virtio/virtio_pci_modern.c
-> > @@ -176,6 +176,29 @@ static void vp_reset(struct virtio_device *vdev)
-> >   	vp_disable_cbs(vdev);
-> >   }
-> >
-> > +static int vp_active_vq(struct virtqueue *vq, u16 msix_vec)
-> > +{
-> > +	struct virtio_pci_device *vp_dev =3D to_vp_device(vq->vdev);
-> > +	struct virtio_pci_modern_device *mdev =3D &vp_dev->mdev;
-> > +	unsigned long index;
-> > +
-> > +	index =3D vq->index;
-> > +
-> > +	/* activate the queue */
-> > +	vp_modern_set_queue_size(mdev, index, virtqueue_get_vring_size(vq));
-> > +	vp_modern_queue_address(mdev, index, virtqueue_get_desc_addr(vq),
-> > +				virtqueue_get_avail_addr(vq),
-> > +				virtqueue_get_used_addr(vq));
-> > +
-> > +	if (msix_vec !=3D VIRTIO_MSI_NO_VECTOR) {
-> > +		msix_vec =3D vp_modern_queue_vector(mdev, index, msix_vec);
-> > +		if (msix_vec =3D=3D VIRTIO_MSI_NO_VECTOR)
-> > +			return -EBUSY;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >   static u16 vp_config_vector(struct virtio_pci_device *vp_dev, u16 vec=
-tor)
-> >   {
-> >   	return vp_modern_config_vector(&vp_dev->mdev, vector);
-> > @@ -220,32 +243,19 @@ static struct virtqueue *setup_vq(struct virtio_p=
-ci_device *vp_dev,
-> >
-> >   	vq->num_max =3D num;
-> >
-> > -	/* activate the queue */
-> > -	vp_modern_set_queue_size(mdev, index, virtqueue_get_vring_size(vq));
-> > -	vp_modern_queue_address(mdev, index, virtqueue_get_desc_addr(vq),
-> > -				virtqueue_get_avail_addr(vq),
-> > -				virtqueue_get_used_addr(vq));
-> > +	err =3D vp_active_vq(vq, msix_vec);
-> > +	if (err)
-> > +		goto err;
-> >
-> >   	vq->priv =3D (void __force *)vp_modern_map_vq_notify(mdev, index, NU=
-LL);
-> >   	if (!vq->priv) {
-> >   		err =3D -ENOMEM;
-> > -		goto err_map_notify;
-> > -	}
-> > -
-> > -	if (msix_vec !=3D VIRTIO_MSI_NO_VECTOR) {
-> > -		msix_vec =3D vp_modern_queue_vector(mdev, index, msix_vec);
-> > -		if (msix_vec =3D=3D VIRTIO_MSI_NO_VECTOR) {
-> > -			err =3D -EBUSY;
-> > -			goto err_assign_vector;
-> > -		}
-> > +		goto err;
-> >   	}
-> >
-> >   	return vq;
-> >
-> > -err_assign_vector:
-> > -	if (!mdev->notify_base)
-> > -		pci_iounmap(mdev->pci_dev, (void __iomem __force *)vq->priv);
->
->
-> We need keep this or anything I missed?
+On 4/11/22 6:40 PM, Hans de Goede wrote:
+> Hi,
+> 
+> On 4/11/22 15:37, Rafael J. Wysocki wrote:
+>> On Mon, Apr 11, 2022 at 3:26 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>
+>>> Hi,
+>>>
+>>> On 4/7/22 14:35, Muhammad Usama Anjum wrote:
+>>>> From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>>>
+>>>> The x86 Chromebooks have ChromeOS ACPI device. This driver attaches to
+>>>> the ChromeOS ACPI device and exports the values reported by ACPI in a
+>>>> sysfs directory. This data isn't present in ACPI tables when read
+>>>> through ACPI tools, hence a driver is needed to do it. The driver gets
+>>>> data from firmware using ACPI component of the kernel. The ACPI values
+>>>> are presented in string form (numbers as decimal values) or binary
+>>>> blobs, and can be accessed as the contents of the appropriate read only
+>>>> files in the standard ACPI device's sysfs directory tree. This data is
+>>>> consumed by the ChromeOS user space.
+>>>>
+>>>> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>>>
+>>>
+>>> Thanks overall this looks pretty good to me.  The only remark which
+>>> I have is that I would like to see the Kconfig symbol changed
+>>> from CONFIG_ACPI_CHROMEOS to CONFIG_CHROMEOS_ACPI to match the
+>>> filename.
+>>>
 
-I think so, after modification, vp_modern_map_vq_notify is the last step be=
-fore
-returning vq. If it fails, then vq->priv is equal to NULL, so there is no n=
-eed
-to execute pci_iounmap.
+I'll rename in next version.
 
-Did I miss something?
+>>> CONFIG_ACPI_CHROMEOS to me suggests that this is an ACPI subsystem
+>>> Kconfig option which, with the driver living under
+>>> drivers/platform/x86 it is not.
+>>>
+>>> There is no need to send a new version for this, if you agree
+>>> with the change let me know and I can change this while merging
+>>> the driver.
+>>>
+>>> Rafael, before I merge this do you have any (more) remarks
+>>> about this driver?
+>>
+>> I'm not sure why it has to be an acpi_driver.
+>>
+>> I think that the generic enumeration code creates a platform device
+>> for this ACPI device object, so why can't it bind to that platform
+>> device?
+>>
+>> Generally speaking, IMV we should avoid adding drivers binding
+>> directly to ACPI device objects, because that is confusing (it is kind
+>> of like binding directly to an of_node) and it should be entirely
+>> avoidable.
+> 
+> Ah I missed that, good point.
+> 
+> Muhammad can you give turning this into a platform driver a try please?
+> 
+> Note this will change all the sysfs attribute paths from:
+> 
+> /sys/bus/acpi/devices/GGL0001:00/...
+> 
+> to:
+> 
+> /sys/bus/platform/devices/GGL0001:00/...
+> 
+> and the ABI documentation should be updated accordingly.
+> 
 
-Thanks.
+Thank you for comments and directions. They mean a lot. I'll make the
+changes in next version.
 
->
-> Thanks
->
->
-> > -err_map_notify:
-> > +err:
-> >   	vring_del_virtqueue(vq);
-> >   	return ERR_PTR(err);
-> >   }
->
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+
+-- 
+Muhammad Usama Anjum
