@@ -2,126 +2,132 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E34C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 09:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FB5C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 10:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242177AbiDNJ51 (ORCPT
+        id S241481AbiDNKZL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Apr 2022 05:57:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51388 "EHLO
+        Thu, 14 Apr 2022 06:25:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242089AbiDNJ5M (ORCPT
+        with ESMTP id S229626AbiDNKZJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Apr 2022 05:57:12 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0506418376;
-        Thu, 14 Apr 2022 02:54:41 -0700 (PDT)
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4KfF7c0sJlzCqxc;
-        Thu, 14 Apr 2022 17:50:20 +0800 (CST)
-Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 14 Apr 2022 17:54:39 +0800
-Received: from localhost.localdomain (10.175.112.125) by
- dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 14 Apr 2022 17:54:37 +0800
-From:   Wupeng Ma <mawupeng1@huawei.com>
-To:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <corbet@lwn.net>
-CC:     <ardb@kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-        <hpa@zyccr.com>, <dvhart@infradead.org>, <andy@infradead.org>,
-        <rppt@kernel.org>, <paulmck@kernel.org>, <peterz@infradead.org>,
-        <jroedel@suse.de>, <songmuchun@bytedance.com>, <macro@orcam.me.uk>,
-        <frederic@kernel.org>, <W_Armin@gmx.de>, <john.garry@huawei.com>,
-        <seanjc@google.com>, <tsbogend@alpha.franken.de>,
-        <anshuman.khandual@arm.com>, <chenhuacai@kernel.org>,
-        <david@redhat.com>, <gpiccoli@igalia.com>, <mark.rutland@arm.com>,
-        <wangkefeng.wang@huawei.com>, <mawupeng1@huawei.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: [PATCH v2 8/9] efi: Disable mirror feature if kernelcore is not specified
-Date:   Thu, 14 Apr 2022 18:13:13 +0800
-Message-ID: <20220414101314.1250667-9-mawupeng1@huawei.com>
-X-Mailer: git-send-email 2.18.0.huawei.25
-In-Reply-To: <20220414101314.1250667-1-mawupeng1@huawei.com>
-References: <20220414101314.1250667-1-mawupeng1@huawei.com>
+        Thu, 14 Apr 2022 06:25:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2F5776677;
+        Thu, 14 Apr 2022 03:22:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C12461E59;
+        Thu, 14 Apr 2022 10:22:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B63C385B2;
+        Thu, 14 Apr 2022 10:22:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649931764;
+        bh=UP2ZdlXMZjXTQwi2bJVC42wnwXESiNxV1SL51CcDxJ4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OwL4J0kxyO6/5LiiQ7Fj4OWwPgPnYkCayAcCWbenxuYiR+T0tK5VcfU6yj7iPNDe8
+         1ji7CgCJiaVHoDuF9HKf/Oh0Xs9Q+p4eukEtKLVZ5bCHMWQR4q0vVaGtbI/aiYsbPb
+         qq4vw4cKxN4d6J5QrHuR2MOkRKjKMY4wCsQo0HEaqPz5X8wKNWnS3gW9ZNezd/eZFM
+         Qbox1JvOQvUUyMNH0L7kr3XAhc2hBdDlLiTM3Vv9rovjsyaTLZhQ2to83DIcBiAdoM
+         DKwPiibbJbfioGbgjHs4mPbEivr+cLG9G+DY6H7g9y9E/ADZc8f3TtxI/ysKmUKTRK
+         g6Tjh7RJXoMdg==
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-dacc470e03so4805887fac.5;
+        Thu, 14 Apr 2022 03:22:44 -0700 (PDT)
+X-Gm-Message-State: AOAM533vkO99tEOYGZYmsC9jH+/jJpuMfJnbZiCA2PqQbYcWjPeszpBs
+        TE1Kz03nhmD1veQdeUynbvIvwIdtNr3YjzAzgwU=
+X-Google-Smtp-Source: ABdhPJwuW/8OUefFVmTgDz0hNVBCeNt8JTQEdxC3MramBRSaVXc+L6rpKEN0PLTlAXUWxqPUmRp0FgtWen5kuG48Mns=
+X-Received: by 2002:a05:6870:eaa5:b0:da:b3f:2b45 with SMTP id
+ s37-20020a056870eaa500b000da0b3f2b45mr1308766oap.228.1649931763538; Thu, 14
+ Apr 2022 03:22:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.112.125]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
+References: <20220414101314.1250667-1-mawupeng1@huawei.com>
+In-Reply-To: <20220414101314.1250667-1-mawupeng1@huawei.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 14 Apr 2022 12:22:31 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
+Message-ID: <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] introduce mirrored memory support for arm64
+To:     Wupeng Ma <mawupeng1@huawei.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        X86 ML <x86@kernel.org>, hpa@zyccr.com,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>, songmuchun@bytedance.com,
+        macro@orcam.me.uk, Frederic Weisbecker <frederic@kernel.org>,
+        W_Armin@gmx.de, John Garry <john.garry@huawei.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        chenhuacai@kernel.org, David Hildenbrand <david@redhat.com>,
+        gpiccoli@igalia.com, Mark Rutland <mark.rutland@arm.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-ia64@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Ma Wupeng <mawupeng1@huawei.com>
+On Thu, 14 Apr 2022 at 11:54, Wupeng Ma <mawupeng1@huawei.com> wrote:
+>
+> From: Ma Wupeng <mawupeng1@huawei.com>
+>
+> Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
+> introduced mirrored memory support for x86. This support rely on UEFI to
+> report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-158:
+>
+>   http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
+>
+> Memory mirroring is a technique used to separate memory into two separate
+> channels, usually on a memory device, like a server. In memory mirroring,
+> one channel is copied to another to create redundancy. This method makes
+> input/output (I/O) registers and memory appear with more than one address
+> range because the same physical byte is accessible at more than one
+> address. Using memory mirroring, higher memory reliability and a higher
+> level of memory consolidation are possible.
+>
+> Arm64 can support this too. So mirrored memory support is added to support
+> arm64.
+>
+> Efi_fake_mem is used for testing mirrored features and will not be used in
+> production environment. This test features can fake memory's attribute
+> values.
+>
+> The reason why efi_fake_mem support is put first is that memory's attribute
+> is reported by BIOS which is hard to simulate. With this support, any arm64
+> machines with efi support can easily test mirrored features.
+>
+> The main purpose of this patchset is to introduce mirrored support for
+> arm64 and we have already fixed the problems we had which is shown in
+> patch #5 to patch #7 and try to bring total isolation in patch #8 which
+> will disable mirror feature if kernelcore is not specified.
+>
+> In order to test this support in arm64:
+> - patch this patchset
+> - add efi_fake_mem=8G@0:0x10000 in kernel parameter to simulate mirrored
+>   memroy between phy addr 0-8G.
+> - add kernelcore=mirror in kernel parameter
+> - start you kernel
+>
 
-With this patch, kernel will check mirrored_kernelcore before calling
-efi_find_mirror() which will enable basic mirrored feature.
+As I explained before:
 
-If system have some mirrored memory and mirrored feature is not specified
-in boot parameter, the basic mirrored feature will be enabled and this will
-lead to the following situations:
-
-- memblock memory allocation perfers mirrored region. This may have some
-  unexpected influence on numa affinity.
-
-- contiguous memory will be splited into several parts if parts of them
-  is mirrored memory via memblock_mark_mirror().
-
-Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
----
- drivers/firmware/efi/efi.c | 3 +++
- include/linux/mm.h         | 2 ++
- mm/page_alloc.c            | 2 +-
- 3 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index eb9ebf4efea1..18d86602424a 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -446,6 +446,9 @@ void __init efi_find_mirror(void)
- 	if (!efi_enabled(EFI_MEMMAP))
- 		return;
- 
-+	if (!mirrored_kernelcore)
-+		return;
-+
- 	for_each_efi_memory_desc(md) {
- 		unsigned long long start = md->phys_addr;
- 		unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index e34edb775334..544717cc7a75 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2536,6 +2536,8 @@ extern void get_pfn_range_for_nid(unsigned int nid,
- 			unsigned long *start_pfn, unsigned long *end_pfn);
- extern unsigned long find_min_pfn_with_active_regions(void);
- 
-+extern bool mirrored_kernelcore;
-+
- #ifndef CONFIG_NUMA
- static inline int early_pfn_to_nid(unsigned long pfn)
- {
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 570d0ebf98df..909d5f7d97bb 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -355,7 +355,7 @@ static unsigned long required_kernelcore_percent __initdata;
- static unsigned long required_movablecore __initdata;
- static unsigned long required_movablecore_percent __initdata;
- static unsigned long zone_movable_pfn[MAX_NUMNODES] __initdata;
--static bool mirrored_kernelcore __meminitdata;
-+bool mirrored_kernelcore __meminitdata;
- 
- /* movable_zone is the "real" zone pages in ZONE_MOVABLE are taken from */
- int movable_zone;
--- 
-2.18.0.huawei.25
-
+- NAK to EFI fake_mem support on arm64
+- NAK to the whole series until you come up with a proposal on how to
+locate the static kernel image itself into more reliable memory, as
+there is really no point to any of this otherwise.
