@@ -2,88 +2,170 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC45BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Apr 2022 18:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67642C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 06:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237687AbiDMSbF (ORCPT
+        id S238295AbiDNG1Z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Apr 2022 14:31:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47732 "EHLO
+        Thu, 14 Apr 2022 02:27:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236313AbiDMSbD (ORCPT
+        with ESMTP id S231788AbiDNG1Y (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Apr 2022 14:31:03 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0011A517C4;
-        Wed, 13 Apr 2022 11:28:41 -0700 (PDT)
-Received: by mail-oi1-f169.google.com with SMTP id e189so2957544oia.8;
-        Wed, 13 Apr 2022 11:28:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5SWSELfeWa5DmOzvc6fSLXMlhJprFBxcF+xYsyulMiQ=;
-        b=PnR+yKHKfAu4DYhMjJSwjqawAgciT1X/SOGn6t2xnkMkSGzQHaRbkUMst8U5Chfump
-         QJUSdDJ7/rkDYlGHxmt2Lxup+ZgMM4zI9vPA6ChYfh4jMb9ZfIsswK5dk5twwuytJbVw
-         xc/DR1XIkz6ZXsw8eICDyLwq9zRAdd3zwUk9TxwhsRfoIht9IBA0PgdfIyxrp5vOZjP4
-         cqDugWHOo276qj4qyt/iFQ99AJiP2Z9uGUkM7F9Uwtloivzrogm2GB0Or7h7cmxH1DSe
-         Hj/8h1jb9tRMfw+XfFlz3psh6u5eDKXO/VL/2vDmSQoXws/PdJL5iVmfrxAHLT0G5b3Z
-         /QkA==
-X-Gm-Message-State: AOAM532bWQIFKMyjGEHXRTCe5XfaVMm+Pg5u6lt78udhw26XL1XL4nXp
-        X1r36FVjQkHhsvGjKjbjJg==
-X-Google-Smtp-Source: ABdhPJxrB+xyAwGoK50FDp8/Bpf1gaWPjyG9igkAc4ADUhJd3bjMrwiFnpPxDcEpNSAUEARe3qs7QA==
-X-Received: by 2002:a05:6808:209e:b0:2da:4de9:e632 with SMTP id s30-20020a056808209e00b002da4de9e632mr66327oiw.214.1649874521279;
-        Wed, 13 Apr 2022 11:28:41 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id bd32-20020a056870d7a000b000d43d4d2de1sm14458027oab.5.2022.04.13.11.28.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Apr 2022 11:28:41 -0700 (PDT)
-Received: (nullmailer pid 3601957 invoked by uid 1000);
-        Wed, 13 Apr 2022 18:28:40 -0000
-Date:   Wed, 13 Apr 2022 13:28:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Jarrett Schultz <jaschultzms@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thu, 14 Apr 2022 02:27:24 -0400
+Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97631FA6F;
+        Wed, 13 Apr 2022 23:24:56 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0VA0zc-G_1649917489;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VA0zc-G_1649917489)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 14 Apr 2022 14:24:51 +0800
+Message-ID: <1649917349.6242197-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH v9 22/32] virtio_pci: queue_reset: extract the logic of active vq for modern pci
+Date:   Thu, 14 Apr 2022 14:22:29 +0800
+From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Jarrett Schultz <jaschultz@microsoft.com>
-Subject: Re: [PATCH v5 0/4] platform: surface: Introduce Surface XBL Driver
-Message-ID: <YlcWWPqGzc4Zk9R+@robh.at.kernel.org>
-References: <20220405210750.619511-1-jaschultzMS@gmail.com>
- <d648629e-2339-449f-f63c-41af85ba35b5@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d648629e-2339-449f-f63c-41af85ba35b5@redhat.com>
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
+ <20220406034346.74409-23-xuanzhuo@linux.alibaba.com>
+ <d228a41f-a3a1-029d-f259-d4fbab822e78@redhat.com>
+In-Reply-To: <d228a41f-a3a1-029d-f259-d4fbab822e78@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 02:13:42PM +0200, Hans de Goede wrote:
-> Hi Jarrett,
-> 
-> On 1/1/70 01:00, Jarrett Schultz wrote:
-> > After v4, there were some suggestions to change the driver again to use
-> > nvmem that would include some other changes to the sm8150 dtsi. While
-> > the suggestions make sense, this driver was supposed to remain simple
-> > for the introduction in order to get it into the tree and I think that
-> > it would be best to implement those and any other suggestions in a future
-> > patch. Hopefully this patch is now in a state where it can be accepted.
-> > Thanks to all who have helped and been patient along the way, this was
-> > my first patch :)
-> I appreciate your efforts to get this upstream, but this is not
-> how upstream development typically works. We usually iterate a patch
-> until all stakeholders are happy and then merge it.
-> 
-> So unless Rob changes its mind and gives his Reviewed-by for the
-> devicetree bits from this v5, then this cannot be merged as is.
+On Tue, 12 Apr 2022 14:58:19 +0800, Jason Wang <jasowang@redhat.com> wrote:
+>
+> =E5=9C=A8 2022/4/6 =E4=B8=8A=E5=8D=8811:43, Xuan Zhuo =E5=86=99=E9=81=93:
+> > Introduce vp_active_vq() to configure vring to backend after vq attach
+> > vring. And configure vq vector if necessary.
+> >
+> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > ---
+> >   drivers/virtio/virtio_pci_modern.c | 46 ++++++++++++++++++------------
+> >   1 file changed, 28 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio=
+_pci_modern.c
+> > index 86d301f272b8..49a4493732cf 100644
+> > --- a/drivers/virtio/virtio_pci_modern.c
+> > +++ b/drivers/virtio/virtio_pci_modern.c
+> > @@ -176,6 +176,29 @@ static void vp_reset(struct virtio_device *vdev)
+> >   	vp_disable_cbs(vdev);
+> >   }
+> >
+> > +static int vp_active_vq(struct virtqueue *vq, u16 msix_vec)
+> > +{
+> > +	struct virtio_pci_device *vp_dev =3D to_vp_device(vq->vdev);
+> > +	struct virtio_pci_modern_device *mdev =3D &vp_dev->mdev;
+> > +	unsigned long index;
+> > +
+> > +	index =3D vq->index;
+> > +
+> > +	/* activate the queue */
+> > +	vp_modern_set_queue_size(mdev, index, virtqueue_get_vring_size(vq));
+> > +	vp_modern_queue_address(mdev, index, virtqueue_get_desc_addr(vq),
+> > +				virtqueue_get_avail_addr(vq),
+> > +				virtqueue_get_used_addr(vq));
+> > +
+> > +	if (msix_vec !=3D VIRTIO_MSI_NO_VECTOR) {
+> > +		msix_vec =3D vp_modern_queue_vector(mdev, index, msix_vec);
+> > +		if (msix_vec =3D=3D VIRTIO_MSI_NO_VECTOR)
+> > +			return -EBUSY;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >   static u16 vp_config_vector(struct virtio_pci_device *vp_dev, u16 vec=
+tor)
+> >   {
+> >   	return vp_modern_config_vector(&vp_dev->mdev, vector);
+> > @@ -220,32 +243,19 @@ static struct virtqueue *setup_vq(struct virtio_p=
+ci_device *vp_dev,
+> >
+> >   	vq->num_max =3D num;
+> >
+> > -	/* activate the queue */
+> > -	vp_modern_set_queue_size(mdev, index, virtqueue_get_vring_size(vq));
+> > -	vp_modern_queue_address(mdev, index, virtqueue_get_desc_addr(vq),
+> > -				virtqueue_get_avail_addr(vq),
+> > -				virtqueue_get_used_addr(vq));
+> > +	err =3D vp_active_vq(vq, msix_vec);
+> > +	if (err)
+> > +		goto err;
+> >
+> >   	vq->priv =3D (void __force *)vp_modern_map_vq_notify(mdev, index, NU=
+LL);
+> >   	if (!vq->priv) {
+> >   		err =3D -ENOMEM;
+> > -		goto err_map_notify;
+> > -	}
+> > -
+> > -	if (msix_vec !=3D VIRTIO_MSI_NO_VECTOR) {
+> > -		msix_vec =3D vp_modern_queue_vector(mdev, index, msix_vec);
+> > -		if (msix_vec =3D=3D VIRTIO_MSI_NO_VECTOR) {
+> > -			err =3D -EBUSY;
+> > -			goto err_assign_vector;
+> > -		}
+> > +		goto err;
+> >   	}
+> >
+> >   	return vq;
+> >
+> > -err_assign_vector:
+> > -	if (!mdev->notify_base)
+> > -		pci_iounmap(mdev->pci_dev, (void __iomem __force *)vq->priv);
+>
+>
+> We need keep this or anything I missed?
 
-This is dependent on the QCom folks. We can't really define the child 
-without first defining the parent binding.
+I think so, after modification, vp_modern_map_vq_notify is the last step be=
+fore
+returning vq. If it fails, then vq->priv is equal to NULL, so there is no n=
+eed
+to execute pci_iounmap.
 
-Rob
+Did I miss something?
+
+Thanks.
+
+>
+> Thanks
+>
+>
+> > -err_map_notify:
+> > +err:
+> >   	vring_del_virtqueue(vq);
+> >   	return ERR_PTR(err);
+> >   }
+>
