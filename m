@@ -2,229 +2,137 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 609A8C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 09:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED85FC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 09:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241886AbiDNJkf (ORCPT
+        id S239118AbiDNJ47 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Apr 2022 05:40:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36770 "EHLO
+        Thu, 14 Apr 2022 05:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241873AbiDNJke (ORCPT
+        with ESMTP id S233679AbiDNJ45 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Apr 2022 05:40:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 227E8710E4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Apr 2022 02:38:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649929085;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kAYBz4doVQTzyQ+XbmAkl9XBH5XLaB98KdCbNRQGiq4=;
-        b=bW+mVmqLH+1fRQddLTqPMoyv8mHOw4JABU1TbiQja52HKKQe7hE1lJTGPGiUHXg+gnGgor
-        zuiRhaVNzkm+dyLOWv8q2h8E6yrRzjMeKyIfBhkQnnav1BhTrGedKD3fEtJtBDW84AENNq
-        WZ5qgF7tkPt0cvaimdW9GzP9Va9oDy8=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-422-oTpSLASsMZ-bq1-lesbDHg-1; Thu, 14 Apr 2022 05:38:03 -0400
-X-MC-Unique: oTpSLASsMZ-bq1-lesbDHg-1
-Received: by mail-lf1-f72.google.com with SMTP id m3-20020a0565120a8300b0046b9e41a663so2107978lfu.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Apr 2022 02:38:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kAYBz4doVQTzyQ+XbmAkl9XBH5XLaB98KdCbNRQGiq4=;
-        b=kuwZ5yWNKfrvngY5A+sv4rrjJnKgQDwlRVTzkz8tWLApTX3lmtSw0EZa1Vwx52cTLH
-         Xanu1h/AZxoSkIU7D2JH7Y/GUhVx4Q4sc34bPirjTMyXcb8irysuiufQXy0pCqtZpR5i
-         gqXfnNeAQLExS4vfXgsNEI9+5uSqK2E5DBEfZRuWimLRk9gH/hpMigmkKvl2Am2pE/Of
-         NyqvWegcgnFgaztSs0/sHwSsKZB91YQH4NfZzT3IjrhFntWWbvSYPs01C0KbDy8V0XUA
-         b6R720B/fMZenOxZMwe4TprHnNnVKbbWR4eTIoo8XFTs26+3nXnPOw6rQbUbdvB4Zkbm
-         7B3w==
-X-Gm-Message-State: AOAM5321stIYRD4glymfCgmmXRdF/MXVROKlW1mU5RNK2OcG9pTYVhjc
-        uGGD40ZXiWo7CRMbIa20obUtb+n7UVueHAr2kYtqrjIPw/uH5ZrfqUxRYf/SvkG+o9iRs0uKMfv
-        qWNgTtyuKtgMSHkncGI2fsjqiSxz9uuM5KNCfTD2FHg+JWPAgxg==
-X-Received: by 2002:a05:6512:b81:b0:448:b342:513c with SMTP id b1-20020a0565120b8100b00448b342513cmr1374417lfv.257.1649929081568;
-        Thu, 14 Apr 2022 02:38:01 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyT+hQL3ayUr4yHsMFIRrMraYLhBZ1J0Bf6UbhSWT+Hf8Hn8S4DOLDQKv3/usDOYYaKjPbe8DoFTVvjkWCTmg0=
-X-Received: by 2002:a05:6512:b81:b0:448:b342:513c with SMTP id
- b1-20020a0565120b8100b00448b342513cmr1374387lfv.257.1649929081317; Thu, 14
- Apr 2022 02:38:01 -0700 (PDT)
+        Thu, 14 Apr 2022 05:56:57 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88F86CEA;
+        Thu, 14 Apr 2022 02:54:30 -0700 (PDT)
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KfF9Z22C9zFpvV;
+        Thu, 14 Apr 2022 17:52:02 +0800 (CST)
+Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 14 Apr 2022 17:54:28 +0800
+Received: from localhost.localdomain (10.175.112.125) by
+ dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 14 Apr 2022 17:54:26 +0800
+From:   Wupeng Ma <mawupeng1@huawei.com>
+To:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <corbet@lwn.net>
+CC:     <ardb@kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        <hpa@zyccr.com>, <dvhart@infradead.org>, <andy@infradead.org>,
+        <rppt@kernel.org>, <paulmck@kernel.org>, <peterz@infradead.org>,
+        <jroedel@suse.de>, <songmuchun@bytedance.com>, <macro@orcam.me.uk>,
+        <frederic@kernel.org>, <W_Armin@gmx.de>, <john.garry@huawei.com>,
+        <seanjc@google.com>, <tsbogend@alpha.franken.de>,
+        <anshuman.khandual@arm.com>, <chenhuacai@kernel.org>,
+        <david@redhat.com>, <gpiccoli@igalia.com>, <mark.rutland@arm.com>,
+        <wangkefeng.wang@huawei.com>, <mawupeng1@huawei.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>
+Subject: [PATCH v2 0/9] introduce mirrored memory support for arm64
+Date:   Thu, 14 Apr 2022 18:13:05 +0800
+Message-ID: <20220414101314.1250667-1-mawupeng1@huawei.com>
+X-Mailer: git-send-email 2.18.0.huawei.25
 MIME-Version: 1.0
-References: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
- <20220406034346.74409-23-xuanzhuo@linux.alibaba.com> <d228a41f-a3a1-029d-f259-d4fbab822e78@redhat.com>
- <1649917349.6242197-1-xuanzhuo@linux.alibaba.com>
-In-Reply-To: <1649917349.6242197-1-xuanzhuo@linux.alibaba.com>
-From:   Jason Wang <jasowang@redhat.com>
-Date:   Thu, 14 Apr 2022 17:37:50 +0800
-Message-ID: <CACGkMEuk24R8Y-H2=cuG4VkQhTNf6CSEMJbxe7jvHFEusa815g@mail.gmail.com>
-Subject: Re: [PATCH v9 22/32] virtio_pci: queue_reset: extract the logic of
- active vq for modern pci
-To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev <netdev@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm <kvm@vger.kernel.org>,
-        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
-        virtualization <virtualization@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.125]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500014.china.huawei.com (7.185.36.153)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 2:25 PM Xuan Zhuo <xuanzhuo@linux.alibaba.com> wrot=
-e:
->
-> On Tue, 12 Apr 2022 14:58:19 +0800, Jason Wang <jasowang@redhat.com> wrot=
-e:
-> >
-> > =E5=9C=A8 2022/4/6 =E4=B8=8A=E5=8D=8811:43, Xuan Zhuo =E5=86=99=E9=81=
-=93:
-> > > Introduce vp_active_vq() to configure vring to backend after vq attac=
-h
-> > > vring. And configure vq vector if necessary.
-> > >
-> > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > ---
-> > >   drivers/virtio/virtio_pci_modern.c | 46 ++++++++++++++++++---------=
----
-> > >   1 file changed, 28 insertions(+), 18 deletions(-)
-> > >
-> > > diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virt=
-io_pci_modern.c
-> > > index 86d301f272b8..49a4493732cf 100644
-> > > --- a/drivers/virtio/virtio_pci_modern.c
-> > > +++ b/drivers/virtio/virtio_pci_modern.c
-> > > @@ -176,6 +176,29 @@ static void vp_reset(struct virtio_device *vdev)
-> > >     vp_disable_cbs(vdev);
-> > >   }
-> > >
-> > > +static int vp_active_vq(struct virtqueue *vq, u16 msix_vec)
-> > > +{
-> > > +   struct virtio_pci_device *vp_dev =3D to_vp_device(vq->vdev);
-> > > +   struct virtio_pci_modern_device *mdev =3D &vp_dev->mdev;
-> > > +   unsigned long index;
-> > > +
-> > > +   index =3D vq->index;
-> > > +
-> > > +   /* activate the queue */
-> > > +   vp_modern_set_queue_size(mdev, index, virtqueue_get_vring_size(vq=
-));
-> > > +   vp_modern_queue_address(mdev, index, virtqueue_get_desc_addr(vq),
-> > > +                           virtqueue_get_avail_addr(vq),
-> > > +                           virtqueue_get_used_addr(vq));
-> > > +
-> > > +   if (msix_vec !=3D VIRTIO_MSI_NO_VECTOR) {
-> > > +           msix_vec =3D vp_modern_queue_vector(mdev, index, msix_vec=
-);
-> > > +           if (msix_vec =3D=3D VIRTIO_MSI_NO_VECTOR)
-> > > +                   return -EBUSY;
-> > > +   }
-> > > +
-> > > +   return 0;
-> > > +}
-> > > +
-> > >   static u16 vp_config_vector(struct virtio_pci_device *vp_dev, u16 v=
-ector)
-> > >   {
-> > >     return vp_modern_config_vector(&vp_dev->mdev, vector);
-> > > @@ -220,32 +243,19 @@ static struct virtqueue *setup_vq(struct virtio=
-_pci_device *vp_dev,
-> > >
-> > >     vq->num_max =3D num;
-> > >
-> > > -   /* activate the queue */
-> > > -   vp_modern_set_queue_size(mdev, index, virtqueue_get_vring_size(vq=
-));
-> > > -   vp_modern_queue_address(mdev, index, virtqueue_get_desc_addr(vq),
-> > > -                           virtqueue_get_avail_addr(vq),
-> > > -                           virtqueue_get_used_addr(vq));
-> > > +   err =3D vp_active_vq(vq, msix_vec);
-> > > +   if (err)
-> > > +           goto err;
-> > >
-> > >     vq->priv =3D (void __force *)vp_modern_map_vq_notify(mdev, index,=
- NULL);
-> > >     if (!vq->priv) {
-> > >             err =3D -ENOMEM;
-> > > -           goto err_map_notify;
-> > > -   }
-> > > -
-> > > -   if (msix_vec !=3D VIRTIO_MSI_NO_VECTOR) {
-> > > -           msix_vec =3D vp_modern_queue_vector(mdev, index, msix_vec=
-);
-> > > -           if (msix_vec =3D=3D VIRTIO_MSI_NO_VECTOR) {
-> > > -                   err =3D -EBUSY;
-> > > -                   goto err_assign_vector;
-> > > -           }
-> > > +           goto err;
-> > >     }
-> > >
-> > >     return vq;
-> > >
-> > > -err_assign_vector:
-> > > -   if (!mdev->notify_base)
-> > > -           pci_iounmap(mdev->pci_dev, (void __iomem __force *)vq->pr=
-iv);
-> >
-> >
-> > We need keep this or anything I missed?
->
-> I think so, after modification, vp_modern_map_vq_notify is the last step =
-before
-> returning vq. If it fails, then vq->priv is equal to NULL, so there is no=
- need
-> to execute pci_iounmap.
->
-> Did I miss something?
+From: Ma Wupeng <mawupeng1@huawei.com>
 
-Nope I miss that the vector is configured before the mapping.
+Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
+introduced mirrored memory support for x86. This support rely on UEFI to
+report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-158:
 
-So
+  http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
 
-Acked-by: Jason Wang <jasowang@redhat.com>
+Memory mirroring is a technique used to separate memory into two separate
+channels, usually on a memory device, like a server. In memory mirroring,
+one channel is copied to another to create redundancy. This method makes
+input/output (I/O) registers and memory appear with more than one address
+range because the same physical byte is accessible at more than one
+address. Using memory mirroring, higher memory reliability and a higher
+level of memory consolidation are possible.
 
-Thanks
+Arm64 can support this too. So mirrored memory support is added to support
+arm64.
 
->
-> Thanks.
->
-> >
-> > Thanks
-> >
-> >
-> > > -err_map_notify:
-> > > +err:
-> > >     vring_del_virtqueue(vq);
-> > >     return ERR_PTR(err);
-> > >   }
-> >
->
+Efi_fake_mem is used for testing mirrored features and will not be used in
+production environment. This test features can fake memory's attribute
+values.
+
+The reason why efi_fake_mem support is put first is that memory's attribute
+is reported by BIOS which is hard to simulate. With this support, any arm64
+machines with efi support can easily test mirrored features.
+
+The main purpose of this patchset is to introduce mirrored support for
+arm64 and we have already fixed the problems we had which is shown in
+patch #5 to patch #7 and try to bring total isolation in patch #8 which
+will disable mirror feature if kernelcore is not specified.
+
+In order to test this support in arm64:
+- patch this patchset
+- add efi_fake_mem=8G@0:0x10000 in kernel parameter to simulate mirrored
+  memroy between phy addr 0-8G.
+- add kernelcore=mirror in kernel parameter
+- start you kernel
+
+Patch #1-#2 introduce efi_fake_mem support for arm64.
+Patch #3-#4 introduce mirrored memory support form arm64.
+Patch #5-#7 fix some bugs for arm64 if memory reliable is enabled.
+Patch #8 disable mirror feature if kernelPHYS_PFNcore is not specified.
+Patch #9 remove some redundant code in ia64 efi_init.
+
+Changelog since v1:
+- update changelog in cover letter
+- use PHYS_PFN in patch #7 
+
+Ma Wupeng (9):
+  efi: Make efi_print_memmap() public
+  arm64: efi: Add fake memory support
+  efi: Make efi_find_mirror() public
+  arm64/mirror: arm64 enabling - find mirrored memory ranges
+  mm: Ratelimited mirrored memory related warning messages
+  mm: Demote warning message in vmemmap_verify() to debug level
+  mm: Calc the right pfn if page size is not 4K
+  efi: Disable mirror feature if kernelcore is not specified
+  ia64/efi: Code simplification in efi_init
+
+ .../admin-guide/kernel-parameters.txt         |  4 +-
+ arch/arm64/kernel/setup.c                     |  3 ++
+ arch/ia64/kernel/efi.c                        | 37 +-----------------
+ arch/x86/include/asm/efi.h                    |  5 ---
+ arch/x86/platform/efi/efi.c                   | 39 -------------------
+ drivers/firmware/efi/Kconfig                  |  2 +-
+ drivers/firmware/efi/efi.c                    | 26 +++++++++++++
+ drivers/firmware/efi/memmap.c                 | 16 ++++++++
+ include/linux/efi.h                           |  4 ++
+ include/linux/mm.h                            |  2 +
+ mm/memblock.c                                 |  4 +-
+ mm/page_alloc.c                               |  4 +-
+ mm/sparse-vmemmap.c                           |  2 +-
+ 13 files changed, 60 insertions(+), 88 deletions(-)
+
+-- 
+2.18.0.huawei.25
 
