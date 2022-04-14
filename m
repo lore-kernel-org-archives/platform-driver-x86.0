@@ -2,31 +2,31 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE96C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 09:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D0EC4167D
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 09:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241935AbiDNJ47 (ORCPT
+        id S238210AbiDNJ5I (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Apr 2022 05:56:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51036 "EHLO
+        Thu, 14 Apr 2022 05:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230483AbiDNJ45 (ORCPT
+        with ESMTP id S242006AbiDNJ5D (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Apr 2022 05:56:57 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 580B32DE6;
-        Thu, 14 Apr 2022 02:54:31 -0700 (PDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KfF9b4wyyzFppJ;
-        Thu, 14 Apr 2022 17:52:03 +0800 (CST)
+        Thu, 14 Apr 2022 05:57:03 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4FCB11C30;
+        Thu, 14 Apr 2022 02:54:34 -0700 (PDT)
+Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KfFCl1wB0z1HBl3;
+        Thu, 14 Apr 2022 17:53:55 +0800 (CST)
 Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 14 Apr 2022 17:54:29 +0800
+ 15.1.2375.24; Thu, 14 Apr 2022 17:54:32 +0800
 Received: from localhost.localdomain (10.175.112.125) by
  dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 14 Apr 2022 17:54:28 +0800
+ 15.1.2375.24; Thu, 14 Apr 2022 17:54:30 +0800
 From:   Wupeng Ma <mawupeng1@huawei.com>
 To:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
         <will@kernel.org>, <corbet@lwn.net>
@@ -44,9 +44,9 @@ CC:     <ardb@kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
         <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: [PATCH v2 1/9] efi: Make efi_print_memmap() public
-Date:   Thu, 14 Apr 2022 18:13:06 +0800
-Message-ID: <20220414101314.1250667-2-mawupeng1@huawei.com>
+Subject: [PATCH v2 3/9] efi: Make efi_find_mirror() public
+Date:   Thu, 14 Apr 2022 18:13:08 +0800
+Message-ID: <20220414101314.1250667-4-mawupeng1@huawei.com>
 X-Mailer: git-send-email 2.18.0.huawei.25
 In-Reply-To: <20220414101314.1250667-1-mawupeng1@huawei.com>
 References: <20220414101314.1250667-1-mawupeng1@huawei.com>
@@ -62,92 +62,130 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Ma Wupeng <mawupeng1@huawei.com>
 
-Make efi_print_memmap() public in preparation for adding fake memory
-support for architecture with efi support, eg, arm64.
+Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory
+ranges") introduce the efi_find_mirror function on x86. In order to reuse
+the API we make it public in preparation for arm64 to support mirrord
+memory.
 
 Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
 ---
- arch/x86/include/asm/efi.h    |  1 -
- arch/x86/platform/efi/efi.c   | 16 ----------------
- drivers/firmware/efi/memmap.c | 16 ++++++++++++++++
- include/linux/efi.h           |  1 +
- 4 files changed, 17 insertions(+), 17 deletions(-)
+ arch/x86/include/asm/efi.h  |  4 ----
+ arch/x86/platform/efi/efi.c | 23 -----------------------
+ drivers/firmware/efi/efi.c  | 23 +++++++++++++++++++++++
+ include/linux/efi.h         |  3 +++
+ 4 files changed, 26 insertions(+), 27 deletions(-)
 
 diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index 98938a68251c..686968073f48 100644
+index 686968073f48..6be838c0f109 100644
 --- a/arch/x86/include/asm/efi.h
 +++ b/arch/x86/include/asm/efi.h
-@@ -150,7 +150,6 @@ extern asmlinkage u64 __efi_call(void *fp, ...);
- #endif /* CONFIG_X86_32 */
+@@ -368,7 +368,6 @@ static inline bool efi_is_64bit(void)
+ extern bool efi_reboot_required(void);
+ extern bool efi_is_table_address(unsigned long phys_addr);
  
- extern int __init efi_memblock_x86_reserve_range(void);
--extern void __init efi_print_memmap(void);
- extern void __init efi_map_region(efi_memory_desc_t *md);
- extern void __init efi_map_region_fixed(efi_memory_desc_t *md);
- extern void efi_sync_low_kernel_mappings(void);
+-extern void efi_find_mirror(void);
+ extern void efi_reserve_boot_services(void);
+ #else
+ static inline void parse_efi_setup(u64 phys_addr, u32 data_len) {}
+@@ -380,9 +379,6 @@ static inline  bool efi_is_table_address(unsigned long phys_addr)
+ {
+ 	return false;
+ }
+-static inline void efi_find_mirror(void)
+-{
+-}
+ static inline void efi_reserve_boot_services(void)
+ {
+ }
 diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 147c30a81f15..7b130f39d841 100644
+index 7b130f39d841..fedbb228faea 100644
 --- a/arch/x86/platform/efi/efi.c
 +++ b/arch/x86/platform/efi/efi.c
-@@ -323,22 +323,6 @@ static void __init efi_clean_memmap(void)
- 	}
+@@ -105,29 +105,6 @@ static int __init setup_add_efi_memmap(char *arg)
  }
+ early_param("add_efi_memmap", setup_add_efi_memmap);
  
--void __init efi_print_memmap(void)
+-void __init efi_find_mirror(void)
 -{
 -	efi_memory_desc_t *md;
--	int i = 0;
+-	u64 mirror_size = 0, total_size = 0;
+-
+-	if (!efi_enabled(EFI_MEMMAP))
+-		return;
 -
 -	for_each_efi_memory_desc(md) {
--		char buf[64];
+-		unsigned long long start = md->phys_addr;
+-		unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
 -
--		pr_info("mem%02u: %s range=[0x%016llx-0x%016llx] (%lluMB)\n",
--			i++, efi_md_typeattr_format(buf, sizeof(buf), md),
--			md->phys_addr,
--			md->phys_addr + (md->num_pages << EFI_PAGE_SHIFT) - 1,
--			(md->num_pages >> (20 - EFI_PAGE_SHIFT)));
+-		total_size += size;
+-		if (md->attribute & EFI_MEMORY_MORE_RELIABLE) {
+-			memblock_mark_mirror(start, size);
+-			mirror_size += size;
+-		}
 -	}
+-	if (mirror_size)
+-		pr_info("Memory: %lldM/%lldM mirrored memory\n",
+-			mirror_size>>20, total_size>>20);
 -}
 -
- static int __init efi_systab_init(unsigned long phys)
- {
- 	int size = efi_enabled(EFI_64BIT) ? sizeof(efi_system_table_64_t)
-diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
-index 4df55a55da84..04cc1f2cdfa4 100644
---- a/drivers/firmware/efi/memmap.c
-+++ b/drivers/firmware/efi/memmap.c
-@@ -376,3 +376,19 @@ void __init efi_memmap_insert(struct efi_memory_map *old_memmap, void *buf,
- 		}
- 	}
- }
-+
-+void __init efi_print_memmap(void)
+ /*
+  * Tell the kernel about the EFI memory map.  This might include
+  * more than the max 128 entries that can fit in the passed in e820
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 5502e176d51b..eb9ebf4efea1 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -438,6 +438,29 @@ static int __init efisubsys_init(void)
+ 
+ subsys_initcall(efisubsys_init);
+ 
++void __init efi_find_mirror(void)
 +{
 +	efi_memory_desc_t *md;
-+	int i = 0;
++	u64 mirror_size = 0, total_size = 0;
++
++	if (!efi_enabled(EFI_MEMMAP))
++		return;
 +
 +	for_each_efi_memory_desc(md) {
-+		char buf[64];
++		unsigned long long start = md->phys_addr;
++		unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
 +
-+		pr_info("mem%02u: %s range=[0x%016llx-0x%016llx] (%lluMB)\n",
-+			i++, efi_md_typeattr_format(buf, sizeof(buf), md),
-+			md->phys_addr,
-+			md->phys_addr + (md->num_pages << EFI_PAGE_SHIFT) - 1,
-+			(md->num_pages >> (20 - EFI_PAGE_SHIFT)));
++		total_size += size;
++		if (md->attribute & EFI_MEMORY_MORE_RELIABLE) {
++			memblock_mark_mirror(start, size);
++			mirror_size += size;
++		}
 +	}
++	if (mirror_size)
++		pr_info("Memory: %lldM/%lldM mirrored memory\n",
++			mirror_size>>20, total_size>>20);
 +}
++
+ /*
+  * Find the efi memory descriptor for a given physical address.  Given a
+  * physical address, determine if it exists within an EFI Memory Map entry,
 diff --git a/include/linux/efi.h b/include/linux/efi.h
-index ccd4d3f91c98..de05682b233b 100644
+index de05682b233b..950c84ce3f16 100644
 --- a/include/linux/efi.h
 +++ b/include/linux/efi.h
-@@ -684,6 +684,7 @@ extern int __init efi_memmap_split_count(efi_memory_desc_t *md,
- 					 struct range *range);
- extern void __init efi_memmap_insert(struct efi_memory_map *old_memmap,
- 				     void *buf, struct efi_mem_range *mem);
-+extern void __init efi_print_memmap(void);
+@@ -853,6 +853,7 @@ static inline bool efi_rt_services_supported(unsigned int mask)
+ {
+ 	return (efi.runtime_supported_mask & mask) == mask;
+ }
++extern void efi_find_mirror(void);
+ #else
+ static inline bool efi_enabled(int feature)
+ {
+@@ -870,6 +871,8 @@ static inline bool efi_rt_services_supported(unsigned int mask)
+ {
+ 	return false;
+ }
++
++static inline void efi_find_mirror(void) {}
+ #endif
  
- #ifdef CONFIG_EFI_ESRT
- extern void __init efi_esrt_init(void);
+ extern int efi_status_to_err(efi_status_t status);
 -- 
 2.18.0.huawei.25
 
