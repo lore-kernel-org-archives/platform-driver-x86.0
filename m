@@ -2,159 +2,418 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F2FC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 09:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2DFC43219
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Apr 2022 09:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241466AbiDNJKI (ORCPT
+        id S241150AbiDNJTB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Apr 2022 05:10:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42950 "EHLO
+        Thu, 14 Apr 2022 05:19:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241325AbiDNJKH (ORCPT
+        with ESMTP id S241407AbiDNJTB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Apr 2022 05:10:07 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7B7E6D962;
-        Thu, 14 Apr 2022 02:07:43 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: usama.anjum)
-        with ESMTPSA id 148F51F4778C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1649927262;
-        bh=SGjdvm2jxn/wrvUxD5fVBXM2K5YNhQcQ079/GSOHMTM=;
-        h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-        b=m1VxcuIEimr1pL6AXUPBpixE9KfydqWy+Yvf7QNvQCWgfZo4BqCHbv/VeS0fgkaK7
-         1ce043sto+XbA7wCsuXlYMm46Pjr3b0K6ijEEEcnMa6OIa5IhG6naZZ0B0mS1aC/qL
-         2ufKmOPdsV2BBhhBlrzCxZjPMf+FDyA8YmhcGALPXXotqpUQEmZcuWAtJiz6ZUdJAy
-         Uh0QoNEw2Z//xRPlNnYNYWhQ9ZlX6/aPt4WMKtsKe5/fejMMQn6EujuyDQtbjSCmqE
-         Lzbad2vaSYyKkCJMUe1hKffhFCSqfhhPys50gVT1hhVV6JWn0OCVD5fngPfWivyCTN
-         jgs2mwU7cXpgQ==
-Message-ID: <fdd5ac4e-bff1-af65-23f8-d73d6b5306e7@collabora.com>
-Date:   Thu, 14 Apr 2022 14:07:30 +0500
+        Thu, 14 Apr 2022 05:19:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 726BA50469
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Apr 2022 02:16:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1649927794;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oDyHVey8Or3yypg5xnBGmBMb7pZ6GTNQ18Cis2FA/oo=;
+        b=a5Jg2FVT0Js0d7xfEwWA1vvGePp6nNhFIZanOkRgvNgTVJUV/A+Du4J5odSyS1lrL3lHM7
+        2QdKkJR9LXdf7EhIFEEC55ZDYA2kn5pSS/5dTcIrdsugl9Mx7Apv1G3zg59oVbfubwzFDS
+        Nea3mnwWIi92eBxIHDLaHLW2htI+QmI=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-616-FZXdVq5ONGmr7HN4NA14LA-1; Thu, 14 Apr 2022 05:16:33 -0400
+X-MC-Unique: FZXdVq5ONGmr7HN4NA14LA-1
+Received: by mail-lf1-f71.google.com with SMTP id n1-20020a196f41000000b0046d14d9067aso418754lfk.18
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Apr 2022 02:16:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oDyHVey8Or3yypg5xnBGmBMb7pZ6GTNQ18Cis2FA/oo=;
+        b=S4OEF6iLcw1xRWWyMH87cran8qsVbQO2o8MRHohZk20bNZsQxywW16BAA1Xe0U/I8T
+         LLfBMXaHfRgKhzrbhQbf7gxrCCC6lfpgxsAIlCyhhGuQstmEMGQ7vzSNm94Nz1fs2BlY
+         kJY9Wmh57eky8kOBZikrNa8SegYEusRWien9pY3IFtN/B41BapbUxXn1A/Munptvk8UB
+         fv0VBAXbdQwzuRyadWkcs5ePjW3HCkLPYK1E5Tks0qD/TRidLAgJS+7CKafmWtikPRpE
+         bV9lK6zKd4v0I2/Ico0zTE6FnSzUgFu0PoPXd2XGpP9HP6YNJgYuCgC86PXKdosLFC9k
+         5OJw==
+X-Gm-Message-State: AOAM533UaMEexDsTXBzDFOTdAgDm8pP1H9yscxaHtWUrnpT+tfrzLS8I
+        iJElCMauh1198oWPiBAVzCrjq0PFj2gI9DFPUY/J5dyjvpmIZ2NP4vzY2nP89sNlhpQ+FMj3i0e
+        pL1wTz3JIdey0eDT3kJOKUDfCIMS6L/OSsuSnwqoFILFxhwX/5g==
+X-Received: by 2002:a05:6512:3093:b0:46b:814c:3a69 with SMTP id z19-20020a056512309300b0046b814c3a69mr1318061lfd.376.1649927791468;
+        Thu, 14 Apr 2022 02:16:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy0kFBUTO7Dlm65tLj1wmU6knA+DzshVe6hYxPEBB/AR6yhSIFpfw3Y9RgnR4ACapxp3cguHQaa7kh1RItoYPY=
+X-Received: by 2002:a05:6512:3093:b0:46b:814c:3a69 with SMTP id
+ z19-20020a056512309300b0046b814c3a69mr1318022lfd.376.1649927791051; Thu, 14
+ Apr 2022 02:16:31 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Cc:     usama.anjum@collabora.com, Len Brown <lenb@kernel.org>,
+References: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
+ <20220406034346.74409-2-xuanzhuo@linux.alibaba.com> <71fbd7fc-20db-024b-ec66-b875216be4bd@redhat.com>
+ <1649816652.9004085-1-xuanzhuo@linux.alibaba.com>
+In-Reply-To: <1649816652.9004085-1-xuanzhuo@linux.alibaba.com>
+From:   Jason Wang <jasowang@redhat.com>
+Date:   Thu, 14 Apr 2022 17:16:19 +0800
+Message-ID: <CACGkMEvCrgRf=6TXQ_pQU0hm-ZDLEBu5VZcL71+c+jVWq=KLDg@mail.gmail.com>
+Subject: Re: [PATCH v9 01/32] virtio: add helper virtqueue_get_vring_max_size()
+To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Enric Balletbo i Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH RESEND v6] platform: x86: Add ChromeOS ACPI device driver
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-References: <Yk7aeAcKIBrTupcq@debian-BULLSEYE-live-builder-AMD64>
- <708fb1ec-4e57-7a1d-b0a0-a3a10b3cacf3@redhat.com>
- <CAJZ5v0g2UDOR3mYsdqnPcpYgmecY706YQcTKTWMRtezkK0sfaQ@mail.gmail.com>
- <e25f5599-10f5-90b7-227a-01616f722cca@redhat.com>
-From:   Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <e25f5599-10f5-90b7-227a-01616f722cca@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev <netdev@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm <kvm@vger.kernel.org>,
+        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
+        virtualization <virtualization@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 4/11/22 6:40 PM, Hans de Goede wrote:
-> Hi,
-> 
-> On 4/11/22 15:37, Rafael J. Wysocki wrote:
->> On Mon, Apr 11, 2022 at 3:26 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>>
->>> Hi,
->>>
->>> On 4/7/22 14:35, Muhammad Usama Anjum wrote:
->>>> From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>>>
->>>> The x86 Chromebooks have ChromeOS ACPI device. This driver attaches to
->>>> the ChromeOS ACPI device and exports the values reported by ACPI in a
->>>> sysfs directory. This data isn't present in ACPI tables when read
->>>> through ACPI tools, hence a driver is needed to do it. The driver gets
->>>> data from firmware using ACPI component of the kernel. The ACPI values
->>>> are presented in string form (numbers as decimal values) or binary
->>>> blobs, and can be accessed as the contents of the appropriate read only
->>>> files in the standard ACPI device's sysfs directory tree. This data is
->>>> consumed by the ChromeOS user space.
->>>>
->>>> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->>>
->>>
->>> Thanks overall this looks pretty good to me.  The only remark which
->>> I have is that I would like to see the Kconfig symbol changed
->>> from CONFIG_ACPI_CHROMEOS to CONFIG_CHROMEOS_ACPI to match the
->>> filename.
->>>
+On Wed, Apr 13, 2022 at 10:30 AM Xuan Zhuo <xuanzhuo@linux.alibaba.com> wro=
+te:
+>
+> On Tue, 12 Apr 2022 10:41:03 +0800, Jason Wang <jasowang@redhat.com> wrot=
+e:
+> >
+> > =E5=9C=A8 2022/4/6 =E4=B8=8A=E5=8D=8811:43, Xuan Zhuo =E5=86=99=E9=81=
+=93:
+> > > Record the maximum queue num supported by the device.
+> > >
+> > > virtio-net can display the maximum (supported by hardware) ring size =
+in
+> > > ethtool -g eth0.
+> > >
+> > > When the subsequent patch implements vring reset, it can judge whethe=
+r
+> > > the ring size passed by the driver is legal based on this.
+> > >
+> > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > > ---
+> > >   arch/um/drivers/virtio_uml.c             |  1 +
+> > >   drivers/platform/mellanox/mlxbf-tmfifo.c |  2 ++
+> > >   drivers/remoteproc/remoteproc_virtio.c   |  2 ++
+> > >   drivers/s390/virtio/virtio_ccw.c         |  3 +++
+> > >   drivers/virtio/virtio_mmio.c             |  2 ++
+> > >   drivers/virtio/virtio_pci_legacy.c       |  2 ++
+> > >   drivers/virtio/virtio_pci_modern.c       |  2 ++
+> > >   drivers/virtio/virtio_ring.c             | 14 ++++++++++++++
+> > >   drivers/virtio/virtio_vdpa.c             |  2 ++
+> > >   include/linux/virtio.h                   |  2 ++
+> > >   10 files changed, 32 insertions(+)
+> > >
+> > > diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_um=
+l.c
+> > > index ba562d68dc04..904993d15a85 100644
+> > > --- a/arch/um/drivers/virtio_uml.c
+> > > +++ b/arch/um/drivers/virtio_uml.c
+> > > @@ -945,6 +945,7 @@ static struct virtqueue *vu_setup_vq(struct virti=
+o_device *vdev,
+> > >             goto error_create;
+> > >     }
+> > >     vq->priv =3D info;
+> > > +   vq->num_max =3D num;
+> > >     num =3D virtqueue_get_vring_size(vq);
+> > >
+> > >     if (vu_dev->protocol_features &
+> > > diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platf=
+orm/mellanox/mlxbf-tmfifo.c
+> > > index 38800e86ed8a..1ae3c56b66b0 100644
+> > > --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> > > +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> > > @@ -959,6 +959,8 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct vi=
+rtio_device *vdev,
+> > >                     goto error;
+> > >             }
+> > >
+> > > +           vq->num_max =3D vring->num;
+> > > +
+> > >             vqs[i] =3D vq;
+> > >             vring->vq =3D vq;
+> > >             vq->priv =3D vring;
+> > > diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remotep=
+roc/remoteproc_virtio.c
+> > > index 70ab496d0431..7611755d0ae2 100644
+> > > --- a/drivers/remoteproc/remoteproc_virtio.c
+> > > +++ b/drivers/remoteproc/remoteproc_virtio.c
+> > > @@ -125,6 +125,8 @@ static struct virtqueue *rp_find_vq(struct virtio=
+_device *vdev,
+> > >             return ERR_PTR(-ENOMEM);
+> > >     }
+> > >
+> > > +   vq->num_max =3D len;
+> >
+> >
+> > I wonder if this is correct.
+> >
+> > It looks to me len is counted in bytes:
+> >
+> > /**
+> >   * struct rproc_vring - remoteproc vring state
+> >   * @va: virtual address
+> >   * @len: length, in bytes
+> >   * @da: device address
+> >   * @align: vring alignment
+> >   * @notifyid: rproc-specific unique vring index
+> >   * @rvdev: remote vdev
+> >   * @vq: the virtqueue of this vring
+> >   */
+> > struct rproc_vring {
+> >          void *va;
+> >          int len;
+> >          u32 da;
+> >          u32 align;
+> >          int notifyid;
+> >          struct rproc_vdev *rvdev;
+> >          struct virtqueue *vq;
+> > };
+> >
+>
+> I think this comment is incorrect because here len is passed as num to
+> vring_new_virtqueue().
+>
+> There is also this usage:
+>
+>         /* actual size of vring (in bytes) */
+>         size =3D PAGE_ALIGN(vring_size(rvring->len, rvring->align));
+>
+>
+> And this value comes from here:
+>
+>         static int
+>         rproc_parse_vring(struct rproc_vdev *rvdev, struct fw_rsc_vdev *r=
+sc, int i)
+>         {
+>                 struct rproc *rproc =3D rvdev->rproc;
+>                 struct device *dev =3D &rproc->dev;
+>                 struct fw_rsc_vdev_vring *vring =3D &rsc->vring[i];
+>                 struct rproc_vring *rvring =3D &rvdev->vring[i];
+>
+>                 dev_dbg(dev, "vdev rsc: vring%d: da 0x%x, qsz %d, align %=
+d\n",
+>                         i, vring->da, vring->num, vring->align);
+>
+>                 /* verify queue size and vring alignment are sane */
+>                 if (!vring->num || !vring->align) {
+>                         dev_err(dev, "invalid qsz (%d) or alignment (%d)\=
+n",
+>                                 vring->num, vring->align);
+>                         return -EINVAL;
+>                 }
+>
+>        >        rvring->len =3D vring->num;
+>                 rvring->align =3D vring->align;
+>                 rvring->rvdev =3D rvdev;
+>
+>                 return 0;
+>         }
+>
+> /**
+>  * struct fw_rsc_vdev_vring - vring descriptor entry
+>  * @da: device address
+>  * @align: the alignment between the consumer and producer parts of the v=
+ring
+>  * @num: num of buffers supported by this vring (must be power of two)
+>  * @notifyid: a unique rproc-wide notify index for this vring. This notif=
+y
+>  * index is used when kicking a remote processor, to let it know that thi=
+s
+>  * vring is triggered.
+>  * @pa: physical address
+>  *
+>  * This descriptor is not a resource entry by itself; it is part of the
+>  * vdev resource type (see below).
+>  *
+>  * Note that @da should either contain the device address where
+>  * the remote processor is expecting the vring, or indicate that
+>  * dynamically allocation of the vring's device address is supported.
+>  */
+> struct fw_rsc_vdev_vring {
+>         u32 da;
+>         u32 align;
+>         u32 num;
+>         u32 notifyid;
+>         u32 pa;
+> } __packed;
+>
+> So I think the 'len' here may have changed its meaning in a version updat=
+e.
 
-I'll rename in next version.
+I think you're right, let's have a patch to fix the comment (probably
+with the name since len is confusing here).
 
->>> CONFIG_ACPI_CHROMEOS to me suggests that this is an ACPI subsystem
->>> Kconfig option which, with the driver living under
->>> drivers/platform/x86 it is not.
->>>
->>> There is no need to send a new version for this, if you agree
->>> with the change let me know and I can change this while merging
->>> the driver.
->>>
->>> Rafael, before I merge this do you have any (more) remarks
->>> about this driver?
->>
->> I'm not sure why it has to be an acpi_driver.
->>
->> I think that the generic enumeration code creates a platform device
->> for this ACPI device object, so why can't it bind to that platform
->> device?
->>
->> Generally speaking, IMV we should avoid adding drivers binding
->> directly to ACPI device objects, because that is confusing (it is kind
->> of like binding directly to an of_node) and it should be entirely
->> avoidable.
-> 
-> Ah I missed that, good point.
-> 
-> Muhammad can you give turning this into a platform driver a try please?
-> 
-> Note this will change all the sysfs attribute paths from:
-> 
-> /sys/bus/acpi/devices/GGL0001:00/...
-> 
-> to:
-> 
-> /sys/bus/platform/devices/GGL0001:00/...
-> 
-> and the ABI documentation should be updated accordingly.
-> 
+Thanks
 
-Thank you for comments and directions. They mean a lot. I'll make the
-changes in next version.
+>
+> Thanks.
+>
+> >
+> > Other looks good.
+> >
+> > Thanks
+> >
+> >
+> > > +
+> > >     rvring->vq =3D vq;
+> > >     vq->priv =3D rvring;
+> > >
+> > > diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/v=
+irtio_ccw.c
+> > > index d35e7a3f7067..468da60b56c5 100644
+> > > --- a/drivers/s390/virtio/virtio_ccw.c
+> > > +++ b/drivers/s390/virtio/virtio_ccw.c
+> > > @@ -529,6 +529,9 @@ static struct virtqueue *virtio_ccw_setup_vq(stru=
+ct virtio_device *vdev,
+> > >             err =3D -ENOMEM;
+> > >             goto out_err;
+> > >     }
+> > > +
+> > > +   vq->num_max =3D info->num;
+> > > +
+> > >     /* it may have been reduced */
+> > >     info->num =3D virtqueue_get_vring_size(vq);
+> > >
+> > > diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmi=
+o.c
+> > > index 56128b9c46eb..a41abc8051b9 100644
+> > > --- a/drivers/virtio/virtio_mmio.c
+> > > +++ b/drivers/virtio/virtio_mmio.c
+> > > @@ -390,6 +390,8 @@ static struct virtqueue *vm_setup_vq(struct virti=
+o_device *vdev, unsigned index,
+> > >             goto error_new_virtqueue;
+> > >     }
+> > >
+> > > +   vq->num_max =3D num;
+> > > +
+> > >     /* Activate the queue */
+> > >     writel(virtqueue_get_vring_size(vq), vm_dev->base + VIRTIO_MMIO_Q=
+UEUE_NUM);
+> > >     if (vm_dev->version =3D=3D 1) {
+> > > diff --git a/drivers/virtio/virtio_pci_legacy.c b/drivers/virtio/virt=
+io_pci_legacy.c
+> > > index 34141b9abe27..b68934fe6b5d 100644
+> > > --- a/drivers/virtio/virtio_pci_legacy.c
+> > > +++ b/drivers/virtio/virtio_pci_legacy.c
+> > > @@ -135,6 +135,8 @@ static struct virtqueue *setup_vq(struct virtio_p=
+ci_device *vp_dev,
+> > >     if (!vq)
+> > >             return ERR_PTR(-ENOMEM);
+> > >
+> > > +   vq->num_max =3D num;
+> > > +
+> > >     q_pfn =3D virtqueue_get_desc_addr(vq) >> VIRTIO_PCI_QUEUE_ADDR_SH=
+IFT;
+> > >     if (q_pfn >> 32) {
+> > >             dev_err(&vp_dev->pci_dev->dev,
+> > > diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virt=
+io_pci_modern.c
+> > > index 5455bc041fb6..86d301f272b8 100644
+> > > --- a/drivers/virtio/virtio_pci_modern.c
+> > > +++ b/drivers/virtio/virtio_pci_modern.c
+> > > @@ -218,6 +218,8 @@ static struct virtqueue *setup_vq(struct virtio_p=
+ci_device *vp_dev,
+> > >     if (!vq)
+> > >             return ERR_PTR(-ENOMEM);
+> > >
+> > > +   vq->num_max =3D num;
+> > > +
+> > >     /* activate the queue */
+> > >     vp_modern_set_queue_size(mdev, index, virtqueue_get_vring_size(vq=
+));
+> > >     vp_modern_queue_address(mdev, index, virtqueue_get_desc_addr(vq),
+> > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_rin=
+g.c
+> > > index 962f1477b1fa..b87130c8f312 100644
+> > > --- a/drivers/virtio/virtio_ring.c
+> > > +++ b/drivers/virtio/virtio_ring.c
+> > > @@ -2371,6 +2371,20 @@ void vring_transport_features(struct virtio_de=
+vice *vdev)
+> > >   }
+> > >   EXPORT_SYMBOL_GPL(vring_transport_features);
+> > >
+> > > +/**
+> > > + * virtqueue_get_vring_max_size - return the max size of the virtque=
+ue's vring
+> > > + * @_vq: the struct virtqueue containing the vring of interest.
+> > > + *
+> > > + * Returns the max size of the vring.
+> > > + *
+> > > + * Unlike other operations, this need not be serialized.
+> > > + */
+> > > +unsigned int virtqueue_get_vring_max_size(struct virtqueue *_vq)
+> > > +{
+> > > +   return _vq->num_max;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(virtqueue_get_vring_max_size);
+> > > +
+> > >   /**
+> > >    * virtqueue_get_vring_size - return the size of the virtqueue's vr=
+ing
+> > >    * @_vq: the struct virtqueue containing the vring of interest.
+> > > diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdp=
+a.c
+> > > index 7767a7f0119b..39e4c08eb0f2 100644
+> > > --- a/drivers/virtio/virtio_vdpa.c
+> > > +++ b/drivers/virtio/virtio_vdpa.c
+> > > @@ -183,6 +183,8 @@ virtio_vdpa_setup_vq(struct virtio_device *vdev, =
+unsigned int index,
+> > >             goto error_new_virtqueue;
+> > >     }
+> > >
+> > > +   vq->num_max =3D max_num;
+> > > +
+> > >     /* Setup virtqueue callback */
+> > >     cb.callback =3D virtio_vdpa_virtqueue_cb;
+> > >     cb.private =3D info;
+> > > diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> > > index 72292a62cd90..d59adc4be068 100644
+> > > --- a/include/linux/virtio.h
+> > > +++ b/include/linux/virtio.h
+> > > @@ -31,6 +31,7 @@ struct virtqueue {
+> > >     struct virtio_device *vdev;
+> > >     unsigned int index;
+> > >     unsigned int num_free;
+> > > +   unsigned int num_max;
+> > >     void *priv;
+> > >   };
+> > >
+> > > @@ -80,6 +81,7 @@ bool virtqueue_enable_cb_delayed(struct virtqueue *=
+vq);
+> > >
+> > >   void *virtqueue_detach_unused_buf(struct virtqueue *vq);
+> > >
+> > > +unsigned int virtqueue_get_vring_max_size(struct virtqueue *vq);
+> > >   unsigned int virtqueue_get_vring_size(struct virtqueue *vq);
+> > >
+> > >   bool virtqueue_is_broken(struct virtqueue *vq);
+> >
+>
 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-
--- 
-Muhammad Usama Anjum
