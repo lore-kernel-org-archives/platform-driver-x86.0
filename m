@@ -2,168 +2,144 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F5CC43219
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Apr 2022 22:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7A0C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Apr 2022 02:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356310AbiDOWEJ (ORCPT
+        id S229720AbiDPCT0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Apr 2022 18:04:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40668 "EHLO
+        Fri, 15 Apr 2022 22:19:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356269AbiDOWEC (ORCPT
+        with ESMTP id S229454AbiDPCTA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Apr 2022 18:04:02 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270FA35DE2;
-        Fri, 15 Apr 2022 15:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650060093; x=1681596093;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MFGHhgLkVammlMUcup3VFIj0qo6uQ1md0in8hWs4fk0=;
-  b=aAQvBSlMRtbqBeDLsytxJbLWtLYsX70UPMlNjdMoOJzRG8XO/zbUuGTm
-   WnDI8WzvLoQmlvvI0Q26jZQz9doSswnZWtZASvJ6iA0gEmfcZLokOtRT1
-   oSceJMpeEmjEUfn+/2Qna6MaXRB5wtxKmDMdPJ5lKVZHz9Y+tEmN5p68J
-   wYpHTPu8QRYx0gsRzYw1ti6GxxYzBSP+hKq4vIAbNq8GBOlC3SETszR8e
-   7bucajJzVI4MXi2Z3QklYDkFzKybBteA9J3PVj8d/P+48LoMVBglQmzvE
-   MgF+9ejNrOm4IjbEwH4ARo/VStc8o3L15wZeB4N3uVc22W01KIqyGkooP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10318"; a="288303532"
-X-IronPort-AV: E=Sophos;i="5.90,263,1643702400"; 
-   d="scan'208";a="288303532"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2022 15:01:31 -0700
-X-IronPort-AV: E=Sophos;i="5.90,263,1643702400"; 
-   d="scan'208";a="612949094"
-Received: from smashtou-mobl1.amr.corp.intel.com (HELO skuppusw-desk1.amr.corp.intel.com) ([10.212.128.210])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2022 15:01:30 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     "H . Peter Anvin" <hpa@zytor.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 2/4] x86/tdx: Add tdx_hcall_get_quote() API support
-Date:   Fri, 15 Apr 2022 15:01:07 -0700
-Message-Id: <20220415220109.282834-3-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+        Fri, 15 Apr 2022 22:19:00 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45A93C72F;
+        Fri, 15 Apr 2022 19:16:24 -0700 (PDT)
+Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4KgFtl21SZzCr3Z;
+        Sat, 16 Apr 2022 09:27:43 +0800 (CST)
+Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
+ dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 16 Apr 2022 09:32:04 +0800
+Received: from [10.174.178.120] (10.174.178.120) by
+ dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 16 Apr 2022 09:32:02 +0800
+Message-ID: <6de859df-e1c3-e9aa-4530-3b61b9c69a28@huawei.com>
+Date:   Sat, 16 Apr 2022 09:32:01 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v2 0/9] introduce mirrored memory support for arm64
+To:     <ardb@kernel.org>
+CC:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <corbet@lwn.net>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+        <x86@kernel.org>, <hpa@zyccr.com>, <dvhart@infradead.org>,
+        <andy@infradead.org>, <rppt@kernel.org>, <paulmck@kernel.org>,
+        <peterz@infradead.org>, <jroedel@suse.de>,
+        <songmuchun@bytedance.com>, <macro@orcam.me.uk>,
+        <frederic@kernel.org>, <W_Armin@gmx.de>, <john.garry@huawei.com>,
+        <seanjc@google.com>, <tsbogend@alpha.franken.de>,
+        <anshuman.khandual@arm.com>, <chenhuacai@kernel.org>,
+        <david@redhat.com>, <gpiccoli@igalia.com>, <mark.rutland@arm.com>,
+        <wangkefeng.wang@huawei.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>
+References: <20220414101314.1250667-1-mawupeng1@huawei.com>
+ <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
+From:   mawupeng <mawupeng1@huawei.com>
+In-Reply-To: <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.178.120]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500014.china.huawei.com (7.185.36.153)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Attestation is the process used by two un-trusted entities to prove to
-each other that it can be trusted. In TDX guest, attestation is mainly
-used to verify the trustworthiness of a TD to the 3rd party key
-servers.
 
-First step in the attestation process is to generate the TDREPORT data.
-This support is added using tdx_mcall_tdreport() API. The second stage
-in the attestation process is for the guest to request the VMM generate
-and sign a quote based on the TDREPORT acquired earlier. More details
-about the steps involved in attestation process can be found in TDX
-Guest-Host Communication Interface (GHCI) for Intel TDX 1.5, section
-titled "TD attestation"
 
-Add tdx_hcall_get_quote() helper function to implement the GetQuote
-hypercall.
+在 2022/4/14 18:22, Ard Biesheuvel 写道:
+> On Thu, 14 Apr 2022 at 11:54, Wupeng Ma <mawupeng1@huawei.com> wrote:
+>>
+>> From: Ma Wupeng <mawupeng1@huawei.com>
+>>
+>> Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
+>> introduced mirrored memory support for x86. This support rely on UEFI to
+>> report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-158:
+>>
+>>    http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
+>>
+>> Memory mirroring is a technique used to separate memory into two separate
+>> channels, usually on a memory device, like a server. In memory mirroring,
+>> one channel is copied to another to create redundancy. This method makes
+>> input/output (I/O) registers and memory appear with more than one address
+>> range because the same physical byte is accessible at more than one
+>> address. Using memory mirroring, higher memory reliability and a higher
+>> level of memory consolidation are possible.
+>>
+>> Arm64 can support this too. So mirrored memory support is added to support
+>> arm64.
+>>
+>> Efi_fake_mem is used for testing mirrored features and will not be used in
+>> production environment. This test features can fake memory's attribute
+>> values.
+>>
+>> The reason why efi_fake_mem support is put first is that memory's attribute
+>> is reported by BIOS which is hard to simulate. With this support, any arm64
+>> machines with efi support can easily test mirrored features.
+>>
+>> The main purpose of this patchset is to introduce mirrored support for
+>> arm64 and we have already fixed the problems we had which is shown in
+>> patch #5 to patch #7 and try to bring total isolation in patch #8 which
+>> will disable mirror feature if kernelcore is not specified.
+>>
+>> In order to test this support in arm64:
+>> - patch this patchset
+>> - add efi_fake_mem=8G@0:0x10000 in kernel parameter to simulate mirrored
+>>    memroy between phy addr 0-8G.
+>> - add kernelcore=mirror in kernel parameter
+>> - start you kernel
+>>
+> 
+> As I explained before:
+> 
+> - NAK to EFI fake_mem support on arm64
 
-More details about the GetQuote TDVMCALL are in the Guest-Host
-Communication Interface (GHCI) Specification, sec 3.3, titled
-"VP.VMCALL<GetQuote>".
+fake_mem support on arm64 will be removed in subsequent version.
 
-This will be used by the TD attestation driver in follow-on patches.
+> - NAK to the whole series until you come up with a proposal on how to
+> locate the static kernel image itself into more reliable memory, as
+> there is really no point to any of this otherwise.
 
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- arch/x86/coco/tdx/tdx.c    | 38 ++++++++++++++++++++++++++++++++++++++
- arch/x86/include/asm/tdx.h |  2 ++
- 2 files changed, 40 insertions(+)
+Sorry I am not familiar with this, as you metioned before,
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 3e409b618d3f..c259d81a5d7f 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -21,6 +21,7 @@
- 
- /* TDX hypercall Leaf IDs */
- #define TDVMCALL_MAP_GPA		0x10001
-+#define TDVMCALL_GET_QUOTE		0x10002
- 
- /* MMIO direction */
- #define EPT_READ	0
-@@ -144,6 +145,43 @@ long tdx_mcall_tdreport(void *data, void *reportdata)
- }
- EXPORT_SYMBOL_GPL(tdx_mcall_tdreport);
- 
-+/*
-+ * tdx_hcall_get_quote() - Generate TDQUOTE using TDREPORT_STRUCT.
-+ *
-+ * @data        : Address of 8KB GPA memory which contains
-+ *                TDREPORT_STRUCT.
-+ * @len		: Length of the GPA in bytes.
-+ *
-+ * return 0 on success or failure error number.
-+ */
-+long tdx_hcall_get_quote(void *data, u64 len)
-+{
-+	u64 ret;
-+
-+	/*
-+	 * Use confidential guest TDX check to ensure this API is only
-+	 * used by TDX guest platforms.
-+	 */
-+	if (!data || !cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
-+		return -EINVAL;
-+
-+	/*
-+	 * Pass the physical address of tdreport data to the VMM
-+	 * and trigger the tdquote generation. Quote data will be
-+	 * stored back in the same physical address space. More info
-+	 * about ABI can be found in TDX Guest-Host-Communication
-+	 * Interface (GHCI), sec titled "TDG.VP.VMCALL<GetQuote>".
-+	 */
-+	ret = _tdx_hypercall(TDVMCALL_GET_QUOTE, cc_mkdec(virt_to_phys(data)),
-+			     len, 0, 0);
-+
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(tdx_hcall_get_quote);
-+
- static u64 get_cc_mask(void)
- {
- 	struct tdx_module_output out;
-diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-index a151f69dd6ef..014cc6192dc5 100644
---- a/arch/x86/include/asm/tdx.h
-+++ b/arch/x86/include/asm/tdx.h
-@@ -69,6 +69,8 @@ bool tdx_early_handle_ve(struct pt_regs *regs);
- 
- long tdx_mcall_tdreport(void *data, void *reportdata);
- 
-+long tdx_hcall_get_quote(void *data, u64 len);
-+
- #else
- 
- static inline void tdx_early_init(void) { };
--- 
-2.25.1
+ > you have to iterate over the memory map and look for regions with
+ > the desired attribute, and allocate those pages explicitly.
+
+Do you mean this is x86, commit c05cd79750fb
+("x86/boot/KASLR: Prefer mirrored memory regions for the kernel physical address").
+I will do some research.
+
+ > I'd prefer to implement this in the bootloader, and only add minimal
+ > logic to the stub to respect the placement of the kernel by the loader
+ > if the loader signals it to do so.
+
+Does this bootloader refer to grub and then add minimal logic to arm64-stub.c?
+
+What is the loader signal?
+System exists mirrored memory reported by uefi?
+
+Thanks for reviewing, sorry for my ignorance on this.
+
+> .
+
+
 
