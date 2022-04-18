@@ -2,144 +2,255 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7A0C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Apr 2022 02:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC2CC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Apr 2022 03:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbiDPCT0 (ORCPT
+        id S236015AbiDRD0x (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Apr 2022 22:19:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51876 "EHLO
+        Sun, 17 Apr 2022 23:26:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbiDPCTA (ORCPT
+        with ESMTP id S236005AbiDRD0v (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Apr 2022 22:19:00 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45A93C72F;
-        Fri, 15 Apr 2022 19:16:24 -0700 (PDT)
-Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4KgFtl21SZzCr3Z;
-        Sat, 16 Apr 2022 09:27:43 +0800 (CST)
-Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Sat, 16 Apr 2022 09:32:04 +0800
-Received: from [10.174.178.120] (10.174.178.120) by
- dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Sat, 16 Apr 2022 09:32:02 +0800
-Message-ID: <6de859df-e1c3-e9aa-4530-3b61b9c69a28@huawei.com>
-Date:   Sat, 16 Apr 2022 09:32:01 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v2 0/9] introduce mirrored memory support for arm64
-To:     <ardb@kernel.org>
-CC:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <corbet@lwn.net>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-        <x86@kernel.org>, <hpa@zyccr.com>, <dvhart@infradead.org>,
-        <andy@infradead.org>, <rppt@kernel.org>, <paulmck@kernel.org>,
-        <peterz@infradead.org>, <jroedel@suse.de>,
-        <songmuchun@bytedance.com>, <macro@orcam.me.uk>,
-        <frederic@kernel.org>, <W_Armin@gmx.de>, <john.garry@huawei.com>,
-        <seanjc@google.com>, <tsbogend@alpha.franken.de>,
-        <anshuman.khandual@arm.com>, <chenhuacai@kernel.org>,
-        <david@redhat.com>, <gpiccoli@igalia.com>, <mark.rutland@arm.com>,
-        <wangkefeng.wang@huawei.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>
-References: <20220414101314.1250667-1-mawupeng1@huawei.com>
- <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
-From:   mawupeng <mawupeng1@huawei.com>
-In-Reply-To: <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.120]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
+        Sun, 17 Apr 2022 23:26:51 -0400
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7C0D140D2;
+        Sun, 17 Apr 2022 20:24:12 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0VAHFyW._1650252245;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VAHFyW._1650252245)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 18 Apr 2022 11:24:06 +0800
+Message-ID: <1650252077.7934203-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH v9 31/32] virtio_net: support rx/tx queue resize
+Date:   Mon, 18 Apr 2022 11:21:17 +0800
+From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
+ <20220406034346.74409-32-xuanzhuo@linux.alibaba.com>
+ <122008a6-1e79-14d3-1478-59f96464afc9@redhat.com>
+In-Reply-To: <122008a6-1e79-14d3-1478-59f96464afc9@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, 13 Apr 2022 16:00:18 +0800, Jason Wang <jasowang@redhat.com> wrote:
+>
+> =E5=9C=A8 2022/4/6 =E4=B8=8A=E5=8D=8811:43, Xuan Zhuo =E5=86=99=E9=81=93:
+> > This patch implements the resize function of the rx, tx queues.
+> > Based on this function, it is possible to modify the ring num of the
+> > queue.
+> >
+> > There may be an exception during the resize process, the resize may
+> > fail, or the vq can no longer be used. Either way, we must execute
+> > napi_enable(). Because napi_disable is similar to a lock, napi_enable
+> > must be called after calling napi_disable.
+> >
+> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > ---
+> >   drivers/net/virtio_net.c | 81 ++++++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 81 insertions(+)
+> >
+> > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > index b8bf00525177..ba6859f305f7 100644
+> > --- a/drivers/net/virtio_net.c
+> > +++ b/drivers/net/virtio_net.c
+> > @@ -251,6 +251,9 @@ struct padded_vnet_hdr {
+> >   	char padding[4];
+> >   };
+> >
+> > +static void virtnet_sq_free_unused_buf(struct virtqueue *vq, void *buf=
+);
+> > +static void virtnet_rq_free_unused_buf(struct virtqueue *vq, void *buf=
+);
+> > +
+> >   static bool is_xdp_frame(void *ptr)
+> >   {
+> >   	return (unsigned long)ptr & VIRTIO_XDP_FLAG;
+> > @@ -1369,6 +1372,15 @@ static void virtnet_napi_enable(struct virtqueue=
+ *vq, struct napi_struct *napi)
+> >   {
+> >   	napi_enable(napi);
+> >
+> > +	/* Check if vq is in reset state. The normal reset/resize process will
+> > +	 * be protected by napi. However, the protection of napi is only enab=
+led
+> > +	 * during the operation, and the protection of napi will end after the
+> > +	 * operation is completed. If re-enable fails during the process, vq
+> > +	 * will remain unavailable with reset state.
+> > +	 */
+> > +	if (vq->reset)
+> > +		return;
+>
+>
+> I don't get when could we hit this condition.
+>
+>
+> > +
+> >   	/* If all buffers were filled by other side before we napi_enabled, =
+we
+> >   	 * won't get another interrupt, so process any outstanding packets n=
+ow.
+> >   	 * Call local_bh_enable after to trigger softIRQ processing.
+> > @@ -1413,6 +1425,15 @@ static void refill_work(struct work_struct *work)
+> >   		struct receive_queue *rq =3D &vi->rq[i];
+> >
+> >   		napi_disable(&rq->napi);
+> > +
+> > +		/* Check if vq is in reset state. See more in
+> > +		 * virtnet_napi_enable()
+> > +		 */
+> > +		if (rq->vq->reset) {
+> > +			virtnet_napi_enable(rq->vq, &rq->napi);
+> > +			continue;
+> > +		}
+>
+>
+> Can we do something similar in virtnet_close() by canceling the work?
+>
+>
+> > +
+> >   		still_empty =3D !try_fill_recv(vi, rq, GFP_KERNEL);
+> >   		virtnet_napi_enable(rq->vq, &rq->napi);
+> >
+> > @@ -1523,6 +1544,10 @@ static void virtnet_poll_cleantx(struct receive_=
+queue *rq)
+> >   	if (!sq->napi.weight || is_xdp_raw_buffer_queue(vi, index))
+> >   		return;
+> >
+> > +	/* Check if vq is in reset state. See more in virtnet_napi_enable() */
+> > +	if (sq->vq->reset)
+> > +		return;
+>
+>
+> We've disabled TX napi, any chance we can still hit this?
 
 
-在 2022/4/14 18:22, Ard Biesheuvel 写道:
-> On Thu, 14 Apr 2022 at 11:54, Wupeng Ma <mawupeng1@huawei.com> wrote:
->>
->> From: Ma Wupeng <mawupeng1@huawei.com>
->>
->> Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
->> introduced mirrored memory support for x86. This support rely on UEFI to
->> report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-158:
->>
->>    http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
->>
->> Memory mirroring is a technique used to separate memory into two separate
->> channels, usually on a memory device, like a server. In memory mirroring,
->> one channel is copied to another to create redundancy. This method makes
->> input/output (I/O) registers and memory appear with more than one address
->> range because the same physical byte is accessible at more than one
->> address. Using memory mirroring, higher memory reliability and a higher
->> level of memory consolidation are possible.
->>
->> Arm64 can support this too. So mirrored memory support is added to support
->> arm64.
->>
->> Efi_fake_mem is used for testing mirrored features and will not be used in
->> production environment. This test features can fake memory's attribute
->> values.
->>
->> The reason why efi_fake_mem support is put first is that memory's attribute
->> is reported by BIOS which is hard to simulate. With this support, any arm64
->> machines with efi support can easily test mirrored features.
->>
->> The main purpose of this patchset is to introduce mirrored support for
->> arm64 and we have already fixed the problems we had which is shown in
->> patch #5 to patch #7 and try to bring total isolation in patch #8 which
->> will disable mirror feature if kernelcore is not specified.
->>
->> In order to test this support in arm64:
->> - patch this patchset
->> - add efi_fake_mem=8G@0:0x10000 in kernel parameter to simulate mirrored
->>    memroy between phy addr 0-8G.
->> - add kernelcore=mirror in kernel parameter
->> - start you kernel
->>
-> 
-> As I explained before:
-> 
-> - NAK to EFI fake_mem support on arm64
+static int virtnet_poll(struct napi_struct *napi, int budget)
+{
+	struct receive_queue *rq =3D
+		container_of(napi, struct receive_queue, napi);
+	struct virtnet_info *vi =3D rq->vq->vdev->priv;
+	struct send_queue *sq;
+	unsigned int received;
+	unsigned int xdp_xmit =3D 0;
 
-fake_mem support on arm64 will be removed in subsequent version.
+	virtnet_poll_cleantx(rq);
+...
+}
 
-> - NAK to the whole series until you come up with a proposal on how to
-> locate the static kernel image itself into more reliable memory, as
-> there is really no point to any of this otherwise.
+This is called by rx poll. Although it is the logic of tx, it is not driven=
+ by
+tx napi, but is called in rx poll.
 
-Sorry I am not familiar with this, as you metioned before,
-
- > you have to iterate over the memory map and look for regions with
- > the desired attribute, and allocate those pages explicitly.
-
-Do you mean this is x86, commit c05cd79750fb
-("x86/boot/KASLR: Prefer mirrored memory regions for the kernel physical address").
-I will do some research.
-
- > I'd prefer to implement this in the bootloader, and only add minimal
- > logic to the stub to respect the placement of the kernel by the loader
- > if the loader signals it to do so.
-
-Does this bootloader refer to grub and then add minimal logic to arm64-stub.c?
-
-What is the loader signal?
-System exists mirrored memory reported by uefi?
-
-Thanks for reviewing, sorry for my ignorance on this.
-
-> .
+Thanks.
 
 
-
+>
+>
+> > +
+> >   	if (__netif_tx_trylock(txq)) {
+> >   		do {
+> >   			virtqueue_disable_cb(sq->vq);
+> > @@ -1769,6 +1794,62 @@ static netdev_tx_t start_xmit(struct sk_buff *sk=
+b, struct net_device *dev)
+> >   	return NETDEV_TX_OK;
+> >   }
+> >
+> > +static int virtnet_rx_resize(struct virtnet_info *vi,
+> > +			     struct receive_queue *rq, u32 ring_num)
+> > +{
+> > +	int err;
+> > +
+> > +	napi_disable(&rq->napi);
+> > +
+> > +	err =3D virtqueue_resize(rq->vq, ring_num, virtnet_rq_free_unused_buf=
+);
+> > +	if (err)
+> > +		goto err;
+> > +
+> > +	if (!try_fill_recv(vi, rq, GFP_KERNEL))
+> > +		schedule_delayed_work(&vi->refill, 0);
+> > +
+> > +	virtnet_napi_enable(rq->vq, &rq->napi);
+> > +	return 0;
+> > +
+> > +err:
+> > +	netdev_err(vi->dev,
+> > +		   "reset rx reset vq fail: rx queue index: %td err: %d\n",
+> > +		   rq - vi->rq, err);
+> > +	virtnet_napi_enable(rq->vq, &rq->napi);
+> > +	return err;
+> > +}
+> > +
+> > +static int virtnet_tx_resize(struct virtnet_info *vi,
+> > +			     struct send_queue *sq, u32 ring_num)
+> > +{
+> > +	struct netdev_queue *txq;
+> > +	int err, qindex;
+> > +
+> > +	qindex =3D sq - vi->sq;
+> > +
+> > +	virtnet_napi_tx_disable(&sq->napi);
+> > +
+> > +	txq =3D netdev_get_tx_queue(vi->dev, qindex);
+> > +	__netif_tx_lock_bh(txq);
+> > +	netif_stop_subqueue(vi->dev, qindex);
+> > +	__netif_tx_unlock_bh(txq);
+> > +
+> > +	err =3D virtqueue_resize(sq->vq, ring_num, virtnet_sq_free_unused_buf=
+);
+> > +	if (err)
+> > +		goto err;
+> > +
+> > +	netif_start_subqueue(vi->dev, qindex);
+> > +	virtnet_napi_tx_enable(vi, sq->vq, &sq->napi);
+> > +	return 0;
+> > +
+> > +err:
+>
+>
+> I guess we can still start the queue in this case? (Since we don't
+> change the queue if resize fails).
+>
+>
+> > +	netdev_err(vi->dev,
+> > +		   "reset tx reset vq fail: tx queue index: %td err: %d\n",
+> > +		   sq - vi->sq, err);
+> > +	virtnet_napi_tx_enable(vi, sq->vq, &sq->napi);
+> > +	return err;
+> > +}
+> > +
+> >   /*
+> >    * Send command via the control virtqueue and check status.  Commands
+> >    * supported by the hypervisor, as indicated by feature bits, should
+>
