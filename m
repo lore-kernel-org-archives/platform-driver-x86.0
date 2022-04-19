@@ -2,90 +2,262 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A17C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 14:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E04C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 16:39:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353299AbiDSO33 (ORCPT
+        id S1354761AbiDSQly (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Apr 2022 10:29:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45240 "EHLO
+        Tue, 19 Apr 2022 12:41:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353323AbiDSO3X (ORCPT
+        with ESMTP id S1354747AbiDSQlt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Apr 2022 10:29:23 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 541F3377C8;
-        Tue, 19 Apr 2022 07:26:29 -0700 (PDT)
+        Tue, 19 Apr 2022 12:41:49 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60BB41583C;
+        Tue, 19 Apr 2022 09:39:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650378389; x=1681914389;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6ZehDyhn6H9IPo7sJc5toahw5KCrc55KbG4HpfjT9p4=;
-  b=hH0foKhnbIfNruIimz5q1Det54aL8kQYecUgjg9jKSijulCPwyb5vtIx
-   ebhNDhp+WkshRBz9PZK60AJLGE7xj2BDgxNUp35GMtLGMAaLi2L/4zChd
-   gA0iJ6tHOYn/qeWg2UQJTEzzkbL7P/EEdvj8peICDzSeTjCj9wKwzbFVI
-   O5YkFUjGQ7oc6j+YLv4wG2hip++2yUJLejW0QC4wP6Xum643kJF729EuF
-   lkFgzWA2ccVC/vJvbVPy0phEb+C4yNlpSCkOgXMXBlMceUWr+Rd0sTj4s
-   QX0ZYWJC1/Kkx5VgdGBizPzivVXOWBketkzAhjqsNGqW38lmxyjhR67ae
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10322"; a="261378586"
-X-IronPort-AV: E=Sophos;i="5.90,272,1643702400"; 
-   d="scan'208";a="261378586"
+  t=1650386346; x=1681922346;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=9vli4iYZWjS13tNYw2fyNdEXM3eToMaMHVWZqh/R3S4=;
+  b=gYWvzDBWgbUtwNXKXYcjRWXTKBjVLEXlix5zdsr5hHwXmxbQp6qY0CiO
+   lJbC6QApb8ijybk0493wcgOhhLqXFsNkDmyQLZzlVvPr4DnyT3I9JID3J
+   CAIgveyvmIHM4BOJae+GgsE69RSUU2BSjWkMGwzzNwJQuyiQ3NNGBwyWX
+   iLJQGxgTZITbz3U7/n15tV77XSD11T4ko3QawB9j6IIwO4YhRsGB+iEiO
+   EtyEL9WXger/8qZm4nwMQEC0jkIvgnSKe7GTf8QMcZMHD8BoLeaVxJCcD
+   VNzTfkLX+RGUrkEWX9A5CkQE9V1zHjG0cWC58dwW80mIddUpyfhjNaXtD
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10322"; a="245702516"
+X-IronPort-AV: E=Sophos;i="5.90,273,1643702400"; 
+   d="scan'208";a="245702516"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 07:26:12 -0700
-X-IronPort-AV: E=Sophos;i="5.90,272,1643702400"; 
-   d="scan'208";a="554749722"
-Received: from chferrer-mobl.amr.corp.intel.com (HELO [10.209.37.31]) ([10.209.37.31])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 07:26:11 -0700
-Message-ID: <c76f77af-47cb-20a9-3187-8241284c6921@linux.intel.com>
-Date:   Tue, 19 Apr 2022 07:26:11 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 09:39:05 -0700
+X-IronPort-AV: E=Sophos;i="5.90,273,1643702400"; 
+   d="scan'208";a="554802124"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 09:39:05 -0700
+From:   Tony Luck <tony.luck@intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        corbet@lwn.net, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com, rostedt@goodmis.org,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com
+Subject: [PATCH v3 00/11] Introduce In Field Scan driver
+Date:   Tue, 19 Apr 2022 09:38:48 -0700
+Message-Id: <20220419163859.2228874-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220407191347.9681-1-jithu.joseph@intel.com>
+References: <20220407191347.9681-1-jithu.joseph@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.7.0
-Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-Content-Language: en-US
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     "H . Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
- <bd83067542a3519ee4c91f9d50e9bd4fac27e4bb.camel@intel.com>
- <975b5050-2108-9ace-cc71-46f17db0a731@intel.com>
- <4875ea9c-593a-e669-889a-1e809a50a570@linux.intel.com>
- <72205a7a-faf2-4322-02cd-303ee8252abb@intel.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <72205a7a-faf2-4322-02cd-303ee8252abb@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Longer description of what this does, and why it is useful in the v2 cover
+letter here:
+  https://lore.kernel.org/all/20220407191347.9681-1-jithu.joseph@intel.com/
+
+But the TL;DR version is this driver loads scan test files that can
+check whether silicon in a CPU core is still running correctly. It
+is expected that these tests would be run several times per day to
+catch problems as silicon ages.
+
+I'm posting this update because I missed many major issues when I added
+my review tag. So I have a moral obligation to fix up the things that
+I missed.
+
+Changes since V2:
+
+Dan Williams (offline):
+----------------------
+1) Provided the clue to split into a tiny driver that enumerates and
+   registers the device. Then the IFS driver can attach to that an behave
+   much more like a normal driver (original idea from Andy Lutomirski,
+   used for pmem/nvdimms)
+
+2 .. many) Lots more pointers, tips, and general good guidance to make both
+   the code and commit comments better and easier to understand.
+
+Boris:
+-----
+1) Add "intel_" prefixes to the two functions moving to wider scope.
+
+Done.
+
+2) Move the declarations from <asm/microcode_intel.h> to <asm/cpu.h>
+
+Done.
+
+3) intel_cpu_signatures_match() is small enough to be "inline".
+
+Done.
+
+Greg:
+----
+1) Is the firmware already submitted to the linux-firmware project for
+   inclusion there?
+   If not, where should a user get it from?
+
+The scan files will be distributed by Intel on Github in much the
+same way that microcode is distributed today.
+
+2) > +struct ifs_binary ifs_binary;
+
+   Please no static memory.  Use the driver model properly which does not
+   want you to do this at all.
+
+   You should not need this at all.  If you do, something is wrong as you
+   are tying the lifecycle of the memory to the code, not to the device.
+
+Moved this (and ifs_test) to dynamic allocation using devm_kzalloc()
+and attaching the resulting pointer to the device with dev_set_drvdata().
+
+3) > +static ssize_t details_show(struct device *dev,
+   > +			    struct device_attribute *attr,
+   > +			    char *buf)
+   > +{
+   > +	int ret;
+   > +
+   > +	if (down_trylock(&ifs_sem))
+   > +		return -EBUSY;
+
+   Why do you care about locking here at all?
+
+   > +
+   > +	ret = sysfs_emit(buf, "%#llx\n", ifs_test.scan_details);
+   > +	up(&ifs_sem);
+
+   What are you protecting?  The value can change right after the lock is
+   released, so who cares?
+
+Removed locking from status and details show() functions. Running a test
+is synchronous. So:
+  # echo 3 > run_test
+  # cat status
+  # cat details
+will give the results of the core 3 test as expected. It is up to the user
+to not do dumb things like reading status/details from another process in
+parallel with running tests.
+
+4) > +	if (!ifs_binary.loaded) {
+   > +		dev_info(&ifs_pdev->dev, "Load scan binary using driver bind interface\n");
+
+   Do not allow userspace to spam kernel logs for no reason :(
+
+   sysfs files are not "help files" in the kernel.
+
+Spam removed.
+
+5) > +void ifs_sysfs_add(void)
+   > +{
+   > +	ifs_pdev->dev.groups = plat_ifs_groups;
+
+   Why do you have a single global structure?
+
+All instances of the driver for different tests can use the same files
+and functions. They use "struct ifs_data *ifsd = dev_get_drvdata(dev);"
+to operate on the correct driver instance.
+
+6) > +KernelVersion:	5.19.0
+
+   No need for ".0"
+
+Removed.
+
+7) > +		For e.g to test cpu5 do echo 5 > /sys/devices/platform/intel_ifs/run_test
+
+   So core numbers are different than cpu numbers here?  How are users
+   going to map them?
+
+Added some extra text here to say that tests are per core, but any thread
+on the core can be used to run the test. Should I also point people at
+/sys/devices/system/cpu/cpu#/topology/thread_siblings_list? It seems
+easy for users to get a list of cores with a script like:
+$ cores=$(cat /sys/devices/system/cpu/cpu*/topology/thread_siblings_list | sed -e 's/,.*//' | sort -n | uniq)
+
+8) > +Description:	Version of loaded IFS binary image.
+
+   In what format?
+
+Added "(hexadecimal)". Also added code (and Docs) to print "none" if the load
+of the scan file failed.
+
+9) > +Description:	echo "intel_ifs" to reload IFS image.
+
+   Huh?  Why are you using a common sysfs file for this type of attribute?
+   Please do not do so, make it "reload" or something like that.
+
+Ok. Added a "reload" file like microcode. (Though using driver bind/unbind
+also works).
+
+10) > +Description:	IFS tunable parameter that user can modify before
+   > +		the scan run if they wish to override default value.
+
+   And where are those parameters documented?  What are valid values here?
+
+Dropped both the "noirq" and "retry" parameters. I think they now have sane
+defaults. If Jithu/Ashok have a good use case, they can send a patch to add
+them back.
+
+-Tony
 
 
-On 4/19/22 7:24 AM, Dave Hansen wrote:
->> Current driver size is ~300 lines. It adds ~500 bytes to the kernel
->> binary if it is built-in.
-> That doesn't sound like good use of a Kconfig option to me.  Just
-> explain in the cover letter:
-> 
-> 	Any distribution enabling TDX is also expected to need
-> 	attestation.  The compiled size is quite small (500 bytes).
+Jithu Joseph (7):
+  x86/microcode/intel: Expose collect_cpu_info_early() for IFS
+  platform/x86/intel/ifs: Read IFS firmware image
+  platform/x86/intel/ifs: Check IFS Image sanity
+  platform/x86/intel/ifs: Authenticate and copy to secured memory
+  platform/x86/intel/ifs: Add scan test support
+  platform/x86/intel/ifs: Add IFS sysfs interface
+  platform/x86/intel/ifs: add ABI documentation for IFS
 
-Ok. I will add it.
+Tony Luck (4):
+  Documentation: In-Field Scan
+  platform/x86/intel/ifs: Create device for Intel IFS (In Field Scan)
+  platform/x86/intel/ifs: Add stub driver for In-Field Scan
+  trace: platform/x86/intel/ifs: Add trace point to track Intel IFS
+    operations
 
+ .../ABI/testing/sysfs-platform-intel-ifs      |  39 ++
+ Documentation/x86/ifs.rst                     | 101 ++++++
+ Documentation/x86/index.rst                   |   1 +
+ MAINTAINERS                                   |   8 +
+ arch/x86/include/asm/cpu.h                    |  18 +
+ arch/x86/kernel/cpu/intel.c                   |  32 ++
+ arch/x86/kernel/cpu/microcode/intel.c         |  59 +---
+ drivers/platform/x86/intel/Kconfig            |   1 +
+ drivers/platform/x86/intel/Makefile           |   1 +
+ drivers/platform/x86/intel/ifs/Kconfig        |  16 +
+ drivers/platform/x86/intel/ifs/Makefile       |   5 +
+ drivers/platform/x86/intel/ifs/core.c         |  74 ++++
+ drivers/platform/x86/intel/ifs/ifs.h          | 103 ++++++
+ .../platform/x86/intel/ifs/intel_ifs_device.c |  50 +++
+ drivers/platform/x86/intel/ifs/load.c         | 265 ++++++++++++++
+ drivers/platform/x86/intel/ifs/runtest.c      | 333 ++++++++++++++++++
+ drivers/platform/x86/intel/ifs/sysfs.c        | 151 ++++++++
+ include/trace/events/intel_ifs.h              |  38 ++
+ 18 files changed, 1243 insertions(+), 52 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-intel-ifs
+ create mode 100644 Documentation/x86/ifs.rst
+ create mode 100644 drivers/platform/x86/intel/ifs/Kconfig
+ create mode 100644 drivers/platform/x86/intel/ifs/Makefile
+ create mode 100644 drivers/platform/x86/intel/ifs/core.c
+ create mode 100644 drivers/platform/x86/intel/ifs/ifs.h
+ create mode 100644 drivers/platform/x86/intel/ifs/intel_ifs_device.c
+ create mode 100644 drivers/platform/x86/intel/ifs/load.c
+ create mode 100644 drivers/platform/x86/intel/ifs/runtest.c
+ create mode 100644 drivers/platform/x86/intel/ifs/sysfs.c
+ create mode 100644 include/trace/events/intel_ifs.h
+
+
+base-commit: b2d229d4ddb17db541098b83524d901257e93845
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.35.1
+
