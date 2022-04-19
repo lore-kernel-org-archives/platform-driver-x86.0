@@ -2,196 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDF4C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 19:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDCDC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 22:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356236AbiDSTsJ (ORCPT
+        id S1355144AbiDSWYt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Apr 2022 15:48:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34482 "EHLO
+        Tue, 19 Apr 2022 18:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356135AbiDSTr7 (ORCPT
+        with ESMTP id S229599AbiDSWYq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Apr 2022 15:47:59 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E64F11A35
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Apr 2022 12:45:15 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id z16so9341933pfh.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Apr 2022 12:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=umMtnsauqQeI0NgI+fx6Tr/G9J3sdAyMJ/d4Ny9Ul3U=;
-        b=AehAOKeaXjujrUFwMA6ZK71ZoKV0rmjP8U3MvAUztOhHEsG2J0rD+dQWbhsFYAdEE8
-         8ZY2LlALZ0XmQuLeQQIaeRRT7u4E27eDJVA3QdfUxT2ojlOLwlmK+E53c+s0iG550u43
-         w47YYKXccyOCiXIHqIR11MF0pt/HMYPDSKQMfZ+9ER4v1UeLJepZsl3Ct44G9yBoqNwW
-         OlxE05TxKK2ddmy6ZeAiNYfoZdWS+VPyuj00LpztKb3B25ifcUzamp+2qoF2pp4+HXPe
-         FaG1usXXb6XTT85qgtfuhQ0sjo21nJqJsdtL4uZLvUtZctI1LfuN3Nglx/7qtGxLqkW+
-         YF3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=umMtnsauqQeI0NgI+fx6Tr/G9J3sdAyMJ/d4Ny9Ul3U=;
-        b=Bnmv5VccDeJ/sA3MPSxQTnvlWUKdbh4olLZqkEeDMf5I3++zAJ3d0HzbzCs+Kw6wWt
-         j5lZcc8S16Bemt8k2SATnlih2yuKrSnxzXggrnTwtWtbK4kTaur5kWV9Ky6jKuxrj4tA
-         kOCJA3yTWQAMLaDwDyHQUn3mQ06N7xtBVMi52BaPK+lsQ1YaA4iBFQr2Tl8MPPXH36lU
-         vptZG2t38Gmz7VGMVWIjcgwp7ICZo9neb+xByQfqUQEV4N5dpzYT32CUJC+LECSSniqc
-         Y9gqKw8Pwbb92cXaKExElN91VUM6jfB+9gzCaxkV9NiyEnEwni4fD7BnqQveYxdWoSNZ
-         3nLA==
-X-Gm-Message-State: AOAM531OOnIzxPz0JPCA7m6Jnn4NvkG5MCmDAr8jIFweUGcMMRnRfTmX
-        74P18hrXwCYIxPw1yeG22pSvV29UGQEi/riTtKvuWQ==
-X-Google-Smtp-Source: ABdhPJwDrg6IREZgfK3FKe60lOcv304qCnNwmMnOuGJueDEDbEPxsP5SKNWyJSrQ/HkYnrQ/DokGtHbNTylYlCtGH3o=
-X-Received: by 2002:a05:6a00:e14:b0:4fe:3cdb:23f with SMTP id
- bq20-20020a056a000e1400b004fe3cdb023fmr19497787pfb.86.1650397514500; Tue, 19
- Apr 2022 12:45:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220407191347.9681-1-jithu.joseph@intel.com> <20220419163859.2228874-1-tony.luck@intel.com>
- <20220419163859.2228874-3-tony.luck@intel.com> <Yl7n5TSCnoksz6jp@kroah.com>
-In-Reply-To: <Yl7n5TSCnoksz6jp@kroah.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 19 Apr 2022 12:45:03 -0700
-Message-ID: <CAPcyv4he5cbftv1VpChc+ifS7Q+TyFbmU68=7UJ6_qwMTQUrCg@mail.gmail.com>
-Subject: Re: [PATCH v3 02/11] Documentation: In-Field Scan
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Tony Luck <tony.luck@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        Tue, 19 Apr 2022 18:24:46 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D39722BE7;
+        Tue, 19 Apr 2022 15:22:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650406922; x=1681942922;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7FPoGNOFLlOXDs/xu3hONgTHzwKlS/vbPKmpCE0gDjo=;
+  b=HnWtQxI0xa8kEbGSLMjLYMwO1/Sk+XoD9m9VfiV0dQH+gUndEVooD5dG
+   KTI1ony/8LY7K1OEuaVUIxukdU/I3PuFDB2puJ0Ij2rDahI0W9a0nlL/L
+   jnoV4F9D/taV9eRoDbPBTHAvQBRMtcvihlMX2Xi1TeH+olCWEqYW1BADj
+   FUYnRS+L4OX0abGTn483wKveHwF2DM+P6KXNMReoEZJ8X+b9bYGWLHQ1b
+   5uU9tHibQ9mWepblGOjpsbZo0QwmW6+zvQYPA3+8zW8bnxj97iUHEmZCy
+   qyCnbnOOPuqUxQluq5hxVwMebIzYmt2Kvq2QvQiURxloWNJC+GNwk1NIJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10322"; a="264058068"
+X-IronPort-AV: E=Sophos;i="5.90,273,1643702400"; 
+   d="scan'208";a="264058068"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 15:22:01 -0700
+X-IronPort-AV: E=Sophos;i="5.90,273,1643702400"; 
+   d="scan'208";a="554918565"
+Received: from asaini1-mobl1.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.254.58.15])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 15:21:57 -0700
+Message-ID: <f40fe89d9b978d525ed5d56b0679d1c20b10864b.camel@intel.com>
+Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
+ attestation interface driver
+From:   Kai Huang <kai.huang@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
-        Ravi V Shankar <ravi.v.shankar@intel.com>
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     "H . Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Date:   Wed, 20 Apr 2022 10:21:55 +1200
+In-Reply-To: <975b5050-2108-9ace-cc71-46f17db0a731@intel.com>
+References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+         <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
+         <bd83067542a3519ee4c91f9d50e9bd4fac27e4bb.camel@intel.com>
+         <975b5050-2108-9ace-cc71-46f17db0a731@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Apr 19, 2022 at 9:48 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Apr 19, 2022 at 09:38:50AM -0700, Tony Luck wrote:
-> > Add documentation for In-Field Scan (IFS). This documentation
-> > describes the basics of IFS, the loading IFS image, chunk
-> > authentication, running scan and how to check result via sysfs
-> > as well as tunable parameters.
-> >
-> > The CORE_CAPABILITIES MSR enumerates whether IFS is supported.
-> >
-> > The full  github location for distributing the IFS images is
-> > still being decided. So just a placeholder included for now
-> > in the documentation.
-> >
-> > Future CPUs will support more than one type of test. Plan for
-> > that now by using a ".0" suffix on the ABI directory names.
-> > Additional test types will use ".1", etc.
-> >
-> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Tony Luck <tony.luck@intel.com>
-> > ---
-> >  Documentation/x86/ifs.rst   | 101 ++++++++++++++++++++++++++++++++++++
-> >  Documentation/x86/index.rst |   1 +
-> >  2 files changed, 102 insertions(+)
-> >  create mode 100644 Documentation/x86/ifs.rst
-> >
-> > diff --git a/Documentation/x86/ifs.rst b/Documentation/x86/ifs.rst
-> > new file mode 100644
-> > index 000000000000..62f3c07d433a
-> > --- /dev/null
-> > +++ b/Documentation/x86/ifs.rst
-> > @@ -0,0 +1,101 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=============
-> > +In-Field Scan
-> > +=============
-> > +
-> > +Introduction
-> > +------------
-> > +
-> > +In Field Scan (IFS) is a hardware feature to run circuit level tests on
-> > +a CPU core to detect problems that are not caught by parity or ECC checks.
-> > +Future CPUs will support more than one type of test which will show up
-> > +with a new platform-device instance-id, for now only .0 is exposed.
-> > +
-> > +
-> > +IFS Image
-> > +---------
-> > +
-> > +Intel provides a firmware file containing the scan tests via
-> > +github [#f1]_.  Similar to microcode there is a separate file for each
-> > +family-model-stepping.
-> > +
-> > +IFS Image Loading
-> > +-----------------
-> > +
-> > +The driver loads the tests into memory reserved BIOS local to each CPU
-> > +socket in a two step process using writes to MSRs to first load the
-> > +SHA hashes for the test. Then the tests themselves. Status MSRs provide
-> > +feedback on the success/failure of these steps. When a new test file
-> > +is installed it can be loaded by writing to the driver reload file::
-> > +
-> > +  # echo 1 > /sys/bus/platform/drivers/intel_ifs.0/reload
-> > +
-> > +Similar to microcode, the current version of the scan tests is stored
-> > +in a fixed location: /lib/firmware/intel/ifs.0/family-model-stepping.scan
-> > +
-> > +Running tests
-> > +-------------
-> > +
-> > +Tests are run by the driver synchronizing execution of all threads on a
-> > +core and then writing to the ACTIVATE_SCAN MSR on all threads. Instruction
-> > +execution continues when:
-> > +
-> > +1) All tests have completed.
-> > +2) Execution was interrupted.
-> > +3) A test detected a problem.
-> > +
-> > +In all cases reading the SCAN_STATUS MSR provides details on what
-> > +happened. The driver makes the value of this MSR visible to applications
-> > +via the "details" file (see below). Interrupted tests may be restarted.
-> > +
-> > +The IFS driver provides sysfs interfaces via /sys/devices/platform/intel_ifs.0/
-> > +to control execution:
-> > +
-> > +Test a specific core::
-> > +
-> > +  # echo <cpu#> > /sys/devices/platform/intel_ifs.0/run_test
-> > +
-> > +when HT is enabled any of the sibling cpu# can be specified to test its
-> > +corresponding physical core. Since the tests are per physical core, the
-> > +result of testing any thread is same. It is only necessary to test one
-> > +thread.
-> > +
-> > +For e.g. to test core corresponding to cpu5
-> > +
-> > +  # echo 5 > /sys/devices/platform/intel_ifs.0/run_test
-> > +
-> > +Results of the last test is provided in /sys::
-> > +
-> > +  $ cat /sys/devices/platform/intel_ifs.0/status
-> > +  pass
->
-> sysfs documentation belongs in Documentation/ABI/
->
-> And why not just include this whole thing in the driver itself and suck
-> the documentation out of that?  No need to have a separate file.
+On Tue, 2022-04-19 at 07:13 -0700, Dave Hansen wrote:
+> On 4/19/22 00:47, Kai Huang wrote:
+> > > From security's perspective, attestation is an essential part of TDX.  That
+> > being said, w/o attestation support in TD guest, I guess nobody will seriously
+> > use TD guest.
+> 
+> Are you saying you can't think of a single threat model where there's a
+> benefit to running a TDX guest without attestation?  Will TDX only be
+> used in environments where secrets are provisioned to guests on the
+> basis of attestation?
+> 
+> > 
 
-At a minimum a separate file is needed to house the
----
- .. kernel-doc:: $source_file
-   :doc: $header
----
-...statements, but ok, I'll recommend that going forward to
-de-emphasize shipping content directly from Documentation/ when it can
-be ingested from "DOC:" source. I had been assuming DOC: blocks in the
-code were more for augmenting kernel-doc on driver internal ABIs and
-not longer theory of operation documentation that is an awkward fit
-for Documentation/ABI/.
+I don't think anyone should provision secret to a TD before it get attested that
+it is a genuine TD that he/she expected.  If someone does that, he/she takes the
+risk of losing the secret.  Of course if someone just want to try a TD then w/o
+attestation is totally fine.
+
+-- 
+Thanks,
+-Kai
+
+
