@@ -2,53 +2,69 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C71C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 11:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D859EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 12:49:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242583AbiDSLQW (ORCPT
+        id S1352421AbiDSMvl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Apr 2022 07:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43430 "EHLO
+        Tue, 19 Apr 2022 08:51:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230010AbiDSLQV (ORCPT
+        with ESMTP id S1346663AbiDSMvk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Apr 2022 07:16:21 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5664C2B1B2;
-        Tue, 19 Apr 2022 04:13:39 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB81B1042;
-        Tue, 19 Apr 2022 04:13:38 -0700 (PDT)
-Received: from [10.163.40.223] (unknown [10.163.40.223])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B88BE3F73B;
-        Tue, 19 Apr 2022 04:13:22 -0700 (PDT)
-Message-ID: <672ff459-81bd-38ef-882d-e718992d295c@arm.com>
-Date:   Tue, 19 Apr 2022 16:44:06 +0530
+        Tue, 19 Apr 2022 08:51:40 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5243700E;
+        Tue, 19 Apr 2022 05:48:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650372538; x=1681908538;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cu8ttrZTtozlzi95obzNrvmh7yZOlBdE43QZNQ1x4ME=;
+  b=ZdX5EatRbFR3AZisA9pBT8Lv6NcGcNNf+BHgCIaBikV0bRt7rKmRWg9l
+   AXC1J9dTlvswjM7g1oOanzEr7XesFj93/lpcYoI9coMID1aSvhlyhOTKq
+   b8mREciWJ7IVbNpnxLeBZinvkkM25fsuxJulndqggyp4gWc/b9Ov2ZuSx
+   2V/6eowtD48b6hsoHS56UfYlXgSAB0kOtyot+TCpP31edkChiASTbqElJ
+   1n13+F5s8JRW80lwiN/SCwIEGYeyU9BF704DyEPV8dkxvhUsPqmhjapSW
+   xux7YcogQQ+uBMQzZ7iL0BBX2qmF3W/uRHa0eFNfClxyn98eYuxifYzmc
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10321"; a="288852895"
+X-IronPort-AV: E=Sophos;i="5.90,272,1643702400"; 
+   d="scan'208";a="288852895"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 05:48:58 -0700
+X-IronPort-AV: E=Sophos;i="5.90,272,1643702400"; 
+   d="scan'208";a="554713824"
+Received: from chferrer-mobl.amr.corp.intel.com (HELO [10.209.37.31]) ([10.209.37.31])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 05:48:57 -0700
+Message-ID: <9198cc36-67d6-9365-5d18-f23ba4075151@linux.intel.com>
+Date:   Tue, 19 Apr 2022 05:48:57 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v2 7/9] mm: Calc the right pfn if page size is not 4K
+ Firefox/91.0 Thunderbird/91.7.0
+Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
+ attestation interface driver
 Content-Language: en-US
-To:     Wupeng Ma <mawupeng1@huawei.com>, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, will@kernel.org, corbet@lwn.net
-Cc:     ardb@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zyccr.com, dvhart@infradead.org, andy@infradead.org,
-        rppt@kernel.org, paulmck@kernel.org, peterz@infradead.org,
-        jroedel@suse.de, songmuchun@bytedance.com, macro@orcam.me.uk,
-        frederic@kernel.org, W_Armin@gmx.de, john.garry@huawei.com,
-        seanjc@google.com, tsbogend@alpha.franken.de,
-        chenhuacai@kernel.org, david@redhat.com, gpiccoli@igalia.com,
-        mark.rutland@arm.com, wangkefeng.wang@huawei.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
-        linux-ia64@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20220414101314.1250667-1-mawupeng1@huawei.com>
- <20220414101314.1250667-8-mawupeng1@huawei.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20220414101314.1250667-8-mawupeng1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
+To:     Borislav Petkov <bp@alien8.de>, Kai Huang <kai.huang@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <bd83067542a3519ee4c91f9d50e9bd4fac27e4bb.camel@intel.com>
+ <Yl5vGIfUFp4TfTWk@zn.tnic>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <Yl5vGIfUFp4TfTWk@zn.tnic>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -56,33 +72,27 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
 
-On 4/14/22 15:43, Wupeng Ma wrote:
-> From: Ma Wupeng <mawupeng1@huawei.com>
+On 4/19/22 1:13 AM, Borislav Petkov wrote:
+> On Tue, Apr 19, 2022 at 07:47:33PM +1200, Kai Huang wrote:
+>>  From this perspective, I am not sure what's the value of having a dedicated
+>> INTEL_TDX_ATTESTATION Kconfig.  The attestation support code should be turned on
+>> unconditionally when CONFIG_INTEL_TDX_GUEST is on.  The code can also be just
+>> under arch/x86/coco/tdx/ I guess?
+>>
+>> But I'll leave this to maintainers.
 > 
-> Previous 0x100000 is used to check the 4G limit in
-> find_zone_movable_pfns_for_nodes(). This is right in x86 because
-> the page size can only be 4K. But 16K and 64K are available in
-> arm64. So replace it with PHYS_PFN(SZ_4G).
+> Similar story with the unaccepted memory gunk. If it is not going to
+> be used outside of encrypted guests, why are we polluting our already
+> insanely humongous Kconfig space with more symbols?
 > 
-> Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
-> ---
->  mm/page_alloc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 6e5b4488a0c5..570d0ebf98df 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -7870,7 +7870,7 @@ static void __init find_zone_movable_pfns_for_nodes(void)
->  
->  			usable_startpfn = memblock_region_memory_base_pfn(r);
->  
-> -			if (usable_startpfn < 0x100000) {
-> +			if (usable_startpfn < PHYS_PFN(SZ_4G)) {
->  				mem_below_4gb_not_mirrored = true;
->  				continue;
->  			}
 
-Regardless PFN value should never be encoded directly.
+Make sense. We can just go with CONFIG_INTEL_TDX_ATTESTATION.
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Boris, this is a simple platform driver which adds IOCTL interfaces to 
+allow user space to get TDREPORT and TDQuote support.
+
+So, would prefer to leave in platform/x86 or move it to arch/x86/coco/tdx/ ?
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
