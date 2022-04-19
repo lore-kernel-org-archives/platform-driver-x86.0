@@ -2,37 +2,37 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EE6C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 18:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9DAC4167B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 18:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356672AbiDSSV4 (ORCPT
+        id S1357032AbiDSSZ0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Apr 2022 14:21:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36920 "EHLO
+        Tue, 19 Apr 2022 14:25:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356819AbiDSSVl (ORCPT
+        with ESMTP id S1357425AbiDSSXU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Apr 2022 14:21:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C97E40932;
-        Tue, 19 Apr 2022 11:14:02 -0700 (PDT)
+        Tue, 19 Apr 2022 14:23:20 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E5A243EC6;
+        Tue, 19 Apr 2022 11:16:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ED2B56133F;
-        Tue, 19 Apr 2022 18:14:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BC5EC385AB;
-        Tue, 19 Apr 2022 18:14:00 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 19AA5B81185;
+        Tue, 19 Apr 2022 18:16:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 541FFC385A7;
+        Tue, 19 Apr 2022 18:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650392041;
-        bh=vCoNlacISAeF5SrHrF466YZGMVddF8Kox+Sb5AEbpII=;
+        s=k20201202; t=1650392162;
+        bh=kKCNAiRVSRYNBM3a+Hb6jDO/M8J2VQLjQI3FjTMlN74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ERQRGqUZZXq3LFEdkTkALTUMMsS2PEgNlNcYhNxC2xLhtO+pPcjyf9B+Slf39xSub
-         53RezC3BUwxg+1xmfx8S8uN48iXGgIdDdJgW6F7SbE63Skgw+fdM5SdlEk0AAVQeb/
-         GcElTT7YxYxp2AmD3ce0Le71q80j3NRIWNL+/hdhRxdmYGSvAlpo/hIpokQbjiuItf
-         JLqzjuOAUQgj1gmN/p9an2UsDq/3pZ1Jnk+Mg4XsXDlT01wofoOMEkpPE3OyqDQ5U2
-         UTdKl189KPAvsBgYc/zsITXxEPTAutGU1yJAP74iA3wtWH0DDggK3S400J3K+a+/rL
-         R2vhoI0Dafybw==
+        b=liORUwxZt3UbrEPErKtHpUTNsGPlCRUWMe7f/UR8I9OlN3NwXUParR3Ttxd/69r4M
+         AI7Mz7ETgJCjjSuzBJcAoJJegjonwB1CPc/UXGXvLW34V3/rFB6l42MHXv7ffd7mjZ
+         +jHHy+nIzM+p7f4nJwtFGdJxDZ/OEb/yKKRU2LJXfJc4smsd4bYg47B8rkVnv/DqOS
+         IlSqn82fhqMgJKQBDoxCUgM3ZE+XfpQPFw2BkkmloQvZ6c7lJQ0YRNCVtTmq/7TWlN
+         edq7u1vzfei6MiTnuntrgt2eSsmOyFqXToCE7iOyD674ePJZ9o/QXDQv15nDk4RtbS
+         Wk5ID9Ls9b9IA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
@@ -40,12 +40,12 @@ Cc:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
         markgross@kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 03/18] platform/x86: samsung-laptop: Fix an unsigned comparison which can never be negative
-Date:   Tue, 19 Apr 2022 14:13:37 -0400
-Message-Id: <20220419181353.485719-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 2/9] platform/x86: samsung-laptop: Fix an unsigned comparison which can never be negative
+Date:   Tue, 19 Apr 2022 14:15:50 -0400
+Message-Id: <20220419181557.486336-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220419181353.485719-1-sashal@kernel.org>
-References: <20220419181353.485719-1-sashal@kernel.org>
+In-Reply-To: <20220419181557.486336-1-sashal@kernel.org>
+References: <20220419181557.486336-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -74,10 +74,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 deletions(-)
 
 diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index d5cec6e35bb8..0e456c39a603 100644
+index d3cb26f6df73..c1c34b495519 100644
 --- a/drivers/platform/x86/samsung-laptop.c
 +++ b/drivers/platform/x86/samsung-laptop.c
-@@ -1121,8 +1121,6 @@ static void kbd_led_set(struct led_classdev *led_cdev,
+@@ -1125,8 +1125,6 @@ static void kbd_led_set(struct led_classdev *led_cdev,
  
  	if (value > samsung->kbd_led.max_brightness)
  		value = samsung->kbd_led.max_brightness;
