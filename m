@@ -2,137 +2,100 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F28BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 08:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A62DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 09:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232725AbiDSITu (ORCPT
+        id S1348136AbiDSJ1x (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Apr 2022 04:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47682 "EHLO
+        Tue, 19 Apr 2022 05:27:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347046AbiDSITk (ORCPT
+        with ESMTP id S1350398AbiDSJ1u (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Apr 2022 04:19:40 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AF8C2BB2B;
-        Tue, 19 Apr 2022 01:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650356215; x=1681892215;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Oa/WjC9/I4BJ7aIcmzeNF6YbXNnZp+KVh7mD9aqG/8g=;
-  b=Ciu1tns02JG/ocOwm99p4+jShuhFeiasM/iPoDdYe3pPsCyC48G32CFx
-   hPoNFRzu+FczBgn05AREualOMXVgThANKazRmmzqCtCNYaY7AebG8aKmM
-   ZfU44jYSm8T89qeVLDBtSCp5cGSHkTtDAIxqhtnK3LmDORuuXKXyJanhD
-   u90wdnFAWDqXOv5f9JHWeHJI9QSpT+Nwj4pJwU0wZh3Gl0X2Cdaz5XEf8
-   3sYgs69sk4IWCBdNCyArr4rVYvcz6ShBFckddZ/CBYYx27Tyx6is92P0e
-   w1WKkZYfn/K0xgsZRxLqgmy6v40sYQB6oL7j0abHEriOlyjFpOyo19xMb
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10321"; a="288805432"
-X-IronPort-AV: E=Sophos;i="5.90,272,1643702400"; 
-   d="scan'208";a="288805432"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 01:16:53 -0700
-X-IronPort-AV: E=Sophos;i="5.90,272,1643702400"; 
-   d="scan'208";a="647178439"
-Received: from csambran-mobl.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.254.58.20])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 01:16:50 -0700
-Message-ID: <0d532b0ce1155bf7778366b14c5d1311c45fef01.camel@intel.com>
-Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-From:   Kai Huang <kai.huang@intel.com>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     "H . Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Date:   Tue, 19 Apr 2022 20:16:48 +1200
-In-Reply-To: <bd83067542a3519ee4c91f9d50e9bd4fac27e4bb.camel@intel.com>
-References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-         <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
-         <bd83067542a3519ee4c91f9d50e9bd4fac27e4bb.camel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+        Tue, 19 Apr 2022 05:27:50 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D2A3BC9B;
+        Tue, 19 Apr 2022 02:25:08 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: usama.anjum)
+        with ESMTPSA id EC0CB1F42013
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1650360307;
+        bh=a6llNOMgG5c9GRiJFktr/S/R/Vwl5cl+XkvWKZME0hA=;
+        h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+        b=CqizTF9Ce2vQ2D/wegQIAIsidWCzd0dYTleYYRWjS5bJGSCyK7p222QRMRo70VD4a
+         MqFb6L1xkC6A0CeUdU6t6a2ee3GUnKYUNm87HmitUbpN6YboUImDr3mheXL+ds/DTO
+         kLE0FfxERhsuopC8fn06c0brC4LSL5dvTUGCcnti/ghH7PayrqGgyFdX5ER4naAOm9
+         nlTGYlAkbbFdBeERWZArDhMysZdxBeSKDC8bpL9DwGjdVvYrx2MgSVsYaFUkFWnw9r
+         fsjFuF6SY+ZywUlUhnuN2A4b6z9+3y71gneiSkJV1BxbEjDWY42aPJbY0ZB3SB7thT
+         vBujHncmIFAXw==
+Message-ID: <a6d6484d-583b-c5f3-bc3e-3a87037b9716@collabora.com>
+Date:   Tue, 19 Apr 2022 14:24:55 +0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Cc:     usama.anjum@collabora.com, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        gwendal@chromium.org, vbendeb@chromium.org, andy@infradead.org,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v8] platform: x86: Add ChromeOS ACPI device driver
+Content-Language: en-US
+To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+References: <Ylmmf03fewXEjRr0@debian-BULLSEYE-live-builder-AMD64>
+ <eygNMwL4gadqjJuOq-syanavJ5sAb5_dHTcQ0V9TU5kM5uh5TZUQXdYsNFTtnSm1ZI5WKhw7BgzG8lXEwJKEZz4agWq5_HkFDGWiFuuo7fE=@protonmail.com>
+ <78e3e1e9-e21f-052a-ecff-1d13714b4303@collabora.com>
+From:   Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <78e3e1e9-e21f-052a-ecff-1d13714b4303@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 2022-04-19 at 19:47 +1200, Kai Huang wrote:
-> On Fri, 2022-04-15 at 15:01 -0700, Kuppuswamy Sathyanarayanan wrote:
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/intel/tdx/Kconfig
-> > @@ -0,0 +1,13 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +#
-> > +# X86 TDX Platform Specific Drivers
-> > +#
-> > +
-> > +config INTEL_TDX_ATTESTATION
-> > +	tristate "Intel TDX attestation driver"
-> > +	depends on INTEL_TDX_GUEST
-> > +	help
-> > +	  The TDX attestation driver provides IOCTL interfaces to the user to
-> > +	  request TDREPORT from the TDX module or request quote from the VMM
-> > +	  or to get quote buffer size. It is mainly used to get secure disk
-> > +	  decryption keys from the key server.
-> > diff --git a/drivers/platform/x86/intel/tdx/Makefile b/drivers/platform/x86/intel/tdx/Makefile
-> > new file mode 100644
-> > index 000000000000..94eea6108fbd
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/intel/tdx/Makefile
-> > @@ -0,0 +1,3 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +obj-$(CONFIG_INTEL_TDX_ATTESTATION)	+= intel_tdx_attest.o
-> > diff --git a/drivers/platform/x86/intel/tdx/intel_tdx_attest.c b/drivers/platform/x86/intel/tdx/intel_tdx_attest.c
-> > new file mode 100644
-> > index 000000000000..9124db800d4f
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/intel/tdx/intel_tdx_attest.c
+On 4/18/22 10:31 PM, Muhammad Usama Anjum wrote:
+> Hi,
 > 
+> Thanks for reviewing.
 > 
-> From security's perspective, attestation is an essential part of TDX.  That
-> being said, w/o attestation support in TD guest, I guess nobody will seriously
-> use TD guest.
+>>> +	switch (element->type) {
+>>> +	case ACPI_TYPE_BUFFER:
+>>> +		length = element->buffer.length;
+>>> +		info->data = kmemdup(element->buffer.pointer,
+>>> +				     length, GFP_KERNEL);
+>>> +		break;
+>>> +	case ACPI_TYPE_INTEGER:
+>>> +		length = snprintf(buffer, sizeof(buffer), "%d",
+>>> +				  (int)element->integer.value);
+>>> +		info->data = kmemdup(buffer, length, GFP_KERNEL);
+>>
+>> You can use `kasprintf()` here, no?
+>>
+Yeah, I can use sasprintf() in place of snprintf() and kmemdup(). Thanks.
+
+> Choosing kmemdup vs k*printf depends on what is being achieved. Usage of
+> kmemdup indicates that only the memory is being duplicated here. While
+> in case of k*printf, some transformation is done. Thus in normal memory
+> duplication cases like this, the usage of kmemdup makes code more
+> readable and seems preferable to me.
 > 
-> From this perspective, I am not sure what's the value of having a dedicated
-> INTEL_TDX_ATTESTATION Kconfig.  The attestation support code should be turned on
-> unconditionally when CONFIG_INTEL_TDX_GUEST is on.  The code can also be just
-> under arch/x86/coco/tdx/ I guess?
-> 
-> But I'll leave this to maintainers.
-
-In fact after slightly thinking more, I think you can split TDREPORT TDCALL
-support with GetQuote/SetupEventNotifyInterrupt support.  The reason is as I
-said, GetQuote isn't mandatory to support attestation.  TD attestation agent can
-use i.e. vsock, tcp/ip, to communicate to QE directly.  Whether kernel needs to
-support GetQuote is actually arguable.
-
-So IMHO you can split this attestation driver into two parts:
-
-1) A "basic" driver which supports reporting TDREPORT to userspace
-2) Additional support of GetQuote/SetupEventNotifyInterrupt.
-
-The 1) can even be in a single patch (I guess it won't be complicated).  It is
-easy to review (and i.e. can be merged separately), and with it, you will
-immediately have one way to support attestation.
-
-2) can be reviewed separately, perhaps with one additional Kconfig option (i.e.
-CONFIG_INTEL_TDX_ATTESTATION_GET_QUOTE).  I think this part has most of the
-complexity things in terms of review.
 
 -- 
-Thanks,
--Kai
-
-
+Muhammad Usama Anjum
