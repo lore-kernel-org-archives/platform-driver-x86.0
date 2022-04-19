@@ -2,47 +2,50 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15000C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 22:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9796EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 22:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358002AbiDSWlA (ORCPT
+        id S1358354AbiDSWwq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Apr 2022 18:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36748 "EHLO
+        Tue, 19 Apr 2022 18:52:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353827AbiDSWk7 (ORCPT
+        with ESMTP id S1358362AbiDSWwl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Apr 2022 18:40:59 -0400
+        Tue, 19 Apr 2022 18:52:41 -0400
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84BB834673;
-        Tue, 19 Apr 2022 15:38:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51F191CFC9;
+        Tue, 19 Apr 2022 15:49:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650407895; x=1681943895;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zZ5x6lVQZ6TKJPa9jLNf41JFMLWlV3hpwDqGfPvblVU=;
-  b=EkfEh+B/ql3iF3tdJ7LXp58adkQCHNr6mAxczmlpxzX/NfphEpqCcG0H
-   z+mVN2iS4R11S/W0XlZJLwKlLbqXaG/+NINoE2u6xDS1zFP3ks/go9fSz
-   l6yjoRtvKknnIza5zUJOIqEexflsyFJJXeN1mQvcknxb0BO+64mzsqOVF
-   8L35YfjecZZddNSOVCSvoB2yWomowsrRt0N8ZP/sr6M/RPAc6bP22NI9m
-   TztxtHmdBvUqd3FGfaAmmtitvJzGFf7OsvZhRS0vK4Je8yOYIqefmxsv8
-   JgMRctzO7zz8pCcH7WYS5oQZD7pcSnfAnJuDOiMMkabkSWH9XbDIvJUpc
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10322"; a="262746452"
+  t=1650408597; x=1681944597;
+  h=message-id:date:mime-version:to:cc:references:from:
+   subject:in-reply-to:content-transfer-encoding;
+  bh=WYVYNsvPxVthnQheJXzFIGzmkqTaq4QduTSZst8QeLE=;
+  b=EuQ2RqQa3+358l4nq2g4UittGID61jEJNtz8J7kKA0QCoUeTK9qRhwhX
+   cNKKnl0blmOlJUwoRk58zrOpdncaKDZ6snJTVQWGmHfuvWZMT+pAmaCZ1
+   /DqOeDpjAV0UbRk4P1EGY6/Vk4v8QHuZQYXDJ1zFv374dlU4cFTvlkHG3
+   v3bOJex9BmWKCAIQuWHnPsongoG0JKdO8tW+G6GoZsT8nUZ4Nezvf8Ap5
+   So8J/W3D/uIVjr7KZcjjcXETxh9t9km5+X+BV45iNVLgOES5+CLOOg758
+   /Aj2enQu7bgSGKr6SMQuSpBwc6pPvjOHxpsxRd4q2qJ8g7pDKMGldCh1e
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10322"; a="262748136"
 X-IronPort-AV: E=Sophos;i="5.90,273,1643702400"; 
-   d="scan'208";a="262746452"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 15:38:15 -0700
+   d="scan'208";a="262748136"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 15:49:55 -0700
 X-IronPort-AV: E=Sophos;i="5.90,273,1643702400"; 
-   d="scan'208";a="727244733"
-Received: from asaini1-mobl1.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.254.58.15])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 15:38:12 -0700
-Message-ID: <5371d2df8940226674f27a7ce950e9ae1468a951.camel@intel.com>
-Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-From:   Kai Huang <kai.huang@intel.com>
-To:     Sathyanarayanan Kuppuswamy 
+   d="scan'208";a="530875662"
+Received: from sazizi-mobl2.amr.corp.intel.com (HELO [10.212.98.167]) ([10.212.98.167])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 15:49:54 -0700
+Message-ID: <ec60ed6f-eafc-80eb-affc-3102c5dc3165@intel.com>
+Date:   Tue, 19 Apr 2022 15:49:53 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Content-Language: en-US
+To:     Kai Huang <kai.huang@intel.com>,
+        Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -54,79 +57,51 @@ Cc:     "H . Peter Anvin" <hpa@zytor.com>,
         Tony Luck <tony.luck@intel.com>,
         Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Date:   Wed, 20 Apr 2022 10:38:09 +1200
-In-Reply-To: <07ef65c4-708e-1bcf-9a7e-f804acefcc7c@linux.intel.com>
 References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-         <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
-         <bd83067542a3519ee4c91f9d50e9bd4fac27e4bb.camel@intel.com>
-         <0d532b0ce1155bf7778366b14c5d1311c45fef01.camel@intel.com>
-         <07ef65c4-708e-1bcf-9a7e-f804acefcc7c@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
-MIME-Version: 1.0
+ <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <bd83067542a3519ee4c91f9d50e9bd4fac27e4bb.camel@intel.com>
+ <975b5050-2108-9ace-cc71-46f17db0a731@intel.com>
+ <f40fe89d9b978d525ed5d56b0679d1c20b10864b.camel@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
+ attestation interface driver
+In-Reply-To: <f40fe89d9b978d525ed5d56b0679d1c20b10864b.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 2022-04-19 at 07:00 -0700, Sathyanarayanan Kuppuswamy wrote:
-> 
-> On 4/19/22 1:16 AM, Kai Huang wrote:
-> > In fact after slightly thinking more, I think you can split TDREPORT TDCALL
-> > support with GetQuote/SetupEventNotifyInterrupt support.  The reason is as I
-> > said, GetQuote isn't mandatory to support attestation.  TD attestation agent can
-> > use i.e. vsock, tcp/ip, to communicate to QE directly.  Whether kernel needs to
-> > support GetQuote is actually arguable.
-> 
-> IMO, we should not use a usage model to categorize "GetQuote" support
-> as a mandatory or non-mandatory requirement.
-> 
-> For customers who use VSOCK, they can get away without GetQuote
-> TDVMCALL support. But for customers who do not want to use
-> VSOCK model, this is a required support. AFAIK, our current customer
-> requirement is to use TDVMCALL approach for attestation support.
-> 
-> If your suggestion is to split GetQuote support as separate
-> patch to make it easier for review, I am fine with such
-> suggestion.
-> 
+On 4/19/22 15:21, Kai Huang wrote:
+> On Tue, 2022-04-19 at 07:13 -0700, Dave Hansen wrote:
+>> On 4/19/22 00:47, Kai Huang wrote:
+>>>> From security's perspective, attestation is an essential part of TDX.  That
+>>> being said, w/o attestation support in TD guest, I guess nobody will seriously
+>>> use TD guest.
+>> Are you saying you can't think of a single threat model where there's a
+>> benefit to running a TDX guest without attestation?  Will TDX only be
+>> used in environments where secrets are provisioned to guests on the
+>> basis of attestation?
+>>
+> I don't think anyone should provision secret to a TD before it get attested that
+> it is a genuine TD that he/she expected.  If someone does that, he/she takes the
+> risk of losing the secret.  Of course if someone just want to try a TD then w/o
+> attestation is totally fine.
 
-I am not saying we should get rid of GetQuote support.  If there's customer
-wants this with a good reason, we can certainly support it.  I understand that
-some customer wants to deploy QE in host and don't want additional communication
-channel (i.e. vsock) between guest and host, which may add additional attack
-window and/or customer's validation resource.
+Yeah, but you said:
 
-My point is regardless whether we need to support GetQuote, logically this
-driver can be split to two parts as I said: 1) basic TDREPORT support to
-userspace; 2) additional GetQuote support.  And I think there are many benefits
-if you do in this way as I commented below.
+	w/o attestation support in TD guest, I guess nobody will
+	seriously use TD guest.
 
+I'm trying to get to the bottom of that.  That's a much more broad
+statement than something about when it's safe to deploy secrets.
 
-> > 
-> > So IMHO you can split this attestation driver into two parts:
-> > 
-> > 1) A "basic" driver which supports reporting TDREPORT to userspace
-> > 2) Additional support of GetQuote/SetupEventNotifyInterrupt.
-> > 
-> > The 1) can even be in a single patch (I guess it won't be complicated).  It is
-> > easy to review (and i.e. can be merged separately), and with it, you will
-> > immediately have one way to support attestation.
-> > 
-> > 2) can be reviewed separately, perhaps with one additional Kconfig option (i.e.
-> > CONFIG_INTEL_TDX_ATTESTATION_GET_QUOTE).  I think this part has most of the
-> 
-> 
-> GetQuote IOCTL support is a very simple feature support, so, IMO, we
-> don't need to complicate it with additional config.
-> 
-> > 
+There are lots of secrets deployed in (serious) VMs today.  There are
+lots of secrets deployed in (serious) SEV VMs that don't have
+attestation.  Yet, the world somehow hasn't come crashing down.
 
-Additional Kconfig can reduce attack window by turning it off for people don't
-need it.  Anyway no strong opinion here.
+I think it's crazy to say that nobody will deploy secrets to TDX VMs
+without attestation.  I think it's a step father into crazy land to say
+that no one will "seriously" use TDX guests without attestation.
 
--- 
-Thanks,
--Kai
-
-
+Let's be honest about this and not live in some fantasy world, please.
