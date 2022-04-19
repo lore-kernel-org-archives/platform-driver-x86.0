@@ -2,190 +2,196 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D16C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 18:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDF4C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 19:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354510AbiDSSi1 (ORCPT
+        id S1356236AbiDSTsJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Apr 2022 14:38:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39024 "EHLO
+        Tue, 19 Apr 2022 15:48:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357653AbiDSShy (ORCPT
+        with ESMTP id S1356135AbiDSTr7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Apr 2022 14:37:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9DE5FF1;
-        Tue, 19 Apr 2022 11:32:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 56FBB615A6;
-        Tue, 19 Apr 2022 18:32:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B515BC385BB;
-        Tue, 19 Apr 2022 18:32:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650393147;
-        bh=md0tG2V1t23ZnRlqUCm/DSQwwQtpFcWbjxl5FLEoEv4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W0rDFyXH+Y4efoyOnsqNuYiJmzhCiI6h9S/IY7vLQ0uLcNiwyzet7N76wpqbRAm30
-         1jqnComDoxuqmYOsfDjPA4y4IULg+iCVZd6KW8jGbhlptQQNieVGtdDsdx3dtc0XJ+
-         B1JG/I0jTQuifGxjaRZf6PdX4JnyRSSZJ1n2xDnKk5h6zYs/gZUqPOMOes8O0riSGE
-         yot+jdxfHO73G0eCf6jG7r1iYS0rlDQCyt3Z3ZLFBtWtXh5NY3R7Hs9IA/BzWOWoZd
-         m7G8EcMmArocQBNTLWRV8SNi17Z1xQSxctb1aG558N+lBbXlBOuexVA3DS9aUbrA1o
-         vBJGSQ2N4JB+Q==
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-e604f712ecso5168895fac.9;
-        Tue, 19 Apr 2022 11:32:27 -0700 (PDT)
-X-Gm-Message-State: AOAM532fwLQWwEhjvmr1BZUjS4aXo+gDWbesKCSAMLT7VBfFAnv9I7bA
-        fChsNW8SbKknUuQ7wRiz1D81IZSlib3yQJmsLuc=
-X-Google-Smtp-Source: ABdhPJy+tDK9eGCepkKXeOvvfKeb4HZc+BluW5/5YJu1JhLSn0xWy3QnFC8BRtKUY0f9PpybIp3EFNlsyXbWugc+Hn4=
-X-Received: by 2002:a05:6870:eaa5:b0:da:b3f:2b45 with SMTP id
- s37-20020a056870eaa500b000da0b3f2b45mr9290611oap.228.1650393146846; Tue, 19
- Apr 2022 11:32:26 -0700 (PDT)
+        Tue, 19 Apr 2022 15:47:59 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E64F11A35
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Apr 2022 12:45:15 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id z16so9341933pfh.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Apr 2022 12:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=umMtnsauqQeI0NgI+fx6Tr/G9J3sdAyMJ/d4Ny9Ul3U=;
+        b=AehAOKeaXjujrUFwMA6ZK71ZoKV0rmjP8U3MvAUztOhHEsG2J0rD+dQWbhsFYAdEE8
+         8ZY2LlALZ0XmQuLeQQIaeRRT7u4E27eDJVA3QdfUxT2ojlOLwlmK+E53c+s0iG550u43
+         w47YYKXccyOCiXIHqIR11MF0pt/HMYPDSKQMfZ+9ER4v1UeLJepZsl3Ct44G9yBoqNwW
+         OlxE05TxKK2ddmy6ZeAiNYfoZdWS+VPyuj00LpztKb3B25ifcUzamp+2qoF2pp4+HXPe
+         FaG1usXXb6XTT85qgtfuhQ0sjo21nJqJsdtL4uZLvUtZctI1LfuN3Nglx/7qtGxLqkW+
+         YF3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=umMtnsauqQeI0NgI+fx6Tr/G9J3sdAyMJ/d4Ny9Ul3U=;
+        b=Bnmv5VccDeJ/sA3MPSxQTnvlWUKdbh4olLZqkEeDMf5I3++zAJ3d0HzbzCs+Kw6wWt
+         j5lZcc8S16Bemt8k2SATnlih2yuKrSnxzXggrnTwtWtbK4kTaur5kWV9Ky6jKuxrj4tA
+         kOCJA3yTWQAMLaDwDyHQUn3mQ06N7xtBVMi52BaPK+lsQ1YaA4iBFQr2Tl8MPPXH36lU
+         vptZG2t38Gmz7VGMVWIjcgwp7ICZo9neb+xByQfqUQEV4N5dpzYT32CUJC+LECSSniqc
+         Y9gqKw8Pwbb92cXaKExElN91VUM6jfB+9gzCaxkV9NiyEnEwni4fD7BnqQveYxdWoSNZ
+         3nLA==
+X-Gm-Message-State: AOAM531OOnIzxPz0JPCA7m6Jnn4NvkG5MCmDAr8jIFweUGcMMRnRfTmX
+        74P18hrXwCYIxPw1yeG22pSvV29UGQEi/riTtKvuWQ==
+X-Google-Smtp-Source: ABdhPJwDrg6IREZgfK3FKe60lOcv304qCnNwmMnOuGJueDEDbEPxsP5SKNWyJSrQ/HkYnrQ/DokGtHbNTylYlCtGH3o=
+X-Received: by 2002:a05:6a00:e14:b0:4fe:3cdb:23f with SMTP id
+ bq20-20020a056a000e1400b004fe3cdb023fmr19497787pfb.86.1650397514500; Tue, 19
+ Apr 2022 12:45:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220414101314.1250667-1-mawupeng1@huawei.com>
- <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com> <6de859df-e1c3-e9aa-4530-3b61b9c69a28@huawei.com>
-In-Reply-To: <6de859df-e1c3-e9aa-4530-3b61b9c69a28@huawei.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 19 Apr 2022 20:32:15 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGyKQMeFWSK-s84pdL89qPTyTN_x3WHTgp_R7sH1+qOfA@mail.gmail.com>
-Message-ID: <CAMj1kXGyKQMeFWSK-s84pdL89qPTyTN_x3WHTgp_R7sH1+qOfA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] introduce mirrored memory support for arm64
-To:     mawupeng <mawupeng1@huawei.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+References: <20220407191347.9681-1-jithu.joseph@intel.com> <20220419163859.2228874-1-tony.luck@intel.com>
+ <20220419163859.2228874-3-tony.luck@intel.com> <Yl7n5TSCnoksz6jp@kroah.com>
+In-Reply-To: <Yl7n5TSCnoksz6jp@kroah.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 19 Apr 2022 12:45:03 -0700
+Message-ID: <CAPcyv4he5cbftv1VpChc+ifS7Q+TyFbmU68=7UJ6_qwMTQUrCg@mail.gmail.com>
+Subject: Re: [PATCH v3 02/11] Documentation: In-Field Scan
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Tony Luck <tony.luck@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, hpa@zyccr.com,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>, songmuchun@bytedance.com,
-        macro@orcam.me.uk, Frederic Weisbecker <frederic@kernel.org>,
-        W_Armin@gmx.de, John Garry <john.garry@huawei.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        chenhuacai@kernel.org, David Hildenbrand <david@redhat.com>,
-        gpiccoli@igalia.com, Mark Rutland <mark.rutland@arm.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-ia64@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 16 Apr 2022 at 03:32, mawupeng <mawupeng1@huawei.com> wrote:
+On Tue, Apr 19, 2022 at 9:48 AM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
->
->
-> =E5=9C=A8 2022/4/14 18:22, Ard Biesheuvel =E5=86=99=E9=81=93:
-> > On Thu, 14 Apr 2022 at 11:54, Wupeng Ma <mawupeng1@huawei.com> wrote:
-> >>
-> >> From: Ma Wupeng <mawupeng1@huawei.com>
-> >>
-> >> Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory=
- ranges")
-> >> introduced mirrored memory support for x86. This support rely on UEFI =
-to
-> >> report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-15=
-8:
-> >>
-> >>    http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
-> >>
-> >> Memory mirroring is a technique used to separate memory into two separ=
-ate
-> >> channels, usually on a memory device, like a server. In memory mirrori=
-ng,
-> >> one channel is copied to another to create redundancy. This method mak=
-es
-> >> input/output (I/O) registers and memory appear with more than one addr=
-ess
-> >> range because the same physical byte is accessible at more than one
-> >> address. Using memory mirroring, higher memory reliability and a highe=
-r
-> >> level of memory consolidation are possible.
-> >>
-> >> Arm64 can support this too. So mirrored memory support is added to sup=
-port
-> >> arm64.
-> >>
-> >> Efi_fake_mem is used for testing mirrored features and will not be use=
-d in
-> >> production environment. This test features can fake memory's attribute
-> >> values.
-> >>
-> >> The reason why efi_fake_mem support is put first is that memory's attr=
-ibute
-> >> is reported by BIOS which is hard to simulate. With this support, any =
-arm64
-> >> machines with efi support can easily test mirrored features.
-> >>
-> >> The main purpose of this patchset is to introduce mirrored support for
-> >> arm64 and we have already fixed the problems we had which is shown in
-> >> patch #5 to patch #7 and try to bring total isolation in patch #8 whic=
-h
-> >> will disable mirror feature if kernelcore is not specified.
-> >>
-> >> In order to test this support in arm64:
-> >> - patch this patchset
-> >> - add efi_fake_mem=3D8G@0:0x10000 in kernel parameter to simulate mirr=
-ored
-> >>    memroy between phy addr 0-8G.
-> >> - add kernelcore=3Dmirror in kernel parameter
-> >> - start you kernel
-> >>
+> On Tue, Apr 19, 2022 at 09:38:50AM -0700, Tony Luck wrote:
+> > Add documentation for In-Field Scan (IFS). This documentation
+> > describes the basics of IFS, the loading IFS image, chunk
+> > authentication, running scan and how to check result via sysfs
+> > as well as tunable parameters.
 > >
-> > As I explained before:
+> > The CORE_CAPABILITIES MSR enumerates whether IFS is supported.
 > >
-> > - NAK to EFI fake_mem support on arm64
+> > The full  github location for distributing the IFS images is
+> > still being decided. So just a placeholder included for now
+> > in the documentation.
+> >
+> > Future CPUs will support more than one type of test. Plan for
+> > that now by using a ".0" suffix on the ABI directory names.
+> > Additional test types will use ".1", etc.
+> >
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Tony Luck <tony.luck@intel.com>
+> > ---
+> >  Documentation/x86/ifs.rst   | 101 ++++++++++++++++++++++++++++++++++++
+> >  Documentation/x86/index.rst |   1 +
+> >  2 files changed, 102 insertions(+)
+> >  create mode 100644 Documentation/x86/ifs.rst
+> >
+> > diff --git a/Documentation/x86/ifs.rst b/Documentation/x86/ifs.rst
+> > new file mode 100644
+> > index 000000000000..62f3c07d433a
+> > --- /dev/null
+> > +++ b/Documentation/x86/ifs.rst
+> > @@ -0,0 +1,101 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=============
+> > +In-Field Scan
+> > +=============
+> > +
+> > +Introduction
+> > +------------
+> > +
+> > +In Field Scan (IFS) is a hardware feature to run circuit level tests on
+> > +a CPU core to detect problems that are not caught by parity or ECC checks.
+> > +Future CPUs will support more than one type of test which will show up
+> > +with a new platform-device instance-id, for now only .0 is exposed.
+> > +
+> > +
+> > +IFS Image
+> > +---------
+> > +
+> > +Intel provides a firmware file containing the scan tests via
+> > +github [#f1]_.  Similar to microcode there is a separate file for each
+> > +family-model-stepping.
+> > +
+> > +IFS Image Loading
+> > +-----------------
+> > +
+> > +The driver loads the tests into memory reserved BIOS local to each CPU
+> > +socket in a two step process using writes to MSRs to first load the
+> > +SHA hashes for the test. Then the tests themselves. Status MSRs provide
+> > +feedback on the success/failure of these steps. When a new test file
+> > +is installed it can be loaded by writing to the driver reload file::
+> > +
+> > +  # echo 1 > /sys/bus/platform/drivers/intel_ifs.0/reload
+> > +
+> > +Similar to microcode, the current version of the scan tests is stored
+> > +in a fixed location: /lib/firmware/intel/ifs.0/family-model-stepping.scan
+> > +
+> > +Running tests
+> > +-------------
+> > +
+> > +Tests are run by the driver synchronizing execution of all threads on a
+> > +core and then writing to the ACTIVATE_SCAN MSR on all threads. Instruction
+> > +execution continues when:
+> > +
+> > +1) All tests have completed.
+> > +2) Execution was interrupted.
+> > +3) A test detected a problem.
+> > +
+> > +In all cases reading the SCAN_STATUS MSR provides details on what
+> > +happened. The driver makes the value of this MSR visible to applications
+> > +via the "details" file (see below). Interrupted tests may be restarted.
+> > +
+> > +The IFS driver provides sysfs interfaces via /sys/devices/platform/intel_ifs.0/
+> > +to control execution:
+> > +
+> > +Test a specific core::
+> > +
+> > +  # echo <cpu#> > /sys/devices/platform/intel_ifs.0/run_test
+> > +
+> > +when HT is enabled any of the sibling cpu# can be specified to test its
+> > +corresponding physical core. Since the tests are per physical core, the
+> > +result of testing any thread is same. It is only necessary to test one
+> > +thread.
+> > +
+> > +For e.g. to test core corresponding to cpu5
+> > +
+> > +  # echo 5 > /sys/devices/platform/intel_ifs.0/run_test
+> > +
+> > +Results of the last test is provided in /sys::
+> > +
+> > +  $ cat /sys/devices/platform/intel_ifs.0/status
+> > +  pass
 >
-> fake_mem support on arm64 will be removed in subsequent version.
+> sysfs documentation belongs in Documentation/ABI/
 >
-> > - NAK to the whole series until you come up with a proposal on how to
-> > locate the static kernel image itself into more reliable memory, as
-> > there is really no point to any of this otherwise.
->
-> Sorry I am not familiar with this, as you metioned before,
->
->  > you have to iterate over the memory map and look for regions with
->  > the desired attribute, and allocate those pages explicitly.
->
-> Do you mean this is x86, commit c05cd79750fb
-> ("x86/boot/KASLR: Prefer mirrored memory regions for the kernel physical =
-address").
-> I will do some research.
->
->  > I'd prefer to implement this in the bootloader, and only add minimal
->  > logic to the stub to respect the placement of the kernel by the loader
->  > if the loader signals it to do so.
->
-> Does this bootloader refer to grub and then add minimal logic to arm64-st=
-ub.c?
->
+> And why not just include this whole thing in the driver itself and suck
+> the documentation out of that?  No need to have a separate file.
 
-Any bootloader, yes.
-
-> What is the loader signal?
-
-A protocol installed onto the image handle, as I suggested before. I
-even cc'ed you on a patch that implements this.
-
-> System exists mirrored memory reported by uefi?
->
-
-What on earth is the point of any of this if the only use case being
-targeted is efi_fake_mem with arbitrary fake mirrored regions?
-
-So yes, unless there are systems that need this, I don't see a point
-in merging any of this.
+At a minimum a separate file is needed to house the
+---
+ .. kernel-doc:: $source_file
+   :doc: $header
+---
+...statements, but ok, I'll recommend that going forward to
+de-emphasize shipping content directly from Documentation/ when it can
+be ingested from "DOC:" source. I had been assuming DOC: blocks in the
+code were more for augmenting kernel-doc on driver internal ABIs and
+not longer theory of operation documentation that is an awkward fit
+for Documentation/ABI/.
