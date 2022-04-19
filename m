@@ -2,42 +2,42 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F39C43219
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 16:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C8DC3527D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 16:39:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354775AbiDSQl4 (ORCPT
+        id S1354788AbiDSQl5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Apr 2022 12:41:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51014 "EHLO
+        Tue, 19 Apr 2022 12:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354753AbiDSQly (ORCPT
+        with ESMTP id S1354755AbiDSQly (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Tue, 19 Apr 2022 12:41:54 -0400
 Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B236515A38;
-        Tue, 19 Apr 2022 09:39:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 888E115FDA;
+        Tue, 19 Apr 2022 09:39:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650386348; x=1681922348;
+  t=1650386349; x=1681922349;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=3+cnaOKNg1DXMe24Z7ON6hVz8Ha5Eswt2xisuNXIrDk=;
-  b=X/jNg+DZmornmyHkvqQxVjEat9iq2/2iiC+9bV+dViTT0as6NAXZ4W6w
-   RoKviYv/g4EM+0mqH/Gu9yh+rkdKhbjFdiQ8KkCVF6Dp/3jPqoYMipmeN
-   W9oOm/z5wGXNzeNqdJl3vODGl3383JgJO305nb3lOQsxsZsOhtCG2UEqZ
-   MiMDVEgSIpnFxgjoodewEzuE8u9KMfpFAZHILp6019rI6bb8hpuCUBWab
-   GYZtPEPzdYqwFGgxsKcwyR6k5P6WeCIg7KVQzBsnQ3/C8ffzK4pF6Jq7L
-   z1Wl8+ehmXp5fyAUbDVzcJDz3U66AV2BFMRq7H8b/55Q0zs/YOTQFu0yf
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10322"; a="245702526"
+  bh=5ARNz7nUBZvuZ8VHGg0IyjYjwy19s9Gc7GZ5lMCyM5s=;
+  b=hHP4jWtDw1/QWNjiMPmahAsC40ILAdW51GkK4Fm1S8Rdn7EUCJ4IWTeT
+   M1v90nI0obTT205cs7t/7Vk/p6+LOMxWcy0vgqUwHy2Eu2DuEpPrcdqA4
+   FzorkLDZcDNcvV4KQNGvj44h1M0QnDbfOk/nvn+cXoY7sZSBL9glomS8M
+   IPruTXWZFchaD+UnJOjfB7eNtsTzr/XkxMGfRlaVZCELKMZw0Uw65B+s/
+   6DnJ+i23TanvcbOVFesZtjcBAnhHfelE23Po2rmwjW7iEALSc9MitpN/1
+   8qUcNO8VqqP5j8PSdGfoojINcCyDBgFeKkleBx3gSaO3kZcuGkUqem+6B
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10322"; a="245702537"
 X-IronPort-AV: E=Sophos;i="5.90,273,1643702400"; 
-   d="scan'208";a="245702526"
+   d="scan'208";a="245702537"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 09:39:07 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 09:39:08 -0700
 X-IronPort-AV: E=Sophos;i="5.90,273,1643702400"; 
-   d="scan'208";a="554802136"
+   d="scan'208";a="554802150"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 09:39:06 -0700
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 09:39:08 -0700
 From:   Tony Luck <tony.luck@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -48,9 +48,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         patches@lists.linux.dev, ravi.v.shankar@intel.com
-Subject: [PATCH v3 03/11] platform/x86/intel/ifs: Create device for Intel IFS (In Field Scan)
-Date:   Tue, 19 Apr 2022 09:38:51 -0700
-Message-Id: <20220419163859.2228874-4-tony.luck@intel.com>
+Subject: [PATCH v3 06/11] platform/x86/intel/ifs: Check IFS Image sanity
+Date:   Tue, 19 Apr 2022 09:38:54 -0700
+Message-Id: <20220419163859.2228874-7-tony.luck@intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220419163859.2228874-1-tony.luck@intel.com>
 References: <20220407191347.9681-1-jithu.joseph@intel.com>
@@ -61,141 +61,111 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The initial implementation of IFS is model specific. Enumeration is
-via a combination of family-model-stepping and a check for a bit in the
-CORE_CAPABILITIES MSR.
+From: Jithu Joseph <jithu.joseph@intel.com>
 
-Linux has handled this lack of enumeration before with a code stub to
-create a device.  See arch/x86/kernel/pmem.c. Use the same approach
-here.
+IFS image is designed specifically for a given family, model and
+stepping of the processor. Like Intel microcode header, the IFS image
+has the Processor Signature, Checksum and Processor Flags that must be
+matched with the information returned by the CPUID.
 
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+Co-developed-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- MAINTAINERS                                   |  7 +++
- drivers/platform/x86/intel/Kconfig            |  1 +
- drivers/platform/x86/intel/Makefile           |  1 +
- drivers/platform/x86/intel/ifs/Kconfig        |  2 +
- drivers/platform/x86/intel/ifs/Makefile       |  1 +
- .../platform/x86/intel/ifs/intel_ifs_device.c | 50 +++++++++++++++++++
- 6 files changed, 62 insertions(+)
- create mode 100644 drivers/platform/x86/intel/ifs/Kconfig
- create mode 100644 drivers/platform/x86/intel/ifs/Makefile
- create mode 100644 drivers/platform/x86/intel/ifs/intel_ifs_device.c
+ drivers/platform/x86/intel/ifs/load.c | 69 +++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 40fa1955ca3f..9e372a960fa5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9861,6 +9861,13 @@ B:	https://bugzilla.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git
- F:	drivers/idle/intel_idle.c
+diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+index fa6c64707a73..b05d9055c391 100644
+--- a/drivers/platform/x86/intel/ifs/load.c
++++ b/drivers/platform/x86/intel/ifs/load.c
+@@ -3,9 +3,73 @@
  
-+INTEL IN FIELD SCAN (IFS) DRIVER
-+M:	Jithu Joseph <jithu.joseph@intel.com>
-+R:	Ashok Raj <ashok.raj@intel.com>
-+R:	Tony Luck <tony.luck@intel.com>
-+S:	Maintained
-+F:	drivers/platform/x86/intel/ifs
-+
- INTEL INTEGRATED SENSOR HUB DRIVER
- M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
- M:	Jiri Kosina <jikos@kernel.org>
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index 1f01a8a23c57..794968bda115 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -4,6 +4,7 @@
- #
+ #include <linux/firmware.h>
+ #include <linux/platform_device.h>
++#include <asm/cpu.h>
++#include <asm/microcode_intel.h>
  
- source "drivers/platform/x86/intel/atomisp2/Kconfig"
-+source "drivers/platform/x86/intel/ifs/Kconfig"
- source "drivers/platform/x86/intel/int1092/Kconfig"
- source "drivers/platform/x86/intel/int3472/Kconfig"
- source "drivers/platform/x86/intel/pmc/Kconfig"
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index c61bc3e97121..10285d0fd16a 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -5,6 +5,7 @@
- #
+ static const char *ifs_path = "intel/ifs/";
  
- obj-$(CONFIG_INTEL_ATOMISP2_PDX86)	+= atomisp2/
-+obj-y					+= ifs/
- obj-$(CONFIG_INTEL_SAR_INT1092)		+= int1092/
- obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
- obj-$(CONFIG_INTEL_PMC_CORE)		+= pmc/
-diff --git a/drivers/platform/x86/intel/ifs/Kconfig b/drivers/platform/x86/intel/ifs/Kconfig
-new file mode 100644
-index 000000000000..51325b699563
---- /dev/null
-+++ b/drivers/platform/x86/intel/ifs/Kconfig
-@@ -0,0 +1,2 @@
-+config INTEL_IFS_DEVICE
-+	bool
-diff --git a/drivers/platform/x86/intel/ifs/Makefile b/drivers/platform/x86/intel/ifs/Makefile
-new file mode 100644
-index 000000000000..12c2f5ce9925
---- /dev/null
-+++ b/drivers/platform/x86/intel/ifs/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_INTEL_IFS_DEVICE)	+= intel_ifs_device.o
-diff --git a/drivers/platform/x86/intel/ifs/intel_ifs_device.c b/drivers/platform/x86/intel/ifs/intel_ifs_device.c
-new file mode 100644
-index 000000000000..64a143871d72
---- /dev/null
-+++ b/drivers/platform/x86/intel/ifs/intel_ifs_device.c
-@@ -0,0 +1,50 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright(c) 2022 Intel Corporation. */
-+
-+#include <linux/platform_device.h>
-+#include <linux/init.h>
-+#include <asm/cpu_device_id.h>
-+
-+#define MSR_IA32_CORE_CAPS_INTEGRITY_BIT	2
-+#define MSR_IA32_CORE_CAPS_INTEGRITY		BIT(MSR_IA32_CORE_CAPS_INTEGRITY_BIT)
-+
-+#define X86_MATCH(model)					\
-+	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6,		\
-+		INTEL_FAM6_##model, X86_FEATURE_CORE_CAPABILITIES, NULL)
-+
-+static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
-+	X86_MATCH(SAPPHIRERAPIDS_X),
-+	{}
-+};
-+
-+static __init int register_ifs_device(void)
++static int ifs_sanity_check(struct device *dev, void *mc)
 +{
-+	struct platform_device *pdev;
-+	const struct x86_cpu_id *m;
-+	u64 ia32_core_caps;
++	struct microcode_header_intel *mc_header = mc;
++	unsigned long total_size, data_size;
++	u32 sum, i;
 +
-+	m = x86_match_cpu(ifs_cpu_ids);
-+	if (!m)
-+		return -ENODEV;
++	total_size = get_totalsize(mc_header);
++	data_size = get_datasize(mc_header);
 +
-+	if (rdmsrl_safe(MSR_IA32_CORE_CAPS, &ia32_core_caps))
-+		return -ENODEV;
-+
-+	if (ia32_core_caps & MSR_IA32_CORE_CAPS_INTEGRITY) {
-+		pdev = platform_device_alloc("intel_ifs", 0);
-+		if (pdev) {
-+			if (platform_device_add(pdev))
-+				platform_device_put(pdev);
-+		}
++	if ((data_size + MC_HEADER_SIZE > total_size) || (total_size % sizeof(u32))) {
++		dev_err(dev, "bad ifs data file size.\n");
++		return -EINVAL;
 +	}
 +
-+	/*
-+	 * Failure here will be visible by a missing device
-+	 * in sysfs. Returning an error code would not make
-+	 * that any easier to diagnose. Would also complicate
-+	 * future implementations that may support a subset of
-+	 * the types of tests.
-+	 */
++	if (mc_header->ldrver != 1 || mc_header->hdrver != 1) {
++		dev_err(dev, "invalid/unknown ifs update format.\n");
++		return -EINVAL;
++	}
++
++	sum = 0;
++	i = total_size / sizeof(u32);
++	while (i--)
++		sum += ((u32 *)mc)[i];
++
++	if (sum) {
++		dev_err(dev, "bad ifs data checksum, aborting.\n");
++		return -EINVAL;
++	}
++
 +	return 0;
 +}
-+device_initcall(register_ifs_device);
++
++static bool find_ifs_matching_signature(struct device *dev, struct ucode_cpu_info *uci, void *mc)
++{
++	struct microcode_header_intel *shdr;
++	unsigned int mc_size;
++
++	shdr = (struct microcode_header_intel *)mc;
++	mc_size = get_totalsize(shdr);
++
++	if (!mc_size || ifs_sanity_check(dev, shdr) < 0) {
++		dev_err(dev, "ifs sanity check failure\n");
++		return false;
++	}
++
++	if (!intel_cpu_signatures_match(uci->cpu_sig.sig, uci->cpu_sig.pf, shdr->sig, shdr->pf)) {
++		dev_err(dev, "ifs signature, pf not matching\n");
++		return false;
++	}
++
++	return true;
++}
++
++static bool ifs_image_sanity_check(struct device *dev, void *data)
++{
++	struct ucode_cpu_info uci;
++
++	intel_cpu_collect_info_early(&uci);
++
++	return find_ifs_matching_signature(dev, &uci, data);
++}
++
+ /*
+  * Load ifs image. Before loading ifs module, the ifs image must be located
+  * in /lib/firmware/intel/ifs and named as {family/model/stepping}.{testname}.
+@@ -25,6 +89,11 @@ int load_ifs_binary(struct device *dev)
+ 		return ret;
+ 	}
+ 
++	if (!ifs_image_sanity_check(dev, (void *)fw->data)) {
++		dev_err(dev, "ifs header sanity check failed\n");
++		ret = -ENOENT;
++	}
++
+ 	release_firmware(fw);
+ 
+ 	return ret;
 -- 
 2.35.1
 
