@@ -2,163 +2,86 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F75AC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Apr 2022 23:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229B3C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Apr 2022 23:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355348AbiDTXVi (ORCPT
+        id S1383250AbiDTXld (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 20 Apr 2022 19:21:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58378 "EHLO
+        Wed, 20 Apr 2022 19:41:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243760AbiDTXVh (ORCPT
+        with ESMTP id S1344527AbiDTXlc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 20 Apr 2022 19:21:37 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94D8818B2D;
-        Wed, 20 Apr 2022 16:18:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650496729; x=1682032729;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wDzQY2+PCspZFvBhtBaNeIPM6Iwdxd0YJ8CLxltVuzA=;
-  b=fFZNqZfk+NsUoRijVa5sl/EeTlplpiaH4AfnkT9+EM55oktdNEdYkeD4
-   i9HHnpzMRhaHYhncJn5dP0YHw4EZr8n572S3X5EAecnYTnW+jXlujtu6o
-   1645ZgoLzhtyOV/imoUVF0Lyo8bXOq7nOMawquVN/7OdQlrGrOrCeEOtV
-   BmiZ/hcxhsSn52ok+wg/Orcja7+nqGHkBtAuZ5K2qXRC6ZPX7ey2nJgNA
-   NPpBGF2HKh/S9+fhFu+3ha/0zYJVLdwwd0e1TdgNdElMTlMMt369ha0wm
-   l/w1Zp3PpodxcZGgpjEjsFWLwKNiGHU59Da+8c5O6C/0QN/HHWwmqQcij
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10323"; a="327073935"
-X-IronPort-AV: E=Sophos;i="5.90,277,1643702400"; 
-   d="scan'208";a="327073935"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 16:18:49 -0700
-X-IronPort-AV: E=Sophos;i="5.90,277,1643702400"; 
-   d="scan'208";a="669300098"
-Received: from ssharm9-mobl.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.254.30.148])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 16:18:46 -0700
-Message-ID: <b209ee09b74394ab7aed85e0244e2191ee3d4171.camel@intel.com>
-Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-From:   Kai Huang <kai.huang@intel.com>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     "H . Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Date:   Thu, 21 Apr 2022 11:18:43 +1200
-In-Reply-To: <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-         <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+        Wed, 20 Apr 2022 19:41:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D4323969C;
+        Wed, 20 Apr 2022 16:38:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C0C5D61B38;
+        Wed, 20 Apr 2022 23:38:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CCADC385A1;
+        Wed, 20 Apr 2022 23:38:41 +0000 (UTC)
+Date:   Wed, 20 Apr 2022 19:38:39 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, corbet@lwn.net,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        jithu.joseph@intel.com, ashok.raj@intel.com,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com
+Subject: Re: [PATCH v3 10/11] trace: platform/x86/intel/ifs: Add trace point
+ to track Intel IFS operations
+Message-ID: <20220420193839.6e9d810b@gandalf.local.home>
+In-Reply-To: <20220419163859.2228874-11-tony.luck@intel.com>
+References: <20220407191347.9681-1-jithu.joseph@intel.com>
+        <20220419163859.2228874-1-tony.luck@intel.com>
+        <20220419163859.2228874-11-tony.luck@intel.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 2022-04-15 at 15:01 -0700, Kuppuswamy Sathyanarayanan wrote:
-> TDX guest supports encrypted disk as root or secondary drives.
-> Decryption keys required to access such drives are usually maintained
-> by 3rd party key servers. Attestation is required by 3rd party key
-> servers to get the key for an encrypted disk volume, or possibly other
-> encrypted services. Attestation is used to prove to the key server that
-> the TD guest is running in a valid TD and the kernel and virtual BIOS
-> and other environment are secure.
-> 
-> During the boot process various components before the kernel accumulate
-> hashes in the TDX module, which can then combined into a report. This
-> would typically include a hash of the bios, bios configuration, boot
-> loader, command line, kernel, initrd.  After checking the hashes the
-> key server will securely release the keys.
-> 
-> The actual details of the attestation protocol depend on the particular
-> key server configuration, but some parts are common and need to
-> communicate with the TDX module.
+On Tue, 19 Apr 2022 09:38:58 -0700
+Tony Luck <tony.luck@intel.com> wrote:
 
-As we discussed "key provisioning from key server to support disk decryption" is
-only one use case of attestation, so I don't think you need 3 paragraphs to talk
-about details of this use case here.  The attestation flow is documented in GHCI
-so it's clear.  The attestation flow (and what this patch does) does not have
-any direct relation to the "disk decryption" details above.  I think you can
-discard above entirely or using one or two simple sentences to explain.
+> +TRACE_EVENT(ifs_status,
+> +
+> +	TP_PROTO(union ifs_scan activate, union ifs_status status),
 
-Also, as you agreed you will remove the 8K shared memory assumption:
+Really, you want to pass the structure in by value, so that we have two
+copies? One to get to this function and then one to write to the ring
+buffer?
 
-https://lore.kernel.org/lkml/20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com/T/
+-- Steve
 
-and if you agree with my approach (again, I recommend) to split the driver to
-two parts (reorganize your patches essentially):
-
-https://lore.kernel.org/lkml/20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com/T/#m9e3c5115df0be0b53d41f987e1eda1715255d1d8
-
-I'll review again once you finish updating the driver.
-
-Btw some minor comments below.
-
-
-[...]
-
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel/tdx/intel_tdx_attest.c
-
-Perhaps attest.c is enough, no matter where the file will reside.
-
-> @@ -0,0 +1,302 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * intel_tdx_attest.c - TDX guest attestation interface driver.
-> + *
-> + * Implements user interface to trigger attestation process and
-> + * read the TD Quote result.
-> + *
-> + * Copyright (C) 2021-2022 Intel Corporation
-
-For upstream I guess just need 2022.
-
-[...]
-
-> +struct attest_dev {
-> +	/* Mutex to serialize attestation requests */
-> +	struct mutex lock;
-
-I think we need a comment to explain why the driver doesn't support multiple
-GetQuote requests in parallel.  In fact the updated GHCI spec doesn't explicitly
-say GetQuote cannot be done in parallel.  It has a new "GET_QUOTE_IN_FLIGHT"
-flag introduced, which can be used to determine which Quote is finished I think.
-
-I am fine with only supporting GetQuote in serialized way, but perhaps we need
-to call out the reason somewhere.
-
-[...]
 
 > +
-> +	/* Allocate DMA buffer to get TDQUOTE data from the VMM */
-> +	adev->tdquote_buf = dma_alloc_coherent(dev, GET_QUOTE_MAX_SIZE,
-> +						&adev->handle,
-> +						GFP_KERNEL | __GFP_ZERO);
-> +	if (!adev->tdquote_buf) {
-> +		ret = -ENOMEM;
-> +		goto failed;
-> +	}
-
-The buffer needs to be shared.  Guest must have called MapGPA to convert the
-buffer to shared.  Is this guaranteed by calling dma_alloc_coherent(), since
-seems I didn't see any MapGPA in the driver?  Anyway this deserves a comment I
-think.
-
-
--- 
-Thanks,
--Kai
-
-
+> +	TP_ARGS(activate, status),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(	u64,	status	)
+> +		__field(	u8,	start	)
+> +		__field(	u8,	stop	)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->start	= activate.start;
+> +		__entry->stop	= activate.stop;
+> +		__entry->status	= status.data;
+> +	),
+> +
+> +	TP_printk("start: %.2x, stop: %.2x, status: %llx",
+> +		__entry->start,
+> +		__entry->stop,
+> +		__entry->status)
+> +);
+> +
+> +#endif /* _TRACE_IFS_H */
