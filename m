@@ -2,85 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35858C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Apr 2022 19:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559F7C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Apr 2022 22:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381607AbiDTTHr (ORCPT
+        id S1382742AbiDTWDU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 20 Apr 2022 15:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49594 "EHLO
+        Wed, 20 Apr 2022 18:03:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244725AbiDTTHq (ORCPT
+        with ESMTP id S1345336AbiDTWDU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 20 Apr 2022 15:07:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39AC52DCF;
-        Wed, 20 Apr 2022 12:04:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Wed, 20 Apr 2022 18:03:20 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB6B140E4;
+        Wed, 20 Apr 2022 15:00:32 -0700 (PDT)
+Received: from zn.tnic (p200300ea971b58ed329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971b:58ed:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CB4926130A;
-        Wed, 20 Apr 2022 19:04:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7826C385A1;
-        Wed, 20 Apr 2022 19:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1650481498;
-        bh=3TwvUFV0aw9LmXxpaVt1WobXYjRRbhKrWPYqHzWsKv4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X7jLxxtVlTztqVg3E8BIUuuDLZKMM2mTqRwnBiVXErc194bnvswjXEBu4V/EHgeHP
-         lzyz9hJhEA9hex7EsRngiu1T0KU677Hoq/3jgOQV3/+r0bxHXVAKpp9uVkCBC9kg8E
-         G4OV5/xcOVd8fTONZl9Nhl9pXMfbDmxy0pC78wzI=
-Date:   Wed, 20 Apr 2022 21:04:55 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B112E1EC0373;
+        Thu, 21 Apr 2022 00:00:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1650492026;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=FTI0nvLkj3mQQgBgshh/GftzMREn/VptyZIk8yqNZsc=;
+        b=gNN4FBttiA59A0dnHly31tuR0HGkjNXyMm+t1Z38iUySSuPy6BkNAXd2fEbUgJaWo8T4za
+        0/79kGFPzuNJmo+bhmB+bpcxoHlq/7ttYlef2BPlEi1iV4YmaABMCR1FkyLvzXdFgDwRYA
+        WCTQJHNsYcVt5VEOPcMNJsqJoz8YmOo=
+Date:   Thu, 21 Apr 2022 00:00:22 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Kai Huang <kai.huang@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: Re: [PATCH v3 03/11] platform/x86/intel/ifs: Create device for Intel
- IFS (In Field Scan)
-Message-ID: <YmBZV3pUtKC2j0Ui@kroah.com>
-References: <20220419163859.2228874-1-tony.luck@intel.com>
- <20220419163859.2228874-4-tony.luck@intel.com>
- <Yl7npfrVTPFEIivC@kroah.com>
- <CAPcyv4jzscs3Dg4QN0+XHRYdekBeqy1=dRX-mWCj1OXo8jS2vQ@mail.gmail.com>
- <Yl+66oyQhI0AkEDC@kroah.com>
- <YmAmebezoc8m6n2E@agluck-desk3.sc.intel.com>
- <YmBG44t4dYsUl4Aa@kroah.com>
- <578be5d8874f4942a58adf5f64c4e817@intel.com>
- <YmBLJf8JQkfSQGvA@kroah.com>
- <cf53a8fa1e4e4c6885810ee8e4785b79@intel.com>
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
+ attestation interface driver
+Message-ID: <YmCCdtF10dYZOQ2a@zn.tnic>
+References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <bd83067542a3519ee4c91f9d50e9bd4fac27e4bb.camel@intel.com>
+ <Yl5vGIfUFp4TfTWk@zn.tnic>
+ <9198cc36-67d6-9365-5d18-f23ba4075151@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cf53a8fa1e4e4c6885810ee8e4785b79@intel.com>
+In-Reply-To: <9198cc36-67d6-9365-5d18-f23ba4075151@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 06:08:20PM +0000, Luck, Tony wrote:
-> >> Or is it ok for them all to sit at the top level of /sys/devices/virtual?
-> >
-> > How many do you have?
-> >
-> > And why is a directory needed for just one tiny driver type?
-> 
-> One today. Two tomorrow (internally ... next gen CPU).
-> 
-> Three eventually (That's how many are on the roadmap that I can see).
+On Tue, Apr 19, 2022 at 05:48:57AM -0700, Sathyanarayanan Kuppuswamy wrote:
+> Make sense. We can just go with CONFIG_INTEL_TDX_ATTESTATION.
 
-Then just use a misc device, it's simple and saves you a ton of code.
+Sounds like you didn't read my mail. Kai was questioning the need for a
+Kconfig symbol at all. And me too.
+
+If this thing is not going to be used by anything else besides TDX
+guests, why does it need a Kconfig option at all?!
+
+> Boris, this is a simple platform driver which adds IOCTL interfaces to allow
+> user space to get TDREPORT and TDQuote support.
+> 
+> So, would prefer to leave in platform/x86 or move it to arch/x86/coco/tdx/ ?
+
+See above.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
