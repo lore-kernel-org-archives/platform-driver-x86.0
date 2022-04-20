@@ -2,87 +2,166 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7739CC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Apr 2022 01:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71020C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Apr 2022 02:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233914AbiDTB3a (ORCPT
+        id S1358861AbiDTCQ3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Apr 2022 21:29:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33036 "EHLO
+        Tue, 19 Apr 2022 22:16:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232010AbiDTB33 (ORCPT
+        with ESMTP id S229791AbiDTCQ2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Apr 2022 21:29:29 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378AD23BC4;
-        Tue, 19 Apr 2022 18:26:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650418005; x=1681954005;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mbBwslPLaoBfylvW/dhJ1OLBSlP7qYZg3Cvd31qjORE=;
-  b=CGW8trYZ7koQ47kn2LlAg7TkxqunsCuFhU7JYFAjDdaBz3in7He7YYGz
-   GfOlp5+lHQFlk7N5slDxiYDdAxRp63TkJ3qY9FEpw4YlnMnzjCaZDCS7v
-   JZK41CI20P4OcnG+l7T9NLi4Aj9nmjGmO34zstVUtvjgdhgCnxM85BdDq
-   +nLSwP4XsnxvX66ICG+Qug2ELP6OMSThtW9I5szLe1dnx/GvRUESjIKCA
-   LWwTwJyAtTMCqvxFYUcXYTpuG/oV1aFqS6ZrxPxm2ECY3NEnwGI2B2wU+
-   fAg4sn9OO2E1qpsXkqBx2Y10KqpM8lyNqnjqRejlxypsFR6umooMUV2RA
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10322"; a="244495224"
-X-IronPort-AV: E=Sophos;i="5.90,274,1643702400"; 
-   d="scan'208";a="244495224"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 18:26:44 -0700
-X-IronPort-AV: E=Sophos;i="5.90,274,1643702400"; 
-   d="scan'208";a="561918375"
-Received: from ktuv-desk2.amr.corp.intel.com (HELO [10.212.227.192]) ([10.212.227.192])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 18:26:43 -0700
-Message-ID: <dd4a2b16-397e-8866-0fd5-b5c5dfd453ab@linux.intel.com>
-Date:   Tue, 19 Apr 2022 18:26:43 -0700
+        Tue, 19 Apr 2022 22:16:28 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B50289BC;
+        Tue, 19 Apr 2022 19:13:43 -0700 (PDT)
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Kjkjr0kH9zhXYf;
+        Wed, 20 Apr 2022 10:13:36 +0800 (CST)
+Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 20 Apr 2022 10:13:41 +0800
+Received: from [10.174.178.120] (10.174.178.120) by
+ dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 20 Apr 2022 10:13:40 +0800
+Message-ID: <b2864968-3cc7-dba3-5361-d8ee4cc3482a@huawei.com>
+Date:   Wed, 20 Apr 2022 10:13:40 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.7.0
-Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-Content-Language: en-US
-To:     Isaku Yamahata <isaku.yamahata@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20220420012032.GA2224031@ls.amr.corp.intel.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20220420012032.GA2224031@ls.amr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v2 0/9] introduce mirrored memory support for arm64
+To:     <ardb@kernel.org>
+CC:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <corbet@lwn.net>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+        <x86@kernel.org>, <dvhart@infradead.org>, <andy@infradead.org>,
+        <rppt@kernel.org>, <paulmck@kernel.org>, <peterz@infradead.org>,
+        <jroedel@suse.de>, <songmuchun@bytedance.com>, <macro@orcam.me.uk>,
+        <frederic@kernel.org>, <W_Armin@gmx.de>, <john.garry@huawei.com>,
+        <seanjc@google.com>, <tsbogend@alpha.franken.de>,
+        <anshuman.khandual@arm.com>, <chenhuacai@kernel.org>,
+        <david@redhat.com>, <gpiccoli@igalia.com>, <mark.rutland@arm.com>,
+        <wangkefeng.wang@huawei.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>
+References: <20220414101314.1250667-1-mawupeng1@huawei.com>
+ <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
+ <6de859df-e1c3-e9aa-4530-3b61b9c69a28@huawei.com>
+ <CAMj1kXGyKQMeFWSK-s84pdL89qPTyTN_x3WHTgp_R7sH1+qOfA@mail.gmail.com>
+From:   mawupeng <mawupeng1@huawei.com>
+In-Reply-To: <CAMj1kXGyKQMeFWSK-s84pdL89qPTyTN_x3WHTgp_R7sH1+qOfA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.178.120]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500014.china.huawei.com (7.185.36.153)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
 
-On 4/19/22 6:20 PM, Isaku Yamahata wrote:
-> If timeout occurs, the state of adev->tdquote_buf is unknown.  It's not safe
-> to continue to using adev->tdquote_buf.  VMM would continue to processing
-> getquote request with this buffer.  What if TDX_CMD_GEN_QUOTE is issued again,
-> and tdquote_buf is re-used?
+在 2022/4/20 2:32, Ard Biesheuvel 写道:
+> On Sat, 16 Apr 2022 at 03:32, mawupeng <mawupeng1@huawei.com> wrote:
+>>
+>>
+>>
+>> 在 2022/4/14 18:22, Ard Biesheuvel 写道:
+>>> On Thu, 14 Apr 2022 at 11:54, Wupeng Ma <mawupeng1@huawei.com> wrote:
+>>>>
+>>>> From: Ma Wupeng <mawupeng1@huawei.com>
+>>>>
+>>>> Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
+>>>> introduced mirrored memory support for x86. This support rely on UEFI to
+>>>> report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-158:
+>>>>
+>>>>     http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
+>>>>
+>>>> Memory mirroring is a technique used to separate memory into two separate
+>>>> channels, usually on a memory device, like a server. In memory mirroring,
+>>>> one channel is copied to another to create redundancy. This method makes
+>>>> input/output (I/O) registers and memory appear with more than one address
+>>>> range because the same physical byte is accessible at more than one
+>>>> address. Using memory mirroring, higher memory reliability and a higher
+>>>> level of memory consolidation are possible.
+>>>>
+>>>> Arm64 can support this too. So mirrored memory support is added to support
+>>>> arm64.
+>>>>
+>>>> Efi_fake_mem is used for testing mirrored features and will not be used in
+>>>> production environment. This test features can fake memory's attribute
+>>>> values.
+>>>>
+>>>> The reason why efi_fake_mem support is put first is that memory's attribute
+>>>> is reported by BIOS which is hard to simulate. With this support, any arm64
+>>>> machines with efi support can easily test mirrored features.
+>>>>
+>>>> The main purpose of this patchset is to introduce mirrored support for
+>>>> arm64 and we have already fixed the problems we had which is shown in
+>>>> patch #5 to patch #7 and try to bring total isolation in patch #8 which
+>>>> will disable mirror feature if kernelcore is not specified.
+>>>>
+>>>> In order to test this support in arm64:
+>>>> - patch this patchset
+>>>> - add efi_fake_mem=8G@0:0x10000 in kernel parameter to simulate mirrored
+>>>>     memroy between phy addr 0-8G.
+>>>> - add kernelcore=mirror in kernel parameter
+>>>> - start you kernel
+>>>>
+>>>
+>>> As I explained before:
+>>>
+>>> - NAK to EFI fake_mem support on arm64
+>>
+>> fake_mem support on arm64 will be removed in subsequent version.
+>>
+>>> - NAK to the whole series until you come up with a proposal on how to
+>>> locate the static kernel image itself into more reliable memory, as
+>>> there is really no point to any of this otherwise.
+>>
+>> Sorry I am not familiar with this, as you metioned before,
+>>
+>>   > you have to iterate over the memory map and look for regions with
+>>   > the desired attribute, and allocate those pages explicitly.
+>>
+>> Do you mean this is x86, commit c05cd79750fb
+>> ("x86/boot/KASLR: Prefer mirrored memory regions for the kernel physical address").
+>> I will do some research.
+>>
+>>   > I'd prefer to implement this in the bootloader, and only add minimal
+>>   > logic to the stub to respect the placement of the kernel by the loader
+>>   > if the loader signals it to do so.
+>>
+>> Does this bootloader refer to grub and then add minimal logic to arm64-stub.c?
+>>
+> 
+> Any bootloader, yes.
+> 
+>> What is the loader signal?
+> 
+> A protocol installed onto the image handle, as I suggested before. I
+> even cc'ed you on a patch that implements this.
 
-This part is not clearly discussed in the specification. May be spec
-should define some reasonable timeout and teardown details.
+Sorry to bother you.
+I didn't receive any patches.
+Could you share the link?
 
-Regarding not using this buffer again, what happens if we de-allocate
-it on timeout and the host still updates it?
+> 
+>> System exists mirrored memory reported by uefi?
+>>
+> 
+> What on earth is the point of any of this if the only use case being
+> targeted is efi_fake_mem with arbitrary fake mirrored regions?
+> 
+> So yes, unless there are systems that need this, I don't see a point
+> in merging any of this
+We do have mirrored memory reported by uefi and efi_fake_mem is added for easy testing
+with qemu/hardware without update UEFI.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+> .
