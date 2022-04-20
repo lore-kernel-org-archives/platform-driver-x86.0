@@ -2,115 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341B7C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Apr 2022 23:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8785C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Apr 2022 01:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346995AbiDSXFg (ORCPT
+        id S1351156AbiDTBXX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Apr 2022 19:05:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54860 "EHLO
+        Tue, 19 Apr 2022 21:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231473AbiDSXFf (ORCPT
+        with ESMTP id S233914AbiDTBXV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Apr 2022 19:05:35 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 676C324F38;
-        Tue, 19 Apr 2022 16:02:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650409371; x=1681945371;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hLC0T6kqi1/zOVAyrMi+mXunlB8no/BrDd00I42Lbds=;
-  b=E2M7uuqD7oX4HBlz1+/vJ6EC7fZ7XeIUzUsRWQPSWfTRAS7ioc88R5OZ
-   rjSSzjNo3boKyZmrK9mJ1JuPvoS+vPt5nhW6eKWOTTOhgxrZsVV8X0vn2
-   wCgZefqdHkw0z0T74s/6qhMFMKf2NPSmv2UJ9x+7w64wNnlsRL+eTeKSS
-   3eR6VHm6mwBNuTi8ohQXZAu5xt9jgvM+NtZN3jmRxYKSnNohwGT4YiWpr
-   TgdEnUlFyLNnfVlMfZEF9y5Vvp5Wzpqc7g1SkOJzmamD5QyCI13DR6FIl
-   oiSc8Z1aZUiWE38v6yNqN6YyII0hQAwqUklvVxW5wXN8Gav7pVNK/C1u2
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10322"; a="251198994"
-X-IronPort-AV: E=Sophos;i="5.90,273,1643702400"; 
-   d="scan'208";a="251198994"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 16:02:50 -0700
-X-IronPort-AV: E=Sophos;i="5.90,273,1643702400"; 
-   d="scan'208";a="667183262"
-Received: from asaini1-mobl1.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.254.58.15])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2022 16:02:46 -0700
-Message-ID: <79119cc04552617ad462d314dcd8bdbec90a1b20.camel@intel.com>
-Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-From:   Kai Huang <kai.huang@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Tue, 19 Apr 2022 21:23:21 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8FA32EC3;
+        Tue, 19 Apr 2022 18:20:35 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id k14so166059pga.0;
+        Tue, 19 Apr 2022 18:20:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kt0BA6E2YVz9rnggJc+TiKb9bbmdQfz/mieF7YR0eTY=;
+        b=nPetD018frdQiGN1xpLyv+3uSuUXRlLIAw/Q2KO+NA8JE5r19ZuBQk/jLrNcWqqZ63
+         4scmHiHLF7HRFSJdnuMnu0kxHqR1NBDB/BjgaTd2MGeJeJVfif1KuFpr56WYX2zPkoXt
+         nqDXLPKPYbYwkd+qIyX52w7J6VoPrs4npeBZA7LXWI11yUTodroygKZgwnTbu2AJNPb9
+         wdJ8eowa9aeo0ndzSoMBhrwyp3TeYcvR6OK5kjw1omdyCvVC6ODyIcl33JgyxE05ZPGF
+         YM/QNmt9fYwSMfXrmBDi4iGW2DtDY5Ox9Ca3sz6iURzrpk+wzTLxzIxCJXp5bU3h4XmP
+         lYQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kt0BA6E2YVz9rnggJc+TiKb9bbmdQfz/mieF7YR0eTY=;
+        b=AQWeQppUFrbJPQXVdSaiX1IHNsyaPLtz0TSubAhaRb/45xTKy043kHTUQmIhDdoF0Z
+         xFStVtGztVoarkZazSOKQeVtM4bKtYMIbTifEbG0rJWkzKJToevASl5A2YkbYYo0dEqF
+         Ze3fDA6TDxL0t5agw9aXSAycwhWjGy1ss5oY84RocUql4cwIRFaZt50St5/b+mDgWRMt
+         Vg8Sd/zz48cDsJOO5v9fZtW75lSe0q1CnEBB9J1J0rJ3bTcvbsVYJSzVnve3XOk+hNx0
+         sqivCcWAG57wEBMoHb1shJZ7iXTFxPdJ/q5phFTG80qiJlCi2HR4eBNjY0Edb74jCoWd
+         ropg==
+X-Gm-Message-State: AOAM532Ojd4oizQuUqS1pIxFw7q3pRV6IlvWY2Jzwjnl7TcdcwiPdmUI
+        L7PDuWw5EHtuUB0h3SIMwUM=
+X-Google-Smtp-Source: ABdhPJxZ2jY+wMDYjTy7G8OoBSAEtjGieq42V1SbbKU98nxxVnPAyKFImwL4eXny0f4+7V1WbEHmHA==
+X-Received: by 2002:a63:5421:0:b0:3aa:5717:fadb with SMTP id i33-20020a635421000000b003aa5717fadbmr2259402pgb.422.1650417634718;
+        Tue, 19 Apr 2022 18:20:34 -0700 (PDT)
+Received: from localhost ([192.55.54.52])
+        by smtp.gmail.com with ESMTPSA id c15-20020a17090a674f00b001cba1008a3csm17225172pjm.51.2022.04.19.18.20.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Apr 2022 18:20:34 -0700 (PDT)
+Date:   Tue, 19 Apr 2022 18:20:32 -0700
+From:   Isaku Yamahata <isaku.yamahata@gmail.com>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     "H . Peter Anvin" <hpa@zytor.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Tony Luck <tony.luck@intel.com>,
         Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Date:   Wed, 20 Apr 2022 11:02:44 +1200
-In-Reply-To: <ec60ed6f-eafc-80eb-affc-3102c5dc3165@intel.com>
+        platform-driver-x86@vger.kernel.org, isaku.yamahata@gmail.com
+Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
+ attestation interface driver
+Message-ID: <20220420012032.GA2224031@ls.amr.corp.intel.com>
 References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-         <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
-         <bd83067542a3519ee4c91f9d50e9bd4fac27e4bb.camel@intel.com>
-         <975b5050-2108-9ace-cc71-46f17db0a731@intel.com>
-         <f40fe89d9b978d525ed5d56b0679d1c20b10864b.camel@intel.com>
-         <ec60ed6f-eafc-80eb-affc-3102c5dc3165@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+ <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 2022-04-19 at 15:49 -0700, Dave Hansen wrote:
-> On 4/19/22 15:21, Kai Huang wrote:
-> > On Tue, 2022-04-19 at 07:13 -0700, Dave Hansen wrote:
-> > > On 4/19/22 00:47, Kai Huang wrote:
-> > > > > From security's perspective, attestation is an essential part of TDX.  That
-> > > > being said, w/o attestation support in TD guest, I guess nobody will seriously
-> > > > use TD guest.
-> > > Are you saying you can't think of a single threat model where there's a
-> > > benefit to running a TDX guest without attestation?  Will TDX only be
-> > > used in environments where secrets are provisioned to guests on the
-> > > basis of attestation?
-> > > 
-> > I don't think anyone should provision secret to a TD before it get attested that
-> > it is a genuine TD that he/she expected.  If someone does that, he/she takes the
-> > risk of losing the secret.  Of course if someone just want to try a TD then w/o
-> > attestation is totally fine.
-> 
-> Yeah, but you said:
-> 
-> 	w/o attestation support in TD guest, I guess nobody will
-> 	seriously use TD guest.
-> 
-> I'm trying to get to the bottom of that.  That's a much more broad
-> statement than something about when it's safe to deploy secrets.
-> 
-> There are lots of secrets deployed in (serious) VMs today.  There are
-> lots of secrets deployed in (serious) SEV VMs that don't have
-> attestation.  Yet, the world somehow hasn't come crashing down.
-> 
-> I think it's crazy to say that nobody will deploy secrets to TDX VMs
-> without attestation.  I think it's a step father into crazy land to say
-> that no one will "seriously" use TDX guests without attestation.
-> 
-> Let's be honest about this and not live in some fantasy world, please.
+On Fri, Apr 15, 2022 at 03:01:09PM -0700,
+Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+...
+> diff --git a/drivers/platform/x86/intel/tdx/intel_tdx_attest.c b/drivers/platform/x86/intel/tdx/intel_tdx_attest.c
+> new file mode 100644
+> index 000000000000..9124db800d4f
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/tdx/intel_tdx_attest.c
+...
+> +static long tdx_attest_ioctl(struct file *file, unsigned int cmd,
+> +			     unsigned long arg)
+> +{
+> +	struct attest_dev *adev = platform_get_drvdata(pdev);
+> +	void __user *argp = (void __user *)arg;
+> +	struct tdx_gen_quote tdquote_req;
+> +	long ret = 0, err;
+> +
+> +	mutex_lock(&adev->lock);
+> +
+> +	switch (cmd) {
+> +	case TDX_CMD_GET_TDREPORT:
+> +		if (copy_from_user(adev->report_buf, argp,
+> +					TDX_REPORT_DATA_LEN)) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		/* Generate TDREPORT_STRUCT */
+> +		err = tdx_mcall_tdreport(adev->tdreport_buf, adev->report_buf);
+> +		if (err) {
+> +			ret = put_user(err, (long __user *)argp);
+> +			ret = -EIO;
+> +			break;
+> +		}
+> +
+> +		if (copy_to_user(argp, adev->tdreport_buf, TDX_TDREPORT_LEN))
+> +			ret = -EFAULT;
+> +		break;
+> +	case TDX_CMD_GEN_QUOTE:
+> +		reinit_completion(&adev->req_compl);
+> +
+> +		/* Copy TDREPORT data from user buffer */
+> +		if (copy_from_user(&tdquote_req, argp, sizeof(struct tdx_gen_quote))) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		if (tdquote_req.len <= 0 || tdquote_req.len > GET_QUOTE_MAX_SIZE) {
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +
+> +		if (copy_from_user(adev->tdquote_buf, (void __user *)tdquote_req.buf,
+> +					tdquote_req.len)) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		/* Submit GetQuote Request */
+> +		err = tdx_hcall_get_quote(adev->tdquote_buf, GET_QUOTE_MAX_SIZE);
+> +		if (err) {
+> +			ret = put_user(err, (long __user *)argp);
+> +			ret = -EIO;
+> +			break;
+> +		}
+> +
+> +		/* Wait for attestation completion */
+> +		ret = wait_for_completion_interruptible_timeout(
+> +				&adev->req_compl,
+> +				msecs_to_jiffies(GET_QUOTE_TIMEOUT));
 
-OK agree.  No argument about this.
-
-
+If timeout occurs, the state of adev->tdquote_buf is unknown.  It's not safe
+to continue to using adev->tdquote_buf.  VMM would continue to processing
+getquote request with this buffer.  What if TDX_CMD_GEN_QUOTE is issued again,
+and tdquote_buf is re-used?
 -- 
-Thanks,
--Kai
-
-
+Isaku Yamahata <isaku.yamahata@gmail.com>
