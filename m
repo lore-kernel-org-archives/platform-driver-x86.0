@@ -2,62 +2,42 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E554BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Apr 2022 18:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35858C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Apr 2022 19:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381402AbiDTSLO (ORCPT
+        id S1381607AbiDTTHr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 20 Apr 2022 14:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36554 "EHLO
+        Wed, 20 Apr 2022 15:07:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381398AbiDTSLN (ORCPT
+        with ESMTP id S244725AbiDTTHq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 20 Apr 2022 14:11:13 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D99B23EB94;
-        Wed, 20 Apr 2022 11:08:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650478106; x=1682014106;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=r82xGPoK3ahf1ghSuP5NKUG1BQLSZ7HM9W5TELKA3TA=;
-  b=P7+FTl42pAYQ1wbZ/8I0EKG+OZpmskKh7fFyX06zG5W+hr2g/ikMfj/C
-   MBpa352qq4V7qrbpalPCrKKjquayMXr5PKLQinxUo/MbM/yGnOaN3ycV/
-   Zokz5SBQfG/JwvdFN3rkVncD4i5NJ7Cv8GYqysTR6MPNbPlR3zMoykCIp
-   KzXW2dqQ0Tx+sf2Cyjq58AsXfQt7EU1Eg1ZzKvHQRTCm92LVBYK+gx9Xg
-   5aVG5JNnHcKU8gGEGHyOfx4toyml5ST7dTr0HeMbPX3MetQjKgp3o5HZ/
-   +DrARTlqDLG4RFaNSjgLwUmzKrZD4vEXWP4ibvZgr5PllLz6/pDpI6PEG
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10323"; a="264288359"
-X-IronPort-AV: E=Sophos;i="5.90,276,1643702400"; 
-   d="scan'208";a="264288359"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 11:08:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,276,1643702400"; 
-   d="scan'208";a="626162563"
-Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Apr 2022 11:08:21 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 20 Apr 2022 11:08:21 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 20 Apr 2022 11:08:20 -0700
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.027;
- Wed, 20 Apr 2022 11:08:20 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        Wed, 20 Apr 2022 15:07:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39AC52DCF;
+        Wed, 20 Apr 2022 12:04:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CB4926130A;
+        Wed, 20 Apr 2022 19:04:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7826C385A1;
+        Wed, 20 Apr 2022 19:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1650481498;
+        bh=3TwvUFV0aw9LmXxpaVt1WobXYjRRbhKrWPYqHzWsKv4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X7jLxxtVlTztqVg3E8BIUuuDLZKMM2mTqRwnBiVXErc194bnvswjXEBu4V/EHgeHP
+         lzyz9hJhEA9hex7EsRngiu1T0KU677Hoq/3jgOQV3/+r0bxHXVAKpp9uVkCBC9kg8E
+         G4OV5/xcOVd8fTONZl9Nhl9pXMfbDmxy0pC78wzI=
+Date:   Wed, 20 Apr 2022 21:04:55 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
         "markgross@kernel.org" <markgross@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Borislav Petkov" <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -71,45 +51,36 @@ CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
         <platform-driver-x86@vger.kernel.org>,
         "patches@lists.linux.dev" <patches@lists.linux.dev>,
         "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: RE: [PATCH v3 03/11] platform/x86/intel/ifs: Create device for Intel
+Subject: Re: [PATCH v3 03/11] platform/x86/intel/ifs: Create device for Intel
  IFS (In Field Scan)
-Thread-Topic: [PATCH v3 03/11] platform/x86/intel/ifs: Create device for Intel
- IFS (In Field Scan)
-Thread-Index: AQHYVAv92LA3gQ6+7UWRqBVIgiQr06z355WAgAAWzYCAAOUNAIAACuQAgACb+YD//4u7sIAAeViA//+LFxA=
-Date:   Wed, 20 Apr 2022 18:08:20 +0000
-Message-ID: <cf53a8fa1e4e4c6885810ee8e4785b79@intel.com>
-References: <20220407191347.9681-1-jithu.joseph@intel.com>
- <20220419163859.2228874-1-tony.luck@intel.com>
- <20220419163859.2228874-4-tony.luck@intel.com> <Yl7npfrVTPFEIivC@kroah.com>
+Message-ID: <YmBZV3pUtKC2j0Ui@kroah.com>
+References: <20220419163859.2228874-1-tony.luck@intel.com>
+ <20220419163859.2228874-4-tony.luck@intel.com>
+ <Yl7npfrVTPFEIivC@kroah.com>
  <CAPcyv4jzscs3Dg4QN0+XHRYdekBeqy1=dRX-mWCj1OXo8jS2vQ@mail.gmail.com>
- <Yl+66oyQhI0AkEDC@kroah.com> <YmAmebezoc8m6n2E@agluck-desk3.sc.intel.com>
- <YmBG44t4dYsUl4Aa@kroah.com> <578be5d8874f4942a58adf5f64c4e817@intel.com>
+ <Yl+66oyQhI0AkEDC@kroah.com>
+ <YmAmebezoc8m6n2E@agluck-desk3.sc.intel.com>
+ <YmBG44t4dYsUl4Aa@kroah.com>
+ <578be5d8874f4942a58adf5f64c4e817@intel.com>
  <YmBLJf8JQkfSQGvA@kroah.com>
-In-Reply-To: <YmBLJf8JQkfSQGvA@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.6.401.20
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ <cf53a8fa1e4e4c6885810ee8e4785b79@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cf53a8fa1e4e4c6885810ee8e4785b79@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
->> Or is it ok for them all to sit at the top level of /sys/devices/virtual=
-?
->
-> How many do you have?
->
-> And why is a directory needed for just one tiny driver type?
+On Wed, Apr 20, 2022 at 06:08:20PM +0000, Luck, Tony wrote:
+> >> Or is it ok for them all to sit at the top level of /sys/devices/virtual?
+> >
+> > How many do you have?
+> >
+> > And why is a directory needed for just one tiny driver type?
+> 
+> One today. Two tomorrow (internally ... next gen CPU).
+> 
+> Three eventually (That's how many are on the roadmap that I can see).
 
-One today. Two tomorrow (internally ... next gen CPU).
-
-Three eventually (That's how many are on the roadmap that I can see).
-
--Tony
+Then just use a misc device, it's simple and saves you a ton of code.
