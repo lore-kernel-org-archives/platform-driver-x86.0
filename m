@@ -2,58 +2,58 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF452C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Apr 2022 06:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A2BC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Apr 2022 07:04:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385440AbiDUHAS (ORCPT
+        id S1385535AbiDUHHj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Apr 2022 03:00:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35406 "EHLO
+        Thu, 21 Apr 2022 03:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1385541AbiDUHAH (ORCPT
+        with ESMTP id S1385571AbiDUHHg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Apr 2022 03:00:07 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F55715A32;
-        Wed, 20 Apr 2022 23:57:14 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id j17so4140112pfi.9;
-        Wed, 20 Apr 2022 23:57:14 -0700 (PDT)
+        Thu, 21 Apr 2022 03:07:36 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BE4D15704;
+        Thu, 21 Apr 2022 00:04:48 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id j8-20020a17090a060800b001cd4fb60dccso4336968pjj.2;
+        Thu, 21 Apr 2022 00:04:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=o/ozdBc2EnetQZby0Dq0arg/wM1fGuqmYXDc/fS+iKE=;
-        b=kV3mEYMRZCjIuz1tsNE+1ob8/s/kL83lxOJG9DUy5xJj7JL8SVYhJlojfHvx7cFwgO
-         Oecl0Og28SvzCiEO5O3tg+l140mcjhtOvaFlX5ejJAfASMTfOiZmkohDsST14SSqKTEy
-         gI2GGj/oWKSKr5npPdFAZBnYpUTo9GLjj0PdDECjOCpVV68FfWTZu5C1oIR0hMWest8g
-         3dN6/AVkelgrY5keUOwkUfsipojB7+oqi0p/5Jm9DQpIIqaK5qhBIRhCHVv6ivg3N8Ir
-         L3sZC8phJt62v36rKBc8nRqMxar5oOSE2ldBHTBOl7fPx7R6wb4gMXCQJXO/iHzH7bJV
-         jsMA==
+        bh=ckZb8HQa6B+H6t9pofeOOWMFEAGtcGaN614SCDhVQYA=;
+        b=SHDfVa3FMmxgIMWcn+Q/V5BXKCMqc6gupBa491JtUf1YiJXt+jMBITI1+IndLPAiIv
+         qD3FcIJbcu4Z7orWyaJDi7S/qhIErBQTYGkWKwxUlUJ2vMf+DsGzkb0kk9s3xYo/3k0Q
+         q/9kDDn1jaPKUZneasma7uFV0PCTz3gm6cl0XD7cUOAbhJilfDoai2do+GjxN34nx897
+         W2ff5yPbIFfPf8l1ovxQlBqjo0jBNRi8Lu65nc+tYdDHkL6ab8PVF4pkwqLl8bIoBbkB
+         6l5CxHzI/LentyJLL/pPGx8po3avHC9IScIBKDV/A1u12xhU8rFhiCHPGCJf/meaz7yd
+         7d9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o/ozdBc2EnetQZby0Dq0arg/wM1fGuqmYXDc/fS+iKE=;
-        b=NbTdxWec8lkvG29gxif/esdCZ+1kWnkZrBaXlDGiMu92fSrArC78JGpx9SGv7m7aFL
-         3p0WBpemBFlDUEgtyTMjAvrBc+8rtVwkeNbDAcMZzeRkSHjQOFtJAM2KEksbSdMun3ZI
-         D976hL1rkltmRo7i0OnP3hQhvjDoTIDWYY7fzj8AaD3DfwoWJyA/ADjZ7S3AQg+NBfum
-         EGHBPhWjM62fEJIZtVMywDIQ92AA689T0iSIpEQIUBgbSQ1iZARoLLa7gZ2pBvZlfDXd
-         uzm4dqDUR3amZKW3faw+pYZSnqE//j8lxma+Vjpws3674livCAccVR6NV46N3NTtzjcx
-         e1Kg==
-X-Gm-Message-State: AOAM53387yIckTrdB21EfmK2QonJRP2U/JCVfcaJvKmXlFlk++ItiHOs
-        Jm1pQre8WK8ktAD2r+ayxYU=
-X-Google-Smtp-Source: ABdhPJyu4eRa97cpqRY5VQJTojJ3owbuG+DINpRNZFO51Z8kHWTLQLLQZmiw9Bsm+h1qVnlcGXWeWg==
-X-Received: by 2002:a05:6a00:2883:b0:509:322f:685f with SMTP id ch3-20020a056a00288300b00509322f685fmr27259825pfb.60.1650524233790;
-        Wed, 20 Apr 2022 23:57:13 -0700 (PDT)
+        bh=ckZb8HQa6B+H6t9pofeOOWMFEAGtcGaN614SCDhVQYA=;
+        b=kF99Lb+uWG+J7oEnYZsZypTaFKqDUvQxFnd0OAKW6DIzpMvzYLIK4srMVyh2Z58BbL
+         mCG76lBDu5RqQ13HRLTnSeL4xfkibx0MmYHXD5nahIhBmFIlp5+hZEXW8vI/PSzRKowt
+         s8ysI+Z8bhIqY/IqR23bNsvxyKUSNTieirl0dDjD0EU09CfZH8rFKQYmZfyGGHRoY8jO
+         VggFSlQd7ke1xvhZ7xTOvG8l/4bp6XewY2l/n6xUPs9RhaWMwYWrmnwIcElj4AsXfRDe
+         fuwjbUokzzWbkoF6dDKw0myd3fOpogZZpZO+2M0NeXpCBSEfl42lPxauPNYYpVUlAeFF
+         QGBA==
+X-Gm-Message-State: AOAM531XkUBWZQOjVRGTLsthYme3InjsrnPIQHJZ7B9VHaIDDXSUQCon
+        VBE5VrpghFpTAvq6A6LgWX8=
+X-Google-Smtp-Source: ABdhPJwvc2lunSrpC+kueBLFryH5B7Be+qQXCmSIgefygKENy10PWbdlNKjZ/L9Cw3ZyArJ2KKboJg==
+X-Received: by 2002:a17:902:8f81:b0:154:be2d:1948 with SMTP id z1-20020a1709028f8100b00154be2d1948mr24109757plo.110.1650524687783;
+        Thu, 21 Apr 2022 00:04:47 -0700 (PDT)
 Received: from localhost (c-107-3-154-88.hsd1.ca.comcast.net. [107.3.154.88])
-        by smtp.gmail.com with ESMTPSA id w7-20020aa79547000000b0050ad0e82e6dsm2847893pfq.215.2022.04.20.23.57.10
+        by smtp.gmail.com with ESMTPSA id a38-20020a056a001d2600b004f72acd4dadsm22961885pfx.81.2022.04.21.00.04.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Apr 2022 23:57:13 -0700 (PDT)
-Date:   Wed, 20 Apr 2022 23:57:07 -0700
+        Thu, 21 Apr 2022 00:04:47 -0700 (PDT)
+Date:   Thu, 21 Apr 2022 00:04:44 -0700
 From:   Isaku Yamahata <isaku.yamahata@gmail.com>
 To:     Sathyanarayanan Kuppuswamy 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Kai Huang <kai.huang@intel.com>,
+Cc:     Isaku Yamahata <isaku.yamahata@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
@@ -63,70 +63,47 @@ Cc:     Kai Huang <kai.huang@intel.com>,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Tony Luck <tony.luck@intel.com>,
         Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, isaku.yamahata@gmail.com
+        platform-driver-x86@vger.kernel.org
 Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
  attestation interface driver
-Message-ID: <20220421065707.GA1423762@private.email.ne.jp>
+Message-ID: <20220421070444.GB1423762@private.email.ne.jp>
 References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
  <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
- <b209ee09b74394ab7aed85e0244e2191ee3d4171.camel@intel.com>
- <e0e2e399-2cac-cf75-2a64-9d017e6d7189@linux.intel.com>
- <420a4d689f73f9f7dc1ef71c61da75b7c9777a3f.camel@intel.com>
- <1e184b44-8024-b8ae-98a8-cf2b6f78df61@linux.intel.com>
+ <20220420012032.GA2224031@ls.amr.corp.intel.com>
+ <dd4a2b16-397e-8866-0fd5-b5c5dfd453ab@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1e184b44-8024-b8ae-98a8-cf2b6f78df61@linux.intel.com>
+In-Reply-To: <dd4a2b16-397e-8866-0fd5-b5c5dfd453ab@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 07:42:06PM -0700,
+On Tue, Apr 19, 2022 at 06:26:43PM -0700,
 Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
 
+> On 4/19/22 6:20 PM, Isaku Yamahata wrote:
+> > If timeout occurs, the state of adev->tdquote_buf is unknown.  It's not safe
+> > to continue to using adev->tdquote_buf.  VMM would continue to processing
+> > getquote request with this buffer.  What if TDX_CMD_GEN_QUOTE is issued again,
+> > and tdquote_buf is re-used?
 > 
+> This part is not clearly discussed in the specification. May be spec
+> should define some reasonable timeout and teardown details.
 > 
-> On 4/20/22 5:11 PM, Kai Huang wrote:
-> > On Wed, 2022-04-20 at 16:45 -0700, Sathyanarayanan Kuppuswamy wrote:
-> > > If we want to support multiple GetQuote requests in parallel, then we
-> > > need some way to uniquely identify the GetQuote requests. So that when
-> > > we get completion notification, we can understand which request is
-> > > completed. This part is not mentioned/discussed in ABI spec. So we want
-> > > to serialize the requests for now.
-> > > 
-> > 
-> > Yes it's unfortunate that this part (whether concurrent GetQuote requests are
-> > supported by TDX architecture) is not explicitly mentioned in GHCI spec.  I am
-> > fine with only supporting GetQuote requests one by one.  AFAICT there's no
-> > request to support concurrent GetQuote requests anyway.  What concerns me is
-> > exactly how explain this.
-> > 
-> > As I said, we have GET_QUOTE_IN_FLIGHT flag now.  Theoretically, you can queue
-> > multiple GetQuote requests, and when you receive the interrupt, you check which
-> > buffer has GET_QUOTE_IN_FLIGHT cleared.  That buffer is the one with Quote
-> > ready.  However I am not 100% sure whether above will always work.  Interrupt
-> > can get lost when there are multiple Quotes ready in multiple buffer in very
-> > short time period, etc?  Perhaps Isaku can provide more input here.
-> 
-> Either supported or not, it should be mentioned in the GHCI spec. Currently,
-> there are no details related to it. If it is supported, the specification
-> should include the protocol to use.
-> 
-> I will check with Isaku about it.
+> Regarding not using this buffer again, what happens if we de-allocate
+> it on timeout and the host still updates it?
 
-The spec says that TD can call multiple GetQuote requests in parallel.
+Until GET_QUOTE_IN_FLIGHT is cleared, the shared page is owned by VMM, TD
+attestation driver shouldn't reuse/free the pages.
 
-  TDG.VP.VMCALL<GetQuote> API allows one TD to issue multiple requests. It's
-  implementation specific that how many concurrent requests are allowed. The TD
-  should be able to handle TDG.VP.VMCALL_RETRY if it chooses to issue multiple
-  requests simultaneously
+In the case of this driver, I think of two options
+- don't timeout. wait for interrupt to arrive and check the shared GPA state.
+- allow timeout. When the next request comes, check the shared GPA state.
+  If it's still GET_QUOTE_IN_FLIGHT, return EBUSY.
 
-As Kai said, there is no requirement for multiple GetQuote in parallel, it's
-okay to support only single request at the same time.
-
-While the status is GET_QUOTE_IN_FLIGHT, VMM owns the shared GPA.  The
-attestation driver should wait for GET_QUOTE_IN_FLIGHT to be cleared before
-sending next request.
+It's possible for VMM to keep the shared GPA forever maliciously(DoS) or
+unintentionally due to bug.  TD can't do much about it.
 -- 
 Isaku Yamahata <isaku.yamahata@gmail.com>
