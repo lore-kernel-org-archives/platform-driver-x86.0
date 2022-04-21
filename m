@@ -2,51 +2,48 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D73C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Apr 2022 23:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E111C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Apr 2022 00:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237352AbiDTXsm (ORCPT
+        id S1351423AbiDUAOQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 20 Apr 2022 19:48:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53032 "EHLO
+        Wed, 20 Apr 2022 20:14:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230418AbiDTXsl (ORCPT
+        with ESMTP id S1348283AbiDUAOO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 20 Apr 2022 19:48:41 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 773633A719;
-        Wed, 20 Apr 2022 16:45:53 -0700 (PDT)
+        Wed, 20 Apr 2022 20:14:14 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54AB2192A6;
+        Wed, 20 Apr 2022 17:11:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650498353; x=1682034353;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jcTFaoLqmZGIq5srJLLqjczCRcqyDECWhEF2CUwrQdU=;
-  b=evYf4LnhHfeQIl4LN4Q89rA6FOJqjoJeapzp54k+zwITenXoSSkgSPz3
-   KCMsmviQJQ51dxbDedw2E72PlyALVNDLcKNsrm3wUIfJqD0Dwt2JExXOt
-   3qPhUQc9OKa5pz9nMpBQ37CYsLACG13RN8t9P5NRp+Dk7/Ck2JPe1Sz3b
-   XZufQhGo4S1ij9lWB5b1eFBRVg8xeCPpysH84cxRpN/me/oBFpnYqBMZ4
-   xm9JC8mtyiBkzM36N/wWKs+A4TCzagsG1azxIWV5KhYDXzBJaKNNm/rje
-   QZpUf8FWLvG5Y7LHLMxhr/GPyY8H7g8pc/gFOUt86arPiohESoeAMROK0
+  t=1650499887; x=1682035887;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=DO8u08CYrrpFU9VtVrhYb0LJ+ph2/wh1S84s2b8igPE=;
+  b=baORlmcRtjFPhbjxeMGeyz4YkHKHJay5aSji5jRILfyHEPjKWWKYhHOb
+   KQu96wFN6xFEa3/izkSzRPokXzKaz9GKYbgiC6W94v04h/UvJoXXpgnuk
+   USjQiKC9inbmj4ljziDtxmAoLaSoLoqONcT2VeNDvHdqQRsmvu7pLn+aL
+   LBHLdHmKYr+gePEUNH41KKNHRQ8DohYh0Py5H5fS15jgK+n8knzHlGvoo
+   XO6jIPXPMt4KNkebywUKbITMEmYCV15HmzBzb8QJqdhxJKVqd23TF1aBl
+   JuB0J+6QRbey24sD8v0V4wOKiOibXeV+/2Umxgsj5xmetF8qyZdUjbKuU
    g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10323"; a="327079916"
+X-IronPort-AV: E=McAfee;i="6400,9594,10323"; a="350634791"
 X-IronPort-AV: E=Sophos;i="5.90,277,1643702400"; 
-   d="scan'208";a="327079916"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 16:45:53 -0700
+   d="scan'208";a="350634791"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 17:11:27 -0700
 X-IronPort-AV: E=Sophos;i="5.90,277,1643702400"; 
-   d="scan'208";a="593388515"
-Received: from dmertma-mobl4.amr.corp.intel.com (HELO [10.209.83.57]) ([10.209.83.57])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 16:45:52 -0700
-Message-ID: <e0e2e399-2cac-cf75-2a64-9d017e6d7189@linux.intel.com>
-Date:   Wed, 20 Apr 2022 16:45:52 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.7.0
+   d="scan'208";a="555463463"
+Received: from ssharm9-mobl.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.254.30.148])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 17:11:23 -0700
+Message-ID: <420a4d689f73f9f7dc1ef71c61da75b7c9777a3f.camel@intel.com>
 Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
  attestation interface driver
-Content-Language: en-US
-To:     Kai Huang <kai.huang@intel.com>,
+From:   Kai Huang <kai.huang@intel.com>
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
@@ -56,152 +53,52 @@ Cc:     "H . Peter Anvin" <hpa@zytor.com>,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Tony Luck <tony.luck@intel.com>,
         Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
+        platform-driver-x86@vger.kernel.org, isaku.yamahata@gmail.com
+Date:   Thu, 21 Apr 2022 12:11:21 +1200
+In-Reply-To: <e0e2e399-2cac-cf75-2a64-9d017e6d7189@linux.intel.com>
 References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
- <b209ee09b74394ab7aed85e0244e2191ee3d4171.camel@intel.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <b209ee09b74394ab7aed85e0244e2191ee3d4171.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+         <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
+         <b209ee09b74394ab7aed85e0244e2191ee3d4171.camel@intel.com>
+         <e0e2e399-2cac-cf75-2a64-9d017e6d7189@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Wed, 2022-04-20 at 16:45 -0700, Sathyanarayanan Kuppuswamy wrote:
+> If we want to support multiple GetQuote requests in parallel, then we
+> need some way to uniquely identify the GetQuote requests. So that when
+> we get completion notification, we can understand which request is
+> completed. This part is not mentioned/discussed in ABI spec. So we want 
+> to serialize the requests for now.
+> 
 
-On 4/20/22 4:18 PM, Kai Huang wrote:
-> On Fri, 2022-04-15 at 15:01 -0700, Kuppuswamy Sathyanarayanan wrote:
->> TDX guest supports encrypted disk as root or secondary drives.
->> Decryption keys required to access such drives are usually maintained
->> by 3rd party key servers. Attestation is required by 3rd party key
->> servers to get the key for an encrypted disk volume, or possibly other
->> encrypted services. Attestation is used to prove to the key server that
->> the TD guest is running in a valid TD and the kernel and virtual BIOS
->> and other environment are secure.
->>
->> During the boot process various components before the kernel accumulate
->> hashes in the TDX module, which can then combined into a report. This
->> would typically include a hash of the bios, bios configuration, boot
->> loader, command line, kernel, initrd.  After checking the hashes the
->> key server will securely release the keys.
->>
->> The actual details of the attestation protocol depend on the particular
->> key server configuration, but some parts are common and need to
->> communicate with the TDX module.
-> 
-> As we discussed "key provisioning from key server to support disk decryption" is
-> only one use case of attestation, so I don't think you need 3 paragraphs to talk
-> about details of this use case here.  The attestation flow is documented in GHCI
+Yes it's unfortunate that this part (whether concurrent GetQuote requests are
+supported by TDX architecture) is not explicitly mentioned in GHCI spec.  I am
+fine with only supporting GetQuote requests one by one.  AFAICT there's no
+request to support concurrent GetQuote requests anyway.  What concerns me is
+exactly how explain this.
 
-Not everyone understands the attestation context and usage. So I have 
-attempted to explain one of the use-case in detail.
+As I said, we have GET_QUOTE_IN_FLIGHT flag now.  Theoretically, you can queue
+multiple GetQuote requests, and when you receive the interrupt, you check which
+buffer has GET_QUOTE_IN_FLIGHT cleared.  That buffer is the one with Quote
+ready.  However I am not 100% sure whether above will always work.  Interrupt
+can get lost when there are multiple Quotes ready in multiple buffer in very
+short time period, etc?  Perhaps Isaku can provide more input here.
 
+Anyway, how about explaining in this way:
 
-> so it's clear.  The attestation flow (and what this patch does) does not have
-> any direct relation to the "disk decryption" details above.  I think you can
-> discard above entirely or using one or two simple sentences to explain.
+"The GHCI spec doesn't clearly say whether TDX can support or how to support
+multiple GetQuote requests in parallel.  Attestation request is not supposed to
+be frequent and should not be in performance critical path.  Only support
+GetQuote requests in serialized way for now." 
 
-Ok. I will try to summarize the details in few lines
-
-> 
-> Also, as you agreed you will remove the 8K shared memory assumption:
-> 
-> https://lore.kernel.org/lkml/20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com/T/
-
-Yes. I have already removed this restriction. This will be part of my
-next submission.
-
-> 
-> and if you agree with my approach (again, I recommend) to split the driver to
-> two parts (reorganize your patches essentially):
-
-Yes. I have moved the GetQuote support to a new patch (but without new
-config).
-
-> 
-> https://lore.kernel.org/lkml/20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com/T/#m9e3c5115df0be0b53d41f987e1eda1715255d1d8
-> 
-> I'll review again once you finish updating the driver.
-
-Thanks.
-
-> 
-> Btw some minor comments below.
-> 
-> 
-> [...]
-> 
->> --- /dev/null
->> +++ b/drivers/platform/x86/intel/tdx/intel_tdx_attest.c
-> 
-> Perhaps attest.c is enough, no matter where the file will reside.
-
-Noted. I will change it.
-
-> 
->> @@ -0,0 +1,302 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * intel_tdx_attest.c - TDX guest attestation interface driver.
->> + *
->> + * Implements user interface to trigger attestation process and
->> + * read the TD Quote result.
->> + *
->> + * Copyright (C) 2021-2022 Intel Corporation
-> 
-> For upstream I guess just need 2022.
-> 
-> [...]
-
-Noted. I will change it.
-
-> 
->> +struct attest_dev {
->> +	/* Mutex to serialize attestation requests */
->> +	struct mutex lock;
-> 
-> I think we need a comment to explain why the driver doesn't support multiple
-> GetQuote requests in parallel.  In fact the updated GHCI spec doesn't explicitly
-> say GetQuote cannot be done in parallel.  It has a new "GET_QUOTE_IN_FLIGHT"
-> flag introduced, which can be used to determine which Quote is finished I think.
-> 
-> I am fine with only supporting GetQuote in serialized way, but perhaps we need
-> to call out the reason somewhere.
-
-If we want to support multiple GetQuote requests in parallel, then we
-need some way to uniquely identify the GetQuote requests. So that when
-we get completion notification, we can understand which request is
-completed. This part is not mentioned/discussed in ABI spec. So we want 
-to serialize the requests for now.
-
-I will include the details about it in the commit log.
-
-> 
-> [...]
-> 
->> +
->> +	/* Allocate DMA buffer to get TDQUOTE data from the VMM */
->> +	adev->tdquote_buf = dma_alloc_coherent(dev, GET_QUOTE_MAX_SIZE,
->> +						&adev->handle,
->> +						GFP_KERNEL | __GFP_ZERO);
->> +	if (!adev->tdquote_buf) {
->> +		ret = -ENOMEM;
->> +		goto failed;
->> +	}
-> 
-> The buffer needs to be shared.  Guest must have called MapGPA to convert the
-> buffer to shared.  Is this guaranteed by calling dma_alloc_coherent(), since
-> seems I didn't see any MapGPA in the driver?  Anyway this deserves a comment I
-> think.
-
-Yes. It is taken care by dma_alloc_*() API. DMA memory is marked by
-default as shared in TDX guest. I will add comment about it.
-
-> 
-> 
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Thanks,
+-Kai
+
+
