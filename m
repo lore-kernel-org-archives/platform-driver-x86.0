@@ -2,133 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBF9C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Apr 2022 10:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13431C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Apr 2022 12:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1388403AbiDUKgF (ORCPT
+        id S1385129AbiDUMom (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Apr 2022 06:36:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56996 "EHLO
+        Thu, 21 Apr 2022 08:44:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235786AbiDUKgD (ORCPT
+        with ESMTP id S1385111AbiDUMol (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Apr 2022 06:36:03 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED8C924F11;
-        Thu, 21 Apr 2022 03:33:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650537194; x=1682073194;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jcMPy87x/HK1o0RKPabZAUkhnjVpowL1sK3ccHuaXNM=;
-  b=Lw2IaOYXXJ4NDgrIVnCt4/ThocGVNf97knlesveEWokL/LL38CvHWhSL
-   sajBFFry4PbRlpRmMKGcQzP08jfF3FdUtXoafaBE9ZveWguFcjZmyYZf+
-   JmTeM4OA6mSIhaabfIAM0WQLKbcHZ4bjjIEr7fVIaE/9JvgTUlMMFBsZ7
-   wezLEJdK20qhUNlJ/eXxssfZSU+zMJnrCEAprtVCHoyZGsQypgJGwbUMs
-   fWD2Qu7+eAAYxdEsHLB9+fPas9eOf3Qa0sBr0rvEptNZTaVQ6j4R9ptm6
-   40ldkNwVGP/fCsiL6HRLGuoQnkfkXB/zGXIg3Il2aIUowrmDaqVhPIkLT
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10323"; a="263159553"
-X-IronPort-AV: E=Sophos;i="5.90,278,1643702400"; 
-   d="scan'208";a="263159553"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 03:33:14 -0700
-X-IronPort-AV: E=Sophos;i="5.90,278,1643702400"; 
-   d="scan'208";a="703031400"
-Received: from jharolds-mobl.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.254.58.27])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 03:33:11 -0700
-Message-ID: <48356d733067781b527fc0294317be27098f502d.camel@intel.com>
-Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-From:   Kai Huang <kai.huang@intel.com>
-To:     Isaku Yamahata <isaku.yamahata@gmail.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Date:   Thu, 21 Apr 2022 22:33:09 +1200
-In-Reply-To: <20220421065707.GA1423762@private.email.ne.jp>
-References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-         <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
-         <b209ee09b74394ab7aed85e0244e2191ee3d4171.camel@intel.com>
-         <e0e2e399-2cac-cf75-2a64-9d017e6d7189@linux.intel.com>
-         <420a4d689f73f9f7dc1ef71c61da75b7c9777a3f.camel@intel.com>
-         <1e184b44-8024-b8ae-98a8-cf2b6f78df61@linux.intel.com>
-         <20220421065707.GA1423762@private.email.ne.jp>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+        Thu, 21 Apr 2022 08:44:41 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A7A3193C;
+        Thu, 21 Apr 2022 05:41:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0F1A6B8245D;
+        Thu, 21 Apr 2022 12:41:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60C7C385A5;
+        Thu, 21 Apr 2022 12:41:46 +0000 (UTC)
+Date:   Thu, 21 Apr 2022 08:41:45 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
+Subject: Re: [PATCH v3 10/11] trace: platform/x86/intel/ifs: Add trace point
+ to track Intel IFS operations
+Message-ID: <20220421084145.3b0c3539@gandalf.local.home>
+In-Reply-To: <adc49af263e2464f86b20ccc2d8f184d@intel.com>
+References: <20220407191347.9681-1-jithu.joseph@intel.com>
+        <20220419163859.2228874-1-tony.luck@intel.com>
+        <20220419163859.2228874-11-tony.luck@intel.com>
+        <20220420193839.6e9d810b@gandalf.local.home>
+        <adc49af263e2464f86b20ccc2d8f184d@intel.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 2022-04-20 at 23:57 -0700, Isaku Yamahata wrote:
-> On Wed, Apr 20, 2022 at 07:42:06PM -0700,
-> Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> 
-> > 
-> > 
-> > On 4/20/22 5:11 PM, Kai Huang wrote:
-> > > On Wed, 2022-04-20 at 16:45 -0700, Sathyanarayanan Kuppuswamy wrote:
-> > > > If we want to support multiple GetQuote requests in parallel, then we
-> > > > need some way to uniquely identify the GetQuote requests. So that when
-> > > > we get completion notification, we can understand which request is
-> > > > completed. This part is not mentioned/discussed in ABI spec. So we want
-> > > > to serialize the requests for now.
-> > > > 
-> > > 
-> > > Yes it's unfortunate that this part (whether concurrent GetQuote requests are
-> > > supported by TDX architecture) is not explicitly mentioned in GHCI spec.  I am
-> > > fine with only supporting GetQuote requests one by one.  AFAICT there's no
-> > > request to support concurrent GetQuote requests anyway.  What concerns me is
-> > > exactly how explain this.
-> > > 
-> > > As I said, we have GET_QUOTE_IN_FLIGHT flag now.  Theoretically, you can queue
-> > > multiple GetQuote requests, and when you receive the interrupt, you check which
-> > > buffer has GET_QUOTE_IN_FLIGHT cleared.  That buffer is the one with Quote
-> > > ready.  However I am not 100% sure whether above will always work.  Interrupt
-> > > can get lost when there are multiple Quotes ready in multiple buffer in very
-> > > short time period, etc?  Perhaps Isaku can provide more input here.
-> > 
-> > Either supported or not, it should be mentioned in the GHCI spec. Currently,
-> > there are no details related to it. If it is supported, the specification
-> > should include the protocol to use.
-> > 
-> > I will check with Isaku about it.
-> 
-> The spec says that TD can call multiple GetQuote requests in parallel.
-> 
->   TDG.VP.VMCALL<GetQuote> API allows one TD to issue multiple requests. It's
->   implementation specific that how many concurrent requests are allowed. The TD
->   should be able to handle TDG.VP.VMCALL_RETRY if it chooses to issue multiple
->   requests simultaneously
-> 
-> As Kai said, there is no requirement for multiple GetQuote in parallel, it's
-> okay to support only single request at the same time.
-> 
-> While the status is GET_QUOTE_IN_FLIGHT, VMM owns the shared GPA.  The
-> attestation driver should wait for GET_QUOTE_IN_FLIGHT to be cleared before
-> sending next request.
+On Thu, 21 Apr 2022 04:26:39 +0000
+"Luck, Tony" <tony.luck@intel.com> wrote:
 
-Sorry I missed this in the spec.  Then as I mentioned above, TD should check
-which buffer has GET_QUOTE_IN_FLIGHT bit cleared to determine which GetQuote
-request is done?  I guess this is the only way.
+> >> +TRACE_EVENT(ifs_status,
+> >> +
+> >> +	TP_PROTO(union ifs_scan activate, union ifs_status status),  
+> >
+> > Really, you want to pass the structure in by value, so that we have two
+> > copies? One to get to this function and then one to write to the ring
+> > buffer?  
+> 
+> These "structures" are just bitfield helpers for a u64 that is passed into
+> WRMSR (in the case of activate) and received back from RDMSR in
+> the case of status.
+> 
+> So this is really just a pair of u64 arguments, with the compiler handling
+> the bit field extractions into the ring buffer.
 
-Anyway, supporting single request only is fine to me.  Just needs some
-explanation in comments or commit message.
+I was just wondering if passing by reference would be better, but as you
+stated, they are just two u64 arguments.
 
--- 
-Thanks,
--Kai
+> 
+> Here are the definitions:
+> 
+> union ifs_scan {
+>         u64     data;
+>         struct {
+>                 u32     start   :8;
+>                 u32     stop    :8;
+>                 u32     rsvd    :16;
+>                 u32     delay   :31;
+>                 u32     sigmce  :1;
+>         };
+> };
+> 
+> union ifs_status {
+>         u64     data;
+>         struct {
+>                 u32     chunk_num               :8;
+>                 u32     chunk_stop_index        :8;
+>                 u32     rsvd1                   :16;
+>                 u32     error_code              :8;
+>                 u32     rsvd2                   :22;
+>                 u32     control_error           :1;
+>                 u32     signature_error         :1;
+>         };
+> };
+> 
+> Would it be better to do the bit extractions of the start/stop fields first?
 
+No, I'm just paranoid about passing structures / unions in by value and not
+reference. If you are fine with this, then I'm OK too.
+
+-- Steve
 
