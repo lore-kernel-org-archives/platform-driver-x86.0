@@ -2,147 +2,131 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC2CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Apr 2022 04:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF452C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Apr 2022 06:57:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238660AbiDUE3a (ORCPT
+        id S1385440AbiDUHAS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Apr 2022 00:29:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58452 "EHLO
+        Thu, 21 Apr 2022 03:00:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229894AbiDUE33 (ORCPT
+        with ESMTP id S1385541AbiDUHAH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Apr 2022 00:29:29 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B2212602;
-        Wed, 20 Apr 2022 21:26:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650515201; x=1682051201;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Z7jdM6pq07KjbTcwuki1ZSctHuXY7XcN+eSmZWx0l0M=;
-  b=cAfSDuCbf7xBSYDM0O40TAf1HQ6qGlpdbPgBD7WQm3UU1PB8INVICZJn
-   AwZv8AXz2ESdGhdW++ayrWRzfh78/StXsj8uWAylPGKOYVCdf4lvJvRPQ
-   8kk3k0bUQgOqKC0WQ53kHWhoqJ8zJOgiWPLms0Ud+vuudStbrbyf1/nrg
-   zrQ+c31rp7fFtPV0vKMnjsQ40BUfxCH7cp4bFVpPyuWBv12gQYMZYoH2z
-   wrNVW5+VUUQ1TJSXCzoncllW847OjHUEsWzIJt8Tt3fFJ5fJ4MAR1Of4D
-   dB6DlAefyQYu8HPxxemPj+4Uub1rPY1CrdLkHgoIzIHjzGohNRQQHAvsG
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10323"; a="324672494"
-X-IronPort-AV: E=Sophos;i="5.90,277,1643702400"; 
-   d="scan'208";a="324672494"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 21:26:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,277,1643702400"; 
-   d="scan'208";a="727803522"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga005.jf.intel.com with ESMTP; 20 Apr 2022 21:26:40 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 20 Apr 2022 21:26:40 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 20 Apr 2022 21:26:39 -0700
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.027;
- Wed, 20 Apr 2022 21:26:39 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: RE: [PATCH v3 10/11] trace: platform/x86/intel/ifs: Add trace point
- to track Intel IFS operations
-Thread-Topic: [PATCH v3 10/11] trace: platform/x86/intel/ifs: Add trace point
- to track Intel IFS operations
-Thread-Index: AQHYVAv/GMu0aAF5oU2sc2NlODgUPKz57MaA///Yp0A=
-Date:   Thu, 21 Apr 2022 04:26:39 +0000
-Message-ID: <adc49af263e2464f86b20ccc2d8f184d@intel.com>
-References: <20220407191347.9681-1-jithu.joseph@intel.com>
-        <20220419163859.2228874-1-tony.luck@intel.com>
-        <20220419163859.2228874-11-tony.luck@intel.com>
- <20220420193839.6e9d810b@gandalf.local.home>
-In-Reply-To: <20220420193839.6e9d810b@gandalf.local.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.6.401.20
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 Apr 2022 03:00:07 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F55715A32;
+        Wed, 20 Apr 2022 23:57:14 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id j17so4140112pfi.9;
+        Wed, 20 Apr 2022 23:57:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o/ozdBc2EnetQZby0Dq0arg/wM1fGuqmYXDc/fS+iKE=;
+        b=kV3mEYMRZCjIuz1tsNE+1ob8/s/kL83lxOJG9DUy5xJj7JL8SVYhJlojfHvx7cFwgO
+         Oecl0Og28SvzCiEO5O3tg+l140mcjhtOvaFlX5ejJAfASMTfOiZmkohDsST14SSqKTEy
+         gI2GGj/oWKSKr5npPdFAZBnYpUTo9GLjj0PdDECjOCpVV68FfWTZu5C1oIR0hMWest8g
+         3dN6/AVkelgrY5keUOwkUfsipojB7+oqi0p/5Jm9DQpIIqaK5qhBIRhCHVv6ivg3N8Ir
+         L3sZC8phJt62v36rKBc8nRqMxar5oOSE2ldBHTBOl7fPx7R6wb4gMXCQJXO/iHzH7bJV
+         jsMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o/ozdBc2EnetQZby0Dq0arg/wM1fGuqmYXDc/fS+iKE=;
+        b=NbTdxWec8lkvG29gxif/esdCZ+1kWnkZrBaXlDGiMu92fSrArC78JGpx9SGv7m7aFL
+         3p0WBpemBFlDUEgtyTMjAvrBc+8rtVwkeNbDAcMZzeRkSHjQOFtJAM2KEksbSdMun3ZI
+         D976hL1rkltmRo7i0OnP3hQhvjDoTIDWYY7fzj8AaD3DfwoWJyA/ADjZ7S3AQg+NBfum
+         EGHBPhWjM62fEJIZtVMywDIQ92AA689T0iSIpEQIUBgbSQ1iZARoLLa7gZ2pBvZlfDXd
+         uzm4dqDUR3amZKW3faw+pYZSnqE//j8lxma+Vjpws3674livCAccVR6NV46N3NTtzjcx
+         e1Kg==
+X-Gm-Message-State: AOAM53387yIckTrdB21EfmK2QonJRP2U/JCVfcaJvKmXlFlk++ItiHOs
+        Jm1pQre8WK8ktAD2r+ayxYU=
+X-Google-Smtp-Source: ABdhPJyu4eRa97cpqRY5VQJTojJ3owbuG+DINpRNZFO51Z8kHWTLQLLQZmiw9Bsm+h1qVnlcGXWeWg==
+X-Received: by 2002:a05:6a00:2883:b0:509:322f:685f with SMTP id ch3-20020a056a00288300b00509322f685fmr27259825pfb.60.1650524233790;
+        Wed, 20 Apr 2022 23:57:13 -0700 (PDT)
+Received: from localhost (c-107-3-154-88.hsd1.ca.comcast.net. [107.3.154.88])
+        by smtp.gmail.com with ESMTPSA id w7-20020aa79547000000b0050ad0e82e6dsm2847893pfq.215.2022.04.20.23.57.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Apr 2022 23:57:13 -0700 (PDT)
+Date:   Wed, 20 Apr 2022 23:57:07 -0700
+From:   Isaku Yamahata <isaku.yamahata@gmail.com>
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Kai Huang <kai.huang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, isaku.yamahata@gmail.com
+Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
+ attestation interface driver
+Message-ID: <20220421065707.GA1423762@private.email.ne.jp>
+References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <b209ee09b74394ab7aed85e0244e2191ee3d4171.camel@intel.com>
+ <e0e2e399-2cac-cf75-2a64-9d017e6d7189@linux.intel.com>
+ <420a4d689f73f9f7dc1ef71c61da75b7c9777a3f.camel@intel.com>
+ <1e184b44-8024-b8ae-98a8-cf2b6f78df61@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e184b44-8024-b8ae-98a8-cf2b6f78df61@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
->> +TRACE_EVENT(ifs_status,
->> +
->> +	TP_PROTO(union ifs_scan activate, union ifs_status status),
->
-> Really, you want to pass the structure in by value, so that we have two
-> copies? One to get to this function and then one to write to the ring
-> buffer?
+On Wed, Apr 20, 2022 at 07:42:06PM -0700,
+Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
 
-These "structures" are just bitfield helpers for a u64 that is passed into
-WRMSR (in the case of activate) and received back from RDMSR in
-the case of status.
+> 
+> 
+> On 4/20/22 5:11 PM, Kai Huang wrote:
+> > On Wed, 2022-04-20 at 16:45 -0700, Sathyanarayanan Kuppuswamy wrote:
+> > > If we want to support multiple GetQuote requests in parallel, then we
+> > > need some way to uniquely identify the GetQuote requests. So that when
+> > > we get completion notification, we can understand which request is
+> > > completed. This part is not mentioned/discussed in ABI spec. So we want
+> > > to serialize the requests for now.
+> > > 
+> > 
+> > Yes it's unfortunate that this part (whether concurrent GetQuote requests are
+> > supported by TDX architecture) is not explicitly mentioned in GHCI spec.  I am
+> > fine with only supporting GetQuote requests one by one.  AFAICT there's no
+> > request to support concurrent GetQuote requests anyway.  What concerns me is
+> > exactly how explain this.
+> > 
+> > As I said, we have GET_QUOTE_IN_FLIGHT flag now.  Theoretically, you can queue
+> > multiple GetQuote requests, and when you receive the interrupt, you check which
+> > buffer has GET_QUOTE_IN_FLIGHT cleared.  That buffer is the one with Quote
+> > ready.  However I am not 100% sure whether above will always work.  Interrupt
+> > can get lost when there are multiple Quotes ready in multiple buffer in very
+> > short time period, etc?  Perhaps Isaku can provide more input here.
+> 
+> Either supported or not, it should be mentioned in the GHCI spec. Currently,
+> there are no details related to it. If it is supported, the specification
+> should include the protocol to use.
+> 
+> I will check with Isaku about it.
 
-So this is really just a pair of u64 arguments, with the compiler handling
-the bit field extractions into the ring buffer.
+The spec says that TD can call multiple GetQuote requests in parallel.
 
-Here are the definitions:
+  TDG.VP.VMCALL<GetQuote> API allows one TD to issue multiple requests. It's
+  implementation specific that how many concurrent requests are allowed. The TD
+  should be able to handle TDG.VP.VMCALL_RETRY if it chooses to issue multiple
+  requests simultaneously
 
-union ifs_scan {
-        u64     data;
-        struct {
-                u32     start   :8;
-                u32     stop    :8;
-                u32     rsvd    :16;
-                u32     delay   :31;
-                u32     sigmce  :1;
-        };
-};
+As Kai said, there is no requirement for multiple GetQuote in parallel, it's
+okay to support only single request at the same time.
 
-union ifs_status {
-        u64     data;
-        struct {
-                u32     chunk_num               :8;
-                u32     chunk_stop_index        :8;
-                u32     rsvd1                   :16;
-                u32     error_code              :8;
-                u32     rsvd2                   :22;
-                u32     control_error           :1;
-                u32     signature_error         :1;
-        };
-};
-
-Would it be better to do the bit extractions of the start/stop fields first=
-?
-
--Tony
-
-
+While the status is GET_QUOTE_IN_FLIGHT, VMM owns the shared GPA.  The
+attestation driver should wait for GET_QUOTE_IN_FLIGHT to be cleared before
+sending next request.
+-- 
+Isaku Yamahata <isaku.yamahata@gmail.com>
