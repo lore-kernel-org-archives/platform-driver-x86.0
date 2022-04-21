@@ -2,115 +2,86 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4482CC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Apr 2022 16:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09BAC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Apr 2022 18:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380219AbiDUQ42 (ORCPT
+        id S1391489AbiDUSpC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Apr 2022 12:56:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38446 "EHLO
+        Thu, 21 Apr 2022 14:45:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231334AbiDUQ41 (ORCPT
+        with ESMTP id S1391466AbiDUSpA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Apr 2022 12:56:27 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE37A49930;
-        Thu, 21 Apr 2022 09:53:37 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id a15so5512726pfv.11;
-        Thu, 21 Apr 2022 09:53:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PlsYbqQmf2Zsys0Fm1nEB5XbzF76fQveH/UoQhbEwwk=;
-        b=gmeYuuM+qQf6VJ+nLapBtr0AmigVa0jZQHl0e/FBjYitnsCfTmGPdMvldE7qtaY5w2
-         maPVqqD4saMVXYO0WiwShFnlnv4imjxiUfdPBY8pxTZzlrjQzTCx8rMHHRA+Q5JhQuTV
-         TJsDfXKm0MK4pQO//phfN+UXs0Ea3ENoyQLt0BSFyMEC1YF8DS6K8Ln2edhmFetOlOBf
-         h3zQR3HfitsoQLhcZJMzypNfatL+8CsXcaOBDQoeE4JvqZhQUTpEwzkROv8gaS+tNPhB
-         FaA487P6t3ozSOZZ98u45EhArSf0dF3HI54oWZ897QbZz9FAfL/1VtmxlXOKCbTNZVXN
-         cgmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PlsYbqQmf2Zsys0Fm1nEB5XbzF76fQveH/UoQhbEwwk=;
-        b=cbfwNk+KxXBsKtRyggkkeeVnjRWrQoyXlovfmRXK/ipQ5mt6rMkw/r2hmejQNIOGiZ
-         t1PXCEc6UzKgp1fud1FvPkwmfUSssLjIZR5JDn+uQBn8w8pS6VJ0ENbH2m+B17owYmVk
-         HHPqMi/tl9KDxSPiiSQZUhwRcEE9ZrKaJ+hmYxtaltu9dqoxEZncxaxF4Y+bq8gvZwcZ
-         bx8KGBqpVT/Z3ViK9pWncAOSPyBLgEriA7sfCUAweF/W4DNo8IzWbxmHogUq9+X7l06x
-         Jx1zj7J9qz1M0/wfjXn6SvigmAQG6PBSvKMl5sBgim/SGBBZMFhs1Lubht0obYXEK7aC
-         mbjA==
-X-Gm-Message-State: AOAM531t6DTrHaxKHsTHgKvI9MbdXtzYOkLB9+mejn4JCgexsoLgYGKf
-        p3mbZs0w2Lf0GnF1SOyAIek=
-X-Google-Smtp-Source: ABdhPJwOWadoG5Yuz0OW3JOA91GG7ddvLLPxagS1bTXiU32a7NvWAsv9jA+IPFlspkEI24sq/aOA/Q==
-X-Received: by 2002:a65:6216:0:b0:39d:5e6c:7578 with SMTP id d22-20020a656216000000b0039d5e6c7578mr328653pgv.114.1650560017228;
-        Thu, 21 Apr 2022 09:53:37 -0700 (PDT)
-Received: from localhost (c-107-3-154-88.hsd1.ca.comcast.net. [107.3.154.88])
-        by smtp.gmail.com with ESMTPSA id p1-20020a056a000a0100b0050ac9c31b7esm7974515pfh.180.2022.04.21.09.53.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Apr 2022 09:53:36 -0700 (PDT)
-Date:   Thu, 21 Apr 2022 09:53:31 -0700
-From:   Isaku Yamahata <isaku.yamahata@gmail.com>
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Isaku Yamahata <isaku.yamahata@gmail.com>,
-        Kai Huang <kai.huang@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-Message-ID: <20220421165331.GA1451512@private.email.ne.jp>
-References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20220415220109.282834-5-sathyanarayanan.kuppuswamy@linux.intel.com>
- <b209ee09b74394ab7aed85e0244e2191ee3d4171.camel@intel.com>
- <e0e2e399-2cac-cf75-2a64-9d017e6d7189@linux.intel.com>
- <420a4d689f73f9f7dc1ef71c61da75b7c9777a3f.camel@intel.com>
- <1e184b44-8024-b8ae-98a8-cf2b6f78df61@linux.intel.com>
- <20220421065707.GA1423762@private.email.ne.jp>
- <a2c2b7f5-0af0-18a3-062b-c6c9f78daaad@linux.intel.com>
+        Thu, 21 Apr 2022 14:45:00 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9EF4BFE2;
+        Thu, 21 Apr 2022 11:42:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650566530; x=1682102530;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+IQDrRPGugZW8RUWPewakie2NlU9QDgn7R5/ljfg3dI=;
+  b=IHNFiVlbgyvTb3em1ZM5Qt9d1sQ6Nj/MjyTelzKVj6Shv6my9qo5HJps
+   lQBKRw4Mjd+DwWfHLX27TWTWNQ2TqgnPvmTGcYuziHKEJqVrd6opWW0Z1
+   uI2SKjobWSkxCgv2DGmaFmVHRdgU4o6m6pmCIdl5XwJGLWwG9eOq905Ra
+   Um+QX9qw1b3ydDcwXl2qgHVY7sn/vsok3o9kylHWr+MZSwXFBeS8/jEBp
+   DYLdSxIjxOUOmPGdSaWfyUqB06WlrWBJJwj12X6eCK1kbs1HwLg8VEC4f
+   48K3SIix+VgNRLgB5d7P4Dq2uRo4p6XTxDttFPnr5KqiNZ0gqmQyYgS6b
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="246346435"
+X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
+   d="scan'208";a="246346435"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 11:42:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
+   d="scan'208";a="555932861"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by orsmga007.jf.intel.com with ESMTP; 21 Apr 2022 11:42:09 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH] platform/x86: intel-uncore-freq: Prevent driver loading in guests
+Date:   Thu, 21 Apr 2022 11:41:54 -0700
+Message-Id: <20220421184154.747721-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a2c2b7f5-0af0-18a3-062b-c6c9f78daaad@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Apr 21, 2022 at 07:53:39AM -0700,
-Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+Loading this driver in guests results in unchecked MSR access error for
+MSR 0x620.
 
-> On 4/20/22 11:57 PM, Isaku Yamahata wrote:
-> > On Wed, Apr 20, 2022 at 07:42:06PM -0700,
-> > Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> > 
-> >    TDG.VP.VMCALL<GetQuote> API allows one TD to issue multiple requests. It's
-> >    implementation specific that how many concurrent requests are allowed. The TD
-> >    should be able to handle TDG.VP.VMCALL_RETRY if it chooses to issue multiple
-> >    requests simultaneously
-> 
-> Do you know why we should handle VMCALL_RETRY case? IIUC, as per
-> above spec, if each request we send uses different GPA buffer, then we
-> should not even worry about checking for IN_FLIGHT status. right?
+There is no use of reading and modifying package/die scoped uncore MSRs
+in guests. So check for CPU feature X86_FEATURE_HYPERVISOR to prevent
+loading of this driver in guests.
 
-Not correct.  User space  VMM, e.g. qemu, may return RETRY error for various
-reasons even if different GPAs are used or even if only single request is issued
-at the same time.  Other user space VMM (there are severals alternatives to qemu)
-would support TDX in future. They would choose different way to implement.
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215870
+Suggested-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-Attestation driver should check IN_FLIGHT always before processing shared GPA.
-Interrupt notifies only that it needs attention from attestation driver.  It
-doesn't guarantee that IN_FLIGHT is cleared. Interrupt indicates only that the
-state may be changed.  It may not be changed.  VMM inject the iterrupt
-spuriously.
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+index c61f804dd44e..8f9c571d7257 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+@@ -212,6 +212,9 @@ static int __init intel_uncore_init(void)
+ 	const struct x86_cpu_id *id;
+ 	int ret;
+ 
++	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
++		return -ENODEV;
++
+ 	id = x86_match_cpu(intel_uncore_cpu_ids);
+ 	if (!id)
+ 		return -ENODEV;
 -- 
-Isaku Yamahata <isaku.yamahata@gmail.com>
+2.31.1
+
