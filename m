@@ -2,189 +2,181 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185E2C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Apr 2022 17:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC6BC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Apr 2022 22:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbiDVRaF (ORCPT
+        id S232094AbiDVWKM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Apr 2022 13:30:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56090 "EHLO
+        Fri, 22 Apr 2022 18:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230001AbiDVR37 (ORCPT
+        with ESMTP id S231624AbiDVWIx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Apr 2022 13:29:59 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A57FDB481;
-        Fri, 22 Apr 2022 10:26:58 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id i63so7813543pge.11;
-        Fri, 22 Apr 2022 10:26:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=mQW2kkYOaO3pvf0qCXwT1g7iXCDVgynpw0QmxVL8Uns=;
-        b=SI9ylh2TgocixOOoo6aYBii86IwIR3xHhIqdIuAqltlCjcEB/oLTCyuuSd9dutBBHo
-         GbndSBL2yABLie+p3G71doE+kZ9kgyEIBTV/Vohq4X1t3QeAREfmHFdNj4Er7eHsmS+Y
-         FhQIKWI8oswmCuZVPAZVteYmNoGE24Eqi1b0/ygSJ3Wn5+eM/CqaZ6eczvfGp4iVX8I3
-         Z2fiHimiRoP0gWXFwUE+vNo9uRtlHRKkcybs/F02VS1IGu068BsYIsyJLua34mUOhNnI
-         3TVmiW99YK+U/71vk5CP0dP1oLvlSwDXShyrAOdavSg2z1gdjSTJACsYJYWfRwy//NI/
-         8dUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mQW2kkYOaO3pvf0qCXwT1g7iXCDVgynpw0QmxVL8Uns=;
-        b=Gt1OY1eS1vTQFochJebO7eH8zMwm10FIpluAZue6gfZAgbG3/XTQNRGW1zzRx9eFux
-         QKXk8zItOw0xcpvdP6pWaulq1R/7HkZEj1DYWOHR/pjM4vpVQhOjdnu/oTr8sk2n8/tQ
-         QaQ701ynUopnouxkLd4QrP7yEnWoWS2Zkt7w3QC8w9Gjtyf7Ey6/p77uUQDUGnH0t5t4
-         eTxf3hKRb9o8ca6U87WsQhm9n81f+fdWgebLaEHLRe/ww0McOOs/wpFE1qwbew5rKPHS
-         x4twSBg1LCmF1Np5+IMqpxafH3++quYL9nBb9QQXflwEepKGQgVsBb42HXVrnDJEJLJt
-         ZT7w==
-X-Gm-Message-State: AOAM532x4z8JxWSt98IOF3DiprOAW4bvLfCaV2Voyakv9AvJq3/ZZp6d
-        BxfmFL/bU2vuZzN0HuYW7gs=
-X-Google-Smtp-Source: ABdhPJzXkylbZG/sNtUbqEDYXE/98ZUTbC9TIiX/RQ5JV7+Tvx9HK3N5eMWXxzsdFr7Vu+8MJ5j6jA==
-X-Received: by 2002:a65:490d:0:b0:39e:58cb:b1eb with SMTP id p13-20020a65490d000000b0039e58cbb1ebmr4800295pgs.390.1650648264776;
-        Fri, 22 Apr 2022 10:24:24 -0700 (PDT)
-Received: from localhost ([192.55.54.53])
-        by smtp.gmail.com with ESMTPSA id t2-20020a17090a510200b001cd4989ff53sm7737604pjh.26.2022.04.22.10.24.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Apr 2022 10:24:24 -0700 (PDT)
-Date:   Fri, 22 Apr 2022 10:24:22 -0700
-From:   Isaku Yamahata <isaku.yamahata@gmail.com>
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Aubrey Li <aubrey.li@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, isaku.yamahata@gmail.com
-Subject: Re: [PATCH v3 2/4] x86/tdx: Add tdx_hcall_get_quote() API support
-Message-ID: <20220422172422.GA2913259@ls.amr.corp.intel.com>
-References: <20220415220109.282834-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20220415220109.282834-3-sathyanarayanan.kuppuswamy@linux.intel.com>
- <f4d1fdb6-b836-a7c7-c9fb-cc4e6c14a335@linux.intel.com>
- <9a72ac4d-bb39-0459-7989-2bd65db1a2c2@linux.intel.com>
+        Fri, 22 Apr 2022 18:08:53 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 986172D8233;
+        Fri, 22 Apr 2022 13:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650660984; x=1682196984;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=66e0gas27WRp3ksBUhkcYZ1nbpEm7fWfloenmE7L+68=;
+  b=LMKDHn56W5K8CLLS6Zff5bGIBoehGgIEGh3c0nGku6wu2T1PRgwDR8UX
+   2cn/oEbRFYAWAUKUAj0e95bzSj/yhh13LIsqoIlVJDtcRd7vzk2I/ZXUY
+   OhG/gJU2uHgOLUSFalQgMPEpQayqsQgfH5todljgnbqQ+lHW0BrNoELpC
+   vpf3u8qcu2RauwnqwmPFFgimvCrJD+qUxd90HXL8nsU79cBtp9E7Vjkw6
+   0YAxXwVoOzSexaWZRLuXQ/hhTJDa4aJ7GkJOfxel7YawZLAp0tHCmXsUt
+   7fHlWnDnixPy9SrHTiH6RF9AniDm9i7orgqD1f30XPp/OkvYNUIeez5jI
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="289897434"
+X-IronPort-AV: E=Sophos;i="5.90,282,1643702400"; 
+   d="scan'208";a="289897434"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2022 13:02:26 -0700
+X-IronPort-AV: E=Sophos;i="5.90,282,1643702400"; 
+   d="scan'208";a="511719312"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2022 13:02:25 -0700
+From:   Tony Luck <tony.luck@intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        corbet@lwn.net, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com, rostedt@goodmis.org,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com
+Subject: [PATCH v4 00/10] Introduce In Field Scan driver
+Date:   Fri, 22 Apr 2022 13:02:09 -0700
+Message-Id: <20220422200219.2843823-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220419163859.2228874-1-tony.luck@intel.com>
+References: <20220419163859.2228874-1-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9a72ac4d-bb39-0459-7989-2bd65db1a2c2@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 12:16:04AM -0700,
-Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+TL;DR this driver loads scan test files that can check whether silicon
+in a CPU core is still running correctly. It is expected that these tests
+would be run several times per day to catch problems as silicon ages.
 
-> 
-> 
-> On 4/19/22 8:39 PM, Aubrey Li wrote:
-> > On 2022/4/16 上午6:01, Kuppuswamy Sathyanarayanan wrote:
-> > > Attestation is the process used by two un-trusted entities to prove to
-> > > each other that it can be trusted. In TDX guest, attestation is mainly
-> > > used to verify the trustworthiness of a TD to the 3rd party key
-> > > servers.
-> > > 
-> > > First step in the attestation process is to generate the TDREPORT data.
-> > > This support is added using tdx_mcall_tdreport() API. The second stage
-> > > in the attestation process is for the guest to request the VMM generate
-> > > and sign a quote based on the TDREPORT acquired earlier. More details
-> > > about the steps involved in attestation process can be found in TDX
-> > > Guest-Host Communication Interface (GHCI) for Intel TDX 1.5, section
-> > > titled "TD attestation"
-> > > 
-> > > Add tdx_hcall_get_quote() helper function to implement the GetQuote
-> > > hypercall.
-> > > 
-> > > More details about the GetQuote TDVMCALL are in the Guest-Host
-> > > Communication Interface (GHCI) Specification, sec 3.3, titled
-> > > "VP.VMCALL<GetQuote>".
-> > > 
-> > > This will be used by the TD attestation driver in follow-on patches.
-> > > 
-> > > Reviewed-by: Tony Luck <tony.luck@intel.com>
-> > > Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> > > Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > ---
-> > >   arch/x86/coco/tdx/tdx.c    | 38 ++++++++++++++++++++++++++++++++++++++
-> > >   arch/x86/include/asm/tdx.h |  2 ++
-> > >   2 files changed, 40 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-> > > index 3e409b618d3f..c259d81a5d7f 100644
-> > > --- a/arch/x86/coco/tdx/tdx.c
-> > > +++ b/arch/x86/coco/tdx/tdx.c
-> > > @@ -21,6 +21,7 @@
-> > >   /* TDX hypercall Leaf IDs */
-> > >   #define TDVMCALL_MAP_GPA		0x10001
-> > > +#define TDVMCALL_GET_QUOTE		0x10002
-> > >   /* MMIO direction */
-> > >   #define EPT_READ	0
-> > > @@ -144,6 +145,43 @@ long tdx_mcall_tdreport(void *data, void *reportdata)
-> > >   }
-> > >   EXPORT_SYMBOL_GPL(tdx_mcall_tdreport);
-> > > +/*
-> > > + * tdx_hcall_get_quote() - Generate TDQUOTE using TDREPORT_STRUCT.
-> > > + *
-> > > + * @data        : Address of 8KB GPA memory which contains
-> > > + *                TDREPORT_STRUCT.
-> > > + * @len		: Length of the GPA in bytes.
-> > > + *
-> > > + * return 0 on success or failure error number.
-> > > + */
-> > > +long tdx_hcall_get_quote(void *data, u64 len)
-> > > +{
-> > > +	u64 ret;
-> > > +
-> > > +	/*
-> > > +	 * Use confidential guest TDX check to ensure this API is only
-> > > +	 * used by TDX guest platforms.
-> > > +	 */
-> > > +	if (!data || !cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
-> > > +		return -EINVAL;
-> > > +
-> > > +	/*
-> > > +	 * Pass the physical address of tdreport data to the VMM
-> > > +	 * and trigger the tdquote generation. Quote data will be
-> > > +	 * stored back in the same physical address space. More info
-> > > +	 * about ABI can be found in TDX Guest-Host-Communication
-> > > +	 * Interface (GHCI), sec titled "TDG.VP.VMCALL<GetQuote>".
-> > > +	 */
-> > > +	ret = _tdx_hypercall(TDVMCALL_GET_QUOTE, cc_mkdec(virt_to_phys(data)),
-> > > +			     len, 0, 0);
-> > > +
-> > 
-> > I commented here in v2 but no response, so let me try again.
-> > 
-> > IIUC, virt_to_phys(data) (GPA) will be stored in the register when
-> > TDCALL brings the context back to the VMX root mode, and hypervisor(QEMU)
-> > will find the mapped host virtual address(HVA) with the GPA in the register,
-> > and the subsequent ops will be HVA<->HVA in hypervisor, EPT will not be
-> > involved so no need to cc_mkdec() this GPA.
-> > 
-> > Please help to correct me if I was wrong.
-> 
-> It was done to meet the expectation from VMM. For shared GPA address,
-> VMM expects shared bit set. All cc_mkdec() does is to set this bit.
+Changes since v3:
 
-This is to conform to the guest-host communicate interface(GHCI) spec.
-The input value is defined as "shared GPA as input".  Shared GPA is GPA with
-shared bit set.
+Thomas Gleixner:
+----------------
+1) intel_collect_cpu_info_early() ... function name doesn't make sense
+   in context of this driver
 
-  table TDG.VP.VMCALL<GetQuote> - Input Operands
-  R12 Shared GPA as input – the memory contains a TDREPORT_STRUCT.
-      The same buffer is used as output – the memory contains a TD Quote.
+   True: Dropped the "_early" suffix from the name.
+
+Greg Kroah-Hartman:
+-------------------
+1) "Ick, why?" and "pmem.c should not be used as a good example of anything"
+   and "Why not just use a misc device?"
+
+   Now using a misc device.
+
+2) "So even if everything fails, you succeed?"
+
+   This was w.r.t. the "pmem"-like driver, which is completely gone in
+   v4. New driver succeeds if any of the test-types enumerate as present
+   on the system. Fails with -ENODEV if no test types found.
+
+3) "sysfs documentation belongs in Documentation/ABI/"
+
+   See patch 10 of this series.
+
+4) "And why not just include this whole thing in the driver itself and suck
+   the documentation out of that?  No need to have a separate file."
+
+   Dropped Documentation/x86/ifs.rst from v4. People should be able to
+   figure out how to use it from the ABI docs for the sysfs files. If
+   that turns out to be wrong, we can revisit.
+
+5) "int load_ifs_binary(struct device *dev)
+    Shouldn't all of your global symbols start with "ifs_"?  Your other ones
+    seem to, what went wrong here?
+    Also, how about "ifs_load_firmware()" makes more sense."
+
+    Changed name to ifs_load_firmware()
+
+6) "static bool ifs_image_sanity_check(struct device *dev, void *data)
+    u8 *data?"  and
+   "if (!ifs_image_sanity_check(dev, (void *)fw->data)) {
+    It's not a void pointer, it's a pointer to u8.  Why cast it away?"
+
+   Changed the top of that call stack to cast to "(struct microcode_header_intel *)
+   which is what the lower level functions all want.
+
+7) "if (!sysfs_streq(buf, "1"))
+   kstrtobool()?
+
+   Changed from sysfs_streq() to kstrtobool()
+
+8) "ATTRIBUTE_GROUPS()?"
+
+   Now using this macro.
+
+Steven Rostedt:
+---------------
+1) "TP_PROTO(union ifs_scan activate, union ifs_status status),
+
+   Really, you want to pass the structure in by value, so that we have two
+   copies? One to get to this function and then one to write to the ring
+   buffer?"
+
+   Discussion on list resolved because these "pass by value" objects are
+   just wrappers around a u64. Passing pointers wouldn't make any real
+   difference. No code change.
+
+Jithu Joseph (7):
+  x86/microcode/intel: Expose collect_cpu_info_early() for IFS
+  platform/x86/intel/ifs: Read IFS firmware image
+  platform/x86/intel/ifs: Check IFS Image sanity
+  platform/x86/intel/ifs: Authenticate and copy to secured memory
+  platform/x86/intel/ifs: Add scan test support
+  platform/x86/intel/ifs: Add IFS sysfs interface
+  platform/x86/intel/ifs: add ABI documentation for IFS
+
+Tony Luck (3):
+  x86/msr-index: Define INTEGRITY_CAPABILITIES MSR
+  platform/x86/intel/ifs: Add stub driver for In-Field Scan
+  trace: platform/x86/intel/ifs: Add trace point to track Intel IFS
+    operations
+
+ .../ABI/testing/sysfs-platform-intel-ifs      |  39 ++
+ MAINTAINERS                                   |   8 +
+ arch/x86/include/asm/cpu.h                    |  18 +
+ arch/x86/include/asm/msr-index.h              |   7 +
+ arch/x86/kernel/cpu/intel.c                   |  32 ++
+ arch/x86/kernel/cpu/microcode/intel.c         |  59 +---
+ drivers/platform/x86/intel/Kconfig            |   1 +
+ drivers/platform/x86/intel/Makefile           |   1 +
+ drivers/platform/x86/intel/ifs/Kconfig        |  13 +
+ drivers/platform/x86/intel/ifs/Makefile       |   3 +
+ drivers/platform/x86/intel/ifs/core.c         |  97 +++++
+ drivers/platform/x86/intel/ifs/ifs.h          | 123 +++++++
+ drivers/platform/x86/intel/ifs/load.c         | 262 ++++++++++++++
+ drivers/platform/x86/intel/ifs/runtest.c      | 332 ++++++++++++++++++
+ drivers/platform/x86/intel/ifs/sysfs.c        | 147 ++++++++
+ include/trace/events/intel_ifs.h              |  38 ++
+ 16 files changed, 1128 insertions(+), 52 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-intel-ifs
+ create mode 100644 drivers/platform/x86/intel/ifs/Kconfig
+ create mode 100644 drivers/platform/x86/intel/ifs/Makefile
+ create mode 100644 drivers/platform/x86/intel/ifs/core.c
+ create mode 100644 drivers/platform/x86/intel/ifs/ifs.h
+ create mode 100644 drivers/platform/x86/intel/ifs/load.c
+ create mode 100644 drivers/platform/x86/intel/ifs/runtest.c
+ create mode 100644 drivers/platform/x86/intel/ifs/sysfs.c
+ create mode 100644 include/trace/events/intel_ifs.h
 
 
-Userspace VMM(qemu) can be implemented to accept GPA with shared bit set or not.
-It's not a big issue.
+base-commit: b2d229d4ddb17db541098b83524d901257e93845
 -- 
-Isaku Yamahata <isaku.yamahata@gmail.com>
+2.35.1
+
