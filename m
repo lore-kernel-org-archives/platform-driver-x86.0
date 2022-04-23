@@ -2,222 +2,101 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6344CC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Apr 2022 22:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D524EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 23 Apr 2022 12:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231657AbiDVWLQ (ORCPT
+        id S232276AbiDWMd7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Apr 2022 18:11:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36324 "EHLO
+        Sat, 23 Apr 2022 08:33:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231953AbiDVWJd (ORCPT
+        with ESMTP id S231449AbiDWMd6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Apr 2022 18:09:33 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BCAE2D8840;
-        Fri, 22 Apr 2022 13:56:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650660985; x=1682196985;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=iwf6L9My/5WPdrLm2KL1drGQqrMQBfK7KVTkKMsd3HY=;
-  b=bUU+iS9DYINxiAI4/W5nHU5Rv7aTy5aB8ZD4ldB3aJVZ71cPIYJJn41f
-   gcz2wE2n3lr218FXjVJnJ+KfNEjnNCzHd9Syp6C7vuyTaXzZgx+6oPNat
-   nz4VbYLaYfRIppiwt+453jCjFn5RxhelNJKVq9ur/7QyxcNc5OMJUo6U8
-   c3lRdt1PV8y+7vJ1vNIHjj7UZJ7Wjv8eYag4jAR3wrzBysxVcb+hjKnBU
-   RUv2rcRwkjPwI+iA3GRyPIJMI+P9SPqMGUMI+QyMg6hyWnHRreyRxLSly
-   4ExBlf/YtF3NA6QYPqPArVDZyfLUdJc6o3pXcPypWc/f+nnWWotAQpK6f
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="289897452"
-X-IronPort-AV: E=Sophos;i="5.90,282,1643702400"; 
-   d="scan'208";a="289897452"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2022 13:02:27 -0700
-X-IronPort-AV: E=Sophos;i="5.90,282,1643702400"; 
-   d="scan'208";a="511719330"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2022 13:02:26 -0700
-From:   Tony Luck <tony.luck@intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        corbet@lwn.net, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
-        ashok.raj@intel.com, tony.luck@intel.com, rostedt@goodmis.org,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@lists.linux.dev, ravi.v.shankar@intel.com
-Subject: [PATCH v4 03/10] platform/x86/intel/ifs: Add stub driver for In-Field Scan
-Date:   Fri, 22 Apr 2022 13:02:12 -0700
-Message-Id: <20220422200219.2843823-4-tony.luck@intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220422200219.2843823-1-tony.luck@intel.com>
-References: <20220419163859.2228874-1-tony.luck@intel.com>
- <20220422200219.2843823-1-tony.luck@intel.com>
+        Sat, 23 Apr 2022 08:33:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 50498169E6A
+        for <platform-driver-x86@vger.kernel.org>; Sat, 23 Apr 2022 05:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1650717060;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=BeOJYjv9Uq2XAYhQoQ5l1QOio0YQGcQSqiAKchKFN5I=;
+        b=E9/ioy77zwY21eX+UcpvtdiQp7kIrGOwyLaIlUDUqof3GRr+g1vSHYf9fBDJPYeFm13/Lh
+        5DmhvvO23lmQ5ScMglaT++D0RUrZ/7edi2+FCFwXFVbtucpeGMbdCJ79kW9UAFY2PZCmL4
+        x6mVT9yNHg9nqeT7uKIGtJEuTVcSZJ8=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-149-IPn56wFbNpSjsHEciaS0WA-1; Sat, 23 Apr 2022 08:30:59 -0400
+X-MC-Unique: IPn56wFbNpSjsHEciaS0WA-1
+Received: by mail-qv1-f71.google.com with SMTP id kk23-20020a056214509700b004542af238feso2861982qvb.19
+        for <platform-driver-x86@vger.kernel.org>; Sat, 23 Apr 2022 05:30:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BeOJYjv9Uq2XAYhQoQ5l1QOio0YQGcQSqiAKchKFN5I=;
+        b=H5D3V8zN+z1fQZBDzptdgG3HiXmOp/8NUquxxc8JjaRbeNEuPUjtWcDD/hK/pxoeBF
+         LvZ80wjN1vQePPDW4/g1BNtW9Kn9UJNt4gnsF6euhTEqZ2cCj+K/1MORMNJoEJebZvhs
+         5sxgltV60Cnfj5EQ41aeuS6sELN3ey4KrJ5YX8IJCunq68ZYO8glJmc7wLZfD/w2hO94
+         y+re6N+n0nrUR0Ga+UG7yES7b55H7FQIL1b8bPx213dJaBdqKTkHpJD9ndS4O0q7qUhF
+         VJL40RgTnVsQuV+qdZLI+nkPB/v2oQ3+8w7VtdIIK+RhP9cZ1fzq7m6gKuEhI5zTrz7l
+         3QXg==
+X-Gm-Message-State: AOAM532WGt154f0eDww5fbbT0jszuLqpomf1Psb97o1jCLVlu6AXhfz0
+        p/SFflb3+CL2mIvRvyIWyt5AaQaX2QyW9ceGmiHdR7ZxC9dtziYtpQYs111jL6TJ7ygwYUgWZwl
+        8BvUtC1VzQ0GCQEwu4KdfeGNsnFOflSSrMA==
+X-Received: by 2002:ad4:5be1:0:b0:440:a2ec:ea99 with SMTP id k1-20020ad45be1000000b00440a2ecea99mr6617960qvc.20.1650717058479;
+        Sat, 23 Apr 2022 05:30:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzhVcaF6hVaQMxy2Bx+WEj0Dv5VCNN+pTO04EbmEvOcA4BOxWj6bxa7W6hRQnXKI8Wa64U7Yg==
+X-Received: by 2002:ad4:5be1:0:b0:440:a2ec:ea99 with SMTP id k1-20020ad45be1000000b00440a2ecea99mr6617945qvc.20.1650717058312;
+        Sat, 23 Apr 2022 05:30:58 -0700 (PDT)
+Received: from dell-per740-01.7a2m.lab.eng.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id y15-20020a05620a09cf00b0069c80404de6sm2105323qky.31.2022.04.23.05.30.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 Apr 2022 05:30:57 -0700 (PDT)
+From:   Tom Rix <trix@redhat.com>
+To:     irenic.rajneesh@gmail.com, david.e.box@intel.com,
+        hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] platform/x86/intel: pmc/core: change pmc_lpm_modes to static
+Date:   Sat, 23 Apr 2022 08:30:48 -0400
+Message-Id: <20220423123048.591405-1-trix@redhat.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Cloud Service Providers that operate fleets of servers have reported
-[1] occasions where they can detect that a CPU has gone bad due to
-effects like electromigration, or isolated manufacturing defects.
-However, that detection method is A/B testing seemingly random
-application failures looking for a pattern. In-Field Scan (IFS) is
-a driver for a platform capability to load a crafted 'scan image'
-to run targeted low level diagnostics outside of the CPU's architectural
-error detection capabilities.
+Sparse reports this issue
+core.c: note: in included file:
+core.h:239:12: warning: symbol 'pmc_lpm_modes' was not declared. Should it be static?
 
-Stub version of driver just does initial part of check for the IFS
-feature. MSR_IA32_CORE_CAPS must enumerate the presence of the
-MSR_INTEGRITY_CAPS MSR.
+Global variables should not be defined in headers.  This only works
+because core.h is only included by core.c. Single file use
+variables should be static, so change its storage-class specifier
+to static.
 
-[1]: https://www.youtube.com/watch?v=QMF3rqhjYuM
-
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Tom Rix <trix@redhat.com>
 ---
- MAINTAINERS                             |  7 ++++
- drivers/platform/x86/intel/Kconfig      |  1 +
- drivers/platform/x86/intel/Makefile     |  1 +
- drivers/platform/x86/intel/ifs/Kconfig  | 13 +++++++
- drivers/platform/x86/intel/ifs/Makefile |  3 ++
- drivers/platform/x86/intel/ifs/core.c   | 52 +++++++++++++++++++++++++
- 6 files changed, 77 insertions(+)
- create mode 100644 drivers/platform/x86/intel/ifs/Kconfig
- create mode 100644 drivers/platform/x86/intel/ifs/Makefile
- create mode 100644 drivers/platform/x86/intel/ifs/core.c
+ drivers/platform/x86/intel/pmc/core.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 40fa1955ca3f..d2ee63193ab3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9861,6 +9861,13 @@ B:	https://bugzilla.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git
- F:	drivers/idle/intel_idle.c
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index a46d3b53bf61..7a059e02c265 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -236,7 +236,7 @@ enum ppfear_regs {
+ #define ADL_LPM_STATUS_LATCH_EN_OFFSET		0x1704
+ #define ADL_LPM_LIVE_STATUS_OFFSET		0x1764
  
-+INTEL IN FIELD SCAN (IFS) DEVICE
-+M:	Jithu Joseph <jithu.joseph@intel.com>
-+R:	Ashok Raj <ashok.raj@intel.com>
-+R:	Tony Luck <tony.luck@intel.com>
-+S:	Maintained
-+F:	drivers/platform/x86/intel/ifs
-+
- INTEL INTEGRATED SENSOR HUB DRIVER
- M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
- M:	Jiri Kosina <jikos@kernel.org>
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index 1f01a8a23c57..794968bda115 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -4,6 +4,7 @@
- #
- 
- source "drivers/platform/x86/intel/atomisp2/Kconfig"
-+source "drivers/platform/x86/intel/ifs/Kconfig"
- source "drivers/platform/x86/intel/int1092/Kconfig"
- source "drivers/platform/x86/intel/int3472/Kconfig"
- source "drivers/platform/x86/intel/pmc/Kconfig"
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index c61bc3e97121..717933dd0cfd 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -5,6 +5,7 @@
- #
- 
- obj-$(CONFIG_INTEL_ATOMISP2_PDX86)	+= atomisp2/
-+obj-$(CONFIG_INTEL_IFS)			+= ifs/
- obj-$(CONFIG_INTEL_SAR_INT1092)		+= int1092/
- obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
- obj-$(CONFIG_INTEL_PMC_CORE)		+= pmc/
-diff --git a/drivers/platform/x86/intel/ifs/Kconfig b/drivers/platform/x86/intel/ifs/Kconfig
-new file mode 100644
-index 000000000000..d84491cfb0db
---- /dev/null
-+++ b/drivers/platform/x86/intel/ifs/Kconfig
-@@ -0,0 +1,13 @@
-+config INTEL_IFS
-+	tristate "Intel In Field Scan"
-+	depends on X86 && 64BIT && SMP
-+	select INTEL_IFS_DEVICE
-+	help
-+	  Enable support for the In Field Scan capability in select
-+	  CPUs. The capability allows for running low level tests via
-+	  a scan image distributed by Intel via Github to validate CPU
-+	  operation beyond baseline RAS capabilities. To compile this
-+	  support as a module, choose M here. The module will be called
-+	  intel_ifs.
-+
-+	  If unsure, say N.
-diff --git a/drivers/platform/x86/intel/ifs/Makefile b/drivers/platform/x86/intel/ifs/Makefile
-new file mode 100644
-index 000000000000..af904880e959
---- /dev/null
-+++ b/drivers/platform/x86/intel/ifs/Makefile
-@@ -0,0 +1,3 @@
-+obj-$(CONFIG_INTEL_IFS)		+= intel_ifs.o
-+
-+intel_ifs-objs			:= core.o
-diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
-new file mode 100644
-index 000000000000..5713e6ee90f0
---- /dev/null
-+++ b/drivers/platform/x86/intel/ifs/core.c
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2022 Intel Corporation. */
-+
-+#include <linux/module.h>
-+#include <linux/kdev_t.h>
-+
-+#include <asm/cpu_device_id.h>
-+
-+enum test_types {
-+	IFS_SAF,
-+};
-+
-+#define X86_MATCH(model)				\
-+	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6,	\
-+		INTEL_FAM6_##model, X86_FEATURE_CORE_CAPABILITIES, NULL)
-+
-+static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
-+	X86_MATCH(SAPPHIRERAPIDS_X),
-+	{}
-+};
-+MODULE_DEVICE_TABLE(x86cpu, ifs_cpu_ids);
-+
-+static int __init ifs_init(void)
-+{
-+	const struct x86_cpu_id *m;
-+	u64 msrval;
-+
-+	m = x86_match_cpu(ifs_cpu_ids);
-+	if (!m)
-+		return -ENODEV;
-+
-+	if (rdmsrl_safe(MSR_IA32_CORE_CAPS, &msrval))
-+		return -ENODEV;
-+
-+	if (!(msrval & MSR_IA32_CORE_CAPS_INTEGRITY_CAPS))
-+		return -ENODEV;
-+
-+	if (rdmsrl_safe(MSR_INTEGRITY_CAPS, &msrval))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static void __exit ifs_exit(void)
-+{
-+}
-+
-+module_init(ifs_init);
-+module_exit(ifs_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Intel In Field Scan (IFS) device");
+-const char *pmc_lpm_modes[] = {
++static const char *pmc_lpm_modes[] = {
+ 	"S0i2.0",
+ 	"S0i2.1",
+ 	"S0i2.2",
 -- 
-2.35.1
+2.27.0
 
