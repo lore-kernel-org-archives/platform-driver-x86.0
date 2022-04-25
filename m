@@ -2,102 +2,95 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B84EC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Apr 2022 08:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE52C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Apr 2022 10:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232518AbiDYI2W (ORCPT
+        id S230070AbiDYK61 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Apr 2022 04:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35796 "EHLO
+        Mon, 25 Apr 2022 06:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240244AbiDYI16 (ORCPT
+        with ESMTP id S241645AbiDYK57 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Apr 2022 04:27:58 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1157CBF5D
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 01:24:51 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C0A3AB81131
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 08:24:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8E20BC385AE
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 08:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650875088;
-        bh=FVkyTrgM7czLSK81N25ZbsdJ5Zlkt3jHZVhjDhgaEUA=;
-        h=From:To:Subject:Date:From;
-        b=qaHebW7JRyZ0G6A1T88Q+PxrUFgOHudl4xj+KrQAjlonE6uSE7Xu3AFQ99Qwn9iiz
-         NKFSYCqVzMd4O7eX50opztR/7j6iV7aqSfaE7UrgdZSAnO/zc1pQvw1rrrBDIy4JMc
-         yWQkv+0n+Evy4s+boNySXPqtOr4Fq2wfMHJyuQRz6w7hdP6jV9TedDWjVp1F6uZF/e
-         MNVkUIX8PlSQcghShm2zYrjG0Xs4KwuDMDZehhCKAFOphIy8kvbGCjOcRoBNGRvcy7
-         eOi3T+g8JNGclYnMPrm1zAFInXlOUrRg9UaglIrHePgee3iaayPBhbnFG5HjpZhSQU
-         sJ8HYs6nAAx3w==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 3E264C05FD0; Mon, 25 Apr 2022 08:24:48 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 215883] New: Unable to resume from suspend with module
- `intel_lpss_pci` enabled
-Date:   Mon, 25 Apr 2022 08:24:47 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: taigi100@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
- priority component assigned_to reporter cf_regression
-Message-ID: <bug-215883-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 25 Apr 2022 06:57:59 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06DC883011;
+        Mon, 25 Apr 2022 03:54:56 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id d19so10445759qko.3;
+        Mon, 25 Apr 2022 03:54:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jp4XLXB+yuFIyEeNeA7P4d0RwkNykKV21HzQvLnUYDI=;
+        b=WvoIZbMKGUK6CAV3ViG2gZsOpJ9sDx9/EXvYDMk6k4AKGTTYFByX8z7U6qJMjkzfno
+         SLYTZynKNW5fKDVYAketkQIdbSakw1+wq/5l21KeFKPqjRfOS8YQZr+JMDCxu3YnkE2k
+         72T0/FcP6YlFZN2VXFe4bQyBVAFwSFktTtWe7yDaWP/DVFK81XphtBORNqm/He0z/4Xi
+         W4/bRbtQ4NSyRdHWvEtp9sA35ad/OLGs/byCwlqcjUoym9oP0qnKb0/CI8J9Wez2tFlD
+         Yvxje1XIzolJerN7DOcEkg/krw5FXz1+Zm8nv7SuTljcHiaBAcxz5IX8u/RRIU6JElxu
+         C/Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jp4XLXB+yuFIyEeNeA7P4d0RwkNykKV21HzQvLnUYDI=;
+        b=bGR3b3pAcNSY2k5S/QqnwSpPi/NQRct+IdBUkiOMB753HDN73eMQmZMrRqNSAerLmw
+         bgDNCyNIMuTQCXjY2ooqF54Slm5FWduCcNwzfepasX+UybPx3WdThVdxh6GWlPVc/AFl
+         PWKBSmqZtjGkvG4rIOTK63LV27rnGCivqRsOHUcSMn//j/B13XYOIbq+AOb00seOZiFK
+         OtZT+ELKItlvYpZix6SXejvYzaG98ORWHeWNDLhsaZ7zbFpFr+/JQCBZAMj5ChZD4OqN
+         TPN9R2nDnpmthpZmODdIgqI/lFVB1WxjCdOeBr/gGyAiPIlaxFSQlbwEcRm/dSLYCIxa
+         TZoA==
+X-Gm-Message-State: AOAM533j2SX/cNbflBc+2jY2ELV8eIeRTtJTAQkUxXhIC45agqjo5heI
+        YDkHjYPhOgxBF9DC4Hm4OmA=
+X-Google-Smtp-Source: ABdhPJyDBcW0PosEENTQ3sDnBnPDKMXjaubTO3wpbz5ZLuwfqkkTwpFfSQbEl1mu/+AxQkwsFMixpg==
+X-Received: by 2002:a05:620a:280e:b0:680:d1b9:6b0 with SMTP id f14-20020a05620a280e00b00680d1b906b0mr9704297qkp.391.1650884095232;
+        Mon, 25 Apr 2022 03:54:55 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id k14-20020ac85fce000000b002f344fc0e0bsm6521472qta.38.2022.04.25.03.54.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Apr 2022 03:54:54 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: chi.minghao@zte.com.cn
+To:     corentin.chary@gmail.com
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Minghao Chi <chi.minghao@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH] platform/x86: use kobj_to_dev()
+Date:   Mon, 25 Apr 2022 10:54:46 +0000
+Message-Id: <20220425105446.3515663-1-chi.minghao@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D215883
+From: Minghao Chi <chi.minghao@zte.com.cn>
 
-            Bug ID: 215883
-           Summary: Unable to resume from suspend with module
-                    `intel_lpss_pci` enabled
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 5.17
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: high
-          Priority: P1
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: taigi100@gmail.com
-        Regression: No
+Use kobj_to_dev() instead of open-coding it.
 
-Hey,
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
+---
+ drivers/platform/x86/asus-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-My PC is unable to resume from sleep if I have the `intel_lpss_pci` module
-enabled. I didn't manage to get useful logs, but here is the HW:
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 2104a2621e50..c840e83947d6 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2529,7 +2529,7 @@ static struct attribute *asus_fan_curve_attr[] = {
+ static umode_t asus_fan_curve_is_visible(struct kobject *kobj,
+ 					 struct attribute *attr, int idx)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct asus_wmi *asus = dev_get_drvdata(dev->parent);
+ 
+ 	/*
+-- 
+2.25.1
 
-Host: B660M GAMING X DDR4=20
-CPU: 12th Gen Intel i7-12700KF (20) @ 5.000GHz=20
-GPU: AMD ATI Radeon RX 6600/6600 XT/6600M=20
-Memory: 3636MiB / 31942MiB
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
