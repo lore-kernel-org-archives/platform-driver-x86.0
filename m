@@ -2,143 +2,198 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63B9C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Apr 2022 16:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051B5C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Apr 2022 17:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243553AbiDYQwr (ORCPT
+        id S235198AbiDYRS5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Apr 2022 12:52:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46318 "EHLO
+        Mon, 25 Apr 2022 13:18:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243585AbiDYQwm (ORCPT
+        with ESMTP id S243887AbiDYRSs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Apr 2022 12:52:42 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D69A724969;
-        Mon, 25 Apr 2022 09:49:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650905377; x=1682441377;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=x1VjlOLFf7+Iwtn5He+Gw098wHontYefP4lyjR1he+4=;
-  b=b9bi1/SdNNCgm03qImb79kNc92BtVmgknXpIjjRJuDxvy4oDjCTtqueq
-   gOBs0YVnAoorP14Igtzhn/qLLjuIKqG0fJnjx/u61CBaFAqtVw1o6zllf
-   1LEm4Zzv4NWjfZ9vcwOC+H/mv6jhSRLRNlcb1ULIgc9H0v8IF/9/r48mS
-   aH6mO9AT9N8/L2O+E/cOGtSkyszGaDrCGKORKKwAcyyK0+geK43PHoJ+Z
-   XhYJHbY0xu0VV+t6nZpCFvEain3xhqvXgRMGGgXPnwuyn6Fv1uFSFr2JR
-   Ul0E86yoKJxqAsGZnMqAsa/36nuPW/6jjAUL4ZDbjttyPBXULknzsSjRj
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10328"; a="264822399"
-X-IronPort-AV: E=Sophos;i="5.90,288,1643702400"; 
-   d="scan'208";a="264822399"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2022 09:49:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,289,1643702400"; 
-   d="scan'208";a="628115236"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Apr 2022 09:49:36 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Mon, 25 Apr 2022 09:49:36 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Mon, 25 Apr 2022 09:49:35 -0700
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.027;
- Mon, 25 Apr 2022 09:49:35 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: RE: [PATCH v4 09/10] trace: platform/x86/intel/ifs: Add trace point
- to track Intel IFS operations
-Thread-Topic: [PATCH v4 09/10] trace: platform/x86/intel/ifs: Add trace point
- to track Intel IFS operations
-Thread-Index: AQHYVoPmGcq84+Hs50ec7Nq4KoK2Oa0BMJaA//+oPOA=
-Date:   Mon, 25 Apr 2022 16:49:35 +0000
-Message-ID: <1752057af33e4eb28bcea0fd75e44048@intel.com>
-References: <20220419163859.2228874-1-tony.luck@intel.com>
-        <20220422200219.2843823-1-tony.luck@intel.com>
-        <20220422200219.2843823-10-tony.luck@intel.com>
- <20220425105251.3f5e8021@gandalf.local.home>
-In-Reply-To: <20220425105251.3f5e8021@gandalf.local.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.6.401.20
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Apr 2022 13:18:48 -0400
+Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5129A26AD6
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 10:15:40 -0700 (PDT)
+Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-e68392d626so11677836fac.4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 10:15:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xAqFGp4hJ4Ap2PuQylwdDGIE1QUHHxK7SjRFz0bwo5Q=;
+        b=AsoXTo3P/v11xpcJVVh/+rUNJq0+W6ckgtZK9u6NRoKvlpEBLIYBE9zc7aMdV1ssFe
+         /ZUXgNoyFA4tPC9YhlNWm1EeAYT8weVVmIATUa040wYMKoRqAlHEV1y8KwMlhBicE00Y
+         j0bV3883YlB1dhcY1uH7ooaN4TT68YzZcAJ+a74nP/ZSjr/MmPzwJwTPBbJhp1fE/hv3
+         4zA8YwAPaDCgtKQey8lqdGlyV24RFMGMmiI0ym8yQygCOkL5ZS8LNWsYxQ4enLJ5UkVi
+         dy+VLSfRUze333U9gYZx56jdwapBkuWTXLBhyiWKjtfE+uQTRcisjM65D3/U2QpwyuOr
+         YvRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xAqFGp4hJ4Ap2PuQylwdDGIE1QUHHxK7SjRFz0bwo5Q=;
+        b=R18HV87Q/7qKbUlg0iZ4KPvxqa3DsM9Sv0AS4cSv+sJfAwpe+0fXfEAVS3DvLvLwY8
+         Pk/W1SGGQEXNaSv7KX9bpOUkehXsEFv1m+fBEsYHKczQARxu9MO+/Eeocdts0ZzaaMNb
+         Na9AiAFXj+OqZ/FLZUubtH33e3HtNwXFy1nuFu3WRAgVUjtHJ179UWfgfmmOT7O5fVyZ
+         1qsxcdQavCzFJadk3gF4F2WagZRWwcWilH1Pl+mbJOneMXAhpVt8HX7ECVmVE9Sx6K3U
+         Cyv3ZfdRw6u1kKn4/9IpSehfDRX0xgCB7tNBh3BosWGY9IfbS9EzZn4jQfnAZ0w2FOdT
+         QCaQ==
+X-Gm-Message-State: AOAM533EZGAW4i/yhX4Qwl5lwcAKTDXFuLEMueXlBmsB1UwOzEEy/xVP
+        em3FaYz8DUo3TfwnplD9r+4PGw==
+X-Google-Smtp-Source: ABdhPJwIqHsRndbjajjZz2J3odU4hYOVsQeCXFIT0F5+eEMWut+Rj0fsSl1OZvEZqluy0EMsZCJQnQ==
+X-Received: by 2002:a05:6870:f697:b0:da:b3f:3268 with SMTP id el23-20020a056870f69700b000da0b3f3268mr7594160oab.280.1650906939567;
+        Mon, 25 Apr 2022 10:15:39 -0700 (PDT)
+Received: from localhost ([181.97.174.128])
+        by smtp.gmail.com with ESMTPSA id b188-20020aca34c5000000b002da579c994dsm3886992oia.31.2022.04.25.10.15.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Apr 2022 10:15:39 -0700 (PDT)
+From:   Martin Fernandez <martin.fernandez@eclypsium.com>
+To:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com, keescook@chromium.org,
+        Martin Fernandez <martin.fernandez@eclypsium.com>
+Subject: [PATCH v7 0/8] x86: Show in sysfs if a memory node is able to do encryption
+Date:   Mon, 25 Apr 2022 14:15:18 -0300
+Message-Id: <20220425171526.44925-1-martin.fernandez@eclypsium.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-> > Add tracing support which may be useful for debugging systems that fail=
- to complete
-> > In Field Scan tests.
-> >
-> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Tony Luck <tony.luck@intel.com>
-> > ---
-> >  MAINTAINERS                              |  1 +
-> >  drivers/platform/x86/intel/ifs/runtest.c |  5 ++++
-> >  include/trace/events/intel_ifs.h         | 38 ++++++++++++++++++++++++
->
-> From the tracing POV:
->
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Show for each node if every memory descriptor in that node has the
+EFI_MEMORY_CPU_CRYPTO attribute.
 
-Question for the future of this driver.  There are a couple more scan tools=
- coming
-in the future. The interface is similar:
+fwupd project plans to use it as part of a check to see if the users
+have properly configured memory hardware encryption
+capabilities. fwupd's people have seen cases where it seems like there
+is memory encryption because all the hardware is capable of doing it,
+but on a closer look there is not, either because of system firmware
+or because some component requires updating to enable the feature.
 
-	WRMSR to start a scan
-	RDMSR to get the results
+It's planned to make it part of a specification that can be passed to
+people purchasing hardware
 
-For this first one, I made the trace code do some user friendly decoding of=
- the
-WRMSR value to just show the two interesting fields (start & stop).
+These checks will run at every boot. The specification is called Host
+Security ID: https://fwupd.github.io/libfwupdplugin/hsi.html.
 
-The future scan modes will have different fields.
+We choosed to do it a per-node basis because although an ABI that
+shows that the whole system memory is capable of encryption would be
+useful for the fwupd use case, doing it in a per-node basis gives also
+the capability to the user to target allocations from applications to
+NUMA nodes which have encryption capabilities.
 
-I see two paths:
+I did some tests for some of the functions introduced (and modified)
+in e820.c. Sadly KUnit is not able to test __init functions and data
+so I had some warnings during the linking. There is a KUnit patch
+already to fix that [1]. I wanted to wait for it to be merged but it
+is taking more time than I expected so I'm sending this without tests
+for now.
 
-1) Create a new user friendly trace point for each new scan mode.
-2) Just provide a generic one that dumps both the 64-bit WRMSR and RDMSR va=
-lues.
+[1] https://lore.kernel.org/lkml/20220419040515.43693-1-brendanhiggins@google.com/T/
 
-Q: Are trace points "expensive" in some way ... so better to just have one =
-than three?
-     Or are the cheap enough that decoding for the user is an OK thing?
 
-Thanks
+Changes since v6:
 
--Tony
+Fixes in __e820__handle_range_update
 
+Const correctness in e820.c
+
+Correct alignment in memblock.h
+
+Rework memblock_overlaps_region
+
+
+Changes since v5:
+
+Refactor e820__range_{update, remove, set_crypto_capable} in order to
+avoid code duplication.
+
+Warn the user when a node has both encryptable and non-encryptable
+regions.
+
+Check that e820_table has enough size to store both current e820_table
+and EFI memmap.
+
+
+Changes since v4:
+
+Add enum to represent the cryptographic capabilities in e820:
+e820_crypto_capabilities.
+
+Revert __e820__range_update, only adding the new argument for
+__e820__range_add about crypto capabilities.
+
+Add a function __e820__range_update_crypto similar to
+__e820__range_update but to only update this new field.
+
+
+Changes since v3:
+
+Update date in Doc/ABI file.
+
+More information about the fwupd usecase and the rationale behind
+doing it in a per-NUMA-node.
+
+
+Changes since v2:
+
+e820__range_mark_crypto -> e820__range_mark_crypto_capable.
+
+In e820__range_remove: Create a region with crypto capabilities
+instead of creating one without it and then mark it.
+
+
+Changes since v1:
+
+Modify __e820__range_update to update the crypto capabilities of a
+range; now this function will change the crypto capability of a range
+if it's called with the same old_type and new_type. Rework
+efi_mark_e820_regions_as_crypto_capable based on this.
+
+Update do_add_efi_memmap to mark the regions as it creates them.
+
+Change the type of crypto_capable in e820_entry from bool to u8.
+
+Fix e820__update_table changes.
+
+Remove memblock_add_crypto_capable. Now you have to add the region and
+mark it then.
+
+Better place for crypto_capable in pglist_data.
+
+Martin Fernandez (8):
+  mm/memblock: Tag memblocks with crypto capabilities
+  mm/mmzone: Tag pg_data_t with crypto capabilities
+  x86/e820: Add infrastructure to refactor e820__range_{update,remove}
+  x86/e820: Refactor __e820__range_update
+  x86/e820: Refactor e820__range_remove
+  x86/e820: Tag e820_entry with crypto capabilities
+  x86/efi: Mark e820_entries as crypto capable from EFI memmap
+  drivers/node: Show in sysfs node's crypto capabilities
+
+ Documentation/ABI/testing/sysfs-devices-node |  10 +
+ arch/x86/include/asm/e820/api.h              |   1 +
+ arch/x86/include/asm/e820/types.h            |  12 +-
+ arch/x86/kernel/e820.c                       | 481 +++++++++++++++----
+ arch/x86/platform/efi/efi.c                  |  37 ++
+ drivers/base/node.c                          |  10 +
+ include/linux/memblock.h                     |   5 +
+ include/linux/mmzone.h                       |   3 +
+ mm/memblock.c                                |  62 +++
+ mm/page_alloc.c                              |   1 +
+ 10 files changed, 524 insertions(+), 98 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-node
+
+-- 
+2.30.2
 
