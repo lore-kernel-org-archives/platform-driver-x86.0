@@ -2,130 +2,143 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63743C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Apr 2022 16:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63B9C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Apr 2022 16:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240129AbiDYQd2 (ORCPT
+        id S243553AbiDYQwr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Apr 2022 12:33:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60772 "EHLO
+        Mon, 25 Apr 2022 12:52:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238415AbiDYQdW (ORCPT
+        with ESMTP id S243585AbiDYQwm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Apr 2022 12:33:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A38571FA58
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 09:30:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5A85FB811FB
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 16:30:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 16E07C385A7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 16:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650904214;
-        bh=BI7RYiVFeg4jPeh43G67XrggeknLFaZmPgTgd5mffIg=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=DnCuPXPJkz3gUXKur1ikO7VPAKwpyeKNoTd7PmnAShlmZmAceQvlXllpmKHjIyP4/
-         Ueu7Okh/XUaTzxVrgZ693frFjGLHIpGhNen+E5ekO/UUUqqtk/ufy09Ia2iCi5nl68
-         pKEs3QTo/54QBra5p2WEREQ6KKlM+tMEPnvD4MAP16UQDMp2iQjhJt7vj141SDpMp6
-         npCJ8S0LrEH21SGyiv4HlhMQqAnm4ijCxCaQBoUnZJASX8Y9AYBiSwiXG6wErcdf6u
-         3j++Rie5Lb/5LffVHR9Iw8wMJr94a+D9KL6Q0aNYgpWbNYA+wQwAOaHmEqyNaG0v1e
-         N1HbMdLIXGy6Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id E91C9C05FCE; Mon, 25 Apr 2022 16:30:13 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
-Date:   Mon, 25 Apr 2022 16:30:13 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-214899-215701-iWgVTvxy5L@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
-References: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 25 Apr 2022 12:52:42 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D69A724969;
+        Mon, 25 Apr 2022 09:49:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650905377; x=1682441377;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=x1VjlOLFf7+Iwtn5He+Gw098wHontYefP4lyjR1he+4=;
+  b=b9bi1/SdNNCgm03qImb79kNc92BtVmgknXpIjjRJuDxvy4oDjCTtqueq
+   gOBs0YVnAoorP14Igtzhn/qLLjuIKqG0fJnjx/u61CBaFAqtVw1o6zllf
+   1LEm4Zzv4NWjfZ9vcwOC+H/mv6jhSRLRNlcb1ULIgc9H0v8IF/9/r48mS
+   aH6mO9AT9N8/L2O+E/cOGtSkyszGaDrCGKORKKwAcyyK0+geK43PHoJ+Z
+   XhYJHbY0xu0VV+t6nZpCFvEain3xhqvXgRMGGgXPnwuyn6Fv1uFSFr2JR
+   Ul0E86yoKJxqAsGZnMqAsa/36nuPW/6jjAUL4ZDbjttyPBXULknzsSjRj
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10328"; a="264822399"
+X-IronPort-AV: E=Sophos;i="5.90,288,1643702400"; 
+   d="scan'208";a="264822399"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2022 09:49:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,289,1643702400"; 
+   d="scan'208";a="628115236"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Apr 2022 09:49:36 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Mon, 25 Apr 2022 09:49:36 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Mon, 25 Apr 2022 09:49:35 -0700
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.027;
+ Mon, 25 Apr 2022 09:49:35 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
+Subject: RE: [PATCH v4 09/10] trace: platform/x86/intel/ifs: Add trace point
+ to track Intel IFS operations
+Thread-Topic: [PATCH v4 09/10] trace: platform/x86/intel/ifs: Add trace point
+ to track Intel IFS operations
+Thread-Index: AQHYVoPmGcq84+Hs50ec7Nq4KoK2Oa0BMJaA//+oPOA=
+Date:   Mon, 25 Apr 2022 16:49:35 +0000
+Message-ID: <1752057af33e4eb28bcea0fd75e44048@intel.com>
+References: <20220419163859.2228874-1-tony.luck@intel.com>
+        <20220422200219.2843823-1-tony.luck@intel.com>
+        <20220422200219.2843823-10-tony.luck@intel.com>
+ <20220425105251.3f5e8021@gandalf.local.home>
+In-Reply-To: <20220425105251.3f5e8021@gandalf.local.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.6.401.20
+x-originating-ip: [10.1.200.100]
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
 MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
+> > Add tracing support which may be useful for debugging systems that fail=
+ to complete
+> > In Field Scan tests.
+> >
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Tony Luck <tony.luck@intel.com>
+> > ---
+> >  MAINTAINERS                              |  1 +
+> >  drivers/platform/x86/intel/ifs/runtest.c |  5 ++++
+> >  include/trace/events/intel_ifs.h         | 38 ++++++++++++++++++++++++
+>
+> From the tracing POV:
+>
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
---- Comment #22 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-Sorry for the slow reply (note I'm afraid my next reply will likely also be=
- a
-bit slow).
+Question for the future of this driver.  There are a couple more scan tools=
+ coming
+in the future. The interface is similar:
 
-Good find on the methods, so this means that the key-press events are suppo=
-sed
-to come from the "Video Bus" device and as you point out for some reason th=
-is
-is not happening. I guess that the drivers/acpi/acpi_video.c is not making =
-some
-call to enable the events which your laptop requires; or it is making a call
-which it should not make which disables the events...
+	WRMSR to start a scan
+	RDMSR to get the results
 
-One thing which I just noticed is that when passing acpi_backlight=3Dvideo =
-you
-get 2 acpi_video# backlight devices. Given that AFAICT your laptop has only=
- a
-single GPU,  may be an indication of a problem.
+For this first one, I made the trace code do some user friendly decoding of=
+ the
+WRMSR value to just show the two interesting fields (start & stop).
 
-I wonder what happens when you pass:
+The future scan modes will have different fields.
 
-video.only_lcd=3D1 acpi_backlight=3Dvideo
+I see two paths:
 
-on the kernel cmdline, I would expect there to only be 1 acpi_video# backli=
-ght
-device under /sys/class/backlight then ?    And maybe this also fixes the
-brightness keys?
+1) Create a new user friendly trace point for each new scan mode.
+2) Just provide a generic one that dumps both the 64-bit WRMSR and RDMSR va=
+lues.
 
-I assume that without any "acpi_backlight=3Dxxx" on the kernel cmdline you =
-only
-get the intel_backlight device, right? You could also check to see if adding
-just "video.only_lcd=3D1" to the kernel cmdline helps.
+Q: Are trace points "expensive" in some way ... so better to just have one =
+than three?
+     Or are the cheap enough that decoding for the user is an OK thing?
 
-If that does not help, you may want to play with the acpi_video_bus_DOS() c=
-all
-from=20
-drivers/acpi/acpi_video.c .
+Thanks
 
-This gets called from the acpi_video_bus_start_devices() function:
+-Tony
 
-static int acpi_video_bus_start_devices(struct acpi_video_bus *video)
-{
-        return acpi_video_bus_DOS(video, 0,
-                                  acpi_osi_is_win8() ? 1 : 0);
-}
 
-You may want to modify this trying the following:
-
-        return acpi_video_bus_DOS(video, 3,
-                                  acpi_osi_is_win8() ? 1 : 0);
-
-Looking at your acpidump it seems the second parameter is ignored, so chang=
-ing
-that will likely not matter.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
