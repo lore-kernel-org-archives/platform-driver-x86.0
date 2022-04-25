@@ -2,53 +2,53 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A877DC43217
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Apr 2022 17:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B20C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Apr 2022 17:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243960AbiDYRTm (ORCPT
+        id S243860AbiDYRTr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Apr 2022 13:19:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40278 "EHLO
+        Mon, 25 Apr 2022 13:19:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243861AbiDYRTc (ORCPT
+        with ESMTP id S243939AbiDYRTg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Apr 2022 13:19:32 -0400
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 177B927B14
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 10:16:03 -0700 (PDT)
-Received: by mail-oi1-x22c.google.com with SMTP id z8so17831875oix.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 10:16:02 -0700 (PDT)
+        Mon, 25 Apr 2022 13:19:36 -0400
+Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4CE01C93E
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 10:16:10 -0700 (PDT)
+Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-deb9295679so16758705fac.6
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 10:16:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=eclypsium.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=scNNecAxK89bCsIv0vpIcsFL1bTqr463ACa9Pmhvay4=;
-        b=Xwe/HZQ7QWugCsF4WnCrUGpuXwV1gaK3ZKZdlbT70p+37ejUk3CLqzzzPcu5CNkCLf
-         CGrax6l11PoWQUWAiqepna03GEHKQuPCaABKVFzgk1+QB6dKZPw49cMsm2dI7OipMjGf
-         4p3gpErYOE85yNl37xI80+X0kBuIv8a27lPKf1GrFBbjhxbzGv6Ff97rQZQLsW4P5MBp
-         4dhjSTORIXAlRYu7rKmo5mqF78SpA5YnhC42lifS4/WCQAGP8Z0cVIe2jdgK6Ds0IgOv
-         9U7YRa3Dd0uYubs5wbYMhhiw+1OBoJ0kh1nuJi6TtmpkxTeJ4ecWP8jBdria2LZdCbkW
-         fkMA==
+        bh=qzwUVSRCTs7yF7NC9RaputFYAMnZCA1mZDnEg/SpEoc=;
+        b=DRhjerDdBI/0oOQFXmN1bF3llrdra9rWGkn4nBmO2KvVeB0kt07/vY4ECI/VgIUTxQ
+         sEEELkTAlRFpqnnphHIURXWHe5ayIwoUn290gBIKXtC72XqXx4eVZ2exM/MeQo3aMwLq
+         5TQBGmO5ZWIGihyIk5bNmzHyYQsuur11t33L3jm41ClHcfiTxNdWeR6CcS04NWp2+oNC
+         Vy6DkPYgyGo/rI4yQKqeUbZ7xe6KtAVzY/lsaFLXMegNf49MDK4RcnH29l49Z44BeMjE
+         sVxFRdiXIYpE6tHva/FHqq/TWZzN6osF+tqnTL42iOJvPOmzWE80X8BAjt8K8iEd4w4N
+         HXAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=scNNecAxK89bCsIv0vpIcsFL1bTqr463ACa9Pmhvay4=;
-        b=LOCe0qtSd/039tYXQHpigxzxPAj2iHLIiDSCgLfUgmYNx5JEcwTVB3zAJzYAMrnoPo
-         UZzYXfbgemU19GQ3eTl4FFxqQ+gOOqq5SzOFUXCIk+4UxKlRk3NZZFp0PB425hqlov2c
-         xXCpgpAGijQDHwg/mBpK/t2h3zDXvO/kNl45tom9w4RgEuszdm2emGpbGendGV+4Rij6
-         LnOYzBYQuXMKN2jnBOBgrO3rS6h+dJIeowV5EMGLa+Cbw+nS4TrxyJoF8UHNb6IUKbDR
-         HpA2foSXCuInzx4KzNCvjo5zMPxNwZqiRXINSUA9MEUfmxM3Sli5B7is1Eilm2pWwmz5
-         FJfg==
-X-Gm-Message-State: AOAM532AXIS4Eb7Jfz9ujtFr5M39+GurELA04Uaa+2e3bEg/g9FTR5Qb
-        gU8zuDCfPj2du0VtfIU7yuD5Cg==
-X-Google-Smtp-Source: ABdhPJxdW0TUVi/qCKY+MEYfc75LBEinyGxemFyKERNQFWQ35/MgZzJ97hAPoKTCadYesjTyi6gU6Q==
-X-Received: by 2002:aca:bd41:0:b0:2ec:ff42:814f with SMTP id n62-20020acabd41000000b002ecff42814fmr8838220oif.63.1650906961998;
-        Mon, 25 Apr 2022 10:16:01 -0700 (PDT)
+        bh=qzwUVSRCTs7yF7NC9RaputFYAMnZCA1mZDnEg/SpEoc=;
+        b=J+5dJ3TapN4zTMugB8UuuJC6YfMK54RwJS9oH+bX/Rh8c0zvJ6ZExkDwW1qS/3/4xu
+         nWE9vWvzF9Qii71GnK+wN096eLBW2k5wCVtBGTC7kBPWxDolg53ILI/ECkwBdGbxcUmA
+         AOeLf9unJqfA8slwFXZgkXAbwky/GpXoyATvEoAoQBjZ955PT8yGMxfNpMqr3fxBPcaG
+         VmYjHEcdJzu0414XpEQPLGZIM3j5aM8Ku5Tl+OrS5qEOS+LNHTN1TQ9Yj25o+gYYrcyx
+         sLAVI5Avx5gmjeIGvueU0HRskfXNifm9cmcsrzWqfSoj1gHVmpvok6cZk69AWxCHhmOz
+         2lUQ==
+X-Gm-Message-State: AOAM532VWAKqbzLGUlrd5Xt0fRIwqzJOKLodQ9BlY+vCHS4gbgZIjRsM
+        zADPfCxw6TCremuSdGyidMuIGw==
+X-Google-Smtp-Source: ABdhPJwbA+Mxla+CdrXZkNdzNcBLQ0nX8DluKtoxXNDB7ZKRkcFPHsqw5ahJLlGkdY1qBkKGVXMlzA==
+X-Received: by 2002:a05:6870:462a:b0:dd:f4f7:24be with SMTP id z42-20020a056870462a00b000ddf4f724bemr7488816oao.39.1650906969504;
+        Mon, 25 Apr 2022 10:16:09 -0700 (PDT)
 Received: from localhost ([181.97.174.128])
-        by smtp.gmail.com with ESMTPSA id 1-20020a05687011c100b000de98359b43sm3502824oav.1.2022.04.25.10.15.56
+        by smtp.gmail.com with ESMTPSA id z13-20020a4a9c8d000000b0035e6c882517sm1471792ooj.16.2022.04.25.10.16.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Apr 2022 10:16:01 -0700 (PDT)
+        Mon, 25 Apr 2022 10:16:09 -0700 (PDT)
 From:   Martin Fernandez <martin.fernandez@eclypsium.com>
 To:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, linux-mm@kvack.org
@@ -60,9 +60,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
         alison.schofield@intel.com, keescook@chromium.org,
         Martin Fernandez <martin.fernandez@eclypsium.com>
-Subject: [PATCH v7 3/8] x86/e820: Add infrastructure to refactor e820__range_{update,remove}
-Date:   Mon, 25 Apr 2022 14:15:21 -0300
-Message-Id: <20220425171526.44925-4-martin.fernandez@eclypsium.com>
+Subject: [PATCH v7 4/8] x86/e820: Refactor __e820__range_update
+Date:   Mon, 25 Apr 2022 14:15:22 -0300
+Message-Id: <20220425171526.44925-5-martin.fernandez@eclypsium.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220425171526.44925-1-martin.fernandez@eclypsium.com>
 References: <20220425171526.44925-1-martin.fernandez@eclypsium.com>
@@ -72,212 +72,190 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-__e820__range_update and e820__range_remove had a very similar flow in
-its implementation with a few lines different from each other, the
-lines that actually perform the modification over the e820_table. The
-similiraties were found in the checks for the different cases on how
-each entry intersects with the given range (if it does at all). These
-checks were very presice and error prone so it was not a good idea to
-have them in both places.
-
-Since I need to add a third one, similar to this two, in this and the
-following patches I'll propose a refactor of these functions.
-
-In this patch I introduce:
-
-- A new type e820_entry_updater that will carry three callbacks, those
-callbacks will decide WHEN to perform actions over the e820_table and
-WHAY actions are going to be performed.
-
-  Note that there is a void pointer "data". This pointer will carry
-  useful information for the callbacks, like the type that we want to
-  update in e820__range_update or if we want to check the type in
-  e820__range_remove. Check it out in the next patches where I do the
-  rework of __e820__range_update and e820__range_remove.
-
-- A new function __e820__handle_range_update that has the flow of the
-original two functions to refactor. Together with e820_entry_updater
-will perform the desired update on the input table.
-
-
-On version 6 of this patch some people pointed out that this solution
-was over-complicated. Mike Rapoport suggested a another solution [1].
-
-I took a look at that, and although it is indeed simpler it's more
-confusing at the same time. I think is manageable to have a single
-function to update or remove sections of the table (what Mike did),
-but when I added the functionality to also update the crypto_capable
-it became really hard to manage.
-
-I think that the approach presented in this patch it's complex but is
-easier to read, to extend and to test.
-
-[1] https://git.kernel.org/rppt/h/x86/e820-update-range
+Refactor __e820__range_update with the introduction of
+e820_type_updater_data, indented to be used as the void pointer in the
+e820_entry_updater callbacks, and the implementation of the callbacks
+to perform the update of the type in a range of a e820_table.
 
 Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
 ---
- arch/x86/kernel/e820.c | 148 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 148 insertions(+)
+ arch/x86/kernel/e820.c | 146 +++++++++++++++++++++++++----------------
+ 1 file changed, 89 insertions(+), 57 deletions(-)
 
 diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index f267205f2d5a..923585ab8377 100644
+index 923585ab8377..763b8b20a1fd 100644
 --- a/arch/x86/kernel/e820.c
 +++ b/arch/x86/kernel/e820.c
-@@ -459,6 +459,154 @@ static int __init append_e820_table(struct boot_e820_entry *entries, u32 nr_entr
- 	return __append_e820_table(entries, nr_entries);
+@@ -607,80 +607,112 @@ __e820__handle_range_update(struct e820_table *table,
+ 	return updated_size;
  }
  
+-static u64 __init
+-__e820__range_update(struct e820_table *table, u64 start, u64 size, enum e820_type old_type, enum e820_type new_type)
+-{
+-	u64 end;
+-	unsigned int i;
+-	u64 real_updated_size = 0;
+-
+-	BUG_ON(old_type == new_type);
+-
+-	if (size > (ULLONG_MAX - start))
+-		size = ULLONG_MAX - start;
 +/**
-+ * struct e820_entry_updater - Helper type for
-+ * __e820__handle_range_update().
-+ * @should_update: Return true if @entry needs to be updated, false
-+ * otherwise.
-+ * @update: Apply desired actions to an @entry that is inside the
-+ * range and satisfies @should_update.
-+ * @new: Create new entry in the table with information gathered from
-+ * @original and @data.
++ * struct e820_type_updater_data - Helper type for
++ * __e820__range_update().
++ * @old_type: old_type parameter of __e820__range_update().
++ * @new_type: new_type parameter of __e820__range_update().
 + *
-+ * Each function corresponds to an action that
-+ * __e820__handle_range_update() does. Callbacks need to cast @data back
-+ * to the corresponding type.
++ * This is intended to be used as the @data argument for the
++ * e820_entry_updater callbacks.
 + */
-+struct e820_entry_updater {
-+	bool (*should_update)(const struct e820_entry *entry, const void *data);
-+	void (*update)(struct e820_entry *entry, const void *data);
-+	void (*new)(struct e820_table *table, u64 new_start, u64 new_size,
-+		    const struct e820_entry *original, const void *data);
++struct e820_type_updater_data {
++	enum e820_type old_type;
++	enum e820_type new_type;
 +};
-+
-+/**
-+ * __e820__handle_intersected_range_update() - Helper function for
-+ * __e820__handle_range_update().
-+ * @table: Target e820_table.
-+ * @start: Start of the range.
-+ * @size: Size of the range.
-+ * @entry: Current entry that __e820__handle_range_update() was
-+ * looking into.
-+ * @updater: updater parameter of __e820__handle_range_update().
-+ * @data: data parameter of __e820__handle_range_update().
-+ *
-+ * Helper for __e820__handle_range_update to handle the case where
-+ * neither the entry completely covers the range nor the range
-+ * completely covers the entry.
-+ *
-+ * Return: The updated size.
-+ */
-+static u64 __init
-+__e820__handle_intersected_range_update(struct e820_table *table,
-+					u64 start,
-+					u64 size,
-+					struct e820_entry *entry,
-+					const struct e820_entry_updater *updater,
+ 
+-	end = start + size;
+-	printk(KERN_DEBUG "e820: update [mem %#010Lx-%#010Lx] ", start, end - 1);
+-	e820_print_type(old_type);
+-	pr_cont(" ==> ");
+-	e820_print_type(new_type);
+-	pr_cont("\n");
++static bool __init type_updater__should_update(const struct e820_entry *entry,
++					       const void *data)
++{
++	const struct e820_type_updater_data *type_updater_data =
++		(const struct e820_type_updater_data *)data;
+ 
+-	for (i = 0; i < table->nr_entries; i++) {
+-		struct e820_entry *entry = &table->entries[i];
+-		u64 final_start, final_end;
+-		u64 entry_end;
++	return entry->type == type_updater_data->old_type;
++}
+ 
+-		if (entry->type != old_type)
+-			continue;
++static void __init type_updater__update(struct e820_entry *entry,
 +					const void *data)
 +{
-+	u64 end;
-+	u64 entry_end = entry->addr + entry->size;
-+	u64 inner_start;
-+	u64 inner_end;
-+	u64 updated_size = 0;
-+
-+	if (size > (ULLONG_MAX - start))
-+		size = ULLONG_MAX - start;
-+
-+	end = start + size;
-+	inner_start = max(start, entry->addr);
-+	inner_end = min(end, entry_end);
-+
-+	/* Range and entry do intersect and... */
-+	if (inner_start < inner_end) {
-+		/* Entry is on the left */
-+		if (entry->addr < inner_start) {
-+			/* Resize current entry */
-+			entry->size = inner_start - entry->addr;
-+		/* Entry is on the right */
-+		} else {
-+			/* Resize and move current section */
-+			entry->addr = inner_end;
-+			entry->size = entry_end - inner_end;
-+		}
-+		/* Create new entry with intersected region */
-+		updater->new(table, inner_start, inner_end - inner_start, entry, data);
-+
-+		updated_size += inner_end - inner_start;
-+	} /* Else: [start, end) doesn't cover entry */
-+
-+	return updated_size;
++	const struct e820_type_updater_data *type_updater_data =
++		(const struct e820_type_updater_data *)data;
+ 
+-		entry_end = entry->addr + entry->size;
++	entry->type = type_updater_data->new_type;
 +}
-+
+ 
+-		/* Completely covered by new range? */
+-		if (entry->addr >= start && entry_end <= end) {
+-			entry->type = new_type;
+-			real_updated_size += entry->size;
+-			continue;
+-		}
++static void __init type_updater__new(struct e820_table *table, u64 new_start,
++				     u64 new_size,
++				     const struct e820_entry *original,
++				     const void *data)
++{
++	const struct e820_type_updater_data *type_updater_data =
++		(const struct e820_type_updater_data *)data;
+ 
+-		/* New range is completely covered? */
+-		if (entry->addr < start && entry_end > end) {
+-			__e820__range_add(table, start, size, new_type);
+-			__e820__range_add(table, end, entry_end - end, entry->type);
+-			entry->size = start - entry->addr;
+-			real_updated_size += size;
+-			continue;
+-		}
++	__e820__range_add(table, new_start, new_size,
++			  type_updater_data->new_type, original->crypto_capable);
++}
+ 
+-		/* Partially covered: */
+-		final_start = max(start, entry->addr);
+-		final_end = min(end, entry_end);
+-		if (final_start >= final_end)
+-			continue;
++static u64 __init __e820__range_update(struct e820_table *table, u64 start,
++				       u64 size, enum e820_type old_type,
++				       enum e820_type new_type)
++{
++	struct e820_entry_updater updater = {
++		.should_update = type_updater__should_update,
++		.update = type_updater__update,
++		.new = type_updater__new
++	};
+ 
+-		__e820__range_add(table, final_start, final_end - final_start, new_type);
++	struct e820_type_updater_data data = {
++		.old_type = old_type,
++		.new_type = new_type
++	};
+ 
+-		real_updated_size += final_end - final_start;
++	BUG_ON(old_type == new_type);
+ 
+-		/*
+-		 * Left range could be head or tail, so need to update
+-		 * its size first:
+-		 */
+-		entry->size -= final_end - final_start;
+-		if (entry->addr < final_start)
+-			continue;
++	printk(KERN_DEBUG "e820: update [mem %#018Lx-%#018Lx] ", start,
++	       start + size - 1);
++	e820_print_type(old_type);
++	pr_cont(" ==> ");
++	e820_print_type(new_type);
++	pr_cont("\n");
+ 
+-		entry->addr = final_end;
+-	}
+-	return real_updated_size;
++	return __e820__handle_range_update(table, start, size, &updater, &data);
+ }
+ 
+-u64 __init e820__range_update(u64 start, u64 size, enum e820_type old_type, enum e820_type new_type)
 +/**
-+ * __e820__handle_range_update(): Helper function to update an address
-+ * range in a e820_table
-+ * @table: e820_table that we want to modify.
++ * e820__range_update() - Update the type of a given address range in
++ * e820_table.
 + * @start: Start of the range.
 + * @size: Size of the range.
-+ * @updater: Callbacks to modify the table.
-+ * @data: Information to modify the table. This must be an struct
-+ * e820_type_*_data.
++ * @old_type: Type that we want to change.
++ * @new_type: New type to replace @old_type.
 + *
-+ * Update the table @table in [@start, @start + @size) doing the
-+ * actions given in @updater.
++ * Update type of addresses in [@start, @start + @size) from @old_type
++ * to @new_type in e820_table.
 + *
-+ * Return: The updated size.
++ * Return: The size updated.
 + */
-+static u64 __init
-+__e820__handle_range_update(struct e820_table *table,
-+			    u64 start,
-+			    u64 size,
-+			    const struct e820_entry_updater *updater,
-+			    const void *data)
-+{
-+	u64 updated_size = 0;
-+	u64 end;
-+	unsigned int i;
-+
-+	if (size > (ULLONG_MAX - start))
-+		size = ULLONG_MAX - start;
-+
-+	end = start + size;
-+
-+	for (i = 0; i < table->nr_entries; i++) {
-+		struct e820_entry *entry = &table->entries[i];
-+		u64 entry_end = entry->addr + entry->size;
-+
-+		if (updater->should_update(entry, data)) {
-+			/* Range completely covers entry */
-+			if (entry->addr >= start && entry_end <= end) {
-+				updated_size += entry->size;
-+				updater->update(entry, data);
-+			/* Entry completely covers range */
-+			} else if (start > entry->addr && end < entry_end) {
-+				/* Resize current entry */
-+				entry->size = start - entry->addr;
-+
-+				/* Create new entry with intersection region */
-+				updater->new(table, start, size, entry, data);
-+
-+				/*
-+				 * Create a new entry for the leftover
-+				 * of the current entry
-+				 */
-+				__e820__range_add(table, end, entry_end - end,
-+						  entry->type,
-+						  entry->crypto_capable);
-+
-+				updated_size += size;
-+			} else {
-+				updated_size +=
-+					__e820__handle_intersected_range_update(table, start, size,
-+										entry, updater, data);
-+			}
-+		}
-+	}
-+
-+	return updated_size;
-+}
-+
- static u64 __init
- __e820__range_update(struct e820_table *table, u64 start, u64 size, enum e820_type old_type, enum e820_type new_type)
++u64 __init e820__range_update(u64 start, u64 size, enum e820_type old_type,
++			      enum e820_type new_type)
  {
+ 	return __e820__range_update(e820_table, start, size, old_type, new_type);
+ }
+ 
+-static u64 __init e820__range_update_kexec(u64 start, u64 size, enum e820_type old_type, enum e820_type  new_type)
++/**
++ * e820__range_update_kexec() - Update the type of a given address
++ * range in e820_table_kexec.
++ * @start: Start of the range.
++ * @size: Size of the range.
++ * @old_type: Type that we want to change.
++ * @new_type: New type to replace @old_type.
++ *
++ * Update type of addresses in [@start, @start + @size) from @old_type
++ * to @new_type in e820_table_kexec.
++ *
++ * Return: The size updated.
++ */
++static u64 __init e820__range_update_kexec(u64 start, u64 size,
++					   enum e820_type old_type,
++					   enum e820_type new_type)
+ {
+ 	return __e820__range_update(e820_table_kexec, start, size, old_type, new_type);
+ }
 -- 
 2.30.2
 
