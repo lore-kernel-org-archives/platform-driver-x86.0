@@ -2,131 +2,62 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4B6C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Apr 2022 17:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94230C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Apr 2022 17:23:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243921AbiDYRUJ (ORCPT
+        id S236724AbiDYR0Z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Apr 2022 13:20:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40278 "EHLO
+        Mon, 25 Apr 2022 13:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243981AbiDYRTr (ORCPT
+        with ESMTP id S236300AbiDYR0Z (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Apr 2022 13:19:47 -0400
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A57C12B27C
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 10:16:38 -0700 (PDT)
-Received: by mail-oi1-x22d.google.com with SMTP id m11so7045962oib.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Apr 2022 10:16:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dBhJQBFFy4Ceg8cAsnJhQlAVWnX2jFGl2toK7LYg2vI=;
-        b=ZUI1SW0LDagU7wptgLkLAyo11l74Ya3MsuwD1LvUoGpHB7JFCD9eGwk+TPuFbsg94J
-         1/2jlCIpJxuoSUuRE77FpuY8ivlJycTuspgiLAQKEm++YBdSPzIgc1bCHwvyU3bM1OIx
-         QVQlUy6mpNLw/RH+old6c5hmH0AGxCuRDi6JZa0UvmfRHrSkPnUMz3ibircJSgTzvhqv
-         vzyJoGr57dosEvqOjyqJIo0/ae+ilr8gmRG4Nybz3RfmwCFa0D2hnsmc/RJNg/8pRgkF
-         kbG9O8mJJfwfTK2t76xzeoPxWz1lE+4Zb2NHMLo5de+3pUBSoQI789poPU5L2Sskqw9r
-         QDHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dBhJQBFFy4Ceg8cAsnJhQlAVWnX2jFGl2toK7LYg2vI=;
-        b=0QbbJf1Qc9wwGa2xRFFnCQ2nYhbEnDttdlulUWJ4uAZXYiowmlFWvN2zhksMEk4/CW
-         ciTE169VVhU1/WyeHYW3patikkNO3UzlmPBkciJbNUCAH2oOcIdrnynV074eiMh3qyvq
-         Xm0srVIM/Siqj1Z69q5rU4N4s28SPSMddg/sIx9uRYPRu5gaag5MRgIxdoE+iMSwDKxb
-         NcM9XnAisVS7MhcgBMKNG/zrTauYEZDPSuRhborRJ7MqajfW6/DBINjFATNY7HYPz692
-         NC666Zv83OmjssJ+N/mCld8KuEbBC68GtbnFUMiI32Z6XLPbfcKZLSVD1mJzJ2RIqRXY
-         LA7Q==
-X-Gm-Message-State: AOAM530vFz3wXTWwBWFDLmNI1SjHf8+mMwOP5aB3uz9b2c81RFIFdV/I
-        LHbJdheQ6gUMTYkQbz+SaLQxYpELmW+HpxnP
-X-Google-Smtp-Source: ABdhPJw2CA5OnWQr+1gbJ1Fj/HVda/dNTu+4D8Lx2yhRTTRMdTF6nMZAB44F7+DCfcQSISEqTGmGkw==
-X-Received: by 2002:a54:4d86:0:b0:324:ecc3:fd02 with SMTP id y6-20020a544d86000000b00324ecc3fd02mr7359683oix.243.1650906997950;
-        Mon, 25 Apr 2022 10:16:37 -0700 (PDT)
-Received: from localhost ([181.97.174.128])
-        by smtp.gmail.com with ESMTPSA id fz13-20020a056870ed8d00b000e593f1f26fsm3441269oab.18.2022.04.25.10.16.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Apr 2022 10:16:37 -0700 (PDT)
-From:   Martin Fernandez <martin.fernandez@eclypsium.com>
-To:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        Mon, 25 Apr 2022 13:26:25 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCCC40E40;
+        Mon, 25 Apr 2022 10:23:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2D3E8B818B0;
+        Mon, 25 Apr 2022 17:23:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24C5FC385A4;
+        Mon, 25 Apr 2022 17:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1650907397;
+        bh=VjTnhuQicGOmkGkCoCTapKBWoxqmayPx+DgY9NCIrMg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RzBpZ2Qln5fmrU4WNMsYu1/qxHLDWPtHTCKeTegCgw9hNDSJoE+fYL6PineKaHxWU
+         dK3D9Zy38F9lCRx0NXhUD3NA97VUNAkNa3CUxqqYmigxJY51ZxkwERrB5F+v4PxSWb
+         fnA0rmV8lSPenJ74LzplsDKWefkm6nZ91fYfga5k=
+Date:   Mon, 25 Apr 2022 10:23:16 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Martin Fernandez <martin.fernandez@eclypsium.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
         ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
         gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com, keescook@chromium.org,
-        Martin Fernandez <martin.fernandez@eclypsium.com>
-Subject: [PATCH v7 8/8] drivers/node: Show in sysfs node's crypto capabilities
-Date:   Mon, 25 Apr 2022 14:15:26 -0300
-Message-Id: <20220425171526.44925-9-martin.fernandez@eclypsium.com>
-X-Mailer: git-send-email 2.30.2
+        daniel.gutson@eclypsium.com, hughsient@gmail.com,
+        alex.bazhaniuk@eclypsium.com, alison.schofield@intel.com,
+        keescook@chromium.org
+Subject: Re: [PATCH v7 0/8] x86: Show in sysfs if a memory node is able to
+ do encryption
+Message-Id: <20220425102316.5c6ae3065363767e89d8855f@linux-foundation.org>
 In-Reply-To: <20220425171526.44925-1-martin.fernandez@eclypsium.com>
 References: <20220425171526.44925-1-martin.fernandez@eclypsium.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Show in each node in sysfs if its memory is able to do be encrypted by
-the CPU, ie. if all its memory is marked with EFI_MEMORY_CPU_CRYPTO in
-the EFI memory map.
+On Mon, 25 Apr 2022 14:15:18 -0300 Martin Fernandez <martin.fernandez@eclypsium.com> wrote:
 
-Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
----
- Documentation/ABI/testing/sysfs-devices-node | 10 ++++++++++
- drivers/base/node.c                          | 10 ++++++++++
- 2 files changed, 20 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-node
+> Show for each node if every memory descriptor in that node has the
+> EFI_MEMORY_CPU_CRYPTO attribute.
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-node b/Documentation/ABI/testing/sysfs-devices-node
-new file mode 100644
-index 000000000000..5fd5dc7fc2eb
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-devices-node
-@@ -0,0 +1,10 @@
-+What:		/sys/devices/system/node/nodeX/crypto_capable
-+Date:		April 2022
-+Contact:	Martin Fernandez <martin.fernandez@eclypsium.com>
-+Users:		fwupd (https://fwupd.org)
-+Description:
-+		This value is 1 if all system memory in this node is
-+		marked with EFI_MEMORY_CPU_CRYPTO, indicating that the
-+		system memory is capable of being protected with the
-+		CPU’s memory cryptographic capabilities. It is 0
-+		otherwise.
-\ No newline at end of file
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index ec8bb24a5a22..1df15ea03c27 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -560,11 +560,21 @@ static ssize_t node_read_distance(struct device *dev,
- }
- static DEVICE_ATTR(distance, 0444, node_read_distance, NULL);
- 
-+static ssize_t crypto_capable_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct pglist_data *pgdat = NODE_DATA(dev->id);
-+
-+	return sysfs_emit(buf, "%d\n", pgdat->crypto_capable);
-+}
-+static DEVICE_ATTR_RO(crypto_capable);
-+
- static struct attribute *node_dev_attrs[] = {
- 	&dev_attr_meminfo.attr,
- 	&dev_attr_numastat.attr,
- 	&dev_attr_distance.attr,
- 	&dev_attr_vmstat.attr,
-+	&dev_attr_crypto_capable.attr,
- 	NULL
- };
- 
--- 
-2.30.2
-
+The MM patches look OK to me.  Mike, can you please opine?
