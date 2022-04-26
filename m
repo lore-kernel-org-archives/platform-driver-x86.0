@@ -2,83 +2,198 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A94C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 01:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7929EC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 06:11:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235800AbiDZBwk (ORCPT
+        id S234125AbiDZGOP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Apr 2022 21:52:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42978 "EHLO
+        Tue, 26 Apr 2022 02:14:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241566AbiDZBwi (ORCPT
+        with ESMTP id S244963AbiDZGOO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Apr 2022 21:52:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FDEB120D04;
-        Mon, 25 Apr 2022 18:49:33 -0700 (PDT)
+        Tue, 26 Apr 2022 02:14:14 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7913B6;
+        Mon, 25 Apr 2022 23:11:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D305461748;
-        Tue, 26 Apr 2022 01:49:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29014C385A7;
-        Tue, 26 Apr 2022 01:49:30 +0000 (UTC)
-Date:   Mon, 25 Apr 2022 21:49:28 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: Re: [PATCH v4 09/10] trace: platform/x86/intel/ifs: Add trace point
- to track Intel IFS operations
-Message-ID: <20220425214928.2aac3391@gandalf.local.home>
-In-Reply-To: <1752057af33e4eb28bcea0fd75e44048@intel.com>
-References: <20220419163859.2228874-1-tony.luck@intel.com>
-        <20220422200219.2843823-1-tony.luck@intel.com>
-        <20220422200219.2843823-10-tony.luck@intel.com>
-        <20220425105251.3f5e8021@gandalf.local.home>
-        <1752057af33e4eb28bcea0fd75e44048@intel.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9EED3B818FE;
+        Tue, 26 Apr 2022 06:11:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62CA1C385AC;
+        Tue, 26 Apr 2022 06:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650953464;
+        bh=hfNYTM7tCR7XMLe8YNkDfgK4t27yGuoKsqJS1LzijzI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e85e/ugCVVRQZCqy0k0uEuBzNQnCcVx4WIUnqB8C0T6QPCXjnaKf7IO2/aQ70Kljd
+         vlE4dJmT//ZnuuDmcnfIhOT57sUgCI4rjNzURBa9MW8cg4J84Usgk9AUu2dYZFR/+P
+         hOkua1+28HL8BCIBylnlN1u6bKb2qhmrdltoCCIDJmbqxwYWY9pUqfwQpqZJlHSrlb
+         c3JJnANcPzM7wIjCbIMP18/4VwFmH3zWpvcoh2husAGZShb0RGCKuHgbUtchKoP9gq
+         CNMmVG1ZRlp+uAHYK7X2HFON6jui9rVE1nNBwvP42hjrz1Rts6UOYHVHApUZyJLHth
+         937AxW/3WnxlQ==
+Date:   Tue, 26 Apr 2022 09:10:45 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Martin Fernandez <martin.fernandez@eclypsium.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com, keescook@chromium.org
+Subject: Re: [PATCH v7 1/8] mm/memblock: Tag memblocks with crypto
+ capabilities
+Message-ID: <YmeM5fklUssR/74e@kernel.org>
+References: <20220425171526.44925-1-martin.fernandez@eclypsium.com>
+ <20220425171526.44925-2-martin.fernandez@eclypsium.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220425171526.44925-2-martin.fernandez@eclypsium.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 25 Apr 2022 16:49:35 +0000
-"Luck, Tony" <tony.luck@intel.com> wrote:
-
-> I see two paths:
+On Mon, Apr 25, 2022 at 02:15:19PM -0300, Martin Fernandez wrote:
+> Add the capability to mark regions of the memory memory_type able of
+> hardware memory encryption.
 > 
-> 1) Create a new user friendly trace point for each new scan mode.
-> 2) Just provide a generic one that dumps both the 64-bit WRMSR and RDMSR values.
+> Also add the capability to query if all regions of a memory node are
+> able to do hardware memory encryption to call it when initializing the
+> nodes. Warn the user if a node has both encryptable and
+> non-encryptable regions.
 > 
-> Q: Are trace points "expensive" in some way ... so better to just have one than three?
->      Or are the cheap enough that decoding for the user is an OK thing?
+> Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
+> ---
+>  include/linux/memblock.h |  5 ++++
+>  mm/memblock.c            | 62 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 67 insertions(+)
+> 
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index 50ad19662a32..00c4f1a20335 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -40,6 +40,7 @@ extern unsigned long long max_possible_pfn;
+>   * via a driver, and never indicated in the firmware-provided memory map as
+>   * system RAM. This corresponds to IORESOURCE_SYSRAM_DRIVER_MANAGED in the
+>   * kernel resource tree.
+> + * @MEMBLOCK_CRYPTO_CAPABLE: capable of hardware encryption
+>   */
+>  enum memblock_flags {
+>  	MEMBLOCK_NONE		= 0x0,	/* No special request */
+> @@ -47,6 +48,7 @@ enum memblock_flags {
+>  	MEMBLOCK_MIRROR		= 0x2,	/* mirrored region */
+>  	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
+>  	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
+> +	MEMBLOCK_CRYPTO_CAPABLE = 0x10,	/* capable of hardware encryption */
+>  };
+>  
+>  /**
+> @@ -120,6 +122,9 @@ int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
+>  void memblock_trim_memory(phys_addr_t align);
+>  bool memblock_overlaps_region(struct memblock_type *type,
+>  			      phys_addr_t base, phys_addr_t size);
+> +bool memblock_node_is_crypto_capable(int nid);
+> +int memblock_mark_crypto_capable(phys_addr_t base, phys_addr_t size);
+> +int memblock_clear_crypto_capable(phys_addr_t base, phys_addr_t size);
+>  int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
+>  int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
+>  int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index e4f03a6e8e56..fe62f81572e6 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -191,6 +191,40 @@ bool __init_memblock memblock_overlaps_region(struct memblock_type *type,
+>  	return i < type->cnt;
+>  }
+>  
+> +/**
+> + * memblock_node_is_crypto_capable - get if whole node is capable
+> + * of encryption
+> + * @nid: number of node
+> + *
+> + * Iterate over all memory memblock_type and find if all regions under
+> + * node @nid are capable of hardware encryption.
+> + *
+> + * Return:
+> + * true if every region in memory memblock_type is capable of
 
-Yes, they are expensive as each TRACE_EVENT() can add a few KB of text and
-data. But you can add a DECLARE_EVENT_CLASS() and then add "printk"
-differences that are less memory heavy.
+I'd s/in memory memblock_type/in @nid
 
-See DEFINE_EVENT_PRINT().
+> + * encryption, false otherwise.
+> + */
+> +bool __init_memblock memblock_node_is_crypto_capable(int nid)
+> +{
+> +	struct memblock_region *region;
+> +	int crypto_capables = 0;
+> +	int not_crypto_capables = 0;
+> +
+> +	for_each_mem_region(region) {
+> +		if (memblock_get_region_node(region) == nid) {
+> +			if (region->flags & MEMBLOCK_CRYPTO_CAPABLE)
+> +				crypto_capables++;
+> +			else
+> +				not_crypto_capables++;
+> +		}
+> +	}
+> +
+> +	if (crypto_capables > 0 && not_crypto_capables > 0)
+> +		pr_warn("Node %d has %d regions that are encryptable and %d regions that aren't",
+> +			nid, not_crypto_capables, crypto_capables);
+> +
+> +	return not_crypto_capables == 0;
 
--- Steve
+This will return true for memoryless nodes as well. Do you mean to consider
+them as capable of encryption?
 
+> +}
+> +
+>  /**
+>   * __memblock_find_range_bottom_up - find free area utility in bottom-up
+>   * @start: start of candidate range
+> @@ -891,6 +925,34 @@ static int __init_memblock memblock_setclr_flag(phys_addr_t base,
+>  	return 0;
+>  }
+>  
+> +/**
+> + * memblock_mark_crypto_capable - Mark memory regions capable of hardware
+> + * encryption with flag MEMBLOCK_CRYPTO_CAPABLE.
+> + * @base: the base phys addr of the region
+> + * @size: the size of the region
+> + *
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +int __init_memblock memblock_mark_crypto_capable(phys_addr_t base,
+> +						 phys_addr_t size)
+> +{
+> +	return memblock_setclr_flag(base, size, 1, MEMBLOCK_CRYPTO_CAPABLE);
+> +}
+> +
+> +/**
+> + * memblock_clear_crypto_capable - Clear flag MEMBLOCK_CRYPTO for a
+> + * specified region.
+> + * @base: the base phys addr of the region
+> + * @size: the size of the region
+> + *
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +int __init_memblock memblock_clear_crypto_capable(phys_addr_t base,
+> +						  phys_addr_t size)
+> +{
+> +	return memblock_setclr_flag(base, size, 0, MEMBLOCK_CRYPTO_CAPABLE);
+> +}
+> +
+>  /**
+>   * memblock_mark_hotplug - Mark hotpluggable memory with flag MEMBLOCK_HOTPLUG.
+>   * @base: the base phys addr of the region
+> -- 
+> 2.30.2
+> 
+
+-- 
+Sincerely yours,
+Mike.
