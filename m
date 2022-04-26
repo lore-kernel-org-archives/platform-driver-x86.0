@@ -2,198 +2,109 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855F6C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 13:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F64EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 15:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350926AbiDZN3G (ORCPT
+        id S1351932AbiDZPNR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Apr 2022 09:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44542 "EHLO
+        Tue, 26 Apr 2022 11:13:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351050AbiDZN3F (ORCPT
+        with ESMTP id S1351918AbiDZPL7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Apr 2022 09:29:05 -0400
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C42412B27F
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Apr 2022 06:25:56 -0700 (PDT)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-2ec42eae76bso181855087b3.10
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Apr 2022 06:25:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hXo185h+kObSXkmQZMr8a8mrf64dnncRTNIlAM3h4k0=;
-        b=XhtPv0riXJD4oHpkFiEGvmxAh+OpkTuZqJNaNstrZ+03xWz4+eDhyxgf4+khWCQbOR
-         Q2FF4wcYRcJCHhrpWxTZmaVNfpXgVtNo+IPasqov4enVnqa7Yyul0b+fWNDyrUOCCQNE
-         DI+kns+Cp/Gut1CGsEAnh+HysYx0PipRwICaAIjbUW9alp60ozvNXxTOU50PgJI4pvuG
-         HwWNpwWhqgpFS8X40+4VFVPQLwJDJR3cAWTLzGtACGPi2Ur6Ui1yH1N4nEPk38pF+ZeH
-         DrZA/75cxP0cqsZpfjn/mfb6QxGqr+xYAFUlKLlearwimmc4MJv4zbwK5DkiNDeFYSRp
-         xKcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hXo185h+kObSXkmQZMr8a8mrf64dnncRTNIlAM3h4k0=;
-        b=N/S6R6DoAHI85YdiPch6CklCiOKElRrkz83qb8VJqI5HOt40TVPlejCVFH7/+hEDr0
-         7E7za/At9aDxQweJmY5MrmTz5CaWoumgjUjodj5rs+vT+qpyevJ+vMMhvzVUe0dPh07s
-         eArp2AqsiQv57DgWQBaYi0O+qOPRQ68Ziiq/dOXOCtm3Xovr11a8choHeW1nY4sAx9CH
-         Jdg8NsOBffd0uULaJtMPYk2NXdy1dLpdX+SWbzCMxKmO/1FKqRye1KYVpXvAOFHTO8kX
-         mJxtH53pPyQzBjWFPrlO1qja9bZynkepdJpH03pCNub2tYKPU8/VR5S4nVKRZWiR7Kb3
-         MK2A==
-X-Gm-Message-State: AOAM531h5D0R/kB8kp3Fo7v+C9EAI1M9EzkXzVdKh0NH+qY3KkeEYX1+
-        F5S1Y5zMekof4X0p7BPtlQVnjlFvp2vcG/bhKsU7NQ==
-X-Google-Smtp-Source: ABdhPJyeUmVpGb8SXBarAcmmHFvinXgebrIrvNFeIufykRJ4H//aeaz5HNCbHAftyJ7CTjQF/0WXHFIa0gYB6LJ9lms=
-X-Received: by 2002:a81:7895:0:b0:2f1:6933:3b66 with SMTP id
- t143-20020a817895000000b002f169333b66mr21694519ywc.239.1650979555989; Tue, 26
- Apr 2022 06:25:55 -0700 (PDT)
+        Tue, 26 Apr 2022 11:11:59 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D62F161BB7;
+        Tue, 26 Apr 2022 08:08:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650985702; x=1682521702;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=j2V5+3CZNEUZjk60xmVPNepccy31dj0aymHOLGJ7vBI=;
+  b=XWm3AW2MQuj0gLHrqbeZHigmbhllG/SEEGEcAPoOQLv6vY3B2JelNnrE
+   3ecLFFWkuNAvuOM5DGWZIhOtvXMyPRN0b1/mIZl9xaM4nJq/tUKzpl56W
+   dSFowNBXnK8LBatx4aWo07dvdfSly1avO+I4BrVGGSxbQ3g0c3nR9bf4y
+   XJNaGuEx5765gMfARJqP+QtZt/Qp0XhVd/+Mu2+k14SrC4gKdi2MtabET
+   Dlo9qrUiIZauICQ+gtO9cg49aBfKsD3qM4Unejy3AZmMNvj3yhNU4OrFY
+   gukKvazZwUoRP8i6WGWXiLQrscAhofQt2YChYV51GoXmZluOKonCaZ2Vy
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10328"; a="265129903"
+X-IronPort-AV: E=Sophos;i="5.90,291,1643702400"; 
+   d="scan'208";a="265129903"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 08:08:21 -0700
+X-IronPort-AV: E=Sophos;i="5.90,291,1643702400"; 
+   d="scan'208";a="595802962"
+Received: from dsocek-mobl2.amr.corp.intel.com (HELO [10.212.69.119]) ([10.212.69.119])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 08:08:20 -0700
+Message-ID: <a02186b9-b72c-1484-2973-c59272ae0a7e@intel.com>
+Date:   Tue, 26 Apr 2022 08:10:58 -0700
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v7 5/8] x86/e820: Refactor e820__range_remove
+Content-Language: en-US
+To:     Martin Fernandez <martin.fernandez@eclypsium.com>,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com, keescook@chromium.org
 References: <20220425171526.44925-1-martin.fernandez@eclypsium.com>
- <20220425171526.44925-2-martin.fernandez@eclypsium.com> <YmeM5fklUssR/74e@kernel.org>
- <CAKgze5YwTD3neYjKNZzLz6DLWxpGPohGCDGT6oJn-KUdAxyCfg@mail.gmail.com> <Ymfxt/ccab3DQENo@kernel.org>
-In-Reply-To: <Ymfxt/ccab3DQENo@kernel.org>
-From:   Daniel Gutson <daniel.gutson@eclypsium.com>
-Date:   Tue, 26 Apr 2022 10:25:45 -0300
-Message-ID: <CAFmMkTHQ75nJi+Zwi6AEy095qUAhDjdbBqSpvvxq8-B2gD4j-g@mail.gmail.com>
-Subject: Re: [PATCH v7 1/8] mm/memblock: Tag memblocks with crypto capabilities
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Martin Fernandez <martin.fernandez@eclypsium.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, ardb@kernel.org,
-        dvhart@infradead.org, andy@infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael@kernel.org, akpm@linux-foundation.org,
-        Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex.bazhaniuk@eclypsium.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+ <20220425171526.44925-6-martin.fernandez@eclypsium.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20220425171526.44925-6-martin.fernandez@eclypsium.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Apr 26, 2022 at 10:21 AM Mike Rapoport <rppt@kernel.org> wrote:
->
-> On Tue, Apr 26, 2022 at 09:59:04AM -0300, Martin Fernandez wrote:
-> > On 4/26/22, Mike Rapoport <rppt@kernel.org> wrote:
-> > > On Mon, Apr 25, 2022 at 02:15:19PM -0300, Martin Fernandez wrote:
-> > >> Add the capability to mark regions of the memory memory_type able of
-> > >> hardware memory encryption.
-> > >>
-> > >> Also add the capability to query if all regions of a memory node are
-> > >> able to do hardware memory encryption to call it when initializing the
-> > >> nodes. Warn the user if a node has both encryptable and
-> > >> non-encryptable regions.
-> > >>
-> > >> Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
-> > >> ---
-> > >>  include/linux/memblock.h |  5 ++++
-> > >>  mm/memblock.c            | 62 ++++++++++++++++++++++++++++++++++++++++
-> > >>  2 files changed, 67 insertions(+)
-> > >>
-> > >> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> > >> index 50ad19662a32..00c4f1a20335 100644
-> > >> --- a/include/linux/memblock.h
-> > >> +++ b/include/linux/memblock.h
-> > >> @@ -40,6 +40,7 @@ extern unsigned long long max_possible_pfn;
-> > >>   * via a driver, and never indicated in the firmware-provided memory map
-> > >> as
-> > >>   * system RAM. This corresponds to IORESOURCE_SYSRAM_DRIVER_MANAGED in
-> > >> the
-> > >>   * kernel resource tree.
-> > >> + * @MEMBLOCK_CRYPTO_CAPABLE: capable of hardware encryption
-> > >>   */
-> > >>  enum memblock_flags {
-> > >>    MEMBLOCK_NONE           = 0x0,  /* No special request */
-> > >> @@ -47,6 +48,7 @@ enum memblock_flags {
-> > >>    MEMBLOCK_MIRROR         = 0x2,  /* mirrored region */
-> > >>    MEMBLOCK_NOMAP          = 0x4,  /* don't add to kernel direct mapping */
-> > >>    MEMBLOCK_DRIVER_MANAGED = 0x8,  /* always detected via a driver */
-> > >> +  MEMBLOCK_CRYPTO_CAPABLE = 0x10, /* capable of hardware encryption */
-> > >>  };
-> > >>
-> > >>  /**
-> > >> @@ -120,6 +122,9 @@ int memblock_physmem_add(phys_addr_t base, phys_addr_t
-> > >> size);
-> > >>  void memblock_trim_memory(phys_addr_t align);
-> > >>  bool memblock_overlaps_region(struct memblock_type *type,
-> > >>                          phys_addr_t base, phys_addr_t size);
-> > >> +bool memblock_node_is_crypto_capable(int nid);
-> > >> +int memblock_mark_crypto_capable(phys_addr_t base, phys_addr_t size);
-> > >> +int memblock_clear_crypto_capable(phys_addr_t base, phys_addr_t size);
-> > >>  int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
-> > >>  int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
-> > >>  int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
-> > >> diff --git a/mm/memblock.c b/mm/memblock.c
-> > >> index e4f03a6e8e56..fe62f81572e6 100644
-> > >> --- a/mm/memblock.c
-> > >> +++ b/mm/memblock.c
-> > >> @@ -191,6 +191,40 @@ bool __init_memblock memblock_overlaps_region(struct
-> > >> memblock_type *type,
-> > >>    return i < type->cnt;
-> > >>  }
-> > >>
-> > >> +/**
-> > >> + * memblock_node_is_crypto_capable - get if whole node is capable
-> > >> + * of encryption
-> > >> + * @nid: number of node
-> > >> + *
-> > >> + * Iterate over all memory memblock_type and find if all regions under
-> > >> + * node @nid are capable of hardware encryption.
-> > >> + *
-> > >> + * Return:
-> > >> + * true if every region in memory memblock_type is capable of
-> > >
-> > > I'd s/in memory memblock_type/in @nid
-> > >
-> >
-> > Good, thanks.
-> >
-> > >> + * encryption, false otherwise.
-> > >> + */
-> > >> +bool __init_memblock memblock_node_is_crypto_capable(int nid)
-> > >> +{
-> > >> +  struct memblock_region *region;
-> > >> +  int crypto_capables = 0;
-> > >> +  int not_crypto_capables = 0;
-> > >> +
-> > >> +  for_each_mem_region(region) {
-> > >> +          if (memblock_get_region_node(region) == nid) {
-> > >> +                  if (region->flags & MEMBLOCK_CRYPTO_CAPABLE)
-> > >> +                          crypto_capables++;
-> > >> +                  else
-> > >> +                          not_crypto_capables++;
-> > >> +          }
-> > >> +  }
-> > >> +
-> > >> +  if (crypto_capables > 0 && not_crypto_capables > 0)
-> > >> +          pr_warn("Node %d has %d regions that are encryptable and %d regions
-> > >> that aren't",
-> > >> +                  nid, not_crypto_capables, crypto_capables);
-> > >> +
-> > >> +  return not_crypto_capables == 0;
-> > >
-> > > This will return true for memoryless nodes as well. Do you mean to consider
-> > > them as capable of encryption?
-> > >
-> >
-> > Not really, I didn't think about that to be honest. I don't think it's
-> > a good idea to consider them as capable, right?
->
-> I think capable of encryption would mean
->
->         crypto_capables && !not_crypto_capables
+On 4/25/22 10:15, Martin Fernandez wrote:
+> +/**
+> + * e820__range_remove() - Remove an address range from e820_table.
+> + * @start: Start of the address range.
+> + * @size: Size of the address range.
+> + * @old_type: Type of the entries that we want to remove.
+> + * @check_type: Bool to decide if ignore @old_type or not.
+> + *
+> + * Remove [@start, @start + @size) from e820_table. If @check_type is
+> + * true remove only entries with type @old_type.
+> + *
+> + * Return: The size removed.
+> + */
 
-Since these operands were evaluated above with comparison ops, I would say
-    crypto_capables > 0 && not_crypto_capables == 0
-to improve readability and be explicit that they are numbers rather
-than booleans.
+The refactoring looks promising.  But, there's a *LOT* of kerneldoc
+noise, like:
 
+> + * @table: Target e820_table.
+> + * @start: Start of the range.
+> + * @size: Size of the range.
 
->
-> --
-> Sincerely yours,
-> Mike.
+and this:
+
+> + * struct e820_type_updater_data - Helper type for
+> + * __e820__range_update().
+> + * @old_type: old_type parameter of __e820__range_update().
+> + * @new_type: new_type parameter of __e820__range_update().
+
+Those are just a pure waste of bytes.  I suspect some more judicious
+function comments would also make the diffstat look more palatable.
+
+Also, in general, the naming is a bit verbose.  You might want to trim
+some of those names down, like:
+
+> +static bool __init crypto_updater__should_update(const struct e820_entry *entry,
+> +						 const void *data)
+> +{
+> +	const struct e820_crypto_updater_data *crypto_updater_data =
+> +		(const struct e820_crypto_updater_data *)data;
+
+Those are just some high-level comments.  This also needs some really
+careful review of the refactoring to make sure that it doesn't break any
+of the existing e820 users.
