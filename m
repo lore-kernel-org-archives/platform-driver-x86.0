@@ -2,124 +2,115 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EBAC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 16:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3539C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 16:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348511AbiDZQgt (ORCPT
+        id S1353018AbiDZQj7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Apr 2022 12:36:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54786 "EHLO
+        Tue, 26 Apr 2022 12:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235283AbiDZQgs (ORCPT
+        with ESMTP id S229684AbiDZQj6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Apr 2022 12:36:48 -0400
+        Tue, 26 Apr 2022 12:39:58 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 049851759D3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Apr 2022 09:33:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C10A2BE2C;
+        Tue, 26 Apr 2022 09:36:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 94DA460A29
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Apr 2022 16:33:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0B24C385A0;
-        Tue, 26 Apr 2022 16:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650990820;
-        bh=mCsl4tJU10JPBJe7//N4x9+VIbVWIdqK82V5aD36DK8=;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5AA6C60ADA;
+        Tue, 26 Apr 2022 16:36:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DA9FC385AA;
+        Tue, 26 Apr 2022 16:36:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1650991009;
+        bh=9UBlXEL+5EXdMywZqCfNDnB8y2GkRUxHNwf+32JANRQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CIFlbQtBo5AlHo9pF1MldnYxxeGeIJNY/THKH+CNYXijAaJat55I6lQ8zt6C4s1iN
-         t4Xf0HPxc43kLDJvOLFtQe5ZU/cY5K6IrMqHc3VanPghguIRBRa2D/EUh1+UPIp1FW
-         SZvogfl+mrPvRigB9fYrc9b9n3pTbwVWZE1d9QJ2kp28JOAz7hqPackajA+rfoDBgT
-         AFzRLHQolo2lNjWoIfXSHituRolKhZaEpyBoEAXqbirs8S/6zc4ZDnM5XcdJr5ZdEo
-         xVup6a4BfQu/pfexRFevvWr71aLOx3mwpNh2fftpxZJGrIx0Ht+YHNXouqMs8V+u6J
-         8iwjtCl6cdlsg==
-Received: by pali.im (Postfix)
-        id 03D6FEB0; Tue, 26 Apr 2022 18:33:36 +0200 (CEST)
-Date:   Tue, 26 Apr 2022 18:33:36 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     gabriele.mzt@gmail.com, Dell.Client.Kernel@dell.com
-Cc:     platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
-Subject: Re: [PATCH] platform/x86: dell-laptop: Add quirk entry for Latitude
- 7520
-Message-ID: <20220426163336.hmook5gkgyba5dur@pali>
-References: <20220426120827.12363-1-gabriele.mzt@gmail.com>
+        b=EDsksfjnlTd1PwBoyZCNHLOrR5M2shxvAywQ6MsmCSbgi/4tuCzy4/PY6ZUgpGL6s
+         WV8b21lEWkARxPfmRX9nTZ6zZyKvmE0ZGxj40sche74Hw8EXNZXKw2ayKfrmEVZUbo
+         LpQdEHw9m/KJ3l4WVmHd/Hov+YrJKU/cIveZlPLE=
+Date:   Tue, 26 Apr 2022 18:36:46 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, corbet@lwn.net,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, rostedt@goodmis.org, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v4 04/10] platform/x86/intel/ifs: Read IFS firmware image
+Message-ID: <YmgfnhhCQHWPHxAw@kroah.com>
+References: <20220419163859.2228874-1-tony.luck@intel.com>
+ <20220422200219.2843823-1-tony.luck@intel.com>
+ <20220422200219.2843823-5-tony.luck@intel.com>
+ <YmfNVG0qLahv7TzL@kroah.com>
+ <YmgZ9d54sjKllh6U@agluck-desk3.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220426120827.12363-1-gabriele.mzt@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <YmgZ9d54sjKllh6U@agluck-desk3.sc.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-+ Dell.Client.Kernel@dell.com : please look at this issue below
-
-On Tuesday 26 April 2022 14:08:27 gabriele.mzt@gmail.com wrote:
-> From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+On Tue, Apr 26, 2022 at 09:12:37AM -0700, Luck, Tony wrote:
+> On Tue, Apr 26, 2022 at 12:45:40PM +0200, Greg KH wrote:
+> > On Fri, Apr 22, 2022 at 01:02:13PM -0700, Tony Luck wrote:
+> > >  drivers/platform/x86/intel/ifs/Makefile |  2 +-
+> > >  drivers/platform/x86/intel/ifs/core.c   | 36 ++++++++++++++++++++++++-
+> > >  drivers/platform/x86/intel/ifs/ifs.h    | 25 +++++++++++++++++
+> > >  drivers/platform/x86/intel/ifs/load.c   | 28 +++++++++++++++++++
 > 
-> The Latitude 7520 supports AC timeouts, but it has no KBD_LED_AC_TOKEN
-> and so changes to stop_timeout appear to have no effect if the laptop
-> is plugged in.
+> You haven't commented on the source tree location. With the change
+> to use misc_register() this isn't a "platform" device anymore.
 > 
-> Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-> ---
-> As per the discussion here https://github.com/dell/libsmbios/issues/48,
-> this is really a BIOS bug. My Latitude 7520 has the latest BIOS
-> update installed, which was released just few months ago, but the
-> issue is still there.
+> Should I move to "drivers/misc/"? Or is there some better spot that
+> preseves the detail that this is an x86/intel driver in the path?
 
-In that ticket is written that issue was already fixed and discussion
-closed.
+There's misc_register() users all over the tree, no need for it to be in
+drivers/misc/ at all, especially if this really is a platform device as
+this one is.  It's fine here.
 
-If it is not truth then please open and report a new ticket on github.
-
-And ideally report also this issue directly to Dell BIOS team per
-https://github.com/dell/libsmbios/issues/48#issuecomment-391328501
-because as written that this is the right way for fixing the issue,
-rather than kernel patch.
-
-> ---
->  drivers/platform/x86/dell/dell-laptop.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> > > +static struct ifs_device ifs_devices[] = {
+> > > +	[IFS_SAF] = {
+> > > +		.data = {
+> > > +			.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
+> > > +		},
+> > > +		.misc = {
+> > > +			.name = "intel_ifs_0",
+> > > +			.nodename = "intel_ifs/0",
+> > > +			.minor = MISC_DYNAMIC_MINOR,
+> > > +		},
+> > > +	},
+> > > +};
+> > > +
+> > > +#define IFS_NUMTESTS ARRAY_SIZE(ifs_devices)
+> > 
+> > Cute way to do this, but I don't see you ever have any more devices
+> > added to this list in this series.  Did I miss them?
 > 
-> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-> index 8230e7a68a5e..1321687d923e 100644
-> --- a/drivers/platform/x86/dell/dell-laptop.c
-> +++ b/drivers/platform/x86/dell/dell-laptop.c
-> @@ -80,6 +80,10 @@ static struct quirk_entry quirk_dell_inspiron_1012 = {
->  	.kbd_led_not_present = true,
->  };
->  
-> +static struct quirk_entry quirk_dell_latitude_7520 = {
-> +	.kbd_missing_ac_tag = true,
-> +};
-> +
->  static struct platform_driver platform_driver = {
->  	.driver = {
->  		.name = "dell-laptop",
-> @@ -336,6 +340,15 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
->  		},
->  		.driver_data = &quirk_dell_inspiron_1012,
->  	},
-> +	{
-> +		.callback = dmi_matched,
-> +		.ident = "Dell Latitude 7520",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude 7520"),
-> +		},
-> +		.driver_data = &quirk_dell_latitude_7520,
-> +	},
->  	{ }
->  };
->  
-> -- 
-> 2.36.0
+> That's in part 11/10 ... I have hardware, so I'm pretty sure that this
+> is a real thing. Just not ready to post until Intel announces the
+> details of the new test type.
+
+Let's not over-engineer for anything we can not review today please.
+
+> > If not, why all the overhead and complexity involved here for just a
+> > single misc device?
 > 
+> It didn't seem like a lot of complexity here. It makes the changes to
+> this file to add an extra test trivial (just a new name in the "enum"
+> and a new initializer in ifs_devices[]).
+> 
+> Obviously some more code in load.c and runtest.c to handle the new
+> test type.
+> 
+> If it really is too much now, I can rip it out from this submission
+> and add it back when the second test is ready for public view.
 
-In any case:
+Please do, thanks.
 
-Acked-by: Pali Rohár <pali@kernel.org>
-
-But I hope that Dell fixes this issue in their BIOS.
+greg k-h
