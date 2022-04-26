@@ -2,109 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F64EC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 15:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E054BC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 16:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351932AbiDZPNR (ORCPT
+        id S1351878AbiDZQPr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Apr 2022 11:13:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50474 "EHLO
+        Tue, 26 Apr 2022 12:15:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351918AbiDZPL7 (ORCPT
+        with ESMTP id S1345245AbiDZQPq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Apr 2022 11:11:59 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D62F161BB7;
-        Tue, 26 Apr 2022 08:08:22 -0700 (PDT)
+        Tue, 26 Apr 2022 12:15:46 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71584996AE;
+        Tue, 26 Apr 2022 09:12:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650985702; x=1682521702;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=j2V5+3CZNEUZjk60xmVPNepccy31dj0aymHOLGJ7vBI=;
-  b=XWm3AW2MQuj0gLHrqbeZHigmbhllG/SEEGEcAPoOQLv6vY3B2JelNnrE
-   3ecLFFWkuNAvuOM5DGWZIhOtvXMyPRN0b1/mIZl9xaM4nJq/tUKzpl56W
-   dSFowNBXnK8LBatx4aWo07dvdfSly1avO+I4BrVGGSxbQ3g0c3nR9bf4y
-   XJNaGuEx5765gMfARJqP+QtZt/Qp0XhVd/+Mu2+k14SrC4gKdi2MtabET
-   Dlo9qrUiIZauICQ+gtO9cg49aBfKsD3qM4Unejy3AZmMNvj3yhNU4OrFY
-   gukKvazZwUoRP8i6WGWXiLQrscAhofQt2YChYV51GoXmZluOKonCaZ2Vy
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10328"; a="265129903"
+  t=1650989559; x=1682525559;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0RIR7mb999d1172gD+dJU/ULf/cy2ZbhtoDViRJG+bI=;
+  b=akxPOGmwj8OoVXM6KLBkU7Yd1qEQIybwgbLqf+n+q0P9ii73iuBJi/RI
+   IFYQA/8lM2o/MKVk/EC67g/Yh2TulTZFKH+XMdY0FOX6595t/ZaPp63rc
+   V8DjW8Iq/BhmhtniqxEvV+LKiJoszwKNskGI3/JgugA2qliLcuCEtbU0U
+   aC8oASDWhubjUFtme/IuM1JgDUYZtJrnwpKaxzPumG91n1aG0hrndIzCH
+   ny2zeBwR8/HpquljsnlpjzpF6itkefcYFplO5tl3w6RkYJxbili4uQjCj
+   wesIkF01qm0I2IFumxpUmHCR36s4d5b1qXJrB0AHOoQvofDPLHgcaWumz
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10329"; a="245552675"
 X-IronPort-AV: E=Sophos;i="5.90,291,1643702400"; 
-   d="scan'208";a="265129903"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 08:08:21 -0700
+   d="scan'208";a="245552675"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 09:12:38 -0700
 X-IronPort-AV: E=Sophos;i="5.90,291,1643702400"; 
-   d="scan'208";a="595802962"
-Received: from dsocek-mobl2.amr.corp.intel.com (HELO [10.212.69.119]) ([10.212.69.119])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 08:08:20 -0700
-Message-ID: <a02186b9-b72c-1484-2973-c59272ae0a7e@intel.com>
-Date:   Tue, 26 Apr 2022 08:10:58 -0700
+   d="scan'208";a="617063201"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 09:12:38 -0700
+Date:   Tue, 26 Apr 2022 09:12:37 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, corbet@lwn.net,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, rostedt@goodmis.org, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v4 04/10] platform/x86/intel/ifs: Read IFS firmware image
+Message-ID: <YmgZ9d54sjKllh6U@agluck-desk3.sc.intel.com>
+References: <20220419163859.2228874-1-tony.luck@intel.com>
+ <20220422200219.2843823-1-tony.luck@intel.com>
+ <20220422200219.2843823-5-tony.luck@intel.com>
+ <YmfNVG0qLahv7TzL@kroah.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v7 5/8] x86/e820: Refactor e820__range_remove
-Content-Language: en-US
-To:     Martin Fernandez <martin.fernandez@eclypsium.com>,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com, keescook@chromium.org
-References: <20220425171526.44925-1-martin.fernandez@eclypsium.com>
- <20220425171526.44925-6-martin.fernandez@eclypsium.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20220425171526.44925-6-martin.fernandez@eclypsium.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YmfNVG0qLahv7TzL@kroah.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 4/25/22 10:15, Martin Fernandez wrote:
-> +/**
-> + * e820__range_remove() - Remove an address range from e820_table.
-> + * @start: Start of the address range.
-> + * @size: Size of the address range.
-> + * @old_type: Type of the entries that we want to remove.
-> + * @check_type: Bool to decide if ignore @old_type or not.
-> + *
-> + * Remove [@start, @start + @size) from e820_table. If @check_type is
-> + * true remove only entries with type @old_type.
-> + *
-> + * Return: The size removed.
-> + */
+On Tue, Apr 26, 2022 at 12:45:40PM +0200, Greg KH wrote:
+> On Fri, Apr 22, 2022 at 01:02:13PM -0700, Tony Luck wrote:
+> >  drivers/platform/x86/intel/ifs/Makefile |  2 +-
+> >  drivers/platform/x86/intel/ifs/core.c   | 36 ++++++++++++++++++++++++-
+> >  drivers/platform/x86/intel/ifs/ifs.h    | 25 +++++++++++++++++
+> >  drivers/platform/x86/intel/ifs/load.c   | 28 +++++++++++++++++++
 
-The refactoring looks promising.  But, there's a *LOT* of kerneldoc
-noise, like:
+You haven't commented on the source tree location. With the change
+to use misc_register() this isn't a "platform" device anymore.
 
-> + * @table: Target e820_table.
-> + * @start: Start of the range.
-> + * @size: Size of the range.
+Should I move to "drivers/misc/"? Or is there some better spot that
+preseves the detail that this is an x86/intel driver in the path?
 
-and this:
+> > +static struct ifs_device ifs_devices[] = {
+> > +	[IFS_SAF] = {
+> > +		.data = {
+> > +			.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
+> > +		},
+> > +		.misc = {
+> > +			.name = "intel_ifs_0",
+> > +			.nodename = "intel_ifs/0",
+> > +			.minor = MISC_DYNAMIC_MINOR,
+> > +		},
+> > +	},
+> > +};
+> > +
+> > +#define IFS_NUMTESTS ARRAY_SIZE(ifs_devices)
+> 
+> Cute way to do this, but I don't see you ever have any more devices
+> added to this list in this series.  Did I miss them?
 
-> + * struct e820_type_updater_data - Helper type for
-> + * __e820__range_update().
-> + * @old_type: old_type parameter of __e820__range_update().
-> + * @new_type: new_type parameter of __e820__range_update().
+That's in part 11/10 ... I have hardware, so I'm pretty sure that this
+is a real thing. Just not ready to post until Intel announces the
+details of the new test type.
 
-Those are just a pure waste of bytes.  I suspect some more judicious
-function comments would also make the diffstat look more palatable.
+> If not, why all the overhead and complexity involved here for just a
+> single misc device?
 
-Also, in general, the naming is a bit verbose.  You might want to trim
-some of those names down, like:
+It didn't seem like a lot of complexity here. It makes the changes to
+this file to add an extra test trivial (just a new name in the "enum"
+and a new initializer in ifs_devices[]).
 
-> +static bool __init crypto_updater__should_update(const struct e820_entry *entry,
-> +						 const void *data)
-> +{
-> +	const struct e820_crypto_updater_data *crypto_updater_data =
-> +		(const struct e820_crypto_updater_data *)data;
+Obviously some more code in load.c and runtest.c to handle the new
+test type.
 
-Those are just some high-level comments.  This also needs some really
-careful review of the refactoring to make sure that it doesn't break any
-of the existing e820 users.
+If it really is too much now, I can rip it out from this submission
+and add it back when the second test is ready for public view.
+
+-Tony
