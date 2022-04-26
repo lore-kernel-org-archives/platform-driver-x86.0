@@ -2,79 +2,175 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A89C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 12:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FC2C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 12:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238703AbiDZM74 (ORCPT
+        id S1350586AbiDZNCs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Apr 2022 08:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40134 "EHLO
+        Tue, 26 Apr 2022 09:02:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234224AbiDZM74 (ORCPT
+        with ESMTP id S1350484AbiDZNCR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Apr 2022 08:59:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172C41CFD2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Apr 2022 05:56:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A5B1561983
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Apr 2022 12:56:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 11713C385AA
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Apr 2022 12:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650977808;
-        bh=FdNvIsa4Z7L2ZV2rS1O/Hj6PsfVm/kTKO0/rQHCAq98=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=p8H0xiUWD6RXtCKyUPxCr/NJVY8xpG2nhFzLN0a1sMtgJRMqCiwDRSKc0D37se+Oa
-         JVgVE5e5yE3Llp7mtgohGrQLzKTzy5zw864kxeyZfqqxNiv1zoAUWT7/JuP+H6mVZg
-         vc6lJn5iG3eoWad3RmduXbCy5JEMYle/iycZ/yRZ8yGYN6UpbVxjy65gxdNgG7mesN
-         506tYQnzmu9RW1RMuxouGw11bnj5It+UhoPXsqodXJLrfSnHWsg5jAe09CX0P18iQB
-         tPq/0YFKIlEFcRjmMFDzZCAbL2bjQIoJgV6Fg/zsWOZLaXBbT61haplyaigmX0h9z2
-         i4v37UIaKlRug==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id CFBDCC05F98; Tue, 26 Apr 2022 12:56:47 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
-Date:   Tue, 26 Apr 2022 12:56:47 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: johannes.penssel@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-214899-215701-fj0wnKOGuO@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
-References: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 26 Apr 2022 09:02:17 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 909981815FF
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Apr 2022 05:59:05 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id y76so3530391ybe.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Apr 2022 05:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=klvWna6aVMmD5xzd2dumZFpFxfWMKshDlMPwR9QCUhU=;
+        b=Snve9f0KfXixZ+c8vg5EYkQfEnS0VOwMlEfbjzSmmLeKl3CV3QY7OoAEGlUCMMiKpD
+         R3uI1qO6ciPKkLK5vtAtgpjFqwIkNnMkoTIIlq14jZ76GdxyOBwkxciG6k+P3CLvjiiz
+         d+oMOO+GBwo5DcLFG2CBUSHN7gROk7mk7kOsagRBNNw+0te+8pMeTBDhlZ8z6gI8V1nB
+         OwcO7pjnH+wqR7qbdlDmbAwik4TDeQZ2HGgpg4HMQ78iHj0vjE5dn+I5qeu85IiTJdFW
+         vB92ZbAXdrOk8XW/osb3yXoM0AJ/fCZoICH/8pvrXNcyr3lJ561gTCb3ThZOCTE8HCXH
+         NdAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=klvWna6aVMmD5xzd2dumZFpFxfWMKshDlMPwR9QCUhU=;
+        b=7fPhATqYtSKzShWLzQ7gr2uWdZ6VZzaKpWd/vyHRfrqg39sHIvcqcDQBoZcT/gGMB8
+         H7JAv8JvysKPq0APiOxFS8Yr1xuSFupOrvlHKFjlBzrPA0qcKcEeddRSC1xX9z5Kyl5y
+         F888S/Kg/woqfCkMv7WXjRrmREUEgaLEmKmCXPEEo8/DI7GuU/l6cqWqltX2dEV8TS0J
+         362oaXFoyrdynGg2CNR/zYZt+Ujo94A1DRRtQHHWTGQfj0HSRpRZA+e/kfpMyTwY2s6Y
+         Gr1w74lunRU6pgvDATrx5TeITz//wld+WhZ0+Te6chw0vzAdTnT1OdDGpXYrHGre7CJh
+         uieQ==
+X-Gm-Message-State: AOAM5320+3OkaDEygMxhKZSEzmQJRP8rhjK0rsAJo2VL5aqxb/BD+54k
+        MDejXPKqbkccgFr7RZkZEnYe1wPnTRxIJyKSVCjq8g==
+X-Google-Smtp-Source: ABdhPJySiRxTZpBhh3bZw12NdC/YImhj5Q/qK8XHR85blgIx7xY01atU3xGEYkhR1DoyFQ8iXTAaEH22Gry149h26oE=
+X-Received: by 2002:a25:8b03:0:b0:628:8cff:ed6c with SMTP id
+ i3-20020a258b03000000b006288cffed6cmr21036112ybl.513.1650977944764; Tue, 26
+ Apr 2022 05:59:04 -0700 (PDT)
 MIME-Version: 1.0
+Received: by 2002:a81:10a:0:0:0:0:0 with HTTP; Tue, 26 Apr 2022 05:59:04 -0700 (PDT)
+In-Reply-To: <YmeM5fklUssR/74e@kernel.org>
+References: <20220425171526.44925-1-martin.fernandez@eclypsium.com>
+ <20220425171526.44925-2-martin.fernandez@eclypsium.com> <YmeM5fklUssR/74e@kernel.org>
+From:   Martin Fernandez <martin.fernandez@eclypsium.com>
+Date:   Tue, 26 Apr 2022 09:59:04 -0300
+Message-ID: <CAKgze5YwTD3neYjKNZzLz6DLWxpGPohGCDGT6oJn-KUdAxyCfg@mail.gmail.com>
+Subject: Re: [PATCH v7 1/8] mm/memblock: Tag memblocks with crypto capabilities
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com, keescook@chromium.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
+On 4/26/22, Mike Rapoport <rppt@kernel.org> wrote:
+> On Mon, Apr 25, 2022 at 02:15:19PM -0300, Martin Fernandez wrote:
+>> Add the capability to mark regions of the memory memory_type able of
+>> hardware memory encryption.
+>>
+>> Also add the capability to query if all regions of a memory node are
+>> able to do hardware memory encryption to call it when initializing the
+>> nodes. Warn the user if a node has both encryptable and
+>> non-encryptable regions.
+>>
+>> Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
+>> ---
+>>  include/linux/memblock.h |  5 ++++
+>>  mm/memblock.c            | 62 ++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 67 insertions(+)
+>>
+>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> index 50ad19662a32..00c4f1a20335 100644
+>> --- a/include/linux/memblock.h
+>> +++ b/include/linux/memblock.h
+>> @@ -40,6 +40,7 @@ extern unsigned long long max_possible_pfn;
+>>   * via a driver, and never indicated in the firmware-provided memory map
+>> as
+>>   * system RAM. This corresponds to IORESOURCE_SYSRAM_DRIVER_MANAGED in
+>> the
+>>   * kernel resource tree.
+>> + * @MEMBLOCK_CRYPTO_CAPABLE: capable of hardware encryption
+>>   */
+>>  enum memblock_flags {
+>>  	MEMBLOCK_NONE		= 0x0,	/* No special request */
+>> @@ -47,6 +48,7 @@ enum memblock_flags {
+>>  	MEMBLOCK_MIRROR		= 0x2,	/* mirrored region */
+>>  	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
+>>  	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
+>> +	MEMBLOCK_CRYPTO_CAPABLE = 0x10,	/* capable of hardware encryption */
+>>  };
+>>
+>>  /**
+>> @@ -120,6 +122,9 @@ int memblock_physmem_add(phys_addr_t base, phys_addr_t
+>> size);
+>>  void memblock_trim_memory(phys_addr_t align);
+>>  bool memblock_overlaps_region(struct memblock_type *type,
+>>  			      phys_addr_t base, phys_addr_t size);
+>> +bool memblock_node_is_crypto_capable(int nid);
+>> +int memblock_mark_crypto_capable(phys_addr_t base, phys_addr_t size);
+>> +int memblock_clear_crypto_capable(phys_addr_t base, phys_addr_t size);
+>>  int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
+>>  int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
+>>  int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index e4f03a6e8e56..fe62f81572e6 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -191,6 +191,40 @@ bool __init_memblock memblock_overlaps_region(struct
+>> memblock_type *type,
+>>  	return i < type->cnt;
+>>  }
+>>
+>> +/**
+>> + * memblock_node_is_crypto_capable - get if whole node is capable
+>> + * of encryption
+>> + * @nid: number of node
+>> + *
+>> + * Iterate over all memory memblock_type and find if all regions under
+>> + * node @nid are capable of hardware encryption.
+>> + *
+>> + * Return:
+>> + * true if every region in memory memblock_type is capable of
+>
+> I'd s/in memory memblock_type/in @nid
+>
 
---- Comment #24 from Johannes P (johannes.penssel@gmail.com) ---
-Created attachment 300805
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300805&action=3Dedit
-acpidump BIOS version FHCN64WW, GPU enabled
+Good, thanks.
 
---=20
-You may reply to this email to add a comment.
+>> + * encryption, false otherwise.
+>> + */
+>> +bool __init_memblock memblock_node_is_crypto_capable(int nid)
+>> +{
+>> +	struct memblock_region *region;
+>> +	int crypto_capables = 0;
+>> +	int not_crypto_capables = 0;
+>> +
+>> +	for_each_mem_region(region) {
+>> +		if (memblock_get_region_node(region) == nid) {
+>> +			if (region->flags & MEMBLOCK_CRYPTO_CAPABLE)
+>> +				crypto_capables++;
+>> +			else
+>> +				not_crypto_capables++;
+>> +		}
+>> +	}
+>> +
+>> +	if (crypto_capables > 0 && not_crypto_capables > 0)
+>> +		pr_warn("Node %d has %d regions that are encryptable and %d regions
+>> that aren't",
+>> +			nid, not_crypto_capables, crypto_capables);
+>> +
+>> +	return not_crypto_capables == 0;
+>
+> This will return true for memoryless nodes as well. Do you mean to consider
+> them as capable of encryption?
+>
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Not really, I didn't think about that to be honest. I don't think it's
+a good idea to consider them as capable, right?
