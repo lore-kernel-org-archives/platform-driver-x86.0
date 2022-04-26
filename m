@@ -2,103 +2,186 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C64C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 18:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79056C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 18:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350720AbiDZSRw (ORCPT
+        id S1352591AbiDZSvE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Apr 2022 14:17:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47646 "EHLO
+        Tue, 26 Apr 2022 14:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347588AbiDZSRv (ORCPT
+        with ESMTP id S1352620AbiDZSvD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Apr 2022 14:17:51 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25C4E8165C
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Apr 2022 11:14:43 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-2eba37104a2so192007897b3.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Apr 2022 11:14:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kIkqOjkK9UaXZhvnTwpF6WfzsFWH6RDxZPgtgbCbHn8=;
-        b=EE/CsQMAqt32syFUbTLRgEQoIh3UvnVW+urLE03c179KKq4js+ffQGY4alOT1TttEW
-         3eEY3xe0S/B8R9ZTTIKF/w8REPdpLhxDC7uoT5iYctyZNn4SM67TTamgxMUnK7AexSov
-         vjZn/4tntdO8jJfc+gbIkyh65Z6sh5XrwH9UCrLaA62BW3uJLNdS2FTdWSh65kQdCJmw
-         YksGlQbALP9T+9XvSeIPKIvgRL4jU2OtIX81czlHLKSp8wlsBOtet38SaVU/GPZwp1hT
-         0mHbVVxwrMF0w6hILfMzElAFaIuxPDlh1hKx1WaJXeeYqT5C24FmzW5SPIExmso3CQV3
-         cOeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kIkqOjkK9UaXZhvnTwpF6WfzsFWH6RDxZPgtgbCbHn8=;
-        b=LfbETfUtxM48McOn9DV90K8LoIF6p+7VK2aVe/my+hRgHKDTuumdEMp/lOflTjxUyo
-         ziMaAr5AOF1q9TzLlsl1xsT32X76oX7pZX1azJfRMwS+2KFSuPiwN75DHWzL+83iu6s5
-         AEUFtiLME/aCjEshp5Ffz0xHwEW/km6vJ7EubUJLJWr18/jYkncAPt+IoAZJLx/8SXeS
-         XFG7BZwnxA42o8/L3/DS6UFCLCb2JfK8KBGjvEMd6zfFVac6TWCttDvWVDMFWjg6RXBZ
-         5mPswKMwvfgsOpYjfWSFE3EimFw3/AWxfZwHj2Hb/2HNnKVCmaZRBAQ3CbkjLv55KN3x
-         Sv5g==
-X-Gm-Message-State: AOAM531wL75hodd3Y2pPaPkTCidVN6pTuu7oAQSq/UsR+ExciY9iMKw3
-        kJ3Run47YqwSk8vvsIQa28vflP2FN7N18q5e6JM=
-X-Google-Smtp-Source: ABdhPJyyJ9h5cwa2WKxKjMOBqvzMCa39sjQzrEI/yYJ52JE7K6PA09GOmk+n+cqRFgcecpN8c82saLTSKThS5IqIDHU=
-X-Received: by 2002:a81:4ec8:0:b0:2f7:ee4c:314 with SMTP id
- c191-20020a814ec8000000b002f7ee4c0314mr10624326ywb.405.1650996882421; Tue, 26
- Apr 2022 11:14:42 -0700 (PDT)
+        Tue, 26 Apr 2022 14:51:03 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0242A90CDC;
+        Tue, 26 Apr 2022 11:47:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650998873; x=1682534873;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0hMC9FCc92/UZsP/d4xjIGjECImVMpXb8G2MfDigzBQ=;
+  b=je8v9jOXBGMD0go0KnHsUgzKj9NurMjbZUxRv23m/FPKAOSLnVobCX4D
+   ZjB1fYEJPBd5aZhdoAUSf0MIpyz7OqJHClzHyqC+BvR1IMCzSsNChFg2a
+   6xBOxN67Wd8BvHbxd1wO1I22m6bIoVb9zC7N76Sh9+q6VXvZwaiXFDLN0
+   XcQ9XoRPSI9LhvVqYCJVVaNMWlvsbYM33gHUAAtDgJyUOi2kLn3caaWlJ
+   YT/oeVa8jmnbZ5vC5B4AFA7TXEEUOh7VGTxBcsE4d8yvDIJBII19tFWZU
+   IFnXdFfu8Nm6s459iYuBrkuUFSftL7uHABbCyHVmdezKU1L3x67+WiLta
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10329"; a="265851409"
+X-IronPort-AV: E=Sophos;i="5.90,291,1643702400"; 
+   d="scan'208";a="265851409"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 11:47:52 -0700
+X-IronPort-AV: E=Sophos;i="5.90,291,1643702400"; 
+   d="scan'208";a="580091108"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2022 11:47:52 -0700
+Date:   Tue, 26 Apr 2022 11:47:50 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, corbet@lwn.net,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, rostedt@goodmis.org, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v4 04/10] platform/x86/intel/ifs: Read IFS firmware image
+Message-ID: <Ymg+VnkW544a4La2@agluck-desk3.sc.intel.com>
+References: <20220419163859.2228874-1-tony.luck@intel.com>
+ <20220422200219.2843823-1-tony.luck@intel.com>
+ <20220422200219.2843823-5-tony.luck@intel.com>
+ <YmfNVG0qLahv7TzL@kroah.com>
+ <YmgZ9d54sjKllh6U@agluck-desk3.sc.intel.com>
+ <YmgfnhhCQHWPHxAw@kroah.com>
 MIME-Version: 1.0
-References: <20220426120827.12363-1-gabriele.mzt@gmail.com> <20220426163336.hmook5gkgyba5dur@pali>
-In-Reply-To: <20220426163336.hmook5gkgyba5dur@pali>
-From:   Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Date:   Tue, 26 Apr 2022 20:14:31 +0200
-Message-ID: <CABFtUbRv=5OaSgADOtXzRSRxAwSS-JaU=Ey5ehJ7YwAuVMJzDA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-laptop: Add quirk entry for Latitude 7520
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YmgfnhhCQHWPHxAw@kroah.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 26 Apr 2022 at 18:33, Pali Roh=C3=A1r <pali@kernel.org> wrote:
->
-> + Dell.Client.Kernel@dell.com : please look at this issue below
->
-> On Tuesday 26 April 2022 14:08:27 gabriele.mzt@gmail.com wrote:
-> > From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-> >
-> > The Latitude 7520 supports AC timeouts, but it has no KBD_LED_AC_TOKEN
-> > and so changes to stop_timeout appear to have no effect if the laptop
-> > is plugged in.
-> >
-> > Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-> > ---
-> > As per the discussion here https://github.com/dell/libsmbios/issues/48,
-> > this is really a BIOS bug. My Latitude 7520 has the latest BIOS
-> > update installed, which was released just few months ago, but the
-> > issue is still there.
->
-> In that ticket is written that issue was already fixed and discussion
-> closed.
->
-> If it is not truth then please open and report a new ticket on github.
->
-> And ideally report also this issue directly to Dell BIOS team per
-> https://github.com/dell/libsmbios/issues/48#issuecomment-391328501
-> because as written that this is the right way for fixing the issue,
-> rather than kernel patch.
+On Tue, Apr 26, 2022 at 06:36:46PM +0200, Greg KH wrote:
+> On Tue, Apr 26, 2022 at 09:12:37AM -0700, Luck, Tony wrote:
+> > If it really is too much now, I can rip it out from this submission
+> > and add it back when the second test is ready for public view.
+> 
+> Please do, thanks.
 
-Yes, I agree, I read the entire thread and it is the main reason why
-I updated the BIOS as soon as I noticed the issue (I've just got this
-laptop and I did not have the time to check everything yet).
+Hmmm ... maybe there were more bits than I thought.
 
-Anyway, I think that that repository is not monitored actively.
-I have also just noticed there is an open issue [1] about the same
-issue on a different laptop, so this is potentially a rather
-widespread issue.
+ 1 file changed, 19 insertions(+), 36 deletions(-)
 
-I will see if I find some other way to contact Dell.
+core.c is now down to just 80 lines ... so that was a significant
+fraction of the file.
 
-[1] - https://github.com/dell/libsmbios/issues/105
+Net change below (I'll thread it back into the patch series before reposting).
+
+Any other comments on the series?
+
+-Tony
+
+
+
+diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+index 317ed3225307..489b77645b5e 100644
+--- a/drivers/platform/x86/intel/ifs/core.c
++++ b/drivers/platform/x86/intel/ifs/core.c
+@@ -9,10 +9,6 @@
+ 
+ #include "ifs.h"
+ 
+-enum test_types {
+-	IFS_SAF,
+-};
+-
+ #define X86_MATCH(model)				\
+ 	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6,	\
+ 		INTEL_FAM6_##model, X86_FEATURE_CORE_CAPABILITIES, NULL)
+@@ -23,27 +19,21 @@ static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
+ };
+ MODULE_DEVICE_TABLE(x86cpu, ifs_cpu_ids);
+ 
+-static struct ifs_device ifs_devices[] = {
+-	[IFS_SAF] = {
+-		.data = {
+-			.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
+-		},
+-		.misc = {
+-			.name = "intel_ifs_0",
+-			.nodename = "intel_ifs/0",
+-			.minor = MISC_DYNAMIC_MINOR,
+-		},
++static struct ifs_device ifs_device = {
++	.data = {
++		.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
++	},
++	.misc = {
++		.name = "intel_ifs_0",
++		.nodename = "intel_ifs/0",
++		.minor = MISC_DYNAMIC_MINOR,
+ 	},
+ };
+ 
+-#define IFS_NUMTESTS ARRAY_SIZE(ifs_devices)
+-
+ static int __init ifs_init(void)
+ {
+ 	const struct x86_cpu_id *m;
+-	int ndevices = 0;
+ 	u64 msrval;
+-	int i;
+ 
+ 	m = x86_match_cpu(ifs_cpu_ids);
+ 	if (!m)
+@@ -61,32 +51,25 @@ static int __init ifs_init(void)
+ 	if (ifs_setup_wq())
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < IFS_NUMTESTS; i++) {
+-		if (!(msrval & BIT(ifs_devices[i].data.integrity_cap_bit)))
+-			continue;
+-
+-		ifs_devices[i].misc.groups = ifs_get_groups();
+-		if (!misc_register(&ifs_devices[i].misc)) {
+-			ndevices++;
+-			down(&ifs_sem);
+-			ifs_load_firmware(ifs_devices[i].misc.this_device);
+-			up(&ifs_sem);
+-		}
+-	}
++	ifs_device.misc.groups = ifs_get_groups();
+ 
+-	if (!ndevices)
++	if ((msrval & BIT(ifs_device.data.integrity_cap_bit)) &&
++	    !misc_register(&ifs_device.misc)) {
++		down(&ifs_sem);
++		ifs_load_firmware(ifs_device.misc.this_device);
++		up(&ifs_sem);
++	} else {
+ 		ifs_destroy_wq();
++		return -ENODEV;
++	}
+ 
+-	return ndevices ? 0 : -ENODEV;
++	return 0;
+ }
+ 
+ static void __exit ifs_exit(void)
+ {
+-	int i;
+ 
+-	for (i = 0; i < IFS_NUMTESTS; i++)
+-		if (ifs_devices[i].misc.this_device)
+-			misc_deregister(&ifs_devices[i].misc);
++	misc_deregister(&ifs_device.misc);
+ 	ifs_destroy_wq();
+ }
+ 
+-- 
+2.35.1
+
