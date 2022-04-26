@@ -2,200 +2,136 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CAFC43217
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 10:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370B1C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Apr 2022 10:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348831AbiDZK2p (ORCPT
+        id S1345480AbiDZKuQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Apr 2022 06:28:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42964 "EHLO
+        Tue, 26 Apr 2022 06:50:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348840AbiDZK2I (ORCPT
+        with ESMTP id S1349200AbiDZKtc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Apr 2022 06:28:08 -0400
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C21565DE64;
-        Tue, 26 Apr 2022 03:01:15 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0VBLW6ip_1650967268;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VBLW6ip_1650967268)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 26 Apr 2022 18:01:09 +0800
-Message-ID: <1650967148.2873914-3-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v9 00/32] virtio pci support VIRTIO_F_RING_RESET (refactor vring)
-Date:   Tue, 26 Apr 2022 17:59:08 +0800
-From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org
-References: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
- <20220426055423-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20220426055423-mutt-send-email-mst@kernel.org>
+        Tue, 26 Apr 2022 06:49:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0F21147;
+        Tue, 26 Apr 2022 03:45:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 403F86173A;
+        Tue, 26 Apr 2022 10:45:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2258C385A0;
+        Tue, 26 Apr 2022 10:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1650969943;
+        bh=6gWdf0sx4XE9f8S+pDU7h2Xqd2fTzJnBt5BeFM/9wH4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Id742V0xJ5l8zl5zUJpQ8HtxX0VBqF1DX1/YfNeEYETApb64r5/RilRtxqLgpNUyU
+         oMHglFdtTjG6oJO35TMkCUAeWKv6rYkUMuqG/eF6/WRbn0vE4VPfn8STq5FPuaOiYK
+         ezuml9uttCHTwOml/BHl8+e9pVYnTfQNf2FkxtAY=
+Date:   Tue, 26 Apr 2022 12:45:40 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, corbet@lwn.net,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, rostedt@goodmis.org, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v4 04/10] platform/x86/intel/ifs: Read IFS firmware image
+Message-ID: <YmfNVG0qLahv7TzL@kroah.com>
+References: <20220419163859.2228874-1-tony.luck@intel.com>
+ <20220422200219.2843823-1-tony.luck@intel.com>
+ <20220422200219.2843823-5-tony.luck@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220422200219.2843823-5-tony.luck@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 26 Apr 2022 05:55:41 -0400, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> On Wed, Apr 06, 2022 at 11:43:14AM +0800, Xuan Zhuo wrote:
-> > The virtio spec already supports the virtio queue reset function. This patch set
-> > is to add this function to the kernel. The relevant virtio spec information is
-> > here:
-> >
-> >     https://github.com/oasis-tcs/virtio-spec/issues/124
-> >
-> > Also regarding MMIO support for queue reset, I plan to support it after this
-> > patch is passed.
->
-> Regarding the spec, there's now an issue proposing
-> some changes to the interface. What do you think about that
-> proposal? Could you respond on that thread on the virtio TC mailing list?
+On Fri, Apr 22, 2022 at 01:02:13PM -0700, Tony Luck wrote:
+> From: Jithu Joseph <jithu.joseph@intel.com>
+> 
+> Driver probe routine allocates structure to communicate status
+> and parameters between functions in the driver. Also call
+> load_ifs_binary() to load the scan image file.
+> 
+> There is a separate scan image file for each processor family,
+> model, stepping combination. This is read from the static path:
+> 
+>   /lib/firmware/intel/ifs/{ff-mm-ss}.scan
+> 
+> Step 1 in loading is to generate the correct path and use
+> request_firmware_direct() to load into memory.
+> 
+> Subsequent patches will use the IFS MSR interfaces to copy
+> the image to BIOS reserved memory and validate the SHA256
+> checksums.
+> 
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+> Co-developed-by: Tony Luck <tony.luck@intel.com>
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  drivers/platform/x86/intel/ifs/Makefile |  2 +-
+>  drivers/platform/x86/intel/ifs/core.c   | 36 ++++++++++++++++++++++++-
+>  drivers/platform/x86/intel/ifs/ifs.h    | 25 +++++++++++++++++
+>  drivers/platform/x86/intel/ifs/load.c   | 28 +++++++++++++++++++
+>  4 files changed, 89 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/ifs/ifs.h
+>  create mode 100644 drivers/platform/x86/intel/ifs/load.c
+> 
+> diff --git a/drivers/platform/x86/intel/ifs/Makefile b/drivers/platform/x86/intel/ifs/Makefile
+> index af904880e959..98b6fde15689 100644
+> --- a/drivers/platform/x86/intel/ifs/Makefile
+> +++ b/drivers/platform/x86/intel/ifs/Makefile
+> @@ -1,3 +1,3 @@
+>  obj-$(CONFIG_INTEL_IFS)		+= intel_ifs.o
+>  
+> -intel_ifs-objs			:= core.o
+> +intel_ifs-objs			:= core.o load.o
+> diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+> index 5713e6ee90f0..ed4ded6755b2 100644
+> --- a/drivers/platform/x86/intel/ifs/core.c
+> +++ b/drivers/platform/x86/intel/ifs/core.c
+> @@ -6,6 +6,8 @@
+>  
+>  #include <asm/cpu_device_id.h>
+>  
+> +#include "ifs.h"
+> +
+>  enum test_types {
+>  	IFS_SAF,
+>  };
+> @@ -20,10 +22,27 @@ static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, ifs_cpu_ids);
+>  
+> +static struct ifs_device ifs_devices[] = {
+> +	[IFS_SAF] = {
+> +		.data = {
+> +			.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
+> +		},
+> +		.misc = {
+> +			.name = "intel_ifs_0",
+> +			.nodename = "intel_ifs/0",
+> +			.minor = MISC_DYNAMIC_MINOR,
+> +		},
+> +	},
+> +};
+> +
+> +#define IFS_NUMTESTS ARRAY_SIZE(ifs_devices)
 
-I have read that thread. And also asked some questions.  I will follow that
-thread.
+Cute way to do this, but I don't see you ever have any more devices
+added to this list in this series.  Did I miss them?
 
-Grateful.
+If not, why all the overhead and complexity involved here for just a
+single misc device?
 
->
->
-> > This patch set implements the refactoring of vring. Finally, the
-> > virtuque_resize() interface is provided based on the reset function of the
-> > transport layer.
-> >
-> > Test environment:
-> >     Host: 4.19.91
-> >     Qemu: QEMU emulator version 6.2.50 (with vq reset support)
-> >     Test Cmd:  ethtool -G eth1 rx $1 tx $2; ethtool -g eth1
-> >
-> >     The default is split mode, modify Qemu virtio-net to add PACKED feature to test
-> >     packed mode.
-> >
-> > Qemu code:
-> >     https://github.com/fengidri/qemu/compare/89f3bfa3265554d1d591ee4d7f1197b6e3397e84...master
-> >
-> > In order to simplify the review of this patch set, the function of reusing
-> > the old buffers after resize will be introduced in subsequent patch sets.
-> >
-> > Please review. Thanks.
-> >
-> > v9:
-> >   1. Provide a virtqueue_resize() interface directly
-> >   2. A patch set including vring resize, virtio pci reset, virtio-net resize
-> >   3. No more separate structs
-> >
-> > v8:
-> >   1. Provide a virtqueue_reset() interface directly
-> >   2. Split the two patch sets, this is the first part
-> >   3. Add independent allocation helper for allocating state, extra
-> >
-> > v7:
-> >   1. fix #6 subject typo
-> >   2. fix #6 ring_size_in_bytes is uninitialized
-> >   3. check by: make W=12
-> >
-> > v6:
-> >   1. virtio_pci: use synchronize_irq(irq) to sync the irq callbacks
-> >   2. Introduce virtqueue_reset_vring() to implement the reset of vring during
-> >      the reset process. May use the old vring if num of the vq not change.
-> >   3. find_vqs() support sizes to special the max size of each vq
-> >
-> > v5:
-> >   1. add virtio-net support set_ringparam
-> >
-> > v4:
-> >   1. just the code of virtio, without virtio-net
-> >   2. Performing reset on a queue is divided into these steps:
-> >     1. reset_vq: reset one vq
-> >     2. recycle the buffer from vq by virtqueue_detach_unused_buf()
-> >     3. release the ring of the vq by vring_release_virtqueue()
-> >     4. enable_reset_vq: re-enable the reset queue
-> >   3. Simplify the parameters of enable_reset_vq()
-> >   4. add container structures for virtio_pci_common_cfg
-> >
-> > v3:
-> >   1. keep vq, irq unreleased
-> >
-> > Xuan Zhuo (32):
-> >   virtio: add helper virtqueue_get_vring_max_size()
-> >   virtio: struct virtio_config_ops add callbacks for queue_reset
-> >   virtio_ring: update the document of the virtqueue_detach_unused_buf
-> >     for queue reset
-> >   virtio_ring: remove the arg vq of vring_alloc_desc_extra()
-> >   virtio_ring: extract the logic of freeing vring
-> >   virtio_ring: split: extract the logic of alloc queue
-> >   virtio_ring: split: extract the logic of alloc state and extra
-> >   virtio_ring: split: extract the logic of attach vring
-> >   virtio_ring: split: extract the logic of vq init
-> >   virtio_ring: split: introduce virtqueue_reinit_split()
-> >   virtio_ring: split: introduce virtqueue_resize_split()
-> >   virtio_ring: packed: extract the logic of alloc queue
-> >   virtio_ring: packed: extract the logic of alloc state and extra
-> >   virtio_ring: packed: extract the logic of attach vring
-> >   virtio_ring: packed: extract the logic of vq init
-> >   virtio_ring: packed: introduce virtqueue_reinit_packed()
-> >   virtio_ring: packed: introduce virtqueue_resize_packed()
-> >   virtio_ring: introduce virtqueue_resize()
-> >   virtio_pci: struct virtio_pci_common_cfg add queue_notify_data
-> >   virtio: queue_reset: add VIRTIO_F_RING_RESET
-> >   virtio_pci: queue_reset: update struct virtio_pci_common_cfg and
-> >     option functions
-> >   virtio_pci: queue_reset: extract the logic of active vq for modern pci
-> >   virtio_pci: queue_reset: support VIRTIO_F_RING_RESET
-> >   virtio: find_vqs() add arg sizes
-> >   virtio_pci: support the arg sizes of find_vqs()
-> >   virtio_mmio: support the arg sizes of find_vqs()
-> >   virtio: add helper virtio_find_vqs_ctx_size()
-> >   virtio_net: set the default max ring size by find_vqs()
-> >   virtio_net: get ringparam by virtqueue_get_vring_max_size()
-> >   virtio_net: split free_unused_bufs()
-> >   virtio_net: support rx/tx queue resize
-> >   virtio_net: support set_ringparam
-> >
-> >  arch/um/drivers/virtio_uml.c             |   3 +-
-> >  drivers/net/virtio_net.c                 | 219 +++++++-
-> >  drivers/platform/mellanox/mlxbf-tmfifo.c |   3 +
-> >  drivers/remoteproc/remoteproc_virtio.c   |   3 +
-> >  drivers/s390/virtio/virtio_ccw.c         |   4 +
-> >  drivers/virtio/virtio_mmio.c             |  11 +-
-> >  drivers/virtio/virtio_pci_common.c       |  28 +-
-> >  drivers/virtio/virtio_pci_common.h       |   3 +-
-> >  drivers/virtio/virtio_pci_legacy.c       |   8 +-
-> >  drivers/virtio/virtio_pci_modern.c       | 149 +++++-
-> >  drivers/virtio/virtio_pci_modern_dev.c   |  36 ++
-> >  drivers/virtio/virtio_ring.c             | 626 ++++++++++++++++++-----
-> >  drivers/virtio/virtio_vdpa.c             |   3 +
-> >  include/linux/virtio.h                   |   6 +
-> >  include/linux/virtio_config.h            |  38 +-
-> >  include/linux/virtio_pci_modern.h        |   2 +
-> >  include/uapi/linux/virtio_config.h       |   7 +-
-> >  include/uapi/linux/virtio_pci.h          |  14 +
-> >  18 files changed, 964 insertions(+), 199 deletions(-)
-> >
-> > --
-> > 2.31.0
->
+thanks,
+
+greg k-h
