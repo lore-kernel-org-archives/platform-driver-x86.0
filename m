@@ -2,73 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABA4C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Apr 2022 14:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F6AC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Apr 2022 14:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238083AbiD0OhY (ORCPT
+        id S238437AbiD0Orf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Apr 2022 10:37:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44900 "EHLO
+        Wed, 27 Apr 2022 10:47:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238276AbiD0OhX (ORCPT
+        with ESMTP id S238443AbiD0Ore (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Apr 2022 10:37:23 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8EAF224F16
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Apr 2022 07:34:08 -0700 (PDT)
+        Wed, 27 Apr 2022 10:47:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8D441377E6
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Apr 2022 07:44:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651070047;
+        s=mimecast20190719; t=1651070662;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3DkvX0ilKmOtfRv4yBSGmcFhCLPyNBAdFDkeCqkWI38=;
-        b=gViF8qZ4BuunV03Brw9YK8lBCp+3Ywot/LyAAOvvSShYlg2zfcxQTxrG3vPp5Fw4KLlhlY
-        xcLxj5yT5LFmdaywyBnQjzAolG/NVVrI+HhS6/dwYHt0KxvCdUmzqhED55tJWMeLLwu6st
-        AG23AHxQJnbTVXoEnxj7AZ458mRgQfY=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=WES/DONTscNIee2b1p9QAIv6eWVgPRSNblxExvEsu6U=;
+        b=MR3eenXa0Pg1atRmasXJwGy3h7c+hxXCmSUD+DeX7AGZ6MyJdLxr1Q6OFGYdGz/MlWUCtX
+        91lOXjsT+bfIRYfqXoarKy8XkoWK1W/WkXYit7Aoqd0CNE0hdZ824bC9g0H0TXAx8Wu5hA
+        Q4eEoVz6eZ99pg5yqN2Gj5wmfYIGYDk=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-349-M56rlOF5MMaWKOzwVxKRCQ-1; Wed, 27 Apr 2022 10:34:06 -0400
-X-MC-Unique: M56rlOF5MMaWKOzwVxKRCQ-1
-Received: by mail-ej1-f70.google.com with SMTP id mp18-20020a1709071b1200b006e7f314ecb3so1257424ejc.23
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Apr 2022 07:34:05 -0700 (PDT)
+ us-mta-380-WPIiaWpVMhO4TS0SoJT1aQ-1; Wed, 27 Apr 2022 10:44:21 -0400
+X-MC-Unique: WPIiaWpVMhO4TS0SoJT1aQ-1
+Received: by mail-ed1-f71.google.com with SMTP id cm1-20020a0564020c8100b0041d6b9cf07eso1112834edb.14
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Apr 2022 07:44:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=3DkvX0ilKmOtfRv4yBSGmcFhCLPyNBAdFDkeCqkWI38=;
-        b=UiVugaJJS+WGMrLlRISENWzCCO0BzSE2sTUP08++9DNpuM53ZuIqZZKEKVFqHXaxdQ
-         wyGHxJQ9MsBkmFzMGwgUzkihH2lyWsvpQIyIqHexXMCCgsy1wjzT02KVRYPZQPHirCBv
-         GoJ+HLFTUjvMTxFdDTaf0PwMyJTTThlG8crajxjI/keNUTfl90H9fCx+pLX3ELVmaAv2
-         L69GexJvkHzf/NzZlT1/GUrYDrH9BfegXBKOo9w8uzqW+ymbWHVelX614GAW0UPopEOU
-         tTIBUnU5WEvxd3yxOhJ9SWMwYwNL1jCBNBjIxC2mIHJJONGJLOfmbvs3Nc4LlKW9Jao7
-         UZBw==
-X-Gm-Message-State: AOAM532kbrb6ALPdJRCmllkE7W/RLKP9kZfJz7ozJGCF1HcuDQKw2Dqy
-        o8bduQwEsRRXRwlVq82vzj54qAqPYZy4oVdxPTLcHWQsdKsz2Xd0ExMfaqt02r+lC8yXovUjrQH
-        6zP2lSSblg1RnM060qdiPBXQsx1jabacDuw==
-X-Received: by 2002:a05:6402:34d2:b0:423:e6c4:3e9 with SMTP id w18-20020a05640234d200b00423e6c403e9mr31369770edc.372.1651070044872;
-        Wed, 27 Apr 2022 07:34:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzQdK7t3/Kg/gpQ+TC6NEm38u6Mm3Kc3AdoHzfvlT7n/SWMPjPngOiwuCqfcoL3rT9E65Gm0Q==
-X-Received: by 2002:a05:6402:34d2:b0:423:e6c4:3e9 with SMTP id w18-20020a05640234d200b00423e6c403e9mr31369739edc.372.1651070044658;
-        Wed, 27 Apr 2022 07:34:04 -0700 (PDT)
+        bh=WES/DONTscNIee2b1p9QAIv6eWVgPRSNblxExvEsu6U=;
+        b=p+i7XX3MlchRGza8YRudBKcHkewl98eQDAVi5n5RPiNbBcakmiquHPRuDEwmakHA+F
+         sIxA/B7b3d1T1xF7PKnK5t23dwHW7Qk6A2nozGoZBNr2/u7MYarmc9k1ABCOkXurvjIP
+         7uusWRJyDp9/jqjKqk9Umqm5wTUKgio01DGmDVH6WKRprD7v3I7roARmERSWYeKl33RE
+         dmkwPrl1hMDHZUF6Y+KQMRPdojRjDwGejgCE0jvbCU1XbjRV3fwA4YMXYZo5X6mN4PEj
+         lKTO7cUozZjCpwerwL4UuG7k3+fBgnOjG53xWW6qyJHVvPD1AVxPb/rZsIRGnEUBy4bB
+         h2xA==
+X-Gm-Message-State: AOAM532+JPnrNEuH949bDnbVdcZppOcwVmFPIlMy9TCAwaqtyaVut8Yi
+        fLqSv22NxioDR7+tUW9aJf9Ojz/s7PaCryo34qQJKaSGsfRkUtQVJ/U0k5kDa3t2TwtyC+Tme+3
+        ga0sJlwXrlxheBkVnnDlPJXoV1LBLk0op3g==
+X-Received: by 2002:a17:907:105d:b0:6f3:a3ea:cdfd with SMTP id oy29-20020a170907105d00b006f3a3eacdfdmr11621188ejb.704.1651070660013;
+        Wed, 27 Apr 2022 07:44:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwIHorRKmbjkRUTiIiR2TjeGeYIOAx/VsJ3BxkFfj+YydEkiklsh8Wd8ujfHxW2QKyaCdSLtg==
+X-Received: by 2002:a17:907:105d:b0:6f3:a3ea:cdfd with SMTP id oy29-20020a170907105d00b006f3a3eacdfdmr11621170ejb.704.1651070659831;
+        Wed, 27 Apr 2022 07:44:19 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id o14-20020a170906774e00b006d5b915f27dsm6814823ejn.169.2022.04.27.07.34.03
+        by smtp.gmail.com with ESMTPSA id fy3-20020a170906b7c300b006f3bbd17e3csm2305543ejb.155.2022.04.27.07.44.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Apr 2022 07:34:04 -0700 (PDT)
-Message-ID: <25fbfb63-3540-2752-6070-37a69a21eba1@redhat.com>
-Date:   Wed, 27 Apr 2022 16:34:03 +0200
+        Wed, 27 Apr 2022 07:44:19 -0700 (PDT)
+Message-ID: <5f434529-2dfb-71c6-4fc2-20dbb5cb68a8@redhat.com>
+Date:   Wed, 27 Apr 2022 16:44:18 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH 0/3] platform/x86/intel/sdsi: Fixes for 5.18
+Subject: Re: [PATCH] platform/x86/intel: pmc/core: change pmc_lpm_modes to
+ static
 Content-Language: en-US
-To:     "David E. Box" <david.e.box@linux.intel.com>, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220420155622.1763633-1-david.e.box@linux.intel.com>
+To:     Tom Rix <trix@redhat.com>, irenic.rajneesh@gmail.com,
+        david.e.box@intel.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220423123048.591405-1-trix@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220420155622.1763633-1-david.e.box@linux.intel.com>
+In-Reply-To: <20220423123048.591405-1-trix@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -77,12 +79,20 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 4/20/22 17:56, David E. Box wrote:
-> The following patches provide fixes for the Intel SDSi driver based on
-> firmware updates and for one driver bug.
+On 4/23/22 14:30, Tom Rix wrote:
+> Sparse reports this issue
+> core.c: note: in included file:
+> core.h:239:12: warning: symbol 'pmc_lpm_modes' was not declared. Should it be static?
+> 
+> Global variables should not be defined in headers.  This only works
+> because core.h is only included by core.c. Single file use
+> variables should be static, so change its storage-class specifier
+> to static.
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
 Note it will show up in my review-hans branch once I've pushed my
@@ -99,18 +109,21 @@ Hans
 
 
 
-
-
-
+> ---
+>  drivers/platform/x86/intel/pmc/core.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> David E. Box (3):
->   platform/x86/intel/sdsi: Handle leaky bucket
->   platform/x86/intel/sdsi: Poll on ready bit for writes
->   platform/x86/intel/sdsi: Fix bug in multi packet reads
-> 
->  drivers/platform/x86/intel/sdsi.c | 44 +++++++++++++++++++++----------
->  1 file changed, 30 insertions(+), 14 deletions(-)
-> 
-> 
-> base-commit: b2d229d4ddb17db541098b83524d901257e93845
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+> index a46d3b53bf61..7a059e02c265 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -236,7 +236,7 @@ enum ppfear_regs {
+>  #define ADL_LPM_STATUS_LATCH_EN_OFFSET		0x1704
+>  #define ADL_LPM_LIVE_STATUS_OFFSET		0x1764
+>  
+> -const char *pmc_lpm_modes[] = {
+> +static const char *pmc_lpm_modes[] = {
+>  	"S0i2.0",
+>  	"S0i2.1",
+>  	"S0i2.2",
 
