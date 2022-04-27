@@ -2,189 +2,90 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4C3C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Apr 2022 02:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B48C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Apr 2022 10:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357190AbiD0Cpn convert rfc822-to-8bit (ORCPT
+        id S230286AbiD0Kwd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Apr 2022 22:45:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58466 "EHLO
+        Wed, 27 Apr 2022 06:52:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233293AbiD0Cpm (ORCPT
+        with ESMTP id S230211AbiD0Kwc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Apr 2022 22:45:42 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 643F146B27;
-        Tue, 26 Apr 2022 19:42:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9DC7CB8248C;
-        Wed, 27 Apr 2022 02:42:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 139C0C385A4;
-        Wed, 27 Apr 2022 02:42:25 +0000 (UTC)
-Date:   Tue, 26 Apr 2022 22:42:24 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: Re: [PATCH v4 09/10] trace: platform/x86/intel/ifs: Add trace point
- to track Intel IFS operations
-Message-ID: <20220426224224.597dd732@rorschach.local.home>
-In-Reply-To: <YmiF6Rsy04pUHVQo@agluck-desk3.sc.intel.com>
-References: <20220419163859.2228874-1-tony.luck@intel.com>
-        <20220422200219.2843823-1-tony.luck@intel.com>
-        <20220422200219.2843823-10-tony.luck@intel.com>
-        <20220425105251.3f5e8021@gandalf.local.home>
-        <1752057af33e4eb28bcea0fd75e44048@intel.com>
-        <20220425214928.2aac3391@gandalf.local.home>
-        <YmiF6Rsy04pUHVQo@agluck-desk3.sc.intel.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Wed, 27 Apr 2022 06:52:32 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C681A49409D;
+        Wed, 27 Apr 2022 03:24:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651055048; x=1682591048;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=oOBwk0JvX4Hq4ln24agEjKLp6VWg/8zMYq4wKqzU1aE=;
+  b=RmfaLN90jWuAtwy5HMxFVCEGzWohdVcZG/REmdHYLKzgLU6HeSNFfrxR
+   X/NcSrcVYPX61qEUBMPpCm9JxFWE5ESAZKRQNx/DLLNcT5om96znkFzdI
+   XLxCy0wc2IuR83aihkav2FyVE5qbQ/MOZToGzBQhJghDyu4qJ/jCqUp/e
+   rE6KVUY2gW5spY3A4xBPiRT8b4XmP1bChY9QfS+q2FtVXGWfsiFmmvJzM
+   mB6VsEUOOcyyJO/2Vhj7UsO1NUx9fSpg0V9rACEphrSDmj4FZEPse6KOb
+   Wpuq+ZTaxnt0xz4QxugDBNwO56+oGkV2kFUMijkqo1ZRiqe4OIozrilsk
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10329"; a="265406485"
+X-IronPort-AV: E=Sophos;i="5.90,292,1643702400"; 
+   d="scan'208";a="265406485"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 03:04:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,292,1643702400"; 
+   d="scan'208";a="596211348"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by orsmga001.jf.intel.com with ESMTP; 27 Apr 2022 03:04:25 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH v2] platform/x86: intel-uncore-freq: Prevent driver loading in guests
+Date:   Wed, 27 Apr 2022 03:03:04 -0700
+Message-Id: <20220427100304.2562990-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 26 Apr 2022 16:53:13 -0700
-"Luck, Tony" <tony.luck@intel.com> wrote:
-> 
-> I looked at the examples in samples/trace_events/trace-events-sample.h
-> and tried to use this. But I'm doing something wrong because the
-> compiler barfs on something defined but not used.
-> 
-> Maybe my problem is the TP_printk() in the DECLARE_EVENT_CLASS() that
-> is over-ridden by DEFINE_EVENT_PRINT(). I wasn't at all sure what to
-> put here ... or how to use the base tracepoint that doesn't have the
-> printk() over-ridden.
+Loading this driver in guests results in unchecked MSR access error for
+MSR 0x620.
 
-Yeah, that could be confusing.
+There is no use of reading and modifying package/die scope uncore MSRs
+in guests. So check for CPU feature X86_FEATURE_HYPERVISOR to prevent
+loading of this driver in guests.
 
-Basically, TRACE_EVENT() is simply defined as:
+Fixes: dbce412a7733 ("platform/x86/intel-uncore-freq: Split common and enumeration part")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215870
+Suggested-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+v2
+	Add Fixes tag
 
-DECLARE_EVENT_CLASS()
-DEFINE_EVENT();
+ drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-So technically you could create the class and event with the same name,
-and then you could create a second event on top of that. But I usually
-suggest people explicitly specify the DECLARE_EVENT_CLASS() and
-DEFINE_EVENT().
-
-I would not do this until you have more than one event. The what you
-would do is create one event where the print matches the
-DECLARE_EVENT_CLASS() TP_printk(), and have that event defined with
-just DEFINE_EVENT(). Then create other events with the
-DEFINE_EVENT_PRINT().
-
-> 
-> I think I need my class to just save both the u64 values to the trace
-> buffer. Then the different trace points will extract the bits they want
-> and print in a user friendly way. While this increases space used in
-> the trace buffer, these events are not crazy high frequency. Usually 
-> one or two events per core with a gap 30 minutes or more between tests.
-> 
-> In my ".c" file the tracepoint looks like this using the name from
-> DEFINE_EVENT_PRINT(), and now passing the full u64 values:
-> 
-> 	trace_ifs_status_saf(activate.data, status.data);
-> 
-> and my #include file looks like this:
-> 
-> ----------------------------------------------
-> /* SPDX-License-Identifier: GPL-2.0 */
-> #undef TRACE_SYSTEM
-> #define TRACE_SYSTEM intel_ifs
-> 
-> #if !defined(_TRACE_IFS_H) || defined(TRACE_HEADER_MULTI_READ)
-> #define _TRACE_IFS_H
-> 
-> #include <linux/ktime.h>
-> #include <linux/tracepoint.h>
-> 
-> DECLARE_EVENT_CLASS(ifs_status,
-> 
-> 	TP_PROTO(u64 activate, u64 status),
-> 
-> 	TP_ARGS(activate, status),
-> 
-> 	TP_STRUCT__entry(
-> 		__field(	u64,	activate	)
-> 		__field(	u64,	status		)
-> 	),
-> 
-> 	TP_fast_assign(
-> 		__entry->activate = activate;
-> 		__entry->status	= status;
-> 	),
-> 
-> 	TP_printk("activate: %llx status: %llx",
-> 		__entry->activate,
-> 		__entry->status)
-> );
-> 
-> DEFINE_EVENT_PRINT(ifs_status, ifs_status_saf,
-> 	TP_PROTO(u64 activate, u64 status),
-> 	TP_ARGS(activate, status),
-> 	TP_printk("start: %.2x, stop: %.2x, status: %llx",
-> 		((union ifs_scan *)&(__entry->activate))->start,
-> 		((union ifs_scan *)&(__entry->activate))->stop,
-> 		__entry->status)
-> );
-> 
-> #endif /* _TRACE_IFS_H */
-> 
-> /* This part must be outside protection */
-> #include <trace/define_trace.h>
-> -----------------------------------------------------
-> 
-> GCC messages:
-> 
-> 
->   CC [M]  drivers/platform/x86/intel/ifs/runtest.o
-> In file included from /home/agluck/GIT/mywork/include/trace/define_trace.h:102,
->                  from /home/agluck/GIT/mywork/include/trace/events/intel_ifs.h:44,
->                  from /home/agluck/GIT/mywork/drivers/platform/x86/intel/ifs/runtest.c:27:
-> /home/agluck/GIT/mywork/include/trace/trace_events.h:426:13: warning: ‘print_fmt_ifs_status’ defined but not used [-Wunused-variable]
->   426 | static char print_fmt_##call[] = print;                                 \
->       |             ^~~~~~~~~~
-> /home/agluck/GIT/mywork/include/trace/events/intel_ifs.h:11:1: note: in expansion of macro ‘DECLARE_EVENT_CLASS’
->    11 | DECLARE_EVENT_CLASS(ifs_status,
->       | ^~~~~~~~~~~~~~~~~~~
-> In file included from /home/agluck/GIT/mywork/include/trace/define_trace.h:102,
->                  from /home/agluck/GIT/mywork/include/trace/events/intel_ifs.h:44,
->                  from /home/agluck/GIT/mywork/drivers/platform/x86/intel/ifs/runtest.c:27:
-> /home/agluck/GIT/mywork/include/trace/trace_events.h:207:37: warning: ‘trace_event_type_funcs_ifs_status’ defined but not used [-Wunused-variable]
->   207 | static struct trace_event_functions trace_event_type_funcs_##call = {   \
->       |                                     ^~~~~~~~~~~~~~~~~~~~~~~
-> /home/agluck/GIT/mywork/include/trace/events/intel_ifs.h:11:1: note: in expansion of macro ‘DECLARE_EVENT_CLASS’
->    11 | DECLARE_EVENT_CLASS(ifs_status,
->       | ^~~~~~~~~~~~~~~~~~~
-> make[1]: Leaving directory '/home/agluck/GIT/mywork/build/ifsv5-rc1'
-> 
-
-Yeah, because you don't have more than one event, so the
-DEFINE_EVENT_PRINT() does not make sense.  You still need one
-DEFINE_EVENT() otherwise, you will get that static function not used
-warning.
-
--- Steve
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+index c61f804dd44e..8f9c571d7257 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+@@ -212,6 +212,9 @@ static int __init intel_uncore_init(void)
+ 	const struct x86_cpu_id *id;
+ 	int ret;
+ 
++	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
++		return -ENODEV;
++
+ 	id = x86_match_cpu(intel_uncore_cpu_ids);
+ 	if (!id)
+ 		return -ENODEV;
+-- 
+2.31.1
 
