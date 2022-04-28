@@ -2,74 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BC0C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Apr 2022 15:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C67C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Apr 2022 16:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347230AbiD1QBn (ORCPT
+        id S236194AbiD1QLj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Apr 2022 12:01:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
+        Thu, 28 Apr 2022 12:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349604AbiD1QBm (ORCPT
+        with ESMTP id S232927AbiD1QLi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Apr 2022 12:01:42 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 710EFAD139;
-        Thu, 28 Apr 2022 08:58:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3239FB82E55;
-        Thu, 28 Apr 2022 15:58:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49115C385A0;
-        Thu, 28 Apr 2022 15:58:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1651161503;
-        bh=fNIBVIIk0IE04HDM8urQy+y3K51vcAq0tBXsH7r/KlQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xV3DlqLd5CF6A5IRnd8nm1k3Euxw82wHgOc+3SlRnN7kkm571vrYUFI95BS0Mp/1U
-         U4Xw+ay7hOT3eYIr2vlsUCISx3fxBLzaKOVRpIOlp/QJSjeWFy0nwYplaE4pxgAYxZ
-         HvT05IKr5pmGm8a6kOIAGyxPRRTspWNsRSjkMjIU=
-Date:   Thu, 28 Apr 2022 17:58:20 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tony Luck <tony.luck@intel.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, corbet@lwn.net,
-        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
-        ashok.raj@intel.com, rostedt@goodmis.org, dan.j.williams@intel.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
-        ravi.v.shankar@intel.com
-Subject: Re: [PATCH v5 00/10] Introduce In Field Scan driver
-Message-ID: <Ymq5nH/A9c88wIM/@kroah.com>
+        Thu, 28 Apr 2022 12:11:38 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58B834A3E0;
+        Thu, 28 Apr 2022 09:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651162103; x=1682698103;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Ir4T5uqY+GX2tlG/wVzI1xs8T7NLnwE/od0GN7231xQ=;
+  b=nqs0/Z474mMw2UkUDmi9VYZ669Dgh2igJbavv1ofFaietJIOCrADOXyE
+   QeTyHuJCI0NBkNWjIr4fVj8ttHsuooD3R4fwICJz1fmpIyddTe9eXEH3k
+   oA31usmbcPwNOzm1lDxaLIml5XCgs3YHfJ67ZCNugSPS3uucwBY9mNkGI
+   0DCo0JYoyAqBNW0/a2bJqHxJV3LNMXOzJuivImUT7FGN+VTGK7QtM5K1T
+   6h7mnsM7ZWBY6XCeij0fphRv6OMCiGzbISZTOxp3zGw8LpOBrQP5kCO+X
+   qZgRbjnyAhOGyYtW6SDK50tyN+UdW3peVz1RBX3PYzosz6LrRJ9SPw8mC
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="246893415"
+X-IronPort-AV: E=Sophos;i="5.91,295,1647327600"; 
+   d="scan'208";a="246893415"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 09:07:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,295,1647327600"; 
+   d="scan'208";a="651280527"
+Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
+  by FMSMGA003.fm.intel.com with ESMTP; 28 Apr 2022 09:07:46 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Thu, 28 Apr 2022 09:07:46 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Thu, 28 Apr 2022 09:07:45 -0700
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.027;
+ Thu, 28 Apr 2022 09:07:45 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
+Subject: RE: [PATCH v5 00/10] Introduce In Field Scan driver
+Thread-Topic: [PATCH v5 00/10] Introduce In Field Scan driver
+Thread-Index: AQHYWxYVdsKdZt61BUSHj1qB1cqAT60F8LwA//+M88A=
+Date:   Thu, 28 Apr 2022 16:07:45 +0000
+Message-ID: <08c593c1aecd4131bf9c2558198a2dc1@intel.com>
 References: <20220422200219.2843823-1-tony.luck@intel.com>
- <20220428153849.295779-1-tony.luck@intel.com>
+ <20220428153849.295779-1-tony.luck@intel.com> <Ymq5nH/A9c88wIM/@kroah.com>
+In-Reply-To: <Ymq5nH/A9c88wIM/@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.6.401.20
+x-originating-ip: [10.1.200.100]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220428153849.295779-1-tony.luck@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Apr 28, 2022 at 08:38:39AM -0700, Tony Luck wrote:
-> Hopefully this is close enough to done to begin discussion on which
-> maintainer tree will take this series.
-> 
-> Choices:
-> 1) Hans/Mark take it into the platform-drivers tree
->    Needs an Ack from x86 maintainers on parts 1 & 2
-> 2) X86 maintainers take it into TIP
->    Needs Ack from Hans/Mark on parts 2-10
-> 
-> TL;DR this driver loads scan test files that can check whether silicon
-> in a CPU core is still running correctly. It is expected that these tests
-> would be run several times per day to catch problems as silicon ages.
+> Much nicer and simpler as compared to the first version submitted,
+> thanks for sticking with it.  The diff seems about 1/3 smaller from the
+> first version sent out, peer-review works :)
+>=20
+> Reviewed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Much nicer and simpler as compared to the first version submitted,
-thanks for sticking with it.  The diff seems about 1/3 smaller from the
-first version sent out, peer-review works :)
+Thanks for your patience leading me to a much better driver.
 
-Reviewed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+-Tony
 
