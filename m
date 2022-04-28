@@ -2,138 +2,133 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22702C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Apr 2022 12:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D14C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Apr 2022 15:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346485AbiD1Mop (ORCPT
+        id S1349263AbiD1PmT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Apr 2022 08:44:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47558 "EHLO
+        Thu, 28 Apr 2022 11:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346408AbiD1Moa (ORCPT
+        with ESMTP id S234156AbiD1PmP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Apr 2022 08:44:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD4122508;
-        Thu, 28 Apr 2022 05:41:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 07C7262021;
-        Thu, 28 Apr 2022 12:41:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9F75C385A0;
-        Thu, 28 Apr 2022 12:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1651149670;
-        bh=H/3u/CcX1d8+DE8rBf/zqVY14MTJASBdkzizEGaA2gY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FOs9EWCWVLCEqaXtG5zXHSqfUuRcmK39Gie4feWGqoBCMY4fVcqunoM19Ioq6fRIc
-         byprs6MT8/Jv0cCj152QLuSmmdW2NKovaPcLqTSz0eljrwzmXO/Tu1YLeOZZcM+JLD
-         fYMjWMp6IbARFh8usL2icsBGfCEQOLuqwjToGTbg=
-Date:   Thu, 28 Apr 2022 14:41:07 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
-        gwendal@chromium.org, vbendeb@chromium.org, andy@infradead.org,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Enric Balletbo i Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v8] platform: x86: Add ChromeOS ACPI device driver
-Message-ID: <YmqLYyUY3sutmMTI@kroah.com>
-References: <Ylmmf03fewXEjRr0@debian-BULLSEYE-live-builder-AMD64>
- <YmUNnq5tH8mykNOF@kroah.com>
- <c195573c-e7c7-a2dd-7f29-c6d4625fefdb@collabora.com>
- <YmqLKBVPMl4AFzCE@kroah.com>
+        Thu, 28 Apr 2022 11:42:15 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76C2BB36A8;
+        Thu, 28 Apr 2022 08:39:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651160340; x=1682696340;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KNI6TywIBrtMzHC0wppg8qEsX62tIPxK1F8eBPhI0zQ=;
+  b=dU1rfjwBhowKSTxgfK2GGMcLq1DR672uXCi1OWcuaovgUhshA1FnNOis
+   Rh+/WqMoD4REES5oIsTezc7RHKYhPebGI+3GNG0h7kxJ78dOwBfX3e4D9
+   mLeZbyB8VX7wyQ/M3wyMnvPuj9K1wpkNLbvv8OMKpXVa4dhbsUfCZOl8N
+   qxjrPV8cMDlZoxVofL9D1FbyhxRweIbd8gBpi0qgATyuwxdJs44m+/qUe
+   TvGRLe6X82j4iKhY2Uxr3YvnNDNGmVoyskBRw+Wa+9GCA+EVSXgDUJf1b
+   nRroj9FmVBItAsY02gjlVuryNcShvXVvAoINxwA47iABm/OxwE1WeQPTO
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="329271639"
+X-IronPort-AV: E=Sophos;i="5.91,295,1647327600"; 
+   d="scan'208";a="329271639"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 08:39:00 -0700
+X-IronPort-AV: E=Sophos;i="5.91,295,1647327600"; 
+   d="scan'208";a="559734311"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 08:38:59 -0700
+From:   Tony Luck <tony.luck@intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        corbet@lwn.net, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com, rostedt@goodmis.org,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com
+Subject: [PATCH v5 00/10] Introduce In Field Scan driver
+Date:   Thu, 28 Apr 2022 08:38:39 -0700
+Message-Id: <20220428153849.295779-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220422200219.2843823-1-tony.luck@intel.com>
+References: <20220422200219.2843823-1-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YmqLKBVPMl4AFzCE@kroah.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Apr 28, 2022 at 02:40:08PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Apr 28, 2022 at 05:24:04PM +0500, Muhammad Usama Anjum wrote:
-> > On 4/24/22 1:43 PM, Greg Kroah-Hartman wrote:
-> > > On Fri, Apr 15, 2022 at 10:08:15PM +0500, Muhammad Usama Anjum wrote:
-> > >> +	i = 0;
-> > >> +	list_for_each_entry(aag, &chromeos_acpi.groups, list) {
-> > >> +		chromeos_acpi.dev_groups[i] = &aag->group;
-> > >> +		i++;
-> > >> +	}
-> > >> +
-> > >> +	ret = sysfs_create_groups(&dev->kobj, chromeos_acpi.dev_groups);
-> > > 
-> > > You have raced with userspace and lost here :(
-> > > 
-> > Sorry, What does it mean exactly?
-> 
-> Long old post that describes the issue in detail is here:
-> 	http://www.kroah.com/log/blog/2013/06/26/how-to-create-a-sysfs-file-correctly/
-> 
-> > > Use the default groups pointer in the platform driver for this, and use
-> > > the is_visible() callback to know to show, or not show, the attribute
-> > > instead of building up dynamic lists of attributes at runtime.  That
-> > > will save you lots of crazy logic and housekeeping _AND_ userspace tools
-> > > will work properly as well.
-> > > 
-> > 
-> > Driver has the 2 kinds of attributes:
-> > 
-> > A) Attributes which are always there. For example, CHSW and HWIDs etc.
-> > They can be easily shows via dev_groups pointer in platform driver.
-> 
-> Great.
-> 
-> > B) Attribute groups which vary between 0 to N. N is platform dependent
-> > and can be determined at runtime. For example, GPIO attribute group
-> > which have 4 sub attributes in it:
-> > 
-> > Group GPIO.0 --> attributes GPIO.0, GPIO.1, GPIO.2 and GPIO.3
-> > Group GPIO.1 --> attributes GPIO.0, GPIO.1, GPIO.2 and GPIO.3
-> > ...
-> > Group GPIO.N --> attributes GPIO.0, GPIO.1, GPIO.2 and GPIO.3
-> > 
-> > My Chromebook has 2 GPIO attribute groups while I've found logs of a
-> > Chromebook which has 7 GPIO groups.
-> > 
-> > Why these groups cannot be defined at compile time (Shortcomings):
-> > 
-> > 1) We don't know the total GPIO groups.
-> > Possible solution: Determine GPIO groups' number at run time and define
-> > attributes at run time.
-> 
-> What is the max number of groups you can ever have?  10?  100?  1000?
-> Pick a high number, define them all (macros make this easy), and then
-> only enable the ones that you need at runtime.
-> 
-> > 2) We cannot determine from attribute name that this group will be
-> > visible or not as is_visible doesn't provide information about its group
-> > name.
-> > umode_t (*is_visible)(struct kobject *, struct attribute *, int);
-> 
-> Look at the attribute pointer.  That's all you care about.  Compare it
-> to a real pointer and away you go!
+Hopefully this is close enough to done to begin discussion on which
+maintainer tree will take this series.
 
-Also remember, each group has a is_visible function, so you know what
-group this is implicitly.
+Choices:
+1) Hans/Mark take it into the platform-drivers tree
+   Needs an Ack from x86 maintainers on parts 1 & 2
+2) X86 maintainers take it into TIP
+   Needs Ack from Hans/Mark on parts 2-10
 
-thanks,
+TL;DR this driver loads scan test files that can check whether silicon
+in a CPU core is still running correctly. It is expected that these tests
+would be run several times per day to catch problems as silicon ages.
 
-greg k-h
+Changes since v4:
+
+Greg Kroah-Hartman
+------------------
+ "Cute way to do this, but I don't see you ever have any more devices
+ added to this list in this series."
+
+ Removed the enum, arrays, loops, and count of test types discovered.
+ Now just check for enumeration of the single test type that is being
+ deployed on Sapphire Rapids.
+
+
+Jithu Joseph (7):
+  x86/microcode/intel: Expose collect_cpu_info_early() for IFS
+  platform/x86/intel/ifs: Read IFS firmware image
+  platform/x86/intel/ifs: Check IFS Image sanity
+  platform/x86/intel/ifs: Authenticate and copy to secured memory
+  platform/x86/intel/ifs: Add scan test support
+  platform/x86/intel/ifs: Add IFS sysfs interface
+  platform/x86/intel/ifs: add ABI documentation for IFS
+
+Tony Luck (3):
+  x86/msr-index: Define INTEGRITY_CAPABILITIES MSR
+  platform/x86/intel/ifs: Add stub driver for In-Field Scan
+  trace: platform/x86/intel/ifs: Add trace point to track Intel IFS
+    operations
+
+ .../ABI/testing/sysfs-platform-intel-ifs      |  39 ++
+ MAINTAINERS                                   |   8 +
+ arch/x86/include/asm/cpu.h                    |  18 +
+ arch/x86/include/asm/msr-index.h              |   7 +
+ arch/x86/kernel/cpu/intel.c                   |  32 ++
+ arch/x86/kernel/cpu/microcode/intel.c         |  59 +---
+ drivers/platform/x86/intel/Kconfig            |   1 +
+ drivers/platform/x86/intel/Makefile           |   1 +
+ drivers/platform/x86/intel/ifs/Kconfig        |  13 +
+ drivers/platform/x86/intel/ifs/Makefile       |   3 +
+ drivers/platform/x86/intel/ifs/core.c         |  80 +++++
+ drivers/platform/x86/intel/ifs/ifs.h          | 123 +++++++
+ drivers/platform/x86/intel/ifs/load.c         | 262 ++++++++++++++
+ drivers/platform/x86/intel/ifs/runtest.c      | 332 ++++++++++++++++++
+ drivers/platform/x86/intel/ifs/sysfs.c        | 147 ++++++++
+ include/trace/events/intel_ifs.h              |  38 ++
+ 16 files changed, 1111 insertions(+), 52 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-intel-ifs
+ create mode 100644 drivers/platform/x86/intel/ifs/Kconfig
+ create mode 100644 drivers/platform/x86/intel/ifs/Makefile
+ create mode 100644 drivers/platform/x86/intel/ifs/core.c
+ create mode 100644 drivers/platform/x86/intel/ifs/ifs.h
+ create mode 100644 drivers/platform/x86/intel/ifs/load.c
+ create mode 100644 drivers/platform/x86/intel/ifs/runtest.c
+ create mode 100644 drivers/platform/x86/intel/ifs/sysfs.c
+ create mode 100644 include/trace/events/intel_ifs.h
+
+
+base-commit: af2d861d4cd2a4da5137f795ee3509e6f944a25b
+-- 
+2.35.1
+
