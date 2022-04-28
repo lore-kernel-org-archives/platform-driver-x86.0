@@ -2,173 +2,153 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBF8C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Apr 2022 12:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D0DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Apr 2022 12:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231824AbiD1Mfv (ORCPT
+        id S1346372AbiD1Mn2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Apr 2022 08:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55764 "EHLO
+        Thu, 28 Apr 2022 08:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346314AbiD1Mft (ORCPT
+        with ESMTP id S1346373AbiD1Mn1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Apr 2022 08:35:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 001D7AF1E7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Apr 2022 05:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651149154;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=79ijUU1b0VRmLKbXz4qgsT0z7n1OHeYnxMCv7eaIW+M=;
-        b=NojOdHRgy8xdf2aaBCevbBpf23ODn7js9dxR2kDyK4tbYdLcJu7MRFOKuP3gSoI02G5TAC
-        ewK8KLGWfpj9yg0HiHRQ5hc50Yz63Gx8mLfOY00IzpylSox/VuwlSbhnH1UEWAJC9Bi+fL
-        Pn8mlNANWKckBNODxs5JMpi0ENaJiDI=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-171-LGcPlhx4OUC4fqLH9sOG1Q-1; Thu, 28 Apr 2022 08:32:32 -0400
-X-MC-Unique: LGcPlhx4OUC4fqLH9sOG1Q-1
-Received: by mail-ed1-f72.google.com with SMTP id l14-20020aa7cace000000b003f7f8e1cbbdso2672255edt.20
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Apr 2022 05:32:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
-         :subject:to:cc:content-language:content-transfer-encoding;
-        bh=79ijUU1b0VRmLKbXz4qgsT0z7n1OHeYnxMCv7eaIW+M=;
-        b=VTBKkJo6oceBMzPu+dbs9vYo6fHGobxEDjQmPL6T9IxoPG10SfZ06MykkMTqTy4+jo
-         OOi0iwSB4vgisMqtPRLnAyP7pVX3dJR1skr46jHK3HpA0Y8uFp8MhxNJroVWJb/PlLCd
-         ImJyFm/RaBMecb34/4ZQhldbLL7xuDN/rnd8IQrkvcQxAk82XvqlI4Wz47dpuARSkzkk
-         ZhEiGM8+kWDa39bkFQ9REAsGoUpmn10DTipMMBNPqKZnBkWIJLQoZq8Hh7LIE1bkEjI9
-         VFqQHHaYc09z68Bimikeg+a6ndPYRBpjmUWLB544614fIBUOoVByq52z3z0yQpKGHi3w
-         8Rjg==
-X-Gm-Message-State: AOAM533IF94NRUYdQwbQ0zE9jvS5QtFxufUUGu6bwSL1t1TOTD95h9yv
-        3lbYfKjvnd/pBu3Llgqq5GLxj/n5lnIgG58lIxMN6tWTbMXnH8MTo9cQrGn8SjlhvwYdN1PWvng
-        ZgoDvPChPk2HT0g2ixrhJM4zj/bLYkP8HoQ==
-X-Received: by 2002:a05:6402:1698:b0:425:f339:80ef with SMTP id a24-20020a056402169800b00425f33980efmr18247479edv.225.1651149151491;
-        Thu, 28 Apr 2022 05:32:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwYjIWNYosD45YvuSoiB3jXXzi9dlVmimt3o+fubvnpzx7imtEdfiVLtQkurUQXLRnblwe5kw==
-X-Received: by 2002:a05:6402:1698:b0:425:f339:80ef with SMTP id a24-20020a056402169800b00425f33980efmr18247464edv.225.1651149151293;
-        Thu, 28 Apr 2022 05:32:31 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id a25-20020a056402169900b0042617ba63c8sm1533454edv.82.2022.04.28.05.32.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Apr 2022 05:32:30 -0700 (PDT)
-Message-ID: <d6954974-3ee8-9573-f906-c141165cd4b7@redhat.com>
-Date:   Thu, 28 Apr 2022 14:32:30 +0200
+        Thu, 28 Apr 2022 08:43:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740096324;
+        Thu, 28 Apr 2022 05:40:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 126A662027;
+        Thu, 28 Apr 2022 12:40:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE201C385A9;
+        Thu, 28 Apr 2022 12:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1651149610;
+        bh=CwJL/sJR7s+HMBkHYZ+buUi2WTGVZ0xfIEzSXHMVYgg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dAATbAyz0Xbfm6thvsL84KlVJyiRJ5XPC+rTYaulWlrE3HkXrdWeKlsjRoywc7nFL
+         op+pi2rLaaGq0HXEEKKma4AmlMcl/+8XxQFaReGnHbZXdWHsfsoRcrNtUTRuvpDAHh
+         lv/+KC3EWTAhKhtb1NtlIeBJdO84xV33i8NyW5LE=
+Date:   Thu, 28 Apr 2022 14:40:08 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        gwendal@chromium.org, vbendeb@chromium.org, andy@infradead.org,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v8] platform: x86: Add ChromeOS ACPI device driver
+Message-ID: <YmqLKBVPMl4AFzCE@kroah.com>
+References: <Ylmmf03fewXEjRr0@debian-BULLSEYE-live-builder-AMD64>
+ <YmUNnq5tH8mykNOF@kroah.com>
+ <c195573c-e7c7-a2dd-7f29-c6d4625fefdb@collabora.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 5.18-3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c195573c-e7c7-a2dd-7f29-c6d4625fefdb@collabora.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
+On Thu, Apr 28, 2022 at 05:24:04PM +0500, Muhammad Usama Anjum wrote:
+> On 4/24/22 1:43 PM, Greg Kroah-Hartman wrote:
+> > On Fri, Apr 15, 2022 at 10:08:15PM +0500, Muhammad Usama Anjum wrote:
+> >> +	i = 0;
+> >> +	list_for_each_entry(aag, &chromeos_acpi.groups, list) {
+> >> +		chromeos_acpi.dev_groups[i] = &aag->group;
+> >> +		i++;
+> >> +	}
+> >> +
+> >> +	ret = sysfs_create_groups(&dev->kobj, chromeos_acpi.dev_groups);
+> > 
+> > You have raced with userspace and lost here :(
+> > 
+> Sorry, What does it mean exactly?
 
-Here is the second round of bug-fixes for platform-drivers-x86
-for 5.18.
+Long old post that describes the issue in detail is here:
+	http://www.kroah.com/log/blog/2013/06/26/how-to-create-a-sysfs-file-correctly/
 
-Highlights:
-- asus-wmi bug-fixes
-- intel-sdsi bug-fixes
-- build (warning) fixes
-- couple of hw-id additions
+> > Use the default groups pointer in the platform driver for this, and use
+> > the is_visible() callback to know to show, or not show, the attribute
+> > instead of building up dynamic lists of attributes at runtime.  That
+> > will save you lots of crazy logic and housekeeping _AND_ userspace tools
+> > will work properly as well.
+> > 
+> 
+> Driver has the 2 kinds of attributes:
+> 
+> A) Attributes which are always there. For example, CHSW and HWIDs etc.
+> They can be easily shows via dev_groups pointer in platform driver.
 
-Regards,
+Great.
 
-Hans
+> B) Attribute groups which vary between 0 to N. N is platform dependent
+> and can be determined at runtime. For example, GPIO attribute group
+> which have 4 sub attributes in it:
+> 
+> Group GPIO.0 --> attributes GPIO.0, GPIO.1, GPIO.2 and GPIO.3
+> Group GPIO.1 --> attributes GPIO.0, GPIO.1, GPIO.2 and GPIO.3
+> ...
+> Group GPIO.N --> attributes GPIO.0, GPIO.1, GPIO.2 and GPIO.3
+> 
+> My Chromebook has 2 GPIO attribute groups while I've found logs of a
+> Chromebook which has 7 GPIO groups.
+> 
+> Why these groups cannot be defined at compile time (Shortcomings):
+> 
+> 1) We don't know the total GPIO groups.
+> Possible solution: Determine GPIO groups' number at run time and define
+> attributes at run time.
 
+What is the max number of groups you can ever have?  10?  100?  1000?
+Pick a high number, define them all (macros make this easy), and then
+only enable the ones that you need at runtime.
 
-The following changes since commit 753ee989f7cf0c0a76a7f56956827a8863a60f97:
+> 2) We cannot determine from attribute name that this group will be
+> visible or not as is_visible doesn't provide information about its group
+> name.
+> umode_t (*is_visible)(struct kobject *, struct attribute *, int);
 
-  platform/x86: amd-pmc: Fix compilation without CONFIG_SUSPEND (2022-04-04 16:26:09 +0200)
+Look at the attribute pointer.  That's all you care about.  Compare it
+to a real pointer and away you go!
 
-are available in the Git repository at:
+> 3) In attribute.show functions, we only know about the attribute's name
+> and not the group's name. We cannot evaluate and show the attribute.
+> ssize_t (*show)(struct device *dev, struct device_attribute *attr, char
+> *buf);
+> Possible solution for 2) and 3):
+> Embed the group name into attribute name like:
+> attributes GPIO.0_GPIO.0, GPIO.0_GPIO.1, GPIO.0_GPIO.2 and GPIO.0_GPIO.3
+> attributes GPIO.1_GPIO.0, GPIO.1_GPIO.1, GPIO.2_GPIO.2 and GPIO.3_GPIO.3
+> But this is completely new ABI which we don't desire.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.18-3
+This whole thing is a new abi :)
 
-for you to fetch changes up to eb2fd9b43fae0c51982ac4229535b6cfd77380db:
+> After looking at dependence on runtime values, can we keep the existing
+> version of the driver instead of trying to workout some other hybrid
+> solution?
 
-  platform/x86/intel: pmc/core: change pmc_lpm_modes to static (2022-04-27 16:55:54 +0200)
+Again, you are racing with userspace and loosing.  If you do not mind
+userspace not noticing the attributes, fine, leave it as-is, but odds
+are you don't want that.
 
-----------------------------------------------------------------
-platform-drivers-x86 for v5.18-3
+thanks,
 
-Highlights:
-- asus-wmi bug-fixes
-- intel-sdsu bug-fixes
-- build (warning) fixes
-- couple of hw-id additions
-
-The following is an automated git shortlog grouped by driver:
-
-asus-wmi:
- -  Fix driver not binding when fan curve control probe fails
- -  Potential buffer overflow in asus_wmi_evaluate_method_buf()
-
-dell-laptop:
- -  Add quirk entry for Latitude 7520
-
-gigabyte-wmi:
- -  added support for B660 GAMING X DDR4 motherboard
-
-intel-uncore-freq:
- -  Prevent driver loading in guests
-
-platform/x86/intel:
- -  pmc/core: change pmc_lpm_modes to static
-
-platform/x86/intel/sdsi:
- -  Fix bug in multi packet reads
- -  Poll on ready bit for writes
- -  Handle leaky bucket
-
-tools/power/x86/intel-speed-select:
- -  fix build failure when using -Wl,--as-needed
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      platform/x86: asus-wmi: Potential buffer overflow in asus_wmi_evaluate_method_buf()
-
-Darryn Anton Jordan (1):
-      platform/x86: gigabyte-wmi: added support for B660 GAMING X DDR4 motherboard
-
-David E. Box (3):
-      platform/x86/intel/sdsi: Handle leaky bucket
-      platform/x86/intel/sdsi: Poll on ready bit for writes
-      platform/x86/intel/sdsi: Fix bug in multi packet reads
-
-Gabriele Mazzotta (1):
-      platform/x86: dell-laptop: Add quirk entry for Latitude 7520
-
-Hans de Goede (1):
-      platform/x86: asus-wmi: Fix driver not binding when fan curve control probe fails
-
-Herton R. Krzesinski (1):
-      tools/power/x86/intel-speed-select: fix build failure when using -Wl,--as-needed
-
-Srinivas Pandruvada (1):
-      platform/x86: intel-uncore-freq: Prevent driver loading in guests
-
-Tom Rix (1):
-      platform/x86/intel: pmc/core: change pmc_lpm_modes to static
-
- drivers/platform/x86/asus-wmi.c                    | 15 +++++---
- drivers/platform/x86/dell/dell-laptop.c            | 13 +++++++
- drivers/platform/x86/gigabyte-wmi.c                |  1 +
- drivers/platform/x86/intel/pmc/core.h              |  2 +-
- drivers/platform/x86/intel/sdsi.c                  | 44 +++++++++++++++-------
- .../x86/intel/uncore-frequency/uncore-frequency.c  |  3 ++
- tools/power/x86/intel-speed-select/Makefile        |  2 +-
- 7 files changed, 59 insertions(+), 21 deletions(-)
-
+greg k-h
