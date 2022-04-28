@@ -2,92 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353D3C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Apr 2022 10:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939E1C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Apr 2022 11:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234529AbiD1KjM (ORCPT
+        id S240476AbiD1LHr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Apr 2022 06:39:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36006 "EHLO
+        Thu, 28 Apr 2022 07:07:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233489AbiD1KjM (ORCPT
+        with ESMTP id S230363AbiD1LHq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Apr 2022 06:39:12 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29D706A02A;
-        Thu, 28 Apr 2022 03:35:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651142158; x=1682678158;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gNerj3kD6Y8mhAk9ompGhzAXz6vRVhoVMUf84Vky2Bs=;
-  b=AxB1IynCFV/sawUjAe7ALmfcYROgwH6GcBZGsVj4cvVOSqEo5m16svKP
-   ppaQb9feuMnoFNUM8dUl6wYU/98C7thSE4BjGt0R9MA4Q2pEfJEgvXXas
-   CvU/lAlL1BIMrNWk1ykOgslvjXO2KYwiNV027mDee9zFH2RwUCxDOw/Xh
-   LPixaeEJlfx+Z/CuYcsY6jA176ndSNYSatuF9N0Hj67Yd1HapjYw/67CD
-   MK2uzQHDkeR/kUKSRsIxuEl4Z/Q+GkqBXjJLm0TeTBhKxrVUqwLNqaZpH
-   WrcWrS1Mg1ZG2GI18FIaVWvoaYE0LA7LCanjJmKErUroOSlU/NNjylDIT
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="253624161"
-X-IronPort-AV: E=Sophos;i="5.90,295,1643702400"; 
-   d="scan'208";a="253624161"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 03:35:57 -0700
-X-IronPort-AV: E=Sophos;i="5.90,295,1643702400"; 
-   d="scan'208";a="581267741"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 03:35:55 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nk1V2-009FkD-EH;
-        Thu, 28 Apr 2022 13:35:52 +0300
-Date:   Thu, 28 Apr 2022 13:35:52 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 2/4] ACPI: LPSS: make the Kconfig dependency on PMC_ATOM
- explicit
-Message-ID: <YmpuCG76aJ+d5lGH@smile.fi.intel.com>
-References: <20220428062430.31010-1-paul.gortmaker@windriver.com>
- <20220428062430.31010-3-paul.gortmaker@windriver.com>
+        Thu, 28 Apr 2022 07:07:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 825FA187
+        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Apr 2022 04:04:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 01C6861F1F
+        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Apr 2022 11:04:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 65173C385D1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Apr 2022 11:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651143871;
+        bh=IaS37S8XrTv1SeiJkjQHr4XMmaSy5DaA4D0avv0Rt3o=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=pR+hfzdyM/n/XWDU2P0V6Q35z/v5mQ76jiX8Efc/dNu7X7LitemzYgc3yTp0eF1dd
+         HVWvT5rAulaBPckAJ+Z99sDQ1Lre3wWG7ndSTsue6S7P66SYT8tBxrICUS1gBMdHfN
+         qZEIZYrJ0WwcLm7Tpj+vjjVgKxFyg6E5zP9h9c8lqsIm1VBpxHdk5azUYdip/Vce1E
+         rUYDAyXATfR1DcPDZEM5gY7F/MtCdyBj07bJeBJe/L4vo4vHRyvjzpMSt/stRr7qmf
+         pmUKq0E7Vi9+SmtnLTMtkCyo8J2aJnEN31g7nLAXrO3Ca9aNF9DC9q/p7PTjEME/3e
+         623iKaNKcA8og==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 569E6C05FD6; Thu, 28 Apr 2022 11:04:31 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 28 Apr 2022 11:04:29 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: hubert.banas@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-45bEDBJz5O@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220428062430.31010-3-paul.gortmaker@windriver.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Apr 28, 2022 at 02:24:28AM -0400, Paul Gortmaker wrote:
-> The code in acpi_lpss.c has been unconditionally using pmc_atom_read()
-> for about the past six years.  This hasn't been a problem since you
-> currently can't disable PMC_ATOM short of disabling PCI entirely.
-> 
-> But it doesn't need to be that way, and so that we can change Kconfigs
-> in a subsequent commit, we make sure LPSS selects PMC_ATOM in advance,
-> so that existing .config files can live on with "make oldconfig".
-> 
-> In theory, one could make LPSS build w/o PMC_ATOM, similar to what it
-> did six years ago, but I doubt there is any demand for that now.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-I'm wondering if without LPSS we may use those devices to some extend.
-If it's the case, this patch is half-baked since it's missed the network
-and audio drivers to also enable it (see PMC clock driver registration
-and usage).
+--- Comment #233 from Hubert Banas (hubert.banas@gmail.com) ---
+(In reply to Denis Pauk from comment #232)
 
-That said, I'm not sure it's beneficial to spread this selection over
-the drivers that may be used widely on non-Intel-Atom platforms.
+> (In reply to Hubert Banas from comment #229)
+> > Would it be possible to get these new motherboard in during Linux 5.18
+> merge
+> > window?
+>=20
+> It can be part of 5.19+ if patch will be accepted before start of the new
+> merge window. (I have not sent patch yet.)
 
--- 
-With Best Regards,
-Andy Shevchenko
+Sounds good. Thank you.
 
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
