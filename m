@@ -2,138 +2,153 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5141C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Apr 2022 12:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC34C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Apr 2022 12:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359048AbiD2M1C (ORCPT
+        id S1352914AbiD2Mhr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 29 Apr 2022 08:27:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56338 "EHLO
+        Fri, 29 Apr 2022 08:37:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229613AbiD2M1A (ORCPT
+        with ESMTP id S242740AbiD2Mhr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 29 Apr 2022 08:27:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8F96FC8ABF
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Apr 2022 05:23:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651235021;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=k6qCS9ciFOfaL2St6haP+w2w2mee1f3YzKKdc3GRel0=;
-        b=cnC57FgYlI4o59OSaWnyJDxD8MFcGf9CWMGCgfHhS5ExMVElYOmsHUyRjAtxQDC26Hckcu
-        t8+HIAOVnVwoxBhSZqpM53efns2kl0zHct0LvXMV87gpfsqQiXNRHDwg8gkoYdV1EE2k3k
-        3SMGeoqUinLPYnewBpth3EXCBcHpL7w=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-668-6FlkSRuLOxCBh7vFgNBFpw-1; Fri, 29 Apr 2022 08:23:30 -0400
-X-MC-Unique: 6FlkSRuLOxCBh7vFgNBFpw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 615CA3C33B22;
-        Fri, 29 Apr 2022 12:23:30 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A972145BA50;
-        Fri, 29 Apr 2022 12:23:30 +0000 (UTC)
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Prarit Bhargava <prarit@redhat.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
+        Fri, 29 Apr 2022 08:37:47 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17FB0C90FB;
+        Fri, 29 Apr 2022 05:34:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651235669; x=1682771669;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+xWYa8I50q7FRALTpyXM0YXJgGA7IXSjZNqvAviJjnY=;
+  b=A0m2nJteuHp4JQd3msz6oNWNUVyLTawqhtlK3LG/MNGA8BXjxDxKcTqK
+   5gahTICbNIKK2s6BGvUPLBtiys6psfID+SCDkcsSIi1qoeenpGnbKWbjP
+   MomfEGHomQDY1TVlfRYfYGBcniuCkhRKf/Dt/FjuuJW9NAOc1LUTnyZQM
+   TOXTrQKYKY4mZIDCJj6PUMk+Ld49HHLhxFIjtR59Kyrju76wBb150KrZx
+   16QoKSFZYjqEUXOP6Rdgn6aDlemhlAnEmOKVvFwqVJgI34BpZjTF280YQ
+   MOkcXPviIaT0Hlbc3QjLNOvyLu84RpRvJnGxVE6Jg8xML+GvZcr3a8I9y
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="266449631"
+X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
+   d="scan'208";a="266449631"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 05:34:28 -0700
+X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
+   d="scan'208";a="662328794"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 05:34:26 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nkPpH-009hyp-Hb;
+        Fri, 29 Apr 2022 15:34:23 +0300
+Date:   Fri, 29 Apr 2022 15:34:23 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Aubrey Li <aubrey.li@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
         Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org,
-        David Arcari <darcari@redhat.com>
-Subject: [PATCH] platform/x86/intel: Fix 'rmmod pmt_telemetry' panic
-Date:   Fri, 29 Apr 2022 08:23:22 -0400
-Message-Id: <20220429122322.2550003-1-prarit@redhat.com>
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 0/4] platform: allow ATOM PMC code to be optional
+Message-ID: <YmvbT9D6v67S+svB@smile.fi.intel.com>
+References: <20220428062430.31010-1-paul.gortmaker@windriver.com>
+ <YmpoeJtFNSyCq1QL@smile.fi.intel.com>
+ <20220428181131.GG12977@windriver.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220428181131.GG12977@windriver.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-'rmmod pmt_telemetry' panics with:
+On Thu, Apr 28, 2022 at 02:11:31PM -0400, Paul Gortmaker wrote:
+> [Re: [PATCH 0/4] platform: allow ATOM PMC code to be optional] On 28/04/2022 (Thu 13:12) Andy Shevchenko wrote:
+> > On Thu, Apr 28, 2022 at 02:24:26AM -0400, Paul Gortmaker wrote:
+> > > A few months back I was doing a test build for "defconfig-like" COTS
+> > > hardware and happened to notice some pmc-atom stuff being built.  Fine,
+> > > I thought - the defconfig isn't minimal - we all know that - what Kconfig
+> > > do I use to turn that off?  Well, imagine my surprise when I found out
+> > > you couldn't turn it [Atom Power Management Controller] code off!
+> > 
+> > Turning it off on BayTrail and CherryTrail devices will be devastating
+> > to the users' experience. And plenty of cheap tablets are exactly made
+> > on that SoCs.
+> 
+> Sure, but I could say the same thing for DRM_I915 and millions of
+> desktop PC users - yet we still give all the other non i915 users the
+> option to be able to turn it off.  Pick any other Kconfig value you like
+> and the same thing holds true.
+> 
+> Just so we are on the same page - I want to give the option to let
+> people opt out, and at the same time not break existing users. If you
+> think the defconfig default of being off is too risky, then I am OK with
+> that and we can just start by exposing the option with "default y".
+> 
+> So, to that end - are you OK with exposing the Kconfig so people can
+> opt out, or are you 100% against exposing the Kconfig at all?  That
+> obviously has the most impact on what I do or don't do next.
+> 
+> > > Normally we all agree to not use "default y" unless unavoidable, but
+> > > somehow this was added as "def_bool y" which is even worse ; you can
+> > > see the Kconfig setting but there is *no* way you can turn it off.
+> > > 
+> > > After investigating, I found no reason why the atom code couldn't be
+> > > opt-out with just minor changes that the original addition overlooked.
+> > > 
+> > > And so this series addreses that.  I tried to be sensitive to not
+> > > break any existing configs in the process, but the defconfig will
+> > > now intentionally be different and exclude this atom specific code.
+> > > 
+> > > Using a defconfig on today's linux-next, here is the delta summary:
+> > > 
+> > > $ ./scripts/bloat-o-meter -c ../pmc-atom-pre/vmlinux ../pmc-atom-post/vmlinux|grep add/remove
+> > > add/remove: 0/410 grow/shrink: 0/7 up/down: 0/-47659 (-47659)
+> > > add/remove: 0/105 grow/shrink: 0/1 up/down: 0/-6848 (-6848)
+> > > add/remove: 0/56 grow/shrink: 0/1 up/down: 0/-10155 (-10155)
+> > > 
+> > > $ ./scripts/bloat-o-meter -c ../pmc-atom-pre/vmlinux ../pmc-atom-post/vmlinux|grep Total
+> > > Total: Before=13626994, After=13579335, chg -0.35%
+> > > Total: Before=3572137, After=3565289, chg -0.19%
+> > > Total: Before=1235335, After=1225180, chg -0.82%
+> > > 
+> > > It is hard to reclaim anything against the inevitable growth in
+> > > footprint, so I'd say we should be glad to take whatever we can.
+> > > 
+> > > Boot tested defconfig on today's linux-next on older non-atom COTS.
+> > 
+> > I believe this needs an extensive test done by Hans who possesses a lot of
+> > problematic devices that require that module to be present.
+> 
+> Input from Hans is 100% welcome - but maybe again if we just consider
+> using "default y" even though it isn't typical - then your concerns are
+> not as extensive?
+> 
+> > Note to all your patches, please, use --cc option instead of putting noisy
+> > lines in the each of the commit messages. For myself I created a "smart"
+> > script [1] to avoid bothering with that. Feel free to use, modify, send PRs
+> > back to improve.
+> 
+> Thanks - I'm used to explicitly capturing who was looped into the
+> discussion.  But I hadn't considered how things have evolved so that in
+> certain circumstances that might be considered just noise with the wider
+> audience we see in the typical patch sets of today.
+> 
+> Assuming you are OK with exposing the option as a choice, I'll make
+> things "default y" in v2 to ensure we've minimized risk to existing
+> users who rely on it, but wait a while for others like Hans to put in
+> their input.  I'll probably follow up in the individual patches to ask
+> for clarification if I'm not clear on what you had in mind.
 
- BUG: kernel NULL pointer dereference, address: 0000000000000040
- #PF: supervisor read access in kernel mode
- #PF: error_code(0x0000) - not-present page
- PGD 0 P4D 0
- Oops: 0000 [#1] PREEMPT SMP NOPTI
- CPU: 4 PID: 1697 Comm: rmmod Tainted: G S      W        --------  ---  5.18.0-rc4 #3
- Hardware name: Intel Corporation Alder Lake Client Platform/AlderLake-P DDR5 RVP, BIOS ADLPFWI1.R00.3056.B00.2201310233 01/31/2022
- RIP: 0010:device_del+0x1b/0x3d0
- Code: e8 1a d9 e9 ff e9 58 ff ff ff 48 8b 08 eb dc 0f 1f 44 00 00 41 56 41 55 41 54 55 48 8d af 80 00 00 00 53 48 89 fb 48 83 ec 18 <4c> 8b 67 40 48 89 ef 65 48 8b 04 25 28 00 00 00 48 89 44 24 10 31
- RSP: 0018:ffffb520415cfd60 EFLAGS: 00010286
- RAX: 0000000000000070 RBX: 0000000000000000 RCX: 0000000000000000
- RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000000
- RBP: 0000000000000080 R08: ffffffffffffffff R09: ffffb520415cfd78
- R10: 0000000000000002 R11: ffffb520415cfd78 R12: 0000000000000000
- R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- FS:  00007f7e198e5740(0000) GS:ffff905c9f700000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000000040 CR3: 000000010782a005 CR4: 0000000000770ee0
- PKRU: 55555554
- Call Trace:
-  <TASK>
-  ? __xa_erase+0x53/0xb0
-  device_unregister+0x13/0x50
-  intel_pmt_dev_destroy+0x34/0x60 [pmt_class]
-  pmt_telem_remove+0x40/0x50 [pmt_telemetry]
-  auxiliary_bus_remove+0x18/0x30
-  device_release_driver_internal+0xc1/0x150
-  driver_detach+0x44/0x90
-  bus_remove_driver+0x74/0xd0
-  auxiliary_driver_unregister+0x12/0x20
-  pmt_telem_exit+0xc/0xe4a [pmt_telemetry]
-  __x64_sys_delete_module+0x13a/0x250
-  ? syscall_trace_enter.isra.19+0x11e/0x1a0
-  do_syscall_64+0x58/0x80
-  ? syscall_exit_to_user_mode+0x12/0x30
-  ? do_syscall_64+0x67/0x80
-  ? syscall_exit_to_user_mode+0x12/0x30
-  ? do_syscall_64+0x67/0x80
-  ? syscall_exit_to_user_mode+0x12/0x30
-  ? do_syscall_64+0x67/0x80
-  ? exc_page_fault+0x64/0x140
-  entry_SYSCALL_64_after_hwframe+0x44/0xae
- RIP: 0033:0x7f7e1803a05b
- Code: 73 01 c3 48 8b 0d 2d 4e 38 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d fd 4d 38 00 f7 d8 64 89 01 48
+My main concern is the existing users' experience. Opting-out the option is a
+good to have, I'm not against it.
 
-The probe function, pmt_telem_probe(), adds an entry for devices even if
-they have not been initialized.  This results in the array of initialized
-devices containing both initialized and uninitialized entries.  This
-causes a panic in the remove function, pmt_telem_remove() which expects
-the array to only contain initialized entries.
-
-Only use an entry when a device is initialized.
-
-Cc: "David E. Box" <david.e.box@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <markgross@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: David Arcari <darcari@redhat.com>
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
----
- drivers/platform/x86/intel/pmt/telemetry.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-index 6b6f3e2a617a..f73ecfd4a309 100644
---- a/drivers/platform/x86/intel/pmt/telemetry.c
-+++ b/drivers/platform/x86/intel/pmt/telemetry.c
-@@ -103,7 +103,7 @@ static int pmt_telem_probe(struct auxiliary_device *auxdev, const struct auxilia
- 	auxiliary_set_drvdata(auxdev, priv);
- 
- 	for (i = 0; i < intel_vsec_dev->num_resources; i++) {
--		struct intel_pmt_entry *entry = &priv->entry[i];
-+		struct intel_pmt_entry *entry = &priv->entry[priv->num_entries];
- 
- 		ret = intel_pmt_dev_create(entry, &pmt_telem_ns, intel_vsec_dev, i);
- 		if (ret < 0)
 -- 
-2.35.1
+With Best Regards,
+Andy Shevchenko
+
 
