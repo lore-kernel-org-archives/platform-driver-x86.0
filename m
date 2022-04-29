@@ -2,56 +2,51 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C877C433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88D4C4332F
 	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Apr 2022 21:14:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234894AbiD2VRq (ORCPT
+        id S234630AbiD2VRs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 29 Apr 2022 17:17:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34594 "EHLO
+        Fri, 29 Apr 2022 17:17:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234608AbiD2VRq (ORCPT
+        with ESMTP id S234732AbiD2VRq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 29 Apr 2022 17:17:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7A839D3DB4
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Apr 2022 14:14:26 -0700 (PDT)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5D32AD3DB5
+        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Apr 2022 14:14:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651266865;
+        s=mimecast20190719; t=1651266866;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vRdwdJR3OoR56yf6TqIrpiS+NzNySH2VSMNhpjHFJH4=;
-        b=OaewuHhgudAm6ngMIWOPH1aeqWjU6X6NnPLj3MR/sAhMXzPpsnitsx19SQBqyt3VoTavz6
-        UbAoazTT5f4OOAV/BllXgQHbIFASyP/1kGNzTdVBVD9xLeFvbpPRfrZm29dCBKuJ166qoN
-        7XSmuzlVYVdkmYqEQSi8C1ZL6yR73m0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+         content-transfer-encoding:content-transfer-encoding;
+        bh=nyt4ykn1QhR0YTgPdt1Y5HFsS6fBE+SgIfjhrvt9+bs=;
+        b=abQCw6TVS+BdpHaHcZiLkqsXYGZ1N9AbZ7bF2+6EDuS3/5UtDwuLvtNzXeWO80JLfh61uu
+        E6YcXkm4Sg9j0gjQiAUEIj4mXBZmx/WPL362EfEZdyXorSKiTNYBNmJ5Dn80vS27ZFVJKp
+        plQaiOzriEbZPO0iJu3VidiyCddcbQg=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-562-XVnx60pGMza8UVmti2IyWw-1; Fri, 29 Apr 2022 17:14:24 -0400
-X-MC-Unique: XVnx60pGMza8UVmti2IyWw-1
+ us-mta-37--AYCXKXxNS-NpUo7Cg87pw-1; Fri, 29 Apr 2022 17:14:23 -0400
+X-MC-Unique: -AYCXKXxNS-NpUo7Cg87pw-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A5C9E811E75;
-        Fri, 29 Apr 2022 21:14:23 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8A7743C0F091;
+        Fri, 29 Apr 2022 21:14:22 +0000 (UTC)
 Received: from emerald.lyude.net (unknown [10.22.8.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 52771111CD36;
-        Fri, 29 Apr 2022 21:14:23 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B4573111DCF9;
+        Fri, 29 Apr 2022 21:14:20 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Mark Gross <markgross@kernel.org>
-Subject: [PATCH 2/2] platform/x86: thinkpad_acpi: Don't probe 2nd fan if enabled by quirk
-Date:   Fri, 29 Apr 2022 17:14:18 -0400
-Message-Id: <20220429211418.4546-3-lyude@redhat.com>
-In-Reply-To: <20220429211418.4546-1-lyude@redhat.com>
-References: <20220429211418.4546-1-lyude@redhat.com>
+        Mark Pearson <markpearson@lenovo.com>
+Subject: [PATCH 0/2] Fix detection of 2nd fan on X1C9
+Date:   Fri, 29 Apr 2022 17:14:16 -0400
+Message-Id: <20220429211418.4546-1-lyude@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
@@ -59,70 +54,16 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If we already know that the system in question has a quirk telling us that
-the system has a second fan, there's no purpose in probing the second fan -
-especially when probing the second fan may not work properly with systems
-relying on quirks.
+Some recent changes broke detection of the second fan on the X1 Carbon
+9th generation, so here's some patches to fix it.
 
-Also, convert all of the conditionals here into a single group of if/else
-statements. This is because there's no situations where there's more then
-one quirk on a device.
+Lyude Paul (2):
+  platform/x86: thinkpad_acpi: Restore X1 Carbon 9th Gen dual fan quirk
+  platform/x86: thinkpad_acpi: Don't probe 2nd fan if enabled by quirk
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: bf779aaf56ea ("platform/x86: thinkpad_acpi: Add dual fan probe")
-Cc: Mark Pearson <markpearson@lenovo.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Mark Gross <markgross@kernel.org>
-Cc: ibm-acpi-devel@lists.sourceforge.net
-Cc: platform-driver-x86@vger.kernel.org
----
- drivers/platform/x86/thinkpad_acpi.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 9067fd0a945c..677822b5d4b4 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8747,26 +8747,25 @@ static int __init fan_init(struct ibm_init_struct *iibm)
- 			unsigned int speed;
- 
- 			fan_status_access_mode = TPACPI_FAN_RD_TPEC;
--			if (quirks & TPACPI_FAN_Q1)
-+			if (quirks & TPACPI_FAN_Q1) {
- 				fan_quirk1_setup();
--			if (quirks & TPACPI_FAN_2FAN) {
-+			} else if (quirks & TPACPI_FAN_2FAN) {
- 				tp_features.second_fan = 1;
- 				pr_info("secondary fan support enabled\n");
--			}
--			if (quirks & TPACPI_FAN_2CTL) {
-+			} else if (quirks & TPACPI_FAN_2CTL) {
- 				tp_features.second_fan = 1;
- 				tp_features.second_fan_ctl = 1;
- 				pr_info("secondary fan control enabled\n");
-+			} else {
-+				/* Try and probe the 2nd fan */
-+				res = fan2_get_speed(&speed);
-+				if (res >= 0) {
-+					/* It responded - so let's assume it's there */
-+					tp_features.second_fan = 1;
-+					tp_features.second_fan_ctl = 1;
-+					pr_info("secondary fan control detected & enabled\n");
-+				}
- 			}
--			/* Try and probe the 2nd fan */
--			res = fan2_get_speed(&speed);
--			if (res >= 0) {
--				/* It responded - so let's assume it's there */
--				tp_features.second_fan = 1;
--				tp_features.second_fan_ctl = 1;
--				pr_info("secondary fan control detected & enabled\n");
--			}
--
- 		} else {
- 			pr_err("ThinkPad ACPI EC access misbehaving, fan status and control unavailable\n");
- 			return -ENODEV;
 -- 
 2.35.1
 
