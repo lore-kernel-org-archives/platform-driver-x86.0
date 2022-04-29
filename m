@@ -2,106 +2,206 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535CFC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Apr 2022 19:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AE7C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Apr 2022 20:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380457AbiD2UBT (ORCPT
+        id S1380346AbiD2UUz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 29 Apr 2022 16:01:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33750 "EHLO
+        Fri, 29 Apr 2022 16:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380455AbiD2UBR (ORCPT
+        with ESMTP id S1380275AbiD2UUy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 29 Apr 2022 16:01:17 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AEFC286D1;
-        Fri, 29 Apr 2022 12:57:58 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id bi24-20020a05600c3d9800b00393ff664705so5316907wmb.4;
-        Fri, 29 Apr 2022 12:57:58 -0700 (PDT)
+        Fri, 29 Apr 2022 16:20:54 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A3EE996A6
+        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Apr 2022 13:17:35 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id l203so9718071oif.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Apr 2022 13:17:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=eclypsium.com; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ARvkbAgMRVMH7yoCqO4w4jgnA6iB3llwc7XTSb32ZTk=;
-        b=C10SkuwQo3GxuX/CMoJUiM2/UQdHqbm4x5l43pCW1MrxnfeHnTx51WZ7O1v7bDJ37B
-         IY3ajfotlY22+CIYrMiq6rV/Y20jaQ/Tc1wQnaXIpbSH7z/rrJ/ZpHVsr3v1UjEqIA4v
-         CFcG+H1fTOloPbDbey02E8OWeNbzAoqLZPn1/Wvga3QSGhac2TOI2Sl3/0IxdpGLf8k3
-         uAdy06uk0sGB1COThB5eadXktEZqRw44hVdI49EL9+cKuY559qmK8soMlVMFuX+fIzgn
-         c0lHtOKDgbb7QMqYhyRzB+L1NuPgAY5UcGrSDEfaIRdicmAhmjU1wmN+zv98M9sdztuX
-         wJ2Q==
+        bh=nYXkLp0fPhZ4miEUy66+jKkP3mtd+ed+kKhoj+7Arlw=;
+        b=EZfC0Wd7Kbw6BPW9sWVjWND+mdI27q73yrr0HJYwPqOp8Lf/p0JKOj6VDiMsg+Q0nK
+         sVE/iNKF2WknemJJDWIQ5jdCr8D15GQELuYdHcEGBfBPyNa+ngksK+vAtsb4jjuJOPCK
+         mSd032rnnKOWxWDhHSF/O+kFKi5zt9r7wJcA/3QfhV8WabfXkaNFqRTfnbDadXZ3abR7
+         BjLXEw2419+T7584YmKWNxqonpx3eslpPSpJPgLkVsou5xTbQ+I0JHWFfROD0SSIW6Cp
+         MfLUrTvomaV4gapy9hV+NJyh0xABJybSoN9XHROU2VQ1urrERCYVwlLrTGG9QlmyxeoV
+         gWQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ARvkbAgMRVMH7yoCqO4w4jgnA6iB3llwc7XTSb32ZTk=;
-        b=Z7uxKrZHIjUCW1pX9dHoLzMR2px/WluDL/6UyP1rS4FyebzoaKgCqvlaVVKIboMA9W
-         CQXPIDtBipS+9ND497OQjgaWyRLt5h3WFzsp3Mu9deM/L1nBv9LSxUmrr36yfUS/Ldew
-         VM1ohVwbpChTFBaMPuVpbs3mWtYXD8ZBa9OX+boHSYR+RcDn/zcyTzz72QXZZi+eG4lB
-         m3/84aoKYVtnBGccmJpVfyH484PmI77IoVjrGZL+WZeTI8heK8M3AQKjWL5JkT5husYF
-         kMD06pNJu0aKJq25CCdDfV+0IG7FkDH4AyO+EfpSjdZuZescCiy1OSgb84T/5D4zhLI5
-         jMug==
-X-Gm-Message-State: AOAM533GVnbEN22BopOhpg933fjcZrHOKoAfAh8yrYwXlNLbybwsGSqN
-        O6iW8x5B+pkgtfYlxmdkUbI=
-X-Google-Smtp-Source: ABdhPJyz4v8SrbAvXMoxUl5IcCPAf9Yr6DflSABwHhRFpGZUKBs5BUW1/VNc602PTUUN58lSBxN7Wg==
-X-Received: by 2002:a05:600c:4f95:b0:393:ec32:d85f with SMTP id n21-20020a05600c4f9500b00393ec32d85fmr4598569wmq.149.1651262276779;
-        Fri, 29 Apr 2022 12:57:56 -0700 (PDT)
-Received: from xws.localdomain ([194.126.177.12])
-        by smtp.gmail.com with ESMTPSA id c2-20020adfc042000000b0020c5253d8e5sm105461wrf.49.2022.04.29.12.57.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Apr 2022 12:57:56 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>
-Subject: [PATCH] platform/surface: aggregator: Fix initialization order when compiling as builtin module
-Date:   Fri, 29 Apr 2022 21:57:38 +0200
-Message-Id: <20220429195738.535751-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.36.0
+        bh=nYXkLp0fPhZ4miEUy66+jKkP3mtd+ed+kKhoj+7Arlw=;
+        b=UFxICLbBwq/HHd84pDv9SYrEurewGQ/OzbhQnMRzDmko4KpraRYP4C+xP9aCWfVs8u
+         zp8hZ0W1x3rd17yYsVJYh67ZnBR2vzXri96HUNk3HjJboK618tB9mAUE8MW3QGvSel/Q
+         /K1Lz2AQAQwB9ssGv1rNS+P9xAdAsVkj8ULqQKTEvgueZKa/FGb3AG92HTWtD6NkV5US
+         0A40WnsmKViuU+HiqJx9EH3IDLmdekOfys+ZL0STGyH3gsQjuUTIyb/PrXACsO5Vxu0Q
+         CQJp8d+fDxhmxbPxlTX2dchx0UB0qtH+4L6xtAum/ADYORCLxnra3dEp3jtLnfnmvxB9
+         grPA==
+X-Gm-Message-State: AOAM532pEnhhKYu5QNjprmVJi0SYiTPpPJd3HlqCemSGgrlFizVSOwwi
+        OnnIiYjk3qS809qjIgSvGH2nmg==
+X-Google-Smtp-Source: ABdhPJzSy3OSVGqtKyunus4UZG+M0Rq/rQsxtwQdjrAQqRXR2fT16vvwtUnNUofDKGpdsowU72xaew==
+X-Received: by 2002:a05:6808:148b:b0:325:21ad:fd18 with SMTP id e11-20020a056808148b00b0032521adfd18mr540018oiw.227.1651263454355;
+        Fri, 29 Apr 2022 13:17:34 -0700 (PDT)
+Received: from localhost ([181.97.174.128])
+        by smtp.gmail.com with ESMTPSA id f21-20020a4ace95000000b0035eb4e5a6b8sm1176122oos.14.2022.04.29.13.17.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Apr 2022 13:17:33 -0700 (PDT)
+From:   Martin Fernandez <martin.fernandez@eclypsium.com>
+To:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com, keescook@chromium.org,
+        Martin Fernandez <martin.fernandez@eclypsium.com>
+Subject: [PATCH v8 0/8] x86: Show in sysfs if a memory node is able to do encryption
+Date:   Fri, 29 Apr 2022 17:17:09 -0300
+Message-Id: <20220429201717.1946178-1-martin.fernandez@eclypsium.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-When building the Surface Aggregator Module (SAM) core, registry, and
-other SAM client drivers as builtin modules (=y), proper initialization
-order is not guaranteed. Due to this, client driver registration
-(triggered by device registration in the registry) races against bus
-initialization in the core.
+Show for each node if every memory descriptor in that node has the
+EFI_MEMORY_CPU_CRYPTO attribute.
 
-If any attempt is made at registering the device driver before the bus
-has been initialized (i.e. if bus initialization fails this race) driver
-registration will fail with a message similar to:
+fwupd project plans to use it as part of a check to see if the users
+have properly configured memory hardware encryption
+capabilities. fwupd's people have seen cases where it seems like there
+is memory encryption because all the hardware is capable of doing it,
+but on a closer look there is not, either because of system firmware
+or because some component requires updating to enable the feature.
 
-    Driver surface_battery was unable to register with bus_type surface_aggregator because the bus was not initialized
+It's planned to make it part of a specification that can be passed to
+people purchasing hardware
 
-Switch from module_init() to subsys_initcall() to resolve this issue.
-Note that the serdev subsystem uses postcore_initcall() so we are still
-able to safely register the serdev device driver for the core.
+These checks will run at every boot. The specification is called Host
+Security ID: https://fwupd.github.io/libfwupdplugin/hsi.html.
 
-Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
-Reported-by: Blaž Hrastnik <blaz@mxxn.io>
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
- drivers/platform/surface/aggregator/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We choosed to do it a per-node basis because although an ABI that
+shows that the whole system memory is capable of encryption would be
+useful for the fwupd use case, doing it in a per-node basis gives also
+the capability to the user to target allocations from applications to
+NUMA nodes which have encryption capabilities.
 
-diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
-index d384d36098c2..a62c5dfe42d6 100644
---- a/drivers/platform/surface/aggregator/core.c
-+++ b/drivers/platform/surface/aggregator/core.c
-@@ -817,7 +817,7 @@ static int __init ssam_core_init(void)
- err_bus:
- 	return status;
- }
--module_init(ssam_core_init);
-+subsys_initcall(ssam_core_init);
- 
- static void __exit ssam_core_exit(void)
- {
+I did some tests for some of the functions introduced (and modified)
+in e820.c. Sadly KUnit is not able to test __init functions and data
+so I had some warnings during the linking. There is a KUnit patch
+already to fix that [1]. I wanted to wait for it to be merged but it
+is taking more time than I expected so I'm sending this without tests
+for now. I'm planning to add unit tests in the future to the e820
+range update rework and e820_update_table.
+
+[1] https://lore.kernel.org/lkml/20220419040515.43693-1-brendanhiggins@google.com/T/
+
+
+Changes since v7:
+
+Less kerneldocs
+
+Less verbosity in the e820 code
+
+
+Changes since v6:
+
+Fixes in __e820__handle_range_update
+
+Const correctness in e820.c
+
+Correct alignment in memblock.h
+
+Rework memblock_overlaps_region
+
+
+Changes since v5:
+
+Refactor e820__range_{update, remove, set_crypto_capable} in order to
+avoid code duplication.
+
+Warn the user when a node has both encryptable and non-encryptable
+regions.
+
+Check that e820_table has enough size to store both current e820_table
+and EFI memmap.
+
+
+Changes since v4:
+
+Add enum to represent the cryptographic capabilities in e820:
+e820_crypto_capabilities.
+
+Revert __e820__range_update, only adding the new argument for
+__e820__range_add about crypto capabilities.
+
+Add a function __e820__range_update_crypto similar to
+__e820__range_update but to only update this new field.
+
+
+Changes since v3:
+
+Update date in Doc/ABI file.
+
+More information about the fwupd usecase and the rationale behind
+doing it in a per-NUMA-node.
+
+
+Changes since v2:
+
+e820__range_mark_crypto -> e820__range_mark_crypto_capable.
+
+In e820__range_remove: Create a region with crypto capabilities
+instead of creating one without it and then mark it.
+
+
+Changes since v1:
+
+Modify __e820__range_update to update the crypto capabilities of a
+range; now this function will change the crypto capability of a range
+if it's called with the same old_type and new_type. Rework
+efi_mark_e820_regions_as_crypto_capable based on this.
+
+Update do_add_efi_memmap to mark the regions as it creates them.
+
+Change the type of crypto_capable in e820_entry from bool to u8.
+
+Fix e820__update_table changes.
+
+Remove memblock_add_crypto_capable. Now you have to add the region and
+mark it then.
+
+Better place for crypto_capable in pglist_data.
+
+Martin Fernandez (8):
+  mm/memblock: Tag memblocks with crypto capabilities
+  mm/mmzone: Tag pg_data_t with crypto capabilities
+  x86/e820: Add infrastructure to refactor e820__range_{update,remove}
+  x86/e820: Refactor __e820__range_update
+  x86/e820: Refactor e820__range_remove
+  x86/e820: Tag e820_entry with crypto capabilities
+  x86/efi: Mark e820_entries as crypto capable from EFI memmap
+  drivers/node: Show in sysfs node's crypto capabilities
+
+ Documentation/ABI/testing/sysfs-devices-node |  10 +
+ arch/x86/include/asm/e820/api.h              |   1 +
+ arch/x86/include/asm/e820/types.h            |  12 +-
+ arch/x86/kernel/e820.c                       | 388 ++++++++++++++-----
+ arch/x86/platform/efi/efi.c                  |  37 ++
+ drivers/base/node.c                          |  10 +
+ include/linux/memblock.h                     |   5 +
+ include/linux/mmzone.h                       |   3 +
+ mm/memblock.c                                |  62 +++
+ mm/page_alloc.c                              |   1 +
+ 10 files changed, 431 insertions(+), 98 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-node
+
 -- 
-2.36.0
+2.30.2
 
