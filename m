@@ -2,130 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94651C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Apr 2022 20:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C877C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Apr 2022 21:14:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380685AbiD2UWC (ORCPT
+        id S234894AbiD2VRq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 29 Apr 2022 16:22:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52534 "EHLO
+        Fri, 29 Apr 2022 17:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380680AbiD2UV5 (ORCPT
+        with ESMTP id S234608AbiD2VRq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 29 Apr 2022 16:21:57 -0400
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD54D5E89
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Apr 2022 13:18:37 -0700 (PDT)
-Received: by mail-ot1-x332.google.com with SMTP id k25-20020a056830169900b00605f215e55dso2504043otr.13
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Apr 2022 13:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OkG/F7+kBMNIWCowVtEazmyHhBwO2DxtbJbfhKP712A=;
-        b=CFVomb+9tyTJtBjEhdpiH1zhwooGhEZao10gTFdxqakjE50a70JiLTBnTH7LkExN+V
-         oc+UNf8vfz0q7LVdjvbwtCy8BnniQSsjA83H+fwEwh99U6UXRuClAcfUpV3bpAAc9umN
-         hs0O4wqgUFbbSCgB/tJAtF1o+ndijINfhWVCNdR3bBValgZ8Z1AMvT3jzPCO56a+EUVj
-         eQw67Azpa5Iv4+Ywhr9kjCjFBO3QXN4+XwHcJopDuXewZTbZD9+wbmGww65HIywNbytB
-         K9o9k/DmPxRb4TRXsls4NQStEslTiFL+j1mwuEZbxJ6bjwWQEk+zv+NX6GgbMX2SInsf
-         YuNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OkG/F7+kBMNIWCowVtEazmyHhBwO2DxtbJbfhKP712A=;
-        b=w20+CXJWVqfRNvhThF+YjKLHmtSJyZ4/nQljK0C7cgwndldWW2M75XvmpLzQFk6lzE
-         6ofQeZyJMIQuGLo47KjbDlVsJtB0OapV/77+nT1of9TFPc6EJdoNZIRAAX7WnzlNPJTw
-         s+ca35nlVS9rNF8dCFChG20QicaV+a+DagI+TSDxnjjKSzpKamtWhGPqQZcGDAFuNYYk
-         ZwRA/BYCvg8Nkf1X8PtT9CGMFhdVIeHetkf6DnEc7K38hoQusb/KogAwZaBHrs6WlidP
-         W2u8wTHEG0T/zsyxROUqgczLQIlBafDUT3P9rwD3G6YEaN8zRUMfzBbyknNpkcU8leKa
-         ByWw==
-X-Gm-Message-State: AOAM531KWU/Be6iwsZqKHfqSWnyqaKiLFurGb5Fut/A8py7QmkLUPili
-        g87cYxpnnlhOgC0FdROcftq8rw==
-X-Google-Smtp-Source: ABdhPJwfcMjRvkAXKIDIz9yJyzv/MGd9Qc+uZBZYcbTg+2X+d01VGqB1uGOCZg191g8uEunpkZerYw==
-X-Received: by 2002:a9d:37cb:0:b0:5cc:7a51:c984 with SMTP id x69-20020a9d37cb000000b005cc7a51c984mr409643otb.98.1651263517007;
-        Fri, 29 Apr 2022 13:18:37 -0700 (PDT)
-Received: from localhost ([181.97.174.128])
-        by smtp.gmail.com with ESMTPSA id t13-20020a05683014cd00b0060603221245sm79060otq.21.2022.04.29.13.18.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Apr 2022 13:18:36 -0700 (PDT)
-From:   Martin Fernandez <martin.fernandez@eclypsium.com>
-To:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com, keescook@chromium.org,
-        Martin Fernandez <martin.fernandez@eclypsium.com>
-Subject: [PATCH v8 8/8] drivers/node: Show in sysfs node's crypto capabilities
-Date:   Fri, 29 Apr 2022 17:17:17 -0300
-Message-Id: <20220429201717.1946178-9-martin.fernandez@eclypsium.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220429201717.1946178-1-martin.fernandez@eclypsium.com>
-References: <20220429201717.1946178-1-martin.fernandez@eclypsium.com>
+        Fri, 29 Apr 2022 17:17:46 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7A839D3DB4
+        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Apr 2022 14:14:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1651266865;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vRdwdJR3OoR56yf6TqIrpiS+NzNySH2VSMNhpjHFJH4=;
+        b=OaewuHhgudAm6ngMIWOPH1aeqWjU6X6NnPLj3MR/sAhMXzPpsnitsx19SQBqyt3VoTavz6
+        UbAoazTT5f4OOAV/BllXgQHbIFASyP/1kGNzTdVBVD9xLeFvbpPRfrZm29dCBKuJ166qoN
+        7XSmuzlVYVdkmYqEQSi8C1ZL6yR73m0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-562-XVnx60pGMza8UVmti2IyWw-1; Fri, 29 Apr 2022 17:14:24 -0400
+X-MC-Unique: XVnx60pGMza8UVmti2IyWw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A5C9E811E75;
+        Fri, 29 Apr 2022 21:14:23 +0000 (UTC)
+Received: from emerald.lyude.net (unknown [10.22.8.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 52771111CD36;
+        Fri, 29 Apr 2022 21:14:23 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Mark Gross <markgross@kernel.org>
+Subject: [PATCH 2/2] platform/x86: thinkpad_acpi: Don't probe 2nd fan if enabled by quirk
+Date:   Fri, 29 Apr 2022 17:14:18 -0400
+Message-Id: <20220429211418.4546-3-lyude@redhat.com>
+In-Reply-To: <20220429211418.4546-1-lyude@redhat.com>
+References: <20220429211418.4546-1-lyude@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Show in each node in sysfs if its memory is able to do be encrypted by
-the CPU; on EFI systems: if all its memory is marked with
-EFI_MEMORY_CPU_CRYPTO in the EFI memory map.
+If we already know that the system in question has a quirk telling us that
+the system has a second fan, there's no purpose in probing the second fan -
+especially when probing the second fan may not work properly with systems
+relying on quirks.
 
-Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
+Also, convert all of the conditionals here into a single group of if/else
+statements. This is because there's no situations where there's more then
+one quirk on a device.
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: bf779aaf56ea ("platform/x86: thinkpad_acpi: Add dual fan probe")
+Cc: Mark Pearson <markpearson@lenovo.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Mark Gross <markgross@kernel.org>
+Cc: ibm-acpi-devel@lists.sourceforge.net
+Cc: platform-driver-x86@vger.kernel.org
 ---
- Documentation/ABI/testing/sysfs-devices-node | 10 ++++++++++
- drivers/base/node.c                          | 10 ++++++++++
- 2 files changed, 20 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-node
+ drivers/platform/x86/thinkpad_acpi.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-node b/Documentation/ABI/testing/sysfs-devices-node
-new file mode 100644
-index 000000000000..0e95420bd7c5
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-devices-node
-@@ -0,0 +1,10 @@
-+What:		/sys/devices/system/node/nodeX/crypto_capable
-+Date:		April 2022
-+Contact:	Martin Fernandez <martin.fernandez@eclypsium.com>
-+Users:		fwupd (https://fwupd.org)
-+Description:
-+		This value is 1 if all system memory in this node is
-+		capable of being protected with the CPU's memory
-+		cryptographic capabilities.  It is 0 otherwise.
-+		On EFI systems the node will be marked with
-+		EFI_MEMORY_CPU_CRYPTO.
-\ No newline at end of file
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index ec8bb24a5a22..1df15ea03c27 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -560,11 +560,21 @@ static ssize_t node_read_distance(struct device *dev,
- }
- static DEVICE_ATTR(distance, 0444, node_read_distance, NULL);
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 9067fd0a945c..677822b5d4b4 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -8747,26 +8747,25 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+ 			unsigned int speed;
  
-+static ssize_t crypto_capable_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct pglist_data *pgdat = NODE_DATA(dev->id);
-+
-+	return sysfs_emit(buf, "%d\n", pgdat->crypto_capable);
-+}
-+static DEVICE_ATTR_RO(crypto_capable);
-+
- static struct attribute *node_dev_attrs[] = {
- 	&dev_attr_meminfo.attr,
- 	&dev_attr_numastat.attr,
- 	&dev_attr_distance.attr,
- 	&dev_attr_vmstat.attr,
-+	&dev_attr_crypto_capable.attr,
- 	NULL
- };
- 
+ 			fan_status_access_mode = TPACPI_FAN_RD_TPEC;
+-			if (quirks & TPACPI_FAN_Q1)
++			if (quirks & TPACPI_FAN_Q1) {
+ 				fan_quirk1_setup();
+-			if (quirks & TPACPI_FAN_2FAN) {
++			} else if (quirks & TPACPI_FAN_2FAN) {
+ 				tp_features.second_fan = 1;
+ 				pr_info("secondary fan support enabled\n");
+-			}
+-			if (quirks & TPACPI_FAN_2CTL) {
++			} else if (quirks & TPACPI_FAN_2CTL) {
+ 				tp_features.second_fan = 1;
+ 				tp_features.second_fan_ctl = 1;
+ 				pr_info("secondary fan control enabled\n");
++			} else {
++				/* Try and probe the 2nd fan */
++				res = fan2_get_speed(&speed);
++				if (res >= 0) {
++					/* It responded - so let's assume it's there */
++					tp_features.second_fan = 1;
++					tp_features.second_fan_ctl = 1;
++					pr_info("secondary fan control detected & enabled\n");
++				}
+ 			}
+-			/* Try and probe the 2nd fan */
+-			res = fan2_get_speed(&speed);
+-			if (res >= 0) {
+-				/* It responded - so let's assume it's there */
+-				tp_features.second_fan = 1;
+-				tp_features.second_fan_ctl = 1;
+-				pr_info("secondary fan control detected & enabled\n");
+-			}
+-
+ 		} else {
+ 			pr_err("ThinkPad ACPI EC access misbehaving, fan status and control unavailable\n");
+ 			return -ENODEV;
 -- 
-2.30.2
+2.35.1
 
