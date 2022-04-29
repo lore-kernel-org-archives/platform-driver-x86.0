@@ -2,84 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49DCC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Apr 2022 16:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86302C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Apr 2022 18:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237502AbiD2Qdk (ORCPT
+        id S1379568AbiD2SEU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 29 Apr 2022 12:33:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51360 "EHLO
+        Fri, 29 Apr 2022 14:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379569AbiD2QdN (ORCPT
+        with ESMTP id S231160AbiD2SET (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 29 Apr 2022 12:33:13 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 221B9DA6FA
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Apr 2022 09:29:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C133BB83697
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Apr 2022 16:29:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A03DC385A4
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Apr 2022 16:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651249790;
-        bh=OumnbMQh7Fot7HsGHlykKiwcnX/2+YmuuhkmrUQDS0w=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=IWYnOZWlex/Gya77+zd/1ynX87Z6Wn9ODZfzf9YpOKgN8rv0vCquTEFko9FhCS9+9
-         N5vDdn0C6qPTAMROp5xVJpQXhjUxS256E/W921zo5WtrZaAwBUgnaQIe+OKETeMJJz
-         ZayqBmV9Br/Kyx7ox3gMkGM0nkQDTBDMc0NW56GK9jQ2YJRGcGB62J7TUIBfVmQGKz
-         xBlEOgVqeFt4qRo0DtHhnln0AT/eVle51eP1pjMnCZYusjI3aNtVMnUw24izpIEMYk
-         ZanJDReQaOfrQ12/4KnvdYYFrR4ZWgaU0utxZJ2X5gCEDVB4XgnvFqhisyAv5V5p/l
-         mcBURv0LmnWiw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 78149C05FD0; Fri, 29 Apr 2022 16:29:50 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
-Date:   Fri, 29 Apr 2022 16:29:50 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-214899-215701-9DFaNfZLPS@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
-References: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Fri, 29 Apr 2022 14:04:19 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A5A786E33;
+        Fri, 29 Apr 2022 11:01:01 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id q23so11775371wra.1;
+        Fri, 29 Apr 2022 11:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kwQwtR8Oa7bR+n2zK/7E32nJYLiZTZEmGGHscOLXyGg=;
+        b=omW4ZgNy3/eRtdMQX8jV0vHYKuikLSy/pjGklKPyktIR3Op8rhe25cBdCRhn2QLg6G
+         tolziYACJvJKqVxSLXiJ/CVYDj9EdJWiIKSCfkJ0w/kD/v8jlaUmtvo5TQrb/355Vd8P
+         zTFyi62DxQ2O3fgqT+ikw1unEpXCip02UU5mh2DWoAZuDaqg5Cj182s4p+jG/5khKQAR
+         G/LLHH5/cbRAf5WCi9jXfgDsWiIxtXMecyQ70EGGibHC7Vu+odSNPRl0IRVFZHKAnOZL
+         h3g0Nx/Wpu8F0X8H2VdyzaSOZL2uAE3mVDy7eaoXI+3zlIhwtc2bXoHHAuTs5M87ZUtX
+         vFvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kwQwtR8Oa7bR+n2zK/7E32nJYLiZTZEmGGHscOLXyGg=;
+        b=Vrd/E/lLav8L0dZGzLQoKX3OHpqMbRNiHg9Lpbria0luMz4ysyFcLG/dqVOn4WJacU
+         XoH+BKzCMwkJ9RCWmlzGP+MeTBlJqVyLy6jrj19lI2XqcSc/yXdUjsOHRJdoFzECsS95
+         fSuh+j+qZSJMM90nR2zibkL7OJHQGG9JG9H6fDyRPLaJ0UYGH2PVjFa3rhiOPO4uQg50
+         SU41qCYFHCj1og7h71VRNcIwRfV7KEfnIVUSm7hJ2CViT2g7OUL+FU7szIJw0C36+6fZ
+         UL+pzbE/7cG46FlOymrVLTp0pw+5w/j3tMECgjIpAq+iz2O6KMFt8krYyIyTZQNrS57G
+         dJ0A==
+X-Gm-Message-State: AOAM532AHjG+Xs6DOmSpt8XgG2mhAy7a39LzjtT+08WDWHiA6SwxTN4Z
+        kfM9FKLNuQOMimZnFZkrKlY=
+X-Google-Smtp-Source: ABdhPJyojKtW+Lvnm5YqDhEX45F4uXf5KSoPl4PhvF828tf3rDJwWkjJ0zVderhj/1i5vb1y0rhebA==
+X-Received: by 2002:adf:b613:0:b0:20a:c7db:3ce4 with SMTP id f19-20020adfb613000000b0020ac7db3ce4mr269389wre.70.1651255259533;
+        Fri, 29 Apr 2022 11:00:59 -0700 (PDT)
+Received: from xws.localdomain (pd9e5acba.dip0.t-ipconnect.de. [217.229.172.186])
+        by smtp.gmail.com with ESMTPSA id s30-20020adf979e000000b0020adfb1292fsm3041309wrb.16.2022.04.29.11.00.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Apr 2022 11:00:58 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/surface: gpe: Add support for Surface Pro 8
+Date:   Fri, 29 Apr 2022 20:00:49 +0200
+Message-Id: <20220429180049.1282447-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.36.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
+The new Surface Pro 8 uses GPEs for lid events as well. Add an entry for
+that so that the lid can be used to wake the device. Note that this is a
+device with a keyboard type-cover, where this acts as the "lid".
 
---- Comment #27 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-(In reply to Johannes P from comment #26)
-> Blacklisting ideapad-laptop seems to have no impact on the brightness key=
-s.
-> Pressing them still results in the same register change outlined above, a=
-nd
-> nothing else.=20
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ drivers/platform/surface/surface_gpe.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Bummer, I'm afraid I'm all out of ideas then.
+diff --git a/drivers/platform/surface/surface_gpe.c b/drivers/platform/surface/surface_gpe.c
+index c1775db29efb..ec66fde28e75 100644
+--- a/drivers/platform/surface/surface_gpe.c
++++ b/drivers/platform/surface/surface_gpe.c
+@@ -99,6 +99,14 @@ static const struct dmi_system_id dmi_lid_device_table[] = {
+ 		},
+ 		.driver_data = (void *)lid_device_props_l4D,
+ 	},
++	{
++		.ident = "Surface Pro 8",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 8"),
++		},
++		.driver_data = (void *)lid_device_props_l4B,
++	},
+ 	{
+ 		.ident = "Surface Book 1",
+ 		.matches = {
+-- 
+2.36.0
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
