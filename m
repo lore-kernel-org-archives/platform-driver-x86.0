@@ -2,305 +2,207 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9E9C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Apr 2022 03:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0474C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Apr 2022 12:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235147AbiD2DIe (ORCPT
+        id S235323AbiD2MZP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Apr 2022 23:08:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54680 "EHLO
+        Fri, 29 Apr 2022 08:25:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235031AbiD2DId (ORCPT
+        with ESMTP id S230095AbiD2MZO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Apr 2022 23:08:33 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2045.outbound.protection.outlook.com [40.107.220.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94D4485655;
-        Thu, 28 Apr 2022 20:05:15 -0700 (PDT)
+        Fri, 29 Apr 2022 08:25:14 -0400
+Received: from mail1.bemta31.messagelabs.com (mail1.bemta31.messagelabs.com [67.219.246.112])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ECEC75633;
+        Fri, 29 Apr 2022 05:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
+        s=Selector; t=1651234914; i=@lenovo.com;
+        bh=qDQRckvWjAZYIXX4XtZVxNPggDs4QX/rS1CQ1Ju5i2U=;
+        h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+         In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        b=gkALruv3624fxE956wMOwSIw95dsHIYWr0bQ9fH3ka91SySd+Jw2LCh/qM4whjsS2
+         9XyH9/44Wwwzk7j++atPv1GVuHC1hkt8Rsn/eurp6T2Vi9g1kIW3t+6Agm1rTtikhL
+         +rTv9DVrDjQUgYBJqXqwHtUYvuPGCSfc8M2hDXlXjwVQ1bTNsnLKsHWGbOP5ynh2Xj
+         nssbaGbYm3v2yn2p54AL4QCdkiAO3ZOIdU8RX8nm7arvrfjVVXaxXvlQ9sMoIS7OH+
+         1LYTe+ZYAMb8kFPnemS3dHGeT5qUt7HEE/1M0B4p0jBCUZvqpAaBkwP+mhkB3acLfi
+         F7G8GBsVFwYLQ==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBJsWRWlGSWpSXmKPExsWSoZ+nrZt4Izv
+  J4OVMNYs3x6czWaz/vZLFYvZhG4vLu+awWXzumMxisXrPC2YHNo/fBxg95p0M9Ni94DOTx/t9
+  V9k8Pm+SC2CNYs3MS8qvSGDNeHboHmvBFv6KN3/esTUwrubpYuTiYBRYyixxcvd9VghnEavE+
+  onX2SGcNiaJbfPusIA4QgLzmSRu9z1jhHAOM0k0Nn5i6mLk5JAQOM4o0b3KHSLRySixe+sPNg
+  hnApPEsrVzoJwnjBL/TuxkgnN2HD/IDNLPK2Ar0d/6mA3EZhFQldj/6CMbRFxQ4uTMJywgtqh
+  AuET3/v2sILawQLHE5l+3wGqYBcQlbj2ZD3aHCFDNmc8bwbYxCyxikjhx7AwjSEJIoEBi4cQz
+  YEVsAtoSW7b8AmvmFLCTODz1FyPEIE2J1u2/2SFseYntb+cwQ/QqS/zqP88M8aiixLPj/SwQd
+  oJE85SjjBC2pMS1mxfYIWxZiaNn5wDVcADZvhJ37xlDhHUluhdugRpjI/H2BoydI3Hr/z/GCY
+  x6s5C8PAvJa7OQXDcLyXULGFlWMVolFWWmZ5TkJmbm6BoaGOgaGpromuoaGZjrJVbpJuqVFuu
+  mJhaX6BrqJZYX66UWF+sVV+Ym56To5aWWbGIEJq+UItbzOxiX9/zUO8QoycGkJMr7/ER2khBf
+  Un5KZUZicUZ8UWlOavEhRhkODiUJXp1rQDnBotT01Iq0zBxgIoVJS3DwKInwPr4MlOYtLkjML
+  c5Mh0idYjTmuLJt715mjvM79+9lFmLJy89LlRLnLb0OVCoAUppRmgc3CJbgLzHKSgnzMjIwMA
+  jxFKQW5WaWoMq/YhTnYFQS5r0CMoUnM68Ebt8roFOYgE5ZWZQJckpJIkJKqoHJdcGkPZZpmZ1
+  Wm+ZttDo896NSu7hLypfrWTt9907/OLnjzq/8XMaYix1+Hgni4fFba1Z+EwrcuYlvm4Lrvsaw
+  6absl759OnrZ7cbc/RHqkXzOvZJJtl4MvefcJDTtmTvmiHkWu35MqZHokeRZbbfy0BWRa2ybz
+  vO+nepTFnTm1iTep3sfVhSnPJDM149QnRnMs/zZkwLmiy9cfqjePKv6946O9O1X6vVHS8wLfz
+  aY/lFWDy1VO7nteLrxvjfTTydMaA2MjZtfq8/FnrHqjoTNfYln99guta1fHFv6L9OCKTi1fP3
+  DpeLVMtODOfSfBn9fZ3xio/LynMRjTx42NnbenJsQ92Ovr2KukT2PhooSS3FGoqEWc1FxIgCd
+  m0jdawQAAA==
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-14.tower-686.messagelabs.com!1651234911!26678!2
+X-Originating-IP: [104.47.110.43]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.86.4; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 27906 invoked from network); 29 Apr 2022 12:21:53 -0000
+Received: from mail-tyzapc01lp2043.outbound.protection.outlook.com (HELO APC01-TYZ-obe.outbound.protection.outlook.com) (104.47.110.43)
+  by server-14.tower-686.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 29 Apr 2022 12:21:53 -0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MdW+HMKtYqHNXEtsOn3tLb2rCG4Z+lI0gqHg9u5NZc/CzBHH6g+LtC0bVD/kXnAAo1TnRmO2NDyLkXbultnWtn0KaRZ9P2dZmsXFBmw36nGR3eDpNK7smIIFyequ8IbbyapV18zIhxjlchLwxFCC783xkiQWgTEUqljYqyfNOiv61N5XcXfchvPRrKeC15sQDjpcRV9HKlcADpRw5Dbuzv2EOYz3xedbbrcA7Lup+QGlWjD1oifhMjJ+3H2F19BxyDFW6+yPnt3R4kHbCmOnBC+ON8Swz1OOBJA+JDfJOSbjRGF7MDyc0rbPYphkOmgYb1kksNMgGCQ66hMP5q9ZJg==
+ b=ih8uUsnNhthbXJNZBntdRMaaJjO8P1+R5tuwxGfZtpuRbn54I35RQnv8KrmzNwY+XiU6l9BDnIprLKmvSK57WpV7NXUYzX+SjR1EobuMOZaeyxDmZIUH9Hix7i9Zqma0J8LEuHI1j2ing0phixgKlHqReC51W77ySmcixHVNtNCpDuHyakVRxeN+NhhAq1Xn8qdZJ1AKRfsiS8Y77+V1oJdx+cCvf4OATriEzlQFl6RhCYnXidk7m6i5mjtmZHOaYlcNNekh1Hwp210tqXz2+d4NGkjCnpvDiFq+/EyzXR+eHWNMVSs1LmnIu15AQZeH783ZwZbFDabrwlt0Q1N2Kg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x79hoz/UFpABXRhK/fZdE/qSKoEbChoC3QRITuGeMMw=;
- b=ny7Yemi2rkX4+Uj6gFarJVhAqvG5PFs19zZ1xr0sS7/gaUwiwH9Ghxch9K1t0FWtD+gOqoh24KSAvIThg96SB81XuC30rifvFzE4wcpImxPSPRekBoBhdHNiGj1ffkrxWVnZbxU+xv4TJoI+TkQYPMKzTIKJD/kKxGflTrIM63K7fbfYsifiK56ikhxOY/IMr3Wc7XanO7U0V1joN78gdTUCIlTjxAatIKYOzAyJdsxYG14C6cyAc+6J8oe+BH3VF59hetUsAjgaC4IIn+KBy2h+9PqFODFOXSlmHIcuYfbG8ELwffERadagBPUn+Ee0CHpKd2hgJ0jM7SNNT7QTVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ bh=qDQRckvWjAZYIXX4XtZVxNPggDs4QX/rS1CQ1Ju5i2U=;
+ b=laFvuujgStGhOr6sKtQf6JC/bVJXCmksusS9Xc5n1Wx62+QzD4Cs2KeU0QvCuSAPWNpt+PXsp5UVNLHW3kwYLu19QzOvgRWd4qYDPDR4A950Gr9/f62EZgHQbt4BTfyQCngHLXj/vM9Jkylve2yAyqCCQIws8HpAQJwljE1TLrpKbZDniF3sTrBfOk2/ocWenS9XEA4lxEOi3sxo2usoKQwHVAwjptqtapXTnP+cJ9JEntrbMBLu7FErgULAhJK+3lNyP1ZpzbcGcaHNbjGEZ75GwQ63nPz6qOsg8sltgWVXjDJyRxAVwbYWrhBVTci88cmTecgj6+jBfgIRXwGYog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 104.232.225.6) smtp.rcpttodomain=amd.com smtp.mailfrom=lenovo.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=lenovo.com;
  dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x79hoz/UFpABXRhK/fZdE/qSKoEbChoC3QRITuGeMMw=;
- b=GEXCCAClWmeTPCSc5h5YN3o+8UhMHJTcZBgLCP5UBx+gJeWniHgHZ83QFNPNy5wzdXvHGaMmmvMCNni4n+KZv5ufKUL8aEfIaNFZx63MSSdRZM5nr6g7j0jmxZFKRUS+gib41+GLzbgf+gmDXUgbsnV5kCdnjoWz/FF3EmMnfCg=
-Received: from BN8PR12CA0029.namprd12.prod.outlook.com (2603:10b6:408:60::42)
- by SJ1PR12MB6098.namprd12.prod.outlook.com (2603:10b6:a03:45f::11) with
+Received: from PS2PR02CA0060.apcprd02.prod.outlook.com (2603:1096:300:5a::24)
+ by SL2PR03MB4233.apcprd03.prod.outlook.com (2603:1096:100:46::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.13; Fri, 29 Apr
- 2022 03:05:13 +0000
-Received: from BN8NAM11FT008.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:60:cafe::92) by BN8PR12CA0029.outlook.office365.com
- (2603:10b6:408:60::42) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.15 via Frontend
- Transport; Fri, 29 Apr 2022 03:05:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT008.mail.protection.outlook.com (10.13.177.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5206.12 via Frontend Transport; Fri, 29 Apr 2022 03:05:13 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 28 Apr
- 2022 22:05:11 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.14; Fri, 29 Apr
+ 2022 12:21:47 +0000
+Received: from PSAAPC01FT067.eop-APC01.prod.protection.outlook.com
+ (2603:1096:300:5a:cafe::3a) by PS2PR02CA0060.outlook.office365.com
+ (2603:1096:300:5a::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.14 via Frontend
+ Transport; Fri, 29 Apr 2022 12:21:47 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 104.232.225.6) smtp.mailfrom=lenovo.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=lenovo.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ lenovo.com discourages use of 104.232.225.6 as permitted sender)
+Received: from mail.lenovo.com (104.232.225.6) by
+ PSAAPC01FT067.mail.protection.outlook.com (10.13.38.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5206.12 via Frontend Transport; Fri, 29 Apr 2022 12:21:46 +0000
+Received: from reswpmail01.lenovo.com (10.62.32.20) by mail.lenovo.com
+ (10.62.123.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.27; Fri, 29 Apr
+ 2022 08:21:44 -0400
+Received: from [10.46.196.199] (10.46.196.199) by reswpmail01.lenovo.com
+ (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2308.27; Fri, 29 Apr
+ 2022 08:22:47 -0400
+Message-ID: <a5faa9e6-feba-6a76-de53-1c9d2c572da4@lenovo.com>
+Date:   Fri, 29 Apr 2022 08:21:43 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [External] [PATCH 2/2] platform/x86: thinkpad_acpi: Add a s2idle
+ resume quirk for a number of laptops
+Content-Language: en-US
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>
 CC:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
         Mark Gross <mgross@linux.intel.com>,
         "open list:THINKPAD ACPI EXTRAS DRIVER" 
         <ibm-acpi-devel@lists.sourceforge.net>,
         "open list:THINKPAD ACPI EXTRAS DRIVER" 
         <platform-driver-x86@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH 2/2] platform/x86: thinkpad_acpi: Add a s2idle resume quirk for a number of laptops
-Date:   Thu, 28 Apr 2022 22:05:01 -0500
-Message-ID: <20220429030501.1909-3-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220429030501.1909-1-mario.limonciello@amd.com>
+        open list <linux-kernel@vger.kernel.org>
 References: <20220429030501.1909-1-mario.limonciello@amd.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
+ <20220429030501.1909-3-mario.limonciello@amd.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+In-Reply-To: <20220429030501.1909-3-mario.limonciello@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.46.196.199]
+X-ClientProxiedBy: reswpmail01.lenovo.com (10.62.32.20) To
+ reswpmail01.lenovo.com (10.62.32.20)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9da0ddac-cbf9-4370-da61-08da298d146a
-X-MS-TrafficTypeDiagnostic: SJ1PR12MB6098:EE_
-X-Microsoft-Antispam-PRVS: <SJ1PR12MB6098F1653A1B0702DF655279E2FC9@SJ1PR12MB6098.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: caf02da9-e4af-489a-6801-08da29dad453
+X-MS-TrafficTypeDiagnostic: SL2PR03MB4233:EE_
+X-LD-Processed: 5c7d0b28-bdf8-410c-aa93-4df372b16203,ExtAddr
+X-Microsoft-Antispam-PRVS: <SL2PR03MB4233F429ABA93A983F7E4678C5FC9@SL2PR03MB4233.apcprd03.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5j60/9k44JpmDJYWRFOljjTaqiXuqCWPREg+bV4d7QBLYS+A7VxLJIFBBGw93G8Sk0IBegRsBE+wLTCEa5O1sOLdUCOuCj98rL2fzc7IRfYyNP5zJf4Hsd7AGptzv14Nts+lwtrv9DU4TT1OBlJLJhS3rLOin9g3Rj36sssGZ7nO3WyJNxej86EStxfsjS3vOPzhJgyQohK0HoAsYERlqhbNqkrC6uxsI+wlEA8zsTBUkUfhbagrzybYqR6wXxqj4iXg2R/uqvFNLRfaVcJp9HdVn5ZsFnE6+MBhQBuhYk2BsbUS8aVRtL3fH3tR6UmbBS2DOKBIE/uCRSMrgN2rrSZEsGsHXyJzcdPNcvZB2oW3KvUxX5Qu0Rp5J4JNIzM8bsX2Tx9VLz59aDgCikXJS33Kdmsp6fVE00ZnJ+AjD/RGL+DQZ/nbvnqGF95xewPVpRAhmXH/16KZ8WX3AB6KwybppgTfhymBw75KOuO/H/FR34avAYLd0ifb7Q73abky45Wb/0MMzzpQn61mRmvKjPKxvajATZZ6Nj1YHJES8mHhAgCjfh/ESPRJ/r/L2j0tJtE1mvSmKlSsIltD7NgBW7JRYnRthM4MrdrnhsUeqZhQnkc97JPfukeOQ/q/zh5+3/YAxPCO18dWW223K8WDMF1yJKXSQyC4j4ugU4221n4itMuntry9aIqvv/iB8NtM1L4Sk4SK52UJL+fXTTDaLA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(70206006)(83380400001)(508600001)(186003)(4326008)(16526019)(36860700001)(2616005)(40460700003)(8676002)(70586007)(82310400005)(7696005)(966005)(86362001)(336012)(426003)(47076005)(44832011)(5660300002)(316002)(36756003)(6666004)(81166007)(26005)(1076003)(54906003)(356005)(110136005)(8936002)(2906002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2022 03:05:13.5239
+X-Microsoft-Antispam-Message-Info: 05dEwvCdPWVG0Fy37s/5cVXdngfZ7B4RBfw+yZLjK9s4RS2xp7YHBKNMOgfbYH9J4Kx6UTe/ZDT9DbMEPyx0nx9+f+JbynBUxXrGVMNJQI4OT7ipsuLV8pcEUOv/lWNCn/jRQNn4kLt0SLtfCTOsEd+pbDC+5RsqHk8h4AxYsRBGAEmHRA/a+TGFWZcaw9LnCHmVzn+raqtSWvQ8b9hPFjZ9lS97hQb792wiqRgC7lgcW0Kue/m+9nVnLG9ft6JafZn/dQhcuLikjPGAsR5WTMl/H7pTeR68QQFMd45qbrcwBW+J690R5qYKlJNOwrGRRFMtCRwl2WCWscdAW4To6fUJv4xTgwPWbNnbPVHVK5Q2v7KKSoQ02nS9qKkjh7+0jSCfv0cgTLfSJR3kcIaTPg4Xk8Oa/0UaKaNT5UDjKjTxvF91YT1qczevZzQ8C+DqIGDo8iK1bDlFavRHkO+cW/zyyUoLif6K+1LjFc1Bq4OfayvF8/iuMbXNFZiSpaSz/yqOOzJRXGk2Qlq2IorWnSiE9NPmI7VpN6nJDGrkTfespb1/LjYHN/BogzTyOBj80CdUiucJIuGYst9MVaOo12FBfLoL7YTkCfN22PwqtsM4RIeraL0Inc8z6gb+lrp5FwlJ9cyTBs0F1t8QnWzlTGzROxt1n7idmSsmyv59WBkBQvW0ZWBhrlviHXno/wvJbARp8LWzgMvZSSs49dY+A1eL++UsexPn2lgiXdldpdsArwaCr6skDPgftRrbyVkn/RQZG6pedg0A3bB7MrwUcJLCEl5egr6EcQcKpmML4GvSMtIMKXhsT6nyAf1x2AqF
+X-Forefront-Antispam-Report: CIP:104.232.225.6;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.lenovo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(46966006)(36840700001)(36906005)(54906003)(8936002)(110136005)(966005)(5660300002)(83380400001)(82960400001)(508600001)(316002)(4326008)(70206006)(8676002)(70586007)(16576012)(86362001)(31696002)(426003)(2616005)(6666004)(26005)(47076005)(186003)(336012)(16526019)(2906002)(36860700001)(36756003)(53546011)(82310400005)(40460700003)(81166007)(31686004)(356005)(3940600001)(36900700001)(43740500002);DIR:OUT;SFP:1102;
+X-OriginatorOrg: lenovo.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2022 12:21:46.3817
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9da0ddac-cbf9-4370-da61-08da298d146a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT008.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: caf02da9-e4af-489a-6801-08da29dad453
+X-MS-Exchange-CrossTenant-Id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5c7d0b28-bdf8-410c-aa93-4df372b16203;Ip=[104.232.225.6];Helo=[mail.lenovo.com]
+X-MS-Exchange-CrossTenant-AuthSource: PSAAPC01FT067.eop-APC01.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6098
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SL2PR03MB4233
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Lenovo laptops that contain NVME SSDs across a variety of generations have
-trouble resuming from suspend to idle when the IOMMU translation layer is
-active for the NVME storage device.
 
-This generally manifests as a large resume delay or page faults. These
-delays and page faults occur as a result of a Lenovo BIOS specific SMI
-that runs during the D3->D0 transition on NVME devices.
+On 4/28/22 23:05, Mario Limonciello wrote:
+> Lenovo laptops that contain NVME SSDs across a variety of generations have
+> trouble resuming from suspend to idle when the IOMMU translation layer is
+> active for the NVME storage device.
+> 
+> This generally manifests as a large resume delay or page faults. These
+> delays and page faults occur as a result of a Lenovo BIOS specific SMI
+> that runs during the D3->D0 transition on NVME devices.
+> 
+> This SMI occurs because of a flag that is set during resume by Lenovo
+> firmware:
+> 
+> ```
+> OperationRegion (PM80, SystemMemory, 0xFED80380, 0x10)
+> Field (PM80, AnyAcc, NoLock, Preserve)
+> {
+> 	SI3R,   1
+> }
+> 
+> Method (_ON, 0, NotSerialized)  // _ON_: Power On
+> {
+> 	TPST (0x60D0)
+> 	If ((DAS3 == 0x00))
+> 	{
+> 		If (SI3R)
+> 		{
+> 			TPST (0x60E0)
+> 			M020 (NBRI, 0x00, 0x00, 0x04, (NCMD | 0x06))
+> 			M020 (NBRI, 0x00, 0x00, 0x10, NBAR)
+> 			APMC = HDSI /* \HDSI */
+> 			SLPS = 0x01
+> 			SI3R = 0x00
+> 			TPST (0x60E1)
+> 		}
+> 		D0NV = 0x01
+> 	}
+> }
+> ```
+> 
+> Create a quirk that will run early in the resume process to prevent this
+> SMI from running. As any of these machines are fixed, they can be peeled
+> back from this quirk or narrowed down to individual firmware versions.
+> 
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1910>> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1689>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-This SMI occurs because of a flag that is set during resume by Lenovo
-firmware:
+Thanks Mario,
 
-```
-OperationRegion (PM80, SystemMemory, 0xFED80380, 0x10)
-Field (PM80, AnyAcc, NoLock, Preserve)
-{
-	SI3R,   1
-}
+Tested the series on the T14 G1 AMD and it fixes the long delay when
+resuming from S0ix suspend nicely.
 
-Method (_ON, 0, NotSerialized)  // _ON_: Power On
-{
-	TPST (0x60D0)
-	If ((DAS3 == 0x00))
-	{
-		If (SI3R)
-		{
-			TPST (0x60E0)
-			M020 (NBRI, 0x00, 0x00, 0x04, (NCMD | 0x06))
-			M020 (NBRI, 0x00, 0x00, 0x10, NBAR)
-			APMC = HDSI /* \HDSI */
-			SLPS = 0x01
-			SI3R = 0x00
-			TPST (0x60E1)
-		}
-		D0NV = 0x01
-	}
-}
-```
+Patches look good to me. I am working with the Lenovo FW teams for the
+various platforms, but as S0ix support wasn't in the original scope I
+don't know yet when (or if in some cases) they'll get FW fixes released.
+I believe these changes are benign even once the FW is fixed so think
+this is a great idea.
 
-Create a quirk that will run early in the resume process to prevent this
-SMI from running. As any of these machines are fixed, they can be peeled
-back from this quirk or narrowed down to individual firmware versions.
+I'll push updates removing platform quirks once FW is released though.
 
-Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1910
-Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1689
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 108 ++++++++++++++++++++++++++-
- 1 file changed, 107 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index f49f59130c3c..9161f356fcdd 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -312,12 +312,17 @@ struct ibm_init_struct {
- /* DMI Quirks */
- struct quirk_entry {
- 	bool btusb_bug;
-+	u32 s2idle_bug_mmio;
- };
- 
- struct quirk_entry quirk_btusb_bug = {
- 	.btusb_bug = true,
- };
- 
-+struct quirk_entry quirk_s2idle_bug = {
-+	.s2idle_bug_mmio = 0xfed80380,
-+};
-+
- static struct {
- 	u32 bluetooth:1;
- 	u32 hotkey:1;
-@@ -4419,9 +4424,101 @@ static const struct dmi_system_id fwbug_list[] __initconst = {
- 			DMI_MATCH(DMI_BOARD_NAME, "20MV"),
- 		},
- 	},
-+	{
-+		.ident = "L14 Gen2 AMD",
-+		.driver_data = &quirk_s2idle_bug,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "20X5"),
-+		}
-+	},
-+	{
-+		.ident = "T14s Gen2 AMD",
-+		.driver_data = &quirk_s2idle_bug,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "20XF"),
-+		}
-+	},
-+	{
-+		.ident = "X13 Gen2 AMD",
-+		.driver_data = &quirk_s2idle_bug,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "20XH"),
-+		}
-+	},
-+	{
-+		.ident = "T14 Gen2 AMD",
-+		.driver_data = &quirk_s2idle_bug,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "20XK"),
-+		}
-+	},
-+	{
-+		.ident = "T14 Gen1 AMD",
-+		.driver_data = &quirk_s2idle_bug,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "20UD"),
-+		}
-+	},
-+	{
-+		.ident = "P14s Gen1 AMD",
-+		.driver_data = &quirk_s2idle_bug,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "20Y1"),
-+		}
-+	},
-+	{
-+		.ident = "P14s Gen2 AMD",
-+		.driver_data = &quirk_s2idle_bug,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "21A0"),
-+		}
-+	},
- 	{}
- };
- 
-+/*
-+ * Lenovo laptops from a variety of generations run a SMI handler during the D3->D0
-+ * transition that occurs specifically when exiting suspend to idle which can cause
-+ * large delays during resume when the IOMMU translation layer is enabled (the default
-+ * behavior) for NVME devices:
-+ *
-+ * To avoid this firmware problem, skip the SMI handler on these machines before the
-+ * D0 transition occurs.
-+ */
-+static void thinkpad_acpi_amd_s2idle_restore(void)
-+{
-+	struct resource *res;
-+	void __iomem *addr;
-+	u8 val;
-+
-+	res = request_mem_region_muxed(tp_features.quirks->s2idle_bug_mmio, 1,
-+					"thinkpad_acpi_pm80");
-+	if (!res)
-+		return;
-+
-+	addr = ioremap(tp_features.quirks->s2idle_bug_mmio, 1);
-+	if (!addr)
-+		goto cleanup_resource;
-+
-+	val = ioread8(addr);
-+	iowrite8(val & ~BIT(0), addr);
-+
-+	iounmap(addr);
-+cleanup_resource:
-+	release_resource(res);
-+}
-+
-+static struct acpi_s2idle_dev_ops thinkpad_acpi_s2idle_dev_ops = {
-+	.restore = thinkpad_acpi_amd_s2idle_restore,
-+};
-+
- static const struct pci_device_id fwbug_cards_ids[] __initconst = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24FD) },
-@@ -11473,6 +11570,8 @@ static void thinkpad_acpi_module_exit(void)
- 
- 	tpacpi_lifecycle = TPACPI_LIFE_EXITING;
- 
-+	if (tp_features.quirks && tp_features.quirks->s2idle_bug_mmio)
-+		acpi_unregister_lps0_dev(&thinkpad_acpi_s2idle_dev_ops);
- 	if (tpacpi_hwmon)
- 		hwmon_device_unregister(tpacpi_hwmon);
- 	if (tp_features.sensors_pdrv_registered)
-@@ -11643,8 +11742,15 @@ static int __init thinkpad_acpi_module_init(void)
- 	}
- 
- 	dmi_id = dmi_first_match(fwbug_list);
--	if (dmi_id)
-+	if (dmi_id) {
- 		tp_features.quirks = dmi_id->driver_data;
-+		if (tp_features.quirks->s2idle_bug_mmio) {
-+			if (!acpi_register_lps0_dev(&thinkpad_acpi_s2idle_dev_ops))
-+				pr_info("Using s2idle quirk to avoid %s platform firmware bug\n",
-+					dmi_id->ident ? dmi_id->ident : "");
-+		}
-+	}
-+
- 	return ret;
- }
- 
--- 
-2.34.1
+Tested-by: Mark Pearson <markpearson@lenvo.com>
 
