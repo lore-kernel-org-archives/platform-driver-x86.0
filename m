@@ -2,103 +2,115 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D81DC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 30 Apr 2022 12:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA134C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 30 Apr 2022 22:49:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235118AbiD3MZn (ORCPT
+        id S235109AbiD3Ww5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 30 Apr 2022 08:25:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53216 "EHLO
+        Sat, 30 Apr 2022 18:52:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232836AbiD3MZm (ORCPT
+        with ESMTP id S229489AbiD3Ww4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 30 Apr 2022 08:25:42 -0400
-X-Greylist: delayed 527 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 30 Apr 2022 05:22:20 PDT
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8527B12E;
-        Sat, 30 Apr 2022 05:22:20 -0700 (PDT)
-Date:   Sat, 30 Apr 2022 14:13:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=t-8ch.de; s=mail;
-        t=1651320808; bh=DT5/86canTZHX2ROrTMFnYpWQTQ8t6bIymKCu+253LY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L9Y6GqstX49RWzFh+5HGKKco8NsZfj3SN4p+EcvonpQAphgOVz6FfS8Wt7CuGu/Hw
-         ilTs6ccH990Ei+1wC/g9xyowAMV7dRKAtDidxpQY0NnkTm/BMQVP5dLMnyogdx/rlt
-         4eCN3Ih0FvKWM7Luybm7G/GUbgFBYos2inKltwM8=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Mark Pearson <markpearson@lenovo.com>
-Cc:     Lyude Paul <lyude@redhat.com>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [External] [PATCH 1/2] platform/x86: thinkpad_acpi: Restore X1
- Carbon 9th Gen dual fan quirk
-Message-ID: <9270b2da-0cca-422f-8bf8-4b1fb9aa363c@t-8ch.de>
-References: <20220429211418.4546-1-lyude@redhat.com>
- <20220429211418.4546-2-lyude@redhat.com>
- <d3461670-a905-4956-4f4d-d847adf4289b@lenovo.com>
+        Sat, 30 Apr 2022 18:52:56 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B112457A3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 30 Apr 2022 15:49:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 6C82DCE0F21
+        for <platform-driver-x86@vger.kernel.org>; Sat, 30 Apr 2022 22:49:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 86C8CC385D5
+        for <platform-driver-x86@vger.kernel.org>; Sat, 30 Apr 2022 22:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651358968;
+        bh=iWpOivR2AQvXwjsn84c360Vd0bphbgphsl3JByGKzYQ=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=LAO8nZL7R7x/ZhGmeQVF0oXzfwVDOVqQqZGyQ0FrZ1BasQwObm7LgJ/rDLi7JwhbG
+         M4Y7FHlrj+xh7y3v9LJsoI3cKv05+xv54TFYviO3UCHIAkkqqewALM9YWesTO3PPAi
+         u7kITpArOz51o18Fu71M3JsiEUJU3c2ll2GOFzxUEDHMPB0stSIBKPaVz89WeHmKvX
+         UgAhPxIGnX3TuC2p6jJPuWsKGuXCyGGkQmntS+DOXlWxFd/cM48u1ss9Cb4k+yFTTJ
+         Yw3f+nlf3HQ8Y+7E6U6EBvoDrRC8+Qr2zAuUoVpJbwTPCF+UI6vbdNiyUwZcUWTPE3
+         U/eapJaQb8YCw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 6F826C05F98; Sat, 30 Apr 2022 22:49:28 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Sat, 30 Apr 2022 22:49:26 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: e_dimas@rambler.ru
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-204807-215701-SegdQ8DaQH@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d3461670-a905-4956-4f4d-d847adf4289b@lenovo.com>
-Jabber-ID: thomas@t-8ch.de
-X-Accept: text/plain, text/html;q=0.2, text/*;q=0.1
-X-Accept-Language: en-us, en;q=0.8, de-de;q=0.7, de;q=0.6
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-On 2022-04-29 21:25-0400, Mark Pearson wrote:
-> Hi Lyude
-> 
-> On 4/29/22 17:14, Lyude Paul wrote:
-> > The new method of probing dual fan support introduced in:
-> > 
-> > bf779aaf56ea ("platform/x86: thinkpad_acpi: Add dual fan probe")
-> > 
-> > While this commit says this works on the X1 Carbon 9th Gen, it actually
-> > just results in hiding the second fan on my local machine. Additionally,
-> > I'm fairly sure this machine powers on quite often without either of the
-> > two fans spinning.
-> > 
-> > So let's fix this by adding back the dual fan quirk for the X1 Carbon 9th
-> > Gen.
-> > 
-> [..]
->
-> I just double checked this on my X1C9 - and it's working correctly. 2nd
-> fan is detected correctly.
-> 
-> I'd rather understand why it's not working on your setup then just
-> re-introduce the quirk.
-> 
-> What happens on your system when the
->   res = fan2_get_speed(&speed);
-> is called? If that is failing it means your 2nd fan isn't responding and
-> that's not supposed to happen. Could you let me know if you get an error
-> code, if it happens every boot, etc
-> I assume when the function is called later it works successfully?
+Dmitrii Levchenko (e_dimas@rambler.ru) changed:
 
-I have the same issue.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |e_dimas@rambler.ru
 
-To me it looks like this:
+--- Comment #234 from Dmitrii Levchenko (e_dimas@rambler.ru) ---
+Thanks all for the effort.
+Please also add:
 
-Probing for the second fan calls fan2_get_speed(), this calls
-fan_select_fan2() which in turn checks that tp_features.second_fan is set.
-But at this point in the tp_features.second_fan can not yet be set because it
-is either set from quirks or *after* the probing.
+$ cat /sys/class/dmi/id/board_name
+PRIME H410M-R
 
-Maybe some of the matches for the quirk TPACPI_FAN_2FAN should also have
-matched this device?
-It doesn't do so on my device.
+$ dmesg
+[ 1685.886012] nct6775: Enabling hardware monitor logical device mappings.
+[ 1685.886040] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
+[ 1685.886044] ACPI Warning: SystemIO range
+0x0000000000000295-0x0000000000000296 conflicts with OpRegion
+0x0000000000000290-0x0000000000000299 (\AMW0.SHWM) (20210730/utaddress-213)
+[ 1685.886048] ACPI: OSL: Resource conflict; ACPI support missing from driv=
+er?
 
-> Also please confirm which BIOS and EC version you have.
+$ uname -a
+Linux localhost.localdomain 5.14.21-150400.19-default #1 SMP PREEMPT_DYNAMIC
+Wed Apr 20 08:32:52 UTC 2022 (d6fb753) x86_64 x86_64 x86_64 GNU/Linux
 
-Linux: 5.17.5
-BIOS Revision: 1.51
-Firmware Revision: 1.32
+$ cat /etc/os-release
+NAME=3D"openSUSE Leap"
+VERSION=3D"15.4 Beta"
+ID=3D"opensuse-leap"
+ID_LIKE=3D"suse opensuse"
+VERSION_ID=3D"15.4"
+PRETTY_NAME=3D"openSUSE Leap 15.4 Beta"
+ANSI_COLOR=3D"0;32"
+CPE_NAME=3D"cpe:/o:opensuse:leap:15.4"
+BUG_REPORT_URL=3D"https://bugs.opensuse.org"
+HOME_URL=3D"https://www.opensuse.org/"
+DOCUMENTATION_URL=3D"https://en.opensuse.org/Portal:Leap"
+LOGO=3D"distributor-logo-Leap"
 
-Thomas
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
