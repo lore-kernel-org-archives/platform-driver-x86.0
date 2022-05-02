@@ -2,129 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE655C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 May 2022 16:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0179FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 May 2022 17:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1386204AbiEBQSD (ORCPT
+        id S243782AbiEBR1H (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 2 May 2022 12:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59620 "EHLO
+        Mon, 2 May 2022 13:27:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357459AbiEBQSC (ORCPT
+        with ESMTP id S235761AbiEBR1F (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 2 May 2022 12:18:02 -0400
+        Mon, 2 May 2022 13:27:05 -0400
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC241DFE4;
-        Mon,  2 May 2022 09:14:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B237A26E0;
+        Mon,  2 May 2022 10:23:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651508073; x=1683044073;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=J/zBHDxhx9Erqph7DBTL1Nk5osAbgd2b/7QSvJaYzxE=;
-  b=F0a77bk2Kbi/bbTcCkXDLX/Egw7XW8812Vs0SbM1wdt6fwkXFlEB3c4W
-   UU5LLxQL1ycnWZCdst4+CHWLO6OIalIz675WKPbydTEGiJMOhbeKVS0RD
-   651vsyst9fmmCZFolb+5KaYWRkzc9cz3wo9sSzClkreUgFa5eZtA7z7hx
-   9LYuvKNZPIojRetHJRqL4dGvG9LSFUwD+wpFuUxV4IOwOoA8egX1byzm5
-   Wxeu4SfZ8YO6h38JwEzfsqj6ABO1+VzGyVfk8dHtdlr/FVDiw2WqdQkY2
-   YJCrz5v6W1mjt/FSMjdqW/EBN/TmPkTnvgkGM/vOo8fhaGzZB26u3G4VY
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="247801312"
+  t=1651512216; x=1683048216;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=LU179n8muWviqqb25jsmrJha83hqn2FjKhu7EZ5iR2M=;
+  b=MPweH+e4JhkJHQ2ct240bWvWRdizj4rRZaIY796PHPVlqM2dpC7UYjvS
+   7ZsiHbeWzcqOriwoj4D4l979T7x7+tLG87K4VsVWU7z2m6p2vuNz+MYBh
+   gKNFddwKetzSFSUpb+SpspyTJkBR68tPLZcGGGek4us20SWTLImE8bVXh
+   NH8vZFuJIf5tX2mFcsKG8CYfOnU6pADxj7OG8kz5XZtk9f27V5E0jzTct
+   FlZ7nhjpIyzeUci5iA9gRbt6c/eSEL5oOhjrnWEaDeMOPNnChpO3g3jKA
+   1mV10WcVedqt2LbIH9/lioMFdzq9Clqt8Lk42/m+jLg8tumEpbAcIvLfV
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="247823198"
 X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
-   d="scan'208";a="247801312"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:14:33 -0700
+   d="scan'208";a="247823198"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 10:23:36 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
-   d="scan'208";a="619957666"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:14:27 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nlYgq-00B6dj-2Z;
-        Mon, 02 May 2022 19:14:24 +0300
-Date:   Mon, 2 May 2022 19:14:23 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v4 5/8] mfd: lpc_ich: Add support for pinctrl in non-ACPI
- system
-Message-ID: <YnADXy3A+kIsL+f9@smile.fi.intel.com>
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
- <20220131151346.45792-6-andriy.shevchenko@linux.intel.com>
- <YgvaqBB8fNVWp1lN@google.com>
- <YgveyspHVXCp2ul+@smile.fi.intel.com>
- <YgvjDy1R06IC8FE5@google.com>
+   d="scan'208";a="516195920"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga003.jf.intel.com with ESMTP; 02 May 2022 10:23:35 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Mon, 2 May 2022 10:23:35 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Mon, 2 May 2022 10:23:34 -0700
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.027;
+ Mon, 2 May 2022 10:23:34 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
+Subject: RE: [PATCH v5 00/10] Introduce In Field Scan driver
+Thread-Topic: [PATCH v5 00/10] Introduce In Field Scan driver
+Thread-Index: AQHYWxYVdsKdZt61BUSHj1qB1cqAT60MLiKA//+uBGA=
+Date:   Mon, 2 May 2022 17:23:34 +0000
+Message-ID: <6171e5bfd1c5402692dca346fc2a5350@intel.com>
+References: <20220422200219.2843823-1-tony.luck@intel.com>
+ <20220428153849.295779-1-tony.luck@intel.com>
+ <13054c5c-ed48-b7a2-a800-25b9b1b1ab0d@redhat.com>
+In-Reply-To: <13054c5c-ed48-b7a2-a800-25b9b1b1ab0d@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.6.401.20
+x-originating-ip: [10.1.200.100]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YgvjDy1R06IC8FE5@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Feb 15, 2022 at 05:29:51PM +0000, Lee Jones wrote:
-> On Tue, 15 Feb 2022, Andy Shevchenko wrote:
-> > On Tue, Feb 15, 2022 at 04:54:00PM +0000, Lee Jones wrote:
-> > > On Mon, 31 Jan 2022, Andy Shevchenko wrote:
-
-...
-
-> > > > +static struct resource apl_gpio_resources[APL_GPIO_NR_DEVICES][2] = {
-> > > > +	[APL_GPIO_NORTH] = {
-> > > > +		DEFINE_RES_MEM(APL_GPIO_NORTH_OFFSET, 0x1000),
-> > > 
-> > > Are these 0x1000's being over-written in lpc_ich_init_pinctrl()?
-> > > 
-> > > If so, why pre-initialise?
-> > 
-> > You mean to pre-initialize the offsets, but leave the length to be added
-> > in the function? It can be done, but it feels inconsistent, since we would
-> > have offsets and lengths in different places for the same thingy. That said,
-> > I prefer current way for the sake of consistency.
-> 
-> Don't you over-write this entry entirely?
-> 
->   for (i = 0; i < ARRAY_SIZE(apl_gpio_devices); i++) {
->         struct resource *mem = &apl_gpio_resources[i][0];
-> 
->         /* Fill MEM resource */
->         mem->start += base.start;
->         mem->end += base.start;
->         mem->flags = base.flags;
->   }
-> 
-> Oh wait, you're just adding the base value to the offsets.
-
-Right.
-
-> In which case that comment is also confusing!
-
-I will fix a comment in the next version.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+PiBJJ3ZlIHRha2VuIGEgcXVpY2sgbG9vayBhdCB0aGUgZW50aXJlIHNlcmllcyBhbmQgaXQgbG9v
+a3MgZ29vZCB0byBtZS4NCj4NCj4gSSdtIGZpbmUgd2l0aCB0aGlzIGVudGlyZSBzZXJpZXMgZ2V0
+dGluZyBtZXJnZWQgdGhyb3VnaCB0aGUgVElQDQo+IHRyZWUsIGhlcmUgaXMgbXkgYWNrIGZvciBt
+ZXJnaW5nIHRoZSBkcml2ZXJzL3BsYXRmb3JtL3g4NiBiaXRzDQo+IHRocm91Z2ggdGhlIFRJUCB0
+cmVlOg0KPg0KPiBBY2tlZC1ieTogSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4N
+Cg0KDQpIYW5zLA0KDQpUaGFua3MgZm9yIGxvb2tpbmcsIGFuZCBkb3VibGUgdGhhbmtzIGZvciB0
+aGUgIkFjayIuDQoNCi1Ub255DQoNCg==
