@@ -2,90 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001EEC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 May 2022 16:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE655C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 May 2022 16:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237266AbiEBQIh (ORCPT
+        id S1386204AbiEBQSD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 2 May 2022 12:08:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48406 "EHLO
+        Mon, 2 May 2022 12:18:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbiEBQIh (ORCPT
+        with ESMTP id S1357459AbiEBQSC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 2 May 2022 12:08:37 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA7EBC3D;
-        Mon,  2 May 2022 09:05:08 -0700 (PDT)
+        Mon, 2 May 2022 12:18:02 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC241DFE4;
+        Mon,  2 May 2022 09:14:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651507508; x=1683043508;
+  t=1651508073; x=1683044073;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=mTN/sFuEKOvHaXrCmuIKcyX8bTKXzMSHR2ip8sSamBk=;
-  b=NlQQgGyv35yNl4gAZEIF4PGmPBhe89/v588AeYSSXWjID/0ubTdgwxrl
-   djuVRjvV56tyZCuTBxptbj6WPBKbSCsE3Mjtt76CtbCcLyjWM13ZbposO
-   K11rOIafOmFJhrlF7ptXCp+rMU4H20FfpyvwGm0RmRICx7B1AlTAgUk9n
-   UKHwdlQZqVQZKe1SGm1uN/JjvzInufpMSxX+wFyz2wIck2I46gT2csjyI
-   0KF6FkQBMVVpOFUTZK9lL/+mUQ8CnrYl7PmpsWjmgifPQFJUKb+0OGB+a
-   7fktiCcuylRcic1X2aQBacwqOHQ3rtO44ix9/6xZguZtERGoxwpbnA/SR
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="330239489"
+  bh=J/zBHDxhx9Erqph7DBTL1Nk5osAbgd2b/7QSvJaYzxE=;
+  b=F0a77bk2Kbi/bbTcCkXDLX/Egw7XW8812Vs0SbM1wdt6fwkXFlEB3c4W
+   UU5LLxQL1ycnWZCdst4+CHWLO6OIalIz675WKPbydTEGiJMOhbeKVS0RD
+   651vsyst9fmmCZFolb+5KaYWRkzc9cz3wo9sSzClkreUgFa5eZtA7z7hx
+   9LYuvKNZPIojRetHJRqL4dGvG9LSFUwD+wpFuUxV4IOwOoA8egX1byzm5
+   Wxeu4SfZ8YO6h38JwEzfsqj6ABO1+VzGyVfk8dHtdlr/FVDiw2WqdQkY2
+   YJCrz5v6W1mjt/FSMjdqW/EBN/TmPkTnvgkGM/vOo8fhaGzZB26u3G4VY
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="247801312"
 X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
-   d="scan'208";a="330239489"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:05:07 -0700
+   d="scan'208";a="247801312"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:14:33 -0700
 X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
-   d="scan'208";a="516162976"
+   d="scan'208";a="619957666"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:05:05 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:14:27 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.95)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nlYXm-00B6Tb-Tt;
-        Mon, 02 May 2022 19:05:02 +0300
-Date:   Mon, 2 May 2022 19:05:02 +0300
+        id 1nlYgq-00B6dj-2Z;
+        Mon, 02 May 2022 19:14:24 +0300
+Date:   Mon, 2 May 2022 19:14:23 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Paul Gortmaker <paul.gortmaker@windriver.com>,
-        linux-kernel@vger.kernel.org,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>,
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 0/4] platform: allow ATOM PMC code to be optional
-Message-ID: <YnABLhyUGR+ZRQ+u@smile.fi.intel.com>
-References: <20220428062430.31010-1-paul.gortmaker@windriver.com>
- <YmpoeJtFNSyCq1QL@smile.fi.intel.com>
- <20220428181131.GG12977@windriver.com>
- <827dc313-33ff-1c91-afaf-7645b655a1be@redhat.com>
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: Re: [PATCH v4 5/8] mfd: lpc_ich: Add support for pinctrl in non-ACPI
+ system
+Message-ID: <YnADXy3A+kIsL+f9@smile.fi.intel.com>
+References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
+ <20220131151346.45792-6-andriy.shevchenko@linux.intel.com>
+ <YgvaqBB8fNVWp1lN@google.com>
+ <YgveyspHVXCp2ul+@smile.fi.intel.com>
+ <YgvjDy1R06IC8FE5@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <827dc313-33ff-1c91-afaf-7645b655a1be@redhat.com>
+In-Reply-To: <YgvjDy1R06IC8FE5@google.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 02, 2022 at 04:30:57PM +0200, Hans de Goede wrote:
-> On 4/28/22 20:11, Paul Gortmaker wrote:
+On Tue, Feb 15, 2022 at 05:29:51PM +0000, Lee Jones wrote:
+> On Tue, 15 Feb 2022, Andy Shevchenko wrote:
+> > On Tue, Feb 15, 2022 at 04:54:00PM +0000, Lee Jones wrote:
+> > > On Mon, 31 Jan 2022, Andy Shevchenko wrote:
 
 ...
 
-> As for users breaking support for BYT/CHT setups because they forget
-> to enable this, without X86_INTEL_LPSS being enabled BYT/CHT are pretty
-> much broken anyways and since patch 2/4 adds a "select PMC_ATOM" to the
-> X86_INTEL_LPSS Kconfig option I'm not really worried about that.
+> > > > +static struct resource apl_gpio_resources[APL_GPIO_NR_DEVICES][2] = {
+> > > > +	[APL_GPIO_NORTH] = {
+> > > > +		DEFINE_RES_MEM(APL_GPIO_NORTH_OFFSET, 0x1000),
+> > > 
+> > > Are these 0x1000's being over-written in lpc_ich_init_pinctrl()?
+> > > 
+> > > If so, why pre-initialise?
+> > 
+> > You mean to pre-initialize the offsets, but leave the length to be added
+> > in the function? It can be done, but it feels inconsistent, since we would
+> > have offsets and lengths in different places for the same thingy. That said,
+> > I prefer current way for the sake of consistency.
 > 
-> I'm afraid this patch-set might break some randomconfig builds though,
-> but I cannot see anything obviously causing such breakage here, so
-> I think it would be fine to just merge this series as is and then
-> see if we get any breakage reports.
+> Don't you over-write this entry entirely?
 > 
-> Andy, are you ok with me moving ahead and merging this series as is?
+>   for (i = 0; i < ARRAY_SIZE(apl_gpio_devices); i++) {
+>         struct resource *mem = &apl_gpio_resources[i][0];
+> 
+>         /* Fill MEM resource */
+>         mem->start += base.start;
+>         mem->end += base.start;
+>         mem->flags = base.flags;
+>   }
+> 
+> Oh wait, you're just adding the base value to the offsets.
 
-It seems as is can't be fulfilled due to your own comment, but in general I'm
-not objecting the idea. So, go ahead if you feel it's ready.
+Right.
+
+> In which case that comment is also confusing!
+
+I will fix a comment in the next version.
+
 
 -- 
 With Best Regards,
