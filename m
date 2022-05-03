@@ -2,64 +2,109 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D6FC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 May 2022 16:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D08C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 May 2022 17:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239538AbiECQaY convert rfc822-to-8bit (ORCPT
+        id S237094AbiECRkR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 May 2022 12:30:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44590 "EHLO
+        Tue, 3 May 2022 13:40:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239570AbiECQaX (ORCPT
+        with ESMTP id S232024AbiECRkQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 May 2022 12:30:23 -0400
-Received: from mail.77msk.ru (mail.77msk.ru [84.204.203.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3058225C79
-        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 09:26:50 -0700 (PDT)
-Received: from mail.77msk.ru (gatekeeper.domain007.com [192.168.2.20])
-        by hermes.domain007.com (Postfix) with ESMTP id DAB0DD4872A
-        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 18:57:47 +0300 (MSK)
-Received: from asda.co.uk (unknown [20.97.211.134])
-        by gatekeeper.domain007.com (Postfix) with ESMTPSA id 71EA932009C
-        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 18:57:47 +0300 (MSK)
-Reply-To: sales@asdaa.uk
-From:   ASDA Stores Limited <Hanes.Thomas44@asda.co.uk>
-To:     platform-driver-x86@vger.kernel.org
-Subject: ASDA Procurement order
-Date:   03 May 2022 15:57:47 +0000
-Message-ID: <20220503141531.DD5C4E09CDD67666@asda.co.uk>
+        Tue, 3 May 2022 13:40:16 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59EBD24F0E;
+        Tue,  3 May 2022 10:36:43 -0700 (PDT)
+Received: from zn.tnic (p5de8eeb4.dip0.t-ipconnect.de [93.232.238.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DD9031EC0354;
+        Tue,  3 May 2022 19:36:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1651599398;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Ck+uGn0FFYbKWUnm+9BbC6zDql8IAMFJc7yr1uqhvvQ=;
+        b=sMlUAoI8K7II7r28TyRvkgIF0qp14gICloiB9vUrautcXJtuY2Mrh8TuXWU35LmYC6Oz4t
+        iayZdB1TIhL71NnMG69c5fP8YuHNXHwf4Zh68xPHjOkkomAELGDkRpnubaV5RSQGe6nEyV
+        YAaAtNXwtjTJVffalgoVECtlWE6dchQ=
+Date:   Tue, 3 May 2022 19:36:35 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Vit Kabele <vit@kabele.me>
+Cc:     platform-driver-x86@vger.kernel.org, r.marek@assembler.cz,
+        x86@kernel.org, linux-kernel@vger.kernel.org, rafael@kernel.org,
+        mingo@redhat.com
+Subject: Re: [PATCH v2] arch/x86: Check validity of EBDA pointer in mpparse.c
+Message-ID: <YnFoIzmt1qJSucAd@zn.tnic>
+References: <CAJZ5v0gBbdzUO9MRxbKESEnaeaNAu-+3oP6ADMretch=iHPNJA@mail.gmail.com>
+ <Yk/2dh4kDobivStp@czspare1-lap.sysgo.cz>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Virus-Scanned: clamav-milter 0.102.4 at hermes
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Yk/2dh4kDobivStp@czspare1-lap.sysgo.cz>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dear platform-driver-x86
+On Fri, Apr 08, 2022 at 10:46:46AM +0200, Vit Kabele wrote:
+> The pointer to EBDA area is retrieved from a word at 0x40e in BDA.
+> In case that the memory there is not initialized and contains garbage,
+> it might happen that the kernel touches memory above 640K.
 
-We are interested in having some of your hot selling product in 
-our stores and outlets spread all over United Kingdom, Northern 
-Island and Africa. ASDA Stores Limited is one of the highest-
-ranking Wholesale & Retail outlets in the United Kingdom. 
-  
-We shall furnish our detailed company profile in our next 
-correspondent. However, it would be appreciated if you can send 
-us your catalog through email to learn more about your company's 
-products and wholesale quote. It is hopeful that we can start a 
-viable long-lasting business relationship (partnership) with you.  
-  
-  
-Your prompt response would be delightfully appreciated. 
-  
-Best Wishes 
-  
-  
-Hanes S. Thomas 
-Procurement Office. 
-ASDA Stores Limited 
-Tel:  + 44 - 7451271650 
-WhatsApp: + 44 – 7441440360 
-Website: www.asda.co.uk
+This is where I'm missing the "why do this" at all. Grepping back in
+my mbox, I see another thread from you where you say something about
+"testing custom virtualization platform".
+
+So I'd like to see why this fix is needed so feel free to elaborate in the
+commit message what the situation is and why you're doing this.
+
+> This may cause unwanted reads from VGA memory which may not be decoded,
+> or even present when running under virtualization.
+> 
+> This patch adds sanity check for the EBDA pointer retrieved from the memory
+
+Avoid having "This patch" or "This commit" in the commit message. It is
+tautologically useless.
+
+IOW,
+
+s/This patch adds/Add/
+
+> diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+> index fed721f90116..9e0b4820f33b 100644
+> --- a/arch/x86/kernel/mpparse.c
+> +++ b/arch/x86/kernel/mpparse.c
+> @@ -633,8 +633,18 @@ void __init default_find_smp_config(void)
+>  	 */
+>  
+>  	address = get_bios_ebda();
+> -	if (address)
+> -		smp_scan_config(address, 0x400);
+> +
+> +	/*
+> +	 * Check that the EBDA address is sane and the get_bios_ebda() did not
+> +	 * return just garbage from memory.
+> +	 * The upper bound is considered valid if it points below 1K before
+> +	 * end of the lower memory (i.e. 639K). The EBDA can be smaller
+> +	 * than 1K in which case the pointer will point above 639K but that
+> +	 * case is handled in step 2) above, and we don't need to adjust scan
+> +	 * size to not bump into the memory above 640K.
+> +	 */
+> +	if (address >= BIOS_START_MIN && address < (BIOS_START_MAX - 1024))
+> +		smp_scan_config(address, 1024);
+>  }
+
+I guess but looking at reserve_bios_regions(), that function is already
+doing kinda the same along with being a bit more careful to figure out
+bios_start so you could unify the code into a common helper and use it
+at both places?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
