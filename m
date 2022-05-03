@@ -2,109 +2,140 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D08C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 May 2022 17:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947D6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 May 2022 18:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237094AbiECRkR (ORCPT
+        id S241518AbiECSiQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 May 2022 13:40:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53986 "EHLO
+        Tue, 3 May 2022 14:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232024AbiECRkQ (ORCPT
+        with ESMTP id S232043AbiECSiL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 May 2022 13:40:16 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59EBD24F0E;
-        Tue,  3 May 2022 10:36:43 -0700 (PDT)
-Received: from zn.tnic (p5de8eeb4.dip0.t-ipconnect.de [93.232.238.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DD9031EC0354;
-        Tue,  3 May 2022 19:36:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1651599398;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Ck+uGn0FFYbKWUnm+9BbC6zDql8IAMFJc7yr1uqhvvQ=;
-        b=sMlUAoI8K7II7r28TyRvkgIF0qp14gICloiB9vUrautcXJtuY2Mrh8TuXWU35LmYC6Oz4t
-        iayZdB1TIhL71NnMG69c5fP8YuHNXHwf4Zh68xPHjOkkomAELGDkRpnubaV5RSQGe6nEyV
-        YAaAtNXwtjTJVffalgoVECtlWE6dchQ=
-Date:   Tue, 3 May 2022 19:36:35 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Vit Kabele <vit@kabele.me>
-Cc:     platform-driver-x86@vger.kernel.org, r.marek@assembler.cz,
-        x86@kernel.org, linux-kernel@vger.kernel.org, rafael@kernel.org,
-        mingo@redhat.com
-Subject: Re: [PATCH v2] arch/x86: Check validity of EBDA pointer in mpparse.c
-Message-ID: <YnFoIzmt1qJSucAd@zn.tnic>
-References: <CAJZ5v0gBbdzUO9MRxbKESEnaeaNAu-+3oP6ADMretch=iHPNJA@mail.gmail.com>
- <Yk/2dh4kDobivStp@czspare1-lap.sysgo.cz>
+        Tue, 3 May 2022 14:38:11 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2065.outbound.protection.outlook.com [40.107.244.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7551EAC4;
+        Tue,  3 May 2022 11:34:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ewm9n3AZ+4tk+uzmyABPc8qqoySF7c5HZCujLv0l9oaJNXnD2EfnwwwTfi6NEDiioKLNR4ZuadphbdSwF/sSErdXxSqbI0lkk4v26UYEhxvsAMqAZaYAcmFFspEndrBur1KCAUzESn0wXJO0JcBfjYu/l5e0ncSHJ0jNMi+TpQBh3IxtmapysnAwHRWPe9pnndRYYFFEMpTm50rV1Ka3MzmZy8fhxdFDhLcDwsdKAbHoJ6dP41lBHfc8DZLRuqCDv7RMorXH5Fw6ZXzibbWaMLs7eN25HW7vdsYgw4tMBOUGRNoAIn0YbkVyQ4dn+4AmSqrUNgoUlwHgmQ9A6LEgPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4RwVV8+iphMKJpY9VBQjS5Z6HMTjRGMQ1gHlrtQKHkI=;
+ b=HId9rICao/ZZmtbQ//I2wOupKyTJtr3iBxs+6t7lfqbun8ZN7NHfU35kdTzDRpV7EMBCrvOCqWPs6TdeT8ZEShJAE0MuV1uqgImgxjXPpQ+3D0/JoE1HHkA/3yZkyuWxgZoM7OEVcbSEa7lVMM3pCm3FAbjOAA9ajNkLjCHPUgsUuqF5hOZqCRja4AQUbKJkaT21iEGRaHuj0zHLybbighIkeyP08IESdrPmp/Hrdu2i8tHw650rk/pi/SQYKUA+W4XcZDzCfy73uoweOScAdf8zCGI3SSZEN/FI3kfM9YIVWbg+TWT9W2wpMOl0mLCzVU3PfDUiZIcitta+pc34zQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4RwVV8+iphMKJpY9VBQjS5Z6HMTjRGMQ1gHlrtQKHkI=;
+ b=R+3IM9oRGJq2nXHmASouSmpQnGtXEri2N/WrRCzq4ZVlJrTUI99lk5WZuwABhb/UKhEkccxLwoZzR2phl/cIQQelJ7LF1XG4PyIAAaHO486Khpom9XyuavfRo3F69OJDDVtw7sXDF3VZkRjcq6MOLbqYKE2CWKCig2MTupymhS4=
+Received: from BN9PR03CA0797.namprd03.prod.outlook.com (2603:10b6:408:13f::22)
+ by LV2PR12MB5992.namprd12.prod.outlook.com (2603:10b6:408:14e::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.14; Tue, 3 May
+ 2022 18:34:35 +0000
+Received: from BN8NAM11FT005.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:13f:cafe::a8) by BN9PR03CA0797.outlook.office365.com
+ (2603:10b6:408:13f::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.15 via Frontend
+ Transport; Tue, 3 May 2022 18:34:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT005.mail.protection.outlook.com (10.13.176.69) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5206.12 via Frontend Transport; Tue, 3 May 2022 18:34:35 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 3 May
+ 2022 13:34:33 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>
+CC:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:THINKPAD ACPI EXTRAS DRIVER" 
+        <ibm-acpi-devel@lists.sourceforge.net>,
+        "open list:THINKPAD ACPI EXTRAS DRIVER" 
+        <platform-driver-x86@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Add a few more models to s2idle quirk list
+Date:   Tue, 3 May 2022 13:34:20 -0500
+Message-ID: <20220503183420.348-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Yk/2dh4kDobivStp@czspare1-lap.sysgo.cz>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 91621de0-8bfa-443a-a4df-08da2d3392db
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5992:EE_
+X-Microsoft-Antispam-PRVS: <LV2PR12MB5992F1641B8792F7CE17F7EAE2C09@LV2PR12MB5992.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fBU2oL6SYic7anlp2VfCnIrtCEhcwosUymgt/263qkAyaRfZPRIF8YTwPaKNBSCosdDABp9tfiFSq5COPibjY0Xj+5X35sVWPXhsNbrKDG9np6bDILATVpuuDfXQOoZz5jZgbDunbUyO7raZc+zmzgh4P4NcjRB5fKz1D33HTTrSyAjata5VuVKD/Yy9/KH+XqVQmLcPL2vatknX8b+bNODfvS8wiYS6s7R3a60oB9qbLTB8bultMDCrpe3G40v7VTMlppv+Va3negXXRbby59tJboXWvdaoaZG0HSpq3X2TNzYyvBW86V6sWobpnLvgpcV4WHfpZuTzPB+HHvS7YOqj3i1AXxsoI9SMLRNuBZY93y8CVA0Ii7WzENj1Y5F6nhgWEFee8VV4Wd5hrgHGolOzs1CO735KWcJThDVDt6dg8bER82JNlrHKlryTG5JBGteNcRXR+jdwVqRQLGkJfcuMXXeJASPBm3vc5I4lAXjjGRoeE+PeYuaHzWYUPe1uEGV6wg//AajcCfF5XoWzZzZmDKke5Mt8+ATNsVumLjGgtGHaAZc4LTyYW31eLwehG6Ti+1IEH/ayu1vRaSZO5b6xbQ3HOi5hDGFqQXi6KzX7584ZQ4CjimH79dWRR3Au8kNC7MZGmFkMz6fFnrmoiebn19guzSBWziGkIu4eDxqXszH9O2OMYgpmuGniZOhnT2PNcXzh4FeBNYY3cM+4lA==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(8676002)(110136005)(508600001)(54906003)(4326008)(70206006)(70586007)(316002)(86362001)(81166007)(36756003)(356005)(7696005)(426003)(336012)(186003)(36860700001)(1076003)(40460700003)(26005)(6666004)(8936002)(5660300002)(44832011)(82310400005)(2616005)(16526019)(47076005)(2906002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2022 18:34:35.6015
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91621de0-8bfa-443a-a4df-08da2d3392db
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT005.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5992
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Apr 08, 2022 at 10:46:46AM +0200, Vit Kabele wrote:
-> The pointer to EBDA area is retrieved from a word at 0x40e in BDA.
-> In case that the memory there is not initialized and contains garbage,
-> it might happen that the kernel touches memory above 640K.
+Users have reported that there are a few other DMI strings that T14 can
+go by, and so these models should also pick up the quirk to avoid the s2idle
+firmware bug.
 
-This is where I'm missing the "why do this" at all. Grepping back in
-my mbox, I see another thread from you where you say something about
-"testing custom virtualization platform".
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-So I'd like to see why this fix is needed so feel free to elaborate in the
-commit message what the situation is and why you're doing this.
-
-> This may cause unwanted reads from VGA memory which may not be decoded,
-> or even present when running under virtualization.
-> 
-> This patch adds sanity check for the EBDA pointer retrieved from the memory
-
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
-
-IOW,
-
-s/This patch adds/Add/
-
-> diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
-> index fed721f90116..9e0b4820f33b 100644
-> --- a/arch/x86/kernel/mpparse.c
-> +++ b/arch/x86/kernel/mpparse.c
-> @@ -633,8 +633,18 @@ void __init default_find_smp_config(void)
->  	 */
->  
->  	address = get_bios_ebda();
-> -	if (address)
-> -		smp_scan_config(address, 0x400);
-> +
-> +	/*
-> +	 * Check that the EBDA address is sane and the get_bios_ebda() did not
-> +	 * return just garbage from memory.
-> +	 * The upper bound is considered valid if it points below 1K before
-> +	 * end of the lower memory (i.e. 639K). The EBDA can be smaller
-> +	 * than 1K in which case the pointer will point above 639K but that
-> +	 * case is handled in step 2) above, and we don't need to adjust scan
-> +	 * size to not bump into the memory above 640K.
-> +	 */
-> +	if (address >= BIOS_START_MIN && address < (BIOS_START_MAX - 1024))
-> +		smp_scan_config(address, 1024);
->  }
-
-I guess but looking at reserve_bios_regions(), that function is already
-doing kinda the same along with being a bit more careful to figure out
-bios_start so you could unify the code into a common helper and use it
-at both places?
-
-Thx.
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 2833609fade7..f3554068dd1e 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -4463,6 +4463,22 @@ static const struct dmi_system_id fwbug_list[] __initconst = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "20UD"),
+ 		}
+ 	},
++	{
++		.ident = "T14 Gen1 AMD",
++		.driver_data = &quirk_s2idle_bug,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "20UE"),
++		}
++	},
++	{
++		.ident = "T14s Gen1 AMD",
++		.driver_data = &quirk_s2idle_bug,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "20UH"),
++		}
++	},
+ 	{
+ 		.ident = "P14s Gen1 AMD",
+ 		.driver_data = &quirk_s2idle_bug,
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
