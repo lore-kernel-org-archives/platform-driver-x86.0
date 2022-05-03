@@ -2,86 +2,95 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01610C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 May 2022 14:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78950C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 May 2022 15:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237460AbiECOyP (ORCPT
+        id S238525AbiECPd0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 May 2022 10:54:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49336 "EHLO
+        Tue, 3 May 2022 11:33:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237449AbiECOyP (ORCPT
+        with ESMTP id S238360AbiECPdZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 May 2022 10:54:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2EED71A3BC
-        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 07:50:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651589441;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=yd6RJcnms3QbLeEWL2yZbs+FnmnChaDBoTejX3QF348=;
-        b=HvR3jSxIqV38uDMYwbecNQPdhoDB+Fkko92TZGF68pL1izz/99lOvM3LWY/V7sJCNR6KN5
-        LOqYnmj55YAMAcjd7lCdKQz+Fj3n3aTdbxHDZBRUUhxFC4WWwJTCjxvLJq9WJAoDqMSSOB
-        BuEYJ6Yw1NzSyw0WFwpdTYUHDqOJm80=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-196-ANR3Y98UPEGRM2lIRHUutw-1; Tue, 03 May 2022 10:44:00 -0400
-X-MC-Unique: ANR3Y98UPEGRM2lIRHUutw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 3 May 2022 11:33:25 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 655E029817;
+        Tue,  3 May 2022 08:29:53 -0700 (PDT)
+Received: from zn.tnic (p5de8eeb4.dip0.t-ipconnect.de [93.232.238.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DE71FCCAFAA;
-        Tue,  3 May 2022 14:02:18 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.194.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E9839E6F;
-        Tue,  3 May 2022 14:02:15 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH 0/1] platform/x86: Drop the PMC_ATOM Kconfig option
-Date:   Tue,  3 May 2022 16:02:06 +0200
-Message-Id: <20220503140207.101218-1-hdegoede@redhat.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DD34D1EC01E0;
+        Tue,  3 May 2022 17:29:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1651591787;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=OAZ8BBOMxTQtT+Y2LCxiEZ74Q/wI8Prs/+c/U9ygqlQ=;
+        b=kOflgr9V+B/lhxJDjEXpqEJ26xqWXMcviI9WtoHBenBDjgyL6CaISHHLmijO5hT9Y5yo6S
+        FRHD9nA6M9V9uonbkwNXstNrxKYYOkkbWtZCYV0xI7ZAqmyaMSeBeramQqOc3sDfDHBvxN
+        4KUMGrxsPLvKHeWEIqvWs84xLjaVRLc=
+Date:   Tue, 3 May 2022 17:29:46 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, corbet@lwn.net, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, rostedt@goodmis.org, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v5 01/10] x86/microcode/intel: Expose
+ collect_cpu_info_early() for IFS
+Message-ID: <YnFKarR+8fxKwBvg@zn.tnic>
+References: <20220422200219.2843823-1-tony.luck@intel.com>
+ <20220428153849.295779-1-tony.luck@intel.com>
+ <20220428153849.295779-2-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220428153849.295779-2-tony.luck@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All,
+On Thu, Apr 28, 2022 at 08:38:40AM -0700, Tony Luck wrote:
+> From: Jithu Joseph <jithu.joseph@intel.com>
+> 
+> IFS is a CPU feature that allows a binary blob, similar to microcode,
+> to be loaded and consumed to perform low level validation of CPU
+> circuitry. In fact, it carries the same Processor Signature
+> (family/model/stepping) details that are contained in Intel microcode
+> blobs.
+> 
+> In support of an IFS driver to trigger loading, validation, and running
+> of these tests blobs, make the functionality of cpu_signatures_match()
+> and collect_cpu_info_early() available outside of the microcode driver.
+> 
+> Add an "intel_" prefix and drop the "_early" suffix from
+> collect_cpu_info_early() and EXPORT_SYMBOL_GPL() it. Add
+> declaration to x86 <asm/cpu.h>
+> 
+> Make cpu_signatures_match() an inline function in x86 <asm/cpu.h>,
+> and also give it an "intel_" prefix.
+> 
+> No functional change intended.
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+> Co-developed-by: Tony Luck <tony.luck@intel.com>
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  arch/x86/include/asm/cpu.h            | 18 ++++++++
+>  arch/x86/kernel/cpu/intel.c           | 32 +++++++++++++++
+>  arch/x86/kernel/cpu/microcode/intel.c | 59 ++++-----------------------
+>  3 files changed, 57 insertions(+), 52 deletions(-)
 
-Here is a patch resulting from an earlier series from Paul Gortmaker to
-allow disabling building the PMC_ATOM bits on platforms which don't
-need them:
-https://lore.kernel.org/platform-driver-x86/20220428062430.31010-1-paul.gortmaker@windriver.com/
-
-This is a simpler way to achieve the result, while actually simplifying
-things / removing some code.
-
-Stephen, if you are ok with this change can you give your Acked-by for
-merging this through the pdx86 tree ?
-
-Regards,
-
-Hans
-
-
-Hans de Goede (1):
-  platform/x86: Drop the PMC_ATOM Kconfig option
-
- drivers/clk/x86/Makefile      | 4 +---
- drivers/platform/x86/Kconfig  | 5 -----
- drivers/platform/x86/Makefile | 2 +-
- 3 files changed, 2 insertions(+), 9 deletions(-)
+Acked-by: Borislav Petkov <bp@suse.de>
 
 -- 
-2.36.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
