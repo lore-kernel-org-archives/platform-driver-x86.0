@@ -2,140 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947D6C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 May 2022 18:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A069C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 May 2022 19:06:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241518AbiECSiQ (ORCPT
+        id S241475AbiECTKR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 May 2022 14:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56208 "EHLO
+        Tue, 3 May 2022 15:10:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232043AbiECSiL (ORCPT
+        with ESMTP id S236659AbiECTKP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 May 2022 14:38:11 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2065.outbound.protection.outlook.com [40.107.244.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7551EAC4;
-        Tue,  3 May 2022 11:34:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ewm9n3AZ+4tk+uzmyABPc8qqoySF7c5HZCujLv0l9oaJNXnD2EfnwwwTfi6NEDiioKLNR4ZuadphbdSwF/sSErdXxSqbI0lkk4v26UYEhxvsAMqAZaYAcmFFspEndrBur1KCAUzESn0wXJO0JcBfjYu/l5e0ncSHJ0jNMi+TpQBh3IxtmapysnAwHRWPe9pnndRYYFFEMpTm50rV1Ka3MzmZy8fhxdFDhLcDwsdKAbHoJ6dP41lBHfc8DZLRuqCDv7RMorXH5Fw6ZXzibbWaMLs7eN25HW7vdsYgw4tMBOUGRNoAIn0YbkVyQ4dn+4AmSqrUNgoUlwHgmQ9A6LEgPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4RwVV8+iphMKJpY9VBQjS5Z6HMTjRGMQ1gHlrtQKHkI=;
- b=HId9rICao/ZZmtbQ//I2wOupKyTJtr3iBxs+6t7lfqbun8ZN7NHfU35kdTzDRpV7EMBCrvOCqWPs6TdeT8ZEShJAE0MuV1uqgImgxjXPpQ+3D0/JoE1HHkA/3yZkyuWxgZoM7OEVcbSEa7lVMM3pCm3FAbjOAA9ajNkLjCHPUgsUuqF5hOZqCRja4AQUbKJkaT21iEGRaHuj0zHLybbighIkeyP08IESdrPmp/Hrdu2i8tHw650rk/pi/SQYKUA+W4XcZDzCfy73uoweOScAdf8zCGI3SSZEN/FI3kfM9YIVWbg+TWT9W2wpMOl0mLCzVU3PfDUiZIcitta+pc34zQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4RwVV8+iphMKJpY9VBQjS5Z6HMTjRGMQ1gHlrtQKHkI=;
- b=R+3IM9oRGJq2nXHmASouSmpQnGtXEri2N/WrRCzq4ZVlJrTUI99lk5WZuwABhb/UKhEkccxLwoZzR2phl/cIQQelJ7LF1XG4PyIAAaHO486Khpom9XyuavfRo3F69OJDDVtw7sXDF3VZkRjcq6MOLbqYKE2CWKCig2MTupymhS4=
-Received: from BN9PR03CA0797.namprd03.prod.outlook.com (2603:10b6:408:13f::22)
- by LV2PR12MB5992.namprd12.prod.outlook.com (2603:10b6:408:14e::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.14; Tue, 3 May
- 2022 18:34:35 +0000
-Received: from BN8NAM11FT005.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:13f:cafe::a8) by BN9PR03CA0797.outlook.office365.com
- (2603:10b6:408:13f::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.15 via Frontend
- Transport; Tue, 3 May 2022 18:34:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT005.mail.protection.outlook.com (10.13.176.69) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5206.12 via Frontend Transport; Tue, 3 May 2022 18:34:35 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 3 May
- 2022 13:34:33 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>
-CC:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Mark Gross <mgross@linux.intel.com>,
-        "open list:THINKPAD ACPI EXTRAS DRIVER" 
-        <ibm-acpi-devel@lists.sourceforge.net>,
-        "open list:THINKPAD ACPI EXTRAS DRIVER" 
-        <platform-driver-x86@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Add a few more models to s2idle quirk list
-Date:   Tue, 3 May 2022 13:34:20 -0500
-Message-ID: <20220503183420.348-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 3 May 2022 15:10:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB432ED5A
+        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 12:06:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 57A0561940
+        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 19:06:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BA5BAC385D4
+        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 19:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651604801;
+        bh=rtdCDzhflyv/ndef9Tnw0l/VCZzdoXJY5YEjb0gkPvo=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=RP54sX6JKUOKmmEMKBvGGtovrvDSFUD6Y64B8jHRBBjil+i0DwE8FTmyXC3TJ+Fm4
+         PV3lbZQQCrMSkPU2l2q2b4hkpTLieKxIopvvx1pJU3pGr2frtPej8jlldcm01fWXHB
+         9tnvlx9wZ1oFalD6yyh2I/BQAGYo15MU4jA4rFnm04MZCjNMGeZ7nXH1lrSiOOn8VI
+         TbEpZyODYIyu8UnlvhNxHoAHkesNtCDehzgCzEbotUSs56DezwIuH2Psz0+HCDI3jC
+         XHYrSI6G1SbP8THAU5w74/2iKGwKi3/2yRLtXJb8QcxqZTAVosz9W7LINXyJIpUeRI
+         HsRZ3b3ImF+Hg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id AA34ACC13AF; Tue,  3 May 2022 19:06:41 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Tue, 03 May 2022 19:06:39 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-NjOT8ebSI7@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 91621de0-8bfa-443a-a4df-08da2d3392db
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5992:EE_
-X-Microsoft-Antispam-PRVS: <LV2PR12MB5992F1641B8792F7CE17F7EAE2C09@LV2PR12MB5992.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fBU2oL6SYic7anlp2VfCnIrtCEhcwosUymgt/263qkAyaRfZPRIF8YTwPaKNBSCosdDABp9tfiFSq5COPibjY0Xj+5X35sVWPXhsNbrKDG9np6bDILATVpuuDfXQOoZz5jZgbDunbUyO7raZc+zmzgh4P4NcjRB5fKz1D33HTTrSyAjata5VuVKD/Yy9/KH+XqVQmLcPL2vatknX8b+bNODfvS8wiYS6s7R3a60oB9qbLTB8bultMDCrpe3G40v7VTMlppv+Va3negXXRbby59tJboXWvdaoaZG0HSpq3X2TNzYyvBW86V6sWobpnLvgpcV4WHfpZuTzPB+HHvS7YOqj3i1AXxsoI9SMLRNuBZY93y8CVA0Ii7WzENj1Y5F6nhgWEFee8VV4Wd5hrgHGolOzs1CO735KWcJThDVDt6dg8bER82JNlrHKlryTG5JBGteNcRXR+jdwVqRQLGkJfcuMXXeJASPBm3vc5I4lAXjjGRoeE+PeYuaHzWYUPe1uEGV6wg//AajcCfF5XoWzZzZmDKke5Mt8+ATNsVumLjGgtGHaAZc4LTyYW31eLwehG6Ti+1IEH/ayu1vRaSZO5b6xbQ3HOi5hDGFqQXi6KzX7584ZQ4CjimH79dWRR3Au8kNC7MZGmFkMz6fFnrmoiebn19guzSBWziGkIu4eDxqXszH9O2OMYgpmuGniZOhnT2PNcXzh4FeBNYY3cM+4lA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(8676002)(110136005)(508600001)(54906003)(4326008)(70206006)(70586007)(316002)(86362001)(81166007)(36756003)(356005)(7696005)(426003)(336012)(186003)(36860700001)(1076003)(40460700003)(26005)(6666004)(8936002)(5660300002)(44832011)(82310400005)(2616005)(16526019)(47076005)(2906002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2022 18:34:35.6015
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91621de0-8bfa-443a-a4df-08da2d3392db
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT005.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5992
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Users have reported that there are a few other DMI strings that T14 can
-go by, and so these models should also pick up the quirk to avoid the s2idle
-firmware bug.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 2833609fade7..f3554068dd1e 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -4463,6 +4463,22 @@ static const struct dmi_system_id fwbug_list[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20UD"),
- 		}
- 	},
-+	{
-+		.ident = "T14 Gen1 AMD",
-+		.driver_data = &quirk_s2idle_bug,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "20UE"),
-+		}
-+	},
-+	{
-+		.ident = "T14s Gen1 AMD",
-+		.driver_data = &quirk_s2idle_bug,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "20UH"),
-+		}
-+	},
- 	{
- 		.ident = "P14s Gen1 AMD",
- 		.driver_data = &quirk_s2idle_bug,
--- 
-2.34.1
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #300687|0                           |1
+        is obsolete|                            |
 
+--- Comment #235 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 300872
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300872&action=3Dedit
+Asus WMI for nct6775 v5.17 base (2022.05.03)
+
+Added support by WMI for:
+* PRO H410T
+* PRIME H410M-R
+* ROG STRIX X570-E GAMING WIFI II
+
+By ACPI lock (will not be upstreamed):
+* ROG STRIX Z370-H GAMING
+
+Code is fully untested.
+
+(In reply to Dmitrii Levchenko from comment #234)
+> Thanks all for the effort.
+> Please also add:
+>=20
+> $ cat /sys/class/dmi/id/board_name
+> PRIME H410M-R
+(In reply to Hubert Banas from comment #233)
+> >=20
+> > It can be part of 5.19+ if patch will be accepted before start of the n=
+ew
+> > merge window. (I have not sent patch yet.)
+>=20
+> Sounds good. Thank you.
+
+Upstream contains rework of nct6775, I have applied all commits but can't c=
+heck
+code with real hardware for now. If everything works for you, i will send p=
+atch
+to updated with new boards.
+
+(In reply to Emmanuel Mayor from comment #223)
+> Same issue with Rog Strix Z370-H Gaming, which has Nuvoton NCT6793D
+>=20
+DSDT does not have required WMI interface, board support can be implemented
+only by direct lock of ACPI mutex.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
