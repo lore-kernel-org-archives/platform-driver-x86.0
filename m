@@ -2,86 +2,112 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910F0C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 May 2022 16:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04382C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 May 2022 16:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353168AbiEDQcf (ORCPT
+        id S239367AbiEDQks (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 May 2022 12:32:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36574 "EHLO
+        Wed, 4 May 2022 12:40:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236487AbiEDQce (ORCPT
+        with ESMTP id S231852AbiEDQks (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 May 2022 12:32:34 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EED38BE2A;
-        Wed,  4 May 2022 09:28:57 -0700 (PDT)
-Received: from zn.tnic (p5de8eeb4.dip0.t-ipconnect.de [93.232.238.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8ACF11EC0505;
-        Wed,  4 May 2022 18:28:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1651681732;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Pwo4stPQS5Epzgq3/I8V0NR8mbENabR0dFZP2E8j8AY=;
-        b=qaXmgIitUirGKOzWMmXfBfPhHrQwFKJhis4aXI7O3YhyJJUuFJE1nUzD28zKlHW1pJwJOW
-        YpcFEuS2JbvzPT8pxSx9ae1KJnDWarb2/P8OmW0gKaUZsjGOlxLWjyKuy2mJx9NzCQGSWT
-        Via2Eiq2+oYOj2UC1ZQa2/gcI9fqdKQ=
-Date:   Wed, 4 May 2022 18:28:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: Re: [PATCH v5 03/10] platform/x86/intel/ifs: Add stub driver for
- In-Field Scan
-Message-ID: <YnKpw2kGY2FEFWcW@zn.tnic>
-References: <20220422200219.2843823-1-tony.luck@intel.com>
- <20220428153849.295779-1-tony.luck@intel.com>
- <20220428153849.295779-4-tony.luck@intel.com>
- <87zgjxk2kt.ffs@tglx>
- <eedc3fa9ec47494590be66ad66f90bb7@intel.com>
+        Wed, 4 May 2022 12:40:48 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 087C015711;
+        Wed,  4 May 2022 09:37:11 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id d6so2321472ede.8;
+        Wed, 04 May 2022 09:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xf0XnIUXSUk6cizryQBZy/YJHjA9ZjdH2YsUOzyDnc4=;
+        b=aSXtoSMHDvZNXMhWaihhLP25nQOQhiEHCKB91OUlWvLZD0yCipp8z5dzqA69y0ms61
+         Lq8x67iU3jxnqIMy4JG6m3PIEmXpy6R1DEZDGGSdgtjRu07/Xsd77YBZQ43e6zWVaYQ5
+         MP1lZaWwaOiuqf2Ddf4OPGhE53cKuuXZoPSktz7O+xjodz7Tbtl9invbFlKBgWRh2q8K
+         Bp6XRGmdhMHMvAcPYe5A7MxC9Wu76/YGcQW8qLUMreFTu1O1DCin2OiWNE1GSjYs8Zrx
+         u5Y0jwDXFcbnRPgCQa0UEB7k08nXH/WpKUg6QkZ9ml4hyJYfsm2oLkuNaLHDW36+8h82
+         yAFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xf0XnIUXSUk6cizryQBZy/YJHjA9ZjdH2YsUOzyDnc4=;
+        b=6sExnOamH6OLNhCg3fHPq6eYJ9D9QxOntpKJFDzhMyWSkanhiGiPkL7xoQXvL/Ho0r
+         6jKTvKNeOz2GaHCzGS+4W9iIq75I8BMlFlV04r46rdW0R+7kyBmQV2hRh6T+hAFOrody
+         ZAPXIVeiNQTtuY9+aFQck2kT1ys3xBZ2TDAy+Mu7MoZ3TYxLmqmaaX9j0qcUWKN1XOIw
+         hKO7mpACf/XMWSoHF+ONVoI5JRW+w5Qe4GtuR4fNEpB1clb0NiJkmJEzd+u8ZUY/7f+/
+         WADTG7OCLvkYc3cSBdqLS7spypshN6/z9OTwh+JJJXUSCSu53a1c9YIhFfet3//BrlZW
+         XNdg==
+X-Gm-Message-State: AOAM533l5IG29udDARzm8ZPDqzY/721uaucsVkHqtlgYrIr3aiUr9l2g
+        +abbNDAU0ku3rv6/caEQnCYlyI7k5OlS5o/RwCRBWi4UMYDGAdDp
+X-Google-Smtp-Source: ABdhPJzvVj4QAu2vJSNQvv5AulXPLXlXytMRH0aeuSwaDWF3GIZlKBljGm3kzbhGM2ilk0akA+eSiBvblyYOUScdFNE=
+X-Received: by 2002:a05:6402:54:b0:419:9b58:e305 with SMTP id
+ f20-20020a056402005400b004199b58e305mr23790727edu.158.1651682229586; Wed, 04
+ May 2022 09:37:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <eedc3fa9ec47494590be66ad66f90bb7@intel.com>
+References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
+ <20220308193522.26696-1-henning.schild@siemens.com> <YnJ2tYjCpJi7yc4j@smile.fi.intel.com>
+ <20220504171951.0d569632@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20220504171951.0d569632@md1za8fc.ad001.siemens.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 May 2022 18:36:33 +0200
+Message-ID: <CAHp75VfhzYrCRd_Ne_JPdzXgNaaHz8Eg_Rr+n83umWVFtoTzfA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] simatic-ipc additions to p2sb apl lake gpio
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, May 04, 2022 at 04:24:50PM +0000, Luck, Tony wrote:
-> > We really don't need more match id tables with gazillions of CPU models.
-> 
-> Sadly we do :-(
+On Wed, May 4, 2022 at 6:16 PM Henning Schild
+<henning.schild@siemens.com> wrote:
+> Am Wed, 4 May 2022 15:51:01 +0300
+> schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+> > On Tue, Mar 08, 2022 at 08:35:20PM +0100, Henning Schild wrote:
 
-So what was the reasoning about CPUID bits being so expensive so that we
-need to match models? Ditto for the splitlock situation - that thing is
-supported on a bunch of models but nope, not a CPUID bit in sight. What
-was the convincing argument that made hw folks give a CPUID bit to the
-PPIN thing? Perhaps we could use it there too. :)
+...
+
+> > Second question is could it be possible to split first patch into
+> > three, or it has to be in one?
+>
+> I assume one for leds one for wdt and finally drop stuff from platform,
+
+Yes.
+
+> and i will go with that assumption for a next round based on your tree
+> directly.
+
+> Can you explain why that will be useful? While it is kind of a
+> separation of concerns and subsystems ... it also kind of all belongs
+> together and needs to be merged in a rather strict order.
+
+The main case here is that it's easy to review during upstreaming and
+in case of somebody looking into the history. It keeps each of the
+changes logically isolated. I.o.w. it adds flexibility, for example
+changing ordering of the WDT and LED patches in the series in this
+case.
+
+I admit that for _this_ series my arguments are not strong, but I'm
+speaking out of general approach. The pattern
+  1) add new api
+  2) switch driver #1 to it
+  ...
+  2+n) switch driver #n to it
+  3+n) drop old API
+is how we do in the Linux kernel, even if the changes are coupled
+together from a functional / compile perspective.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+With Best Regards,
+Andy Shevchenko
