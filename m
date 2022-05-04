@@ -2,279 +2,176 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7359CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 May 2022 15:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46403C43217
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 May 2022 15:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348701AbiEDPNw (ORCPT
+        id S1352171AbiEDPXg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 May 2022 11:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35228 "EHLO
+        Wed, 4 May 2022 11:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348700AbiEDPNv (ORCPT
+        with ESMTP id S1352227AbiEDPXc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 May 2022 11:13:51 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80074.outbound.protection.outlook.com [40.107.8.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E2A2E0A3;
-        Wed,  4 May 2022 08:10:13 -0700 (PDT)
+        Wed, 4 May 2022 11:23:32 -0400
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2075.outbound.protection.outlook.com [40.107.22.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E472443E2;
+        Wed,  4 May 2022 08:19:56 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DOEF15WYQfBDQzK2F6BGP7Ql7ESzcdbKqtA90BSWu1N1YCXrvY5aGDlN9TSDbSL9ker4XtxczER3e1TexPitMus/Wjtgt4tCnnw+EWscD9krEecB73TO+rJxkUjgN4KmA0FEUno6UjzXNUrhs6CO7LcG73wO/8Fu2UwDLqfNdiPdlNy9OhdQGRq7o/Zb2OqMMzMGY3Pm3dX3V7GBBfTBPx6zYBWsZRU+vwfYTCMFMteQ/SEgNywDE/uDNlJzP27PDnfwDDdhc4pRBfuRmYUcoiAvOnV1PU5oAfjWt5bnkn6BPBPsIi4hryjgktsQ+XOD4WiU28/LlzNyuz+AJ5gZuQ==
+ b=IPcGFQ1uAxGuGx+A9AFqyvhrVoMGugXjNe2G1McFJf6SxtULIbeG/kEPp1flk2rCSEig+bllUcKeczXygFEFMmxeRVIyeZsvodsFPFYObEIg/j3bbN5/rzusmUjU+MgwIStQnlZ8xovG+ibi2q0V5pwYHa9KDoxbwWhBulruk5KgkiDxGbA9Dgbrl9qnzBLS0uBThGTlLSRRzfi5Z6xCok4TkJLNfdDBqHpZXFadgUwZEMTMmObWB8HyPubPdhIYMiDDZag4w8fbRPeUqkKLyfuU/q6vmR9UDnOM8p1CbT5KWs8JgB6o7MRqFBx1hLCCapWBlAP5HJFqjacXhWZs1A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cg15scm8hKiLYDryfx6K9+Q3YRWzaeK1L+GqYchFJtA=;
- b=QV1tacb/Im47QaiglGZB2PLcW67M5/lfJe+SFDoVjFxO9BBRrOBXFYtEinqFgJAHVFneAFK4I3Kzj9/+hwoXyme5tzxOqlomQZqJWDDFkX6vn1XB6X8JExgMyy5bs+GdeY5tICPaMBtvBywmTPSHt17iGQOEMG3E9a69zj5HiQD/ORVBaGv92Jf6wFmrybMFn2boVYTGow0x6SPCXemo0j2BWUM+QIgH97ORpikSqqFX/rTtWZTQMj4QLeflKuCbhxF250udtAMNSS+CBNvU9ZkWB4GuE8NFT6QCAcOuelqq/gT8pDvFCNEza3hOHNOYTcR/zEeBW8ImZZk4ewyFxg==
+ bh=syebumXPcAWGZvREzXE1vo+vzjah2K51G26GiAWeZwI=;
+ b=FcjNUEKgS1Z53PtxvVXz7SmPlbOmoRRoVEXsVAJ82AH/Z5ZSnB2qIIEif3oqavq663GsOXZRb04HjscI4JcROEjBMSFYrMjtOO2V428UYlB42u7bONi12hsfIx5OGBZvhSTzUCYNUl5B/yWXZSEBqe1T1sVUOdaHgz9kQumGql1kQxQxpPoEvBcOXlSbLtQbeAsINepMQ0Vutah+Wz1bpiaStMETPWHC31OMYjGtWfHiOUfb2WUs6w5bxnV1zH9E5E0tpXkZtk7Kn6LX9LAuZDzLQ5sjar+ChmykQTV9dmyZiFZ+YOSVehGKShpAkFoHAfO5oaKC7Hjobl3BDb0Bvw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
  dkim=pass header.d=siemens.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cg15scm8hKiLYDryfx6K9+Q3YRWzaeK1L+GqYchFJtA=;
- b=CkBSVy6T1ruF0KA0voGS63rE7IsQNXqIHz8WpCSDW/K5kN7BVFbRQC5iPnqV+dC8Ne2aN2amEk6hN1fguHIBWBq2mSmokQK0qtVPMME+cQ00C5me3hwXQ69y4zEZZziaDsYc2cdZKjfci5DITSdGBoenZGixnWw8ZIusqWFgIjDwfQCbSSVZOyJsd9WRwsUVC7AvTis1M5/mNptpwuYaP0fn09suE+nfrivSuviw5xuh2kSw4uXYSWBm/LsTDrRCtwCqzuGZ0IF2GSxYJ44pmFlukyo73luDf1i83TGLBoW9PeQMQ/XCi1dixf/4IZ8WEnAbAq+aB3PQ2veRGeGG+w==
+ bh=syebumXPcAWGZvREzXE1vo+vzjah2K51G26GiAWeZwI=;
+ b=gJUJhxjIDfvNlblXpLSVTitsN84xqksRUKXR2zA2O6ReRMxiBOcvdFjTk7rdIsCF7kf8WndlQFT+U7Q906SRSFpAIpdlZYDYIUFhgor/FMYN2gCJ35bCh/FwzcVA5E6IlY/RM5LrfpOA4j6zzEzJzx4YDZBKQm1N01Ev0q8f9OBIB18RJFQlTqAlmrSgDrlLIjZNO5gQI0nqxLRkUO7IR9/zEpYWGeiLXWU/OoaiFPH/3DV35wTmwPLOsm6pt0vLimp6eyEzk/E1l4NpFnwi2g6t/O3kv1zJTpZy5yYHaWZMtKljnek5KzKi+pPtyal1QfYMqetw6/Yvijs2OCfrIw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=siemens.com;
 Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
- by AM9PR10MB4182.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:1cc::17) with
+ by AS8PR10MB5830.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:50a::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.13; Wed, 4 May
- 2022 15:10:10 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.20; Wed, 4 May
+ 2022 15:19:54 +0000
 Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::f4be:8b5d:4314:c2d8]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::f4be:8b5d:4314:c2d8%4]) with mapi id 15.20.5206.025; Wed, 4 May 2022
- 15:10:10 +0000
-Date:   Wed, 4 May 2022 17:10:07 +0200
+ 15:19:53 +0000
+Date:   Wed, 4 May 2022 17:19:51 +0200
 From:   Henning Schild <henning.schild@siemens.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+Cc:     Mark Gross <markgross@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v4 0/8] platform/x86: introduce p2sb_bar() helper
-Message-ID: <20220504171007.2f641098@md1za8fc.ad001.siemens.net>
-In-Reply-To: <YnJ0tdGTzTRYEISn@smile.fi.intel.com>
+        linux-watchdog@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+Subject: Re: [PATCH 0/2] simatic-ipc additions to p2sb apl lake gpio
+Message-ID: <20220504171951.0d569632@md1za8fc.ad001.siemens.net>
+In-Reply-To: <YnJ2tYjCpJi7yc4j@smile.fi.intel.com>
 References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
-        <20220308205016.2c0112ad@md1za8fc.ad001.siemens.net>
-        <YnJ0tdGTzTRYEISn@smile.fi.intel.com>
+        <20220308193522.26696-1-henning.schild@siemens.com>
+        <YnJ2tYjCpJi7yc4j@smile.fi.intel.com>
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.31; x86_64-pc-linux-gnu)
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM6PR05CA0016.eurprd05.prod.outlook.com
- (2603:10a6:20b:2e::29) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+X-ClientProxiedBy: AS8PR04CA0141.eurprd04.prod.outlook.com
+ (2603:10a6:20b:127::26) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
  (2603:10a6:102:269::8)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a5a7668e-993b-464c-9b28-08da2de02e4f
-X-MS-TrafficTypeDiagnostic: AM9PR10MB4182:EE_
-X-Microsoft-Antispam-PRVS: <AM9PR10MB41825CDCE768FEA7B2B1A1D585C39@AM9PR10MB4182.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Office365-Filtering-Correlation-Id: 03033f90-8828-4890-aad7-08da2de18a4b
+X-MS-TrafficTypeDiagnostic: AS8PR10MB5830:EE_
+X-Microsoft-Antispam-PRVS: <AS8PR10MB58307B36FE7E6588F9E60F7185C39@AS8PR10MB5830.EURPRD10.PROD.OUTLOOK.COM>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VLIvzEKjIIp/2jvNU0SPSJPCj89YsLfzAnLpaeYNO9kYQs3caNNZLcdV9DUezneMGneT1zBoC+LU+lJ2+65VM7pbobA5Vg+A1fETaWM0oEEdmjVLizXyQCzm8F/frzyA4Fug68ZXXi3L/R2JjgTCVY3xClrWEJF3qJ45LZoHnaadr4za+XPtnEoFc0u2Nir3f29ms7bgacuObDRkcOEXr9bH5PK/U8On5059bMbuDwFKCDio1blVyivzSQhh1gEeLpofPAKSgsyfiIQ9zUZRuRuZAV++1Q3Jkxo8ozdqckmcfJ7BJR4MwTdS/aOWG4AiiMMSMC0IupshTNPS7VrKiwtwVtbL9jl00AjhoFkhpk+p5NHxwMl4rMz/smClzZkMICcVvOLnHRZDahpT+lvD1k+K1h6bEYyqmmh0ugcSPLJh+2B9xpeXKz3tzrF+aupGzaKCchvHalRBJuN4rtWqBfa3q1PzQ7NkwEM4Za9hnLarD5fqAhIBeSV7aVK9uoeu/HX+jOFKJxUCwbC9qwtSvsYsPB+FBdH/kgIDleLAmpAG2L108Z8usDlQZ1f35WKDBF677PvQ745gP79YEiB/neHFTo4ABIFgMb+nVimNRO6YM5vP5GewCMh+5HdT2YBztNIgvkCwOjFjEgPqt8Bxvw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(44832011)(6506007)(6916009)(7416002)(5660300002)(8936002)(2906002)(83380400001)(54906003)(1076003)(316002)(186003)(6512007)(66556008)(8676002)(86362001)(4326008)(66946007)(26005)(66476007)(9686003)(508600001)(38100700002)(82960400001)(6666004)(6486002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 4KgS6gtcFoU4vYoRtDz595gVgTeImKaU+53H+tIk0nfxvL0hh20qbpDXorTGU1P2R3HpcwYNdontgbZj6bEnsY3BCagXIF5llQ9OH0aFlauTYiDQijtgInWX7DeV8INdoA9RR1gSjQrjrtRYFRW6QbokxB2GLn79FYH6pYmO1HFbfnOLNawvmZYaBJ6g1doLCJN7Db43o4FdH/QWebPw4EQjAbPtOJUmun3B8Xo4iqLwEhPj1pYPs6SswDLlJpkus2Ul+33cLV+vtltEjoYr3FDgLZod7vHYg7EDDVPovOR1xMLR/5rhJhr0y2lJV4mxaC4uTc0UOsBYejAXW1JETRnIHVUxs1xTktOs+ugqP6ief7GKRR8S82QCNCQmB8/9zhF3sEnIt2QlOxN9AkP7H5MSTR3WXePrxMjUzugAekLwrruXbOk27wEeFmSGHgugGvf7sNSG5q8X1B6wujHZCdRzwFb+YO+wo5qaeYJ6CikSDZ0lZ4c9eWd61FuKVW9ecij7qb4U4W5qrernejpvTnfL6zWHP4wcP0g/YZM3SYBWV98cJULniBdoifSPVBAeGZU4RNFz4ChvqujR+EYHHIP6fIE8p+sVk9FR7Zl9/r6IA8be9hOX1My3HU5SclTbfZ5VpEmyISnT/oJhlW4ZsnEwuzp21g9muRJXmUnEIEe3H8lm/ZN8fOCxRdOGean54ctlHfDA++rAzEzrGzbN1IcFSD46oYYAW18viHmCjwk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(38100700002)(44832011)(2906002)(86362001)(1076003)(82960400001)(66476007)(8676002)(4326008)(66556008)(66946007)(966005)(6486002)(6512007)(83380400001)(5660300002)(8936002)(26005)(9686003)(107886003)(186003)(6506007)(508600001)(54906003)(6916009)(316002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?U5rzZT3jHWTZejXBMjx+p64Bz+6rq5zYuWyBt6n3uK7FDPFBzVHyBjdMrkVt?=
- =?us-ascii?Q?HF8brQHzc7+bzOBwMwjLTisrFTBp1/2tOA41c8oPFLxcYSYek35jr3lbhIGP?=
- =?us-ascii?Q?BKWTmDQfqdfPFE8di58N0/zOqcMMyckukkibILD+7PK7ImL5R2oRLtu610ga?=
- =?us-ascii?Q?EDkk93YJlH7wUnOtdzJrhoVGs4zuMc91CsnKjjZZy85wx0G7keOiMBL5xOfx?=
- =?us-ascii?Q?pVhsIZ/avW4uUbnlyknc7Jb+jrn8wSXyhqCUt1EBPsYGPoxFfSm+HeHBj8T+?=
- =?us-ascii?Q?91tM6/gohW/UbJ2LuPcv+Jsx7Fd/ALgN14kQ/ELGyE7zT4wquzrVVaCFPgVP?=
- =?us-ascii?Q?id9MrQzZsVOyoEoaH6yEgiWXTieE80KB61pFLy63SEANms5qUeWHE/RyXeto?=
- =?us-ascii?Q?99XJtWdQOXjUxfLYfbAyxqxYR3lnXVthXfC0FBOQI1b6Rw9E1rwgvbQ5BwfO?=
- =?us-ascii?Q?41aYzJ0/SmilOk8kiYHWLDfZLx1IHXBwlsndBu07/6aXzMSmaXqm1KBqExSA?=
- =?us-ascii?Q?4omt7Bhh+c/Qi3aOHn9bjA7SrVFVvwqbeCPBkpG739dI4ajtjzV3kNGLUWuG?=
- =?us-ascii?Q?tsZp/xZGlO4vDBMXGBybfR44bT+ZOuTnnOE5+qQLu0FIT0mq+z/l4pXOEgR8?=
- =?us-ascii?Q?8Akon4MRu2n55wPsmnU2wiyrSaYzfuFM+l9dlXMK79cB0uitSBfyDrVrIvD9?=
- =?us-ascii?Q?obAVqSQsXs2tFJ+W8Y+ChsQ9hLJkYM/wTG7s4LAmrMWPn3qni3XvIxXQifpS?=
- =?us-ascii?Q?9lD//egfGVZSiLBnEZaeLjXiMuFQ2hAApU4gEWI3UF5p/IKHuhVj0DaBgZlQ?=
- =?us-ascii?Q?NUhpBSKp0NsoyEziY5gNjgDCGaHIn51KVTCIa40GNfDLTuDrNvrzPU62Hw0b?=
- =?us-ascii?Q?Kk9fW7RJpZCghsqwP5jqlbH/mtm0QNZ1qAZkFPlr9awYz5M6uMKaLJ46iHaR?=
- =?us-ascii?Q?wJ7I14XbjUyJC7HmlLWK2Fouzhq8kUgSUe7h0A0tOoNPbBW1LeR62vsK0Xsf?=
- =?us-ascii?Q?Vy3/3qa2rCS2LIJNh6zTYcm8W0ky1OOQgAQxi/bNe7vxpPKwBLDGjFyocFma?=
- =?us-ascii?Q?UvLerdKr+/+RPp6PyJyNOuaUrKRT2OFQph/KsMhQqFhZfz6qw6g7VqKnkyFU?=
- =?us-ascii?Q?MEvaUotBVI4a8rnSWaMjEh+UnKHBoe0d8BxX6Z6PmWfBP9ElRlYVCV/sZXvY?=
- =?us-ascii?Q?baf6Q1BRWnm2ckQT1iarmFd/eZkjSFkXGPVX8Y/Iri7h/31L+oVfyp6cxBYk?=
- =?us-ascii?Q?i9OXRZCsddmj/PWPGvKdsJAYDyA8SgDJ9sji4WgIcXNWqJPekYO8Ykx+zhsj?=
- =?us-ascii?Q?nCUlF7Ghc7Y9X7eDL/tHgHb810SKU5kgOSKj4eIdf27AoMNad2XdCJ6YEucV?=
- =?us-ascii?Q?/iiKhddkaitFNTjfZMTbYSvj8soNnUgBwFFEt0hLjwTGzqh83CK0onparuZG?=
- =?us-ascii?Q?FhrP0hTdTclXEcSVn0v2uv+YnUkmUpI+VQaERAX9NL0pMizYHBUeCkLevg1L?=
- =?us-ascii?Q?VMKee83fDemb2qMWUQzNmOn0xUG8iKw4TvU2WIyrXfouIDrXhelmDQXNZ3DD?=
- =?us-ascii?Q?MTV14RiIfXosh/p58DmfbAxA31vfVY2NN4TLgy6vnPEAKsq0yLUMNKHPyLsx?=
- =?us-ascii?Q?6t5b/W7UYV7OfYVkFKdtNAZk98FfRG+sHsSuTW4TFpMm5USPDTelBJD9QjY0?=
- =?us-ascii?Q?UEz85owbmW0Va669Ngq+eOMZewTKYy7WrAjsKyIPNDihPpBLlqwfesV+WRLI?=
- =?us-ascii?Q?gNtjwFOvWVQoPZqnopVMJUshwRtqxOps1svh121IXk00Lsr6nyk8?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1jtFtJOq8gwCukzE5+8PXTR2Zgw7spWFOJQLgxdPpkm077x7U+X9ziDsIZLL?=
+ =?us-ascii?Q?99ginLO0fW2LGphwJOT5kEpPVgl+0n9xyeYrdIaK8tUNNHeJ1mga7e3lvMYb?=
+ =?us-ascii?Q?K1AId6v6UAVozMNaTNtOyVFhk7YC3IeD0JuaAxEGU+rIRq5JLeaqZjD4lOPc?=
+ =?us-ascii?Q?EV1kUJj0XrHuxpOFq9iB+AyVNQV86QkumhmOBp6YSQrw+a4dUklufBXp11Ic?=
+ =?us-ascii?Q?t4eQFG9li8IpgiG9rqGVaDhBJe9MGcEz2rC6UgJTkd4dr6kBGi6dbqrWlPbp?=
+ =?us-ascii?Q?b19dFnt6KzWp4t1P8h2VFxBVwcbbT+5p1ZUptlATOmgXf1tUMyNMHb+tF2Zn?=
+ =?us-ascii?Q?cmFBT2se1b9b1oJmmdPl0YN+2XiVtlh/jQ8DuSRBULxuM3jytru3b0SpQ506?=
+ =?us-ascii?Q?uzwlhOUy32BuUZF5cIaZpTAJAOQRLv4gIeSZLvyf8qnKeSe1An08aPoV/pz5?=
+ =?us-ascii?Q?u1h9Kbf5/42zmzyiEIfBAInfiJD30+Z4x7g91bsFwWCm+TrLMnEhjJUs+few?=
+ =?us-ascii?Q?MkhwVJGkXWt36SVKmJCmZanfG9CNL9r+ldgvVwszQqFyhVeeptxAE8EaoS51?=
+ =?us-ascii?Q?IHBZfFgTxAdPaN/YNLwsd0eC5cgYt2FSAftEGEIqDCNGtSDq8vvSH0JCqrEW?=
+ =?us-ascii?Q?q3a0QR605o1et1U8IK3r7SnIWELsqek7VlGSqKqS2xy+p+bYMOfhQ4trlNMy?=
+ =?us-ascii?Q?CCRenfThJZ4a6G+Tv1GtosksIUciK6+20q1vL/CQaz1qCj65YpQdGaYXCnfY?=
+ =?us-ascii?Q?df7aosfsTF3OfmbKeKVgyh3S+4UABMXLGV1SEUM5rGlchdk/D4QKoz0vMIht?=
+ =?us-ascii?Q?IeQ0JURG4mbq4NpwtgAjXVnwnLdpgtXJls3p7GjJ+xuqv5XdOePsIfFzGvK9?=
+ =?us-ascii?Q?v1ECLfYlsGOpbGS2r6s1gPoW4RPkGmNZaZ7mckq0C0SdcfZzxKwAk6nJAu9F?=
+ =?us-ascii?Q?6dJ44TaK5GfhuRClkXbZ71uA2WLpMTmeJv44Fsjxa+J2504fMHS8Euyul0ZH?=
+ =?us-ascii?Q?uyxZ3hgG0z82kUGa/32BsmFu6nA8hugUchiS/FQGWicRaGwkY6vg2Wy4LXJQ?=
+ =?us-ascii?Q?t4TmOa+Yw0wECaKyJVh6dJ+U0mqGydAanNrYrdg8vf89jJO4Ymh94zd+q6/H?=
+ =?us-ascii?Q?nmKfkku/dsOpcNHceIQ9PG+YPRnWgAkAzIn6l+/aqvMUpqTCKg5kCruhTTws?=
+ =?us-ascii?Q?mBJYYbEEugT8QqEpB5mGo/7OG2R8diIdzqNOjzXJW5Q0Md0IN4CoQdq1Q9xZ?=
+ =?us-ascii?Q?y5b/E+WmS+xemnxxRHlu13xl57XWgiW7plKeoTB+Rw9N/8RsDUfRIFRaRBFo?=
+ =?us-ascii?Q?DVItAMb2IONFkatZhnjyzySTKgdeuICv1tV8I6twdl85/twq8C5Ysfirwfc8?=
+ =?us-ascii?Q?TGbTX/6Umk4NDNuwdu1lci/aYnpnEEf+2tmxv1BfB/rO3AWrbpY8y7RLzvoz?=
+ =?us-ascii?Q?j121kwLscaNvhvGEO+CYAW4N2lweLiBAYWcPhnRbQJCbu3uIuWvwfOiThaeV?=
+ =?us-ascii?Q?qhTQdqZmsKsmzAtYpsflZe6DM3C4Obk7fj0oamTbIfMep0WHDYTkAeLgM67v?=
+ =?us-ascii?Q?0o0UgzKbmzROdX9bJz1a/E+wOO9RLQQHHj+QouJX9j2z9vNxlsAIIAEvMTux?=
+ =?us-ascii?Q?DXewtH75qKtPKuE9exmPAgSaQhKkWR0aCSVb6k3rJYhDJGlf38DeyUpkjzb9?=
+ =?us-ascii?Q?WhZGmU8xnVtX76Vjk/f0rfWAiBzNKRT4lg9+2PMz3n0Y7NuUUNqQa1jGrIlK?=
+ =?us-ascii?Q?H3aZUOGz88GfJTH8cN1c0PFuUWfaSjZV8H7FJih15XP5h2QPVkjO?=
 X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5a7668e-993b-464c-9b28-08da2de02e4f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03033f90-8828-4890-aad7-08da2de18a4b
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2022 15:10:10.0489
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2022 15:19:53.8715
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ydLYIETtQDmkplkWLufx3ZlatX3kfuW87QE87/3mAlHOd3btrnMpJg4btumBmWE8A59I7pxJ/74dksBtKUKpqOmTWsaYI0Zoux+a0uRe2QM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR10MB4182
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z3PxVk+c7PnWVp6I1xwWE9eou2rhBOfL9watHm0NEclrcGMxvhKn9QUjG2xeN1WzErtf5HnfJSlC64Vcjd6blV4MJfIVt9WDedjazKV+MBE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB5830
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Wed, 4 May 2022 15:42:29 +0300
+Am Wed, 4 May 2022 15:51:01 +0300
 schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
 
-> On Tue, Mar 08, 2022 at 08:50:16PM +0100, Henning Schild wrote:
-> > Am Mon, 31 Jan 2022 17:13:38 +0200
-> > schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
-> >   
-> > > There are a few users and at least one more is coming (*) that
-> > > would like to utilize P2SB mechanism of hiding and unhiding a
-> > > device from the PCI configuration space.
-> > > 
-> > > Here is the series to consolidate p2sb handling code for existing
-> > > users and provide a generic way for new comer(s).
-> > > 
-> > > It also includes a patch to enable GPIO controllers on Apollo Lake
-> > > when it's used with ABL bootloader w/o ACPI support.
-> > > 
-> > > The patch that bring the helper ("platform/x86/intel: Add Primary
-> > > to Sideband (P2SB) bridge support") has a commit message that
-> > > sheds a light on what the P2SB is and why this is needed.
-> > > 
-> > > The changes made in v2 do not change the main idea and the
-> > > functionality in a big scale. What we need is probably one more
-> > > (RE-)test done by Henning. I hope to have it merged to v5.18-rc1
-> > > that Siemens can develop their changes based on this series.  
+> On Tue, Mar 08, 2022 at 08:35:20PM +0100, Henning Schild wrote:
+> > This switches the simatic-ipc modules to using the p2sb interface
+> > introduced by Andy with "platform/x86: introduce p2sb_bar() helper".
 > > 
-> > I did test this series and it works as expected. Only problem is
-> > that the leds driver will not work together with the pinctrl.
-> > Because two "in tree drivers" will try to reserve the same memory
-> > region when both are enabled. Who wins is a matter of probing order
-> > ...  
+> > It also switches to one apollo lake device to using gpio leds.
+> > 
+> > I am kind of hoping Andy will take this on top and propose it in his
+> > series.  
 > 
-> Can we have your formal Tested-by tag?
+> First of all, they are not applicable to my current version [1] of
+> the series (it maybe something changed in the Simatic drivers
+> upstream, because I have got conflicts there. For the record, I'm
+> using Linux Next as a base.
 
-Sure. I will just put it here for you to take.
+That is possible, some sparse findings have been fixed lately.
 
-Tested-by: Henning Schild <henning.schild@siemens.com>
+> Second question is could it be possible to split first patch into
+> three, or it has to be in one?
 
-Let me know if you need it in another shape or form.
+I assume one for leds one for wdt and finally drop stuff from platform,
+and i will go with that assumption for a next round based on your tree
+directly.
+Can you explain why that will be useful? While it is kind of a
+separation of concerns and subsystems ... it also kind of all belongs
+together and needs to be merged in a rather strict order.
 
+regards,
 Henning
 
+> [1]: https://gitlab.com/andy-shev/next/-/tree/topic/p2sb-next
+> It would be nice if you can perform another round of testing.
 > 
-> > If you can take my changes into your series we will not have a
-> > problem.  
-> 
-> Yes, that's the plan, but your patches needs a bit of work I believe.
-> 
-> > Otherwise we might need to create sort of a conflict which my series
-> > would revert when switching apl lake to gpio.
+> > Henning Schild (2):
+> >   simatic-ipc: convert to use common P2SB accessor
+> >   leds: simatic-ipc-leds-gpio: add GPIO version of Siemens driver
 > > 
-> > I would not know the process, let us see what the reviews bring and
-> > how to continue here.  
-> 
-> I'm about to comment on the patches.
-> 
-> > Thanks so much for taking care, especially the pinctrl coming up
-> > without ACPI really improves the simatic leds on the apl lake.  
-> 
-> You are welcome!
-> 
-> > In fact i will have to double check if i really need the p2sb for
-> > the 427E wdt ... but until i have an answer, p2sb works just fine.  
-> 
-> Thanks!
-> 
-> > > I have tested this on Apollo Lake platform (I'm able to see SPI
-> > > NOR and since we have an ACPI device for GPIO I do not see any
-> > > attempts to recreate one).
-> > > 
-> > > *) One in this series, and one is a due after merge in the Simatic
-> > > IPC drivers
-> > > 
-> > > The series may be routed either via MFD (and I guess Lee would
-> > > prefer that) or via PDx86, whichever seems better for you, folks.
-> > > As of today patches are ACKed by the respective maintainers, but
-> > > I2C one and one of the MFD.
-> > > 
-> > > Wolfram, can you ACK the patch against i2c-i801 driver, if you
-> > > have no objections?
-> > > 
-> > > Changes in v4:
-> > > - added tag to the entire series (Hans)
-> > > - added tag to pin control patch (Mika)
-> > > - dropped PCI core changes (PCI core doesn't want modifications
-> > > to be made)
-> > > - as a consequence of the above merged necessary bits into p2sb.c
-> > > - added a check that p2sb is really hidden (Hans)
-> > > - added EDAC patches (reviewed by maintainer internally)
-> > > 
-> > > Changes in v3:
-> > > - resent with cover letter
-> > > 
-> > > Changes in v2:
-> > > - added parentheses around bus in macros (Joe)
-> > > - added tag (Jean)
-> > > - fixed indentation and wrapping in the header (Christoph)
-> > > - moved out of PCI realm to PDx86 as the best common denominator
-> > > (Bjorn)
-> > > - added a verbose commit message to explain P2SB thingy (Bjorn)
-> > > - converted first parameter from pci_dev to pci_bus
-> > > - made first two parameters (bus and devfn) optional (Henning,
-> > > Lee)
-> > > - added Intel pin control patch to the series (Henning, Mika)
-> > > - fixed English style in the commit message of one of MFD patch
-> > > (Lee)
-> > > - added tags to my MFD LPC ICH patches (Lee)
-> > > - used consistently (c) (Lee)
-> > > - made indexing for MFD cell and resource arrays (Lee)
-> > > - fixed the resource size in i801 (Jean)
-> > > 
-> > > Andy Shevchenko (6):
-> > >   pinctrl: intel: Check against matching data instead of ACPI
-> > > companion mfd: lpc_ich: Factor out lpc_ich_enable_spi_write()
-> > >   mfd: lpc_ich: Switch to generic p2sb_bar()
-> > >   i2c: i801: convert to use common P2SB accessor
-> > >   EDAC, pnd2: Use proper I/O accessors and address space
-> > > annotation EDAC, pnd2: convert to use common P2SB accessor
-> > > 
-> > > Jonathan Yong (1):
-> > >   platform/x86/intel: Add Primary to Sideband (P2SB) bridge
-> > > support
-> > > 
-> > > Tan Jui Nee (1):
-> > >   mfd: lpc_ich: Add support for pinctrl in non-ACPI system
-> > > 
-> > >  drivers/edac/Kconfig                   |   1 +
-> > >  drivers/edac/pnd2_edac.c               |  62 ++---
-> > >  drivers/i2c/busses/Kconfig             |   1 +
-> > >  drivers/i2c/busses/i2c-i801.c          |  39 +---
-> > >  drivers/mfd/Kconfig                    |   1 +
-> > >  drivers/mfd/lpc_ich.c                  | 136 +++++++++--
-> > >  drivers/pinctrl/intel/pinctrl-intel.c  |  14 +-
-> > >  drivers/platform/x86/intel/Kconfig     |  12 +
-> > >  drivers/platform/x86/intel/Makefile    |   1 +
-> > >  drivers/platform/x86/intel/p2sb.c      | 305
-> > > +++++++++++++++++++++++++ include/linux/platform_data/x86/p2sb.h |
-> > > 27 +++ 11 files changed, 500 insertions(+), 99 deletions(-)
-> > >  create mode 100644 drivers/platform/x86/intel/p2sb.c
-> > >  create mode 100644 include/linux/platform_data/x86/p2sb.h
-> > >   
+> >  drivers/leds/simple/Kconfig                   |  11 ++
+> >  drivers/leds/simple/Makefile                  |   3 +-
+> >  drivers/leds/simple/simatic-ipc-leds-gpio.c   | 108
+> > ++++++++++++++++++ drivers/leds/simple/simatic-ipc-leds.c        |
+> > 77 +------------ drivers/platform/x86/simatic-ipc.c            |
+> > 43 +------ drivers/watchdog/Kconfig                      |   1 +
+> >  drivers/watchdog/simatic-ipc-wdt.c            |  15 +--
+> >  .../platform_data/x86/simatic-ipc-base.h      |   2 -
+> >  8 files changed, 139 insertions(+), 121 deletions(-)
+> >  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio.c
+> > 
+> > -- 
+> > 2.34.1
 > >   
 > 
 
