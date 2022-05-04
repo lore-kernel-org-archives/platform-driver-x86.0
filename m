@@ -2,123 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A069C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 May 2022 19:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C909C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 May 2022 06:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241475AbiECTKR (ORCPT
+        id S233641AbiEDGPY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 May 2022 15:10:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40442 "EHLO
+        Wed, 4 May 2022 02:15:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236659AbiECTKP (ORCPT
+        with ESMTP id S233453AbiEDGPX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 May 2022 15:10:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB432ED5A
-        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 12:06:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 57A0561940
-        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 19:06:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BA5BAC385D4
-        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 19:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651604801;
-        bh=rtdCDzhflyv/ndef9Tnw0l/VCZzdoXJY5YEjb0gkPvo=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=RP54sX6JKUOKmmEMKBvGGtovrvDSFUD6Y64B8jHRBBjil+i0DwE8FTmyXC3TJ+Fm4
-         PV3lbZQQCrMSkPU2l2q2b4hkpTLieKxIopvvx1pJU3pGr2frtPej8jlldcm01fWXHB
-         9tnvlx9wZ1oFalD6yyh2I/BQAGYo15MU4jA4rFnm04MZCjNMGeZ7nXH1lrSiOOn8VI
-         TbEpZyODYIyu8UnlvhNxHoAHkesNtCDehzgCzEbotUSs56DezwIuH2Psz0+HCDI3jC
-         XHYrSI6G1SbP8THAU5w74/2iKGwKi3/2yRLtXJb8QcxqZTAVosz9W7LINXyJIpUeRI
-         HsRZ3b3ImF+Hg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id AA34ACC13AF; Tue,  3 May 2022 19:06:41 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Tue, 03 May 2022 19:06:39 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: pauk.denis@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
-Message-ID: <bug-204807-215701-NjOT8ebSI7@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 4 May 2022 02:15:23 -0400
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA0615A13
+        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 23:11:48 -0700 (PDT)
+Date:   Wed, 4 May 2022 08:11:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=t-8ch.de; s=mail;
+        t=1651644705; bh=nWTipHjTqTixz8w7jR6LGAhjzxtDgYSt6f8e52i1jrw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dbkzM5Os0HaoN0m3n0bE07BwSBSUITGaZj7o9fUUOiMuWq/gwc69iZVSxvMH+Gnzf
+         rgok5QF/OWTGHjJZvm3WkTICZuQWG+rEkap3J+g20D/d8dYXppQIVrnxjOkXQeXnH/
+         Zyted4FLIfRwqHUcEcrLkMkXuU9hwGbv4ETSOQmo=
+From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, lyude@redhat.com
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Correct dual fan probe
+Message-ID: <bcc78237-fa4c-4d9f-86a6-4d1a8ea0e0fe@t-8ch.de>
+References: <markpearson@lenovo.com>
+ <20220502191200.63470-1-markpearson@lenovo.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220502191200.63470-1-markpearson@lenovo.com>
+Jabber-ID: thomas@t-8ch.de
+X-Accept: text/plain, text/html;q=0.2, text/*;q=0.1
+X-Accept-Language: en-us, en;q=0.8, de-de;q=0.7, de;q=0.6
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Thanks!
 
-Denis Pauk (pauk.denis@gmail.com) changed:
+On 2022-05-02 15:12-0400, Mark Pearson wrote:
+> Date: Mon, 2 May 2022 15:12:00 -0400
+> From: Mark Pearson <markpearson@lenovo.com>
+> To: markpearson@lenovo.com
+> CC: hdegoede@redhat.com, markgross@kernel.org,
+>  platform-driver-x86@vger.kernel.org, lyude@redhat.com, thomas@t-8ch.de
+> Subject: [PATCH] platform/x86: thinkpad_acpi: Correct dual fan probe
+> X-Mailer: git-send-email 2.35.1
+> 
+> There was an issue with the dual fan probe whereby the probe was
+> failing as it assuming that second_fan support was not available.
+> 
+> Corrected the logic so the probe works correctly. Cleaned up so
+> quirks only used if 2nd fan not detected.
+> 
+> Tested on X1 Carbon 10 (2 fans), X1 Carbon 9 (2 fans) and T490 (1 fan)
+> 
+> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 23 +++++++++++++----------
+>  1 file changed, 13 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index f385450af864..5eea6651a312 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -8862,24 +8862,27 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+>  			fan_status_access_mode = TPACPI_FAN_RD_TPEC;
+>  			if (quirks & TPACPI_FAN_Q1)
+>  				fan_quirk1_setup();
+> -			if (quirks & TPACPI_FAN_2FAN) {
+> -				tp_features.second_fan = 1;
+> -				pr_info("secondary fan support enabled\n");
+> -			}
+> -			if (quirks & TPACPI_FAN_2CTL) {
+> -				tp_features.second_fan = 1;
+> -				tp_features.second_fan_ctl = 1;
+> -				pr_info("secondary fan control enabled\n");
+> -			}
+>  			/* Try and probe the 2nd fan */
+> +			tp_features.second_fan = 1; /* needed for get_speed to work */
+>  			res = fan2_get_speed(&speed);
+>  			if (res >= 0) {
+>  				/* It responded - so let's assume it's there */
+>  				tp_features.second_fan = 1;
+>  				tp_features.second_fan_ctl = 1;
+>  				pr_info("secondary fan control detected & enabled\n");
+> +			} else {
+> +				/* Fan not auto-detected */
+> +				tp_features.second_fan = 0;
+> +				if (quirks & TPACPI_FAN_2FAN) {
+> +					tp_features.second_fan = 1;
+> +					pr_info("secondary fan support enabled\n");
+> +				}
+> +				if (quirks & TPACPI_FAN_2CTL) {
+> +					tp_features.second_fan = 1;
+> +					tp_features.second_fan_ctl = 1;
+> +					pr_info("secondary fan control enabled\n");
+> +				}
+>  			}
+> -
+>  		} else {
+>  			pr_err("ThinkPad ACPI EC access misbehaving, fan status and control unavailable\n");
+>  			return -ENODEV;
+> -- 
+> 2.35.1
+> 
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
- Attachment #300687|0                           |1
-        is obsolete|                            |
+Tested-by: Thomas Weißschuh <linux@weissschuh.net>
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
 
---- Comment #235 from Denis Pauk (pauk.denis@gmail.com) ---
-Created attachment 300872
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300872&action=3Dedit
-Asus WMI for nct6775 v5.17 base (2022.05.03)
+FYI this now inverts the logic from "platform/x86: thinkpad_acpi: Don't probe 2nd fan if enabled by quirk" [0]
+Instead of skipping the probe when there is a quirk the quirk is skipped if the
+probe succeeds first.
 
-Added support by WMI for:
-* PRO H410T
-* PRIME H410M-R
-* ROG STRIX X570-E GAMING WIFI II
+Going after the rationale in the patch it might be better to turn this around
+here, too:
 
-By ACPI lock (will not be upstreamed):
-* ROG STRIX Z370-H GAMING
+	"If we already know that the system in question has a quirk telling us that
+	the system has a second fan, there's no purpose in probing the second fan -
+	especially when probing the second fan may not work properly with systems
+	relying on quirks."
 
-Code is fully untested.
-
-(In reply to Dmitrii Levchenko from comment #234)
-> Thanks all for the effort.
-> Please also add:
->=20
-> $ cat /sys/class/dmi/id/board_name
-> PRIME H410M-R
-(In reply to Hubert Banas from comment #233)
-> >=20
-> > It can be part of 5.19+ if patch will be accepted before start of the n=
-ew
-> > merge window. (I have not sent patch yet.)
->=20
-> Sounds good. Thank you.
-
-Upstream contains rework of nct6775, I have applied all commits but can't c=
-heck
-code with real hardware for now. If everything works for you, i will send p=
-atch
-to updated with new boards.
-
-(In reply to Emmanuel Mayor from comment #223)
-> Same issue with Rog Strix Z370-H Gaming, which has Nuvoton NCT6793D
->=20
-DSDT does not have required WMI interface, board support can be implemented
-only by direct lock of ACPI mutex.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+[0] https://lore.kernel.org/platform-driver-x86/20220429211418.4546-3-lyude@redhat.com/
