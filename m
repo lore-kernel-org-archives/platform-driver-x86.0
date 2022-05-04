@@ -2,60 +2,41 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81563C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 May 2022 16:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910F0C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 May 2022 16:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353382AbiEDQ23 (ORCPT
+        id S1353168AbiEDQcf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 May 2022 12:28:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33108 "EHLO
+        Wed, 4 May 2022 12:32:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233593AbiEDQ23 (ORCPT
+        with ESMTP id S236487AbiEDQce (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 May 2022 12:28:29 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6F146675;
-        Wed,  4 May 2022 09:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651681492; x=1683217492;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=lIZS8L9hUURotYWnPIQEjJsG5uiWV1waq7GDXPVIqcc=;
-  b=gExUBy8e2Cihm/6XjCUMw7vxfEqmclF77qKJoR3k0GbAblzfMm/VX3tV
-   /19mYH11fGepyzx0wbCkvWVz5xyctii3eWJRWkPexTyqaQ+bRuB3I3myr
-   c8qCIvrF/joHyr83Dp2czBNZi7aFDdIL97M+z70Sd/kpflcfYqP4N8dvz
-   5u/lUA5aL3ZnbNNW5iMSrdr5+Q6ny72G4RLl7tU/viLk8YWYTmj9+vmNm
-   2O/4dn6QpnfD/JgsfHSzUWCyzSFc4cnUfRaSW8L9+57c09WNGsg6V+ROn
-   uMNCF/8nOPidkU69grdbB7RPngkIzbZoINEfsmkt171pb/mPVFAS4VofM
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10337"; a="293004702"
-X-IronPort-AV: E=Sophos;i="5.91,198,1647327600"; 
-   d="scan'208";a="293004702"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 09:24:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,198,1647327600"; 
-   d="scan'208";a="599597736"
-Received: from fmsmsx605.amr.corp.intel.com ([10.18.126.85])
-  by orsmga001.jf.intel.com with ESMTP; 04 May 2022 09:24:51 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 4 May 2022 09:24:51 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 4 May 2022 09:24:50 -0700
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.027;
- Wed, 4 May 2022 09:24:50 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
+        Wed, 4 May 2022 12:32:34 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EED38BE2A;
+        Wed,  4 May 2022 09:28:57 -0700 (PDT)
+Received: from zn.tnic (p5de8eeb4.dip0.t-ipconnect.de [93.232.238.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8ACF11EC0505;
+        Wed,  4 May 2022 18:28:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1651681732;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Pwo4stPQS5Epzgq3/I8V0NR8mbENabR0dFZP2E8j8AY=;
+        b=qaXmgIitUirGKOzWMmXfBfPhHrQwFKJhis4aXI7O3YhyJJUuFJE1nUzD28zKlHW1pJwJOW
+        YpcFEuS2JbvzPT8pxSx9ae1KJnDWarb2/P8OmW0gKaUZsjGOlxLWjyKuy2mJx9NzCQGSWT
+        Via2Eiq2+oYOj2UC1ZQa2/gcI9fqdKQ=
+Date:   Wed, 4 May 2022 18:28:51 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>
-CC:     "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
         "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
         "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
         "corbet@lwn.net" <corbet@lwn.net>,
@@ -72,55 +53,35 @@ CC:     "mingo@redhat.com" <mingo@redhat.com>,
         <platform-driver-x86@vger.kernel.org>,
         "patches@lists.linux.dev" <patches@lists.linux.dev>,
         "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: RE: [PATCH v5 03/10] platform/x86/intel/ifs: Add stub driver for
+Subject: Re: [PATCH v5 03/10] platform/x86/intel/ifs: Add stub driver for
  In-Field Scan
-Thread-Topic: [PATCH v5 03/10] platform/x86/intel/ifs: Add stub driver for
- In-Field Scan
-Thread-Index: AQHYWxYWmJjf7gsCY0aglBAPDxFRY60PBIYA///pJDA=
-Date:   Wed, 4 May 2022 16:24:50 +0000
-Message-ID: <eedc3fa9ec47494590be66ad66f90bb7@intel.com>
+Message-ID: <YnKpw2kGY2FEFWcW@zn.tnic>
 References: <20220422200219.2843823-1-tony.luck@intel.com>
  <20220428153849.295779-1-tony.luck@intel.com>
- <20220428153849.295779-4-tony.luck@intel.com> <87zgjxk2kt.ffs@tglx>
-In-Reply-To: <87zgjxk2kt.ffs@tglx>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.6.401.20
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ <20220428153849.295779-4-tony.luck@intel.com>
+ <87zgjxk2kt.ffs@tglx>
+ <eedc3fa9ec47494590be66ad66f90bb7@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <eedc3fa9ec47494590be66ad66f90bb7@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
->> +static const struct x86_cpu_id ifs_cpu_ids[] __initconst =3D {
->> +	X86_MATCH(SAPPHIRERAPIDS_X),
->
-> Why do we need a model match here? The core capabilities MSR is only
-> available when X86_FEATURE_CORE_CAPABILITIES is set:
->
->    "If CPUID.(EAX=3D07H, ECX=3D0):EDX[30] =3D 1.
->     This MSR provides an architectural enumeration
->     function for model-specific behavior."
->
-> So checking for Intel Fam6 ANYMODEL and X86_FEATURE_CORE_CAPABILITIES is
-> sufficient, no?
+On Wed, May 04, 2022 at 04:24:50PM +0000, Luck, Tony wrote:
+> > We really don't need more match id tables with gazillions of CPU models.
+> 
+> Sadly we do :-(
 
-IA32_CORE_CAPABILITES is a nightmare. Although it is an architectural
-register, the bits inside it are model specific.
+So what was the reasoning about CPUID bits being so expensive so that we
+need to match models? Ditto for the splitlock situation - that thing is
+supported on a bunch of models but nope, not a CPUID bit in sight. What
+was the convincing argument that made hw folks give a CPUID bit to the
+PPIN thing? Perhaps we could use it there too. :)
 
-In particular bit 2 (which we check here for the existence of the INTEGRITY
-MSR) has been assigned for other use on other models. See SDM volume 4
-table 2-45 where bit 2 means FUSA supported on 06_8C and 06_8D (Tigerlake
-mobile and desktop). Ditto in table 2-46 (Alderlake and Raptorlake).
+-- 
+Regards/Gruss,
+    Boris.
 
-> We really don't need more match id tables with gazillions of CPU models.
-
-Sadly we do :-(
-
--Tony
+https://people.kernel.org/tglx/notes-about-netiquette
