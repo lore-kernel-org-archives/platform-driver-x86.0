@@ -2,130 +2,89 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C909C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 May 2022 06:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A2EC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 May 2022 10:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233641AbiEDGPY (ORCPT
+        id S1348081AbiEDKcF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 May 2022 02:15:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44292 "EHLO
+        Wed, 4 May 2022 06:32:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233453AbiEDGPX (ORCPT
+        with ESMTP id S1348077AbiEDKcE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 May 2022 02:15:23 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA0615A13
-        for <platform-driver-x86@vger.kernel.org>; Tue,  3 May 2022 23:11:48 -0700 (PDT)
-Date:   Wed, 4 May 2022 08:11:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=t-8ch.de; s=mail;
-        t=1651644705; bh=nWTipHjTqTixz8w7jR6LGAhjzxtDgYSt6f8e52i1jrw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dbkzM5Os0HaoN0m3n0bE07BwSBSUITGaZj7o9fUUOiMuWq/gwc69iZVSxvMH+Gnzf
-         rgok5QF/OWTGHjJZvm3WkTICZuQWG+rEkap3J+g20D/d8dYXppQIVrnxjOkXQeXnH/
-         Zyted4FLIfRwqHUcEcrLkMkXuU9hwGbv4ETSOQmo=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Mark Pearson <markpearson@lenovo.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, lyude@redhat.com
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Correct dual fan probe
-Message-ID: <bcc78237-fa4c-4d9f-86a6-4d1a8ea0e0fe@t-8ch.de>
-References: <markpearson@lenovo.com>
- <20220502191200.63470-1-markpearson@lenovo.com>
+        Wed, 4 May 2022 06:32:04 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89B4826571;
+        Wed,  4 May 2022 03:28:28 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1651660107;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+p02m4NybtoYkCAp7qOzZK/r9dVhwWNCaV0MHp4YzOA=;
+        b=Otdai8w7VXz67RzUE5XSQmT2/Nd3ubJw/iakDnDoxp9DehhbkNO1Vb/WFz0CJ+pvB4t8YP
+        LN5o5ykv5TfR56hguAugW7oIlKo5w51JuG8/STTOWnu2V06KUkVFQevsv2sLCdC682G4pS
+        k7RrtghYswPqJuSUq8uwbf3RlUtlcO28qloxGGE/STp/e2si20zaMwc6pP5yRmT86mJv/z
+        J5JcON7SEUVFjH42qddQG7+qpfJuDS5xaZH144vHlTDGTCRcc6eTrVjwsEiqyNUocrDwTr
+        3drUcZdC7xH/zPfhimNggICUo8DHu/5aPRoNcc2Kb5iDajzyTZQm6VXKmP6YCQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1651660107;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+p02m4NybtoYkCAp7qOzZK/r9dVhwWNCaV0MHp4YzOA=;
+        b=B6VxQKFHlQCHU2LFvEypkmPmWEWQvlBAc/zif7fWOm0uwcZWEWSJSXfHgGcQKgfByVxHwI
+        cbKgzLNZC3+sLQBA==
+To:     Tony Luck <tony.luck@intel.com>, hdegoede@redhat.com,
+        markgross@kernel.org
+Cc:     mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, corbet@lwn.net,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        jithu.joseph@intel.com, ashok.raj@intel.com, tony.luck@intel.com,
+        rostedt@goodmis.org, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v5 01/10] x86/microcode/intel: Expose
+ collect_cpu_info_early() for IFS
+In-Reply-To: <20220428153849.295779-2-tony.luck@intel.com>
+References: <20220422200219.2843823-1-tony.luck@intel.com>
+ <20220428153849.295779-1-tony.luck@intel.com>
+ <20220428153849.295779-2-tony.luck@intel.com>
+Date:   Wed, 04 May 2022 12:28:26 +0200
+Message-ID: <8735hplhh1.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220502191200.63470-1-markpearson@lenovo.com>
-Jabber-ID: thomas@t-8ch.de
-X-Accept: text/plain, text/html;q=0.2, text/*;q=0.1
-X-Accept-Language: en-us, en;q=0.8, de-de;q=0.7, de;q=0.6
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks!
+On Thu, Apr 28 2022 at 08:38, Tony Luck wrote:
+> From: Jithu Joseph <jithu.joseph@intel.com>
+>
+> IFS is a CPU feature that allows a binary blob, similar to microcode,
+> to be loaded and consumed to perform low level validation of CPU
+> circuitry. In fact, it carries the same Processor Signature
+> (family/model/stepping) details that are contained in Intel microcode
+> blobs.
+>
+> In support of an IFS driver to trigger loading, validation, and running
+> of these tests blobs, make the functionality of cpu_signatures_match()
+> and collect_cpu_info_early() available outside of the microcode driver.
+>
+> Add an "intel_" prefix and drop the "_early" suffix from
+> collect_cpu_info_early() and EXPORT_SYMBOL_GPL() it. Add
+> declaration to x86 <asm/cpu.h>
+>
+> Make cpu_signatures_match() an inline function in x86 <asm/cpu.h>,
+> and also give it an "intel_" prefix.
+>
+> No functional change intended.
+>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+> Co-developed-by: Tony Luck <tony.luck@intel.com>
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
 
-On 2022-05-02 15:12-0400, Mark Pearson wrote:
-> Date: Mon, 2 May 2022 15:12:00 -0400
-> From: Mark Pearson <markpearson@lenovo.com>
-> To: markpearson@lenovo.com
-> CC: hdegoede@redhat.com, markgross@kernel.org,
->  platform-driver-x86@vger.kernel.org, lyude@redhat.com, thomas@t-8ch.de
-> Subject: [PATCH] platform/x86: thinkpad_acpi: Correct dual fan probe
-> X-Mailer: git-send-email 2.35.1
-> 
-> There was an issue with the dual fan probe whereby the probe was
-> failing as it assuming that second_fan support was not available.
-> 
-> Corrected the logic so the probe works correctly. Cleaned up so
-> quirks only used if 2nd fan not detected.
-> 
-> Tested on X1 Carbon 10 (2 fans), X1 Carbon 9 (2 fans) and T490 (1 fan)
-> 
-> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 23 +++++++++++++----------
->  1 file changed, 13 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index f385450af864..5eea6651a312 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -8862,24 +8862,27 @@ static int __init fan_init(struct ibm_init_struct *iibm)
->  			fan_status_access_mode = TPACPI_FAN_RD_TPEC;
->  			if (quirks & TPACPI_FAN_Q1)
->  				fan_quirk1_setup();
-> -			if (quirks & TPACPI_FAN_2FAN) {
-> -				tp_features.second_fan = 1;
-> -				pr_info("secondary fan support enabled\n");
-> -			}
-> -			if (quirks & TPACPI_FAN_2CTL) {
-> -				tp_features.second_fan = 1;
-> -				tp_features.second_fan_ctl = 1;
-> -				pr_info("secondary fan control enabled\n");
-> -			}
->  			/* Try and probe the 2nd fan */
-> +			tp_features.second_fan = 1; /* needed for get_speed to work */
->  			res = fan2_get_speed(&speed);
->  			if (res >= 0) {
->  				/* It responded - so let's assume it's there */
->  				tp_features.second_fan = 1;
->  				tp_features.second_fan_ctl = 1;
->  				pr_info("secondary fan control detected & enabled\n");
-> +			} else {
-> +				/* Fan not auto-detected */
-> +				tp_features.second_fan = 0;
-> +				if (quirks & TPACPI_FAN_2FAN) {
-> +					tp_features.second_fan = 1;
-> +					pr_info("secondary fan support enabled\n");
-> +				}
-> +				if (quirks & TPACPI_FAN_2CTL) {
-> +					tp_features.second_fan = 1;
-> +					tp_features.second_fan_ctl = 1;
-> +					pr_info("secondary fan control enabled\n");
-> +				}
->  			}
-> -
->  		} else {
->  			pr_err("ThinkPad ACPI EC access misbehaving, fan status and control unavailable\n");
->  			return -ENODEV;
-> -- 
-> 2.35.1
-> 
-
-Tested-by: Thomas Weißschuh <linux@weissschuh.net>
-Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
-
-FYI this now inverts the logic from "platform/x86: thinkpad_acpi: Don't probe 2nd fan if enabled by quirk" [0]
-Instead of skipping the probe when there is a quirk the quirk is skipped if the
-probe succeeds first.
-
-Going after the rationale in the patch it might be better to turn this around
-here, too:
-
-	"If we already know that the system in question has a quirk telling us that
-	the system has a second fan, there's no purpose in probing the second fan -
-	especially when probing the second fan may not work properly with systems
-	relying on quirks."
-
-[0] https://lore.kernel.org/platform-driver-x86/20220429211418.4546-3-lyude@redhat.com/
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
