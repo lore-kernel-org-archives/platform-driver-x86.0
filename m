@@ -2,79 +2,193 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6C6C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 May 2022 09:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B46C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 May 2022 12:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348924AbiEEJFK (ORCPT
+        id S232170AbiEEMYz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 May 2022 05:05:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46360 "EHLO
+        Thu, 5 May 2022 08:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345372AbiEEJFJ (ORCPT
+        with ESMTP id S1357745AbiEEMYy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 May 2022 05:05:09 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA6846B22;
-        Thu,  5 May 2022 02:01:30 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1651741287;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NBH1gFjnIQzahzJKDpgyGdyjqnsj7PYnMtU9OaVJyYA=;
-        b=Vk7T23Z2kxMOWJJ8QsGbVyEx+m/o9PzOvoxJJAzUJ09ITAuT2zy0d5xLv3JzcWbz5lfXEk
-        pOgOxBzoNln8mjYTAionappG8dFL5wuDqRS3jOf8BDEVJCZqJrGZwb+Y9RtUgWC6KfpRx2
-        zd7DRhu4I+zFCJAdGfr6cr/xn0zMZI99FvfD5epsRN23vHQAaO7MzozJOP1H7jcVY2ZoW2
-        xerXJEzHelK33MSGqiNI9UwPOfAuEV6Bnb5UQ2SDkoXJtagsvnYmJXr6wr+kBV/BiwY+mD
-        kTpMZL1QY5DJn0G/4FSk7eZr3m5lXNm4Sh6qGpqbWuRODU72mkHILVSgByAaBg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1651741287;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NBH1gFjnIQzahzJKDpgyGdyjqnsj7PYnMtU9OaVJyYA=;
-        b=94EEqp97FWTSI4XD39inzTx78Dsm3/zxPnX226a0G3lezjj5RTzp/ysR2PflCTT4Rgzy5D
-        OO09by74/We4KKDw==
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Luck, Tony" <tony.luck@intel.com>, hdegoede@redhat.com,
-        markgross@kernel.org, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        corbet@lwn.net, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
-        ashok.raj@intel.com, rostedt@goodmis.org, dan.j.williams@intel.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
-        ravi.v.shankar@intel.com
-Subject: Re: [PATCH v5 07/10] platform/x86/intel/ifs: Add scan test support
-In-Reply-To: <20220505082824.GD2501@worktop.programming.kicks-ass.net>
-References: <20220422200219.2843823-1-tony.luck@intel.com>
- <20220428153849.295779-1-tony.luck@intel.com>
- <20220428153849.295779-8-tony.luck@intel.com> <87r159jxaq.ffs@tglx>
- <YnLLekoripdY2oQU@agluck-desk3.sc.intel.com> <87tua4j3es.ffs@tglx>
- <20220505082824.GD2501@worktop.programming.kicks-ass.net>
-Date:   Thu, 05 May 2022 11:01:27 +0200
-Message-ID: <87bkwcic9k.ffs@tglx>
+        Thu, 5 May 2022 08:24:54 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8F445522C;
+        Thu,  5 May 2022 05:21:14 -0700 (PDT)
+Received: from dggpeml500022.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KvCQs2wvXzGpJx;
+        Thu,  5 May 2022 20:18:29 +0800 (CST)
+Received: from dggpeml500008.china.huawei.com (7.185.36.147) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 5 May 2022 20:21:13 +0800
+Received: from huawei.com (10.67.175.34) by dggpeml500008.china.huawei.com
+ (7.185.36.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 5 May
+ 2022 20:21:12 +0800
+From:   Ren Zhijie <renzhijie2@huawei.com>
+To:     <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>,
+        <markgross@kernel.org>
+CC:     <weiyongjun1@huawei.com>, <yuehaibing@huawei.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Ren Zhijie" <renzhijie2@huawei.com>
+Subject: [PATCH -next] platform/x86: amd-pmc: Fix build error unused-function
+Date:   Thu, 5 May 2022 20:19:58 +0800
+Message-ID: <20220505121958.138905-1-renzhijie2@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.175.34]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500008.china.huawei.com (7.185.36.147)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, May 05 2022 at 10:28, Peter Zijlstra wrote:
-> On Thu, May 05, 2022 at 01:15:07AM +0200, Thomas Gleixner wrote:
->> We don't have stomp_cpumask() today, but that's trivial enough to
->> implement.
->
-> I don't think we want to gift people a random cpumask stop_machine(),
+If CONFIG_SUSPEND and CONFIG_DEBUG_FS are not set.
 
-Fair enough.
+compile error:
+drivers/platform/x86/amd-pmc.c:323:12: error: ‘get_metrics_table’ defined but not used [-Werror=unused-function]
+ static int get_metrics_table(struct amd_pmc_dev *pdev, struct smu_metrics *table)
+            ^~~~~~~~~~~~~~~~~
+drivers/platform/x86/amd-pmc.c:298:12: error: ‘amd_pmc_idlemask_read’ defined but not used [-Werror=unused-function]
+ static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
+            ^~~~~~~~~~~~~~~~~~~~~
+drivers/platform/x86/amd-pmc.c:196:12: error: ‘amd_pmc_get_smu_version’ defined but not used [-Werror=unused-function]
+ static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
+            ^~~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
 
-> but here's one that stops a core. It runs the @fn on every cpu since I
-> thought to have understood that was the requirement for this muck.
+To fix building warning, wrap all related code with CONFIG_SUSPEND or CONFIG_DEBUG_FS.
 
-Yes.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Ren Zhijie <renzhijie2@huawei.com>
+---
+ drivers/platform/x86/amd-pmc.c | 72 ++++++++++++++++++----------------
+ 1 file changed, 39 insertions(+), 33 deletions(-)
 
-> *completely* untestededed.
+diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+index 668a1d6c11ee..8f004673b23f 100644
+--- a/drivers/platform/x86/amd-pmc.c
++++ b/drivers/platform/x86/amd-pmc.c
+@@ -164,7 +164,6 @@ static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
+ #ifdef CONFIG_SUSPEND
+ static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
+ #endif
+-static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev);
+ 
+ static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
+ {
+@@ -193,6 +192,7 @@ struct smu_metrics {
+ 	u64 timecondition_notmet_totaltime[SOC_SUBSYSTEM_IP_MAX];
+ } __packed;
+ 
++#ifdef CONFIG_DEBUG_FS
+ static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
+ {
+ 	int rc;
+@@ -212,6 +212,7 @@ static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
+ 
+ 	return 0;
+ }
++#endif /* CONFIG_DEBUG_FS */
+ 
+ static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
+ {
+@@ -295,6 +296,9 @@ static const struct file_operations amd_pmc_stb_debugfs_fops_v2 = {
+ 	.release = amd_pmc_stb_debugfs_release_v2,
+ };
+ 
++#if defined(CONFIG_SUSPEND) || defined(CONFIG_DEBUG_FS)
++static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev);
++
+ static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
+ 				 struct seq_file *s)
+ {
+@@ -335,6 +339,40 @@ static int get_metrics_table(struct amd_pmc_dev *pdev, struct smu_metrics *table
+ 	return 0;
+ }
+ 
++static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
++{
++	if (dev->cpu_id == AMD_CPU_ID_PCO) {
++		dev_warn_once(dev->dev, "SMU debugging info not supported on this platform\n");
++		return -EINVAL;
++	}
++
++	/* Get Active devices list from SMU */
++	if (!dev->active_ips)
++		amd_pmc_send_cmd(dev, 0, &dev->active_ips, SMU_MSG_GET_SUP_CONSTRAINTS, 1);
++
++	/* Get dram address */
++	if (!dev->smu_virt_addr) {
++		u32 phys_addr_low, phys_addr_hi;
++		u64 smu_phys_addr;
++
++		amd_pmc_send_cmd(dev, 0, &phys_addr_low, SMU_MSG_LOG_GETDRAM_ADDR_LO, 1);
++		amd_pmc_send_cmd(dev, 0, &phys_addr_hi, SMU_MSG_LOG_GETDRAM_ADDR_HI, 1);
++		smu_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
++
++		dev->smu_virt_addr = devm_ioremap(dev->dev, smu_phys_addr,
++						  sizeof(struct smu_metrics));
++		if (!dev->smu_virt_addr)
++			return -ENOMEM;
++	}
++
++	/* Start the logging */
++	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_RESET, 0);
++	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_START, 0);
++
++	return 0;
++}
++#endif /* CONFIG_SUSPEND || CONFIG_DEBUG_FS */
++
+ #ifdef CONFIG_SUSPEND
+ static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
+ {
+@@ -475,38 +513,6 @@ static inline void amd_pmc_dbgfs_unregister(struct amd_pmc_dev *dev)
+ }
+ #endif /* CONFIG_DEBUG_FS */
+ 
+-static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
+-{
+-	if (dev->cpu_id == AMD_CPU_ID_PCO) {
+-		dev_warn_once(dev->dev, "SMU debugging info not supported on this platform\n");
+-		return -EINVAL;
+-	}
+-
+-	/* Get Active devices list from SMU */
+-	if (!dev->active_ips)
+-		amd_pmc_send_cmd(dev, 0, &dev->active_ips, SMU_MSG_GET_SUP_CONSTRAINTS, 1);
+-
+-	/* Get dram address */
+-	if (!dev->smu_virt_addr) {
+-		u32 phys_addr_low, phys_addr_hi;
+-		u64 smu_phys_addr;
+-
+-		amd_pmc_send_cmd(dev, 0, &phys_addr_low, SMU_MSG_LOG_GETDRAM_ADDR_LO, 1);
+-		amd_pmc_send_cmd(dev, 0, &phys_addr_hi, SMU_MSG_LOG_GETDRAM_ADDR_HI, 1);
+-		smu_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
+-
+-		dev->smu_virt_addr = devm_ioremap(dev->dev, smu_phys_addr,
+-						  sizeof(struct smu_metrics));
+-		if (!dev->smu_virt_addr)
+-			return -ENOMEM;
+-	}
+-
+-	/* Start the logging */
+-	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_RESET, 0);
+-	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_START, 0);
+-
+-	return 0;
+-}
+ 
+ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
+ {
+-- 
+2.17.1
 
-Looks about right neverthelessesseess.
