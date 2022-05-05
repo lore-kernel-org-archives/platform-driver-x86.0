@@ -2,159 +2,142 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E38B6C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 May 2022 20:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8549C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 May 2022 21:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385815AbiEEU3E (ORCPT
+        id S1386116AbiEEWBa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 May 2022 16:29:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44616 "EHLO
+        Thu, 5 May 2022 18:01:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1385817AbiEEU27 (ORCPT
+        with ESMTP id S233742AbiEEWB1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 May 2022 16:28:59 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 873FBDC2;
-        Thu,  5 May 2022 13:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=g9KS680sylr141Y7EFEPAHf/H7cuGajRNWijrXb2NGk=; b=ABt4kLuOw6w/JeQBMYDB1HqmPh
-        7LsM4idgjz8oEiH/lY4uWKnQbA8np9cAnGRSKVNzlcsZkMbXq8JMvJn23/GczC3WY4ph+1yf4PiR9
-        tl4PfCCQNTvpNKzM9gGyT7W5J8g39grZu8Q0P+yXo97p7YY7kD5bYctzi1BDZk8pu/YcsuLW3wVXi
-        ZoOoplw8mH6uB2sSZGIudCJN9DfeCYKe6qSTFZnNAzgw1Z73dq69CM6uF1MQZgwuhCqDzX+t0c4rk
-        RHk0ldr8EoeFvIq46Y550Rdbp/kG0p9RLHBlZBqO/cZqV4m49cVgPKOGRr4vRKi/MUcvV/FXDP2/7
-        14S7i+8Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nmhz0-00BSux-7P; Thu, 05 May 2022 20:22:47 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 68A7A980EF5; Thu,  5 May 2022 22:21:52 +0200 (CEST)
-Date:   Thu, 5 May 2022 22:21:52 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, hdegoede@redhat.com,
-        markgross@kernel.org, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        corbet@lwn.net, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
-        ashok.raj@intel.com, rostedt@goodmis.org, dan.j.williams@intel.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
-        ravi.v.shankar@intel.com
-Subject: Re: [PATCH v5 07/10] platform/x86/intel/ifs: Add scan test support
-Message-ID: <20220505202152.GF2501@worktop.programming.kicks-ass.net>
-References: <20220422200219.2843823-1-tony.luck@intel.com>
- <20220428153849.295779-1-tony.luck@intel.com>
- <20220428153849.295779-8-tony.luck@intel.com>
- <87r159jxaq.ffs@tglx>
- <YnLLekoripdY2oQU@agluck-desk3.sc.intel.com>
- <87tua4j3es.ffs@tglx>
- <20220505082824.GD2501@worktop.programming.kicks-ass.net>
- <87bkwcic9k.ffs@tglx>
- <YnQYJIVC0scuL7D7@agluck-desk3.sc.intel.com>
+        Thu, 5 May 2022 18:01:27 -0400
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A41F5C743;
+        Thu,  5 May 2022 14:57:46 -0700 (PDT)
+Received: by mail-ot1-x329.google.com with SMTP id h10-20020a056830400a00b00605e92cc450so3792859ots.11;
+        Thu, 05 May 2022 14:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=509K5q5w5Q3BFRAS70sMGRGeHF3csETOGikobOSYWkA=;
+        b=LcETCIlYbzQXR/6AbUW4QFk5oDcrtbVpfcfzZn3fbYshQ2015TOgGQhFJOtkcd+YSX
+         phcvx3bBu26ZpQzb97JQZ4JiLyZ5CF4uUch7kIeTQl79ygztbGw56OBNbRdRaRkz+0Ff
+         zPCinQils9bxU6DCWRsSG8xQIXAgAvpoQvwGf2Euv9+2UTU48bwfWDCsVPrZIjPHINNY
+         n/RrGeq3w69tT/We5ftF12W8SRFUc51N7w6ouPZAUYVj2+45fs5B0s6A2csCpkbHEUGS
+         eqsXFyg8MsOFDToe8ZCrfzBkGB26yaoZ+ZPvx+CDY5ezQ+8oia++R1X39/U0zQeHsjhD
+         n0DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=509K5q5w5Q3BFRAS70sMGRGeHF3csETOGikobOSYWkA=;
+        b=xXpvMmZsjVaZQnyJAtp4N+1MwM8ssAmMA9qSzA3lA7PjDic48YK4JaM+ttgOfSN4KV
+         RgbX24GGPq+H7K6zumhX7kzc5JunOMQF6KOTyWMHS6O7eV5dh+1fWgu933G4kcTF749Y
+         dua6jyQNnZ6LbY1v1MzFXTFQv1OKafGoLc9EgCkF+kwC8yG7M2jQaFkYItbsGhbExy8X
+         3Bnil6cf3p17mbTXSVCXJivpFHFFfR/JSFMRcoaThGsgv1o5dyZF71TCzRg0r1xedUX7
+         sg/OrnkJuyREVnM6p58eyxQAgW3tViZQsW3hkEuqqqWFEfxbBnkYGij980ic1zZFpGCL
+         ig/A==
+X-Gm-Message-State: AOAM531sDlZlbO7FJoIxvtzdSpPqzSduSf0bwHOa59967u0bV+FthXcW
+        Mty51X+cfR5rfOfBM3jqewU=
+X-Google-Smtp-Source: ABdhPJydUKSEZXQ8aX/lXkp0HXnuTHboM/MSlzYxQ2HDDlSpXRQkkGTPYfsEsUuJM+u7vm5tDhsnbw==
+X-Received: by 2002:a9d:2ab:0:b0:605:6c58:668c with SMTP id 40-20020a9d02ab000000b006056c58668cmr107150otl.284.1651787865415;
+        Thu, 05 May 2022 14:57:45 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r1-20020a056870e98100b000e686d13890sm900678oao.42.2022.05.05.14.57.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 May 2022 14:57:44 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Thu, 5 May 2022 14:57:43 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+Subject: Re: [PATCH 0/2] simatic-ipc additions to p2sb apl lake gpio
+Message-ID: <20220505215743.GE1988936@roeck-us.net>
+References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
+ <20220308193522.26696-1-henning.schild@siemens.com>
+ <YnJ2tYjCpJi7yc4j@smile.fi.intel.com>
+ <20220504171951.0d569632@md1za8fc.ad001.siemens.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YnQYJIVC0scuL7D7@agluck-desk3.sc.intel.com>
+In-Reply-To: <20220504171951.0d569632@md1za8fc.ad001.siemens.net>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, May 05, 2022 at 11:32:04AM -0700, Luck, Tony wrote:
+On Wed, May 04, 2022 at 05:19:51PM +0200, Henning Schild wrote:
+> Am Wed, 4 May 2022 15:51:01 +0300
+> schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+> 
+> > On Tue, Mar 08, 2022 at 08:35:20PM +0100, Henning Schild wrote:
+> > > This switches the simatic-ipc modules to using the p2sb interface
+> > > introduced by Andy with "platform/x86: introduce p2sb_bar() helper".
+> > > 
+> > > It also switches to one apollo lake device to using gpio leds.
+> > > 
+> > > I am kind of hoping Andy will take this on top and propose it in his
+> > > series.  
+> > 
+> > First of all, they are not applicable to my current version [1] of
+> > the series (it maybe something changed in the Simatic drivers
+> > upstream, because I have got conflicts there. For the record, I'm
+> > using Linux Next as a base.
+> 
+> That is possible, some sparse findings have been fixed lately.
+> 
+> > Second question is could it be possible to split first patch into
+> > three, or it has to be in one?
+> 
+> I assume one for leds one for wdt and finally drop stuff from platform,
+> and i will go with that assumption for a next round based on your tree
+> directly.
+> Can you explain why that will be useful? While it is kind of a
+> separation of concerns and subsystems ... it also kind of all belongs
+> together and needs to be merged in a rather strict order.
+> 
 
-> Patch now looks like this. Author credit to Peter ... are you willing
-> to add a Signed-off-by to stop checkpatch from whining at me?
+That is not really correct. It should be possible to split
+the patches and only remove simatic_ipc_get_membase0() after the
+other patches have been applied.
 
-sure, see below.
+On a side note, neither subject nor description of patch 1/2
+mention that the patch touches both LED and watchdog code, which
+is at the very least bad style.
 
-> There isn't a "Something-similar-suggested-by:" tag to credit Thomas
-> with this.  Perhaps "Inspired-by:"?
+Guenter
 
-I'm all for creative one off tags, there's some marvelous ones in the
-tree, but we always need more :-)
-
-> -Tony
+> regards,
+> Henning
 > 
-> 
-> From df5ca8024997d3d782978d154cfbff5147f451ad Mon Sep 17 00:00:00 2001
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Thu, 5 May 2022 08:55:09 -0700
-> Subject: [PATCH] stop_machine: Add stop_core_cpuslocked() for per-core
->  operations
-> 
-> Hardware core level testing features require near simultaneous execution
-> of WRMSR instructions on all threads of a core to initiate a test.
-> 
-> Provide a customized cut down version of stop_machine_cpuslocked() that
-> just operates on the threads of a single core.
-> 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  include/linux/stop_machine.h | 16 ++++++++++++++++
->  kernel/stop_machine.c        | 19 +++++++++++++++++++
->  2 files changed, 35 insertions(+)
-> 
-> diff --git a/include/linux/stop_machine.h b/include/linux/stop_machine.h
-> index 46fb3ebdd16e..ea7a74ea7389 100644
-> --- a/include/linux/stop_machine.h
-> +++ b/include/linux/stop_machine.h
-> @@ -124,6 +124,22 @@ int stop_machine(cpu_stop_fn_t fn, void *data, const struct cpumask *cpus);
->   */
->  int stop_machine_cpuslocked(cpu_stop_fn_t fn, void *data, const struct cpumask *cpus);
->  
-> +/**
-> + * stop_core_cpuslocked: - stop all threads on just one core
-> + * @cpu: any cpu in the targeted core
-> + * @fn: the function to run
-> + * @data: the data ptr for @fn()
-> + *
-> + * Same as above, but instead of every CPU, only the logical CPUs of a
-> + * single core are affected.
-> + *
-> + * Context: Must be called from within a cpus_read_lock() protected region.
-> + *
-> + * Return: 0 if all executions of @fn returned 0, any non zero return
-> + * value if any returned non zero.
-> + */
-> +int stop_core_cpuslocked(unsigned int cpu, cpu_stop_fn_t fn, void *data);
-> +
->  int stop_machine_from_inactive_cpu(cpu_stop_fn_t fn, void *data,
->  				   const struct cpumask *cpus);
->  #else	/* CONFIG_SMP || CONFIG_HOTPLUG_CPU */
-> diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-> index cbc30271ea4d..579761729836 100644
-> --- a/kernel/stop_machine.c
-> +++ b/kernel/stop_machine.c
-> @@ -633,6 +633,25 @@ int stop_machine(cpu_stop_fn_t fn, void *data, const struct cpumask *cpus)
->  }
->  EXPORT_SYMBOL_GPL(stop_machine);
->  
-> +int stop_core_cpuslocked(unsigned int cpu, cpu_stop_fn_t fn, void *data)
-> +{
-> +	const struct cpumask *smt_mask = cpu_smt_mask(cpu);
-> +
-> +	struct multi_stop_data msdata = {
-> +		.fn = fn,
-> +		.data = data,
-> +		.num_threads = cpumask_weight(smt_mask),
-> +		.active_cpus = smt_mask,
-> +	};
-> +
-> +	lockdep_assert_cpus_held();
-> +
-> +	/* Set the initial state and stop all online cpus. */
-> +	set_state(&msdata, MULTI_STOP_PREPARE);
-> +	return stop_cpus(smt_mask, multi_cpu_stop, &msdata);
-> +}
-> +EXPORT_SYMBOL_GPL(stop_core_cpuslocked);
-> +
->  /**
->   * stop_machine_from_inactive_cpu - stop_machine() from inactive CPU
->   * @fn: the function to run
-> -- 
-> 2.35.1
+> > [1]: https://gitlab.com/andy-shev/next/-/tree/topic/p2sb-next
+> > It would be nice if you can perform another round of testing.
+> > 
+> > > Henning Schild (2):
+> > >   simatic-ipc: convert to use common P2SB accessor
+> > >   leds: simatic-ipc-leds-gpio: add GPIO version of Siemens driver
+> > > 
+> > >  drivers/leds/simple/Kconfig                   |  11 ++
+> > >  drivers/leds/simple/Makefile                  |   3 +-
+> > >  drivers/leds/simple/simatic-ipc-leds-gpio.c   | 108
+> > > ++++++++++++++++++ drivers/leds/simple/simatic-ipc-leds.c        |
+> > > 77 +------------ drivers/platform/x86/simatic-ipc.c            |
+> > > 43 +------ drivers/watchdog/Kconfig                      |   1 +
+> > >  drivers/watchdog/simatic-ipc-wdt.c            |  15 +--
+> > >  .../platform_data/x86/simatic-ipc-base.h      |   2 -
+> > >  8 files changed, 139 insertions(+), 121 deletions(-)
+> > >  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio.c
+> > > 
+> > > -- 
+> > > 2.34.1
+> > >   
+> > 
 > 
