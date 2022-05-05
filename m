@@ -2,183 +2,112 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DD4C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 May 2022 14:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7268DC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 May 2022 17:33:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356114AbiEEO6r (ORCPT
+        id S1382368AbiEERgp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 May 2022 10:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47732 "EHLO
+        Thu, 5 May 2022 13:36:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233840AbiEEO6q (ORCPT
+        with ESMTP id S235800AbiEERgo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 May 2022 10:58:46 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02CF25A5B5;
-        Thu,  5 May 2022 07:55:05 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id D70CF3000A3AD;
-        Thu,  5 May 2022 16:55:03 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id CB4F01D8B44; Thu,  5 May 2022 16:55:03 +0200 (CEST)
-Date:   Thu, 5 May 2022 16:55:03 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v4 1/8] platform/x86/intel: Add Primary to Sideband
- (P2SB) bridge support
-Message-ID: <20220505145503.GA25423@wunner.de>
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
- <20220131151346.45792-2-andriy.shevchenko@linux.intel.com>
+        Thu, 5 May 2022 13:36:44 -0400
+Received: from us-smtp-delivery-74.mimecast.com (us-smtp-delivery-74.mimecast.com [170.10.129.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0EB6B52E64
+        for <platform-driver-x86@vger.kernel.org>; Thu,  5 May 2022 10:33:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1651771983;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eM4cXVKw10nB3OTGJYme9KzcjWir9gWjYqhtqtiwXZE=;
+        b=fVwDSHoR5LFp2nPrkoqQyym1918WNnWeQYagCs+JkEj0Iul67ru2UdHwsJEUBz+gLE2Em9
+        9HImIfyamONvRe/YyF2NBYhmOZ0jWi591pKezEppjgvQqSIWegq8UTq761WWzjE72I7zm9
+        e/8p8QtrcFxqPbXTmSWvzI0WOjEsAVE=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-39-1bT7B2NfOraHADSg2QXAqA-1; Thu, 05 May 2022 13:33:01 -0400
+X-MC-Unique: 1bT7B2NfOraHADSg2QXAqA-1
+Received: by mail-qv1-f71.google.com with SMTP id kj4-20020a056214528400b0044399a9bb4cso3744440qvb.15
+        for <platform-driver-x86@vger.kernel.org>; Thu, 05 May 2022 10:33:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=eM4cXVKw10nB3OTGJYme9KzcjWir9gWjYqhtqtiwXZE=;
+        b=QUMEMvj+JIfTqxB+DSVTSmCY9mdLGljKaKOrJirrpo1l/cDmY+uUjid2R8n4x9P+40
+         OOr0rarylBhaGwU63fxbDgXbl+4tpPAV5ZR1SaB8iDH8XwHZkt1/AwGDMUiNDgs5wmKU
+         o8rDg6RS1N/zqHtEGwSSGgMtdpPw4rI9KPLqUUymP/yfstBULw6Q+/VeGiwNqdDMteP/
+         Yut2p66U7ihP0gmSrvXy9QyKTNvYF/ep6R+XykCHbezTiPg/iCHujONqQ2LJr03sf1yH
+         KeTh1cDcsVwQa4DcUHqFdyJb32I/wfPADdIGJqQCDiz65BGlXdr6eshLOCmpzpy06PkL
+         4Qdg==
+X-Gm-Message-State: AOAM531sutdASN6F4ayfxd66tUxZCVJTVFFKNI1r1yW76KCWprNAp5As
+        DPlUAFKVo7hKAziNbs5EQtlje/xwshXAfUPPkB/+YXZTzC2gdYa58mMvxgA7+GCML5pUOfbSJ6C
+        kW8pkZ+qen77MffAJN2MBINAG0P8bzTlq1Q==
+X-Received: by 2002:ac8:4e53:0:b0:2f3:af5d:a9b5 with SMTP id e19-20020ac84e53000000b002f3af5da9b5mr12338433qtw.392.1651771981307;
+        Thu, 05 May 2022 10:33:01 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzPHgC56QvOK+uBy2tDqzB0GLPmPDg3MBQbs3tVpbIzKXq1gmmk+M1Qkkgp1in43pE+HtBSIg==
+X-Received: by 2002:ac8:4e53:0:b0:2f3:af5d:a9b5 with SMTP id e19-20020ac84e53000000b002f3af5da9b5mr12338413qtw.392.1651771981092;
+        Thu, 05 May 2022 10:33:01 -0700 (PDT)
+Received: from [192.168.8.138] (static-71-184-137-158.bstnma.ftas.verizon.net. [71.184.137.158])
+        by smtp.gmail.com with ESMTPSA id a26-20020ac84d9a000000b002f39b99f676sm1126848qtw.16.2022.05.05.10.32.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 May 2022 10:33:00 -0700 (PDT)
+Message-ID: <bb8fa51d02d84c2a912709f3e308e096b6fe7988.camel@redhat.com>
+Subject: Re: [External] Re: [PATCH] platform/x86: thinkpad_acpi: Correct
+ dual fan probe
+From:   Lyude Paul <lyude@redhat.com>
+To:     Mark Pearson <markpearson@lenovo.com>,
+        Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org
+Date:   Thu, 05 May 2022 13:32:59 -0400
+In-Reply-To: <191b8c12-c04a-197c-d9e6-f510c738ba41@lenovo.com>
+References: <markpearson@lenovo.com>
+         <20220502191200.63470-1-markpearson@lenovo.com>
+         <bcc78237-fa4c-4d9f-86a6-4d1a8ea0e0fe@t-8ch.de>
+         <191b8c12-c04a-197c-d9e6-f510c738ba41@lenovo.com>
+Organization: Red Hat Inc.
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220131151346.45792-2-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 05:13:39PM +0200, Andy Shevchenko wrote:
-> Background information
-> ======================
+So - no promises, but which laptops in particular did you need access to? I
+should have at least:
 
-The wealth of information in the commit message obscures what the
-actual problem is, which is actually quite simple:  SoC features
-such as GPIO are accessed via a reserved MMIO area, we don't know
-its address but can obtain it from the BAR of the P2SB device,
-that device is normally hidden so we have to temporarily unhide it.
+P50 (I think??? would have to double check this one), P1 2nd gen, X1 Extreme
+2nd gen, and I think I may have access to a P51/P52.
 
+As well, I only have a few old thinkpads (there may actually be a bunch in the
+boston office though). However, given how nice the older thinkpads are it's
+not too unlikely I could poke around my friends who still use ancient
+thinkpads and see if any of them have access to these. Problem is though the
+older IBM models seem to be the ones missing comments with the model numbers,
+so I'd probably need to know what those are. However, given how old these
+machines are feel free not to bother with it if identifying the model numbers
+looks to be too much work.
 
-> On top of that in some cases P2SB is represented by function 0 on PCI
-> slot (in terms of B:D.F) and according to the PCI specification any
-> other function can't be seen until function 0 is present and visible.
-
-I find that paragraph confusing:  Do multi-function P2SB devices exist?
-What are the other functions?  Are they visible but merely not enumerated
-because function 0 is not visible?
-
-
-> P2SB unconditional unhiding awareness
-> =====================================
-> Technically it's possible to unhide the P2SB device and devices on
-> the same PCI slot and access them at any time as needed. But there are
-> several potential issues with that:
+On Wed, 2022-05-04 at 21:57 -0400, Mark Pearson wrote:
+> I had deliberately done it this was as the logic was cleaner this way
+> with setting/clearing the second_fan setting but I'm good with putting
+> the order back as it was and doing the quirks first.
 > 
->  - the systems were never tested against such configuration and hence
->    nobody knows what kind of bugs it may bring, especially when we talk
->    about SPI NOR case which contains Intel FirmWare Image (IFWI) code
->    (including BIOS) and already known to be problematic in the past for
->    end users
+> I'd love to get rid of the quirks completely but looking at the list of
+> platforms there's some I'm not going to be able to get hold of to test
+> so it's moot.
 > 
->  - the PCI by its nature is a hotpluggable bus and in case somebody
->    attaches a driver to the functions of a P2SB slot device(s) the
->    end user experience and system behaviour can be unpredictable
-> 
->  - the kernel code would need some ugly hacks (or code looking as an
->    ugly hack) under arch/x86/pci in order to enable these devices on
->    only selected platforms (which may include CPU ID table followed by
->    a potentially growing number of DMI strings
+> Mark
 
-Honestly I would have taken the step to always expose the device,
-identify breakages and then fix those.
+-- 
+Cheers,
+ Lyude Paul (she/her)
+ Software Engineer at Red Hat
 
-We had a similar issue with HD audio controllers on Nvidia GPUs
-which were only visible when an HDMI cable was plugged in.
-We always expose them since b516ea586d71 and I recall we merely
-had a few cases that an audio device was exposed in cases when
-the card had no HDMI connectors at all.  So there was a useless
-HD audio card visible to the user but no real harm.
-
-
-> +	pci_lock_rescan_remove();
-> +
-> +	/* Unhide the P2SB device, if needed */
-> +	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
-> +	if ((value & P2SBC_HIDE) == P2SBC_HIDE)
-> +		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
-> +
-> +	/* Read the first BAR of the device in question */
-> +	__pci_bus_read_base(bus, devfn, mem, PCI_BASE_ADDRESS_0);
-> +
-> +	/* Hide the P2SB device, if it was hidden */
-> +	if (value & P2SBC_HIDE)
-> +		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
-> +
-> +	pci_unlock_rescan_remove();
-
-Please add a code comment why you're calling pci_lock_rescan_remove(),
-such as:
-
-	/*
-	 * Prevent concurrent PCI bus scan from seeing the P2SB device
-	 * while it is temporarily exposed.
-	 */
-
-Otherwise it looks like you're abusing that lock to prevent multiple
-simultaneous RMW operations of the P2SBC_HIDE bit.
-
-
-I think the first if-clause above can be simplified to
-
-	if (value & P2SBC_HIDE)
-
-I don't understand why one of the two if-clauses adds "== P2SBC_HIDE".
-
-
-Do you really need all the complicated logic in __pci_bus_read_base()?
-For comparison, simatic_ipc_get_membase0() in simatic-ipc.c merely does:
-
-	pci_bus_read_config_dword(bus, p2sb, PCI_BASE_ADDRESS_0, &bar0);
-
-If that's sufficient for simatic-ipc.c, why is the more complicated code
-necessary in p2sb.c?
-
-
-I'm wondering, since you're only retrieving the base address (and thus
-temporarily expose the P2SB device) when it's actually needed by a driver,
-would there be any harm in keeping the P2SB device exposed indefinitely
-from the moment a driver first requests the base address?  I.e., unhide it
-but don't hide it again.  That would allow you to call pci_scan_slot() and
-pci_bus_add_devices(), thus instantiating a proper pci_dev which you can
-access without the __pci_bus_read_base() kludge.
-
-
-> +	/*
-> +	 * I don't know how l can have all bits set.  Copied from old code.
-> +	 * Maybe it fixes a bug on some ancient platform.
-> +	 */
-> +	if (PCI_POSSIBLE_ERROR(l))
-> +		l = 0;
-
-l can have all bits set if the device was hot-removed.  That can't happen
-with a built-in device such as P2SB.
-
-Thanks,
-
-Lukas
