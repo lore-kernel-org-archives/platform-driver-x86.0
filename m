@@ -2,193 +2,183 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B46C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 May 2022 12:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DD4C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 May 2022 14:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232170AbiEEMYz (ORCPT
+        id S1356114AbiEEO6r (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 May 2022 08:24:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59440 "EHLO
+        Thu, 5 May 2022 10:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357745AbiEEMYy (ORCPT
+        with ESMTP id S233840AbiEEO6q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 May 2022 08:24:54 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8F445522C;
-        Thu,  5 May 2022 05:21:14 -0700 (PDT)
-Received: from dggpeml500022.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KvCQs2wvXzGpJx;
-        Thu,  5 May 2022 20:18:29 +0800 (CST)
-Received: from dggpeml500008.china.huawei.com (7.185.36.147) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 5 May 2022 20:21:13 +0800
-Received: from huawei.com (10.67.175.34) by dggpeml500008.china.huawei.com
- (7.185.36.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 5 May
- 2022 20:21:12 +0800
-From:   Ren Zhijie <renzhijie2@huawei.com>
-To:     <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>,
-        <markgross@kernel.org>
-CC:     <weiyongjun1@huawei.com>, <yuehaibing@huawei.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Ren Zhijie" <renzhijie2@huawei.com>
-Subject: [PATCH -next] platform/x86: amd-pmc: Fix build error unused-function
-Date:   Thu, 5 May 2022 20:19:58 +0800
-Message-ID: <20220505121958.138905-1-renzhijie2@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 5 May 2022 10:58:46 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02CF25A5B5;
+        Thu,  5 May 2022 07:55:05 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id D70CF3000A3AD;
+        Thu,  5 May 2022 16:55:03 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id CB4F01D8B44; Thu,  5 May 2022 16:55:03 +0200 (CEST)
+Date:   Thu, 5 May 2022 16:55:03 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: Re: [PATCH v4 1/8] platform/x86/intel: Add Primary to Sideband
+ (P2SB) bridge support
+Message-ID: <20220505145503.GA25423@wunner.de>
+References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
+ <20220131151346.45792-2-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.175.34]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml500008.china.huawei.com (7.185.36.147)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220131151346.45792-2-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If CONFIG_SUSPEND and CONFIG_DEBUG_FS are not set.
+On Mon, Jan 31, 2022 at 05:13:39PM +0200, Andy Shevchenko wrote:
+> Background information
+> ======================
 
-compile error:
-drivers/platform/x86/amd-pmc.c:323:12: error: ‘get_metrics_table’ defined but not used [-Werror=unused-function]
- static int get_metrics_table(struct amd_pmc_dev *pdev, struct smu_metrics *table)
-            ^~~~~~~~~~~~~~~~~
-drivers/platform/x86/amd-pmc.c:298:12: error: ‘amd_pmc_idlemask_read’ defined but not used [-Werror=unused-function]
- static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
-            ^~~~~~~~~~~~~~~~~~~~~
-drivers/platform/x86/amd-pmc.c:196:12: error: ‘amd_pmc_get_smu_version’ defined but not used [-Werror=unused-function]
- static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
-            ^~~~~~~~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
+The wealth of information in the commit message obscures what the
+actual problem is, which is actually quite simple:  SoC features
+such as GPIO are accessed via a reserved MMIO area, we don't know
+its address but can obtain it from the BAR of the P2SB device,
+that device is normally hidden so we have to temporarily unhide it.
 
-To fix building warning, wrap all related code with CONFIG_SUSPEND or CONFIG_DEBUG_FS.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Ren Zhijie <renzhijie2@huawei.com>
----
- drivers/platform/x86/amd-pmc.c | 72 ++++++++++++++++++----------------
- 1 file changed, 39 insertions(+), 33 deletions(-)
+> On top of that in some cases P2SB is represented by function 0 on PCI
+> slot (in terms of B:D.F) and according to the PCI specification any
+> other function can't be seen until function 0 is present and visible.
 
-diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-index 668a1d6c11ee..8f004673b23f 100644
---- a/drivers/platform/x86/amd-pmc.c
-+++ b/drivers/platform/x86/amd-pmc.c
-@@ -164,7 +164,6 @@ static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
- #ifdef CONFIG_SUSPEND
- static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
- #endif
--static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev);
- 
- static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
- {
-@@ -193,6 +192,7 @@ struct smu_metrics {
- 	u64 timecondition_notmet_totaltime[SOC_SUBSYSTEM_IP_MAX];
- } __packed;
- 
-+#ifdef CONFIG_DEBUG_FS
- static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
- {
- 	int rc;
-@@ -212,6 +212,7 @@ static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
- 
- 	return 0;
- }
-+#endif /* CONFIG_DEBUG_FS */
- 
- static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
- {
-@@ -295,6 +296,9 @@ static const struct file_operations amd_pmc_stb_debugfs_fops_v2 = {
- 	.release = amd_pmc_stb_debugfs_release_v2,
- };
- 
-+#if defined(CONFIG_SUSPEND) || defined(CONFIG_DEBUG_FS)
-+static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev);
-+
- static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
- 				 struct seq_file *s)
- {
-@@ -335,6 +339,40 @@ static int get_metrics_table(struct amd_pmc_dev *pdev, struct smu_metrics *table
- 	return 0;
- }
- 
-+static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
-+{
-+	if (dev->cpu_id == AMD_CPU_ID_PCO) {
-+		dev_warn_once(dev->dev, "SMU debugging info not supported on this platform\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Get Active devices list from SMU */
-+	if (!dev->active_ips)
-+		amd_pmc_send_cmd(dev, 0, &dev->active_ips, SMU_MSG_GET_SUP_CONSTRAINTS, 1);
-+
-+	/* Get dram address */
-+	if (!dev->smu_virt_addr) {
-+		u32 phys_addr_low, phys_addr_hi;
-+		u64 smu_phys_addr;
-+
-+		amd_pmc_send_cmd(dev, 0, &phys_addr_low, SMU_MSG_LOG_GETDRAM_ADDR_LO, 1);
-+		amd_pmc_send_cmd(dev, 0, &phys_addr_hi, SMU_MSG_LOG_GETDRAM_ADDR_HI, 1);
-+		smu_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
-+
-+		dev->smu_virt_addr = devm_ioremap(dev->dev, smu_phys_addr,
-+						  sizeof(struct smu_metrics));
-+		if (!dev->smu_virt_addr)
-+			return -ENOMEM;
-+	}
-+
-+	/* Start the logging */
-+	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_RESET, 0);
-+	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_START, 0);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_SUSPEND || CONFIG_DEBUG_FS */
-+
- #ifdef CONFIG_SUSPEND
- static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
- {
-@@ -475,38 +513,6 @@ static inline void amd_pmc_dbgfs_unregister(struct amd_pmc_dev *dev)
- }
- #endif /* CONFIG_DEBUG_FS */
- 
--static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
--{
--	if (dev->cpu_id == AMD_CPU_ID_PCO) {
--		dev_warn_once(dev->dev, "SMU debugging info not supported on this platform\n");
--		return -EINVAL;
--	}
--
--	/* Get Active devices list from SMU */
--	if (!dev->active_ips)
--		amd_pmc_send_cmd(dev, 0, &dev->active_ips, SMU_MSG_GET_SUP_CONSTRAINTS, 1);
--
--	/* Get dram address */
--	if (!dev->smu_virt_addr) {
--		u32 phys_addr_low, phys_addr_hi;
--		u64 smu_phys_addr;
--
--		amd_pmc_send_cmd(dev, 0, &phys_addr_low, SMU_MSG_LOG_GETDRAM_ADDR_LO, 1);
--		amd_pmc_send_cmd(dev, 0, &phys_addr_hi, SMU_MSG_LOG_GETDRAM_ADDR_HI, 1);
--		smu_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
--
--		dev->smu_virt_addr = devm_ioremap(dev->dev, smu_phys_addr,
--						  sizeof(struct smu_metrics));
--		if (!dev->smu_virt_addr)
--			return -ENOMEM;
--	}
--
--	/* Start the logging */
--	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_RESET, 0);
--	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_START, 0);
--
--	return 0;
--}
- 
- static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
- {
--- 
-2.17.1
+I find that paragraph confusing:  Do multi-function P2SB devices exist?
+What are the other functions?  Are they visible but merely not enumerated
+because function 0 is not visible?
 
+
+> P2SB unconditional unhiding awareness
+> =====================================
+> Technically it's possible to unhide the P2SB device and devices on
+> the same PCI slot and access them at any time as needed. But there are
+> several potential issues with that:
+> 
+>  - the systems were never tested against such configuration and hence
+>    nobody knows what kind of bugs it may bring, especially when we talk
+>    about SPI NOR case which contains Intel FirmWare Image (IFWI) code
+>    (including BIOS) and already known to be problematic in the past for
+>    end users
+> 
+>  - the PCI by its nature is a hotpluggable bus and in case somebody
+>    attaches a driver to the functions of a P2SB slot device(s) the
+>    end user experience and system behaviour can be unpredictable
+> 
+>  - the kernel code would need some ugly hacks (or code looking as an
+>    ugly hack) under arch/x86/pci in order to enable these devices on
+>    only selected platforms (which may include CPU ID table followed by
+>    a potentially growing number of DMI strings
+
+Honestly I would have taken the step to always expose the device,
+identify breakages and then fix those.
+
+We had a similar issue with HD audio controllers on Nvidia GPUs
+which were only visible when an HDMI cable was plugged in.
+We always expose them since b516ea586d71 and I recall we merely
+had a few cases that an audio device was exposed in cases when
+the card had no HDMI connectors at all.  So there was a useless
+HD audio card visible to the user but no real harm.
+
+
+> +	pci_lock_rescan_remove();
+> +
+> +	/* Unhide the P2SB device, if needed */
+> +	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
+> +	if ((value & P2SBC_HIDE) == P2SBC_HIDE)
+> +		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
+> +
+> +	/* Read the first BAR of the device in question */
+> +	__pci_bus_read_base(bus, devfn, mem, PCI_BASE_ADDRESS_0);
+> +
+> +	/* Hide the P2SB device, if it was hidden */
+> +	if (value & P2SBC_HIDE)
+> +		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
+> +
+> +	pci_unlock_rescan_remove();
+
+Please add a code comment why you're calling pci_lock_rescan_remove(),
+such as:
+
+	/*
+	 * Prevent concurrent PCI bus scan from seeing the P2SB device
+	 * while it is temporarily exposed.
+	 */
+
+Otherwise it looks like you're abusing that lock to prevent multiple
+simultaneous RMW operations of the P2SBC_HIDE bit.
+
+
+I think the first if-clause above can be simplified to
+
+	if (value & P2SBC_HIDE)
+
+I don't understand why one of the two if-clauses adds "== P2SBC_HIDE".
+
+
+Do you really need all the complicated logic in __pci_bus_read_base()?
+For comparison, simatic_ipc_get_membase0() in simatic-ipc.c merely does:
+
+	pci_bus_read_config_dword(bus, p2sb, PCI_BASE_ADDRESS_0, &bar0);
+
+If that's sufficient for simatic-ipc.c, why is the more complicated code
+necessary in p2sb.c?
+
+
+I'm wondering, since you're only retrieving the base address (and thus
+temporarily expose the P2SB device) when it's actually needed by a driver,
+would there be any harm in keeping the P2SB device exposed indefinitely
+from the moment a driver first requests the base address?  I.e., unhide it
+but don't hide it again.  That would allow you to call pci_scan_slot() and
+pci_bus_add_devices(), thus instantiating a proper pci_dev which you can
+access without the __pci_bus_read_base() kludge.
+
+
+> +	/*
+> +	 * I don't know how l can have all bits set.  Copied from old code.
+> +	 * Maybe it fixes a bug on some ancient platform.
+> +	 */
+> +	if (PCI_POSSIBLE_ERROR(l))
+> +		l = 0;
+
+l can have all bits set if the device was hot-removed.  That can't happen
+with a built-in device such as P2SB.
+
+Thanks,
+
+Lukas
