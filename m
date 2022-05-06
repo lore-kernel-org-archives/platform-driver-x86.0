@@ -2,98 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEECC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 12:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112A4C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 12:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1391932AbiEFMcx (ORCPT
+        id S1392114AbiEFMsW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 May 2022 08:32:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57756 "EHLO
+        Fri, 6 May 2022 08:48:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1392044AbiEFMcK (ORCPT
+        with ESMTP id S1349759AbiEFMsS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 May 2022 08:32:10 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D423E6A40F;
-        Fri,  6 May 2022 05:27:45 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id dk23so14167318ejb.8;
-        Fri, 06 May 2022 05:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZqUNvjWc6qfxPvZnmvjPbtp1QQWguZNI9GetenDDpAw=;
-        b=cqi4Xo5Zc3oZLNL2p8Mjafx627DEi8TsXDj8MW0s/XP1VJzr2PYmlG978syo4B3A5z
-         GWO9R+8yzfg6/0kAZc4VkX5v9s2vyB1HqhKBRREQCZ/YCwZYxJb3HUgei+NJpTljzsh6
-         M+0PKWPSBJodsRdD+bheM3mIEPfH0vGNL8SYiWI0mKRZ9+TXPX5UW6LmBOSupzs3wTtg
-         by9huPz4nC3HgVFcWFguIfKBd3FTz1g0RfXT3i3nIDizbIIl4LL4M7ZkPiiSzuypbdm/
-         ejvmAoLuYxOSelkXtpttvtNPxDPZFPYIZnX7YDX/lkKNrJ5V9Xjxzz7osSEoJ4HJA42c
-         yXOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZqUNvjWc6qfxPvZnmvjPbtp1QQWguZNI9GetenDDpAw=;
-        b=VuGur058yFE3K7x1I0ZuL00x2hRBmEyLwXiLzvH2fYSt/FHWo63dxtSC6qU9Y3PQCR
-         hp+eQerhpmgdXfWz84Mik/kuC0wYjqv2tEIUEIK9g8xlN8U9Go6RW1uMOZy+4ro429aD
-         EVjQgbVK8UKyoQwgIx6Ke6Zb6dweEU3ruAEXokFS+kOJ1443FPE/FwaHUc7IdT5dz6XY
-         +3+djmI70XkkgZWAgwCVyFkPcurvy1EGT3xm3AFn7XSVbs4FGoPCGvHxtrQNgKumwe9w
-         1auh2KwjUyIWYreeCzLmHNHBWkwqIHojWTC0CiTgm1U2esD7qnnVPSHlrdJBoqzBMMRp
-         mwnA==
-X-Gm-Message-State: AOAM533YY1PkYWVOYj6x608cqEjMKQxvT/6AS+x7vCIcautgK0SCR/FQ
-        LHam3av32Zr300jv8gMqp1w=
-X-Google-Smtp-Source: ABdhPJy/R4dOpJZb6mQlM7G3KWqJpA2yIywFotO5FYj8OsBWpXnpklBoQcREQGziCOwgACLdlPIobw==
-X-Received: by 2002:a17:907:62a2:b0:6e0:e201:b94e with SMTP id nd34-20020a17090762a200b006e0e201b94emr2728871ejc.730.1651840064344;
-        Fri, 06 May 2022 05:27:44 -0700 (PDT)
-Received: from luca020400-fedora.lan (93-51-1-159.ip298.fastwebnet.it. [93.51.1.159])
-        by smtp.googlemail.com with ESMTPSA id k11-20020a056402048b00b0042617ba6383sm2178829edv.13.2022.05.06.05.27.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 May 2022 05:27:43 -0700 (PDT)
-From:   Luca Stefani <luca.stefani.ge1@gmail.com>
-Cc:     Luca Stefani <luca.stefani.ge1@gmail.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        acpi4asus-user@lists.sourceforge.net (open list:ASUS NOTEBOOKS AND
-        EEEPC ACPI/WMI EXTRAS DRIVERS),
-        platform-driver-x86@vger.kernel.org (open list:ASUS NOTEBOOKS AND EEEPC
-        ACPI/WMI EXTRAS DRIVERS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] platform/x86: asus-nb-wmi: Add keymap for MyASUS key
-Date:   Fri,  6 May 2022 14:25:36 +0200
-Message-Id: <20220506122536.113566-2-luca.stefani.ge1@gmail.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220506122536.113566-1-luca.stefani.ge1@gmail.com>
-References: <20220506122536.113566-1-luca.stefani.ge1@gmail.com>
+        Fri, 6 May 2022 08:48:18 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71046622A;
+        Fri,  6 May 2022 05:44:34 -0700 (PDT)
+Received: from zn.tnic (p5de8eeb4.dip0.t-ipconnect.de [93.232.238.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4FC151EC0535;
+        Fri,  6 May 2022 14:44:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1651841069;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=w5a6VyPh1Kscuhtqek949cERiqs3llXbkMpRPLQU5xk=;
+        b=dpv0sfJ5xO11IrTCW6v14olvNOOwGrPsTwhjEfGvy52/IQq+4XMU7KoitZrS39tyViUorp
+        OR+MmdaGZEgHm0e4Ni5J6+hp0htSwMKucCTk81kI0MzRsJk0513S9YBDSBJAFM08racC6c
+        eEYzCqDeC8PmWbUkGHxbSx/eOo6xEks=
+Date:   Fri, 6 May 2022 14:44:28 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Martin Fernandez <martin.fernandez@eclypsium.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
+        dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com, keescook@chromium.org
+Subject: Re: [PATCH v8 0/8] x86: Show in sysfs if a memory node is able to do
+ encryption
+Message-ID: <YnUYLDjIThbIz/Uf@zn.tnic>
+References: <20220429201717.1946178-1-martin.fernandez@eclypsium.com>
+ <YnKr+aMf4PspDpHZ@zn.tnic>
+ <CAKgze5YDD02AsrF0yESv2sptZ4qxyTMgCDmnOKcbQWjKQsJRsw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKgze5YDD02AsrF0yESv2sptZ4qxyTMgCDmnOKcbQWjKQsJRsw@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This event is triggered by pressing Fn+F12 on
-ASUS Zenbook UX425JA
+On Wed, May 04, 2022 at 02:18:30PM -0300, Martin Fernandez wrote:
+> The use case is to know if a user is using hardware encryption or
+> not. This new sysfs file plus knowing if tme/sev is active you can be
+> pretty sure about that.
 
-Map it to KEY_PROG1 to allow userspace to
-configure it
+Then please explain it in detail and in the text so that it is clear. As
+it is now, the reader is left wondering what that file is supposed to
+state.
 
-Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
----
- drivers/platform/x86/asus-nb-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+> Dave Hansen pointed those out in a previuos patch serie, here is the
+> quote:
+> 
+> > CXL devices will have normal RAM on them, be exposed as "System RAM" and
+> > they won't have encryption capabilities.  I think these devices were
+> > probably the main motivation for EFI_MEMORY_CPU_CRYPTO.
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index a81dc4b191b7..57a07db659cb 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -553,6 +553,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0x7D, { KEY_BLUETOOTH } }, /* Bluetooth Enable */
- 	{ KE_KEY, 0x7E, { KEY_BLUETOOTH } }, /* Bluetooth Disable */
- 	{ KE_KEY, 0x82, { KEY_CAMERA } },
-+	{ KE_KEY, 0x86, { KEY_PROG1 } }, /* MyASUS Key */
- 	{ KE_KEY, 0x88, { KEY_RFKILL  } }, /* Radio Toggle Key */
- 	{ KE_KEY, 0x8A, { KEY_PROG1 } }, /* Color enhancement mode */
- 	{ KE_KEY, 0x8C, { KEY_SWITCHVIDEOMODE } }, /* SDSP DVI only */
+So this would mean that if a system doesn't have CXL devices and has
+TME/SME/SEV-* enabled, then it is running with encrypted memory.
+
+Which would then also mean, you don't need any of that code - you only
+need to enumerate CXL devices which, it seems, do not support memory
+encryption, and then state that memory encryption is enabled on the
+whole system, except for the memory of those devices.
+
+I.e.,
+
+$ dmesg | grep -i SME
+[    1.783650] AMD Memory Encryption Features active: SME
+
+Done - memory is encrypted on the whole system.
+
+We could export it into /proc/cpuinfo so that you don't have to grep
+dmesg and problem solved.
+
 -- 
-2.35.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
