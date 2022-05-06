@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF64C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 08:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71D7C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 08:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1390075AbiEFIYw (ORCPT
+        id S1385302AbiEFI1p (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 May 2022 04:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41938 "EHLO
+        Fri, 6 May 2022 04:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1390168AbiEFIY1 (ORCPT
+        with ESMTP id S1390103AbiEFI1l (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 May 2022 04:24:27 -0400
+        Fri, 6 May 2022 04:27:41 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D05413D13;
-        Fri,  6 May 2022 01:20:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5705B68F9C;
+        Fri,  6 May 2022 01:23:56 -0700 (PDT)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1651825224;
+        s=2020; t=1651825434;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=XvECXZlKv//5WXr2Qh3h1YJR2CNLvzofteXK2A2O1ho=;
-        b=C8ni3HIp+lksZAPvlwAD6tGqGcAuY5WJ7CQCJojWPzOWWgQTwgRyNAgCBFQkV5VfxGHFGe
-        j0MqyYE+lNEt0MQkpP1deH5GhC+aE0GlsIllCQm8coNDB+hSk34j0R0CiEKpxsoyzbGmtt
-        Su3DU3ch9uDjbQwNHvnkTMAclmQFDC4jTzbTDvWR7T+JOI2VDOlgW+SEZAFnENWVURKSq4
-        8W+P05Oix32+ZM4SwrKRoZkCtr+Q805Y12gvaEma15l7o6dcJCAG27PGQDKIQJOmVB+9q3
-        kw0oucAN942TB66n8wMEAs2fo1vHp2B047hKLXSIrSU/6/SAqw2dPQTFIZ+r2A==
+        bh=770rOCEglJcTn6tOCmhg2DWqxE2dENlNOc6UvMrWrn0=;
+        b=SWdlPTx50Sth51PvJ895RJTrT4U24BL4jUAFpr4iLPHiAGZqSnszudzX19JIt0rBwORvW3
+        ln9dKTaD7e5bdN9HhwZW5AuVU8kpBDN/Zf+Qp2D7P//NP0vxRiLhfrB55uXMNnMk95IQST
+        RZzjuDfS3O3YMH65RtEkxPX821YxIClVWuMvwbBt494vVZ00B+wyWbJ/Jkv2llZsm7jDeC
+        V8YIzlYWLaA5aW2RAgVsM3OMkER8elfU/FqfdJcq5hQxoo1jutEacwxDQO1JalB9NFvS05
+        JWSaPxdmnw01ddtTlx+F6tx2EkpZaV5YGyXadPsrOYGJX2PC481JPpEhAYoj5g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1651825224;
+        s=2020e; t=1651825434;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=XvECXZlKv//5WXr2Qh3h1YJR2CNLvzofteXK2A2O1ho=;
-        b=EvVTeBAWPkgbWcXilyuBQ16WAspalSc/xW7PUI/iM2W3GpiEZJY2Q7Lf7/3O4+mx8be/Ik
-        7JbcLOHcn+8IU6BA==
+        bh=770rOCEglJcTn6tOCmhg2DWqxE2dENlNOc6UvMrWrn0=;
+        b=UhQ+wS469qIUvvXkeMoQ2z5tuJDuxrtHGkFcCGrgMQ8u1/Wh2cDAchumGeta7jwV0+SXE0
+        j/73GWMjRB3BwWCA==
 To:     Tony Luck <tony.luck@intel.com>, hdegoede@redhat.com,
         markgross@kernel.org
 Cc:     mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
@@ -45,15 +45,15 @@ Cc:     mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
         rostedt@goodmis.org, dan.j.williams@intel.com,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
-        ravi.v.shankar@intel.com, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v6 03/11] stop_machine: Add stop_core_cpuslocked() for
- per-core operations
-In-Reply-To: <20220506014035.1173578-4-tony.luck@intel.com>
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v6 04/11] platform/x86/intel/ifs: Add stub driver for
+ In-Field Scan
+In-Reply-To: <20220506014035.1173578-5-tony.luck@intel.com>
 References: <20220428153849.295779-1-tony.luck@intel.com>
  <20220506014035.1173578-1-tony.luck@intel.com>
- <20220506014035.1173578-4-tony.luck@intel.com>
-Date:   Fri, 06 May 2022 10:20:23 +0200
-Message-ID: <87wnezgji0.ffs@tglx>
+ <20220506014035.1173578-5-tony.luck@intel.com>
+Date:   Fri, 06 May 2022 10:23:54 +0200
+Message-ID: <87tua3gjc5.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -61,16 +61,15 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Thu, May 05 2022 at 18:40, Tony Luck wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
->
-> Hardware core level testing features require near simultaneous execution
-> of WRMSR instructions on all threads of a core to initiate a test.
->
-> Provide a customized cut down version of stop_machine_cpuslocked() that
-> just operates on the threads of a single core.
->
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> +#include <asm/cpu_device_id.h>
+> +
+> +#define X86_MATCH(model)				\
+> +	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6,	\
+> +		INTEL_FAM6_##model, X86_FEATURE_CORE_CAPABILITIES, NULL)
+> +
+> +static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
+> +	X86_MATCH(SAPPHIRERAPIDS_X),
+
+I still hate this with a passion. Nevertheless:
 
 Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
