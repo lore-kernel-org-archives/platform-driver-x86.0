@@ -2,96 +2,161 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112A4C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 12:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A0BC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 12:47:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1392114AbiEFMsW (ORCPT
+        id S1392131AbiEFMvQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 May 2022 08:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47536 "EHLO
+        Fri, 6 May 2022 08:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349759AbiEFMsS (ORCPT
+        with ESMTP id S245378AbiEFMvQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 May 2022 08:48:18 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71046622A;
-        Fri,  6 May 2022 05:44:34 -0700 (PDT)
-Received: from zn.tnic (p5de8eeb4.dip0.t-ipconnect.de [93.232.238.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4FC151EC0535;
-        Fri,  6 May 2022 14:44:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1651841069;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=w5a6VyPh1Kscuhtqek949cERiqs3llXbkMpRPLQU5xk=;
-        b=dpv0sfJ5xO11IrTCW6v14olvNOOwGrPsTwhjEfGvy52/IQq+4XMU7KoitZrS39tyViUorp
-        OR+MmdaGZEgHm0e4Ni5J6+hp0htSwMKucCTk81kI0MzRsJk0513S9YBDSBJAFM08racC6c
-        eEYzCqDeC8PmWbUkGHxbSx/eOo6xEks=
-Date:   Fri, 6 May 2022 14:44:28 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Martin Fernandez <martin.fernandez@eclypsium.com>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
-        dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com, keescook@chromium.org
-Subject: Re: [PATCH v8 0/8] x86: Show in sysfs if a memory node is able to do
- encryption
-Message-ID: <YnUYLDjIThbIz/Uf@zn.tnic>
-References: <20220429201717.1946178-1-martin.fernandez@eclypsium.com>
- <YnKr+aMf4PspDpHZ@zn.tnic>
- <CAKgze5YDD02AsrF0yESv2sptZ4qxyTMgCDmnOKcbQWjKQsJRsw@mail.gmail.com>
+        Fri, 6 May 2022 08:51:16 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39A8733E1C;
+        Fri,  6 May 2022 05:47:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651841253; x=1683377253;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lgRANVpIeYbETu3AmcMFp1S7V1/cZNNLTeeu8Vwuz7k=;
+  b=K8fxmXhj7zMxjiI0h3kDihLUorFMXsHQzUU9zwoG3icseoIzc0MWb9pO
+   eggcnKTpW3vaGaXaULG65586eRR4k27YbN3iN6BrRYWexONOUV3mW7dT+
+   9rYaiLtU5JID0n1Qgn8YaTg0SIE5BrIXOXf3Zng+YSJhhe215RW1whosQ
+   Wo39u4i6evVuPBao+25Go8bO6tWbJA0N01wL8OiTQLQ70C/GdB9kkVbMz
+   XpJXZkjXyVRAZOd1VT0xOgGcB6PzTl/7iVVmS/uLcx8iI+wDpXB+5QUwB
+   zb9y4hra7fSDHGh5RlFg/ZTegiOp9Yrg9Cod1bmRQP2aZDfM1a1zjghpy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="267295609"
+X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
+   d="scan'208";a="267295609"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2022 05:47:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
+   d="scan'208";a="518024373"
+Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 06 May 2022 05:47:25 -0700
+Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nmxMi-000DTo-H2;
+        Fri, 06 May 2022 12:47:24 +0000
+Date:   Fri, 6 May 2022 20:47:07 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     kbuild-all@lists.01.org, usama.anjum@collabora.com,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, dtor@chromium.org, gwendal@chromium.org,
+        vbendeb@chromium.org, andy@infradead.org,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        chrome-platform@lists.linux.dev
+Subject: Re: [PATCH v9] platform/chrome: Add ChromeOS ACPI device driver
+Message-ID: <202205062057.LDuKncYN-lkp@intel.com>
+References: <YnTw/iQ1Asjjmsb9@debian-BULLSEYE-live-builder-AMD64>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKgze5YDD02AsrF0yESv2sptZ4qxyTMgCDmnOKcbQWjKQsJRsw@mail.gmail.com>
+In-Reply-To: <YnTw/iQ1Asjjmsb9@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, May 04, 2022 at 02:18:30PM -0300, Martin Fernandez wrote:
-> The use case is to know if a user is using hardware encryption or
-> not. This new sysfs file plus knowing if tme/sev is active you can be
-> pretty sure about that.
+Hi Muhammad,
 
-Then please explain it in detail and in the text so that it is clear. As
-it is now, the reader is left wondering what that file is supposed to
-state.
+I love your patch! Perhaps something to improve:
 
-> Dave Hansen pointed those out in a previuos patch serie, here is the
-> quote:
-> 
-> > CXL devices will have normal RAM on them, be exposed as "System RAM" and
-> > they won't have encryption capabilities.  I think these devices were
-> > probably the main motivation for EFI_MEMORY_CPU_CRYPTO.
+[auto build test WARNING on rafael-pm/linux-next]
+[also build test WARNING on chrome-platform/for-next v5.18-rc5 next-20220506]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-So this would mean that if a system doesn't have CXL devices and has
-TME/SME/SEV-* enabled, then it is running with encrypted memory.
+url:    https://github.com/intel-lab-lkp/linux/commits/Muhammad-Usama-Anjum/platform-chrome-Add-ChromeOS-ACPI-device-driver/20220506-175951
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+config: arc-allyesconfig (https://download.01.org/0day-ci/archive/20220506/202205062057.LDuKncYN-lkp@intel.com/config)
+compiler: arceb-elf-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/4f6407962feddc57bc7c80e5b29d5d339a1dba6c
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Muhammad-Usama-Anjum/platform-chrome-Add-ChromeOS-ACPI-device-driver/20220506-175951
+        git checkout 4f6407962feddc57bc7c80e5b29d5d339a1dba6c
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash drivers/platform/chrome/
 
-Which would then also mean, you don't need any of that code - you only
-need to enumerate CXL devices which, it seems, do not support memory
-encryption, and then state that memory encryption is enabled on the
-whole system, except for the memory of those devices.
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-I.e.,
+All warnings (new ones prefixed by >>):
 
-$ dmesg | grep -i SME
-[    1.783650] AMD Memory Encryption Features active: SME
+   In file included from include/linux/device.h:15,
+                    from include/linux/acpi.h:15,
+                    from drivers/platform/chrome/chromeos_acpi.c:13:
+   drivers/platform/chrome/chromeos_acpi.c: In function 'chromeos_acpi_device_probe':
+>> drivers/platform/chrome/chromeos_acpi.c:253:40: warning: format '%ld' expects argument of type 'long int', but argument 3 has type 'unsigned int' [-Wformat=]
+     253 |                 dev_warn(&(pdev->dev), "Only %ld GPIO attr groups supported by the driver out of total %d.\n",
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:110:30: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                              ^~~
+   include/linux/dev_printk.h:146:61: note: in expansion of macro 'dev_fmt'
+     146 |         dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                             ^~~~~~~
+   drivers/platform/chrome/chromeos_acpi.c:253:17: note: in expansion of macro 'dev_warn'
+     253 |                 dev_warn(&(pdev->dev), "Only %ld GPIO attr groups supported by the driver out of total %d.\n",
+         |                 ^~~~~~~~
+   drivers/platform/chrome/chromeos_acpi.c:253:48: note: format string is defined here
+     253 |                 dev_warn(&(pdev->dev), "Only %ld GPIO attr groups supported by the driver out of total %d.\n",
+         |                                              ~~^
+         |                                                |
+         |                                                long int
+         |                                              %d
+   At top level:
+   drivers/platform/chrome/chromeos_acpi.c:259:36: warning: 'chromeos_device_ids' defined but not used [-Wunused-const-variable=]
+     259 | static const struct acpi_device_id chromeos_device_ids[] = {
+         |                                    ^~~~~~~~~~~~~~~~~~~
 
-Done - memory is encrypted on the whole system.
 
-We could export it into /proc/cpuinfo so that you don't have to grep
-dmesg and problem solved.
+vim +253 drivers/platform/chrome/chromeos_acpi.c
+
+   244	
+   245	static int chromeos_acpi_device_probe(struct platform_device *pdev)
+   246	{
+   247		chromeos_acpi_gpio_groups = get_gpio_pkg_num(&pdev->dev);
+   248	
+   249		/* If platform has more GPIO attribute groups than the number of
+   250		 * groups this driver supports, give out a warning message.
+   251		 */
+   252		if (chromeos_acpi_gpio_groups > (ARRAY_SIZE(chromeos_acpi_all_groups) - 2))
+ > 253			dev_warn(&(pdev->dev), "Only %ld GPIO attr groups supported by the driver out of total %d.\n",
+   254				 (ARRAY_SIZE(chromeos_acpi_all_groups) - 2), chromeos_acpi_gpio_groups);
+   255		return 0;
+   256	}
+   257	
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+0-DAY CI Kernel Test Service
+https://01.org/lkp
