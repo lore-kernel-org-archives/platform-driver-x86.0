@@ -2,42 +2,42 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF63C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 22:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49490C43217
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 22:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1444844AbiEFW6P (ORCPT
+        id S1444850AbiEFW6Q (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 May 2022 18:58:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35108 "EHLO
+        Fri, 6 May 2022 18:58:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1444733AbiEFW6F (ORCPT
+        with ESMTP id S1444834AbiEFW6J (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 May 2022 18:58:05 -0400
+        Fri, 6 May 2022 18:58:09 -0400
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897166D38B;
-        Fri,  6 May 2022 15:54:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E374C6D959;
+        Fri,  6 May 2022 15:54:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651877661; x=1683413661;
+  t=1651877663; x=1683413663;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=IGuz7+KLznfQwM4nTyMl0C070MuaOTvQuxQ4l91Ly4M=;
-  b=Rle8ffnGJMVstb4vIjhUcSrIHj++nCWinru+lJTJkGx7m3gvpnnS1trC
-   22gBrn4Sy/OlZr7Ww8hPLfDeLIy8Id3IbbVcsODmvQz/szmfgm+IwOBT4
-   QLtHibS/x98zCdmGW/La5ZhUuP27dtvRWrWsNtTcz4DA/bmJN0naCIFxz
-   PGimhD0HuA44/2u07nM55O24rNEse/93qYc6BUJzUqOoCrierRgxJW3A1
-   HhMX6XRDH5b3kM2MFYkEvPu0Q3UIEtVAM1PdNCiawKP4thUocwmhJ370V
-   Sa3kRd0A/AKRDj1ZwZw00MZfoKLTuIEKFczlP6b8/S9jrh8SddagM9hD7
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10339"; a="256080803"
+  bh=Z5FZPzcnm4iGFKmgA6F8JRxrUCFwdulp9PZjuNmmimo=;
+  b=a2Faf9HCdLQ1XhHfoGYjeKgZ2kNRPCQpgYXiOlpW34vgc+c4ISlbpFLT
+   5fEeLdBzpJ9p4R8g1HaX3CJVYwZY65LdidmDXjNCPbivnxOFma2BUVfG9
+   U2azDoLAOh7tiHVx/jdP3as4A8pOCQEvUx9UWhMPjGF5mXl2lSRd2ffAn
+   naBs5ZAPkybK8t5iLpfPsrAKq6duwFBX/7rj3hU1QTFawDqtVoMsO9VO/
+   iX+/UELdKWrsh36S0jpMgDd+ZE7iq5gFO9DOc1hQrB31M5rFSdRVBhyoa
+   zSMZmNrZbddBzlO8fc8TvJT3ubn4lHvTMdv8JhzzllwVgPYTtXF9iq9hk
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10339"; a="256080815"
 X-IronPort-AV: E=Sophos;i="5.91,205,1647327600"; 
-   d="scan'208";a="256080803"
+   d="scan'208";a="256080815"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2022 15:54:21 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2022 15:54:22 -0700
 X-IronPort-AV: E=Sophos;i="5.91,205,1647327600"; 
-   d="scan'208";a="695383644"
+   d="scan'208";a="695383654"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2022 15:54:20 -0700
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2022 15:54:21 -0700
 From:   Tony Luck <tony.luck@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -48,9 +48,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         patches@lists.linux.dev, ravi.v.shankar@intel.com
-Subject: [PATCH v7 09/12] platform/x86/intel/ifs: Add IFS sysfs interface
-Date:   Fri,  6 May 2022 15:54:07 -0700
-Message-Id: <20220506225410.1652287-10-tony.luck@intel.com>
+Subject: [PATCH v7 12/12] Documentation: In-Field Scan
+Date:   Fri,  6 May 2022 15:54:10 -0700
+Message-Id: <20220506225410.1652287-13-tony.luck@intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220506225410.1652287-1-tony.luck@intel.com>
 References: <20220506014035.1173578-1-tony.luck@intel.com>
@@ -61,238 +61,170 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Jithu Joseph <jithu.joseph@intel.com>
+Add documentation for In-Field Scan (IFS). This documentation
+describes the basics of IFS, the loading IFS image, chunk
+authentication, running scan and how to check result via sysfs.
 
-Implement sysfs interface to trigger ifs test for a specific cpu.
-Additional interfaces related to checking the status of the
-scan test and seeing the version of the loaded IFS binary
-are also added.
+The CORE_CAPABILITIES MSR enumerates whether IFS is supported.
 
-The basic usage is as below.
-   - To start test, for example on cpu5:
-       echo 5 > /sys/devices/platform/intel_ifs/run_test
-   - To see the status of the last test
-       cat /sys/devices/platform/intel_ifs/status
-   - To see the version of the loaded scan binary
-       cat /sys/devices/platform/intel_ifs/image_version
+The full  github location for distributing the IFS images is
+still being decided. So just a placeholder included for now
+in the documentation.
+
+Future CPUs will support more than one type of test. Plan for
+that now by using a "_0" suffix on the ABI directory names.
+Additional test types will use "_1", etc.
 
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-Co-developed-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/platform/x86/intel/ifs/Makefile |   2 +-
- drivers/platform/x86/intel/ifs/core.c   |   5 +
- drivers/platform/x86/intel/ifs/ifs.h    |   3 +
- drivers/platform/x86/intel/ifs/sysfs.c  | 149 ++++++++++++++++++++++++
- 4 files changed, 158 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/x86/intel/ifs/sysfs.c
+ Documentation/x86/ifs.rst            |   2 +
+ Documentation/x86/index.rst          |   1 +
+ drivers/platform/x86/intel/ifs/ifs.h | 110 +++++++++++++++++++++++++++
+ 3 files changed, 113 insertions(+)
+ create mode 100644 Documentation/x86/ifs.rst
 
-diff --git a/drivers/platform/x86/intel/ifs/Makefile b/drivers/platform/x86/intel/ifs/Makefile
-index cedcb103f860..30f035ef5581 100644
---- a/drivers/platform/x86/intel/ifs/Makefile
-+++ b/drivers/platform/x86/intel/ifs/Makefile
-@@ -1,3 +1,3 @@
- obj-$(CONFIG_INTEL_IFS)		+= intel_ifs.o
- 
--intel_ifs-objs			:= core.o load.o runtest.o
-+intel_ifs-objs			:= core.o load.o runtest.o sysfs.o
-diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
-index f62578dae8e9..27204e3d674d 100644
---- a/drivers/platform/x86/intel/ifs/core.c
-+++ b/drivers/platform/x86/intel/ifs/core.c
-@@ -3,6 +3,7 @@
- 
- #include <linux/module.h>
- #include <linux/kdev_t.h>
-+#include <linux/semaphore.h>
- 
- #include <asm/cpu_device_id.h>
- 
-@@ -47,9 +48,13 @@ static int __init ifs_init(void)
- 	if (rdmsrl_safe(MSR_INTEGRITY_CAPS, &msrval))
- 		return -ENODEV;
- 
-+	ifs_device.misc.groups = ifs_get_groups();
-+
- 	if ((msrval & BIT(ifs_device.data.integrity_cap_bit)) &&
- 	    !misc_register(&ifs_device.misc)) {
-+		down(&ifs_sem);
- 		ifs_load_firmware(ifs_device.misc.this_device);
-+		up(&ifs_sem);
- 		return 0;
- 	}
- 
+diff --git a/Documentation/x86/ifs.rst b/Documentation/x86/ifs.rst
+new file mode 100644
+index 000000000000..97abb696a680
+--- /dev/null
++++ b/Documentation/x86/ifs.rst
+@@ -0,0 +1,2 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. kernel-doc:: drivers/platform/x86/intel/ifs/ifs.h
+diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+index 91b2fa456618..9d8e8a73d57b 100644
+--- a/Documentation/x86/index.rst
++++ b/Documentation/x86/index.rst
+@@ -35,6 +35,7 @@ x86-specific Documentation
+    usb-legacy-support
+    i386/index
+    x86_64/index
++   ifs
+    sva
+    sgx
+    features
 diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index b648cccda3ec..720bd18a5e91 100644
+index 720bd18a5e91..73c8e91cf144 100644
 --- a/drivers/platform/x86/intel/ifs/ifs.h
 +++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -117,5 +117,8 @@ static inline struct ifs_data *ifs_get_data(struct device *dev)
+@@ -4,6 +4,116 @@
+ #ifndef _IFS_H_
+ #define _IFS_H_
  
- void ifs_load_firmware(struct device *dev);
- int do_core_test(int cpu, struct device *dev);
-+const struct attribute_group **ifs_get_groups(void);
-+
-+extern struct semaphore ifs_sem;
++/**
++ * DOC: In-Field Scan
++ *
++ * =============
++ * In-Field Scan
++ * =============
++ *
++ * Introduction
++ * ------------
++ *
++ * In Field Scan (IFS) is a hardware feature to run circuit level tests on
++ * a CPU core to detect problems that are not caught by parity or ECC checks.
++ * Future CPUs will support more than one type of test which will show up
++ * with a new platform-device instance-id, for now only .0 is exposed.
++ *
++ *
++ * IFS Image
++ * ---------
++ *
++ * Intel provides a firmware file containing the scan tests via
++ * github [#f1]_.  Similar to microcode there is a separate file for each
++ * family-model-stepping.
++ *
++ * IFS Image Loading
++ * -----------------
++ *
++ * The driver loads the tests into memory reserved BIOS local to each CPU
++ * socket in a two step process using writes to MSRs to first load the
++ * SHA hashes for the test. Then the tests themselves. Status MSRs provide
++ * feedback on the success/failure of these steps. When a new test file
++ * is installed it can be loaded by writing to the driver reload file::
++ *
++ *   # echo 1 > /sys/devices/virtual/misc/intel_ifs_0/reload
++ *
++ * Similar to microcode, the current version of the scan tests is stored
++ * in a fixed location: /lib/firmware/intel/ifs.0/family-model-stepping.scan
++ *
++ * Running tests
++ * -------------
++ *
++ * Tests are run by the driver synchronizing execution of all threads on a
++ * core and then writing to the ACTIVATE_SCAN MSR on all threads. Instruction
++ * execution continues when:
++ *
++ * 1) All tests have completed.
++ * 2) Execution was interrupted.
++ * 3) A test detected a problem.
++ *
++ * Note that ALL THREADS ON THE CORE ARE EFFECTIVELY OFFLINE FOR THE
++ * DURATION OF THE TEST. This can be up to 200 milliseconds. If the system
++ * is running latency sensitive applications that cannot tolerate an
++ * interruption of this magnitude, the system administrator must arrange
++ * to migrate those applications to other cores before running a core test.
++ * It may also be necessary to redirect interrupts to other CPUs.
++ *
++ * In all cases reading the SCAN_STATUS MSR provides details on what
++ * happened. The driver makes the value of this MSR visible to applications
++ * via the "details" file (see below). Interrupted tests may be restarted.
++ *
++ * The IFS driver provides sysfs interfaces via /sys/devices/virtual/misc/intel_ifs_0/
++ * to control execution:
++ *
++ * Test a specific core::
++ *
++ *   # echo <cpu#> > /sys/devices/virtual/misc/intel_ifs_0/run_test
++ *
++ * when HT is enabled any of the sibling cpu# can be specified to test
++ * its corresponding physical core. Since the tests are per physical core,
++ * the result of testing any thread is same. All siblings must be online
++ * to run a core test. It is only necessary to test one thread.
++ *
++ * For e.g. to test core corresponding to cpu5
++ *
++ *   # echo 5 > /sys/devices/virtual/misc/intel_ifs_0/run_test
++ *
++ * Results of the last test is provided in /sys::
++ *
++ *   $ cat /sys/devices/virtual/misc/intel_ifs_0/status
++ *   pass
++ *
++ * Status can be one of pass, fail, untested
++ *
++ * Additional details of the last test is provided by the details file::
++ *
++ *   $ cat /sys/devices/virtual/misc/intel_ifs_0/details
++ *   0x8081
++ *
++ * The details file reports the hex value of the SCAN_STATUS MSR.
++ * Hardware defined error codes are documented in volume 4 of the Intel
++ * Software Developer's Manual but the error_code field may contain one of
++ * the following driver defined software codes:
++ *
++ * +------+--------------------+
++ * | 0xFD | Software timeout   |
++ * +------+--------------------+
++ * | 0xFE | Partial completion |
++ * +------+--------------------+
++ *
++ * Driver design choices
++ * ---------------------
++ *
++ * 1) The ACTIVATE_SCAN MSR allows for running any consecutive subrange of
++ * available tests. But the driver always tries to run all tests and only
++ * uses the subrange feature to restart an interrupted test.
++ *
++ * 2) Hardware allows for some number of cores to be tested in parallel.
++ * The driver does not make use of this, it only tests one core at a time.
++ *
++ * .. [#f1] https://github.com/intel/TBD
++ */
+ #include <linux/device.h>
+ #include <linux/miscdevice.h>
  
- #endif
-diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
-new file mode 100644
-index 000000000000..37d8380d6fa8
---- /dev/null
-+++ b/drivers/platform/x86/intel/ifs/sysfs.c
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2022 Intel Corporation. */
-+
-+#include <linux/cpu.h>
-+#include <linux/delay.h>
-+#include <linux/fs.h>
-+#include <linux/semaphore.h>
-+#include <linux/slab.h>
-+
-+#include "ifs.h"
-+
-+/*
-+ * Protects against simultaneous tests on multiple cores, or
-+ * reloading can file while a test is in progress
-+ */
-+DEFINE_SEMAPHORE(ifs_sem);
-+
-+/*
-+ * The sysfs interface to check additional details of last test
-+ * cat /sys/devices/system/platform/ifs/details
-+ */
-+static ssize_t details_show(struct device *dev,
-+			    struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct ifs_data *ifsd = ifs_get_data(dev);
-+
-+	return sysfs_emit(buf, "%#llx\n", ifsd->scan_details);
-+}
-+
-+static DEVICE_ATTR_RO(details);
-+
-+static const char * const status_msg[] = {
-+	[SCAN_NOT_TESTED] = "untested",
-+	[SCAN_TEST_PASS] = "pass",
-+	[SCAN_TEST_FAIL] = "fail"
-+};
-+
-+/*
-+ * The sysfs interface to check the test status:
-+ * To check the status of last test
-+ * cat /sys/devices/platform/ifs/status
-+ */
-+static ssize_t status_show(struct device *dev,
-+			   struct device_attribute *attr,
-+			   char *buf)
-+{
-+	struct ifs_data *ifsd = ifs_get_data(dev);
-+
-+	return sysfs_emit(buf, "%s\n", status_msg[ifsd->status]);
-+}
-+
-+static DEVICE_ATTR_RO(status);
-+
-+/*
-+ * The sysfs interface for single core testing
-+ * To start test, for example, cpu5
-+ * echo 5 > /sys/devices/platform/ifs/run_test
-+ * To check the result:
-+ * cat /sys/devices/platform/ifs/result
-+ * The sibling core gets tested at the same time.
-+ */
-+static ssize_t run_test_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	struct ifs_data *ifsd = ifs_get_data(dev);
-+	unsigned int cpu;
-+	int rc;
-+
-+	rc = kstrtouint(buf, 0, &cpu);
-+	if (rc < 0 || cpu >= nr_cpu_ids)
-+		return -EINVAL;
-+
-+	if (down_interruptible(&ifs_sem))
-+		return -EINTR;
-+
-+	if (!ifsd->loaded)
-+		rc = -EPERM;
-+	else
-+		rc = do_core_test(cpu, dev);
-+
-+	up(&ifs_sem);
-+
-+	return rc ? rc : count;
-+}
-+
-+static DEVICE_ATTR_WO(run_test);
-+
-+/*
-+ * Reload the IFS image. When user wants to install new IFS image
-+ */
-+static ssize_t reload_store(struct device *dev,
-+			    struct device_attribute *attr,
-+			    const char *buf, size_t count)
-+{
-+	struct ifs_data *ifsd = ifs_get_data(dev);
-+	bool res;
-+
-+
-+	if (kstrtobool(buf, &res))
-+		return -EINVAL;
-+	if (!res)
-+		return count;
-+
-+	if (down_interruptible(&ifs_sem))
-+		return -EINTR;
-+
-+	ifs_load_firmware(dev);
-+
-+	up(&ifs_sem);
-+
-+	return ifsd->loaded ? count : -ENODEV;
-+}
-+
-+static DEVICE_ATTR_WO(reload);
-+
-+/*
-+ * Display currently loaded IFS image version.
-+ */
-+static ssize_t image_version_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct ifs_data *ifsd = ifs_get_data(dev);
-+
-+	if (!ifsd->loaded)
-+		return sysfs_emit(buf, "%s\n", "none");
-+	else
-+		return sysfs_emit(buf, "%#x\n", ifsd->loaded_version);
-+}
-+
-+static DEVICE_ATTR_RO(image_version);
-+
-+/* global scan sysfs attributes */
-+static struct attribute *plat_ifs_attrs[] = {
-+	&dev_attr_details.attr,
-+	&dev_attr_status.attr,
-+	&dev_attr_run_test.attr,
-+	&dev_attr_reload.attr,
-+	&dev_attr_image_version.attr,
-+	NULL
-+};
-+
-+ATTRIBUTE_GROUPS(plat_ifs);
-+
-+const struct attribute_group **ifs_get_groups(void)
-+{
-+	return plat_ifs_groups;
-+}
 -- 
 2.35.1
 
