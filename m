@@ -2,138 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFADC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 10:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDA0C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 12:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1391056AbiEFKr0 (ORCPT
+        id S1392033AbiEFMct (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 May 2022 06:47:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50494 "EHLO
+        Fri, 6 May 2022 08:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1391060AbiEFKrY (ORCPT
+        with ESMTP id S1392035AbiEFMcE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 May 2022 06:47:24 -0400
-Received: from us-smtp-delivery-74.mimecast.com (us-smtp-delivery-74.mimecast.com [170.10.129.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CA50B674FB
-        for <platform-driver-x86@vger.kernel.org>; Fri,  6 May 2022 03:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651833820;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kMQXo3cnYgdSGZtZpKkyGl/T8WZO8ymEMiHkJONI6aE=;
-        b=Ro6Iujz37aUyXGOMBBwhtCj8D+LOcqIZFQcmC5YpWz8A3me5fpn9nvRulawMly4hEokrt/
-        mA1Q1hahZOJq3YnkjDsaIVdkj0yvlTmgcBFRUUCbfaYNCIMg5YzO525v/VgLDCbBWB3lkg
-        qaeeTmuOClHpVbqpdvnCkqsUT+OytJU=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-531-PkXoWzV1OWqNYEo9fHPFTg-1; Fri, 06 May 2022 06:43:39 -0400
-X-MC-Unique: PkXoWzV1OWqNYEo9fHPFTg-1
-Received: by mail-ed1-f71.google.com with SMTP id a19-20020aa7d913000000b004284eecb34aso1144686edr.6
-        for <platform-driver-x86@vger.kernel.org>; Fri, 06 May 2022 03:43:39 -0700 (PDT)
+        Fri, 6 May 2022 08:32:04 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B7D69735;
+        Fri,  6 May 2022 05:27:44 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id gh6so14219960ejb.0;
+        Fri, 06 May 2022 05:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fe1JHUplZR5IUQaqAYF8p9Q8oDHY3OVbkMey3bjJMO8=;
+        b=gWDa64RMBd7N2yJ51Vy6ho5N5Vm++jBsOrEOLmic9/Hqe112IA/Iv/Ncx+Lb8PxJrI
+         9xUPJRcb/h7wJMDkFJDbptKeU7JoejFZtRUGndl+4S6ebQ1kUS/vMn/VH9ug6jK9SgPC
+         QTaznMtWUmG7vHwNTchIBaMslSH07fInVI2ttzslmzdgYRdnEX5AxUpJnxUCktsGFPQe
+         TyBgc/Y0Xcd0d/jjqomD1SfMDEVdl8A+1TLIQyxTI8rXlwN0oPx4f0gQ3UifLKC83A+J
+         e9ZgkCVtZscKGI9Ssnlm7EoxxlSscgirpGu9EwnA1Gb4cKr5uGI3UG6UsIEsaO8lODXR
+         nMdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kMQXo3cnYgdSGZtZpKkyGl/T8WZO8ymEMiHkJONI6aE=;
-        b=uDZsFtIzrFv3LpNE9SWO1/sK5MvcBYDtaEqvleqITDi62WArxBFq88zA9EpbRJc0iL
-         hBGhNHOfNQZnD+jlu2Jwri/MSOkMyo45qESt6TlkM3jSygLirbCCfeB6K8hAIg/AgNzz
-         nz/1AS9MK63IwApFS70L0v8bYpBU6+R47iYWjuSHMp7icKqGEsxhQJ/BorpOJcFnhKcC
-         301m5sMGTMDz+7Jv637H3u8M7Yj/4q3Avoj62SmrdWzSKyXzm5LvHrNxIg4hw82ffYdq
-         Pfg6F6G9r1ILN4zPr32R7HLv9xLSVVc11GZ5AXZE0ftSgcj1pA1D7ruaPXrrcYtjfeLf
-         fozQ==
-X-Gm-Message-State: AOAM530UFcjK5G0ydMCYswCPcgUTZCxPG8U6X6WLlmezoV230uxgd9+d
-        EsdzSDbA78MHWS1gLJuD5GJNHV2Lrf/7qi/YFb/XKwgsC2Q6iMd5vp2i5x1qczB4ld95klIaCgt
-        J5uFZeb7ZnmhuJW2HuIjUTEZx/PGeOlgN2A==
-X-Received: by 2002:a05:6402:5286:b0:425:f0fb:5d23 with SMTP id en6-20020a056402528600b00425f0fb5d23mr2689868edb.243.1651833818609;
-        Fri, 06 May 2022 03:43:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzZTE0uRg4uU87MZ9mD5uG+ERThe0GHe4ZMXBFFDI5DcMXMQU/nUPpLZEa/sYlzlo2p0AVsAQ==
-X-Received: by 2002:a05:6402:5286:b0:425:f0fb:5d23 with SMTP id en6-20020a056402528600b00425f0fb5d23mr2689854edb.243.1651833818449;
-        Fri, 06 May 2022 03:43:38 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id d25-20020a056402145900b0042617ba63b2sm2122401edx.60.2022.05.06.03.43.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 May 2022 03:43:38 -0700 (PDT)
-Message-ID: <f56a64f4-da3a-7b77-58f9-598e294772fd@redhat.com>
-Date:   Fri, 6 May 2022 12:43:37 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 3/4] platform/x86: pmc_atom: dont export pmc_atom_read -
- no modular users
-Content-Language: en-US
-To:     Paul Gortmaker <paul.gortmaker@windriver.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        bh=fe1JHUplZR5IUQaqAYF8p9Q8oDHY3OVbkMey3bjJMO8=;
+        b=a8whoqAy5EJkzv0BU4ttNmGgFb34sKo+YOmX4lWX+LsGneM1Lu7JLTs+yxS/RASlbo
+         /wHO0XDElBmszNjbyZdd7lerHXHc06gA7h4rn+2OGvXyA1URgKvifhwqtEM7B/kx12pT
+         9w4T4uUEJX1Cwpf2wd3ZRJgWJLiSq6Kh/yy3dg+BdSHEaSNYKfDWBLRFRXRG2lIoCv4N
+         6Dx0N1TIVwdh/REWSkmnEKQQ/ij3rfwOcg3xoInF5Oci7DrkR3kN9mJxn375qCxhPfDn
+         R82JDF4LlSshWQdg7AXZyGfvvPy0bfvMTBW/J7P3hLW6RIXWKUoGRN6LnxQsD50+5Vmk
+         MLeQ==
+X-Gm-Message-State: AOAM533W8IxnWReu8yCcyjT/J/6NXNHKFeKvmrP0QRDN9V52vOrQM1KG
+        jcIOJgE5/GNpMen6QyjIRgE=
+X-Google-Smtp-Source: ABdhPJyg2dL+Bc9X3CwXpwBz53viUmGxMyEqZH1EB2Lu2BwxNNEUK43P7fWZq6sDl9EhL1wbdMSn2A==
+X-Received: by 2002:a17:907:da6:b0:6f4:c257:750d with SMTP id go38-20020a1709070da600b006f4c257750dmr2728807ejc.669.1651840063228;
+        Fri, 06 May 2022 05:27:43 -0700 (PDT)
+Received: from luca020400-fedora.lan (93-51-1-159.ip298.fastwebnet.it. [93.51.1.159])
+        by smtp.googlemail.com with ESMTPSA id k11-20020a056402048b00b0042617ba6383sm2178829edv.13.2022.05.06.05.27.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 May 2022 05:27:42 -0700 (PDT)
+From:   Luca Stefani <luca.stefani.ge1@gmail.com>
+Cc:     Luca Stefani <luca.stefani.ge1@gmail.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20220428062430.31010-1-paul.gortmaker@windriver.com>
- <20220428062430.31010-4-paul.gortmaker@windriver.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220428062430.31010-4-paul.gortmaker@windriver.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        acpi4asus-user@lists.sourceforge.net (open list:ASUS NOTEBOOKS AND
+        EEEPC ACPI/WMI EXTRAS DRIVERS),
+        platform-driver-x86@vger.kernel.org (open list:ASUS NOTEBOOKS AND EEEPC
+        ACPI/WMI EXTRAS DRIVERS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] platform/x86: asus-wmi: Update unknown code message
+Date:   Fri,  6 May 2022 14:25:35 +0200
+Message-Id: <20220506122536.113566-1-luca.stefani.ge1@gmail.com>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Prepend 0x to the actual key code to specify it
+is already an hex value
 
-On 4/28/22 08:24, Paul Gortmaker wrote:
-> There is only one user of pmc_atom_read in tree, and that is in
-> drivers/acpi/acpi_lpss.c -- which can't be anything but built-in.
-> 
-> As such there is no point in adding this function to the global symbol
-> list exported to modules.
-> 
-> Note that there is no <linux/export.h> include removal since the code
-> was getting that header implicitly.
-> 
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Aubrey Li <aubrey.li@linux.intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mark Gross <markgross@kernel.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
+---
+ drivers/platform/x86/asus-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/platform/x86/pmc_atom.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-> index 31cf25d25d66..b8b1ed1406de 100644
-> --- a/drivers/platform/x86/pmc_atom.c
-> +++ b/drivers/platform/x86/pmc_atom.c
-> @@ -221,7 +221,6 @@ int pmc_atom_read(int offset, u32 *value)
->  	*value = pmc_reg_read(pmc, offset);
->  	return 0;
->  }
-> -EXPORT_SYMBOL_GPL(pmc_atom_read);
->  
->  static void pmc_power_off(void)
->  {
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 0e7fbed8a50d..35fe9641ba9b 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -3114,7 +3114,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+ 
+ 	if (!sparse_keymap_report_event(asus->inputdev, code,
+ 					key_value, autorelease))
+-		pr_info("Unknown key %x pressed\n", code);
++		pr_info("Unknown key code 0x%x\n", code);
+ }
+ 
+ static void asus_wmi_notify(u32 value, void *context)
+-- 
+2.35.1
 
