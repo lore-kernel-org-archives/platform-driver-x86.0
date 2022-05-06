@@ -2,115 +2,116 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DBCC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 19:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB9DC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 19:06:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234158AbiEFTF5 (ORCPT
+        id S1388809AbiEFTKW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 May 2022 15:05:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44252 "EHLO
+        Fri, 6 May 2022 15:10:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232908AbiEFTF5 (ORCPT
+        with ESMTP id S245289AbiEFTKV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 May 2022 15:05:57 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E227868313;
-        Fri,  6 May 2022 12:02:12 -0700 (PDT)
-Received: from [127.0.0.1] (dynamic-002-247-254-212.2.247.pool.telefonica.de [2.247.254.212])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B87B01EC0426;
-        Fri,  6 May 2022 21:02:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1651863727;
+        Fri, 6 May 2022 15:10:21 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC262FD1A;
+        Fri,  6 May 2022 12:06:34 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1651863992;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=x8fVcWLqPFG6/0kPKgTD+h7VgiMOQivyi/yzrWDL31E=;
-        b=QcEfbINsxQXGmb/lPhWm6hiBU4SyfpGvhd0wkxxntZDP7ynpTevpNVvJIYEZzXegdL5Jhe
-        dYv/chRkNgyID97Ya33eCDNS4Dgk1/2xJWPpbp9ozV/xUeWODkGvV6HLMzbqchi7qIJfp9
-        kra0g1/NjXuMvYmH/3hRFkUuapJjZcc=
-Date:   Fri, 06 May 2022 19:02:03 +0000
-From:   Boris Petkov <bp@alien8.de>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Martin Fernandez <martin.fernandez@eclypsium.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, daniel.gutson@eclypsium.com,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, X86 ML <x86@kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        "Huang, Kai" <kai.huang@intel.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v8_0/8=5D_x86=3A_Show_in_sysfs_i?= =?US-ASCII?Q?f_a_memory_node_is_able_to_do_encryption?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <4bc56567-e2ce-40ec-19ab-349c8de8d969@intel.com>
-References: <20220429201717.1946178-1-martin.fernandez@eclypsium.com> <YnKr+aMf4PspDpHZ@zn.tnic> <CAKgze5YDD02AsrF0yESv2sptZ4qxyTMgCDmnOKcbQWjKQsJRsw@mail.gmail.com> <YnUYLDjIThbIz/Uf@zn.tnic> <6d90c832-af4a-7ed6-4f72-dae08bb69c37@intel.com> <CAPcyv4i73m6iPPfJE9CBdxf-OWGXahvGqvh6G-pqVO=3LB6ktQ@mail.gmail.com> <47140A56-D3F8-4292-B355-5F92E3BA9F67@alien8.de> <6abea873-52a2-f506-b21b-4b567bee1874@intel.com> <FDABC5C8-B80A-4977-9F97-5A8FC47F69D6@alien8.de> <4bc56567-e2ce-40ec-19ab-349c8de8d969@intel.com>
-Message-ID: <CE52D65A-C9F4-408D-B18A-72D87495A433@alien8.de>
+        bh=wxjZwQifAYdhM0J4VQYq2cjp3Wo71QrUD1AE1URfaSg=;
+        b=vOcUd/lmDHJJL+Wjm7RLEdKcEcChnT4ZknvyLz64mOH/YEleSdhoaACEWCfVrpMZf3A2am
+        Xyd7ivGV3f4PUKlHc9Z46RGJK4DMUAkgmDEBZlybFFaob76fScq/QSdbFGudmcwauravCz
+        vOS6gK9DMgTuoGviLkslDRGocC6PWKDkn9qxcoCnBMeKj/g0sbk8LAkGdlMH/YL2PQ9UUD
+        xxd/1a/oiEv1Af2UivDg66d0eQ1XtEAIZ8ljQT9SfOwCdbCyPpdsoWol7rd2OyC3LRe1WC
+        xhs30NLrjE0Ac4eiJCcLyftkzVrZzu7TdS8Nq0nhaHAxhMNBR+0UlZvSWdD+PQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1651863992;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wxjZwQifAYdhM0J4VQYq2cjp3Wo71QrUD1AE1URfaSg=;
+        b=p8bHn1UkvG9MTT6yYjW8yIhIvMPQ05zlVK7KctnyNqRnOmtOfthHCPxamNZoKpTvMHi0N8
+        /B8gZ//KBFrmRQDg==
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, corbet@lwn.net, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, rostedt@goodmis.org, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v6 08/11] platform/x86/intel/ifs: Add scan test support
+In-Reply-To: <YnVtvJgWU5KDnGSl@agluck-desk3.sc.intel.com>
+References: <20220428153849.295779-1-tony.luck@intel.com>
+ <20220506014035.1173578-1-tony.luck@intel.com>
+ <20220506014035.1173578-9-tony.luck@intel.com> <87r156hjpl.ffs@tglx>
+ <YnVtvJgWU5KDnGSl@agluck-desk3.sc.intel.com>
+Date:   Fri, 06 May 2022 21:06:32 +0200
+Message-ID: <87ee16h45j.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On May 6, 2022 6:43:39 PM UTC, Dave Hansen <dave=2Ehansen@intel=2Ecom> wrot=
-e:
->On 5/6/22 11:25, Boris Petkov wrote:
->> On May 6, 2022 6:14:00 PM UTC, Dave Hansen <dave=2Ehansen@intel=2Ecom>
->> wrote:
->>> But, this interface will *work* both for the uniform and
->>> non-uniform systems alike=2E
->> And what would that additional information that some "node" -
->> whatever "node" means nowadays - is not encrypted give you?
+On Fri, May 06 2022 at 11:49, Luck, Tony wrote:
+> On Fri, May 06, 2022 at 03:30:30PM +0200, Thomas Gleixner wrote:
+>> 1) How is that supposed to work on a system which has HT enabled in BIOS,
+>>    but disabled on the kernel command line or via /sys/..../smt/control or
+>>    when a HT sibling is offlined temporarily?
+>> 
+>>    I assume it cannot work, but I can't see anything which handles those
+>>    cases.
 >
->Tying it to the node ties it to the NUMA ABIs=2E  For instance, it lets
->you say: "allocate memory with encryption capabilities" with a
->set_mempolicy() to nodes that are enumerated as encryption-capable=2E
-
-I was expecting something along those lines=2E=2E=2E
-
->Imagine that we have a non-uniform system: some memory supports TDX (or
->SEV-SNP) and some doesn't=2E  QEMU calls mmap() to allocate some guest
->memory and then its ioctl()s to get its addresses stuffed into EPT/NPT=2E
-> The memory might be allocated from anywhere, CPU_CRYPTO-capable or not=
-=2E
-> VM creation will fail because the (hardware-enforced) security checks
->can't be satisfied on non-CPU_CRYPTO memory=2E
+> Correct. If HT is disabled in BIOS, then there is no other thread, so
+> core tests just use a single thread.
 >
->Userspace has no recourse to fix this=2E  It's just stuck=2E  In that cas=
-e,
-> the *kernel* needs to be responsible for ensuring that the backing
->physical memory supports TDX (or SEV)=2E
+> If a logical CPU is "offline" due to Linux actions, then core test will
+> fail. In an earlier version we did attempt to detect this before trying
+> to run the test. But we didn't find a simple way to determine that a
+> core has one thread online, and another offline. Rather than a bunch of
+> code to detect an operator error it seemed better to let it run &
+> fail.
+
+Fair enough.
+
+> GregKH wasn't a fan of this itty bitty driver cluttering up
+> Documentation/x86. He said:
 >
->This node attribute punts the problem back out to userspace=2E  It gives
->userspace the ability to steer allocations to compatible NUMA nodes=2E  I=
-f
->something goes wrong, they can use other NUMA ABIs to inspect the
->situation, like /proc/$pid/numa_maps=2E
+>    I don't know which is better, it's just that creating a whole new
+>    documentation file for a single tiny driver feels very odd as it will
+>    get out of date and is totally removed from the driver itself.
+>
+>    I'd prefer that drivers be self-contained, including the documentation,
+>    as it is much more obvious what is happening with that.  Spreading stuff
+>    around the tree only causes stuff to get out of sync easier.
 
-That's all fine and dandy but I still don't see the *actual*, real-life us=
-e case of why something would request memory of particular encryption capab=
-ilities=2E Don't get me wrong  - I'm not saying there are not such use case=
-s - I'm saying we should go all the way and fully define properly  *why* we=
-'re doing this whole hoopla=2E
+Well, I agree to some extent, but the documentation which I want to see
+is documentation for admins. I'm not sure whether we want them to search
+the code. Those are consumers of Documentation/ AFAICT.
 
-Remember - this all started with "i wanna say that mem enc is active" and =
-now we're so far deep down the rabbit hole=2E=2E=2E
+> So the documentation patch was dropped after v3. Last version here:
+>
+> https://lore.kernel.org/r/20220419163859.2228874-3-tony.luck@intel.com
+>
+> That doc would need pathnames updated to match the move from a platform
+> device to a virtual misc device. But otherwise seems still accurate.
+>
+> Does that cover what you want from documentation for this driver
+> (wherever it gets located in the tree)? Are you looking for more?
 
---=20
-Sent from a small device: formatting sux and brevity is inevitable=2E 
+It's pretty detailed on the inner workings, but lacks a big fat warning
+for the admin vs. the impact, i.e. that it makes the core go out for
+lunch for a while, which has consequences on workloads and interrupts
+directed at that core. Plus some explanation vs. the HT (SMT=off, soft
+offline) case above. Similar to what we have e.g. for buslocks.
+
+Thanks,
+
+        tglx
+
