@@ -2,142 +2,184 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8549C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 May 2022 21:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2AEC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 01:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1386116AbiEEWBa (ORCPT
+        id S1387984AbiEFBo1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 May 2022 18:01:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50242 "EHLO
+        Thu, 5 May 2022 21:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233742AbiEEWB1 (ORCPT
+        with ESMTP id S1387983AbiEFBo0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 May 2022 18:01:27 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A41F5C743;
-        Thu,  5 May 2022 14:57:46 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id h10-20020a056830400a00b00605e92cc450so3792859ots.11;
-        Thu, 05 May 2022 14:57:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=509K5q5w5Q3BFRAS70sMGRGeHF3csETOGikobOSYWkA=;
-        b=LcETCIlYbzQXR/6AbUW4QFk5oDcrtbVpfcfzZn3fbYshQ2015TOgGQhFJOtkcd+YSX
-         phcvx3bBu26ZpQzb97JQZ4JiLyZ5CF4uUch7kIeTQl79ygztbGw56OBNbRdRaRkz+0Ff
-         zPCinQils9bxU6DCWRsSG8xQIXAgAvpoQvwGf2Euv9+2UTU48bwfWDCsVPrZIjPHINNY
-         n/RrGeq3w69tT/We5ftF12W8SRFUc51N7w6ouPZAUYVj2+45fs5B0s6A2csCpkbHEUGS
-         eqsXFyg8MsOFDToe8ZCrfzBkGB26yaoZ+ZPvx+CDY5ezQ+8oia++R1X39/U0zQeHsjhD
-         n0DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=509K5q5w5Q3BFRAS70sMGRGeHF3csETOGikobOSYWkA=;
-        b=xXpvMmZsjVaZQnyJAtp4N+1MwM8ssAmMA9qSzA3lA7PjDic48YK4JaM+ttgOfSN4KV
-         RgbX24GGPq+H7K6zumhX7kzc5JunOMQF6KOTyWMHS6O7eV5dh+1fWgu933G4kcTF749Y
-         dua6jyQNnZ6LbY1v1MzFXTFQv1OKafGoLc9EgCkF+kwC8yG7M2jQaFkYItbsGhbExy8X
-         3Bnil6cf3p17mbTXSVCXJivpFHFFfR/JSFMRcoaThGsgv1o5dyZF71TCzRg0r1xedUX7
-         sg/OrnkJuyREVnM6p58eyxQAgW3tViZQsW3hkEuqqqWFEfxbBnkYGij980ic1zZFpGCL
-         ig/A==
-X-Gm-Message-State: AOAM531sDlZlbO7FJoIxvtzdSpPqzSduSf0bwHOa59967u0bV+FthXcW
-        Mty51X+cfR5rfOfBM3jqewU=
-X-Google-Smtp-Source: ABdhPJydUKSEZXQ8aX/lXkp0HXnuTHboM/MSlzYxQ2HDDlSpXRQkkGTPYfsEsUuJM+u7vm5tDhsnbw==
-X-Received: by 2002:a9d:2ab:0:b0:605:6c58:668c with SMTP id 40-20020a9d02ab000000b006056c58668cmr107150otl.284.1651787865415;
-        Thu, 05 May 2022 14:57:45 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r1-20020a056870e98100b000e686d13890sm900678oao.42.2022.05.05.14.57.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 May 2022 14:57:44 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Thu, 5 May 2022 14:57:43 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
-Subject: Re: [PATCH 0/2] simatic-ipc additions to p2sb apl lake gpio
-Message-ID: <20220505215743.GE1988936@roeck-us.net>
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
- <20220308193522.26696-1-henning.schild@siemens.com>
- <YnJ2tYjCpJi7yc4j@smile.fi.intel.com>
- <20220504171951.0d569632@md1za8fc.ad001.siemens.net>
+        Thu, 5 May 2022 21:44:26 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E1D457131;
+        Thu,  5 May 2022 18:40:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651801244; x=1683337244;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=RLvHL8anf2YkJtlMQuHsQJoDiZbnI5hToTtaX6fMmgM=;
+  b=hRJlILKZJueGB3gryV2JQByW7DQRT/DePilbnfjHBejW7C8/uxxoB+ax
+   TnziYG7bUO8Z2sAqttN9V9bSHsXUs2jdkFHCU7//Egppfech6ERX4CBF6
+   VdcWqVzeUF3O8W+MnaF8gBU0qCcueQoi6I/qK4+0THxUsVs6HrfMaCLGd
+   QmZ0vmMFw6HLspKnI4oXouGbLZt3ouOLPVA/L8YptMIkesDW+RKZqkLEk
+   t2kVItYtGbLnHwgBnUe63/5I5tRt2OX8V9SIZE6MjhQG2H5ZbFjdMsB06
+   OHqO0zPpdeEauTVgMrrop55+L804bsDdqxFH8wyc+VsRVcokt9yd4Ckg+
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="293519422"
+X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
+   d="scan'208";a="293519422"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 18:40:44 -0700
+X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
+   d="scan'208";a="537645006"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 18:40:43 -0700
+From:   Tony Luck <tony.luck@intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        corbet@lwn.net, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com, rostedt@goodmis.org,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com
+Subject: [PATCH v6 00/11] Introduce In Field Scan driver
+Date:   Thu,  5 May 2022 18:40:24 -0700
+Message-Id: <20220506014035.1173578-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220428153849.295779-1-tony.luck@intel.com>
+References: <20220428153849.295779-1-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220504171951.0d569632@md1za8fc.ad001.siemens.net>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, May 04, 2022 at 05:19:51PM +0200, Henning Schild wrote:
-> Am Wed, 4 May 2022 15:51:01 +0300
-> schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
-> 
-> > On Tue, Mar 08, 2022 at 08:35:20PM +0100, Henning Schild wrote:
-> > > This switches the simatic-ipc modules to using the p2sb interface
-> > > introduced by Andy with "platform/x86: introduce p2sb_bar() helper".
-> > > 
-> > > It also switches to one apollo lake device to using gpio leds.
-> > > 
-> > > I am kind of hoping Andy will take this on top and propose it in his
-> > > series.  
-> > 
-> > First of all, they are not applicable to my current version [1] of
-> > the series (it maybe something changed in the Simatic drivers
-> > upstream, because I have got conflicts there. For the record, I'm
-> > using Linux Next as a base.
-> 
-> That is possible, some sparse findings have been fixed lately.
-> 
-> > Second question is could it be possible to split first patch into
-> > three, or it has to be in one?
-> 
-> I assume one for leds one for wdt and finally drop stuff from platform,
-> and i will go with that assumption for a next round based on your tree
-> directly.
-> Can you explain why that will be useful? While it is kind of a
-> separation of concerns and subsystems ... it also kind of all belongs
-> together and needs to be merged in a rather strict order.
-> 
+TL;DR this driver loads scan test files that can check whether silicon
+in a CPU core is still running correctly. It is expected that these tests
+would be run several times per day to catch problems as silicon ages.
 
-That is not really correct. It should be possible to split
-the patches and only remove simatic_ipc_get_membase0() after the
-other patches have been applied.
+Changes since v5:
 
-On a side note, neither subject nor description of patch 1/2
-mention that the patch touches both LED and watchdog code, which
-is at the very least bad style.
+Added various Reviewed tags. If anyone wants to take one or more
+back in the light of changes listed below, please speak up.
 
-Guenter
+Thomas Gleixner
+---------------
+03 "So checking for Intel Fam6 ANYMODEL and X86_FEATURE_CORE_CAPABILITIES is
+ sufficient, no?"
 
-> regards,
-> Henning
-> 
-> > [1]: https://gitlab.com/andy-shev/next/-/tree/topic/p2sb-next
-> > It would be nice if you can perform another round of testing.
-> > 
-> > > Henning Schild (2):
-> > >   simatic-ipc: convert to use common P2SB accessor
-> > >   leds: simatic-ipc-leds-gpio: add GPIO version of Siemens driver
-> > > 
-> > >  drivers/leds/simple/Kconfig                   |  11 ++
-> > >  drivers/leds/simple/Makefile                  |   3 +-
-> > >  drivers/leds/simple/simatic-ipc-leds-gpio.c   | 108
-> > > ++++++++++++++++++ drivers/leds/simple/simatic-ipc-leds.c        |
-> > > 77 +------------ drivers/platform/x86/simatic-ipc.c            |
-> > > 43 +------ drivers/watchdog/Kconfig                      |   1 +
-> > >  drivers/watchdog/simatic-ipc-wdt.c            |  15 +--
-> > >  .../platform_data/x86/simatic-ipc-base.h      |   2 -
-> > >  8 files changed, 139 insertions(+), 121 deletions(-)
-> > >  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio.c
-> > > 
-> > > -- 
-> > > 2.34.1
-> > >   
-> > 
-> 
+Longer explanation in earlier e-mail ... but the family/model/stepping
+check is needed. No change.
+
+04 "Why is ifs_load_firmware() not returning an error to the caller?"
+
+In most cases the return isn't useful. But this did prompt a change
+to make sure "echo 1 > reload" does give an error if the load fails.
+
+05 "The above struct is nicely tabular. Can we have that here too please?"
+
+Added <TAB>s to ifs_data structure to make it equally pretty.
+
+06 "Setting the authenticated indicator _before_ actually doing the
+authentication is just wrong. It does not matter in this case, but it's
+still making my eyes bleed."
+
+Moved indicator to after success has been checked.
+
+06 "Why has this to be a smp function call? Just because it's conveniant?
+This is nothing urgent and no hotpath, so this really can use
+queue_work_on()."
+
+Even simpler is schedule_work_on() [since other changes mean that
+the driver no longer allocates a work queue.
+
+
+07 "Waiting for a second with preemption disabled? Seriously?"
+   "Plus another half a second with preemption disabled. That's just insane."
+   "That local_irq_disable() solves what?"
+   "Why cpu_hotplug_disable()? Why is cpus_read_lock() not sufficient here?"
+   "Why does this need GFP_NOWAIT?"
+   "I put that into the wishful thinking realm"
+   "The real question is why you try to rendevouz CPUs via work queues."
+   "pseudo-code to use stomp_machine()"
+
+PeterZ contributed a neatly tailored for this usage "stop_core_cpuslocked()"
+function that works beautifully. See part 0003 of this new series. That
+meant all of the code that triggered the above comments has gone.
+
+Tony Luck
+---------
+Noticed unnecessary casts from u8 to u32 in the checksum calculation
+in load.c. Fixed.
+
+Changed the tracepoint to include the CPU number of the core being
+tested (the tracepoint otherwise just tells you which CPU is executing
+the driver code and executing "stop_core_cpuslocked()" to do the actual
+work on the target CPUs.
+
+Dropped the msec_to_tsc() function that was used to initialize
+activate.delay. Just use a #define of 100000 cycles (two orders
+of magnitude bigger than I saw for the slew between the two threads
+executing the "stop_core_cpuslocked()" target function ... but not
+too insane so if the threads do not sync, we give up quickly).
+
+
+
+Jithu Joseph (7):
+  x86/microcode/intel: Expose collect_cpu_info_early() for IFS
+  platform/x86/intel/ifs: Read IFS firmware image
+  platform/x86/intel/ifs: Check IFS Image sanity
+  platform/x86/intel/ifs: Authenticate and copy to secured memory
+  platform/x86/intel/ifs: Add scan test support
+  platform/x86/intel/ifs: Add IFS sysfs interface
+  platform/x86/intel/ifs: add ABI documentation for IFS
+
+Peter Zijlstra (1):
+  stop_machine: Add stop_core_cpuslocked() for per-core operations
+
+Tony Luck (3):
+  x86/msr-index: Define INTEGRITY_CAPABILITIES MSR
+  platform/x86/intel/ifs: Add stub driver for In-Field Scan
+  trace: platform/x86/intel/ifs: Add trace point to track Intel IFS
+    operations
+
+ .../ABI/testing/sysfs-platform-intel-ifs      |  39 +++
+ MAINTAINERS                                   |   8 +
+ arch/x86/include/asm/cpu.h                    |  18 ++
+ arch/x86/include/asm/msr-index.h              |   7 +
+ arch/x86/kernel/cpu/intel.c                   |  32 +++
+ arch/x86/kernel/cpu/microcode/intel.c         |  59 +---
+ drivers/platform/x86/intel/Kconfig            |   1 +
+ drivers/platform/x86/intel/Makefile           |   1 +
+ drivers/platform/x86/intel/ifs/Kconfig        |  13 +
+ drivers/platform/x86/intel/ifs/Makefile       |   3 +
+ drivers/platform/x86/intel/ifs/core.c         |  74 +++++
+ drivers/platform/x86/intel/ifs/ifs.h          | 124 ++++++++
+ drivers/platform/x86/intel/ifs/load.c         | 266 ++++++++++++++++++
+ drivers/platform/x86/intel/ifs/runtest.c      | 255 +++++++++++++++++
+ drivers/platform/x86/intel/ifs/sysfs.c        | 149 ++++++++++
+ include/linux/stop_machine.h                  |  16 ++
+ include/trace/events/intel_ifs.h              |  41 +++
+ kernel/stop_machine.c                         |  19 ++
+ 18 files changed, 1073 insertions(+), 52 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-intel-ifs
+ create mode 100644 drivers/platform/x86/intel/ifs/Kconfig
+ create mode 100644 drivers/platform/x86/intel/ifs/Makefile
+ create mode 100644 drivers/platform/x86/intel/ifs/core.c
+ create mode 100644 drivers/platform/x86/intel/ifs/ifs.h
+ create mode 100644 drivers/platform/x86/intel/ifs/load.c
+ create mode 100644 drivers/platform/x86/intel/ifs/runtest.c
+ create mode 100644 drivers/platform/x86/intel/ifs/sysfs.c
+ create mode 100644 include/trace/events/intel_ifs.h
+
+
+base-commit: 672c0c5173427e6b3e2a9bbb7be51ceeec78093a
+-- 
+2.35.1
+
