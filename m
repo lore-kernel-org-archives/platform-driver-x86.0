@@ -2,161 +2,179 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A0BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 12:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D446AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 13:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1392131AbiEFMvQ (ORCPT
+        id S1378482AbiEFNe3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 May 2022 08:51:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49728 "EHLO
+        Fri, 6 May 2022 09:34:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245378AbiEFMvQ (ORCPT
+        with ESMTP id S1392614AbiEFNeR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 May 2022 08:51:16 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39A8733E1C;
-        Fri,  6 May 2022 05:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651841253; x=1683377253;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lgRANVpIeYbETu3AmcMFp1S7V1/cZNNLTeeu8Vwuz7k=;
-  b=K8fxmXhj7zMxjiI0h3kDihLUorFMXsHQzUU9zwoG3icseoIzc0MWb9pO
-   eggcnKTpW3vaGaXaULG65586eRR4k27YbN3iN6BrRYWexONOUV3mW7dT+
-   9rYaiLtU5JID0n1Qgn8YaTg0SIE5BrIXOXf3Zng+YSJhhe215RW1whosQ
-   Wo39u4i6evVuPBao+25Go8bO6tWbJA0N01wL8OiTQLQ70C/GdB9kkVbMz
-   XpJXZkjXyVRAZOd1VT0xOgGcB6PzTl/7iVVmS/uLcx8iI+wDpXB+5QUwB
-   zb9y4hra7fSDHGh5RlFg/ZTegiOp9Yrg9Cod1bmRQP2aZDfM1a1zjghpy
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="267295609"
-X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
-   d="scan'208";a="267295609"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2022 05:47:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
-   d="scan'208";a="518024373"
-Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 06 May 2022 05:47:25 -0700
-Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nmxMi-000DTo-H2;
-        Fri, 06 May 2022 12:47:24 +0000
-Date:   Fri, 6 May 2022 20:47:07 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <eballetbo@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     kbuild-all@lists.01.org, usama.anjum@collabora.com,
-        Collabora Kernel ML <kernel@collabora.com>,
-        groeck@chromium.org, dtor@chromium.org, gwendal@chromium.org,
-        vbendeb@chromium.org, andy@infradead.org,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v9] platform/chrome: Add ChromeOS ACPI device driver
-Message-ID: <202205062057.LDuKncYN-lkp@intel.com>
-References: <YnTw/iQ1Asjjmsb9@debian-BULLSEYE-live-builder-AMD64>
+        Fri, 6 May 2022 09:34:17 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 546BADEFF;
+        Fri,  6 May 2022 06:30:32 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1651843830;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wZT4vpKjh29qyIrnPoc3fuhpC7Rcupj4xp4jJbaitm0=;
+        b=lyxMJI1c7/bjcUC/0uaoPfrBDisjmcy1aRbtVcCUe6jpvyqZHJ+GJQrLENoe/pP6ncW2c7
+        Kc4G8e56XxkYdHFGvIkaVRECgrnS4YpoTsGvQralepmfGpDBMEwpd8xCqjfIUFJsbRXKTk
+        4yOrW/Dx9bRWOesgwhTLoiJ8fD6AYpm1QwwYbjBzN/EN4sfzqbcr5NaKkfUKFMCuPYB16P
+        P6Sxwp8Bh9bali6WmcfkHJxKIrmURPZKmrYQPhX/TFRdI0q5EdI01y9PQAr9KyF5N72wIy
+        5KOACG4W6wOSeJzT3gfwX3CDcPgYifckyM8ppFWWQKqxcP6un1C1lSYwOyrEYw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1651843830;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wZT4vpKjh29qyIrnPoc3fuhpC7Rcupj4xp4jJbaitm0=;
+        b=y14yn9YwzJ+hhYfkB0MjQdCOMV74S1yrsUYx4GjRmexAl8grOu5L+7DELCDn8g4FMCqTGw
+        AREyL5xsCBUtO3Ag==
+To:     Tony Luck <tony.luck@intel.com>, hdegoede@redhat.com,
+        markgross@kernel.org
+Cc:     mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, corbet@lwn.net,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        jithu.joseph@intel.com, ashok.raj@intel.com, tony.luck@intel.com,
+        rostedt@goodmis.org, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v6 08/11] platform/x86/intel/ifs: Add scan test support
+In-Reply-To: <20220506014035.1173578-9-tony.luck@intel.com>
+References: <20220428153849.295779-1-tony.luck@intel.com>
+ <20220506014035.1173578-1-tony.luck@intel.com>
+ <20220506014035.1173578-9-tony.luck@intel.com>
+Date:   Fri, 06 May 2022 15:30:30 +0200
+Message-ID: <87r156hjpl.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YnTw/iQ1Asjjmsb9@debian-BULLSEYE-live-builder-AMD64>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Muhammad,
+On Thu, May 05 2022 at 18:40, Tony Luck wrote:
+> +/*
+> + * Note all code and data in this file is protected by
+> + * ifs_sem. On HT systems all threads on a core will
+> + * execute together, but only the first thread on the
+> + * core will update results of the test.
+> + */
+> +struct workqueue_struct *ifs_wq;
 
-I love your patch! Perhaps something to improve:
+Seems to be unused.
 
-[auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on chrome-platform/for-next v5.18-rc5 next-20220506]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+> +static bool oscan_enabled = true;
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Muhammad-Usama-Anjum/platform-chrome-Add-ChromeOS-ACPI-device-driver/20220506-175951
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-config: arc-allyesconfig (https://download.01.org/0day-ci/archive/20220506/202205062057.LDuKncYN-lkp@intel.com/config)
-compiler: arceb-elf-gcc (GCC) 11.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/4f6407962feddc57bc7c80e5b29d5d339a1dba6c
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Muhammad-Usama-Anjum/platform-chrome-Add-ChromeOS-ACPI-device-driver/20220506-175951
-        git checkout 4f6407962feddc57bc7c80e5b29d5d339a1dba6c
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash drivers/platform/chrome/
+What changes this?
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+> +static void message_not_tested(struct device *dev, int cpu, union ifs_status status)
+> +{
+> +	if (status.error_code < ARRAY_SIZE(scan_test_status))
 
-All warnings (new ones prefixed by >>):
+Please add curly brackets as these are not one-line statements.
 
-   In file included from include/linux/device.h:15,
-                    from include/linux/acpi.h:15,
-                    from drivers/platform/chrome/chromeos_acpi.c:13:
-   drivers/platform/chrome/chromeos_acpi.c: In function 'chromeos_acpi_device_probe':
->> drivers/platform/chrome/chromeos_acpi.c:253:40: warning: format '%ld' expects argument of type 'long int', but argument 3 has type 'unsigned int' [-Wformat=]
-     253 |                 dev_warn(&(pdev->dev), "Only %ld GPIO attr groups supported by the driver out of total %d.\n",
-         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dev_printk.h:110:30: note: in definition of macro 'dev_printk_index_wrap'
-     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-         |                              ^~~
-   include/linux/dev_printk.h:146:61: note: in expansion of macro 'dev_fmt'
-     146 |         dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |                                                             ^~~~~~~
-   drivers/platform/chrome/chromeos_acpi.c:253:17: note: in expansion of macro 'dev_warn'
-     253 |                 dev_warn(&(pdev->dev), "Only %ld GPIO attr groups supported by the driver out of total %d.\n",
-         |                 ^~~~~~~~
-   drivers/platform/chrome/chromeos_acpi.c:253:48: note: format string is defined here
-     253 |                 dev_warn(&(pdev->dev), "Only %ld GPIO attr groups supported by the driver out of total %d.\n",
-         |                                              ~~^
-         |                                                |
-         |                                                long int
-         |                                              %d
-   At top level:
-   drivers/platform/chrome/chromeos_acpi.c:259:36: warning: 'chromeos_device_ids' defined but not used [-Wunused-const-variable=]
-     259 | static const struct acpi_device_id chromeos_device_ids[] = {
-         |                                    ^~~~~~~~~~~~~~~~~~~
+> +		dev_info(dev, "CPU(s) %*pbl: SCAN operation did not start. %s\n",
+> +			 cpumask_pr_args(topology_sibling_cpumask(cpu)),
+> +			 scan_test_status[status.error_code]);
+> +/*
+> + * Execute the scan. Called "simultaneously" on all threads of a core
+> + * at high priority using the stop_cpus mechanism.
+> + */
+> +static int doscan(void *data)
+> +{
+> +	int cpu = smp_processor_id();
+> +	u64 *msrs = data;
+> +	int first;
+> +
+> +	/* Only the first logical CPU on a core reports result */
+> +	first = cpumask_first(topology_sibling_cpumask(cpu));
 
+Shouldn't that be cpu_smt_mask()?
 
-vim +253 drivers/platform/chrome/chromeos_acpi.c
+> +	/*
+> +	 * This WRMSR will wait for other HT threads to also write
+> +	 * to this MSR (at most for activate.delay cycles). Then it
+> +	 * starts scan of each requested chunk. The core scan happens
+> +	 * during the "execution" of the WRMSR. This instruction can
+> +	 * take up to 200 milliseconds before it retires.
 
-   244	
-   245	static int chromeos_acpi_device_probe(struct platform_device *pdev)
-   246	{
-   247		chromeos_acpi_gpio_groups = get_gpio_pkg_num(&pdev->dev);
-   248	
-   249		/* If platform has more GPIO attribute groups than the number of
-   250		 * groups this driver supports, give out a warning message.
-   251		 */
-   252		if (chromeos_acpi_gpio_groups > (ARRAY_SIZE(chromeos_acpi_all_groups) - 2))
- > 253			dev_warn(&(pdev->dev), "Only %ld GPIO attr groups supported by the driver out of total %d.\n",
-   254				 (ARRAY_SIZE(chromeos_acpi_all_groups) - 2), chromeos_acpi_gpio_groups);
-   255		return 0;
-   256	}
-   257	
+200ms per test chunk?
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> +	 */
+> +	wrmsrl(MSR_ACTIVATE_SCAN, msrs[0]);
+> +
+
+> +	while (activate.start <= activate.stop) {
+> +		if (time_after(jiffies, timeout)) {
+> +			status.error_code = IFS_SW_TIMEOUT;
+> +			break;
+> +		}
+> +
+> +		msrvals[0] = activate.data;
+> +		stop_core_cpuslocked(cpu, doscan, msrvals);
+> +
+> +		status.data = msrvals[1];
+> +
+> +		/* Some cases can be retried, give up for others */
+> +		if (!can_restart(status))
+> +			break;
+> +
+> +		if (status.chunk_num == activate.start) {
+> +			/* Check for forward progress */
+> +			if (retries-- == 0) {
+> +				if (status.error_code == IFS_NO_ERROR)
+> +					status.error_code = IFS_SW_PARTIAL_COMPLETION;
+> +				break;
+> +			}
+> +		} else {
+> +			retries = MAX_IFS_RETRIES;
+> +			activate.start = status.chunk_num;
+> +		}
+> +	}
+
+Looks way better now.
+
+> +}
+> +/*
+> + * Initiate per core test. It wakes up work queue threads on the target cpu and
+> + * its sibling cpu. Once all sibling threads wake up, the scan test gets executed and
+> + * wait for all sibling threads to finish the scan test.
+> + */
+> +int do_core_test(int cpu, struct device *dev)
+> +{
+> +	int ret = 0;
+> +
+> +	if (!scan_enabled)
+> +		return -ENXIO;
+> +
+> +	/* Prevent CPUs from being taken offline during the scan test */
+> +	cpus_read_lock();
+> +
+> +	if (!cpu_online(cpu)) {
+> +		dev_info(dev, "cannot test on the offline cpu %d\n", cpu);
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+
+Coming back to my points from the previous round:
+
+1) How is that supposed to work on a system which has HT enabled in BIOS,
+   but disabled on the kernel command line or via /sys/..../smt/control or
+   when a HT sibling is offlined temporarily?
+
+   I assume it cannot work, but I can't see anything which handles those
+   cases.
+
+2) That documentation for the admin/user got eaten by the gremlins in
+   the intertubes again.
+
+Thanks,
+
+        tglx
