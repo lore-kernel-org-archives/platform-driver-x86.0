@@ -2,125 +2,235 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE99CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 May 2022 22:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906C6C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  7 May 2022 01:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1444857AbiEFW6R (ORCPT
+        id S1356424AbiEGB1D (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 May 2022 18:58:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35156 "EHLO
+        Fri, 6 May 2022 21:27:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1444833AbiEFW6J (ORCPT
+        with ESMTP id S236738AbiEGB1D (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 May 2022 18:58:09 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 876FB6D384;
-        Fri,  6 May 2022 15:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651877662; x=1683413662;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Y6AdNcL23AXH/PwccmO/lGBoL6djloRm+NY0sn6Dk+I=;
-  b=d3p+pljmgabS3M4D9wAHh1Dz1nvuPZkOt/zqgq7to0SdT1yJgXp4Hn9D
-   bnOa9gGtcF9qhCTLD9rMmYMo3+NJjNVCOrKmum3Rj2T2TXFDqsPF15Ic/
-   T2OXOtNPXzq0HWvFvijKnv559b0s1YEqB73Z+2jVctoTYIEyX0hAyLIpn
-   jSbKlCIFEvq68wmBQry+5gDzVBHLKAaaF1kseU25/u/IpY27peiWETwMm
-   gGP3yVhCS4t9xLEye93Fe4rIr+jLGFop6HsBFhQMwb3Pfq4Z3luFyERkC
-   Mimgmjv/O1VArCZ1yluxaY9bUpBW+zeaWDffxoKxlHSG/Ty3bnYWV2we1
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10339"; a="256080809"
-X-IronPort-AV: E=Sophos;i="5.91,205,1647327600"; 
-   d="scan'208";a="256080809"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2022 15:54:21 -0700
-X-IronPort-AV: E=Sophos;i="5.91,205,1647327600"; 
-   d="scan'208";a="695383650"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2022 15:54:21 -0700
-From:   Tony Luck <tony.luck@intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        corbet@lwn.net, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
-        ashok.raj@intel.com, tony.luck@intel.com, rostedt@goodmis.org,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@lists.linux.dev, ravi.v.shankar@intel.com
-Subject: [PATCH v7 11/12] platform/x86/intel/ifs: add ABI documentation for IFS
-Date:   Fri,  6 May 2022 15:54:09 -0700
-Message-Id: <20220506225410.1652287-12-tony.luck@intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220506225410.1652287-1-tony.luck@intel.com>
-References: <20220506014035.1173578-1-tony.luck@intel.com>
- <20220506225410.1652287-1-tony.luck@intel.com>
+        Fri, 6 May 2022 21:27:03 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD721A074;
+        Fri,  6 May 2022 18:23:16 -0700 (PDT)
+Received: from dggpeml500021.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Kw8kj5qmCzGpXk;
+        Sat,  7 May 2022 09:20:29 +0800 (CST)
+Received: from dggpeml500008.china.huawei.com (7.185.36.147) by
+ dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 7 May 2022 09:23:14 +0800
+Received: from [127.0.0.1] (10.67.111.83) by dggpeml500008.china.huawei.com
+ (7.185.36.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Sat, 7 May
+ 2022 09:23:14 +0800
+Message-ID: <c395bed5-8701-de91-feaf-ceeda95702e3@huawei.com>
+Date:   Sat, 7 May 2022 09:23:14 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH -next] platform/x86: amd-pmc: Fix build error
+ unused-function
+To:     Hans de Goede <hdegoede@redhat.com>, <Shyam-sundar.S-k@amd.com>,
+        <markgross@kernel.org>
+CC:     <weiyongjun1@huawei.com>, <yuehaibing@huawei.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20220505121958.138905-1-renzhijie2@huawei.com>
+ <f73836d2-913a-87c1-af44-56429ffcb963@redhat.com>
+From:   Ren Zhijie <renzhijie2@huawei.com>
+In-Reply-To: <f73836d2-913a-87c1-af44-56429ffcb963@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.83]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500008.china.huawei.com (7.185.36.147)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Jithu Joseph <jithu.joseph@intel.com>
 
-Add the sysfs attributes in ABI/testing for In-Field Scan.
+在 2022/5/6 18:37, Hans de Goede 写道:
+> Hi,
+>
+> On 5/5/22 14:19, Ren Zhijie wrote:
+>> If CONFIG_SUSPEND and CONFIG_DEBUG_FS are not set.
+>>
+>> compile error:
+>> drivers/platform/x86/amd-pmc.c:323:12: error: ‘get_metrics_table’ defined but not used [-Werror=unused-function]
+>>   static int get_metrics_table(struct amd_pmc_dev *pdev, struct smu_metrics *table)
+>>              ^~~~~~~~~~~~~~~~~
+>> drivers/platform/x86/amd-pmc.c:298:12: error: ‘amd_pmc_idlemask_read’ defined but not used [-Werror=unused-function]
+>>   static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
+>>              ^~~~~~~~~~~~~~~~~~~~~
+>> drivers/platform/x86/amd-pmc.c:196:12: error: ‘amd_pmc_get_smu_version’ defined but not used [-Werror=unused-function]
+>>   static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
+>>              ^~~~~~~~~~~~~~~~~~~~~~~
+>> cc1: all warnings being treated as errors
+>>
+>> To fix building warning, wrap all related code with CONFIG_SUSPEND or CONFIG_DEBUG_FS.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: Ren Zhijie <renzhijie2@huawei.com>
+> Thanks for the patch, the issue with amd_pmc_get_smu_version() not being
+> wrapped in #ifdef CONFIG_DEBUG_FS was already fixed by:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=for-next&id=acd51562e07d17aaf4ac652f1dc55c743685bf41
+>
+> Moving amd_pmc_setup_smu_logging + amd_pmc_idlemask_read +
+> get_metrics_table under:
+>
+> #if defined(CONFIG_SUSPEND) || defined(CONFIG_DEBUG_FS)
+>
+> is still necessary though, so I've merged that part of your patch:
+>
+> Thank you for your patch, I've applied this patch to my review-hans
+> branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+>
+> Note it will show up in my review-hans branch once I've pushed my
+> local branch there, which might take a while.
+>
+> Once I've run some tests on this branch the patches there will be
+> added to the platform-drivers-x86/for-next branch and eventually
+> will be included in the pdx86 pull-request to Linus for the next
+> merge-window.
+>
+> Regards,
+>
+> Hans
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-Co-developed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- .../ABI/testing/sysfs-platform-intel-ifs      | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-intel-ifs
+Glad that I could help
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-intel-ifs b/Documentation/ABI/testing/sysfs-platform-intel-ifs
-new file mode 100644
-index 000000000000..486d6d2ff8a0
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-intel-ifs
-@@ -0,0 +1,39 @@
-+What:		/sys/devices/virtual/misc/intel_ifs_<N>/run_test
-+Date:		April 21 2022
-+KernelVersion:	5.19
-+Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
-+Description:	Write <cpu#> to trigger IFS test for one online core.
-+		Note that the test is per core. The cpu# can be
-+		for any thread on the core. Running on one thread
-+		completes the test for the core containing that thread.
-+		Example: to test the core containing cpu5: echo 5 >
-+		/sys/devices/platform/intel_ifs.<N>/run_test
-+
-+What:		/sys/devices/virtual/misc/intel_ifs_<N>/status
-+Date:		April 21 2022
-+KernelVersion:	5.19
-+Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
-+Description:	The status of the last test. It can be one of "pass", "fail"
-+		or "untested".
-+
-+What:		/sys/devices/virtual/misc/intel_ifs_<N>/details
-+Date:		April 21 2022
-+KernelVersion:	5.19
-+Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
-+Description:	Additional information regarding the last test. The details file reports
-+		the hex value of the SCAN_STATUS MSR. Note that the error_code field
-+		may contain driver defined software code not defined in the Intel SDM.
-+
-+What:		/sys/devices/virtual/misc/intel_ifs_<N>/image_version
-+Date:		April 21 2022
-+KernelVersion:	5.19
-+Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
-+Description:	Version (hexadecimal) of loaded IFS binary image. If no scan image
-+		is loaded reports "none".
-+
-+What:		/sys/devices/virtual/misc/intel_ifs_<N>/reload
-+Date:		April 21 2022
-+KernelVersion:	5.19
-+Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
-+Description:	Write "1" (or "y" or "Y") to reload the IFS image from
-+		/lib/firmware/intel/ifs/ff-mm-ss.scan.
--- 
-2.35.1
+Regards,
+
+Ren
+
+>
+>> ---
+>>   drivers/platform/x86/amd-pmc.c | 72 ++++++++++++++++++----------------
+>>   1 file changed, 39 insertions(+), 33 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+>> index 668a1d6c11ee..8f004673b23f 100644
+>> --- a/drivers/platform/x86/amd-pmc.c
+>> +++ b/drivers/platform/x86/amd-pmc.c
+>> @@ -164,7 +164,6 @@ static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
+>>   #ifdef CONFIG_SUSPEND
+>>   static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
+>>   #endif
+>> -static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev);
+>>   
+>>   static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
+>>   {
+>> @@ -193,6 +192,7 @@ struct smu_metrics {
+>>   	u64 timecondition_notmet_totaltime[SOC_SUBSYSTEM_IP_MAX];
+>>   } __packed;
+>>   
+>> +#ifdef CONFIG_DEBUG_FS
+>>   static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
+>>   {
+>>   	int rc;
+>> @@ -212,6 +212,7 @@ static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
+>>   
+>>   	return 0;
+>>   }
+>> +#endif /* CONFIG_DEBUG_FS */
+>>   
+>>   static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
+>>   {
+>> @@ -295,6 +296,9 @@ static const struct file_operations amd_pmc_stb_debugfs_fops_v2 = {
+>>   	.release = amd_pmc_stb_debugfs_release_v2,
+>>   };
+>>   
+>> +#if defined(CONFIG_SUSPEND) || defined(CONFIG_DEBUG_FS)
+>> +static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev);
+>> +
+>>   static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
+>>   				 struct seq_file *s)
+>>   {
+>> @@ -335,6 +339,40 @@ static int get_metrics_table(struct amd_pmc_dev *pdev, struct smu_metrics *table
+>>   	return 0;
+>>   }
+>>   
+>> +static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
+>> +{
+>> +	if (dev->cpu_id == AMD_CPU_ID_PCO) {
+>> +		dev_warn_once(dev->dev, "SMU debugging info not supported on this platform\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/* Get Active devices list from SMU */
+>> +	if (!dev->active_ips)
+>> +		amd_pmc_send_cmd(dev, 0, &dev->active_ips, SMU_MSG_GET_SUP_CONSTRAINTS, 1);
+>> +
+>> +	/* Get dram address */
+>> +	if (!dev->smu_virt_addr) {
+>> +		u32 phys_addr_low, phys_addr_hi;
+>> +		u64 smu_phys_addr;
+>> +
+>> +		amd_pmc_send_cmd(dev, 0, &phys_addr_low, SMU_MSG_LOG_GETDRAM_ADDR_LO, 1);
+>> +		amd_pmc_send_cmd(dev, 0, &phys_addr_hi, SMU_MSG_LOG_GETDRAM_ADDR_HI, 1);
+>> +		smu_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
+>> +
+>> +		dev->smu_virt_addr = devm_ioremap(dev->dev, smu_phys_addr,
+>> +						  sizeof(struct smu_metrics));
+>> +		if (!dev->smu_virt_addr)
+>> +			return -ENOMEM;
+>> +	}
+>> +
+>> +	/* Start the logging */
+>> +	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_RESET, 0);
+>> +	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_START, 0);
+>> +
+>> +	return 0;
+>> +}
+>> +#endif /* CONFIG_SUSPEND || CONFIG_DEBUG_FS */
+>> +
+>>   #ifdef CONFIG_SUSPEND
+>>   static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
+>>   {
+>> @@ -475,38 +513,6 @@ static inline void amd_pmc_dbgfs_unregister(struct amd_pmc_dev *dev)
+>>   }
+>>   #endif /* CONFIG_DEBUG_FS */
+>>   
+>> -static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
+>> -{
+>> -	if (dev->cpu_id == AMD_CPU_ID_PCO) {
+>> -		dev_warn_once(dev->dev, "SMU debugging info not supported on this platform\n");
+>> -		return -EINVAL;
+>> -	}
+>> -
+>> -	/* Get Active devices list from SMU */
+>> -	if (!dev->active_ips)
+>> -		amd_pmc_send_cmd(dev, 0, &dev->active_ips, SMU_MSG_GET_SUP_CONSTRAINTS, 1);
+>> -
+>> -	/* Get dram address */
+>> -	if (!dev->smu_virt_addr) {
+>> -		u32 phys_addr_low, phys_addr_hi;
+>> -		u64 smu_phys_addr;
+>> -
+>> -		amd_pmc_send_cmd(dev, 0, &phys_addr_low, SMU_MSG_LOG_GETDRAM_ADDR_LO, 1);
+>> -		amd_pmc_send_cmd(dev, 0, &phys_addr_hi, SMU_MSG_LOG_GETDRAM_ADDR_HI, 1);
+>> -		smu_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
+>> -
+>> -		dev->smu_virt_addr = devm_ioremap(dev->dev, smu_phys_addr,
+>> -						  sizeof(struct smu_metrics));
+>> -		if (!dev->smu_virt_addr)
+>> -			return -ENOMEM;
+>> -	}
+>> -
+>> -	/* Start the logging */
+>> -	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_RESET, 0);
+>> -	amd_pmc_send_cmd(dev, 0, NULL, SMU_MSG_LOG_START, 0);
+>> -
+>> -	return 0;
+>> -}
+>>   
+>>   static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
+>>   {
+> .
 
