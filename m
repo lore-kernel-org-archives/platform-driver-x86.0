@@ -2,150 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6DDC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  7 May 2022 09:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C091AC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  7 May 2022 10:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378642AbiEGJcQ (ORCPT
+        id S243767AbiEGKhQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 7 May 2022 05:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37550 "EHLO
+        Sat, 7 May 2022 06:37:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245217AbiEGJcP (ORCPT
+        with ESMTP id S236372AbiEGKhP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 7 May 2022 05:32:15 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F1A55343;
-        Sat,  7 May 2022 02:28:28 -0700 (PDT)
-Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KwMXR5vqtz1JBtC;
-        Sat,  7 May 2022 17:27:19 +0800 (CST)
-Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Sat, 7 May 2022 17:28:26 +0800
-Received: from [10.174.178.120] (10.174.178.120) by
- dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Sat, 7 May 2022 17:28:25 +0800
-Message-ID: <c65d22b4-f654-21aa-bd5f-d4f8b0939a25@huawei.com>
-Date:   Sat, 7 May 2022 17:28:24 +0800
+        Sat, 7 May 2022 06:37:15 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C992D1ED;
+        Sat,  7 May 2022 03:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651919609; x=1683455609;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tz4eaxNFw3OE/vYEfmWYD9ee4vGmGUyLKAFHoXsKn8Q=;
+  b=kgDPj8hGIsQ2S/dIq0sRi9iT4oiK18Z0EJR68cKN19CnmC2SyL5eoBFx
+   6K3q6O7VF845lDASmDO5Ue3HyFcunueF9PYPdUkNyLyLdAs6V1jgbnvjB
+   sZG2QxPp85lKrTZCeFjFvT55NJvSh+c+xB+JVkGmpcMATlVF+Lc9G+uVm
+   4Uu4DCKdCFXBiwUerjhIe0WcAtewvEKFrMCiU4aWiyUEiO7hxSyKvKzj5
+   PEqS9ZVyelpM8B+tBXKFMAvfZfSEm/Nsne2gt8jBxVllSoY4am+PzZ89n
+   2U9iATPW+tTqbrwqYHsaOrN244sa8ORH+ABixS90BTXmbWlo0St3P79hQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10339"; a="268589634"
+X-IronPort-AV: E=Sophos;i="5.91,207,1647327600"; 
+   d="scan'208";a="268589634"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2022 03:33:29 -0700
+X-IronPort-AV: E=Sophos;i="5.91,207,1647327600"; 
+   d="scan'208";a="550239830"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2022 03:33:23 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nnHkV-00D3B8-LA;
+        Sat, 07 May 2022 13:33:19 +0300
+Date:   Sat, 7 May 2022 13:33:19 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v4 0/8] platform/x86: introduce p2sb_bar() helper
+Message-ID: <YnZK75D3fMvLSgAD@smile.fi.intel.com>
+References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
+ <20220308205016.2c0112ad@md1za8fc.ad001.siemens.net>
+ <YnJ0tdGTzTRYEISn@smile.fi.intel.com>
+ <20220504171007.2f641098@md1za8fc.ad001.siemens.net>
+ <CAHp75Vfh5DbiGQ4NLv+hhYyRx5wDbMjFmgO5sNZ7864ipRrDHg@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 0/2] Add support to relocate kernel image to mirrored
- region
-To:     <ardb@kernel.org>
-CC:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <corbet@lwn.net>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-        <x86@kernel.org>, <dvhart@infradead.org>, <andy@infradead.org>,
-        <rppt@kernel.org>, <paulmck@kernel.org>, <peterz@infradead.org>,
-        <jroedel@suse.de>, <songmuchun@bytedance.com>, <macro@orcam.me.uk>,
-        <frederic@kernel.org>, <W_Armin@gmx.de>, <john.garry@huawei.com>,
-        <seanjc@google.com>, <tsbogend@alpha.franken.de>,
-        <anshuman.khandual@arm.com>, <chenhuacai@kernel.org>,
-        <david@redhat.com>, <gpiccoli@igalia.com>, <mark.rutland@arm.com>,
-        <wangkefeng.wang@huawei.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>,
-        <mawupeng1@huawei.com>
-References: <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
- <20220419070150.254377-1-mawupeng1@huawei.com>
- <CAMj1kXHr2RdYSPor1st1ZnL=O42c8N6e=bNG+eFhatfefWLUrw@mail.gmail.com>
-From:   mawupeng <mawupeng1@huawei.com>
-In-Reply-To: <CAMj1kXHr2RdYSPor1st1ZnL=O42c8N6e=bNG+eFhatfefWLUrw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.120]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vfh5DbiGQ4NLv+hhYyRx5wDbMjFmgO5sNZ7864ipRrDHg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, May 04, 2022 at 05:55:26PM +0200, Andy Shevchenko wrote:
+> On Wed, May 4, 2022 at 5:10 PM Henning Schild
+> <henning.schild@siemens.com> wrote:
+> > Am Wed, 4 May 2022 15:42:29 +0300
+> > schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
 
+> ...
 
-在 2022/5/3 17:58, Ard Biesheuvel 写道:
-> On Tue, 19 Apr 2022 at 08:43, Wupeng Ma <mawupeng1@huawei.com> wrote:
->>
->> From: Ma Wupeng <mawupeng1@huawei.com>
->>
->> Now system image will perfer to be located to mirrored regions both KASLR
->> on and off.
->>
+> > Let me know if you need it in another shape or form.
 > 
-> Hello Ma Wupeng,
-> 
-> I wonder if we could simplify this as follows:
-> - ignore the non-KASLR case for now, and rely on the bootloader  > load the image into mirrored memory if it exists;
+> Form is okay, just would be nice if you can retest what I have in the
+> branch as an updated version.
 
-In grub, memory for static image is allocated via the following path:
+Is there any news? I would like to send a new version sooner than later.
+We may also apply the patches from this series and when you will be ready
+apply yours.
 
-grub_cmd_linux
-   kernel = grub_malloc(filelen)
-   kernel_alloc_addr = grub_efi_allocate_any_pages (kernel_alloc_pages)
-   grub_memcpy (kernel_addr, kernel, grub_min(filelen, kernel_size))
-    grub_loader_set (grub_linux_boot, grub_linux_unload, 0)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Can we get memory from mirrored region by the following steps:
-1. get memory map by calling grub_efi_get_memory_map()
-2. iter all memory map to find a suitable mirrored memory area
-3. locate kernel image to this area
 
-So, if kaslr is not enabled
-  - grub will load kernel into mirrored region
-else
-  - arm64-stub.c will relocate kernel image to mirrored region
-
-Is this feasible?
-
-> - simplify the KASLR case to the below.
-
-Yes, we can certainly do this. I will remove my code and use yours.
-
-> 
-> I think this is reasonable, because it means we take mirrored memory
-> into account when we decide to move the image anyway, but expect the
-> boot chain to take care of this if there is no need to move the image.
-> 
-> -------------8<------------------
-> --- a/drivers/firmware/efi/libstub/randomalloc.c
-> +++ b/drivers/firmware/efi/libstub/randomalloc.c
-> @@ -56,6 +56,7 @@ efi_status_t efi_random_alloc(unsigned long size,
->                                unsigned long random_seed)
->   {
->          unsigned long map_size, desc_size, total_slots = 0, target_slot;
-> +       unsigned long total_mirrored_slots = 0;
->          unsigned long buff_size;
->          efi_status_t status;
->          efi_memory_desc_t *memory_map;
-> @@ -86,8 +87,14 @@ efi_status_t efi_random_alloc(unsigned long size,
->                  slots = get_entry_num_slots(md, size, ilog2(align));
->                  MD_NUM_SLOTS(md) = slots;
->                  total_slots += slots;
-> +               if (md->attribute & EFI_MEMORY_MORE_RELIABLE)
-> +                       total_mirrored_slots += slots;
->          }
-> 
-> +       /* only consider mirrored slots for randomization if any exist */
-> +       if (total_mirrored_slots > 0)
-> +               total_slots = total_mirrored_slots;
-> +
->          /* find a random number between 0 and total_slots */
->          target_slot = (total_slots * (u64)(random_seed & U32_MAX)) >> 32;
-> 
-> @@ -107,6 +114,10 @@ efi_status_t efi_random_alloc(unsigned long size,
->                  efi_physical_addr_t target;
->                  unsigned long pages;
-> 
-> +               if (total_mirrored_slots > 0 &&
-> +                   !(md->attribute & EFI_MEMORY_MORE_RELIABLE))
-> +                       continue;
-> +
->                  if (target_slot >= MD_NUM_SLOTS(md)) {
->                          target_slot -= MD_NUM_SLOTS(md);
->                          continue;
-> .
