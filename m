@@ -2,126 +2,85 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87E9C43219
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  8 May 2022 10:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BB3C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  8 May 2022 10:50:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231252AbiEHKa3 (ORCPT
+        id S232029AbiEHKyp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 8 May 2022 06:30:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51798 "EHLO
+        Sun, 8 May 2022 06:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230152AbiEHKa2 (ORCPT
+        with ESMTP id S232171AbiEHKyj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 8 May 2022 06:30:28 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01903DFBD;
-        Sun,  8 May 2022 03:26:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652005598; x=1683541598;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bSU9fO4lrWoDsIEUgjYMWmwmoe4o/mjHCu3zxv5muLo=;
-  b=bgLWj9Ugko7x3VrxEUt+bA8JPpASnmfAw1o6MUinh/egqAJlZVsOZsUF
-   OpPwjg74P73SVlHzQASclgOQg4JTNnba5JSvrildL03zgVBAY0p45BZdu
-   jD4Jcdduwompy3biUGjGM25k5I9iPlGJWiAkUezPkjTMKenvlgS6bISEd
-   hAX3rGbYH1z7abWiBc7ax3lWfnPHJqPaJr8+0Amxngs1cE7qFPjh9/Vu6
-   09+GnLlT86T3odBOHPQ5nDErTa+0E3TSkhS0WV1+BJR3INzkkyofOs9D7
-   rrRFI+9LzW399sOhtfVynAJgv9XUlzCK3e0SLSS3ZQuGgtQfMre4VGm3b
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10340"; a="329386548"
-X-IronPort-AV: E=Sophos;i="5.91,208,1647327600"; 
-   d="scan'208";a="329386548"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2022 03:26:37 -0700
-X-IronPort-AV: E=Sophos;i="5.91,208,1647327600"; 
-   d="scan'208";a="564569270"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2022 03:26:26 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nne7J-00DSlW-Qt;
-        Sun, 08 May 2022 13:26:21 +0300
-Date:   Sun, 8 May 2022 13:26:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Daniel Lezcano <daniel.lezcano@linexp.org>
-Cc:     daniel.lezcano@linaro.org, rafael@kernel.org, khilman@baylibre.com,
-        abailon@baylibre.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
-        Raju Rangoju <rajur@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Ido Schimmel <idosch@nvidia.com>,
-        Petr Machata <petrm@nvidia.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@kernel.org>, Peter Kaestle <peter@piie.net>,
+        Sun, 8 May 2022 06:54:39 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89D3239A;
+        Sun,  8 May 2022 03:50:49 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 49F423002C27F;
+        Sun,  8 May 2022 12:50:47 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 3E4C228DC2F; Sun,  8 May 2022 12:50:47 +0200 (CEST)
+Date:   Sun, 8 May 2022 12:50:47 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Mark Gross <markgross@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>,
-        Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Chuansheng Liu <chuansheng.liu@intel.com>,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>,
-        Antoine Tenart <atenart@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:ACPI THERMAL DRIVER" <linux-acpi@vger.kernel.org>,
-        "open list:CXGB4 ETHERNET DRIVER (CXGB4)" <netdev@vger.kernel.org>,
-        "open list:INTEL WIRELESS WIFI LINK (iwlwifi)" 
-        <linux-wireless@vger.kernel.org>,
-        "open list:ACER ASPIRE ONE TEMPERATURE AND FAN DRIVER" 
-        <platform-driver-x86@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:RENESAS R-CAR THERMAL DRIVERS" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v2 01/14] thermal/core: Change thermal_zone_ops to
- thermal_sensor_ops
-Message-ID: <YneazaFEg3nONazs@smile.fi.intel.com>
-References: <20220507125443.2766939-1-daniel.lezcano@linexp.org>
- <20220507125443.2766939-2-daniel.lezcano@linexp.org>
+        Henning Schild <henning.schild@siemens.com>
+Subject: Re: [PATCH v4 1/8] platform/x86/intel: Add Primary to Sideband
+ (P2SB) bridge support
+Message-ID: <20220508105047.GA28082@wunner.de>
+References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
+ <20220131151346.45792-2-andriy.shevchenko@linux.intel.com>
+ <20220505145503.GA25423@wunner.de>
+ <CAHp75VdQqQj0fS6t5nYj+7rJ1tuSt7+5GT78eN06PShWnrDZgA@mail.gmail.com>
+ <20220508071308.GA27815@wunner.de>
+ <CAHp75Vfy3Z0+YmPucL=xbP9tiSL6jM34mJ5-fK=og91eEzq5hw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220507125443.2766939-2-daniel.lezcano@linexp.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAHp75Vfy3Z0+YmPucL=xbP9tiSL6jM34mJ5-fK=og91eEzq5hw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, May 07, 2022 at 02:54:29PM +0200, Daniel Lezcano wrote:
-> A thermal zone is software abstraction of a sensor associated with
-> properties and cooling devices if any.
+On Sun, May 08, 2022 at 12:05:53PM +0200, Andy Shevchenko wrote:
+> On Sun, May 8, 2022 at 9:13 AM Lukas Wunner <lukas@wunner.de> wrote:
+> > pci_lock_rescan_remove() prevents concurrent unhiding as well as
+> > removal via sysfs.
 > 
-> The fact that we have thermal_zone and thermal_zone_ops mixed is
-> confusing and does not clearly identify the different components
-> entering in the thermal management process. A thermal zone appears to
-> be a sensor while it is not.
-> 
-> In order to set the scene for multiple thermal sensors aggregated into
-> a single thermal zone. Rename the thermal_zone_ops to
-> thermal_sensor_ops, that will appear clearyl the thermal zone is not a
-> sensor but an abstraction of one [or multiple] sensor(s).
+> Yep, that's good. In any case this piece of code will be gone if your
+> above suggestion works, have I got it right?
 
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-for whatever drivers in this series I have somehow been involved into.
+Yes.  You just need to make sure that you call pci_scan_single_device()
+*after* unhiding the P2SB device so that this check succeeds:
 
--- 
-With Best Regards,
-Andy Shevchenko
+  pci_scan_single_device()
+    pci_scan_device()
+      pci_bus_read_dev_vendor_id()
 
+Thanks,
 
+Lukas
