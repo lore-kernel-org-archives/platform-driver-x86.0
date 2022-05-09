@@ -2,219 +2,71 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00441C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 14:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433E4C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 15:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236591AbiEIOIJ (ORCPT
+        id S238593AbiEIQDF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 May 2022 10:08:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49864 "EHLO
+        Mon, 9 May 2022 12:03:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236600AbiEIOIG (ORCPT
+        with ESMTP id S238770AbiEIQDE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 May 2022 10:08:06 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F4E928FE95;
-        Mon,  9 May 2022 07:04:12 -0700 (PDT)
-Date:   Mon, 9 May 2022 16:04:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1652105050;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=vkv8HBPFx6WlkqEMz3LJTFoSbV8VQ/L5ryA8fWqm968=;
-        b=o1wwuTeMmQcpAkUaprbcn6XoOJLnhk3S7uyIcDPBnmQujDQvjSyvsBKPpX4EbaYg0SyJrw
-        vSMOHPbHeLikKMh159ZagB123pAShjR1ygxRWG9c7Aw61FhjrC4JmHj4aRjOrrdFUxlFhg
-        erAyTX844QfySyeSrndxJ+G7YJ0Fbn1Pi1Nwd52nMtnWyuC0ZwNKiIdUGMwiXofZp4j3AX
-        sV2PU7069wepTKSDl3SmAtIEwdFx/LPj3ZwLUQg8JRvbL2+pdgwXB2Ufpa79HfNSL//xa4
-        Ys+PlnQq+oBJgoh/YGuY9VFK5oB6lHinvHgzImDZXBMosqr9SC9jrL0aiS71lw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1652105050;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=vkv8HBPFx6WlkqEMz3LJTFoSbV8VQ/L5ryA8fWqm968=;
-        b=XfcHOKM5w4lYvL6EVj0TvlvjvHYtjNUSkVl9sSi6CIhYTPicntmECZOlwNwzENXBZuHSFZ
-        hkSbF/vYa3C02FCw==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>, Michael Buesch <m@bues.ch>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-gpio@vger.kernel.org, linux-wireless@vger.kernel.org,
+        Mon, 9 May 2022 12:03:04 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE3E2D9EF4;
+        Mon,  9 May 2022 08:59:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 86D0FB81252;
+        Mon,  9 May 2022 15:59:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 414A4C385AE;
+        Mon,  9 May 2022 15:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652111948;
+        bh=3WqpGb4b7mV7spWAV8RawQwEEHkl0hO6Vsc2rKASjFE=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=bAeqQ9dtNwYyeWxWYzg5ackhrkGBMhf4bHNoqedbzV/xnilOHN1b/RmTrt9xGjaFp
+         dDj3gb4klNyZKJ52zEglFB7ljdxcIbG/ANXaz6SomL0OpB70FiS/aJlDh+y+Ca/xv4
+         u+sEw9DZ8veaERabwo70T/YSiLmflolNCDI38VSNl7icGBVp2Qfmq8myNBSHR9jrrW
+         xaR9oRYA70YQpJdL1Mp0RxciEXp82d3khiwu7FwXMcN94zfrytyB7/jDI0bgupRqYv
+         8i0B1CALTuBBThlQcNgYBL34AIOdNfNbgz5Ics9bNAF3uusUT0nZhS0BbsDziSNtbP
+         G2skyMcXhGy4w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2D392F03928;
+        Mon,  9 May 2022 15:59:08 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for 5.18-4
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <d9007c58-71a2-e081-c609-fbf04855b591@redhat.com>
+References: <d9007c58-71a2-e081-c609-fbf04855b591@redhat.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <d9007c58-71a2-e081-c609-fbf04855b591@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.18-4
+X-PR-Tracked-Commit-Id: 44acfc22c7d055d9c4f8f0974ee28422405b971a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9be9ed2612b5aedb52a2c240edb1630b6b743cb6
+Message-Id: <165211194817.13222.583089385536373493.pr-tracker-bot@kernel.org>
+Date:   Mon, 09 May 2022 15:59:08 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [RFC PATCH] genirq: Provide generic_handle_domain_irq_safe().
-Message-ID: <YnkfWFzvusFFktSt@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Provide generic_handle_domain_irq_safe() which can used from any context.
-This similar to commit
-   509853f9e1e7b ("genirq: Provide generic_handle_irq_safe()")
+The pull request you sent on Mon, 9 May 2022 09:27:51 +0200:
 
-but this time for the irq-domains interface. It has been reported for
-the amd-pinctrl driver via bugzilla
-   https://bugzilla.kernel.org/show_bug.cgi?id=215954
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.18-4
 
-I looked around and added a few users so it is not just one user API :)
-Instead of generic_handle_irq(irq_find_mapping)) one can use
-generic_handle_domain_irq().
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9be9ed2612b5aedb52a2c240edb1630b6b743cb6
 
-The problem with generic_handle_domain_irq() is that with `threadirqs'
-it will trigger "WARN_ON_ONCE(!in_hardirq())". That interrupt handler
-can't be marked non-threaded because it is a shared handler (it is
-marked as such and I can't tell the interrupt can be really shared on
-the system).
-Ignoring the just mentioned warning, on PREEMPT_RT the threaded handler
-is invoked with enabled interrupts leading other problems.
+Thank you!
 
-Do we do this?
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- drivers/bcma/driver_gpio.c                 |  2 +-
- drivers/gpio/gpio-mlxbf2.c                 |  6 ++----
- drivers/pinctrl/pinctrl-amd.c              |  2 +-
- drivers/platform/x86/intel/int0002_vgpio.c |  3 +--
- drivers/ssb/driver_gpio.c                  |  6 ++++--
- include/linux/irqdesc.h                    |  1 +
- kernel/irq/irqdesc.c                       | 24 ++++++++++++++++++++++
- 7 files changed, 34 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/bcma/driver_gpio.c b/drivers/bcma/driver_gpio.c
-index 1e74ec1c7f231..ed2730a21e7c4 100644
---- a/drivers/bcma/driver_gpio.c
-+++ b/drivers/bcma/driver_gpio.c
-@@ -113,7 +113,7 @@ static irqreturn_t bcma_gpio_irq_handler(int irq, void *dev_id)
- 		return IRQ_NONE;
- 
- 	for_each_set_bit(gpio, &irqs, gc->ngpio)
--		generic_handle_irq(irq_find_mapping(gc->irq.domain, gpio));
-+		generic_handle_domain_irq_safe(gc->irq.domain, gpio);
- 	bcma_chipco_gpio_polarity(cc, irqs, val & irqs);
- 
- 	return IRQ_HANDLED;
-diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
-index 3d89912a05b87..d4916f32fee73 100644
---- a/drivers/gpio/gpio-mlxbf2.c
-+++ b/drivers/gpio/gpio-mlxbf2.c
-@@ -273,10 +273,8 @@ static irqreturn_t mlxbf2_gpio_irq_handler(int irq, void *ptr)
- 	pending = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_CAUSE_EVTEN0);
- 	writel(pending, gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
- 
--	for_each_set_bit(level, &pending, gc->ngpio) {
--		int gpio_irq = irq_find_mapping(gc->irq.domain, level);
--		generic_handle_irq(gpio_irq);
--	}
-+	for_each_set_bit(level, &pending, gc->ngpio)
-+		generic_handle_domain_irq_safe(gc->irq.domain, level);
- 
- 	return IRQ_RETVAL(pending);
- }
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 1a7d686494ffb..ce6fa6a76d1f6 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -638,7 +638,7 @@ static bool do_amd_gpio_irq_handler(int irq, void *dev_id)
- 			if (!(regval & PIN_IRQ_PENDING) ||
- 			    !(regval & BIT(INTERRUPT_MASK_OFF)))
- 				continue;
--			generic_handle_domain_irq(gc->irq.domain, irqnr + i);
-+			generic_handle_domain_irq_safe(gc->irq.domain, irqnr + i);
- 
- 			/* Clear interrupt.
- 			 * We must read the pin register again, in case the
-diff --git a/drivers/platform/x86/intel/int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
-index 617dbf98980ec..97cfbc520a02c 100644
---- a/drivers/platform/x86/intel/int0002_vgpio.c
-+++ b/drivers/platform/x86/intel/int0002_vgpio.c
-@@ -125,8 +125,7 @@ static irqreturn_t int0002_irq(int irq, void *data)
- 	if (!(gpe_sts_reg & GPE0A_PME_B0_STS_BIT))
- 		return IRQ_NONE;
- 
--	generic_handle_irq(irq_find_mapping(chip->irq.domain,
--					    GPE0A_PME_B0_VIRT_GPIO_PIN));
-+	generic_handle_domain_irq_safe(chip->irq.domain, GPE0A_PME_B0_VIRT_GPIO_PIN);
- 
- 	pm_wakeup_hard_event(chip->parent);
- 
-diff --git a/drivers/ssb/driver_gpio.c b/drivers/ssb/driver_gpio.c
-index 2de3896489c84..897cb8db5084f 100644
---- a/drivers/ssb/driver_gpio.c
-+++ b/drivers/ssb/driver_gpio.c
-@@ -132,7 +132,8 @@ static irqreturn_t ssb_gpio_irq_chipco_handler(int irq, void *dev_id)
- 		return IRQ_NONE;
- 
- 	for_each_set_bit(gpio, &irqs, bus->gpio.ngpio)
--		generic_handle_irq(ssb_gpio_to_irq(&bus->gpio, gpio));
-+		generic_handle_domain_irq_safe(bus->irq_domain, gpio);
-+
- 	ssb_chipco_gpio_polarity(chipco, irqs, val & irqs);
- 
- 	return IRQ_HANDLED;
-@@ -330,7 +331,8 @@ static irqreturn_t ssb_gpio_irq_extif_handler(int irq, void *dev_id)
- 		return IRQ_NONE;
- 
- 	for_each_set_bit(gpio, &irqs, bus->gpio.ngpio)
--		generic_handle_irq(ssb_gpio_to_irq(&bus->gpio, gpio));
-+		generic_handle_domain_irq_safe(bus->irq_domain, gpio);
-+
- 	ssb_extif_gpio_polarity(extif, irqs, val & irqs);
- 
- 	return IRQ_HANDLED;
-diff --git a/include/linux/irqdesc.h b/include/linux/irqdesc.h
-index a77584593f7d1..98253955e2ae7 100644
---- a/include/linux/irqdesc.h
-+++ b/include/linux/irqdesc.h
-@@ -169,6 +169,7 @@ int generic_handle_irq_safe(unsigned int irq);
-  * conversion failed.
-  */
- int generic_handle_domain_irq(struct irq_domain *domain, unsigned int hwirq);
-+int generic_handle_domain_irq_safe(struct irq_domain *domain, unsigned int hwirq);
- int generic_handle_domain_nmi(struct irq_domain *domain, unsigned int hwirq);
- #endif
- 
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index 0099b87dd8530..48c34d47255cc 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -706,6 +706,30 @@ int generic_handle_domain_irq(struct irq_domain *domain, unsigned int hwirq)
- }
- EXPORT_SYMBOL_GPL(generic_handle_domain_irq);
- 
-+ /**
-+ * generic_handle_irq_safe - Invoke the handler for a HW irq belonging
-+ *			     to a domain from any context.
-+ * @domain:	The domain where to perform the lookup
-+ * @hwirq:	The HW irq number to convert to a logical one
-+ *
-+ * Returns:	0 on success, a negative value on error.
-+ *
-+ * This function can be called from any context (IRQ or process context). It
-+ * will report an error if not invoked from IRQ context and the irq has been
-+ * marked to enforce IRQ-context only.
-+ */
-+int generic_handle_domain_irq_safe(struct irq_domain *domain, unsigned int hwirq)
-+{
-+	unsigned long flags;
-+	int ret;
-+
-+	local_irq_save(flags);
-+	ret = handle_irq_desc(irq_resolve_mapping(domain, hwirq));
-+	local_irq_restore(flags);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(generic_handle_domain_irq_safe);
-+
- /**
-  * generic_handle_domain_nmi - Invoke the handler for a HW nmi belonging
-  *                             to a domain.
 -- 
-2.36.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
