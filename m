@@ -2,57 +2,38 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B01CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 16:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B5AC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 16:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239292AbiEIQzx (ORCPT
+        id S239326AbiEIRA3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 May 2022 12:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53806 "EHLO
+        Mon, 9 May 2022 13:00:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239297AbiEIQzw (ORCPT
+        with ESMTP id S239333AbiEIRAQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 May 2022 12:55:52 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33D9A2A83E7;
-        Mon,  9 May 2022 09:51:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652115118; x=1683651118;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ZHf1aKrJPNEzW3CkgiZfux0Tgdcjxu6YIMeTHM4FNg8=;
-  b=HqvzycxNJqhIv5kTYJJ6RtMy19OoAc83bCoeTFfdE5XW7nWOZQY2P95y
-   j8puy348guhBTWS4ZcKRqgdwCS13mImhZ+JTVN0YgIHkkknHTyCDYGexU
-   sRbfkTnqEog8r1WiS5WXLn3EToKkqilAqFq3868hQ3ThYvibgNszyeh1d
-   TtfKWi8tW7nnyM7i5+a5/tHlfIJf7gwJeS49tTZx0WGt0HHRYbgy3Xqbc
-   IjJPzakSSLcbC37/m2MOvC9taUCyLbqGdjUPxhzY6sDS+C+3z8uk5DYR1
-   KZzRLZDcn0+cJHYjE5lnQA4yGh6rBcvoByaRidf5s0E3bUD41jk/YhysE
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10342"; a="249007726"
-X-IronPort-AV: E=Sophos;i="5.91,211,1647327600"; 
-   d="scan'208";a="249007726"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2022 09:51:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,211,1647327600"; 
-   d="scan'208";a="710610178"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga001.fm.intel.com with ESMTP; 09 May 2022 09:51:57 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Mon, 9 May 2022 09:51:57 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Mon, 9 May 2022 09:51:57 -0700
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.027;
- Mon, 9 May 2022 09:51:57 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        Mon, 9 May 2022 13:00:16 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365E914043C;
+        Mon,  9 May 2022 09:56:14 -0700 (PDT)
+Received: from zn.tnic (p5de8eeb4.dip0.t-ipconnect.de [93.232.238.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 05F011EC04A9;
+        Mon,  9 May 2022 18:56:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1652115369;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=7lpb50R3zwIu2G3tyk1yvdZ54QsxXH26Abyw68QhTVY=;
+        b=kZ2vb5Dq0zLAVqs6/OU7hsQVgPdPmhmTE+pGDaSjnXrI6Y9slOcw6gqWXpuJ+0VMWDHAVO
+        vDDuIpxJGsgINtJM1RTIoAsXDDBnIlMkklVQLFUwPOGkuhSAfsm+OhpX6THsEGK5MxDYyy
+        LTCFprBt9z25m1YiEoL+ZEtIBJ8GMe8=
+Date:   Mon, 9 May 2022 18:56:15 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
         "markgross@kernel.org" <markgross@kernel.org>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
         "mingo@redhat.com" <mingo@redhat.com>,
@@ -72,38 +53,33 @@ CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
         <platform-driver-x86@vger.kernel.org>,
         "patches@lists.linux.dev" <patches@lists.linux.dev>,
         "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: RE: [PATCH v7 06/12] platform/x86/intel/ifs: Check IFS Image sanity
-Thread-Topic: [PATCH v7 06/12] platform/x86/intel/ifs: Check IFS Image sanity
-Thread-Index: AQHYYZw4URI4jEBNME2Pw/7vY15Q9K0XNqMA//+PpSA=
-Date:   Mon, 9 May 2022 16:51:56 +0000
-Message-ID: <ddd29688b88b4176957ef5dd8731d90a@intel.com>
+Subject: Re: [PATCH v7 06/12] platform/x86/intel/ifs: Check IFS Image sanity
+Message-ID: <YnlHr6Is7xq+cBRH@zn.tnic>
 References: <20220506014035.1173578-1-tony.luck@intel.com>
  <20220506225410.1652287-1-tony.luck@intel.com>
- <20220506225410.1652287-7-tony.luck@intel.com> <YnlB6iAp4fjM0Cw9@zn.tnic>
-In-Reply-To: <YnlB6iAp4fjM0Cw9@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.6.401.20
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <20220506225410.1652287-7-tony.luck@intel.com>
+ <YnlB6iAp4fjM0Cw9@zn.tnic>
+ <ddd29688b88b4176957ef5dd8731d90a@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ddd29688b88b4176957ef5dd8731d90a@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-PiBJcyB0aGUgY2hlY2tzdW0gdGhlIG9ubHkgcHJvdGVjdGlvbiBhZ2FpbnN0IHBlb3BsZSBsb2Fk
-aW5nIGFyYml0cmFyeSBJRlMNCj4gaW1hZ2VzIG9yIGFyZSB0aG9zZSB0aGluZ3Mgc2lnbmVkIG9y
-IGVuY3J5cHRlZCwganVzdCBsaWtlIHRoZSBtaWNyb2NvZGU/DQo+DQo+IEknZCBob3BlIHRoZXkg
-cGFzcyB0aGUgc2FtZSBjaGVja3MgYXMgbWljcm9jb2RlLCB3aGVuIHRoZXkgZ2V0IGxvYWRlZCwN
-Cj4gY29uc2lkZXJpbmcgdGhlIHNpbWlsYXJpdHkgb2YgaG93IHRoZXkncmUgaGFuZGxlZC4uLg0K
-DQpUaGUgY2hlY2tzdW0gaXMganVzdCBhICJkaWQgdGhpcyBmaWxlIGdldCBjb3JydXB0ZWQgY2hl
-Y2siLiBUaGUgZmlsZSBjb250YWlucw0KU0hBMjU2IGNoZWNrc3VtcyBmb3IgZWFjaCBvZiB0aGUg
-Y2h1bmtzLiBUaGVzZSBjaGVja3N1bXMgYXJlIGRpZ2l0YWxseQ0Kc2lnbmVkLiBDaGVja2luZyBv
-ZiB0aGVzZSBpcyBkb25lIGJ5IG1pY3JvY29kZSB3aGVuIHRoZSBmaWxlIGlzIGxvYWRlZCBpbnRv
-DQpCSU9TIHJlc2VydmVkIG1lbW9yeSAod2hlcmUgaXQgaXMgaW5hY2Nlc3NpYmxlIHRvIE9TIGFu
-ZCBJL08pLg0KDQotVG9ueQ0K
+On Mon, May 09, 2022 at 04:51:56PM +0000, Luck, Tony wrote:
+> The checksum is just a "did this file get corrupted check". The file contains
+> SHA256 checksums for each of the chunks. These checksums are digitally
+> signed. Checking of these is done by microcode when the file is loaded into
+> BIOS reserved memory (where it is inaccessible to OS and I/O).
+
+That sounds like something I was hoping to hear, good. :-)
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
