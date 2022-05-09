@@ -2,71 +2,74 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 433E4C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 15:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8C9C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 16:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238593AbiEIQDF (ORCPT
+        id S238890AbiEIQfg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 May 2022 12:03:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
+        Mon, 9 May 2022 12:35:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238770AbiEIQDE (ORCPT
+        with ESMTP id S238152AbiEIQff (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 May 2022 12:03:04 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE3E2D9EF4;
-        Mon,  9 May 2022 08:59:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Mon, 9 May 2022 12:35:35 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693C62E098;
+        Mon,  9 May 2022 09:31:41 -0700 (PDT)
+Received: from zn.tnic (p5de8eeb4.dip0.t-ipconnect.de [93.232.238.180])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 86D0FB81252;
-        Mon,  9 May 2022 15:59:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 414A4C385AE;
-        Mon,  9 May 2022 15:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652111948;
-        bh=3WqpGb4b7mV7spWAV8RawQwEEHkl0hO6Vsc2rKASjFE=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=bAeqQ9dtNwYyeWxWYzg5ackhrkGBMhf4bHNoqedbzV/xnilOHN1b/RmTrt9xGjaFp
-         dDj3gb4klNyZKJ52zEglFB7ljdxcIbG/ANXaz6SomL0OpB70FiS/aJlDh+y+Ca/xv4
-         u+sEw9DZ8veaERabwo70T/YSiLmflolNCDI38VSNl7icGBVp2Qfmq8myNBSHR9jrrW
-         xaR9oRYA70YQpJdL1Mp0RxciEXp82d3khiwu7FwXMcN94zfrytyB7/jDI0bgupRqYv
-         8i0B1CALTuBBThlQcNgYBL34AIOdNfNbgz5Ics9bNAF3uusUT0nZhS0BbsDziSNtbP
-         G2skyMcXhGy4w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2D392F03928;
-        Mon,  9 May 2022 15:59:08 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 5.18-4
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <d9007c58-71a2-e081-c609-fbf04855b591@redhat.com>
-References: <d9007c58-71a2-e081-c609-fbf04855b591@redhat.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <d9007c58-71a2-e081-c609-fbf04855b591@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.18-4
-X-PR-Tracked-Commit-Id: 44acfc22c7d055d9c4f8f0974ee28422405b971a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9be9ed2612b5aedb52a2c240edb1630b6b743cb6
-Message-Id: <165211194817.13222.583089385536373493.pr-tracker-bot@kernel.org>
-Date:   Mon, 09 May 2022 15:59:08 +0000
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ADA9F1EC01D4;
+        Mon,  9 May 2022 18:31:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1652113895;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=YVZDhhuwFnG0wO9zG2gz1m1ChZD7/QsEFk2nXCEHMmY=;
+        b=rGl4Ip+PNvLTALQHSdUG89pzYor5BP8t3NYCl5ruhddTTsfk9a0w3Vx+hjAt8rPD77xcel
+        u35x0hFwVkG2cz5/8d/HDeuA70a/n7vqEwwnvRNo6drlfmU0ISJPcTrvrXG1EJw6hv8WgM
+        xY5BKcbCNji7BIHkNvD1AwirRUrRVUU=
+Date:   Mon, 9 May 2022 18:31:38 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, corbet@lwn.net, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, jithu.joseph@intel.com,
+        ashok.raj@intel.com, rostedt@goodmis.org, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v7 06/12] platform/x86/intel/ifs: Check IFS Image sanity
+Message-ID: <YnlB6iAp4fjM0Cw9@zn.tnic>
+References: <20220506014035.1173578-1-tony.luck@intel.com>
+ <20220506225410.1652287-1-tony.luck@intel.com>
+ <20220506225410.1652287-7-tony.luck@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220506225410.1652287-7-tony.luck@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Mon, 9 May 2022 09:27:51 +0200:
+On Fri, May 06, 2022 at 03:54:04PM -0700, Tony Luck wrote:
+> From: Jithu Joseph <jithu.joseph@intel.com>
+> 
+> IFS image is designed specifically for a given family, model and
+> stepping of the processor. Like Intel microcode header, the IFS image
+> has the Processor Signature, Checksum and Processor Flags that must be
+> matched with the information returned by the CPUID.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.18-4
+Is the checksum the only protection against people loading arbitrary IFS
+images or are those things signed or encrypted, just like the microcode?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9be9ed2612b5aedb52a2c240edb1630b6b743cb6
-
-Thank you!
+I'd hope they pass the same checks as microcode, when they get loaded,
+considering the similarity of how they're handled...
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
