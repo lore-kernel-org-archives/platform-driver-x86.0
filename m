@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E9CC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 12:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4C6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 12:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233780AbiEIMPs (ORCPT
+        id S234068AbiEIMPw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 May 2022 08:15:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40374 "EHLO
+        Mon, 9 May 2022 08:15:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233822AbiEIMPZ (ORCPT
+        with ESMTP id S234060AbiEIMPv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 May 2022 08:15:25 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 938CF1BA8E6;
-        Mon,  9 May 2022 05:11:29 -0700 (PDT)
+        Mon, 9 May 2022 08:15:51 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A1BA149ABD;
+        Mon,  9 May 2022 05:11:57 -0700 (PDT)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1652098288;
+        s=2020; t=1652098315;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=azpewdwyr1bDmpn1HTMmZ9HZHXGFtPT95Bi3ep9m4fU=;
-        b=u70MPVD8ERKX1uNmwc7uEvWWOziwIe0sK5l5/8PprTbFop5Wh+3UBHzTYsVXZ4iGGjo2sB
-        TJ1iGbJleqVU5kHAKtaCtmJBtr8qw6LeqGC5LXftcheFpj9wbK5KmP5S/B36mYyKpfk65t
-        7lw6Jpa0b7ZbqxPiGmhs+eiz2UlavI5B6GQU/nFVs9LtQO+k475KNaUxVPBoGTZDW/Q6kr
-        R+lcPp34M2O+KGQjO1VpsiihXJkCnT1N+zaAxmC/CyNi2gskzcgG1jf8dAvEI1gHmUstVn
-        HMdbSBX0CSewShErKJdiNVemiyjr5Tr3WzJnbPQ+tHb/p1BIg5DKO115eZooKQ==
+        bh=fdMlXl/5cbOn67j58YZZq3Iq75451DHzugIa12n6YdQ=;
+        b=uw8lq4AsfqLcbN4Dvu2spbaWFtpItEctuzNfDt1KLAXwEV+7SEEKdAxcy6LqH9DsYWZ7qR
+        vWhkZp+n3rYuXxlKOvBwmb6FJT5KM010IFdFurHrTHaWtN17SRf8DAZ16CMjh4D6teTvKV
+        Uz66TJlF0vViY4BIyUCTWfOX2Rv7d3HtIRZJZsIqche3E1aG94M4PEEa8UfD2lX08dMqmn
+        kjnf4R4SHeZ+DzPUnKh2kMdxCo/rGV1vhDqtnvhdae30v/0IcAXhhEnUwkpSe3O3YG5RXN
+        +jbR6ZOYkQv2IiUzhLYUmQAJDy/1wbz7uNwdoZEnDBiLd5URRJHaEzCLf26CjA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1652098288;
+        s=2020e; t=1652098315;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=azpewdwyr1bDmpn1HTMmZ9HZHXGFtPT95Bi3ep9m4fU=;
-        b=1/c7846O+NuvxIDeuK3kKtYyi3Qj1aWmj6uHAMvLoVPfxEM8nEF0oO7G3HeIOTbzVAv/69
-        gzz3Jzm4Pekgx+Cw==
+        bh=fdMlXl/5cbOn67j58YZZq3Iq75451DHzugIa12n6YdQ=;
+        b=WLJ4qQc0Pa4ernlDQdXt7u481TctoUyjRBzb8N1ON36rdqEHvGO8EI2nCJDOqwl1NJs8OL
+        JMEO5k5QQKc/lxDA==
 To:     Tony Luck <tony.luck@intel.com>, hdegoede@redhat.com,
         markgross@kernel.org
 Cc:     mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
@@ -46,13 +46,13 @@ Cc:     mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
         ravi.v.shankar@intel.com
-Subject: Re: [PATCH v7 06/12] platform/x86/intel/ifs: Check IFS Image sanity
-In-Reply-To: <20220506225410.1652287-7-tony.luck@intel.com>
+Subject: Re: [PATCH v7 08/12] platform/x86/intel/ifs: Add scan test support
+In-Reply-To: <20220506225410.1652287-9-tony.luck@intel.com>
 References: <20220506014035.1173578-1-tony.luck@intel.com>
  <20220506225410.1652287-1-tony.luck@intel.com>
- <20220506225410.1652287-7-tony.luck@intel.com>
-Date:   Mon, 09 May 2022 14:11:27 +0200
-Message-ID: <8735hisy6o.ffs@tglx>
+ <20220506225410.1652287-9-tony.luck@intel.com>
+Date:   Mon, 09 May 2022 14:11:55 +0200
+Message-ID: <87wneurjlg.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -60,6 +60,20 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Fri, May 06 2022 at 15:54, Tony Luck wrote:
+> From: Jithu Joseph <jithu.joseph@intel.com>
+>
+> In a core, the scan engine is shared between sibling cpus.
+>
+> When a Scan test (for a particular core) is triggered by the user,
+> the scan chunks are executed on all the threads on the core using
+> stop_core_cpuslocked.
+>
+> Scan may be aborted by some reasons. Scan test will be aborted in certain
+> circumstances such as when interrupt occurred or cpu does not have enough
+> power budget for scan. In this case, the kernel restart scan from the chunk
+> where it stopped. Scan will also be aborted when the test is failed. In
+> this case, the test is immediately stopped without retry.
+>
 > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 > Co-developed-by: Tony Luck <tony.luck@intel.com>
