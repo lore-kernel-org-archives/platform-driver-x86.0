@@ -2,57 +2,70 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5349C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 17:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AAFC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 18:12:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239514AbiEIRJU (ORCPT
+        id S240106AbiEISQP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 May 2022 13:09:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49594 "EHLO
+        Mon, 9 May 2022 14:16:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239513AbiEIRJS (ORCPT
+        with ESMTP id S240064AbiEISQB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 May 2022 13:09:18 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE752B9C8C;
-        Mon,  9 May 2022 10:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652115923; x=1683651923;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=3scayCu6ID1aDNn8OBm96/lJRF8vjKYB0DQAdtKYOc0=;
-  b=jj+crfWBUsSbeetSYp9V3o2a4LsL/LArIN48QWg04oc24Pw52VWmwB6F
-   ybMDS59kafVrPECltxMxO9QeXEWI68+gB7vSqmKzSZW/tJLIa3qI201Bb
-   R89PMGmGtbDzupEHwAgn4Bi9v9M3OQZiPSWDRjr0jYVsfVdmLZvspdOo9
-   hQf3n/0jiTyyvBhTHO/0yH+SD5jwo1eItIu+YQEciSuz41tkfXzQzioa2
-   sFC123eulWTYoOeNKSvJYnZwJk67jSAKhAImyy8bVYNhhDs6AgY9bM+n9
-   veBFaa7QnytAbRKYKUCTXL2PyGZft470jHrfZnEdT+LNC4mI49Ia+Fr5n
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10342"; a="355538406"
-X-IronPort-AV: E=Sophos;i="5.91,211,1647327600"; 
-   d="scan'208";a="355538406"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2022 10:05:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,211,1647327600"; 
-   d="scan'208";a="602054410"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga001.jf.intel.com with ESMTP; 09 May 2022 10:05:22 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Mon, 9 May 2022 10:05:21 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Mon, 9 May 2022 10:05:21 -0700
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.027;
- Mon, 9 May 2022 10:05:21 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>, Borislav Petkov <bp@alien8.de>
-CC:     "markgross@kernel.org" <markgross@kernel.org>,
+        Mon, 9 May 2022 14:16:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7A8234D617
+        for <platform-driver-x86@vger.kernel.org>; Mon,  9 May 2022 11:12:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652119926;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PDz7CXT91tsteQlydOBrXVm/Nk7FX3udXe6Lvda4gk0=;
+        b=PvXRIOtUFPIFvILxSdQ9TiO62fENrwFfPwxxD2sBHSeOmOuvvAIHm9kGzUKatt3m3Mi0cv
+        +b4zDkOaiK/6VsJF3eeKdSB9F3/pclQcVwQNW67eXO06hvlnRlI8CZ+u526qgba+P75T/h
+        yFZ4c9FJ9qZlVaP003CvQeIc9Y7INyU=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-446-_0V86Z_TP2-uvtaVWAmkcA-1; Mon, 09 May 2022 14:12:03 -0400
+X-MC-Unique: _0V86Z_TP2-uvtaVWAmkcA-1
+Received: by mail-ej1-f69.google.com with SMTP id i14-20020a17090639ce00b006dabe6a112fso7087646eje.13
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 May 2022 11:12:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=PDz7CXT91tsteQlydOBrXVm/Nk7FX3udXe6Lvda4gk0=;
+        b=OLzr7E/KUywSzL/6dDgEEjyXlxUGCAiM6ae/eCQ9x08cssQrBSxjv6AkZ4HNe2GPeq
+         lTXCe7VLuyvx/sHMzN4321D3EKDPPtItlmOsUiYXx5v4FIWfMptl6Vg3YEy2W5bMmXCw
+         P/ntJFTYJYEVBAHDEsS3Ixyfz+4FMJfo0oLHqT23qTwhnZCgobgv7PtQ1a+/FzmnJrN4
+         eq5k2a78S8rT0LAeKsRcH7ChxrQmzGkUxbwLZmHCkV8izTEltcGMOKwzI6pbYVP+csZb
+         Bh+yO9Y2mcqJSWOJidUmIUlHl0/xlD+ifHGpvD2UzI+Qg+TFcaQaU4vfiIOF12eyQyNF
+         RTcA==
+X-Gm-Message-State: AOAM531VrGZn8Cy+DwguQStblSMRe37tZw7vRlnuP1uK1ouvvkM6F/qU
+        P50i5R/9wbLVBatmB3IxGAYZxubRBN9JjecDcDsKLj6XDRnflSB9PEqpWRLN4XNQSZiVwA0zH4W
+        IwrYl3kO3VUj3XsdIZDT0MXY5vzrOXYBeOg==
+X-Received: by 2002:a05:6402:4310:b0:427:f6e9:76b3 with SMTP id m16-20020a056402431000b00427f6e976b3mr18716529edc.324.1652119922159;
+        Mon, 09 May 2022 11:12:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzIhCnxEwAwh0UWoKYWIuKMyOPRZ6yYLPhg/iJNa7BitKx5xVaUTemiyrsOpCwXdv0OiUndPg==
+X-Received: by 2002:a05:6402:4310:b0:427:f6e9:76b3 with SMTP id m16-20020a056402431000b00427f6e976b3mr18716516edc.324.1652119922018;
+        Mon, 09 May 2022 11:12:02 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id p26-20020a056402045a00b0042617ba6388sm6586819edw.18.2022.05.09.11.12.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 May 2022 11:12:01 -0700 (PDT)
+Message-ID: <e8cfdd18-6c18-16c8-c4cc-89d50ba3ac92@redhat.com>
+Date:   Mon, 9 May 2022 20:12:00 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v5 00/10] Introduce In Field Scan driver
+Content-Language: en-US
+To:     "Luck, Tony" <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>
+Cc:     "markgross@kernel.org" <markgross@kernel.org>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
         "mingo@redhat.com" <mingo@redhat.com>,
         "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
@@ -71,37 +84,45 @@ CC:     "markgross@kernel.org" <markgross@kernel.org>,
         <platform-driver-x86@vger.kernel.org>,
         "patches@lists.linux.dev" <patches@lists.linux.dev>,
         "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: RE: [PATCH v5 00/10] Introduce In Field Scan driver
-Thread-Topic: [PATCH v5 00/10] Introduce In Field Scan driver
-Thread-Index: AQHYWxYVdsKdZt61BUSHj1qB1cqAT60MLiKAgAGW8wCABKLQAP//o/BAgAClR4CABCX1EA==
-Date:   Mon, 9 May 2022 17:05:20 +0000
-Message-ID: <05b3c44c62a944f793b66b2e8e8c0cfe@intel.com>
 References: <20220422200219.2843823-1-tony.luck@intel.com>
  <20220428153849.295779-1-tony.luck@intel.com>
  <13054c5c-ed48-b7a2-a800-25b9b1b1ab0d@redhat.com> <YnFK+gXFx0jQB1dz@zn.tnic>
  <b18234d7-a1f4-d5a4-e59b-f5439c38c2d0@redhat.com>
  <15cca88b82cd46a3a2a98b7cf336a6ed@intel.com>
  <4fda831b-c132-53cd-cd75-4f46b45219ac@redhat.com>
-In-Reply-To: <4fda831b-c132-53cd-cd75-4f46b45219ac@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.6.401.20
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+ <05b3c44c62a944f793b66b2e8e8c0cfe@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <05b3c44c62a944f793b66b2e8e8c0cfe@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Pj4gRG8geW91IHN0aWxsIHRha2UgcGF0Y2hlcyBhZnRlciAtcmM2Pw0KPg0KPiBJZiB0aGUgcGF0
-Y2hlcyBhcmUgc2VuZCBzb29uICgxLTIgZGF5cykgYWZ0ZXIgcmM2IEkgY2FuIHN0aWxsIHRha2Ug
-dGhlbS4NCg0KSGFucywNCg0KVjcgd2FzIHBvc3RlZCBGcmlkYXkuIEl0IHN1cnZpdmVkIG15IHdl
-ZWtlbmQgdGVzdGluZywgYW5kIGFub3RoZXIgcm91bmQgb2YgdGdseCBzY3J1dGlueSAoZW5kaW5n
-IHdpdGgNCmhpcyAiUmV2aWV3ZWQtYnkiIG9uIHRoZSBsYXR0ZXIgcGFydHMgb2YgdGhlIHNlcmll
-cy4NCg0KTGV0IG1lIGtub3cgaWYgdGhlcmUgaXMgYW55dGhpbmcgZWxzZSB5b3UgbmVlZCB0byBn
-ZXQgdGhlbSBhcHBsaWVkLg0KDQpUaGFua3MNCg0KLVRvbnkNCg==
+Hi,
+
+On 5/9/22 19:05, Luck, Tony wrote:
+>>> Do you still take patches after -rc6?
+>>
+>> If the patches are send soon (1-2 days) after rc6 I can still take them.
+> 
+> Hans,
+> 
+> V7 was posted Friday. It survived my weekend testing, and another round of tglx scrutiny (ending with
+> his "Reviewed-by" on the latter parts of the series.
+> 
+> Let me know if there is anything else you need to get them applied.
+
+From my side everything looks good. I plan to merge this
+into my review-hans (*) branch coming Wednesday.
+
+Regards,
+
+Hans
+
+
+
+*) And then from there move it to for-next once the build bots
+have had a chance to play with it
+
+
