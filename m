@@ -2,143 +2,146 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FA0C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 07:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CF9C4167D
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 May 2022 09:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229662AbiEIHtU (ORCPT
+        id S232112AbiEIJvc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 May 2022 03:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59458 "EHLO
+        Mon, 9 May 2022 05:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236744AbiEIHdD (ORCPT
+        with ESMTP id S235704AbiEIJY5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 May 2022 03:33:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 514A710DC
-        for <platform-driver-x86@vger.kernel.org>; Mon,  9 May 2022 00:29:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652081275;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=V2c9vBmEzL9GnOTwGUFGbuZHpMHymiK976kVFmr4dm0=;
-        b=ANpSGgeqFsTwCdcld7hd1sMBf4MFaopChjXMzpr++jsxNrmKBFS80BxrhClRejZIesLmfJ
-        ZhPm2QlM0KCZGBgNVAO3yDHrKpexW6D9rSDTm6nzhxClV1ybOCDkghagD2KG1DVBxBSfHG
-        pyzPU2PA4R8/AD/5MLtLqc41HWHcy0E=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-460-ebefpZfXNoS016HRueEjrg-1; Mon, 09 May 2022 03:27:53 -0400
-X-MC-Unique: ebefpZfXNoS016HRueEjrg-1
-Received: by mail-ej1-f72.google.com with SMTP id x2-20020a1709065ac200b006d9b316257fso6244903ejs.12
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 May 2022 00:27:53 -0700 (PDT)
+        Mon, 9 May 2022 05:24:57 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD2EB131F22;
+        Mon,  9 May 2022 02:21:01 -0700 (PDT)
+Received: by mail-qk1-f173.google.com with SMTP id z126so10302506qkb.2;
+        Mon, 09 May 2022 02:21:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
-         :subject:to:cc:content-language:content-transfer-encoding;
-        bh=V2c9vBmEzL9GnOTwGUFGbuZHpMHymiK976kVFmr4dm0=;
-        b=gk61KxxHF+PotNBnZ4umBFU9MX9uv7Iu+X7kHMIoY8qO02wF6hSw0aQiXnoIbdJXmH
-         eULIpIpxdeOym5q/kvjnKIWoN0dshHJlJjieOlMdfTValhrlcoYZwdPqW5/VtpLzHNUO
-         8Ej62lkEZXP+mKUaQNDeR32oWfLgH13jYUl0wTn/3rjL9iuvezaSA151INvDb9hltQg2
-         BE+Luw/JF3cUsGi3pe5bQgBdMPF39KMx7jx8NO1uZwAdYLc/L4Rem62POK/WVPJKu8//
-         ixgK/Dg97v4ZIenx7GYbH+YoW7pJ4iPbqk18A6rt3G5Fmf7bpaTEuScX9ysEJSzdzF68
-         aPww==
-X-Gm-Message-State: AOAM530SmlJieH2QlgcAbaw1PVlcGkrp/2IvjsSzQnVm4MowIQaLYBuT
-        1/PTnrDZpEX+XTwoA9Yz0YHmRoEHxLPdeFKIHY4S0tBVY3rMEKl4q4ZA8k/JpiKJzSMr0ydrpIL
-        6zva/xzb5nqkj51kSnwg5SC2P3fQPmSjWjw==
-X-Received: by 2002:a05:6402:4256:b0:428:39:c6c7 with SMTP id g22-20020a056402425600b004280039c6c7mr15465374edb.374.1652081272625;
-        Mon, 09 May 2022 00:27:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxtLYjqjd+JSRhyz+2aHDlDZujkKSuS44yxRLRXeGdCffdJgodAPLKfV+vb4QTZPqFG8D2GdQ==
-X-Received: by 2002:a05:6402:4256:b0:428:39:c6c7 with SMTP id g22-20020a056402425600b004280039c6c7mr15465361edb.374.1652081272439;
-        Mon, 09 May 2022 00:27:52 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id k14-20020aa7c04e000000b0042617ba639asm5967014edo.36.2022.05.09.00.27.51
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gMtmW3ArowZdX4IsaNSLBpR+NhLcfUq95yoUD9gi7Sw=;
+        b=RPbtzqE7rsbQATU6SraHZ5WF8sqL/dJMsdRf3VxMG2l0nyGHyJnVeR1CbqgVgiZwk7
+         K1cckVRnICC1Ttt/J+vIz1+8hg5h+QsziFaqrJmHfKRWUYjfvSxW0IPzoW30Ycvtfqbr
+         LoWndeocqBDIPgtNck0MoZHx4HjJ0lqEFa0hLFNYy4smuKdUmcfolZ1j+xDxBptDU/Xg
+         32atW/LVRs28O66Vheo+fJqFaeGiyCyp/erqy7i0uKWGKDfXR0fipzGqm+mFGBNfGzJD
+         hMAubUMZzWeB9o0I2WBUBPUPnayKzdFJJ8kjdqSbhguMF4rsQXGHwusQpvWIqaCFzdkt
+         vCZg==
+X-Gm-Message-State: AOAM532LFEsIpxM5WTRCEERrNv9b5cC8eNYIx8Qt41ds9PoaToFJYDW8
+        +Oj2xyFjFF6gi2GNnMbfvOT+878GxtTFoA==
+X-Google-Smtp-Source: ABdhPJxnCxGOKIp1bvvTmGtnVq0s0cmUaxXisxLRgd67SYcfs1XylGWC/N82+lVAr1wxirT3+vyUEA==
+X-Received: by 2002:a05:620a:4488:b0:6a0:2aab:a736 with SMTP id x8-20020a05620a448800b006a02aaba736mr11287091qkp.717.1652088060478;
+        Mon, 09 May 2022 02:21:00 -0700 (PDT)
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
+        by smtp.gmail.com with ESMTPSA id w24-20020ac87198000000b002f39b99f697sm7235538qto.49.2022.05.09.02.20.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 May 2022 00:27:52 -0700 (PDT)
-Message-ID: <d9007c58-71a2-e081-c609-fbf04855b591@redhat.com>
-Date:   Mon, 9 May 2022 09:27:51 +0200
+        Mon, 09 May 2022 02:20:59 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id g28so23731968ybj.10;
+        Mon, 09 May 2022 02:20:59 -0700 (PDT)
+X-Received: by 2002:a25:4506:0:b0:648:cfc2:301d with SMTP id
+ s6-20020a254506000000b00648cfc2301dmr12295875yba.380.1652088059134; Mon, 09
+ May 2022 02:20:59 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 5.18-4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Gross <mgross@linux.intel.com>,
+References: <20220507125443.2766939-1-daniel.lezcano@linexp.org> <20220507125443.2766939-2-daniel.lezcano@linexp.org>
+In-Reply-To: <20220507125443.2766939-2-daniel.lezcano@linexp.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 9 May 2022 11:20:47 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXXMzR+ukK9Bm+eWhLuWOozU6n96hTcGV5xf9omQvoHCA@mail.gmail.com>
+Message-ID: <CAMuHMdXXMzR+ukK9Bm+eWhLuWOozU6n96hTcGV5xf9omQvoHCA@mail.gmail.com>
+Subject: Re: [PATCH v2 01/14] thermal/core: Change thermal_zone_ops to thermal_sensor_ops
+To:     daniel.lezcano@linexp.org
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
+        Raju Rangoju <rajur@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Ido Schimmel <idosch@nvidia.com>,
+        Petr Machata <petrm@nvidia.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@kernel.org>, Peter Kaestle <peter@piie.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Chuansheng Liu <chuansheng.liu@intel.com>,
+        Jiasheng Jiang <jiasheng@iscas.ac.cn>,
+        Antoine Tenart <atenart@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:ACPI THERMAL DRIVER" <linux-acpi@vger.kernel.org>,
+        "open list:CXGB4 ETHERNET DRIVER (CXGB4)" <netdev@vger.kernel.org>,
+        "open list:INTEL WIRELESS WIFI LINK (iwlwifi)" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:ACER ASPIRE ONE TEMPERATURE AND FAN DRIVER" 
+        <platform-driver-x86@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:RENESAS R-CAR THERMAL DRIVERS" 
+        <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
+Hi Daniel,
 
-Here is a third round of bug-fixes for platform-drivers-x86
-for 5.18:
+Thanks for your patch!
 
- -  thinkpad_acpi AMD suspend/resume + fan detection fixes
- -  2 other small fixes
- -  1 hardware-id addition
+On Sat, May 7, 2022 at 3:03 PM Daniel Lezcano <daniel.lezcano@linexp.org> wrote:
+> A thermal zone is software abstraction of a sensor associated with
+> properties and cooling devices if any.
+>
+> The fact that we have thermal_zone and thermal_zone_ops mixed is
+> confusing and does not clearly identify the different components
+> entering in the thermal management process. A thermal zone appears to
+> be a sensor while it is not.
+>
+> In order to set the scene for multiple thermal sensors aggregated into
+> a single thermal zone. Rename the thermal_zone_ops to
+> thermal_sensor_ops, that will appear clearyl the thermal zone is not a
 
-Regards,
+to make it clear
 
-Hans
+> sensor but an abstraction of one [or multiple] sensor(s).
+>
+> Cc: Alexandre Bailon <abailon@baylibre.com>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc; Eduardo Valentin <eduval@amazon.com>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linexp.org>
 
+>  drivers/thermal/rcar_thermal.c                            | 4 ++--
 
-The following changes since commit eb2fd9b43fae0c51982ac4229535b6cfd77380db:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-  platform/x86/intel: pmc/core: change pmc_lpm_modes to static (2022-04-27 16:55:54 +0200)
+Gr{oetje,eeting}s,
 
-are available in the Git repository at:
+                        Geert
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.18-4
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-for you to fetch changes up to 44acfc22c7d055d9c4f8f0974ee28422405b971a:
-
-  platform/surface: aggregator: Fix initialization order when compiling as builtin module (2022-05-06 13:05:57 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v5.18-4
-
-3th set of pdx86 fixes for 5.18:
- -  thinkpad_acpi AMD suspend/resume + fan detection fixes
- -  2 other small fixes
- -  1 hardware-id addition
-
-The following is an automated git shortlog grouped by driver:
-
-platform/surface:
- -  aggregator: Fix initialization order when compiling as builtin module
- -  gpe: Add support for Surface Pro 8
-
-platform/x86/intel:
- -  Fix 'rmmod pmt_telemetry' panic
-
-thinkpad_acpi:
- -  Correct dual fan probe
- -  Add a s2idle resume quirk for a number of laptops
- -  Convert btusb DMI list to quirks
-
-----------------------------------------------------------------
-Mario Limonciello (2):
-      platform/x86: thinkpad_acpi: Convert btusb DMI list to quirks
-      platform/x86: thinkpad_acpi: Add a s2idle resume quirk for a number of laptops
-
-Mark Pearson (1):
-      platform/x86: thinkpad_acpi: Correct dual fan probe
-
-Maximilian Luz (2):
-      platform/surface: gpe: Add support for Surface Pro 8
-      platform/surface: aggregator: Fix initialization order when compiling as builtin module
-
-Prarit Bhargava (1):
-      platform/x86/intel: Fix 'rmmod pmt_telemetry' panic
-
- drivers/platform/surface/aggregator/core.c |   2 +-
- drivers/platform/surface/surface_gpe.c     |   8 ++
- drivers/platform/x86/intel/pmt/telemetry.c |   2 +-
- drivers/platform/x86/thinkpad_acpi.c       | 175 +++++++++++++++++++++++++++--
- 4 files changed, 173 insertions(+), 14 deletions(-)
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
