@@ -2,111 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAF8C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 May 2022 10:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C0FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 May 2022 10:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239641AbiEJKOe (ORCPT
+        id S240269AbiEJK5M (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 May 2022 06:14:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36954 "EHLO
+        Tue, 10 May 2022 06:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239611AbiEJKOZ (ORCPT
+        with ESMTP id S240719AbiEJK4b (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 May 2022 06:14:25 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D0DF2AACFD;
-        Tue, 10 May 2022 03:10:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BF4D9B81CA8;
-        Tue, 10 May 2022 10:10:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F4EC385C6;
-        Tue, 10 May 2022 10:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1652177425;
-        bh=DdPFsUVSv7R67frGX61raO5JCCbtyzeekzE/nESThhU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IoJjIXCCfHHivO8X0PqX8WAbWdVeWOcgJe8Pw2cjWC1GJNQAqEp3rb2SBqvEZYo3A
-         XzGOdszW5aH8i4v65YuDO5qKM7reUe3SXBCfxbkTWuJoHQnk9TbbTphisu9pAA2fEf
-         3o8rkTmLwm6xUODtE5n/3P+/dOrtV26GhDBGS5UQ=
-Date:   Tue, 10 May 2022 12:10:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <eballetbo@gmail.com>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        chrome-platform@lists.linux.dev
-Subject: Re: [PATCH RESEND v11] platform/chrome: Add ChromeOS ACPI device
- driver
-Message-ID: <Yno6DtwL+Mhic2ek@kroah.com>
-References: <YnoJ0k6eIUiwjXSZ@debian-BULLSEYE-live-builder-AMD64>
- <CAHp75Vd574LCnEq-KX=WHnnDyrjZgGu6W9wNEbnw79FBpyx=Lw@mail.gmail.com>
+        Tue, 10 May 2022 06:56:31 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86079186DE;
+        Tue, 10 May 2022 03:50:48 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id iq10so15560899pjb.0;
+        Tue, 10 May 2022 03:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=keKvWn4skwJEPMKYt8IdlL6/BT3R30J+5SJ0HpwYsbQ=;
+        b=TLnk/k5j02FJEO5ZPqpBonxx06Y7/UvAiW/xGg7q6jDc4KaST8vdQ4Q25FmZDW7WqS
+         K21JUSYFOYIOaDVDu8Crv1GFf6zy50NK+HXnFNXGVzrtMNMmRzagXJyPgFPiTmZVNVnF
+         ISDrXzbsIHZ2rUuFf223/A74htDcQlhsNa3n6kwhcIYwmAAgswojAC1Yt3VYNxO8LxUk
+         DjJtOi7+StxGiXqQZ/YXFac2ZLfHy3capQgHv9yBLeg0/EESiyN7riHf17B425YTmYLv
+         jvRi+TCDNVEMbPLbn5yzpD0flnwRAqRMNSAhx5yD9ODSrov1L6e4SAsW0c/JEA3zQ6hc
+         nVIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=keKvWn4skwJEPMKYt8IdlL6/BT3R30J+5SJ0HpwYsbQ=;
+        b=2n5DzpdLERo7heek0Og1DICFj4/KdLN17dLRSMB07ocmTtQ+g9siNuzogGLFTJZMgx
+         6NvtWMFmpnjdTCpLVAYxW12jBycXax417po15XF/D5iLngzp1dQgyVPoCP0mkp6/qg/E
+         dGbZbB26W4Ihnpfbt5eBPzgmE+r3JQ4z2LCJjWhaBt1/TeO3T8fGdYLP6Xd9h8sVLZh1
+         R93YqPR2qJosyVgzvtBulnSA5s5TcVT2/EXq0ytxGQyiGhBQbEVhRVP1ie3ARIKRFDfE
+         VmQkXxx5Y6CJpdiBpOmsBxIlfz+RoKThy2J47s9svYKXmVlYi9TSPPx/RKZwJdExMRfX
+         zOSA==
+X-Gm-Message-State: AOAM531D8XPKmX2dtoQQeFGYv04lNfRIRMU+StCfGve+uxd2ebCEfHOg
+        SKOp2cTD/TIB5v7n3f6dX9MaIx/9eAQ=
+X-Google-Smtp-Source: ABdhPJwcd9lTvldg1q7fXnHFTXYXLMY8RnJM+oKWHCngh5ehFgNLm1Af1QZ7z0E8AbSuNdsmwXc4sg==
+X-Received: by 2002:a17:902:c602:b0:15f:2a36:ab03 with SMTP id r2-20020a170902c60200b0015f2a36ab03mr1396101plr.99.1652179842196;
+        Tue, 10 May 2022 03:50:42 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id m2-20020a17090aab0200b001cd4c118b07sm1534895pjq.16.2022.05.10.03.50.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 May 2022 03:50:41 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: chi.minghao@zte.com.cn
+To:     corentin.chary@gmail.com
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Minghao Chi <chi.minghao@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH] samsung-laptop: use kobj_to_dev()
+Date:   Tue, 10 May 2022 10:50:38 +0000
+Message-Id: <20220510105038.1351743-1-chi.minghao@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vd574LCnEq-KX=WHnnDyrjZgGu6W9wNEbnw79FBpyx=Lw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, May 10, 2022 at 11:33:19AM +0200, Andy Shevchenko wrote:
-> On Tue, May 10, 2022 at 8:44 AM Muhammad Usama Anjum
-> <usama.anjum@collabora.com> wrote:
-> >
-> > From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> >
-> > The x86 Chromebooks have the ChromeOS ACPI device. This driver attaches
-> > to the ChromeOS ACPI device and exports the values reported by ACPI in a
-> > sysfs directory. This data isn't present in ACPI tables when read
-> > through ACPI tools, hence a driver is needed to do it. The driver gets
-> > data from firmware using the ACPI component of the kernel. The ACPI values
-> > are presented in string form (numbers as decimal values) or binary
-> > blobs, and can be accessed as the contents of the appropriate read only
-> > files in the standard ACPI device's sysfs directory tree. This data is
-> > consumed by the ChromeOS user space.
-> 
-> > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > Cc: Hans de Goede <hdegoede@redhat.com>
-> 
-> You can use --cc parameter to `git send-email` instead of putting
-> these lines in the commit message.
-> 
-> ...
-> 
-> > +#define DEV_ATTR(_var, _name)                                  \
-> > +       static struct device_attribute dev_attr_##_var =        \
-> > +               __ATTR(_name, 0444, chromeos_first_level_attr_show, NULL);
-> > +
-> 
-> Why not ATTR_RO()?
+From: Minghao Chi <chi.minghao@zte.com.cn>
 
-Try it and see, that will not work here.
+Use kobj_to_dev() instead of open-coding it.
 
-thanks,
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
+---
+ drivers/platform/x86/samsung-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index 19f6b456234f..c187dcdf82f0 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -1208,7 +1208,7 @@ static int __init samsung_backlight_init(struct samsung_laptop *samsung)
+ static umode_t samsung_sysfs_is_visible(struct kobject *kobj,
+ 					struct attribute *attr, int idx)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct samsung_laptop *samsung = dev_get_drvdata(dev);
+ 	bool ok = true;
+ 
+-- 
+2.25.1
+
+
