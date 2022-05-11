@@ -2,131 +2,218 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57768C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 16:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32643C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 16:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344323AbiEKQFE (ORCPT
+        id S1344347AbiEKQIz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 May 2022 12:05:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48204 "EHLO
+        Wed, 11 May 2022 12:08:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344360AbiEKQEz (ORCPT
+        with ESMTP id S230114AbiEKQIw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 May 2022 12:04:55 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD3B81CE60C;
-        Wed, 11 May 2022 09:04:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652285088; x=1683821088;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DdgW529vfrzUdK200xAyqlK8chpMkKRWAWDKnvN+xwU=;
-  b=n/CoXh9Go0iybYnUG27b1a3hP3k/avkGPZonqwWtrkrN7K5m3OHChXVn
-   c7z/BACU6zTcM0yjnYpee1POSZyj642aXVxaYM70LpyoAtOOUIYyDfCjO
-   YLw7ZpVgA8+W7jPhid0NFF5SMGiiwCoMyKEZOxNlUExYBddAivsTPbPux
-   KFN1Q9zFMF9PwB6rvxzs6tAai3dziwvM9LJQQLcOXBFmO7cNWEvmHybPk
-   4gUNjD/J5taec7USjt07jDZQYQN2uJbQ5Ja6VEBOdGNyhddxawtg5ED/+
-   erBdZ319BuMI3tAqAzT7xRs43sCClDi/A9GMH/wW8rgzsGTqJ3pvLxb7F
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="294982389"
-X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
-   d="scan'208";a="294982389"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 09:04:48 -0700
-X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
-   d="scan'208";a="739283010"
-Received: from abynum-mobl.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.209.66.243])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 09:04:47 -0700
-Message-ID: <7481e4eb79a1eabb7389b3d74d132c111be36477.camel@linux.intel.com>
-Subject: Re: [PATCH] tools/power/x86/intel-speed-select: Display error on
- turbo mode disabled
-From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 11 May 2022 09:04:47 -0700
-In-Reply-To: <e2f85541-3e7b-6120-1c44-70ec4447291c@redhat.com>
-References: <20220510023421.3930540-1-srinivas.pandruvada@linux.intel.com>
-         <e2f85541-3e7b-6120-1c44-70ec4447291c@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+        Wed, 11 May 2022 12:08:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 158DC20EE21
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 09:08:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652285330;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0TAjuarkhLQxoAHeLGfylbueNIUv/uakgBC3ZhGbIR8=;
+        b=hiL6/W2x/z5N2S26kifA7eTTbwHwYk2F8u9Cl86yijoYobuqfYdzmREYAETaVdYYbbmoCP
+        vBMKoUIS4a5YsHYIrOTsErcgUhEnzHL0m0DlQZaZ/FLZwuGbOiTQwvg2I90zS1F/gCwzcv
+        2/yad4ZiSkOym+ojX0ytrM1AyJkMeWo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-197-OfhMi_XmMr-hJ--8uNOrnQ-1; Wed, 11 May 2022 12:08:46 -0400
+X-MC-Unique: OfhMi_XmMr-hJ--8uNOrnQ-1
+Received: by mail-ed1-f70.google.com with SMTP id cw28-20020a056402229c00b00425dda4b67dso1603491edb.10
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 09:08:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=0TAjuarkhLQxoAHeLGfylbueNIUv/uakgBC3ZhGbIR8=;
+        b=zhd7+jcQ1fhslgxg5EzcksXuQ3epKKLm5X6dZfAS0QNkwuFongvF3uNmcaDhxY1L6U
+         DUz5hUdp9GnwPpMi8jRqgWMzJlYEIz4IFUjVdw3V0HAkTTfSLNRDrACl48fRzL6mu6hs
+         ZurYeMfIxXAG1jQcQsDAP2U2c2i+nWK4CVaNfbyFZ9kUdYOGfCKW5J27ufDZ/zS86luk
+         WelxadthkG52N2ufRqtkUZpChDa3wn+YnFdKZHrQwrP5DJFttRLnGN+KZjMMXe4oTHYN
+         DlNGQDGClyItY4pdyAEYjqpiiQL4HZM+VrtVQQvaKU1gf81ndHy47nvLd24X9zSNZFSO
+         GRjw==
+X-Gm-Message-State: AOAM531R1b14KjySM8/py0lhstqCUJE9VZ0KRYdBkn+Lke9nJtceQXkd
+        2Jw6lJN163Qg8g9CDguDBPh+UT0Z3UD3g7+U9kZbYs7K9Ejr48CS1EVTJF6y01YMfJM70gqjDWe
+        EpmWU7S7YbuHGzuONMfJwbsipKIgO4oOhdA==
+X-Received: by 2002:a17:907:70c4:b0:6f3:d23f:d711 with SMTP id yk4-20020a17090770c400b006f3d23fd711mr24653694ejb.205.1652285325208;
+        Wed, 11 May 2022 09:08:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzmTsJIO4z+aRs4UiV4aYVuseJVmDaOGsHevOquQ3R7A40zTHs5eGgHEtcyWYgi3gqrT2wi6A==
+X-Received: by 2002:a17:907:70c4:b0:6f3:d23f:d711 with SMTP id yk4-20020a17090770c400b006f3d23fd711mr24653656ejb.205.1652285324948;
+        Wed, 11 May 2022 09:08:44 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id cn16-20020a0564020cb000b0042617ba63bfsm1339395edb.73.2022.05.11.09.08.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 May 2022 09:08:44 -0700 (PDT)
+Message-ID: <eff9907f-e92b-9115-bea7-b1093d1dc28e@redhat.com>
+Date:   Wed, 11 May 2022 18:08:43 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v5 0/8] platform/x86: introduce p2sb_bar() helper
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?=c5=81ukasz_Bartosik?= <lb@semihalf.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+References: <20220510151451.85561-1-andriy.shevchenko@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220510151451.85561-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Hi All,
 
-On Wed, 2022-05-11 at 17:56 +0200, Hans de Goede wrote:
-> Hi,
+On 5/10/22 17:14, Andy Shevchenko wrote:
+> There are a few users and at least one more is coming (*1) that would
+> like to utilize P2SB mechanism of hiding and unhiding a device from
+> the PCI configuration space.
 > 
-> On 5/10/22 04:34, Srinivas Pandruvada wrote:
-> > For Intel SST turbo-freq feature to be enabled, the turbo mode on
-> > the
-> > platform must be enabled also. If turbo mode is disabled, display
-> > error
-> > while enabling turbo-freq feature.
-> > 
-> > Signed-off-by: Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>
-> > ---
-> > Since this is a trivial patch, I am not sending a PULL request.
+> Here is the series to consolidate p2sb handling code for existing users
+> and provide a generic way for new comer(s).
 > 
-> Note not related to this patch, but when test building intel-speed-
-> select
-> I got the following compiler warning:
+> It also includes a patch to enable GPIO controllers on Apollo Lake
+> when it's used with ABL bootloader w/o ACPI support (*2).
 > 
->   CC      hfi-events.o
-> In function ‘process_hfi_event’,
->     inlined from ‘handle_event’ at hfi-events.c:220:5:
-> hfi-events.c:184:9: warning: ‘perf_cap.cpu’ may be used uninitialized
-> [-Wmaybe-uninitialized]
->   184 |         process_level_change(perf_cap->cpu);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> hfi-events.c: In function ‘handle_event’:
-> hfi-events.c:193:25: note: ‘perf_cap.cpu’ was declared here
->   193 |         struct perf_cap perf_cap;
->       |                         ^~~~~~~~
+> The patch that brings the helper ("platform/x86/intel: Add Primary to
+> Sideband (P2SB) bridge support") has a commit message that sheds a light
+> on what the P2SB is and why this is needed.
 > 
+> The changes made in v5 do not change the main idea and the functionality
+> in a big scale. What we need is probably one more retest done by Henning
+> (*3). I hope to have it merged to v5.19-rc1 that Siemens can develop
+> their changes based on this series (*4).
 > 
-Let me send a patch to fix. In reality this will not happen as HFI
-message will always have a CPU.
+> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+> since we have an ACPI device for GPIO I do not see any attempts to recreate
+> one).
+> 
+> *1) One in this series, and one is a recent merge of the Simatic IPC drivers
+> *2) This patch can be postponed as Lee hasn't given his tag yet.
+> *3) Henning gave his tag and I dared to used it even against changed patch 1
+> *4) The changes were posted in between of v4 and v5 of this series, but need
+>     more work.
+> 
+> Taking into account the *2) the series is ready to be merged via PDx86 tree.
 
-Thanks,
-Srinivas
+I must admit I have lost track of all the Ack-s / Reviewed-by-s a bit.
+
+So from the above I take it that the Ack-s resp. Reviewed-by-s on the
+other non drivers/platform/x86 bits also signal an Ack to merge the entire
+series through the pdx86 tree?
+
+Lee, any chance you can take a look at patches 3-5 and give your Ack
+for merging these through the pdx86 tree together with the rest?
+
+Regards,
+
+Hans
 
 
-> Regards,
+p.s.
+
+Since this is mostly a cleanup series and since we are getting close
+to the next merge-window I believe that it likely is best to merge
+this after 5.19-rc1 has been released. I can then also provide
+an immutable branch for other maintainers early on in the 5.19
+cycle which should help to avoid merge conflicts.
+
+
+
+
 > 
-> Hans
+> Changes in v5:
+> - rewritten patch 1 to use pci_scan_single_device() (Lukas, Bjorn)
+> - rebased patch 2 on top of the new Intel SPI NOR codebase
+> - fixed a potential bug and rewritten resource filling in patch 5 (Lee)
+> - added many different tags in a few patches (Jean, Wolfram, Henning)
+> 
+> Changes in v4:
+> - added tag to the entire series (Hans)
+> - added tag to pin control patch (Mika)
+> - dropped PCI core changes (PCI core doesn't want modifications to be made)
+> - as a consequence of the above merged necessary bits into p2sb.c
+> - added a check that p2sb is really hidden (Hans)
+> - added EDAC patches (reviewed by maintainer internally)
+> 
+> Changes in v3:
+> - resent with cover letter
+> 
+> Changes in v2:
+> - added parentheses around bus in macros (Joe)
+> - added tag (Jean)
+> - fixed indentation and wrapping in the header (Christoph)
+> - moved out of PCI realm to PDx86 as the best common denominator (Bjorn)
+> - added a verbose commit message to explain P2SB thingy (Bjorn)
+> - converted first parameter from pci_dev to pci_bus
+> - made first two parameters (bus and devfn) optional (Henning, Lee)
+> - added Intel pin control patch to the series (Henning, Mika)
+> - fixed English style in the commit message of one of MFD patch (Lee)
+> - added tags to my MFD LPC ICH patches (Lee)
+> - used consistently (c) (Lee)
+> - made indexing for MFD cell and resource arrays (Lee)
+> - fixed the resource size in i801 (Jean)
+> 
+> Andy Shevchenko (6):
+>   pinctrl: intel: Check against matching data instead of ACPI companion
+>   mfd: lpc_ich: Factor out lpc_ich_enable_spi_write()
+>   mfd: lpc_ich: Switch to generic p2sb_bar()
+>   i2c: i801: convert to use common P2SB accessor
+>   EDAC, pnd2: Use proper I/O accessors and address space annotation
+>   EDAC, pnd2: convert to use common P2SB accessor
+> 
+> Jonathan Yong (1):
+>   platform/x86/intel: Add Primary to Sideband (P2SB) bridge support
+> 
+> Tan Jui Nee (1):
+>   mfd: lpc_ich: Add support for pinctrl in non-ACPI system
+> 
+>  drivers/edac/Kconfig                   |   1 +
+>  drivers/edac/pnd2_edac.c               |  62 +++-------
+>  drivers/i2c/busses/Kconfig             |   1 +
+>  drivers/i2c/busses/i2c-i801.c          |  39 ++----
+>  drivers/mfd/Kconfig                    |   1 +
+>  drivers/mfd/lpc_ich.c                  | 161 +++++++++++++++++++------
+>  drivers/pinctrl/intel/pinctrl-intel.c  |  14 +--
+>  drivers/platform/x86/intel/Kconfig     |  12 ++
+>  drivers/platform/x86/intel/Makefile    |   2 +
+>  drivers/platform/x86/intel/p2sb.c      | 133 ++++++++++++++++++++
+>  include/linux/platform_data/x86/p2sb.h |  28 +++++
+>  11 files changed, 338 insertions(+), 116 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/p2sb.c
+>  create mode 100644 include/linux/platform_data/x86/p2sb.h
 > 
 > 
-> 
-> > 
-> >  tools/power/x86/intel-speed-select/isst-config.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/tools/power/x86/intel-speed-select/isst-config.c
-> > b/tools/power/x86/intel-speed-select/isst-config.c
-> > index 060390e88e37..9d35614995ee 100644
-> > --- a/tools/power/x86/intel-speed-select/isst-config.c
-> > +++ b/tools/power/x86/intel-speed-select/isst-config.c
-> > @@ -1892,6 +1892,12 @@ static void set_fact_for_cpu(int cpu, void
-> > *arg1, void *arg2, void *arg3,
-> >         int ret;
-> >         int status = *(int *)arg4;
-> >  
-> > +       if (status && no_turbo()) {
-> > +               isst_display_error_info_message(1, "Turbo mode is
-> > disabled", 0, 0);
-> > +               ret = -1;
-> > +               goto disp_results;
-> > +       }
-> > +
-> >         ret = isst_get_ctdp_levels(cpu, &pkg_dev);
-> >         if (ret) {
-> >                 isst_display_error_info_message(1, "Failed to get
-> > number of levels", 0, 0);
-> 
+> base-commit: 3bf222d317a20170ee17f082626c1e0f83537e13
 
