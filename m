@@ -2,205 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03025C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 15:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70051C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 16:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344151AbiEKP7Y (ORCPT
+        id S233545AbiEKQEG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 May 2022 11:59:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56176 "EHLO
+        Wed, 11 May 2022 12:04:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239167AbiEKP7X (ORCPT
+        with ESMTP id S1344230AbiEKQEG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 May 2022 11:59:23 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00FF81505CF;
-        Wed, 11 May 2022 08:59:21 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: usama.anjum)
-        with ESMTPSA id F0E6E1F41720
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1652284760;
-        bh=JQ6HdYH9HaMCjw2/dzr/tOM16K501dak4z60cc1ZykY=;
-        h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-        b=KNGvZVnG5pMiE8Utp5gcEaS8cUQTgJ9S8uF7Hli0BhK/lKJPjNXFvBRxIjG+ZoLHb
-         rhc2GromAoJx2M9tCfKJvyJp5uGE5rhlqLmbYTEpUqhXfnZA/SuelhrPq7PxXZZ2fE
-         1y62AIMulgwoeS3cKUdjYmreBBaK3WCHaWLvkgOJoPkbJgOhZzJyzurGWHIZBjjahe
-         gwj20WjmXJPjAc8Q5BGoGCDnCYSlZ0foEq0rioYpu2JdKDRJNk0wcAQyeW3qGY+Osx
-         fFkQ31tZTqjjdD1TV6uCgcZKe94uF3kVRxVtJdndKhA+woeXmd8egj+txOJaHirB8j
-         nk1E7XqdyvT4Q==
-Message-ID: <8bd83f45-5278-e817-3f65-88fafd0ad3f4@collabora.com>
-Date:   Wed, 11 May 2022 20:59:07 +0500
+        Wed, 11 May 2022 12:04:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DD064199B24
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 09:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652285044;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=byqMNSdf6bnIBh4DurWrX7V2g59mmEQr+NLKUpUehNY=;
+        b=AS9OgPWRRuMvKtkeoGIiJ6luackU2oUsCjzyLPi0u1vnvCMf4Khaq3o+8F7azPdmiHpZBd
+        oW/lARuce1acri/sEi/ThOzCsjS6ntkOxw36v7p6sFCX4GnaV5/1tLCQI0VGnE08QTjq5P
+        sYVti1FKR7blt5Rr6JtqUT8gKglGObA=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-417-b41OR9DYPnKsCYnWL27wKQ-1; Wed, 11 May 2022 12:04:00 -0400
+X-MC-Unique: b41OR9DYPnKsCYnWL27wKQ-1
+Received: by mail-ed1-f70.google.com with SMTP id bf14-20020a0564021a4e00b0042872820fddso1631972edb.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 09:04:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=byqMNSdf6bnIBh4DurWrX7V2g59mmEQr+NLKUpUehNY=;
+        b=7BJXUAiAfRfHM92U4a7+ZYEQfAp3D3gOR9WaQ2dR0fAWAJoZhH7yzWeZUI8J/zICzY
+         ezNBekbjqLrdlGPJ28dQXaIIsLEdZES5vVt7Ggu+GFis1n0gQfjeUMf1CTJU+kfsvSUV
+         6CWfGNZIoIorgwARGvc8sfuU4cZWO3tJYvFZG62Z69MjRPagqGd9skMiq610vDtwcsru
+         Ro+4p7vjgy2fQfClF6TDzL6nu1Fw8f2Urc+4Kt7jxmtdp0EGzJXZYsfp8YxzVqs7/gv5
+         t05ZZLoeP2GgqVJfWnG3Nimsw3D/sJaSe+l3ogRZrhvYLQK+mobY8jPD+R80ImKDWKzX
+         XNvg==
+X-Gm-Message-State: AOAM533BI4+UdGe2Y1DzjznrEhnf7s+3AFRREou9t+W4Limb1X/7GV/N
+        oUAvo0VzvX2nP39H8iZ+MadPFHXSx2QtB+qufqIc2qMJn05kK7e6LMsE/dEvic6Pe09Q9xz4l/3
+        XUKNHLRIipG+DcOPyOsex35ebbSotqYfryg==
+X-Received: by 2002:a17:906:3e05:b0:6f3:a14a:fd3f with SMTP id k5-20020a1709063e0500b006f3a14afd3fmr24340207eji.640.1652285038871;
+        Wed, 11 May 2022 09:03:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz57bRJ8Xm97UzTQ6gASlTYMO34H4z/Jt5jP3gub5wjACPTo4dTYHQBBEZVD8jqkcn8T3Pliw==
+X-Received: by 2002:a17:906:3e05:b0:6f3:a14a:fd3f with SMTP id k5-20020a1709063e0500b006f3a14afd3fmr24340190eji.640.1652285038652;
+        Wed, 11 May 2022 09:03:58 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id v22-20020aa7d9d6000000b0042617ba6392sm1337013eds.28.2022.05.11.09.03.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 May 2022 09:03:58 -0700 (PDT)
+Message-ID: <1bdf6cfd-7690-f949-8eee-e545af979a3a@redhat.com>
+Date:   Wed, 11 May 2022 18:03:57 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-From:   Muhammad Usama Anjum <usama.anjum@collabora.com>
-Subject: Re: [PATCH RESEND v11] platform/chrome: Add ChromeOS ACPI device
- driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     usama.anjum@collabora.com, "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <eballetbo@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        chrome-platform@lists.linux.dev
-References: <YnoJ0k6eIUiwjXSZ@debian-BULLSEYE-live-builder-AMD64>
- <CAHp75Vd574LCnEq-KX=WHnnDyrjZgGu6W9wNEbnw79FBpyx=Lw@mail.gmail.com>
+Subject: Re: [PATCH V2] samsung-laptop: use kobj_to_dev()
 Content-Language: en-US
-In-Reply-To: <CAHp75Vd574LCnEq-KX=WHnnDyrjZgGu6W9wNEbnw79FBpyx=Lw@mail.gmail.com>
+To:     cgel.zte@gmail.com, andy.shevchenko@gmail.com
+Cc:     chi.minghao@zte.com.cn, corentin.chary@gmail.com,
+        linux-kernel@vger.kernel.org, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, zealci@zte.com.cn
+References: <CAHp75Vc+G1JNkxBcpyXge9qsGpT0m4erBV1aEi4bMHDYfE-JOw@mail.gmail.com>
+ <20220511021522.1488373-1-chi.minghao@zte.com.cn>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220511021522.1488373-1-chi.minghao@zte.com.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy,
+Hi,
 
-Thank you for reviewing.
+On 5/11/22 04:15, cgel.zte@gmail.com wrote:
+> From: Minghao Chi <chi.minghao@zte.com.cn>
+> 
+> Use kobj_to_dev() instead of open-coding it.
+> 
+> Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
 
-On 5/10/22 2:33 PM, Andy Shevchenko wrote:
-> On Tue, May 10, 2022 at 8:44 AM Muhammad Usama Anjum
-> <usama.anjum@collabora.com> wrote:
->>
->> From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>
->> The x86 Chromebooks have the ChromeOS ACPI device. This driver attaches
->> to the ChromeOS ACPI device and exports the values reported by ACPI in a
->> sysfs directory. This data isn't present in ACPI tables when read
->> through ACPI tools, hence a driver is needed to do it. The driver gets
->> data from firmware using the ACPI component of the kernel. The ACPI values
->> are presented in string form (numbers as decimal values) or binary
->> blobs, and can be accessed as the contents of the appropriate read only
->> files in the standard ACPI device's sysfs directory tree. This data is
->> consumed by the ChromeOS user space.
-> 
->> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> Cc: Hans de Goede <hdegoede@redhat.com>
-> 
-> You can use --cc parameter to `git send-email` instead of putting
-> these lines in the commit message.
-> 
-> ...
-> 
->> +#define DEV_ATTR(_var, _name)                                  \
->> +       static struct device_attribute dev_attr_##_var =        \
->> +               __ATTR(_name, 0444, chromeos_first_level_attr_show, NULL);
->> +
-> 
-> Why not ATTR_RO()?
-It'll not work as attribute name has . in it.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-> 
-> ...
-> 
->> +#define GPIO_ATTR_GROUP(_group, _name, _num)                                           \
->> +       static umode_t attr_is_visible_gpio_##_num(struct kobject *kobj,                \
->> +                                                  struct attribute *attr, int n)       \
->> +       {                                                                               \
->> +               if (_num < chromeos_acpi_gpio_groups)                                   \
->> +                       return attr->mode;                                              \
-> 
->> +               else                                                                    \
-> 
-> Redundant.
-We are deciding on run time that how many GPIO attribute groups need to
-be shown. chromeos_acpi_gpio_groups is set at run time. I don't see why
-`else` can be redundant here.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-> 
->> +                       return 0;                                                       \
->> +       }                                                                               \
->> +       static ssize_t chromeos_attr_show_gpio_##_num(struct device *dev,               \
->> +                                                     struct device_attribute *attr,    \
->> +                                                     char *buf)                        \
->> +       {                                                                               \
->> +               char name[ACPI_ATTR_NAME_LEN + 1];                                      \
->> +               int ret, num;                                                           \
->> +                                                                                       \
->> +               ret = parse_attr_name(attr->attr.name, name, &num);                     \
->> +               if (ret)                                                                \
->> +                       return ret;                                                     \
-> 
->> +               ret = chromeos_acpi_evaluate_method(dev, _num, num, name, buf);         \
->> +               if (ret < 0)                                                            \
->> +                       ret = 0;                                                        \
-> 
-> Below I saw the same code, why is the error ignored?
-> 
-I'll return the error in both places.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
->> +               return ret;                                                             \
->> +       }                                                                               \
->> +       static struct device_attribute dev_attr_0_##_group =                            \
->> +               __ATTR(GPIO.0, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
->> +       static struct device_attribute dev_attr_1_##_group =                            \
->> +               __ATTR(GPIO.1, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
->> +       static struct device_attribute dev_attr_2_##_group =                            \
->> +               __ATTR(GPIO.2, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
->> +       static struct device_attribute dev_attr_3_##_group =                            \
->> +               __ATTR(GPIO.3, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
->> +                                                                                       \
->> +       static struct attribute *attrs_##_group[] = {                                   \
->> +               &dev_attr_0_##_group.attr,                                              \
->> +               &dev_attr_1_##_group.attr,                                              \
->> +               &dev_attr_2_##_group.attr,                                              \
->> +               &dev_attr_3_##_group.attr,                                              \
->> +               NULL                                                                    \
->> +       };                                                                              \
->> +       static const struct attribute_group attr_group_##_group = {                     \
->> +               .name = _name,                                                          \
->> +               .is_visible = attr_is_visible_gpio_##_num,                              \
-> 
->> +               .attrs = attrs_##_group                                                 \
-> 
-> Keep a comma here.
-Is there any particular reason for it? If there is, I'll add commas to
-all the structures.
-...
-> 
-> ...
-> 
->> +static int parse_attr_name(const char *name, char *attr_name, int *attr_num)
->> +{
->> +       int ret = 0;
->> +
->> +       strscpy(attr_name, name, ACPI_ATTR_NAME_LEN + 1);
->> +
->> +       if (strlen(name) > ACPI_ATTR_NAME_LEN)
-> 
-> This seems strange, esp. taking into account that strscpy() returns that.
-> 
-> int ret;
-> 
-> ret = strscpy(...);
-> if (ret == -E2BIG)
->   return kstrtoint(...);
-> 
-> return 0;
-This is very nice way to do it. I'll update.
-...
+Regards,
 
--- 
-Muhammad Usama Anjum
+Hans
+
+
+> ---
+> v1->v2:
+> 	remove Reported-by: Zeal Robot <zealci@zte.com.cn>
+> 
+>  drivers/platform/x86/samsung-laptop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+> index 19f6b456234f..c187dcdf82f0 100644
+> --- a/drivers/platform/x86/samsung-laptop.c
+> +++ b/drivers/platform/x86/samsung-laptop.c
+> @@ -1208,7 +1208,7 @@ static int __init samsung_backlight_init(struct samsung_laptop *samsung)
+>  static umode_t samsung_sysfs_is_visible(struct kobject *kobj,
+>  					struct attribute *attr, int idx)
+>  {
+> -	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct device *dev = kobj_to_dev(kobj);
+>  	struct samsung_laptop *samsung = dev_get_drvdata(dev);
+>  	bool ok = true;
+>  
+
