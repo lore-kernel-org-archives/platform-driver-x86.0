@@ -2,218 +2,225 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32643C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 16:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F66C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 16:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344347AbiEKQIz (ORCPT
+        id S240920AbiEKQXl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 May 2022 12:08:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35604 "EHLO
+        Wed, 11 May 2022 12:23:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230114AbiEKQIw (ORCPT
+        with ESMTP id S1344654AbiEKQXk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 May 2022 12:08:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 158DC20EE21
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 09:08:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652285330;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0TAjuarkhLQxoAHeLGfylbueNIUv/uakgBC3ZhGbIR8=;
-        b=hiL6/W2x/z5N2S26kifA7eTTbwHwYk2F8u9Cl86yijoYobuqfYdzmREYAETaVdYYbbmoCP
-        vBMKoUIS4a5YsHYIrOTsErcgUhEnzHL0m0DlQZaZ/FLZwuGbOiTQwvg2I90zS1F/gCwzcv
-        2/yad4ZiSkOym+ojX0ytrM1AyJkMeWo=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-197-OfhMi_XmMr-hJ--8uNOrnQ-1; Wed, 11 May 2022 12:08:46 -0400
-X-MC-Unique: OfhMi_XmMr-hJ--8uNOrnQ-1
-Received: by mail-ed1-f70.google.com with SMTP id cw28-20020a056402229c00b00425dda4b67dso1603491edb.10
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 09:08:46 -0700 (PDT)
+        Wed, 11 May 2022 12:23:40 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D5A60BA8
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 09:23:38 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id n10so5127022ejk.5
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 09:23:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=POdbBUuLUOeD8dnJi9C2So78rhobliTsIgeT1Jg08bk=;
+        b=gbgLI2yp/3VCBc7DlaQPxNdeiz65WMkVuJXn1mPLH0mQQ1ZRV2z74XHm/flUlawuiI
+         Vf1/8rHCM/p0dFcR/CxKOJPqxWMPYXUtZYqUZvVeTRrYUur/kAi0pk3APCvJZuSE1dIh
+         mF5e4Xcl+DYTO6tg7veoz5qFwfthauZyE+Kn2wDQIcxkHbLInY8Qg2vj3/7AEfRF84Df
+         S6FZXxkasSWS0s47QTiqqjptEEojp7c9ACoJP1KD7xp0QfvNQJTgbpMtFEjyU2/oQykk
+         9h1BNdmfXmpA2f/Z8q6G2hgoloXuy5lrshBqAgxpQBu/NeRfVzyf6Zy3v6IkntTsFzcL
+         5DSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=0TAjuarkhLQxoAHeLGfylbueNIUv/uakgBC3ZhGbIR8=;
-        b=zhd7+jcQ1fhslgxg5EzcksXuQ3epKKLm5X6dZfAS0QNkwuFongvF3uNmcaDhxY1L6U
-         DUz5hUdp9GnwPpMi8jRqgWMzJlYEIz4IFUjVdw3V0HAkTTfSLNRDrACl48fRzL6mu6hs
-         ZurYeMfIxXAG1jQcQsDAP2U2c2i+nWK4CVaNfbyFZ9kUdYOGfCKW5J27ufDZ/zS86luk
-         WelxadthkG52N2ufRqtkUZpChDa3wn+YnFdKZHrQwrP5DJFttRLnGN+KZjMMXe4oTHYN
-         DlNGQDGClyItY4pdyAEYjqpiiQL4HZM+VrtVQQvaKU1gf81ndHy47nvLd24X9zSNZFSO
-         GRjw==
-X-Gm-Message-State: AOAM531R1b14KjySM8/py0lhstqCUJE9VZ0KRYdBkn+Lke9nJtceQXkd
-        2Jw6lJN163Qg8g9CDguDBPh+UT0Z3UD3g7+U9kZbYs7K9Ejr48CS1EVTJF6y01YMfJM70gqjDWe
-        EpmWU7S7YbuHGzuONMfJwbsipKIgO4oOhdA==
-X-Received: by 2002:a17:907:70c4:b0:6f3:d23f:d711 with SMTP id yk4-20020a17090770c400b006f3d23fd711mr24653694ejb.205.1652285325208;
-        Wed, 11 May 2022 09:08:45 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzmTsJIO4z+aRs4UiV4aYVuseJVmDaOGsHevOquQ3R7A40zTHs5eGgHEtcyWYgi3gqrT2wi6A==
-X-Received: by 2002:a17:907:70c4:b0:6f3:d23f:d711 with SMTP id yk4-20020a17090770c400b006f3d23fd711mr24653656ejb.205.1652285324948;
-        Wed, 11 May 2022 09:08:44 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id cn16-20020a0564020cb000b0042617ba63bfsm1339395edb.73.2022.05.11.09.08.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 May 2022 09:08:44 -0700 (PDT)
-Message-ID: <eff9907f-e92b-9115-bea7-b1093d1dc28e@redhat.com>
-Date:   Wed, 11 May 2022 18:08:43 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=POdbBUuLUOeD8dnJi9C2So78rhobliTsIgeT1Jg08bk=;
+        b=p3tXn6nBiUQqDbgvnVVYWgRXwmzGTu/m4fcR0o5owzq4BsG+ol8u0uWirVV9xdCU/j
+         A74PgKEPMpd1tDwA2XbdOc6mQAajjAi0JLQcxoNWqXwhT5LRJwCm3XldT7XLHERMaS2Z
+         gDx0XmtV3NYRh1eNnsiX/4QZ5kGprpRFsaP47LqZLXeJ2ZAljpVdgaTrwLXu8KP36/ds
+         WDknSh61/etF30BPcu5v/Dspq2hLA4ylP4PAQ/RLnlMDUoVjQ+p2wzq99FY05Vo78r4Z
+         2bXNGTC6W17vOWKqG+AOgiKMX7lu40GxBHLTnKlaAhVrhb2DDcMLaix/i0MuWbOtmEob
+         Drrw==
+X-Gm-Message-State: AOAM530nisKTxQCBZdEsstrpt9UT9TUWPO/W2JYoh9fcl16rDxHLcmnI
+        uRxhppXd2HItb/ER2vJD2hh1/U6fLOqu/jIALDml3A==
+X-Google-Smtp-Source: ABdhPJxVpcJI5J1XjN8yl3eLnyQ1rHrvKD4tRUFk0C2I3SD6mc/x46SCPzGa2lPgn91Y3rMniYGyUgadmrlhuQUO0HQ=
+X-Received: by 2002:a17:907:9711:b0:6f4:6989:6afb with SMTP id
+ jg17-20020a170907971100b006f469896afbmr26603981ejc.618.1652286216547; Wed, 11
+ May 2022 09:23:36 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v5 0/8] platform/x86: introduce p2sb_bar() helper
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?=c5=81ukasz_Bartosik?= <lb@semihalf.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-References: <20220510151451.85561-1-andriy.shevchenko@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220510151451.85561-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <YnoJ0k6eIUiwjXSZ@debian-BULLSEYE-live-builder-AMD64>
+ <CAHp75Vd574LCnEq-KX=WHnnDyrjZgGu6W9wNEbnw79FBpyx=Lw@mail.gmail.com> <8bd83f45-5278-e817-3f65-88fafd0ad3f4@collabora.com>
+In-Reply-To: <8bd83f45-5278-e817-3f65-88fafd0ad3f4@collabora.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Wed, 11 May 2022 09:23:24 -0700
+Message-ID: <CABXOdTe1N7iRTVrCZSgQo=dazofWByM_W6EZgWixLj=Z8Xg0ag@mail.gmail.com>
+Subject: Re: [PATCH RESEND v11] platform/chrome: Add ChromeOS ACPI device driver
+To:     Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        chrome-platform@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All,
+On Wed, May 11, 2022 at 8:59 AM Muhammad Usama Anjum
+<usama.anjum@collabora.com> wrote:
+>
+> Hi Andy,
+>
+> Thank you for reviewing.
+>
+> On 5/10/22 2:33 PM, Andy Shevchenko wrote:
+> > On Tue, May 10, 2022 at 8:44 AM Muhammad Usama Anjum
+> > <usama.anjum@collabora.com> wrote:
+> >>
+> >> From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >>
+> >> The x86 Chromebooks have the ChromeOS ACPI device. This driver attaches
+> >> to the ChromeOS ACPI device and exports the values reported by ACPI in a
+> >> sysfs directory. This data isn't present in ACPI tables when read
+> >> through ACPI tools, hence a driver is needed to do it. The driver gets
+> >> data from firmware using the ACPI component of the kernel. The ACPI values
+> >> are presented in string form (numbers as decimal values) or binary
+> >> blobs, and can be accessed as the contents of the appropriate read only
+> >> files in the standard ACPI device's sysfs directory tree. This data is
+> >> consumed by the ChromeOS user space.
+> >
+> >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> >> Cc: Hans de Goede <hdegoede@redhat.com>
+> >
+> > You can use --cc parameter to `git send-email` instead of putting
+> > these lines in the commit message.
+> >
+> > ...
+> >
+> >> +#define DEV_ATTR(_var, _name)                                  \
+> >> +       static struct device_attribute dev_attr_##_var =        \
+> >> +               __ATTR(_name, 0444, chromeos_first_level_attr_show, NULL);
+> >> +
+> >
+> > Why not ATTR_RO()?
+> It'll not work as attribute name has . in it.
+>
+> >
+> > ...
+> >
+> >> +#define GPIO_ATTR_GROUP(_group, _name, _num)                                           \
+> >> +       static umode_t attr_is_visible_gpio_##_num(struct kobject *kobj,                \
+> >> +                                                  struct attribute *attr, int n)       \
+> >> +       {                                                                               \
+> >> +               if (_num < chromeos_acpi_gpio_groups)                                   \
+> >> +                       return attr->mode;                                              \
+> >
+> >> +               else                                                                    \
+> >
+> > Redundant.
+> We are deciding on run time that how many GPIO attribute groups need to
+> be shown. chromeos_acpi_gpio_groups is set at run time. I don't see why
+> `else` can be redundant here.
+>
 
-On 5/10/22 17:14, Andy Shevchenko wrote:
-> There are a few users and at least one more is coming (*1) that would
-> like to utilize P2SB mechanism of hiding and unhiding a device from
-> the PCI configuration space.
-> 
-> Here is the series to consolidate p2sb handling code for existing users
-> and provide a generic way for new comer(s).
-> 
-> It also includes a patch to enable GPIO controllers on Apollo Lake
-> when it's used with ABL bootloader w/o ACPI support (*2).
-> 
-> The patch that brings the helper ("platform/x86/intel: Add Primary to
-> Sideband (P2SB) bridge support") has a commit message that sheds a light
-> on what the P2SB is and why this is needed.
-> 
-> The changes made in v5 do not change the main idea and the functionality
-> in a big scale. What we need is probably one more retest done by Henning
-> (*3). I hope to have it merged to v5.19-rc1 that Siemens can develop
-> their changes based on this series (*4).
-> 
-> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
-> since we have an ACPI device for GPIO I do not see any attempts to recreate
-> one).
-> 
-> *1) One in this series, and one is a recent merge of the Simatic IPC drivers
-> *2) This patch can be postponed as Lee hasn't given his tag yet.
-> *3) Henning gave his tag and I dared to used it even against changed patch 1
-> *4) The changes were posted in between of v4 and v5 of this series, but need
->     more work.
-> 
-> Taking into account the *2) the series is ready to be merged via PDx86 tree.
+else after return is _always_ unnecessary (and results in static
+analyzer messages).
 
-I must admit I have lost track of all the Ack-s / Reviewed-by-s a bit.
-
-So from the above I take it that the Ack-s resp. Reviewed-by-s on the
-other non drivers/platform/x86 bits also signal an Ack to merge the entire
-series through the pdx86 tree?
-
-Lee, any chance you can take a look at patches 3-5 and give your Ack
-for merging these through the pdx86 tree together with the rest?
-
-Regards,
-
-Hans
-
-
-p.s.
-
-Since this is mostly a cleanup series and since we are getting close
-to the next merge-window I believe that it likely is best to merge
-this after 5.19-rc1 has been released. I can then also provide
-an immutable branch for other maintainers early on in the 5.19
-cycle which should help to avoid merge conflicts.
-
-
-
-
-> 
-> Changes in v5:
-> - rewritten patch 1 to use pci_scan_single_device() (Lukas, Bjorn)
-> - rebased patch 2 on top of the new Intel SPI NOR codebase
-> - fixed a potential bug and rewritten resource filling in patch 5 (Lee)
-> - added many different tags in a few patches (Jean, Wolfram, Henning)
-> 
-> Changes in v4:
-> - added tag to the entire series (Hans)
-> - added tag to pin control patch (Mika)
-> - dropped PCI core changes (PCI core doesn't want modifications to be made)
-> - as a consequence of the above merged necessary bits into p2sb.c
-> - added a check that p2sb is really hidden (Hans)
-> - added EDAC patches (reviewed by maintainer internally)
-> 
-> Changes in v3:
-> - resent with cover letter
-> 
-> Changes in v2:
-> - added parentheses around bus in macros (Joe)
-> - added tag (Jean)
-> - fixed indentation and wrapping in the header (Christoph)
-> - moved out of PCI realm to PDx86 as the best common denominator (Bjorn)
-> - added a verbose commit message to explain P2SB thingy (Bjorn)
-> - converted first parameter from pci_dev to pci_bus
-> - made first two parameters (bus and devfn) optional (Henning, Lee)
-> - added Intel pin control patch to the series (Henning, Mika)
-> - fixed English style in the commit message of one of MFD patch (Lee)
-> - added tags to my MFD LPC ICH patches (Lee)
-> - used consistently (c) (Lee)
-> - made indexing for MFD cell and resource arrays (Lee)
-> - fixed the resource size in i801 (Jean)
-> 
-> Andy Shevchenko (6):
->   pinctrl: intel: Check against matching data instead of ACPI companion
->   mfd: lpc_ich: Factor out lpc_ich_enable_spi_write()
->   mfd: lpc_ich: Switch to generic p2sb_bar()
->   i2c: i801: convert to use common P2SB accessor
->   EDAC, pnd2: Use proper I/O accessors and address space annotation
->   EDAC, pnd2: convert to use common P2SB accessor
-> 
-> Jonathan Yong (1):
->   platform/x86/intel: Add Primary to Sideband (P2SB) bridge support
-> 
-> Tan Jui Nee (1):
->   mfd: lpc_ich: Add support for pinctrl in non-ACPI system
-> 
->  drivers/edac/Kconfig                   |   1 +
->  drivers/edac/pnd2_edac.c               |  62 +++-------
->  drivers/i2c/busses/Kconfig             |   1 +
->  drivers/i2c/busses/i2c-i801.c          |  39 ++----
->  drivers/mfd/Kconfig                    |   1 +
->  drivers/mfd/lpc_ich.c                  | 161 +++++++++++++++++++------
->  drivers/pinctrl/intel/pinctrl-intel.c  |  14 +--
->  drivers/platform/x86/intel/Kconfig     |  12 ++
->  drivers/platform/x86/intel/Makefile    |   2 +
->  drivers/platform/x86/intel/p2sb.c      | 133 ++++++++++++++++++++
->  include/linux/platform_data/x86/p2sb.h |  28 +++++
->  11 files changed, 338 insertions(+), 116 deletions(-)
->  create mode 100644 drivers/platform/x86/intel/p2sb.c
->  create mode 100644 include/linux/platform_data/x86/p2sb.h
-> 
-> 
-> base-commit: 3bf222d317a20170ee17f082626c1e0f83537e13
-
+> >
+> >> +                       return 0;                                                       \
+> >> +       }                                                                               \
+> >> +       static ssize_t chromeos_attr_show_gpio_##_num(struct device *dev,               \
+> >> +                                                     struct device_attribute *attr,    \
+> >> +                                                     char *buf)                        \
+> >> +       {                                                                               \
+> >> +               char name[ACPI_ATTR_NAME_LEN + 1];                                      \
+> >> +               int ret, num;                                                           \
+> >> +                                                                                       \
+> >> +               ret = parse_attr_name(attr->attr.name, name, &num);                     \
+> >> +               if (ret)                                                                \
+> >> +                       return ret;                                                     \
+> >
+> >> +               ret = chromeos_acpi_evaluate_method(dev, _num, num, name, buf);         \
+> >> +               if (ret < 0)                                                            \
+> >> +                       ret = 0;                                                        \
+> >
+> > Below I saw the same code, why is the error ignored?
+> >
+> I'll return the error in both places.
+>
+> >> +               return ret;                                                             \
+> >> +       }                                                                               \
+> >> +       static struct device_attribute dev_attr_0_##_group =                            \
+> >> +               __ATTR(GPIO.0, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
+> >> +       static struct device_attribute dev_attr_1_##_group =                            \
+> >> +               __ATTR(GPIO.1, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
+> >> +       static struct device_attribute dev_attr_2_##_group =                            \
+> >> +               __ATTR(GPIO.2, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
+> >> +       static struct device_attribute dev_attr_3_##_group =                            \
+> >> +               __ATTR(GPIO.3, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
+> >> +                                                                                       \
+> >> +       static struct attribute *attrs_##_group[] = {                                   \
+> >> +               &dev_attr_0_##_group.attr,                                              \
+> >> +               &dev_attr_1_##_group.attr,                                              \
+> >> +               &dev_attr_2_##_group.attr,                                              \
+> >> +               &dev_attr_3_##_group.attr,                                              \
+> >> +               NULL                                                                    \
+> >> +       };                                                                              \
+> >> +       static const struct attribute_group attr_group_##_group = {                     \
+> >> +               .name = _name,                                                          \
+> >> +               .is_visible = attr_is_visible_gpio_##_num,                              \
+> >
+> >> +               .attrs = attrs_##_group                                                 \
+> >
+> > Keep a comma here.
+> Is there any particular reason for it? If there is, I'll add commas to
+> all the structures.
+> ...
+> >
+> > ...
+> >
+> >> +static int parse_attr_name(const char *name, char *attr_name, int *attr_num)
+> >> +{
+> >> +       int ret = 0;
+> >> +
+> >> +       strscpy(attr_name, name, ACPI_ATTR_NAME_LEN + 1);
+> >> +
+> >> +       if (strlen(name) > ACPI_ATTR_NAME_LEN)
+> >
+> > This seems strange, esp. taking into account that strscpy() returns that.
+> >
+> > int ret;
+> >
+> > ret = strscpy(...);
+> > if (ret == -E2BIG)
+> >   return kstrtoint(...);
+> >
+> > return 0;
+> This is very nice way to do it. I'll update.
+> ...
+>
+> --
+> Muhammad Usama Anjum
