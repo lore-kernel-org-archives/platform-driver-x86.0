@@ -2,90 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F6AC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 17:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79D9C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 17:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240870AbiEKRM1 (ORCPT
+        id S1344055AbiEKRlZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 May 2022 13:12:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33716 "EHLO
+        Wed, 11 May 2022 13:41:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242131AbiEKRMZ (ORCPT
+        with ESMTP id S1345733AbiEKRlO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 May 2022 13:12:25 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C2D1595A7;
-        Wed, 11 May 2022 10:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652289144; x=1683825144;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=PmUQ7d9wEJbUBzDsFN+FiATLacntfGFgKdbPMzYUIig=;
-  b=GRV8ZqfDx1I+uOtBEfjf54LQyhe24U2Nv0n/bvImUsY5lPky5qGCoi4l
-   Udh7ylXazeRmGEYpL0MKIBz25PaB2B6vihYtz9VjqJuEd5/QFM9xp84sz
-   xYmG8JvT9MS6m6tI35FnUvFYbd35i5bQDcecoWygN/lB2/4H8hZ4SdXvA
-   7oETvH03WW5plQHmhARH1KprBQWc23XODyN2XvKNOrIObwDY0dEo5u00d
-   2gf6bpV4GjeKPFs6Z22b0C8XCzthGu/KIos9+OEtT3DrUh5k0yNS15GhV
-   q7yuu6ZRUrd8uviEUATaTWBDFWSoAgvTTZ3kjnmDCF+/aGVEf/69MChCi
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="268596068"
-X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
-   d="scan'208";a="268596068"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 10:12:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
-   d="scan'208";a="594234097"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
-  by orsmga008.jf.intel.com with ESMTP; 11 May 2022 10:12:23 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] tools/power/x86/intel-speed-select: Fix warning for perf_cap.cpu
-Date:   Wed, 11 May 2022 10:12:08 -0700
-Message-Id: <20220511171208.211319-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
+        Wed, 11 May 2022 13:41:14 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E827E219F69;
+        Wed, 11 May 2022 10:41:09 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id p18so3426277edr.7;
+        Wed, 11 May 2022 10:41:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2Ke+AGfzv6tvoEFSxFKuURhI7WvGdekzVHjZqAbbO8s=;
+        b=G9wqQwuFFHa1lknmirIg8grgSmlGhY4vOMeTI7ajMbQFOkPDfAjxkC53pYWGPJ2cZF
+         JYFgcz/9NdUz5O/wqsbhfPi2zN/aY/XE8j2tiIE+GNsGbyuPFnW8P1tp2iJW3pJ7hdxQ
+         0IWMmg6WoVXdfvmSzYuR0vhQNDCC0PHJKULu799/jK8hUupfLZ4wSeZ7OW6yle+knuIx
+         wKXck2gICgiHyMkOEoopjNhzgzuCsUiXl0Fc8RjVEZqu59KvypFwP3AWHlhIyW+2eUvJ
+         9/csBr94Q6HkyJhoRRrkcPuuXe8cn9wJZuWneLmHD2vUIG70ZoAZdfhxmnMfAxo/8/s1
+         RtmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2Ke+AGfzv6tvoEFSxFKuURhI7WvGdekzVHjZqAbbO8s=;
+        b=IyTEu0BCJo1oB/cUJnUAJCpi9etJdWOi4APkhpkhnU3OK4KyJvQw2Sbnthwgb7Kxu1
+         UKcGilb7cwwvXQo510/KQU4oxvdmispBYROdmkre/SAUi3kWcfnVzHZNDVsx9jZ6qW6A
+         XtbkR1ReBjaHUJEssFgr2CaAsbCF4eQCrYlHRIhuDXjMV2ieCMxOiVhDeWeo3CCExoLV
+         3mNFTUP4FdL/nD0Ux8TQXNYC+y3JFOvCI8tJZTFpUk956cYjQVPlvDNuNC3DquaSCo+L
+         m2IMd6Ovc74Evo611BIhymOWbwjpiRDLSWzd4wDwywGCgK6oToRl24HAOKpgtVRzqzhP
+         ZEnA==
+X-Gm-Message-State: AOAM533bLk4qWjQvGFDPtfc/i5dIJE2ibDasrobjBAftnPcZbBzuO9TQ
+        HHeUQgZvcfSS74UGlrwTBImL5b8PiyHNmllKooQ=
+X-Google-Smtp-Source: ABdhPJypHOUVtZ/mWQM6O1I1uprLxF37dkIpuFfu2UGbONcylK6L0+EILGXJ8zFdWrxtLQMY1Q94ZDxv7qrd1l5g0T4=
+X-Received: by 2002:a05:6402:1d4c:b0:427:d1f5:3a41 with SMTP id
+ dz12-20020a0564021d4c00b00427d1f53a41mr29873435edb.218.1652290868261; Wed, 11
+ May 2022 10:41:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <YnoJ0k6eIUiwjXSZ@debian-BULLSEYE-live-builder-AMD64>
+ <CAHp75Vd574LCnEq-KX=WHnnDyrjZgGu6W9wNEbnw79FBpyx=Lw@mail.gmail.com> <8bd83f45-5278-e817-3f65-88fafd0ad3f4@collabora.com>
+In-Reply-To: <8bd83f45-5278-e817-3f65-88fafd0ad3f4@collabora.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 11 May 2022 19:40:31 +0200
+Message-ID: <CAHp75VcQYncfCv-2GE0a0e=0iOLBC6wMvoH8pFCirN3NyLzdhw@mail.gmail.com>
+Subject: Re: [PATCH RESEND v11] platform/chrome: Add ChromeOS ACPI device driver
+To:     Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        chrome-platform@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Initialize perf_cap struct to avoid warning:
+On Wed, May 11, 2022 at 5:59 PM Muhammad Usama Anjum
+<usama.anjum@collabora.com> wrote:
+> On 5/10/22 2:33 PM, Andy Shevchenko wrote:
+> > On Tue, May 10, 2022 at 8:44 AM Muhammad Usama Anjum
+> > <usama.anjum@collabora.com> wrote:
 
-  CC      hfi-events.o
-In function ‘process_hfi_event’,
-    inlined from ‘handle_event’ at hfi-events.c:220:5:
-hfi-events.c:184:9: warning: ‘perf_cap.cpu’ may be used
-uninitialized [-Wmaybe-uninitialized]
-  184 |         process_level_change(perf_cap->cpu);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-hfi-events.c: In function ‘handle_event’:
-hfi-events.c:193:25: note: ‘perf_cap.cpu’ was declared here
-  193 |         struct perf_cap perf_cap;
-      |                         ^~~~~~~~
+...
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- tools/power/x86/intel-speed-select/hfi-events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> >> +       static struct attribute *attrs_##_group[] = {                                   \
+> >> +               &dev_attr_0_##_group.attr,                                              \
+> >> +               &dev_attr_1_##_group.attr,                                              \
+> >> +               &dev_attr_2_##_group.attr,                                              \
+> >> +               &dev_attr_3_##_group.attr,                                              \
+> >> +               NULL                                                                    \
 
-diff --git a/tools/power/x86/intel-speed-select/hfi-events.c b/tools/power/x86/intel-speed-select/hfi-events.c
-index e85676711372..761375062505 100644
---- a/tools/power/x86/intel-speed-select/hfi-events.c
-+++ b/tools/power/x86/intel-speed-select/hfi-events.c
-@@ -190,7 +190,7 @@ static int handle_event(struct nl_msg *n, void *arg)
- 	struct genlmsghdr *genlhdr = genlmsg_hdr(nlh);
- 	struct nlattr *attrs[THERMAL_GENL_ATTR_MAX + 1];
- 	int ret;
--	struct perf_cap perf_cap;
-+	struct perf_cap perf_cap = {0};
- 
- 	ret = genlmsg_parse(nlh, 0, attrs, THERMAL_GENL_ATTR_MAX, NULL);
- 
+(1)
+
+> >> +       };                                                                              \
+> >> +       static const struct attribute_group attr_group_##_group = {                     \
+> >> +               .name = _name,                                                          \
+> >> +               .is_visible = attr_is_visible_gpio_##_num,                              \
+> >
+> >> +               .attrs = attrs_##_group                                                 \
+> >
+> > Keep a comma here.
+
+> Is there any particular reason for it?
+
+Yes, if it's not a terminator entry, like (1), the comma would help to
+avoid unneeded churm in the future in case someone wants to add
+another initialization member.
+
+> If there is, I'll add commas to
+> all the structures.
+
+It depends if it is a terminator entry or not, so please check
+carefully where to add and where not (the latter example is (1) where
+comma is not needed and theoretically might add a confusion).
+
 -- 
-2.35.1
-
+With Best Regards,
+Andy Shevchenko
