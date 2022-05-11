@@ -2,121 +2,205 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AD3C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 15:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03025C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 15:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344189AbiEKP5a (ORCPT
+        id S1344151AbiEKP7Y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 May 2022 11:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
+        Wed, 11 May 2022 11:59:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242624AbiEKP52 (ORCPT
+        with ESMTP id S239167AbiEKP7X (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 May 2022 11:57:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 78BA02D1EC
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 08:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652284645;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rqqc34Z12XbJJIz/Zvc0IwP6r5N7BbjbaqgG4HSdh7k=;
-        b=FAk695XQGTX/Q1TClng8RYVXu4axwHgyEUes5jHf4GlypVUJ3kRQ4h5vKfeCIgCIeceS72
-        417Q/O7TtkYdYr6BQFnzrwIHm9OeYk+m/TF0VR5yE7ihkGE5Cqf7OwgZJsW9fmyx3zhLRT
-        XhdtYN4a1FnfKCLYCFnC4veWZqiaaXs=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-648-Culxr2VROfGRIARB8TXT0w-1; Wed, 11 May 2022 11:57:24 -0400
-X-MC-Unique: Culxr2VROfGRIARB8TXT0w-1
-Received: by mail-ed1-f70.google.com with SMTP id cz24-20020a0564021cb800b00425dfdd7768so1601952edb.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 08:57:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=rqqc34Z12XbJJIz/Zvc0IwP6r5N7BbjbaqgG4HSdh7k=;
-        b=7R4y9P76v3zpvO//0ogsXf+dYwnjlPuf0Bet6RpT4UL2TMQooIT+2sGBZoLkeJdPQo
-         hKVgKWR3vbb4a9mGkhP9KV7C0yfkBlhUH1LTi5CeSwI9qJTqM8vj+DQK3fnR0785dAvu
-         v+MwSgwnCZINunS4iNmkXKkRGxGrcwvU2i7q7mDFxf9FrXjr54akdcS3ZQWI+rlp+QNA
-         oT3tNkHgid6jesSaTGnmucvLdqggID/8Cxq/UiY9qUJz0EEKMBEoj/OO10s7Ic7A48DG
-         n/0pUAchnNPSWXX0/Eh4PO4xT4o0Xyw9EroMzUVWowDV5cws4B6jD2M9yhAcez+M7MTl
-         lmbA==
-X-Gm-Message-State: AOAM530nDQMxyWuimdmTX7q28QJc99ESpUrioNVtR1BuG7PQrLm30tO+
-        K1tyLIcbWMiOldusCW0aOb6rB0quYi593jcmBucY44nvS8ppIx1mw1ltWMMYHuRnIDwSFVXcG7H
-        q//bcyJrDWJ15pzQOAaOzo+LcZKlnPRKz6g==
-X-Received: by 2002:a05:6402:b2e:b0:425:d3f7:4c1a with SMTP id bo14-20020a0564020b2e00b00425d3f74c1amr28935631edb.366.1652284642977;
-        Wed, 11 May 2022 08:57:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwRbpFCIoEbs6lAXwSQ0w4+SiuTEAcPtKT2FDBsVCmZHWf8UMOCBEHw0GMuMnik5nhGmW2PNw==
-X-Received: by 2002:a05:6402:b2e:b0:425:d3f7:4c1a with SMTP id bo14-20020a0564020b2e00b00425d3f74c1amr28935613edb.366.1652284642795;
-        Wed, 11 May 2022 08:57:22 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id e15-20020a056402104f00b0042a2d27619fsm284362edu.26.2022.05.11.08.57.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 May 2022 08:57:22 -0700 (PDT)
-Message-ID: <61120220-6b59-7000-f59d-d4750d5e4405@redhat.com>
-Date:   Wed, 11 May 2022 17:57:21 +0200
+        Wed, 11 May 2022 11:59:23 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00FF81505CF;
+        Wed, 11 May 2022 08:59:21 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: usama.anjum)
+        with ESMTPSA id F0E6E1F41720
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1652284760;
+        bh=JQ6HdYH9HaMCjw2/dzr/tOM16K501dak4z60cc1ZykY=;
+        h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+        b=KNGvZVnG5pMiE8Utp5gcEaS8cUQTgJ9S8uF7Hli0BhK/lKJPjNXFvBRxIjG+ZoLHb
+         rhc2GromAoJx2M9tCfKJvyJp5uGE5rhlqLmbYTEpUqhXfnZA/SuelhrPq7PxXZZ2fE
+         1y62AIMulgwoeS3cKUdjYmreBBaK3WCHaWLvkgOJoPkbJgOhZzJyzurGWHIZBjjahe
+         gwj20WjmXJPjAc8Q5BGoGCDnCYSlZ0foEq0rioYpu2JdKDRJNk0wcAQyeW3qGY+Osx
+         fFkQ31tZTqjjdD1TV6uCgcZKe94uF3kVRxVtJdndKhA+woeXmd8egj+txOJaHirB8j
+         nk1E7XqdyvT4Q==
+Message-ID: <8bd83f45-5278-e817-3f65-88fafd0ad3f4@collabora.com>
+Date:   Wed, 11 May 2022 20:59:07 +0500
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH] Add support for Z490 AORUS ELITE AC and X570 AORUS ELITE
- WIFI
+From:   Muhammad Usama Anjum <usama.anjum@collabora.com>
+Subject: Re: [PATCH RESEND v11] platform/chrome: Add ChromeOS ACPI device
+ driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     usama.anjum@collabora.com, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        chrome-platform@lists.linux.dev
+References: <YnoJ0k6eIUiwjXSZ@debian-BULLSEYE-live-builder-AMD64>
+ <CAHp75Vd574LCnEq-KX=WHnnDyrjZgGu6W9wNEbnw79FBpyx=Lw@mail.gmail.com>
 Content-Language: en-US
-To:     Frank Crawford <frank@crawford.emu.id.au>,
-        platform-driver-x86@vger.kernel.org
-References: <20220510120012.2167591-1-frank@crawford.emu.id.au>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220510120012.2167591-1-frank@crawford.emu.id.au>
+In-Reply-To: <CAHp75Vd574LCnEq-KX=WHnnDyrjZgGu6W9wNEbnw79FBpyx=Lw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Andy,
 
-On 5/10/22 14:00, Frank Crawford wrote:
-> Tested on my systems with module force_load option.
+Thank you for reviewing.
+
+On 5/10/22 2:33 PM, Andy Shevchenko wrote:
+> On Tue, May 10, 2022 at 8:44 AM Muhammad Usama Anjum
+> <usama.anjum@collabora.com> wrote:
+>>
+>> From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>
+>> The x86 Chromebooks have the ChromeOS ACPI device. This driver attaches
+>> to the ChromeOS ACPI device and exports the values reported by ACPI in a
+>> sysfs directory. This data isn't present in ACPI tables when read
+>> through ACPI tools, hence a driver is needed to do it. The driver gets
+>> data from firmware using the ACPI component of the kernel. The ACPI values
+>> are presented in string form (numbers as decimal values) or binary
+>> blobs, and can be accessed as the contents of the appropriate read only
+>> files in the standard ACPI device's sysfs directory tree. This data is
+>> consumed by the ChromeOS user space.
 > 
-> Signed-off-by: Frank Crawford <frank@crawford.emu.id.au>
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/platform/x86/gigabyte-wmi.c | 2 ++
->  1 file changed, 2 insertions(+)
+>> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Cc: Hans de Goede <hdegoede@redhat.com>
 > 
-> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-> index 658bab4b7964..730b3f6f942f 100644
-> --- a/drivers/platform/x86/gigabyte-wmi.c
-> +++ b/drivers/platform/x86/gigabyte-wmi.c
-> @@ -149,7 +149,9 @@ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M AORUS PRO-P"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M DS3H"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z390 I AORUS PRO WIFI-CF"),
-> +	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z490 AORUS ELITE AC"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE"),
-> +	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE WIFI"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 GAMING X"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 I AORUS PRO WIFI"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 UD"),
+> You can use --cc parameter to `git send-email` instead of putting
+> these lines in the commit message.
+> 
+> ...
+> 
+>> +#define DEV_ATTR(_var, _name)                                  \
+>> +       static struct device_attribute dev_attr_##_var =        \
+>> +               __ATTR(_name, 0444, chromeos_first_level_attr_show, NULL);
+>> +
+> 
+> Why not ATTR_RO()?
+It'll not work as attribute name has . in it.
 
+> 
+> ...
+> 
+>> +#define GPIO_ATTR_GROUP(_group, _name, _num)                                           \
+>> +       static umode_t attr_is_visible_gpio_##_num(struct kobject *kobj,                \
+>> +                                                  struct attribute *attr, int n)       \
+>> +       {                                                                               \
+>> +               if (_num < chromeos_acpi_gpio_groups)                                   \
+>> +                       return attr->mode;                                              \
+> 
+>> +               else                                                                    \
+> 
+> Redundant.
+We are deciding on run time that how many GPIO attribute groups need to
+be shown. chromeos_acpi_gpio_groups is set at run time. I don't see why
+`else` can be redundant here.
+
+> 
+>> +                       return 0;                                                       \
+>> +       }                                                                               \
+>> +       static ssize_t chromeos_attr_show_gpio_##_num(struct device *dev,               \
+>> +                                                     struct device_attribute *attr,    \
+>> +                                                     char *buf)                        \
+>> +       {                                                                               \
+>> +               char name[ACPI_ATTR_NAME_LEN + 1];                                      \
+>> +               int ret, num;                                                           \
+>> +                                                                                       \
+>> +               ret = parse_attr_name(attr->attr.name, name, &num);                     \
+>> +               if (ret)                                                                \
+>> +                       return ret;                                                     \
+> 
+>> +               ret = chromeos_acpi_evaluate_method(dev, _num, num, name, buf);         \
+>> +               if (ret < 0)                                                            \
+>> +                       ret = 0;                                                        \
+> 
+> Below I saw the same code, why is the error ignored?
+> 
+I'll return the error in both places.
+
+>> +               return ret;                                                             \
+>> +       }                                                                               \
+>> +       static struct device_attribute dev_attr_0_##_group =                            \
+>> +               __ATTR(GPIO.0, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
+>> +       static struct device_attribute dev_attr_1_##_group =                            \
+>> +               __ATTR(GPIO.1, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
+>> +       static struct device_attribute dev_attr_2_##_group =                            \
+>> +               __ATTR(GPIO.2, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
+>> +       static struct device_attribute dev_attr_3_##_group =                            \
+>> +               __ATTR(GPIO.3, 0444, chromeos_attr_show_gpio_##_num, NULL);             \
+>> +                                                                                       \
+>> +       static struct attribute *attrs_##_group[] = {                                   \
+>> +               &dev_attr_0_##_group.attr,                                              \
+>> +               &dev_attr_1_##_group.attr,                                              \
+>> +               &dev_attr_2_##_group.attr,                                              \
+>> +               &dev_attr_3_##_group.attr,                                              \
+>> +               NULL                                                                    \
+>> +       };                                                                              \
+>> +       static const struct attribute_group attr_group_##_group = {                     \
+>> +               .name = _name,                                                          \
+>> +               .is_visible = attr_is_visible_gpio_##_num,                              \
+> 
+>> +               .attrs = attrs_##_group                                                 \
+> 
+> Keep a comma here.
+Is there any particular reason for it? If there is, I'll add commas to
+all the structures.
+...
+> 
+> ...
+> 
+>> +static int parse_attr_name(const char *name, char *attr_name, int *attr_num)
+>> +{
+>> +       int ret = 0;
+>> +
+>> +       strscpy(attr_name, name, ACPI_ATTR_NAME_LEN + 1);
+>> +
+>> +       if (strlen(name) > ACPI_ATTR_NAME_LEN)
+> 
+> This seems strange, esp. taking into account that strscpy() returns that.
+> 
+> int ret;
+> 
+> ret = strscpy(...);
+> if (ret == -E2BIG)
+>   return kstrtoint(...);
+> 
+> return 0;
+This is very nice way to do it. I'll update.
+...
+
+-- 
+Muhammad Usama Anjum
