@@ -2,89 +2,118 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17053C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 17:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE479C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 18:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345936AbiEKR4U (ORCPT
+        id S1345982AbiEKSCX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 May 2022 13:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49264 "EHLO
+        Wed, 11 May 2022 14:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345966AbiEKR4M (ORCPT
+        with ESMTP id S231759AbiEKSCS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 May 2022 13:56:12 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A8A2B1B9;
-        Wed, 11 May 2022 10:56:10 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id bv19so5597307ejb.6;
-        Wed, 11 May 2022 10:56:10 -0700 (PDT)
+        Wed, 11 May 2022 14:02:18 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8578381991;
+        Wed, 11 May 2022 11:02:17 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id z19so3485606edx.9;
+        Wed, 11 May 2022 11:02:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Y4/SAPsJ9f4OXJYDdFhUA/nd1PhxlZKu/Ys21YszRaA=;
-        b=lZEjE+zhrFuarohgPN3uPPp3/1ifjXsr/pHVEE0WklPDTG0muYg+gRfQm2JpIVeLvD
-         clhRYNK89WLQOLEF94OpOfecWz2CWB13B5z9QOXm+oktp5meLYxiZUPtVY4RmjBvnbU3
-         /6S+aX7/uBWmn4YPi3VlznZnHBTIcH+uzmAH44/GYOmx5EzjXaGqEnaUCkbHSsCQfOwQ
-         uiJKgh0Zk6QECVwJKFJJXrHJmbV0GCiYQ1QJ1kjzTUF0Ipw3OmLJmYyhewMiTpW0KmUe
-         lVtK3VEzSqYqWOLRlsoGOs41WyZV7byxDZ95xdgEm5bo3p5E1r9aBwsJMQlreZFFRNUx
-         DGSA==
+        bh=WXSifZkVMNKJIWFI2353UCu3hiqezZq+FGcwxX96rkU=;
+        b=G+0Za8nPUrc8M0fsDLPxGWlmEaKAp942tfzktpszcavil+hsJTVX794SkbzQ/4gxHG
+         zPfJuX/ctiEtkVXbI+iyAkObd23R2vM54dbSvqo0AmvAdqDoYkSTKIH+oksSFKoIvpr8
+         OdNV7sbn4X6o1ScR/3ah7q5ZA8YDLHOowO+FlJ75oyoaO0cUEcTr53Nx6Hu57P1GDdgV
+         EWkoRGlWhnvF1Cj8GKw2amyZlIySmYbjduYLE21gYJcqRHDK60uJWe4HfwIWpSRW4GqQ
+         d/00sYksDLT0W3c/YnrkFPS8zSl+s5dJOQYBMIhSBavxqsHr4jLh9Rg1L1wGtUrRMzEP
+         RTNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Y4/SAPsJ9f4OXJYDdFhUA/nd1PhxlZKu/Ys21YszRaA=;
-        b=XPQ5w/QMa1DkjJQUWuoW3k+gKvWb4tReBAn6K3+fe2/8i2/3xBme3QcLF3l1RraWQT
-         OGKdulsC78ISGHj6XAodhZ/E621PSAlJFJf0KSwbRLH1MrDJp8BCFbaQI5/PJybEWkuI
-         aeE/HpABFEMaIKp2nE18QuoRWFlwccSOzeTtzZz8x3Wvml3hnIyUGEVVEEK0WtKddhHo
-         CHuBKh0HEDuVFZ39H5Npcpe9y/GTz6Lb9qmvuhpRlL3gVAr/s5oa3sSwByKMtjYsFIc9
-         iRII3k15g6ZRHYJUjjXOPMcnqXZWmfvso1+Z7fYs4pYWXNmy0w7R3SFBAd87JAVS0RsP
-         EujA==
-X-Gm-Message-State: AOAM533AgeaBPqGZVtsnNGhXnT6H4S7PDIaeoJ47MQJVkoSWyVerstaQ
-        EsINZ0PVmZCR7aJm2c1Icsv3BHdZRmiB4KEOUamTjPO9mZeA4Q==
-X-Google-Smtp-Source: ABdhPJwVD3U070rN+XeenMtclJ09vcrP7AYcNnGmrmWjBeX2VPQ+rXyde6ML2tgSNrC70rjKc3pedg9gQgeK2xdVdq8=
-X-Received: by 2002:a17:906:c10d:b0:6f4:a770:846e with SMTP id
- do13-20020a170906c10d00b006f4a770846emr26455803ejc.497.1652291768721; Wed, 11
- May 2022 10:56:08 -0700 (PDT)
+        bh=WXSifZkVMNKJIWFI2353UCu3hiqezZq+FGcwxX96rkU=;
+        b=UX3AkJmqjS/ELQXvMTBPdR82lRXtOvX7KiH0Gk/+RzPYItccDfK5SRCpdsN/IYABoS
+         pyCAtGHhpPPJ6LKIugg5i5hUicCWQVHhtxWXZ9wezGm0vTJMEyZx5e9qetLx6J3VbeoO
+         9BMwfLGeHVakRSIJb6ixkMB9kzKe6Jxu3/2uJ540c47YjrDc6B1DYLbvl7VgLB5gGKI7
+         EpXmPyRmT4OnCb9CGt9WUpMsBYcVk8FA75sc9oVhU8wpj9yakdwBfJ/eor7td10OS8R2
+         LXnHwvLBqUd/XZGE67rSndCNGmOD+ddZGC0dx6apI7ojikJDrXYmroI5qa/E9wolwLCA
+         k7lw==
+X-Gm-Message-State: AOAM530qz0UMzVIisZfoPARu4PyzKRi0AjP584jbRmJlJ2AAH3j6SPw7
+        WrkTqQsSWBGZY9au5mJde8Y00P7gpOEwMcP+PMQ=
+X-Google-Smtp-Source: ABdhPJzED7Bj/17e150QFoZy4+zLcq3hKeUUGjsXs0im7kbV5CxZM9b9YkqCYtGyfOXYgxCLa43Mb4ikyMkmyAox4Qk=
+X-Received: by 2002:a05:6402:d51:b0:425:d5e1:e9f0 with SMTP id
+ ec17-20020a0564020d5100b00425d5e1e9f0mr30316725edb.125.1652292136090; Wed, 11
+ May 2022 11:02:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220511153905.13980-1-henning.schild@siemens.com>
-In-Reply-To: <20220511153905.13980-1-henning.schild@siemens.com>
+References: <20220510151451.85561-1-andriy.shevchenko@linux.intel.com> <eff9907f-e92b-9115-bea7-b1093d1dc28e@redhat.com>
+In-Reply-To: <eff9907f-e92b-9115-bea7-b1093d1dc28e@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 11 May 2022 19:55:30 +0200
-Message-ID: <CAHp75Vc6imwy0faWEtmnnsNh6WfccA2KuJuy2e7+VHuxhQ8VbA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] simatic-ipc additions to p2sb apl lake gpio
-To:     Henning Schild <henning.schild@siemens.com>
+Date:   Wed, 11 May 2022 20:01:39 +0200
+Message-ID: <CAHp75Vcnq=Ou6QNyPjwC+HR9wJ2BheonTqmkGvQU0qFtHO2BDw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/8] platform/x86: introduce p2sb_bar() helper
+To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?=C5=81ukasz_Bartosik?= <lb@semihalf.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        linux-edac@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, May 11, 2022 at 6:50 PM Henning Schild
-<henning.schild@siemens.com> wrote:
->
-> changed since v1:
->  - rebased
->  - split p1 into p1-3
->
-> This switches the simatic-ipc modules to using the p2sb interface
-> introduced by Andy with "platform/x86: introduce p2sb_bar() helper".
->
-> It also switches to one apollo lake device to using gpio leds.
->
-> I am kind of hoping Andy will take this on top and propose it in his
-> series.
+On Wed, May 11, 2022 at 6:08 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 5/10/22 17:14, Andy Shevchenko wrote:
 
-Yes, I will. Since it seems it requires a v6 of my series after
-v5.19-rc1 and will be material for v5.20... we have time.
+...
+
+> I must admit I have lost track of all the Ack-s / Reviewed-by-s a bit.
+>
+> So from the above I take it that the Ack-s resp. Reviewed-by-s on the
+> other non drivers/platform/x86 bits also signal an Ack to merge the entire
+> series through the pdx86 tree?
+>
+> Lee, any chance you can take a look at patches 3-5 and give your Ack
+> for merging these through the pdx86 tree together with the rest?
+
+Actually I misinterpreted Lee's different tags again. Acked-by is
+normal for routing MFD code via other subsystems, while
+Acked-for-MFD-by is for Lee (scripts?) to route the code via MFD tree.
+Lee, is it the correct interpretation now?
+
+...
+
+> p.s.
+>
+> Since this is mostly a cleanup series and since we are getting close
+> to the next merge-window I believe that it likely is best to merge
+> this after 5.19-rc1 has been released.
+
+OK.
+
+> I can then also provide
+> an immutable branch for other maintainers early on in the 5.19
+> cycle which should help to avoid merge conflicts.
+
+I guess I will send a v6 anyway in order to attach Henning's series to mine.
 
 -- 
 With Best Regards,
