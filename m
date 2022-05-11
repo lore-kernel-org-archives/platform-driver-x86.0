@@ -2,99 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13F0C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 02:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F29AC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 09:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232969AbiEKCQp (ORCPT
+        id S232831AbiEKJS0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 May 2022 22:16:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59396 "EHLO
+        Wed, 11 May 2022 05:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229891AbiEKCQo (ORCPT
+        with ESMTP id S239356AbiEKJSZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 May 2022 22:16:44 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBAE481644;
-        Tue, 10 May 2022 19:16:42 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id v10so525638pgl.11;
-        Tue, 10 May 2022 19:16:42 -0700 (PDT)
+        Wed, 11 May 2022 05:18:25 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F259BAC7;
+        Wed, 11 May 2022 02:18:21 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id ba17so1784550edb.5;
+        Wed, 11 May 2022 02:18:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=buRI718RFPrTtdiRLJoEyVax+0RYy5X13JOpEpadUuU=;
-        b=O38Tu6+beNDnnVNtxh7fOgBixYQaJXblJOrMVxDv629pCOwVzoPH1O4x3it3LR9GWm
-         WmSwqKjedt/f3uWUmwbXgxDqBSAIELGRm2sEUwe7zPkn4uf9k9o0tjRlGY+58AlIX6f+
-         3ivEDQw1au4QnXgkrtPV5V6tcCB889NVaX4KMa3/OvLO/e4P1RmYFS4c1cySw6G2UaaJ
-         pNIW64MLUCJlsBgvHGUQWppfXYV34agKMin093B8ASOXxiXK3SArgPcUhCo7v7WYjCM0
-         rIOBwuwZccdegIbYgwgn1cocMgNXJkytVusVODABrIKITsRpgDWE9bUwm9seX6/2SraB
-         oWRg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aXS0yW+0IcDdjRjEe31czGkw0Rugc3CtPkAGtXZ/h6g=;
+        b=LU7MyaWJehUmZPza+nAsaCsl9u26dN3RvR3uVdlxck2gt6nXab6l8upNIFrWPKJyZP
+         VhLLyF4wngqY+bcK6NxToHLdrdsSgMBPhMoTQ+Di9uaVTXkLaM3smW99KS+hDlrNMRuX
+         U3Qy+2hQWABEOhLearPTRiI5lnJsEUVbaFC9MHm/4h2IzH7QlepQjQjE57OOf2PJ/X4C
+         BZSax/i3CvSP7+NDK9YJpGtL6H+3z196y5V4uNKkU4VPRbROAWbSP16zyEYX6thlP2Wd
+         UNUPhC79bd/PAuS048Va2Kb/7SWjb9HgxbK8zFIdjP6X9YPXElSRFV3B1OHhXlPRDoU8
+         yEJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=buRI718RFPrTtdiRLJoEyVax+0RYy5X13JOpEpadUuU=;
-        b=VYiwUQgLjrm62sRwqRJz0EIW3FGOvvN92JJvTdeJQ91c48mskCSy7k5lz0krQ/fWhK
-         okj2SWzfm46tRe/U+J09zyoVK97vULTJcbwFqEH86iK3Tbl7cVidCPCot3YZlg/mWkQa
-         ZVlEdn+9WpiCSM8TVRDCEAceGgOp2nuEc7hvc69MQF3nxmmBLnpUm8QbacWFK2JvJYan
-         z4wYrez3KVYozjL1UTa8BLx7bU61k9y332+65c25SwDLu3ylOuuB8Jt6mLrZmDDyAcJr
-         DG8qr36FpodCGin9ym7b0NK85x3jBqDGRgdERijfK7d7CYrPRqOZargMqCqCia9TQsBT
-         bZaw==
-X-Gm-Message-State: AOAM532Wa3qVJByOYnjChE+vQcjbH+VCSuju1ORmwfe7Y/oUKXnhbQjn
-        WOotTTh2pBpfguGG0bGwp7BoAcLCxo4=
-X-Google-Smtp-Source: ABdhPJwSTNC7XV5g8rgzvLhMnHke+15+xCA+f/9KoLJUeFW2q/tcqIfUyrGoJdlVs17dXjSkPjgyjA==
-X-Received: by 2002:a63:d241:0:b0:3db:11bc:8d6e with SMTP id t1-20020a63d241000000b003db11bc8d6emr2313497pgi.229.1652235402492;
-        Tue, 10 May 2022 19:16:42 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id j12-20020a17090a2a8c00b001d792761e2esm2566405pjd.47.2022.05.10.19.16.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 May 2022 19:16:42 -0700 (PDT)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: chi.minghao@zte.com.cn
-To:     andy.shevchenko@gmail.com
-Cc:     cgel.zte@gmail.com, chi.minghao@zte.com.cn, coproscefalo@gmail.com,
-        hdegoede@redhat.com, linux-kernel@vger.kernel.org,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        zealci@zte.com.cn
-Subject: [PATCH V2] toshiba_acpi: use kobj_to_dev()
-Date:   Wed, 11 May 2022 02:16:38 +0000
-Message-Id: <20220511021638.1488650-1-chi.minghao@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAHp75VfzbWAS6phV3eB7ehe50NrXitkuS54sYjdVK-OqqYVieA@mail.gmail.com>
-References: <CAHp75VfzbWAS6phV3eB7ehe50NrXitkuS54sYjdVK-OqqYVieA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aXS0yW+0IcDdjRjEe31czGkw0Rugc3CtPkAGtXZ/h6g=;
+        b=pyG6LiaEXCKAPCQYH2CCgk/P1U+Qj7Mknz+KkYHEvOCzuTrxaZLfSbAMQDLKq/XLqC
+         h9NFLFyz96gDhUScHk20c6c2hNmDmcVSuycHx2694EFuCOG3Up9buyG0MBb137w4z8ok
+         Igf0lVmZej/ArpmWGdZbPLJR1f+TAlh/WoO6di8Qznt7F8W2nW/m+LNLkZeBcnGpx5+0
+         9dwexCiubpAyQc2Pw/KiPzBrvA2n/n3ve4TmzT/q8AA7778btefnJQxDjydBVBy8cVR8
+         ahYYAqX9x1DSb2LaMeeInOIZ9v4TEQi5aBFJqgoYR4pzTTJyARGJkitmI3cGwpa/1Edw
+         ETiA==
+X-Gm-Message-State: AOAM5327ozxb1vJOUYB4indsIdvq1DXGQWjgpNl+QQ3cCsgqX3rccNK7
+        CKZg9nrH9gRrz8ZRrKT45fnfME/F1uGoyhf7Kgo=
+X-Google-Smtp-Source: ABdhPJyl/VOXNYLums4ReuHqmBuwnb6C5RopKopIqITvRa12z6BjZTB1VGi7oQ+cUO2/oD36q46W83YIl1Km36m1LsQ=
+X-Received: by 2002:a05:6402:d51:b0:425:d5e1:e9f0 with SMTP id
+ ec17-20020a0564020d5100b00425d5e1e9f0mr27625201edb.125.1652260700381; Wed, 11
+ May 2022 02:18:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHp75Vc+G1JNkxBcpyXge9qsGpT0m4erBV1aEi4bMHDYfE-JOw@mail.gmail.com>
+ <20220511021522.1488373-1-chi.minghao@zte.com.cn>
+In-Reply-To: <20220511021522.1488373-1-chi.minghao@zte.com.cn>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 11 May 2022 11:17:43 +0200
+Message-ID: <CAHp75Vcna-XZVxBn900CfOCC0V2To3OTpT6_aKYQVEToNGQKVA@mail.gmail.com>
+Subject: Re: [PATCH V2] samsung-laptop: use kobj_to_dev()
+To:     cgel.zte@gmail.com
+Cc:     Minghao Chi <chi.minghao@zte.com.cn>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Zeal Robot <zealci@zte.com.cn>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Minghao Chi <chi.minghao@zte.com.cn>
+On Wed, May 11, 2022 at 4:15 AM <cgel.zte@gmail.com> wrote:
+>
+> From: Minghao Chi <chi.minghao@zte.com.cn>
+>
+> Use kobj_to_dev() instead of open-coding it.
 
-Use kobj_to_dev() instead of open-coding it.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
----
-v1->v2:
-	remove Reported-by: Zeal Robot <zealci@zte.com.cn>
+> Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
+> ---
+> v1->v2:
+>         remove Reported-by: Zeal Robot <zealci@zte.com.cn>
 
- drivers/platform/x86/toshiba_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I believe you want to give credit to the bot in the future patches
+like this. You may use commit message to add something like "The
+suggestion has been given by Zeal Robot."
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c
-b/drivers/platform/x86/toshiba_acpi.c
-index f113dec98e21..0fc9e8b8827b 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2353,7 +2353,7 @@ static struct attribute *toshiba_attributes[] = {
- static umode_t toshiba_sysfs_is_visible(struct kobject *kobj,
- 					struct attribute *attr, int idx)
- {
--	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct toshiba_acpi_dev *drv = dev_get_drvdata(dev);
- 	bool exists = true;
- 
+>  drivers/platform/x86/samsung-laptop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+> index 19f6b456234f..c187dcdf82f0 100644
+> --- a/drivers/platform/x86/samsung-laptop.c
+> +++ b/drivers/platform/x86/samsung-laptop.c
+> @@ -1208,7 +1208,7 @@ static int __init samsung_backlight_init(struct samsung_laptop *samsung)
+>  static umode_t samsung_sysfs_is_visible(struct kobject *kobj,
+>                                         struct attribute *attr, int idx)
+>  {
+> -       struct device *dev = container_of(kobj, struct device, kobj);
+> +       struct device *dev = kobj_to_dev(kobj);
+>         struct samsung_laptop *samsung = dev_get_drvdata(dev);
+>         bool ok = true;
+>
+> --
+> 2.25.1
+>
+>
+
+
 -- 
-2.25.1
-
-
+With Best Regards,
+Andy Shevchenko
