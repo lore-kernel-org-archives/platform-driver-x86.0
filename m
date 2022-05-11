@@ -2,103 +2,135 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E5EC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 09:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCAAC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 14:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231144AbiEKJuf (ORCPT
+        id S244750AbiEKOec (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 May 2022 05:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44504 "EHLO
+        Wed, 11 May 2022 10:34:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232388AbiEKJue (ORCPT
+        with ESMTP id S244843AbiEKOe1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 May 2022 05:50:34 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EAAB51308
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 02:50:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 46970B8216E
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 09:50:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F24F6C340ED
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 09:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652262631;
-        bh=J02jIRMFhexYOzkBJGJ+Z9LGmOSZskXRIMLcEF4x9ec=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=MVT1BLeuui7NEEvPMAkZsQXryYZtNrc2hxY1nA08WSUWarQREmzIUy7qo0dSnCivn
-         jCfAkcXt498eKKFIeLfJL/Sdfgzzs49dN8shGs4VG9beNExQ+wbp1Q+tEhisS6ml9x
-         3P27hhWfxviiAM/MRaEVGHf60TDjgL4j2kZtJsZI/SzziMj2pxVY7Liueg4+Tet6/W
-         0bb/HCp6RJV+V7n3OgcXo9Tfojxduppbs6Ufd4xO9oy54ZiQhyzvOzevvqNZ7wv8PO
-         Hx3ehJsT8F86rA111GrrwXlFkw2tzXlFIRG+aZlmzntp5ezdBdt6ZYafsvR5cW7wF6
-         Sb3Co7FlBIBFg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id E1E59CAC6E2; Wed, 11 May 2022 09:50:30 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Wed, 11 May 2022 09:50:28 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: sa@whiz.se
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc attachments.created
-Message-ID: <bug-204807-215701-UHhp3IeCqt@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 11 May 2022 10:34:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ABE2D19B3AF
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 07:34:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652279659;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l6RLj8UsrA5gv/Hv6OZRopkP0qnJiCPWilzj0FfnJcw=;
+        b=Me8SyT3ddV6rG8AEMuVCNweinqqlU+iPnfB83WTQ4faOWZQgN76DjbPgtqfYZDZBKswi6d
+        R/pTlHKdJ9COAqgE9LKLtHYpORJieSc1kn8DVFM5bGb+wP+Oo1YUYRDLGSKyDcOoh1ZXjg
+        FMw/cpNod+NXaUfLpip2MN0fxpdEHf8=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-149-k6BiGKEqPMSyK9elrUdbsQ-1; Wed, 11 May 2022 10:34:18 -0400
+X-MC-Unique: k6BiGKEqPMSyK9elrUdbsQ-1
+Received: by mail-ej1-f72.google.com with SMTP id p7-20020a170906614700b006f87f866117so1244887ejl.21
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 May 2022 07:34:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=l6RLj8UsrA5gv/Hv6OZRopkP0qnJiCPWilzj0FfnJcw=;
+        b=4dvVn+jQRDv6w3dXYKaVx0TE+L2SOoxaA9pIysiRZoCWKVHEGh/10KW6OzYAV6KDim
+         fcaANFas1qFMdjztbLnU2RTeU57t4ZPeMXi5h3IP8tYvsrags9+yak0T+s22lT1inwBX
+         lPva6wwQ4fUbGsU22rqtMRDqqjcrbsKJjNrNmI+c63wlKK6GDrxXF7MxBjTW3k1hrx1V
+         kwBMfb/A0sLeRm98Ch/6j53LDd+5oGNPvMzu3ivG8PgvBUCT8IgUiRdgU5JZkOLakRWn
+         Pj3JJ2D+dxGjdaH98ouWrgwcWYDW4XRn4w3YrI7LLLvHkLKKMgYJfHPrS88fs8BJlVhW
+         YAQA==
+X-Gm-Message-State: AOAM53021QVslEhKfBK3MOzmTAmslQzm4z4k1OrOGShz+iG+nz5/sD51
+        N1nroCsMe9ODt+FR40/T49OsvbcaYRdzxoluVPLL5M4lp/AJO6k6P/fEyTVvSIeR2Vf8Yft2xOE
+        SCkuC8YzUuFLmVTcpFO4oI6JIRuSgb1DMRw==
+X-Received: by 2002:a50:fa8c:0:b0:428:9d92:e5fb with SMTP id w12-20020a50fa8c000000b004289d92e5fbmr16842850edr.395.1652279657262;
+        Wed, 11 May 2022 07:34:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzjckULa/jmWXEiIh/TleWW58ONjAbx8TZEmK4BhFuoToi9I8RYT9biDSKkDQ/NQA/KyhXpZg==
+X-Received: by 2002:a50:fa8c:0:b0:428:9d92:e5fb with SMTP id w12-20020a50fa8c000000b004289d92e5fbmr16842811edr.395.1652279656926;
+        Wed, 11 May 2022 07:34:16 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id k15-20020a50ce4f000000b0042a2ccdd2b8sm257216edj.70.2022.05.11.07.34.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 May 2022 07:34:16 -0700 (PDT)
+Message-ID: <a4883972-a31b-5e81-c8ef-3d9d097662d0@redhat.com>
+Date:   Wed, 11 May 2022 16:34:15 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v1 1/3] platform_data/mlxreg: Add field for notification
+ callback
+Content-Language: en-US
+To:     michaelsh@nvidia.com
+Cc:     platform-driver-x86@vger.kernel.org, vadimp@nvidia.com
+References: <20220430115809.54565-1-michaelsh@nvidia.com>
+ <20220430115809.54565-2-michaelsh@nvidia.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220430115809.54565-2-michaelsh@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
-
-Sven Arvidsson (sa@whiz.se) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |sa@whiz.se
-
---- Comment #238 from Sven Arvidsson (sa@whiz.se) ---
-Created attachment 300932
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300932&action=3Dedit
-Z170M-PLUS dsdt dump
-
 Hi,
 
-Can the Asus Z170M-PLUS be supported by this effort too?
+On 4/30/22 13:58, michaelsh@nvidia.com wrote:
+> From: Michael Shych <michaelsh@nvidia.com>
+> 
+> Add notification callback to inform caller that platform driver probing
+> has been completed. It allows to caller to perform some initialization
+> flow steps depending on specific driver probing completion.
+> 
+> Signed-off-by: Michael Shych <michaelsh@nvidia.com>
+> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
 
-cat /sys/class/dmi/id/board_name
-Z170M-PLUS
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-[May11 11:46] nct6775: Enabling hardware monitor logical device mappings.
-[  +0.000028] nct6775: Found NCT6793D or compatible chip at 0x2e:0x290
-[  +0.000004] ACPI Warning: SystemIO range
-0x0000000000000295-0x0000000000000296 conflicts with OpRegion
-0x0000000000000290-0x0000000000000299 (\_GPE.HWM) (20211217/utaddress-204)
-[  +0.000004] ACPI: OSL: Resource conflict; ACPI support missing from drive=
-r?
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-dsdt dump is attached.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
---=20
-You may reply to this email to add a comment.
+Regards,
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Hans
+
+
+
+> ---
+>  include/linux/platform_data/mlxreg.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
+> index 40185f9d7c14..a6bd74e29b6b 100644
+> --- a/include/linux/platform_data/mlxreg.h
+> +++ b/include/linux/platform_data/mlxreg.h
+> @@ -216,6 +216,8 @@ struct mlxreg_core_platform_data {
+>   * @mask_low: low aggregation interrupt common mask;
+>   * @deferred_nr: I2C adapter number must be exist prior probing execution;
+>   * @shift_nr: I2C adapter numbers must be incremented by this value;
+> + * @handle: handle to be passed by callback;
+> + * @completion_notify: callback to notify when platform driver probing is done;
+>   */
+>  struct mlxreg_core_hotplug_platform_data {
+>  	struct mlxreg_core_item *items;
+> @@ -228,6 +230,8 @@ struct mlxreg_core_hotplug_platform_data {
+>  	u32 mask_low;
+>  	int deferred_nr;
+>  	int shift_nr;
+> +	void *handle;
+> +	int (*completion_notify)(void *handle, int id);
+>  };
+>  
+>  #endif /* __LINUX_PLATFORM_DATA_MLXREG_H */
+
