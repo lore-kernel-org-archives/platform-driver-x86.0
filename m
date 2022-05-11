@@ -2,110 +2,98 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6237CC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 May 2022 16:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4917FC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 02:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347058AbiEJQKY (ORCPT
+        id S237671AbiEKCP3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 May 2022 12:10:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45970 "EHLO
+        Tue, 10 May 2022 22:15:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347202AbiEJQJ7 (ORCPT
+        with ESMTP id S229891AbiEKCP2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 May 2022 12:09:59 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F0C32670B7;
-        Tue, 10 May 2022 09:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652198737; x=1683734737;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=knKoDSX6XXVi1UoUVL9DwH66JaiGwiaJztWXaAd6inc=;
-  b=XryxLngxqZCXypeKsueZ0AsnkNZ++ArGYWUAOhsrAy7R5n23abIRRjsZ
-   eg8YLcC1nP95DD0AJhuZ6+PC96L7lwOT25Yg5aBDE3A4+Q+7473Lemrpj
-   wJg5SgCrPj44Tu3yLaFimmfHpNdKdbEDvqaTluegaCZ4Tpif+3XcDLqs1
-   o07bfPLT9y7cj+8MXp6TMDAb+AHJ+AcXXHbMZ8A547sQnB5Kzy8ECoqbH
-   wdjeOrRCHPKHP1s4weEy0OaWXrHCjmBeh6i8cOvU+UilOmuMANkGU8nQo
-   iNH3hxghXgrLoIZsCQjqPE0K/JY+u6/jbcAWwr11emAJQ1E/UF98xpn+R
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="269558159"
-X-IronPort-AV: E=Sophos;i="5.91,214,1647327600"; 
-   d="scan'208";a="269558159"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 09:05:25 -0700
-X-IronPort-AV: E=Sophos;i="5.91,214,1647327600"; 
-   d="scan'208";a="738765503"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 09:05:22 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1noSMR-00EOjV-12;
-        Tue, 10 May 2022 19:05:19 +0300
-Date:   Tue, 10 May 2022 19:05:18 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
-Subject: Re: [PATCH 0/2] simatic-ipc additions to p2sb apl lake gpio
-Message-ID: <YnqNPpIKFAoLegMr@smile.fi.intel.com>
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
- <20220308193522.26696-1-henning.schild@siemens.com>
- <YnJ2tYjCpJi7yc4j@smile.fi.intel.com>
- <20220504171951.0d569632@md1za8fc.ad001.siemens.net>
- <20220510173053.10a14aeb@md1za8fc.ad001.siemens.net>
+        Tue, 10 May 2022 22:15:28 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F421683F1;
+        Tue, 10 May 2022 19:15:28 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id v10so523585pgl.11;
+        Tue, 10 May 2022 19:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=IAnyOLboazy5po7m/eHBvwb+oiA0ecLXwwnI0Wa0X6w=;
+        b=f0wl661H7cQPuRQYqKkPNPPRoaVtAChbJPvbirTud+O7pmInscpk4I7FSSPRzdsTXo
+         Kd4SlyyE4r+QFfuEiBAdfKPeKmXkOpV6Ec0NXezSSOeQecNB2BdXMpglYUw3xghB7Udu
+         MQENRTnWhVMcGJEW0gh0ig5WQJwAP9oLz6w83NyjmZhxKus+G6LBalazIYOjZOd9ZqdC
+         5uMONadIks8ritGT5Su/GXXCzsZv+EwLbp4qESPmakQ1yWHjMouwfZc4Pqv+z8kinYof
+         dvTJHhjyrIU/Lbizyttrv0zhc8mL1tNZWgicLHRqmQ0toCK4TQQR9DZkhV1vQiC1aELK
+         mHkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IAnyOLboazy5po7m/eHBvwb+oiA0ecLXwwnI0Wa0X6w=;
+        b=WUlf2thU3+qKmMOT4phNjr4j2r+I0nsq9jfwDiD8qAl62AkihJJRIO0LlEBeQC1H2X
+         QffMNmb2T76OsNG+xpnLlR/fjsZIdtgRMXgV6G77460BeTo/Uze8RWT30dBrRNIgDnDP
+         mh0avNS0hK2eAqqud2XFt0L4+mYU5lZgCVlK/2/23rlOiB6WpcoFe12wLZnYy9+Wx/u8
+         60n1iKe+G3APlu2raBP91R3xhV4fqbrEOtM0mIPDHIkAzCVQLjWuAz5Lje7uoTf8jqtt
+         /L8uT987gvUNcOg0IwLm/ouBI/nzBshiHLaxR/pcU7yoaEK9VrXVELWDy+ISJl+tkYWr
+         ki6Q==
+X-Gm-Message-State: AOAM531arec5tuxNgDwpEr+545AEwBSK4IbelovRbqr2TbHiwerHsBY4
+        +HBhs0eIhyN7O1yCvF6ANve8EA7Hnnw=
+X-Google-Smtp-Source: ABdhPJz3BWINpHXO5RoZIsI3nhh2DNTzVb3J8N0kq5RlKAOX3+gOTJdpUF6a8/XVXDeFocKdI3YZdw==
+X-Received: by 2002:aa7:8c4c:0:b0:510:8573:e7c0 with SMTP id e12-20020aa78c4c000000b005108573e7c0mr21518351pfd.52.1652235327750;
+        Tue, 10 May 2022 19:15:27 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id bj10-20020a170902850a00b0015e8d4eb20fsm313917plb.89.2022.05.10.19.15.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 May 2022 19:15:27 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: chi.minghao@zte.com.cn
+To:     andy.shevchenko@gmail.com
+Cc:     cgel.zte@gmail.com, chi.minghao@zte.com.cn,
+        corentin.chary@gmail.com, hdegoede@redhat.com,
+        linux-kernel@vger.kernel.org, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, zealci@zte.com.cn
+Subject: [PATCH V2] samsung-laptop: use kobj_to_dev()
+Date:   Wed, 11 May 2022 02:15:22 +0000
+Message-Id: <20220511021522.1488373-1-chi.minghao@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAHp75Vc+G1JNkxBcpyXge9qsGpT0m4erBV1aEi4bMHDYfE-JOw@mail.gmail.com>
+References: <CAHp75Vc+G1JNkxBcpyXge9qsGpT0m4erBV1aEi4bMHDYfE-JOw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220510173053.10a14aeb@md1za8fc.ad001.siemens.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, May 10, 2022 at 05:30:53PM +0200, Henning Schild wrote:
-> Am Wed, 4 May 2022 17:19:51 +0200
-> schrieb Henning Schild <henning.schild@siemens.com>:
-> > Am Wed, 4 May 2022 15:51:01 +0300
-> > schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
-> > > On Tue, Mar 08, 2022 at 08:35:20PM +0100, Henning Schild wrote:
+From: Minghao Chi <chi.minghao@zte.com.cn>
 
-...
+Use kobj_to_dev() instead of open-coding it.
 
-> > > [1]: https://gitlab.com/andy-shev/next/-/tree/topic/p2sb-next
-> > > It would be nice if you can perform another round of testing.
->
-> Just got around to testing this with my patches on top. My stuff will
-> need some more work before i can send again.
->
-> Is this a rebasing branch?
-> With efc7d77ea372 ("EDAC, pnd2: convert to use common P2SB accessor")
+Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
+---
+v1->v2:
+	remove Reported-by: Zeal Robot <zealci@zte.com.cn>
 
-It's rebased over and over. I just pushed the same version I have sent as v5.
+ drivers/platform/x86/samsung-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> I am seeing problems while booting ... things do work but still error
-> messages which probably should not be there.
-
-It's okay. This is not related to my stuff, it's a new series from Marc which
-enables that (harmless) warning.
-
-> [    2.217506] broxton-pinctrl apollolake-pinctrl.1: Failed to attach ACPI GPIO chip
-> [    2.217542] gpio gpiochip1: (apollolake-pinctrl.1): not an immutable chip, please consider fixing it!
-> [    2.217771] i801_smbus 0000:00:1f.1: Failed to enable SMBus PCI device (-22)
-> [    2.217788] i801_smbus: probe of 0000:00:1f.1 failed with error -22
-> [    2.221460] broxton-pinctrl apollolake-pinctrl.2: Failed to attach ACPI GPIO chip
-> [    2.221482] gpio gpiochip2: (apollolake-pinctrl.2): not an immutable chip, please consider fixing it!
-> [    2.222010] broxton-pinctrl apollolake-pinctrl.3: Failed to attach ACPI GPIO chip
-> [    2.222023] gpio gpiochip3: (apollolake-pinctrl.3): not an immutable
-> chip, please consider fixing it!
-
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index 19f6b456234f..c187dcdf82f0 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -1208,7 +1208,7 @@ static int __init samsung_backlight_init(struct samsung_laptop *samsung)
+ static umode_t samsung_sysfs_is_visible(struct kobject *kobj,
+ 					struct attribute *attr, int idx)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct samsung_laptop *samsung = dev_get_drvdata(dev);
+ 	bool ok = true;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
 
 
