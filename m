@@ -2,129 +2,136 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79D9C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 17:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA65C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 17:53:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344055AbiEKRlZ (ORCPT
+        id S1345878AbiEKRxz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 May 2022 13:41:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50938 "EHLO
+        Wed, 11 May 2022 13:53:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345733AbiEKRlO (ORCPT
+        with ESMTP id S1345868AbiEKRxy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 May 2022 13:41:14 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E827E219F69;
-        Wed, 11 May 2022 10:41:09 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id p18so3426277edr.7;
-        Wed, 11 May 2022 10:41:09 -0700 (PDT)
+        Wed, 11 May 2022 13:53:54 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F98621A952;
+        Wed, 11 May 2022 10:53:53 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id m20so5542596ejj.10;
+        Wed, 11 May 2022 10:53:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2Ke+AGfzv6tvoEFSxFKuURhI7WvGdekzVHjZqAbbO8s=;
-        b=G9wqQwuFFHa1lknmirIg8grgSmlGhY4vOMeTI7ajMbQFOkPDfAjxkC53pYWGPJ2cZF
-         JYFgcz/9NdUz5O/wqsbhfPi2zN/aY/XE8j2tiIE+GNsGbyuPFnW8P1tp2iJW3pJ7hdxQ
-         0IWMmg6WoVXdfvmSzYuR0vhQNDCC0PHJKULu799/jK8hUupfLZ4wSeZ7OW6yle+knuIx
-         wKXck2gICgiHyMkOEoopjNhzgzuCsUiXl0Fc8RjVEZqu59KvypFwP3AWHlhIyW+2eUvJ
-         9/csBr94Q6HkyJhoRRrkcPuuXe8cn9wJZuWneLmHD2vUIG70ZoAZdfhxmnMfAxo/8/s1
-         RtmQ==
+        bh=20318/xvPXu2lxX8X9tVBy9ShWnG5kb0p7KIWm6bilY=;
+        b=JhwCo1D5QmYppFs7JgZN+Z1pfDhfm374tctxpKM/EvNUTf8teix+UoxWxHTlqIgQU6
+         p1t5nB782rusQ3nkFO8wA3iFptOukcRDowcFR96BfOF5UDs1dJwN2tBXPsMDiOeofRp3
+         Xb8m22WFI6FbzSbfk7mvNd6koLTB4U0CZITZTpzr7lsDXmKMBr13C4TfUmHULvxXiZT+
+         zMzyOhR6DRohpqj2EbducUCZV2c9nieHO73muzMM3HUp4G5P0mzmgP+EduQsZVrnLkv6
+         XDXPilhxlLJ/MApYsWpaNvCcvPc1g/unY/sjRejpX83J88JbZ5z2nyq7SW///qK4oMEI
+         +uLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2Ke+AGfzv6tvoEFSxFKuURhI7WvGdekzVHjZqAbbO8s=;
-        b=IyTEu0BCJo1oB/cUJnUAJCpi9etJdWOi4APkhpkhnU3OK4KyJvQw2Sbnthwgb7Kxu1
-         UKcGilb7cwwvXQo510/KQU4oxvdmispBYROdmkre/SAUi3kWcfnVzHZNDVsx9jZ6qW6A
-         XtbkR1ReBjaHUJEssFgr2CaAsbCF4eQCrYlHRIhuDXjMV2ieCMxOiVhDeWeo3CCExoLV
-         3mNFTUP4FdL/nD0Ux8TQXNYC+y3JFOvCI8tJZTFpUk956cYjQVPlvDNuNC3DquaSCo+L
-         m2IMd6Ovc74Evo611BIhymOWbwjpiRDLSWzd4wDwywGCgK6oToRl24HAOKpgtVRzqzhP
-         ZEnA==
-X-Gm-Message-State: AOAM533bLk4qWjQvGFDPtfc/i5dIJE2ibDasrobjBAftnPcZbBzuO9TQ
-        HHeUQgZvcfSS74UGlrwTBImL5b8PiyHNmllKooQ=
-X-Google-Smtp-Source: ABdhPJypHOUVtZ/mWQM6O1I1uprLxF37dkIpuFfu2UGbONcylK6L0+EILGXJ8zFdWrxtLQMY1Q94ZDxv7qrd1l5g0T4=
-X-Received: by 2002:a05:6402:1d4c:b0:427:d1f5:3a41 with SMTP id
- dz12-20020a0564021d4c00b00427d1f53a41mr29873435edb.218.1652290868261; Wed, 11
- May 2022 10:41:08 -0700 (PDT)
+        bh=20318/xvPXu2lxX8X9tVBy9ShWnG5kb0p7KIWm6bilY=;
+        b=d3YNWI7aV7+39si42NZxJdm08zsUWIDG4LL2ImYXWLLCxYYVdhEf230Yo/cgQnvCow
+         RJ/Cp9KjCGJ7/dhUyEOarzc0kWV+n2txoB/QdGEOmdmAEY0q/LPjmAx8aT04tVvf9suw
+         kj9VRoSup5EADHmWZgeV5pMJosuDwxX4H3/VcRk/93UGjZeC0Crl+oJS746zNsfc2pjf
+         51C3/Yy9vddJx1S7IJZitpCN9qYikMmvIdSf1+jiGeFGKlFXAQb5FpQiueEAt6DHoFuL
+         MIY537emUW9nOvXw1D/58q2WR49Mi9y6Y6IxNF61p5opgIagt34/ucjfCohkIkp8sdBB
+         uzMw==
+X-Gm-Message-State: AOAM533rnvHaBIQhxIDmfQ7U5GPlUHt2UUOSdQq/5XKmR7bOpllM2DKg
+        4AyDEPGf2FpemFyh+rsGty5am9WsCWqNPELMYEg=
+X-Google-Smtp-Source: ABdhPJxLMXfl6V1uz22UIQH2xA7vQHrxBxFcksWT+mePA5R6lPB9wyRPj6nwxmx2HuPq5Ms9yAFMlx+fSjhE4qq5i34=
+X-Received: by 2002:a17:906:3ce9:b0:6ef:a8aa:ab46 with SMTP id
+ d9-20020a1709063ce900b006efa8aaab46mr25724454ejh.579.1652291631524; Wed, 11
+ May 2022 10:53:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <YnoJ0k6eIUiwjXSZ@debian-BULLSEYE-live-builder-AMD64>
- <CAHp75Vd574LCnEq-KX=WHnnDyrjZgGu6W9wNEbnw79FBpyx=Lw@mail.gmail.com> <8bd83f45-5278-e817-3f65-88fafd0ad3f4@collabora.com>
-In-Reply-To: <8bd83f45-5278-e817-3f65-88fafd0ad3f4@collabora.com>
+References: <20220511153905.13980-1-henning.schild@siemens.com> <20220511153905.13980-5-henning.schild@siemens.com>
+In-Reply-To: <20220511153905.13980-5-henning.schild@siemens.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 11 May 2022 19:40:31 +0200
-Message-ID: <CAHp75VcQYncfCv-2GE0a0e=0iOLBC6wMvoH8pFCirN3NyLzdhw@mail.gmail.com>
-Subject: Re: [PATCH RESEND v11] platform/chrome: Add ChromeOS ACPI device driver
-To:     Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
+Date:   Wed, 11 May 2022 19:53:15 +0200
+Message-ID: <CAHp75VdSYgAj-8scpZK1EmiNywuji6cpsCWnCo+6vqqdEvg+5w@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] leds: simatic-ipc-leds-gpio: add GPIO version of
+ Siemens driver
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mark Gross <markgross@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <eballetbo@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        chrome-platform@lists.linux.dev
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, May 11, 2022 at 5:59 PM Muhammad Usama Anjum
-<usama.anjum@collabora.com> wrote:
-> On 5/10/22 2:33 PM, Andy Shevchenko wrote:
-> > On Tue, May 10, 2022 at 8:44 AM Muhammad Usama Anjum
-> > <usama.anjum@collabora.com> wrote:
+On Wed, May 11, 2022 at 6:40 PM Henning Schild
+<henning.schild@siemens.com> wrote:
+>
+> On Apollo Lake the pinctrl drivers will now come up without ACPI. Use
+> that instead of open coding it.
+> Create a new driver for that which can later be filled with more GPIO
+> based models, and which has different dependencies.
 
 ...
 
-> >> +       static struct attribute *attrs_##_group[] = {                                   \
-> >> +               &dev_attr_0_##_group.attr,                                              \
-> >> +               &dev_attr_1_##_group.attr,                                              \
-> >> +               &dev_attr_2_##_group.attr,                                              \
-> >> +               &dev_attr_3_##_group.attr,                                              \
-> >> +               NULL                                                                    \
+> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
+> +       .dev_id = "leds-gpio",
+> +       .table = {
+> +               GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 0, GPIO_ACTIVE_LOW),
+> +               GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 52, NULL, 1, GPIO_ACTIVE_LOW),
+> +               GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 53, NULL, 2, GPIO_ACTIVE_LOW),
+> +               GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 57, NULL, 3, GPIO_ACTIVE_LOW),
+> +               GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 58, NULL, 4, GPIO_ACTIVE_LOW),
+> +               GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 60, NULL, 5, GPIO_ACTIVE_LOW),
+> +               GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 56, NULL, 6, GPIO_ACTIVE_LOW),
+> +               GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 59, NULL, 7, GPIO_ACTIVE_HIGH),
 
-(1)
+> +       }
 
-> >> +       };                                                                              \
-> >> +       static const struct attribute_group attr_group_##_group = {                     \
-> >> +               .name = _name,                                                          \
-> >> +               .is_visible = attr_is_visible_gpio_##_num,                              \
-> >
-> >> +               .attrs = attrs_##_group                                                 \
-> >
-> > Keep a comma here.
+Keeping a comma is good here.
 
-> Is there any particular reason for it?
+> +};
 
-Yes, if it's not a terminator entry, like (1), the comma would help to
-avoid unneeded churm in the future in case someone wants to add
-another initialization member.
+...
 
-> If there is, I'll add commas to
-> all the structures.
+> +       /* PM_BIOS_BOOT_N */
+> +       gpiod = gpiod_get_index(&simatic_leds_pdev->dev, NULL, 6, 0);
 
-It depends if it is a terminator entry or not, so please check
-carefully where to add and where not (the latter example is (1) where
-comma is not needed and theoretically might add a confusion).
+This is basically GPIOD_ASIS...
+
+> +       if (IS_ERR(gpiod)) {
+> +               err = PTR_ERR(gpiod);
+> +               goto out;
+> +       }
+
+> +       gpiod_set_value(gpiod, 0);
+
+...but you may apply GPIOD_OUTPUT_LOW there and drop this call.
+
+> +       gpiod_put(gpiod);
+
+Ditto for the rest GPIO requests.
+
+...
+
+> +static struct platform_driver simatic_ipc_led_gpio_driver = {
+> +       .probe = simatic_ipc_leds_gpio_probe,
+> +       .remove = simatic_ipc_leds_gpio_remove,
+> +       .driver = {
+> +               .name = KBUILD_MODNAME,
+> +       }
+> +};
+
+> +
+
+No need to have this blank line.
+
+> +module_platform_driver(simatic_ipc_led_gpio_driver);
 
 -- 
 With Best Regards,
