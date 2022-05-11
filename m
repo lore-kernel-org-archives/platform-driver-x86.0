@@ -2,104 +2,90 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F38C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 16:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F6AC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 May 2022 17:12:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344739AbiEKQaw (ORCPT
+        id S240870AbiEKRM1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 May 2022 12:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57254 "EHLO
+        Wed, 11 May 2022 13:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344759AbiEKQau (ORCPT
+        with ESMTP id S242131AbiEKRMZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 May 2022 12:30:50 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 869F16242;
-        Wed, 11 May 2022 09:30:46 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: usama.anjum)
-        with ESMTPSA id 6A2651F43201
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1652286615;
-        bh=McJOd1OtcooV/2GyTlhAmO/oG/dgXkbBGxYysmipYdk=;
-        h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-        b=VzCtVwdQlqPakSLJ6UCDMWheZMYOIyk+aHp5prPY5f2IR/g2qQeolRqAShBqjyVwC
-         mIdleiFJViLVz0xD9K0oZ/6AFzVyJ2+meMAX6iNMj1+Mk2+c1V3HdwHCLHqjGzaERA
-         DJdI53Z2A9U2w+mxEKUa45Ge1RwTDk4fq2iwJdNxGLpjd6qHdQ0eEK/bo7KDlr9YDy
-         hKgS3leqKfT5sRj/D3AML6U5N8j52eL0ZZ4NhxVqe5anKMELARxa5iESwkoAT5P6bV
-         a6NQZIItNU8tY60jaZcImHIvT9ZtZkNKIehK7hMiMlwu6bg0/Sv2+2dAWiHxv2Pkyc
-         DEQC6VYsFEzHw==
-Message-ID: <4bcd4fd7-ff81-b480-6ad6-ae027e268c7e@collabora.com>
-Date:   Wed, 11 May 2022 21:29:46 +0500
+        Wed, 11 May 2022 13:12:25 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C2D1595A7;
+        Wed, 11 May 2022 10:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652289144; x=1683825144;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PmUQ7d9wEJbUBzDsFN+FiATLacntfGFgKdbPMzYUIig=;
+  b=GRV8ZqfDx1I+uOtBEfjf54LQyhe24U2Nv0n/bvImUsY5lPky5qGCoi4l
+   Udh7ylXazeRmGEYpL0MKIBz25PaB2B6vihYtz9VjqJuEd5/QFM9xp84sz
+   xYmG8JvT9MS6m6tI35FnUvFYbd35i5bQDcecoWygN/lB2/4H8hZ4SdXvA
+   7oETvH03WW5plQHmhARH1KprBQWc23XODyN2XvKNOrIObwDY0dEo5u00d
+   2gf6bpV4GjeKPFs6Z22b0C8XCzthGu/KIos9+OEtT3DrUh5k0yNS15GhV
+   q7yuu6ZRUrd8uviEUATaTWBDFWSoAgvTTZ3kjnmDCF+/aGVEf/69MChCi
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="268596068"
+X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
+   d="scan'208";a="268596068"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 10:12:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
+   d="scan'208";a="594234097"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by orsmga008.jf.intel.com with ESMTP; 11 May 2022 10:12:23 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] tools/power/x86/intel-speed-select: Fix warning for perf_cap.cpu
+Date:   Wed, 11 May 2022 10:12:08 -0700
+Message-Id: <20220511171208.211319-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Cc:     usama.anjum@collabora.com, "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <eballetbo@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        chrome-platform@lists.linux.dev
-Subject: Re: [PATCH RESEND v11] platform/chrome: Add ChromeOS ACPI device
- driver
-Content-Language: en-US
-To:     Guenter Roeck <groeck@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <YnoJ0k6eIUiwjXSZ@debian-BULLSEYE-live-builder-AMD64>
- <CAHp75Vd574LCnEq-KX=WHnnDyrjZgGu6W9wNEbnw79FBpyx=Lw@mail.gmail.com>
- <8bd83f45-5278-e817-3f65-88fafd0ad3f4@collabora.com>
- <CABXOdTe1N7iRTVrCZSgQo=dazofWByM_W6EZgWixLj=Z8Xg0ag@mail.gmail.com>
-From:   Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <CABXOdTe1N7iRTVrCZSgQo=dazofWByM_W6EZgWixLj=Z8Xg0ag@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 5/11/22 9:23 PM, Guenter Roeck wrote:
-> On Wed, May 11, 2022 at 8:59 AM Muhammad Usama Anjum
-> <usama.anjum@collabora.com> wrote:
->>>> +#define GPIO_ATTR_GROUP(_group, _name, _num)                                           \
->>>> +       static umode_t attr_is_visible_gpio_##_num(struct kobject *kobj,                \
->>>> +                                                  struct attribute *attr, int n)       \
->>>> +       {                                                                               \
->>>> +               if (_num < chromeos_acpi_gpio_groups)                                   \
->>>> +                       return attr->mode;                                              \
->>>
->>>> +               else                                                                    \
->>>
->>> Redundant.
->> We are deciding on run time that how many GPIO attribute groups need to
->> be shown. chromeos_acpi_gpio_groups is set at run time. I don't see why
->> `else` can be redundant here.
->>
-> 
-> else after return is _always_ unnecessary (and results in static
-> analyzer messages).
-> 
-Got it. I'll update. Thank you.
+Initialize perf_cap struct to avoid warning:
 
+  CC      hfi-events.o
+In function ‘process_hfi_event’,
+    inlined from ‘handle_event’ at hfi-events.c:220:5:
+hfi-events.c:184:9: warning: ‘perf_cap.cpu’ may be used
+uninitialized [-Wmaybe-uninitialized]
+  184 |         process_level_change(perf_cap->cpu);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+hfi-events.c: In function ‘handle_event’:
+hfi-events.c:193:25: note: ‘perf_cap.cpu’ was declared here
+  193 |         struct perf_cap perf_cap;
+      |                         ^~~~~~~~
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ tools/power/x86/intel-speed-select/hfi-events.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/power/x86/intel-speed-select/hfi-events.c b/tools/power/x86/intel-speed-select/hfi-events.c
+index e85676711372..761375062505 100644
+--- a/tools/power/x86/intel-speed-select/hfi-events.c
++++ b/tools/power/x86/intel-speed-select/hfi-events.c
+@@ -190,7 +190,7 @@ static int handle_event(struct nl_msg *n, void *arg)
+ 	struct genlmsghdr *genlhdr = genlmsg_hdr(nlh);
+ 	struct nlattr *attrs[THERMAL_GENL_ATTR_MAX + 1];
+ 	int ret;
+-	struct perf_cap perf_cap;
++	struct perf_cap perf_cap = {0};
+ 
+ 	ret = genlmsg_parse(nlh, 0, attrs, THERMAL_GENL_ATTR_MAX, NULL);
+ 
 -- 
-Muhammad Usama Anjum
+2.35.1
+
