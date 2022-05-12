@@ -2,168 +2,120 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4534C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 May 2022 08:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49F1C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 May 2022 09:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351417AbiELI6o (ORCPT
+        id S1352334AbiELJxw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 May 2022 04:58:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38662 "EHLO
+        Thu, 12 May 2022 05:53:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346555AbiELI6m (ORCPT
+        with ESMTP id S1352315AbiELJxr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 May 2022 04:58:42 -0400
-Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-eopbgr30067.outbound.protection.outlook.com [40.107.3.67])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ABD15838D;
-        Thu, 12 May 2022 01:58:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=adWABasQLXBaT/VY38PiMHCVkPpPFjK3yNuF9EnKrzIdilOu79x3ro2Ioy/NUBUC+p3iRy7dK4yCVU7HeYuGMevN33ysfYJtEkWke3r5IV04RB/j89S3v0udppVjbN7NGa+3TZUbSxGSgFMdUPmDxFPlGme5i3928iXSjLSlqj38oWNoKCYt1PudXEeeMVxy+bAZc2DA5v9q9waY6yXhV/14VeUKq9an6FEUJAbxBSCNFTrmyIbbYPxZVFWY6764TYxEArrIMaSz+KRc3JhYQwDYW2qv7rQ2Ac6ewynt5JXm0eabvsMLRzr0N0TAliC44qneYB3wypN4kthf1yrMEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UxYLS8yY8+C5UHIOz9nz3Bx5mYH8srTmRXlal6rArd4=;
- b=mt2ziwH7G6t0TAexSxjsNlxbEonwg+IK6ymLwv33Q+teBa5dtHh74X6jzYbymd0QDHiyeDO4U2de9RsRiRgvRdA078KCySPxhQxs1Bf8mNhb1qjGvTd0zkD1xtH35EKXEBUzQkhm6c6nL7Pf8WVTiLPtR5Pch6Dks6ty8TlEbsl/jYsfBGnbZP8HL2hykCY8QjYZ7E694FJgEMxqtd18Y8InlD2mddvX9WcYGnzWwpj4RdAnbxmLKO++saghGD9Tqqueg9Gt/enFwHrnf/IlDXP4HEpKdUmrlh+qyScny8p3ElRYJzCm1ipyTT/Dhcn5KA3J5F9SCZBnUKtFvMxFtA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UxYLS8yY8+C5UHIOz9nz3Bx5mYH8srTmRXlal6rArd4=;
- b=CjfV/20vsCYmpD3BSD47+I6DXiTCPNBVfnpjQkjOSjT7RuGTH1fggmkUbgIkqcTQPdD3YiFdFMtZ5Svki0lt3iLaB4wVoUUZLLlUDPtsUJTXUi/VFeaQ4Tpjmo5LcqqTpGU0ahvdJP4qEZkg3FVy+JtuQKA4lz5SkceXAJJNjCaBMXCe7U8SrkrNGE6oUz8psW3utQLgyL0yUBmxJptEsTBoNELjqSbBLwLmLulBs8YLZ3BJ34MCW8ispYEobWpdphkPAyG6Pk7/8swKbC3KI9Jed9zjp8So8FQH+zDd/OVLaukqPGb81OivCu7ateGjF3y5oTBUfQoD0Uus522Jow==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:2ed::13)
- by DB8PR10MB3211.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:117::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.13; Thu, 12 May
- 2022 08:58:39 +0000
-Received: from DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::7574:7fdc:9b12:30be]) by DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::7574:7fdc:9b12:30be%8]) with mapi id 15.20.5227.023; Thu, 12 May 2022
- 08:58:38 +0000
-Date:   Thu, 12 May 2022 10:58:36 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Thu, 12 May 2022 05:53:47 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5BC942ED2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 May 2022 02:53:45 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id r188-20020a1c44c5000000b003946c466c17so2146950wma.4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 May 2022 02:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=36WnFUDNUVrLnebw8e2rXDDHxmNPW9lYWYZDRw2VWIc=;
+        b=wItM0zhGx7UzmwBKHTcTNSfo6Gq3orFWBR5BIn2yY69ledPGEX5cdPMw/CjKLUonw1
+         VW6ImWsa4Tgl6WMGhWiArwkcvEm+bubsIfJzl+XouMoj/ahYklsOtVjX2+kzBTMMZvVs
+         wI24LeMLt/Njzl5+4+MSimffTiYgguNRSwX4X2zewUOO83l3pFiwdFtjPAX9jNSDJDXL
+         zq5/NAY98iB7sljIHtDqmb03G+2P0Eqv94aZOQNUDtd5UFX+ntNlQs8uDgd4v57hd7OW
+         XAQb3WtzZNIg4cu9//2PIO+eQbn+NnwxgsxrVe2c2sJWrSiQ93pFX5DTFp9k0diNbzJ9
+         c+dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=36WnFUDNUVrLnebw8e2rXDDHxmNPW9lYWYZDRw2VWIc=;
+        b=bUj5UCr0cLmj6DO056p96ZnNcXEl3AkQoxScU+cyCUTa92NyG5kFGY25x4N1UU6HHm
+         QTnvShNadLgKVrrZPd6xvM5BIUw+SBHQ+rBsQskiGy4tuMwBnIASHuUNnJO0SIj5KCLt
+         O7/H1bOQawqQuJRr9WK0zzLqxlRuiAzXkzVYsV19f0MCUAfGpbl7NrbMYI8QhyDs7Xk5
+         +7XAqBpEraEuuKr5NXNSJaFHHSU0lB16ClXUTm5OwDXtZXBabM/d4CFhEMX7u+hFvNk7
+         4aJrS/Vt5p8JwQMD+pg82xO+hLjCuduO/zcRAMwUWtvYyEFttffR2gxB4UoERfMz70WR
+         1HMg==
+X-Gm-Message-State: AOAM533lSYDFQPeNUBg8tKKxk7pOjigH4I+R/n9GMk13HgyKMKjBmJvk
+        OFRkakvWfPECiVYWMJmE6kIhvw==
+X-Google-Smtp-Source: ABdhPJyiH+vmHLZHTmxMQfShNBwbUwLOV82INmXxyFQwcXdIF90tUO/KPbJe4l2fiAUfICToHf26tg==
+X-Received: by 2002:a1c:5415:0:b0:394:2c89:4f2a with SMTP id i21-20020a1c5415000000b003942c894f2amr9282931wmb.144.1652349224349;
+        Thu, 12 May 2022 02:53:44 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id f15-20020a056000128f00b0020c5253d8dbsm3080302wrx.39.2022.05.12.02.53.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 02:53:43 -0700 (PDT)
+Date:   Thu, 12 May 2022 10:53:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        =?utf-8?Q?=C5=81ukasz?= Bartosik <lb@semihalf.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
-Subject: Re: [PATCH v2 2/4] watchdog: simatic-ipc-wdt: convert to use P2SB
- accessor
-Message-ID: <20220512105836.3fb3ff95@md1za8fc.ad001.siemens.net>
-In-Reply-To: <7c458add-a496-6b3a-a04f-e6b68865daf4@roeck-us.net>
-References: <20220511153905.13980-1-henning.schild@siemens.com>
-        <20220511153905.13980-3-henning.schild@siemens.com>
-        <7c458add-a496-6b3a-a04f-e6b68865daf4@roeck-us.net>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.31; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS9P251CA0018.EURP251.PROD.OUTLOOK.COM
- (2603:10a6:20b:50f::16) To DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:2ed::13)
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: Re: [PATCH v5 5/8] mfd: lpc_ich: Add support for pinctrl in non-ACPI
+ system
+Message-ID: <YnzZJaS+ZISAZfh5@google.com>
+References: <20220510151451.85561-1-andriy.shevchenko@linux.intel.com>
+ <20220510151451.85561-6-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b44789b7-03f6-465e-21b2-08da33f59b11
-X-MS-TrafficTypeDiagnostic: DB8PR10MB3211:EE_
-X-Microsoft-Antispam-PRVS: <DB8PR10MB3211F934569EBC7537802E2985CB9@DB8PR10MB3211.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cH8SgwUJCG+SXSGb/cDhWCgB1Zs/UgpKno5JsgwNvVtGwpnLLhcqGCfapVYOmHCgP08rees/ThK+gItMzoCe7qLNCFTXvL61ht9ipW4yIWip8XHTFb01umPutZHwtPVtoijnPkCggh65j9UK2NmyGw2tmV3OglNNSwzHMr+fAi0g1LTypVPl+4LnteVcu67qnpjZJPK6W+/aeqSsF4h3ecIfy+1AtoUOd+XKGqAAf2Cy/kCNtQF2L32JnU3XEPcfUKlwpBj3agb/LJTLZqYqE9bO69p+ztIFf8SFExkHA/CDFSqv94vn50E1r2towEuUnQ9FxyvGRh+9O3o9Z0dQugzFvZA8kHBy3zvIHdCxy7HcrD1gg28Ucno/RWBFpcXgOiSTYiSFDpXp5jxaDFU3bZH5PiHBKILQ1pLfIMR0HTODhqPOlvIzeMdR7n8yT21MO+O1OVWRfNh4tGISCJC+FKKhwhd2GMtErjztX8mdIcNdCqfC7OFD3HLMmDyKJwwIoVt1zlUlU/04zi9E5Xfp6AcMjASIjX84ifImf5rp6JSBNPII8iR+lDyeyOdHFFLMHhnjn0qkk4YobJ6BA3vb9zkvUWMkwInsl4iQcMOXZhHI6/mWlyxcJWcu4AfKluILs3ACqb6Pjo22y70lpnWClA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(83380400001)(5660300002)(1076003)(6506007)(186003)(2906002)(66476007)(66556008)(66946007)(44832011)(8936002)(53546011)(86362001)(6916009)(8676002)(6486002)(4326008)(9686003)(26005)(6512007)(38100700002)(82960400001)(498600001)(54906003)(107886003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?y1qWKtAcdg+ymxQd7KhZ+u/SnS1XtqsoOiKyvdkow+zt7A5px2+tiPqPLMel?=
- =?us-ascii?Q?bVkGYCMHGAHToUn0bnBymhwmFlTqXPgJGf6EETckb553Lkbwiz9mDo3X4RG6?=
- =?us-ascii?Q?/1NuH0KUsm+5O20OL7m3K2VJ2nFXzy0LJHcql2TIRHibVDMMP7FNPfdfimpu?=
- =?us-ascii?Q?z0iBoSsKsUYta4aVsRSh+n8/6szU0Z5eE/A81xt89QPjTlgefUT16iTnOStW?=
- =?us-ascii?Q?IAPNI6Vau8hz2LYwS9NbTGxgvCbjNpSHBkmszgCHGYpB0pVFDH6TuU1Ur3FG?=
- =?us-ascii?Q?muyG0uPOcDzcUzSPMofDnNxOwU24rGo+3mTHGmQdtecDQf9TvaEhl9sFJIex?=
- =?us-ascii?Q?evPusHgVlR2l6X2NYZoGE3rR1z4aLo7VzEUzqWvoc7C0SRakUxMlN6pb/gcv?=
- =?us-ascii?Q?s8T4p1Rd/7tvOBdwYsbP2ad0bUB2UedPlvL9HQtV/ZLkk1ktWsvjpWGEin8Q?=
- =?us-ascii?Q?0lA1moqRPbb4Ts3wbVNepuAGGJQ9zsqnWWL6Vn0NxvJQ8k7cFIMDiSt36rPV?=
- =?us-ascii?Q?Gg8R9LX3r0/yPYsqRwAcuWl9PjC9JfSBj8ub01bAo0NOUmSAQqkk9dr5pxa/?=
- =?us-ascii?Q?jqeg4XAgk0reNKfG4BDLMgFjLNWo1S/mJID2KL8+RSCLYLEYkRrUmFug2vp/?=
- =?us-ascii?Q?6QLhJrWEzthobSjeOvD3b+Cxz/kDzBLOtmjuikcmbmoVSOXFLx/d4hibPZ5T?=
- =?us-ascii?Q?NFR/U2leNlYlXVzpHyGvokfLKGpZsVTy3sXa/7w3Pq0uBD5W37sFY15d5AB5?=
- =?us-ascii?Q?8SmxV45wNcE1Pae0B2Hj8mwdyQtFtbhbTDdWTTdUNhQbhXigQh7jyMcgDl70?=
- =?us-ascii?Q?HXZAYgHTnxq67570GEWrCJiZ79NmbepY6KLrAg1gxv5VoiXaGtC7or9xhoFg?=
- =?us-ascii?Q?+v1Z4ouetB8nASI5zyb+THJ619VWyAHo9yfJGg1PjZ+9RB9RDvMDyEGY39EZ?=
- =?us-ascii?Q?KaD8PnukygDFrmRYfzy90dPaiPgTD7SLrp8cxqjd4e1l1bmGOAbgz7JrFnWg?=
- =?us-ascii?Q?K3AxwVL0gwpT6Dx1NgRRxvtBzJ74EupTaWQAymvc6eFYC3g530YiN4KWRny+?=
- =?us-ascii?Q?uiTf+ieriEUWd+xhEBORtoowKFTQct5eiUmY5NKDnx2p96XVz2uIoqpJfZoe?=
- =?us-ascii?Q?8TPqAJhty+9vx1v35+U52VUyMf/Y7KcIN/0wGND32gdCCuFWJNm30ZcUpHU0?=
- =?us-ascii?Q?Y9MxjiIsRGliWQWfR9vfW+T4bwq9KjW+mnSYg+PniY2YXSKjwVPcgoKm4qXf?=
- =?us-ascii?Q?s1EwkC5dQ7XDVeKU8dYQjADJSHn7PdrkIJ5BJcFXwpc4uqYEckQgd8ZPcQfQ?=
- =?us-ascii?Q?+NBnqVcJ/K5cUwp6aQ7+JbgP/MNcYKVEtUb1N06ROOsU6ODDUEvFnfaCDeWe?=
- =?us-ascii?Q?OLch8y71aQEFzgLdlnN0i1jBmi/3G3xrsfMRb7vr7hYfaXaBAMu32cWc7daM?=
- =?us-ascii?Q?hL3ikk62Lg5ySnB1GmZm+cmDWcxmpj2SWbGOZQU0RUIRXAqKx8ArqHDefdpf?=
- =?us-ascii?Q?jAXHzjPmUDMI3B/OVYhyVUOClj5sMsjF0Up7fMuNtcsBJAI40P4DI0sZEO2h?=
- =?us-ascii?Q?1jZgEfc6XKaeveDcxZg3w22R/LnhmlkCQV7jJYyrswpbc7kZHYqmVTXGGMof?=
- =?us-ascii?Q?l4xfX4ao0nhuIp3CwHhe3L8UJ3JWryzCCs9t8s2e7hy6bWrhNMgWWoWZPzEB?=
- =?us-ascii?Q?A0EC4zEtMo3LyC962l3a6WLcTR8dN6TRPY3xddtbFaTpcxfgKRpUWpGLWE/R?=
- =?us-ascii?Q?YH2bLkuUW3z9t8ca92ZMinJ1uB5YyCmJJHJmm/rgTC/SD7CDZXO9?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b44789b7-03f6-465e-21b2-08da33f59b11
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2022 08:58:38.8879
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o5Si+QI7BmkcNF1KioNYvfpDXDV8wGXycM5AMy62jpfrXrmcjeLGODMqxNZSRYQdBi9cuLk56eQFTn9zYajBmNIIcDPyYDy0dHp96pbV5eQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3211
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220510151451.85561-6-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Wed, 11 May 2022 11:03:04 -0700
-schrieb Guenter Roeck <linux@roeck-us.net>:
+On Tue, 10 May 2022, Andy Shevchenko wrote:
 
-> On 5/11/22 08:39, Henning Schild wrote:
-> > Since we have a common P2SB accessor in tree we may use it instead
-> > of open coded variants.
-> > 
-> > Replace custom code by p2sb_bar() call.
-> > 
-> > Signed-off-by: Henning Schild <henning.schild@siemens.com>
-> > ---
-> >   drivers/watchdog/Kconfig           |  1 +
-> >   drivers/watchdog/simatic-ipc-wdt.c | 15 ++++++++-------
-> >   2 files changed, 9 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> > index c4e82a8d863f..643a8f5a97b1 100644
-> > --- a/drivers/watchdog/Kconfig
-> > +++ b/drivers/watchdog/Kconfig
-> > @@ -1628,6 +1628,7 @@ config SIEMENS_SIMATIC_IPC_WDT
-> >   	tristate "Siemens Simatic IPC Watchdog"
-> >   	depends on SIEMENS_SIMATIC_IPC
-> >   	select WATCHDOG_CORE
-> > +	select P2SB if X86  
+> From: Tan Jui Nee <jui.nee.tan@intel.com>
 > 
-> Why "if X86" ? SIEMENS_SIMATIC_IPC already depends on it.
+> Add support for non-ACPI systems, such as system that uses
+> Advanced Boot Loader (ABL) whereby a platform device has to be created
+> in order to bind with pin control and GPIO.
+> 
+> At the moment, Intel Apollo Lake In-Vehicle Infotainment (IVI) system
+> requires a driver to hide and unhide P2SB to lookup P2SB BAR and pass
+> the PCI BAR address to GPIO.
+> 
+> Signed-off-by: Tan Jui Nee <jui.nee.tan@intel.com>
+> Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Tested-by: Henning Schild <henning.schild@siemens.com>
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/mfd/lpc_ich.c | 105 +++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 104 insertions(+), 1 deletion(-)
 
-Thanks, will remove that.
+For my own reference (apply this as-is to your sign-off block):
 
-> Also, I just noticed that P2SB is neither in mainline nor
-> in linux-next, meaning this code won't even compile right now.
-> That should be mentioned in the introduction e-mail (the use
-> of "introduced" suggests that it is already there; you could
-> just use "will be introduced" instead).
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-It was kind of in the cover letter, but maybe not verbose enough. Sorry
-for the confusion. v1 was sent in-reply-to on top of P2SB, maybe i will
-do that again for v3 but for sure point out the order in case i send it
-without the reply.
-
-Thanks,
-Henning
-
-> Thanks,
-> Guenter
-
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
