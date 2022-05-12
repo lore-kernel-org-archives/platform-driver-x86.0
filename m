@@ -2,194 +2,98 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365B1C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 May 2022 09:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C7BC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 May 2022 09:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352291AbiELJ4U (ORCPT
+        id S1352013AbiELJ5T (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 May 2022 05:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40198 "EHLO
+        Thu, 12 May 2022 05:57:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348013AbiELJz5 (ORCPT
+        with ESMTP id S1352377AbiELJ5J (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 May 2022 05:55:57 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B68022BF9
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 May 2022 02:55:52 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id x18so6549231wrc.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 May 2022 02:55:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=8Mml8/I6dZjDQVSbpICZmHamoycoSx+AztXtLx3bWPs=;
-        b=iH1TKkrS5WfQgAyOTSHAq81+XzaNS/SFjVKI4d3/BpcOtFsBqxWj3bgJ4wY28aEBac
-         sG/55sB6TPsWSZFpA2WndigICY7YfyCG+PHvvr6K46+6/decyzAEHzfVRe2adr9Zlv3L
-         rvRLAfsObPWEGc2Mso2ipeHw+q+ZrtNK67cQtGYWfifXG83tN0dYKb3PkW9gX1nu+tNI
-         xsGzpCFigWKpCW3r6X/zacsEhongIdUz0JzN+OMRKVHUFE3DklG8AmKcPrklhluQIgm2
-         3lnmtsE6m3uOnhRJXMQKV7POS8YYoYfWYm78+ZRyll34IbUFtD1yZ1Xq1fVU6DsIKO1V
-         JWZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=8Mml8/I6dZjDQVSbpICZmHamoycoSx+AztXtLx3bWPs=;
-        b=0l9rWcxXBJ149dvFXNElU29FCY4cr9BMHstuNgNt9BEEqNQ7mJ/64pF/czP4MPLiCP
-         bRfbyD7/NtW4Qdp7vZQP+b+aAAumdmIYJRKy4g4wjjXvhk7aHf0FUQWZkzMLBjhqHTTA
-         uxfJtotcouXX5hckKsLSRKmaKUDC3wvlRfns1pXplC5v+7AyXwyffiUSfriZWGBgYuS9
-         0jtN93A/ehvlEDrgxSsaT7m8I6Gv2xXPyZGL0jXpmK+IMMv5IjUkyLaTjTaUNtc1pOt4
-         wp0WOR6AaH1nqXT32NXArdxmLWz1DA5qLKZv20efmhZ/MQtJf5qwc/nTx4/Z5otPp00o
-         K9lw==
-X-Gm-Message-State: AOAM531lww2xVcsns4sCqga1o014/B91odGjHo+NjQ7CV21UO8jsDV5o
-        NpMAZUhlNr/w3aZAxo17Bary5A==
-X-Google-Smtp-Source: ABdhPJyeg+3xggI6uw+b1bSLWxaJSk3lJwrHHEn3ulHOjlGlq4yeoq8w9RWSdcvpl6PMXoJGur9TQw==
-X-Received: by 2002:adf:e812:0:b0:20c:dd44:b06c with SMTP id o18-20020adfe812000000b0020cdd44b06cmr6707154wrm.714.1652349351033;
-        Thu, 12 May 2022 02:55:51 -0700 (PDT)
-Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
-        by smtp.gmail.com with ESMTPSA id m126-20020a1ca384000000b003945cdd0d55sm2167193wme.26.2022.05.12.02.55.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 May 2022 02:55:50 -0700 (PDT)
-Date:   Thu, 12 May 2022 10:55:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        =?utf-8?Q?=C5=81ukasz?= Bartosik <lb@semihalf.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Thu, 12 May 2022 05:57:09 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2725C5045C;
+        Thu, 12 May 2022 02:57:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652349428; x=1683885428;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5ulaCPfybGFTVCcH+ydh23paG+OmMRRGrYmal9E2wDg=;
+  b=ZGoEPOct66vaOnboh6UC1F4VqM80sELBNRCzfKlUZcnH0VaG2417V8gb
+   o21XrtxRpECFMqtHxLIZj8bG+t5uOru8PSCcd0zSA75E82EhdUXq4T88x
+   FdQWJQnQx0N5eyNjLk+h8YUnkn8JoSjhO/2cQs6mhNNmlwDV03DucJxUy
+   fa3MIoTRkY5gon0QWJCWbPn/y8lfR4clutM3y38RolUHrnMA2lS7CTYHK
+   SrKkiRUSElNCLbIJ8KOFY0sXO3w0BHrmOwQxCS4EY1Rhkw+iXT5Sgdmd5
+   b0sDkM1XUxVEKT3klSqJhgPuBNuNOp7bgQVL3TPR1Jup0IgntlO5Z2Jl+
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="252006696"
+X-IronPort-AV: E=Sophos;i="5.91,219,1647327600"; 
+   d="scan'208";a="252006696"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 02:57:07 -0700
+X-IronPort-AV: E=Sophos;i="5.91,219,1647327600"; 
+   d="scan'208";a="739622755"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 02:57:05 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1np5Z7-00F9nh-Gl;
+        Thu, 12 May 2022 12:57:01 +0300
+Date:   Thu, 12 May 2022 12:57:01 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Mark Gross <markgross@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v5 0/8] platform/x86: introduce p2sb_bar() helper
-Message-ID: <YnzZpE4JOLlxsjVc@google.com>
-References: <20220510151451.85561-1-andriy.shevchenko@linux.intel.com>
+        linux-watchdog@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+Subject: Re: [PATCH v2 2/4] watchdog: simatic-ipc-wdt: convert to use P2SB
+ accessor
+Message-ID: <YnzZ7XeHqRaBka50@smile.fi.intel.com>
+References: <20220511153905.13980-1-henning.schild@siemens.com>
+ <20220511153905.13980-3-henning.schild@siemens.com>
+ <7c458add-a496-6b3a-a04f-e6b68865daf4@roeck-us.net>
+ <20220512105836.3fb3ff95@md1za8fc.ad001.siemens.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220510151451.85561-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220512105836.3fb3ff95@md1za8fc.ad001.siemens.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 10 May 2022, Andy Shevchenko wrote:
+On Thu, May 12, 2022 at 10:58:36AM +0200, Henning Schild wrote:
+> Am Wed, 11 May 2022 11:03:04 -0700
+> schrieb Guenter Roeck <linux@roeck-us.net>:
+> > On 5/11/22 08:39, Henning Schild wrote:
 
-> There are a few users and at least one more is coming (*1) that would
-> like to utilize P2SB mechanism of hiding and unhiding a device from
-> the PCI configuration space.
-> 
-> Here is the series to consolidate p2sb handling code for existing users
-> and provide a generic way for new comer(s).
-> 
-> It also includes a patch to enable GPIO controllers on Apollo Lake
-> when it's used with ABL bootloader w/o ACPI support (*2).
-> 
-> The patch that brings the helper ("platform/x86/intel: Add Primary to
-> Sideband (P2SB) bridge support") has a commit message that sheds a light
-> on what the P2SB is and why this is needed.
-> 
-> The changes made in v5 do not change the main idea and the functionality
-> in a big scale. What we need is probably one more retest done by Henning
-> (*3). I hope to have it merged to v5.19-rc1 that Siemens can develop
-> their changes based on this series (*4).
-> 
-> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
-> since we have an ACPI device for GPIO I do not see any attempts to recreate
-> one).
-> 
-> *1) One in this series, and one is a recent merge of the Simatic IPC drivers
-> *2) This patch can be postponed as Lee hasn't given his tag yet.
-> *3) Henning gave his tag and I dared to used it even against changed patch 1
-> *4) The changes were posted in between of v4 and v5 of this series, but need
->     more work.
-> 
-> Taking into account the *2) the series is ready to be merged via PDx86 tree.
+...
 
-If that happens you need to do 2 things:
+> > Also, I just noticed that P2SB is neither in mainline nor
+> > in linux-next, meaning this code won't even compile right now.
+> > That should be mentioned in the introduction e-mail (the use
+> > of "introduced" suggests that it is already there; you could
+> > just use "will be introduced" instead).
+> 
+> It was kind of in the cover letter, but maybe not verbose enough. Sorry
+> for the confusion. v1 was sent in-reply-to on top of P2SB, maybe i will
+> do that again for v3 but for sure point out the order in case i send it
+> without the reply.
 
-1. Change all s/Acked-for-MFD-by/Acked-by/
-2. Submit a pull-request that we can all pull from
-
-Alternatively, I can apply this via MFD and do the same.
-
-> Changes in v5:
-> - rewritten patch 1 to use pci_scan_single_device() (Lukas, Bjorn)
-> - rebased patch 2 on top of the new Intel SPI NOR codebase
-> - fixed a potential bug and rewritten resource filling in patch 5 (Lee)
-> - added many different tags in a few patches (Jean, Wolfram, Henning)
-> 
-> Changes in v4:
-> - added tag to the entire series (Hans)
-> - added tag to pin control patch (Mika)
-> - dropped PCI core changes (PCI core doesn't want modifications to be made)
-> - as a consequence of the above merged necessary bits into p2sb.c
-> - added a check that p2sb is really hidden (Hans)
-> - added EDAC patches (reviewed by maintainer internally)
-> 
-> Changes in v3:
-> - resent with cover letter
-> 
-> Changes in v2:
-> - added parentheses around bus in macros (Joe)
-> - added tag (Jean)
-> - fixed indentation and wrapping in the header (Christoph)
-> - moved out of PCI realm to PDx86 as the best common denominator (Bjorn)
-> - added a verbose commit message to explain P2SB thingy (Bjorn)
-> - converted first parameter from pci_dev to pci_bus
-> - made first two parameters (bus and devfn) optional (Henning, Lee)
-> - added Intel pin control patch to the series (Henning, Mika)
-> - fixed English style in the commit message of one of MFD patch (Lee)
-> - added tags to my MFD LPC ICH patches (Lee)
-> - used consistently (c) (Lee)
-> - made indexing for MFD cell and resource arrays (Lee)
-> - fixed the resource size in i801 (Jean)
-> 
-> Andy Shevchenko (6):
->   pinctrl: intel: Check against matching data instead of ACPI companion
->   mfd: lpc_ich: Factor out lpc_ich_enable_spi_write()
->   mfd: lpc_ich: Switch to generic p2sb_bar()
->   i2c: i801: convert to use common P2SB accessor
->   EDAC, pnd2: Use proper I/O accessors and address space annotation
->   EDAC, pnd2: convert to use common P2SB accessor
-> 
-> Jonathan Yong (1):
->   platform/x86/intel: Add Primary to Sideband (P2SB) bridge support
-> 
-> Tan Jui Nee (1):
->   mfd: lpc_ich: Add support for pinctrl in non-ACPI system
-> 
->  drivers/edac/Kconfig                   |   1 +
->  drivers/edac/pnd2_edac.c               |  62 +++-------
->  drivers/i2c/busses/Kconfig             |   1 +
->  drivers/i2c/busses/i2c-i801.c          |  39 ++----
->  drivers/mfd/Kconfig                    |   1 +
->  drivers/mfd/lpc_ich.c                  | 161 +++++++++++++++++++------
->  drivers/pinctrl/intel/pinctrl-intel.c  |  14 +--
->  drivers/platform/x86/intel/Kconfig     |  12 ++
->  drivers/platform/x86/intel/Makefile    |   2 +
->  drivers/platform/x86/intel/p2sb.c      | 133 ++++++++++++++++++++
->  include/linux/platform_data/x86/p2sb.h |  28 +++++
->  11 files changed, 338 insertions(+), 116 deletions(-)
->  create mode 100644 drivers/platform/x86/intel/p2sb.c
->  create mode 100644 include/linux/platform_data/x86/p2sb.h
-> 
-> 
-> base-commit: 3bf222d317a20170ee17f082626c1e0f83537e13
+A new version of a series should start a new thread. Just use cover letter
+to explain the dependencies. My expectations here is to see v3 with comments
+addressed and I will incorporate it into v6 of mine. Then LKP and other
+bots will be happy to test all bunch. Also, I would wait a bit for your v3,
+so maintainers will have time to give their tags and/or comments.
 
 -- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
+
+
