@@ -2,990 +2,479 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26132C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 May 2022 05:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F70C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 May 2022 08:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349747AbiELFfL (ORCPT
+        id S1351652AbiELIoc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 May 2022 01:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57824 "EHLO
+        Thu, 12 May 2022 04:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349945AbiELFfJ (ORCPT
+        with ESMTP id S230160AbiELIoc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 May 2022 01:35:09 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2088121A957;
-        Wed, 11 May 2022 22:34:41 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: usama.anjum)
-        with ESMTPSA id 0E79A1F435A8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1652333679;
-        bh=zRHQhj5xfqVm4fZg44tRzt0oEHoAEbQjTr+IEHnwrtg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=bv6PaooOdxzWZ929kfI29TuRulcU62SaFSM4HTskUNy710vlJlGmODHyVeqMAZR1n
-         2vR/rEqJkLUWoWayBOoeiQGdor52mPGEa5qC+h6WThFoKCcKClJU0S5taL2kNlp2Iw
-         dGjUdi9b33QN9Z6UIFpoWzd/9NAkCWSBq1HXp9p80Z8NSYDh4p/X2fqxk3FZX8m/Iz
-         b/+AM42OCRDdUdCYaA4H2zla03mYqzallSAEbmg3wqTRPE1WxNUEGCIuXWBxMuU7lQ
-         wGQXgMswJ3PFBAVNtzcSzBDdBp6RP7OH4imwZcY6GW39K/IEv3930+hQVmX/p52hHQ
-         c2vx2HhBCEGXg==
-Date:   Thu, 12 May 2022 10:34:29 +0500
-From:   Muhammad Usama Anjum <usama.anjum@collabora.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <eballetbo@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     usama.anjum@collabora.com,
-        Collabora Kernel ML <kernel@collabora.com>,
-        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
-        gwendal@chromium.org, vbendeb@chromium.org, andy@infradead.org,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        chrome-platform@lists.linux.dev
-Subject: [PATCH v12] platform/chrome: Add ChromeOS ACPI device driver
-Message-ID: <YnycZaoBPF89t/qF@debian-BULLSEYE-live-builder-AMD64>
+        Thu, 12 May 2022 04:44:32 -0400
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80079.outbound.protection.outlook.com [40.107.8.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E523ED1E;
+        Thu, 12 May 2022 01:44:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=naOxQhwLFc2/ZguO7mHDUNAqnW7X9O4xw2mZiY1oaObVN6xrBP/R81LA8Px4a9xVzuh+5mCdu+wTiKzuXG4B9Rn75zXF4kYDLEZNeIMOuYJolChR99HqFmihVacyzpn+0eTghRhkyhpydCdKZNFJUjUggvrcuogjBgb8pRUaQ4pzJ2MNt9Roth1LjI/RLYcpnDDmRXwYbDFhOsFoC8tlXl8z1nwFxmCqYWesVaIHqaid41bnvLBFgalKf0hnrSA133XGBoWgmzITh2st1+xzQnBFjY6V+GRdL7q4d7qTLApq//SejIODgF6uTWrvluk16hxm18PRjKKOc6nemDQ5Fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LSTCNlfvpOpnPGO0tkaCeVdrxkFSbanvIifdF1hCB/E=;
+ b=Y6nF0hj+bn4HR9O3by20k4DkitkmmUvy3GFiJ532xFXOWS43cn5Fv7Sqjh9NOwbwQDg7jiLd0hmajH/3gPCDuVAXwg33B5CwGm7wWOoJZtEO5GEcHI0olDSG8T8xh0rHiBb+He7GzZ2WT1GRPuu4HLfnujcvQiwbFHKXyusUEHQu83KWonkFXMHNE/ecK4jQggX1ZOgKty1xfV/XrqF+OHUXpLqXYd2vPVu5vb/QjBpruOa8KJXOPFI3inpCP4IzJo84enEo7vpwCjUlH3QTPhKo+nx7XuGP9iHfDe6misOZidIGphO8sq5OUZz83Ps629d1B+5JDG6YdS3Y8zhOQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LSTCNlfvpOpnPGO0tkaCeVdrxkFSbanvIifdF1hCB/E=;
+ b=l/MO8Rh7ErhPXReTwcEr79O4EtHgHsGS0tpPZbgX36y0DDcsPmV1I8R9rQLjDxVZWJrvx9U/RqwXix88GncTHxAuHkp3we/7rP5v3mBWiTc+JJAzkr6nPBbDTBgq/yo68BdEanQrcf/wspJd+dT/+b70uyhHnUT9iJ4QWUgajlq+ZF4chZS1cp175RLUVyJ5D/hwc29osIMJwq6PuI2ShCndsQBiEH+M01nn4Pb5vKFSkKy3PN+jnhrtkMSM4FEpnEUVSS6AIWXeKBmAXbnFMVncR2qBAVGUv5giE2yXTp0jtvsoaff32yqFpEoxQMpGLEcjekIa9bKEWCYRcbIaQQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:2ed::13)
+ by PA4PR10MB4606.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:103::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.14; Thu, 12 May
+ 2022 08:44:27 +0000
+Received: from DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::7574:7fdc:9b12:30be]) by DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::7574:7fdc:9b12:30be%8]) with mapi id 15.20.5227.023; Thu, 12 May 2022
+ 08:44:27 +0000
+Date:   Thu, 12 May 2022 10:44:24 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>, Enrico Weigelt <lkml@metux.net>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+Subject: Re: [PATCH v2 4/4] leds: simatic-ipc-leds-gpio: add GPIO version of
+ Siemens driver
+Message-ID: <20220512104424.1430c9a3@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20220511153905.13980-5-henning.schild@siemens.com>
+References: <20220511153905.13980-1-henning.schild@siemens.com>
+        <20220511153905.13980-5-henning.schild@siemens.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.31; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AS8P250CA0005.EURP250.PROD.OUTLOOK.COM
+ (2603:10a6:20b:330::10) To DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:2ed::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3e70e3b7-8cef-467e-05fa-08da33f39f48
+X-MS-TrafficTypeDiagnostic: PA4PR10MB4606:EE_
+X-Microsoft-Antispam-PRVS: <PA4PR10MB460658EFC091DF21408E9AC385CB9@PA4PR10MB4606.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xP5oR3SuquLK4pvzMLpnfsP1HFQ82jYjC4ATrPuX5gI5L0f0CutAvUi45xgRz8l64jvUNtFx3wE4Q4uOXpHP1LQQjgZ9F1gjktyHDc1JFx2tY2s8USDqvDSdwqAHbNgO0zafz+ytMbhBgQ4OY93BP2VO8QkUW5w1BA92uXYZfDr06oEar+KpbToViJWRfMAr8GYOKuDAe2e9VkbZrsevgp0IeNJ/J+zdqbPCDQQoqost2wUKIP+jt7OSlWEitX+eTwnYtcANI6kCmep4nCXqavItKiqmevmyjm+RjaOv0vz3hQSXtpyby0pzhChgeX74FUnHP+bxoUpIvbj90w1LfFaKazdq3xW1MqsQsq157bIW32MWQnofMwPY+89WkX5dhQGNzxBxtujN+sScTBlSLpqZYxylX9Isz3jB07H1a0foREc2pi6aNEfPfvXXYY3VEbIw8J17TxAgUo3S0obImK29LE1svQJgIiM1hBCoUqoHFao34BL/QJ8ZapXoDIQ0dytW33zk3ezKxQpy0Jac/vtUTw6bGNUTVyyuEIERngBGr2IPXea0FSkt4S8H1PbkNJjsj2OeAz705WcehdB/WfFAgAQFOmfu5nz9I9+n93PxKLgOTonUX2fFriE0Pp5M4rPLcHZK7KoeSqVUK+zu1g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6486002)(508600001)(6666004)(6506007)(316002)(26005)(6512007)(9686003)(82960400001)(54906003)(6916009)(2906002)(38100700002)(5660300002)(86362001)(66946007)(66556008)(8676002)(4326008)(83380400001)(66476007)(107886003)(186003)(44832011)(1076003)(30864003)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7vY4xPUhyCnbRcvtlusRG74nYAE0PhDE3uOhkmuife1eGpqci/qot4nVEvSI?=
+ =?us-ascii?Q?9YaqoJshwxd99+cINpW4AtDCbA43NdEut+0mgOqnBUgatLQUym4UmsP3+hXR?=
+ =?us-ascii?Q?afbFnoudPa8dJsQZasR5x4Mk/LQHxfrYhal2EH4R0Sy9AXdeCTUMag9ntYcE?=
+ =?us-ascii?Q?KNZ+C3zLs/uD9f5tACJk8aa5EMaejr51tPtaLlXMgAMJByMyqF4xMuekmdl+?=
+ =?us-ascii?Q?6WYcBE5YiRvPO0LeXhwVSll8apIuhkfET7zXnvfPaEJgm5hmnlKYfV2vurr2?=
+ =?us-ascii?Q?3mHNZjEur7HxqxL+/4hZCJY7iXT7NlBTzblmF+mJXcEXVa2Y3qQysWd0tV+w?=
+ =?us-ascii?Q?5lHpuFc09FKNizYdPYzaFVvHKftECC0UYCDVv+7q0ZgdwICTM7MS3+YSBKWD?=
+ =?us-ascii?Q?oxstG9GuC9nv7qGKtBN8k3fU9zfcC5Gkqi3AqnIm9LD/FH6PLrx/WcE8uFry?=
+ =?us-ascii?Q?kE8zkv3v49cwxNNSGpVY/36dKXvmTHW9OwY9KjWmlaXuPU0esUcSTRmLSXJj?=
+ =?us-ascii?Q?73MoEneEL1xW9c1j3ltR0J+IrR2uipwRN2pF7+udR0XjBl2CX7mAZeQclI98?=
+ =?us-ascii?Q?x9EvixOR7wDqbKKk4RA16brsGOHi+X9QuNJrYnbvJXc5Gc7r9pNnvNosCnZ5?=
+ =?us-ascii?Q?7lZh4rGrorKQmuFGJRJvxAWOLme/kJKfiVStvKroSeOqzZnoto+T0mgoHUyD?=
+ =?us-ascii?Q?C8qPZDCHbF3HM/+IMgvfEvCrmkH7dZkpGgH/k+27GQAuFZdnlxHgif9Lol7K?=
+ =?us-ascii?Q?ALpQF3+SphMiGmgTycuGBEMnVfCTdkCIRRXwRAqMqx34TvTInhTN9exVwOrA?=
+ =?us-ascii?Q?p/LYCOUWEtbXA0B2A3LY9HdKKtTl0qqoGDS2PV08NdDcwaCdBs4EldbNMI/S?=
+ =?us-ascii?Q?pqP+WHgrqo2b/AAY59oRBfigbs6MlJA3IGGbkiTU1YcqayG1b0GPOsc2YLuO?=
+ =?us-ascii?Q?UwJrFhupyTh0XUqHmJQqua0IZAjugQ3E0qVZqo5rhrByj/mvG3DE/ukgjohK?=
+ =?us-ascii?Q?nCxbYtWxAqZtlA0qNzhxaPFdiAgLKgcbz55f6ISXgDAxVk232CzvNVOgkkyN?=
+ =?us-ascii?Q?XfBAV5BkP9WbKDyN6b1hZfGk5Uc33GeQv+ZxTlQNZdLaTtXgfxFf26xmousa?=
+ =?us-ascii?Q?xzBStOYvbzvrdUzKKOcdUuspdnkzBlbOWovhNVk/ABQadP9EKGiBBLCTN3DB?=
+ =?us-ascii?Q?FlwvSlc2gth/uHsiN9rNG2JkacBXHEhl/wm2TInUwqiP1hnXx2WZ3sTcnBtm?=
+ =?us-ascii?Q?dyyKIk9gWtPPnG1/ov4Zg2J7QMlErHiOmkuHjxP3N+Z5LrWqTNMgBTTd6vt+?=
+ =?us-ascii?Q?Sd639EGEvY9rFSr3oaTtDvnU8H+8E2/T4tFZfGC6Vddf6UBR9e569J+JWOew?=
+ =?us-ascii?Q?rl1z75Qdn2zwkMOEgoTOB6QkTQmkA1vNE/0pHN5ScsxO/P1e147otYtY+FiQ?=
+ =?us-ascii?Q?ENswqNlTSWk1//q/62bCmnmHr46WQwKI4D5HGGbzynbpXhIUcxN6PClf+/1a?=
+ =?us-ascii?Q?lvflle5YJ4srOSkiOVk1aX3CBXaBzJ+ohaGBMV39T0HAR2OvIC4KRWPPquHE?=
+ =?us-ascii?Q?F9asr/T/XBv5nvx2zcYG280vj+nb7p855ut0mmsr8VR2UmpIvkNszVmxAEP8?=
+ =?us-ascii?Q?rIoJPD9eZaazadT/cwMey/SC2/6frYMSH4QtJg/5hmRcGTuZUCIBBQjA4x4Z?=
+ =?us-ascii?Q?kaPmvoUsHpTGz6edkedWCHVmWosL4wWSCvariUeYebRpv5QVn8SC/ZzBn7QZ?=
+ =?us-ascii?Q?564SeeOCKI6a5FQYSOJ/2sbL0AemwVc=3D?=
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e70e3b7-8cef-467e-05fa-08da33f39f48
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR10MB5762.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2022 08:44:27.0744
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bAt3WaGDOKhI4Cm3votVozaKGxxetdKT+dV07xwXjt7Po3iVylWy8E8Vav+F9bK73cFdjIK98HDemjeZ2e7Ylx1dWGbSo+z5SmSRqlT6NJw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR10MB4606
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Am Wed, 11 May 2022 17:39:05 +0200
+schrieb Henning Schild <henning.schild@siemens.com>:
 
-The x86 Chromebooks have the ChromeOS ACPI device. This driver attaches
-to the ChromeOS ACPI device and exports the values reported by ACPI in a
-sysfs directory. This data isn't present in ACPI tables when read
-through ACPI tools, hence a driver is needed to do it. The driver gets
-data from firmware using the ACPI component of the kernel. The ACPI values
-are presented in string form (numbers as decimal values) or binary
-blobs, and can be accessed as the contents of the appropriate read only
-files in the standard ACPI device's sysfs directory tree. This data is
-consumed by the ChromeOS user space.
+> On Apollo Lake the pinctrl drivers will now come up without ACPI. Use
+> that instead of open coding it.
+> Create a new driver for that which can later be filled with more GPIO
+> based models, and which has different dependencies.
+> 
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> ---
+>  drivers/leds/simple/Kconfig                 |  12 ++-
+>  drivers/leds/simple/Makefile                |   3 +-
+>  drivers/leds/simple/simatic-ipc-leds-gpio.c | 108
+> ++++++++++++++++++++ drivers/leds/simple/simatic-ipc-leds.c      |
+> 80 +-------------- drivers/platform/x86/simatic-ipc.c          |   5
+> +- 5 files changed, 129 insertions(+), 79 deletions(-)
+>  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio.c
+> 
+> diff --git a/drivers/leds/simple/Kconfig b/drivers/leds/simple/Kconfig
+> index 9293e6b36c75..9d2487908743 100644
+> --- a/drivers/leds/simple/Kconfig
+> +++ b/drivers/leds/simple/Kconfig
+> @@ -3,10 +3,20 @@ config LEDS_SIEMENS_SIMATIC_IPC
+>  	tristate "LED driver for Siemens Simatic IPCs"
+>  	depends on LEDS_CLASS
+>  	depends on SIEMENS_SIMATIC_IPC
+> -	select P2SB if X86
+>  	help
+>  	  This option enables support for the LEDs of several
+> Industrial PCs from Siemens.
+>  
+>  	  To compile this driver as a module, choose M here: the
+> module will be called simatic-ipc-leds.
+> +
+> +config LEDS_SIEMENS_SIMATIC_IPC_GPIO
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Co-developed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
-Changes in v12:
-- Use one type of correct commenting style
-- Optimize parse_attr_name
-- Made code a little more readable at some places
-- Remove usage of ACPI_PTR
+I wonder if i really should introduce a new switch here or just carry
+this one under LEDS_SIEMENS_SIMATIC_IPC
 
-Changes in v11:
-- Use __ATTR macro
-- Remove local variable length and return instead
+For a v3 i will likely put two modules under that one config switch.
 
-Changes in v10:
-- Remove COMPILE_TEST as driver depends on ACPI component which isn't
-  enabled by COMPILE_TEST itself.
-- Fix build warnings
+Henning
 
-Changes in v9:
-- Changed the implementation completely
-- Move the driver to drivers/platform/chrome
-- Remove Acked-by Rafael as driver has changed
-- Corrected some typos
-- Changed the author of the module
-
-Changes in v8:
-- Change struct platform_driver name from chromeos_acpi_driver to
-  chromeos_acpi_device_driver
-
-Changes in v7:
-- Rename acpi_chromeos Kconfig option to chromeos_acpi
-- Change this acpi driver to platform driver
-- Minor cosmetic changes
-
-There were the following concerns on v4 which have been delt with in
-v5/v6:
-- Remove BINF.{0,1,4} from sysfs as they are reserved and not used
-  anymore
-- Reword the description of MECK
-- Change function name from chromeos_acpi_alloc_name() to
-  chromeos_acpi_gen_file_name()
-- Remove local variable obj in chromeos_acpi_add_method()
-- Replace usage of dev_info() to dev_dbg()
-- Improve the description of the patch
-- Add the firmware interface document which serves as primary
-  documentation and garantees that this interface will not change
-- GGL0001 is valid PNP ID of the Google. PNP ID can be used with the
-  ACPI devices. Consensus was developed on it in discussion of v4.
-
-Changes in v6:
-- Correct authorship and path email's From
-- Add changelog between v4 and v5 in detail
-- Add copywrite year 2022
-- Improve the description and add concerns from V4 which have been fixed
-
-Changes in v5:
-- Improve the description of the patch
-- Document firmware interface
-- Update sysfs interface documentation
-- Remove binf{0,1,4} as they have been deprecated
-- Update some cleanup logic in case of error
-  - Remove freeing of chromeos_acpi.root explicitely in
-    chromeos_acpi_device_remove() as it'll be automatically freed by
-    chromeos_acpi_remove_groups()
-  - If sysfs_create_groups() fails in chromeos_acpi_process_mlst(),
-    cleanup all groups
-- Cosmetic changes
-
-Changes in v4:
-https://lore.kernel.org/lkml/20200413134611.478441-1-enric.balletbo@collabora.com/t/
-- Add COMPILE_TEST to increase build coverage.
-- Add sysfs ABI documentation.
-- Rebased on top of 5.7-rc1 and solve conflicts.
-- Cc ACPI maintainers.
-
-Changes in v3:
-- Use attribute groups instead of adding files "by hand".
-- Do not use "raw" kobject to create directories.
-- Do not abuse of the platform_device interface. Remove it.
-
-Changes in v2:
-- Note that this version is a total rework, with those major changes:
-- Use lists to track dinamically allocated attributes and groups.
-- Use sysfs binary attributes to store the ACPI contents.
-- Remove all the functionalities except the one that creates the sysfs files.
----
- .../ABI/testing/sysfs-driver-chromeos-acpi    | 126 ++++++
- .../acpi/chromeos-acpi-device.rst             | 363 ++++++++++++++++++
- Documentation/firmware-guide/acpi/index.rst   |   1 +
- drivers/platform/chrome/Kconfig               |  11 +
- drivers/platform/chrome/Makefile              |   1 +
- drivers/platform/chrome/chromeos_acpi.c       | 259 +++++++++++++
- 6 files changed, 761 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-chromeos-acpi
- create mode 100644 Documentation/firmware-guide/acpi/chromeos-acpi-device.rst
- create mode 100644 drivers/platform/chrome/chromeos_acpi.c
-
-diff --git a/Documentation/ABI/testing/sysfs-driver-chromeos-acpi b/Documentation/ABI/testing/sysfs-driver-chromeos-acpi
-new file mode 100644
-index 0000000000000..5b59ef9d7b371
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-chromeos-acpi
-@@ -0,0 +1,126 @@
-+What:		/sys/bus/platform/devices/GGL0001:*/BINF.2
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows information about the current boot of
-+		the active EC firmware.
-+		  * 0 - Read only (recovery) firmware.
-+		  * 1 - Rewritable firmware.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/BINF.3
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows information about the current boot of
-+		the active main	firmware type.
-+		  * 0 - Recovery.
-+		  * 1 - Normal.
-+		  * 2 - Developer.
-+		  * 3 - Netboot (factory installation only).
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/CHSW
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows the switch position for the Chrome OS specific
-+		hardware switches.
-+		  * 0   - No changes.
-+		  * 2   - Recovery button was pressed when firmware booted.
-+		  * 4   - Recovery button was pressed when EC firmware booted.
-+		  * 32  - Developer switch was enabled when firmware booted.
-+		  * 512 - Firmware write protection was disabled when firmware
-+			  booted.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/FMAP
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows the physical memory address of the start of
-+		the main processor firmware flashmap.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/FRID
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows the firmware version for the read-only portion
-+		of the main processor firmware.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/FWID
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows the firmware version for the rewritable portion
-+		of the main processor firmware.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/GPIO.X/GPIO.0
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows the type of the GPIO signal for the Chrome OS
-+		specific GPIO assignments.
-+		  * 1   - Recovery button.
-+		  * 2   - Developer mode switch.
-+		  * 3   - Firmware write protection switch.
-+		  * 256 to 511 - Debug header GPIO 0 to GPIO 255.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/GPIO.X/GPIO.1
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows the signal attributes of the GPIO signal.
-+		  * 0 - Signal is active low.
-+		  * 1 - Signal is active high.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/GPIO.X/GPIO.2
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows the GPIO number on the specified GPIO
-+		controller.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/GPIO.X/GPIO.3
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows the name of the GPIO controller.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/HWID
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows the hardware ID for the Chromebook.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/MECK
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This binary file returns the SHA-1 or SHA-256 hash that is
-+		read out of the Management Engine extended registers during
-+		boot. The hash is exported vi ACPI so the OS can verify that
-+		the Management Engine firmware has not changed. If Management
-+		Engine is not present, or if the firmware was unable to read the
-+		extended registers, this buffer size can be zero.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/VBNV.0
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows the offset in CMOS bank 0 of the verified boot
-+		non-volatile storage block, counting from the first writable
-+		CMOS byte (that is, 'offset = 0' is the byte following the 14
-+		bytes of clock data).
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/VBNV.1
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This file shows the size in bytes of the verified boot
-+		non-volatile storage block.
-+
-+What:		/sys/bus/platform/devices/GGL0001:*/VDAT
-+Date:		May 2022
-+KernelVersion:	5.19
-+Description:
-+		This binary file returns the verified boot data block shared
-+		between the firmware verification step and the kernel
-+		verification step.
-diff --git a/Documentation/firmware-guide/acpi/chromeos-acpi-device.rst b/Documentation/firmware-guide/acpi/chromeos-acpi-device.rst
-new file mode 100644
-index 0000000000000..f37fc90ce340e
---- /dev/null
-+++ b/Documentation/firmware-guide/acpi/chromeos-acpi-device.rst
-@@ -0,0 +1,363 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====================
-+Chrome OS ACPI Device
-+=====================
-+
-+Hardware functionality specific to Chrome OS is exposed through a Chrome OS ACPI device.
-+The plug and play ID of a Chrome OS ACPI device is GGL0001. GGL is a valid PNP ID of Google.
-+PNP ID can be used with the ACPI devices according to the guidelines. The following ACPI
-+objects are supported:
-+
-+.. flat-table:: Supported ACPI Objects
-+   :widths: 1 2
-+   :header-rows: 1
-+
-+   * - Object
-+     - Description
-+
-+   * - CHSW
-+     - Chrome OS switch positions
-+
-+   * - HWID
-+     - Chrome OS hardware ID
-+
-+   * - FWID
-+     - Chrome OS firmware version
-+
-+   * - FRID
-+     - Chrome OS read-only firmware version
-+
-+   * - BINF
-+     - Chrome OS boot information
-+
-+   * - GPIO
-+     - Chrome OS GPIO assignments
-+
-+   * - VBNV
-+     - Chrome OS NVRAM locations
-+
-+   * - VDTA
-+     - Chrome OS verified boot data
-+
-+   * - FMAP
-+     - Chrome OS flashmap base address
-+
-+   * - MLST
-+     - Chrome OS method list
-+
-+CHSW (Chrome OS switch positions)
-+=================================
-+This control method returns the switch positions for Chrome OS specific hardware switches.
-+
-+Arguments:
-+----------
-+None
-+
-+Result code:
-+------------
-+An integer containing the switch positions as bitfields:
-+
-+.. flat-table::
-+   :widths: 1 2
-+
-+   * - 0x00000002
-+     - Recovery button was pressed when x86 firmware booted.
-+
-+   * - 0x00000004
-+     - Recovery button was pressed when EC firmware booted. (required if EC EEPROM is
-+       rewritable; otherwise optional)
-+
-+   * - 0x00000020
-+     - Developer switch was enabled when x86 firmware booted.
-+
-+   * - 0x00000200
-+     - Firmware write protection was disabled when x86 firmware booted. (required if
-+       firmware write protection is controlled through x86 BIOS; otherwise optional)
-+
-+All other bits are reserved and should be set to 0.
-+
-+HWID (Chrome OS hardware ID)
-+============================
-+This control method returns the hardware ID for the Chromebook.
-+
-+Arguments:
-+----------
-+None
-+
-+Result code:
-+------------
-+A null-terminated ASCII string containing the hardware ID from the Model-Specific Data area of
-+EEPROM.
-+
-+Note that the hardware ID can be up to 256 characters long, including the terminating null.
-+
-+FWID (Chrome OS firmware version)
-+=================================
-+This control method returns the firmware version for the rewritable portion of the main
-+processor firmware.
-+
-+Arguments:
-+----------
-+None
-+
-+Result code:
-+------------
-+A null-terminated ASCII string containing the complete firmware version for the rewritable
-+portion of the main processor firmware.
-+
-+FRID (Chrome OS read-only firmware version)
-+===========================================
-+This control method returns the firmware version for the read-only portion of the main
-+processor firmware.
-+
-+Arguments:
-+----------
-+None
-+
-+Result code:
-+------------
-+A null-terminated ASCII string containing the complete firmware version for the read-only
-+(bootstrap + recovery ) portion of the main processor firmware.
-+
-+BINF (Chrome OS boot information)
-+=================================
-+This control method returns information about the current boot.
-+
-+Arguments:
-+----------
-+None
-+
-+Result code:
-+------------
-+
-+.. code-block::
-+
-+   Package {
-+           Reserved1
-+           Reserved2
-+           Active EC Firmware
-+           Active Main Firmware Type
-+           Reserved5
-+   }
-+
-+.. flat-table::
-+   :widths: 1 1 2
-+   :header-rows: 1
-+
-+   * - Field
-+     - Format
-+     - Description
-+
-+   * - Reserved1
-+     - DWORD
-+     - Set to 256 (0x100). This indicates this field is no longer used.
-+
-+   * - Reserved2
-+     - DWORD
-+     - Set to 256 (0x100). This indicates this field is no longer used.
-+
-+   * - Active EC firmware
-+     - DWORD
-+     - The EC firmware which was used during boot.
-+
-+       - 0 - Read-only (recovery) firmware
-+       - 1 - Rewritable firmware.
-+
-+       Set to 0 if EC firmware is always read-only.
-+
-+   * - Active Main Firmware Type
-+     - DWORD
-+     - The main firmware type which was used during boot.
-+
-+       - 0 - Recovery
-+       - 1 - Normal
-+       - 2 - Developer
-+       - 3 - netboot (factory installation only)
-+
-+       Other values are reserved.
-+
-+   * - Reserved5
-+     - DWORD
-+     - Set to 256 (0x100). This indicates this field is no longer used.
-+
-+GPIO (Chrome OS GPIO assignments)
-+=================================
-+This control method returns information about Chrome OS specific GPIO assignments for
-+Chrome OS hardware, so the kernel can directly control that hardware.
-+
-+Arguments:
-+----------
-+None
-+
-+Result code:
-+------------
-+.. code-block::
-+
-+        Package {
-+                Package {
-+                        // First GPIO assignment
-+                        Signal Type        //DWORD
-+                        Attributes         //DWORD
-+                        Controller Offset  //DWORD
-+                        Controller Name    //ASCIIZ
-+                },
-+                ...
-+                Package {
-+                        // Last GPIO assignment
-+                        Signal Type        //DWORD
-+                        Attributes         //DWORD
-+                        Controller Offset  //DWORD
-+                        Controller Name    //ASCIIZ
-+                }
-+        }
-+
-+Where ASCIIZ means a null-terminated ASCII string.
-+
-+.. flat-table::
-+   :widths: 1 1 2
-+   :header-rows: 1
-+
-+   * - Field
-+     - Format
-+     - Description
-+
-+   * - Signal Type
-+     - DWORD
-+     - Type of GPIO signal
-+
-+       - 0x00000001 - Recovery button
-+       - 0x00000002 - Developer mode switch
-+       - 0x00000003 - Firmware write protection switch
-+       - 0x00000100 - Debug header GPIO 0
-+       - ...
-+       - 0x000001FF - Debug header GPIO 255
-+
-+       Other values are reserved.
-+
-+   * - Attributes
-+     - DWORD
-+     - Signal attributes as bitfields:
-+
-+       - 0x00000001 - Signal is active-high (for button, a GPIO value
-+         of 1 means the button is pressed; for switches, a GPIO value
-+         of 1 means the switch is enabled). If this bit is 0, the signal
-+         is active low. Set to 0 for debug header GPIOs.
-+
-+   * - Controller Offset
-+     - DWORD
-+     - GPIO number on the specified controller.
-+
-+   * - Controller Name
-+     - ASCIIZ
-+     - Name of the controller for the GPIO.
-+       Currently supported names:
-+       "NM10" - Intel NM10 chip
-+
-+VBNV (Chrome OS NVRAM locations)
-+================================
-+This control method returns information about the NVRAM (CMOS) locations used to
-+communicate with the BIOS.
-+
-+Arguments:
-+----------
-+None
-+
-+Result code:
-+------------
-+.. code-block::
-+
-+        Package {
-+                NV Storage Block Offset  //DWORD
-+                NV Storage Block Size    //DWORD
-+        }
-+
-+.. flat-table::
-+   :widths: 1 1 2
-+   :header-rows: 1
-+
-+   * - Field
-+     - Format
-+     - Description
-+
-+   * - NV Storage Block Offset
-+     - DWORD
-+     - Offset in CMOS bank 0 of the verified boot non-volatile storage block, counting from
-+       the first writable CMOS byte (that is, offset=0 is the byte following the 14 bytes of
-+       clock data).
-+
-+   * - NV Storage Block Size
-+     - DWORD
-+     - Size in bytes of the verified boot non-volatile storage block.
-+
-+FMAP (Chrome OS flashmap address)
-+=================================
-+This control method returns the physical memory address of the start of the main processor
-+firmware flashmap.
-+
-+Arguments:
-+----------
-+None
-+
-+NoneResult code:
-+----------------
-+A DWORD containing the physical memory address of the start of the main processor firmware
-+flashmap.
-+
-+VDTA (Chrome OS verified boot data)
-+===================================
-+This control method returns the verified boot data block shared between the firmware
-+verification step and the kernel verification step.
-+
-+Arguments:
-+----------
-+None
-+
-+Result code:
-+------------
-+A buffer containing the verified boot data block.
-+
-+MECK (Management Engine Checksum)
-+=================================
-+This control method returns the SHA-1 or SHA-256 hash that is read out of the Management
-+Engine extended registers during boot. The hash is exported via ACPI so the OS can verify that
-+the ME firmware has not changed. If Management Engine is not present, or if the firmware was
-+unable to read the extended registers, this buffer can be zero.
-+
-+Arguments:
-+----------
-+None
-+
-+Result code:
-+------------
-+A buffer containing the ME hash.
-+
-+MLST (Chrome OS method list)
-+============================
-+This control method returns a list of the other control methods supported by the Chrome OS
-+hardware device.
-+
-+Arguments:
-+----------
-+None
-+
-+Result code:
-+------------
-+A package containing a list of null-terminated ASCII strings, one for each control method
-+supported by the Chrome OS hardware device, not including the MLST method itself.
-+For this version of the specification, the result is:
-+
-+.. code-block::
-+
-+        Package {
-+                "CHSW",
-+                "FWID",
-+                "HWID",
-+                "FRID",
-+                "BINF",
-+                "GPIO",
-+                "VBNV",
-+                "FMAP",
-+                "VDTA",
-+                "MECK"
-+        }
-diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-index b053b0c3d6969..b6a42f4ffe032 100644
---- a/Documentation/firmware-guide/acpi/index.rst
-+++ b/Documentation/firmware-guide/acpi/index.rst
-@@ -29,3 +29,4 @@ ACPI Support
-    non-d0-probe
-    extcon-intel-int3496
-    intel-pmc-mux
-+   chromeos-acpi-device
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 75e93efd669f0..717299cbccac6 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -15,6 +15,17 @@ menuconfig CHROME_PLATFORMS
- 
- if CHROME_PLATFORMS
- 
-+config CHROMEOS_ACPI
-+	tristate "ChromeOS specific ACPI extensions"
-+	depends on ACPI
-+	help
-+	  This driver provides the firmware interface for the services
-+	  exported through the ChromeOS interfaces when using ChromeOS
-+	  ACPI firmware.
-+
-+	  If you have an ACPI-compatible Chromebook, say Y or M here.
-+	  The module will be called chromeos_acpi.
-+
- config CHROMEOS_LAPTOP
- 	tristate "Chrome OS Laptop"
- 	depends on I2C && DMI && X86
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index 6420ca129548e..52f5a2dde8b81 100644
---- a/drivers/platform/chrome/Makefile
-+++ b/drivers/platform/chrome/Makefile
-@@ -4,6 +4,7 @@
- CFLAGS_cros_ec_trace.o:=		-I$(src)
- CFLAGS_cros_ec_sensorhub_ring.o:=	-I$(src)
- 
-+obj-$(CONFIG_CHROMEOS_ACPI)		+= chromeos_acpi.o
- obj-$(CONFIG_CHROMEOS_LAPTOP)		+= chromeos_laptop.o
- obj-$(CONFIG_CHROMEOS_PRIVACY_SCREEN)	+= chromeos_privacy_screen.o
- obj-$(CONFIG_CHROMEOS_PSTORE)		+= chromeos_pstore.o
-diff --git a/drivers/platform/chrome/chromeos_acpi.c b/drivers/platform/chrome/chromeos_acpi.c
-new file mode 100644
-index 0000000000000..0434e15569046
---- /dev/null
-+++ b/drivers/platform/chrome/chromeos_acpi.c
-@@ -0,0 +1,259 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * ChromeOS specific ACPI extensions
-+ *
-+ * Copyright 2022 Google LLC
-+ *
-+ * This driver attaches to the ChromeOS ACPI device and then exports the
-+ * values reported by the ACPI in a sysfs directory. All values are
-+ * presented in the string form (numbers as decimal values) and can be
-+ * accessed as the contents of the appropriate read only files in the
-+ * sysfs directory tree.
-+ */
-+#include <linux/acpi.h>
-+#include <linux/platform_device.h>
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+
-+#define ACPI_ATTR_NAME_LEN 4
-+
-+#define DEV_ATTR(_var, _name)					\
-+	static struct device_attribute dev_attr_##_var =	\
-+		__ATTR(_name, 0444, chromeos_first_level_attr_show, NULL);
-+
-+#define GPIO_ATTR_GROUP(_group, _name, _num)						\
-+	static umode_t attr_is_visible_gpio_##_num(struct kobject *kobj,		\
-+						   struct attribute *attr, int n)	\
-+	{										\
-+		if (_num < chromeos_acpi_gpio_groups)					\
-+			return attr->mode;						\
-+		return 0;								\
-+	}										\
-+	static ssize_t chromeos_attr_show_gpio_##_num(struct device *dev,		\
-+						      struct device_attribute *attr,	\
-+						      char *buf)			\
-+	{										\
-+		char name[ACPI_ATTR_NAME_LEN + 1];					\
-+		int ret, num;								\
-+											\
-+		ret = parse_attr_name(attr->attr.name, name, &num);			\
-+		if (ret)								\
-+			return ret;							\
-+		ret = chromeos_acpi_evaluate_method(dev, _num, num, name, buf);		\
-+		return ret;								\
-+	}										\
-+	static struct device_attribute dev_attr_0_##_group =				\
-+		__ATTR(GPIO.0, 0444, chromeos_attr_show_gpio_##_num, NULL);		\
-+	static struct device_attribute dev_attr_1_##_group =				\
-+		__ATTR(GPIO.1, 0444, chromeos_attr_show_gpio_##_num, NULL);		\
-+	static struct device_attribute dev_attr_2_##_group =				\
-+		__ATTR(GPIO.2, 0444, chromeos_attr_show_gpio_##_num, NULL);		\
-+	static struct device_attribute dev_attr_3_##_group =				\
-+		__ATTR(GPIO.3, 0444, chromeos_attr_show_gpio_##_num, NULL);		\
-+											\
-+	static struct attribute *attrs_##_group[] = {					\
-+		&dev_attr_0_##_group.attr,						\
-+		&dev_attr_1_##_group.attr,						\
-+		&dev_attr_2_##_group.attr,						\
-+		&dev_attr_3_##_group.attr,						\
-+		NULL									\
-+	};										\
-+	static const struct attribute_group attr_group_##_group = {			\
-+		.name = _name,								\
-+		.is_visible = attr_is_visible_gpio_##_num,				\
-+		.attrs = attrs_##_group,						\
-+	};
-+
-+static unsigned int chromeos_acpi_gpio_groups;
-+
-+/* Parse the ACPI package and return the data related to that attribute */
-+static int chromeos_acpi_handle_package(struct device *dev, union acpi_object *obj,
-+					int pkg_num, int sub_pkg_num, char *name, char *buf)
-+{
-+	union acpi_object *element = obj->package.elements;
-+
-+	if (pkg_num >= obj->package.count)
-+		return -EINVAL;
-+	element += pkg_num;
-+
-+	if (element->type == ACPI_TYPE_PACKAGE) {
-+		if (sub_pkg_num >= element->package.count)
-+			return -EINVAL;
-+		/* select sub element inside this package */
-+		element = element->package.elements;
-+		element += sub_pkg_num;
-+	}
-+
-+	switch (element->type) {
-+	case ACPI_TYPE_INTEGER:
-+		return sysfs_emit(buf, "%d\n", (int)element->integer.value);
-+	case ACPI_TYPE_STRING:
-+		return sysfs_emit(buf, "%s\n", element->string.pointer);
-+	case ACPI_TYPE_BUFFER:
-+		return sysfs_emit(buf, "%s\n", element->buffer.pointer);
-+	default:
-+		dev_err(dev, "element type %d not supported\n", element->type);
-+		return -EINVAL;
-+	}
-+}
-+
-+static int chromeos_acpi_evaluate_method(struct device *dev, int pkg_num, int sub_pkg_num,
-+					 char *name, char *buf)
-+{
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	acpi_status status;
-+	int ret = -EINVAL;
-+
-+	status = acpi_evaluate_object(ACPI_HANDLE(dev), name, NULL, &output);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(dev, "failed to retrieve %s. %s\n", name, acpi_format_exception(status));
-+		return ret;
-+	}
-+
-+	if (((union acpi_object *)output.pointer)->type == ACPI_TYPE_PACKAGE)
-+		ret = chromeos_acpi_handle_package(dev, output.pointer, pkg_num, sub_pkg_num,
-+						   name, buf);
-+
-+	kfree(output.pointer);
-+	return ret;
-+}
-+
-+static int parse_attr_name(const char *name, char *attr_name, int *attr_num)
-+{
-+	int ret;
-+
-+	ret = strscpy(attr_name, name, ACPI_ATTR_NAME_LEN + 1);
-+	if (ret == -E2BIG)
-+		return kstrtoint(&name[ACPI_ATTR_NAME_LEN + 1], 0, attr_num);
-+	return 0;
-+}
-+
-+static ssize_t chromeos_first_level_attr_show(struct device *dev, struct device_attribute *attr,
-+					      char *buf)
-+{
-+	char attr_name[ACPI_ATTR_NAME_LEN + 1];
-+	int ret, attr_num = 0;
-+
-+	ret = parse_attr_name(attr->attr.name, attr_name, &attr_num);
-+	if (ret)
-+		return 0;
-+	ret = chromeos_acpi_evaluate_method(dev, attr_num, 0, attr_name, buf);
-+	return ret;
-+}
-+
-+static unsigned int get_gpio_pkg_num(struct device *dev)
-+{
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *obj;
-+	acpi_status status;
-+	unsigned int count = 0;
-+	char *name = "GPIO";
-+
-+	status = acpi_evaluate_object(ACPI_HANDLE(dev), name, NULL, &output);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(dev, "failed to retrieve %s. %s\n", name, acpi_format_exception(status));
-+		return count;
-+	}
-+
-+	obj = output.pointer;
-+
-+	if (obj->type == ACPI_TYPE_PACKAGE)
-+		count = obj->package.count;
-+
-+	kfree(output.pointer);
-+	return count;
-+}
-+
-+DEV_ATTR(binf2, BINF.2)
-+DEV_ATTR(binf3, BINF.3)
-+DEV_ATTR(chsw, CHSW)
-+DEV_ATTR(fmap, FMAP)
-+DEV_ATTR(frid, FRID)
-+DEV_ATTR(fwid, FWID)
-+DEV_ATTR(hwid, HWID)
-+DEV_ATTR(meck, MECK)
-+DEV_ATTR(vbnv0, VBNV.0)
-+DEV_ATTR(vbnv1, VBNV.1)
-+DEV_ATTR(vdat, VDAT)
-+
-+static struct attribute *first_level_attrs[] = {
-+	&dev_attr_binf2.attr,
-+	&dev_attr_binf3.attr,
-+	&dev_attr_chsw.attr,
-+	&dev_attr_fmap.attr,
-+	&dev_attr_frid.attr,
-+	&dev_attr_fwid.attr,
-+	&dev_attr_hwid.attr,
-+	&dev_attr_meck.attr,
-+	&dev_attr_vbnv0.attr,
-+	&dev_attr_vbnv1.attr,
-+	&dev_attr_vdat.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group first_level_attr_group = {
-+	.attrs = first_level_attrs,
-+};
-+
-+/*
-+ * Every platform can have a different number of GPIO attribute groups.
-+ * Define upper limit groups. At run time, the platform decides to show
-+ * the present number of groups only, others are hidden.
-+ */
-+GPIO_ATTR_GROUP(gpio0, "GPIO.0", 0)
-+GPIO_ATTR_GROUP(gpio1, "GPIO.1", 1)
-+GPIO_ATTR_GROUP(gpio2, "GPIO.2", 2)
-+GPIO_ATTR_GROUP(gpio3, "GPIO.3", 3)
-+GPIO_ATTR_GROUP(gpio4, "GPIO.4", 4)
-+GPIO_ATTR_GROUP(gpio5, "GPIO.5", 5)
-+GPIO_ATTR_GROUP(gpio6, "GPIO.6", 6)
-+GPIO_ATTR_GROUP(gpio7, "GPIO.7", 7)
-+
-+static const struct attribute_group *chromeos_acpi_all_groups[] = {
-+	&first_level_attr_group,
-+	&attr_group_gpio0,
-+	&attr_group_gpio1,
-+	&attr_group_gpio2,
-+	&attr_group_gpio3,
-+	&attr_group_gpio4,
-+	&attr_group_gpio5,
-+	&attr_group_gpio6,
-+	&attr_group_gpio7,
-+	NULL
-+};
-+
-+static int chromeos_acpi_device_probe(struct platform_device *pdev)
-+{
-+	chromeos_acpi_gpio_groups = get_gpio_pkg_num(&pdev->dev);
-+
-+	/*
-+	 * If the platform has more GPIO attribute groups than the number of
-+	 * groups this driver supports, give out a warning message.
-+	 */
-+	if (chromeos_acpi_gpio_groups > ARRAY_SIZE(chromeos_acpi_all_groups) - 2)
-+		dev_warn(&pdev->dev, "Only %zu GPIO attr groups supported by the driver out of total %u.\n",
-+			 ARRAY_SIZE(chromeos_acpi_all_groups) - 2, chromeos_acpi_gpio_groups);
-+	return 0;
-+}
-+
-+/* GGL is valid PNP ID of Google. PNP ID can be used with the ACPI devices. */
-+static const struct acpi_device_id chromeos_device_ids[] = {
-+	{ "GGL0001", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, chromeos_device_ids);
-+
-+static struct platform_driver chromeos_acpi_device_driver = {
-+	.probe = chromeos_acpi_device_probe,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.dev_groups = chromeos_acpi_all_groups,
-+		.acpi_match_table = chromeos_device_ids,
-+	}
-+};
-+module_platform_driver(chromeos_acpi_device_driver);
-+
-+MODULE_AUTHOR("Muhammad Usama Anjum <usama.anjum@collabora.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("ChromeOS specific ACPI extensions");
--- 
-2.30.2
+> +	tristate "LED driver for Siemens Simatic IPCs, GPIO based"
+> +	depends on SIEMENS_SIMATIC_IPC
+> +	depends on LEDS_GPIO
+> +	help
+> +	  This option enables support for the LEDs of several
+> Industrial PCs
+> +	  from Siemens.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> module
+> +	  will be called simatic-ipc-leds-gpio.
+> diff --git a/drivers/leds/simple/Makefile
+> b/drivers/leds/simple/Makefile index 8481f1e9e360..e1df74fb5915 100644
+> --- a/drivers/leds/simple/Makefile
+> +++ b/drivers/leds/simple/Makefile
+> @@ -1,2 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds.o
+> +obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)		+=
+> simatic-ipc-leds.o
+> +obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_GPIO)	+=
+> simatic-ipc-leds-gpio.o diff --git
+> a/drivers/leds/simple/simatic-ipc-leds-gpio.c
+> b/drivers/leds/simple/simatic-ipc-leds-gpio.c new file mode 100644
+> index 000000000000..552b65a72e04 --- /dev/null +++
+> b/drivers/leds/simple/simatic-ipc-leds-gpio.c @@ -0,0 +1,108 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Siemens SIMATIC IPC driver for GPIO based LEDs
+> + *
+> + * Copyright (c) Siemens AG, 2022
+> + *
+> + * Authors:
+> + *  Henning Schild <henning.schild@siemens.com>
+> + */
+> +
+> +#include <linux/gpio/machine.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
+> +	.dev_id = "leds-gpio",
+> +	.table = {
+> +		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 0,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 52, NULL, 1,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 53, NULL, 2,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 57, NULL, 3,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 58, NULL, 4,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 60, NULL, 5,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 56, NULL, 6,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 59, NULL, 7,
+> GPIO_ACTIVE_HIGH),
+> +	}
+> +};
+> +
+> +static const struct gpio_led simatic_ipc_gpio_leds[] = {
+> +	{ .name = "green:" LED_FUNCTION_STATUS "-3" },
+> +	{ .name = "red:" LED_FUNCTION_STATUS "-1" },
+> +	{ .name = "green:" LED_FUNCTION_STATUS "-1" },
+> +	{ .name = "red:" LED_FUNCTION_STATUS "-2" },
+> +	{ .name = "green:" LED_FUNCTION_STATUS "-2" },
+> +	{ .name = "red:" LED_FUNCTION_STATUS "-3" },
+> +};
+> +
+> +static const struct gpio_led_platform_data
+> simatic_ipc_gpio_leds_pdata = {
+> +	.num_leds	= ARRAY_SIZE(simatic_ipc_gpio_leds),
+> +	.leds		= simatic_ipc_gpio_leds,
+> +};
+> +
+> +static struct platform_device *simatic_leds_pdev;
+> +
+> +static int simatic_ipc_leds_gpio_remove(struct platform_device *pdev)
+> +{
+> +	gpiod_remove_lookup_table(&simatic_ipc_led_gpio_table);
+> +	platform_device_unregister(simatic_leds_pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int simatic_ipc_leds_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct gpio_desc *gpiod;
+> +	int err;
+> +
+> +	gpiod_add_lookup_table(&simatic_ipc_led_gpio_table);
+> +	simatic_leds_pdev = platform_device_register_resndata(NULL,
+> +		"leds-gpio", PLATFORM_DEVID_NONE, NULL, 0,
+> +		&simatic_ipc_gpio_leds_pdata,
+> +		sizeof(simatic_ipc_gpio_leds_pdata));
+> +	if (IS_ERR(simatic_leds_pdev)) {
+> +		err = PTR_ERR(simatic_leds_pdev);
+> +		goto out;
+> +	}
+> +
+> +	/* PM_BIOS_BOOT_N */
+> +	gpiod = gpiod_get_index(&simatic_leds_pdev->dev, NULL, 6, 0);
+> +	if (IS_ERR(gpiod)) {
+> +		err = PTR_ERR(gpiod);
+> +		goto out;
+> +	}
+> +	gpiod_set_value(gpiod, 0);
+> +	gpiod_put(gpiod);
+> +
+> +	/* PM_WDT_OUT */
+> +	gpiod = gpiod_get_index(&simatic_leds_pdev->dev, NULL, 7, 0);
+> +	if (IS_ERR(gpiod)) {
+> +		err = PTR_ERR(gpiod);
+> +		goto out;
+> +	}
+> +	gpiod_set_value(gpiod, 0);
+> +	gpiod_put(gpiod);
+> +
+> +	return 0;
+> +out:
+> +	simatic_ipc_leds_gpio_remove(pdev);
+> +
+> +	return err;
+> +}
+> +
+> +static struct platform_driver simatic_ipc_led_gpio_driver = {
+> +	.probe = simatic_ipc_leds_gpio_probe,
+> +	.remove = simatic_ipc_leds_gpio_remove,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +	}
+> +};
+> +
+> +module_platform_driver(simatic_ipc_led_gpio_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:" KBUILD_MODNAME);
+> +MODULE_SOFTDEP("pre: platform:leds-gpio");
+> +MODULE_AUTHOR("Henning Schild <henning.schild@siemens.com>");
+> diff --git a/drivers/leds/simple/simatic-ipc-leds.c
+> b/drivers/leds/simple/simatic-ipc-leds.c index
+> 2e7597c143d8..4894c228c165 100644 ---
+> a/drivers/leds/simple/simatic-ipc-leds.c +++
+> b/drivers/leds/simple/simatic-ipc-leds.c @@ -15,7 +15,6 @@
+>  #include <linux/leds.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> -#include <linux/platform_data/x86/p2sb.h>
+>  #include <linux/platform_data/x86/simatic-ipc-base.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/sizes.h>
+> @@ -24,7 +23,7 @@
+>  #define SIMATIC_IPC_LED_PORT_BASE	0x404E
+>  
+>  struct simatic_ipc_led {
+> -	unsigned int value; /* mask for io and offset for mem */
+> +	unsigned int value; /* mask for io */
+>  	char *name;
+>  	struct led_classdev cdev;
+>  };
+> @@ -39,21 +38,6 @@ static struct simatic_ipc_led
+> simatic_ipc_leds_io[] = { { }
+>  };
+>  
+> -/* the actual start will be discovered with p2sb, 0 is a placeholder
+> */ -static struct resource simatic_ipc_led_mem_res =
+> DEFINE_RES_MEM_NAMED(0, 0, KBUILD_MODNAME); -
+> -static void __iomem *simatic_ipc_led_memory;
+> -
+> -static struct simatic_ipc_led simatic_ipc_leds_mem[] = {
+> -	{0x500 + 0x1A0, "red:" LED_FUNCTION_STATUS "-1"},
+> -	{0x500 + 0x1A8, "green:" LED_FUNCTION_STATUS "-1"},
+> -	{0x500 + 0x1C8, "red:" LED_FUNCTION_STATUS "-2"},
+> -	{0x500 + 0x1D0, "green:" LED_FUNCTION_STATUS "-2"},
+> -	{0x500 + 0x1E0, "red:" LED_FUNCTION_STATUS "-3"},
+> -	{0x500 + 0x198, "green:" LED_FUNCTION_STATUS "-3"},
+> -	{ }
+> -};
+> -
+>  static struct resource simatic_ipc_led_io_res =
+>  	DEFINE_RES_IO_NAMED(SIMATIC_IPC_LED_PORT_BASE, SZ_2,
+> KBUILD_MODNAME); 
+> @@ -89,28 +73,6 @@ static enum led_brightness
+> simatic_ipc_led_get_io(struct led_classdev *led_cd) return
+> inw(SIMATIC_IPC_LED_PORT_BASE) & led->value ? LED_OFF :
+> led_cd->max_brightness; } 
+> -static void simatic_ipc_led_set_mem(struct led_classdev *led_cd,
+> -				    enum led_brightness brightness)
+> -{
+> -	struct simatic_ipc_led *led = cdev_to_led(led_cd);
+> -	void __iomem *reg = simatic_ipc_led_memory + led->value;
+> -	u32 val;
+> -
+> -	val = readl(reg);
+> -	val = (val & ~1) | (brightness == LED_OFF);
+> -	writel(val, reg);
+> -}
+> -
+> -static enum led_brightness simatic_ipc_led_get_mem(struct
+> led_classdev *led_cd) -{
+> -	struct simatic_ipc_led *led = cdev_to_led(led_cd);
+> -	void __iomem *reg = simatic_ipc_led_memory + led->value;
+> -	u32 val;
+> -
+> -	val = readl(reg);
+> -	return (val & 1) ? LED_OFF : led_cd->max_brightness;
+> -}
+> -
+>  static int simatic_ipc_leds_probe(struct platform_device *pdev)
+>  {
+>  	const struct simatic_ipc_platform *plat =
+> pdev->dev.platform_data; @@ -118,9 +80,7 @@ static int
+> simatic_ipc_leds_probe(struct platform_device *pdev) struct
+> simatic_ipc_led *ipcled; struct led_classdev *cdev;
+>  	struct resource *res;
+> -	void __iomem *reg;
+> -	int err, type;
+> -	u32 val;
+> +	int err;
+>  
+>  	switch (plat->devmode) {
+>  	case SIMATIC_IPC_DEVICE_227D:
+> @@ -135,51 +95,19 @@ static int simatic_ipc_leds_probe(struct
+> platform_device *pdev) }
+>  			ipcled = simatic_ipc_leds_io;
+>  		}
+> -		type = IORESOURCE_IO;
+>  		if (!devm_request_region(dev, res->start,
+> resource_size(res), KBUILD_MODNAME)) { dev_err(dev, "Unable to
+> register IO resource at %pR\n", res); return -EBUSY;
+>  		}
+>  		break;
+> -	case SIMATIC_IPC_DEVICE_127E:
+> -		res = &simatic_ipc_led_mem_res;
+> -		ipcled = simatic_ipc_leds_mem;
+> -		type = IORESOURCE_MEM;
+> -
+> -		err = p2sb_bar(NULL, 0, res);
+> -		if (err)
+> -			return err;
+> -
+> -		/* do the final address calculation */
+> -		res->start = res->start + (0xC5 << 16);
+> -		res->end = res->start + SZ_4K - 1;
+> -
+> -		simatic_ipc_led_memory = devm_ioremap_resource(dev,
+> res);
+> -		if (IS_ERR(simatic_ipc_led_memory))
+> -			return PTR_ERR(simatic_ipc_led_memory);
+> -
+> -		/* initialize power/watchdog LED */
+> -		reg = simatic_ipc_led_memory + 0x500 + 0x1D8; /*
+> PM_WDT_OUT */
+> -		val = readl(reg);
+> -		writel(val & ~1, reg);
+> -
+> -		reg = simatic_ipc_led_memory + 0x500 + 0x1C0; /*
+> PM_BIOS_BOOT_N */
+> -		val = readl(reg);
+> -		writel(val | 1, reg);
+> -		break;
+>  	default:
+>  		return -ENODEV;
+>  	}
+>  
+>  	while (ipcled->value) {
+>  		cdev = &ipcled->cdev;
+> -		if (type == IORESOURCE_MEM) {
+> -			cdev->brightness_set =
+> simatic_ipc_led_set_mem;
+> -			cdev->brightness_get =
+> simatic_ipc_led_get_mem;
+> -		} else {
+> -			cdev->brightness_set =
+> simatic_ipc_led_set_io;
+> -			cdev->brightness_get =
+> simatic_ipc_led_get_io;
+> -		}
+> +		cdev->brightness_set = simatic_ipc_led_set_io;
+> +		cdev->brightness_get = simatic_ipc_led_get_io;
+>  		cdev->max_brightness = LED_ON;
+>  		cdev->name = ipcled->name;
+>  
+> diff --git a/drivers/platform/x86/simatic-ipc.c
+> b/drivers/platform/x86/simatic-ipc.c index 26c35e1660cb..ca3647b751d5
+> 100644 --- a/drivers/platform/x86/simatic-ipc.c
+> +++ b/drivers/platform/x86/simatic-ipc.c
+> @@ -51,6 +51,7 @@ static int register_platform_devices(u32 station_id)
+>  {
+>  	u8 ledmode = SIMATIC_IPC_DEVICE_NONE;
+>  	u8 wdtmode = SIMATIC_IPC_DEVICE_NONE;
+> +	char *pdevname = KBUILD_MODNAME "_leds";
+>  	int i;
+>  
+>  	platform_data.devmode = SIMATIC_IPC_DEVICE_NONE;
+> @@ -64,10 +65,12 @@ static int register_platform_devices(u32
+> station_id) }
+>  
+>  	if (ledmode != SIMATIC_IPC_DEVICE_NONE) {
+> +		if (ledmode == SIMATIC_IPC_DEVICE_127E)
+> +			pdevname = KBUILD_MODNAME "_leds_gpio";
+>  		platform_data.devmode = ledmode;
+>  		ipc_led_platform_device =
+>  			platform_device_register_data(NULL,
+> -				KBUILD_MODNAME "_leds",
+> PLATFORM_DEVID_NONE,
+> +				pdevname, PLATFORM_DEVID_NONE,
+>  				&platform_data,
+>  				sizeof(struct simatic_ipc_platform));
+>  		if (IS_ERR(ipc_led_platform_device))
 
