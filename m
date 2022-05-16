@@ -2,103 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186DAC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 May 2022 08:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326F5C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 May 2022 09:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235663AbiEPIjX (ORCPT
+        id S233564AbiEPJuH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 May 2022 04:39:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38272 "EHLO
+        Mon, 16 May 2022 05:50:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241852AbiEPIjU (ORCPT
+        with ESMTP id S231350AbiEPJuH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 May 2022 04:39:20 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455D5E0DD;
-        Mon, 16 May 2022 01:39:19 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id t25so24484799lfg.7;
-        Mon, 16 May 2022 01:39:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=58VJTyS91eGqmdDXfaHsOWtLLXLnqdoRzKRAXC8kYBg=;
-        b=YVTJUSj/06UfDPLrm20dENmoGpPw2RJnksjmdtiMqOazR5RCC88+ZWL6zRO18B/o/B
-         9y/kX/HElg8zwwc6TZ5LZQET02cIH1M1OFTXBOSeyOgSS6KNwYbAuCjzIxCuLbxvjsDD
-         8EyhjCSDPM1Plw3hWzHYzL/z5yoiDWwlNvpZSXmFpi0t3lhmU2Bv1J8zGdXMJKFZHjJF
-         rUhIAPPwq+z+xJhJMOjJLVUwp60NbkpUQqNqPldCGMvk3ZrIKrm+GFvaurLQHmTVARhm
-         hDlKB2gdpPNayypGBUyaAuvpNymHS80rgVgB42nObLLsRGHhih+TH6JYo91Vsw4A0Kg1
-         yOMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=58VJTyS91eGqmdDXfaHsOWtLLXLnqdoRzKRAXC8kYBg=;
-        b=QqML4grVSPGqaCJBbJEoRkRuhmFb7/On7F5IeWlt7omOHvVOb2GqZ20nafIdCI3Lvj
-         JbJUKnx3rr/eIR0iJXFY4oPuIXfvJoHh+0BD1Yvc72L7yl5Pg66SFgf/jHlDZ5D/eO+j
-         eeDl7L5qmVMUJ/v7EMYjigOT7Uto8EIQXGQg+nWWkQ16pRri4rwCbSO83Aq6DigEnL+M
-         E9dz/MT8v0f269nYxlf71nW6HbYlVa9YwMqXeMtFNnFI+9X3mQjXd4LpLKP+8vCvwDrP
-         o4iaf8tmNxiU6VheDGeYm9FPrt3Y5OpnSxfZQJMmdMOGhN9D0uS8MTy57eFnfivim8mu
-         2xkg==
-X-Gm-Message-State: AOAM533wzo95DEg9bSrm1LTpbaqvUFPJ7NrfJ72gnjWHj1jtV6bgc22h
-        dOigWxiqiHMLXZIqZqH8ZXKMBcqhZDSz/xwR4b3FlUl3ZjI=
-X-Google-Smtp-Source: ABdhPJxEEbo+EAFfwfotAw1nk3krfv5ObqZpSLA1blGFWBxMNNAv0SeoagqdByHHQifh2R6BT5Gjsga8Q/x372A24ZQ=
-X-Received: by 2002:ac2:5456:0:b0:471:f9e6:7388 with SMTP id
- d22-20020ac25456000000b00471f9e67388mr11665162lfn.504.1652690357642; Mon, 16
- May 2022 01:39:17 -0700 (PDT)
+        Mon, 16 May 2022 05:50:07 -0400
+X-Greylist: delayed 346 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 16 May 2022 02:50:05 PDT
+Received: from vik-lap.sysgo.cz (dynamic-2a01-0c22-9170-4b00-8d03-2ed4-b08c-7f42.c22.pool.telefonica.de [IPv6:2a01:c22:9170:4b00:8d03:2ed4:b08c:7f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD8137034;
+        Mon, 16 May 2022 02:50:05 -0700 (PDT)
+Received: from vik-lap.sysgo.cz (localhost [127.0.0.1])
+        by vik-lap.sysgo.cz (8.15.2/8.15.2/Debian-22) with ESMTP id 24G9hnss011800;
+        Mon, 16 May 2022 11:43:49 +0200
+Received: (from vik@localhost)
+        by vik-lap.sysgo.cz (8.15.2/8.15.2/Submit) id 24G9hmTC011799;
+        Mon, 16 May 2022 11:43:48 +0200
+X-Authentication-Warning: vik-lap.sysgo.cz: vik set sender to vit@kabele.me using -f
+Date:   Mon, 16 May 2022 11:43:48 +0200
+From:   Vit Kabele <vit@kabele.me>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     platform-driver-x86@vger.kernel.org, r.marek@assembler.cz,
+        x86@kernel.org, linux-kernel@vger.kernel.org, rafael@kernel.org,
+        mingo@redhat.com
+Subject: Re: [PATCH v2] arch/x86: Check validity of EBDA pointer in mpparse.c
+Message-ID: <YoIc1AHLK4pfR4AI@czspare1-lap.sysgo.cz>
+References: <CAJZ5v0gBbdzUO9MRxbKESEnaeaNAu-+3oP6ADMretch=iHPNJA@mail.gmail.com>
+ <Yk/2dh4kDobivStp@czspare1-lap.sysgo.cz>
+ <YnFoIzmt1qJSucAd@zn.tnic>
 MIME-Version: 1.0
-References: <20220429201717.1946178-1-martin.fernandez@eclypsium.com>
- <YnKr+aMf4PspDpHZ@zn.tnic> <CAKgze5YDD02AsrF0yESv2sptZ4qxyTMgCDmnOKcbQWjKQsJRsw@mail.gmail.com>
- <YnUYLDjIThbIz/Uf@zn.tnic> <6d90c832-af4a-7ed6-4f72-dae08bb69c37@intel.com>
- <CAPcyv4i73m6iPPfJE9CBdxf-OWGXahvGqvh6G-pqVO=3LB6ktQ@mail.gmail.com>
- <47140A56-D3F8-4292-B355-5F92E3BA9F67@alien8.de> <6abea873-52a2-f506-b21b-4b567bee1874@intel.com>
- <FDABC5C8-B80A-4977-9F97-5A8FC47F69D6@alien8.de> <4bc56567-e2ce-40ec-19ab-349c8de8d969@intel.com>
- <CE52D65A-C9F4-408D-B18A-72D87495A433@alien8.de>
-In-Reply-To: <CE52D65A-C9F4-408D-B18A-72D87495A433@alien8.de>
-From:   Richard Hughes <hughsient@gmail.com>
-Date:   Mon, 16 May 2022 09:39:06 +0100
-Message-ID: <CAD2FfiHe3hCSNHEA0mSWPbH4LEWhj+FgxkhO83U1GgYEJR6wrw@mail.gmail.com>
-Subject: Re: [PATCH v8 0/8] x86: Show in sysfs if a memory node is able to do encryption
-To:     Boris Petkov <bp@alien8.de>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Martin Fernandez <martin.fernandez@eclypsium.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, daniel.gutson@eclypsium.com,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, X86 ML <x86@kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        alex.bazhaniuk@eclypsium.com, Greg KH <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        "Huang, Kai" <kai.huang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YnFoIzmt1qJSucAd@zn.tnic>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 6 May 2022 at 20:02, Boris Petkov <bp@alien8.de> wrote:
-> Remember - this all started with "i wanna say that mem enc is active" and now we're so far deep down the rabbit hole...
+On Tue, May 03, 2022 at 07:36:35PM +0200, Borislav Petkov wrote:
+> > diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+> > index fed721f90116..9e0b4820f33b 100644
+> > --- a/arch/x86/kernel/mpparse.c
+> > +++ b/arch/x86/kernel/mpparse.c
+> > @@ -633,8 +633,18 @@ void __init default_find_smp_config(void)
+> >  	 */
+> >  
+> >  	address = get_bios_ebda();
+> > -	if (address)
+> > -		smp_scan_config(address, 0x400);
+> > +
+> > +	/*
+> > +	 * Check that the EBDA address is sane and the get_bios_ebda() did not
+> > +	 * return just garbage from memory.
+> > +	 * The upper bound is considered valid if it points below 1K before
+> > +	 * end of the lower memory (i.e. 639K). The EBDA can be smaller
+> > +	 * than 1K in which case the pointer will point above 639K but that
+> > +	 * case is handled in step 2) above, and we don't need to adjust scan
+> > +	 * size to not bump into the memory above 640K.
+> > +	 */
+> > +	if (address >= BIOS_START_MIN && address < (BIOS_START_MAX - 1024))
+> > +		smp_scan_config(address, 1024);
+> >  }
+> 
+> I guess but looking at reserve_bios_regions(), that function is already
+> doing kinda the same along with being a bit more careful to figure out
+> bios_start so you could unify the code into a common helper and use it
+> at both places?
+I also initially thought of extracting the check to a separate method,
+but imo this decreases the overall code readability. Any function
+calling the get_bios_ebda() must check the returned value anyway, so
+there will be always at least one if statement involved. And the valid
+upper bound of the EBDA pointer is also different for these two use-cases.
+(The mpparse.c usage is interested in EBDA pointer only if it ends 1KiB
+before the end of low memory, while the ebda.c accepts even the values in the
+last KiB below 640KiB).
 
-This is still something consumers need; at the moment users have no
-idea if data is *actually* being encrypted. I think Martin has done an
-admirable job going down the rabbit hole to add this functionality in
-the proper manner -- so it's actually accurate and useful for other
-use cases to that of fwupd.
+I also consider it unlikely that there will be some new code using
+the same bounds check, so I'd prefer to leave it inline.
 
-At the moment my professional advice to people asking about Intel
-memory encryption is to assume there is none, as there's no way of
-verifying that it's actually enabled and working. This is certainly a
-shame for something so promising, touted as an enterprise security
-feature.
-
-Richard
+-- 
+Best regards,
+Vit Kabele
