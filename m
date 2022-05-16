@@ -2,88 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60ADCC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 May 2022 11:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4038C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 May 2022 13:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233267AbiEPLpC (ORCPT
+        id S238066AbiEPNGt convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 May 2022 07:45:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56548 "EHLO
+        Mon, 16 May 2022 09:06:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229931AbiEPLpA (ORCPT
+        with ESMTP id S229895AbiEPNGt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 May 2022 07:45:00 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E83DFBF;
-        Mon, 16 May 2022 04:44:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3BAECB810DF;
-        Mon, 16 May 2022 11:44:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71AC9C385AA;
-        Mon, 16 May 2022 11:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1652701497;
-        bh=1/FDxy2CAaHH3ifNaeWDSyCbylIpRpLLo9WGNNpQnTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uBDSx2JnqLxlx+IIVLoBSW/Orox5T3+4msweStgIKmKa9/dCQ+fqGdebr68e9Tucr
-         Qew11AIMzT6W5Ftyf4k8GK1JloTqdsNcptkbF/j2UBzL2oVZUoSLmeHawCF02Riw+A
-         PWB2pRXWe481WL0pPFN4Eqz0OoT66/Pq9QdZVq2s=
-Date:   Mon, 16 May 2022 13:44:54 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Michael =?iso-8859-1?Q?Niew=F6hner?= <linux@mniewoehner.de>
-Cc:     Alex Hung <alex.hung@canonical.com>,
+        Mon, 16 May 2022 09:06:49 -0400
+Received: from sender4-of-o58.zoho.com (sender4-of-o58.zoho.com [136.143.188.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CEE311A0A;
+        Mon, 16 May 2022 06:06:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1652706397; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=MDZ4xEOWpxIZhmqokCcpk391itTa2iDZCEgtXO6j1BQRlGmdO7MZyj1HleRHimBJWb8eiE4efI3WVB1sf2pmUApWHt15cnaK974SxRjJW5FiQT0n4fcarG73zBJr7sCQbI1F976HU7erIX2pFFnmhmV6Zg3Rqt18vxKdQuhhykI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1652706397; h=Content-Type:Content-Transfer-Encoding:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=rMdGdZjft1ez7rS5/RSOrjzo5Y2NZwBNqyLlALkfo9Q=; 
+        b=Mc3ZL4rUFnEMgu6dlar4j6tcpBIUXh2aGMANRDREVeRYLxlVRg2Jkdv3p8WWf8+4A4Rh6i8CzkI3yAPu+3tfK5dvkeaKRBKYxqLwRR8H1L1iBSdQxM2l4JcjqT4chDQb/Q6fHA+FfRVWVhsWfP+YAC+jMKXBx1U+YV6qcrspAbY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        spf=pass  smtp.mailfrom=linux@mniewoehner.de;
+        dmarc=pass header.from=<linux@mniewoehner.de>
+Received: from z3r0.lan (185.31.62.161 [185.31.62.161]) by mx.zohomail.com
+        with SMTPS id 1652706395737383.4100488774111; Mon, 16 May 2022 06:06:35 -0700 (PDT)
+Message-ID: <44828f285aeacf0e941f4f6452b190b46146043f.camel@mniewoehner.de>
+Subject: [PATCH v2] platform/x86: intel-hid: fix _DSM function index
+ handling
+From:   Michael =?ISO-8859-1?Q?Niew=F6hner?= <linux@mniewoehner.de>
+To:     Alex Hung <alex.hung@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: intel-hid: fix _DSM function index handling
-Message-ID: <YoI5NvHiihliSO/g@kroah.com>
-References: <50eb664046b0d036a434c4a602087b791b6e796f.camel@mniewoehner.de>
+        trivial@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Date:   Mon, 16 May 2022 15:06:32 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <50eb664046b0d036a434c4a602087b791b6e796f.camel@mniewoehner.de>
+User-Agent: Evolution 3.42.2 
+Content-Transfer-Encoding: 8BIT
+X-ZohoMailClient: External
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 16, 2022 at 12:23:22PM +0200, Michael Niewöhner wrote:
-> intel_hid_dsm_fn_mask is a bit mask containing one bit for each function
-> index. Fix the function index check in intel_hid_evaluate_method
-> accordingly, which was missed in commit 97ab4516205e ("platform/x86:
-> intel-hid: fix _DSM function index handling").
-> 
-> Signed-off-by: Michael Niewöhner <linux@mniewoehner.de>
-> ---
->  drivers/platform/x86/intel/hid.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-> index 13f8cf70b9ae..5c39d40a701b 100644
-> --- a/drivers/platform/x86/intel/hid.c
-> +++ b/drivers/platform/x86/intel/hid.c
-> @@ -238,7 +238,7 @@ static bool intel_hid_evaluate_method(acpi_handle handle,
->  
->         method_name = (char *)intel_hid_dsm_fn_to_method[fn_index];
->  
-> -       if (!(intel_hid_dsm_fn_mask & fn_index))
-> +       if (!(intel_hid_dsm_fn_mask & BIT(fn_index)))
->                 goto skip_dsm_eval;
->  
->         obj = acpi_evaluate_dsm_typed(handle, &intel_dsm_guid,
-> -- 
-> 2.34.1
-> 
-> 
+intel_hid_dsm_fn_mask is a bit mask containing one bit for each function
+index. Fix the function index check in intel_hid_evaluate_method
+accordingly, which was missed in commit 97ab4516205e ("platform/x86:
+intel-hid: fix _DSM function index handling").
 
-<formletter>
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael NiewÃ¶hner <linux@mniewoehner.de>
+---
+Changes in v2:
+Added Cc to stable
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+ drivers/platform/x86/intel/hid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-</formletter>
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 13f8cf70b9ae..5c39d40a701b 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -238,7 +238,7 @@ static bool intel_hid_evaluate_method(acpi_handle handle,
+ 
+        method_name = (char *)intel_hid_dsm_fn_to_method[fn_index];
+ 
+-       if (!(intel_hid_dsm_fn_mask & fn_index))
++       if (!(intel_hid_dsm_fn_mask & BIT(fn_index)))
+                goto skip_dsm_eval;
+ 
+        obj = acpi_evaluate_dsm_typed(handle, &intel_dsm_guid,
+-- 
+2.34.1
+
+
