@@ -2,87 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02103C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 May 2022 10:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7843FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 May 2022 10:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239496AbiEPKSS (ORCPT
+        id S242420AbiEPKja convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 May 2022 06:18:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53610 "EHLO
+        Mon, 16 May 2022 06:39:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233302AbiEPKSQ (ORCPT
+        with ESMTP id S231665AbiEPKj3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 May 2022 06:18:16 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434E0DE97;
-        Mon, 16 May 2022 03:18:16 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id EB3D4300002A8;
-        Mon, 16 May 2022 12:18:14 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id DF4F129FE74; Mon, 16 May 2022 12:18:14 +0200 (CEST)
-Date:   Mon, 16 May 2022 12:18:14 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Mon, 16 May 2022 06:39:29 -0400
+X-Greylist: delayed 952 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 16 May 2022 03:39:27 PDT
+Received: from sender4-of-o58.zoho.com (sender4-of-o58.zoho.com [136.143.188.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C73DA237DD
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 May 2022 03:39:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1652696606; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=Kx1bU6cM2rTQ45627TLaIrUmyuK8JKxe+6dp969h79UtC72vzaptU0KAgj+yR01SB944vwrFBEOUrv5e3GeHDr5wpbNgqKKhX+Ec69AwAwBKYdQyIPWyBF003aykHC/weZGvfvuwbuwCpe45CS/kCgfMkHkZBc6wewNUhlUJ77k=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1652696606; h=Content-Type:Content-Transfer-Encoding:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=aKy/2D1I+Ijo3H2U2qrIhNvqL3xXRiti3x//u1F3D3k=; 
+        b=eMhvNN6dhsImM1RDhgTfGczy4vtJCZgj5bQU8XN4ByPWOLVnroLJcfCcBXmFtQArvlItw5JXc15lPafwdUDB4dg4nztF4oEnpl+gC+VXWIK87IsXiAr+IXCCxQ/Y3StZhnoDckF2WHZfB3vR8LW+LuBgYe5rZ+R5p3itFGvitJ0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        spf=pass  smtp.mailfrom=linux@mniewoehner.de;
+        dmarc=pass header.from=<linux@mniewoehner.de>
+Received: from z3r0.lan (185.31.62.161 [185.31.62.161]) by mx.zohomail.com
+        with SMTPS id 1652696605359658.627437004699; Mon, 16 May 2022 03:23:25 -0700 (PDT)
+Message-ID: <50eb664046b0d036a434c4a602087b791b6e796f.camel@mniewoehner.de>
+Subject: [PATCH] platform/x86: intel-hid: fix _DSM function index handling
+From:   Michael =?ISO-8859-1?Q?Niew=F6hner?= <linux@mniewoehner.de>
+To:     Alex Hung <alex.hung@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>, Michael Buesch <m@bues.ch>,
-        Rafa?? Mi??ecki <zajec5@gmail.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-gpio@vger.kernel.org, linux-wireless@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [RFC PATCH] genirq: Provide generic_handle_domain_irq_safe().
-Message-ID: <20220516101814.GA18490@wunner.de>
-References: <YnkfWFzvusFFktSt@linutronix.de>
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Date:   Mon, 16 May 2022 12:23:22 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YnkfWFzvusFFktSt@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Evolution 3.42.2 
+Content-Transfer-Encoding: 8BIT
+X-ZohoMailClient: External
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 09, 2022 at 04:04:08PM +0200, Sebastian Andrzej Siewior wrote:
-> The problem with generic_handle_domain_irq() is that with `threadirqs'
-> it will trigger "WARN_ON_ONCE(!in_hardirq())".
+intel_hid_dsm_fn_mask is a bit mask containing one bit for each function
+index. Fix the function index check in intel_hid_evaluate_method
+accordingly, which was missed in commit 97ab4516205e ("platform/x86:
+intel-hid: fix _DSM function index handling").
 
-Now silenced by:
-https://git.kernel.org/linus/792ea6a074ae
+Signed-off-by: Michael Niewöhner <linux@mniewoehner.de>
+---
+ drivers/platform/x86/intel/hid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 13f8cf70b9ae..5c39d40a701b 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -238,7 +238,7 @@ static bool intel_hid_evaluate_method(acpi_handle handle,
+ 
+        method_name = (char *)intel_hid_dsm_fn_to_method[fn_index];
+ 
+-       if (!(intel_hid_dsm_fn_mask & fn_index))
++       if (!(intel_hid_dsm_fn_mask & BIT(fn_index)))
+                goto skip_dsm_eval;
+ 
+        obj = acpi_evaluate_dsm_typed(handle, &intel_dsm_guid,
+-- 
+2.34.1
 
 
-> +int generic_handle_domain_irq_safe(struct irq_domain *domain, unsigned int hwirq)
-> +{
-> +	unsigned long flags;
-> +	int ret;
-> +
-> +	local_irq_save(flags);
-> +	ret = handle_irq_desc(irq_resolve_mapping(domain, hwirq));
-> +	local_irq_restore(flags);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(generic_handle_domain_irq_safe);
-
-AFAICS you don't need to disable hardirqs at least for the "threadirqs"
-case because irq_forced_thread_fn() already does that.
-
-
->  drivers/bcma/driver_gpio.c                 |  2 +-
->  drivers/gpio/gpio-mlxbf2.c                 |  6 ++----
->  drivers/pinctrl/pinctrl-amd.c              |  2 +-
->  drivers/platform/x86/intel/int0002_vgpio.c |  3 +--
->  drivers/ssb/driver_gpio.c                  |  6 ++++--
-
-From a quick look, the proper solution for all of those drivers is
-probably to just add IRQF_NO_THREAD and be done with it.
-
-Thanks,
-
-Lukas
