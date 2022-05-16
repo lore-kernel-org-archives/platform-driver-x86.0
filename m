@@ -2,107 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D86E9C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 May 2022 11:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60ADCC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 May 2022 11:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243087AbiEPLXx (ORCPT
+        id S233267AbiEPLpC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 May 2022 07:23:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41738 "EHLO
+        Mon, 16 May 2022 07:45:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243099AbiEPLXw (ORCPT
+        with ESMTP id S229931AbiEPLpA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 May 2022 07:23:52 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94DBF387A2;
-        Mon, 16 May 2022 04:23:49 -0700 (PDT)
-Date:   Mon, 16 May 2022 13:23:46 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1652700228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=S5NxAJPVWcMi6gSub2SnJmtVeydspv2dOKKX4Sgbo2E=;
-        b=lJ/ua/xT36CFkqAG2YmuUJzsMegjfmmNTNqFT+fjWUS0gy0CFATLEgN6pymWdJzZRXx+c2
-        +2tnuSQnhzScgw8CD400ykPzDIZ34DTelPol+ky2h5ZdINhBstvnNH2N6Xwral/bK94Srw
-        GcE97KmJQRokY9lLjkxkE0MajKpJCpKkpsFmmNGZLC0M4eGr2JrDlIkWq+IUovdVExg15j
-        ngczzWRkxsTGvHYwzULb4NfvLr1Zvc1S1egZzwo3HBfWnvIZhMwtnLjGw44Udvu5b7unJQ
-        2rRFDnGD6COThS/URwcxwBvcZchfuCohtpzk9klqe6WeAdWfuiCwwSPp0C+O9g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1652700228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=S5NxAJPVWcMi6gSub2SnJmtVeydspv2dOKKX4Sgbo2E=;
-        b=54/Hu5OcF7w+aG2PdqmJIRu09tvXTti1VbEvmiab9M9zPRjw3PZQbf8xF5NEXBPzJfk2jw
-        5Mtg5wpN0Ua/JmBg==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Mon, 16 May 2022 07:45:00 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E83DFBF;
+        Mon, 16 May 2022 04:44:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3BAECB810DF;
+        Mon, 16 May 2022 11:44:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71AC9C385AA;
+        Mon, 16 May 2022 11:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1652701497;
+        bh=1/FDxy2CAaHH3ifNaeWDSyCbylIpRpLLo9WGNNpQnTU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uBDSx2JnqLxlx+IIVLoBSW/Orox5T3+4msweStgIKmKa9/dCQ+fqGdebr68e9Tucr
+         Qew11AIMzT6W5Ftyf4k8GK1JloTqdsNcptkbF/j2UBzL2oVZUoSLmeHawCF02Riw+A
+         PWB2pRXWe481WL0pPFN4Eqz0OoT66/Pq9QdZVq2s=
+Date:   Mon, 16 May 2022 13:44:54 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Michael =?iso-8859-1?Q?Niew=F6hner?= <linux@mniewoehner.de>
+Cc:     Alex Hung <alex.hung@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>, Michael Buesch <m@bues.ch>,
-        Rafa?? Mi??ecki <zajec5@gmail.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-gpio@vger.kernel.org, linux-wireless@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [RFC PATCH] genirq: Provide generic_handle_domain_irq_safe().
-Message-ID: <YoI0QiM4ntJP/9fQ@linutronix.de>
-References: <YnkfWFzvusFFktSt@linutronix.de>
- <20220516101814.GA18490@wunner.de>
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: intel-hid: fix _DSM function index handling
+Message-ID: <YoI5NvHiihliSO/g@kroah.com>
+References: <50eb664046b0d036a434c4a602087b791b6e796f.camel@mniewoehner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220516101814.GA18490@wunner.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <50eb664046b0d036a434c4a602087b791b6e796f.camel@mniewoehner.de>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2022-05-16 12:18:14 [+0200], Lukas Wunner wrote:
-> On Mon, May 09, 2022 at 04:04:08PM +0200, Sebastian Andrzej Siewior wrote:
-> > The problem with generic_handle_domain_irq() is that with `threadirqs'
-> > it will trigger "WARN_ON_ONCE(!in_hardirq())".
+On Mon, May 16, 2022 at 12:23:22PM +0200, Michael Niewöhner wrote:
+> intel_hid_dsm_fn_mask is a bit mask containing one bit for each function
+> index. Fix the function index check in intel_hid_evaluate_method
+> accordingly, which was missed in commit 97ab4516205e ("platform/x86:
+> intel-hid: fix _DSM function index handling").
 > 
-> Now silenced by:
-> https://git.kernel.org/linus/792ea6a074ae
+> Signed-off-by: Michael Niewöhner <linux@mniewoehner.de>
+> ---
+>  drivers/platform/x86/intel/hid.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+> index 13f8cf70b9ae..5c39d40a701b 100644
+> --- a/drivers/platform/x86/intel/hid.c
+> +++ b/drivers/platform/x86/intel/hid.c
+> @@ -238,7 +238,7 @@ static bool intel_hid_evaluate_method(acpi_handle handle,
+>  
+>         method_name = (char *)intel_hid_dsm_fn_to_method[fn_index];
+>  
+> -       if (!(intel_hid_dsm_fn_mask & fn_index))
+> +       if (!(intel_hid_dsm_fn_mask & BIT(fn_index)))
+>                 goto skip_dsm_eval;
+>  
+>         obj = acpi_evaluate_dsm_typed(handle, &intel_dsm_guid,
+> -- 
+> 2.34.1
 > 
 > 
-> > +int generic_handle_domain_irq_safe(struct irq_domain *domain, unsigned int hwirq)
-> > +{
-> > +	unsigned long flags;
-> > +	int ret;
-> > +
-> > +	local_irq_save(flags);
-> > +	ret = handle_irq_desc(irq_resolve_mapping(domain, hwirq));
-> > +	local_irq_restore(flags);
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(generic_handle_domain_irq_safe);
-> 
-> AFAICS you don't need to disable hardirqs at least for the "threadirqs"
-> case because irq_forced_thread_fn() already does that.
 
-PREEMPT_RT does not disable interrupts. Also completions in softirq
-won't disable interrupts.
+<formletter>
 
-> 
-> >  drivers/bcma/driver_gpio.c                 |  2 +-
-> >  drivers/gpio/gpio-mlxbf2.c                 |  6 ++----
-> >  drivers/pinctrl/pinctrl-amd.c              |  2 +-
-> >  drivers/platform/x86/intel/int0002_vgpio.c |  3 +--
-> >  drivers/ssb/driver_gpio.c                  |  6 ++++--
-> 
-> From a quick look, the proper solution for all of those drivers is
-> probably to just add IRQF_NO_THREAD and be done with it.
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-I think I mentioned that part in the commit description: IRQF_NO_THREAD
-must be specified by all handlers of a shared interrupt. It is an option
-for the handler that owns an interrupt exclusive.
-
-> Thanks,
-> 
-> Lukas
-
-Sebastian
+</formletter>
