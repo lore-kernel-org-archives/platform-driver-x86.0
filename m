@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE9CC4321E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 May 2022 15:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE53C4167D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 May 2022 15:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349948AbiEQPYd (ORCPT
+        id S244022AbiEQPYg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 May 2022 11:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37068 "EHLO
+        Tue, 17 May 2022 11:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349914AbiEQPYP (ORCPT
+        with ESMTP id S1349968AbiEQPYY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 May 2022 11:24:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 43F494F9D5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 May 2022 08:24:10 -0700 (PDT)
+        Tue, 17 May 2022 11:24:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 025594F9C3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 May 2022 08:24:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652801050;
+        s=mimecast20190719; t=1652801062;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ERnLkWVyBsAc5m+rcKBnRJVMnRy5wO9Pel0V4BqR0DY=;
-        b=C8Aw67eZQH97d2nfFZyXxFKE4JgfvIsdNH5YkuQAm8ecS45wo+P171pON5idODcVEGF3x1
-        AST+Y1h4te4F68FHKCuakDAOTtB27D7wr21+WC1Jzgp3rjr7aT1nI+9OivJMEf/til55uW
-        TW+QvcblK88EmFxM55iI7bzVOyhDBi0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=MiZqR+nlatrUqoF+Bj6/ALhugHQFjYZid/1UyHSgCow=;
+        b=LiSO67KFKZfGDPHrCj/vDupHHjpCV1PhwHRvvuIChgOd0GO3KT0kHKPNWdtuAdKjjwunty
+        BQSEw5OcDeCgG3vqKQkYW0+cVOslI2vdkE2lWM4WFDobybB0PvSCbKvH9qPgvoBU1tAB6q
+        itxHItjCnSg4+yK6I70+tnVVBwDH8Z8=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-421-urD-K1tEMridfGT7PU5enw-1; Tue, 17 May 2022 11:24:07 -0400
-X-MC-Unique: urD-K1tEMridfGT7PU5enw-1
+ us-mta-484-Z4O-XODoMBKkphAGc1GIwQ-1; Tue, 17 May 2022 11:24:18 -0400
+X-MC-Unique: Z4O-XODoMBKkphAGc1GIwQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5DDAE100BAA9;
-        Tue, 17 May 2022 15:24:06 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7B3703C1E32B;
+        Tue, 17 May 2022 15:24:17 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D5BB1C15D5C;
-        Tue, 17 May 2022 15:24:02 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07844C15E71;
+        Tue, 17 May 2022 15:24:13 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
         Lyude <lyude@redhat.com>, Daniel Dadap <ddadap@nvidia.com>,
@@ -63,9 +63,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
         Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH 07/14] ACPI: video: Remove acpi_video_bus from list before tearing it down
-Date:   Tue, 17 May 2022 17:23:24 +0200
-Message-Id: <20220517152331.16217-8-hdegoede@redhat.com>
+Subject: [PATCH 10/14] ACPI: video: Remove code to unregister acpi_video backlight when a native backlight registers
+Date:   Tue, 17 May 2022 17:23:27 +0200
+Message-Id: <20220517152331.16217-11-hdegoede@redhat.com>
 In-Reply-To: <20220517152331.16217-1-hdegoede@redhat.com>
 References: <20220517152331.16217-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -75,39 +75,106 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Move the list_del removing an acpi_video_bus from video_bus_head
-on teardown to before the teardown is done, to avoid code iterating
-over the video_bus_head list seeing acpi_video_bus objects on there
-which are (partly) torn down already.
+Remove the code to unregister acpi_video backlight devices when
+a native backlight device gets registered later.
+
+Now that the acpi_video backlight device registration is a separate step
+which runs later, after the drm/kms driver is done setting up its own
+native backlight device, it is no longer necessary to monitor for a
+native (BACKLIGHT_RAW) device showing up later and to then unregister
+the acpi_video backlight device(s).
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/acpi/acpi_video.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/acpi/acpi_video.c   |  2 --
+ drivers/acpi/video_detect.c | 36 ------------------------------------
+ 2 files changed, 38 deletions(-)
 
 diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index cebef3403620..7f48352840bb 100644
+index 79e75dc86243..20a2638f0ef1 100644
 --- a/drivers/acpi/acpi_video.c
 +++ b/drivers/acpi/acpi_video.c
-@@ -2114,14 +2114,14 @@ static int acpi_video_bus_remove(struct acpi_device *device)
+@@ -89,7 +89,6 @@ static void acpi_video_bus_notify(struct acpi_device *device, u32 event);
+ static void acpi_video_bus_register_backlight_work(struct work_struct *ignored);
+ static DECLARE_DELAYED_WORK(video_bus_register_backlight_work,
+ 			    acpi_video_bus_register_backlight_work);
+-void acpi_video_detect_exit(void);
  
- 	video = acpi_driver_data(device);
+ /*
+  * Indices in the _BCL method response: the first two items are special,
+@@ -2345,7 +2344,6 @@ static int __init acpi_video_init(void)
  
--	acpi_video_bus_remove_notify_handler(video);
--	acpi_video_bus_unregister_backlight(video);
--	acpi_video_bus_put_devices(video);
+ static void __exit acpi_video_exit(void)
+ {
+-	acpi_video_detect_exit();
+ 	acpi_video_unregister();
+ }
+ 
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 6caabdf189c9..3fa79584981e 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -39,10 +39,6 @@
+ 
+ void acpi_video_unregister_backlight(void);
+ 
+-static bool backlight_notifier_registered;
+-static struct notifier_block backlight_nb;
+-static struct work_struct backlight_notify_work;
 -
- 	mutex_lock(&video_list_lock);
- 	list_del(&video->entry);
- 	mutex_unlock(&video_list_lock);
+ static enum acpi_backlight_type acpi_backlight_cmdline = acpi_backlight_undef;
+ static enum acpi_backlight_type acpi_backlight_dmi = acpi_backlight_undef;
  
-+	acpi_video_bus_remove_notify_handler(video);
-+	acpi_video_bus_unregister_backlight(video);
-+	acpi_video_bus_put_devices(video);
-+
- 	kfree(video->attached_array);
- 	kfree(video);
+@@ -516,26 +512,6 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
+ 	{ },
+ };
  
+-/* This uses a workqueue to avoid various locking ordering issues */
+-static void acpi_video_backlight_notify_work(struct work_struct *work)
+-{
+-	if (acpi_video_get_backlight_type(false) != acpi_backlight_video)
+-		acpi_video_unregister_backlight();
+-}
+-
+-static int acpi_video_backlight_notify(struct notifier_block *nb,
+-				       unsigned long val, void *bd)
+-{
+-	struct backlight_device *backlight = bd;
+-
+-	/* A raw bl registering may change video -> native */
+-	if (backlight->props.type == BACKLIGHT_RAW &&
+-	    val == BACKLIGHT_REGISTERED)
+-		schedule_work(&backlight_notify_work);
+-
+-	return NOTIFY_OK;
+-}
+-
+ /*
+  * Determine which type of backlight interface to use on this system,
+  * First check cmdline, then dmi quirks, then do autodetect.
+@@ -565,12 +541,6 @@ enum acpi_backlight_type acpi_video_get_backlight_type(bool native)
+ 		acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
+ 				    ACPI_UINT32_MAX, find_video, NULL,
+ 				    &video_caps, NULL);
+-		INIT_WORK(&backlight_notify_work,
+-			  acpi_video_backlight_notify_work);
+-		backlight_nb.notifier_call = acpi_video_backlight_notify;
+-		backlight_nb.priority = 0;
+-		if (backlight_register_notifier(&backlight_nb) == 0)
+-			backlight_notifier_registered = true;
+ 		init_done = true;
+ 	}
+ 	if (native)
+@@ -606,9 +576,3 @@ void acpi_video_set_dmi_backlight_type(enum acpi_backlight_type type)
+ 		acpi_video_unregister_backlight();
+ }
+ EXPORT_SYMBOL(acpi_video_set_dmi_backlight_type);
+-
+-void __exit acpi_video_detect_exit(void)
+-{
+-	if (backlight_notifier_registered)
+-		backlight_unregister_notifier(&backlight_nb);
+-}
 -- 
 2.36.0
 
