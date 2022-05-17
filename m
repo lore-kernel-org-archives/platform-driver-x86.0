@@ -2,80 +2,159 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9489FC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 May 2022 16:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2626BC43217
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 May 2022 16:51:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244267AbiEQQOv (ORCPT
+        id S1351204AbiEQQvS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 May 2022 12:14:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43452 "EHLO
+        Tue, 17 May 2022 12:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232963AbiEQQOu (ORCPT
+        with ESMTP id S1351207AbiEQQu7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 May 2022 12:14:50 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CEE72B9;
-        Tue, 17 May 2022 09:14:49 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id i19so35621381eja.11;
-        Tue, 17 May 2022 09:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tt7zm04FGXtuD21TiwMVKS3Q+xBPI2XIPf8jUpqW1y0=;
-        b=iydMExLbtxZvc/lILbSGclEuP/4wxj1eepsr30NQdZjIVI9jsJNOpCBn01ZOU+7x1G
-         gq691RQAGrDJQ8fOqMGMYiah/f1X5IJnoO1Nf7fVhOYM6BXsZfJfHBJXPsk67lT9pI3L
-         GO8Xfcj4iwBqcpUjJQYhPBmcqN5D4rTb1f2w/3AWwQPqtyzfWF8yB1uVg8jdTJONU3Dx
-         vqFpRD1zfgJWJnN+w2Xfgcm/oZmtK6Us53EVevWgGPalUo/SBAoX90NAcfO97i3DM6PB
-         D2ZH9IDVu/gWXomdJPYyOpezKggARONvZjN9tZCfDwZjGxRp/6oj/HhUeNwp+z9hW+d1
-         RDuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tt7zm04FGXtuD21TiwMVKS3Q+xBPI2XIPf8jUpqW1y0=;
-        b=kjql98oLamrBDEwteeJoXh7pUwohsiQv3qwNfC4ykau91Z2mKOtlGkUROegPacMn+8
-         LP24YdGwmf4L1UY5TkUGqp4M1d04ars4trmYJYuRdDDliGEVAZWwTOTO/jHlAfDkfu5g
-         N7JazCJd6rWgta668GN0yfnTlrqshBGT0iVpGwn00SziYbeNi5CBqZPRe30hCZtz5p7j
-         uh30ANvJ0MG5L+0Rp6Gg8FZOQohOXJA1RFtP0xcxPlvLqSVrvN0vxln+7bsRBMn2IHw/
-         gMmdWH2YZ8PnrcQQB2LgzSdMQlJu6Mj1NUNjrNLbPn8mLsY1b475JwVO7Lu1wY7g4B+v
-         oTJQ==
-X-Gm-Message-State: AOAM532DUF9yVBONVD08V4qRJPZm+0B8SvxuV8WNV/4e2vtqZneyOX3K
-        gehBIdODhJoZzfRfeuIyQKQC8nk5/i8DfNPINxM=
-X-Google-Smtp-Source: ABdhPJzQSIp/iPhUJDlTKgL6WKPfrKEJVcGOjD5bg+BJM786iaaQEgaii0OIjcfd/jv0+QM2apMhLY5bCzdHgZ3tR5o=
-X-Received: by 2002:a17:906:c10d:b0:6f4:a770:846e with SMTP id
- do13-20020a170906c10d00b006f4a770846emr20505102ejc.497.1652804087559; Tue, 17
- May 2022 09:14:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <44828f285aeacf0e941f4f6452b190b46146043f.camel@mniewoehner.de>
-In-Reply-To: <44828f285aeacf0e941f4f6452b190b46146043f.camel@mniewoehner.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 17 May 2022 18:14:11 +0200
-Message-ID: <CAHp75VcoLqByXy_VdhAu-j9oU_cL7FhdcegG=ePGkNK=cD+wKA@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86: intel-hid: fix _DSM function index handling
-To:     =?UTF-8?Q?Michael_Niew=C3=B6hner?= <linux@mniewoehner.de>
-Cc:     Alex Hung <alex.hung@canonical.com>,
+        Tue, 17 May 2022 12:50:59 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E5AE2BE7;
+        Tue, 17 May 2022 09:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652806257; x=1684342257;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=9E/vttDFy0EFq5zSJDnsg0HX9OScE43/QxlsTcLOYjs=;
+  b=UJP/OC/2KaLR5AWSQouaN1Gn86vjq8OiJlF4rj4czHPCzl1W20K28/yj
+   E48d3/mnsQq9MGhMPHzQhwRhrS6Y9ylFqNVpHBMnlQzakcyonIljuzsw2
+   /Wlm3MGAXM1oMtPb2hLe8UQuNX3atEIBNZ9vkcedVhvpUGBy4ergUvyFX
+   USfbcdLREcD1wZsXsiZkkCqkqs3CEOdeqtxwb/KkLBc1nYuLP1tD28tAR
+   WclN2XblDZRwtPIi/cwTw74EfMRQWhqcVg5SJNkZoebwdvVUp/h9Mi/k8
+   UV1rn/PnmsWXLJovpJLIVBzc1DbLDpUNsAlV4eHBj+wSiX16F1JMgMiJl
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10350"; a="271371030"
+X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
+   d="scan'208";a="271371030"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 09:50:57 -0700
+X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
+   d="scan'208";a="672939443"
+Received: from abhuwalk-mobl1.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.212.246.60])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 09:50:55 -0700
+Message-ID: <7b1a9f3b5b5087f47bf4839858c7bfebdb60aa2f.camel@linux.intel.com>
+Subject: Re: [PATCH v2 01/14] thermal/core: Change thermal_zone_ops to
+ thermal_sensor_ops
+From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linexp.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
+        Raju Rangoju <rajur@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Ido Schimmel <idosch@nvidia.com>,
+        Petr Machata <petrm@nvidia.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@kernel.org>, Peter Kaestle <peter@piie.net>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Kosina <trivial@kernel.org>
+        Sebastian Reichel <sre@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Niklas =?ISO-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>,
+        Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Chuansheng Liu <chuansheng.liu@intel.com>,
+        Jiasheng Jiang <jiasheng@iscas.ac.cn>,
+        Antoine Tenart <atenart@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:ACPI THERMAL DRIVER" <linux-acpi@vger.kernel.org>,
+        "open list:CXGB4 ETHERNET DRIVER (CXGB4)" <netdev@vger.kernel.org>,
+        "open list:INTEL WIRELESS WIFI LINK (iwlwifi)" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:ACER ASPIRE ONE TEMPERATURE AND FAN DRIVER" 
+        <platform-driver-x86@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:RENESAS R-CAR THERMAL DRIVERS" 
+        <linux-renesas-soc@vger.kernel.org>
+Date:   Tue, 17 May 2022 09:50:54 -0700
+In-Reply-To: <CAJZ5v0ik_JQ4Awtw7iR68W4-9ZL8FRDsDd-kWmL-n09fgg3reg@mail.gmail.com>
+References: <20220507125443.2766939-1-daniel.lezcano@linexp.org>
+         <20220507125443.2766939-2-daniel.lezcano@linexp.org>
+         <CAJZ5v0ik_JQ4Awtw7iR68W4-9ZL8FRDsDd-kWmL-n09fgg3reg@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 16, 2022 at 3:58 PM Michael Niew=C3=B6hner <linux@mniewoehner.d=
-e> wrote:
->
-> intel_hid_dsm_fn_mask is a bit mask containing one bit for each function
-> index. Fix the function index check in intel_hid_evaluate_method
-> accordingly, which was missed in commit 97ab4516205e ("platform/x86:
-> intel-hid: fix _DSM function index handling").
+On Tue, 2022-05-17 at 17:42 +0200, Rafael J. Wysocki wrote:
+> On Sat, May 7, 2022 at 2:55 PM Daniel Lezcano
+> <daniel.lezcano@linexp.org> wrote:
+> > 
+> > A thermal zone is software abstraction of a sensor associated with
+> > properties and cooling devices if any.
+> > 
+> > The fact that we have thermal_zone and thermal_zone_ops mixed is
+> > confusing and does not clearly identify the different components
+> > entering in the thermal management process. A thermal zone appears
+> > to
+> > be a sensor while it is not.
+> 
+> Well, the majority of the operations in thermal_zone_ops don't apply
+> to thermal sensors.  For example, ->set_trips(), ->get_trip_type(),
+> ->get_trip_temp().
+> 
+In past we discussed adding thermal sensor sysfs with threshold to
+notify temperature.
 
-Hence Fixes tag?
+So sensor can have set/get_threshold() functions instead of the
+set/get_trip for zones.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Like we have /sys/class/thermal_zone* we can have
+/sys/class/thermal_sensor*.
+
+Thermal sensor(s) are bound to  thermal zones. This can also include
+multiple sensors in a zone and can create a virtual sensor also.
+
+Thanks,
+Srinivas
+
+> > In order to set the scene for multiple thermal sensors aggregated
+> > into
+> > a single thermal zone. Rename the thermal_zone_ops to
+> > thermal_sensor_ops, that will appear clearyl the thermal zone is
+> > not a
+> > sensor but an abstraction of one [or multiple] sensor(s).
+> 
+> So I'm not convinced that the renaming mentioned above is
+> particularly
+> clean either.
+> 
+> IMV the way to go would be to split the thermal sensor operations,
+> like ->get_temp(), out of thermal_zone_ops.
+> 
+> But then it is not clear what a thermal zone with multiple sensors in
+> it really means.  I guess it would require an aggregation function to
+> combine the thermal sensors in it that would produce an effective
+> temperature to check against the trip points.
+> 
+> Honestly, I don't think that setting a separate set of trips for each
+> sensor in a thermal zone would make a lot of sense.
+
