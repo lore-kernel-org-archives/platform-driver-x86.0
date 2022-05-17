@@ -2,78 +2,216 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A502CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 May 2022 19:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDECC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 May 2022 21:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243116AbiEQTWJ (ORCPT
+        id S229524AbiEQVqj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 May 2022 15:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52156 "EHLO
+        Tue, 17 May 2022 17:46:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241252AbiEQTWJ (ORCPT
+        with ESMTP id S229502AbiEQVqi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 May 2022 15:22:09 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8619C42ED0;
-        Tue, 17 May 2022 12:22:07 -0700 (PDT)
-Received: from zn.tnic (p200300ea97465748329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9746:5748:329c:23ff:fea6:a903])
+        Tue, 17 May 2022 17:46:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9192113E11
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 May 2022 14:46:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E99E11EC0494;
-        Tue, 17 May 2022 21:22:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1652815322;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=IULBMfEGpOw9HxNHCKRwR6+0MRbfXrGSt3zlfqBRSkQ=;
-        b=M5sfRUAfnZRyTytNX27nGdm7GTOJdPyCh2go8W+YApmL/RwEnT7JuzgZz+P7LU8Ghf8Oj6
-        2frl1NRX0fbyU3Ozt2FC1ji4QXPIPIbEQHi55dO2f1d2u/oJTqcXx9lRat8zJ6q3rKU/5Y
-        11ksitcfYivI/VNweYM4nMnGcMS40eQ=
-Date:   Tue, 17 May 2022 21:21:57 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Vit Kabele <vit@kabele.me>
-Cc:     platform-driver-x86@vger.kernel.org, r.marek@assembler.cz,
-        x86@kernel.org, linux-kernel@vger.kernel.org, rafael@kernel.org,
-        mingo@redhat.com
-Subject: Re: [PATCH v2] arch/x86: Check validity of EBDA pointer in mpparse.c
-Message-ID: <YoP11ZNZv2/Z7B0g@zn.tnic>
-References: <CAJZ5v0gBbdzUO9MRxbKESEnaeaNAu-+3oP6ADMretch=iHPNJA@mail.gmail.com>
- <Yk/2dh4kDobivStp@czspare1-lap.sysgo.cz>
- <YnFoIzmt1qJSucAd@zn.tnic>
- <YoIc1AHLK4pfR4AI@czspare1-lap.sysgo.cz>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 36C9160F40
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 May 2022 21:46:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 94F04C34100
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 May 2022 21:46:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652823996;
+        bh=jSK6uSf9EDnTK8pfovww/gr70c3i91LjPsHobGbUr2Q=;
+        h=From:To:Subject:Date:From;
+        b=lLBDhn3NuI8Wmbfm/uU7TuBI29xA4e0W4l0ixA707eJ0OinjOZYg1mOhkd9x0VAyW
+         BXLYIf4MTbHVj7k6dVsL7OyNvksZtAKhIkG3qVsGN6c4TKFpMByDjlatuxpGFzXzC8
+         xAQAQX/6Nw2xewvMDKlj7qkDrtassbk9XNgrtNr7NiDzJL+NSGAqLUjeqA2INX+edQ
+         a3aiek80ioYJ1vCwAVa4l9ZLpuNLsTkXaJrDoTHEIjNEtvP5jaPKcwcjE9TvzaZJxH
+         3lolDhF3X2xAAHrs/tshHgG8jU5y3nyUGNZQqku285wK4CE7hbxZ4MR4w2X8asmIGF
+         4jGQqunaBcyXA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 72BDDC05FD0; Tue, 17 May 2022 21:46:36 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 215993] New: Serial Bus Multi Instantiate driver fails to
+ allocate SPI device CSC3551:00
+Date:   Tue, 17 May 2022 21:46:36 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: matt.perlick@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression attachments.created
+Message-ID: <bug-215993-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YoIc1AHLK4pfR4AI@czspare1-lap.sysgo.cz>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 16, 2022 at 11:43:48AM +0200, Vit Kabele wrote:
->  And the valid upper bound of the EBDA pointer is also different
-> for these two use-cases. (The mpparse.c usage is interested in EBDA
-> pointer only if it ends 1KiB before the end of low memory, while the
-> ebda.c accepts even the values in the last KiB below 640KiB).
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215993
 
-And I still don't know why this difference in the upper bounds is really
-relevant and why you can't simply use the code in reserve_bios_regions()
-after carving it out in a helper?
+            Bug ID: 215993
+           Summary: Serial Bus Multi Instantiate driver fails to allocate
+                    SPI device CSC3551:00
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 5.18-rc7
+          Hardware: All
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: matt.perlick@gmail.com
+        Regression: No
 
-The latter considers ebda_start valid when it is between BIOS_START_MIN
-and bios_start, after having sanitized that bios_start to 640K if "out
-of bounds".
+Created attachment 300984
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D300984&action=3Dedit
+Boot Dmesg
 
-Why can't default_find_smp_config() simply scan the last KiB below
-640KiB twice for the sake of simpler code?
+Distribution: Manjaro
+CPU: Intel 12th gen i5-1240P
+Kernel version: 5.18-rc7
+Problem Description:
 
-I.e., there needs to be a single get_bios_ebda() - the current one can
-be renamed to __get_bios_ebda() - and that get_bios_ebda() should give
-either a sane EBDA address or 0 if the checks don't pass. And all code
-should use that.
+TLDR: I think ACPI device HID=3DCSC3551 should be supported with a new driv=
+er but
+dmesg shows:
+Serial bus multi instantiate pseudo device driver CSC3551:00: error -ENODEV:
+failed to allocate SPI device CSC3551:00 from ACPI: -19
+Is this a bug in the module?
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+I've been working on getting internal speakers functional on Asus Zenbook
+UX3402ZA. After ruling out ALSA issues and ALC294 codec configuration, I fo=
+und
+out this machine has two amp devices (Cirrus Logic CS35l41?) connected over
+SPI. These devices are declared under a single ACPI node with HID=3DCSC3551.
+
+I found a patch series for supporting this particular ACPI node in the LKML=
+ (
+https://lore.kernel.org/lkml/20220121143254.6432-7-sbinding@opensource.cirr=
+us.com/T/
+). It requires a special driver because declaring multiple SPI devices in o=
+ne
+ACPI node was not previously supported. Looking at the Linux source, I beli=
+eve
+this patch has been included in all the 5.18 release candidates. I've compi=
+led
+rc7 and made sure to set the .config file to include the new module
+CONFIG_SERIAL_MULTI_INSTANTIATE=3Dy.=20
+
+With this newly compiled kernel, I see this error in dmesg:
+Serial bus multi instantiate pseudo device driver CSC3551:00: error -ENODEV:
+failed to allocate SPI device CSC3551:00 from ACPI: -19
+
+Could this be a bug in the module? I'm not sure how to proceed from here. A=
+ny
+advice is appreciated.
+
+dmesg:=20
+Included as attachment
+
+ACPI dsdt.dsl Node:
+    Scope (_SB.PC00.SPI0)
+    {
+        Device (SPK1)
+        {
+            Name (_HID, "CSC3551")  // _HID: Hardware ID
+            Name (_SUB, "10431E02")  // _SUB: Subsystem ID
+            Name (_UID, One)  // _UID: Unique ID
+            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Sett=
+ings
+            {
+                Name (SBUF, ResourceTemplate ()
+                {
+                    SpiSerialBusV2 (0x0000, PolarityLow, FourWireMode, 0x08,
+                        ControllerInitiated, 0x003D0900, ClockPolarityLow,
+                        ClockPhaseFirst, "\\_SB.PC00.SPI0",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    SpiSerialBusV2 (0x0001, PolarityLow, FourWireMode, 0x08,
+                        ControllerInitiated, 0x003D0900, ClockPolarityLow,
+                        ClockPhaseFirst, "\\_SB.PC00.SPI0",
+                        0x00, ResourceConsumer, , Exclusive,
+                        )
+                    GpioIo (Exclusive, PullUp, 0x0000, 0x0000,
+IoRestrictionOutputOnly,
+                        "\\_SB.GPI0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0156
+                        }
+                    GpioIo (Exclusive, PullDown, 0x0000, 0x0000,
+IoRestrictionOutputOnly,
+                        "\\_SB.GPI0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0065
+                        }
+                    GpioIo (Exclusive, PullDown, 0x0000, 0x0000,
+IoRestrictionInputOnly,
+                        "\\_SB.GPI0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0165
+                        }
+                    GpioIo (Shared, PullUp, 0x0064, 0x0000,
+IoRestrictionInputOnly,
+                        "\\_SB.GPI0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0064
+                        }
+                    GpioInt (Edge, ActiveBoth, Shared, PullUp, 0x0064,
+                        "\\_SB.GPI0", 0x00, ResourceConsumer, ,
+                        )
+                        {   // Pin list
+                            0x0064
+                        }
+                })
+                Return (SBUF) /* \_SB_.PC00.SPI0.SPK1._CRS.SBUF */
+            }
+
+            Method (_STA, 0, NotSerialized)  // _STA: Status
+            {
+                If ((AMPP =3D=3D One))
+                {
+                    Return (0x0F)
+                }
+
+                Return (Zero)
+            }
+
+            Method (_DIS, 0, NotSerialized)  // _DIS: Disable Device
+            {
+            }
+        }
+    }
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
