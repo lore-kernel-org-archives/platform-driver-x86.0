@@ -2,157 +2,101 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 624A0C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 May 2022 17:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7461FC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 May 2022 18:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241027AbiERRkI (ORCPT
+        id S241395AbiERS3F (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 May 2022 13:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47604 "EHLO
+        Wed, 18 May 2022 14:29:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241024AbiERRkH (ORCPT
+        with ESMTP id S241376AbiERS3C (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 May 2022 13:40:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 86F7E2181C3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 May 2022 10:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652895597;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gDGt/Rg9AZsxvRBAhR5KeMESGNTYZAfpSxQWVhbVFk4=;
-        b=aHVEiwnWBk0+bNDlKvdW7YJL8Bd5u/UpHJTC2PfM55nP+om+NkEm0VXGBuZNeK82X3rl4J
-        Ew7sDpjXOoLfcc1oLhXwJ35SWlMepEk+k5JiJtlxWBT1FFIgftvQoE3VIiTCuemUn0i6Pd
-        Uy+QcSCH/pJfN66S78Rl3JqSYjGJhc0=
-Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com
- [209.85.217.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-635-2h1fvOGSNXCYqLRXdV_R6w-1; Wed, 18 May 2022 13:39:56 -0400
-X-MC-Unique: 2h1fvOGSNXCYqLRXdV_R6w-1
-Received: by mail-vs1-f72.google.com with SMTP id o33-20020a0561023fa100b00335cf2c9f84so314811vsv.12
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 May 2022 10:39:56 -0700 (PDT)
+        Wed, 18 May 2022 14:29:02 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C26FC205242
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 May 2022 11:29:00 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id j6so2881771pfe.13
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 May 2022 11:29:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rs+hYjREIGQRrA6fYOwB+iDuVdssLJ9+QtiHFV7DjL0=;
+        b=56li6rLC4mQzRo0A2kXqCOMihPnh37A1HauoHxo4CjJMMuRdOwMf25S0Gg0mhW4H1V
+         9oOovgGOyX26iKhdSLr17ZDHUilwvfRWItX4kYjWxDcZeJLKtWZdFg1s7NiWZdD+GyVM
+         KJttKiC4l1M5erBf0kwMAuhlpCYSJef4Ht1zQqWzfQh9U259WzwAbZy7OglBSEw1Kkt5
+         I8zIKarbcikHCK0RFMumk20d6U4SinIwA/pHFrpQj3jVTbbDOPe4Z+fN1BJJD+DxEI+B
+         O7cWYnGGR+LQ4+Smr495r3EMtIZ9/Hrn5EVFhO1s214IbW9ifIzL2RKvXS2XHrYOVgOA
+         InyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=gDGt/Rg9AZsxvRBAhR5KeMESGNTYZAfpSxQWVhbVFk4=;
-        b=TCTw6NoMZvQPEWTn4eQZtSo/dp1n62NefflKe6xe1I2B7E5GK3XlGqFr2cUffe7FyV
-         ghHYcM8pBG4Pv+V/NVjjZTE2VaKNZjdWdsspDuTiyuyA6TPBIljGzaZkKAiMPhGgYu2Y
-         vbqy8OYEP5hw1OgFumXuGfrURrPGvKn2etFPeDM2/rOLD3nHuQiZ/WLkJ8tRiT78aMi+
-         5UEdgHCwlbT+3bRTExSx61h9ke5p5rS4IrD/Y7ZZuUAXp16xvfCCf0jdLJ+tyRaSlrro
-         Dj8GgnTYbp7RK7TM955x5h4J2ZDydB4G5IMkANUDMIGA5doBSUa1gawRdGhGVCsrnjBB
-         5Kww==
-X-Gm-Message-State: AOAM531e42/MVDsha1OPgXL/+srAmT+GDJBVrcPx/fUd2SjKN+ylSqr/
-        Kfx64PBXar5mpS19SJB9FYVDT3DDxokK4Hwo/QBlIsFMuo3iTuEYC6v7RJued/7Y2gHX8eb40gn
-        6IKP8ljFWN+cCnJoj1TokidMuxpIFIjqQVQ==
-X-Received: by 2002:a05:6102:3706:b0:335:80be:bdf8 with SMTP id s6-20020a056102370600b0033580bebdf8mr527606vst.17.1652895595667;
-        Wed, 18 May 2022 10:39:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy+wcU/dWMJlXfe/1930TJzCPdcc6Su+ICGYsTy4q9ZBSUQnSN+lF31nL1TGBauw8+rrCkI6g==
-X-Received: by 2002:a05:6102:3706:b0:335:80be:bdf8 with SMTP id s6-20020a056102370600b0033580bebdf8mr527593vst.17.1652895595399;
-        Wed, 18 May 2022 10:39:55 -0700 (PDT)
-Received: from [192.168.8.138] (static-71-184-137-158.bstnma.ftas.verizon.net. [71.184.137.158])
-        by smtp.gmail.com with ESMTPSA id 143-20020a1f1995000000b0034e6f1fd055sm246132vkz.31.2022.05.18.10.39.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 May 2022 10:39:54 -0700 (PDT)
-Message-ID: <0c9c2c59ca9c351769921c47beb49dda79ddd5de.camel@redhat.com>
-Subject: Re: [PATCH 12/14] drm/nouveau: Register ACPI video backlight when
- nv_backlight registration fails
-From:   Lyude Paul <lyude@redhat.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Daniel Dadap <ddadap@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>, Xinhui <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     nouveau@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Date:   Wed, 18 May 2022 13:39:52 -0400
-In-Reply-To: <20220517152331.16217-13-hdegoede@redhat.com>
-References: <20220517152331.16217-1-hdegoede@redhat.com>
-         <20220517152331.16217-13-hdegoede@redhat.com>
-Organization: Red Hat Inc.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rs+hYjREIGQRrA6fYOwB+iDuVdssLJ9+QtiHFV7DjL0=;
+        b=7nUHNj6uFZw8LWIIz5QhyiGE/5g/Mlw58cEV95QmJ9SdATIO0W0AaVEprAchqxeqj4
+         UPx7z8ZXtmalO81fOylmJdp4LGNC1dikglpUAVNvMdwbPs0G/k8++KeThPzDCve/68wP
+         LEyJctqCMGjK00qee4Hzko0yZeRMklwa+0J3DV6qKMG2eCPVr43vPi3/b6MjsBaXFybi
+         zeg+oz3vUUa/ZL9Z2OOqLX4hOm5qTovRh8h2vd0WZ/ItZhPk92qFW1bPduYO2ATUC9oE
+         i8Zwqb6TeyxdxC5gfrH1l1R7yx6awlx2Ihf5NnBZ6ebIK6uLZOL11dXKyfyRu8FZJkj9
+         eUiw==
+X-Gm-Message-State: AOAM532ch661jynseWt3s6GL3Qc8RfBiqIi2uHGce/c4IHX0MlOPr27y
+        VEehpUXdR9H/OucJbp7z52yvwNKqBWIKNl1bVdFCEA==
+X-Google-Smtp-Source: ABdhPJwMwJen2kHUljMxLGhfJo+EhmxX/T4W59DWfSThgOD6IYw6SPZuTRmwpc9boSVZhrVVAKPtxD2J9ln9cKQkELQ=
+X-Received: by 2002:a63:e648:0:b0:3f2:7ade:8f86 with SMTP id
+ p8-20020a63e648000000b003f27ade8f86mr670271pgj.40.1652898540353; Wed, 18 May
+ 2022 11:29:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAKgze5YDD02AsrF0yESv2sptZ4qxyTMgCDmnOKcbQWjKQsJRsw@mail.gmail.com>
+ <YnUYLDjIThbIz/Uf@zn.tnic> <6d90c832-af4a-7ed6-4f72-dae08bb69c37@intel.com>
+ <CAPcyv4i73m6iPPfJE9CBdxf-OWGXahvGqvh6G-pqVO=3LB6ktQ@mail.gmail.com>
+ <47140A56-D3F8-4292-B355-5F92E3BA9F67@alien8.de> <6abea873-52a2-f506-b21b-4b567bee1874@intel.com>
+ <FDABC5C8-B80A-4977-9F97-5A8FC47F69D6@alien8.de> <4bc56567-e2ce-40ec-19ab-349c8de8d969@intel.com>
+ <CE52D65A-C9F4-408D-B18A-72D87495A433@alien8.de> <CAD2FfiHe3hCSNHEA0mSWPbH4LEWhj+FgxkhO83U1GgYEJR6wrw@mail.gmail.com>
+ <YoSlzqSGLrQ+jdnD@zn.tnic>
+In-Reply-To: <YoSlzqSGLrQ+jdnD@zn.tnic>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 18 May 2022 11:28:49 -0700
+Message-ID: <CAPcyv4jv52nv=Q=gm783ysU8D56iHzh9-UJrqqkgUve0f_kyZw@mail.gmail.com>
+Subject: Re: [PATCH v8 0/8] x86: Show in sysfs if a memory node is able to do encryption
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Richard Hughes <hughsient@gmail.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Martin Fernandez <martin.fernandez@eclypsium.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, daniel.gutson@eclypsium.com,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, X86 ML <x86@kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        alex.bazhaniuk@eclypsium.com, Greg KH <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        "Huang, Kai" <kai.huang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 2022-05-17 at 17:23 +0200, Hans de Goede wrote:
-> Typically the acpi_video driver will initialize before nouveau, which
-> used to cause /sys/class/backlight/acpi_video0 to get registered and then
-> nouveau would register its own nv_backlight device later. After which
-> the drivers/acpi/video_detect.c code unregistered the acpi_video0 device
-> to avoid there being 2 backlight devices.
-> 
-> This means that userspace used to briefly see 2 devices and the
-> disappearing of acpi_video0 after a brief time confuses the systemd
-> backlight level save/restore code, see e.g.:
-> https://bbs.archlinux.org/viewtopic.php?id=269920
-> 
-> To fix this the ACPI video code has been modified to make backlight class
-> device registration a separate step, relying on the drm/kms driver to
-> ask for the acpi_video backlight registration after it is done setting up
-> its native backlight device.
-> 
-> Add a call to the new acpi_video_register_backlight() when native backlight
-> device registration has failed / was skipped to ensure that there is a
-> backlight device available before the drm_device gets registered with
-> userspace.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/gpu/drm/nouveau/nouveau_backlight.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_backlight.c
-> b/drivers/gpu/drm/nouveau/nouveau_backlight.c
-> index f56ff797c78c..0ae8793357a4 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_backlight.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_backlight.c
-> @@ -436,6 +436,13 @@ nouveau_backlight_init(struct drm_connector *connector)
->  
->  fail_alloc:
->         kfree(bl);
-> +       /*
-> +        * If we get here we have an internal panel, but no nv_backlight,
-> +        * try registering an ACPI video backlight device instead.
-> +        */
-> +       if (ret == 0)
-> +               acpi_video_register_backlight();
+On Wed, May 18, 2022 at 12:53 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, May 16, 2022 at 09:39:06AM +0100, Richard Hughes wrote:
+> > This is still something consumers need; at the moment users have no
+> > idea if data is *actually* being encrypted.
+>
+> As it was already pointed out - that's in /proc/cpuinfo.
 
-Assuming we don't need to return the value of acpi_video_register_backlight()
-here:
-
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-
-> +
->         return ret;
->  }
->  
-
--- 
-Cheers,
- Lyude Paul (she/her)
- Software Engineer at Red Hat
-
+For TME you still need to compare it against the EFI memory map as
+there are exclusion ranges for things like persistent memory. Given
+that persistent memory can be forced into volatile "System RAM"
+operation by various command line options and driver overrides, you
+need to at least trim the assumptions of what is encrypted to the
+default "conventional memory" conveyed by platform firmware / BIOS.
