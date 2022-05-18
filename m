@@ -2,115 +2,74 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0224C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 May 2022 20:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15623C43219
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 May 2022 21:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242511AbiERUXN (ORCPT
+        id S243007AbiERVAf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 May 2022 16:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
+        Wed, 18 May 2022 17:00:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242489AbiERUXM (ORCPT
+        with ESMTP id S242898AbiERVAR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 May 2022 16:23:12 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4328023F380;
-        Wed, 18 May 2022 13:23:11 -0700 (PDT)
-Received: from zn.tnic (p200300ea974657d0329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9746:57d0:329c:23ff:fea6:a903])
+        Wed, 18 May 2022 17:00:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EDCB2550AA;
+        Wed, 18 May 2022 14:00:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8A6DB1EC03AD;
-        Wed, 18 May 2022 22:23:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1652905385;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=kiP3CsxtGQt01zP15K1kxQEOaD5Egp8vF87dwKeKYL8=;
-        b=cfQxvj7SaeAWQCQZgNDAuheCGIvEi/o+BwUKpBXlQCx98/tzP4S1cxFICjF3KCwG83r3mO
-        tMgfYDjND/mIZQ0JHd2wD1TBCBrPqUWd4BMCiw0dw8M3Gm2435TeQVnQPiM3tnaj4Ww1+6
-        C2VzC/gIXuOFBVRrGEMeRkVj1TG1SAw=
-Date:   Wed, 18 May 2022 22:23:01 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Richard Hughes <hughsient@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Martin Fernandez <martin.fernandez@eclypsium.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, daniel.gutson@eclypsium.com,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, X86 ML <x86@kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        alex.bazhaniuk@eclypsium.com, Greg KH <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        "Huang, Kai" <kai.huang@intel.com>
-Subject: Re: [PATCH v8 0/8] x86: Show in sysfs if a memory node is able to do
- encryption
-Message-ID: <YoVVpRBGp23ZOMVf@zn.tnic>
-References: <6d90c832-af4a-7ed6-4f72-dae08bb69c37@intel.com>
- <CAPcyv4i73m6iPPfJE9CBdxf-OWGXahvGqvh6G-pqVO=3LB6ktQ@mail.gmail.com>
- <47140A56-D3F8-4292-B355-5F92E3BA9F67@alien8.de>
- <6abea873-52a2-f506-b21b-4b567bee1874@intel.com>
- <FDABC5C8-B80A-4977-9F97-5A8FC47F69D6@alien8.de>
- <4bc56567-e2ce-40ec-19ab-349c8de8d969@intel.com>
- <CE52D65A-C9F4-408D-B18A-72D87495A433@alien8.de>
- <CAD2FfiHe3hCSNHEA0mSWPbH4LEWhj+FgxkhO83U1GgYEJR6wrw@mail.gmail.com>
- <YoSlzqSGLrQ+jdnD@zn.tnic>
- <CAPcyv4jv52nv=Q=gm783ysU8D56iHzh9-UJrqqkgUve0f_kyZw@mail.gmail.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9B7D960B82;
+        Wed, 18 May 2022 21:00:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4BDCC34118;
+        Wed, 18 May 2022 21:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652907608;
+        bh=KcS5GI4xf1k64PlWdqRXj976hlEmI3j8PQlC7U+Rs4U=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=eVuCqyttWm3s81U5rgu5NjkkkKPWZdWATppI6afGf+VTj6TXIZN9Hwnl/7xhQky6Q
+         mjYUJOcu6em4FApsXOHKPue2KsHmWzhc+HWL5AYO0uxdz+sr/bx7ykV7moJSeMLoMr
+         rOLc7YHGgiapwNmZl3rk0/C6AdMPa3LrH0SZoZhG7ZjADck/eh7GTNp/3qOuk2kR55
+         BGiboC/7kjN57A5+CH4VGeMVA8SANjbXWcjQ+AKS67mGzbq0kVi9m+mzdTdkYy9bbQ
+         P/zbU3GCXC2OR2j9nOxsHu5mKM1e0EQNn31ZCjmTvi0Z0YRsfFy4nu7kTTZl2qJe+m
+         bDMBDeYlT1nGA==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jv52nv=Q=gm783ysU8D56iHzh9-UJrqqkgUve0f_kyZw@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20220503114607.98844-2-hdegoede@redhat.com>
+References: <20220503114607.98844-1-hdegoede@redhat.com> <20220503114607.98844-2-hdegoede@redhat.com>
+Subject: Re: [PATCH 1/1] platform/x86: Drop the PMC_ATOM Kconfig option
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-clk@vger.kernel.org
+To:     Andy Shevchenko <andy@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>
+Date:   Wed, 18 May 2022 14:00:06 -0700
+User-Agent: alot/0.10
+Message-Id: <20220518210007.E4BDCC34118@smtp.kernel.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, May 18, 2022 at 11:28:49AM -0700, Dan Williams wrote:
-> On Wed, May 18, 2022 at 12:53 AM Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > On Mon, May 16, 2022 at 09:39:06AM +0100, Richard Hughes wrote:
-> > > This is still something consumers need; at the moment users have no
-> > > idea if data is *actually* being encrypted.
-> >
-> > As it was already pointed out - that's in /proc/cpuinfo.
-> 
-> For TME you still need to compare it against the EFI memory map as
-> there are exclusion ranges for things like persistent memory. Given
-> that persistent memory can be forced into volatile "System RAM"
-> operation by various command line options and driver overrides, you
-> need to at least trim the assumptions of what is encrypted to the
-> default "conventional memory" conveyed by platform firmware / BIOS.
+Quoting Hans de Goede (2022-05-03 04:46:07)
+> The def_bool y PMC_ATOM Kconfig option provides a couple of symbols used
+> by the code enabled by the X86_INTEL_LPSS option and it registers some
+> clocks. These clocks are only registered on Bay Trail, Cherry Trail and
+> Brasswell Intel SoCs and kernels targeting these SoCs must always have
+> the X86_INTEL_LPSS option enabled otherwise many things will not work.
+>=20
+> Building the PMC_ATOM code on kernels which are not targeting the
+> mentioned SoCs and which do not have the X86_INTEL_LPSS enabled is
+> not useful.
+>=20
+> This means that we can simplify things by replacing the PMC_ATOM Kconfig
+> option in Makefiles with X86_INTEL_LPSS and then drop the option.
+>=20
+> Cc: Paul Gortmaker <paul.gortmaker@windriver.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
 
-So SME/SEV also has some exceptions to which memory is encrypted and
-which not. Doing device IO would be one example where you simply cannot
-encrypt.
-
-But that wasn't the original question - the original question is whether
-memory encryption is enabled on the system.
-
-Now, the nodes way of describing what is encrypted and what not is
-not enough either when you want to determine whether an arbitrary
-transaction is being done encrypted or not. You can do silly things
-as mapping a page decrypted even if the underlying hardware can do
-encryption and every other page is encrypted and still think that that
-page is encrypted too. But that would be a lie.
-
-So the whole problem space needs to be specified with a lot more detail
-as to what exact information userspace is going to need and how we can
-provide it to it.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Acked-by: Stephen Boyd <sboyd@kernel.org>
