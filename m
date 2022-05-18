@@ -2,48 +2,49 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76309C43219
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 May 2022 12:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8513CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 May 2022 12:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236495AbiERM1R (ORCPT
+        id S236540AbiERM1Z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 May 2022 08:27:17 -0400
+        Wed, 18 May 2022 08:27:25 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236489AbiERM1O (ORCPT
+        with ESMTP id S236476AbiERM1Q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 May 2022 08:27:14 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB73A76CA;
-        Wed, 18 May 2022 05:27:09 -0700 (PDT)
+        Wed, 18 May 2022 08:27:16 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F70CB042C;
+        Wed, 18 May 2022 05:27:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 901F2B81FB9;
-        Wed, 18 May 2022 12:27:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D3FC34117;
-        Wed, 18 May 2022 12:27:05 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E0892B81F43;
+        Wed, 18 May 2022 12:27:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D00FC385AA;
+        Wed, 18 May 2022 12:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652876826;
-        bh=y1xog3J27YTwN0A9xZLgHTReF4/FxWbtCjlVdhy8QJY=;
+        s=k20201202; t=1652876829;
+        bh=3KXaNdVrYk/EFhR1Fb+di4Uk5jeldvRSpV8whhTzXI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KFj2DXIRo1N/U3qEMl2Iy2DE+pSVPenlaK9KFY4mkHbOj6WHGecZdpgwDUSBoueHF
-         0wwUw+x8j+X/UYNQRj4VhrZBN5I9G/8XAoYYqPnDdvEmZJa1IAt7sWZjKp+L1XfpQm
-         5pR+GKEgKvMPi/9PuPkVtEHDBnxkvUIeGYJz60k1OAaIPO60J/s7KkIlkNhcekD2GK
-         Dh1c57fI3FxFPrPL3uZTcKTEBJ3x5Kf/EcSkly4ucx73O0hPSwUqJXh3e+SKZzG0fH
-         wx7M/PdOwD5sZAF8plxYGh2S8Lr6ICUklhrAl4gzPQ5/pSP1IZPbjVtWZR/bEHepAg
-         j7Wt3bB8fNkfQ==
+        b=Jojmq3VmctB7noT++uireC0mrhq9loboeq8GtOPJ0vOyyQZqt5KJvEOKmVHXJ9mRr
+         M92+VFD2loF4qURoODqWrbbQCdIloGtNpSpSNVF7XpTFyrsy5uTelFgiljgxaYH7qc
+         iFaHNpEe7ckHI2EMJUBkbSGDdLJtf+QA0hTysvQtogxuC0KbrlYxZx7wOQ//7qb9WE
+         ti02ilDyCTD9kzpDc60v4hbwpq6kRvkRP9GJxYSt1pQSHcN5lF+L4qi5j3NdvHYvnr
+         f8UKyMBNxbHTJSL/wxkA+j4uOZ9Tn0PGa0bq6tQeIHYdk+6epsgH0KyO2LZyuDe6fJ
+         8n4oCciebSsDw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
-        Mark Pearson <markpearson@lenvo.com>,
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, hmh@hmh.eng.br,
-        markgross@kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.17 09/23] platform/x86: thinkpad_acpi: Convert btusb DMI list to quirks
-Date:   Wed, 18 May 2022 08:26:22 -0400
-Message-Id: <20220518122641.342120-9-sashal@kernel.org>
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        David Arcari <darcari@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.17 11/23] platform/x86/intel: Fix 'rmmod pmt_telemetry' panic
+Date:   Wed, 18 May 2022 08:26:24 -0400
+Message-Id: <20220518122641.342120-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220518122641.342120-1-sashal@kernel.org>
 References: <20220518122641.342120-1-sashal@kernel.org>
@@ -55,135 +56,93 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+From: Prarit Bhargava <prarit@redhat.com>
 
-[ Upstream commit c25d7f32e3e209462cd82e6e93e66b72dbb2308f ]
+[ Upstream commit 2cdfa0c20d58da3757054797c2974c967035926a ]
 
-DMI matching in thinkpad_acpi happens local to a function meaning
-quirks can only match that function.
+'rmmod pmt_telemetry' panics with:
 
-Future changes to thinkpad_acpi may need to quirk other code, so
-change this to use a quirk infrastructure.
+ BUG: kernel NULL pointer dereference, address: 0000000000000040
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0
+ Oops: 0000 [#1] PREEMPT SMP NOPTI
+ CPU: 4 PID: 1697 Comm: rmmod Tainted: G S      W        --------  ---  5.18.0-rc4 #3
+ Hardware name: Intel Corporation Alder Lake Client Platform/AlderLake-P DDR5 RVP, BIOS ADLPFWI1.R00.3056.B00.2201310233 01/31/2022
+ RIP: 0010:device_del+0x1b/0x3d0
+ Code: e8 1a d9 e9 ff e9 58 ff ff ff 48 8b 08 eb dc 0f 1f 44 00 00 41 56 41 55 41 54 55 48 8d af 80 00 00 00 53 48 89 fb 48 83 ec 18 <4c> 8b 67 40 48 89 ef 65 48 8b 04 25 28 00 00 00 48 89 44 24 10 31
+ RSP: 0018:ffffb520415cfd60 EFLAGS: 00010286
+ RAX: 0000000000000070 RBX: 0000000000000000 RCX: 0000000000000000
+ RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000000
+ RBP: 0000000000000080 R08: ffffffffffffffff R09: ffffb520415cfd78
+ R10: 0000000000000002 R11: ffffb520415cfd78 R12: 0000000000000000
+ R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ FS:  00007f7e198e5740(0000) GS:ffff905c9f700000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000040 CR3: 000000010782a005 CR4: 0000000000770ee0
+ PKRU: 55555554
+ Call Trace:
+  <TASK>
+  ? __xa_erase+0x53/0xb0
+  device_unregister+0x13/0x50
+  intel_pmt_dev_destroy+0x34/0x60 [pmt_class]
+  pmt_telem_remove+0x40/0x50 [pmt_telemetry]
+  auxiliary_bus_remove+0x18/0x30
+  device_release_driver_internal+0xc1/0x150
+  driver_detach+0x44/0x90
+  bus_remove_driver+0x74/0xd0
+  auxiliary_driver_unregister+0x12/0x20
+  pmt_telem_exit+0xc/0xe4a [pmt_telemetry]
+  __x64_sys_delete_module+0x13a/0x250
+  ? syscall_trace_enter.isra.19+0x11e/0x1a0
+  do_syscall_64+0x58/0x80
+  ? syscall_exit_to_user_mode+0x12/0x30
+  ? do_syscall_64+0x67/0x80
+  ? syscall_exit_to_user_mode+0x12/0x30
+  ? do_syscall_64+0x67/0x80
+  ? syscall_exit_to_user_mode+0x12/0x30
+  ? do_syscall_64+0x67/0x80
+  ? exc_page_fault+0x64/0x140
+  entry_SYSCALL_64_after_hwframe+0x44/0xae
+ RIP: 0033:0x7f7e1803a05b
+ Code: 73 01 c3 48 8b 0d 2d 4e 38 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d fd 4d 38 00 f7 d8 64 89 01 48
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Tested-by: Mark Pearson <markpearson@lenvo.com>
-Link: https://lore.kernel.org/r/20220429030501.1909-2-mario.limonciello@amd.com
+The probe function, pmt_telem_probe(), adds an entry for devices even if
+they have not been initialized.  This results in the array of initialized
+devices containing both initialized and uninitialized entries.  This
+causes a panic in the remove function, pmt_telem_remove() which expects
+the array to only contain initialized entries.
+
+Only use an entry when a device is initialized.
+
+Cc: "David E. Box" <david.e.box@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Gross <markgross@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org
+Signed-off-by: David Arcari <darcari@redhat.com>
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Reviewed-by: David E. Box <david.e.box@linux.intel.com>
+Link: https://lore.kernel.org/r/20220429122322.2550003-1-prarit@redhat.com
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel/pmt/telemetry.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 3fb8cda31eb9..c43586f1cb4b 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -309,6 +309,15 @@ struct ibm_init_struct {
- 	struct ibm_struct *data;
- };
+diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
+index 6b6f3e2a617a..f73ecfd4a309 100644
+--- a/drivers/platform/x86/intel/pmt/telemetry.c
++++ b/drivers/platform/x86/intel/pmt/telemetry.c
+@@ -103,7 +103,7 @@ static int pmt_telem_probe(struct auxiliary_device *auxdev, const struct auxilia
+ 	auxiliary_set_drvdata(auxdev, priv);
  
-+/* DMI Quirks */
-+struct quirk_entry {
-+	bool btusb_bug;
-+};
-+
-+static struct quirk_entry quirk_btusb_bug = {
-+	.btusb_bug = true,
-+};
-+
- static struct {
- 	u32 bluetooth:1;
- 	u32 hotkey:1;
-@@ -338,6 +347,7 @@ static struct {
- 	u32 hotkey_poll_active:1;
- 	u32 has_adaptive_kbd:1;
- 	u32 kbd_lang:1;
-+	struct quirk_entry *quirks;
- } tp_features;
+ 	for (i = 0; i < intel_vsec_dev->num_resources; i++) {
+-		struct intel_pmt_entry *entry = &priv->entry[i];
++		struct intel_pmt_entry *entry = &priv->entry[priv->num_entries];
  
- static struct {
-@@ -4361,9 +4371,10 @@ static void bluetooth_exit(void)
- 	bluetooth_shutdown();
- }
- 
--static const struct dmi_system_id bt_fwbug_list[] __initconst = {
-+static const struct dmi_system_id fwbug_list[] __initconst = {
- 	{
- 		.ident = "ThinkPad E485",
-+		.driver_data = &quirk_btusb_bug,
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_BOARD_NAME, "20KU"),
-@@ -4371,6 +4382,7 @@ static const struct dmi_system_id bt_fwbug_list[] __initconst = {
- 	},
- 	{
- 		.ident = "ThinkPad E585",
-+		.driver_data = &quirk_btusb_bug,
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_BOARD_NAME, "20KV"),
-@@ -4378,6 +4390,7 @@ static const struct dmi_system_id bt_fwbug_list[] __initconst = {
- 	},
- 	{
- 		.ident = "ThinkPad A285 - 20MW",
-+		.driver_data = &quirk_btusb_bug,
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_BOARD_NAME, "20MW"),
-@@ -4385,6 +4398,7 @@ static const struct dmi_system_id bt_fwbug_list[] __initconst = {
- 	},
- 	{
- 		.ident = "ThinkPad A285 - 20MX",
-+		.driver_data = &quirk_btusb_bug,
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_BOARD_NAME, "20MX"),
-@@ -4392,6 +4406,7 @@ static const struct dmi_system_id bt_fwbug_list[] __initconst = {
- 	},
- 	{
- 		.ident = "ThinkPad A485 - 20MU",
-+		.driver_data = &quirk_btusb_bug,
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_BOARD_NAME, "20MU"),
-@@ -4399,6 +4414,7 @@ static const struct dmi_system_id bt_fwbug_list[] __initconst = {
- 	},
- 	{
- 		.ident = "ThinkPad A485 - 20MV",
-+		.driver_data = &quirk_btusb_bug,
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_BOARD_NAME, "20MV"),
-@@ -4421,7 +4437,8 @@ static int __init have_bt_fwbug(void)
- 	 * Some AMD based ThinkPads have a firmware bug that calling
- 	 * "GBDC" will cause bluetooth on Intel wireless cards blocked
- 	 */
--	if (dmi_check_system(bt_fwbug_list) && pci_dev_present(fwbug_cards_ids)) {
-+	if (tp_features.quirks && tp_features.quirks->btusb_bug &&
-+	    pci_dev_present(fwbug_cards_ids)) {
- 		vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_RFKILL,
- 			FW_BUG "disable bluetooth subdriver for Intel cards\n");
- 		return 1;
-@@ -11438,6 +11455,7 @@ static void thinkpad_acpi_module_exit(void)
- 
- static int __init thinkpad_acpi_module_init(void)
- {
-+	const struct dmi_system_id *dmi_id;
- 	int ret, i;
- 
- 	tpacpi_lifecycle = TPACPI_LIFE_INIT;
-@@ -11477,6 +11495,10 @@ static int __init thinkpad_acpi_module_init(void)
- 		return -ENODEV;
- 	}
- 
-+	dmi_id = dmi_first_match(fwbug_list);
-+	if (dmi_id)
-+		tp_features.quirks = dmi_id->driver_data;
-+
- 	/* Device initialization */
- 	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, -1,
- 							NULL, 0);
+ 		ret = intel_pmt_dev_create(entry, &pmt_telem_ns, intel_vsec_dev, i);
+ 		if (ret < 0)
 -- 
 2.35.1
 
