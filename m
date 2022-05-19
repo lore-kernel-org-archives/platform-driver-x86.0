@@ -2,158 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741FCC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 May 2022 11:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1922CC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 May 2022 12:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237311AbiESLJ1 (ORCPT
+        id S229921AbiESMV2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 May 2022 07:09:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
+        Thu, 19 May 2022 08:21:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237168AbiESLJY (ORCPT
+        with ESMTP id S237930AbiESMVG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 May 2022 07:09:24 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD0DFB0429;
-        Thu, 19 May 2022 04:09:22 -0700 (PDT)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4L3nCd4PfdzjWwl;
-        Thu, 19 May 2022 19:08:29 +0800 (CST)
-Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 19 May 2022 19:09:20 +0800
-Received: from [10.174.178.120] (10.174.178.120) by
- dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 19 May 2022 19:09:19 +0800
-Message-ID: <7058b8d8-c0cb-108e-0db9-2fdf5fb154cf@huawei.com>
-Date:   Thu, 19 May 2022 19:09:18 +0800
+        Thu, 19 May 2022 08:21:06 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE3F6341;
+        Thu, 19 May 2022 05:21:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652962865; x=1684498865;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=oBSyY7X6t4ROiq+8EMvXp6xQPws7d2kgaBMrTI4wyuU=;
+  b=XWNeSRmhJDcQ9jhn0fJW5Ucc9pFbFStj1jTeTlsPkEQ6op4v0uuwb2yQ
+   r6rcdDU56u7MfPRrHAR1RIdxL8+S881p2e6p0/eSciF1e1UesyqDbEm/w
+   VvkCiQjrNRNs2o3BnyYEt98YCvk8RcLNXV9Y1OtYsN729Vvqf0OkICsZK
+   jhHuvEeH2FCCmGmfb2xjRxZbHh3xnNq02V2SEGUZNeWTTbp0lQI+4AO8N
+   jL2APZKhNA+c5tg2D1AqbC9Gye6AP+5mkNs6dIWefrTt0xcY119KrGL0J
+   Hyx4ngLHFAzdeJkcCTjpq1tF9lUDuHcyICUHQeHrKK7Ro2oZoseZ9FfGV
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="259755724"
+X-IronPort-AV: E=Sophos;i="5.91,237,1647327600"; 
+   d="scan'208";a="259755724"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 05:21:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,237,1647327600"; 
+   d="scan'208";a="714956163"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 19 May 2022 05:21:02 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: intel_cht_int33fe: Set driver data
+Date:   Thu, 19 May 2022 15:21:03 +0300
+Message-Id: <20220519122103.78546-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 0/2] Add support to relocate kernel image to mirrored
- region
-To:     <ardb@kernel.org>
-CC:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <corbet@lwn.net>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-        <x86@kernel.org>, <dvhart@infradead.org>, <andy@infradead.org>,
-        <rppt@kernel.org>, <paulmck@kernel.org>, <peterz@infradead.org>,
-        <jroedel@suse.de>, <songmuchun@bytedance.com>, <macro@orcam.me.uk>,
-        <frederic@kernel.org>, <W_Armin@gmx.de>, <john.garry@huawei.com>,
-        <seanjc@google.com>, <tsbogend@alpha.franken.de>,
-        <anshuman.khandual@arm.com>, <chenhuacai@kernel.org>,
-        <david@redhat.com>, <gpiccoli@igalia.com>, <mark.rutland@arm.com>,
-        <wangkefeng.wang@huawei.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>,
-        <mawupeng1@huawei.com>
-References: <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
- <20220419070150.254377-1-mawupeng1@huawei.com>
- <CAMj1kXHr2RdYSPor1st1ZnL=O42c8N6e=bNG+eFhatfefWLUrw@mail.gmail.com>
- <c65d22b4-f654-21aa-bd5f-d4f8b0939a25@huawei.com>
-From:   mawupeng <mawupeng1@huawei.com>
-In-Reply-To: <c65d22b4-f654-21aa-bd5f-d4f8b0939a25@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.120]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Module removal fails because cht_int33fe_typec_remove()
+tries to access driver data that does not exist. Fixing by
+assigning the data at the end of probe.
 
+Fixes: 915623a80b5a ("platform/x86: intel_cht_int33fe: Switch to DMI modalias based loading")
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/platform/x86/intel/chtwc_int33fe.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-在 2022/5/7 17:28, mawupeng 写道:
-> 
-> 
-> 在 2022/5/3 17:58, Ard Biesheuvel 写道:
->> On Tue, 19 Apr 2022 at 08:43, Wupeng Ma <mawupeng1@huawei.com> wrote:
->>>
->>> From: Ma Wupeng <mawupeng1@huawei.com>
->>>
->>> Now system image will perfer to be located to mirrored regions both KASLR
->>> on and off.
->>>
->>
->> Hello Ma Wupeng,
->>
->> I wonder if we could simplify this as follows:
->> - ignore the non-KASLR case for now, and rely on the bootloader  > load the image into mirrored memory if it exists;
-> 
-> In grub, memory for static image is allocated via the following path:
-> 
-> grub_cmd_linux
->    kernel = grub_malloc(filelen)
->    kernel_alloc_addr = grub_efi_allocate_any_pages (kernel_alloc_pages)
->    grub_memcpy (kernel_addr, kernel, grub_min(filelen, kernel_size))
->     grub_loader_set (grub_linux_boot, grub_linux_unload, 0)
-> 
-> Can we get memory from mirrored region by the following steps:
-> 1. get memory map by calling grub_efi_get_memory_map()
-> 2. iter all memory map to find a suitable mirrored memory area
-> 3. locate kernel image to this area
-> 
-> So, if kaslr is not enabled
->   - grub will load kernel into mirrored region
-> else
->   - arm64-stub.c will relocate kernel image to mirrored region
-> 
-> Is this feasible?
+diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
+index 0de509fbf0209..c52ac23e23315 100644
+--- a/drivers/platform/x86/intel/chtwc_int33fe.c
++++ b/drivers/platform/x86/intel/chtwc_int33fe.c
+@@ -389,6 +389,8 @@ static int cht_int33fe_typec_probe(struct platform_device *pdev)
+ 		goto out_unregister_fusb302;
+ 	}
+ 
++	platform_set_drvdata(pdev, data);
++
+ 	return 0;
+ 
+ out_unregister_fusb302:
+-- 
+2.35.1
 
-Is this a feasible proposal to relocate the static kernel image itself
-into more reliable memory?
-
-> 
->> - simplify the KASLR case to the below.
-> 
-> Yes, we can certainly do this. I will remove my code and use yours.
-> 
->>
->> I think this is reasonable, because it means we take mirrored memory
->> into account when we decide to move the image anyway, but expect the
->> boot chain to take care of this if there is no need to move the image.
->>
->> -------------8<------------------
->> --- a/drivers/firmware/efi/libstub/randomalloc.c
->> +++ b/drivers/firmware/efi/libstub/randomalloc.c
->> @@ -56,6 +56,7 @@ efi_status_t efi_random_alloc(unsigned long size,
->>                                unsigned long random_seed)
->>   {
->>          unsigned long map_size, desc_size, total_slots = 0, target_slot;
->> +       unsigned long total_mirrored_slots = 0;
->>          unsigned long buff_size;
->>          efi_status_t status;
->>          efi_memory_desc_t *memory_map;
->> @@ -86,8 +87,14 @@ efi_status_t efi_random_alloc(unsigned long size,
->>                  slots = get_entry_num_slots(md, size, ilog2(align));
->>                  MD_NUM_SLOTS(md) = slots;
->>                  total_slots += slots;
->> +               if (md->attribute & EFI_MEMORY_MORE_RELIABLE)
->> +                       total_mirrored_slots += slots;
->>          }
->>
->> +       /* only consider mirrored slots for randomization if any exist */
->> +       if (total_mirrored_slots > 0)
->> +               total_slots = total_mirrored_slots;
->> +
->>          /* find a random number between 0 and total_slots */
->>          target_slot = (total_slots * (u64)(random_seed & U32_MAX)) >> 32;
->>
->> @@ -107,6 +114,10 @@ efi_status_t efi_random_alloc(unsigned long size,
->>                  efi_physical_addr_t target;
->>                  unsigned long pages;
->>
->> +               if (total_mirrored_slots > 0 &&
->> +                   !(md->attribute & EFI_MEMORY_MORE_RELIABLE))
->> +                       continue;
->> +
->>                  if (target_slot >= MD_NUM_SLOTS(md)) {
->>                          target_slot -= MD_NUM_SLOTS(md);
->>                          continue;
->> .
