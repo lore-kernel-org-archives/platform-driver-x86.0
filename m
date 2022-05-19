@@ -2,98 +2,89 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF41C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 May 2022 17:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87204C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 May 2022 17:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242802AbiESRiw (ORCPT
+        id S242969AbiESRoK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 May 2022 13:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58794 "EHLO
+        Thu, 19 May 2022 13:44:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242863AbiESRiu (ORCPT
+        with ESMTP id S239575AbiESRoJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 May 2022 13:38:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2DE16A5035
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 May 2022 10:38:47 -0700 (PDT)
+        Thu, 19 May 2022 13:44:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 28B7B674F4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 May 2022 10:44:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652981926;
+        s=mimecast20190719; t=1652982245;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xT+DddQugG4iwTysI8HRLb1sjtX9nO4NqgI0BDmJlBE=;
-        b=W+H+FzDD4XagpdcXbkHHfYxKHOd9be1q8m8kfWs/YASByGlIdW+RD64is6+nDryaSmevXu
-        V83pnIegwSK84bkzQh3HiJf4jWRQg9OlJpuzhxna199WrncaO7sC4Wo1L8v5eIts4v1dwU
-        JNOP9tdTqickMmpGnncAZj7w2gSaUYk=
+        bh=TbKUDAKlg/Ogjr+4QtQJqlmidAs8wGDhpgalHiP6hOo=;
+        b=GncvwfsXmWksaV2D/D5dcRUcq2QlVL2Vurwa27vjeFOviWblnoM8H49ltvuZgG8HV5gdas
+        hOu5Kn/4mqGiNqZ1ZZFLmPI3X2Mmx6NyM+i2b7ikKLcf2++j8xA8gqX7P6VhrSb1jaUW3B
+        QQz0V+QcyzpgLBxtEfDgkZRSDcaBW/4=
 Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
  [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-571-F74pHaolPNapKTF3T6iyxA-1; Thu, 19 May 2022 13:38:45 -0400
-X-MC-Unique: F74pHaolPNapKTF3T6iyxA-1
-Received: by mail-ed1-f69.google.com with SMTP id i22-20020aa7dd16000000b0042a9f9e2272so4037655edv.6
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 May 2022 10:38:44 -0700 (PDT)
+ us-mta-612-jj7lnYWoOEqIRkDOBaXYQA-1; Thu, 19 May 2022 13:44:04 -0400
+X-MC-Unique: jj7lnYWoOEqIRkDOBaXYQA-1
+Received: by mail-ed1-f69.google.com with SMTP id i22-20020aa7dd16000000b0042a9f9e2272so4044935edv.6
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 May 2022 10:44:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=xT+DddQugG4iwTysI8HRLb1sjtX9nO4NqgI0BDmJlBE=;
-        b=sMZgGciY528WI/39ZkZbwwd+SlkA5dHr8uuZjrUbt68PrCJtkRQEydUq/fPSdcvkWj
-         H/XOAm+qQ4KrtkkvLooJfzHMM8JPeEUgcZlRLztnwb6yV5w7gvjLBi2Riq/J6sRmTig7
-         hbusPRwsEO+yM4q4nBz0wpPFATP/DvYWHSJWlYIOq3n2hen/JSAKBw19xA4d8VRS4QGU
-         m223wO7vY/yUHPC+75UBU8LzzCS53Wu1o+5StNdMfsznq6uMz1AAPtxA1WeGZFZpSjag
-         xphuRrf6WFXnLR/emhlpI5xTxXyXVHYi+irMCkg2FCH6TdKzESyFWaRfwQ7YudPI1raM
-         SFJQ==
-X-Gm-Message-State: AOAM532QLNOzDYlbFFexa/L9ccfmYO+iIH0DMvNpWGuOjA/J6R2v6CL/
-        xUlxZdaBmHAzIgcsPyK+UKR6ldK89SLtlEl8Fta+ojGn3xPpRfVwfaQSatttwcCWr3fS5Y1knNl
-        t8ayeneUqKVM21Qz/ebEzpi2PjeRDT0JqsA==
-X-Received: by 2002:a17:907:6d96:b0:6fe:6da7:6bc6 with SMTP id sb22-20020a1709076d9600b006fe6da76bc6mr5329354ejc.57.1652981923950;
-        Thu, 19 May 2022 10:38:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwEMjWFkQfd18c2iV1zR2cO0D5V9rR1DXWUrSOCmVrIAC5vA4qCGn5clilMna1lxljOfhD4tg==
-X-Received: by 2002:a17:907:6d96:b0:6fe:6da7:6bc6 with SMTP id sb22-20020a1709076d9600b006fe6da76bc6mr5329338ejc.57.1652981923701;
-        Thu, 19 May 2022 10:38:43 -0700 (PDT)
+        bh=TbKUDAKlg/Ogjr+4QtQJqlmidAs8wGDhpgalHiP6hOo=;
+        b=m1ZtHY+A5Ozidbt2gaCnVZjo5GtY81VF4BHS9dil6N5uHL/SA6bBPDpVx/nTTIg1N7
+         0ONCaFvsa6YyDfMswXONKe/vC5ON/ESZLdulJ0LjzLfyywAo5wLvA+wPZcr4/SaXI4ce
+         ++nxeRf4/zIvcJSYhyZJ2AEMo4VJG3AKzCB2Yoq5ntXfeys2HOHpi1hVE6bJCBz7FSoi
+         BJC3qldoKqkuPJu2hO3ThpVHYdAM+Qy0FDmIb3QjIKDsqbU3BM/bKenlvonJFVlIh20f
+         YtIp2A0J/A7dYyF3ny5m5sNHwoOpAQZPv9fmmzH+NNAcM1/VmFBHofjH9lvd5hzYzkE5
+         N0lg==
+X-Gm-Message-State: AOAM531//bAe2eCy4e4MVsAGIPyX5E0nUrry5iI3xBN+pY7esvEPqSg/
+        CkiQYlOt8gWpzaNwPeYYM935zF6xs/Vt45MOikwyDEu8V3iPVOeFrgbXHA1lXX1sgcRPPWKhdlx
+        JFeftcaWn6t0VHRF4xU4o7laoEJZ2JxDzmA==
+X-Received: by 2002:a05:6402:2999:b0:428:bb4d:6cea with SMTP id eq25-20020a056402299900b00428bb4d6ceamr6631356edb.29.1652982242776;
+        Thu, 19 May 2022 10:44:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzvMbOp5T/ObRZXQ6Jq5u59322uAqzlrp5apy+zFigpuah5J4H5qKyzhYRShJqiKytyVEbuWA==
+X-Received: by 2002:a05:6402:2999:b0:428:bb4d:6cea with SMTP id eq25-20020a056402299900b00428bb4d6ceamr6631339edb.29.1652982242610;
+        Thu, 19 May 2022 10:44:02 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id jl7-20020a17090775c700b006fea2035036sm320340ejc.86.2022.05.19.10.38.42
+        by smtp.gmail.com with ESMTPSA id v18-20020a056402349200b0042ac43be19dsm3339522edc.3.2022.05.19.10.44.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 May 2022 10:38:43 -0700 (PDT)
-Message-ID: <e683e5b5-05f0-dc2d-2c0c-cbccba3dcf98@redhat.com>
-Date:   Thu, 19 May 2022 19:38:42 +0200
+        Thu, 19 May 2022 10:44:02 -0700 (PDT)
+Message-ID: <b08e3ae2-18b8-fe4d-7658-c51baf2dd197@redhat.com>
+Date:   Thu, 19 May 2022 19:44:01 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH v3] platform/x86: intel-hid: fix _DSM function index
- handling
+Subject: Re: [PATCH] platform/x86: intel_cht_int33fe: Set driver data
 Content-Language: en-US
-To:     =?UTF-8?Q?Michael_Niew=c3=b6hner?= <linux@mniewoehner.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alex Hung <alex.hung@canonical.com>,
-        Mark Gross <markgross@kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Kosina <trivial@kernel.org>
-References: <44828f285aeacf0e941f4f6452b190b46146043f.camel@mniewoehner.de>
- <CAHp75VcoLqByXy_VdhAu-j9oU_cL7FhdcegG=ePGkNK=cD+wKA@mail.gmail.com>
- <66f813f5bcc724a0f6dd5adefe6a9728dbe509e3.camel@mniewoehner.de>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220519122103.78546-1-heikki.krogerus@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <66f813f5bcc724a0f6dd5adefe6a9728dbe509e3.camel@mniewoehner.de>
+In-Reply-To: <20220519122103.78546-1-heikki.krogerus@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 5/17/22 20:31, Michael Niewöhner wrote:
-> intel_hid_dsm_fn_mask is a bit mask containing one bit for each function
-> index. Fix the function index check in intel_hid_evaluate_method
-> accordingly, which was missed in commit 97ab4516205e ("platform/x86:
-> intel-hid: fix _DSM function index handling").
+On 5/19/22 14:21, Heikki Krogerus wrote:
+> Module removal fails because cht_int33fe_typec_remove()
+> tries to access driver data that does not exist. Fixing by
+> assigning the data at the end of probe.
 > 
-> Fixes: 97ab4516205e ("platform/x86: intel-hid: fix _DSM function index handling")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Michael Niewöhner <linux@mniewoehner.de>
+> Fixes: 915623a80b5a ("platform/x86: intel_cht_int33fe: Switch to DMI modalias based loading")
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -112,28 +103,23 @@ Regards,
 Hans
 
 
+
+
 > ---
-> Changes in v3:
-> Added Fixes tag
+>  drivers/platform/x86/intel/chtwc_int33fe.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Changes in v2:
-> Added Cc to stable
-> 
->  drivers/platform/x86/intel/hid.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-> index 13f8cf70b9ae..5c39d40a701b 100644
-> --- a/drivers/platform/x86/intel/hid.c
-> +++ b/drivers/platform/x86/intel/hid.c
-> @@ -238,7 +238,7 @@ static bool intel_hid_evaluate_method(acpi_handle handle,
+> diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
+> index 0de509fbf0209..c52ac23e23315 100644
+> --- a/drivers/platform/x86/intel/chtwc_int33fe.c
+> +++ b/drivers/platform/x86/intel/chtwc_int33fe.c
+> @@ -389,6 +389,8 @@ static int cht_int33fe_typec_probe(struct platform_device *pdev)
+>  		goto out_unregister_fusb302;
+>  	}
 >  
->         method_name = (char *)intel_hid_dsm_fn_to_method[fn_index];
+> +	platform_set_drvdata(pdev, data);
+> +
+>  	return 0;
 >  
-> -       if (!(intel_hid_dsm_fn_mask & fn_index))
-> +       if (!(intel_hid_dsm_fn_mask & BIT(fn_index)))
->                 goto skip_dsm_eval;
->  
->         obj = acpi_evaluate_dsm_typed(handle, &intel_dsm_guid,
-> 
+>  out_unregister_fusb302:
 
