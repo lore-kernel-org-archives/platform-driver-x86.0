@@ -2,185 +2,158 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE162C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 May 2022 09:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741FCC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 May 2022 11:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235765AbiESJDB (ORCPT
+        id S237311AbiESLJ1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 May 2022 05:03:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53024 "EHLO
+        Thu, 19 May 2022 07:09:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235755AbiESJC7 (ORCPT
+        with ESMTP id S237168AbiESLJY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 May 2022 05:02:59 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3660A5022;
-        Thu, 19 May 2022 02:02:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652950978; x=1684486978;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=hAoQkRu47IyaWQTtveq3c7aHdT3liXee0nWJIpO68aY=;
-  b=KnfdPscxlT8KXdzqv75Z1ANV1KHBgEGg+OdxYgkoWkDUH8X5cV0uVJEB
-   5fOfAZhJCy/DzImsYRScRePnUMfzMyCHNTEgvtEfb0U/JdEBgdmshYMPN
-   Um+82sYVNuLCjS4AFqdfqQ/ig6ORQs3JxLp9eBxjspcGULTIhe2ldBnLo
-   9iHHyAVlkB2OcTTTMIe5uC7lr4T2V+j9oHd9cP9DzzVyfuxHheTtRTXTW
-   rqB/oWg+bdc5MyV5eei86tVUbrERwFQWq/a9G50r3xUYuzIlxuCWZb89Y
-   pnD/6oXJC5Ww8rKbMCzLkM9wHexDfSWSZaZ+IVxmXbeflj4cH5lGF10Vm
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="252001680"
-X-IronPort-AV: E=Sophos;i="5.91,237,1647327600"; 
-   d="scan'208";a="252001680"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 02:02:57 -0700
-X-IronPort-AV: E=Sophos;i="5.91,237,1647327600"; 
-   d="scan'208";a="545991736"
-Received: from tszulist-mobl.ger.corp.intel.com (HELO localhost) ([10.249.146.157])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 02:02:49 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
-        Daniel Dadap <ddadap@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     nouveau@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 01/14] ACPI: video: Add a native function parameter to
- acpi_video_get_backlight_type()
-In-Reply-To: <dc30ddc2-b00e-234e-5ec3-b1ea79c74082@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20220517152331.16217-1-hdegoede@redhat.com>
- <20220517152331.16217-2-hdegoede@redhat.com> <87y1yzdxtk.fsf@intel.com>
- <dc30ddc2-b00e-234e-5ec3-b1ea79c74082@redhat.com>
-Date:   Thu, 19 May 2022 12:02:46 +0300
-Message-ID: <87pmk9dhe1.fsf@intel.com>
+        Thu, 19 May 2022 07:09:24 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD0DFB0429;
+        Thu, 19 May 2022 04:09:22 -0700 (PDT)
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4L3nCd4PfdzjWwl;
+        Thu, 19 May 2022 19:08:29 +0800 (CST)
+Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 19 May 2022 19:09:20 +0800
+Received: from [10.174.178.120] (10.174.178.120) by
+ dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 19 May 2022 19:09:19 +0800
+Message-ID: <7058b8d8-c0cb-108e-0db9-2fdf5fb154cf@huawei.com>
+Date:   Thu, 19 May 2022 19:09:18 +0800
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH 0/2] Add support to relocate kernel image to mirrored
+ region
+To:     <ardb@kernel.org>
+CC:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <corbet@lwn.net>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+        <x86@kernel.org>, <dvhart@infradead.org>, <andy@infradead.org>,
+        <rppt@kernel.org>, <paulmck@kernel.org>, <peterz@infradead.org>,
+        <jroedel@suse.de>, <songmuchun@bytedance.com>, <macro@orcam.me.uk>,
+        <frederic@kernel.org>, <W_Armin@gmx.de>, <john.garry@huawei.com>,
+        <seanjc@google.com>, <tsbogend@alpha.franken.de>,
+        <anshuman.khandual@arm.com>, <chenhuacai@kernel.org>,
+        <david@redhat.com>, <gpiccoli@igalia.com>, <mark.rutland@arm.com>,
+        <wangkefeng.wang@huawei.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>,
+        <mawupeng1@huawei.com>
+References: <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
+ <20220419070150.254377-1-mawupeng1@huawei.com>
+ <CAMj1kXHr2RdYSPor1st1ZnL=O42c8N6e=bNG+eFhatfefWLUrw@mail.gmail.com>
+ <c65d22b4-f654-21aa-bd5f-d4f8b0939a25@huawei.com>
+From:   mawupeng <mawupeng1@huawei.com>
+In-Reply-To: <c65d22b4-f654-21aa-bd5f-d4f8b0939a25@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.178.120]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500014.china.huawei.com (7.185.36.153)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 18 May 2022, Hans de Goede <hdegoede@redhat.com> wrote:
-> Hi,
->
-> On 5/18/22 10:55, Jani Nikula wrote:
->> On Tue, 17 May 2022, Hans de Goede <hdegoede@redhat.com> wrote:
->>> ATM on x86 laptops where we want userspace to use the acpi_video backlight
->>> device we often register both the GPU's native backlight device and
->>> acpi_video's firmware acpi_video# backlight device. This relies on
->>> userspace preferring firmware type backlight devices over native ones, but
->>> registering 2 backlight devices for a single display really is undesirable.
+
+
+在 2022/5/7 17:28, mawupeng 写道:
+> 
+> 
+> 在 2022/5/3 17:58, Ard Biesheuvel 写道:
+>> On Tue, 19 Apr 2022 at 08:43, Wupeng Ma <mawupeng1@huawei.com> wrote:
 >>>
->>> On x86 laptops where the native GPU backlight device should be used,
->>> the registering of other backlight devices is avoided by their drivers
->>> using acpi_video_get_backlight_type() and only registering their backlight
->>> if the return value matches their type.
+>>> From: Ma Wupeng <mawupeng1@huawei.com>
 >>>
->>> acpi_video_get_backlight_type() uses
->>> backlight_device_get_by_type(BACKLIGHT_RAW) to determine if a native
->>> driver is available and will never return native if this returns
->>> false. This means that the GPU's native backlight registering code
->>> cannot just call acpi_video_get_backlight_type() to determine if it
->>> should register its backlight, since acpi_video_get_backlight_type() will
->>> never return native until the native backlight has already registered.
+>>> Now system image will perfer to be located to mirrored regions both KASLR
+>>> on and off.
 >>>
->>> To fix this add a native function parameter to
->>> acpi_video_get_backlight_type(), which when set to true will make
->>> acpi_video_get_backlight_type() behave as if a native backlight has
->>> already been registered.
+>>
+>> Hello Ma Wupeng,
+>>
+>> I wonder if we could simplify this as follows:
+>> - ignore the non-KASLR case for now, and rely on the bootloader  > load the image into mirrored memory if it exists;
+> 
+> In grub, memory for static image is allocated via the following path:
+> 
+> grub_cmd_linux
+>    kernel = grub_malloc(filelen)
+>    kernel_alloc_addr = grub_efi_allocate_any_pages (kernel_alloc_pages)
+>    grub_memcpy (kernel_addr, kernel, grub_min(filelen, kernel_size))
+>     grub_loader_set (grub_linux_boot, grub_linux_unload, 0)
+> 
+> Can we get memory from mirrored region by the following steps:
+> 1. get memory map by calling grub_efi_get_memory_map()
+> 2. iter all memory map to find a suitable mirrored memory area
+> 3. locate kernel image to this area
+> 
+> So, if kaslr is not enabled
+>   - grub will load kernel into mirrored region
+> else
+>   - arm64-stub.c will relocate kernel image to mirrored region
+> 
+> Is this feasible?
 
-Regarding the question below, this is the part that throws me off.
+Is this a feasible proposal to relocate the static kernel image itself
+into more reliable memory?
 
->>>
->>> Note that all current callers are updated to pass false for the new
->>> parameter, so this change in itself causes no functional changes.
->> 
->> 
->>> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
->>> index becc198e4c22..0a06f0edd298 100644
->>> --- a/drivers/acpi/video_detect.c
->>> +++ b/drivers/acpi/video_detect.c
->>> @@ -17,12 +17,14 @@
->>>   * Otherwise vendor specific drivers like thinkpad_acpi, asus-laptop,
->>>   * sony_acpi,... can take care about backlight brightness.
->>>   *
->>> - * Backlight drivers can use acpi_video_get_backlight_type() to determine
->>> - * which driver should handle the backlight.
->>> + * Backlight drivers can use acpi_video_get_backlight_type() to determine which
->>> + * driver should handle the backlight. RAW/GPU-driver backlight drivers must
->>> + * pass true for the native function argument, other drivers must pass false.
->>>   *
->>>   * If CONFIG_ACPI_VIDEO is neither set as "compiled in" (y) nor as a module (m)
->>>   * this file will not be compiled and acpi_video_get_backlight_type() will
->>> - * always return acpi_backlight_vendor.
->>> + * return acpi_backlight_native when its native argument is true and
->>> + * acpi_backlight_vendor when it is false.
->>>   */
->> 
->> Frankly, I think the boolean native parameter here, and at the call
->> sites, is confusing, and the slightly different explanations in the
->> commit message and comment here aren't helping.
->
-> Can you elaborate the "slightly different explanations in the
-> commit message and comment" part a bit (so that I can fix this) ?
->
->> I suggest adding a separate function that the native backlight drivers
->> should use. I think it's more obvious all around, and easier to document
->> too.
->
-> Code wise I think this would mean renaming the original and
-> then adding 2 wrappers, but that is fine with me. I've no real
-> preference either way and I'm happy with adding a new variant of
-> acpi_video_get_backlight_type() for the native backlight drivers
-> any suggestion for a name ?
-
-Alternatively, do the native backlight drivers have any need for the
-actual backlight type information from acpi? They only need to be able
-to ask if they should register themselves, right?
-
-I understand this sounds like bikeshedding, but I'm trying to avoid
-duplicating the conditions in the drivers where a single predicate
-function call could be sufficient, and the complexity could be hidden in
-acpi.
-
-	if (!acpi_video_backlight_use_native())
-		return;
-
-Perhaps all the drivers/platform/x86/* backlight drivers could use:
-
-	if (acpi_video_backlight_use_vendor())
-		...
-
-You can still use the native parameter etc. internally, but just hide
-the details from everyone else, and, hopefully, make it harder for them
-to do silly things?
-
-BR,
-Jani.
-
-
->
-> Regards,
->
-> Hans
->
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+> 
+>> - simplify the KASLR case to the below.
+> 
+> Yes, we can certainly do this. I will remove my code and use yours.
+> 
+>>
+>> I think this is reasonable, because it means we take mirrored memory
+>> into account when we decide to move the image anyway, but expect the
+>> boot chain to take care of this if there is no need to move the image.
+>>
+>> -------------8<------------------
+>> --- a/drivers/firmware/efi/libstub/randomalloc.c
+>> +++ b/drivers/firmware/efi/libstub/randomalloc.c
+>> @@ -56,6 +56,7 @@ efi_status_t efi_random_alloc(unsigned long size,
+>>                                unsigned long random_seed)
+>>   {
+>>          unsigned long map_size, desc_size, total_slots = 0, target_slot;
+>> +       unsigned long total_mirrored_slots = 0;
+>>          unsigned long buff_size;
+>>          efi_status_t status;
+>>          efi_memory_desc_t *memory_map;
+>> @@ -86,8 +87,14 @@ efi_status_t efi_random_alloc(unsigned long size,
+>>                  slots = get_entry_num_slots(md, size, ilog2(align));
+>>                  MD_NUM_SLOTS(md) = slots;
+>>                  total_slots += slots;
+>> +               if (md->attribute & EFI_MEMORY_MORE_RELIABLE)
+>> +                       total_mirrored_slots += slots;
+>>          }
+>>
+>> +       /* only consider mirrored slots for randomization if any exist */
+>> +       if (total_mirrored_slots > 0)
+>> +               total_slots = total_mirrored_slots;
+>> +
+>>          /* find a random number between 0 and total_slots */
+>>          target_slot = (total_slots * (u64)(random_seed & U32_MAX)) >> 32;
+>>
+>> @@ -107,6 +114,10 @@ efi_status_t efi_random_alloc(unsigned long size,
+>>                  efi_physical_addr_t target;
+>>                  unsigned long pages;
+>>
+>> +               if (total_mirrored_slots > 0 &&
+>> +                   !(md->attribute & EFI_MEMORY_MORE_RELIABLE))
+>> +                       continue;
+>> +
+>>                  if (target_slot >= MD_NUM_SLOTS(md)) {
+>>                          target_slot -= MD_NUM_SLOTS(md);
+>>                          continue;
+>> .
