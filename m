@@ -2,80 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1922CC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 May 2022 12:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEC6C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 May 2022 13:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbiESMV2 (ORCPT
+        id S233558AbiESNHR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 May 2022 08:21:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53308 "EHLO
+        Thu, 19 May 2022 09:07:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237930AbiESMVG (ORCPT
+        with ESMTP id S230339AbiESNHQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 May 2022 08:21:06 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE3F6341;
-        Thu, 19 May 2022 05:21:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652962865; x=1684498865;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=oBSyY7X6t4ROiq+8EMvXp6xQPws7d2kgaBMrTI4wyuU=;
-  b=XWNeSRmhJDcQ9jhn0fJW5Ucc9pFbFStj1jTeTlsPkEQ6op4v0uuwb2yQ
-   r6rcdDU56u7MfPRrHAR1RIdxL8+S881p2e6p0/eSciF1e1UesyqDbEm/w
-   VvkCiQjrNRNs2o3BnyYEt98YCvk8RcLNXV9Y1OtYsN729Vvqf0OkICsZK
-   jhHuvEeH2FCCmGmfb2xjRxZbHh3xnNq02V2SEGUZNeWTTbp0lQI+4AO8N
-   jL2APZKhNA+c5tg2D1AqbC9Gye6AP+5mkNs6dIWefrTt0xcY119KrGL0J
-   Hyx4ngLHFAzdeJkcCTjpq1tF9lUDuHcyICUHQeHrKK7Ro2oZoseZ9FfGV
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="259755724"
-X-IronPort-AV: E=Sophos;i="5.91,237,1647327600"; 
-   d="scan'208";a="259755724"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 05:21:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,237,1647327600"; 
-   d="scan'208";a="714956163"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 19 May 2022 05:21:02 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: intel_cht_int33fe: Set driver data
-Date:   Thu, 19 May 2022 15:21:03 +0300
-Message-Id: <20220519122103.78546-1-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        Thu, 19 May 2022 09:07:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CBCD6CA89
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 May 2022 06:07:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E21C761723
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 May 2022 13:07:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5299FC385AA
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 May 2022 13:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652965634;
+        bh=UdTdDBSb9hhpLNBK3B/J4A1rQ7r033NmYM3G49GpPoo=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=RF49Um/UhQeVSP6kriJ+5VDD0+h41nQFOp04rntdVmsj/1KAVa3sr1C/L7+gERhhB
+         +/hV4jm7KOr9jqtWadR0nch5ZuQ4V+DDNkPpf1iF2aZSyP1ifhiqbi0Z9go80sO+Cr
+         M7P8rJRHMv04nxLw7YAil6G98lBFw2jnEUPBi0pylwlnOjjq8lSt2pHHyN1vnoFZRr
+         OVMH91pUrDaH6NdNgRb0PqRlw2zKkFab3gOIQ3SybTGvXOK+L8yU/c+TuJfer0Ze4p
+         PHrqGbOeZSTIWSJny9LpvUMDn9G3C5dd8Euh9bIjcrMrc/xY4QtqOL07a1i8F5pDX1
+         1mc+5uYxvscuQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 41591CC13B4; Thu, 19 May 2022 13:07:14 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 19 May 2022 13:07:12 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: mikhail.v.gavrilov@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-WV2DcwkcxR@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Module removal fails because cht_int33fe_typec_remove()
-tries to access driver data that does not exist. Fixing by
-assigning the data at the end of probe.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Fixes: 915623a80b5a ("platform/x86: intel_cht_int33fe: Switch to DMI modalias based loading")
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/platform/x86/intel/chtwc_int33fe.c | 2 ++
- 1 file changed, 2 insertions(+)
+--- Comment #241 from Mikhail (mikhail.v.gavrilov@gmail.com) ---
+Denis, please answer the question.
+The driver `nct6775` I should manually loaded after each boot? Or it should=
+ be
+loaded automatically?
 
-diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
-index 0de509fbf0209..c52ac23e23315 100644
---- a/drivers/platform/x86/intel/chtwc_int33fe.c
-+++ b/drivers/platform/x86/intel/chtwc_int33fe.c
-@@ -389,6 +389,8 @@ static int cht_int33fe_typec_probe(struct platform_device *pdev)
- 		goto out_unregister_fusb302;
- 	}
- 
-+	platform_set_drvdata(pdev, data);
-+
- 	return 0;
- 
- out_unregister_fusb302:
--- 
-2.35.1
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
