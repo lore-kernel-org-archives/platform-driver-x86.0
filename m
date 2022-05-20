@@ -2,153 +2,141 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE1DC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 May 2022 06:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F239C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 May 2022 18:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244352AbiETGws (ORCPT
+        id S1348225AbiETSen (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 May 2022 02:52:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45840 "EHLO
+        Fri, 20 May 2022 14:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345919AbiETGwp (ORCPT
+        with ESMTP id S1343952AbiETSen (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 May 2022 02:52:45 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642B65DBDE;
-        Thu, 19 May 2022 23:52:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 6A5F6CE27A2;
-        Fri, 20 May 2022 06:52:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE11FC36AEC;
-        Fri, 20 May 2022 06:52:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653029558;
-        bh=zCfFFCGe/AG+lzsCAng2qYtEBpCVx3Hvfd4T25qLHJE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WURZpMvuRSprpYKhNklruvBIefHI85zzQkD5d63METtxWJZOcNUBsD8gmOWTCiD/r
-         On+R+elW5y/dl4os9iiXTGjQqjvIyWop3RW9c0A8UoHt+65GRqd0IHR6j9XK5ngzlZ
-         S2UHt7+9DEc5nz9e1JlgKFv7TRqge110TfdF1g9+r6AAOh2u0Tv34ynxBdZdBI00oj
-         pCQTjZ46N/Rd40Q8bncUrGbMm+ktr7+h4q7s/AI6IXPcdV3l89da4c0Y6BkWrOl9FY
-         M70p/HMOiq8e2qp1x8ix0w2nNuv1vj07LBKJw8T+XimTrImA0vmQSrDybzvelhzNz4
-         96NYdg/9e2lEQ==
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-f1eafa567cso5939229fac.8;
-        Thu, 19 May 2022 23:52:38 -0700 (PDT)
-X-Gm-Message-State: AOAM532acDQN9Ht3Rv/8rP6qCbDTF7daGhOQq54StYfQc4Qv+lUk31De
-        08vqyVJnD4V6NbFoO8D+LfzYxm+I4KTuyeKIdPg=
-X-Google-Smtp-Source: ABdhPJz2W/7dvembodmCsWH351nKi/f5VpNYYyF6mV6O3gBLvZ7E0rPGjRInnvXyOVZQdqISea5dzKMcVurSNykdr58=
-X-Received: by 2002:a05:6870:eaa5:b0:da:b3f:2b45 with SMTP id
- s37-20020a056870eaa500b000da0b3f2b45mr5450734oap.228.1653029558029; Thu, 19
- May 2022 23:52:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
- <20220419070150.254377-1-mawupeng1@huawei.com> <CAMj1kXHr2RdYSPor1st1ZnL=O42c8N6e=bNG+eFhatfefWLUrw@mail.gmail.com>
- <c65d22b4-f654-21aa-bd5f-d4f8b0939a25@huawei.com> <7058b8d8-c0cb-108e-0db9-2fdf5fb154cf@huawei.com>
- <CAMj1kXHnL12j6FPGtEeSQB2-kHzoVF+LJMUF9YBq43Yi1UntDg@mail.gmail.com>
-In-Reply-To: <CAMj1kXHnL12j6FPGtEeSQB2-kHzoVF+LJMUF9YBq43Yi1UntDg@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 20 May 2022 08:52:27 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFP9kA_rJ8DfP1Ln=W++xL1Rvdojb8ZuNLoOJx2mLkysA@mail.gmail.com>
-Message-ID: <CAMj1kXFP9kA_rJ8DfP1Ln=W++xL1Rvdojb8ZuNLoOJx2mLkysA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Add support to relocate kernel image to mirrored region
-To:     mawupeng <mawupeng1@huawei.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Fri, 20 May 2022 14:34:43 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26CD65FF06;
+        Fri, 20 May 2022 11:34:42 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id w4so12575953wrg.12;
+        Fri, 20 May 2022 11:34:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Bvgb2lQC/lXU1/Ce5R2fdk8VVqr9ldd55Cmvb2FG04=;
+        b=Tnva1bxMWOKs2UqctZ678Ff8MWwyt7pQaseYZ2MDJ+3GyUDgF5viImh1detkoBd1B6
+         YKxC2awW4A830XVPDuHwTJzGCWo5E0WuetPzvkDotXPqQoIQQ2R01ix3CfOo5IJRIBqP
+         XSSHC7PvHXaXIlGLSs5ynFI6qWX6T6z4PULIstgeURmE66hXexdQ5grYvSjjTtrIRuOC
+         vr0vjR/KZ9jN8yNIsgbWc2iC9BuqA9A1DTbdNpTw1mlifrqOOYzwn5qLjnwf+vOVSzEB
+         KIA4LEsDxpaKCsAi1DrvxKEuxCWB9S2GpwicMCBI8uO+RxCEbwhA/o/Gic7TRjNO0lLn
+         ELIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Bvgb2lQC/lXU1/Ce5R2fdk8VVqr9ldd55Cmvb2FG04=;
+        b=YDRJafk1kipNmVZul7qw7uvFARymDtoa2U53yjfB/WZAkwTlOBt5OVEngO99VRwyVN
+         kuUuSIT5BSg7+D5kq9M2XR49qOXJ3KII5/AwsNeCT8ttUNZ7YYC1xgMY3Egse2uswxxT
+         jluIvRqt+zsheema38J3bJ4Sj4TtdtTI+QJZym6B5ew/KpSxtovNDk+yACRnM1uAjZxP
+         1moSjgtFQdXpYZSCBNmqp4QJEBxSzODn4tcr5fc/tty+fusP9bR0j84VxcTn5sFCR+Sk
+         i75oT3c2W0pBqL79CQd73VNSz9G7ZXwHF2/JyHz0Uop9UOYpqFhFUk3ecEyLbMBeeZe5
+         rYvQ==
+X-Gm-Message-State: AOAM5303IbthLmJKhwyYCLuQmUBdFtYN19m919MC0GNqIv5IDybyGN/6
+        S3cGZ7sSqLbhDE6upkBZ190=
+X-Google-Smtp-Source: ABdhPJzBFOybRHQwepl7PhKKrktyPRT15xK3/W3FnElF3Q2IZ9Mk0too/QOoL1RiYQkCDtTGxdHPOw==
+X-Received: by 2002:a5d:68cf:0:b0:20c:ff58:37b with SMTP id p15-20020a5d68cf000000b0020cff58037bmr9412390wrw.448.1653071680604;
+        Fri, 20 May 2022 11:34:40 -0700 (PDT)
+Received: from xws.localdomain (pd9e5a9fe.dip0.t-ipconnect.de. [217.229.169.254])
+        by smtp.gmail.com with ESMTPSA id r9-20020adfa149000000b0020e62feca05sm3252081wrr.32.2022.05.20.11.34.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 May 2022 11:34:40 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>, songmuchun@bytedance.com,
-        macro@orcam.me.uk, Frederic Weisbecker <frederic@kernel.org>,
-        W_Armin@gmx.de, John Garry <john.garry@huawei.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        chenhuacai@kernel.org, David Hildenbrand <david@redhat.com>,
-        gpiccoli@igalia.com, Mark Rutland <mark.rutland@arm.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-ia64@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/10] platform/surface: aggregator: Add support for client hot-removal
+Date:   Fri, 20 May 2022 20:34:12 +0200
+Message-Id: <20220520183422.7185-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.36.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 20 May 2022 at 08:52, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Thu, 19 May 2022 at 13:09, mawupeng <mawupeng1@huawei.com> wrote:
-> >
-> >
-> >
-> > =E5=9C=A8 2022/5/7 17:28, mawupeng =E5=86=99=E9=81=93:
-> > >
-> > >
-> > > =E5=9C=A8 2022/5/3 17:58, Ard Biesheuvel =E5=86=99=E9=81=93:
-> > >> On Tue, 19 Apr 2022 at 08:43, Wupeng Ma <mawupeng1@huawei.com> wrote=
-:
-> > >>>
-> > >>> From: Ma Wupeng <mawupeng1@huawei.com>
-> > >>>
-> > >>> Now system image will perfer to be located to mirrored regions both=
- KASLR
-> > >>> on and off.
-> > >>>
-> > >>
-> > >> Hello Ma Wupeng,
-> > >>
-> > >> I wonder if we could simplify this as follows:
-> > >> - ignore the non-KASLR case for now, and rely on the bootloader  > l=
-oad the image into mirrored memory if it exists;
-> > >
-> > > In grub, memory for static image is allocated via the following path:
-> > >
-> > > grub_cmd_linux
-> > >    kernel =3D grub_malloc(filelen)
-> > >    kernel_alloc_addr =3D grub_efi_allocate_any_pages (kernel_alloc_pa=
-ges)
-> > >    grub_memcpy (kernel_addr, kernel, grub_min(filelen, kernel_size))
-> > >     grub_loader_set (grub_linux_boot, grub_linux_unload, 0)
-> > >
-> > > Can we get memory from mirrored region by the following steps:
-> > > 1. get memory map by calling grub_efi_get_memory_map()
-> > > 2. iter all memory map to find a suitable mirrored memory area
-> > > 3. locate kernel image to this area
-> > >
-> > > So, if kaslr is not enabled
-> > >   - grub will load kernel into mirrored region
-> > > else
-> > >   - arm64-stub.c will relocate kernel image to mirrored region
-> > >
-> > > Is this feasible?
-> >
-> > Is this a feasible proposal to relocate the static kernel image itself
-> > into more reliable memory?
-> >
->
-> I'm not sure, it all depends on the firmware.
->
-> When GRUB calls LoadImage(), the firmware will reallocate the image
-> and unpack it there. So it is really the firmware's job to ensure that
-> the image is loaded into a suitable location.
->
-> I have some code here that implements a EFI based decompressor, and
-> which loads the kernel image into mirrored memory if it exists,
-> without the need to move it again. It could trivially be modified to
-> deal with non-randomized loads as well.
->
+This series adds support for the type cover of the Surface Pro 8. On the
+Pro 8, the type cover is (unlike on previous generations) handled via
+the Surface System Aggregator Module (SSAM). As the type cover is
+detachable, care needs to be taken and the respective SSAM (HID) client
+devices need to be properly removed when detached and re-initialized
+when attached.
 
-Code is here
-https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=3Defi=
--decompressor-v2
+Therefore, this series does three things:
+
+ 1. Improve hot-removal support for SSAM client devices. When
+    hot-removing clients, subsequent communication may time out.
+
+    In the worst case, this can lead to problems when devices are
+    detached and re-attached quickly, before we can remove their
+    respective kernel representations. This can then lead to devices
+    being in an uninitialized state, preventing, for example, touchpad
+    gestures from working properly as the required HID feature report
+    has not been sent.
+
+    Therefore, handle hot-removal of devices more gracefully by avoiding
+    communication once it has been detected and ensure that devices are
+    actually removed.
+ 
+ 2. Generify SSAM subsystem hubs and add a KIP hub. On the Surface Pro
+    8, the KIP subsystem (only that abbreviation is known) is
+    responsible for managing type-cover devices. This hub acts as the
+    controller for device removal similar to the BAS (detachable base)
+    subsystem hub on the Surface Book 3 (therefore we can share most of
+    the code between them).
+
+ 3. Add the (HID) type-cover clients of the Surface Pro 8 to the
+    aggregator registry.
+
+Regards,
+Max
+
+
+Maximilian Luz (10):
+  platform/surface: aggregator: Allow devices to be marked as
+    hot-removed
+  platform/surface: aggregator: Allow notifiers to avoid communication
+    on unregistering
+  platform/surface: aggregator_registry: Use client device wrappers for
+    notifier registration
+  power/supply: surface_charger: Use client device wrappers for notifier
+    registration
+  power/supply: surface_battery: Use client device wrappers for notifier
+    registration
+  HID: surface-hid: Add support for hot-removal
+  platform/surface: aggregator: Add comment for KIP subsystem category
+  platform/surface: aggregator_registry: Generify subsystem hub
+    functionality
+  platform/surface: aggregator_registry: Add KIP device hub
+  platform/surface: aggregator_registry: Add support for keyboard cover
+    on Surface Pro 8
+
+ .../driver-api/surface_aggregator/client.rst  |   6 +-
+ drivers/hid/surface-hid/surface_hid_core.c    |  38 +-
+ .../platform/surface/aggregator/controller.c  |  53 ++-
+ .../surface/surface_aggregator_registry.c     | 401 +++++++++++++-----
+ drivers/power/supply/surface_battery.c        |   4 +-
+ drivers/power/supply/surface_charger.c        |   4 +-
+ include/linux/surface_aggregator/controller.h |  24 +-
+ include/linux/surface_aggregator/device.h     | 114 ++++-
+ include/linux/surface_aggregator/serial_hub.h |   2 +-
+ 9 files changed, 501 insertions(+), 145 deletions(-)
+
+-- 
+2.36.1
+
