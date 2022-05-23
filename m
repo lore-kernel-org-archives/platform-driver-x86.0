@@ -2,92 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F15C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 May 2022 18:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A11C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 May 2022 18:33:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241116AbiEWSDO (ORCPT
+        id S240802AbiEWSdc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 May 2022 14:03:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39910 "EHLO
+        Mon, 23 May 2022 14:33:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243587AbiEWSB5 (ORCPT
+        with ESMTP id S239388AbiEWSdT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 May 2022 14:01:57 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DA59DFF48;
-        Mon, 23 May 2022 10:46:51 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:281:8300:35::5f6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id B981660A;
-        Mon, 23 May 2022 17:46:05 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net B981660A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-        t=1653327965; bh=tKg2U0MvNTJAYNl6IAoyEFljp3YdzFQOTMvhJuCB7vw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=M8bVJTBgGchdemxpZMG8x4ui4vpVchupoKVbrRx8XiuM24+s4+3VDXEa9zJcDyRm9
-         aKa5VFSNgvNL2YktRd35Qc0+RI5Yx2qsv9yoh8Q+EmfuLI/l1BOYozhH7vAYGhhTO+
-         fTYW5iySlsQ3krhbMQxNcT74AWOhF41Bk/WWY/hADh6aU6Syh41n9TvDTVoHGoZ7/0
-         UQX6pqO+lb75dpi+JBmrb6GVKJLoo2rGyHDYb5cQNRa3JrccCNCtz4/BBfO/NWQylF
-         yjXwHwnquaWSzMFZW83wMQ3Zyt7GWAfBM9Zct1nH/q/zyOry2TaqTQzck1dfg08etg
-         nBi9EfqudA4wg==
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        rafael@kernel.org, hdegoede@redhat.com, markgross@kernel.org
+        Mon, 23 May 2022 14:33:19 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F4D7F134A;
+        Mon, 23 May 2022 11:07:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653329261; x=1684865261;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xO9+Il1COuI9460Hv2AB+G62aauLLV09YgyaLPckxgE=;
+  b=Vp1hZYYg27RvoLTD3VYUiXcI55o0Qu1X/DQkWtH/TvjDMW/dMHVcoysw
+   jj5QJJpPFXgTAxkGDDsQV0oQFImYmjNFf4/fO0Ev0vZ1U5M9uwduEZdZH
+   Xw+E3fGDqwdh69fojk3mKd/2wTl0t6h3GD1qFkPldyO5u/YGphO62SH6b
+   nwwkyar8wN8rgjx2bzO3Qn5g8eGZAfHZlmN87mEbq1Q4ftob14UFvZv6k
+   uPin5boCUxmYIzxyOUFwafcwvWGuP14gP8KCxCzUQlb+2nwZu5Z0THyKk
+   tV183/VQLqu1rhj0StcOC2EnFax4iBNiv1z0oRxDFDZ/E9yq64v1Pf7yJ
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10356"; a="253183301"
+X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
+   d="scan'208";a="253183301"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 11:00:30 -0700
+X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
+   d="scan'208";a="572227817"
+Received: from ijgarcia-mobl.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.212.152.3])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 11:00:29 -0700
+Message-ID: <19189e1c806bf812e41a400e826c5e23892900e0.camel@linux.intel.com>
+Subject: Re: [PATCH] Documentation: admin-guide: pm: Add Out of Band mode
+From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Jonathan Corbet <corbet@lwn.net>, rafael@kernel.org,
+        hdegoede@redhat.com, markgross@kernel.org
 Cc:     lenb@kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, prarit@redhat.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH] Documentation: admin-guide: pm: Add Out of Band mode
-In-Reply-To: <20220523172757.2351052-1-srinivas.pandruvada@linux.intel.com>
+        platform-driver-x86@vger.kernel.org, prarit@redhat.com
+Date:   Mon, 23 May 2022 11:00:29 -0700
+In-Reply-To: <871qwkb0rn.fsf@meer.lwn.net>
 References: <20220523172757.2351052-1-srinivas.pandruvada@linux.intel.com>
-Date:   Mon, 23 May 2022 11:46:04 -0600
-Message-ID: <871qwkb0rn.fsf@meer.lwn.net>
+         <871qwkb0rn.fsf@meer.lwn.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> writes:
+On Mon, 2022-05-23 at 11:46 -0600, Jonathan Corbet wrote:
+> Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> writes:
+> 
+> > Update documentation for using the tool to support performance
+> > level
+> > change via OOB (Out of Band) interface.
+> > 
+> > Signed-off-by: Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com>
+> > ---
+> >  .../admin-guide/pm/intel-speed-select.rst     | 19
+> > +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> > 
+> > diff --git a/Documentation/admin-guide/pm/intel-speed-select.rst
+> > b/Documentation/admin-guide/pm/intel-speed-select.rst
+> > index 0a1fbdb54bfe..4146a2da35ea 100644
+> > --- a/Documentation/admin-guide/pm/intel-speed-select.rst
+> > +++ b/Documentation/admin-guide/pm/intel-speed-select.rst
+> > @@ -262,6 +262,25 @@ Which shows that the base frequency now
+> > increased from 2600 MHz at performance
+> >  level 0 to 2800 MHz at performance level 4. As a result, any
+> > workload, which can
+> >  use fewer CPUs, can see a boost of 200 MHz compared to performance
+> > level 0.
+> >  
+> > +Changing performance level via BMC Interface
+> > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > +
+> > +It is possible to change SST-PP level using out of band (OOB)
+> > agent (Via some
+> > +remote management console, through BMC "Baseboard Management
+> > Controller"
+> > +interface). This mode is supported from the Sapphire Rapids
+> > processor
+> > +generation. The kernel and tool change to support this mode is
+> > added to Linux
+> > +kernel version 5.18. To enable this feature, kernel config
+> > +"CONFIG_INTEL_HFI_THERMAL" is required. The minimum version of the
+> > tool
+> > +is "v1.12" to support this feature, which is part of Linux kernel
+> > version 5.18.
+> > +
+> > +To support such configuration, this tool can be used as a daemon.
+> > Add
+> > +a command line option --oob::
+> > +
+> > +# intel-speed-select --oob
+> > +
+> 
+> This suggests you haven't actually built the documentation with your
+> change and verified that you got the result you were after.
+You mean I should print the result with the command? Something like
+this:
+#intel-speed-select --oob
+Intel(R) Speed Select Technology
+OOB mode is enabled and will run as daemon
 
-> Update documentation for using the tool to support performance level
-> change via OOB (Out of Band) interface.
->
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
->  .../admin-guide/pm/intel-speed-select.rst     | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->
-> diff --git a/Documentation/admin-guide/pm/intel-speed-select.rst b/Documentation/admin-guide/pm/intel-speed-select.rst
-> index 0a1fbdb54bfe..4146a2da35ea 100644
-> --- a/Documentation/admin-guide/pm/intel-speed-select.rst
-> +++ b/Documentation/admin-guide/pm/intel-speed-select.rst
-> @@ -262,6 +262,25 @@ Which shows that the base frequency now increased from 2600 MHz at performance
->  level 0 to 2800 MHz at performance level 4. As a result, any workload, which can
->  use fewer CPUs, can see a boost of 200 MHz compared to performance level 0.
->  
-> +Changing performance level via BMC Interface
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +It is possible to change SST-PP level using out of band (OOB) agent (Via some
-> +remote management console, through BMC "Baseboard Management Controller"
-> +interface). This mode is supported from the Sapphire Rapids processor
-> +generation. The kernel and tool change to support this mode is added to Linux
-> +kernel version 5.18. To enable this feature, kernel config
-> +"CONFIG_INTEL_HFI_THERMAL" is required. The minimum version of the tool
-> +is "v1.12" to support this feature, which is part of Linux kernel version 5.18.
-> +
-> +To support such configuration, this tool can be used as a daemon. Add
-> +a command line option --oob::
-> +
-> +# intel-speed-select --oob
-> +
 
-This suggests you haven't actually built the documentation with your
-change and verified that you got the result you were after.  Literal
-blocks need to be indented.
+>   Literal
+> blocks need to be indented.
+I will submit v2.
 
 Thanks,
+Srinivas
 
-jon
+> 
+> Thanks,
+> 
+> jon
+
