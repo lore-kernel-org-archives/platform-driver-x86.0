@@ -2,141 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056EAC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 May 2022 11:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B4FC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 May 2022 11:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235011AbiEWLsj (ORCPT
+        id S235024AbiEWLx0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 May 2022 07:48:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41084 "EHLO
+        Mon, 23 May 2022 07:53:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234914AbiEWLsi (ORCPT
+        with ESMTP id S235029AbiEWLxZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 May 2022 07:48:38 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B71150E29;
-        Mon, 23 May 2022 04:48:37 -0700 (PDT)
-Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4L6FtM0ZgVzfZNG;
-        Mon, 23 May 2022 19:47:07 +0800 (CST)
-Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 23 May 2022 19:48:35 +0800
-Received: from [10.174.178.120] (10.174.178.120) by
- dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 23 May 2022 19:48:33 +0800
-Message-ID: <2a8cc751-dd72-6fe7-9a33-d6f24769f57d@huawei.com>
-Date:   Mon, 23 May 2022 19:48:33 +0800
+        Mon, 23 May 2022 07:53:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CAA3125C75
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 May 2022 04:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1653306803;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7F3S847gNoYJomgUoUZV18TXMjCkXEdtxQeLaDBDuhM=;
+        b=R6MM9teEuZ4e4PX647ku+P04aPnoq25kpPVIGHcRpK6fGqwrzXlfJlV/lQycT81b9ldgAS
+        Uo2WN/ATsx+kMeZlyrzEdmPf07lxpcRrQmnagA3qyVdsls7BOfpiWL16szaok8YyRfxdtF
+        u4EXFDOs+6n09hDnXjh72MLX1RNKLqs=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-144-hQqPdsrjNhGKzkucz4K9pA-1; Mon, 23 May 2022 07:53:22 -0400
+X-MC-Unique: hQqPdsrjNhGKzkucz4K9pA-1
+Received: by mail-ed1-f71.google.com with SMTP id f20-20020a50d554000000b0042abba35e60so10530401edj.15
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 May 2022 04:53:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=7F3S847gNoYJomgUoUZV18TXMjCkXEdtxQeLaDBDuhM=;
+        b=Db7aItQ6WYcKdgjKyrIuGc+0r6OeoQF0ZU9Ti/EH9/DrGfCIE10glPtMT+bB0bncYm
+         cOylVpo0LP2URSrPeX9HBFFxP3pFa4cUx9Cv7XMMqF2LWXthMzlJjkEDsBCrgvE5bpwq
+         mMpe6k7AVIU3/6ue/I2800VjZi3v5zsGyxWQNr5sRLrZ1Jnal/KjtXsNfBK8tGdk0fy8
+         OtCloz3ga8MKYGIZx5M9/rv+k+XzOkqU2pb6RlshgubJMJ5hUgIH9Srx98sCf5Unp6qC
+         68aXhZjW2lqUlOOeVDWHpWBDX9/x/A0fbEk+qh7AGbvMSnJemKRMcMYH3p/QbbfdxYod
+         4SgA==
+X-Gm-Message-State: AOAM533w9mDnx9X3qecyc0TFB4Ocz1Sn3cr86wnRAb4kUjq2Vzl04zkD
+        Hol9S5RCeIjDN1XiusUyBJYeYFj177MXiGo/i52cGHeEjZrlZF+JEBytMy4ge6llbc8TTRrqY9A
+        XwIzXhd+3v4IA6M2DBHmfAlrWXIQ+Eqd5oQ==
+X-Received: by 2002:aa7:cc01:0:b0:42a:402b:b983 with SMTP id q1-20020aa7cc01000000b0042a402bb983mr23397826edt.257.1653306801373;
+        Mon, 23 May 2022 04:53:21 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyZQC9f79vxf9n/pVL1esanudk6sncq8ii/E3gyGPk2KhpEeJpKzIAHGD8JrKhZmVEi+x9pKw==
+X-Received: by 2002:aa7:cc01:0:b0:42a:402b:b983 with SMTP id q1-20020aa7cc01000000b0042a402bb983mr23397812edt.257.1653306801228;
+        Mon, 23 May 2022 04:53:21 -0700 (PDT)
+Received: from [172.18.228.53] ([46.183.103.8])
+        by smtp.gmail.com with ESMTPSA id 11-20020a17090602cb00b006f3ef214e59sm6076484ejk.191.2022.05.23.04.53.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 May 2022 04:53:20 -0700 (PDT)
+Message-ID: <74b7b668-a1f6-596f-8000-041f9ca7b181@redhat.com>
+Date:   Mon, 23 May 2022 13:53:18 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH 0/2] Add support to relocate kernel image to mirrored
- region
-To:     <ardb@kernel.org>
-CC:     <akpm@linux-foundation.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <corbet@lwn.net>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-        <x86@kernel.org>, <dvhart@infradead.org>, <andy@infradead.org>,
-        <rppt@kernel.org>, <paulmck@kernel.org>, <peterz@infradead.org>,
-        <jroedel@suse.de>, <songmuchun@bytedance.com>, <macro@orcam.me.uk>,
-        <frederic@kernel.org>, <W_Armin@gmx.de>, <john.garry@huawei.com>,
-        <seanjc@google.com>, <tsbogend@alpha.franken.de>,
-        <anshuman.khandual@arm.com>, <chenhuacai@kernel.org>,
-        <david@redhat.com>, <gpiccoli@igalia.com>, <mark.rutland@arm.com>,
-        <wangkefeng.wang@huawei.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-efi@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <linux-mm@kvack.org>,
-        <mawupeng1@huawei.com>
-References: <CAMj1kXGSStDgj9ABmUaTLnBmpQFksh3wx4tx=mJohum4GQe3Gg@mail.gmail.com>
- <20220419070150.254377-1-mawupeng1@huawei.com>
- <CAMj1kXHr2RdYSPor1st1ZnL=O42c8N6e=bNG+eFhatfefWLUrw@mail.gmail.com>
- <c65d22b4-f654-21aa-bd5f-d4f8b0939a25@huawei.com>
- <7058b8d8-c0cb-108e-0db9-2fdf5fb154cf@huawei.com>
- <CAMj1kXHnL12j6FPGtEeSQB2-kHzoVF+LJMUF9YBq43Yi1UntDg@mail.gmail.com>
- <CAMj1kXFP9kA_rJ8DfP1Ln=W++xL1Rvdojb8ZuNLoOJx2mLkysA@mail.gmail.com>
-From:   mawupeng <mawupeng1@huawei.com>
-In-Reply-To: <CAMj1kXFP9kA_rJ8DfP1Ln=W++xL1Rvdojb8ZuNLoOJx2mLkysA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.120]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
+Subject: Re: [PATCH] x86, olpc: Avoid leak OF node on error
+Content-Language: en-US
+To:     cgel.zte@gmail.com, dvhart@infradead.org
+Cc:     andy@infradead.org, tglx@linutronix.de,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Minghao Chi <chi.minghao@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+References: <20220523111253.3114-1-chi.minghao@zte.com.cn>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220523111253.3114-1-chi.minghao@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
-
-在 2022/5/20 14:52, Ard Biesheuvel 写道:
-> On Fri, 20 May 2022 at 08:52, Ard Biesheuvel <ardb@kernel.org> wrote:
->>
->> On Thu, 19 May 2022 at 13:09, mawupeng <mawupeng1@huawei.com> wrote:
->>>
->>>
->>>
->>> 在 2022/5/7 17:28, mawupeng 写道:
->>>>
->>>>
->>>> 在 2022/5/3 17:58, Ard Biesheuvel 写道:
->>>>> On Tue, 19 Apr 2022 at 08:43, Wupeng Ma <mawupeng1@huawei.com> wrote:
->>>>>>
->>>>>> From: Ma Wupeng <mawupeng1@huawei.com>
->>>>>>
->>>>>> Now system image will perfer to be located to mirrored regions both KASLR
->>>>>> on and off.
->>>>>>
->>>>>
->>>>> Hello Ma Wupeng,
->>>>>
->>>>> I wonder if we could simplify this as follows:
->>>>> - ignore the non-KASLR case for now, and rely on the bootloader  > load the image into mirrored memory if it exists;
->>>>
->>>> In grub, memory for static image is allocated via the following path:
->>>>
->>>> grub_cmd_linux
->>>>     kernel = grub_malloc(filelen)
->>>>     kernel_alloc_addr = grub_efi_allocate_any_pages (kernel_alloc_pages)
->>>>     grub_memcpy (kernel_addr, kernel, grub_min(filelen, kernel_size))
->>>>      grub_loader_set (grub_linux_boot, grub_linux_unload, 0)
->>>>
->>>> Can we get memory from mirrored region by the following steps:
->>>> 1. get memory map by calling grub_efi_get_memory_map()
->>>> 2. iter all memory map to find a suitable mirrored memory area
->>>> 3. locate kernel image to this area
->>>>
->>>> So, if kaslr is not enabled
->>>>    - grub will load kernel into mirrored region
->>>> else
->>>>    - arm64-stub.c will relocate kernel image to mirrored region
->>>>
->>>> Is this feasible?
->>>
->>> Is this a feasible proposal to relocate the static kernel image itself
->>> into more reliable memory?
->>>
->>
->> I'm not sure, it all depends on the firmware.
->>
->> When GRUB calls LoadImage(), the firmware will reallocate the image
->> and unpack it there. So it is really the firmware's job to ensure that
->> the image is loaded into a suitable location.
->>
->> I have some code here that implements a EFI based decompressor, and
->> which loads the kernel image into mirrored memory if it exists,
->> without the need to move it again. It could trivially be modified to
->> deal with non-randomized loads as well.
->>
+On 5/23/22 13:12, cgel.zte@gmail.com wrote:
+> From: Minghao Chi <chi.minghao@zte.com.cn>
 > 
-> Code is here
-> https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-decompressor-v2
+> The OF node should be put before returning error in xo1_rtc_init(),
+> otherwise node's refcount will be leaked.
+> 
+> Reported-by: Zeal Robot <zealci@zte.com.cn>
+> Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
+> ---
+>  arch/x86/platform/olpc/olpc-xo1-rtc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/platform/olpc/olpc-xo1-rtc.c b/arch/x86/platform/olpc/olpc-xo1-rtc.c
+> index 57f210cda761..dc5ac56cd9dd 100644
+> --- a/arch/x86/platform/olpc/olpc-xo1-rtc.c
+> +++ b/arch/x86/platform/olpc/olpc-xo1-rtc.c
+> @@ -59,9 +59,9 @@ static int __init xo1_rtc_init(void)
+>  	struct device_node *node;
+>  
+>  	node = of_find_compatible_node(NULL, NULL, "olpc,xo1-rtc");
+> +	of_node_put(node);
+>  	if (!node)
+>  		return 0;
+> -	of_node_put(node);
+>  
+>  	pr_info("olpc-xo1-rtc: Initializing OLPC XO-1 RTC\n");
+>  	rdmsrl(MSR_RTC_DOMA_OFFSET, rtc_info.rtc_day_alarm);
 
-I will test this later.
+of_node_put on a NULL node is a no-op, so this patch
+does not make any functional difference and it makes the
+code harder to read.
 
-Thanks.
+nack.
 
-> .
+Regards,
+
+Hans
+
