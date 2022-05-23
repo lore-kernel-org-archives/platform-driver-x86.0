@@ -2,148 +2,98 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4D9C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 May 2022 17:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C0AC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 May 2022 17:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239738AbiEWRoI (ORCPT
+        id S241013AbiEWRoM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 May 2022 13:44:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35940 "EHLO
+        Mon, 23 May 2022 13:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242356AbiEWRhe (ORCPT
+        with ESMTP id S242218AbiEWRhZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 May 2022 13:37:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B05AC37A33;
-        Mon, 23 May 2022 10:31:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 29EB961175;
-        Mon, 23 May 2022 17:30:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10E96C385AA;
-        Mon, 23 May 2022 17:30:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1653327056;
-        bh=3KXaNdVrYk/EFhR1Fb+di4Uk5jeldvRSpV8whhTzXI4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dnOjPbV3/d6RKuatmuJPioxKEaUi0EtGDuJNFa3eVcHWBWv+QgK7DEKvk6fS5fXdr
-         fw164isQ0JDJ67KgqxF0nw1Usp9l/fpNAsWr1kLa+Bn1pqYLQxX4zljFdLKAay4MDV
-         niPscAojgTghwXnLe2WdbK6tVjxs1ePQ2Ey8uqoU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        David Arcari <darcari@redhat.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.17 143/158] platform/x86/intel: Fix rmmod pmt_telemetry panic
-Date:   Mon, 23 May 2022 19:05:00 +0200
-Message-Id: <20220523165853.999069582@linuxfoundation.org>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220523165830.581652127@linuxfoundation.org>
-References: <20220523165830.581652127@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 23 May 2022 13:37:25 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD4823150;
+        Mon, 23 May 2022 10:31:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653327070; x=1684863070;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yEKxJVGCY27SHm5dP9lIMOmKkOGFlFMyVfaXYrGEgOA=;
+  b=RKG5vLCn4NHSN0ULoje8CgbeSIYdoL1KJoT0CBSMYytoRuxF0YmwR+H6
+   D1bVmLCifpdthshBIGNMT2ohbycx+63KftIKeBdDeJ8pWcsb2kli88Ogc
+   JV90jFUf2cYNhTxBq1LBq/BQOYj3e9K3mhExiGNtzphmkRdmubewzLtQ/
+   5UdiilF60BqYdryKmob08gamuGFkxsx8/Km1NtJ1ibSa6gLWuoacUUwWf
+   BWcPeZ2Z95xG6edF4JgctdxfGM1ZpyjbKASUjmOpZGTpyWarbYVFe52lt
+   yfYpjrr/BYfY1OH13Llew0OMr5z2FiR3HAVocaEjX24ltLnE4mXr59rxG
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10356"; a="273290493"
+X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
+   d="scan'208";a="273290493"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 10:28:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
+   d="scan'208";a="577510072"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by fmsmga007.fm.intel.com with ESMTP; 23 May 2022 10:28:23 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     rafael@kernel.org, corbet@lwn.net, hdegoede@redhat.com,
+        markgross@kernel.org
+Cc:     lenb@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, prarit@redhat.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] Documentation: admin-guide: pm: Add Out of Band mode
+Date:   Mon, 23 May 2022 10:27:57 -0700
+Message-Id: <20220523172757.2351052-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Prarit Bhargava <prarit@redhat.com>
+Update documentation for using the tool to support performance level
+change via OOB (Out of Band) interface.
 
-[ Upstream commit 2cdfa0c20d58da3757054797c2974c967035926a ]
-
-'rmmod pmt_telemetry' panics with:
-
- BUG: kernel NULL pointer dereference, address: 0000000000000040
- #PF: supervisor read access in kernel mode
- #PF: error_code(0x0000) - not-present page
- PGD 0 P4D 0
- Oops: 0000 [#1] PREEMPT SMP NOPTI
- CPU: 4 PID: 1697 Comm: rmmod Tainted: G S      W        --------  ---  5.18.0-rc4 #3
- Hardware name: Intel Corporation Alder Lake Client Platform/AlderLake-P DDR5 RVP, BIOS ADLPFWI1.R00.3056.B00.2201310233 01/31/2022
- RIP: 0010:device_del+0x1b/0x3d0
- Code: e8 1a d9 e9 ff e9 58 ff ff ff 48 8b 08 eb dc 0f 1f 44 00 00 41 56 41 55 41 54 55 48 8d af 80 00 00 00 53 48 89 fb 48 83 ec 18 <4c> 8b 67 40 48 89 ef 65 48 8b 04 25 28 00 00 00 48 89 44 24 10 31
- RSP: 0018:ffffb520415cfd60 EFLAGS: 00010286
- RAX: 0000000000000070 RBX: 0000000000000000 RCX: 0000000000000000
- RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000000
- RBP: 0000000000000080 R08: ffffffffffffffff R09: ffffb520415cfd78
- R10: 0000000000000002 R11: ffffb520415cfd78 R12: 0000000000000000
- R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- FS:  00007f7e198e5740(0000) GS:ffff905c9f700000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000000040 CR3: 000000010782a005 CR4: 0000000000770ee0
- PKRU: 55555554
- Call Trace:
-  <TASK>
-  ? __xa_erase+0x53/0xb0
-  device_unregister+0x13/0x50
-  intel_pmt_dev_destroy+0x34/0x60 [pmt_class]
-  pmt_telem_remove+0x40/0x50 [pmt_telemetry]
-  auxiliary_bus_remove+0x18/0x30
-  device_release_driver_internal+0xc1/0x150
-  driver_detach+0x44/0x90
-  bus_remove_driver+0x74/0xd0
-  auxiliary_driver_unregister+0x12/0x20
-  pmt_telem_exit+0xc/0xe4a [pmt_telemetry]
-  __x64_sys_delete_module+0x13a/0x250
-  ? syscall_trace_enter.isra.19+0x11e/0x1a0
-  do_syscall_64+0x58/0x80
-  ? syscall_exit_to_user_mode+0x12/0x30
-  ? do_syscall_64+0x67/0x80
-  ? syscall_exit_to_user_mode+0x12/0x30
-  ? do_syscall_64+0x67/0x80
-  ? syscall_exit_to_user_mode+0x12/0x30
-  ? do_syscall_64+0x67/0x80
-  ? exc_page_fault+0x64/0x140
-  entry_SYSCALL_64_after_hwframe+0x44/0xae
- RIP: 0033:0x7f7e1803a05b
- Code: 73 01 c3 48 8b 0d 2d 4e 38 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d fd 4d 38 00 f7 d8 64 89 01 48
-
-The probe function, pmt_telem_probe(), adds an entry for devices even if
-they have not been initialized.  This results in the array of initialized
-devices containing both initialized and uninitialized entries.  This
-causes a panic in the remove function, pmt_telem_remove() which expects
-the array to only contain initialized entries.
-
-Only use an entry when a device is initialized.
-
-Cc: "David E. Box" <david.e.box@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <markgross@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: David Arcari <darcari@redhat.com>
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
-Link: https://lore.kernel.org/r/20220429122322.2550003-1-prarit@redhat.com
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/platform/x86/intel/pmt/telemetry.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../admin-guide/pm/intel-speed-select.rst     | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-index 6b6f3e2a617a..f73ecfd4a309 100644
---- a/drivers/platform/x86/intel/pmt/telemetry.c
-+++ b/drivers/platform/x86/intel/pmt/telemetry.c
-@@ -103,7 +103,7 @@ static int pmt_telem_probe(struct auxiliary_device *auxdev, const struct auxilia
- 	auxiliary_set_drvdata(auxdev, priv);
+diff --git a/Documentation/admin-guide/pm/intel-speed-select.rst b/Documentation/admin-guide/pm/intel-speed-select.rst
+index 0a1fbdb54bfe..4146a2da35ea 100644
+--- a/Documentation/admin-guide/pm/intel-speed-select.rst
++++ b/Documentation/admin-guide/pm/intel-speed-select.rst
+@@ -262,6 +262,25 @@ Which shows that the base frequency now increased from 2600 MHz at performance
+ level 0 to 2800 MHz at performance level 4. As a result, any workload, which can
+ use fewer CPUs, can see a boost of 200 MHz compared to performance level 0.
  
- 	for (i = 0; i < intel_vsec_dev->num_resources; i++) {
--		struct intel_pmt_entry *entry = &priv->entry[i];
-+		struct intel_pmt_entry *entry = &priv->entry[priv->num_entries];
++Changing performance level via BMC Interface
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++It is possible to change SST-PP level using out of band (OOB) agent (Via some
++remote management console, through BMC "Baseboard Management Controller"
++interface). This mode is supported from the Sapphire Rapids processor
++generation. The kernel and tool change to support this mode is added to Linux
++kernel version 5.18. To enable this feature, kernel config
++"CONFIG_INTEL_HFI_THERMAL" is required. The minimum version of the tool
++is "v1.12" to support this feature, which is part of Linux kernel version 5.18.
++
++To support such configuration, this tool can be used as a daemon. Add
++a command line option --oob::
++
++# intel-speed-select --oob
++
++In this mode the tool will online/offline CPUs based on the new performance
++level.
++
+ Check presence of other Intel(R) SST features
+ ---------------------------------------------
  
- 		ret = intel_pmt_dev_create(entry, &pmt_telem_ns, intel_vsec_dev, i);
- 		if (ret < 0)
 -- 
 2.35.1
-
-
 
