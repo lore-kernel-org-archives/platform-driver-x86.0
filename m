@@ -2,92 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AF4C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 May 2022 16:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EC7C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 May 2022 16:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238773AbiEWQYP (ORCPT
+        id S238970AbiEWQrr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 May 2022 12:24:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55594 "EHLO
+        Mon, 23 May 2022 12:47:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238749AbiEWQYO (ORCPT
+        with ESMTP id S238871AbiEWQrp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 May 2022 12:24:14 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1784668986;
-        Mon, 23 May 2022 09:24:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653323054; x=1684859054;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mgeF5UP7Wf9c6WWHGWu8/vp/irc3h+dCZkex5X4gbCU=;
-  b=WSuKqj1H4aSbRjJhMyeKdYpMIxsrfE5Yxw6BVXRMqnHYprQrX9SAQUG3
-   e4tunAjdWkYXeh0NPDcX6MH1DMW1+EGPP6bEP9NCxMMI+FO/50d6hLPUD
-   LlgHgdaQFZCkay0TpOhoFE2hN2liev9JfLIO2hEIfmr0r475IJSorYWnB
-   op29ti0Wq0eAFB0XvQ5AuwuTZZC48M+eSULtP/dMgkWSErumSCDvpFbrR
-   O3JChT+3X4NH80v1wpg2pOImHNALkOfQr+9wVxZ7Get2neXwlLRQNrlBa
-   fDE13/UqSUR/vQpal0DupceGbmn0JrmYkdkqZ7Kl4FbCi59kWaDrXAd0X
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10356"; a="253776859"
-X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
-   d="scan'208";a="253776859"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 09:24:13 -0700
-X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
-   d="scan'208";a="577479194"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 09:24:11 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ntAqm-000JLn-IX;
-        Mon, 23 May 2022 19:24:08 +0300
-Date:   Mon, 23 May 2022 19:24:08 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
-Subject: Re: [PATCH v3 0/4] simatic-ipc additions to p2sb apl lake gpio
-Message-ID: <You1KI78zbXmApm+@smile.fi.intel.com>
-References: <20220513083652.974-1-henning.schild@siemens.com>
+        Mon, 23 May 2022 12:47:45 -0400
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFC02313B3;
+        Mon, 23 May 2022 09:47:41 -0700 (PDT)
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24NG7i9Q020385;
+        Mon, 23 May 2022 16:47:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pps0720;
+ bh=FzQNwTi13ARFCJVSGCYihZ8rVSZ+bSBFvx/V3quqw0c=;
+ b=HNc6yecs4gSb53mS9wiGIWdJY8+MxfWJCveeh+dnhs6PVeiHQ7+Zc1gcd+6xDn6cUuc+
+ 8E3GyLIe+Uv0s6o+//w78cgZnwQ0o71zrtcqP8A9GtrX2PnZM5mzIqNGJaNiarEKhXtj
+ ySFGDL2UK/ExHmt5piVKfWaZjAKJ1GzG+h5xI8RzZYr4HrU4DQ7h4zBceHDs0Ih152gY
+ V5rIx1GI1UIRZKhNDL8dq8GKbfixLFjrEQ+0UbtOr8CMDp4VmMRHyNLvSrRsJrbzhMCC
+ qLzTKerP+IL7xDy3h+eDvIPWYKT37t0CTuUzGGpLCxGF5VRUwf56AUucYvpvO3tJODHA cA== 
+Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
+        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3g884f44q0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 May 2022 16:47:03 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g9t5008.houston.hpe.com (Postfix) with ESMTP id F33DC4F;
+        Mon, 23 May 2022 16:47:01 +0000 (UTC)
+Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 5FF374C;
+        Mon, 23 May 2022 16:47:00 +0000 (UTC)
+From:   Mike Travis <mike.travis@hpe.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org
+Cc:     Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        stable@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2] x86/platform/uv: Dont use smp_processor_id while preemptible
+Date:   Mon, 23 May 2022 11:45:21 -0500
+Message-Id: <20220523164521.155872-1-mike.travis@hpe.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220513083652.974-1-henning.schild@siemens.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: AWsB_-ro9HKGeoA4AQdZCDpc7-9ZvM_B
+X-Proofpoint-GUID: AWsB_-ro9HKGeoA4AQdZCDpc7-9ZvM_B
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-23_07,2022-05-23_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 phishscore=0 clxscore=1011 mlxlogscore=999
+ malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 bulkscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2202240000 definitions=main-2205230094
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, May 13, 2022 at 10:36:48AM +0200, Henning Schild wrote:
-> changed since v2:
->  - put GPIO led module under same config switch
->  - some style changes from review
->  - init gpios with gpiod_get_index and drop gpiod_set_value
->  - drop bogus "if" from watchdog Kconfig
-> 
-> changed since v1:
->  - rebased
->  - split p1 into p1-3
-> 
-> This switches the simatic-ipc modules to using the upcoming p2sb 
-> interface introduced by Andy with 
-> "platform/x86: introduce p2sb_bar() helper".
-> The series relies on these p2sb changes already applied and Andy will
-> likely take them into his series at some point.
-> 
-> It also switches to one apollo lake device to using gpio leds.
+To avoid a "BUG: using smp_processor_id() in preemptible" debug
+warning message, disable preemption around use of the processor id.
 
-Hmm... This series misses LEDS maintainer. Okay, I will include them when
-sending v6 after v5.19-rc1.
+Signed-off-by: Mike Travis <mike.travis@hpe.com>
+Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+Cc: stable@vger.kernel.org
+---
+v2: Add Cc: stable tag
+---
+ arch/x86/platform/uv/uv_time.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
+diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
+index 54663f3e00cb..094190814a28 100644
+--- a/arch/x86/platform/uv/uv_time.c
++++ b/arch/x86/platform/uv/uv_time.c
+@@ -275,14 +275,17 @@ static int uv_rtc_unset_timer(int cpu, int force)
+  */
+ static u64 uv_read_rtc(struct clocksource *cs)
+ {
+-	unsigned long offset;
++	unsigned long offset, time;
++	unsigned int cpu = get_cpu();
+ 
+ 	if (uv_get_min_hub_revision_id() == 1)
+ 		offset = 0;
+ 	else
+-		offset = (uv_blade_processor_id() * L1_CACHE_BYTES) % PAGE_SIZE;
++		offset = (uv_cpu_blade_processor_id(cpu) * L1_CACHE_BYTES) % PAGE_SIZE;
+ 
+-	return (u64)uv_read_local_mmr(UVH_RTC | offset);
++	time = (u64)uv_read_local_mmr(UVH_RTC | offset);
++	put_cpu();
++	return time;
+ }
+ 
+ /*
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.26.2
 
