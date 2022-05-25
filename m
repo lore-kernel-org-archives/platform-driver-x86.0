@@ -2,101 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155CEC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 May 2022 19:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81084C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 May 2022 13:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240984AbiEXTmi (ORCPT
+        id S235698AbiEYNuR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 May 2022 15:42:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50684 "EHLO
+        Wed, 25 May 2022 09:50:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239067AbiEXTmi (ORCPT
+        with ESMTP id S244596AbiEYNuQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 May 2022 15:42:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D39A674D4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 May 2022 12:42:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DD0946171C
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 May 2022 19:42:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4CAFCC341CB
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 May 2022 19:42:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653421356;
-        bh=yFAsONw200Nx0bz5E9fyrEJfbH3CHvmwOm1wyQZxQpc=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=tdD3gUuPAsCTmZVzKNAfkraXg86y+8JEPnpVX8ttlHjabSdaqNuTwnlzpNTatC15v
-         z3pGIWHi+3oL3pK0Ywqv7QXISZ7zVH7oOiaTbhE/84iM3j/6stoUIcM0oKFMWcjr6F
-         4O1kCgUKMYz/G0qmueMvNZxJXPjbx4mt4uI+C/dpMjBPMW8KhlM7zzU6NH68wnxZ74
-         stb4kX7fBhn0l/Tk4aNt1B4CsOvhqrwztAaRxUAh0IifIlwE6GAFFWlzKkkNb4DCeM
-         eYv6YFyjsdnacBMl3lk6ku6CbAugqNVjCj6i8Vtk11KmeYYFXXgUm5cZ6YqR16KXvF
-         nI2dBBD+ZdXQw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 3AF7EC05FD2; Tue, 24 May 2022 19:42:36 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Tue, 24 May 2022 19:42:34 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: pauk.denis@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
-Message-ID: <bug-204807-215701-cbnxcuxyDy@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 25 May 2022 09:50:16 -0400
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACEA03584D;
+        Wed, 25 May 2022 06:50:15 -0700 (PDT)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-300628e76f3so8260657b3.12;
+        Wed, 25 May 2022 06:50:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D7pNBXTzwb2NC+1B3pkw6XahPKXPrihCDQqGfh0Wnzo=;
+        b=UDr7JM9Zp9EaPbB6flSIhtvB2rBN91LXcTY6rg/XNnEmkypBFmx8VaTIPQWW7V8ljq
+         wo0gjJ8H82RLcuAuAp61ucpo/HIOlDaFBawgJ97i/2HsqrfRjL9czqv5LJDN0NmSwaQM
+         Fzz7epy4GXkt3VAR36Jb+cAbHG4vkJDiUjSnw588eCXVvbFMo43fkZd7K97uY5S3VU7T
+         bCUNYDZbsjmD5a49QjGwRayassCze0fNleUcVCuSgR1vNt5cNbGeA19EQoXkjCYqUFzw
+         vZLKNq5tnPuEX03Mijp75rOZ+5QG3KPuKjO2QLLbfG4l7Xq3EtFGNyVKRR9xkwXaDZ56
+         AHAg==
+X-Gm-Message-State: AOAM532xuiA1s+IhedFnUiIIb/k6AvbWzyRRzdLLPJxt5JqOpzPELD/D
+        awreOjGkSXDody8TroDrslNsU1tLqzuAXdBwspkY56N+
+X-Google-Smtp-Source: ABdhPJweqWSCLXeXw+r+GeogMl1WGgJ5ajSlE51Ud/iUBvqvwf0bA2VMSP4GcN/QX3cCdkBu3ImXYBXI9ubr+DisxJk=
+X-Received: by 2002:a81:87c4:0:b0:2ff:c5dc:72b9 with SMTP id
+ x187-20020a8187c4000000b002ffc5dc72b9mr19519391ywf.19.1653486614968; Wed, 25
+ May 2022 06:50:14 -0700 (PDT)
 MIME-Version: 1.0
+References: <20220523181655.2352470-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20220523181655.2352470-1-srinivas.pandruvada@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 25 May 2022 15:50:04 +0200
+Message-ID: <CAJZ5v0je=rTPG+y-CSd=mi4RTbOq2zni7-1SdKmbNadhUUihCA@mail.gmail.com>
+Subject: Re: [PATCH v2] Documentation: admin-guide: pm: Add Out of Band mode
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>, Len Brown <lenb@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Prarit Bhargava <prarit@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+On Mon, May 23, 2022 at 8:17 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> Update documentation for using the tool to support performance level
+> change via OOB (Out of Band) interface.
+>
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+> v2:
+> As suggested by Jonathan
+> - Indent literal block
+> - Show output of command
+>
+>  .../admin-guide/pm/intel-speed-select.rst     | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>
+> diff --git a/Documentation/admin-guide/pm/intel-speed-select.rst b/Documentation/admin-guide/pm/intel-speed-select.rst
+> index 0a1fbdb54bfe..a2bfb971654f 100644
+> --- a/Documentation/admin-guide/pm/intel-speed-select.rst
+> +++ b/Documentation/admin-guide/pm/intel-speed-select.rst
+> @@ -262,6 +262,28 @@ Which shows that the base frequency now increased from 2600 MHz at performance
+>  level 0 to 2800 MHz at performance level 4. As a result, any workload, which can
+>  use fewer CPUs, can see a boost of 200 MHz compared to performance level 0.
+>
+> +Changing performance level via BMC Interface
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +It is possible to change SST-PP level using out of band (OOB) agent (Via some
+> +remote management console, through BMC "Baseboard Management Controller"
+> +interface). This mode is supported from the Sapphire Rapids processor
+> +generation. The kernel and tool change to support this mode is added to Linux
+> +kernel version 5.18. To enable this feature, kernel config
+> +"CONFIG_INTEL_HFI_THERMAL" is required. The minimum version of the tool
+> +is "v1.12" to support this feature, which is part of Linux kernel version 5.18.
+> +
+> +To support such configuration, this tool can be used as a daemon. Add
+> +a command line option --oob::
+> +
+> + # intel-speed-select --oob
+> + Intel(R) Speed Select Technology
+> + Executing on CPU model:143[0x8f]
+> + OOB mode is enabled and will run as daemon
+> +
+> +In this mode the tool will online/offline CPUs based on the new performance
+> +level.
+> +
+>  Check presence of other Intel(R) SST features
+>  ---------------------------------------------
+>
+> --
 
-Denis Pauk (pauk.denis@gmail.com) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
- Attachment #300963|0                           |1
-        is obsolete|                            |
-
---- Comment #245 from Denis Pauk (pauk.denis@gmail.com) ---
-Created attachment 301030
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D301030&action=3Dedit
-Asus WMI for nct6775 v5.18 base (2022.05.24)
-
-(In reply to Sven Arvidsson from comment #244)
-> (In reply to Denis Pauk from comment #240)
-> >=20
-> > Could you please try with attached patch? It provides custom lock method
-> > that is unsupported by upstream driver.
-> Thanks for the patch and your continued work on this!
->=20
-> Unfortunately, there's no difference on my system after applying the patc=
-h.
-> I get the same warnings about a resource conflict and missing ACPI suppor=
-t.
-I have made mistake in board name(Z170-PLUS instead Z170M-PLUS), could you
-please recheck with rebased patch?
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Applied as 5.19-rc material, thanks!
