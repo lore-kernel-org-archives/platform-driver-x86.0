@@ -2,88 +2,77 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503B7C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 May 2022 09:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA2CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 May 2022 15:30:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240100AbiEZJLw (ORCPT
+        id S1347915AbiEZPa2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 26 May 2022 05:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59496 "EHLO
+        Thu, 26 May 2022 11:30:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234969AbiEZJLv (ORCPT
+        with ESMTP id S1347910AbiEZPaX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 May 2022 05:11:51 -0400
-X-Greylist: delayed 468 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 26 May 2022 02:11:49 PDT
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 612DB27CF5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 May 2022 02:11:48 -0700 (PDT)
-Received: from localhost.localdomain (unknown [124.16.138.126])
-        by APP-01 (Coremail) with SMTP id qwCowAD3_4dyQo9iz1N7Cg--.40442S2;
-        Thu, 26 May 2022 17:03:54 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     santoshkumar.yadav@barco.com, peter.korsgaard@barco.com,
-        hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Subject: [PATCH] platform/x86: barco-p50-gpio: Add check for platform_driver_register
-Date:   Thu, 26 May 2022 17:03:45 +0800
-Message-Id: <20220526090345.1444172-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+        Thu, 26 May 2022 11:30:23 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3500DD8088;
+        Thu, 26 May 2022 08:30:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653579023; x=1685115023;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3B2Wr7V4mxS5yN7FqlZWSMeWz6geZFEoAVpPVPFG0QY=;
+  b=bkyku7NUBX/SMJbHdk4IDnNnnQO8N+DNJAYNcY5yScQjVe7Md+65umaq
+   QBuQZ/dFZ1vgi0+PfK5KWkPpB3UuLf0nJivPKxgq1kBNJnQPy7zxCs1/x
+   kwIjPS/vhKfQ2fHipreFrZfJCaQjdyfuVEW+IsZxqGODcAovPJDLzuZSD
+   7durXoaBfhHAahjwYbxFHpl8Rep2riDcNt+3yo5o8B43svyVhWNhf7/lU
+   KL5cmxBtORhCoVzQmGYln+z1vR8ZPAQUILlvUvjV4j4LSg583QaqzHOzT
+   ImIjNpcR8kx1w7OA3CiedkGAf2n5MRV4QF4qCMpyfRPlVKOG/ypED65B7
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10359"; a="274295901"
+X-IronPort-AV: E=Sophos;i="5.91,252,1647327600"; 
+   d="scan'208";a="274295901"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2022 08:30:23 -0700
+X-IronPort-AV: E=Sophos;i="5.91,252,1647327600"; 
+   d="scan'208";a="642933553"
+Received: from tjeziers-mobl1.amr.corp.intel.com (HELO [10.251.23.34]) ([10.251.23.34])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2022 08:30:22 -0700
+Message-ID: <902b4745-4ca0-9b29-6563-ed49f924a5e1@intel.com>
+Date:   Thu, 26 May 2022 08:30:21 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: qwCowAD3_4dyQo9iz1N7Cg--.40442S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw18uF43GFWkAr1DCF1xXwb_yoWktwc_CF
-        18uFZrWrn5Kas2kF1jyw43uryIkas5WFs3Kw1xtFyaqa4rJa1xCr42vry3tw17Wr1YvFyD
-        G3s7CFWSkrya9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbckFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8uwCF
-        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
-        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
-        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
-        1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUhNVgUUUUU=
-X-Originating-IP: [124.16.138.126]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH] x86/platform/uv: Dont use smp_processor_id while
+ preemptable
+Content-Language: en-US
+To:     Mike Travis <mike.travis@hpe.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org
+Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20220520203755.266337-1-mike.travis@hpe.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20220520203755.266337-1-mike.travis@hpe.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-As platform_driver_register() could fail, it should be better
-to deal with the return value in order to maintain the code
-consisitency.
+On 5/20/22 13:37, Mike Travis wrote:
+> To avoid a "BUG: using smp_processor_id() in preemptible" debug
+> warning message, disable preemption around use of the processor id.
 
-Fixes: 86af1d02d458 ("platform/x86: Support for EC-connected GPIOs for identify LED/button on Barco P50 board")
+I'm sure this gets rid of the warning.  But, could you please take a
+quick look at the callers and ensure that they can handle if this read
+comes from another CPU?
 
-Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
----
- drivers/platform/x86/barco-p50-gpio.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
-index 05534287bc26..8dd672339485 100644
---- a/drivers/platform/x86/barco-p50-gpio.c
-+++ b/drivers/platform/x86/barco-p50-gpio.c
-@@ -405,11 +405,14 @@ MODULE_DEVICE_TABLE(dmi, dmi_ids);
- static int __init p50_module_init(void)
- {
- 	struct resource res = DEFINE_RES_IO(P50_GPIO_IO_PORT_BASE, P50_PORT_CMD + 1);
-+	int ret;
- 
- 	if (!dmi_first_match(dmi_ids))
- 		return -ENODEV;
- 
--	platform_driver_register(&p50_gpio_driver);
-+	ret = platform_driver_register(&p50_gpio_driver);
-+	if (ret)
-+		return ret;
- 
- 	gpio_pdev = platform_device_register_simple(DRIVER_NAME, PLATFORM_DEVID_NONE, &res, 1);
- 	if (IS_ERR(gpio_pdev)) {
--- 
-2.25.1
-
+In other words, what would actually go wrong if uv_read_rtc() got
+preempted in this region?  What would this actually fix?
