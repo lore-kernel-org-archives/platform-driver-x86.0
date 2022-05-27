@@ -2,53 +2,53 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7A3C38A06
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 May 2022 02:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C86C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 May 2022 02:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233626AbiE0CfL (ORCPT
+        id S235981AbiE0CfO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 26 May 2022 22:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34032 "EHLO
+        Thu, 26 May 2022 22:35:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235921AbiE0CfL (ORCPT
+        with ESMTP id S235956AbiE0CfN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 May 2022 22:35:11 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DA9E64C1;
-        Thu, 26 May 2022 19:35:10 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id h11so3830430eda.8;
-        Thu, 26 May 2022 19:35:10 -0700 (PDT)
+        Thu, 26 May 2022 22:35:13 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEDE1E7300;
+        Thu, 26 May 2022 19:35:12 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id t26so3880250edt.0;
+        Thu, 26 May 2022 19:35:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+zy0ZMngfTOngFEr2IYaeKfKrlSi1ZcJUZpm4PtyoKk=;
-        b=CFTp3sTkY5CI8c8bv7T4i4oB//dxfwZP4PtkA6hHzdT4UKYA8tNK7wAfjOBE6a42vf
-         5x4Nhboo4ywWbGmUC0MnTHWWyRWFdpUCcoaZBU/91pVIXK0iPoZri4fj4PhW45ZOSCpR
-         dIGcD0f/dVXwUlviSMq+MzFU0Y79Y8fLKWxIUTTKo6IHV85Vgha/2wo6hF1Y+310LCZ2
-         x4Cyk2W89y01zeST7O5hZE/wcHkaqcgnVQ2JEfFFAS3NOCbBFPVcr9oeeYPNDUIkeIt1
-         OHp+yn7GDG61dNUnuHmUO+kmuUxpfL4YfE8FkJ4xp/Hzc791fONPNqksMZWzJv8zChlB
-         B4Fw==
+        bh=33mv8EaBI1zM629Xj/kVmXIYGAzhKnFwO0nYllphfAQ=;
+        b=MkT2UaMH5+BElHtJP2OUJi9BQMBKUe78q5K3VMuLTWFcANblXvQ7DvvH3raL3LRDNQ
+         +f+1916RJABa/TdhOPm6x5FaqklvDRamPIkftlf3LURnJavW2EF3MRw9fnvfz3saRcn6
+         m1zU/GKUUJX2F5XVYOdtiAhBXbr9qDdZNVIB0rd6monHaSF6n6Ncp6cyTWwEa602R2eu
+         ndg7JrVLTsI6cjqiOcZw6QT4athU8T66SffPR50q0+BAPvfNWtfxc6t9x3F0dqJAtKw3
+         db/YbGS5yx+Trv+ZfsIt7Dv/srrDRm4QpQ3ukev5xJyol9L74yG59FoTy0V8sHuEsx/Q
+         I/5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+zy0ZMngfTOngFEr2IYaeKfKrlSi1ZcJUZpm4PtyoKk=;
-        b=IaWOFYWf1YM08hX6gXuDXios51R2ndHRivWsrUqyOMd/hrhLrEVreV+9/D0UdcPnr9
-         V0cUU6JJXiAO8pQs7JifLdviiHQ5xfdZyscd9WAAcR40DoB5IYQGDaqIIeLAHNOJSxYh
-         K4q842qbGiJM9R6DTmQFXQ30TW/EjU4JiEF18y4dHgqZgTqDIbVnPySwdrc769ANqID5
-         gp81eFyZj6Nq7HKuOQKlb6RBt8EAybZsodyBtGPtspyRcwCWcv+dAtq+LrD613Oan+Z6
-         ErNNqO1Q9gG6gurTyWI3EejkWkatemL1qKYm8iE5GmkeGWrqRg+VzkdgouyBPQWhKhSq
-         8DCw==
-X-Gm-Message-State: AOAM531QJbVCok+3trYOs0k0AZH23Ud8pS9b8VtPoSa9XddjA6ngrne1
-        bMHxnBSZHep59l3ag3e0e6A=
-X-Google-Smtp-Source: ABdhPJwFjNXrX7OMZt7PLSL2J6omXHehakVkWuDP2UASzot24lrRxYlHgRbZuREjkzMOZYQMbZjLuw==
-X-Received: by 2002:a05:6402:2682:b0:42b:5ace:b0e5 with SMTP id w2-20020a056402268200b0042b5aceb0e5mr26557462edd.358.1653618908819;
-        Thu, 26 May 2022 19:35:08 -0700 (PDT)
+        bh=33mv8EaBI1zM629Xj/kVmXIYGAzhKnFwO0nYllphfAQ=;
+        b=D3Il7FVjIjhdMaV78qshl7nB/4XtwxrMIiTw6mCKvAaa6wDRdHM6do2BZ/aQfNJ/Zr
+         3lnvIT+40dg0kZQmFVjhZcOQaBpc+iz1JluUIv3bpfPaY6xWkwJ3WfbhA95Q0WNP3U4q
+         Bv9F4VvI43FtAm/BmAwUGZbQGCGb33DNf+AQ/+6SXPo5mEPjYI3njEys+0D+3dTuF7H+
+         CQrmF/jsDzIoCPtXmwdsT2+/Ku6oAiExWaJGe+tRsqErnKajAv/Mmi3ogARR26T+Nfq7
+         6i7HpHdWrkza6saciu2vXeLE889DgBsk8wNBrXPHfoXN8u2WxZFH55zFsbSk8hHos2UZ
+         Faqg==
+X-Gm-Message-State: AOAM530f9gVuPaM4xzhAuCfFGAdIT4i6uNYApBlC//gPCn69pp14O9/9
+        Sr4tom8Bo1wrUZnXqN2pMyQ=
+X-Google-Smtp-Source: ABdhPJxu3oZtHaLBwLoCpKzElRIa+HUI8j6WkGhM0JTe2qUXc1o8vrlbbrKvvrqxG3syRBg+Z+14pw==
+X-Received: by 2002:a05:6402:43c4:b0:41d:9403:8dca with SMTP id p4-20020a05640243c400b0041d94038dcamr3400494edc.184.1653618911513;
+        Thu, 26 May 2022 19:35:11 -0700 (PDT)
 Received: from xws.localdomain ([37.120.217.83])
-        by smtp.gmail.com with ESMTPSA id qn12-20020a170907210c00b006fe89cafc42sm1025167ejb.172.2022.05.26.19.35.07
+        by smtp.gmail.com with ESMTPSA id qn12-20020a170907210c00b006fe89cafc42sm1025167ejb.172.2022.05.26.19.35.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 May 2022 19:35:08 -0700 (PDT)
+        Thu, 26 May 2022 19:35:11 -0700 (PDT)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Jiri Kosina <jikos@kernel.org>,
@@ -59,9 +59,9 @@ Cc:     Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
         Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH v2 06/12] power/supply: surface_battery: Use client device wrappers for notifier registration
-Date:   Fri, 27 May 2022 04:34:41 +0200
-Message-Id: <20220527023447.2460025-7-luzmaximilian@gmail.com>
+Subject: [PATCH v2 08/12] platform/surface: aggregator: Add comment for KIP subsystem category
+Date:   Fri, 27 May 2022 04:34:43 +0200
+Message-Id: <20220527023447.2460025-9-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <20220527023447.2460025-1-luzmaximilian@gmail.com>
 References: <20220527023447.2460025-1-luzmaximilian@gmail.com>
@@ -71,8 +71,15 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use newly introduced client device wrapper functions for notifier
-registration and unregistration.
+The KIP subsystem (full name unknown, abbreviation has been obtained
+through reverse engineering) handles detachable peripherals such as the
+keyboard cover on the Surface Pro X and Surface Pro 8.
+
+It is currently not entirely clear what this subsystem entails, but at
+the very least it provides event notifications for when the keyboard
+cover on the Surface Pro X and Surface Pro 8 have been detached or
+re-attached, as well as the state that the keyboard cover is currently
+in (e.g. folded-back, folded laptop-like, closed, etc.).
 
 Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 ---
@@ -81,31 +88,22 @@ Changes in v2:
   - none
 
 ---
- drivers/power/supply/surface_battery.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/surface_aggregator/serial_hub.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/surface_battery.c b/drivers/power/supply/surface_battery.c
-index 5ec2e6bb2465..540707882bb0 100644
---- a/drivers/power/supply/surface_battery.c
-+++ b/drivers/power/supply/surface_battery.c
-@@ -802,7 +802,7 @@ static int spwr_battery_register(struct spwr_battery_device *bat)
- 	if (IS_ERR(bat->psy))
- 		return PTR_ERR(bat->psy);
- 
--	return ssam_notifier_register(bat->sdev->ctrl, &bat->notif);
-+	return ssam_device_notifier_register(bat->sdev, &bat->notif);
- }
- 
- 
-@@ -837,7 +837,7 @@ static void surface_battery_remove(struct ssam_device *sdev)
- {
- 	struct spwr_battery_device *bat = ssam_device_get_drvdata(sdev);
- 
--	ssam_notifier_unregister(sdev->ctrl, &bat->notif);
-+	ssam_device_notifier_unregister(sdev, &bat->notif);
- 	cancel_delayed_work_sync(&bat->update_work);
- }
- 
+diff --git a/include/linux/surface_aggregator/serial_hub.h b/include/linux/surface_aggregator/serial_hub.h
+index c3de43edcffa..26b95ec12733 100644
+--- a/include/linux/surface_aggregator/serial_hub.h
++++ b/include/linux/surface_aggregator/serial_hub.h
+@@ -306,7 +306,7 @@ enum ssam_ssh_tc {
+ 	SSAM_SSH_TC_LPC = 0x0b,
+ 	SSAM_SSH_TC_TCL = 0x0c,
+ 	SSAM_SSH_TC_SFL = 0x0d,
+-	SSAM_SSH_TC_KIP = 0x0e,
++	SSAM_SSH_TC_KIP = 0x0e,	/* Manages detachable peripherals (Pro X/8 keyboard cover) */
+ 	SSAM_SSH_TC_EXT = 0x0f,
+ 	SSAM_SSH_TC_BLD = 0x10,
+ 	SSAM_SSH_TC_BAS = 0x11,	/* Detachment system (Surface Book 2/3). */
 -- 
 2.36.1
 
