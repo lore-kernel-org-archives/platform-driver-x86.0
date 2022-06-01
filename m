@@ -2,77 +2,65 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA0BC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 31 May 2022 09:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B298CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Jun 2022 23:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245166AbiEaJYf (ORCPT
+        id S232569AbiFAXRz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 31 May 2022 05:24:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39664 "EHLO
+        Wed, 1 Jun 2022 19:17:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245168AbiEaJY2 (ORCPT
+        with ESMTP id S232557AbiFAXRy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 31 May 2022 05:24:28 -0400
-Received: from mail.meizu.com (edge05.meizu.com [157.122.146.251])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C608B0AC;
-        Tue, 31 May 2022 02:24:26 -0700 (PDT)
-Received: from IT-EXMB-1-125.meizu.com (172.16.1.125) by mz-mail12.meizu.com
- (172.16.1.108) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 31 May
- 2022 17:24:26 +0800
-Received: from meizu.meizu.com (172.16.137.70) by IT-EXMB-1-125.meizu.com
- (172.16.1.125) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.14; Tue, 31 May
- 2022 17:24:24 +0800
-From:   Haowen Bai <baihaowen@meizu.com>
-To:     Jeremy Soller <jeremy@system76.com>,
-        System76 Product Development <productdev@system76.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-CC:     Haowen Bai <baihaowen@meizu.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] platform/x86: system76_acpi: use dev_get_drvdata
-Date:   Tue, 31 May 2022 17:24:23 +0800
-Message-ID: <1653989063-20180-1-git-send-email-baihaowen@meizu.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.137.70]
-X-ClientProxiedBy: IT-EXMB-1-126.meizu.com (172.16.1.126) To
- IT-EXMB-1-125.meizu.com (172.16.1.125)
+        Wed, 1 Jun 2022 19:17:54 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5109120C254
+        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Jun 2022 16:17:53 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="362134816"
+X-IronPort-AV: E=Sophos;i="5.91,269,1647327600"; 
+   d="scan'208";a="362134816"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 16:17:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,269,1647327600"; 
+   d="scan'208";a="633763304"
+Received: from otc-chromeosbuild-5.ostc.intel.com (HELO otc-chromeosbuild-5.intel.com) ([10.54.29.149])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Jun 2022 16:17:52 -0700
+From:   George D Sworo <gdsworo@vger.kernel.org>
+To:     david.e.box@intel.com
+Cc:     platform-driver-x86@vger.kernel.org,
+        George D Sworo <george.d.sworo@intel.com>
+Subject: [PATCH] platform/x86/intel: pmc: Support Intel Raptorlake P
+Date:   Wed,  1 Jun 2022 16:17:50 -0700
+Message-Id: <20220601231750.16584-1-george.d.sworo@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Eliminate direct accesses to the driver_data field.
+From: George D Sworo <george.d.sworo@intel.com>
 
-Signed-off-by: Haowen Bai <baihaowen@meizu.com>
+Add Raptorlake P to the list of the platforms that intel_pmc_core driver
+supports for pmc_core device. Raptorlake P PCH is based on Alderlake P
+PCH.
+
+Signed-off-by: George D Sworo <george.d.sworo@intel.com>
 ---
- drivers/platform/x86/system76_acpi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel/pmc/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
-index 7299ad08c838..958df41ad509 100644
---- a/drivers/platform/x86/system76_acpi.c
-+++ b/drivers/platform/x86/system76_acpi.c
-@@ -339,7 +339,7 @@ static ssize_t kb_led_color_show(
- 	struct led_classdev *led;
- 	struct system76_data *data;
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index edaf22e5ae98..40183bda7894 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -1912,6 +1912,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		&tgl_reg_map),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&tgl_reg_map),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_reg_map),
++	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
+ 	{}
+ };
  
--	led = (struct led_classdev *)dev->driver_data;
-+	led = dev_get_drvdata(dev);
- 	data = container_of(led, struct system76_data, kb_led);
- 	return sysfs_emit(buf, "%06X\n", data->kb_color);
- }
-@@ -356,7 +356,7 @@ static ssize_t kb_led_color_store(
- 	unsigned int val;
- 	int ret;
- 
--	led = (struct led_classdev *)dev->driver_data;
-+	led = dev_get_drvdata(dev);
- 	data = container_of(led, struct system76_data, kb_led);
- 	ret = kstrtouint(buf, 16, &val);
- 	if (ret)
 -- 
-2.7.4
+2.17.1
 
