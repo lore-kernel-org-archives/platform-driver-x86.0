@@ -2,91 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B396EC43334
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Jun 2022 01:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBE8C43334
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Jun 2022 11:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232838AbiFBBgq (ORCPT
+        id S234396AbiFBLtL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Jun 2022 21:36:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38396 "EHLO
+        Thu, 2 Jun 2022 07:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232699AbiFBBgq (ORCPT
+        with ESMTP id S233722AbiFBLs5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Jun 2022 21:36:46 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0461E1DE
-        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Jun 2022 18:36:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654133804; x=1685669804;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=21GT1OsXHLX3oChV6MkepquESEqv62tPRDiyYdDi/hY=;
-  b=iE12Z4z7ApQVJuDWNMbAb+jmjNguOIzxYwXLjHLmHYFt2P9VNv0ld93F
-   gCJzSJV+V3o4sr+EXlFbFvBexRTO5nOLkjBcyBjwubuplKa78q0wPtbM8
-   TtYRVOomQFauaKGQQonLUp17Pe9+01Gc9zh1cskKiZggD3Vi3TRT5NODD
-   POuwTWZCn2p2r3lOHVZ0ntTqmO03Ilvm17yxWm8PBOUlGEeWZCXtujDw1
-   bR+MjXYd8jjx+n9qA0azBsAjSosKHfUeL85hWaw/eFX6Le19dFM0DIOHr
-   0Xa+1/OwGTJqNTq8FZvj9gYT2YW+sRSUG3jS3BgG/tIxDVB2dBkp6pxEI
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="275513199"
-X-IronPort-AV: E=Sophos;i="5.91,270,1647327600"; 
-   d="scan'208";a="275513199"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 18:36:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,270,1647327600"; 
-   d="scan'208";a="612590101"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 01 Jun 2022 18:36:43 -0700
-Received: from alwinma-MOBL2.amr.corp.intel.com (unknown [10.209.123.116])
-        by linux.intel.com (Postfix) with ESMTP id 727EC580378;
-        Wed,  1 Jun 2022 18:36:43 -0700 (PDT)
-Message-ID: <e66d266554132a94d2290edba52039ad257b7add.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86/intel: pmc: Support Intel Raptorlake P
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     george.d.sworo@intel.com, david.e.box@intel.com
-Cc:     platform-driver-x86@vger.kernel.org
-Date:   Wed, 01 Jun 2022 18:36:43 -0700
-In-Reply-To: <20220602012617.20100-1-george.d.sworo@intel.com>
-References: <20220602012617.20100-1-george.d.sworo@intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        Thu, 2 Jun 2022 07:48:57 -0400
+Received: from meesny.iki.fi (meesny.iki.fi [IPv6:2001:67c:2b0:1c1::201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 358212B1D42;
+        Thu,  2 Jun 2022 04:48:54 -0700 (PDT)
+Received: from localhost (91-154-92-55.elisa-laajakaista.fi [91.154.92.55])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sakkinen)
+        by meesny.iki.fi (Postfix) with ESMTPSA id B102C20050;
+        Thu,  2 Jun 2022 14:48:51 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
+        t=1654170531;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tl5Jw+UulbKqEMtgUT3K2V354kKV5SSHEf74OZxYd5E=;
+        b=gVIvyyFheZVOW68udFbl3Qpp9M7jjcbWm9FiuKuldUA0wBr/wcvKOh6oKSlm0FoFCrGc0G
+        lsOlYPhv+Htk32XWaDLY8BMfz1Jnnqwv08tgZW6pNc7J1LCWEyUaQoUcrTB+nmUKwkfWEj
+        JxvXIkollSXLISgj1FALNvEyep0VQpE=
+Date:   Thu, 2 Jun 2022 14:47:02 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@iki.fi>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part2 RFC v4 04/40] x86/sev: Add the host SEV-SNP
+ initialization support
+Message-ID: <YpijNgA9ZJFOwF8k@kernel.org>
+References: <20210707183616.5620-1-brijesh.singh@amd.com>
+ <20210707183616.5620-5-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210707183616.5620-5-brijesh.singh@amd.com>
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
+        s=meesny; t=1654170531;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tl5Jw+UulbKqEMtgUT3K2V354kKV5SSHEf74OZxYd5E=;
+        b=ePgDehaSBHMbAUeRp95u13p4p8R22l6vqZ0Y7PeMjozqI0sCl7tMMSg7fa+Rj8EsK12Dq9
+        Q7NAMreqVW2DSqoiku0beXey8bOa/CKisFZf3su1o1Em6zHYFfxJIU+ZuM+wjtgiMaLuei
+        EBgApVVinLsgcmdA6hz+r0XtTmGpcfw=
+ARC-Authentication-Results: i=1;
+        ORIGINATING;
+        auth=pass smtp.auth=sakkinen smtp.mailfrom=jarkko.sakkinen@iki.fi
+ARC-Seal: i=1; s=meesny; d=iki.fi; t=1654170531; a=rsa-sha256; cv=none;
+        b=LC1JwZgfmfj/q89WJnmLomXZ9I33E8D3pncYsBCxYXrtbfkGKulazshKvHVgPXgYyOeUvZ
+        oWMRAL0kUm5nnedlv5afvZAt1bUMzvZNHXZE7+RfG1jmq5cNNtqWJfwl2OhNbt7c2V12yD
+        aaXkQguiVODIdoopJVtYpj7pyRE7tp8=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 2022-06-01 at 18:26 -0700, george.d.sworo@intel.com wrote:
-> From: George D Sworo <george.d.sworo@intel.com>
+On Wed, Jul 07, 2021 at 01:35:40PM -0500, Brijesh Singh wrote:
+> The memory integrity guarantees of SEV-SNP are enforced through a new
+> structure called the Reverse Map Table (RMP). The RMP is a single data
+> structure shared across the system that contains one entry for every 4K
+> page of DRAM that may be used by SEV-SNP VMs. The goal of RMP is to
+> track the owner of each page of memory. Pages of memory can be owned by
+> the hypervisor, owned by a specific VM or owned by the AMD-SP. See APM2
+> section 15.36.3 for more detail on RMP.
 > 
-> Add Raptorlake P to the list of the platforms that intel_pmc_core driver
-> supports for pmc_core device. Raptorlake P PCH is based on Alderlake P
-> PCH.
-> 
-> Signed-off-by: George D Sworo <george.d.sworo@intel.com>
-> ---
->  drivers/platform/x86/intel/pmc/core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/core.c
-> b/drivers/platform/x86/intel/pmc/core.c
-> index edaf22e5ae98..40183bda7894 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -1912,6 +1912,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
->  	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		&tgl_reg_map),
->  	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&tgl_reg_map),
->  	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_reg_map),
-> +	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
->  	{}
->  };
->  
+> The RMP table is used to enforce access control to memory. The table itself
+> is not directly writable by the software. New CPU instructions (RMPUPDATE,
+> PVALIDATE, RMPADJUST) are used to manipulate the RMP entries.
 
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
+What's the point of throwing out a set of opcodes, if there's
+no explanation what they do?
 
-Thanks
-
+BR, Jarkko
