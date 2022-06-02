@@ -2,37 +2,49 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B298CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Jun 2022 23:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14FDC43334
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Jun 2022 01:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232569AbiFAXRz (ORCPT
+        id S233182AbiFBB0W (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Jun 2022 19:17:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
+        Wed, 1 Jun 2022 21:26:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232557AbiFAXRy (ORCPT
+        with ESMTP id S233176AbiFBB0V (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Jun 2022 19:17:54 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5109120C254
-        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Jun 2022 16:17:53 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="362134816"
-X-IronPort-AV: E=Sophos;i="5.91,269,1647327600"; 
-   d="scan'208";a="362134816"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 16:17:53 -0700
+        Wed, 1 Jun 2022 21:26:21 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D51552A5D6C
+        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Jun 2022 18:26:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654133179; x=1685669179;
+  h=from:to:cc:subject:date:message-id;
+  bh=g96Hb8i5gLRe62w8Pmn27xlTs9mAsprcfcUPyyq2+tQ=;
+  b=Q5inpLClp/KV8tEpVELMxzyVAj81gEpzV53Mi5if/+FnmYQ2jwCC83PA
+   pwbOW0UOOfA1rWj9fen1I2NAltuufuqFCcpZTBtOGZc1yKeuYHCknlE8A
+   QHRymWWsTSvLdWfInCqQJ6Gk7suEqyEljrXFE6FNgKQWDj03KfynEK0ig
+   /pu7z5UnRK2bCzmoHCTHyqGdycZrPxEeabegO5qs84z7SrEGsmZ2oe8MU
+   3wYUejpvbExHqSm6Pv3Jfkl3IZPIvfa2+jXSb7ihRoyve21t5oebJrMAX
+   siJiqErlBi5ducx3B5zCoIHc8oyY2jKt4WVkY40GoVdWEO1VQBrKdD6Zl
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="273353533"
+X-IronPort-AV: E=Sophos;i="5.91,270,1647327600"; 
+   d="scan'208";a="273353533"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 18:26:19 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,269,1647327600"; 
-   d="scan'208";a="633763304"
+X-IronPort-AV: E=Sophos;i="5.91,270,1647327600"; 
+   d="scan'208";a="577235571"
 Received: from otc-chromeosbuild-5.ostc.intel.com (HELO otc-chromeosbuild-5.intel.com) ([10.54.29.149])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Jun 2022 16:17:52 -0700
-From:   George D Sworo <gdsworo@vger.kernel.org>
+  by orsmga007.jf.intel.com with ESMTP; 01 Jun 2022 18:26:19 -0700
+From:   george.d.sworo@intel.com
 To:     david.e.box@intel.com
 Cc:     platform-driver-x86@vger.kernel.org,
         George D Sworo <george.d.sworo@intel.com>
 Subject: [PATCH] platform/x86/intel: pmc: Support Intel Raptorlake P
-Date:   Wed,  1 Jun 2022 16:17:50 -0700
-Message-Id: <20220601231750.16584-1-george.d.sworo@intel.com>
+Date:   Wed,  1 Jun 2022 18:26:17 -0700
+Message-Id: <20220602012617.20100-1-george.d.sworo@intel.com>
 X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
