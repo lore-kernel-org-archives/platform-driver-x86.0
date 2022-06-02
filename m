@@ -2,106 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBE8C43334
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Jun 2022 11:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF82C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Jun 2022 14:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234396AbiFBLtL (ORCPT
+        id S236251AbiFBOvY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Jun 2022 07:49:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42766 "EHLO
+        Thu, 2 Jun 2022 10:51:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233722AbiFBLs5 (ORCPT
+        with ESMTP id S236242AbiFBOvP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Jun 2022 07:48:57 -0400
-Received: from meesny.iki.fi (meesny.iki.fi [IPv6:2001:67c:2b0:1c1::201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 358212B1D42;
-        Thu,  2 Jun 2022 04:48:54 -0700 (PDT)
-Received: from localhost (91-154-92-55.elisa-laajakaista.fi [91.154.92.55])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: sakkinen)
-        by meesny.iki.fi (Postfix) with ESMTPSA id B102C20050;
-        Thu,  2 Jun 2022 14:48:51 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-        t=1654170531;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tl5Jw+UulbKqEMtgUT3K2V354kKV5SSHEf74OZxYd5E=;
-        b=gVIvyyFheZVOW68udFbl3Qpp9M7jjcbWm9FiuKuldUA0wBr/wcvKOh6oKSlm0FoFCrGc0G
-        lsOlYPhv+Htk32XWaDLY8BMfz1Jnnqwv08tgZW6pNc7J1LCWEyUaQoUcrTB+nmUKwkfWEj
-        JxvXIkollSXLISgj1FALNvEyep0VQpE=
-Date:   Thu, 2 Jun 2022 14:47:02 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@iki.fi>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
-        npmccallum@redhat.com, brijesh.ksingh@gmail.com
-Subject: Re: [PATCH Part2 RFC v4 04/40] x86/sev: Add the host SEV-SNP
- initialization support
-Message-ID: <YpijNgA9ZJFOwF8k@kernel.org>
-References: <20210707183616.5620-1-brijesh.singh@amd.com>
- <20210707183616.5620-5-brijesh.singh@amd.com>
+        Thu, 2 Jun 2022 10:51:15 -0400
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2058.outbound.protection.outlook.com [40.107.212.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168C72ACB57
+        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Jun 2022 07:51:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QGzwpuc2mHA3Ihqqh8PXClkGZvelvlxQyIzmRoT9zGPDHerTzL7ygvSenTLLXxO+UnUWN/AUD0cgEKnEqEntMeyL/0cmha9YlBoE9Fl/HiOkL8p6xhsJFOkITux0mfvBZ71Tk/N4Q/kAw0MoawQ6YUUQDj6xuIh0HAKurSC7/EzaTodATndHk+ILmpSLhHkMWEYGHtqPusg8wWXWvZMEUDNGGP8W4Pxx4xZG3vgNRnKFXtz+f8YBHgam3qqFvm9OCB8Dgr/a8DsvAVWWUrpKodtYSkVkd/BvthopHKn12fmgBIVqzEPFwrFI49x0lu7rZjCd9COL3LKGZQ7Ij5claw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=z8850PnLwbRU+bvXyPB++l49dOdwR69MzrKfaMsQs2o=;
+ b=VhyEftJ9U9HZAI/MP23P1cEy9gozbQgUKGStw32ToCh9+h4iPdjbAtFY/wh6drKVQgZ6rgUiMsCq9Ko+e9/24ppLf5TrxAK09UpQIKnrfz/v+jbRFgV7ETYfxIq/fM8p/uGktNf3eCGTA1B7pnjnC6F1nyyCCW5/hM0RDAYwEk5w3TNdAQvr2pOkXnhJnddZOZbe70lWa2Cd/kdZNrxJhXsFU9Aq72JZD/yr8VlP6mc/N6yuRvssFGVlO9eh0qXCK3M4s687/V/NwGd4T20fq+/EWpdSE8KgfWcClSbHNXy0s2gGexAOtkKR84yV0N9gETar5vYUVKvFBR8OAISyWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 12.22.5.238) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z8850PnLwbRU+bvXyPB++l49dOdwR69MzrKfaMsQs2o=;
+ b=q39nhIYRCSNJW7LiOC7bjToRaB0hVLGhvX0ADQ+fZDT0vurXIsJpZw97kJQyPMbIbm0bJC9w06nN/k8rlC5lsodz5+E4SpmHNd0v7GKVeRuSct+1ZRir1Rp6W/906vfnkCmtKdudMhKLO7iVTxLdeb5hG5LpAZE/ZQRKs2FCnnSQzEX8gc3gSZb1r3/1W1HSNhu8kbgJnDJXg46EXUyuU9KtGw2b++lxiUyE0ab8hX5wSuZiabzNoGFAb3jMSJQWwKyUJmijq6KrE9VxYz3rbFkbjxT91LQKs63ze1wYFNzjrwFUpNKuc7HAafBo4Fg0+iwEa3g5OULGGRsOi87hMQ==
+Received: from CO2PR18CA0044.namprd18.prod.outlook.com (2603:10b6:104:2::12)
+ by CH2PR12MB3799.namprd12.prod.outlook.com (2603:10b6:610:21::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.13; Thu, 2 Jun
+ 2022 14:51:10 +0000
+Received: from CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:104:2:cafe::1f) by CO2PR18CA0044.outlook.office365.com
+ (2603:10b6:104:2::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.14 via Frontend
+ Transport; Thu, 2 Jun 2022 14:51:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.238)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 12.22.5.238 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.238; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (12.22.5.238) by
+ CO1NAM11FT040.mail.protection.outlook.com (10.13.174.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.5314.12 via Frontend Transport; Thu, 2 Jun 2022 14:51:09 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by DRHQMAIL105.nvidia.com
+ (10.27.9.14) with Microsoft SMTP Server (TLS) id 15.0.1497.32; Thu, 2 Jun
+ 2022 14:51:09 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Thu, 2 Jun 2022
+ 07:51:08 -0700
+Received: from r-build-bsp-02.mtr.labs.mlnx (10.127.8.9) by mail.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server id 15.2.986.22 via Frontend
+ Transport; Thu, 2 Jun 2022 07:51:07 -0700
+From:   <michaelsh@nvidia.com>
+To:     <hdegoede@redhat.com>
+CC:     <platform-driver-x86@vger.kernel.org>, <vadimp@nvidia.com>,
+        Michael Shych <michaelsh@nvidia.com>
+Subject: [PATCH v1 1/1] platform/mellanox: Add static in struct declaration.
+Date:   Thu, 2 Jun 2022 17:51:03 +0300
+Message-ID: <20220602145103.11859-1-michaelsh@nvidia.com>
+X-Mailer: git-send-email 2.14.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210707183616.5620-5-brijesh.singh@amd.com>
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-        s=meesny; t=1654170531;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tl5Jw+UulbKqEMtgUT3K2V354kKV5SSHEf74OZxYd5E=;
-        b=ePgDehaSBHMbAUeRp95u13p4p8R22l6vqZ0Y7PeMjozqI0sCl7tMMSg7fa+Rj8EsK12Dq9
-        Q7NAMreqVW2DSqoiku0beXey8bOa/CKisFZf3su1o1Em6zHYFfxJIU+ZuM+wjtgiMaLuei
-        EBgApVVinLsgcmdA6hz+r0XtTmGpcfw=
-ARC-Authentication-Results: i=1;
-        ORIGINATING;
-        auth=pass smtp.auth=sakkinen smtp.mailfrom=jarkko.sakkinen@iki.fi
-ARC-Seal: i=1; s=meesny; d=iki.fi; t=1654170531; a=rsa-sha256; cv=none;
-        b=LC1JwZgfmfj/q89WJnmLomXZ9I33E8D3pncYsBCxYXrtbfkGKulazshKvHVgPXgYyOeUvZ
-        oWMRAL0kUm5nnedlv5afvZAt1bUMzvZNHXZE7+RfG1jmq5cNNtqWJfwl2OhNbt7c2V12yD
-        aaXkQguiVODIdoopJVtYpj7pyRE7tp8=
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c74779ca-a015-42c4-babe-08da44a7548e
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3799:EE_
+X-Microsoft-Antispam-PRVS: <CH2PR12MB37993D89338FFC222DA7BA32D4DE9@CH2PR12MB3799.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: MNwMiQtI8kBZgmNN69A/jGa2xU+kvTyVJXnXBKRLWIb0ef5lGQee/nijUz2GETOA7rmtX2SCjPQqL8dhmHj9j4tCVq0xA//AtSdCUwZEHxAVY1G2AEujcJFqYv35nwwixxqGEGd+sxX0A9qvvDTaSjh/y0nb6RUgQjZ2xiwEggLGXnB3cZ4l/UvNx1COU+joN0jPWiF9i1B3nVJdF7Yk+0Jo/jCytzxI7RODVjc/PbkewjRqYCYjpIz6ZXgo2FRljitbE/dhEqkwFKrpjY7yPCZjE2QkPVYgVFaUwE5cKhh21Jr36T3hfKJIcGN3ELl7RFzhZKkdCON1hcqUOM16W4Pxe9KsRS4fWLFyQNj+8YIUaHVB/62DiPiGX1YVkElZsT6n2jcm4B02RRh7xOT/vd8aKZDFH3svgPlCE0HRuhis2Cojp9N9csRRu4Y14AJZSWtH+nBxz/Y0cfYHj0IEDVBrL0EjoUIKT4h5F0toGO0IYs+ppMrCf3AyxIWzntz4ntkjY8tcEYKUMARMX4JCAbpsFbBkP5Nt3qYR7suVLA3CXAuOnmEYB4Z7mgTspGYChiuQY8oUdOUAdTP+sfjvAH/ZF/grRdY5IgU4DxbQvm+x13jbC7wKZRMK8ZUpY0A1tYXzK7H9mecQKUnDCa35AsHW8WMoM77S8pBn9W96Vu8J39cIG30Aw8M+mQoW/fyd4CJ7HHL8jDPk1r8hAaTBvA==
+X-Forefront-Antispam-Report: CIP:12.22.5.238;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(2616005)(107886003)(1076003)(86362001)(82310400005)(4744005)(186003)(36860700001)(5660300002)(356005)(8936002)(2906002)(4326008)(336012)(40460700003)(426003)(47076005)(8676002)(83380400001)(70206006)(2876002)(81166007)(70586007)(26005)(6916009)(54906003)(6666004)(36756003)(508600001)(316002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2022 14:51:09.4120
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c74779ca-a015-42c4-babe-08da44a7548e
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.238];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3799
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 07, 2021 at 01:35:40PM -0500, Brijesh Singh wrote:
-> The memory integrity guarantees of SEV-SNP are enforced through a new
-> structure called the Reverse Map Table (RMP). The RMP is a single data
-> structure shared across the system that contains one entry for every 4K
-> page of DRAM that may be used by SEV-SNP VMs. The goal of RMP is to
-> track the owner of each page of memory. Pages of memory can be owned by
-> the hypervisor, owned by a specific VM or owned by the AMD-SP. See APM2
-> section 15.36.3 for more detail on RMP.
-> 
-> The RMP table is used to enforce access control to memory. The table itself
-> is not directly writable by the software. New CPU instructions (RMPUPDATE,
-> PVALIDATE, RMPADJUST) are used to manipulate the RMP entries.
+From: Michael Shych <michaelsh@nvidia.com>
 
-What's the point of throwing out a set of opcodes, if there's
-no explanation what they do?
+Fix problem of missing static in struct declaration.
 
-BR, Jarkko
+Fixes: 662f24826f954 ("platform/mellanox: Add support for new SN2201 system")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Michael Shych <michaelsh@nvidia.com>
+---
+ drivers/platform/mellanox/nvsw-sn2201.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/mellanox/nvsw-sn2201.c b/drivers/platform/mellanox/nvsw-sn2201.c
+index 0bcdc7c75007..2923daf63b75 100644
+--- a/drivers/platform/mellanox/nvsw-sn2201.c
++++ b/drivers/platform/mellanox/nvsw-sn2201.c
+@@ -326,7 +326,7 @@ static struct resource nvsw_sn2201_lpc_res[] = {
+ };
+ 
+ /* SN2201 I2C platform data. */
+-struct mlxreg_core_hotplug_platform_data nvsw_sn2201_i2c_data = {
++static struct mlxreg_core_hotplug_platform_data nvsw_sn2201_i2c_data = {
+ 	.irq = NVSW_SN2201_CPLD_SYSIRQ,
+ };
+ 
+-- 
+2.14.1
+
