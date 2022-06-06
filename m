@@ -2,90 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B85C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Jun 2022 00:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E677C43334
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Jun 2022 11:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231949AbiFDAc5 (ORCPT
+        id S235553AbiFFLmN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 3 Jun 2022 20:32:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34616 "EHLO
+        Mon, 6 Jun 2022 07:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231737AbiFDAc4 (ORCPT
+        with ESMTP id S235542AbiFFLmL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Jun 2022 20:32:56 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5049193E8
-        for <platform-driver-x86@vger.kernel.org>; Fri,  3 Jun 2022 17:32:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 655C6B8252B
-        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Jun 2022 00:32:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0F560C341E2
-        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Jun 2022 00:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654302772;
-        bh=NSnOkJWM4xxRT57e3++kpyw+bcxfLWo9S+LcpPJ0IT4=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=LhXvigt+z9K3wNjLEboE3TLrVxwqNJn/GXRduyuko1Hw8zm33x6PWN0bsBZZ0oj8V
-         7FNq1tbB25Vgv4ReeaUidFVInHRHjJWMuQd/q7n6g5TEeXZmCUatR1jfNcSJcXYWCu
-         T1fahu31tnoXTeIz5hVbkC1WhuxRuJzE2ClCBzvK3Hl4qXBre+KrdN7RxAAqu7I+tv
-         u+rnTju1nGk7Vz3Omr9GCU4h2Cdl7XXdKLgSWrw0cOvZK/v/MAxu1P37u62f3ptNtx
-         q9VqTngsTWabI+jwrHdEtb40cyC1fsDHQEuU3KBtIVtUmxLBuNoez50K44VYPWZz4/
-         ECVtQe8ZfJlAA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id F229FCC13B1; Sat,  4 Jun 2022 00:32:51 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Sat, 04 Jun 2022 00:32:50 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: rob@janerob.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-DdrnSF1eIQ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 6 Jun 2022 07:42:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4ED17B24
+        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jun 2022 04:42:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1654515727;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LbU0lHc+WuTsfhjoR9o0hk34WGqlmY1f4clG2HCMCgk=;
+        b=GdNj97MlOG2A67jgibe+4hsKpOAHqDLNtwlv8f89XTvUMy7FELty6m42+Ym7NlPNYk1ftF
+        wZuBPyISMIV7xl14tsoTbmeyiLX7MyZreko95BOwtqUJ9veUCFzfUNtNo4VWYfgsaCy1HK
+        VwVPU0PiZkKgCAeginH8Y0s/lYp8hcg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-302-rK_k0WlnMWmkRLAMiO5AEQ-1; Mon, 06 Jun 2022 07:42:06 -0400
+X-MC-Unique: rK_k0WlnMWmkRLAMiO5AEQ-1
+Received: by mail-wr1-f70.google.com with SMTP id t2-20020adfe442000000b002108370e7a3so2705270wrm.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jun 2022 04:42:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LbU0lHc+WuTsfhjoR9o0hk34WGqlmY1f4clG2HCMCgk=;
+        b=8IU2C+36rCu2ZXq4mJcIb+p4TAWoC/1IHslpz7hA/w3lJNqobFVy2s1ssT3V2QcCyR
+         ihhRvLdTaOgAUkXASo/q5v0GUG+6OVX49ba3S8RKxGwPJpqH+MbRNRfYkKtHaYFBN7Ap
+         kuc6nK3V/Kjgiau8M/DdSzSlLqhLEV5Mb+Odi6n0jofmN1trGh2rf3Ck9W/wXT0HYlV+
+         UG+2n4yAh5qtDt9qu1N1bGwYqsq7/vhN2dAI45QqU02sCMqqbcdpWTHe60zyH0wtquqL
+         hYHgqUQjB9Qm2G8g0dxrtqw4UNenBthlMfaP3bbiyxfdAOat6UGykKY3iTleyA7h5n1Y
+         PCYg==
+X-Gm-Message-State: AOAM532VASk4Dkmgfoi6EHoyhY5vzP1eSOEbUR+0YpzOLdOezsp4ysk3
+        M99Cwsg+DHeXbyEKRTS8wXfYBmP+oX+16bQYL+xpqjli1Sjq2RSy21RLLnqdOfMf3uXfMKIRxzg
+        lqgLQyj/bZz7GWpVVW5fm3rvTsrQOVQBdvQ==
+X-Received: by 2002:adf:f385:0:b0:213:bb0e:383a with SMTP id m5-20020adff385000000b00213bb0e383amr16114877wro.481.1654515725446;
+        Mon, 06 Jun 2022 04:42:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzEvzYVC9++mJVt13KuXQ5MBP3pxhBSkYiVChyG6utGpOcobdad2X2l/uq7b7FRSa2su3OnkA==
+X-Received: by 2002:adf:f385:0:b0:213:bb0e:383a with SMTP id m5-20020adff385000000b00213bb0e383amr16114820wro.481.1654515725160;
+        Mon, 06 Jun 2022 04:42:05 -0700 (PDT)
+Received: from work-vm (cpc109025-salf6-2-0-cust480.10-2.cable.virginm.net. [82.30.61.225])
+        by smtp.gmail.com with ESMTPSA id h5-20020a5d5045000000b0020d07d90b71sm14848968wrt.66.2022.06.06.04.42.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jun 2022 04:42:04 -0700 (PDT)
+Date:   Mon, 6 Jun 2022 12:42:01 +0100
+From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@iki.fi>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part2 RFC v4 04/40] x86/sev: Add the host SEV-SNP
+ initialization support
+Message-ID: <Yp3oCYwZbYuVQ9r6@work-vm>
+References: <20210707183616.5620-1-brijesh.singh@amd.com>
+ <20210707183616.5620-5-brijesh.singh@amd.com>
+ <YpijNgA9ZJFOwF8k@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YpijNgA9ZJFOwF8k@kernel.org>
+User-Agent: Mutt/2.2.1 (2022-02-19)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+* Jarkko Sakkinen (jarkko.sakkinen@iki.fi) wrote:
+> On Wed, Jul 07, 2021 at 01:35:40PM -0500, Brijesh Singh wrote:
+> > The memory integrity guarantees of SEV-SNP are enforced through a new
+> > structure called the Reverse Map Table (RMP). The RMP is a single data
+> > structure shared across the system that contains one entry for every 4K
+> > page of DRAM that may be used by SEV-SNP VMs. The goal of RMP is to
+> > track the owner of each page of memory. Pages of memory can be owned by
+> > the hypervisor, owned by a specific VM or owned by the AMD-SP. See APM2
+> > section 15.36.3 for more detail on RMP.
+> > 
+> > The RMP table is used to enforce access control to memory. The table itself
+> > is not directly writable by the software. New CPU instructions (RMPUPDATE,
+> > PVALIDATE, RMPADJUST) are used to manipulate the RMP entries.
+> 
+> What's the point of throwing out a set of opcodes, if there's
+> no explanation what they do?
 
---- Comment #252 from Rob Miller (rob@janerob.com) ---
-(In reply to Denis Pauk from comment #251)
-> Created attachment 301099 [details]
-> Asus WMI for nct6775 v5.18 base (2022.06.03)
->=20
-> (In reply to Rob Miller from comment #250)
+TBF They are described in the public document section linked in the previous
+paragraph.
 
-> Could you please check?
+Dave
+> BR, Jarkko
+> 
+-- 
+Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
 
-Score!
-
-sensors command fully working, no issues in dmesg, no 'lax' boot parameter.
-
-Thank you! and well done!
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
