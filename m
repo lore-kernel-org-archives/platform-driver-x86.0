@@ -2,154 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBF9C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Jun 2022 17:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108D7C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Jun 2022 17:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229674AbiFFROH (ORCPT
+        id S229943AbiFFRSi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Jun 2022 13:14:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56320 "EHLO
+        Mon, 6 Jun 2022 13:18:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229831AbiFFRNs (ORCPT
+        with ESMTP id S229976AbiFFRSN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Jun 2022 13:13:48 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B793878A;
-        Mon,  6 Jun 2022 10:04:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654535076; x=1686071076;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8B3oBa5J+/nZtfBbVHEcmqTofXo8TT8r9m6GWKF4qqA=;
-  b=VOXLQdbqEmDOjfQLktWJcGsVLYc1dwvVlie7eG5SUvbUDdvn9gyVgaPj
-   NVIJWWV9F6GN8AS54gAf9qZGQdzBEONDo4/LHw125sVOwcugo/sOnV7YD
-   XzwHpbBeKGqMGcVCxRdgN8cED4XCGmPpiiL6OjZKwqgoUqVCGtZmJyF8e
-   n2bE7jOAo3vR9rmJnSsgUqwO+b5tDL9pZjo3wp+BiiZbLwJrYo974aUST
-   0FsnKdTaaVDmmYCtSqFaLd+bpplGAwVxAuJki9f/rK3taaSyfjlLHcEto
-   NAU/lLHBW7DZqQIHply7dTwWsUownZin9C8saFPr/hfOW8LdeBvPEs6ok
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10370"; a="277055858"
-X-IronPort-AV: E=Sophos;i="5.91,280,1647327600"; 
-   d="scan'208";a="277055858"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2022 09:42:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,280,1647327600"; 
-   d="scan'208";a="709122657"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 06 Jun 2022 09:41:55 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id E430A11FA; Mon,  6 Jun 2022 19:41:50 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tony Luck <tony.luck@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: [PATCH v6 11/12] platform/x86: simatic-ipc: drop custom P2SB bar code
-Date:   Mon,  6 Jun 2022 19:41:37 +0300
-Message-Id: <20220606164138.66535-12-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
-References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+        Mon, 6 Jun 2022 13:18:13 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B23F1085
+        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jun 2022 10:15:18 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id y15so11057654ljc.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jun 2022 10:15:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:from
+         :subject:cc:content-transfer-encoding;
+        bh=s3ld9dbviT8JdxsfZiAoXVO0rdP+1apuy7OtDLRd52s=;
+        b=G7vXWMSRk5iO3Gal0CRNkW5Nd89Gm+TIDtQfxcX6KV/HwMoagwq5rgxtY9QAaXvgT4
+         qJ9aS+yP8q0zmDW/xUgVDms8Vn63+hkD+9hnm+FjwUSktn8Q169jq3c0r8cd048F2dUW
+         gZWvS3UyBMJmDpLjlNtVk1gmBm55UrhlugtYENqwZugMy56MDis+i19XcbBvB10N/Nn0
+         vIP+eCxqzZC/hvzjcN2l7+e5Hi5VNo+6vJ6s4T3jr029jZlwzrnCrfShOYomOAFasBK2
+         B2VMD1Uq28vkXpH/c1G5/hu0YDQAQ5q/IFhiF2MvYC/EfzNbTavIwtmPA4kMajtcOxB2
+         s01A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:from:subject:cc:content-transfer-encoding;
+        bh=s3ld9dbviT8JdxsfZiAoXVO0rdP+1apuy7OtDLRd52s=;
+        b=hNhh0ml3L3cCLRSpYGR+oKKU5cvbMwlem5223xxRgPS8FltZapg7IbYqke0vPyzf1l
+         JYNM2dU+ee0mIzRdR0mnXvfVbORXmqWYDFzQYcgCcXioInuykXC8aVV8w2fYBtncR385
+         49S3LOX6McklS0GzGGZMaQxJBfIlLBiDRiUwo1EStbyn43TyFAvQ8dAXCyhhlDY0xbPa
+         xGWpaEPAZXEtd88h5FNjDAOrH9mvs5BF35QiNlC7IvDd4r5EzJBnI6be0pieNs5XQSGY
+         a/xM0BsJsfHZbZPYst7Cz5KS/1VmNOi/ojRb35ybpX2M2PLfuSwXiy0GeuYDHFPu2MeK
+         +3eg==
+X-Gm-Message-State: AOAM533pxL+Osvz2t+p9ByO1888XGD/+nnuQNAUP1NXD9EmW2TL+OhPp
+        HUhOJ+F0BssYQXGDBPSCCA4ZUGIe4b/jLQ==
+X-Google-Smtp-Source: ABdhPJzos+wDuYofavoomXcTDNrz141yI3IMrTGsflZgG/OXgVy0XmtSHUL5Yfgx3FE621catQeR+Q==
+X-Received: by 2002:a2e:a22d:0:b0:255:7b60:f522 with SMTP id i13-20020a2ea22d000000b002557b60f522mr10914181ljm.483.1654535716475;
+        Mon, 06 Jun 2022 10:15:16 -0700 (PDT)
+Received: from [192.168.1.2] (235.132.246.94.ip4.artcom.pl. [94.246.132.235])
+        by smtp.googlemail.com with ESMTPSA id i26-20020a0565123e1a00b00478e9b136f6sm1642227lfv.221.2022.06.06.10.15.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jun 2022 10:15:15 -0700 (PDT)
+Message-ID: <bd83567e-ebf5-0b31-074b-5f6dc7f7c147@gmail.com>
+Date:   Mon, 6 Jun 2022 19:15:13 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Content-Language: en-US
+To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@weissschuh.net>
+From:   Piotr Chmura <chmooreck@gmail.com>
+Subject: [PATCH] platform/x86: gigabyte-wmi: add Z690M AORUS ELITE AX DDR4
+ support
+Cc:     platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Henning Schild <henning.schild@siemens.com>
+Add dmi_system_id of Gigabyte Z690M AORUS ELITE AX DDR4 board. Tested on my PC.
 
-The two drivers that used to use this have been switched over to the
-common P2SB accessor, so this code is not needed any longer.
+Signed-off-by: Piotr Chmura <chmooreck@gmail.com>
 
-Signed-off-by: Henning Schild <henning.schild@siemens.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/simatic-ipc.c            | 38 -------------------
- .../platform_data/x86/simatic-ipc-base.h      |  2 -
- 2 files changed, 40 deletions(-)
 
-diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
-index b599cda5ba3c..26c35e1660cb 100644
---- a/drivers/platform/x86/simatic-ipc.c
-+++ b/drivers/platform/x86/simatic-ipc.c
-@@ -101,44 +101,6 @@ static int register_platform_devices(u32 station_id)
- 	return 0;
- }
- 
--/* FIXME: this should eventually be done with generic P2SB discovery code
-- * the individual drivers for watchdogs and LEDs access memory that implements
-- * GPIO, but pinctrl will not come up because of missing ACPI entries
-- *
-- * While there is no conflict a cleaner solution would be to somehow bring up
-- * pinctrl even with these ACPI entries missing, and base the drivers on pinctrl.
-- * After which the following function could be dropped, together with the code
-- * poking the memory.
-- */
--/*
-- * Get membase address from PCI, used in leds and wdt module. Here we read
-- * the bar0. The final address calculation is done in the appropriate modules
-- */
--u32 simatic_ipc_get_membase0(unsigned int p2sb)
--{
--	struct pci_bus *bus;
--	u32 bar0 = 0;
--	/*
--	 * The GPIO memory is in bar0 of the hidden P2SB device.
--	 * Unhide the device to have a quick look at it, before we hide it
--	 * again.
--	 * Also grab the pci rescan lock so that device does not get discovered
--	 * and remapped while it is visible.
--	 * This code is inspired by drivers/mfd/lpc_ich.c
--	 */
--	bus = pci_find_bus(0, 0);
--	pci_lock_rescan_remove();
--	pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x0);
--	pci_bus_read_config_dword(bus, p2sb, PCI_BASE_ADDRESS_0, &bar0);
--
--	bar0 &= ~0xf;
--	pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x1);
--	pci_unlock_rescan_remove();
--
--	return bar0;
--}
--EXPORT_SYMBOL(simatic_ipc_get_membase0);
--
- static int __init simatic_ipc_init_module(void)
- {
- 	const struct dmi_system_id *match;
-diff --git a/include/linux/platform_data/x86/simatic-ipc-base.h b/include/linux/platform_data/x86/simatic-ipc-base.h
-index 62d2bc774067..39fefd48cf4d 100644
---- a/include/linux/platform_data/x86/simatic-ipc-base.h
-+++ b/include/linux/platform_data/x86/simatic-ipc-base.h
-@@ -24,6 +24,4 @@ struct simatic_ipc_platform {
- 	u8	devmode;
+--- linux/drivers/platform/x86/gigabyte-wmi.c	2022-05-22 21:52:31.000000000 +0200
++++ linux-wmi/drivers/platform/x86/gigabyte-wmi.c	2022-06-05 18:53:47.242238345 +0200
+@@ -156,6 +156,7 @@
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 GAMING X"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 I AORUS PRO WIFI"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 UD"),
++	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z690M AORUS ELITE AX DDR4"),
+ 	{ }
  };
  
--u32 simatic_ipc_get_membase0(unsigned int p2sb);
--
- #endif /* __PLATFORM_DATA_X86_SIMATIC_IPC_BASE_H */
--- 
-2.35.1
-
