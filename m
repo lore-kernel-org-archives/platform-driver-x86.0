@@ -2,134 +2,73 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADC2CCA47C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D58CCA487
 	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 21:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379312AbiFGVLz (ORCPT
+        id S1379319AbiFGVL4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Jun 2022 17:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43878 "EHLO
+        Tue, 7 Jun 2022 17:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380108AbiFGVLa (ORCPT
+        with ESMTP id S1380158AbiFGVLf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Jun 2022 17:11:30 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 579892178A3
-        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jun 2022 11:53:14 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id bo5so16291313pfb.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jun 2022 11:53:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :content-transfer-encoding:user-agent:mime-version;
-        bh=8GDJ304MDnpM/Ky3IDV1uo99afYb4ire+JK9NbMGhmE=;
-        b=GzltJXg+35iyjEOZ+9g+aSn2M3WLCdjkEcrgF5jnnWptQkGIVrSZN2pBcO2cPfGL/1
-         SAf/ZAsBfjbiDeenOS0TVBAejPCatiok8rnb6VMGyEcSFV68e8pY+5llmT1RPMOyQK4s
-         FMYguWG059BzrLJWq/GI0yUKb7/2qcQ48RrlFu6lBFYVE26OIVMN29oA7XHc9I0ClLAN
-         EvbkPsshVsPh7NPDECIaL1HEJRetSIoZsQeRtpppQTJ6/8hQNK5x9e8CsBbmBmzyHIm/
-         ireEAjHU/YV+w0A5dgyxcgeW5lWBiXi0Qe3oTIH3qmpP+10YVY42r+r1j6ecyywm7tBS
-         Zk5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:content-transfer-encoding:user-agent:mime-version;
-        bh=8GDJ304MDnpM/Ky3IDV1uo99afYb4ire+JK9NbMGhmE=;
-        b=0AfypCPmhw2PfOgw4+D1j3xRpBwBtHPjmLZGvdeUnHJ14Ln+m6R1Cc56XAJy3p0wr5
-         TtQwRfkwN9XZUCxu+q8dDWzXIMpwMvlBQe2IDmAYj08PLoEaK8ar638KI3+C/9poOhiq
-         8MJP5xRB4K/lQkvCMx1dk439+BBgVyjt+KNpqy63qm7vbxejWwATegYpXVAj1nWJgbhR
-         mEn2vONyr0MKZ9zaKsyS0iIUvMEZFL+XhKVH25sf3WSTIDx6qDkQvcPvLZ8DRXCxtFg9
-         nImFnkOA97aD/bLnPMQ/THK+jrX/dcpp3IpLw7gXIqIy5tcPtr4Sq26nYjMhTnc8bUxP
-         zMbw==
-X-Gm-Message-State: AOAM530PcohbrKsHCj+O5/GMzrTd7DlVZsL0dyZ+xnRrwt6aa4O98YzS
-        Hrhb4TQhbfobrN8zbzdRTfRGxCpEKR+zZ4x/fs4=
-X-Google-Smtp-Source: ABdhPJz0C90P2MnAHNhM2pUoYGd/5SDZoai9KC4TsHe8GskslU05iBm5isn9NHEXUEEg6Bis3jPmjg==
-X-Received: by 2002:a63:e903:0:b0:3fd:ac2a:5123 with SMTP id i3-20020a63e903000000b003fdac2a5123mr11385461pgh.297.1654627993542;
-        Tue, 07 Jun 2022 11:53:13 -0700 (PDT)
-Received: from ?IPv6:2405:201:a007:e183:aa6d:fbda:3c70:a6e9? ([2405:201:a007:e183:aa6d:fbda:3c70:a6e9])
-        by smtp.gmail.com with ESMTPSA id u19-20020a170903305300b001622c377c3esm12815171pla.117.2022.06.07.11.52.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jun 2022 11:53:13 -0700 (PDT)
-Message-ID: <34dc40b7c51ee62825e4e063b77e40c0c842f2d5.camel@gmail.com>
-Subject: Re: [RFC] platform/x86: hp-wmi: make hp_wmi_perform_query() work
- with certain devices
-From:   Bedant Patnaik <bedant.patnaik@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Date:   Wed, 08 Jun 2022 00:22:42 +0530
-In-Reply-To: <fd1b71fe-d9a7-65bb-314c-f11b7d550fe8@redhat.com>
-References: <20220607132428.7221-1-bedant.patnaik@gmail.com>
-         <094f73b7-f618-aa12-762b-3b1a1f4556d2@redhat.com>
-         <CAOOmCE8QYEwh6TrgA=_sTcm4spkuk3rjMS4g78nbBbWXWUB2aQ@mail.gmail.com>
-         <fd1b71fe-d9a7-65bb-314c-f11b7d550fe8@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.2 (3.44.2-1.fc36) 
+        Tue, 7 Jun 2022 17:11:35 -0400
+Received: from 2.mo576.mail-out.ovh.net (2.mo576.mail-out.ovh.net [178.33.251.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAD7F2178A0
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jun 2022 11:53:18 -0700 (PDT)
+Received: from player796.ha.ovh.net (unknown [10.109.143.249])
+        by mo576.mail-out.ovh.net (Postfix) with ESMTP id B4C7E24265
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jun 2022 18:47:02 +0000 (UTC)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player796.ha.ovh.net (Postfix) with ESMTPSA id 7B42B2B43739F;
+        Tue,  7 Jun 2022 18:46:54 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-100R003e100f37a-472c-4ee8-8084-671dd768fd49,
+                    38FB55E0ED6224772C245AF554E1AE62085133ED) smtp.auth=steve@sk2.org
+X-OVh-ClientIp: 82.65.25.201
+From:   Stephen Kitt <steve@sk2.org>
+To:     "Lee, Chun-Yi" <jlee@suse.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Cezary Jackiewicz <cezary.jackiewicz@gmail.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Kitt <steve@sk2.org>
+Subject: [PATCH 0/4] platform/x86: Use backlight helpers
+Date:   Tue,  7 Jun 2022 20:46:31 +0200
+Message-Id: <20220607184635.1127913-1-steve@sk2.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 11323738314411247238
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedruddthedguddvlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeelgeetueejffejfeejvefhtddufeejgfetleegtddukeelieelvddvteduveejtdenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpohhuthdphhgvlhhopehplhgrhigvrhejleeirdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehjeei
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Bedant Patnaik <bedant.patnaik@gmail.com>
-Date: Tue, 7 Jun 2022 23:16:05 +0530
-Subject: [PATCH] platform/x86: hp-wmi: make hp_wmi_perform_query() work wit=
-h
- certain devices
+backlight_properties.fb_blank is deprecated. The states it represents
+are handled by other properties; but instead of accessing those
+properties directly, drivers should use the helpers provided by
+backlight.h.
 
-4b4967cbd2685f313411e6facf915fb2ae01d796 ("platform/x86: hp-wmi: Changing b=
-ios_args.data to be dynamically allocated")
-broke WMI queries on some devices where the ACPI method HWMC unconditionall=
-y attempts to create Fields beyond the buffer
-if the buffer is too small:
-        CreateByteField (Arg1, 0x10, D008)
-        CreateByteField (Arg1, 0x11, D009)
-        CreateByteField (Arg1, 0x12, D010)
-        CreateDWordField (Arg1, 0x10, D032)
-        CreateField (Arg1, 0x80, 0x0400, D128)
-In cases where args->data had zero length, ACPI BIOS Error (bug): AE_AML_BU=
-FFER_LIMIT, Field [D008] at bit
-offset/length 128/8 exceeds size of target Buffer (128 bits) (20211217/dsop=
-code-198) was obtained.
-Fix: allocate at least 128 bytes for args->data
+This will ultimately allow fb_blank to be removed.
 
-Tested on Omen 15 AMD (2020) board ID: 8786.
+Stephen Kitt (4):
+  platform/x86: acer-wmi: Use backlight helper
+  platform/x86: apple-gmux: Use backlight helper
+  platform/x86: compal-laptop: Use backlight helper
+  platform/x86: thinkpad_acpi: Use backlight helper
 
-Signed-off-by: Bedant Patnaik <bedant.patnaik@gmail.com>
----
- drivers/platform/x86/hp-wmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/acer-wmi.c      | 7 +------
+ drivers/platform/x86/apple-gmux.c    | 5 +----
+ drivers/platform/x86/compal-laptop.c | 4 +---
+ drivers/platform/x86/thinkpad_acpi.c | 5 +----
+ 4 files changed, 4 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 667f94bba..7a54191f0 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -175,7 +175,7 @@ enum hp_thermal_profile_omen_v1 {
- enum hp_thermal_profile {
- 	HP_THERMAL_PROFILE_PERFORMANCE	=3D 0x00,
- 	HP_THERMAL_PROFILE_DEFAULT		=3D 0x01,
--	HP_THERMAL_PROFILE_COOL			=3D 0x02
-+	HP_THERMAL_PROFILE_COOL			=3D 0x02,
- };
-=20
- #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) !=3D HPWMI_POWER_FW_OR=
-_HW)
-@@ -297,8 +297,8 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_=
-command command,
- 	if (WARN_ON(mid < 0))
- 		return mid;
-=20
--	bios_args_size =3D struct_size(args, data, insize);
--	args =3D kmalloc(bios_args_size, GFP_KERNEL);
-+	bios_args_size =3D max(struct_size(args, data, insize), struct_size(args,=
- data, 128));
-+	args =3D kzalloc(bios_args_size, GFP_KERNEL);
- 	if (!args)
- 		return -ENOMEM;
-=20
---=20
-2.36.1
 
+base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
+-- 
+2.30.2
 
