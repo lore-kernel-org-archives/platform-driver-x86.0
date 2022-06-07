@@ -2,97 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA49CCA47C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 09:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73DDC43334
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 09:55:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239228AbiFGJRA (ORCPT
+        id S240288AbiFGJzt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Jun 2022 05:17:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41894 "EHLO
+        Tue, 7 Jun 2022 05:55:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239162AbiFGJQx (ORCPT
+        with ESMTP id S240188AbiFGJzg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Jun 2022 05:16:53 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02C9CDE30F;
-        Tue,  7 Jun 2022 02:16:51 -0700 (PDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LHPmK6j59zRp5Z;
-        Tue,  7 Jun 2022 17:13:37 +0800 (CST)
-Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 7 Jun 2022 17:16:49 +0800
-Received: from localhost.localdomain (10.175.112.125) by
- dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 7 Jun 2022 17:16:47 +0800
-From:   Wupeng Ma <mawupeng1@huawei.com>
-To:     <corbet@lwn.net>, <will@kernel.org>, <ardb@kernel.org>,
-        <catalin.marinas@arm.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-        <dvhart@infradead.org>, <andy@infradead.org>, <rppt@kernel.org>,
-        <akpm@linux-foundation.org>, <paul.walmsley@sifive.com>,
-        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-        <paulmck@kernel.org>, <keescook@chromium.org>,
-        <songmuchun@bytedance.com>, <rdunlap@infradead.org>,
-        <damien.lemoal@opensource.wdc.com>, <swboyd@chromium.org>,
-        <wei.liu@kernel.org>, <robin.murphy@arm.com>, <david@redhat.com>,
-        <mawupeng1@huawei.com>, <anshuman.khandual@arm.com>,
-        <thunder.leizhen@huawei.com>, <wangkefeng.wang@huawei.com>,
-        <gpiccoli@igalia.com>, <chenhuacai@kernel.org>,
-        <geert@linux-m68k.org>, <chenzhou10@huawei.com>,
-        <vijayb@linux.microsoft.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>
-Subject: [PATCH v3 4/6] mm: Demote warning message in vmemmap_verify() to debug level
-Date:   Tue, 7 Jun 2022 17:38:03 +0800
-Message-ID: <20220607093805.1354256-5-mawupeng1@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220607093805.1354256-1-mawupeng1@huawei.com>
-References: <20220607093805.1354256-1-mawupeng1@huawei.com>
+        Tue, 7 Jun 2022 05:55:36 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC7BE7313
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jun 2022 02:55:36 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id m20so34021954ejj.10
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jun 2022 02:55:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kLeADl+bGocWVSl8yomUziuv+0ymwn1ixOTdNVPq5hw=;
+        b=cN6nSG7jPrwHSfzDTNCONJtLB3q6BiVGeZkFdObDsM3gUu9SboXiJ9iQhobMmscywp
+         ZFuNBV1Mlwa9cUHalQ438Iu30ihJizmX4cLKhxWmSVyGEZBgdbqUr87K+wXEBB4kDlOQ
+         pmKIQXT3a/loR3cyXnz1poxcp4gMRJVF3VQzMiaWRRnwXXpk5M8NWdyN/WkxGcojJJWf
+         UkIiIP1u0WhIMz6uay3fSXQCf16EPca5i14XfnCpz6fHwm728OVMTHC2LnX+pf+oRT2P
+         +Xh7HQIk8YW2YOaYZoUfbTGncuvE5jrObEcF2nF7klBIqkv87uXiVzRp45B171TmkBm8
+         xP4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kLeADl+bGocWVSl8yomUziuv+0ymwn1ixOTdNVPq5hw=;
+        b=nyI516rRnzrJT10rimgIaMQYy9L3XZhBYrxG/haJETsBJGF9UTQZip3S21bJ8chhQH
+         /ftpD9HLCvh4DRcxBHZTDSNrfDykkbCTxITYaCKQDBL3/NFmvjRa2sL0iiSQRGu026Gu
+         nc1mK3aRZ8rs+eOi1rVH0HJC8aqK7CLWA8594I4ULkhWZYiFW6D70GlU8kgPemH5E6aY
+         DSG9n5A5RjlHJsTxCz64RYFmbYmYmCDoD5WyUgbq7KpQrDKNMvqhsY3BQ3wOAWs+gfmA
+         YEbRhtZRjfZv5yffW2a70ymYUy1QwKIJYctV8uAFNhPPTejMUO/3sT1XlM6UMQIU24M2
+         DMpA==
+X-Gm-Message-State: AOAM532/51ofAZQPOXVYaKrYDO2S3zTfZn4/JjqQspfkgtv+qAMpBSDw
+        cLkJEWdNvKg9BD9VYqshDBXTdRG2dhpjmJFaW01bdIx1o+y++Q==
+X-Google-Smtp-Source: ABdhPJxAYe3ZiCo0uhAR/WRQZa/wGmEGi29AfeIppomfbQdzJyztlh6mjO3V30o/J4bcuGB/nbxa5X9vLG3r/d50BR8=
+X-Received: by 2002:a17:906:d9d9:b0:710:f2ae:b455 with SMTP id
+ qk25-20020a170906d9d900b00710f2aeb455mr14520675ejb.77.1654595734496; Tue, 07
+ Jun 2022 02:55:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.112.125]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
+References: <20220606205451.21067-1-jorge.lopez2@hp.com>
+In-Reply-To: <20220606205451.21067-1-jorge.lopez2@hp.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 7 Jun 2022 11:54:58 +0200
+Message-ID: <CAHp75Vck8=TUeq6gQQyjS00i9Zn4G+vXK0Lev+AFMWdVpe1GGw@mail.gmail.com>
+Subject: Re: [PATCH] Revert "platform/x86: hp-wmi: Changing bios_args.data to
+ be dynamically allocated"
+To:     Jorge Lopez <jorgealtxwork@gmail.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Ma Wupeng <mawupeng1@huawei.com>
+On Tue, Jun 7, 2022 at 7:59 AM Jorge Lopez <jorgealtxwork@gmail.com> wrote:
+>
+> This reverts commit 4b4967cbd2685f313411e6facf915fb2ae01d796.
+>
+> Changes to bios_args.data to be allocated dynamically causes
+> several WMI calls for OMEN laptops to fail.  The problem
+> is resolved by reverting commit 4b4967cbd26.
 
-For a system only have limited mirrored memory or some numa node without
-mirrored memory, the per node vmemmap page_structs prefer to allocate
-memory from mirrored region, which will lead to vmemmap_verify() in
-vmemmap_populate_basepages() report lots of warning message.
+As a quick fix it's good, but have you had a chance to understand why
+this failure happened in the first place?
 
-This patch demote the "potential offnode page_structs" warning messages
-to debug level to avoid a very long print during bootup.
+Can you check my theory that is expressed in the code below?
 
-Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
----
- mm/sparse-vmemmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+...
 
-diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-index f4fa61dbbee3..78debdb89eb1 100644
---- a/mm/sparse-vmemmap.c
-+++ b/mm/sparse-vmemmap.c
-@@ -528,7 +528,7 @@ void __meminit vmemmap_verify(pte_t *pte, int node,
- 	int actual_node = early_pfn_to_nid(pfn);
- 
- 	if (node_distance(actual_node, node) > LOCAL_DISTANCE)
--		pr_warn("[%lx-%lx] potential offnode page_structs\n",
-+		pr_debug("[%lx-%lx] potential offnode page_structs\n",
- 			start, end - 1);
- }
- 
+> -       bios_args_size = struct_size(args, data, insize);
+
+Try to replace insize here with
+
+max(insize, 128)
+
+> -       args = kmalloc(bios_args_size, GFP_KERNEL);
+> -       if (!args)
+> -               return -ENOMEM;
+> -
+> -       input.length = bios_args_size;
+> -       input.pointer = args;
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
