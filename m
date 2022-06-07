@@ -2,134 +2,218 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECD6CCA47C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 12:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D81CCA47C
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 13:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243683AbiFGMZ4 (ORCPT
+        id S244632AbiFGNZS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Jun 2022 08:25:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53942 "EHLO
+        Tue, 7 Jun 2022 09:25:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243646AbiFGMZ4 (ORCPT
+        with ESMTP id S244624AbiFGNZR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Jun 2022 08:25:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 23017CE3E
-        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jun 2022 05:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654604754;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Mf4QQ8b/9HcGL5J+sznsLy7f+ZtpXa7DM56pD/5wHRY=;
-        b=eXJ9N+Cg7DMxXx7emkv4BgnaqjyRPf01f3mP842tAzxcq/992S0rnbhsvpSHHvKNqXRMXa
-        XDnkD/EJyopKS5N8d1bVvkAcv6g9mSwzTl99a98bve0yfzTgrVvdp/MF6CIh7gJE53UYAT
-        rMxfZ0L2tjawYYOyzRiC0owdQk4YM/4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-635-G-8UyXehM_KaAv1WT-aYaQ-1; Tue, 07 Jun 2022 08:25:53 -0400
-X-MC-Unique: G-8UyXehM_KaAv1WT-aYaQ-1
-Received: by mail-wm1-f69.google.com with SMTP id j40-20020a05600c1c2800b003972dbb1066so12699548wms.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jun 2022 05:25:53 -0700 (PDT)
+        Tue, 7 Jun 2022 09:25:17 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC42BE154
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jun 2022 06:25:16 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 123so5490801pgb.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jun 2022 06:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LxWRBVaAY+phAkjGqy0v3xkLRwWWCDznZIZ4ZNdQf40=;
+        b=WCh/wV/n+yuTPWnM2dcENbiwAd7ftjUmGtKRQdB53C2HFz1cr1GmhiDbdsjjMJJ4z6
+         0iXz8pdF7hcWh0r9HWEYefJ3mvmXidWOi63wwaYw7K5ECiR6ZaeDi4D6bt2KRzSIxleC
+         cv+v8U+ukt3UCo46USKC4zGIMU0AE1R+iGaUFXiDku9/NNXfaMFy8mR5TwMm7hWgieOb
+         um4Sd60g2xZTvykm0b4cuSzgwZxtau2tv9XfGg4C1UzGRpy82WqtLK3SUMk5FLQunV9V
+         BlNKVxevvPAnGJujNHaqR6faZLt4aYnzDvHOQ5PoiMIRJjbfUI/MoVuDCndoLhcv8oxy
+         0TYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Mf4QQ8b/9HcGL5J+sznsLy7f+ZtpXa7DM56pD/5wHRY=;
-        b=woJxrcuNp1x/tleCj6GNSsC24BWsOHHajrB2Xe4LpeGVtmumI5zeQ1JW5zYzZUkIIs
-         lKSaYfPe+mi+PwQgQ5UKl17Hc8zwPotZD8zRfuZkR6l+ob3ve4kWDljEs4Pve/MQ88Pb
-         OykWbQ9XBj6MJCc3tWui5fZjMUtwDKcyRxaVAUNpscbxkz02rUq7Vgy6XI9alMcSlhze
-         +jQgfQ5JG8rzyJmmRR4pv/0kcTKmlu1MFhq2HFt0kCRqqPYJalztxUuYeneQ8/uxtukf
-         b4ih6jbvLKtc02iWOZpCWzAaB/kQHbmUtHWGmtb265pNORxgPW6gaaafafM9AjyY7Hcs
-         7/PQ==
-X-Gm-Message-State: AOAM533W3EXKaH3RgTaZ38s2HH4XF/UifMLzSzOwRDL8cQGrqs7Reonc
-        tjijSRnWVOJ28yvLc/nqdv6Y/iqFMKhkJ2iKU5AqCj05beiKS2WueafsP+iapQHhvxUBMxms3Fa
-        jOa96DN1z1tMN9IbgBjcRnfHrSMAZgIPqng==
-X-Received: by 2002:a05:600c:190d:b0:394:8241:6454 with SMTP id j13-20020a05600c190d00b0039482416454mr29078102wmq.198.1654604751329;
-        Tue, 07 Jun 2022 05:25:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxEuwOaCR67pR222FFFc/vDtB6DVVouzt2vgnHsRtqi2r3pc13yypWYxPfO2mRuKCd4JmPjUQ==
-X-Received: by 2002:a05:600c:190d:b0:394:8241:6454 with SMTP id j13-20020a05600c190d00b0039482416454mr29078055wmq.198.1654604751070;
-        Tue, 07 Jun 2022 05:25:51 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c709:500:4c8d:4886:f874:7b6f? (p200300cbc70905004c8d4886f8747b6f.dip0.t-ipconnect.de. [2003:cb:c709:500:4c8d:4886:f874:7b6f])
-        by smtp.gmail.com with ESMTPSA id m19-20020a05600c4f5300b003942a244f2esm26245306wmq.7.2022.06.07.05.25.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jun 2022 05:25:50 -0700 (PDT)
-Message-ID: <b1975f44-2552-a03c-bb6f-1452f1fd99c0@redhat.com>
-Date:   Tue, 7 Jun 2022 14:25:47 +0200
+        bh=LxWRBVaAY+phAkjGqy0v3xkLRwWWCDznZIZ4ZNdQf40=;
+        b=CrpQXFCGXFPAfOETsk4NnQVanvdPPVLhoNomeHRv/sCKgJFfF1jNuAcsNfn1go+ljk
+         D8cQRyPGhehJJwuzlC1FXw37XNFvSpb5V56Z2jaSUqH69j9cfHlVNRPU6w3acziJVYPP
+         qw46FcT5ay566jMT0DR9aDw7tg0MkgLOL3IxOCE6HPp78rsmBJ2MDXa7ShQtMHmN93NU
+         wtKRPugMAmR0THPWm3mDwDUwC63G3eDHTgF93n7/kTCO1Q2/ySgOeNMsavDyOA31Vz7Y
+         cmitN9w+7w6gMfWltprJuBcebnuFDL2kaZV37o8lTW/cJuOk5JUnjdfd7E5ylUCmVNpk
+         7bMQ==
+X-Gm-Message-State: AOAM530ERHJB9tTMxvArkdfRC/KmqeYxxDDSjhv11l4MGtUQ0HiOs7mC
+        cKp2kaFS+W3/+JveBeQqJGr7hp6iDnFjTRiAO5U=
+X-Google-Smtp-Source: ABdhPJywqVLzcRMAtq2Rvaxy995L2LMeMziYg9txobL/16OmX6qU58NfXlyOKtOVrlfdP8k3w6Y5/g==
+X-Received: by 2002:a05:6a00:1a87:b0:51c:29f1:13a0 with SMTP id e7-20020a056a001a8700b0051c29f113a0mr7474784pfv.13.1654608315606;
+        Tue, 07 Jun 2022 06:25:15 -0700 (PDT)
+Received: from fedora.. ([2405:201:a007:e183:aa6d:fbda:3c70:a6e9])
+        by smtp.googlemail.com with ESMTPSA id l63-20020a632542000000b003fc4001fd5fsm12736795pgl.10.2022.06.07.06.25.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jun 2022 06:25:15 -0700 (PDT)
+From:   Bedant Patnaik <bedant.patnaik@gmail.com>
+To:     hdegoede@redhat.com
+Cc:     Bedant Patnaik <bedant.patnaik@gmail.com>, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [RFC] platform/x86: hp-wmi: make hp_wmi_perform_query() work with certain devices
+Date:   Tue,  7 Jun 2022 18:54:28 +0530
+Message-Id: <20220607132428.7221-1-bedant.patnaik@gmail.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v3 4/6] mm: Demote warning message in vmemmap_verify() to
- debug level
-Content-Language: en-US
-To:     Wupeng Ma <mawupeng1@huawei.com>, corbet@lwn.net, will@kernel.org,
-        ardb@kernel.org, catalin.marinas@arm.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        dvhart@infradead.org, andy@infradead.org, rppt@kernel.org,
-        akpm@linux-foundation.org, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, paulmck@kernel.org,
-        keescook@chromium.org, songmuchun@bytedance.com,
-        rdunlap@infradead.org, damien.lemoal@opensource.wdc.com,
-        swboyd@chromium.org, wei.liu@kernel.org, robin.murphy@arm.com,
-        anshuman.khandual@arm.com, thunder.leizhen@huawei.com,
-        wangkefeng.wang@huawei.com, gpiccoli@igalia.com,
-        chenhuacai@kernel.org, geert@linux-m68k.org, chenzhou10@huawei.com,
-        vijayb@linux.microsoft.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org
-References: <20220607093805.1354256-1-mawupeng1@huawei.com>
- <20220607093805.1354256-5-mawupeng1@huawei.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20220607093805.1354256-5-mawupeng1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 07.06.22 11:38, Wupeng Ma wrote:
-> From: Ma Wupeng <mawupeng1@huawei.com>
-> 
-> For a system only have limited mirrored memory or some numa node without
-> mirrored memory, the per node vmemmap page_structs prefer to allocate
-> memory from mirrored region, which will lead to vmemmap_verify() in
-> vmemmap_populate_basepages() report lots of warning message.
-> 
-> This patch demote the "potential offnode page_structs" warning messages
-> to debug level to avoid a very long print during bootup.
-> 
-> Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
-> ---
->  mm/sparse-vmemmap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-> index f4fa61dbbee3..78debdb89eb1 100644
-> --- a/mm/sparse-vmemmap.c
-> +++ b/mm/sparse-vmemmap.c
-> @@ -528,7 +528,7 @@ void __meminit vmemmap_verify(pte_t *pte, int node,
->  	int actual_node = early_pfn_to_nid(pfn);
->  
->  	if (node_distance(actual_node, node) > LOCAL_DISTANCE)
-> -		pr_warn("[%lx-%lx] potential offnode page_structs\n",
-> +		pr_debug("[%lx-%lx] potential offnode page_structs\n",
->  			start, end - 1);
->  }
->  
+4b4967cbd2685f313411e6facf915fb2ae01d796 ("platform/x86: hp-wmi: Changing bios_args.data to be dynamically...")
+broke WMI queries on some devices where the ACPI method HWMC unconditionally attempts to create Fields beyond the buffer
+if the buffer is too small, this breaks essential features such as power profiles:
+        CreateByteField (Arg1, 0x10, D008)
+        CreateByteField (Arg1, 0x11, D009)
+        CreateByteField (Arg1, 0x12, D010)
+        CreateDWordField (Arg1, 0x10, D032)
+        CreateField (Arg1, 0x80, 0x0400, D128)
+In cases where args->data had zero length, ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [D008] at bit 
+offset/length 128/8 exceeds size of target Buffer (128 bits) (20211217/dsopcode-198) was obtained.
+Fix: allocate at least 128 bytes for args->data
 
-This will possibly hide it in environments where this might indeed
-indicate performance issues.
+be9d73e64957bbd31ee9a0d11adc0f720974c558 ("platform/x86: hp-wmi: Fix 0x05 error code reported by several WMI calls")
+and 12b19f14a21a2ee6348825d95b642ef2cd16794f ("platform/x86: hp-wmi: Fix hp_wmi_read_int() reporting error (0x05)")
+caused ACPI BIOS Error (bug): Attempt to CreateField of length zero (20211217/dsopcode-133) because of the ACPI
+method HWMC, which unconditionally creates a Field of size (insize*8) bits:
+	CreateField (Arg1, 0x80, (Local5 * 0x08), DAIN)
+In cases where args->insize = 0, the Field size is 0, resulting in an error.
+Fix: use zero insize only if 0x5 error code is returned
 
-What about a pr_warn_once()?
+Tested on Omen 15 AMD (2020) board ID: 8786.
 
+Signed-off-by: Bedant Patnaik <bedant.patnaik@gmail.com>
+Cc: markgross@kernel.org
+Cc: platform-driver-x86@vger.kernel.org
+
+---
+ drivers/platform/x86/hp-wmi.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 667f94bba..3ef385f14 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -38,6 +38,7 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+ #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
+ #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
+ #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
++#define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
+ 
+ /* DMI board names of devices that should use the omen specific path for
+  * thermal profiles.
+@@ -175,7 +176,7 @@ enum hp_thermal_profile_omen_v1 {
+ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+ 	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+-	HP_THERMAL_PROFILE_COOL			= 0x02
++	HP_THERMAL_PROFILE_COOL			= 0x02,
+ };
+ 
+ #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+@@ -220,6 +221,7 @@ static struct input_dev *hp_wmi_input_dev;
+ static struct platform_device *hp_wmi_platform_dev;
+ static struct platform_profile_handler platform_profile_handler;
+ static bool platform_profile_support;
++static bool zero_insize_support;
+ 
+ static struct rfkill *wifi_rfkill;
+ static struct rfkill *bluetooth_rfkill;
+@@ -297,8 +299,8 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 	if (WARN_ON(mid < 0))
+ 		return mid;
+ 
+-	bios_args_size = struct_size(args, data, insize);
+-	args = kmalloc(bios_args_size, GFP_KERNEL);
++	bios_args_size = max(struct_size(args, data, insize), struct_size(args, data, 128));
++	args = kzalloc(bios_args_size, GFP_KERNEL);
+ 	if (!args)
+ 		return -ENOMEM;
+ 
+@@ -374,7 +376,7 @@ static int hp_wmi_read_int(int query)
+ 	int val = 0, ret;
+ 
+ 	ret = hp_wmi_perform_query(query, HPWMI_READ, &val,
+-				   0, sizeof(val));
++				   zero_if_sup(val), sizeof(val));
+ 
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
+@@ -410,7 +412,8 @@ static int hp_wmi_get_tablet_mode(void)
+ 		return -ENODEV;
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_SYSTEM_DEVICE_MODE, HPWMI_READ,
+-				   system_device_mode, 0, sizeof(system_device_mode));
++				   system_device_mode, zero_if_sup(system_device_mode),
++				   sizeof(system_device_mode));
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -497,7 +500,7 @@ static int hp_wmi_fan_speed_max_get(void)
+ 	int val = 0, ret;
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
+-				   &val, 0, sizeof(val));
++				   &val, zero_if_sup(val), sizeof(val));
+ 
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
+@@ -509,7 +512,7 @@ static int __init hp_wmi_bios_2008_later(void)
+ {
+ 	int state = 0;
+ 	int ret = hp_wmi_perform_query(HPWMI_FEATURE_QUERY, HPWMI_READ, &state,
+-				       0, sizeof(state));
++				       zero_if_sup(state), sizeof(state));
+ 	if (!ret)
+ 		return 1;
+ 
+@@ -520,7 +523,7 @@ static int __init hp_wmi_bios_2009_later(void)
+ {
+ 	u8 state[128];
+ 	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &state,
+-				       0, sizeof(state));
++				       zero_if_sup(state), sizeof(state));
+ 	if (!ret)
+ 		return 1;
+ 
+@@ -598,7 +601,7 @@ static int hp_wmi_rfkill2_refresh(void)
+ 	int err, i;
+ 
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   0, sizeof(state));
++				   zero_if_sup(state), sizeof(state));
+ 	if (err)
+ 		return err;
+ 
+@@ -1007,7 +1010,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 	int err, i;
+ 
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+-				   0, sizeof(state));
++				   zero_if_sup(state), sizeof(state));
+ 	if (err)
+ 		return err < 0 ? err : -EINVAL;
+ 
+@@ -1483,11 +1486,15 @@ static int __init hp_wmi_init(void)
+ {
+ 	int event_capable = wmi_has_guid(HPWMI_EVENT_GUID);
+ 	int bios_capable = wmi_has_guid(HPWMI_BIOS_GUID);
+-	int err;
++	int err, tmp = 0;
+ 
+ 	if (!bios_capable && !event_capable)
+ 		return -ENODEV;
+ 
++	if (hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_READ, &tmp,
++				 sizeof(tmp), sizeof(tmp)) == HPWMI_RET_INVALID_PARAMETERS)
++		zero_insize_support = true;
++
+ 	if (event_capable) {
+ 		err = hp_wmi_input_setup();
+ 		if (err)
 -- 
-Thanks,
-
-David / dhildenb
+2.36.1
 
