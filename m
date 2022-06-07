@@ -2,68 +2,68 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFA6C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 12:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECD6CCA47C
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 12:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243651AbiFGMZP (ORCPT
+        id S243683AbiFGMZ4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Jun 2022 08:25:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53474 "EHLO
+        Tue, 7 Jun 2022 08:25:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242662AbiFGMZP (ORCPT
+        with ESMTP id S243646AbiFGMZ4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Jun 2022 08:25:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 777AA63EB
-        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jun 2022 05:25:14 -0700 (PDT)
+        Tue, 7 Jun 2022 08:25:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 23017CE3E
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jun 2022 05:25:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654604713;
+        s=mimecast20190719; t=1654604754;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=+BkMDQZuNbOmLtpQeNhEv9Hz5yKGluY7VE08oBIu2Ig=;
-        b=S85/WgSAFfLdJbhkd2mcI2/tg+YZY6o0673cOHPw25PMRMwc7bfxxXWa33POSwlX1vVnxm
-        8U/fbVImXwOUlW/4gBIrUGSGAjXZSflRztZcZHOStamgjEiDj0LqHsUEOaOjde6+8R9Mhp
-        PY7XDBTsLoEmboF2A1EbJCMfk7nNw+Y=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Mf4QQ8b/9HcGL5J+sznsLy7f+ZtpXa7DM56pD/5wHRY=;
+        b=eXJ9N+Cg7DMxXx7emkv4BgnaqjyRPf01f3mP842tAzxcq/992S0rnbhsvpSHHvKNqXRMXa
+        XDnkD/EJyopKS5N8d1bVvkAcv6g9mSwzTl99a98bve0yfzTgrVvdp/MF6CIh7gJE53UYAT
+        rMxfZ0L2tjawYYOyzRiC0owdQk4YM/4=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-570-pxT8pdxbNpWBSb71oprBvg-1; Tue, 07 Jun 2022 08:25:12 -0400
-X-MC-Unique: pxT8pdxbNpWBSb71oprBvg-1
-Received: by mail-wr1-f69.google.com with SMTP id y2-20020adff142000000b0021581245fa1so2693503wro.7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jun 2022 05:25:12 -0700 (PDT)
+ us-mta-635-G-8UyXehM_KaAv1WT-aYaQ-1; Tue, 07 Jun 2022 08:25:53 -0400
+X-MC-Unique: G-8UyXehM_KaAv1WT-aYaQ-1
+Received: by mail-wm1-f69.google.com with SMTP id j40-20020a05600c1c2800b003972dbb1066so12699548wms.4
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jun 2022 05:25:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:organization:in-reply-to
          :content-transfer-encoding;
-        bh=+BkMDQZuNbOmLtpQeNhEv9Hz5yKGluY7VE08oBIu2Ig=;
-        b=UI7sJ7FL4gRVTx2KTcaEDJCOnXwQFYCGzxSU3t8jTgA9QU5OgX7VwFiO9jBbEQtIRx
-         0BfBqXUUr6le8gBJYuoY6Jta5XaEdi+0rg/FUho9ctuvOlD0VKSCGeJHvqamaWJ30Ios
-         8GGavL9Kpw1C2NmREH6yZ1mlGzi/UejIZa/LM8IzN1VuU/pgK/mDkOj5yuAb6JXs0uX7
-         FbSVhHnZZAwIjEMe4XzOha6IPG4yaUD8GHQHtv3Mf6kVtYTFj+u/HZfXV0aIzd+n0EBO
-         UnMHUCluaZLBdJre5UPg9lgZ1tjNbUivXuc65MaYerKBknygjNQCxlj/F20T5wQ27f7+
-         Zt+w==
-X-Gm-Message-State: AOAM532FnWIqLi6rQDONO+cWo7z1BiDUYw9aUj+yWimN6uP97DvrUP49
-        3leLoKlSXYLqlg0U974TGKBMsQVeLuYIMUxk6ST2meCtsYkKN4TueZyD9NLijKu/r7LYobykb+j
-        YR1rgqnUoHrNfDeTiRhY/Jstc4mlDXu5e5w==
-X-Received: by 2002:a1c:f208:0:b0:39c:1282:3d04 with SMTP id s8-20020a1cf208000000b0039c12823d04mr28841128wmc.26.1654604711160;
-        Tue, 07 Jun 2022 05:25:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwMUrgCzQBm+yVcNb8mYR2lLnuWwWS9cRpDp1JcqdwRxHeXNkz9aaogfYXuCC8mxqoLMwFOiA==
-X-Received: by 2002:a1c:f208:0:b0:39c:1282:3d04 with SMTP id s8-20020a1cf208000000b0039c12823d04mr28841072wmc.26.1654604710883;
-        Tue, 07 Jun 2022 05:25:10 -0700 (PDT)
+        bh=Mf4QQ8b/9HcGL5J+sznsLy7f+ZtpXa7DM56pD/5wHRY=;
+        b=woJxrcuNp1x/tleCj6GNSsC24BWsOHHajrB2Xe4LpeGVtmumI5zeQ1JW5zYzZUkIIs
+         lKSaYfPe+mi+PwQgQ5UKl17Hc8zwPotZD8zRfuZkR6l+ob3ve4kWDljEs4Pve/MQ88Pb
+         OykWbQ9XBj6MJCc3tWui5fZjMUtwDKcyRxaVAUNpscbxkz02rUq7Vgy6XI9alMcSlhze
+         +jQgfQ5JG8rzyJmmRR4pv/0kcTKmlu1MFhq2HFt0kCRqqPYJalztxUuYeneQ8/uxtukf
+         b4ih6jbvLKtc02iWOZpCWzAaB/kQHbmUtHWGmtb265pNORxgPW6gaaafafM9AjyY7Hcs
+         7/PQ==
+X-Gm-Message-State: AOAM533W3EXKaH3RgTaZ38s2HH4XF/UifMLzSzOwRDL8cQGrqs7Reonc
+        tjijSRnWVOJ28yvLc/nqdv6Y/iqFMKhkJ2iKU5AqCj05beiKS2WueafsP+iapQHhvxUBMxms3Fa
+        jOa96DN1z1tMN9IbgBjcRnfHrSMAZgIPqng==
+X-Received: by 2002:a05:600c:190d:b0:394:8241:6454 with SMTP id j13-20020a05600c190d00b0039482416454mr29078102wmq.198.1654604751329;
+        Tue, 07 Jun 2022 05:25:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxEuwOaCR67pR222FFFc/vDtB6DVVouzt2vgnHsRtqi2r3pc13yypWYxPfO2mRuKCd4JmPjUQ==
+X-Received: by 2002:a05:600c:190d:b0:394:8241:6454 with SMTP id j13-20020a05600c190d00b0039482416454mr29078055wmq.198.1654604751070;
+        Tue, 07 Jun 2022 05:25:51 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c709:500:4c8d:4886:f874:7b6f? (p200300cbc70905004c8d4886f8747b6f.dip0.t-ipconnect.de. [2003:cb:c709:500:4c8d:4886:f874:7b6f])
-        by smtp.gmail.com with ESMTPSA id c6-20020adffb46000000b0020c5253d90asm18213212wrs.86.2022.06.07.05.24.45
+        by smtp.gmail.com with ESMTPSA id m19-20020a05600c4f5300b003942a244f2esm26245306wmq.7.2022.06.07.05.25.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jun 2022 05:25:09 -0700 (PDT)
-Message-ID: <f17bbf85-66bc-619a-6a73-71c1cc719622@redhat.com>
-Date:   Tue, 7 Jun 2022 14:24:43 +0200
+        Tue, 07 Jun 2022 05:25:50 -0700 (PDT)
+Message-ID: <b1975f44-2552-a03c-bb6f-1452f1fd99c0@redhat.com>
+Date:   Tue, 7 Jun 2022 14:25:47 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [PATCH v3 3/6] mm: Ratelimited mirrored memory related warning
- messages
+Subject: Re: [PATCH v3 4/6] mm: Demote warning message in vmemmap_verify() to
+ debug level
 Content-Language: en-US
 To:     Wupeng Ma <mawupeng1@huawei.com>, corbet@lwn.net, will@kernel.org,
         ardb@kernel.org, catalin.marinas@arm.com
@@ -83,10 +83,10 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         linux-mm@kvack.org, linux-riscv@lists.infradead.org
 References: <20220607093805.1354256-1-mawupeng1@huawei.com>
- <20220607093805.1354256-4-mawupeng1@huawei.com>
+ <20220607093805.1354256-5-mawupeng1@huawei.com>
 From:   David Hildenbrand <david@redhat.com>
 Organization: Red Hat
-In-Reply-To: <20220607093805.1354256-4-mawupeng1@huawei.com>
+In-Reply-To: <20220607093805.1354256-5-mawupeng1@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -96,43 +96,37 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 On 07.06.22 11:38, Wupeng Ma wrote:
 > From: Ma Wupeng <mawupeng1@huawei.com>
 > 
-> If system has mirrored memory, memblock will try to allocate mirrored
-> memory firstly and fallback to non-mirrored memory when fails, but if with
-> limited mirrored memory or some numa node without mirrored memory, lots of
-> warning message about memblock allocation will occur.
+> For a system only have limited mirrored memory or some numa node without
+> mirrored memory, the per node vmemmap page_structs prefer to allocate
+> memory from mirrored region, which will lead to vmemmap_verify() in
+> vmemmap_populate_basepages() report lots of warning message.
 > 
-> This patch ratelimit the warning message to avoid a very long print during
-> bootup.
+> This patch demote the "potential offnode page_structs" warning messages
+> to debug level to avoid a very long print during bootup.
 > 
 > Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
 > ---
->  mm/memblock.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  mm/sparse-vmemmap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index e4f03a6e8e56..b1d2a0009733 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -327,7 +327,7 @@ static phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
->  					    NUMA_NO_NODE, flags);
+> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+> index f4fa61dbbee3..78debdb89eb1 100644
+> --- a/mm/sparse-vmemmap.c
+> +++ b/mm/sparse-vmemmap.c
+> @@ -528,7 +528,7 @@ void __meminit vmemmap_verify(pte_t *pte, int node,
+>  	int actual_node = early_pfn_to_nid(pfn);
 >  
->  	if (!ret && (flags & MEMBLOCK_MIRROR)) {
-> -		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
-> +		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
->  			&size);
->  		flags &= ~MEMBLOCK_MIRROR;
->  		goto again;
-> @@ -1384,7 +1384,7 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+>  	if (node_distance(actual_node, node) > LOCAL_DISTANCE)
+> -		pr_warn("[%lx-%lx] potential offnode page_structs\n",
+> +		pr_debug("[%lx-%lx] potential offnode page_structs\n",
+>  			start, end - 1);
+>  }
 >  
->  	if (flags & MEMBLOCK_MIRROR) {
->  		flags &= ~MEMBLOCK_MIRROR;
-> -		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
-> +		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
->  			&size);
->  		goto again;
->  	}
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+This will possibly hide it in environments where this might indeed
+indicate performance issues.
+
+What about a pr_warn_once()?
 
 -- 
 Thanks,
