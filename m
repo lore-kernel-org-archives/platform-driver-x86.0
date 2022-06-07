@@ -2,245 +2,143 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9A2C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Jun 2022 21:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F7DCCA47C
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 09:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234924AbiFFVEr (ORCPT
+        id S239206AbiFGJQw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Jun 2022 17:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39328 "EHLO
+        Tue, 7 Jun 2022 05:16:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234923AbiFFVEj (ORCPT
+        with ESMTP id S239182AbiFGJQr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Jun 2022 17:04:39 -0400
-Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C43A6E64C0
-        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jun 2022 13:54:54 -0700 (PDT)
-Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-e656032735so20707553fac.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jun 2022 13:54:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gX6s7Wh6aEsuXk169Xqvmjed2XHRcZV2BmxZzPYQiQ8=;
-        b=VcxVBvi0Z9U60zdAo9s7TR5KpA3qpVoeh+AI0EtWyvFeVjUGwY0y6yvL5I6j9Tt3h8
-         Md8Zl87D2hrjrIlzlf1jpBxVfUr2aIKBzEHCh75LoytM8AHOY4Yu2RB226EUk1Orhyvt
-         hIFJF84oHS/XnSUeRAvfHdjWu6Rmx/kPfiMw0wHahR6DbYN5HjGAT0KLa1I1+MYq/9R1
-         rVcrTOUc9M3NLaX6lNVnCHFOQUFJTB60Z5fsguXhuScppG1Qa6N7bNzHLoDZsvGHR0gQ
-         kElLH8lnBwz1KVDdr4lzGYWypqmKqFPv5BP6adPLaOc3pJRpETxXnWwmiHdRtLP5uH9g
-         4FBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gX6s7Wh6aEsuXk169Xqvmjed2XHRcZV2BmxZzPYQiQ8=;
-        b=RwGA1LWnxVc49jOK8XDluRGNV4c3n67PM/XGF3fNdYyanL5AWdjhitcYA99cAT1ui7
-         CpDBO7iAVupOS/WKCRdcqm5vpr0ZqwlllwyOGn1mt6M2EM6PGZrCiDe7DGaZ/nS16pKl
-         gsac5ZlebDetnWRr65UJpMaCmVgAUotKWwDvSzkgYT9RJ1jzAyFva0U7yU0HPN9JpO6q
-         j6sRYBNlkFMJ5XgpCzkkgy7xOWgDgDsE6lXp+6HIzkRugX3KWuGFXjp/Ope1GgQwKCGT
-         UVv6dTFCq9SYm4Aj0GMMm4HGdXDXd6A8i9XDzFMj92BkUzI2lVR8DSR7dQOA1azrOe1F
-         N/wg==
-X-Gm-Message-State: AOAM530G0LFbZOl618s31Le4C7VeMhjZBzmMuBspEN3lfVZhmnNSeTGr
-        +dghGQo9b55KBQ2w+4Px8Rr+1c4z4gc=
-X-Google-Smtp-Source: ABdhPJzeh3vF3vob5Rx2fI7+6fu4FnaHsQM5mUWqwERsNmR0iBixVysH/xYBV88Mpzo/i8jcnrVgDQ==
-X-Received: by 2002:a05:6870:1690:b0:f3:4053:c009 with SMTP id j16-20020a056870169000b000f34053c009mr22252674oae.41.1654548893769;
-        Mon, 06 Jun 2022 13:54:53 -0700 (PDT)
-Received: from grumpy-vm.hsd1.tx.comcast.net ([2601:2c3:480:7390:8846:ac70:774e:54a4])
-        by smtp.gmail.com with ESMTPSA id e29-20020a4a9b5d000000b0035eb4e5a6b3sm8324728ook.9.2022.06.06.13.54.52
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jun 2022 13:54:53 -0700 (PDT)
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
-To:     platform-driver-x86@vger.kernel.org
-Subject: [PATCH] Revert "platform/x86: hp-wmi: Changing bios_args.data to be dynamically allocated"
-Date:   Mon,  6 Jun 2022 15:54:51 -0500
-Message-Id: <20220606205451.21067-1-jorge.lopez2@hp.com>
+        Tue, 7 Jun 2022 05:16:47 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F3EDB0D00;
+        Tue,  7 Jun 2022 02:16:44 -0700 (PDT)
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LHPmC185MzRp5T;
+        Tue,  7 Jun 2022 17:13:31 +0800 (CST)
+Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 7 Jun 2022 17:16:42 +0800
+Received: from localhost.localdomain (10.175.112.125) by
+ dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 7 Jun 2022 17:16:40 +0800
+From:   Wupeng Ma <mawupeng1@huawei.com>
+To:     <corbet@lwn.net>, <will@kernel.org>, <ardb@kernel.org>,
+        <catalin.marinas@arm.com>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+        <dvhart@infradead.org>, <andy@infradead.org>, <rppt@kernel.org>,
+        <akpm@linux-foundation.org>, <paul.walmsley@sifive.com>,
+        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+        <paulmck@kernel.org>, <keescook@chromium.org>,
+        <songmuchun@bytedance.com>, <rdunlap@infradead.org>,
+        <damien.lemoal@opensource.wdc.com>, <swboyd@chromium.org>,
+        <wei.liu@kernel.org>, <robin.murphy@arm.com>, <david@redhat.com>,
+        <mawupeng1@huawei.com>, <anshuman.khandual@arm.com>,
+        <thunder.leizhen@huawei.com>, <wangkefeng.wang@huawei.com>,
+        <gpiccoli@igalia.com>, <chenhuacai@kernel.org>,
+        <geert@linux-m68k.org>, <chenzhou10@huawei.com>,
+        <vijayb@linux.microsoft.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>
+Subject: [PATCH v3 0/6] introduce mirrored memory support for arm64
+Date:   Tue, 7 Jun 2022 17:37:59 +0800
+Message-ID: <20220607093805.1354256-1-mawupeng1@huawei.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.112.125]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500014.china.huawei.com (7.185.36.153)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This reverts commit 4b4967cbd2685f313411e6facf915fb2ae01d796.
+From: Ma Wupeng <mawupeng1@huawei.com>
 
-Changes to bios_args.data to be allocated dynamically causes
-several WMI calls for OMEN laptops to fail.  The problem
-is resolved by reverting commit 4b4967cbd26.
+Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
+introduced mirrored memory support for x86. This support rely on UEFI to
+report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-158:
 
-All changes were validated on a HP ZBook Workstation notebook,
-HP EliteBook x360, HP EliteBook 850 G8, and Omen 15 notebooks.
-Additional validation was included in the test process to
-ensure no other	commands were incorrectly handled.
+  http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
 
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+Memory mirroring is a technique used to separate memory into two separate
+channels, usually on a memory device, like a server. In memory mirroring,
+one channel is copied to another to create redundancy. This method makes
+input/output (I/O) registers and memory appear with more than one address
+range because the same physical byte is accessible at more than one
+address. Using memory mirroring, higher memory reliability and a higher
+level of memory consolidation are possible.
 
----
-Based on the latest platform-drivers-x86.git/for-next
----
- drivers/platform/x86/hp-wmi.c | 62 ++++++++++++++++-------------------
- 1 file changed, 29 insertions(+), 33 deletions(-)
+These EFI memory regions have various attributes, and the "mirrored"
+attribute is one of them. The physical memory region whose descriptors
+in EFI memory map has EFI_MEMORY_MORE_RELIABLE attribute (bit: 16) are
+mirrored. The address range mirroring feature of the kernel arranges such
+mirrored regions into normal zones and other regions into movable zones.
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 0e9a25b56e0e..b917571a1e47 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -90,17 +90,12 @@ enum hp_wmi_event_ids {
- 	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
- };
- 
--/*
-- * struct bios_args buffer is dynamically allocated.  New WMI command types
-- * were introduced that exceeds 128-byte data size.  Changes to handle
-- * the data size allocation scheme were kept in hp_wmi_perform_qurey function.
-- */
- struct bios_args {
- 	u32 signature;
- 	u32 command;
- 	u32 commandtype;
- 	u32 datasize;
--	u8 data[];
-+	u8 data[128];
- };
- 
- enum hp_wmi_commandtype {
-@@ -286,43 +281,37 @@ static inline int encode_outsize_for_pvsz(int outsize)
- static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
- 				void *buffer, int insize, int outsize)
- {
--	struct acpi_buffer input, output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	int mid;
- 	struct bios_return *bios_return;
--	union acpi_object *obj = NULL;
--	struct bios_args *args = NULL;
--	int mid, actual_outsize, ret;
--	size_t bios_args_size;
-+	int actual_outsize;
-+	union acpi_object *obj;
-+	struct bios_args args = {
-+		.signature = 0x55434553,
-+		.command = command,
-+		.commandtype = query,
-+		.datasize = insize,
-+		.data = { 0 },
-+	};
-+	struct acpi_buffer input = { sizeof(struct bios_args), &args };
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	int ret = 0;
- 
- 	mid = encode_outsize_for_pvsz(outsize);
- 	if (WARN_ON(mid < 0))
- 		return mid;
- 
--	bios_args_size = struct_size(args, data, insize);
--	args = kmalloc(bios_args_size, GFP_KERNEL);
--	if (!args)
--		return -ENOMEM;
--
--	input.length = bios_args_size;
--	input.pointer = args;
--
--	args->signature = 0x55434553;
--	args->command = command;
--	args->commandtype = query;
--	args->datasize = insize;
--	memcpy(args->data, buffer, flex_array_size(args, data, insize));
-+	if (WARN_ON(insize > sizeof(args.data)))
-+		return -EINVAL;
-+	memcpy(&args.data[0], buffer, insize);
- 
--	ret = wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
--	if (ret)
--		goto out_free;
-+	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
- 
- 	obj = output.pointer;
--	if (!obj) {
--		ret = -EINVAL;
--		goto out_free;
--	}
-+
-+	if (!obj)
-+		return -EINVAL;
- 
- 	if (obj->type != ACPI_TYPE_BUFFER) {
--		pr_warn("query 0x%x returned an invalid object 0x%x\n", query, ret);
- 		ret = -EINVAL;
- 		goto out_free;
- 	}
-@@ -347,7 +336,6 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
- 
- out_free:
- 	kfree(obj);
--	kfree(args);
- 	return ret;
- }
- 
-@@ -605,6 +593,7 @@ static int hp_wmi_rfkill2_refresh(void)
- 	for (i = 0; i < rfkill2_count; i++) {
- 		int num = rfkill2[i].num;
- 		struct bios_rfkill2_device_state *devstate;
-+
- 		devstate = &state.device[num];
- 
- 		if (num >= state.count ||
-@@ -625,6 +614,7 @@ static ssize_t display_show(struct device *dev, struct device_attribute *attr,
- 			    char *buf)
- {
- 	int value = hp_wmi_read_int(HPWMI_DISPLAY_QUERY);
-+
- 	if (value < 0)
- 		return value;
- 	return sprintf(buf, "%d\n", value);
-@@ -634,6 +624,7 @@ static ssize_t hddtemp_show(struct device *dev, struct device_attribute *attr,
- 			    char *buf)
- {
- 	int value = hp_wmi_read_int(HPWMI_HDDTEMP_QUERY);
-+
- 	if (value < 0)
- 		return value;
- 	return sprintf(buf, "%d\n", value);
-@@ -643,6 +634,7 @@ static ssize_t als_show(struct device *dev, struct device_attribute *attr,
- 			char *buf)
- {
- 	int value = hp_wmi_read_int(HPWMI_ALS_QUERY);
-+
- 	if (value < 0)
- 		return value;
- 	return sprintf(buf, "%d\n", value);
-@@ -652,6 +644,7 @@ static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
- 	int value = hp_wmi_get_dock_state();
-+
- 	if (value < 0)
- 		return value;
- 	return sprintf(buf, "%d\n", value);
-@@ -661,6 +654,7 @@ static ssize_t tablet_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
- {
- 	int value = hp_wmi_get_tablet_mode();
-+
- 	if (value < 0)
- 		return value;
- 	return sprintf(buf, "%d\n", value);
-@@ -671,6 +665,7 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
- {
- 	/* Get the POST error code of previous boot failure. */
- 	int value = hp_wmi_read_int(HPWMI_POSTCODEERROR_QUERY);
-+
- 	if (value < 0)
- 		return value;
- 	return sprintf(buf, "0x%x\n", value);
-@@ -1013,6 +1008,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
- 		struct rfkill *rfkill;
- 		enum rfkill_type type;
- 		char *name;
-+
- 		switch (state.device[i].radio_type) {
- 		case HPWMI_WIFI:
- 			type = RFKILL_TYPE_WLAN;
+Arm64 can support this too. So mirrored memory support is added to support
+arm64.
+
+The main purpose of this patch set is to introduce mirrored support for
+arm64 and we have already fixed the problems we had which is shown in
+patch #5 to patch #8 and try to bring total isolation in patch #9 which
+will disable mirror feature if kernelcore is not specified.
+
+In order to test this support in arm64:
+- patch this patch set
+- add kernelcore=mirror in kernel parameter
+- start you kernel
+
+Patch #1-#2 introduce mirrored memory support form arm64.
+Patch #3-#5 fix some bugs for arm64 if memory reliable is enabled.
+Patch #6 disable mirror feature if kernelcore is not specified.
+
+Thanks to Ard Biesheuvel's hard work [1], now kernel will perfer mirrored
+memory if kaslr is enabled.
+
+[1] https://lore.kernel.org/linux-arm-kernel/CAMj1kXEPVEzMgOM4+Yj6PxHA-jFuDOAUdDJSiSxy_XaP4P7LSw@mail.gmail.com/T/
+
+Changelog since v2:
+- remove efi_fake_mem support
+- remove Commit ("remove some redundant code in ia64 efi_init") since
+  efi_print_memmap() is not public
+- add mirror flag back on initrd memory
+
+Changelog since v1:
+- update changelog in cover letter
+- use PHYS_PFN in patch #7
+
+Ma Wupeng (6):
+  efi: Make efi_find_mirror() public
+  arm64/mirror: arm64 enabling - find mirrored memory ranges
+  mm: Ratelimited mirrored memory related warning messages
+  mm: Demote warning message in vmemmap_verify() to debug level
+  mm: Add mirror flag back on initrd memory
+  efi: Disable mirror feature if kernelcore is not specified
+
+ .../admin-guide/kernel-parameters.txt         |  2 +-
+ arch/arm64/kernel/setup.c                     |  1 +
+ arch/arm64/mm/init.c                          |  9 +++++++
+ arch/x86/include/asm/efi.h                    |  4 ---
+ arch/x86/platform/efi/efi.c                   | 23 ----------------
+ drivers/firmware/efi/efi.c                    | 26 +++++++++++++++++++
+ include/linux/efi.h                           |  3 +++
+ include/linux/memblock.h                      |  1 +
+ include/linux/mm.h                            |  2 ++
+ mm/memblock.c                                 | 24 +++++++++++++++--
+ mm/page_alloc.c                               |  2 +-
+ mm/sparse-vmemmap.c                           |  2 +-
+ 12 files changed, 67 insertions(+), 32 deletions(-)
+
 -- 
 2.25.1
 
