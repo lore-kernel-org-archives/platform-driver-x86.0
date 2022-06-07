@@ -2,94 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE187CCA483
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 17:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AE7C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 17:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237631AbiFGRQ2 (ORCPT
+        id S1346835AbiFGRcE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Jun 2022 13:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59500 "EHLO
+        Tue, 7 Jun 2022 13:32:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345479AbiFGRQY (ORCPT
+        with ESMTP id S1347068AbiFGRaD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Jun 2022 13:16:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 00270104CA6
-        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jun 2022 10:16:22 -0700 (PDT)
+        Tue, 7 Jun 2022 13:30:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 01159EAD1C
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jun 2022 10:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654622181;
+        s=mimecast20190719; t=1654622733;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IXEuAxtdK44RWYeCxDOJ3NCkadlV5+P4l5LCOSSL0CM=;
-        b=Kx/BE+sDfDkwVM7zpw66ZE+5WR773rx32GZRQLKt10WJkbUk4Hv99xFPzbSw9z4MhCFrhM
-        OsfvlP05JjOhIJaAHk+EvEOCHPJiCe3S3AqFiFdQBDDddMhjtoGMx5kFlnoZ5tNf83KfGZ
-        /bCQA26M4EB0KrWGhvF5XVVBCKGnEQw=
+        bh=YnCoHL449X7tbcwtTlDBo6pzdAbzSUHoEukd3QLon0Q=;
+        b=icOg3nypLIX0y1KNVaucPOYixuiO1S9OLxVXNX/jNI0YPdew2WCBMa6VwcDpKVu0VSvG5H
+        zQ++Oq3uRCR/Ed1I28tS13M/K0TXcdmNG9t2Xcu9V2A7bIX3RwHGIQly6Jy0zpE4wydbz5
+        Btix0k2UWNnZEX8p/Cu4wenhH5ue86U=
 Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
  [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-357-cYb2y5BvNmibor6fkRy8bA-1; Tue, 07 Jun 2022 13:16:20 -0400
-X-MC-Unique: cYb2y5BvNmibor6fkRy8bA-1
-Received: by mail-ed1-f70.google.com with SMTP id g3-20020a056402320300b0042dc956d80eso13037404eda.14
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jun 2022 10:16:20 -0700 (PDT)
+ us-mta-8-b2VwSfGyOOKJZZDz-9GKvA-1; Tue, 07 Jun 2022 13:25:31 -0400
+X-MC-Unique: b2VwSfGyOOKJZZDz-9GKvA-1
+Received: by mail-ed1-f70.google.com with SMTP id y4-20020aa7ccc4000000b0042df06d83bcso13138901edt.22
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jun 2022 10:25:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+         :content-language:to:references:cc:from:in-reply-to
          :content-transfer-encoding;
-        bh=IXEuAxtdK44RWYeCxDOJ3NCkadlV5+P4l5LCOSSL0CM=;
-        b=ZXtIgj6fqxq4WQsZuDmcFphiLBenEJ7zkDDIThjX8EcSiAOdYFsZripQBF+4wTCT5/
-         8guhVB6DJfhBo190dLHRU4Q6zbjar0ndTQcSfRm2lYp3lkHyuLYj/tzhBxKzjgCZRDnG
-         Ydw4082x3JZfWCk9UHvlQ6aLyP/cRJyiuev80fFSG+QyporfMqS/Ydt4oQZ/hxfNnCYO
-         k06sTSUvXx2oLpUrloOWNoDM9HdsSKFTd3J8Zwm7oNz4lj98T12bKojfMJ4gNNdFEc3s
-         ilWvpHUUV7jGxX9q0f4/kRQgw6ah7UGlu4+CPM/9kppnFB0euCJhAzdMFqhhLU92Stbs
-         b7Fg==
-X-Gm-Message-State: AOAM532hl/GfrMGYQxErUa4Tn1A/qjfmVef7BnlOENlhs6d9adUC+VrF
-        q7pxldtDmeCQjfwiLJNUuYPDS9rWgfM1+GJKTh2ryP0w/PFAs0urQ0LRSB0smK6bEAUpibbOiHx
-        OvUpnUUDg5OSdKDA3TXYk37mltqIjAn5G8A==
-X-Received: by 2002:a17:907:6e9f:b0:711:d2cb:63d8 with SMTP id sh31-20020a1709076e9f00b00711d2cb63d8mr9708514ejc.232.1654622179439;
-        Tue, 07 Jun 2022 10:16:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJygX9k/gltKfeagReGyy6GfPh4jDhAQD4hT60Nsn75EUxfKbAYHHTu7noGrC7gq+8HKZe2OtA==
-X-Received: by 2002:a17:907:6e9f:b0:711:d2cb:63d8 with SMTP id sh31-20020a1709076e9f00b00711d2cb63d8mr9708471ejc.232.1654622179223;
-        Tue, 07 Jun 2022 10:16:19 -0700 (PDT)
+        bh=YnCoHL449X7tbcwtTlDBo6pzdAbzSUHoEukd3QLon0Q=;
+        b=77UWzNDgP6UW0T+BqM7E+oqdnlCn2PKcjGNKxh1dvcvmyWv5R7g9EU02gnteylNpZZ
+         zmTpRuOSilBJc9vRXvYueqT79O75cmXjbdZQxvRT2lBji8LRRQcF8h6eOnGErcytrDhQ
+         34OWfd1iaPhjbqah2TXLtjIgHDB7lP+yT1z9gKKfmsQrKmg7ziAjTEOxxDD/tLr48SIC
+         6Nz9SaL4GMLY2+Ps2+a7VsHCvY7Zpq0b4prr+YSOXl9kbAI4fy3JNjUBLSZrYV8nsALa
+         3hCwoEKYwNe4C+PVYgdEWRGSjjngF/2rIZWCtPvgWocmfWn27o+Hq38vpojvPDn65Dgl
+         4vJg==
+X-Gm-Message-State: AOAM530SrZ15haagd/FJVsz03acl0zIpLgjXyEZCnTli4APNIAKtD5H+
+        BsZOb3O8hRh5UeVscPckURftunnDNzXLtjUp9p1UuYXqiv2uSWS8Gllk0+m7WuMc4wTxuVAVBNp
+        XKam/AiacQsLNzedvP8sLz23JmD5I+iws7w==
+X-Received: by 2002:a05:6402:2696:b0:42f:aa52:aca7 with SMTP id w22-20020a056402269600b0042faa52aca7mr24735989edd.358.1654622729879;
+        Tue, 07 Jun 2022 10:25:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwYxMQyzruXGW28PGyGUgTfKZ3a3r+Z2JEbFLdifSZHVskADAn8dUzrl7IWWOs4OdEA6rmupw==
+X-Received: by 2002:a05:6402:2696:b0:42f:aa52:aca7 with SMTP id w22-20020a056402269600b0042faa52aca7mr24735960edd.358.1654622729512;
+        Tue, 07 Jun 2022 10:25:29 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id u15-20020a05640207cf00b0042dd60352d1sm10784675edy.35.2022.06.07.10.16.17
+        by smtp.gmail.com with ESMTPSA id t6-20020a170906948600b006fed062c68esm7920991ejx.182.2022.06.07.10.25.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jun 2022 10:16:18 -0700 (PDT)
-Message-ID: <251fa028-9ecc-f7b0-078a-e96c7063bd96@redhat.com>
-Date:   Tue, 7 Jun 2022 19:16:17 +0200
+        Tue, 07 Jun 2022 10:25:28 -0700 (PDT)
+Message-ID: <fd1b71fe-d9a7-65bb-314c-f11b7d550fe8@redhat.com>
+Date:   Tue, 7 Jun 2022 19:25:28 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
+Subject: Re: [RFC] platform/x86: hp-wmi: make hp_wmi_perform_query() work with
+ certain devices
 Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>
+References: <20220607132428.7221-1-bedant.patnaik@gmail.com>
+ <094f73b7-f618-aa12-762b-3b1a1f4556d2@redhat.com>
+ <CAOOmCE8QYEwh6TrgA=_sTcm4spkuk3rjMS4g78nbBbWXWUB2aQ@mail.gmail.com>
+Cc:     Bedant Patnaik <bedant.patnaik@gmail.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <CAOOmCE8QYEwh6TrgA=_sTcm4spkuk3rjMS4g78nbBbWXWUB2aQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -98,124 +84,271 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 6/6/22 18:41, Andy Shevchenko wrote:
-> There are a few users that would like to utilize P2SB mechanism of hiding
-> and unhiding a device from the PCI configuration space.
-> 
-> Here is the series to consolidate p2sb handling code for existing users
-> and to provide a generic way for new comer(s).
-> 
-> It also includes a patch to enable GPIO controllers on Apollo Lake
-> when it's used with ABL bootloader w/o ACPI support.
-> 
-> The patch that brings the helper ("platform/x86/intel: Add Primary to
-> Sideband (P2SB) bridge support") has a commit message that sheds a light
-> on what the P2SB is and why this is needed.
-> 
-> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
-> since we have an ACPI device for GPIO I do not see any attempts to recreate
-> one).
-> 
-> The series is ready to be merged via MFD tree, but see below.
-> 
-> The series also includes updates for Simatic IPC drivers that partially
-> tagged by respective maintainers (the main question is if Pavel is okay
-> with the last three patches, since I believe Hans is okay with removing
-> some code under PDx86). Hence the first 8 patches can be merged right
-> away and the rest when Pavel does his review.
-> 
-> Changes in v6:
-> - added tag to patch 5 (Lee)
-> - incorporated Henning's series on top of v5
+It looks like you accidentally dropped all the other folks on the Cc,
+please use reply-to-all. I've re-added those folks now.
 
-I've taken a quick look at the new patches and they look ok to me:
+On 6/7/22 18:00, Jorge Lopez wrote:
+> Hi Hans
+> 
+> 
+> On Tue, Jun 7, 2022 at 8:35 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>>
+>> Hi Bedant,
+>>
+>> Adding Jorge from HP to the To: list.
+>>
+>> On 6/7/22 15:24, Bedant Patnaik wrote:
+>>> 4b4967cbd2685f313411e6facf915fb2ae01d796 ("platform/x86: hp-wmi: Changing bios_args.data to be dynamically...")
+>>> broke WMI queries on some devices where the ACPI method HWMC unconditionally attempts to create Fields beyond the buffer
+>>> if the buffer is too small, this breaks essential features such as power profiles:
+>>>         CreateByteField (Arg1, 0x10, D008)
+>>>         CreateByteField (Arg1, 0x11, D009)
+>>>         CreateByteField (Arg1, 0x12, D010)
+>>>         CreateDWordField (Arg1, 0x10, D032)
+>>>         CreateField (Arg1, 0x80, 0x0400, D128)
+>>> In cases where args->data had zero length, ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [D008] at bit
+>>> offset/length 128/8 exceeds size of target Buffer (128 bits) (20211217/dsopcode-198) was obtained.
+>>> Fix: allocate at least 128 bytes for args->data
+>>>
+>>> be9d73e64957bbd31ee9a0d11adc0f720974c558 ("platform/x86: hp-wmi: Fix 0x05 error code reported by several WMI calls")
+>>> and 12b19f14a21a2ee6348825d95b642ef2cd16794f ("platform/x86: hp-wmi: Fix hp_wmi_read_int() reporting error (0x05)")
+>>> caused ACPI BIOS Error (bug): Attempt to CreateField of length zero (20211217/dsopcode-133) because of the ACPI
+>>> method HWMC, which unconditionally creates a Field of size (insize*8) bits:
+>>>       CreateField (Arg1, 0x80, (Local5 * 0x08), DAIN)
+>>> In cases where args->insize = 0, the Field size is 0, resulting in an error.
+>>> Fix: use zero insize only if 0x5 error code is returned
+>>>
+>>> Tested on Omen 15 AMD (2020) board ID: 8786.
+>>
+>> Thank you for looking into this. The alloc at least
+>> 128 bytes part for args->data looks good and likely is a better
+>> fix then the revert of 4b4967cbd2685f3 which Jorge has submitted.
+>>
+>> I'm not 100% sure about the zero_insize_support() thingie though.
+>>
+>> Looking at the original fix and then trying to get things
+>> to work on all models with some requiring insize==0 and
+>> otheres requiring insize!=0 I guess this also makes sense...
+>>
+>> Jorge, any remarks on this patch?
+>>
+> 
+> The original code created an insize buffer size of 128 bytes
+> regardless if the WMI call required a smaller buffer or not.  This
+> particular behavior occurs in older BIOS and reproduced in OMEN
+> laptops.  Newer BIOS handles  buffer sizes properly and meets the
+> latest specification requirements.  This is the reason why testing
+> with a dynamically allocated buffer did not uncover any failures with
+> the test systems at hand.
+> One additional point was considered.  The purpose for introducing
+> dynamically allocated buffers was primarily to support WMI calls that
+> required buffers size bigger than 128 bytes.  The decision  was made
+> to separate those WMI calls to a separate driver and implement the new
+> firmware-attribute framework.
+> 
+> The current review request title is  "[PATCH] Revert "platform/x86:
+> hp-wmi: Changing bios_args.data to be dynamically allocated"
+> 
+> I am testing a cleaner solution to submit instead of  reverting the
+> changes to hp_wmi_perform_query method.  The changes were made and
+> tested on business notebooks without any issues.  I will submit a new
+> patch as soon as I get the test results from a  community member who
+> owns an Omen 15 system.
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
+Right, notice the RFC this thread is a reply to already contains
+a cleaner version and has been tested on a HP Omen laptop already.
 
-for the entire series.
+The already tested cleaner fix from this RFC is:
+
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -297,8 +299,8 @@  static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 	if (WARN_ON(mid < 0))
+ 		return mid;
+ 
+-	bios_args_size = struct_size(args, data, insize);
+-	args = kmalloc(bios_args_size, GFP_KERNEL);
++	bios_args_size = max(struct_size(args, data, insize), struct_size(args, data, 128));
++	args = kzalloc(bios_args_size, GFP_KERNEL);
+ 	if (!args)
+ 		return -ENOMEM;
+
+
+Which seems a better (more future proof) solution then your revert.
+
+Jorge, my main question from my previous email really is what you
+make of the zero_if_sup() changes / part of this RFC. Which are
+necessary because some older ACPI tables don't like it when
+args->insize is set to 0, which it is after your:
+
+be9d73e64957bbd31ee9a0d11adc0f720974c558 ("platform/x86: hp-wmi: Fix 0x05 error code reported by several WMI calls")
+12b19f14a21a2ee6348825d95b642ef2cd16794f ("platform/x86: hp-wmi: Fix hp_wmi_read_int() reporting error (0x05)")
+
+commits. For details see the original commit msg from this RFC:
+https://patchwork.kernel.org/project/platform-driver-x86/patch/20220607132428.7221-1-bedant.patnaik@gmail.com/
+
+Even if we go with the revert you submitted that only fixes
+the passing buffers < 128 bytes issue and not this other issue.
+
+I had to take a good look at it, but after doing that I do believe
+that the proposed zero_if_sup() changes make sense.
+
+Bedant, can you split your original RFC into 2 patches please,
+one for each separate of the two (128 bytes buf-size,
+resp. zero_if_sup()) fixes which you are doing ?
 
 Regards,
 
 Hans
 
 
+
+
+
+
+
 > 
-> Changes in v5:
-> - rewritten patch 1 to use pci_scan_single_device() (Lukas, Bjorn)
-> - rebased patch 2 on top of the new Intel SPI NOR codebase
-> - fixed a potential bug and rewritten resource filling in patch 5 (Lee)
-> - added many different tags in a few patches (Jean, Wolfram, Henning)
+> Regards,
 > 
-> Changes in v4:
-> - added tag to the entire series (Hans)
-> - added tag to pin control patch (Mika)
-> - dropped PCI core changes (PCI core doesn't want modifications to be made)
-> - as a consequence of the above merged necessary bits into p2sb.c
-> - added a check that p2sb is really hidden (Hans)
-> - added EDAC patches (reviewed by maintainer internally)
-> 
-> Changes in v3:
-> - resent with cover letter
-> 
-> Changes in v2:
-> - added parentheses around bus in macros (Joe)
-> - added tag (Jean)
-> - fixed indentation and wrapping in the header (Christoph)
-> - moved out of PCI realm to PDx86 as the best common denominator (Bjorn)
-> - added a verbose commit message to explain P2SB thingy (Bjorn)
-> - converted first parameter from pci_dev to pci_bus
-> - made first two parameters (bus and devfn) optional (Henning, Lee)
-> - added Intel pin control patch to the series (Henning, Mika)
-> - fixed English style in the commit message of one of MFD patch (Lee)
-> - added tags to my MFD LPC ICH patches (Lee)
-> - used consistently (c) (Lee)
-> - made indexing for MFD cell and resource arrays (Lee)
-> - fixed the resource size in i801 (Jean)
-> 
-> Andy Shevchenko (6):
->   pinctrl: intel: Check against matching data instead of ACPI companion
->   mfd: lpc_ich: Factor out lpc_ich_enable_spi_write()
->   mfd: lpc_ich: Switch to generic p2sb_bar()
->   i2c: i801: convert to use common P2SB accessor
->   EDAC, pnd2: Use proper I/O accessors and address space annotation
->   EDAC, pnd2: convert to use common P2SB accessor
-> 
-> Henning Schild (4):
->   watchdog: simatic-ipc-wdt: convert to use P2SB accessor
->   leds: simatic-ipc-leds: convert to use P2SB accessor
->   platform/x86: simatic-ipc: drop custom P2SB bar code
->   leds: simatic-ipc-leds-gpio: add GPIO version of Siemens driver
-> 
-> Jonathan Yong (1):
->   platform/x86/intel: Add Primary to Sideband (P2SB) bridge support
-> 
-> Tan Jui Nee (1):
->   mfd: lpc_ich: Add support for pinctrl in non-ACPI system
-> 
->  drivers/edac/Kconfig                          |   1 +
->  drivers/edac/pnd2_edac.c                      |  62 +++----
->  drivers/i2c/busses/Kconfig                    |   1 +
->  drivers/i2c/busses/i2c-i801.c                 |  39 +----
->  drivers/leds/simple/Kconfig                   |   6 +-
->  drivers/leds/simple/Makefile                  |   1 +
->  drivers/leds/simple/simatic-ipc-leds-gpio.c   | 105 ++++++++++++
->  drivers/leds/simple/simatic-ipc-leds.c        |  80 +--------
->  drivers/mfd/Kconfig                           |   1 +
->  drivers/mfd/lpc_ich.c                         | 161 ++++++++++++++----
->  drivers/pinctrl/intel/pinctrl-intel.c         |  14 +-
->  drivers/platform/x86/intel/Kconfig            |  12 ++
->  drivers/platform/x86/intel/Makefile           |   2 +
->  drivers/platform/x86/intel/p2sb.c             | 133 +++++++++++++++
->  drivers/platform/x86/simatic-ipc.c            |  43 +----
->  drivers/watchdog/Kconfig                      |   1 +
->  drivers/watchdog/simatic-ipc-wdt.c            |  15 +-
->  include/linux/platform_data/x86/p2sb.h        |  28 +++
->  .../platform_data/x86/simatic-ipc-base.h      |   2 -
->  19 files changed, 464 insertions(+), 243 deletions(-)
->  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio.c
->  create mode 100644 drivers/platform/x86/intel/p2sb.c
->  create mode 100644 include/linux/platform_data/x86/p2sb.h
+> Jorge.
 > 
 > 
-> base-commit: 40b58e42584bf5bd9230481dc8946f714fb387de
+> 
+>> Regards,
+>>
+>> Hans
+>>
+>>>
+>>> Signed-off-by: Bedant Patnaik <bedant.patnaik@gmail.com>
+>>> Cc: markgross@kernel.org
+>>> Cc: platform-driver-x86@vger.kernel.org
+>>>
+>>> ---
+>>>  drivers/platform/x86/hp-wmi.c | 29 ++++++++++++++++++-----------
+>>>  1 file changed, 18 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+>>> index 667f94bba..3ef385f14 100644
+>>> --- a/drivers/platform/x86/hp-wmi.c
+>>> +++ b/drivers/platform/x86/hp-wmi.c
+>>> @@ -38,6 +38,7 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+>>>  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
+>>>  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
+>>>  #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
+>>> +#define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
+>>>
+>>>  /* DMI board names of devices that should use the omen specific path for
+>>>   * thermal profiles.
+>>> @@ -175,7 +176,7 @@ enum hp_thermal_profile_omen_v1 {
+>>>  enum hp_thermal_profile {
+>>>       HP_THERMAL_PROFILE_PERFORMANCE  = 0x00,
+>>>       HP_THERMAL_PROFILE_DEFAULT              = 0x01,
+>>> -     HP_THERMAL_PROFILE_COOL                 = 0x02
+>>> +     HP_THERMAL_PROFILE_COOL                 = 0x02,
+>>>  };
+>>>
+>>>  #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+>>> @@ -220,6 +221,7 @@ static struct input_dev *hp_wmi_input_dev;
+>>>  static struct platform_device *hp_wmi_platform_dev;
+>>>  static struct platform_profile_handler platform_profile_handler;
+>>>  static bool platform_profile_support;
+>>> +static bool zero_insize_support;
+>>>
+>>>  static struct rfkill *wifi_rfkill;
+>>>  static struct rfkill *bluetooth_rfkill;
+>>> @@ -297,8 +299,8 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+>>>       if (WARN_ON(mid < 0))
+>>>               return mid;
+>>>
+>>> -     bios_args_size = struct_size(args, data, insize);
+>>> -     args = kmalloc(bios_args_size, GFP_KERNEL);
+>>> +     bios_args_size = max(struct_size(args, data, insize), struct_size(args, data, 128));
+>>> +     args = kzalloc(bios_args_size, GFP_KERNEL);
+>>>       if (!args)
+>>>               return -ENOMEM;
+>>>
+>>> @@ -374,7 +376,7 @@ static int hp_wmi_read_int(int query)
+>>>       int val = 0, ret;
+>>>
+>>>       ret = hp_wmi_perform_query(query, HPWMI_READ, &val,
+>>> -                                0, sizeof(val));
+>>> +                                zero_if_sup(val), sizeof(val));
+>>>
+>>>       if (ret)
+>>>               return ret < 0 ? ret : -EINVAL;
+>>> @@ -410,7 +412,8 @@ static int hp_wmi_get_tablet_mode(void)
+>>>               return -ENODEV;
+>>>
+>>>       ret = hp_wmi_perform_query(HPWMI_SYSTEM_DEVICE_MODE, HPWMI_READ,
+>>> -                                system_device_mode, 0, sizeof(system_device_mode));
+>>> +                                system_device_mode, zero_if_sup(system_device_mode),
+>>> +                                sizeof(system_device_mode));
+>>>       if (ret < 0)
+>>>               return ret;
+>>>
+>>> @@ -497,7 +500,7 @@ static int hp_wmi_fan_speed_max_get(void)
+>>>       int val = 0, ret;
+>>>
+>>>       ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
+>>> -                                &val, 0, sizeof(val));
+>>> +                                &val, zero_if_sup(val), sizeof(val));
+>>>
+>>>       if (ret)
+>>>               return ret < 0 ? ret : -EINVAL;
+>>> @@ -509,7 +512,7 @@ static int __init hp_wmi_bios_2008_later(void)
+>>>  {
+>>>       int state = 0;
+>>>       int ret = hp_wmi_perform_query(HPWMI_FEATURE_QUERY, HPWMI_READ, &state,
+>>> -                                    0, sizeof(state));
+>>> +                                    zero_if_sup(state), sizeof(state));
+>>>       if (!ret)
+>>>               return 1;
+>>>
+>>> @@ -520,7 +523,7 @@ static int __init hp_wmi_bios_2009_later(void)
+>>>  {
+>>>       u8 state[128];
+>>>       int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &state,
+>>> -                                    0, sizeof(state));
+>>> +                                    zero_if_sup(state), sizeof(state));
+>>>       if (!ret)
+>>>               return 1;
+>>>
+>>> @@ -598,7 +601,7 @@ static int hp_wmi_rfkill2_refresh(void)
+>>>       int err, i;
+>>>
+>>>       err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+>>> -                                0, sizeof(state));
+>>> +                                zero_if_sup(state), sizeof(state));
+>>>       if (err)
+>>>               return err;
+>>>
+>>> @@ -1007,7 +1010,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+>>>       int err, i;
+>>>
+>>>       err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+>>> -                                0, sizeof(state));
+>>> +                                zero_if_sup(state), sizeof(state));
+>>>       if (err)
+>>>               return err < 0 ? err : -EINVAL;
+>>>
+>>> @@ -1483,11 +1486,15 @@ static int __init hp_wmi_init(void)
+>>>  {
+>>>       int event_capable = wmi_has_guid(HPWMI_EVENT_GUID);
+>>>       int bios_capable = wmi_has_guid(HPWMI_BIOS_GUID);
+>>> -     int err;
+>>> +     int err, tmp = 0;
+>>>
+>>>       if (!bios_capable && !event_capable)
+>>>               return -ENODEV;
+>>>
+>>> +     if (hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_READ, &tmp,
+>>> +                              sizeof(tmp), sizeof(tmp)) == HPWMI_RET_INVALID_PARAMETERS)
+>>> +             zero_insize_support = true;
+>>> +
+>>>       if (event_capable) {
+>>>               err = hp_wmi_input_setup();
+>>>               if (err)
+>>
+> 
 
