@@ -2,31 +2,31 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7673C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 09:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EEECCA483
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Jun 2022 09:17:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239231AbiFGJQ6 (ORCPT
+        id S239213AbiFGJRF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Jun 2022 05:16:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41680 "EHLO
+        Tue, 7 Jun 2022 05:17:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239236AbiFGJQz (ORCPT
+        with ESMTP id S239221AbiFGJQw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Jun 2022 05:16:55 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4978215D;
-        Tue,  7 Jun 2022 02:16:52 -0700 (PDT)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4LHPqj4SWXzpXwZ;
-        Tue,  7 Jun 2022 17:16:33 +0800 (CST)
+        Tue, 7 Jun 2022 05:16:52 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9253DD2476;
+        Tue,  7 Jun 2022 02:16:49 -0700 (PDT)
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LHPpS5pBrzjcSw;
+        Tue,  7 Jun 2022 17:15:28 +0800 (CST)
 Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 7 Jun 2022 17:16:51 +0800
+ 15.1.2375.24; Tue, 7 Jun 2022 17:16:47 +0800
 Received: from localhost.localdomain (10.175.112.125) by
  dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 7 Jun 2022 17:16:49 +0800
+ 15.1.2375.24; Tue, 7 Jun 2022 17:16:45 +0800
 From:   Wupeng Ma <mawupeng1@huawei.com>
 To:     <corbet@lwn.net>, <will@kernel.org>, <ardb@kernel.org>,
         <catalin.marinas@arm.com>
@@ -48,9 +48,9 @@ CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
         <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>
-Subject: [PATCH v3 5/6] mm: Add mirror flag back on initrd memory
-Date:   Tue, 7 Jun 2022 17:38:04 +0800
-Message-ID: <20220607093805.1354256-6-mawupeng1@huawei.com>
+Subject: [PATCH v3 3/6] mm: Ratelimited mirrored memory related warning messages
+Date:   Tue, 7 Jun 2022 17:38:02 +0800
+Message-ID: <20220607093805.1354256-4-mawupeng1@huawei.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220607093805.1354256-1-mawupeng1@huawei.com>
 References: <20220607093805.1354256-1-mawupeng1@huawei.com>
@@ -67,87 +67,41 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Ma Wupeng <mawupeng1@huawei.com>
 
-Initrd memory will be removed and then added in arm64_memblock_init() and this
-will cause it to lose all of its memblock flags. The lost of MEMBLOCK_MIRROR
-flag will lead to error log printed by find_zone_movable_pfns_for_nodes if
-the lower 4G range has some non-mirrored memory.
+If system has mirrored memory, memblock will try to allocate mirrored
+memory firstly and fallback to non-mirrored memory when fails, but if with
+limited mirrored memory or some numa node without mirrored memory, lots of
+warning message about memblock allocation will occur.
 
-In order to solve this problem, the lost MEMBLOCK_MIRROR flag will be
-reinstalled if the origin memblock has this flag.
+This patch ratelimit the warning message to avoid a very long print during
+bootup.
 
 Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
 ---
- arch/arm64/mm/init.c     |  9 +++++++++
- include/linux/memblock.h |  1 +
- mm/memblock.c            | 20 ++++++++++++++++++++
- 3 files changed, 30 insertions(+)
+ mm/memblock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 339ee84e5a61..11641f924d08 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -350,9 +350,18 @@ void __init arm64_memblock_init(void)
- 			"initrd not fully accessible via the linear mapping -- please check your bootloader ...\n")) {
- 			phys_initrd_size = 0;
- 		} else {
-+			int flags, ret;
-+
-+			ret = memblock_get_flags(base, &flags);
-+			if (ret)
-+				flags = 0;
-+
- 			memblock_remove(base, size); /* clear MEMBLOCK_ flags */
- 			memblock_add(base, size);
- 			memblock_reserve(base, size);
-+
-+			if (flags & MEMBLOCK_MIRROR)
-+				memblock_mark_mirror(base, size);
- 		}
- 	}
- 
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 50ad19662a32..3d6a382ac9c8 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -487,6 +487,7 @@ bool memblock_is_map_memory(phys_addr_t addr);
- bool memblock_is_region_memory(phys_addr_t base, phys_addr_t size);
- bool memblock_is_reserved(phys_addr_t addr);
- bool memblock_is_region_reserved(phys_addr_t base, phys_addr_t size);
-+int memblock_get_flags(phys_addr_t base, int *flags);
- 
- void memblock_dump_all(void);
- 
 diff --git a/mm/memblock.c b/mm/memblock.c
-index b1d2a0009733..0c5b5699af6e 100644
+index e4f03a6e8e56..b1d2a0009733 100644
 --- a/mm/memblock.c
 +++ b/mm/memblock.c
-@@ -1796,6 +1796,26 @@ int __init_memblock memblock_search_pfn_nid(unsigned long pfn,
- 	return memblock_get_region_node(&type->regions[mid]);
- }
+@@ -327,7 +327,7 @@ static phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
+ 					    NUMA_NO_NODE, flags);
  
-+/**
-+ * memblock_get_flags - get a single memblock flags
-+ * @base: base of memeblock to get
-+ *
-+ * Get the flags of memeblock with base: @base
-+ *
-+ * Return:
-+ * 0 if ok, non-zero if fail
-+ */
-+int __init_memblock memblock_get_flags(phys_addr_t base, int *flags)
-+{
-+	int idx = memblock_search(&memblock.memory, base);
-+
-+	if (idx == -1)
-+		return -EINVAL;
-+
-+	*flags = memblock.memory.regions[idx].flags;
-+	return 0;
-+}
-+
- /**
-  * memblock_is_region_memory - check if a region is a subset of memory
-  * @base: base of region to check
+ 	if (!ret && (flags & MEMBLOCK_MIRROR)) {
+-		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
++		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
+ 			&size);
+ 		flags &= ~MEMBLOCK_MIRROR;
+ 		goto again;
+@@ -1384,7 +1384,7 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ 
+ 	if (flags & MEMBLOCK_MIRROR) {
+ 		flags &= ~MEMBLOCK_MIRROR;
+-		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
++		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
+ 			&size);
+ 		goto again;
+ 	}
 -- 
 2.25.1
 
