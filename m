@@ -2,57 +2,57 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DAEC43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Jun 2022 18:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26BAC43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Jun 2022 18:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230126AbiFHSpI (ORCPT
+        id S229549AbiFHSp7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Jun 2022 14:45:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59582 "EHLO
+        Wed, 8 Jun 2022 14:45:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbiFHSpH (ORCPT
+        with ESMTP id S229496AbiFHSp6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Jun 2022 14:45:07 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1914013E2B
-        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Jun 2022 11:45:05 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id n10so43221768ejk.5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jun 2022 11:45:05 -0700 (PDT)
+        Wed, 8 Jun 2022 14:45:58 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB5E713E2B
+        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Jun 2022 11:45:55 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id h19so28342163edj.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jun 2022 11:45:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Wyn7ChPM8gfceSmggjslNfqEzt1RoRkOlJqEBiMROD8=;
-        b=YYT1kKmUb3bijdrg5VKbQUeEY0voNSYwWzv1QOKNjIVQy6NmE78p2rg3BUbCWd8mjg
-         ageAPLTfSQKqXkQsfO6p3IhlA3wDcqMi9oFPJR6MPABDDfiexVvhN87VF1AkJA1RP83M
-         ACOy93JDIAG/pacMwUIpbwKickTa+yA8gJu09/e+tcDG9Lw9/FW1c4v9kcvt+p+dIxzn
-         xelVpgufqIyKDIgsw5FrirUBOrAAMRzCqJiFwtlQO44QGTFN+3zP07DPNIGy0ZoIPA3Z
-         TwaVrmYR+1j3hVK0QSr2HeVmh0x7XMUgN67EHYwNbSZ9rb1l317tY0fjepEN5b2VaKfq
-         33eQ==
+        bh=Zt1kCcynRpaqL9Yx6hLSOVY/NT8LSaNBUN0ocitNwUo=;
+        b=OD8AvxxjH8SuAB032aL15mSmKKUPqF/SQ53OtAmOW5m4o8LAyIWu1JATE1X8y0ybxi
+         7eyEqXHQ96ppYORWgZf7K5aznRP40heOkZsVhNpa6DRrjJJub7nQiUtCqrf1YpLUSrO6
+         Gupxqyw9RE5yT6hiK+q4HW/4/+G2sQBX+AalJ8iBlOnv3NeWzj4KTQ4Ks36+a9O6rz3z
+         deqH2Q3eWhbTXZJWsPtU5iD2bSqYUq2TGP15Fn9h9sZVXuBq7OxyN3/YAw3v4vGn3iLJ
+         2wOBOJotEfv3Hl5MDkxJfdJX74c3u+BACrt7XA5jCkrEA3kTWuZEas+mIRV7J1HlL4Dd
+         7KeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Wyn7ChPM8gfceSmggjslNfqEzt1RoRkOlJqEBiMROD8=;
-        b=W8eZfT1Y3rtuRhAt+vuhQTbjuUu2fkdb51DME+JAI1cFZZNjW3vEgezfGgBr+6bIWd
-         Bad4Rt4RIzW96XrS8gWIeHyo4nfK3/h3nRsmutd8ZG4k+G1Zhb3PUsKrW36dehCPQgM6
-         bL4P/VbwHLjqXSzwPKXX2WkDopNAZvu8UkPQF9rl+7CdVDwP515asSpyIiH2+yil7IaT
-         IWp8AtvfvJ5EILZgHoZrXhIW9bZIUoJxLA9WtbZ30Ny1PmoLJ7I8nKvEMFAJRauFJwPT
-         cBuDgOa8ldA517NXL1oslKL4m0PM9ieSQAVMSdlcjqnBCc18qlUkXVYxSsLbLMrfaXT+
-         KW3g==
-X-Gm-Message-State: AOAM531D0bldDmHCgudqQXdnsf0HKc05lmm2IPvMwBQQKEN7KWHdTOS1
-        +JH0d8SpewFjBZl5nlPn1wFd9TT4dHZAZTqAGys=
-X-Google-Smtp-Source: ABdhPJyzT/PHTQW3uSthFg15LezbLFMRRvMZsHckX28vXO1wXWrZRpvem58hLH1HZP3Z0D2Moes/kaX4x6KhXCMBE9Q=
-X-Received: by 2002:a17:907:9721:b0:70c:65e7:2aa5 with SMTP id
- jg33-20020a170907972100b0070c65e72aa5mr29377812ejc.132.1654713903602; Wed, 08
- Jun 2022 11:45:03 -0700 (PDT)
+        bh=Zt1kCcynRpaqL9Yx6hLSOVY/NT8LSaNBUN0ocitNwUo=;
+        b=AZnRhSRBmOVqT/oLLnWRJHjNJobmUkcsirNKjUpL6WWhbIrvSsXVHMSQzhLZ0YuFdg
+         9IIVhH3OF8MYXPRnkQfCno50YzetvoLyZH/+vdkXebc+N2MQAz5ADVAPhAePpNMvwgmd
+         6nIw0tOqAVIrTyTpsNhPrnzDP0DQ2crSC8v0Da8ZAGnZ4Dduh7EAnfViP1WI1Um2OTOF
+         XWqXaRh0kQeqMpywdLZSqy8+TfOzI7R8BpSpbKCFL0BQTgU4chdxp0sX8E4Fy59NL40c
+         NZcAB8G9LQP001k5XLJ09jOmKCx81dQLlMw+G952mU83yoca1chCXfxZg/lV1XHUq5YX
+         aoYw==
+X-Gm-Message-State: AOAM532LH7dk60WYK0oVcWwGHEubPeay4JJhnExOOrsnwEpeJbkT0WU+
+        0J758rcb5B0vOa8ar1prvV8LiXzfRxzdQpCAatk=
+X-Google-Smtp-Source: ABdhPJwlpp5xSCh1tM6WZUVYkAVzFCReje1LQuMqm/DiUgK0BYSAqoibqWJNR3Q87dBKDbWWFt6Vdl7WNNeEoHgAAeM=
+X-Received: by 2002:aa7:d481:0:b0:42d:d5fd:f963 with SMTP id
+ b1-20020aa7d481000000b0042dd5fdf963mr41013413edr.209.1654713954519; Wed, 08
+ Jun 2022 11:45:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220608170220.5751-1-jorge.lopez2@hp.com> <20220608170220.5751-2-jorge.lopez2@hp.com>
-In-Reply-To: <20220608170220.5751-2-jorge.lopez2@hp.com>
+References: <20220608170220.5751-1-jorge.lopez2@hp.com> <20220608170220.5751-3-jorge.lopez2@hp.com>
+In-Reply-To: <20220608170220.5751-3-jorge.lopez2@hp.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 8 Jun 2022 20:44:27 +0200
-Message-ID: <CAHp75VdPOSHyHiwFWYR6_BuoUXca9wvYFkgy7wXBW305FGHigA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] Resolve WMI query failures on some devices
+Date:   Wed, 8 Jun 2022 20:45:18 +0200
+Message-ID: <CAHp75VdcnNkomj5125QRmo20LKX0CzCVo8R=qUsEHaNspviFYg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] Organize declaration variables
 To:     Jorge Lopez <jorgealtxwork@gmail.com>
 Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -62,51 +62,10 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Wed, Jun 8, 2022 at 7:20 PM Jorge Lopez <jorgealtxwork@gmail.com> wrote:
 >
-> WMI queries fail on some devices where the ACPI method HWMC
-> unconditionally attempts to create Fields beyond the buffer
-> if the buffer is too small, this breaks essential features
-> such as power profiles:
->
->          CreateByteField (Arg1, 0x10, D008)
->          CreateByteField (Arg1, 0x11, D009)
->          CreateByteField (Arg1, 0x12, D010)
->          CreateDWordField (Arg1, 0x10, D032)
->          CreateField (Arg1, 0x80, 0x0400, D128)
->
-> In cases where args->data had zero length, ACPI BIOS Error
-> (bug): AE_AML_BUFFER_LIMIT, Field [D008] at bit
-> offset/length 128/8 exceeds size of target Buffer (128 bits)
-> (20211217/dsopcode-198) was obtained.
->
-> ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [D009] at bit
-> offset/length 136/8 exceeds size of target Buffer (136bits)
-> (20211217/dsopcode-198)
->
-> The original code created a buffer size of 128 bytes regardless if
-> the WMI call required a smaller buffer or not.  This particular
-> behavior occurs in older BIOS and reproduced in OMEN laptops.  Newer
-> BIOS handles buffer sizes properly and meets the latest specification
-> requirements.  This is the reason why testing with a dynamically
-> allocated buffer did not uncover any failures with the test systems at
-> hand.
->
-> This patch was tested on several OMEN, Elite, and Zbooks.  It was
-> confirmed the patch resolves HPWMI_FAN GET/SET calls in an OMEN
-> Laptop 15-ek0xxx.  No problems were reported when testing on several Elite
-> and Zbooks notebooks.
+> This patch organizes declaration variables in method
+> hp_wmi_perform_query as requested.
 
-...
-
->         struct bios_args *args = NULL;
->         int mid, actual_outsize, ret;
->         size_t bios_args_size;
-> +       int actual_insize;
-
-Same comment as per v1.
-
-Please, be careful and read all comments you have been given and react
-to them either by explaining why it's not worth to address or with an
-addressed changes.
+Ah, I see now. Please squash these changes in one patch.
 
 -- 
 With Best Regards,
