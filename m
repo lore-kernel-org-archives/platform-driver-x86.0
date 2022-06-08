@@ -2,121 +2,115 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C51C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Jun 2022 08:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E78C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Jun 2022 10:04:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230527AbiFHIPV (ORCPT
+        id S235583AbiFHKEf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Jun 2022 04:15:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47180 "EHLO
+        Wed, 8 Jun 2022 06:04:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232448AbiFHIN2 (ORCPT
+        with ESMTP id S236010AbiFHKC7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Jun 2022 04:13:28 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2863104C0
-        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Jun 2022 00:42:44 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id o37-20020a05600c512500b0039c4ba4c64dso4908409wms.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jun 2022 00:42:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=pDUMQH/JwikS3dGEuoL+s1rn8CjjChIDmrF7b583qjU=;
-        b=fKa3RQzgR1C9gPuzjlK18lPR2ODRZc9Pj5Y+S/gKLpIzbFKHaf1hSkOcGwqMnNsq9r
-         XMuR0mXisUyo/8tXYSJHQu1AEBby8iCEMYFo9QfFIPo7CeBdgGwt4qVeeX7wVgxf6yLX
-         bw288huVE7wnORJcuCI5o1dxTMI8dpA+TRhyYRY3VuiE+BlZ/D2EkZIJVJKnQEiTN0M4
-         2Tc/6fwu7DLHDdQbhhhmCxEbH3XYI2IzWnO/zUDfPluY0N6BMqQOxDd5pl8kgFNumtlP
-         e0rNv4a89XGj4Yn2zUj5RD1kWvz2pHoia7MKcqd+835Rt8u8iwj82sJeJYf00LEQTTM1
-         RbHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=pDUMQH/JwikS3dGEuoL+s1rn8CjjChIDmrF7b583qjU=;
-        b=8HVXOjXZn1sC//QARkgrH01rmDsbRuzw8pZpIgoyyzPXtVC5S4lNn1oFY47f9kZir9
-         p9Gf1uLCmj9dtsoS2irK98Nyg91dTBA567CIn4qZQN6DECCgTrDDPa/HotMy3VeSazqB
-         rVDybNP1UuZmEsTGRRSRf7igKIf+qkhpjvCrzcqTnQE30f72X3j1RH9w2svT8YXKS/e/
-         GmM+eoU/CglzpjvWBHKhsL7HKwOBDirDBoXUcu9WhMY0UhmoKqvyHHo8zxDFwl0jfB0o
-         n6S7BM+/AgJCBReJ6aHcKZ10lktBvrAAkffBx4gOOswb5Fr7tHdzBUPn+Usr0Qn5+5SS
-         urww==
-X-Gm-Message-State: AOAM5330She9dpFMHrGcHxzeFU1/GtOW1Bj9G+KTkf4rulVPI8KoWEIC
-        iO5sK/NrX1/9w3vmbgvfNBGIeA==
-X-Google-Smtp-Source: ABdhPJxfmsfGuJRdtDGKUMYuiYyopBGOApn2Jgo+2/o+D5JV/RRywsnhNTpqwclfgNE8JAcQiqHOkA==
-X-Received: by 2002:a05:600c:5021:b0:39c:6571:e0b0 with SMTP id n33-20020a05600c502100b0039c6571e0b0mr190102wmr.177.1654674163150;
-        Wed, 08 Jun 2022 00:42:43 -0700 (PDT)
-Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
-        by smtp.gmail.com with ESMTPSA id g20-20020a05600c4c9400b0039749b01ea7sm26101954wmp.32.2022.06.08.00.42.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jun 2022 00:42:42 -0700 (PDT)
-Date:   Wed, 8 Jun 2022 08:42:40 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
-Message-ID: <YqBS8I62YBPFC9iS@google.com>
-References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+        Wed, 8 Jun 2022 06:02:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91514151FDA;
+        Wed,  8 Jun 2022 02:45:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2CC59619FA;
+        Wed,  8 Jun 2022 09:45:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDE36C3411C;
+        Wed,  8 Jun 2022 09:44:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654681503;
+        bh=eC3ZU1sGIhjzZLCps+HxX1Ppe0DIJdW2BceBVl9oo+U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pktPbLEeaAky17dLmb9pivTEyBK0H2sS17eVHHPAHPk0YF+9j8rR3HysSNKYOmSr8
+         HRYG0xkAuXKuaHXofsU4P4oTPA5VxDxGZpRnW1qIvvzTFCfjD4/DwbaFa6AOXlZNZE
+         HplT8LIBYvTvIej8PCkNSNXyr2NMJndntFXg/CJEHkzPr7/2Z9PbQveTolHDq8qGRg
+         3Hh7FFYid6joddofVPduvwi9PvHOVyg58QN9Xwmo27Upu79Ntyg8BDUueh1eaZAuc3
+         kH7BOwB7rhOZUlw+oE1QrCIASkeUfQvxfMMp9Dv/04dHQzIcK5+8NcHs3vW5y9b43+
+         P1Zl9+X0RcLMw==
+Date:   Wed, 8 Jun 2022 12:44:44 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Wupeng Ma <mawupeng1@huawei.com>
+Cc:     corbet@lwn.net, will@kernel.org, ardb@kernel.org,
+        catalin.marinas@arm.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, dvhart@infradead.org, andy@infradead.org,
+        akpm@linux-foundation.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, paulmck@kernel.org,
+        keescook@chromium.org, songmuchun@bytedance.com,
+        rdunlap@infradead.org, damien.lemoal@opensource.wdc.com,
+        swboyd@chromium.org, wei.liu@kernel.org, robin.murphy@arm.com,
+        david@redhat.com, anshuman.khandual@arm.com,
+        thunder.leizhen@huawei.com, wangkefeng.wang@huawei.com,
+        gpiccoli@igalia.com, chenhuacai@kernel.org, geert@linux-m68k.org,
+        chenzhou10@huawei.com, vijayb@linux.microsoft.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v3 3/6] mm: Ratelimited mirrored memory related warning
+ messages
+Message-ID: <YqBvjDavqUdLgmuo@kernel.org>
+References: <20220607093805.1354256-1-mawupeng1@huawei.com>
+ <20220607093805.1354256-4-mawupeng1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220607093805.1354256-4-mawupeng1@huawei.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 06 Jun 2022, Andy Shevchenko wrote:
+On Tue, Jun 07, 2022 at 05:38:02PM +0800, Wupeng Ma wrote:
+> From: Ma Wupeng <mawupeng1@huawei.com>
+> 
+> If system has mirrored memory, memblock will try to allocate mirrored
+> memory firstly and fallback to non-mirrored memory when fails, but if with
+> limited mirrored memory or some numa node without mirrored memory, lots of
+> warning message about memblock allocation will occur.
+> 
+> This patch ratelimit the warning message to avoid a very long print during
+> bootup.
+> 
+> Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
 
-> There are a few users that would like to utilize P2SB mechanism of hiding
-> and unhiding a device from the PCI configuration space.
-> 
-> Here is the series to consolidate p2sb handling code for existing users
-> and to provide a generic way for new comer(s).
-> 
-> It also includes a patch to enable GPIO controllers on Apollo Lake
-> when it's used with ABL bootloader w/o ACPI support.
-> 
-> The patch that brings the helper ("platform/x86/intel: Add Primary to
-> Sideband (P2SB) bridge support") has a commit message that sheds a light
-> on what the P2SB is and why this is needed.
-> 
-> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
-> since we have an ACPI device for GPIO I do not see any attempts to recreate
-> one).
-> 
-> The series is ready to be merged via MFD tree, but see below.
-> 
-> The series also includes updates for Simatic IPC drivers that partially
-> tagged by respective maintainers (the main question is if Pavel is okay
-> with the last three patches, since I believe Hans is okay with removing
-> some code under PDx86). Hence the first 8 patches can be merged right
-> away and the rest when Pavel does his review.
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
 
-Can we just wait for Pavel's review, then merge them all at once?
+> ---
+>  mm/memblock.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index e4f03a6e8e56..b1d2a0009733 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -327,7 +327,7 @@ static phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
+>  					    NUMA_NO_NODE, flags);
+>  
+>  	if (!ret && (flags & MEMBLOCK_MIRROR)) {
+> -		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
+> +		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
+>  			&size);
+>  		flags &= ~MEMBLOCK_MIRROR;
+>  		goto again;
+> @@ -1384,7 +1384,7 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+>  
+>  	if (flags & MEMBLOCK_MIRROR) {
+>  		flags &= ~MEMBLOCK_MIRROR;
+> -		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
+> +		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
+>  			&size);
+>  		goto again;
+>  	}
+> -- 
+> 2.25.1
+> 
 
 -- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Sincerely yours,
+Mike.
