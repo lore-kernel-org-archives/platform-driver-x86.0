@@ -2,264 +2,198 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69026C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Jun 2022 19:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1970C43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Jun 2022 19:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229830AbiFHTcz (ORCPT
+        id S229539AbiFHTmW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Jun 2022 15:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52012 "EHLO
+        Wed, 8 Jun 2022 15:42:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235595AbiFHTcy (ORCPT
+        with ESMTP id S229693AbiFHTmU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Jun 2022 15:32:54 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2047.outbound.protection.outlook.com [40.107.95.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E481E73E9
-        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Jun 2022 12:32:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lh13GUQf6MeJwzcKOHJKxouSyr0Z/eFAgIeLf5ugBaaTv202PeLN+/XBYGYhYtqo8tlelX2iGvMuhQhvn0SwkwUCUUHePwvdIDN7TQ4DKumJXG52I9JEpNfMOQG+qDJ92n61Z8G/T6l2eJz312zlwkgOgNkO4RH0D5/cfBzXxiNGu8UIUgLEQ+8a34W3drF36qKHUB1MG/XW7kacfFyxCTe7pGpJNuI0KCXXvPNLGEMLUX2Y0LZglYImaWkVq4uVgduYocDlPT8jgwXBQa+GT3KjqPxjL9C6oXQMXqAaTIWBbwb9SO5yEod8qTv86+jpDcKQhjbr+KRaCLla/SuIMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ce40U2Jm82l1LlROE9JxYhqrOh6c93wyBVpP3HHCfLk=;
- b=S19/F1WpLvQtp7Be9ieIu1yWTYrD0UwN/BfL9kjYK8kmhsm4moVz3wSQFglEz9o9N+Jf/JnO2bwGPVZFU1CqTtwDLI/i122Ct9cCH1za0p5zYo+wDO5CQbvaHPrPRo5CNwe1Frq4fdTkDTG+l/Fz/xUnkQtIATI5HJ5ZmmS0ZlFp8L9G8usiWH5u+Z7aPwsUzZsSwQrGNhXjjt/91GepMdpeqY/vgWzvDkbKtkdneS9oZCKj7nrlzV3+D7M9G7ByGny606lbcsfI0yFal08eQZO8n5l9XmiWiVM2j3gqJK+d5Q4SL7MlQ0vZyG4tLI/gbubFcJyIf3oDU9fpxVT5fw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ce40U2Jm82l1LlROE9JxYhqrOh6c93wyBVpP3HHCfLk=;
- b=GYG6hvvMMnjsgg0GdH048EJOWAbLnhCNRRqxxuY38y+cjzfMNcSB8fsYtT2XeV98bZ1bRlvb90WBwV87PyoLzvEEj8FheOVBTdZeXa8614UH4XMkb5h2VQ672DmG8Atp3VPj/i4aLhiQoxcxGePaHKdiK0k4jadSwrI6tNMdl5o=
-Received: from MW4PR04CA0271.namprd04.prod.outlook.com (2603:10b6:303:89::6)
- by BL1PR12MB5111.namprd12.prod.outlook.com (2603:10b6:208:31b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.12; Wed, 8 Jun
- 2022 19:32:49 +0000
-Received: from CO1NAM11FT013.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:89:cafe::ac) by MW4PR04CA0271.outlook.office365.com
- (2603:10b6:303:89::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.13 via Frontend
- Transport; Wed, 8 Jun 2022 19:32:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT013.mail.protection.outlook.com (10.13.174.227) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5332.12 via Frontend Transport; Wed, 8 Jun 2022 19:32:48 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Wed, 8 Jun
- 2022 14:32:43 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>
-CC:     <platform-driver-x86@vger.kernel.org>, <mario.limonciello@amd.com>,
-        <andy.shevchenko@gmail.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Naveen Krishna Chatradhi <NaveenKrishna.Chatradhi@amd.com>,
-        Suma Hegde <suma.hegde@amd.com>
-Subject: [PATCH v3] platform/x86: Move AMD platform drivers to separate  directory
-Date:   Thu, 9 Jun 2022 01:02:12 +0530
-Message-ID: <20220608193212.2827257-1-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 8 Jun 2022 15:42:20 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 579DE2AF7
+        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Jun 2022 12:42:19 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id e9so8995281pju.5
+        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jun 2022 12:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :content-transfer-encoding:user-agent:mime-version;
+        bh=Wyf1FuSzefQAznnuFhKZHRRgC3cYTUZTWTeOH3BIMpo=;
+        b=ctncTZwAfG0feWADl15/EJPnAVe1qwU3vQi5Jl5MROXZyd61Z6TgIlAzRwXE5AC8Op
+         DNOUmBUaqja2/vnbbIVb+ObBmedw4EyYdVgpA+IdfSSi2bd/c24jsFVM/Pkv7oJYR+Q7
+         9lqjuitianWZzceRgqqE7y4f/sZABVjTZ/7L9OYxCtnIEoIMTu/9PiqCm4KSaKVvaZv5
+         PZRTK16NgKDX9Coi7ruBLmp0EIW+ShMj0oKsmWFfbgICivB8gjpR9biubFnt9SnVH2yH
+         4wx0v0ezsRrfZ25wg4J+3Yf6sVzaloA/wpLfx3RqOqXIL9cFzRPmnscKFeVLP00cmAM1
+         dTPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:content-transfer-encoding:user-agent:mime-version;
+        bh=Wyf1FuSzefQAznnuFhKZHRRgC3cYTUZTWTeOH3BIMpo=;
+        b=BNmXdM72lX/0gghUwh5mxXnkElnQ5PuBYtOBXPVPlbSZZ9SpqwW2BjYfBnYT955FDY
+         PBQwCQY4oG3jDA3Or5X953sXNY8Ix9IbkHZCy4MGIO52vE4WYmrXss8twJ4FtaSGcZl9
+         Jn7hKwqmHtGMkrbJG5YIgngjblCKiGlS9mpNri9sJADyjGm4OAPooVXVUut1/kw5YzZi
+         qf5BmD/hiw8JXbu5h1Q2dCUSf7K+IgsE2Ra4Yk+NbquGxlaPaU5ZxxuatgC5l0//GA2G
+         /4fJmn0tW5dCYGjItQQEHd8BauC+KF1Ph0rNX4wQkpapPVLMgSO+buNNmofdRuZBaOOg
+         yAYw==
+X-Gm-Message-State: AOAM533VpdwPdwbO+NCoOSoStiWkuj3AhLsxckWQSoGMyrlxnX7AgAu3
+        3wDQUVOTV3Q4mwqgv27Bymg=
+X-Google-Smtp-Source: ABdhPJyq0MCpplXK/w0OXVmQXr2zPL3wC38B/956qfdpYrLWgCtovz1UhLNxmWZ4K33UkH/Apux1Hw==
+X-Received: by 2002:a17:903:11d2:b0:167:8a0f:8d33 with SMTP id q18-20020a17090311d200b001678a0f8d33mr13286341plh.95.1654717338786;
+        Wed, 08 Jun 2022 12:42:18 -0700 (PDT)
+Received: from ?IPv6:2405:201:a007:e183:aa6d:fbda:3c70:a6e9? ([2405:201:a007:e183:aa6d:fbda:3c70:a6e9])
+        by smtp.gmail.com with ESMTPSA id a2-20020a170902710200b0016141e6c5acsm15278280pll.296.2022.06.08.12.41.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jun 2022 12:42:18 -0700 (PDT)
+Message-ID: <acafed286e86158cec3ad5f0ddf9e52b912db996.camel@gmail.com>
+Subject: Re: [RFC] platform/x86: hp-wmi: make hp_wmi_perform_query() work
+ with certain devices
+From:   Bedant Patnaik <bedant.patnaik@gmail.com>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Date:   Thu, 09 Jun 2022 01:11:24 +0530
+In-Reply-To: <41be46743d21c78741232a47bbb5f1cdbcc3d21e.camel@gmail.com>
+References: <20220607132428.7221-1-bedant.patnaik@gmail.com>
+         <094f73b7-f618-aa12-762b-3b1a1f4556d2@redhat.com>
+         <CAOOmCE8QYEwh6TrgA=_sTcm4spkuk3rjMS4g78nbBbWXWUB2aQ@mail.gmail.com>
+         <fd1b71fe-d9a7-65bb-314c-f11b7d550fe8@redhat.com>
+         <CAOOmCE-NN6cQ-hcG5Tyd8P8AjounN5aVZTD=AouX-isWNqe4dA@mail.gmail.com>
+         <ca2bb15600cd7d101153eb4ee4a62ef5d8f0df72.camel@gmail.com>
+         <CAOOmCE8LO5ns8pf4fhXWrDiBwYUHsvEtmqcSfEiw5nsKYKhSNw@mail.gmail.com>
+         <41be46743d21c78741232a47bbb5f1cdbcc3d21e.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.2 (3.44.2-1.fc36) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 86dc756f-fa81-41b1-3343-08da4985ab96
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5111:EE_
-X-Microsoft-Antispam-PRVS: <BL1PR12MB5111627C8F6536DE8F2CDB8A9AA49@BL1PR12MB5111.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: l8IQSeEm0Xe8vakzDoKKCIUxcyVCbp3XAEoG3zHcpj8IcNOHSOGK2RuMJsJiCVliQ2YNshR4yo2btMAkCA0ziBkGsTkgO7s1wl6Hrt8FbMEaRK6vbCsf7/G41NigErbSl2OT6XZ0o+Oxm0WkXkivgSwhKEoA7hL/a67AN0vo6HB0B44ttWODh01qek3Cx/tPkX9dNHr961a9mugREW4AEoZ7UHIMU/kBsqS0MSxgIC+uJRsY2BYUWg6AX+1cuvtfdJVChHQtPlZTCawWChdmHIr6htSpv3fpQowoed/g0xk/sAtes5tIdNsmC/KGaNM8mbnRcgIFZONgGZ2Nbu0Q3/sZCO5lYDROPCXOv58n79Pq7cK21gdIVdZaQDRxgdnJ12QtMpawMdnnLSnTuJTX3gbDE3omFIxQQKMUmZZaFtuRm3KxW1T+It6bN/AyxKIuSAhpmPNQX80HvdGP3XLCZV0r0YZQfj+QNczmoNL7guXlDlDv7j77CI2mekXidq5e62PC7+dvI4kE/pu25+e1JwS72/Il//SfYDB42/fn7a5Vk9T1YyPaTgRVA3IXETkKtxD7gt0lYr8pA3jnFMaa5JMGN99x457nSGL2M/NqTkGyuM20NaeBKiiMIo7n79Qz5uPmfb7jLUBk+bBkG/BkcHWFjmSZPADWuhF5LQZsyFC550QBjRUoOAAuhrW37j5Myvx1rM3sQ7srMXb8jR3tLA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(47076005)(5660300002)(36860700001)(316002)(70206006)(36756003)(4326008)(70586007)(54906003)(110136005)(508600001)(8676002)(8936002)(186003)(6666004)(2906002)(336012)(2616005)(83380400001)(1076003)(7696005)(16526019)(82310400005)(40460700003)(356005)(81166007)(26005)(426003)(86362001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2022 19:32:48.2697
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86dc756f-fa81-41b1-3343-08da4985ab96
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT013.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5111
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently, AMD supported platform drivers are grouped under generic "x86"
-folder structure. Move the current drivers (amd-pmc and amd_hsmp) to a
-separate directory. This would also mean the newer driver submissions to
-pdx86 subsystem in the future will also land in AMD specific directory.
-
-Reviewed-by: Naveen Krishna Chatradhi <NaveenKrishna.Chatradhi@amd.com>
-Tested-by: Suma Hegde <suma.hegde@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
-v3:
- - Address collision problem when module with same name is used.
-
-v2:
- - drop "amd" prefix from the file names
-
- MAINTAINERS                                   |  4 +--
- drivers/platform/x86/Kconfig                  | 27 +---------------
- drivers/platform/x86/Makefile                 |  3 +-
- drivers/platform/x86/amd/Kconfig              | 31 +++++++++++++++++++
- drivers/platform/x86/amd/Makefile             | 11 +++++++
- .../platform/x86/{amd_hsmp.c => amd/hsmp.c}   |  0
- drivers/platform/x86/{amd-pmc.c => amd/pmc.c} |  0
- 7 files changed, 46 insertions(+), 30 deletions(-)
- create mode 100644 drivers/platform/x86/amd/Kconfig
- create mode 100644 drivers/platform/x86/amd/Makefile
- rename drivers/platform/x86/{amd_hsmp.c => amd/hsmp.c} (100%)
- rename drivers/platform/x86/{amd-pmc.c => amd/pmc.c} (100%)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a6d3bd9d2a8d..2a34deb24594 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -996,7 +996,7 @@ AMD PMC DRIVER
- M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
--F:	drivers/platform/x86/amd-pmc.*
-+F:	drivers/platform/x86/amd/pmc.c
- 
- AMD HSMP DRIVER
- M:	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-@@ -1006,7 +1006,7 @@ S:	Maintained
- F:	Documentation/x86/amd_hsmp.rst
- F:	arch/x86/include/asm/amd_hsmp.h
- F:	arch/x86/include/uapi/asm/amd_hsmp.h
--F:	drivers/platform/x86/amd_hsmp.c
-+F:	drivers/platform/x86/amd/hsmp.c
- 
- AMD POWERPLAY AND SWSMU
- M:	Evan Quan <evan.quan@amd.com>
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index f08ad85683cb..b1879980ce2e 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -196,32 +196,7 @@ config ACER_WMI
- 	  If you have an ACPI-WMI compatible Acer/ Wistron laptop, say Y or M
- 	  here.
- 
--config AMD_PMC
--	tristate "AMD SoC PMC driver"
--	depends on ACPI && PCI && RTC_CLASS
--	help
--	  The driver provides support for AMD Power Management Controller
--	  primarily responsible for S2Idle transactions that are driven from
--	  a platform firmware running on SMU. This driver also provides a debug
--	  mechanism to investigate the S2Idle transactions and failures.
--
--	  Say Y or M here if you have a notebook powered by AMD RYZEN CPU/APU.
--
--	  If you choose to compile this driver as a module the module will be
--	  called amd-pmc.
--
--config AMD_HSMP
--	tristate "AMD HSMP Driver"
--	depends on AMD_NB && X86_64
--	help
--	  The driver provides a way for user space tools to monitor and manage
--	  system management functionality on EPYC server CPUs from AMD.
--
--	  Host System Management Port (HSMP) interface is a mailbox interface
--	  between the x86 core and the System Management Unit (SMU) firmware.
--
--	  If you choose to compile this driver as a module the module will be
--	  called amd_hsmp.
-+source "drivers/platform/x86/amd/Kconfig"
- 
- config ADV_SWBUTTON
- 	tristate "Advantech ACPI Software Button Driver"
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 4a59f47a46e2..48abfe50aaf5 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -23,8 +23,7 @@ obj-$(CONFIG_ACER_WIRELESS)	+= acer-wireless.o
- obj-$(CONFIG_ACER_WMI)		+= acer-wmi.o
- 
- # AMD
--obj-$(CONFIG_AMD_PMC)		+= amd-pmc.o
--obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
-+obj-y				+= amd/
- 
- # Advantech
- obj-$(CONFIG_ADV_SWBUTTON)	+= adv_swbutton.o
-diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-new file mode 100644
-index 000000000000..c0d0a3c5170c
---- /dev/null
-+++ b/drivers/platform/x86/amd/Kconfig
-@@ -0,0 +1,31 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# AMD x86 Platform Specific Drivers
-+#
-+
-+config AMD_PMC
-+	tristate "AMD SoC PMC driver"
-+	depends on ACPI && PCI && RTC_CLASS
-+	help
-+	  The driver provides support for AMD Power Management Controller
-+	  primarily responsible for S2Idle transactions that are driven from
-+	  a platform firmware running on SMU. This driver also provides a debug
-+	  mechanism to investigate the S2Idle transactions and failures.
-+
-+	  Say Y or M here if you have a notebook powered by AMD RYZEN CPU/APU.
-+
-+	  If you choose to compile this driver as a module the module will be
-+	  called amd-pmc.
-+
-+config AMD_HSMP
-+	tristate "AMD HSMP Driver"
-+	depends on AMD_NB && X86_64
-+	help
-+	  The driver provides a way for user space tools to monitor and manage
-+	  system management functionality on EPYC server CPUs from AMD.
-+
-+	  Host System Management Port (HSMP) interface is a mailbox interface
-+	  between the x86 core and the System Management Unit (SMU) firmware.
-+
-+	  If you choose to compile this driver as a module the module will be
-+	  called amd_hsmp.
-diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-new file mode 100644
-index 000000000000..a36688653203
---- /dev/null
-+++ b/drivers/platform/x86/amd/Makefile
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for drivers/platform/x86/amd
-+# AMD x86 Platform-Specific Drivers
-+#
-+
-+amd-pmc-y			:= pmc.o
-+obj-$(CONFIG_AMD_PMC)		+= amd-pmc.o
-+amd_hsmp-y			:= hsmp.o
-+obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
-+
-diff --git a/drivers/platform/x86/amd_hsmp.c b/drivers/platform/x86/amd/hsmp.c
-similarity index 100%
-rename from drivers/platform/x86/amd_hsmp.c
-rename to drivers/platform/x86/amd/hsmp.c
-diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd/pmc.c
-similarity index 100%
-rename from drivers/platform/x86/amd-pmc.c
-rename to drivers/platform/x86/amd/pmc.c
--- 
-2.25.1
+R3JlZXRpbmdzIEhhbnMsIEpvcmdlLAoKSSBoYXZlIHNlbnQgdGhlIHplcm9faWZfc3VwcCgpIHBh
+dGNoIHRoYXQgY2FuIGJlIGFwcGxpZWQgb3ZlciBKb3JnZSdzIGJ1ZmZlciBzaXplIHBhdGNoIGlu
+IHRoZSBtYWlsIHRoYXQgSSdtIHJlcGx5aW5nIHRvLgpUaGlzICpzaG91bGQqIGJlIGVub3VnaCBh
+cyB0aGUgZmluYWwgcGF0Y2guIFBsZWFzZSBsZXQgbWUga25vdyBpZiBhbnl0aGluZyBuZWVkcyB0
+byBiZSByZWN0aWZpZWQuCgpBbGwgeW91ciBpbnB1dCBpcyB3ZWxjb21lLgoKVGhhbmsgeW91LgoK
+T24gVGh1LCAyMDIyLTA2LTA5IGF0IDAwOjU4ICswNTMwLCBCZWRhbnQgUGF0bmFpayB3cm90ZToK
+PiBGcm9tIDI2Zjg0ZDgzNTgxOWZhMzg4NzJjNjczZjQ5ZjFiNzc3NzQ5Mjc1NjggTW9uIFNlcCAx
+NyAwMDowMDowMCAyMDAxCj4gRnJvbTogQmVkYW50IFBhdG5haWsgPGJlZGFudC5wYXRuYWlrQGdt
+YWlsLmNvbT4KPiBEYXRlOiBUaHUsIDkgSnVuIDIwMjIgMDA6NTA6NTMgKzA1MzAKPiBTdWJqZWN0
+OiBbUEFUQ0hdIFVzZSB6ZXJvIGluc2l6ZSBwYXJhbWV0ZXIgb25seSB3aGVuIHN1cHBvcnRlZAo+
+IAo+IGJlOWQ3M2U2NDk1N2JiZDMxZWU5YTBkMTFhZGMwZjcyMDk3NGM1NTggKCJwbGF0Zm9ybS94
+ODY6IGhwLXdtaTogRml4IDB4MDUgZXJyb3IgY29kZSByZXBvcnRlZCBieSBzZXZlcmFsIFdNSSBj
+YWxscyIpCj4gYW5kIDEyYjE5ZjE0YTIxYTJlZTYzNDg4MjVkOTViNjQyZWYyY2QxNjc5NGYgKCJw
+bGF0Zm9ybS94ODY6IGhwLXdtaTogRml4IGhwX3dtaV9yZWFkX2ludCgpIHJlcG9ydGluZyBlcnJv
+ciAoMHgwNSkiKQo+IGNhdXNlIEFDUEkgQklPUyBFcnJvciAoYnVnKTogQXR0ZW1wdCB0byBDcmVh
+dGVGaWVsZCBvZiBsZW5ndGggemVybyAoMjAyMTEyMTcvZHNvcGNvZGUtMTMzKSBiZWNhdXNlIG9m
+IHRoZSBBQ1BJCj4gbWV0aG9kIEhXTUMsIHdoaWNoIHVuY29uZGl0aW9uYWxseSBjcmVhdGVzIGEg
+RmllbGQgb2Ygc2l6ZSAoaW5zaXplKjgpIGJpdHM6Cj4gwqDCoMKgwqDCoMKgwqDCoENyZWF0ZUZp
+ZWxkIChBcmcxLCAweDgwLCAoTG9jYWw1ICogMHgwOCksIERBSU4pCj4gSW4gY2FzZXMgd2hlcmUg
+YXJncy0+aW5zaXplID0gMCwgdGhlIEZpZWxkIHNpemUgaXMgMCwgcmVzdWx0aW5nIGluIGFuIGVy
+cm9yLgo+IEZpeDogdXNlIHplcm8gaW5zaXplIG9ubHkgaWYgMHg1IGVycm9yIGNvZGUgaXMgcmV0
+dXJuZWQKPiAKPiBUZXN0ZWQgb24gT21lbiAxNSBBTUQgKDIwMjApIGJvYXJkIElEOiA4Nzg2Lgo+
+IAo+IFNpZ25lZC1vZmYtYnk6IEJlZGFudCBQYXRuYWlrIDxiZWRhbnQucGF0bmFpa0BnbWFpbC5j
+b20+Cj4gLS0tCj4gwqBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC13bWkuYyB8IDIzICsrKysrKysr
+KysrKysrKy0tLS0tLS0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgOCBk
+ZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAtd21p
+LmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC13bWkuYwo+IGluZGV4IDI3NzM5N2RlNS4uMGUw
+NzU4MWI4IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2hwLXdtaS5jCj4gKysr
+IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAtd21pLmMKPiBAQCAtMzgsNiArMzgsNyBAQCBNT0RV
+TEVfQUxJQVMoIndtaTo1RkI3RjAzNC0yQzYzLTQ1ZTktQkU5MS0zRDQ0RTJDNzA3RTQiKTsKPiDC
+oCNkZWZpbmUgSFBXTUlfRVZFTlRfR1VJRCAiOTVGMjQyNzktNEQ3Qi00MzM0LTkzODctQUNDREM2
+N0VGNjFDIgo+IMKgI2RlZmluZSBIUFdNSV9CSU9TX0dVSUQgIjVGQjdGMDM0LTJDNjMtNDVlOS1C
+RTkxLTNENDRFMkM3MDdFNCIKPiDCoCNkZWZpbmUgSFBfT01FTl9FQ19USEVSTUFMX1BST0ZJTEVf
+T0ZGU0VUIDB4OTUKPiArI2RlZmluZSB6ZXJvX2lmX3N1cCh0bXApICh6ZXJvX2luc2l6ZV9zdXBw
+b3J0PzA6c2l6ZW9mKHRtcCkpIC8vIHVzZSB3aGVuIHplcm8gaW5zaXplIGlzIHJlcXVpcmVkCj4g
+wqAKPiDCoC8qIERNSSBib2FyZCBuYW1lcyBvZiBkZXZpY2VzIHRoYXQgc2hvdWxkIHVzZSB0aGUg
+b21lbiBzcGVjaWZpYyBwYXRoIGZvcgo+IMKgICogdGhlcm1hbCBwcm9maWxlcy4KPiBAQCAtMjIw
+LDYgKzIyMSw3IEBAIHN0YXRpYyBzdHJ1Y3QgaW5wdXRfZGV2ICpocF93bWlfaW5wdXRfZGV2Owo+
+IMKgc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmhwX3dtaV9wbGF0Zm9ybV9kZXY7Cj4g
+wqBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX3Byb2ZpbGVfaGFuZGxlciBwbGF0Zm9ybV9wcm9maWxl
+X2hhbmRsZXI7Cj4gwqBzdGF0aWMgYm9vbCBwbGF0Zm9ybV9wcm9maWxlX3N1cHBvcnQ7Cj4gK3N0
+YXRpYyBib29sIHplcm9faW5zaXplX3N1cHBvcnQ7Cj4gwqAKPiDCoHN0YXRpYyBzdHJ1Y3QgcmZr
+aWxsICp3aWZpX3Jma2lsbDsKPiDCoHN0YXRpYyBzdHJ1Y3QgcmZraWxsICpibHVldG9vdGhfcmZr
+aWxsOwo+IEBAIC0zNzYsNyArMzc4LDcgQEAgc3RhdGljIGludCBocF93bWlfcmVhZF9pbnQoaW50
+IHF1ZXJ5KQo+IMKgwqDCoMKgwqDCoMKgwqBpbnQgdmFsID0gMCwgcmV0Owo+IMKgCj4gwqDCoMKg
+wqDCoMKgwqDCoHJldCA9IGhwX3dtaV9wZXJmb3JtX3F1ZXJ5KHF1ZXJ5LCBIUFdNSV9SRUFELCAm
+dmFsLAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgMCwgc2l6ZW9mKHZhbCkpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgemVyb19pZl9z
+dXAodmFsKSwgc2l6ZW9mKHZhbCkpOwo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoGlmIChyZXQpCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gcmV0IDwgMCA/IHJldCA6IC1F
+SU5WQUw7Cj4gQEAgLTQxMiw3ICs0MTQsOCBAQCBzdGF0aWMgaW50IGhwX3dtaV9nZXRfdGFibGV0
+X21vZGUodm9pZCkKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAtRU5P
+REVWOwo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoHJldCA9IGhwX3dtaV9wZXJmb3JtX3F1ZXJ5KEhQ
+V01JX1NZU1RFTV9ERVZJQ0VfTU9ERSwgSFBXTUlfUkVBRCwKPiAtwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN5c3RlbV9k
+ZXZpY2VfbW9kZSwgMCwgc2l6ZW9mKHN5c3RlbV9kZXZpY2VfbW9kZSkpOwo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+c3lzdGVtX2RldmljZV9tb2RlLCB6ZXJvX2lmX3N1cChzeXN0ZW1fZGV2aWNlX21vZGUpLAo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgc2l6ZW9mKHN5c3RlbV9kZXZpY2VfbW9kZSkpOwo+IMKgwqDCoMKgwqDCoMKgwqBp
+ZiAocmV0IDwgMCkKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiByZXQ7
+Cj4gwqAKPiBAQCAtNDk5LDcgKzUwMiw3IEBAIHN0YXRpYyBpbnQgaHBfd21pX2Zhbl9zcGVlZF9t
+YXhfZ2V0KHZvaWQpCj4gwqDCoMKgwqDCoMKgwqDCoGludCB2YWwgPSAwLCByZXQ7Cj4gwqAKPiDC
+oMKgwqDCoMKgwqDCoMKgcmV0ID0gaHBfd21pX3BlcmZvcm1fcXVlcnkoSFBXTUlfRkFOX1NQRUVE
+X01BWF9HRVRfUVVFUlksIEhQV01JX0dNLAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgJnZhbCwgMCwgc2l6ZW9mKHZh
+bCkpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgJnZhbCwgemVyb19pZl9zdXAodmFsKSwgc2l6ZW9mKHZhbCkpOwo+
+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoGlmIChyZXQpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqByZXR1cm4gcmV0IDwgMCA/IHJldCA6IC1FSU5WQUw7Cj4gQEAgLTUxMSw3ICs1MTQs
+NyBAQCBzdGF0aWMgaW50IF9faW5pdCBocF93bWlfYmlvc18yMDA4X2xhdGVyKHZvaWQpCj4gwqB7
+Cj4gwqDCoMKgwqDCoMKgwqDCoGludCBzdGF0ZSA9IDA7Cj4gwqDCoMKgwqDCoMKgwqDCoGludCBy
+ZXQgPSBocF93bWlfcGVyZm9ybV9xdWVyeShIUFdNSV9GRUFUVVJFX1FVRVJZLCBIUFdNSV9SRUFE
+LCAmc3RhdGUsCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDAsIHNpemVvZihzdGF0ZSkpOwo+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCB6ZXJvX2lmX3N1cChzdGF0ZSksIHNpemVvZihzdGF0ZSkpOwo+IMKgwqDC
+oMKgwqDCoMKgwqBpZiAoIXJldCkKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJl
+dHVybiAxOwo+IMKgCj4gQEAgLTUyMiw3ICs1MjUsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBocF93
+bWlfYmlvc18yMDA5X2xhdGVyKHZvaWQpCj4gwqB7Cj4gwqDCoMKgwqDCoMKgwqDCoHU4IHN0YXRl
+WzEyOF07Cj4gwqDCoMKgwqDCoMKgwqDCoGludCByZXQgPSBocF93bWlfcGVyZm9ybV9xdWVyeShI
+UFdNSV9GRUFUVVJFMl9RVUVSWSwgSFBXTUlfUkVBRCwgJnN0YXRlLAo+IC3CoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCAwLCBzaXplb2Yoc3RhdGUpKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgemVyb19pZl9zdXAo
+c3RhdGUpLCBzaXplb2Yoc3RhdGUpKTsKPiDCoMKgwqDCoMKgwqDCoMKgaWYgKCFyZXQpCj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gMTsKPiDCoAo+IEBAIC02MDAsNyAr
+NjAzLDcgQEAgc3RhdGljIGludCBocF93bWlfcmZraWxsMl9yZWZyZXNoKHZvaWQpCj4gwqDCoMKg
+wqDCoMKgwqDCoGludCBlcnIsIGk7Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgZXJyID0gaHBfd21p
+X3BlcmZvcm1fcXVlcnkoSFBXTUlfV0lSRUxFU1MyX1FVRVJZLCBIUFdNSV9SRUFELCAmc3RhdGUs
+Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCAwLCBzaXplb2Yoc3RhdGUpKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHplcm9faWZfc3Vw
+KHN0YXRlKSwgc2l6ZW9mKHN0YXRlKSk7Cj4gwqDCoMKgwqDCoMKgwqDCoGlmIChlcnIpCj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gZXJyOwo+IMKgCj4gQEAgLTEwMDks
+NyArMTAxMiw3IEBAIHN0YXRpYyBpbnQgX19pbml0IGhwX3dtaV9yZmtpbGwyX3NldHVwKHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKmRldmljZSkKPiDCoMKgwqDCoMKgwqDCoMKgaW50IGVyciwgaTsK
+PiDCoAo+IMKgwqDCoMKgwqDCoMKgwqBlcnIgPSBocF93bWlfcGVyZm9ybV9xdWVyeShIUFdNSV9X
+SVJFTEVTUzJfUVVFUlksIEhQV01JX1JFQUQsICZzdGF0ZSwKPiAtwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDAsIHNpemVv
+ZihzdGF0ZSkpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgemVyb19pZl9zdXAoc3RhdGUpLCBzaXplb2Yoc3RhdGUp
+KTsKPiDCoMKgwqDCoMKgwqDCoMKgaWYgKGVycikKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoHJldHVybiBlcnIgPCAwID8gZXJyIDogLUVJTlZBTDsKPiDCoAo+IEBAIC0xNDg1LDEx
+ICsxNDg4LDE1IEBAIHN0YXRpYyBpbnQgX19pbml0IGhwX3dtaV9pbml0KHZvaWQpCj4gwqB7Cj4g
+wqDCoMKgwqDCoMKgwqDCoGludCBldmVudF9jYXBhYmxlID0gd21pX2hhc19ndWlkKEhQV01JX0VW
+RU5UX0dVSUQpOwo+IMKgwqDCoMKgwqDCoMKgwqBpbnQgYmlvc19jYXBhYmxlID0gd21pX2hhc19n
+dWlkKEhQV01JX0JJT1NfR1VJRCk7Cj4gLcKgwqDCoMKgwqDCoMKgaW50IGVycjsKPiArwqDCoMKg
+wqDCoMKgwqBpbnQgZXJyLCB0bXAgPSAwOwo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoGlmICghYmlv
+c19jYXBhYmxlICYmICFldmVudF9jYXBhYmxlKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgcmV0dXJuIC1FTk9ERVY7Cj4gwqAKPiArwqDCoMKgwqDCoMKgwqBpZiAoaHBfd21pX3Bl
+cmZvcm1fcXVlcnkoSFBXTUlfSEFSRFdBUkVfUVVFUlksIEhQV01JX1JFQUQsICZ0bXAsCj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIHNpemVvZih0bXApLCBzaXplb2YodG1wKSkgPT0gSFBXTUlfUkVUX0lOVkFMSURfUEFSQU1F
+VEVSUykKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgemVyb19pbnNpemVfc3VwcG9y
+dCA9IHRydWU7Cj4gKwo+IMKgwqDCoMKgwqDCoMKgwqBpZiAoZXZlbnRfY2FwYWJsZSkgewo+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZXJyID0gaHBfd21pX2lucHV0X3NldHVwKCk7
+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoZXJyKQoK
 
