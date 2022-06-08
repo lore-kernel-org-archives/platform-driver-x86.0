@@ -2,157 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83992C43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Jun 2022 07:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C51C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Jun 2022 08:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231421AbiFHH7Z (ORCPT
+        id S230527AbiFHIPV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Jun 2022 03:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56784 "EHLO
+        Wed, 8 Jun 2022 04:15:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232952AbiFHH6E (ORCPT
+        with ESMTP id S232448AbiFHIN2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Jun 2022 03:58:04 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E76B1E2269;
-        Wed,  8 Jun 2022 00:27:14 -0700 (PDT)
-Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LHzKy3CJYzYsQl;
-        Wed,  8 Jun 2022 15:26:14 +0800 (CST)
-Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 8 Jun 2022 15:27:12 +0800
-Received: from [10.174.178.120] (10.174.178.120) by
- dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 8 Jun 2022 15:27:10 +0800
-Message-ID: <29900b05-ec44-76a2-645a-22a13399d7fd@huawei.com>
-Date:   Wed, 8 Jun 2022 15:27:09 +0800
+        Wed, 8 Jun 2022 04:13:28 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2863104C0
+        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Jun 2022 00:42:44 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id o37-20020a05600c512500b0039c4ba4c64dso4908409wms.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jun 2022 00:42:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=pDUMQH/JwikS3dGEuoL+s1rn8CjjChIDmrF7b583qjU=;
+        b=fKa3RQzgR1C9gPuzjlK18lPR2ODRZc9Pj5Y+S/gKLpIzbFKHaf1hSkOcGwqMnNsq9r
+         XMuR0mXisUyo/8tXYSJHQu1AEBby8iCEMYFo9QfFIPo7CeBdgGwt4qVeeX7wVgxf6yLX
+         bw288huVE7wnORJcuCI5o1dxTMI8dpA+TRhyYRY3VuiE+BlZ/D2EkZIJVJKnQEiTN0M4
+         2Tc/6fwu7DLHDdQbhhhmCxEbH3XYI2IzWnO/zUDfPluY0N6BMqQOxDd5pl8kgFNumtlP
+         e0rNv4a89XGj4Yn2zUj5RD1kWvz2pHoia7MKcqd+835Rt8u8iwj82sJeJYf00LEQTTM1
+         RbHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=pDUMQH/JwikS3dGEuoL+s1rn8CjjChIDmrF7b583qjU=;
+        b=8HVXOjXZn1sC//QARkgrH01rmDsbRuzw8pZpIgoyyzPXtVC5S4lNn1oFY47f9kZir9
+         p9Gf1uLCmj9dtsoS2irK98Nyg91dTBA567CIn4qZQN6DECCgTrDDPa/HotMy3VeSazqB
+         rVDybNP1UuZmEsTGRRSRf7igKIf+qkhpjvCrzcqTnQE30f72X3j1RH9w2svT8YXKS/e/
+         GmM+eoU/CglzpjvWBHKhsL7HKwOBDirDBoXUcu9WhMY0UhmoKqvyHHo8zxDFwl0jfB0o
+         n6S7BM+/AgJCBReJ6aHcKZ10lktBvrAAkffBx4gOOswb5Fr7tHdzBUPn+Usr0Qn5+5SS
+         urww==
+X-Gm-Message-State: AOAM5330She9dpFMHrGcHxzeFU1/GtOW1Bj9G+KTkf4rulVPI8KoWEIC
+        iO5sK/NrX1/9w3vmbgvfNBGIeA==
+X-Google-Smtp-Source: ABdhPJxfmsfGuJRdtDGKUMYuiYyopBGOApn2Jgo+2/o+D5JV/RRywsnhNTpqwclfgNE8JAcQiqHOkA==
+X-Received: by 2002:a05:600c:5021:b0:39c:6571:e0b0 with SMTP id n33-20020a05600c502100b0039c6571e0b0mr190102wmr.177.1654674163150;
+        Wed, 08 Jun 2022 00:42:43 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id g20-20020a05600c4c9400b0039749b01ea7sm26101954wmp.32.2022.06.08.00.42.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jun 2022 00:42:42 -0700 (PDT)
+Date:   Wed, 8 Jun 2022 08:42:40 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
+Message-ID: <YqBS8I62YBPFC9iS@google.com>
+References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v3 5/6] mm: Add mirror flag back on initrd memory
-To:     <ardb@kernel.org>, <david@redhat.com>
-CC:     <corbet@lwn.net>, <will@kernel.org>, <catalin.marinas@arm.com>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-        <dvhart@infradead.org>, <andy@infradead.org>, <rppt@kernel.org>,
-        <akpm@linux-foundation.org>, <paul.walmsley@sifive.com>,
-        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-        <paulmck@kernel.org>, <keescook@chromium.org>,
-        <songmuchun@bytedance.com>, <rdunlap@infradead.org>,
-        <damien.lemoal@opensource.wdc.com>, <swboyd@chromium.org>,
-        <wei.liu@kernel.org>, <robin.murphy@arm.com>,
-        <anshuman.khandual@arm.com>, <thunder.leizhen@huawei.com>,
-        <wangkefeng.wang@huawei.com>, <gpiccoli@igalia.com>,
-        <chenhuacai@kernel.org>, <geert@linux-m68k.org>,
-        <chenzhou10@huawei.com>, <vijayb@linux.microsoft.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
-        <mawupeng1@huawei.com>
-References: <20220607093805.1354256-1-mawupeng1@huawei.com>
- <20220607093805.1354256-6-mawupeng1@huawei.com>
- <99900b31-2605-2c85-a1b7-9ef2666b58da@redhat.com>
- <CAMj1kXGkzjq3koW_sgO4uzrdtwqSqzsJfT5ABYyvodf+ggXT2w@mail.gmail.com>
-From:   mawupeng <mawupeng1@huawei.com>
-In-Reply-To: <CAMj1kXGkzjq3koW_sgO4uzrdtwqSqzsJfT5ABYyvodf+ggXT2w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.120]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Mon, 06 Jun 2022, Andy Shevchenko wrote:
 
-
-在 2022/6/7 22:49, Ard Biesheuvel 写道:
-> On Tue, 7 Jun 2022 at 14:22, David Hildenbrand <david@redhat.com> wrote:
->>
->> On 07.06.22 11:38, Wupeng Ma wrote:
->>> From: Ma Wupeng <mawupeng1@huawei.com>
->>>
->>> Initrd memory will be removed and then added in arm64_memblock_init() and this
->>> will cause it to lose all of its memblock flags. The lost of MEMBLOCK_MIRROR
->>> flag will lead to error log printed by find_zone_movable_pfns_for_nodes if
->>> the lower 4G range has some non-mirrored memory.
->>>
->>> In order to solve this problem, the lost MEMBLOCK_MIRROR flag will be
->>> reinstalled if the origin memblock has this flag.
->>>
->>> Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
->>> ---
->>>   arch/arm64/mm/init.c     |  9 +++++++++
->>>   include/linux/memblock.h |  1 +
->>>   mm/memblock.c            | 20 ++++++++++++++++++++
->>>   3 files changed, 30 insertions(+)
->>>
->>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->>> index 339ee84e5a61..11641f924d08 100644
->>> --- a/arch/arm64/mm/init.c
->>> +++ b/arch/arm64/mm/init.c
->>> @@ -350,9 +350,18 @@ void __init arm64_memblock_init(void)
->>>                        "initrd not fully accessible via the linear mapping -- please check your bootloader ...\n")) {
->>>                        phys_initrd_size = 0;
->>>                } else {
->>> +                     int flags, ret;
->>> +
->>> +                     ret = memblock_get_flags(base, &flags);
->>> +                     if (ret)
->>> +                             flags = 0;
->>> +
->>>                        memblock_remove(base, size); /* clear MEMBLOCK_ flags */
->>>                        memblock_add(base, size);
->>>                        memblock_reserve(base, size);
->>
->> Can you explain why we're removing+re-adding here exactly? Is it just to
->> clear flags as the comment indicates?
->>
+> There are a few users that would like to utilize P2SB mechanism of hiding
+> and unhiding a device from the PCI configuration space.
 > 
-> This should only happen if the placement of the initrd conflicts with
-> a mem= command line parameter or it is not covered by memblock for
-> some other reason.
+> Here is the series to consolidate p2sb handling code for existing users
+> and to provide a generic way for new comer(s).
 > 
-> IOW, this should never happen, and if re-memblock_add'ing this memory
-> unconditionally is causing problems, we should fix that instead of
-> working around it.
-
-This will happen if we use initrdmem=3G,100M to reserve initrd memory below
-the 4G limit to test this scenario(just for testing, I have trouble to boot
-qemu with initrd enabled and memory below 4G are all mirror memory).
-
-Re-memblock_add'ing this memory unconditionally seems fine but clear all
-flags(especially MEMBLOCK_MIRROR) may lead to some error log.
-
+> It also includes a patch to enable GPIO controllers on Apollo Lake
+> when it's used with ABL bootloader w/o ACPI support.
 > 
->> If it's really just about clearing flags, I wonder if we rather want to
->> have an interface that does exactly that, and hides the way this is
->> actually implemented (obtain flags, remove, re-add ...), internally.
->>
->> But most probably there is more magic in the code and clearing flags
->> isn't all it ends up doing.
->>
+> The patch that brings the helper ("platform/x86/intel: Add Primary to
+> Sideband (P2SB) bridge support") has a commit message that sheds a light
+> on what the P2SB is and why this is needed.
 > 
-> I don't remember exactly why we needed to clear the flags, but I think
-> it had to do with some corner case we hit when the initrd was
-> partially covered.
-If "mem=" is set in command line, memblock_mem_limit_remove_map() will
-remove all memory block without MEMBLOCK_NOMAP. Maybe this will bring the
-memory back if this initrd mem has the MEMBLOCK_NOMAP flag?
+> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+> since we have an ACPI device for GPIO I do not see any attempts to recreate
+> one).
+> 
+> The series is ready to be merged via MFD tree, but see below.
+> 
+> The series also includes updates for Simatic IPC drivers that partially
+> tagged by respective maintainers (the main question is if Pavel is okay
+> with the last three patches, since I believe Hans is okay with removing
+> some code under PDx86). Hence the first 8 patches can be merged right
+> away and the rest when Pavel does his review.
 
-The rfc version [1] introduce and use memblock_clear_nomap() to clear the
-MEMBLOCK_NOMAP of this initrd memblock.
-So maybe the usage of memblock_remove() is just to avoid introducing new
-function(memblock_clear_nomap)?
+Can we just wait for Pavel's review, then merge them all at once?
 
-Since commit 4c546b8a3469 ("memblock: add memblock_clear_nomap()") already
-introduced memblock_clear_nomap(). Can we use this to remove flag MEMBLOCK_NOMAP
-to solve this problem rather than bring flag MEMBLOCK_MIRROR back?
-
-[1] https://lore.kernel.org/linux-arm-kernel/20160202180622.GP10166@arm.com/T/#t
-> .
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
