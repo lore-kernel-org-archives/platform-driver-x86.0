@@ -2,159 +2,112 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83721CCA47B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 12:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669EAC43334
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 17:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345027AbiFJMP0 (ORCPT
+        id S244605AbiFJR2J (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Jun 2022 08:15:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49394 "EHLO
+        Fri, 10 Jun 2022 13:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242459AbiFJMP0 (ORCPT
+        with ESMTP id S1346784AbiFJR2I (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Jun 2022 08:15:26 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3948622DB65;
-        Fri, 10 Jun 2022 05:15:21 -0700 (PDT)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LKKcR3XT9zgYbl;
-        Fri, 10 Jun 2022 20:13:27 +0800 (CST)
-Received: from dggpemm500001.china.huawei.com (7.185.36.107) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 10 Jun 2022 20:15:19 +0800
-Received: from [10.174.177.243] (10.174.177.243) by
- dggpemm500001.china.huawei.com (7.185.36.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 10 Jun 2022 20:15:17 +0800
-Message-ID: <70bd99eb-a05d-adb0-5cb8-84dcc66b674e@huawei.com>
-Date:   Fri, 10 Jun 2022 20:15:17 +0800
+        Fri, 10 Jun 2022 13:28:08 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A43812A7882;
+        Fri, 10 Jun 2022 10:28:07 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id r71so25437446pgr.0;
+        Fri, 10 Jun 2022 10:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JGqbehE+ZveInuu1+3qwVkNRRvQWvCG4DxrZ+H9HjeM=;
+        b=Peuo1gMnEIX9fpDqjCX+Bu1Bhcpes+fjpnwEFgBejwqmc1JnCjtABamm3y3ULvgyLL
+         HkqiToUK4OlbBTTkmzNhfM+YKbEHfiAyXiO+dpxqyU4VOwJoQPZNC3iezLsRGlw5wnLa
+         Das340RRUWzo8SGhiGPHxjUqHvzjm+n4HP657lHc/nrAJkwfCaWMwZwtVgEJXSMF8Uk3
+         y+AV3EqK6JRwmXehAHk6ypiOMdReUE/34wn9IH3SoX6DFkiyrTZtvovS5IEKX7vv3ZHG
+         1eZwvrlj/T6f5J8e4Qn7JFPIoqOCrzFwYRyJnvdjFZtzytlIto67m7CyRoOSpPpm6dn4
+         pfyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JGqbehE+ZveInuu1+3qwVkNRRvQWvCG4DxrZ+H9HjeM=;
+        b=XKELGV2kTqAcl5Ma+Ib7IL5mum5JWDyxe/AaKBPMgb8R3PIRz0fUkZl+bwk3YNSCZc
+         U6AkjCnlhtr0jtYhW9AiCy6nEcBZP+67RQv39yOpSrfGfL/tBnUIktfP8JJctIQ/1sPA
+         /h8VGFXPMrlK9gFY7ACIHq+uFHZWl+KBhUZH36UoOr1jARB0RzqOVLpShW4pFa8kHGiU
+         CPWbKsrJq08bsm6YbWJSoE/Suil4N5RaTIiUvQf7nfSq0gKMtfeebjOg3MsvkOlgShgc
+         o/7zQz0KVQEt3WVJwJV8gWuugPwnkqnuvauIjGSS9v2Bvf/9duFw6G8bkTTQqKn1aL4G
+         eS8A==
+X-Gm-Message-State: AOAM532jU308DowntirDkkmtN0UeK5mwXeZRpZMpRIvQXmPoFG5tywLI
+        Oso2cRHw+KASPcNw0uKpnos=
+X-Google-Smtp-Source: ABdhPJz+Qr3QgcbMAG9/jGKndXDWYWzi78jgegL3uDMSyjR4IW7voDshOdHPvzlc5M4HrwWifp30vw==
+X-Received: by 2002:a65:6e9b:0:b0:3c5:f761:2d94 with SMTP id bm27-20020a656e9b000000b003c5f7612d94mr40256869pgb.79.1654882087047;
+        Fri, 10 Jun 2022 10:28:07 -0700 (PDT)
+Received: from localhost.localdomain ([2402:7500:a25:b2b9:c7f3:678d:3dce:b25d])
+        by smtp.gmail.com with ESMTPSA id b15-20020a170902650f00b0016194c1df58sm17222665plk.105.2022.06.10.10.28.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jun 2022 10:28:06 -0700 (PDT)
+From:   Risheng1128 <hi4u29ck02@gmail.com>
+To:     srinivas.pandruvada@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Risheng1128 <hi4u29ck02@gmail.com>
+Subject: [PATCH] tools/power/x86/intel-speed-select: Remove duplicate macro
+Date:   Sat, 11 Jun 2022 01:27:14 +0800
+Message-Id: <20220610172714.27772-1-hi4u29ck02@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v3 6/6] efi: Disable mirror feature if kernelcore is not
- specified
-Content-Language: en-US
-To:     Ard Biesheuvel <ardb@kernel.org>, Wupeng Ma <mawupeng1@huawei.com>
-CC:     Jonathan Corbet <corbet@lwn.net>, Will Deacon <will@kernel.org>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>, <songmuchun@bytedance.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        <damien.lemoal@opensource.wdc.com>,
-        Stephen Boyd <swboyd@chromium.org>, <wei.liu@kernel.org>,
-        <robin.murphy@arm.com>, <david@redhat.com>,
-        <anshuman.khandual@arm.com>, <thunder.leizhen@huawei.com>,
-        <gpiccoli@igalia.com>, <chenhuacai@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        <chenzhou10@huawei.com>, <vijayb@linux.microsoft.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>
-References: <20220607093805.1354256-1-mawupeng1@huawei.com>
- <20220607093805.1354256-7-mawupeng1@huawei.com>
- <CAMj1kXGMHn_jsMe2WxWZ-s_QV==1tc5k=xpbNXuDbGp0qF534w@mail.gmail.com>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-In-Reply-To: <CAMj1kXGMHn_jsMe2WxWZ-s_QV==1tc5k=xpbNXuDbGp0qF534w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.177.243]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500001.china.huawei.com (7.185.36.107)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+There are some macros such as `GENMASK` and `GENMASK_ULL` are redefined in
+`include/linux/bits.h`. Simultaneously, the `GENMASK` in
+`include/linux/bits.h` is more secure and prevents the following situation.
+1. [net: stmmac: Fix misuses of GENMASK macro](https://reurl.cc/loMWvl)
+2. [clocksource/drivers/npcm: Fix misuse of GENMASK macro](
+https://reurl.cc/b2yr96)
 
-On 2022/6/10 19:20, Ard Biesheuvel wrote:
-> On Tue, 7 Jun 2022 at 11:16, Wupeng Ma <mawupeng1@huawei.com> wrote:
->> From: Ma Wupeng <mawupeng1@huawei.com>
->>
->> If system have some mirrored memory and mirrored feature is not specified
->> in boot parameter, the basic mirrored feature will be enabled and this will
->> lead to the following situations:
->>
->> - memblock memory allocation prefers mirrored region. This may have some
->>    unexpected influence on numa affinity.
->>
->> - contiguous memory will be split into several parts if parts of them
->>    is mirrored memory via memblock_mark_mirror().
->>
->> To fix this, variable mirrored_kernelcore will be checked before calling
->> efi_find_mirror() which will enable basic mirrored feature and this
->> variable is true if kernelcore=mirror is added in the kernel parameters.
->>
->> Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
-> This seems like the wrong place to do this. If mirrored memory is
-> irrelevant to memblock, it should ignore the attribute. So I think
-> this check belongs in mm/memblock.c instead.
+Therefore, I think these macro could be removed.
 
-Sound good,  let's add check into memblock_mark_mirror() and retain
+Signed-off-by: Risheng1128 <hi4u29ck02@gmail.com>
+---
+ tools/power/x86/intel-speed-select/Makefile | 1 +
+ tools/power/x86/intel-speed-select/isst.h   | 7 +------
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-the efi memory mirror information printing.
+diff --git a/tools/power/x86/intel-speed-select/Makefile b/tools/power/x86/intel-speed-select/Makefile
+index 7221f2f55e8b..760d49d61955 100644
+--- a/tools/power/x86/intel-speed-select/Makefile
++++ b/tools/power/x86/intel-speed-select/Makefile
+@@ -14,6 +14,7 @@ endif
+ # (this improves performance and avoids hard-to-debug behaviour);
+ MAKEFLAGS += -r
+ override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include -I/usr/include/libnl3
++override CFLAGS += -I../../../include
+ override LDFLAGS += -lnl-genl-3 -lnl-3
+ 
+ ALL_TARGETS := intel-speed-select
+diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
+index 0796d8c6a882..44de990d182e 100644
+--- a/tools/power/x86/intel-speed-select/isst.h
++++ b/tools/power/x86/intel-speed-select/isst.h
+@@ -27,12 +27,7 @@
+ 
+ #include <stdarg.h>
+ #include <sys/ioctl.h>
+-
+-#define BIT(x) (1 << (x))
+-#define BIT_ULL(nr) (1ULL << (nr))
+-#define GENMASK(h, l) (((~0UL) << (l)) & (~0UL >> (sizeof(long) * 8 - 1 - (h))))
+-#define GENMASK_ULL(h, l)                                                      \
+-	(((~0ULL) << (l)) & (~0ULL >> (sizeof(long long) * 8 - 1 - (h))))
++#include <linux/bits.h>
+ 
+ #define CONFIG_TDP				0x7f
+ #define CONFIG_TDP_GET_LEVELS_INFO		0x00
+-- 
+2.25.1
 
->
->
->> ---
->>   drivers/firmware/efi/efi.c | 3 +++
->>   include/linux/mm.h         | 2 ++
->>   mm/page_alloc.c            | 2 +-
->>   3 files changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
->> index 79c232e07de7..8a5edcb0dd82 100644
->> --- a/drivers/firmware/efi/efi.c
->> +++ b/drivers/firmware/efi/efi.c
->> @@ -454,6 +454,9 @@ void __init efi_find_mirror(void)
->>          if (!efi_enabled(EFI_MEMMAP))
->>                  return;
->>
->> +       if (!mirrored_kernelcore)
->> +               return;
->> +
->>          for_each_efi_memory_desc(md) {
->>                  unsigned long long start = md->phys_addr;
->>                  unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index bc8f326be0ce..741ac7d022c3 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -2540,6 +2540,8 @@ extern void get_pfn_range_for_nid(unsigned int nid,
->>                          unsigned long *start_pfn, unsigned long *end_pfn);
->>   extern unsigned long find_min_pfn_with_active_regions(void);
->>
->> +extern bool mirrored_kernelcore;
->> +
->>   #ifndef CONFIG_NUMA
->>   static inline int early_pfn_to_nid(unsigned long pfn)
->>   {
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index e008a3df0485..cf6f70aba787 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -356,7 +356,7 @@ static unsigned long required_kernelcore_percent __initdata;
->>   static unsigned long required_movablecore __initdata;
->>   static unsigned long required_movablecore_percent __initdata;
->>   static unsigned long zone_movable_pfn[MAX_NUMNODES] __initdata;
->> -static bool mirrored_kernelcore __meminitdata;
->> +bool mirrored_kernelcore __meminitdata;
->>
->>   /* movable_zone is the "real" zone pages in ZONE_MOVABLE are taken from */
->>   int movable_zone;
->> --
->> 2.25.1
->>
-> .
