@@ -2,122 +2,196 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BFCC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 05:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E01CCA47F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 09:24:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239815AbiFJFmW (ORCPT
+        id S1349067AbiFJJYg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Jun 2022 01:42:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34492 "EHLO
+        Fri, 10 Jun 2022 05:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240043AbiFJFmV (ORCPT
+        with ESMTP id S1349675AbiFJJYL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Jun 2022 01:42:21 -0400
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A1E6BFF2
-        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jun 2022 22:42:20 -0700 (PDT)
-Received: from fsav118.sakura.ne.jp (fsav118.sakura.ne.jp [27.133.134.245])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 25A5g2Nh087677;
-        Fri, 10 Jun 2022 14:42:02 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav118.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav118.sakura.ne.jp);
- Fri, 10 Jun 2022 14:42:02 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav118.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 25A5g1uR087674
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 10 Jun 2022 14:42:02 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <63ec2d45-c67c-1134-f6d3-490c8ba67a01@I-love.SAKURA.ne.jp>
-Date:   Fri, 10 Jun 2022 14:41:58 +0900
+        Fri, 10 Jun 2022 05:24:11 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8F80142A8C;
+        Fri, 10 Jun 2022 02:22:32 -0700 (PDT)
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LKFlS4W3FzRhtr;
+        Fri, 10 Jun 2022 17:19:16 +0800 (CST)
+Received: from dggpemm500001.china.huawei.com (7.185.36.107) by
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 10 Jun 2022 17:22:30 +0800
+Received: from [10.174.177.243] (10.174.177.243) by
+ dggpemm500001.china.huawei.com (7.185.36.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 10 Jun 2022 17:22:28 +0800
+Message-ID: <93222719-fcee-2a78-8822-b49944bf1b8b@huawei.com>
+Date:   Fri, 10 Jun 2022 17:22:28 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v3 1/6] efi: Make efi_find_mirror() public
 Content-Language: en-US
-To:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [PATCH] platform/surface: avoid flush_scheduled_work() usage
-Content-Type: text/plain; charset=UTF-8
+To:     Wupeng Ma <mawupeng1@huawei.com>, <corbet@lwn.net>,
+        <will@kernel.org>, <ardb@kernel.org>, <catalin.marinas@arm.com>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+        <dvhart@infradead.org>, <andy@infradead.org>, <rppt@kernel.org>,
+        <akpm@linux-foundation.org>, <paul.walmsley@sifive.com>,
+        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+        <paulmck@kernel.org>, <keescook@chromium.org>,
+        <songmuchun@bytedance.com>, <rdunlap@infradead.org>,
+        <damien.lemoal@opensource.wdc.com>, <swboyd@chromium.org>,
+        <wei.liu@kernel.org>, <robin.murphy@arm.com>, <david@redhat.com>,
+        <anshuman.khandual@arm.com>, <thunder.leizhen@huawei.com>,
+        <gpiccoli@igalia.com>, <chenhuacai@kernel.org>,
+        <geert@linux-m68k.org>, <chenzhou10@huawei.com>,
+        <vijayb@linux.microsoft.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>
+References: <20220607093805.1354256-1-mawupeng1@huawei.com>
+ <20220607093805.1354256-2-mawupeng1@huawei.com>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+In-Reply-To: <20220607093805.1354256-2-mawupeng1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.177.243]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500001.china.huawei.com (7.185.36.107)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use local wq in order to avoid flush_scheduled_work() usage.
 
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
-Please see commit c4f135d643823a86 ("workqueue: Wrap flush_workqueue()
-using a macro") for background.
-
-This is a blind conversion, and is only compile tested.
-
- .../platform/surface/surface_acpi_notify.c    | 27 ++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
-index 7b758f8cc137..c0e12f0b9b79 100644
---- a/drivers/platform/surface/surface_acpi_notify.c
-+++ b/drivers/platform/surface/surface_acpi_notify.c
-@@ -37,6 +37,7 @@ struct san_data {
- #define to_san_data(ptr, member) \
- 	container_of(ptr, struct san_data, member)
- 
-+static struct workqueue_struct *san_wq;
- 
- /* -- dGPU notifier interface. ---------------------------------------------- */
- 
-@@ -356,7 +357,7 @@ static u32 san_evt_bat_nf(struct ssam_event_notifier *nf,
- 
- 	memcpy(&work->event, event, sizeof(struct ssam_event) + event->length);
- 
--	schedule_delayed_work(&work->work, delay);
-+	queue_delayed_work(san_wq, &work->work, delay);
- 	return SSAM_NOTIF_HANDLED;
- }
- 
-@@ -861,7 +862,7 @@ static int san_remove(struct platform_device *pdev)
- 	 * We have unregistered our event sources. Now we need to ensure that
- 	 * all delayed works they may have spawned are run to completion.
- 	 */
--	flush_scheduled_work();
-+	flush_workqueue(san_wq);
- 
- 	return 0;
- }
-@@ -881,7 +882,27 @@ static struct platform_driver surface_acpi_notify = {
- 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- };
--module_platform_driver(surface_acpi_notify);
-+
-+static int __init san_init(void)
-+{
-+	int ret;
-+
-+	san_wq = alloc_workqueue("san_wq", 0, 0);
-+	if (!san_wq)
-+		return -ENOMEM;
-+	ret = platform_driver_register(&surface_acpi_notify);
-+	if (ret)
-+		destroy_workqueue(san_wq);
-+	return ret;
-+}
-+module_init(san_init);
-+
-+static void __exit san_exit(void)
-+{
-+	platform_driver_unregister(&surface_acpi_notify);
-+	destroy_workqueue(san_wq);
-+}
-+module_exit(san_exit);
- 
- MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
- MODULE_DESCRIPTION("Surface ACPI Notify driver for Surface System Aggregator Module");
--- 
-2.18.4
+On 2022/6/7 17:38, Wupeng Ma wrote:
+> From: Ma Wupeng <mawupeng1@huawei.com>
+>
+> Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory
+> ranges") introduce the efi_find_mirror function on x86. In order to reuse
+> the API we make it public in preparation for arm64 to support mirrord
+> memory.
+Reviewed-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
+> ---
+>   arch/x86/include/asm/efi.h  |  4 ----
+>   arch/x86/platform/efi/efi.c | 23 -----------------------
+>   drivers/firmware/efi/efi.c  | 23 +++++++++++++++++++++++
+>   include/linux/efi.h         |  3 +++
+>   4 files changed, 26 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+> index 71943dce691e..eb90206eae80 100644
+> --- a/arch/x86/include/asm/efi.h
+> +++ b/arch/x86/include/asm/efi.h
+> @@ -383,7 +383,6 @@ static inline bool efi_is_64bit(void)
+>   extern bool efi_reboot_required(void);
+>   extern bool efi_is_table_address(unsigned long phys_addr);
+>   
+> -extern void efi_find_mirror(void);
+>   extern void efi_reserve_boot_services(void);
+>   #else
+>   static inline void parse_efi_setup(u64 phys_addr, u32 data_len) {}
+> @@ -395,9 +394,6 @@ static inline  bool efi_is_table_address(unsigned long phys_addr)
+>   {
+>   	return false;
+>   }
+> -static inline void efi_find_mirror(void)
+> -{
+> -}
+>   static inline void efi_reserve_boot_services(void)
+>   {
+>   }
+> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> index 1591d67e0bcd..6e598bd78eef 100644
+> --- a/arch/x86/platform/efi/efi.c
+> +++ b/arch/x86/platform/efi/efi.c
+> @@ -108,29 +108,6 @@ static int __init setup_add_efi_memmap(char *arg)
+>   }
+>   early_param("add_efi_memmap", setup_add_efi_memmap);
+>   
+> -void __init efi_find_mirror(void)
+> -{
+> -	efi_memory_desc_t *md;
+> -	u64 mirror_size = 0, total_size = 0;
+> -
+> -	if (!efi_enabled(EFI_MEMMAP))
+> -		return;
+> -
+> -	for_each_efi_memory_desc(md) {
+> -		unsigned long long start = md->phys_addr;
+> -		unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
+> -
+> -		total_size += size;
+> -		if (md->attribute & EFI_MEMORY_MORE_RELIABLE) {
+> -			memblock_mark_mirror(start, size);
+> -			mirror_size += size;
+> -		}
+> -	}
+> -	if (mirror_size)
+> -		pr_info("Memory: %lldM/%lldM mirrored memory\n",
+> -			mirror_size>>20, total_size>>20);
+> -}
+> -
+>   /*
+>    * Tell the kernel about the EFI memory map.  This might include
+>    * more than the max 128 entries that can fit in the passed in e820
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 860534bcfdac..79c232e07de7 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -446,6 +446,29 @@ static int __init efisubsys_init(void)
+>   
+>   subsys_initcall(efisubsys_init);
+>   
+> +void __init efi_find_mirror(void)
+> +{
+> +	efi_memory_desc_t *md;
+> +	u64 mirror_size = 0, total_size = 0;
+> +
+> +	if (!efi_enabled(EFI_MEMMAP))
+> +		return;
+> +
+> +	for_each_efi_memory_desc(md) {
+> +		unsigned long long start = md->phys_addr;
+> +		unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
+> +
+> +		total_size += size;
+> +		if (md->attribute & EFI_MEMORY_MORE_RELIABLE) {
+> +			memblock_mark_mirror(start, size);
+> +			mirror_size += size;
+> +		}
+> +	}
+> +	if (mirror_size)
+> +		pr_info("Memory: %lldM/%lldM mirrored memory\n",
+> +			mirror_size>>20, total_size>>20);
+> +}
+> +
+>   /*
+>    * Find the efi memory descriptor for a given physical address.  Given a
+>    * physical address, determine if it exists within an EFI Memory Map entry,
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index 7d9b0bb47eb3..53f64c14a525 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -872,6 +872,7 @@ static inline bool efi_rt_services_supported(unsigned int mask)
+>   {
+>   	return (efi.runtime_supported_mask & mask) == mask;
+>   }
+> +extern void efi_find_mirror(void);
+>   #else
+>   static inline bool efi_enabled(int feature)
+>   {
+> @@ -889,6 +890,8 @@ static inline bool efi_rt_services_supported(unsigned int mask)
+>   {
+>   	return false;
+>   }
+> +
+> +static inline void efi_find_mirror(void) {}
+>   #endif
+>   
+>   extern int efi_status_to_err(efi_status_t status);
