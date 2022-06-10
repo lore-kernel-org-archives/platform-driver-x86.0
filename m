@@ -2,112 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 669EAC43334
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 17:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C7AC43334
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 18:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244605AbiFJR2J (ORCPT
+        id S243528AbiFJSof (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Jun 2022 13:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59080 "EHLO
+        Fri, 10 Jun 2022 14:44:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346784AbiFJR2I (ORCPT
+        with ESMTP id S1345188AbiFJSod (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Jun 2022 13:28:08 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A43812A7882;
-        Fri, 10 Jun 2022 10:28:07 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id r71so25437446pgr.0;
-        Fri, 10 Jun 2022 10:28:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JGqbehE+ZveInuu1+3qwVkNRRvQWvCG4DxrZ+H9HjeM=;
-        b=Peuo1gMnEIX9fpDqjCX+Bu1Bhcpes+fjpnwEFgBejwqmc1JnCjtABamm3y3ULvgyLL
-         HkqiToUK4OlbBTTkmzNhfM+YKbEHfiAyXiO+dpxqyU4VOwJoQPZNC3iezLsRGlw5wnLa
-         Das340RRUWzo8SGhiGPHxjUqHvzjm+n4HP657lHc/nrAJkwfCaWMwZwtVgEJXSMF8Uk3
-         y+AV3EqK6JRwmXehAHk6ypiOMdReUE/34wn9IH3SoX6DFkiyrTZtvovS5IEKX7vv3ZHG
-         1eZwvrlj/T6f5J8e4Qn7JFPIoqOCrzFwYRyJnvdjFZtzytlIto67m7CyRoOSpPpm6dn4
-         pfyQ==
+        Fri, 10 Jun 2022 14:44:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F045E22DFA6
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 11:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1654886672;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l+bgqEFlNGsSZP0ydOxQikqPn/Ach7Xe4eAsJh69aB0=;
+        b=giZGWGfCXmv+rvvVP2eQCVl9CXkhD0kzn3VM90P1QM7F7eLl3ab+Pwp/cgmLEK5xkIFvur
+        fxanNy70G1RgQZ3TTUsTBgdgk2z+Lcy4zat1cVNt6lHA31XBx2ojxHEk8R9KREKu7gyHc5
+        Ofa6Wffuo23JHAZliYZf7R3fcrsB8F0=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-349-iUCFX1TfOUWMv75_RtCK0Q-1; Fri, 10 Jun 2022 14:44:30 -0400
+X-MC-Unique: iUCFX1TfOUWMv75_RtCK0Q-1
+Received: by mail-ej1-f69.google.com with SMTP id p7-20020a170906614700b006f87f866117so12879269ejl.21
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 11:44:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=JGqbehE+ZveInuu1+3qwVkNRRvQWvCG4DxrZ+H9HjeM=;
-        b=XKELGV2kTqAcl5Ma+Ib7IL5mum5JWDyxe/AaKBPMgb8R3PIRz0fUkZl+bwk3YNSCZc
-         U6AkjCnlhtr0jtYhW9AiCy6nEcBZP+67RQv39yOpSrfGfL/tBnUIktfP8JJctIQ/1sPA
-         /h8VGFXPMrlK9gFY7ACIHq+uFHZWl+KBhUZH36UoOr1jARB0RzqOVLpShW4pFa8kHGiU
-         CPWbKsrJq08bsm6YbWJSoE/Suil4N5RaTIiUvQf7nfSq0gKMtfeebjOg3MsvkOlgShgc
-         o/7zQz0KVQEt3WVJwJV8gWuugPwnkqnuvauIjGSS9v2Bvf/9duFw6G8bkTTQqKn1aL4G
-         eS8A==
-X-Gm-Message-State: AOAM532jU308DowntirDkkmtN0UeK5mwXeZRpZMpRIvQXmPoFG5tywLI
-        Oso2cRHw+KASPcNw0uKpnos=
-X-Google-Smtp-Source: ABdhPJz+Qr3QgcbMAG9/jGKndXDWYWzi78jgegL3uDMSyjR4IW7voDshOdHPvzlc5M4HrwWifp30vw==
-X-Received: by 2002:a65:6e9b:0:b0:3c5:f761:2d94 with SMTP id bm27-20020a656e9b000000b003c5f7612d94mr40256869pgb.79.1654882087047;
-        Fri, 10 Jun 2022 10:28:07 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:a25:b2b9:c7f3:678d:3dce:b25d])
-        by smtp.gmail.com with ESMTPSA id b15-20020a170902650f00b0016194c1df58sm17222665plk.105.2022.06.10.10.28.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jun 2022 10:28:06 -0700 (PDT)
-From:   Risheng1128 <hi4u29ck02@gmail.com>
-To:     srinivas.pandruvada@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Risheng1128 <hi4u29ck02@gmail.com>
-Subject: [PATCH] tools/power/x86/intel-speed-select: Remove duplicate macro
-Date:   Sat, 11 Jun 2022 01:27:14 +0800
-Message-Id: <20220610172714.27772-1-hi4u29ck02@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        bh=l+bgqEFlNGsSZP0ydOxQikqPn/Ach7Xe4eAsJh69aB0=;
+        b=CmACaJGVxmvXj8t3CudBL9r/UUwPD3ZG2PcdGxkpxFkiPt0ncks6AwPfOIBhsHD4p0
+         wc4cY9cI1RzC9sgpb5Don3FmN+sPd6WTsZxNExOz/zeBzBvxuSLouCJ8tHmsOn5sVqsh
+         oKjTJNjTufo5ohpS863QKHUQN4IJ2IMAP3/oqziC9phC1roEtRCt62iTz/Prs6bEXzPf
+         P7efwbm4xmFF4Ab5OgbrJEpWDxJ1/o9cjXB7WsGiv4gGI/xibSiEvVo3CLiphAxOjoNK
+         73g0nZedlHpW5Ue/STIzMBARHhvTK53cwD3Tkm4rkK8WhpYPQK6L+5GuG1hoO51DfS53
+         EqgQ==
+X-Gm-Message-State: AOAM530GYPw1Qq56tCRza7Qu186FdaP/Bg4SHE/Se4Qi1F3blyOBqZe5
+        d6lbWXwD9Bscl6sqKXPjeu4vszuY/gGRfXxs8F9NRQXpDK1Vniqkr1fMB1o4YJfC+8WOQadvNY8
+        Fsutnn94HFeZ9nXPR4iOXFqTFrk1u3btcUw==
+X-Received: by 2002:a17:906:9c82:b0:6df:baa2:9f75 with SMTP id fj2-20020a1709069c8200b006dfbaa29f75mr40953380ejc.762.1654886669651;
+        Fri, 10 Jun 2022 11:44:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzQ7MrLQnjoc0JgGNtXzN423/UM2kCHjIvtW+kLiqpNKUIPKv7D/umJ9WuGmeePmYkdRi2+dQ==
+X-Received: by 2002:a17:906:9c82:b0:6df:baa2:9f75 with SMTP id fj2-20020a1709069c8200b006dfbaa29f75mr40953372ejc.762.1654886669456;
+        Fri, 10 Jun 2022 11:44:29 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
+        by smtp.gmail.com with ESMTPSA id l21-20020a17090615d500b006feb479fcb4sm12497662ejd.44.2022.06.10.11.44.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jun 2022 11:44:28 -0700 (PDT)
+Message-ID: <66b25f33-7988-b615-9816-d4bde5c6bd0c@redhat.com>
+Date:   Fri, 10 Jun 2022 20:44:28 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH] platform/mellanox: Spelling s/platfom/platform/
+Content-Language: en-US
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Shych <michaelsh@nvidia.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <9c8edde31e271311b7832d7677fe84aba917da8d.1653376503.git.geert@linux-m68k.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <9c8edde31e271311b7832d7677fe84aba917da8d.1653376503.git.geert@linux-m68k.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-There are some macros such as `GENMASK` and `GENMASK_ULL` are redefined in
-`include/linux/bits.h`. Simultaneously, the `GENMASK` in
-`include/linux/bits.h` is more secure and prevents the following situation.
-1. [net: stmmac: Fix misuses of GENMASK macro](https://reurl.cc/loMWvl)
-2. [clocksource/drivers/npcm: Fix misuse of GENMASK macro](
-https://reurl.cc/b2yr96)
+Hi,
 
-Therefore, I think these macro could be removed.
+On 5/24/22 09:15, Geert Uytterhoeven wrote:
+> Fix a misspelling of the word "platform".
+> 
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Signed-off-by: Risheng1128 <hi4u29ck02@gmail.com>
----
- tools/power/x86/intel-speed-select/Makefile | 1 +
- tools/power/x86/intel-speed-select/isst.h   | 7 +------
- 2 files changed, 2 insertions(+), 6 deletions(-)
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-diff --git a/tools/power/x86/intel-speed-select/Makefile b/tools/power/x86/intel-speed-select/Makefile
-index 7221f2f55e8b..760d49d61955 100644
---- a/tools/power/x86/intel-speed-select/Makefile
-+++ b/tools/power/x86/intel-speed-select/Makefile
-@@ -14,6 +14,7 @@ endif
- # (this improves performance and avoids hard-to-debug behaviour);
- MAKEFLAGS += -r
- override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include -I/usr/include/libnl3
-+override CFLAGS += -I../../../include
- override LDFLAGS += -lnl-genl-3 -lnl-3
- 
- ALL_TARGETS := intel-speed-select
-diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
-index 0796d8c6a882..44de990d182e 100644
---- a/tools/power/x86/intel-speed-select/isst.h
-+++ b/tools/power/x86/intel-speed-select/isst.h
-@@ -27,12 +27,7 @@
- 
- #include <stdarg.h>
- #include <sys/ioctl.h>
--
--#define BIT(x) (1 << (x))
--#define BIT_ULL(nr) (1ULL << (nr))
--#define GENMASK(h, l) (((~0UL) << (l)) & (~0UL >> (sizeof(long) * 8 - 1 - (h))))
--#define GENMASK_ULL(h, l)                                                      \
--	(((~0ULL) << (l)) & (~0ULL >> (sizeof(long long) * 8 - 1 - (h))))
-+#include <linux/bits.h>
- 
- #define CONFIG_TDP				0x7f
- #define CONFIG_TDP_GET_LEVELS_INFO		0x00
--- 
-2.25.1
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+> ---
+>  drivers/platform/mellanox/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
+> index 72df4b8f4dd8b5a0..09c7829e95c4b037 100644
+> --- a/drivers/platform/mellanox/Kconfig
+> +++ b/drivers/platform/mellanox/Kconfig
+> @@ -85,7 +85,7 @@ config NVSW_SN2201
+>  	depends on I2C
+>  	depends on REGMAP_I2C
+>  	help
+> -	  This driver provides support for the Nvidia SN2201 platfom.
+> +	  This driver provides support for the Nvidia SN2201 platform.
+>  	  The SN2201 is a highly integrated for one rack unit system with
+>  	  L3 management switches. It has 48 x 1Gbps RJ45 + 4 x 100G QSFP28
+>  	  ports in a compact 1RU form factor. The system also including a
 
