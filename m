@@ -2,76 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA36C43334
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 18:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A84FC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 18:48:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347980AbiFJSsH (ORCPT
+        id S1347158AbiFJSs1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Jun 2022 14:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49884 "EHLO
+        Fri, 10 Jun 2022 14:48:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347716AbiFJSsG (ORCPT
+        with ESMTP id S1350421AbiFJSsZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Jun 2022 14:48:06 -0400
+        Fri, 10 Jun 2022 14:48:25 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A5F9D13D40
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 11:48:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E442B13D40
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 11:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654886884;
+        s=mimecast20190719; t=1654886904;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cQJvEeLF3FaPSVIqqkc4TorYc9fXCT+vm0vr/Ev8Wck=;
-        b=e0A8w7JBXhp34nmj/+DfmB9rO62FvuQM4PAnldynNIhqh8vcWf+g0/uBv5AcEYXJNjhGKE
-        EYrvTcj2kT2uOWwOhPp42h9QnoliQc3ZqdFP+kdCL8hSsncExS2+kT3MxlXzaiBH0Nn45x
-        5TLQZkoXk1b98vytmTKMnJ1ZEzinBY0=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=2kuLRtRoKUifo/tKfS7LdiA/ElsrLzJlIXXi0O8EF0U=;
+        b=a+a/GDlYy2ZU2G+z32ixAH4q3lg1fZweTBSjmBFgjHM0/4cXOSKFocItTUdYZcep9uZon1
+        7vQo4zMjN532NcYjB5Tlvf6pUP3xR0nEO3WNGaln+IqgDQT8WD3ucvWkFkOr9sE6ed4Uxr
+        hRmS2WsS7z1iTY2+5AT2BdpQz88JmAk=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-629-quCM5g84Mpm1aEjmTn1xVA-1; Fri, 10 Jun 2022 14:48:03 -0400
-X-MC-Unique: quCM5g84Mpm1aEjmTn1xVA-1
-Received: by mail-ed1-f70.google.com with SMTP id g3-20020a056402320300b0042dc956d80eso30182eda.14
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 11:48:03 -0700 (PDT)
+ us-mta-621-8Qtm7qgHP4uExtDsg9StLw-1; Fri, 10 Jun 2022 14:48:22 -0400
+X-MC-Unique: 8Qtm7qgHP4uExtDsg9StLw-1
+Received: by mail-ej1-f70.google.com with SMTP id lv2-20020a170906bc8200b0070e0d6bcec0so9982402ejb.6
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 11:48:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=cQJvEeLF3FaPSVIqqkc4TorYc9fXCT+vm0vr/Ev8Wck=;
-        b=KyRB4u7wpV47tq+OuaLayWN32IDZzSVn/8/9r66jdfy3WcIyGNtmqVdwu3kpuDrJP1
-         wM6xY+3R8SPVEZzO/E0Jo+jQ+6WutTxl1RAhKFs63wGDFKE1GQuGegR/SspITjDTZnYu
-         fcKCsv0KEX3aYiTLB44Q9lAbubRpoFwdYg+5UTOTFG2nvhJBHDQBWSqPa1ERUSvkuCSt
-         RnTKuiDHwtDsWA3A5SAYLh9n5i/RPAXTgRxNhOSd1xfIS9q2Dq2yGtpZ5qZNsZBbHC7q
-         mxLQgATOMyd02hJYW+yXhnu0C4IuN5kft22JhDFVdYd874E+HuSe5U++ePF/3jzJfCs+
-         nJ4A==
-X-Gm-Message-State: AOAM533/TU57GmA0kI8wHJmislHeuggJTMwum0+kqG8e0yToEsn8ajKI
-        D0pUc9eyhfF6Unzt9bBmuJ5v21rdaV9B3S7ov0WAJxUWS8DN9ao8tTrXMiM9FejBfqyyN3nSevF
-        AdeeMoAZV1Dg38Mi3qmkYs21l+t/NzA99uw==
-X-Received: by 2002:a05:6402:5191:b0:42f:b303:ed61 with SMTP id q17-20020a056402519100b0042fb303ed61mr41996443edd.233.1654886882375;
-        Fri, 10 Jun 2022 11:48:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx7lXvW4sKC5uS5pmUSAk6B7E3AsjomPuvd4DXesgz0gbp4+TrP/ck0tZ0CAi4KKOttG5GVkA==
-X-Received: by 2002:a05:6402:5191:b0:42f:b303:ed61 with SMTP id q17-20020a056402519100b0042fb303ed61mr41996424edd.233.1654886882160;
-        Fri, 10 Jun 2022 11:48:02 -0700 (PDT)
+        bh=2kuLRtRoKUifo/tKfS7LdiA/ElsrLzJlIXXi0O8EF0U=;
+        b=fAdRw6iE10t6R8Us3QuPz+5MDBk/1Gor0cGB5LvOR32+XN5wWsYbTpRYUaLJWTqDxC
+         OHRM8fxhdPHEStRC0WJ4NUqQGg6V55HsOx3jiXnqMu2PWFH1gwmj317z8R5CsxsmXXC4
+         3XYlQbyPCrUShs/cwrLX1B50wNs4OoQRw3yhF/aa0peUJNZBIxHeGrjusNup/ZE0AUL+
+         L/XQp4tjCiw22oXqnlFhGss5iDbDZHRNab2SDZ7yHzeCMjIebJOXc8wHxDZU8/ySnEWT
+         dbr+99QwyimEbnNgh6j6UhTWhVMVEVxAvCGiQMTuW8JiemjoTspGNL99dIwBwYSc7fsc
+         hb5w==
+X-Gm-Message-State: AOAM530s5EydLTepq+W7Ww7yhiSr+REi44e1VLtdNrKrGjYuz1XmXskM
+        IoImtGgJiYnz19M3DZ3i7Phr/byFXxr44wiZKcvkYhADfzBHEvinUbIodi+a376Ts/ujhBu6jLc
+        /wSdE87mZ6FKvcNW7ET7JYVUwjLeLhellug==
+X-Received: by 2002:a17:906:414f:b0:711:ce99:69ec with SMTP id l15-20020a170906414f00b00711ce9969ecmr25093234ejk.724.1654886900344;
+        Fri, 10 Jun 2022 11:48:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwqEM5tPbFuvpNe/haxDXhAPPziWrdTs8l89PJk48KAGAYo4y++uBvXFWfvBsk2LG4uj5ozZA==
+X-Received: by 2002:a17:906:414f:b0:711:ce99:69ec with SMTP id l15-20020a170906414f00b00711ce9969ecmr25093220ejk.724.1654886900122;
+        Fri, 10 Jun 2022 11:48:20 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
-        by smtp.gmail.com with ESMTPSA id e20-20020a056402149400b0042bd75c53casm17024484edv.83.2022.06.10.11.48.01
+        by smtp.gmail.com with ESMTPSA id ga33-20020a1709070c2100b0070a50832376sm11716543ejc.154.2022.06.10.11.48.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jun 2022 11:48:01 -0700 (PDT)
-Message-ID: <01b424c3-fd5b-c60f-5b1d-6eb76fe732ea@redhat.com>
-Date:   Fri, 10 Jun 2022 20:48:01 +0200
+        Fri, 10 Jun 2022 11:48:19 -0700 (PDT)
+Message-ID: <25e78a1e-6ec2-845c-61b6-ec3f0d6766de@redhat.com>
+Date:   Fri, 10 Jun 2022 20:48:19 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH] [PATCH] platform/x86/intel: Fix pmt_crashlog array
- reference
+Subject: Re: [PATCH] platform/x86: barco-p50-gpio: Add check for
+ platform_driver_register
 Content-Language: en-US
-To:     David Arcari <darcari@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>, linux-kernel@vger.kernel.org
-References: <20220526203140.339120-1-darcari@redhat.com>
+To:     Jiasheng Jiang <jiasheng@iscas.ac.cn>,
+        santoshkumar.yadav@barco.com, peter.korsgaard@barco.com,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220526090345.1444172-1-jiasheng@iscas.ac.cn>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220526203140.339120-1-darcari@redhat.com>
+In-Reply-To: <20220526090345.1444172-1-jiasheng@iscas.ac.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -80,18 +80,14 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 5/26/22 22:31, David Arcari wrote:
-> The probe function pmt_crashlog_probe() may incorrectly reference
-> the 'priv->entry array' as it uses 'i' to reference the array instead
-> of 'priv->num_entries' as it should.  This is similar to the problem
-> that was addressed in pmt_telemetry_probe via commit 2cdfa0c20d58
-> ("platform/x86/intel: Fix 'rmmod pmt_telemetry' panic").
+On 5/26/22 11:03, Jiasheng Jiang wrote:
+> As platform_driver_register() could fail, it should be better
+> to deal with the return value in order to maintain the code
+> consisitency.
 > 
-> Cc: "David E. Box" <david.e.box@linux.intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mark Gross <markgross@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: David Arcari <darcari@redhat.com>
+> Fixes: 86af1d02d458 ("platform/x86: Support for EC-connected GPIOs for identify LED/button on Barco P50 board")
+> 
+> Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -109,21 +105,29 @@ Regards,
 
 Hans
 
+
 > ---
->  drivers/platform/x86/intel/pmt/crashlog.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/barco-p50-gpio.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-> index 34daf9df168b..ace1239bc0a0 100644
-> --- a/drivers/platform/x86/intel/pmt/crashlog.c
-> +++ b/drivers/platform/x86/intel/pmt/crashlog.c
-> @@ -282,7 +282,7 @@ static int pmt_crashlog_probe(struct auxiliary_device *auxdev,
->  	auxiliary_set_drvdata(auxdev, priv);
+> diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
+> index 05534287bc26..8dd672339485 100644
+> --- a/drivers/platform/x86/barco-p50-gpio.c
+> +++ b/drivers/platform/x86/barco-p50-gpio.c
+> @@ -405,11 +405,14 @@ MODULE_DEVICE_TABLE(dmi, dmi_ids);
+>  static int __init p50_module_init(void)
+>  {
+>  	struct resource res = DEFINE_RES_IO(P50_GPIO_IO_PORT_BASE, P50_PORT_CMD + 1);
+> +	int ret;
 >  
->  	for (i = 0; i < intel_vsec_dev->num_resources; i++) {
-> -		struct intel_pmt_entry *entry = &priv->entry[i].entry;
-> +		struct intel_pmt_entry *entry = &priv->entry[priv->num_entries].entry;
+>  	if (!dmi_first_match(dmi_ids))
+>  		return -ENODEV;
 >  
->  		ret = intel_pmt_dev_create(entry, &pmt_crashlog_ns, intel_vsec_dev, i);
->  		if (ret < 0)
+> -	platform_driver_register(&p50_gpio_driver);
+> +	ret = platform_driver_register(&p50_gpio_driver);
+> +	if (ret)
+> +		return ret;
+>  
+>  	gpio_pdev = platform_device_register_simple(DRIVER_NAME, PLATFORM_DEVID_NONE, &res, 1);
+>  	if (IS_ERR(gpio_pdev)) {
 
