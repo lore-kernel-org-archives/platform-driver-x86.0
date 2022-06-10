@@ -2,76 +2,73 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401D2CCA47D
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 19:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3243C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 19:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350459AbiFJTKJ (ORCPT
+        id S237516AbiFJTNz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Jun 2022 15:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33072 "EHLO
+        Fri, 10 Jun 2022 15:13:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350465AbiFJTKI (ORCPT
+        with ESMTP id S229571AbiFJTNy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Jun 2022 15:10:08 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 36D1E15828
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 12:10:07 -0700 (PDT)
+        Fri, 10 Jun 2022 15:13:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A80437654
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 12:13:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654888206;
+        s=mimecast20190719; t=1654888432;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qUW6JDLfmxj9lFzCpBnq7MGkjudHtjpg7FJPkpReq6I=;
-        b=YzrHk8ANKkdwsfW5kABDc/uNzjxIHs1qJaadf139pUKck6MDMvkROu40yaWcUUHIN4esE4
-        b9aVc34LsvNFD75yjVUuFkdgqJlKhe/WKoC+KpMqzctg7GgGE1QR7iCHnIifatPhv47Tbk
-        moKxd4mrowV398XbqbkbfYqD7b7T7FA=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=xuSLX1JTtdpAX4DYqdYpSG+yP23REGXs72HpqSK69v4=;
+        b=bOohtI4TLehz4pthuwMpmkBecyOIDYzRRQAviyUK9VQHjoMffeSyMQCfOgxa33kXA0saLP
+        a0OpZ72bqhH9YviLMsTQV0gFJcQKrIdTDpIzc2SyxO4OvA+PBPpSsNOXx3fXpHB8BefEN1
+        OvW0zZr279JKBUA/o/JQlnKsF35e/4s=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-235-IL_9wK0ENtOWpyc69dAeYA-1; Fri, 10 Jun 2022 15:10:05 -0400
-X-MC-Unique: IL_9wK0ENtOWpyc69dAeYA-1
-Received: by mail-ej1-f72.google.com with SMTP id l2-20020a170906078200b006fed42bfeacso12910629ejc.16
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 12:10:04 -0700 (PDT)
+ us-mta-596-w_sgtNI_M2Cd-XkvqB671Q-1; Fri, 10 Jun 2022 15:13:51 -0400
+X-MC-Unique: w_sgtNI_M2Cd-XkvqB671Q-1
+Received: by mail-ej1-f70.google.com with SMTP id a9-20020a17090682c900b0070b513b9dc4so11159432ejy.4
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 12:13:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=qUW6JDLfmxj9lFzCpBnq7MGkjudHtjpg7FJPkpReq6I=;
-        b=XpnsAHktniNsqrO96BF9sAawRTpCMuuwYw7R19cidKxhdAtKhsb8mg6/ZnZuqA1mNi
-         OB3+OKZLNL3kSi1hGZ2upC5fFSAH4F0norwV9t9pjOi10y+hd25XQFTQLJ3EaKpcS4NC
-         7En67j/6VGyckMDlp2oGKgp0p3e/8Ku17L8n2X/qjAdky3YbOpbhYKtaIBzJzMfJonZB
-         ymQwjmMuwYeErhXsRlY7t/o54hWlbdGBHYYWsEQtKziAq+oNnhEn+qLcUh7FhU4mp4z9
-         mb51Yi5Kflkr5omWqafAAc5y6s/VYwMuhqyJsqtmGilgtonafFq+FOp4Xz9o3iStxXzi
-         VXCQ==
-X-Gm-Message-State: AOAM532HWx/9HJPgkaqeEHWzfiNA8C4DDpn3vKegMUpMXLmmaG42NUUa
-        FBrVLdfYqd1jKPn0sOyg/uB+Kz2GQwDQ1DCGsKBsA+2nSA++JBppFSD2sRz1jXld/NDcAv4Y6nv
-        YNWt+TC+cToWZUi5Uki+2NcyVDy5SoX352A==
-X-Received: by 2002:a05:6402:4246:b0:42f:3a4b:cc71 with SMTP id g6-20020a056402424600b0042f3a4bcc71mr43556563edb.107.1654888203760;
-        Fri, 10 Jun 2022 12:10:03 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxnQNxWVZrJvoD/0PvZcdsGvidN1hpNu/R4NfW2TAvvSoYJyzY0SE26ysyPLnRN+SSoVDGpzg==
-X-Received: by 2002:a05:6402:4246:b0:42f:3a4b:cc71 with SMTP id g6-20020a056402424600b0042f3a4bcc71mr43556545edb.107.1654888203542;
-        Fri, 10 Jun 2022 12:10:03 -0700 (PDT)
+        bh=xuSLX1JTtdpAX4DYqdYpSG+yP23REGXs72HpqSK69v4=;
+        b=1nQ9heA8P03RphqwHI0BBWyy8Lq9N8jPzWtJfLUlxCWkHGstwCSd/7LBwWI+cIr79l
+         wmCvy38333ni/t+cbGuLCH7rbMWUTG28guw8LLI6FzB9kw3yKoDIsUrJYjJF0p4LuT2H
+         85FLTnsIfEXTJiuYj9dH/qI3QtanEuzmxkaHxQh5yb0ounOot/d++Pa4SweYLXcjsjmr
+         sxq81aU+7AKy+kDAtE00BB9WS8RJqXwvw2FfyzDAmrZzoZ+g5OALGEP0LJSC35Br9ba/
+         T4NqKbN0zSx0trmhbiPXhzUV8I6apz5v9UnCb+UVWhWPJ4L4rDb3cEC1PqXXngel8b1Q
+         w6mQ==
+X-Gm-Message-State: AOAM532hvzcsVtMT3kVm4+cPThybd5MUr9tOF9tKhprY3Qb672yijT+O
+        SFdJZmdsR6MLWoEBxFlTpAKMaiY4DGhz9YP+ww04v9/2n0T1lKEKgxH1pgzEl10LyH3qL7rA8RJ
+        40v3BFZsisH769ywSCRh7/UiJziG8eeDgVQ==
+X-Received: by 2002:a17:907:2b06:b0:711:e8cc:363e with SMTP id gc6-20020a1709072b0600b00711e8cc363emr16788173ejc.393.1654888430076;
+        Fri, 10 Jun 2022 12:13:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwdSO29aMwG+8vYqqhAdApIiUIVQ7e/lPvMNN7Y7ISYSe25wwLhEENxzhblvmQkWp18PthAug==
+X-Received: by 2002:a17:907:2b06:b0:711:e8cc:363e with SMTP id gc6-20020a1709072b0600b00711e8cc363emr16788165ejc.393.1654888429902;
+        Fri, 10 Jun 2022 12:13:49 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
-        by smtp.gmail.com with ESMTPSA id t2-20020a05640203c200b0042617ba63c2sm5084edw.76.2022.06.10.12.10.02
+        by smtp.gmail.com with ESMTPSA id s16-20020a50d490000000b004329ec63c42sm42205edi.25.2022.06.10.12.13.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jun 2022 12:10:03 -0700 (PDT)
-Message-ID: <d5680f64-d5e7-3e42-0340-0f540ea12e50@redhat.com>
-Date:   Fri, 10 Jun 2022 21:10:02 +0200
+        Fri, 10 Jun 2022 12:13:49 -0700 (PDT)
+Message-ID: <5de67ae1-29f4-5538-1623-ea1d3bfd1ed1@redhat.com>
+Date:   Fri, 10 Jun 2022 21:13:48 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH] platform/x86: system76_acpi: use dev_get_drvdata
+Subject: Re: [PATCH] platform/x86/intel: pmc: Support Intel Raptorlake P
 Content-Language: en-US
-To:     Haowen Bai <baihaowen@meizu.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        System76 Product Development <productdev@system76.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1653989063-20180-1-git-send-email-baihaowen@meizu.com>
+To:     george.d.sworo@intel.com, david.e.box@intel.com
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20220602012617.20100-1-george.d.sworo@intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <1653989063-20180-1-git-send-email-baihaowen@meizu.com>
+In-Reply-To: <20220602012617.20100-1-george.d.sworo@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -80,10 +77,14 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 5/31/22 11:24, Haowen Bai wrote:
-> Eliminate direct accesses to the driver_data field.
+On 6/2/22 03:26, george.d.sworo@intel.com wrote:
+> From: George D Sworo <george.d.sworo@intel.com>
 > 
-> Signed-off-by: Haowen Bai <baihaowen@meizu.com>
+> Add Raptorlake P to the list of the platforms that intel_pmc_core driver
+> supports for pmc_core device. Raptorlake P PCH is based on Alderlake P
+> PCH.
+> 
+> Signed-off-by: George D Sworo <george.d.sworo@intel.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -101,30 +102,21 @@ Regards,
 
 Hans
 
+
 > ---
->  drivers/platform/x86/system76_acpi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/intel/pmc/core.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
-> index 7299ad08c838..958df41ad509 100644
-> --- a/drivers/platform/x86/system76_acpi.c
-> +++ b/drivers/platform/x86/system76_acpi.c
-> @@ -339,7 +339,7 @@ static ssize_t kb_led_color_show(
->  	struct led_classdev *led;
->  	struct system76_data *data;
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index edaf22e5ae98..40183bda7894 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1912,6 +1912,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>  	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		&tgl_reg_map),
+>  	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&tgl_reg_map),
+>  	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_reg_map),
+> +	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
+>  	{}
+>  };
 >  
-> -	led = (struct led_classdev *)dev->driver_data;
-> +	led = dev_get_drvdata(dev);
->  	data = container_of(led, struct system76_data, kb_led);
->  	return sysfs_emit(buf, "%06X\n", data->kb_color);
->  }
-> @@ -356,7 +356,7 @@ static ssize_t kb_led_color_store(
->  	unsigned int val;
->  	int ret;
->  
-> -	led = (struct led_classdev *)dev->driver_data;
-> +	led = dev_get_drvdata(dev);
->  	data = container_of(led, struct system76_data, kb_led);
->  	ret = kstrtouint(buf, 16, &val);
->  	if (ret)
 
