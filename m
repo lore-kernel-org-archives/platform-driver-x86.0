@@ -2,217 +2,148 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE69CCCA47B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 11:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0A6C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 11:30:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344989AbiFJLZS (ORCPT
+        id S244949AbiFJLaA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Jun 2022 07:25:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55640 "EHLO
+        Fri, 10 Jun 2022 07:30:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233916AbiFJLZR (ORCPT
+        with ESMTP id S243688AbiFJL37 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Jun 2022 07:25:17 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3909EED7A2;
-        Fri, 10 Jun 2022 04:25:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B879EB832C7;
-        Fri, 10 Jun 2022 11:25:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C876C34114;
-        Fri, 10 Jun 2022 11:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654860312;
-        bh=R7E/rhnNrACRko2rS5mkC65LV2AS1sbDF48bNArKqCg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OdW49OZ2G0DH43aev+ICAtbsWWbHFStsHOeouI2lqbtIyLGMJGpYKEBSBYc6C2gDU
-         4FOes5PXQLmq3w9wvl5ThMGVeixrpPPc0D/MbI8GlyBCn8W9UPhyyaLbIPLt39Uixj
-         W83f7yjjDrQ2QbLxD64P00x5W+9bMoOHgzskdAnsDhGUTR9z3KD/lSA++1X2Hv7U/l
-         Hlm5rn2MmmpUMTCSAiZVuN9fu/g6Q9ZxVl7lAWVoSkPtRqGXxxnCivuuk8cRSIQNTf
-         0XsKWPW+A8tLwC2X71bA2wXl7vUzqj6GkeStCkQxrcchfH/UkeiM9zD3v4ghjPTZwG
-         8TfdoW95quHUg==
-Received: by mail-oi1-f174.google.com with SMTP id bl34so3672142oib.1;
-        Fri, 10 Jun 2022 04:25:12 -0700 (PDT)
-X-Gm-Message-State: AOAM5327BK6Ug5tAY21OYaI/V+vtEeuTq60Dh/SsT4ffz7vzo+qx7E5i
-        ltyrrtWFFNnef92J+Rl5vBWkTIHX7mGka3yDenk=
-X-Google-Smtp-Source: ABdhPJxchFb1YBSq+ODryfDT61Kd03pOAps2R21snltVHICUuIHqUgkA3se7XxGAoa7fI3/uaYqtBouurO7FziMDMm8=
-X-Received: by 2002:a05:6871:5c8:b0:f3:3c1c:126f with SMTP id
- v8-20020a05687105c800b000f33c1c126fmr4439313oan.126.1654860300884; Fri, 10
- Jun 2022 04:25:00 -0700 (PDT)
+        Fri, 10 Jun 2022 07:29:59 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418DB1D5
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 04:29:57 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id p10so36117131wrg.12
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 04:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=5i8d1CARYwyZjzbfDJrhdl9Iz5KPK+C+6+wRDbPE9e8=;
+        b=KnschyVBqMFVPwzHQcxiJ5oDAq0t4tLNA2s/5XExfMu9e+4yLGk5yOmKg2v3P7dIRi
+         PYSUK8ym5mGemccWhA3bBlZKADhDR8vuJzZtVdVhqLcy5Y5JFS2fAuKbvVK8l9xsZ2/9
+         CtAZ866ff4bFeHLgVMB9cUGm6IYSXD/f7P2F4jvohsg0aERimeDcxWlrxRVU67JMKMy9
+         /F69ZS6pDx0lgI61L1HIdEn1fjWeHFlkyKMOvTtJic+X6J2rBWYmgeu/A2SHpwd4d94t
+         k73F6BmVJ1n+SXduJeVf4iec78SaUX0D1/gQbUhoE2/JZLGLps74o23yWoYa8y/bTpYR
+         6ukA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=5i8d1CARYwyZjzbfDJrhdl9Iz5KPK+C+6+wRDbPE9e8=;
+        b=wkvxln5au+jfbplgB62PTuzNLcj8ueR+z04SqTjEeLKrK3Id38b2yLKkDBUEc3xJlk
+         H9wFgy4QeYQhOhzPoY2g4kEs3DDqJv2wcTG35Sb8aTfSREzMAVB1zbQKOkkGgud9pyuX
+         E+V6w257dXERf7NjcdbSjtPi/qBJBTBt4AUh3vpJ1sQCASK0ZEa6vPHapPya9iKZaPzZ
+         U8DnE9dk3VWZ+LfbB7RXCT7yvzMeGlFIoTdbQqqTJ9/9vbE4bV1q1mIMzy9QztnAcL5k
+         pz0J9LrQCRuyUSDy/KKjb/8h9omh119zvtGd9LVC1o2liDhcngjwoDNb5mTsAfUsYYP2
+         mBOQ==
+X-Gm-Message-State: AOAM532SxSi1pVearEExdSI9FVFunrSX2u/maL7v1LiV4njUIoS4gDsy
+        1OTUDHdU19hyiqp68oDJidk=
+X-Google-Smtp-Source: ABdhPJydWVK102zJ6tMi4e6zQS3tkqs99TbMNf6GLaPiuHlJzyJBnARS2UNdf2RA0bJ/c/yU/tUaCQ==
+X-Received: by 2002:adf:fb82:0:b0:219:af0c:489a with SMTP id a2-20020adffb82000000b00219af0c489amr10053730wrr.212.1654860595707;
+        Fri, 10 Jun 2022 04:29:55 -0700 (PDT)
+Received: from [192.168.2.202] (pd9ea33cd.dip0.t-ipconnect.de. [217.234.51.205])
+        by smtp.gmail.com with ESMTPSA id h62-20020a1c2141000000b0039c151298b7sm2827639wmh.10.2022.06.10.04.29.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jun 2022 04:29:55 -0700 (PDT)
+Message-ID: <df69c497-0ec1-0ffa-b434-dede30a36c36@gmail.com>
+Date:   Fri, 10 Jun 2022 13:29:53 +0200
 MIME-Version: 1.0
-References: <20220607093805.1354256-1-mawupeng1@huawei.com> <CAMj1kXH5r=CUoLCndBUsZ04_0UCJ2VqgJDdp2wbdNCtEx0Yxag@mail.gmail.com>
-In-Reply-To: <CAMj1kXH5r=CUoLCndBUsZ04_0UCJ2VqgJDdp2wbdNCtEx0Yxag@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 10 Jun 2022 13:24:48 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHNK+t1yWMP4+syi-_01qxZ=o-5HoaTTzRhFM7EqLaBPQ@mail.gmail.com>
-Message-ID: <CAMj1kXHNK+t1yWMP4+syi-_01qxZ=o-5HoaTTzRhFM7EqLaBPQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] introduce mirrored memory support for arm64
-To:     Wupeng Ma <mawupeng1@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>, songmuchun@bytedance.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        damien.lemoal@opensource.wdc.com,
-        Stephen Boyd <swboyd@chromium.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>, gpiccoli@igalia.com,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        chenzhou10@huawei.com, vijayb@linux.microsoft.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH] platform/surface: avoid flush_scheduled_work() usage
+Content-Language: en-US
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org
+References: <63ec2d45-c67c-1134-f6d3-490c8ba67a01@I-love.SAKURA.ne.jp>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <63ec2d45-c67c-1134-f6d3-490c8ba67a01@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 10 Jun 2022 at 13:23, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Tue, 7 Jun 2022 at 11:16, Wupeng Ma <mawupeng1@huawei.com> wrote:
-> >
-> > From: Ma Wupeng <mawupeng1@huawei.com>
-> >
-> > Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
-> > introduced mirrored memory support for x86. This support rely on UEFI to
-> > report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-158:
-> >
-> >   http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
-> >
-> > Memory mirroring is a technique used to separate memory into two separate
-> > channels, usually on a memory device, like a server. In memory mirroring,
-> > one channel is copied to another to create redundancy. This method makes
-> > input/output (I/O) registers and memory appear with more than one address
-> > range because the same physical byte is accessible at more than one
-> > address. Using memory mirroring, higher memory reliability and a higher
-> > level of memory consolidation are possible.
-> >
-> > These EFI memory regions have various attributes, and the "mirrored"
-> > attribute is one of them. The physical memory region whose descriptors
-> > in EFI memory map has EFI_MEMORY_MORE_RELIABLE attribute (bit: 16) are
-> > mirrored. The address range mirroring feature of the kernel arranges such
-> > mirrored regions into normal zones and other regions into movable zones.
-> >
-> > Arm64 can support this too. So mirrored memory support is added to support
-> > arm64.
-> >
-> > The main purpose of this patch set is to introduce mirrored support for
-> > arm64 and we have already fixed the problems we had which is shown in
-> > patch #5 to patch #8 and try to bring total isolation in patch #9 which
-> > will disable mirror feature if kernelcore is not specified.
-> >
-> > In order to test this support in arm64:
-> > - patch this patch set
-> > - add kernelcore=mirror in kernel parameter
-> > - start you kernel
-> >
-> > Patch #1-#2 introduce mirrored memory support form arm64.
-> > Patch #3-#5 fix some bugs for arm64 if memory reliable is enabled.
-> > Patch #6 disable mirror feature if kernelcore is not specified.
-> >
-> > Thanks to Ard Biesheuvel's hard work [1], now kernel will perfer mirrored
-> > memory if kaslr is enabled.
-> >
-> > [1] https://lore.kernel.org/linux-arm-kernel/CAMj1kXEPVEzMgOM4+Yj6PxHA-jFuDOAUdDJSiSxy_XaP4P7LSw@mail.gmail.com/T/
-> >
-> > Changelog since v2:
-> > - remove efi_fake_mem support
-> > - remove Commit ("remove some redundant code in ia64 efi_init") since
-> >   efi_print_memmap() is not public
-> > - add mirror flag back on initrd memory
-> >
-> > Changelog since v1:
-> > - update changelog in cover letter
-> > - use PHYS_PFN in patch #7
-> >
-> > Ma Wupeng (6):
-> >   efi: Make efi_find_mirror() public
-> >   arm64/mirror: arm64 enabling - find mirrored memory ranges
-> >   mm: Ratelimited mirrored memory related warning messages
-> >   mm: Demote warning message in vmemmap_verify() to debug level
-> >   mm: Add mirror flag back on initrd memory
-> >   efi: Disable mirror feature if kernelcore is not specified
-> >
->
-> I have tested these changes on QEMU/arm64 with the patch below, and
-> things seem to work as expected. We have some minor issues to work out
-> but the general shape of this code is good.
->
-> As for the mm/ changes: does anyone mind if I take those through the
-> EFI tree as well? I don't think the EFI and -mm changes depend on each
-> other, so they can go into -mm separately as well.
+On 6/10/22 07:41, Tetsuo Handa wrote:
+> Use local wq in order to avoid flush_scheduled_work() usage.
+> 
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> ---
+> Please see commit c4f135d643823a86 ("workqueue: Wrap flush_workqueue()
+> using a macro") for background.
+> 
+> This is a blind conversion, and is only compile tested.
 
-diff --git a/drivers/firmware/efi/libstub/efi-stub.c
-b/drivers/firmware/efi/libstub/efi-stub.c
-index f515394cce6e..1d4dd8aca3e6 100644
---- a/drivers/firmware/efi/libstub/efi-stub.c
-+++ b/drivers/firmware/efi/libstub/efi-stub.c
-@@ -136,6 +136,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
-        enum efi_secureboot_mode secure_boot;
-        struct screen_info *si;
-        efi_properties_table_t *prop_tbl;
-+       const efi_dxe_services_table_t *efi_dxe_table;
+Looks good to me, thanks!
 
-        efi_system_table = sys_table_arg;
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+Tested-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-@@ -161,6 +162,20 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
-                goto fail;
-        }
-
-+       efi_dxe_table = get_efi_config_table(EFI_DXE_SERVICES_TABLE_GUID);
-+       if (efi_dxe_table) {
-+               efi_physical_addr_t pa = 0x60000000;
-+               efi_gcd_memory_space_desc_t desc;
-+
-+               status = efi_dxe_call(get_memory_space_descriptor, pa, &desc);
-+               if (status != EFI_SUCCESS)
-+                       efi_err("Failed to get memory space
-descriptor: %lx\n", status);
-+               status = efi_dxe_call(set_memory_space_capabilities, pa, SZ_1G,
-+                                     desc.capabilities |
-EFI_MEMORY_MORE_RELIABLE);
-+               if (status != EFI_SUCCESS)
-+                       efi_err("Failed to set memory space
-capabilities: %lx\n", status);
-+       }
-+
-        /*
-         * Get the command line from EFI, using the LOADED_IMAGE
-         * protocol. We are going to copy the command line into the
-diff --git a/drivers/firmware/efi/libstub/efistub.h
-b/drivers/firmware/efi/libstub/efistub.h
-index b0ae0a454404..bf11d85bf9b4 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -378,7 +378,8 @@ union efi_dxe_services_table {
-                void *schedule;
-                void *trust;
-                void *process_firmware_volume;
--               void *set_memory_space_capabilities;
-+               efi_status_t (__efiapi
-*set_memory_space_capabilities)(efi_physical_addr_t,
-+
-u64, u64);
-        };
-        struct {
-                efi_table_hdr_t hdr;
+>   .../platform/surface/surface_acpi_notify.c    | 27 ++++++++++++++++---
+>   1 file changed, 24 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
+> index 7b758f8cc137..c0e12f0b9b79 100644
+> --- a/drivers/platform/surface/surface_acpi_notify.c
+> +++ b/drivers/platform/surface/surface_acpi_notify.c
+> @@ -37,6 +37,7 @@ struct san_data {
+>   #define to_san_data(ptr, member) \
+>   	container_of(ptr, struct san_data, member)
+>   
+> +static struct workqueue_struct *san_wq;
+>   
+>   /* -- dGPU notifier interface. ---------------------------------------------- */
+>   
+> @@ -356,7 +357,7 @@ static u32 san_evt_bat_nf(struct ssam_event_notifier *nf,
+>   
+>   	memcpy(&work->event, event, sizeof(struct ssam_event) + event->length);
+>   
+> -	schedule_delayed_work(&work->work, delay);
+> +	queue_delayed_work(san_wq, &work->work, delay);
+>   	return SSAM_NOTIF_HANDLED;
+>   }
+>   
+> @@ -861,7 +862,7 @@ static int san_remove(struct platform_device *pdev)
+>   	 * We have unregistered our event sources. Now we need to ensure that
+>   	 * all delayed works they may have spawned are run to completion.
+>   	 */
+> -	flush_scheduled_work();
+> +	flush_workqueue(san_wq);
+>   
+>   	return 0;
+>   }
+> @@ -881,7 +882,27 @@ static struct platform_driver surface_acpi_notify = {
+>   		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>   	},
+>   };
+> -module_platform_driver(surface_acpi_notify);
+> +
+> +static int __init san_init(void)
+> +{
+> +	int ret;
+> +
+> +	san_wq = alloc_workqueue("san_wq", 0, 0);
+> +	if (!san_wq)
+> +		return -ENOMEM;
+> +	ret = platform_driver_register(&surface_acpi_notify);
+> +	if (ret)
+> +		destroy_workqueue(san_wq);
+> +	return ret;
+> +}
+> +module_init(san_init);
+> +
+> +static void __exit san_exit(void)
+> +{
+> +	platform_driver_unregister(&surface_acpi_notify);
+> +	destroy_workqueue(san_wq);
+> +}
+> +module_exit(san_exit);
+>   
+>   MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
+>   MODULE_DESCRIPTION("Surface ACPI Notify driver for Surface System Aggregator Module");
