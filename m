@@ -2,137 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABD5C43334
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Jun 2022 18:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A59C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 00:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239797AbiFISBp (ORCPT
+        id S239432AbiFJAxJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Jun 2022 14:01:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49842 "EHLO
+        Thu, 9 Jun 2022 20:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232321AbiFISBp (ORCPT
+        with ESMTP id S239357AbiFJAxI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Jun 2022 14:01:45 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12380340D1;
-        Thu,  9 Jun 2022 11:01:44 -0700 (PDT)
-Received: from mercury (unknown [185.209.196.172])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        Thu, 9 Jun 2022 20:53:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFBDF1C204C
+        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jun 2022 17:53:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sre)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id D415A66017BA;
-        Thu,  9 Jun 2022 19:01:42 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1654797702;
-        bh=COv9YkbXDTMR+TEI4D5j7tkKFAMKfvJAEv9mCgLuZ2Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hvPjhnr9dKTtoNpC1ASRBt+5tljQSro6Z61Aeu1Ks0AG/ImJJiKQKTWpHPZ3MNQ0v
-         7ZL8u3ZOwjW+uJ1fTtc3NhhYRJuQdCrgg4YV4kw0dcQJPCWkRSuVHTcPvwADG6FX/K
-         QDt72P/e/6P/fJDmwGLpLCR2JomHU2IpgBeMAhFo2FcfX9GWxLHjgEGhvAMsQyKUXc
-         0ym062ENJUm+GRtlzGd/nn25j6e9JnN64IbufBi33lg2E1E1ydVSX0fopyoJdRt/2+
-         8LYA6iRk1SfBhtOnrA66IxpSu72Dkt0h9M7cbWH/DV0sInodLNH3MAtoJhZ52Rb/YN
-         FC+2jvIRPHHpw==
-Received: by mercury (Postfix, from userid 1000)
-        id D9FF510605B9; Thu,  9 Jun 2022 20:01:40 +0200 (CEST)
-Date:   Thu, 9 Jun 2022 20:01:40 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 06/12] power/supply: surface_battery: Use client
- device wrappers for notifier registration
-Message-ID: <20220609180140.zlpqsj7aqxihrxis@mercury.elektranox.org>
-References: <20220527023447.2460025-1-luzmaximilian@gmail.com>
- <20220527023447.2460025-7-luzmaximilian@gmail.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7869461680
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 00:53:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E05F3C3411F
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 00:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654822386;
+        bh=M+sVAZ4dN3ctzfeKANysRNl/lb2vvKzH5qx37TFRuO4=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=fE5kMsHz9kphD+Ob7T685l/eX67rCwhXCUWZ1OGOF2BIL+AAx8OgdW314C9oxkviX
+         ju+aL46fFCqcXcYeJ9HLq8xOlrpqEoeVDlB0H9JLI578YfJsAu34N5T85LE1/Mpk5j
+         HEf1yIIZ2HGM72l4LX3rL1nY0VCQ+tl+WXdAdMvQ6jE5y8r7Df9TadSLWVBWLEPSY8
+         BCrJShuQBsjBnbyxwiRyqVspee1uHmOoA+ewpAzkpSDU6Aks0Gxv93zxdkfQD6zG/o
+         2EgCCjYKaOYSHv/hBqtl9bOMkwtSc9ZUS7Q3IIhWukC8EluAqtOeBctgG/qebv/kdo
+         JNptmc2K12Ctg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id CF9F6CC13B4; Fri, 10 Jun 2022 00:53:06 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Fri, 10 Jun 2022 00:53:04 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: mike@carns.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc attachments.created
+Message-ID: <bug-204807-215701-X8fPcJW2S1@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="266k64e73ouevr3e"
-Content-Disposition: inline
-In-Reply-To: <20220527023447.2460025-7-luzmaximilian@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---266k64e73ouevr3e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Michael Carns (mike@carns.com) changed:
 
-Hi,
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |mike@carns.com
 
-On Fri, May 27, 2022 at 04:34:41AM +0200, Maximilian Luz wrote:
-> Use newly introduced client device wrapper functions for notifier
-> registration and unregistration.
->=20
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> ---
+--- Comment #253 from Michael Carns (mike@carns.com) ---
+Created attachment 301145
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D301145&action=3Dedit
+Add Maximus XI Hero
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+I have an older Maximus XI Hero (WiFi) that works fine once I add it to the
+appropriate lists.  I'm attaching the patch I've been using on top of the
+existing nct6775.patch.  Hopefully, it can get integrated into the next
+iteration.
 
--- Sebastian
+Thanks!
 
->=20
-> Changes in v2:
->   - none
->=20
-> ---
->  drivers/power/supply/surface_battery.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/power/supply/surface_battery.c b/drivers/power/suppl=
-y/surface_battery.c
-> index 5ec2e6bb2465..540707882bb0 100644
-> --- a/drivers/power/supply/surface_battery.c
-> +++ b/drivers/power/supply/surface_battery.c
-> @@ -802,7 +802,7 @@ static int spwr_battery_register(struct spwr_battery_=
-device *bat)
->  	if (IS_ERR(bat->psy))
->  		return PTR_ERR(bat->psy);
-> =20
-> -	return ssam_notifier_register(bat->sdev->ctrl, &bat->notif);
-> +	return ssam_device_notifier_register(bat->sdev, &bat->notif);
->  }
-> =20
-> =20
-> @@ -837,7 +837,7 @@ static void surface_battery_remove(struct ssam_device=
- *sdev)
->  {
->  	struct spwr_battery_device *bat =3D ssam_device_get_drvdata(sdev);
-> =20
-> -	ssam_notifier_unregister(sdev->ctrl, &bat->notif);
-> +	ssam_device_notifier_unregister(sdev, &bat->notif);
->  	cancel_delayed_work_sync(&bat->update_work);
->  }
-> =20
-> --=20
-> 2.36.1
->=20
+--=20
+You may reply to this email to add a comment.
 
---266k64e73ouevr3e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmKiNYQACgkQ2O7X88g7
-+ppseA/+ObGFViG58wz5J1z1VWkyOsN3F66FzFlDxrZjD28yt8eJFmB9wLetJIqM
-EBa6o+WrcjFL/LvPA6se2eRQb1aZ/FRN/0jmJtPXUQsqhY+Uk2ZNNfuPq4U3PQCY
-TvS2z/VAApl2BMmofrfXTs1uxd92GF6Kdku3CED/xod7xG3VllJbD6mnEGkPB2NA
-0TNr+WhRiw4dCu0+2BkaG4+Ou7Yqnyo180+TXmrxTaf4N9lhncGmlHSIO3fDb1dZ
-abpDyCcoKRZbH/ndfal/kTa5TFxhqMADSKywckyJioKIDWkOHaeOvu/dPG2H/8dm
-Q0hHEVtrvuwRnj4/6THG/R5Ul0FG7RP2k3FLrpGbd5JFy8Mjf8klUfB65z990Sis
-aPI8xETfAng1LRAOk9x/yw40KczVSReSkJuy5LuIAqMWkWv8/+4AEi+MsHByRzGM
-v5Thmbaue0kaUPSZEndWJiHUgdM7Ej+g6cjnzr4ChS7wF4/THWQpKU5a3ZjNqHro
-2ZIePAd3tYKfhr69NJD/Zsm7BFoQ5E+lgLvcCSDvCrXbffzj5dHLZCeBNgeJU0zG
-ipEOEhgh97/813eKwFUOQGMiBtnsnRU2/tNWewOuX+J7CEJwbM8kBVga/mvnwO1L
-tsorCNhcwyM/a5GO9uUkOkVCYMthgRuTabgqJLubZVgsnFppS9M=
-=PM8u
------END PGP SIGNATURE-----
-
---266k64e73ouevr3e--
+You are receiving this mail because:
+You are watching the assignee of the bug.=
