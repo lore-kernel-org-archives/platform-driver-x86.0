@@ -2,141 +2,163 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAEEC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Jun 2022 20:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CACCCA47A
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 11 Jun 2022 09:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243284AbiFJU3B (ORCPT
+        id S230170AbiFKJ42 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Jun 2022 16:29:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36600 "EHLO
+        Sat, 11 Jun 2022 05:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244799AbiFJU3A (ORCPT
+        with ESMTP id S229541AbiFKJ41 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Jun 2022 16:29:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 217EB3002C4
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 13:28:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654892938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+u44QcXVdJwe6eSMGtGuv2o7tQ9H97sb2AU9wHQqPIU=;
-        b=DKzwtaeOuoBHJ7xeifoxvaTQp5PkidETzWn0qJ3bQLr0kuyxW5lYN73HNBWKIomrHM3PZd
-        OUQUwKd7wzZCJad33f60a0S1gb0u+D7P0rliDB49psnmRf8TEcKHbd8I55gPBl7K6oa0hc
-        Ys/3QehkE0Dba+URmypxWhyvsROvJaY=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-479-LEzrqeiJMIO99MFwXQQOQg-1; Fri, 10 Jun 2022 16:28:57 -0400
-X-MC-Unique: LEzrqeiJMIO99MFwXQQOQg-1
-Received: by mail-ed1-f69.google.com with SMTP id x15-20020a05640226cf00b004318eab9feaso161531edd.12
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jun 2022 13:28:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=+u44QcXVdJwe6eSMGtGuv2o7tQ9H97sb2AU9wHQqPIU=;
-        b=5C1cKKwlcvWFO2ongx6ZV5QtBvD4D6Eu2h6V2io/nRQgGKpZ54OGagZy15RJNm9zVD
-         yU6+ibhkuETjBBdZW1F83jPmS2LC0xolgMUEHanCcoRFiUqR7kdgAz5MXB0FGi1nkElG
-         IT7e8LT5yXRgZbYCCSiKUQRW6X3q+9OMquZnc+9NgfLlIGMVkKdXhZz6uIHJGktskvp5
-         t7AG3iRoweJadochJo+BjbSFWM9pai8rjVbeYQqTouIKXUuNswgyzk/pqW1loTvyd8QM
-         NbE1IUbBCMMlaINVBuGI4UW8oBo56ZLuLOafwiEzNWYoWaXdIS8fHW58K6gdtLwkivhH
-         JE0A==
-X-Gm-Message-State: AOAM532RyXuCI/A6euyZ9Y7cnyLtFIyVFgXcZZThlHZm+wHzsPBlj3k3
-        AetqnBMao6M1vukaPfVoZYA40rYAHQxhFzsxnnAvadtR1AWIaN4Awzyxpl6q8NSCj+RpzO3Svaw
-        Wucn9VOoErS3xvrOaILwSatKbBCxgQPjZ1w==
-X-Received: by 2002:a17:906:3b87:b0:70d:3189:6aae with SMTP id u7-20020a1709063b8700b0070d31896aaemr38099320ejf.222.1654892935925;
-        Fri, 10 Jun 2022 13:28:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwL1o8NDwMcR2lxf3dBDZIYC5j427/sL6njURQZaHh8eayUk0h4euQQRb+G6NTF6gOAZZwTqA==
-X-Received: by 2002:a17:906:3b87:b0:70d:3189:6aae with SMTP id u7-20020a1709063b8700b0070d31896aaemr38099311ejf.222.1654892935696;
-        Fri, 10 Jun 2022 13:28:55 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
-        by smtp.gmail.com with ESMTPSA id s11-20020aa7d78b000000b0042bca34bd15sm99170edq.95.2022.06.10.13.26.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jun 2022 13:27:25 -0700 (PDT)
-Message-ID: <e92f2e19-7303-f7bf-a5b5-dd7b236161cc@redhat.com>
-Date:   Fri, 10 Jun 2022 22:26:55 +0200
+        Sat, 11 Jun 2022 05:56:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B6BEE15;
+        Sat, 11 Jun 2022 02:56:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 965DA60BA3;
+        Sat, 11 Jun 2022 09:56:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF641C3411E;
+        Sat, 11 Jun 2022 09:56:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654941386;
+        bh=G3SijAZJFwW8PPbomjAxbmJ1C1Qf1Qf77wWOoRRw+dg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=je5xCyBasUps0lw+zm8BT+55x7BMo8QBuhxo7JbtlactdaXmHz6lygNzLVrkm8nAX
+         HjEppJFc+QzCFrtWjpMbQ5TNT070wVV+inQya2B9+gtBdLCpCi5lhYrB8oioVSA00t
+         hIu1Oa3GrD0WLeAPrt7UP5jlkYHkU2fo87dm0Y2tsE2pbKenH7urJXTDUAgrXYtoWI
+         sACEfm3Hy0H/485yd2z03sytvQHGo5HqeAr0OHZgDGtUHNS7u3v0z9DoUqRmcgnTGS
+         yJ2Edt+EBxtqLD6Zk4/TW4K+j7AB4xUoNv3rGt0AT9EmLHGsWZAuNEVqCOGQlFxuD6
+         6hRDH3YDodvdQ==
+Date:   Sat, 11 Jun 2022 12:56:12 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Wupeng Ma <mawupeng1@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>, songmuchun@bytedance.com,
+        Randy Dunlap <rdunlap@infradead.org>,
+        damien.lemoal@opensource.wdc.com,
+        Stephen Boyd <swboyd@chromium.org>,
+        Wei Liu <wei.liu@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>, gpiccoli@igalia.com,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        chenzhou10@huawei.com, vijayb@linux.microsoft.com,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v3 0/6] introduce mirrored memory support for arm64
+Message-ID: <YqRmvJDiy2UQkEDu@kernel.org>
+References: <20220607093805.1354256-1-mawupeng1@huawei.com>
+ <CAMj1kXH5r=CUoLCndBUsZ04_0UCJ2VqgJDdp2wbdNCtEx0Yxag@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH] platform/x86/intel: hid: Add Surface Go to VGBS allow
- list
-Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Duke Lee <krnhotwings@gmail.com>
-Cc:     Alex Hung <alex.hung@canonical.com>,
-        Mark Gross <markgross@kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-References: <20220607213654.5567-1-krnhotwings@gmail.com>
- <CAHp75Vfzd+sWWffUHkAbXo-tU8rBnq1f+VUeDFWPtu46sxF=DQ@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75Vfzd+sWWffUHkAbXo-tU8rBnq1f+VUeDFWPtu46sxF=DQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXH5r=CUoLCndBUsZ04_0UCJ2VqgJDdp2wbdNCtEx0Yxag@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 6/8/22 12:49, Andy Shevchenko wrote:
-> On Wed, Jun 8, 2022 at 7:48 AM Duke Lee <krnhotwings@gmail.com> wrote:
->>
->> The Surface Go reports Chassis Type 9 (Laptop,) so the device needs to be
->> added to dmi_vgbs_allow_list to enable tablet mode when an attached Type
->> Cover is folded back.
+On Fri, Jun 10, 2022 at 01:23:34PM +0200, Ard Biesheuvel wrote:
+> On Tue, 7 Jun 2022 at 11:16, Wupeng Ma <mawupeng1@huawei.com> wrote:
+> >
+> > From: Ma Wupeng <mawupeng1@huawei.com>
+> >
+> > Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
+> > introduced mirrored memory support for x86. This support rely on UEFI to
+> > report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-158:
+> >
+> >   http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
+> >
+> > Memory mirroring is a technique used to separate memory into two separate
+> > channels, usually on a memory device, like a server. In memory mirroring,
+> > one channel is copied to another to create redundancy. This method makes
+> > input/output (I/O) registers and memory appear with more than one address
+> > range because the same physical byte is accessible at more than one
+> > address. Using memory mirroring, higher memory reliability and a higher
+> > level of memory consolidation are possible.
+> >
+> > These EFI memory regions have various attributes, and the "mirrored"
+> > attribute is one of them. The physical memory region whose descriptors
+> > in EFI memory map has EFI_MEMORY_MORE_RELIABLE attribute (bit: 16) are
+> > mirrored. The address range mirroring feature of the kernel arranges such
+> > mirrored regions into normal zones and other regions into movable zones.
+> >
+> > Arm64 can support this too. So mirrored memory support is added to support
+> > arm64.
+> >
+> > The main purpose of this patch set is to introduce mirrored support for
+> > arm64 and we have already fixed the problems we had which is shown in
+> > patch #5 to patch #8 and try to bring total isolation in patch #9 which
+> > will disable mirror feature if kernelcore is not specified.
+> >
+> > In order to test this support in arm64:
+> > - patch this patch set
+> > - add kernelcore=mirror in kernel parameter
+> > - start you kernel
+> >
+> > Patch #1-#2 introduce mirrored memory support form arm64.
+> > Patch #3-#5 fix some bugs for arm64 if memory reliable is enabled.
+> > Patch #6 disable mirror feature if kernelcore is not specified.
+> >
+> > Thanks to Ard Biesheuvel's hard work [1], now kernel will perfer mirrored
+> > memory if kaslr is enabled.
+> >
+> > [1] https://lore.kernel.org/linux-arm-kernel/CAMj1kXEPVEzMgOM4+Yj6PxHA-jFuDOAUdDJSiSxy_XaP4P7LSw@mail.gmail.com/T/
+> >
+> > Changelog since v2:
+> > - remove efi_fake_mem support
+> > - remove Commit ("remove some redundant code in ia64 efi_init") since
+> >   efi_print_memmap() is not public
+> > - add mirror flag back on initrd memory
+> >
+> > Changelog since v1:
+> > - update changelog in cover letter
+> > - use PHYS_PFN in patch #7
+> >
+> > Ma Wupeng (6):
+> >   efi: Make efi_find_mirror() public
+> >   arm64/mirror: arm64 enabling - find mirrored memory ranges
+> >   mm: Ratelimited mirrored memory related warning messages
+> >   mm: Demote warning message in vmemmap_verify() to debug level
+> >   mm: Add mirror flag back on initrd memory
+> >   efi: Disable mirror feature if kernelcore is not specified
+> >
 > 
->> Relevant bug report and discussion:
->> https://github.com/linux-surface/linux-surface/issues/837
+> I have tested these changes on QEMU/arm64 with the patch below, and
+> things seem to work as expected. We have some minor issues to work out
+> but the general shape of this code is good.
 > 
-> It can be a BugLink tag instead.
-> 
->>
-> 
-> BugLink: https://github.com/linux-surface/linux-surface/issues/837
->> Signed-off-by: Duke Lee <krnhotwings@gmail.com>
-> 
-> I believe Hans can tweak this on the fly, so
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> As for the mm/ changes: does anyone mind if I take those through the
+> EFI tree as well?
 
-Right, I've just merged this into my review-hans branch,
-with the BugLink tag added. I'll also include this in my
-first fixes pull-req for the 5.19 cycle.
+No objections from me.
 
-Regards,
+> I don't think the EFI and -mm changes depend on each other, so they
+> can go into -mm separately as well.
 
-Hans
-
-
-
-> 
->> ---
->>  drivers/platform/x86/intel/hid.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
->> index 216d31e3403d..79cff1fc675c 100644
->> --- a/drivers/platform/x86/intel/hid.c
->> +++ b/drivers/platform/x86/intel/hid.c
->> @@ -122,6 +122,12 @@ static const struct dmi_system_id dmi_vgbs_allow_list[] = {
->>                         DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x360 Convertible 15-df0xxx"),
->>                 },
->>         },
->> +       {
->> +               .matches = {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
->> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Surface Go"),
->> +               },
->> +       },
->>         { }
->>  };
->>
->> --
->> 2.36.1
->>
-> 
-> 
-
+--
+Sincerely yours,
+Mike.
