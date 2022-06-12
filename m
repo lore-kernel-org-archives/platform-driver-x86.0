@@ -2,163 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CACCCA47A
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 11 Jun 2022 09:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757CBC43334
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Jun 2022 09:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230170AbiFKJ42 (ORCPT
+        id S231931AbiFLJFw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 11 Jun 2022 05:56:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49438 "EHLO
+        Sun, 12 Jun 2022 05:05:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbiFKJ41 (ORCPT
+        with ESMTP id S231250AbiFLJFv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 11 Jun 2022 05:56:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B6BEE15;
-        Sat, 11 Jun 2022 02:56:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 965DA60BA3;
-        Sat, 11 Jun 2022 09:56:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF641C3411E;
-        Sat, 11 Jun 2022 09:56:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654941386;
-        bh=G3SijAZJFwW8PPbomjAxbmJ1C1Qf1Qf77wWOoRRw+dg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=je5xCyBasUps0lw+zm8BT+55x7BMo8QBuhxo7JbtlactdaXmHz6lygNzLVrkm8nAX
-         HjEppJFc+QzCFrtWjpMbQ5TNT070wVV+inQya2B9+gtBdLCpCi5lhYrB8oioVSA00t
-         hIu1Oa3GrD0WLeAPrt7UP5jlkYHkU2fo87dm0Y2tsE2pbKenH7urJXTDUAgrXYtoWI
-         sACEfm3Hy0H/485yd2z03sytvQHGo5HqeAr0OHZgDGtUHNS7u3v0z9DoUqRmcgnTGS
-         yJ2Edt+EBxtqLD6Zk4/TW4K+j7AB4xUoNv3rGt0AT9EmLHGsWZAuNEVqCOGQlFxuD6
-         6hRDH3YDodvdQ==
-Date:   Sat, 11 Jun 2022 12:56:12 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Wupeng Ma <mawupeng1@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>, songmuchun@bytedance.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        damien.lemoal@opensource.wdc.com,
-        Stephen Boyd <swboyd@chromium.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>, gpiccoli@igalia.com,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        chenzhou10@huawei.com, vijayb@linux.microsoft.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 0/6] introduce mirrored memory support for arm64
-Message-ID: <YqRmvJDiy2UQkEDu@kernel.org>
-References: <20220607093805.1354256-1-mawupeng1@huawei.com>
- <CAMj1kXH5r=CUoLCndBUsZ04_0UCJ2VqgJDdp2wbdNCtEx0Yxag@mail.gmail.com>
+        Sun, 12 Jun 2022 05:05:51 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E653619D;
+        Sun, 12 Jun 2022 02:05:48 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id m20so5708721ejj.10;
+        Sun, 12 Jun 2022 02:05:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=p5/W6Lg7ZVRQY4aBYu6sgvVILEtgCF93h3bLCt2TIuY=;
+        b=WCsRsSXipZzbMX6EyL5gU2NWxKUWCBKsmiJ0Ej8ZSiGaPdd5EQzv1nBf2CZGsfAcbP
+         EQ9+FsfsKUwTGVFjHA2X+5DJuWx+ptZEm2lIn/9avOXpjB8ef8vdauJTmR830blojReI
+         c6zezFcsxjGNxTaOX49ZKU9pWsMhDrUuvRo9ZfYC9MnzWSnmU8hiZHdkNNo3KzxzVLFR
+         3bf8fcrQSWk5HQ/7Wy+j7RuzU0ZYX6JMErqsssQeEsxIGaSlDwTGMP1jzTK5K8tAwfSM
+         am+u+/J4MIYcIO8GuaD0tBPxuzxG6QgJ6tfFgzbyuQjsIlkBDOMz+mS4YevuDJbawrN1
+         RhEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=p5/W6Lg7ZVRQY4aBYu6sgvVILEtgCF93h3bLCt2TIuY=;
+        b=49eby5GRUOwVqbTiP2BFxYHORBaJE8f5i9Lzb6TzeaHazCe/R0gTqWBnaedv+6bBKe
+         eUSLdcPeGSaAuzo4n9NDSRq4wjWYfcLuJlg5ldr4maeXkNpAXAN+ySnHgLM2TrRUKKLb
+         6tkByKJEPpzDK6ATVSyld1wAfkeoCt0cxI7GXHlHXYgN2B1RvCAnonpdVwZcB0zYe9yJ
+         o5Q58rlk+DfQjA4R1PWJ/p4LvnW+o8oJT/rhDHpl3z161zFm3xeKazx4VEmCrl+e+RIY
+         TUMZri4L7yV9WBdh/bLytCUhkU/a+KqUVHyHoVkpmeQtagDfujxKUpxPYukxowZVj7qI
+         ssEg==
+X-Gm-Message-State: AOAM530XNnWhf7mL5ccXYRZ97jrc+cnvr59aXRuAWPph/jrBKHMwByfw
+        7tAsqb750QekqRFWncRRvuI=
+X-Google-Smtp-Source: ABdhPJyMTVzfqW6BTypBHblaN9sRLPDDdltQ9kcFG0ekxD+sju3JjLgGT4QAb9eHN0UYWTKGJn12sA==
+X-Received: by 2002:a17:906:7791:b0:712:1c42:777a with SMTP id s17-20020a170906779100b007121c42777amr11647473ejm.68.1655024747371;
+        Sun, 12 Jun 2022 02:05:47 -0700 (PDT)
+Received: from strolchi.home.s3e.de (p3ee2bf2d.dip0.t-ipconnect.de. [62.226.191.45])
+        by smtp.gmail.com with ESMTPSA id o18-20020aa7c7d2000000b004335e08d6c9sm2860075eds.33.2022.06.12.02.05.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jun 2022 02:05:47 -0700 (PDT)
+From:   stefan.seyfried@googlemail.com
+To:     kenneth.t.chan@gmail.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] fix panasonic-laptop hotkey regression
+Date:   Sun, 12 Jun 2022 11:05:05 +0200
+Message-Id: <20220612090507.20648-1-stefan.seyfried@googlemail.com>
+X-Mailer: git-send-email 2.36.1
+In-Reply-To: <20200821181433.17653-8-kenneth.t.chan@gmail.com>
+References: <20200821181433.17653-8-kenneth.t.chan@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXH5r=CUoLCndBUsZ04_0UCJ2VqgJDdp2wbdNCtEx0Yxag@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 01:23:34PM +0200, Ard Biesheuvel wrote:
-> On Tue, 7 Jun 2022 at 11:16, Wupeng Ma <mawupeng1@huawei.com> wrote:
-> >
-> > From: Ma Wupeng <mawupeng1@huawei.com>
-> >
-> > Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
-> > introduced mirrored memory support for x86. This support rely on UEFI to
-> > report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-158:
-> >
-> >   http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
-> >
-> > Memory mirroring is a technique used to separate memory into two separate
-> > channels, usually on a memory device, like a server. In memory mirroring,
-> > one channel is copied to another to create redundancy. This method makes
-> > input/output (I/O) registers and memory appear with more than one address
-> > range because the same physical byte is accessible at more than one
-> > address. Using memory mirroring, higher memory reliability and a higher
-> > level of memory consolidation are possible.
-> >
-> > These EFI memory regions have various attributes, and the "mirrored"
-> > attribute is one of them. The physical memory region whose descriptors
-> > in EFI memory map has EFI_MEMORY_MORE_RELIABLE attribute (bit: 16) are
-> > mirrored. The address range mirroring feature of the kernel arranges such
-> > mirrored regions into normal zones and other regions into movable zones.
-> >
-> > Arm64 can support this too. So mirrored memory support is added to support
-> > arm64.
-> >
-> > The main purpose of this patch set is to introduce mirrored support for
-> > arm64 and we have already fixed the problems we had which is shown in
-> > patch #5 to patch #8 and try to bring total isolation in patch #9 which
-> > will disable mirror feature if kernelcore is not specified.
-> >
-> > In order to test this support in arm64:
-> > - patch this patch set
-> > - add kernelcore=mirror in kernel parameter
-> > - start you kernel
-> >
-> > Patch #1-#2 introduce mirrored memory support form arm64.
-> > Patch #3-#5 fix some bugs for arm64 if memory reliable is enabled.
-> > Patch #6 disable mirror feature if kernelcore is not specified.
-> >
-> > Thanks to Ard Biesheuvel's hard work [1], now kernel will perfer mirrored
-> > memory if kaslr is enabled.
-> >
-> > [1] https://lore.kernel.org/linux-arm-kernel/CAMj1kXEPVEzMgOM4+Yj6PxHA-jFuDOAUdDJSiSxy_XaP4P7LSw@mail.gmail.com/T/
-> >
-> > Changelog since v2:
-> > - remove efi_fake_mem support
-> > - remove Commit ("remove some redundant code in ia64 efi_init") since
-> >   efi_print_memmap() is not public
-> > - add mirror flag back on initrd memory
-> >
-> > Changelog since v1:
-> > - update changelog in cover letter
-> > - use PHYS_PFN in patch #7
-> >
-> > Ma Wupeng (6):
-> >   efi: Make efi_find_mirror() public
-> >   arm64/mirror: arm64 enabling - find mirrored memory ranges
-> >   mm: Ratelimited mirrored memory related warning messages
-> >   mm: Demote warning message in vmemmap_verify() to debug level
-> >   mm: Add mirror flag back on initrd memory
-> >   efi: Disable mirror feature if kernelcore is not specified
-> >
-> 
-> I have tested these changes on QEMU/arm64 with the patch below, and
-> things seem to work as expected. We have some minor issues to work out
-> but the general shape of this code is good.
-> 
-> As for the mm/ changes: does anyone mind if I take those through the
-> EFI tree as well?
+Hi Kenneth,
 
-No objections from me.
+commit ed83c9171829 broke the hotkeys on my Toughbook CF-51, this adds a
+module option to make them work again.
+The first patch in the series is a small cleanup to allow the actual fix
+to be much more obvious.
 
-> I don't think the EFI and -mm changes depend on each other, so they
-> can go into -mm separately as well.
+ drivers/platform/x86/panasonic-laptop.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
---
-Sincerely yours,
-Mike.
+
