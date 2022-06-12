@@ -2,170 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CB3C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Jun 2022 12:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1231C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Jun 2022 15:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236845AbiFLMzs (ORCPT
+        id S231444AbiFLPZH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 12 Jun 2022 08:55:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53902 "EHLO
+        Sun, 12 Jun 2022 11:25:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231208AbiFLMzr (ORCPT
+        with ESMTP id S234861AbiFLPZG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 12 Jun 2022 08:55:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4D69FBF7A
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2022 05:55:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655038545;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=QIKykbyrNNm1Wral+I5eFaur3PFJU57q+42L2hj1KHI=;
-        b=ZYth8s/qLV2mswZOYUkan2Jc3y5QwOBcA0E8oycBHvi3oHw08C45n3fyjQdV/djYlWADZX
-        TrhyvV7mnAtklASPT6xek09WxBwq1YKDllD9l5WlmGVP1iukwwPZ1q9LC/Axogm3NK9zbA
-        ICqlAkQnUguwj7bQmv2KWetM962bbio=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-508-BqF6odZZOP6FjBaXGhUg-Q-1; Sun, 12 Jun 2022 08:55:44 -0400
-X-MC-Unique: BqF6odZZOP6FjBaXGhUg-Q-1
-Received: by mail-ed1-f69.google.com with SMTP id x8-20020a056402414800b0042d8498f50aso2430508eda.23
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2022 05:55:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
-         :subject:to:cc:content-language:content-transfer-encoding;
-        bh=QIKykbyrNNm1Wral+I5eFaur3PFJU57q+42L2hj1KHI=;
-        b=C0xLN5mSm8KqqeViS+vn+JCFYzigCcvxZoy8vH7Chqdip+DrAdqvQVWoG816zzG+Dd
-         TAr9k+txMWS44xSoRPxLw4Ne54bYRjaC4ASxtsxnYQpGIRD4lIAN6gDSAzdNQrq8sGCu
-         8FB4iruKtT4t6KoOThjiFWvvcXQqRu300Bc50reuBIDWnWybZWILvKhIQIAnFttcRmtY
-         G1SIaA2W/RnY5qrSOgb6ltcfJbOVPS0atwzrSDril4+JAGZwHxUaxDh2HIO7cxsmIaHo
-         17V2aNcpfBaPXsKHw1hJSAzK9byT4yRafsTK1PSmzv8FKiVPKZThe7HpwAjvWftNfZ81
-         ZJxg==
-X-Gm-Message-State: AOAM530vz9cvCngAlCJTXMamMWaH90bh35sSdHHYE25bmwwZ6OVmvX1A
-        TrIPLdIfDt1TgS27SHFfCT+32BAUnkEZiiFklZYoA8mTFQ8sRy7ThOWm3pU7c9wXyJKKnOY29tS
-        PQyfGysizcq81U1Mbesysrix65BkA1Q8f2g==
-X-Received: by 2002:a17:906:544e:b0:6f3:bd59:1a93 with SMTP id d14-20020a170906544e00b006f3bd591a93mr47998349ejp.421.1655038542919;
-        Sun, 12 Jun 2022 05:55:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxGda6jV94ijBtpP/dvyylDlakPx3jOjzohspNDADS+WXZHsHx4rhqSbiG5HQuAprOuJtlJ+w==
-X-Received: by 2002:a17:906:544e:b0:6f3:bd59:1a93 with SMTP id d14-20020a170906544e00b006f3bd591a93mr47998343ejp.421.1655038542745;
-        Sun, 12 Jun 2022 05:55:42 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id fu9-20020a170907b00900b006feb875503fsm2428972ejc.78.2022.06.12.05.55.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jun 2022 05:55:42 -0700 (PDT)
-Message-ID: <8c5b557d-7e6b-cbb7-316b-f26c567b08cd@redhat.com>
-Date:   Sun, 12 Jun 2022 14:55:41 +0200
+        Sun, 12 Jun 2022 11:25:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D9348332
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2022 08:25:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 214F060F27
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2022 15:25:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 75093C3411C
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2022 15:25:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655047504;
+        bh=HN2LYjgE3nH8XQBjP2u+QjIhia1Y8Vme+K0Nj3nlS6M=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=le/rx7l4DPH2Axz28f/0uf4nV6/7CTcMT5TGUH8wssoBuKwg5zRankYWXF536KW6T
+         kzedAEOsshLfHw9y1GnvN9volysuk83Vi/Yj2J21kCyKY8n7gyjVzt9ZjfFwcnj2Ik
+         Pi2bQkE9mxETSA/JJQD+e/TmBOxWx/6A0oQgj5GxTF+ns0SRa0kezqw0JZxOygDBJN
+         rPvxkHQq/tsOvCSYMvuqBHZp+Ug8qRMIL3/giEVAUmexWo5LtWhdGWuin1kX0XNbo4
+         rw44QI65TyWN2U2QhRERmPYNWi9a5zGepVvJaTQqOyWmMIYAuKgDROnyA34nLDLuHA
+         BVbfBfRRTre1w==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 552AAC05FD6; Sun, 12 Jun 2022 15:25:04 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
+Date:   Sun, 12 Jun 2022 15:25:04 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-214899-215701-5MUJn3WAlv@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
+References: <bug-214899-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 5.19-2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
 
-Here is the first round of fixes for platform-drivers-x86 for 5.19:
+--- Comment #29 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+(In reply to Johannes Pen=C3=9Fel from comment #28)
+> Finally, I have managed to get the keys working.=20
+>=20
+> Using ec-dump.exe, I figured out which EC registers hold different values=
+ on
+> Windows compared to Linux. After writing 0x86 to offset 0xA3, (which is 0=
+x80
+> on Linux by default) the keys started working instantly, with proper ACPI
+> events and everything.
 
- -  Fix hp-wmi regression on HP Omen laptops introduced in 5.18
- -  Several hardware-id additions
- -  A couple of other tiny fixes
+That is some good detective work on your side!
 
-Regards,
+May I ask how you are writing 0x86 to offset 0xA3 under Linux ?
 
-Hans
+I think this part of the DSDT is interesting:
+
+        Device (EC0)
+        {
+            ...
+
+            OperationRegion (ERAX, SystemMemory, 0xFE0B0400, 0xFF)
+            Field (ERAX, ByteAcc, Lock, Preserve)
+            {
+                ...
+                Offset (0xA3),=20
+                OSTY,   3,=20
+                    ,   1,=20
+                ADPI,   2,=20
+                    ,   1,=20
+                ADPT,   1,=20
+                ...
+            }
+            ...
+
+            Method (_REG, 2, NotSerialized)  // _REG: Region Availability
+            {
+                If ((Arg0 =3D=3D 0x03))
+                {
+                    ECAV =3D Arg1
+                }
+
+                If (((Arg0 =3D=3D 0x03) && (Arg1 =3D=3D One)))
+                {
+                    ...
+                    If ((OSYS =3D=3D 0x07DF))
+                    {
+                        Local0 =3D 0x06
+                    }
+
+                    If ((Acquire (LFCM, 0xA000) =3D=3D Zero))
+                    {
+                        OSTY =3D Local0
 
 
-The following changes since commit f2906aa863381afb0015a9eb7fefad885d4e5a56:
+Under Linux OSYS should be 0x06. So this in essence writes 0x06 to the lowe=
+r 4
+bits of the byte at offset 0xA3 of the MMIO region at 0xFE0B0400...
 
-  Linux 5.19-rc1 (2022-06-05 17:18:54 -0700)
+So maybe this is the path which we need to hit, but which for some reason is
+not being hit under Linux ... ?
 
-are available in the Git repository at:
+We could try to confirm this with a DSDT override. where we add an extra
+unconditional (sow without all the if-s):
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.19-2
 
-for you to fetch changes up to d4fe9cc4ff8656704b58cfd9363d7c3c9d65e519:
+                       OSTY =3D 0x06=20
 
-  platform/x86/intel: hid: Add Surface Go to VGBS allow list (2022-06-12 14:41:17 +0200)
+To the top of the _REG method above and then build a new DSDT and use the
+initrd override method to inject this. See:
 
-----------------------------------------------------------------
-platform-drivers-x86 for v5.19-2
+https://docs.kernel.org/admin-guide/acpi/initrd_table_override.html
 
-Highlights:
- -  Fix hp-wmi regression on HP Omen laptops introduced in 5.18
- -  Several hardware-id additions
- -  A couple of other tiny fixes
+If you can give this a try that would be great. If the issue turns out to be
+that the _REG code is somehow not hitting the desired code-path then that
+likely is a generic issue caused by subtle differences between how Linux ru=
+ns
+ACPI code vs how Windows does it. And figuring that out and fixing it will
+likely also help on other devices.
 
-The following is an automated git shortlog grouped by driver:
+--=20
+You may reply to this email to add a comment.
 
-barco-p50-gpio:
- -  Add check for platform_driver_register
-
-gigabyte-wmi:
- -  Add support for B450M DS3H-CF
- -  Add Z690M AORUS ELITE AX DDR4 support
-
-hp-wmi:
- -  Use zero insize parameter only when supported
- -  Resolve WMI query failures on some devices
-
-platform/mellanox:
- -  Add static in struct declaration.
- -  Spelling s/platfom/platform/
-
-platform/x86/intel:
- -  hid: Add Surface Go to VGBS allow list
- -  pmc: Support Intel Raptorlake P
- -  Fix pmt_crashlog array reference
-
-----------------------------------------------------------------
-August Wikerfors (1):
-      platform/x86: gigabyte-wmi: Add support for B450M DS3H-CF
-
-Bedant Patnaik (1):
-      platform/x86: hp-wmi: Use zero insize parameter only when supported
-
-David Arcari (1):
-      platform/x86/intel: Fix pmt_crashlog array reference
-
-Duke Lee (1):
-      platform/x86/intel: hid: Add Surface Go to VGBS allow list
-
-Geert Uytterhoeven (1):
-      platform/mellanox: Spelling s/platfom/platform/
-
-George D Sworo (1):
-      platform/x86/intel: pmc: Support Intel Raptorlake P
-
-Jiasheng Jiang (1):
-      platform/x86: barco-p50-gpio: Add check for platform_driver_register
-
-Jorge Lopez (1):
-      platform/x86: hp-wmi: Resolve WMI query failures on some devices
-
-Michael Shych (1):
-      platform/mellanox: Add static in struct declaration.
-
-Piotr Chmura (1):
-      platform/x86: gigabyte-wmi: Add Z690M AORUS ELITE AX DDR4 support
-
- drivers/platform/mellanox/Kconfig         |  2 +-
- drivers/platform/mellanox/nvsw-sn2201.c   |  2 +-
- drivers/platform/x86/barco-p50-gpio.c     |  5 ++++-
- drivers/platform/x86/gigabyte-wmi.c       |  2 ++
- drivers/platform/x86/hp-wmi.c             | 29 +++++++++++++++++++----------
- drivers/platform/x86/intel/hid.c          |  6 ++++++
- drivers/platform/x86/intel/pmc/core.c     |  1 +
- drivers/platform/x86/intel/pmt/crashlog.c |  2 +-
- 8 files changed, 35 insertions(+), 14 deletions(-)
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
