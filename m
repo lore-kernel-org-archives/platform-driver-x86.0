@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1231C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Jun 2022 15:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EA4C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Jun 2022 15:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231444AbiFLPZH (ORCPT
+        id S233382AbiFLPce (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 12 Jun 2022 11:25:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45160 "EHLO
+        Sun, 12 Jun 2022 11:32:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234861AbiFLPZG (ORCPT
+        with ESMTP id S236454AbiFLPce (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 12 Jun 2022 11:25:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D9348332
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2022 08:25:05 -0700 (PDT)
+        Sun, 12 Jun 2022 11:32:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C38F0BED
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2022 08:32:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 214F060F27
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2022 15:25:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 75093C3411C
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2022 15:25:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EBC7360F95
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2022 15:32:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4A80AC3411C
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2022 15:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655047504;
-        bh=HN2LYjgE3nH8XQBjP2u+QjIhia1Y8Vme+K0Nj3nlS6M=;
+        s=k20201202; t=1655047945;
+        bh=LEQ36o8NtDhGgSE5dU++zAF8jtlj8XpjqCryAAII/+o=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=le/rx7l4DPH2Axz28f/0uf4nV6/7CTcMT5TGUH8wssoBuKwg5zRankYWXF536KW6T
-         kzedAEOsshLfHw9y1GnvN9volysuk83Vi/Yj2J21kCyKY8n7gyjVzt9ZjfFwcnj2Ik
-         Pi2bQkE9mxETSA/JJQD+e/TmBOxWx/6A0oQgj5GxTF+ns0SRa0kezqw0JZxOygDBJN
-         rPvxkHQq/tsOvCSYMvuqBHZp+Ug8qRMIL3/giEVAUmexWo5LtWhdGWuin1kX0XNbo4
-         rw44QI65TyWN2U2QhRERmPYNWi9a5zGepVvJaTQqOyWmMIYAuKgDROnyA34nLDLuHA
-         BVbfBfRRTre1w==
+        b=J46Ksb9D6MSeUOSXqvNiBfvSI+76e2gSUE4bqAfGpBxUm4u+ffjHtX+y27RphDIAJ
+         biMF0Pve2XACKmPKxIOqWIbt6ZYBfMqeFEbC/lQbPUlSrmL9LgwC3+7QMbVRn1w2lq
+         GS56zYPuZ0gzsZY/E8OS56wkcktC43C4EzvBevWdzRM5LHfzPXYsjQlnRFGbvCRHGw
+         aJYOT8jqPDNXXNCXjdfVSxYV8UPpVgm85xvR2wy2OTeEVksWBeD2vm6j66vAoIO/x/
+         2Zz6njGhATn1VKw4ck0mxotvJ2QjYhKDQ0tIEqIgCnIK9AL8MG//OPJBTRgmWQq7IU
+         A24mw7WX1Vkbw==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 552AAC05FD6; Sun, 12 Jun 2022 15:25:04 +0000 (UTC)
+        id 2B57FC05FD5; Sun, 12 Jun 2022 15:32:25 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
-Date:   Sun, 12 Jun 2022 15:25:04 +0000
+Date:   Sun, 12 Jun 2022 15:32:24 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -54,7 +54,7 @@ X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-214899-215701-5MUJn3WAlv@https.bugzilla.kernel.org/>
+Message-ID: <bug-214899-215701-szdpOmYaVf@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
 References: <bug-214899-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -68,85 +68,42 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
 
---- Comment #29 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-(In reply to Johannes Pen=C3=9Fel from comment #28)
-> Finally, I have managed to get the keys working.=20
->=20
-> Using ec-dump.exe, I figured out which EC registers hold different values=
- on
-> Windows compared to Linux. After writing 0x86 to offset 0xA3, (which is 0=
-x80
-> on Linux by default) the keys started working instantly, with proper ACPI
-> events and everything.
+--- Comment #30 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+If it turns out that the issue is that for some reason the "Local0 =3D 0x06=
+" part
+of:
 
-That is some good detective work on your side!
-
-May I ask how you are writing 0x86 to offset 0xA3 under Linux ?
-
-I think this part of the DSDT is interesting:
-
-        Device (EC0)
-        {
-            ...
-
-            OperationRegion (ERAX, SystemMemory, 0xFE0B0400, 0xFF)
-            Field (ERAX, ByteAcc, Lock, Preserve)
-            {
-                ...
-                Offset (0xA3),=20
-                OSTY,   3,=20
-                    ,   1,=20
-                ADPI,   2,=20
-                    ,   1,=20
-                ADPT,   1,=20
-                ...
-            }
-            ...
-
-            Method (_REG, 2, NotSerialized)  // _REG: Region Availability
-            {
-                If ((Arg0 =3D=3D 0x03))
-                {
-                    ECAV =3D Arg1
-                }
-
-                If (((Arg0 =3D=3D 0x03) && (Arg1 =3D=3D One)))
-                {
-                    ...
                     If ((OSYS =3D=3D 0x07DF))
                     {
                         Local0 =3D 0x06
                     }
 
-                    If ((Acquire (LFCM, 0xA000) =3D=3D Zero))
-                    {
-                        OSTY =3D Local0
+Does not execute then this is similar to:
+https://bugzilla.redhat.com/show_bug.cgi?id=3D1842039
 
+Which is also caused by an OSYS check for some reason not working. Note OSYS
+gets set to 0x07DF this bit of DSDT code:
 
-Under Linux OSYS should be 0x06. So this in essence writes 0x06 to the lowe=
-r 4
-bits of the byte at offset 0xA3 of the MMIO region at 0xFE0B0400...
+                If (_OSI ("Windows 2015"))
+                {
+                    OSYS =3D 0x07DF
+                }
 
-So maybe this is the path which we need to hit, but which for some reason is
-not being hit under Linux ... ?
+Which should run early on, but on the 1842039 this for some reason is not
+working.
 
-We could try to confirm this with a DSDT override. where we add an extra
-unconditional (sow without all the if-s):
+For some more background info, Linux will answer true for _OSI ("Windows 20=
+15")
+which is asking the OS if it is "Windows 10", or IOW if it can handle modern
+ACPI features, which Linux can.
 
+So assuming that this is the cause of 0xA3 is not being set to 0x86 (*), th=
+en
+getting to the bottom of this is definitely interesting.
 
-                       OSTY =3D 0x06=20
-
-To the top of the _REG method above and then build a new DSDT and use the
-initrd override method to inject this. See:
-
-https://docs.kernel.org/admin-guide/acpi/initrd_table_override.html
-
-If you can give this a try that would be great. If the issue turns out to be
-that the _REG code is somehow not hitting the desired code-path then that
-likely is a generic issue caused by subtle differences between how Linux ru=
-ns
-ACPI code vs how Windows does it. And figuring that out and fixing it will
-likely also help on other devices.
+*) Note I'm not even sure that the OSTY reference to address 0xFE0B04A3 is =
+the
+A3 we are looking for ...
 
 --=20
 You may reply to this email to add a comment.
