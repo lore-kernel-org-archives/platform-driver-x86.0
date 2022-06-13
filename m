@@ -2,94 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B80CCA47C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 10:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F88CCA47B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 11:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347572AbiFMKzs (ORCPT
+        id S1355645AbiFMLqt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Jun 2022 06:55:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44244 "EHLO
+        Mon, 13 Jun 2022 07:46:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350295AbiFMKys (ORCPT
+        with ESMTP id S1356763AbiFMLpB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Jun 2022 06:54:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1497D13E16
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 03:30:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A2E0B60EF5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 10:30:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0D03BC34114
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 10:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655116242;
-        bh=PHXISeuJlnElXsRTl0Rm1K5iopcAJPoIM1q5qBWHZvI=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=SZwLRMODJ+FKfd97ZvB6SBJKl6+ct/44JxAbG/TejsGBWEE7aAcgo+3XzACbF3jGk
-         jXr+s3ACr77/6ql0OObi5SRTWeRz7r4N14PTLWZs+OHzYxWmKyCctUmtJ5KBxl+9Vx
-         JJ64BzL9Hcz842xZrWme4gwCpyG0k3hyZy1E5SEa+fMNS4BMFcVBMef2hhiqjH0yD0
-         C7mne94nfQ6SITBytPgUY+idYHSlt20a1RZVWZlZEmzwGdNgRwPZUrVAETDTCq+Pjf
-         1bwscxuhRqars1a++3ffqhFYYHd3o2c0WY14cygCbi7tdtGd6K63yKIeTtmHAgehkk
-         DDZhDgXVB2mUA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id E0296C05FD5; Mon, 13 Jun 2022 10:30:41 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
-Date:   Mon, 13 Jun 2022 10:30:41 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-214899-215701-fdkVoT8KsH@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
-References: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 13 Jun 2022 07:45:01 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB3D21276;
+        Mon, 13 Jun 2022 03:51:12 -0700 (PDT)
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.53])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LM7bq14W9z1K9Sb;
+        Mon, 13 Jun 2022 18:49:11 +0800 (CST)
+Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 13 Jun 2022 18:50:47 +0800
+Received: from [10.174.178.120] (10.174.178.120) by
+ dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 13 Jun 2022 18:50:45 +0800
+Message-ID: <4e312b22-73ba-8d59-b494-b7cb1d7bbb49@huawei.com>
+Date:   Mon, 13 Jun 2022 18:50:45 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+From:   mawupeng <mawupeng1@huawei.com>
+Subject: Re: [PATCH v4 5/6] mm: Only remove nomap flag for initrd
+To:     <ardb@kernel.org>, <will@kernel.org>, <catalin.marinas@arm.com>
+CC:     <corbet@lwn.net>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        <hpa@zytor.com>, <dvhart@infradead.org>, <andy@infradead.org>,
+        <rppt@kernel.org>, <akpm@linux-foundation.org>,
+        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
+        <aou@eecs.berkeley.edu>, <paulmck@kernel.org>,
+        <keescook@chromium.org>, <songmuchun@bytedance.com>,
+        <rdunlap@infradead.org>, <damien.lemoal@opensource.wdc.com>,
+        <swboyd@chromium.org>, <wei.liu@kernel.org>,
+        <robin.murphy@arm.com>, <david@redhat.com>,
+        <anshuman.khandual@arm.com>, <thunder.leizhen@huawei.com>,
+        <wangkefeng.wang@huawei.com>, <gpiccoli@igalia.com>,
+        <chenhuacai@kernel.org>, <geert@linux-m68k.org>,
+        <vijayb@linux.microsoft.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+        <mawupeng1@huawei.com>
+References: <20220613082147.183145-1-mawupeng1@huawei.com>
+ <20220613082147.183145-6-mawupeng1@huawei.com>
+ <CAMj1kXFn_FKt2jLJOntvT0FBtL9b=VWZdrBFpn48LBMDLy1WBQ@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CAMj1kXFn_FKt2jLJOntvT0FBtL9b=VWZdrBFpn48LBMDLy1WBQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.120]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500014.china.huawei.com (7.185.36.153)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
 
---- Comment #32 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-(In reply to Johannes Pen=C3=9Fel from comment #31)
-> Thank you for your help!
 
-You're welcome and thank you for your work on this, your APCI debugging ski=
-lls
-are impressive!
+On 6/13/2022 5:42 PM, Ard Biesheuvel wrote:
+> On Mon, 13 Jun 2022 at 10:00, Wupeng Ma <mawupeng1@huawei.com> wrote:
+>>
+>> From: Ma Wupeng <mawupeng1@huawei.com>
+>>
+>> Commit 177e15f0c144 ("arm64: add the initrd region to the linear mapping explicitly")
+>> remove all the flags of the memory used by initrd. This is fine since
+>> MEMBLOCK_MIRROR is not used in arm64.
+>>
+>> However with mirrored feature introduced to arm64, this will clear the mirrored
+>> flag used by initrd, which will lead to error log printed by
+>> find_zone_movable_pfns_for_nodes() if the lower 4G range has some non-mirrored
+>> memory.
+>>
+>> To solve this problem, only MEMBLOCK_NOMAP flag will be removed via
+>> memblock_clear_nomap().
+>>
+>> Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
+> 
+> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> 
+> This needs and ack from the arm64 maintainers, please?
+> And also please fix the subject to include 'arm64'
+> 
 
-> My understanding of ACPI is limited, but my guess would be that for some
-> reason, \_SB.PC00.LPCB.EC0._REG gets evaluated before _SB.PC00._INI, thus
-> leaving the former with an incorrect value for OSYS. AFAICT, this does not
-> look too dissimilar from the issue in the bugzilla thread you linked.
+Ok, I will include 'arm64' in my subject in v5.
 
-Yes, I believe that that is what is happening too.
+Thanks for reviewing.
 
-Looking at the code I have an idea how to fix this, I'm testing a patch for
-this now (to make sure it does not regress things on other hw, or at least =
-on
-my laptop).
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+> 
+>> ---
+>>  arch/arm64/mm/init.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>> index 339ee84e5a61..8456dbae9441 100644
+>> --- a/arch/arm64/mm/init.c
+>> +++ b/arch/arm64/mm/init.c
+>> @@ -350,8 +350,8 @@ void __init arm64_memblock_init(void)
+>>                         "initrd not fully accessible via the linear mapping -- please check your bootloader ...\n")) {
+>>                         phys_initrd_size = 0;
+>>                 } else {
+>> -                       memblock_remove(base, size); /* clear MEMBLOCK_ flags */
+>>                         memblock_add(base, size);
+>> +                       memblock_clear_nomap(base, size);
+>>                         memblock_reserve(base, size);
+>>                 }
+>>         }
+>> --
+>> 2.25.1
+>>
+> .
