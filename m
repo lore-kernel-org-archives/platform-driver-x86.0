@@ -2,34 +2,52 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403D6CCA47B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 20:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E80EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 20:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245193AbiFMUHR (ORCPT
+        id S1350928AbiFMURN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Jun 2022 16:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42968 "EHLO
+        Mon, 13 Jun 2022 16:17:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240097AbiFMUGj (ORCPT
+        with ESMTP id S1350960AbiFMUQy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Jun 2022 16:06:39 -0400
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 266885A14D;
-        Mon, 13 Jun 2022 11:40:56 -0700 (PDT)
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.0.0)
- id 6919db4401a1fb40; Mon, 13 Jun 2022 20:40:55 +0200
-Received: from kreacher.localnet (unknown [213.134.187.64])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id 6A2CF66C81D;
-        Mon, 13 Jun 2022 20:40:54 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mon, 13 Jun 2022 16:16:54 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A501737AA;
+        Mon, 13 Jun 2022 11:54:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655146485; x=1686682485;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rrteT8J06qadrldMcQRzRLZphFKmersKJgLFFUeBMAw=;
+  b=acZCmGCyIAErSAEvtzRqpmxCogNIu7Kx1odcmKEC80A+F3SCN1890qMk
+   5jhVe6X8vBNAaCEJyXllB2lrzKQtYbBc187mf/UCcfbq/tWT1kTHoJ6Hs
+   YcouSYYeZdDrK2uPj1e0niTPUdLoFi8PsUA/Ofu00hnzilW6n1Ri6YFuS
+   kShvxtnbZzhD0o1Bz3xaE8kjxMD/4Rob6AzYa4xkkRPqhkCqoDnklsJrR
+   U7XCLh6xBhzz5Dl2fQHhk0xIugkyXQaSpSFyPM9f/vOaQPK2HvbUEmMyg
+   1u5QKX607sIHXm3a0CgjyYg+vKL+mH0/rpmxsxTB5VQxjWyN7yk3hQKLP
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10377"; a="278412731"
+X-IronPort-AV: E=Sophos;i="5.91,297,1647327600"; 
+   d="scan'208";a="278412731"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2022 11:54:43 -0700
+X-IronPort-AV: E=Sophos;i="5.91,297,1647327600"; 
+   d="scan'208";a="686212131"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2022 11:54:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1o0pCu-000bIa-OV;
+        Mon, 13 Jun 2022 21:54:36 +0300
+Date:   Mon, 13 Jun 2022 21:54:36 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Linux PM <linux-pm@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -37,121 +55,127 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Mark Gross <markgross@kernel.org>,
         ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 12/16] platform/x86/thinkpad_acpi: Use acpi_dev_for_each_child()
-Date:   Mon, 13 Jun 2022 20:30:19 +0200
-Message-ID: <2091400.OBFZWjSADL@kreacher>
-In-Reply-To: <2653857.mvXUDI8C0e@kreacher>
-References: <1843211.tdWV9SEqCh@kreacher> <2653857.mvXUDI8C0e@kreacher>
+Subject: Re: [PATCH v2 12/16] platform/x86/thinkpad_acpi: Use
+ acpi_dev_for_each_child()
+Message-ID: <YqeH7G8pJMelXYaJ@smile.fi.intel.com>
+References: <1843211.tdWV9SEqCh@kreacher>
+ <2653857.mvXUDI8C0e@kreacher>
+ <2091400.OBFZWjSADL@kreacher>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 213.134.187.64
-X-CLIENT-HOSTNAME: 213.134.187.64
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedruddujedguddviecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepvddufedrudefgedrudekjedrieegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddufedrudefgedrudekjedrieegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhi
- nhhtvghlrdgtohhmpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtghpthhtohepmhgrrhhkghhrohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=11 Fuz1=11 Fuz2=11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2091400.OBFZWjSADL@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Mon, Jun 13, 2022 at 08:30:19PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Instead of walking the list of children of an ACPI device directly,
+> use acpi_dev_for_each_child() to carry out an action for all of
+> the given ACPI device's children.
+> 
+> This will help to eliminate the children list head from struct
+> acpi_device as it is redundant and it is used in questionable ways
+> in some places (in particular, locking is needed for walking the
+> list pointed to it safely, but it is often missing).
 
-Instead of walking the list of children of an ACPI device directly,
-use acpi_dev_for_each_child() to carry out an action for all of
-the given ACPI device's children.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This will help to eliminate the children list head from struct
-acpi_device as it is redundant and it is used in questionable ways
-in some places (in particular, locking is needed for walking the
-list pointed to it safely, but it is often missing).
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> v1 -> v2:
+>    * Eliminate unnecessary branch (Andy).
+> 
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c |   53 +++++++++++++++++------------------
+>  1 file changed, 27 insertions(+), 26 deletions(-)
+> 
+> Index: linux-pm/drivers/platform/x86/thinkpad_acpi.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/thinkpad_acpi.c
+> +++ linux-pm/drivers/platform/x86/thinkpad_acpi.c
+> @@ -6841,6 +6841,31 @@ static const struct backlight_ops ibm_ba
+>  
+>  /* --------------------------------------------------------------------- */
+>  
+> +static int __init tpacpi_evaluate_bcl(struct acpi_device *adev, void *not_used)
+> +{
+> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object *obj;
+> +	acpi_status status;
+> +	int rc;
+> +
+> +	status = acpi_evaluate_object(adev->handle, "_BCL", NULL, &buffer);
+> +	if (ACPI_FAILURE(status))
+> +		return 0;
+> +
+> +	obj = buffer.pointer;
+> +	if (!obj || obj->type != ACPI_TYPE_PACKAGE) {
+> +		acpi_handle_info(adev->handle,
+> +				 "Unknown _BCL data, please report this to %s\n",
+> +				 TPACPI_MAIL);
+> +		rc = 0;
+> +	} else {
+> +		rc = obj->package.count;
+> +	}
+> +	kfree(obj);
+> +
+> +	return rc;
+> +}
+> +
+>  /*
+>   * Call _BCL method of video device.  On some ThinkPads this will
+>   * switch the firmware to the ACPI brightness control mode.
+> @@ -6848,37 +6873,13 @@ static const struct backlight_ops ibm_ba
+>  
+>  static int __init tpacpi_query_bcl_levels(acpi_handle handle)
+>  {
+> -	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+> -	union acpi_object *obj;
+> -	struct acpi_device *device, *child;
+> -	int rc;
+> +	struct acpi_device *device;
+>  
+>  	device = acpi_fetch_acpi_dev(handle);
+>  	if (!device)
+>  		return 0;
+>  
+> -	rc = 0;
+> -	list_for_each_entry(child, &device->children, node) {
+> -		acpi_status status = acpi_evaluate_object(child->handle, "_BCL",
+> -							  NULL, &buffer);
+> -		if (ACPI_FAILURE(status)) {
+> -			buffer.length = ACPI_ALLOCATE_BUFFER;
+> -			continue;
+> -		}
+> -
+> -		obj = (union acpi_object *)buffer.pointer;
+> -		if (!obj || (obj->type != ACPI_TYPE_PACKAGE)) {
+> -			pr_err("Unknown _BCL data, please report this to %s\n",
+> -				TPACPI_MAIL);
+> -			rc = 0;
+> -		} else {
+> -			rc = obj->package.count;
+> -		}
+> -		break;
+> -	}
+> -
+> -	kfree(buffer.pointer);
+> -	return rc;
+> +	return acpi_dev_for_each_child(device, tpacpi_evaluate_bcl, NULL);
+>  }
+>  
+>  
+> 
+> 
+> 
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-v1 -> v2:
-   * Eliminate unnecessary branch (Andy).
-
----
- drivers/platform/x86/thinkpad_acpi.c |   53 +++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 26 deletions(-)
-
-Index: linux-pm/drivers/platform/x86/thinkpad_acpi.c
-===================================================================
---- linux-pm.orig/drivers/platform/x86/thinkpad_acpi.c
-+++ linux-pm/drivers/platform/x86/thinkpad_acpi.c
-@@ -6841,6 +6841,31 @@ static const struct backlight_ops ibm_ba
- 
- /* --------------------------------------------------------------------- */
- 
-+static int __init tpacpi_evaluate_bcl(struct acpi_device *adev, void *not_used)
-+{
-+	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *obj;
-+	acpi_status status;
-+	int rc;
-+
-+	status = acpi_evaluate_object(adev->handle, "_BCL", NULL, &buffer);
-+	if (ACPI_FAILURE(status))
-+		return 0;
-+
-+	obj = buffer.pointer;
-+	if (!obj || obj->type != ACPI_TYPE_PACKAGE) {
-+		acpi_handle_info(adev->handle,
-+				 "Unknown _BCL data, please report this to %s\n",
-+				 TPACPI_MAIL);
-+		rc = 0;
-+	} else {
-+		rc = obj->package.count;
-+	}
-+	kfree(obj);
-+
-+	return rc;
-+}
-+
- /*
-  * Call _BCL method of video device.  On some ThinkPads this will
-  * switch the firmware to the ACPI brightness control mode.
-@@ -6848,37 +6873,13 @@ static const struct backlight_ops ibm_ba
- 
- static int __init tpacpi_query_bcl_levels(acpi_handle handle)
- {
--	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
--	struct acpi_device *device, *child;
--	int rc;
-+	struct acpi_device *device;
- 
- 	device = acpi_fetch_acpi_dev(handle);
- 	if (!device)
- 		return 0;
- 
--	rc = 0;
--	list_for_each_entry(child, &device->children, node) {
--		acpi_status status = acpi_evaluate_object(child->handle, "_BCL",
--							  NULL, &buffer);
--		if (ACPI_FAILURE(status)) {
--			buffer.length = ACPI_ALLOCATE_BUFFER;
--			continue;
--		}
--
--		obj = (union acpi_object *)buffer.pointer;
--		if (!obj || (obj->type != ACPI_TYPE_PACKAGE)) {
--			pr_err("Unknown _BCL data, please report this to %s\n",
--				TPACPI_MAIL);
--			rc = 0;
--		} else {
--			rc = obj->package.count;
--		}
--		break;
--	}
--
--	kfree(buffer.pointer);
--	return rc;
-+	return acpi_dev_for_each_child(device, tpacpi_evaluate_bcl, NULL);
- }
- 
- 
-
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
