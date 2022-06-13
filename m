@@ -2,196 +2,156 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD30C43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 18:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403D6CCA47B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 20:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245615AbiFMSk7 (ORCPT
+        id S245193AbiFMUHR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Jun 2022 14:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45238 "EHLO
+        Mon, 13 Jun 2022 16:07:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344045AbiFMSkc (ORCPT
+        with ESMTP id S240097AbiFMUGj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Jun 2022 14:40:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4718362BEC
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 08:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655134052;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=349ItO45Tva+Eg6mNSQZ8gAgx0dNkmVf6n7IrTnPg/k=;
-        b=DKD2aMRYWxq/AN3Jrp9y8znBjc4DORo9JLcRxmPegXEzXJlPUgxB5hgNbe43SAZ39/UMl2
-        bEwLOk1n7fO1k8aK2STvniE0HcHBDQaPx35XiPJgU3jK9U4s9xfOCyVex/hvlu+3/N8Nez
-        fGa1RzrvJSBcVE6fHxifBtoVb0q2jTE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-479-owhcd1VKP9iJxuwn9bA6IA-1; Mon, 13 Jun 2022 11:27:31 -0400
-X-MC-Unique: owhcd1VKP9iJxuwn9bA6IA-1
-Received: by mail-ed1-f72.google.com with SMTP id g3-20020a056402320300b0042dc956d80eso4161381eda.14
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 08:27:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=349ItO45Tva+Eg6mNSQZ8gAgx0dNkmVf6n7IrTnPg/k=;
-        b=CO95WexNYr7h9pm9zJoujKbvRRPYqYaYQgeKWHJrqQT6FobYTbdsGG4Q270desn07G
-         PRQ1iiJ1iiaNSoLA4bZLuAsGdOPzjOx+qkcJDY6QDtBPBTpvH8o/jHT+Y5xiEJD+lq6x
-         tNFoZ4Qj6L1yonfwf6nGW1ba6gnz+pGbG4+pv3aaLQN7TnxY2vcDyvqkmN9upx6K48HW
-         QSTXgnfFNTF//ejKgWtW0vqT3sB7PQGJDoxYsd0Ab2q7w0/5/GwQNjYmFcSZxqiOStrv
-         /rIH+QO+rszpBBQ81i8F1gRBErVutVF+rzEszQP0nMwJBkk2b1AtFoC7uQf/z04dykqE
-         QXWQ==
-X-Gm-Message-State: AOAM532XFMf3PYpU8nKpU9+z/prSg+i1k3dVHXuOqNPSzsvNxBx6wJVy
-        L6neXBnpYqYo6mNbGLocHV7J1WrLeHHGsaWeGh/aKVtFSMHFQBSo5iGut6upc/HsaX9fr57/EXu
-        WY7c4FdXBt0HlJu2DFLJWVNFqZC8Aq2u8Bg==
-X-Received: by 2002:a17:906:2c4d:b0:70f:ede5:d456 with SMTP id f13-20020a1709062c4d00b0070fede5d456mr373617ejh.366.1655134049913;
-        Mon, 13 Jun 2022 08:27:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJybsNmkzlGzyyL4shgHdKlEEvyjK/FcnSjJ/CLCJb6gofvFDki+1kMsAbYEIwlvSuuJGGJGfA==
-X-Received: by 2002:a17:906:2c4d:b0:70f:ede5:d456 with SMTP id f13-20020a1709062c4d00b0070fede5d456mr373604ejh.366.1655134049710;
-        Mon, 13 Jun 2022 08:27:29 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id h20-20020a056402281400b0042dd05edeedsm5226591ede.17.2022.06.13.08.27.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jun 2022 08:27:29 -0700 (PDT)
-Message-ID: <23f92ec3-a739-6ee7-10f9-f66b17ae6088@redhat.com>
-Date:   Mon, 13 Jun 2022 17:27:28 +0200
+        Mon, 13 Jun 2022 16:06:39 -0400
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 266885A14D;
+        Mon, 13 Jun 2022 11:40:56 -0700 (PDT)
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.0.0)
+ id 6919db4401a1fb40; Mon, 13 Jun 2022 20:40:55 +0200
+Received: from kreacher.localnet (unknown [213.134.187.64])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by v370.home.net.pl (Postfix) with ESMTPSA id 6A2CF66C81D;
+        Mon, 13 Jun 2022 20:40:54 +0200 (CEST)
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Mark Gross <markgross@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 12/16] platform/x86/thinkpad_acpi: Use acpi_dev_for_each_child()
+Date:   Mon, 13 Jun 2022 20:30:19 +0200
+Message-ID: <2091400.OBFZWjSADL@kreacher>
+In-Reply-To: <2653857.mvXUDI8C0e@kreacher>
+References: <1843211.tdWV9SEqCh@kreacher> <2653857.mvXUDI8C0e@kreacher>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v2 00/12] platform/surface: aggregator: Add support for
- client hot-removal
-Content-Language: en-US
-To:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20220527023447.2460025-1-luzmaximilian@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220527023447.2460025-1-luzmaximilian@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 213.134.187.64
+X-CLIENT-HOSTNAME: 213.134.187.64
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedruddujedguddviecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepvddufedrudefgedrudekjedrieegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddufedrudefgedrudekjedrieegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhi
+ nhhtvghlrdgtohhmpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtghpthhtohepmhgrrhhkghhrohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=11 Fuz1=11 Fuz2=11
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On 5/27/22 04:34, Maximilian Luz wrote:
-> Summary:
-> 
->   Add support for the HID type cover input devices on the Pro 8 and all
->   requirements for that.
-> 
-> 
-> Blurb from v1:
-> 
->   This series adds support for the type cover of the Surface Pro 8. On
->   the Pro 8, the type cover is (unlike on previous generations) handled
->   via the Surface System Aggregator Module (SSAM). As the type cover is
->   detachable, care needs to be taken and the respective SSAM (HID)
->   client devices need to be properly removed when detached and
->   re-initialized when attached.
->   
->   Therefore, this series does three things:
->   
->    1. Improve hot-removal support for SSAM client devices. When
->       hot-removing clients, subsequent communication may time out.
->   
->       In the worst case, this can lead to problems when devices are
->       detached and re-attached quickly, before we can remove their
->       respective kernel representations. This can then lead to devices
->       being in an uninitialized state, preventing, for example, touchpad
->       gestures from working properly as the required HID feature report
->       has not been sent.
->   
->       Therefore, handle hot-removal of devices more gracefully by
->       avoiding communication once it has been detected and ensure that
->       devices are actually removed.
->    
->    2. Generify SSAM subsystem hubs and add a KIP hub. On the Surface Pro
->       8, the KIP subsystem (only that abbreviation is known) is
->       responsible for managing type-cover devices. This hub acts as the
->       controller for device removal similar to the BAS (detachable base)
->       subsystem hub on the Surface Book 3 (therefore we can share most
->       of the code between them).
->   
->    3. Add the (HID) type-cover clients of the Surface Pro 8 to the
->       aggregator registry.
-> 
-> 
-> Changes in v2:
-> 
->  - Introduce "platform/surface: aggregator: Allow is_ssam_device() to be
->    used when CONFIG_SURFACE_AGGREGATOR_BUS is disabled" to fix an
->    undefined reference  build issue when CONFIG_SURFACE_AGGREGATOR_BUS
->    is disabled.
-> 
->  - Make SSAM hub device UIDs consistent.
->     - Introduce "platform/surface: aggregator_registry: Change device ID
->       for base hub" to make association between hub and subsystem target
->       category more obvious.
->     - Change hub device ID for KIP subsystem hub to be consistent with
->       the id of the already existing BAS hub.
+Instead of walking the list of children of an ACPI device directly,
+use acpi_dev_for_each_child() to carry out an action for all of
+the given ACPI device's children.
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+This will help to eliminate the children list head from struct
+acpi_device as it is redundant and it is used in questionable ways
+in some places (in particular, locking is needed for walking the
+list pointed to it safely, but it is often missing).
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-Jiri, Benjamin, note I've also taken the one small(ish) HID patch
-which is a part of this series, despite it lacking an Ack from
-either of you. I hope this is ok, if not let me know.
+v1 -> v2:
+   * Eliminate unnecessary branch (Andy).
 
-Regards,
+---
+ drivers/platform/x86/thinkpad_acpi.c |   53 +++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 26 deletions(-)
 
-Hans
+Index: linux-pm/drivers/platform/x86/thinkpad_acpi.c
+===================================================================
+--- linux-pm.orig/drivers/platform/x86/thinkpad_acpi.c
++++ linux-pm/drivers/platform/x86/thinkpad_acpi.c
+@@ -6841,6 +6841,31 @@ static const struct backlight_ops ibm_ba
+ 
+ /* --------------------------------------------------------------------- */
+ 
++static int __init tpacpi_evaluate_bcl(struct acpi_device *adev, void *not_used)
++{
++	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
++	union acpi_object *obj;
++	acpi_status status;
++	int rc;
++
++	status = acpi_evaluate_object(adev->handle, "_BCL", NULL, &buffer);
++	if (ACPI_FAILURE(status))
++		return 0;
++
++	obj = buffer.pointer;
++	if (!obj || obj->type != ACPI_TYPE_PACKAGE) {
++		acpi_handle_info(adev->handle,
++				 "Unknown _BCL data, please report this to %s\n",
++				 TPACPI_MAIL);
++		rc = 0;
++	} else {
++		rc = obj->package.count;
++	}
++	kfree(obj);
++
++	return rc;
++}
++
+ /*
+  * Call _BCL method of video device.  On some ThinkPads this will
+  * switch the firmware to the ACPI brightness control mode.
+@@ -6848,37 +6873,13 @@ static const struct backlight_ops ibm_ba
+ 
+ static int __init tpacpi_query_bcl_levels(acpi_handle handle)
+ {
+-	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+-	union acpi_object *obj;
+-	struct acpi_device *device, *child;
+-	int rc;
++	struct acpi_device *device;
+ 
+ 	device = acpi_fetch_acpi_dev(handle);
+ 	if (!device)
+ 		return 0;
+ 
+-	rc = 0;
+-	list_for_each_entry(child, &device->children, node) {
+-		acpi_status status = acpi_evaluate_object(child->handle, "_BCL",
+-							  NULL, &buffer);
+-		if (ACPI_FAILURE(status)) {
+-			buffer.length = ACPI_ALLOCATE_BUFFER;
+-			continue;
+-		}
+-
+-		obj = (union acpi_object *)buffer.pointer;
+-		if (!obj || (obj->type != ACPI_TYPE_PACKAGE)) {
+-			pr_err("Unknown _BCL data, please report this to %s\n",
+-				TPACPI_MAIL);
+-			rc = 0;
+-		} else {
+-			rc = obj->package.count;
+-		}
+-		break;
+-	}
+-
+-	kfree(buffer.pointer);
+-	return rc;
++	return acpi_dev_for_each_child(device, tpacpi_evaluate_bcl, NULL);
+ }
+ 
+ 
 
 
-
-
-> Maximilian Luz (12):
->   platform/surface: aggregator: Allow is_ssam_device() to be used when
->     CONFIG_SURFACE_AGGREGATOR_BUS is disabled
->   platform/surface: aggregator: Allow devices to be marked as
->     hot-removed
->   platform/surface: aggregator: Allow notifiers to avoid communication
->     on unregistering
->   platform/surface: aggregator_registry: Use client device wrappers for
->     notifier registration
->   power/supply: surface_charger: Use client device wrappers for notifier
->     registration
->   power/supply: surface_battery: Use client device wrappers for notifier
->     registration
->   HID: surface-hid: Add support for hot-removal
->   platform/surface: aggregator: Add comment for KIP subsystem category
->   platform/surface: aggregator_registry: Generify subsystem hub
->     functionality
->   platform/surface: aggregator_registry: Change device ID for base hub
->   platform/surface: aggregator_registry: Add KIP device hub
->   platform/surface: aggregator_registry: Add support for keyboard cover
->     on Surface Pro 8
-> 
->  .../driver-api/surface_aggregator/client.rst  |   6 +-
->  drivers/hid/surface-hid/surface_hid_core.c    |  38 +-
->  .../platform/surface/aggregator/controller.c  |  53 ++-
->  .../surface/surface_aggregator_registry.c     | 403 +++++++++++++-----
->  drivers/power/supply/surface_battery.c        |   4 +-
->  drivers/power/supply/surface_charger.c        |   4 +-
->  include/linux/surface_aggregator/controller.h |  24 +-
->  include/linux/surface_aggregator/device.h     | 125 +++++-
->  include/linux/surface_aggregator/serial_hub.h |   2 +-
->  9 files changed, 513 insertions(+), 146 deletions(-)
-> 
 
