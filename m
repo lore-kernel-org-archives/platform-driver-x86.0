@@ -2,98 +2,196 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF89C43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 15:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD30C43334
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 18:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237305AbiFMPoE (ORCPT
+        id S245615AbiFMSk7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Jun 2022 11:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58446 "EHLO
+        Mon, 13 Jun 2022 14:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235155AbiFMPnG (ORCPT
+        with ESMTP id S1344045AbiFMSkc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Jun 2022 11:43:06 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFB91140863
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 06:17:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 729E1B80FB5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 13:17:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 23D61C3411C
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 13:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655126259;
-        bh=NCsW1q+poUfcfUEsIAw7IKa0Js0mUpf3NPv8BWqitvs=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=OCVGj6gd35zAHy0g5NJ486IS4BPDQwr9R66jVFTTpdpq0TbajktNrQiKPBC4a409F
-         9OLppmTRBAYLJ7/MF6Xr72tdqs2+9FXga4WKsJCAyyp2nG2mfBwlpZiMdvlWuhVT8E
-         vwjm4tIQ+NvS2TsDhaBBzDOM40/bB/wJVmOKtDu/+eiwdmC2JMtIY7mA2oAQbIyqOK
-         iEA6RUUzGWfCrxBr7uG1Nn0XZAaorquWlhSsN8BuexvX3Z1Hgl7NDWptq6CGhOZCVD
-         uWip/sKHYsN3J9bT/8TiXPG13JhSxtfbKGcNnIz6WN9MvH3TLEe9Gskm5oXKJkx8v7
-         Ii6CV8+KVUhfQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id EDFB7C05FD5; Mon, 13 Jun 2022 13:17:38 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
-Date:   Mon, 13 Jun 2022 13:17:38 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-214899-215701-DMsqWkU1GN@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
-References: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 13 Jun 2022 14:40:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4718362BEC
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 08:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1655134052;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=349ItO45Tva+Eg6mNSQZ8gAgx0dNkmVf6n7IrTnPg/k=;
+        b=DKD2aMRYWxq/AN3Jrp9y8znBjc4DORo9JLcRxmPegXEzXJlPUgxB5hgNbe43SAZ39/UMl2
+        bEwLOk1n7fO1k8aK2STvniE0HcHBDQaPx35XiPJgU3jK9U4s9xfOCyVex/hvlu+3/N8Nez
+        fGa1RzrvJSBcVE6fHxifBtoVb0q2jTE=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-479-owhcd1VKP9iJxuwn9bA6IA-1; Mon, 13 Jun 2022 11:27:31 -0400
+X-MC-Unique: owhcd1VKP9iJxuwn9bA6IA-1
+Received: by mail-ed1-f72.google.com with SMTP id g3-20020a056402320300b0042dc956d80eso4161381eda.14
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 08:27:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=349ItO45Tva+Eg6mNSQZ8gAgx0dNkmVf6n7IrTnPg/k=;
+        b=CO95WexNYr7h9pm9zJoujKbvRRPYqYaYQgeKWHJrqQT6FobYTbdsGG4Q270desn07G
+         PRQ1iiJ1iiaNSoLA4bZLuAsGdOPzjOx+qkcJDY6QDtBPBTpvH8o/jHT+Y5xiEJD+lq6x
+         tNFoZ4Qj6L1yonfwf6nGW1ba6gnz+pGbG4+pv3aaLQN7TnxY2vcDyvqkmN9upx6K48HW
+         QSTXgnfFNTF//ejKgWtW0vqT3sB7PQGJDoxYsd0Ab2q7w0/5/GwQNjYmFcSZxqiOStrv
+         /rIH+QO+rszpBBQ81i8F1gRBErVutVF+rzEszQP0nMwJBkk2b1AtFoC7uQf/z04dykqE
+         QXWQ==
+X-Gm-Message-State: AOAM532XFMf3PYpU8nKpU9+z/prSg+i1k3dVHXuOqNPSzsvNxBx6wJVy
+        L6neXBnpYqYo6mNbGLocHV7J1WrLeHHGsaWeGh/aKVtFSMHFQBSo5iGut6upc/HsaX9fr57/EXu
+        WY7c4FdXBt0HlJu2DFLJWVNFqZC8Aq2u8Bg==
+X-Received: by 2002:a17:906:2c4d:b0:70f:ede5:d456 with SMTP id f13-20020a1709062c4d00b0070fede5d456mr373617ejh.366.1655134049913;
+        Mon, 13 Jun 2022 08:27:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJybsNmkzlGzyyL4shgHdKlEEvyjK/FcnSjJ/CLCJb6gofvFDki+1kMsAbYEIwlvSuuJGGJGfA==
+X-Received: by 2002:a17:906:2c4d:b0:70f:ede5:d456 with SMTP id f13-20020a1709062c4d00b0070fede5d456mr373604ejh.366.1655134049710;
+        Mon, 13 Jun 2022 08:27:29 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id h20-20020a056402281400b0042dd05edeedsm5226591ede.17.2022.06.13.08.27.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jun 2022 08:27:29 -0700 (PDT)
+Message-ID: <23f92ec3-a739-6ee7-10f9-f66b17ae6088@redhat.com>
+Date:   Mon, 13 Jun 2022 17:27:28 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v2 00/12] platform/surface: aggregator: Add support for
+ client hot-removal
+Content-Language: en-US
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20220527023447.2460025-1-luzmaximilian@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220527023447.2460025-1-luzmaximilian@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
+Hi,
 
---- Comment #33 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-Created attachment 301163
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D301163&action=3Dedit
-ACPICA: eval \_SB.PC00._INI and \_SB.PCI0._INI before running  _REG methods
+On 5/27/22 04:34, Maximilian Luz wrote:
+> Summary:
+> 
+>   Add support for the HID type cover input devices on the Pro 8 and all
+>   requirements for that.
+> 
+> 
+> Blurb from v1:
+> 
+>   This series adds support for the type cover of the Surface Pro 8. On
+>   the Pro 8, the type cover is (unlike on previous generations) handled
+>   via the Surface System Aggregator Module (SSAM). As the type cover is
+>   detachable, care needs to be taken and the respective SSAM (HID)
+>   client devices need to be properly removed when detached and
+>   re-initialized when attached.
+>   
+>   Therefore, this series does three things:
+>   
+>    1. Improve hot-removal support for SSAM client devices. When
+>       hot-removing clients, subsequent communication may time out.
+>   
+>       In the worst case, this can lead to problems when devices are
+>       detached and re-attached quickly, before we can remove their
+>       respective kernel representations. This can then lead to devices
+>       being in an uninitialized state, preventing, for example, touchpad
+>       gestures from working properly as the required HID feature report
+>       has not been sent.
+>   
+>       Therefore, handle hot-removal of devices more gracefully by
+>       avoiding communication once it has been detected and ensure that
+>       devices are actually removed.
+>    
+>    2. Generify SSAM subsystem hubs and add a KIP hub. On the Surface Pro
+>       8, the KIP subsystem (only that abbreviation is known) is
+>       responsible for managing type-cover devices. This hub acts as the
+>       controller for device removal similar to the BAS (detachable base)
+>       subsystem hub on the Surface Book 3 (therefore we can share most
+>       of the code between them).
+>   
+>    3. Add the (HID) type-cover clients of the Surface Pro 8 to the
+>       aggregator registry.
+> 
+> 
+> Changes in v2:
+> 
+>  - Introduce "platform/surface: aggregator: Allow is_ssam_device() to be
+>    used when CONFIG_SURFACE_AGGREGATOR_BUS is disabled" to fix an
+>    undefined reference  build issue when CONFIG_SURFACE_AGGREGATOR_BUS
+>    is disabled.
+> 
+>  - Make SSAM hub device UIDs consistent.
+>     - Introduce "platform/surface: aggregator_registry: Change device ID
+>       for base hub" to make association between hub and subsystem target
+>       category more obvious.
+>     - Change hub device ID for KIP subsystem hub to be consistent with
+>       the id of the already existing BAS hub.
 
-As promised here is a kernel patch which will hopefully fix this, please gi=
-ve
-this a try.
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-If this works, please let me know if it is ok to add the following to the
-commit msg:
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-Reported-and-tested-by: Johannes Pen=C3=9Fel <johannes.xxxxxxx@domain.tld>
+Jiri, Benjamin, note I've also taken the one small(ish) HID patch
+which is a part of this series, despite it lacking an Ack from
+either of you. I hope this is ok, if not let me know.
 
-But then when your real email address. Note this will expose your email add=
-ress
-to the entire world (where as here in bugzilla it is only visible to users =
-with
-a bugzilla account).
+Regards,
 
-Alternatively I can also give you credit using just your name:
+Hans
 
-Reported-and-tested-by: Johannes Pen=C3=9Fel
 
---=20
-You may reply to this email to add a comment.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+
+> Maximilian Luz (12):
+>   platform/surface: aggregator: Allow is_ssam_device() to be used when
+>     CONFIG_SURFACE_AGGREGATOR_BUS is disabled
+>   platform/surface: aggregator: Allow devices to be marked as
+>     hot-removed
+>   platform/surface: aggregator: Allow notifiers to avoid communication
+>     on unregistering
+>   platform/surface: aggregator_registry: Use client device wrappers for
+>     notifier registration
+>   power/supply: surface_charger: Use client device wrappers for notifier
+>     registration
+>   power/supply: surface_battery: Use client device wrappers for notifier
+>     registration
+>   HID: surface-hid: Add support for hot-removal
+>   platform/surface: aggregator: Add comment for KIP subsystem category
+>   platform/surface: aggregator_registry: Generify subsystem hub
+>     functionality
+>   platform/surface: aggregator_registry: Change device ID for base hub
+>   platform/surface: aggregator_registry: Add KIP device hub
+>   platform/surface: aggregator_registry: Add support for keyboard cover
+>     on Surface Pro 8
+> 
+>  .../driver-api/surface_aggregator/client.rst  |   6 +-
+>  drivers/hid/surface-hid/surface_hid_core.c    |  38 +-
+>  .../platform/surface/aggregator/controller.c  |  53 ++-
+>  .../surface/surface_aggregator_registry.c     | 403 +++++++++++++-----
+>  drivers/power/supply/surface_battery.c        |   4 +-
+>  drivers/power/supply/surface_charger.c        |   4 +-
+>  include/linux/surface_aggregator/controller.h |  24 +-
+>  include/linux/surface_aggregator/device.h     | 125 +++++-
+>  include/linux/surface_aggregator/serial_hub.h |   2 +-
+>  9 files changed, 513 insertions(+), 146 deletions(-)
+> 
+
