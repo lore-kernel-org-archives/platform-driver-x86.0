@@ -2,106 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F80C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 09:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D5DC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 09:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234182AbiFMJTB (ORCPT
+        id S240157AbiFMJlq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Jun 2022 05:19:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59554 "EHLO
+        Mon, 13 Jun 2022 05:41:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234262AbiFMJS4 (ORCPT
+        with ESMTP id S240106AbiFMJlp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Jun 2022 05:18:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D11140FF
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 02:18:55 -0700 (PDT)
+        Mon, 13 Jun 2022 05:41:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65842183BD;
+        Mon, 13 Jun 2022 02:41:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D77F861336
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 09:18:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3DD01C34114
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 09:18:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 48A7161389;
+        Mon, 13 Jun 2022 09:41:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8C43C3411E;
+        Mon, 13 Jun 2022 09:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655111934;
-        bh=z1bhuOFoieXZ3tyYUyxaVRhf1Asp0bFvKq7hc6Yu5nA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=J3LwnTTTd+htQAGcCewDpNZSkDlasLXS+dookKnOJmhOdA/+rGIylezB59Blb5ozn
-         lF4h7Um8Nxl3fgHdliFnIxo1eZdICNIH3aR2FRgwGsvZvdEPBOZhsa+xti9QRVyFZo
-         YI7MVqqo2Uw9RtBR/wc30vo+Hq6b7P1UJQP9zg8txDfa+bQ4Rgaj42Wp3UMJD+RHgl
-         8qEcfHB0o9TaIch/hTcHVakStTWs7adfqVQA2vsEokXzKbGCC5fSklvqF619EHwj7P
-         I0/TikJ6mwYbeRbxmX625ThHbFbGklTnAMQjK7V8dvQPW5P87DWYy2ebZFTsZ7MRRy
-         PEewbRTluCc0w==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 04956C05FD2; Mon, 13 Jun 2022 09:18:53 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
-Date:   Mon, 13 Jun 2022 09:18:53 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: johannes.penssel@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-214899-215701-HCDc9k6OWP@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
-References: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        s=k20201202; t=1655113301;
+        bh=3puFac3kf4giRZYoO/LUKKimJuAXXCEnp+VaAFnVp0o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EI79bY9mlA9e+vYEx3uUUMNO6sq8+/PDdG2zOjbwdzhpBT5leidQSOyGozcRT3Ghb
+         o5ssxRmDK/wronkeLdXsP/EtgKSNYhpVUDSKuo+aULIi8qsZpvwOQvf4MJXUvkqCRP
+         2KwNLhRCBMaFJW2XwbGPwj7v0j7/aRmSzBjskTIl1fT+5riJV9/6hkIB2hDoidLE8h
+         3tYi0lftDAzhGMOosxrgU8tJZer3KygMzLqjr8gJ5irMmV4lVlj9kDhRX2evUc0fXk
+         LbGk1oFBMga+929A47QJVIYO6FMcnq0H8XwAGKBcYv4mpD8mSp69g9yTmqlumu7DG2
+         oy3cQxwTwh6fw==
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-fe4ac3b87fso7720993fac.3;
+        Mon, 13 Jun 2022 02:41:41 -0700 (PDT)
+X-Gm-Message-State: AOAM530KsL050976LyuIWh1WxMoZYMWd1Fom5jJ2A6Dy4pcYmR8kNMtu
+        jphEtEYwwU9YfuHkBUPGuprUOxL6InAAxddRZX8=
+X-Google-Smtp-Source: ABdhPJzJUE5eQIFQw1wDEuVAU3BsFccZwzLeam8ZSG5GUbrm7+bJ19w2hvDgq/MdVlhPhpH4bgTqWjWDxk7foXjlYlM=
+X-Received: by 2002:a05:6871:5c8:b0:f3:3c1c:126f with SMTP id
+ v8-20020a05687105c800b000f33c1c126fmr7222252oan.126.1655113289866; Mon, 13
+ Jun 2022 02:41:29 -0700 (PDT)
 MIME-Version: 1.0
+References: <20220613082147.183145-1-mawupeng1@huawei.com> <20220613082147.183145-3-mawupeng1@huawei.com>
+In-Reply-To: <20220613082147.183145-3-mawupeng1@huawei.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 13 Jun 2022 11:41:17 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEWRXKZdLz3C2MofKXgx6yadSOQru979brm3r_sgBdMgw@mail.gmail.com>
+Message-ID: <CAMj1kXEWRXKZdLz3C2MofKXgx6yadSOQru979brm3r_sgBdMgw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/6] arm64/mirror: arm64 enabling - find mirrored
+ memory ranges
+To:     Wupeng Ma <mawupeng1@huawei.com>
+Cc:     corbet@lwn.net, will@kernel.org, catalin.marinas@arm.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        dvhart@infradead.org, andy@infradead.org, rppt@kernel.org,
+        akpm@linux-foundation.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, paulmck@kernel.org,
+        keescook@chromium.org, songmuchun@bytedance.com,
+        rdunlap@infradead.org, damien.lemoal@opensource.wdc.com,
+        swboyd@chromium.org, wei.liu@kernel.org, robin.murphy@arm.com,
+        david@redhat.com, anshuman.khandual@arm.com,
+        thunder.leizhen@huawei.com, wangkefeng.wang@huawei.com,
+        gpiccoli@igalia.com, chenhuacai@kernel.org, geert@linux-m68k.org,
+        vijayb@linux.microsoft.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
+On Mon, 13 Jun 2022 at 10:00, Wupeng Ma <mawupeng1@huawei.com> wrote:
+>
+> From: Ma Wupeng <mawupeng1@huawei.com>
+>
+> Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
+> introduced mirrored memory support for x86 and this could be used on arm64.
+>
+> Since we only support this feature on arm64, efi_find_mirror() won't be placed
+> into efi_init(), which is used by riscv/arm/arm64, it is added in setup_arch()
+> to scan the memory map and mark mirrored memory in memblock.
+>
+> Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
+> Reviewed-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 2 +-
+>  arch/arm64/kernel/setup.c                       | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 8090130b544b..e3537646b6f7 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2301,7 +2301,7 @@
+>
+>         keepinitrd      [HW,ARM]
+>
+> -       kernelcore=     [KNL,X86,IA-64,PPC]
+> +       kernelcore=     [KNL,X86,IA-64,PPC,ARM64]
+>                         Format: nn[KMGTPE] | nn% | "mirror"
+>                         This parameter specifies the amount of memory usable by
+>                         the kernel for non-movable allocations.  The requested
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index cf3a759f10d4..6e9acd7ecf0f 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -328,6 +328,7 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+>
+>         xen_early_init();
+>         efi_init();
+> +       efi_find_mirror();
+>
+>         if (!efi_enabled(EFI_BOOT) && ((u64)_text % MIN_KIMG_ALIGN) != 0)
+>              pr_warn(FW_BUG "Kernel image misaligned at boot, please fix your bootloader!");
 
---- Comment #31 from Johannes Pen=C3=9Fel (johannes.penssel@gmail.com) ---
-Thank you for your help!
+As suggested by Kefeng Wang, I think this call needs to be moved into
+efi_init() [the generic version]
 
-The kernel ships with a tool to read / write to the EC. It is built by runn=
-ing
-"make ec" inside tools/power/acpi and relies on the module ec_sys (enabled =
-by
-CONFIG_ACPI_EC_DEBUGFS). To enable EC write support, this module must be lo=
-aded
-with the parameter "write_support=3D1". Writing to a register works by runn=
-ing
-"./ec -w [offset] -v [value]".
-
-Replacing all the OSYS if-conditionals inside _REG with just "Local0 =3D 0x=
-06"
-indeed fixes the issue. Looks like _REG somehow does not receive a correct
-value for OSYS. I've tried changing _SB.PC00._INI so it unconditionally sets
-OSYS to 0x07DF, but this does not fix _REG. When executed in step-by-step m=
-ode
-with the kernel AML debugger, _SB.PC00._INI seems to function correctly by
-default anyway.
-
-Here comes the interesting part: When running _REG (with arguments 0x03 and
-0x01) inside the kernel AML debugger with unmodified ACPI tables, the method
-executes correctly and the keys start working.
-
-My understanding of ACPI is limited, but my guess would be that for some
-reason, \_SB.PC00.LPCB.EC0._REG gets evaluated before _SB.PC00._INI, thus
-leaving the former with an incorrect value for OSYS. AFAICT, this does not =
-look
-too dissimilar from the issue in the bugzilla thread you linked.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Please drop this hunk, and add this call to efi_init() in patch #1.
