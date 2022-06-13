@@ -2,101 +2,98 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C13C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 14:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF89C43334
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 15:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1386136AbiFMOvQ (ORCPT
+        id S237305AbiFMPoE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Jun 2022 10:51:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45508 "EHLO
+        Mon, 13 Jun 2022 11:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1385964AbiFMOuX (ORCPT
+        with ESMTP id S235155AbiFMPnG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Jun 2022 10:50:23 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A8F124979;
-        Mon, 13 Jun 2022 04:54:58 -0700 (PDT)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LM91S5pwBz1K9RY;
-        Mon, 13 Jun 2022 19:53:00 +0800 (CST)
-Received: from dggpemm500001.china.huawei.com (7.185.36.107) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 13 Jun 2022 19:54:56 +0800
-Received: from [10.174.177.243] (10.174.177.243) by
- dggpemm500001.china.huawei.com (7.185.36.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 13 Jun 2022 19:54:54 +0800
-Message-ID: <fa1416be-f940-4c28-5c67-911e61ac024f@huawei.com>
-Date:   Mon, 13 Jun 2022 19:54:53 +0800
+        Mon, 13 Jun 2022 11:43:06 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFB91140863
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 06:17:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 729E1B80FB5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 13:17:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 23D61C3411C
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 13:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655126259;
+        bh=NCsW1q+poUfcfUEsIAw7IKa0Js0mUpf3NPv8BWqitvs=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=OCVGj6gd35zAHy0g5NJ486IS4BPDQwr9R66jVFTTpdpq0TbajktNrQiKPBC4a409F
+         9OLppmTRBAYLJ7/MF6Xr72tdqs2+9FXga4WKsJCAyyp2nG2mfBwlpZiMdvlWuhVT8E
+         vwjm4tIQ+NvS2TsDhaBBzDOM40/bB/wJVmOKtDu/+eiwdmC2JMtIY7mA2oAQbIyqOK
+         iEA6RUUzGWfCrxBr7uG1Nn0XZAaorquWlhSsN8BuexvX3Z1Hgl7NDWptq6CGhOZCVD
+         uWip/sKHYsN3J9bT/8TiXPG13JhSxtfbKGcNnIz6WN9MvH3TLEe9Gskm5oXKJkx8v7
+         Ii6CV8+KVUhfQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id EDFB7C05FD5; Mon, 13 Jun 2022 13:17:38 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
+Date:   Mon, 13 Jun 2022 13:17:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-214899-215701-DMsqWkU1GN@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
+References: <bug-214899-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v4 6/6] memblock: Disable mirror feature if kernelcore is
- not specified
-Content-Language: en-US
-To:     Ard Biesheuvel <ardb@kernel.org>, Mike Rapoport <rppt@kernel.org>
-CC:     Wupeng Ma <mawupeng1@huawei.com>, <corbet@lwn.net>,
-        <will@kernel.org>, <catalin.marinas@arm.com>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-        <x86@kernel.org>, <hpa@zytor.com>, <dvhart@infradead.org>,
-        <andy@infradead.org>, <akpm@linux-foundation.org>,
-        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <paulmck@kernel.org>,
-        <keescook@chromium.org>, <songmuchun@bytedance.com>,
-        <rdunlap@infradead.org>, <damien.lemoal@opensource.wdc.com>,
-        <swboyd@chromium.org>, <wei.liu@kernel.org>,
-        <robin.murphy@arm.com>, <david@redhat.com>,
-        <anshuman.khandual@arm.com>, <thunder.leizhen@huawei.com>,
-        <gpiccoli@igalia.com>, <chenhuacai@kernel.org>,
-        <geert@linux-m68k.org>, <vijayb@linux.microsoft.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>
-References: <20220613082147.183145-1-mawupeng1@huawei.com>
- <20220613082147.183145-7-mawupeng1@huawei.com> <YqcZ4O3pwceVtKYm@kernel.org>
- <CAMj1kXGwOczo1bgftMX9xTf8fRkrVYq8BjXJ6=XPj_yarbDYrA@mail.gmail.com>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-In-Reply-To: <CAMj1kXGwOczo1bgftMX9xTf8fRkrVYq8BjXJ6=XPj_yarbDYrA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.243]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500001.china.huawei.com (7.185.36.107)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
 
-On 2022/6/13 19:25, Ard Biesheuvel wrote:
-> On Mon, 13 Jun 2022 at 13:05, Mike Rapoport <rppt@kernel.org> wrote:
->> On Mon, Jun 13, 2022 at 04:21:47PM +0800, Wupeng Ma wrote:
->>> From: Ma Wupeng <mawupeng1@huawei.com>
->>>
->>> If system have some mirrored memory and mirrored feature is not specified
->>> in boot parameter, the basic mirrored feature will be enabled and this will
->>> lead to the following situations:
->>>
->>> - memblock memory allocation prefers mirrored region. This may have some
->>>    unexpected influence on numa affinity.
->>>
->>> - contiguous memory will be split into several parts if parts of them
->>>    is mirrored memory via memblock_mark_mirror().
-...
-> Also, on second thought, I don't think marking as mirror is what
-> should be affected by the policy. Instead, choose_memblock_flags()
-> should take this into account, in a way that we could refine later if
-> needed.
-> .
+--- Comment #33 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+Created attachment 301163
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D301163&action=3Dedit
+ACPICA: eval \_SB.PC00._INI and \_SB.PCI0._INI before running  _REG methods
 
-The choose_memblock_flags() only solve the issue of memblock allocation, but
+As promised here is a kernel patch which will hopefully fix this, please gi=
+ve
+this a try.
 
-the memblock could be splitted and fragmentized, the kernel won't treat the
+If this works, please let me know if it is ok to add the following to the
+commit msg:
 
-mirror memory as special if no mirrored_kernelcore for now, so I think 
-we'd better
+Reported-and-tested-by: Johannes Pen=C3=9Fel <johannes.xxxxxxx@domain.tld>
 
-to add the check into memblock_mark_mirror().
+But then when your real email address. Note this will expose your email add=
+ress
+to the entire world (where as here in bugzilla it is only visible to users =
+with
+a bugzilla account).
 
+Alternatively I can also give you credit using just your name:
+
+Reported-and-tested-by: Johannes Pen=C3=9Fel
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
