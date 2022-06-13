@@ -2,31 +2,31 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB45DCCA485
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 08:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C66CDCCA47F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 08:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237976AbiFMIAl (ORCPT
+        id S229533AbiFMIBD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Jun 2022 04:00:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46038 "EHLO
+        Mon, 13 Jun 2022 04:01:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231781AbiFMIAg (ORCPT
+        with ESMTP id S239490AbiFMIA7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Jun 2022 04:00:36 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8CF1141;
-        Mon, 13 Jun 2022 01:00:35 -0700 (PDT)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LM3qY4rMyzjXbr;
-        Mon, 13 Jun 2022 15:59:05 +0800 (CST)
+        Mon, 13 Jun 2022 04:00:59 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F165355B2;
+        Mon, 13 Jun 2022 01:00:58 -0700 (PDT)
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4LM3sF3Gy1zDqtf;
+        Mon, 13 Jun 2022 16:00:33 +0800 (CST)
 Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 13 Jun 2022 16:00:33 +0800
+ 15.1.2375.24; Mon, 13 Jun 2022 16:00:30 +0800
 Received: from localhost.localdomain (10.175.112.125) by
  dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 13 Jun 2022 16:00:31 +0800
+ 15.1.2375.24; Mon, 13 Jun 2022 16:00:28 +0800
 From:   Wupeng Ma <mawupeng1@huawei.com>
 To:     <corbet@lwn.net>, <will@kernel.org>, <ardb@kernel.org>,
         <catalin.marinas@arm.com>
@@ -46,10 +46,11 @@ CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>
-Subject: [PATCH v4 5/6] mm: Only remove nomap flag for initrd
-Date:   Mon, 13 Jun 2022 16:21:46 +0800
-Message-ID: <20220613082147.183145-6-mawupeng1@huawei.com>
+        <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v4 3/6] mm: Ratelimited mirrored memory related warning messages
+Date:   Mon, 13 Jun 2022 16:21:44 +0800
+Message-ID: <20220613082147.183145-4-mawupeng1@huawei.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220613082147.183145-1-mawupeng1@huawei.com>
 References: <20220613082147.183145-1-mawupeng1@huawei.com>
@@ -66,36 +67,44 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Ma Wupeng <mawupeng1@huawei.com>
 
-Commit 177e15f0c144 ("arm64: add the initrd region to the linear mapping explicitly")
-remove all the flags of the memory used by initrd. This is fine since
-MEMBLOCK_MIRROR is not used in arm64.
+If system has mirrored memory, memblock will try to allocate mirrored
+memory firstly and fallback to non-mirrored memory when fails, but if with
+limited mirrored memory or some numa node without mirrored memory, lots of
+warning message about memblock allocation will occur.
 
-However with mirrored feature introduced to arm64, this will clear the mirrored
-flag used by initrd, which will lead to error log printed by
-find_zone_movable_pfns_for_nodes() if the lower 4G range has some non-mirrored
-memory.
-
-To solve this problem, only MEMBLOCK_NOMAP flag will be removed via
-memblock_clear_nomap().
+This patch ratelimit the warning message to avoid a very long print during
+bootup.
 
 Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Reviewed-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- arch/arm64/mm/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memblock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 339ee84e5a61..8456dbae9441 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -350,8 +350,8 @@ void __init arm64_memblock_init(void)
- 			"initrd not fully accessible via the linear mapping -- please check your bootloader ...\n")) {
- 			phys_initrd_size = 0;
- 		} else {
--			memblock_remove(base, size); /* clear MEMBLOCK_ flags */
- 			memblock_add(base, size);
-+			memblock_clear_nomap(base, size);
- 			memblock_reserve(base, size);
- 		}
+diff --git a/mm/memblock.c b/mm/memblock.c
+index e4f03a6e8e56..b1d2a0009733 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -327,7 +327,7 @@ static phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
+ 					    NUMA_NO_NODE, flags);
+ 
+ 	if (!ret && (flags & MEMBLOCK_MIRROR)) {
+-		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
++		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
+ 			&size);
+ 		flags &= ~MEMBLOCK_MIRROR;
+ 		goto again;
+@@ -1384,7 +1384,7 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ 
+ 	if (flags & MEMBLOCK_MIRROR) {
+ 		flags &= ~MEMBLOCK_MIRROR;
+-		pr_warn("Could not allocate %pap bytes of mirrored memory\n",
++		pr_warn_ratelimited("Could not allocate %pap bytes of mirrored memory\n",
+ 			&size);
+ 		goto again;
  	}
 -- 
 2.25.1
