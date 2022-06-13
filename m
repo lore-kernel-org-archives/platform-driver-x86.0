@@ -2,75 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E80EC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 20:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C44B9C43334
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Jun 2022 21:12:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350928AbiFMURN (ORCPT
+        id S1351783AbiFMVMp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Jun 2022 16:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53818 "EHLO
+        Mon, 13 Jun 2022 17:12:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350960AbiFMUQy (ORCPT
+        with ESMTP id S1351741AbiFMVMS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Jun 2022 16:16:54 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A501737AA;
-        Mon, 13 Jun 2022 11:54:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655146485; x=1686682485;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rrteT8J06qadrldMcQRzRLZphFKmersKJgLFFUeBMAw=;
-  b=acZCmGCyIAErSAEvtzRqpmxCogNIu7Kx1odcmKEC80A+F3SCN1890qMk
-   5jhVe6X8vBNAaCEJyXllB2lrzKQtYbBc187mf/UCcfbq/tWT1kTHoJ6Hs
-   YcouSYYeZdDrK2uPj1e0niTPUdLoFi8PsUA/Ofu00hnzilW6n1Ri6YFuS
-   kShvxtnbZzhD0o1Bz3xaE8kjxMD/4Rob6AzYa4xkkRPqhkCqoDnklsJrR
-   U7XCLh6xBhzz5Dl2fQHhk0xIugkyXQaSpSFyPM9f/vOaQPK2HvbUEmMyg
-   1u5QKX607sIHXm3a0CgjyYg+vKL+mH0/rpmxsxTB5VQxjWyN7yk3hQKLP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10377"; a="278412731"
-X-IronPort-AV: E=Sophos;i="5.91,297,1647327600"; 
-   d="scan'208";a="278412731"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2022 11:54:43 -0700
-X-IronPort-AV: E=Sophos;i="5.91,297,1647327600"; 
-   d="scan'208";a="686212131"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2022 11:54:39 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1o0pCu-000bIa-OV;
-        Mon, 13 Jun 2022 21:54:36 +0300
-Date:   Mon, 13 Jun 2022 21:54:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Mon, 13 Jun 2022 17:12:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 88E803E5DB
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 13:50:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1655153449;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uHh1Mc7ZpYll3jkRg/4I2vZLEod4WMai9S1oJy78FZg=;
+        b=HaFtrNhqDdyXicP9yPhPOcblhPU24z6gvNzZX+e2ITvmr6JvvVlJWGx1EXngtCyzMzcQRy
+        EfSGqOa9sJcm2aCmFOJ8mXRrW75jAHsV7wornbSadQEGQksLodg+6vstswjSaSHi8cYu2f
+        aoeq0ymFDJ9SYhXd071uhpEEBr/dF4U=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-588-OlCbS8hlNL2tEXJQa4qa8A-1; Mon, 13 Jun 2022 16:50:48 -0400
+X-MC-Unique: OlCbS8hlNL2tEXJQa4qa8A-1
+Received: by mail-ej1-f70.google.com with SMTP id hg21-20020a1709072cd500b00718cd4dcf6eso1001257ejc.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2022 13:50:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=uHh1Mc7ZpYll3jkRg/4I2vZLEod4WMai9S1oJy78FZg=;
+        b=IALhXJEHbN1xG7q+iL9ZJ8MBZPV4gzhgY//xzsuBZYEE3j5ROVafsPTyKf1n3Fdn/8
+         NWQarBB0ZHlpuaYTqG6aLCRwKwv93ugTn/IwEhjrmilFU2gckDGZmz6EkSw9jmDFq4w/
+         E8UiIxO75b8WLYVihp5SWiF1hZlqPZBsEGZvLmO+PDJdbzHWYNrTDX68o5b+xSVla2Fj
+         SChPeMoSFnMyiYIwx8TGzkottcPbJvdV4q1ILDSLq7wDovjJZzVBLNJGllU3Aochg6Ir
+         9rLEenbFx3sRhdW2OIetAy1BrB8WSBE0IDOcp3PQSPK74UYHJOn5ZJSrB4s/P552sXgS
+         z+xA==
+X-Gm-Message-State: AJIora+GKLO08i1YfooeiaH5+w2K5p7Bs3BwVHtJ0s8/SvTBJT/otjA2
+        Ang2lXlvP/OpUYcmLD9SGZW1jcA0FKPJkcNFPhctk7ycgQKbVc/xTnaPotYD4eonQagezH09G2r
+        pkyxxH0pg+7rAXjsq5SS1hTRFbMm8aBjHuQ==
+X-Received: by 2002:a17:907:160c:b0:711:3b56:dc7 with SMTP id hb12-20020a170907160c00b007113b560dc7mr1377170ejc.587.1655153446908;
+        Mon, 13 Jun 2022 13:50:46 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwLiEiFvejpV3bRXy2k4g93sSKykLlmNzgB4sMsx4IWkixW2j3DGJCzho0mbCSzEtPT4MlbBg==
+X-Received: by 2002:a17:907:160c:b0:711:3b56:dc7 with SMTP id hb12-20020a170907160c00b007113b560dc7mr1377157ejc.587.1655153446669;
+        Mon, 13 Jun 2022 13:50:46 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id za14-20020a170906878e00b00706c1327f4bsm4243279ejb.23.2022.06.13.13.50.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jun 2022 13:50:46 -0700 (PDT)
+Message-ID: <81a7cbe7-068a-d9ab-74b1-b6891f5a6f10@redhat.com>
+Date:   Mon, 13 Jun 2022 22:50:45 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v2 12/16] platform/x86/thinkpad_acpi: Use
+ acpi_dev_for_each_child()
+Content-Language: en-US
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Linux PM <linux-pm@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
         Mark Gross <markgross@kernel.org>,
         ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 12/16] platform/x86/thinkpad_acpi: Use
- acpi_dev_for_each_child()
-Message-ID: <YqeH7G8pJMelXYaJ@smile.fi.intel.com>
-References: <1843211.tdWV9SEqCh@kreacher>
- <2653857.mvXUDI8C0e@kreacher>
+References: <1843211.tdWV9SEqCh@kreacher> <2653857.mvXUDI8C0e@kreacher>
  <2091400.OBFZWjSADL@kreacher>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From:   Hans de Goede <hdegoede@redhat.com>
 In-Reply-To: <2091400.OBFZWjSADL@kreacher>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 08:30:19PM +0200, Rafael J. Wysocki wrote:
+Hi,
+
+On 6/13/22 20:30, Rafael J. Wysocki wrote:
 > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
 > Instead of walking the list of children of an ACPI device directly,
@@ -81,10 +99,22 @@ On Mon, Jun 13, 2022 at 08:30:19PM +0200, Rafael J. Wysocki wrote:
 > acpi_device as it is redundant and it is used in questionable ways
 > in some places (in particular, locking is needed for walking the
 > list pointed to it safely, but it is often missing).
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
+> 
 > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Rafael, feel free to take this upstream through the apci tree.
+
+Regards,
+
+Hans
+
+
+
+
 > ---
 > 
 > v1 -> v2:
@@ -173,9 +203,4 @@ Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
 > 
 > 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
 
