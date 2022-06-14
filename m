@@ -2,88 +2,151 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E15BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 13:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2159EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 15:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233465AbiFNNlN (ORCPT
+        id S243154AbiFNPn4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Jun 2022 09:41:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56946 "EHLO
+        Tue, 14 Jun 2022 11:43:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232220AbiFNNlL (ORCPT
+        with ESMTP id S241356AbiFNPnz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Jun 2022 09:41:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B631E3DC
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jun 2022 06:41:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C1B01616CA
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jun 2022 13:41:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 290AAC3411B
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jun 2022 13:41:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655214070;
-        bh=4R7T1jbvnolo5xM5PVyYCKcp2L24rlH+TyAD5HAUHTg=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=bcOV4che2DYPEholeqqY8f/ZsVUqowk8FwDhxXIghVycT0RtWSa90uSiSWyJeQwd4
-         LhIvId/WhDuSAQ0bLtAK8y1pY8vestxghz72fx+pV8avKd3Xq8aocM0e69GrRjRLyb
-         7OL4/NV2fkmh8iEEh0kTJ7v1N14GVnvXZexpF81OFttiIbYrphTTjQdFo322mjXxCS
-         sFE5La9oy3X8Y7/LApjReqWyJkle8oXCPiq5eWuP3GSUBibEltMt1Z05zfQMP3zBJS
-         BzfMvPqJhg5JQKXKu9dCg7l02O1Hblc2tPjaSWseh6IpMSvDFQDbD2SZ9H0J+w4VYn
-         HVrG+YEFfmQag==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 04A65C05FD5; Tue, 14 Jun 2022 13:41:09 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
-Date:   Tue, 14 Jun 2022 13:41:09 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-214899-215701-h8vT0odQb3@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
-References: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 14 Jun 2022 11:43:55 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8597E39813
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jun 2022 08:43:53 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id k12-20020a17090a404c00b001eaabc1fe5dso6280894pjg.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jun 2022 08:43:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=v7R3AU8eay3jFLbgOIExfUOsI5EdQhSbQRsdrHwotJw=;
+        b=ehHmS6K8XnQ2SrjXe0GbtBVb7v2r/7AcW7sIGGWUjjSMTDgZG99AgHzHG+emgMuy78
+         oJg0pzPpvCtiu3YGgen4uTSgcaIQrSr23K6ULxNbRwaPO6Yv/2KLZXVbn7tBDmMEA+JB
+         /OEgfzksSH1MA4vy1vX+tyavgxHUWffoUJgQft6aRg+kifewPpPNV53IAZXgkNQBHTWY
+         Ql4t/SIvDY0bHTODMSic0GJaxZI6gfqzTzQMvW4xvnj/rmFRw+k9nbzv081yS6sEUTLa
+         VSazk4yWTKuGPfHB+dJmXxfbDPgU54AVHMrrKLFMMzFiEc/Rb9mMF6g9UULaB5YLhewT
+         nzjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=v7R3AU8eay3jFLbgOIExfUOsI5EdQhSbQRsdrHwotJw=;
+        b=GyS5kiE+cZWDsteCpuCXBP28HKqXwqWLBX2sqDabYMLE0obQtxXbmtk/FUbE7RcwWr
+         Jwlqt4UaL61Yr5pIM/wXvU3hgixou5y28qzL2oZC4FW8vrTUi2kdksj+fj/T2wdpZlMs
+         LSO59D/edTaCO7mjEBA3UxITMqYzIBnVoh+8wypBJfqM0C6G0E/2FHb/QVr+3DXfIGTe
+         WVa4ztuilO4yUQ7+USJ6t036sc9jR+B2fhsQ+EuNIPNzBb95kCBjLfgKn7EvT+JPaquR
+         2r3qtj8CJp0Jjyn+kV2yUrWub1BIU1mkrkNng0sAn1jiFRk9xivOMsKqZPZlNVdE3Lir
+         AnYQ==
+X-Gm-Message-State: AJIora/l+VAHhUHhvRfWE45o7JrJewztg2Z8IzkpWrZzDhu02Cj+wRXK
+        rjPcwod/KNiZNoN9G/UFnG6uCQ==
+X-Google-Smtp-Source: AGRyM1sSpS8ksQoeFsAiBuqnaVFCfTWw36cqGK81vkz64eI2RfYURAd4rfysk6IagqiDsDg27788vA==
+X-Received: by 2002:a17:90a:fd0d:b0:1ea:b661:4fa1 with SMTP id cv13-20020a17090afd0d00b001eab6614fa1mr5238743pjb.46.1655221432801;
+        Tue, 14 Jun 2022 08:43:52 -0700 (PDT)
+Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
+        by smtp.gmail.com with ESMTPSA id v11-20020a1709028d8b00b00165105518f6sm7390006plo.287.2022.06.14.08.43.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jun 2022 08:43:52 -0700 (PDT)
+Date:   Tue, 14 Jun 2022 15:43:48 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Michael Roth <michael.roth@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v12 19/46] x86/kernel: Make the .bss..decrypted section
+ shared in RMP table
+Message-ID: <YqistMvngNKEJu2o@google.com>
+References: <20220307213356.2797205-1-brijesh.singh@amd.com>
+ <20220307213356.2797205-20-brijesh.singh@amd.com>
+ <YqfabnTRxFSM+LoX@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YqfabnTRxFSM+LoX@google.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
+On Tue, Jun 14, 2022, Sean Christopherson wrote:
+> s/Brijesh/Michael
+> 
+> On Mon, Mar 07, 2022, Brijesh Singh wrote:
+> > The encryption attribute for the .bss..decrypted section is cleared in the
+> > initial page table build. This is because the section contains the data
+> > that need to be shared between the guest and the hypervisor.
+> > 
+> > When SEV-SNP is active, just clearing the encryption attribute in the
+> > page table is not enough. The page state need to be updated in the RMP
+> > table.
+> > 
+> > Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> > ---
+> >  arch/x86/kernel/head64.c | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> > 
+> > diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+> > index 83514b9827e6..656d2f3e2cf0 100644
+> > --- a/arch/x86/kernel/head64.c
+> > +++ b/arch/x86/kernel/head64.c
+> > @@ -143,7 +143,20 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp, pmdv
+> >  	if (sme_get_me_mask()) {
+> >  		vaddr = (unsigned long)__start_bss_decrypted;
+> >  		vaddr_end = (unsigned long)__end_bss_decrypted;
+> > +
+> >  		for (; vaddr < vaddr_end; vaddr += PMD_SIZE) {
+> > +			/*
+> > +			 * On SNP, transition the page to shared in the RMP table so that
+> > +			 * it is consistent with the page table attribute change.
+> > +			 *
+> > +			 * __start_bss_decrypted has a virtual address in the high range
+> > +			 * mapping (kernel .text). PVALIDATE, by way of
+> > +			 * early_snp_set_memory_shared(), requires a valid virtual
+> > +			 * address but the kernel is currently running off of the identity
+> > +			 * mapping so use __pa() to get a *currently* valid virtual address.
+> > +			 */
+> > +			early_snp_set_memory_shared(__pa(vaddr), __pa(vaddr), PTRS_PER_PMD);
+> 
+> This breaks SME on Rome and Milan when compiling with clang-13.  I haven't been
+> able to figure out exactly what goes wrong.  printk isn't functional at this point,
+> and interactive debug during boot on our test systems is beyond me.  I can't even
+> verify that the bug is specific to clang because the draconian build system for our
+> test systems apparently is stuck pointing at gcc-4.9.
+> 
+> I suspect the issue is related to relocation and/or encrypting memory, as skipping
+> the call to early_snp_set_memory_shared() if SNP isn't active masks the issue.
+> I've dug through the assembly and haven't spotted a smoking gun, e.g. no obvious
+> use of absolute addresses.
+> 
+> Forcing a VM through the same path doesn't fail.  I can't test an SEV guest at the
+> moment because INIT_EX is also broken.
 
---- Comment #35 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-I think I know what is going on here:
+The SEV INIT_EX was a PEBKAC issue.  An SEV guest boots just fine with a clang-built
+kernel, so either it's a finnicky relocation issue or something specific to SME.
 
-1. acpi_bus_init() calls acpi_ec_ecdt_probe()
-2. acpi_ec_ecdt_probe() calls acpi_ec_setup()
-3. acpi_ec_setup() calls ec_install_handlers()
-4. ec_install_handlers() calls acpi_install_address_space_handler()
-5. acpi_install_address_space_handler() calls _REG for Device (EC0)
-6. acpi_bus_init() calls acpi_initialize_objects(), but _REG has already run
-
-I've a plan for fixing this. I hope to have a set of patches for you to tes=
-t in
-a couple of hours.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+> The crash incurs a very, very slow reboot, and I was out of cycles to work on this
+> about three hours ago.  If someone on the AMD side can repro, it would be much
+> appreciated.
