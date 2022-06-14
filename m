@@ -2,48 +2,46 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F03C43334
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 02:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91A9CCA47B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 02:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351523AbiFNCH7 (ORCPT
+        id S1351355AbiFNCID (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Jun 2022 22:07:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
+        Mon, 13 Jun 2022 22:08:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351529AbiFNCHC (ORCPT
+        with ESMTP id S1351095AbiFNCHg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Jun 2022 22:07:02 -0400
+        Mon, 13 Jun 2022 22:07:36 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA70834BA5;
-        Mon, 13 Jun 2022 19:05:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48C6F35273;
+        Mon, 13 Jun 2022 19:06:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4E441B816A6;
-        Tue, 14 Jun 2022 02:05:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F218CC385A2;
-        Tue, 14 Jun 2022 02:05:53 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8BE6AB8169A;
+        Tue, 14 Jun 2022 02:06:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FACAC34114;
+        Tue, 14 Jun 2022 02:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655172355;
-        bh=9jDDsgQyQTjlFBuKLov8y6UFAbc1Ox58tCBgC74fWGY=;
+        s=k20201202; t=1655172359;
+        bh=7NUMHzQlN+H4b3c+QV6ZaAVLc79YAd+yAe4WU2xah7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IZ2DTThrEKVugU8QwDUxEUqS89HIRN2ZhYR6d8X/WR1X4o/MW7byM1muiHJsOHcLH
-         5mDhVF4Q+su6zniBYz//nqhFhE/qDdQ6Tq7kLqs9KtyGF9Lap5qCIQ3VWsVXO2K/8l
-         WNSCNakfW48HAe3YIYewFd49onzIgGE2LYM0Rgo53O0MpR7i73Twm9NddJDq1YABYH
-         M1F+JSUYL0YXBhdrksKje7j3mRbyAy19j3XbpBv2HJXatenTTbB3OqLn7x9KcA31ft
-         WXxlcet9v9y028iZFqkWZZLlBN7JraTX+6VXPFIlvQmjF98ye+JP4ikWzYfuPvHXPK
-         9glFRw66eN5oA==
+        b=gw/w4M6cwO806kjba5yjJiufXyN/MVoQv7fJsr6SiJRVJMBqxgUwPpbXU6YJnsCAE
+         SZSG7J2K5BqTnU4UF7TgeknWRHoof9T5kPF1SUw5Sc7+PijCVd4to2H7nbWs93Gvsg
+         dG9Kupmmixe3hY4t/N5F7CkT6tEWgQNPa9A3OG+GwBtylcsj5DYB0qsIsa1fTrUbNK
+         7/40n1XAp4wyEwP0qTi/x/zLoI0PH/hzhntvnGZqCTUaodAk2SrQ3/PGREfRGn7hFy
+         NFkIH02r1GbIGDJOJwWuMxw4izJ7qJ+pKIjzPcQHPttsFeBdbL0Ribqok+iGLEy0Ug
+         Wadn2dXdqMUIg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Arcari <darcari@redhat.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
+Cc:     August Wikerfors <git@augustwikerfors.se>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
         Sasha Levin <sashal@kernel.org>, dvhart@infradead.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.18 43/47] platform/x86/intel: Fix pmt_crashlog array reference
-Date:   Mon, 13 Jun 2022 22:04:36 -0400
-Message-Id: <20220614020441.1098348-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.18 46/47] platform/x86: gigabyte-wmi: Add support for B450M DS3H-CF
+Date:   Mon, 13 Jun 2022 22:04:39 -0400
+Message-Id: <20220614020441.1098348-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220614020441.1098348-1-sashal@kernel.org>
 References: <20220614020441.1098348-1-sashal@kernel.org>
@@ -55,42 +53,32 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: David Arcari <darcari@redhat.com>
+From: August Wikerfors <git@augustwikerfors.se>
 
-[ Upstream commit 66cb3a2d7ad0d0e9af4d3430a4f2a32ffb9ac098 ]
+[ Upstream commit c6bc7e8ee90845556a90faf8b043cbefd77b8903 ]
 
-The probe function pmt_crashlog_probe() may incorrectly reference
-the 'priv->entry array' as it uses 'i' to reference the array instead
-of 'priv->num_entries' as it should.  This is similar to the problem
-that was addressed in pmt_telemetry_probe via commit 2cdfa0c20d58
-("platform/x86/intel: Fix 'rmmod pmt_telemetry' panic").
+Tested and works on my system.
 
-Cc: "David E. Box" <david.e.box@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <markgross@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: David Arcari <darcari@redhat.com>
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
-Link: https://lore.kernel.org/r/20220526203140.339120-1-darcari@redhat.com
+Signed-off-by: August Wikerfors <git@augustwikerfors.se>
+Link: https://lore.kernel.org/r/20220608212028.28307-1-git@augustwikerfors.se
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel/pmt/crashlog.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/gigabyte-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-index 34daf9df168b..ace1239bc0a0 100644
---- a/drivers/platform/x86/intel/pmt/crashlog.c
-+++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -282,7 +282,7 @@ static int pmt_crashlog_probe(struct auxiliary_device *auxdev,
- 	auxiliary_set_drvdata(auxdev, priv);
+diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+index 05588a47ac38..78446b1953f7 100644
+--- a/drivers/platform/x86/gigabyte-wmi.c
++++ b/drivers/platform/x86/gigabyte-wmi.c
+@@ -140,6 +140,7 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
+ 	}}
  
- 	for (i = 0; i < intel_vsec_dev->num_resources; i++) {
--		struct intel_pmt_entry *entry = &priv->entry[i].entry;
-+		struct intel_pmt_entry *entry = &priv->entry[priv->num_entries].entry;
- 
- 		ret = intel_pmt_dev_create(entry, &pmt_crashlog_ns, intel_vsec_dev, i);
- 		if (ret < 0)
+ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
++	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H-CF"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE AX V2"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
 -- 
 2.35.1
 
