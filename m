@@ -2,49 +2,49 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91A9CCA47B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 02:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EAAC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 02:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351355AbiFNCID (ORCPT
+        id S1352982AbiFNCLi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Jun 2022 22:08:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42828 "EHLO
+        Mon, 13 Jun 2022 22:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351095AbiFNCHg (ORCPT
+        with ESMTP id S229633AbiFNCLT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Jun 2022 22:07:36 -0400
+        Mon, 13 Jun 2022 22:11:19 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48C6F35273;
-        Mon, 13 Jun 2022 19:06:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA943466F;
+        Mon, 13 Jun 2022 19:07:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8BE6AB8169A;
-        Tue, 14 Jun 2022 02:06:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FACAC34114;
-        Tue, 14 Jun 2022 02:05:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 83F4AB8169A;
+        Tue, 14 Jun 2022 02:07:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75874C34114;
+        Tue, 14 Jun 2022 02:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655172359;
-        bh=7NUMHzQlN+H4b3c+QV6ZaAVLc79YAd+yAe4WU2xah7I=;
+        s=k20201202; t=1655172423;
+        bh=QDZWRKLomtgTCOUp44KOpz7Tt4UYzs/H9LN7NegqbCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gw/w4M6cwO806kjba5yjJiufXyN/MVoQv7fJsr6SiJRVJMBqxgUwPpbXU6YJnsCAE
-         SZSG7J2K5BqTnU4UF7TgeknWRHoof9T5kPF1SUw5Sc7+PijCVd4to2H7nbWs93Gvsg
-         dG9Kupmmixe3hY4t/N5F7CkT6tEWgQNPa9A3OG+GwBtylcsj5DYB0qsIsa1fTrUbNK
-         7/40n1XAp4wyEwP0qTi/x/zLoI0PH/hzhntvnGZqCTUaodAk2SrQ3/PGREfRGn7hFy
-         NFkIH02r1GbIGDJOJwWuMxw4izJ7qJ+pKIjzPcQHPttsFeBdbL0Ribqok+iGLEy0Ug
-         Wadn2dXdqMUIg==
+        b=bi40EH3C+uQF65QH75T+pnTy5+x+xli3T9p1GPQhwN1EYUgiIjg5yJY0x73nW+CD6
+         zgCqNEOf4dBmeTrrkAM9ADWtJ9DcYDAQ+LHh6o235RPEh8MDoFLwN0/mShNqBUJyaI
+         /VSqTIOEkLdDJY8URtrGmF+1p+blXcFq+2ne/Bj5jDusPhci0JoMlsuz4ITU1FWKI+
+         ZftnYq5ZdpDUfmm0EQlQU4hbvMgVR268dtMkSV+Uje1G6gUZvzH8CzBLn3hbVwzPnV
+         OiO4r84D72bTjNC0LrQH9mJskqAg3xJv3Ul/62wiDeAfC82wTb1AmnBF4Btxd/ky62
+         sK3BGeFc0ppxw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     August Wikerfors <git@augustwikerfors.se>,
+Cc:     Piotr Chmura <chmooreck@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, dvhart@infradead.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.18 46/47] platform/x86: gigabyte-wmi: Add support for B450M DS3H-CF
-Date:   Mon, 13 Jun 2022 22:04:39 -0400
-Message-Id: <20220614020441.1098348-46-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.17 41/43] platform/x86: gigabyte-wmi: Add Z690M AORUS ELITE AX DDR4 support
+Date:   Mon, 13 Jun 2022 22:06:00 -0400
+Message-Id: <20220614020602.1098943-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220614020441.1098348-1-sashal@kernel.org>
-References: <20220614020441.1098348-1-sashal@kernel.org>
+In-Reply-To: <20220614020602.1098943-1-sashal@kernel.org>
+References: <20220614020602.1098943-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -53,14 +53,15 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: August Wikerfors <git@augustwikerfors.se>
+From: Piotr Chmura <chmooreck@gmail.com>
 
-[ Upstream commit c6bc7e8ee90845556a90faf8b043cbefd77b8903 ]
+[ Upstream commit 8a041afe3e774bedd3e0a9b96f65e48a1299a595 ]
 
-Tested and works on my system.
+Add dmi_system_id of Gigabyte Z690M AORUS ELITE AX DDR4 board.
+Tested on my PC.
 
-Signed-off-by: August Wikerfors <git@augustwikerfors.se>
-Link: https://lore.kernel.org/r/20220608212028.28307-1-git@augustwikerfors.se
+Signed-off-by: Piotr Chmura <chmooreck@gmail.com>
+Link: https://lore.kernel.org/r/bd83567e-ebf5-0b31-074b-5f6dc7f7c147@gmail.com
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
@@ -68,17 +69,17 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-index 05588a47ac38..78446b1953f7 100644
+index 658bab4b7964..ad4f789309d6 100644
 --- a/drivers/platform/x86/gigabyte-wmi.c
 +++ b/drivers/platform/x86/gigabyte-wmi.c
-@@ -140,6 +140,7 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
- 	}}
+@@ -153,6 +153,7 @@ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 GAMING X"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 I AORUS PRO WIFI"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 UD"),
++	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z690M AORUS ELITE AX DDR4"),
+ 	{ }
+ };
  
- static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
-+	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H-CF"),
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE AX V2"),
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
 -- 
 2.35.1
 
