@@ -2,277 +2,263 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBAEC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 19:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C565CCA47A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 19:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243571AbiFNTlf (ORCPT
+        id S244338AbiFNTwk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Jun 2022 15:41:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48746 "EHLO
+        Tue, 14 Jun 2022 15:52:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243974AbiFNTlc (ORCPT
+        with ESMTP id S1348810AbiFNTwg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Jun 2022 15:41:32 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6E5D27CE4;
-        Tue, 14 Jun 2022 12:41:30 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id h5so12650110wrb.0;
-        Tue, 14 Jun 2022 12:41:30 -0700 (PDT)
+        Tue, 14 Jun 2022 15:52:36 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165C324946
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jun 2022 12:52:34 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id i15so8628998plr.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jun 2022 12:52:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=T+6Pg7cjduifTxuHDSkXVpXdVfCIHhnTev9bEdkehao=;
-        b=IYtZ7iaWkiRAIRvKKUIk5pSOZ0h0e+sPMP05HHbrMw8BcavHu/B7oNw1RZB8wIyXBi
-         x7PLLLd7i0q5RiXSIlilCtqFIP+LQDcfOcSZ6XCkJuVoXAlXUoXNTUF7gWfua0ZdFcyE
-         aRIiaKZx00Y6VhxZOoNVB+auArvtXN16/q5IIB8L/yGiZoNu9WnRHycBKg88myTP/48I
-         Gh4v9NtkCUWrMuMoYCsrNDaUnXS7/EHcWhcu1zcuMhniMbPMVTeGhXMBfxroubKJjgKG
-         vCUJCFTmJtUZMm1OXjxboAIwYMLg9I6+TvA6DaFYGVWmNf+Nqx+JOAv+ArWtcInGcclA
-         sW0Q==
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Jsh+9nIpfSBa1uEbPDqPUdbNg1GFShpfTtOI9ZfqinA=;
+        b=eLG14A21pvHg32PiwjkaP+dh9Qho4ANeFBz02faR0OsqBnkDDbTweNJx25wqnfQzwT
+         LZajfdHpDqoWVoTqlS5amqN02i/CTNrfUTFQxdPrK0wLT0hHu+P2l3WdL7or8ftHI9Zj
+         XI6Sb0fyqhajsZSEvctk10YiHR/27iHNnn/m7fJGCWnpiNwaU0p3zQ+N2If5En6CbSTZ
+         TeARvQ+PHUGw6gNxjtkgCDbMTLgsykaaVNPB7nHEVrJpbGorTL+E+nAzD0nESw9Ctc4T
+         OUGprmoaRamJ5Mbt8Vl7O0v085JO+MNslMMSYl2Ztf9NtnQUjrdbPuMBixF4qeoNNkDU
+         KwBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=T+6Pg7cjduifTxuHDSkXVpXdVfCIHhnTev9bEdkehao=;
-        b=FV+qUtVYglCA5JVr2iBfbGRfA9VkcQdUlD77o9z/jmdmG7fm2K/NNBf11aaFkLKsbx
-         fHYMMV7+O36XTkpglv9k43Xd6SPDmMTarOeh14neNZ06GrTQld+aAneJN9kV2AsY9nta
-         Ji5i8CFozmcLX+zFvDkm4TXeMcXkrbVLyY5a+HQi7WVB1GZa8aVSsAYsIwE4wY1XLRU1
-         L5IfOquAF02tO+gN1ZoX5MgvdLaCBT+DEPhK5ZBeBpUsYXai71PWlPjhFmOAkNZADFdG
-         pO6q2KjPIqkuWB1xWNAecmNKDHkbACQO1Nr5NvXuXKvuMJZGk21FBbP7230J49MNy1Nk
-         XsWQ==
-X-Gm-Message-State: AJIora/Zvz2ir39boDKL3oKA7z6SokCDzGIjNTh06JMW5hkk+fRRO170
-        pZKx2JhFIYG0Xk7rdIzhDe9KCu88sAA=
-X-Google-Smtp-Source: AGRyM1tzzzyNWvIB/8qVgpfk6RtUEHFHtXQ0nyAQDPu0o3R26uINfpYABcTjVk59Jg0mUD6myuB7sg==
-X-Received: by 2002:a05:6000:1acc:b0:219:e689:d61b with SMTP id i12-20020a0560001acc00b00219e689d61bmr6212101wry.24.1655235689050;
-        Tue, 14 Jun 2022 12:41:29 -0700 (PDT)
-Received: from xws.localdomain ([194.126.177.7])
-        by smtp.gmail.com with ESMTPSA id k7-20020a1ca107000000b003973c54bd69sm18768442wme.1.2022.06.14.12.41.27
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Jsh+9nIpfSBa1uEbPDqPUdbNg1GFShpfTtOI9ZfqinA=;
+        b=fjzqxhXfyh+oYYw7wwRgCbQXPOfm4nWcTPBEKLLbYVI4aw2RScCe/EA24ujl5zJTvA
+         L1TCa5jvAGSyY6H/sEAzW9+PqMVuQJ7S6/TUbAlB/VU7c93xBa89YGNDuh6II26z6l2e
+         CVwAUWBPj/3AmXUv3D+wZuk8o0nrr5a0JNByuQyjUctWxu81FZ4qRsFVvEZhEwHvOJ04
+         lT21WWdAUU7W2gvWvuFUEfi/gInXKWDj3lIoxewU5Yzc/SmHIVBNyeb/qcELAxvl8mC8
+         ODHLpXZ9eonHB7eObgJCZW9YRr3Kz1Egz8vwO8ZxMGDrKVeA6dITH9rDzB9I3KhPXmWe
+         ULJg==
+X-Gm-Message-State: AJIora91psfaCm+Hl5lkpIPbNkFh1Pyf8PSb3iYcBLi0xUnzzPiAwn2I
+        yD8sFugmrMo+3UtcvGhZfWR7kw==
+X-Google-Smtp-Source: AGRyM1vv7m0b7E/234X9osMyE0Ar/aQSj9TrfEOaTO6q4JlGEpk2zdpwTjkcgfSkZj0JFdWamW6DWA==
+X-Received: by 2002:a17:90b:1b0d:b0:1e6:847e:6448 with SMTP id nu13-20020a17090b1b0d00b001e6847e6448mr6122283pjb.125.1655236353306;
+        Tue, 14 Jun 2022 12:52:33 -0700 (PDT)
+Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
+        by smtp.gmail.com with ESMTPSA id z11-20020aa7958b000000b0051bdb735647sm8046474pfj.159.2022.06.14.12.52.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jun 2022 12:41:28 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH] platform/surface: aggregator: Reserve more event- and target-categories
-Date:   Tue, 14 Jun 2022 21:41:17 +0200
-Message-Id: <20220614194117.4118897-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.36.1
+        Tue, 14 Jun 2022 12:52:32 -0700 (PDT)
+Date:   Tue, 14 Jun 2022 19:52:29 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     Michael Roth <michael.roth@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v12 19/46] x86/kernel: Make the .bss..decrypted section
+ shared in RMP table
+Message-ID: <Yqjm/b3deMlxxePh@google.com>
+References: <20220307213356.2797205-1-brijesh.singh@amd.com>
+ <20220307213356.2797205-20-brijesh.singh@amd.com>
+ <YqfabnTRxFSM+LoX@google.com>
+ <YqistMvngNKEJu2o@google.com>
+ <daaf7a84-4204-48ca-e40c-7ba296b4789c@amd.com>
+ <YqizrTCk460kov/X@google.com>
+ <6db51d45-e17a-38dd-131d-e43132c55dfb@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6db51d45-e17a-38dd-131d-e43132c55dfb@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-With the introduction of the Surface Laptop Studio, more event- and
-target categories have been added. Therefore, increase the number of
-reserved events and extend the enum of know target categories to
-accommodate this.
+On Tue, Jun 14, 2022, Tom Lendacky wrote:
+> On 6/14/22 11:13, Sean Christopherson wrote:
+> > > > > This breaks SME on Rome and Milan when compiling with clang-13.  I haven't been
+> > > > > able to figure out exactly what goes wrong.  printk isn't functional at this point,
+> > > > > and interactive debug during boot on our test systems is beyond me.  I can't even
+> > > > > verify that the bug is specific to clang because the draconian build system for our
+> > > > > test systems apparently is stuck pointing at gcc-4.9.
+> > > > > 
+> > > > > I suspect the issue is related to relocation and/or encrypting memory, as skipping
+> > > > > the call to early_snp_set_memory_shared() if SNP isn't active masks the issue.
+> > > > > I've dug through the assembly and haven't spotted a smoking gun, e.g. no obvious
+> > > > > use of absolute addresses.
+> > > > > 
+> > > > > Forcing a VM through the same path doesn't fail.  I can't test an SEV guest at the
+> > > > > moment because INIT_EX is also broken.
+> > > > 
+> > > > The SEV INIT_EX was a PEBKAC issue.  An SEV guest boots just fine with a clang-built
+> > > > kernel, so either it's a finnicky relocation issue or something specific to SME.
+> > > 
+> > > I just built and booted 5.19-rc2 with clang-13 and SME enabled without issue:
+> > > 
+> > > [    4.118226] Memory Encryption Features active: AMD SME
+> > 
+> > Phooey.
+> > 
+> > > Maybe something with your kernel config? Can you send me your config?
+> > 
+> > Attached.  If you can't repro, I'll find someone on our end to work on this.
+> 
+> I was able to repro. It dies in the cc_platform_has() code, where it is
+> trying to do an indirect jump based on the attribute (actually in the
+> amd_cc_platform_has() which I think has been optimized in):
+> 
+> bool cc_platform_has(enum cc_attr attr)
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+...
+
+> ffffffff81002160:       ff 24 c5 c0 01 00 82    jmp    *-0x7dfffe40(,%rax,8)
+> 
+> This last line is what causes the reset. I'm guessing that the jump isn't
+> valid at this point because we are running in identity mapped mode and not
+> with a kernel virtual address at this point.
+> 
+> Trying to see what the difference was between your config and mine, the
+> indirect jump lead me to check the setting of CONFIG_RETPOLINE. Your config
+> did not have it enabled, so I set CONFIG_RETPOLINE=y, and with that, the
+> kernel boots successfully.
+
+That would explain why my VMs didn't fail, I build those kernels with CONFIG_RETPOLINE=y.
+
+> With retpolines, the code is completely different around here:
+
+...
+
+> I'm not sure if there's a way to remove the jump table optimization for
+> the arch/x86/coco/core.c file when retpolines aren't configured.
+
+And for post-boot I don't think we'd want to disable any such optimizations.
+
+A possibled "fix" would be to do what sme_encrypt_kernel() does and just query
+sev_status directly.  But even that works, the fragility of the boot code is
+terrifying :-(  I can't think of any clever solutions though.
+
+Many thanks again Tom!
+
 ---
- drivers/platform/surface/aggregator/trace.h   | 80 +++++++++++--------
- include/linux/surface_aggregator/serial_hub.h | 75 +++++++++--------
- 2 files changed, 85 insertions(+), 70 deletions(-)
+ arch/x86/include/asm/sev.h |  4 ++++
+ arch/x86/kernel/head64.c   | 10 +++++++---
+ arch/x86/kernel/sev.c      | 16 +++++++++++-----
+ 3 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/platform/surface/aggregator/trace.h b/drivers/platform/surface/aggregator/trace.h
-index de64cf169060..cc9e73fbc18e 100644
---- a/drivers/platform/surface/aggregator/trace.h
-+++ b/drivers/platform/surface/aggregator/trace.h
-@@ -76,7 +76,7 @@ TRACE_DEFINE_ENUM(SSAM_SSH_TC_HID);
- TRACE_DEFINE_ENUM(SSAM_SSH_TC_TCH);
- TRACE_DEFINE_ENUM(SSAM_SSH_TC_BKL);
- TRACE_DEFINE_ENUM(SSAM_SSH_TC_TAM);
--TRACE_DEFINE_ENUM(SSAM_SSH_TC_ACC);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_ACC0);
- TRACE_DEFINE_ENUM(SSAM_SSH_TC_UFI);
- TRACE_DEFINE_ENUM(SSAM_SSH_TC_USC);
- TRACE_DEFINE_ENUM(SSAM_SSH_TC_PEN);
-@@ -85,6 +85,11 @@ TRACE_DEFINE_ENUM(SSAM_SSH_TC_AUD);
- TRACE_DEFINE_ENUM(SSAM_SSH_TC_SMC);
- TRACE_DEFINE_ENUM(SSAM_SSH_TC_KPD);
- TRACE_DEFINE_ENUM(SSAM_SSH_TC_REG);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_SPT);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_SYS);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_ACC1);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_SHB);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_POS);
- 
- #define SSAM_PTR_UID_LEN		9
- #define SSAM_U8_FIELD_NOT_APPLICABLE	((u16)-1)
-@@ -229,40 +234,45 @@ static inline u32 ssam_trace_get_request_tc(const struct ssh_packet *p)
- 
- #define ssam_show_ssh_tc(rqid)						\
- 	__print_symbolic(rqid,						\
--		{ SSAM_SSH_TC_NOT_APPLICABLE,		"N/A" },	\
--		{ SSAM_SSH_TC_SAM,			"SAM" },	\
--		{ SSAM_SSH_TC_BAT,			"BAT" },	\
--		{ SSAM_SSH_TC_TMP,			"TMP" },	\
--		{ SSAM_SSH_TC_PMC,			"PMC" },	\
--		{ SSAM_SSH_TC_FAN,			"FAN" },	\
--		{ SSAM_SSH_TC_PoM,			"PoM" },	\
--		{ SSAM_SSH_TC_DBG,			"DBG" },	\
--		{ SSAM_SSH_TC_KBD,			"KBD" },	\
--		{ SSAM_SSH_TC_FWU,			"FWU" },	\
--		{ SSAM_SSH_TC_UNI,			"UNI" },	\
--		{ SSAM_SSH_TC_LPC,			"LPC" },	\
--		{ SSAM_SSH_TC_TCL,			"TCL" },	\
--		{ SSAM_SSH_TC_SFL,			"SFL" },	\
--		{ SSAM_SSH_TC_KIP,			"KIP" },	\
--		{ SSAM_SSH_TC_EXT,			"EXT" },	\
--		{ SSAM_SSH_TC_BLD,			"BLD" },	\
--		{ SSAM_SSH_TC_BAS,			"BAS" },	\
--		{ SSAM_SSH_TC_SEN,			"SEN" },	\
--		{ SSAM_SSH_TC_SRQ,			"SRQ" },	\
--		{ SSAM_SSH_TC_MCU,			"MCU" },	\
--		{ SSAM_SSH_TC_HID,			"HID" },	\
--		{ SSAM_SSH_TC_TCH,			"TCH" },	\
--		{ SSAM_SSH_TC_BKL,			"BKL" },	\
--		{ SSAM_SSH_TC_TAM,			"TAM" },	\
--		{ SSAM_SSH_TC_ACC,			"ACC" },	\
--		{ SSAM_SSH_TC_UFI,			"UFI" },	\
--		{ SSAM_SSH_TC_USC,			"USC" },	\
--		{ SSAM_SSH_TC_PEN,			"PEN" },	\
--		{ SSAM_SSH_TC_VID,			"VID" },	\
--		{ SSAM_SSH_TC_AUD,			"AUD" },	\
--		{ SSAM_SSH_TC_SMC,			"SMC" },	\
--		{ SSAM_SSH_TC_KPD,			"KPD" },	\
--		{ SSAM_SSH_TC_REG,			"REG" }		\
-+		{ SSAM_SSH_TC_NOT_APPLICABLE,		"N/A"  },	\
-+		{ SSAM_SSH_TC_SAM,			"SAM"  },	\
-+		{ SSAM_SSH_TC_BAT,			"BAT"  },	\
-+		{ SSAM_SSH_TC_TMP,			"TMP"  },	\
-+		{ SSAM_SSH_TC_PMC,			"PMC"  },	\
-+		{ SSAM_SSH_TC_FAN,			"FAN"  },	\
-+		{ SSAM_SSH_TC_PoM,			"PoM"  },	\
-+		{ SSAM_SSH_TC_DBG,			"DBG"  },	\
-+		{ SSAM_SSH_TC_KBD,			"KBD"  },	\
-+		{ SSAM_SSH_TC_FWU,			"FWU"  },	\
-+		{ SSAM_SSH_TC_UNI,			"UNI"  },	\
-+		{ SSAM_SSH_TC_LPC,			"LPC"  },	\
-+		{ SSAM_SSH_TC_TCL,			"TCL"  },	\
-+		{ SSAM_SSH_TC_SFL,			"SFL"  },	\
-+		{ SSAM_SSH_TC_KIP,			"KIP"  },	\
-+		{ SSAM_SSH_TC_EXT,			"EXT"  },	\
-+		{ SSAM_SSH_TC_BLD,			"BLD"  },	\
-+		{ SSAM_SSH_TC_BAS,			"BAS"  },	\
-+		{ SSAM_SSH_TC_SEN,			"SEN"  },	\
-+		{ SSAM_SSH_TC_SRQ,			"SRQ"  },	\
-+		{ SSAM_SSH_TC_MCU,			"MCU"  },	\
-+		{ SSAM_SSH_TC_HID,			"HID"  },	\
-+		{ SSAM_SSH_TC_TCH,			"TCH"  },	\
-+		{ SSAM_SSH_TC_BKL,			"BKL"  },	\
-+		{ SSAM_SSH_TC_TAM,			"TAM"  },	\
-+		{ SSAM_SSH_TC_ACC0,			"ACC0" },	\
-+		{ SSAM_SSH_TC_UFI,			"UFI"  },	\
-+		{ SSAM_SSH_TC_USC,			"USC"  },	\
-+		{ SSAM_SSH_TC_PEN,			"PEN"  },	\
-+		{ SSAM_SSH_TC_VID,			"VID"  },	\
-+		{ SSAM_SSH_TC_AUD,			"AUD"  },	\
-+		{ SSAM_SSH_TC_SMC,			"SMC"  },	\
-+		{ SSAM_SSH_TC_KPD,			"KPD"  },	\
-+		{ SSAM_SSH_TC_REG,			"REG"  },	\
-+		{ SSAM_SSH_TC_SPT,			"SPT"  },	\
-+		{ SSAM_SSH_TC_SYS,			"SYS"  },	\
-+		{ SSAM_SSH_TC_ACC1,			"ACC1" },	\
-+		{ SSAM_SSH_TC_SHB,			"SMB"  },	\
-+		{ SSAM_SSH_TC_POS,			"POS"  }	\
- 	)
- 
- DECLARE_EVENT_CLASS(ssam_frame_class,
-diff --git a/include/linux/surface_aggregator/serial_hub.h b/include/linux/surface_aggregator/serial_hub.h
-index 26b95ec12733..45501b6e54e8 100644
---- a/include/linux/surface_aggregator/serial_hub.h
-+++ b/include/linux/surface_aggregator/serial_hub.h
-@@ -201,7 +201,7 @@ static inline u16 ssh_crc(const u8 *buf, size_t len)
-  * exception of zero, which is not an event ID. Thus, this is also the
-  * absolute maximum number of event handlers that can be registered.
-  */
--#define SSH_NUM_EVENTS		34
-+#define SSH_NUM_EVENTS		38
- 
- /*
-  * SSH_NUM_TARGETS - The number of communication targets used in the protocol.
-@@ -292,40 +292,45 @@ struct ssam_span {
-  * Windows driver.
-  */
- enum ssam_ssh_tc {
--				/* Category 0x00 is invalid for EC use. */
--	SSAM_SSH_TC_SAM = 0x01,	/* Generic system functionality, real-time clock. */
--	SSAM_SSH_TC_BAT = 0x02,	/* Battery/power subsystem. */
--	SSAM_SSH_TC_TMP = 0x03,	/* Thermal subsystem. */
--	SSAM_SSH_TC_PMC = 0x04,
--	SSAM_SSH_TC_FAN = 0x05,
--	SSAM_SSH_TC_PoM = 0x06,
--	SSAM_SSH_TC_DBG = 0x07,
--	SSAM_SSH_TC_KBD = 0x08,	/* Legacy keyboard (Laptop 1/2). */
--	SSAM_SSH_TC_FWU = 0x09,
--	SSAM_SSH_TC_UNI = 0x0a,
--	SSAM_SSH_TC_LPC = 0x0b,
--	SSAM_SSH_TC_TCL = 0x0c,
--	SSAM_SSH_TC_SFL = 0x0d,
--	SSAM_SSH_TC_KIP = 0x0e,	/* Manages detachable peripherals (Pro X/8 keyboard cover) */
--	SSAM_SSH_TC_EXT = 0x0f,
--	SSAM_SSH_TC_BLD = 0x10,
--	SSAM_SSH_TC_BAS = 0x11,	/* Detachment system (Surface Book 2/3). */
--	SSAM_SSH_TC_SEN = 0x12,
--	SSAM_SSH_TC_SRQ = 0x13,
--	SSAM_SSH_TC_MCU = 0x14,
--	SSAM_SSH_TC_HID = 0x15,	/* Generic HID input subsystem. */
--	SSAM_SSH_TC_TCH = 0x16,
--	SSAM_SSH_TC_BKL = 0x17,
--	SSAM_SSH_TC_TAM = 0x18,
--	SSAM_SSH_TC_ACC = 0x19,
--	SSAM_SSH_TC_UFI = 0x1a,
--	SSAM_SSH_TC_USC = 0x1b,
--	SSAM_SSH_TC_PEN = 0x1c,
--	SSAM_SSH_TC_VID = 0x1d,
--	SSAM_SSH_TC_AUD = 0x1e,
--	SSAM_SSH_TC_SMC = 0x1f,
--	SSAM_SSH_TC_KPD = 0x20,
--	SSAM_SSH_TC_REG = 0x21,	/* Extended event registry. */
-+				  /* Category 0x00 is invalid for EC use. */
-+	SSAM_SSH_TC_SAM  = 0x01,  /* Generic system functionality, real-time clock. */
-+	SSAM_SSH_TC_BAT  = 0x02,  /* Battery/power subsystem. */
-+	SSAM_SSH_TC_TMP  = 0x03,  /* Thermal subsystem. */
-+	SSAM_SSH_TC_PMC  = 0x04,
-+	SSAM_SSH_TC_FAN  = 0x05,
-+	SSAM_SSH_TC_PoM  = 0x06,
-+	SSAM_SSH_TC_DBG  = 0x07,
-+	SSAM_SSH_TC_KBD  = 0x08,  /* Legacy keyboard (Laptop 1/2). */
-+	SSAM_SSH_TC_FWU  = 0x09,
-+	SSAM_SSH_TC_UNI  = 0x0a,
-+	SSAM_SSH_TC_LPC  = 0x0b,
-+	SSAM_SSH_TC_TCL  = 0x0c,
-+	SSAM_SSH_TC_SFL  = 0x0d,
-+	SSAM_SSH_TC_KIP  = 0x0e,  /* Manages detachable peripherals (Pro X/8 keyboard cover) */
-+	SSAM_SSH_TC_EXT  = 0x0f,
-+	SSAM_SSH_TC_BLD  = 0x10,
-+	SSAM_SSH_TC_BAS  = 0x11,  /* Detachment system (Surface Book 2/3). */
-+	SSAM_SSH_TC_SEN  = 0x12,
-+	SSAM_SSH_TC_SRQ  = 0x13,
-+	SSAM_SSH_TC_MCU  = 0x14,
-+	SSAM_SSH_TC_HID  = 0x15,  /* Generic HID input subsystem. */
-+	SSAM_SSH_TC_TCH  = 0x16,
-+	SSAM_SSH_TC_BKL  = 0x17,
-+	SSAM_SSH_TC_TAM  = 0x18,
-+	SSAM_SSH_TC_ACC0 = 0x19,
-+	SSAM_SSH_TC_UFI  = 0x1a,
-+	SSAM_SSH_TC_USC  = 0x1b,
-+	SSAM_SSH_TC_PEN  = 0x1c,
-+	SSAM_SSH_TC_VID  = 0x1d,
-+	SSAM_SSH_TC_AUD  = 0x1e,
-+	SSAM_SSH_TC_SMC  = 0x1f,
-+	SSAM_SSH_TC_KPD  = 0x20,
-+	SSAM_SSH_TC_REG  = 0x21,  /* Extended event registry. */
-+	SSAM_SSH_TC_SPT  = 0x22,
-+	SSAM_SSH_TC_SYS  = 0x23,
-+	SSAM_SSH_TC_ACC1 = 0x24,
-+	SSAM_SSH_TC_SHB  = 0x25,
-+	SSAM_SSH_TC_POS  = 0x26,  /* For obtaining Laptop Studio screen position. */
- };
- 
- 
--- 
-2.36.1
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 19514524f0f8..701c561fdf08 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -193,6 +193,8 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
+ void setup_ghcb(void);
+ void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
+ 					 unsigned int npages);
++void __init __early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
++					  unsigned int npages);
+ void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
+ 					unsigned int npages);
+ void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op);
+@@ -214,6 +216,8 @@ static inline void setup_ghcb(void) { }
+ static inline void __init
+ early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr, unsigned int npages) { }
+ static inline void __init
++__early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr, unsigned int npages) { }
++static inline void __init
+ early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr, unsigned int npages) { }
+ static inline void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op) { }
+ static inline void snp_set_memory_shared(unsigned long vaddr, unsigned int npages) { }
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index bd4a34100ed0..5efab0d8e49d 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -127,7 +127,9 @@ static bool __head check_la57_support(unsigned long physaddr)
+ }
+ #endif
+
+-static unsigned long __head sme_postprocess_startup(struct boot_params *bp, pmdval_t *pmd)
++static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
++						    pmdval_t *pmd,
++						    unsigned long physaddr)
+ {
+ 	unsigned long vaddr, vaddr_end;
+ 	int i;
+@@ -156,7 +158,9 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp, pmdv
+ 			 * address but the kernel is currently running off of the identity
+ 			 * mapping so use __pa() to get a *currently* valid virtual address.
+ 			 */
+-			early_snp_set_memory_shared(__pa(vaddr), __pa(vaddr), PTRS_PER_PMD);
++			if (sev_status & MSR_AMD64_SEV_SNP_ENABLED_BIT)
++				__early_snp_set_memory_shared(__pa(vaddr), __pa(vaddr),
++							      PTRS_PER_PMD);
+
+ 			i = pmd_index(vaddr);
+ 			pmd[i] -= sme_get_me_mask();
+@@ -316,7 +320,7 @@ unsigned long __head __startup_64(unsigned long physaddr,
+ 	 */
+ 	*fixup_long(&phys_base, physaddr) += load_delta - sme_get_me_mask();
+
+-	return sme_postprocess_startup(bp, pmd);
++	return sme_postprocess_startup(bp, pmd, physaddr);
+ }
+
+ /* Wipe all early page tables except for the kernel symbol map */
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index c05f0124c410..48966ecc520e 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -714,12 +714,9 @@ void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long padd
+ 	pvalidate_pages(vaddr, npages, true);
+ }
+
+-void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
+-					unsigned int npages)
++void __init __early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
++					  unsigned int npages)
+ {
+-	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+-		return;
+-
+ 	/* Invalidate the memory pages before they are marked shared in the RMP table. */
+ 	pvalidate_pages(vaddr, npages, false);
+
+@@ -727,6 +724,15 @@ void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr
+ 	early_set_pages_state(paddr, npages, SNP_PAGE_STATE_SHARED);
+ }
+
++void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
++					unsigned int npages)
++{
++	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
++		return;
++
++	__early_snp_set_memory_shared(vaddr, paddr, npages);
++}
++
+ void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op)
+ {
+ 	unsigned long vaddr, npages;
+
+base-commit: b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3
+--
 
