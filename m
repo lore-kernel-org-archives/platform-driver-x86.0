@@ -2,34 +2,34 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929C2C43334
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 18:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6C7CCA47A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 18:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357195AbiFNSmY (ORCPT
+        id S1356667AbiFNSp0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Jun 2022 14:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59438 "EHLO
+        Tue, 14 Jun 2022 14:45:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357112AbiFNSlv (ORCPT
+        with ESMTP id S1356353AbiFNSnH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Jun 2022 14:41:51 -0400
+        Tue, 14 Jun 2022 14:43:07 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56274AE0E;
-        Tue, 14 Jun 2022 11:41:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 540724A91F;
+        Tue, 14 Jun 2022 11:42:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 586B9B8186A;
-        Tue, 14 Jun 2022 18:41:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72894C3411D;
-        Tue, 14 Jun 2022 18:41:37 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0CF3CB81AF4;
+        Tue, 14 Jun 2022 18:42:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27CEAC3411B;
+        Tue, 14 Jun 2022 18:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1655232098;
-        bh=jQYiJ2B/yh0n5o1YR+tVEwoIRowRhZ8d7T3D5XSYiqk=;
+        s=korg; t=1655232133;
+        bh=KuQzGMB/TGELsDVIKt9X9t+czdHlsCotrXvjvJZQ58M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fYI5PJRJw1rTG9g09fKkdsx/MrghZjYPt8dW7Om8F6vpjsLE1VYSDPgL6Lt/O+ymA
-         dJQ/9/4UD0rA7FKW0bC9mcc7sSFim+G4ChTCehZeziG++FXSXYGhlb/2FmYYH5joCL
-         SV9ezOvR8CcUYMIKvGvKqvoat5WDid1hXNXRUY/Q=
+        b=OJKq+NqDQC9srwkw3cwsX+fFV4AE7yLqmvkPJXxN1C0oqftFCc1oVpJ0h++DT2J7U
+         yzhoQ8GsYzMm8a57lIk+IG+WkdAwa7iqHQFJdMnPJw1XvssfpwkqbQvGLMJ7EFo/5j
+         V9A6an28dOBrmKIPrZ40Iu7rkBy2lc0OhD/UDplU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,12 +47,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Subject: [PATCH 4.9 05/20] x86/CPU: Add Icelake model number
-Date:   Tue, 14 Jun 2022 20:39:48 +0200
-Message-Id: <20220614183723.380508297@linuxfoundation.org>
+Subject: [PATCH 4.14 05/20] x86/CPU: Add Icelake model number
+Date:   Tue, 14 Jun 2022 20:39:56 +0200
+Message-Id: <20220614183724.632217777@linuxfoundation.org>
 X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220614183722.061550591@linuxfoundation.org>
-References: <20220614183722.061550591@linuxfoundation.org>
+In-Reply-To: <20220614183723.328825625@linuxfoundation.org>
+References: <20220614183723.328825625@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -92,7 +92,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/x86/include/asm/intel-family.h
 +++ b/arch/x86/include/asm/intel-family.h
-@@ -54,6 +54,8 @@
+@@ -55,6 +55,8 @@
  
  #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
  
