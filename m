@@ -2,51 +2,50 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D48C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 02:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3CCCCA47E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 02:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352871AbiFNCM6 (ORCPT
+        id S1353342AbiFNCPY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Jun 2022 22:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55246 "EHLO
+        Mon, 13 Jun 2022 22:15:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353060AbiFNCMX (ORCPT
+        with ESMTP id S1353898AbiFNCOJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Jun 2022 22:12:23 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B147737BF7;
-        Mon, 13 Jun 2022 19:07:15 -0700 (PDT)
+        Mon, 13 Jun 2022 22:14:09 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 393BA3B030;
+        Mon, 13 Jun 2022 19:08:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DF784B81699;
-        Tue, 14 Jun 2022 02:07:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0AC9C341C0;
-        Tue, 14 Jun 2022 02:06:59 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C065DB816AA;
+        Tue, 14 Jun 2022 02:08:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 997D5C385A9;
+        Tue, 14 Jun 2022 02:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655172420;
-        bh=9jDDsgQyQTjlFBuKLov8y6UFAbc1Ox58tCBgC74fWGY=;
+        s=k20201202; t=1655172490;
+        bh=LUqjWhd2x19oH7kQGPvqJsFKkYqV5H/4feAZdzzEdv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XEpvdb6o/1WVItxEIQ47T2flyoT+Uwe/QEDoU8ud+tYdNNyTTCpgoiO7I7NOelmJh
-         a54djrbs+tZlapTbeGEUYKiyF+NZl8Hko4hk9jPF7p81VAlchcqOX6aGm60At2nPfk
-         QQCvwJbvMuaQQuwI7BFRUtLZ2tyOgtfXH9NKsmbvpjB/KXhI8s01WfmW3JMqfE1E2U
-         HrxukRghCh8kYnNDpNAF81a0r9Q1Mmcuxiwm0J0/qHtTRErC3hhvX4DqKXHNyWvdlZ
-         9q8hQ7xU4A2ZlrpVzGVhc38mx9mVn6zmsnHsxArj7tHyyyLJPDcqQ9m3YWt2iAiEW4
-         MKmCSgPyxYFag==
+        b=iK32ZxHY70ql6v1Zj3KCgydR+CRQXY/9fMZeJAAEmqv4pz0MmvwijFhJtsmzpG77Q
+         AudfUolyZdSfWR2K1K2Vk7+pLudQpg3z6zcWNrQOYc1pI8Oifaxdp5Gw0ug6VX0Jou
+         VJmwzkvDQHdq4KnwROhTpQ4M+06DYstnbtorDeauE2gcRqFVs6ZIPx/Rw/afn15URV
+         82+Hrr9iHF+gXD1kFlVVJpgUPhoXlszKRAEQmkrRzBOp7ngL7CaAZYruCjELse7YvD
+         xK/8VsBuNCqq8/dybo0KZBqrNSfD1K2BI5S+jw8A43bPr10tllN8M1IBIDZCye1Aoo
+         F82K0Ef69wQaQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Arcari <darcari@redhat.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
+Cc:     George D Sworo <george.d.sworo@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
         Sasha Levin <sashal@kernel.org>, dvhart@infradead.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.17 39/43] platform/x86/intel: Fix pmt_crashlog array reference
-Date:   Mon, 13 Jun 2022 22:05:58 -0400
-Message-Id: <20220614020602.1098943-39-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 38/41] platform/x86/intel: pmc: Support Intel Raptorlake P
+Date:   Mon, 13 Jun 2022 22:07:03 -0400
+Message-Id: <20220614020707.1099487-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220614020602.1098943-1-sashal@kernel.org>
-References: <20220614020602.1098943-1-sashal@kernel.org>
+In-Reply-To: <20220614020707.1099487-1-sashal@kernel.org>
+References: <20220614020707.1099487-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -55,42 +54,35 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: David Arcari <darcari@redhat.com>
+From: George D Sworo <george.d.sworo@intel.com>
 
-[ Upstream commit 66cb3a2d7ad0d0e9af4d3430a4f2a32ffb9ac098 ]
+[ Upstream commit 552f3b801de6eb062b225a76e140995483a0609c ]
 
-The probe function pmt_crashlog_probe() may incorrectly reference
-the 'priv->entry array' as it uses 'i' to reference the array instead
-of 'priv->num_entries' as it should.  This is similar to the problem
-that was addressed in pmt_telemetry_probe via commit 2cdfa0c20d58
-("platform/x86/intel: Fix 'rmmod pmt_telemetry' panic").
+Add Raptorlake P to the list of the platforms that intel_pmc_core driver
+supports for pmc_core device. Raptorlake P PCH is based on Alderlake P
+PCH.
 
-Cc: "David E. Box" <david.e.box@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <markgross@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: David Arcari <darcari@redhat.com>
+Signed-off-by: George D Sworo <george.d.sworo@intel.com>
 Reviewed-by: David E. Box <david.e.box@linux.intel.com>
-Link: https://lore.kernel.org/r/20220526203140.339120-1-darcari@redhat.com
+Link: https://lore.kernel.org/r/20220602012617.20100-1-george.d.sworo@intel.com
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel/pmt/crashlog.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/intel/pmc/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-index 34daf9df168b..ace1239bc0a0 100644
---- a/drivers/platform/x86/intel/pmt/crashlog.c
-+++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -282,7 +282,7 @@ static int pmt_crashlog_probe(struct auxiliary_device *auxdev,
- 	auxiliary_set_drvdata(auxdev, priv);
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index ac19fcc9abbf..8ee15a7252c7 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -1912,6 +1912,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		&tgl_reg_map),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&tgl_reg_map),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_reg_map),
++	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
+ 	{}
+ };
  
- 	for (i = 0; i < intel_vsec_dev->num_resources; i++) {
--		struct intel_pmt_entry *entry = &priv->entry[i].entry;
-+		struct intel_pmt_entry *entry = &priv->entry[priv->num_entries].entry;
- 
- 		ret = intel_pmt_dev_create(entry, &pmt_crashlog_ns, intel_vsec_dev, i);
- 		if (ret < 0)
 -- 
 2.35.1
 
