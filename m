@@ -2,108 +2,155 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4706C43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Jun 2022 01:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FC9CCA47D
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Jun 2022 03:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242577AbiFOBm6 (ORCPT
+        id S1353164AbiFODxI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Jun 2022 21:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42548 "EHLO
+        Tue, 14 Jun 2022 23:53:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232340AbiFOBm5 (ORCPT
+        with ESMTP id S1351718AbiFODwN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Jun 2022 21:42:57 -0400
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA1FE24586;
-        Tue, 14 Jun 2022 18:42:56 -0700 (PDT)
-Received: by mail-vs1-xe30.google.com with SMTP id f1so10661631vsv.5;
-        Tue, 14 Jun 2022 18:42:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zLlOpMMZLalQrrj3ld3d4c2TnADWloh8V/PPI75OtI4=;
-        b=LZXCrr/DK6w6PNwU0LHVJqIcX3Il12vTffWTrzUT7SfLkrLQSOYFfxTAQJus91hJrc
-         e7Ewu4BAaZR3RY7f5xwnKndoV4+WcGjtOPEb7B0E7pRisHM4nKnFOXnh6HmL2qr4Dri9
-         UVlthychACLH7LFU9/hcsAUsXU15YckTZWDL2eMmxYI9LdFAIg9mqtIYfmj8joTJkOW8
-         BY95iUTLWUilV+MdadPsJij9V6QVS7HIeZj4aWXs1NdMwe05mwazXaR6sWMlylAufK5L
-         7pYHvaPXtB5HW1kktAx6Zz1vmXuMFyp9c6IcMo7g4p1BJTxUQa/yvddzFhzGRRyx5nk4
-         sW+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zLlOpMMZLalQrrj3ld3d4c2TnADWloh8V/PPI75OtI4=;
-        b=cXbUlI65dbNWrBVWJqoCiND45KQETFbqDICXccJGXxpCgBtj9lZUXPdQhyVurWkvbd
-         4fN/nhVy3CF2G5fZqcmBDk8YEyw/KgYioaq+ZF+JMsT3KWPJoLZPzXHIFKiFHYzCqnzy
-         tC+rSsSzU/bIjsVXhRfH3r3r7enwFRhCG1E3aqsZHNhyPAUNzl/EIo1EKDL7EUUK4x+A
-         SQkdsOHPlrHYIOGS1sK+92o1vivmyP0xtLdMnpIBq4S/eixGoJtVpRy9Zp8P4VSYNRz/
-         UtOTYgmJvFlvhL5yLZYawy9VeWV6nNEG5XrFfBwkgrHkGWBZXvFsdo0hP+S4U8y2bwqq
-         7FCA==
-X-Gm-Message-State: AJIora9x0uSLQk0JvpbSfoRnLXN0W55OHHH7PuS8MZ9TfJs/l9YHnXIL
-        oOhpZKioKd6U5dcUuDShN+DKCLM3EYUME+JLKmnoBWPSboFSt526mWM=
-X-Google-Smtp-Source: AGRyM1sRyufxWNbEmVTtdEMXBl+wkYBMp8LvcOojRc7QZCqct+liLSZgd4rtP+D9JNxR4i6zCM2zOEhDklLil79ERKw=
-X-Received: by 2002:a05:6102:2911:b0:34b:dab7:832b with SMTP id
- cz17-20020a056102291100b0034bdab7832bmr3754974vsb.76.1655257375932; Tue, 14
- Jun 2022 18:42:55 -0700 (PDT)
+        Tue, 14 Jun 2022 23:52:13 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD32050052;
+        Tue, 14 Jun 2022 20:52:10 -0700 (PDT)
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LNBCR1cT8z1KB1N;
+        Wed, 15 Jun 2022 11:50:11 +0800 (CST)
+Received: from dggpemm500001.china.huawei.com (7.185.36.107) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 15 Jun 2022 11:52:08 +0800
+Received: from [10.174.177.243] (10.174.177.243) by
+ dggpemm500001.china.huawei.com (7.185.36.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 15 Jun 2022 11:52:00 +0800
+Message-ID: <5af7a1d9-31fa-74d1-b292-79dc3c658dbd@huawei.com>
+Date:   Wed, 15 Jun 2022 11:52:00 +0800
 MIME-Version: 1.0
-References: <20220615002751.3371730-1-gayatri.kammela@linux.intel.com>
-In-Reply-To: <20220615002751.3371730-1-gayatri.kammela@linux.intel.com>
-From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Date:   Tue, 14 Jun 2022 21:42:29 -0400
-Message-ID: <CAE2upjTKF=rBympBM0sRUM1EWbFd7JASeyzkG1J-gic4co7fvw@mail.gmail.com>
-Subject: Re: [PATCH v1] platform/x86: intel/pmc: Add Alder Lake N support to
- PMC core driver
-To:     Gayatri Kammela <gayatri.kammela@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v5 0/5] introduce mirrored memory support for arm64
+Content-Language: en-US
+To:     Wupeng Ma <mawupeng1@huawei.com>, <corbet@lwn.net>,
+        <will@kernel.org>, <ardb@kernel.org>, <catalin.marinas@arm.com>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+        <dvhart@infradead.org>, <andy@infradead.org>, <rppt@kernel.org>,
+        <akpm@linux-foundation.org>, <paul.walmsley@sifive.com>,
+        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+        <paulmck@kernel.org>, <keescook@chromium.org>,
+        <songmuchun@bytedance.com>, <rdunlap@infradead.org>,
+        <damien.lemoal@opensource.wdc.com>, <swboyd@chromium.org>,
+        <wei.liu@kernel.org>, <robin.murphy@arm.com>, <david@redhat.com>,
+        <anshuman.khandual@arm.com>, <thunder.leizhen@huawei.com>,
+        <gpiccoli@igalia.com>, <chenhuacai@kernel.org>,
+        <geert@linux-m68k.org>, <vijayb@linux.microsoft.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>
+References: <20220614092156.1972846-1-mawupeng1@huawei.com>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+In-Reply-To: <20220614092156.1972846-1-mawupeng1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.177.243]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm500001.china.huawei.com (7.185.36.107)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Is RocketLake the same as Alder Lake N? Otherwise, it looks pretty
-straight forward.
 
-Reviewed-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+On 2022/6/14 17:21, Wupeng Ma wrote:
+> From: Ma Wupeng <mawupeng1@huawei.com>
+>
+> Commit b05b9f5f9dcf ("x86, mirror: x86 enabling - find mirrored memory ranges")
+> introduced mirrored memory support for x86. This support rely on UEFI to
+> report mirrored memory address ranges.  See UEFI 2.5 spec pages 157-158:
+>
+>    http://www.uefi.org/sites/default/files/resources/UEFI%202_5.pdf
+>
+> Memory mirroring is a technique used to separate memory into two separate
+> channels, usually on a memory device, like a server. In memory mirroring,
+> one channel is copied to another to create redundancy. This method makes
+> input/output (I/O) registers and memory appear with more than one address
+> range because the same physical byte is accessible at more than one
+> address. Using memory mirroring, higher memory reliability and a higher
+> level of memory consolidation are possible.
+>
+> These EFI memory regions have various attributes, and the "mirrored"
+> attribute is one of them. The physical memory region whose descriptors
+> in EFI memory map has EFI_MEMORY_MORE_RELIABLE attribute (bit: 16) are
+> mirrored. The address range mirroring feature of the kernel arranges such
+> mirrored regions into normal zones and other regions into movable zones.
+>
+> Arm64 can support this too. So mirrored memory support is added to support
+> arm64.
+>
+> The main purpose of this patch set is to introduce mirrored support for
+> arm64 and we have already fixed the problems we had which is shown in
+> patch #5 to patch #8 and try to bring total isolation in patch #9 which
+> will disable mirror feature if kernelcore is not specified.
+>
+> In order to test this support in arm64:
+> - patch this patch set
+> - add kernelcore=mirror in kernel parameter
+> - start you kernel
+>
+> Patch #1 introduce mirrored memory support form arm64.
+> Patch #2-#4 fix some bugs for arm64 if memory reliable is enabled.
+> Patch #5 disable mirror feature if kernelcore is not specified.
+>
+> Thanks to Ard Biesheuvel's hard work [1], now kernel will perfer mirrored
+> memory if kaslr is enabled.
+>
+> [1] https://lore.kernel.org/linux-arm-kernel/CAMj1kXEPVEzMgOM4+Yj6PxHA-jFuDOAUdDJSiSxy_XaP4P7LSw@mail.gmail.com/T/
 
+For series,
 
-On Tue, Jun 14, 2022 at 8:28 PM Gayatri Kammela
-<gayatri.kammela@linux.intel.com> wrote:
->
-> Add Alder Lake N (ADL-N) to the list of the platforms that Intel's
-> PMC core driver supports. RocketLake reuses all the TigerLake PCH IPs.
->
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: David E. Box <david.e.box@linux.intel.com>
-> Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmc/core.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index 40183bda7894..a1fe1e0dcf4a 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -1911,6 +1911,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
->         X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,      &icl_reg_map),
->         X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,          &tgl_reg_map),
->         X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,         &tgl_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,         &tgl_reg_map),
->         X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,           &adl_reg_map),
->         X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
->         {}
->
-> base-commit: b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3
-> --
-> 2.25.1
->
+Reviewed-by: Kefeng Wang<wangkefeng.wang@huawei.com>
 
-
--- 
-Thanks,
-Rajneesh
+>
+> Changelog since v4:
+> - merge the first two patches into one
+> - change __initdata to __initdata_memblock in patch #5
+>
+> Changelog since v3:
+> - limit warning message in vmemmap_verify via pr_warn_once()
+> - only clear memblock_nomap flags rather than bring the mirrored flag back
+> - disable mirrored feature in memblock_mark_mirror()
+>
+> Changelog since v2:
+> - remove efi_fake_mem support
+> - remove Commit ("remove some redundant code in ia64 efi_init") since
+>    efi_print_memmap() is not public
+> - add mirror flag back on initrd memory
+>
+> Changelog since v1:
+> - update changelog in cover letter
+> - use PHYS_PFN in patch #7
+>
+> Ma Wupeng (5):
+>    efi: arm64: Introduce ability to find mirrored memory ranges
+>    mm: Ratelimited mirrored memory related warning messages
+>    mm: Limit warning message in vmemmap_verify() to once
+>    arm64: mm: Only remove nomap flag for initrd
+>    memblock: Disable mirror feature if kernelcore is not specified
+>
+>   arch/arm64/mm/init.c            |  2 +-
+>   arch/x86/include/asm/efi.h      |  4 ----
+>   arch/x86/platform/efi/efi.c     | 23 -----------------------
+>   drivers/firmware/efi/efi-init.c |  1 +
+>   drivers/firmware/efi/efi.c      | 23 +++++++++++++++++++++++
+>   include/linux/efi.h             |  3 +++
+>   mm/internal.h                   |  2 ++
+>   mm/memblock.c                   |  7 +++++--
+>   mm/page_alloc.c                 |  2 +-
+>   mm/sparse-vmemmap.c             |  2 +-
+>   10 files changed, 37 insertions(+), 32 deletions(-)
+>
