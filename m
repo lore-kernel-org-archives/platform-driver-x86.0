@@ -2,263 +2,108 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C565CCA47A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Jun 2022 19:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4706C43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Jun 2022 01:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244338AbiFNTwk (ORCPT
+        id S242577AbiFOBm6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Jun 2022 15:52:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59378 "EHLO
+        Tue, 14 Jun 2022 21:42:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348810AbiFNTwg (ORCPT
+        with ESMTP id S232340AbiFOBm5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Jun 2022 15:52:36 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165C324946
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jun 2022 12:52:34 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id i15so8628998plr.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jun 2022 12:52:34 -0700 (PDT)
+        Tue, 14 Jun 2022 21:42:57 -0400
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA1FE24586;
+        Tue, 14 Jun 2022 18:42:56 -0700 (PDT)
+Received: by mail-vs1-xe30.google.com with SMTP id f1so10661631vsv.5;
+        Tue, 14 Jun 2022 18:42:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Jsh+9nIpfSBa1uEbPDqPUdbNg1GFShpfTtOI9ZfqinA=;
-        b=eLG14A21pvHg32PiwjkaP+dh9Qho4ANeFBz02faR0OsqBnkDDbTweNJx25wqnfQzwT
-         LZajfdHpDqoWVoTqlS5amqN02i/CTNrfUTFQxdPrK0wLT0hHu+P2l3WdL7or8ftHI9Zj
-         XI6Sb0fyqhajsZSEvctk10YiHR/27iHNnn/m7fJGCWnpiNwaU0p3zQ+N2If5En6CbSTZ
-         TeARvQ+PHUGw6gNxjtkgCDbMTLgsykaaVNPB7nHEVrJpbGorTL+E+nAzD0nESw9Ctc4T
-         OUGprmoaRamJ5Mbt8Vl7O0v085JO+MNslMMSYl2Ztf9NtnQUjrdbPuMBixF4qeoNNkDU
-         KwBg==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zLlOpMMZLalQrrj3ld3d4c2TnADWloh8V/PPI75OtI4=;
+        b=LZXCrr/DK6w6PNwU0LHVJqIcX3Il12vTffWTrzUT7SfLkrLQSOYFfxTAQJus91hJrc
+         e7Ewu4BAaZR3RY7f5xwnKndoV4+WcGjtOPEb7B0E7pRisHM4nKnFOXnh6HmL2qr4Dri9
+         UVlthychACLH7LFU9/hcsAUsXU15YckTZWDL2eMmxYI9LdFAIg9mqtIYfmj8joTJkOW8
+         BY95iUTLWUilV+MdadPsJij9V6QVS7HIeZj4aWXs1NdMwe05mwazXaR6sWMlylAufK5L
+         7pYHvaPXtB5HW1kktAx6Zz1vmXuMFyp9c6IcMo7g4p1BJTxUQa/yvddzFhzGRRyx5nk4
+         sW+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jsh+9nIpfSBa1uEbPDqPUdbNg1GFShpfTtOI9ZfqinA=;
-        b=fjzqxhXfyh+oYYw7wwRgCbQXPOfm4nWcTPBEKLLbYVI4aw2RScCe/EA24ujl5zJTvA
-         L1TCa5jvAGSyY6H/sEAzW9+PqMVuQJ7S6/TUbAlB/VU7c93xBa89YGNDuh6II26z6l2e
-         CVwAUWBPj/3AmXUv3D+wZuk8o0nrr5a0JNByuQyjUctWxu81FZ4qRsFVvEZhEwHvOJ04
-         lT21WWdAUU7W2gvWvuFUEfi/gInXKWDj3lIoxewU5Yzc/SmHIVBNyeb/qcELAxvl8mC8
-         ODHLpXZ9eonHB7eObgJCZW9YRr3Kz1Egz8vwO8ZxMGDrKVeA6dITH9rDzB9I3KhPXmWe
-         ULJg==
-X-Gm-Message-State: AJIora91psfaCm+Hl5lkpIPbNkFh1Pyf8PSb3iYcBLi0xUnzzPiAwn2I
-        yD8sFugmrMo+3UtcvGhZfWR7kw==
-X-Google-Smtp-Source: AGRyM1vv7m0b7E/234X9osMyE0Ar/aQSj9TrfEOaTO6q4JlGEpk2zdpwTjkcgfSkZj0JFdWamW6DWA==
-X-Received: by 2002:a17:90b:1b0d:b0:1e6:847e:6448 with SMTP id nu13-20020a17090b1b0d00b001e6847e6448mr6122283pjb.125.1655236353306;
-        Tue, 14 Jun 2022 12:52:33 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id z11-20020aa7958b000000b0051bdb735647sm8046474pfj.159.2022.06.14.12.52.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jun 2022 12:52:32 -0700 (PDT)
-Date:   Tue, 14 Jun 2022 19:52:29 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Michael Roth <michael.roth@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v12 19/46] x86/kernel: Make the .bss..decrypted section
- shared in RMP table
-Message-ID: <Yqjm/b3deMlxxePh@google.com>
-References: <20220307213356.2797205-1-brijesh.singh@amd.com>
- <20220307213356.2797205-20-brijesh.singh@amd.com>
- <YqfabnTRxFSM+LoX@google.com>
- <YqistMvngNKEJu2o@google.com>
- <daaf7a84-4204-48ca-e40c-7ba296b4789c@amd.com>
- <YqizrTCk460kov/X@google.com>
- <6db51d45-e17a-38dd-131d-e43132c55dfb@amd.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zLlOpMMZLalQrrj3ld3d4c2TnADWloh8V/PPI75OtI4=;
+        b=cXbUlI65dbNWrBVWJqoCiND45KQETFbqDICXccJGXxpCgBtj9lZUXPdQhyVurWkvbd
+         4fN/nhVy3CF2G5fZqcmBDk8YEyw/KgYioaq+ZF+JMsT3KWPJoLZPzXHIFKiFHYzCqnzy
+         tC+rSsSzU/bIjsVXhRfH3r3r7enwFRhCG1E3aqsZHNhyPAUNzl/EIo1EKDL7EUUK4x+A
+         SQkdsOHPlrHYIOGS1sK+92o1vivmyP0xtLdMnpIBq4S/eixGoJtVpRy9Zp8P4VSYNRz/
+         UtOTYgmJvFlvhL5yLZYawy9VeWV6nNEG5XrFfBwkgrHkGWBZXvFsdo0hP+S4U8y2bwqq
+         7FCA==
+X-Gm-Message-State: AJIora9x0uSLQk0JvpbSfoRnLXN0W55OHHH7PuS8MZ9TfJs/l9YHnXIL
+        oOhpZKioKd6U5dcUuDShN+DKCLM3EYUME+JLKmnoBWPSboFSt526mWM=
+X-Google-Smtp-Source: AGRyM1sRyufxWNbEmVTtdEMXBl+wkYBMp8LvcOojRc7QZCqct+liLSZgd4rtP+D9JNxR4i6zCM2zOEhDklLil79ERKw=
+X-Received: by 2002:a05:6102:2911:b0:34b:dab7:832b with SMTP id
+ cz17-20020a056102291100b0034bdab7832bmr3754974vsb.76.1655257375932; Tue, 14
+ Jun 2022 18:42:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6db51d45-e17a-38dd-131d-e43132c55dfb@amd.com>
+References: <20220615002751.3371730-1-gayatri.kammela@linux.intel.com>
+In-Reply-To: <20220615002751.3371730-1-gayatri.kammela@linux.intel.com>
+From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Date:   Tue, 14 Jun 2022 21:42:29 -0400
+Message-ID: <CAE2upjTKF=rBympBM0sRUM1EWbFd7JASeyzkG1J-gic4co7fvw@mail.gmail.com>
+Subject: Re: [PATCH v1] platform/x86: intel/pmc: Add Alder Lake N support to
+ PMC core driver
+To:     Gayatri Kammela <gayatri.kammela@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jun 14, 2022, Tom Lendacky wrote:
-> On 6/14/22 11:13, Sean Christopherson wrote:
-> > > > > This breaks SME on Rome and Milan when compiling with clang-13.  I haven't been
-> > > > > able to figure out exactly what goes wrong.  printk isn't functional at this point,
-> > > > > and interactive debug during boot on our test systems is beyond me.  I can't even
-> > > > > verify that the bug is specific to clang because the draconian build system for our
-> > > > > test systems apparently is stuck pointing at gcc-4.9.
-> > > > > 
-> > > > > I suspect the issue is related to relocation and/or encrypting memory, as skipping
-> > > > > the call to early_snp_set_memory_shared() if SNP isn't active masks the issue.
-> > > > > I've dug through the assembly and haven't spotted a smoking gun, e.g. no obvious
-> > > > > use of absolute addresses.
-> > > > > 
-> > > > > Forcing a VM through the same path doesn't fail.  I can't test an SEV guest at the
-> > > > > moment because INIT_EX is also broken.
-> > > > 
-> > > > The SEV INIT_EX was a PEBKAC issue.  An SEV guest boots just fine with a clang-built
-> > > > kernel, so either it's a finnicky relocation issue or something specific to SME.
-> > > 
-> > > I just built and booted 5.19-rc2 with clang-13 and SME enabled without issue:
-> > > 
-> > > [    4.118226] Memory Encryption Features active: AMD SME
-> > 
-> > Phooey.
-> > 
-> > > Maybe something with your kernel config? Can you send me your config?
-> > 
-> > Attached.  If you can't repro, I'll find someone on our end to work on this.
-> 
-> I was able to repro. It dies in the cc_platform_has() code, where it is
-> trying to do an indirect jump based on the attribute (actually in the
-> amd_cc_platform_has() which I think has been optimized in):
-> 
-> bool cc_platform_has(enum cc_attr attr)
+Is RocketLake the same as Alder Lake N? Otherwise, it looks pretty
+straight forward.
 
-...
+Reviewed-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
 
-> ffffffff81002160:       ff 24 c5 c0 01 00 82    jmp    *-0x7dfffe40(,%rax,8)
-> 
-> This last line is what causes the reset. I'm guessing that the jump isn't
-> valid at this point because we are running in identity mapped mode and not
-> with a kernel virtual address at this point.
-> 
-> Trying to see what the difference was between your config and mine, the
-> indirect jump lead me to check the setting of CONFIG_RETPOLINE. Your config
-> did not have it enabled, so I set CONFIG_RETPOLINE=y, and with that, the
-> kernel boots successfully.
 
-That would explain why my VMs didn't fail, I build those kernels with CONFIG_RETPOLINE=y.
+On Tue, Jun 14, 2022 at 8:28 PM Gayatri Kammela
+<gayatri.kammela@linux.intel.com> wrote:
+>
+> Add Alder Lake N (ADL-N) to the list of the platforms that Intel's
+> PMC core driver supports. RocketLake reuses all the TigerLake PCH IPs.
+>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: David E. Box <david.e.box@linux.intel.com>
+> Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/core.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 40183bda7894..a1fe1e0dcf4a 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1911,6 +1911,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>         X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,      &icl_reg_map),
+>         X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,          &tgl_reg_map),
+>         X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,         &tgl_reg_map),
+> +       X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,         &tgl_reg_map),
+>         X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,           &adl_reg_map),
+>         X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
+>         {}
+>
+> base-commit: b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3
+> --
+> 2.25.1
+>
 
-> With retpolines, the code is completely different around here:
 
-...
-
-> I'm not sure if there's a way to remove the jump table optimization for
-> the arch/x86/coco/core.c file when retpolines aren't configured.
-
-And for post-boot I don't think we'd want to disable any such optimizations.
-
-A possibled "fix" would be to do what sme_encrypt_kernel() does and just query
-sev_status directly.  But even that works, the fragility of the boot code is
-terrifying :-(  I can't think of any clever solutions though.
-
-Many thanks again Tom!
-
----
- arch/x86/include/asm/sev.h |  4 ++++
- arch/x86/kernel/head64.c   | 10 +++++++---
- arch/x86/kernel/sev.c      | 16 +++++++++++-----
- 3 files changed, 22 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 19514524f0f8..701c561fdf08 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -193,6 +193,8 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
- void setup_ghcb(void);
- void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
- 					 unsigned int npages);
-+void __init __early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
-+					  unsigned int npages);
- void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
- 					unsigned int npages);
- void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op);
-@@ -214,6 +216,8 @@ static inline void setup_ghcb(void) { }
- static inline void __init
- early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr, unsigned int npages) { }
- static inline void __init
-+__early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr, unsigned int npages) { }
-+static inline void __init
- early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr, unsigned int npages) { }
- static inline void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op) { }
- static inline void snp_set_memory_shared(unsigned long vaddr, unsigned int npages) { }
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index bd4a34100ed0..5efab0d8e49d 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -127,7 +127,9 @@ static bool __head check_la57_support(unsigned long physaddr)
- }
- #endif
-
--static unsigned long __head sme_postprocess_startup(struct boot_params *bp, pmdval_t *pmd)
-+static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
-+						    pmdval_t *pmd,
-+						    unsigned long physaddr)
- {
- 	unsigned long vaddr, vaddr_end;
- 	int i;
-@@ -156,7 +158,9 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp, pmdv
- 			 * address but the kernel is currently running off of the identity
- 			 * mapping so use __pa() to get a *currently* valid virtual address.
- 			 */
--			early_snp_set_memory_shared(__pa(vaddr), __pa(vaddr), PTRS_PER_PMD);
-+			if (sev_status & MSR_AMD64_SEV_SNP_ENABLED_BIT)
-+				__early_snp_set_memory_shared(__pa(vaddr), __pa(vaddr),
-+							      PTRS_PER_PMD);
-
- 			i = pmd_index(vaddr);
- 			pmd[i] -= sme_get_me_mask();
-@@ -316,7 +320,7 @@ unsigned long __head __startup_64(unsigned long physaddr,
- 	 */
- 	*fixup_long(&phys_base, physaddr) += load_delta - sme_get_me_mask();
-
--	return sme_postprocess_startup(bp, pmd);
-+	return sme_postprocess_startup(bp, pmd, physaddr);
- }
-
- /* Wipe all early page tables except for the kernel symbol map */
-diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index c05f0124c410..48966ecc520e 100644
---- a/arch/x86/kernel/sev.c
-+++ b/arch/x86/kernel/sev.c
-@@ -714,12 +714,9 @@ void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long padd
- 	pvalidate_pages(vaddr, npages, true);
- }
-
--void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
--					unsigned int npages)
-+void __init __early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
-+					  unsigned int npages)
- {
--	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
--		return;
--
- 	/* Invalidate the memory pages before they are marked shared in the RMP table. */
- 	pvalidate_pages(vaddr, npages, false);
-
-@@ -727,6 +724,15 @@ void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr
- 	early_set_pages_state(paddr, npages, SNP_PAGE_STATE_SHARED);
- }
-
-+void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
-+					unsigned int npages)
-+{
-+	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-+		return;
-+
-+	__early_snp_set_memory_shared(vaddr, paddr, npages);
-+}
-+
- void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op)
- {
- 	unsigned long vaddr, npages;
-
-base-commit: b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3
---
-
+-- 
+Thanks,
+Rajneesh
