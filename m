@@ -2,86 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED032C43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Jun 2022 10:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12641C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Jun 2022 11:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243952AbiFOKye (ORCPT
+        id S1346373AbiFOLWz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Jun 2022 06:54:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47998 "EHLO
+        Wed, 15 Jun 2022 07:22:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233661AbiFOKyd (ORCPT
+        with ESMTP id S1345753AbiFOLWv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Jun 2022 06:54:33 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE0B522CC;
-        Wed, 15 Jun 2022 03:54:32 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id n10so22419155ejk.5;
-        Wed, 15 Jun 2022 03:54:32 -0700 (PDT)
+        Wed, 15 Jun 2022 07:22:51 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA945220;
+        Wed, 15 Jun 2022 04:22:27 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id n10so22557910ejk.5;
+        Wed, 15 Jun 2022 04:22:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FvMKd4KKRKUMir0Cr403t8MbrCd1Ebi5CzetpJyqwmk=;
-        b=ZNvLP6IHrqVdFY3IjQ/DXgKkdf/o6QPFiEhs9XBpiDx/cg+mFrkcEY2/wj4q7Yjy7Q
-         NQZKPEhh1bfnic6ztJsfARTmk5XkQznDD6ixRqviVECVIBZeN+p3NySev8u1Nvn3iLXy
-         aBa6suCcTktw0V6DewfH+zfxdKcR/XvWIvT8qHdM1DxPilxbscG0g/iXCe5Hyjdij5tb
-         L/zsIYL+9whzJ04F8rcFhNlwOk1C0WJ2NndUyEEgf2UCC/8/W/kV8BukZwViai0SKBnY
-         Fe8JILq424z/wNbtR/g1KVAT5Tut7Tgy1QCop9Y1LjxmxtPRk6MY8IR9O0dtGmSPb3rV
-         wOlg==
+        bh=yS4AEQhVOxYtw9bkG8bQ5OUIdbAZ8lf4Xr7hDzTTOJM=;
+        b=Ukb88aqEEeeeaHcbY7m5Yr493yWZYALiPv7J935rjlqmAkTRvWBSLWYid+GWmUtZay
+         9qgRnoYrTB/T1cZVFUrYv+iPpMQQGHv1/DZkDWzbCKXxqoe9auDAOMubA9OoogE8Fcke
+         h9eOcqRDKr339Mth5LsC8YXDbLmlAbpx3C1WTw068dDJJNn81mcHEa/kLF2bzVZ/YSDQ
+         HP/K+L3oswilfZRHy9tjMktcoPBBxdjWKRJWcCoBTrVUbOcyvkxz1d7E3w+r3jEaOMxP
+         NqEXRziLhZiDj/3GIO8YI8nZMaufL3i0vbRSfzlkkEKKW2Ky8N2y+ihLdgOg3HHAD/dJ
+         T0sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FvMKd4KKRKUMir0Cr403t8MbrCd1Ebi5CzetpJyqwmk=;
-        b=ezxbIu4yOWJIn6ftXE94NxZUwFq1ix6bts6DOc+YoAA0OSroyq+6gpypwpeY40Syzi
-         jKYcNRYyHIt67lI+u705oQJikd7ryPMmz38AJ/auRSm01UZlQRKeTW6pe1bT3cH2vxXH
-         6c78OYNjFQCytt4X3qDSe/ct8/2PQnwC0lihHqOIt66NoemvqT09F05lQ3h3D9penlD7
-         MrgLrPChyqhbn599PFhfhUICkH663gZjf4B6JdRL4yPL0BL5+OV03CJTghTdBKp5+Sry
-         AMKgKTnyO8Q1RoZwxUaiUGaCHjaOj15xlDcH7lgQghk71x5Mpwy8hZk/I/i3R9+5b3E8
-         dxmw==
-X-Gm-Message-State: AOAM530vHjpAWLFSVivG/A29tviB/IGsljLqvBpDKTwJqQOhHavKS3l6
-        23RIxqh8RUOOWAmNLHgdwdxpHrfw8mgVQgGRGBrHl0RWXoNUTg==
-X-Google-Smtp-Source: AGRyM1sfDJWK0pt/4Gdwh45Wsy2UAp27zdAMS37AdAo5twCBdpgKzBsztxZO7KUaHq9wCFPtSHHeSyqQoEpWnqzEfqo=
-X-Received: by 2002:a17:906:a202:b0:711:29a:c96c with SMTP id
- r2-20020a170906a20200b00711029ac96cmr8495653ejy.407.1655290471155; Wed, 15
- Jun 2022 03:54:31 -0700 (PDT)
+        bh=yS4AEQhVOxYtw9bkG8bQ5OUIdbAZ8lf4Xr7hDzTTOJM=;
+        b=z3jJ5fKIPg1gXLYkzVnRZbDoIC4CXC8GDNMWFSJaymOM9SfkfqT28ltQZrxLchgnxv
+         01L2mlCiSzveOkjjo07xDtf7TOcW4MIXlmfuh/O4VWjNIqSej9T5LN3b2YgQrdzxBmjW
+         NrpGNCnyyxgg5k1WnXxcBijQrgMyeQqrUmEojdehoj+XvDCIW12mIJDXks43eaEFvLon
+         lCPoTwE5z8cV/SWBt+vWY+TJr3XJif6QDx7AHi6Ht/WFDEzZ8ivrZEStQ1i8GoPlTFll
+         rJckCLIGZW0s0NYa0AmUfwdX6clpeFxlTKhDt8gb/o2lHFzlu4kvfv8BaPsCf+Ft7J5p
+         WOUQ==
+X-Gm-Message-State: AOAM530GeZDoZ61S6IDoltwECC7oIAECeTBKhihfyxVzK0mCjQR/FxWT
+        BBkQgqIMKJG+G74qk51qwLSGlezojE+wjx8T6erm7j4YHU3OPg==
+X-Google-Smtp-Source: ABdhPJwnjrX0McnQqoik8S22Pbe+lTRpbNgs0SpPLmlzTwjVkQ+QwjnzpUyYdGKwU1/RfSbNzO80TTZZZRgIndreomE=
+X-Received: by 2002:a17:906:1193:b0:70d:cf39:a4db with SMTP id
+ n19-20020a170906119300b0070dcf39a4dbmr8469334eja.44.1655292144186; Wed, 15
+ Jun 2022 04:22:24 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200821181433.17653-8-kenneth.t.chan@gmail.com>
  <20220612090507.20648-1-stefan.seyfried@googlemail.com> <20220612090507.20648-3-stefan.seyfried@googlemail.com>
 In-Reply-To: <20220612090507.20648-3-stefan.seyfried@googlemail.com>
-From:   Kenneth Chan <kenneth.t.chan@gmail.com>
-Date:   Wed, 15 Jun 2022 18:53:52 +0800
-Message-ID: <CAPqSeKuubG0Q2BhsYz+MbLi_ViU97whTzwVaUQOf7OvLSb4bFg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 15 Jun 2022 13:21:46 +0200
+Message-ID: <CAHp75Ve+vrfSu6pD+AKe-eCVA2pC5o520y4gVwLNg9Dtk0U5bw@mail.gmail.com>
 Subject: Re: [PATCH 2/2] platform/x86: panasonic-laptop: allow to use all hotkeys
 To:     stefan.seyfried@googlemail.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Kenneth Chan <kenneth.t.chan@gmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Stefan Seyfried <seife+kernel@b1-systems.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-I'm resending it due to reported spam. I forgot to turn off HTML
-formatting. My bad.
-
-Thanks for the patches.
-
+On Sun, Jun 12, 2022 at 3:54 PM <stefan.seyfried@googlemail.com> wrote:
+>
 > From: Stefan Seyfried <seife+kernel@b1-systems.com>
 >
 > commit ed83c9171829 broke the hotkeys on my Toughbook CF-51.
+
+The commit
+
 > I'm questioning the general validity of that commit, but as I only
 > have a single machine to test, add a module parameter to allow making
 > it work at runtime.
 
-I can confirm that as soon as the hotkey_input option is enabled (at
-least on my aged CF-W5) it reports the ACPI event twice. Unfortunately
-it's the only machine I have for testing. Unless we have a bigger
-sample base, making it a module_param is a safe choice.
+Thanks for the report and the fix, my comments below.
 
-Otherwise the patches look good to me.
+> +static bool hotkey_input;
+> +module_param(hotkey_input, bool, 0644);
+> +MODULE_PARM_DESC(hotkey_input, "Send all hotkeys to the input subsystem");
 
-Reviewed-by: Kenneth Chan <kenneth.t.chan@gmail.com>
+We usually add module options in very bad cases where it's very useful
+for debugging or when some devices require the opposite settings while
+can't be distinguished automatically. Here I do not see either of such
+cases. Hence, I would prefer to see a DMI based quirk as it's done a
+lot in the PDx86 drivers. Can you do that?
 
---
-Kenneth
+-- 
+With Best Regards,
+Andy Shevchenko
