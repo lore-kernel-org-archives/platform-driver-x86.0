@@ -2,83 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE2EC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Jun 2022 11:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8DAC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Jun 2022 16:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343798AbiFOLYq (ORCPT
+        id S1356805AbiFOQgS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Jun 2022 07:24:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52876 "EHLO
+        Wed, 15 Jun 2022 12:36:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343678AbiFOLYp (ORCPT
+        with ESMTP id S1356774AbiFOQgR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Jun 2022 07:24:45 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C82F35A8A;
-        Wed, 15 Jun 2022 04:24:45 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id y19so22569080ejq.6;
-        Wed, 15 Jun 2022 04:24:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RcIsYZgQ3wffpFYTz+tQ8CrN5DLnWI36Wvm6m89SFMM=;
-        b=YM/ce9swQN4g8I1u1q6a1V4OKZjzVZmw9/Lzud1xRfdDGqAdVXgVvb8RNZrmUO4noG
-         YutZlktsKUDVlu9OIVwIrrYscHWPfUp8e7GxTQ6GoQS+zV0GRkyAYdXDZiQ86h0lC+tG
-         MLe5gXSFrOe7QGcLz4MlrPq/jMziLb/hnYxE4IL/T4htOG1NUGgNwgk61FKx/voICzk6
-         OlkRnHWtH/lzxWtkJj/37f5oG8xp2fnUxFC3dc4DvUKnNl33tfz3+kCGVhClCTFByh3a
-         GUaCO7jjngZR/WU7ij2Bdio0jDCHm6lKO7ctDZMLXo9tXrf6n4bNspNRmarWuw+MguEE
-         9+vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RcIsYZgQ3wffpFYTz+tQ8CrN5DLnWI36Wvm6m89SFMM=;
-        b=zGIM39w4uSt6UIsSNq4wJPgGdyVJ2EJuUJjeo7CDKm/ehzRzagGGJMxbNF/TYKwkVh
-         36xo3m2JYdjBEjY9/UqYJYsO8ubz3lMrHd5vkrqACcsG/mg4hTndH510PNHHIleZbccG
-         BPTZGcKuFSg80arW9wQjgsnL/UTxACI6yuC7QI/x2u8oEfQElbLI8V/2uNqibXEs0KZl
-         DRS2NN4xBDOD8RXSj1kyqmlF3nvYl87cHu+dj5CuZ3VoOil61JGRDTaxRm31zKvlExuX
-         00SF+EnrOgLxKe6CP9v+Att9VA/SPtBGBhVtFGtyB7kE4FAZ5jPeSThVmJzpK+3LhCTM
-         IlHA==
-X-Gm-Message-State: AOAM531C0mGGe2Rdt8u7N6ODs3HV403ja+1X0pn4904oem30/kamO2Yy
-        wk+OjpcFHWiD4IcKOFoqmfPx34TCWucqKTRPUXxAyqlx9YoxeQ==
-X-Google-Smtp-Source: AGRyM1u167zDbthEdeQw+IsWWuX6OC89LCdIsKeXieMsDx1ZnUZgNc/sQmyoQ6YL9HT+xU9hiTBfz3Kxbr5V84JHmhw=
-X-Received: by 2002:a17:907:9721:b0:70c:65e7:2aa5 with SMTP id
- jg33-20020a170907972100b0070c65e72aa5mr8385497ejc.132.1655292284501; Wed, 15
- Jun 2022 04:24:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200821181433.17653-8-kenneth.t.chan@gmail.com>
- <20220612090507.20648-1-stefan.seyfried@googlemail.com> <20220612090507.20648-3-stefan.seyfried@googlemail.com>
- <CAHp75Ve+vrfSu6pD+AKe-eCVA2pC5o520y4gVwLNg9Dtk0U5bw@mail.gmail.com>
-In-Reply-To: <CAHp75Ve+vrfSu6pD+AKe-eCVA2pC5o520y4gVwLNg9Dtk0U5bw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 15 Jun 2022 13:24:06 +0200
-Message-ID: <CAHp75VdFPUHTeDBY5ukFgVqJJn7BbTHxrxKUGOLB6P1UX-utAg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: panasonic-laptop: allow to use all hotkeys
-To:     stefan.seyfried@googlemail.com
-Cc:     Kenneth Chan <kenneth.t.chan@gmail.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stefan Seyfried <seife+kernel@b1-systems.com>
+        Wed, 15 Jun 2022 12:36:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA0C934677
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jun 2022 09:36:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6FD11617EF
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jun 2022 16:36:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D1320C34115
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jun 2022 16:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655310975;
+        bh=3ge8TlkKPwVb22/q6HqKHmWzhuGnGVvyKJqId7d0nTc=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=tIN/BaHgLdp2m1PuZroqEUftW3Cx3FEC8BIkMPOpOqhF2mR+dY0wMaNcauEuDdbT2
+         BshMYmLalNb6NM6NTFF75zXjg+/0EveUmAnMjC5O/xSvF4k03G6Z2u/siGrihwzk4O
+         iisL9gx/tHupWmX2er0/a5F6rFWfmYeVNVzw73CLqN7tb5uMGUUptoLYgFGu/Rnm/Q
+         b+p+vLcw99AyMG+h8YFoyI6ogwHnF5l+H3ZmUcun7AdJSfseBVI7AOqSCgBIPvraUm
+         4FZaBEmLTyhIjVw9vzMM+6VMZrTAujw+coXjbZJ2E5fAYM0RjNvQVzLHuIZ49YM7lC
+         Q0Ex7gDKrJVVA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id BD943C05FD5; Wed, 15 Jun 2022 16:36:15 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
+Date:   Wed, 15 Jun 2022 16:36:15 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-214899-215701-SOTCr3mKhJ@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
+References: <bug-214899-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 15, 2022 at 1:21 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sun, Jun 12, 2022 at 3:54 PM <stefan.seyfried@googlemail.com> wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
 
-> We usually add module options in very bad cases where it's very useful
-> for debugging or when some devices require the opposite settings while
-> can't be distinguished automatically. Here I do not see either of such
-> cases. Hence, I would prefer to see a DMI based quirk as it's done a
-> lot in the PDx86 drivers. Can you do that?
+Hans de Goede (jwrdegoede@fedoraproject.org) changed:
 
-Looking into the code of the culprit patch, have you tried to add a
-debug pr_info() and see what value is in the result? Perhaps you may
-just sort out by correcting that.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #301163|0                           |1
+        is obsolete|                            |
+ Attachment #301177|0                           |1
+        is obsolete|                            |
 
--- 
-With Best Regards,
-Andy Shevchenko
+--- Comment #40 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+Created attachment 301181
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D301181&action=3Dedit
+Attempt 3 at fixing this (4 patches in a tarbal)
+
+Ok, this patch-set should still fix things on your IdeaPad while also not
+causing any ACPI errors on my X1C8.
+
+So this should be it, assuming it passes review.
+
+Please give this a try and let me know how it goes.
+
+I'll also submit this upstream as a RFC to get some discussion going about =
+the
+chosen approach, I'll put you in the Cc of that.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
