@@ -2,196 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBB7CCA47A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Jun 2022 16:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922FAC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Jun 2022 18:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235441AbiFPQlN (ORCPT
+        id S1377864AbiFPSja (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Jun 2022 12:41:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41926 "EHLO
+        Thu, 16 Jun 2022 14:39:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235390AbiFPQlM (ORCPT
+        with ESMTP id S1378000AbiFPSj2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Jun 2022 12:41:12 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5AF72FFD5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jun 2022 09:41:10 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id h1so1688705plf.11
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jun 2022 09:41:10 -0700 (PDT)
+        Thu, 16 Jun 2022 14:39:28 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9352541B1;
+        Thu, 16 Jun 2022 11:39:25 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id m20so4346767ejj.10;
+        Thu, 16 Jun 2022 11:39:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MgmvFnUtjCO2ZoSD/nh5tvlUNfC+KyhUyQKzm2xuMbA=;
-        b=rlwAFQlOm9itrfoCxgGh2ywywZl2bMeNhE/UA1PRYZB7i/vvH7BJx3aAMyfon2pdrX
-         pGUCFTdy6Qt+qWQjwXYPfiIcqN2Zn1lVN7FZmUw4gBTqeBQzHay+jfk5j8v8udJ69z4c
-         Ovi2fhLTQyq92Fboa5CW44YjCxausTVRZBemYXcSZxLbvYlej4x2lNJtiFZH0EC43HNm
-         6zrK2x9JwIjc/UxsKb4jh0zY64YzOcypofW1QgsGJAYt8YH5SlvJ6ob0WVBnlosQCuB7
-         C80yyHM3T2egJ6kEAfcwVphKIOZ24uXk1bcvLPuwLcvQgo3vqgtnZ2759mIzyjU2ethL
-         94zg==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bGYFIH9aSkriLdFfiKulB4E6eyOYQPrarXGAwb17SDA=;
+        b=eQVuGG1rUjiWvp+r8nAzdDDY7VksQYDYjLVelqq+oyBm5mlEOPtz2QUVbJjKsliM3S
+         OZKN0bSAG4ovLj2DuCOcL3DjW8Gh/4BVNBu/bTBXSNIz5+39kzi6FNfzaOZLo1l52ES6
+         iZb2fiKyVeQqd63/J66fQ/ONrwQ4bjuA5lSvtUFgxIZx1RBW3wqXJ6AuDugGi5ohNZx9
+         hfY0AUr3pbciYQrwNbwZGUGoPftkEv3vBEYTx7htdHsuFpK5xru9FJuK09WxTJyodms2
+         PF8PNEIq3NigPKJe+9Vfkt0X5cN1TmhYTO+eN88DHrIWu812u0BWiEiLZWjmVsiqYddy
+         UmJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MgmvFnUtjCO2ZoSD/nh5tvlUNfC+KyhUyQKzm2xuMbA=;
-        b=BKiRiZMH9qLdPhmn1hEEWGDdhWLeyeN6HyhpI8zvRA0LBHAra5O422lTbu4NohU8nG
-         h4K3wiro8V3n2nzTvS7SjTtes3NzSziJ5UrZ0JFG/qrWUINH6fotvlbLAtkojnctZfxM
-         FDsBCXYj+SnOVqtWMFu8lfFQ+miu+xzNDnOVhbhmB7dGmoE4VDEb5VRS64BKXXFzDUkM
-         ldFugI0zMnbIBsQA1IoKyYqkASdj+Vcr0PmUVTXAcHyUA1d1Mo6iMNmJNlvQ6FwFi6A/
-         GbhN0N+IWaTod76OdeYH3EZzltzdFltqBl2F+qREehbMX2vg5T0uqC+9HhbjA1RFkhJC
-         pr8Q==
-X-Gm-Message-State: AJIora/l0usv5Dg4Uk+O1Dum1W2qN7ccrUsH/KC5YfZbdhY8L5UN+4AT
-        2DQxUv8eDVOtbZ1UQp13n0lQsw==
-X-Google-Smtp-Source: AGRyM1vlSK6hxncAIYtMkN18fpKkq/QvaVi/pEh5N9nHCclY7o89DXDIz4RXJ2yZPL1ZZAT6zOGVRg==
-X-Received: by 2002:a17:903:41ca:b0:169:9b8:36bf with SMTP id u10-20020a17090341ca00b0016909b836bfmr2742734ple.161.1655397669715;
-        Thu, 16 Jun 2022 09:41:09 -0700 (PDT)
-Received: from google.com (123.65.230.35.bc.googleusercontent.com. [35.230.65.123])
-        by smtp.gmail.com with ESMTPSA id j5-20020a17090adc8500b001e34b5ed5a7sm4031001pjv.35.2022.06.16.09.41.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jun 2022 09:41:09 -0700 (PDT)
-Date:   Thu, 16 Jun 2022 16:41:05 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Michael Roth <michael.roth@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v12 19/46] x86/kernel: Make the .bss..decrypted section
- shared in RMP table
-Message-ID: <YqtdIf7OSivLxFL0@google.com>
-References: <20220307213356.2797205-1-brijesh.singh@amd.com>
- <20220307213356.2797205-20-brijesh.singh@amd.com>
- <YqfabnTRxFSM+LoX@google.com>
- <YqistMvngNKEJu2o@google.com>
- <daaf7a84-4204-48ca-e40c-7ba296b4789c@amd.com>
- <YqizrTCk460kov/X@google.com>
- <6db51d45-e17a-38dd-131d-e43132c55dfb@amd.com>
- <Yqjm/b3deMlxxePh@google.com>
- <9abe9a71-242d-91d5-444a-b56c8b9b6d90@amd.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bGYFIH9aSkriLdFfiKulB4E6eyOYQPrarXGAwb17SDA=;
+        b=S3Z9H2I8yEbbru9I+pA0w/j9fsQJKIXw7VLoBZHoBVoOD/4M1A7xkiqrn6vaxZBICi
+         a8kcln83a5Djse/K9sXtFP6iGEhSdpyGaRTbaYIY4BeXuAibUcEmFM9o0DXKoT619DA0
+         UDWlQ5xgw76+a9Os6XlpXuIsSAh/BRL0DiRMCoPJR6k2hXtVlccbu344v7Q7tBOkuiNL
+         +uDjP7TktLxMLMB1tU5SBD8ueWnqqnWicd4dTUGbWSWJESsh5u9Oux+HYh0UkVBH7bt1
+         rWOuYrgo6Nde+yGud+k3P40oewoSMYb+tyOxhAg9/mkacdEyCSiv6mYOIoWzYsQjgbYj
+         0iJQ==
+X-Gm-Message-State: AJIora8XKKpN5L3NRbVOICs8b47ngUUWh3ESPG2punP929gZuUcdLqb0
+        LU0iGkUoIK4kLLP0/8jh9otA/HWGdVUfRXMW+tM=
+X-Google-Smtp-Source: AGRyM1vO9rGooCHoVbpV/hrK9KzzzVRjUCAqtktqt/IjEA491gU+sNk3TEM+VuufSUnbaTlCKuqlmrdgFRxBRsBnlR0=
+X-Received: by 2002:a17:906:a202:b0:711:29a:c96c with SMTP id
+ r2-20020a170906a20200b00711029ac96cmr5860508ejy.407.1655404764089; Thu, 16
+ Jun 2022 11:39:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9abe9a71-242d-91d5-444a-b56c8b9b6d90@amd.com>
+References: <20200821181433.17653-8-kenneth.t.chan@gmail.com>
+ <20220612090507.20648-1-stefan.seyfried@googlemail.com> <20220612090507.20648-3-stefan.seyfried@googlemail.com>
+ <CAHp75Ve+vrfSu6pD+AKe-eCVA2pC5o520y4gVwLNg9Dtk0U5bw@mail.gmail.com>
+ <CAHp75VdFPUHTeDBY5ukFgVqJJn7BbTHxrxKUGOLB6P1UX-utAg@mail.gmail.com>
+ <d80789bc-a8fc-de5f-164a-75adf7097311@message-id.googlemail.com> <6969ca0e-4a4c-c995-02a2-6645f875338c@redhat.com>
+In-Reply-To: <6969ca0e-4a4c-c995-02a2-6645f875338c@redhat.com>
+From:   Kenneth Chan <kenneth.t.chan@gmail.com>
+Date:   Fri, 17 Jun 2022 02:38:46 +0800
+Message-ID: <CAPqSeKugObSvP=CWVp6+7J+O5a0xA9o77+_CzcKZK_hn49iGqA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] platform/x86: panasonic-laptop: allow to use all hotkeys
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Stefan Seyfried <stefan.seyfried@googlemail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stefan Seyfried <seife+kernel@b1-systems.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jun 16, 2022, Tom Lendacky wrote:
-> On 6/14/22 14:52, Sean Christopherson wrote:
-> > On Tue, Jun 14, 2022, Tom Lendacky wrote:
-> > > On 6/14/22 11:13, Sean Christopherson wrote:
-> > > > > > > This breaks SME on Rome and Milan when compiling with clang-13.  I haven't been
-> > > > > > > able to figure out exactly what goes wrong.  printk isn't functional at this point,
-> > > > > > > and interactive debug during boot on our test systems is beyond me.  I can't even
-> > > > > > > verify that the bug is specific to clang because the draconian build system for our
-> > > > > > > test systems apparently is stuck pointing at gcc-4.9.
-> > > > > > > 
-> > > > > > > I suspect the issue is related to relocation and/or encrypting memory, as skipping
-> > > > > > > the call to early_snp_set_memory_shared() if SNP isn't active masks the issue.
-> > > > > > > I've dug through the assembly and haven't spotted a smoking gun, e.g. no obvious
-> > > > > > > use of absolute addresses.
-> > > > > > > 
-> > > > > > > Forcing a VM through the same path doesn't fail.  I can't test an SEV guest at the
-> > > > > > > moment because INIT_EX is also broken.
-> > > > > > 
-> 
-> > 
-> > > I'm not sure if there's a way to remove the jump table optimization for
-> > > the arch/x86/coco/core.c file when retpolines aren't configured.
-> > 
-> > And for post-boot I don't think we'd want to disable any such optimizations.
-> > 
-> > A possibled "fix" would be to do what sme_encrypt_kernel() does and just query
-> > sev_status directly.  But even that works, the fragility of the boot code is
-> > terrifying :-(  I can't think of any clever solutions though.
-> 
-> I worry that another use of cc_platform_has() could creep in at some point
-> and cause the same issue. Not sure how bad it would be, performance-wise, to
-> remove the jump table optimization for arch/x86/coco/core.c.
+On Thu, 16 Jun 2022 at 03:28, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Kenneth, can you check with e.g. evemu-record or evtest
+> where the double events are coming from ?  Obviously one of
+> the events is coming from the panasonic-laptop driver, but
+> where is the other event coming from. Is it coming from the
+> atkbd driver; or ... ?   Maybe from the acpi-video driver
+> for the brightness keys ?
+>
 
-One thought would be to initialize "vendor" to a bogus value, disallow calls to
-cc_set_vendor() until after the kernel as gotten to a safe point, and then WARN
-(or panic?) if cc_platform_has() is called before "vendor" is explicitly set.
-New calls can still get in, but they'll be much easier to detect and less likely
-to escape initial testing.
+Certainly. I'm happy to dig deeper and see what it's up to.
 
-diff --git a/arch/x86/coco/core.c b/arch/x86/coco/core.c
-index 49b44f881484..803220cd34a6 100644
---- a/arch/x86/coco/core.c
-+++ b/arch/x86/coco/core.c
-@@ -13,7 +13,11 @@
- #include <asm/coco.h>
- #include <asm/processor.h>
-
--static enum cc_vendor vendor __ro_after_init;
-+/*
-+ * Initialize the vendor to garbage to detect usage of cc_platform_has() before
-+ * the vendor has been set.
-+ */
-+static enum cc_vendor vendor = CC_NR_VENDORS __ro_after_init;
- static u64 cc_mask __ro_after_init;
-
- static bool intel_cc_platform_has(enum cc_attr attr)
-@@ -90,7 +94,10 @@ bool cc_platform_has(enum cc_attr attr)
-                return intel_cc_platform_has(attr);
-        case CC_VENDOR_HYPERV:
-                return hyperv_cc_platform_has(attr);
-+       case CC_VENDOR_NONE:
-+               return false;
-        default:
-+               WARN_ONCE(1, "blah blah blah");
-                return false;
-        }
- }
-diff --git a/arch/x86/include/asm/coco.h b/arch/x86/include/asm/coco.h
-index 3d98c3a60d34..adfd2fbce7ac 100644
---- a/arch/x86/include/asm/coco.h
-+++ b/arch/x86/include/asm/coco.h
-@@ -9,6 +9,7 @@ enum cc_vendor {
-        CC_VENDOR_AMD,
-        CC_VENDOR_HYPERV,
-        CC_VENDOR_INTEL,
-+       CC_NR_VENDORS,
- };
-
- void cc_set_vendor(enum cc_vendor v);
-
-> I guess we can wait for Boris to get back and chime in.
-> 
-> > diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-> > index bd4a34100ed0..5efab0d8e49d 100644
-> > --- a/arch/x86/kernel/head64.c
-> > +++ b/arch/x86/kernel/head64.c
-> > @@ -127,7 +127,9 @@ static bool __head check_la57_support(unsigned long physaddr)
-> >   }
-> >   #endif
-> > 
-> > -static unsigned long __head sme_postprocess_startup(struct boot_params *bp, pmdval_t *pmd)
-> > +static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
-> > +						    pmdval_t *pmd,
-> > +						    unsigned long physaddr)
-> 
-> I noticed that you added the physaddr parameter but never use it...
-
-Likely just garbage on my end, I was trying various ideas.
+-- 
+Kenneth
