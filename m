@@ -2,168 +2,125 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AE5C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Jun 2022 13:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A890BC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Jun 2022 23:37:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381794AbiFQNHg (ORCPT
+        id S232793AbiFSXh1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Jun 2022 09:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53824 "EHLO
+        Sun, 19 Jun 2022 19:37:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381727AbiFQNHf (ORCPT
+        with ESMTP id S231539AbiFSXh0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Jun 2022 09:07:35 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F23D33881;
-        Fri, 17 Jun 2022 06:07:31 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id v1so8642836ejg.13;
-        Fri, 17 Jun 2022 06:07:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:content-language:to:cc
-         :references:from:subject:in-reply-to:content-transfer-encoding;
-        bh=EgM/55Bgwb9NtXmPkvIN9CBkEmMtdD1Usod399h4Ozc=;
-        b=Q/4P8EcCJYN+Jn5qumvRFCk34bxXni1uSse9Q7QPgKp+LyCC08tupqcVEPz054rkNv
-         vg+HwrK/XDi7cIQPG+o37RXNhrb9o5J+7Hr+d/LmVpn+KWZlY4ZIYag7cqePLcNaPfpl
-         ftLkmtoqGF5fL3t2luEa5OYcnWJRUXtaovnZS9fKKom1A2wLA7AXAg8seq/64l5mHni0
-         8dtp8R90x9z95qxmqCwNvAe9ir7Tt/HbfX5PJINe9AucrFepvr5u7gid2n59ZdmRZii7
-         IeIyPHgI2dWFE/cW9KhygO46XyoYWxm/JXzE1Q7Ya/9q6zBELlvXCCdpCOhMIfg9Lfmr
-         aBNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent
-         :content-language:to:cc:references:from:subject:in-reply-to
-         :content-transfer-encoding;
-        bh=EgM/55Bgwb9NtXmPkvIN9CBkEmMtdD1Usod399h4Ozc=;
-        b=Kb2MXwYz2XA7D1JgD9wxC+6IXKmHQ3v6gSQeTa9kihaQY4w41mk2mp0lcPT93x5AHq
-         MFxflcu47mONxD/dcm4avajEcNsLnEF/ycydaeAdnVSkmahrEZwvZAfgFWuU4cX+rx14
-         GDy5HQTNS2wUNAZS5q+lx20ywYJmJhnv/jtxZF3d234ME1N4EamwDZsh21cWJsdBSozu
-         6TIkBB2E9Sh1K0YTwKowb+O2JzBVAhKrva1znn3zyhYoQsFc0aEZxSsXNYt5TO4CR4ZH
-         9HhWYlZHzXU+EnYvosI9CWM2mnXryL4vHEQNDV9qB0UtpHOnaRENkgBT7QyrD6OJGEjw
-         A0TA==
-X-Gm-Message-State: AJIora+UDsc9YCPkPSqYd+jb4J+fwVnrZo6cW1tIozsOQJ4LY9j/F/st
-        LepqOT+gssYTnsro03PkW/s=
-X-Google-Smtp-Source: AGRyM1s5eS9OJhUK1yYzMMOiQnlTWeu/qJ2WtRUmKrArXBadtAWB0It61i5HZXsA9CJUHpnSYTe9mw==
-X-Received: by 2002:a17:907:6e02:b0:719:2c77:37ce with SMTP id sd2-20020a1709076e0200b007192c7737cemr8659054ejc.759.1655471250003;
-        Fri, 17 Jun 2022 06:07:30 -0700 (PDT)
-Received: from [192.168.200.12] (p5790330e.dip0.t-ipconnect.de. [87.144.51.14])
-        by smtp.gmail.com with ESMTPSA id c1-20020a17090618a100b006fea2705d18sm2155582ejf.210.2022.06.17.06.07.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jun 2022 06:07:29 -0700 (PDT)
-Message-ID: <89398c05-92c6-120d-ed51-ab62f1f404eb@message-id.googlemail.com>
-Date:   Fri, 17 Jun 2022 15:07:28 +0200
+        Sun, 19 Jun 2022 19:37:26 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF09B1C3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jun 2022 16:37:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B74C5B80BA9
+        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jun 2022 23:37:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 61906C34114
+        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jun 2022 23:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655681842;
+        bh=/nz94wF0suXXQC8wxAuHBxIfoA4dDNxBmB9lyyJPkoM=;
+        h=From:To:Subject:Date:From;
+        b=cTRpuejxfGMhG7bGWMCc/NhNQjYsKJf6zv4WMEFedRJ2fXtI6svRir1E/ldZtvLbE
+         bllt3qQd+4/wkPVA81/TijkgjXCyBPYSB9BNDBLsvkIDe0oQN0wRSqynqukrQnQnM6
+         8nEUg6TCbMRxRz8rIHAe/72Vt+VNkohudP9ePuWFSYlQ9iF4AnInL4AppTmoV7VvaF
+         d8noxT+UbOUlKdVqXXWoCawLElqSs75NaJi2p5VI+IxXK7pTj+d1Q7Owln0SRdKgNK
+         MLKHZK7gGcHDuEZ5Xm1aTdaRTFwOXRw1dx0WTnivHbOd2o14GoWnqPxBOEp9GYt7EK
+         mZAPZ67D5HAZw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 43386C05FD2; Sun, 19 Jun 2022 23:37:22 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216150] New: ideapad-laptop exposes only two keyboard backlight
+ levels, instead of three
+Date:   Sun, 19 Jun 2022 23:37:22 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: tinozzo123@tutanota.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression
+Message-ID: <bug-216150-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stefan Seyfried <seife+kernel@b1-systems.com>
-References: <20200821181433.17653-8-kenneth.t.chan@gmail.com>
- <20220612090507.20648-1-stefan.seyfried@googlemail.com>
- <20220612090507.20648-3-stefan.seyfried@googlemail.com>
- <CAHp75Ve+vrfSu6pD+AKe-eCVA2pC5o520y4gVwLNg9Dtk0U5bw@mail.gmail.com>
- <CAHp75VdFPUHTeDBY5ukFgVqJJn7BbTHxrxKUGOLB6P1UX-utAg@mail.gmail.com>
- <d80789bc-a8fc-de5f-164a-75adf7097311@message-id.googlemail.com>
- <6969ca0e-4a4c-c995-02a2-6645f875338c@redhat.com>
- <CAPqSeKu9csK_u0S6MiRay_mvfYejUhKbb=wvJO7F_Z-JL6F7DA@mail.gmail.com>
- <5f03f5b9-87bb-e27d-ce51-9c1572221f21@redhat.com>
-From:   Stefan Seyfried <stefan.seyfried@googlemail.com>
-Subject: Re: [PATCH 2/2] platform/x86: panasonic-laptop: allow to use all
- hotkeys
-In-Reply-To: <5f03f5b9-87bb-e27d-ce51-9c1572221f21@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216150
 
-On 17.06.22 13:07, Hans de Goede wrote:
+            Bug ID: 216150
+           Summary: ideapad-laptop exposes only two keyboard backlight
+                    levels, instead of three
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 5.18.1
+          Hardware: All
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: tinozzo123@tutanota.com
+        Regression: No
 
-> Thank you for providing this info. Can you please give
-> the attached patch series a try, this includes Stefan's 1/2 patch
-> and replaces Stefan's 2/2 patch.
-> 
-> This will hopefully fix the double key-presses for you, while
-> also keeping everything working for Stefan without requiring
-> a module option or DMI quirks.
-> 
-> Stefan can you also give this series a try please?
+I own a Lenovo IdeaPad 5 14ARE05, which has three keyboard brightness level=
+s:
+off, low and high, which are cycled through with the Fn+space key combo.
+However, ideapad-laptop.c sets max_brightness to 1, which means that the
+brightness is either off (0) or on (1). This means that I'm unable to select
+the high intensity brightness from ACPI like I could on a ThinkPad (I don't=
+ own
+one, but thinkpad_acpi.c sets max_brightness to 2, so I guess that it doesn=
+'t
+have that problem).
 
-Works for me, almost out of the box.
-I need to enable "report_key_events=1" in the video module, then the 
-panasonic-acpi module starts reporting brightness up/down keys.
 
-Volume and mute keys work without manual changes.
+Still, I don't know if this feature is present on all IdeaPad laptops. I
+couldn't find any documentation on this (there is an article on Lenovo's
+support, but it only refers to ThinkPads*). Even the user manual of my lapt=
+op
+doesn't mention this (it only says that it has keyboard backlight, not that=
+ it
+has three levels). Finally, I never tested Windows, so I don't know if Leno=
+vo
+Vantage provides any more settings.
 
-(I tested against 5.18.2 because that's what was already prepared. That 
-old machine takes quite some time, even to just compile the platform/x86 
-subdirectory ;-) but I don't think this is relevant. If you think it is, 
-I can also test against latest 5.19-rc code)
+Also, small note: right now, if the keyboard brightness is at high intensity
+(with Fn+space, since there is no other way to do it), then is set to 0 usi=
+ng
+ACPI (and *not* with Fn+space), then set to 1 again with ACPI (still *not* =
+with
+Fn+space), the result is that the keyboard backlight will turn on with high
+intensity (and the next Fn+space will turn it off) instead of low.
 
-> Looking at this has also brought up an unrelated backlight question:
-> 
-> Kenneth, since you have acpi-video reporting keypresses you will
-> likely also have an acpi_video (or perhaps a native intel) backlight
-> under /sys/class/backlight and I noticed that panasonic-laptop
-> uncondirionally registers its backlight so you may very well end
-> up with 2 backlight controls under /sys/class/backlight, which
-> we generally try to avoid (so that userspace does not have to
-> guess which one to use).
-> 
-> Can you do:
-> ls /sys/class/backlight
+*https://support.lenovo.com/us/en/solutions/ht104451-how-to-turn-onoff-the-=
+keyboard-light-backlit-on-your-laptop-thinkpad
 
-toughbook:~ # ls -l /sys/class/backlight/
-total 0
-lrwxrwxrwx 1 root root 0 Jun 17 14:45 intel_backlight -> 
-../../devices/pci0000:00/0000:00:02.0/drm/card0/card0-LVDS-1/intel_backlight
-lrwxrwxrwx 1 root root 0 Jun 17 14:49 panasonic -> 
-../../devices/virtual/backlight/panasonic
+--=20
+You may reply to this email to add a comment.
 
-> and let me know the output?
-> 
-> Also if there are 2 backlights there then please do:
-> cat /sys/class/backlight/<name>/max_brightness
-> to find out the range (0-value)
-
-toughbook:/sys/class/backlight # grep . */max_brightness
-intel_backlight/max_brightness:19531
-panasonic/max_brightness:255
-
-> and then try if they both work by doing:
-> 
-> echo $number > /sys/class/backlight/<name>/brightness
-> 
-> with different $number values in the range and see
-> if this actually changes the brightness.
-
-intel_backlight: does not work
-panasonic: does work
-
-> While we are at it, Stefan can you do the same please?
-
-See above.
-But hey, this is an i855GM graphics chip, I'm happy if it is still 
-working *at all* (for example I need to avoid the xf86-intel driver and 
-use the modesetting driver instead to get a usable sytstem)
-
-And I'm totally happy if all I have to do in the future is a
-
-option video report_key_events=1
-
-modprobe.conf file ;-)
-
-Best regards,
-
-	Stefan
--- 
-Stefan Seyfried
-
-"For a successful technology, reality must take precedence over
-  public relations, for nature cannot be fooled." -- Richard Feynman
+You are receiving this mail because:
+You are watching the assignee of the bug.=
