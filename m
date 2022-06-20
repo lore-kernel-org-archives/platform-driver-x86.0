@@ -2,97 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B759BC43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Jun 2022 15:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CBCC43334
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Jun 2022 15:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242656AbiFTPLW (ORCPT
+        id S243322AbiFTPMF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Jun 2022 11:11:22 -0400
+        Mon, 20 Jun 2022 11:12:05 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243092AbiFTPLH (ORCPT
+        with ESMTP id S242127AbiFTPLj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Jun 2022 11:11:07 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABFD2DF5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 07:59:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0C4E2B811CB
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 14:59:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 87BFDC3411B
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 14:59:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655737178;
-        bh=1ZKc8CjhbJX7zAJq4+t6uWvFbARAjQ40HWmpgJII4w4=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=LO4lKxwdDz/M0bh3hMA0y6/TP7Sj4x0LqZf7QY1fBJy6xwfGRvLPZnDPn5Il8yU8Q
-         gQy94oFuEAKBB/F0bwJ2iunj7kl7DHWsAuBWuCzZs+YdiXCDI5TxcxRZ+NWOctSxd7
-         2gpIbyYXnYopjHwf9AOoWG2Q6pWev/YfLiD62w2vvPXzpj0Q5vtiZ7MLoihIlooIqH
-         1AsmEiFNxCmeiKn6mWXKeb0Y7EmiWBV5lIcNAAInNgzhvAPrEdVAfmgdi7baVx6sHD
-         i3T/hb5lrJITKjdIJ5ynEQW78fBs8fQ717hTZUIjBF1E353fNPiuYtbi5y8rXmrXLS
-         Wb1ioInrMSO2A==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 6AFC1CC13AD; Mon, 20 Jun 2022 14:59:38 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216150] ideapad-laptop exposes only two keyboard backlight
- levels, instead of three
-Date:   Mon, 20 Jun 2022 14:59:38 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: pobrn@protonmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-216150-215701-kfs1RTnqqL@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216150-215701@https.bugzilla.kernel.org/>
-References: <bug-216150-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 20 Jun 2022 11:11:39 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2599D1F2E4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 08:01:34 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id fd6so12757671edb.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 08:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MGhT9sBmAXD+E3qEISPGTHlR9iZUa32mlpWZBko6pZI=;
+        b=O/1rkDk1+5mP9KjlpzgDDp4DfUAw9RjtIxzToVTIi9YN8oLIBYhdtzoFOEV0wRn2Gt
+         95g+M+NihS5y4QghROsouvAcg1PgN2vJKN9hXd3gQrE0j5FVdZOlYFNxaouSLCTrRAML
+         cSIslRHip8s7UbKjUMoMWhK3+O8NJsjdZL6dAGu3O7vBRdkMVeEGTW/0bSpUs8ZcknaE
+         ZJoh6JM/U1F9gLFmEWaIfLJVOGAcISSNezDsKSjDdZmGImKYD9BZtEF2wdNFW/Dt6VF8
+         sUjD3JJZY1IbGksczkAnvmz3Ikm9njKp/O+1EpCanB67Ftj+3K0Yr20SWoO5UIt2+0Hu
+         5Tig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MGhT9sBmAXD+E3qEISPGTHlR9iZUa32mlpWZBko6pZI=;
+        b=64iGMVU9XLn+aC53Pi6ZlTMDVAIdPhvDJ1ElBfwd6chh10NUuWRrhc7Sx6S+ZHf6xx
+         pcfaikxd3XC8glvvL654j4wtaCUpPfoqGtivlrqtqMKm3AiV8k6w7Ip24KU39C/p6Pnz
+         r9AuwEHXaoQBzlAyl3ZZn14grPWbZ7LUE9NWC6Cze/nsgA2Kb1ZPNfa6AbPE4jkkc73K
+         AEPJ2tq6QFSMLyyjNyxPaC41nWf545RPm4SyVP1dJAP1nvnVmMio0PoLQcuVJ5QHvYDp
+         +V4qQKM+rsBOkX7xSJlkjejOJ7+WBQMawEmimtQXN/FX49ppLwN03Nl99Nh8XKLUmTnP
+         ZGcA==
+X-Gm-Message-State: AJIora9xdsebcqCWJFMwZd7Zb1SGrKT2j4V7myeCOq1MMe4HQ7DmHfv9
+        5Cql2UG+Z2agzzHMsPSw/eEO3bCVgjXTGu8wv24=
+X-Google-Smtp-Source: AGRyM1u8kBByFePHyjsRvWhfUtnR3clFyY85sNse3y62TcUDA7qdE8QbuGPSGgNOBO9pYylKDWPttVAjn5CX/mFrYQ4=
+X-Received: by 2002:a05:6402:f8d:b0:435:6df2:68a with SMTP id
+ eh13-20020a0564020f8d00b004356df2068amr15633799edb.209.1655737292334; Mon, 20
+ Jun 2022 08:01:32 -0700 (PDT)
 MIME-Version: 1.0
+References: <20220620145628.5882-1-hdegoede@redhat.com> <20220620145628.5882-2-hdegoede@redhat.com>
+In-Reply-To: <20220620145628.5882-2-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 20 Jun 2022 17:00:55 +0200
+Message-ID: <CAHp75VdgrUFTgzT6jYo4ff+JEbvBncZKbx0317FduZzGcida4A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] platform/x86: Kconfig: Remove unnecessary "if X86"
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216150
+On Mon, Jun 20, 2022 at 4:56 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> drivers/platform/x86/Kconfig is wrapped in one big
+> if X86_PLATFORM_DEVICES .. endif and X86_PLATFORM_DEVICES already
+> has a "depends on X86" so the "if X86" in drivers/platform/Kconfig
+> is not necessary and except for mips non of the other includes
 
-Barnab=C3=A1s P=C5=91cze (pobrn@protonmail.com) changed:
+MIPS
+none ?
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |pobrn@protonmail.com
+> there has such an if. So lets remove it.
 
---- Comment #1 from Barnab=C3=A1s P=C5=91cze (pobrn@protonmail.com) ---
-From https://bugzilla.redhat.com/show_bug.cgi?id=3D1979909:
 
-> Hi
->=20
-> This is a limitation of the interface. The device I tested this feature on
-> also has three keyboard backlight levels that can be changed using Fn+spa=
-ce,
-> however, the Lenovo Vantage software on Windows can only turn it on/off,
-> because the that's all the interface is capable of. And since I based my =
-work
-> on that, this limitation is carried over to the Linux kernel driver. If I
-> recall correctly there is another interface that has multiple backlight
-> levels, but my device was not compatible so I didn't attempt to implement
-> that. Curiously, the backlight change notification is still sent.
+let's
 
---=20
-You may reply to this email to add a comment.
+> While at it also move the x86/Kconfig include to the end of the file
+> for alphabetical sorting.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> - Drop "if X86" from drivers/platform/Kconfig instead of dropping the
+>   "depends on X86" from X86_PLATFORM_DEVICES
+> ---
+>  drivers/platform/Kconfig | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
+> index 18fc6a08569e..b437847b6237 100644
+> --- a/drivers/platform/Kconfig
+> +++ b/drivers/platform/Kconfig
+> @@ -1,7 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -if X86
+> -source "drivers/platform/x86/Kconfig"
+> -endif
+>  if MIPS
+>  source "drivers/platform/mips/Kconfig"
+>  endif
+> @@ -15,3 +12,5 @@ source "drivers/platform/mellanox/Kconfig"
+>  source "drivers/platform/olpc/Kconfig"
+>
+>  source "drivers/platform/surface/Kconfig"
+> +
+> +source "drivers/platform/x86/Kconfig"
+> --
+> 2.36.0
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
