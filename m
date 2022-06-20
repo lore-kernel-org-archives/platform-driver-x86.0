@@ -2,125 +2,95 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A890BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Jun 2022 23:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9E9C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Jun 2022 09:36:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232793AbiFSXh1 (ORCPT
+        id S232170AbiFTJgo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 19 Jun 2022 19:37:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45486 "EHLO
+        Mon, 20 Jun 2022 05:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231539AbiFSXh0 (ORCPT
+        with ESMTP id S232000AbiFTJgn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 19 Jun 2022 19:37:26 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF09B1C3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jun 2022 16:37:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 20 Jun 2022 05:36:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F1F0E13D67
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 02:36:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1655717802;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=JSZp0yA+KjRoh2VaWCiAsqzkCTe2noZ8GpHX1yIh4cA=;
+        b=ZVgwyNJHI9m7yJRhnpxgwe3KkHd1ZL7EYptG/uWXPUtsRKeLe39pCxcprYyzEKGNWiADKR
+        RrNG5aRlq8UwgobcGxfQkbHc/emALIWveF4hlh++30drl3fxAo4O9GrbVVvTD8WPoWnmzi
+        uhosWm5d5aguo0AMLHC+fvhH7EEo+JA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-601-8BfnPFfWMyiCPpz8HNM0Kg-1; Mon, 20 Jun 2022 05:36:40 -0400
+X-MC-Unique: 8BfnPFfWMyiCPpz8HNM0Kg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B74C5B80BA9
-        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jun 2022 23:37:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 61906C34114
-        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jun 2022 23:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655681842;
-        bh=/nz94wF0suXXQC8wxAuHBxIfoA4dDNxBmB9lyyJPkoM=;
-        h=From:To:Subject:Date:From;
-        b=cTRpuejxfGMhG7bGWMCc/NhNQjYsKJf6zv4WMEFedRJ2fXtI6svRir1E/ldZtvLbE
-         bllt3qQd+4/wkPVA81/TijkgjXCyBPYSB9BNDBLsvkIDe0oQN0wRSqynqukrQnQnM6
-         8nEUg6TCbMRxRz8rIHAe/72Vt+VNkohudP9ePuWFSYlQ9iF4AnInL4AppTmoV7VvaF
-         d8noxT+UbOUlKdVqXXWoCawLElqSs75NaJi2p5VI+IxXK7pTj+d1Q7Owln0SRdKgNK
-         MLKHZK7gGcHDuEZ5Xm1aTdaRTFwOXRw1dx0WTnivHbOd2o14GoWnqPxBOEp9GYt7EK
-         mZAPZ67D5HAZw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 43386C05FD2; Sun, 19 Jun 2022 23:37:22 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216150] New: ideapad-laptop exposes only two keyboard backlight
- levels, instead of three
-Date:   Sun, 19 Jun 2022 23:37:22 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: tinozzo123@tutanota.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
- priority component assigned_to reporter cf_regression
-Message-ID: <bug-216150-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E343E101AA45;
+        Mon, 20 Jun 2022 09:36:39 +0000 (UTC)
+Received: from x1.nl (unknown [10.39.195.183])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 62715C08F22;
+        Mon, 20 Jun 2022 09:36:38 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/3] platform/x86: acer_wmi: Cleanup Kconfig selects
+Date:   Mon, 20 Jun 2022 11:36:35 +0200
+Message-Id: <20220620093637.9429-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216150
+ACER_WMI already depends on ACPI_WMI which depends on ACPI
+so the "depends on ACPI" is unnecessary.
 
-            Bug ID: 216150
-           Summary: ideapad-laptop exposes only two keyboard backlight
-                    levels, instead of three
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 5.18.1
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: tinozzo123@tutanota.com
-        Regression: No
+And since ACER_WMI already depends on ACPI adding an "if ACPI"
+to the ACPI_VIDEO select is non-sense.
 
-I own a Lenovo IdeaPad 5 14ARE05, which has three keyboard brightness level=
-s:
-off, low and high, which are cycled through with the Fn+space key combo.
-However, ideapad-laptop.c sets max_brightness to 1, which means that the
-brightness is either off (0) or on (1). This means that I'm unable to select
-the high intensity brightness from ACPI like I could on a ThinkPad (I don't=
- own
-one, but thinkpad_acpi.c sets max_brightness to 2, so I guess that it doesn=
-'t
-have that problem).
+While at it also group all the selects together.
 
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/Kconfig | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-Still, I don't know if this feature is present on all IdeaPad laptops. I
-couldn't find any documentation on this (there is an article on Lenovo's
-support, but it only refers to ThinkPads*). Even the user manual of my lapt=
-op
-doesn't mention this (it only says that it has keyboard backlight, not that=
- it
-has three levels). Finally, I never tested Windows, so I don't know if Leno=
-vo
-Vantage provides any more settings.
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 08852a1cd51d..6e22ac916f7a 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -177,17 +177,15 @@ config ACER_WIRELESS
+ 
+ config ACER_WMI
+ 	tristate "Acer WMI Laptop Extras"
+-	depends on ACPI
+-	select LEDS_CLASS
+-	select NEW_LEDS
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on SERIO_I8042
+ 	depends on INPUT
+ 	depends on RFKILL || RFKILL = n
+ 	depends on ACPI_WMI
++	select ACPI_VIDEO
+ 	select INPUT_SPARSEKMAP
+-	# Acer WMI depends on ACPI_VIDEO when ACPI is enabled
+-        select ACPI_VIDEO if ACPI
++	select LEDS_CLASS
++	select NEW_LEDS
+ 	help
+ 	  This is a driver for newer Acer (and Wistron) laptops. It adds
+ 	  wireless radio and bluetooth control, and on some laptops,
+-- 
+2.36.0
 
-Also, small note: right now, if the keyboard brightness is at high intensity
-(with Fn+space, since there is no other way to do it), then is set to 0 usi=
-ng
-ACPI (and *not* with Fn+space), then set to 1 again with ACPI (still *not* =
-with
-Fn+space), the result is that the keyboard backlight will turn on with high
-intensity (and the next Fn+space will turn it off) instead of low.
-
-*https://support.lenovo.com/us/en/solutions/ht104451-how-to-turn-onoff-the-=
-keyboard-light-backlit-on-your-laptop-thinkpad
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
