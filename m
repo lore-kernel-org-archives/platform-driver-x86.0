@@ -2,119 +2,205 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CBCC43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Jun 2022 15:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E29C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Jun 2022 15:17:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243322AbiFTPMF (ORCPT
+        id S243864AbiFTPRo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Jun 2022 11:12:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36898 "EHLO
+        Mon, 20 Jun 2022 11:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242127AbiFTPLj (ORCPT
+        with ESMTP id S243580AbiFTPRf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Jun 2022 11:11:39 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2599D1F2E4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 08:01:34 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id fd6so12757671edb.5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 08:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MGhT9sBmAXD+E3qEISPGTHlR9iZUa32mlpWZBko6pZI=;
-        b=O/1rkDk1+5mP9KjlpzgDDp4DfUAw9RjtIxzToVTIi9YN8oLIBYhdtzoFOEV0wRn2Gt
-         95g+M+NihS5y4QghROsouvAcg1PgN2vJKN9hXd3gQrE0j5FVdZOlYFNxaouSLCTrRAML
-         cSIslRHip8s7UbKjUMoMWhK3+O8NJsjdZL6dAGu3O7vBRdkMVeEGTW/0bSpUs8ZcknaE
-         ZJoh6JM/U1F9gLFmEWaIfLJVOGAcISSNezDsKSjDdZmGImKYD9BZtEF2wdNFW/Dt6VF8
-         sUjD3JJZY1IbGksczkAnvmz3Ikm9njKp/O+1EpCanB67Ftj+3K0Yr20SWoO5UIt2+0Hu
-         5Tig==
+        Mon, 20 Jun 2022 11:17:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D41ED1ADBA
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 08:08:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1655737690;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nOQ6e6pAcimxOwwNtbbgCCN0/d+i6E7YaBaKogZ6pjQ=;
+        b=GrrojHCfKboX0skcXTA1uS5Mo3kjy2fFWCmORD+aL40cfCl1lW1g3L6F65bjeti0Ce58hc
+        Z0KzDd5SDDCSlSZnm5Hp3SKdITGE6BFhb+McvXfvHhad2/LZ+Pa4da9LdoVUrvsiVn9RbR
+        /t45HZwoy0/JDkiCuKq40NsK8bFXEUg=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-317-e-kqId3KPFi4E_gCfOB97Q-1; Mon, 20 Jun 2022 11:08:06 -0400
+X-MC-Unique: e-kqId3KPFi4E_gCfOB97Q-1
+Received: by mail-ed1-f69.google.com with SMTP id m5-20020a056402430500b004319d8ba8afso8941573edc.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 08:08:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MGhT9sBmAXD+E3qEISPGTHlR9iZUa32mlpWZBko6pZI=;
-        b=64iGMVU9XLn+aC53Pi6ZlTMDVAIdPhvDJ1ElBfwd6chh10NUuWRrhc7Sx6S+ZHf6xx
-         pcfaikxd3XC8glvvL654j4wtaCUpPfoqGtivlrqtqMKm3AiV8k6w7Ip24KU39C/p6Pnz
-         r9AuwEHXaoQBzlAyl3ZZn14grPWbZ7LUE9NWC6Cze/nsgA2Kb1ZPNfa6AbPE4jkkc73K
-         AEPJ2tq6QFSMLyyjNyxPaC41nWf545RPm4SyVP1dJAP1nvnVmMio0PoLQcuVJ5QHvYDp
-         +V4qQKM+rsBOkX7xSJlkjejOJ7+WBQMawEmimtQXN/FX49ppLwN03Nl99Nh8XKLUmTnP
-         ZGcA==
-X-Gm-Message-State: AJIora9xdsebcqCWJFMwZd7Zb1SGrKT2j4V7myeCOq1MMe4HQ7DmHfv9
-        5Cql2UG+Z2agzzHMsPSw/eEO3bCVgjXTGu8wv24=
-X-Google-Smtp-Source: AGRyM1u8kBByFePHyjsRvWhfUtnR3clFyY85sNse3y62TcUDA7qdE8QbuGPSGgNOBO9pYylKDWPttVAjn5CX/mFrYQ4=
-X-Received: by 2002:a05:6402:f8d:b0:435:6df2:68a with SMTP id
- eh13-20020a0564020f8d00b004356df2068amr15633799edb.209.1655737292334; Mon, 20
- Jun 2022 08:01:32 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=nOQ6e6pAcimxOwwNtbbgCCN0/d+i6E7YaBaKogZ6pjQ=;
+        b=EHgBeYzHHDKdhynVtK6V+sVixfpryhImhjN5/YPmR+oa+lpaJxvmW6MAz/tdoVoyw9
+         HWTVKHHKjwsO1DFwqXmz0JhD9E99nBdopau+2fTEIRSiyo9Z3x2Lwu+2QWzkIk9CgFZh
+         5QMIV7M/P3B2yUaXZRxKdDvoxb3aA5gKwChW9MBF7K9xhvwViQAhbZRSOZGSCqdF/Nh3
+         IuagZKsGZD7c3+zVAibnNPArO/wqGcVoc20mOpn3/pUi/OWkWFXWQomuSuISCA74pNXK
+         q751/9Wpb8gfMj6wR+WR29IsiUEWOxBba9WLEaDyxkwCFu4O8hy1BYortbf5Ld7wKTLW
+         711A==
+X-Gm-Message-State: AJIora+59TawJk3uLtRZJ0uYM+9oPyino1INkaVS7s4vccqht9pr6snK
+        sG/q6wgzMY7LGSoH3uVaEobF8JyRe5HZPWxlEAk24DHb+TDbZSFJ7sQXoE1onw4uz+3BaG2fCy7
+        8qYOc8k92S4K1p7ew8isbAJWWkIjEFbW0qg==
+X-Received: by 2002:a17:906:38d0:b0:715:8483:e01e with SMTP id r16-20020a17090638d000b007158483e01emr22134663ejd.265.1655737684707;
+        Mon, 20 Jun 2022 08:08:04 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1tAnhocu7zzqOnvIChRoIB6PdhC4SoZp9rxJRlpwZNjYXy9x9UEnuqQFGmUC9iV6bqJIQDJuA==
+X-Received: by 2002:a17:906:38d0:b0:715:8483:e01e with SMTP id r16-20020a17090638d000b007158483e01emr22134631ejd.265.1655737684433;
+        Mon, 20 Jun 2022 08:08:04 -0700 (PDT)
+Received: from [10.0.0.147] (D57D5A4B.static.ziggozakelijk.nl. [213.125.90.75])
+        by smtp.gmail.com with ESMTPSA id d20-20020a50fb14000000b004357558a243sm4973553edq.55.2022.06.20.08.08.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jun 2022 08:08:03 -0700 (PDT)
+Message-ID: <19e590f1-e865-ad19-e9e4-df1f9274663c@redhat.com>
+Date:   Mon, 20 Jun 2022 17:08:03 +0200
 MIME-Version: 1.0
-References: <20220620145628.5882-1-hdegoede@redhat.com> <20220620145628.5882-2-hdegoede@redhat.com>
-In-Reply-To: <20220620145628.5882-2-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 20 Jun 2022 17:00:55 +0200
-Message-ID: <CAHp75VdgrUFTgzT6jYo4ff+JEbvBncZKbx0317FduZzGcida4A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] platform/x86: Kconfig: Remove unnecessary "if X86"
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH 2/2] platform/x86: panasonic-laptop: allow to use all
+ hotkeys
+Content-Language: en-US
+To:     Stefan Seyfried <stefan.seyfried@googlemail.com>,
+        Kenneth Chan <kenneth.t.chan@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stefan Seyfried <seife+kernel@b1-systems.com>
+References: <20200821181433.17653-8-kenneth.t.chan@gmail.com>
+ <20220612090507.20648-1-stefan.seyfried@googlemail.com>
+ <20220612090507.20648-3-stefan.seyfried@googlemail.com>
+ <CAHp75Ve+vrfSu6pD+AKe-eCVA2pC5o520y4gVwLNg9Dtk0U5bw@mail.gmail.com>
+ <CAHp75VdFPUHTeDBY5ukFgVqJJn7BbTHxrxKUGOLB6P1UX-utAg@mail.gmail.com>
+ <d80789bc-a8fc-de5f-164a-75adf7097311@message-id.googlemail.com>
+ <6969ca0e-4a4c-c995-02a2-6645f875338c@redhat.com>
+ <CAPqSeKu9csK_u0S6MiRay_mvfYejUhKbb=wvJO7F_Z-JL6F7DA@mail.gmail.com>
+ <5f03f5b9-87bb-e27d-ce51-9c1572221f21@redhat.com>
+ <89398c05-92c6-120d-ed51-ab62f1f404eb@message-id.googlemail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <89398c05-92c6-120d-ed51-ab62f1f404eb@message-id.googlemail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 20, 2022 at 4:56 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> drivers/platform/x86/Kconfig is wrapped in one big
-> if X86_PLATFORM_DEVICES .. endif and X86_PLATFORM_DEVICES already
-> has a "depends on X86" so the "if X86" in drivers/platform/Kconfig
-> is not necessary and except for mips non of the other includes
+Hi,
 
-MIPS
-none ?
+Thank you for the quick testing.
 
-> there has such an if. So lets remove it.
+On 6/17/22 15:07, Stefan Seyfried wrote:
+> Hi Hans,
+> 
+> On 17.06.22 13:07, Hans de Goede wrote:
+> 
+>> Thank you for providing this info. Can you please give
+>> the attached patch series a try, this includes Stefan's 1/2 patch
+>> and replaces Stefan's 2/2 patch.
+>>
+>> This will hopefully fix the double key-presses for you, while
+>> also keeping everything working for Stefan without requiring
+>> a module option or DMI quirks.
+>>
+>> Stefan can you also give this series a try please?
+> 
+> Works for me, almost out of the box.
+> I need to enable "report_key_events=1" in the video module, then the panasonic-acpi module starts reporting brightness up/down keys.
+
+Ok, so you need another module option that is not really helpful.
+
+The idea behind the acpi_video_handles_brightness_key_presses() check
+is that if the ACPI video bus device is present it is expected to
+already report brightness up/down keypresses and we want to avoid
+duplicates.
+
+Can you check with evtest or evemu-record that the brightness
+events are not already being delivered by the "Video Bus"
+input device ?
+
+> Volume and mute keys work without manual changes.
+
+Good.
+ 
+> (I tested against 5.18.2 because that's what was already prepared. That old machine takes quite some time, even to just compile the platform/x86 subdirectory ;-) but I don't think this is relevant. If you think it is, I can also test against latest 5.19-rc code)
+
+Testing against 5.18 is fine .
+
+>> Looking at this has also brought up an unrelated backlight question:
+>>
+>> Kenneth, since you have acpi-video reporting keypresses you will
+>> likely also have an acpi_video (or perhaps a native intel) backlight
+>> under /sys/class/backlight and I noticed that panasonic-laptop
+>> uncondirionally registers its backlight so you may very well end
+>> up with 2 backlight controls under /sys/class/backlight, which
+>> we generally try to avoid (so that userspace does not have to
+>> guess which one to use).
+>>
+>> Can you do:
+>> ls /sys/class/backlight
+> 
+> toughbook:~ # ls -l /sys/class/backlight/
+> total 0
+> lrwxrwxrwx 1 root root 0 Jun 17 14:45 intel_backlight -> ../../devices/pci0000:00/0000:00:02.0/drm/card0/card0-LVDS-1/intel_backlight
+> lrwxrwxrwx 1 root root 0 Jun 17 14:49 panasonic -> ../../devices/virtual/backlight/panasonic
+> 
+>> and let me know the output?
+>>
+>> Also if there are 2 backlights there then please do:
+>> cat /sys/class/backlight/<name>/max_brightness
+>> to find out the range (0-value)
+> 
+> toughbook:/sys/class/backlight # grep . */max_brightness
+> intel_backlight/max_brightness:19531
+> panasonic/max_brightness:255
+> 
+>> and then try if they both work by doing:
+>>
+>> echo $number > /sys/class/backlight/<name>/brightness
+>>
+>> with different $number values in the range and see
+>> if this actually changes the brightness.
+> 
+> intel_backlight: does not work
+> panasonic: does work
+
+Ok, so that suggests that the ACPI video bus on your
+device is defunct, so I guess it also does not report
+key-presses (see above) ?
+
+This will also need some work then because we want to move
+to there only being 1 (actually working) backlight-class
+device. Rather then having multiple and let userspace
+guess which one it needs to use.
+
+>> While we are at it, Stefan can you do the same please?
+> 
+> See above.
+> But hey, this is an i855GM graphics chip, I'm happy if it is still working *at all* (for example I need to avoid the xf86-intel driver and use the modesetting driver instead to get a usable sytstem)
+> 
+> And I'm totally happy if all I have to do in the future is a
+> 
+> option video report_key_events=1
+> 
+> modprobe.conf file ;-)
+
+We really don't want people to have to specify module-options just
+to have things working.
+
+Stefam, at least for the backlight class-device issue we will need a DMI
+quirk, so can you run:
+
+sudo dmidecode > dmidecode.txt
+
+and then attach the output to your next email, or send me a copy
+privately ?
+
+Regards,
+
+Hans
 
 
-let's
-
-> While at it also move the x86/Kconfig include to the end of the file
-> for alphabetical sorting.
-
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> - Drop "if X86" from drivers/platform/Kconfig instead of dropping the
->   "depends on X86" from X86_PLATFORM_DEVICES
-> ---
->  drivers/platform/Kconfig | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
-> index 18fc6a08569e..b437847b6237 100644
-> --- a/drivers/platform/Kconfig
-> +++ b/drivers/platform/Kconfig
-> @@ -1,7 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -if X86
-> -source "drivers/platform/x86/Kconfig"
-> -endif
->  if MIPS
->  source "drivers/platform/mips/Kconfig"
->  endif
-> @@ -15,3 +12,5 @@ source "drivers/platform/mellanox/Kconfig"
->  source "drivers/platform/olpc/Kconfig"
->
->  source "drivers/platform/surface/Kconfig"
-> +
-> +source "drivers/platform/x86/Kconfig"
-> --
-> 2.36.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
