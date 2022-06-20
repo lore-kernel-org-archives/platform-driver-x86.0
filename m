@@ -2,106 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E251C43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Jun 2022 15:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F419C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Jun 2022 15:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242651AbiFTPHv (ORCPT
+        id S231253AbiFTPLT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Jun 2022 11:07:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
+        Mon, 20 Jun 2022 11:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242047AbiFTPH1 (ORCPT
+        with ESMTP id S240247AbiFTPJ4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Jun 2022 11:07:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D25AC192BA
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 07:46:24 -0700 (PDT)
+        Mon, 20 Jun 2022 11:09:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 89DEB24968
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 07:56:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655736383;
+        s=mimecast20190719; t=1655736998;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=EuPLnv3TxBvx0dcIPzcNt4xFvE8FfTVPRBY+T/dhH5s=;
-        b=Oq5HvsnvKj8j9hXtZBp2p1qjDVxHpMwKA+Oous6y2hwXjxrT9Uc8ifqRd9zyaGWGMo6Pgp
-        2CF3sVLyPh+zkI7ZZ7nnSmlZ/2rZpf+x1jB1UK8t1w96Dlok6hGwSlf8BPJRmOOTZUlqHp
-        +KjKykqEQAYh5XOTXd4TiL4d7AKaLFA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=lKyF+z79fHYcBhESudOJe7xlGopRWYOzajO6RkvOs0E=;
+        b=NreE8oOwEUKkZEfSUW6TYv1DCKp2Jgm2pMhHYeHicSdDgY/9MCugn4By4+W4z2XkiXtY83
+        WHxHcAI8uYiNPxfqFCjKBoBEiZD+YqrS4G7EtQzonIxYjtMlQPOEH1rMFGbClyI/A+izyL
+        qt8Qj8ozWES83O3ipwbP6GXuY6+SUOA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-533-p_OPSAd7OECNJAiEDRy5xQ-1; Mon, 20 Jun 2022 10:46:21 -0400
-X-MC-Unique: p_OPSAd7OECNJAiEDRy5xQ-1
-Received: by mail-ed1-f71.google.com with SMTP id b7-20020a056402350700b004355e4d1e36so6988270edd.10
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jun 2022 07:46:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=EuPLnv3TxBvx0dcIPzcNt4xFvE8FfTVPRBY+T/dhH5s=;
-        b=BDFvzQ5trRhGMj+RlvqoMMykxH5A/f/kXvmr+zCMN7HrGColDxr075jn1Id2U1G0hl
-         xFpDcI86Q3Zr37UdJFuUtVLHDkTHM6Rky/Nq1wF5WdMm2H7U4VL99otw+wgqhD8uhRP8
-         LEtASUsikSlzQc+mYYosssJiQrIxxPciwd+TcWmpgGF5htZ4DwfL8JwrlYOzG2OUxlL6
-         iL8H3doQ6NUiQ/MRgJ+110eJd1GUM+WKmnvSjWBW9Fm9ynXbzBOhR+bxxNmrO0rg+RF/
-         /i30UWPDkmdHRyYSBfB+SydwRdInvcGMPBDsxMgIiwjOYGn4Jv7TszpLaQ2ilL0J+b+J
-         /FmA==
-X-Gm-Message-State: AJIora8hrI9vgXMW4ayo/JqqX/iON50V59Jn+7yFssik3e1kkMWtih9o
-        HXtCHwgBme6PXTTwsBsyXcFMWj7FJbfDQh32TSF/rjLttdm8ULmORGrMs8nKCmRK/4RDd9q+POY
-        W9kFCVQOXUXwjr8c907gUXIFE5exOTMGewA==
-X-Received: by 2002:a17:906:ae57:b0:70b:e847:271b with SMTP id lf23-20020a170906ae5700b0070be847271bmr21402920ejb.700.1655736380216;
-        Mon, 20 Jun 2022 07:46:20 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1u3rgZmBHzCKhL8u2XwQpvwzNmd6nYRBVjcpvvPg26UxtD6hk/fbuPOIl22BfWkSOQTzVf/Rg==
-X-Received: by 2002:a17:906:ae57:b0:70b:e847:271b with SMTP id lf23-20020a170906ae5700b0070be847271bmr21402896ejb.700.1655736379913;
-        Mon, 20 Jun 2022 07:46:19 -0700 (PDT)
-Received: from [10.0.0.147] (D57D5A4B.static.ziggozakelijk.nl. [213.125.90.75])
-        by smtp.gmail.com with ESMTPSA id h18-20020a056402281200b0043173ab6728sm11039491ede.7.2022.06.20.07.46.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jun 2022 07:46:19 -0700 (PDT)
-Message-ID: <a6439243-9d4c-0089-62de-50a9d992dcaa@redhat.com>
-Date:   Mon, 20 Jun 2022 16:46:18 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 2/3] platform/x86: Kconfig: Remove unnecessary "depends on
- X86"
-Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-References: <20220620093637.9429-1-hdegoede@redhat.com>
- <20220620093637.9429-2-hdegoede@redhat.com>
- <CAHp75Vf26xfP9j386HEoxeJmu1Co-KXkU6Dk+9q8rEu_hr4fFA@mail.gmail.com>
+ us-mta-460-Fg4g1VbTM46DW6nRZ-erXw-1; Mon, 20 Jun 2022 10:56:35 -0400
+X-MC-Unique: Fg4g1VbTM46DW6nRZ-erXw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DA1FE8339A2;
+        Mon, 20 Jun 2022 14:56:34 +0000 (UTC)
+Received: from x1.nl (unknown [10.39.192.239])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D1CB9D63;
+        Mon, 20 Jun 2022 14:56:33 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75Vf26xfP9j386HEoxeJmu1Co-KXkU6Dk+9q8rEu_hr4fFA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v2 3/3] platform/x86/dell: Kconfig: Remove unnecessary "depends on X86_PLATFORM_DEVICES"
+Date:   Mon, 20 Jun 2022 16:56:28 +0200
+Message-Id: <20220620145628.5882-3-hdegoede@redhat.com>
+In-Reply-To: <20220620145628.5882-1-hdegoede@redhat.com>
+References: <20220620145628.5882-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+platform/x86/dell/Kconfig is only sourced if X86_PLATFORM_DEVICES is set,
+so it does not need to depend on it.
 
-On 6/20/22 12:21, Andy Shevchenko wrote:
-> On Mon, Jun 20, 2022 at 11:36 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> The sourcing of drivers/platform/x86/Kconfig is protected by
->> a "if X86", so the "depends on X86" for X86_PLATFORM_DEVICES
->> is unnecessary, remove it.
-> 
-> Looking into the upper Kconfig, I would rather go and drop dependency
-> there to be consistent with the rest of drivers/platform/ cases.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/dell/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-I did consider doing things this way myself too :)
-
-I'll go and prep a v2 of the series with this changed.
-
-> Perhaps it needs to be done separately for MIPS.
-
-That would make everything consistent, but I'll leave doing this
-to someone else.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
+index fe224a54f24c..25421e061c47 100644
+--- a/drivers/platform/x86/dell/Kconfig
++++ b/drivers/platform/x86/dell/Kconfig
+@@ -5,7 +5,6 @@
+ 
+ menuconfig X86_PLATFORM_DRIVERS_DELL
+ 	bool "Dell X86 Platform Specific Device Drivers"
+-	depends on X86_PLATFORM_DEVICES
+ 	help
+ 	  Say Y here to get to see options for device drivers for various
+ 	  Dell x86 platforms, including vendor-specific laptop extension drivers.
+-- 
+2.36.0
 
