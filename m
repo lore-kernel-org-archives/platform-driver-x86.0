@@ -2,72 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F48BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Jun 2022 09:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C10DC43334
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Jun 2022 09:34:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347928AbiFUJ1G (ORCPT
+        id S1348992AbiFUJet (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Jun 2022 05:27:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38676 "EHLO
+        Tue, 21 Jun 2022 05:34:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348720AbiFUJ1F (ORCPT
+        with ESMTP id S1348988AbiFUJes (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Jun 2022 05:27:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 514B824597
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jun 2022 02:27:03 -0700 (PDT)
+        Tue, 21 Jun 2022 05:34:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 15ECF25E80
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jun 2022 02:34:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655803622;
+        s=mimecast20190719; t=1655804087;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=yVXKD1SRWCTG8TkMbZT/7AXadnxCyJ3SQLpn/ow4PdQ=;
-        b=I+VYX3MV4w+3bOjzV9e5HGkV0wDeSYirmqAvqbqpu5cSoehN7mvx6Cxp2m5k1TfYclF5Bz
-        O4sly9KwxOMKubtxyteoSaxXXgWi2goXtk/G6HUDIc+hSU9iVsHNxMSVkDbBdFVUDgVeTy
-        /CaWaUsRde0YFbgFmakUgzFEA1ibqI4=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=RWzQF61uANH2HUaxbmeM2TgavDsoShFLMy1+w4turxk=;
+        b=QmfIZryWQtZWuFFDBR9EX/y4AnAqnqudCUlMGbbyAHeBlJa3AAkrTZaEU3V4z75k71QJpr
+        8sIosynj3vO60RA3zaY/FrSk+VfKe+qwqbSUSvoX6niTknZ/xZKt+bJj7ZCe9+xt+6KQ6Y
+        UFp3QbbDBJTuMT3BhrwQjqMhFNRalKI=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-648-qU7lojA3ODurbRpZIwV82w-1; Tue, 21 Jun 2022 05:26:54 -0400
-X-MC-Unique: qU7lojA3ODurbRpZIwV82w-1
-Received: by mail-ed1-f69.google.com with SMTP id m5-20020a056402430500b004319d8ba8afso10584713edc.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jun 2022 02:26:54 -0700 (PDT)
+ us-mta-215-aRuSE5kAOqmtB48I9hDuYw-1; Tue, 21 Jun 2022 05:34:45 -0400
+X-MC-Unique: aRuSE5kAOqmtB48I9hDuYw-1
+Received: by mail-ed1-f70.google.com with SMTP id z13-20020a056402274d00b004357fcdd51fso4312923edd.17
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jun 2022 02:34:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to;
-        bh=yVXKD1SRWCTG8TkMbZT/7AXadnxCyJ3SQLpn/ow4PdQ=;
-        b=TmsCJdwdcpmcR4BVTTr8wffgVXynG6RkXtRFqwqY6+Ps8pLrj5AcgUeUh0deayk+BB
-         K+A7RJdmNm6+1RZHfWqLDWS96v4Wh3epPfcPePsLJlozhkmHgINyEekuc/0+GBgMr3Ho
-         4/fu8qMebjrcHhKi7lMJn6i5MDmK2SA5PheNx/6t21Pqer5nog8Bw6BZoBF+EF5HoLfW
-         mQEWr/SNT48cIiw76LdZQ6bSAycAKh/v6bUxgSwMhyxv/6rRk6ZfuJpOCq+T+V1Mfqyr
-         otZOLln6XZp+Gv55KuIHSR6skKm3Sy35j9HeFNvD76feACzasE32PUKHPzFq+4fQn1xG
-         euaQ==
-X-Gm-Message-State: AJIora/pSr8vaWwTyJmCE13mWOBzJ2wKgVqlzd4GCtCepaaL+HDPG0HD
-        JlCutHVOGtBNsq1F8zPoqvV47OrqHccpYGxy5asT0gaWEEiuEclv4vJgyytNeykNQ8ujvRmsqDM
-        BZ/ISbkAxtWYSB05aOm5FU+0cGlXf7edCVg==
-X-Received: by 2002:a17:906:180c:b0:6fe:9a3e:3d5b with SMTP id v12-20020a170906180c00b006fe9a3e3d5bmr24245412eje.202.1655803613051;
-        Tue, 21 Jun 2022 02:26:53 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1uSvS7lYna2MDh2044/JxSVtFJKWddti3qUEcXvNYQxtVYoc+q5d0wqxgFitD+YUpLqde3uYA==
-X-Received: by 2002:a17:906:180c:b0:6fe:9a3e:3d5b with SMTP id v12-20020a170906180c00b006fe9a3e3d5bmr24245379eje.202.1655803612666;
-        Tue, 21 Jun 2022 02:26:52 -0700 (PDT)
+        bh=RWzQF61uANH2HUaxbmeM2TgavDsoShFLMy1+w4turxk=;
+        b=twKuIjN20hz09z6bUiPgdJBSYa2BLClY1IaG0LUTyq+9YOpc/NB9+0xTe14EkUIn8P
+         h4ssECJ23xYlqV9qLPvFQlo+LU9UPugrykkbIsG38HmCclD57Jid2IaQB6SRLnP+CIeP
+         rYRpbyedBbkbl7qc8RErR/+fiRGozBwTacBbJotvIBMIkY5vmUT9xWQhBxaeMUoUIH4N
+         vUb1Rz6/88KthlJ8YRKB+hEEcpHY55dZH05haNcGjyt6dIfIw7Z6lERlBHRRr4aacNNG
+         vAQsv41bn0Ff+A/yJS2xM7Vf/+eyJLoENFFhBIhG6uEYqXnKRFwKBuB9+DFU4yTmijNg
+         JZYA==
+X-Gm-Message-State: AJIora/LVM2t7MnBpdOFPJYlCrGqxYd74lPWXQCNJ7iMOj7xExTGeHOM
+        VSlip6WqxLjthYYvMH8w8eyrmmjj+LxMkfMx7cVGUBIGouS3hWqylFfBeSwrQQt604mFrwh8lc2
+        w+zZZDA0UekTZXFtbTsnukvASek1oEhPVJQ==
+X-Received: by 2002:aa7:cf91:0:b0:435:6e07:2825 with SMTP id z17-20020aa7cf91000000b004356e072825mr19552753edx.381.1655804084277;
+        Tue, 21 Jun 2022 02:34:44 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1v++PB6fvCdw8ZAXMFkokVTJYFvG0ZbMrKc6wO7VzDohjdF8iJqgsXOFQbGziOaXlmbgHcN7w==
+X-Received: by 2002:aa7:cf91:0:b0:435:6e07:2825 with SMTP id z17-20020aa7cf91000000b004356e072825mr19552739edx.381.1655804084110;
+        Tue, 21 Jun 2022 02:34:44 -0700 (PDT)
 Received: from ?IPV6:2001:1c01:2e0c:ab03:79ba:9443:520f:dd0a? (2001-1c01-2e0c-ab03-79ba-9443-520f-dd0a.cable.dynamic.v6.ziggo.nl. [2001:1c01:2e0c:ab03:79ba:9443:520f:dd0a])
-        by smtp.gmail.com with ESMTPSA id ky4-20020a170907778400b006fe921fcb2dsm7292853ejc.49.2022.06.21.02.26.51
+        by smtp.gmail.com with ESMTPSA id kw2-20020a170907770200b007121361d54asm7378726ejc.25.2022.06.21.02.34.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jun 2022 02:26:51 -0700 (PDT)
-Content-Type: multipart/mixed; boundary="------------TvZvkKyiiWksbQIloAfAt1Lu"
-Message-ID: <3f3dfbad-9437-2c04-cf56-861649c117fd@redhat.com>
-Date:   Tue, 21 Jun 2022 11:26:51 +0200
+        Tue, 21 Jun 2022 02:34:43 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="------------qD2D9wuPhfF5xO8QnRCnE0e0"
+Message-ID: <e5701e68-1b15-97b7-51e4-8d3c8a7c3c86@redhat.com>
+Date:   Tue, 21 Jun 2022 11:34:42 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
 Subject: Re: [PATCH 2/2] platform/x86: panasonic-laptop: allow to use all
  hotkeys
 Content-Language: en-US
-To:     Stefan Seyfried <stefan.seyfried@googlemail.com>,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+To:     Kenneth Chan <kenneth.t.chan@gmail.com>
+Cc:     Stefan Seyfried <stefan.seyfried@googlemail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Stefan Seyfried <seife+kernel@b1-systems.com>
 References: <20200821181433.17653-8-kenneth.t.chan@gmail.com>
@@ -79,206 +79,47 @@ References: <20200821181433.17653-8-kenneth.t.chan@gmail.com>
  <6969ca0e-4a4c-c995-02a2-6645f875338c@redhat.com>
  <CAPqSeKu9csK_u0S6MiRay_mvfYejUhKbb=wvJO7F_Z-JL6F7DA@mail.gmail.com>
  <5f03f5b9-87bb-e27d-ce51-9c1572221f21@redhat.com>
- <89398c05-92c6-120d-ed51-ab62f1f404eb@message-id.googlemail.com>
- <19e590f1-e865-ad19-e9e4-df1f9274663c@redhat.com>
- <ad0e83af-b704-53b8-3963-b4dd53853f2b@message-id.googlemail.com>
+ <CAPqSeKtqORkhW4dAMsd2b6e3OwhHZ107znwJtoBADE1h2-dsVA@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ad0e83af-b704-53b8-3963-b4dd53853f2b@message-id.googlemail.com>
+In-Reply-To: <CAPqSeKtqORkhW4dAMsd2b6e3OwhHZ107znwJtoBADE1h2-dsVA@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 This is a multi-part message in MIME format.
---------------TvZvkKyiiWksbQIloAfAt1Lu
+--------------qD2D9wuPhfF5xO8QnRCnE0e0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 6/20/22 20:10, Stefan Seyfried wrote:
-> Hi Hans,
-> 
-> On 20.06.22 17:08, Hans de Goede wrote:
->> Hi,
->>
->> Thank you for the quick testing.
->>
->> On 6/17/22 15:07, Stefan Seyfried wrote:
->>> Hi Hans,
->>>
->>> On 17.06.22 13:07, Hans de Goede wrote:
->>>
->>>> Thank you for providing this info. Can you please give
->>>> the attached patch series a try, this includes Stefan's 1/2 patch
->>>> and replaces Stefan's 2/2 patch.
->>>>
->>>> This will hopefully fix the double key-presses for you, while
->>>> also keeping everything working for Stefan without requiring
->>>> a module option or DMI quirks.
->>>>
->>>> Stefan can you also give this series a try please?
->>>
->>> Works for me, almost out of the box.
->>> I need to enable "report_key_events=1" in the video module, then the panasonic-acpi module starts reporting brightness up/down keys.
->>
->> Ok, so you need another module option that is not really helpful.
-> 
-> Well, I looked into the acpi_video.c module and that one is to blame.
-> By default, it assumes that both "OUTPUT_KEY_EVENTS" and "BRIGHTNESS_KEY_EVENTS" should be handled by this module.
-> But on the CF-51, this does not happen. "Video Bus" does not generate any key events (I'm not sure about output, but plugging in a VGA monitor and enabling/disabling it with xrandr or tapping the "display" fn-f3 hotkey does not get anything from "Video Bus" input device.
-> 
->> The idea behind the acpi_video_handles_brightness_key_presses() check
->> is that if the ACPI video bus device is present it is expected to
->> already report brightness up/down keypresses and we want to avoid
->> duplicates.
-> 
-> Yes, but the check apparently returns true in my case, because:
-> 
->         return have_video_busses &&
->                (report_key_events & REPORT_BRIGHTNESS_KEY_EVENTS);
-> 
-> apparently i have a video_bus ;-) and report_key_events (== -1) & 2 is true.
-> 
-> This check is totally fine, it's just that *the acpi_video.c* code is missing a DMI match for my machine telling it that it handles nothing at all.
-> 
->> Can you check with evtest or evemu-record that the brightness
->> events are not already being delivered by the "Video Bus"
->> input device ?
-> 
-> I did, nothing at all gets delivered by Video Bus.
-> 
->>> Volume and mute keys work without manual changes.
->>
->> Good.
->>  
->>> (I tested against 5.18.2 because that's what was already prepared. That old machine takes quite some time, even to just compile the platform/x86 subdirectory ;-) but I don't think this is relevant. If you think it is, I can also test against latest 5.19-rc code)
->>
->> Testing against 5.18 is fine .
->>
->>>> Looking at this has also brought up an unrelated backlight question:
->>>>
->>>> Kenneth, since you have acpi-video reporting keypresses you will
->>>> likely also have an acpi_video (or perhaps a native intel) backlight
->>>> under /sys/class/backlight and I noticed that panasonic-laptop
->>>> uncondirionally registers its backlight so you may very well end
->>>> up with 2 backlight controls under /sys/class/backlight, which
->>>> we generally try to avoid (so that userspace does not have to
->>>> guess which one to use).
->>>>
->>>> Can you do:
->>>> ls /sys/class/backlight
->>>
->>> toughbook:~ # ls -l /sys/class/backlight/
->>> total 0
->>> lrwxrwxrwx 1 root root 0 Jun 17 14:45 intel_backlight -> ../../devices/pci0000:00/0000:00:02.0/drm/card0/card0-LVDS-1/intel_backlight
->>> lrwxrwxrwx 1 root root 0 Jun 17 14:49 panasonic -> ../../devices/virtual/backlight/panasonic
->>>
->>>> and let me know the output?
->>>>
->>>> Also if there are 2 backlights there then please do:
->>>> cat /sys/class/backlight/<name>/max_brightness
->>>> to find out the range (0-value)
->>>
->>> toughbook:/sys/class/backlight # grep . */max_brightness
->>> intel_backlight/max_brightness:19531
->>> panasonic/max_brightness:255
->>>
->>>> and then try if they both work by doing:
->>>>
->>>> echo $number > /sys/class/backlight/<name>/brightness
->>>>
->>>> with different $number values in the range and see
->>>> if this actually changes the brightness.
->>>
->>> intel_backlight: does not work
->>> panasonic: does work
->>
->> Ok, so that suggests that the ACPI video bus on your
->> device is defunct, so I guess it also does not report
->> key-presses (see above) ?
-> 
-> Yes, it looks like ACPI video driver is totally useless on that machine.
-> 
->> This will also need some work then because we want to move
->> to there only being 1 (actually working) backlight-class
->> device. Rather then having multiple and let userspace
->> guess which one it needs to use.
-> 
-> Well, the non-working backlight is coming from the i915 driver, but as this is a very old Chipset (i855 GM) I'd rather be happy it works at all instead of complaining ;-)
-> (I have another machine of similar age, hp nc6000 with ati graphics, and there is no way getting it to work somewhat reliably at all)
+On 6/20/22 17:21, Kenneth Chan wrote:
+> It took quite a while to do a full compile, just to be safe.
 
-Ah right, you've got a panasonic + a native intel backlight device.
+<snip backlight stuff, which looks as expected>
 
-We are going to need a quirk to (eventually also depending on other changes)
-disable the broken intel backlight device.
+> The mute, volume up/down keys are still duplicated by atkbd after
+> applying 0005-platform-x86-panasonic-laptop-filter-out-duplicate-v.patch.
 
-But that won't fix the keys issue, at least not without an extra
-quirk just for that.
+Hmm, can you add a couple of:
 
-I wonder if your machine supports the backlight control part of
-the ACPI video bus at all. If not that would explain why it is
-not reporting brightness keys and that would also give us a way
-to solve this without an extra quirk.
+ pr_info("data 0x%02x\n", data);
 
-And that would actually also avoid the need for a backlight
-quirk too.
+at the top of the new panasonic_i8042_filter() function
+and then check in dmesg what is output for the volume keys.
 
-Can you pass "acpi_backlight=video" on the kernel commandline
-and see if a /sys/class/backlight/acpi_video0 device then
-shows up. If it does _not_ show up then indeed there is no
-ACPI backlight control at all.
+The patch should filter out those duplicate keys, unless
+I got the codes wrong somehow.
 
-In that case please give the attached patches a try on top
-of my last series.
-
-The acpi_video patch should fix your brightness keys then and
-the extra panasonic-laptop patch should not make any difference
-for the available /sys/class/backlight devices on your laptop,
-while filtering out the broken panasonic backlight on Kenneth's
-device.
+Also can you please try the attached 2 patches on top of my
+last series, this should hide the broken panasonic backlight
+device and otherwise it should make no difference (but maybe
+double check the duplicate brightness keys are not back.
 
 Regards,
 
 Hans
-
-
-
-> 
->>>> While we are at it, Stefan can you do the same please?
->>>
->>> See above.
->>> But hey, this is an i855GM graphics chip, I'm happy if it is still working *at all* (for example I need to avoid the xf86-intel driver and use the modesetting driver instead to get a usable sytstem)
->>>
->>> And I'm totally happy if all I have to do in the future is a
->>>
->>> option video report_key_events=1
->>>
->>> modprobe.conf file ;-)
->>
->> We really don't want people to have to specify module-options just
->> to have things working.
-> 
-> I understand, but then it's my job to get that DMI match to set this parameter into acpi_video.c ;-)
-> 
->> Stefam, at least for the backlight class-device issue we will need a DMI
->> quirk, so can you run:
->>
->> sudo dmidecode > dmidecode.txt
->>
->> and then attach the output to your next email, or send me a copy
->> privately ?
-> 
-> I'll send it privately as it is pretty big, but I think
-> 
-> DMI_BOARD_VENDOR, "Matsushita Electric Industrial Co.,Ltd."
-> DMI_BOARD_NAME, "CF51-1L"
-> 
-> (Similar to the CF51-2L in acpi/sleep.c) will do.
-> 
-> Best regards,
-> 
->     Stefan
---------------TvZvkKyiiWksbQIloAfAt1Lu
+--------------qD2D9wuPhfF5xO8QnRCnE0e0
 Content-Type: text/x-patch; charset=UTF-8;
  name="0001-platform-x86-panasonic-laptop-Use-acpi_video_get_bac.patch"
 Content-Disposition: attachment;
@@ -322,7 +163,7 @@ CQkgICAmcGNjX2JhY2tsaWdodF9vcHMsICZwcm9wcyk7CisJCWlmIChJU19FUlIocGNjLT5i
 YWNrbGlnaHQpKSB7CisJCQlyZXN1bHQgPSBQVFJfRVJSKHBjYy0+YmFja2xpZ2h0KTsKKwkJ
 CWdvdG8gb3V0X2lucHV0OworCQl9CiAJfQogCiAJLyogcmVhZCB0aGUgaW5pdGlhbCBicmln
 aHRuZXNzIHNldHRpbmcgZnJvbSB0aGUgaGFyZHdhcmUgKi8KLS0gCjIuMzYuMAoK
---------------TvZvkKyiiWksbQIloAfAt1Lu
+--------------qD2D9wuPhfF5xO8QnRCnE0e0
 Content-Type: text/x-patch; charset=UTF-8;
  name="0002-ACPI-video-Change-how-we-determine-if-brightness-key.patch"
 Content-Disposition: attachment;
@@ -377,5 +218,5 @@ aWdodCAmJgogCSAgICAgICAocmVwb3J0X2tleV9ldmVudHMgJiBSRVBPUlRfQlJJR0hUTkVT
 U19LRVlfRVZFTlRTKTsKIH0KIEVYUE9SVF9TWU1CT0woYWNwaV92aWRlb19oYW5kbGVzX2Jy
 aWdodG5lc3Nfa2V5X3ByZXNzZXMpOwotLSAKMi4zNi4wCgo=
 
---------------TvZvkKyiiWksbQIloAfAt1Lu--
+--------------qD2D9wuPhfF5xO8QnRCnE0e0--
 
