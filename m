@@ -2,145 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713E4C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Jun 2022 10:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502A1CCA483
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Jun 2022 11:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347543AbiFUKYB (ORCPT
+        id S1348753AbiFUL64 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Jun 2022 06:24:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56578 "EHLO
+        Tue, 21 Jun 2022 07:58:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347235AbiFUKYA (ORCPT
+        with ESMTP id S1350349AbiFUL63 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Jun 2022 06:24:00 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6490028726;
-        Tue, 21 Jun 2022 03:23:59 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id z19so1863319edb.11;
-        Tue, 21 Jun 2022 03:23:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:content-language:to:cc
-         :references:from:subject:in-reply-to:content-transfer-encoding;
-        bh=UIabU2pkC2/AvrVTQSBwnJCm7Ly90Sb7abdtPAu5vBs=;
-        b=ajb1az5VvNGT+J/HemtLsXsmMKyswA0XxkCXmMw9NxDOAKaI3GjXEH0aHtAmKF6wEX
-         mzU7czpoQY4f6XXfd2hPL77gM7k9SPWesdlKTkxD7IZCjoWzJNLcYUt9Sp0X6GR8hGz+
-         ibn7CNrTq8WzeH9Y7MoGxUgJTPZ/1/njUH1i6Sp00AAxO5JZJcx0eIqufnnkEOMBJ09w
-         /ovv2c4OLtG1npo0wkHmxjA/shsF2Tjljs+96WkBGW8hWId0y4Fjf6OJQsf2tEIJ2rWm
-         B0vlddY77Jq9aorSgCWjk43ntmtfiEqtKFOxgkDHJwS7MdBY1C/X5B4leW79MOpIpAzn
-         JZAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent
-         :content-language:to:cc:references:from:subject:in-reply-to
-         :content-transfer-encoding;
-        bh=UIabU2pkC2/AvrVTQSBwnJCm7Ly90Sb7abdtPAu5vBs=;
-        b=zkhI8f5BvrOVzIFnOOMu8FK3yY6hRJel8SLfqOGzUpAXlRF0F/WGJHUZbZkaQIJbyo
-         swlRJ09CmoyeEa9pcEa5QQHH6gxoPrQfhfi6hxcLtR+9Q3ftWtj5+ZEyRXIhuYwo2FPc
-         sqQTcFa/1idyyKKu0tnca9SySf1bpMutKByJXFNlmF83K5zBMB8wYcskKl85uXZAbQhO
-         UpBX88iVFabRgPFxDfzt5yRilV16k+9Wmg7AkCFXrRP1q32fvhui7wiXIcpcyVV4JM4r
-         6OwQ9V47TeZDG+m2vwRMNKU565nXvKF8kDgs6puGoHJITarUfnHqsJSNWpvcGKlQqMFM
-         8KaQ==
-X-Gm-Message-State: AJIora8JDxAIOqe3ExWwhxXaslWWeuRs+IhyCRH2T7RYu/BonQ5yrJ65
-        /mlsRirfU2HvmPClB97SZLc=
-X-Google-Smtp-Source: AGRyM1sKeqzQgg3kXilBxLYi2NDAnuXhA+TCXtQjYOPnmgJc1bzEKOsxrVDDOEldL/oiE9zVuU2mwg==
-X-Received: by 2002:a05:6402:128c:b0:435:6a3b:3a0a with SMTP id w12-20020a056402128c00b004356a3b3a0amr22099773edv.237.1655807037880;
-        Tue, 21 Jun 2022 03:23:57 -0700 (PDT)
-Received: from [192.168.200.12] (p3ee2b637.dip0.t-ipconnect.de. [62.226.182.55])
-        by smtp.gmail.com with ESMTPSA id b9-20020a1709063ca900b0072232a898f1sm4466923ejh.103.2022.06.21.03.23.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jun 2022 03:23:57 -0700 (PDT)
-Message-ID: <0bfb0325-0362-2d51-7f25-f389af4bfb68@message-id.googlemail.com>
-Date:   Tue, 21 Jun 2022 12:23:56 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Tue, 21 Jun 2022 07:58:29 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCF92AC69;
+        Tue, 21 Jun 2022 04:58:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655812708; x=1687348708;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fJlvgZDVU/+AbpIeOVnnvWZJsUD7oZ1ag94qSd3Xs98=;
+  b=C/zx29/uNzbeu5d194OVBcPzGgzeDLqJBnM+PcMJdGBdVx9RXfRQExn6
+   YLKa8td27UEjgnRwoQJpB0x/yDzbydEPNuvI0DBqf88oBqE1MDjhcR2jV
+   daDGADbHhR3tSkwOSP0+dI+nqY+0r6DhZub3oNrVGZY0r90+n2sNzcSPs
+   UR0y/rqFVhYNylrA2Rv5oNwQPWgX9BkuaEjI/g1KH1zWQTWLFnwZwmyAo
+   fRXq3e2SEtwKwfwU6GN5vNudPnsRejw/N62NJZWJ3YNbTdI/tXIKnoQ/N
+   2f3Sl7FGEyqqB47kgVV9Uo/m3b9XPNOTG52AzmU8tokgSev2de6hWtx6d
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10384"; a="278869433"
+X-IronPort-AV: E=Sophos;i="5.92,209,1650956400"; 
+   d="scan'208";a="278869433"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 04:58:28 -0700
+X-IronPort-AV: E=Sophos;i="5.92,209,1650956400"; 
+   d="scan'208";a="538012895"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 04:58:21 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1o3cWP-000r07-2e;
+        Tue, 21 Jun 2022 14:58:17 +0300
+Date:   Tue, 21 Jun 2022 14:58:16 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stefan Seyfried <seife+kernel@b1-systems.com>
-References: <20200821181433.17653-8-kenneth.t.chan@gmail.com>
- <20220612090507.20648-1-stefan.seyfried@googlemail.com>
- <20220612090507.20648-3-stefan.seyfried@googlemail.com>
- <CAHp75Ve+vrfSu6pD+AKe-eCVA2pC5o520y4gVwLNg9Dtk0U5bw@mail.gmail.com>
- <CAHp75VdFPUHTeDBY5ukFgVqJJn7BbTHxrxKUGOLB6P1UX-utAg@mail.gmail.com>
- <d80789bc-a8fc-de5f-164a-75adf7097311@message-id.googlemail.com>
- <6969ca0e-4a4c-c995-02a2-6645f875338c@redhat.com>
- <CAPqSeKu9csK_u0S6MiRay_mvfYejUhKbb=wvJO7F_Z-JL6F7DA@mail.gmail.com>
- <5f03f5b9-87bb-e27d-ce51-9c1572221f21@redhat.com>
- <89398c05-92c6-120d-ed51-ab62f1f404eb@message-id.googlemail.com>
- <19e590f1-e865-ad19-e9e4-df1f9274663c@redhat.com>
- <ad0e83af-b704-53b8-3963-b4dd53853f2b@message-id.googlemail.com>
- <3f3dfbad-9437-2c04-cf56-861649c117fd@redhat.com>
-From:   Stefan Seyfried <stefan.seyfried@googlemail.com>
-Subject: Re: [PATCH 2/2] platform/x86: panasonic-laptop: allow to use all
- hotkeys
-In-Reply-To: <3f3dfbad-9437-2c04-cf56-861649c117fd@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        linux-edac@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
+Message-ID: <YrGyWCaY+swYAYzH@smile.fi.intel.com>
+References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+ <YqBS8I62YBPFC9iS@google.com>
+ <CAHp75Ve9Lju8AEQd5huz1aYGg4sOu-ae7tTdyDWCXPCBR=wXbQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Ve9Lju8AEQd5huz1aYGg4sOu-ae7tTdyDWCXPCBR=wXbQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
-
-On 21.06.22 11:26, Hans de Goede wrote:
-> Hi,
+On Wed, Jun 08, 2022 at 12:50:44PM +0200, Andy Shevchenko wrote:
+> On Wed, Jun 8, 2022 at 9:42 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Mon, 06 Jun 2022, Andy Shevchenko wrote:
+> >
+> > > There are a few users that would like to utilize P2SB mechanism of hiding
+> > > and unhiding a device from the PCI configuration space.
+> > >
+> > > Here is the series to consolidate p2sb handling code for existing users
+> > > and to provide a generic way for new comer(s).
+> > >
+> > > It also includes a patch to enable GPIO controllers on Apollo Lake
+> > > when it's used with ABL bootloader w/o ACPI support.
+> > >
+> > > The patch that brings the helper ("platform/x86/intel: Add Primary to
+> > > Sideband (P2SB) bridge support") has a commit message that sheds a light
+> > > on what the P2SB is and why this is needed.
+> > >
+> > > I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+> > > since we have an ACPI device for GPIO I do not see any attempts to recreate
+> > > one).
+> > >
+> > > The series is ready to be merged via MFD tree, but see below.
+> > >
+> > > The series also includes updates for Simatic IPC drivers that partially
+> > > tagged by respective maintainers (the main question is if Pavel is okay
+> > > with the last three patches, since I believe Hans is okay with removing
+> > > some code under PDx86). Hence the first 8 patches can be merged right
+> > > away and the rest when Pavel does his review.
+> >
+> > Can we just wait for Pavel's review, then merge them all at once?
 > 
-> On 6/20/22 20:10, Stefan Seyfried wrote:
->> Well, the non-working backlight is coming from the i915 driver, but as this is a very old Chipset (i855 GM) I'd rather be happy it works at all instead of complaining ;-)
->> (I have another machine of similar age, hp nc6000 with ati graphics, and there is no way getting it to work somewhat reliably at all)
-> 
-> Ah right, you've got a panasonic + a native intel backlight device.
-> 
-> We are going to need a quirk to (eventually also depending on other changes)
-> disable the broken intel backlight device.
-> 
-> But that won't fix the keys issue, at least not without an extra
-> quirk just for that.
-> 
-> I wonder if your machine supports the backlight control part of
-> the ACPI video bus at all. If not that would explain why it is
-> not reporting brightness keys and that would also give us a way
-> to solve this without an extra quirk.
-> 
-> And that would actually also avoid the need for a backlight
-> quirk too.
-> 
-> Can you pass "acpi_backlight=video" on the kernel commandline
-> and see if a /sys/class/backlight/acpi_video0 device then
-> shows up. If it does _not_ show up then indeed there is no
-> ACPI backlight control at all.
+> Sure, it would be the best course of action.
 
-Nothing new shows up, just panasonic and intel_backlight as before.
+Pavel, do you have a chance to review the patches (last three) that touch
+LED drivers? What would be your verdict?
 
-> In that case please give the attached patches a try on top
-> of my last series.
-
-they do not fix the brightness keys for me.
-I did not have time to put in some debugging and will be traveling for 
-the rest of the week, but I'll take the toughbook with me and will try 
-to debug this later ;-)
-
-> The acpi_video patch should fix your brightness keys then and
-
-apparently it does not :-(
-
-> the extra panasonic-laptop patch should not make any difference
-> for the available /sys/class/backlight devices on your laptop,
-> while filtering out the broken panasonic backlight on Kenneth's
-> device.
-
-Yes, the panasonic backlight does still work on my machine.
-
-Best regards,
-
-	Stefan
 -- 
-Stefan Seyfried
+With Best Regards,
+Andy Shevchenko
 
-"For a successful technology, reality must take precedence over
-  public relations, for nature cannot be fooled." -- Richard Feynman
+
