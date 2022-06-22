@@ -2,78 +2,78 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A47CCA483
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Jun 2022 10:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC59EC43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Jun 2022 10:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347800AbiFVKXs (ORCPT
+        id S1354539AbiFVKYp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Jun 2022 06:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44140 "EHLO
+        Wed, 22 Jun 2022 06:24:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352262AbiFVKXO (ORCPT
+        with ESMTP id S1354615AbiFVKYa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Jun 2022 06:23:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 45BC73A5DB
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jun 2022 03:23:11 -0700 (PDT)
+        Wed, 22 Jun 2022 06:24:30 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 981483BA5A
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jun 2022 03:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655893390;
+        s=mimecast20190719; t=1655893442;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=q4Vd5UfRrhClnRvajU2UKtAqYXeZzT2WxiMDDNQrFZ4=;
-        b=RcZNYMLf8autrN+pyEZhqCcfRFLhW+mbdz7WtsJOkVXE2eR+tO4i6rHdg5uE8crhrjV0X2
-        8FGmnzDEotc9yYj7b4PXTXyNVjHZfgNistKcSfhw9cTEO/Xm97nLv+xyNAjBvm8EMt4Ozj
-        jgj2IyDwkm+VgX5CZmTQyEpkS2xSKZ8=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=5Os74LkYyLCMXIIdSPNx/FWApMAFK2xK/N4YdMkWG4k=;
+        b=Ekwq2zAMpTev/fgfIgONwc2iUY6rwl2owLLcq2ZniCdgv1t56IGoDthOQQgUlbEB28WadN
+        ePmFCxf4P/LEtxewU99aIG74dkxtntwT2R17SQn2Ofn4TOsJbJ9F9JO5i/RGP74hTAPTCY
+        O+TUTf1YbNIeLu3yoLmaAO6sCMkQk4g=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-470-S5BVy9_fNDGDxfX03VjKug-1; Wed, 22 Jun 2022 06:23:09 -0400
-X-MC-Unique: S5BVy9_fNDGDxfX03VjKug-1
-Received: by mail-ed1-f70.google.com with SMTP id f9-20020a056402354900b0042ded146259so13040193edd.20
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jun 2022 03:23:09 -0700 (PDT)
+ us-mta-589-eqdAKwIINP-etEQch49N7Q-1; Wed, 22 Jun 2022 06:24:01 -0400
+X-MC-Unique: eqdAKwIINP-etEQch49N7Q-1
+Received: by mail-ed1-f71.google.com with SMTP id y5-20020a056402358500b0043592ac3961so3930583edc.6
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jun 2022 03:24:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=q4Vd5UfRrhClnRvajU2UKtAqYXeZzT2WxiMDDNQrFZ4=;
-        b=NXnw8mHXVMtzVXPuGgCwm9NaSOQkU759rMNzjC4IEBTVWH1vwE4IWAjDYyR3YXqLOq
-         pPbUbBT7fe5lSDQzrT7/Jxr46VPs26lliJBlndq9IEJaeW02Nxw+3Zx5g9t4Q62zZgvF
-         0pRsLag8bCIv2RcFiG7yEG8IWIt1RZA2UZuBI4Dm10NNoOFP9dTz6a1m6OpJWjnSBFHu
-         MLdcCJhl+Je4uMXDPVfd342s3wK3pfx3LpLcpn1C6L4OUR/Xu96sbV+N+AEYvKxEhHgQ
-         ggJp06DoELHUPGFcsvtdCSUz+z4Hp+L/6di4EEzFxpy/fz9Gr/TRFGgcNyIxJxj4fand
-         9pNA==
-X-Gm-Message-State: AJIora9lhwzWXsROG//sKJpAecx3nSSOrSN4XDJTPYvoMpyn0aVQ/098
-        4joZdMfyLVzEUIkNgGqr1tRikKZdBsTATULz/Bi4sBDAEpKDkmDNCRND7Nx/MfPX6IseoGPcIMV
-        3lfH2QXbflWGaNnRKLVQ1Ee7CxTFpVA0vsA==
-X-Received: by 2002:a05:6402:149:b0:431:7dde:9b59 with SMTP id s9-20020a056402014900b004317dde9b59mr3240982edu.339.1655893388217;
-        Wed, 22 Jun 2022 03:23:08 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1uLmcag7vtQWJsjDk69I3LaddPH5DLFa9DAzI9sfx5/q9tJLuEQEmoAZ+f2nmyMAfvAz7d2DA==
-X-Received: by 2002:a05:6402:149:b0:431:7dde:9b59 with SMTP id s9-20020a056402014900b004317dde9b59mr3240961edu.339.1655893388064;
-        Wed, 22 Jun 2022 03:23:08 -0700 (PDT)
+        bh=5Os74LkYyLCMXIIdSPNx/FWApMAFK2xK/N4YdMkWG4k=;
+        b=X/r1RbrkQa6+AYD+G/hY6yxFcE3prCgUiaZ1dM3d5P4YBmS1feZzqK2n72oDra9rrZ
+         7uyrYCayWt+TmvVxOra0LXxSIqoFYq3Y9x3EWcO1R0p7KPhhKQ11Y5v9+7H/KCbN2qe4
+         3S/e2+px1LMCfI1vku7g2euJHPrKq39BNfOBHfTTT0vcf8S6BjAHjWJufFwxKYs/tQuE
+         pylsFW/sQ667hIdcz58D1QmvBLyzAqmsVUcMmA5BdFkP3xnZMIUurkTDKA/knHLVVBsn
+         ldFhgswRSif55CfAHPqm56rQE/D1jli8h3sm9m9uE2tCwHdN2Imzk3UdBWq6Lghg+jNq
+         g4YA==
+X-Gm-Message-State: AJIora9pxkFYxOe4pfVh256qUn9b9zxutNafOC6Y6YclKmmkEWVQLco6
+        GKAnM7hFXqdD9/i0JMtjQRf8l/qsIb0Tmawn0QQyNqNEXBhe9iFXnBRvFvD25mHSE6v5LHmKnmG
+        CpqQzTB91v5bsxk0r/g5RevGyrFqP0YeUBg==
+X-Received: by 2002:a05:6402:2806:b0:431:87c8:b45e with SMTP id h6-20020a056402280600b0043187c8b45emr3371517ede.130.1655893440267;
+        Wed, 22 Jun 2022 03:24:00 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vm3DnB+9uZytnD7Hup1u9qPvqVbizMuaBQt6JqOBBJut6qc5nipsyUROtz0To51miRbdVkjg==
+X-Received: by 2002:a05:6402:2806:b0:431:87c8:b45e with SMTP id h6-20020a056402280600b0043187c8b45emr3371500ede.130.1655893440093;
+        Wed, 22 Jun 2022 03:24:00 -0700 (PDT)
 Received: from [192.168.43.127] ([109.37.135.195])
-        by smtp.gmail.com with ESMTPSA id l2-20020a1709063d2200b006fecf74395bsm9039127ejf.8.2022.06.22.03.23.07
+        by smtp.gmail.com with ESMTPSA id f23-20020a170906825700b0070ad296e4b0sm8935604ejx.186.2022.06.22.03.23.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jun 2022 03:23:07 -0700 (PDT)
-Message-ID: <caaca84e-1cc4-bf81-f705-fdabe2313d71@redhat.com>
-Date:   Wed, 22 Jun 2022 12:23:06 +0200
+        Wed, 22 Jun 2022 03:23:59 -0700 (PDT)
+Message-ID: <8a325309-a64c-d5c6-0164-9d626ff62e41@redhat.com>
+Date:   Wed, 22 Jun 2022 12:23:58 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH v1] platform/x86: intel/pmc: Add Alder Lake N support to
- PMC core driver
+Subject: Re: [PATCH] platform/mellanox: nvsw-sn2201: fix error code in
+ nvsw_sn2201_create_static_devices()
 Content-Language: en-US
-To:     Gayatri Kammela <gayatri.kammela@linux.intel.com>
-Cc:     irenic.rajneesh@gmail.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>
-References: <20220615002751.3371730-1-gayatri.kammela@linux.intel.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Michael Shych <michaelsh@nvidia.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <YqmUGwmPK7cPolk/@kili>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220615002751.3371730-1-gayatri.kammela@linux.intel.com>
+In-Reply-To: <YqmUGwmPK7cPolk/@kili>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -82,14 +82,13 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 6/15/22 02:27, Gayatri Kammela wrote:
-> Add Alder Lake N (ADL-N) to the list of the platforms that Intel's
-> PMC core driver supports. RocketLake reuses all the TigerLake PCH IPs.
+On 6/15/22 10:11, Dan Carpenter wrote:
+> This should return PTR_ERR() instead of IS_ERR().  Also "dev->client"
+> has been set to NULL by this point so it returns 0/success so preserve
+> the error code earlier.
 > 
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: David E. Box <david.e.box@linux.intel.com>
-> Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+> Fixes: 662f24826f95 ("platform/mellanox: Add support for new SN2201 system")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -109,21 +108,36 @@ Hans
 
 
 > ---
->  drivers/platform/x86/intel/pmc/core.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/platform/mellanox/nvsw-sn2201.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index 40183bda7894..a1fe1e0dcf4a 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -1911,6 +1911,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
->  	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&icl_reg_map),
->  	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		&tgl_reg_map),
->  	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&tgl_reg_map),
-> +	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		&tgl_reg_map),
->  	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_reg_map),
->  	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
->  	{}
-> 
-> base-commit: b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3
+> diff --git a/drivers/platform/mellanox/nvsw-sn2201.c b/drivers/platform/mellanox/nvsw-sn2201.c
+> index 0bcdc7c75007..217e22e81c1a 100644
+> --- a/drivers/platform/mellanox/nvsw-sn2201.c
+> +++ b/drivers/platform/mellanox/nvsw-sn2201.c
+> @@ -890,6 +890,7 @@ nvsw_sn2201_create_static_devices(struct nvsw_sn2201 *nvsw_sn2201,
+>  				  int size)
+>  {
+>  	struct mlxreg_hotplug_device *dev = devs;
+> +	int ret;
+>  	int i;
+>  
+>  	/* Create I2C static devices. */
+> @@ -901,6 +902,7 @@ nvsw_sn2201_create_static_devices(struct nvsw_sn2201 *nvsw_sn2201,
+>  				dev->nr, dev->brdinfo->addr);
+>  
+>  			dev->adapter = NULL;
+> +			ret = PTR_ERR(dev->client);
+>  			goto fail_create_static_devices;
+>  		}
+>  	}
+> @@ -914,7 +916,7 @@ nvsw_sn2201_create_static_devices(struct nvsw_sn2201 *nvsw_sn2201,
+>  		dev->client = NULL;
+>  		dev->adapter = NULL;
+>  	}
+> -	return IS_ERR(dev->client);
+> +	return ret;
+>  }
+>  
+>  static void nvsw_sn2201_destroy_static_devices(struct nvsw_sn2201 *nvsw_sn2201,
 
