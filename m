@@ -2,130 +2,120 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CA4C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Jun 2022 19:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF32DC43334
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Jun 2022 20:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231538AbiFXTtu (ORCPT
+        id S229928AbiFXU6P (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 24 Jun 2022 15:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41264 "EHLO
+        Fri, 24 Jun 2022 16:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229844AbiFXTtt (ORCPT
+        with ESMTP id S230232AbiFXU6O (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 24 Jun 2022 15:49:49 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EFF581DAB;
-        Fri, 24 Jun 2022 12:49:46 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id q6so6671981eji.13;
-        Fri, 24 Jun 2022 12:49:46 -0700 (PDT)
+        Fri, 24 Jun 2022 16:58:14 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C36D31A3BB;
+        Fri, 24 Jun 2022 13:58:09 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id t5so7115678eje.1;
+        Fri, 24 Jun 2022 13:58:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=Fq6Y5GABR5Xiv6AZ5DeydR2z/C8G+gw3CTWJuwXVja0=;
-        b=THQMBbRBvLooOL2Wg2hnLo9Ris4qYgRBWYe8nNqM6Y4H5Z6sUDenj9BsCz8tGxjbku
-         UO0mbToNRKV65y4KKdFzwi9j+HFbqpj60bW+VcDo656jJ27e/kLQ+3QyXIsRkVLXjycE
-         UN4Sv9hZsWp3s58YBH+C6uuIOuOVagOoNe42MBKvLMebYeyIjL8Iw6jJgg8grmWKWSZn
-         RhMbVL4W863KKcFDOGj7O3bS8tlECFBZOv2MblbgJT0GjAsrMJ8ltsqlsNUDwRd+yWHk
-         1desO5xR2znpxUnm5hcjnzgCGaqvZx5Q3BShHcLZNaSZMQ9SmuWC8esJ9knZTRUG4oF2
-         wnBg==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UIgY3FeoHMf+aDlAZ/zhoODzy0zddGpMaimt54u9oe0=;
+        b=cB6/aNC07c5ZUrnCKh6xVfURtO23mkpV1NWKPLkDa0FncdfL9QMGLTdG+szuj+f+04
+         6n10dcl14mMvmJwBuVGsTHS45SsA9JLiVQuiQ9z54LCYf67P2MVBV4wYpH1r9BTJR1yY
+         oiXuyzP9zi09Jqr9yNzxTDmOkJwkq9UU0Zu8EDW7NWF5Eg42Pjaizgo4vj7biykQsUfB
+         5OaJr98VDUCGKp1777Bqk1a6V/ppakGoCG8FZZ29c1kaDACSyuXhY5DR0QCUfZEbqtCh
+         o7fwEdBHMeYN9JZ7mwEaVJbJXFZABEcTopAWCKOCwoZ2yri/oHvo52S3hSHFa6iBUdx/
+         DPfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Fq6Y5GABR5Xiv6AZ5DeydR2z/C8G+gw3CTWJuwXVja0=;
-        b=545YVJPBAAZo+ObgwVw4Kbu49o42qL2M8bznhIzyTfuVUHG74sELGVTJcoVlLdAN0p
-         hTFVq9gxP85/Nknq4LJYLPJAuFC29GZl+Tt6BxyUQMddFtzMNRbUVv5gyM6lmltV15ED
-         BAvmXHh4W+2GUAVkCOtlhVXsNmBx0Wsy+yWAynfKEz5/WLGNB3nJBbBPQeMpHQ8JtuEA
-         L62Kd8C+q1wMjN/VJo4tallcS9kaBxe+Ihif0+KlTIVcakH07NOIws5vV5mupoan85rQ
-         KOSW+ghO2bievfyW6PM4ey6J6zX0/3GI6sWyiwe2GKGGXHS9ZdZJv5YnP0NkS1WyHSO+
-         BRNw==
-X-Gm-Message-State: AJIora+g6KAI/vlSnYurlzurvJ2z6WXnk7lgX8lIt4sBx8tZbi5r5Vqi
-        3uTsuMCJBJIxyKJSM42W/qw=
-X-Google-Smtp-Source: AGRyM1vx9cMxbKmnLPa/JYhC+7pg2Bs8ZuKcROUz2Ig4veSKcf2av7xnTSah+ql1UFZ7RZjSSjHttw==
-X-Received: by 2002:a17:906:d7:b0:718:df95:985 with SMTP id 23-20020a17090600d700b00718df950985mr659324eji.582.1656100184793;
-        Fri, 24 Jun 2022 12:49:44 -0700 (PDT)
-Received: from [192.168.200.12] (p3ee2b637.dip0.t-ipconnect.de. [62.226.182.55])
-        by smtp.gmail.com with ESMTPSA id e13-20020a170906c00d00b007262b7afa05sm1576933ejz.213.2022.06.24.12.49.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jun 2022 12:49:44 -0700 (PDT)
-Message-ID: <df35a580-3e4b-cf45-004f-7c6848a1dfae@message-id.googlemail.com>
-Date:   Fri, 24 Jun 2022 21:49:46 +0200
+        bh=UIgY3FeoHMf+aDlAZ/zhoODzy0zddGpMaimt54u9oe0=;
+        b=Imogtfjt42jyLC3hlGLAddjTtMleWRaZtgGvYxJUwjYgDQMfOxFUCfXwXX3iM9s9wS
+         0xz8Fn+zvc6oUPW9s5mrHFZz0kmrhUAmsK76e9G4Kx/AFhBl/IHpbkkyzLpeqj0Seta2
+         31M2F3yeSE+rmVlt2lo2f2NXJKPP355yPnIl6427fbBnYEkjqg20rChGpVTylO79Hb7r
+         1YYzrvGYDIv0ppdfbRfLstdRir9p50rQqDqjOZi8qfLwsLgmJrNEojer4BsmgcqyZqcV
+         AsxAbCNz0nhSCDXATffMKxD2HmAUvt+JHj7o2zpGCD4IxSpd9Czwsf+1+qE9nMNSI9JP
+         EOEA==
+X-Gm-Message-State: AJIora8uJ10H4sDoja45ZSTrg5PDm92frzncwC2O9KRe9JwnL8OickNs
+        gYBx54QXWoJECT3u/T5oA44=
+X-Google-Smtp-Source: AGRyM1u4d0aMsBv1S7Cj8ckLuj7VBJ2ysil1FL+0quRgD3bxm62sVZK50zb6x1o1KXIZQosmgAUpIQ==
+X-Received: by 2002:a17:906:14d:b0:711:ff36:b1af with SMTP id 13-20020a170906014d00b00711ff36b1afmr928612ejh.422.1656104287800;
+        Fri, 24 Jun 2022 13:58:07 -0700 (PDT)
+Received: from xws.localdomain ([37.120.217.162])
+        by smtp.gmail.com with ESMTPSA id i5-20020a1709061e4500b006feb6dee4absm1672666ejj.137.2022.06.24.13.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jun 2022 13:58:07 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 0/3] platform/surface: Move Surface Aggregator client hubs to their own modules
+Date:   Fri, 24 Jun 2022 22:57:57 +0200
+Message-Id: <20220624205800.1355621-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 0/7] ACPI: video / platform/x86: Fix Panasonic laptop
- missing keypresses
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20220624112340.10130-1-hdegoede@redhat.com>
-From:   Stefan Seyfried <stefan.seyfried@googlemail.com>
-In-Reply-To: <20220624112340.10130-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 24.06.22 13:23, Hans de Goede wrote:
-> Hi All,
-> 
-> Here is a series fixing the missing keypresses on some Panasonic Toughbook
-> models. These missing keypresses are caused by
-> commit ed83c9171829 ("platform/x86: panasonic-laptop: Resolve hotkey double
-> trigger bug"), which made the panasonic-laptop driver unconditionally drop
-> most WMI reported hotkeys.
-> 
-> This series reverts that commit and then adds some more selective filtering
-> to still avoid the double key-presses on some models, while avoiding
-> completely missing keypresses on others.
-> 
-> Rafael, these fixes rely on patch 1/7, which is a tweak to
-> the acpi_video_handles_brightness_key_presses() helper. Without this
-> tweak this series will cause a regression, so I would like to merge
-> the entire series through the pdx86 tree, may I have your ack for this?
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> Hans de Goede (6):
->    ACPI: video: Change how we determine if brightness key-presses are
->      handled
->    platform/x86: panasonic-laptop: sort includes alphabetically
->    platform/x86: panasonic-laptop: revert "Resolve hotkey double trigger
->      bug"
->    platform/x86: panasonic-laptop: don't report duplicate brightness
->      key-presses
->    platform/x86: panasonic-laptop: filter out duplicate volume
->      up/down/mute keypresses
->    platform/x86: panasonic-laptop: Use acpi_video_get_backlight_type()
-> 
-> Stefan Seyfried (1):
->    platform/x86: panasonic-laptop: de-obfuscate button codes
-> 
->   drivers/acpi/acpi_video.c               |  13 ++-
->   drivers/platform/x86/Kconfig            |   2 +
->   drivers/platform/x86/panasonic-laptop.c | 112 ++++++++++++++++++------
->   3 files changed, 91 insertions(+), 36 deletions(-)
+This series moves the Surface Aggregator client device hubs from the
+Surface Aggregator registry to their own modules. While, at the moment,
+client device hubs are exclusively instantiated by the registry platform
+hub driver, this will change in the future. In particular, with the
+introduction of DT/OF support, which is required for the Surface Pro X.
+Therefore, this series also slightly restructures the functions used for
+software-node-based device instantiation, essentially acting as
+preparation for that.
 
-The whole series works without any manual setup on my Toughbook CF-51:
+In addition, this series follows-up "platform/surface: aggregator: Add
+support for client hot-removal" and further removes some code
+duplication by consolidating more parts of the hub drivers. While at it,
+also ensure proper handling of firmware node lifetimes and update the
+copyright year of various files.
 
-Tested-by: Stefan Seyfried <seife+kernel@b1-systems.com>
+Maximilian Luz (3):
+  platform/surface: aggregator: Move device registry helper functions to
+    core module
+  platform/surface: aggregator: Move subsystem hub drivers to their own
+    module
+  platform/surface: Update copyright year of various drivers
 
-Thanks again!
+ MAINTAINERS                                   |   6 +
+ drivers/platform/surface/Kconfig              |  35 +-
+ drivers/platform/surface/Makefile             |   1 +
+ drivers/platform/surface/aggregator/Kconfig   |   2 +-
+ drivers/platform/surface/aggregator/Makefile  |   2 +-
+ drivers/platform/surface/aggregator/bus.c     | 151 +++++-
+ drivers/platform/surface/aggregator/bus.h     |   2 +-
+ .../platform/surface/aggregator/controller.c  |   2 +-
+ .../platform/surface/aggregator/controller.h  |   2 +-
+ drivers/platform/surface/aggregator/core.c    |   2 +-
+ .../platform/surface/aggregator/ssh_msgb.h    |   2 +-
+ .../surface/aggregator/ssh_packet_layer.c     |   2 +-
+ .../surface/aggregator/ssh_packet_layer.h     |   2 +-
+ .../platform/surface/aggregator/ssh_parser.c  |   2 +-
+ .../platform/surface/aggregator/ssh_parser.h  |   2 +-
+ .../surface/aggregator/ssh_request_layer.c    |   2 +-
+ .../surface/aggregator/ssh_request_layer.h    |   2 +-
+ drivers/platform/surface/aggregator/trace.h   |   2 +-
+ .../platform/surface/surface_acpi_notify.c    |   2 +-
+ .../surface/surface_aggregator_cdev.c         |   2 +-
+ .../platform/surface/surface_aggregator_hub.c | 371 +++++++++++++++
+ .../surface/surface_aggregator_registry.c     | 446 +-----------------
+ drivers/platform/surface/surface_dtx.c        |   2 +-
+ drivers/platform/surface/surface_gpe.c        |   2 +-
+ drivers/platform/surface/surface_hotplug.c    |   2 +-
+ .../surface/surface_platform_profile.c        |   2 +-
+ include/linux/surface_aggregator/device.h     |  52 ++
+ 27 files changed, 618 insertions(+), 484 deletions(-)
+ create mode 100644 drivers/platform/surface/surface_aggregator_hub.c
 
-Stefan
 -- 
-Stefan Seyfried
+2.36.1
 
-"For a successful technology, reality must take precedence over
-  public relations, for nature cannot be fooled." -- Richard Feynman
