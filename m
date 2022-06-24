@@ -2,104 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8148CC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Jun 2022 18:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CA4C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Jun 2022 19:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231636AbiFXShM (ORCPT
+        id S231538AbiFXTtu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 24 Jun 2022 14:37:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35910 "EHLO
+        Fri, 24 Jun 2022 15:49:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231569AbiFXShI (ORCPT
+        with ESMTP id S229844AbiFXTtt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 24 Jun 2022 14:37:08 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1295B8126C;
-        Fri, 24 Jun 2022 11:37:08 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id ge10so6385469ejb.7;
-        Fri, 24 Jun 2022 11:37:07 -0700 (PDT)
+        Fri, 24 Jun 2022 15:49:49 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EFF581DAB;
+        Fri, 24 Jun 2022 12:49:46 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id q6so6671981eji.13;
+        Fri, 24 Jun 2022 12:49:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Wk5pMy7Zd97VX3BKR5VEk1jaORfYL6tDVYZN+cZYFto=;
-        b=RRMHywXN0k5cnqLRZ1tqLahM6ZdigXE5VNCurGhJPbwCK6VI0UaIwBPmznefCYqhUI
-         GkTxDznIPnPaZq5Wf8w9ESY2dzStS/Kk/Gor9ZgXBYskw+YXz2KLDkWRvV9boTegcIFx
-         gsm2maO/0TEmcjAlaRTBdJ201yVUMOovz0OlAJ8H5kwfo90kG7+FRlM6scCWk/EqGefI
-         IwlC+aSQGOcOGXGh5T2BPNK6sMkgrrzCwMgiiQbIv+lzY0gWR2cM4gG3NM9wKg4yxQ/t
-         K3jQTnI41UfKyefGLXg9vZmC8Bzo/Wjd8N0qdFrosEE4ZjXd2IrGrQrA/bPDVfyThXFI
-         eIHA==
+        d=googlemail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Fq6Y5GABR5Xiv6AZ5DeydR2z/C8G+gw3CTWJuwXVja0=;
+        b=THQMBbRBvLooOL2Wg2hnLo9Ris4qYgRBWYe8nNqM6Y4H5Z6sUDenj9BsCz8tGxjbku
+         UO0mbToNRKV65y4KKdFzwi9j+HFbqpj60bW+VcDo656jJ27e/kLQ+3QyXIsRkVLXjycE
+         UN4Sv9hZsWp3s58YBH+C6uuIOuOVagOoNe42MBKvLMebYeyIjL8Iw6jJgg8grmWKWSZn
+         RhMbVL4W863KKcFDOGj7O3bS8tlECFBZOv2MblbgJT0GjAsrMJ8ltsqlsNUDwRd+yWHk
+         1desO5xR2znpxUnm5hcjnzgCGaqvZx5Q3BShHcLZNaSZMQ9SmuWC8esJ9knZTRUG4oF2
+         wnBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Wk5pMy7Zd97VX3BKR5VEk1jaORfYL6tDVYZN+cZYFto=;
-        b=m7dZK4TNgHP0dOpU0XVE9OhwH5TCqSLp4Jq34i2lfEex6lXolpJoXMktMrYCq/7qFT
-         jqLLxR4KQorRv8KTCKJWR/dqI2C2o0qJEeG+0HhpKyLEg6tgL/8peHkEPGqFQiFTVYw9
-         Jrb4C+a141qil631NxkqO27LguuR4q2h0cCcvilpbMSMV4U4nFfeokbZgezjWq6CvpE6
-         V7+ChjoDnVLlZXBW1qFNUZa3IVbfWOHRZoxyREAlLxvvdDqLYW0v/IhZr0i3DDcs2O6V
-         bsGmeA5jmmnfof7lbn5YH9oJ1h8BX2hvAbF1TFsbJ72MDA7pzMSr16xnYrWdWgikMMWp
-         YqTg==
-X-Gm-Message-State: AJIora/ipMq0I0kALdNX/lOpsc3vrREgeiXLs7h9/44RliZcfWVm3/3s
-        NkhWEcC5wCar10QuMwnbqxg=
-X-Google-Smtp-Source: AGRyM1tjEUoazywNMjLpdPgFsdSAat4CmmBmty2MepRR97HbIFsh643SXO+IoeJf0NpDI5i9snAF6g==
-X-Received: by 2002:a17:907:6d0c:b0:726:32e5:1736 with SMTP id sa12-20020a1709076d0c00b0072632e51736mr370371ejc.596.1656095827578;
-        Fri, 24 Jun 2022 11:37:07 -0700 (PDT)
-Received: from xws.localdomain ([37.120.217.162])
-        by smtp.gmail.com with ESMTPSA id jw12-20020a170906e94c00b00722e8827c53sm1493822ejb.208.2022.06.24.11.37.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jun 2022 11:37:07 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH 4/4] platform/surface: aggregator_registry: Add support for tablet mode switch on Surface Laptop Studio
-Date:   Fri, 24 Jun 2022 20:36:42 +0200
-Message-Id: <20220624183642.910893-5-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220624183642.910893-1-luzmaximilian@gmail.com>
-References: <20220624183642.910893-1-luzmaximilian@gmail.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Fq6Y5GABR5Xiv6AZ5DeydR2z/C8G+gw3CTWJuwXVja0=;
+        b=545YVJPBAAZo+ObgwVw4Kbu49o42qL2M8bznhIzyTfuVUHG74sELGVTJcoVlLdAN0p
+         hTFVq9gxP85/Nknq4LJYLPJAuFC29GZl+Tt6BxyUQMddFtzMNRbUVv5gyM6lmltV15ED
+         BAvmXHh4W+2GUAVkCOtlhVXsNmBx0Wsy+yWAynfKEz5/WLGNB3nJBbBPQeMpHQ8JtuEA
+         L62Kd8C+q1wMjN/VJo4tallcS9kaBxe+Ihif0+KlTIVcakH07NOIws5vV5mupoan85rQ
+         KOSW+ghO2bievfyW6PM4ey6J6zX0/3GI6sWyiwe2GKGGXHS9ZdZJv5YnP0NkS1WyHSO+
+         BRNw==
+X-Gm-Message-State: AJIora+g6KAI/vlSnYurlzurvJ2z6WXnk7lgX8lIt4sBx8tZbi5r5Vqi
+        3uTsuMCJBJIxyKJSM42W/qw=
+X-Google-Smtp-Source: AGRyM1vx9cMxbKmnLPa/JYhC+7pg2Bs8ZuKcROUz2Ig4veSKcf2av7xnTSah+ql1UFZ7RZjSSjHttw==
+X-Received: by 2002:a17:906:d7:b0:718:df95:985 with SMTP id 23-20020a17090600d700b00718df950985mr659324eji.582.1656100184793;
+        Fri, 24 Jun 2022 12:49:44 -0700 (PDT)
+Received: from [192.168.200.12] (p3ee2b637.dip0.t-ipconnect.de. [62.226.182.55])
+        by smtp.gmail.com with ESMTPSA id e13-20020a170906c00d00b007262b7afa05sm1576933ejz.213.2022.06.24.12.49.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jun 2022 12:49:44 -0700 (PDT)
+Message-ID: <df35a580-3e4b-cf45-004f-7c6848a1dfae@message-id.googlemail.com>
+Date:   Fri, 24 Jun 2022 21:49:46 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH 0/7] ACPI: video / platform/x86: Fix Panasonic laptop
+ missing keypresses
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        Kenneth Chan <kenneth.t.chan@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+References: <20220624112340.10130-1-hdegoede@redhat.com>
+From:   Stefan Seyfried <stefan.seyfried@googlemail.com>
+In-Reply-To: <20220624112340.10130-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a POS subsystem tablet-mode switch device for the Surface Laptop
-Studio. The respective driver for this device provides SW_TABLET_MODE
-input events for user-space based on the posture of the screen.
+On 24.06.22 13:23, Hans de Goede wrote:
+> Hi All,
+> 
+> Here is a series fixing the missing keypresses on some Panasonic Toughbook
+> models. These missing keypresses are caused by
+> commit ed83c9171829 ("platform/x86: panasonic-laptop: Resolve hotkey double
+> trigger bug"), which made the panasonic-laptop driver unconditionally drop
+> most WMI reported hotkeys.
+> 
+> This series reverts that commit and then adds some more selective filtering
+> to still avoid the double key-presses on some models, while avoiding
+> completely missing keypresses on others.
+> 
+> Rafael, these fixes rely on patch 1/7, which is a tweak to
+> the acpi_video_handles_brightness_key_presses() helper. Without this
+> tweak this series will cause a regression, so I would like to merge
+> the entire series through the pdx86 tree, may I have your ack for this?
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> Hans de Goede (6):
+>    ACPI: video: Change how we determine if brightness key-presses are
+>      handled
+>    platform/x86: panasonic-laptop: sort includes alphabetically
+>    platform/x86: panasonic-laptop: revert "Resolve hotkey double trigger
+>      bug"
+>    platform/x86: panasonic-laptop: don't report duplicate brightness
+>      key-presses
+>    platform/x86: panasonic-laptop: filter out duplicate volume
+>      up/down/mute keypresses
+>    platform/x86: panasonic-laptop: Use acpi_video_get_backlight_type()
+> 
+> Stefan Seyfried (1):
+>    platform/x86: panasonic-laptop: de-obfuscate button codes
+> 
+>   drivers/acpi/acpi_video.c               |  13 ++-
+>   drivers/platform/x86/Kconfig            |   2 +
+>   drivers/platform/x86/panasonic-laptop.c | 112 ++++++++++++++++++------
+>   3 files changed, 91 insertions(+), 36 deletions(-)
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
- drivers/platform/surface/surface_aggregator_registry.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+The whole series works without any manual setup on my Toughbook CF-51:
 
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index 8f249df673a4..f1c5905f1c16 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -191,6 +191,12 @@ static const struct software_node ssam_node_hid_kip_iid5 = {
- 	.parent = &ssam_node_hub_kip,
- };
- 
-+/* Tablet-mode switch via POS subsystem. */
-+static const struct software_node ssam_node_pos_tablet_switch = {
-+	.name = "ssam:01:26:01:00:01",
-+	.parent = &ssam_node_root,
-+};
-+
- /*
-  * Devices for 5th- and 6th-generations models:
-  * - Surface Book 2,
-@@ -237,6 +243,7 @@ static const struct software_node *ssam_node_group_sls[] = {
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
- 	&ssam_node_tmp_pprof,
-+	&ssam_node_pos_tablet_switch,
- 	&ssam_node_hid_tid1_keyboard,
- 	&ssam_node_hid_tid1_penstash,
- 	&ssam_node_hid_tid1_touchpad,
+Tested-by: Stefan Seyfried <seife+kernel@b1-systems.com>
+
+Thanks again!
+
+Stefan
 -- 
-2.36.1
+Stefan Seyfried
 
+"For a successful technology, reality must take precedence over
+  public relations, for nature cannot be fooled." -- Richard Feynman
