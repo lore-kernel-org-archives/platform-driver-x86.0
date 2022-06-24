@@ -2,42 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD5EC43334
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Jun 2022 11:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD72CCA473
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Jun 2022 11:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229783AbiFXLX5 (ORCPT
+        id S230053AbiFXLX6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 24 Jun 2022 07:23:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51744 "EHLO
+        Fri, 24 Jun 2022 07:23:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbiFXLXz (ORCPT
+        with ESMTP id S230414AbiFXLX5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 24 Jun 2022 07:23:55 -0400
+        Fri, 24 Jun 2022 07:23:57 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8268D7A1B7
-        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jun 2022 04:23:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C979A7C508
+        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jun 2022 04:23:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656069833;
+        s=mimecast20190719; t=1656069836;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=LGApk+swnP1uEKw3iYyR1RdJ655GxP4fSVzWwny/eHI=;
-        b=VxetD1cmM1qQyi86yLWsV6oPrYOWXpxlaO1ZTPCxw5EZ8lajFvgNWiJvmK2qjcSjB9p1h5
-        nRF6xyJjPucT/cXigbjmb7bnL0x36AaEUTyhm9JtWPprJpDSqchHGIUFm67ly1eN5JckX2
-        eHywcVDM/R3ebo8CscSQk0K9QfMMzC4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gLS+rTb/joeHyvhLqe9uems9tKBO8o9mAsEEBCpu9f0=;
+        b=J91bXpatB0u1DgpZyiJQ/L4QmtOJqFNYXTZqca7BNgxzsZZCdAB0TIBuyGq9drxEXvcIGy
+        KwaY6yIg9ES9gllbc58vbKN9i8Tab3Mbl4DOVLcpCh3T332l3lztdeeaZhn5qh1q97gXqD
+        D4HgALjzphPwb3d70Ur02/E8eI5rcJg=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-655-PESJFhd9NQ2Gip7ZT9i0-Q-1; Fri, 24 Jun 2022 07:23:50 -0400
-X-MC-Unique: PESJFhd9NQ2Gip7ZT9i0-Q-1
+ us-mta-607-VaA9sZqfPbqSJiauYO897Q-1; Fri, 24 Jun 2022 07:23:54 -0400
+X-MC-Unique: VaA9sZqfPbqSJiauYO897Q-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8B1E81818CB8;
-        Fri, 24 Jun 2022 11:23:49 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5D9573C0D86C;
+        Fri, 24 Jun 2022 11:23:54 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.193.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4988B492C3B;
-        Fri, 24 Jun 2022 11:23:48 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 19A94492CA6;
+        Fri, 24 Jun 2022 11:23:52 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Mark Gross <markgross@kernel.org>,
@@ -47,9 +48,11 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
         Stefan Seyfried <stefan.seyfried@googlemail.com>,
         Kenneth Chan <kenneth.t.chan@gmail.com>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH 0/7] ACPI: video / platform/x86: Fix Panasonic laptop missing keypresses
-Date:   Fri, 24 Jun 2022 13:23:33 +0200
-Message-Id: <20220624112340.10130-1-hdegoede@redhat.com>
+Subject: [PATCH 3/7] platform/x86: panasonic-laptop: sort includes alphabetically
+Date:   Fri, 24 Jun 2022 13:23:36 +0200
+Message-Id: <20220624112340.10130-4-hdegoede@redhat.com>
+In-Reply-To: <20220624112340.10130-1-hdegoede@redhat.com>
+References: <20220624112340.10130-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
@@ -57,48 +60,48 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All,
+Sort includes alphabetically, small cleanup patch in preparation of
+further changes.
 
-Here is a series fixing the missing keypresses on some Panasonic Toughbook
-models. These missing keypresses are caused by
-commit ed83c9171829 ("platform/x86: panasonic-laptop: Resolve hotkey double
-trigger bug"), which made the panasonic-laptop driver unconditionally drop
-most WMI reported hotkeys.
+Fixes: ed83c9171829 ("platform/x86: panasonic-laptop: Resolve hotkey double trigger bug")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/panasonic-laptop.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-This series reverts that commit and then adds some more selective filtering
-to still avoid the double key-presses on some models, while avoiding
-completely missing keypresses on others.
-
-Rafael, these fixes rely on patch 1/7, which is a tweak to
-the acpi_video_handles_brightness_key_presses() helper. Without this
-tweak this series will cause a regression, so I would like to merge
-the entire series through the pdx86 tree, may I have your ack for this?
-
-Regards,
-
-Hans
-
-
-Hans de Goede (6):
-  ACPI: video: Change how we determine if brightness key-presses are
-    handled
-  platform/x86: panasonic-laptop: sort includes alphabetically
-  platform/x86: panasonic-laptop: revert "Resolve hotkey double trigger
-    bug"
-  platform/x86: panasonic-laptop: don't report duplicate brightness
-    key-presses
-  platform/x86: panasonic-laptop: filter out duplicate volume
-    up/down/mute keypresses
-  platform/x86: panasonic-laptop: Use acpi_video_get_backlight_type()
-
-Stefan Seyfried (1):
-  platform/x86: panasonic-laptop: de-obfuscate button codes
-
- drivers/acpi/acpi_video.c               |  13 ++-
- drivers/platform/x86/Kconfig            |   2 +
- drivers/platform/x86/panasonic-laptop.c | 112 ++++++++++++++++++------
- 3 files changed, 91 insertions(+), 36 deletions(-)
-
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index ca6137f4000f..26e31ac09dc6 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -119,20 +119,19 @@
+  *		- v0.1  start from toshiba_acpi driver written by John Belmonte
+  */
+ 
+-#include <linux/kernel.h>
+-#include <linux/module.h>
+-#include <linux/init.h>
+-#include <linux/types.h>
++#include <linux/acpi.h>
+ #include <linux/backlight.h>
+ #include <linux/ctype.h>
+-#include <linux/seq_file.h>
+-#include <linux/uaccess.h>
+-#include <linux/slab.h>
+-#include <linux/acpi.h>
++#include <linux/init.h>
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/platform_device.h>
+-
++#include <linux/seq_file.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <linux/uaccess.h>
+ 
+ MODULE_AUTHOR("Hiroshi Miura <miura@da-cha.org>");
+ MODULE_AUTHOR("David Bronaugh <dbronaugh@linuxboxen.org>");
 -- 
 2.36.0
 
