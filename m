@@ -2,24 +2,24 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414E8CCA480
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1312CCA481
 	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Jun 2022 02:58:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231802AbiFXC6U (ORCPT
+        id S231812AbiFXC6V (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Jun 2022 22:58:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44164 "EHLO
+        Thu, 23 Jun 2022 22:58:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231591AbiFXC5a (ORCPT
+        with ESMTP id S231171AbiFXC5b (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Jun 2022 22:57:30 -0400
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B5B60F35;
-        Thu, 23 Jun 2022 19:57:18 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0VHEuW1M_1656039431;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VHEuW1M_1656039431)
+        Thu, 23 Jun 2022 22:57:31 -0400
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A124462C23;
+        Thu, 23 Jun 2022 19:57:24 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0VHErstf_1656039438;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VHErstf_1656039438)
           by smtp.aliyun-inc.com;
-          Fri, 24 Jun 2022 10:57:12 +0800
+          Fri, 24 Jun 2022 10:57:19 +0800
 From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 To:     virtualization@lists.linux-foundation.org
 Cc:     Richard Weinberger <richard@nod.at>,
@@ -55,9 +55,9 @@ Cc:     Richard Weinberger <richard@nod.at>,
         linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
         kvm@vger.kernel.org, bpf@vger.kernel.org,
         kangjie.xu@linux.alibaba.com
-Subject: [PATCH v10 22/41] virtio_ring: packed: introduce virtqueue_reinit_packed()
-Date:   Fri, 24 Jun 2022 10:56:02 +0800
-Message-Id: <20220624025621.128843-23-xuanzhuo@linux.alibaba.com>
+Subject: [PATCH v10 25/41] virtio_pci: struct virtio_pci_common_cfg add queue_notify_data
+Date:   Fri, 24 Jun 2022 10:56:05 +0800
+Message-Id: <20220624025621.128843-26-xuanzhuo@linux.alibaba.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20220624025621.128843-1-xuanzhuo@linux.alibaba.com>
 References: <20220624025621.128843-1-xuanzhuo@linux.alibaba.com>
@@ -68,49 +68,38 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Introduce a function to initialize vq without allocating new ring,
-desc_state, desc_extra.
+Add queue_notify_data in struct virtio_pci_common_cfg, which comes from
+here https://github.com/oasis-tcs/virtio-spec/issues/89
 
-Subsequent patches will call this function after reset vq to
-reinitialize vq.
+For not breaks uABI, add a new struct virtio_pci_common_cfg_notify.
+
+Since I want to add queue_reset after queue_notify_data, I submitted
+this patch first.
 
 Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
 ---
- drivers/virtio/virtio_ring.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ include/uapi/linux/virtio_pci.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index 8d7c07494f04..740b17550df5 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -1938,6 +1938,27 @@ static void virtqueue_vring_init_packed(struct vring_virtqueue *vq)
- 	}
- }
+diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
+index 3a86f36d7e3d..22bec9bd0dfc 100644
+--- a/include/uapi/linux/virtio_pci.h
++++ b/include/uapi/linux/virtio_pci.h
+@@ -166,6 +166,13 @@ struct virtio_pci_common_cfg {
+ 	__le32 queue_used_hi;		/* read-write */
+ };
  
-+static void virtqueue_reinit_packed(struct vring_virtqueue *vq)
-+{
-+	int size, i;
++struct virtio_pci_common_cfg_notify {
++	struct virtio_pci_common_cfg cfg;
 +
-+	memset(vq->packed.vring.device, 0, vq->packed.event_size_in_bytes);
-+	memset(vq->packed.vring.driver, 0, vq->packed.event_size_in_bytes);
-+	memset(vq->packed.vring.desc, 0, vq->packed.ring_size_in_bytes);
++	__le16 queue_notify_data;	/* read-write */
++	__le16 padding;
++};
 +
-+	size = sizeof(struct vring_desc_state_packed) * vq->packed.vring.num;
-+	memset(vq->packed.desc_state, 0, size);
-+
-+	size = sizeof(struct vring_desc_extra) * vq->packed.vring.num;
-+	memset(vq->packed.desc_extra, 0, size);
-+
-+	for (i = 0; i < vq->packed.vring.num - 1; i++)
-+		vq->packed.desc_extra[i].next = i + 1;
-+
-+	virtqueue_init(vq, vq->packed.vring.num);
-+	virtqueue_vring_init_packed(vq);
-+}
-+
- static struct virtqueue *vring_create_virtqueue_packed(
- 	unsigned int index,
- 	unsigned int num,
+ /* Fields in VIRTIO_PCI_CAP_PCI_CFG: */
+ struct virtio_pci_cfg_cap {
+ 	struct virtio_pci_cap cap;
 -- 
 2.31.0
 
