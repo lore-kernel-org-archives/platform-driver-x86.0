@@ -2,178 +2,108 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A411CCA473
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Jun 2022 11:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691D7C43334
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Jun 2022 18:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230521AbiFXLYL (ORCPT
+        id S230129AbiFXShD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 24 Jun 2022 07:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51986 "EHLO
+        Fri, 24 Jun 2022 14:37:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231308AbiFXLYH (ORCPT
+        with ESMTP id S229647AbiFXShC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 24 Jun 2022 07:24:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A022E7A6FB
-        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jun 2022 04:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656069845;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JiC2ttPcK4jbIqmWkR/0dSZUmikhtPV7gNuoggW+vR4=;
-        b=XMrvSPR3UzaiVBgAM9peM4w0OLbKUSYMAuaiqeAEWxc1qcJKv43n31kr7+aa3cdZmBXc++
-        wgiveNhlawGZEV0nD744oHDg8DCZEUt/GeB98z0uDvGfqgbb3ZFmc0RvaOFVWiUvDnSzX8
-        cFNCpguS97pmqulyKwp/hXjlbMJebpQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-557-gJuTfcBXPc2vVSr1wTs-ww-1; Fri, 24 Jun 2022 07:23:59 -0400
-X-MC-Unique: gJuTfcBXPc2vVSr1wTs-ww-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 48D318032F0;
-        Fri, 24 Jun 2022 11:23:59 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.193.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E247E492C3B;
-        Fri, 24 Jun 2022 11:23:57 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org,
-        Stefan Seyfried <stefan.seyfried@googlemail.com>,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        platform-driver-x86@vger.kernel.org,
-        Stefan Seyfried <seife+kernel@b1-systems.com>
-Subject: [PATCH 6/7] platform/x86: panasonic-laptop: filter out duplicate volume up/down/mute keypresses
-Date:   Fri, 24 Jun 2022 13:23:39 +0200
-Message-Id: <20220624112340.10130-7-hdegoede@redhat.com>
-In-Reply-To: <20220624112340.10130-1-hdegoede@redhat.com>
-References: <20220624112340.10130-1-hdegoede@redhat.com>
+        Fri, 24 Jun 2022 14:37:02 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7516B80507;
+        Fri, 24 Jun 2022 11:37:01 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id g26so6391086ejb.5;
+        Fri, 24 Jun 2022 11:37:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R7x+93/bf/OFy0gtgD7o9zovjDkSW2Dr+HMDRLcG03E=;
+        b=UBwZQNMdfo8T1yoq3GvmXbSulJCGmOEiLiJslZupN8Vsv1vKmyEAa8FpFSp5w8lDVt
+         gD1+oEJ/u4JQa5z6mv2+rrUWaItISlPOp1Ni2ByexriZl1+UmYQ463CNS3B5QBIU/Wur
+         /DM6EKKWLLtJdzxXqrCkH2/umepgecr9rOBlfidU9M73txE6LOwntNlezSTuhmbHMPdx
+         4Qc6K17jBxKm6fp1HViA6J4ZJtzCmkAVMhhZiIxeHu9+Z4B9CJeM+4vwDgIOaYWE3lzT
+         Tkcm+ADukm2KPWjmfsXI8lxcR2sM8SV7mNDkei9rC7hGIiMGZM9VZyIV+PJKelhr702n
+         U6eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R7x+93/bf/OFy0gtgD7o9zovjDkSW2Dr+HMDRLcG03E=;
+        b=1pz6H0JE0O8fxcJYUzEwzsZR7zcl+uSZRK6jlyAmEMwqt8eHwDC1rCgaCCIbz6quXw
+         pEc6iMZc9Bg0eJEgon80J8tUOwlQYpc+SFuGNzWJuhXgfXxMsPrvC4gj+nPJGr4kp64S
+         rHvyCI5AUWX7FRg/BpQwRbSFVOXRTeMnfeUooWbfhsFBl8vVL+aiTTq8iNZFZ40VxaZ8
+         XHmdwWhWJ4JvUzt1t0HkrU/3YjpgwgBQm42Wx6fH3yata10yGgSB/Utcf7c5a+CS6801
+         7e6HuNiO0WLR5F2BhILAzKSQWoY36o8wBZA4iN2p35ZCf/HyACcefC4IrcHhLblw5KZL
+         A2ug==
+X-Gm-Message-State: AJIora/kCtj7/lPN6jzLkX+T4pJttNG7sWn+aKe+l3fHz/7dvgbRYd/G
+        3tCY8KnMsAZp7g9Ob0Fx1K+2bBgVsEo=
+X-Google-Smtp-Source: AGRyM1uze8mxsLSfHcjqNG1xbj2n7dYFcrYO4BpMGtGidaD6HXzNi7n2yCadoGyUWWMSuXX1dReA8A==
+X-Received: by 2002:a17:906:4f:b0:712:af2:29d9 with SMTP id 15-20020a170906004f00b007120af229d9mr320542ejg.751.1656095819920;
+        Fri, 24 Jun 2022 11:36:59 -0700 (PDT)
+Received: from xws.localdomain ([37.120.217.162])
+        by smtp.gmail.com with ESMTPSA id jw12-20020a170906e94c00b00722e8827c53sm1493822ejb.208.2022.06.24.11.36.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jun 2022 11:36:59 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 0/4] platform/surface: Add support for tablet mode switch via Surface Aggregator Module
+Date:   Fri, 24 Jun 2022 20:36:38 +0200
+Message-Id: <20220624183642.910893-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On some Panasonic models the volume up/down/mute keypresses get
-reported both through the Panasonic ACPI HKEY interface as well as
-through the atkbd device.
+This series adds a driver providing a tablet mode switch on the Surface
+Pro 8, Surface Pro X, and Surface Laptop Studio.
 
-Filter out the atkbd scan-codes for these to avoid reporting presses
-twice.
+These devices provide posture information via subsystems of the Surface
+Aggregator Module (SAM; embedded controller). While the specific
+subsystems used for the Pro and Laptop models differ, large parts of the
+respective subsystem drivers would be equal. Therefore, we essentially
+provide a generic framework for tablet-mode switches via the Surface
+Aggregator module and use that to implement specific support for the KIP
+and POS subsystems used on the aforementioned devices.
 
-Note normally we would leave the filtering of these to userspace by mapping
-the scan-codes to KEY_UNKNOWN through /lib/udev/hwdb.d/60-keyboard.hwdb.
-However in this case that would cause regressions since we were filtering
-the Panasonic ACPI HKEY events before, so filter these in the kernel.
+In addition, this series first introduces some helper macros for
+synchronous stack-allocated SAM requests used in the subsequent patches,
+extending the already existing ones.
 
-Fixes: ed83c9171829 ("platform/x86: panasonic-laptop: Resolve hotkey double trigger bug")
-Reported-and-tested-by: Stefan Seyfried <seife+kernel@b1-systems.com>
-Reported-and-tested-by: Kenneth Chan <kenneth.t.chan@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/Kconfig            |  1 +
- drivers/platform/x86/panasonic-laptop.c | 41 +++++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
+Further, this series adds the respective firmware nodes to the Surface
+Aggregator Registry.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 156cb7e3f422..6e22ac916f7a 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -944,6 +944,7 @@ config PANASONIC_LAPTOP
- 	depends on INPUT && ACPI
- 	depends on BACKLIGHT_CLASS_DEVICE
- 	depends on ACPI_VIDEO=n || ACPI_VIDEO
-+	depends on SERIO_I8042 || SERIO_I8042 = n
- 	select INPUT_SPARSEKMAP
- 	help
- 	  This driver adds support for access to backlight control and hotkeys
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index d65e6c2372ca..615e39cbbbf1 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -122,6 +122,7 @@
- #include <linux/acpi.h>
- #include <linux/backlight.h>
- #include <linux/ctype.h>
-+#include <linux/i8042.h>
- #include <linux/init.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
-@@ -129,6 +130,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/seq_file.h>
-+#include <linux/serio.h>
- #include <linux/slab.h>
- #include <linux/types.h>
- #include <linux/uaccess.h>
-@@ -241,6 +243,42 @@ struct pcc_acpi {
- 	struct platform_device	*platform;
- };
- 
-+/*
-+ * On some Panasonic models the volume up / down / mute keys send duplicate
-+ * keypress events over the PS/2 kbd interface, filter these out.
-+ */
-+static bool panasonic_i8042_filter(unsigned char data, unsigned char str,
-+				   struct serio *port)
-+{
-+	static bool extended;
-+
-+	if (str & I8042_STR_AUXDATA)
-+		return false;
-+
-+	if (data == 0xe0) {
-+		extended = true;
-+		return true;
-+	} else if (extended) {
-+		extended = false;
-+
-+		switch (data & 0x7f) {
-+		case 0x20: /* e0 20 / e0 a0, Volume Mute press / release */
-+		case 0x2e: /* e0 2e / e0 ae, Volume Down press / release */
-+		case 0x30: /* e0 30 / e0 b0, Volume Up press / release */
-+			return true;
-+		default:
-+			/*
-+			 * Report the previously filtered e0 before continuing
-+			 * with the next non-filtered byte.
-+			 */
-+			serio_interrupt(port, 0xe0, 0);
-+			return false;
-+		}
-+	}
-+
-+	return false;
-+}
-+
- /* method access functions */
- static int acpi_pcc_write_sset(struct pcc_acpi *pcc, int func, int val)
- {
-@@ -1006,6 +1044,7 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
- 		pcc->platform = NULL;
- 	}
- 
-+	i8042_install_filter(panasonic_i8042_filter);
- 	return 0;
- 
- out_platform:
-@@ -1029,6 +1068,8 @@ static int acpi_pcc_hotkey_remove(struct acpi_device *device)
- 	if (!device || !pcc)
- 		return -EINVAL;
- 
-+	i8042_remove_filter(panasonic_i8042_filter);
-+
- 	if (pcc->platform) {
- 		device_remove_file(&pcc->platform->dev, &dev_attr_cdpower);
- 		platform_device_unregister(pcc->platform);
+Maximilian Luz (4):
+  platform/surface: aggregator: Add helper macros for requests with
+    argument and return value
+  platform/surface: Add KIP/POS tablet-mode switch driver
+  platform/surface: aggregator_registry: Add support for tablet mode
+    switch on Surface Pro 8
+  platform/surface: aggregator_registry: Add support for tablet mode
+    switch on Surface Laptop Studio
+
+ .../sysfs-bus-surface_aggregator-tabletsw     |  57 ++
+ MAINTAINERS                                   |   6 +
+ drivers/platform/surface/Kconfig              |  23 +
+ drivers/platform/surface/Makefile             |   1 +
+ .../surface/surface_aggregator_registry.c     |  15 +-
+ .../surface/surface_aggregator_tabletsw.c     | 533 ++++++++++++++++++
+ include/linux/surface_aggregator/controller.h | 125 ++++
+ include/linux/surface_aggregator/device.h     |  36 ++
+ 8 files changed, 795 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-surface_aggregator-tabletsw
+ create mode 100644 drivers/platform/surface/surface_aggregator_tabletsw.c
+
 -- 
-2.36.0
+2.36.1
 
