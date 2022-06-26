@@ -2,91 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAB4C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Jun 2022 19:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F456CCA481
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Jun 2022 19:34:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231562AbiFZTLZ (ORCPT
+        id S231921AbiFZTen (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 26 Jun 2022 15:11:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56106 "EHLO
+        Sun, 26 Jun 2022 15:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbiFZTLY (ORCPT
+        with ESMTP id S231903AbiFZTem (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 26 Jun 2022 15:11:24 -0400
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8A4FBCAE;
-        Sun, 26 Jun 2022 12:11:22 -0700 (PDT)
-Received: (Authenticated sender: peter@korsgaard.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id F0E29C0005;
-        Sun, 26 Jun 2022 19:11:19 +0000 (UTC)
-Received: from peko by dell.be.48ers.dk with local (Exim 4.94.2)
-        (envelope-from <peter@korsgaard.com>)
-        id 1o5XfC-00CMMP-Iw; Sun, 26 Jun 2022 21:11:18 +0200
-From:   Peter Korsgaard <peter@korsgaard.com>
-To:     Saurav Girepunje <saurav.girepunje@gmail.com>
-Cc:     santoshkumar.yadav@barco.com, peter.korsgaard@barco.com,
-        hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        saurav.girepunje@hotmail.com
-Subject: Re: [PATCH] platform: x86: Remove duplicated include in
- barco-p50-gpio.c
-References: <YriUMDJoip0Mknh3@Sauravs-MacBook-Air.local>
-Date:   Sun, 26 Jun 2022 21:11:18 +0200
-In-Reply-To: <YriUMDJoip0Mknh3@Sauravs-MacBook-Air.local> (Saurav Girepunje's
-        message of "Sun, 26 Jun 2022 22:45:28 +0530")
-Message-ID: <8735fr1bqh.fsf@dell.be.48ers.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        Sun, 26 Jun 2022 15:34:42 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038B555A2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 12:34:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B1B70B80D10
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 19:34:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7DD3CC34114
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 19:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656272079;
+        bh=4n1/LK78tkjdu4+4QlR2B/wF/1vqrfE2/6iv622zAGg=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=RSJ4mnr7OXmUmccaTJgeYSZG+hMbnktOvoz+m9xrqUumpkeKe18reCyROK0704PMk
+         WBINj8AWR4JRuXZIdvjYXkj0aCoO1mmxQj09rdttc5e7CjRnlaYMLpPs5PaVczmeox
+         cYKgJNYYuQtutpOFhynP6xcghBjdgf3J4Qt2Cq0Yu/zvLwsDrA0jjHkVC0NfY+hJn4
+         7YUfAkEwoWFZGdvVm0gz8eoUt7afxh2dbur8Z+ZzTxIZ6kl9yGynTdczYLD5TZ+hHu
+         hDAvmN4C2kLgay8YNCaXKak+YGGXvOAUSTI6sL1QPKxKoC5u0sgNjx8g3lxN702zXY
+         ZzOwSN8GCiUHg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 66222C05FF5; Sun, 26 Jun 2022 19:34:39 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216176] ideapad-laptop doesn't expose rapid charge
+Date:   Sun, 26 Jun 2022 19:34:39 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-216176-215701-DcOmjrjkLW@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-216176-215701@https.bugzilla.kernel.org/>
+References: <bug-216176-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
->>>>> "Saurav" == Saurav Girepunje <saurav.girepunje@gmail.com> writes:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216176
 
- > Remove the duplicate include of linux/io.h in barco-p50-gpio.c
- > file.
+Hans de Goede (jwrdegoede@fedoraproject.org) changed:
 
- > Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |jwrdegoede@fedoraproject.or
+                   |                            |g
 
-What tree is this against? The io.h include in the line just above
-delay.h was already removed by:
+--- Comment #1 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+Link to arch wiki page?
 
-commit 011881b80ebe773914b59905bce0f5e0ef93e7ba
-Author: Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Date:   Thu May 26 17:03:45 2022 +0800
+--=20
+You may reply to this email to add a comment.
 
-    platform/x86: barco-p50-gpio: Add check for platform_driver_register
-
-    As platform_driver_register() could fail, it should be better
-    to deal with the return value in order to maintain the code
-    consisitency.
-
-    Fixes: 86af1d02d458 ("platform/x86: Support for EC-connected GPIOs for identify LED/button on Barco P50 board")
-    Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
-    Acked-by: Peter Korsgaard <peter.korsgaard@barco.com>
-    Link: https://lore.kernel.org/r/20220526090345.1444172-1-jiasheng@iscas.ac.cn
-    Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-
-> ---
- >  drivers/platform/x86/barco-p50-gpio.c | 1 -
- >  1 file changed, 1 deletion(-)
-
- > diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
- > index f5c72e33f9ae..bb8ed8e95225 100644
- > --- a/drivers/platform/x86/barco-p50-gpio.c
- > +++ b/drivers/platform/x86/barco-p50-gpio.c
- > @@ -14,7 +14,6 @@
- >  #include <linux/delay.h>
- >  #include <linux/dmi.h>
- >  #include <linux/err.h>
- > -#include <linux/io.h>
- >  #include <linux/kernel.h>
- >  #include <linux/leds.h>
- >  #include <linux/module.h>
- > --
- > 2.33.0
-
-
--- 
-Bye, Peter Korsgaard
+You are receiving this mail because:
+You are watching the assignee of the bug.=
