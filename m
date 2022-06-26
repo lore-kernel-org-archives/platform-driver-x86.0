@@ -2,121 +2,87 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942ADC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Jun 2022 15:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF947C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Jun 2022 17:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229626AbiFZP4q (ORCPT
+        id S231563AbiFZRPj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 26 Jun 2022 11:56:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59774 "EHLO
+        Sun, 26 Jun 2022 13:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbiFZP4q (ORCPT
+        with ESMTP id S231867AbiFZRPh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 26 Jun 2022 11:56:46 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60BD2DE82
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 08:56:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 20233B80D37
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 15:56:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C6428C34114
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 15:56:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656259002;
-        bh=4R3nZwtvcRM0XaAUL8wc17arN5yBXSxo8fNNKLAgNmo=;
-        h=From:To:Subject:Date:From;
-        b=s9WsjZaZBrU7GESxUCcJ+PnTPYqYfsRhSI+Hdzaapmm4CeaSS+k3/U0/x4OYQ3O/M
-         TIHvkCsDd/SSI6e2BVqSeDe6rnYxlK04i3yPQYiooaW5TacE/ag6Wl3PzOVjoU8/aM
-         JrGXg9JVzTvKdYcerzWCj8OrIOt7bIj2rE3Ahh4Pu6p9HbZQDdK9P27H2xUC6tYvKl
-         UK+igC4FYWWmdetUR/uhV5sbMbZdutRNBcTgvUvfZEdVAjJD8/Kd5lQgrAj9c2tMRQ
-         tFXL0TXxbXthfL9eEABWPb0Rwly+W6vOI7m3HW25gqbLo/WgcMCeFinwaS5qJfpED/
-         vA++NcNxTV/iw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id AD123C05FF5; Sun, 26 Jun 2022 15:56:42 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216176] New: ideapad-laptop doesn't expose rapid charge
-Date:   Sun, 26 Jun 2022 15:56:42 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: tinozzo123@tutanota.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
- priority component assigned_to reporter cf_regression
-Message-ID: <bug-216176-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sun, 26 Jun 2022 13:15:37 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7570AE093;
+        Sun, 26 Jun 2022 10:15:35 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id k12-20020a17090a404c00b001eaabc1fe5dso10223488pjg.1;
+        Sun, 26 Jun 2022 10:15:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=dPKELELgFlCVowNQzSbwUOPIVqSefa774VaFs/5xX9g=;
+        b=TTTicy3ewL1Zk/RYe5zjLoofl+7vqoioHrHCGakdXAQJjtpZw1TVvrTZC+x62Cn5U9
+         smedmNDM6j6HiUeRdceXl/LpjrziuO44JkHEZh2f9sqjIGh0udxl7Dc5u92gW4owZqgG
+         ePbV+O101344ucPTugz+R+L+P1sL+ip7YTOX1IwWa1kspveMN4oUSwEIOUONmen19ZfS
+         8r9vXdrZLUK54um6JoYFq/8dThjgt7UzscsJkChWx21aeeeVgLuTcDmq8L6NuGrvLH5s
+         aIc+oV40D/N0XhH+v6VWfCy9TzVt9z7mBH1JqNM9syMbMtz3TdP2t5rB9nNpequuKllf
+         I8cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=dPKELELgFlCVowNQzSbwUOPIVqSefa774VaFs/5xX9g=;
+        b=t51g9vL2/+MsooHojtC+ymNmjFXEOrpGeVZep+D891v6QQ4WYcKX8j2LQuWDTiIQ7c
+         66GIkGD+Pa3Lm0JFCS4VWmcpsAoNfneNTuxN/p9HV/msrwvjIVumaMQ75iI0zsZbTdOX
+         +cCASNtlKYHNNPwhL1J8r9lk1hRu6VTTMvIgiAG1vNLe3bRILbhrTr11Y4jKBD65jqcZ
+         6e4zv8Ax07imnAaD5Q5mhLnEeLIlgRJ6roafWNc3y8MX3K8WFmzm3InAPDhdgkK1G0mC
+         myeOzByThdpo1+WMEGP6ge3BAlB9SLplGCBTmMtwl6S6onwfTXo1yykog+a6a+EqUbfB
+         NM/g==
+X-Gm-Message-State: AJIora+7sGsjujUPEligtV/PdVD2QDY43yzD1erBNDkVjxOreChFhg9F
+        gZ2YbBAkyFFMqei+kF59CbY=
+X-Google-Smtp-Source: AGRyM1txc6slEOYWYXWXLdsMQVfV6ZRoR58qxTkTnBp7RWuDTTrRkkLN5l/nMwi6Z1d+mgiTgakCwA==
+X-Received: by 2002:a17:90b:4b48:b0:1ec:fc87:691c with SMTP id mi8-20020a17090b4b4800b001ecfc87691cmr16122588pjb.120.1656263734820;
+        Sun, 26 Jun 2022 10:15:34 -0700 (PDT)
+Received: from Sauravs-MacBook-Air.local ([2401:4900:1c0f:ec3f:8053:b39e:a633:cf03])
+        by smtp.gmail.com with ESMTPSA id v11-20020a1709028d8b00b0016a4f3ca2b5sm5411427plo.277.2022.06.26.10.15.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jun 2022 10:15:34 -0700 (PDT)
+Date:   Sun, 26 Jun 2022 22:45:28 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     santoshkumar.yadav@barco.com, peter.korsgaard@barco.com,
+        hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] platform: x86: Remove duplicated include in barco-p50-gpio.c
+Message-ID: <YriUMDJoip0Mknh3@Sauravs-MacBook-Air.local>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216176
+Remove the duplicate include of linux/io.h in barco-p50-gpio.c
+file.
 
-            Bug ID: 216176
-           Summary: ideapad-laptop doesn't expose rapid charge
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 5.18.5
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: tinozzo123@tutanota.com
-        Regression: No
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+---
+ drivers/platform/x86/barco-p50-gpio.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Lenovo IdeaPad laptops support a feature named "Rapid Charge", normally usa=
-ble
-on Windows via Lenovo Vantage. However, this feature isn't exposed on
-idepad-laptop.c.
-According to the Arch Wiki, this feature is still usable via ACPI commands:
+diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
+index f5c72e33f9ae..bb8ed8e95225 100644
+--- a/drivers/platform/x86/barco-p50-gpio.c
++++ b/drivers/platform/x86/barco-p50-gpio.c
+@@ -14,7 +14,6 @@
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/err.h>
+-#include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/leds.h>
+ #include <linux/module.h>
+--
+2.33.0
 
-To enable:
-# echo '\_SB.PCI0.LPC0.EC0.VPC0.SBMC 0x07' > /proc/acpi/call
-
-To disable:
-# echo '\_SB.PCI0.LPC0.EC0.VPC0.SBMC 0x08' > /proc/acpi/call
-
-To check, the wiki uses different commands for different laptops. Three of =
-them
-are (on all of them, 0x0 stands for off and 0x1 stands for on):
-Lenovo IdeaPad 5 14are05
-# echo '\_SB.PCI0.LPC0.EC0.FCGM' | tee /proc/acpi/call
-# cat /proc/acpi/call; printf '\n'
-
-Lenovo IdeaPad 5 15are05
-# echo '\_SB.PCI0.LPC0.EC0.QCHO' > /proc/acpi/call
-# cat /proc/acpi/call; printf '\n'
-
-Lenovo IdeaPad Flex 5 14alc05
-# echo '\_SB.PCI0.LPC0.EC0.QKCM' | tee /proc/acpi/call
-# cat /proc/acpi/call | cut -d '' -f1
-
-Small note, on Lenovo Vantage enabling Rapid Charge disables Battery
-Conservation automatically, and enabling Battery Conservation disables Rapid
-Charge automatically. The ACPI commands don't have this limitation.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
