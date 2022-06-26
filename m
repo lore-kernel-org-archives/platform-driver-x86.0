@@ -2,131 +2,151 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D33C43334
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Jun 2022 13:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B161C43334
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Jun 2022 06:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233263AbiFYNoT (ORCPT
+        id S232798AbiFZG7j (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 25 Jun 2022 09:44:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
+        Sun, 26 Jun 2022 02:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233272AbiFYNoD (ORCPT
+        with ESMTP id S229742AbiFZG7i (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 25 Jun 2022 09:44:03 -0400
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D5861C117;
-        Sat, 25 Jun 2022 06:43:46 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id i15so9185033ybp.1;
-        Sat, 25 Jun 2022 06:43:46 -0700 (PDT)
+        Sun, 26 Jun 2022 02:59:38 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95EB7764A;
+        Sat, 25 Jun 2022 23:59:36 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id ge10so12764598ejb.7;
+        Sat, 25 Jun 2022 23:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AFCTsw44eCfrIgw5g5eDIqwDRb52nasQ63KFo0XcRT8=;
+        b=iosWctIEzGRn3VqhcDfevg21KFkBMr3PQc+fjRGdNPv6hLOSRgC4v7M2AstxoDchuC
+         V7S++HUkNhKKm+6CFaxqe48R83MawCe1Sg1Cwal4RQ8QxsGkCdCLj3J8TdtAFkLk/8hI
+         bpu2EZ3jGalQfBU0b4emd3UMybTBYMzNCYQARAjBEBYSbKEMDjkYF7EnjvHBFt3v59yy
+         N76Bw0kQ69124S5YAS0EK3Tsim6/8AWqwDM2nhUbIb5wGPvJvxKxafMl1g8oj7ak7gVH
+         QEU+nvsxU1m6Wz/GS6D2qYSdz9k8f3xlSVnzXaf6UoDGsiuRTf5baihDQkYYkStzBW6M
+         +jbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UAKAgQ+yky+qtekDhyWd05POB+q8QkxLv66gfq+6TPk=;
-        b=6Lv/onNj9yZUjId2h/vsAJEwQCZB8mGMD9pl8pUaVfwHLIaYTDAW75Y7X0W+hvFS+Y
-         pKcGw1mv2UPvAzBnEqzZ4F9qNRODO1GlP9VzxC+Xn/Z2dc1paVNFLIhbfy1VSagR6f0d
-         K5wUnWXh1t+/AsZkyNrv2NmizHffXtyO94cVk6BTAPJayoe9UX6MgzK0utw4EnD6GJf8
-         O8YjZ0UfcsBZ3XdfN0lJFhHSdPBUYlwV1MBWAVSUpMDJzsxlGdZfOTQVM1rPnYBl5GCk
-         8b6AIJS0Z/C1+KKxMPhkVt19lS2HtEKYf3moMCf2A5fLo3s/gM35jW0sM0BQAdumqR/w
-         eobg==
-X-Gm-Message-State: AJIora+dOwgnGJrAawJRUelgEZTzCycznzMRRzXzJCZwHXj/tXYRa26X
-        G6yvj9tuai75Le2Nx2jjXwMLu3MHnqsjqwPipDE=
-X-Google-Smtp-Source: AGRyM1v5wXOcNu4UWaZx73jz9jkTRv6Ia0s8IquEmqiLD8bsS43vIR5/4h0nTSbbmb2je2bOmzKYnqG/AJDQMgwHgdg=
-X-Received: by 2002:a25:9004:0:b0:66c:97a4:3053 with SMTP id
- s4-20020a259004000000b0066c97a43053mr548906ybl.137.1656164625449; Sat, 25 Jun
- 2022 06:43:45 -0700 (PDT)
+        bh=AFCTsw44eCfrIgw5g5eDIqwDRb52nasQ63KFo0XcRT8=;
+        b=ay4mBWHIhdI2SDaE4NM1UMlcVwn5aEKcZQwY7+MAlwXTPLHDBTCwjcK2xz6tjVLyy9
+         3bqtnXNqTmdh9U+lRbZ+16Pl6gd5k64z9LJ0Vmo7DKqwAxlr0j568X/wxR1HE6QTAUxv
+         oNTAa4TS3Av+m52psje68vuawU209A/GAslQ5d+PTr/a+aDXBGoGzE+vO8+bxkk9z/xx
+         I51EYR5XVchJWvAaywAD4fL7ezJ1fFHgaY/Z+tNdFIJpBGblEBYYkaq3z4mV1WDZGn7z
+         ffvSQ7yNadMqr9MVSE3xGz5bIycX2dL9sQCf8zXqP/ITl6sTch8jdvOTC2treZaX3In9
+         xEZw==
+X-Gm-Message-State: AJIora/RgSv/wgU3yAT4E6KkyaoJW7Asapr2Wjb+nMNWMdRvYOOzdpa7
+        8BnX9EE5qbp8AENeAhJTZkVz5nwbR06UxzCvMPQ=
+X-Google-Smtp-Source: AGRyM1vdbd0R7YMxYxy0P2dd8vQrxNLQeA6X4bNQXzyEIGvSWfphBH2XZjr5H4rQJtEKHjuHxSI7AndhUPKnaI4Hbw4=
+X-Received: by 2002:a17:907:2d24:b0:726:34e6:52fd with SMTP id
+ gs36-20020a1709072d2400b0072634e652fdmr7061557ejc.307.1656226775034; Sat, 25
+ Jun 2022 23:59:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220624112340.10130-1-hdegoede@redhat.com> <20220624112340.10130-2-hdegoede@redhat.com>
-In-Reply-To: <20220624112340.10130-2-hdegoede@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sat, 25 Jun 2022 15:43:34 +0200
-Message-ID: <CAJZ5v0gYf30tMDTPzB6QMYVp-6zcENhgFQeKSaT4DzLSDi7_zw@mail.gmail.com>
-Subject: Re: [PATCH 1/7] ACPI: video: Change how we determine if brightness
- key-presses are handled
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+References: <20220624112340.10130-1-hdegoede@redhat.com> <df35a580-3e4b-cf45-004f-7c6848a1dfae@message-id.googlemail.com>
+In-Reply-To: <df35a580-3e4b-cf45-004f-7c6848a1dfae@message-id.googlemail.com>
+From:   Kenneth Chan <kenneth.t.chan@gmail.com>
+Date:   Sun, 26 Jun 2022 14:58:57 +0800
+Message-ID: <CAPqSeKu0XRsgg1dQce+cc89LVrqX0GY0ak5Vzzv+PEHF2Pr95w@mail.gmail.com>
+Subject: Re: [PATCH 0/7] ACPI: video / platform/x86: Fix Panasonic laptop
+ missing keypresses
+To:     Stefan Seyfried <stefan.seyfried@googlemail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
         Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>, Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Stefan Seyfried <stefan.seyfried@googlemail.com>,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Stefan Seyfried <seife+kernel@b1-systems.com>
+        linux-acpi@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 24, 2022 at 1:23 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Some systems have an ACPI video bus but not ACPI video devices with
-> backlight capability. On these devices brightness key-presses are
-> (logically) not reported through the ACPI video bus.
->
-> Change how acpi_video_handles_brightness_key_presses() determines if
-> brightness key-presses are handled by the ACPI video driver to avoid
-> vendor specific drivers/platform/x86 drivers filtering out their
-> brightness key-presses even though they are the only ones reporting
-> these presses.
->
-> Fixes: ed83c9171829 ("platform/x86: panasonic-laptop: Resolve hotkey double trigger bug")
-> Reported-and-tested-by: Stefan Seyfried <seife+kernel@b1-systems.com>
-> Reported-and-tested-by: Kenneth Chan <kenneth.t.chan@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Hi Hans and Stefan,
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, 21 Jun 2022 at 02:10, Stefan Seyfried
+<stefan.seyfried@googlemail.com> wrote:
+>
+> Well, I looked into the acpi_video.c module and that one is to blame.
+> By default, it assumes that both "OUTPUT_KEY_EVENTS" and
+> "BRIGHTNESS_KEY_EVENTS" should be handled by this module.
+> But on the CF-51, this does not happen. "Video Bus" does not generate
+> any key events (I'm not sure about output, but plugging in a VGA monitor
+> and enabling/disabling it with xrandr or tapping the "display" fn-f3
+> hotkey does not get anything from "Video Bus" input device.
+>
 
-and I'm assuming that you'll take this one along with the rest of the series.
+The "display" Fn-F3 hotkey doesn't generate any key events on mine
+either. I have no external VGA monitors to test it anyway.
 
-> ---
->  drivers/acpi/acpi_video.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
+Apart from that, the patches work perfectly on my Let's Note CF-W5.
+Cheers, Hans!
+
+Tested-by: Kenneth Chan <kenneth.t.chan@gmail.com>
+
+
+On Sat, 25 Jun 2022 at 03:49, Stefan Seyfried
+<stefan.seyfried@googlemail.com> wrote:
 >
-> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-> index b6ee27cb32f3..dc3c037d6313 100644
-> --- a/drivers/acpi/acpi_video.c
-> +++ b/drivers/acpi/acpi_video.c
-> @@ -79,6 +79,7 @@ module_param(device_id_scheme, bool, 0444);
->  static int only_lcd = -1;
->  module_param(only_lcd, int, 0444);
+> On 24.06.22 13:23, Hans de Goede wrote:
+> > Hi All,
+> >
+> > Here is a series fixing the missing keypresses on some Panasonic Toughbook
+> > models. These missing keypresses are caused by
+> > commit ed83c9171829 ("platform/x86: panasonic-laptop: Resolve hotkey double
+> > trigger bug"), which made the panasonic-laptop driver unconditionally drop
+> > most WMI reported hotkeys.
+> >
+> > This series reverts that commit and then adds some more selective filtering
+> > to still avoid the double key-presses on some models, while avoiding
+> > completely missing keypresses on others.
+> >
+> > Rafael, these fixes rely on patch 1/7, which is a tweak to
+> > the acpi_video_handles_brightness_key_presses() helper. Without this
+> > tweak this series will cause a regression, so I would like to merge
+> > the entire series through the pdx86 tree, may I have your ack for this?
+> >
+> > Regards,
+> >
+> > Hans
+> >
+> >
+> > Hans de Goede (6):
+> >    ACPI: video: Change how we determine if brightness key-presses are
+> >      handled
+> >    platform/x86: panasonic-laptop: sort includes alphabetically
+> >    platform/x86: panasonic-laptop: revert "Resolve hotkey double trigger
+> >      bug"
+> >    platform/x86: panasonic-laptop: don't report duplicate brightness
+> >      key-presses
+> >    platform/x86: panasonic-laptop: filter out duplicate volume
+> >      up/down/mute keypresses
+> >    platform/x86: panasonic-laptop: Use acpi_video_get_backlight_type()
+> >
+> > Stefan Seyfried (1):
+> >    platform/x86: panasonic-laptop: de-obfuscate button codes
+> >
+> >   drivers/acpi/acpi_video.c               |  13 ++-
+> >   drivers/platform/x86/Kconfig            |   2 +
+> >   drivers/platform/x86/panasonic-laptop.c | 112 ++++++++++++++++++------
+> >   3 files changed, 91 insertions(+), 36 deletions(-)
 >
-> +static bool has_backlight;
->  static int register_count;
->  static DEFINE_MUTEX(register_count_mutex);
->  static DEFINE_MUTEX(video_list_lock);
-> @@ -1230,6 +1231,9 @@ acpi_video_bus_get_one_device(struct acpi_device *device,
->         acpi_video_device_bind(video, data);
->         acpi_video_device_find_cap(data);
+> The whole series works without any manual setup on my Toughbook CF-51:
 >
-> +       if (data->cap._BCM && data->cap._BCL)
-> +               has_backlight = true;
-> +
->         mutex_lock(&video->device_list_lock);
->         list_add_tail(&data->entry, &video->video_device_list);
->         mutex_unlock(&video->device_list_lock);
-> @@ -2276,6 +2280,7 @@ void acpi_video_unregister(void)
->                 cancel_delayed_work_sync(&video_bus_register_backlight_work);
->                 acpi_bus_unregister_driver(&acpi_video_bus);
->                 register_count = 0;
-> +               has_backlight = false;
->         }
->         mutex_unlock(&register_count_mutex);
->  }
-> @@ -2294,13 +2299,7 @@ EXPORT_SYMBOL(acpi_video_register_backlight);
+> Tested-by: Stefan Seyfried <seife+kernel@b1-systems.com>
 >
->  bool acpi_video_handles_brightness_key_presses(void)
->  {
-> -       bool have_video_busses;
-> -
-> -       mutex_lock(&video_list_lock);
-> -       have_video_busses = !list_empty(&video_bus_head);
-> -       mutex_unlock(&video_list_lock);
-> -
-> -       return have_video_busses &&
-> +       return has_backlight &&
->                (report_key_events & REPORT_BRIGHTNESS_KEY_EVENTS);
->  }
->  EXPORT_SYMBOL(acpi_video_handles_brightness_key_presses);
+> Thanks again!
+>
+> Stefan
 > --
-> 2.36.0
+> Stefan Seyfried
 >
+> "For a successful technology, reality must take precedence over
+>   public relations, for nature cannot be fooled." -- Richard Feynman
+
+-- 
+Kenneth
