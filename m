@@ -2,180 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2F4C43334
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Jun 2022 17:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAB4C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Jun 2022 19:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231587AbiFZRdQ (ORCPT
+        id S231562AbiFZTLZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 26 Jun 2022 13:33:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45226 "EHLO
+        Sun, 26 Jun 2022 15:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231383AbiFZRdO (ORCPT
+        with ESMTP id S229775AbiFZTLY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 26 Jun 2022 13:33:14 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F076590
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 10:33:11 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id v14so9952330wra.5
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 10:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=LVyzL8mphbtENNv7Ak5Yb4fzhkW9NpbRag7uI4Hacxc=;
-        b=CixvAORRF/ukN2FEZzF3AXwjYn0QSsLkd38tK+4yJetZJEOD2q8BWdl+K7blkYG7QX
-         PEpxd9kqTN2VWUXcz4YD/IK4r7df6FMK1XmJ0tM6GJBIgNOaTzoUXLdb0Hle84111G9o
-         PEcdOK/tcVBUK/beyvIgVjBuqREmne+JuyFWCO/FfnY/agQm+R8Qf8mdpKl+YSiiVc6D
-         warzD6uHfDCskO3OxQ41n/NxKpV0jX6Lm3HwMpdQWZangXskbf0W6LW/iOMuDxXv5+n9
-         tur8NsPqRiFwF1WgpEzx5KFrcp5JtHOeGJzYbiubnZrrT7cSPNOvq+v99yOHeGHnva84
-         muQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=LVyzL8mphbtENNv7Ak5Yb4fzhkW9NpbRag7uI4Hacxc=;
-        b=17Gg8fX0hP6xlACCbEkU94G9nsS2E9tvTwt3DZahrOyT4GOaScQ4zOXtA+Bp+R1CbK
-         AIqnTsaZWbUfbDEtmkDcqvupUhAGYp7/i5gijaKHofoHBtg+5ZdPrNgM/IcvHMycSJCL
-         4w4nlmphRzUJkBCxg8hi17g8ueVcK1kmoEZi3WEW23/0mftTn6dmzusqFA1q8V/lYizc
-         7QY3C9pTBzJdx8IEmSCbho/Am7MO8MJI5BRWX46voDcuuku4dclKggUsGSWXVjNAdBdy
-         fdQhZZPI/BW0gFz9IseFMPfzBHLyIStP/73P89KlZ0R8vb95GW+BcNvHHkcvw5yx/mCm
-         c6Vg==
-X-Gm-Message-State: AJIora++MqpTfIrmxnWrMzEATMDjQitW3aSFKmZWuYJSw3hWqTs5vXc2
-        OpeLGpszfsMPCdp7QmkuK7HvRg==
-X-Google-Smtp-Source: AGRyM1sT+QzEds/eFmu00keheN6WbaWKP57czuiPSPRTt3/jN3GsXQ0byLphmAqRpiPIai9t45cykg==
-X-Received: by 2002:a5d:6ac4:0:b0:21b:a724:1711 with SMTP id u4-20020a5d6ac4000000b0021ba7241711mr8495754wrw.80.1656264790204;
-        Sun, 26 Jun 2022 10:33:10 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id c11-20020a05600c0acb00b00397342e3830sm11310979wmr.0.2022.06.26.10.33.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Jun 2022 10:33:09 -0700 (PDT)
-Message-ID: <43b1c2fd-b746-84eb-c82b-23f1bd39242e@linaro.org>
-Date:   Sun, 26 Jun 2022 19:33:06 +0200
+        Sun, 26 Jun 2022 15:11:24 -0400
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8A4FBCAE;
+        Sun, 26 Jun 2022 12:11:22 -0700 (PDT)
+Received: (Authenticated sender: peter@korsgaard.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id F0E29C0005;
+        Sun, 26 Jun 2022 19:11:19 +0000 (UTC)
+Received: from peko by dell.be.48ers.dk with local (Exim 4.94.2)
+        (envelope-from <peter@korsgaard.com>)
+        id 1o5XfC-00CMMP-Iw; Sun, 26 Jun 2022 21:11:18 +0200
+From:   Peter Korsgaard <peter@korsgaard.com>
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>
+Cc:     santoshkumar.yadav@barco.com, peter.korsgaard@barco.com,
+        hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        saurav.girepunje@hotmail.com
+Subject: Re: [PATCH] platform: x86: Remove duplicated include in
+ barco-p50-gpio.c
+References: <YriUMDJoip0Mknh3@Sauravs-MacBook-Air.local>
+Date:   Sun, 26 Jun 2022 21:11:18 +0200
+In-Reply-To: <YriUMDJoip0Mknh3@Sauravs-MacBook-Air.local> (Saurav Girepunje's
+        message of "Sun, 26 Jun 2022 22:45:28 +0530")
+Message-ID: <8735fr1bqh.fsf@dell.be.48ers.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v2 01/14] thermal/core: Change thermal_zone_ops to
- thermal_sensor_ops
-Content-Language: en-US
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linexp.org>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
-        Raju Rangoju <rajur@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Ido Schimmel <idosch@nvidia.com>,
-        Petr Machata <petrm@nvidia.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@kernel.org>, Peter Kaestle <peter@piie.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Chuansheng Liu <chuansheng.liu@intel.com>,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>,
-        Antoine Tenart <atenart@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:ACPI THERMAL DRIVER" <linux-acpi@vger.kernel.org>,
-        "open list:CXGB4 ETHERNET DRIVER (CXGB4)" <netdev@vger.kernel.org>,
-        "open list:INTEL WIRELESS WIFI LINK (iwlwifi)" 
-        <linux-wireless@vger.kernel.org>,
-        "open list:ACER ASPIRE ONE TEMPERATURE AND FAN DRIVER" 
-        <platform-driver-x86@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:RENESAS R-CAR THERMAL DRIVERS" 
-        <linux-renesas-soc@vger.kernel.org>
-References: <20220507125443.2766939-1-daniel.lezcano@linexp.org>
- <20220507125443.2766939-2-daniel.lezcano@linexp.org>
- <CAJZ5v0ik_JQ4Awtw7iR68W4-9ZL8FRDsDd-kWmL-n09fgg3reg@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <CAJZ5v0ik_JQ4Awtw7iR68W4-9ZL8FRDsDd-kWmL-n09fgg3reg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+>>>>> "Saurav" == Saurav Girepunje <saurav.girepunje@gmail.com> writes:
 
-Hi Rafael,
+ > Remove the duplicate include of linux/io.h in barco-p50-gpio.c
+ > file.
 
-sorry for the delay, I was OoO.
+ > Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
 
-On 17/05/2022 17:42, Rafael J. Wysocki wrote:
-> On Sat, May 7, 2022 at 2:55 PM Daniel Lezcano <daniel.lezcano@linexp.org> wrote:
->>
->> A thermal zone is software abstraction of a sensor associated with
->> properties and cooling devices if any.
->>
->> The fact that we have thermal_zone and thermal_zone_ops mixed is
->> confusing and does not clearly identify the different components
->> entering in the thermal management process. A thermal zone appears to
->> be a sensor while it is not.
-> 
-> Well, the majority of the operations in thermal_zone_ops don't apply
-> to thermal sensors.  For example, ->set_trips(), ->get_trip_type(),
-> ->get_trip_temp().
+What tree is this against? The io.h include in the line just above
+delay.h was already removed by:
 
-The set_trips is necessary to set the sensor interrupt to fire when the 
-trip temperature is crossed the way up or down.
+commit 011881b80ebe773914b59905bce0f5e0ef93e7ba
+Author: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Date:   Thu May 26 17:03:45 2022 +0800
 
->> In order to set the scene for multiple thermal sensors aggregated into
->> a single thermal zone. Rename the thermal_zone_ops to
->> thermal_sensor_ops, that will appear clearyl the thermal zone is not a
->> sensor but an abstraction of one [or multiple] sensor(s).
-> 
-> So I'm not convinced that the renaming mentioned above is particularly
-> clean either.
-> 
-> IMV the way to go would be to split the thermal sensor operations,
-> like ->get_temp(), out of thermal_zone_ops.
+    platform/x86: barco-p50-gpio: Add check for platform_driver_register
 
-Probably, we should first replace all the calls to ops->get_temp with a 
-function. Then create the ops for the sensor:
+    As platform_driver_register() could fail, it should be better
+    to deal with the return value in order to maintain the code
+    consisitency.
 
-  - get_trend
-  - get_temp
-  - set_trips
-  - bind / unbind
+    Fixes: 86af1d02d458 ("platform/x86: Support for EC-connected GPIOs for identify LED/button on Barco P50 board")
+    Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+    Acked-by: Peter Korsgaard <peter.korsgaard@barco.com>
+    Link: https://lore.kernel.org/r/20220526090345.1444172-1-jiasheng@iscas.ac.cn
+    Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-> But then it is not clear what a thermal zone with multiple sensors in
-> it really means.  I guess it would require an aggregation function to
-> combine the thermal sensors in it that would produce an effective
-> temperature to check against the trip points.
+> ---
+ >  drivers/platform/x86/barco-p50-gpio.c | 1 -
+ >  1 file changed, 1 deletion(-)
 
-Yes, that is why the above ops->get_temp should be wrapped into a 
-function which can evolve to an aggregation function.
-
-> Honestly, I don't think that setting a separate set of trips for each
-> sensor in a thermal zone would make a lot of sense.
-
-I agree the set_trips is for the interrupt mode only.
+ > diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
+ > index f5c72e33f9ae..bb8ed8e95225 100644
+ > --- a/drivers/platform/x86/barco-p50-gpio.c
+ > +++ b/drivers/platform/x86/barco-p50-gpio.c
+ > @@ -14,7 +14,6 @@
+ >  #include <linux/delay.h>
+ >  #include <linux/dmi.h>
+ >  #include <linux/err.h>
+ > -#include <linux/io.h>
+ >  #include <linux/kernel.h>
+ >  #include <linux/leds.h>
+ >  #include <linux/module.h>
+ > --
+ > 2.33.0
 
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Bye, Peter Korsgaard
