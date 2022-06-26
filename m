@@ -2,151 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B161C43334
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Jun 2022 06:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D75C43334
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Jun 2022 15:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232798AbiFZG7j (ORCPT
+        id S229531AbiFZPjB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 26 Jun 2022 02:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47878 "EHLO
+        Sun, 26 Jun 2022 11:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbiFZG7i (ORCPT
+        with ESMTP id S229468AbiFZPjA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 26 Jun 2022 02:59:38 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95EB7764A;
-        Sat, 25 Jun 2022 23:59:36 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id ge10so12764598ejb.7;
-        Sat, 25 Jun 2022 23:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AFCTsw44eCfrIgw5g5eDIqwDRb52nasQ63KFo0XcRT8=;
-        b=iosWctIEzGRn3VqhcDfevg21KFkBMr3PQc+fjRGdNPv6hLOSRgC4v7M2AstxoDchuC
-         V7S++HUkNhKKm+6CFaxqe48R83MawCe1Sg1Cwal4RQ8QxsGkCdCLj3J8TdtAFkLk/8hI
-         bpu2EZ3jGalQfBU0b4emd3UMybTBYMzNCYQARAjBEBYSbKEMDjkYF7EnjvHBFt3v59yy
-         N76Bw0kQ69124S5YAS0EK3Tsim6/8AWqwDM2nhUbIb5wGPvJvxKxafMl1g8oj7ak7gVH
-         QEU+nvsxU1m6Wz/GS6D2qYSdz9k8f3xlSVnzXaf6UoDGsiuRTf5baihDQkYYkStzBW6M
-         +jbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AFCTsw44eCfrIgw5g5eDIqwDRb52nasQ63KFo0XcRT8=;
-        b=ay4mBWHIhdI2SDaE4NM1UMlcVwn5aEKcZQwY7+MAlwXTPLHDBTCwjcK2xz6tjVLyy9
-         3bqtnXNqTmdh9U+lRbZ+16Pl6gd5k64z9LJ0Vmo7DKqwAxlr0j568X/wxR1HE6QTAUxv
-         oNTAa4TS3Av+m52psje68vuawU209A/GAslQ5d+PTr/a+aDXBGoGzE+vO8+bxkk9z/xx
-         I51EYR5XVchJWvAaywAD4fL7ezJ1fFHgaY/Z+tNdFIJpBGblEBYYkaq3z4mV1WDZGn7z
-         ffvSQ7yNadMqr9MVSE3xGz5bIycX2dL9sQCf8zXqP/ITl6sTch8jdvOTC2treZaX3In9
-         xEZw==
-X-Gm-Message-State: AJIora/RgSv/wgU3yAT4E6KkyaoJW7Asapr2Wjb+nMNWMdRvYOOzdpa7
-        8BnX9EE5qbp8AENeAhJTZkVz5nwbR06UxzCvMPQ=
-X-Google-Smtp-Source: AGRyM1vdbd0R7YMxYxy0P2dd8vQrxNLQeA6X4bNQXzyEIGvSWfphBH2XZjr5H4rQJtEKHjuHxSI7AndhUPKnaI4Hbw4=
-X-Received: by 2002:a17:907:2d24:b0:726:34e6:52fd with SMTP id
- gs36-20020a1709072d2400b0072634e652fdmr7061557ejc.307.1656226775034; Sat, 25
- Jun 2022 23:59:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220624112340.10130-1-hdegoede@redhat.com> <df35a580-3e4b-cf45-004f-7c6848a1dfae@message-id.googlemail.com>
-In-Reply-To: <df35a580-3e4b-cf45-004f-7c6848a1dfae@message-id.googlemail.com>
-From:   Kenneth Chan <kenneth.t.chan@gmail.com>
-Date:   Sun, 26 Jun 2022 14:58:57 +0800
-Message-ID: <CAPqSeKu0XRsgg1dQce+cc89LVrqX0GY0ak5Vzzv+PEHF2Pr95w@mail.gmail.com>
-Subject: Re: [PATCH 0/7] ACPI: video / platform/x86: Fix Panasonic laptop
- missing keypresses
-To:     Stefan Seyfried <stefan.seyfried@googlemail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
+        Sun, 26 Jun 2022 11:39:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3BE1DFAD
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 08:38:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6D7C460AFF
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 15:38:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C59DDC34114
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 15:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656257938;
+        bh=6iBgcrGVVGkHVXLwgxbOucWCL1LVZVSlEobjqgCs7Yo=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=UhATo9YC45HhqsC7/A9XMY/RnAfJLaCHV+kpTJ0qXtMPdPzkXlLnUziNCekOX8B4t
+         QyPXRFW1F+iZvAfg6li/iISVF7s449B7l8MG9YLNCh6ilE4sypSEUIwz39in9HqdG9
+         2QF0Ax15/b9zUV7sf0E3VbP2Bg8YatcNsh5OCgun19kUyxvDE3jWXjWiWUt9h+Eqq7
+         a48aRXIL7i233A5UxZ6cvzLWza+R0H1PF4uCNNTrLEtB+huh/oYVihMDplNrSn4ZJ9
+         3SdXapP2P6mt+YZnO2LvYFUHKhWF5mcrTWvxy8f+Qb2uxVbJJPZTF5C6fgI3ZZTMEK
+         jIDksahlCgbeg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id A8EACC05FD2; Sun, 26 Jun 2022 15:38:58 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
+Date:   Sun, 26 Jun 2022 15:38:58 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: tinozzo123@tutanota.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-214899-215701-8pSR6wWMAP@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
+References: <bug-214899-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans and Stefan,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
 
-On Tue, 21 Jun 2022 at 02:10, Stefan Seyfried
-<stefan.seyfried@googlemail.com> wrote:
->
-> Well, I looked into the acpi_video.c module and that one is to blame.
-> By default, it assumes that both "OUTPUT_KEY_EVENTS" and
-> "BRIGHTNESS_KEY_EVENTS" should be handled by this module.
-> But on the CF-51, this does not happen. "Video Bus" does not generate
-> any key events (I'm not sure about output, but plugging in a VGA monitor
-> and enabling/disabling it with xrandr or tapping the "display" fn-f3
-> hotkey does not get anything from "Video Bus" input device.
->
+tinozzo123@tutanota.com changed:
 
-The "display" Fn-F3 hotkey doesn't generate any key events on mine
-either. I have no external VGA monitors to test it anyway.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |tinozzo123@tutanota.com
 
-Apart from that, the patches work perfectly on my Let's Note CF-W5.
-Cheers, Hans!
+--- Comment #42 from tinozzo123@tutanota.com ---
+I have zero issues on an IdeaPad 5 14ARE05.
 
-Tested-by: Kenneth Chan <kenneth.t.chan@gmail.com>
+--=20
+You may reply to this email to add a comment.
 
-
-On Sat, 25 Jun 2022 at 03:49, Stefan Seyfried
-<stefan.seyfried@googlemail.com> wrote:
->
-> On 24.06.22 13:23, Hans de Goede wrote:
-> > Hi All,
-> >
-> > Here is a series fixing the missing keypresses on some Panasonic Toughbook
-> > models. These missing keypresses are caused by
-> > commit ed83c9171829 ("platform/x86: panasonic-laptop: Resolve hotkey double
-> > trigger bug"), which made the panasonic-laptop driver unconditionally drop
-> > most WMI reported hotkeys.
-> >
-> > This series reverts that commit and then adds some more selective filtering
-> > to still avoid the double key-presses on some models, while avoiding
-> > completely missing keypresses on others.
-> >
-> > Rafael, these fixes rely on patch 1/7, which is a tweak to
-> > the acpi_video_handles_brightness_key_presses() helper. Without this
-> > tweak this series will cause a regression, so I would like to merge
-> > the entire series through the pdx86 tree, may I have your ack for this?
-> >
-> > Regards,
-> >
-> > Hans
-> >
-> >
-> > Hans de Goede (6):
-> >    ACPI: video: Change how we determine if brightness key-presses are
-> >      handled
-> >    platform/x86: panasonic-laptop: sort includes alphabetically
-> >    platform/x86: panasonic-laptop: revert "Resolve hotkey double trigger
-> >      bug"
-> >    platform/x86: panasonic-laptop: don't report duplicate brightness
-> >      key-presses
-> >    platform/x86: panasonic-laptop: filter out duplicate volume
-> >      up/down/mute keypresses
-> >    platform/x86: panasonic-laptop: Use acpi_video_get_backlight_type()
-> >
-> > Stefan Seyfried (1):
-> >    platform/x86: panasonic-laptop: de-obfuscate button codes
-> >
-> >   drivers/acpi/acpi_video.c               |  13 ++-
-> >   drivers/platform/x86/Kconfig            |   2 +
-> >   drivers/platform/x86/panasonic-laptop.c | 112 ++++++++++++++++++------
-> >   3 files changed, 91 insertions(+), 36 deletions(-)
->
-> The whole series works without any manual setup on my Toughbook CF-51:
->
-> Tested-by: Stefan Seyfried <seife+kernel@b1-systems.com>
->
-> Thanks again!
->
-> Stefan
-> --
-> Stefan Seyfried
->
-> "For a successful technology, reality must take precedence over
->   public relations, for nature cannot be fooled." -- Richard Feynman
-
--- 
-Kenneth
+You are receiving this mail because:
+You are watching the assignee of the bug.=
