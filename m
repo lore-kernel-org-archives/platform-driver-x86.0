@@ -2,172 +2,145 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A213C43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Jun 2022 07:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B76DC43334
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Jun 2022 07:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233104AbiF0Hps (ORCPT
+        id S232600AbiF0HrJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Jun 2022 03:45:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52692 "EHLO
+        Mon, 27 Jun 2022 03:47:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233095AbiF0Hpr (ORCPT
+        with ESMTP id S233121AbiF0HrH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Jun 2022 03:45:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2984260D2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 00:45:45 -0700 (PDT)
+        Mon, 27 Jun 2022 03:47:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2990660E8
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 00:47:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656315944;
+        s=mimecast20190719; t=1656316024;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=DJ8lTv8mNQFqfIpLLTdJ5wTzmtewiqdkMpwZ7L0k0po=;
-        b=CvbzazEhsnrxYlxxmqXKq/wjdpjt4q5JJ31r+UR+Ij8/avZTeFuFOdeNX48Nv4Xn6IDWrN
-        SHSE1HW0dgpkA9BVDWgLHCxZZiPe367TXVSyHAPXs3mJlc8BtGzamdkLRoZe9vtIsSaiaa
-        L3yhwunItgVpG8j5fcrHpaCNKGtcnFw=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=O41SPTINQewaiTEEXheNcbqXApvzJfrGLeI0iN71ztc=;
+        b=ONSkrSR5ZHZOFviNqtvEWS9ELVVm8o2/Wayk2ddK7b36D2v8sM2bhU78R6i9E1tBT+CALs
+        9ErWsFOicuSmIXAQfVQFGSQreYXgGgPzRHp5LsR5+PBo2hSZn6OQL4aJZtbl4Z/qxm4w73
+        6VQW6JQHSpC5q/AWJT6bfRq+kH/vkc0=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-500-MiU47sKcNxOhjgVnMTX72g-1; Mon, 27 Jun 2022 03:45:42 -0400
-X-MC-Unique: MiU47sKcNxOhjgVnMTX72g-1
-Received: by mail-lf1-f71.google.com with SMTP id o22-20020a05651205d600b004810c974c17so1867608lfo.23
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 00:45:42 -0700 (PDT)
+ us-mta-379-zjZDuUxsOe-oyQIOzPnrPg-1; Mon, 27 Jun 2022 03:47:02 -0400
+X-MC-Unique: zjZDuUxsOe-oyQIOzPnrPg-1
+Received: by mail-ej1-f72.google.com with SMTP id kz20-20020a17090777d400b007268efe3bccso650645ejc.10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 00:47:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DJ8lTv8mNQFqfIpLLTdJ5wTzmtewiqdkMpwZ7L0k0po=;
-        b=skIumZ9Wgkw690am6bVqwlqtW3hJHYvzeZcB+JhgpQ2Oe8Hy2YMxIrIbQJrtSxs91O
-         gcg9juGmn4Gn4feLPZBPUrWFH2XULwBfOLWdQLfAD8ltENu+LDZhXMjZk4io7pdD/oxL
-         2L7OukegtTXLsAOjuZClvaRP50JVKmAR+XcEdfmkS/SyS0ep5xDC27/wKWHfx8cncxVn
-         XIqVZxSMKiVCdXZYFkwtXFGsnIl7QkQOl/2Mk598IVGrTmV2bEuMf/zA0tIZDPksJCmD
-         iF1ylmklwAvocuY9uHm+Lo0NCQ238F7JnVqymAPmsLPuVE3uKnputy/7WBEVVJDjbIo/
-         2m+A==
-X-Gm-Message-State: AJIora9LJGyntA/svobRcMsK6ud3kCTM1osjUBD0iw2Wv9J4h1+eB2Bk
-        aS/ECfVPjBko/wD79oimN0oOXiLU2lTLMwJ2woHeh+A/rZ9CHii98noSsu1TzKYDpaMjQoNa4UX
-        wRYNaASuDDDPqqYKYh60rB9A+MWhgGCdbKxpX2GDii7vxtxvJEg==
-X-Received: by 2002:a2e:aaa5:0:b0:25b:ae57:4ad7 with SMTP id bj37-20020a2eaaa5000000b0025bae574ad7mr6113603ljb.323.1656315941394;
-        Mon, 27 Jun 2022 00:45:41 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vViYYUTuYJvHrB7a6J1t+RbESIVnJ/fW5l8pDtbVNhAjJvWLMAazge0YptM+fayabkTwGDETijvn1jNEjsB7g=
-X-Received: by 2002:a2e:aaa5:0:b0:25b:ae57:4ad7 with SMTP id
- bj37-20020a2eaaa5000000b0025bae574ad7mr6113578ljb.323.1656315941180; Mon, 27
- Jun 2022 00:45:41 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=O41SPTINQewaiTEEXheNcbqXApvzJfrGLeI0iN71ztc=;
+        b=Yibz2dFo8l8jGJdHlVzfyMmvqOdPQGmva+3oigDdZyeAz2EvcqH5J2lEsVaOgTSMdr
+         PIyiosFe7mdQ4lFqVpQsgeHw7Na6L/45poIi02SaCRudtT5AKRKS4htvMOnOKzYzZoIe
+         RKgbA9PZkZPR6rtSpIRFbu0oNWztZ+PkqeZt4bJ7/gGFuNSQ5qNRGMn/nXU/mZm7LqiB
+         1okjMjzzO0WsrypJK1ZZD67kbzjzGRJnrxDbkknhq12xPyEluSAur3gWn9kG4oR5afQg
+         R+yzpMVuo2TvuKtvQRUjHBt+ATRfYFjFiHde7TYipK8JvKZVFfBjpdsMiGGnAkrCAG5u
+         k3Lg==
+X-Gm-Message-State: AJIora9w5qCRRDG7yx/ljrDtIuQISwH063fj7gYxLwGT62PYWvgXxnWO
+        7tGSYBlGWAlom1Vw/hj1QfmVguvJSKbkphwVDs0aWoaKfrPnD+++I/dxja4xenrpXuKP56HaOaU
+        i1lo2tpQsz1hN9kinuOe70y4lbf6sJoepaQ==
+X-Received: by 2002:aa7:c352:0:b0:435:7fbd:90b9 with SMTP id j18-20020aa7c352000000b004357fbd90b9mr14993699edr.139.1656316021397;
+        Mon, 27 Jun 2022 00:47:01 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vI0GYBvX7+TU34vpS/TdEuNLFGBo0OUd5Z63Q15rQixBleAil+59tqDrskJL5H3Si/TWttnA==
+X-Received: by 2002:aa7:c352:0:b0:435:7fbd:90b9 with SMTP id j18-20020aa7c352000000b004357fbd90b9mr14993682edr.139.1656316021187;
+        Mon, 27 Jun 2022 00:47:01 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id t23-20020a170906179700b006ff19354f9fsm4685334eje.215.2022.06.27.00.47.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jun 2022 00:47:00 -0700 (PDT)
+Message-ID: <ec9550c2-982f-12b6-e368-2cf94a1dba60@redhat.com>
+Date:   Mon, 27 Jun 2022 09:46:59 +0200
 MIME-Version: 1.0
-References: <20220624025621.128843-1-xuanzhuo@linux.alibaba.com>
- <20220624025621.128843-26-xuanzhuo@linux.alibaba.com> <20220624025817-mutt-send-email-mst@kernel.org>
- <CACGkMEseptD=45j3kQr0yciRxR679Jcig=292H07-RYC2vXmFQ@mail.gmail.com> <20220627023841-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20220627023841-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Date:   Mon, 27 Jun 2022 15:45:30 +0800
-Message-ID: <CACGkMEvy8xF2T_vubKeUEPC2aroO_fbB0Xe8nnxK4OBUgAS+Gw@mail.gmail.com>
-Subject: Re: [PATCH v10 25/41] virtio_pci: struct virtio_pci_common_cfg add queue_notify_data
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        virtualization <virtualization@lists.linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev <netdev@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm <kvm@vger.kernel.org>,
-        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
-        kangjie.xu@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v1] platform/x86: intel/pmc: Add Alder Lake N support to
+ PMC core driver
+Content-Language: en-US
+To:     "Kammela, Gayatri" <gayatri.kammela@linux.intel.com>
+Cc:     irenic.rajneesh@gmail.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>
+References: <20220615002751.3371730-1-gayatri.kammela@linux.intel.com>
+ <caaca84e-1cc4-bf81-f705-fdabe2313d71@redhat.com>
+ <3fc73477-59e3-2935-489b-d3dbfd77eafc@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <3fc73477-59e3-2935-489b-d3dbfd77eafc@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 2:39 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Mon, Jun 27, 2022 at 10:30:42AM +0800, Jason Wang wrote:
-> > On Fri, Jun 24, 2022 at 2:59 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
-> > > On Fri, Jun 24, 2022 at 10:56:05AM +0800, Xuan Zhuo wrote:
-> > > > Add queue_notify_data in struct virtio_pci_common_cfg, which comes from
-> > > > here https://github.com/oasis-tcs/virtio-spec/issues/89
-> > > >
-> > > > For not breaks uABI, add a new struct virtio_pci_common_cfg_notify.
-> > >
-> > > What exactly is meant by not breaking uABI?
-> > > Users are supposed to be prepared for struct size to change ... no?
-> >
-> > Not sure, any doc for this?
-> >
-> > Thanks
->
->
-> Well we have this:
->
->         The drivers SHOULD only map part of configuration structure
->         large enough for device operation.  The drivers MUST handle
->         an unexpectedly large \field{length}, but MAY check that \field{length}
->         is large enough for device operation.
+Hi,
 
-Yes, but that's the device/driver interface. What's done here is the
-userspace/kernel.
+On 6/22/22 19:56, Kammela, Gayatri wrote:
+> On 6/22/2022 3:23 AM, Hans de Goede wrote:
+> 
+>> Hi,
+>>
+>> On 6/15/22 02:27, Gayatri Kammela wrote:
+>>> Add Alder Lake N (ADL-N) to the list of the platforms that Intel's
+>>> PMC core driver supports. RocketLake reuses all the TigerLake PCH IPs.
+>>>
+>>> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+>>> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>> Cc: David E. Box <david.e.box@linux.intel.com>
+>>> Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+>> Thank you for your patch, I've applied this patch to my review-hans
+>> branch:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+>>
+>> Note it will show up in my review-hans branch once I've pushed my
+>> local branch there, which might take a while.
+>>
+>> Once I've run some tests on this branch the patches there will be
+>> added to the platform-drivers-x86/for-next branch and eventually
+>> will be included in the pdx86 pull-request to Linus for the next
+>> merge-window.
+>>
+>> Regards,
+>>
+>> Hans
+> Thank you Hans! I have sent v2 fixing the typo.
 
-Userspace may break if it uses e.g sizeof(struct virtio_pci_common_cfg)?
+Next time please send newer versions before I apply them. I've updated
+the version in my review-hans and fixes branches now and done a
+forced push of those branches.
 
-Thanks
+Regards,
 
->
->
->
-> >
-> > >
-> > >
-> > > > Since I want to add queue_reset after queue_notify_data, I submitted
-> > > > this patch first.
-> > > >
-> > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > Acked-by: Jason Wang <jasowang@redhat.com>
-> > > > ---
-> > > >  include/uapi/linux/virtio_pci.h | 7 +++++++
-> > > >  1 file changed, 7 insertions(+)
-> > > >
-> > > > diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
-> > > > index 3a86f36d7e3d..22bec9bd0dfc 100644
-> > > > --- a/include/uapi/linux/virtio_pci.h
-> > > > +++ b/include/uapi/linux/virtio_pci.h
-> > > > @@ -166,6 +166,13 @@ struct virtio_pci_common_cfg {
-> > > >       __le32 queue_used_hi;           /* read-write */
-> > > >  };
-> > > >
-> > > > +struct virtio_pci_common_cfg_notify {
-> > > > +     struct virtio_pci_common_cfg cfg;
-> > > > +
-> > > > +     __le16 queue_notify_data;       /* read-write */
-> > > > +     __le16 padding;
-> > > > +};
-> > > > +
-> > > >  /* Fields in VIRTIO_PCI_CAP_PCI_CFG: */
-> > > >  struct virtio_pci_cfg_cap {
-> > > >       struct virtio_pci_cap cap;
-> > > > --
-> > > > 2.31.0
-> > >
->
+Hans
+
+
+>>
+>>> ---
+>>>   drivers/platform/x86/intel/pmc/core.c | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+>>> index 40183bda7894..a1fe1e0dcf4a 100644
+>>> --- a/drivers/platform/x86/intel/pmc/core.c
+>>> +++ b/drivers/platform/x86/intel/pmc/core.c
+>>> @@ -1911,6 +1911,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>>>       X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,    &icl_reg_map),
+>>>       X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,        &tgl_reg_map),
+>>>       X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,        &tgl_reg_map),
+>>> +    X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,        &tgl_reg_map),
+>>>       X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,        &adl_reg_map),
+>>>       X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
+>>>       {}
+>>>
+>>> base-commit: b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3
+> 
 
