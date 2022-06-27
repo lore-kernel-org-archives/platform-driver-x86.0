@@ -2,80 +2,149 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A311C43334
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Jun 2022 19:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B483C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Jun 2022 02:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230413AbiFZToj (ORCPT
+        id S231814AbiF0Ca7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 26 Jun 2022 15:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44678 "EHLO
+        Sun, 26 Jun 2022 22:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229999AbiFZToj (ORCPT
+        with ESMTP id S229895AbiF0Ca6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 26 Jun 2022 15:44:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71781E6
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 12:44:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1569160EC1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 19:44:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 73F11C34114
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 19:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656272677;
-        bh=JXlkaXgUmYlSbWrUr6Xe6+LsPNkTfO9TaxjPhdB/G60=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=DAHOyCvrtTHHSaV8/pn3nt4pIB7NsYBkyg+qQqfvALINNzs6ZwfQTAU2TMnoosj+y
-         VmWhs7JXcsX08crir+0WSnWRZQYZUU1q+BulvdYOyOUZ4jDFwDrZvzlkIzY/nbmQcu
-         J4/UBaZZrfB8vlYb1TTNhTHud/7qTLZkfW76NP0czDM5ziUh2cA5tHpCLz97EttAoA
-         Vg2P44lYAjMICZJqy606sJNeP19mzVf1vU3zeV8Hjm1nSpwEO6nW0mNX5rKiERX2VG
-         ClAkAq34WBDA1zOhM+t8YFTIx6QfprODeV21WddOL2e/4+ZjHvFiEV4yUiGR5umvGP
-         3Ohb4LAP7DIbQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 5581CC05FD2; Sun, 26 Jun 2022 19:44:37 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216176] ideapad-laptop doesn't expose rapid charge
-Date:   Sun, 26 Jun 2022 19:44:37 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: tinozzo123@tutanota.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216176-215701-jsSZteVhcA@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216176-215701@https.bugzilla.kernel.org/>
-References: <bug-216176-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sun, 26 Jun 2022 22:30:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 308992BE5
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 19:30:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1656297056;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kJbcwB7EfNKpZ99plzFtpzkiIgmO0GfWqgxD6ydKGBA=;
+        b=O+AVCCYAVcZ+unyq4WDBIyDHCnIFtjwZo6ua7+oY0je044DHpfBv0eDeF6Hz3+NTx89/1S
+        2yOBQnJsh5l/n1+5eSWxKWMcIuxw2OsDc75iVnp4Om5NxZxK6A893PBKr0Et8zHNpxxIiJ
+        Wxeq0YhxOcC/pmsRN5NePbhyJaEOap4=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-517-ZAXbX2J-OXmqVc7MbVlEYA-1; Sun, 26 Jun 2022 22:30:54 -0400
+X-MC-Unique: ZAXbX2J-OXmqVc7MbVlEYA-1
+Received: by mail-lf1-f72.google.com with SMTP id p36-20020a05651213a400b004779d806c13so3993985lfa.10
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2022 19:30:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kJbcwB7EfNKpZ99plzFtpzkiIgmO0GfWqgxD6ydKGBA=;
+        b=xPVtEhh41PqSOLsXEh/oIV4Ys8WyK3fVPq06W3RvZLsly3gS8MX3MlLAIDclRmE8dC
+         Givq9au0YyZ59faTff6ndAhM34HbG1SZ7NdRYapxjV5h1RvkWibaTHmsOWmbVBNmjMix
+         RTOHNt8jTQO2SWbsFRZKyvtRZSM8pLqv6jMXD1oECJRsXzl9vfcl0Vrjb4HBE3Uo+e5Q
+         sboBPLkDc5n6Z5WCv3V47bIytk3cms+ri9NX0lG/PAXu3zY+DHea9FhRLbRTHN1A6mNc
+         5fSawUjoUd9xaxt1kofa/k07SZSMHirlyv9b/NSViIbYH07ESTfV9xbVry4bhrNM5J7W
+         0VDw==
+X-Gm-Message-State: AJIora/u5CRjRXmeZKrWuks5c0kH6SxoPYqkrqeMjWkDMszJnlBtEccc
+        ihGC2GlzmqH99d2sheVDo/9OP0tlM7ZlmKWqJJKKgeioMm5eBcbUJdORtlSEokbEnhqVojb4YXp
+        w+yYLYy7B375syCijyQRgyxuwQ12ef6eiwj1pfdbysiDJ2pKqjQ==
+X-Received: by 2002:a05:6512:13a5:b0:47d:c1d9:dea8 with SMTP id p37-20020a05651213a500b0047dc1d9dea8mr6773786lfa.442.1656297053243;
+        Sun, 26 Jun 2022 19:30:53 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1ur82ARcDJaALzWVAunDCgq4vaJSklh1IynesHEAuaeWnmZYcX/Br+tGQmrs/x93fW3c+90sT9mKBAdQ35aQEI=
+X-Received: by 2002:a05:6512:13a5:b0:47d:c1d9:dea8 with SMTP id
+ p37-20020a05651213a500b0047dc1d9dea8mr6773770lfa.442.1656297053073; Sun, 26
+ Jun 2022 19:30:53 -0700 (PDT)
 MIME-Version: 1.0
+References: <20220624025621.128843-1-xuanzhuo@linux.alibaba.com>
+ <20220624025621.128843-26-xuanzhuo@linux.alibaba.com> <20220624025817-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20220624025817-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Date:   Mon, 27 Jun 2022 10:30:42 +0800
+Message-ID: <CACGkMEseptD=45j3kQr0yciRxR679Jcig=292H07-RYC2vXmFQ@mail.gmail.com>
+Subject: Re: [PATCH v10 25/41] virtio_pci: struct virtio_pci_common_cfg add queue_notify_data
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        virtualization <virtualization@lists.linux-foundation.org>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev <netdev@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm <kvm@vger.kernel.org>,
+        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
+        kangjie.xu@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216176
+On Fri, Jun 24, 2022 at 2:59 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Fri, Jun 24, 2022 at 10:56:05AM +0800, Xuan Zhuo wrote:
+> > Add queue_notify_data in struct virtio_pci_common_cfg, which comes from
+> > here https://github.com/oasis-tcs/virtio-spec/issues/89
+> >
+> > For not breaks uABI, add a new struct virtio_pci_common_cfg_notify.
+>
+> What exactly is meant by not breaking uABI?
+> Users are supposed to be prepared for struct size to change ... no?
 
---- Comment #2 from tinozzo123@tutanota.com ---
-There are multiple of them.
-https://wiki.archlinux.org/title/Lenovo_IdeaPad_5_14are05#Rapid_Charge
-https://wiki.archlinux.org/title/Lenovo_IdeaPad_5_15are05#Rapid_Charge
-https://wiki.archlinux.org/title/Lenovo_IdeaPad_Flex_5_14alc05#Rapid_Charge
+Not sure, any doc for this?
 
---=20
-You may reply to this email to add a comment.
+Thanks
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+
+>
+>
+> > Since I want to add queue_reset after queue_notify_data, I submitted
+> > this patch first.
+> >
+> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > Acked-by: Jason Wang <jasowang@redhat.com>
+> > ---
+> >  include/uapi/linux/virtio_pci.h | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
+> > index 3a86f36d7e3d..22bec9bd0dfc 100644
+> > --- a/include/uapi/linux/virtio_pci.h
+> > +++ b/include/uapi/linux/virtio_pci.h
+> > @@ -166,6 +166,13 @@ struct virtio_pci_common_cfg {
+> >       __le32 queue_used_hi;           /* read-write */
+> >  };
+> >
+> > +struct virtio_pci_common_cfg_notify {
+> > +     struct virtio_pci_common_cfg cfg;
+> > +
+> > +     __le16 queue_notify_data;       /* read-write */
+> > +     __le16 padding;
+> > +};
+> > +
+> >  /* Fields in VIRTIO_PCI_CAP_PCI_CFG: */
+> >  struct virtio_pci_cfg_cap {
+> >       struct virtio_pci_cap cap;
+> > --
+> > 2.31.0
+>
+
