@@ -2,93 +2,151 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79292C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Jun 2022 19:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C16C43334
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Jun 2022 21:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240752AbiF0TsE (ORCPT
+        id S239387AbiF0Vut (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Jun 2022 15:48:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60560 "EHLO
+        Mon, 27 Jun 2022 17:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240811AbiF0TsC (ORCPT
+        with ESMTP id S238130AbiF0Vuo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Jun 2022 15:48:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA3B1B7A6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 12:48:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 69A7C61562
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 19:48:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D27E7C34115
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 19:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656359279;
-        bh=9ITFzbvolHjVFtb/TEnJQqj27EbSkUpXXkDW9dEj07I=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=IpoS3r4x6LgmIutjmN9hp9TyGg6RuSbMQhxh5ufK/crSBttIzU7v9CFw3mbc/gQ1k
-         AEdZBul1a1Re7tPnMzmqfuOEqGg9HI9gbNdmDinq/5GHnqRT9u0U/t2NFh8iS/Nl//
-         06v1PVCC+fnOFgfKGwPROKuO4wDqKzr35paZTR/fKw4emrjNbAdXe2/0KEfF66p8pD
-         +U238V8VfqhMaoBSLGqioQh+Bcu2X/F7EyB7CbrjGrQS9L9B7Kst3JwBhn3Z1u6Ft6
-         mtxnwottkoVPdCuYhB9Ihefo01GgP9THTwsr6DpEzNGT7KYLUbuBCpS/H/A9cfelZK
-         K7Jz3dH0wjCXg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id A9809C05FD6; Mon, 27 Jun 2022 19:47:59 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216176] ideapad-laptop doesn't expose rapid charge
-Date:   Mon, 27 Jun 2022 19:47:59 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: tinozzo123@tutanota.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216176-215701-vrvFSou6Ab@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216176-215701@https.bugzilla.kernel.org/>
-References: <bug-216176-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 27 Jun 2022 17:50:44 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EB92DC9;
+        Mon, 27 Jun 2022 14:50:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656366643; x=1687902643;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=p9nbmeAUVIyt45kDOqNNIMa+DKOyaEwgkbvEn2hif7g=;
+  b=j+pvSU3rjz3nijVZlN0sloKYf1bjOlSLP7EUqx9HqktqQ85Kjq93Vur8
+   YeImsZoVJ8dNsHubc+INB7wbPFlgefdhWSoo9Fgjpl2FjBRjUbKnLqEga
+   ozRtP0ArqbJny2KhGBop+Av6V4D3M/NOC1mvZWwka4GgJm3cEHPPyyw6I
+   we2yVv989B0+mDGVJvSHPD2RMBG/UJVAV6ZK21KsECWNhEvNOfKiBzQCe
+   X9WrsFBX8VFKNkzL4tH/7WXv9rnzRVoGaraHbnxAWMBZowW8XlWuIi91X
+   yQPaJ4O+4ZmpcPCKPjgs1lzcWYWx75V2WFfIpftgUSRXKFpzUme25l4GT
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="282305334"
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="282305334"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 14:50:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="657862028"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Jun 2022 14:50:41 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86: ISST: PUNIT device mapping with Sub-NUMA clustering
+Date:   Mon, 27 Jun 2022 14:50:31 -0700
+Message-Id: <20220627215031.2158825-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216176
+On a multiple package system using Sub-NUMA clustering, there is an issue
+in mapping Linux CPU number to PUNIT PCI device when manufacturer decided
+to reuse the PCI bus number across packages. Bus number can be reused as
+long as they are in different domain or segment. In this case some CPU
+will fail to find a PCI device to issue SST requests.
 
---- Comment #4 from tinozzo123@tutanota.com ---
-My take on where it should be exposed.
+When bus numbers are reused across CPU packages, we are using proximity
+information by matching CPU numa node id to PUNIT PCI device numa node
+id. But on a package there can be only one PUNIT PCI device, but multiple
+numa nodes (one for each sub cluster). So, the numa node ID of the PUNIT
+PCI device can only match with one numa node id of CPUs in a sub cluster
+in the package.
 
-Something related to the battery, which are charge thresholds, are supporte=
-d in
-multiple laptop brands (Lenovo ThinkPad, ASUS, System76...) and are thus are
-exposed in the battery power supply device
-(/sys/class/power_supply/BAT0/charge_control_{start,end}_threshold)
+Since there can be only one PUNIT PCI device per package, if we match
+with numa node id of any sub cluster in that package, we can use that
+mapping for any CPU in that package. So, store the match information
+in a per package data structure and return the information when there
+is no match.
 
-conservation_mode is basically an equivalent with a fixed value (60%) that =
-is
-exclusive to IdeaPads, and it's exposed in the platform device
-(/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode).
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ .../intel/speed_select_if/isst_if_common.c    | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-I guess that my the verdict is that, because rapid charging is supported on
-multiple laptop series (both ThinkPads and IdeaPads, which use different
-drivers, and maybe there are more brands, though I couldn't find anything on
-Google), so it should be exposed in the battery power supply device.
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index e8424e70d81d..f3cd1be3283a 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -286,11 +286,18 @@ struct isst_if_cpu_info {
+ 	int numa_node;
+ };
+ 
++struct isst_if_pkg_info {
++	struct pci_dev *pci_dev[2];
++};
++
+ static struct isst_if_cpu_info *isst_cpu_info;
++static struct isst_if_pkg_info *isst_pkg_info;
++
+ #define ISST_MAX_PCI_DOMAINS	8
+ 
+ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
+ {
++	int pkg_id = topology_physical_package_id(cpu);
+ 	struct pci_dev *matched_pci_dev = NULL;
+ 	struct pci_dev *pci_dev = NULL;
+ 	int no_matches = 0;
+@@ -324,6 +331,8 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+ 		}
+ 
+ 		if (node == isst_cpu_info[cpu].numa_node) {
++			isst_pkg_info[pkg_id].pci_dev[bus_no] = _pci_dev;
++
+ 			pci_dev = _pci_dev;
+ 			break;
+ 		}
+@@ -342,6 +351,9 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+ 	if (!pci_dev && no_matches == 1)
+ 		pci_dev = matched_pci_dev;
+ 
++	if (!pci_dev)
++		pci_dev = isst_pkg_info[pkg_id].pci_dev[bus_no];
++
+ 	return pci_dev;
+ }
+ 
+@@ -417,10 +429,19 @@ static int isst_if_cpu_info_init(void)
+ 	if (!isst_cpu_info)
+ 		return -ENOMEM;
+ 
++	isst_pkg_info = kcalloc(topology_max_packages(),
++				sizeof(*isst_pkg_info),
++				GFP_KERNEL);
++	if (!isst_pkg_info) {
++		kfree(isst_cpu_info);
++		return -ENOMEM;
++	}
++
+ 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+ 				"platform/x86/isst-if:online",
+ 				isst_if_cpu_online, NULL);
+ 	if (ret < 0) {
++		kfree(isst_pkg_info);
+ 		kfree(isst_cpu_info);
+ 		return ret;
+ 	}
+@@ -433,6 +454,7 @@ static int isst_if_cpu_info_init(void)
+ static void isst_if_cpu_info_exit(void)
+ {
+ 	cpuhp_remove_state(isst_if_online_id);
++	kfree(isst_pkg_info);
+ 	kfree(isst_cpu_info);
+ };
+ 
+-- 
+2.31.1
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
