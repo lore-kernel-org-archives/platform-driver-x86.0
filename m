@@ -2,134 +2,186 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4604ACCA473
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Jun 2022 07:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80282C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Jun 2022 07:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232460AbiF0Hwo (ORCPT
+        id S233183AbiF0H6T (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Jun 2022 03:52:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57636 "EHLO
+        Mon, 27 Jun 2022 03:58:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233167AbiF0Hwm (ORCPT
+        with ESMTP id S233192AbiF0H6P (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Jun 2022 03:52:42 -0400
+        Mon, 27 Jun 2022 03:58:15 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BBF72614D
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 00:52:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C878310C
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 00:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656316360;
+        s=mimecast20190719; t=1656316690;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zvnEckNZ0t6aw6dYsWsOgua6RSjEJtpEtX3LU+NwFVc=;
-        b=P7eHg+FbkyVqLBgWMDn1usbPdJNlQGf0paF47wxwhssM5lniL+AaVdDsjuNRE0TTBWwuQL
-        HF1pMSxGtLbgV/QMCU1y0asQy1zT1TdAeEcD3d6CyqwRRLh5gnFb7t2cn+A6fPJQqffG0R
-        5FptSJoP/y8Gol8QtI7LJIRi9/JGuyY=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=gR36iGOYPRI7XA3wSmeHv9qI5C/E+Rq80TLdrN+txO0=;
+        b=AobZvjq7OfvNi0ebg7J5cjjrKuYPAqWvOcmKhmRW5g9S+h7Pt7Dr6YYQr0DRlU8FgSLRBe
+        wtIGtaIjl1nHNrn1SdE4+PyH2C7bWH9OMTvSyxi4XOuEEPuiXH/yXnFAmlx45JNUUgT7UM
+        Q19mwvg/HM9faZR4YN7YUGkqnv5d3R4=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-260-KDYBUgVLN9eXKgO6ntuKPQ-1; Mon, 27 Jun 2022 03:52:39 -0400
-X-MC-Unique: KDYBUgVLN9eXKgO6ntuKPQ-1
-Received: by mail-ed1-f71.google.com with SMTP id h4-20020a056402280400b00435abcf8f2dso6556064ede.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 00:52:39 -0700 (PDT)
+ us-mta-610-WJL2xDfCM324Do56-nJLYw-1; Mon, 27 Jun 2022 03:58:09 -0400
+X-MC-Unique: WJL2xDfCM324Do56-nJLYw-1
+Received: by mail-wm1-f70.google.com with SMTP id j20-20020a05600c1c1400b0039c747a1e5aso5225504wms.9
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 00:58:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=zvnEckNZ0t6aw6dYsWsOgua6RSjEJtpEtX3LU+NwFVc=;
-        b=3zXORYwfX6eAhD9FuPsXmhdMxkY80MIb2Z8bTd3id26Gr4PcCGwvGMzYU+4t6o7z/s
-         jta8O77G7lusyRdC9QuPXB0I/gSBSwFP2yYdenKr7H5rRqTzpTCnBKJL+bDTD7B+bhT0
-         W4F5lRHf/tFjhpJ8hXZA5QoqzPN0uaqt6DULHEGiZK0AyOsHaRtKxgTlvjP1RgKf0kh9
-         O9JKctEZu3HTnspXa5SIFajte89CyVRpjCFevgp33NaANJlsiTbRxNuy7ThpdoWoaph9
-         Jm/2oJSoMfusAe4FT5AU+AJd2vKGzSbY+glAoU3ALcZbppSFOrsTkBG1ofRZODGf+QDa
-         gOIA==
-X-Gm-Message-State: AJIora8nrenXBZxXUo+/cpn1VIeT+NZbcA043km1tUk0pHoUG1iBZu57
-        PO1DFJQHMikuI3gjrZUx/vrCPv1kD9C8zNnTbAKRvDB3siLEx186VOIWF6r1dHZ/0VxuMcxb0kW
-        jBTBG19GMtcZn2dFV6rHQuzEGx4V5OBnEIw==
-X-Received: by 2002:a05:6402:2c4:b0:435:8ce0:aef8 with SMTP id b4-20020a05640202c400b004358ce0aef8mr14605046edx.140.1656316357985;
-        Mon, 27 Jun 2022 00:52:37 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1u+5KZUuGpblxj/yMxUJEx/3n9U33TPquKEG128zW87dbfTKcFA3G83NAdTJGMQ0d+rIIFptg==
-X-Received: by 2002:a05:6402:2c4:b0:435:8ce0:aef8 with SMTP id b4-20020a05640202c400b004358ce0aef8mr14605032edx.140.1656316357843;
-        Mon, 27 Jun 2022 00:52:37 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id r21-20020a1709067fd500b007025015599bsm4644756ejs.214.2022.06.27.00.52.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jun 2022 00:52:37 -0700 (PDT)
-Message-ID: <e134b37f-6618-d3ad-7de7-3b376c30a16c@redhat.com>
-Date:   Mon, 27 Jun 2022 09:52:37 +0200
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gR36iGOYPRI7XA3wSmeHv9qI5C/E+Rq80TLdrN+txO0=;
+        b=8KVtzjMrU14UQjxxF2tH3WI3jNb8n+qZ42K2xxFVUR3IHacGBHjy5YntQLGqau/mvV
+         ROI5XktWRqOVe33jjnSpdpKfx3ZdKwv+/SX4/Q6XrWIDWeS/luR5mbfeB1mfnkrfMVke
+         lOnI66UYMDi72spy11nsuk5kUBypZ6ul+XiMvEDE/n+qAPbqLHryPzSyKMF319xVb278
+         kDEA2ZBMRiahf5+p0DrdfVayOazWcfqpWg+Y2GBfvNy5w2EIrI53NWga99Hl0R2FzuSh
+         /UknE609U6gGdiSd2NXXbbvyvSQ+fVmH8KDzbTuV1u5fEOCmqL4mr2jWq1Z9zi5EMhKM
+         0jNw==
+X-Gm-Message-State: AJIora8W3wvGTzVMsVUPK60q9aRDpWKZwHzgGmqaIZjqzW35+83wE40Z
+        TqRMz4zhGuQg5epUz6/F/k4zpHlu/pxXhJWE/+nCoebdWnn9KC+BIJJKtc2mwtHQqfCTL7OJNqJ
+        pz9TpZ8Sj3FGgCBQDDB/AGpIObnATzgEZ8g==
+X-Received: by 2002:a5d:6d8b:0:b0:21b:9804:1959 with SMTP id l11-20020a5d6d8b000000b0021b98041959mr10779913wrs.605.1656316688458;
+        Mon, 27 Jun 2022 00:58:08 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1u006yfHOEqWpSmwDiypaX+nb3Ki7jpntJhsVXGDo34rsHtagr1loLXbMMVyBM9VityuTjV+A==
+X-Received: by 2002:a5d:6d8b:0:b0:21b:9804:1959 with SMTP id l11-20020a5d6d8b000000b0021b98041959mr10779871wrs.605.1656316688168;
+        Mon, 27 Jun 2022 00:58:08 -0700 (PDT)
+Received: from redhat.com ([2.54.45.90])
+        by smtp.gmail.com with ESMTPSA id l13-20020a5d674d000000b0021bbdc3375fsm6171009wrw.68.2022.06.27.00.58.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jun 2022 00:58:07 -0700 (PDT)
+Date:   Mon, 27 Jun 2022 03:57:59 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        virtualization <virtualization@lists.linux-foundation.org>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev <netdev@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm <kvm@vger.kernel.org>,
+        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
+        kangjie.xu@linux.alibaba.com
+Subject: Re: [PATCH v10 25/41] virtio_pci: struct virtio_pci_common_cfg add
+ queue_notify_data
+Message-ID: <20220627034733-mutt-send-email-mst@kernel.org>
+References: <20220624025621.128843-1-xuanzhuo@linux.alibaba.com>
+ <20220624025621.128843-26-xuanzhuo@linux.alibaba.com>
+ <20220624025817-mutt-send-email-mst@kernel.org>
+ <CACGkMEseptD=45j3kQr0yciRxR679Jcig=292H07-RYC2vXmFQ@mail.gmail.com>
+ <20220627023841-mutt-send-email-mst@kernel.org>
+ <CACGkMEvy8xF2T_vubKeUEPC2aroO_fbB0Xe8nnxK4OBUgAS+Gw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: do not use PSC mode on Intel
- platforms
-Content-Language: en-US
-To:     Mark Pearson <markpearson@lenovo.com>
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org
-References: <markpearson@lenovo.com>
- <20220622181329.63505-1-markpearson@lenovo.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220622181329.63505-1-markpearson@lenovo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACGkMEvy8xF2T_vubKeUEPC2aroO_fbB0Xe8nnxK4OBUgAS+Gw@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 6/22/22 20:13, Mark Pearson wrote:
-> PSC platform profile mode is only supported on Linux for AMD platforms.
+On Mon, Jun 27, 2022 at 03:45:30PM +0800, Jason Wang wrote:
+> On Mon, Jun 27, 2022 at 2:39 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Mon, Jun 27, 2022 at 10:30:42AM +0800, Jason Wang wrote:
+> > > On Fri, Jun 24, 2022 at 2:59 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > >
+> > > > On Fri, Jun 24, 2022 at 10:56:05AM +0800, Xuan Zhuo wrote:
+> > > > > Add queue_notify_data in struct virtio_pci_common_cfg, which comes from
+> > > > > here https://github.com/oasis-tcs/virtio-spec/issues/89
+> > > > >
+> > > > > For not breaks uABI, add a new struct virtio_pci_common_cfg_notify.
+> > > >
+> > > > What exactly is meant by not breaking uABI?
+> > > > Users are supposed to be prepared for struct size to change ... no?
+> > >
+> > > Not sure, any doc for this?
+> > >
+> > > Thanks
+> >
+> >
+> > Well we have this:
+> >
+> >         The drivers SHOULD only map part of configuration structure
+> >         large enough for device operation.  The drivers MUST handle
+> >         an unexpectedly large \field{length}, but MAY check that \field{length}
+> >         is large enough for device operation.
 > 
-> Some older Intel platforms (e.g T490) are advertising it's capability
-> as Windows uses it - but on Linux we should only be using MMC profile
-> for Intel systems.
+> Yes, but that's the device/driver interface. What's done here is the
+> userspace/kernel.
 > 
-> Add a check to prevent it being enabled incorrectly.
+> Userspace may break if it uses e.g sizeof(struct virtio_pci_common_cfg)?
 > 
-> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index e6cb4a14cdd4..be194be43663 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -10548,6 +10548,11 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
->  				dytc_mmc_get_available = true;
->  		}
->  	} else if (output & BIT(DYTC_FC_PSC)) { /* PSC MODE */
+> Thanks
 
-After your recent patch series this now reads:
-
-        } else if (dytc_capabilities & BIT(DYTC_FC_PSC)) { /* PSC MODE */
-
-Please rebase on pdx86/for-next and send a new version.
+Hmm I guess there's risk... but then how are we going to maintain this
+going forward?  Add a new struct on any change? Can we at least
+prevent this going forward somehow?
 
 
-
-> +		/* Support for this only works on AMD platforms */
-> +		if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD) {
-> +			dbg_printk(TPACPI_DBG_INIT, "PSC not support on Intel platforms\n");
-> +			return -ENODEV;
-> +		}
-
-So I assume that e.g. the T490 does advertise MMC capability so
-this path is not actually hit there ?
-
-IOW this is just a sanity check. Or is this path being hit on actual
-hw? The reason I'm asking is because if the path is being hit on actual
-hw then the patch should go to my fixes branch too.
-
-Regards,
-
-Hans
-
-
-
->  		dytc_profile_available = DYTC_FUNCMODE_PSC;
->  	} else {
->  		dbg_printk(TPACPI_DBG_INIT, "No DYTC support available\n");
+> >
+> >
+> >
+> > >
+> > > >
+> > > >
+> > > > > Since I want to add queue_reset after queue_notify_data, I submitted
+> > > > > this patch first.
+> > > > >
+> > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > > > > Acked-by: Jason Wang <jasowang@redhat.com>
+> > > > > ---
+> > > > >  include/uapi/linux/virtio_pci.h | 7 +++++++
+> > > > >  1 file changed, 7 insertions(+)
+> > > > >
+> > > > > diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
+> > > > > index 3a86f36d7e3d..22bec9bd0dfc 100644
+> > > > > --- a/include/uapi/linux/virtio_pci.h
+> > > > > +++ b/include/uapi/linux/virtio_pci.h
+> > > > > @@ -166,6 +166,13 @@ struct virtio_pci_common_cfg {
+> > > > >       __le32 queue_used_hi;           /* read-write */
+> > > > >  };
+> > > > >
+> > > > > +struct virtio_pci_common_cfg_notify {
+> > > > > +     struct virtio_pci_common_cfg cfg;
+> > > > > +
+> > > > > +     __le16 queue_notify_data;       /* read-write */
+> > > > > +     __le16 padding;
+> > > > > +};
+> > > > > +
+> > > > >  /* Fields in VIRTIO_PCI_CAP_PCI_CFG: */
+> > > > >  struct virtio_pci_cfg_cap {
+> > > > >       struct virtio_pci_cap cap;
+> > > > > --
+> > > > > 2.31.0
+> > > >
+> >
 
