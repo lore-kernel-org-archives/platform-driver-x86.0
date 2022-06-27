@@ -2,151 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C16C43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Jun 2022 21:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C69C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Jun 2022 22:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239387AbiF0Vut (ORCPT
+        id S236537AbiF0WsH convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Jun 2022 17:50:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54570 "EHLO
+        Mon, 27 Jun 2022 18:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238130AbiF0Vuo (ORCPT
+        with ESMTP id S242850AbiF0Wro (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Jun 2022 17:50:44 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EB92DC9;
-        Mon, 27 Jun 2022 14:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656366643; x=1687902643;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=p9nbmeAUVIyt45kDOqNNIMa+DKOyaEwgkbvEn2hif7g=;
-  b=j+pvSU3rjz3nijVZlN0sloKYf1bjOlSLP7EUqx9HqktqQ85Kjq93Vur8
-   YeImsZoVJ8dNsHubc+INB7wbPFlgefdhWSoo9Fgjpl2FjBRjUbKnLqEga
-   ozRtP0ArqbJny2KhGBop+Av6V4D3M/NOC1mvZWwka4GgJm3cEHPPyyw6I
-   we2yVv989B0+mDGVJvSHPD2RMBG/UJVAV6ZK21KsECWNhEvNOfKiBzQCe
-   X9WrsFBX8VFKNkzL4tH/7WXv9rnzRVoGaraHbnxAWMBZowW8XlWuIi91X
-   yQPaJ4O+4ZmpcPCKPjgs1lzcWYWx75V2WFfIpftgUSRXKFpzUme25l4GT
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="282305334"
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="282305334"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 14:50:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="657862028"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Jun 2022 14:50:41 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86: ISST: PUNIT device mapping with Sub-NUMA clustering
-Date:   Mon, 27 Jun 2022 14:50:31 -0700
-Message-Id: <20220627215031.2158825-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
+        Mon, 27 Jun 2022 18:47:44 -0400
+X-Greylist: delayed 49100 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 27 Jun 2022 15:47:41 PDT
+Received: from mail.dica.am (inntech.am [109.75.47.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B0A18E21
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 15:47:41 -0700 (PDT)
+X-Footer: aW5udGVjaC5hbQ==
+Received: from johnlewis.com ([35.89.234.8])
+        (authenticated user info@inntech.am)
+        by mail.dica.am (Kerio Connect 9.2.1) with ESMTPSA
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256 bits))
+        for platform-driver-x86@vger.kernel.org;
+        Mon, 27 Jun 2022 13:10:04 +0400
+Reply-To: robert_turner@johnlewis-trades.com
+From:   John Lewis & Partners <robert_turner049@johnlewis.com>
+To:     platform-driver-x86@vger.kernel.org
+Subject: Order Emquiry 27/06/22
+Date:   27 Jun 2022 19:09:09 +1000
+Message-ID: <20220627171945.5FB70597009F4327@johnlewis.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On a multiple package system using Sub-NUMA clustering, there is an issue
-in mapping Linux CPU number to PUNIT PCI device when manufacturer decided
-to reuse the PCI bus number across packages. Bus number can be reused as
-long as they are in different domain or segment. In this case some CPU
-will fail to find a PCI device to issue SST requests.
+Dear platform-driver-x86
 
-When bus numbers are reused across CPU packages, we are using proximity
-information by matching CPU numa node id to PUNIT PCI device numa node
-id. But on a package there can be only one PUNIT PCI device, but multiple
-numa nodes (one for each sub cluster). So, the numa node ID of the PUNIT
-PCI device can only match with one numa node id of CPUs in a sub cluster
-in the package.
 
-Since there can be only one PUNIT PCI device per package, if we match
-with numa node id of any sub cluster in that package, we can use that
-mapping for any CPU in that package. So, store the match information
-in a per package data structure and return the information when there
-is no match.
+ 
+The world famous brand John Lewis & Partners, is UK's largest 
+multi-channel retailer with over 126 shops and multiple expansion 
+in Africa furnished by European/Asian/American products. We are
+sourcing new products to attract new customers and also retain 
+our existing ones, create new partnerships with companies dealing 
+with different kinds of goods globally.
+ 
+Your company's products are of interest to our market as we have 
+an amazing market for your products.Provide us your current 
+catalog through email to review more. We hope to be able to order
+with you and start a long-term friendly, respectable and solid 
+business partnership. Please we would appreciate it if you could 
+send us your stock availability via email if any.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../intel/speed_select_if/isst_if_common.c    | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ 
+Our payment terms are 15 days net in Europe, 30 days Net in UK 
+and 30 days net in Asia/USA as we have operated with over 5297 
+suppliers around the globe for the past 50 years now. For
+immediate response Send your reply to "robert_turner@johnlewis-
+trades.com" for us to be able to treat with care and urgency.
+ 
+ 
+Best Regards
+Rob Turner
+Head Of Procurement Operations
+John Lewis & Partners.
+robert_turner@johnlewis-trades.com
+Tel: +44-7451-274090
+WhatsApp: +447497483925
+www.johnlewis.com
+REGISTERED OFFICE: 171 VICTORIA STREET, LONDON SW1E 5NN
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index e8424e70d81d..f3cd1be3283a 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -286,11 +286,18 @@ struct isst_if_cpu_info {
- 	int numa_node;
- };
- 
-+struct isst_if_pkg_info {
-+	struct pci_dev *pci_dev[2];
-+};
-+
- static struct isst_if_cpu_info *isst_cpu_info;
-+static struct isst_if_pkg_info *isst_pkg_info;
-+
- #define ISST_MAX_PCI_DOMAINS	8
- 
- static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
- {
-+	int pkg_id = topology_physical_package_id(cpu);
- 	struct pci_dev *matched_pci_dev = NULL;
- 	struct pci_dev *pci_dev = NULL;
- 	int no_matches = 0;
-@@ -324,6 +331,8 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
- 		}
- 
- 		if (node == isst_cpu_info[cpu].numa_node) {
-+			isst_pkg_info[pkg_id].pci_dev[bus_no] = _pci_dev;
-+
- 			pci_dev = _pci_dev;
- 			break;
- 		}
-@@ -342,6 +351,9 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
- 	if (!pci_dev && no_matches == 1)
- 		pci_dev = matched_pci_dev;
- 
-+	if (!pci_dev)
-+		pci_dev = isst_pkg_info[pkg_id].pci_dev[bus_no];
-+
- 	return pci_dev;
- }
- 
-@@ -417,10 +429,19 @@ static int isst_if_cpu_info_init(void)
- 	if (!isst_cpu_info)
- 		return -ENOMEM;
- 
-+	isst_pkg_info = kcalloc(topology_max_packages(),
-+				sizeof(*isst_pkg_info),
-+				GFP_KERNEL);
-+	if (!isst_pkg_info) {
-+		kfree(isst_cpu_info);
-+		return -ENOMEM;
-+	}
-+
- 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
- 				"platform/x86/isst-if:online",
- 				isst_if_cpu_online, NULL);
- 	if (ret < 0) {
-+		kfree(isst_pkg_info);
- 		kfree(isst_cpu_info);
- 		return ret;
- 	}
-@@ -433,6 +454,7 @@ static int isst_if_cpu_info_init(void)
- static void isst_if_cpu_info_exit(void)
- {
- 	cpuhp_remove_state(isst_if_online_id);
-+	kfree(isst_pkg_info);
- 	kfree(isst_cpu_info);
- };
- 
--- 
-2.31.1
 
