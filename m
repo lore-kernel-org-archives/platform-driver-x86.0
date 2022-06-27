@@ -2,88 +2,125 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA87C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Jun 2022 13:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE93C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Jun 2022 14:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236525AbiF0NtJ (ORCPT
+        id S234863AbiF0ONw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Jun 2022 09:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51924 "EHLO
+        Mon, 27 Jun 2022 10:13:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236584AbiF0NtI (ORCPT
+        with ESMTP id S235431AbiF0ONv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Jun 2022 09:49:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A895BE7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 06:49:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 10BAAB81707
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 13:49:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BD127C341C8
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 13:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656337743;
-        bh=xwk2mjEZBeQIR3Z4HfI0Cv2K1gONmG+dERMR9/qITbI=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=PT5k6deCyFPX7MIfXeUOs4I5Sd7HRXueCF/siKPPdxBMizaQJDBFnPp0YcAAj2eAr
-         qvyvhEPGI768T4jCU22EZbdiV67TMYA6TTtSqnhLG0RZarOkpaSZAYpr6lOPYdcMjD
-         +8j+UuMmY6UaS6F5LVHrzSwT7XwfWkFr3CNl4gAZ6ZFelp0GpOcChQQNpqnJyAQaw/
-         MmLSVbRZzcurxRIDNw3B3WZpRVT6zu6knKJ956BksOayuBy/zaGB2b/wWCUohBTAya
-         O6UVtCW1udKjU2JkOiiV7OZjljaCzYGgFPPLkVrB02U1W2CXnNpf/0lFVkMHH8hNY0
-         AWzD7nhINxFiQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 9EFB8CAC6E2; Mon, 27 Jun 2022 13:49:03 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216176] ideapad-laptop doesn't expose rapid charge
-Date:   Mon, 27 Jun 2022 13:49:03 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: pobrn@protonmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-216176-215701-1ntI9zu1g4@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216176-215701@https.bugzilla.kernel.org/>
-References: <bug-216176-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 27 Jun 2022 10:13:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F0E8513EAB
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 07:13:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1656339229;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PaBchH00/cLTwlFioUfw/jt6my8axMDb4JnaGlug/JM=;
+        b=HBxzSWLiyKVj1YIqyANMimF7dVo70ZHqd3lS5nD3kasmAruDq6xXHLM6q0q6vL5bOl6ozf
+        CxTN27z67l3g6LDn0FUXBMUXoWtYBcpJZiUkIm5r0p4mAvYng6dDuXJnrg7D0Wkx2HtnLC
+        +fjVdr2xJA4+wly5QCirszLXLRQ4enk=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-599-IXxc4SyJOtq7eJlZy1k5kw-1; Mon, 27 Jun 2022 10:13:47 -0400
+X-MC-Unique: IXxc4SyJOtq7eJlZy1k5kw-1
+Received: by mail-ej1-f69.google.com with SMTP id hq41-20020a1709073f2900b00722e5ad076cso2493042ejc.20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 07:13:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=PaBchH00/cLTwlFioUfw/jt6my8axMDb4JnaGlug/JM=;
+        b=lXZ/Wm0Flw99FMKxa4AiZ177j3hn9RAC3hR9VscXEwNgI/qFksdPilZ0N2WNoG35ub
+         MjqhnARB/bD6bCcaiz32G3VQnMCVpPYgMU6GatfpiYUP4iFIsvgHdKOz9F0nbve9xYQK
+         Wjw1fK4YR6p54qKjlHd0cJarz+dzlrFO70zgnXVDbyUTJWN/aMmeXANEvznva13dmxu8
+         UM/WPiymAqwpMEIZPrscRK6sgekuWcOZQ7Jq6Ces0i9zYKS0UUNrUnMDBepk+fBSwvYx
+         XBSof7E805vmbR+KtQGfen1Z16gThCCiCfFrI3ho8EQ1CyPOZFsIYpOLF2rvNkcQ67dE
+         q/bQ==
+X-Gm-Message-State: AJIora/MY+J0BQOhjotR44ggmwMM37gdVomPJlKSN2m+yP11jZL18l8V
+        3qLOgFKLN9IZEvWYIRjHbmVR5atLN8go8J9uw5ZyV+JHqiEmBNl9Tda646RmiBY70XZpuTVXJpK
+        ntZAU8Pg6LVZqpqEJZBBe/krr/ZRxM/rhUA==
+X-Received: by 2002:a50:fb13:0:b0:435:90d1:19ca with SMTP id d19-20020a50fb13000000b0043590d119camr17096508edq.159.1656339225178;
+        Mon, 27 Jun 2022 07:13:45 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uXpSBSnnMN1aRdOuqu4lYaagT+7DB/EaNPUVgUryz82H3cqCybLeL6v5W/xUURV0v9dvjV3Q==
+X-Received: by 2002:a50:fb13:0:b0:435:90d1:19ca with SMTP id d19-20020a50fb13000000b0043590d119camr17096488edq.159.1656339224985;
+        Mon, 27 Jun 2022 07:13:44 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id p23-20020a1709061b5700b0070e3f58ed5csm5111626ejg.48.2022.06.27.07.13.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jun 2022 07:13:44 -0700 (PDT)
+Message-ID: <19243ae0-241a-f8ad-0782-34fc5730ffd2@redhat.com>
+Date:   Mon, 27 Jun 2022 16:13:43 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] platform: x86: ideapad-laptop: Add Ideapad 5 15ITL05 to
+ ideapad_dytc_v4_allow_table[]
+Content-Language: en-US
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+References: <20220627130850.313537-1-hdegoede@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220627130850.313537-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216176
+Hi,
 
-Barnab=C3=A1s P=C5=91cze (pobrn@protonmail.com) changed:
+On 6/27/22 15:08, Hans de Goede wrote:
+> The Ideapad 5 15ITL05 uses DYTC version 4 for platform-profile
+> control. This has been tested successfully with the ideapad-laptop
+> DYTC version 5 code; Add the Ideapad 5 15ITL05 to the
+> ideapad_dytc_v4_allow_table[].
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |pobrn@protonmail.com
+I've added this patch to my review-hans branch now.
 
---- Comment #3 from Barnab=C3=A1s P=C5=91cze (pobrn@protonmail.com) ---
-I have a device that supports this (YOGA 520-14IKB), so I think I can prepa=
-re a
-patch until the next merge window. The biggest question - I think - is where
-should this be exposed? Another attribute on the platform device, or maybe =
-on
-the battery power supply device somehow?
+Regards,
 
---=20
-You may reply to this email to add a comment.
+Hans
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+
+
+> ---
+>  drivers/platform/x86/ideapad-laptop.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 3ccb7b71dfb1..6b472fd431d0 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -871,12 +871,18 @@ static void dytc_profile_refresh(struct ideapad_private *priv)
+>  static const struct dmi_system_id ideapad_dytc_v4_allow_table[] = {
+>  	{
+>  		/* Ideapad 5 Pro 16ACH6 */
+> -		.ident = "LENOVO 82L5",
+>  		.matches = {
+>  			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "82L5")
+>  		}
+>  	},
+> +	{
+> +		/* Ideapad 5 15ITL05 */
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_VERSION, "IdeaPad 5 15ITL05")
+> +		}
+> +	},
+>  	{}
+>  };
+>  
+
