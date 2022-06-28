@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC7EC43334
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Jun 2022 20:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283E7C43334
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Jun 2022 20:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231429AbiF1UQF (ORCPT
+        id S232343AbiF1UUW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Jun 2022 16:16:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54358 "EHLO
+        Tue, 28 Jun 2022 16:20:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231625AbiF1UPk (ORCPT
+        with ESMTP id S231733AbiF1UUG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Jun 2022 16:15:40 -0400
+        Tue, 28 Jun 2022 16:20:06 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2655C37024
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jun 2022 13:11:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 793EE393CF
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jun 2022 13:16:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656447113;
+        s=mimecast20190719; t=1656447396;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LuudToaHFtY71z1dT24Ygd09rqfeP3tpw++rIcnycEA=;
-        b=T91yXH+PQSUBe9u4iiuSMcDZcthSkkTmeegGkewgjAmpLN0efIj8kl+GCylyEHph9/17PS
-        aBHYaJwfWzylOl5nYZEvtJ1nbEcWgVcVH0OlE3onjjK014LePPrlbdHiCJ/vdpQI2vQ57n
-        DYIF71LXdXIwjf5eCe7OGFj5ZzpinGQ=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=w5t2VUZwsXFY0k3oH1xTiBRVlbwES5cmjy0YTjX97qU=;
+        b=K+1U+4CQypAxFvnLnZHElrxZCpictsJPxww0OLkzeIiB1ecjKBGTcFDpW5gVwFpIRk6oh9
+        90UNJe7otB3U+EYVXAD5VgNAur38o23LttwaGlac4AirT7dY3ZV6NJI9ftJXO48JEACQJz
+        J7l1EdsN4UZRemLbMCY+huLTHjzku4Q=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-163-Js0kjD0nNkKO55f-QfEccA-1; Tue, 28 Jun 2022 16:11:51 -0400
-X-MC-Unique: Js0kjD0nNkKO55f-QfEccA-1
-Received: by mail-ed1-f70.google.com with SMTP id v16-20020a056402349000b00435a1c942a9so10388878edc.15
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jun 2022 13:11:51 -0700 (PDT)
+ us-mta-177-rLc3kuG7MYqwrzX7X1393Q-1; Tue, 28 Jun 2022 16:16:34 -0400
+X-MC-Unique: rLc3kuG7MYqwrzX7X1393Q-1
+Received: by mail-ed1-f72.google.com with SMTP id x8-20020a056402414800b0042d8498f50aso10409160eda.23
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jun 2022 13:16:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=LuudToaHFtY71z1dT24Ygd09rqfeP3tpw++rIcnycEA=;
-        b=6pmJE0o7iLdw+pdB+0mmLailCafK/ZnygG8v9Ac5hfTsq+7MiQVj7Dm8T3g1u+rH+0
-         x1wlXKuI3nnrLrAvw2BrTn0uh8M3E3M78D5PpH6DA3NhAHvMOTytM26gEns58vJ/Ct24
-         MuqAZcxarZeEs1yYG3QUAVRPYBLnyHd8Ji9dfpcQPDUbJ9aeVSW9Q67nBoXgXkSwPKum
-         tStLrhIhb/cJV0Geu/lNkoaNn+q1LFn+Dalxg+dBY9bz2RKe0VqwMjqy3Lb1oyvmoThd
-         vtWPvkp7wbimo9k/AY63fEpbsFXQQxTaJjCFuHk4bjS9AM7Y6gcsAM1vmfOpnRlQLPDE
-         PaRw==
-X-Gm-Message-State: AJIora/BDd6P5a6RmxsVbiedGt9Y4Ke1iD9rKXAq/SEFkoIqquPLL3yG
-        DPcywi+tddxByUWEXAEszdZVbMp7Avl/A+aK9ZgY7PpaQ450CalknEFd5THPsxdSNri5m0wxvRW
-        71BnOmLn7EkEgMeF1Whme5uf+gCCPmbQ97w==
-X-Received: by 2002:a17:907:6289:b0:6e0:eb0c:8ee7 with SMTP id nd9-20020a170907628900b006e0eb0c8ee7mr18777659ejc.245.1656447109997;
-        Tue, 28 Jun 2022 13:11:49 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1s2SzIp/JmJiAANPviK+4LqMHmI57kKWr8P7h6Z/LEQZxTGfWFpnKjLwLj4/gZ6OCkXlOmrBw==
-X-Received: by 2002:a17:907:6289:b0:6e0:eb0c:8ee7 with SMTP id nd9-20020a170907628900b006e0eb0c8ee7mr18777646ejc.245.1656447109838;
-        Tue, 28 Jun 2022 13:11:49 -0700 (PDT)
+        bh=w5t2VUZwsXFY0k3oH1xTiBRVlbwES5cmjy0YTjX97qU=;
+        b=lGkY44LS9bHMbvKLYqUYbLT4wM6TObOP0FT5Duewxwgt4Ct6wEotMWdTVPLlfAPNRi
+         IYkrlnoaMPHbQjpD1knsVQj0SS+fL//Yc+2H0gyV2oeAtIRCLe2ZHPbQyIO56YUH2Fg2
+         DPxwWhun2zxehNeo2jPUgolCrCZnajTiOmS8ijvJLqckIjlq6ekk6YrIUpC7c+eaqzyg
+         5uCqapP7/mISLLR2NktjuVgf/TFqsV1mRyjaHV0GBtIVr/zp/ZLyZ/mN1/oG5Lm7/xX4
+         zJ5eQMQ4rZIMGDVlR7X8RiSqqD1vzI4JhiGX2WSK2re8tS4K85a4ankVXoXK0zqKI4iR
+         LtBQ==
+X-Gm-Message-State: AJIora9IxhEJ8by15aAdhtZ/hg/EFs6T0YqKYHq271VVr5tAN7KT4iKZ
+        KAJM3FQznX0bopQzg8ZIDTj0RRH5ib7HgS/kYVTAkA+O/hWdwr5jY7RG+ezDFi3JJb3KnTF1frv
+        6Mw6Ob+i4EThrZ2GtiC9SUj1WHXTZM6XW1g==
+X-Received: by 2002:a17:906:478e:b0:722:fc31:aa13 with SMTP id cw14-20020a170906478e00b00722fc31aa13mr19710301ejc.84.1656447393683;
+        Tue, 28 Jun 2022 13:16:33 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vhAi45OuzkkoS/wShPDoNWffVDzr7aH4KbVApKSA+zXAsAoWeU15s+bMfn/r9ynQUhwNmp/g==
+X-Received: by 2002:a17:906:478e:b0:722:fc31:aa13 with SMTP id cw14-20020a170906478e00b00722fc31aa13mr19710277ejc.84.1656447393398;
+        Tue, 28 Jun 2022 13:16:33 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id k12-20020a17090666cc00b007041e969a8asm6871952ejp.97.2022.06.28.13.11.49
+        by smtp.gmail.com with ESMTPSA id h26-20020aa7c61a000000b00435cfa7c6f5sm9979349edq.46.2022.06.28.13.16.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jun 2022 13:11:49 -0700 (PDT)
-Message-ID: <cf39c305-7b19-8088-ea70-a485034f1e34@redhat.com>
-Date:   Tue, 28 Jun 2022 22:11:48 +0200
+        Tue, 28 Jun 2022 13:16:32 -0700 (PDT)
+Message-ID: <b292bb64-edf9-81b3-b66d-b6c696b8deec@redhat.com>
+Date:   Tue, 28 Jun 2022 22:16:32 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: do not use PSC mode on
- Intel platforms
+Subject: Re: [PATCH] platform/x86: ISST: PUNIT device mapping with Sub-NUMA
+ clustering
 Content-Language: en-US
-To:     Mark Pearson <markpearson@lenovo.com>
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org
-References: <markpearson@lenovo.com>
- <20220627181449.3537-1-markpearson@lenovo.com>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220627215031.2158825-1-srinivas.pandruvada@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220627181449.3537-1-markpearson@lenovo.com>
+In-Reply-To: <20220627215031.2158825-1-srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,54 +79,120 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 6/27/22 20:14, Mark Pearson wrote:
-> PSC platform profile mode is only supported on Linux for AMD platforms.
+On 6/27/22 23:50, Srinivas Pandruvada wrote:
+> On a multiple package system using Sub-NUMA clustering, there is an issue
+> in mapping Linux CPU number to PUNIT PCI device when manufacturer decided
+> to reuse the PCI bus number across packages. Bus number can be reused as
+> long as they are in different domain or segment. In this case some CPU
+> will fail to find a PCI device to issue SST requests.
 > 
-> Some older Intel platforms (e.g T490) are advertising it's capability
-> as Windows uses it - but on Linux we should only be using MMC profile
-> for Intel systems.
+> When bus numbers are reused across CPU packages, we are using proximity
+> information by matching CPU numa node id to PUNIT PCI device numa node
+> id. But on a package there can be only one PUNIT PCI device, but multiple
+> numa nodes (one for each sub cluster). So, the numa node ID of the PUNIT
+> PCI device can only match with one numa node id of CPUs in a sub cluster
+> in the package.
 > 
-> Add a check to prevent it being enabled incorrectly.
+> Since there can be only one PUNIT PCI device per package, if we match
+> with numa node id of any sub cluster in that package, we can use that
+> mapping for any CPU in that package. So, store the match information
+> in a per package data structure and return the information when there
+> is no match.
 > 
-> Signed-off-by: Mark Pearson <markpearson@lenovo.com>> ---
-> Changes in v2: rebased on for-next stream
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  .../intel/speed_select_if/isst_if_common.c    | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> index e8424e70d81d..f3cd1be3283a 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> @@ -286,11 +286,18 @@ struct isst_if_cpu_info {
+>  	int numa_node;
+>  };
+>  
+> +struct isst_if_pkg_info {
+> +	struct pci_dev *pci_dev[2];
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+This and (continued below) ...
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+> +};
+> +
+>  static struct isst_if_cpu_info *isst_cpu_info;
+> +static struct isst_if_pkg_info *isst_pkg_info;
+> +
+>  #define ISST_MAX_PCI_DOMAINS	8
+>  
+>  static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
+>  {
+> +	int pkg_id = topology_physical_package_id(cpu);
+>  	struct pci_dev *matched_pci_dev = NULL;
+>  	struct pci_dev *pci_dev = NULL;
+>  	int no_matches = 0;
+> @@ -324,6 +331,8 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+>  		}
+>  
+>  		if (node == isst_cpu_info[cpu].numa_node) {
+> +			isst_pkg_info[pkg_id].pci_dev[bus_no] = _pci_dev;
+> +
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+This and ...
+
+>  			pci_dev = _pci_dev;
+>  			break;
+>  		}
+> @@ -342,6 +351,9 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+>  	if (!pci_dev && no_matches == 1)
+>  		pci_dev = matched_pci_dev;
+>  
+> +	if (!pci_dev)
+> +		pci_dev = isst_pkg_info[pkg_id].pci_dev[bus_no];
+> +
+
+This assumes that bus_no is never > 1, is this assumption enforced somewhere?
+
+Also maybe make the 2 in:
+
+> +struct isst_if_pkg_info {
+> +	struct pci_dev *pci_dev[2];
+
+a #define ?
 
 Regards,
 
 Hans
 
 
-
-> 
->  drivers/platform/x86/thinkpad_acpi.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 17d503e65a54..09047ca14b43 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -10565,6 +10565,11 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
->  				dytc_mmc_get_available = true;
->  		}
->  	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) { /* PSC MODE */
-> +		/* Support for this only works on AMD platforms */
-> +		if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD) {
-> +			dbg_printk(TPACPI_DBG_INIT, "PSC not support on Intel platforms\n");
-> +			return -ENODEV;
-> +		}
->  		pr_debug("PSC is supported\n");
->  	} else {
->  		dbg_printk(TPACPI_DBG_INIT, "No DYTC support available\n");
+>  	return pci_dev;
+>  }
+>  
+> @@ -417,10 +429,19 @@ static int isst_if_cpu_info_init(void)
+>  	if (!isst_cpu_info)
+>  		return -ENOMEM;
+>  
+> +	isst_pkg_info = kcalloc(topology_max_packages(),
+> +				sizeof(*isst_pkg_info),
+> +				GFP_KERNEL);
+> +	if (!isst_pkg_info) {
+> +		kfree(isst_cpu_info);
+> +		return -ENOMEM;
+> +	}
+> +
+>  	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+>  				"platform/x86/isst-if:online",
+>  				isst_if_cpu_online, NULL);
+>  	if (ret < 0) {
+> +		kfree(isst_pkg_info);
+>  		kfree(isst_cpu_info);
+>  		return ret;
+>  	}
+> @@ -433,6 +454,7 @@ static int isst_if_cpu_info_init(void)
+>  static void isst_if_cpu_info_exit(void)
+>  {
+>  	cpuhp_remove_state(isst_if_online_id);
+> +	kfree(isst_pkg_info);
+>  	kfree(isst_cpu_info);
+>  };
+>  
 
