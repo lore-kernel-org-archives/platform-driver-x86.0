@@ -2,124 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B99C43334
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Jun 2022 10:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F186C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Jun 2022 12:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344949AbiF1Kfj (ORCPT
+        id S1344872AbiF1Mib (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Jun 2022 06:35:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38698 "EHLO
+        Tue, 28 Jun 2022 08:38:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230259AbiF1Kfi (ORCPT
+        with ESMTP id S1344722AbiF1Mib (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Jun 2022 06:35:38 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C00531399;
-        Tue, 28 Jun 2022 03:35:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656412537; x=1687948537;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8Ci8DfysHblkeyhLSE3h8K3QZUSIUJa57/PqOK9DH8E=;
-  b=mJbIjhcYPr6qhyOFG2EOkxQE0H43Ey8iOlOJmJoUxiy1xTu/yPE0NlPz
-   s79pL71gCNlgcKIrwS2plIV+C/q+W/oQHbrhjzvgAYk/GkXQOUmls/yZV
-   M4SPjj07AHKEfSDbsLFOpSWsuuGdeZQr6UWsYKbtSjk8F7FeAwOq27Sxj
-   SEttkeFlX+8w1Pur6ugJX5vGfUlCdx/QWq5gEBfHFqPbQeoyhzfSd/pS6
-   g0d0Y75LXwNdGumgAS41TByyDoozdMybNWrUzPunw4i+VJ5Xu+zXgHvXV
-   +udHnVqA0rXwd245useLGhVdNY85io6ntgxLbjgUKA1gi4ROE6DK1NX68
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="280465087"
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="280465087"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 03:35:37 -0700
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="836628710"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 03:35:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1o68ZA-000wj1-BR;
-        Tue, 28 Jun 2022 13:35:32 +0300
-Date:   Tue, 28 Jun 2022 13:35:32 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org,
-        Stefan Seyfried <stefan.seyfried@googlemail.com>,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 0/7] ACPI: video / platform/x86: Fix Panasonic laptop
- missing keypresses
-Message-ID: <YrrZdKUxPhT5qR5F@smile.fi.intel.com>
-References: <20220624112340.10130-1-hdegoede@redhat.com>
+        Tue, 28 Jun 2022 08:38:31 -0400
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFC3B2DABF;
+        Tue, 28 Jun 2022 05:38:27 -0700 (PDT)
+Received: from localhost.localdomain (unknown [10.101.196.174])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 1F9A63F38A;
+        Tue, 28 Jun 2022 12:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1656419905;
+        bh=PlJGMxqqZX0JynyKbbC2D1kesVnUtHM3lue6u6DvQ60=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=T9srd950/DVx1FwCt2QdEgiWz9YJ+ah9UjHwSZFXz7n9STBn5q6jXx3fRu10QzKah
+         +FzKoQPiSGlrRvhRQqbTVa/i9IsqM558XH8GV+Pa7aPJkSnUJBTEtd7DgKVITzH/2Q
+         7K1YmrlnQyDVD2gmLqt+d3GgYei8XmMTRrMXj5xPHRQQ6mUY92OuSb7YmYy1SOIKRp
+         hb2UhKAXrBVSjmZp1KLCtea+lo6YIYzQWVcKCba6CmwrGs4uApNFblc6vlgHbMouOF
+         +x9O3QP9WqHKZoREzp4cOyl0qJj1IJprvq2sNj7HHwIFjkc0oPHmpRStynbVOPgTBH
+         w9Ac0+y/lFP7A==
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jorge Lopez <jorge.lopez2@hp.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: hp-wmi: Ignore Sanitization Mode event
+Date:   Tue, 28 Jun 2022 20:37:26 +0800
+Message-Id: <20220628123726.250062-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220624112340.10130-1-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 24, 2022 at 01:23:33PM +0200, Hans de Goede wrote:
-> Hi All,
-> 
-> Here is a series fixing the missing keypresses on some Panasonic Toughbook
-> models. These missing keypresses are caused by
-> commit ed83c9171829 ("platform/x86: panasonic-laptop: Resolve hotkey double
-> trigger bug"), which made the panasonic-laptop driver unconditionally drop
-> most WMI reported hotkeys.
-> 
-> This series reverts that commit and then adds some more selective filtering
-> to still avoid the double key-presses on some models, while avoiding
-> completely missing keypresses on others.
-> 
-> Rafael, these fixes rely on patch 1/7, which is a tweak to
-> the acpi_video_handles_brightness_key_presses() helper. Without this
-> tweak this series will cause a regression, so I would like to merge
-> the entire series through the pdx86 tree, may I have your ack for this?
+After system resume the hp-wmi driver may complain:
+[ 702.620180] hp_wmi: Unknown event_id - 23 - 0x0
 
+According to HP it means 'Sanitization Mode' and it's harmless to just
+ignore the event.
 
-I followed this series on Bugzilla,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Jorge Lopez <jorge.lopez2@hp.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/platform/x86/hp-wmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-with or without my comments addressed (they are optional)
-
-> Regards,
-> 
-> Hans
-> 
-> 
-> Hans de Goede (6):
->   ACPI: video: Change how we determine if brightness key-presses are
->     handled
->   platform/x86: panasonic-laptop: sort includes alphabetically
->   platform/x86: panasonic-laptop: revert "Resolve hotkey double trigger
->     bug"
->   platform/x86: panasonic-laptop: don't report duplicate brightness
->     key-presses
->   platform/x86: panasonic-laptop: filter out duplicate volume
->     up/down/mute keypresses
->   platform/x86: panasonic-laptop: Use acpi_video_get_backlight_type()
-> 
-> Stefan Seyfried (1):
->   platform/x86: panasonic-laptop: de-obfuscate button codes
-> 
->  drivers/acpi/acpi_video.c               |  13 ++-
->  drivers/platform/x86/Kconfig            |   2 +
->  drivers/platform/x86/panasonic-laptop.c | 112 ++++++++++++++++++------
->  3 files changed, 91 insertions(+), 36 deletions(-)
-> 
-> -- 
-> 2.36.0
-> 
-
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 0d8cb22e30df9..bc7020e9df9e8 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -89,6 +89,7 @@ enum hp_wmi_event_ids {
+ 	HPWMI_BACKLIT_KB_BRIGHTNESS	= 0x0D,
+ 	HPWMI_PEAKSHIFT_PERIOD		= 0x0F,
+ 	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
++	HPWMI_SANITIZATION_MODE		= 0x17,
+ };
+ 
+ /*
+@@ -853,6 +854,8 @@ static void hp_wmi_notify(u32 value, void *context)
+ 		break;
+ 	case HPWMI_BATTERY_CHARGE_PERIOD:
+ 		break;
++	case HPWMI_SANITIZATION_MODE:
++		break;
+ 	default:
+ 		pr_info("Unknown event_id - %d - 0x%x\n", event_id, event_data);
+ 		break;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.36.1
 
