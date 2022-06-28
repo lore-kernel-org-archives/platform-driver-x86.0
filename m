@@ -2,47 +2,47 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C7DC43334
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Jun 2022 10:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8731AC43334
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Jun 2022 10:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344486AbiF1K3u (ORCPT
+        id S244453AbiF1KeO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Jun 2022 06:29:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33584 "EHLO
+        Tue, 28 Jun 2022 06:34:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244644AbiF1K3t (ORCPT
+        with ESMTP id S1344904AbiF1KeN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Jun 2022 06:29:49 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EB62DABD;
-        Tue, 28 Jun 2022 03:29:48 -0700 (PDT)
+        Tue, 28 Jun 2022 06:34:13 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF61131394;
+        Tue, 28 Jun 2022 03:34:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656412188; x=1687948188;
+  t=1656412452; x=1687948452;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=Au78MCEIZK1ygGIJgEKGdmYvYhaAqsHQWJs7/sj4sBI=;
-  b=YsZNcazOeYMnaz7YP/eSg2Yk6dpWEktSLzJkxBzD6Us4x7l+o3qiTiI6
-   MzFCnCviI+42v7d/xiRCGT6bSqaMXHMwJ+l9iPbgdNh8hX2J2lt4wgAv6
-   Mi9BTw2kEjLZa7siqM/klOcpi/gqYMW1gAG46LR7ZLzmJPb+DjLQIxzhy
-   /6Up/6J9uW2OdBMMUD/liDsLEc8IiUzZg/V2rrEe2Bs2GKQ7xqveBHcv2
-   +YN+zb5+n4TG4ZnYPI+nvHoxlNEQlyomPuFEEXxTeIGP7KOM/QdOP9IYU
-   bGjPYISfnt2Ej/QUB6h2hXpasiZITocaY8HJ84ztrW2PODDDGtbHsKoBr
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="281741453"
+  bh=ahssOpzE03JgiEPd7aO9UUEH0/nuSOcqYqlgvAT6dJs=;
+  b=WAm1pO6UO16PUStd41MT6XWkKvs0lSgn+RxkrbyVa2H1+e3EB7KT/Uhs
+   6O7Alz69JupExCGLZS5b6iXZKI5LfeClcrjVizRTyL4MEP0xOe/N9bTYE
+   qXA5K2vmG4EzrZCipY713c9qg6c29hK+HhRaTwBvZ5G/Njc7ZeYpYRurK
+   1BQFsulRPg3i6yG/TDUBa2w/w/vGxTq1QGe9SRBdMpCXim3R/9gnHxz/F
+   VykSRBen6YPByg7GwfT+vdLN8apU6m+GmzdmnBUIfZbjNKSZUSLhg27eT
+   UjSsu1mc6pcAIF8saSeBJCT/bukd8J+Em307LutynVdpwgeDHOMNsB9YA
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="282439740"
 X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="281741453"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 03:29:47 -0700
+   d="scan'208";a="282439740"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 03:34:12 -0700
 X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="594743946"
+   d="scan'208";a="679989656"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 03:29:45 -0700
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 03:34:09 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.95)
         (envelope-from <andriy.shevchenko@intel.com>)
-        id 1o68TW-000whw-HH;
-        Tue, 28 Jun 2022 13:29:42 +0300
-Date:   Tue, 28 Jun 2022 13:29:42 +0300
+        id 1o68Xm-000wis-CY;
+        Tue, 28 Jun 2022 13:34:06 +0300
+Date:   Tue, 28 Jun 2022 13:34:06 +0300
 From:   Andy Shevchenko <andriy.shevchenko@intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
@@ -53,67 +53,66 @@ Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Kenneth Chan <kenneth.t.chan@gmail.com>,
         platform-driver-x86@vger.kernel.org,
         Stefan Seyfried <seife+kernel@b1-systems.com>
-Subject: Re: [PATCH 2/7] platform/x86: panasonic-laptop: de-obfuscate button
- codes
-Message-ID: <YrrYFgu17uC+bMxo@smile.fi.intel.com>
+Subject: Re: [PATCH 6/7] platform/x86: panasonic-laptop: filter out duplicate
+ volume up/down/mute keypresses
+Message-ID: <YrrZHtO032v2BwJs@smile.fi.intel.com>
 References: <20220624112340.10130-1-hdegoede@redhat.com>
- <20220624112340.10130-3-hdegoede@redhat.com>
+ <20220624112340.10130-7-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220624112340.10130-3-hdegoede@redhat.com>
+In-Reply-To: <20220624112340.10130-7-hdegoede@redhat.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 24, 2022 at 01:23:35PM +0200, Hans de Goede wrote:
-> From: Stefan Seyfried <seife+kernel@b1-systems.com>
+On Fri, Jun 24, 2022 at 01:23:39PM +0200, Hans de Goede wrote:
+> On some Panasonic models the volume up/down/mute keypresses get
+> reported both through the Panasonic ACPI HKEY interface as well as
+> through the atkbd device.
 > 
-> In the definition of panasonic_keymap[] the key codes are given in
-> decimal, later checks are done with hexadecimal values, which does
-> not help in understanding the code.
-> Additionally use two helper variables to shorten the code and make
-> the logic more obvious.
-
-(Note, all comments are up to you, I understand that this is a fix and maybe
- better to make code neat in a separate change)
-
-...
-
->  	struct input_dev *hotk_input_dev = pcc->input_dev;
->  	int rc;
->  	unsigned long long result;
-> +	unsigned int key;
-> +	unsigned int updown;
-
-Perhaps make them more like reversed xmas tree order?
+> Filter out the atkbd scan-codes for these to avoid reporting presses
+> twice.
+> 
+> Note normally we would leave the filtering of these to userspace by mapping
+> the scan-codes to KEY_UNKNOWN through /lib/udev/hwdb.d/60-keyboard.hwdb.
+> However in this case that would cause regressions since we were filtering
+> the Panasonic ACPI HKEY events before, so filter these in the kernel.
 
 ...
 
->  			sparse_keymap_report_event(hotk_input_dev,
-> -					result & 0xf, 0x80, false);
-> +					key, 0x80, false);
+> +	if (data == 0xe0) {
+> +		extended = true;
+> +		return true;
+> +	} else if (extended) {
 
-Maybe move one or more parameters to the previous line?
+'else' is not needed.
 
-...
+> +		extended = false;
+> +
+> +		switch (data & 0x7f) {
+> +		case 0x20: /* e0 20 / e0 a0, Volume Mute press / release */
+> +		case 0x2e: /* e0 2e / e0 ae, Volume Down press / release */
+> +		case 0x30: /* e0 30 / e0 b0, Volume Up press / release */
+> +			return true;
+> +		default:
+> +			/*
+> +			 * Report the previously filtered e0 before continuing
+> +			 * with the next non-filtered byte.
+> +			 */
+> +			serio_interrupt(port, 0xe0, 0);
 
->  		if (!sparse_keymap_report_event(hotk_input_dev,
-> -						result & 0xf, result & 0x80, false))
-> +						key, updown, false))
->  			pr_err("Unknown hotkey event: 0x%04llx\n", result);
+> +			return false;
 
-Ditto.
+Could be 'break;' but...
 
-Although I would even go for
+> +		}
+> +	}
 
-	rc = sparse_...;
-	if (!rc)
-		pr_err(...);
+> +	return false;
 
-
-pattern.
+You can go with 'if (!extended)' above.
 
 -- 
 With Best Regards,
