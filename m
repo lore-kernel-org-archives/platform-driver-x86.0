@@ -2,136 +2,201 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D1ECCA47E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Jun 2022 20:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F42EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Jun 2022 20:15:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230265AbiF1UMJ (ORCPT
+        id S231994AbiF1UPT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Jun 2022 16:12:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49336 "EHLO
+        Tue, 28 Jun 2022 16:15:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230301AbiF1ULu (ORCPT
+        with ESMTP id S229944AbiF1UPD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Jun 2022 16:11:50 -0400
+        Tue, 28 Jun 2022 16:15:03 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D747A3BF86
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jun 2022 13:02:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F3AF41E3DB
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jun 2022 13:09:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656446558;
+        s=mimecast20190719; t=1656446944;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=akzoymvv+isndpzk5w3BDP04fzMq1Ke7S8Y9F0OGSKE=;
-        b=Lk3ihs9wvr3qmfdJ0XrKE3HxRP8OMRsZxOuOT5l3XvFcFZFrNlN8tX0K52KR4+Eck8elKe
-        0CneY0jYQ6q5fSJnplE+8jHpXOG9suWpciPj04nLnZZFQOG7rqqO2nnWkY9hMBabGs1Nvo
-        sMxp1/6XRIr5VB1BfDTRRleS0vr1cOE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=0us+YPR7sRu5GzqimM7W+6XFvNuV6NMSzbIRZ9Kh2A0=;
+        b=ixWXl1LGP5ev7SToLLc36bLhNIR989yvhRogSubEbVmnb+7YTAmM/+KIxkgRHLXbS3SKMy
+        aeI7P3jcqML6F+CWzWri+X5h7eYxm8O0pj/siUyu2s5GvRJrk8HYu7YielmrUmruziZWc+
+        EKPFWMZMDvPWt0CcPUG1vPjSh1HCUGU=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-156-CDW73vYAOT-VCiS1xCq-qQ-1; Tue, 28 Jun 2022 16:02:36 -0400
-X-MC-Unique: CDW73vYAOT-VCiS1xCq-qQ-1
-Received: by mail-ed1-f72.google.com with SMTP id q18-20020a056402519200b004358ce90d97so10177599edd.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jun 2022 13:02:36 -0700 (PDT)
+ us-mta-168-RXqLSQ3wO528yfe931upTg-1; Tue, 28 Jun 2022 16:09:02 -0400
+X-MC-Unique: RXqLSQ3wO528yfe931upTg-1
+Received: by mail-ed1-f69.google.com with SMTP id y5-20020a056402358500b0043592ac3961so10194726edc.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jun 2022 13:09:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=akzoymvv+isndpzk5w3BDP04fzMq1Ke7S8Y9F0OGSKE=;
-        b=0WNHgpnxgd+w7Io9NgXjBRm9uDknLxhoR0SAa6exc69Xs45BsnT33ukPWI5KDcGU+5
-         1sXJ2W+X3FQewpxFq36XAHNFISlOPDJ5tloE71snR6m2gNpYRFpanS3MFP4URcJ7QLTz
-         TossmbRmNPotFbL0NZ2f37fW+mZqzClGuzT+LPorMntsL9CvHTGB7JzrDXOLzocVpnzT
-         AfeWUGA1xw9p3rxRLCjNUopSNijTtb8zdgxXxy3qZaVygtDZb2+a7/ka9iDREEUBHxW4
-         u+IY63d7Uue0STAuHszd68bGb7y2AdYylzp++C1XyNMSLbpFFIUKexAeM8sHJFn3/kUP
-         LxIA==
-X-Gm-Message-State: AJIora/b3tjlj3KRfvnEhyDHghPoEaFwhrYuDUXi7/34qUpS6i4jUiqA
-        erLk546boig3i8Bg091FcpK/8PlE76QgTHJMy7GP4qb1n3CbeqopJgQy5gcLL5UJdZlyV5yEKkz
-        GKreBPsykiPVYSOMJ+qN8fsWfo2PwoLdrUQ==
-X-Received: by 2002:a17:907:6d99:b0:726:3668:4f2a with SMTP id sb25-20020a1709076d9900b0072636684f2amr19047428ejc.627.1656446555465;
-        Tue, 28 Jun 2022 13:02:35 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1sVgEFIOl5VP12jn9dNL1FO8tkC49tfbOsnzBV0A2rraUANyD6uLuaYAoNME8fg4MkyB4EeMQ==
-X-Received: by 2002:a17:907:6d99:b0:726:3668:4f2a with SMTP id sb25-20020a1709076d9900b0072636684f2amr19047410ejc.627.1656446555281;
-        Tue, 28 Jun 2022 13:02:35 -0700 (PDT)
+        bh=0us+YPR7sRu5GzqimM7W+6XFvNuV6NMSzbIRZ9Kh2A0=;
+        b=ptna2GiZsqgWMPzZpbSAjDk+XjaXI3XHi5dkvwwwNkCtGjbZ5sZjLZMFjEXOkVXppv
+         dhJ6XWQnk4hMxATwqNBndpWRZWJ7VogazAW3wAA9vpc5kd5+Y7cJFxwEHeuwnBS0ueMK
+         +YACMLUJJVHOUXSr3OfZm+Uh5FdQBJflfkbg+cjMQhay4xxgZu1wZIjXr4oHmIRy+lHk
+         dpd0GlX+iwtp1nfiBHEeYQr4Ld5PxiYo11hqrztRtJm6uRtImJSxGP4LM/WZOfEhO1Aa
+         2RJURnSb2t4MIrVo3AbvGR2aoTuVwn5DgyzfqG+RxsLfZwuX46drXGePMm4Cg0dzWCT2
+         ToSw==
+X-Gm-Message-State: AJIora9jJuEcEqg/Wozk1UO6vPSqMBbyCMF8nMvsv7KPQhHpo5gxKST5
+        RxTo/tY/U/UAcJzQOTCytKWtDTXaUeaMDrtfrJu/C8PXxbZRPF7bGRw9PSqyH7DIoW7vOnkWsbf
+        h0TpRS+2iwDhS7lJd2XUOJ/okOSKq0v+ITA==
+X-Received: by 2002:a17:907:6d20:b0:728:46e4:dac6 with SMTP id sa32-20020a1709076d2000b0072846e4dac6mr304259ejc.280.1656446941444;
+        Tue, 28 Jun 2022 13:09:01 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1tjCjetBseNsFwX6gKQNOh5peHa9g+736NmMh+imAmNitHfWJlcSsT8PKXhMdqnACDkcDYiHA==
+X-Received: by 2002:a17:907:6d20:b0:728:46e4:dac6 with SMTP id sa32-20020a1709076d2000b0072846e4dac6mr304235ejc.280.1656446941233;
+        Tue, 28 Jun 2022 13:09:01 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id z23-20020a170906435700b007094f98788csm6823390ejm.113.2022.06.28.13.02.34
+        by smtp.gmail.com with ESMTPSA id q2-20020a170906a08200b006fed93bf71fsm6920045ejy.18.2022.06.28.13.09.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jun 2022 13:02:34 -0700 (PDT)
-Message-ID: <ea4c139f-c2b2-7dc2-8c24-5d25ddb573ae@redhat.com>
-Date:   Tue, 28 Jun 2022 22:02:34 +0200
+        Tue, 28 Jun 2022 13:09:00 -0700 (PDT)
+Message-ID: <aae88f51-dfff-8ae1-5f15-91056ce22445@redhat.com>
+Date:   Tue, 28 Jun 2022 22:09:00 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
 Subject: Re: [PATCH 0/7] ACPI: video / platform/x86: Fix Panasonic laptop
  missing keypresses
 Content-Language: en-US
-To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+To:     Kenneth Chan <kenneth.t.chan@gmail.com>,
+        Stefan Seyfried <stefan.seyfried@googlemail.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Stefan Seyfried <stefan.seyfried@googlemail.com>,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        platform-driver-x86@vger.kernel.org
+        Andy Shevchenko <andy@kernel.org>, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
 References: <20220624112340.10130-1-hdegoede@redhat.com>
+ <df35a580-3e4b-cf45-004f-7c6848a1dfae@message-id.googlemail.com>
+ <CAPqSeKu0XRsgg1dQce+cc89LVrqX0GY0ak5Vzzv+PEHF2Pr95w@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220624112340.10130-1-hdegoede@redhat.com>
+In-Reply-To: <CAPqSeKu0XRsgg1dQce+cc89LVrqX0GY0ak5Vzzv+PEHF2Pr95w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All,
+Hi,
 
-On 6/24/22 13:23, Hans de Goede wrote:
-> Hi All,
+On 6/26/22 08:58, Kenneth Chan wrote:
+> Hi Hans and Stefan,
 > 
-> Here is a series fixing the missing keypresses on some Panasonic Toughbook
-> models. These missing keypresses are caused by
-> commit ed83c9171829 ("platform/x86: panasonic-laptop: Resolve hotkey double
-> trigger bug"), which made the panasonic-laptop driver unconditionally drop
-> most WMI reported hotkeys.
+> On Tue, 21 Jun 2022 at 02:10, Stefan Seyfried
+> <stefan.seyfried@googlemail.com> wrote:
+>>
+>> Well, I looked into the acpi_video.c module and that one is to blame.
+>> By default, it assumes that both "OUTPUT_KEY_EVENTS" and
+>> "BRIGHTNESS_KEY_EVENTS" should be handled by this module.
+>> But on the CF-51, this does not happen. "Video Bus" does not generate
+>> any key events (I'm not sure about output, but plugging in a VGA monitor
+>> and enabling/disabling it with xrandr or tapping the "display" fn-f3
+>> hotkey does not get anything from "Video Bus" input device.
+>>
 > 
-> This series reverts that commit and then adds some more selective filtering
-> to still avoid the double key-presses on some models, while avoiding
-> completely missing keypresses on others.
-> 
-> Rafael, these fixes rely on patch 1/7, which is a tweak to
-> the acpi_video_handles_brightness_key_presses() helper. Without this
-> tweak this series will cause a regression, so I would like to merge
-> the entire series through the pdx86 tree, may I have your ack for this?
+> The "display" Fn-F3 hotkey doesn't generate any key events on mine
+> either.
 
-I've added this series to my review-hans (soon to be for-next) branch now.
-Patches 1-6 have also been added to the fixes branch.
+Hmm, well that is unrelated to the double / missing other hotkeys,
+but still worth investigating.
+
+Normally that key just sends Windows-key (Super/Meta) + P, did you
+check the atkbd for this being outputted?
+
+You could install acpid and then run acpi_listen and see if any
+events are reported for the key-press.
+
+You could also try adding:
+
+wmi.debug_event=Y to your kernel commandline and see if:
+
+dmesg -w 
+
+Shows any new output when the key is pressed ?
+
+
+> I have no external VGA monitors to test it anyway.
+
+Typically the key-press is handled independently from there
+actually being an external monitor.
+
+> Apart from that, the patches work perfectly on my Let's Note CF-W5.
+> Cheers, Hans!
+> 
+> Tested-by: Kenneth Chan <kenneth.t.chan@gmail.com>
+
+Thanks (to both of you).
 
 Regards,
 
 Hans
 
-> 
-> Regards,
-> 
-> Hans
+
 > 
 > 
-> Hans de Goede (6):
->   ACPI: video: Change how we determine if brightness key-presses are
->     handled
->   platform/x86: panasonic-laptop: sort includes alphabetically
->   platform/x86: panasonic-laptop: revert "Resolve hotkey double trigger
->     bug"
->   platform/x86: panasonic-laptop: don't report duplicate brightness
->     key-presses
->   platform/x86: panasonic-laptop: filter out duplicate volume
->     up/down/mute keypresses
->   platform/x86: panasonic-laptop: Use acpi_video_get_backlight_type()
-> 
-> Stefan Seyfried (1):
->   platform/x86: panasonic-laptop: de-obfuscate button codes
-> 
->  drivers/acpi/acpi_video.c               |  13 ++-
->  drivers/platform/x86/Kconfig            |   2 +
->  drivers/platform/x86/panasonic-laptop.c | 112 ++++++++++++++++++------
->  3 files changed, 91 insertions(+), 36 deletions(-)
+> On Sat, 25 Jun 2022 at 03:49, Stefan Seyfried
+> <stefan.seyfried@googlemail.com> wrote:
+>>
+>> On 24.06.22 13:23, Hans de Goede wrote:
+>>> Hi All,
+>>>
+>>> Here is a series fixing the missing keypresses on some Panasonic Toughbook
+>>> models. These missing keypresses are caused by
+>>> commit ed83c9171829 ("platform/x86: panasonic-laptop: Resolve hotkey double
+>>> trigger bug"), which made the panasonic-laptop driver unconditionally drop
+>>> most WMI reported hotkeys.
+>>>
+>>> This series reverts that commit and then adds some more selective filtering
+>>> to still avoid the double key-presses on some models, while avoiding
+>>> completely missing keypresses on others.
+>>>
+>>> Rafael, these fixes rely on patch 1/7, which is a tweak to
+>>> the acpi_video_handles_brightness_key_presses() helper. Without this
+>>> tweak this series will cause a regression, so I would like to merge
+>>> the entire series through the pdx86 tree, may I have your ack for this?
+>>>
+>>> Regards,
+>>>
+>>> Hans
+>>>
+>>>
+>>> Hans de Goede (6):
+>>>    ACPI: video: Change how we determine if brightness key-presses are
+>>>      handled
+>>>    platform/x86: panasonic-laptop: sort includes alphabetically
+>>>    platform/x86: panasonic-laptop: revert "Resolve hotkey double trigger
+>>>      bug"
+>>>    platform/x86: panasonic-laptop: don't report duplicate brightness
+>>>      key-presses
+>>>    platform/x86: panasonic-laptop: filter out duplicate volume
+>>>      up/down/mute keypresses
+>>>    platform/x86: panasonic-laptop: Use acpi_video_get_backlight_type()
+>>>
+>>> Stefan Seyfried (1):
+>>>    platform/x86: panasonic-laptop: de-obfuscate button codes
+>>>
+>>>   drivers/acpi/acpi_video.c               |  13 ++-
+>>>   drivers/platform/x86/Kconfig            |   2 +
+>>>   drivers/platform/x86/panasonic-laptop.c | 112 ++++++++++++++++++------
+>>>   3 files changed, 91 insertions(+), 36 deletions(-)
+>>
+>> The whole series works without any manual setup on my Toughbook CF-51:
+>>
+>> Tested-by: Stefan Seyfried <seife+kernel@b1-systems.com>
+>>
+>> Thanks again!
+>>
+>> Stefan
+>> --
+>> Stefan Seyfried
+>>
+>> "For a successful technology, reality must take precedence over
+>>   public relations, for nature cannot be fooled." -- Richard Feynman
 > 
 
