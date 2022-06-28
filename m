@@ -2,72 +2,30 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B5CCCA481
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Jun 2022 06:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9DBCCA47E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Jun 2022 06:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243969AbiF1GNO (ORCPT
+        id S1343651AbiF1GzV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Jun 2022 02:13:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48632 "EHLO
+        Tue, 28 Jun 2022 02:55:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245494AbiF1GMa (ORCPT
+        with ESMTP id S244756AbiF1GzS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Jun 2022 02:12:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A4B9B2611B
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 23:12:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656396748;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Dx6dQM49vWdX9cmVmNPYk3K9FV6smpCQ8wm7kLXU688=;
-        b=dKEaPyWtbnBXm29muTFnCoEgXGlmd00ZkTQyJG84/bEwP8SnFuI+wHlRv/BBBxm/gC7SGc
-        IQ+G62Y0G45VU75DFsda7EKaVkJ1x79Akm6CbBprqxB2qUNf25nM8xPgW1cmADnggtaPDN
-        8lLm0yeWMAybd0fxXTExnLzrcJcJytE=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-591-3JdTdFzmPH-oNeBA6J60pw-1; Tue, 28 Jun 2022 02:12:26 -0400
-X-MC-Unique: 3JdTdFzmPH-oNeBA6J60pw-1
-Received: by mail-lf1-f71.google.com with SMTP id b2-20020a0565120b8200b00477a4532448so5810205lfv.22
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jun 2022 23:12:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dx6dQM49vWdX9cmVmNPYk3K9FV6smpCQ8wm7kLXU688=;
-        b=Bd7HD/UWMQ59obRfA8HWVqYEHLdry0VXcgAsplnc9AQRy2vE2qzelzzniVU8sKyeki
-         cWhyd59OJm1g7EUPoA9YPgA8vvQoSE/GRhBofI3XCc2399B59FcfKl52vgXk1UgQHVM1
-         ZcnuOqhvwD7/jfuxK3xaUE62HgyuHX5BgClyCgMiGz6JusDPb9ny0bY+RJe4L6SjLxv4
-         dj4hY4PErnnBsQHxTEaV+sD4iypIKC0LA+iO9UYFtDAuG+txIuWByHy1P9/5PY+S51hy
-         NOns8g3V9JTpbbAK2+QEbxnxLvpAIv/PZ3BlIk9Jom04DDFZQH+0dc1NrqDUns39b1Gy
-         KspQ==
-X-Gm-Message-State: AJIora/PRhe1fZSYNfuk9CmTwXtgO/6ednEo4YPIVlFk+GD84DvUEwyA
-        Pv/gl12kWS+quKke5s/8lHK/x0gIOHUQBdwtT0bt4wG0jnLZ0kove65+mKIafrUazHRJkySIAtW
-        SGrEFkPC/yRrn5ft1cq6g2LUWVYpD8qzZPYIulKtzn9NWGeSAWA==
-X-Received: by 2002:a05:6512:13a5:b0:47d:c1d9:dea8 with SMTP id p37-20020a05651213a500b0047dc1d9dea8mr10373845lfa.442.1656396744828;
-        Mon, 27 Jun 2022 23:12:24 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1sXN+QfgdhlGQk/CZZ9irUZ7rpfge9ShgLuLje1BX5ivPuK52DeT/MuedO9nPEXy/Kb7bkkyZVCwlmvRGeNCLg=
-X-Received: by 2002:a05:6512:13a5:b0:47d:c1d9:dea8 with SMTP id
- p37-20020a05651213a500b0047dc1d9dea8mr10373832lfa.442.1656396744537; Mon, 27
- Jun 2022 23:12:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220624025817-mutt-send-email-mst@kernel.org>
- <CACGkMEseptD=45j3kQr0yciRxR679Jcig=292H07-RYC2vXmFQ@mail.gmail.com>
- <20220627023841-mutt-send-email-mst@kernel.org> <CACGkMEvy8xF2T_vubKeUEPC2aroO_fbB0Xe8nnxK4OBUgAS+Gw@mail.gmail.com>
- <20220627034733-mutt-send-email-mst@kernel.org> <CACGkMEtpjUBaUML=fEs5hR66rzNTBhBXOmfpzyXV1F-6BqvsGg@mail.gmail.com>
- <20220627074723-mutt-send-email-mst@kernel.org> <CACGkMEv0zdgG6SAaxRwkpObEFX_KRB1ovezNiHX+QXsYhE=qaQ@mail.gmail.com>
- <20220628014309-mutt-send-email-mst@kernel.org> <CACGkMEuzrmVsM5Xa3N_9n0-XOqyMAz65AON8oxkgmjnXb_bAFg@mail.gmail.com>
- <20220628020832-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20220628020832-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Date:   Tue, 28 Jun 2022 14:12:13 +0800
-Message-ID: <CACGkMEs4Ps6Jnbzrx+4Zju7SUfgu0aTACrLyqpqBcxsZP7YOkQ@mail.gmail.com>
+        Tue, 28 Jun 2022 02:55:18 -0400
+Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C87F726562;
+        Mon, 27 Jun 2022 23:55:14 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0VHfuH4N_1656399306;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VHfuH4N_1656399306)
+          by smtp.aliyun-inc.com;
+          Tue, 28 Jun 2022 14:55:07 +0800
+Message-ID: <1656399270.5965908-1-xuanzhuo@linux.alibaba.com>
 Subject: Re: [PATCH v10 25/41] virtio_pci: struct virtio_pci_common_cfg add queue_notify_data
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        virtualization <virtualization@lists.linux-foundation.org>,
+Date:   Tue, 28 Jun 2022 14:54:30 +0800
+From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     virtualization <virtualization@lists.linux-foundation.org>,
         Richard Weinberger <richard@nod.at>,
         Anton Ivanov <anton.ivanov@cambridgegreys.com>,
         Johannes Berg <johannes@sipsolutions.net>,
@@ -98,175 +56,197 @@ Cc:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
         linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
         kvm <kvm@vger.kernel.org>,
         "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
-        kangjie.xu@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
+        kangjie.xu@linux.alibaba.com, "Michael S. Tsirkin" <mst@redhat.com>
+References: <20220624025621.128843-1-xuanzhuo@linux.alibaba.com>
+ <20220624025621.128843-26-xuanzhuo@linux.alibaba.com>
+ <20220624025817-mutt-send-email-mst@kernel.org>
+ <CACGkMEseptD=45j3kQr0yciRxR679Jcig=292H07-RYC2vXmFQ@mail.gmail.com>
+ <20220627023841-mutt-send-email-mst@kernel.org>
+ <CACGkMEvy8xF2T_vubKeUEPC2aroO_fbB0Xe8nnxK4OBUgAS+Gw@mail.gmail.com>
+ <20220627034733-mutt-send-email-mst@kernel.org>
+ <CACGkMEtpjUBaUML=fEs5hR66rzNTBhBXOmfpzyXV1F-6BqvsGg@mail.gmail.com>
+ <20220627074723-mutt-send-email-mst@kernel.org>
+ <CACGkMEv0zdgG6SAaxRwkpObEFX_KRB1ovezNiHX+QXsYhE=qaQ@mail.gmail.com>
+ <20220628014309-mutt-send-email-mst@kernel.org>
+ <CACGkMEuzrmVsM5Xa3N_9n0-XOqyMAz65AON8oxkgmjnXb_bAFg@mail.gmail.com>
+ <20220628020832-mutt-send-email-mst@kernel.org>
+ <CACGkMEs4Ps6Jnbzrx+4Zju7SUfgu0aTACrLyqpqBcxsZP7YOkQ@mail.gmail.com>
+In-Reply-To: <CACGkMEs4Ps6Jnbzrx+4Zju7SUfgu0aTACrLyqpqBcxsZP7YOkQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 2:10 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Tue, Jun 28, 2022 at 02:07:28PM +0800, Jason Wang wrote:
-> > On Tue, Jun 28, 2022 at 1:46 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
-> > > On Tue, Jun 28, 2022 at 11:50:37AM +0800, Jason Wang wrote:
-> > > > On Mon, Jun 27, 2022 at 7:53 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > >
-> > > > > On Mon, Jun 27, 2022 at 04:14:20PM +0800, Jason Wang wrote:
-> > > > > > On Mon, Jun 27, 2022 at 3:58 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > > > >
-> > > > > > > On Mon, Jun 27, 2022 at 03:45:30PM +0800, Jason Wang wrote:
-> > > > > > > > On Mon, Jun 27, 2022 at 2:39 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Mon, Jun 27, 2022 at 10:30:42AM +0800, Jason Wang wrote:
-> > > > > > > > > > On Fri, Jun 24, 2022 at 2:59 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > On Fri, Jun 24, 2022 at 10:56:05AM +0800, Xuan Zhuo wrote:
-> > > > > > > > > > > > Add queue_notify_data in struct virtio_pci_common_cfg, which comes from
-> > > > > > > > > > > > here https://github.com/oasis-tcs/virtio-spec/issues/89
-> > > > > > > > > > > >
-> > > > > > > > > > > > For not breaks uABI, add a new struct virtio_pci_common_cfg_notify.
-> > > > > > > > > > >
-> > > > > > > > > > > What exactly is meant by not breaking uABI?
-> > > > > > > > > > > Users are supposed to be prepared for struct size to change ... no?
-> > > > > > > > > >
-> > > > > > > > > > Not sure, any doc for this?
-> > > > > > > > > >
-> > > > > > > > > > Thanks
-> > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > Well we have this:
-> > > > > > > > >
-> > > > > > > > >         The drivers SHOULD only map part of configuration structure
-> > > > > > > > >         large enough for device operation.  The drivers MUST handle
-> > > > > > > > >         an unexpectedly large \field{length}, but MAY check that \field{length}
-> > > > > > > > >         is large enough for device operation.
-> > > > > > > >
-> > > > > > > > Yes, but that's the device/driver interface. What's done here is the
-> > > > > > > > userspace/kernel.
-> > > > > > > >
-> > > > > > > > Userspace may break if it uses e.g sizeof(struct virtio_pci_common_cfg)?
-> > > > > > > >
-> > > > > > > > Thanks
-> > > > > > >
-> > > > > > > Hmm I guess there's risk... but then how are we going to maintain this
-> > > > > > > going forward?  Add a new struct on any change?
-> > > > > >
-> > > > > > This is the way we have used it for the past 5 or more years. I don't
-> > > > > > see why this must be handled in the vq reset feature.
-> > > > > >
-> > > > > > >Can we at least
-> > > > > > > prevent this going forward somehow?
-> > > > > >
-> > > > > > Like have some padding?
-> > > > > >
-> > > > > > Thanks
-> > > > >
-> > > > > Maybe - this is what QEMU does ...
+On Tue, 28 Jun 2022 14:12:13 +0800, Jason Wang <jasowang@redhat.com> wrote:
+> On Tue, Jun 28, 2022 at 2:10 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Tue, Jun 28, 2022 at 02:07:28PM +0800, Jason Wang wrote:
+> > > On Tue, Jun 28, 2022 at 1:46 PM Michael S. Tsirkin <mst@redhat.com> wrote:
 > > > >
-> > > > Do you want this to be addressed in this series (it's already very huge anyhow)?
-> > > >
-> > > > Thanks
-> > >
-> > > Let's come up with a solution at least. QEMU does not seem to need the struct.
-> >
-> > If we want to implement it in Qemu we need that:
-> >
-> > https://github.com/fengidri/qemu/commit/39b79335cb55144d11a3b01f93d46cc73342c6bb
-> >
-> > > Let's just put
-> > > it in virtio_pci_modern.h for now then?
-> >
-> > Does this mean userspace needs to define the struct by their own
-> > instead of depending on the uapi in the future?
-> >
-> > Thanks
->
->
-> $ git grep 'struct virtio_pci_common_cfg'
-> include/standard-headers/linux/virtio_pci.h:struct virtio_pci_common_cfg {
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                       offsetof(struct virtio_pci_common_cfg, device_feature));
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                       offsetof(struct virtio_pci_common_cfg, device_feature));
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                       offsetof(struct virtio_pci_common_cfg, guest_feature));
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                       offsetof(struct virtio_pci_common_cfg, guest_feature));
-> tests/qtest/libqos/virtio-pci-modern.c:                         offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                          offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_select),
-> tests/qtest/libqos/virtio-pci-modern.c:                         offsetof(struct virtio_pci_common_cfg, queue_size));
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_desc_lo),
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_desc_hi),
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_avail_lo),
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_avail_hi),
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_used_lo),
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_used_hi),
-> tests/qtest/libqos/virtio-pci-modern.c:                               offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_enable), 1);
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, msix_config), entry);
-> tests/qtest/libqos/virtio-pci-modern.c:                           offsetof(struct virtio_pci_common_cfg,
-> tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_msix_vector),
-> tests/qtest/libqos/virtio-pci-modern.c:                           offsetof(struct virtio_pci_common_cfg,
->
->
-> The only user of the struct is libqos and it just wants
-> the offsets so can use macros just as well.
-
-Yes, so this way should be fine.
-
-Thanks
-
->
->
-> > >
+> > > > On Tue, Jun 28, 2022 at 11:50:37AM +0800, Jason Wang wrote:
+> > > > > On Mon, Jun 27, 2022 at 7:53 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > > >
+> > > > > > On Mon, Jun 27, 2022 at 04:14:20PM +0800, Jason Wang wrote:
+> > > > > > > On Mon, Jun 27, 2022 at 3:58 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > > > > >
+> > > > > > > > On Mon, Jun 27, 2022 at 03:45:30PM +0800, Jason Wang wrote:
+> > > > > > > > > On Mon, Jun 27, 2022 at 2:39 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > On Mon, Jun 27, 2022 at 10:30:42AM +0800, Jason Wang wrote:
+> > > > > > > > > > > On Fri, Jun 24, 2022 at 2:59 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Fri, Jun 24, 2022 at 10:56:05AM +0800, Xuan Zhuo wrote:
+> > > > > > > > > > > > > Add queue_notify_data in struct virtio_pci_common_cfg, which comes from
+> > > > > > > > > > > > > here https://github.com/oasis-tcs/virtio-spec/issues/89
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > For not breaks uABI, add a new struct virtio_pci_common_cfg_notify.
+> > > > > > > > > > > >
+> > > > > > > > > > > > What exactly is meant by not breaking uABI?
+> > > > > > > > > > > > Users are supposed to be prepared for struct size to change ... no?
+> > > > > > > > > > >
+> > > > > > > > > > > Not sure, any doc for this?
+> > > > > > > > > > >
+> > > > > > > > > > > Thanks
+> > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > Well we have this:
+> > > > > > > > > >
+> > > > > > > > > >         The drivers SHOULD only map part of configuration structure
+> > > > > > > > > >         large enough for device operation.  The drivers MUST handle
+> > > > > > > > > >         an unexpectedly large \field{length}, but MAY check that \field{length}
+> > > > > > > > > >         is large enough for device operation.
+> > > > > > > > >
+> > > > > > > > > Yes, but that's the device/driver interface. What's done here is the
+> > > > > > > > > userspace/kernel.
+> > > > > > > > >
+> > > > > > > > > Userspace may break if it uses e.g sizeof(struct virtio_pci_common_cfg)?
+> > > > > > > > >
+> > > > > > > > > Thanks
+> > > > > > > >
+> > > > > > > > Hmm I guess there's risk... but then how are we going to maintain this
+> > > > > > > > going forward?  Add a new struct on any change?
+> > > > > > >
+> > > > > > > This is the way we have used it for the past 5 or more years. I don't
+> > > > > > > see why this must be handled in the vq reset feature.
+> > > > > > >
+> > > > > > > >Can we at least
+> > > > > > > > prevent this going forward somehow?
+> > > > > > >
+> > > > > > > Like have some padding?
+> > > > > > >
+> > > > > > > Thanks
+> > > > > >
+> > > > > > Maybe - this is what QEMU does ...
 > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > > > > >
-> > > > > > > > >
-> > > > > > > > >
+> > > > > Do you want this to be addressed in this series (it's already very huge anyhow)?
+> > > > >
+> > > > > Thanks
+> > > >
+> > > > Let's come up with a solution at least. QEMU does not seem to need the struct.
+> > >
+> > > If we want to implement it in Qemu we need that:
+> > >
+> > > https://github.com/fengidri/qemu/commit/39b79335cb55144d11a3b01f93d46cc73342c6bb
+> > >
+> > > > Let's just put
+> > > > it in virtio_pci_modern.h for now then?
+> > >
+> > > Does this mean userspace needs to define the struct by their own
+> > > instead of depending on the uapi in the future?
+> > >
+> > > Thanks
+> >
+> >
+> > $ git grep 'struct virtio_pci_common_cfg'
+> > include/standard-headers/linux/virtio_pci.h:struct virtio_pci_common_cfg {
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                       offsetof(struct virtio_pci_common_cfg, device_feature));
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                       offsetof(struct virtio_pci_common_cfg, device_feature));
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                       offsetof(struct virtio_pci_common_cfg, guest_feature));
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                       offsetof(struct virtio_pci_common_cfg, guest_feature));
+> > tests/qtest/libqos/virtio-pci-modern.c:                         offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                          offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_select),
+> > tests/qtest/libqos/virtio-pci-modern.c:                         offsetof(struct virtio_pci_common_cfg, queue_size));
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_desc_lo),
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_desc_hi),
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_avail_lo),
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_avail_hi),
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_used_lo),
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_used_hi),
+> > tests/qtest/libqos/virtio-pci-modern.c:                               offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_enable), 1);
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, msix_config), entry);
+> > tests/qtest/libqos/virtio-pci-modern.c:                           offsetof(struct virtio_pci_common_cfg,
+> > tests/qtest/libqos/virtio-pci-modern.c:                   offsetof(struct virtio_pci_common_cfg, queue_msix_vector),
+> > tests/qtest/libqos/virtio-pci-modern.c:                           offsetof(struct virtio_pci_common_cfg,
+> >
+> >
+> > The only user of the struct is libqos and it just wants
+> > the offsets so can use macros just as well.
+>
+> Yes, so this way should be fine.
+
+
+OK. I will fix in next version.
+
+Thanks.
+
+
+>
+> Thanks
+>
+> >
+> >
+> > > >
+> > > > > >
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > >
 > > > > > > > > > >
 > > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > > Since I want to add queue_reset after queue_notify_data, I submitted
-> > > > > > > > > > > > this patch first.
 > > > > > > > > > > > >
-> > > > > > > > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > > > > > > > > > Acked-by: Jason Wang <jasowang@redhat.com>
-> > > > > > > > > > > > ---
-> > > > > > > > > > > >  include/uapi/linux/virtio_pci.h | 7 +++++++
-> > > > > > > > > > > >  1 file changed, 7 insertions(+)
 > > > > > > > > > > > >
-> > > > > > > > > > > > diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
-> > > > > > > > > > > > index 3a86f36d7e3d..22bec9bd0dfc 100644
-> > > > > > > > > > > > --- a/include/uapi/linux/virtio_pci.h
-> > > > > > > > > > > > +++ b/include/uapi/linux/virtio_pci.h
-> > > > > > > > > > > > @@ -166,6 +166,13 @@ struct virtio_pci_common_cfg {
-> > > > > > > > > > > >       __le32 queue_used_hi;           /* read-write */
-> > > > > > > > > > > >  };
+> > > > > > > > > > > > > Since I want to add queue_reset after queue_notify_data, I submitted
+> > > > > > > > > > > > > this patch first.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > > > > > > > > > > > > Acked-by: Jason Wang <jasowang@redhat.com>
+> > > > > > > > > > > > > ---
+> > > > > > > > > > > > >  include/uapi/linux/virtio_pci.h | 7 +++++++
+> > > > > > > > > > > > >  1 file changed, 7 insertions(+)
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
+> > > > > > > > > > > > > index 3a86f36d7e3d..22bec9bd0dfc 100644
+> > > > > > > > > > > > > --- a/include/uapi/linux/virtio_pci.h
+> > > > > > > > > > > > > +++ b/include/uapi/linux/virtio_pci.h
+> > > > > > > > > > > > > @@ -166,6 +166,13 @@ struct virtio_pci_common_cfg {
+> > > > > > > > > > > > >       __le32 queue_used_hi;           /* read-write */
+> > > > > > > > > > > > >  };
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > +struct virtio_pci_common_cfg_notify {
+> > > > > > > > > > > > > +     struct virtio_pci_common_cfg cfg;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +     __le16 queue_notify_data;       /* read-write */
+> > > > > > > > > > > > > +     __le16 padding;
+> > > > > > > > > > > > > +};
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > >  /* Fields in VIRTIO_PCI_CAP_PCI_CFG: */
+> > > > > > > > > > > > >  struct virtio_pci_cfg_cap {
+> > > > > > > > > > > > >       struct virtio_pci_cap cap;
+> > > > > > > > > > > > > --
+> > > > > > > > > > > > > 2.31.0
 > > > > > > > > > > > >
-> > > > > > > > > > > > +struct virtio_pci_common_cfg_notify {
-> > > > > > > > > > > > +     struct virtio_pci_common_cfg cfg;
-> > > > > > > > > > > > +
-> > > > > > > > > > > > +     __le16 queue_notify_data;       /* read-write */
-> > > > > > > > > > > > +     __le16 padding;
-> > > > > > > > > > > > +};
-> > > > > > > > > > > > +
-> > > > > > > > > > > >  /* Fields in VIRTIO_PCI_CAP_PCI_CFG: */
-> > > > > > > > > > > >  struct virtio_pci_cfg_cap {
-> > > > > > > > > > > >       struct virtio_pci_cap cap;
-> > > > > > > > > > > > --
-> > > > > > > > > > > > 2.31.0
-> > > > > > > > > > >
-> > > > > > > > >
-> > > > > > >
-> > > > >
-> > >
+> > > > > > > > > >
+> > > > > > > >
+> > > > > >
+> > > >
+> >
 >
-
