@@ -2,147 +2,197 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34148CCA47F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 08:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301A2C43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 10:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232587AbiF2IJP (ORCPT
+        id S229897AbiF2KA7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Jun 2022 04:09:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56432 "EHLO
+        Wed, 29 Jun 2022 06:00:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232648AbiF2IJL (ORCPT
+        with ESMTP id S231298AbiF2KA6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Jun 2022 04:09:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6C1B43BBDE
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 01:09:09 -0700 (PDT)
+        Wed, 29 Jun 2022 06:00:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3A3193DA66
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 03:00:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656490148;
+        s=mimecast20190719; t=1656496854;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=7hQQnP6ElkRz6EikrOqVkat5RAwQAYxqOhDbZ9zjeug=;
-        b=gfG0m6l+r+FCzpEDS2EiQFlsAKnvq8mqtCofhDWIpWrY9vxQhKBlor+D/0I6Sff4LgcVE6
-        xiq4o2Wczk6Kollq3z2axdqoau+n/XIHfvM9sr8a7rF+hy614APO82l00pqmNnQ/fP8wQI
-        B81k+d6+GWUxcX+BdlcV5NgBhQbp97Y=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=w5t2VUZwsXFY0k3oH1xTiBRVlbwES5cmjy0YTjX97qU=;
+        b=A2VzX3hoq6wh9QJ4cHBcYN00VO+LIIV6KAe/mMZdEn4zq6VWWeT8OfcX0seB9dMc4vwz5e
+        FkK8M4dE4x9uQ6ovQPKGUd3z2xagYEf5tdi9xY8XIylRzI2v0CdDGgl61eK/HtEDqtrDBA
+        56o4FQgVlIKxjOBQvwwZChDOJTDhrTI=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-224-VXWMZgYSMHWV6fGcQChyqw-1; Wed, 29 Jun 2022 04:09:05 -0400
-X-MC-Unique: VXWMZgYSMHWV6fGcQChyqw-1
-Received: by mail-wr1-f72.google.com with SMTP id q6-20020adfea06000000b0021bad47edaeso2182681wrm.20
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 01:09:05 -0700 (PDT)
+ us-mta-259-Gu81aLnmNni7LwWyboz_rw-1; Wed, 29 Jun 2022 06:00:53 -0400
+X-MC-Unique: Gu81aLnmNni7LwWyboz_rw-1
+Received: by mail-ej1-f71.google.com with SMTP id gr1-20020a170906e2c100b006fefea3ec0aso4726594ejb.14
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 03:00:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
+         :subject:to:cc:references:content-language:in-reply-to
          :content-transfer-encoding;
-        bh=7hQQnP6ElkRz6EikrOqVkat5RAwQAYxqOhDbZ9zjeug=;
-        b=AyauklOtC4h5ZKT3duncsAsBos8Q74Q/GJl4j2e5udNm3/OUj7TKKuDgKv8VdfytDM
-         QfGx6Ra23xTL9VxUmO1IWWfq5zwXqV192L4T3I0txW/lpGiVjvBxi73OPvDp0dQw0rsI
-         DIerUNPMeyrBh8ZRpWWPKlasjTDevDR56/fAhXEKRLwazg09jwkJ0hhCG0UsFhxflRk/
-         Lzoleh3Q7IF9tsdYCSrTn4UNBsoAa7SEgLICRN1C+COGXJfYEngdE++0TA7BYI59AF76
-         UpUgbf/ForAqWsDM046NYK/mO8wINRJ6KaYMteSzPXne0730j7pVZNME0nqH4MTkR71j
-         7f1A==
-X-Gm-Message-State: AJIora9XfxPEHywyRTgqwWFYQEAGmntYllBwiFBRGMz7yqbJe5OK/fSx
-        t8PGXYWb1efk2b08UQIrxBPheAUIDKe8uR+w5fNFiQPNtbk7BL33ooqFT++Ib4tofexc/EjWwr2
-        wX7lGXT09W+WuL7GiDARMdNssj5mEN/iWsQ==
-X-Received: by 2002:a05:600c:2246:b0:3a0:4d14:e9d5 with SMTP id a6-20020a05600c224600b003a04d14e9d5mr2201651wmm.70.1656490144654;
-        Wed, 29 Jun 2022 01:09:04 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1usFW/96xeCeX9gWa5EcwEsowhB540yEb4Gaanj9433iMcJH3n1uDXhdEWzSLPQicn1TmuJ9w==
-X-Received: by 2002:a05:600c:2246:b0:3a0:4d14:e9d5 with SMTP id a6-20020a05600c224600b003a04d14e9d5mr2201616wmm.70.1656490144372;
-        Wed, 29 Jun 2022 01:09:04 -0700 (PDT)
-Received: from [192.168.1.129] (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id p2-20020a05600c358200b003942a244f47sm2507134wmq.32.2022.06.29.01.09.02
+        bh=w5t2VUZwsXFY0k3oH1xTiBRVlbwES5cmjy0YTjX97qU=;
+        b=UZ/s6a5Ck5bK1PWFk0JyCcklLJd3mFz0p5GXv+u/I6C/tTYHEVU5xUtFE74UT/WKp3
+         auLcKtScghKc3mZRa+6sLtUKlvImJm7FohdLlm2mLXRQc6/3i98yaigCPTZv8R+ihowB
+         NAwJqmB4sCOC/VGT85pTk81V2Jr0B1Mpm7DNdViPhhiqzk8mA9D0SgBSBj+9lfrB6BO7
+         39LzR5YDmnXg91fc2XWaCdZG+1UpavpWCXj++8CJv7NrhEBWqwl7FRPDHTtmzmKV6o9C
+         Edzz2piWwE2j4/GoiZU0Hjb1N6XjI3c/udTbqWNfc8ZOXO2RNEiuN9MSFd3Pqyyrq6uq
+         wCXA==
+X-Gm-Message-State: AJIora+R/BXN/Q+AiC30kpCYhIxrin6xk+07ecXQYn4rwasQ42UUN1/Y
+        6VXzsxdhhlrrWxTziIr0b34OEUloC9Sag/SpGpLJpQL83J66G13VoEL4gOTxgj2ELnNC4zarZz4
+        RlxfY3LkKLOTKNwkwqotAlFEBMvZ0A2aYNg==
+X-Received: by 2002:a17:907:6e90:b0:726:a767:e542 with SMTP id sh16-20020a1709076e9000b00726a767e542mr2494681ejc.746.1656496851907;
+        Wed, 29 Jun 2022 03:00:51 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1tNLYNaiC/3EpWcFKIqQEyZzV9a1LOWijci1Fy3ZSisNtP7NU03Ket7XZxbKIjhAdvso3tk5g==
+X-Received: by 2002:a17:907:6e90:b0:726:a767:e542 with SMTP id sh16-20020a1709076e9000b00726a767e542mr2494667ejc.746.1656496851697;
+        Wed, 29 Jun 2022 03:00:51 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id s1-20020aa7c541000000b004357171dcccsm11065514edr.12.2022.06.29.03.00.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jun 2022 01:09:03 -0700 (PDT)
-Message-ID: <a5a3e2ca-030a-4838-296e-50dbb6d87330@redhat.com>
-Date:   Wed, 29 Jun 2022 10:09:01 +0200
+        Wed, 29 Jun 2022 03:00:51 -0700 (PDT)
+Message-ID: <55a6470c-1ce5-b237-d3be-1b98e4dbe3ce@redhat.com>
+Date:   Wed, 29 Jun 2022 12:00:50 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 6/6] i2c: Make remove callback return void
+ Thunderbird/91.8.0
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86: ISST: PUNIT device mapping with Sub-NUMA
+ clustering
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220627215031.2158825-1-srinivas.pandruvada@linux.intel.com>
 Content-Language: en-US
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Jeremy Kerr <jk@codeconstruct.com.au>
-Cc:     "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@opensource.cirrus.com" <patches@opensource.cirrus.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "chrome-platform@lists.linux.dev" <chrome-platform@lists.linux.dev>,
-        "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
-        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "acpi4asus-user@lists.sourceforge.net" 
-        <acpi4asus-user@lists.sourceforge.net>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-rpi-kernel@lists.infradead.org" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <20220628140313.74984-1-u.kleine-koenig@pengutronix.de>
- <20220628140313.74984-7-u.kleine-koenig@pengutronix.de>
- <60cc6796236f23c028a9ae76dbe00d1917df82a5.camel@codeconstruct.com.au>
- <20220629072304.qazmloqdi5h5kdre@pengutronix.de>
- <5517f329-b6ba-efbd-ccab-3d5caa658b80@csgroup.eu>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <5517f329-b6ba-efbd-ccab-3d5caa658b80@csgroup.eu>
+In-Reply-To: <20220627215031.2158825-1-srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 6/29/22 09:55, Christophe Leroy wrote:
-> 
-> 
-> Le 29/06/2022 à 09:23, Uwe Kleine-König a écrit :
->> Hello,
->>
->> [I dropped nearly all individuals from the Cc: list because various
->> bounces reported to be unhappy about the long (logical) line.]
-> 
-> Good idea, even patchwork made a mess of it, see 
-> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20220628140313.74984-7-u.kleine-koenig@pengutronix.de/
-> 
+Hi,
 
-FYI, for patches like these what I usually use is:
+On 6/27/22 23:50, Srinivas Pandruvada wrote:
+> On a multiple package system using Sub-NUMA clustering, there is an issue
+> in mapping Linux CPU number to PUNIT PCI device when manufacturer decided
+> to reuse the PCI bus number across packages. Bus number can be reused as
+> long as they are in different domain or segment. In this case some CPU
+> will fail to find a PCI device to issue SST requests.
+> 
+> When bus numbers are reused across CPU packages, we are using proximity
+> information by matching CPU numa node id to PUNIT PCI device numa node
+> id. But on a package there can be only one PUNIT PCI device, but multiple
+> numa nodes (one for each sub cluster). So, the numa node ID of the PUNIT
+> PCI device can only match with one numa node id of CPUs in a sub cluster
+> in the package.
+> 
+> Since there can be only one PUNIT PCI device per package, if we match
+> with numa node id of any sub cluster in that package, we can use that
+> mapping for any CPU in that package. So, store the match information
+> in a per package data structure and return the information when there
+> is no match.
+> 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  .../intel/speed_select_if/isst_if_common.c    | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> index e8424e70d81d..f3cd1be3283a 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> @@ -286,11 +286,18 @@ struct isst_if_cpu_info {
+>  	int numa_node;
+>  };
+>  
+> +struct isst_if_pkg_info {
+> +	struct pci_dev *pci_dev[2];
 
-./scripts/get_maintainer.pl --nogit-fallback --no-m --no-r
+This and (continued below) ...
 
--- 
-Best regards,
+> +};
+> +
+>  static struct isst_if_cpu_info *isst_cpu_info;
+> +static struct isst_if_pkg_info *isst_pkg_info;
+> +
+>  #define ISST_MAX_PCI_DOMAINS	8
+>  
+>  static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
+>  {
+> +	int pkg_id = topology_physical_package_id(cpu);
+>  	struct pci_dev *matched_pci_dev = NULL;
+>  	struct pci_dev *pci_dev = NULL;
+>  	int no_matches = 0;
+> @@ -324,6 +331,8 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+>  		}
+>  
+>  		if (node == isst_cpu_info[cpu].numa_node) {
+> +			isst_pkg_info[pkg_id].pci_dev[bus_no] = _pci_dev;
+> +
 
-Javier Martinez Canillas
-Linux Engineering
-Red Hat
+This and ...
+
+>  			pci_dev = _pci_dev;
+>  			break;
+>  		}
+> @@ -342,6 +351,9 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+>  	if (!pci_dev && no_matches == 1)
+>  		pci_dev = matched_pci_dev;
+>  
+> +	if (!pci_dev)
+> +		pci_dev = isst_pkg_info[pkg_id].pci_dev[bus_no];
+> +
+
+This assumes that bus_no is never > 1, is this assumption enforced somewhere?
+
+Also maybe make the 2 in:
+
+> +struct isst_if_pkg_info {
+> +	struct pci_dev *pci_dev[2];
+
+a #define ?
+
+Regards,
+
+Hans
+
+
+>  	return pci_dev;
+>  }
+>  
+> @@ -417,10 +429,19 @@ static int isst_if_cpu_info_init(void)
+>  	if (!isst_cpu_info)
+>  		return -ENOMEM;
+>  
+> +	isst_pkg_info = kcalloc(topology_max_packages(),
+> +				sizeof(*isst_pkg_info),
+> +				GFP_KERNEL);
+> +	if (!isst_pkg_info) {
+> +		kfree(isst_cpu_info);
+> +		return -ENOMEM;
+> +	}
+> +
+>  	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+>  				"platform/x86/isst-if:online",
+>  				isst_if_cpu_online, NULL);
+>  	if (ret < 0) {
+> +		kfree(isst_pkg_info);
+>  		kfree(isst_cpu_info);
+>  		return ret;
+>  	}
+> @@ -433,6 +454,7 @@ static int isst_if_cpu_info_init(void)
+>  static void isst_if_cpu_info_exit(void)
+>  {
+>  	cpuhp_remove_state(isst_if_online_id);
+> +	kfree(isst_pkg_info);
+>  	kfree(isst_cpu_info);
+>  };
+>  
 
