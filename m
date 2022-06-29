@@ -2,132 +2,209 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EF7C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Jun 2022 21:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8811CCA481
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 06:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbiF1VZG (ORCPT
+        id S232441AbiF2G5K (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Jun 2022 17:25:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36772 "EHLO
+        Wed, 29 Jun 2022 02:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbiF1VZF (ORCPT
+        with ESMTP id S229457AbiF2G5I (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Jun 2022 17:25:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D49603A731
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jun 2022 14:25:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656451503;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Xl/Fq3aI5MxcGRQwvCytnZREphBAGecmNnGHoTX9/fA=;
-        b=cANikGApbagCw/83Jhp8mxf7CJIkRQk1kFcRxeWsFleD0wthvfYjpZ6U/E770MYpTmH/kY
-        MuSwGbvy8AYjEzWgKWgo3ZTZFTOJhAOBD6EeSKyOYL+YoW3uDvNPOJs7jyVRoonekAs60X
-        hD/koNiHVCBJssdTngpeHUljdolfLf0=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-425-TOsbV9kxN368zmzWFFFSQw-1; Tue, 28 Jun 2022 17:25:01 -0400
-X-MC-Unique: TOsbV9kxN368zmzWFFFSQw-1
-Received: by mail-ed1-f72.google.com with SMTP id w8-20020a056402268800b004379267f163so5486099edd.20
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jun 2022 14:25:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Xl/Fq3aI5MxcGRQwvCytnZREphBAGecmNnGHoTX9/fA=;
-        b=nq1JA8cOCLnWHzm7367ql8YcX5Z7iKQ05QY3ly5NSSZfW1pt1qKhs1K7k+3d49aRYn
-         l3h7zVvvla9tuAwkU/01hQWLm4LL4C1qpNG7dHm2W+T3IYI67EyHQIbHjtefLa1tESqf
-         DGKguhjVVl6gB6ur8rfSTtFqQw8lk7ygq8bDr0LZAC5bIDOVfA/TLAkhaLkyKfkgcP0l
-         xKvvJyN654dnCLjbwzgG93JM9a1jTHX1w1d4Hwovbqe3R5QJfUjaBAalqjp5h+VIo6bw
-         2v75uXtkYM1OKde2Y+YTLBlxoi6fLvJXrPyMAzLgsEZiYOtBtRGCsmKU61Hn8cGEwm3D
-         o/0A==
-X-Gm-Message-State: AJIora+e3aChAvkk2xXwdz1CXKDek+kFnd1uHMaGX7i1usDCn/3KuSpk
-        I2A6+1uV2nt+BmG3lUM1uc2d6l9FfoGsYPLPUIfj4nvOxTi5qUV48WTFZpybuQUC4pQnI8a8dTQ
-        tmA1dsPL7LMQxD6vjcsP06ad8gnEuhV6p7w==
-X-Received: by 2002:a17:906:7386:b0:715:7024:3df7 with SMTP id f6-20020a170906738600b0071570243df7mr81250ejl.543.1656451500400;
-        Tue, 28 Jun 2022 14:25:00 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1uTnum0GpPfJsvt8qSMvEwb2tgAmQ9Hwn/c5JV4Hh36sXQRXdGRQoAnRgz6pVG6ofW5EaK6Ww==
-X-Received: by 2002:a17:906:7386:b0:715:7024:3df7 with SMTP id f6-20020a170906738600b0071570243df7mr81238ejl.543.1656451500206;
-        Tue, 28 Jun 2022 14:25:00 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id s10-20020a1709060c0a00b0070beb9401d9sm6966520ejf.171.2022.06.28.14.24.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jun 2022 14:24:59 -0700 (PDT)
-Message-ID: <b11094eb-fd3c-06d9-adca-7d56f40e7f4f@redhat.com>
-Date:   Tue, 28 Jun 2022 23:24:58 +0200
+        Wed, 29 Jun 2022 02:57:08 -0400
+Received: from out199-9.us.a.mail.aliyun.com (out199-9.us.a.mail.aliyun.com [47.90.199.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CB3631220;
+        Tue, 28 Jun 2022 23:57:05 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0VHmluRw_1656485816;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VHmluRw_1656485816)
+          by smtp.aliyun-inc.com;
+          Wed, 29 Jun 2022 14:56:57 +0800
+From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To:     virtualization@lists.linux-foundation.org
+Cc:     Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org,
+        kangjie.xu@linux.alibaba.com
+Subject: [PATCH v11 00/40] virtio pci support VIRTIO_F_RING_RESET
+Date:   Wed, 29 Jun 2022 14:56:16 +0800
+Message-Id: <20220629065656.54420-1-xuanzhuo@linux.alibaba.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH] platform/x86: hp-wmi: Ignore Sanitization Mode event
-Content-Language: en-US
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, markgross@kernel.org
-Cc:     Jorge Lopez <jorge.lopez2@hp.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220628123726.250062-1-kai.heng.feng@canonical.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220628123726.250062-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Git-Hash: 3fdaf102dd89
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+The virtio spec already supports the virtio queue reset function. This patch set
+is to add this function to the kernel. The relevant virtio spec information is
+here:
 
-On 6/28/22 14:37, Kai-Heng Feng wrote:
-> After system resume the hp-wmi driver may complain:
-> [ 702.620180] hp_wmi: Unknown event_id - 23 - 0x0
-> 
-> According to HP it means 'Sanitization Mode' and it's harmless to just
-> ignore the event.
-> 
-> Cc: Jorge Lopez <jorge.lopez2@hp.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+    https://github.com/oasis-tcs/virtio-spec/issues/124
+    https://github.com/oasis-tcs/virtio-spec/issues/139
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Also regarding MMIO support for queue reset, I plan to support it after this
+patch is passed.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+This patch set implements the refactoring of vring. Finally, the
+virtuque_resize() interface is provided based on the reset function of the
+transport layer.
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Test environment:
+    Host: 4.19.91
+    Qemu: QEMU emulator version 6.2.50 (with vq reset support)
+    Test Cmd:  ethtool -G eth1 rx $1 tx $2; ethtool -g eth1
 
-Regards,
+    The default is split mode, modify Qemu virtio-net to add PACKED feature to test
+    packed mode.
 
-Hans
+Qemu code:
+    https://github.com/fengidri/qemu/compare/89f3bfa3265554d1d591ee4d7f1197b6e3397e84...master
 
+In order to simplify the review of this patch set, the function of reusing
+the old buffers after resize will be introduced in subsequent patch sets.
 
-> ---
->  drivers/platform/x86/hp-wmi.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> index 0d8cb22e30df9..bc7020e9df9e8 100644
-> --- a/drivers/platform/x86/hp-wmi.c
-> +++ b/drivers/platform/x86/hp-wmi.c
-> @@ -89,6 +89,7 @@ enum hp_wmi_event_ids {
->  	HPWMI_BACKLIT_KB_BRIGHTNESS	= 0x0D,
->  	HPWMI_PEAKSHIFT_PERIOD		= 0x0F,
->  	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
-> +	HPWMI_SANITIZATION_MODE		= 0x17,
->  };
->  
->  /*
-> @@ -853,6 +854,8 @@ static void hp_wmi_notify(u32 value, void *context)
->  		break;
->  	case HPWMI_BATTERY_CHARGE_PERIOD:
->  		break;
-> +	case HPWMI_SANITIZATION_MODE:
-> +		break;
->  	default:
->  		pr_info("Unknown event_id - %d - 0x%x\n", event_id, event_data);
->  		break;
+Please review. Thanks.
+
+v11:
+  1. struct virtio_pci_common_cfg to virtio_pci_modern.h
+  2. conflict resolution
+
+v10:
+  1. on top of the harden vring IRQ
+  2. factor out split and packed from struct vring_virtqueue
+  3. some suggest from @Jason Wang
+
+v9:
+  1. Provide a virtqueue_resize() interface directly
+  2. A patch set including vring resize, virtio pci reset, virtio-net resize
+  3. No more separate structs
+
+v8:
+  1. Provide a virtqueue_reset() interface directly
+  2. Split the two patch sets, this is the first part
+  3. Add independent allocation helper for allocating state, extra
+
+v7:
+  1. fix #6 subject typo
+  2. fix #6 ring_size_in_bytes is uninitialized
+  3. check by: make W=12
+
+v6:
+  1. virtio_pci: use synchronize_irq(irq) to sync the irq callbacks
+  2. Introduce virtqueue_reset_vring() to implement the reset of vring during
+     the reset process. May use the old vring if num of the vq not change.
+  3. find_vqs() support sizes to special the max size of each vq
+
+v5:
+  1. add virtio-net support set_ringparam
+
+v4:
+  1. just the code of virtio, without virtio-net
+  2. Performing reset on a queue is divided into these steps:
+    1. reset_vq: reset one vq
+    2. recycle the buffer from vq by virtqueue_detach_unused_buf()
+    3. release the ring of the vq by vring_release_virtqueue()
+    4. enable_reset_vq: re-enable the reset queue
+  3. Simplify the parameters of enable_reset_vq()
+  4. add container structures for virtio_pci_common_cfg
+
+v3:
+  1. keep vq, irq unreleased
+
+Xuan Zhuo (40):
+  virtio: add helper virtqueue_get_vring_max_size()
+  virtio: struct virtio_config_ops add callbacks for queue_reset
+  virtio_ring: update the document of the virtqueue_detach_unused_buf
+    for queue reset
+  virtio_ring: extract the logic of freeing vring
+  virtio_ring: split vring_virtqueue
+  virtio_ring: introduce virtqueue_init()
+  virtio_ring: split: introduce vring_free_split()
+  virtio_ring: split: extract the logic of alloc queue
+  virtio_ring: split: extract the logic of alloc state and extra
+  virtio_ring: split: extract the logic of attach vring
+  virtio_ring: split: extract the logic of vring init
+  virtio_ring: split: introduce virtqueue_reinit_split()
+  virtio_ring: split: reserve vring_align, may_reduce_num
+  virtio_ring: split: introduce virtqueue_resize_split()
+  virtio_ring: packed: introduce vring_free_packed
+  virtio_ring: packed: extract the logic of alloc queue
+  virtio_ring: packed: extract the logic of alloc state and extra
+  virtio_ring: packed: extract the logic of attach vring
+  virtio_ring: packed: extract the logic of vring init
+  virtio_ring: packed: introduce virtqueue_reinit_packed()
+  virtio_ring: packed: introduce virtqueue_resize_packed()
+  virtio_ring: introduce virtqueue_resize()
+  virtio_pci: move struct virtio_pci_common_cfg to virtio_pci_modern.h
+  virtio_pci: struct virtio_pci_common_cfg add queue_notify_data
+  virtio: allow to unbreak/break virtqueue individually
+  virtio: queue_reset: add VIRTIO_F_RING_RESET
+  virtio_pci: struct virtio_pci_common_cfg add queue_reset
+  virtio_pci: introduce helper to get/set queue reset
+  virtio_pci: extract the logic of active vq for modern pci
+  virtio_pci: support VIRTIO_F_RING_RESET
+  virtio: find_vqs() add arg sizes
+  virtio_pci: support the arg sizes of find_vqs()
+  virtio_mmio: support the arg sizes of find_vqs()
+  virtio: add helper virtio_find_vqs_ctx_size()
+  virtio_net: set the default max ring size by find_vqs()
+  virtio_net: get ringparam by virtqueue_get_vring_max_size()
+  virtio_net: split free_unused_bufs()
+  virtio_net: support rx queue resize
+  virtio_net: support tx queue resize
+  virtio_net: support set_ringparam
+
+ arch/um/drivers/virtio_uml.c             |   3 +-
+ drivers/net/virtio_net.c                 | 209 +++++-
+ drivers/platform/mellanox/mlxbf-tmfifo.c |   3 +
+ drivers/remoteproc/remoteproc_virtio.c   |   3 +
+ drivers/s390/virtio/virtio_ccw.c         |   4 +
+ drivers/virtio/virtio_mmio.c             |  11 +-
+ drivers/virtio/virtio_pci_common.c       |  32 +-
+ drivers/virtio/virtio_pci_common.h       |   3 +-
+ drivers/virtio/virtio_pci_legacy.c       |   8 +-
+ drivers/virtio/virtio_pci_modern.c       | 161 ++++-
+ drivers/virtio/virtio_pci_modern_dev.c   |  35 +
+ drivers/virtio/virtio_ring.c             | 785 +++++++++++++++++------
+ drivers/virtio/virtio_vdpa.c             |   3 +
+ include/linux/virtio.h                   |   9 +
+ include/linux/virtio_config.h            |  38 +-
+ include/linux/virtio_pci_modern.h        |  30 +
+ include/uapi/linux/virtio_config.h       |   7 +-
+ include/uapi/linux/virtio_pci.h          |  28 +-
+ 18 files changed, 1068 insertions(+), 304 deletions(-)
+
+--
+2.31.0
 
