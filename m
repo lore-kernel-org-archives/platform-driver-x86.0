@@ -2,153 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3129ECCA480
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 16:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 676D9C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 16:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229681AbiF2QkM (ORCPT
+        id S230254AbiF2Qon (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Jun 2022 12:40:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50314 "EHLO
+        Wed, 29 Jun 2022 12:44:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbiF2QkL (ORCPT
+        with ESMTP id S230370AbiF2Qom (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Jun 2022 12:40:11 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 644292C11C;
-        Wed, 29 Jun 2022 09:40:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656520810; x=1688056810;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Z+hcQzKepqpV4YWC94+CLnyEkG6YeuxWItwkjNGgn3g=;
-  b=EMRW4yYMOut+YvJiCcEB/BGuUvjzqEzgX9f5bC9NWVMYs6cnTWIe3WsI
-   T6YkypOYsWZ/OLVPV8f5g5zspOYHdmoP7AINP4P2SWAuBeX2ygDN3vXoZ
-   rUGXuRCQrR6WL24VKXhV+NoEMuybUALfGA9WSeuKPfdK4lUMKvnG5Mjc/
-   7uBpK0Suq3innGLuCCU6bTB+dGOTuBMIsRf/cLA2YeNnZXtTV6o+8No4x
-   RdLkwQCfTfTGQgNsO7dvOjRqGRW4166hFId7Rb5M1/B9NZgiacPTvslkK
-   WyBaqJMNOYz3BNdwJcH1z3//EMNFHQ2qQXwO08sgRMqCYfRqFGAIMvosh
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="307579352"
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="307579352"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 09:40:09 -0700
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="617628857"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 09:40:02 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1o6ajO-000xuI-Nk;
-        Wed, 29 Jun 2022 19:39:58 +0300
-Date:   Wed, 29 Jun 2022 19:39:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wed, 29 Jun 2022 12:44:42 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54B5FDF;
+        Wed, 29 Jun 2022 09:44:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id C222ECE2859;
+        Wed, 29 Jun 2022 16:44:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E02DEC385A2;
+        Wed, 29 Jun 2022 16:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656521077;
+        bh=145iEFNr+1wndFzy/YO7HeoszVr7V6xV125JMJOC2BA=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=iTEEWW7gkf0KXLxUKPsSkMp6AA0JyrCS+u9apqlc0be5x/QEJBJ0x2rmDbttPF9lA
+         I0xoNNZgvJota+PI7lJMYufnee2Y5goxdo5cSBl1inOUJu2KLWIZBG4K9IAihuOdpP
+         jQsMOP4LBAxOZoelnUxYW8V4yfKDfrDoAbSNvVo4kONpF6EZs/2zvL52CRamdSGIRE
+         TrEQ0v1hpMs8GuMsMRDrtxQg7+8/JClFH8btuu82kH8djFZX1PqyQ/lxOG4OmJ626F
+         H1bwUvhNB6l9nycj2QqynbyweE6TDJc7juaxQkGjutp/HFT87sFyY79yx6yMSk0U3R
+         4EPk0iPQCOTNw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C9A9AE49BB8;
+        Wed, 29 Jun 2022 16:44:37 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for 5.19-3
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <42646771-d1ea-0b05-7cb8-233d6e42ac1d@redhat.com>
+References: <42646771-d1ea-0b05-7cb8-233d6e42ac1d@redhat.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <42646771-d1ea-0b05-7cb8-233d6e42ac1d@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.19-3
+X-PR-Tracked-Commit-Id: 9ab762a84b8094540c18a170e5ddd6488632c456
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d9b2ba67917c18822c6a09af41c32fa161f1606b
+Message-Id: <165652107782.8432.17451658153338765951.pr-tracker-bot@kernel.org>
+Date:   Wed, 29 Jun 2022 16:44:37 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-edac@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
-Message-ID: <YryAXlZqcr/liN7n@smile.fi.intel.com>
-References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
- <YqBS8I62YBPFC9iS@google.com>
- <CAHp75Ve9Lju8AEQd5huz1aYGg4sOu-ae7tTdyDWCXPCBR=wXbQ@mail.gmail.com>
- <YrGyWCaY+swYAYzH@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YrGyWCaY+swYAYzH@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-+Cc: Rafael
+The pull request you sent on Wed, 29 Jun 2022 13:01:42 +0200:
 
-On Tue, Jun 21, 2022 at 02:58:16PM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 08, 2022 at 12:50:44PM +0200, Andy Shevchenko wrote:
-> > On Wed, Jun 8, 2022 at 9:42 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > > On Mon, 06 Jun 2022, Andy Shevchenko wrote:
-> > >
-> > > > There are a few users that would like to utilize P2SB mechanism of hiding
-> > > > and unhiding a device from the PCI configuration space.
-> > > >
-> > > > Here is the series to consolidate p2sb handling code for existing users
-> > > > and to provide a generic way for new comer(s).
-> > > >
-> > > > It also includes a patch to enable GPIO controllers on Apollo Lake
-> > > > when it's used with ABL bootloader w/o ACPI support.
-> > > >
-> > > > The patch that brings the helper ("platform/x86/intel: Add Primary to
-> > > > Sideband (P2SB) bridge support") has a commit message that sheds a light
-> > > > on what the P2SB is and why this is needed.
-> > > >
-> > > > I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
-> > > > since we have an ACPI device for GPIO I do not see any attempts to recreate
-> > > > one).
-> > > >
-> > > > The series is ready to be merged via MFD tree, but see below.
-> > > >
-> > > > The series also includes updates for Simatic IPC drivers that partially
-> > > > tagged by respective maintainers (the main question is if Pavel is okay
-> > > > with the last three patches, since I believe Hans is okay with removing
-> > > > some code under PDx86). Hence the first 8 patches can be merged right
-> > > > away and the rest when Pavel does his review.
-> > >
-> > > Can we just wait for Pavel's review, then merge them all at once?
-> > 
-> > Sure, it would be the best course of action.
-> 
-> Pavel, do you have a chance to review the patches (last three) that touch
-> LED drivers? What would be your verdict?
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.19-3
 
-Lee, Rafael,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d9b2ba67917c18822c6a09af41c32fa161f1606b
 
-It seems quite hard to get Pavel's attention to this series [1]. It's already
-passed more than 3 weeks for any sign of review of three top patches of the
-series that touched LED subsystem. The entire series has all necessary tags,
-but for LED changes.
-
-Note, that the top of this series is not done by me and was sent for
-preliminary review much earlier [2], altogether it makes months of no response from
-the maintainer.
-
-The nature of patches is pretty simple and doesn't touch any of other than Simatic LED
-drivers nor LED core. Moreover, it was written by Siemens, who produces the H/W in
-question and very well tested as a separate change and as part of the series.
-
-I think to move forward we may ask Rafael to review it on behalf of good maintainer
-and with his approval apply entire series.
-
-Thoughts?
-
-[1]: https://lore.kernel.org/all/20220606164138.66535-1-andriy.shevchenko@linux.intel.com/
-[2]: https://lore.kernel.org/linux-leds/20220513083652.974-1-henning.schild@siemens.com/
+Thank you!
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
