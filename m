@@ -2,174 +2,162 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6796BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 14:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9EEC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 14:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230049AbiF2OPW (ORCPT
+        id S232164AbiF2O0E (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Jun 2022 10:15:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45754 "EHLO
+        Wed, 29 Jun 2022 10:26:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230496AbiF2OPQ (ORCPT
+        with ESMTP id S230240AbiF2O0A (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Jun 2022 10:15:16 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8209535869;
-        Wed, 29 Jun 2022 07:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656512112; x=1688048112;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=K4nrdIMH7LeQTNEo2WI2WMtd03lmym7Tvgf9klz9R2g=;
-  b=DhTgs/y/vDSEG19s8uyQFlPdp2EZBZ4P8CGNNWC8Kd3gpGRSxzq3nLYo
-   ieJS3sNj9yFwbR73/3W7Y2mKqH5feZEn4d/MTJk1N2GcG3AQTfjBKLJYG
-   EZx2kyXDf/+dPrdxcfUuK+AtQtjNCWAxpToOkDV3R+Xdvfe3qGu2FUTs7
-   LgP9+JwbG+98mIQsmdPhg0T6WGd3e40UQCOMOGpsyjFId54Y0TSCno0iW
-   6lKqCfqAc7DBhB9c2aYr21kXzQ5RgHNzdoYYMgqRQGi7kCUodu/BxnvpV
-   LSyFEY/7w/UbhF4S+kPpcWrI9c8FGr05cYNrA31/5HXjTnlCDePA6XIQW
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="343728904"
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="343728904"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 07:14:36 -0700
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="647409322"
-Received: from egolubev-mobl.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.209.68.9])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 07:14:35 -0700
-Message-ID: <4fa1d4befe5de6d402aeb72ec1ae9953789da3ec.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: ISST: PUNIT device mapping with Sub-NUMA
- clustering
-From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 29 Jun 2022 07:14:34 -0700
-In-Reply-To: <55a6470c-1ce5-b237-d3be-1b98e4dbe3ce@redhat.com>
-References: <20220627215031.2158825-1-srinivas.pandruvada@linux.intel.com>
-         <55a6470c-1ce5-b237-d3be-1b98e4dbe3ce@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+        Wed, 29 Jun 2022 10:26:00 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C74A93190A;
+        Wed, 29 Jun 2022 07:25:59 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id mf9so33053848ejb.0;
+        Wed, 29 Jun 2022 07:25:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=nzVAkjUIXnSmifmZO/KNuTW33GCGTCzsi9aX026XXeg=;
+        b=S2dVib/eYmAFl827WdIoCLllzfbxALRjIjzfRRwuBWpdbVEMsjXdf1fQZ0QK1n2n0J
+         7Rc0uKmDUlj06sv7gme85B+3fLmze+mOouy0tIsuBDVpy1nD4eEh9k2i1LyAyfo/z7Zj
+         KDlk5RBwfb1T/0o1rVzuZORFiKZsCvSsNfve9fNt60vuT8XdzQWLTwkS/9FAhK69nmEs
+         mEzSIHBFyIvznhb3ZYEmWznM5HxrpFTwi8PXn2kSF7LDJWEQQU2316sTZ03OvudAaN+G
+         thYeRK11RnXT7zItby/QP43/O2E1Z4EfVZv3Nyn7dRrR7zoEuvKZKKrx+f9P5pfvx3Rg
+         uLHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=nzVAkjUIXnSmifmZO/KNuTW33GCGTCzsi9aX026XXeg=;
+        b=K+/sP/hRrNW2dKVpBtInRhRcLgevV8ty+8mr5yrNwVTd2440sDwaFo+X70nnHqBZAM
+         O1e8Mt2RDyCnrbwIY3Vfho714AOnWqqXNMH6wDFomSZQxVP/5hLg590W2SFDcCNq7n0j
+         dUBbh1mohPAsDDqfwTtDNwtKCgpxtJ7iwkDUt4rOj9rlVZxBDAQBZ70wGo35FmuOBC3u
+         xejORvqK4II7TIRohQmMq2TK+l0mlnshiOzW+PTHdSVBC+QokePfjOGSPUlKUtHUWTqi
+         1dbdYVekSRxf7honXKELQjw3s2sJFpAo6ohp0sneZck+CTstgY3IOQrAz3PYuH8xBCno
+         LsNA==
+X-Gm-Message-State: AJIora9fPn0c14bXzp6tnc7I4qM66JCoAiTwWqMctW6cwVtnVYc7d4n8
+        MWmqpEuyoC12RWdG8cu+TcE=
+X-Google-Smtp-Source: AGRyM1vLxTFMIxeh0MQDJmw094z51hmalDIKhKM+71jelG0gY6NpuuzQXDALY4ZT1iSuYjMs9++euw==
+X-Received: by 2002:a17:906:58cf:b0:722:e4e1:c174 with SMTP id e15-20020a17090658cf00b00722e4e1c174mr3593366ejs.85.1656512758310;
+        Wed, 29 Jun 2022 07:25:58 -0700 (PDT)
+Received: from [10.29.0.16] ([37.120.217.82])
+        by smtp.gmail.com with ESMTPSA id jy19-20020a170907763300b007263713cfe9sm7220580ejc.169.2022.06.29.07.25.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jun 2022 07:25:57 -0700 (PDT)
+Message-ID: <80117936-6869-19b2-45a6-96a4562c6cd2@gmail.com>
+Date:   Wed, 29 Jun 2022 16:25:54 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH 6/6] i2c: Make remove callback return void
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wolfram Sang <wsa@kernel.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Luka Perkov <luka.perkov@sartura.hr>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Tu <shawnx.tu@intel.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-integrity@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, chrome-platform@lists.linux.dev,
+        linux-rpi-kernel@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-mediatek@lists.infradead.org
+References: <20220628140313.74984-1-u.kleine-koenig@pengutronix.de>
+ <20220628140313.74984-7-u.kleine-koenig@pengutronix.de>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <20220628140313.74984-7-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
-
-Thanks for the review.
-
-On Wed, 2022-06-29 at 12:00 +0200, Hans de Goede wrote:
-> Hi,
+On 6/28/22 16:03, Uwe Kleine-König wrote:
+> From: Uwe Kleine-König <uwe@kleine-koenig.org>
 > 
-> On 6/27/22 23:50, Srinivas Pandruvada wrote:
-> > 
+> The value returned by an i2c driver's remove function is mostly ignored.
+> (Only an error message is printed if the value is non-zero that the
+> error is ignored.)
+> 
+> So change the prototype of the remove function to return no value. This
+> way driver authors are not tempted to assume that passing an error to
+> the upper layer is a good idea. All drivers are adapted accordingly.
+> There is no intended change of behaviour, all callbacks were prepared to
+> return 0 before.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+[...]
+>   drivers/platform/surface/surface3_power.c                 | 4 +---
+
 [...]
 
-> >  
-> > +struct isst_if_pkg_info {
-> > +       struct pci_dev *pci_dev[2];
-> 
-> This and (continued below) ...
-> 
-Didn't understand the comment.
+> diff --git a/drivers/platform/surface/surface3_power.c b/drivers/platform/surface/surface3_power.c
+> index 444ec81ba02d..3b20dddeb815 100644
+> --- a/drivers/platform/surface/surface3_power.c
+> +++ b/drivers/platform/surface/surface3_power.c
+> @@ -554,7 +554,7 @@ static int mshw0011_probe(struct i2c_client *client)
+>   	return error;
+>   }
+>   
+> -static int mshw0011_remove(struct i2c_client *client)
+> +static void mshw0011_remove(struct i2c_client *client)
+>   {
+>   	struct mshw0011_data *cdata = i2c_get_clientdata(client);
+>   
+> @@ -564,8 +564,6 @@ static int mshw0011_remove(struct i2c_client *client)
+>   		kthread_stop(cdata->poll_task);
+>   
+>   	i2c_unregister_device(cdata->bat0);
+> -
+> -	return 0;
+>   }
+>   
+>   static const struct acpi_device_id mshw0011_acpi_match[] = {
 
-> > +};
-> > +
-> >  static struct isst_if_cpu_info *isst_cpu_info;
-> > +static struct isst_if_pkg_info *isst_pkg_info;
-> > +
-> >  #define ISST_MAX_PCI_DOMAINS   8
-> >  
-> >  static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no,
-> > int dev, int fn)
-> >  {
-> > +       int pkg_id = topology_physical_package_id(cpu);
-> >         struct pci_dev *matched_pci_dev = NULL;
-> >         struct pci_dev *pci_dev = NULL;
-> >         int no_matches = 0;
-> > @@ -324,6 +331,8 @@ static struct pci_dev *_isst_if_get_pci_dev(int
-> > cpu, int bus_no, int dev, int fn
-> >                 }
-> >  
-> >                 if (node == isst_cpu_info[cpu].numa_node) {
-> > +                       isst_pkg_info[pkg_id].pci_dev[bus_no] =
-> > _pci_dev;
-> > +
-> 
-> This and ...
-> 
-Please explain the comment.
+For the quoted above:
 
-> >                         pci_dev = _pci_dev;
-> >                         break;
-> >                 }
-> > @@ -342,6 +351,9 @@ static struct pci_dev *_isst_if_get_pci_dev(int
-> > cpu, int bus_no, int dev, int fn
-> >         if (!pci_dev && no_matches == 1)
-> >                 pci_dev = matched_pci_dev;
-> >  
-> > +       if (!pci_dev)
-> > +               pci_dev = isst_pkg_info[pkg_id].pci_dev[bus_no];
-> > +
-> 
-> This assumes that bus_no is never > 1, is this assumption enforced
-> somewhere?
-> 
-Yes. That is checked at the beginning of function
-   if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
-            cpu >= num_possible_cpus())
-	 return NULL;
-
-
-> Also maybe make the 2 in:
-> 
-> > +struct isst_if_pkg_info {
-> > +       struct pci_dev *pci_dev[2];
-> 
-> a #define ?
-I will.
-
-Thanks,
-Srinivas
-
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> >         return pci_dev;
-> >  }
-> >  
-> > @@ -417,10 +429,19 @@ static int isst_if_cpu_info_init(void)
-> >         if (!isst_cpu_info)
-> >                 return -ENOMEM;
-> >  
-> > +       isst_pkg_info = kcalloc(topology_max_packages(),
-> > +                               sizeof(*isst_pkg_info),
-> > +                               GFP_KERNEL);
-> > +       if (!isst_pkg_info) {
-> > +               kfree(isst_cpu_info);
-> > +               return -ENOMEM;
-> > +       }
-> > +
-> >         ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
-> >                                 "platform/x86/isst-if:online",
-> >                                 isst_if_cpu_online, NULL);
-> >         if (ret < 0) {
-> > +               kfree(isst_pkg_info);
-> >                 kfree(isst_cpu_info);
-> >                 return ret;
-> >         }
-> > @@ -433,6 +454,7 @@ static int isst_if_cpu_info_init(void)
-> >  static void isst_if_cpu_info_exit(void)
-> >  {
-> >         cpuhp_remove_state(isst_if_online_id);
-> > +       kfree(isst_pkg_info);
-> >         kfree(isst_cpu_info);
-> >  };
-> >  
-> 
-
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
