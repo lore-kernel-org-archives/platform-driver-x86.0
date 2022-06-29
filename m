@@ -2,91 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C696C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 21:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66CCCCA481
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 21:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230186AbiF2VKm (ORCPT
+        id S230472AbiF2VUe convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Jun 2022 17:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53526 "EHLO
+        Wed, 29 Jun 2022 17:20:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230179AbiF2VKl (ORCPT
+        with ESMTP id S229741AbiF2VU3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Jun 2022 17:10:41 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F952CC90
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 14:10:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 64CBAB82739
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 21:10:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 19377C341CB
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 21:10:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656537038;
-        bh=1eO/OpxFqMuCEjsIKIZgzTpnQzYwq83mlqnSpy4LCO8=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=KW58jf8Y91uH20vfcT8DS0dwhxpOZsnp3/J/Grz9RRqX18+WmLlRooGiyRhGW3juO
-         ltcqKTz/zfim+FFvHdPUGTHNxXus1v6VHIdbsiKD2mpqXtRdzaQA1/qyaGQDUe+Nzj
-         es9RTQkGjy1fCURBzNYvITEgs4yHOsmcMAoy9NLZ6EfZ74TAEptDpQGBflXNkehq2u
-         ySHlM2rSSvRX5IxUFeFj2DBA/V3kv2rW8ByuA6yaePYLStqrqaxydJXpp3y0fBRFjk
-         9F8bgpX4g+ZpvKdC+YW2VnU1SEzL0bM7LpwCBVK+wwep8maiveCf8v4GGwdF9PrZuS
-         diXtIOSpKvA/Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id EBC4FC05FD2; Wed, 29 Jun 2022 21:10:37 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216176] ideapad-laptop doesn't expose rapid charge
-Date:   Wed, 29 Jun 2022 21:10:37 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216176-215701-AN9fXZk3zk@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216176-215701@https.bugzilla.kernel.org/>
-References: <bug-216176-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 29 Jun 2022 17:20:29 -0400
+Received: from hostingweb31-40.netsons.net (hostingweb31-40.netsons.net [89.40.174.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C99113F79;
+        Wed, 29 Jun 2022 14:20:28 -0700 (PDT)
+Received: from [37.161.29.0] (port=43545 helo=[192.168.131.30])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1o6f6m-000BzC-Qd;
+        Wed, 29 Jun 2022 23:20:25 +0200
+Message-ID: <d682fb60-c254-f89e-5d6d-cdf7aa752939@lucaceresoli.net>
+Date:   Wed, 29 Jun 2022 23:20:04 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [PATCH 6/6] i2c: Make remove callback return void
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wolfram Sang <wsa@kernel.org>
+Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-integrity@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, chrome-platform@lists.linux.dev,
+        linux-rpi-kernel@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-mediatek@lists.infradead.org
+References: <20220628140313.74984-1-u.kleine-koenig@pengutronix.de>
+ <20220628140313.74984-7-u.kleine-koenig@pengutronix.de>
+Content-Language: en-US
+In-Reply-To: <20220628140313.74984-7-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216176
+Hi,
 
---- Comment #7 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-(In reply to Barnab=C3=A1s P=C5=91cze from comment #6)
-> My concern is that there is already a "charge_type" attribute which can t=
-ake
-> the "Fast" value among others: Unknown, N/A, Trickle, Fast, Standard,
-> Adaptive, Custom, Long Life, Bypass.
->=20
-> It might even make sense to wire up the so-called "conservation mode" to
-> this attribute as well ("Long Life") .
+[keeping only individuals and lists in Cc to avoid bounces]
 
-That is a good point, although AFAIK that is more intended for charger-type
-power_supply devices then for batteries...
+On 28/06/22 16:03, Uwe Kleine-König wrote:
+> From: Uwe Kleine-König <uwe@kleine-koenig.org>
+> 
+> The value returned by an i2c driver's remove function is mostly ignored.
+> (Only an error message is printed if the value is non-zero that the
+> error is ignored.)
+> 
+> So change the prototype of the remove function to return no value. This
+> way driver authors are not tempted to assume that passing an error to
+> the upper layer is a good idea. All drivers are adapted accordingly.
+> There is no intended change of behaviour, all callbacks were prepared to
+> return 0 before.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Either way I think it is best to just write a proposal in the form of a
-Documentation patch to Documentation/ABI/testing/sysfs-class-power and then
-discuss this further on the mailinglist.
+For versaclock:
 
---=20
-You may reply to this email to add a comment.
+> diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
+> index e7be3e54b9be..657493ecce4c 100644
+> --- a/drivers/clk/clk-versaclock5.c
+> +++ b/drivers/clk/clk-versaclock5.c
+> @@ -1138,7 +1138,7 @@ static int vc5_probe(struct i2c_client *client)
+>  	return ret;
+>  }
+>  
+> -static int vc5_remove(struct i2c_client *client)
+> +static void vc5_remove(struct i2c_client *client)
+>  {
+>  	struct vc5_driver_data *vc5 = i2c_get_clientdata(client);
+>  
+> @@ -1146,8 +1146,6 @@ static int vc5_remove(struct i2c_client *client)
+>  
+>  	if (vc5->chip_info->flags & VC5_HAS_INTERNAL_XTAL)
+>  		clk_unregister_fixed_rate(vc5->pin_xin);
+> -
+> -	return 0;
+>  }
+>  
+>  static int __maybe_unused vc5_suspend(struct device *dev)
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+
+-- 
+Luca
