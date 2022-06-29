@@ -2,193 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 047CBC43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 19:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACF9C43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 20:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbiF2TwB (ORCPT
+        id S230060AbiF2UEp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Jun 2022 15:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57476 "EHLO
+        Wed, 29 Jun 2022 16:04:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229841AbiF2Tv5 (ORCPT
+        with ESMTP id S230250AbiF2UEo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Jun 2022 15:51:57 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 085B629CB1;
-        Wed, 29 Jun 2022 12:51:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656532317; x=1688068317;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=N/fkGCuTMr1eYUIcmeBesy9hJ2pRKXecFt00zHBxD1E=;
-  b=m7hJaZaReGqdEIXNcAJ/jq9URzfK1KEw42tGWc5g8pwanIMP5UQ+wx4z
-   jLeE9Gd3wemulQiflBSbpdz9zbgH2rfkI56alLQIX3hnJwTB7/Be8FPi1
-   jcMDwXbS5I1MUvfmkZ48r+ac4DSQqzTGxWGlYd0vq3OX9YrbhaBPZuSY3
-   FhuhZPg+bPc96m+2mvvMqsxfHWw7ykWE7sLHj3u7NkEYBG5ZdwXoxpXx0
-   93SnCI/tIjzh82K4QJ2wuOOfEkng9te8E3HpB0/0HjbJoceZvG0J62Gs7
-   +kR3k9lbxFYqxJ2ahvjPui4IccfgXaKOOxfiE9dltJn9qhxZ0hnj8/j34
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="307644703"
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="307644703"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 12:48:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="717956836"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
-  by orsmga004.jf.intel.com with ESMTP; 29 Jun 2022 12:48:24 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2] platform/x86: ISST: PUNIT device mapping with Sub-NUMA clustering
-Date:   Wed, 29 Jun 2022 12:48:17 -0700
-Message-Id: <20220629194817.2418240-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
+        Wed, 29 Jun 2022 16:04:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9F136322
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 13:04:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 159F0620CF
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 20:04:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 75A7AC341C8
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 20:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656533081;
+        bh=Q3fepfn3vzOXxK+wr3u/Qxtq1GetF4geHp7Fgtuzras=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=YQ4759UO0ObhXe3HOt2lV+S0q0rllU13N6rWdO4p3KrYCEx7+7GDc3s/YuDudjexy
+         /cQEkfeF90P//rMu6pV6I+DYiBPw++cWAXXlnkUC4uKqEDwOwg7Er1ovcHGDIVxaLz
+         8mG36oLsqIwfpstlZYdN5LeqbUfnQX6OQ5lWLoLd0J4pCW9l/FWzKYu9FUA6R+2HRY
+         hhT70lc3/JkBgJAu8uNzD63Z+DewMRPGCx6L5E5K8x/AIFWJOTpayrc/+7yaKbzQSP
+         O+pKE34jGJD6KbANEI5IbBT85s5nKMSaWukqT5hSaEpakaDGTWkT7HkUC0anmj7/Ot
+         4DPHp2ykZX1Bg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 640F2CC13B0; Wed, 29 Jun 2022 20:04:41 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216176] ideapad-laptop doesn't expose rapid charge
+Date:   Wed, 29 Jun 2022 20:04:41 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: pobrn@protonmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-216176-215701-o9oF18anq8@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-216176-215701@https.bugzilla.kernel.org/>
+References: <bug-216176-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On a multiple package system using Sub-NUMA clustering, there is an issue
-in mapping Linux CPU number to PUNIT PCI device when manufacturer decided
-to reuse the PCI bus number across packages. Bus number can be reused as
-long as they are in different domain or segment. In this case some CPU
-will fail to find a PCI device to issue SST requests.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216176
 
-When bus numbers are reused across CPU packages, we are using proximity
-information by matching CPU numa node id to PUNIT PCI device numa node
-id. But on a package there can be only one PUNIT PCI device, but multiple
-numa nodes (one for each sub cluster). So, the numa node ID of the PUNIT
-PCI device can only match with one numa node id of CPUs in a sub cluster
-in the package.
+--- Comment #6 from Barnab=C3=A1s P=C5=91cze (pobrn@protonmail.com) ---
+My concern is that there is already a "charge_type" attribute which can take
+the "Fast" value among others: Unknown, N/A, Trickle, Fast, Standard, Adapt=
+ive,
+Custom, Long Life, Bypass.
 
-Since there can be only one PUNIT PCI device per package, if we match
-with numa node id of any sub cluster in that package, we can use that
-mapping for any CPU in that package. So, store the match information
-in a per package data structure and return the information when there
-is no match.
+It might even make sense to wire up the so-called "conservation mode" to th=
+is
+attribute as well ("Long Life") .
 
-While here, use defines for max bus number instead of hardcoding.
+--=20
+You may reply to this email to add a comment.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
-v2
-- Use #define for max bus number and use
-
- .../intel/speed_select_if/isst_if_common.c    | 39 +++++++++++++++----
- 1 file changed, 32 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index e8424e70d81d..fd102678c75f 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -277,29 +277,38 @@ static int isst_if_get_platform_info(void __user *argp)
- 	return 0;
- }
- 
-+#define ISST_MAX_BUS_NUMBER	2
- 
- struct isst_if_cpu_info {
- 	/* For BUS 0 and BUS 1 only, which we need for PUNIT interface */
--	int bus_info[2];
--	struct pci_dev *pci_dev[2];
-+	int bus_info[ISST_MAX_BUS_NUMBER];
-+	struct pci_dev *pci_dev[ISST_MAX_BUS_NUMBER];
- 	int punit_cpu_id;
- 	int numa_node;
- };
- 
-+struct isst_if_pkg_info {
-+	struct pci_dev *pci_dev[ISST_MAX_BUS_NUMBER];
-+};
-+
- static struct isst_if_cpu_info *isst_cpu_info;
-+static struct isst_if_pkg_info *isst_pkg_info;
-+
- #define ISST_MAX_PCI_DOMAINS	8
- 
- static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
- {
- 	struct pci_dev *matched_pci_dev = NULL;
- 	struct pci_dev *pci_dev = NULL;
--	int no_matches = 0;
-+	int no_matches = 0, pkg_id;
- 	int i, bus_number;
- 
--	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
--	    cpu >= num_possible_cpus())
-+	if (bus_no < 0 || bus_no >= ISST_MAX_BUS_NUMBER || cpu < 0 ||
-+	    cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
- 		return NULL;
- 
-+	pkg_id = topology_physical_package_id(cpu);
-+
- 	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
- 	if (bus_number < 0)
- 		return NULL;
-@@ -324,6 +333,8 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
- 		}
- 
- 		if (node == isst_cpu_info[cpu].numa_node) {
-+			isst_pkg_info[pkg_id].pci_dev[bus_no] = _pci_dev;
-+
- 			pci_dev = _pci_dev;
- 			break;
- 		}
-@@ -342,6 +353,10 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
- 	if (!pci_dev && no_matches == 1)
- 		pci_dev = matched_pci_dev;
- 
-+	/* Return pci_dev pointer for any matched CPU in the package */
-+	if (!pci_dev)
-+		pci_dev = isst_pkg_info[pkg_id].pci_dev[bus_no];
-+
- 	return pci_dev;
- }
- 
-@@ -361,8 +376,8 @@ struct pci_dev *isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
- {
- 	struct pci_dev *pci_dev;
- 
--	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
--	    cpu >= num_possible_cpus())
-+	if (bus_no < 0 || bus_no >= ISST_MAX_BUS_NUMBER  || cpu < 0 ||
-+	    cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
- 		return NULL;
- 
- 	pci_dev = isst_cpu_info[cpu].pci_dev[bus_no];
-@@ -417,10 +432,19 @@ static int isst_if_cpu_info_init(void)
- 	if (!isst_cpu_info)
- 		return -ENOMEM;
- 
-+	isst_pkg_info = kcalloc(topology_max_packages(),
-+				sizeof(*isst_pkg_info),
-+				GFP_KERNEL);
-+	if (!isst_pkg_info) {
-+		kfree(isst_cpu_info);
-+		return -ENOMEM;
-+	}
-+
- 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
- 				"platform/x86/isst-if:online",
- 				isst_if_cpu_online, NULL);
- 	if (ret < 0) {
-+		kfree(isst_pkg_info);
- 		kfree(isst_cpu_info);
- 		return ret;
- 	}
-@@ -433,6 +457,7 @@ static int isst_if_cpu_info_init(void)
- static void isst_if_cpu_info_exit(void)
- {
- 	cpuhp_remove_state(isst_if_online_id);
-+	kfree(isst_pkg_info);
- 	kfree(isst_cpu_info);
- };
- 
--- 
-2.31.1
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
