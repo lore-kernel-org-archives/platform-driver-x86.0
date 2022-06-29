@@ -2,183 +2,146 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB0AC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 11:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6D0C43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 13:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231613AbiF2LBt (ORCPT
+        id S233802AbiF2Nf5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Jun 2022 07:01:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38818 "EHLO
+        Wed, 29 Jun 2022 09:35:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbiF2LBs (ORCPT
+        with ESMTP id S233819AbiF2Nf4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Jun 2022 07:01:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 36F4E3E5D6
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 04:01:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656500506;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=JncY8iU7qudh/q/NGqxm2tsN+EiGstzfMOsDe7WvCvo=;
-        b=dV/PuEQDGMqDNseSQuRy8UUIISBJu013yQm28Ot62JfjvkSIaonHBadCfHqMOiaeAxQSWI
-        QggWKwyW7F/WzwmophR6x/UcogxlGhit8w9HMtuj2fqMrGvH2e6Cyiuok0LGUIGBw1DgqV
-        TkgN9+mEFhmuNa1Wr0mDLUToaqxWVns=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-379-PaDXSpxRP5Cr0iESJfUneA-1; Wed, 29 Jun 2022 07:01:45 -0400
-X-MC-Unique: PaDXSpxRP5Cr0iESJfUneA-1
-Received: by mail-ed1-f71.google.com with SMTP id c20-20020a05640227d400b004369cf00c6bso11625267ede.22
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 04:01:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
-         :subject:to:cc:content-language:content-transfer-encoding;
-        bh=JncY8iU7qudh/q/NGqxm2tsN+EiGstzfMOsDe7WvCvo=;
-        b=RRB+3mHd1bH3vG7aO2f33HTmeIxuaYjOkuo713brhJnOJDRc/3pIcLNRTSIXgkBamO
-         qiqhSuoKRzpQ8YoFls7KdCheBqCJy+w6ckdk1rENRAe5A5oFhkhUvV3UU4obaJX1fcN7
-         l8VAoG0CfCVKH6QgZi8E6BiweSahyLev7gUKcGBwZ73iM4JL1WlBDyTzKJjmFMbc7JNV
-         1pIoJS1q+YFxH++86JOw3xUn8fA7nvHe6FcnNzBGc7sVS2sb1WerQHd5jsdeTYznZOBy
-         oX3qOYqdj1fHj6/EHFtmqlJ4eOpjVmxNMpl/PhbQwOPTr5rPzCbSzWU2O17Wx/LimDbO
-         fwUQ==
-X-Gm-Message-State: AJIora9pM/QimhJkDV9DGhwNpO6VM+asnN6CNIAhAAbiiksjMl81BEd4
-        vicFHKqCHK628GGoYR/Fnx4QGbQK1xgfn6sF7AwObkwoPaM4Vka+qXCTu9AEnjwjk5ThurC/sVC
-        7eUBhumAfJreMlpkTVa83+EcATENa7gatOw==
-X-Received: by 2002:a17:906:c14f:b0:726:a609:a369 with SMTP id dp15-20020a170906c14f00b00726a609a369mr2760534ejc.326.1656500503963;
-        Wed, 29 Jun 2022 04:01:43 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1s8eOy+oPXUz1mVczyDKrGkwCyqsPLS5yJ4CQZghPK7i176EkxCQZyOelDL60BAfwGWPhi1yw==
-X-Received: by 2002:a17:906:c14f:b0:726:a609:a369 with SMTP id dp15-20020a170906c14f00b00726a609a369mr2760512ejc.326.1656500503782;
-        Wed, 29 Jun 2022 04:01:43 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id m9-20020a509989000000b004355d27799fsm11331281edb.96.2022.06.29.04.01.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jun 2022 04:01:43 -0700 (PDT)
-Message-ID: <42646771-d1ea-0b05-7cb8-233d6e42ac1d@redhat.com>
-Date:   Wed, 29 Jun 2022 13:01:42 +0200
+        Wed, 29 Jun 2022 09:35:56 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FAF72B257
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 06:35:55 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o6Xqa-0006SP-06; Wed, 29 Jun 2022 15:35:12 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o6XqQ-003PNQ-Vz; Wed, 29 Jun 2022 15:35:06 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o6XqT-001txR-NY; Wed, 29 Jun 2022 15:35:05 +0200
+Date:   Wed, 29 Jun 2022 15:35:04 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc:     Wolfram Sang <wsa@kernel.org>, dri-devel@lists.freedesktop.org,
+        linux-omap@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-leds@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-crypto@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-clk@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-watchdog@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-usb@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, netdev@vger.kernel.org,
+        chrome-platform@lists.linux.dev, linux-input@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-hwmon@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        patches@opensource.cirrus.com, UNGLinuxDriver@microchip.com,
+        linux-pwm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-staging@lists.linux.dev
+Subject: Re: [PATCH 6/6] i2c: Make remove callback return void
+Message-ID: <20220629133504.syc6x4ptia3mnof5@pengutronix.de>
+References: <20220628140313.74984-1-u.kleine-koenig@pengutronix.de>
+ <20220628140313.74984-7-u.kleine-koenig@pengutronix.de>
+ <CAPAsAGwP4Mw_CJfsi7oapABdTBwO1HfiQux6X4UahspU74VjtQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 5.19-3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5z6hgi6euioj5d47"
+Content-Disposition: inline
+In-Reply-To: <CAPAsAGwP4Mw_CJfsi7oapABdTBwO1HfiQux6X4UahspU74VjtQ@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
 
-Here is the second round of fixes for platform-drivers-x86 for 5.19:
+--5z6hgi6euioj5d47
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- -  thinkpad_acpi/ideapad-laptop: mem-leak and platform-profile fixes
- -  panasonic-laptop: missing hotkey presses regression fix
- -  some hardware-id additions
- -  some other small fixes
+[Dropped most people from Cc, keeping only lists]
 
-This includes a small fix to the acpi_video_handles_brightness_key_presses()
-ACPI helper function, this has been acked by Rafael for merging through
-the pdx86 tree.
+On Wed, Jun 29, 2022 at 04:11:26PM +0300, Andrey Ryabinin wrote:
+> On 6/28/22 17:03, Uwe Kleine-K=F6nig wrote:
+> > From: Uwe Kleine-K=F6nig <uwe@kleine-koenig.org>
+> >
+> > The value returned by an i2c driver's remove function is mostly ignored.
+> > (Only an error message is printed if the value is non-zero that the
+> > error is ignored.)
+> >
+> > So change the prototype of the remove function to return no value. This
+> > way driver authors are not tempted to assume that passing an error to
+> > the upper layer is a good idea. All drivers are adapted accordingly.
+> > There is no intended change of behaviour, all callbacks were prepared to
+> > return 0 before.
+> >
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+>                                     | 2 +-
+> >  lib/Kconfig.kasan                                         | 1 +
+>=20
+> > diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> > index f0973da583e0..366e61639cb2 100644
+> > --- a/lib/Kconfig.kasan
+> > +++ b/lib/Kconfig.kasan
+> > @@ -149,6 +149,7 @@ config KASAN_STACK
+> >       depends on KASAN_GENERIC || KASAN_SW_TAGS
+> >       depends on !ARCH_DISABLE_KASAN_INLINE
+> >       default y if CC_IS_GCC
+> > +     depends on !ARM
+> >       help
+> >         Disables stack instrumentation and thus KASAN's ability to dete=
+ct
+> >         out-of-bounds bugs in stack variables.
+>=20
+>=20
+> What is this doing here?
 
-Regards,
+Huh, that is wrong. I needed that for build testing, but it shouldn't
+have been added to the patch. I'm dropping that for the final
+submission.
 
-Hans
+Thanks for spotting.
 
+Best regards
+Uwe
 
-The following changes since commit d4fe9cc4ff8656704b58cfd9363d7c3c9d65e519:
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-  platform/x86/intel: hid: Add Surface Go to VGBS allow list (2022-06-12 14:41:17 +0200)
+--5z6hgi6euioj5d47
+Content-Type: application/pgp-signature; name="signature.asc"
 
-are available in the Git repository at:
+-----BEGIN PGP SIGNATURE-----
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.19-3
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmK8VQUACgkQwfwUeK3K
+7AkL0wf/Ra+JtsXozoGjhV4ADtJcJAo/mOIZQ6qOdPZGqHYkMvBmkEJ9zbvY4Edk
+SwYoapiHgVT4tDX56ekEGnm/x3udNUt5wugpsqDm4oAgYtbBCMEVtHbp3t/AqMp2
+sZcn0JsvUs6FVWSTomD396Pt10x0r+JrPTJVY2pwj1nUUV63/25oIT/4I77IughK
+LvQBMIesHK9damtObmRGqI5Ljz1L6SP7WgiLSEq1R/LjSeEwbURT3ijca95YO2Jv
+YyxoC7TiNJj2uJiisjl/r1T/LdGF6RpMN197XQjcvaZ0sbTZRF2vXlqp3cSyXrCG
+BbT2nohQYXjznouz9TIuBFtA0iX7SA==
+=YEZr
+-----END PGP SIGNATURE-----
 
-for you to fetch changes up to 9ab762a84b8094540c18a170e5ddd6488632c456:
-
-  platform/x86: hp-wmi: Ignore Sanitization Mode event (2022-06-28 22:20:07 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v5.19-3
-
-Highlights:
- -  thinkpad_acpi/ideapad-laptop: mem-leak and platform-profile fixes
- -  panasonic-laptop: missing hotkey presses regression fix
- -  some hardware-id additions
- -  some other small fixes
-
-The following is an automated git shortlog grouped by driver:
-
-ACPI:
- -  video: Change how we determine if brightness key-presses are handled
-
-hp-wmi:
- -  Ignore Sanitization Mode event
-
-ideapad-laptop:
- -  Add Ideapad 5 15ITL05 to ideapad_dytc_v4_allow_table[]
- -  Add allow_v4_dytc module parameter
-
-intel/pmc:
- -  Add Alder Lake N support to PMC core driver
-
-panasonic-laptop:
- -  filter out duplicate volume up/down/mute keypresses
- -  don't report duplicate brightness key-presses
- -  revert "Resolve hotkey double trigger bug"
- -  sort includes alphabetically
- -  de-obfuscate button codes
-
-platform/mellanox:
- -  nvsw-sn2201: fix error code in nvsw_sn2201_create_static_devices()
-
-thinkpad_acpi:
- -  profile capabilities as integer
- -  do not use PSC mode on Intel platforms
- -  Fix a memory leak of EFCH MMIO resource
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      platform/mellanox: nvsw-sn2201: fix error code in nvsw_sn2201_create_static_devices()
-
-Gayatri Kammela (1):
-      platform/x86: intel/pmc: Add Alder Lake N support to PMC core driver
-
-Hans de Goede (7):
-      platform/x86: ideapad-laptop: Add allow_v4_dytc module parameter
-      platform/x86: ideapad-laptop: Add Ideapad 5 15ITL05 to ideapad_dytc_v4_allow_table[]
-      ACPI: video: Change how we determine if brightness key-presses are handled
-      platform/x86: panasonic-laptop: sort includes alphabetically
-      platform/x86: panasonic-laptop: revert "Resolve hotkey double trigger bug"
-      platform/x86: panasonic-laptop: don't report duplicate brightness key-presses
-      platform/x86: panasonic-laptop: filter out duplicate volume up/down/mute keypresses
-
-Jean Delvare (1):
-      platform/x86: thinkpad_acpi: Fix a memory leak of EFCH MMIO resource
-
-Kai-Heng Feng (1):
-      platform/x86: hp-wmi: Ignore Sanitization Mode event
-
-Mark Pearson (2):
-      platform/x86: thinkpad-acpi: profile capabilities as integer
-      platform/x86: thinkpad_acpi: do not use PSC mode on Intel platforms
-
-Stefan Seyfried (1):
-      platform/x86: panasonic-laptop: de-obfuscate button codes
-
- drivers/acpi/acpi_video.c               | 13 +++--
- drivers/platform/mellanox/nvsw-sn2201.c |  4 +-
- drivers/platform/x86/Kconfig            |  2 +
- drivers/platform/x86/hp-wmi.c           |  3 ++
- drivers/platform/x86/ideapad-laptop.c   | 29 ++++++++----
- drivers/platform/x86/intel/pmc/core.c   |  1 +
- drivers/platform/x86/panasonic-laptop.c | 84 ++++++++++++++++++++++++++-------
- drivers/platform/x86/thinkpad_acpi.c    | 51 ++++++++++----------
- 8 files changed, 127 insertions(+), 60 deletions(-)
-
+--5z6hgi6euioj5d47--
