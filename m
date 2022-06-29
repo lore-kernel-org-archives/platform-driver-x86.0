@@ -2,149 +2,141 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0474FC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 07:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ED1C43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 07:24:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232676AbiF2HB6 (ORCPT
+        id S231629AbiF2HYK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Jun 2022 03:01:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37552 "EHLO
+        Wed, 29 Jun 2022 03:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232869AbiF2G74 (ORCPT
+        with ESMTP id S231755AbiF2HYI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Jun 2022 02:59:56 -0400
-Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAE2C37017;
-        Tue, 28 Jun 2022 23:58:29 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0VHml8K4_1656485902;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VHml8K4_1656485902)
-          by smtp.aliyun-inc.com;
-          Wed, 29 Jun 2022 14:58:23 +0800
-From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To:     virtualization@lists.linux-foundation.org
-Cc:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev@vger.kernel.org,
+        Wed, 29 Jun 2022 03:24:08 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA01A344D3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 00:24:05 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o6S2d-0005UO-4V; Wed, 29 Jun 2022 09:23:15 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o6S2S-003M3c-Vk; Wed, 29 Jun 2022 09:23:08 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o6S2V-001qeU-Nu; Wed, 29 Jun 2022 09:23:07 +0200
+Date:   Wed, 29 Jun 2022 09:23:04 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Jeremy Kerr <jk@codeconstruct.com.au>
+Cc:     Wolfram Sang <wsa@kernel.org>, dri-devel@lists.freedesktop.org,
+        linux-serial@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-mtd@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-crypto@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-i2c@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org,
-        kangjie.xu@linux.alibaba.com
-Subject: [PATCH v11 40/40] virtio_net: support set_ringparam
-Date:   Wed, 29 Jun 2022 14:56:56 +0800
-Message-Id: <20220629065656.54420-41-xuanzhuo@linux.alibaba.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20220629065656.54420-1-xuanzhuo@linux.alibaba.com>
-References: <20220629065656.54420-1-xuanzhuo@linux.alibaba.com>
+        linux-integrity@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, netdev@vger.kernel.org,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        chrome-platform@lists.linux.dev, linux-input@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-media@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-hwmon@vger.kernel.org,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-fbdev@vger.kernel.org, patches@opensource.cirrus.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pwm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        kasan-dev@googlegroups.com, linux-staging@lists.linux.dev
+Subject: Re: [PATCH 6/6] i2c: Make remove callback return void
+Message-ID: <20220629072304.qazmloqdi5h5kdre@pengutronix.de>
+References: <20220628140313.74984-1-u.kleine-koenig@pengutronix.de>
+ <20220628140313.74984-7-u.kleine-koenig@pengutronix.de>
+ <60cc6796236f23c028a9ae76dbe00d1917df82a5.camel@codeconstruct.com.au>
 MIME-Version: 1.0
-X-Git-Hash: 3fdaf102dd89
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3yzpq2rgg2xm7tqn"
+Content-Disposition: inline
+In-Reply-To: <60cc6796236f23c028a9ae76dbe00d1917df82a5.camel@codeconstruct.com.au>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Support set_ringparam based on virtio queue reset.
 
-Users can use ethtool -G eth0 <ring_num> to modify the ring size of
-virtio-net.
+--3yzpq2rgg2xm7tqn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
----
- drivers/net/virtio_net.c | 48 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+Hello,
 
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index fd358462f802..cc554cbac431 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -2330,6 +2330,53 @@ static void virtnet_get_ringparam(struct net_device *dev,
- 	ring->tx_pending = virtqueue_get_vring_size(vi->sq[0].vq);
- }
- 
-+static int virtnet_set_ringparam(struct net_device *dev,
-+				 struct ethtool_ringparam *ring,
-+				 struct kernel_ethtool_ringparam *kernel_ring,
-+				 struct netlink_ext_ack *extack)
-+{
-+	struct virtnet_info *vi = netdev_priv(dev);
-+	u32 rx_pending, tx_pending;
-+	struct receive_queue *rq;
-+	struct send_queue *sq;
-+	int i, err;
-+
-+	if (ring->rx_mini_pending || ring->rx_jumbo_pending)
-+		return -EINVAL;
-+
-+	rx_pending = virtqueue_get_vring_size(vi->rq[0].vq);
-+	tx_pending = virtqueue_get_vring_size(vi->sq[0].vq);
-+
-+	if (ring->rx_pending == rx_pending &&
-+	    ring->tx_pending == tx_pending)
-+		return 0;
-+
-+	if (ring->rx_pending > virtqueue_get_vring_max_size(vi->rq[0].vq))
-+		return -EINVAL;
-+
-+	if (ring->tx_pending > virtqueue_get_vring_max_size(vi->sq[0].vq))
-+		return -EINVAL;
-+
-+	for (i = 0; i < vi->max_queue_pairs; i++) {
-+		rq = vi->rq + i;
-+		sq = vi->sq + i;
-+
-+		if (ring->tx_pending != tx_pending) {
-+			err = virtnet_tx_resize(vi, sq, ring->tx_pending);
-+			if (err)
-+				return err;
-+		}
-+
-+		if (ring->rx_pending != rx_pending) {
-+			err = virtnet_rx_resize(vi, rq, ring->rx_pending);
-+			if (err)
-+				return err;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static bool virtnet_commit_rss_command(struct virtnet_info *vi)
- {
- 	struct net_device *dev = vi->dev;
-@@ -2817,6 +2864,7 @@ static const struct ethtool_ops virtnet_ethtool_ops = {
- 	.get_drvinfo = virtnet_get_drvinfo,
- 	.get_link = ethtool_op_get_link,
- 	.get_ringparam = virtnet_get_ringparam,
-+	.set_ringparam = virtnet_set_ringparam,
- 	.get_strings = virtnet_get_strings,
- 	.get_sset_count = virtnet_get_sset_count,
- 	.get_ethtool_stats = virtnet_get_ethtool_stats,
--- 
-2.31.0
+[I dropped nearly all individuals from the Cc: list because various
+bounces reported to be unhappy about the long (logical) line.]
 
+On Wed, Jun 29, 2022 at 03:03:54PM +0800, Jeremy Kerr wrote:
+> Looks good - just one minor change for the mctp-i2c driver, but only
+> worthwhile if you end up re-rolling this series for other reasons:
+>=20
+> > -static int mctp_i2c_remove(struct i2c_client *client)
+> > +static void mctp_i2c_remove(struct i2c_client *client)
+> > =A0{
+> > =A0=A0=A0=A0=A0=A0=A0=A0struct mctp_i2c_client *mcli =3D i2c_get_client=
+data(client);
+> > =A0=A0=A0=A0=A0=A0=A0=A0struct mctp_i2c_dev *midev =3D NULL, *tmp =3D N=
+ULL;
+> > @@ -1000,7 +1000,6 @@ static int mctp_i2c_remove(struct i2c_client *cli=
+ent)
+> > =A0=A0=A0=A0=A0=A0=A0=A0mctp_i2c_free_client(mcli);
+> > =A0=A0=A0=A0=A0=A0=A0=A0mutex_unlock(&driver_clients_lock);
+> > =A0=A0=A0=A0=A0=A0=A0=A0/* Callers ignore return code */
+> > -=A0=A0=A0=A0=A0=A0=A0return 0;
+> > =A0}
+>=20
+> The comment there no longer makes much sense, I'd suggest removing that
+> too.
+
+Yeah, that was already pointed out to me in a private reply. It's
+already fixed in
+
+	https://git.pengutronix.de/cgit/ukl/linux/log/?h=3Di2c-remove-void
+
+> Either way:
+>=20
+> Reviewed-by: Jeremy Kerr <jk@codeconstruct.com.au>
+
+Added to my tree, too.
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--3yzpq2rgg2xm7tqn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmK7/dUACgkQwfwUeK3K
+7AnTJgf9GW2H7fk9/Je11PRlCnUOSZ1sz/49RHAm4xj66pI/hdRP++D8L5o7ntEU
+Hl5hKosR36cUyX12ie+YQtiCRkjhLqUoJnPzJOtcXQNV7mlMt6ds2INSO4iHYtMa
+b2UH+lLQ6K/DO0+1KquElKJhfBOKucYY1WQAVK4cfasBKMR4MtukcHAgcYClRYdj
+Nvvy6bCjqr8M1+uqDTJUUR/d0rWYHxFKygYRUfK7YPpz57gaVgaR9Js9GDGkVFB4
+qVL5x23NzgB/Djr1Ls1F6Z5eFMjbtVb+S1HDRsU+HJOYD6v1LkT2OFx9iFpme+8m
++4HHNR5pxKogz59u4YpP1pIb0MejhA==
+=ibah
+-----END PGP SIGNATURE-----
+
+--3yzpq2rgg2xm7tqn--
