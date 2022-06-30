@@ -2,106 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084CDC43334
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Jun 2022 19:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDE3C43334
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Jun 2022 21:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236829AbiF3Tnf (ORCPT
+        id S237551AbiF3V2j (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 30 Jun 2022 15:43:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43340 "EHLO
+        Thu, 30 Jun 2022 17:28:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236382AbiF3Tne (ORCPT
+        with ESMTP id S237557AbiF3V23 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Jun 2022 15:43:34 -0400
+        Thu, 30 Jun 2022 17:28:29 -0400
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFA624F25;
-        Thu, 30 Jun 2022 12:43:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D702F443D3;
+        Thu, 30 Jun 2022 14:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656618213; x=1688154213;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pIgHqbTPvdZQRFyBm2TkG/rvzqkdS8PX64Z2/SY+C1U=;
-  b=Uo1P8pLV48AKE/EQkWEhnSKWtQcHDIxyDT9i9o7L6n+RE3rvC1AD0gdQ
-   IiFftra4m1AXsT8wCvw7nToD68CIg/X6toor9+DuwYDM+EDQYEQFjdzRJ
-   RM+wn5MzKTuVRoayNfzZHsZGYNwR3tgskKlUyb2BtQPBVpIdXUTcE2b7a
-   g9pVCDohc8bwy7Bgd6A7vbcTbx7h8QZFpkZrmZlUYykd8Nl3qzwr44bNd
-   oO6SfEbZx6yGlC+gBIf7C8L/6igUTcJwKIMPWjM9YG8QY86ijZI8BSX/L
-   AgsHv7qNPEPqcHpch+RuH5J6F4/Xtd/Jfa9YgqvpJP2/YDwR0Eul54bgN
+  t=1656624508; x=1688160508;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jdYxOV2rC4m5qbz+X1x7eTSjCsv8/obXsOi7V/f8hhY=;
+  b=h/xtQaWNAVZawetWJKstFUzls7srfPBlKHmkrK3MMk4CPaAPecnOZI06
+   zJ+qzCDHxFff+B9nABx7QoH8YYrq9QPnYG01qeLbG2hRdbx8uK4dZACJo
+   CeYx8E0FPyRQlrcJCemYvxGowDG/fxxfJbMVdXk1Yrk9xYnbdohp9E4Uh
+   +UHAZKzLrI4cMLUfon9xdCXX8aKvS+SONnEPDt2uauchGQoPv2JWSYMkv
+   60OG1leYy88FaxRWY1ors4IQ3KgXUNYKmcIXDx5s4K4gEh7YRP8r2QWm/
+   V0JVgozbmC0jpk7rKVwfpJy05RJh9zfeSxJTTnYnSL3oqtVVolWXSZhJU
    w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10394"; a="282481179"
+X-IronPort-AV: E=McAfee;i="6400,9594,10394"; a="282506504"
 X-IronPort-AV: E=Sophos;i="5.92,235,1650956400"; 
-   d="scan'208";a="282481179"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2022 12:43:33 -0700
+   d="scan'208";a="282506504"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2022 14:28:28 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.92,235,1650956400"; 
-   d="scan'208";a="694196407"
+   d="scan'208";a="648065571"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Jun 2022 12:43:32 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 30 Jun 2022 14:28:24 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 337CC11E; Thu, 30 Jun 2022 22:43:37 +0300 (EEST)
+        id 2E4871E8; Fri,  1 Jul 2022 00:28:31 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Wolfram Sang <wsa@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
         Mark Gross <markgross@kernel.org>
-Subject: [PATCH v1 1/1] platform/x86: xo15-ebook: Replace open coded acpi_match_device()
-Date:   Thu, 30 Jun 2022 22:43:35 +0300
-Message-Id: <20220630194335.3730-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 4/5] PCI/VGA: Convert to use acpi_match_video_device_handle() helper
+Date:   Fri,  1 Jul 2022 00:28:18 +0300
+Message-Id: <20220630212819.42958-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220630212819.42958-1-andriy.shevchenko@linux.intel.com>
+References: <20220630212819.42958-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Replace open coded acpi_match_device() in ebook_switch_add().
-
-Note, while it is a bit longer it is more robust in case more ID
-are coming.
+Replace open coded variant of acpi_match_video_device_handle() helper.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/xo15-ebook.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/pci/vgaarb.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/xo15-ebook.c b/drivers/platform/x86/xo15-ebook.c
-index 97440462aa25..40b2dd4ae5ea 100644
---- a/drivers/platform/x86/xo15-ebook.c
-+++ b/drivers/platform/x86/xo15-ebook.c
-@@ -81,9 +81,9 @@ static SIMPLE_DEV_PM_OPS(ebook_switch_pm, NULL, ebook_switch_resume);
- 
- static int ebook_switch_add(struct acpi_device *device)
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index f80b6ec88dc3..47058f70c2c9 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -585,9 +585,7 @@ static bool vga_is_firmware_default(struct pci_dev *pdev)
+ static bool vga_arb_integrated_gpu(struct device *dev)
  {
-+	const struct acpi_device_id *id;
- 	struct ebook_switch *button;
- 	struct input_dev *input;
--	const char *hid = acpi_device_hid(device);
- 	char *name, *class;
- 	int error;
- 
-@@ -102,8 +102,9 @@ static int ebook_switch_add(struct acpi_device *device)
- 	name = acpi_device_name(device);
- 	class = acpi_device_class(device);
- 
--	if (strcmp(hid, XO15_EBOOK_HID)) {
--		pr_err("Unsupported hid [%s]\n", hid);
-+	id = acpi_match_device(device, ebook_device_ids);
-+	if (!id) {
-+		dev_err(&device->dev, "Unsupported hid\n");
- 		error = -ENODEV;
- 		goto err_free_input;
- 	}
-@@ -111,7 +112,7 @@ static int ebook_switch_add(struct acpi_device *device)
- 	strcpy(name, XO15_EBOOK_DEVICE_NAME);
- 	sprintf(class, "%s/%s", XO15_EBOOK_CLASS, XO15_EBOOK_SUBCLASS);
- 
--	snprintf(button->phys, sizeof(button->phys), "%s/button/input0", hid);
-+	snprintf(button->phys, sizeof(button->phys), "%s/button/input0", id->id);
- 
- 	input->name = name;
- 	input->phys = button->phys;
+ #if defined(CONFIG_ACPI)
+-	struct acpi_device *adev = ACPI_COMPANION(dev);
+-
+-	return adev && !strcmp(acpi_device_hid(adev), ACPI_VIDEO_HID);
++	return acpi_match_video_device_handle(ACPI_HANDLE(dev));
+ #else
+ 	return false;
+ #endif
 -- 
 2.35.1
 
