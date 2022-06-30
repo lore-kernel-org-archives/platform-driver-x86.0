@@ -2,210 +2,167 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF25C43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Jun 2022 22:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A74FC43334
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Jun 2022 05:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbiF2WNm (ORCPT
+        id S229844AbiF3FED (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Jun 2022 18:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37698 "EHLO
+        Thu, 30 Jun 2022 01:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229875AbiF2WNR (ORCPT
+        with ESMTP id S229520AbiF3FEC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Jun 2022 18:13:17 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 197341AD8D;
-        Wed, 29 Jun 2022 15:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656540796; x=1688076796;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hM5yXBlOkkU9tdnWE+P4k5x9ZayD+DfNzsincX9Nu0w=;
-  b=drd5NDyRHSHo5ftdsGWskL04jyJv8G9mYp564kJn8VbmHExRjR7QXwoO
-   qaT68OxScZKXpjN74WQfVtaxWOra6PIWLEU//oH3hYSqooCY6V54MKTIr
-   HE6repRIbu9P2txHN6ooSgkbD+fWN+xpH+/TcKW3ycHcImRGRjkLRr3DA
-   UQcrExX453IvfxEJiOrRlPSJGBN9wTGtKlEX108Vg2A078WGnFZycROHY
-   M0TEqmlvkj1hM01acoYUPdfmW5Ovm2OTnb3VAYCOsJQ8a1Laabs0xilLt
-   DPGXuUWHAVVjHdqaMd2AabJ0rfgrjFOsmzA/BtVWzmWfvCmWKX2KNu1ow
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="346165664"
-X-IronPort-AV: E=Sophos;i="5.92,232,1650956400"; 
-   d="scan'208";a="346165664"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 15:13:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,232,1650956400"; 
-   d="scan'208";a="917782995"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Jun 2022 15:13:15 -0700
-Received: from MeteorLakePO1.jf.intel.com (MeteorLakePO1.jf.intel.com [10.234.180.58])
-        by linux.intel.com (Postfix) with ESMTP id 313B9580AB4;
-        Wed, 29 Jun 2022 15:13:15 -0700 (PDT)
-From:   Gayatri Kammela <gayatri.kammela@linux.intel.com>
-To:     hdegoede@redhat.com
-Cc:     markgross@kernel.org, david.e.box@linux.intel.com,
-        srinivas.pandruvada@intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gayatri Kammela <gayatri.kammela@linux.intel.com>,
-        David E Box <david.e.box@intel.com>
-Subject: [PATCH v1 4/4] platform/x86/intel/vsec: Add PCI error recovery support to Intel PMT
-Date:   Wed, 29 Jun 2022 15:13:34 -0700
-Message-Id: <20220629221334.434307-5-gayatri.kammela@linux.intel.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220629221334.434307-1-gayatri.kammela@linux.intel.com>
-References: <20220629221334.434307-1-gayatri.kammela@linux.intel.com>
+        Thu, 30 Jun 2022 01:04:02 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2087.outbound.protection.outlook.com [40.107.92.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6EEA13E8A
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 22:04:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cia33tFACV8fu3YAWK4FL9iyiB9WQPuF2r3BQGYtLqvP/mpwNfu4VAni+Qnvvv6NoqiGc8driSryHamJ3Z1g4bVuo2DLZUXm085wssp3Sbn4SYtLMfcbYb3lPAmnWqkzosdZkdPwAQeQ5z6wWiynby4gzQjgGmfEq3g5gUZLD4Rh2i6e497KjavvLjfYX2xv46hXGYbPSDLFuax1+ruQj4dLgfLOCP1NyiurKQXBOOarrr7boXv/PEQIUdhCPIYkwOYpl7c9tqmSLcFISZuI9JH6FMSfZWikF6AEWNNUnBry5Sc16BXDl86HOzVujBNpF2na3aT1B4WXkylJ0Rma4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RszwbkvyG4cSvxHvnPrVAY9rqapSQW4/wwPLJCXbT0o=;
+ b=PH6feBu1iK4K+KPtMiEL3Q3seLv3N1e38chy8EgnZwMc5aH/00WxG9SYrffzKQWgkeWcqzzxnMwQtv6i2CQg14pX7eOeXctueGwC3nxKc3sQP/hvi9Xi17gozzVP7N1V9FQUaxVsizWBWz+tC0Ge1jm7a3oY5HaOupceEi8DByaAYSjJKtdpmbfzp4UqlKZqHmEFyFN/P3zGXkmb1d2yCEBiQ3zLvSS4/3+r1mD+19mrSz7deBVjsc//N7rOz/NTucc01i0DkGOlJlEOHnuExCWGm742AkXRyX1b+iOr4u30LrKyOvVEm3MT8nDXNN9gJU9NuS4sfOKURNPLLtZpmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RszwbkvyG4cSvxHvnPrVAY9rqapSQW4/wwPLJCXbT0o=;
+ b=kuUHdB3LhSOrpmG/nhPfWADSxfAVgStC7dIqHk0XAQy9fIia+jbUq5DnCPTvsvuLymahk221yTNABjaa/biQ4Tjq/Koo7TIMBHL6DY4msbbKBF+1w94Oukzw4deJeTTp8Cvypgxp8+vhvHzDHqzOffJddlHOilPmnjnDbdWluYo=
+Received: from DM6PR08CA0019.namprd08.prod.outlook.com (2603:10b6:5:80::32) by
+ BN6PR12MB1364.namprd12.prod.outlook.com (2603:10b6:404:1e::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5373.17; Thu, 30 Jun 2022 05:03:58 +0000
+Received: from DM6NAM11FT059.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:80:cafe::57) by DM6PR08CA0019.outlook.office365.com
+ (2603:10b6:5:80::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.16 via Frontend
+ Transport; Thu, 30 Jun 2022 05:03:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT059.mail.protection.outlook.com (10.13.172.92) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5395.14 via Frontend Transport; Thu, 30 Jun 2022 05:03:58 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 30 Jun
+ 2022 00:03:55 -0500
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 1/2] platform/x86/amd/pmc: Add new acpi id for PMC controller
+Date:   Thu, 30 Jun 2022 10:33:23 +0530
+Message-ID: <20220630050324.3780654-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2a9978f7-436b-4eab-ae66-08da5a55f0d9
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1364:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 48uge2Lp8H7K5C4iUVuBdcdnnBrJEGMJ+S7MfaOT99F60KRYiHu0OhMtBkmdr+BHQ4ufjwvheGqU1FTYs0Hpw4i62jI4BYYBngenz8n7P4zcNtgkZwoNStGhdxWeFyRbpaY5tlUOyKzOGLfOOO4EBAXpL3piZIO5VHN8Y/2lL89aSR+dwAp5K/iNEqj1PkLLq8hNlZgJgC+r/WUGNbaI0VYfaOrvkZAvQDqqcTXjQ0gaF9dr0uq6NVVLs1QquK26IcXdeq44ohWtxMRcghfZCYUMqkOqIqScfN4NfSsimOjauwuTGEOUVCkxvbhsJ1fRUrsqZtyWbe7S5F5G6qBj5m6dsYGTsxxcxi4VuGI3UE0jgHUpy3T/QCLfCy68oxjeCwKOrxHWhKkeAA/mG8xifpX8ftoeAi387ymHVFVJ/yo59euNaeyQiayAHFA3Y6qlbp+9W4hDptyRr5VGgVeRzQdONqqVCa5/XtTaZ6SYHKwuTH42+Cmdl+lAeB+kdtgvo4vzHQa3MBOrLUisPl1QcTsjrhSIcvUN/KDKoTorWF3V+qhK6ix85uaydqQOVMoC6UQ9RfDF6LPvNerKHf8zoY79J8ingfb55LwJ3irwYHw2zTOKMqYwpfjAtSi120SQGi7nU5wqlVXsAFzMFEXFdM5jYGiXfCAeN9Mf7UqBee6OcXPfgGJLwZaWTNs+QFmJ3HsFc7pd+hHOnckDWGFMgZfT8crZUubi8a+TcmcUXatbDzG87a2qo/9LriHUDCDUDW4hjfFQWM6wqBZFoGAgloc4XNHB+S1EWA98vMguz7dR9qx2hWG2YrclcYFk8Dd/Yf9Np/1mKQAd7XQuQzO8vPkFDriFIxAINy69RrzuW/g=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(376002)(346002)(39860400002)(136003)(396003)(36840700001)(40470700004)(46966006)(5660300002)(2906002)(36756003)(26005)(8936002)(4326008)(41300700001)(356005)(8676002)(336012)(81166007)(2616005)(70206006)(82740400003)(478600001)(86362001)(70586007)(54906003)(7696005)(6666004)(40460700003)(16526019)(47076005)(40480700001)(316002)(426003)(36860700001)(1076003)(83380400001)(186003)(110136005)(82310400005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2022 05:03:58.4926
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a9978f7-436b-4eab-ae66-08da5a55f0d9
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT059.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1364
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add PCI error recovery support for Intel PMT driver to recover
-from PCI fatal errors
+New version of PMC controller will have a separate ACPI id, add that
+to the support list.
 
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Cc: David E Box <david.e.box@intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/intel/vsec.c | 82 ++++++++++++++++++++++++++++++-
- 1 file changed, 80 insertions(+), 2 deletions(-)
+Based on "review-hans" branch.
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index 9368a3d587ab..544493ae85b7 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -15,6 +15,7 @@
+ drivers/platform/x86/amd/pmc.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
+index f11d18beac18..73d6867cc20b 100644
+--- a/drivers/platform/x86/amd/pmc.c
++++ b/drivers/platform/x86/amd/pmc.c
+@@ -91,6 +91,7 @@
+ #define AMD_CPU_ID_PCO			AMD_CPU_ID_RV
+ #define AMD_CPU_ID_CZN			AMD_CPU_ID_RN
+ #define AMD_CPU_ID_YC			0x14B5
++#define AMD_CPU_ID_CB			0x14D8
  
- #include <linux/auxiliary_bus.h>
- #include <linux/bits.h>
-+#include <linux/delay.h>
- #include <linux/kernel.h>
- #include <linux/idr.h>
- #include <linux/module.h>
-@@ -30,9 +31,13 @@
- #define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
- #define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
- #define TABLE_OFFSET_SHIFT		3
-+#define PMT_XA_START			0
-+#define PMT_XA_MAX			INT_MAX
-+#define PMT_XA_LIMIT			XA_LIMIT(PMT_XA_START, PMT_XA_MAX)
- 
- static DEFINE_IDA(intel_vsec_ida);
- static DEFINE_IDA(intel_vsec_sdsi_ida);
-+static DEFINE_XARRAY_ALLOC(auxdev_array);
- 
- /**
-  * struct intel_vsec_header - Common fields of Intel VSEC and DVSEC registers.
-@@ -132,7 +137,7 @@ static int intel_vsec_add_aux(struct pci_dev *pdev, struct intel_vsec_device *in
- 			      const char *name)
- {
- 	struct auxiliary_device *auxdev = &intel_vsec_dev->auxdev;
--	int ret;
-+	int ret, id;
- 
- 	ret = ida_alloc(intel_vsec_dev->ida, GFP_KERNEL);
- 	if (ret < 0) {
-@@ -159,7 +164,18 @@ static int intel_vsec_add_aux(struct pci_dev *pdev, struct intel_vsec_device *in
- 		return ret;
+ #define PMC_MSG_DELAY_MIN_US		50
+ #define RESPONSE_REGISTER_LOOP_MAX	20000
+@@ -318,6 +319,7 @@ static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
+ 		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_CZN);
+ 		break;
+ 	case AMD_CPU_ID_YC:
++	case AMD_CPU_ID_CB:
+ 		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_YC);
+ 		break;
+ 	default:
+@@ -491,7 +493,7 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
+ 			    &amd_pmc_idlemask_fops);
+ 	/* Enable STB only when the module_param is set */
+ 	if (enable_stb) {
+-		if (dev->cpu_id == AMD_CPU_ID_YC)
++		if (dev->cpu_id == AMD_CPU_ID_YC || dev->cpu_id == AMD_CPU_ID_CB)
+ 			debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
+ 					    &amd_pmc_stb_debugfs_fops_v2);
+ 		else
+@@ -615,6 +617,7 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
+ 		return MSG_OS_HINT_PCO;
+ 	case AMD_CPU_ID_RN:
+ 	case AMD_CPU_ID_YC:
++	case AMD_CPU_ID_CB:
+ 		return MSG_OS_HINT_RN;
  	}
+ 	return -EINVAL;
+@@ -735,6 +738,7 @@ static struct acpi_s2idle_dev_ops amd_pmc_s2idle_dev_ops = {
+ #endif
  
--	return devm_add_action_or_reset(&pdev->dev, intel_vsec_remove_aux, auxdev);
-+	ret = devm_add_action_or_reset(&pdev->dev, intel_vsec_remove_aux,
-+				       auxdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Add auxdev to list */
-+	ret = xa_alloc(&auxdev_array, &id, intel_vsec_dev, PMT_XA_LIMIT,
-+		       GFP_KERNEL);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
- }
+ static const struct pci_device_id pmc_pci_ids[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_CB) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_YC) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_CZN) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RN) },
+@@ -877,7 +881,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
  
- static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *header,
-@@ -345,6 +361,7 @@ static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_device_id
- 	if (ret)
- 		return ret;
+ 	mutex_init(&dev->lock);
  
-+	pci_save_state(pdev);
- 	info = (struct intel_vsec_platform_info *)id->driver_data;
- 	if (!info)
- 		return -EINVAL;
-@@ -406,10 +423,71 @@ static const struct pci_device_id intel_vsec_pci_ids[] = {
- };
- MODULE_DEVICE_TABLE(pci, intel_vsec_pci_ids);
- 
-+static pci_ers_result_t intel_vsec_pci_error_detected(struct pci_dev *pdev,
-+						      pci_channel_state_t state)
-+{
-+	pci_channel_state_t status = PCI_ERS_RESULT_NEED_RESET;
-+
-+	dev_info(&pdev->dev, "PCI error detected, state %d", state);
-+
-+	if (state == pci_channel_io_perm_failure)
-+		status = PCI_ERS_RESULT_DISCONNECT;
-+	else
-+		pci_disable_device(pdev);
-+
-+	return status;
-+}
-+
-+static pci_ers_result_t intel_vsec_pci_slot_reset(struct pci_dev *pdev)
-+{
-+	struct intel_vsec_device *intel_vsec_dev;
-+	pci_channel_state_t status = PCI_ERS_RESULT_DISCONNECT;
-+	const struct pci_device_id *pci_dev_id;
-+	unsigned long index;
-+
-+	dev_info(&pdev->dev, "Resetting PCI slot\n");
-+
-+	msleep(2000);
-+	if (pci_enable_device(pdev)) {
-+		dev_info(&pdev->dev,
-+			 "Failed to re-enable PCI device after reset.\n");
-+		goto out;
-+	}
-+
-+	status =  PCI_ERS_RESULT_RECOVERED;
-+
-+	xa_for_each(&auxdev_array, index, intel_vsec_dev) {
-+		/* check if pdev doesn't match */
-+		if (pdev != intel_vsec_dev->pcidev)
-+			continue;
-+		devm_release_action(&pdev->dev, intel_vsec_remove_aux,
-+				    &intel_vsec_dev->auxdev);
-+	}
-+	pci_disable_device(pdev);
-+	pci_restore_state(pdev);
-+	pci_dev_id = pci_match_id(intel_vsec_pci_ids, pdev);
-+	intel_vsec_pci_probe(pdev, pci_dev_id);
-+
-+out:
-+	return status;
-+}
-+
-+void intel_vsec_pci_resume(struct pci_dev *pdev)
-+{
-+	dev_info(&pdev->dev, "Done resuming PCI device\n");
-+}
-+
-+const struct pci_error_handlers intel_vsec_pci_err_handlers = {
-+	.error_detected = intel_vsec_pci_error_detected,
-+	.slot_reset = intel_vsec_pci_slot_reset,
-+	.resume = intel_vsec_pci_resume,
-+};
-+
- static struct pci_driver intel_vsec_pci_driver = {
- 	.name = "intel_vsec",
- 	.id_table = intel_vsec_pci_ids,
- 	.probe = intel_vsec_pci_probe,
-+	.err_handler = &intel_vsec_pci_err_handlers,
- };
- module_pci_driver(intel_vsec_pci_driver);
- 
+-	if (enable_stb && dev->cpu_id == AMD_CPU_ID_YC) {
++	if (enable_stb && (dev->cpu_id == AMD_CPU_ID_YC || dev->cpu_id == AMD_CPU_ID_CB)) {
+ 		err = amd_pmc_s2d_init(dev);
+ 		if (err)
+ 			return err;
+@@ -915,6 +919,7 @@ static const struct acpi_device_id amd_pmc_acpi_ids[] = {
+ 	{"AMDI0005", 0},
+ 	{"AMDI0006", 0},
+ 	{"AMDI0007", 0},
++	{"AMDI0008", 0},
+ 	{"AMD0004", 0},
+ 	{"AMD0005", 0},
+ 	{ }
 -- 
-2.32.0
+2.25.1
 
