@@ -2,123 +2,166 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2361ECCA47F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Jun 2022 21:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AC8C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Jun 2022 23:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237555AbiF3V3G (ORCPT
+        id S232955AbiF3X2i (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 30 Jun 2022 17:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48200 "EHLO
+        Thu, 30 Jun 2022 19:28:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237582AbiF3V2k (ORCPT
+        with ESMTP id S232923AbiF3X22 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Jun 2022 17:28:40 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 164843700E;
-        Thu, 30 Jun 2022 14:28:40 -0700 (PDT)
+        Thu, 30 Jun 2022 19:28:28 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E13C26251;
+        Thu, 30 Jun 2022 16:28:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656624520; x=1688160520;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vov2D8XGLh7l4fzlqjW0FYaJ1gTowtT9oIai97+IhHY=;
-  b=lqc0a5cbBr/XdEfiZALSXhOhQpaT3KpFm4M8usVu2M16Y3M59+x7Ix6f
-   WvD4pWHxR/xWnm3VylAAlPYLTR+4Vptd+CydB0+GPSXPc1hSTuURp8kjR
-   qI56do2P/aC2Mjwgc1dkPG6UNnAjKQDN6YKv0S33VlUIzwd4UMU84c71T
-   c4hGz4GF17AC/sZwUi3c2/BLkI9kPRQQgqUs36ZLq2cMrx2H+UC9k6287
-   mMzAZlsPnZgw5Z3EoNOJXMhuiVdlb1as5JnbXf6zxLJimB7xLBkXV+TyQ
-   k33omhVDZcebYMs+EQxMu+7EarIHZIWtAIO/I8sGRtGqL5DQqE8XpsLrJ
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10394"; a="280021839"
+  t=1656631697; x=1688167697;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RM88QkoXYJlc9UBUy307/BtPhtlC+Z2vGnV2YkjHYkI=;
+  b=XbNJCVghKX82ZZE6BJYL+thL/5UXrtBQZXwoGiUybuR7O7YVqylBUto+
+   7qI09CUVzO5/tB2h2CrSAahq6Ruf7ybjgU6umMHY1m3k3weH6Plr14xXF
+   PUZBAc0zWGKqcwPfGt5of2Egjq7YdoxWJC5s2bYD5acZvhVZoMzaAvbMG
+   2hl+PjXSTIw4J/PYqotNHTxR+nWT2eNTKYzU7CLO+MtsIS34qFNkK37LK
+   AAgGsr0pUnPR40igiud8HnyRnsOv/qpRIjuY6dAlPVux4IVnH8K/X6ua1
+   RIK1daCWtTqDMd4Bu8Ci5o1zhWKc6LT/E6Pb/0xh0WWae5Q3O00OtiqUl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10394"; a="368811212"
 X-IronPort-AV: E=Sophos;i="5.92,235,1650956400"; 
-   d="scan'208";a="280021839"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2022 14:28:29 -0700
+   d="scan'208";a="368811212"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2022 16:28:17 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.92,235,1650956400"; 
-   d="scan'208";a="588945471"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 30 Jun 2022 14:28:24 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 0B8D111E; Fri,  1 Jul 2022 00:28:30 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+   d="scan'208";a="837807180"
+Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 30 Jun 2022 16:28:15 -0700
+Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o73a2-000DIm-RL;
+        Thu, 30 Jun 2022 23:28:14 +0000
+Date:   Fri, 1 Jul 2022 07:28:09 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        Corentin Chary <corentin.chary@gmail.com>,
+        =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Wolfram Sang <wsa@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
         Mark Gross <markgross@kernel.org>
-Subject: [PATCH v1 1/5] ACPI: utils: Introduce acpi_match_video_device_handle() helper
-Date:   Fri,  1 Jul 2022 00:28:15 +0300
-Message-Id: <20220630212819.42958-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+Subject: Re: [PATCH v1 1/1] platform/x86: asus-wireless: Replace open coded
+ acpi_match_device()
+Message-ID: <202207010744.ugH4lnF8-lkp@intel.com>
+References: <20220630193234.3499-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220630193234.3499-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-There are a couple of users that open code functionality of matching
-a given handle against ACPI video device IDs. The current approach
-duplicates ID table along with the matching code. Consolidate it
-under the acpi_match_video_device_handle() helper's hood.
+Hi Andy,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/acpi/utils.c | 19 +++++++++++++++++++
- include/linux/acpi.h |  2 ++
- 2 files changed, 21 insertions(+)
+I love your patch! Yet something to improve:
 
-diff --git a/drivers/acpi/utils.c b/drivers/acpi/utils.c
-index 3a9773a09e19..4800aba3b99c 100644
---- a/drivers/acpi/utils.c
-+++ b/drivers/acpi/utils.c
-@@ -929,6 +929,25 @@ static int __init acpi_backlight(char *str)
- }
- __setup("acpi_backlight=", acpi_backlight);
- 
-+static const struct acpi_device_id video_device_ids[] = {
-+	{ACPI_VIDEO_HID, 0},
-+	{}
-+};
-+
-+/**
-+ * acpi_match_video_device_handle - match handle against ACPI video device IDs
-+ * @handle: ACPI handle to match
-+ *
-+ * Return: true when matches, otherwise false.
-+ */
-+bool acpi_match_video_device_handle(acpi_handle handle)
-+{
-+	struct acpi_device *adev = acpi_fetch_acpi_dev(handle);
-+
-+	return adev && !acpi_match_device_ids(adev, video_device_ids);
-+}
-+EXPORT_SYMBOL(acpi_match_video_device_handle);
-+
- /**
-  * acpi_match_platform_list - Check if the system matches with a given list
-  * @plat: pointer to acpi_platform_list table terminated by a NULL entry
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 7b96a8bff6d2..c48e8a0df0cc 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -439,6 +439,8 @@ extern char *wmi_get_acpi_device_uid(const char *guid);
- 
- extern char acpi_video_backlight_string[];
- extern long acpi_is_video_device(acpi_handle handle);
-+extern bool acpi_match_video_device_handle(acpi_handle handle);
-+
- extern int acpi_blacklisted(void);
- extern void acpi_osi_setup(char *str);
- extern bool acpi_osi_is_win8(void);
+[auto build test ERROR on linus/master]
+[also build test ERROR on v5.19-rc4 next-20220630]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/platform-x86-asus-wireless-Replace-open-coded-acpi_match_device/20220701-033501
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 1a0e93df1e107dc766fdf86ae88076efd9f376e6
+config: x86_64-randconfig-a003 (https://download.01.org/0day-ci/archive/20220701/202207010744.ugH4lnF8-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project a774ba7f60d1fef403b5507b1b1a7475d3684d71)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/6aca63018deba5520de593749517efd03f7289c7
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Andy-Shevchenko/platform-x86-asus-wireless-Replace-open-coded-acpi_match_device/20220701-033501
+        git checkout 6aca63018deba5520de593749517efd03f7289c7
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/platform/x86/
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> drivers/platform/x86/asus-wireless.c:151:25: error: incompatible pointer types passing 'struct acpi_device *' to parameter of type 'const struct acpi_device_id *' [-Werror,-Wincompatible-pointer-types]
+           id = acpi_match_device(adev, device_ids);
+                                  ^~~~
+   include/linux/acpi.h:713:77: note: passing argument to parameter 'ids' here
+   const struct acpi_device_id *acpi_match_device(const struct acpi_device_id *ids,
+                                                                               ^
+>> drivers/platform/x86/asus-wireless.c:151:31: error: incompatible pointer types passing 'const struct acpi_device_id[3]' to parameter of type 'const struct device *' [-Werror,-Wincompatible-pointer-types]
+           id = acpi_match_device(adev, device_ids);
+                                        ^~~~~~~~~~
+   include/linux/acpi.h:714:34: note: passing argument to parameter 'dev' here
+                                                  const struct device *dev);
+                                                                       ^
+   2 errors generated.
+
+
+vim +151 drivers/platform/x86/asus-wireless.c
+
+   125	
+   126	static int asus_wireless_add(struct acpi_device *adev)
+   127	{
+   128		struct asus_wireless_data *data;
+   129		const struct acpi_device_id *id;
+   130		int err;
+   131	
+   132		data = devm_kzalloc(&adev->dev, sizeof(*data), GFP_KERNEL);
+   133		if (!data)
+   134			return -ENOMEM;
+   135		adev->driver_data = data;
+   136		data->adev = adev;
+   137	
+   138		data->idev = devm_input_allocate_device(&adev->dev);
+   139		if (!data->idev)
+   140			return -ENOMEM;
+   141		data->idev->name = "Asus Wireless Radio Control";
+   142		data->idev->phys = "asus-wireless/input0";
+   143		data->idev->id.bustype = BUS_HOST;
+   144		data->idev->id.vendor = PCI_VENDOR_ID_ASUSTEK;
+   145		set_bit(EV_KEY, data->idev->evbit);
+   146		set_bit(KEY_RFKILL, data->idev->keybit);
+   147		err = input_register_device(data->idev);
+   148		if (err)
+   149			return err;
+   150	
+ > 151		id = acpi_match_device(adev, device_ids);
+   152		if (id)
+   153			data->hswc_params = (const struct hswc_params *)id->driver_data;
+   154		if (!data->hswc_params)
+   155			return 0;
+   156	
+   157		data->wq = create_singlethread_workqueue("asus_wireless_workqueue");
+   158		if (!data->wq)
+   159			return -ENOMEM;
+   160		INIT_WORK(&data->led_work, led_state_update);
+   161		data->led.name = "asus-wireless::airplane";
+   162		data->led.brightness_set = led_state_set;
+   163		data->led.brightness_get = led_state_get;
+   164		data->led.flags = LED_CORE_SUSPENDRESUME;
+   165		data->led.max_brightness = 1;
+   166		data->led.default_trigger = "rfkill-none";
+   167		err = devm_led_classdev_register(&adev->dev, &data->led);
+   168		if (err)
+   169			destroy_workqueue(data->wq);
+   170	
+   171		return err;
+   172	}
+   173	
+
 -- 
-2.35.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
