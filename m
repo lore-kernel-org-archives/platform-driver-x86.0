@@ -2,154 +2,284 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D52C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Jun 2022 05:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F4CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Jun 2022 06:35:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231658AbiF3FEE (ORCPT
+        id S232816AbiF3Gf4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 30 Jun 2022 01:04:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33918 "EHLO
+        Thu, 30 Jun 2022 02:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbiF3FEE (ORCPT
+        with ESMTP id S232106AbiF3Gf4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Jun 2022 01:04:04 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2057.outbound.protection.outlook.com [40.107.92.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D7A713E8A
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 22:04:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lit36ByKMyQituHt0nt3HW5G5ZAIbN11YwMqdl+sqg8qz7+KCouO2Xb5XhtaNt8ADPIAIXMeBaFOHYTgIMvzyXAF56hEbGv6PQbaV3/0XsNokexDPlDePiUS0ZNYLwLH3zVQ4XpA33TFvbSszkMnGPaPl5ec8TIo+zzmGRwK4f1PordY3tFXMvqbeJQ71vzpJlOwq6fUiatTFR/Kn8Syg5J7+EgdBOnFUoX+HjYy56z74CI7hhi+P79M821m0TxQzR9TuQRaIhy9imUQjm6vsHW2Qw6U6dfgJyZ/78I3zcuKPRfERsCN9paXdDNuNf67eIHm2pQR1GbRjQPGOVRZYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=seieaz/wEQB/RYLiZAiNl0iUardr1lYWp52c6WlD+tc=;
- b=SVpq4QL6Drh3lG8ZKXTlSOMVV2eUfgCUsLtHenrVeE6KfpCS3Kq5jMUlnM9/WpWDFuDNZKh14YWi+blfdTNgkH2+NFFqKO5NEjEqyXd7WV8B2ZTx9vN3iDcvp6gy8FPBYNdrt1C7R0zbchCu1C97VGzEPtXOl/wnxjRvFnFwmaRwFwqfyiG+60cp/CM4JAwpik2NvFMJhOgEb4/rcYnO7q6dIb+NWzL5vO3TO9IKl7Z5GvgVQHIiDstll+un5hMaaZwLCtVrZpwwZlg2AHRtnWROeqklW3BMehsH92ae+v1TqcDvR3+yZGi8ShS4g++aU9la5UiEnxw9zGqwQf9NPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=seieaz/wEQB/RYLiZAiNl0iUardr1lYWp52c6WlD+tc=;
- b=TeSjHYGGlpLftOgz5yVaXwH37cbyEeFBjwjOD6kPvmKNyk+grGhFc41Tc/lK/Xicsp6FWqQ0QURAqiK91MeOJ47cy6xFYCjEOn+VD0O1UpPeF1lOsqpdhlB6qrGafrc4D5t5SUcj2g0EcqiUOIPMK1yzdVo6py/jsEXrN0jGr+Y=
-Received: from DM6PR08CA0010.namprd08.prod.outlook.com (2603:10b6:5:80::23) by
- MN2PR12MB3293.namprd12.prod.outlook.com (2603:10b6:208:106::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.17; Thu, 30 Jun
- 2022 05:04:00 +0000
-Received: from DM6NAM11FT059.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:80:cafe::6c) by DM6PR08CA0010.outlook.office365.com
- (2603:10b6:5:80::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.17 via Frontend
- Transport; Thu, 30 Jun 2022 05:03:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT059.mail.protection.outlook.com (10.13.172.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5395.14 via Frontend Transport; Thu, 30 Jun 2022 05:03:59 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 30 Jun
- 2022 00:03:57 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>
-CC:     <platform-driver-x86@vger.kernel.org>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH 2/2] platform/x86/amd/pmc: Add new platform support
-Date:   Thu, 30 Jun 2022 10:33:24 +0530
-Message-ID: <20220630050324.3780654-2-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220630050324.3780654-1-Shyam-sundar.S-k@amd.com>
-References: <20220630050324.3780654-1-Shyam-sundar.S-k@amd.com>
+        Thu, 30 Jun 2022 02:35:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 28C412CE2C
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 23:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1656570954;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=njLH7GFfaOXROEX4o3ayXFUqakNk2re9lthQMqB92Q8=;
+        b=Hg4d5uCoaHu/KWLe/t2tRKmke+XtMjLRuo3ZSN5ELsXsCcHU1CQ54wTJ2SZ5FemOcDnqkW
+        zkxO2R4NcLiPEZARASd12RV6c1ghcc3X7nPIO55K/WPetlUY7owGzPjeC71BWr3xFfQTIY
+        oi3BG3HiJSi4a5aCh/SPFribXXVhCzc=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-155-aiWEQuQDM3-mrm6o4ZD7qg-1; Thu, 30 Jun 2022 02:35:52 -0400
+X-MC-Unique: aiWEQuQDM3-mrm6o4ZD7qg-1
+Received: by mail-lf1-f72.google.com with SMTP id cf10-20020a056512280a00b0047f5a295656so8740228lfb.15
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jun 2022 23:35:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=njLH7GFfaOXROEX4o3ayXFUqakNk2re9lthQMqB92Q8=;
+        b=nRJQQvcC4o9ztWksYrTx5nvWn4xZMUbuj7Frtc7q/jZ7IDAJaBZ3EKF0n2kh9CSUqk
+         nHFc1QbiKIkYONkU8AvEsglIwkU9TO9wEvP9uAV1qX5wcQ4eqy5Q7FH3vwaFi+QudnzG
+         2ap+AeN+8h6HhaREd8FIX637v3MWAdg1UG0ACTGfhNk0NHydxW5YENAoJtmSlkdp9csR
+         NAUHffU5HpTa/ti4N8zo8FR8fdTy+edGrbZD3ZI5132lqd62KZaASsSJ2H0BD+CMual/
+         VLwNBcsaQ1xdMhMPiNjXgmJOCdylghm9+ODkRG7KlSJqAtfAHa3DY9xKd0mQ7sURpIGW
+         h8Cg==
+X-Gm-Message-State: AJIora84qkKvfMEond1UPoYbqiO6ix2N+Pger1FcD/pjfq7Jd/UjKT9L
+        4kDEJR3VZTzGvuczdB1WbJ1jRItcIny18TLvUQ908ojhOsN+wRdJeZN0qBnp9+kE83AqiI+cgky
+        9ixALoeduqbdBqAXj08nI3YriiYkCvAYPAo/+JL26QUonwoC58g==
+X-Received: by 2002:a05:6512:158d:b0:47f:718c:28b5 with SMTP id bp13-20020a056512158d00b0047f718c28b5mr4745099lfb.397.1656570950078;
+        Wed, 29 Jun 2022 23:35:50 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1tJKVtY+Zl0/40XEr/wn6beDS0TB6Ve6wa1Oo7+BpbGVCUvzB09kLNntuaMrZWqNzwTBjf08mKnZiCH+Ir+mBo=
+X-Received: by 2002:a05:6512:158d:b0:47f:718c:28b5 with SMTP id
+ bp13-20020a056512158d00b0047f718c28b5mr4745069lfb.397.1656570949818; Wed, 29
+ Jun 2022 23:35:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 407d2eca-f509-4d6f-b838-08da5a55f187
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3293:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /bFl71o44l5WhcgyiNiTs0cadIvJHQmvx4QPjG9yElie8md/SFBYJjNGuitdPoI11v2W0cGwS6p3KabIIRDDo8neLVRjrxi9Pg728uP4Sf3WdJD8+pYuineylK7TDqrJ8LcnUNoQK8KOH4c6iQD6ROlMuwXJHs9jWwrTDsKL6OJS1zUSUvcIrXRXhqwT1+IR3XjRBCqCdZ4zYmnaqSHre1baBTn9zG1z7QzzvpbTxgp9A7mQAoWRuTrfEAiHVeD9KFoXMRwfgjQkacHrwP6j2MYlXFkMwBtSKchUGDfduoZ+NI6PcOJ73BlhF/yJRtNPUBc9sgoOoN+C6wDpvBkYqaBR3QH6qhAm8dI3g+HXzkxlRSFDT8o+jXYxrXKtO4ma/MO58cMpXGIc6/XWVdrLrteu7toVVA5koKlE2MnJz3enhy2iI7/tTs0Q21e/ymZ9i4/z/OvIbc9GNpeZYUNZWTWJFUUo03RxfRpk1tXgezIsJ4g/Q2q0fsqrj6M16OY/PGYFwSHo5gckWsRaMGcJSwVHkU/LyRRGKaFfGcgf5h2JkdOIFkrHivHaR6cDGqCw8Q63Q6EpaFfaLxY02fSTmTHEazJS0GZ8MbIYl5uGup5mwbmfIagZ+UYj/cHRFZfC5Acdpxuy2kYcZGGM3szl7Lz1htWngXUDbufK5HzoPRzf75ypVwTluROM/7wyXDMyh9Awbxeo3PMo5hLZZc57Uvfjqv5wT5u1jq0ld3E9t3wMR8oHXvUaiqIadeDBLrPbX3gB6jOq44yn4MKumuCOu6t8CuUnKzHiL0KRXN4bGOQLfXlFfnrOUUGZu4kqHU7hyIWs+ME/tTxbYYrlX+fzlRrQJ5Map0kPPKBkMBrl7gc=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(376002)(136003)(39860400002)(346002)(396003)(36840700001)(46966006)(40470700004)(426003)(47076005)(16526019)(2616005)(6666004)(41300700001)(82310400005)(336012)(36756003)(1076003)(186003)(83380400001)(40480700001)(40460700003)(36860700001)(2906002)(70586007)(478600001)(5660300002)(110136005)(26005)(8936002)(356005)(316002)(81166007)(54906003)(82740400003)(86362001)(4326008)(8676002)(7696005)(70206006)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2022 05:03:59.6332
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 407d2eca-f509-4d6f-b838-08da5a55f187
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT059.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3293
+References: <20220629065656.54420-1-xuanzhuo@linux.alibaba.com> <20220629065656.54420-2-xuanzhuo@linux.alibaba.com>
+In-Reply-To: <20220629065656.54420-2-xuanzhuo@linux.alibaba.com>
+From:   Jason Wang <jasowang@redhat.com>
+Date:   Thu, 30 Jun 2022 14:35:38 +0800
+Message-ID: <CACGkMEuWK5i4pyvzN306v2ijstFQQbuspNCcNRJrw0kskvcozg@mail.gmail.com>
+Subject: Re: [PATCH v11 01/40] virtio: add helper virtqueue_get_vring_max_size()
+To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc:     virtualization <virtualization@lists.linux-foundation.org>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev <netdev@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm <kvm@vger.kernel.org>,
+        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
+        kangjie.xu@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-PMC driver can be supported on a new upcoming platform.
-Add this information to the support list.
+On Wed, Jun 29, 2022 at 2:57 PM Xuan Zhuo <xuanzhuo@linux.alibaba.com> wrote:
+>
+> Record the maximum queue num supported by the device.
+>
+> virtio-net can display the maximum (supported by hardware) ring size in
+> ethtool -g eth0.
+>
+> When the subsequent patch implements vring reset, it can judge whether
+> the ring size passed by the driver is legal based on this.
+>
+> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> ---
+>  arch/um/drivers/virtio_uml.c             |  1 +
+>  drivers/platform/mellanox/mlxbf-tmfifo.c |  2 ++
+>  drivers/remoteproc/remoteproc_virtio.c   |  2 ++
+>  drivers/s390/virtio/virtio_ccw.c         |  3 +++
+>  drivers/virtio/virtio_mmio.c             |  2 ++
+>  drivers/virtio/virtio_pci_legacy.c       |  2 ++
+>  drivers/virtio/virtio_pci_modern.c       |  2 ++
+>  drivers/virtio/virtio_ring.c             | 14 ++++++++++++++
+>  drivers/virtio/virtio_vdpa.c             |  2 ++
+>  include/linux/virtio.h                   |  2 ++
+>  10 files changed, 32 insertions(+)
+>
+> diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
+> index 82ff3785bf69..e719af8bdf56 100644
+> --- a/arch/um/drivers/virtio_uml.c
+> +++ b/arch/um/drivers/virtio_uml.c
+> @@ -958,6 +958,7 @@ static struct virtqueue *vu_setup_vq(struct virtio_device *vdev,
+>                 goto error_create;
+>         }
+>         vq->priv = info;
+> +       vq->num_max = num;
+>         num = virtqueue_get_vring_size(vq);
+>
+>         if (vu_dev->protocol_features &
+> diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> index 38800e86ed8a..1ae3c56b66b0 100644
+> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> @@ -959,6 +959,8 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
+>                         goto error;
+>                 }
+>
+> +               vq->num_max = vring->num;
+> +
+>                 vqs[i] = vq;
+>                 vring->vq = vq;
+>                 vq->priv = vring;
+> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+> index d43d74733f0a..0f7706e23eb9 100644
+> --- a/drivers/remoteproc/remoteproc_virtio.c
+> +++ b/drivers/remoteproc/remoteproc_virtio.c
+> @@ -125,6 +125,8 @@ static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
+>                 return ERR_PTR(-ENOMEM);
+>         }
+>
+> +       vq->num_max = num;
+> +
+>         rvring->vq = vq;
+>         vq->priv = rvring;
+>
+> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+> index 161d3b141f0d..6b86d0280d6b 100644
+> --- a/drivers/s390/virtio/virtio_ccw.c
+> +++ b/drivers/s390/virtio/virtio_ccw.c
+> @@ -530,6 +530,9 @@ static struct virtqueue *virtio_ccw_setup_vq(struct virtio_device *vdev,
+>                 err = -ENOMEM;
+>                 goto out_err;
+>         }
+> +
+> +       vq->num_max = info->num;
+> +
+>         /* it may have been reduced */
+>         info->num = virtqueue_get_vring_size(vq);
+>
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index 083ff1eb743d..a20d5a6b5819 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -403,6 +403,8 @@ static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsigned int in
+>                 goto error_new_virtqueue;
+>         }
+>
+> +       vq->num_max = num;
+> +
+>         /* Activate the queue */
+>         writel(virtqueue_get_vring_size(vq), vm_dev->base + VIRTIO_MMIO_QUEUE_NUM);
+>         if (vm_dev->version == 1) {
+> diff --git a/drivers/virtio/virtio_pci_legacy.c b/drivers/virtio/virtio_pci_legacy.c
+> index a5e5721145c7..2257f1b3d8ae 100644
+> --- a/drivers/virtio/virtio_pci_legacy.c
+> +++ b/drivers/virtio/virtio_pci_legacy.c
+> @@ -135,6 +135,8 @@ static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
+>         if (!vq)
+>                 return ERR_PTR(-ENOMEM);
+>
+> +       vq->num_max = num;
+> +
+>         q_pfn = virtqueue_get_desc_addr(vq) >> VIRTIO_PCI_QUEUE_ADDR_SHIFT;
+>         if (q_pfn >> 32) {
+>                 dev_err(&vp_dev->pci_dev->dev,
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> index 623906b4996c..e7e0b8c850f6 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -218,6 +218,8 @@ static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
+>         if (!vq)
+>                 return ERR_PTR(-ENOMEM);
+>
+> +       vq->num_max = num;
+> +
+>         /* activate the queue */
+>         vp_modern_set_queue_size(mdev, index, virtqueue_get_vring_size(vq));
+>         vp_modern_queue_address(mdev, index, virtqueue_get_desc_addr(vq),
+> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> index a5ec724c01d8..4cac600856ad 100644
+> --- a/drivers/virtio/virtio_ring.c
+> +++ b/drivers/virtio/virtio_ring.c
+> @@ -2385,6 +2385,20 @@ void vring_transport_features(struct virtio_device *vdev)
+>  }
+>  EXPORT_SYMBOL_GPL(vring_transport_features);
+>
+> +/**
+> + * virtqueue_get_vring_max_size - return the max size of the virtqueue's vring
+> + * @_vq: the struct virtqueue containing the vring of interest.
+> + *
+> + * Returns the max size of the vring.
+> + *
+> + * Unlike other operations, this need not be serialized.
+> + */
+> +unsigned int virtqueue_get_vring_max_size(struct virtqueue *_vq)
+> +{
+> +       return _vq->num_max;
+> +}
+> +EXPORT_SYMBOL_GPL(virtqueue_get_vring_max_size);
+> +
+>  /**
+>   * virtqueue_get_vring_size - return the size of the virtqueue's vring
+>   * @_vq: the struct virtqueue containing the vring of interest.
+> diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
+> index c40f7deb6b5a..9670cc79371d 100644
+> --- a/drivers/virtio/virtio_vdpa.c
+> +++ b/drivers/virtio/virtio_vdpa.c
+> @@ -183,6 +183,8 @@ virtio_vdpa_setup_vq(struct virtio_device *vdev, unsigned int index,
+>                 goto error_new_virtqueue;
+>         }
+>
+> +       vq->num_max = max_num;
+> +
+>         /* Setup virtqueue callback */
+>         cb.callback = callback ? virtio_vdpa_virtqueue_cb : NULL;
+>         cb.private = info;
+> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> index d8fdf170637c..a82620032e43 100644
+> --- a/include/linux/virtio.h
+> +++ b/include/linux/virtio.h
+> @@ -31,6 +31,7 @@ struct virtqueue {
+>         struct virtio_device *vdev;
+>         unsigned int index;
+>         unsigned int num_free;
+> +       unsigned int num_max;
 
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
-Based on "review-hans" branch.
+A question, since we export virtqueue to drivers, this means they can
+access vq->num_max directly.
 
- drivers/platform/x86/amd/pmc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+So we probably don't need a helper here.
 
-diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-index 73d6867cc20b..700eb19e8450 100644
---- a/drivers/platform/x86/amd/pmc.c
-+++ b/drivers/platform/x86/amd/pmc.c
-@@ -92,6 +92,7 @@
- #define AMD_CPU_ID_CZN			AMD_CPU_ID_RN
- #define AMD_CPU_ID_YC			0x14B5
- #define AMD_CPU_ID_CB			0x14D8
-+#define AMD_CPU_ID_PS			0x14E8
- 
- #define PMC_MSG_DELAY_MIN_US		50
- #define RESPONSE_REGISTER_LOOP_MAX	20000
-@@ -320,6 +321,7 @@ static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
- 		break;
- 	case AMD_CPU_ID_YC:
- 	case AMD_CPU_ID_CB:
-+	case AMD_CPU_ID_PS:
- 		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_YC);
- 		break;
- 	default:
-@@ -493,7 +495,8 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
- 			    &amd_pmc_idlemask_fops);
- 	/* Enable STB only when the module_param is set */
- 	if (enable_stb) {
--		if (dev->cpu_id == AMD_CPU_ID_YC || dev->cpu_id == AMD_CPU_ID_CB)
-+		if (dev->cpu_id == AMD_CPU_ID_YC || dev->cpu_id == AMD_CPU_ID_CB ||
-+		    dev->cpu_id == AMD_CPU_ID_PS)
- 			debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
- 					    &amd_pmc_stb_debugfs_fops_v2);
- 		else
-@@ -618,6 +621,7 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
- 	case AMD_CPU_ID_RN:
- 	case AMD_CPU_ID_YC:
- 	case AMD_CPU_ID_CB:
-+	case AMD_CPU_ID_PS:
- 		return MSG_OS_HINT_RN;
- 	}
- 	return -EINVAL;
-@@ -738,6 +742,7 @@ static struct acpi_s2idle_dev_ops amd_pmc_s2idle_dev_ops = {
- #endif
- 
- static const struct pci_device_id pmc_pci_ids[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_CB) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_YC) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_CZN) },
--- 
-2.25.1
+Thanks
+
+>         void *priv;
+>  };
+>
+> @@ -80,6 +81,7 @@ bool virtqueue_enable_cb_delayed(struct virtqueue *vq);
+>
+>  void *virtqueue_detach_unused_buf(struct virtqueue *vq);
+>
+> +unsigned int virtqueue_get_vring_max_size(struct virtqueue *vq);
+>  unsigned int virtqueue_get_vring_size(struct virtqueue *vq);
+>
+>  bool virtqueue_is_broken(struct virtqueue *vq);
+> --
+> 2.31.0
+>
 
