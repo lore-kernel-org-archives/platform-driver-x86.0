@@ -2,74 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4434EC43334
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Jul 2022 11:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25C8C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Jul 2022 16:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235572AbiGALui (ORCPT
+        id S232271AbiGAQvZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 1 Jul 2022 07:50:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50786 "EHLO
+        Fri, 1 Jul 2022 12:51:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234982AbiGALui (ORCPT
+        with ESMTP id S229476AbiGAQvY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 1 Jul 2022 07:50:38 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6BC87B357;
-        Fri,  1 Jul 2022 04:50:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656676237; x=1688212237;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NiYL5Jr2KLxooX4pas5+jSalXMUHhgELTa/NNp/8y1o=;
-  b=KRPFDWU5piVo4snfhWXICTiLmBDrov6hLF+Py2huxBYNdrOt5R0PS5NW
-   MiPAqr7BUR+E4hUNlBHlHPIHrlUybr5BlJM0PeEEMTggjX4lZHgjhGaQM
-   Fo1ErV6pP+BN3mBXVbGOD0MqTTtdL0g4havFYtFN+PHvYm0qNcJp+71x2
-   TU/mV97zhqidtoa0rdEevBRJyR81UI291WJM/B7trwVKUAcgHlQeL7m4i
-   v0uCwhHnoPYz8VinnICcevcKmuIXu5jN0RZvJbMraJ2KMGX8nO6praQFe
-   AIUUaZEN6YjejdWTnv4oMYJ58LDqXXQ9NNp+7Sc+7aJ4+sBTxgmvwI8Z+
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10394"; a="265664543"
-X-IronPort-AV: E=Sophos;i="5.92,236,1650956400"; 
-   d="scan'208";a="265664543"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2022 04:50:37 -0700
-X-IronPort-AV: E=Sophos;i="5.92,236,1650956400"; 
-   d="scan'208";a="768481899"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2022 04:50:36 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1o7FAP-000zK4-Ir;
-        Fri, 01 Jul 2022 14:50:33 +0300
-Date:   Fri, 1 Jul 2022 14:50:33 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v1 1/1] platform/x86: xo15-ebook: Replace open coded
- acpi_match_device()
-Message-ID: <Yr7fiZlwLIiCE9Ys@smile.fi.intel.com>
-References: <20220630194335.3730-1-andriy.shevchenko@linux.intel.com>
+        Fri, 1 Jul 2022 12:51:24 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A5D44A0A;
+        Fri,  1 Jul 2022 09:51:23 -0700 (PDT)
+Received: from zn.tnic (p200300ea970ff648329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:970f:f648:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 43EFA1EC064A;
+        Fri,  1 Jul 2022 18:51:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1656694277;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=LsRagpxJ0d6m6LED7HHfWRzzrUzw8aGp7k8R8oF5VaQ=;
+        b=kVgbaLHTIsuv3Te5Rsh4ZkmUq+hTiJvlWYa0pGnkSJ1yBJNazGmA2MlsU8d0LXoBgXZDOs
+        BK/Mwzu4AfZefSG/tFTr/kXyg/+2uZlvmUlaGKGG9Ycsc+noYabQkfcWzq5iRgMug9P5/h
+        w9QwkfALpCmGSrcjBNsjLmOwQ/3hJ1w=
+Date:   Fri, 1 Jul 2022 18:51:13 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Michael Roth <michael.roth@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v12 19/46] x86/kernel: Make the .bss..decrypted section
+ shared in RMP table
+Message-ID: <Yr8mARnQT+VZK0iy@zn.tnic>
+References: <20220307213356.2797205-1-brijesh.singh@amd.com>
+ <20220307213356.2797205-20-brijesh.singh@amd.com>
+ <YqfabnTRxFSM+LoX@google.com>
+ <YqistMvngNKEJu2o@google.com>
+ <daaf7a84-4204-48ca-e40c-7ba296b4789c@amd.com>
+ <YqizrTCk460kov/X@google.com>
+ <6db51d45-e17a-38dd-131d-e43132c55dfb@amd.com>
+ <Yqjm/b3deMlxxePh@google.com>
+ <9abe9a71-242d-91d5-444a-b56c8b9b6d90@amd.com>
+ <YqtdIf7OSivLxFL0@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220630194335.3730-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <YqtdIf7OSivLxFL0@google.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jun 30, 2022 at 10:43:35PM +0300, Andy Shevchenko wrote:
-> Replace open coded acpi_match_device() in ebook_switch_add().
-> 
-> Note, while it is a bit longer it is more robust in case more ID
-> are coming.
+On Thu, Jun 16, 2022 at 04:41:05PM +0000, Sean Christopherson wrote:
+> > I worry that another use of cc_platform_has() could creep in at some point
+> > and cause the same issue. Not sure how bad it would be, performance-wise, to
+> > remove the jump table optimization for arch/x86/coco/core.c.
 
-Discard this, a last minute change that makes it not buildable.
+Is there a gcc switch for that?
+
+> One thought would be to initialize "vendor" to a bogus value, disallow calls to
+> cc_set_vendor() until after the kernel as gotten to a safe point, and then WARN
+> (or panic?) if cc_platform_has() is called before "vendor" is explicitly set.
+> New calls can still get in, but they'll be much easier to detect and less likely
+> to escape initial testing.
+
+The invalid vendor thing makes sense but I don't think it'll help in
+this case.
+
+We set vendor in sme_enable() which comes before the
+
+__startup_64 -> sme_postprocess_startup
+
+path you're hitting.
+
+We could do only the aspect of checking whether it hasn't been set yet
+and warn then, in order to make the usage more robust...
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
