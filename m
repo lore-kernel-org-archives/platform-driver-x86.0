@@ -2,80 +2,158 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A85CCA479
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Jul 2022 05:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B509CCA479
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Jul 2022 06:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234470AbiGAFrl (ORCPT
+        id S235199AbiGAG3b (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 1 Jul 2022 01:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54436 "EHLO
+        Fri, 1 Jul 2022 02:29:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234423AbiGAFrh (ORCPT
+        with ESMTP id S234233AbiGAG3X (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 1 Jul 2022 01:47:37 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43CFD68A38;
-        Thu, 30 Jun 2022 22:47:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656654456; x=1688190456;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Isy2vf1MMMuyEw6FjN6hYjOB38jJmfhpCIoqFRQ0Z2M=;
-  b=BoyWNACy3TkB8QM/8y8DnC53BjKZaoJOJfotMhiVKUzWI5imZkDoJ/dW
-   C7O1ti+Eo1gKk9JykXt7M12TQcVcxA1PjlHWDUO3Vs/xP52J0kqEAN7j4
-   hJ/NBIfIvPVYZZv4ufmwVQuMg55+vWbiCDmZf1pvrWDm12NqP9MZGGQCk
-   oJ9FeH1mFbfI+oCP3BJqFNj7uF14FtysuXhyC9iDLTFAjBmUS+a6l4bIs
-   rtELxh0LGJqtfQPyVUQV3JkY4fZw8sQAfZTXxV1KI8WgVeGMKpVqDsGKO
-   ORu9j4BhFFLGq7+9oPz4wZvNlIEqIm6S9LIOPIVtm5x8pndi8NdlPHcS2
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10394"; a="281322763"
-X-IronPort-AV: E=Sophos;i="5.92,236,1650956400"; 
-   d="scan'208";a="281322763"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2022 22:47:36 -0700
-X-IronPort-AV: E=Sophos;i="5.92,236,1650956400"; 
-   d="scan'208";a="566121503"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2022 22:47:31 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 01 Jul 2022 08:47:28 +0300
-Date:   Fri, 1 Jul 2022 08:47:28 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Fri, 1 Jul 2022 02:29:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5DCF158FC2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jun 2022 23:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1656656936;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ep21GC3WWMrq7ZTqF7foficvymTnhxBLuGKtrZfIeyk=;
+        b=SS1HgDTIFVH2zgSXAMsjs2vhgS3F3OCBjq033wDVLO7BHQhtoLmlerdi1uvPEh5NRF87CZ
+        fvW6D/it5hbG4HEeNY05+qdqDFPDq0vuvLmTYCmaXnbPRDAfUPm/xAXJKmU1stg5IMTT/f
+        +giqnl3ym/jg1Dwn1r1yaj9V0ilhs2Y=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-474-PR2Skvp0MomshH1TtdqnGA-1; Fri, 01 Jul 2022 02:28:55 -0400
+X-MC-Unique: PR2Skvp0MomshH1TtdqnGA-1
+Received: by mail-ed1-f70.google.com with SMTP id h16-20020a05640250d000b00435bab1a7b4so1101731edb.10
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jun 2022 23:28:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ep21GC3WWMrq7ZTqF7foficvymTnhxBLuGKtrZfIeyk=;
+        b=jtNwfol0nurrNKjUQfPB2WfSRs85BjmS9uVA8+kpadEhdhOFkaEFMWh47fGGaIVENr
+         xaMf8zjE51vERzl/NMnCwXkOyDM2q4Ehe1g2y5B/2FZ7w+ChgBLuQYLdj7Y4eU+0p0FG
+         xHlwsACStkPuSr7jVCvqAEIQCHJnuq7uG7ZvjeueMluybQ75FgkmeXQmK/KZDRmdYqGo
+         k7IZ2fmOIgv6FxgcXSxLoSwyEh1zl71Sia2gY9m15m91cmtMW+1tCVXL7/FwOzHt0lpW
+         B3qUmlULrttYmnx+S9TaP+gwn36+brxCiPyj8k5hU7rC39JncWlzkx8XGyenzk/4D6FN
+         27VA==
+X-Gm-Message-State: AJIora/uXeN+djRwbu6tbTE3zU9BIBeZYaoLhxvrO8Al5NnvaiutyvfT
+        UrS7RqfppEiH1IcNTb/4SQgHcCET0XcJSMiZVm5zr21aFDU05nU7y4iYCC++frq37Ot2+7je0OP
+        OXq3DmrAyypxJKIwNysQRNpO5BInT7sNdXg==
+X-Received: by 2002:a17:907:a428:b0:726:c9f6:cb72 with SMTP id sg40-20020a170907a42800b00726c9f6cb72mr12254060ejc.663.1656656933879;
+        Thu, 30 Jun 2022 23:28:53 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1slJK/GfjvEb+V/KlSodwyGrJY9IlEvcE76Gj4Vrg2HN6t0BznA8dFZxHAHBftC/lU4lpUOHg==
+X-Received: by 2002:a17:907:a428:b0:726:c9f6:cb72 with SMTP id sg40-20020a170907a42800b00726c9f6cb72mr12254030ejc.663.1656656933627;
+        Thu, 30 Jun 2022 23:28:53 -0700 (PDT)
+Received: from redhat.com ([2.55.3.188])
+        by smtp.gmail.com with ESMTPSA id a23-20020aa7d757000000b00437df2444f5sm3589564eds.11.2022.06.30.23.28.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jun 2022 23:28:53 -0700 (PDT)
+Date:   Fri, 1 Jul 2022 02:28:46 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Wolfram Sang <wsa@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v1 1/5] ACPI: utils: Introduce
- acpi_match_video_device_handle() helper
-Message-ID: <Yr6KcPlC/3rYAtKE@lahna>
-References: <20220630212819.42958-1-andriy.shevchenko@linux.intel.com>
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org,
+        kangjie.xu@linux.alibaba.com
+Subject: Re: [PATCH v11 02/40] virtio: struct virtio_config_ops add callbacks
+ for queue_reset
+Message-ID: <20220701022728-mutt-send-email-mst@kernel.org>
+References: <20220629065656.54420-1-xuanzhuo@linux.alibaba.com>
+ <20220629065656.54420-3-xuanzhuo@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220630212819.42958-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20220629065656.54420-3-xuanzhuo@linux.alibaba.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy,
+On Wed, Jun 29, 2022 at 02:56:18PM +0800, Xuan Zhuo wrote:
+> reset can be divided into the following four steps (example):
+>  1. transport: notify the device to reset the queue
+>  2. vring:     recycle the buffer submitted
+>  3. vring:     reset/resize the vring (may re-alloc)
+>  4. transport: mmap vring to device, and enable the queue
+> 
+> In order to support queue reset, add two callbacks(reset_vq,
+> enable_reset_vq) in struct virtio_config_ops to implement steps 1 and 4.
+> 
+> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> ---
+>  include/linux/virtio_config.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+> index b47c2e7ed0ee..ded51b0d4823 100644
+> --- a/include/linux/virtio_config.h
+> +++ b/include/linux/virtio_config.h
+> @@ -78,6 +78,16 @@ struct virtio_shm_region {
+>   * @set_vq_affinity: set the affinity for a virtqueue (optional).
+>   * @get_vq_affinity: get the affinity for a virtqueue (optional).
+>   * @get_shm_region: get a shared memory region based on the index.
+> + * @reset_vq: reset a queue individually (optional).
+> + *	vq: the virtqueue
+> + *	Returns 0 on success or error status
+> + *	reset_vq will guarantee that the callbacks are disabled and synchronized.
+> + *	Except for the callback, the caller should guarantee that the vring is
+> + *	not accessed by any functions of virtqueue.
+> + * @enable_reset_vq: enable a reset queue
+> + *	vq: the virtqueue
+> + *	Returns 0 on success or error status
+> + *	If reset_vq is set, then enable_reset_vq must also be set.
+>   */
+>  typedef void vq_callback_t(struct virtqueue *);
+>  struct virtio_config_ops {
+> @@ -104,6 +114,8 @@ struct virtio_config_ops {
+>  			int index);
+>  	bool (*get_shm_region)(struct virtio_device *vdev,
+>  			       struct virtio_shm_region *region, u8 id);
+> +	int (*reset_vq)(struct virtqueue *vq);
+> +	int (*enable_reset_vq)(struct virtqueue *vq);
+>  };
 
-On Fri, Jul 01, 2022 at 12:28:15AM +0300, Andy Shevchenko wrote:
->  extern long acpi_is_video_device(acpi_handle handle);
-> +extern bool acpi_match_video_device_handle(acpi_handle handle);
+The names need some tweaking.
+I came up with
+ 	int (*disable_vq_and_reset)(struct virtqueue *vq);
+ 	int (*enable_vq_after_reset)(struct virtqueue *vq);
 
-I think we can do slightly better here. The only caller of
-acpi_is_video_device() is in drivers/acpi/video_detect.c so we can move
-it there and make it static (is_video_device()).
 
-Then we can name this one acpi_is_video_device() instead and in addition
-make it take struct acpi_device as parameter instead of acpi_handle (I
-think we should not use acpi_handles in drivers if possible).
+>  /* If driver didn't advertise the feature, it will never appear. */
+> -- 
+> 2.31.0
+
