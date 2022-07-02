@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25269C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Jul 2022 09:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917D3C43334
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Jul 2022 09:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229951AbiGBJNv (ORCPT
+        id S229446AbiGBJlP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 2 Jul 2022 05:13:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
+        Sat, 2 Jul 2022 05:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbiGBJNu (ORCPT
+        with ESMTP id S231995AbiGBJlO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Jul 2022 05:13:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 056DC1B7BF
-        for <platform-driver-x86@vger.kernel.org>; Sat,  2 Jul 2022 02:13:49 -0700 (PDT)
+        Sat, 2 Jul 2022 05:41:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F314AB4A2
+        for <platform-driver-x86@vger.kernel.org>; Sat,  2 Jul 2022 02:41:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656753228;
+        s=mimecast20190719; t=1656754872;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wFmB2k60UuW2i0Ht+Cef4lERIPyUH6lPw9UpjnL8iPw=;
-        b=BuDUVvTzV6aCIRdEJGQ2wNL/W4QQ/MGW0FDkOSh9blYzf2Mlvb0Y9So8V7E+F0Th36TKqh
-        vE3NSLQ5Yn081UnLecs0Bl/x11JwzILZeJ5w+LwZWG0R3VtOKMredAALxzKTmPuD5FJbBD
-        btw7p6Ck+qMmTf+LupImiDrVqmkeP7w=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=EbUcjl37U9ZI5oLem8qgJPAQgmdyWCyCszoWhSDvio0=;
+        b=HHJ6V5mSfvjdSbJfsiL4heJl1LzczJXE6LjblP/BRS7y1X3Ddyu8IxTi6FfpEQ/szCzZCv
+        0gH2reUs3mxLG0B1mMqoQsNS+SyOEDvn9UGbYZKLJ1wqUOIGxxBR5JiOi61CTFrXrEKbBv
+        zO+Z+BOwXJUBkrgafXAl9DStNe7+WDA=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-264-RaPhf5XXNMKtg0T_5oEigg-1; Sat, 02 Jul 2022 05:13:47 -0400
-X-MC-Unique: RaPhf5XXNMKtg0T_5oEigg-1
-Received: by mail-ed1-f69.google.com with SMTP id i9-20020a05640242c900b004373cd1c4d5so3359422edc.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 02 Jul 2022 02:13:47 -0700 (PDT)
+ us-mta-163-ksCOEDIiMrG5GfhM9YxR3Q-1; Sat, 02 Jul 2022 05:41:08 -0400
+X-MC-Unique: ksCOEDIiMrG5GfhM9YxR3Q-1
+Received: by mail-ed1-f71.google.com with SMTP id o11-20020a056402438b00b0043676efd75dso3418254edc.16
+        for <platform-driver-x86@vger.kernel.org>; Sat, 02 Jul 2022 02:41:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=wFmB2k60UuW2i0Ht+Cef4lERIPyUH6lPw9UpjnL8iPw=;
-        b=Etqu/88h8ApME45CqwjWxX8l6nek2DrOOGeNXOlB4SqgTrE/NEm9uwImZktERx3Goa
-         z1mAog8XLNT7m3aKa9N56axou1AvUtx5SepxGTIMHYVMl9doQAlafJtqZ+DSksqIqZwL
-         gF1YF5y+IdNMPpAGxnvA3J3HvMXUe6tyh9yE4BkCl6xuF95jxaunAOwwsoIrpmGnVyXL
-         fR411Jyp3UjcakKDFHbOTAZfAd0ukvXuq0queSJlgM0tRDGKhxfS2bsoA/6k07eQEzBK
-         kpPKdg2kk8+Vd69fvNFZxn+kQ5lu0Y66DnhHbRklfufvVnGCEtSvZTCo0reSIfW8A/1T
-         /jmA==
-X-Gm-Message-State: AJIora8n5l9lwAgwOoplGWH2ufYDAi4UmKIgSxkobBBwrw3zKDoJEm9M
-        pkwy79pNHMEaOhW00qNIN5zFbSEYrWO64mgTD/Qdjo4UXJWYNebNxBpv6WFpqP1UJl/7ncsTcWI
-        7SSDfM/VeYbUecFToHlpylFMeshEAAGbY/w==
-X-Received: by 2002:a17:906:af12:b0:722:f9f0:cb75 with SMTP id lx18-20020a170906af1200b00722f9f0cb75mr18376893ejb.643.1656753226474;
-        Sat, 02 Jul 2022 02:13:46 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tzOdQ1+rNU4RL6J1uNPu/GPGrF4Z+Slx9/SINFUrbq42gOmhP98HTwRwIETyi1VTR+i837DA==
-X-Received: by 2002:a17:906:af12:b0:722:f9f0:cb75 with SMTP id lx18-20020a170906af1200b00722f9f0cb75mr18376888ejb.643.1656753226290;
-        Sat, 02 Jul 2022 02:13:46 -0700 (PDT)
+        bh=EbUcjl37U9ZI5oLem8qgJPAQgmdyWCyCszoWhSDvio0=;
+        b=O9A2qB/xI4dQaRqnoHqQraMJQza3Ugk6LYLj7mHniCAVZqABy/EugEsGFbZAEAgcPt
+         NstofpW/9ALIIx0eVRfX29IHEiMmJSihqBrXn2nJ3WOyNIJEYfEv7aLmONCW3JOt2ypS
+         TeOtzmmPQJB8JN60z/L0FA22QteG8vWJ/r59v52lHht9t0lUBCa8QCdlBHHmerQ3Yl5n
+         IzrcfCb6F1SgrXTiyk5V7zN5UrBfXlYxy5RvsRzm0UoW1FLo6Jw+lH45QvHbgMXP24NK
+         UmHoSPdTzPgthSyuc7hw9VKBBA+mQFpZi7nhJvR4QBMln59T8L82FVeECCuzTYAFkIcT
+         T5xA==
+X-Gm-Message-State: AJIora8Cy2A2BpfFQxwU26B8EYZuBrcGf7Skvpfu9qlzAk40pVGCeVtu
+        +986kvgCofDQHiXitDtTZsQ+ZllvYQonsX1eKcrd44jq5RB97FCNlApvUlH/SsBOCskhFd/Pstx
+        K1vr+rDNboh6cm1w7CGwMkzx90n3S72T9Qg==
+X-Received: by 2002:a17:907:1dc6:b0:72a:5e9a:91be with SMTP id og6-20020a1709071dc600b0072a5e9a91bemr13345192ejc.730.1656754867653;
+        Sat, 02 Jul 2022 02:41:07 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vy+ZptcZ/qo+F2ZEOOawo6gU0JWHUnczjYlCP6J5rlgkyPXET7RulfZIUqwqQ3kZ3IWdEwAA==
+X-Received: by 2002:a17:907:1dc6:b0:72a:5e9a:91be with SMTP id og6-20020a1709071dc600b0072a5e9a91bemr13345178ejc.730.1656754867476;
+        Sat, 02 Jul 2022 02:41:07 -0700 (PDT)
 Received: from [192.168.43.127] ([109.38.147.70])
-        by smtp.gmail.com with ESMTPSA id w14-20020a056402128e00b004356894a3f8sm16463809edv.89.2022.07.02.02.13.45
+        by smtp.gmail.com with ESMTPSA id p4-20020a056402154400b0042dcac2afc6sm16571865edx.72.2022.07.02.02.41.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Jul 2022 02:13:45 -0700 (PDT)
-Message-ID: <226acf2e-19a3-6ece-c353-793eb6995549@redhat.com>
-Date:   Sat, 2 Jul 2022 11:13:20 +0200
+        Sat, 02 Jul 2022 02:41:06 -0700 (PDT)
+Message-ID: <a3b35758-2279-34d9-9b4b-6cb837618918@redhat.com>
+Date:   Sat, 2 Jul 2022 11:40:57 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH 0/4] platform/surface: Add support for tablet mode switch
- via Surface Aggregator Module
+Subject: Re: [PATCH 0/3] platform/surface: Move Surface Aggregator client hubs
+ to their own modules
 Content-Language: en-US
 To:     Maximilian Luz <luzmaximilian@gmail.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220624183642.910893-1-luzmaximilian@gmail.com>
+References: <20220624205800.1355621-1-luzmaximilian@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220624183642.910893-1-luzmaximilian@gmail.com>
+In-Reply-To: <20220624205800.1355621-1-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,24 +79,21 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 6/24/22 20:36, Maximilian Luz wrote:
-> This series adds a driver providing a tablet mode switch on the Surface
-> Pro 8, Surface Pro X, and Surface Laptop Studio.
+On 6/24/22 22:57, Maximilian Luz wrote:
+> This series moves the Surface Aggregator client device hubs from the
+> Surface Aggregator registry to their own modules. While, at the moment,
+> client device hubs are exclusively instantiated by the registry platform
+> hub driver, this will change in the future. In particular, with the
+> introduction of DT/OF support, which is required for the Surface Pro X.
+> Therefore, this series also slightly restructures the functions used for
+> software-node-based device instantiation, essentially acting as
+> preparation for that.
 > 
-> These devices provide posture information via subsystems of the Surface
-> Aggregator Module (SAM; embedded controller). While the specific
-> subsystems used for the Pro and Laptop models differ, large parts of the
-> respective subsystem drivers would be equal. Therefore, we essentially
-> provide a generic framework for tablet-mode switches via the Surface
-> Aggregator module and use that to implement specific support for the KIP
-> and POS subsystems used on the aforementioned devices.
-> 
-> In addition, this series first introduces some helper macros for
-> synchronous stack-allocated SAM requests used in the subsequent patches,
-> extending the already existing ones.
-> 
-> Further, this series adds the respective firmware nodes to the Surface
-> Aggregator Registry.
+> In addition, this series follows-up "platform/surface: aggregator: Add
+> support for client hot-removal" and further removes some code
+> duplication by consolidating more parts of the hub drivers. While at it,
+> also ensure proper handling of firmware node lifetimes and update the
+> copyright year of various files.
 
 Thank you for your patch-series, I've applied the series to my
 review-hans branch:
@@ -114,28 +111,42 @@ Regards,
 
 Hans
 
-
-
 > 
-> Maximilian Luz (4):
->   platform/surface: aggregator: Add helper macros for requests with
->     argument and return value
->   platform/surface: Add KIP/POS tablet-mode switch driver
->   platform/surface: aggregator_registry: Add support for tablet mode
->     switch on Surface Pro 8
->   platform/surface: aggregator_registry: Add support for tablet mode
->     switch on Surface Laptop Studio
+> Maximilian Luz (3):
+>   platform/surface: aggregator: Move device registry helper functions to
+>     core module
+>   platform/surface: aggregator: Move subsystem hub drivers to their own
+>     module
+>   platform/surface: Update copyright year of various drivers
 > 
->  .../sysfs-bus-surface_aggregator-tabletsw     |  57 ++
 >  MAINTAINERS                                   |   6 +
->  drivers/platform/surface/Kconfig              |  23 +
+>  drivers/platform/surface/Kconfig              |  35 +-
 >  drivers/platform/surface/Makefile             |   1 +
->  .../surface/surface_aggregator_registry.c     |  15 +-
->  .../surface/surface_aggregator_tabletsw.c     | 533 ++++++++++++++++++
->  include/linux/surface_aggregator/controller.h | 125 ++++
->  include/linux/surface_aggregator/device.h     |  36 ++
->  8 files changed, 795 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-surface_aggregator-tabletsw
->  create mode 100644 drivers/platform/surface/surface_aggregator_tabletsw.c
+>  drivers/platform/surface/aggregator/Kconfig   |   2 +-
+>  drivers/platform/surface/aggregator/Makefile  |   2 +-
+>  drivers/platform/surface/aggregator/bus.c     | 151 +++++-
+>  drivers/platform/surface/aggregator/bus.h     |   2 +-
+>  .../platform/surface/aggregator/controller.c  |   2 +-
+>  .../platform/surface/aggregator/controller.h  |   2 +-
+>  drivers/platform/surface/aggregator/core.c    |   2 +-
+>  .../platform/surface/aggregator/ssh_msgb.h    |   2 +-
+>  .../surface/aggregator/ssh_packet_layer.c     |   2 +-
+>  .../surface/aggregator/ssh_packet_layer.h     |   2 +-
+>  .../platform/surface/aggregator/ssh_parser.c  |   2 +-
+>  .../platform/surface/aggregator/ssh_parser.h  |   2 +-
+>  .../surface/aggregator/ssh_request_layer.c    |   2 +-
+>  .../surface/aggregator/ssh_request_layer.h    |   2 +-
+>  drivers/platform/surface/aggregator/trace.h   |   2 +-
+>  .../platform/surface/surface_acpi_notify.c    |   2 +-
+>  .../surface/surface_aggregator_cdev.c         |   2 +-
+>  .../platform/surface/surface_aggregator_hub.c | 371 +++++++++++++++
+>  .../surface/surface_aggregator_registry.c     | 446 +-----------------
+>  drivers/platform/surface/surface_dtx.c        |   2 +-
+>  drivers/platform/surface/surface_gpe.c        |   2 +-
+>  drivers/platform/surface/surface_hotplug.c    |   2 +-
+>  .../surface/surface_platform_profile.c        |   2 +-
+>  include/linux/surface_aggregator/device.h     |  52 ++
+>  27 files changed, 618 insertions(+), 484 deletions(-)
+>  create mode 100644 drivers/platform/surface/surface_aggregator_hub.c
 > 
 
