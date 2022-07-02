@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A66C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Jul 2022 09:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C277BC43334
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Jul 2022 09:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232072AbiGBJoa (ORCPT
+        id S232131AbiGBJyc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 2 Jul 2022 05:44:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51834 "EHLO
+        Sat, 2 Jul 2022 05:54:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232070AbiGBJo3 (ORCPT
+        with ESMTP id S229446AbiGBJyb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Jul 2022 05:44:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 64F2413EB7
-        for <platform-driver-x86@vger.kernel.org>; Sat,  2 Jul 2022 02:44:28 -0700 (PDT)
+        Sat, 2 Jul 2022 05:54:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C02F175BD
+        for <platform-driver-x86@vger.kernel.org>; Sat,  2 Jul 2022 02:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656755067;
+        s=mimecast20190719; t=1656755669;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=EkncoZo4fSfWKZyfeSpaR0K8SUXZs4qQntp3fAHOyD0=;
-        b=KwWQrEyDzUinFPlS2s0bkpo9eAQw70t7O4+rmsSxGIyrSnVUTif6haJoqu5la1Ql1UyVaH
-        YB7/asmVwHmiAteZK+tGobJK2arm9eD71SeelJfaFacwT+wSv1O0x+JliUZaTISjCpLDV5
-        c8iH7xlHENlmS9FFg0kqY8dsUsAoJIM=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=5aY2747Hk3us9Bi14d8WdjF4WmVrxBQs7Bc7ML/SUFk=;
+        b=KSFMLIqCMN5iBYZ4BxUG6yjxBsKu6bRK1fHmSpOTfVSLk5wgsNxGlwSSh8B4Hx1M1imQeY
+        td82S/vITyFrxNJoFfFJ5wfqNVEsZYRCtj7oWzaZ1dj1p/9JfDa1N24po9N0oHhQ4k9Y2R
+        A7LTof3IripBbuyuww8nqT7CqaRycV0=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-169-fKUsOJMtMkuLy4JYan4TTg-1; Sat, 02 Jul 2022 05:44:26 -0400
-X-MC-Unique: fKUsOJMtMkuLy4JYan4TTg-1
-Received: by mail-ed1-f72.google.com with SMTP id r12-20020a05640251cc00b00435afb01d7fso3382740edd.18
-        for <platform-driver-x86@vger.kernel.org>; Sat, 02 Jul 2022 02:44:25 -0700 (PDT)
+ us-mta-658-DsHTfxZiM-OKyRLlKNh7hQ-1; Sat, 02 Jul 2022 05:54:28 -0400
+X-MC-Unique: DsHTfxZiM-OKyRLlKNh7hQ-1
+Received: by mail-ed1-f69.google.com with SMTP id y5-20020a056402358500b0043592ac3961so3362038edc.6
+        for <platform-driver-x86@vger.kernel.org>; Sat, 02 Jul 2022 02:54:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=EkncoZo4fSfWKZyfeSpaR0K8SUXZs4qQntp3fAHOyD0=;
-        b=XGHn/UiZZCy/TcRJ3D19d9ksTgUZ0urAV+PmmPPTiNZOLzWC+3qCvq9SgcSSLIY3lP
-         eaG41EyfJNqa6TBlzWQ9CyYJZgc8wXhsUT+KMRU0jHPtkY33/i4ZwqNdTJd0SUdJP0cq
-         rYWLsa5zDme2KllAf7ugsk/+DJc4BD9MFIZXX+8vYTsjt2ZJEkyqHWxa7+Jvdk8Tu+Ef
-         JRbCYjLjxrrI//KrnYQkVzaheN3E45bhOIXhhsiVnIlHoUQ5IOW25tV7GVYAw0AEgrFs
-         bB8Q3zbfazKFFRX4DWmq08mIBaDNYajbxz+JZWuVNzxhNNwnQ7br/9WxXu1tQQZJT/+0
-         Erhw==
-X-Gm-Message-State: AJIora+DgBxMGr0M+34ivWzDBrBhw0tmm+QobjKnP9/9+WSUiOJBfKGk
-        +NDyJPDV5myoTpiGsIQUrz8VOfqDcsSstIAYBiPUnAL2hvsG4XO4/9s/Hq4qtqUkgt3jwcbVW0q
-        arSfOLx4fTF5q5MISShuQSdlaGgxe859MlQ==
-X-Received: by 2002:a17:907:3f8d:b0:726:2ab9:f2fc with SMTP id hr13-20020a1709073f8d00b007262ab9f2fcmr18725101ejc.313.1656755064924;
-        Sat, 02 Jul 2022 02:44:24 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1s8sw6ek35qgaYjnBW4sVHkV40TbvJjgm7Y3qBTfseFvTQVsPB2spIQ604ZBmJyjulhxK7lug==
-X-Received: by 2002:a17:907:3f8d:b0:726:2ab9:f2fc with SMTP id hr13-20020a1709073f8d00b007262ab9f2fcmr18725084ejc.313.1656755064675;
-        Sat, 02 Jul 2022 02:44:24 -0700 (PDT)
+        bh=5aY2747Hk3us9Bi14d8WdjF4WmVrxBQs7Bc7ML/SUFk=;
+        b=iNxCj2X0g2+iLCplBEwgud/HMcJd1wmdcZ4mkU/WKJ9I8Y9g0ykxl/apUL5bIEQ8yI
+         5vXm5mPGXoTJKjv+PkZuaZS8byB55BuwuPDo4zreqNF6PkmOpYjpolDjgS1Q+xa7/tQv
+         RqPTTxtS42g/iKyQQW6u2HDBBLMyOtNbJ0F3x8c1puWBeE8wpy138xBzSYwHGW0nnHpK
+         23yG9oeLBg4m9gXj0ydq+YCrwMdTgaJl8sl5XjGbiUcqAnxUWsHV4vqq+gq5t6y9t4ep
+         Tka1yZESmacXxv/nJu04Ua+I6FWbDKuBB/5pv7GpfRDx4jxuws4wtq1i7nsT/RT2bzF6
+         DJ0w==
+X-Gm-Message-State: AJIora+Bfv7KaWvUGW2AXR4XaQXpPvQlmY17AIG/qzAdbAPvsc3fOGka
+        6gNa9WRP0fW/akDkhQZCBKi6Kq5e2wK/jItLvQFT9As7wUwWL9zb8k1HNRuLV9QRsmgjfhdVa44
+        Z0nOV/fUMX70OlpnlEqgQM7Ol6AurzTm51g==
+X-Received: by 2002:a17:907:7283:b0:727:b4c0:b1f6 with SMTP id dt3-20020a170907728300b00727b4c0b1f6mr18578673ejc.197.1656755666982;
+        Sat, 02 Jul 2022 02:54:26 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1t4/6byBX8rh0oM+kgYZVCwfnRyKKcPLodPqj5yer0AXp+5bcVTNwbBRZT1aNEzCvQOsoO/KA==
+X-Received: by 2002:a17:907:7283:b0:727:b4c0:b1f6 with SMTP id dt3-20020a170907728300b00727b4c0b1f6mr18578652ejc.197.1656755666790;
+        Sat, 02 Jul 2022 02:54:26 -0700 (PDT)
 Received: from [192.168.43.127] ([109.38.147.70])
-        by smtp.gmail.com with ESMTPSA id b3-20020a17090636c300b00726b8e84c1asm6994694ejc.21.2022.07.02.02.44.23
+        by smtp.gmail.com with ESMTPSA id 4-20020a170906308400b006f3ef214e27sm3759870ejv.141.2022.07.02.02.54.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Jul 2022 02:44:23 -0700 (PDT)
-Message-ID: <2604d622-08b7-e517-b423-73e38dc5b286@redhat.com>
-Date:   Sat, 2 Jul 2022 11:44:23 +0200
+        Sat, 02 Jul 2022 02:54:26 -0700 (PDT)
+Message-ID: <ac7bfd35-203b-5002-a3ff-787ca1738a41@redhat.com>
+Date:   Sat, 2 Jul 2022 11:54:23 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH v2] platform/x86: ISST: PUNIT device mapping with Sub-NUMA
- clustering
+Subject: Re: [PATCH v1 0/4] Add Raptor Lake and PCI error recovery support
 Content-Language: en-US
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220629194817.2418240-1-srinivas.pandruvada@linux.intel.com>
+To:     Gayatri Kammela <gayatri.kammela@linux.intel.com>
+Cc:     markgross@kernel.org, david.e.box@linux.intel.com,
+        srinivas.pandruvada@intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220629221334.434307-1-gayatri.kammela@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220629194817.2418240-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20220629221334.434307-1-gayatri.kammela@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,32 +79,20 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 6/29/22 21:48, Srinivas Pandruvada wrote:
-> On a multiple package system using Sub-NUMA clustering, there is an issue
-> in mapping Linux CPU number to PUNIT PCI device when manufacturer decided
-> to reuse the PCI bus number across packages. Bus number can be reused as
-> long as they are in different domain or segment. In this case some CPU
-> will fail to find a PCI device to issue SST requests.
+On 6/30/22 00:13, Gayatri Kammela wrote:
+> Hi,
 > 
-> When bus numbers are reused across CPU packages, we are using proximity
-> information by matching CPU numa node id to PUNIT PCI device numa node
-> id. But on a package there can be only one PUNIT PCI device, but multiple
-> numa nodes (one for each sub cluster). So, the numa node ID of the PUNIT
-> PCI device can only match with one numa node id of CPUs in a sub cluster
-> in the package.
+> This patch set adds Raptor Lake support as well as PCI error recovery
+> support to PMT driver. It also has a rework patch and a fix for fixed
+> region handling.
 > 
-> Since there can be only one PUNIT PCI device per package, if we match
-> with numa node id of any sub cluster in that package, we can use that
-> mapping for any CPU in that package. So, store the match information
-> in a per package data structure and return the information when there
-> is no match.
-> 
-> While here, use defines for max bus number instead of hardcoding.
-> 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Patch 1: Rework early hardware code
+> Patch 2: Add support for Raptor Lake
+> Patch 3: Fix fixed region handling
+> Patch 4: Add PCI error recovery support to Intel PMT
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
 Note it will show up in my review-hans branch once I've pushed my
@@ -120,118 +108,21 @@ Regards,
 Hans
 
 
-> ---
-> v2
-> - Use #define for max bus number and use
 > 
->  .../intel/speed_select_if/isst_if_common.c    | 39 +++++++++++++++----
->  1 file changed, 32 insertions(+), 7 deletions(-)
+> David E. Box (3):
+>   platform/x86/intel/vsec: Rework early hardware code
+>   platform/x86/intel/vsec: Add support for Raptor Lake
+>   platform/x86/intel/pmt: telemetry: Fix fixed region handling
 > 
-> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> index e8424e70d81d..fd102678c75f 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> @@ -277,29 +277,38 @@ static int isst_if_get_platform_info(void __user *argp)
->  	return 0;
->  }
->  
-> +#define ISST_MAX_BUS_NUMBER	2
->  
->  struct isst_if_cpu_info {
->  	/* For BUS 0 and BUS 1 only, which we need for PUNIT interface */
-> -	int bus_info[2];
-> -	struct pci_dev *pci_dev[2];
-> +	int bus_info[ISST_MAX_BUS_NUMBER];
-> +	struct pci_dev *pci_dev[ISST_MAX_BUS_NUMBER];
->  	int punit_cpu_id;
->  	int numa_node;
->  };
->  
-> +struct isst_if_pkg_info {
-> +	struct pci_dev *pci_dev[ISST_MAX_BUS_NUMBER];
-> +};
-> +
->  static struct isst_if_cpu_info *isst_cpu_info;
-> +static struct isst_if_pkg_info *isst_pkg_info;
-> +
->  #define ISST_MAX_PCI_DOMAINS	8
->  
->  static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
->  {
->  	struct pci_dev *matched_pci_dev = NULL;
->  	struct pci_dev *pci_dev = NULL;
-> -	int no_matches = 0;
-> +	int no_matches = 0, pkg_id;
->  	int i, bus_number;
->  
-> -	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
-> -	    cpu >= num_possible_cpus())
-> +	if (bus_no < 0 || bus_no >= ISST_MAX_BUS_NUMBER || cpu < 0 ||
-> +	    cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
->  		return NULL;
->  
-> +	pkg_id = topology_physical_package_id(cpu);
-> +
->  	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
->  	if (bus_number < 0)
->  		return NULL;
-> @@ -324,6 +333,8 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
->  		}
->  
->  		if (node == isst_cpu_info[cpu].numa_node) {
-> +			isst_pkg_info[pkg_id].pci_dev[bus_no] = _pci_dev;
-> +
->  			pci_dev = _pci_dev;
->  			break;
->  		}
-> @@ -342,6 +353,10 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
->  	if (!pci_dev && no_matches == 1)
->  		pci_dev = matched_pci_dev;
->  
-> +	/* Return pci_dev pointer for any matched CPU in the package */
-> +	if (!pci_dev)
-> +		pci_dev = isst_pkg_info[pkg_id].pci_dev[bus_no];
-> +
->  	return pci_dev;
->  }
->  
-> @@ -361,8 +376,8 @@ struct pci_dev *isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
->  {
->  	struct pci_dev *pci_dev;
->  
-> -	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
-> -	    cpu >= num_possible_cpus())
-> +	if (bus_no < 0 || bus_no >= ISST_MAX_BUS_NUMBER  || cpu < 0 ||
-> +	    cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
->  		return NULL;
->  
->  	pci_dev = isst_cpu_info[cpu].pci_dev[bus_no];
-> @@ -417,10 +432,19 @@ static int isst_if_cpu_info_init(void)
->  	if (!isst_cpu_info)
->  		return -ENOMEM;
->  
-> +	isst_pkg_info = kcalloc(topology_max_packages(),
-> +				sizeof(*isst_pkg_info),
-> +				GFP_KERNEL);
-> +	if (!isst_pkg_info) {
-> +		kfree(isst_cpu_info);
-> +		return -ENOMEM;
-> +	}
-> +
->  	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
->  				"platform/x86/isst-if:online",
->  				isst_if_cpu_online, NULL);
->  	if (ret < 0) {
-> +		kfree(isst_pkg_info);
->  		kfree(isst_cpu_info);
->  		return ret;
->  	}
-> @@ -433,6 +457,7 @@ static int isst_if_cpu_info_init(void)
->  static void isst_if_cpu_info_exit(void)
->  {
->  	cpuhp_remove_state(isst_if_online_id);
-> +	kfree(isst_pkg_info);
->  	kfree(isst_cpu_info);
->  };
->  
+> Gayatri Kammela (1):
+>   platform/x86/intel/vsec: Add PCI error recovery support to Intel PMT
+> 
+>  drivers/platform/x86/intel/pmt/class.c     |  23 ++--
+>  drivers/platform/x86/intel/pmt/telemetry.c |  18 ++-
+>  drivers/platform/x86/intel/vsec.c          | 130 ++++++++++++++++-----
+>  drivers/platform/x86/intel/vsec.h          |  11 +-
+>  4 files changed, 136 insertions(+), 46 deletions(-)
+> 
+> 
+> base-commit: 03c765b0e3b4cb5063276b086c76f7a612856a9a
 
