@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917D3C43334
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Jul 2022 09:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A66C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Jul 2022 09:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229446AbiGBJlP (ORCPT
+        id S232072AbiGBJoa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 2 Jul 2022 05:41:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
+        Sat, 2 Jul 2022 05:44:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231995AbiGBJlO (ORCPT
+        with ESMTP id S232070AbiGBJo3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Jul 2022 05:41:14 -0400
+        Sat, 2 Jul 2022 05:44:29 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F314AB4A2
-        for <platform-driver-x86@vger.kernel.org>; Sat,  2 Jul 2022 02:41:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 64F2413EB7
+        for <platform-driver-x86@vger.kernel.org>; Sat,  2 Jul 2022 02:44:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656754872;
+        s=mimecast20190719; t=1656755067;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=EbUcjl37U9ZI5oLem8qgJPAQgmdyWCyCszoWhSDvio0=;
-        b=HHJ6V5mSfvjdSbJfsiL4heJl1LzczJXE6LjblP/BRS7y1X3Ddyu8IxTi6FfpEQ/szCzZCv
-        0gH2reUs3mxLG0B1mMqoQsNS+SyOEDvn9UGbYZKLJ1wqUOIGxxBR5JiOi61CTFrXrEKbBv
-        zO+Z+BOwXJUBkrgafXAl9DStNe7+WDA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=EkncoZo4fSfWKZyfeSpaR0K8SUXZs4qQntp3fAHOyD0=;
+        b=KwWQrEyDzUinFPlS2s0bkpo9eAQw70t7O4+rmsSxGIyrSnVUTif6haJoqu5la1Ql1UyVaH
+        YB7/asmVwHmiAteZK+tGobJK2arm9eD71SeelJfaFacwT+wSv1O0x+JliUZaTISjCpLDV5
+        c8iH7xlHENlmS9FFg0kqY8dsUsAoJIM=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-163-ksCOEDIiMrG5GfhM9YxR3Q-1; Sat, 02 Jul 2022 05:41:08 -0400
-X-MC-Unique: ksCOEDIiMrG5GfhM9YxR3Q-1
-Received: by mail-ed1-f71.google.com with SMTP id o11-20020a056402438b00b0043676efd75dso3418254edc.16
-        for <platform-driver-x86@vger.kernel.org>; Sat, 02 Jul 2022 02:41:08 -0700 (PDT)
+ us-mta-169-fKUsOJMtMkuLy4JYan4TTg-1; Sat, 02 Jul 2022 05:44:26 -0400
+X-MC-Unique: fKUsOJMtMkuLy4JYan4TTg-1
+Received: by mail-ed1-f72.google.com with SMTP id r12-20020a05640251cc00b00435afb01d7fso3382740edd.18
+        for <platform-driver-x86@vger.kernel.org>; Sat, 02 Jul 2022 02:44:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=EbUcjl37U9ZI5oLem8qgJPAQgmdyWCyCszoWhSDvio0=;
-        b=O9A2qB/xI4dQaRqnoHqQraMJQza3Ugk6LYLj7mHniCAVZqABy/EugEsGFbZAEAgcPt
-         NstofpW/9ALIIx0eVRfX29IHEiMmJSihqBrXn2nJ3WOyNIJEYfEv7aLmONCW3JOt2ypS
-         TeOtzmmPQJB8JN60z/L0FA22QteG8vWJ/r59v52lHht9t0lUBCa8QCdlBHHmerQ3Yl5n
-         IzrcfCb6F1SgrXTiyk5V7zN5UrBfXlYxy5RvsRzm0UoW1FLo6Jw+lH45QvHbgMXP24NK
-         UmHoSPdTzPgthSyuc7hw9VKBBA+mQFpZi7nhJvR4QBMln59T8L82FVeECCuzTYAFkIcT
-         T5xA==
-X-Gm-Message-State: AJIora8Cy2A2BpfFQxwU26B8EYZuBrcGf7Skvpfu9qlzAk40pVGCeVtu
-        +986kvgCofDQHiXitDtTZsQ+ZllvYQonsX1eKcrd44jq5RB97FCNlApvUlH/SsBOCskhFd/Pstx
-        K1vr+rDNboh6cm1w7CGwMkzx90n3S72T9Qg==
-X-Received: by 2002:a17:907:1dc6:b0:72a:5e9a:91be with SMTP id og6-20020a1709071dc600b0072a5e9a91bemr13345192ejc.730.1656754867653;
-        Sat, 02 Jul 2022 02:41:07 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vy+ZptcZ/qo+F2ZEOOawo6gU0JWHUnczjYlCP6J5rlgkyPXET7RulfZIUqwqQ3kZ3IWdEwAA==
-X-Received: by 2002:a17:907:1dc6:b0:72a:5e9a:91be with SMTP id og6-20020a1709071dc600b0072a5e9a91bemr13345178ejc.730.1656754867476;
-        Sat, 02 Jul 2022 02:41:07 -0700 (PDT)
+        bh=EkncoZo4fSfWKZyfeSpaR0K8SUXZs4qQntp3fAHOyD0=;
+        b=XGHn/UiZZCy/TcRJ3D19d9ksTgUZ0urAV+PmmPPTiNZOLzWC+3qCvq9SgcSSLIY3lP
+         eaG41EyfJNqa6TBlzWQ9CyYJZgc8wXhsUT+KMRU0jHPtkY33/i4ZwqNdTJd0SUdJP0cq
+         rYWLsa5zDme2KllAf7ugsk/+DJc4BD9MFIZXX+8vYTsjt2ZJEkyqHWxa7+Jvdk8Tu+Ef
+         JRbCYjLjxrrI//KrnYQkVzaheN3E45bhOIXhhsiVnIlHoUQ5IOW25tV7GVYAw0AEgrFs
+         bB8Q3zbfazKFFRX4DWmq08mIBaDNYajbxz+JZWuVNzxhNNwnQ7br/9WxXu1tQQZJT/+0
+         Erhw==
+X-Gm-Message-State: AJIora+DgBxMGr0M+34ivWzDBrBhw0tmm+QobjKnP9/9+WSUiOJBfKGk
+        +NDyJPDV5myoTpiGsIQUrz8VOfqDcsSstIAYBiPUnAL2hvsG4XO4/9s/Hq4qtqUkgt3jwcbVW0q
+        arSfOLx4fTF5q5MISShuQSdlaGgxe859MlQ==
+X-Received: by 2002:a17:907:3f8d:b0:726:2ab9:f2fc with SMTP id hr13-20020a1709073f8d00b007262ab9f2fcmr18725101ejc.313.1656755064924;
+        Sat, 02 Jul 2022 02:44:24 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1s8sw6ek35qgaYjnBW4sVHkV40TbvJjgm7Y3qBTfseFvTQVsPB2spIQ604ZBmJyjulhxK7lug==
+X-Received: by 2002:a17:907:3f8d:b0:726:2ab9:f2fc with SMTP id hr13-20020a1709073f8d00b007262ab9f2fcmr18725084ejc.313.1656755064675;
+        Sat, 02 Jul 2022 02:44:24 -0700 (PDT)
 Received: from [192.168.43.127] ([109.38.147.70])
-        by smtp.gmail.com with ESMTPSA id p4-20020a056402154400b0042dcac2afc6sm16571865edx.72.2022.07.02.02.41.06
+        by smtp.gmail.com with ESMTPSA id b3-20020a17090636c300b00726b8e84c1asm6994694ejc.21.2022.07.02.02.44.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Jul 2022 02:41:06 -0700 (PDT)
-Message-ID: <a3b35758-2279-34d9-9b4b-6cb837618918@redhat.com>
-Date:   Sat, 2 Jul 2022 11:40:57 +0200
+        Sat, 02 Jul 2022 02:44:23 -0700 (PDT)
+Message-ID: <2604d622-08b7-e517-b423-73e38dc5b286@redhat.com>
+Date:   Sat, 2 Jul 2022 11:44:23 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH 0/3] platform/surface: Move Surface Aggregator client hubs
- to their own modules
+Subject: Re: [PATCH v2] platform/x86: ISST: PUNIT device mapping with Sub-NUMA
+ clustering
 Content-Language: en-US
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220624205800.1355621-1-luzmaximilian@gmail.com>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220629194817.2418240-1-srinivas.pandruvada@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220624205800.1355621-1-luzmaximilian@gmail.com>
+In-Reply-To: <20220629194817.2418240-1-srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,24 +79,32 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 6/24/22 22:57, Maximilian Luz wrote:
-> This series moves the Surface Aggregator client device hubs from the
-> Surface Aggregator registry to their own modules. While, at the moment,
-> client device hubs are exclusively instantiated by the registry platform
-> hub driver, this will change in the future. In particular, with the
-> introduction of DT/OF support, which is required for the Surface Pro X.
-> Therefore, this series also slightly restructures the functions used for
-> software-node-based device instantiation, essentially acting as
-> preparation for that.
+On 6/29/22 21:48, Srinivas Pandruvada wrote:
+> On a multiple package system using Sub-NUMA clustering, there is an issue
+> in mapping Linux CPU number to PUNIT PCI device when manufacturer decided
+> to reuse the PCI bus number across packages. Bus number can be reused as
+> long as they are in different domain or segment. In this case some CPU
+> will fail to find a PCI device to issue SST requests.
 > 
-> In addition, this series follows-up "platform/surface: aggregator: Add
-> support for client hot-removal" and further removes some code
-> duplication by consolidating more parts of the hub drivers. While at it,
-> also ensure proper handling of firmware node lifetimes and update the
-> copyright year of various files.
+> When bus numbers are reused across CPU packages, we are using proximity
+> information by matching CPU numa node id to PUNIT PCI device numa node
+> id. But on a package there can be only one PUNIT PCI device, but multiple
+> numa nodes (one for each sub cluster). So, the numa node ID of the PUNIT
+> PCI device can only match with one numa node id of CPUs in a sub cluster
+> in the package.
+> 
+> Since there can be only one PUNIT PCI device per package, if we match
+> with numa node id of any sub cluster in that package, we can use that
+> mapping for any CPU in that package. So, store the match information
+> in a per package data structure and return the information when there
+> is no match.
+> 
+> While here, use defines for max bus number instead of hardcoding.
+> 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
 Note it will show up in my review-hans branch once I've pushed my
@@ -111,42 +119,119 @@ Regards,
 
 Hans
 
+
+> ---
+> v2
+> - Use #define for max bus number and use
 > 
-> Maximilian Luz (3):
->   platform/surface: aggregator: Move device registry helper functions to
->     core module
->   platform/surface: aggregator: Move subsystem hub drivers to their own
->     module
->   platform/surface: Update copyright year of various drivers
+>  .../intel/speed_select_if/isst_if_common.c    | 39 +++++++++++++++----
+>  1 file changed, 32 insertions(+), 7 deletions(-)
 > 
->  MAINTAINERS                                   |   6 +
->  drivers/platform/surface/Kconfig              |  35 +-
->  drivers/platform/surface/Makefile             |   1 +
->  drivers/platform/surface/aggregator/Kconfig   |   2 +-
->  drivers/platform/surface/aggregator/Makefile  |   2 +-
->  drivers/platform/surface/aggregator/bus.c     | 151 +++++-
->  drivers/platform/surface/aggregator/bus.h     |   2 +-
->  .../platform/surface/aggregator/controller.c  |   2 +-
->  .../platform/surface/aggregator/controller.h  |   2 +-
->  drivers/platform/surface/aggregator/core.c    |   2 +-
->  .../platform/surface/aggregator/ssh_msgb.h    |   2 +-
->  .../surface/aggregator/ssh_packet_layer.c     |   2 +-
->  .../surface/aggregator/ssh_packet_layer.h     |   2 +-
->  .../platform/surface/aggregator/ssh_parser.c  |   2 +-
->  .../platform/surface/aggregator/ssh_parser.h  |   2 +-
->  .../surface/aggregator/ssh_request_layer.c    |   2 +-
->  .../surface/aggregator/ssh_request_layer.h    |   2 +-
->  drivers/platform/surface/aggregator/trace.h   |   2 +-
->  .../platform/surface/surface_acpi_notify.c    |   2 +-
->  .../surface/surface_aggregator_cdev.c         |   2 +-
->  .../platform/surface/surface_aggregator_hub.c | 371 +++++++++++++++
->  .../surface/surface_aggregator_registry.c     | 446 +-----------------
->  drivers/platform/surface/surface_dtx.c        |   2 +-
->  drivers/platform/surface/surface_gpe.c        |   2 +-
->  drivers/platform/surface/surface_hotplug.c    |   2 +-
->  .../surface/surface_platform_profile.c        |   2 +-
->  include/linux/surface_aggregator/device.h     |  52 ++
->  27 files changed, 618 insertions(+), 484 deletions(-)
->  create mode 100644 drivers/platform/surface/surface_aggregator_hub.c
-> 
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> index e8424e70d81d..fd102678c75f 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> @@ -277,29 +277,38 @@ static int isst_if_get_platform_info(void __user *argp)
+>  	return 0;
+>  }
+>  
+> +#define ISST_MAX_BUS_NUMBER	2
+>  
+>  struct isst_if_cpu_info {
+>  	/* For BUS 0 and BUS 1 only, which we need for PUNIT interface */
+> -	int bus_info[2];
+> -	struct pci_dev *pci_dev[2];
+> +	int bus_info[ISST_MAX_BUS_NUMBER];
+> +	struct pci_dev *pci_dev[ISST_MAX_BUS_NUMBER];
+>  	int punit_cpu_id;
+>  	int numa_node;
+>  };
+>  
+> +struct isst_if_pkg_info {
+> +	struct pci_dev *pci_dev[ISST_MAX_BUS_NUMBER];
+> +};
+> +
+>  static struct isst_if_cpu_info *isst_cpu_info;
+> +static struct isst_if_pkg_info *isst_pkg_info;
+> +
+>  #define ISST_MAX_PCI_DOMAINS	8
+>  
+>  static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
+>  {
+>  	struct pci_dev *matched_pci_dev = NULL;
+>  	struct pci_dev *pci_dev = NULL;
+> -	int no_matches = 0;
+> +	int no_matches = 0, pkg_id;
+>  	int i, bus_number;
+>  
+> -	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
+> -	    cpu >= num_possible_cpus())
+> +	if (bus_no < 0 || bus_no >= ISST_MAX_BUS_NUMBER || cpu < 0 ||
+> +	    cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
+>  		return NULL;
+>  
+> +	pkg_id = topology_physical_package_id(cpu);
+> +
+>  	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
+>  	if (bus_number < 0)
+>  		return NULL;
+> @@ -324,6 +333,8 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+>  		}
+>  
+>  		if (node == isst_cpu_info[cpu].numa_node) {
+> +			isst_pkg_info[pkg_id].pci_dev[bus_no] = _pci_dev;
+> +
+>  			pci_dev = _pci_dev;
+>  			break;
+>  		}
+> @@ -342,6 +353,10 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+>  	if (!pci_dev && no_matches == 1)
+>  		pci_dev = matched_pci_dev;
+>  
+> +	/* Return pci_dev pointer for any matched CPU in the package */
+> +	if (!pci_dev)
+> +		pci_dev = isst_pkg_info[pkg_id].pci_dev[bus_no];
+> +
+>  	return pci_dev;
+>  }
+>  
+> @@ -361,8 +376,8 @@ struct pci_dev *isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
+>  {
+>  	struct pci_dev *pci_dev;
+>  
+> -	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
+> -	    cpu >= num_possible_cpus())
+> +	if (bus_no < 0 || bus_no >= ISST_MAX_BUS_NUMBER  || cpu < 0 ||
+> +	    cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
+>  		return NULL;
+>  
+>  	pci_dev = isst_cpu_info[cpu].pci_dev[bus_no];
+> @@ -417,10 +432,19 @@ static int isst_if_cpu_info_init(void)
+>  	if (!isst_cpu_info)
+>  		return -ENOMEM;
+>  
+> +	isst_pkg_info = kcalloc(topology_max_packages(),
+> +				sizeof(*isst_pkg_info),
+> +				GFP_KERNEL);
+> +	if (!isst_pkg_info) {
+> +		kfree(isst_cpu_info);
+> +		return -ENOMEM;
+> +	}
+> +
+>  	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+>  				"platform/x86/isst-if:online",
+>  				isst_if_cpu_online, NULL);
+>  	if (ret < 0) {
+> +		kfree(isst_pkg_info);
+>  		kfree(isst_cpu_info);
+>  		return ret;
+>  	}
+> @@ -433,6 +457,7 @@ static int isst_if_cpu_info_init(void)
+>  static void isst_if_cpu_info_exit(void)
+>  {
+>  	cpuhp_remove_state(isst_if_online_id);
+> +	kfree(isst_pkg_info);
+>  	kfree(isst_cpu_info);
+>  };
+>  
 
