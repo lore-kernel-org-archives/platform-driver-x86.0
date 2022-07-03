@@ -2,134 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544EBC43334
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  3 Jul 2022 13:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D77EC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  3 Jul 2022 20:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232514AbiGCNor (ORCPT
+        id S229794AbiGCUof (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 3 Jul 2022 09:44:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45300 "EHLO
+        Sun, 3 Jul 2022 16:44:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229739AbiGCNor (ORCPT
+        with ESMTP id S229519AbiGCUoe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 3 Jul 2022 09:44:47 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10275389E;
-        Sun,  3 Jul 2022 06:44:46 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id n8so8598673eda.0;
-        Sun, 03 Jul 2022 06:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=MhWXASV9uAtRYqFy58hR7cUX9m4VJqD2eKZ99FmSWGM=;
-        b=pz1hxLte/F5cbuK5ITkMo2QzBCZPG6Vs1r7Y7/87EPI2A1ikkue+RNdrmqVH6gHqtk
-         i5ELPBHx+n3Upz/uq4mOKJKOwMnTAS6FCWc7w/4FdJ8ySirkw47wrzmCk9OjdCl3Lph6
-         U78DFCceqlQYdtD1umD2AANoM5rqmSRhULwzyc7tp8dzsJkha+d1f+LLQxXDrX/WewhT
-         IReW25QCSPJYarnwzgHexTPixYP2WgemEW6yHcIFwKMhmX/H5lho93ClMeH4NaiElg5R
-         DyXWirVoFgwu64zAN+vLimk1tAOuMHcYIVxkcCZ8bQzA9CZIPzWmJglIxVPjR+NFsYcv
-         hwKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=MhWXASV9uAtRYqFy58hR7cUX9m4VJqD2eKZ99FmSWGM=;
-        b=ed432jK/fwmGcMCaUkwWAg5b+XjDnjgKU8qJvZWIO9LXpDYX7o8je9gTO4ZKX8Zmkm
-         OcbO7E/MoT1yTYaxJal/gJfJijW4oK7nBF/lZqMhEee4Ciz7b07rxLbvHN/vPqJQBWSO
-         upznOmLO+vnZkM89UoVi33TZC85r9Ns74j5b3AQugCmJolZuEeFJzYnd9zXkECeiJZk1
-         loHGw30m/vEX1Z4Y2MByt4ETqiBh2Zk52UzdE/EJH2JkWsPYGaOhlKhJiDFFt7Ssgaet
-         h3i8ujztBwNxZeSdtRFpXIu/6PYmvZoaPQFdkUcB5X20EXvSYCZAMnZg9PEe7/vzH846
-         lM1w==
-X-Gm-Message-State: AJIora/5Naq2m3HFqA7Lm/O9XBYaPB3uTPm5DlzQ/jcReVbmigYhpHCx
-        VequFysp2BYqlbRX1l3eCfg=
-X-Google-Smtp-Source: AGRyM1uA0tgBD4B80gL1VAX4pYOFZjexmnjnURrl+5D/O1JzsHZ9I3bOzEoYieUnz+TSg3LHVLYWDg==
-X-Received: by 2002:a05:6402:1606:b0:43a:2204:8b5e with SMTP id f6-20020a056402160600b0043a22048b5emr4247151edv.316.1656855884434;
-        Sun, 03 Jul 2022 06:44:44 -0700 (PDT)
-Received: from [10.17.0.7] ([37.120.217.162])
-        by smtp.gmail.com with ESMTPSA id y21-20020a170906559500b00726dbb16b8dsm7357703ejp.65.2022.07.03.06.44.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Jul 2022 06:44:44 -0700 (PDT)
-Message-ID: <3c5e8227-8110-a949-8045-54206357d63c@gmail.com>
-Date:   Sun, 3 Jul 2022 15:44:42 +0200
+        Sun, 3 Jul 2022 16:44:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0824DB10
+        for <platform-driver-x86@vger.kernel.org>; Sun,  3 Jul 2022 13:44:34 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 93AE6611D2
+        for <platform-driver-x86@vger.kernel.org>; Sun,  3 Jul 2022 20:44:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DD1C9C341C6
+        for <platform-driver-x86@vger.kernel.org>; Sun,  3 Jul 2022 20:44:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656881072;
+        bh=+ujCLpE7eMxGR1/qNqVC5zVR41LY8IKYJ1V27aUOtyk=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=YrogKJXd3QUXTJeITzH9J9P/vPQATK14ILd9Me+pMnDOnS/sa07XS80AekWZm+S5w
+         6sCMjUSD+LMcumWyJxp4GAEQqcax+bquzJxi4GGr5YI2omrDg+eNBaVAsz2qnlfYgP
+         YdGu7dJdzsPfibjh3vgvlGnqWMSkXA1e4h+BlhCn9U5HzZ9U72GNHPYSfVpfn+GyfA
+         kENMTwqI7RCFRp/FIUAxpAsYU065m6nHSzmP8p+P/tnLJa8B4rvQHtOr3ndBmDyeSY
+         V1p8Nk/AQeofg4vv//KzsoqPqYt9muewvSuEyYVK43jRDcvUo779IUChaMAuZ8DBpF
+         Pf9ofzRSHtqJg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id C43C5C05FD5; Sun,  3 Jul 2022 20:44:32 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
+Date:   Sun, 03 Jul 2022 20:44:32 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: p.jungkamp@gmx.net
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-214899-215701-FKgThQtgnP@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
+References: <bug-214899-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 2/4] platform/surface: Add KIP/POS tablet-mode switch
- driver
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220624183642.910893-1-luzmaximilian@gmail.com>
- <20220624183642.910893-3-luzmaximilian@gmail.com>
- <a49c84ed-c885-fe9b-5971-681a43edb560@redhat.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <a49c84ed-c885-fe9b-5971-681a43edb560@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 7/2/22 11:05, Hans de Goede wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
 
-[...]
+Philipp Jungkamp (p.jungkamp@gmx.net) changed:
 
->> A few more notes on the Surface Laptop Studio:
->>
->> A peculiarity of the Surface Laptop Studio is its "slate/tent" mode
->> (symbolized: user> _/\). In this mode, the screen covers the keyboard
->> but leaves the touchpad exposed. This is essentially a mode in-between
->> tablet and laptop, and it is debatable whether tablet-mode should be
->> enabled in this mode. We therefore let the user decide this via a module
->> parameter.
->>
->> In particular, tablet-mode may bring up the on-screen touch keyboard
->> more easily, which would be desirable in this mode. However, some
->> user-space software currently also decides to disable keyboard and, more
->> importantly, touchpad input, while the touchpad is still accessible in
->> the "slate/tent" mode. Furthermore, this mode shares its identifier with
->> "slate/flipped" mode where the screen is flipped 180° and the keyboard
->> points away from the user (symbolized: user> /_). In this mode we would
->> like to enable auto-rotation, something that user-space software may
->> only do when tablet-mode is enabled. We therefore default to the
->> slate-mode enabling the tablet-mode switch.
-> 
-> Note that you could add a libinput quirk to ignore the tablet-switch
-> for keybd/touchpad event suprression since when not used the keyboard /
-> touchpad are covered I expect them to not send false input events so
-> this should be fine. Then the touchpad will keep working in "slate/tent"
-> mode while still enabling the onscreen-kbd since you are reporting
-> sw_tablet_mode=1.
-> 
-> The onscreen-kbd and auto-rotation enabling/disabling lives outside of
-> ibinput. Although gnome-shell does use libinput to read the touchpad and
-> currently I think the only way to get libinput to ignore the tablet-mode-sw
-> is to mark it as unreliable, which I guess might also stop it from reporting
-> it to gnome-shell.
-> 
-> Another option would be to mark the touchpad as "external" with a libinput
-> quirk (so not build into the hw) then it also won't suppress events based
-> on the tablet-mode-sw state. TL;DR: this can be fixed with a quirk on
-> the libinput side, how best to do that needs to be discussed with the libinput
-> devs.
-> 
-> And once solved at the libinput side, you probably don't need
-> the module-parameter. Note I'm fine with keeping it, but feel free to
-> submit a follow-up patch to remove it, explaining that this is fixed
-> in libinput now...
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |p.jungkamp@gmx.net
 
-Thanks for that hint!
+--- Comment #43 from Philipp Jungkamp (p.jungkamp@gmx.net) ---
+I can report that this also fixes the brightness keys on the 'Lenovo Yoga 9
+14IAP7'.
 
-Turns out libinput has a quirk for that (ModelTabletModeNoSuspend). I'm
-working with someone actually owning a SLS and we will submit an entry
-to the libinput hwdb once we've fleshed that out.
+I was just trying to trace the ACPI events on Windows when I found this thr=
+ead
+while browsing the Mailing list in the train.
 
-I'll yet have to think some more about whether it makes sense to keep
-the module parameter or not. I think ideally there would be a way to
-notify user-space for more states than just tablet/laptop, but that is
-very device specific.
+(In reply to Johannes Pen=C3=9Fel from comment #15)
+> Unfortunately, your latest patch did not yield any results either. :(
+>=20
+> In the meantime, I have discovered another peculiarity: the ACPI/WMI even=
+ts
+> generated by this "open app" key are identical to the ones created by
+> pressing Fn + ESC. (i.e. toggling Fn lock) In fact, the WMI 0xd0 event is
+> already handled by ideapad driver in the ideapad_wmi_notify function. The
+> only apparent difference between pressing "open app" and pressing Fn + ESC
+> is that the latter also toggles the LED on the ESC key. This might be a
+> firmware issue however, as this key does nothing in Windows either.
+>=20
+> Thanks a lot for your support!
 
-Regards,
-Max
+My device has multiple of these open app keys (Support, Favorite App, Virtu=
+al
+Background, Sound Profile, Dark Mode Toggle), I just wrote a short WMI driv=
+er
+to get them working. Have you figured out how to get these working for
+yourself? I presume the open application key you were talking about is the
+"star with an S inside", which is also present on my device.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
