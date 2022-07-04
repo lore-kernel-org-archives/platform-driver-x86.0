@@ -2,92 +2,214 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEB3C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jul 2022 10:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EAACCA479
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jul 2022 13:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233257AbiGDKeK (ORCPT
+        id S233329AbiGDN6s (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Jul 2022 06:34:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59510 "EHLO
+        Mon, 4 Jul 2022 09:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232438AbiGDKeI (ORCPT
+        with ESMTP id S233493AbiGDN6r (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Jul 2022 06:34:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82658E0CB
-        for <platform-driver-x86@vger.kernel.org>; Mon,  4 Jul 2022 03:34:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 04371B80E8D
-        for <platform-driver-x86@vger.kernel.org>; Mon,  4 Jul 2022 10:34:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8755BC341CE
-        for <platform-driver-x86@vger.kernel.org>; Mon,  4 Jul 2022 10:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656930844;
-        bh=uhKZ9+k2DcGjTBkCehypgEL4KXx4qQ/yJaRpZB3kyc0=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=fom7H/X5pGagz5LhzVTwgRA2CfAhnbQ8i10FILrGq3BA4vQucG/+yVDWgsZ4Fr7ol
-         6WWCQcUaGeu3XuhWXdiUtGncv14E9bK76cFneqtpvo5wYlMIP6sGlVlvCz+aaslCex
-         jV/0CTByHEJVraHj9e/wKrjk2LqiaRdbwDz7WZMqFXAPOzvl7ALu2fb9EbTAKgUCdu
-         KlND5Glr5oQK096JGwL9ZPUDzw/fLe0odvqJUC/tlSen+IBs7UcUh5ixu1ziXcFjOD
-         02nYpxO42dmkb6kFsj5UW/NfJwWIfh+0MIy79wz5IjWAoSXjfqZWDHrtBd66xHy6bi
-         dbTdWrEeEBBaQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 700C6C05FD2; Mon,  4 Jul 2022 10:34:04 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 214899] ideapad-laptop: brightness hotkeys not working
-Date:   Mon, 04 Jul 2022 10:34:04 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-214899-215701-V0NteZuCMJ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214899-215701@https.bugzilla.kernel.org/>
-References: <bug-214899-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 4 Jul 2022 09:58:47 -0400
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3892310B3
+        for <platform-driver-x86@vger.kernel.org>; Mon,  4 Jul 2022 06:58:46 -0700 (PDT)
+Received: by mail-vs1-xe32.google.com with SMTP id 126so9051364vsq.13
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Jul 2022 06:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ztA+AcW0Z5yxncYBDtWD6STNULe14Sk0EXcXnPOw+f4=;
+        b=fydK2EY08GUj6bqmi53Jl6xaXTvB65A9lj5bRNFxZeapv/tUcE4QN7t8PznT4jlW+e
+         0rDG6bJ0fMViPwfaDZiR/WIecntHzLs+ddCh3VrBeb4zitUcdM4x9plNiNeRTVIh0TvV
+         TCkTeM70nq5ZST24ywg8pMnTQH5Nr32Q5LoEisV+hSJlt5MkxVO1wZMYxq90Nc/hOK+Q
+         ZOfpFu0DI6+kpXPe2V9WmbXwON5GNop+xAneuw6eQB/d6b2Q8kRPFp0roAy+/AEX7cPj
+         PER7yvGdPFy4Zj+r4qgMqMHWyIRWibEKlqXWQwU+rttUX3ngf2alEHE/VenxQKdvwEGh
+         uU8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ztA+AcW0Z5yxncYBDtWD6STNULe14Sk0EXcXnPOw+f4=;
+        b=TYAEuYvy9knfOp3zJlFxwCA2VhdmHvaT9w2N+k0opotmIL8cWtLcmrHeAjCMU592hO
+         PpwkgMQySPjcSc4MuA1ANivzTTDFzW07LeLBpg8RcK2U8g2eIWhicvExJHItfBdDvu5c
+         JbQVZS+/kzcD2jzKglXRFNdCPfuUrsVAHP4wDhQIQT2ioafNhVXfhicaSHRsbzGtHXjg
+         7AxZFLea5ZOBNPWJZexdvNwfgaKj0iulEWqwzdsuZhnE5cMF/R1m3ud9xU5D66q8gM/y
+         xrqKP9XCyxDTzNSz5HJYs/slFSBFqBywESX0mB345v2dovereN0LsZK2pQttaI8jNYhO
+         RWcA==
+X-Gm-Message-State: AJIora9huDfhPIKBtz8acGoDaJRy1Mi4oYVX2x60UuenG2UrsRUNPZRP
+        dQg52dV1klrbh5frtL1Pc05qZg==
+X-Google-Smtp-Source: AGRyM1sE6X+ncoLXgmaxZR7/g+iA8gyRtqST2d07S2Z+ia/JWZThIFFbyNf15t/vtifF0SiuZRjkgg==
+X-Received: by 2002:a05:6102:1504:b0:354:397f:51c5 with SMTP id f4-20020a056102150400b00354397f51c5mr17054790vsv.63.1656943125320;
+        Mon, 04 Jul 2022 06:58:45 -0700 (PDT)
+Received: from localhost ([181.97.174.128])
+        by smtp.gmail.com with ESMTPSA id bi44-20020a05612218ac00b0036bff0dc94esm4494942vkb.34.2022.07.04.06.58.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Jul 2022 06:58:45 -0700 (PDT)
+From:   Martin Fernandez <martin.fernandez@eclypsium.com>
+To:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com, keescook@chromium.org,
+        Martin Fernandez <martin.fernandez@eclypsium.com>
+Subject: [PATCH v9 0/9] x86: Show in sysfs if a memory node is able to do encryption
+Date:   Mon,  4 Jul 2022 10:58:24 -0300
+Message-Id: <20220704135833.1496303-1-martin.fernandez@eclypsium.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214899
+Show for each node if every memory descriptor in that node has the
+EFI_MEMORY_CPU_CRYPTO attribute.
 
---- Comment #47 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-(In reply to Philipp Jungkamp from comment #43)
-> I can report that this also fixes the brightness keys on the 'Lenovo Yoga=
- 9
-> 14IAP7'.
+fwupd project plans to use it as part of a check to see if the users
+have properly configured memory hardware encryption
+capabilities. fwupd's people have seen cases where it seems like there
+is memory encryption because all the hardware is capable of doing it,
+but on a closer look there is not, either because of system firmware
+or because some component requires updating to enable the feature.
 
-That is great news.
+The MKTME/TME spec says that it will only encrypt those memory regions
+which are flagged with the EFI_MEMORY_CPU_CRYPTO attribute.
 
-> My device has multiple of these open app keys (Support, Favorite App,
-> Virtual Background, Sound Profile, Dark Mode Toggle), I just wrote a short
-> WMI driver to get them working.
+If all nodes are capable of encryption and if the system have tme/sme
+on we can pretty confidently say that the device is actively
+encrypting all its memory.
 
-Cool, please submit the new driver upstream to:
-platform-driver-x86@vger.kernel.org
-and then I can review it and once it passes review merge it into the mainli=
-ne
-kernel.
+It's planned to make this check part of an specification that can be
+passed to people purchasing hardware
 
---=20
-You may reply to this email to add a comment.
+These checks will run at every boot. The specification is called Host
+Security ID: https://fwupd.github.io/libfwupdplugin/hsi.html.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+We choosed to do it a per-node basis because although an ABI that
+shows that the whole system memory is capable of encryption would be
+useful for the fwupd use case, doing it in a per-node basis would make
+the path easier to give the capability to the user to target
+allocations from applications to NUMA nodes which have encryption
+capabilities in the future.
+
+
+Changes since v8:
+
+Add unit tests to e820_range_* functions
+
+
+Changes since v7:
+
+Less kerneldocs
+
+Less verbosity in the e820 code
+
+
+Changes since v6:
+
+Fixes in __e820__handle_range_update
+
+Const correctness in e820.c
+
+Correct alignment in memblock.h
+
+Rework memblock_overlaps_region
+
+
+Changes since v5:
+
+Refactor e820__range_{update, remove, set_crypto_capable} in order to
+avoid code duplication.
+
+Warn the user when a node has both encryptable and non-encryptable
+regions.
+
+Check that e820_table has enough size to store both current e820_table
+and EFI memmap.
+
+
+Changes since v4:
+
+Add enum to represent the cryptographic capabilities in e820:
+e820_crypto_capabilities.
+
+Revert __e820__range_update, only adding the new argument for
+__e820__range_add about crypto capabilities.
+
+Add a function __e820__range_update_crypto similar to
+__e820__range_update but to only update this new field.
+
+
+Changes since v3:
+
+Update date in Doc/ABI file.
+
+More information about the fwupd usecase and the rationale behind
+doing it in a per-NUMA-node.
+
+
+Changes since v2:
+
+e820__range_mark_crypto -> e820__range_mark_crypto_capable.
+
+In e820__range_remove: Create a region with crypto capabilities
+instead of creating one without it and then mark it.
+
+
+Changes since v1:
+
+Modify __e820__range_update to update the crypto capabilities of a
+range; now this function will change the crypto capability of a range
+if it's called with the same old_type and new_type. Rework
+efi_mark_e820_regions_as_crypto_capable based on this.
+
+Update do_add_efi_memmap to mark the regions as it creates them.
+
+Change the type of crypto_capable in e820_entry from bool to u8.
+
+Fix e820__update_table changes.
+
+Remove memblock_add_crypto_capable. Now you have to add the region and
+mark it then.
+
+Better place for crypto_capable in pglist_data.
+
+Martin Fernandez (9):
+  mm/memblock: Tag memblocks with crypto capabilities
+  mm/mmzone: Tag pg_data_t with crypto capabilities
+  x86/e820: Add infrastructure to refactor e820__range_{update,remove}
+  x86/e820: Refactor __e820__range_update
+  x86/e820: Refactor e820__range_remove
+  x86/e820: Tag e820_entry with crypto capabilities
+  x86/e820: Add unit tests for e820_range_* functions
+  x86/efi: Mark e820_entries as crypto capable from EFI memmap
+  drivers/node: Show in sysfs node's crypto capabilities
+
+ Documentation/ABI/testing/sysfs-devices-node |  10 +
+ arch/x86/Kconfig.debug                       |  10 +
+ arch/x86/include/asm/e820/api.h              |   1 +
+ arch/x86/include/asm/e820/types.h            |  12 +-
+ arch/x86/kernel/e820.c                       | 393 ++++++++++++++-----
+ arch/x86/kernel/e820_test.c                  | 249 ++++++++++++
+ arch/x86/platform/efi/efi.c                  |  37 ++
+ drivers/base/node.c                          |  10 +
+ include/linux/memblock.h                     |   5 +
+ include/linux/mmzone.h                       |   3 +
+ mm/memblock.c                                |  62 +++
+ mm/page_alloc.c                              |   1 +
+ 12 files changed, 695 insertions(+), 98 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-node
+ create mode 100644 arch/x86/kernel/e820_test.c
+
+-- 
+2.30.2
+
