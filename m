@@ -2,303 +2,115 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C8DC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jul 2022 02:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8F8C43334
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jul 2022 03:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234459AbiGECXL (ORCPT
+        id S231717AbiGEDBH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Jul 2022 22:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49718 "EHLO
+        Mon, 4 Jul 2022 23:01:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231329AbiGECXK (ORCPT
+        with ESMTP id S230005AbiGEDBG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Jul 2022 22:23:10 -0400
-Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20B6B12639;
-        Mon,  4 Jul 2022 19:23:07 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0VIPtdPZ_1656987780;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VIPtdPZ_1656987780)
-          by smtp.aliyun-inc.com;
-          Tue, 05 Jul 2022 10:23:01 +0800
-Message-ID: <1656987177.3209145-3-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v11 08/40] virtio_ring: split: extract the logic of alloc queue
-Date:   Tue, 5 Jul 2022 10:12:57 +0800
-From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org,
-        kangjie.xu@linux.alibaba.com,
-        virtualization@lists.linux-foundation.org
-References: <20220629065656.54420-1-xuanzhuo@linux.alibaba.com>
- <20220629065656.54420-9-xuanzhuo@linux.alibaba.com>
- <3e36e44f-1f37-ad02-eb89-833a0856ec4e@redhat.com>
- <1656665158.0036178-3-xuanzhuo@linux.alibaba.com>
- <6daca7fd-ae2a-cd0c-2030-3c6e503a3200@redhat.com>
-In-Reply-To: <6daca7fd-ae2a-cd0c-2030-3c6e503a3200@redhat.com>
+        Mon, 4 Jul 2022 23:01:06 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1346AB08
+        for <platform-driver-x86@vger.kernel.org>; Mon,  4 Jul 2022 20:01:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B4926B80EF7
+        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Jul 2022 03:01:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C6EAC3411E
+        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Jul 2022 03:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656990063;
+        bh=kjzuP7/7FaQjAfMMRL2wG3eG5cIxYcZ/UdS97WJ6QIU=;
+        h=From:To:Subject:Date:From;
+        b=sohawdEZ18oFockrPXaOVu/Dmv1FRXjKX5XOUQCWTnHzItz4QSpgdBRVQouA7MKl6
+         QYbqqf0ahXUPHMwo0JE9MrZ1QVg9Qjruu+RcuJw5+xjUx0RiauPW3/v5mR5SN79LOU
+         LRgTMWvCk6TtetalREYsKp1SGbC5H8t2mmiA5LCykwuqFQb5QYvGlVqCnqAJo20wOI
+         WVpVTIQxOBCT7i021ofSQKo6bOupInDo5TB2g7fmHHnQj03Dz0lAf3VOLwt4vcD78e
+         HH0D5G9xVaTCHrOFwMupbc0P/v2tmU3gfuFky82ixEDltHzF8fsRx6j5XJQbrUE2cN
+         /46I0EhcLTs1A==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 3B453C05FD2; Tue,  5 Jul 2022 03:01:03 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216204] New: ideapad-laptop: Testing for DYTC platform-profile
+ support
+Date:   Tue, 05 Jul 2022 03:01:02 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: low
+X-Bugzilla-Who: git@tenseventyseven.cf
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression attachments.created
+Message-ID: <bug-216204-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 4 Jul 2022 11:59:03 +0800, Jason Wang <jasowang@redhat.com> wrote:
->
-> =E5=9C=A8 2022/7/1 16:45, Xuan Zhuo =E5=86=99=E9=81=93:
-> > On Fri, 1 Jul 2022 16:26:25 +0800, Jason Wang <jasowang@redhat.com> wro=
-te:
-> >> =E5=9C=A8 2022/6/29 14:56, Xuan Zhuo =E5=86=99=E9=81=93:
-> >>> Separate the logic of split to create vring queue.
-> >>>
-> >>> This feature is required for subsequent virtuqueue reset vring.
-> >>>
-> >>> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> >>> ---
-> >>>    drivers/virtio/virtio_ring.c | 68 ++++++++++++++++++++++----------=
-----
-> >>>    1 file changed, 42 insertions(+), 26 deletions(-)
-> >>>
-> >>> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_rin=
-g.c
-> >>> index 49d61e412dc6..a9ceb9c16c54 100644
-> >>> --- a/drivers/virtio/virtio_ring.c
-> >>> +++ b/drivers/virtio/virtio_ring.c
-> >>> @@ -949,28 +949,19 @@ static void vring_free_split(struct vring_virtq=
-ueue_split *vring,
-> >>>    	kfree(vring->desc_extra);
-> >>>    }
-> >>>
-> >>> -static struct virtqueue *vring_create_virtqueue_split(
-> >>> -	unsigned int index,
-> >>> -	unsigned int num,
-> >>> -	unsigned int vring_align,
-> >>> -	struct virtio_device *vdev,
-> >>> -	bool weak_barriers,
-> >>> -	bool may_reduce_num,
-> >>> -	bool context,
-> >>> -	bool (*notify)(struct virtqueue *),
-> >>> -	void (*callback)(struct virtqueue *),
-> >>> -	const char *name)
-> >>> +static int vring_alloc_queue_split(struct vring_virtqueue_split *vri=
-ng,
-> >>> +				   struct virtio_device *vdev,
-> >>> +				   u32 num,
-> >>> +				   unsigned int vring_align,
-> >>> +				   bool may_reduce_num)
-> >>>    {
-> >>> -	struct virtqueue *vq;
-> >>>    	void *queue =3D NULL;
-> >>>    	dma_addr_t dma_addr;
-> >>> -	size_t queue_size_in_bytes;
-> >>> -	struct vring vring;
-> >>>
-> >>>    	/* We assume num is a power of 2. */
-> >>>    	if (num & (num - 1)) {
-> >>>    		dev_warn(&vdev->dev, "Bad virtqueue length %u\n", num);
-> >>> -		return NULL;
-> >>> +		return -EINVAL;
-> >>>    	}
-> >>>
-> >>>    	/* TODO: allocate each queue chunk individually */
-> >>> @@ -981,11 +972,11 @@ static struct virtqueue *vring_create_virtqueue=
-_split(
-> >>>    		if (queue)
-> >>>    			break;
-> >>>    		if (!may_reduce_num)
-> >>> -			return NULL;
-> >>> +			return -ENOMEM;
-> >>>    	}
-> >>>
-> >>>    	if (!num)
-> >>> -		return NULL;
-> >>> +		return -ENOMEM;
-> >>>
-> >>>    	if (!queue) {
-> >>>    		/* Try to get a single page. You are my only hope! */
-> >>> @@ -993,21 +984,46 @@ static struct virtqueue *vring_create_virtqueue=
-_split(
-> >>>    					  &dma_addr, GFP_KERNEL|__GFP_ZERO);
-> >>>    	}
-> >>>    	if (!queue)
-> >>> -		return NULL;
-> >>> +		return -ENOMEM;
-> >>> +
-> >>> +	vring_init(&vring->vring, num, queue, vring_align);
-> >>>
-> >>> -	queue_size_in_bytes =3D vring_size(num, vring_align);
-> >>> -	vring_init(&vring, num, queue, vring_align);
-> >>> +	vring->queue_dma_addr =3D dma_addr;
-> >>> +	vring->queue_size_in_bytes =3D vring_size(num, vring_align);
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +
-> >>> +static struct virtqueue *vring_create_virtqueue_split(
-> >>> +	unsigned int index,
-> >>> +	unsigned int num,
-> >>> +	unsigned int vring_align,
-> >>> +	struct virtio_device *vdev,
-> >>> +	bool weak_barriers,
-> >>> +	bool may_reduce_num,
-> >>> +	bool context,
-> >>> +	bool (*notify)(struct virtqueue *),
-> >>> +	void (*callback)(struct virtqueue *),
-> >>> +	const char *name)
-> >>> +{
-> >>> +	struct vring_virtqueue_split vring =3D {};
-> >>> +	struct virtqueue *vq;
-> >>> +	int err;
-> >>> +
-> >>> +	err =3D vring_alloc_queue_split(&vring, vdev, num, vring_align,
-> >>> +				      may_reduce_num);
-> >>> +	if (err)
-> >>> +		return NULL;
-> >>>
-> >>> -	vq =3D __vring_new_virtqueue(index, vring, vdev, weak_barriers, con=
-text,
-> >>> -				   notify, callback, name);
-> >>> +	vq =3D __vring_new_virtqueue(index, vring.vring, vdev, weak_barrier=
-s,
-> >>> +				   context, notify, callback, name);
-> >>>    	if (!vq) {
-> >>> -		vring_free_queue(vdev, queue_size_in_bytes, queue,
-> >>> -				 dma_addr);
-> >>> +		vring_free_split(&vring, vdev);
-> >>>    		return NULL;
-> >>>    	}
-> >>>
-> >>> -	to_vvq(vq)->split.queue_dma_addr =3D dma_addr;
-> >>> -	to_vvq(vq)->split.queue_size_in_bytes =3D queue_size_in_bytes;
-> >>> +	to_vvq(vq)->split.queue_dma_addr =3D vring.queue_dma_addr;
-> >>
-> >> Nit: having two queue_dma_addr seems redundant (so did queue_size_in_b=
-ytes).
-> > two?
-> >
-> > Where is the problem I don't understand?
-> >
-> > Thanks.
->
->
-> I meant we had:
->
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vring.vring =3D _vring;
->
-> in __vring_new_virtqueue().
->
-> This means we'd better initialize vring fully before that?
->
-> E.g
->
-> vring.queue_dma_addr =3D dma_addr;
->
-> ...
->
-> __vring_new_virtqueue()
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216204
 
-oh, my bad, maybe the repeated use of the name "vring" led to a
-misunderstanding.
+            Bug ID: 216204
+           Summary: ideapad-laptop: Testing for DYTC platform-profile
+                    support
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 5.18.9
+          Hardware: Intel
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: low
+          Priority: P1
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: git@tenseventyseven.cf
+        Regression: No
 
-What is passed to __vring_new_virtqueue is the structure struct vring
+Created attachment 301332
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D301332&action=3Dedit
+Decompiled DSDT of Lenovo IdeaPad 3 (14ITL05) - BIOS ver GCCN26WW
 
-struct vring {
-	unsigned int num;
+Hello! I'm just curious on how do I test DYTC platform profiles compatibili=
+ty
+with ideapad-laptop and my Lenovo laptop? I've merged the newest changes to=
+ the
+driver that adds (experimental) support to DYTC v4, but I couldn't find any
+concrete way to test it.
 
-	vring_desc_t *desc;
+Even without the change applied (and boot option enabled),
+power-profiles-daemon is still present on GNOME and throttles the CPU speed=
+. Is
+there any other way I can test for it? I currently am running the kernel on
+Fedora 36, if it helps.
 
-	vring_avail_t *avail;
+I've attached the decompiled DSDT, and it seems to be very similar to
+https://bugzilla.kernel.org/show_bug.cgi?id=3D213297.
 
-	vring_used_t *used;
-};
+Hoping for your reply.
+Thank you very much!
 
-And what contains queue_dma_addr is our newly split structure struct
-vring_virtqueue_split
+--=20
+You may reply to this email to add a comment.
 
-struct vring_virtqueue_split {
-	/* Actual memory layout for this queue. */
-	struct vring vring;
-
-	/* Last written value to avail->flags */
-	u16 avail_flags_shadow;
-
-	/*
-	 * Last written value to avail->idx in
-	 * guest byte order.
-	 */
-	u16 avail_idx_shadow;
-
-	/* Per-descriptor state. */
-	struct vring_desc_state_split *desc_state;
-	struct vring_desc_extra *desc_extra;
-
-	/* DMA address and size information */
-	dma_addr_t queue_dma_addr;
-	size_t queue_size_in_bytes;
-
-	/*
-	 * The parameters for creating vrings are reserved for creating new
-	 * vring.
-	 */
-	u32 vring_align;
-	bool may_reduce_num;
-};
-
-We have no way to pass queue_dma_addr into __vring_new_virtqueue. But for t=
-he
-uniformity of the interface, I create a temporary struct vring_virtqueue_sp=
-lit
-vring_split(your suggestion) in __vring_new_virtqueue. Then assign the pass=
-ed
-in struct vring to it
-
-	vring.vring =3D _vring.
-
-So here vring is an empty temporary variable.
-
-As you have replied in other patches, my re-use of the name vring is a mist=
-ake,
-I will change some places to vring_split and vring_packed.
-
-Thanks.
-
-
->
-> Thanks
->
->
-> >
-> >> Thanks
-> >>
-> >>
-> >>> +	to_vvq(vq)->split.queue_size_in_bytes =3D vring.queue_size_in_bytes;
-> >>>    	to_vvq(vq)->we_own_ring =3D true;
-> >>>
-> >>>    	return vq;
->
+You are receiving this mail because:
+You are watching the assignee of the bug.=
