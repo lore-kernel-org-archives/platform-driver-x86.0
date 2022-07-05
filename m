@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD78EC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jul 2022 17:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A274C43334
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jul 2022 18:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231769AbiGERiE (ORCPT
+        id S229941AbiGESMs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Jul 2022 13:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
+        Tue, 5 Jul 2022 14:12:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232708AbiGERh6 (ORCPT
+        with ESMTP id S229591AbiGESMr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Jul 2022 13:37:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73CF52018E
-        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Jul 2022 10:37:58 -0700 (PDT)
+        Tue, 5 Jul 2022 14:12:47 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F751C120
+        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Jul 2022 11:12:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1B8DD617C9
-        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Jul 2022 17:37:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7DA16C341C7
-        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Jul 2022 17:37:57 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 6AF33CE1C8E
+        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Jul 2022 18:12:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 79EA9C341C7
+        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Jul 2022 18:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657042677;
-        bh=/IfF/ajiL06Z29io3wnrYqRIX7heD+xZ9i3ff6Xs5U0=;
+        s=k20201202; t=1657044762;
+        bh=xbbhN4RyABGPCxG98YT3ui2lUX+ULOwammCh+rvnBaE=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=lRH5WBTBeyMX/iIdb47d6CfLRjDpwQ/BW0E+dxFXljvaJVNTWozRiuVSql2/IuSMy
-         e9izyv6xhFfooEEEIr18NeihpWWMZO2s4guPGYEL/iYZyD91dQm3fuADY8cuiKmtrL
-         h+MsV9bOnVD4bUXMGmvzxVdkXT/wPQ33M0vRv9zlpQaDr36iS+SaSlKdyyTdRePkqc
-         LOz8iTs0RqNQYVXZA2FKoNwkmSxtW96fpqRoGo+RzLMIpxHFYpxvAlTiEPtpkjVbU5
-         m9CyLdW2efHzSbjPWeiitrzSCvZqz1cAG/DnueffzXPBkZ7bRZwO29Y85FlW3ZmwLA
-         7bSutmHjvnRbw==
+        b=VyF5FRMb5QEBmNoIZyNTxK5IvplUCJ9pCRGAbJ2W0fW2GJadgD/Bv4pSaReRJdKkI
+         TboyI/OgM0TBqF96wDOm/0Ds+0e1yu5G5Bap86Lmalg5Z5ehsRqWDdvxVAWWC6gU3s
+         MparqthEf7bJfx4R54HtRXrIUghuauooK5EHKY/79/oZ6UlPjU6GHpyXTx/MYmf6OJ
+         xN/wk/YieAQNSrifgzHra1JNl+JBPNvwK1MVPbieSniUwSZyqHrSWC6l1yLA/g0OZo
+         RmuNKx/Rglui2pxbU7+ouvFo65/9JF0JwK0/z+8Jm8r1A/+6STwcURADhuc/DiJXuG
+         HQHlOgNUzM8Hw==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 6430BC05FD6; Tue,  5 Jul 2022 17:37:57 +0000 (UTC)
+        id 5DE3CC05FD6; Tue,  5 Jul 2022 18:12:42 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 215993] Serial Bus Multi Instantiate driver fails to allocate
  SPI device CSC3551:00
-Date:   Tue, 05 Jul 2022 17:37:57 +0000
+Date:   Tue, 05 Jul 2022 18:12:42 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -54,8 +54,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-215993-215701-9guEW3Cztv@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-215993-215701-2IWUEvxYNv@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-215993-215701@https.bugzilla.kernel.org/>
 References: <bug-215993-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -69,16 +69,16 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D215993
 
-Andy Shevchenko (andy.shevchenko@gmail.com) changed:
+--- Comment #3 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
+For the debugging, can you add these to lines
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |andy.shevchenko@gmail.com
+#undef ENODEV
+#define ENODEV __LINE__
 
---- Comment #2 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
-Guys, would you be able to test the latest vanilla (v5.19-rc5)? Just to be =
-sure
-that the bug can be reproduced.
+to drivers/spi/spi.c _after_ the inclusion block (all of those #include ...)
+and compile and try? It will set an error code to the line number, so we wi=
+ll
+see which one exactly failed.
 
 --=20
 You may reply to this email to add a comment.
