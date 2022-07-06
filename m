@@ -2,125 +2,128 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9822BC3F2D4
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 09:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63ADBC43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 11:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232380AbiGFJcc (ORCPT
+        id S233034AbiGFLup (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Jul 2022 05:32:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43998 "EHLO
+        Wed, 6 Jul 2022 07:50:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232678AbiGFJc0 (ORCPT
+        with ESMTP id S233029AbiGFLuo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Jul 2022 05:32:26 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD5B20F49
-        for <platform-driver-x86@vger.kernel.org>; Wed,  6 Jul 2022 02:32:25 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o91Nj-0005lo-Ss; Wed, 06 Jul 2022 11:31:39 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o91Na-004jSK-Sg; Wed, 06 Jul 2022 11:31:34 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o91Nd-003KbY-Gm; Wed, 06 Jul 2022 11:31:33 +0200
-Date:   Wed, 6 Jul 2022 11:31:30 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Wolfram Sang <wsa@kernel.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-integrity@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, chrome-platform@lists.linux.dev,
-        linux-rpi-kernel@lists.infradead.org, linux-input@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
-        linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 6/6] i2c: Make remove callback return void
-Message-ID: <20220706093130.cet7y7upl76rp6ug@pengutronix.de>
-References: <20220628140313.74984-1-u.kleine-koenig@pengutronix.de>
- <20220628140313.74984-7-u.kleine-koenig@pengutronix.de>
- <20220706091315.p5k2jck3rmyjhvqw@skbuf>
+        Wed, 6 Jul 2022 07:50:44 -0400
+X-Greylist: delayed 11289 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 06 Jul 2022 04:50:42 PDT
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050:0:465::202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38980286E2;
+        Wed,  6 Jul 2022 04:50:42 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4LdHt53CyRz9sWy;
+        Wed,  6 Jul 2022 13:50:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+        t=1657108237;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X4wqxoMq5oR8WkvTArbbG1sxY1bReFEEjrwDGNLdXas=;
+        b=dxyQbe93rW3+y0ijBIAK8fWQHkSfmwz01/hLaCPeTK/37mShVNU59E70jutpBIcXDmF3hK
+        MTP8dxh4tddo70cZsSHAVz+U2wBBRiZkzvlvit+8snXOqN+1umZth1Le+ORp3Zpvkw9+Fx
+        PtA55w7U12dLXNO3JK0VzCL4p20f1SMY/O4L8dsAPPEpqJ0iNXOTSsIIYunc9X8jUJlmoM
+        JvSjs4d5OjMUP8Gb5Gq4WOGG8dXBdzGITPqDmsRgIUQZ+rb+7VuEYZsTCz01L2S4325NdE
+        KLo6aNZU+lvDKNmyAlvTdMnAel2ESQ2YuuvMRLK3b7SSiPFB9kgwOzDovPa0hg==
+Date:   Wed, 6 Jul 2022 13:50:36 +0200 (CEST)
+From:   torvic9@mailbox.org
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <404021154.598.1657108236295@office.mailbox.org>
+In-Reply-To: <MN0PR12MB61015A04C6E4202B2E8E08A9E2819@MN0PR12MB6101.namprd12.prod.outlook.com>
+References: <272584304.305738.1657029005216@office.mailbox.org>
+ <CAHk-=wivGGgs9K_TfQYTW4RzH_C-JVfLZKNA5+hKQU0eNFBeiw@mail.gmail.com>
+ <MN0PR12MB61015A04C6E4202B2E8E08A9E2819@MN0PR12MB6101.namprd12.prod.outlook.com>
+Subject: RE: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yp3ilhvx53xygi7l"
-Content-Disposition: inline
-In-Reply-To: <20220706091315.p5k2jck3rmyjhvqw@skbuf>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-MBO-RS-ID: b1a714af9c1f0358d8e
+X-MBO-RS-META: 6zsa5ug3yrfakz3br9dnuoxmu8jjz41c
+X-Rspamd-Queue-Id: 4LdHt53CyRz9sWy
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
---yp3ilhvx53xygi7l
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Limonciello, Mario <mario.limonciello@amd.com> hat am 05.07.2022 17:10 GMT geschrieben:
+> 
+>  
+> [Public]
+> 
+> > -----Original Message-----
+> > From: Linus Torvalds <torvalds@linux-foundation.org>
+> > Sent: Tuesday, July 5, 2022 11:40
+> > To: Tor Vic <torvic9@mailbox.org>
+> > Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> > Hans de Goede <hdegoede@redhat.com>; Jani Nikula
+> > <jani.nikula@intel.com>
+> > Subject: Re: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
+> > 
+> > On Tue, Jul 5, 2022 at 6:50 AM <torvic9@mailbox.org> wrote:
+> > >
+> > > Linux 5.19-rc5 does not boot on my Kaby Lake Thinkpad.
+> > > rc3 and rc4 were still fine, so I guess something between rc4 and rc5
+> > > introduced a regression.
+> > 
+> > Sounds that way.
+> > 
+> > > Unfortunately, there are no errors or warning messages.
+> > > It gets stuck quite early on boot, about the time USB is initialized,
+> > > so less than 1 second into post-bootloader boot.
+> > > It then just sits there doing nothing - SysRq still works though.
+> > 
+> > There aren't all that many changes in rc5, and your hardware looks
+> > *very* standard (all intel chipset, and a Samsung SM961 SSD).
+> > 
+> > And with the lack of details, we'll either need a bisect:
+> > 
+> > > I don't have time for a bisect, but I thought I'll let you know about
+> > > this issue, and maybe someone already has an idea.
+> > 
+> > or we'll need more reports..
+> > 
+> > > Some system information below. Root filesystem is f2fs.
+> > 
+> > Ok, f2fs is certainly unusual, but there are no f2fs changes in rc5.
+> > 
+> > There's some PM changes for i915 ("drm/i915/dgfx: Disable d3cold at
+> > gfx root port") and a couple of thinkpad-acpi platform driver updates,
+> > so I'm adding a few random people to the cc in case somebody goes
+> > "ahh..."
+> > 
+> 
+> If a bisect isn't possible for you the kernel command line should be pretty
+> helpful to isolate which area the problem is introduced.
+> I'd say start out with "nomodeset" on the kernel command line to prevent
+> i915 from loading.  If that fixes it, hopefully it's a small number of commits
+> to peel back like the one Linus mentioned.
+> 
+> For thinkpad_acpi you can try modprobe.blacklist=thinkpad_acpi.
+> 
+> > But otherwise I think we'll just need more reports or info to even
+> > start guessing.
+> > 
+> >               Linus
 
-On Wed, Jul 06, 2022 at 12:13:15PM +0300, Vladimir Oltean wrote:
-> On Tue, Jun 28, 2022 at 04:03:12PM +0200, Uwe Kleine-K=F6nig wrote:
-> > From: Uwe Kleine-K=F6nig <uwe@kleine-koenig.org>
-> >=20
-> > The value returned by an i2c driver's remove function is mostly ignored.
-> > (Only an error message is printed if the value is non-zero that the
-> > error is ignored.)
-> >=20
-> > So change the prototype of the remove function to return no value. This
-> > way driver authors are not tempted to assume that passing an error to
-> > the upper layer is a good idea. All drivers are adapted accordingly.
-> > There is no intended change of behaviour, all callbacks were prepared to
-> > return 0 before.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > ---
->=20
-> Assuming you remove the spurious kasan change:
+Reverting the three i915 and the two thinkpad_acpi commits introduced with rc5
+does not solve this problem. Maybe I missed something else...
 
-It's already gone in my tree, see
-https://git.pengutronix.de/cgit/ukl/linux/commit/?h=3Di2c-remove-void
-
-> Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
-
-Thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---yp3ilhvx53xygi7l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLFVmcACgkQwfwUeK3K
-7AkOwAgAkt7aZ38n1lpOoBzXslSDQyp/lKc47Ehs+a1LTESfOP6+4frSHSJhaIMw
-WX2bIAZO2kfHd2GJJ1+miP0YO3eys+YJus7vlVp9LsZCtTrR7uUlJ9PhG4eVmYxD
-ZPZMbP533Mkp9Tj201PJRSbnOlhRhKnwpl4kQfj9nXD478yP1zbT/7CDh4Im1isE
-dOUnNdPTAnT17u0fIRREu6TIC/hKy5Lh772ukCBsHwkBWQD4WTtLmdL1uZrspPa3
-fKxI4tIGoKufFCNMNNzK8li/dghhpkn4uy8iNwyjkkmjfCXAkNdwNJiCDlo6qPwb
-idJ3DvpJEEx44L8KdcjzBYUHdSNUkQ==
-=ZnQL
------END PGP SIGNATURE-----
-
---yp3ilhvx53xygi7l--
+Tor
