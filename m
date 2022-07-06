@@ -2,37 +2,37 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E0DC43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 15:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B902FCCA481
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 15:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233922AbiGFPbt (ORCPT
+        id S234173AbiGFPeA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Jul 2022 11:31:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44184 "EHLO
+        Wed, 6 Jul 2022 11:34:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233705AbiGFPbR (ORCPT
+        with ESMTP id S234034AbiGFPdD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Jul 2022 11:31:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD2B223158;
-        Wed,  6 Jul 2022 08:31:16 -0700 (PDT)
+        Wed, 6 Jul 2022 11:33:03 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A260127145;
+        Wed,  6 Jul 2022 08:32:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5200861FDB;
-        Wed,  6 Jul 2022 15:31:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12CFC341C8;
-        Wed,  6 Jul 2022 15:31:14 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 80BF6B81D93;
+        Wed,  6 Jul 2022 15:32:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78BD7C341CD;
+        Wed,  6 Jul 2022 15:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657121475;
-        bh=SXBs8PJTooKJkdHbWMfHeTXXHYAQPjBwFTdpDhHDu64=;
+        s=k20201202; t=1657121540;
+        bh=/9U0QyD3NK9GUBDhZqXZ5q1VZdElBR+OKYhYTtvKLUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ugkvIpyG8EhU+yT3ZmumnKeVCoaUz19q96VLFStnaI3BZhARdPg27RZqq3S8AJspS
-         tXndA2zKv6ODysLNP+umQFIJE4dyZ3I8rPOf+X1k17UteLU11YR+HU7kyc0CtFQOFr
-         AEagjXaQEWxQJumyfdBf7a8+LBE6vb7ioRGmKpXVFEkl7IVlaG/d8lac9ZNODfLgtt
-         AHeka9CPdanhhk99N4bxLDavR6k3aA4uD6B3gnNGXgXX9KphmSjMmPp89cSWSMcuMY
-         MYhK1pUk21ukA1cnvkuLmqQ2Zycf9NXMZunubskyoSOjpe/03KRY1bCel9Ntmbj57g
-         iZ4fhQK6al4Aw==
+        b=qC14H0hYGvqiTA/1m5IRNVooZfsISI17Wa2YXkHZqJKBzdKmBVGOhe0t/2CfHG35g
+         X7T02vadYCC8g5QO5dc8SVOL1CoWs8WQOsWaOMJqBjcG62ffoHqBuSvW5RsRJvYr21
+         b6Tdx/He+ToiTnzKzpXsi+YiPZAsrg4JPyhxXiBG/9RiIdySE2cc0q+APALcAymho1
+         FgkT1UqSCon7fq2FRv+J+cyljDK6s8i5BRD4KvX0qzZvpXT3H3bx+Fe+lfC5bXnAT/
+         IxVtJZeCJA9HeicMINBBS8fymHHMVlMxZtpGElJThklw5N26OjvDtzoHd7GZRQekMI
+         etZs2EjUSOS7w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
@@ -40,12 +40,12 @@ Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.18 14/22] platform/x86: hp-wmi: Ignore Sanitization Mode event
-Date:   Wed,  6 Jul 2022 11:30:32 -0400
-Message-Id: <20220706153041.1597639-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 10/18] platform/x86: hp-wmi: Ignore Sanitization Mode event
+Date:   Wed,  6 Jul 2022 11:31:45 -0400
+Message-Id: <20220706153153.1598076-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220706153041.1597639-1-sashal@kernel.org>
-References: <20220706153041.1597639-1-sashal@kernel.org>
+In-Reply-To: <20220706153153.1598076-1-sashal@kernel.org>
+References: <20220706153153.1598076-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -75,18 +75,18 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+)
 
 diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 0e6ed75c70f3..c63ec1471b84 100644
+index 027a1467d009..1cd168e32810 100644
 --- a/drivers/platform/x86/hp-wmi.c
 +++ b/drivers/platform/x86/hp-wmi.c
-@@ -89,6 +89,7 @@ enum hp_wmi_event_ids {
+@@ -63,6 +63,7 @@ enum hp_wmi_event_ids {
  	HPWMI_BACKLIT_KB_BRIGHTNESS	= 0x0D,
  	HPWMI_PEAKSHIFT_PERIOD		= 0x0F,
  	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
 +	HPWMI_SANITIZATION_MODE		= 0x17,
  };
  
- /*
-@@ -846,6 +847,8 @@ static void hp_wmi_notify(u32 value, void *context)
+ struct bios_args {
+@@ -638,6 +639,8 @@ static void hp_wmi_notify(u32 value, void *context)
  		break;
  	case HPWMI_BATTERY_CHARGE_PERIOD:
  		break;
