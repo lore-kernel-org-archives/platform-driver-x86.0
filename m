@@ -2,118 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42685CCA47F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 06:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26165C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 08:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229459AbiGFGin (ORCPT
+        id S232489AbiGFImi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Jul 2022 02:38:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37338 "EHLO
+        Wed, 6 Jul 2022 04:42:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbiGFGin (ORCPT
+        with ESMTP id S232617AbiGFImi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Jul 2022 02:38:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83E12167CA;
-        Tue,  5 Jul 2022 23:38:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 6 Jul 2022 04:42:38 -0400
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 303DB24BCC
+        for <platform-driver-x86@vger.kernel.org>; Wed,  6 Jul 2022 01:42:37 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 62D2361D84;
-        Wed,  6 Jul 2022 06:38:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39758C3411C;
-        Wed,  6 Jul 2022 06:38:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1657089519;
-        bh=sIhADMY3Ddiwqu/4zmrMxVcxGylkvp6d6ylGolHrEgY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dv8K6kxrFf7OTnxoy7BJoYTK27INCS/dp6gsLZU+mDz0eG+7Cfsq3vGkwutzzXz77
-         jOM4u9OlUDKwA1RaRr22Fe34PTWi+7e+iuBGypoSgP3RRd1neORWeqv6u+fz4YMohn
-         QmQwowyzodvSl9o04hklMK59Etq0P85n2f5nOg/4=
-Date:   Wed, 6 Jul 2022 08:38:37 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Martin Fernandez <martin.fernandez@eclypsium.com>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        rafael@kernel.org, rppt@kernel.org, akpm@linux-foundation.org,
-        daniel.gutson@eclypsium.com, hughsient@gmail.com,
-        alex.bazhaniuk@eclypsium.com, alison.schofield@intel.com,
-        keescook@chromium.org
-Subject: Re: [PATCH v9 9/9] drivers/node: Show in sysfs node's crypto
- capabilities
-Message-ID: <YsUt7X6HLIY6wt1Z@kroah.com>
-References: <20220704135833.1496303-1-martin.fernandez@eclypsium.com>
- <20220704135833.1496303-10-martin.fernandez@eclypsium.com>
- <YsL6XCWmgiIeLKJ9@kroah.com>
- <CAKgze5aD3vJwMQwzJ1syzAKvSvPgYDFvtapDea_zBki5taoFEQ@mail.gmail.com>
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4LdCj06PlGz9snb;
+        Wed,  6 Jul 2022 10:42:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+        t=1657096948;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zaMdZ5ijAhH8MOqzd9LdmX606cpTE3BFadjMMV7IX2g=;
+        b=YCIQvUuRusPMheXGI40WYog7Cl52ziMWnF2ndMapbTsgdUo8YGqLm0cjRr7iLymu4hf0jW
+        e4XktQ+G140SZsKQqR9EP/3uEXenj3CSlOPe4ksz7eIAN9XAFK4A4TR1QAN5Zq4iSzkQLM
+        mkPs/QT/sWhJCpZWne3kKXQVTeAIkIfkRp3ULF3Mv66uEmoO+//ZgCYa4jQOYAoXZGpQsV
+        OfmgQ/PU2bFpugKxRxQa3dU9ZGheR/TorybF8vEnYD0uULh3DIe32hq/KDbmxqKT4awh5n
+        mI7NUizcKB0DPuO8Etjc/ouU8qsUohtWSodjDSQ805N3KZisL7m7fZcqahRvHA==
+Date:   Wed, 6 Jul 2022 10:42:28 +0200 (CEST)
+From:   torvic9@mailbox.org
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <72419963.329229.1657096948079@office.mailbox.org>
+In-Reply-To: <MN0PR12MB61015A04C6E4202B2E8E08A9E2819@MN0PR12MB6101.namprd12.prod.outlook.com>
+References: <272584304.305738.1657029005216@office.mailbox.org>
+ <CAHk-=wivGGgs9K_TfQYTW4RzH_C-JVfLZKNA5+hKQU0eNFBeiw@mail.gmail.com>
+ <MN0PR12MB61015A04C6E4202B2E8E08A9E2819@MN0PR12MB6101.namprd12.prod.outlook.com>
+Subject: RE: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgze5aD3vJwMQwzJ1syzAKvSvPgYDFvtapDea_zBki5taoFEQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-MBO-RS-META: tn9od3ka6gzpbd6tkbqzccaouc7uzbo7
+X-MBO-RS-ID: 421a68c2a5210c8bd90
+X-Rspamd-Queue-Id: 4LdCj06PlGz9snb
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jul 05, 2022 at 02:35:18PM -0300, Martin Fernandez wrote:
-> On 7/4/22, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Mon, Jul 04, 2022 at 10:58:33AM -0300, Martin Fernandez wrote:
-> >> Show in each node in sysfs if its memory is able to do be encrypted by
-> >> the CPU; on EFI systems: if all its memory is marked with
-> >> EFI_MEMORY_CPU_CRYPTO in the EFI memory map.
-> >>
-> >> Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
-> >> ---
-> >>  Documentation/ABI/testing/sysfs-devices-node | 10 ++++++++++
-> >>  drivers/base/node.c                          | 10 ++++++++++
-> >>  2 files changed, 20 insertions(+)
-> >>  create mode 100644 Documentation/ABI/testing/sysfs-devices-node
-> >>
-> >> diff --git a/Documentation/ABI/testing/sysfs-devices-node
-> >> b/Documentation/ABI/testing/sysfs-devices-node
-> >> new file mode 100644
-> >> index 000000000000..0e95420bd7c5
-> >> --- /dev/null
-> >> +++ b/Documentation/ABI/testing/sysfs-devices-node
-> >> @@ -0,0 +1,10 @@
-> >> +What:		/sys/devices/system/node/nodeX/crypto_capable
-> >> +Date:		April 2022
-> >> +Contact:	Martin Fernandez <martin.fernandez@eclypsium.com>
-> >> +Users:		fwupd (https://fwupd.org)
-> >> +Description:
-> >> +		This value is 1 if all system memory in this node is
-> >> +		capable of being protected with the CPU's memory
-> >> +		cryptographic capabilities.  It is 0 otherwise.
-> >> +		On EFI systems the node will be marked with
-> >> +		EFI_MEMORY_CPU_CRYPTO.
-> >
-> > Where will such a node be "marked"?  I do not understand this last
-> > sentence, sorry, can you please reword this?
-> 
-> What I meant is that if all the memory regions in a given node are
-> flagged with EFI_MEMORY_CPU_CRYPTO then that file will hold a 1.
-> 
-> Maybe it's a little confusing if you don't know what
-> EFI_MEMORY_CPU_CRYPTO is.
-> 
-> > And why is EFI an issue here at all?
-> 
-> Checking for EFI_MEMORY_CPU_CRYPTO is the way to know if a memory
-> region is able to be encrypted by the CPU on EFI platforms. It's not
-> really an issue and it's currently the only implementation for this
-> file.
-> 
-> Is it clearer here?
-> 
->   This value is 1 if the memory in this node is capable of being
->   protected with the CPU's memory cryptographic capabilities.  It is 0
->   otherwise.
->   On EFI systems this means that all the memory regions of the node
->   have the EFI_MEMORY_CPU_CRYPTO attribute set.
 
-Much better, thanks.
+> Limonciello, Mario <mario.limonciello@amd.com> hat am 05.07.2022 17:10 GMT geschrieben:
+> 
+>  
+> [Public]
+> 
+> > -----Original Message-----
+> > From: Linus Torvalds <torvalds@linux-foundation.org>
+> > Sent: Tuesday, July 5, 2022 11:40
+> > To: Tor Vic <torvic9@mailbox.org>
+> > Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> > Hans de Goede <hdegoede@redhat.com>; Jani Nikula
+> > <jani.nikula@intel.com>
+> > Subject: Re: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
+> > 
+> > On Tue, Jul 5, 2022 at 6:50 AM <torvic9@mailbox.org> wrote:
+> > >
+> > > Linux 5.19-rc5 does not boot on my Kaby Lake Thinkpad.
+> > > rc3 and rc4 were still fine, so I guess something between rc4 and rc5
+> > > introduced a regression.
+> > 
+> > Sounds that way.
+> > 
+> > > Unfortunately, there are no errors or warning messages.
+> > > It gets stuck quite early on boot, about the time USB is initialized,
+> > > so less than 1 second into post-bootloader boot.
+> > > It then just sits there doing nothing - SysRq still works though.
+> > 
+> > There aren't all that many changes in rc5, and your hardware looks
+> > *very* standard (all intel chipset, and a Samsung SM961 SSD).
+> > 
+> > And with the lack of details, we'll either need a bisect:
+> > 
+> > > I don't have time for a bisect, but I thought I'll let you know about
+> > > this issue, and maybe someone already has an idea.
+> > 
+> > or we'll need more reports..
+> > 
+> > > Some system information below. Root filesystem is f2fs.
+> > 
+> > Ok, f2fs is certainly unusual, but there are no f2fs changes in rc5.
+> > 
+> > There's some PM changes for i915 ("drm/i915/dgfx: Disable d3cold at
+> > gfx root port") and a couple of thinkpad-acpi platform driver updates,
+> > so I'm adding a few random people to the cc in case somebody goes
+> > "ahh..."
+> > 
+> 
+> If a bisect isn't possible for you the kernel command line should be pretty
+> helpful to isolate which area the problem is introduced.
+> I'd say start out with "nomodeset" on the kernel command line to prevent
+> i915 from loading.  If that fixes it, hopefully it's a small number of commits
+> to peel back like the one Linus mentioned.
 
-greg k-h
+Good advice!
+Using "nomodeset" makes the computer boot again.
+I will now try to revert the commit Linus mentioned above and report back.
+
+> 
+> For thinkpad_acpi you can try modprobe.blacklist=thinkpad_acpi.
+> 
+> > But otherwise I think we'll just need more reports or info to even
+> > start guessing.
+> > 
+> >               Linus
