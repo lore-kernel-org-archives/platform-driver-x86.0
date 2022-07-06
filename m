@@ -2,50 +2,47 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C936CCA47F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 15:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D52C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 15:31:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233797AbiGFPbN (ORCPT
+        id S233906AbiGFPbp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Jul 2022 11:31:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44160 "EHLO
+        Wed, 6 Jul 2022 11:31:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233784AbiGFPbJ (ORCPT
+        with ESMTP id S233826AbiGFPbQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Jul 2022 11:31:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EE6F2611B;
-        Wed,  6 Jul 2022 08:31:05 -0700 (PDT)
+        Wed, 6 Jul 2022 11:31:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E5621EC57;
+        Wed,  6 Jul 2022 08:31:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2CEB1B81D95;
-        Wed,  6 Jul 2022 15:31:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C7EC341CE;
-        Wed,  6 Jul 2022 15:31:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2775561FE1;
+        Wed,  6 Jul 2022 15:31:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9168C341CA;
+        Wed,  6 Jul 2022 15:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657121462;
-        bh=2s+Qy8PAT+eFTqzOukEbXvmcPXQSWYaLsQ5kNH32U4c=;
+        s=k20201202; t=1657121474;
+        bh=ZFp9+Yw28TQhbhmiQOVJ3uRa9TI1VoMCgjXTFboPp84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gLmpnbvwWfZxphHiLjvDPeHFIH2RFvLUcK+eOilhnP5E9BBUHOq/ThBXLoGqgagi0
-         RG86K3WvfIXG6ePNQey85qPOmk+Up9Try73vcsU7sDQzV2Yb4qUXf7HVwaYscezCEG
-         Ev5EAkfCZ8ySjh7wGr4AxEm7GkNPXZ6yCKadY/ETkWGQDeWhQczxzNZMJKntSxwpzt
-         FXQg9S1hbuWPaa/lnPuGm7zDUk09AA5Hm+EBOgC85I/yfgN1RdbFa1KHeznmBVpfLq
-         gDBnbOtUoh7n0SL8p/gpaFgn33Y2ct+NHpBEvRgQZHwjoroTHGU61WQkmrbqQNepLG
-         mf6AxpOVJUtjA==
+        b=T70dYUMJUebXF2Hf8bIDTMlOyjjijwlWjvEe3sJMyc8mdO02U/2YtAVL2b8OokTWI
+         wJxfHbSu/Se7K2o8qsVznYtse5t9M0ER0zboGi6Np+4XGuOrZtWSlSxuC8ALje+pnz
+         7SHd/pDm5rqrDKrE3p76BmrbEDRzoDoIbXM7Xq/dP4T/n/bB0gnFYqIS3wfwJdk5SL
+         DlUw/PhbUBy47z/xdJeDvWVRcmfyxOJYSvZI4mywvfcNyeBgjVV51PX+2ggfIgIGkE
+         FDt+CxfFXmz0ilsTPbu/9lVI1u0QCIIcAQu7C/Z+6QBCG/DNXeU/6eTGO269iVCb0v
+         lbcZbyWGPupiQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gayatri Kammela <gayatri.kammela@linux.intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+Cc:     Mark Pearson <markpearson@lenovo.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, david.e.box@intel.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.18 05/22] platform/x86: intel/pmc: Add Alder Lake N support to PMC core driver
-Date:   Wed,  6 Jul 2022 11:30:23 -0400
-Message-Id: <20220706153041.1597639-5-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, hmh@hmh.eng.br,
+        markgross@kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.18 13/22] platform/x86: thinkpad_acpi: do not use PSC mode on Intel platforms
+Date:   Wed,  6 Jul 2022 11:30:31 -0400
+Message-Id: <20220706153041.1597639-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220706153041.1597639-1-sashal@kernel.org>
 References: <20220706153041.1597639-1-sashal@kernel.org>
@@ -57,38 +54,43 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+From: Mark Pearson <markpearson@lenovo.com>
 
-[ Upstream commit d63eae6747eb8b3192e89712f6553c6aa162f872 ]
+[ Upstream commit bce6243f767f7da88aa4674d5d678f9f156eaba9 ]
 
-Add Alder Lake N (ADL-N) to the list of the platforms that Intel's
-PMC core driver supports. Alder Lake N reuses all the TigerLake PCH IPs.
+PSC platform profile mode is only supported on Linux for AMD platforms.
 
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David E. Box <david.e.box@linux.intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
-Reviewed-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Link: https://lore.kernel.org/r/20220615002751.3371730-1-gayatri.kammela@linux.intel.com
+Some older Intel platforms (e.g T490) are advertising it's capability
+as Windows uses it - but on Linux we should only be using MMC profile
+for Intel systems.
+
+Add a check to prevent it being enabled incorrectly.
+
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+Link: https://lore.kernel.org/r/20220627181449.3537-1-markpearson@lenovo.com
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel/pmc/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/thinkpad_acpi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 8ee15a7252c7..c3ec5dc88bbf 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1911,6 +1911,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&icl_reg_map),
- 	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		&tgl_reg_map),
- 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&tgl_reg_map),
-+	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		&tgl_reg_map),
- 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_reg_map),
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
- 	{}
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 5d1e0a3a5c1e..832ab77ab961 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -10540,6 +10540,11 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+ 				dytc_mmc_get_available = true;
+ 		}
+ 	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) { /* PSC MODE */
++		/* Support for this only works on AMD platforms */
++		if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD) {
++			dbg_printk(TPACPI_DBG_INIT, "PSC not support on Intel platforms\n");
++			return -ENODEV;
++		}
+ 		pr_debug("PSC is supported\n");
+ 	} else {
+ 		dbg_printk(TPACPI_DBG_INIT, "No DYTC support available\n");
 -- 
 2.35.1
 
