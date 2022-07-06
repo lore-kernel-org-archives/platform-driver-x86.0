@@ -2,99 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC81C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 15:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF44BC43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 18:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234479AbiGFPiV (ORCPT
+        id S230400AbiGFSVc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Jul 2022 11:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57934 "EHLO
+        Wed, 6 Jul 2022 14:21:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234632AbiGFPhi (ORCPT
+        with ESMTP id S229757AbiGFSVb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Jul 2022 11:37:38 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB892AE28;
-        Wed,  6 Jul 2022 08:34:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B2AD7B81D90;
-        Wed,  6 Jul 2022 15:34:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95C67C341CB;
-        Wed,  6 Jul 2022 15:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657121639;
-        bh=3wNf9MU5nkqkVJi/QAPuv9CYhltkS5PKt+M/rdroE8Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TISIF1x/BWlids3Yk5gyFque8Zwohrzly9hYUppfH0KF7+LaS5PrK26fThqhBR2pB
-         tzV6Qcr7wvmmFSEXS5CH8RXhBLUQaQwl5QIRJDZquzdoenhnnN6vInfbOSIrBZD59r
-         fzQKG2T7b9xB4lRlDKobfFgymX+iZVYJ66UBC1avYhrnS/BJcry6TaHIm6w2lPtIlD
-         rz++iwQod7GXURwqq153GgmpxnqKFrW1WqSqUt5v67ASwZQMYVqBNGFkD24VQsP5py
-         Gob20SugkKFeYCQGvHypvBkhRwfQNP9t9kTrr89MIVfPraD0lCd8+JS+a2JsejZbGu
-         L9e3GTMQH8XwQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jorge Lopez <jorge.lopez2@hp.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 5/8] platform/x86: hp-wmi: Ignore Sanitization Mode event
-Date:   Wed,  6 Jul 2022 11:33:47 -0400
-Message-Id: <20220706153351.1598805-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220706153351.1598805-1-sashal@kernel.org>
-References: <20220706153351.1598805-1-sashal@kernel.org>
+        Wed, 6 Jul 2022 14:21:31 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE81F1EACD;
+        Wed,  6 Jul 2022 11:21:29 -0700 (PDT)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1o99eP-0001yD-Im; Wed, 06 Jul 2022 20:21:25 +0200
+Message-ID: <8ee1bc75-3ecd-9d87-b7cc-37ba15133026@leemhuis.info>
+Date:   Wed, 6 Jul 2022 20:21:24 +0200
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
+Content-Language: en-US
+To:     torvic9@mailbox.org,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <272584304.305738.1657029005216@office.mailbox.org>
+ <CAHk-=wivGGgs9K_TfQYTW4RzH_C-JVfLZKNA5+hKQU0eNFBeiw@mail.gmail.com>
+ <MN0PR12MB61015A04C6E4202B2E8E08A9E2819@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <72419963.329229.1657096948079@office.mailbox.org>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <72419963.329229.1657096948079@office.mailbox.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1657131689;5fec622f;
+X-HE-SMSGID: 1o99eP-0001yD-Im
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+On 06.07.22 10:42, torvic9@mailbox.org wrote:
+> 
+>> Limonciello, Mario <mario.limonciello@amd.com> hat am 05.07.2022 17:10 GMT geschrieben:
+>>> -----Original Message-----
+>>> From: Linus Torvalds <torvalds@linux-foundation.org>
+>>> Sent: Tuesday, July 5, 2022 11:40
+>>> To: Tor Vic <torvic9@mailbox.org>
+>>> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+>>> Hans de Goede <hdegoede@redhat.com>; Jani Nikula
+>>> <jani.nikula@intel.com>
+>>> Subject: Re: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
+>>>
+>>> On Tue, Jul 5, 2022 at 6:50 AM <torvic9@mailbox.org> wrote:
+>>>>
+>>>> Linux 5.19-rc5 does not boot on my Kaby Lake Thinkpad.
+>>>> rc3 and rc4 were still fine, so I guess something between rc4 and rc5
+>>>> introduced a regression.
+>>>
+>>> Sounds that way.
+>>>
+>>>> Unfortunately, there are no errors or warning messages.
+>>>> It gets stuck quite early on boot, about the time USB is initialized,
+>>>> so less than 1 second into post-bootloader boot.
+>>>> It then just sits there doing nothing - SysRq still works though.
+>>>
+>>> There aren't all that many changes in rc5, and your hardware looks
+>>> *very* standard (all intel chipset, and a Samsung SM961 SSD).
+>>>
+>>> And with the lack of details, we'll either need a bisect:
+>>>
+>>>> I don't have time for a bisect, but I thought I'll let you know about
+>>>> this issue, and maybe someone already has an idea.
+>>>
+>>> or we'll need more reports..
+>>>
+>>>> Some system information below. Root filesystem is f2fs.
+>>>
+>>> Ok, f2fs is certainly unusual, but there are no f2fs changes in rc5.
+>>>
+>>> There's some PM changes for i915 ("drm/i915/dgfx: Disable d3cold at
+>>> gfx root port") and a couple of thinkpad-acpi platform driver updates,
+>>> so I'm adding a few random people to the cc in case somebody goes
+>>> "ahh..."
+>>>
+>>
+>> If a bisect isn't possible for you the kernel command line should be pretty
+>> helpful to isolate which area the problem is introduced.
+>> I'd say start out with "nomodeset" on the kernel command line to prevent
+>> i915 from loading.  If that fixes it, hopefully it's a small number of commits
+>> to peel back like the one Linus mentioned.
+> 
+> Good advice!
+> Using "nomodeset" makes the computer boot again.
 
-[ Upstream commit 9ab762a84b8094540c18a170e5ddd6488632c456 ]
+Wild guess, I'm not involved at all in any of the following, I just
+noticed it and thought it might be worth mentioning:
 
-After system resume the hp-wmi driver may complain:
-[ 702.620180] hp_wmi: Unknown event_id - 23 - 0x0
+I heard Fedora rawhide added this patch to solve a boot problem that
+sounded similar to yours:
+https://patchwork.freedesktop.org/patch/489982/
 
-According to HP it means 'Sanitization Mode' and it's harmless to just
-ignore the event.
+See also this thread:
+https://lore.kernel.org/all/fddf5ca6-77dc-88f9-c191-7de09717063c@redhat.com/
 
-Cc: Jorge Lopez <jorge.lopez2@hp.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Link: https://lore.kernel.org/r/20220628123726.250062-1-kai.heng.feng@canonical.com
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/hp-wmi.c | 3 +++
- 1 file changed, 3 insertions(+)
+A few config option are mentioned there that seem to have an impact.
+Maybe it's worth changing those or trying that patch.
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 93fadd4abf14..f911410bb4c7 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -75,6 +75,7 @@ enum hp_wmi_event_ids {
- 	HPWMI_BACKLIT_KB_BRIGHTNESS	= 0x0D,
- 	HPWMI_PEAKSHIFT_PERIOD		= 0x0F,
- 	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
-+	HPWMI_SANITIZATION_MODE		= 0x17,
- };
- 
- struct bios_args {
-@@ -631,6 +632,8 @@ static void hp_wmi_notify(u32 value, void *context)
- 		break;
- 	case HPWMI_BATTERY_CHARGE_PERIOD:
- 		break;
-+	case HPWMI_SANITIZATION_MODE:
-+		break;
- 	default:
- 		pr_info("Unknown event_id - %d - 0x%x\n", event_id, event_data);
- 		break;
--- 
-2.35.1
+But as I said, I'm not involved, so maybe this is a bad advice.
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
