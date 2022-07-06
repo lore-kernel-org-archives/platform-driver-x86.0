@@ -2,128 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63ADBC43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 11:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E8AC43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 13:09:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233034AbiGFLup (ORCPT
+        id S233542AbiGFNJf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Jul 2022 07:50:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51680 "EHLO
+        Wed, 6 Jul 2022 09:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233029AbiGFLuo (ORCPT
+        with ESMTP id S233473AbiGFNJe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Jul 2022 07:50:44 -0400
-X-Greylist: delayed 11289 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 06 Jul 2022 04:50:42 PDT
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050:0:465::202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38980286E2;
-        Wed,  6 Jul 2022 04:50:42 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 6 Jul 2022 09:09:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A77D205C4;
+        Wed,  6 Jul 2022 06:09:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4LdHt53CyRz9sWy;
-        Wed,  6 Jul 2022 13:50:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1657108237;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X4wqxoMq5oR8WkvTArbbG1sxY1bReFEEjrwDGNLdXas=;
-        b=dxyQbe93rW3+y0ijBIAK8fWQHkSfmwz01/hLaCPeTK/37mShVNU59E70jutpBIcXDmF3hK
-        MTP8dxh4tddo70cZsSHAVz+U2wBBRiZkzvlvit+8snXOqN+1umZth1Le+ORp3Zpvkw9+Fx
-        PtA55w7U12dLXNO3JK0VzCL4p20f1SMY/O4L8dsAPPEpqJ0iNXOTSsIIYunc9X8jUJlmoM
-        JvSjs4d5OjMUP8Gb5Gq4WOGG8dXBdzGITPqDmsRgIUQZ+rb+7VuEYZsTCz01L2S4325NdE
-        KLo6aNZU+lvDKNmyAlvTdMnAel2ESQ2YuuvMRLK3b7SSiPFB9kgwOzDovPa0hg==
-Date:   Wed, 6 Jul 2022 13:50:36 +0200 (CEST)
-From:   torvic9@mailbox.org
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F214461CFA;
+        Wed,  6 Jul 2022 13:09:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97E16C3411C;
+        Wed,  6 Jul 2022 13:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657112972;
+        bh=tCGPdJSxKe2o22ghTeorrfE8/xxYhqHBt7RlbZJUOig=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R+dojw68Wj3R/wsUoUU6bFtYgLn8gBlUYGCY25+q8cObMwEPuC12fFiyeUI9lycV5
+         sh16KbzTJnoN5mPYiCBdiknm4pLgVAfEY8jWObeHKnV3c6dXukZlp5/RmYuegU04Bb
+         ztZRw2+/NHcvusce1HEFOLkkfJ2+nWjmDA9w+AGbW5Cty/wley/TTVqjywJOpkodNR
+         0IoB9ROU3uFA1QqhAa6aa/kus6vHAQnC4Jq51qObrMfBD1jgaL4DcPdsmOLtMxH+gU
+         ItLKOVfhJ20i6QAdXHB4XEZ+9KoblWeB0U1oAHitrOMeGp+qBhvdAm2wJcVim0At6J
+         6b52ddrjRiKDw==
+Date:   Wed, 6 Jul 2022 15:09:28 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <404021154.598.1657108236295@office.mailbox.org>
-In-Reply-To: <MN0PR12MB61015A04C6E4202B2E8E08A9E2819@MN0PR12MB6101.namprd12.prod.outlook.com>
-References: <272584304.305738.1657029005216@office.mailbox.org>
- <CAHk-=wivGGgs9K_TfQYTW4RzH_C-JVfLZKNA5+hKQU0eNFBeiw@mail.gmail.com>
- <MN0PR12MB61015A04C6E4202B2E8E08A9E2819@MN0PR12MB6101.namprd12.prod.outlook.com>
-Subject: RE: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v1 3/5] i2c: acpi: Convert to use
+ acpi_match_video_device_handle() helper
+Message-ID: <YsWJiPOHwPSYQ7AQ@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Mark Gross <markgross@kernel.org>
+References: <20220630212819.42958-1-andriy.shevchenko@linux.intel.com>
+ <20220630212819.42958-3-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-MBO-RS-ID: b1a714af9c1f0358d8e
-X-MBO-RS-META: 6zsa5ug3yrfakz3br9dnuoxmu8jjz41c
-X-Rspamd-Queue-Id: 4LdHt53CyRz9sWy
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gfFBjfQD4LmWzExs"
+Content-Disposition: inline
+In-Reply-To: <20220630212819.42958-3-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
-> Limonciello, Mario <mario.limonciello@amd.com> hat am 05.07.2022 17:10 GMT geschrieben:
-> 
->  
-> [Public]
-> 
-> > -----Original Message-----
-> > From: Linus Torvalds <torvalds@linux-foundation.org>
-> > Sent: Tuesday, July 5, 2022 11:40
-> > To: Tor Vic <torvic9@mailbox.org>
-> > Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
-> > Hans de Goede <hdegoede@redhat.com>; Jani Nikula
-> > <jani.nikula@intel.com>
-> > Subject: Re: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
-> > 
-> > On Tue, Jul 5, 2022 at 6:50 AM <torvic9@mailbox.org> wrote:
-> > >
-> > > Linux 5.19-rc5 does not boot on my Kaby Lake Thinkpad.
-> > > rc3 and rc4 were still fine, so I guess something between rc4 and rc5
-> > > introduced a regression.
-> > 
-> > Sounds that way.
-> > 
-> > > Unfortunately, there are no errors or warning messages.
-> > > It gets stuck quite early on boot, about the time USB is initialized,
-> > > so less than 1 second into post-bootloader boot.
-> > > It then just sits there doing nothing - SysRq still works though.
-> > 
-> > There aren't all that many changes in rc5, and your hardware looks
-> > *very* standard (all intel chipset, and a Samsung SM961 SSD).
-> > 
-> > And with the lack of details, we'll either need a bisect:
-> > 
-> > > I don't have time for a bisect, but I thought I'll let you know about
-> > > this issue, and maybe someone already has an idea.
-> > 
-> > or we'll need more reports..
-> > 
-> > > Some system information below. Root filesystem is f2fs.
-> > 
-> > Ok, f2fs is certainly unusual, but there are no f2fs changes in rc5.
-> > 
-> > There's some PM changes for i915 ("drm/i915/dgfx: Disable d3cold at
-> > gfx root port") and a couple of thinkpad-acpi platform driver updates,
-> > so I'm adding a few random people to the cc in case somebody goes
-> > "ahh..."
-> > 
-> 
-> If a bisect isn't possible for you the kernel command line should be pretty
-> helpful to isolate which area the problem is introduced.
-> I'd say start out with "nomodeset" on the kernel command line to prevent
-> i915 from loading.  If that fixes it, hopefully it's a small number of commits
-> to peel back like the one Linus mentioned.
-> 
-> For thinkpad_acpi you can try modprobe.blacklist=thinkpad_acpi.
-> 
-> > But otherwise I think we'll just need more reports or info to even
-> > start guessing.
-> > 
-> >               Linus
+--gfFBjfQD4LmWzExs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reverting the three i915 and the two thinkpad_acpi commits introduced with rc5
-does not solve this problem. Maybe I missed something else...
+On Fri, Jul 01, 2022 at 12:28:17AM +0300, Andy Shevchenko wrote:
+> Replace open coded variant of acpi_match_video_device_handle() helper.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Tor
+Looks like a good improvement to me:
+
+Acked-by: Wolfram Sang <wsa@kernel.org>
+
+
+--gfFBjfQD4LmWzExs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmLFiYgACgkQFA3kzBSg
+KbY1Pg//brgfb7cilmz8agELwunWwgwUQpo3Al1zlLGPzTyBT7suwUDktIHwMhBt
+K9czE4Ly9fupBj9O1GbcU2xJUV32OKZUIDkFOeHQQdC0e0LtFEetHwcFMrWOI3PD
+JPLAIODYZ7iSTt1O3Pfq24YcNVYbBYvpU03qRVDvh+DdE4805wOH1JNeWirP1JtA
+AvaAlCOPCFTwA23/0ecEDH4AAnzlW/XA+f+IBCKKhnYVcrbcX7O9YcZ2P+Pwanob
+BUN7oxGvzBM/XGNX49uX07NNFTxFEk7c1lJ59tiJ4XYs0iSRCjPCdWA98k4P2LuK
+qJMxbnVQb7phZZX/fczQsz3Z4hkXR2VWBuASV1oQsGWMOQyI1iA8J9s9PK88tUhC
+HyieWCYPeVfr2wgdD4wjCFRIQVdEYmN0BgHWDrjQN2LM1JiPr/T3dBb+1Ur8oFg6
+juDsRBztAeMxFSjlir5/bpNqiGeIrnxjHOUXLUw4W2QSauZIWwGiG794JSjP49dq
+pOAaGEKdEz6Ao4xPS/As0mNQEisWs2zYsXIS4shmnn2sm4JV1AkXNoRar8sQi9ug
+mAlwEZzUIf10JhRtR0LwrAJIVwVTRMk6xuAdqnVlVAzcGd3E3o4uucEWOaRyU++Q
+En74Fg/NVJxKqA8+Qx1ZqfSRGxwLk96eXsnMByMIqjjc9UsAp5k=
+=4tIl
+-----END PGP SIGNATURE-----
+
+--gfFBjfQD4LmWzExs--
