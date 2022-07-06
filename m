@@ -2,108 +2,118 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E0FC43334
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jul 2022 19:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42685CCA47F
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jul 2022 06:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230095AbiGETrj (ORCPT
+        id S229459AbiGFGin (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Jul 2022 15:47:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44368 "EHLO
+        Wed, 6 Jul 2022 02:38:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229849AbiGETri (ORCPT
+        with ESMTP id S229455AbiGFGin (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Jul 2022 15:47:38 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4DE019C3D;
-        Tue,  5 Jul 2022 12:47:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657050457; x=1688586457;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6Vb7xfZq1vwtZpgIWv0jJKrs3Fn35tFR3X4uht7SrhY=;
-  b=R8hFQ24vLrZU1jukMXRDuj99hcayGKB8hxsr6MeVMxAYFSjYJPxO11Ls
-   fH1+wVyC9pofFNgmC/FeEgL0E2NQKWNCgzcQq4DVTLjWddFm0k+5IzFzK
-   TlJICJUXAOh9URpH0Q5U8W45csOj0f9qxs3S7N6aqojc1YAoZ8SVSnM3q
-   MtC73BFr590dW+AJA0SZhoP30ThjmcIu01iMBnmZzamvCpuGAORg/PMZK
-   qgSiEfPBk/9MllRY+0pyMwsPQNlGzhSQEx7chzP+KijIYX8qrYzxFpN6e
-   hH7kr8f2t6IG8PWABP/g5jv0COmr2gcZxSso4vaQ304gxYMI5Xt4+jfI8
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10399"; a="272252921"
-X-IronPort-AV: E=Sophos;i="5.92,247,1650956400"; 
-   d="scan'208";a="272252921"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2022 12:47:37 -0700
-X-IronPort-AV: E=Sophos;i="5.92,247,1650956400"; 
-   d="scan'208";a="619987493"
-Received: from gkammela-mobl.amr.corp.intel.com (HELO [10.144.144.107]) ([10.144.144.107])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2022 12:47:37 -0700
-Message-ID: <b617a83b-cde1-ed7f-cd5f-9eabcffffafb@linux.intel.com>
-Date:   Tue, 5 Jul 2022 12:47:31 -0700
+        Wed, 6 Jul 2022 02:38:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83E12167CA;
+        Tue,  5 Jul 2022 23:38:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 62D2361D84;
+        Wed,  6 Jul 2022 06:38:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39758C3411C;
+        Wed,  6 Jul 2022 06:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1657089519;
+        bh=sIhADMY3Ddiwqu/4zmrMxVcxGylkvp6d6ylGolHrEgY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dv8K6kxrFf7OTnxoy7BJoYTK27INCS/dp6gsLZU+mDz0eG+7Cfsq3vGkwutzzXz77
+         jOM4u9OlUDKwA1RaRr22Fe34PTWi+7e+iuBGypoSgP3RRd1neORWeqv6u+fz4YMohn
+         QmQwowyzodvSl9o04hklMK59Etq0P85n2f5nOg/4=
+Date:   Wed, 6 Jul 2022 08:38:37 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Martin Fernandez <martin.fernandez@eclypsium.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        rafael@kernel.org, rppt@kernel.org, akpm@linux-foundation.org,
+        daniel.gutson@eclypsium.com, hughsient@gmail.com,
+        alex.bazhaniuk@eclypsium.com, alison.schofield@intel.com,
+        keescook@chromium.org
+Subject: Re: [PATCH v9 9/9] drivers/node: Show in sysfs node's crypto
+ capabilities
+Message-ID: <YsUt7X6HLIY6wt1Z@kroah.com>
+References: <20220704135833.1496303-1-martin.fernandez@eclypsium.com>
+ <20220704135833.1496303-10-martin.fernandez@eclypsium.com>
+ <YsL6XCWmgiIeLKJ9@kroah.com>
+ <CAKgze5aD3vJwMQwzJ1syzAKvSvPgYDFvtapDea_zBki5taoFEQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v1 0/4] Add Raptor Lake and PCI error recovery support
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     markgross@kernel.org, david.e.box@linux.intel.com,
-        srinivas.pandruvada@intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220629221334.434307-1-gayatri.kammela@linux.intel.com>
- <ac7bfd35-203b-5002-a3ff-787ca1738a41@redhat.com>
-From:   "Kammela, Gayatri" <gayatri.kammela@linux.intel.com>
-In-Reply-To: <ac7bfd35-203b-5002-a3ff-787ca1738a41@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgze5aD3vJwMQwzJ1syzAKvSvPgYDFvtapDea_zBki5taoFEQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 7/2/2022 2:54 AM, Hans de Goede wrote:
+On Tue, Jul 05, 2022 at 02:35:18PM -0300, Martin Fernandez wrote:
+> On 7/4/22, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > On Mon, Jul 04, 2022 at 10:58:33AM -0300, Martin Fernandez wrote:
+> >> Show in each node in sysfs if its memory is able to do be encrypted by
+> >> the CPU; on EFI systems: if all its memory is marked with
+> >> EFI_MEMORY_CPU_CRYPTO in the EFI memory map.
+> >>
+> >> Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
+> >> ---
+> >>  Documentation/ABI/testing/sysfs-devices-node | 10 ++++++++++
+> >>  drivers/base/node.c                          | 10 ++++++++++
+> >>  2 files changed, 20 insertions(+)
+> >>  create mode 100644 Documentation/ABI/testing/sysfs-devices-node
+> >>
+> >> diff --git a/Documentation/ABI/testing/sysfs-devices-node
+> >> b/Documentation/ABI/testing/sysfs-devices-node
+> >> new file mode 100644
+> >> index 000000000000..0e95420bd7c5
+> >> --- /dev/null
+> >> +++ b/Documentation/ABI/testing/sysfs-devices-node
+> >> @@ -0,0 +1,10 @@
+> >> +What:		/sys/devices/system/node/nodeX/crypto_capable
+> >> +Date:		April 2022
+> >> +Contact:	Martin Fernandez <martin.fernandez@eclypsium.com>
+> >> +Users:		fwupd (https://fwupd.org)
+> >> +Description:
+> >> +		This value is 1 if all system memory in this node is
+> >> +		capable of being protected with the CPU's memory
+> >> +		cryptographic capabilities.  It is 0 otherwise.
+> >> +		On EFI systems the node will be marked with
+> >> +		EFI_MEMORY_CPU_CRYPTO.
+> >
+> > Where will such a node be "marked"?  I do not understand this last
+> > sentence, sorry, can you please reword this?
+> 
+> What I meant is that if all the memory regions in a given node are
+> flagged with EFI_MEMORY_CPU_CRYPTO then that file will hold a 1.
+> 
+> Maybe it's a little confusing if you don't know what
+> EFI_MEMORY_CPU_CRYPTO is.
+> 
+> > And why is EFI an issue here at all?
+> 
+> Checking for EFI_MEMORY_CPU_CRYPTO is the way to know if a memory
+> region is able to be encrypted by the CPU on EFI platforms. It's not
+> really an issue and it's currently the only implementation for this
+> file.
+> 
+> Is it clearer here?
+> 
+>   This value is 1 if the memory in this node is capable of being
+>   protected with the CPU's memory cryptographic capabilities.  It is 0
+>   otherwise.
+>   On EFI systems this means that all the memory regions of the node
+>   have the EFI_MEMORY_CPU_CRYPTO attribute set.
 
-> Hi,
->
-> On 6/30/22 00:13, Gayatri Kammela wrote:
->> Hi,
->>
->> This patch set adds Raptor Lake support as well as PCI error recovery
->> support to PMT driver. It also has a rework patch and a fix for fixed
->> region handling.
->>
->> Patch 1: Rework early hardware code
->> Patch 2: Add support for Raptor Lake
->> Patch 3: Fix fixed region handling
->> Patch 4: Add PCI error recovery support to Intel PMT
-> Thank you for your patch-series, I've applied the series to my
-> review-hans branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->
-> Note it will show up in my review-hans branch once I've pushed my
-> local branch there, which might take a while.
->
-> Once I've run some tests on this branch the patches there will be
-> added to the platform-drivers-x86/for-next branch and eventually
-> will be included in the pdx86 pull-request to Linus for the next
-> merge-window.
->
-> Regards,
->
-> Hans
->
-Thank you Hans!
->> David E. Box (3):
->>    platform/x86/intel/vsec: Rework early hardware code
->>    platform/x86/intel/vsec: Add support for Raptor Lake
->>    platform/x86/intel/pmt: telemetry: Fix fixed region handling
->>
->> Gayatri Kammela (1):
->>    platform/x86/intel/vsec: Add PCI error recovery support to Intel PMT
->>
->>   drivers/platform/x86/intel/pmt/class.c     |  23 ++--
->>   drivers/platform/x86/intel/pmt/telemetry.c |  18 ++-
->>   drivers/platform/x86/intel/vsec.c          | 130 ++++++++++++++++-----
->>   drivers/platform/x86/intel/vsec.h          |  11 +-
->>   4 files changed, 136 insertions(+), 46 deletions(-)
->>
->>
->> base-commit: 03c765b0e3b4cb5063276b086c76f7a612856a9a
+Much better, thanks.
+
+greg k-h
