@@ -2,86 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DB6C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jul 2022 08:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BD7C43334
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jul 2022 12:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230222AbiGGIWx (ORCPT
+        id S235785AbiGGM5B (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 7 Jul 2022 04:22:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39318 "EHLO
+        Thu, 7 Jul 2022 08:57:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235434AbiGGIW2 (ORCPT
+        with ESMTP id S235836AbiGGM4r (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Jul 2022 04:22:28 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFF222F;
-        Thu,  7 Jul 2022 01:22:27 -0700 (PDT)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1o9MmF-00023V-VO; Thu, 07 Jul 2022 10:22:24 +0200
-Message-ID: <40f45d61-2e3a-eef1-d31a-ca41f40cacfd@leemhuis.info>
-Date:   Thu, 7 Jul 2022 10:22:19 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
-Content-Language: en-US
-To:     torvic9@mailbox.org, Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
+        Thu, 7 Jul 2022 08:56:47 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3E2313AF
+        for <platform-driver-x86@vger.kernel.org>; Thu,  7 Jul 2022 05:56:15 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id bf9so7722760lfb.13
+        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Jul 2022 05:56:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H6677ejFNXKglyi/84+y7ULfVLWnlMQ6vEtVbRnv+vI=;
+        b=Mh7gtpR4GcdX4WcgpOC+AbgtdPP6eO6z1dw11i6JBWeX1ULeCBz+lpRR3pORehirTa
+         86zxMqdsM7RuDU6w8EOL+0bNM0etAC2TTxfd4rjD2DVTQzvN0l2yN2NkcKW/SOItDMpU
+         dFVvBoNMbXV0ILGAfklsAmdtRatKiwTaUIozP2JEbk7/qALXd9p+qfz20kNNYlYV1qWV
+         WsTlyC+6KzVBm4GRcpUC6E5dhO3jWsgT93LvIVR6DWK6RLgMWU6M7UZiEttdlYL7cA14
+         1HDKQnyd1ly1tq5a3Tn/QJaBOUD1v1VUs2HOlRK7LDuaJp9FoGvesu5Aen5x1orm1k3l
+         DQtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H6677ejFNXKglyi/84+y7ULfVLWnlMQ6vEtVbRnv+vI=;
+        b=EwXJQ7DsHZbNCyaKN4UJ9EPFNi/W8rMcS4Na14X89MMNf/IgVFEZzJpzQ8OdOuZ9e/
+         Kqk3zlxDwGR/a/5qdwav3lEIP4vpVRHbnsoJmQLGSHLSvV6XzNJAQfPHHNaZCJmfvNWD
+         mZ3SyRattNlBUVyh6hmpqIhl9a7RT3R7tsE3gT7mNSsoQekvQTl+2nxN8yQPVh+q8+t5
+         8qSdOP7o4CZWhk65cE/QBavvzYI35J0VenTQGGcQjcoUafQ/c3iYMRs2bp1tbMcYRbog
+         sO18JcEQp9Qd5xxYyu+15qG/ycwySCsdpz2AOUQResT+falsoPBpDp2aMWq3N6R9KnoA
+         BVaQ==
+X-Gm-Message-State: AJIora8oYVzMOMVKDj6SFhIrATP3sOoG1lAdj4bZY1FNxIDHYmYh1dIk
+        dCBEpOx1zsuBDXMv7H5ucVhY7g==
+X-Google-Smtp-Source: AGRyM1tJ3jCvJ5a/DkRtsTuF+6ZetmEjN6/i+Wqc17/EryWUTrJPKEaxdDE3XdzFq4E7wl3HyOZznw==
+X-Received: by 2002:a05:6512:3d89:b0:47f:c089:1c7f with SMTP id k9-20020a0565123d8900b0047fc0891c7fmr31065785lfv.72.1657198573447;
+        Thu, 07 Jul 2022 05:56:13 -0700 (PDT)
+Received: from jazctssd.c.googlers.com.com (138.58.228.35.bc.googleusercontent.com. [35.228.58.138])
+        by smtp.gmail.com with ESMTPSA id d7-20020a05651221c700b0047255d2111csm6810361lft.75.2022.07.07.05.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Jul 2022 05:56:12 -0700 (PDT)
+From:   Grzegorz Jaszczyk <jaz@semihalf.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jaz@semihalf.com, dmy@semihalf.com, mario.limonciello@amd.com,
+        seanjc@google.com, dbehr@google.com, upstream@semihalf.com,
+        zide.chen@intel.corp-partner.google.com,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
-        Jani Nikula <jani.nikula@intel.com>
-References: <272584304.305738.1657029005216@office.mailbox.org>
- <CAHk-=wivGGgs9K_TfQYTW4RzH_C-JVfLZKNA5+hKQU0eNFBeiw@mail.gmail.com>
- <MN0PR12MB61015A04C6E4202B2E8E08A9E2819@MN0PR12MB6101.namprd12.prod.outlook.com>
- <72419963.329229.1657096948079@office.mailbox.org>
- <8ee1bc75-3ecd-9d87-b7cc-37ba15133026@leemhuis.info>
- <CAHk-=whfSg1FNFJXv9QfXXnWFO71YufsoTs9S8sYzonfwjm4XA@mail.gmail.com>
- <830109073.51279.1657180466311@office.mailbox.org>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <830109073.51279.1657180466311@office.mailbox.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1657182147;cf722b2f;
-X-HE-SMSGID: 1o9MmF-00023V-VO
+        Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sachi King <nakato@nakato.io>,
+        linux-acpi@vger.kernel.org (open list:ACPI),
+        platform-driver-x86@vger.kernel.org (open list:X86 PLATFORM DRIVERS),
+        linux-pm@vger.kernel.org (open list:HIBERNATION (aka Software Suspend,
+        aka swsusp))
+Subject: [RFC PATCH 0/2] x86: allow to notify host about guest entering s2idle
+Date:   Thu,  7 Jul 2022 12:53:22 +0000
+Message-Id: <20220707125329.378277-1-jaz@semihalf.com>
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 07.07.22 09:54, torvic9@mailbox.org wrote:
->> Linus Torvalds <torvalds@linux-foundation.org> hat am 06.07.2022 18:59 GMT geschrieben:
->> On Wed, Jul 6, 2022 at 11:21 AM Thorsten Leemhuis
->> <regressions@leemhuis.info> wrote:
->>>
->>> Wild guess, I'm not involved at all in any of the following, I just
->>> noticed it and thought it might be worth mentioning:
->>>
->>> I heard Fedora rawhide added this patch to solve a boot problem that
->>> sounded similar to yours:
->>> https://patchwork.freedesktop.org/patch/489982/
->>
->> Yes, this looks likely, and matches that "starts in 5.19-rc5" since
->> the offending commit came in as
->>
->>   ee7a69aa38d8 ("fbdev: Disable sysfb device registration when
->> removing conflicting FBs")
->>
->> so that does look like a likely cause.
->>
-> 
-> I confirm that applying
->   "drm/aperture: Run fbdev removal before internal helpers"
-> on top of rc5 solves this issue, computer boots normally again.
-> I suppose this commit will be cherry-picked for rc6.
+According to the mailing list discussion [1] about the preferred approach
+for notifying hypervisor/VMM about guest entering s2idle state this RFC was
+implemented.
 
-Thx for confirming. Yes, that patch is in the drm-misc-fixes tree as
-bf43e4521ff3 and thus will likely be merged with this weeks DRM merge.
+Instead of original hypercall based approach, which involves KVM change [2]
+and makes it hypervisor specific, implement different mechanism, which
+takes advantage of MMIO/PIO trapping and makes it hypervisor independent.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+Patch #1 extends S2Idle ops by new notify handler which will be invoked as
+a very last command before system actually enters S2Idle states. It also
+allows to register and use driver specific notification hook which is used
+in patch #2.
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+Patch #2 introduces new driver for virtual PMC, which registers
+acpi_s2idle_dev_ops's notify handler. Its implementation is based on an
+ACPI _DSM evaluation, which in turn can perform MMIO access and allow to
+trap and therefore notify the VMM about guest entering S2Idle state.
+
+Please see individual patches and commit logs for more verbose description.
+
+This patchset is marked as RFC since patch #2 implements driver for non
+existing device "HYPE0001", which ACPI ID was not registered yet.
+Furthermore the required registration process [3] will not be started
+before getting positive feedback about this patchset.
+
+[1] https://patchwork.kernel.org/project/linux-pm/patch/20220609110337.1238762-2-jaz@semihalf.com/
+[2] https://patchwork.kernel.org/project/linux-pm/patch/20220609110337.1238762-3-jaz@semihalf.com/
+[3] https://uefi.org/PNP_ACPI_Registry
+
+Grzegorz Jaszczyk (2):
+  suspend: extend S2Idle ops by new notify handler
+  platform/x86: Add virtual PMC driver used for S2Idle
+
+ drivers/acpi/x86/s2idle.c       | 11 +++++
+ drivers/platform/x86/Kconfig    |  7 ++++
+ drivers/platform/x86/Makefile   |  1 +
+ drivers/platform/x86/virt_pmc.c | 73 +++++++++++++++++++++++++++++++++
+ include/linux/acpi.h            |  1 +
+ include/linux/suspend.h         |  1 +
+ kernel/power/suspend.c          |  4 ++
+ 7 files changed, 98 insertions(+)
+ create mode 100644 drivers/platform/x86/virt_pmc.c
+
+-- 
+2.37.0.rc0.161.g10f37bed90-goog
+
