@@ -2,89 +2,98 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65057C43334
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jul 2022 05:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D5CC43334
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jul 2022 07:54:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbiGGFjO (ORCPT
+        id S231393AbiGGHyg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 7 Jul 2022 01:39:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57868 "EHLO
+        Thu, 7 Jul 2022 03:54:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbiGGFjN (ORCPT
+        with ESMTP id S230004AbiGGHyf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Jul 2022 01:39:13 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5AD82F02A
-        for <platform-driver-x86@vger.kernel.org>; Wed,  6 Jul 2022 22:39:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 7 Jul 2022 03:54:35 -0400
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050:0:465::201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48BB42616;
+        Thu,  7 Jul 2022 00:54:32 -0700 (PDT)
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 777B5B81A69
-        for <platform-driver-x86@vger.kernel.org>; Thu,  7 Jul 2022 05:39:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0155FC341C0
-        for <platform-driver-x86@vger.kernel.org>; Thu,  7 Jul 2022 05:39:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657172350;
-        bh=KqGhUZv/vmYKrRnDoGHds0VrnTUPEmpTvhnxeuzM97o=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=MiR4CwDZzFr/Eqsk0HT2Sp49r5kyhZXjQvxSad9QNAgoHYiKGhl9DF/tnT+rJNEnD
-         J/9ctlaHzmcG58vJDKz4I5AqSpmczwyfMZ9WHGa2vM8kgYl8oRWR0XLjYJO4bnmF5i
-         DAEQ8VWRXATSPQ79owFWGW68M/tatu7uPGwTCUXb2k5FP0d4cp6rDMHm1yIpboDVVk
-         tRX9WN3ye9WhfisaXmJ9UGzH+BENdHSxhEzQQl+uW5jWAt9uM2BG/wxn5Zdiah1z5v
-         gp1zcfiLUirWaSUeFZeyayTOR8lQJPxwINNQLV//fuTGG7nivmtucxFDNYZ4HYFI4x
-         B0dHIDRqa/lcQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id D58A4C05FD6; Thu,  7 Jul 2022 05:39:09 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 215993] Serial Bus Multi Instantiate driver fails to allocate
- SPI device CSC3551:00
-Date:   Thu, 07 Jul 2022 05:39:09 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: blur.3rd@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-215993-215701-3xZsCh6uqz@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-215993-215701@https.bugzilla.kernel.org/>
-References: <bug-215993-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Ldpb727dYz9sp9;
+        Thu,  7 Jul 2022 09:54:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+        t=1657180467;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=V+yyT26kcCPIvJtlTgb0qkwB1W9jNIgrKQnDPJqABws=;
+        b=VGFq8cLB6ORk/2eP9jRsUcVNi7kAJE2eSN0/j3hS5jGEWw5H3wc4XleMrxyVqP5Sxxwgwq
+        oLsmpzndN6xrDwoiBT+CAR0HR/4cFZE7qpREol2H+LMy1I1ECvqsUi0d7b9piB1ituRx0x
+        2K2IFKEyf3M8Uot/Fwxojb8cg8qBLvIeSQwYK2Yxk7+fpMmutbDLKO15hEoZ7L3jPq5PJt
+        8r1ElP1ECLiCRRTt839ZD57ehcPKNeyKNBL4CIL2ER6e8GvoJRdl6YwW6TveUqwuUnvhpE
+        eT0g9IYh7rymEvOwf0I6bkmUP1qWMCiKELXHAJhcrh7lls1ZuSOIbB6s6o7+VQ==
+Date:   Thu, 7 Jul 2022 09:54:26 +0200 (CEST)
+From:   torvic9@mailbox.org
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thorsten Leemhuis <regressions@leemhuis.info>
+Cc:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Message-ID: <830109073.51279.1657180466311@office.mailbox.org>
+In-Reply-To: <CAHk-=whfSg1FNFJXv9QfXXnWFO71YufsoTs9S8sYzonfwjm4XA@mail.gmail.com>
+References: <272584304.305738.1657029005216@office.mailbox.org>
+ <CAHk-=wivGGgs9K_TfQYTW4RzH_C-JVfLZKNA5+hKQU0eNFBeiw@mail.gmail.com>
+ <MN0PR12MB61015A04C6E4202B2E8E08A9E2819@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <72419963.329229.1657096948079@office.mailbox.org>
+ <8ee1bc75-3ecd-9d87-b7cc-37ba15133026@leemhuis.info>
+ <CAHk-=whfSg1FNFJXv9QfXXnWFO71YufsoTs9S8sYzonfwjm4XA@mail.gmail.com>
+Subject: Re: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-MBO-RS-ID: 995ad3399b4688e71e7
+X-MBO-RS-META: t1g34utnt94rj7afsxinsoojtq6b3iwq
+X-Rspamd-Queue-Id: 4Ldpb727dYz9sp9
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D215993
 
---- Comment #4 from Supasak Sutha (blur.3rd@gmail.com) ---
+> Linus Torvalds <torvalds@linux-foundation.org> hat am 06.07.2022 18:59 GMT geschrieben:
+> 
+>  
+> On Wed, Jul 6, 2022 at 11:21 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+> >
+> > Wild guess, I'm not involved at all in any of the following, I just
+> > noticed it and thought it might be worth mentioning:
+> >
+> > I heard Fedora rawhide added this patch to solve a boot problem that
+> > sounded similar to yours:
+> > https://patchwork.freedesktop.org/patch/489982/
+> 
+> Yes, this looks likely, and matches that "starts in 5.19-rc5" since
+> the offending commit came in as
+> 
+>   ee7a69aa38d8 ("fbdev: Disable sysfb device registration when
+> removing conflicting FBs")
+> 
+> so that does look like a likely cause.
+> 
 
-Hi @Andy Shevchenko,
+I confirm that applying
+  "drm/aperture: Run fbdev removal before internal helpers"
+on top of rc5 solves this issue, computer boots normally again.
+I suppose this commit will be cherry-picked for rc6.
 
-I cannot boot with `v5.19-rc5`. Got black screen even with debug and without
-"rhgb quiet".
+Thanks to all!
+Tor
 
-But I try with `v5.19-rc4` and got this.
-
-[   15.224358] Serial bus multi instantiate pseudo device driver CSC3551:00:
-error -2488: failed to allocate SPI device CSC3551:00 from ACPI: -2488
-[   15.228652] Serial bus multi instantiate pseudo device driver: probe of
-CSC3551:00 failed with error -2488
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+>               Linus
